@@ -75,12 +75,14 @@ if($admoption['user_price_activate']==1 and !$_SESSION['UsersId']){
 	<td>
 	<a href=\"/shop/UID_".$id.".html\" title=\"".$name."\">".$uid." ".$name."</a>
 	</td>
-	<td width=\"150\" align=\"center\">
-	".$price." ".$valuta."
-	</td>
+	<td width=\"150\" align=\"center\">";
+
+        if(!empty($price)) $disp.=$price." ".$valuta;
+
+	$disp.="</td>
 	<td>";
 	
-	if($sklad==0){// Если товар на складе
+	if($sklad==0 and !empty($price)){// Если товар на складе
 	  if($admoption['user_price_activate']==1 and !$_SESSION['UsersId'])
 	    @$disp.="";
 		else

@@ -197,7 +197,7 @@ echo '
 if(isset($editID) and isset($zag_new))// Запись редактирования
 {
 if(CheckedRules($UserStatus["news"],2) == 1){
-$sql="INSERT INTO $table_name8 VALUES ('','$data_new','$zag_new','".addslashes($EditorContent)."','".addslashes($EditorContent2)."','".date("U")."')";
+$sql="INSERT INTO $table_name8 VALUES ('','$data_new','$zag_new','".addslashes($EditorContent)."','".addslashes($EditorContent2)."','".GetUnicTime($data_new)."')";
 $result=mysql_query($sql)or @die("Невозможно изменить запись");
 echo"
 	  <script>

@@ -21,7 +21,7 @@ class PHPShopMail {
 	 var $zag;
 	 var $to;
 	 
-	 function PHPShopMail($to,$from,$zag,$content){   
+	 function PHPShopMail($to,$from,$zag,$content) {
      $this->from=$from;
 	 $this->zag="=?".$this->codepage."?B?".base64_encode($zag)."?=";
 	 $this->to=$to;

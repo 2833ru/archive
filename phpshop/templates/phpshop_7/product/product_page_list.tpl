@@ -22,7 +22,9 @@
 	</tbody>
 </table></form>
 
-<div style="height:20px"></div>
+<div style="height:20px">
+<div align="right" style="padding-top: 5px"><img src="images/shop/page_excel.gif" alt="" border="0" align="absmiddle" hspace="5"><a href="/price/CAT_SORT_@pcatalogId@.html" title="Прайс-лист каталога @catalogCategory@" class="link">Прайс-лист каталога</a></div>
+</div>
 
 
 <table cellpadding="0" cellspacing="0" border="0">

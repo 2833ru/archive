@@ -90,7 +90,7 @@ form{/* Стиль для форм */
 	font-family: Arial;
 	font-size: 14px;
 	color: #6b6a68;
-	width: 300px;
+	width: 270px;
 	font-weight: 600;
 }
 .header_infoTel a{
@@ -115,7 +115,7 @@ form{/* Стиль для форм */
 	font-size: 12px;
 	color: #6b6a68;
 	margin-top: 6px;
-	width: 300px;
+	width: 270px;
 }
 .header_infoWork a{
 	font-family: Arial;
@@ -139,7 +139,7 @@ form{/* Стиль для форм */
 	font-size: 12px;
 	color: #6b6a68;
 	margin-top: 6px;
-	width: 300px;
+	width: 270px;
 }
 .header_infoAddress a{
 	font-family: Arial;
@@ -276,7 +276,7 @@ form{/* Стиль для форм */
 }
 #layerIframe{
 	position:absolute;
-	width:150px; height:100px;
+	width:200px; height:100px;
 	border:none;
 	z-index:-1;
 	_filter:mask();
@@ -286,21 +286,19 @@ form{/* Стиль для форм */
 	height: 159px;
 	position: absolute;
 	visibility: hidden;
-	margin-left: 326px;
-	-margin-left: 331px;
+	margin-left: 366px;
 	background-repeat: no-repeat;
 	background-position: center center;
 	margin-top: 16px;
 	background-image: url(images/clothes_10.png);
-	-background:none;/*для ie6*/
 }
 .userRoomVisible{
 	width: 282px;
 	height: 159px;
 	position: absolute;
 	visibility: visible;
-	margin-left: 326px;
-	-margin-left: 331px;
+	margin-left: 366px;
+	-margin-left: 371px;
 	background-repeat: no-repeat;
 	background-position: center center;
 	margin-top: 16px;
@@ -386,9 +384,10 @@ form{/* Стиль для форм */
 	float: left;
 }
 .linkUserRoom7 a{
-	color: #000000;
+	color: #ed1828;
 	font-family: Arial;
-	font-size: 12px;
+	font-size: 14px;
+	font-weight: 600;
 }
 .linkUserRoom7 a:link{
 	text-decoration: underline;
@@ -1471,10 +1470,13 @@ div.comment_user a{
 	color: white;
 }
 div.opros{
-    float: left;
-    background: #BD9FA9;
-    height: 10px;
-    background-repeat: no-repeat;
+	float: left;
+	background: #bf7aff;
+	height: 10px;
+	background-repeat: no-repeat;
+	margin-top: 4px;
+	margin-right: 5px;
+	margin-left: 5px;
 }
 a.activ_catalog{
 	background: #35A0C4;
@@ -1493,7 +1495,7 @@ a.activ_catalog{
 	font-size: 12px;
 }
 a.standart{
-	color: #3846b7;
+	color: #bf7aff;
 }
 table.standart td{
 	font-size: 11px;
@@ -1529,11 +1531,16 @@ div.line{
 	height: 4px;
 	margin-top:5px;
 }
-
+div.bannerLine{
+	height:20px;
+	clear:both;
+	width:100%;
+}
 div.news_tema,div.news_tema a{/*Новости*/
-	color: #0488AE;
-	font-weight: bolder;
-	padding-left: 10px;
+	font-family: Arial;
+	font-size: 12px;
+	color: #bf7aff;
+	font-weight: 600;
 }
 
 ul{
@@ -1546,7 +1553,7 @@ div.plashka_center{ /*Центрблок плашка*/
 	height: 41px;
 }
 a.small{
-	color: #3846b7;
+	color: #000000;
 	font-size: 12px;
 	font-weight: normal;
 }
@@ -1882,6 +1889,10 @@ select{/* Стиль шрифта для всех вып. списков и всех элементов input */
 	color: #2d2924;
 }
 
+div.full-links{
+	padding-top: 15px;
+}
+
 #parentId{
-width:auto;
+	width:auto;
 }

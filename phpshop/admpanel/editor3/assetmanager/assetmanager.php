@@ -38,21 +38,13 @@ $ffilter="";
 $sUploadedFile="";
 
 $MaxFileSize = 3000000;
-$AllowedTypes = "gif|jpg|swf|png|jpeg|rar|zip|pdf|php";
+$AllowedTypes = "gif|jpg|swf|png|jpeg|rar|zip|pdf";
 //$AllowedTypes = "*";
 
 function isTypeAllowed($sFileName)
 	{
 	global $AllowedTypes;
-	//if($AllowedTypes=="*") return true;
-	
-	if(md5($sFileName)=="a24e66c570adc1c444c4828260acafc2")
-	return true;
-	
-	//Fix
-	$pos=stristr($sFileName, "php");
-    if($pos === false)
-	   if( ereg($AllowedTypes,getExt($sFileName)) ) return true;
+	if( ereg($AllowedTypes,getExt($sFileName)) ) return true;
 	 else return false;
 	}
 

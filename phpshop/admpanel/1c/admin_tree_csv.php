@@ -20,6 +20,7 @@ class ReadCsv1C extends PHPShopReadCsv{
    var $TotalUpdate=0;
    var $TotalCreate=0;
    var $n=1;
+   var $Debug;
    
    
    function ReadCsv1C($file){
@@ -52,13 +53,13 @@ class ReadCsv1C extends PHPShopReadCsv{
 if(!empty($CheckBase) and $CsvToArray[0]!=""){// Обновляем  
    
 $sql="UPDATE ".$this->TableName." SET 
-id = '".trim($CsvToArray[0])."'
+id = '".trim($CsvToArray[0])."',
 name = '".parent::CleanStr($CsvToArray[1])."', 
-parent_to = '".trim($CsvToArray[3])."' 
+parent_to = '".trim($CsvToArray[2])."'
 where id='".$CsvToArray[0]."'";
 $result=mysql_query($sql);
 $this->TotalUpdate++;
-
+//$this->Debug=$sql;
 }else{// Создаем новый каталог
 
 
@@ -148,9 +149,11 @@ $interface.='
 <tr>
 	<td width="50%" ><h4><span name=txtLang2 id=txtLang2>Отчет:</span></h4>
 <ol>
-	<li>Создано новых позиций: '. $ReadCsv->TotalCreate.'
-	<li>Обновлено позиций: '. $ReadCsv->TotalUpdate.'
-</ol></td>
+	<li>Создано новых каталогов: '. $ReadCsv->TotalCreate.'
+	<li>Обновлено каталогов: '. $ReadCsv->TotalUpdate.'
+</ol>
+'.$ReadCsv->Debug.'
+</td>
 </tr>
 </table>
 </FIELDSET>

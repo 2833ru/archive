@@ -49,7 +49,15 @@ DoResize(<? echo $GetSystems['width_icon']?>,700,630);
 Если после кнопки ОК осталось слишком много пространства - уменьшите размер окна.<BR>
 После этого нажмите кнопку "сохранить размер" и закройте это окно!
 
-<p><?=getSizer()?></p>
+<p>
+<?
+
+if(CheckedRules($UserStatus["option"],1) == 1){
+echo getSizer();
+}else $UserChek->BadUserFormaWindow();
+
+?>
+        </p>
 
 </DIV>
 <hr>

@@ -3,6 +3,26 @@
 // Copyright © www.phpshop.ru. Все права защищены.   //
 //***************************************************//
 
+
+// Управление модулями
+function DoUpdateModules(action,xid) {
+
+var req = new Subsys_JsHttpRequest_Js();
+		req.onreadystatechange = function() {
+			if (req.readyState == 4) {
+				if (req.responseJS) {
+                                        window.document.location.reload('?page=modules');
+				}
+			}
+		}
+		req.caching = false;
+		// Подготваливаем объект.
+		req.open('POST', 'modules/action.php?do='+action, true);
+		req.send( {  xid: xid } );
+}
+
+
+
 // Калибровка
 function savesize(){
 //Получаем новые и старые значения
@@ -1125,14 +1145,16 @@ window.frame2.location.replace('page/admin_cat_content.php?words='+words);
 }
 
 function AllPage(){
-window.frame2.location.replace('page/admin_cat_content.php?pid=all');
+        try{
+            window.frame2.location.replace('page/admin_cat_content.php?pid=all');
+        }catch(e){ window.document.location.reload();}
 }
 
 
 function AllProducts(){
     try{
        window.frame2.document.location.replace('catalog/admin_cat_content.php?pid=all');
-    }catch(e){ window.document.location.replace('./admin.php?page=cat_prod');}
+    }catch(e){ window.document.location.reload();}
 
 }
 

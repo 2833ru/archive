@@ -169,6 +169,16 @@ while (list($key, $value) = each($array))
 }
 
 
+function DispDelivery(){
+global $SysValue;
+$sql="select price from ".$SysValue['base']['table_name30']." where flag='1' limit 1";
+$result=mysql_query($sql);
+@$row = mysql_fetch_array($result);
+$price=$row['price'];
+return $price;
+}
+
+
 function DispValuta($n)// вывод валют
 {
 global $SysValue;
@@ -286,7 +296,6 @@ $XML=('<?xml version="1.0" encoding="windows-1251"?>
   $XML.='<currency id="'.$v['iso'].'" rate="1"/>';
 $XML.=('
 </currencies>
-
 <categories>');
 while (list($key, $val) = @each($CATALOG)) 
 $XML.= ('
@@ -297,6 +306,7 @@ $XML.= ('
 <category id="'.$key.'" parentId="'.$PODCATALOG[$key]['parent_to'].'">'.$PODCATALOG[$key]['name'].'</category>');
 
 $XML.=('</categories>
+    <local_delivery_cost>'.DispDelivery().'</local_delivery_cost>
 <offers>');
 while (list($key, $val) = @each($PRODUCT)) {
     

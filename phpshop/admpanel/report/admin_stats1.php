@@ -123,7 +123,7 @@ while(@$row = mysql_fetch_array(@$result))
   
     @$display.=('
 
-	<tr bgcolor="ffffff"  onmouseover="show_on(\'r'.$id.'\')" id="r'.$id.'" onmouseout="show_out(\'r'.$id.'\')" class=row onclick="miniWin(\'order/adm_visitor.php?visitorID='.$id.'\',650,500)">
+	<tr bgcolor="ffffff"  onmouseover="show_on(\'r'.$id.'\')" id="r'.$id.'" onmouseout="show_out(\'r'.$id.'\')" class=row onclick="miniWin(\'order/adm_visitorID.php?visitorID='.$id.'\',650,500)">
     <td class=forma align="center">
 	'.$uid.'
 	</td>

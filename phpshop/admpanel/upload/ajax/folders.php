@@ -90,10 +90,12 @@ foreach ($map as $k=>$v) {
 		
 	if (isset($map[$k]['files'])){
 		$tt = str_replace(" ","",$map[$k]['files']);
-		$tt = explode(";",$tt);
-		foreach ($tt as $ttt => $t){
-			$sql = "INSERT INTO ".$SysValue['base']['table_name46']." SET dir='".$k."', name = '".$t."' ";
-			mysql_query($sql);
+		if($tt!=""){			
+			$tt = explode(";",$tt);
+			foreach ($tt as $ttt => $t){
+				$sql = "INSERT INTO ".$SysValue['base']['table_name46']." SET dir='".$k."', name = '".$t."' ";
+				mysql_query($sql);
+			}
 		}
 	}
 	

@@ -30,7 +30,7 @@ $SecurityKey=md5("MerchantId=$MerchantId&OrderId=$OrderId&Amount=$Amount&Currenc
 
 
 // обратный адрес
-$ReturnUrl="http://".$_SERVER['SERVER_NAME'].$SysValue['dir']['dir']."/success/?mail=".$_POST['mail']."&order=".$_POST['ouid']."";
+$FailUrl="http://".$_SERVER['SERVER_NAME'].$SysValue['dir']['dir']."/fail/";
 
 
 // вывод HTML страницы с кнопкой для оплаты
@@ -51,7 +51,7 @@ $disp= "
 <input type=\"hidden\" name=\"MerchantId\" value=\"$MerchantId\">
 <input type=\"hidden\" name=\"Currency\" value=\"$Currency\">
 <input type=\"hidden\" name=\"SecurityKey\" value=\"$SecurityKey\">
-<input type=\"hidden\" name=\"ReturnUrl\" value=\"".urlencode($ReturnUrl)."\">
+<input type=\"hidden\" name=\"FailUrl\" value=\"".urlencode($FailUrl)."\">
 	<table>
 <tr><td><img src=\"images/shop/icon-setup.gif\" width=\"16\" height=\"16\" border=\"0\"></td>
 	<td align=\"center\"><a href=\"javascript:history.back(1)\"><u>

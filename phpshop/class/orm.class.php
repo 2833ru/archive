@@ -210,7 +210,7 @@ width="32" height="32" alt="PHPShopOrm Debug On"/ ><strong>'.$name.'</strong>
     }
 }
 
-/* Пример
+/* Пример использования
 
 $PHPShopOrm->select(array('id','name'),array('id'=>'=10'),array('order'=>'id DESC'),array('limit'=>1));
 или

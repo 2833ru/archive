@@ -88,6 +88,7 @@ stm_aix("p10i6","p1i0",[0,"Клоны магазина","","",-1,-1,0,"javascript:DoReload('s
 stm_aix("p10i7","p1i0",[0,"Документооборот","","",-1,-1,0,"javascript:miniWin('system/adm_system_docsstyle.php',500,400)","_self","","","report.gif","report.gif"]);
 stm_aix("p10i8","p1i0",[0,"RSS каналы","","",-1,-1,0,"javascript:DoReload('rssgraber_chanels')","_self","","","rss.gif","rss.gif"]);
 stm_aix("p10i7","p1i0",[0,"Фотогалерея","","",-1,-1,0,"javascript:miniWin('system/adm_system_watermark.php',500,640)","_self","","","photo_album.gif","photo_album.gif"]);
+stm_aix("p10i7","p1i0",[0,"Модули","","",-1,-1,0,"javascript:DoReload('modules')","_self","","","plugin.gif","plugin.gif"]);
 stm_ep();
 stm_aix("p0i6","p0i0",[0,"База"],40,20);
 stm_bpx("p11","p1",[]);
@@ -106,32 +107,3 @@ stm_aix("p11i8","p11i7",[0,"Резервные копии базы (Backup)","","",-1,-1,0,"javasc
 stm_aix("p11i9","p1i1",[]);
 stm_aix("p11i10","p1i0",[0,"1С:Предприятие","","",-1,-1,0,"javascript:DoReload('csv1c')","_self","","","1c_icon.gif","1c_icon.gif"]);
 stm_ep();
-
-stm_aix("p0i7","p0i0",[0,"Обновления"],80,20);
-stm_bpx("p13","p1",[]);
-stm_aix("p13i0","p1i0",[0,"Проверить наличие обновления","","",-1,-1,0,"javascript:ChekUpdate('true')","_self","","","wand.gif","wand.gif"]);
-stm_aix("p13i0","p1i0",[0,"Выполнить откат обновления","","",-1,-1,0,"javascript:miniWin('upload/adm_backup.php',600,430)","_self","","","wand.gif","wand.gif"]);
-stm_ep();
-
-stm_aix("p0i7","p0i0",[0,"Справка"],60,20);
-stm_bpx("p12","p1",[]);
-stm_aix("p12i0","p1i0",[0,"Техническая Поддержка","","",-1,-1,0,"http://help.phpshop.ru/","_blank","","","icon_info.gif","icon_info.gif"]);
-stm_aix("p12i0","p1i0",[0,"Справка по разделу","","",-1,-1,0,"javascript:initSlide(0);loadhelp();","_self","","","question_frame.png","question_frame.png"]);
-stm_aix("p12i0","p1i0",[0,"Учебник","","",-1,-1,0,"http://phpshop.ru/help/","_blank","","","book.gif","book.gif"]);
-
-stm_aix("p12i1","p1i0",[0,"Новости","","",-1,-1,0,"http://www.phpshop.ru/news/","_blank","","","book_next.gif","book_next.gif"]);
-stm_aix("p12i2","p1i0",[0,"Настройка Internet Explorer","","",-1,-1,0,"javascript:ChekOptionDefault()","_self","","","computer_key.gif","computer_key.gif"]);
-stm_aix("p12i3","p1i1",[]);
-stm_aix("p12i4","p1i0",[0,"Установить Order Agent Windows","","",-1,-1,0,"http://www.phpshop.ru/loads/downloadexe.php","_blank","","","plugin.gif","plugin.gif"]);
-stm_aix("p12i4","p1i0",[0,"Установить Order Agent Mobil","","",-1,-1,0,"http://www.phpshop.ru/docs/mobileagent.html","_blank","","","plugin_blue.gif","plugin_blue.gif"]);
-stm_aix("p12i4","p1i0",[0,"Установить Order Gadget","","",-1,-1,0,"http://www.phpshop.ru/docs/vistagadget.html","_blank","","","plugin_red.gif","plugin_red.gif"]);
-stm_aix("p12i4","p1i0",[0,"Установить обработчик 1С:Предприятие","","",-1,-1,0,"http://www.phpshop.ru/docs/1c.html","_blank","","","1c_icon.gif","1c_icon.gif"]);
-
-stm_aix("p12i7","p1i1",[]);
-stm_aix("p12i6","p1i0",[0,"О программе","","",-1,-1,0,"javascript:miniWin('window/adm_about.php',650,500)","_self","","","image.gif","image.gif"]);
-stm_aix("p12i7","p1i1",[]);
-stm_aix("p12i8","p1i0",[0,"Выход","","",-1,-1,0,"javascript:window.close()","_self","","","door.gif","door.gif"]);
-stm_aix("p12i9","p1i0",[0,"Магазин","","",-1,-1,0,"../../","_blank","","","house.gif","house.gif"]);
-stm_ep();
-stm_ep();
-stm_em();

@@ -35,7 +35,7 @@
         <table class="header1Table" border="0" cellpadding="0" cellspacing="0" align="center">
             <tbody>
                 <tr>
-                    <td width="337" rowspan="2" align="left" valign="top">
+                    <td width="297" rowspan="2" align="left" valign="top">
                         <div class="header_information">
                             <div class="header_infoTel"><a href="/">@name@</a></div>
                             <div class="header_infoWork"><a href="/">@serverName@</a></div>
@@ -93,16 +93,27 @@ php@
                             </tbody>
                         </table><input type="hidden" value="1" name="user_enter"></form></div></div>
                     </td>
-                    <td width="600" align="left" valign="top" height="62">
+                    <td width="640" align="left" valign="top" height="62">
                         <div class="topMenu">
-                            <span class="topMenuSpan"><a href="/" title="Главная">Главная</a></span>
-                            @topMenu@
+                        	<table cellpadding="0" cellspacing="0" border="0"><tr>
+                                <td>
+                            		<span class="topMenuSpan"><a href="/" title="Главная">Главная</a></span>
+                            	</td>
+                                @topMenu@
+                            </tr></table>
                         </div>
-                        <div class="topUser">
+                        <div class="topUser" id="topUser">
                             <span class="topUserSpan"><a href="javascript:avtorizationClickOn('userform');" title="Войти">Войти</a></span>
                             <img src="images/spacer.gif" class="topMenuImg2" align="absmiddle" height="11" width="1">
                             <span class="topMenuSpan2"><a href="/users/register.html" title="Регистрация">Регистрация</a></span>
                         </div>
+@php
+include_once($GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47)."php/template_php.php");
+$inUserRoom = inUserRoom();
+if($inUserRoom == 1){
+	echo "<script type='text/javascript'>var topUser = document.getElementById('topUser'); topUser.style.display = 'none';</script>";
+}
+php@
                     </td>
                 </tr>
                 <tr>
@@ -136,8 +147,7 @@ php@
             <tbody>
                 <tr>
                     <td align="left" valign="top" class="leftCat"><img src="images/spacer.gif" height="1" width="220">@php
-                        include_once($GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47)."php/catReplace.php");
-	$shopLeftCat = shopLeftCat_replace();
+						$shopLeftCat = shopLeftCat_replace();
                         echo $shopLeftCat;
                         php@
                         <script type="text/javascript">
@@ -158,6 +168,7 @@ php@
                                 <div class="divNavigationA"><a href="/forma/">Форма связи</a></div>
                             </div>
                         </div>
+                        @oprosDisp@
                         @leftMenu@
                         @calendar@
                         @cloud@
@@ -171,7 +182,7 @@ php@
                 hs.graphicsDir = 'java/highslide/graphics/';
                 hs.wrapperClassName = 'borderless';
             </script>
-            <img src="images/spacer.gif" height="1" width="700">@DispShop@
+            <img src="images/spacer.gif" height="1" width="700">@DispShop@@banersDisp@
             </td>
             </tr>
             </tbody>
@@ -179,9 +190,9 @@ php@
         <table class="bottonTable" border="0" cellpadding="0" cellspacing="0" align="center">
             <tbody>
                 <tr>
-                    <td align="center" valign="middle">
-                        <div class="divBotContent">2010 &copy; @pageReg@@topMenu@</div>
-                    </td>
+                <td align="center" valign="middle"><table cellpadding="0" cellspacing="0" border="0" class="divBotContent"><tr><td>
+                    2010 &copy; @pageReg@
+                </td>@topMenu@</tr></table></td>
                 </tr>
             </tbody>
         </table>
@@ -195,7 +206,6 @@ php@
                 </tr>
             </table>
         </div>
-
         <div id="comparewindow" style="position:absolute;left:0px;top:0px;bottom:0px;right:0px;visibility:hidden;">
             <table width="100%" height="100%">
                 <tr>

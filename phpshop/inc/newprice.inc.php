@@ -6,7 +6,7 @@
 +-------------------------------------+
 */
 
-function DispNewpriceNav()// Навигация 
+function DispNewpriceNav()// Навигация
 {
 global $SysValue,$LoadItems,$_POST;
 $id=TotalClean($SysValue['nav']['id'],1);
@@ -33,19 +33,19 @@ $num=$num_page/$num_row;
 while ($i<$num+1)
     {
 	if($i!=$p){
-	
+
 	if($i==1) $pageOt=$i+@$pageDo;
 	 else $pageOt=$i+@$pageDo-$i;
-	 
+
 	$pageDo=$i*$num_row;
     @$navigat.="
 	     <a href=\"./newtip_".$i.".html".$querystring."\">".$pageOt."-".$pageDo."</a> | ";
 	}
 	else{
-	
+
      if($i==1) $pageOt=$i+@$pageDo;
 	 else $pageOt=$i+@$pageDo-$i;
-	 
+
 	$pageDo=$i*$num_row;
 	 @$navigat.="
 	     <b>".$pageOt."-".$pageDo."</b> | ";
@@ -89,7 +89,7 @@ switch($s){
   case(1): @$string.="order by name"; break;
   case(2): @$string.="order by price"; break;
   case(3): @$string.="order by num"; break;
-  default: @$string.="order by num"; 
+  default: @$string.="order by num";
 }
 
 
@@ -97,7 +97,7 @@ switch($s){
 switch($f){
   case(1): @$string.=""; break;
   case(2): @$string.=" desc"; break;
-  default: @$string.=""; 
+  default: @$string.="";
 }
 
 // Все страницы
@@ -156,40 +156,40 @@ while($row = mysql_fetch_array($result))
 	$price=($price+(($price*$LoadItems['System']['percent'])/100));
 	$pic_small=$row['pic_small'];
 	$pic_big=$row['pic_big'];
-	$baseinputvaluta=$row['baseinputvaluta'];	
-	
+	$baseinputvaluta=$row['baseinputvaluta'];
+
 	// Выборка из базы нужной колонки цены
 	if(session_is_registered('UsersStatus')){
     $GetUsersStatusPrice=GetUsersStatusPrice($_SESSION['UsersStatus']);
 	  if($GetUsersStatusPrice>1){
 	   $pole="price".$GetUsersStatusPrice;
 	   $pricePersona=$row[$pole];
-	   if(!empty($pricePersona)) 
+	   if(!empty($pricePersona))
 	     $price=($pricePersona+(($pricePersona*$LoadItems['System']['percent'])/100));
 	   }
 	}
-	
-	
+
+
 	// Если есть новая цена
 	if($priceNew>0){
 	$priceNew=($priceNew+(($priceNew*$LoadItems['System']['percent'])/100));
 	$priceNew=number_format($priceNew,"2",".","");
 	}
-	
+
 	// Проверка на нулевую цену
 	if(!is_numeric($row['price']))
 	$sklad = 1;
-	
+
 	$uid=$row['uid'];
 	$parent=explode(",",$row['parent']);
 	$vendor=$row['vendor'];
     $vendor_array=$row['vendor_array'];
 	$description=$row['description'];
-	
+
 // Пустая картинка
 if(empty($pic_small))
 $pic_small="images/shop/no_photo.gif";
-	
+
 // Определяем переменые
 $SysValue['other']['productSale']= $SysValue['lang']['product_sale'];
 $SysValue['other']['productInfo']= $SysValue['lang']['product_info'];
@@ -199,7 +199,7 @@ $SysValue['other']['productArt']= $uid;
 
 // Описание
 $SysValue['other']['productDes']= DispCatSortTable($category,$vendor_array).$description;
- 
+
 $SysValue['other']['productImg']= $pic_small;
 $SysValue['other']['productImgBigFoto']= $pic_big;
 $SysValue['other']['productValutaName']= GetValuta();
@@ -242,6 +242,11 @@ if($DispCatOptionsTest == 1){
   $SysValue['other']['ComEndCart']="";
   }
 
+if($sklad!=0){// Если товар на заказ
+    $SysValue['other']['ComStartCart']="<!--";
+    $SysValue['other']['ComEndCart']="-->";
+}
+
 
 // Подключаем шаблон
 @$dis=ParseTemplateReturn($SysValue['templates']['main_product_forma_'.$SysValue['my']['setka_num']]);
@@ -268,7 +273,7 @@ if($SysValue['my']['setka_num'] == 2){
  $td.="<tr><td valign=\"top\" class=\"panel_l\">"; $j++; $td2="</td>";
  $td2.="<TD width=1 class=setka><IMG height=1 src=\"images/spacer.gif\" width=1></TD>";
  }
- 
+
  @$disp.=$td.$dis.$td2;
 
 }
@@ -301,7 +306,7 @@ $j=1;
 }
 
 }
-	
+
 }
 
 
@@ -385,3 +390,4 @@ return @$disp;
 }
 
 ?>
+

@@ -8,7 +8,9 @@
         <tr>
         	<td align="left" valign="top" style="padding-top:4px"><div class="tovarThree_price6" style="float:left"><a href="javascript:AddToCompare(@productUid@)" title="Сравнить @productName@">сравнить</a></div><div class="tovarThree_price7" style="float:left; padding-top:4px"><img src="images/sravnenie_6.gif"></div></td>
         </tr>
-    </table><div class="cartFullSklad">@productSklad@</div><div class="cartFullFilter">@optionsDisp@</div>@ComEnd@@productParentList@</td>
+    </table><div class="cartFullSklad">@productSklad@</div><div class="cartFullFilter">@optionsDisp@</div>@ComEnd@@productParentList@
+    <SCRIPT type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@javascript/links/links.js"></SCRIPT>
+	<div class="full-links"><SCRIPT type="text/javascript">share42("","","@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@")</SCRIPT></div></td>
 </tr></tbody></table>
 
 <div class="tabPaneFull" id="tabPaneFull">

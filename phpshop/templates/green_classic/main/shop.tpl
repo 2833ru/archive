@@ -28,7 +28,7 @@
     <td width="40" vAlign=center>
     <img src="images/shop/i_commercemanager_med.gif" alt="" width="32" height="32" border="0" align="absmiddle">
     </td>
-    <td><b>Внимание...</b><br>Товар добавлен к корзину</td>
+    <td><b>Внимание...</b><br>Товар добавлен в корзину</td>
 </tr>
 </table>
 </div> 
@@ -137,7 +137,7 @@
         <table>
 <tr>
     <td>@valutaDisp@</td>
-    <td>  <div style="padding-left:20px" id="order" style="display:@orderEnabled@"><A href="/order/" style="color: white; font-weight: bold;">Оформить заказ</A></div>
+    <td>  <div id="order" style="display:@orderEnabled@; padding-left:20px"><A href="/order/" style="color: white; font-weight: bold;">Оформить заказ</A></div>
  <div id="compare" style="padding-left:20px;padding-top:5px;display:@compareEnabled@" class="header_bg_2_up_compare"><a href="/compare/" title="Сравнение товаров"  style="color: white; font-weight: bold;">Сравнить товары</div>
 
 </td>
@@ -167,9 +167,7 @@
 <table width="1004" BORDER="0" CELLPADDING="0" CELLSPACING="0" style="margin-top:20px">
 <tr>
     <td width="2"><img src="images/spacer.gif" alt="" width="10" height="1" border="0"></td>
-    <td width="275"  valign="top">
-	<img src="images/spacer.gif" alt="" width="275" height="1" border="0">
-	@skinSelect@
+    <td width="275"  valign="top"><img src="images/spacer.gif" alt="" width="275" height="1" border="0">@skinSelect@
     <div id="bg_catalog_1">Каталог продукции</div>
     @leftCatal@
     <a href="/news/"><DIV class=catalog_forma style="CURSOR: pointer" onclick="javascript:location.replace('/news/')"><TABLE cellSpacing=0 cellPadding=0 width=275 border=0>

@@ -6,14 +6,19 @@
 +-------------------------------------+
 */
 
-function DispCatSortTable($category,$vendor_array){ // Вывод сортировок таблицей
+// Вывод сортировок таблицей
+function DispCatSortTable($category,$vendor_array){ 
 global $SysValue,$LoadItems;
 
 // Выводить имя набора характеристики
-$categorySort = "false";
+$categorySort = false;
+
+// Оптимизация для больших баз
+if(empty($LoadItems['Sort'])) $optimize = true;
+
 
 $sort=unserialize($LoadItems['Podcatalog'][$category]['sort']);
-$vendor_array=unserialize($vendor_array); 
+$vendor_array=unserialize($vendor_array);
 $categoryControl="";
 if(is_array($sort))
 foreach($sort as $v){
@@ -28,7 +33,7 @@ while (@$row = mysql_fetch_array($result))
 	$clean="false";
 	$page=$row['page'];
 	
-  if($categoryControl!=$category and $categorySort == "true")
+  if($categoryControl!=$category and $categorySort)
   @$dis.= '
 <tr>
    <td colspan="2"><b>'.$LoadItems['CatalogSort'][$category]['name'].'</b></td>
@@ -39,9 +44,13 @@ $srt_value="";
 if( $count> 1)
   $zpt=", ";
   else $zpt="";
-  
+
 if(is_array($vendor_array[$id]))
 foreach($vendor_array[$id] as $p){
+
+    // Оптимизированный вывод
+    if($optimize) $LoadItems['Sort']=Sorts(' where id='.$p);
+
 
      if(!@$LoadItems['Sort'][$p]['name']) {
 	   @$srt_value="-   ";

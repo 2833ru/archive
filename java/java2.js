@@ -280,7 +280,9 @@ if(w > max_width) obj.width = max_width;
 
 // Вывод полной формы
 function GetAllForma(catId){
-if(catId!="") window.location.replace("../shop/CID_"+catId+".html");
+	if(catId!="" && catId!="ALL") window.location.replace("../shop/CID_"+catId+".html");
+	if(catId=="ALL") alert('Для всех категорий форма с описанием не доступна! Выберите из выпадающего меню категорию и нажмите "показать". После этого форма с описание станет доступна.');
+	if(catId=="") alert('Выберите из выпадающего меню категорию и нажмите "показать". После этого форма с описание станет доступна.');
 }
 
 

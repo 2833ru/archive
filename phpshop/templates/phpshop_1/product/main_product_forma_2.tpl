@@ -47,6 +47,6 @@
     <td valign="top" style="padding:10px;">@vendorDisp@ <BR>  @productDes@</td>
   </tr>
 </table>
-
+@productParentList@
 
 	

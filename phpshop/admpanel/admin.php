@@ -8,7 +8,14 @@ error_reporting(0);
 mysql_select_db("$dbase")or @die("Невозможно подсоединиться к базе");
 
 require("enter_to_admin.php");
-require("class/xml.class.php");
+//require("class/xml.class.php");
+
+include("../class/obj.class.php");
+PHPShopObj::loadClass("system");
+PHPShopObj::loadClass("admgui");
+PHPShopObj::loadClass("orm");
+PHPShopObj::loadClass("date");
+PHPShopObj::loadClass("xml");
 
 
 // Проверяем на root
@@ -20,7 +27,7 @@ $rootNote="rootNote()";
 // Выбор файла
 function GetFile($dir){
 global $SysValue;
-    if ($dh = opendir($dir)) {
+    if (@$dh = opendir($dir)) {
         while (($file = readdir($dh)) !== false) {
 		$fstat = explode(".",$file);
 		if($fstat[1] == "lic")
@@ -120,13 +127,43 @@ foreach ($db as $k=>$v){
 
 
 
-
-
-
 // Opera 9 Fix
 if(eregi('Opera', $HTTP_USER_AGENT)) 
 $onload="";
   else $onload="onload=\"".@$ChekUpdate."DoCheckInterfaceLang('icon',1);preloader(0)\"";
+
+
+// Подключение JS меню модулей
+function CreateModulesMenu() {
+    $sql="select path from ".$GLOBALS['SysValue']['base']['modules'];
+    $result=mysql_query($sql);
+
+    while($row = mysql_fetch_array($result)) {
+        $path=$row['path'];
+        $menu="../modules/".$path."/install/module.xml";
+        @$data=implode("",file($menu));
+        if(@$db=readDatabase($data,"adminmenu",false)) {
+            $DIR="../../modules/".$path."/install/";
+            @$dis_js.='
+                stm_aix("p0i7","p0i0",[0,"'.$db[0]['title'].'"],70,20);
+                stm_bpx("p13","p1",[]);';
+
+            // JS меню
+            $podmenu=readDatabase($data,"podmenu",false);
+            foreach($podmenu as $val)
+                @$dis_js.='
+stm_aix("p10i1","p2i0",[0,"'.$val['podmenu_name'].'","","",-1,-1,0,"'.$val['podmenu_action'].'","_self","","","'.$DIR.$val['podmenu_icon'].'","'.$DIR.$val['podmenu_icon'].'",16,16]);
+	  ';
+            @$dis_js.='stm_ep();';
+        }
+    }
+    $disp=@$dis_js.'
+stm_ep();
+stm_ep();
+';
+    return $disp;
+}
+
 
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -230,11 +267,11 @@ if($option['calibrated'] != 1) {
   </SCRIPT>
   ';
 }
-//Вызов калибровщика
+// Вызов калибровщика
 
 ?>
 </head>
-<body id="mybody" style="background: threedface; color: windowtext;" topmargin="0" rightmargin="3" leftmargin="3" <?=$onload?> oncontextmenu="return false;"  onresize="ResizeWin('prders')" onhelp="initSlide(0);loadhelp();return false;">
+<body id="mybody" style="background: threedface; color: windowtext;" topmargin="0" rightmargin="3" leftmargin="3" <?=$onload?>  onresize="ResizeWin('prders')" onhelp="initSlide(0);loadhelp();return false;">
 <span id="cartwindow" style="position:absolute;left:10px;top:0;visibility:hidden; width: 250px; height: 68px;Z-INDEX: 3;BACKGROUND: #C0D2EC;padding:10px;border: solid;border-width: 1px; border-color:#4D88C8;FILTER: revealTrans  (duration=1,transition=4);" > 
 <table width="100%" height="100%">
 <tr>
@@ -331,9 +368,49 @@ if(is_numeric($TechPodUntilUnixTime))
 <table width="100%" cellpadding="0" cellpadding="0" style="border: 1px;border-style: outset; Z-INDEX: 1">
 <tr>
     <td style="padding-left:7px">
-	<script type="text/javascript" language="JavaScript" src="language/<? echo 
-$Lang;?>/menu.js"></script>
-	</td>
+	<script type="text/javascript" language="JavaScript" src="language/russian/menu.js"></script>
+
+<script>
+                        // Модули
+<?
+$CreateModulesMenu = CreateModulesMenu();
+echo $CreateModulesMenu;
+?>
+
+
+                      // Дописываем меню
+stm_aix("p0i7","p0i0",[0,"Обновления"],80,20);
+stm_bpx("p13","p1",[]);
+stm_aix("p13i0","p1i0",[0,"Проверить наличие обновления","","",-1,-1,0,"javascript:ChekUpdate('true')","_self","","","wand.gif","wand.gif"]);
+stm_aix("p13i0","p1i0",[0,"Выполнить откат обновления","","",-1,-1,0,"javascript:miniWin('upload/adm_backup.php',600,430)","_self","","","wand.gif","wand.gif"]);
+stm_ep();
+
+stm_aix("p0i7","p0i0",[0,"Справка"],60,20);
+stm_bpx("p12","p1",[]);
+stm_aix("p12i0","p1i0",[0,"Техническая Поддержка","","",-1,-1,0,"http://help.phpshop.ru/","_blank","","","icon_info.gif","icon_info.gif"]);
+stm_aix("p12i0","p1i0",[0,"Справка по разделу","","",-1,-1,0,"javascript:initSlide(0);loadhelp();","_self","","","question_frame.png","question_frame.png"]);
+stm_aix("p12i0","p1i0",[0,"Учебник","","",-1,-1,0,"http://phpshop.ru/help/","_blank","","","book.gif","book.gif"]);
+
+stm_aix("p12i1","p1i0",[0,"Новости","","",-1,-1,0,"http://www.phpshop.ru/news/","_blank","","","book_next.gif","book_next.gif"]);
+stm_aix("p12i2","p1i0",[0,"Настройка Internet Explorer","","",-1,-1,0,"javascript:ChekOptionDefault()","_self","","","computer_key.gif","computer_key.gif"]);
+stm_aix("p12i3","p1i1",[]);
+stm_aix("p12i4","p1i0",[0,"Установить Order Agent Windows","","",-1,-1,0,"http://www.phpshop.ru/loads/downloadexe.php","_blank","","","plugin.gif","plugin.gif"]);
+stm_aix("p12i4","p1i0",[0,"Установить Order Agent Mobil","","",-1,-1,0,"http://www.phpshop.ru/docs/mobileagent.html","_blank","","","plugin_blue.gif","plugin_blue.gif"]);
+stm_aix("p12i4","p1i0",[0,"Установить Order Gadget","","",-1,-1,0,"http://www.phpshop.ru/docs/vistagadget.html","_blank","","","plugin_red.gif","plugin_red.gif"]);
+stm_aix("p12i4","p1i0",[0,"Установить обработчик 1С:Предприятие","","",-1,-1,0,"http://www.phpshop.ru/docs/1c.html","_blank","","","1c_icon.gif","1c_icon.gif"]);
+
+stm_aix("p12i7","p1i1",[]);
+stm_aix("p12i6","p1i0",[0,"О программе","","",-1,-1,0,"javascript:miniWin('window/adm_about.php',650,500)","_self","","","image.gif","image.gif"]);
+stm_aix("p12i7","p1i1",[]);
+stm_aix("p12i8","p1i0",[0,"Выход","","",-1,-1,0,"javascript:window.close()","_self","","","door.gif","door.gif"]);
+stm_aix("p12i9","p1i0",[0,"Магазин","","",-1,-1,0,"../../","_blank","","","house.gif","house.gif"]);
+stm_ep();
+stm_ep();
+stm_em();
+
+
+                    </script>
+</td>
     <td align="right" id="phpshop">
 	<a href="http://www.phpshop.ru" target="_blank" class="phpshop" title="Все права защищены
 © www.PHPShop.ru">
@@ -347,89 +424,89 @@ $Lang;?>/menu.js"></script>
 	 <td style="padding-left:12">
 	<table cellpadding="0" cellspacing="0">
 <tr>
-    <td id="but0"  class="butoff"><img name="iconLang" src="icon/folder_images.gif" alt="Каталог" width="16" height="16" border="0" onmouseover="ButOn(0)" onmouseout="ButOff(0)" onclick="DoReload('cat_prod')" ></td>
+    <td id="but0"  class="butoff"><img name="iconLang" src="icon/folder_images.gif" alt="Каталог" title="Каталог" width="16" height="16" border="0" onmouseover="ButOn(0)" onmouseout="ButOff(0)" onclick="DoReload('cat_prod')" ></td>
    <td width="3"></td>
   <td width="1" bgcolor="#ffffff"></td>
    <td width="1" bgcolor="#808080" ></td>
    <td width="3"></td>
-   <td id="but3"  class="butoff"><img name="iconLang" src="icon/creditcards.gif" alt="Заказы" width="16" height="16" border="0" onmouseover="ButOn(3)" onmouseout="ButOff(3)" onclick="DoReload('orders')"></td>
+   <td id="but3"  class="butoff"><img name="iconLang" src="icon/creditcards.gif" alt="Заказы" title="Заказы" width="16" height="16" border="0" onmouseover="ButOn(3)" onmouseout="ButOff(3)" onclick="DoReload('orders')"></td>
  <td width="3"></td>
-   <td id="but18"  class="butoff"><img name="iconLang" src="icon/chart_bar.gif" alt="Отчеты" width="16" height="16" border="0" onmouseover="ButOn(18)" onmouseout="ButOff(18)" onclick="DoReload('stats1')"></td>
+   <td id="but18"  class="butoff"><img name="iconLang" src="icon/chart_bar.gif" alt="Отчеты" title="Отчеты"  width="16" height="16" border="0" onmouseover="ButOn(18)" onmouseout="ButOff(18)" onclick="DoReload('stats1')"></td>
   <td width="3"></td>
   <td width="1" bgcolor="#ffffff"></td>
    <td width="1" bgcolor="#808080" ></td>
    <td width="3"></td>
-   <td id="but4"  class="butoff"><img name="iconLang" src="icon/page_code.gif" alt="Загрузка прайса" width="16" height="16" border="0" onmouseover="ButOn(4)" onmouseout="ButOff(4)" onclick="DoReload('csv')"></td>
+   <td id="but4"  class="butoff"><img name="iconLang" src="icon/page_code.gif" alt="Загрузка прайса" title="Загрузка прайса" width="16" height="16" border="0" onmouseover="ButOn(4)" onmouseout="ButOff(4)" onclick="DoReload('csv')"></td>
  <td width="3"></td>
-    <td id="but104"  class="butoff"><img name="iconLang" src="icon/1c_icon.gif" alt="Загрузка 1C:Предприятие" width="16" height="16" border="0" onmouseover="ButOn(104)" onmouseout="ButOff(104)" onclick="DoReload('csv1c')"></td>
+    <td id="but104"  class="butoff"><img name="iconLang" src="icon/1c_icon.gif" alt="Загрузка 1C:Предприятие" title="Загрузка 1C:Предприятие"  width="16" height="16" border="0" onmouseover="ButOn(104)" onmouseout="ButOff(104)" onclick="DoReload('csv1c')"></td>
  <td width="3"></td>
-   <td id="but5"  class="butoff"><img name="iconLang" src="icon/page_save.gif" alt="Выгрузка прайса" width="16" height="16" border="0" onmouseover="ButOn(5)" onmouseout="ButOff(5)" onclick="miniWin('export/adm_csv.php?IDS=all',300,300)"></td>
+   <td id="but5"  class="butoff"><img name="iconLang" src="icon/page_save.gif" alt="Выгрузка прайса" title="Выгрузка прайса" width="16" height="16" border="0" onmouseover="ButOn(5)" onmouseout="ButOff(5)" onclick="miniWin('export/adm_csv.php?IDS=all',300,300)"></td>
 <td width="3"></td>
   <td width="1" bgcolor="#ffffff"></td>
    <td width="1" bgcolor="#808080" ></td>
    <td width="3"></td>
-   <td id="but6"  class="butoff"><img name="iconLang" src="icon/joystick.gif" alt="Системные настройки" width="16" height="16" border="0" onmouseover="ButOn(6)" onmouseout="ButOff(6)" onclick="miniWin('system/adm_system.php',600,450)"></td>
+   <td id="but6"  class="butoff"><img name="iconLang" src="icon/joystick.gif" alt="Системные настройки" title="Системные настройки" width="16" height="16" border="0" onmouseover="ButOn(6)" onmouseout="ButOff(6)" onclick="miniWin('system/adm_system.php',600,450)"></td>
 <td width="3"></td>
-<td id="butxhtml"  class="butoff"><img name="iconLang" src="icon/xhtml.gif" alt="Keywords & Titles" width="16" height="16" border="0" onmouseover="ButOn('xhtml')" onmouseout="ButOff('xhtml')" onclick="miniWin('system/adm_system_promo.php',650,630)"></td>
+<td id="butxhtml"  class="butoff"><img name="iconLang" src="icon/xhtml.gif" alt="Keywords & Titles" title="Keywords & Titles"  width="16" height="16" border="0" onmouseover="ButOn('xhtml')" onmouseout="ButOff('xhtml')" onclick="miniWin('system/adm_system_promo.php',650,630)"></td>
 <td width="3"></td>
- <td id="but7"  class="butoff"><img name="iconLang" src="icon/telephone.gif" alt="Реквизиты" width="16" height="16" border="0" onmouseover="ButOn(7)" onmouseout="ButOff(7)" onclick="miniWin('system/adm_system_recvizit.php',500,500)"></td>
-<td width="3"></td>
-   <td width="1" bgcolor="#ffffff"></td>
-   <td width="1" bgcolor="#808080" ></td>
-   <td width="3"></td>
-   <td id="but8"  class="butoff"><img name="iconLang" src="icon/page.gif" alt="Страницы" width="16" height="16" border="0" onmouseover="ButOn(8)" onmouseout="ButOff(8)" onclick="DoReload('page_site_catalog')"></td>
- <td width="3"></td>
-   <td id="but9"  class="butoff"><img name="iconLang" src="icon/page_lightning.gif" alt="Новости" width="16" height="16" border="0" onmouseover="ButOn(9)" onmouseout="ButOff(9)" onclick="DoReload('news')"></td>
- <td width="3"></td>
-   <td id="but10"  class="butoff"><img name="iconLang" src="icon/page_refresh.gif" alt="Баннеры" width="16" height="16" border="0" onmouseover="ButOn(10)" onmouseout="ButOff(10)" onclick="DoReload('baner')"></td>
- <td width="3"></td>
-   <td id="but11"  class="butoff"><img name="iconLang" src="icon/page_attach.gif" alt="Текстовые блоки" width="16" height="16" border="0" onmouseover="ButOn(11)" onmouseout="ButOff(11)" onclick="DoReload('page_menu')"></td>
-<td width="3"></td>
-   <td id="but12"  class="butoff"><img name="iconLang" src="icon/page_error.gif" alt="Отзывы" width="16" height="16" border="0" onmouseover="ButOn(12)" onmouseout="ButOff(12)" onclick="DoReload('gbook')"></td>
-<td width="3"></td>
-   <td id="but14"  class="butoff"><img name="iconLang" src="icon/page_link.gif" alt="Ссылки" width="16" height="16" border="0" onmouseover="ButOn(14)" onmouseout="ButOff(14)" onclick="DoReload('links')"></td>
-<td width="3"></td>
-   <td id="but21"  class="butoff"><img name="iconLang" src="icon/page_edit.gif" alt="Опросы" width="16" height="16" border="0" onmouseover="ButOn(21)" onmouseout="ButOff(21)" onclick="DoReload('opros')"></td>
-<td width="3"></td>
-   <td id="but45"  class="butoff"><img name="iconLang" src="icon/page_key.gif" alt="Комментарии" width="16" height="16" border="0" onmouseover="ButOn(45)" onmouseout="ButOff(45)" onclick="DoReload('comment')"></td>
-<td width="3"></td>
-   <td id="but60"  class="butoff"><img name="iconLang" src="icon/page_rating.gif" alt="Рейтинги" width="16" height="16" border="0" onmouseover="ButOn(60)" onmouseout="ButOff(60)" onclick="DoReload('rating')"></td>
+ <td id="but7"  class="butoff"><img name="iconLang" src="icon/telephone.gif" alt="Реквизиты" title="Реквизиты" width="16" height="16" border="0" onmouseover="ButOn(7)" onmouseout="ButOff(7)" onclick="miniWin('system/adm_system_recvizit.php',500,500)"></td>
 <td width="3"></td>
    <td width="1" bgcolor="#ffffff"></td>
    <td width="1" bgcolor="#808080" ></td>
    <td width="3"></td>
-     <td id="but41"  class="butoff"><img name="iconLang" src="icon/group.gif" alt="Пользователи" width="16" height="16" border="0" onmouseover="ButOn(41)" onmouseout="ButOff(41)" onclick="DoReload('shopusers')"></td>
+   <td id="but8"  class="butoff"><img name="iconLang" src="icon/page.gif" alt="Страницы" title="Страницы" width="16" height="16" border="0" onmouseover="ButOn(8)" onmouseout="ButOff(8)" onclick="DoReload('page_site_catalog')"></td>
+ <td width="3"></td>
+   <td id="but9"  class="butoff"><img name="iconLang" src="icon/page_lightning.gif" alt="Новости" title="Новости" width="16" height="16" border="0" onmouseover="ButOn(9)" onmouseout="ButOff(9)" onclick="DoReload('news')"></td>
+ <td width="3"></td>
+   <td id="but10"  class="butoff"><img name="iconLang" src="icon/page_refresh.gif" alt="Баннеры" title="Баннеры" width="16" height="16" border="0" onmouseover="ButOn(10)" onmouseout="ButOff(10)" onclick="DoReload('baner')"></td>
+ <td width="3"></td>
+   <td id="but11"  class="butoff"><img name="iconLang" src="icon/page_attach.gif" alt="Текстовые блоки" title="Текстовые блоки"  width="16" height="16" border="0" onmouseover="ButOn(11)" onmouseout="ButOff(11)" onclick="DoReload('page_menu')"></td>
 <td width="3"></td>
-  <td id="but42"  class="butoff"><img name="iconLang" src="icon/user.gif" alt="Администраторы" width="16" height="16" border="0" onmouseover="ButOn(42)" onmouseout="ButOff(42)" onclick="DoReload('users')"></td>
+   <td id="but12"  class="butoff"><img name="iconLang" src="icon/page_error.gif" alt="Отзывы" width="16"  title="Отзывы" height="16" border="0" onmouseover="ButOn(12)" onmouseout="ButOff(12)" onclick="DoReload('gbook')"></td>
+<td width="3"></td>
+   <td id="but14"  class="butoff"><img name="iconLang" src="icon/page_link.gif" alt="Ссылки" width="16" title="Ссылки"  height="16" border="0" onmouseover="ButOn(14)" onmouseout="ButOff(14)" onclick="DoReload('links')"></td>
+<td width="3"></td>
+   <td id="but21"  class="butoff"><img name="iconLang" src="icon/page_edit.gif" alt="Опросы" title="Опросы" width="16" height="16" border="0" onmouseover="ButOn(21)" onmouseout="ButOff(21)" onclick="DoReload('opros')"></td>
+<td width="3"></td>
+   <td id="but45"  class="butoff"><img name="iconLang" src="icon/page_key.gif" alt="Комментарии" title="Комментарии" width="16" height="16" border="0" onmouseover="ButOn(45)" onmouseout="ButOff(45)" onclick="DoReload('comment')"></td>
+<td width="3"></td>
+   <td id="but60"  class="butoff"><img name="iconLang" src="icon/page_rating.gif" alt="Рейтинги"  title="Рейтинги" width="16" height="16" border="0" onmouseover="ButOn(60)" onmouseout="ButOff(60)" onclick="DoReload('rating')"></td>
+<td width="3"></td>
+   <td width="1" bgcolor="#ffffff"></td>
+   <td width="1" bgcolor="#808080" ></td>
    <td width="3"></td>
-   <td id="but43"  class="butoff"><img name="iconLang" src="icon/vcard.gif" alt="Журнал авторизации" width="16" height="16" border="0" onmouseover="ButOn(43)" onmouseout="ButOff(43)" onclick="DoReload('users_jurnal')"></td>
+     <td id="but41"  class="butoff"><img name="iconLang" src="icon/group.gif" alt="Пользователи" title="Пользователи" width="16" height="16" border="0" onmouseover="ButOn(41)" onmouseout="ButOff(41)" onclick="DoReload('shopusers')"></td>
+<td width="3"></td>
+  <td id="but42"  class="butoff"><img name="iconLang" src="icon/user.gif" alt="Администраторы"  title="Администраторы" width="16" height="16" border="0" onmouseover="ButOn(42)" onmouseout="ButOff(42)" onclick="DoReload('users')"></td>
    <td width="3"></td>
-    <td id="but44"  class="butoff"><img name="iconLang" src="icon/page_find.gif" alt="Журнал поиска" width="16" height="16" border="0" onmouseover="ButOn(44)" onmouseout="ButOff(44)" onclick="DoReload('search_jurnal')"></td>
+   <td id="but43"  class="butoff"><img name="iconLang" src="icon/vcard.gif" alt="Журнал авторизации" title="Журнал авторизации" width="16" height="16" border="0" onmouseover="ButOn(43)" onmouseout="ButOff(43)" onclick="DoReload('users_jurnal')"></td>
+   <td width="3"></td>
+    <td id="but44"  class="butoff"><img name="iconLang" src="icon/page_find.gif" alt="Журнал поиска" title="Журнал поиска"  width="16" height="16" border="0" onmouseover="ButOn(44)" onmouseout="ButOff(44)" onclick="DoReload('search_jurnal')"></td>
    <td width="3"></td>
    <td width="1" bgcolor="#ffffff"></td>
    <td width="1" bgcolor="#808080" ></td>
    <td width="3"></td>
-      <td id="but15"  class="butoff"><img name="iconLang" src="icon/database_key.gif" alt="SQL" width="16" height="16" border="0" onmouseover="ButOn(15)" onmouseout="ButOff(15)" onclick="miniWin('sql/adm_sql.php',500,400)"></td>
+      <td id="but15"  class="butoff"><img name="iconLang" src="icon/database_key.gif" alt="SQL" title="SQL" width="16" height="16" border="0" onmouseover="ButOn(15)" onmouseout="ButOff(15)" onclick="miniWin('sql/adm_sql.php',500,400)"></td>
 <td width="3"></td>
-      <td id="but22"  class="butoff"><img name="iconLang" src="icon/database_save.gif" alt="Создание резевной копии" width="16" height="16" border="0" onmouseover="ButOn(22)" onmouseout="ButOff(22)" onclick="miniWin('dumper/dumper.php',500,430)"></td>
+      <td id="but22"  class="butoff"><img name="iconLang" src="icon/database_save.gif" alt="Создание резевной копии" title="Создание резевной копии" width="16" height="16" border="0" onmouseover="ButOn(22)" onmouseout="ButOff(22)" onclick="miniWin('dumper/dumper.php',500,430)"></td>
 <td width="3"></td>
 <td width="1" bgcolor="#ffffff"></td>
    <td width="1" bgcolor="#808080" ></td>
    <?if($SysValue['cnstats']['enabled'] == "true"){?>
     <td width="3"></td>
-    <td id="but40"  class="butoff"><img name="iconLang" src="icon/chart_curve.gif" alt="Статистика" width="16" height="16" border="0" onmouseover="ButOn(40)" onmouseout="ButOff(40)" onclick="window.open('/cnstats/')"></td>
+    <td id="but40"  class="butoff"><img name="iconLang" src="icon/chart_curve.gif" alt="Статистика" title="Статистика" width="16" height="16" border="0" onmouseover="ButOn(40)" onmouseout="ButOff(40)" onclick="window.open('/cnstats/')"></td>
 <?}?>
    <td width="3"></td>
-   <td id="but17"  class="butoff"><img name="iconLang" src="icon/house.gif" alt="Магазин" width="16" height="16" border="0" onmouseover="ButOn(17)" onmouseout="ButOff(17)" onclick="window.open('../../')"></td>
+   <td id="but17"  class="butoff"><img name="iconLang" src="icon/house.gif" alt="Магазин" title="Магазин" width="16" height="16" border="0" onmouseover="ButOn(17)" onmouseout="ButOff(17)" onclick="window.open('../../')"></td>
  <td width="3"></td>
-    <td id="but16"  class="butoff"><img name="iconLang" src="icon/door.gif" alt="Выход" width="16" height="16" border="0" onmouseover="ButOn(16)" onmouseout="ButOff(16)" onclick="window.close()"></td>
+    <td id="but16"  class="butoff"><img name="iconLang" src="icon/door.gif" alt="Выход" title="Выход" width="16" height="16" border="0" onmouseover="ButOn(16)" onmouseout="ButOff(16)" onclick="window.close()"></td>
 <td width="3"></td>
 <? if ($option['helper_enabled']==1) {?>
-    <td id="but99"  class="butoff"><img name="iconLang" src="icon/question_frame.png" alt="Быстрая справка" width="16" height="16" border="0" onmouseover="ButOn(99)" onmouseout="ButOff(99)" onclick="initSlide(0);loadhelp();"></td>
+    <td id="but99"  class="butoff"><img name="iconLang" src="icon/question_frame.png" alt="Быстрая справка" title="Быстрая справка" width="16" height="16" border="0" onmouseover="ButOn(99)" onmouseout="ButOff(99)" onclick="initSlide(0);loadhelp();"></td>
 <td width="3"></td>
 <?}?>
 <? if ($support_status=="active" and $option['update_enabled'] == 1) {?>
-    <td id="but100"  class="butoff"><img name="iconLang" src="icon/update.gif" alt="Доступно обновление" title="Доступно обновление" width="16" height="16" border="0" onmouseover="ButOn(100)" onmouseout="ButOff(100)" onclick="ChekUpdate('true');"></td>
+    <td id="but100"  class="butoff"><img name="iconLang" src="icon/update.gif" alt="Доступно обновление"  title="Доступно обновление" width="16" height="16" border="0" onmouseover="ButOn(100)" onmouseout="ButOff(100)" onclick="ChekUpdate('true');"></td>
 <td width="3"></td>
 <?}?> 
 </tr>
@@ -473,11 +550,19 @@ function ButOffHelp() {document.getElementById("slidebutt").style.background="#d
 
 // Fix bug FF
 if(empty($_GET['page'])) $_GET['page']='orders';
+
+
+// Поддержка модулей CMS Free
+if(!empty($_GET['plugin'])){
+    $_GET['page']='modules';
+    $_GET['var1']=$_GET['plugin'];
+    $_GET['var2']=base64_encode($_SERVER['QUERY_STRING']);
+}
 ?>
 
 <div align="center" id="interfaces" name="interfaces">
 <script>
-setTimeout("DoReload('<?=$_GET['page']?>')",500);
+setTimeout("DoReload('<?=$_GET['page']?>','<?=$_GET['var1']?>','<?=$_GET['var2']?>')",500);
 </script>
 </div>
 <div id="CSCHint"></div>

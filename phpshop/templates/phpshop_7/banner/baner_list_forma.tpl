@@ -1,7 +1,5 @@
- <div class="plashka_center">
-				<div class="plashka_zag">@banerTitle@</div>
-			</div>
-<div align="center" style="padding:10px;">@banerContent@</div>
-
-
-		
+<div class="bannerLine"></div>
+<div class="specTitleDiv">
+    <div class="specTitDiv1">@banerTitle@</div>
+</div>
+@banerContent@

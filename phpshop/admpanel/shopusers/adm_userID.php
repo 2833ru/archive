@@ -123,7 +123,7 @@ DoResize(<? echo $GetSystems['width_icon']?>,500,580);
 	<td width="10"></td>
 	<td><input type="text" name="login_new" value="<?=$login?>" style="width:250px;" ></td>
 	<td rowspan="2" valign="top" style="padding-left:10">
-	<button style="width: 14em; height: 2.2em; margin-left:5"  onclick="location.replace('../order/adm_visitor_new.php?userAdd=<?=$id?>')">
+	<button style="width: 14em; height: 2.2em; margin-left:5"  onclick="location.replace('../order/adm_visitor_new.php?userAdd=<?=$id?>');return false;">
 <img src="../img/page_attachment.gif" border="0" align="absmiddle" hspace=5>
 	<span name=txtLang id=txtLang>Новый заказ</span></button>
 	</div>

@@ -53,15 +53,20 @@ function DispCategoryParent($cat)// вывод категорий для каталогов
 }
 
 
-// Secure Fix 6.0
+// Secure Fix 6.2
 function CleanSearch($search) {
+    $count=strlen($search);
     $search=strtolower($search);
-    $search=str_replace("'", "", $search);
-    if (preg_match("/union/i", $search)) $search = str_replace("union", "", $search);
-    if (preg_match("/select/i", $search)) $search = str_replace("select", "", $search);
-    if (preg_match("/insert/i", $search)) $search = str_replace("insert", "", $search);
-    if (preg_match("/delete/i", $search)) $search = str_replace("delete", "", $search);
-    if (preg_match("/update/i", $search)) $search = str_replace("update", "", $search);
+    $i=0;
+    while($i<($count/7)){
+    $search = str_replace("'", "", $search);
+    $search = str_replace("union", "", $search);
+    $search = str_replace("select", "", $search);
+    $search = str_replace("insert", "", $search);
+    $search = str_replace("delete", "", $search);
+    $search = str_replace("update", "", $search);
+    $i++;
+    }
     return $search;
 }
 
@@ -143,7 +148,7 @@ function Page_search($words,$cat)// Создание страниц
     else while($q<$p) {
             if($set==1)
                 $sql="select * from ".$SysValue['base']['table_name2']." where enabled='1' and $string  $sort id!=0 $prewords $sortV GROUP BY name LIMIT $num_ot, $num_row";
-            else $sql="select * from ".$SysValue['base']['table_name2']." where enabled='1' and $string $sort id=0 $prewords $sortV GROUP BY name LIMIT $num_ot, $num_row";
+            else $sql="select * from ".$SysValue['base']['table_name2']." where enabled='1' and $string ($sort id=0) $prewords $sortV GROUP BY name LIMIT $num_ot, $num_row";
             $q++;
             $num_ot=$num_ot+$num_row;
         }
@@ -233,7 +238,7 @@ function SearchNav($words,$cat)// Навигация
     $i=1;
     if($set == 1)
         $num_page=NumFrom("table_name2","where $string $sort id!=0 $prewords $sortV and enabled='1'");
-    else $num_page=NumFrom("table_name2","where $string $sort id=0 $prewords $sortV and enabled='1'");
+    else $num_page=NumFrom("table_name2","where $string ($sort id=0) $prewords $sortV and enabled='1'");
 
 // пишем в журнал
     $SearchJurnalWrite=SearchJurnalWrite($words,$num_page,$cat,$set);

@@ -658,20 +658,6 @@ tabPane.addTabPage( document.getElementById( \"regim\" ) );
 </tr>
 </table>
 </div>
-<div class=\"tab-page\" id=\"lang\" style=\"height:250px\">
-<h2 class=\"tab\"><span name=txtLang id=txtLang>Язык</span></h2>
-
-<script type=\"text/javascript\">
-tabPane.addTabPage( document.getElementById( \"lang\" ) );
-</script>
-<table>
-<tr>
-	<td><span name=txtLang id=txtLang>Административная панель</span>:</td>
-	<td>".GetLang($option['lang'])."</td>
-</tr>
-</table>
-
-</div>
 <div class=\"tab-page\" id=\"user\" style=\"height:250px\">
 <h2 class=\"tab\"><span name=txtLang id=txtLang>Пользователи</span></h2>
 

@@ -222,7 +222,7 @@ $F=CloseUrlFile($f);
 @$file_list.="
 <tr>
 	<td id=allspecwhite><a href=\"../files/filesSave.php?F=$F\" class=b title=\"".$SysValue['lang']['load']." ".$_Name['basename']."\"><img src=\"images/shop/action_save.gif\"  width=16 height=16 border=0 align=\"absmiddle\" hspace=5>".$_Name['basename']."</a></td>
-	<td id=allspecwhite>".round($fstat['size']/100)." Κα</td>
+	<td id=allspecwhite>".round($fstat['size']/1000)." Κα</td>
 </tr>
 ";
 }

@@ -21,6 +21,8 @@ $time=$code['time'];
 $file_1="../".$files;
 $_Name=pathinfo($file_1);
 
+if(in_array($_Name['extension'],array('php','ini','html','tpl'))) exit('<h3>Запрещенный формат...</h3>');
+
 if($time>date("U")){
 if(file_exists($file_1)){
     header("Content-Description: File Transfer"); 

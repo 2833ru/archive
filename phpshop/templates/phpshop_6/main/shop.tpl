@@ -60,7 +60,7 @@
                                                                     </table><input type="hidden" value="1" name="user_enter"></form></div></div><table cellpadding="0" cellspacing="0" border="0" width="100%" height="59">
                                                             <tbody>
                                                                 <tr>
-                                                                    <td width="30%" align="left" valign="middle"><div class="user_div_1"><span class="user_text_1"><a href="javascript:avtorizationOn('userform');">авторизация</a></span><span class="user_text_2">&nbsp; / &nbsp;</span><span class="user_text_1"><a href="/users/register.html" title="регистрация">регистрация</a></span></div></td>
+                                                                    <td width="30%" align="left" valign="middle"><div class="user_div_1" id="topUser"><span class="user_text_1"><a href="javascript:avtorizationOn('userform');">авторизация</a></span><span class="user_text_2">&nbsp; / &nbsp;</span><span class="user_text_1"><a href="/users/register.html" title="регистрация">регистрация</a></span></div></td>
                                                                     <td width="70%" align="right" valign="middle"><div>
                                                                             <div class="order_div_5"><a href="/order/" class="order_link_1"><img src="images/bt-template_05.png" width="27" height="28" border="0" class="iePNG"></a></div>
                                                                             <div class="order_div_4"><div class="order_div_6" ><a href="/order/" class="order_link_1"><span class="user_order_2"id="sum">@sum@</span>&nbsp;<a href="/order/" class="order_link_1"><span class="user_order_2">@productValutaName@</span></a></div></div>
@@ -74,7 +74,11 @@
                                                                         </div></td>
                                                                 </tr>
                                                             </tbody>
-                                                        </table></td>
+                                                        </table>@php
+if(isset($_SESSION['UsersId'])){
+	echo "<script type='text/javascript'>var topUser = document.getElementById('topUser'); topUser.style.display = 'none';</script>";
+}
+php@</td>
                                                     <td align="left" valign="top"><div class="headerdiv_right"></div></td>
                                                 </tr>
                                                 <tr>
@@ -170,6 +174,7 @@
                                                     </table><div class="textBlokLeft_1">Последние новости
                                                     </div><div class="textBlokLeft_2">@miniNews@</div>
                                                     @leftMenu@
+                                                    @oprosDisp@
                                                     @calendar@
                                                     @cloud@</td>
                                                 <td><div class="centerdiv_center"></div></td>

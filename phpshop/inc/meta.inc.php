@@ -256,8 +256,16 @@ $params['_W2'] = 4;  //minimum length of words for 2 word phrases
 $params['_W3'] = 3;  //minimum length of words for 3 word phrases
 $params['_P2'] = 12; //minimum length of 2 word phrases
 $params['_P3'] = 15; //minimum length of 3 word phrases
-$return = $keyword->autokeyword($params);
-return $return;
+$max_words=12; // лимит
+$string = $keyword->autokeyword($params);
+
+// Обрезаем до 12 слов
+$words=explode(',', $string, $max_words+1);
+array_pop($words);
+foreach($words as $val)
+    if(!empty($val)) $return.=$val.",";
+
+return substr($return,0,-1);
 }
 
 // Определяем переменые

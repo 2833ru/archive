@@ -36,9 +36,10 @@ $cart=$CART['cart'];
 $kurs=$CART['kurs'];
 $n=1;
   if(sizeof($cart)!=0)
-  foreach(@$cart as $val){
+  foreach(@$cart as $key=>$val){
+  	$key  = base64_encode(base64_encode($key));
   $disCart.="
-<tr class=row3 onmouseover=\"show_on('r".$val['id']."')\" id=\"r".$val['id']."\" onmouseout=\"show_out('r".$val['id']."')\" onclick=\"miniWin('adm_order_productID.php?orderId=".$_REQUEST['uid']."&xid=".$val['id']."',400,300,event)\">
+<tr class=row3 onmouseover=\"show_on('r".$key."')\" id=\"r".$key."\" onmouseout=\"show_out('r".$key."')\" onclick=\"miniWin('adm_order_productID.php?orderId=".$_REQUEST['uid']."&xid=".$key."',400,300,event)\">
  <td style=\"padding:3\">$n</td> 
   <td style=\"padding:3\">".$val['uid']."</td>
   <td style=\"padding:3\">".$val['name']."</td>
@@ -249,13 +250,27 @@ switch($do){
 	  $row = mysql_fetch_array($result);
       $order=unserialize($row['orders']);
 	  $num=mysql_num_rows($result);
-	  unset($order['Cart']['cart'][$_REQUEST['xid']]);
+	  /////
+	  $xid = base64_decode(base64_decode($_REQUEST['xid']));
+	  /*
+	  foreach ($order['Cart']['cart'] as $key=>$value) {
+	  	if ($key == $xid){
+	  		//////////////////////$interfaces .= "гар!!!!";
+	  		unset($order['Cart']['cart'][$key]);
+	  	}
+	  	
+	  }
+	  */
+	  unset($order['Cart']['cart'][$xid]);
+	  
 	  $order['Cart']['sum']=UpdateSummaOrder($order['Cart']['cart']);
 	  $sql="UPDATE $table_name1
       SET
       orders='".serialize($order)."'
       where id='".$_REQUEST['uid']."'";
       $result2=mysql_query($sql);
+     
+      
 	  $interfaces="
 	  <table cellpadding=\"0\" cellspacing=\"1\" width=\"100%\" border=\"0\" bgcolor=\"#808080\">
 <tr>
@@ -278,10 +293,11 @@ switch($do){
 	  $row = mysql_fetch_array($result);
       $order=unserialize($row['orders']);
 	  $num=mysql_num_rows($result);
-	  $order['Cart']['cart'][$_REQUEST['xid']]['name']=$_REQUEST['name'];
-	  $order['Cart']['cart'][$_REQUEST['xid']]['num']=$_REQUEST['num'];
+	  $xid = base64_decode(base64_decode($_REQUEST['xid']));
+	  $order['Cart']['cart'][$xid]['name']=$_REQUEST['name'];
+	  $order['Cart']['cart'][$xid]['num']=$_REQUEST['num'];
 	  $kurs=GetKursOrder();
-	  $order['Cart']['cart'][$_REQUEST['xid']]['price']=$_REQUEST['price']/$kurs;
+	  $order['Cart']['cart'][$xid]['price']=$_REQUEST['price']/$kurs;
 	  $order['Cart']['sum']=UpdateSummaOrder($order['Cart']['cart']);
 	  $sql="UPDATE $table_name1
       SET

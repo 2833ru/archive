@@ -281,8 +281,9 @@ a:active {
 }
 .link_userroom_9 a{
 	font-family: Arial;
-	font-size: 12px;
+	font-size: 14px;
 	color: #336699;
+	font-weight: 600;
 }
 .link_userroom_9 a:link {
 	color: #336699;
@@ -2558,6 +2559,9 @@ input.ok_price{
 }
 #parentId{
 	width: 100%;
+}
+div.full-links{
+	padding-top:15px;
 }
 *html #parentId{
 	*width:auto;

@@ -46,10 +46,10 @@ if(!empty($row[$pole])) return $row[$pole];
 
 
 // Характеристики
-function Sorts()
+function Sorts($sql=false)
  {
 global $SysValue;
-$sql="select * from ".$SysValue['base']['table_name21'];
+$sql="select * from ".$SysValue['base']['table_name21'].$sql;
 $result=mysql_query($sql) or  die("".PHPSHOP_error(102,$SysValue['my']['error_tracer'])."");
 $Sorts='';
 while ($row = mysql_fetch_array($result))

@@ -497,7 +497,8 @@ function getExt($sFileName)//ffilter
         }
     }
     $pos=stristr($sFileName, "php");
-    if($pos === false) return strtolower($sExt);
+    $pos2=stristr($sFileName, "phtm");
+    if($pos === false and $pos2 === false) return strtolower($sExt);
 }
 
 require_once "../../lib/JsHttpRequest/JsHttpRequest.php";

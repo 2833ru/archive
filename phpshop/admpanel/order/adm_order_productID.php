@@ -60,8 +60,8 @@ $row = mysql_fetch_array($result);
 	$order=unserialize($row['orders']);
 	$status=unserialize($row['status']);
 
-
-	
+	$xid = base64_decode(base64_decode($xid));
+	echo $xid;
 echo "
 
 <form method=\"post\" id=\"product_edit\">
@@ -116,8 +116,8 @@ echo "
 <table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" height=\"50\" >
 <tr>
 	<td align=\"right\" style=\"padding:10\">
-<input type=button value=\"ОК\"  id=btnOk  style=\"width: 7em; height: 2.2em;\" onClick=\"DoUpdateFromOrder($xid,$orderId,this.form.name_new.value,this.form.num_new.value,this.form.price_new.value);\">
-<input type=\"button\" class=but id=btnRemove value=\"Удалить\" onClick=\"DoDelFromOrder($xid, $orderId);\">
+<input type=button value=\"ОК\"  id=btnOk  style=\"width: 7em; height: 2.2em;\" onClick=\"DoUpdateFromOrder('".base64_encode(base64_encode($xid))."',$orderId,this.form.name_new.value,this.form.num_new.value,this.form.price_new.value);\">
+<input type=\"button\" class=but id=btnRemove value=\"Удалить\" onClick=\"DoDelFromOrder('".base64_encode(base64_encode($xid))."', $orderId);\">
 	<input type=submit id=btnCancel value=Отмена class=but onClick=\"return onCancel();\">
 
 	</td>

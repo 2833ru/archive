@@ -9,6 +9,22 @@ $GetSystems=GetSystems();
 $option=unserialize($GetSystems['admoption']);
 $Lang=$option['lang'];
 require("../language/".$Lang."/language.php");
+
+// Проверка расширения файла
+function getExt($sFileName)//ffilter
+{
+    $sTmp=$sFileName;
+    while($sTmp!="") {
+        $sTmp=strstr($sTmp,".");
+        if($sTmp!="") {
+            $sTmp=substr($sTmp,1);
+            $sExt=$sTmp;
+        }
+    }
+    $pos=stristr($sFileName, "php");
+    $pos2=stristr($sFileName, "phtm");
+    if($pos === false and $pos2 === false) return strtolower($sExt);
+}
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -56,25 +72,25 @@ echo"
 ";
 if(@$sql_file){
 if(CheckedRules($UserStatus["sql"],1) == 1){
-@copy("$csv_file","../csv/$csv_file_name");
-@$fp = fopen("../csv/$csv_file_name", "r");
 
-  if ($fp) {
-  //stream_set_write_buffer($fp, 0);
-  $fstat = fstat($fp);
-  $CsvContent=fread($fp,$fstat['size']);
-  //$CsvContent=addslashes($CsvContent);
-  //$CsvContent=str_replace("`", "", $CsvContent);
-  //$CsvContent=str_replace("\"", "", $CsvContent);
-  //$CsvContent=addslashes($CsvContent);
-  //$CsvContent=str_replace("\r\n","", $CsvContent);
-  //$CsvContent=addcslashes($CsvContent,"\0..\37");
-  fclose($fp);
-  }
+
+// Расширение
+$_FILES['file']['ext']=getExt($_FILES['file']['name']);
+
+if($_FILES['file']['ext']=="sql") {
+
+// Загружаем
+    $copy_file="../csv/".@$_FILES['file']['name'];
+    if(move_uploaded_file(@$_FILES['file']['tmp_name'], $copy_file))
+
+if (is_file($copy_file)) {
+        $CsvContent=file_get_contents($copy_file);
+
 $IdsArray2=split(";\r",$CsvContent);
 array_pop($IdsArray2);
 while (list($key, $val) = each($IdsArray2))
 $result=mysql_query($val);
+}}
 
 if(@$result) $disp= "><strong> MySQL: запрос выполнен.</strong>";
 else $disp="<strong>> MySQL: </strong>".mysql_error()."";
@@ -120,7 +136,7 @@ $bases2=ereg_replace("phpshop_system","",$bases);
 <tr>
 	<td>
 	<FIELDSET><LEGEND id=lgdLayout><span name=txtLang id=txtLang>Загрузка SQL</span></LEGEND>
-<DIV style="PADDING-RIGHT: 10px; PADDING-LEFT: 10px; PADDING-BOTTOM: 185px; PADDING-TOP: 10px"><span name=txtLang id=txtLang>Выберите файл с расширением</span> *.sql&nbsp;&nbsp; <INPUT type=file size=70 name=csv_file  id=csv_file>
+<DIV style="PADDING-RIGHT: 10px; PADDING-LEFT: 10px; PADDING-BOTTOM: 185px; PADDING-TOP: 10px"><span name=txtLang id=txtLang>Выберите файл с расширением</span> *.sql&nbsp;&nbsp; <INPUT type=file size=70 name=file  id=csv_file>
 </DIV></FIELDSET>
 
 	</td>

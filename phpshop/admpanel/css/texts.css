@@ -170,19 +170,31 @@ table.sortable span.sortarrow {
 	height: 20px;
 }
 #pane{
-	border: 1px;
-	border-style: outset;
-	background: ButtonFace;
-	text-align: center;
-	padding: 3;
+    border: 1px;
+    border-style: outset;
+    background: ButtonFace;
+    text-align: center;
+    padding: 3;
 }
+button.pane{
+    width:100%;
+}
+
+
+
+tr.row td {
+   padding: 5px;
+   cursor: help;
+}
+
+
 #rol td{
-	padding: 3;
+	padding: 5;
 	/*cursor: pointer;*/
 	background: White;
 }
 tr.row {
-   padding: 3;
+   padding: 5;
    background: White;
    cursor: help;
 }

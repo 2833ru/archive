@@ -1412,8 +1412,11 @@ while($row = mysql_fetch_array($result)){ //Перебор выбранных товаров
 
 
 //Корректное склеивание двух массивов
+if(is_array($save_arr))
+$vendor_new=$save_arr;
 $arr1=cleanArray($vendor_array); //Удаляем пустышки из массива
 $arr2=cleanArray($vendor_new); //Удаляем пустышки из массива
+$save_arr=$vendor_new;
 //print_r($arr1);
 //print_r($arr2);
 
@@ -1461,6 +1464,7 @@ foreach ($arr1 as $id=>$values) { //Перебор цикла
   $vendor_new=$arr3;
 
   if(is_array($vendor_new)) { //Если присланные новые характеристики массив
+	$vendor='';
     foreach($vendor_new as $k=>$v){ //Перебираем элементы присланного массив
          if(is_array($v)){ //Если выбраны несколько элементов
            foreach($v as $o=>$p) @$vendor.="i".$k."-".$p."i";
@@ -1473,6 +1477,7 @@ foreach ($arr1 as $id=>$values) { //Перебор цикла
   $sqll='UPDATE '.$table_name2.' SET vendor="'.$vendor.'", vendor_array="'.addslashes(serialize($vendor_new)).'" where id='.$idgood;
   $resultt=mysql_query($sqll);  
 //print_r($vendor_new);
+//echo $vendor;
 //echo '"'.$sqll.'"';
 
 } //Конец Перебор выбранных товаров

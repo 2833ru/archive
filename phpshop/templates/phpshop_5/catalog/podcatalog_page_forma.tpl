@@ -1,3 +1,5 @@
-<div style="padding-left:48;HEIGHT:32px;padding-top:3px;">
-<a href="/page/CID_@catalogUid@.html" class="black">@catalogName@</a>
+<div class="menuList33">
+<div class="menuList33Fone"><DIV style="cursor:pointer;" onClick="window.location.replace('/page/CID_@catalogUid@.html');">
+@catalogName@</DIV>
+	</div>
 </div>

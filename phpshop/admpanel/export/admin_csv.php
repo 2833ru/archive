@@ -211,20 +211,19 @@ function Ors($n){
 
 // Проверка расширения файла
 function getExt($sFileName)//ffilter
-	{
-	$sTmp=$sFileName;
-	while($sTmp!="") 
-		{
-		$sTmp=strstr($sTmp,".");
-		if($sTmp!="")
-			{
-			$sTmp=substr($sTmp,1);
-			$sExt=$sTmp;
-			}
-		}
-	$pos=stristr($sFileName, "php");
-    if($pos === false) return strtolower($sExt);
-	}
+{
+    $sTmp=$sFileName;
+    while($sTmp!="") {
+        $sTmp=strstr($sTmp,".");
+        if($sTmp!="") {
+            $sTmp=substr($sTmp,1);
+            $sExt=$sTmp;
+        }
+    }
+    $pos=stristr($sFileName, "php");
+    $pos2=stristr($sFileName, "phtm");
+    if($pos === false and $pos2 === false) return strtolower($sExt);
+}
 
 // Load JsHttpRequest backend.
 require_once "../../lib/JsHttpRequest/JsHttpRequest.php";

@@ -17,7 +17,7 @@ function Catalog() {
 <tr>
 	<td id=pane align=center width=\"295\"><img src=img/arrow_d.gif width=7 height=7 border=0 hspace=5 ><span name=txtLang id=txtLang>Каталоги</span></td>
     <td rowspan=2 valign=top width=\"100%\">
-<iframe id=interfacesWin1 src=\"catalog/admin_cat_content.php\" width=\"100%\" height=\"400\"  name=\"frame2\" frameborder=\"0\" scrolling=\"Auto\"></iframe>
+<iframe id=interfacesWin1 src=\"catalog/admin_cat_content.php\" width=\"100%\" height=\"400\"  name=\"frame2\" id=\"frame2\" frameborder=\"0\" scrolling=\"Auto\"></iframe>
 
 <div style=\"padding:5px\">
 <input type=\"hidden\" value=\"\" id=\"prevpanel_mem\">
@@ -33,7 +33,7 @@ function Catalog() {
 
 
 <tr valign=\"top\">
-	<td id=\"catalog_products\"><iframe id=interfacesWin2  src=\"catalog/tree.php\" width=\"300\"  height=\"550\"  scrolling=\"Auto\" name=\"frame1\"></iframe>
+	<td id=\"catalog_products\"><iframe id=interfacesWin2  src=\"catalog/tree.php\" width=\"300\"  height=\"550\"  scrolling=\"Auto\" name=\"frame1\" id=\"frame1\"></iframe>
 
 <div align=\"center\" style=\"padding:5\">
 <table cellpadding=\"0\" cellspacing=\"0\">

@@ -1,5 +1,4 @@
 <?
-require("bin.php");
 require("connect.php");
 
 // Secure Fix 6.0
@@ -40,7 +39,7 @@ $mes2="<br>Удалите все вхождения этой команды в водимой информации.";
 foreach($com as $v)
       if(@preg_match("/".$v."/i", $search)){
 	   $search=eregi_replace($v,"!!!$v!!!",$search);
-	   exit($mes." ".strtoupper($v).$mes2."<br><br><br><textarea style='width: 100%;height:50%'>".$search."</textarea><p>Команда к тексте выделена знаками !!! с обеих сторон</p>
+	   exit($mes." ".strtoupper($v).$mes2."<br><br><br><textarea style='width: 100%;height:50%'>".substr($search, 0, 11)."</textarea><p>Команда к тексте выделена знаками !!! с обеих сторон</p>
 <hr>
 <div align=right>
 <input type=button value=Вернуться onclick=\"history.back(1)\">
@@ -108,7 +107,7 @@ exit("Заблокировано для ".$REMOTE_ADDR);
 
 if(isset($pas_to_mail))
  {
-$log=htmlspecialchars(stripslashes($log));
+$log=htmlspecialchars(addslashes($log));
 $sql="select password,mail from $table_name19 where login='$log'";
 $result=mysql_query($sql);
 while($row = mysql_fetch_array($result)){
@@ -204,7 +203,7 @@ tmr = setTimeout("WO();",100);
 	  if(!@$logPHPSHOP){
 	  // Пишим в журнал
 $sql="INSERT INTO ".$SysValue['base']['table_name10']."
-VALUES ('','".htmlspecialchars(stripslashes($log."@".base64_decode($pas)))."','".date("d-m-y H:s a")."','1','$REMOTE_ADDR')";
+VALUES ('','".htmlspecialchars(addslashes($log."@".base64_decode($pas)))."','".date("d-m-y H:s a")."','1','$REMOTE_ADDR')";
 $result=mysql_query($sql);
 }
 	}

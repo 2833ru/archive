@@ -146,9 +146,10 @@ $kurs=$CART['kurs'];
 $n=1;
   if(sizeof($cart)!=0)
   if(is_array($cart))
-  foreach(@$cart as $val){
+  foreach(@$cart as $key=>$val){
+  	$key  = base64_encode(base64_encode($key));
   $disCart.="
-<tr class=row3 onmouseover=\"show_on('r".$val['id']."')\" id=\"r".$val['id']."\" onmouseout=\"show_out('r".$val['id']."')\" onclick=\"miniWin('adm_order_productID.php?orderId=$id&xid=".$val['id']."',400,300,event)\">
+<tr class=row3 onmouseover=\"show_on('r".$key."')\" id=\"r".$key."\" onmouseout=\"show_out('r".$key."')\" onclick=\"miniWin('adm_order_productID.php?orderId=$id&xid=".$key."',400,300,event)\">
  <td style=\"padding:3\">$n</td> 
   <td style=\"padding:3\">".$val['uid']."</td>
   <td style=\"padding:3\">".$val['name']."</td>

@@ -70,6 +70,12 @@ $row = mysql_fetch_array($result);
 
          if($с_option['update_category']==1) $update_category="checked";
 	 else $update_category="";
+
+         if($с_option['update_category']==1) $update_category="checked";
+	 else $update_category="";
+
+         if($с_option['update_sort']==1) $update_sort="checked";
+	 else $update_sort="";
 	 
 	
 echo"
@@ -150,6 +156,7 @@ tabPane.addTabPage( document.getElementById( \"sklad\" ) );
 	<input type=\"checkbox\" name=\"update_content_new\" value=\"1\" $update_content> Краткое описание <br>
         <input type=\"checkbox\" name=\"update_description_new\" value=\"1\" $update_description> Подробное описание <br>
         <input type=\"checkbox\" name=\"update_category_new\" value=\"1\" $update_category> Родительская категория <br>
+        <input type=\"checkbox\" name=\"update_sort_new\" value=\"1\" $update_sort> Характериcтики <br>
          <br>
 * Только для версий PHPShop Enterprise Pro 1C
 </div>
@@ -188,6 +195,7 @@ $с_option["update_name"]=$update_name_new;
 $с_option["update_content"]=$update_content_new;
 $с_option["update_description"]=$update_description_new;
 $с_option["update_category"]=$update_category_new;
+$с_option["update_sort"]=$update_sort_new;
 $с_option_new=serialize($с_option);
 
 

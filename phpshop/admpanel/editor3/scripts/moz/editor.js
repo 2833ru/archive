@@ -209,7 +209,7 @@ function InnovaEditor(oName)
     this.btnNumbering=true;this.btnBullets=true;this.btnIndent=true;this.btnOutdent=true;
     this.btnLTR=false;this.btnRTL=false;this.btnForeColor=true;this.btnBackColor=true;
     this.btnHyperlink=true;this.btnBookmark=true;this.btnCharacters=true;this.btnCustomTag=false;
-    this.btnImage=true;this.btnFlash=false;this.btnMedia=false;
+    this.btnImage=true;this.btnFlash=true;this.btnMedia=false;
     this.btnTable=true;this.btnGuidelines=true;
     this.btnAbsolute=true;this.btnPasteWord=true;this.btnLine=true;
     this.btnForm=true;this.btnClean=true;

@@ -233,7 +233,7 @@ $content_adm="
 
 Дата/время: ".date("d-m-y H:i a")."
 ";
-mail($_POST['mail_new'],$zag_adm, $content_adm, $header_adm);
+mail($mail_new,$zag_adm, $content_adm, $header_adm);
 
 
 echo"

@@ -212,7 +212,8 @@ $SysValue['other']['productPrice']=GetPriceValuta(ReturnTruePriceUser($val['uid'
 }
 
 
-
+$productImgBigFoto = str_replace("s.",".",$Product[$val]['pic_small']);
+$SysValue['other']['productImgBigFoto']= $productImgBigFoto;
 $SysValue['other']['productImg']= $Product[$val]['pic_small'];
 $SysValue['other']['productDesOdnotip']= $Product[$val]['description'];
 $SysValue['other']['productUid']= $val;

@@ -39,7 +39,6 @@ $F=str_replace("O","$",$code2);
 
 
 // Создаем интерфейс
-
 switch($p) {
 
     // Отзывы
@@ -210,7 +209,7 @@ switch($p) {
 	<table cellspacing="0" cellpadding="0" >
 <tr>
     <td>
-	<input type=text name="order_serach" size=20 class=s onMouseMove="show(\'['.$SysValue['Lang']['Help']['Help'].']\', \''.$SysValue['Lang']['Help'][6].'\')" onMouseOut="hide()" onfocus="hide()" value="'.$var3.'">
+	<input type=text name="order_serach"  id="order_serach" size=20 class=s onMouseMove="show(\'['.$SysValue['Lang']['Help']['Help'].']\', \''.$SysValue['Lang']['Help'][6].'\')" onMouseOut="hide()" onfocus="hide()" value="'.$var3.'">
 	<input type=button value=Поиск class=but3 id=btnSearch name="btnLang" onclick="DoReload(\'shopusers_notice\',calendar.pole1.value,calendar.pole2.value,document.getElementById(\'order_serach\').value)">
 	</td>
 </tr>
@@ -289,7 +288,7 @@ switch($p) {
 	<table cellspacing="0" cellpadding="0" >
 <tr>
     <td>
-	<input type=text name="order_serach" size=25 class=s onMouseMove="show(\'['.$SysValue['Lang']['Help']['Help'].']\', \''.$SysValue['Lang']['Help']['forma_4'].'\')" onMouseOut="hide()" onfocus="hide()" value="'.$var3.'">
+	<input type=text name="order_serach" id="order_serach" size=25 class=s onMouseMove="show(\'['.$SysValue['Lang']['Help']['Help'].']\', \''.$SysValue['Lang']['Help']['forma_4'].'\')" onMouseOut="hide()" onfocus="hide()" value="'.$var3.'">
 	<input type=button value=Поиск class=but3 id=btnSearch  onclick="DoReload(\'order_payment\',calendar.pole1.value,calendar.pole2.value,document.getElementById(\'order_serach\').value)">
 	</td>
 </tr>
@@ -1182,7 +1181,7 @@ switch($p) {
 	<table cellspacing="0" cellpadding="0" >
 <tr>
     <td>
-	<input type=text name="order_serach" size=50 class=s onMouseMove="show(\'['.$SysValue['Lang']['Help']['Help'].']\', \''.$SysValue['Lang']['Help']['forma_3'].'\')" onMouseOut="hide()" onfocus="hide()" value="'.$var3.'">
+	<input type=text name="order_serach" id="order_serach" size=50 class=s onMouseMove="show(\'['.$SysValue['Lang']['Help']['Help'].']\', \''.$SysValue['Lang']['Help']['forma_3'].'\')" onMouseOut="hide()" onfocus="hide()" value="'.$var3.'">
 	<input type=button value=Поиск class=but3 id=btnSearch  onclick="DoReload(\'orders\',calendar.pole1.value,calendar.pole2.value,document.getElementById(\'order_serach\').value)">
 	</td>
 </tr>
@@ -1271,6 +1270,46 @@ switch($p) {
         require("../order/admin_visiter.php");
         if(CheckedRules($UserStatus["visitor"],0) == 1) $interface.=Visitor($var1,$var2,$var3,$var4);
         else $interface=$UserChek->BadUserForma();
+        break;
+
+    default:
+
+        if(!empty($p)) {
+
+            $_classPath='../../';
+
+            if(empty($var1)) $loader_file="../$p/admin_$p.php";
+              else $loader_file="../../modules/$var1/admpanel/admin_$var1.php";
+              
+            $loader_function = 'actionStart';
+
+            if(is_file($loader_file)) {
+                include("../../class/obj.class.php");
+
+                // Поддержка модулей CMS Free
+                parse_str(base64_decode($var2),$strArray);
+                foreach($strArray as $key=>$var) $_REQUEST[$key]=$var;
+                
+
+                require_once($loader_file);
+                if(function_exists($loader_function)) {
+                    $SysValue['Lang']['Title'][$p]=$TitlePage;
+                    PHPShopObj::loadClass("system");
+                    PHPShopObj::loadClass("admgui");
+                    PHPShopObj::loadClass("orm");
+                    PHPShopObj::loadClass("date");
+                    PHPShopObj::loadClass("xml");
+                    $PHPShopInterface = &new PHPShopInterface();
+                    if(CheckedRules($UserStatus["page_site"],0) == 1) {
+                        ob_start();
+                        call_user_func($loader_function);
+                        $interface=ob_get_clean();
+                    }
+                    else $interface=$UserChek->BadUserForma();
+                }
+            }
+
+        }
         break;
 }
 

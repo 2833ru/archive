@@ -45,10 +45,11 @@ switch($_GET['command']) {
         PHPShopObj::loadClass("order");
         PHPShopObj::loadClass("delivery");
 
+        // Безопасность
+        if(PHPShopSecurity::true_num($_GET['date1']) and PHPShopSecurity::true_num($_GET['date2']) and PHPShopSecurity::true_num($_GET['num'])){
 
-        $sql="select * from ".$GLOBALS['SysValue']['base']['table_name1']." where seller!='1' and datas BETWEEN ".@$_GET['date1']." AND ".@$_GET['date2']." order by id desc  limit ".@$_GET['num'];
-
-//$sql="select * from ".$PHPShopBase->getParam("base.table_name1")." where seller!='1' and datas<'".date("U")."'  order by id desc  limit 1";
+        $sql="select * from ".$GLOBALS['SysValue']['base']['table_name1']." where seller!='1' and datas BETWEEN ".$_GET['date1']." AND ".$_GET['date2']." order by id desc  limit ".$_GET['num'];
+        //$sql="select * from ".$PHPShopBase->getParam("base.table_name1")." where seller!='1' and datas<'".date("U")."'  order by id desc  limit 1";
 
         @$result=mysql_query(@$sql);
         while(@$row = mysql_fetch_array(@$result)) {
@@ -100,6 +101,7 @@ switch($_GET['command']) {
             @$csv.=$csv1.$csv2.$csv3;
         }
         echo @$csv;
+        } else exit('Ошибка проверки параметров блока list');
         break;
 
 
