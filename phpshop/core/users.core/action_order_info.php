@@ -59,7 +59,7 @@ function action_order_info($obj, $tip) {
 
             // Заголовок
 //            $title = PHPShopText::div(PHPShopText::b(__('Информация по заказу №') . $row['uid']) . __('от') . PHPShopDate::dataV($row['datas']), $align = "left", $style = false, $id = 'allspec');
-            $title = PHPShopText::div(PHPShopText::img('images/shop/icon_info.gif', 5, 'absmiddle') . PHPShopText::b(__('Информация по заказу №') . $row['uid'] . __(' от ') . PHPShopDate::dataV($row['datas'])), $align = "left", $style = false, $id = 'allspec');
+            $title = PHPShopText::div(PHPShopText::notice(__('Информация по заказу №') . $row['uid'] . __(' от ') . PHPShopDate::dataV($row['datas'],false)));
 
 
             // Доставка
@@ -73,7 +73,7 @@ function action_order_info($obj, $tip) {
 
             // Комментарии по заказу
             if ($PHPShopOrderFunction->getSerilizeParam('status.maneger') != '')
-                $comment = PHPShopText::p(PHPShopText::message($PHPShopOrderFunction->getSerilizeParam('status.maneger'), 'images/shop/icon_info.gif'));
+                $comment = PHPShopText::p(PHPShopText::message($PHPShopOrderFunction->getSerilizeParam('status.maneger')));
             else
                 $comment = null;
 

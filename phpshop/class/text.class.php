@@ -45,7 +45,13 @@ class PHPShopText {
             $img = PHPShopText::img($icon);
         else
             $img = null;
-        return $img . '<span style="color:red;font-size:' . $size . '">' . $string . '</span>';
+
+        if (!empty($size))
+            $size = 'font-size:' . $size;
+        else
+            $size = null;
+
+        return $img . '<h3 style="' . $size . '">' . $string . '</h3>';
     }
 
     /**
@@ -56,7 +62,7 @@ class PHPShopText {
      * @param string $color цвет текста
      * @return string
      */
-    static function message($string, $icon = false, $size = false, $color = 'green', $class = false) {
+    static function message($string, $icon = false, $size = false, $color = false, $class = false) {
         if (!empty($icon))
             $img = PHPShopText::img($icon);
         else
@@ -96,7 +102,7 @@ class PHPShopText {
      * @return string
      */
     static function a($href, $text, $title = false, $color = false, $size = false, $target = false, $class = false) {
-        //$style = 'text-decoration:underline;';
+
         if ($size)
             $style.='font-size:' . $size . 'px;';
         if ($color)
@@ -127,6 +133,7 @@ class PHPShopText {
     /**
      * Заголовок H1
      * @param string $string текст
+     * @param string $class css
      * @return string
      */
     static function h1($string, $class = false) {
@@ -136,6 +143,7 @@ class PHPShopText {
     /**
      * Заголовок H2
      * @param string $string текст
+     * @param string $class css
      * @return string
      */
     static function h2($string, $class = false) {
@@ -145,6 +153,7 @@ class PHPShopText {
     /**
      * Заголовок H3
      * @param string $string текст
+     * @param string $class css
      * @return string
      */
     static function h3($string, $class = false) {
@@ -154,6 +163,7 @@ class PHPShopText {
     /**
      * Заголовок H4
      * @param string $string текст
+     * @param string $class css
      * @return string
      */
     static function h4($string, $class = false) {
@@ -426,17 +436,21 @@ class PHPShopText {
      * @param string $class имя класса стиля
      * @param string $caption текст перед элементом
      * @param string $description текст после элемента
+     * @param string $data пополнительеы параметры в атрибуте data-option
      * @return string
      */
-    static function setInput($type, $name, $value, $float = "none", $size = 200, $onclick = "return true", $class = false, $caption = false, $description = false) {
+    static function setInput($type, $name, $value, $float = "none", $size = 200, $onclick = "return true", $class = false, $caption = false, $description = false, $data = false, $requared = false ) {
 
         if (!empty($onclick))
             $onclick = 'onclick="' . $onclick . '"';
 
-        $input = ' <input type="' . $type . '" value="' . $value . '" name="' . $name . '" id="' . $name . '" ' . $onclick . '> ';
+        if (!empty($data))
+           $data = 'data-option="' . $data . '"';
+
+        $input = ' <input type="' . $type . '" value="' . $value . '" name="' . $name . '" id="' . $name . '" ' . $onclick . ' '.$data.' '.$requared.'> ';
 
         if ($type != 'hidden')
-            $input = '<div style="float:' . $float . $padding . '">
+            $input = '<div style="float:' . $float . '" class="'.$class.'">
              <label>' . $caption . $input . $description . '</label></div>';
 
         return $input;
@@ -457,8 +471,8 @@ class PHPShopText {
         return PHPShopText::setInput('text', $name, $value, $float, $size, false, $class, $caption, $description);
     }
 
-    static function alert($content, $class='warning') {
-        return '<div class="alert alert-'.$class.'" role="alert">'.$content.'</div>';
+    static function alert($content, $class = 'warning') {
+        return '<div class="alert alert-' . $class . '" role="alert">' . $content . '</div>';
     }
 
 }

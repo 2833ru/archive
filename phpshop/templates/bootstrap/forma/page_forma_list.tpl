@@ -1,7 +1,7 @@
 
 @Error@
 
-<form role="form" method="post" name="forma_message" class="template-sm">
+<form role="form" method="post" name="forma_message">
     <div class="form-group">
         <label for="exampleInputEmail1">Заголовок</label>
         <input type="text" name="tema" value="@php  echo $_POST[tema]; php@" class="form-control" id="exampleInputEmail1"  required="">
@@ -26,6 +26,7 @@
         <label for="exampleInputEmail1">Сообщение</label>
         <textarea name="content" class="form-control" required="">@php  echo $_POST[content]; php@</textarea>
     </div>
+    <p class="small"><label><input name="rule" value="1" required="" checked="" type="checkbox"> @rule@</label></p>
     <div class="form-group">
         <span class="pull-right">
             <input type="hidden" name="send" value="1">

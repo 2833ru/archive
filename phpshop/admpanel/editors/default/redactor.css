@@ -28,9 +28,9 @@
   overflow: auto;
   outline: none;
   border: none;
-  background-color: #111;
+  background-color: #fff;
   box-shadow: none;
-  color: #ccc;
+  color: #111;
   font-size: 13px;
   font-family: Menlo, Monaco, monospace, sans-serif;
   resize: none;

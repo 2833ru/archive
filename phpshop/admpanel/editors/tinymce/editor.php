@@ -20,6 +20,8 @@ class Editor {
 
     // Отключенный редактор
     function Textarea() {
+        global $PHPShopSystem;
+        
         if (strpos($this->Width, '%') === false)
             $WidthCSS = $this->Width . 'px';
         else
@@ -32,11 +34,13 @@ class Editor {
 
         $html ='
         <script src="./editors/tinymce/tinymce.min.js"></script>
+        <script src="./tpleditor/gui/ace/ace.js"></script>
         ';
         
             
         $html.= "
         <script>
+        var ace_theme = '".$PHPShopSystem->getSerilizeParam('admoption.ace_theme')."';
         $(function(){
         tinymce.init({ 
         selector:'textarea[name=".$this->InstanceName."]',
@@ -48,18 +52,19 @@ class Editor {
         },
         theme: 'modern',
         file_browser_callback : elFinderBrowser,
-        directionality : 'ru',
         relative_urls : false,
         remove_script_host : true,
         browser_spellcheck: true,
         language: 'ru',
+        content_css : ['/phpshop/templates/".$PHPShopSystem->getParam('skin')."/style.css','css/bootstrap-theme-default.css'], 
+        content_style: 'div,p {padding: 5px;}',
         insert_toolbar: 'quickimage quicktable',
         selection_toolbar: 'bold italic | quicklink h2 h3 blockquote',
         toolbar: [
-        'undo redo | styleselect | bold italic  underline strikethrough textcolor textpattern removeformat formats | link image media | alignleft aligncenter alignright table | code fullscreen'
+        'undo redo | styleselect | bold italic underline strikethrough forecolor backcolor removeformat formats | link image media | alignleft aligncenter alignright textcolor table | fullscreen ace'
          ],
         plugins: [
-        'advlist autolink lists link image charmap print preview anchor table imagetools textpattern media textcolor searchreplace visualblocks code fullscreen insertdatetime media table contextmenu paste code'
+        'advlist autolink lists link image charmap print preview anchor table imagetools textpattern media searchreplace visualblocks code fullscreen insertdatetime media table contextmenu paste textcolor textpattern lists colorpicker ace'
         ],
         });
         })

@@ -50,6 +50,16 @@ for (var i = 0x410; i <= 0x44F; i++)
 trans[0x401] = 0xA8;    // Ё
 trans[0x451] = 0xB8;    // ё
 
+// Таблица перевода на украинский
+/*
+ trans[0x457] = 0xBF;    // ї
+ trans[0x407] = 0xAF;    // Ї
+ trans[0x456] = 0xB3;    // і
+ trans[0x406] = 0xB2;    // І
+ trans[0x404] = 0xBA;    // є
+ trans[0x454] = 0xAA;    // Є
+ */
+
 // Сохраняем стандартную функцию escape()
 var escapeOrig = window.escape;
 
@@ -70,11 +80,7 @@ window.escape = function(str)
     return escapeOrig(String.fromCharCode.apply(null, ret));
 };
 
-// Нет изображения
-function imgerror(obj) {
-    obj.onerror = null;
-    obj.src = './images/no_photo.gif';
-}
+
 
 $().ready(function() {
 
@@ -139,7 +145,6 @@ $().ready(function() {
             history.back(1);
     });
 
-
     // Загрузка иконки
     $('.btn-file :file').on('fileselect', function(event, numFiles, label) {
         var input = $(this).parents('.input-group').find(':text'),
@@ -155,8 +160,6 @@ $().ready(function() {
         $("input[name='" + id + "']").val('/UserFiles/Image/' + log);
         $('[data-icon="' + id + '"]').prev('.glyphicon').removeClass('hide');
         showAlertMessage(locale.icon_load, 'info');
-
-
     });
 
     // Ввод URL иконки
@@ -305,7 +308,7 @@ $().ready(function() {
     // Сохранить из карточки
     $("button[name=editID]").on('click', function(event) {
         event.preventDefault();
-        
+
         var data = [];
         data.push({name: 'editID', value: 1});
         $('#product_edit .form-control, #product_edit .hidden-edit, #product_edit input:radio:checked, #product_edit input:checkbox:checked').each(function() {
@@ -339,10 +342,7 @@ $().ready(function() {
     });
 
     // Иконки оформления меню
-    $(".deleteone, .delete").append(' <span class="glyphicon glyphicon-trash"></span>');
-
-
-
+    $(".deleteone, .delete, .value-delete").append(' <span class="glyphicon glyphicon-trash"></span>');
 
     // Удаление из карточки
     $(".deleteone").on('click', function(event) {
@@ -475,6 +475,16 @@ $().ready(function() {
             ]
 
         });
+
+        // Проверка checked в пагинации
+        $('#data').on('draw.dt', function() {
+            if ($('#select_all').prop("checked")) {
+                $("input:checkbox[name=items]").each(function() {
+                    this.checked = 'checked';
+                });
+            }
+        });
+
     }
 
     // Сохранение настройки пагинатора
@@ -526,8 +536,6 @@ $().ready(function() {
     });
 
     // Progress
-
-
     if (parent.window.$('#adminModal') && $.getUrlVar('frame') !== undefined) {
         parent.window.$('.progress-bar').css('width', '90%');
         setTimeout(function() {

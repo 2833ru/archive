@@ -156,7 +156,8 @@
                         parent.window.location.href = parent.window.location.href.split('&tab=1').join('') + '&tab=1';
                     }
                 }
-                else parent.window.location.href = parent.window.location.href.split('&tab=1').join('') + '&tab=1';
+                else
+                    parent.window.location.href = parent.window.location.href.split('&tab=1').join('') + '&tab=1';
             }
         });
 

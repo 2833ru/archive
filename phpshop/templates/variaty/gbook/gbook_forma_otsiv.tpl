@@ -24,7 +24,7 @@
     <tr bgcolor="ffffff">
       <td align="right">Отзыв </td>
       <td valign="top"><textarea style="width:300px; height:150px; font-family:tahoma; font-size:11px ; color:#4F4F4F " name="otsiv_new" maxlength="100" ></textarea>
-        <img src="images/shop/flag_green.gif" alt="" width="16" height="16" hspace="5" align="absmiddle"> </td>
+        <img src="images/shop/flag_green.gif" alt="" width="16" height="16" hspace="5" align="absmiddle"> <p class="small"><label><input name="rule" value="1" required="" checked="" type="checkbox"> @rule@</label></p></td>
     </tr>
   </table>
   <table cellpadding="5" cellspacing="1" class="standart" width="100%">

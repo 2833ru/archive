@@ -39,12 +39,13 @@ function actionStart() {
     }
 
 
-    $PHPShopInterface->action_select['Предпросмотр'] = array(
-        'name' => 'Предпросмотр',
-        'url' => '../../shop/CID_' . $_GET['cat'] . '.html',
-        'action' => 'front enabled',
-        'target' => '_blank'
-    );
+    if (!empty($_GET['cat']))
+        $PHPShopInterface->action_select['Предпросмотр'] = array(
+            'name' => 'Предпросмотр',
+            'url' => '../../shop/CID_' . $_GET['cat'] . '.html',
+            'action' => 'front enabled',
+            'target' => '_blank'
+        );
 
     $PHPShopInterface->action_select['Редактировать выбранные'] = array(
         'name' => 'Редактировать выбранные',
@@ -133,9 +134,9 @@ function actionStart() {
             break;
         default: $core = 'REGEXP';
     }
-    
+
     // ID всегда eq
-    if(!empty($_GET['where']['id']))
+    if (!empty($_GET['where']['id']))
         $core = ' = ';
 
 
@@ -240,13 +241,16 @@ function actionStart() {
         $where['uid'] = $where['id'] = $where['name'];
     }
 
+    // Убираем подтипы
+    $where['parent_enabled'] = "='0'";
+
     $PHPShopOrm->mysql_error = false;
     $data = $PHPShopOrm->select(array('*'), $where, $order, $limit);
     if (is_array($data))
         foreach ($data as $row) {
 
             if (!empty($row['pic_small']))
-                $icon = '<img src="' . $row['pic_small'] . '" onerror="imgerror(this)" class="media-object" lowsrc="./images/no_photo.gif">';
+                $icon = '<img src="' . $row['pic_small'] . '" onerror="this.onerror = null;this.src = \'./images/no_photo.gif\'" class="media-object">';
             else
                 $icon = '<img class="media-object" src="./images/no_photo.gif">';
 
@@ -281,6 +285,10 @@ function actionStart() {
                 // Яндекс Маркет
                 if ($row['cpa'] == 1 and !empty($row['yml']))
                     $uid.= '<a class="label label-info" title="Яндекс.Маркете CPA" href="?path=catalog' . $postfix . '&where[cpa]=1">CPA</a> ';
+
+                // Подтип
+                if (strstr($row['parent'],','))
+                    $uid.= '<a class="label label-default" title="Подтипы" href="?path=catalog' . $postfix . '&where[parent]=,">П</a> ';
 
                 $uid.='</div>';
             }

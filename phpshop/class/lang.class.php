@@ -38,7 +38,7 @@ class PHPShopLang {
             // Чтение локали файла
             $this->langFile = $_classPath.'locale/'.$_SESSION['lang'].'.ini';
             if(is_file($this->langFile)) {
-                if($langArray = parse_ini_file($this->langFile,1)) {
+                if($langArray = parse_ini_file_true($this->langFile,1)) {
                     $this->doLang = $this->check($langArray);
                 }
                 else echo "Error parsing locale ".$this->langFile;
@@ -47,7 +47,6 @@ class PHPShopLang {
         else {
             $this->doLang=false;
         }
-
     }
 
     /**

@@ -101,13 +101,13 @@ function product_grid_hook($obj, $row) {
 
         $productPrice = $priceDiscount;
         $productPriceNew = $obj->price($row, true);
-        $obj->set('productPrice', $productPrice);
-        $obj->set('productPriceRub', PHPShopText::strike($obj->price($row) . " " . $obj->currency()));
+        if ($productPrice < $productPriceNew) {
+            $obj->set('productPrice', $productPrice);
+            $obj->set('productPriceRub', PHPShopText::strike($productPriceNew . " " . $obj->currency()));
 
-
-
-        //ставим лэйбл
-        $obj->set('promotionsIcon', '<span class="sale-icon" style="background-color: rgba(115, 41, 2, 0.29) !important;">Промо-акция</span>');
+            //ставим лэйбл
+            $obj->set('promotionsIcon', '<span class="sale-icon" style="background-color: rgba(115, 41, 2, 0.29) !important;">Промо-акция</span>');
+        }
     } else {
         $obj->set('promotionsIcon', '');
     }

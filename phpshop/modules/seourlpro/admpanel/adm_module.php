@@ -173,16 +173,16 @@ function actionStart() {
 
 
     // Содержание закладки
-    $Info = '<p>При включеном режиме "SEO пагинация" следует добавить переменную <kbd>@seourl_canonical@</kbd> в шаблон <code>phpshop/templates/имя шаблона/main/shop.tpl</code>, в результате будет добавлена ссылка link rel="canonical" с точным адресом для отсеивания дублей страниц описания списка товаров.</p>';
+    $Info = '<p>При включенном режиме "SEO пагинация" можно добавить переменную <code>@seourl_canonical@</code> в содержание тега <kbd>head</kbd> шаблона <code>phpshop/templates/имя шаблона/main/shop.tpl</code>. В результате будет добавлена ссылка <code>link rel="canonical"</code> с точным адресом страницы для отсеивания дублей страниц описания списка товаров при использовании фильтра сортировок товаров. Тег Canonical полностью дублирует функционал <kbd>robots.txt</kbd> и не обязателен при использовани заводского robots.txt. </p>';
 
-    $Tab1 = $PHPShopGUI->setField('SEO пагинация', $PHPShopGUI->setRadio('paginator_new', 2, 'Включить', $data['paginator']) . $PHPShopGUI->setRadio('paginator_new', 1, 'Выключить', $data['paginator']));
-    $Tab1.=$PHPShopGUI->setField('Описание каталога на внутренних страницах', $PHPShopGUI->setRadio('cat_content_enabled_new', 1, 'Включить', $data['cat_content_enabled']) . $PHPShopGUI->setRadio('cat_content_enabled_new', 2, 'Выключить', $data['cat_content_enabled']));
+    $Tab1 = $PHPShopGUI->setField('SEO пагинация', $PHPShopGUI->setRadio('paginator_new', 2, 'Включить', $data['paginator']) . $PHPShopGUI->setRadio('paginator_new', 1, 'Выключить', $data['paginator']),false,'Добавляет в теги Title и Description нумерацию страниц для уникальности индексации');
+    $Tab1.=$PHPShopGUI->setField('Описание каталога на внутренних страницах', $PHPShopGUI->setRadio('cat_content_enabled_new', 1, 'Включить', $data['cat_content_enabled']) . $PHPShopGUI->setRadio('cat_content_enabled_new', 2, 'Выключить', $data['cat_content_enabled']),false,'Убирает описание каталога для внутренних страниц для сохранения уникальности первой.');
     $Tab1.= $PHPShopGUI->setField('Совет',$PHPShopGUI->setInfo($Info));
 
-    $Tab2 = $PHPShopGUI->setPay($serial = false, $pay = false, $data['version'], $update = true);
+    $Tab2 = $PHPShopGUI->setPay($serial = false, false, $data['version'], true);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1, 270), array("О Модуле", $Tab2, 270));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("О Модуле", $Tab2));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =

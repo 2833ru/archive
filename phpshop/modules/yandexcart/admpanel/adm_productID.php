@@ -23,6 +23,10 @@ function addYandexcartCPA($data) {
 
     $Tab3.=$PHPShopGUI->setField(__('Покупка в розничном магазине'), $PHPShopGUI->setRadio('store_new', 1, __('Включить'), $data['store']) . $PHPShopGUI->setRadio('store_new', 2, __('Выключить'), $data['store'], false, 'text-muted'), 1, 'Тег <store>');
 
+    $Tab3.= $PHPShopGUI->setField("Минимальное количество", $PHPShopGUI->setInputText(null, 'yandex_min_quantity_new', $data['yandex_min_quantity'], 100), 1, ' Минимальное количество товара в одном заказе');
+
+        $Tab3.= $PHPShopGUI->setField("Минимальный шаг", $PHPShopGUI->setInputText(null, 'yandex_step_quantity_new', $data['yandex_step_quantity'], 100), 1, ' Количество товара, добавляемое к минимальному');
+
 
     $PHPShopGUI->addTab(array("Яндекс.Заказ", $Tab3, true));
 }

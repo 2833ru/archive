@@ -1,21 +1,26 @@
-$(document).ready(function () {
+$(document).ready(function() {
+
+    // выделение подтипа для корзины
+    $('[name="parentIdNt"]').on('click', function() {
+        $('#parentId').val(this.value);
+    })
 
     // редирект на оформление заказа с миникорзины, если отключена визуальная корзина.    
-    $('.minicart').on('click', function () {
-        if (typeof visualCart != 'function') 
+    $('.minicart').on('click', function() {
+        if (typeof visualCart != 'function')
             window.location.href = ROOT_PATH + "/order";
     });
 
 
     // Направление сортировки в брендах
-    $('#filter-selection-well button').on('click', function () {
+    $('#filter-selection-well button').on('click', function() {
         window.location.href = $(this).attr('data-url');
     });
 
     setTooltip()
 
     // Направление сортировки
-    $('#filter-well button').on('click', function () {
+    $('#filter-well button').on('click', function() {
         if (AJAX_SCROLL) {
 
             count = current;
@@ -63,7 +68,7 @@ $(document).ready(function () {
             data: {
                 ajaxfilter: true
             },
-            success: function (data)
+            success: function(data)
             {
                 if (data) {
                     $("#faset-filter-body").html(data);
@@ -74,7 +79,7 @@ $(document).ready(function () {
     }
 
     // Ajax фильтр
-    $('#faset-filter-body').on('change', 'input:checkbox', function () {
+    $('#faset-filter-body').on('change', 'input:checkbox', function() {
 
         // Сброс текущей страницы
         count = current;
@@ -83,7 +88,7 @@ $(document).ready(function () {
     });
 
     // Сброс фильтра
-    $('#faset-filter-reset').on('click', function (event) {
+    $('#faset-filter-reset').on('click', function(event) {
         if (AJAX_SCROLL) {
             event.preventDefault();
             $("#faset-filter-body").html($("#sorttable table td").html());
@@ -101,7 +106,7 @@ $(document).ready(function () {
     });
 
     // Пагинация товаров
-    $('.pagination a').on('click', function (event) {
+    $('.pagination a').on('click', function(event) {
         if (AJAX_SCROLL) {
             event.preventDefault();
             window.location.href = $(this).attr('href') + window.location.hash;
@@ -109,7 +114,7 @@ $(document).ready(function () {
     });
 
     // Ценовой слайдер
-    $("#slider-range").on("slidestop", function (event, ui) {
+    $("#slider-range").on("slidestop", function(event, ui) {
 
         if (AJAX_SCROLL) {
 
@@ -140,16 +145,16 @@ $(document).ready(function () {
 
     ////////////////////////////////////
     // смена оформления
-    $(".bootstrap-theme,.bootstrap-theme-button").on('click', function () {
+    $(".bootstrap-theme,.bootstrap-theme-button").on('click', function() {
         skin = $(this).attr('data-skin');
 
         var forN = $(this).attr('data-for');
 
-        $('.bod').fadeOut('slow', function () {
+        $('.bod').fadeOut('slow', function() {
             $('#bootstrap_theme' + forN).attr('href', '/phpshop/templates/variaty/css/' + skin + '.css');
         });
 
-        setTimeout(function () {
+        setTimeout(function() {
             $('.bod').fadeIn();
         }, 1000);
 
@@ -159,14 +164,14 @@ $(document).ready(function () {
     });
 
     // сохранение оформления
-    $(".saveTheme").on('click', function () {
+    $(".saveTheme").on('click', function() {
 
         $.ajax({
             url: ROOT_PATH + '/phpshop/ajax/skin.php',
             type: 'post',
             data: 'template=variaty&type=json',
             dataType: 'json',
-            success: function (json) {
+            success: function(json) {
                 if (json['success']) {
                     showAlertMessage(json['status']);
                 }
@@ -175,7 +180,7 @@ $(document).ready(function () {
     });
 
     // Ajax быстрый просмотр подробного описания товара
-    $(".fastView").live('click', function (e) {
+    $(".fastView").live('click', function(e) {
         e.preventDefault();
         var url = $(this).attr('data-role');
         $('.fastViewContent').html('<h2>загрузка...</h2>');
@@ -187,7 +192,7 @@ $(document).ready(function () {
                 data: {
                     ajax: true
                 },
-                success: function (data)
+                success: function(data)
                 {
                     $('.fastViewContent').html(data);
                     //image zoom
@@ -199,11 +204,11 @@ $(document).ready(function () {
 
 
 
-    $(document).on("click", "ul.currency li a.valCh", function () {
+    $(document).on("click", "ul.currency li a.valCh", function() {
         $("form#ValutaForm input#valuta").val($(this).attr("data-for"));
         $("form#ValutaForm").submit();
     });
-    $(document).on("click", "a.goToCompare", function () {
+    $(document).on("click", "a.goToCompare", function() {
         window.location.href = '/compare/';
     });
 
@@ -215,7 +220,7 @@ $(document).ready(function () {
         saveState: false
     });
 
-    $(".goTOtabs").click(function () {
+    $(".goTOtabs").click(function() {
         $("div.product-tab ul li").removeClass("active");
         $("div.product-tab ul li.feedback").addClass("active");
         $("div.tab-content").removeClass("active");
@@ -223,7 +228,7 @@ $(document).ready(function () {
     });
 
     // Ajax поиск
-    $("#search").on('input', function () {
+    $("#search").on('input', function() {
         var words = $(this).val();
         if (words.length > 2) {
             $.ajax({
@@ -234,7 +239,7 @@ $(document).ready(function () {
                     set: 2,
                     ajax: true
                 },
-                success: function (data)
+                success: function(data)
                 {
                     // Результат поиска
                     if (data != 'false') {
@@ -287,16 +292,16 @@ $(document).ready(function () {
             "n": "т", "m": "ь", ",": "б", ".": "ю", "/": "."
         };
 
-        return str.replace(/[A-z/,.;\'\]\[]/g, function (x) {
+        return str.replace(/[A-z/,.;\'\]\[]/g, function(x) {
             return x == x.toLowerCase() ? replacer[ x ] : replacer[ x.toLowerCase() ].toUpperCase();
         });
     }
 
     // Validator Fix brands url
-    $('.brands-list a').on('click', function (event) {
+    $('.brands-list a').on('click', function(event) {
         event.preventDefault();
-        if($(this).attr('data-url'))
-        window.location.replace($(this).attr('data-url'));
+        if ($(this).attr('data-url'))
+            window.location.replace($(this).attr('data-url'));
     });
 
     //image zoom
@@ -338,7 +343,7 @@ function filter_load(filter_str, obj) {
         data: {
             ajax: true
         },
-        success: function (data)
+        success: function(data)
         {
             if (data) {
                 $("#product-scroll").html(data);
@@ -349,7 +354,7 @@ function filter_load(filter_str, obj) {
                 Waypoint.refreshAll();
             }
         },
-        error: function (data) {
+        error: function(data) {
             $(obj).attr('checked', false);
             //$(obj).attr('disabled', true);
 

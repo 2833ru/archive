@@ -68,7 +68,7 @@ class PHPShopModules {
     function addTemplateHook() {
         $ini = 'phpshop/templates' . chr(47) . @$_SESSION['skin'] . "/php/inc/config.ini";
         if (file_exists($ini)) {
-            $SysValue = @parse_ini_file($ini, 1);
+            $SysValue = @parse_ini_file_true($ini, 1);
 
             if (is_array($SysValue['autoload']))
                 foreach ($SysValue['autoload'] as $k => $v)
@@ -135,7 +135,7 @@ class PHPShopModules {
     function getIni($path, $add = true) {
         $ini = $this->ModDir . $path . "/inc/config.ini";
         if (file_exists($ini)) {
-            $SysValue = @parse_ini_file($ini, 1);
+            $SysValue = @parse_ini_file_true($ini, 1);
 
             if (!empty($SysValue['autoload']) and is_array($SysValue['autoload']))
                 foreach ($SysValue['autoload'] as $k => $v)

@@ -1,6 +1,6 @@
 
 
-<div class="modal fade bs-example-modal-sm" id="oneClickModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade bs-example-modal-sm" id="oneClickModal@productUid@" tabindex="-1" role="dialog"  aria-hidden="true">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
@@ -28,4 +28,4 @@
         </div>
     </div>
 </div>
-<a href="#" data-toggle="modal" data-target="#oneClickModal" class="btn btn-success"> упить в 1 клик!</a>
+<a href="#" data-toggle="modal" data-target="#oneClickModal@productUid@" class="btn btn-default"><i class="fa fa-bell" aria-hidden="true"></i>  упить в 1 клик</a>

@@ -92,7 +92,7 @@ function actionStart() {
         'icon' => 'glyphicon glyphicon-time'
     );
 
-    $License = @parse_ini_file("../../license/" . PHPShopFile::searchFile('../../license/', 'getLicense'), 1);
+    $License = parse_ini_file_true("../../license/" . PHPShopFile::searchFile('../../license/', 'getLicense'), 1);
 
 
     // Проверка обновлений
@@ -227,8 +227,10 @@ function actionStart() {
     if ($PHPShopSystem->ifSerilizeParam('admoption.rule_enabled', 1) and !$PHPShopBase->Rule->CheckedRules('catalog', 'remove')) {
         $where = array('user' => "=" . intval($_SESSION['idPHPSHOP']));
     }
-    else
-        $where = false;
+
+    
+    // Убираем подтипы
+    $where['parent_enabled'] = "='0'";
 
     // Новые товары
     $PHPShopInterface = new PHPShopInterface();

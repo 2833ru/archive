@@ -6,7 +6,7 @@
  * @return string 
  */
 function tab_headers($row) {
-    
+
     global $PHPShopGUI;
 
 
@@ -66,9 +66,9 @@ function tab_headers($row) {
 
     $disp = '
 <script src="./catalog/gui/tab_headers.gui.js"></script>';
-    
-    
-    $disp.=$PHPShopGUI->setCollapse("Title",'
+
+
+    $disp.=$PHPShopGUI->setCollapse("Title", '
 <label><input type="radio" value="0" name="title_enabled_new" onclick="document.getElementById(\'titleForma\').style.display=\'none\';document.getElementById(\'titleShablon\').style.display=\'none\'" ' . $t1 . '> Автоматическая генерация</label>&nbsp;&nbsp;&nbsp;
 <label><input type="radio" value="2" name="title_enabled_new" onclick="document.getElementById(\'titleShablon\').style.display=\'block\';document.getElementById(\'titleForma\').style.display=\'none\'" ' . $t3 . '> Мой шаблон</label> &nbsp;&nbsp;&nbsp;
 <label><input type="radio" value="1" name="title_enabled_new"  onclick="document.getElementById(\'titleForma\').style.display=\'block\';document.getElementById(\'titleShablon\').style.display=\'none\'" ' . $t2 . '> Ручная настройка</label><br>
@@ -93,7 +93,7 @@ function tab_headers($row) {
 <textarea class="form-control" name="title_new">' . $title . '</textarea>
 </div>');
 
-   $disp.=$PHPShopGUI->setCollapse("Description",'<label>
+    $disp.=$PHPShopGUI->setCollapse("Description", '<label>
 <input type="radio" value="0" name="descrip_enabled_new" onclick="document.getElementById(\'titleFormaD\').style.display=\'none\';document.getElementById(\'titleShablonD\').style.display=\'none\'" ' . $d1 . '> Автоматическая генерация</label>&nbsp;&nbsp;&nbsp;
 <label><input type="radio" value="2" name="descrip_enabled_new" onclick="document.getElementById(\'titleShablonD\').style.display=\'block\';document.getElementById(\'titleFormaD\').style.display=\'none\'" ' . $d3 . '> Мой шаблон</label>&nbsp;&nbsp;&nbsp;
 <label><input type="radio" value="1" name="descrip_enabled_new"  onclick="document.getElementById(\'titleFormaD\').style.display=\'block\';document.getElementById(\'titleShablonD\').style.display=\'none\'" ' . $d2 . '> Ручная настройка</label><br>
@@ -117,8 +117,8 @@ function tab_headers($row) {
 <div id="titleFormaD" style="display:' . $d2_enabled . '">
 <textarea class="form-control" name="descrip_new">' . $descrip . '</textarea>
 </div>');
-   
-   $disp.=$PHPShopGUI->setCollapse("Keywords",'
+
+    $disp.=$PHPShopGUI->setCollapse("Keywords", '
 
 <label>
 <input type="radio" value="0" name="keywords_enabled_new" onclick="document.getElementById(\'titleFormaK\').style.display=\'none\';document.getElementById(\'titleShablonK\').style.display=\'none\'" ' . $k1 . '> Автоматическая генерация</label>&nbsp;&nbsp;&nbsp;
@@ -143,7 +143,8 @@ function tab_headers($row) {
 <div id="titleFormaK" style="display:' . $k2_enabled . '">
 <textarea class="form-control"  name="keywords_new">' . $keywords . '</textarea>
 </div>');
-   
+
     return $disp;
 }
+
 ?>

@@ -103,11 +103,14 @@ function UID_odnotip_hook($obj, $row, $rout) {
 
             $productPrice = $priceDiscount;
             $productPriceNew = $obj->price($row, true);
+            
+            if ($productPrice < $productPriceNew) {
             $obj->set('productPrice', $productPrice);
-            $obj->set('productPriceRub', PHPShopText::strike($obj->price($row) . " " . $obj->currency()));
+            $obj->set('productPriceRub', PHPShopText::strike($productPriceNew. " " . $obj->currency()));
 
             //ставим лэйбл
             $obj->set('promotionsIcon', '<span class="sale-icon" style="background-color: rgba(115, 41, 2, 0.29) !important;">Промо-акция</span>');
+            }
         }
 
 
@@ -128,7 +131,7 @@ function UID_odnotip_hook($obj, $row, $rout) {
                     //Создаем запрос для создания массива товаров по ID категорий
                     if (isset($category_ar)):
                         foreach ($category_ar as $val_cat) {
-                            if($val_cat==$row['category'])
+                            if ($val_cat == $row['category'])
                                 $inf_text_code[$value['id']] = '<div>' . $value['description'] . '</div>';
                         }
                     endif;
@@ -255,11 +258,14 @@ function product_grid_n_hook($obj, $row) {
 
         $productPrice = $priceDiscount;
         $productPriceNew = $obj->price($row, true);
-        $obj->set('productPrice', $productPrice);
-        $obj->set('productPriceRub', PHPShopText::strike($obj->price($row) . " " . $obj->currency()));
 
-        //ставим лэйбл
-        $obj->set('promotionsIcon', '<span class="sale-icon" style="background-color: rgba(115, 41, 2, 0.29) !important;">Промо-акция</span>');
+        if ($productPrice < $productPriceNew) {
+            $obj->set('productPrice', $productPrice);
+            $obj->set('productPriceRub', PHPShopText::strike($productPriceNew . " " . $obj->currency()));
+
+            //ставим лэйбл
+            $obj->set('promotionsIcon', '<span class="sale-icon" style="background-color: rgba(115, 41, 2, 0.29) !important;">Промо-акция</span>');
+        }
     }
 }
 

@@ -1,5 +1,5 @@
 $().ready(function() {
-    
+
     // Id каталога
     var cat = $.getUrlVar('cat');
 
@@ -226,9 +226,9 @@ $().ready(function() {
     });
 
     // Изменение данных из списка (цена, склад)
-    $('.editable').on('change', function() {
+    $('body').on('change', '.editable', function() {
         var data = [];
-        data.push({name: $(this).attr('data-edit'), value: $(this).val()});
+        data.push({name: $(this).attr('data-edit'), value: escape($(this).val())});
         data.push({name: 'rowID', value: $(this).attr('data-id')});
         data.push({name: 'editID', value: 1});
         data.push({name: 'ajax', value: 1});
@@ -335,6 +335,20 @@ $().ready(function() {
         event.preventDefault();
         window.location.href = '?path=product&return=catalog&action=new&id=' + $(this).attr('data-id');
     });
+
+
+    if ($('#dop_cat_new').length)
+        $('#dop_cat_new').tagsInput({
+            'height': '100px',
+            'width': '100%',
+            'interactive': true,
+            'defaultText': 'Ввод...',
+            'removeWithBackspace': true,
+            'minChars': 0,
+            'delimiter': ['#'],
+            'maxChars': 0, // if not provided there is no limit
+            'placeholderColor': '#666666'
+        });
 
     // Активация из списка dropdown
     $('.data-row, .data-tree').hover(

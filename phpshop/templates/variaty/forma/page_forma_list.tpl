@@ -29,9 +29,12 @@
     <tr>
       <td>Сообщение:</td>
       <td><textarea style="width:300px; height:200px;" name="content" id="content"></textarea>
-        <img src="images/shop/flag_green.gif" alt="" width="16" height="16" hspace="5" align="absmiddle"> </td>
+        <img src="images/shop/flag_green.gif" alt="" width="16" height="16" hspace="5" align="absmiddle"> 
+       <p class="small"><label><input name="rule" value="1" required="" checked="" type="checkbox"> @rule@</label></p>
+      </td>
     </tr>
   </table>
+   
   <table>
     <tr>
       <td align="center"><img src="phpshop/captcha.php" id="captcha" alt="captcha" ><br>

@@ -177,6 +177,7 @@ class PHPShopPage extends PHPShopCore {
             $title = $row['name'] . " - " . $this->PHPShopSystem->getValue("name");
         else
             $title = $row['title'];
+        
         $this->title = $title;
         $this->description = $row['description'];
         $this->keywords = $row['keywords'];

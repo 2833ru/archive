@@ -4,7 +4,7 @@
 $TitlePage = __("Модули");
 
 function getFileInfo($file) {
-    $f = parse_ini_file("../../license/" . $file, 1);
+    $f = parse_ini_file_true("../../license/" . $file, 1);
 
     if ($f['License']['Pro'] == 'Start')
         $_SESSION['mod_limit'] = 5;
@@ -301,7 +301,7 @@ function actionStart() {
     else
         $label_class = 'label-primary';
 
-    $tree = '<table class="tree table table-hover">
+    $tree = '<table class="table table-hover">
         <tr class="treegrid-all">
            <td><a href="?path=modules" class="treegrid-parent" data-parent="treegrid-all">Все модули</a></td>
 	</tr>

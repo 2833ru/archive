@@ -27,7 +27,6 @@ function setProducts_yandexcart_hook($obj, $data) {
         $data['xml'] = str_replace('<offer', '<offer fee="' . $data['val']['fee'] . '"', $data['xml']);
     }
 
-
     // Oldprice
     if (!empty($data['val']['oldprice']))
         $data['xml'] = str_replace('<price>' . $data['val']['price'] . '</price>', '<price>' . $data['val']['price'] . '</price><oldprice>' . $data['val']['oldprice'] . '</oldprice>', $data['xml']);
@@ -82,6 +81,14 @@ function setProducts_yandexcart_hook($obj, $data) {
     if ($data['val']['adult'] == 1)
         $add.='<adult>true</adult>';
 
+    // min-quantity
+    if (!empty($data['val']['yandex_min_quantity']))
+        $add.='<min-quantity>' . $data['val']['yandex_min_quantity'] . '</min-quantity>';
+
+    // step-quantity
+    if (!empty($data['val']['yandex_step_quantity']))
+        $add.='<step-quantity>' . $data['val']['yandex_step_quantity'] . '</step-quantity>';
+
     // cpa
     if ($data['val']['cpa'] == 1) {
         $add.='<cpa>1</cpa>';
@@ -107,11 +114,12 @@ function setDelivery_yandexcart_hook($obj, $data) {
 
     // Доставка
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['delivery']);
-    $delivery = $PHPShopOrm->select(array('price', 'yandex_day', 'yandex_day_min', 'yandex_order_before'), array('enabled' => "='1'", 'is_folder' => "!='1'", 'yandex_enabled' => "='2'", 'yandex_check' => "='2'",'yandex_type'=>"='1'"), false, array('limit' => 300));
+    $delivery = $PHPShopOrm->select(array('price', 'yandex_day', 'yandex_day_min', 'yandex_order_before'), array('enabled' => "='1'", 'is_folder' => "!='1'", 'yandex_enabled' => "='2'", 'yandex_check' => "='2'", 'yandex_type' => "='1'"), false, array('limit' => 300));
     $GLOBALS['delivery'] = $delivery;
 
+    /*
     if (!empty($delivery))
-        $data['xml'] = str_replace('<local_delivery_cost>' . $data['val']['price'] . '</local_delivery_cost>', '<delivery-options/>', $data['xml']);
+        $data['xml'] = str_replace('<local_delivery_cost>' . $data['val']['price'] . '</local_delivery_cost>', '<delivery-options/>', $data['xml']);*/
 
     // Бренды
     $PHPShopOrm = new PHPShopOrm();

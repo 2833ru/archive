@@ -52,11 +52,17 @@ function actionStart() {
         'url' => '../../page/' . $data['link'] . '.html',
         'action' => 'front',
         'target' => '_blank',
-        'class'=>$GLOBALS['isFrame']
+        'class' => $GLOBALS['isFrame']
     );
 
+    // Имя
+    if (strlen($data['name']) > 77)
+        $title_name = substr($data['name'], 0, 77) . '...';
+    else
+        $title_name = $data['name'];
+
     $PHPShopGUI->field_col = 2;
-    $PHPShopGUI->setActionPanel(__("Страница") . ': ' . $data['name'], array('Создать', 'Предпросмотр', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'));
+    $PHPShopGUI->setActionPanel(__("Страница") . ': ' . $title_name, array('Создать', 'Предпросмотр', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'));
     $PHPShopGUI->addJSFiles('./js/jquery.tagsinput.min.js', './page/gui/page.gui.js');
     $PHPShopGUI->addCSSFiles('./css/jquery.tagsinput.css');
 
@@ -81,11 +87,12 @@ function actionStart() {
 
     $GLOBALS['tree_array'] = &$tree_array;
 
-        $tree_select = '<select class="selectpicker show-menu-arrow hidden-edit" data-container=""  data-style="btn btn-default btn-sm" name="category_new" data-width="100%">';
+    $tree_select = '<select class="selectpicker show-menu-arrow hidden-edit" data-container=""  data-style="btn btn-default btn-sm" name="category_new" data-width="100%">';
 
     $tree_array[0]['sub'][1000] = 'Главное меню сайта';
     $tree_array[0]['sub'][2000] = 'Начальная страница';
 
+    $tree_select.='<option value="0" ' . $data['category'] . ' data-subtext="<span class=\'glyphicon glyphicon-cog\'></span> Настройка">Внутренняя страница</option>';
     if (is_array($tree_array[0]['sub']))
         foreach ($tree_array[0]['sub'] as $k => $v) {
             $check = treegenerator($tree_array[$k], 1, $data['category']);
@@ -143,11 +150,9 @@ function actionStart() {
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
-    
+
     // Вывод формы закладки
     $PHPShopGUI->setTab(array("Основное", $Tab1), array("Содержание", $oFCKeditor->AddGUI()));
-
-
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =
@@ -189,7 +194,7 @@ function actionSave() {
     // Сохранение данных
     actionUpdate();
 
-    header('Location: ?path=page.catalog&cat='.$_POST['category_new']);
+    header('Location: ?path=page.catalog&cat=' . $_POST['category_new']);
 }
 
 // Функция удаления

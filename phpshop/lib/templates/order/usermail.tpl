@@ -173,7 +173,7 @@ php@</p>
 <p>
 Итого -- @sum@ @currency@<br>
 Скидка -- @discount@%<br>
-Доставка -- @deliveryPrice@ @currency@<br></p>
+Доставка -- @deliveryPrice@ @currency@ @deliveryInfo@</p>
 <hr>
 <p>Итого к оплате с учетом скидки: @total@ @currency@</p><hr><p>
 

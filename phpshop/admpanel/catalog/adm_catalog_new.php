@@ -48,8 +48,8 @@ function actionStart() {
 
     // Размер названия поля
     $PHPShopGUI->field_col = 2;
-    $PHPShopGUI->addJSFiles('./catalog/gui/catalog.gui.js', './js/bootstrap-tour.min.js', './catalog/gui/tour.gui.js', './js/bootstrap-treeview.min.js');
-    $PHPShopGUI->addCSSFiles('./css/bootstrap-treeview.min.css');
+    $PHPShopGUI->addJSFiles('./js/jquery.tagsinput.min.js', './js/jquery.treegrid.js', './catalog/gui/catalog.gui.js', './js/bootstrap-treeview.min.js');
+    $PHPShopGUI->addCSSFiles('./css/bootstrap-treeview.min.css', './css/jquery.tagsinput.css');
 
     // Начальные данные
     $data = array();
@@ -151,9 +151,11 @@ function actionStart() {
     $order_to_value[] = array('убыванию', 2, $data['order_to']);
     $Tab_info.=$PHPShopGUI->setField(__("Сортировка:"), $PHPShopGUI->setInputText(null, "num_new", $data['num'], 100, false, 'left') . '&nbsp' .
             $PHPShopGUI->setSelect('order_by_new', $order_by_value, 120) . $PHPShopGUI->setSelect('order_to_new', $order_to_value, 120), 'left');
+    
+    // Дополнительные каталоги
+    $Tab_info.=$PHPShopGUI->setField('Дополнительные каталоги:', $PHPShopGUI->setTextarea('dop_cat_new', $data['dop_cat'], false, false, false, __('Введите ID каталога')), 1, 'Подкаталоги одновременно выводятся в нескольких каталогах.');
 
     $Tab1 = $PHPShopGUI->setCollapse(__('Информация'), $Tab_info);
-
 
     // Иконка
     $Tab_icon.=$PHPShopGUI->setField(__("Изображение"), $PHPShopGUI->setIcon($data['icon'], "icon_new", false));
@@ -238,13 +240,19 @@ function actionInsert() {
     // Характеристики
     $_POST['sort_new'] = serialize($_POST['sort_new']);
 
-    // Мультибаза
-    $_POST['servers_new'] = null;
-    if (is_array($_POST['servers']))
-        foreach ($_POST['servers'] as $v)
-            $_POST['servers_new'].="i" . $v . "i";
+    /* // Мультибаза
+      $_POST['servers_new'] = null;
+      if (is_array($_POST['servers']))
+      foreach ($_POST['servers'] as $v)
+      $_POST['servers_new'].="i" . $v . "i";
+     */
 
     $_POST['iocn_new'] = iconAdd();
+
+    // Доп каталоги
+    if (!empty($_POST['dop_cat_new']) and substr($_POST['dop_cat_new'], 1) != '#') {
+        $_POST['dop_cat_new'] = '#' . $_POST['dop_cat_new'] . '#';
+    }
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);

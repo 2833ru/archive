@@ -4,7 +4,6 @@
     <name>Filemanager</name>
     <description>Модуль файлового менеджера.</description>
     <category>template,decorate</category>
-    <status>new</status>
      <adminmenu>
         <title>Файловый менеджер</title>
         <capability>true</capability>

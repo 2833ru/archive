@@ -66,8 +66,7 @@ class PHPShopCoreElement extends PHPShopElements {
             $tel_xs[] = $tel;
 
         $this->set('telNumMobile', $tel_xs[0]);
-
-
+        $this->set('rule', $this->lang('rule'));
         $this->set('name', $this->PHPShopSystem->getValue('name'));
         $this->set('company', $this->PHPShopSystem->getValue('company'));
         $this->set('streetAddress', $this->PHPShopSystem->getSerilizeParam('bank.org_adres'));

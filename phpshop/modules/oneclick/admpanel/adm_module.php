@@ -11,6 +11,7 @@ function actionBaseUpdate() {
     $new_version = $PHPShopModules->getUpdate($option['version']);
     $PHPShopOrm->clean();
     $action = $PHPShopOrm->update(array('version_new' => $new_version));
+    header('Location: ?path=modules&id='.$_GET['id']);
     return $action;
 }
 
@@ -20,7 +21,7 @@ function actionUpdate() {
 
     $PHPShopOrm->debug = false;
     $action = $PHPShopOrm->update($_POST);
-    header('Location: ?path=modules&install=check');
+    header('Location: ?path=modules&id='.$_GET['id']);
     return $action;
 }
 
@@ -39,19 +40,23 @@ function actionStart() {
     // Тип вывода
     $w_value[] = array('форма', 0, $data['windows']);
     $w_value[] = array('всплывающее окно', 1, $data['windows']);
+    
+    // Место вывода
+    $d_value[] = array('подробное описание', 0, $data['display']);
+    $d_value[] = array('подробное и краткое описание', 1, $data['display']);
 
 
     $Tab1 = $PHPShopGUI->setField('Заголовок', $PHPShopGUI->setInputText(false, 'title_new', $data['title']));
     $Tab1.=$PHPShopGUI->setField('Сообщение', $PHPShopGUI->setTextarea('title_end_new', $data['title_end']));
-    $Tab1.=$PHPShopGUI->setField('Место вывода', $PHPShopGUI->setSelect('enabled_new', $e_value, 200));
-    $Tab1.=$PHPShopGUI->setField('Тип вывода', $PHPShopGUI->setSelect('windows_new', $w_value, 200));
+    $Tab1.=$PHPShopGUI->setField('Место вывода', $PHPShopGUI->setSelect('enabled_new', $e_value, 250));
+    $Tab1.=$PHPShopGUI->setField('Тип вывода', $PHPShopGUI->setSelect('windows_new', $w_value, 250));
+    $Tab1.=$PHPShopGUI->setField('Вывод', $PHPShopGUI->setSelect('display_new', $d_value, 250));
 
 
     $info = 'Для произвольной вставки элемента, следует выбрать параметр вывода "Кнопка купить" и вставить переменную
         <kbd>@oneclick@</kbd> в свой шаблон в нужное вам место.
         <p>Для персонализации формы вывода, отредактируйте шаблоны phpshop/modules/oneclick/templates/</p>
-        <p>Для включения режима быстрого заказа для товаров в списке каталога, следует переключить файл хука в config.ini на:<br> 
-        <code>phpshopshopcore="./phpshop/modules/oneclick/hook/oneclickall.hook.php</code>";
+        ";
 ';
 
     $Tab2 = $PHPShopGUI->setInfo($info);

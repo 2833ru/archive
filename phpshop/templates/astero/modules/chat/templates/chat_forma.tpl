@@ -16,10 +16,10 @@
 <script>
     $().ready(function() {
 
-
+        /*
         $('.breadcrumb, .template-slider').waypoint(function() {
             $('#chatbutton').popover('hide');
-        });
+        });*/
 
         $("body").on("click", "#chatend", function() {
             $('#chatbutton').popover('hide');

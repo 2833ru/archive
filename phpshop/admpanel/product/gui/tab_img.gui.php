@@ -19,7 +19,7 @@ function tab_img($data) {
 
 
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['foto']);
-    $data_pic = $PHPShopOrm->select(array('*'), array('parent' => '=' . intval($data['id'])), array('order' => 'id'), array('limit' => 100));
+    $data_pic = $PHPShopOrm->select(array('*'), array('parent' => '=' . intval($data['id'])), array('order' => 'num,id'), array('limit' => 100));
     $i = 1;
     $count = 0;
 
@@ -37,7 +37,14 @@ function tab_img($data) {
             else
                 $main = "btn-default";
 
-            $img_list.='<div class="col-md-3 data-row"><div class="panel panel-default "><div class="panel-heading">' . $path_parts['basename'] . '<span class="glyphicon glyphicon-remove pull-right btn btn-default btn-xs img-delete" data-id="' . $row['id'] . '" data-toggle="tooltip" data-placement="top" title="' . __('Удалить') . '"></span><span class="pull-right">&nbsp;</span><span class="glyphicon glyphicon-heart pull-right btn ' . $main . ' btn-xs img-main" data-path="' . $row['name'] . '" data-path-s="' . str_replace('.', 's.', $row['name']) . '"  data-toggle="tooltip" data-placement="top" title="' . __('Главное превью товара') . '"></span></div><div class="panel-body text-center"><a href="' . $row['name'] . '" target="_blank"><img class="" src="' . str_replace('.', 's.', $row['name']) . '"></a></div></div></div>';
+
+
+            $num = $PHPShopGUI->setSelectValue($row['num'], 10);
+
+            $select = $PHPShopGUI->setSelect("foto_num_new[" . $row['id'] . "]", $num, 45, null, false, false, false, false, false, $row['id'], 'selectpicker pull-right img-num', false, 'btn btn-default btn-xs');
+
+
+            $img_list.='<div class="col-md-3 data-row"><div class="panel panel-default"><div class="panel-heading">' . $path_parts['basename'] . '<span class="glyphicon glyphicon-remove pull-right btn btn-default btn-xs img-delete" data-id="' . $row['id'] . '" data-toggle="tooltip" data-placement="top" title="' . __('Удалить') . '"></span><span class="pull-right">&nbsp;</span><span class="glyphicon glyphicon-heart pull-right btn ' . $main . ' btn-xs img-main" data-path="' . $row['name'] . '" data-path-s="' . str_replace('.', 's.', $row['name']) . '"  data-toggle="tooltip" data-placement="top" title="' . __('Главное превью товара') . '"></span><span class="pull-right">&nbsp;</span>' . $select . '</div><div class="panel-body text-center"><a href="' . $row['name'] . '" target="_blank"><img class="" src="' . str_replace('.', 's.', $row['name']) . '"></a></div></div></div>';
 
             if ($i == 4) {
                 $img_list.='</div>';
@@ -54,14 +61,14 @@ function tab_img($data) {
         $img_list.='</div>';
 
 
-    $img_add = '<div class="panel panel-default"><div class="panel-body">' . $PHPShopGUI->setIcon(false, "img_new", false, array('load' => true, 'server' => true, 'url' => true,'multi'=>true), $img_width) . '</div></div>';
+    $img_add = '<div class="panel panel-default"><div class="panel-body">' . $PHPShopGUI->setIcon(false, "img_new", false, array('load' => true, 'server' => true, 'url' => true, 'multi' => true), $img_width) . '</div></div>';
 
 
 
     $disp = $PHPShopGUI->setCollapse(__('Добавить изображение'), $img_add);
-    
-    if(!empty($img_list))
-    $disp.= $PHPShopGUI->setCollapse(__('Дополнительные изображения'), $img_list);
+
+    if (!empty($img_list))
+        $disp.= $PHPShopGUI->setCollapse(__('Дополнительные изображения'), $img_list);
 
     return $disp;
 }

@@ -1,7 +1,8 @@
 
 ALTER TABLE  `phpshop_orders` ADD  `sum` FLOAT ;
-
+ALTER TABLE  `phpshop_categories` ADD  `dop_cat` varchar(255) DEFAULT '';
 ALTER TABLE  `phpshop_sort_categories` ADD  `product` enum('0','1') NOT NULL DEFAULT '0' ;
+ALTER TABLE  `phpshop_delivery` ADD  `payment` varchar(255) DEFAULT '';
 
 CREATE TABLE IF NOT EXISTS `phpshop_newsletter` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

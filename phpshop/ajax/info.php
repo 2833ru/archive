@@ -50,7 +50,7 @@ function GetFile($dir) {
 
 // Срок действия тех. поддержки
 $GetFile = GetFile("../../license/");
-@$License = parse_ini_file("../../license/" . $GetFile, 1);
+@$License = parse_ini_file_true("../../license/" . $GetFile, 1);
 
 $TechPodUntilUnixTime = $License['License']['SupportExpires'];
 if (is_numeric($TechPodUntilUnixTime))
@@ -65,7 +65,7 @@ else
     $LicenseUntil = " - ";
 
 if ($License['License']['Pro'] == 'Start') {
-    $product_name = 'Start';
+    $product_name = 'Basic';
 } else {
     if ($License['License']['Pro'] == 'Enabled')
         $product_name = 'Pro 1C';
@@ -86,7 +86,7 @@ foreach (str_split($GLOBALS['SysValue']['upload']['version']) as $w)
 $Info = "Информация о программе
 ---------------------------------------------
 
-Версия: " . $product_name . "
+Версия: PHPShop " . $product_name . "
 Сборка: " . substr($version, 0, strlen($version)-1). "
 Дизайн: " . $PHPShopSystem->getParam('skin') . " " . $theme . "
 Установлено: " . $FileDate . "

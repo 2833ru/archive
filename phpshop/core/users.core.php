@@ -16,6 +16,8 @@ PHPShopObj::loadClass('delivery');
 class PHPShopUsers extends PHPShopCore {
 
     var $activation = false;
+    var $debug = false;
+    
 
     /**
      * Конструктор
@@ -24,9 +26,6 @@ class PHPShopUsers extends PHPShopCore {
 
         // Имя Бд
         $this->objBase = $GLOBALS['SysValue']['base']['shopusers'];
-
-        // Отладка
-        $this->debug = false;
 
         // Список экшенов
         $this->action = array('get' => array('productId', 'noticeId'), 'post' => array('add_notice', 'update_password', 'add_user', 'update_user', 'passw_send'),
@@ -852,8 +851,9 @@ class PHPShopUsers extends PHPShopCore {
     function user_check_by_email($login) {
         $PHPShopOrm = new PHPShopOrm($this->getValue('base.shopusers'));
         $PHPShopOrm->debug = $this->debug;
+        $PHPShopOrm->Option['where'] = " or ";
         if (PHPShopSecurity::true_email($login)) {
-            $data = $PHPShopOrm->select(array('id'), array('mail' => '="' . trim($login) . '"'), false, array('limit' => 1));
+            $data = $PHPShopOrm->select(array('id'), array('mail' => '="' . trim($login) . '"','login'=>'="' . trim($login).'"'), false, array('limit' => 1));
             if (is_array($data) AND PHPShopSecurity::true_num($data['id'])) {
                 return $data['id'];
             }

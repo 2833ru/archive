@@ -347,7 +347,7 @@ function faset_filter_click(obj) {
             if (last != '&' && last != '')
                 href += '&';
 
-            href += $(obj).attr('data-url').split(']').join('][]');
+            href += $(obj).attr('data-url').split(']').join('][]')+'&';
 
         }
         else {
@@ -690,6 +690,7 @@ $(document).ready(function() {
     // добавление в корзину подтипа
     $(".addToCartListParent").on('click', function() {
         addToCartList($(this).attr('data-uid'), $(this).attr('data-num'), $(this).attr('data-parent'));
+        $('[itemprop="price"]').html($(this).attr('data-price'));
     });
 
     // добавление в корзину опции
@@ -873,5 +874,7 @@ $(document).ready(function() {
         sliderbig.destroySlider();
         delete sliderbig;
     });
+    
+    
 
 });

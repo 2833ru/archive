@@ -3,14 +3,13 @@ if (empty($_GET['path']))
     header('Location: ?path=intro');
 
 // Фрейм
-if(isset($_GET['frame'])){
-    $isFrame=' hidden ';
-    $frameWidth='width:100%;';
-    $isMobile=null;
-}
-else {
-    $isFrame=$frameWidtn=null;
-    $isMobile='visible-xs';
+if (isset($_GET['frame'])) {
+    $isFrame = ' hidden ';
+    $frameWidth = 'width:100%;';
+    $isMobile = null;
+} else {
+    $isFrame = $frameWidtn = null;
+    $isMobile = 'visible-xs';
 }
 
 session_start();
@@ -92,6 +91,8 @@ function getLicense($file) {
 
 // Подключение меню модулей
 function modulesMenu() {
+    global $notificationList;
+
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['modules']);
     if (!empty($_SESSION['mod_limit']))
         $mod_limit = intval($_SESSION['mod_limit']);
@@ -106,6 +107,11 @@ function modulesMenu() {
             $db = xml2array($menu, "adminmenu", true);
             if ($db['capability']) {
                 $dis.='<li><a href="?path=modules&id=' . $path . '">' . $db['title'] . '</a></li>';
+            }
+
+            // Notification
+            if (!empty($db['notification'])) {
+                $notificationList[] = $path;
             }
         }
 
@@ -132,7 +138,6 @@ if (empty($adm_title)) {
     $adm_title = 'PHPShop';
     $adm_brand = $brand;
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -281,7 +286,7 @@ if (empty($adm_title)) {
                         <ul class="nav navbar-nav">
                             <li><a href="../../" title="Магазин" target="_blank" class="visible-xs">Магазин</a></li>
                             <li><a href="./admin.php" title="Стартовая панель" class="home"><span class="glyphicon glyphicon-home hidden-xs"></span><span class="visible-xs">Домой</span></a></li>
-                            <li class="dropdown <?php echo $menu_active_order . $menu_active_payment . $menu_active_order_paymentlog . $menu_active_order_status . $menu_active_report_statorder . $menu_active_report_statuser . $menu_active_report_statpayment. $menu_active_report_statproduct; ?>">
+                            <li class="dropdown <?php echo $menu_active_order . $menu_active_payment . $menu_active_order_paymentlog . $menu_active_order_status . $menu_active_report_statorder . $menu_active_report_statuser . $menu_active_report_statpayment . $menu_active_report_statproduct; ?>">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Заказы <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="?path=order"><span>Заказы</span><span class="dropdown-header">Просмотр и оформление заказов, распечатка счетов</span></a></li>
@@ -341,7 +346,7 @@ if (empty($adm_title)) {
                             </li>
                         </ul>
                         <?php
-                        // Быстрый поиск
+// Быстрый поиск
                         switch ($PHPShopSystem->getSerilizeParam('admoption.search_enabled')) {
                             case 1:
                                 $search_class = 'hidden';
@@ -377,8 +382,24 @@ if (empty($adm_title)) {
                             </div>
                         </form>
                         <?php
+                        // notification
+                        $i_notif = 0;
+                        if (is_array($notificationList))
+                            foreach ($notificationList as $notification) {
+                                if ($i_notif < 3) {
+                                    include_once($_classPath . 'modules/' . $notification . '/admpanel/notification.php');
+                                    $notification_function = 'notification' . ucfirst($notification);
+                                    if (function_exists($notification_function)) {
+                                        call_user_func($notification_function);
+                                    }
+                                    
+                                }
+                                $i_notif++;
+                            }
+
+
                         if (!empty($_SESSION['update_check']))
-                            echo '<a class="navbar-btn btn btn-sm btn-info navbar-right hidden-xs" href="?path=update">Update <span class="badge">' . intval($_SESSION['update_check']) . '</span></a>';
+                            echo '<a class="navbar-btn btn btn-sm btn-info navbar-right hidden-xs" href="?path=update" data-toggle="tooltip" data-placement="bottom" title="Доступно обновление">Update <span class="badge">' . intval($_SESSION['update_check']) . '</span></a>';
                         ?>
 
                         <a class="navbar-btn btn btn-sm btn-warning navbar-right hidden-xs hidden-sm hide" href="?path=order&where[statusi]=0">
@@ -517,7 +538,7 @@ if (empty($adm_title)) {
         <!--/ Modal filemanager -->
 
         <!-- Fixed mobile bar -->
-        <div class="bar-padding-fix <?php echo $isMobile.$isFrame; ?>"> </div>
+        <div class="bar-padding-fix <?php echo $isMobile . $isFrame; ?>"> </div>
         <nav class="navbar navbar-statick navbar-fixed-bottom bar bar-tab visible-xs visible-sm <?php echo $isFrame; ?>" role="navigation">
             <a class="tab-item <?php echo $menu_active_intro; ?>" href="./admin.php">
                 <span class="icon icon-home"></span>
@@ -541,7 +562,7 @@ if (empty($adm_title)) {
             </a>
         </nav>
         <!--/ Fixed mobile bar -->
-   
+
         <!-- jQuery plugins -->
         <script src="./js/bootstrap.min.js"></script>
         <script src="./js/jquery.dataTables.min.js"></script>

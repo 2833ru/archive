@@ -3,7 +3,7 @@
 /**
  * Библиотека парсинга данных
  * @author PHPShop Software
- * @version 1.5
+ * @version 1.7
  * @package PHPShopParser
  */
 class PHPShopParser {
@@ -41,7 +41,7 @@ class PHPShopParser {
 
     static function replacedir($string) {
         $replaces = array(
-            "/images\//i" => $GLOBALS['SysValue']['dir']['dir'] . $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/images/",
+             "/(\"|\'|=)images\//i" => "\\1".$GLOBALS['SysValue']['dir']['dir'] . $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/images/",
             "/!images!\//i" => "images/",
             "/java\//i" => "/java/",
             "/css\//i" => "/css/",
@@ -79,7 +79,7 @@ class PHPShopParser {
             echo "Error Tpl File: $path";
 
         $replaces = array(
-            "/images\//i" => $GLOBALS['SysValue']['dir']['dir'] . $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/images/",
+            "/(\"|\'|=)images\//i" => "\\1".$GLOBALS['SysValue']['dir']['dir'] . $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/images/",
             "/!images!\//i" => "images/",
             "/java\//i" => "/java/",
             "/phpshop\//i" => "/phpshop/",
@@ -243,7 +243,7 @@ function ParseTemplate($TemplateName) {
     $root = $path_parts['dirname'] . "/";
     if ($path_parts['dirname'] != $dirSlesh) {
         $replaces = array(
-            "/images\//i" => $SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/images/",
+            "/(\"|\'|=)images\//i" => "\\1".$SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/images/",
             "/!images!\//i" => "images/",
             "/\/favicon.ico/i" => $root . "favicon.ico",
             "/java\//i" => $root . "java/",
@@ -280,7 +280,7 @@ function ParseTemplate($TemplateName) {
         );
     } else {
         $replaces = array(
-            "/images\//i" => $SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/images/",
+            "/(\"|\'|=)images\//i" => "\\1".$SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/images/",
             "/!images!\//i" => "images/",
             "/java\//i" => "/java/",
             "/css\//i" => "/css/",
@@ -388,7 +388,7 @@ function SysValueReturn($m) {
  * @return string
  */
 function Parser($string) {
-    return @preg_replace_callback("/@([a-zA-Z0-9_]+)@/", 'SysValueReturn', @preg_replace_callback("/(@php)(.*)(php@)/sU", "evalstr", $string));
+    return @preg_replace_callback("/@([a-zA-Z0-9_]+)@/", 'SysValueReturn', @preg_replace_callback("/(@php)(.*)(php@)/sU", "evalstr",  str_replace('&#43;', '+',$string)));
 }
 
 /**

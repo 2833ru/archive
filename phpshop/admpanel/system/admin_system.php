@@ -204,16 +204,17 @@ function actionStart() {
             $PHPShopGUI->setField("Цифровые товары", $PHPShopGUI->setCheckbox('option[digital_product_enabled]', 1, 'Продажа цифровых товаров', $option['digital_product_enabled']), 1, 'Прикрепленные к товару файлы доступны после оплаты заказа в личном кабинете');
 
     $PHPShopGUI->_CODE.=$PHPShopGUI->setCollapse('Настройка цен', $PHPShopGUI->setField("Валюта по умолчанию", $PHPShopGUI->setSelect('dengi_new', $dengi_value)) .
-            $PHPShopGUI->setField("Валюта в счете", $PHPShopGUI->setSelect('kurs_new', $kurs_value)) .
-            $PHPShopGUI->setField("Валюта для безнала", $PHPShopGUI->setSelect('kurs_beznal_new', $kurs_beznal_value)) .
-            $PHPShopGUI->setField("Накрутка цены", $PHPShopGUI->setInputText(false, 'percent_new', $data['percent'], 100, '%')) .
-            $PHPShopGUI->setField("НДС", $PHPShopGUI->setCheckbox('nds_enabled_new', 1, 'Учитывать НДС в счете', $data['nds_enabled'])) .
-            $PHPShopGUI->setField("Значение НДС", $PHPShopGUI->setInputText(false, 'nds_new', $data['nds'], 100, '%')) .
-            $PHPShopGUI->setField("Склад", $PHPShopGUI->setCheckbox('option[sklad_enabled]', 1, 'Показывать значение склада у товара', $option['sklad_enabled'])) .
-            $PHPShopGUI->setField("Округление цен", $PHPShopGUI->setInputText(false, 'option[price_znak]', $option['price_znak'], 50), 1, 'Количество знаков после запятой в цене') .
-            $PHPShopGUI->setField("Минимальная сумма заказа", $PHPShopGUI->setInputText(false, 'option[cart_minimum]', $option['cart_minimum'], 100)) .
-            $PHPShopGUI->setField("Контроль склада", $PHPShopGUI->setSelect('option[sklad_status]', $sklad_status_value)) .
-            $PHPShopGUI->setField("Подтипы", $PHPShopGUI->setCheckbox('option[parent_price_enabled]', 1, 'Показывать цену и корзину у ведущего товара в подтипах', $option['parent_price_enabled']))
+    $PHPShopGUI->setField("Валюта в счете", $PHPShopGUI->setSelect('kurs_new', $kurs_value)) .
+    $PHPShopGUI->setField("Валюта для безнала", $PHPShopGUI->setSelect('kurs_beznal_new', $kurs_beznal_value)) .
+    $PHPShopGUI->setField("Накрутка цены", $PHPShopGUI->setInputText(false, 'percent_new', $data['percent'], 100, '%')) .
+    $PHPShopGUI->setField("НДС", $PHPShopGUI->setCheckbox('nds_enabled_new', 1, 'Учитывать НДС в счете', $data['nds_enabled'])) .
+    $PHPShopGUI->setField("Значение НДС", $PHPShopGUI->setInputText(false, 'nds_new', $data['nds'], 100, '%')) .
+    $PHPShopGUI->setField("Склад", $PHPShopGUI->setCheckbox('option[sklad_enabled]', 1, 'Показывать значение склада у товара', $option['sklad_enabled'])) .
+    $PHPShopGUI->setField("Округление цен", $PHPShopGUI->setInputText(false, 'option[price_znak]', $option['price_znak'], 50), 1, 'Количество знаков после запятой в цене') .
+    $PHPShopGUI->setField("Минимальная сумма заказа", $PHPShopGUI->setInputText(false, 'option[cart_minimum]', $option['cart_minimum'], 100)) .
+    $PHPShopGUI->setField("Контроль склада", $PHPShopGUI->setSelect('option[sklad_status]', $sklad_status_value)) .
+    $PHPShopGUI->setField("Подтипы", $PHPShopGUI->setCheckbox('option[parent_price_enabled]', 1, 'Показывать цену и корзину у ведущего товара в подтипах', $option['parent_price_enabled'])).
+    $PHPShopGUI->setField("Мультивалютные цены", $PHPShopGUI->setCheckbox('option[multi_currency_search]', 1, 'Сортировка по цене среди мультивалютных товаров', $option['multi_currency_search']),false,__('Автоматизируется через модуль Задачи'))
     );
 
     $PHPShopGUI->_CODE.=$PHPShopGUI->setCollapse('Настройка дизайна', $PHPShopGUI->setField('Дизайн', GetSkinList($data['skin']) . '<br>' . $PHPShopGUI->setCheckbox('option[user_skin]', 1, 'Смены дизайна пользователями', $option["user_skin"]), 1, 'Дизайн шаблон сайта (front-end)') . $PHPShopGUI->setField("Логотип", $PHPShopGUI->setIcon($data['logo'], "logo_new", false), 1, 'Используется в шапке дизайна и печатных документах'));
@@ -244,7 +245,7 @@ function actionStart() {
 
     $PHPShopGUI->_CODE.=$PHPShopGUI->setCollapse('Настройка управления', $PHPShopGUI->setField('Дизайн', GetAdminSkinList($option['theme']), 1, 'Цветовая схема оформления панели управления (back-end)') .
             $PHPShopGUI->setField("HTML-редактор по умолчанию", GetEditors($option['editor']), 1, 'Визуальный редактор контента') .
-            $PHPShopGUI->setField("Цвет редактора шаблонов", GetAceSkinList($option['ace_theme']), 1, 'Стилизованная подсветка синтаксиса кода шаблонов') .
+            $PHPShopGUI->setField("Цвет редактора исходного кода", GetAceSkinList($option['ace_theme']), 1, 'Стилизованная подсветка синтаксиса исходного HTML кода') .
             $PHPShopGUI->setField(__("Заголовок"), $PHPShopGUI->setInputText(null, "option[adm_title]", $option['adm_title'], 300), 1, 'Брендовый заголовок в левом верхнем углу панели управления') .
             $PHPShopGUI->setField("RSS", $PHPShopGUI->setCheckbox('option[rss_graber_enabled]', 1, 'Создавать новости из RSS каналов', $option['rss_graber_enabled'])) .
             $PHPShopGUI->setField("Multi Manager", $PHPShopGUI->setCheckbox('option[rule_enabled]', 1, 'Учет прав управления товарами для менеджеров', $option['rule_enabled'])) .
@@ -294,7 +295,7 @@ function actionUpdate() {
     unset($option['support_notice']);
 
     // Корректировка пустых значений
-    $PHPShopOrm->updateZeroVars('option.user_calendar', 'option.cloud_enabled', 'option.digital_product_enabled', 'option.parent_price_enabled', 'option.user_skin', 'option.sms_enabled', 'option.sms_status_order_enabled', 'option.notice_enabled', 'option.user_mail_activate', 'option.user_mail_activate_pre', 'option.user_price_activate', 'option.rss_graber_enabled', 'option.mail_smtp_enabled', 'option.mail_smtp_debug', 'option.mail_smtp_auth', 'option.sklad_enabled','option.rule_enabled');
+    $PHPShopOrm->updateZeroVars('option.user_calendar', 'option.cloud_enabled', 'option.digital_product_enabled', 'option.parent_price_enabled', 'option.user_skin', 'option.sms_enabled', 'option.sms_status_order_enabled', 'option.notice_enabled', 'option.user_mail_activate', 'option.user_mail_activate_pre', 'option.user_price_activate', 'option.rss_graber_enabled', 'option.mail_smtp_enabled', 'option.mail_smtp_debug', 'option.multi_currency_search', 'option.mail_smtp_auth', 'option.sklad_enabled', 'option.rule_enabled');
 
     if (is_array($_POST['option']))
         foreach ($_POST['option'] as $key => $val)

@@ -1,4 +1,10 @@
 
+#faset-filter h4 {
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bolder;
+}
+
 #visualcart > a{
     height: 75px;
 }

@@ -37,7 +37,7 @@ function treegenerator($array, $i, $curent) {
 }
 
 function actionStart() {
-    global $PHPShopGUI, $PHPShopSystem, $PHPShopModules, $PHPShopOrm;
+    global $PHPShopGUI, $PHPShopModules, $PHPShopOrm;
 
     // Выборка
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
@@ -100,11 +100,11 @@ function actionStart() {
 
     $Tab1.= $PHPShopGUI->setField("Опции вывода:", $PHPShopGUI->setSelect("enabled_new", $SelectValue, 300));
 
-    // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1));
-
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
+
+    // Вывод формы закладки
+    $PHPShopGUI->setTab(array("Основное", $Tab1));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =

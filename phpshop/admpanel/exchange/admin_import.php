@@ -49,11 +49,17 @@ $key_name = array(
     'data_adres' => 'Адрес',
     'descrip' => 'Meta description',
     'keywords' => 'Meta keywords',
+    "prod_seo_name" => 'SEO ссылка',
+    'num_row' => 'Товаров в длину',
+    'num_cow' => 'Товаров на странице',
+    'count' => 'Содержит товаров',
+    'cat_seo_name'=>'SEO ссылка',
+    'sum'=>'Сумма'
 );
 
 
 // Стоп лист
-$key_stop = array('password', 'wishlist', 'data_adres', 'sort', 'yml_bid_array', 'vendor', 'status', 'files', 'datas', 'price_search');
+$key_stop = array('password', 'wishlist', 'data_adres', 'sort', 'yml_bid_array', 'vendor', 'status', 'files', 'datas', 'price_search','vid','name_rambler','servers','skin','skin_enabled','secure_groups','icon_description');
 
 switch ($subpath[2]) {
     case 'catalog':

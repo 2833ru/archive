@@ -16,7 +16,7 @@ class AddToTemplate extends PHPShopProductElements {
     function header_bar() {
         global $PHPShopSystem;
 
-        $this->set('version', ', Mobile Template 1.9', true);
+        $this->set('version', ', Mobile Template 2.0', true);
 
         // »конка
         $logo=$this->memory_get('mobile.logo');

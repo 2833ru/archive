@@ -147,7 +147,7 @@ E-mail: @mail@<br>
 <hr>
 <p>Итого -- @sum@ @currency@<br>
 Скидка -- @discount@%<br>
-Доставка -- @deliveryPrice@ @currency@</p>
+Доставка -- @deliveryPrice@ @currency@ @deliveryInfo@</p>
 <hr>
 <p>К оплате с учетом скидки: @total@ @currency@</p>
 

@@ -6,7 +6,7 @@ function addFilial($data) {
     if ($data['category'] == 1000) {
 
         $licFile = PHPShopFile::searchFile('../../license/', 'getLicense', true);
-        @$License = parse_ini_file("../../license/" . $licFile, 1);
+        @$License = parse_ini_file_true("../../license/" . $licFile, 1);
 
         if (empty($License['License']['DomenLocked']))
             $License['License']['DomenLocked'] = $_SERVER['SERVER_NAME'];

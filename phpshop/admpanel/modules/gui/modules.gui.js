@@ -46,7 +46,7 @@ $().ready(function() {
             data.push({action: 0, ajax: 1, id: 'button'});
             $.ajax({
                 mimeType: 'text/html; charset=windows-1251',
-                url: '?path=modules.action&id=' + $('#module-name').html(),
+                url: '?path=modules.action&id=' + $.getUrlVar('id'),
                 type: 'post',
                 data: data,
                 dataType: "html",

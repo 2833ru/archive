@@ -1470,8 +1470,7 @@ img.template:hover{
     margin-right: 15px;
 }
 #faset-filter-body .checkbox span {
-    font-weight: 700;
-    text-transform: uppercase;
+    -text-transform: uppercase;
     display: inline-block;
 }
 #price-filter-body {
@@ -1482,8 +1481,7 @@ img.template:hover{
     padding-right: 15px;
 }
 #price-filter-form span {
-    font-weight: 700;
-    text-transform: uppercase;
+    -text-transform: uppercase;
 }
 .row.cat-intro img {
     max-width: 100%;
@@ -1662,7 +1660,7 @@ img.template:hover{
     list-style-type: none;
     position: absolute;
     z-index: 10;    
-    max-height: 320px;
+    max-height: 600px;
     overflow: auto;
 }
 .main-navbar-list-catalog-wrapper.open {
@@ -1958,3 +1956,42 @@ body.modal-open {
     -moz-transition: 0.5s;
     transition: 0.5s;
 }
+
+.product-col .panel.panel-default {
+        border: none;
+        box-shadow: none;
+        margin: 0;
+    }
+    .product-col .panel.panel-default .panel-body {
+        border: none;
+        box-shadow: none;
+        padding: 0;
+        margin: 0;
+        display: block;
+        width: 100%;
+    }
+    .product-col .panel.panel-default .panel-body .panel-body-left,
+    .product-col .panel.panel-default .panel-body .panel-body-right {
+        display: block;
+    }
+    .product-col .panel.panel-default .panel-body .panel-body-right {
+        padding-left: 0;
+    }
+@media (min-width: 768px) {
+        .product-col .panel.panel-default .panel-body {
+            display: table;
+            width: 100%;
+            height: 120px;
+        }
+        .product-col .panel.panel-default .panel-body .panel-body-left,
+        .product-col .panel.panel-default .panel-body .panel-body-right {
+            display: table-cell;
+            vertical-align: middle;
+        }
+        .product-col .panel.panel-default .panel-body .panel-body-left {
+            width: 105px;
+        }
+        .product-col .panel.panel-default .panel-body .panel-body-right {
+            padding-left: 10px;
+        }
+    }

@@ -15,14 +15,14 @@ function actionStart() {
     if (is_array($status_array))
         foreach ($status_array as $status_val) {
 
-            $status[$status_val['id']] = substr($status_val['name'], 0, 25);
+            $status[$status_val['id']] = substr($status_val['name'], 0, 22);
             $order_status_value[] = array($status_val['name'], $status_val['id'], $_GET['where']['statusi']);
         }
 
-    /*
-    if (empty($_GET['where']['statusi']))
+    
+    if (!isset($_GET['where']['statusi']))
         $_GET['where']['statusi'] = 'none';
-    */
+    
 
     $order_status_value[] = array(__('Все заказы'), 'none', $_GET['where']['statusi']);
 

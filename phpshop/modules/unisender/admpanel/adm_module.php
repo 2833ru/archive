@@ -12,7 +12,7 @@ function actionBase() {
 
     // Обход пользователей
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['shopusers']);
-    $data = $PHPShopOrm->select(array('*'), array('subscribe' => "='1'"), false, array('limit' => 100));
+    $data = $PHPShopOrm->select(array('*'), array('subscribe' => "='1'"), array('order'=>'id desc'), array('limit' => 500));
     if (is_array($data))
         foreach ($data as $user) {
 
@@ -46,17 +46,19 @@ function actionBase() {
 
         $fp = fsockopen("ssl://api.unisender.com", 443, $errno, $errstr, 30);
         $get_string = http_build_query($query_array);
-        
         if (!$fp) {
             $api_uri = 'https://api.unisender.com/ru/api/importContacts';
             $result = file_get_contents($api_uri . '?' . $get_string);
         } else {
 
-            $out = "GET /ru/api/importContacts?$get_string    HTTP/1.1\r\n";
+            $out = "POST /ru/api/importContacts    HTTP/1.1\r\n";
             $out .= "Host: api.unisender.com\r\n";
+			$out .= "Content-Type: application/x-www-form-urlencoded\r\n";
+            $out .= "Content-Length: ".strlen($get_string)."\r\n";
             $out .= "Connection: Close\r\n\r\n";
 
             fwrite($fp, $out);
+			fwrite($fp, $get_string);
             $res = null;
             while (!feof($fp)) {
                 $res.=fgets($fp, 128);
@@ -124,7 +126,7 @@ function actionStart() {
 
     // Новык пользователи
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['shopusers']);
-    $data_user = $PHPShopOrm->select(array('*'), array('subscribe' => "='1'"), false, array('limit' => 1000));
+    $data_user = $PHPShopOrm->select(array('*'), array('subscribe' => "='1'"), array('order'=>'id desc'), array('limit' => 500));
     $num_new_user = count($data_user);
     if ($num_new_user > 0)
         $new_user = '<span class=badge>' . $num_new_user . '</span>';
@@ -150,7 +152,7 @@ function actionStart() {
 
     $Tab1.=$PHPShopGUI->setField('Ключ доступа к API ', $PHPShopGUI->setInput('text.required', "key_new", $data['key'], false, 300));
 
-    $Tab2 = $PHPShopGUI->setInfo('<p>Модуль позволяет автоматически выгружать данные покупателей из интернет-магазина в сервис увеличения повторных продаж через емейл рассылку <a href="http://unisender.com" target="_blank">UniSender.com</a>.</p>
+    $Tab2 = $PHPShopGUI->setInfo('<p>Модуль позволяет автоматически выгружать данные покупателей из интернет-магазина в сервис увеличения повторных продаж через емейл рассылку <a href="http://unisender.com/?a=phpshop" target="_blank">UniSender.com</a>.</p>
 <p>    
 Ключ доступа к API для использования текущего модуля можно получить в настройках аккаунта Unisender в закладке <kbd>Интеграция и API</kbd>.<br>Опция <code>Текущий статус API</code> должна быть в режиме <kbd>Включен</kbd>.</p>');
 

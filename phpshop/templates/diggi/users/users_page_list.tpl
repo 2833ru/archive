@@ -1,4 +1,9 @@
-<h2 class="main-heading text-center">@formaTitle@</h2>
+
+<div class="page-header text-center">
+    <h2>@formaTitle@</h2>
+</div>
+
+
 <style type="text/css">
 	table {
 	max-width: 465px;

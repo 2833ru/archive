@@ -636,7 +636,7 @@ hr{
     box-shadow:none;
 }
 .sidebar-nav ul.active li a{
-    font-size:15px;
+    font-size:14px;
     color:#fff;
     padding-top:8px;
     padding-bottom:8px;
@@ -787,7 +787,7 @@ hr{
 .product-head{
     padding: 15px 25px;
     margin: 0 0 20px;
-    font-size: 20px;
+    font-size: 15px;
     background: #0a87cf;
     color: #fff;
     text-transform: uppercase;
@@ -798,7 +798,7 @@ hr{
 }
 .product-head h2 {
     margin: 0;
-    font-size: 24px;
+    font-size: 15px;
     color: #fff;
 }
 .product-col{
@@ -849,20 +849,13 @@ hr{
     line-height: 18px;
     position: relative;
 }
-.product-col .description.product-description {
-    height: 64px;
-    overflow: hidden;
-}
+
 
 .description-product-height-fix {
     width: 100%;
     height: 100%;
     top: 0;
     left: 0;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0), #fff);
-    background: -webkit-linear-gradient(to bottom, rgba(0, 0, 0, 0), #fff);
-    background: -moz-linear-gradient(to bottom, rgba(0, 0, 0, 0), #fff);
-    background: -o-linear-gradient(to bottom, rgba(0, 0, 0, 0), #fff);
     position: absolute;
     z-index: 1;
     -webkit-transition: 0.5s;
@@ -1110,7 +1103,7 @@ hr{
 }
 .product-filter .control-label{
     padding-top:5px;
-    font-size:18px !important;
+    font-size:16px !important;
     font-weight:normal;
 }
 .product-filter .form-control{
@@ -1420,8 +1413,8 @@ hr{
 
 .side-heading {
     margin:0;
-    padding: 14px 20px;
-    font-size:20px;
+    padding: 12px 15px;
+    font-size: 15px;
     text-transform: uppercase;
     color: #fff;
     background: #0a87cf;
@@ -1696,7 +1689,7 @@ img.template:hover{
     transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 }
 #faset-filter-body {
-    padding-bottom: 10px;
+    padding-bottom: 1px;
 }
 #price-filter-body {
     border-bottom: 1px solid #ddd;
@@ -1719,7 +1712,7 @@ img.template:hover{
     margin-bottom: 0px;
     margin-top:0px;
     background-color: #fff;
-    border-bottom: 1px solid #ddd;
+    -border-bottom: 1px solid #ddd;
     border-top: 1px solid #ddd;
 }
 #price-filter-body h4 {
@@ -1730,8 +1723,8 @@ img.template:hover{
     margin-right: 15px;
 }
 #faset-filter-body .checkbox span {
-    /*font-weight: 700;*/
-    text-transform: uppercase;
+    /*font-weight: 700;
+    text-transform: uppercase;*/
     display: inline-block;
     margin-top: 1px;
 }
@@ -1743,12 +1736,12 @@ img.template:hover{
     padding-right: 15px;
 }
 #price-filter-form span {
-    /*font-weight: 700;*/
-    text-transform: uppercase;
+    /*font-weight: 700;
+    text-transform: uppercase;*/
 }
 #price-filter-val-min span,
 #price-filter-val-max span {
-    margin-top: 10px;
+    margin-top: 0px;
     display: inline-block;
 }
 .row.cat-intro img {
@@ -1932,9 +1925,8 @@ img.template:hover{
 }
 .panel-default>.panel-heading > h3,
 .panel-success>.panel-heading > h3 {
-    font-size: 18px;
+    font-size: 15px;
     text-transform: uppercase;
-    -color: #ffb400;
 }
 .panel-success>.panel-heading > a {
     color: #fff;
@@ -1949,7 +1941,7 @@ img.template:hover{
     list-style-type: none;
     position: absolute;
     z-index: 10;    
-    max-height: 320px;
+    max-height: 600px;
     overflow: auto;
 }
 .main-navbar-list-catalog-wrapper.open {
@@ -2218,6 +2210,7 @@ img.template:hover{
 }
 .nav-catalog-dropdown-link.open {
     background: #3bc6e4;
+    border-radius: 5px 0 0 0 !important;
     color: #fff !important;
 }
 .compare-list-button-wrapper {
@@ -2363,3 +2356,46 @@ img.template:hover{
     -moz-border-radius: 5px 5px 0 0;
     border-radius: 5px 5px 0 0;
 }
+
+#faset-filter  h4{
+    cursor: pointer;
+}
+
+.product-col .panel.panel-default {
+        border: none;
+        box-shadow: none;
+        margin: 0;
+    }
+    .product-col .panel.panel-default .panel-body {
+        border: none;
+        box-shadow: none;
+        padding: 0;
+        margin: 0;
+        display: block;
+        width: 100%;
+    }
+    .product-col .panel.panel-default .panel-body .panel-body-left,
+    .product-col .panel.panel-default .panel-body .panel-body-right {
+        display: block;
+    }
+    .product-col .panel.panel-default .panel-body .panel-body-right {
+        padding-left: 0;
+    }
+@media (min-width: 768px) {
+        .product-col .panel.panel-default .panel-body {
+            display: table;
+            width: 100%;
+            height: 120px;
+        }
+        .product-col .panel.panel-default .panel-body .panel-body-left,
+        .product-col .panel.panel-default .panel-body .panel-body-right {
+            display: table-cell;
+            vertical-align: middle;
+        }
+        .product-col .panel.panel-default .panel-body .panel-body-left {
+            width: 105px;
+        }
+        .product-col .panel.panel-default .panel-body .panel-body-right {
+            padding-left: 10px;
+        }
+    }

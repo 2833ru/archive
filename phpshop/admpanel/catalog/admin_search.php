@@ -149,6 +149,9 @@ function actionSearch() {
         $is_cart = true;
         $where['id'] = ' IN (' . $str . '0)';
     }
+    
+    // Убираем подтипы
+    $where['parent_enabled']="='0'";
 
     $PHPShopOrm->debug = false;
     $data = $PHPShopOrm->select(array('*'), $where, array('order' => 'name'), array('limit' => 100));

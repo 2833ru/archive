@@ -15,12 +15,12 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_yandexkassa_system` (
 
 
 INSERT INTO `phpshop_modules_yandexkassa_system` (`id`, `status`, `title`, `title_end`, `merchant_id`, `merchant_scid`, `merchant_sig`, `pay_variants`, `serial`, `version`) VALUES
-(1, 0, 'ѕлатежна€ система яндекс.ƒеньги', 'ќплатите пожалуйста свой заказ', '', '', '', 0x613a333a7b693a303b733a323a225043223b693a313b733a323a224143223b693a323b733a323a224750223b7d, '', 1.1);
+(1, 0, 'ѕлатежна€ система яндекс. асса', 'ќплатите пожалуйста свой заказ', '', '', '', 0x613a333a7b693a303b733a323a225043223b693a313b733a323a224143223b693a323b733a323a224750223b7d, '', 1.1);
 
 ALTER TABLE  `phpshop_modules_yandexkassa_system` ADD  `test` ENUM(  '0',  '1' ) NOT NULL DEFAULT  '0' AFTER  `pay_variants` ;
 
 INSERT INTO `phpshop_payment_systems` (`id`, `name`, `path`, `enabled`, `num`, `message`, `message_header`, `yur_data_flag`, `icon`) VALUES
-(10004, 'яндекс.ƒеньги', 'modules', '0', 0, '', '', '', '/UserFiles/Image/Payments/yandex-money.png');
+(10004, 'яндекс. асса', 'modules', '0', 0, '', '', '', '/UserFiles/Image/Payments/yandex-money.png');
 
 CREATE TABLE IF NOT EXISTS `phpshop_modules_yandexkassa_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

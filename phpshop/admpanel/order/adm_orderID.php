@@ -412,7 +412,6 @@ function sendUserMail($data) {
 function actionUpdate() {
     global $PHPShopModules, $PHPShopOrm;
 
-
     // Данные по заказу
     $PHPShopOrm->debug = false;
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_POST['rowID'])));
@@ -435,9 +434,6 @@ function actionUpdate() {
         $PHPShopDelivery->checkMod($order['Cart']['dostavka']);
         $order['Cart']['dostavka'] = $PHPShopDelivery->getPrice($PHPShopCart->getSum(false), $PHPShopCart->getWeight());
 
-        // Сериализация данных заказа
-        $_POST['orders_new'] = serialize($order);
-
         // Библиотека заказа
         $PHPShopOrder = new PHPShopOrderFunction(false, $order['Cart']['cart']);
 
@@ -447,9 +443,17 @@ function actionUpdate() {
 
         // Скидка
         $discount = $PHPShopOrder->ChekDiscount($order['Cart']['sum']);
+        if($order['Person']['discount']>$discount)
+            $discount = $order['Person']['discount'];
+    
+        
+        $order['Person']['discount']=$discount;
+        
+                // Сериализация данных заказа
+        $_POST['orders_new'] = serialize($order);
 
         // Итого
-        $_POST['sum_new'] = $PHPShopOrder->returnSumma($order['Cart']['sum'], $discount) + $order['Cart']['dostavka'];
+        $_POST['sum_new'] = $PHPShopOrder->returnSumma($PHPShopCart->getSum(false), $order['Person']['discount'])+ $order['Cart']['dostavka'];
     }
     // Только смена статуса
     else {

@@ -8,12 +8,13 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_oneclick_system` (
   `title_end` text NOT NULL,
   `serial` varchar(64) NOT NULL default '',
   `windows` enum('0','1') NOT NULL default '0',
+  `display` enum('0','1') NOT NULL default '0',
   `version` FLOAT(2) DEFAULT '1.1' NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 
-INSERT INTO `phpshop_modules_oneclick_system` VALUES (1,'0','Спасибо, Ваш заказ принят!','Наши менеджеры свяжутся с Вами для уточнения деталей.','','1','1.2');
+INSERT INTO `phpshop_modules_oneclick_system` VALUES (1,'0','Спасибо, Ваш заказ принят!','Наши менеджеры свяжутся с Вами для уточнения деталей.','','1','0','1.3');
 
 DROP TABLE IF EXISTS `phpshop_modules_oneclick_jurnal`;
 CREATE TABLE `phpshop_modules_oneclick_jurnal` (

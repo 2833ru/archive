@@ -34,7 +34,7 @@ function setGeneration() {
     $dir_global = $root . "/UserFiles/Files";
     GetFile($dir_global, "BASE");
 
-    $lang = @parse_ini_file('../modules/filemanager/server/lang.ini', 1);
+    $lang = @parse_ini_file_true('../modules/filemanager/server/lang.ini', 1);
 
     $ini = null;
     if (is_array($BASE))

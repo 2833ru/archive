@@ -12,5 +12,6 @@
             <podmenu_name>Обзор заявок</podmenu_name>
             <podmenu_action>dir.returncall</podmenu_action>
         </podmenu>
+        <notification>true</notification>
     </adminmenu>
 </module>

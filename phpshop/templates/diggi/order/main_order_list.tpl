@@ -1,8 +1,4 @@
-<!-- Main Heading Starts -->
-<h2 class="main-heading text-center">
-	Ваша корзина
-</h2>
-<!-- Main Heading Ends -->
+
 
 <!-- Top button Order Page Start -->
 <div class="row top-button-order-row">

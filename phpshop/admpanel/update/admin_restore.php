@@ -37,7 +37,7 @@ function getFileInfo($file) {
 
     $i++;
     $stat = stat("../../backup/backups/" . $file . '/files.zip');
-    $stat_bd = stat("../../backup/backups/" . $file . '/base.sql.gz');
+    $stat_bd = stat("../../backup/backups/" . $file . '/restore.sql');
 
     foreach (str_split($file) as $w)
         $version.=$w . '.';

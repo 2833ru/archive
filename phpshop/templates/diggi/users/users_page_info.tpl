@@ -1,13 +1,13 @@
 <div id="allspec">
     @user_error@
 </div>
-
+<p><br></p>
 <form name="users_password" method="post" class="form-horizontal" role="form">
 
     <div class="form-group">
         <label class="col-xs-12 col-sm-2 control-label">Статус</label>
         <div class="col-xs-4">
-            <span class="btn btn-success"><span class="glyphicon glyphicon-user"></span> @user_status@</span>
+            <span class="btn btn-default"><span class="glyphicon glyphicon-user"></span> @user_status@</span>
         </div>
     </div>
 

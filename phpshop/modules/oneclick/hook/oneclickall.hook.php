@@ -3,7 +3,7 @@
 /**
  * Элемент формы обратного звонка
  */
-class AddToTemplateOneclickElement extends PHPShopElements {
+class AddToTemplateOneclickElementAll extends PHPShopElements {
 
     var $debug = false;
 
@@ -19,32 +19,40 @@ class AddToTemplateOneclickElement extends PHPShopElements {
      * Настройки
      */
     function option() {
-        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['oneclick']['oneclick_system']);
-        $PHPShopOrm->debug = $this->debug;
-        $this->option = $PHPShopOrm->select();
+        global $OneclickOption;
+
+        // Память настроек
+        if (!$OneclickOption) {
+            $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['oneclick']['oneclick_system']);
+            $PHPShopOrm->debug = $this->debug;
+            $OneclickOption = $this->option = $PHPShopOrm->select();
+        }
+        else $this->option = $OneclickOption;
     }
 
     /**
      * Вывод формы
      */
     function display() {
-        $forma = parseTemplateReturn($GLOBALS['SysValue']['templates']['oneclick']['oneclick_forma'], true);
+
+        if ($this->option['display'] == 0)
+            return true;
+
+        $forma = PHPShopParser::file($GLOBALS['SysValue']['templates']['oneclick']['oneclick_forma'], true, false, true);
         $this->set('leftMenuContent', $forma);
-        $this->set('leftMenuName', $this->option['title']);
+        $this->set('leftMenuName', 'Быстрый заказ');
 
         // Подключаем шаблон
         if (empty($this->option['windows']))
             $dis = $this->parseTemplate($this->getValue('templates.left_menu'));
         else {
             if (empty($this->option['enabled']))
-                $dis = parseTemplateReturn($GLOBALS['SysValue']['templates']['oneclick']['oneclick_window_forma'], true);
+                $dis = PHPShopParser::file($GLOBALS['SysValue']['templates']['oneclick']['oneclick_window_forma'], true, false, true);
             else {
-                $this->set('leftMenuContent', parseTemplateReturn($GLOBALS['SysValue']['templates']['oneclick']['oneclick_window_forma'], true));
+                $this->set('leftMenuContent', PHPShopParser::file($GLOBALS['SysValue']['templates']['oneclick']['oneclick_window_forma'], true, false, true));
                 $dis = $this->parseTemplate($this->getValue('templates.left_menu'));
             }
         }
-
-
 
 
         // Назначаем переменную шаблона
@@ -64,16 +72,14 @@ class AddToTemplateOneclickElement extends PHPShopElements {
 
 }
 
-
-function checkStore_mod_oneclick_hook($obj) {
-    $AddToTemplateOneclickElement = new AddToTemplateOneclickElement();
-    $AddToTemplateOneclickElement->display();
+function product_grid_mod_oneclick_hook($obj, $row) {
+    $AddToTemplateOneclickElement = new AddToTemplateOneclickElementAll();
+    $AddToTemplateOneclickElement->display($row);
     return true;
 }
 
-
-$addHandler=array
-        (
-        'checkStore'=>'checkStore_mod_oneclick_hook',
+$addHandler = array
+    (
+    'product_grid' => 'product_grid_mod_oneclick_hook',
 );
 ?>

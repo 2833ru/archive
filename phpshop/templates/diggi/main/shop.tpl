@@ -40,7 +40,7 @@
 
         <!-- Fonts -->
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/font-awesome.min.css" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700italic,700,400italic,300italic,300" rel="stylesheet">
+        <link href="//fonts.googleapis.com/css?family=Roboto+Condensed:400,700italic,700,400italic,300italic,300" rel="stylesheet">
 
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
@@ -192,13 +192,13 @@
                     </ul>
                     <!-- Categories Links Ends -->
                     <!-- Фасетный фильтр -->
-                    <div class="hide" id="faset-filter">
+                    <div class="hide sidebar-nav" id="faset-filter">
                         <h3 class="side-heading">Фильтр товаров</h3>                    
                         <div class="list-group">
                             <div id="faset-filter-body">Загрузка...</div>
                             <div id="price-filter-body">
-                                <h4>Цена</h4>
-                                <form method="get" id="price-filter-form">
+                                <h4 data-toggle="collapse" data-target="#price-filter-form" title="Показать">Цена <i class="fa fa-chevron-down"></i></h4>
+                                <form method="get" id="price-filter-form" class="collapse">
                                     <div class="row">
                                         <div class="col-md-6" id="price-filter-val-min">
                                             <span>от</span>

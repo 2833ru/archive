@@ -322,7 +322,7 @@ class PHPShopUserSoc extends PHPShopElements {
             'tel_new' => '',
             'adres_new' => '',
             'enabled_new' => 1,
-            'status_new' => 1,
+            'status_new' => 0,
             'kpp_new' => '',
             'tel_code_new' => ''
         );

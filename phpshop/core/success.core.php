@@ -84,7 +84,7 @@ class PHPShopSuccess extends PHPShopCore {
         if (is_array($data)) {
 
             // —ообщение пользователю об успешном платеже
-            $text = PHPShopText::notice($data['message_header'] . PHPShopText::br(), $icon = false, '14px') . $data['message'];
+            $text = PHPShopText::h3($data['message_header'],'text-success') . $data['message'];
             $this->set('mesageText', $text);
             $this->set('orderMesage', ParseTemplateReturn($this->getValue('templates.order_forma_mesage')));
 
@@ -181,7 +181,8 @@ class PHPShopSuccess extends PHPShopCore {
         $hook = $this->setHook(__CLASS__, __FUNCTION__, $_REQUEST);
         if (is_array($hook)) {
             extract($hook);
-        }
+        }else if ($hook)
+            return $hook;
 
         if (!empty($inv_id)) {
 

@@ -3,7 +3,7 @@
 /**
  * Библиотека форматирования строк
  * @author PHPShop Software
- * @version 1.99999
+ * @version 2.0
  * @package PHPShopClass
  * @subpackage Helper
  */
@@ -202,6 +202,11 @@ class PHPShopString {
 
 }
 
+/**
+ * Перевод массива из Windows-1251 в UTF-8 
+ * @param array $var массив данных
+ * @return array
+ */
 function json_fix_cyr($var) {
     if (is_array($var)) {
         $new = array();
@@ -211,6 +216,24 @@ function json_fix_cyr($var) {
         $var = $new;
     } elseif (is_string($var)) {
         $var = PHPShopString::win_utf8($var);
+    }
+    return $var;
+}
+
+/**
+ * Перевод массива из UTF-8 в Windows-1251
+ * @param array $var массив данных
+ * @return array
+ */
+function json_fix_utf($var) {
+    if (is_array($var)) {
+        $new = array();
+        foreach ($var as $k => $v) {
+            $new[json_fix_utf($k)] = json_fix_utf($v);
+        }
+        $var = $new;
+    } elseif (is_string($var)) {
+        $var = PHPShopString::utf8_win1251($var);
     }
     return $var;
 }

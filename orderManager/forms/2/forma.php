@@ -137,9 +137,11 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
     </style>
 </head>
 <body onload="window.focus()" bgcolor="#FFFFFF" text="#000000" marginwidth=5 leftmargin=5 style="padding: 2px;">
-    <div align="right" class="nonprint"><a href="#" onclick="window.print();
-        return false;" ><img border=0 align=absmiddle hspace=3 vspace=3 src="http://<?php echo $_SERVER['SERVER_NAME'] . $SysValue['dir']['dir'] ?>/phpshop/admpanel/img/action_print.gif">Распечатать</a> | <a href="#" class="save" onclick="document.execCommand('SaveAs');
-        return false;">Сохранить на диск<img border=0 align=absmiddle hspace=3 vspace=3 src="http://<?php echo $_SERVER['SERVER_NAME'] . $SysValue['dir']['dir'] ?>/phpshop/admpanel/img/action_save.gif"></a><br><br></div>
+        <div align="right" class="nonprint">
+        <button onclick="window.print()">
+            Распечатать
+        </button> 
+    </div>
 
     <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0><TBODY>
             <TR>

@@ -11,23 +11,6 @@
 function sort_table($obj, $row) {
     global $SysValue;
 
-    /*
-
-      // Совместимые товары
-      elseif (!empty($arrayVendorValue[$idCategory]['product'])) {
-
-      $where['id'] = ' IN (' . $arrayVendorValue[$idCategory]['product'] . '0)';
-
-      $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
-      $PHPShopOrm->debug = $obj->debug;
-      $data = $PHPShopOrm->select(array('*'), $where, false, array('limit' => 100));
-      if (is_array($data))
-      foreach ($data as $row)
-      $sortName.= PHPShopText::a('/shop/UID_' . $row['id'] . '.html', $row['name']);
-      }
-     *
-     */
-
     $sort = $obj->PHPShopCategory->unserializeParam('sort');
     $vendor_array = unserialize($row['vendor_array']);
     $dis = $sortCat = $sortValue = null;
@@ -44,7 +27,7 @@ function sort_table($obj, $row) {
         // Массив имен характеристик
         $PHPShopOrm = new PHPShopOrm();
         $PHPShopOrm->debug = $obj->debug;
-        $result = $PHPShopOrm->query("select * from " . $SysValue['base']['sort_categories'] . " where  id IN ( $sortCat 0) and goodoption != '1' order by num");
+        $result = $PHPShopOrm->query("select * from " . $SysValue['base']['sort_categories'] . " where id IN ( $sortCat 0) order by num");
         while (@$row = mysqli_fetch_assoc($result)) {
             $arrayVendor[$row['id']] = $row;
         }
@@ -101,12 +84,14 @@ function sort_table($obj, $row) {
             if (is_array($arrayVendor))
                 foreach ($arrayVendor as $idCategory => $value) {
 
-                    if (!empty($value['product'])) {
+                    if (!empty($value['product']) and strstr($odnotip,',')) {
 
-                        $where['id'] = ' IN (' . $odnotip . '0)';
+                        $where['id'] = ' IN (' . $odnotip . ')';
+                        $where['enabled'] = "='1'";
 
                         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
                         $PHPShopOrm->debug = $obj->debug;
+                        $PHPShopOrm->mysql_error = false;
                         $data = $PHPShopOrm->select(array('*'), $where, false, array('limit' => 100));
                         if (is_array($data)){
                             $sortValueName=null;

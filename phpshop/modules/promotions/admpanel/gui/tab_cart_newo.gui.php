@@ -53,6 +53,7 @@ function tab_cart_newo($data, $option = false) {
                         $ted = $val['discount'].$val['discount_tip'];
                         $sumitog = $price_discount*$val['num'];
                     }
+                    
                     $text_di = '<p>'.$price_discount.$currency.' <strike style="color:#ccc;">'.$val['price'].$currency.'</strike></p><i style="color:#808080;">Скидка '.$ted.'</i>';
 
                 }

@@ -20,6 +20,8 @@ class PHPShopDone extends PHPShopCore {
      * @var bool 
      */
     public $cart_clean_enabled = true;
+    public $delivery_mod = false;
+    public $manager_comment = null;
 
     /**
      * Конструктор
@@ -104,6 +106,7 @@ class PHPShopDone extends PHPShopCore {
     function send_to_order() {
         global $SysValue, $link_db;
 
+
         // Перехват модуля
         if ($this->setHook(__CLASS__, __FUNCTION__, $_POST, 'START'))
             return true;
@@ -120,8 +123,6 @@ class PHPShopDone extends PHPShopCore {
             $PHPShopUsers = new PHPShopUsers();
             $this->userId = $PHPShopUsers->add_user_from_order($_POST['mail']);
 
-            // if (isset($_SESSION['UsersLogin']) AND !empty($_SESSION['UsersLogin']))
-            // $_POST['mail'] = $_SESSION['UsersMail'];
 
             if (PHPShopSecurity::true_email($_POST['mail']) AND $this->userId) {
                 $this->ouid = $_POST['ouid'];
@@ -138,12 +139,17 @@ class PHPShopDone extends PHPShopCore {
                 $this->num = $this->PHPShopCart->getNum();
                 $this->weight = $this->PHPShopCart->getWeight();
 
+                // Почта для заказов
+                $this->adminmail = $this->PHPShopSystem->getEmail();
+
                 // Валюта
                 $this->currency = $this->PHPShopOrder->default_valuta_code;
 
                 // Стоимость доставки
-                if ($this->PHPShopDelivery)
+                if ($this->PHPShopDelivery) {
+                    $this->PHPShopDelivery->checkMod($this->delivery_mod);
                     $this->delivery = $this->PHPShopDelivery->getPrice($this->PHPShopCart->getSum(false), $this->PHPShopCart->getWeight());
+                }
                 else
                     $this->delivery = 0;
 
@@ -180,16 +186,11 @@ class PHPShopDone extends PHPShopCore {
                 $PHPShopCartElement->init('miniCart');
             }
             else {
-
-                $this->set('mesageText', $this->message($this->lang('bad_order_mesage_1'), $this->lang('bad_order_mesage_2')));
-
-                // Подключаем шаблон
-                $disp = ParseTemplateReturn($this->getValue('templates.order_forma_mesage'));
-                $disp.=PHPShopText::notice(PHPShopText::a('javascript:history.back(1)', $this->lang('order_return')), false);
+                $disp = PHPShopText::alert($this->lang('bad_order_mesage_2'), 'danger');
                 $this->set('orderMesage', $disp);
             }
         } else {
-            $disp =  PHPShopText::alert($this->lang('bad_order_mesage_2'),'danger');
+            $disp = PHPShopText::alert($this->lang('bad_order_mesage_2'), 'danger');
             $this->set('orderMesage', $disp);
         }
 
@@ -254,7 +255,7 @@ class PHPShopDone extends PHPShopCore {
         $title = $this->lang('mail_title_user_start') . $_POST['ouid'] . $this->lang('mail_title_user_end');
 
         // Отсылаем письмо покупателю
-        $PHPShopMail = new PHPShopMail($_POST['mail'], $this->PHPShopSystem->getEmail(), $title, '', true, true);
+        $PHPShopMail = new PHPShopMail($_POST['mail'], $this->adminmail, $title, '', true, true);
         $content = ParseTemplateReturn('./phpshop/lib/templates/order/usermail.tpl', true);
 
         // Перехват модуля в середине функции
@@ -271,7 +272,7 @@ class PHPShopDone extends PHPShopCore {
         $title_adm = $this->lang('mail_title_adm') . $_POST['ouid'] . "/" . date("d-m-y");
 
         // Отсылаем письмо администратору
-        $PHPShopMail = new PHPShopMail($this->PHPShopSystem->getEmail(), $this->PHPShopSystem->getEmail(), $title_adm, '', true, true, array('replyto' => $_POST['mail']));
+        $PHPShopMail = new PHPShopMail($this->adminmail, $this->adminmail, $title_adm, '', true, true, array('replyto' => $_POST['mail']));
 
         $content_adm = ParseTemplateReturn('./phpshop/lib/templates/order/adminmail.tpl', true);
         // Перехват модуля в конце функции
@@ -340,7 +341,7 @@ class PHPShopDone extends PHPShopCore {
 
         // Статус заказа
         $this->status = array(
-            "maneger" => "",
+            "maneger" => $this->manager_comment,
             "time" => "");
 
         // Серелиазованный массив заказа

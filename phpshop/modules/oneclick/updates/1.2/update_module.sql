@@ -1,0 +1,1 @@
+ALTER TABLE `phpshop_modules_oneclick_system` ADD `display` enum('0','1') NOT NULL default '0';

@@ -156,8 +156,11 @@ $adr_info = substr($adr_info, 2);
     </style>
 </head>
 <body onload="window.focus()" bgcolor="#FFFFFF" text="#000000" marginwidth=5 leftmargin=5 style="padding: 2px;">
-    <div align="right" class="nonprint"><a href="#" onclick="window.print();
-        return false;" >Распечатать</a><br><br></div>
+    <div align="right" class="nonprint">
+        <button onclick="window.print()">
+            Распечатать
+        </button> 
+    </div>
     <div align="center"><table align="center" width="100%">
             <tr>
                 <td align="center"><img src="<?php echo $PHPShopSystem->getLogo(); ?>" alt="" border="0"></td>

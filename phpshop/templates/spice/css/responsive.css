@@ -13,6 +13,19 @@
 	#main-menu .navbar-collapse.collapse {
 		display:block !important;
 	}
+        
+                .description-product-height-fix {
+        background: linear-gradient(to bottom, rgba(0, 0, 0, 0), #fff);
+        background: -webkit-linear-gradient(to bottom, rgba(0, 0, 0, 0), #fff);
+        background: -moz-linear-gradient(to bottom, rgba(0, 0, 0, 0), #fff);
+        background: -o-linear-gradient(to bottom, rgba(0, 0, 0, 0), #fff);
+        }
+        
+        .product-col .description.product-description {
+        height: 64px;
+        overflow: hidden;
+        }
+	
 	
 }
 

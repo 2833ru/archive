@@ -423,7 +423,7 @@ class ReadCsv1C extends PHPShopReadCsvNative {
 
             // Добавляем характеристики
             $vendor = null;
-            $vendor_array = nyll;
+            $vendor_array = null;
             if ($this->ObjSystem->getSerilizeParam("1c_option.update_category") == 1 and !empty($CsvToArray[$GLOBALS['option']['sort']])) {
                 $resCharsArray = null;
 

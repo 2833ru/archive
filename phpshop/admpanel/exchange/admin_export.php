@@ -89,11 +89,19 @@ $key_name = array(
     'city' => 'Город',
     'sum' => 'Сумма',
     'user' => 'ID Пользователя',
-    'orders' => 'Корзина'
+    'orders' => 'Корзина',
+    "prod_seo_name" => 'SEO ссылка',
+    'num_row' => 'Товаров в длину',
+    'num_cow' => 'Товаров на странице',
+    'count' => 'Содержит товаров',
+    'cat_seo_name'=>'SEO ссылка',
+    'sum'=>'Сумма'
+    
+   
 );
 
 // Стоп лист
-$key_stop = array('password', 'wishlist', 'sort', 'yml_bid_array', 'vendor', 'files');
+$key_stop = array('password', 'wishlist', 'sort', 'yml_bid_array', 'vendor', 'files','vid','name_rambler','servers','skin','skin_enabled','secure_groups','icon_description');
 
 
 switch ($subpath[2]) {

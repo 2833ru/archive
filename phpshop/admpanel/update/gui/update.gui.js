@@ -15,6 +15,7 @@ $(document).ready(function() {
         data.push({name: 'lfile', value: '/phpshop/admpanel/dumper/backup/restore.sql'});
         data.push({name: 'saveID', value: 1});
         data.push({name: 'ajax', value: 1});
+        data.push({name: 'clean', value: 1});
         data.push({name: 'actionList[saveID]', value: 'actionSave'});
         $.ajax({
             mimeType: 'text/html; charset=windows-1251',
@@ -52,6 +53,7 @@ $(document).ready(function() {
         data.push({name: 'lfile', value: '/phpshop/admpanel/dumper/backup/update.sql'});
         data.push({name: 'saveID', value: 1});
         data.push({name: 'ajax', value: 1});
+        data.push({name: 'clean', value: 1});
         data.push({name: 'actionList[saveID]', value: 'actionSave'});
         $.ajax({
             mimeType: 'text/html; charset=windows-1251',

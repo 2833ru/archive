@@ -30,7 +30,7 @@ function actionValueEdit() {
     $PHPShopGUI->_CODE.= $PHPShopGUI->setField('Название', $PHPShopGUI->setInputArg(array('name' => 'name_value', 'type' => 'text.required', 'value' => $data['name'])));
     $PHPShopGUI->_CODE.= $PHPShopGUI->setField('Приоритет', $PHPShopGUI->setInputArg(array('name' => 'num_value', 'type' => 'text', 'value' => $data['num'], 'size' => 100)));
 
-    $PHPShopGUI->_CODE.=$PHPShopGUI->setField(__("Иконка"), $PHPShopGUI->setIcon($data['icon'], "icon_value", false, array('load' => false, 'server' => true, 'url' => false)));
+    $PHPShopGUI->_CODE.=$PHPShopGUI->setField(__("Иконка"), $PHPShopGUI->setIcon($data['icon'], "icon_value", true, array('load' => false, 'server' => true, 'url' => false)));
 
     // Страницы с описанием
     $page_value[] = array('- Нет описания - ', null, $data['page']);

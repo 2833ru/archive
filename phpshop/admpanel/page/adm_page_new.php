@@ -75,6 +75,7 @@ function actionStart() {
     $tree_array[0]['sub'][1000] = 'Главное меню сайта';
     $tree_array[0]['sub'][2000] = 'Начальная страница';
 
+        $tree_select.='<option value="0" ' . $data['category'] . ' data-subtext="<span class=\'glyphicon glyphicon-cog\'></span> Настройка">Внутренняя страница</option>';
     if (is_array($tree_array[0]['sub']))
         foreach ($tree_array[0]['sub'] as $k => $v) {
             $check = treegenerator($tree_array[$k], 1, $data['category']);

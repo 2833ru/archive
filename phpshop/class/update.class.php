@@ -32,7 +32,7 @@ class PHPShopRestore extends PHPShopUpdate {
     function restoreBD() {
         global $PHPShopGUI;
 
-        if (file_exists($this->_backup_path . 'backups/' . $this->_restore_version . '/restore.sql', 'dumper/backup/restore.sql')) {
+        if (file_exists($this->_backup_path . 'backups/' . $this->_restore_version . '/restore.sql')) {
 
             if (!copy($this->_backup_path . 'backups/' . $this->_restore_version . '/restore.sql', 'dumper/backup/restore.sql')) {
                 $this->log("Не удаётся скопировать восстановление базы в backup/backups/" . $this->_restore_version . '/restore.sql', 'warning', 'remove');
@@ -281,7 +281,6 @@ class PHPShopUpdate {
             $this->_log.=$PHPShopGUI->setProgress(__('Обновление базы данных...'), 'install-update-bd');
             $this->log("Обновление базы данных выполнено", 'success hide install-update-bd');
             $this->log("Не удается обновить базу данных", 'danger hide install-update-bd-danger');
-            @unlink("dumper/backup/update.sql");
             return false;
         }
     }
@@ -296,9 +295,9 @@ class PHPShopUpdate {
         $this->chmod("phpshop/inc/config.ini", $this->_user_ftp_chmod);
 
         if (!is_array($config))
-            $config = parse_ini_file($this->_backup_path . "temp/config_update.txt", 1);
+            $config = parse_ini_file_true($this->_backup_path . "temp/config_update.txt", 1);
 
-        $SysValue = parse_ini_file($PHPShopBase->iniPath, 1);
+        $SysValue = parse_ini_file_true($PHPShopBase->iniPath, 1);
 
         // Новый config.ini
         if (is_array($config)) {
@@ -358,9 +357,9 @@ class PHPShopUpdate {
         // Права на папку
         $this->chmod($this->_user_ftp_dir . '/backup/backups/' . $GLOBALS['SysValue']['upload']['version'], $this->_user_ftp_chmod);
 
-        if ($this->base_update_enabled and !copy($this->_backup_path . "temp/upload_backup.sql.gz", $this->_backup_path . 'backups/' . $GLOBALS['SysValue']['upload']['version'] . '/base.sql.gz')) {
-            copy($this->_backup_path . "temp/restore.sql", $this->_backup_path . 'backups/' . $GLOBALS['SysValue']['upload']['version'] . '/restore.sql');
-            $this->log("Не удаётся скопировать бекап базы в backup/backups/" . $GLOBALS['SysValue']['upload']['version'], 'warning', 'remove');
+        if ($this->base_update_enabled) {
+            if(!copy($this->_backup_path . "temp/restore.sql", $this->_backup_path . 'backups/' . $GLOBALS['SysValue']['upload']['version'] . '/restore.sql'))
+             $this->log("Не удаётся скопировать бекап базы в backup/backups/" . $GLOBALS['SysValue']['upload']['version'], 'warning', 'remove');
         }
 
         if ($this->base_update_enabled)
@@ -368,7 +367,7 @@ class PHPShopUpdate {
 
 
         $archive = new PclZip($this->_backup_path . 'backups/' . $GLOBALS['SysValue']['upload']['version'] . '/files.zip');
-        $map = parse_ini_file($this->_backup_path . "temp/upd_conf.txt", 1);
+        $map = parse_ini_file_true($this->_backup_path . "temp/upd_conf.txt", 1);
         $zip_files = null;
 
         if (is_array($map)) {
@@ -438,7 +437,7 @@ class PHPShopUpdate {
 
 
         // Анализ файл конфига апдейта
-        if (!$this->map = parse_ini_file($this->_backup_path . "temp/upd_conf.txt", 1)) {
+        if (!$this->map = parse_ini_file_true($this->_backup_path . "temp/upd_conf.txt", 1)) {
             $this->log("Не удаётся провести анализ конфига обновлений");
             return false;
         }

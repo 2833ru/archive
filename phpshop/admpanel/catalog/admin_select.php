@@ -255,7 +255,7 @@ function actionSave() {
     unset($_POST['vendor_array_new']);
     unset($_POST['vendor_new']);
 
-// Списывание со склада
+    // Списывание со склада
     if (isset($_POST['items_new'])) {
         switch ($PHPShopSystem->getSerilizeParam('admoption.sklad_status')) {
 
@@ -283,7 +283,7 @@ function actionSave() {
     // Дата обновления
     $_POST['datas_new'] = time();
 
-    if ($PHPShopOrm->update($_POST, $where)) {
+    if (is_array($where) and $PHPShopOrm->update($_POST, $where)) {
         header('Location: ?path=catalog&cat=' . intval($_GET['cat']));
         return true;
     }

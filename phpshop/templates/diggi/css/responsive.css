@@ -26,7 +26,7 @@
 		}
 			#main-menu .navbar-nav > li > a{
 				padding:18px;
-				font-size:16px;
+				font-size:15px;
 			}
 			#main-menu .navbar-nav > li:first-of-type > a{
 				padding-left:40px;
@@ -44,7 +44,7 @@
 		#main-menu .navbar-form .form-control{
 			padding:17px 10px 17px 30px;
 			height:56px;
-			font-size:16px;
+			font-size:15px;
 		}
 		#main-menu .navbar-form .btn{
 			padding:15px 20px;
@@ -80,6 +80,18 @@
 	#main-carousel .carousel-caption h2{
 		font-size:42px;
 	}
+        
+        .description-product-height-fix {
+        background: linear-gradient(to bottom, rgba(0, 0, 0, 0), #fff);
+        background: -webkit-linear-gradient(to bottom, rgba(0, 0, 0, 0), #fff);
+        background: -moz-linear-gradient(to bottom, rgba(0, 0, 0, 0), #fff);
+        background: -o-linear-gradient(to bottom, rgba(0, 0, 0, 0), #fff);
+        }
+        
+        .product-col .description.product-description {
+        height: 64px;
+        overflow: hidden;
+        }
 	
 }
 

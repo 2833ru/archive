@@ -74,7 +74,7 @@ function actionSave() {
     // Сохранение данных
     actionUpdate();
 
-    //header('Location: ?path='.$_GET['path']);
+    header('Location: ?path='.$_GET['path']);
 }
 
 // Функция обновления

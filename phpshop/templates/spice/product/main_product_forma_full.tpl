@@ -29,13 +29,16 @@
             </li>
             <li> @promotionInfo@ </li>
             <li>@oneclick@</li>
+            <li><a href="/pricemail/UID_@productUid@.html">@productBestPrice@</a></li>
         </ul>
         <!-- Manufacturer Ends -->
         <hr>
         <!-- Price Starts -->
         <div class="price">
             <span class="price-head">Цена :</span>
-            <span class="price-new" itemprop="price">@productPrice@ <span itemprop="priceCurrency" class="rubznak">@productValutaName@</span></span><span class="price-old">@productPriceRub@</span>
+            <span class="price-new" itemprop="price">@productPrice@</span> 
+            <span itemprop="priceCurrency" class="price-new rubznak">@productValutaName@</span>
+            <span class="price-old">@productPriceRub@</span>
         </div>
         <!-- Price Ends -->
         <hr>

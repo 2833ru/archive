@@ -47,8 +47,8 @@ function actionStart() {
 
     // Размер названия поля
     $PHPShopGUI->field_col = 2;
-    $PHPShopGUI->addJSFiles('./js/jquery.treegrid.js', './catalog/gui/catalog.gui.js', './js/bootstrap-treeview.min.js');
-    $PHPShopGUI->addCSSFiles('./css/bootstrap-treeview.min.css');
+    $PHPShopGUI->addJSFiles('./js/jquery.tagsinput.min.js', './js/jquery.treegrid.js', './catalog/gui/catalog.gui.js', './js/bootstrap-treeview.min.js');
+    $PHPShopGUI->addCSSFiles('./css/bootstrap-treeview.min.css', './css/jquery.tagsinput.css');
 
     // Выборка
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_REQUEST['id'])));
@@ -61,7 +61,7 @@ function actionStart() {
     $PHPShopGUI->action_select['Предпросмотр'] = array(
         'name' => 'Предпросмотр',
         'url' => '../../shop/CID_' . $data['id'] . '.html',
-        'action' => 'front'.$GLOBALS['isFrame'],
+        'action' => 'front' . $GLOBALS['isFrame'],
         'target' => '_blank'
     );
 
@@ -69,7 +69,7 @@ function actionStart() {
     $PHPShopGUI->action_select['Товары'] = array(
         'name' => 'Товары в каталоге',
         'url' => '?path=' . $_GET['path'] . '&cat=' . intval($_GET['id']),
-        'class'=>$GLOBALS['isFrame']
+        'class' => $GLOBALS['isFrame']
     );
 
     $PHPShopGUI->setActionPanel(__("Каталог") . ': ' . $data['name'] . ' [ID ' . $data['id'] . ']', array('Товары', 'Создать', 'Предпросмотр', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'));
@@ -77,7 +77,7 @@ function actionStart() {
     // Наименование
     $Tab_info = $PHPShopGUI->setField(__("Название:"), $PHPShopGUI->setInputText(false, 'name_new', $data['name'], '100%'));
 
-        // Права менеджеров
+    // Права менеджеров
     if ($PHPShopSystem->ifSerilizeParam('admoption.rule_enabled', 1) and !$PHPShopBase->Rule->CheckedRules('catalog', 'remove')) {
         $where = array('secure_groups' => " REGEXP 'i" . $_SESSION['idPHPSHOP'] . "i' or secure_groups = ''");
         $secure_groups = true;
@@ -101,8 +101,6 @@ function actionStart() {
         if ($k == $data['parent_to'])
             $tree_array[$k]['selected'] = true;
     }
-
-
 
     $GLOBALS['tree_array'] = &$tree_array;
     $_GET['parent_to'] = $data['parent_to'];
@@ -135,7 +133,6 @@ function actionStart() {
     $num_row_area.=$PHPShopGUI->setRadio('num_row_new', 4, 4, $data['num_row']);
     $Tab_info.=$PHPShopGUI->setField(__("Товаров в длину:"), $num_row_area, 'left');
 
-    // Вывод
     // вывод списком доступен только для корневых каталогов.
     if ($data['parent_to'] == 0)
         $vid = $PHPShopGUI->setCheckbox('vid_new', 1, __('Выводить подкаталоги списком в основном окне'), $data['vid']);
@@ -154,13 +151,13 @@ function actionStart() {
     $Tab_info.=$PHPShopGUI->setField(__("Сортировка:"), $PHPShopGUI->setInputText(null, "num_new", $data['num'], 100, false, 'left') . '&nbsp' .
             $PHPShopGUI->setSelect('order_by_new', $order_by_value, 120) . $PHPShopGUI->setSelect('order_to_new', $order_to_value, 120), 'left');
 
-    $Tab1 = $PHPShopGUI->setCollapse(__('Информация'), $Tab_info);
+    // Дополнительные каталоги
+    $Tab_info.=$PHPShopGUI->setField('Дополнительные каталоги:', $PHPShopGUI->setTextarea('dop_cat_new', $data['dop_cat'], false, false, false, __('Введите ID каталога')), 1, 'Подкаталоги одновременно выводятся в нескольких каталогах.');
 
+    $Tab1 = $PHPShopGUI->setCollapse(__('Информация'), $Tab_info);
 
     // Иконка
     $Tab_icon.=$PHPShopGUI->setField(__("Изображение"), $PHPShopGUI->setIcon($data['icon'], "icon_new", false));
-
-
     $Tab1.= $PHPShopGUI->setCollapse(__('Иконка'), $Tab_icon);
 
     // Редактор
@@ -176,15 +173,16 @@ function actionStart() {
     $Tab7 = $PHPShopGUI->loadLib('tab_headers', $data);
 
     // Права
-    $Tab9 = $PHPShopGUI->setCollapse(__('Каталог могут редактировать'), $PHPShopGUI->loadLib('tab_secure', $data),'in', false);
-    
+    $Tab9 = $PHPShopGUI->setCollapse(__('Каталог могут редактировать'), $PHPShopGUI->loadLib('tab_secure', $data), 'in', false);
+
     // Добавление закладки характеристики если нет подкаталогов
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
     $subcategory_data = $PHPShopOrm->select(array('id'), array('parent_to' => '=' . intval($data['id'])), false, array('limit' => 1));
 
     if (!is_array($subcategory_data))
-        $Tab8 = $PHPShopGUI->setCollapse(__('Характеристики'), $PHPShopGUI->loadLib('tab_sorts', $data),'in', false);
-    else $Tab8 = $PHPShopGUI->setHelp('Характеристики доступны только в подкаталогах с товарами.');
+        $Tab8 = $PHPShopGUI->setCollapse(__('Характеристики'), $PHPShopGUI->loadLib('tab_sorts', $data), 'in', false);
+    else
+        $Tab8 = $PHPShopGUI->setHelp('Характеристики доступны только в подкаталогах с товарами.');
 
     //Мультибаза
     //$Tab8.=$PHPShopGUI->setCollapse(__('Мультибаза'), $PHPShopGUI->loadLib('tab_multibase', $data));
@@ -192,7 +190,7 @@ function actionStart() {
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array(__("Основное"), $Tab1), array(__("Описание"), $Tab2), array(__("Заголовки"), $Tab7), array(__("Характеристики"), $Tab8,true), array(__("Права"), $Tab9,true));
+    $PHPShopGUI->setTab(array(__("Основное"), $Tab1), array(__("Описание"), $Tab2), array(__("Заголовки"), $Tab7), array(__("Характеристики"), $Tab8, true), array(__("Права"), $Tab9, true));
 
     // Прогрессбар
     if ($GLOBALS['count'] > 500)
@@ -210,12 +208,12 @@ function actionStart() {
                  </span>
             </div></div>';
 
-    if(empty($GLOBALS['isFrame'])){
-    
-    // Левый сайдбар
-    $sidebarleft[] = array('title' => 'Категории', 'content' => $search.'<div id="tree">' . $treebar . '</div>', 'title-icon' => '<span class="glyphicon glyphicon-plus new" data-toggle="tooltip" data-placement="top" title="Добавить каталог"></span>&nbsp;<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="Развернуть"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="Свернуть"></span>&nbsp;<span class="glyphicon glyphicon-search" id="show-category-search" data-toggle="tooltip" data-placement="top" title="Поиск"></span>');
-    $PHPShopGUI->setSidebarLeft($sidebarleft, 3);
-    $PHPShopGUI->sidebarLeftCell = 3;
+    if (empty($GLOBALS['isFrame'])) {
+
+        // Левый сайдбар
+        $sidebarleft[] = array('title' => 'Категории', 'content' => $search . '<div id="tree">' . $treebar . '</div>', 'title-icon' => '<span class="glyphicon glyphicon-plus new" data-toggle="tooltip" data-placement="top" title="Добавить каталог"></span>&nbsp;<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="Развернуть"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="Свернуть"></span>&nbsp;<span class="glyphicon glyphicon-search" id="show-category-search" data-toggle="tooltip" data-placement="top" title="Поиск"></span>');
+        $PHPShopGUI->setSidebarLeft($sidebarleft, 3);
+        $PHPShopGUI->sidebarLeftCell = 3;
     }
 
 
@@ -247,7 +245,7 @@ function actionSave() {
  * @return bool 
  */
 function actionUpdate() {
-    global $PHPShopModules,$PHPShopBase;
+    global $PHPShopModules, $PHPShopBase;
 
 
     if (empty($_POST['vid_new']))
@@ -258,15 +256,15 @@ function actionUpdate() {
 
     // Характеристики
     $_POST['sort_new'] = serialize($_POST['sort_new']);
-    
-    
-   // Проверка прав редактирования
-   if ($PHPShopBase->Rule->CheckedRules('catalog', 'rule')) {
-    
+
+
+    // Проверка прав редактирования
+    if ($PHPShopBase->Rule->CheckedRules('catalog', 'rule')) {
+
         $secure = null;
         if (is_array($_POST['secure_groups_new']))
             foreach ($_POST['secure_groups_new'] as $crid => $value) {
-                $secure.='i' . $crid .'i';
+                $secure.='i' . $crid . 'i';
                 if (!empty($_POST['secure_groups_new']['all'])) {
                     $secure = '';
                     break;
@@ -276,15 +274,17 @@ function actionUpdate() {
         $_POST['secure_groups_new'] = $secure;
     }
 
-
-    // Мультибаза
-    /*
-    $_POST['servers_new'] = null;
-    if (is_array($_POST['servers']))
-        foreach ($_POST['servers'] as $v)
-            $_POST['servers_new'].="i" . $v . "i";
+    /* // Мультибаза
+      $_POST['servers_new'] = null;
+      if (is_array($_POST['servers']))
+      foreach ($_POST['servers'] as $v)
+      $_POST['servers_new'].="i" . $v . "i";
      */
 
+    // Доп каталоги
+    if (!empty($_POST['dop_cat_new']) and substr($_POST['dop_cat_new'], 1) != '#') {
+        $_POST['dop_cat_new'] = '#' . $_POST['dop_cat_new'] . '#';
+    }
 
     $_POST['icon_new'] = iconAdd();
 

@@ -58,6 +58,48 @@ function tab_info($data) {
         </ol>
         
 
+      <h4>SQL запросы для пакетной обработки</h4>
+      <p>
+      Для использования SQL команд в большинстве случаев помогает штатная возможность панели управления магазином <kbd>База</kbd> -  <kbd>SQL запрос к базе</kbd>.
+      </p>
+       <table class="table table-bordered table-striped">
+   <thead>
+        <tr>
+          <th>#</th>
+          <th>SQL</th>
+          <th>Описание</th>
+        </tr>
+      </thead>
+    <tbody>
+        <tr>
+          <th scope="row">1</th>
+          <td>update phpshop_products set manufacturer_warranty=\'1\';</td>
+          <td>Включение гарантии в Яндекс.Маркете для всех товаров</td>
+        </tr>
+        <tr>
+          <th scope="row">2</th>
+          <td>update phpshop_products set sales_notes="Минимальная партия - 1шт; минимальная сумма заказа - 1000 руб.";</td>
+          <td>Добавляем комментарий ко всем товарам для Яндекс.Маркета</td>
+        </tr>
+         <tr>
+          <th scope="row">3</th>
+          <td>update phpshop_products set country_of_origin="Беларусь";</td>
+          <td>Добавляем страну производителя ко всем товарам для Яндекс.Маркета</td>
+        </tr>
+         <tr>
+          <th scope="row">4</th>
+          <td>update phpshop_products set yml=\'0\' where price<1 or items<1;</td>
+          <td>Замена статуса участие в Яндекс.Маркете (убрать из выгрузки) при пустом складе или нулевой цене</td>
+        </tr>
+         <tr>
+          <th scope="row">5</th>
+          <td>update phpshop_products set yml=\'1\' where price>0 or items>0;</td>
+          <td>Замена статуса участие в Яндекс.Маркете (убрать из выгрузки) при положительном складе или нулевой цене</td>
+        </tr>
+   </tbody>
+</table>
+        
+
         </p>';
     
     return $PHPShopGUI->setInfo($Info, 280, '98%');

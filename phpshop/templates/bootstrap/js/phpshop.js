@@ -347,7 +347,7 @@ function faset_filter_click(obj) {
             if (last != '&' && last != '')
                 href += '&';
 
-            href += $(obj).attr('data-url').split(']').join('][]');
+            href += $(obj).attr('data-url').split(']').join('][]')+'&';
 
         }
         else {
@@ -690,6 +690,7 @@ $(document).ready(function() {
     // добавление в корзину подтипа
     $(".addToCartListParent").on('click', function() {
         addToCartList($(this).attr('data-uid'), $(this).attr('data-num'), $(this).attr('data-parent'));
+        $('[itemprop="price"]').html($(this).attr('data-price'));
     });
 
     // добавление в корзину опции
@@ -873,6 +874,18 @@ $(document).ready(function() {
         slider.goToSlide(sliderbig.getCurrentSlide());
         sliderbig.destroySlider();
         delete sliderbig;
+    });
+    
+        // Сворачиваемый блок 
+    $('.collapse').on('show.bs.collapse', function() {
+        $(this).prev('h4').find('i').removeClass('fa-chevron-down');
+        $(this).prev('h4').find('i').addClass('fa-chevron-up');
+        $(this).prev('h4').attr('title','Скрыть');
+    });
+    $('.collapse').on('hidden.bs.collapse', function() {
+        $(this).prev('h4').find('i').removeClass('fa-chevron-up');
+        $(this).prev('h4').find('i').addClass('fa-chevron-down');
+         $(this).prev('h4').attr('title','Показать');
     });
 
 });

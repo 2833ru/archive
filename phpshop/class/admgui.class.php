@@ -59,14 +59,16 @@ class PHPShopGUI {
      * Иконка с выбором исходника
      * @param string $data путь
      * @param string $id имя поля
+     * @param bool $drag_off загрузка перетаскиванием
+     * @param array $option настройки
      */
-    function setIcon($data, $id = "icon_new", $alt = true, $option = array('load' => true, 'server' => true, 'url' => true, 'multi' => false), $width = false) {
+    function setIcon($data, $id = "icon_new", $drag_off = false, $option = array('load' => true, 'server' => true, 'url' => true, 'multi' => false), $width = false) {
 
         if (!empty($data)) {
             $name = '<span data-icon="' . $id . '">' . $data . '</span>';
             if (!empty($width))
                 $width = 'style="max-width:' . $width . 'px"';
-            $icon = '<img src="' . $data . '" data-thumbnail="' . $id . '" onerror="imgerror(this)" class="img-thumbnail" ' . $width . '>';
+            $icon = '<img src="' . $data . '" data-thumbnail="' . $id . '" onerror="this.onerror = null;this.src = \'./images/no_photo.gif\'" class="img-thumbnail" ' . $width . '>';
             $icon_hide = $drag = '';
         } else {
             $icon = '<img class="img-thumbnail img-thumbnail-dashed" data-thumbnail="' . $id . '" src="images/no_photo.gif">';
@@ -88,14 +90,15 @@ class PHPShopGUI {
             $add.='<button type="button" class="btn btn-default" id="promtUrl" data-target="' . $id . '">URL</button>
                  <input type="hidden" name="furl" id="furl" value="0">';
 
+        if ($drag_off) {
+            $drag = null;
+            $icon = str_replace('img-thumbnail-dashed', null, $icon);
+        }
+
         $dis = '
         <div class="row">
-           <div class="col-md-2 btn-file"><a href="#" class="link-thumbnail">' . $icon . '</a>' . $drag . '</span>';
-        if ($alt)
-            $dis.='<div class="input-group" style="margin-top:10px">
-             <div class="input-group-addon input-sm" data-toggle="tooltip" data-placement="bottom" title="Описание"><span class="glyphicon glyphicon-comment" ></span></div>
-             <input class="form-control input-sm" name="info_' . $id . '" value="' . $alt . '" placeholder="Alt" type="text">
-             </div>';
+           <div class="col-md-2 btn-file"><a href="#" class="link-thumbnail">' . $icon . '</a>' . $drag;
+
         $dis.='
            </div>
            <div class="col-md-10">
@@ -424,6 +427,9 @@ class PHPShopGUI {
             $back['class'] = null;
 
 
+        if (strlen($title) > 73)
+            $title = substr($title, 0, 73) . '...';
+
         $CODE = '
             <!-- Action panell -->
             <div class="navbar-header">
@@ -659,7 +665,7 @@ class PHPShopGUI {
     function setEditor($editor = false, $mod_enabled = false) {
 
         // Временный запрет подключения редакторов
-        if (!in_array($editor, array('ace', 'none', 'default','tinymce')))
+        if (!in_array($editor, array('ace', 'none', 'default', 'tinymce')))
             $editor = 'default';
 
         // Временное перенаправление выбора редактора
@@ -1167,9 +1173,14 @@ class PHPShopGUI {
      * @param string $search режим поиска
      * @param int $height высота
      * @param int $size размер
+     * @param bool $multiple мультивыбор
+     * @param string $id id
+     * @param string $class class [selectpicker]
+     * @param string $onchange JS функция изменения выбора
+     * @param string $style class [btn btn-default btn-sm]
      * @return string
      */
-    function setSelect($name, $value, $width = '', $float = "none", $caption = false, $search = false, $height = false, $size = 1, $multiple = false, $id = false, $class = 'selectpicker', $onchange = null) {
+    function setSelect($name, $value, $width = '', $float = "none", $caption = false, $search = false, $height = false, $size = 1, $multiple = false, $id = false, $class = 'selectpicker', $onchange = null, $style = 'btn btn-default btn-sm') {
 
         if ($search)
             $search = 'data-live-search="true" data-placeholder="123"';
@@ -1180,7 +1191,7 @@ class PHPShopGUI {
         if (empty($id))
             $id = $name;
 
-        $CODE = $caption . '<select class="' . $class . ' show-menu-arrow hidden-edit" ' . $search . ' data-container=""  data-style="btn btn-default btn-sm" data-width="' . $width . '"  name="' . $name . '" id="' . $id . '" size="' . $size . '" onchange="' . $onchange . '"   ' . $multiple . '>';
+        $CODE = $caption . '<select class="' . $class . ' show-menu-arrow hidden-edit" ' . $search . ' data-container=""  data-style="' . $style . '" data-width="' . $width . '"  name="' . $name . '" id="' . $id . '" size="' . $size . '" onchange="' . $onchange . '"   ' . $multiple . '>';
         if (is_array($value))
             foreach ($value as $val) {
 
@@ -1559,11 +1570,11 @@ class PHPShopGUI {
         $db = $PHPShopModules->getXml("../modules/" . $path . "/install/module.xml");
         if ($db['version'] > $version and !empty($update)) {
             PHPShopObj::loadClass('text');
-            $version_info = PHPShopText::notice('Версия ядра ' . $db['version'] . ' не соответствует версии БД ' . $version);
+            $version_info = $this->setAlert('Версия ядра ' . $db['version'] . ' не соответствует версии БД ' . $version, 'warning');
             $version_info.=$this->setInput("submit", "modupdate", "Обновить модуль", "center", null, "", "btn-sm pull-right", "actionBaseUpdate");
         }
         else
-            $version_info = $db['version'];
+            $version_info = $db['version'] . $status;
 
         if (!empty($db['status']))
             $status = ' <span class="label label-default">' . $db['status'] . '</span>';
@@ -1572,7 +1583,7 @@ class PHPShopGUI {
 
         $CODE.='<tr>
                   <td>' . $db['name'] . '</td>
-                  <td>' . $version_info . $status . '</td>
+                  <td>' . $version_info . '</td>
                   <td>' . $db['description'] . $mes . '</td>
                </tr>
                </table>';
@@ -1642,8 +1653,9 @@ class PHPShopInterface extends PHPShopGUI {
      * Прорисовка элемента Fieldset с легендой
      * @param string $title заголовок легенды
      * @param string $content содержание
-     * @param integer $size размер сетки описаняи поля 1-12
+     * @param integer $size размер сетки описания поля 1-12
      * @param string $help справка
+     * @param string $class css class
      * @return string
      */
     function setField($title, $content, $size = 1, $help = false, $class = false, $label = 'control-label') {
@@ -1830,6 +1842,10 @@ class PHPShopInterface extends PHPShopGUI {
                     else
                         $row = $val['name'];
 
+                    // id
+                    if (!empty($val['id']))
+                        $id = $val['id'];
+
                     // Статус
                     if (isset($val['status'])) {
                         $row = $this->setDropdown(array_merge(array('id' => $id), $val['status']), 'dropdown', $val['status']['align'], $val['status']['passive']);
@@ -1851,9 +1867,6 @@ class PHPShopInterface extends PHPShopGUI {
                         $val['align'] = 'left';
                     }
 
-                    // id
-                    if (!empty($val['id']))
-                        $id = $val['id'];
 
                     // editable
                     if (!empty($val['editable'])) {

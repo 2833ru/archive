@@ -707,20 +707,12 @@ hr{
     line-height: 18px;
     position: relative;
 }
-.product-col .description.product-description {
-    height: 64px;
-    overflow: hidden;
-}
 
 .description-product-height-fix {
     width: 100%;
     height: 100%;
     top: 0;
     left: 0;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0), #fff);
-    background: -webkit-linear-gradient(to bottom, rgba(0, 0, 0, 0), #fff);
-    background: -moz-linear-gradient(to bottom, rgba(0, 0, 0, 0), #fff);
-    background: -o-linear-gradient(to bottom, rgba(0, 0, 0, 0), #fff);
     position: absolute;
     z-index: 1;
     -webkit-transition: 0.5s;
@@ -1575,7 +1567,6 @@ img.template:hover{
 }
 #faset-filter-body .checkbox span {
     /*font-weight: 700;*/
-    text-transform: uppercase;
     display: inline-block;
 }
 #price-filter-body {
@@ -1587,7 +1578,7 @@ img.template:hover{
 }
 #price-filter-form span {
     /*font-weight: 700;*/
-    text-transform: uppercase;
+    
 }
 .row.cat-intro img {
     max-width: 100%;
@@ -1782,7 +1773,7 @@ img.template:hover{
     list-style-type: none;
     position: absolute;
     z-index: 10;    
-    max-height: 320px;
+    max-height: 600px;
     overflow: auto;
 }
 .main-navbar-list-catalog-wrapper.open {
@@ -2180,3 +2171,43 @@ img.template:hover{
 .bx-pager {
     margin-top: 15px;
 }
+
+
+.product-col .panel.panel-default {
+        border: none;
+        box-shadow: none;
+        margin: 0;
+    }
+    .product-col .panel.panel-default .panel-body {
+        border: none;
+        box-shadow: none;
+        padding: 0;
+        margin: 0;
+        display: block;
+        width: 100%;
+    }
+    .product-col .panel.panel-default .panel-body .panel-body-left,
+    .product-col .panel.panel-default .panel-body .panel-body-right {
+        display: block;
+    }
+    .product-col .panel.panel-default .panel-body .panel-body-right {
+        padding-left: 0;
+    }
+@media (min-width: 768px) {
+        .product-col .panel.panel-default .panel-body {
+            display: table;
+            width: 100%;
+            height: 120px;
+        }
+        .product-col .panel.panel-default .panel-body .panel-body-left,
+        .product-col .panel.panel-default .panel-body .panel-body-right {
+            display: table-cell;
+            vertical-align: middle;
+        }
+        .product-col .panel.panel-default .panel-body .panel-body-left {
+            width: 105px;
+        }
+        .product-col .panel.panel-default .panel-body .panel-body-right {
+            padding-left: 10px;
+        }
+    }

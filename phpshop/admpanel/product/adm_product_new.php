@@ -7,6 +7,7 @@ PHPShopObj::loadClass("array");
 PHPShopObj::loadClass("page");
 PHPShopObj::loadClass("security");
 PHPShopObj::loadClass("category");
+PHPShopObj::loadClass("product");
 
 $TitlePage = __('Новый товар');
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
@@ -144,7 +145,7 @@ function actionStart() {
     $Tab_info.=$PHPShopGUI->setField('Артикул:', $PHPShopGUI->setInputText(null, 'uid_new', $data['uid'], 250));
 
     // Иконка
-    $Tab_info.=$PHPShopGUI->setField(__("Изображение"), $PHPShopGUI->setIcon($data['pic_big'], "pic_big_new", false, array('load' => false, 'server' => true, 'url' => false)), 1, 'Главное изображение товара создается автоматически при загрузке через закладку Изображение. Но вы можете загрузить главное фото отдельно здесь.');
+    $Tab_info.=$PHPShopGUI->setField(__("Изображение"), $PHPShopGUI->setIcon($data['pic_big'], "pic_big_new", true, array('load' => false, 'server' => true, 'url' => false)), 1, 'Главное изображение товара создается автоматически при загрузке через закладку Изображение. Но вы можете загрузить главное фото отдельно здесь.');
     $Tab_info.=$PHPShopGUI->setField(__("Превью"), $PHPShopGUI->setFile($data['pic_small'], "pic_small_new", array('load' => false, 'server' => 'image', 'url' => false)), 1, 'Превью изображения товара создается автоматически при загрузке через закладку Изображение. Но вы можете загрузить превью отдельно здесь.');
 
     // Склад
@@ -176,7 +177,6 @@ function actionStart() {
 
     $Tab1 = $PHPShopGUI->setCollapse(__('Информация'), $Tab_info);
 
-
     // Валюты
     $PHPShopValutaArray = new PHPShopValutaArray();
     $valuta_array = $PHPShopValutaArray->getArray();
@@ -206,7 +206,6 @@ function actionStart() {
 
     $Tab1.=$PHPShopGUI->setCollapse(__('Цены'), $Tab_price);
 
-
     // YML
     $data['yml_bid_array'] = unserialize($data['yml_bid_array']);
     $Tab_yml = $PHPShopGUI->setField(__('YML'), $PHPShopGUI->setCheckbox('yml_new', 1, __('Вывод в Яндекс Маркете'), $data['yml']) . '<br>' .
@@ -220,13 +219,18 @@ function actionStart() {
     $Tab1.=$PHPShopGUI->setCollapse(__('Яндекс Маркет'), $Tab_yml, false);
 
     // Подтипы
-    $Tab_option = $PHPShopGUI->setField(__('Связи'), $PHPShopGUI->setRadio('parent_enabled_new', 0, __('Обычный товар'), $data['parent_enabled']) .
-            $PHPShopGUI->setRadio('parent_enabled_new', 1, __('Добавочная опция для ведущего товара'), $data['parent_enabled']));
+    /*
+      $Tab_option = $PHPShopGUI->setField(__('Связи'), $PHPShopGUI->setRadio('parent_enabled_new', 0, __('Обычный товар'), $data['parent_enabled']) .
+      $PHPShopGUI->setRadio('parent_enabled_new', 1, __('Добавочная опция для ведущего товара'), $data['parent_enabled']));
 
-    $Tab_option.=$PHPShopGUI->setField(__('ID подтипов'), $PHPShopGUI->setTextarea('parent_new', $data['parent'], "none", false, false, __('Укажите ID товаров или воспользуйтесь <a href="#"  data-target="#parent_new" class="btn btn-sm btn-default tag-search"><span class="glyphicon glyphicon-search"></span> поиском товаров</a>')));
+      $Tab_option.=$PHPShopGUI->setField(__('ID подтипов'), $PHPShopGUI->setTextarea('parent_new', $data['parent'], "none", false, false, __('Укажите ID товаров или воспользуйтесь <a href="#"  data-target="#parent_new" class="btn btn-sm btn-default tag-search"><span class="glyphicon glyphicon-search"></span> поиском товаров</a>')));
+     * 
+     */
 
     // Подтипы
-    $Tab1.=$PHPShopGUI->setCollapse(__('Опции'), $Tab_option, false);
+    $option_info = '<p class="text-muted">Для добавления новых подтипов необходимо сначала создать основной товар и затем перейти в его редактирование <span href="?path=sort" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-floppy-saved"></span> Создать и редактировать</span>.</p>';
+    $Tab_option = $PHPShopGUI->setCollapse(__('Подтипы'), $option_info, $collapse = 'none', $line = false, $icons = false);
+
 
     // Редактор краткого описания
     $Tab2 = $PHPShopGUI->loadLib('tab_description', $data);
@@ -262,9 +266,6 @@ function actionStart() {
     // Файлы
     $Tab_docs.= $PHPShopGUI->setCollapse(__('Файлы'), $PHPShopGUI->loadLib('tab_files', $data));
 
-
-
-
     // Фотогалерея
     $Tab6 = $PHPShopGUI->loadLib('tab_img', $data);
 
@@ -278,7 +279,7 @@ function actionStart() {
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array(__("Основное"), $Tab1), array(__("Изображение"), $Tab6), array(__("Описание"), $Tab2), array(__("Подробно"), $Tab3,), array(__("Документы"), $Tab_docs), array(__("Характеристики"), $Tab_sorts), array(__("Заголовки"), $Tab_header));
+    $PHPShopGUI->setTab(array(__("Основное"), $Tab1), array(__("Изображение"), $Tab6), array(__("Описание"), $Tab2), array(__("Подробно"), $Tab3,), array(__("Документы"), $Tab_docs), array(__("Характеристики"), $Tab_sorts), array(__("Подтипы"), $Tab_option, true), array(__("Заголовки"), $Tab_header));
 
 
     // Вывод кнопок сохранить и выход в футер
@@ -457,8 +458,22 @@ function actionInsert() {
     $PHPShopOrm->debug = false;
     $action = $PHPShopOrm->insert($_POST);
 
+    // Ajax для подтипов
+    if (isset($_POST['ajax'])) {
 
-    if ($_POST['saveID'] == 'Создать и редактировать') {
+        $PHPShopProduct = new PHPShopProduct($_POST['parent']);
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
+        $parent_array = @explode(",", $PHPShopProduct->getParam('parent'));
+        $parent_array_true[] = $action;
+        if (is_array($parent_array))
+            foreach ($parent_array as $v)
+                if (!empty($v))
+                    $parent_array_true[] = $v;
+
+        $PHPShopOrm->update(array('parent_new' => @implode(",", $parent_array_true)), array('id' => '=' . intval($_POST['parent'])));
+
+        return array("success" => $action);
+    } else if ($_POST['saveID'] == 'Создать и редактировать') {
 
         // Изображение
         if ($_POST['tabName'] == 'Изображение')
@@ -470,6 +485,7 @@ function actionInsert() {
     }
     else
         header('Location: ?path=catalog&cat=' . $_POST['category_new']);
+
     return $action;
 }
 

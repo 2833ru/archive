@@ -347,7 +347,7 @@ function faset_filter_click(obj) {
             if (last != '&' && last != '')
                 href += '&';
 
-            href += $(obj).attr('data-url').split(']').join('][]');
+            href += $(obj).attr('data-url').split(']').join('][]') + '&';
 
         }
         else {
@@ -391,15 +391,13 @@ function setRubznak() {
 $(document).ready(function() {
 
     // Коррекция знака рубля
-    setRubznak();
+    //setRubznak();
 
     // логика кнопки оформления заказа 
     $("button.orderCheckButton").on("click", function(e) {
         e.preventDefault();
         OrderChekJq();
     });
-
-    // Выравнивание ячеек товара
 
 
     // Корректировка стилей меню
@@ -430,7 +428,6 @@ $(document).ready(function() {
 
     });
 
-
     // Ценовой слайдер
     $("#slider-range").on("slidestop", function(event, ui) {
 
@@ -447,7 +444,6 @@ $(document).ready(function() {
     });
 
     // Фасетный фильтр
-
     if (FILTER && $("#sorttable table td").html()) {
         $("#faset-filter-body").html($("#sorttable table td").html());
         $("#faset-filter").removeClass('hide');
@@ -461,7 +457,6 @@ $(document).ready(function() {
         $("#faset-filter").hide();
         $("#sorttable").removeClass('hide');
     }
-
 
     // Направление сортировки
     $('#filter-well input:radio').on('change', function() {
@@ -492,7 +487,6 @@ $(document).ready(function() {
             window.location.href = '?' + href;
         }
     });
-
 
     // Загрузка результата отбора при переходе
     if (window.location.hash != "" && $("#sorttable table td").html()) {
@@ -528,7 +522,6 @@ $(document).ready(function() {
         faset_filter_click($(this));
     });
 
-
     // Сброс фильтра
     $('#faset-filter-reset').on('click', function(event) {
         if (AJAX_SCROLL) {
@@ -544,9 +537,7 @@ $(document).ready(function() {
             // Сброс текущей страницы
             count = current;
         }
-
     });
-
 
     // Пагинация товаров
     $('.pagination a').on('click', function(event) {
@@ -555,7 +546,6 @@ $(document).ready(function() {
             window.location.href = $(this).attr('href') + window.location.hash;
         }
     });
-
 
     // toTop
     $('#toTop').on('click', function(event) {
@@ -687,7 +677,12 @@ $(document).ready(function() {
 
     // добавление в корзину подтипа
     $(".addToCartListParent").on('click', function() {
-        addToCartList($(this).attr('data-uid'), $(this).attr('data-num'), $(this).attr('data-parent'));
+        addToCartList($('input[name="parentIdNt"]:checked').val(), $(this).attr('data-num'), $(this).attr('data-parent'));
+
+    });
+
+    $('input[name="parentIdNt"]').on('change', function() {
+        $('[itemprop="price"]').html($(this).attr('data-price'));
     });
 
     // добавление в корзину опции
@@ -871,6 +866,18 @@ $(document).ready(function() {
         if ($(this).find('a').html() === undefined || $(this).find('.vendorenabled').html() == '') {
             $(this).fadeOut('slow');
         }
+    });
+    
+    // Сворачиваемый блок 
+    $('.collapse').on('show.bs.collapse', function() {
+        $(this).prev('h4').find('i').removeClass('fa-chevron-down');
+        $(this).prev('h4').find('i').addClass('fa-chevron-up');
+        $(this).prev('h4').attr('title','Скрыть');
+    });
+    $('.collapse').on('hidden.bs.collapse', function() {
+        $(this).prev('h4').find('i').removeClass('fa-chevron-up');
+        $(this).prev('h4').find('i').addClass('fa-chevron-down');
+         $(this).prev('h4').attr('title','Показать');
     });
 
 });

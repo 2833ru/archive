@@ -12470,7 +12470,7 @@ CREATE TABLE `phpshop_photo_categories` (
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 
-
+ALTER TABLE  `phpshop_categories` ADD  `dop_cat` varchar(255) DEFAULT '';
 CREATE TABLE `phpshop_photo` (
   `id` int(11) NOT NULL auto_increment,
   `category` int(11) default '0',

@@ -14,7 +14,6 @@ Disallow: /print/
 Disallow: /pricemail/
 Disallow: /forma/
 Disallow: /users/
-Disallow: /phpshop/
 Disallow: /selection/
 Disallow: /rss/
 Disallow: /*?*$
@@ -35,7 +34,6 @@ Disallow: /print/
 Disallow: /pricemail/
 Disallow: /forma/
 Disallow: /users/
-Disallow: /phpshop/
 Disallow: /selection/
 Disallow: /rss/
 Disallow: /*?*$
@@ -56,7 +54,6 @@ Disallow: /print/
 Disallow: /pricemail/
 Disallow: /forma/
 Disallow: /users/
-Disallow: /phpshop/
 Disallow: /selection/
 Disallow: /rss/
 Disallow: /*?*$

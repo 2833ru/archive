@@ -2,6 +2,7 @@
 
 // Подключение подменю модулей
 function modulesSubMenu() {
+    global $modName;
 
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['modules']);
     $data = $PHPShopOrm->select(array('*'), array('path' => '="' . $_GET['id'] . '"'), false, array('limit' => 1));
@@ -9,6 +10,8 @@ function modulesSubMenu() {
         $path = $data['path'];
         $menu = "../modules/" . $path . "/install/module.xml";
         $db = xml2array($menu, false, true);
+        
+        $modName = $db['name'];
 
         if (is_array($db['adminmenu']['podmenu'][0])) {
             foreach ($db['adminmenu']['podmenu'] as $val) {
@@ -53,9 +56,10 @@ function modulesSubMenu() {
     return $action_select;
 }
 
-$TitlePage = __('Настройка модуля ' . $_GET['id']);
-$PHPShopModules->path = $_GET['id'];
 $mod_podmenu = modulesSubMenu();
+$TitlePage = __('Настройка модуля ' . $modName);
+$PHPShopModules->path = $_GET['id'];
+
 $PHPShopGUI->action_select = $mod_podmenu;
 
 foreach ($mod_podmenu as $title) {
@@ -65,7 +69,7 @@ foreach ($mod_podmenu as $title) {
 
 $PHPShopGUI->field_col = 2;
 $PHPShopGUI->addJSFiles('./modules/gui/modules.gui.js');
-$PHPShopGUI->setActionPanel(__("Настройка модуля") . ' <span id="module-name">' . ucfirst($_GET['id']) . '</span>', $select_name, array('Сохранить и закрыть'));
+$PHPShopGUI->setActionPanel($TitlePage, $select_name, array('Сохранить и закрыть'));
 $path = '../modules/' . substr($_GET['id'], 0, 20) . '/admpanel/adm_module.php';
 if (file_exists($path) and !empty($mod_podmenu))
     include_once($path);

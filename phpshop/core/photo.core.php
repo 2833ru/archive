@@ -3,7 +3,7 @@
 /**
  * Обработчик фото галереи
  * @author PHPShop Software
- * @version 1.2
+ * @version 1.3
  * @package PHPShopCore
  */
 class PHPShopPhoto extends PHPShopCore {
@@ -87,7 +87,9 @@ class PHPShopPhoto extends PHPShopCore {
      */
     function ListPhoto() {
         $disp = null;
-        $i = 0;
+
+        // Перехват модуля
+        $this->setHook(__CLASS__, __FUNCTION__, $this->dataArray, 'START');
 
         // Путь для навигации
         $this->objPath = '/photo/CID_' . $this->category . '_';
@@ -102,6 +104,9 @@ class PHPShopPhoto extends PHPShopCore {
                 $this->set('photoInfo', $row['info']);
                 $this->set('photoImg', $row['name']);
 
+                // Перехват модуля
+                $this->setHook(__CLASS__, __FUNCTION__, $row, 'MIDDLE');
+
                 $disp.=ParseTemplateReturn('./phpshop/lib/templates/photo/photo_element_forma.tpl', true);
             }
         // Если есть описание каталога
@@ -110,7 +115,7 @@ class PHPShopPhoto extends PHPShopCore {
         elseif (!empty($this->LoadItems['CatalogPhoto'][$this->category]['content_enabled']))
             $content = $this->PHPShopPhotoCategory->getContent();
 
-        $this->set('pageContent', $content.$disp);
+        $this->set('pageContent', $content . $disp);
         $this->set('pageTitle', $this->category_name);
 
         // Пагинатор
@@ -121,6 +126,9 @@ class PHPShopPhoto extends PHPShopCore {
 
         // Навигация хлебные крошки
         $this->navigation($row['parent_to'], $this->category_name);
+
+        // Перехват модуля
+        $this->setHook(__CLASS__, __FUNCTION__, $this->dataArray, 'END');
 
         // Подключаем шаблон
         $this->parseTemplate($this->getValue('templates.page_page_list'));

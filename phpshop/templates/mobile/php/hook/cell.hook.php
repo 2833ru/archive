@@ -222,7 +222,7 @@ $addHandler = array
     (
     'CID_Product' => 'CID_Product_cell_hook',
     '#CID_Category' => 'CID_Category_cell_hook',
-    'setCell' => 'setcell_hook',
+    '#setCell' => 'setcell_hook',
     'UID' => 'UID_mob_hook',
     'image_gallery' => 'image_gallery_mob_hook',
     'sort_table' => 'sort_table_mob_hook',

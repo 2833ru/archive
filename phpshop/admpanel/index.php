@@ -12,7 +12,7 @@ PHPShopObj::loadClass("orm");
 PHPShopObj::loadClass("admgui");
 PHPShopObj::loadClass("update");
 
-$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, false);
+$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, true);
 $PHPShopSystem = new PHPShopSystem();
 
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['users']);
@@ -163,7 +163,7 @@ function getLicense($file) {
 function actionStart() {
     global $PHPShopSystem, $PHPShopBase, $notification;
 
-    $License = @parse_ini_file("../../license/" . PHPShopFile::searchFile('../../license/', 'getLicense', true), 1);
+    $License = parse_ini_file_true("../../license/" . PHPShopFile::searchFile('../../license/', 'getLicense', true), 1);
 
     // ќзнакомительный режим
     if (is_array($License) and $License['License']['Expires'] != 'Never' and $License['License']['Expires'] < time()) {

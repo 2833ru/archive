@@ -73,7 +73,7 @@ if (PHPShopSecurity::true_param($_GET['tip'], $_GET['orderId'], $_GET['datas']))
         PHPShopParser::set('nds_block_end', '-->');
     }
 
-    PHPShopParser::set('totalnds', $PHPShopOrder->getTotal($nds = true));
+    PHPShopParser::set('totalnds', $PHPShopOrder->getTotal(true));
     PHPShopParser::set('nds', $PHPShopOrder->PHPShopSystem->getParam('nds'));
     PHPShopParser::set('discount', $PHPShopOrder->getDiscount());
     PHPShopParser::set('ouid', $PHPShopOrder->getValue('uid'));

@@ -1,6 +1,6 @@
 <?php
 
-PHPShopObj::loadClass('delivery');
+PHPShopObj::loadClass(array('delivery', 'payment'));
 
 
 $TitlePage = __('Редактирование Доставки #' . $_GET['id']);
@@ -51,7 +51,7 @@ function actionStart() {
 
     // Размер названия поля
     $PHPShopGUI->field_col = 2;
-    $PHPShopGUI->addJSFiles('./js/jquery.treegrid.js','./delivery/gui/delivery.gui.js');
+    $PHPShopGUI->addJSFiles('./js/jquery.treegrid.js', './delivery/gui/delivery.gui.js');
 
     // Выборка
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_REQUEST['id'])));
@@ -66,7 +66,7 @@ function actionStart() {
     else
         $catalog = false;
 
-    $PHPShopGUI->setActionPanel(__("Доставка") . ' / ' . $data['city'], array('Создать','|','Удалить', ), array('Сохранить', 'Сохранить и закрыть'));
+    $PHPShopGUI->setActionPanel(__("Доставка") . ' / ' . $data['city'], array('Создать', '|', 'Удалить',), array('Сохранить', 'Сохранить и закрыть'));
 
     // Наименование
     $Tab_info = $PHPShopGUI->setField(__("Название:"), $PHPShopGUI->setInputText(false, 'city_new', $data['city'], '100%'));
@@ -150,6 +150,27 @@ function actionStart() {
     // Иконка
     $Tab1.=$PHPShopGUI->setField(__("Изображение"), $PHPShopGUI->setIcon($data['icon'], "icon_new", false));
 
+    $PHPShopPaymentArray = new PHPShopPaymentArray(array('enabled' => "='1'"));
+    if (strstr($data['payment'], ","))
+        $payment_array = explode(",", $data['payment']);
+    else
+        $payment_array[] = $data['payment'];
+
+    $PaymentArray = $PHPShopPaymentArray->getArray();
+    if (is_array($PaymentArray))
+        foreach ($PaymentArray as $payment) {
+
+            if (in_array($payment['id'], $payment_array))
+                $payment_check = $payment['id'];
+            else
+                $payment_check = null;
+            $payment_value[] = array($payment['name'], $payment['id'], $payment_check);
+        }
+
+    // Оплаты
+    if(empty($data['is_folder']))
+    $Tab1.=$PHPShopGUI->setField(__("Блокировка оплат"), $PHPShopGUI->setSelect('payment_new[]', $payment_value, false, null, false, $search = false, false, $size = 1, $multiple = true));
+
     // Цены
     if (!$catalog)
         $Tab1.= $PHPShopGUI->setCollapse(__('Цены'), $Tab_price);
@@ -171,11 +192,11 @@ function actionStart() {
 
     // Левый сайдбар
     $sidebarleft[] = array('title' => 'Категории', 'content' => $tree, 'title-icon' => '<span class="glyphicon glyphicon-plus newcat" data-toggle="tooltip" data-placement="top" title="Добавить каталог"></span>&nbsp;<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="Развернуть"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="Свернуть"></span>');
-    
-        $help = '<p class="text-muted">У каждого типа доставки можно настроить обязательные и дополнительные поля для заполнения заказа в закладке управления доставкой <kbd>Адреса пользователя</kbd></p>';
+
+    $help = '<p class="text-muted">У каждого типа доставки можно настроить обязательные и дополнительные поля для заполнения заказа в закладке управления доставкой <kbd>Адреса пользователя</kbd></p>';
 
     $sidebarleft[] = array('title' => 'Подсказка', 'content' => $help);
-    
+
     $PHPShopGUI->setSidebarLeft($sidebarleft, 3);
     $PHPShopGUI->sidebarLeftCell = 3;
 
@@ -184,7 +205,7 @@ function actionStart() {
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =
             $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .
-            $PHPShopGUI->setInput("button", "delID", "Удалить", "right", 70, "", "but", "actionDelete.delivery.delete") .
+            $PHPShopGUI->setInput("button", "delID", "Удалить", "right", 70, "", "but", "actionDelete.delivery.edit") .
             $PHPShopGUI->setInput("submit", "editID", "Сохранить", "right", 70, "", "but", "actionUpdate.delivery.edit") .
             $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionSave.delivery.edit");
 
@@ -200,11 +221,12 @@ function actionSave() {
 
     // Сохранение данных
     $result = actionUpdate();
-    
-      if (isset($_REQUEST['ajax'])) {
-      exit(json_encode($result));
-      }
-      else header('Location: ?path=' . $_GET['path'].'&cat='.$_POST['PID_new']); 
+
+    if (isset($_REQUEST['ajax'])) {
+        exit(json_encode($result));
+    }
+    else
+        header('Location: ?path=' . $_GET['path'] . '&cat=' . $_POST['PID_new']);
 }
 
 /**
@@ -215,22 +237,32 @@ function actionUpdate() {
     global $PHPShopOrm, $PHPShopModules;
 
 
-    if (is_array($_POST['data_fields'])){
-        
-        if(is_array($_POST[data_fields][enabled]))
-        foreach($_POST[data_fields][enabled] as $k=>$v){
-            $_POST[data_fields][enabled][$k] = array_map("urldecode", $v);
-        }
-        
-        
+    if (is_array($_POST['data_fields'])) {
+
+        if (is_array($_POST[data_fields][enabled]))
+            foreach ($_POST[data_fields][enabled] as $k => $v) {
+                $_POST[data_fields][enabled][$k] = array_map("urldecode", $v);
+            }
+
+
         $_POST['data_fields_new'] = serialize($_POST['data_fields']);
     }
 
-    // Корректировка пустых значений
-    $PHPShopOrm->updateZeroVars('flag_new', 'enabled_new', 'price_null_enabled_new');
+    if (empty($_POST['ajax'])) {
 
-    if(!empty($_POST['icon_new']))
-    $_POST['icon_new'] = iconAdd('icon_new');
+        // Корректировка пустых значений
+        $PHPShopOrm->updateZeroVars('flag_new', 'enabled_new', 'price_null_enabled_new');
+    }
+
+    if (!empty($_POST['icon_new']))
+        $_POST['icon_new'] = iconAdd('icon_new');
+
+    // Оплаты
+    if (isset($_POST['payment_new'])) {
+        if (is_array($_POST['payment_new']))
+            $_POST['payment_new'] = @implode(',', $_POST['payment_new']);
+    }
+
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
@@ -282,6 +314,7 @@ function actionDelete() {
 
 
     $action = $PHPShopOrm->delete(array('id' => '=' . $_POST['rowID']));
+    $PHPShopOrm->debug=true;
     return array('success' => $action);
 }
 

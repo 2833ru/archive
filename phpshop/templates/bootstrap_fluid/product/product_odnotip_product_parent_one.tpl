@@ -1,2 +1,2 @@
 
-<a href="#" class="list-group-item addToCartListParent" data-uid="@parentId@" data-num="1" data-parent="@productUid@" data-dismiss="modal">@parentName@</a>
+<a href="#" class="list-group-item addToCartListParent" data-uid="@parentId@" data-num="1" data-price="@parentPrice@" data-parent="@productUid@" data-dismiss="modal">@parentName@ - @parentPrice@ <span class="rubznak">@productValutaName@</span></a>

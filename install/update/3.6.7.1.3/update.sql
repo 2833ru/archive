@@ -1,3 +1,5 @@
+ALTER TABLE  `phpshop_categories` ADD  `dop_cat` varchar(255) DEFAULT '';
+ALTER TABLE  `phpshop_delivery` ADD  `payment` varchar(255) DEFAULT '';
 ALTER TABLE  `phpshop_users` ADD  `hash` VARCHAR( 255 ) NOT NULL ;
 ALTER TABLE  `phpshop_delivery` ADD  `icon` VARCHAR( 255 ) NOT NULL ;
 ALTER TABLE  `phpshop_payment_systems` ADD  `icon` VARCHAR( 255 ) NOT NULL ;

@@ -101,7 +101,7 @@
                         <dt>Скидка :</dt>
                         <dd id="SkiSummaAll"><span id="SkiSumma">@discount@</span></dd>
                         <dt>Доставка :</dt>
-                        <dd><span id="DosSumma">@delivery_price@ </span><span class="rubznak">@currency@</span></dd>
+                        <dd><span id="DosSumma">@delivery_price@</span> <span class="rubznak">@currency@</span> <span id="deliveryInfo"></span></dd>
                     </dl>
                     <hr>
                     <dl class="dl-horizontal total">

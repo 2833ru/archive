@@ -24,6 +24,39 @@ PHPShopObj::loadClass("valuta");
 /*
   $_POST['log']='root';
   $_POST['pas']='I4OI1OI1OI6OI4OI1OI1OI6OI10O';
+ 
+  $_POST['sql']='<?xml version="1.0" encoding="windows-1251"?>
+  <phpshop>
+  <sql>
+  <from>table_name1</from>
+  <method>update</method>
+  <vars>
+  <fio>Петя</fio>
+  <tel>1050540</tel>
+  <country>Россия</country>
+  <city>Москва</city>
+  <index>Москва</index>
+  <house>55</house>
+  <porch>4</porch>
+  <street>Суздальская</street>
+  <flat>22</flat>
+  <org_name>ООО "ПХПШОП"</org_name>
+  <org_inn>11111111111111111</org_inn>
+  <org_kpp>2222222222222</org_kpp>
+  <org_yur_adres>Щербаковская 4</org_yur_adres>
+  <org_fakt_adres>Рязанский проспект</org_fakt_adres>
+  <org_ras>333333333333</org_ras>
+  <org_bank>Альфа Банк</org_bank>
+  <org_kor>444444444444</org_kor>
+  <org_bik>555555</org_bik>
+  <org_bik>org_city</org_bik>
+  <delivtime>org_city</delivtime>
+  <statusi>1</statusi>
+  <dop_info>1</dop_info>
+  </vars>
+  <where>id=4</where>
+  </sql>
+  </phpshop>';
 
   $_POST['sql']='<?xml version="1.0" encoding="windows-1251"?>
   <phpshop>

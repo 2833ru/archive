@@ -65,7 +65,7 @@ class PHPShopBase {
         $this->setPHPCoreReporting($error);
 
         $this->iniPath = $iniPath;
-        $this->SysValue = parse_ini_file($this->iniPath, 1);
+        $this->SysValue = parse_ini_file_true($this->iniPath, 1);
 
         define('parser_function_allowed', $this->SysValue['function']['allowed']);
         define('parser_function_deny', $this->SysValue['function']['deny']);
@@ -251,4 +251,18 @@ class PHPShopBase {
     }
 
 }
+
+/**
+ * Безопасная обработка INI файлов
+ * @param string $file INI файл
+ * @param bool $process_sections [true/false] режим многомерного массива
+ * @return array
+ */
+function parse_ini_file_true($file, $process_sections) {
+    if (function_exists('parse_ini_file'))
+        return @parse_ini_file($file, $process_sections);
+    elseif(is_file($file))
+        return parse_ini_string(@file_get_contents($file), $process_sections);
+}
+
 ?>

@@ -307,16 +307,17 @@ class PHPShopOrderFunction extends PHPShopObj {
      */
     function delivery($function, $option = false) {
         $list = null;
-        $i=0;
+        $i = 0;
         $order = $this->unserializeParam('orders');
 
         $PHPShopDelivery = new PHPShopDelivery($order['Person']['dostavka_metod']);
         $delivery['id'] = $order['Person']['dostavka_metod'];
         $name = $PHPShopDelivery->getCity();
-        
-        if(empty($order['Cart']['dostavka']))
-        $delivery['price'] = number_format($PHPShopDelivery->getPrice($order['Cart']['sum'], $order['Cart']['weight']), $this->format, '.', '');
-        else $delivery['price'] = number_format($order['Cart']['dostavka'], $this->format, '.', '');
+
+        if (empty($order['Cart']['dostavka']))
+            $delivery['price'] = number_format($PHPShopDelivery->getPrice($order['Cart']['sum'], $order['Cart']['weight']), $this->format, '.', '');
+        else
+            $delivery['price'] = number_format($order['Cart']['dostavka'], $this->format, '.', '');
         $delivery['data_fields'] = $PHPShopDelivery->getParam('data_fields');
 
         $PID = $PHPShopDelivery->getParam('PID');
@@ -360,10 +361,10 @@ class PHPShopOrderFunction extends PHPShopObj {
      */
     function getDeliverySumma() {
         $order = $this->unserializeParam('orders');
-        
-        if(!empty($order['Cart']['dostavka']))
-             return  $order['Cart']['dostavka'];
-        
+
+        if (!empty($order['Cart']['dostavka']))
+            return $order['Cart']['dostavka'];
+
         if (!empty($order['Person']['discount']))
             $discount = $order['Person']['discount'];
         else
@@ -420,16 +421,16 @@ class PHPShopOrderFunction extends PHPShopObj {
 
         if ($this->getValue('sum') > 0)
             $total = $this->getValue('sum');
-
         else {
             $cart = $this->getCartSumma();
             $delivery = $this->getDeliverySumma();
             $total = $cart + $delivery;
-            if (!empty($nds))
-                $total = $total * $this->PHPShopSystem->getParam('nds') / (100 + $this->PHPShopSystem->getParam('nds'));
-            else
-                $total = $total;
         }
+        if (!empty($nds))
+            $total = $total * $this->PHPShopSystem->getParam('nds') / (100 + $this->PHPShopSystem->getParam('nds'));
+        else
+            $total = $total;
+
         $total = number_format($total, $this->format, '.', $def);
         return $total;
     }
@@ -473,7 +474,7 @@ class PHPShopOrderStatusArray extends PHPShopArray {
      */
     function __construct() {
         $this->objBase = $GLOBALS['SysValue']['base']['order_status'];
-        parent::__construct('id', 'name', 'color', 'sklad_action','cumulative_action');
+        parent::__construct('id', 'name', 'color', 'sklad_action', 'cumulative_action');
     }
 
 }

@@ -60,7 +60,7 @@ function tab_base($data) {
         $disp= $PHPShopGUI->setCollapse(__('Дополнительные шаблоны'), $title.$img_list);
     else $disp=$PHPShopGUI->setAlert('Ошибка связи с сервером '.$skin_base_path, $type = 'warning'); 
 
-    $promo='Дизайн-бюро <a href="http://phpshop-design.ru" target="_blank">PHPShop.Design</a> делает дизайны только для  PHPShop, а значит, неожиданностей при создании дизайна не произойдет, и  вы получите уникальный профессиональный дизайн в срок, отвечающий всем  требованиям сегодняшнего дня. <ol>
+    $promo='Дизайн-бюро <a href="http://www.phpshop.ru/news/ID_shop_design_2016.html" target="_blank">PHPShop.Design</a> делает дизайны только для  PHPShop, а значит, неожиданностей при создании дизайна не произойдет, и  вы получите уникальный профессиональный дизайн в срок, отвечающий всем  требованиям сегодняшнего дня. <ol>
         <li>Мы на 100% знаем свою платформу, а это значит, что  Вам не придется переплачивать за часы работы дизайнера, не знакомого с  PHPShop. </li>
         <li>Мы стараемся учитывать всю функциональность PHPShop  еще на первом этапе его создания, и вы получите работающий  интернет-магазин таким, каким Вы его видите на утвержденном Вами макете. </li>
         <li>Большинство доработок, ранее требовавших  вмешательства в код платформы, на новой версии PHPShop 5,  производятся с помощью "дизайн-хуков", - это значит, что в будущем вы  сможете обновляться без потери доработок. </li>
@@ -68,7 +68,7 @@ function tab_base($data) {
     </ol>
     <p>Для заказа персонального дизайна нужно заполнить бриф, в котором вы  формулируете будущий проект, все возникающие вопросы уточнить у наших  консультантов. Cрок создания макета дизайна - 15 рабочих дней.</p>
     <p>
-    <a href="http://phpshop-design.ru/page/brif-design.html" target="_blank" class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-share-alt"></span> Бриф на Персональный дизайн сайта</a></p>';
+    <a href="http://www.phpshop.ru/calculation/brifdesign/" target="_blank" class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-share-alt"></span> Бриф на Персональный дизайн сайта</a></p>';
     $disp.=$PHPShopGUI->setCollapse(__('Персональный дизайн'), $promo);
     
     return $disp;

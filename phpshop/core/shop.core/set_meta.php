@@ -19,7 +19,6 @@ function catalog_meta($array,$flag) {
     $tip=$row[$flag.'_enabled'];
     $cat=$row['parent_to'];
     
-
     if($cat != 0) {
         if($tip == 0) $Shablon=$PHPShopSystem->getParam($flag.'_shablon');
         elseif($tip == 1) $Shablon=$row[$flag];
@@ -27,9 +26,9 @@ function catalog_meta($array,$flag) {
     }else {
         if($tip == 0) $Shablon=$PHPShopSystem->getParam($flag.'_shablon3');
         elseif($tip == 1) $Shablon=$row[$flag];
-        elseif($tip == 2) $Shablon=$row[$flag.'_shablon3'];
+        elseif($tip == 2) $Shablon=$row[$flag.'_shablon'];
     }
-
+    
     if($tip !=1) {
         if($cat != 0) {
             $Catalog=$parent_row['name'];
@@ -51,6 +50,8 @@ function catalog_meta($array,$flag) {
             $Shablon=str_replace("@Generator@", $Generator, $Shablon);
         }
     }
+    
+
     return $Shablon;
 }
 
@@ -65,7 +66,7 @@ function catalog_meta($array,$flag) {
  */
 function product_meta($array,$flag) {
     global $PHPShopSystem;
-
+    
     // Массив текущего товара
     $row=$array[0];
     

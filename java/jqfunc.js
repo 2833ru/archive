@@ -107,6 +107,31 @@ function UpdateDeliveryJq(xid, param, stop_hook) {
                 $("#userAdresData").html(json['adresList']);
                 $("#userAdresData").fadeIn("slow");
 
+                // блокировка способов оплат
+                var paymentStop = $("input#dostavka_metod:checked").attr('data-option');
+                if (paymentStop !== undefined)
+                    var payment_array = paymentStop.split(",");
+
+                $('input[name="order_metod"]').each(function() {
+                    $(this).attr('disabled', false);
+                });
+
+                if ($.isArray(payment_array)) {
+                    $.each(payment_array, function(index, value) {
+                        $('input[data-option="payment' + value + '"]').attr('disabled', true);
+                        $('input[data-option="payment' + value + '"]').attr('checked', false);
+                    });
+                }
+                
+                if ($("input#order_metod:checked").length == 0) {             
+                    $('input#order_metod').each(function() {
+                        if (!this.disabled){
+                            this.checked = true;
+                            return false;
+                        }                 
+                    });
+                }
+
                 // учет хука доставки
                 if (json['hook'] !== undefined && json['hook'] !== "" && stop_hook === undefined) {
                     eval(json['hook']);
@@ -382,13 +407,13 @@ $(document).ready(function() {
     cart_lang[22] = 'а';
     cart_lang[23] = 'а';
     cart_lang[24] = 'а';
-    if(cart_lang[$('#num').text()] != 'undefined')
-    $('#lang-cart').text('товар'+cart_lang[$('#num').text()]);
+    if (cart_lang[$('#num').text()] != 'undefined')
+        $('#lang-cart').text('товар' + cart_lang[$('#num').text()]);
 
     $(".button").click(function() {
         setTimeout(function() {
-            if(cart_lang[$('#num').text()] != 'undefined')
-            $('#lang-cart').text('товар'+cart_lang[$('#num').text()]);
+            if (cart_lang[$('#num').text()] != 'undefined')
+                $('#lang-cart').text('товар' + cart_lang[$('#num').text()]);
         }, 1000);
     });
 

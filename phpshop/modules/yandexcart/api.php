@@ -97,10 +97,10 @@ switch ($_SERVER["PATH_INFO"]) {
 
         // Доставка
         $result["cart"]["deliveryOptions"] = array();
-        $PHPShopDeliveryArray = new PHPShopDeliveryArray(array('enabled' => "='1'", 'is_folder' => "!='1'", 'yandex_enabled' => "='2'"), array('yandex_day_min', 'yandex_day', 'yandex_type', 'yandex_payment', 'yandex_outlet', 'yandex_check','yandex_order_before'));
+        $PHPShopDeliveryArray = new PHPShopDeliveryArray(array('enabled' => "='1'", 'is_folder' => "!='1'", 'yandex_enabled' => "='2'"), array('yandex_day_min', 'yandex_day', 'yandex_type', 'yandex_payment', 'yandex_outlet', 'yandex_check', 'yandex_order_before'));
         $deliveryPrice = $PHPShopDeliveryArray->getArray();
 
-        
+
         // Корзина для подсчета бесплатной доставки
         $items = $data['cart']['items'];
         $priceTotal = $weightTotal = 0;
@@ -139,15 +139,15 @@ switch ($_SERVER["PATH_INFO"]) {
                     $PHPShopDelivery = new PHPShopDelivery($delivery['id']);
 
                     // Проверка локального региона
-                    if ($data["cart"]['delivery']['region']['id'] != $option['region_data']['region']['id'])
+                    if ($delivery['yandex_check'] == 2 and $data["cart"]['delivery']['region']['id'] != $option['region_data']['region']['id'])
                         continue;
 
                     // Доставка кол-во дней
                     if (empty($delivery['yandex_day']))
                         $delivery['yandex_day'] = 2;
-                    
+
                     // Учет order-before
-                    if(date('H')>$delivery['yandex_order_before']){
+                    if (date('H') > $delivery['yandex_order_before']) {
                         $delivery['yandex_day_min']++;
                         $delivery['yandex_day']++;
                     }
@@ -164,6 +164,10 @@ switch ($_SERVER["PATH_INFO"]) {
                         else
                             $outlet[] = $delivery['yandex_outlet'];
                     }
+                    // PICKUP с пустыми yandex_outlet
+                    elseif ($delivery_type[intval($delivery['yandex_type'])] == 'PICKUP')
+                        continue;
+
 
                     $result["cart"]["deliveryOptions"][$i] = array(
                         "id" => $delivery['id'],
@@ -214,7 +218,7 @@ switch ($_SERVER["PATH_INFO"]) {
                 // Итоговый вес
                 $weightTotal+=$PHPShopProduct->getParam('weight') * $item['count'];
 
-                if (count($result["cart"]["deliveryOptions"])>0)
+                if (count($result["cart"]["deliveryOptions"]) > 0)
                     $mi["delivery"] = true;
                 else
                     $mi["delivery"] = false;
@@ -271,7 +275,7 @@ switch ($_SERVER["PATH_INFO"]) {
         $all_num = explode("-", $last);
         $ferst_num = $all_num[0];
         $order_num = $ferst_num + 1;
-        $order_num = $order_num . "-" . rand(10,99);
+        $order_num = $order_num . "-" . rand(10, 99);
 
         // Данные покупателя
         $result["Person"] = array(
@@ -310,7 +314,7 @@ switch ($_SERVER["PATH_INFO"]) {
         $insert['orders_new'] = serialize($result);
         //$insert['status_new'] = serialize(array('maneger' => iconv("utf-8", "cp1251", $data['order']['notes'])));
         $insert['dop_info_new'] = 'yandex' . $data['order']['id'];
-        $insert['sum_new']=$sum+$delivery_price;
+        $insert['sum_new'] = $sum + $delivery_price;
 
 
         // Запись заказа в БД

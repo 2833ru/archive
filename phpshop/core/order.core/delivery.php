@@ -7,23 +7,20 @@
  * @return string
  */
 function delivery($obj, $deliveryID) {
-    global $SysValue,$link_db;
+    global $SysValue, $link_db;
 
-    $pred = $br = $my = $alldone = $waytodo = null;
+    $pred = $br = $my = $alldone = $waytodo =  $disp = null;
 
-    if (empty($SysValue['nav'])) {
-        $engineinc = 0;
-        $pathTemplate = $GLOBALS['SysValue']['dir']['dir']. chr(47) . $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . chr(47); // путь до шаблона
-    } else {
-        $engineinc = 1;
-        $pathTemplate = '../../';
-    }
 
-    $table = $SysValue['base']['table_name30'];
+    $engineinc = 0;
+    $pathTemplate = $GLOBALS['SysValue']['dir']['dir'] . chr(47) . $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . chr(47); // путь до шаблона
+
+
+    $table = $SysValue['base']['delivery'];
 
     if ($deliveryID > 0) {
         $sql = "select * from " . $table . " where (enabled='1' and id='" . $deliveryID . "') order by num,city";
-        $result = mysqli_query($link_db,$sql);
+        $result = mysqli_query($link_db, $sql);
         $row = mysqli_fetch_array($result);
         $isfolder = $row['is_folder'];
         $PID = $row['PID'];
@@ -45,7 +42,7 @@ function delivery($obj, $deliveryID) {
         $deliveryID = 0; //Присваиваем нулевой идентификатор, если ничего не прислали
         $sqlvariants = "select * from " . $table . " where (enabled='1' and PID='0') order by num,city";
     }
-    $resultvariants = mysqli_query($link_db,$sqlvariants); // Принимаем варианты
+    $resultvariants = mysqli_query($link_db, $sqlvariants); // Принимаем варианты
     $varamount = mysqli_num_rows($resultvariants);
 
 
@@ -58,19 +55,19 @@ function delivery($obj, $deliveryID) {
 
             //Получаем первого предка
             $sqlpr = "select * from " . $SysValue['base']['table_name30'] . " where (enabled='1' and id='" . $PIDpr . "') order by num,city";
-            $resultpr = mysqli_query($link_db,$sqlpr);
+            $resultpr = mysqli_query($link_db, $sqlpr);
             $rowpr = mysqli_fetch_array($resultpr);
 
             $PIDpr = $rowpr['PID']; //Меняем идентификатор предка. На уровень выше
             $city = $rowpr['city'];
             $predok = $rowpr['city'] . ' > ' . $predok; //Довесок, который будем дописывать каждому варианту
             //Получаем количество соседей у вышестоящего.
-            $sqlprr = "select * from " . $SysValue['base']['table_name30'] . " where (enabled='1' and PID='" . $PIDpr . "') order by num,city";
-            $resultprr = mysqli_query($link_db,$sqlprr);
+            $sqlprr = "select * from " . $table . " where (enabled='1' and PID='" . $PIDpr . "') order by num,city";
+            $resultprr = mysqli_query($link_db, $sqlprr);
             $ii = 0;
             while ($rowsos = mysqli_fetch_array($resultprr)) {
-                $sqlsosed = "select * from " . $SysValue['base']['table_name30'] . " where (enabled='1' and PID='" . $rowsos['id'] . "') order by num,city";
-                $resultsosed = mysqli_query($link_db,$sqlsosed);
+                $sqlsosed = "select * from " . $table . " where (enabled='1' and PID='" . $rowsos['id'] . "') order by num,city";
+                $resultsosed = mysqli_query($link_db, $sqlsosed);
                 $sosed = mysqli_num_rows($resultsosed);
                 $sosfolder = $rowsos['is_folder'];
                 if ($sosfolder) {
@@ -125,8 +122,8 @@ function delivery($obj, $deliveryID) {
         }
 
         // Получаем количество соседей у вышестоящего.
-        $sqlpot = "select * from " . $SysValue['base']['table_name30'] . " where (enabled='1' and PID='" . $row['id'] . "') order by num,city";
-        $resultpot = mysqli_query($link_db,$sqlpot);
+        $sqlpot = "select * from " . $table . " where (enabled='1' and PID='" . $row['id'] . "') order by num,city";
+        $resultpot = mysqli_query($link_db, $sqlpot);
         $pot = mysqli_num_rows($resultpot);
 
 
@@ -139,7 +136,7 @@ function delivery($obj, $deliveryID) {
                 $img = "&nbsp;<img src='{$row['icon']}' title='$city' height='30'>&nbsp;";
             else
                 $img = "";
-            @$disp .= '<span class="delivOneEl"><label><input type=radio value=' . $row['id'] . ' ' . $chk . '  name="dostavka_metod" id="dostavka_metod" > <span class="deliveryName">' . $img . $city . '</span></span></label>';
+            $disp .= '<span class="delivOneEl"><label><input type="radio" value="' . $row['id'] . '" ' . $chk . '  name="dostavka_metod" id="dostavka_metod" data-option="'.$row['payment'].'"> <span class="deliveryName" >' . $img . $city . '</span></span></label>';
             $varamount++;
             $curid = $row['id'];
         }
@@ -147,10 +144,9 @@ function delivery($obj, $deliveryID) {
 
 
     $query = "select data_fields,city_select from " . $SysValue['base']['table_name30'] . " where id=$deliveryID";
-    $row = mysqli_fetch_array(mysqli_query($link_db,$query));
+    $row = mysqli_fetch_array(mysqli_query($link_db, $query));
     $adresDisp_save = getAdresFields(unserialize($row['data_fields']), $row['city_select']);
     $adresDisp = "Для заполнения адреса, пожалуйста, выберите удобный способ доставки.";
-    //$adresDisp_save = print_r(unserialize($row['data_fields']),1);
 
     if ($varamount === 0) {
         $makechoise = '&nbsp;<input type=radio value=0  name="dostavka_metod" id="dostavka_metod">[Доставка по умолчанию]';
@@ -182,8 +178,6 @@ function delivery($obj, $deliveryID) {
     }
 
 
-
-
     $disp = '<DIV id="seldelivery">' . $pred . $br . $my . '
 ' . $makechoise . '
 ' . $disp . '
@@ -197,7 +191,7 @@ function delivery($obj, $deliveryID) {
 }
 
 function getAdresFields($mass, $city_select = null) {
-    global $SysValue,$link_db;
+    global $SysValue, $link_db;
 
 
     if (!is_array($mass))
@@ -212,7 +206,7 @@ function getAdresFields($mass, $city_select = null) {
         if ($city_select == 2) {
             $disabled = "disabled";
             $query = "SELECT country_id, name FROM " . $SysValue['base']['citylist_country'] . " Order BY name";
-            $result = mysqli_query($link_db,$query);
+            $result = mysqli_query($link_db, $query);
             while ($row = mysqli_fetch_array($result)) {
                 $disOpt .= "<option value='" . $row['name'] . "' for='" . $row['country_id'] . "'>" . $row['name'] . "</option>";
             }
@@ -230,7 +224,7 @@ function getAdresFields($mass, $city_select = null) {
         $rfId = 3159; // ID РФ 
         $disOpt = "";
         $query = "SELECT region_id, name FROM " . $SysValue['base']['citylist_region'] . " WHERE country_id = $rfId Order BY name";
-        $result = mysqli_query($link_db,$query);
+        $result = mysqli_query($link_db, $query);
         while ($row = mysqli_fetch_array($result)) {
             $disOpt .= "<option value='" . $row['name'] . "' for='" . $row['region_id'] . "' $ch>" . $row['name'] . "</option>";
         }

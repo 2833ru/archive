@@ -2,12 +2,12 @@
     
     function UpdatePromotion(promo) {
 
-        var sum = document.getElementById('OrderSumma').value;
+        var sum = $("#OrderSumma").val(); 
         var ssum = $("#SkiSumma").html();
         var promocode = $("#promocode").val(); 
         var tipoplcheck = $("#order_metod:checked").val();
         var dostavka = $("#dostavka_metod:checked").val();        
-        var wsum = document.getElementById('WeightSumma').innerHTML;
+        var wsum = $("#WeightSumma").html(); 
 
         if(typeof promocode=="undefined") {
             promocodei = promo;

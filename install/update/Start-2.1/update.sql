@@ -12496,3 +12496,5 @@ CREATE TABLE `phpshop_photo` (
   PRIMARY KEY  (`id`),
   KEY `parent` (`category`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
+ALTER TABLE  `phpshop_categories` ADD  `dop_cat` varchar(255) DEFAULT '';

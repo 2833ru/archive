@@ -43,11 +43,12 @@ class PHPShopPricemail extends PHPShopCore {
         if ($this->setHook(__CLASS__, __FUNCTION__, $_POST))
             return true;
 
-        if (!empty($_SESSION['text']) and $_POST['key'] == $_SESSION['text']) {
+        if (!empty($_SESSION['text']) and strtoupper($_POST['key']) == strtoupper($_SESSION['text'])) {
             $this->send();
-            $this->set('Error', __("Сообщение успешно отправлено"));
-        }else
-            $this->set('Error', __("Ошибка ключа, повторите попытку ввода ключа"));
+            $this->set('Error', PHPShopText::alert(__("Сообщение успешно отправлено"),'success'));
+        }
+        else
+            $this->set('Error', PHPShopText::alert(__("Ошибка ключа, повторите попытку ввода ключа"))  );
         $this->index();
     }
 
@@ -60,7 +61,7 @@ class PHPShopPricemail extends PHPShopCore {
         if ($this->setHook(__CLASS__, __FUNCTION__, $_POST, 'START'))
             return true;
 
-        if (PHPShopSecurity::true_param($_SESSION['text'], $_POST['mail'], $_POST['name_person'], $_POST['link_to_page']) and $_POST['key'] == $_SESSION['text']) {
+        if (PHPShopSecurity::true_param($_SESSION['text'], $_POST['mail'], $_POST['name_person'], $_POST['link_to_page'])) {
 
             // Заголовок e-mail пользователю
             //$title = $this->PHPShopSystem->getName() . " - " . __('Сообщение о меньшей цене');
@@ -89,7 +90,7 @@ class PHPShopPricemail extends PHPShopCore {
 
             if (PHPShopSecurity::true_email($_POST['mail'])) {
                 PHPShopObj::loadClass('mail');
-                $PHPShopMail = new PHPShopMail($this->PHPShopSystem->getEmail(),$this->PHPShopSystem->getEmail(), $title, $content,true);
+                new PHPShopMail($this->PHPShopSystem->getEmail(), $this->PHPShopSystem->getEmail(), $title, $content, true);
             }
 
             $this->redirect();
@@ -109,6 +110,28 @@ class PHPShopPricemail extends PHPShopCore {
     }
 
     /**
+     * Валюта
+     * @param string $name имя поля в таблице валют для выдачи
+     * @return string
+     */
+    function currency($name = 'code') {
+
+        if (isset($_SESSION['valuta']))
+            $currency = $_SESSION['valuta'];
+        else
+            $currency = $this->PHPShopSystem->getParam('dengi');
+        
+        $PHPShopOrm = new PHPShopOrm($this->getValue('base.currency'));
+
+        $row = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($currency)), false, array('limit' => 1), __FUNCTION__, array('base' => $this->getValue('base.currency'), 'cache' => 'true'));
+
+        if ($name == 'code' and ($row['iso'] == 'RUR' or $row['iso'] == "RUB"))
+            return 'p';
+
+        return $row[$name];
+    }
+
+    /**
      * Прорисовка формы
      */
     function forma() {
@@ -120,10 +143,11 @@ class PHPShopPricemail extends PHPShopCore {
         $PHPShopProduct = new PHPShopProduct($this->PHPShopNav->getId());
 
         $this->set('productName', $PHPShopProduct->getName());
+        $this->set('productDes', $PHPShopProduct->getParam('description'));
         $this->set('productImg', $PHPShopProduct->getImage());
         $this->set('productPrice', $PHPShopProduct->getPrice());
         $this->set('productUid', $this->PHPShopNav->getId());
-        $this->set('productPriceRub', '');
+        $this->set('productValutaName', $this->currency());
 
         // Данные пользователя
         if (PHPShopSecurity::true_num($_SESSION['UsersId'])) {
@@ -135,9 +159,9 @@ class PHPShopPricemail extends PHPShopCore {
             $this->set('UserAdres', $PHPShopUsers->getParam('adres'));
             $this->set('UserComp', $PHPShopUsers->getParam('company'));
             $this->set('formaLock', 'readonly=1');
-        } 
+        }
         // Запоминаем данные при неудачной отправке формы
-        elseif(!empty($_POST['send_price_link'])) {
+        elseif (!empty($_POST['send_price_link'])) {
             $this->set('UserMail', $_POST['mail']);
             $this->set('UserName', $_POST['name_person']);
             $this->set('UserTel', $_POST['tel_name']);
@@ -149,15 +173,16 @@ class PHPShopPricemail extends PHPShopCore {
 
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__, $PHPShopProduct, 'END');
-        
+
         // Заголовок
-        $this->title=$PHPShopProduct->getName().' - '.  __('Пожаловаться на цену'). " - " .$this->PHPShopSystem->getName();
-        $this->description=__('Пожаловаться на цену').': '.$PHPShopProduct->getName();
-        $this->keywords=$PHPShopProduct->getName();
-        
+        $this->title = $PHPShopProduct->getName() . ' - ' . __('Пожаловаться на цену') . " - " . $this->PHPShopSystem->getName();
+        $this->description = __('Пожаловаться на цену') . ': ' . $PHPShopProduct->getName();
+        $this->keywords = $PHPShopProduct->getName();
+
         // Вставка данных в шаблон
         $this->ParseTemplate($this->getValue('templates.pricemail_forma'));
     }
+
 }
 
 ?>

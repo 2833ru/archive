@@ -10,7 +10,6 @@
             <div class="modal-body">
 
                 <div class="list-group">
-                    <a class="list-group-item active">@productName@</a>
                     @parentList@
                 </div>
             </div>

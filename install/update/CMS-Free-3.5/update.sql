@@ -673,7 +673,7 @@ ALTER TABLE  `phpshop_order_status` ADD  `cumulative_action` ENUM(  '0',  '1' ) 
 ALTER TABLE  `phpshop_comment` CHANGE  `rate`  `rate` SMALLINT( 1 ) UNSIGNED NOT NULL DEFAULT  '0';
 
 ALTER TABLE  `phpshop_orders` ADD  `sum` FLOAT ;
-
+ALTER TABLE  `phpshop_categories` ADD  `dop_cat` varchar(255) DEFAULT '';
 ALTER TABLE  `phpshop_sort_categories` ADD  `product` enum('0','1') NOT NULL DEFAULT '0' ;
 
 CREATE TABLE IF NOT EXISTS `phpshop_newsletter` (

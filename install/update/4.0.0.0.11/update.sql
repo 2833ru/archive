@@ -1,4 +1,5 @@
-
+ALTER TABLE  `phpshop_categories` ADD  `dop_cat` varchar(255) DEFAULT '';
+ALTER TABLE  `phpshop_delivery` ADD  `payment` varchar(255) DEFAULT '';
 ALTER TABLE  `phpshop_products` ADD  `price_search` float NOT NULL DEFAULT '0';
 
 ALTER TABLE  `phpshop_orders` ADD  `sum` FLOAT ;

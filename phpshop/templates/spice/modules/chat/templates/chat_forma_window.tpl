@@ -33,10 +33,10 @@
             $('#chatModalPre').modal('hide');
         });
 
-
+        /*
         $('.breadcrumb, .template-slider').waypoint(function() {
             $('#chatbutton').popover('hide');
-        });
+        });*/
 
         $("body").on("input", "#chat_mod_user_name", function() {
               $('#chat_mod_user_name_true').val(($(this).val()));

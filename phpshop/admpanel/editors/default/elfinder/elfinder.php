@@ -69,7 +69,7 @@ if (ini_get("mbstring.func_overload") > 0 and function_exists('ini_set')) {
                         
                         
                          // Tinymce
-                        if(parent.tinymce){
+                        if(parent.tinymce && parent.tinymce.activeEditor.windowManager.getParams()){
                              FileBrowserDialogue.mySubmit(file);
                         }
 

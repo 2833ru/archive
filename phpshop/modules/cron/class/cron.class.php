@@ -30,10 +30,14 @@ class PHPShopCron {
     function execute($job) {
 
         if (is_file($job['path'])) {
-            if (fopen("http://" . $_SERVER['SERVER_NAME'] . "/" . $job['path'], "r"))
+            
+            // Безопасность
+            $cron_secure= md5($this->SysValue['connect']['host'].$this->SysValue['connect']['dbase'].$this->SysValue['connect']['user_db'].$this->SysValue['connect']['pass_db']);
+            
+            if (fopen("http://" . $_SERVER['SERVER_NAME'] . "/" . $job['path'].'?s='.$cron_secure, "r"))
                 return 'Выполнено';
             else
-                return 'Ошибка вызова файл';
+                return 'Ошибка вызова файла';
         }
         else
             return 'Ошибка размещения файла';

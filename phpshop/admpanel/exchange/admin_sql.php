@@ -108,6 +108,10 @@ function actionSave() {
 Ошибка: ' . mysqli_error($link_db);
             }
         }
+        
+                // Удаление файла после выполнения
+        if(isset($_POST['clean']))
+            @unlink($csv_file);
 
         // Выполнено успешно
         if (empty($result_error_tracert)) {
@@ -122,6 +126,7 @@ function actionSave() {
             else
                 $result_message = $PHPShopGUI->setAlert('SQL ошибка: ' . mysqli_error($link_db), 'danger');
         }
+        
     }
 }
 

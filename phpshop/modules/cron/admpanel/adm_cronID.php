@@ -47,9 +47,10 @@ function actionStart() {
     $work[] = array('Бекап БД', 'phpshop/modules/cron/sample/dump.php');
     $work[] = array('Курсы валют', 'phpshop/modules/cron/sample/currency.php');
     $work[] = array('Снятие с продаж товаров', 'phpshop/modules/cron/sample/product.php');
+    $work[] = array('Разновалютый поиск', 'phpshop/modules/cron/sample/pricesearch.php');
 
     $Tab1 = $PHPShopGUI->setField("Название задачи:", $PHPShopGUI->setInput("text.requared", "name_new", $data['name']));
-    $Tab1.=$PHPShopGUI->setField("Запускаемый Файл:" , $PHPShopGUI->setInputArg(array('type'=>"text.requared", 'name'=>"path_new", 'size'=>'60%','float'=>'left','placeholder'=>'phpshop/modules/cron/sample/testcron.php')) . $PHPShopGUI->setSelect('work', $work, 200, 'left', false, false,false,false,false,false,'selectpicker', '$(\'input[name=path_new]\').val(this.value);'));
+    $Tab1.=$PHPShopGUI->setField("Запускаемый Файл:" , $PHPShopGUI->setInputArg(array('type'=>"text.requared", 'name'=>"path_new", 'size'=>'60%','float'=>'left','placeholder'=>'phpshop/modules/cron/sample/testcron.php','value'=>$data['path'])) . $PHPShopGUI->setSelect('work', $work, 200, 'left', false, false,false,false,false,false,'selectpicker', '$(\'input[name=path_new]\').val(this.value);'));
     $Tab1.=$PHPShopGUI->setField("Статус", $PHPShopGUI->setCheckbox("enabled_new", 1, "Включить", 1));
     $Tab1.=$PHPShopGUI->setField("Кол-во запусков в день", $PHPShopGUI->setSelect('execute_day_num_new', $PHPShopGUI->setSelectValue($data['execute_day_num']), 70));
 

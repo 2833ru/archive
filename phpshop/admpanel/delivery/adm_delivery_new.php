@@ -1,6 +1,6 @@
 <?php
 
-PHPShopObj::loadClass('delivery');
+PHPShopObj::loadClass(array('delivery', 'payment'));
 
 
 $TitlePage = __('Создание Доставки');
@@ -156,6 +156,27 @@ function actionStart() {
     // Иконка
     $Tab1.=$PHPShopGUI->setField(__("Изображение"), $PHPShopGUI->setIcon($data['icon'], "icon_new", false));
 
+    $PHPShopPaymentArray = new PHPShopPaymentArray(array('enabled' => "='1'"));
+    if (strstr($data['payment'], ","))
+        $payment_array = explode(",", $data['payment']);
+    else
+        $payment_array[] = $data['payment'];
+
+    $PaymentArray = $PHPShopPaymentArray->getArray();
+    if (is_array($PaymentArray))
+        foreach ($PaymentArray as $payment) {
+
+            if (in_array($payment['id'], $payment_array))
+                $payment_check = $payment['id'];
+            else
+                $payment_check = null;
+            $payment_value[] = array($payment['name'], $payment['id'], $payment_check);
+        }
+
+    // Оплаты
+    if ($_GET['target'] != 'cat')
+        $Tab1.=$PHPShopGUI->setField(__("Блокировка оплат"), $PHPShopGUI->setSelect('payment_new[]', $payment_value, false, null, false, $search = false, false, $size = 1, $multiple = true));
+
     // Цены
     if (!$catalog)
         $Tab1.= $PHPShopGUI->setCollapse(__('Цены'), $Tab_price);
@@ -200,6 +221,12 @@ function actionInsert() {
     $PHPShopOrm->updateZeroVars('flag_new', 'enabled_new', 'price_null_enabled_new');
 
     $_POST['icon_new'] = iconAdd('icon_new');
+
+    // Оплаты
+    if (isset($_POST['payment_new'])) {
+        if (is_array($_POST['payment_new']))
+            $_POST['payment_new'] = @implode(',', $_POST['payment_new']);
+    }
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);

@@ -26,6 +26,7 @@
         <label for="exampleInputEmail1">Сообщение</label>
         <textarea name="content" class="form-control" required="">@php  echo $_POST[content]; php@</textarea>
     </div>
+    <p class="small"><label><input name="rule" value="1" required="" checked="" type="checkbox"> @rule@</label></p>
     <div class="form-group">
         <span class="pull-right">
             <input type="hidden" name="send" value="1">

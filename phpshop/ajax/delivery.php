@@ -32,18 +32,18 @@ function GetDeliveryPrice($deliveryID, $sum, $weight = 0) {
     global $SysValue,$link_db;
 
     if (!empty($deliveryID)) {
-        $sql = "select * from " . $SysValue['base']['table_name30'] . " where id='$deliveryID' and enabled='1'";
+        $sql = "select * from " . $SysValue['base']['delivery'] . " where id='$deliveryID' and enabled='1'";
         $result = mysqli_query($link_db,$sql);
         $num = mysqli_num_rows($result);
         $row = mysqli_fetch_array($result);
 
         if ($num == 0) {
-            $sql = "select * from " . $SysValue['base']['table_name30'] . " where flag='1' and enabled='1'";
+            $sql = "select * from " . $SysValue['base']['delivery'] . " where flag='1' and enabled='1'";
             $result = mysqli_query($link_db,$sql);
             $row = mysqli_fetch_array($result);
         }
     } else {
-        $sql = "select * from " . $SysValue['base']['table_name30'] . " where flag='1' and enabled='1'";
+        $sql = "select * from " . $SysValue['base']['delivery'] . " where flag='1' and enabled='1'";
         $result = mysqli_query($link_db,$sql);
         $row = mysqli_fetch_array($result);
     }
@@ -75,14 +75,13 @@ $deliveryArr = delivery(false, intval($_REQUEST['xid']));
 $dellist = $deliveryArr['dellist'];
 $adresList = $deliveryArr['adresList'];
 
-
-
 // Результат
 $_RESULT = array(
     'delivery' => $GetDeliveryPrice,
     'dellist' => $dellist,
     'adresList' => $adresList,
     'total' => $totalsumma,
+    'wsum' => $_REQUEST['wsum'],
     'success' => 1
 );
 
@@ -95,6 +94,7 @@ if(is_array($hook))
 if ($_REQUEST['type'] == 'json'){
     $_RESULT['dellist']=PHPShopString::win_utf8($_RESULT['dellist']);
     $_RESULT['adresList']=PHPShopString::win_utf8($_RESULT['adresList']);
+    
     echo json_encode($_RESULT);
 }
 ?>

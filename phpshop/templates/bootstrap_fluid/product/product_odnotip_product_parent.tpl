@@ -1,6 +1,6 @@
 
 <!-- Окно выбора подтипов товара  -->
-<div class="modal fade bs-example-modal-sm" id="parentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade bs-example-modal-sm" id="parentModal" tabindex="-1" role="dialog"  aria-hidden="true">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
@@ -10,7 +10,6 @@
             <div class="modal-body">
 
                 <div class="list-group">
-                    <a class="list-group-item active">@productName@</a>
                     @parentList@
                 </div>
             </div>

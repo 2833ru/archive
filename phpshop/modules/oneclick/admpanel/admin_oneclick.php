@@ -19,7 +19,7 @@ function actionStart() {
     $data = $PHPShopOrm->select(array('*'),false,array('order'=>'id DESC'),array("limit"=>"1000"));
     if(is_array($data))
         foreach($data as $row) {
-            $PHPShopInterface->setRow($row['id'],array('name'=>$row['name'],'link'=>'?path=modules.dir.oneclick&id=' . $row['id']),PHPShopDate::get($row['date'],false),$row['product_name'],$row['product_price'],$status_array[$row['status']]);
+            $PHPShopInterface->setRow($row['id'],array('name'=>$row['name'],'link'=>'?path=modules.dir.oneclick&id=' . $row['id']),PHPShopDate::get($row['date'],false),array('name'=>$row['product_name'],'link'=>'?path=product&id='.$row['product_id']),$row['product_price'],$status_array[$row['status']]);
         }
     
     $PHPShopInterface->Compile();

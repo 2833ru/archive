@@ -2,7 +2,7 @@
 /**
  * Файл выгрузки для Яндекс Маркет
  * @author PHPShop Software
- * @version 1.10
+ * @version 1.11
  * @package PHPShopXML
  * @example ?ssl [bool] SSL
  * @example ?getall [bool] Выгрузка всех товаров без учета флага YML
@@ -297,7 +297,7 @@ class PHPShopYml {
                 "id" => $id,
                 "category" => $category,
                 "name" => $name,
-                "picture" => $row['pic_small'],
+                "picture" => $row['pic_big'],
                 "price" => $price,
                 "oldprice" => $oldprice,
                 "weight" => $row['weight'],
@@ -317,6 +317,8 @@ class PHPShopYml {
                 "delivery" => $row['delivery'],
                 "pickup" => $row['pickup'],
                 "store" => $row['store'],
+                "yandex_min_quantity" => $row['yandex_min_quantity'],
+                "yandex_step_quantity" => $row['yandex_step_quantity'],
             );
 
             // Параметр сортировки
@@ -372,14 +374,19 @@ class PHPShopYml {
      * Доставка
      */
     function setDelivery() {
+        
+        /*
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['table_name30']);
         $data = $PHPShopOrm->select(array('price'), array('flag' => "='1'", 'is_folder' => "='0'"), false, array('limit' => 1));
         if (is_array($data))
             $xml = '<local_delivery_cost>' . $data['price'] . '</local_delivery_cost>';
+         */
+        
+        $xml = '<delivery-options/>';
 
         // Перехват модуля, занесение в память наличия модуля для оптимизации
         if ($this->memory_get(__CLASS__ . '.' . __FUNCTION__, true)) {
-            $hook = $this->setHook(__CLASS__, __FUNCTION__, array('xml' => $xml, 'val' => $data));
+            $hook = $this->setHook(__CLASS__, __FUNCTION__, array('xml' => $xml));
             if ($hook) {
                 $this->xml.= $hook;
             } else {

@@ -28,6 +28,7 @@
         <label for="exampleInputEmail1">Отзыв</label>
         <textarea name="otsiv_new" class="form-control" maxlength="500" placeholder="Сообщение..." required=""></textarea>
     </div>
+    <p class="small"><label><input name="rule" value="1" required="" checked="" type="checkbox"> @rule@</label></p>
     <div class="form-group">
         <span class="pull-right">
             <input type="hidden" name="send_gb" value="1">

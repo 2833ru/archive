@@ -47,29 +47,43 @@ function template_CID_Product($obj, $data, $rout) {
  * Вывод подтипов в подробном описании 
  */
 function template_parent($obj, $dataArray, $rout) {
-
+    
     if ($rout == 'END') {
-
+        
+        $currency = $obj->currency;
+        
         if (count($obj->select_value > 0)) {
             $obj->set('parentList', '');
 
             foreach ($obj->select_value as $k => $value) {
-
-                if ($k == 0)
+                $row = $value[3];
+                
+                if ($k == 0){
                     $obj->set('checked', 'checked');
+                    $obj->set('productPrice',$row['price']);
+                    $obj->set('productValutaName',$currency);
+                }
                 else
                     $obj->set('checked', null);
 
-                $obj->set('parentName', $value[0]);
+                // Короткое имя
+                if(empty($row['parent']) or $obj->parent_id == $row['id'])
+                    $row['parent'] = $row['name'];
+
+                $obj->set('parentName', $row['parent']);
                 $obj->set('parentId', $value[1]);
                 $obj->set('parentCheckedId', $value[1]);
+                $obj->set('parentPrice',$row['price']);
 
                 $disp = ParseTemplateReturn("product/product_odnotip_product_parent_one.tpl");
                 $obj->set('parentList', $disp, true);
             }
 
-            if (empty($dataArray['sklad']))
+            if (empty($dataArray['sklad'])){
                 $obj->set('productParentList', ParseTemplateReturn("product/product_odnotip_product_parent.tpl"));
+            }
+            
+             
         }
     }
 }
@@ -94,7 +108,9 @@ function template_UID($obj, $dataArray, $rout) {
  * Шаблон вывода характеристик
  */
 function sorttemplatehook($value, $n, $title, $vendor) {
+    $limit = 5;
     $disp = null;
+    $num = 0;
 
     if (is_array($value)) {
         foreach ($value as $p) {
@@ -120,9 +136,22 @@ function sorttemplatehook($value, $n, $title, $vendor) {
     <span class="filter-item"  title="' . $p[0] . '">' . $text . '</span>
   </label>
 </div>';
+            $num++;
         }
     }
-    return '<h4>' . $title . '</h4>' . $disp;
+    
+    if($num>$limit){
+        $style="collapse";
+        $chevron='fa fa-chevron-down';
+        $help='Показать';
+    }
+    else {
+        $style="collapse in";
+        $chevron='fa fa-chevron-up';
+        $help='Скрыть';
+    }
+    
+    return '<h4 data-toggle="collapse" data-target="#collapseSort'.$n.'" title="'.$help.'">' . $title . ' <i class="'.$chevron.'"></i></h4><div class="'.$style.'" id="collapseSort'.$n.'">' . $disp.'</div>';
 }
 
 /**

@@ -6,6 +6,7 @@
     <category>sale</category>
     <adminmenu>
         <title>Прием оплат через DeltaKey</title>
+        <capability>true</capability>
         <podmenu>
             <podmenu_name>Настройка</podmenu_name>
         </podmenu>

@@ -13,6 +13,7 @@
             </div>
             <div class="description-link-wrapper">
                 <a class="description-link" href="/shop/UID_@productUid@.html" title="@productName@">Подробнее</a>
+                
             </div>
             <div class="price">
                 <span class="price-new">@productPrice@ <span class="rubznak">@productValutaName@</span></span> 
@@ -26,7 +27,7 @@
                 </button>
                 @ComEndCart@
                 <button class="btn btn-wishlist addToWishList" role="button" data-uid="@productUid@" data-title="Отложить" data-placement="top" data-toggle="tooltip"><i class="fa fa-heart"></i></button>
-                <button class="btn btn-wishlist addToCompareList" role="button" data-uid="@productUid@" data-title="Сравнить" data-placement="top" data-toggle="tooltip"><i class="fa fa-bar-chart-o"></i></button>
+                <button class="btn btn-wishlist addToCompareList hidden-md" role="button" data-uid="@productUid@" data-title="Сравнить" data-placement="top" data-toggle="tooltip"><i class="fa fa-bar-chart-o"></i></button>
 
                 @ComStartNotice@
                 <a class="btn btn-cart" href="/users/notice.html?productId=@productUid@" title="@productNotice@">
@@ -34,7 +35,6 @@
                     Уведомить
                 </a>                                   
                 @ComEndNotice@ 
-
             </div>
         </div>
     </div>

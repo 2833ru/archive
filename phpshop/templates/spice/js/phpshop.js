@@ -347,7 +347,7 @@ function faset_filter_click(obj) {
             if (last != '&' && last != '')
                 href += '&';
 
-            href += $(obj).attr('data-url').split(']').join('][]');
+            href += $(obj).attr('data-url').split(']').join('][]') + '&';
 
         }
         else {
@@ -401,7 +401,7 @@ $(document).ready(function() {
     });
 
     // Выравнивание ячеек товара
-    
+
 
     // Корректировка стилей меню
     $('.mega-more-parent').each(function() {
@@ -687,8 +687,13 @@ $(document).ready(function() {
 
     // добавление в корзину подтипа
     $(".addToCartListParent").on('click', function() {
-        addToCartList($(this).attr('data-uid'), $(this).attr('data-num'), $(this).attr('data-parent'));
+        addToCartList($('input[name="parentIdNt"]:checked').val(), $(this).attr('data-num'), $(this).attr('data-parent'));
+
     });
+
+    $('input[name="parentIdNt"]').on('change', function() {
+        $('[itemprop="price"]').html($(this).attr('data-price'));
+    })
 
     // добавление в корзину опции
     $(".addToCartListOption").on('click', function() {
@@ -714,7 +719,7 @@ $(document).ready(function() {
     // Визуальная корзина
     $("#cartlink").on('click', function() {
         if ($(this).attr('data-content') == "") {
-            window.location.href=$('#body').attr('data-dir')+'/order/';
+            window.location.href = $('#body').attr('data-dir') + '/order/';
         }
     });
 
@@ -868,11 +873,11 @@ $(document).ready(function() {
 
     // Скрыть пустые блоки в описании товара
     $('.empty-check').each(function() {
-        if ($(this).find('a').html() === undefined && $(this).find('.vendorenabled').html() === undefined ) {
+        if ($(this).find('a').html() === undefined && $(this).find('.vendorenabled').html() === undefined) {
             $(this).fadeOut('slow');
         }
-        else if($(this).find('.vendorenabled').html() == ''){
-             $(this).fadeOut('slow');
+        else if ($(this).find('.vendorenabled').html() == '') {
+            $(this).fadeOut('slow');
         }
     });
 

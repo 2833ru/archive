@@ -48,29 +48,44 @@ function template_CID_Product($obj, $data, $rout) {
  * Вывод подтипов в подробном описании 
  */
 function template_parent($obj, $dataArray, $rout) {
-
+    
     if ($rout == 'END') {
+        
+        $currency = $obj->currency;
+        
 
         if (count($obj->select_value > 0)) {
             $obj->set('parentList', '');
 
             foreach ($obj->select_value as $k => $value) {
-
-                if ($k == 0)
+                $row = $value[3];
+                
+                if ($k == 0){
                     $obj->set('checked', 'checked');
+                    $obj->set('productPrice',$row['price']);
+                    $obj->set('productValutaName',$currency);
+                }
                 else
                     $obj->set('checked', null);
+                
+                // Короткое имя
+                if(empty($row['parent']) or $obj->parent_id == $row['id'])
+                    $row['parent'] = $row['name'];
 
-                $obj->set('parentName', $value[0]);
+                $obj->set('parentName', $row['parent']);
                 $obj->set('parentId', $value[1]);
                 $obj->set('parentCheckedId', $value[1]);
+                $obj->set('parentPrice',$row['price']);
 
                 $disp = ParseTemplateReturn("product/product_odnotip_product_parent_one.tpl");
                 $obj->set('parentList', $disp, true);
             }
 
-            if (empty($dataArray['sklad']))
+            if (empty($dataArray['sklad'])){
                 $obj->set('productParentList', ParseTemplateReturn("product/product_odnotip_product_parent.tpl"));
+            }
+            
+             
         }
     }
 }
