@@ -76,26 +76,6 @@ class PHPShopProductListElement extends PHPShopProductElements {
             }
 
             $this->set('productlist_list', $dis, true);
-
-            // Назначаем переменную шаблона
-            switch ($this->data['enabled']) {
-
-                case 1:
-                    $this->set('leftMenuName', $this->data['title']);
-                    $product = PHPShopParser::file($GLOBALS['SysValue']['templates']['productlist']['productlist_forma'], true, false, true);
-                    $this->set('leftMenuContent', $product);
-                    $this->set('leftMenu', parseTemplateReturn("main/left_menu.tpl"), true);
-                    break;
-
-                case 2:
-                    $this->set('rightMenuName', $this->data['title']);
-                    $product = PHPShopParser::file($GLOBALS['SysValue']['templates']['productlist']['productlist_forma'], true, false, true);
-                    $this->set('rightMenuContent', $product);
-                    $this->set('rightMenu', parseTemplateReturn("main/left_menu.tpl"), true);
-                    break;
-
-                default: $this->set('productlist', $dis);
-            }
         }
     }
 

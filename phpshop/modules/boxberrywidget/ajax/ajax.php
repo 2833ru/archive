@@ -24,6 +24,7 @@ if(isset($_REQUEST['operation']) && strlen($_REQUEST['operation']) > 2) {
                     $order->changePaymentStatus((int) $_REQUEST['value']);
                 }
                 $result['success'] = true;
+                $result['error'] = 'success';
                 break;
         }
     } catch (\Exception $exception) {

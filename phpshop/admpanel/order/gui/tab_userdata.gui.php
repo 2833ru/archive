@@ -14,8 +14,8 @@ function tab_userdata($data, $order) {
     
     if(empty($data['user']))
         $user='<div class="form-group form-group-sm ">
-        <label class="col-sm-3 control-label">‘»Œ:</label><div class="col-sm-9">
-        <input data-set="3" name="fio_new" maxlength="50" class="search_user form-control input-sm" type="search" data-trigger="manual" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true"  data-content="" placeholder="Õ‡ÈÚË..." value="'.$data['fio'].'">
+        <label class="col-sm-3 control-label">'.__('‘»Œ').':</label><div class="col-sm-9">
+        <input data-set="3" name="fio_new" maxlength="50" class="search_user form-control input-sm" type="search" data-trigger="manual" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true"  data-content="" placeholder="'.__('Õ‡ÈÚË...').'" value="'.$data['fio'].'">
         <input name="user_new" type="hidden">
      </div></div> ';
     else $user=$PHPShopGUI->setField("‘»Œ", $PHPShopGUI->setInputText('', 'fio_new', $data['fio'] ));

@@ -13,7 +13,7 @@
         <link rel="mask-icon" href="@icon@" >
         <link rel="icon" href="@icon@" type="image/x-icon">
         <link rel="mask-icon" href="@icon@" >
-        
+
         <!-- OpenGraph -->
         <meta property="og:title" content="@ogTitle@">
         <meta property="og:image" content="http://@serverName@@ogImage@">
@@ -41,6 +41,15 @@
         <!-- Theme -->
         <link id="bootstrap_theme" data-name="@php echo $_SESSION['skin']; php@" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/@unishop_theme@.css" rel="stylesheet">
 
+        <!-- Стикер-полоска -->
+        <div class="@php __hide('sticker_top'); php@">
+            <div class="top-banner @php __hide('sticker_close','cookie'); php@">
+                <div class="sticker-text">@sticker_top@</div>
+                <span class="close sticker-close">x</span>
+            </div>
+        </div>
+        <!-- /Стикер-полоска -->
+
         <div class="navbar-offcanvas" id="js-bootstrap-offcanvas">
             <ul class="offcanvas-list">
                 <li class="dropdown">
@@ -66,12 +75,6 @@
                 <li class=""><a href="/map/">{Карта сайта}</a></li>
             </ul>
         </div>
-        	        <!-- Стикер-полоска -->
-	        <div class="top-banner @php __hide('sticker_close','cookie'); php@">
-				<div class="sticker-text">@sticker_top@</div>
-				<span class="close sticker-close">x</span>
-			</div>
-			<!-- /Стикер-полоска -->
 
         <!-- Header Section Starts -->
         <header>
@@ -459,7 +462,7 @@
         <div class="cookie-message hide"><p></p><a href="#" class="btn btn-default btn-sm">Ok</a></div>
 
         <!-- JQuery Plugins  -->
-         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/swiper.min.css" rel="stylesheet">
+        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/swiper.min.css" rel="stylesheet">
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/font-awesome.min.css" rel="stylesheet">
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/iconfont.css" rel="stylesheet">
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/bootstrap.offcanvas.min.css" rel="stylesheet">

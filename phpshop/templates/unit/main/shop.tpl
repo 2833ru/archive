@@ -11,6 +11,13 @@
         <link rel="apple-touch-icon" href="@icon@">
         <link rel="icon" href="@icon@" type="image/x-icon">
         <link rel="mask-icon" href="@icon@">
+        
+        <!-- OpenGraph -->
+        <meta property="og:title" content="@ogTitle@">
+        <meta property="og:image" content="http://@serverName@@ogImage@">
+        <meta property="og:url" content="http://@ogUrl@">
+        <meta property="og:type" content="website">
+        <meta property="og:description" content="@ogDescription@">
 
         <!-- Preload -->
         <link rel="preload" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/@unit_theme@.css" as="style">
@@ -198,13 +205,15 @@
 
         <div class="container  main-block-content ">
             <div class="text-center banner banner-top">@banersDispHorizontal@</div>
-                    	        <!-- Стикер-полоска -->
-	        <div class="top-banner @php __hide('sticker_close','cookie'); php@">
-				<div class="sticker-text">@sticker_top@</div>
-				<span class="close sticker-close"><i class="fal fa-times" aria-hidden="true"></i></span>
-			</div>
-			<!-- /Стикер-полоска -->
-
+            
+            <!-- Стикер-полоска -->
+            <div class="top_banner_parent @php __hide('sticker_top'); php@">
+                <div class="top-banner @php __hide('sticker_close','cookie'); php@">
+                    <div class="sticker-text">@sticker_top@</div>
+                    <span class="close sticker-close">x</span>
+                </div>
+            </div>
+            <!-- /Стикер-полоска -->
 
             <div class="row">
                 <div class="head-block "></div>
@@ -710,6 +719,7 @@
     </script>
     <script src="java/highslide/highslide-p.js"></script>
     <script src="phpshop/locale/@php echo $_SESSION['lang']; php@/template.js"></script>
+    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/flipclock.min.js"></script>
     <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@/js/jquery.cookie.js">
     </script>
     <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.waypoints.min.js">

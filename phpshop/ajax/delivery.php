@@ -33,52 +33,11 @@ require_once $_classPath . "core/order.core/delivery.php";
 
 $PHPShopDelivery = new PHPShopDelivery((int) $_REQUEST['xid']);
 
-function GetDeliveryPrice($deliveryID, $sum, $weight = 0) {
-    global $SysValue, $link_db, $PHPShopDelivery;
-
-
-    if (!empty($deliveryID)) {
-        $sql = "select * from " . $SysValue['base']['delivery'] . " where id='$deliveryID' and enabled='1'";
-        $result = mysqli_query($link_db, $sql);
-        $num = mysqli_num_rows($result);
-        $row = mysqli_fetch_array($result);
-
-        if ($num == 0) {
-            $sql = "select * from " . $SysValue['base']['delivery'] . " where flag='1' and enabled='1'";
-            $result = mysqli_query($link_db, $sql);
-            $row = mysqli_fetch_array($result);
-        }
-    } else {
-        $sql = "select * from " . $SysValue['base']['delivery'] . " where flag='1' and enabled='1'";
-        $result = mysqli_query($link_db, $sql);
-        $row = mysqli_fetch_array($result);
-    }
-
-    if ($row['price_null_enabled'] == 1 and $sum >= $row['price_null']) {
-        return 0;
-    } else {
-        if ($row['taxa'] > 0) {
-            $addweight = $weight - $PHPShopDelivery->fee;
-            if ($addweight < 0) {
-                $addweight = 0;
-                $at = '';
-            } else {
-                $at = '';
-                //$at='Вес: '.$weight.' гр. Превышение: '.$addweight.' гр. Множитель:'.ceil($addweight/500).' = ';
-            }
-            $addweight = ceil($addweight / $PHPShopDelivery->fee) * $row['taxa'];
-            $endprice = $row['price'] + $addweight;
-            return $at . $endprice;
-        } else {
-            return $row['price'];
-        }
-    }
-}
-
-$GetDeliveryPrice = GetDeliveryPrice(intval($_REQUEST['xid']), $_REQUEST['sum'], floatval($_REQUEST['wsum']));
-$GetDeliveryPrice = $GetDeliveryPrice * $PHPShopSystem->getDefaultValutaKurs(true);
+$GetDeliveryPrice = $PHPShopDelivery->getPrice($_REQUEST['sum'], floatval($_REQUEST['wsum']));
+$GetDeliveryPrice *= $PHPShopSystem->getDefaultValutaKurs(true);
 
 $PHPShopCart = new PHPShopCart();
+
 // Итого товары по акции
 $totalsumma = (float) $PHPShopOrder->returnSumma($PHPShopCart->getSumPromo(true));
 
@@ -108,8 +67,8 @@ if (is_array($hook))
     $_RESULT = $hook;
 
 
-$_RESULT['dellist'] = PHPShopString::win_utf8($_RESULT['dellist'], false);
-$_RESULT['adresList'] = PHPShopString::win_utf8($_RESULT['adresList'], false);
+$_RESULT['dellist'] = PHPShopString::win_utf8($_RESULT['dellist']);
+$_RESULT['adresList'] = PHPShopString::win_utf8($_RESULT['adresList']);
 
 echo json_encode($_RESULT);
 ?>

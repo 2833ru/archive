@@ -74,10 +74,27 @@ function addYandexcartCPA($data) {
 function addYandexCartOptions($data) {
     global $PHPShopGUI;
 
-    $PHPShopGUI->field_col = 3;
+    $PHPShopGUI->field_col = 5;
+    
+    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['yandexcart']['yandexcart_system']);
+    $options = $PHPShopOrm->select();
+    
+    // Валюты
+    $PHPShopValutaArray = new PHPShopValutaArray();
+    $valuta_array = $PHPShopValutaArray->getArray();
+    if (is_array($valuta_array))
+        foreach ($valuta_array as $val) {
+            if ($data['baseinputvaluta'] == $val['id']) {
+                $valuta_def_name = $val['code'];
+            }
+        }
 
-    $Tab = $PHPShopGUI->setField("Штрихкод", $PHPShopGUI->setInputText(null, 'barcode_new', $data['barcode'], 300), 1, 'Тег barcode');
-    $Tab .= $PHPShopGUI->setField("Код производителя", $PHPShopGUI->setInputText(null, 'vendor_code_new', $data['vendor_code'], 300), 1, 'Тег vendorCode');
+    $Tab = $PHPShopGUI->setField("Штрихкод", $PHPShopGUI->setInputText(null, 'barcode_new', $data['barcode']), 1, 'Тег barcode');
+    $Tab .= $PHPShopGUI->setField("Код производителя", $PHPShopGUI->setInputText(null, 'vendor_code_new', $data['vendor_code']), 1, 'Тег vendorCode');
+    
+    if($options['model'] === 'DBS') {
+        $Tab .= $PHPShopGUI->setField('Цена Яндекс.Маркет DBS', $PHPShopGUI->setInputText(null, 'price_yandex_dbs_new', $data['price_yandex_dbs'], 150, $valuta_def_name), 2);
+    }
 
     $PHPShopGUI->addTab(["Яндекс", $Tab, true]);
 }

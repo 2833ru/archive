@@ -15,7 +15,7 @@ function sendToOrderOzonRocketWidgetHook($obj, $row, $rout)
                 $_POST['ozonrocket_order_data_new'] = serialize(array(
                     'delivery_type' => $_POST['ozonrocketType'],
                     'status'        => $OzonRocketWidget->options['status'],
-                    'status_text'   => 'ќжидает отправки в Ozon',
+                    'status_text'   => __('ќжидает отправки в Ozon'),
                     'address' => $_POST['address'],
                     'delivery_id' => $_POST['delivery_id']
                 ));

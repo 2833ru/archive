@@ -58,6 +58,8 @@ function actionValueEdit() {
 
     $Tab1.=$PHPShopGUI->setField("Категория", $PHPShopGUI->setSelect('category_value', $sort_value, '100%', false, false, false, false, false, false, false, 'form-control'));
     
+    if($_GET['brand'] == 'true'){
+    
     // Редактор 
     $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));
     $oFCKeditor = new Editor('description_value');
@@ -87,12 +89,16 @@ function actionValueEdit() {
                 <input type="button" value="'.__('Характеристика').'" data-seo="@sortTitle@" data-target="meta_description_value" class="seo-button btn btn-default btn-sm">
                 <input type="button" value="'.__('Значение').'" data-seo="@valueTitle@" data-target="meta_description_value" class="seo-button btn btn-default btn-sm">
             </div>');
+    }
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     $PHPShopGUI->tab_key = 100;
+    
+    if($_GET['brand'] == 'true')
     $PHPShopGUI->setTab(["Основное", $Tab1,true], ["Дополнительно", $Tab2,true]);
+    else $PHPShopGUI->setTab(["Основное", $Tab1,true]);
 
     $PHPShopGUI->_CODE .= '<script>$(document).ready(function () {
         $(".seo-button").on("click", function() {

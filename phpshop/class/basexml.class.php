@@ -179,14 +179,16 @@ class PHPShopBaseXml {
     // Чистка тегов
     function clean($vars) {
 
-        foreach ($vars as $k => $v) {
+        if (is_array($vars)) {
+            foreach ($vars as $k => $v) {
 
-            if (preg_match("/\[CDATA\[(.*)\]\]/i", $v, $matches))
-                $clean_array[$k] = html_entity_decode($matches[1]);
-            else
-                $clean_array[$k] = html_entity_decode($v);
+                if (preg_match("/\[CDATA\[(.*)\]\]/i", $v, $matches))
+                    $clean_array[$k] = html_entity_decode($matches[1]);
+                else
+                    $clean_array[$k] = html_entity_decode($v);
+            }
+            return $clean_array;
         }
-        return $clean_array;
     }
 
     function select() {
@@ -199,7 +201,12 @@ class PHPShopBaseXml {
     }
 
     function update() {
+        
+        // Массив данных для обновления
         $vars = $this->xml['vars'];
+        if(!is_array($vars[0]))
+            $vars = readDatabase($this->sql, "vars", false);
+        
         $PHPShopOrm = new PHPShopOrm($this->PHPShopBase->getParam('base.' . $this->xml['from']));
         $PHPShopOrm->debug = $this->debug;
         $PHPShopOrm->mysql_error = false;

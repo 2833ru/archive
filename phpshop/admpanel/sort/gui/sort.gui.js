@@ -1,6 +1,21 @@
 
 $().ready(function() {
     
+    // Блокировка
+    $('body').on('change', '#filtr_new', function () {
+         if ($(this).prop('checked') === true){
+             $('#virtual_new').bootstrapToggle('off');
+         }
+    });
+    
+    // Блокировка
+    $('body').on('change', '#virtual_new', function () {
+         if ($(this).prop('checked') === true){
+             $('#filtr_new').bootstrapToggle('off');
+         }
+    });
+    
+    
     // Быстрое изменение checkbox
     $("body").on('click', ".data-row .checkbox", function (event) {
 
@@ -109,7 +124,7 @@ $().ready(function() {
     // Редактировать значение характеристики - 1 шаг 
     $("body").on('click', ".data-row .value-edit", function(event) {
         event.preventDefault();
-
+        
         var data = [];
         var id = $(this).attr('data-id');
         var parent = $(this).closest('.data-row').attr('data-row');
@@ -117,6 +132,7 @@ $().ready(function() {
         data.push({name: 'parentID', value: parent});
         data.push({name: 'ajax', value: 1});
         data.push({name: 'actionList[selectID]', value: 'actionValueEdit.sort.view'});
+        data.push({name: 'brand', value: $('#brand_new').prop('checked')});
 
         $.ajax({
             mimeType: 'text/html; charset='+locale.charset,

@@ -306,7 +306,7 @@ class PHPShopCart {
      * Шаблонизатор вывода списка товаров в корзине
      * @global obj $PHPShopOrder
      * @param string $function имя функции шаблона вывода
-     * @param array $option масив дополнительных данных
+     * @param array $option массив дополнительных данных
      * @return string
      */
     function display($function, $option = false) {

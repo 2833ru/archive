@@ -74,7 +74,7 @@ class PHPShopSort {
 
         // Список для выборки
         $sortList = null;
-        if (is_array($sort)) {
+        if (is_array($sort) and count($sort)>0) {
             foreach ($sort as $value) {
                 $sortList.=' id=' . trim($value) . ' OR';
             }

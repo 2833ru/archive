@@ -13,7 +13,7 @@
         <link rel="mask-icon" href="@icon@" >
         <link rel="icon" href="@icon@" type="image/x-icon">
         <link rel="mask-icon" href="@icon@" >
-        
+
         <!-- OpenGraph -->
         <meta property="og:title" content="@ogTitle@">
         <meta property="og:image" content="http://@serverName@@ogImage@">
@@ -36,13 +36,16 @@
         <link href="@pageCss@" rel="stylesheet">
 
         <!-- Theme -->
-        <link id="bootstrap_theme" data-name="@php echo $_SESSION['skin']; php@" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/@hub_theme@.css" rel="stylesheet">        
-	        <!-- Стикер-полоска -->
-	        <div class="top-banner @php __hide('sticker_close','cookie'); php@">
-				<div class="sticker-text">@sticker_top@</div>
-				<span class="close sticker-close">x</span>
-			</div>
-			<!-- /Стикер-полоска -->
+        <link id="bootstrap_theme" data-name="@php echo $_SESSION['skin']; php@" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/@hub_theme@.css" rel="stylesheet">   
+
+        <!-- Стикер-полоска -->
+        <div class="@php __hide('sticker_top'); php@">
+            <div class="top-banner @php __hide('sticker_close','cookie'); php@">
+                <div class="sticker-text">@sticker_top@</div>
+                <span class="close sticker-close">x</span>
+            </div>
+        </div>
+        <!-- /Стикер-полоска -->
 
         <header>
             <div class="header-top">
@@ -185,8 +188,8 @@
         </div>
 
         <!-- Slider Section Ends -->
-        
-        
+
+
         <!-- jQuery -->
         <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery-1.11.0.min.js"></script>
 
@@ -215,7 +218,7 @@
                 </div>
             </div>
         </section>
-       <section class="main-page-banner container ">
+        <section class="main-page-banner container ">
             <div class="top-col-banners row">@banersDispHorizontal@</div>
         </section>
         <section class="special-offers @php __hide('specMain'); php@">

@@ -134,10 +134,10 @@ function actionStart() {
         'action' => 'presentation',
         'icon' => 'glyphicon glyphicon-education'
     );
-    
+
     // Фрейм
-    if (!empty($GLOBALS['isFrame'])){
-         $PHPShopGUI->action_button['Сохранить и закрыть'] = array(
+    if (!empty($GLOBALS['isFrame'])) {
+        $PHPShopGUI->action_button['Сохранить и закрыть'] = array(
             'name' => 'Сохранить',
             'locale' => true,
             'action' => 'actionInsert',
@@ -145,8 +145,8 @@ function actionStart() {
             'type' => 'submit',
             'icon' => 'glyphicon glyphicon-floppy-saved'
         );
-         
-         $PHPShopGUI->action_button['Создать и редактировать'] = array(
+
+        $PHPShopGUI->action_button['Создать и редактировать'] = array(
             'name' => 'Сохранить',
             'locale' => true,
             'action' => 'editID',
@@ -160,7 +160,12 @@ function actionStart() {
 
     // Размер названия поля
     $PHPShopGUI->field_col = 4;
-    $PHPShopGUI->addJSFiles('./js/jquery.tagsinput.min.js', './catalog/gui/catalog.gui.js', './js/jquery.waypoints.min.js', './product/gui/product.gui.js', './js/bootstrap-tour.min.js', './product/gui/tour.gui.js');
+    $PHPShopGUI->addJSFiles('./js/jquery.tagsinput.min.js', './catalog/gui/catalog.gui.js', './js/jquery.waypoints.min.js', './product/gui/product.gui.js', './js/bootstrap-tour.min.js');
+    if ($GLOBALS['PHPShopBase']->codBase == 'utf-8')
+        $PHPShopGUI->addJSFiles('./product/gui/tour_utf.gui.js');
+    else
+        $PHPShopGUI->addJSFiles('./product/gui/tour.gui.js');
+
     $PHPShopGUI->addCSSFiles('./css/jquery.tagsinput.css');
 
     // Права менеджеров
@@ -223,7 +228,7 @@ function actionStart() {
     $tree_select = '<select class="selectpicker show-menu-arrow hidden-edit" data-live-search="true" data-container="body"  data-style="btn btn-default btn-sm" name="category_new"  data-width="100%"><option value="0">' . $CategoryArray[0]['name'] . '</option>' . $tree_select . '</select>';
 
     // Наименование
-    $Tab_info .= $PHPShopGUI->setField("Название", $PHPShopGUI->setInputText(null, 'name_new', $data['name']));
+    $Tab_info .= $PHPShopGUI->setField("Название", $PHPShopGUI->setTextarea('name_new', $data['name']));
 
     // Артикул
     $Tab_info .= $PHPShopGUI->setField('Артикул', $PHPShopGUI->setInputText(null, 'uid_new', $data['uid']));
@@ -274,8 +279,8 @@ function actionStart() {
     $Tab_info_dop .= $PHPShopGUI->setField('Дополнительные каталоги', $tree_select_dop, 1, 'Товары одновременно выводятся в нескольких каталогах.');
 
     // Опции вывода
-    $Tab_info .= $PHPShopGUI->setField('Опции вывода', $PHPShopGUI->setCheckbox('enabled_new', 1, 'Вывод в каталоге', $data['enabled']) .'<br>'.
-            $PHPShopGUI->setCheckbox('spec_new', 1, 'Спецпредложение', $data['spec']) . '<br>'.
+    $Tab_info .= $PHPShopGUI->setField('Опции вывода', $PHPShopGUI->setCheckbox('enabled_new', 1, 'Вывод в каталоге', $data['enabled']) . '<br>' .
+            $PHPShopGUI->setCheckbox('spec_new', 1, 'Спецпредложение', $data['spec']) . '<br>' .
             $PHPShopGUI->setCheckbox('newtip_new', 1, 'Новинка', $data['newtip']));
     $Tab_info .= $PHPShopGUI->setField('Сортировка', $PHPShopGUI->setInputText('&#8470;', 'num_new', $data['num'], 150));
 
@@ -285,7 +290,6 @@ function actionStart() {
 
     $Tab1 = $PHPShopGUI->setCollapse('Информация', $Tab_info);
     $Tab1 .= $PHPShopGUI->setCollapse('Размещение', $Tab_info_dop);
-
 
     // Валюты
     $PHPShopValutaArray = new PHPShopValutaArray();
@@ -298,7 +302,7 @@ function actionStart() {
                 $valuta_def_name = $val['code'];
             } else
                 $check = false;
-            $valuta_area .= $PHPShopGUI->setRadio('baseinputvaluta_new', $val['id'], $val['name'], $check, false, false, array('code' => $val['code']));
+            $valuta_area .= $PHPShopGUI->setRadio('baseinputvaluta_new', $val['id'], $val['name'], $check, false, false, array('code' => $val['code']), false);
         }
 
     // Цены
@@ -317,17 +321,17 @@ function actionStart() {
     // YML
     $data['yml_bid_array'] = unserialize($data['yml_bid_array']);
     $Tab_yml = $PHPShopGUI->setField('YML', $PHPShopGUI->setCheckbox('yml_new', 1, 'Вывод в Яндекс Маркете', $data['yml']) . '<br>' .
-            $PHPShopGUI->setRadio('p_enabled_new', 1, 'В наличии', $data['p_enabled']) .'<br>' .
+            $PHPShopGUI->setRadio('p_enabled_new', 1, 'В наличии', $data['p_enabled']) . '<br>' .
             $PHPShopGUI->setRadio('p_enabled_new', 0, 'Уведомить (Под заказ)', $data['p_enabled'])
     );
 
     // BID
     $Tab_yml .= $PHPShopGUI->setField('Ставка BID', $PHPShopGUI->setInputText(null, 'yml_bid_array[bid]', @$data['yml_bid_array']['bid'], 100));
     $Tab1 .= $PHPShopGUI->setCollapse('Цены', $Tab_price, 'in', true, true, array('type' => 'price'));
-    
+
     $Tab1 .= $PHPShopGUI->setCollapse('Яндекс Маркет', $Tab_yml, false);
 
-    
+
     $Tab1 .= $PHPShopGUI->setCollapse('Габариты', $Tab_info_size);
     $Tab_rating = $PHPShopGUI->setCollapse('Рейтинг', $Tab_rating, false);
 
@@ -340,10 +344,10 @@ function actionStart() {
     $Tab_option = $PHPShopGUI->setCollapse('Подтипы', $option_info, $collapse = 'none', false, false);
 
     // Редактор краткого описания
-    $Tab2 = $PHPShopGUI->setCollapse('Краткое описание',$PHPShopGUI->loadLib('tab_description', $data));
+    $Tab2 = $PHPShopGUI->setCollapse('Краткое описание', $PHPShopGUI->loadLib('tab_description', $data));
 
     // Редактор подробного описания
-    $Tab3 = $PHPShopGUI->setCollapse('Подробное описание',$PHPShopGUI->loadLib('tab_content', $data));
+    $Tab3 = $PHPShopGUI->setCollapse('Подробное описание', $PHPShopGUI->loadLib('tab_content', $data));
 
     // Статьи
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['page']);
@@ -384,7 +388,7 @@ function actionStart() {
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1, true, false, true), array("Изображение", $Tab6, true, $PHPShopSystem->ifSerilizeParam("admoption.image_off", 1)), array("Описание", $Tab2.$Tab3,true, false, true), array("Дополнительно", $Tab_docs.$Tab_rating.$Tab_header, true, false, true), array("Характеристики", $Tab_sorts,true), array("Подтипы", $Tab_option, true));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true, false, true), array("Изображение", $Tab6, true, $PHPShopSystem->ifSerilizeParam("admoption.image_off", 1)), array("Описание", $Tab2 . $Tab3, true, false, true), array("Дополнительно", $Tab_docs . $Tab_rating . $Tab_header, true, false, true), array("Характеристики", $Tab_sorts, true), array("Подтипы", $Tab_option, true));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("submit", "saveID", "ОК", "right", 70, "", "but", "actionInsert.catalog.create") .

@@ -4,7 +4,7 @@
     <name>Partner</name>
     <faqlink>https://docs.phpshop.ru/moduli/prodazhi/partner</faqlink>
     <description>Модуль партнерской программы и учета реферальных ссылок.</description>
-    <category>sale</category>
+    <category>sale,pro</category>
     <pro>true</pro>
     <sign>1613634149</sign>
     <adminmenu>

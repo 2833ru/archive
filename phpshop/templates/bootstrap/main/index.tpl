@@ -37,12 +37,14 @@
 
         <!-- Header -->
         <header class="container ">
-	        <!-- Стикер-полоска -->
-	        <div class="top-banner @php __hide('sticker_close','cookie'); php@">
-				<div class="sticker-text">@sticker_top@</div>
-				<span class="close sticker-close">x</i></span>
-			</div>
-			<!-- /Стикер-полоска -->
+            <!-- Стикер-полоска -->
+            <div class="@php __hide('sticker_top'); php@">
+                <div class="top-banner @php __hide('sticker_close','cookie'); php@">
+                    <div class="sticker-text">@sticker_top@</div>
+                    <span class="close sticker-close">x</span>
+                </div>
+            </div>
+            <!-- /Стикер-полоска -->
             <div class="row">
                 <div class="col-md-12 hidden-xs">
                     <ul class="nav nav-pills pull-right">
@@ -164,6 +166,8 @@
             </div>
         </nav>
         <!-- VisualCart Mod -->
+        
+              
 
         <!-- Notification -->
         <div id="notification" class="success-notification" style="display:none">
@@ -183,6 +187,8 @@
 
                     <!-- jQuery -->
                     <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery-1.11.0.min.js"></script>
+                    
+                     
                     
                     <ul class="list-group sidebar-nav hidden-xs hidden-sm">
                         @leftCatal@
@@ -241,6 +247,8 @@
             </div>
             <!--/ toTop -->
             <div class="banner">@banersDispHorizontal@</div>
+            
+            @editor@
 
             <footer class="footer well ">
                 <div class="row">
@@ -299,6 +307,8 @@
 
 
         </div>
+        
+        
 
         <!-- Модальное окно мобильного поиска -->
         <div class="modal fade bs-example-modal-sm" id="searchModal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -367,7 +377,7 @@
             </div>
         </div>
         <!--/ Модальное окно авторизации-->
-        @editor@
+ 
 
         <!-- Fixed mobile bar -->
         <div class="bar-padding-fix visible-xs"></div>

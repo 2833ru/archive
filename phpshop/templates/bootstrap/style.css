@@ -1359,7 +1359,7 @@ p img {max-width:100%; height:auto}
 .page-list .list-group .list-group-item {
 
     flex: 1 0 25%;
-    max-width: 25%;
+    /*max-width: 25%;*/
 
 }
 @media (max-width:991px) {.page-list .list-group .list-group-item {
@@ -2076,7 +2076,7 @@ div.swiper-button-prev {left:-5px;}
 .mobile-menu .dropdown-parent >a {display:flex; align-items:center; justify-content:space-between;}
 .mobile-menu ul{position:relative; width:100%; border:none; background:none; box-shadow:none}
 .submenu.open ul {display:block;position:relative!important; width:100%; border:none; background:none; box-shadow:none}
-.breadcrumb{display:block!important}
+
 .bx-viewport{min-height:300px!important}
 footer .submenu{display:none}
 .media-object {

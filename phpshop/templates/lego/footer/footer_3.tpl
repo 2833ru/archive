@@ -1,12 +1,12 @@
 <style>.brands{display:none;}</style>   
-<footer class="footer footer-2 footer-3" id="footer-area">
+<footer class="footer footer-3" id="footer-area">
     <!-- Footer Links Starts -->
     <div class="footer-links">
         <!-- Container Starts -->
         <div class="container-fluid">
             <!-- Contact Us Starts -->
             <div class="col-md-3 col-sm-6 col-xs-12" itemscope itemtype="http://schema.org/Organization">
-                 <a href=""><img src="images/logo.jpg" alt="" width="180"></a>
+                 <a href=""><img src="@logo@" alt="" width="180"></a>
                 <ul>
                     <li class="footer-map" itemprop="address" itemscope itemtype="http://schema.org/PostalAddress"><span itemprop="streetAddress">@streetAddress@</span></li>
                     <li class="footer-email"><a href="mailto:@adminMail@" itemprop="email">@adminMail@</a></li>

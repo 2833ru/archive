@@ -44,6 +44,9 @@ function actionUpdate()
     if (empty($_POST['dev_mode_new'])) {
         $_POST['dev_mode_new'] = 0;
     }
+    
+    $_POST['token_new'] = str_replace('=','%3D',$_POST['token_new']);
+    
     $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.ozonrocket.ozonrocket_system"));
     $PHPShopOrm->debug = false;
     $action = $PHPShopOrm->update($_POST);
@@ -97,8 +100,8 @@ function actionStart()
     $Tab1.= $PHPShopGUI->setField('Дата доставки', $PHPShopGUI->setCheckbox("show_delivery_time_new", 1, "Показывать дату доставки", $data["show_delivery_time"]));
     $Tab1.= $PHPShopGUI->setField('Цена доставки', $PHPShopGUI->setCheckbox("show_delivery_price_new", 1, "Показывать цену доставки", $data["show_delivery_price"]));
     $Tab1.= $PHPShopGUI->setField('Добавить наценку', '<input class="form-control input-sm " onkeypress="ozonrocketvalidate(event)" type="number" step="0.1" min="0" value="' . $data['fee'] . '" name="fee_new" style="width:300px;">');
-    $Tab1.= $PHPShopGUI->setField('Тип наценки', $PHPShopGUI->setSelect('fee_type_new', array(array('%', 1, $data['fee_type']), array('Руб.', 2, $data['fee_type'])), 300, null, false, $search = false, false, $size = 1));
-    $Tab1.= $PHPShopGUI->setField('Отправка заказа из', $PHPShopGUI->setSelect('type_transfer_new', array(array('Доставка отправителем на склад Ozon', 'DropOff', $data['type_transfer']), array('Забор со склада отправителя', 'PickUp', $data['type_transfer'])), 300, null, false, $search = false, false, $size = 1));
+    $Tab1.= $PHPShopGUI->setField('Тип наценки', $PHPShopGUI->setSelect('fee_type_new', array(array('%', 1, $data['fee_type']), array(__('Руб.'), 2, $data['fee_type'])), 300, null, false, $search = false, false, $size = 1));
+    $Tab1.= $PHPShopGUI->setField('Отправка заказа из', $PHPShopGUI->setSelect('type_transfer_new', array(array('Доставка отправителем на склад Ozon', 'DropOff', $data['type_transfer']), array('Забор со склада отправителя', 'PickUp', $data['type_transfer'])), 300,true, false, $search = false, false, $size = 1));
     $Tab1.= $PHPShopGUI->setField('Текст кнопки в товаре', $PHPShopGUI->setInputText(false, 'btn_text_new', $data['btn_text'], 300));
     $Tab1.= $PHPShopGUI->setField('Идентификатор склада отгрузки ', $PHPShopGUI->setInputText(false, 'from_place_id_new', $data['from_place_id'], 300));
     

@@ -103,8 +103,6 @@ function setProducts_marketplaces_hook($obj, $data) {
             $add.='<width>' . $data['val']['width'] . '</width>';
         if (!empty($data['val']['height']))
             $add.='<height>' . $data['val']['height'] . '</height>';
-        if (!empty($data['val']['weight']))
-            $add.='<weight>' . $data['val']['weight'] . '</weight>';
     }
 
     if($fee > 0) {

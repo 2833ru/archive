@@ -1,90 +1,93 @@
-$().ready(function() {
+$().ready(function () {
 
     // Подсказки DaData.ru
     var DADATA_TOKEN = $('#body').attr('data-token');
 
-    $("[name='fio_new'],[name='mass[0][fio_new]']").suggestions({
-        token: DADATA_TOKEN,
-        partner: "PHPSHOP",
-        type: "NAME",
-        params: {
-            parts: ["NAME"]
-        },
-        count: 5
-    });
+    if (DADATA_TOKEN != "") {
 
-    // Подсказки DaData.ru
-    var
-            token = DADATA_TOKEN,
-            type = "ADDRESS",
-            $city = $("[name='city_new'],[name='mass[0][city_new]']"),
-            $street = $("[name='street_new'],[name='mass[0][street_new]']"),
-            $house = $("[name='house_new'],[name='mass[0][house_new]']");
+        $("[name='fio_new'],[name='mass[0][fio_new]']").suggestions({
+            token: DADATA_TOKEN,
+            partner: "PHPSHOP",
+            type: "NAME",
+            params: {
+                parts: ["NAME"]
+            },
+            count: 5
+        });
 
-    $city.suggestions({
-        token: token,
-        partner: "PHPSHOP",
-        type: type,
-        hint: false,
-        bounds: "city-settlement",
-        onSelect: showPostalCode,
-        onSelectNothing: clearPostalCode
-    });
+        // Подсказки DaData.ru
+        var
+                token = DADATA_TOKEN,
+                type = "ADDRESS",
+                $city = $("[name='city_new'],[name='mass[0][city_new]']"),
+                $street = $("[name='street_new'],[name='mass[0][street_new]']"),
+                $house = $("[name='house_new'],[name='mass[0][house_new]']");
 
-    $street.suggestions({
-        token: token,
-        partner: "PHPSHOP",
-        type: type,
-        hint: false,
-        bounds: "street",
-        constraints: $city,
-        onSelect: showPostalCode,
-        onSelectNothing: clearPostalCode
-    });
+        $city.suggestions({
+            token: token,
+            partner: "PHPSHOP",
+            type: type,
+            hint: false,
+            bounds: "city-settlement",
+            onSelect: showPostalCode,
+            onSelectNothing: clearPostalCode
+        });
 
-    $house.suggestions({
-        token: token,
-        partner: "PHPSHOP",
-        type: type,
-        hint: false,
-        bounds: "house",
-        constraints: $street,
-        onSelect: showPostalCode,
-        onSelectNothing: clearPostalCode
-    });
-    function showPostalCode(suggestion) {
-        $("[name='index_new'],[name='mass[0][index_new]']").val(suggestion.data.postal_code);
+        $street.suggestions({
+            token: token,
+            partner: "PHPSHOP",
+            type: type,
+            hint: false,
+            bounds: "street",
+            constraints: $city,
+            onSelect: showPostalCode,
+            onSelectNothing: clearPostalCode
+        });
+
+        $house.suggestions({
+            token: token,
+            partner: "PHPSHOP",
+            type: type,
+            hint: false,
+            bounds: "house",
+            constraints: $street,
+            onSelect: showPostalCode,
+            onSelectNothing: clearPostalCode
+        });
+        function showPostalCode(suggestion) {
+            $("[name='index_new'],[name='mass[0][index_new]']").val(suggestion.data.postal_code);
+        }
+        function clearPostalCode() {
+            $("[name='index_new'],[name='mass[0][index_new]']").val("");
+        }
+        $("[name='fio_new'],[name='mass[0][fio_new]']").suggestions({
+            token: DADATA_TOKEN,
+            partner: "PHPSHOP",
+            type: "NAME",
+            count: 5
+        });
+        $("[name='org_name_new'],[name='mass[0][org_name_new]']").suggestions({
+            token: DADATA_TOKEN,
+            partner: "PHPSHOP",
+            type: "PARTY",
+            count: 5
+        });
+
+        $("[name='org_name_new'],[name='mass[0][org_name_new]']").suggestions({
+            token: DADATA_TOKEN,
+            partner: "PHPSHOP",
+            type: "PARTY",
+            count: 5,
+            onSelect: showSuggestion
+        });
+        $("[name='org_bank_new'],[name='mass[0][org_bank_new]']").suggestions({
+            token: DADATA_TOKEN,
+            partner: "PHPSHOP",
+            type: "BANK",
+            count: 5,
+            onSelect: showSuggestionBank
+        });
     }
-    function clearPostalCode() {
-        $("[name='index_new'],[name='mass[0][index_new]']").val("");
-    }
-    $("[name='fio_new'],[name='mass[0][fio_new]']").suggestions({
-        token: DADATA_TOKEN,
-        partner: "PHPSHOP",
-        type: "NAME",
-        count: 5
-    });
-    $("[name='org_name_new'],[name='mass[0][org_name_new]']").suggestions({
-        token: DADATA_TOKEN,
-        partner: "PHPSHOP",
-        type: "PARTY",
-        count: 5
-    });
-
-    $("[name='org_name_new'],[name='mass[0][org_name_new]']").suggestions({
-        token: DADATA_TOKEN,
-        partner: "PHPSHOP",
-        type: "PARTY",
-        count: 5,
-        onSelect: showSuggestion
-    });
-    $("[name='org_bank_new'],[name='mass[0][org_bank_new]']").suggestions({
-        token: DADATA_TOKEN,
-        partner: "PHPSHOP",
-        type: "BANK",
-        count: 5,
-        onSelect: showSuggestionBank
-    });
 
     // Вывод подсказок DaData.ru в форме юридических данных
     function showSuggestion(suggestion) {

@@ -43,15 +43,16 @@
         <link href="@pageCss@" rel="stylesheet">
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/responsive.css" rel="stylesheet">
 
-
-
         <div id="bootstrap_theme" data-name="@php echo $_SESSION['skin']; php@"></div>
-	        <!-- Стикер-полоска -->
-	        <div class="top-banner @php __hide('sticker_close','cookie'); php@">
-				<div class="sticker-text">@sticker_top@</div>
-				<span class="close sticker-close">x</span>
-			</div>
-			<!-- /Стикер-полоска -->
+        
+        <!-- Стикер-полоска -->
+        <div class="@php __hide('sticker_top'); php@">
+            <div class="top-banner @php __hide('sticker_close','cookie'); php@">
+                <div class="sticker-text">@sticker_top@</div>
+                <span class="close sticker-close">x</span>
+            </div>
+        </div>
+        <!-- /Стикер-полоска -->
 
         <header>
             <div class="header-top">
@@ -185,6 +186,8 @@
         <!-- Main Container Ends -->
 
         <div class="top-col-banners text-center  container">@banersDispHorizontal@</div>
+        
+        @editor@
 
         <div class="copyright">
             <!-- Container Starts -->
@@ -194,6 +197,8 @@
             </div>
             <!-- Container Ends -->
         </div>
+        
+        
 
         <!-- Footer Section Starts -->
         <footer id="footer-area">
@@ -249,7 +254,6 @@
         </footer>
         <!-- Footer Section Ends -->
 
-        @editor@
 
         <!-- Fixed mobile bar -->
         <div class="bar-padding-fix visible-xs"> </div>

@@ -13,7 +13,7 @@
         <link rel="mask-icon" href="@icon@" >
         <link rel="icon" href="@icon@" type="image/x-icon">
         <link rel="mask-icon" href="@icon@" >
-        
+
         <!-- OpenGraph -->
         <meta property="og:title" content="@ogTitle@">
         <meta property="og:image" content="http://@serverName@@ogImage@">
@@ -34,7 +34,6 @@
     </head>
     <body id="body" data-dir="@ShopDir@" data-path="@php echo $GLOBALS['PHPShopNav']->objNav['path']; php@" data-id="@php echo $GLOBALS['PHPShopNav']->objNav['id']; php@" data-subpath="@php echo $GLOBALS['PHPShopNav']->objNav['name']; php@" data-token="@dadataToken@">
 
-
         <!-- Template -->
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/swiper.min.css" rel="stylesheet">
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/animate.css" rel="stylesheet">
@@ -43,12 +42,16 @@
 
         <!-- Theme -->
         <link id="bootstrap_theme" data-name="@php echo $_SESSION['skin']; php@" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/@spice_theme@.css" rel="stylesheet">
-	        <!-- Стикер-полоска -->
-	        <div class="top-banner @php __hide('sticker_close','cookie'); php@">
-				<div class="sticker-text">@sticker_top@</div>
-				<span class="close sticker-close">x</span>
-			</div>
-			<!-- /Стикер-полоска -->
+
+        <!-- Стикер-полоска -->
+        <div class="@php __hide('sticker_top'); php@">
+            <div class="top-banner @php __hide('sticker_close','cookie'); php@">
+                <div class="sticker-text">@sticker_top@</div>
+                <span class="close sticker-close">x</span>
+            </div>
+        </div>
+        <!-- /Стикер-полоска -->
+
 
         <!-- Header Section Starts -->
         <header id="header-area">
@@ -267,14 +270,14 @@
 
                     @rightMenu@
                     @leftMenu@
-					<div class="panel panel-default  hidden-xs  hidden-sm @php __hide('productlist_list'); php@">
+                    <div class="panel panel-default  hidden-xs  hidden-sm @php __hide('productlist_list'); php@">
                         <div class="panel-heading">
                             <div class="panel-title">{Похожие товары}</div>
                         </div>
                         <div class="panel-body">
-                          <div id="productlist">
-    <table>@productlist_list@</table>
-</div>
+                            <div id="productlist">
+                                <table>@productlist_list@</table>
+                            </div>
 
 
                         </div>
@@ -299,12 +302,12 @@
             <!-- Primary Content Starts -->
             <div class="col-md-9 col-xs-12 middle-content-block">
                 @DispShop@
-               
-                   
-                    <div class="col-xs-12 @php __hide('now_buying'); php@ nowbuy-block">
-          <div class="row">                
 
-<h4 class="heading">@now_buying@</h4>
+
+                <div class="col-xs-12 @php __hide('now_buying'); php@ nowbuy-block">
+                    <div class="row">                
+
+                        <h4 class="heading">@now_buying@</h4>
                         @nowBuy@
                     </div>
                 </div>
@@ -336,6 +339,8 @@
         <a href="#" id="toTop"><span id="toTopHover"></span>{Наверх}</a>
     </div>
     <!--/ toTop -->
+    
+        @editor@
 
     <!-- Footer Section Starts -->
     <footer class="visible-sm visible-md visible-lg" id="footer-area">
@@ -383,10 +388,10 @@
                         <li class="footer-email">@adminMail@</li>                              
                     </ul>
                     <h4 class="lead">
-                            @telNum@
-                            <br>@telNum2@
-                            <br>@workingTime@
-                        </h4>
+                        @telNum@
+                        <br>@telNum2@
+                        <br>@workingTime@
+                    </h4>
                     @sticker_socfooter@
                 </div>
                 <!-- Contact Us Ends -->
@@ -406,8 +411,6 @@
         <!-- Copyright Area Ends -->
     </footer>
     <!-- Footer Section Ends -->
-
-    @editor@
 
     <!-- Fixed mobile bar -->
     <div class="bar-padding-fix visible-xs"> </div>
@@ -507,6 +510,46 @@
         </div>
     </div>
     <!--/ Модальное окно мобильного поиска -->
+
+    <!-- Модальное окно returncall-->
+    <div class="modal fade bs-example-modal-sm return-call" id="returnCallModal" tabindex="-1" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">{Обратный звонок}</h4>
+                </div>
+                <form method="post" name="user_forma" action="@ShopDir@/returncall/">
+                    <div class="modal-body">
+
+                        <div class="form-group">
+
+                            <input type="text" name="returncall_mod_name" class="form-control" placeholder="{Имя}" required="">
+                        </div>
+                        <div class="form-group">
+
+                            <input type="text" name="returncall_mod_tel" class="form-control phone" placeholder="{Телефон}" required="">
+                        </div>
+                        <div class="form-group">
+
+                            <input class="form-control" type="text" placeholder="{Время звонка}" name="returncall_mod_time_start">
+                        </div>
+                        <div class="form-group">
+
+                            <textarea class="form-control" name="returncall_mod_message" placeholder="{Сообщение}"></textarea>
+                        </div>
+                        @returncall_captcha@
+                        <p class="small"><label><input type="checkbox" value="on" name="rule" class="req" checked="checked">  {Я согласен} <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html">{на обработку моих персональных данных}</a></label></p>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="hidden" name="returncall_mod_send" value="1">
+
+                        <button type="submit" class="btn btn-main">{Заказать звонок}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <!-- Согласие на использование cookie  -->
     <div class="cookie-message hide"><p></p><a href="#" class="btn btn-default btn-sm">Ok</a></div>

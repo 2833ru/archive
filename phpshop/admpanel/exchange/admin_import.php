@@ -86,7 +86,8 @@ $key_name = array(
     'width' => 'Ширина',
     'height' => 'Высота',
     'moysklad_product_id' => 'МойСклад Id',
-    'bonus' => 'Бонус'
+    'bonus' => 'Бонус',
+    'price_purch' => 'Закупочная цена'
 );
 
 if ($GLOBALS['PHPShopBase']->codBase == 'utf-8')
@@ -95,8 +96,8 @@ if ($GLOBALS['PHPShopBase']->codBase == 'utf-8')
 // Стоп лист
 $key_stop = array('password', 'wishlist', 'sort', 'yml_bid_array', 'status', 'files', 'datas', 'price_search', 'vid', 'name_rambler', 'servers', 'skin', 'skin_enabled', 'secure_groups', 'icon_description', 'title_enabled', 'title_shablon', 'descrip_shablon', 'descrip_enabled', 'productsgroup_check', 'productsgroup_product', 'keywords_enabled', 'keywords_shablon', 'rate_count', 'sort_cache', 'sort_cache_created_at', 'parent_title', 'menu', 'order_by', 'order_to', 'org_ras', 'org_bank', 'org_kor', 'org_bik', 'org_city', 'admin', 'org_fakt_adres');
 
-if(empty($subpath[2]))
-    $subpath[2]=null;
+if (empty($subpath[2]))
+    $subpath[2] = null;
 
 switch ($subpath[2]) {
     case 'catalog':
@@ -220,7 +221,7 @@ function sort_encode($sort, $category) {
                                 }
                         }
                         // Дописываем значение 
-                        elseif(!empty($sort_value)) {
+                        elseif (!empty($sort_value)) {
 
                             // Получаем ИД существующей характеристики
                             $PHPShopOrm = new PHPShopOrm();
@@ -313,8 +314,8 @@ function csv_update($data) {
                     $sort_name = substr($cols_name, 1, (strlen($cols_name) - 1));
 
                     // Несколько значений
-                    if (strstr($data[$k], ',')) {
-                        $sort_array = explode(',', $data[$k]);
+                    if (strstr($data[$k], $_POST['export_sortsdelim'])) {
+                        $sort_array = explode($_POST['export_sortsdelim'], $data[$k]);
                     } else
                         $sort_array[] = $data[$k];
 
@@ -391,7 +392,7 @@ function csv_update($data) {
             // Дополнительные изображения
             if (!empty($_POST['export_imgdelim']) and strstr($row['pic_big'], $_POST['export_imgdelim'])) {
                 $data_img = explode($_POST['export_imgdelim'], $row['pic_big']);
-            } elseif(!empty($row['pic_big']))
+            } elseif (!empty($row['pic_big']))
                 $data_img[] = $row['pic_big'];
 
             if (!empty($data_img) and is_array($data_img)) {
@@ -673,9 +674,7 @@ function actionSave() {
     // Настройка нулевого склада
     $GLOBALS['admoption_sklad_status'] = $PHPShopSystem->getSerilizeParam('admoption.sklad_status');
 
-    // Память разделителей характеристик
-    $memory = json_decode($_COOKIE['check_memory'], true);
-    unset($memory[$_GET['path']]);
+    // Память настроек
     $memory[$_GET['path']]['export_sortdelim'] = @$_POST['export_sortdelim'];
     $memory[$_GET['path']]['export_sortsdelim'] = @$_POST['export_sortsdelim'];
     $memory[$_GET['path']]['export_imgdelim'] = @$_POST['export_imgdelim'];
@@ -684,9 +683,6 @@ function actionSave() {
     $memory[$_GET['path']]['export_action'] = @$_POST['export_action'];
     $memory[$_GET['path']]['export_delim'] = @$_POST['export_delim'];
     $memory[$_GET['path']]['export_imgproc'] = @$_POST['export_imgproc'];
-
-    if (is_array($memory))
-        setcookie("check_memory", json_encode($memory), time() + 3600000, $GLOBALS['SysValue']['dir']['dir'] . '/phpshop/admpanel/');
 
     // Копируем csv от пользователя
     if (!empty($_FILES['file']['name'])) {
@@ -847,6 +843,35 @@ function actionSave() {
 function actionStart() {
     global $PHPShopGUI, $PHPShopModules, $TitlePage, $PHPShopOrm, $key_name, $subpath, $key_base, $key_stop, $result_message;
 
+    // Выбрать настройку
+    if (!empty($_GET['exchanges'])) {
+
+        $PHPShopOrmExchanges = new PHPShopOrm($GLOBALS['SysValue']['base']['exchanges']);
+        $data_exchanges = $PHPShopOrmExchanges->select(array('*'), array('id' => '=' . intval($_GET['exchanges'])), false, array("limit" => 1));
+        
+
+        if (is_array($data_exchanges)) {
+            $_POST = unserialize($data_exchanges['option']);
+            
+            $exchanges_name = ": ". $data_exchanges['name'];
+
+            $memory[$_GET['path']]['export_sortdelim'] = @$_POST['export_sortdelim'];
+            $memory[$_GET['path']]['export_sortsdelim'] = @$_POST['export_sortsdelim'];
+            $memory[$_GET['path']]['export_imgdelim'] = @$_POST['export_imgdelim'];
+            $memory[$_GET['path']]['export_imgpath'] = @$_POST['export_imgpath'];
+            $memory[$_GET['path']]['export_uniq'] = @$_POST['export_uniq'];
+            $memory[$_GET['path']]['export_action'] = @$_POST['export_action'];
+            $memory[$_GET['path']]['export_delim'] = @$_POST['export_delim'];
+            $memory[$_GET['path']]['export_imgproc'] = @$_POST['export_imgproc'];
+            $memory[$_GET['path']]['export_code'] = @$_POST['export_code'];
+            
+            $export_sortdelim = @$memory[$_GET['path']]['export_sortdelim'];
+            $export_sortsdelim = @$memory[$_GET['path']]['export_sortsdelim'];
+            $export_imgvalue = @$memory[$_GET['path']]['export_imgdelim'];
+            $export_code = $memory[$_GET['path']]['export_code'];
+        }
+    }
+
     $PHPShopGUI->action_button['Импорт'] = array(
         'name' => __('Выполнить'),
         'action' => 'saveID',
@@ -859,6 +884,14 @@ function actionStart() {
     $PHPShopOrm->clean();
     $data = $PHPShopOrm->select(array('*'), false, false, array('limit' => 1));
     $select_value[] = array('Не выбрано', false, false);
+
+    // Пустая база
+    if (!is_array($data)) {
+        $PHPShopOrm->insert(array('name_new' => 'Тестовый товар'));
+        $PHPShopOrm->clean();
+        $data = $PHPShopOrm->select(array('*'), false, false, array('limit' => 1));
+        $PHPShopOrm->delete(array('name' => '="Тестовый товар"'));
+    }
 
     if (is_array($data)) {
 
@@ -930,7 +963,7 @@ function actionStart() {
 
     $PHPShopGUI->_CODE .= '<p class="text-muted hidden-xs">' . __('Ниже приведен список полей, которые может содержать ваш файл. Одно из выделенных полей являются обязательными. Если вы импортируете данные, содержащие специальные символы (запятые, точки с запятыми и т.д.), соответствующие поля должны быть заключены в кавычки') . '.</p>';
     $PHPShopGUI->_CODE .= '<div class="panel panel-default"><div class="panel-body">' . $list . '</div></div>';
-    $PHPShopGUI->setActionPanel($TitlePage, false, array('Импорт'));
+    $PHPShopGUI->setActionPanel($TitlePage.$exchanges_name, false, array('Импорт'));
 
     // Память полей
     if (!empty($_POST['export_sortdelim']))
@@ -940,18 +973,8 @@ function actionStart() {
 
     if (!empty($_POST['export_sortsdelim']))
         $export_sortdelim = $_POST['export_sortsdelim'];
-    else
-        $export_sortsdelim = '/';
 
-    if (!empty($_COOKIE['check_memory'])) {
-        $memory = json_decode($_COOKIE['check_memory'], true);
-        $export_sortdelim = @$memory[$_GET['path']]['export_sortdelim'];
-        $export_sortsdelim = @$memory[$_GET['path']]['export_sortsdelim'];
-        $export_imgvalue = @$memory[$_GET['path']]['export_imgdelim'];
-    }
-    else {
-        $memory=$export_sortdelim=$export_sortsdelim=$export_imgvalue=$exchanges_remove_value=null;
-    }
+
 
     $delim_value[] = array('Точка с запятой', ';', @$memory[$_GET['path']]['export_delim']);
     $delim_value[] = array('Запятая', ',', @$memory[$_GET['path']]['export_delim']);
@@ -962,24 +985,28 @@ function actionStart() {
     $delim_sortvalue[] = array('#', '#', $export_sortdelim);
     $delim_sortvalue[] = array('@', '@', $export_sortdelim);
     $delim_sortvalue[] = array('$', '$', $export_sortdelim);
+    $delim_sortvalue[] = array(__('Колонка'), '-', $export_sortdelim);
 
     $delim_sort[] = array('/', '/', $export_sortsdelim);
     $delim_sort[] = array('\\', '\\', $export_sortsdelim);
     $delim_sort[] = array('-', '-', $export_sortsdelim);
     $delim_sort[] = array('&', '&', $export_sortsdelim);
+    $delim_sort[] = array(';', ';', $export_sortsdelim);
+    $delim_sort[] = array(',', ',', $export_sortsdelim);
 
-    $delim_imgvalue[] = array(__('Выключить'), 0, $export_imgvalue);
     $delim_imgvalue[] = array(__('Запятая'), ',', $export_imgvalue);
+    $delim_imgvalue[] = array(__('Выключить'), 0, $export_imgvalue);
+    $delim_imgvalue[] = array(__('Точка с запятой'), ';', $export_imgvalue);
     $delim_imgvalue[] = array('#', '#', $export_imgvalue);
     $delim_imgvalue[] = array(__('пробел'), ' ', $export_imgvalue);
 
-    $code_value[] = array('ANSI', 'ansi', 'selected');
-    $code_value[] = array('UTF-8', 'utf', '');
+    $code_value[] = array('ANSI', 'ansi', $export_code);
+    $code_value[] = array('UTF-8', 'utf', $export_code);
 
     $key_value[] = array('Id или Артикул', 0, 'selected');
 
     // Закладка 1
-    $Tab1 = $PHPShopGUI->setField("Файл", $PHPShopGUI->setFile()).
+    $Tab1 = $PHPShopGUI->setField("Файл", $PHPShopGUI->setFile()) .
             $PHPShopGUI->setField('Действие', $PHPShopGUI->setSelect('export_action', $action_value, 150, true)) .
             $PHPShopGUI->setField('CSV-разделитель', $PHPShopGUI->setSelect('export_delim', $delim_value, 150, true)) .
             $PHPShopGUI->setField('Разделитель для характеристик', $PHPShopGUI->setSelect('export_sortdelim', $delim_sortvalue, 150), false, false, $class) .
@@ -992,33 +1019,34 @@ function actionStart() {
             $PHPShopGUI->setField('Проверка уникальности', $PHPShopGUI->setCheckbox('export_uniq', 1, null, @$memory[$_GET['path']]['export_uniq']), 1, 'Исключает дублирование данных при создании');
 
     // Закладка 2
-    $Tab2 = $PHPShopGUI->setField(array('Колонка 1', 'Колонка 2'), array($PHPShopGUI->setSelect('select_action[]', $select_value, 150, true,false,true), $PHPShopGUI->setSelect('select_action[]', $select_value, 150, true,false,true)), array(array(3, 2), array(2, 2)));
-    $Tab2 .= $PHPShopGUI->setField(array('Колонка 3', 'Колонка 4'), array($PHPShopGUI->setSelect('select_action[]', $select_value, 150, true,false,true), $PHPShopGUI->setSelect('select_action[]', $select_value, 150, true,false,true)), array(array(3, 2), array(2, 2)));
-    $Tab2 .= $PHPShopGUI->setField(array('Колонка 5', 'Колонка 6'), array($PHPShopGUI->setSelect('select_action[]', $select_value, 150, true,false,true), $PHPShopGUI->setSelect('select_action[]', $select_value, 150, true,false,true)), array(array(3, 2), array(2, 2)));
-    $Tab2 .= $PHPShopGUI->setField(array('Колонка 7', 'Колонка 8'), array($PHPShopGUI->setSelect('select_action[]', $select_value, 150, true,false,true), $PHPShopGUI->setSelect('select_action[]', $select_value, 150, true,false,true)), array(array(3, 2), array(2, 2)));
-    $Tab2 .= $PHPShopGUI->setField(array('Колонка 9', 'Колонка 10'), array($PHPShopGUI->setSelect('select_action[]', $select_value, 150, true,false,true), $PHPShopGUI->setSelect('select_action[]', $select_value, 150, true,false,true)), array(array(3, 2), array(2, 2)));
-    $Tab2 .= $PHPShopGUI->setField(array('Колонка 11', 'Колонка 12'), array($PHPShopGUI->setSelect('select_action[]', $select_value, 150, true,false,true), $PHPShopGUI->setSelect('select_action[]', $select_value, 150, true,false,true)), array(array(3, 2), array(2, 2)));
-    $Tab2 .= $PHPShopGUI->setField(array('Колонка 13', 'Колонка 14'), array($PHPShopGUI->setSelect('select_action[]', $select_value, 150, true,false,true), $PHPShopGUI->setSelect('select_action[]', $select_value, 150, true,false,true)), array(array(3, 2), array(2, 2)));
-    $Tab2 .= $PHPShopGUI->setField(array('Колонка 15', 'Колонка 16'), array($PHPShopGUI->setSelect('select_action[]', $select_value, 150, true,false,true), $PHPShopGUI->setSelect('select_action[]', $select_value, 150, true,false,true)), array(array(3, 2), array(2, 2)));
-    $Tab2 .= $PHPShopGUI->setField(array('Колонка 17', 'Колонка 18'), array($PHPShopGUI->setSelect('select_action[]', $select_value, 150, true,false,true), $PHPShopGUI->setSelect('select_action[]', $select_value, 150, true,false,true)), array(array(3, 2), array(2, 2)));
-    $Tab2 .= $PHPShopGUI->setField(array('Колонка 19', 'Колонка 20'), array($PHPShopGUI->setSelect('select_action[]', $select_value, 150, true,false,true), $PHPShopGUI->setSelect('select_action[]', $select_value, 150, true,false,true)), array(array(3, 2), array(2, 2)));
+    $Tab2 = $PHPShopGUI->setField(array('Колонка A', 'Колонка B'), array($PHPShopGUI->setSelect('select_action[]', $select_value, 150, true, false, true), $PHPShopGUI->setSelect('select_action[]', $select_value, 150, true, false, true)), array(array(3, 2), array(2, 2)));
+    $Tab2 .= $PHPShopGUI->setField(array('Колонка C', 'Колонка D'), array($PHPShopGUI->setSelect('select_action[]', $select_value, 150, true, false, true), $PHPShopGUI->setSelect('select_action[]', $select_value, 150, true, false, true)), array(array(3, 2), array(2, 2)));
+    $Tab2 .= $PHPShopGUI->setField(array('Колонка E', 'Колонка F'), array($PHPShopGUI->setSelect('select_action[]', $select_value, 150, true, false, true), $PHPShopGUI->setSelect('select_action[]', $select_value, 150, true, false, true)), array(array(3, 2), array(2, 2)));
+    $Tab2 .= $PHPShopGUI->setField(array('Колонка G', 'Колонка H'), array($PHPShopGUI->setSelect('select_action[]', $select_value, 150, true, false, true), $PHPShopGUI->setSelect('select_action[]', $select_value, 150, true, false, true)), array(array(3, 2), array(2, 2)));
+    $Tab2 .= $PHPShopGUI->setField(array('Колонка I', 'Колонка J'), array($PHPShopGUI->setSelect('select_action[]', $select_value, 150, true, false, true), $PHPShopGUI->setSelect('select_action[]', $select_value, 150, true, false, true)), array(array(3, 2), array(2, 2)));
+    $Tab2 .= $PHPShopGUI->setField(array('Колонка K', 'Колонка L'), array($PHPShopGUI->setSelect('select_action[]', $select_value, 150, true, false, true), $PHPShopGUI->setSelect('select_action[]', $select_value, 150, true, false, true)), array(array(3, 2), array(2, 2)));
+    $Tab2 .= $PHPShopGUI->setField(array('Колонка M', 'Колонка N'), array($PHPShopGUI->setSelect('select_action[]', $select_value, 150, true, false, true), $PHPShopGUI->setSelect('select_action[]', $select_value, 150, true, false, true)), array(array(3, 2), array(2, 2)));
+    $Tab2 .= $PHPShopGUI->setField(array('Колонка O', 'Колонка P'), array($PHPShopGUI->setSelect('select_action[]', $select_value, 150, true, false, true), $PHPShopGUI->setSelect('select_action[]', $select_value, 150, true, false, true)), array(array(3, 2), array(2, 2)));
+    $Tab2 .= $PHPShopGUI->setField(array('Колонка Q', 'Колонка R'), array($PHPShopGUI->setSelect('select_action[]', $select_value, 150, true, false, true), $PHPShopGUI->setSelect('select_action[]', $select_value, 150, true, false, true)), array(array(3, 2), array(2, 2)));
+    $Tab2 .= $PHPShopGUI->setField(array('Колонка S', 'Колонка T'), array($PHPShopGUI->setSelect('select_action[]', $select_value, 150, true, false, true), $PHPShopGUI->setSelect('select_action[]', $select_value, 150, true, false, true)), array(array(3, 2), array(2, 2)));
 
     // Закладка 3
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['exchanges']);
     $data = $PHPShopOrm->select(array('*'), array('type' => '="import"'), array('order' => 'id DESC'), array("limit" => "1000"));
     $exchanges_value[] = array(__('Создать новую настройку'), 'new');
-    if (is_array($data)){
+    if (is_array($data)) {
         foreach ($data as $row) {
-            $exchanges_value[] = array($row['name'], $row['id']);
+            $exchanges_value[] = array($row['name'], $row['id'],$_REQUEST['exchanges']);
             $exchanges_remove_value[] = array($row['name'], $row['id']);
         }
-    }else $exchanges_remove_value=null;
+    } else
+        $exchanges_remove_value = null;
 
     $Tab3 = $PHPShopGUI->setField('Выбрать настройку', $PHPShopGUI->setSelect('exchanges', $exchanges_value, 300, false));
     $Tab3 .= $PHPShopGUI->setField('Сохранить настройку', $PHPShopGUI->setInputArg(array('type' => 'text', 'placeholder' => 'Имя настройки', 'size' => '300', 'name' => 'exchanges_new', 'class' => 'vendor_add')));
-    
-    if(is_array($exchanges_remove_value))
-    $Tab3 .= $PHPShopGUI->setField('Удалить настройки', $PHPShopGUI->setSelect('exchanges_remove[]', $exchanges_remove_value, 300, false, false, false, false, 1, true));
+
+    if (is_array($exchanges_remove_value))
+        $Tab3 .= $PHPShopGUI->setField('Удалить настройки', $PHPShopGUI->setSelect('exchanges_remove[]', $exchanges_remove_value, 300, false, false, false, false, 1, true));
 
     // Закладка 4
     if (empty($_POST['time_limit']))
@@ -1026,21 +1054,21 @@ function actionStart() {
 
     if (empty($_POST['line_limit']))
         $_POST['line_limit'] = 500;
-    
-    if(empty($_POST['bot']))
-        $_POST['bot']=null;
+
+    if (empty($_POST['bot']))
+        $_POST['bot'] = null;
 
     $Tab4 = $PHPShopGUI->setField('Лимит строк', $PHPShopGUI->setInputText(null, 'line_limit', $_POST['line_limit'], 150), 1, 'Задается хостингом');
     $Tab4 .= $PHPShopGUI->setField('Временной интервал', $PHPShopGUI->setInputText(null, 'time_limit', $_POST['time_limit'], 150, __('минут')), 1, 'Задается хостингом');
     $Tab4 .= $PHPShopGUI->setField("Помощник", $PHPShopGUI->setCheckbox('bot', 1, __('Умная загрузка для соблюдения правила ограничений на хостинге'), $_POST['bot'], false, false));
 
-    $Tab1 = $PHPShopGUI->setCollapse('Настройки',$Tab1);
-    $Tab2 = $PHPShopGUI->setCollapse('Подсказка',$PHPShopGUI->setHelp('Если вы загружаете файл, который скачали в меню "База" &rarr; "Экспорт базы", и он содержит штатные заголовки столбцов – сопоставление полей делать <b>не нужно</b>. Если это сторонний прайс со своими названиями колонок, сделайте <b>Cопоставление полей</b>.')).
-            $PHPShopGUI->setCollapse('Сопоставление полей',$Tab2);
-    
-    $Tab3 = $PHPShopGUI->setCollapse('Сохраненные настройки',$Tab3);
-    $Tab4 = $PHPShopGUI->setCollapse('Автоматизация',$Tab4);
-    
+    $Tab1 = $PHPShopGUI->setCollapse('Настройки', $Tab1);
+    $Tab2 = $PHPShopGUI->setCollapse('Подсказка', $PHPShopGUI->setHelp('Если вы загружаете файл, который скачали в меню "База" &rarr; "Экспорт базы", и он содержит штатные заголовки столбцов – сопоставление полей делать <b>не нужно</b>. Если это сторонний прайс со своими названиями колонок, сделайте <b>Cопоставление полей</b>.')) .
+            $PHPShopGUI->setCollapse('Сопоставление полей', $Tab2);
+
+    $Tab3 = $PHPShopGUI->setCollapse('Сохраненные настройки', $Tab3);
+    $Tab4 = $PHPShopGUI->setCollapse('Автоматизация', $Tab4);
+
     $PHPShopGUI->tab_return = true;
     $PHPShopGUI->setTab(array('Настройки', $Tab1, true), array('Сопоставление полей', $Tab2, true), array('Сохраненные настройки', $Tab3, true), array('Автоматизация', $Tab4, true));
 

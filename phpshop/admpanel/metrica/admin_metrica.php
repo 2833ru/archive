@@ -176,7 +176,7 @@ function actionStart() {
        </div>
        <div class="col-md-2 hidden-xs hidden-sm">
           <div class="panel panel-default">
-             <div class="panel-heading"><span class="glyphicon glyphicon-hourglass"></span> ' . __('Время') . '<span class="pull-right text-muted">мин.</span></div>
+             <div class="panel-heading"><span class="glyphicon glyphicon-hourglass"></span> ' . __('Время') . '<span class="pull-right text-muted">'.__('мин').'</span></div>
                 <div class="panel-body text-right panel-intro">
                  <a data-toggle="tooltip" data-placement="top" href="?path=metrica.traffic&date_start=' . $_GET['date_start'] . '&date_end=' . $_GET['date_end'] . '&group_date=' . $_GET['group_date'] . '" title="' . __('Показать больше') . '">' . round($json_data[totals][5], 2) . '</a>
                </div>
@@ -265,7 +265,7 @@ function actionStart() {
             }
         }
         if (count($json_data) == 0)
-            $PHPShopInterface->setRow('Нет данных..', array('name' => '?', 'align' => 'right'));
+            $PHPShopInterface->setRow(__('Нет данных..'), array('name' => '?', 'align' => 'right'));
 
 
         $PHPShopGUI->_CODE.='<div class="col-md-6 col-xs-12">
@@ -500,7 +500,7 @@ function actionStart() {
             }
         }
         if (count($json_data[data]) == 0)
-            $PHPShopInterface->setRow('Нет данных..', array('name' => '?', 'align' => 'right'));
+            $PHPShopInterface->setRow(__('Нет данных..'), array('name' => '?', 'align' => 'right'));
 
         $PHPShopGUI->_CODE.='
    <div class="col-md-6 col-xs-12">

@@ -128,7 +128,7 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or !empty($_SESSION
                         <h4 class="modal-title">{Найти файл}</h4>
                     </div>
                     <div class="modal-body">
-                        <iframe class="elfinder-modal-content" data-path="image" data-option="return=icon_new" id="admin-modal-filemanager"></iframe>
+                        <iframe class="elfinder-modal-content" data-path="image" frameborder="0" data-option="return=icon_new" id="admin-modal-filemanager"></iframe>
 
                     </div>
                 </div>

@@ -88,7 +88,7 @@ $().ready(function() {
         }
     });
 
-    $('[name="option[mail_smtp_enabled]"]').click(function() {
+    $('[name="option[mail_smtp_enabled]"]').change(function() {
         var smtp_disabled = this.checked;
         $('[name="option[mail_smtp_auth]"]').attr('disabled', !smtp_disabled);
         $('[name="option[mail_smtp_host]"]').attr('disabled', !smtp_disabled);

@@ -20,12 +20,12 @@ $SysValue['bank'] = $LoadBanc = unserialize($LoadItems['System']['bank']);
 
 $sql = "select * from " . $SysValue['base']['orders'] . " where id=" . intval($_GET['orderID']);
 $n = 1;
-@$result = mysqli_query($link_db, $sql);
-$row = mysqli_fetch_array(@$result);
+$result = mysqli_query($link_db, $sql);
+$row = mysqli_fetch_array($result);
 $ouid = $row['uid'];
 $order = unserialize($row['orders']);
 $dis = null;
-$weight=0;
+$weight=$sum=$num=0;
 if (is_array($order['Cart']['cart']))
     foreach ($order['Cart']['cart'] as $val) {
 
@@ -35,16 +35,14 @@ if (is_array($order['Cart']['cart']))
         if (!empty($val['uid']))
             $val['name'].= ' (' . $val['uid'] . ')';
 
-        $dis.="
-  <tr class=tablerow>
+        $dis.="<tr class=tablerow>
 		<td class=tablerow>" . $n . "</td>
 		<td class=tablerow>" . $val['name'] . "</td>
 		<td class=tablerow align=center>" . $val['ed_izm'] . "</td>
 		<td align=right class=tablerow>" . $val['num'] . "</td>
 		<td align=right class=tablerow nowrap>" . $PHPShopOrder->returnSumma($val['price'], 0) . "</td>
 		<td class=tableright>" . $PHPShopOrder->returnSumma($val['price'] * $val['num'], 0) . "</td>
-	</tr>
-  ";
+	</tr>";
 
         //Определение и суммирование веса
         $goodid = $val['id'];
@@ -59,8 +57,8 @@ if (is_array($order['Cart']['cart']))
         $weight+=$cweight;
 
 
-        @$sum+=$val['price'] * $val['num'];
-        @$num+=$val['num'];
+        $sum+=$val['price'] * $val['num'];
+        $num+=$val['num'];
         $n++;
     }
 
@@ -72,6 +70,7 @@ if ($zeroweight) {
 $PHPShopDelivery = new PHPShopDelivery($order['Person']['dostavka_metod']);
 $PHPShopDelivery->checkMod($order['Cart']['dostavka']);
 $deliveryPrice = $PHPShopDelivery->getPrice($sum, $weight);
+$deliveryName = unserialize($PHPShopDelivery->getParam('data_fields'));
 $dis.="
   <tr class=tablerow>
 		<td class=tablerow>" . $n . "</td>
@@ -102,24 +101,12 @@ else $dost_ot = null;
 
 // формируем адрес доставки с учётом старого формата данных в заказах
 $adr_info=null;
-if ($row['country'])
-    $adr_info .= ", ".__("страна").": " . $row['country'];
-if ($row['state'])
-    $adr_info .= ", ".__("регион/штат").": " . $row['state'];
-if ($row['city'])
-    $adr_info .= ", ".__("город").": " . $row['city'];
-if ($row['index'])
-    $adr_info .= ", ".__("индекс").": " . $row['index'];
-if ($row['street'] OR @$order['Person']['adr_name'])
-    $adr_info .= ", ".__("улица").": " . $row['street'] . @$order['Person']['adr_name'];
-if ($row['house'])
-    $adr_info .= ", ".__("дом").": " . $row['house'];
-if ($row['porch'])
-    $adr_info .= ", ".__("подъезд").": " . $row['porch'];
-if ($row['door_phone'])
-    $adr_info .= ", ".__("код домофона").": " . $row['door_phone'];
-if ($row['flat'])
-    $adr_info .= ", ".__("квартира").": " . $row['flat'];
+
+if(is_array($deliveryName['enabled']))
+    foreach($deliveryName['enabled'] as $k=>$v){
+        if(!empty($row[$k]) and $v['name'] != 'ФИО')
+            $adr_info.=", ".$v['name'].': '.$row[$k];
+    }
 
 $adr_info = substr($adr_info, 2);
 

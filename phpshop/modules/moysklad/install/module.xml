@@ -6,7 +6,7 @@
     <faqlink>https://docs.phpshop.ru/sinkhronizaciya-s-moi-sklad/sinkhronizaciya-s-moi-sklad</faqlink>
     <sign>1617019383</sign>
     <pro>true</pro>
-    <category>crm</category>
+    <category>crm,pro</category>
      <adminmenu>
         <title>МойСклад</title>
         <capability>true</capability>

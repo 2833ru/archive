@@ -4,7 +4,7 @@
     <name>Retail CRM</name>
     <faqlink>https://docs.phpshop.ru/moduli/crm/retailcrm</faqlink>
     <description>Автоматизация интернет-продаж Retail CRM</description>
-    <category>crm</category>
+    <category>crm,pro</category>
     <pro>true</pro>
     <adminmenu>
         <title>Retail CRM</title>

@@ -1334,7 +1334,7 @@ class PHPShopSliderElement extends PHPShopElements {
     /**
      * @var int  Кол-во изображений
      */
-    var $limit = 7;
+    var $limit = 25;
 
     /**
      * Конструктор
@@ -1540,12 +1540,11 @@ class PHPShopBannerElement extends PHPShopElements {
                     if (!is_array($dirs))
                         $dirs[] = $row['dir'];
                     
-
                     // Таргетинг
                     foreach ($dirs as $dir) {
                         if (!empty($dir))
-                                
-                            if (stristr($this->PHPShopNav->objNav['truepath'], trim($dir)) or $this->PHPShopNav->objNav['truepath'] == trim($dir) or !empty($true_cid)) {
+                    
+                            if ($this->PHPShopNav->objNav['truepath'] == trim($dir) or !empty($true_cid)) {
                                 
                                 // Проверка индекса
                                 if ($dir == '/' and $this->PHPShopNav->objNav['truepath'] != '/')
@@ -1553,15 +1552,16 @@ class PHPShopBannerElement extends PHPShopElements {
 
                                 // Шаблон
                                 $this->template($row);
+                                
                             }
                     }
 
                     
                    if (!empty($row['dop_cat']) and empty($true_cid))
                         continue;
-                       
-                    // Каталоги
-                    $this->template($row);
+         
+
+                    
                 }
             }
     }

@@ -6,7 +6,15 @@ $(document).ready(function () {
         cat = 0;
     }
     $('.treegrid-' + cat).addClass('treegrid-active');
-
+    
+    
+    // Выбрать все категории
+    $('body').on('change', '#categories_all', function () {
+        if (this.checked)
+            $('[name="categories[]"]').selectpicker('selectAll');
+        else
+            $('[name="categories[]"]').selectpicker('deselectAll');
+    });
 
     // Автозаполнение дополнительных полей
     $('.autofill tr').each(function (key, value) {

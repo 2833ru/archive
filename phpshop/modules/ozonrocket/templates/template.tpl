@@ -6,7 +6,7 @@
                 <h4 class="modal-title">{Доставка}</h4>
             </div>
             <div class="modal-body" id ="ozonrocketwidget" style="width:100%;">
-                <iframe title="Ozon widget" style="width: 100%; height: 100%; min-width: 320px; min-height: 350px; border: none; overflow: hidden" data-src="https://rocket-demo.ozonru.me/lk/widget?@ozonrocket_params@" src="#">Браузер не поддерживает iframe</iframe>
+                <iframe title="Ozon widget" style="width: 100%; height: 100%; min-width: 320px; min-height: 350px; border: none; overflow: hidden" data-src="https://rocket.ozon.ru/lk/widget?@ozonrocket_params@" src="#">Браузер не поддерживает iframe</iframe>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal" id="ddelivery-close">{Закрыть}</button>

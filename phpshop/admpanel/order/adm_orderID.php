@@ -113,7 +113,12 @@ function actionStart() {
 
     // Подсказки
     if ($PHPShopSystem->ifSerilizeParam('admoption.dadata_enabled')) {
-        $PHPShopGUI->addJSFiles('./js/jquery.suggestions.min.js', './order/gui/dadata.gui.js');
+
+        if ($GLOBALS['PHPShopBase']->codBase == 'utf-8')
+            $PHPShopGUI->addJSFiles('./js/jquery.suggestions_utf.min.js', './order/gui/dadata.gui.js');
+        else
+            $PHPShopGUI->addJSFiles('./js/jquery.suggestions.min.js', './order/gui/dadata.gui.js');
+
         $PHPShopGUI->addCSSFiles('./css/suggestions.min.css');
     }
 
@@ -144,14 +149,14 @@ function actionStart() {
         'name' => 'Напоминание об оплате',
         'action' => 'order-reminder',
     );
-    
+
     $PHPShopGUI->action_select['Новый заказ'] = array(
-            'name' => 'Новый заказ пользователя',
-            'locale' => true,
-            'url' => '?path=' . $_GET['path'] . '&action=new&cart=false&id=' . $_GET['id'],
-            'action' => $GLOBALS['isFrame']
-        );
-    
+        'name' => 'Новый заказ пользователя',
+        'locale' => true,
+        'url' => '?path=' . $_GET['path'] . '&action=new&cart=false&id=' . $_GET['id'],
+        'action' => $GLOBALS['isFrame']
+    );
+
 
     // Библиотека заказа
     $PHPShopOrder = new PHPShopOrderFunction($data['id'], $data);
@@ -255,8 +260,8 @@ function actionStart() {
                 $name = explode(".", $payment['name']);
                 $payment['name'] = $name[0];
             }
-            
-            $payment = $PHPShopGUI->valid($payment,'color');
+
+            $payment = $PHPShopGUI->valid($payment, 'color');
 
             $payment_value[] = array($payment['name'], $payment['id'], $order['Person']['order_metod'], 'data-content="<span class=\'glyphicon glyphicon-text-background\' style=\'color:' . $payment['color'] . '\'></span> ' . $payment['name'] . '"');
         }
@@ -356,17 +361,18 @@ function actionStart() {
 
     if ($dialog > 99)
         $dialog = 99;
-    
+
     if (empty($dialog))
         $dialog_enabled = $PHPShopBase->getNumRows('dialog', "where user_id='" . $data['user'] . "' group by chat_id");
-    else $dialog_enabled=true;
-    
+    else
+        $dialog_enabled = true;
+
     if (!empty($dialog_enabled))
         $PHPShopGUI->addTabSeparate(array("Диалог <span class=badge>" . $dialog . "</span>", $Tab7, true, 'dialog'));
 
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Корзина", $PHPShopGUI->setCollapse(null,$Tab2)), array("Данные покупателя", $PHPShopGUI->setCollapse(null,$Tab3)), array("Заказы пользователя", $PHPShopGUI->setCollapse(null,$Tab4)), array("Документы", $PHPShopGUI->setCollapse(null,$Tab5)));
+    $PHPShopGUI->setTab(array("Корзина", $PHPShopGUI->setCollapse(null, $Tab2)), array("Данные покупателя", $PHPShopGUI->setCollapse(null, $Tab3)), array("Заказы пользователя", $PHPShopGUI->setCollapse(null, $Tab4)), array("Документы", $PHPShopGUI->setCollapse(null, $Tab5)));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .

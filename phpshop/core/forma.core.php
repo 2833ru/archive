@@ -79,6 +79,7 @@ class PHPShopForma extends PHPShopCore {
             $_POST['tema']    = PHPShopString::utf8_win1251($_POST['tema']);
             $_POST['name']    = PHPShopString::utf8_win1251($_POST['name']);
             $_POST['content'] = PHPShopString::utf8_win1251($_POST['content']);
+            $_POST['content'].=' '. __('Источник').': '.$_SERVER['HTTP_REFERER'];
             $_POST['mail']    = PHPShopString::utf8_win1251($_POST['mail']);
         }
 

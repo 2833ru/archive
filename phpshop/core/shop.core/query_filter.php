@@ -55,10 +55,10 @@ function query_filter($obj) {
                     if (PHPShopSecurity::true_num($key) and PHPShopSecurity::true_num($v)) {
                         $obj->selected_filter[$key][] = $v;
                         $hash = $key . "-" . $v;
-                        $sort .= " vendor REGEXP 'i" . $hash . "i' or";
+                        $sort .= " vendor REGEXP 'i" . $hash . "i' and";
                     }
                 }
-                $sort = substr($sort, 0, strlen($sort) - 2);
+                $sort = substr($sort, 0, strlen($sort) - 3);
                 $sort .= ")";
             }
             // Обычный отбор []

@@ -5,7 +5,7 @@
     <faqlink>https://docs.phpshop.ru/moduli/crm/bitrix24</faqlink>
     <description>Синхронизация с CRM системой Битрикс24</description>
     <sign>1618822466</sign>
-    <category>crm</category>
+    <category>crm,pro</category>
     <pro>true</pro>
     <adminmenu>
         <title>CRM Битрикс24</title>

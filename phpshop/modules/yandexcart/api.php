@@ -3,7 +3,7 @@
 $_classPath = "../../";
 include($_classPath . "class/obj.class.php");
 PHPShopObj::loadClass("base");
-$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, true);
+$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, false);
 PHPShopObj::loadClass("orm");
 PHPShopObj::loadClass("system");
 PHPShopObj::loadClass("text");
@@ -15,6 +15,9 @@ PHPShopObj::loadClass("parser");
 PHPShopObj::loadClass("modules");
 PHPShopObj::loadClass("security");
 PHPShopObj::loadClass("delivery");
+PHPShopObj::loadClass("lang");
+
+$PHPShopLang = new PHPShopLang();
 
 $PHPShopModules = new PHPShopModules($_classPath . "modules/");
 $PHPShopModules->checkInstall('yandexcart');
@@ -66,13 +69,18 @@ switch ($_SERVER["PATH_INFO"]) {
         if (is_array($data['cart']['items']))
             foreach ($data['cart']['items'] as $item) {
                 $PHPShopProduct = new PHPShopProduct($item["offerId"]);
-
+                
+                // Блокировка приема заказов
+                if(!empty($option['stop']))
+                    $PHPShopProduct->setParam('items',0);
+                
                 $result['cart']['items'][] = [
                     'feedId'  => $item['feedId'],
                     'offerId' => $item['offerId'],
                     'count'   => (int) $PHPShopProduct->getParam('items') > 0 ? (int) $PHPShopProduct->getParam('items') : 0
                 ];
-
+                
+                
                 $weight += (float) $PHPShopProduct->getParam('weight');
                 $sum += (float) $PHPShopProduct->getPrice();
             }
@@ -117,7 +125,7 @@ switch ($_SERVER["PATH_INFO"]) {
 
             if(count($deliveries) === 0) {
                 setYandexcartLog([
-                    'error'      => 'Не найдено доставок для региона ' . (int) $data['cart']['delivery']['region']['name'],
+                    'error'      => __('Не найдено доставок для региона ') . (int) $data['cart']['delivery']['region']['name'],
                     'parameters' => $data
                 ]);
                 exit;
@@ -247,8 +255,8 @@ switch ($_SERVER["PATH_INFO"]) {
             "ouid" => $orderNum,
             "data" => date("U"),
             "time" => date("H:s a"),
-            "mail" => 'market@yandex.ru',
-            "name_person" => 'Яндекс.Маркет',
+            "mail" => __('market@yandex.ru'),
+            "name_person" => __('Яндекс.Маркет'),
             "org_name" => null,
             "org_inn" => null,
             "org_kpp" => null,
@@ -263,7 +271,7 @@ switch ($_SERVER["PATH_INFO"]) {
             "order_metod" => $payment
         );
 
-        $insert['fio_new'] = 'Яндекс.Маркет';
+        $insert['fio_new'] = __('Яндекс.Маркет');
         $insert['datas_new'] = time();
         $insert['uid_new'] = $orderNum;
         $insert['orders_new'] = serialize($order);

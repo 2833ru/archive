@@ -55,7 +55,7 @@ function treegenerator($array, $i, $curent, $dop_cat_array) {
 function actionStart() {
     global $PHPShopGUI, $PHPShopOrm, $TitlePage, $select_name;
 
-    $PHPShopGUI->field_col = 4;
+    $PHPShopGUI->field_col = 5;
     PHPShopObj::loadClass("order");
 
     // Выборка
@@ -109,7 +109,7 @@ function actionStart() {
             ['ADV (реклама товарных предложений)', 'ADV', $data['model']],
         ];
 
-    $Tab1 = $PHPShopGUI->setField('Модель работы', $PHPShopGUI->setSelect('model_new', $models,'100%'));
+    $Tab1 = $PHPShopGUI->setField('Модель работы', $PHPShopGUI->setSelect('model_new', $models,'100%',true));
 
     if ($data['model'] === 'ADV' || $data['model'] === 'DBS') {
         $Tab1 .= $PHPShopGUI->setField('Пароль защиты файла', $PHPShopGUI->setInputText('http://' . $_SERVER['SERVER_NAME'] . '/yml/?pas=', 'password_new', $data['password']));
@@ -121,6 +121,7 @@ function actionStart() {
         $Tab1 .= $PHPShopGUI->setField('Авторизационный токен API', $PHPShopGUI->setInputText(null, 'auth_token_new', $data['auth_token']));
         $Tab1 .= $PHPShopGUI->setField('ID приложения Яндекс.OAuth', $PHPShopGUI->setInputText(null, 'client_id_new', $data['client_id']));
         $Tab1 .= $PHPShopGUI->setField('OAuth-токен', $PHPShopGUI->setInputText(null, 'client_token_new', $data['client_token']));
+        $Tab1 .= $PHPShopGUI->setField('Блокировать прием заказов', $PHPShopGUI->setCheckbox('stop_new', 1,null,$data['stop']));
 
         if ($data['model'] === 'FBS') {
             $Tab1 .= $PHPShopGUI->setField('Доставка для заказов с Маркета', $PHPShopGUI->setSelect('delivery_id_new', $delivery_value, 300, null));
@@ -390,6 +391,8 @@ function actionUpdate() {
     $_POST['region_data_new'] = 1;
     if (empty($_POST["use_params_new"]))
         $_POST["use_params_new"] = 0;
+    if (empty($_POST["stop_new"]))
+        $_POST["stop_new"] = 0;
 
     // Категории
     if (is_array($_POST['categories']) and $_POST['categories'][0] != 'null') {

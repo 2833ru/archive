@@ -40,13 +40,13 @@ function actionStart() {
             $row['pic_small'] = str_replace(array('.jpg', '.png'), array('s.jpg', 's.png'), $row['img']);
             $row['pic_source'] = str_replace(array('.jpg', '.png'), array('_big.jpg', '_big.png'), $row['img']);
 
-            if (!file_exists('../..' . $row['pic_small']))
+            if (!file_exists('../..' . $row['pic_small']) and !strstr($row['pic_small'],'http'))
                 $error[] = $row['pic_small'];
 
-            if (!file_exists('../..' . $row['pic_big']))
+            if (!file_exists('../..' . $row['pic_big']) and !strstr($row['pic_big'],'http'))
                 $error[] = $row['pic_big'];
 
-            if (!empty($image_source) and !file_exists('../..' . $row['pic_source']))
+            if (!empty($image_source) and !file_exists('../..' . $row['pic_source']) and !strstr($row['pic_source'],'http'))
                 $error[] = $row['pic_source'];
 
             if (!empty($error) and is_array($error)) {

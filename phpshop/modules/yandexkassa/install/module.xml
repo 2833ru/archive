@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.5</version>
+    <version>1.6</version>
     <name>ЮKassa</name>
     <faqlink>https://docs.phpshop.ru/moduli/platezhnye-sistemy/yookassa</faqlink>
     <description>Прием оплат через ЮKassa в соответствии с 54-ФЗ.</description>
     <category>payment</category>
     <status>Hit</status>
-    <sign>1605773063</sign>
+    <sign>1638880478</sign>
     <adminmenu>
         <title>ЮKassa</title>
         <capability>true</capability>

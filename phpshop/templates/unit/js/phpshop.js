@@ -1486,7 +1486,7 @@ $(document).ready(function () {
         addToCartList($(this).attr('data-uid'), $(this).attr('data-num'));
         $(this).attr('disabled', 'disabled');
         $(this).addClass('btn-success');
-        $(this).html('В корзине <span class="icons icons-incart"></span>')
+        $(this).html(locale.incart + ' <span class="icons icons-incart"></span>')
         $('#order').addClass('active');
     });
 
@@ -1732,7 +1732,7 @@ $(document).ready(function () {
             // Размер
             if ($('input[name="parentColor"]').val() === undefined && $('input[name="parentSize"]:checked').val() !== undefined) {
                 addToCartList($('input[name="parentSize"]:checked').val(), count, $('input[name="parentSize"]:checked').attr('data-parent'));
-                $(this).html('В корзине <span class="icons icons-incart"></span>')
+                $(this).html(locale.incart+' <span class="icons icons-incart"></span>')
             }
             // Размер  и цвет
             else if ($('input[name="parentSize"]:checked').val() > 0 && $('input[name="parentColor"]:checked').val() > 0) {
@@ -1740,7 +1740,7 @@ $(document).ready(function () {
                 var color = $('input[name="parentColor"]:checked').attr('data-color');
                 var size = $('input[name="parentSize"]:checked').attr('data-name');
                 var parent = $('input[name="parentColor"]:checked').attr('data-parent');
-                $(this).html('В корзине <span class="icons icons-incart"></span>')
+                $(this).html(locale.incart+' <span class="icons icons-incart"></span>')
                 $.ajax({
                     url: ROOT_PATH + '/phpshop/ajax/option.php',
                     type: 'post',
@@ -1751,7 +1751,7 @@ $(document).ready(function () {
                         if (json['id'] > 0) {
                             if ($('input[name="parentSize"]:checked').val() > 0 && $('input[name="parentColor"]:checked').val() > 0) {
                                 addToCartList(json['id'], count, $('input[name="parentColor"]:checked').attr('data-parent'));
-                                $(this).html('В корзине <span class="icons icons-incart"></span>')
+                                $(this).html(locale.incart+' <span class="icons icons-incart"></span>')
                             } else {
                                 blinkParentVariants();
                                 showAlertMessage($('#parentSizeMessage').html());
@@ -1775,7 +1775,7 @@ $(document).ready(function () {
 
             if (optionCheck) {
                 addToCartList($(this).attr('data-uid'), count, $(this).attr('data-uid'), optionValue);
-                $(this).html('В корзине <span class="icons icons-incart"></span>')
+                $(this).html(locale.incart+'<span class="icons icons-incart"></span>')
             } else {
                 showAlertMessage($('#optionMessage').html());
                 blinkOptions();
@@ -1784,7 +1784,7 @@ $(document).ready(function () {
         // Обычный товар
         else {
             addToCartList($(this).attr('data-uid'), count);
-            $(this).html('В корзине <span class="icons icons-incart"></span>')
+            $(this).html(locale.incart+' <span class="icons icons-incart"></span>')
         }
 
     });

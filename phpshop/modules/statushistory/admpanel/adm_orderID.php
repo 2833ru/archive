@@ -8,8 +8,9 @@ function addModStatusHistory($data) {
     
     // Вывод вкладки истории
     $PHPShopStatusHistory = new PHPShopStatusHistory();
-    $Tab111 = $PHPShopStatusHistory->table($data['id']);
-    $PHPShopGUI->addTab(array("История статусов", $Tab111));
+    $Tab = $PHPShopStatusHistory->table($data['id']);
+    if(!empty($Tab))
+    $PHPShopGUI->addTab(array("История статусов", $Tab));
 }
 
 function updateModStatusHistory($post) {

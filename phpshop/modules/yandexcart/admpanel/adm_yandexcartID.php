@@ -11,12 +11,14 @@ function actionStart() {
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . $_GET['id']));
     
     // Панель заголовка
-    $PHPShopGUI->setActionPanel($TitlePage. ' №'.$data['order_id'], $select_name, array('Закрыть'));
+    $PHPShopGUI->setActionPanel($TitlePage. ' &#8470; '.$data['order_id'], $select_name, array('Закрыть'));
 
     // Переводим в читаемый вид
     ob_start();
     print_r(unserialize($data['message']));
     $log = ob_get_clean();
+    
+    
 
     $Tab1 = $PHPShopGUI->setTextarea(null, PHPShopString::utf8_win1251($log), "none", false, '450');
 

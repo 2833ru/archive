@@ -76,7 +76,7 @@ function actionStart() {
 
     $GLOBALS['tree_array'] = &$tree_array;
 
-    $tree_select = '<select class="selectpicker show-menu-arrow hidden-edit" data-container=""  data-style="btn btn-default btn-sm" name="category_new" data-width="100%">';
+    $tree_select = '<select class="selectpicker show-menu-arrow hidden-edit" data-container="body"  data-style="btn btn-default btn-sm" name="category_new" data-width="100%">';
 
     $tree_array[0]['sub'][1000] = __('Главное меню сайта');
     $tree_array[0]['sub'][2000] = __('Начальная страница');
@@ -117,12 +117,12 @@ function actionStart() {
             $PHPShopGUI->setField("Сортировка", $PHPShopGUI->setInputText("№", "num_new", $data['num'], 150)) .
             $PHPShopGUI->setField("URL Ссылка", $PHPShopGUI->setInputText('/page/', "link_new", $data['link'], '100%', '.html')) .
             $PHPShopGUI->setField("Опции вывода:", $PHPShopGUI->setSelect("enabled_new", $SelectValue, 300, true)
-            );
-    
+    );
+
     if ($data['category'] != 2000)
         $Tab_info .= $PHPShopGUI->setField("Подвал", $PHPShopGUI->setCheckbox('footer_new', 1, 'Главное меню в подвале', $data['footer']));
 
-    $Tab_info = $PHPShopGUI->setCollapse('Информация',$Tab_info);
+    $Tab_info = $PHPShopGUI->setCollapse('Информация', $Tab_info);
 
     // Содержание закладки 3
     if ($data['category'] != 2000) {
@@ -162,13 +162,16 @@ function actionStart() {
 
     $Tab_sec = $PHPShopGUI->setCollapse('Доступность', $TabSec . $PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/')));
 
+    // Запрос модуля на закладку
+    $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
+
     // Вывод формы закладки
     if (!empty($data['category']) and $data['category'] != 2000 and $data['category'] != 1000) {
         $Tab_content = $PHPShopGUI->setCollapse("Анонс", $oFCKeditor2->AddGUI());
         $Tab_description = $PHPShopGUI->setCollapse("Содержание", $oFCKeditor->AddGUI());
         $PHPShopGUI->setTab(array("Основное", $Tab_content . $Tab_info . $Tab_seo . $Tab_description . $Tab_dop . $Tab_sec, true, false, true));
     } else {
-        
+
         $Tab_description = $PHPShopGUI->setCollapse("Содержание", $oFCKeditor->AddGUI());
 
         if ($data['category'] == 2000)
@@ -178,9 +181,6 @@ function actionStart() {
 
         $PHPShopGUI->setTab(array("Основное", $Tab_description . $Tab_info . $Tab_seo . $Tab_dop . $Tab_sec, true, false, true));
     }
-
-    // Запрос модуля на закладку
-    $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("submit", "saveID", "ОК", "right", 70, "", "but", "actionInsert.page.create");

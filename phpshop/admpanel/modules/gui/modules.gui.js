@@ -29,9 +29,18 @@ $().ready(function () {
                     function () {
                         $(this).find('#dropdown_action').hide();
                     });
-                    
+
             // Toggle
             $('.toggle-event').bootstrapToggle();
+
+            // Установленные модули
+            $('table#data tr').each(function (key, value) {
+                if (key > 0) {
+                    if ($(value).find('.install-date').html() != '') {
+                        $(value).addClass('success');
+                    }
+                }
+            });
         },
 
     });

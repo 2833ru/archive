@@ -117,7 +117,7 @@ class PHPShopOneclick extends PHPShopCore {
                 }
 
                 echo json_encode([
-                    'message' => PHPShopString::win_utf8(__($message)),
+                    'message' => PHPShopString::win_utf8($message),
                     'success' => true
                 ]);
                 exit;
@@ -239,7 +239,7 @@ class PHPShopOneclick extends PHPShopCore {
         $insert['fio_new'] = $name;
         $insert['tel_new'] = $phone;
         $insert['statusi_new'] = $this->system['status'];
-        $insert['status_new'] = serialize(array("maneger" => 'Áûñòğûé çàêàç'));
+        $insert['status_new'] = serialize(array("maneger" => __('Áûñòğûé çàêàç')));
 
         // Çàïèñü â áàçó
         $PHPShopOrm->insert($insert);

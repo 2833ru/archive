@@ -328,6 +328,9 @@ function actionStart() {
            <td><a href="?path=modules" class="treegrid-parent" data-parent="treegrid-all">' . __('Все модули') . '</a> <span class="label label-primary pull-right">103</span></td>
 	</tr>
         <tr class="treegrid-template">
+           <td><a href="?path=modules&cat=pro" class="treegrid-parent" data-parent="treegrid-template">' . __('Pro') . '</a> <span class="label label-primary pull-right">9</span></td>
+	</tr>
+        <tr class="treegrid-template">
            <td><a href="?path=modules&cat=template" class="treegrid-parent" data-parent="treegrid-template">' . __('Дизайн') . '</a> <span class="label label-primary pull-right">8</span></td>
 	</tr>
         <tr class="treegrid-soc">
@@ -337,13 +340,13 @@ function actionStart() {
            <td><a href="?path=modules&cat=seo" class="treegrid-parent" data-parent="treegrid-seo">SEO</a> <span class="label label-primary pull-right">6</span></td>
 	</tr>
         <tr class="treegrid-delivery">
-           <td><a href="?path=modules&cat=delivery" class="treegrid-parent" data-parent="treegrid-delivery">' . __('Доставка') . '</a> <span  class="label label-primary pull-right">13</span></td>
+           <td><a href="?path=modules&cat=delivery" class="treegrid-parent" data-parent="treegrid-delivery">' . __('Доставка') . '</a> <span  class="label label-primary pull-right">12</span></td>
 	</tr>
         <tr class="treegrid-chat">
            <td><a href="?path=modules&cat=chat" class="treegrid-parent" data-parent="treegrid-delivery">' . __('Чаты и звонки') . '</a> <span class="label label-primary pull-right">7</span></td>
 	</tr>
         <tr class="treegrid-crm">
-           <td><a href="?path=modules&cat=crm" class="treegrid-parent" data-parent="treegrid-crm">CRM</a> <span class="label label-primary pull-right">5</span></td>
+           <td><a href="?path=modules&cat=crm" class="treegrid-parent" data-parent="treegrid-crm">CRM</a> <span class="label label-primary pull-right">6</span></td>
 	</tr>
         <tr class="treegrid-payment">
            <td><a href="?path=modules&cat=payment" class="treegrid-parent" data-parent="treegrid-payment">' . __('Платежные системы') . '</a> <span class="label label-primary pull-right">27</span></td>

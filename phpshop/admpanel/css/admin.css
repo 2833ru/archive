@@ -272,7 +272,7 @@ img.media-object{
     padding-right: 0px;
     padding-left: 0px;
     margin-bottom:0px;
-    overflow: hidden;
+    overflow:  hidden;
 }
 
 .sidebarcontainer{
@@ -280,6 +280,7 @@ img.media-object{
     padding-right: 0px !important;
     margin-left: 0px !important;
     padding-left: 0px !important;
+    background-color: #FFF;
 }
 
 @media (min-width: 1200px) {
@@ -794,7 +795,7 @@ li.active .text-muted{
 .masonry-grid .col-block{
     break-inside: avoid-column;
     page-break-inside: avoid;
-    overflow: hidden; /* fix for firefox */
+    overflow: hidden;  /*fix for firefox */
 }
 
 .col-block {
@@ -834,4 +835,8 @@ li.active .text-muted{
 .toggle.btn-xs {
     min-width: 48px !important;
     min-height: 22px;
+}
+
+.modal-open {    
+    overflow: hidden;
 }

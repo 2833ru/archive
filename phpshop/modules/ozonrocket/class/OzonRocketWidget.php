@@ -120,8 +120,8 @@ class OzonRocketWidget
             $this->log(
                 ['error' => $exception->getMessage()],
                 $order['id'],
-                'Ошибка передачи заказа',
-                'Передача заказа службе доставки Ozon Rocket',
+                __('Ошибка передачи заказа'),
+                __('Передача заказа службе доставки Ozon Rocket'),
                 'error'
             );
             return;
@@ -148,7 +148,7 @@ class OzonRocketWidget
                 'quantity' => $item['num'],
                 'vat' => [
                     'rate' => $nds,
-                    'sum' => $cart['Cart']['dostavka'] * ($nds / 100)
+                    'sum' => $item['total'] * ($nds / 100)
                 ],
                 'attributes' => ['isDangerous' => false],
                 'resideInPackages' =>[ (string) $number]
@@ -198,11 +198,17 @@ class OzonRocketWidget
             ]
         ];
         $result = $this->request(self::CREATE_ORDER_METHOD, $parameters);
+        
+        // Статус отправки заказа
+        if(isset($result['errorCode']))
+            $status = __('Ошибка передачи заказа');
+        else $status = __('Успешная передача заказа');
+        
         $this->log(
             ['response' => $result, 'parameters' => $parameters],
             $order['id'],
-            'Успешная передача заказа',
-            'Передача заказа службе доставки Ozon Rocket',
+            $status,
+            __('Передача заказа службе доставки Ozon Rocket'),
             'success'
         );
     }
@@ -324,7 +330,7 @@ class OzonRocketWidget
 
         $ozonRocketData = serialize(array(
             'status'        => $this->options['status'],
-            'status_text'   => 'Ожидает отправки в Ozon',
+            'status_text'   => __('Ожидает отправки в Ozon'),
             'address' => PHPShopString::utf8_win1251($_POST['address']),
             'delivery_id' => $_POST['delivery_id'],
             'delivery_type' => PHPShopString::utf8_win1251($_POST['delivery_type'])

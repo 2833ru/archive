@@ -46,16 +46,16 @@ function actionStart() {
 
 
     $status_array = array(
-        0 => '<span>Новая заявка</span>',
-        1 => '<span class="text-warning">Ожидание ответа</span>',
-        2 => '<span class="text-success">Есть ответ</span>',
-        3 => '<span class="text-muted">Выполнено</span>',
+        0 => '<span>'.__('Новая заявка').'</span>',
+        1 => '<span class="text-warning">'.__('Ожидание ответа').'</span>',
+        2 => '<span class="text-success">'.__('Есть ответ').'</span>',
+        3 => '<span class="text-muted">'.__('Выполнено').'</span>',
     );
 
     if (is_array($dataArray))
         foreach ($dataArray as $row) {
 
-            $PHPShopInterface->setRow(array('name' => $row['subject'], 'link' => '?path=' . $_GET['path'] . '&id=' . $row['id'] . '#m', 'align' => 'left'), array('name' => $row['id'], 'align' => 'left'), array('name' => $row['lastchange'], 'align' => 'center'), $status_array[$row['status']]);
+            $PHPShopInterface->setRow(array('name' => __($row['subject']), 'link' => '?path=' . $_GET['path'] . '&id=' . $row['id'] . '#m', 'align' => 'left'), array('name' => $row['id'], 'align' => 'left'), array('name' => $row['lastchange'], 'align' => 'center'), $status_array[$row['status']]);
         }
 
     $PHPShopInterface->Compile();

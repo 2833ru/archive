@@ -37,7 +37,7 @@ function actionStart() {
 
     // Выборка
     $data = $PHPShopOrm->select();
-
+    
     $Tab1 = $PHPShopGUI->setField('Ссылка на оплату', $PHPShopGUI->setInputText(false, 'title_new', $data['title'], 300));
     $Tab1 .= $PHPShopGUI->setField('ShopID', $PHPShopGUI->setInputText(false, 'shop_id_new', $data['shop_id'], 300));
     $Tab1 .= $PHPShopGUI->setField('Секретный ключ', $PHPShopGUI->setInputText(false, 'api_key_new', $data['api_key'], 300));
@@ -45,7 +45,7 @@ function actionStart() {
     $Tab1 .= $PHPShopGUI->setField('Описание оплаты', $PHPShopGUI->setTextarea('title_end_new', $data['title_end'], true, 300));
 
     // Форма регистрации
-    $Tab3 = $PHPShopGUI->setPay(false, false, $data['version'], false);
+    $Tab3 = $PHPShopGUI->setPay(false, false, $data['version'], true);
 
     $protocol = YandexKassa::isHttps() ? 'https://' : 'http://';
 

@@ -36,12 +36,14 @@
         <link href="@pageCss@" rel="stylesheet">
         <link id="bootstrap_theme" data-name="@php echo $_SESSION['skin']; php@" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/@astero_theme@.css" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700&display=swap&subset=cyrillic" rel="stylesheet">
-	        <!-- Стикер-полоска -->
-	        <div class="top-banner @php __hide('sticker_close','cookie'); php@">
-				<div class="sticker-text">@sticker_top@</div>
-				<span class="close sticker-close">x</span>
-			</div>
-			<!-- /Стикер-полоска -->
+            <!-- Стикер-полоска -->
+            <div class="@php __hide('sticker_top'); php@">
+                <div class="top-banner @php __hide('sticker_close','cookie'); php@">
+                    <div class="sticker-text">@sticker_top@</div>
+                    <span class="close sticker-close">x</span>
+                </div>
+            </div>
+            <!-- /Стикер-полоска -->
         <!-- Header Section Starts -->
         <header id="header-area">
             <!-- Nested Container Starts -->
@@ -302,6 +304,9 @@
         <a href="#" id="toTop"><span id="toTopHover"></span>{Наверх}</a>
     </div>
     <!--/ toTop -->
+    
+    
+    @editor@
 
     <!-- Footer Section Starts -->
     <footer class="visible-sm visible-md visible-lg" id="footer-area">
@@ -370,8 +375,6 @@
         <!-- Copyright Area Ends -->
     </footer>
     <!-- Footer Section Ends -->
-
-    @editor@
 
     <!-- Fixed mobile bar -->
     <div class="bar-padding-fix visible-xs"> </div>

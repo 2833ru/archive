@@ -14,7 +14,7 @@
         <input placeholder="{Пароль}" type="password" name="password_new"  class="form-control"  required="" >
     </div>
     <div class="form-group" id="check_pass">
-        <input type="password" placeholder="Повторите пароль" name="password_new2"  class="form-control" required="">
+        <input type="password" placeholder="{Повторите пароль}" name="password_new2"  class="form-control" required="">
         <span class="glyphicon glyphicon-remove form-control-feedback hide" aria-hidden="true"></span>
     </div>
 

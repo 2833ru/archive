@@ -177,7 +177,7 @@ function actionStart() {
     $size_value[] = array('Среднее', 1, $data['size']);
     $size_value[] = array('Большое', 2, $data['size']);
 
-    $Tab_tip1 .= $PHPShopGUI->setField("Размер окна", $PHPShopGUI->setSelect('size_new', $size_value, 150));
+    $Tab_tip1 .= $PHPShopGUI->setField("Размер окна", $PHPShopGUI->setSelect('size_new', $size_value, 150,true));
 
     // Витрина
     $Tab2 .= $PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'));

@@ -96,7 +96,7 @@ class PHPShopCompare extends PHPShopCore {
             foreach ($cats as $catid => $name) {
                 if ((count($goods[$catid]) > 1) && (count($goods[$catid]) <= $limit)) {
                     if ($catid != $COMCID) {
-                        $as = '<b>' . __('Сравнить в категории') . '</b>: <a href="../compare/COMCID_' . $catid . '.html#list" title="' . __('Сравнить в') . ' ' . $name . '">';
+                        $as = '<b>' . __('Сравнить в категории') . '</b>: <a href="/compare/COMCID_' . $catid . '.html#list" title="' . __('Сравнить в') . ' ' . $name . '">';
                         $ae = '</a>';
                     } else {
                         $as = '<b>';
@@ -116,7 +116,7 @@ class PHPShopCompare extends PHPShopCore {
   </tr>';
                 }
                 foreach ($goods[$catid] as $id => $val) {
-                    $dis.='<tr><td>' . $val['name'] . ' </td><td width="50" class="text-center"><a href="../compare/DID_' . $val['id'] . '.html" class="btn btn-danger btn-xs" title="{Удалить}"><span>X</span></a></td></tr>';
+                    $dis.='<tr><td>' . $val['name'] . ' </td><td width="50" class="text-center"><a href="/compare/DID_' . $val['id'] . '.html" class="btn btn-danger btn-xs" title="{Удалить}"><span>X</span></a></td></tr>';
                 }
             }
 
@@ -125,7 +125,7 @@ class PHPShopCompare extends PHPShopCore {
             $name = 'по всем категориям';
             if ((count($compare) > 1) && (count($compare) <= $limit)) {
                 if ($COMCID != "ALL") {
-                    $as = '<a href="../compare/COMCID_ALL.html#list" title="' . __('Сравнить по ВСЕМ категориям') . '"><span class="glyphicon glyphicon-ok"></span> ' . __('Сравнить') . ' ';
+                    $as = '<a href="/compare/COMCID_ALL.html#list" title="' . __('Сравнить по ВСЕМ категориям') . '"><span class="glyphicon glyphicon-ok"></span> ' . __('Сравнить') . ' ';
                     $ae = '</a>';
                 } else {
                     $as = '<b>' . __('Сравнивается') . ': ';

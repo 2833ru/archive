@@ -108,7 +108,13 @@ function _tpl($file) {
 function actionStart() {
     global $PHPShopGUI, $TitlePage, $PHPShopSystem, $selectModalBody;
 
-    $PHPShopGUI->addJSFiles('./js/jquery.waypoints.min.js', './js/jquery.treegrid.js', './tpleditor/gui/tpleditor.gui.js', './tpleditor/gui/ace/ace.js', './js/bootstrap-tour.min.js', './tpleditor/gui/tour.gui.js');
+    $PHPShopGUI->addJSFiles('./js/jquery.waypoints.min.js', './js/jquery.treegrid.js', './tpleditor/gui/tpleditor.gui.js', './tpleditor/gui/ace/ace.js', './js/bootstrap-tour.min.js');
+    
+    if ($GLOBALS['PHPShopBase']->codBase == 'utf-8')
+        $PHPShopGUI->addJSFiles('./tpleditor/gui/tour_utf.gui.js');
+    else
+        $PHPShopGUI->addJSFiles('./tpleditor/gui/tour.gui.js');
+    
     $ace = false;
 
     if (empty($_GET['option']) or $_GET['option'] == 'lite') {

@@ -12,6 +12,8 @@ PHPShopObj::loadClass('orm');
 PHPShopObj::loadClass('system');
 PHPShopObj::loadClass('security');
 PHPShopObj::loadClass('order');
+PHPShopObj::loadClass("lang");
+$PHPShopLang = new PHPShopLang(array('locale' => $_SESSION['lang'], 'path' => 'admin'));
 
 $PHPShopBase->chekAdmin();
 

@@ -113,12 +113,9 @@ class PHPShopString {
     static function toLatin($str) {
         $str = strtolower($str);
 
-        // Коррекция первого символа
-        /*
-        $num = intval($str);
-        if (!empty($num))
-            $str = '_' . $str;
-         */
+        // UTF Fix
+        if ($GLOBALS['PHPShopBase']->codBase == 'utf-8')
+            $str =  iconv( "utf-8","windows-1251//IGNORE", $str);
 
         $str = str_replace("&nbsp;", "", $str);
         $str = str_replace("/", "-", $str); // Добавлено для SeoPro

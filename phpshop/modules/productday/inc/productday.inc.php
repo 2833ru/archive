@@ -34,12 +34,12 @@ class ProductDay extends PHPShopProductElements {
 
         $productday = $PHPShopOrm->select(array('*'), $where, array('order' => 'datas desc'), array('limit' => 1));
 
-        // Добавляем время начала отображения
-       if(!empty($productday['productday_time']) and (int) $productday['productday_time'] === 0) {
+       // Добавляем время начала отображения
+       if((int) $productday['productday_time'] === 0) {
            $this->setStartTime($productday['id']);
         }
         // Если время больше чем указано в настройках. Иначе ломается шаблон.
-        if(!empty($this->option['time']) and (int) date("H") >= (int) $this->option['time']) {
+        if((int) date("H") >= (int) $this->option['time']) {
             return true;
         }
 

@@ -30,7 +30,7 @@ function template_pricecore_product_hook($obj, $category, $rout) {
         // Добавляем в дизайн ячейки с товарами
         if (is_array($data))
             foreach ($data as $row) {
-                $name = '<a href="' . $obj->seourl($row) . '" class="list-group-item">' . $row['name'] ;
+                $name = '<a href="' . $GLOBALS['SysValue']['dir']['dir'].$obj->seourl($row) . '" class="list-group-item">' . $row['name'] ;
                 if (empty($row['sklad']) and empty($user_price_activate))
                     $cart = '<button class="btn btn-default btn-xs  addToCartList" data-uid="' . $row['id'] . '">'.$obj->lang('product_sale').'</button>';
                 if (empty($user_price_activate))
@@ -84,7 +84,7 @@ function template_pricecore_CAT_hook($obj, $data, $rout) {
 }
 
 function template_category_select_hook($obj) {
-    $catdrop = '<li role="presentation"><a role="menuitem" tabindex="-1" href="/price/CAT_SORT_ALL.html">Все каталоги</a></li>';
+    $catdrop = '<li role="presentation"><a role="menuitem" tabindex="-1" href="/price/CAT_SORT_ALL.html">'.__('Все каталоги').'</a></li>';
     if (is_array($obj->category_array))
         foreach ($obj->category_array as $k => $v) {
             $catdrop.='<li role="presentation"><a role="menuitem" tabindex="-1" href="/price/CAT_SORT_' . $k . '.html">' . $v . '</a></li>';

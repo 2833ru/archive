@@ -29,8 +29,8 @@ function cdekAdminWidgetOnChoose(result)
         async: false,
         success: function(json) {
             if(json['success']) {
-                if(Number($.getUrlVar('tab')) !== 101) {
-                    window.location.href += '&tab=101';
+                if(Number($.getUrlVar('tab')) !== 4) {
+                    window.location.href += '&tab=4';
                 } else {
                     location.reload();
                 }
@@ -42,8 +42,8 @@ function cdekAdminWidgetOnChoose(result)
 }
 
 $(document).ready(function () {
-    if(Number($.getUrlVar('tab')) === 101) {
-        $('a[href="#tabs-101"]').tab('show');
+    if(Number($.getUrlVar('tab')) === 4) {
+        $('a[href="#tabs-4"]').tab('show');
     }
 
     if (typeof $('#body').attr('data-token') !== 'undefined' && $('#body').attr('data-token').length)
@@ -83,8 +83,8 @@ $(document).ready(function () {
             async: false,
             success: function(json) {
                 if(json['success']) {
-                    if(Number($.getUrlVar('tab')) !== 101) {
-                        window.location.href += '&tab=101';
+                    if(Number($.getUrlVar('tab')) !== 4) {
+                        window.location.href += '&tab=4';
                     } else {
                         location.reload();
                     }
@@ -99,7 +99,7 @@ $(document).ready(function () {
     // Изменение статуса оплаты
     $('#payment_status').on('change', function () {
         var paymentStatus = 0;
-        if($('#payment_status').prop('checked')) {
+        if($(this).prop('checked') === true) {
             paymentStatus = 1;
         }
         $.ajax({
@@ -111,8 +111,8 @@ $(document).ready(function () {
             async: false,
             success: function(json) {
                 if(json['success']) {
-                    if(Number($.getUrlVar('tab')) !== 101) {
-                        window.location.href += '&tab=101';
+                    if(Number($.getUrlVar('tab')) !== 4) {
+                        window.location.href += '&tab=4';
                     } else {
                         location.reload();
                     }

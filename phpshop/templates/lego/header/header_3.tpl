@@ -35,9 +35,14 @@
 
         </div>
     </div>
-    <div class="top-banner @php __hide('sticker_close','cookie'); php@">
-        <div class="sticker-text">@sticker_top@</div><span class="close sticker-close"><i class="fal fa-times" aria-hidden="true"></i></span>
+    <!-- Стикер-полоска -->
+    <div class="@php __hide('sticker_top'); php@">
+        <div class="top-banner @php __hide('sticker_close','cookie'); php@">
+            <div class="sticker-text">@sticker_top@</div>
+            <span class="close sticker-close">x</span>
+        </div>
     </div>
+    <!-- /Стикер-полоска -->
     <div class="top-menu hidden">
         <div class="container-fluid">
             <div class="row">
@@ -128,14 +133,14 @@
             <div class="navbar-header"></div>
             <div id="navbar" class="navbar-collapse collapse">
                 <label class="btn-menu visible-xs btn-menu-left">
-                     <span class="f-block">
-                         <span class="f-block-wrapper">
-                             <span class="first"></span>
-                             <span class="second"></span>
-                             <span class="third"></span>
-                         </span>
-                         {Каталог}
-                     </span>
+                    <span class="f-block">
+                        <span class="f-block-wrapper">
+                            <span class="first"></span>
+                            <span class="second"></span>
+                            <span class="third"></span>
+                        </span>
+                        {Каталог}
+                    </span>
                 </label>
                 <ul class="nav navbar-nav main-menu">
                     <!-- dropdown catalog menu -->
@@ -209,7 +214,7 @@
                         </span>
                     </div>
                 </form>	
-				<a href="/order/" class="btn-menu visible-xs"><span class="icons-cart"></span></a>
+                <a href="/order/" class="btn-menu visible-xs"><span class="icons-cart"></span></a>
                 <label class="btn-menu btn-menu-right visible-xs" for="hmt">
                     <span class="f-block-wrapper">
                         <span class="first"></span>

@@ -34,7 +34,7 @@ $().ready(function() {
             data.push({name: 'items_new', value: items});
             data.push({name: 'price_new', value: price});
             data.push({name: 'parent2_new', value: escape(parent2)});
-            data.push({name: 'name_new', value: escape($('input[name="name_new"]').val() + ' ' + name + ' ' + parent2)});
+            data.push({name: 'name_new', value: escape($('[name="name_new"]').val() + ' ' + name + ' ' + parent2)});
             data.push({name: 'parent_enabled_new', value: 1});
             data.push({name: 'enabled_new', value: 1});
             data.push({name: 'ajax', value: 1});
@@ -316,6 +316,7 @@ $().ready(function() {
         data.push({name: 'selectID', value: 2});
         data.push({name: 'ajax', value: 1});
         data.push({name: 'actionList[selectID]', value: 'actionSearch'});
+        data.push({name: 'frame', value: $('#frame').val()});
 
         $.ajax({
             mimeType: 'text/html; charset='+locale.charset,
@@ -367,6 +368,7 @@ $().ready(function() {
         data.push({name: 'ajax', value: 1});
         data.push({name: 'currentID', value: $(selectTarget).val()});
         data.push({name: 'actionList[selectID]', value: 'actionSearch'});
+        data.push({name: 'frame', value: $.getUrlVar('frame')});
 
         $.ajax({
             mimeType: 'text/html; charset='+locale.charset,

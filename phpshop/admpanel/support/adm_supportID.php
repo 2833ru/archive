@@ -36,14 +36,8 @@ function actionStart() {
     else
         $status_off = null;
 
-    $status_array = array(
-        1 => '<span class="text-warning">Ожидание ответа</span>',
-        2 => '<span class="text-success">Есть ответ</span>',
-        3 => '<span class="text-muted">Выполнено</span>',
-    );
-
     $PHPShopGUI->action_button['Выполнено'] = array(
-        'name' => 'Заявка выполнена',
+        'name' => __('Заявка выполнена'),
         'class' => 'btn btn-default btn-sm navbar-btn support-close ' . $status_off,
         'type' => 'button',
         'icon' => 'glyphicon glyphicon-ok',
@@ -51,7 +45,7 @@ function actionStart() {
     );
 
     $PHPShopGUI->action_button['PUSH'] = array(
-        'name' => 'Подписаться на уведомления',
+        'name' => __('Подписаться на уведомления'),
         'class' => 'btn btn-default btn-sm navbar-btn btn-action-panel-blank '. $status_off,
         'type' => 'button',
         'action'=>'https://help.phpshop.ru/ticket/?track='.$dataArrayTrack[0]['trackid'],
@@ -89,7 +83,7 @@ function actionStart() {
               <div class="received_msg">
                 <div class="received_withd_msg">
                    <span class="time_date">' . $dataArrayTrack[0]['dt'] . '</span>
-                  <p>' . preg_replace_callback("/@([a-zA-Z0-9_]+)@/", 'set_kbd', $dataArrayTrack[0]['message']) . '</p>
+                  <p>' . preg_replace_callback("/@([a-zA-Z0-9_]+)@/", 'set_kbd', __($dataArrayTrack[0]['message'])) . '</p>
                     <span class="time_date">' . $flist . '</span>
                  </div>
               </div>
@@ -110,7 +104,7 @@ function actionStart() {
         $dataArray = readDatabase($path, "row");
     }
 
-    $PHPShopGUI->setActionPanel(__("Тикет") . " №" . $_GET['id'] . ' / ' . $dataArrayTrack[0]['subject'], false, array('PUSH','Выполнено'));
+    $PHPShopGUI->setActionPanel(__("Тикет") . " &#8470; " . $_GET['id'] . ' / ' . __($dataArrayTrack[0]['subject']), false, array('PUSH','Выполнено'));
 
     if (is_array($dataArray))
         foreach ($dataArray as $row) {
@@ -148,7 +142,7 @@ function actionStart() {
               <div class="received_msg">
                 <div class="received_withd_msg">
                    <span class="time_date">' . $row['dt'] . '</span>
-                    <p>' . $row['message'] . '</p>
+                    <p>' . __($row['message']) . '</p>
                     <span class="time_date"><div class="row">' . $flist . '</div></span>
                  </div>
               </div>
@@ -157,8 +151,8 @@ function actionStart() {
                 $message .= '
             <div class="outgoing_msg">
               <div class="sent_msg">
-                <span class="time_date text-right">' . $row['name'] . ': ' . $row['dt'] . '</span>
-                <p>' . $row['message'] . '</p>
+                <span class="time_date text-right">' . __($row['name']) . ': ' . $row['dt'] . '</span>
+                <p>' . __($row['message']) . '</p>
                 <span class="time_date"><div class="row">' . $flist . '</div></span>
                </div>
             </div>';
@@ -223,7 +217,7 @@ function actionClose() {
 function actionReplies() {
     global $License;
 
-    $path = 'https://help.phpshop.ru/base-xml-manager/search/xml.php?s=' . $License['License']['Serial'] . '&u=' . $License['License']['DomenLocked'] . '&id=' . intval($_GET['id']) . '&do=insert';
+    $path = 'https://help.phpshop.ru/base-xml-manager/search/xml.php?s=' . $License['License']['Serial'] . '&u=' . $License['License']['DomenLocked'] . '&id=' . intval($_GET['id']) . '&do=insert&code='.$GLOBALS['PHPShopBase']->codBase;
     $ch = curl_init();
 
     if (!empty($_POST['attachment'])) {

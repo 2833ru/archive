@@ -35,9 +35,16 @@
 
         </div>
     </div>
-    <div class="top-banner @php __hide('sticker_close','cookie'); php@">
-        <div class="sticker-text">@sticker_top@</div><span class="close sticker-close"><i class="fal fa-times" aria-hidden="true"></i></span>
+
+    <!-- Стикер-полоска -->
+    <div class="@php __hide('sticker_top'); php@">
+        <div class="top-banner @php __hide('sticker_close','cookie'); php@">
+            <div class="sticker-text">@sticker_top@</div>
+            <span class="close sticker-close">x</span>
+        </div>
     </div>
+    <!-- /Стикер-полоска -->
+
     <div class="top-menu">
         <div class="container-fluid">
             <div class="row">
@@ -187,7 +194,7 @@
                             </li>
                         </ul>
                     </div>
-					<a href="/order/" class="btn-menu visible-xs"><span class="icons-cart"></span></a>
+                    <a href="/order/" class="btn-menu visible-xs"><span class="icons-cart"></span></a>
                     <label class="btn-menu btn-menu-right visible-xs" for="hmt">
                         <span class="f-block-wrapper">
                             <span class="first"></span>

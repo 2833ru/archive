@@ -62,7 +62,7 @@ function notice_list($obj) {
     if ($table . $table_archive)
         $disp = $table . $table_archive;
     else
-        $disp = "У Вас нет уведомлений.";
+        $disp = __("У Вас нет уведомлений.");
 
     $obj->set('formaTitle', __('Уведомления'));
     $obj->set('formaContent', $disp);

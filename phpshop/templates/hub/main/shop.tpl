@@ -13,7 +13,7 @@
         <link rel="mask-icon" href="@icon@" >
         <link rel="icon" href="@icon@" type="image/x-icon">
         <link rel="mask-icon" href="@icon@" >
-        
+
         <!-- OpenGraph -->
         <meta property="og:title" content="@ogTitle@">
         <meta property="og:image" content="http://@serverName@@ogImage@">
@@ -38,12 +38,15 @@
 
         <!-- Theme -->
         <link id="bootstrap_theme" data-name="@php echo $_SESSION['skin']; php@" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/@hub_theme@.css" rel="stylesheet">  
-	        <!-- Стикер-полоска -->
-	        <div class="top-banner @php __hide('sticker_close','cookie'); php@">
-				<div class="sticker-text">@sticker_top@</div>
-				<span class="close sticker-close">x</span>
-			</div>
-			<!-- /Стикер-полоска -->
+
+        <!-- Стикер-полоска -->
+        <div class="@php __hide('sticker_top'); php@">
+            <div class="top-banner @php __hide('sticker_close','cookie'); php@">
+                <div class="sticker-text">@sticker_top@</div>
+                <span class="close sticker-close">x</span>
+            </div>
+        </div>
+        <!-- /Стикер-полоска -->
 
         <!-- Header Section Starts -->
         <header>
@@ -333,10 +336,10 @@
                         <h5>{Контакты}</h5>
                         <ul>
                             <li class="footer-map">@streetAddress@</li>
-                             <li class="footer-map">@workingTime@</li>
-                             <li class="footer-map">@telNum@</li>
+                            <li class="footer-map">@workingTime@</li>
+                            <li class="footer-map">@telNum@</li>
                             <li class="footer-map">@telNum2@</li>
-                            
+
                             <li class="footer-email"><a href="mailto:@adminMail@">@adminMail@</a></li>                              
                         </ul>
                         <div class="form-group">

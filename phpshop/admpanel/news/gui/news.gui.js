@@ -58,22 +58,6 @@ $().ready(function() {
     }
 
 
-
-    // Применение темы оформления
-    $('#theme_new').on('changed.bs.select', function() {
-        theme_new = true;
-    });
-
-    // закрепление навигации
-    if ($('#fix-check').length && typeof(WAYPOINT_LOAD) != 'undefined')
-        var waypoint = new Waypoint({
-            element: document.getElementById('fix-check'),
-            handler: function(direction) {
-                $('.navbar-action').toggleClass('navbar-fixed-top');
-            },
-            offset: '10%'
-        });
-
     $(".tree a[data-view]").on('click', function(event) {
         event.preventDefault();
 
@@ -143,7 +127,6 @@ $().ready(function() {
     });
 
 
-
     // Указать ID товара в виде тега  - 1 шаг
     $(".tag-search").on('click', function(event) {
         event.preventDefault();
@@ -198,4 +181,3 @@ $().ready(function() {
         });
 
 });
-    

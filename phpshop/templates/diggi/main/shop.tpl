@@ -49,12 +49,14 @@
         <!-- Theme -->
         <link id="bootstrap_theme" data-name="@php echo $_SESSION['skin']; php@" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/@diggi_theme@.css" rel="stylesheet">
 	
-                <!-- Стикер-полоска -->
-        <div class="top-banner @php __hide('sticker_close','cookie'); php@">
-            <div class="sticker-text">@sticker_top@</div>
-            <span class="close sticker-close">x</span>
-        </div>
-        <!-- /Стикер-полоска -->
+            <!-- Стикер-полоска -->
+            <div class="@php __hide('sticker_top'); php@">
+                <div class="top-banner @php __hide('sticker_close','cookie'); php@">
+                    <div class="sticker-text">@sticker_top@</div>
+                    <span class="close sticker-close">x</span>
+                </div>
+            </div>
+            <!-- /Стикер-полоска -->
 
         <!-- Header Section Starts -->
         <header id="header-area" class="header-wrap inner">
@@ -283,35 +285,7 @@
 
             <!-- Primary Content Starts -->
             <div class="col-md-9 col-xs-12 middle-content-block">
-                @DispShop@
-                <div class="col-md-12">
-                    <div class="row">
-                        <section class="products-list @php __hide('now_buying'); php@">
-                    <div class="swiper-slider-wrapper">
-                        <!-- Heading Starts -->
-                        <h2 class="product-head page-header swiper-title">{Сейчас покупают}</h2>
-                        <!-- Heading Ends -->
-                        <!-- Products Row Starts -->
-                        <div class="swiper-container nowBuy">
-                            <div class="swiper-wrapper">
-                                @nowBuy@
-                            </div>
-                        </div>
-                        <div class="swiper-button-prev-block">
-                            <div class="swiper-button-prev btn-prev3">
-                                <span class="glyphicon glyphicon-chevron-left"></span>
-                            </div>
-                        </div>
-                        <div class="swiper-button-next-block">
-                            <div class="swiper-button-next btn-next3">
-                                <span class="glyphicon glyphicon-chevron-right"></span>
-                            </div>
-                        </div>
-                        <!-- Products Row Ends -->
-                    </div>     
-                </section>
-                    </div>
-                </div>
+                @DispShop@ 
             </div>
             <div class="col-xs-12">
                 <div class="banner-block">
@@ -330,6 +304,9 @@
         <a href="#" id="toTop"><span id="toTopHover"></span></a>
     </div>
     <!--/ toTop -->
+    
+    
+    @editor@
 
     <!-- Footer Section Starts -->
     <footer class="visible-sm visible-md visible-lg" id="footer-area">
@@ -402,7 +379,6 @@
     </footer>
     <!-- Footer Section Ends -->
 
-    @editor@
 
     <!-- Fixed mobile bar -->
     <div class="bar-padding-fix visible-xs"> </div>

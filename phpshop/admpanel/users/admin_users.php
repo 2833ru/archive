@@ -42,7 +42,7 @@ function actionStart() {
         'type' => 'button',
         'locale'=>true,
         'icon' => 'glyphicon glyphicon-plus',
-        'tooltip' => 'data-toggle="tooltip" data-placement="left" title="Создание Администратора"'
+        'tooltip' => 'data-toggle="tooltip" data-placement="left" title="'.__('Создание Администратора').'"'
     );
 
 

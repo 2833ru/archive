@@ -31,17 +31,19 @@ function addMarketplacesTab($data) {
 }
 
 function updateMarketplaces($product) {
-    if(empty($_POST['google_merchant_new'])) {
-        $_POST['google_merchant_new'] = 0;
-    }
-    if(empty($_POST['cdek_new'])) {
-        $_POST['cdek_new'] = 0;
-    }
-    if(empty($_POST['aliexpress_new'])) {
-        $_POST['aliexpress_new'] = 0;
-    }
-    if(empty($_POST['sbermarket_new'])) {
-        $_POST['sbermarket_new'] = 0;
+    if (empty($_POST['ajax'])) {
+        if (empty($_POST['google_merchant_new'])) {
+            $_POST['google_merchant_new'] = 0;
+        }
+        if (empty($_POST['cdek_new'])) {
+            $_POST['cdek_new'] = 0;
+        }
+        if (empty($_POST['aliexpress_new'])) {
+            $_POST['aliexpress_new'] = 0;
+        }
+        if (empty($_POST['sbermarket_new'])) {
+            $_POST['sbermarket_new'] = 0;
+        }
     }
 }
 

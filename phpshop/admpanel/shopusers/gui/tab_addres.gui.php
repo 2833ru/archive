@@ -18,7 +18,7 @@ function tab_addres($row) {
         foreach ($mass['list'] as $adrId => $adresData) {
 
 
-            if (!empty($mass['main']) and $mass['main'] == $adrId)
+            if ($mass['main'] == $adrId)
                 $defaultChecked = 1;
             else
                 $defaultChecked = 0;
@@ -37,7 +37,7 @@ function tab_addres($row) {
                     $PHPShopGUI->setField("Код домофона", $PHPShopGUI->setInputText('', 'mass['.$adrId.'][door_phone_new]', @$adresData['door_phone_new'])) .
                     $PHPShopGUI->setField("Квартира", $PHPShopGUI->setInputText('', 'mass['.$adrId.'][flat_new]', @$adresData['flat_new'])) .
                     $PHPShopGUI->setField("Время доставки", $PHPShopGUI->setInputText('', 'mass['.$adrId.'][delivtime_new]', @$adresData['delivtime_new'])) .
-                    $PHPShopGUI->setField("Управление", $PHPShopGUI->setCheckbox('mass['.$adrId.'][default]', 1, 'Данные по умолчанию', $defaultChecked).$PHPShopGUI->setCheckbox('mass['.$adrId.'][delete]', 1, 'Удалить адрес', 0));
+                    $PHPShopGUI->setField("Управление", $PHPShopGUI->setCheckbox('mass['.$adrId.'][default]', 1, 'Данные по умолчанию', $defaultChecked).'<br>'.$PHPShopGUI->setCheckbox('mass['.$adrId.'][delete]', 1, 'Удалить адрес', 0));
 
             // Юр. данные покупателя
             $Tab2= $PHPShopGUI->setField("Организация", $PHPShopGUI->setInputText('', 'mass['.$adrId.'][org_name_new]', @$adresData['org_name_new'])) .

@@ -33,7 +33,7 @@ function actionStart() {
     global $PHPShopGUI, $PHPShopOrm, $TitlePage, $select_name;
 
     $PHPShopGUI->action_button['Создать'] = array(
-        'name' => 'Создать Sitemap',
+        'name' => __('Создать Sitemap'),
         'action' => 'saveIDsitemap',
         'class' => 'btn  btn-default btn-sm navbar-btn hidden-xs',
         'type' => 'submit',
@@ -41,7 +41,7 @@ function actionStart() {
     );
 
     $PHPShopGUI->action_button['Создать SSL'] = array(
-        'name' => 'Создать Sitemap SSL',
+'name' => __('Создать Sitemap SSL'),
         'action' => 'saveIDssl',
         'class' => 'btn  btn-default btn-sm navbar-btn hidden-xs',
         'type' => 'submit',
@@ -49,7 +49,7 @@ function actionStart() {
     );
     
     $PHPShopGUI->action_button['Открыть'] = array(
-        'name' => 'Открыть Sitemap',
+        'name' => __('Открыть Sitemap'),
         'action' => '../../sitemap.xml',
         'class' => 'btn  btn-default btn-sm navbar-btn btn-action-panel-blank hidden-xs',
         'type' => 'button',
@@ -73,7 +73,7 @@ function actionStart() {
 
     $Tab1 = $PHPShopGUI->setField('Товаров в одном файле', $PHPShopGUI->setInputText(false, 'limit_products_new', $data['limit_products'], 150));
     $Tab1 .= $PHPShopGUI->setField('Комбинации значений фильтра', $PHPShopGUI->setCheckbox("use_filter_combinations_new", 1, "Добавить в карту сайта страницы категорий с комбинациями значений фильтра", $data["use_filter_combinations"]));
-    $Tab1 .= $PHPShopGUI->setField('Следующий этап',sprintf('<div class="well well-sm" style="max-width:300px" role="alert">%s.</div>', $status));
+    $Tab1 .= $PHPShopGUI->setField('Следующий этап',sprintf('<div class="well well-sm" style="max-width:300px" role="alert">%s.</div>', __($status)));
 
     $Info = '
         <ol>

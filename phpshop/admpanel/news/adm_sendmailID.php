@@ -169,9 +169,15 @@ function actionUpdate($option = false) {
 
     $n = $error = 0;
     
+    if (!empty($_SERVER['HTTPS']) && 'off' !== strtolower($_SERVER['HTTPS']))
+            $ssl = 'https://';
+    else $ssl = 'http://';
+    
     // Добавление http
-    if(!strstr($_POST['content_new'],"http:") and !strstr($_POST['content_new'],"https:"))
-            $_POST['content_new'] = str_replace("/UserFiles/","http://".$_SERVER['SERVER_NAME']."/UserFiles/",$_POST['content_new']);
+    if(!strstr($_POST['content_new'],"http:") and !strstr($_POST['content_new'],"https:")){
+            $_POST['content_new'] = str_replace('../../UserFiles/', "/UserFiles/", $_POST['content_new']);
+            $_POST['content_new'] = str_replace("/UserFiles/",$ssl.$_SERVER['SERVER_NAME']."/UserFiles/",$_POST['content_new']);
+    }
 
     // Тест
     if (!empty($_POST['test'])) {

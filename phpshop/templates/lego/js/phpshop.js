@@ -1638,7 +1638,7 @@ $(document).ready(function () {
     }
 
     // Варианты оплат
-    $("input#order_metod").change(function () {
+    $("body").on('click',"input#order_metod",function () {
         $('.paymOneEl').removeClass('active');
         $(this).closest('.paymOneEl').addClass('active');
     });

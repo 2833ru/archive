@@ -18,19 +18,26 @@ function actionUpdate() {
 
 // Начальная функция загрузки
 function actionStart() {
-    global $PHPShopGUI, $PHPShopOrm;
+    global $PHPShopGUI, $PHPShopOrm,$PHPShopModules,$PHPShopSystem;;
 
+    $PHPShopOrmOption = new PHPShopOrm($PHPShopModules->getParam("base.button.button_system"));
+    $option = $PHPShopOrmOption->select();
+    
     // Выборка
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
 
-    $PHPShopGUI->field_col = 1;
+    $PHPShopGUI->field_col = 3;
     $Tab1 = $PHPShopGUI->setField('Название', $PHPShopGUI->setInputText(false, 'name_new', $data['name']));
 
-    $Tab1.= $PHPShopGUI->setField('Приоритет', $PHPShopGUI->setInputText('№', 'num_new', $data['num'], '100') .
-            $PHPShopGUI->setCheckbox('enabled_new', 1, 'Вкл.', $data['enabled']));
+    $Tab1.= $PHPShopGUI->setField('Приоритет', $PHPShopGUI->setInputText('№', 'num_new', $data['num'], '100'));
+    $Tab1.= $PHPShopGUI->setField('Статус',  $PHPShopGUI->setCheckbox('enabled_new', 1, null, $data['enabled']));
        
-    // Редактор 
-    $PHPShopGUI->setEditor('ace', true);
+     // Редактор 
+    if(empty($option['editor']))
+        $editor = 'ace';
+    else $editor = $PHPShopSystem->getSerilizeParam("admoption.editor");
+    
+    $PHPShopGUI->setEditor($editor, true);
     $oFCKeditor = new Editor('content_new');
     $oFCKeditor->Height = '320';
     $oFCKeditor->Value = $data['content'];
@@ -38,7 +45,7 @@ function actionStart() {
     $Tab1.=$PHPShopGUI->setField('HTML Код', $oFCKeditor->AddGUI());
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1, 350));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true,false,true));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =

@@ -17,7 +17,7 @@ function tab_secure($data) {
     $data = $PHPShopOrm->select(array('*'), array('enabled' => "='1'"), false, array('limit' => 100));
     if (is_array($data)) {
 
-        $disp.=$PHPShopGUI->setLine($PHPShopGUI->setCheckbox('secure_groups_new[all]', '1', __('Все пользователи'), $secure_groups_empty));
+        $disp.=$PHPShopGUI->setLine($PHPShopGUI->setCheckbox('secure_groups_new[all]', '1', 'Все пользователи', $secure_groups_empty));
 
         foreach ($data as $row) {
             if (strlen($secure_groups)) {

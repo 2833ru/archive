@@ -742,7 +742,7 @@ class PHPShopGUI {
         elseif ($checked == 0)
             $checked = null;
 
-        $CODE = '<input type="checkbox" name="enable" data-toggle="toggle"  data-on="' . __('Вкл') . '" data-off="' . __('Выкл') . '" data-size="mini" value="1" ' . $checked . ' data-id="' . $Arg['id'] . '" data-val="' . $Arg['enable'] . '" class="toggle-event">';
+        $CODE = '<span class="hide">'.$Arg['enable'].'</span><input type="checkbox" name="enable" data-toggle="toggle"  data-on="' . __('Вкл') . '" data-off="' . __('Выкл') . '" data-size="mini" value="'.$Arg['enable'].'" ' . $checked . ' data-id="' . $Arg['id'] . '" data-val="' . $Arg['enable'] . '" class="toggle-event">';
 
         $CODE .= '<form method="post" action="?path=' . $this->path . '&id=' . $Arg['id'] . '" class="status_edit_' . $Arg['id'] . '">            
 <input type="hidden" value="actionUpdate.' . $subpath[0] . '.edit" name="actionList[editID]">
@@ -1566,7 +1566,7 @@ class PHPShopGUI {
                 if ($locale)
                     $val[0] = $this->__($val[0]);
 
-                if (empty($val[2]))
+                if (!isset($val[2]))
                     $val[2] = null;
 
                 // Автовыделение 

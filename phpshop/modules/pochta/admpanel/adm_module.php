@@ -89,6 +89,7 @@ function actionStart() {
     $Tab1.= $PHPShopGUI->setField('Типоразмер', $PHPShopGUI->setSelect('dimension_type_new', Settings::getDimensionVariants($data['dimension_type']), 300));
     $Tab1.= $PHPShopGUI->setField('Почтовый индекс города отправителя', '<input class="form-control input-sm " onkeypress="pochtavalidate(event)" type="text" value="' . $data['index_from'] . '" name="index_from_new" style="width:300px; ">');
     $Tab1.= $PHPShopGUI->setField('Объявленная ценность', $PHPShopGUI->setInputText('От суммы корзины', 'declared_percent_new', $data['declared_percent'], 300,'%'));
+    $Tab1= $PHPShopGUI->setCollapse('Настройки',$Tab1);
     $Tab1.= $PHPShopGUI->setCollapse('Настройки отправляемого заказа',
         $PHPShopGUI->setField('Лёгкий возврат', $PHPShopGUI->setCheckbox('easy_return_new', 1, 'Отметка "Лёгкий возврат"', $data["easy_return"])) .
         $PHPShopGUI->setField('Возврату не подлежит', $PHPShopGUI->setCheckbox('no_return_new', 1, 'Отметка "Возврату не подлежит"', $data["no_return"])) .

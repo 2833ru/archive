@@ -62,8 +62,12 @@ function actionStart() {
 
     // Размер названия поля
     $PHPShopGUI->field_col = 3;
-    $PHPShopGUI->addJSFiles('./js/jquery.treegrid.js', './catalog/gui/catalog.gui.js', './js/bootstrap-treeview.min.js', './js/bootstrap-tour.min.js', './catalog/gui/tour.gui.js');
-    $PHPShopGUI->addCSSFiles('./css/bootstrap-treeview.min.css');
+    $PHPShopGUI->addJSFiles('./js/jquery.treegrid.js', './catalog/gui/catalog.gui.js', './js/bootstrap-treeview.min.js', './js/bootstrap-tour.min.js');
+    if ($GLOBALS['PHPShopBase']->codBase == 'utf-8')
+        $PHPShopGUI->addJSFiles('./catalog/gui/tour_utf.gui.js');
+    else
+        $PHPShopGUI->addJSFiles('./catalog/gui/tour.gui.js');
+    $PHPShopGUI->addCSSFiles('./css/jquery.tagsinput.css', './css/bootstrap-colorpicker.min.css', './css/bootstrap-treeview.min.css');
 
     // Начальные данные
     $data = array();
@@ -75,8 +79,8 @@ function actionStart() {
         $data['num_row'] = 3;
 
     $data['num'] = 1;
-    
-    $data = $PHPShopGUI->valid($data,'name','parent_to','dop_cat','vid','skin_enabled','menu','tile','order_by','order_to','icon','content','title','title_enabled','title_shablon','descrip','descrip_enabled','descrip_shablon','keywords','keywords_enabled','keywords_shablon','secure_groups','servers','sort');
+
+    $data = $PHPShopGUI->valid($data, 'name', 'parent_to', 'dop_cat', 'vid', 'skin_enabled', 'menu', 'tile', 'order_by', 'order_to', 'icon', 'content', 'title', 'title_enabled', 'title_shablon', 'descrip', 'descrip_enabled', 'descrip_shablon', 'keywords', 'keywords_enabled', 'keywords_shablon', 'secure_groups', 'servers', 'sort');
 
     // Нет данных
     if (!is_array($data)) {
@@ -120,7 +124,7 @@ function actionStart() {
 
     $GLOBALS['tree_array'] = &$tree_array;
     $_GET['parent_to'] = $data['parent_to'];
-    $tree_select= $tree_select_dop = null;
+    $tree_select = $tree_select_dop = null;
 
     // Допкаталоги
     $dop_cat_array = preg_split('/#/', $data['dop_cat'], -1, PREG_SPLIT_NO_EMPTY);
@@ -161,10 +165,10 @@ function actionStart() {
     $Tab_info .= $PHPShopGUI->setField("Товаров в длину", $num_row_area, 'left');
 
     // Вывод
-    $vid = $PHPShopGUI->setCheckbox('vid_new', 1, 'Не выводить внутренние подкаталоги в меню', $data['vid']).'<br>';
-    $vid .= $PHPShopGUI->setCheckbox('skin_enabled_new', 1, 'Скрыть каталог', $data['skin_enabled']).'<br>';
-    $vid .= $PHPShopGUI->setCheckbox('menu_new', 1, 'Главное меню', $data['menu']).'<br>';
-    $Tab_info .= $PHPShopGUI->setField("Опции вывода", $vid).'<br>';
+    $vid = $PHPShopGUI->setCheckbox('vid_new', 1, 'Не выводить внутренние подкаталоги в меню', $data['vid']) . '<br>';
+    $vid .= $PHPShopGUI->setCheckbox('skin_enabled_new', 1, 'Скрыть каталог', $data['skin_enabled']) . '<br>';
+    $vid .= $PHPShopGUI->setCheckbox('menu_new', 1, 'Главное меню', $data['menu']) . '<br>';
+    $Tab_info .= $PHPShopGUI->setField("Опции вывода", $vid) . '<br>';
     $vid .= $PHPShopGUI->setCheckbox('tile_new', 1, 'Плитка на главной', $data['tile']);
 
     // Товаров на странице
@@ -213,7 +217,7 @@ function actionStart() {
     $subcategory_data = $PHPShopOrm->select(array('id'), array('parent_to' => '=' . intval(@$data['id'])), false, array('limit' => 1));
 
     $help_sort = $PHPShopGUI->setHelp('Не забудьте выбрать значение этих характеристик в товарах во вкладке Характеристики. Можно это сделать пакетно <a href="https://docs.phpshop.ru/rabota-s-bazoi/import-i-eksport#csv" target="_blank" title="Перейти">через csv файл</a>');
-    $Tab9 = $PHPShopGUI->setCollapse('Характеристики', $PHPShopGUI->loadLib('tab_sorts', $data).$help_sort);
+    $Tab9 = $PHPShopGUI->setCollapse('Характеристики', $PHPShopGUI->loadLib('tab_sorts', $data) . $help_sort);
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
@@ -228,7 +232,8 @@ function actionStart() {
     <span class="sr-only">' . __('Загрузка') . '..</span>
   </div>
 </div>';
-    else $treebar=null;
+    else
+        $treebar = null;
 
     // Поиск категорий
     $search = '<div class="none" id="category-search" style="padding-bottom:5px;"><div class="input-group input-sm">

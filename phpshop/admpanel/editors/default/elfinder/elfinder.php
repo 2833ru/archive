@@ -89,6 +89,13 @@ $locale = str_replace(array('russian','russian_utf','ukrainian','belarusian','en
                             parent.window.$("#mymodal-textarea").val(file);
                             parent.window.$('#elfinderModal').modal('hide');
                         }
+                        // Quill
+                        else if(parent.quill<?php echo '_'.str_replace('-','',$_GET['return']); ?>){
+                             var range = parent.quill<?php echo '_'.str_replace('-','',$_GET['return']); ?>.getSelection();
+                             parent.quill<?php echo '_'.str_replace('-','',$_GET['return']); ?>.insertEmbed(range.index, 'image', file);
+                             parent.window.$('#elfinderModal').modal('hide');   
+                        }
+                        
                         // Modal
                         else if (parent.window) {
                             parent.window.$('[data-icon="<?php echo $_GET['return']; ?>"]').html(file);
@@ -97,6 +104,7 @@ $locale = str_replace(array('russian','russian_utf','ukrainian','belarusian','en
                             parent.window.$('[data-icon="<?php echo $_GET['return']; ?>"]').prev('.glyphicon').removeClass('hide');
                             parent.window.$('#elfinderModal').modal('hide');
                         }
+                        
                        
                     },
                     resizable: <?php echo $resizable; ?>,

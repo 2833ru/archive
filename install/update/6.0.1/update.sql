@@ -70,18 +70,6 @@ ALTER TABLE `phpshop_notes` ADD `name` VARCHAR(64), ADD `tel` VARCHAR(64), ADD `
 ALTER TABLE `phpshop_payment_systems` ADD `company` INT(11) DEFAULT '0';
 ALTER TABLE `phpshop_orders` ADD `company` INT(11) DEFAULT '0';
 CREATE TABLE `phpshop_company` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `bank` blob,
-  `enabled` enum('0','1') DEFAULT '1'
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
-ALTER TABLE `phpshop_servers` ADD `company_id` INT(11) DEFAULT '0';
-ALTER TABLE `phpshop_discount` ADD `block_old_price` enum('0','1') DEFAULT '0';
-ALTER TABLE `phpshop_discount` ADD `block_categories` text DEFAULT '';
-
-ALTER TABLE `phpshop_payment_systems` ADD `company` INT(11) DEFAULT '0';
-ALTER TABLE `phpshop_orders` ADD `company` INT(11) DEFAULT '0';
-CREATE TABLE `phpshop_company` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
   `bank` blob,
@@ -143,3 +131,6 @@ ALTER TABLE `phpshop_baners` ADD `mobile` ENUM('0','1') DEFAULT '0';
 ALTER TABLE `phpshop_slider` ADD `name` VARCHAR(255);
 ALTER TABLE `phpshop_slider` ADD `link_text` VARCHAR(255);
 ALTER TABLE `phpshop_shopusers_status` ADD `warehouse` enum('0','1') DEFAULT '1';
+
+/*621*/
+ALTER TABLE `phpshop_delivery` ADD `categories_check` ENUM('0','1') DEFAULT '0', ADD `categories` VARCHAR(255);

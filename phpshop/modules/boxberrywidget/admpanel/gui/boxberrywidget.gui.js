@@ -6,14 +6,13 @@ function setPVZ(result) {
     $('input[name="pvz_id_new"]').val(result.id);
 }
 $(document).ready(function() {
-    $('body').on('click', 'input[name="boxberry_payment_status"]', function() {
+    $('body').on('change', 'input[name="boxberry_payment_status"]', function() {
         var value;
-        if($('#boxberry_payment_status').prop('checked') === true) {
+        
+        if($(this).prop('checked') === true) {
             value = 1;
         }
-        if($('#boxberry_payment_status').prop('checked') === false) {
-            value = 0;
-        }
+        else value = 0;
 
         $.ajax({
             mimeType: 'text/html; charset='+locale.charset,
@@ -26,7 +25,9 @@ $(document).ready(function() {
             },
             dataType: "json",
             async: false,
-            success: function(json) {}
+            success: function(json) {
+                console.log(json['error']);
+            }
         });
     });
 });

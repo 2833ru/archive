@@ -229,7 +229,7 @@ function UpdateDeliveryJq(xid, param, stop_hook) {
                 $('#deliveryInfo').html(null);
 
                 // блокировка способов оплат
-                var paymentStop = $("input#dostavka_metod:checked").attr('data-option');
+                var paymentStop = $('input[name="dostavka_metod"]:checked').attr('data-option');
                 if (paymentStop !== undefined)
                     var payment_array = paymentStop.split(",");
 
@@ -480,8 +480,7 @@ $(document).ready(function () {
     });
     // выделяем первую в списке оплату.
     $("input#order_metod:first").attr('checked', 'checked').change().closest('.paymOneEl').addClass('active');
-    ;
-
+    
     // при изменении адреса, заполняем соотв. поля
     $("#adres_id").change(function () {
         var str = "";

@@ -6,3 +6,5 @@ ALTER TABLE `phpshop_products` DROP `price_google`;
 ALTER TABLE `phpshop_products` DROP `price_cdek`;
 ALTER TABLE `phpshop_products` DROP `price_aliexpress`;
 ALTER TABLE `phpshop_products` DROP `price_sbermarket`;
+
+ALTER TABLE `phpshop_modules_yandexcart_system` ADD `stop` enum('0','1') DEFAULT '0';

@@ -20,7 +20,7 @@ function userorderpaymentlink_mod_modulbank_hook($obj, $PHPShopOrderFunction)
 
             $Modulbank->parameters['order_id'] = $PHPShopOrderFunction->objRow['uid'];
             $Modulbank->parameters['receipt_contact'] = $PHPShopOrderFunction->getMail();
-            $Modulbank->parameters['description'] = PHPShopString::win_utf8(str_replace('"', '', $PHPShopSystem->getName() . ' оплата заказа ' . $Modulbank->parameters['order_id']));
+            $Modulbank->parameters['description'] = PHPShopString::win_utf8(str_replace('"', '', $PHPShopSystem->getName() . __(' оплата заказа ') . $Modulbank->parameters['order_id']));
 
             $order = $PHPShopOrderFunction->unserializeParam('orders');
 
@@ -84,11 +84,11 @@ function userorderpaymentlink_mod_modulbank_hook($obj, $PHPShopOrderFunction)
 
             $payment_form = $Modulbank->getForm();
 
-            $Modulbank->log($Modulbank->parameters, $Modulbank->parameters['order_id'], 'Форма подготовлена для отправки', 'Регистрация заказа');
+            $Modulbank->log($Modulbank->parameters, $Modulbank->parameters['order_id'], _-('Форма подготовлена для отправки'), __('Регистрация заказа'));
 
             $return = PHPShopText::form($payment_form, 'modulbankpay', 'post', 'https://pay.modulbank.ru/pay', '_blank');
         } elseif ($PHPShopOrderFunction->getSerilizeParam('orders.Person.order_metod') == 10012)
-            $return = ' Заказ обрабатывается менеджером';
+            $return = __(' Заказ обрабатывается менеджером');
 
     return $return;
 }

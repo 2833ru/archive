@@ -82,7 +82,7 @@ function actionStart() {
     $GLOBALS['tree_array'] = &$tree_array;
     $_GET['parent_to'] = $data['parent_to'];
 
-    $tree_select = '<select class="selectpicker show-menu-arrow hidden-edit" data-container=""  data-style="btn btn-default btn-sm" name="parent_to_new" data-width="100%"><option value="0">' . $CategoryArray[0]['name'] . '</option>';
+    $tree_select = '<select class="selectpicker show-menu-arrow hidden-edit" data-container="body"  data-style="btn btn-default btn-sm" name="parent_to_new" data-width="100%"><option value="0">' . $CategoryArray[0]['name'] . '</option>';
     $tree = '<table class="table table-hover">';
     if ($k == $data['parent_to'])
         $selected = 'selected';

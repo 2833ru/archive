@@ -24,7 +24,7 @@ function send_modulbank_hook($obj, $value, $rout) {
 
             $Modulbank->parameters['order_id']        = $value['ouid'];
             $Modulbank->parameters['receipt_contact'] = $_POST['mail'];
-            $Modulbank->parameters['description']     = PHPShopString::win_utf8(str_replace('"', '', $PHPShopSystem->getName() . ' оплата заказа ' . $Modulbank->parameters['order_id']));
+            $Modulbank->parameters['description']     = PHPShopString::win_utf8(str_replace('"', '', $PHPShopSystem->getName() . __(' оплата заказа ') . $Modulbank->parameters['order_id']));
 
             // Содержимое корзины
             $total = 0;
@@ -81,7 +81,7 @@ function send_modulbank_hook($obj, $value, $rout) {
 
             $payment_form = $Modulbank->getForm();
 
-            $Modulbank->log($Modulbank->parameters, $Modulbank->parameters['order_id'], 'Форма подготовлена для отправки', 'Регистрация заказа');
+            $Modulbank->log($Modulbank->parameters, $Modulbank->parameters['order_id'], __('Форма подготовлена для отправки'), __('Регистрация заказа'));
 
             $obj->set('payment_forma', PHPShopText::form($payment_form, 'modulbankpay', 'post', 'https://pay.modulbank.ru/pay', '_blank'));
 

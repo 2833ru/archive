@@ -50,7 +50,13 @@ function actionStart() {
     // Размер названия поля
     $PHPShopGUI->field_col = 3;
     $PHPShopGUI->setActionPanel(__("Покупатели") . '<span class="hidden-xs">: ' . $data['name'] . '</span>', array('Создать заказ', 'Заказы пользователя', 'Диалоги пользователя', 'Создать диалог', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'));
-    $PHPShopGUI->addJSFiles('./js/validator.js', './js/jquery.suggestions.min.js', './order/gui/dadata.gui.js');
+    $PHPShopGUI->addJSFiles('./js/validator.js');
+
+    if ($GLOBALS['PHPShopBase']->codBase == 'utf-8')
+        $PHPShopGUI->addJSFiles('./js/jquery.suggestions_utf.min.js', './order/gui/dadata.gui.js');
+    else
+        $PHPShopGUI->addJSFiles('./js/jquery.suggestions.min.js', './order/gui/dadata.gui.js');
+
     $PHPShopGUI->addCSSFiles('./css/suggestions.min.css');
 
     // Статусы пользователей
@@ -67,7 +73,7 @@ function actionStart() {
             $PHPShopGUI->setField("Телефон", $PHPShopGUI->setInput('tel', "tel_new", $data['tel'])) .
             $PHPShopGUI->setField("Пароль", $PHPShopGUI->setInput("password.required.4", "password_new", base64_decode($data['password']), null, false, false, false, false, false, '<a href="#" class="password-view"  data-toggle="tooltip" data-placement="top" title="' . __('Показать пароль') . '"><span class="glyphicon glyphicon-eye-open"></span></a>')) .
             $PHPShopGUI->setField("Подтверждение пароля", $PHPShopGUI->setInput("password.required.4", "password2_new", base64_decode($data['password']))) .
-            $PHPShopGUI->setField("Статус",$PHPShopGUI->setCheckbox("enabled_new", 1, null, $data['enabled']). '<br>' . $PHPShopGUI->setCheckbox('sendActivationEmail', 1, 'Оповестить пользователя', 0)) .
+            $PHPShopGUI->setField("Статус", $PHPShopGUI->setCheckbox("enabled_new", 1, null, $data['enabled']) . '<br>' . $PHPShopGUI->setCheckbox('sendActivationEmail', 1, 'Оповестить пользователя', 0)) .
             $PHPShopGUI->setField("Блокировка диалогов", $PHPShopGUI->setCheckbox("dialog_ban_new", 1, null, $data['dialog_ban'])) .
             $PHPShopGUI->setField("Статус", $PHPShopGUI->setSelect('status_new', $user_status_value)) .
             $PHPShopGUI->setField("Накопительная скидка", $PHPShopGUI->setInput('text', "cumulative_discount_new", $data['cumulative_discount'], null, 100, false, false, false, '%'))
@@ -99,11 +105,13 @@ function actionStart() {
 
     // Карта
     $mass = unserialize($data['data_adres']);
-    if (!empty($mass['main']) and !empty($mass['list'][$mass['main']]['street_new'])) {
-        $PHPShopGUI->addJSFiles('./shopusers/gui/shopusers.gui.js', '//api-maps.yandex.ru/2.0/?load=package.standard&lang=ru-RU&apikey=' . $yandex_apikey);
-        $map = '<div id="map" data-geocode="' . $mass['list'][$mass['main']]['city_new'] . ', ' . $mass['list'][$mass['main']]['street_new'] . ' ' . $mass['list'][$mass['main']]['house_new'] . '" style="width: 280px;height:280px;"></div>';
+    if ($PHPShopSystem->ifSerilizeParam('admoption.yandexmap_enabled')) {
+        if (!empty($mass['main']) and ! empty($mass['list'][$mass['main']]['street_new'])) {
+            $PHPShopGUI->addJSFiles('./shopusers/gui/shopusers.gui.js', '//api-maps.yandex.ru/2.0/?load=package.standard&lang=ru-RU&apikey=' . $yandex_apikey);
+            $map = '<div id="map" data-geocode="' . $mass['list'][$mass['main']]['city_new'] . ', ' . $mass['list'][$mass['main']]['street_new'] . ' ' . $mass['list'][$mass['main']]['house_new'] . '" style="width: 280px;height:280px;"></div>';
 
-        $sidebarright[] = array('title' => 'Адрес доставки на карте', 'content' => array($map));
+            $sidebarright[] = array('title' => 'Адрес доставки на карте', 'content' => array($map));
+        }
     }
 
     // Правый сайдбар
@@ -120,7 +128,7 @@ function actionStart() {
         $PHPShopGUI->addTab(array("Бонусы <span class=badge>" . $data['bonus'] . "</span>", $Tab3, true));
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1,true), array("Доставка и реквизиты", $Tab2,true));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Доставка и реквизиты", $Tab2, true));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .
@@ -219,8 +227,8 @@ function actionUpdate() {
     }
 
     // Корректировка пустых значений
-    if(empty($_POST['ajax']))
-    $PHPShopOrm->updateZeroVars('enabled_new','dialog_ban_new');
+    if (empty($_POST['ajax']))
+        $PHPShopOrm->updateZeroVars('enabled_new', 'dialog_ban_new');
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);

@@ -51,7 +51,8 @@ function saferoutewidgetStart() {
     regionName: city,
     userAddressStreet: street,
     userAddressBuilding: house,
-    userAddressApartment: flat
+    userAddressApartment: flat,
+    mod: 'bitrix',
   });
 
   widget.on('error', function (e) {

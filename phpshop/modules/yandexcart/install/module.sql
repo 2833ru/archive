@@ -46,13 +46,14 @@ CREATE TABLE `phpshop_modules_yandexcart_system` (
   `use_params` enum('0','1') DEFAULT '0',
   `version` varchar(64) default '2.0',
   `options` BLOB,
+  `stop` enum('0','1') DEFAULT '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251 ;
 
 -- 
 -- Дамп данных таблицы `phpshop_modules_yandexcart_system`
 --
-INSERT INTO `phpshop_modules_yandexcart_system` VALUES (1,'', '', '', '', '', '', 0, 'ADV', 0, 0, '3.1','');
+INSERT INTO `phpshop_modules_yandexcart_system` VALUES (1,'', '', '', '', '', '', 0, 'ADV', 0, 0, '3.2','','0');
 
 CREATE TABLE IF NOT EXISTS `phpshop_modules_yandexcart_log` (
     `id` int(11) NOT NULL AUTO_INCREMENT,

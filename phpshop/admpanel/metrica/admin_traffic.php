@@ -10,7 +10,7 @@ function actionStart() {
     $metrica_token = $PHPShopSystem->getSerilizeParam('admoption.metrica_token');
 
     $PHPShopInterface->action_button['Показать в Метрике'] = array(
-        'name' => 'Отчет на Яндекс.Метрика',
+        'name' => __('Отчет на Яндекс.Метрика'),
         'action' => 'https://metrika.yandex.ru/stat/traffic?id=' . $metrica_id,
         'class' => 'btn  btn-default btn-sm navbar-btn btn-action-panel-blank',
         'type' => 'button',
@@ -33,7 +33,7 @@ function actionStart() {
     else
         $date_end = $_GET['date_end'];
 
-    $TitlePage.=' с ' . $date_start . ' по ' . $date_end;
+    $TitlePage.=__(' с ') . $date_start . __(' по ') . $date_end;
 
     if (empty($_GET['group'])) {
         $_GET['group'] = 'day';

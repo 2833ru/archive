@@ -17,7 +17,7 @@ PHPShopObj::loadClass("text");
 PHPShopObj::loadClass("lang");
 PHPShopObj::loadClass("security");
 
-$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, false);
+$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, true);
 $PHPShopLang = new PHPShopLang(array('locale' => $_SESSION['lang'], 'path' => 'shop'));
 $PHPShopSystem = new PHPShopSystem();
 $GLOBALS['PHPShopOrder'] = new PHPShopOrderFunction();

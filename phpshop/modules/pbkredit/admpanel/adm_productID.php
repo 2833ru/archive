@@ -9,10 +9,11 @@ function addPbkreditTab($data) {
 }
 
 function savePbkreditTab($data) {
-    if(!isset($data['pbkredit_disabled_new'])) {
-        $_POST['pbkredit_disabled_new'] = '0';
-    }
+    if (empty($_POST['ajax']))
+        if (!isset($data['pbkredit_disabled_new'])) {
+            $_POST['pbkredit_disabled_new'] = '0';
+        }
 }
 
-$addHandler = array('actionStart'  => 'addPbkreditTab', 'actionDelete' => false, 'actionUpdate' => 'savePbkreditTab');
+$addHandler = array('actionStart' => 'addPbkreditTab', 'actionDelete' => false, 'actionUpdate' => 'savePbkreditTab');
 ?>

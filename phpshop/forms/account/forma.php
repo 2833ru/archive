@@ -32,10 +32,9 @@ $PHPShopLang = new PHPShopLang(array('locale'=>$_SESSION['lang'],'path'=>'admin'
  * Основной шаблон печатной формы расположен в phpshop/lib/templates/print/acount.tpl
  */
 function printforma($val, $options) {
-
     global $n;
     if (empty($val['ed_izm']))
-        $val['ed_izm'] = 'шт.';
+        $val['ed_izm'] = __('шт.');
     $dis = PHPShopText::tr($n, $val['name'], $val['ed_izm'], $val['num'], $val['price'] . ' ' . $options['currency'], $val['total'] . ' ' . $options['currency']);
     @$n++;
     return $dis;

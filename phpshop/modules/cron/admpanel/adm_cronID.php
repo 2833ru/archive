@@ -72,6 +72,12 @@ function actionStart() {
         $work[] = array('Большая карта сайта', 'phpshop/modules/sitemappro/cron/sitemap_generator.php');
         $work[] = array('Большая карта сайта SSL', 'phpshop/modules/sitemappro/cron/sitemap_generator.php?ssl');
     }
+    
+    // Учет модуля VisualCart
+    if (!empty($GLOBALS['SysValue']['base']['visualcart']['visualcart_system'])) {
+        $work[] = array("|");
+        $work[] = array('Очистка брошенных корзин', 'phpshop/modules/visualcart/cron/clean.php');
+    }
 
     // Загрузка CSV
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['exchanges']);

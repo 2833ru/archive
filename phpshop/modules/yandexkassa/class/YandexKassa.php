@@ -29,6 +29,8 @@ class YandexKassa {
         $this->tax = $this->setTax(empty($ndsEnabled) ? 2 : $nds);
     }
 
+    
+    
     /**
      * Сборка массива товаров.
      * @param array $cart
@@ -44,7 +46,14 @@ class YandexKassa {
                 $price = $product['price']  - ($product['price']  * $discount  / 100);
             else
                 $price = $product['price'];
-
+            
+            // НДС
+            $PHPShopProduct = new PHPShopProduct($product['id']);
+            $yandex_vat_code = $PHPShopProduct->getParam('yandex_vat_code');
+            if(!empty($yandex_vat_code))
+                $tax = $yandex_vat_code;
+            else $tax = $this->tax;
+                
             $items[] = array(
                 'description' => PHPShopString::win_utf8($product['name']),
                 'quantity' => $product['num'],
@@ -52,7 +61,7 @@ class YandexKassa {
                     'value' => number_format($price, 2, '.', ''),
                     'currency' => 'RUB'
                 ),
-                'vat_code' => $this->tax,
+                'vat_code' => $tax,
                 'payment_subject' => 'commodity',
                 'payment_mode' => 'full_prepayment',
             );
@@ -260,8 +269,8 @@ class YandexKassa {
 
     private function setTax($tax = null)
     {
-        if (empty($tax)) {
-            return 2;
+        if ($tax == "") {
+            return 1;
         }
 
         switch ($tax) {

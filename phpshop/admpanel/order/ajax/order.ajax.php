@@ -37,9 +37,8 @@ $order_status_value[] = array(__('Новый заказ'), 0, '');
 
 mb_internal_encoding($GLOBALS['PHPShopBase']->codBase);
 
-if (empty($_GET['where']['statusi']))
+if (!isset($_GET['where']['statusi']))
     $_GET['where']['statusi'] = null;
-
 
 if (is_array($status_array))
     foreach ($status_array as $status_val) {
@@ -307,6 +306,13 @@ if (is_array($total)) {
 if (!empty($PHPShopInterface->_AJAX["sort"])) {
     $_SESSION['jsort'] = $PHPShopInterface->_AJAX["sort"];
     unset($PHPShopInterface->_AJAX["sort"]);
+}
+
+if(!is_array($PHPShopInterface->_AJAX["data"])){
+     $PHPShopInterface->_AJAX["recordsFiltered"]=0;
+     $PHPShopInterface->_AJAX["sum"]=0;
+     $PHPShopInterface->_AJAX["num"]=0;
+     $PHPShopInterface->_AJAX["data"] = array();
 }
 
 header("Content-Type: application/json");

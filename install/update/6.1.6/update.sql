@@ -11,3 +11,5 @@ ALTER TABLE `phpshop_slider` ADD `name` VARCHAR(255);
 ALTER TABLE `phpshop_slider` ADD `link_text` VARCHAR(255);
 ALTER TABLE `phpshop_shopusers_status` ADD `warehouse` enum('0','1') DEFAULT '1';
 
+/*621*/
+ALTER TABLE `phpshop_delivery` ADD `categories_check` ENUM('0','1') DEFAULT '0', ADD `categories` VARCHAR(255);

@@ -1,14 +1,14 @@
 <div class="row">
     <div class="col-sm-12">
         <div class="alert alert-danger">
-            <strong>Внимание!</strong> Для корректного расчета стоимости доставки и оформления заказа в системе СДЭК, необходимо выбрать ПВЗ или город для курьерской доставки.<br>
-            Нажмите "Выбрать адрес доставки".
+            <strong>{Внимание!}</strong> {Для корректного расчета стоимости доставки и оформления заказа в системе СДЭК, необходимо выбрать ПВЗ или город для курьерской доставки.}<br>
+            {Нажмите "Выбрать адрес доставки".}
         </div>
     </div>
 </div>
 <div class="row">
     <div class="col-sm-12">
-        <button type="button" class="btn btn-sm btn-primary cdek-change-address">Выбрать адрес доставки</button>
+        <button type="button" class="btn btn-sm btn-primary cdek-change-address">{Выбрать адрес доставки}</button>
     </div>
 </div>
 <script src="../modules/cdekwidget/js/cdekwidget.js"></script>

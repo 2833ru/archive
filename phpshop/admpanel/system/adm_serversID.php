@@ -35,10 +35,10 @@ function GetLocaleList($skin) {
     $dir = "../locale/";
 
     $locale_array = array(
-        'russian' => 'Русский',
-        'ukrainian' => 'Український',
-        'belarusian' => 'Беларускі',
-        'english' => 'English'
+        'russian' => __('Русский'),
+        'ukrainian' => __('Український'),
+        'belarusian' => __('Беларускі'),
+        'english' => __('English')
     );
 
     if (is_dir($dir)) {

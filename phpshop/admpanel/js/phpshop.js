@@ -41,7 +41,7 @@ function showAlertMessage(message, danger, hide) {
 }
 
 
-// Инициализируем таблицу перевода
+// Инициализируем таблицу перевода https://wm-school.ru/html/html_win-1251.html
 var trans = [];
 for (var i = 0x410; i <= 0x44F; i++)
     trans[i] = i - 0x350; // А-Яа-я
@@ -247,8 +247,8 @@ $().ready(function () {
                                 id.remove();
                                 showAlertMessage(locale.save_done);
                                 i++;
-                                if (chk == i)
-                                    window.location.reload();
+                                //if (chk == i)
+                                    //window.location.reload();
 
                             } else
                                 showAlertMessage(locale.save_false, true);

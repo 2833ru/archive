@@ -64,7 +64,7 @@ switch ($_REQUEST['command']) {
                 $id = $row['id'];
                 $datas = $row['datas'];
                 $uid = $row['uid'];
-                $adr_info = null;
+                $adr_info = $dop_info = null;
 
                 // Подключаем класс заказа
                 if (class_exists('PHPShopOrder'))
@@ -122,8 +122,8 @@ switch ($_REQUEST['command']) {
                     $adr_info .= ", квартира: " . $row['flat'];
                 if ($row['delivtime'])
                     $adr_info .= ", время доставки: " . $row['delivtime'];
-                //if ($row['dop_info'])
-                    //$adr_info .= ", дополнительная информация: " . $row['dop_info'];
+                if ($row['dop_info'])
+                    $dop_info =  $row['dop_info'];
 
                 $adres = PHPShopSecurity::CleanOut(str_replace("&quot;", '"', $adr_info . $order['Person']['adr_name']));
                 $oplata = $PHPShopOrder->getOplataMetodName();
@@ -141,7 +141,7 @@ switch ($_REQUEST['command']) {
                 $org_city = $row['org_city'];
 
                 // Ver 1.8
-                $csv1 .= "$id;$uid;$datas;$mail;$name;$company;$tel;$oplata;$sum;$discount;$inn;$adres;$kpp;$user;$org_yur_adres;$org_fakt_adres;$org_ras;$org_bank;$org_kor;$org_bik;$org_city\n";
+                $csv1 .= "$id;$uid;$datas;$mail;$name;$company;$tel;$oplata;$sum;$discount;$inn;$adres;$kpp;$user;$org_yur_adres;$org_fakt_adres;$org_ras;$org_bank;$org_kor;$org_bik;$org_city;$dop_info\n";
 
                 if (is_array($order['Cart']['cart']))
                     foreach ($order['Cart']['cart'] as $val) {

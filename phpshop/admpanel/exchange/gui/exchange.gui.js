@@ -1,9 +1,14 @@
-
 // Переопределение функции
 var TABLE_EVENT = true;
 locale.icon_load = locale.file_load;
 
 $().ready(function () {
+
+    // Выбор сохраненной настройки
+    $('body').on('change', '#exchanges', function () {
+        if (this.value != "new")
+            window.location.href += '&exchanges=' + this.value;
+    });
 
     // Автоматизация загрузки файла
     if ($('.bot-progress .progress-bar').hasClass('active')) {
@@ -351,22 +356,33 @@ $().ready(function () {
     });
 
     // Лимит
-    $(".btn-file-search").on('click', function() {
+    $(".btn-file-search").on('click', function () {
         $('#file_search').submit();
     });
-    
+
 
     // Лимит - очистка
-    $(".btn-file-cancel").on('click', function() {
+    $(".btn-file-cancel").on('click', function () {
         window.location.replace('?path=exchange.file');
     });
-    
+
 
     // Таблица сортировки
     var table = $('#data').dataTable({
         "paging": true,
         "ordering": true,
         "info": false,
-        "language": locale.dataTable
+        "language": locale.dataTable,
+         "fnDrawCallback": function () {
+
+            // Активация из списка dropdown
+            $('.data-row').hover(
+                    function () {
+                        $(this).find('#dropdown_action').show();
+                    },
+                    function () {
+                        $(this).find('#dropdown_action').hide();
+                    });
+        }
     });
 });

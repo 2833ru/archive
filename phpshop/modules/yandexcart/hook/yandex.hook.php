@@ -88,7 +88,7 @@ function setProducts_yandexcart_hook($obj, $data) {
             $fee = (float) $yandexOptions['price_dbs_fee'];
         }
     }
-
+    
     if($fee > 0) {
         $price = $price + ($price * $fee / 100);
     }
@@ -165,7 +165,7 @@ function setProducts_yandexcart_hook($obj, $data) {
         $add.='<step-quantity>' . $data['val']['yandex_step_quantity'] . '</step-quantity>';
 
     // market-sku
-    if (isset($_GET['fbs']) && !empty($data['val']['market_sku']))
+    if (!empty($data['val']['market_sku']))
         $add.='<market-sku>' . $data['val']['market_sku'] . '</market-sku>';
 
     // shop-sku, count, cpa

@@ -1,12 +1,12 @@
 <?php
 
-$TitlePage = __('Редактирование комментария').' #' . $_GET['id'];
+$TitlePage = __('Редактирование комментария') . ' #' . $_GET['id'];
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['comment']);
 PHPShopObj::loadClass('user');
 
 // Стартовый вид
 function actionStart() {
-    global $PHPShopGUI, $PHPShopOrm, $PHPShopModules,$PHPShopSystem;
+    global $PHPShopGUI, $PHPShopOrm, $PHPShopModules, $PHPShopSystem;
 
     // Выборка
     $PHPShopOrm->sql = 'SELECT a.*, b.name as product, b.pic_small, b.description FROM ' . $GLOBALS['SysValue']['base']['comment'] . ' AS a 
@@ -23,7 +23,11 @@ function actionStart() {
 
     // Размер названия поля
     $PHPShopGUI->field_col = 2;
-    $PHPShopGUI->setActionPanel(__("Покупатели") . ' / ' . __('Комментарии') . ' / ' . $data['name'], array('Удалить'), array('Сохранить и закрыть'),false);
+
+    $PHPShopGUI->addJSFiles('./js/jquery.tagsinput.min.js', './js/bootstrap-datetimepicker.min.js', './js/jquery.waypoints.min.js', './news/gui/news.gui.js');
+    $PHPShopGUI->addCSSFiles('./css/jquery.tagsinput.css', './css/bootstrap-datetimepicker.min.css');
+
+    $PHPShopGUI->setActionPanel(__("Покупатели") . ' / ' . __('Комментарии') . ' / ' . $data['name'], array('Удалить'), array('Сохранить и закрыть'), false);
 
     $media = '<div class="media">
   <div class="media-left">
@@ -36,20 +40,21 @@ function actionStart() {
     ' . $data['description'] . '
   </div>
 </div>';
-    
+
     $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));
     $oFCKeditor = new Editor('content_new');
     $oFCKeditor->Height = '300';
     $oFCKeditor->Value = $data['content'];
-    
+
 
     // Содержание закладки 1
     $Tab1 = $PHPShopGUI->setCollapse('Информация', $PHPShopGUI->setField("ФИО", $PHPShopGUI->setInput('text.required', "name_new", $data['name'])) .
+            $PHPShopGUI->setField("Дата", $PHPShopGUI->setInputDate("datas_new", PHPShopDate::get($data['datas']))) .
             $PHPShopGUI->setField("Название", $media) .
             $PHPShopGUI->setField("Комментарий", $oFCKeditor->AddGUI()) .
             $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("enabled_new", 1, "Вкл.", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выкл.", $data['enabled'])
     ));
-    
+
 
 
 
@@ -60,8 +65,7 @@ function actionStart() {
     $PHPShopGUI->setTab(array("Основное", $Tab1));
 
     // Вывод кнопок сохранить и выход в футер
-    $ContentFooter =
-            $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .
+    $ContentFooter = $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .
             $PHPShopGUI->setInput("hidden", "parentID", $data['parent_id'], "right", 70, "", "but") .
             $PHPShopGUI->setInput("button", "delID", "Удалить", "right", 70, "", "but", "actionDelete.shopusers.edit") .
             $PHPShopGUI->setInput("submit", "editID", "Сохранить", "right", 70, "", "but", "actionUpdate.shopusers.edit") .
@@ -81,7 +85,7 @@ function actionDelete() {
 
     // Активация из спиcка
     if (empty($_POST['parentID'])) {
-        $data = $PHPShopOrm->select(array('parent_id'), array('id' =>'='.intval($_POST['rowID'])), false, array('limit' => 1));
+        $data = $PHPShopOrm->select(array('parent_id'), array('id' => '=' . intval($_POST['rowID'])), false, array('limit' => 1));
         if (!empty($data['parent_id']))
             $_POST['parentID'] = $data['parent_id'];
     }
@@ -110,7 +114,7 @@ function actionSave() {
  */
 function ratingUpdate() {
 
-    if(empty($_POST['parentID'])) {
+    if (empty($_POST['parentID'])) {
         return false;
     }
 
@@ -135,6 +139,8 @@ function ratingUpdate() {
 function actionUpdate() {
     global $PHPShopOrm, $PHPShopModules;
 
+    $_POST['datas_new'] = PHPShopDate::GetUnixTime($_POST['datas_new']);
+
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
 
@@ -142,14 +148,14 @@ function actionUpdate() {
 
     // Активация из спиcка
     if (empty($_POST['parentID'])) {
-        $data = $PHPShopOrm->select(array('parent_id'), array('id' =>'='.intval($_POST['rowID'])), false, array('limit' => 1));
+        $data = $PHPShopOrm->select(array('parent_id'), array('id' => '=' . intval($_POST['rowID'])), false, array('limit' => 1));
         if (!empty($data['parent_id']))
             $_POST['parentID'] = $data['parent_id'];
     }
 
     // Пересчет рейтинга товара
     ratingUpdate();
-    
+
     return array('success' => $action);
 }
 

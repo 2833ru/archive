@@ -10,7 +10,7 @@ function actionStart() {
     $metrica_token = $PHPShopSystem->getSerilizeParam('admoption.metrica_token');
 
     $PHPShopInterface->action_button['Показать в Метрике'] = array(
-        'name' => 'Отчет на Яндекс.Метрика',
+        'name' => __('Отчет на Яндекс.Метрика'),
         'action' => 'https://metrika.yandex.ru/stat/top_products?id=' . $metrica_id,
         'class' => 'btn  btn-default btn-sm navbar-btn btn-action-panel-blank',
         'type' => 'button',
@@ -63,7 +63,7 @@ function actionStart() {
         }
     }else $_GET['group_date']=null;
 
-    $TitlePage.=' с ' . $date_start . ' по ' . $date_end;
+    $TitlePage.=__(' с ') . $date_start . __(' по ') . $date_end;
 
     if (empty($_GET['group'])) {
         $_GET['group'] = 'day';
@@ -100,7 +100,7 @@ function actionStart() {
 
     if (!empty($json_data['data']) and is_array($json_data['data'])) {
 
-        $PHPShopInterface->setRow('Итого и средние', array('name' => $json_data['totals'][1], 'align' => 'center'), array('name' => $json_data['totals'][0], 'align' => 'center'), array('name' => round($json_data['totals'][2], 2), 'align' => 'center'), array('name' => round($json_data['totals'][3], 2), 'align' => 'center'));
+        $PHPShopInterface->setRow(__('Итого и средние'), array('name' => $json_data['totals'][1], 'align' => 'center'), array('name' => $json_data['totals'][0], 'align' => 'center'), array('name' => round($json_data['totals'][2], 2), 'align' => 'center'), array('name' => round($json_data['totals'][3], 2), 'align' => 'center'));
 
         $json_data = $json_data['data'];
 

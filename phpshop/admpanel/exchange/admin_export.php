@@ -114,7 +114,8 @@ $key_name = array(
     'length' => 'Длина',
     'width' =>'Ширина',
     'height' => 'Высота',
-    'moysklad_product_id' => 'МойСклад Id'
+    'moysklad_product_id' => 'МойСклад Id',
+    'price_purch' => 'Закупочная цена'
 );
 
 if ($GLOBALS['PHPShopBase']->codBase == 'utf-8')
@@ -164,7 +165,6 @@ if (!empty($_COOKIE['check_memory'])) {
 function actionSelect() {
     global $subpath;
     unset($_SESSION['select']);
-
 
     // Выбранные товары
     if (!empty($_POST['select'])) {
@@ -240,11 +240,11 @@ function serializeSelect($str, $cat) {
                             $array_line_value .= $data_v[$a_v]['name'] . ',';
                         }
                     }
-
+                    
                     if ($sortdelim == ';') {
 
                         // Создаем новую колонку
-                        if (empty($GLOBALS['sort_col_name'][$k]) and ! empty($data_v[$a_v]['name'])) {
+                        if (empty($GLOBALS['sort_col_name'][$k])) {
                             $GLOBALS['sort_col_name'][$data[$k]['name']] = $data_v[$a_v]['name'];
                         }
 
@@ -468,7 +468,7 @@ function actionSave() {
                         $csv_line .= '"';
                         if (is_array($order['Cart']['cart']))
                             foreach ($order['Cart']['cart'] as $k => $v) {
-                                $csv_line .= '[' . $v['name'] . '(' . $v['num'] . '*' . $v['price'] . ')]';
+                                $csv_line .= '[' . $v['uid'].' '.$v['name'] . '(' . $v['num'] . '*' . $v['price'] . ')]';
                             }
                         $csv_line .= '[' . __('Доставка') . '(' . $order['Cart']['dostavka'] . ')]';
                         $csv_line .= '"' . $delim;
@@ -569,7 +569,7 @@ function actionSave() {
     }
 
     // Кодировка
-    if ($_POST['export_code'] == 'utf' and $csv == 'csv')
+    if ($_POST['export_code'] == 'utf' and $_POST['export_format'] == 'csv')
         $content = PHPShopString::win_utf8($csv_title . $csv);
     else
         $content = $csv_title . $csv;
@@ -595,6 +595,37 @@ function actionSave() {
 // Стартовый вид
 function actionStart() {
     global $PHPShopGUI, $PHPShopModules, $TitlePage, $PHPShopOrm, $key_name, $subpath, $key_base, $key_stop;
+    
+    // Выбрать настройку
+    if (!empty($_GET['exchanges'])) {
+
+        $PHPShopOrmExchanges = new PHPShopOrm($GLOBALS['SysValue']['base']['exchanges']);
+        $data_exchanges = $PHPShopOrmExchanges->select(array('*'), array('id' => '=' . intval($_GET['exchanges'])), false, array("limit" => 1));
+        
+
+        if (is_array($data_exchanges)) {
+            $_POST = unserialize($data_exchanges['option']);
+            
+            $exchanges_name = ": ". $data_exchanges['name'];
+
+            $memory[$_GET['path']]['export_sortdelim'] = @$_POST['export_sortdelim'];
+            $memory[$_GET['path']]['export_sortsdelim'] = @$_POST['export_sortsdelim'];
+            $memory[$_GET['path']]['export_imgdelim'] = @$_POST['export_imgdelim'];
+            $memory[$_GET['path']]['export_imgpath'] = @$_POST['export_imgpath'];
+            $memory[$_GET['path']]['export_uniq'] = @$_POST['export_uniq'];
+            $memory[$_GET['path']]['export_action'] = @$_POST['export_action'];
+            $memory[$_GET['path']]['export_delim'] = @$_POST['export_delim'];
+            $memory[$_GET['path']]['export_imgproc'] = @$_POST['export_imgproc'];
+            $memory[$_GET['path']]['export_code'] = @$_POST['export_code'];
+            
+            $export_sortdelim = @$memory[$_GET['path']]['export_sortdelim'];
+            $export_sortsdelim = @$memory[$_GET['path']]['export_sortsdelim'];
+            $export_imgvalue = @$memory[$_GET['path']]['export_imgdelim'];
+            $export_code = $memory[$_GET['path']]['export_code'];
+            $export_format = @$_POST['export_format'];
+            $export_limit = @$_POST['export_limit'];
+        }
+    }
 
     $PHPShopGUI->action_button['Экспорт'] = array(
         'name' => __('Выполнить'),
@@ -696,28 +727,28 @@ function actionStart() {
         </tr>
    </table>';
 
-    $PHPShopGUI->setActionPanel($TitlePage, false, array('Экспорт'));
+    $PHPShopGUI->setActionPanel($TitlePage.$exchanges_name, false, array('Экспорт'));
 
-    $delim_value[] = array(__('Точка с запятой'), ';', 'selected');
-    $delim_value[] = array(__('Запятая'), ',', '');
+    $delim_value[] = array(__('Точка с запятой'), ';', @$memory[$_GET['path']]['export_delim']);
+    $delim_value[] = array(__('Запятая'), ',', @$memory[$_GET['path']]['export_delim']);
 
-    $delim_sortvalue[] = array('#', '#', 'selected');
-    $delim_sortvalue[] = array(__('Колонка'), ';', '');
+    $delim_sortvalue[] = array('#', '#', $export_sortdelim);
+    $delim_sortvalue[] = array(__('Колонка'), ';', $export_sortdelim);
 
-    $delim_imgvalue[] = array(__('Выключить'), 0, 'selected');
-    $delim_imgvalue[] = array(__('Запятая'), ',', '');
-    $delim_imgvalue[] = array('#', '#', '');
-    $delim_imgvalue[] = array(__('пробел'), ' ', '');
+    $delim_imgvalue[] = array(__('Выключить'), 0, $export_imgvalue);
+    $delim_imgvalue[] = array(__('Запятая'), ',', $export_imgvalue);
+    $delim_imgvalue[] = array('#', '#', $export_imgvalue);
+    $delim_imgvalue[] = array(__('пробел'), ' ', $export_imgvalue);
 
-    $code_value[] = array('ANSI', 'ansi', 'selected');
-    $code_value[] = array('UTF-8', 'utf', '');
+    $code_value[] = array('ANSI', 'ansi', $export_code);
+    $code_value[] = array('UTF-8', 'utf', $export_code);
 
-    $format_value[] = array('CSV', 'csv', 'selected');
-    $format_value[] = array('CommerceML', 'xml', '');
+    $format_value[] = array('CSV', 'csv', $export_format);
+    $format_value[] = array('CommerceML', 'xml', $export_format);
 
     $Tab1 = $PHPShopGUI->setField('CSV-разделитель', $PHPShopGUI->setSelect('export_delim', $delim_value, 150)) .
             $PHPShopGUI->setField('Разделитель для характеристик', $PHPShopGUI->setSelect('export_sortdelim', $delim_sortvalue, 150), 1, 'Колонка с характеристиками только для общего каталога', $class) .
-            $PHPShopGUI->setField('Полный путь для изображений', $PHPShopGUI->setCheckbox('export_imgpath', 1, null, 0), 1, 'Добавляет к изображениям адрес сайта', $class) .
+            $PHPShopGUI->setField('Полный путь для изображений', $PHPShopGUI->setCheckbox('export_imgpath', 1, null, @$memory[$_GET['path']]['export_imgpath']), 1, 'Добавляет к изображениям адрес сайта', $class) .
             $PHPShopGUI->setField('Разделитель для изображений', $PHPShopGUI->setSelect('export_imgdelim', $delim_imgvalue, 150), 1, 'Дополнительные изображения', $class) .
             $PHPShopGUI->setField('Кодировка текста', $PHPShopGUI->setSelect('export_code', $code_value, 150)) .
             $PHPShopGUI->setField('Формат файла', $PHPShopGUI->setSelect('export_format', $format_value, 150), 1, false, $class_xml) .
@@ -730,7 +761,7 @@ function actionStart() {
     $exchanges_value[] = array(__('Создать новую настройку'), 'new');
     if (is_array($data)){
         foreach ($data as $row) {
-            $exchanges_value[] = array($row['name'], $row['id']);
+            $exchanges_value[] = array($row['name'], $row['id'],$_REQUEST['exchanges']);
             $exchanges_remove_value[] = array($row['name'], $row['id']);
         }
     }else $exchanges_remove_value=null;

@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_moysklad_system` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 
-INSERT INTO `phpshop_modules_moysklad_system` VALUES (1, '', '', '','','','','1','1.0');
+INSERT INTO `phpshop_modules_moysklad_system` VALUES (1, '', '', '','','','','1','1.1');
 
 DROP TABLE IF EXISTS `phpshop_modules_moysklad_log`;
 CREATE TABLE IF NOT EXISTS `phpshop_modules_moysklad_log` (

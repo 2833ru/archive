@@ -64,9 +64,9 @@ function actionStart() {
             $PHPShopGUI->setCheckbox('option[tel_dialog]', 1, 'Включить обязательное поле телефон для чата', $option['tel_dialog'])).
             $PHPShopGUI->setField("Заголовок чата", $PHPShopGUI->setInputText(null, "option[title_dialog]", $option['title_dialog'], 300)) .
             $PHPShopGUI->setField("Приветствие в чате", $PHPShopGUI->setTextarea('option[text_dialog]',$option['text_dialog'],false,300)).
-            $PHPShopGUI->setField("График работы чата", $PHPShopGUI->setInputText(__('c').'&nbsp;&nbsp;', "option[time_from_dialog]", (int) $option['time_from_dialog'], 150,'ч.').'<br>'.
-                    $PHPShopGUI->setInputText(__('до'), "option[time_until_dialog]", (int) $option['time_until_dialog'], 150,'ч.') .'<br>'.
-                    $PHPShopGUI->setSelect('option[day_dialog]', $value_day,150).'<br>'.
+            $PHPShopGUI->setField("График работы чата", $PHPShopGUI->setInputText('c'.'&nbsp;&nbsp;', "option[time_from_dialog]", (int) $option['time_from_dialog'], 150,__('ч.')).'<br>'.
+                    $PHPShopGUI->setInputText('до', "option[time_until_dialog]", (int) $option['time_until_dialog'], 150,__('ч.')) .'<br>'.
+                    $PHPShopGUI->setSelect('option[day_dialog]', $value_day,150,true).'<br>'.
                     $PHPShopGUI->setCheckbox('option[time_off_dialog]', 1, 'Скрыть виджет чата в нерабочее время', $option['time_off_dialog'])
                     ) .
             $PHPShopGUI->setField("Аватар сотрудника в чате", $PHPShopGUI->setIcon($option['avatar_dialog'], "avatar_dialog", false, array('load' => false, 'server' => true))).

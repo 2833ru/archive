@@ -4,7 +4,7 @@
     <name>Sitemap Pro</name>
     <faqlink>https://docs.phpshop.ru/moduli/seo/sitemappro</faqlink>
     <description>Модуль генерации карты сайта с поддержкой большого количества номенклатуры.</description>
-    <category>seo</category>
+    <category>seo,pro</category>
     <pro>true</pro>
     <sign>1620802556</sign>
     <adminmenu>

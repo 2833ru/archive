@@ -340,9 +340,10 @@ class PHPShopUsers extends PHPShopCore {
      * @return string 
      */
     function link_encode($files) {
+        $time = time();
         $str = array(
             "files" => $files,
-            "time" => (time("U") + ($this->getValue('my.digital_time') * 86400))
+            "time" => ($time + $this->getValue('my.digital_time') * 86400)
         );
         $str = serialize($str);
         $code = base64_encode($str);

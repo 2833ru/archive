@@ -1145,7 +1145,7 @@ function index() {
  */
 
 function update_cache($type) {
-    if (count($_REQUEST['v']) == 1) {
+    if (is_array($_REQUEST['v']) and count($_REQUEST['v']) == 1) {
         foreach ($_REQUEST['v'] as $sort_id => $sort_value) {
 
             if (count($sort_value) == 1) {

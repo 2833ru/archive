@@ -136,9 +136,10 @@ class PHPShopYml {
             $this->ssl = 'https://';
 
         // Исходное изображение
-        if(isset($_GET['image_source']) and $this->PHPShopSystem->ifSerilizeParam('admoption.image_save_source'))
+        if (isset($_GET['image_source']) and $this->PHPShopSystem->ifSerilizeParam('admoption.image_save_source'))
             $this->image_source = true;
-        else $this->image_source = false;
+        else
+            $this->image_source = false;
 
         // Колонка цен
         $this->price = $this->PHPShopSystem->getPriceColumn();
@@ -579,7 +580,7 @@ class PHPShopYml {
 function setHeader() {
     $this->xml .= '<?xml version="1.0" encoding="' . $this->encoding . '"?>
 <!DOCTYPE yml_catalog SYSTEM "shops.dtd">
-<yml_catalog date="' . date('Y-m-d H:m') . '">
+<yml_catalog date="' . date('Y-m-d H:i') . '">
 <shop>
 <name>' . $this->PHPShopSystem->getName() . '</name>
 <company>' . $this->PHPShopSystem->getValue('company') . '</company>
@@ -641,7 +642,7 @@ function setDelivery() {
 function cleanStr($string) {
     $string = html_entity_decode($string, ENT_QUOTES, 'windows-1251');
     $string = str_replace('&#43;', '+', $string);
-    $string = str_replace(array('"','&','>','<',"'"),array('&quot;','&amp;','&gt;','&lt;','&apos;'),$string);
+    $string = str_replace(array('"', '&', '>', '<', "'"), array('&quot;', '&amp;', '&gt;', '&lt;', '&apos;'), $string);
     return $string;
 }
 
@@ -760,15 +761,12 @@ function setProducts() {
 
         // weight
         if (!empty($val['weight']))
-            $xml.='<weight>' . round($val['weight'] / 1000, 3) . '</weight>';
+            $xml .= '<weight>' . round($val['weight']/1000,3). '</weight>';
 
         // Габариты
         if (!empty($val['length']) && !empty($val['width']) && !empty($val['height']))
-            $xml.='<dimensions>' . sprintf('%s/%s/%s',
-                    number_format($val['length'], 2, '.', ''),
-                    number_format($val['width'], 2, '.', ''),
-                    number_format($val['height'], 2, '.', '')
-                ) . '</dimensions>';
+            $xml .= '<dimensions>' . sprintf('%s/%s/%s', number_format($val['length'], 2, '.', ''), number_format($val['width'], 2, '.', ''), number_format($val['height'], 2, '.', '')
+                    ) . '</dimensions>';
 
         $xml .= '<currencyId>' . $this->defvalutaiso . '</currencyId>
       <categoryId>' . $val['category'] . '</categoryId>
@@ -784,7 +782,8 @@ function setProducts() {
             $this->xml .= $xml;
         }
     }
-    $this->xml .= '
+    if (!empty($this->xml))
+        $this->xml .= '
         </offers>
         ';
 }

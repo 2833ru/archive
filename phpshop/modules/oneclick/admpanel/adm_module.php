@@ -70,14 +70,14 @@ function actionStart() {
 
     $Tab1 = $PHPShopGUI->setField('Заголовок', $PHPShopGUI->setInputText(false, 'title_new', $data['title']));
     $Tab1 .= $PHPShopGUI->setField('Сообщение', $PHPShopGUI->setTextarea('title_end_new', $data['title_end']));
-    $Tab1 .= $PHPShopGUI->setField('Место вывода', $PHPShopGUI->setSelect('enabled_new', $e_value, 250));
-    $Tab1 .= $PHPShopGUI->setField('Тип вывода', $PHPShopGUI->setSelect('windows_new', $w_value, 250));
-    $Tab1 .= $PHPShopGUI->setField('Вывод', $PHPShopGUI->setSelect('display_new', $d_value, 250));
-    $Tab1 .= $PHPShopGUI->setField('Запись заказа', $PHPShopGUI->setSelect('write_order_new', $o_value, 250));
+    $Tab1 .= $PHPShopGUI->setField('Место вывода', $PHPShopGUI->setSelect('enabled_new', $e_value, 250,true));
+    $Tab1 .= $PHPShopGUI->setField('Тип вывода', $PHPShopGUI->setSelect('windows_new', $w_value, 250,true));
+    $Tab1 .= $PHPShopGUI->setField('Вывод', $PHPShopGUI->setSelect('display_new', $d_value, 250,true));
+    $Tab1 .= $PHPShopGUI->setField('Запись заказа', $PHPShopGUI->setSelect('write_order_new', $o_value, 250,true));
     
     $Tab1 .= $PHPShopGUI->setField('Статус заказа', $PHPShopGUI->setSelect('status_new', $order_status_value, 250));
     
-    $Tab1 .= $PHPShopGUI->setField('Защитная картинка', $PHPShopGUI->setSelect('captcha_new', $c_value, 250));
+    $Tab1 .= $PHPShopGUI->setField('Защитная картинка', $PHPShopGUI->setSelect('captcha_new', $c_value, 250,true));
     $Tab1 .= $PHPShopGUI->setField('Только в наличии', $PHPShopGUI->setCheckbox('only_available_new', 1, 'Отображать кнопку только у товаров в наличии', $data['only_available']));
 
 

@@ -7372,7 +7372,7 @@ h1.title{
 
 .btn-default:focus,
 .btn-default.focus,.btn-default:hover,.btn-default:active,
-.btn-default.active,.open > .dropdown-toggle.btn-default, 
+,.open > .dropdown-toggle.btn-default, 
 .navbar-nav > .active > a:hover, .navbar-nav > .active > a:focus,.navbar-nav > li > a:hover, 
 .navbar-nav > li > a:focus,.dropdown-menu > li > a:focus, .dropdown-menu > li > a:hover, .nav-pills > li.active > a:hover,.nav > li > a:hover, .nav > li > a:focus, .dropdown-menu > li > a:hover > .dropdown-header {
   background-color: #007AFE !important;
@@ -7412,4 +7412,18 @@ h1.title{
 .col-block,.panel {
     background-color: rgb(46, 51, 56) !important; 
     border: 1px solid rgba(0, 0, 0, 0.6) !important; 
+}
+
+/*scrollbar*/
+::-webkit-scrollbar {
+    width: 15px;
+}
+
+::-webkit-scrollbar-track {
+    border-radius: 0;
+}
+
+::-webkit-scrollbar-thumb {
+    margin: 2px;
+    background: rgb(25,25,25);
 }

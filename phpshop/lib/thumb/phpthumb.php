@@ -974,10 +974,10 @@ class PHPThumb extends PHPThumbLibrary {
 
                 // throw an exception if not writeable
                 if (!is_writeable(dirname($fileName))) {
-                    throw new RuntimeException("File is not writeable, and could not correct permissions: {$fileName}");
+                    //throw new RuntimeException("File is not writeable, and could not correct permissions: {$fileName}");
                 }
             } else { // throw an exception if not writeable
-                throw new RuntimeException("File not writeable: {$fileName}");
+                //throw new RuntimeException("File not writeable: {$fileName}");
             }
         }
 

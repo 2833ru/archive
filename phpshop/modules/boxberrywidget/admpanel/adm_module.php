@@ -69,6 +69,7 @@ function actionStart() {
 
     // Выборка
     $data = $PHPShopOrm->select();
+    $PHPShopGUI->field_col = 4;
 
     // Демо-режим
     if ($PHPShopBase->getParam('template_theme.demo') == 'true') {
@@ -143,6 +144,8 @@ function actionStart() {
     $Tab1.= $PHPShopGUI->setField('Город на карте по умолчанию', $PHPShopGUI->setInputText(false, 'city_new', $data['city'], 300));
     $Tab1.= $PHPShopGUI->setField('Добавить наценку', '<input class="form-control input-sm " type="number" step="0.1" min="0" value="' . $data['fee'] . '" name="fee_new" style="width:300px;">');
     $Tab1.= $PHPShopGUI->setField('Тип наценки', $PHPShopGUI->setSelect('fee_type_new', array(array('%', 1, $data['fee_type']), array('Руб.', 2, $data['fee_type'])), 300, null, false, $search = false, false, $size = 1));
+    
+    $Tab1 = $PHPShopGUI->setCollapse('Настройки',$Tab1);
 
     $Tab1.= $PHPShopGUI->setCollapse('Вес и габариты по умолчанию', $PHPShopGUI->setField('Вес, гр.', $PHPShopGUI->setInputText('', 'weight_new', $data['weight'], 300)) .
             $PHPShopGUI->setField('Ширина, см.', $PHPShopGUI->setInputText('', 'width_new', $data['width'], 300)) .
@@ -183,7 +186,7 @@ function actionStart() {
     $Tab4 = $PHPShopGUI->setPay($serial = false, false, $data['version'], true);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Инструкция", $Tab2), array("О Модуле", $Tab4));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true,false,true), array("Инструкция", $Tab2), array("О Модуле", $Tab4));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =

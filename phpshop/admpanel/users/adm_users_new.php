@@ -38,7 +38,7 @@ function actionStart() {
     $pasgen = substr(md5(date("U")), 0, 8);
 
     // Содержание закладки 1
-    $Tab1 = $PHPShopGUI->setCollapse(__('Информация'), $PHPShopGUI->setField("Имя", $PHPShopGUI->setInput('text', "name_new", $data['name'])) .
+    $Tab1 = $PHPShopGUI->setCollapse('Информация', $PHPShopGUI->setField("Имя", $PHPShopGUI->setInput('text', "name_new", $data['name'])) .
             $PHPShopGUI->setField("Логин", $PHPShopGUI->setInput('text.required.4', "login_new", $data['login'])) .
             $PHPShopGUI->setField("E-mail", $PHPShopGUI->setInput('email.required.6', "mail_new", $data['mail'])) .
             $PHPShopGUI->setField("Пароль", $PHPShopGUI->setInput("password.required.6", "password_new", hidePassword($data['password']), null, false, false, false, false, false, '<a href="#" class="password-gen" data-password="P' . $pasgen . '" data-text="' . __('Сгенерирован пароль: ') . '"  data-toggle="tooltip" data-placement="top" title="' . __('Сгенерировать пароль') . '"><span class="glyphicon glyphicon-cog"></span></a>')) .

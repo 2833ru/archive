@@ -40,16 +40,17 @@ class PHPShopStatusHistory {
         
         $PHPShopInterface = new PHPShopInterface();
         $PHPShopInterface->checkbox_action = false;
-        $PHPShopInterface->setCaption(array("Дата", "20%"),array("Пользователь", "20%"),  array("IP", "20%"), array("Статус", "40%"));
+        $PHPShopInterface->setCaption(array("Дата", "20%"),array("Пользователь", "20%"),  array("Статус", "40%"));
 
         $data = $this->PHPShopOrm->select(array('*'), array('ouid' => "='$order_id'"), array('order' => 'id ASC'), array('limit' => 50));
         if (is_array($data)) {
             foreach ($data as $val) {
-                $PHPShopInterface->setRow(array('name' => PHPShopDate::dataV($val['unix_data'])), array('name' => $users[$val['user_id']]), array('name' => $val['user_ip']), array('name' => '<span class="hidden-xs" style="color:' . $color[$val['status']] . '">' . $statuses[$val['status']] . '</span>', 'class' => 'label-link'));
+                $PHPShopInterface->setRow(array('name' => PHPShopDate::dataV($val['unix_data'])), array('name' => $users[$val['user_id']].'<br>'.$val['user_ip']), array('name' => '<span class="hidden-xs" style="color:' . $color[$val['status']] . '">' . $statuses[$val['status']] . '</span>', 'class' => 'label-link'));
             }
+        return '<table class="table table-hover">'.$PHPShopInterface->_CODE.'</table>';    
         }
         
-        return '<table class="table table-hover">'.$PHPShopInterface->_CODE.'</table>';        
+            
     }
     
     private function get_array($table, $field = 'name') {

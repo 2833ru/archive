@@ -5,10 +5,10 @@ function addProductIDProductsgroup($data) {
 
     $productsgroup_products = unserialize($data['productsgroup_products']);
     $Tab10 = $PHPShopGUI->setCheckbox('productsgroup_check_new', 1, 'Включить вывод групп составных товаров', $data['productsgroup_check']);
-    $tr=null;
+    $tr = null;
 
     for ($i = 1; $i < 10; $i++) {
-        
+
         $tr .= '<tr>
             <td>' . $PHPShopGUI->setInputText(null, 'productsgroup_products[' . $i . '][id]', @$productsgroup_products[$i]['id']) . ' </td>
             <td><button  class="btn btn-default btn-sm cart-add" data-id="' . $i . '"><span class="glyphicon glyphicon-plus"></span> ' . __('Добавить товар') . '</button></td>
@@ -16,11 +16,11 @@ function addProductIDProductsgroup($data) {
         </tr>';
     }
 
-    $Tab10.= '<br><br><table class="table table-striped table-hover" style="width:550px;">
+    $Tab10 .= '<br><br><table class="table table-striped table-hover" style="width:550px;">
         <tr>
-            <th class="text-center" width="40%">'.__('Товар').' ID</th>
+            <th class="text-center" width="40%">' . __('Товар') . ' ID</th>
             <th class="text-center" width="20%"></th>
-            <th class="text-center">'.__('Кол-во').'</th>
+            <th class="text-center">' . __('Кол-во') . '</th>
         </tr>
          ' . $tr . '
     </table>
@@ -33,9 +33,10 @@ function addProductIDProductsgroup($data) {
 function updateProductIDProductsgroup($data) {
     global $link_db;
 
-    if (empty($_POST['productsgroup_check_new'])) {
-        $_POST['productsgroup_check_new'] = 0;
-    }
+    if (empty($_POST['ajax']))
+        if (empty($_POST['productsgroup_check_new'])) {
+            $_POST['productsgroup_check_new'] = 0;
+        }
     if (is_array($_POST['productsgroup_products'])) {
         //Обновляем цену
         if ($_POST['productsgroup_check_new'] == 1) {

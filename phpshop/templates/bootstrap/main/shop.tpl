@@ -37,12 +37,14 @@
 
         <!-- Header -->
         <header class="container ">
-	        <!-- Стикер-полоска -->
-	        <div class="top-banner @php __hide('sticker_close','cookie'); php@">
-				<div class="sticker-text">@sticker_top@</div>
-				<span class="close sticker-close">x</span>
-			</div>
-			<!-- /Стикер-полоска -->
+            <!-- Стикер-полоска -->
+            <div class="@php __hide('sticker_top'); php@">
+                <div class="top-banner @php __hide('sticker_close','cookie'); php@">
+                    <div class="sticker-text">@sticker_top@</div>
+                    <span class="close sticker-close">x</span>
+                </div>
+            </div>
+            <!-- /Стикер-полоска -->
             <div class="row">
                 <div class="col-md-12 hidden-xs">
                     <ul class="nav nav-pills pull-right">
@@ -273,6 +275,7 @@
         <!--/ toTop -->
         <div class="text-center banner">@banersDispHorizontal@</div>
 
+        @editor@
 
         <div class="row">
             <div class="col-xs-12 @php __hide('now_buying'); php@">
@@ -406,9 +409,6 @@
         </div>
     </div>
     <!--/ Модальное окно авторизации-->
-
-    <!-- jQuery -->
-    @editor@
 
     <!-- Fixed mobile bar -->
     <div class="bar-padding-fix visible-xs"></div>

@@ -42,17 +42,20 @@ function actionStart() {
     // Выборка
     $data = $PHPShopOrm->select();
 
+    // Место вывода
     $e_value[] = array('корзина', 0, $data['enabled']);
     $e_value[] = array('слева', 1, $data['enabled']);
     $e_value[] = array('справа', 2, $data['enabled']);
-
+    
 
     $Tab1 = $PHPShopGUI->setField('Заголовок блока', $PHPShopGUI->setInputText(false, 'title_new', $data['title'],300),1,'Для вывода слева или справа');
-    $Tab1.=$PHPShopGUI->setField('Память корзины', $PHPShopGUI->setCheckbox('memory_new', 1, 'Хранить незаконченные корзины в базе', $data['memory']));
+    $Tab1.= $PHPShopGUI->setField('Память корзины', $PHPShopGUI->setInputText(false, 'day_new', $data['day'],100,__('дней')).$PHPShopGUI->setCheckbox('memory_new', 1, 'Хранить незаконченные корзины в базе', $data['memory']));
+    
     $Tab1.=$PHPShopGUI->setField('Сейчас покупают', $PHPShopGUI->setCheckbox('nowbuy_new', 1, 'Вывод случайного товара из последних заказов', $data['nowbuy']));
     $Tab1.=$PHPShopGUI->setField('Источник', $PHPShopGUI->setCheckbox('referal_new', 1, 'Добавлять источник перехода в комментарий менеджеру', $data['referal']));
     $Tab1.=$PHPShopGUI->setField('Место вывода', $PHPShopGUI->setSelect('enabled_new', $e_value, 150,true));
-    $Tab1.= $PHPShopGUI->setField('Рассылка уведомлений', $PHPShopGUI->setInputText(false, 'sendmail_new', $data['sendmail'],50),1,'Количество писем при рассылке за раз');
+    $Tab1.= $PHPShopGUI->setField('Рассылка уведомлений', $PHPShopGUI->setInputText(false, 'sendmail_new', $data['sendmail'],100,__('писем')),1,'Количество писем при рассылке за раз');
+   
 
     // Форма регистрации
     $Tab3 = $PHPShopGUI->setPay($serial = false, false, $data['version'], true);

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<module>
+    <version>1.0</version>
+    <name>1С синхронизация</name>
+    <description>Модуль настройки синхронизации с 1С.</description>
+    <faqlink>https://docs.phpshop.ru/moduli/crm/1c</faqlink>
+    <category>crm,pro</category>
+    <adminmenu>
+        <title>1С синхронизация</title>
+        <capability>true</capability>
+        <podmenu>
+            <podmenu_name>Документооборот</podmenu_name>
+            <podmenu_action>system.sync</podmenu_action>
+        </podmenu>
+        <podmenu>
+            <podmenu_name>Журнал операций</podmenu_name>
+            <podmenu_action>report.crm</podmenu_action>
+        </podmenu>
+    </adminmenu>
+</module>

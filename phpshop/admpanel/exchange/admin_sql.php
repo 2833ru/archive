@@ -198,6 +198,8 @@ function actionStart() {
     $query_value[] = array('Выбрать SQL команду', 0, '');
     $query_value[] = array('Оптимизировать базу', 'OPTIMIZE TABLE ' . $bases, $optimize_sel);
     $query_value[] = array('Починить базу', 'REPAIR TABLE ' . $bases, '');
+    $query_value[] = array('Удалить все фото товаров', 'TRUNCATE ' . $GLOBALS['SysValue']['base']['foto'] . ';
+UPDATE ' . $GLOBALS['SysValue']['base']['products'] . ' set pic_small=\'\', pic_big=\'\';','');
     $query_value[] = array('Удалить характеристики', 'TRUNCATE ' . $GLOBALS['SysValue']['base']['sort'] . ';
 TRUNCATE ' . $GLOBALS['SysValue']['base']['sort_categories'] . ';
 UPDATE ' . $GLOBALS['SysValue']['base']['products'] . ' set vendor=\'\', vendor_array=\'\';

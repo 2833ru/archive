@@ -11,7 +11,7 @@
         <link rel="apple-touch-icon" href="@icon@">
         <link rel="icon" href="@icon@" type="image/x-icon">
         <link rel="mask-icon" href="@icon@" >
-        
+
         <!-- OpenGraph -->
         <meta property="og:title" content="@ogTitle@">
         <meta property="og:image" content="http://@serverName@@ogImage@">
@@ -36,12 +36,15 @@
 
         <!-- Header -->
         <header class="container-fluid ">
-	        <!-- Стикер-полоска -->
-	        <div class="top-banner @php __hide('sticker_close','cookie'); php@">
-				<div class="sticker-text">@sticker_top@</div>
-				<span class="close sticker-close">x</span>
-			</div>
-			<!-- /Стикер-полоска -->
+
+            <!-- Стикер-полоска -->
+            <div class="@php __hide('sticker_top'); php@">
+                <div class="top-banner @php __hide('sticker_close','cookie'); php@">
+                    <div class="sticker-text">@sticker_top@</div>
+                    <span class="close sticker-close">x</span>
+                </div>
+            </div>
+            <!-- /Стикер-полоска -->
 
             <div class="row">
                 <div class="col-md-12 hidden-xs">
@@ -277,6 +280,7 @@
 
         <div class="visible-lg visible-md text-center banner">@banersDispHorizontal@<br></div>
 
+        @editor@
 
         <!-- toTop -->
         <div class="visible-lg visible-md">
@@ -406,9 +410,6 @@
     </div>
     <!--/ Модальное окно авторизации-->
 
-    <!-- jQuery -->
-    @editor@
-
     <!-- Fixed mobile bar -->
     <div class="bar-padding-fix visible-xs"></div>
     <nav class="navbar navbar-default navbar-fixed-bottom bar bar-tab visible-xs">
@@ -434,7 +435,7 @@
 
     <!-- Согласие на использование cookie  -->
     <div class="cookie-message hide"><p></p><a href="#" class="btn btn-default btn-sm">Ok</a></div>
-    
+
     <link rel="stylesheet" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/font-awesome.min.css"> 
     <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/bar.css" rel="stylesheet">
     <link rel="stylesheet" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/solid-menu.css">

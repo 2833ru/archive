@@ -27,7 +27,7 @@ function actionStart() {
     $Tab1 .= $PHPShopGUI->setField("Наименование организации", $PHPShopGUI->setInputText(null, "bank[org_name]", $bank['org_name']));
     $Tab1 .= $PHPShopGUI->setField("Юридический адрес", $PHPShopGUI->setInputText(null, "bank[org_ur_adres]", $bank['org_ur_adres']));
     $Tab1 .= $PHPShopGUI->setField("Фактический адрес", $PHPShopGUI->setInputText(null, "bank[org_adres]", $bank['org_adres']));
-    $Tab1 .= $PHPShopGUI->setField("Форма собственности", $PHPShopGUI->setSelect('bank[org_forma]', $forma_value, 350));
+    $Tab1 .= $PHPShopGUI->setField("Форма собственности", $PHPShopGUI->setSelect('bank[org_forma]', $forma_value, 350,true));
     $Tab1 .= $PHPShopGUI->setField("ИНН", $PHPShopGUI->setInputText(null, "bank[org_inn]", $bank['org_inn'], 350));
 
     if ($bank['org_forma'] == 1)

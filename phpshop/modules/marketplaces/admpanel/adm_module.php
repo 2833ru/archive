@@ -127,13 +127,13 @@ function actionStart() {
         }
 
 
-    $tree_select_gm = '<select class="selectpicker show-menu-arrow hidden-edit" data-live-search="true" data-container=""  data-style="btn btn-default btn-sm" name="categories_gm[]"  data-width="100%" multiple>' . $tree_select . '</select>';
+    $tree_select_gm = '<select class="selectpicker show-menu-arrow hidden-edit" data-live-search="true" data-container="body" data-style="btn btn-default btn-sm" name="categories_gm[]"  data-width="100%" multiple>' . $tree_select . '</select>';
     
-    $tree_select_cm = '<select class="selectpicker show-menu-arrow hidden-edit" data-live-search="true" data-container=""  data-style="btn btn-default btn-sm" name="categories_cm[]"  data-width="100%" multiple>' . $tree_select . '</select>';
+    $tree_select_cm = '<select class="selectpicker show-menu-arrow hidden-edit" data-live-search="true" data-container="body" data-style="btn btn-default btn-sm" name="categories_cm[]"  data-width="100%" multiple>' . $tree_select . '</select>';
     
-    $tree_select_ae = '<select class="selectpicker show-menu-arrow hidden-edit" data-live-search="true" data-container=""  data-style="btn btn-default btn-sm" name="categories_ae[]"  data-width="100%" multiple>' . $tree_select . '</select>';
+    $tree_select_ae = '<select class="selectpicker show-menu-arrow hidden-edit" data-live-search="true" data-container="body" data-style="btn btn-default btn-sm" name="categories_ae[]"  data-width="100%" multiple>' . $tree_select . '</select>';
     
-    $tree_select_sm = '<select class="selectpicker show-menu-arrow hidden-edit" data-live-search="true" data-container=""  data-style="btn btn-default btn-sm" name="categories_sm[]"  data-width="100%" multiple>' . $tree_select . '</select>';
+    $tree_select_sm = '<select class="selectpicker show-menu-arrow hidden-edit" data-live-search="true" data-container="body" data-style="btn btn-default btn-sm" name="categories_sm[]"  data-width="100%" multiple>' . $tree_select . '</select>';
 
     // Выбор каталога Google Merchant
     $catOption =  $PHPShopGUI->setField("Размещение", $tree_select_gm . $PHPShopGUI->setCheckbox("categories_gm_all", 1, "Выбрать все категории?", 0));
@@ -247,7 +247,7 @@ function actionUpdate() {
             $where = array('category' => ' IN ("' . implode('","', $cat_array) . '")');
             $PHPShopOrmProducts = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
             $PHPShopOrmProducts->debug=false;
-            $PHPShopOrmProducts->update(array('aliexpress_new' =>intval($_POST['enabled_cm_all'])), $where);
+            $PHPShopOrmProducts->update(array('aliexpress_new' =>intval($_POST['enabled_gm_all'])), $where);
         }
     }
     
