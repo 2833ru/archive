@@ -65,7 +65,7 @@ while($row = mysql_fetch_array($result))
 	$num=TestCat($id);
 	if($num>0) 
 	 @$dis.="
-	d4.add($id,0,'$name','javascript:miniWin(\'./adm_catalogID.php?catalogID=$id\',500,320);');
+	d4.add($id,0,'$name','javascript:miniWin(\'./adm_catalogID.php?catalogID=$id\',600,600);');
 	".Vivod_rekurs($id)."
 	";
 	else @$dis.="

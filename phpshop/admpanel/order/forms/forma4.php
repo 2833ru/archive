@@ -15,7 +15,7 @@ $PHPShopBase->chekAdmin();
 $PHPShopSystem = new PHPShopSystem();
 $LoadItems['System']=$PHPShopSystem->getArray();
 
-$PHPShopOrder = new PHPShopOrder($_GET['orderID']);
+$PHPShopOrder = new PHPShopOrderFunction($_GET['orderID']);
 
 
 // Подключаем реквизиты
@@ -43,7 +43,7 @@ $row = mysql_fetch_array(@$result);
  @$dis.="
   <tr>
     <td >".$val['name']."</td>
-    <td align=\"center\">шт</td>
+    <td align=\"center\">".$val['ed_izm']."</td>
     <td align=\"right\">".$val['num']."</td>
     <td align=\"right\">".$this_price."</td>
     <td align=\"right\">".$this_price_bez_nds."</td>
@@ -85,7 +85,7 @@ if ($zeroweight) {$weight=0;}
  @$dis.="
   <tr>
     <td >Доставка ".$PHPShopDelivery->getCity()."</td>
-    <td align=\"center\">шт</td>
+    <td align=\"center\">шт.</td>
     <td align=\"right\">1</td>
     <td align=\"right\">".$deliveryPrice."</td>
     <td align=\"right\">".$deliveryPrice."</td>

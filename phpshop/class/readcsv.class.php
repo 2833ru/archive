@@ -1,19 +1,12 @@
-<?
-/*
-+-------------------------------------+
-|  Имя: PHPShopReadCsv                |
-|  Разработчик: PHPShop Software      |
-|  Использование: Enterprise          |
-|  Назначение: Чтения CSV             |
-|  Версия: 1.1                        |
-|  Тип: Extends class                 |
-|  Зависимости: PHPShopSecurity       |
-|  Вызов: Object                      |
-+-------------------------------------+
-*/
+<?php
 
-
-class PHPShopReadCsvPro {
+/**
+ * Библиотека чтения CSV файлов с учетом html тегов
+ * @author PHPShop Software
+ * @version 1.5
+ * @package PHPShopClass
+ */
+class PHPShopReadCsvPro extends PHPShopReadCsv{
     var $CsvContent;
     var $ReadCsvRow;
     var $TableName;
@@ -26,6 +19,7 @@ class PHPShopReadCsvPro {
 
     function ReadCsvRow() {
         $csv_lines  = $this->CsvContent;
+        array_shift($csv_lines);
         if(is_array($csv_lines)) {
             //разбор csv
             $cnt = count($csv_lines);
@@ -108,13 +102,6 @@ class PHPShopReadCsvPro {
     }
 
 
-    function CleanStr($str) {
-        $a= str_replace("\"", "", $str);
-        $a= str_replace("\\", "", $a);
-        return str_replace("'", "", $a);
-    }
-
-
     function readFile($file) {
         if(is_file($file)) return file($file);
         else echo ("Не могу прочитать файл ".$file);
@@ -123,7 +110,12 @@ class PHPShopReadCsvPro {
 }
 
 
-
+/**
+ * Библиотека чтения CSV файлов
+ * @author PHPShop Software
+ * @version 1.5
+ * @package PHPShopClass
+ */
 class PHPShopReadCsv {
     var $CsvContent;
     var $ReadCsvRow;
@@ -185,7 +177,6 @@ class PHPShopReadCsv {
             return $fread;
         } else echo ("Не могу прочитать файл ".$file);
     }
-
 }
 
 

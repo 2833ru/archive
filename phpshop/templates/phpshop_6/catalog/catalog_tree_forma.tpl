@@ -1,1 +1,0 @@
-<li style="padding-left:20px"> <a href="/shop/CID_@CatalogId@.html?v[@SortCategoryId@]=@SortId@" title="@SortCategoryName@: @SortName@">@SortCategoryName@: @SortName@</a></li>

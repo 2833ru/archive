@@ -15,9 +15,9 @@ class PHPShopDelivery extends PHPShopObj {
      * Конструктор
      * @param Int $objID ИД доставки
      */
-    function PHPShopDelivery($objID) {
+    function PHPShopDelivery($objID=false) {
         $this->objID=$objID;
-        $this->objBase=$GLOBALS['SysValue']['base']['table_name30'];
+        $this->objBase=$GLOBALS['SysValue']['base']['delivery'];
         parent::PHPShopObj();
     }
 
@@ -54,5 +54,10 @@ class PHPShopDelivery extends PHPShopObj {
         return parent::getParam("city");
     }
 
+    function getPriceDefault() {
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['delivery']);
+        $row=$PHPShopOrm->select(array('price'),array('flag'=>"='1'",'enabled'=>"='1'"),false,array('limit'=>1));
+        return $row['price'];
+    }
 }
 ?>

@@ -4,6 +4,7 @@
  * @author PHPShop Software
  * @version 1.0
  * @package PHPShopClass
+ * @subpackage Helper
  */
 class PHPShopMath {
 

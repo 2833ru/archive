@@ -1,17 +1,13 @@
-<?
-/*
-+-------------------------------------+
-|  PHPShop Enterprise                 |
-|  Модуль OrderFunction CyberPlat     |
-+-------------------------------------+
-*/
+<?php
+/**
+ * Обработчик оплаты заказа через CyberPlat
+ * @author PHPShop Software
+ * @version 1.0
+ * @package PHPShopPayment
+ */
 
 if(empty($GLOBALS['SysValue'])) exit(header("Location: /"));
 
-$cart_list=Summa_cart();
-$ChekDiscount=ChekDiscount($cart_list[1]);
-$sum_pol=(ReturnSummaNal($cart_list[1],$ChekDiscount[0])+$GetDeliveryPrice);
-	 
 
 //параметры магазина
 $mrh_ouid = explode("-", $_POST['ouid']);
@@ -19,7 +15,7 @@ $inv_id = $mrh_ouid[0]."".$mrh_ouid[1];     //номер счета
 
 //описание покупки
 $inv_desc  = "$inv_id";
-
+$amount=$GLOBALS['SysValue']['other']['total'];
 
 // вывод HTML страницы с кнопкой для оплаты
  $disp=('
@@ -38,13 +34,13 @@ $inv_desc  = "$inv_id";
 	  
 <INPUT NAME="OrderID" TYPE=HIDDEN VALUE="$inv_desc">
 <INPUT NAME="Currency" TYPE=HIDDEN VALUE="RUR">
-<INPUT NAME="Amount" TYPE=HIDDEN VALUE="'.$sum_pol.'">
+<INPUT NAME="Amount" TYPE=HIDDEN VALUE="'.$amount.'">
 <INPUT NAME="PaymentDetails" TYPE=HIDDEN VALUE="'.$cart_list[0].'">
 <INPUT NAME="FirstName" TYPE=HIDDEN VALUE="'.$_POST['name_person'].'">
 <INPUT NAME="LastName" TYPE=HIDDEN VALUE="'.$_POST['name_person'].'">
 <INPUT NAME="Email" TYPE=HIDDEN VALUE="'.$_POST['mail'].'">
 <INPUT NAME="Phone" TYPE=HIDDEN VALUE="'.$_POST['tel_code'].' '.$_POST['tel_name'].'">
-<INPUT NAME="return_url" TYPE=HIDDEN VALUE="http://'.$SERVER_NAME.'"/">
+<INPUT NAME="return_url" TYPE=HIDDEN VALUE="http://'.$_SERVER['SERVER_NAME'].'"/">
 <table>
 <tr>
 	<td><img src="images/shop/icon-setup.gif" width="16" height="16" border="0"></td>

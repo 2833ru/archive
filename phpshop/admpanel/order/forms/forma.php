@@ -16,7 +16,7 @@ $PHPShopBase->chekAdmin();
 $PHPShopSystem = new PHPShopSystem();
 $LoadItems['System']=$PHPShopSystem->getArray();
 
-$PHPShopOrder = new PHPShopOrder($_GET['orderID']);
+$PHPShopOrder = new PHPShopOrderFunction($_GET['orderID']);
 
 // Подключаем реквизиты
 $SysValue['bank']=unserialize($LoadItems['System']['bank']);
@@ -38,7 +38,7 @@ $row = mysql_fetch_array(@$result);
   <tr class=tablerow>
 		<td class=tablerow>".$n."</td>
 		<td class=tablerow>".$val['name']."</td>
-		<td class=tablerow align=center>шт.&nbsp;</td>
+		<td class=tablerow align=center>".$val['ed_izm']."</td>
 		<td align=right class=tablerow>".$val['num']."</td>
 		<td align=right class=tablerow nowrap>".$PHPShopOrder->returnSumma($val['price'],0)."</td>
 		<td class=tableright>".$PHPShopOrder->returnSumma($val['price']*$val['num'],0)."</td>

@@ -17,7 +17,7 @@ while ($row = mysql_fetch_array($result))
 		$imgchek="<img src=\"img/icon-deactivate.gif\" width=\"16\" height=\"16\" border=\"0\">";
 	}
 	@$display.="
-	<tr onmouseover=\"show_on('r".$id_category."')\" id=\"r".$id_category."\" onmouseout=\"show_out('r".$id_category."')\" class=row onclick=\"miniWin('rating/adm_ratingID.php?id=$id_category',650,500)\">
+	<tr onmouseover=\"show_on('r".$id_category."')\" id=\"r".$id_category."\" onmouseout=\"show_out('r".$id_category."')\" class=row onclick=\"miniWin('rating/adm_ratingID.php?id=$id_category',650,550)\">
     <td align=\"center\" class=forma>
 	$imgchek
 	</td>

@@ -161,7 +161,7 @@ switch($p) {
    <td>
    <select name="action" size="1" onchange="DoWithSelect(this.value,form_flag,1000)">
 			<option SELECTED id=txtLang>С отмеченными</option>
-			<option value="43" id=txtLang>Раблокировать вывод</option>
+			<option value="43" id=txtLang>Разблокировать вывод</option>
 			<option value="44" id=txtLang>Заблокировать вывод</option>
 			<option value="41" id=txtLang>Удалить из базы</option>
    </select>
@@ -527,7 +527,7 @@ switch($p) {
 </table>
 <div align="right" style="padding:10">
 <BUTTON class="help" onclick="initSlide(0);loadhelp();">Справка</BUTTON>
-<BUTTON style="width: 15em; height: 2.2em; margin-left:5"  onclick="miniWin(\'./export/seamply_base.csv\',500,370)">
+<BUTTON style="width: 25em; height: 2.2em; margin-left:5"  onclick="miniWin(\'./export/seamply_base.csv\',500,370)">
 <img src="./img/action_save.gif" width="16" height="16" border="0" align="absmiddle" hspace="3">
 <span name=txtLang id=txtLang>Скачать пример файла</span>
 </BUTTON>
@@ -653,7 +653,7 @@ switch($p) {
     case("stats1"):
         require("../report/admin_stats1.php");
         $a_button=18;
-        if(CheckedRules($UserStatus["cat_prod"],0) == 1) $interface=Stats1($var1,$var2,$var3,$var4);
+        if(CheckedRules($UserStatus["stats1"],0) == 1) $interface=Stats1($var1,$var2,$var3,$var4);
         else $interface = $UserChek->BadUserForma();
         break;
 
@@ -1099,7 +1099,7 @@ switch($p) {
     <td id="but23"  class="butoff"><img name="imgLang" src="icon/page_new.gif" title="Новая позиция" width="16" height="16" border="0" onmouseover="ButOn(23)" onmouseout="ButOff(23)" onclick="NewProductPage()">
     </td>
     <td width="3"></td>
-	<td id="but1"  class="butoff"><img name="imgLang" src="icon/folder_add.gif" title="Новый каталог" width="16" height="16" border="0" onmouseover="ButOn(1)" onmouseout="ButOff(1)" onclick="miniWin(\'page/adm_catalog_new.php\',\'500\',\'320\')"></td>
+	<td id="but1"  class="butoff"><img name="imgLang" src="icon/folder_add.gif" title="Новый каталог" width="16" height="16" border="0" onmouseover="ButOn(1)" onmouseout="ButOff(1)" onclick="miniWin(\'page/adm_catalog_new.php\',\'600\',\'600\')"></td>
 <td width="5"></td>
 	<td width="1" bgcolor="#ffffff"></td>
 	<td width="1" bgcolor="#808080"></td>

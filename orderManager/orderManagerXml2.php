@@ -28,9 +28,9 @@ function OrdersArray($p1,$p2,$words,$list) {
     $words = MyStripSlashes(base64_decode($words));
 
     if(empty($p1)) $p1=date("U")-86400;
-    else $p1=PHPShopDate::GetUnicTime($p1)-86400;
+    else $p1=PHPShopDate::GetUnixTime($p1)-86400;
     if(empty($p2)) $p2=date("U");
-    else $p2=PHPShopDate::GetUnicTime($p2)+86400;
+    else $p2=PHPShopDate::GetUnixTime($p2)+86400;
 
 
     if($list == "all" or !$list) $sort="";

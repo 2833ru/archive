@@ -70,7 +70,7 @@ require("../language/".$Lang."/language.php");
         </table>
 
         <SCRIPT language=JavaScript type=text/javascript>preloader(1);</SCRIPT>
-<?
+        <?
 
         function dataV2($nowtime) {
             $Months = array("01"=>"января","02"=>"февраля","03"=>"марта",
@@ -345,11 +345,11 @@ tabPane.addTabPage( document.getElementById( \"intro-page\" ) );
   <td>
   
   
-  <textarea name=\"adr_name\" style=\"width: 100%; height: 50;\">".$order['Person']['adr_name']."</textarea>
+  <textarea name=\"adr_name\" style=\"width: 100%; height: 50;\">".stripslashes(MyStripSlashes($order['Person']['adr_name']))."</textarea>
 
   </td>
   <td colspan=3>
-  <textarea name=\"name_person\" style=\"width: 100%; height: 35;\">".$order['Person']['name_person']."</textarea><br>
+  <textarea name=\"name_person\" style=\"width: 100%; height: 35;\">".stripslashes($order['Person']['name_person'])."</textarea><br>
 &nbsp;&nbsp;&nbsp;<span name=txtLang id=txtLang>Время доставки от</span> <input type=\"text\" name=dos_ot style=\"width: 50px;\" value=\"".$order['Person']['dos_ot']."\"> 
 &nbsp;&nbsp;&nbsp;<span name=txtLang id=txtLang>до</span> <input type=\"text\" name=dos_do style=\"width: 50px;\" value=\"".$order['Person']['dos_do']."\">
 </td>
@@ -365,7 +365,7 @@ tabPane.addTabPage( document.getElementById( \"intro-page\" ) );
 </td>
   <td style=\"padding:3\" width=200>".OplataMetod($order['Person']['order_metod'],$datas)."</td>
   <td>
-  <textarea name=\"org_name\" style=\"width: 100%; height: 30;\">".$order['Person']['org_name']."</textarea></td>
+  <textarea name=\"org_name\" style=\"width: 100%; height: 30;\">".stripslashes($order['Person']['org_name'])."</textarea></td>
 </tr>
 </table>
 	</td>
@@ -387,7 +387,7 @@ tabPane.addTabPage( document.getElementById( \"intro-page\" ) );
 	
 	";
         if($user>0)
-            echo"<button style=\"width: 14em; height: 2.2em; margin-left:5\"  onclick=\"miniWin('../shopusers/adm_userID.php?id=".$order['Person']['user_id']."',500,580)\"> <img src=\"../img/icon_user.gif\"  border=\"0\" align=\"absmiddle\" hspace=\"5\">
+            echo"<button style=\"width: 14em; height: 2.2em; margin-left:5\"  onclick=\"miniWin('../shopusers/adm_userID.php?id=".$user."',500,580)\"> <img src=\"../img/icon_user.gif\"  border=\"0\" align=\"absmiddle\" hspace=\"5\">
 <span name=txtLang id=txtLang>Пользователь</span></button>";
         else echo"<button style=\"width: 14em; height: 2.2em; margin-left:5\"  onclick=\"miniWin('../shopusers/adm_users_new.php?visitorID=".$id."',500,580)\"> <img src=\"../img/icon_user.gif\"  border=\"0\" align=\"absmiddle\" hspace=\"5\">
 <span name=txtLang id=txtLang>Авторизовать</span></button>";
@@ -410,19 +410,19 @@ tabPane.addTabPage( document.getElementById( \"intro-page\" ) );
 	<button style=\"width: 14em; height: 2.2em; margin-left:5\"  onclick=\"miniWin('forms/forma4.php?orderID=".$id."',800,800)\">
 <img src=\"../img/action_print.gif\" border=\"0\" align=\"absmiddle\" hspace=5>
 	Счет-Фактура</button>
-	<BUTTON style=\"width: 11em; height: 2.2em; margin-left:5\"  onclick=\"DoPrint('../../../phpshop/forms/1/forma.html?orderId=".$id."&tip=2&datas=".$datas."')\"> <img src=\"../img/interface_browser.gif\"  border=\"0\" align=\"absmiddle\" hspace=\"5\">Счет в банк</BUTTON>
-<BUTTON style=\"width: 11em; height: 2.2em; margin-left:5\"  onclick=\"DoPrint('../../../phpshop/forms/2/forma.html?orderId=".$id."&tip=2&datas=".$datas."')\"> <img src=\"../img/interface_dialog.gif\"  border=\"0\" align=\"absmiddle\" hspace=\"5\">Сбербанк</BUTTON>
+	<BUTTON style=\"width: 11em; height: 2.2em; margin-left:5\"  onclick=\"DoPrint('../../../phpshop/forms/account/forma.html?orderId=".$id."&tip=2&datas=".$datas."')\"> <img src=\"../img/interface_browser.gif\"  border=\"0\" align=\"absmiddle\" hspace=\"5\">Счет в банк</BUTTON>
+<BUTTON style=\"width: 11em; height: 2.2em; margin-left:5\"  onclick=\"DoPrint('../../../phpshop/forms/receipt/forma.html?orderId=".$id."&tip=2&datas=".$datas."')\"> <img src=\"../img/interface_dialog.gif\"  border=\"0\" align=\"absmiddle\" hspace=\"5\">Сбербанк</BUTTON>
 ";
         echo "
 <BUTTON style=\"width: 11em; height: 2.2em; margin-left:5\"  onclick=\"GetMailTo('".$order['Person']['mail']."','Re: ".$GetSystems['name']." - Заказ №".$uid."');return false;\"> <img src=\"../img/icon_email.gif\"  border=\"0\" align=\"absmiddle\" hspace=\"5\">E-mail</BUTTON>
 	";
-        if($SysValue['pro']['enabled'] == "true" and $Lang == "russian") {
-            echo"
+
+        echo"
 	<button style=\"width: 11em; height: 2.2em; margin-left:5\"  onclick=\"window.open('../1c/orders_export.php?orderID=".$id."')\">
 <img src=\"../img/icon_package_get.gif\" border=\"0\" align=\"absmiddle\" hspace=5>
 	Импорт в 1С</button>
 	";
-        }
+
         echo"
 	<button style=\"width: 14em; height: 2.2em; margin-left:5\"  onclick=\"window.location.replace('adm_visitor_new.php?orderAdd=".$id."'); return false;\">
 <img src=\"../img/page_attachment.gif\" border=\"0\" align=\"absmiddle\" hspace=5>
@@ -514,7 +514,7 @@ tabPane.addTabPage( document.getElementById( \"cart\" ) );
 	";
 
         function MyStripSlashes($str) {
-            return str_replace("\"","*",$str);
+            return stripslashes(CleanStr($str));
         }
 
 
@@ -574,7 +574,7 @@ tabPane.addTabPage( document.getElementById( \"cart\" ) );
      status='".serialize($Status)."',
 	 statusi='".$statusi_new."' 
      where id='$id'";
-                $result=mysql_query($sql)or @die("".mysql_error()."");
+                $result=mysql_query($sql);
 
                 // Списываем со склада
                 $GetOrderStatusArray=GetOrderStatusArray();
@@ -629,6 +629,8 @@ tabPane.addTabPage( document.getElementById( \"cart\" ) );
 </tr>
 </table>
  ';
+                unset($cart);
+                unset($order);
                 echo"
 <script>
 DoReloadMainWindow('orders','".@date("d-m-Y",$pole1)."','".@date("d-m-Y",$pole2)."');
@@ -641,7 +643,7 @@ DoReloadMainWindow('orders','".@date("d-m-Y",$pole1)."','".@date("d-m-Y",$pole2)
                 $sql="delete from $table_name1
     where id='$id'";
                 $result=mysql_query($sql)or @die("Невозможно удалить запись");
-        echo '
+                echo '
  <table width="100%" height="100%">
 <tr>
 	<td valign="middle" align="center">
@@ -654,12 +656,12 @@ DoReloadMainWindow('orders','".@date("d-m-Y",$pole1)."','".@date("d-m-Y",$pole2)
 </tr>
 </table>
  ';
-        echo"
+                echo"
 <script>
 DoReloadMainWindow('orders','".@date("d-m-Y",$pole1)."','".@date("d-m-Y",$pole2)."');
 </script>";
-    }else $UserChek->BadUserFormaWindow();
-} 
-?>
+            }else $UserChek->BadUserFormaWindow();
+        }
+        ?>
     </body>
 </html>

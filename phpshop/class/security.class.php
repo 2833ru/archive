@@ -1,9 +1,10 @@
-<?
+<?php
 /**
  * Библиотека проверки безопасности
  * @author PHPShop Software
- * @version 1.2
+ * @version 1.3
  * @package PHPShopClass
+ * @subpackage Helper
  */
 class PHPShopSecurity {
 
@@ -43,7 +44,7 @@ class PHPShopSecurity {
      * @return string
      */
     function CleanStr($str) {
-        $str=str_replace("/","",$str);
+        $str=str_replace("\/","|",$str);
         $a= str_replace("\"", "", $str);
         return str_replace("'", "", $a);
     }
@@ -54,7 +55,7 @@ class PHPShopSecurity {
      * @return string
      */
     function CleanOut($str) {
-        $str = preg_replace('([\r\n\t])', '', $str);
+        $str = preg_replace('([\r\n\t;])', '', $str);
         $str = @html_entity_decode($str);
         return $str;
     }
@@ -66,7 +67,7 @@ class PHPShopSecurity {
      */
     function true_email($email) {
         if(strlen($email)>100) return FALSE;
-        return preg_match("/^([a-z0-9_\.-]+@[a-z0-9_\.\-]+\.[a-z0-9_-]{2,6})$/i",$email);
+        return preg_match("/^([a-z0-9_\.-]+@[a-z0-9_\.\-]+\.[a-z0-9_-]{2,6})$/i",trim($email));
     }
 
     /**
@@ -75,7 +76,16 @@ class PHPShopSecurity {
      * @return bool
      */
     function true_login($login) {
-        return preg_match("/^[a-zA-Z0-9_\.]{2,20}$/",$login);
+        return preg_match("/^[a-zA-Z0-9_\.]{2,20}$/",trim($login));
+    }
+
+    /**
+     * Проверка номера зааказа
+     * @param string $num номер заказа
+     * @return bool
+     */
+    function true_order($num) {
+        return preg_match("/^[0-9-]{4,20}$/",$num);
     }
 
     /**
@@ -93,7 +103,7 @@ class PHPShopSecurity {
      * @return bool
      */
     function true_passw($passw) {
-        return preg_match("/^[a-zA-Z0-9_]{4,20}$/",$passw);
+        return preg_match("/^[a-zA-Z0-9_]{4,20}$/",trim($passw));
     }
 
     /**
@@ -148,6 +158,28 @@ class PHPShopSecurity {
             if(@preg_match("/".$v."/i", $search)) exit($mes.' <b style="color:red">'.$v.'</b>'.$mes2);
     }
 
+    /**
+     *
+     * @param <type> $search
+     * @return <type>
+     */
+    function true_search($search) {
+        $count=strlen($search);
+        $search=strtolower($search);
+        $i=0;
+        while($i<($count/7)) {
+            $search = str_replace("'", "", $search);
+            $search = str_replace("\\", "", $search);
+            $search = str_replace("union", "", $search);
+            $search = str_replace("select", "", $search);
+            $search = str_replace("insert", "", $search);
+            $search = str_replace("delete", "", $search);
+            $search = str_replace("update", "", $search);
+            $i++;
+        }
+        return $search;
+    }
+
 }
 
 // Поддержка API 2.X
@@ -171,7 +203,7 @@ function true_num($num) {
     return preg_match("/^[0-9]{1,10}$/",$num);
 }
 
-function TotalClean($str,$flag){
+function TotalClean($str,$flag) {
     return PHPShopSecurity::TotalClean($str,$flag);
 }
 ?>

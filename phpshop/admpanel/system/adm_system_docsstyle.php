@@ -49,7 +49,7 @@ DoResize(<? echo $GetSystems['width_icon']?>,500,400);
 $sql="select * from $table_name3";
 $result=mysql_query($sql);
 $row = mysql_fetch_array($result);
-	$logo=$row['logo'];
+
 	
 	if($row['1c_load_accounts']==1) $load_accounts="checked";
 	 else $load_accounts="";
@@ -109,18 +109,6 @@ tabPane.addTabPage( document.getElementById( \"intro-page\" ) );
 </script>
 
 <table width=\"95%\">
-
-<tr>
-	<td colspan=3>
-	<FIELDSET id=fldLayout>
-	<legend>Логотип для рассылки новостей</legend>
-<div style=\"padding:10\">
-	<input type=\"text\" name=\"logo_new\" id=\"logo\" style=\"width: 350\" value=\"$logo\">
-	<BUTTON style=\"width: 3em; height: 2.2em; margin-left:5\"  onclick=\"ReturnPic('logo');return false;\"><img src=\"../img/icon-move-banner.gif\"  width=\"16\" height=\"16\" border=\"0\"></BUTTON>
-</div>
-</FIELDSET>
-	</td>
-</tr>
 <tr>
 	<td colspan=3>
 	<FIELDSET id=fldLayout>
@@ -153,8 +141,8 @@ tabPane.addTabPage( document.getElementById( \"sklad\" ) );
 <div style=\"padding:10\">
 
 	<input type=\"checkbox\" name=\"update_name_new\" value=\"1\" $update_name> Название номенклатуры<br>
-	<input type=\"checkbox\" name=\"update_content_new\" value=\"1\" $update_content> Краткое описание <br>
-        <input type=\"checkbox\" name=\"update_description_new\" value=\"1\" $update_description> Подробное описание <br>
+        <input type=\"checkbox\" name=\"update_description_new\" value=\"1\" $update_description> Краткое описание <br>
+	<input type=\"checkbox\" name=\"update_content_new\" value=\"1\" $update_content> Подробное описание <br>
         <input type=\"checkbox\" name=\"update_category_new\" value=\"1\" $update_category> Родительская категория <br>
         <input type=\"checkbox\" name=\"update_sort_new\" value=\"1\" $update_sort> Характериcтики <br>
          <br>
@@ -201,7 +189,6 @@ $с_option_new=serialize($с_option);
 
 $sql="UPDATE $table_name3
 SET
-logo='$logo_new',
 1c_load_accounts='$load_accounts_new',
 1c_load_invoice='$load_invoice_new',
 1c_option='$с_option_new'";

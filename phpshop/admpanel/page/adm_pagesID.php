@@ -141,7 +141,7 @@ tabPane.addTabPage( document.getElementById( "intro-page" ) );
 <LEGEND id=lgdLayout><span name=txtLang id=txtLang><u>К</u>аталог</span>:</LEGEND>
 	<div style="padding:10">
 	<?echo '
-<input type=text id="myName"  style="width: 550" value="'.Disp_cat($category).'">
+<input type=text id="myName"  style="width: 500" value="'.Disp_cat($category).'">
 <input type="hidden" value="'.$category.'" name="category_new" id="myCat">
 <BUTTON style="width: 3em; height: 2.2em; margin-left:5"  onclick="miniWinFull(\'adm_cat.php?category='.$category.'\',300,400,300,200);return false;"><img src="../img/icon-move-banner.gif"  width="16" height="16" border="0"></BUTTON>';
 	?>

@@ -1,8 +1,10 @@
 <?php
+$_SESSION['theme']='classic';
+
 /**
  * Библиотека оконных административных интерфейсов
  * @author PHPShop Software
- * @version 1.4
+ * @version 1.5
  * @package PHPShopGUI
  */
 class PHPShopGUI {
@@ -172,7 +174,7 @@ class PHPShopGUI {
     function setInput($type,$name,$value,$float="none",$size=200,$onclick="return true",$class=false,$action=false,$caption=false,$description=false) {
         $CODE='
 	 <div style="float:'.$float.';padding:'.$this->padding.'px;">
-             '.$caption.' <input type="'.$type.'" value="'.$value.'" name="'.$name.'" id="'.$name.'" style="width:'.$size.'px;"
+             '.$caption.' <input type="'.$type.'" value="'.$value.'" name="'.$name.'" id="'.$name.'" style="width:'.$this->chekSize($size).';"
                  class="'.$class.'" onclick="'.$onclick.'"> '.$description.'</div>';
 
         // Слушатель действия
@@ -239,6 +241,14 @@ class PHPShopGUI {
 	 ';
 
         $Arg=func_get_args();
+
+
+        if(!empty($this->TrialOff)) {
+            $count=count($Arg)-1;
+            foreach($Arg as $key=>$val)
+                if($key<$count) unset($Arg[$key]);
+        }
+
         foreach($Arg as $key=>$val) {
 
             $this->_CODE.='
@@ -277,16 +287,48 @@ class PHPShopGUI {
         $this->_CODE.='</div>
 	 ';
     }
+
+
+    /**
+     * Проверка размера
+     * @param mixed $size
+     * @return string
+     */
+    function chekSize($size) {
+        if(!strpos($size, '%') and !strpos($size, 'px')) $size.='px';
+        return $size;
+    }
+
+    /**
+     * Добавление JS файлов
+     */
+    function addJSFiles() {
+        $Arg=func_get_args();
+        foreach($Arg as $val) {
+            $this->includeJava.='<script type="text/javascript" src="'.$val.'"></script>';
+        }
+    }
+
+    /**
+     * Добавление CSS файлов
+     */
+    function addCSSFiles() {
+        $Arg=func_get_args();
+        foreach($Arg as $val) {
+            $this->includeCss.='<link href="'.$val.'" type=text/css rel=stylesheet>';
+        }
+    }
     /**
      * Прорисовка элемента Div
      * @param string $align align
      * @param string $code содержание
      * @param string $style имя стиля css
+     * @nane string $name имя блока
      * @return string
      */
-    function setDiv($align,$code,$style=false) {
+    function setDiv($align,$code,$style=false,$name='div1') {
         $CODE='
-	 <div align="'.$align.'" style="'.$style.'">
+	 <div align="'.$align.'" style="'.$style.'" name="'.$name.'" id="'.$name.'">
 	 '.$code.'
 	 </div>
 	 ';
@@ -319,6 +361,19 @@ class PHPShopGUI {
 	 ';
         return $CODE;
     }
+
+    /**
+     * Прорисовка календаря
+     * @param string $name имя поля для вставки даты
+     * @param string $align выравнивание
+     * @param string $icon кинока
+     * @return string
+     */
+    function setCalendar($name,$align='right',$icon='../icon/date.gif',$float='left',$style="width:50px") {
+        $CODE='<div style="float:'.$float.';padding:'.$this->padding.'px;'.$style.'">'.$this->setImage($icon,16,16,$align='right',0,'','popUpCalendar(this, product_edit.'.$name.', \'dd-mm-yyyy\');').'</div>';
+        return $CODE;
+    }
+
     /**
      * Прорисовка блока инструкции с прокруткой
      * @param string $value содержание text
@@ -328,7 +383,7 @@ class PHPShopGUI {
      * @return string
      */
     function setInfo($value,$height=false,$width='100%',$align="left") {
-        return $this->setDiv($align,$value,'width:'.$width.';height:'.$height.';background-color:white;padding:10px;border:1px;border-style: inset;overflow:auto;');
+        return $this->setDiv($align,$value,'width:'.$this->chekSize($width).';height:'.$this->chekSize($height).';background-color:white;padding:10px;border:1px;border-style: inset;overflow:auto;');
     }
     /**
      * Прорисовка элемента Select
@@ -427,8 +482,8 @@ class PHPShopGUI {
      * @param string $style имя стиля css
      * @return string
      */
-    function setImage($src,$width,$height,$align='absmiddle',$hspace="5",$style=false) {
-        $CODE='<img src="'.$src.'" width="'.$width.'" height="'.$height.'" border="0" align="'.$align.'" hspace="'.$hspace.'" style="'.$style.'">';
+    function setImage($src,$width,$height,$align='absmiddle',$hspace="5",$style=false,$onclick="return false") {
+        $CODE='<img src="'.$src.'" width="'.$width.'" height="'.$height.'" border="0" align="'.$align.'" hspace="'.$hspace.'" style="'.$style.'" onclick="'.$onclick.'">';
         return $CODE;
     }
     /**
@@ -471,14 +526,18 @@ class PHPShopGUI {
             if ($this->reload == "right") $this->_CODE.=' window.opener.top.frame2.location.reload();';
             if ($this->reload == "top")
 
-                // Поддержка Ajax
+            // Поддержка Ajax
                 if($this->ajax) $this->_CODE.=" DoReloadMainWindowModule(".$this->ajax.");";
                 else $this->_CODE.=' window.opener.location.reload();';
 
             $this->_CODE.='
 	 }catch(e){
-         self.close();
-         }';
+         ';
+            // Отладка, не закрывем окно
+            if(empty($this->debug))
+                $this->_CODE.='self.close();';
+
+            $this->_CODE.='}';
 
             if($this->debug_close_window) $this->_CODE.='window.close();';
             $this->_CODE.='</script>';
@@ -551,14 +610,30 @@ class PHPShopGUI {
         return $CODE;
     }
 
+
+
     /**
-     * Прорисовка формы оплаты модуля
-     * @param string $serial серийный номер
+     * Прорисовка формы о модуле
      * @return string
      */
-    function setPay($serial,$pay=true) {
+    function setPay($serial,$pay=false,$version=false,$update=false) {
         global $PHPShopModules;
+
+        $mes=null;
+        $path=$PHPShopModules->path;
         PHPShopObj::loadClass("date");
+
+        if(!empty($path)) {
+            $data=$PHPShopModules->checkKeyBase();
+            if($data) {
+                $this->TrialOff=true;
+
+                if(!$PHPShopModules->checkKey($serial,$path))
+                    $mes='<br>Срок ознакомительного периода до <b>'.PHPShopDate::dataV($data,false).'</b>';
+            }
+        }
+
+        
         $PHPShopInterface = new PHPShopInterface();
         $PHPShopInterface->size="500,400";
         $PHPShopInterface->window=true;
@@ -567,44 +642,43 @@ class PHPShopGUI {
         $PHPShopInterface->setCaption(array("Название","20%"),array("Версия","20%"),array("Описание","80%"));
 
         // Описание модуля
-        $db=$PHPShopModules->getXml($path="../install/module.xml");
-        $PHPShopInterface->setRow(1,$db['name'],$db['version'],$db['description']);
+        $db=$PHPShopModules->getXml("../install/module.xml");
+        if($db['version']>$version and !empty($update)){
+            PHPShopObj::loadClass('text');
+            $version_info=PHPShopText::notice('Версия ядра '.$db['version'].' не соответствует версии БД '.$version);
+            $version_info.=$this->setInput("submit","modupdate","Обновить","center",100,"","but","actionBaseUpdate");
+        }
+        else $version_info=$db['version'];
+        $PHPShopInterface->setRow(1,$db['name'],$version_info,$db['description'].$mes);
 
         $CODE=$PHPShopInterface->Compile();
 
 
-        if(!$pay) return $CODE;
+        if(!$pay)
+            return $CODE;
 
         $CODE.=$this->setLine('<br>');
 
-        // Проверка серийника 27142-35902-20536
-        if($PHPShopModules->true_serial($serial)) {
-            if(@$db=$PHPShopModules->getXml("http://phpshopcms.ru/modmoney/modinfo.php?serial=".$serial)) {
-
-                // Форма регистрации
-                $PHPShopInterface = new PHPShopInterface();
-                $PHPShopInterface->size="500,400";
-                $PHPShopInterface->window=true;
-                $PHPShopInterface->imgPath="../../../admpanel/img/";
-                $PHPShopInterface->setCaption(array("Имя","40%"),array("E-mail","40%"),array("Дата","20%"));
-
-                $PHPShopInterface->setRow(2,$db['name'],$db['mail'],PHPShopDate::dataV($db['datas']));
-
-                $CODE.=$this->setField($this->setInputText('SN: ','serial_new',$serial,$size=110,$this->setImage($PHPShopInterface->imgPath.'icon-activate.gif',16,16,$align='absmiddle',0),false,'serial_done'),$PHPShopInterface->Compile());
-                return $CODE;
-            }
+        if($PHPShopModules->checkKey($serial,$path)) {
+            $CODE.=$this->setField('Серийный номер',$this->setInputText('EEM-','serial_new',$serial,$size=110,$this->setImage($PHPShopInterface->imgPath.'icon-activate.gif',16,16,$align='absmiddle',0).' * Активация выполнена',false,'serial_done'));
+            $this->TrialOff=false;
+            $PHPShopModules->setKeyBase($path);
+            return $CODE;
         }
 
+        $status_serial_img=null;
+        $status_serial=null;
 
         if(!empty($serial)) {
             $status_serial='serial_fail';
             $status_serial_img=$this->setImage($PHPShopInterface->imgPath.'error.gif',16,16,$align='absmiddle',0);
         }
 
-        $CODE.=$this->setInputText('SN: ','serial_new',$serial,$size=110,$status_serial_img.' * формат серийного  номера: 11111-22222-33333
-            ','none',$status_serial);
-        $CODE.=$this->setButton("Добровольная регистрация",'../../../admpanel/icon/key.png',200,false,$float="none",
-                $onclick="miniWin('../../../admpanel/modules/adm_modreg.php?mod_id=".$db['base']."',510,460)");
+        $CODE.=$this->setField('Серийный номер',$this->setInputText('EEM-','serial_new',$serial,110,$status_serial_img.' * Формат серийного  номера: 11111-22222-33333',false,$status_serial));
+
+        if(!$PHPShopModules->checkKey($serial,$path) and !empty($db['base']) )
+            $CODE.=$this->setButton("Купить лицензию ".$db['price'],'../../../admpanel/icon/key.png',200,false,$float="none",
+                    $onclick="window.open('http://www.phpshop.ru/order/?bay_mod=".$db['base']."')");
 
         return $CODE;
     }
@@ -864,5 +938,147 @@ class PHPShopFrontInterface extends PHPShopInterface {
     }
 
 
+}
+
+/**
+ * Библиотека дерева каталогов
+ * @author PHPShop Software
+ * @version 1.0
+ * @package PHPShopGUI
+ */
+class CatalogTree {
+
+    /**
+     * Конструктор
+     */
+    function CatalogTree($table) {
+        $this->table=$table;
+        PHPShopObj::loadClass("lang");
+        $this->dis="<script type=\"text/javascript\">
+    <!--
+    d = new dTree('d');
+       ";
+    }
+
+    /**
+     * Добавление каталога в дерево
+     * @param int $n идентификатор
+     * @param int $id родитель
+     * @param string $name наименование
+     * @param string $icon иконка
+     */
+    function addcat($n,$id,$name,$icon=false) {
+        $name=__($name);
+        $this->dis.="d.add($n,$id,'$name','$name','','','','$icon');";
+    }
+
+
+    /**
+     * Запрос к БД
+     * @param string $sql SQL запрос
+     * @return mixed
+     */
+    function sql($sql) {
+        $PHPShopOrm = new PHPShopOrm($this->table);
+        return $PHPShopOrm->query($sql);
+    }
+
+    /**
+     * Проверка на наличие каталогов
+     * @param int $n ид катлога
+     * @return int
+     */
+    function chek($n) {
+        return mysql_num_rows($this->sql("select id from ".$this->table." where parent_to='$n'"));
+    }
+
+    /**
+     * Рекурсионный проход по каталогам
+     * @param int $n идентификатор
+     * @return string
+     */
+    function add($n) {
+        $disp='';
+        $result=$this->sql("select * from ".$this->table." where parent_to='$n' order by num");
+        while($row = mysql_fetch_array($result)) {
+            $i=0;
+            $id=$row['id'];
+            $name=$row['name'];
+            $parent_to=$row['parent_to'];
+            $num=$this->chek($id);
+
+            if($i<$num)// если есть еще каталоги
+            {
+                $disp.="d.add($id,$n,'$name','');
+                        ".$this->add($id);
+            }
+            else// если нет каталогов
+            {
+                $disp.="d.add($id,$n,'$name','".$this->name($parent_to,$name)."');";
+            }
+        }
+        return $disp;
+    }
+
+
+    /**
+     * Имя каталога по идентификатору
+     * @param int $n идентификатор каталога
+     * @return string
+     */
+    function name($n) {
+        $result=$this->sql("select name from ".$this->table." where id='$n'");
+        $row = mysql_fetch_array($result);
+        $name=$row['name'];
+        return $name." => ".$catalog;
+    }
+
+    /**
+     * Вывод дерева каталогов
+     */
+    function disp() {
+        $this->dis.="
+         document.write(d);
+        //-->
+       </script>";
+
+        // Локализация
+        writeLangFile();
+
+        echo $this->dis;
+    }
+
+
+    /**
+     * Рассчет дерева каталогов
+     */
+    function create() {
+        $result=$this->sql("select * from ".$this->table." where parent_to=0 order by num");
+        $i=0;
+        $j=0;
+        $dis='';
+        while($row = mysql_fetch_array($result)) {
+            $id=$row['id'];
+            $name=$row['name'];
+            $num=$this->chek($id);
+            if($num>0)
+                $this->dis.="
+  d.add($id,0,'$name','');
+                        ".$this->add($id)."
+  ";
+            else $this->dis.="
+  d.add($id,0,'$name','$name');
+                        ".$this->add($id)."
+  ";
+            $i++;
+        }
+
+
+        // Открытие категории
+        if(!empty($_GET['category'])) {
+            $this->dis.="d.openTo(".$_GET['category'].", true);";
+        }
+
+    }
 }
 ?>

@@ -91,7 +91,7 @@ function WebFXTabPane( el, bUseCookie ) {
 
 	var tabIndex = 0;
 	if ( this.useCookie ) {
-		tabIndex = Number( WebFXTabPane.getCookie( "webfxtab_" + this.element.id ) );
+		tabIndex = Number( WebFXTabPane.getCookie( "webfxtab_partner_" + this.element.id ) );
 		if ( isNaN( tabIndex ) )
 			tabIndex = 0;
 	}
@@ -117,7 +117,7 @@ WebFXTabPane.prototype.setSelectedIndex = function ( n ) {
 		this.pages[ this.selectedIndex ].show();
 
 		if ( this.useCookie )
-			WebFXTabPane.setCookie( "webfxtab_" + this.element.id, n );	// session cookie
+			WebFXTabPane.setCookie( "webfxtab_partner_" + this.element.id, n );	// session cookie
 	}
 };
 
@@ -169,7 +169,8 @@ WebFXTabPane.setCookie = function ( sName, sValue, nDays ) {
 		expires = "; expires=" + d.toGMTString();
 	}
 
-	//document.cookie = sName + "=" + sValue + expires + "; path=/";
+        // Запоминаем закладку
+	document.cookie = sName + "=" + sValue + expires + "; path=/";
 };
 
 WebFXTabPane.getCookie = function (sName) {

@@ -1,4 +1,5 @@
 <?
+
 if(@$_POST['news_plus']=="ok"){
 	  // Определяем переменые
 $SysValue['other']['orderMesage']=News_write(@$mail);

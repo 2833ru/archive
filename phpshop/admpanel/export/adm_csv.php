@@ -125,7 +125,7 @@ if(CheckedRules($UserStatus["csv"],1) == 1) {
                 $id=$row['id'];
                 $name=html_entity_decode(($row['name']));
                 $category=$row['category'];
-                $content= PHPShopSecurity::CleanOut($row['content']);
+                $content=PHPShopSecurity::CleanOut($row['content']);
                 $description=PHPShopSecurity::CleanOut($row['description']);
                 $price=$row['price'];
                 $price2=trim($row['price2']);
@@ -142,6 +142,7 @@ if(CheckedRules($UserStatus["csv"],1) == 1) {
                 $items=trim($row['items']);
                 $weight=trim($row['weight']);
                 $dop_cat = $row['dop_cat'];
+                
                 @$csv.="$id;\"$name\";\"$description\";$pic_small;\"$content\";$pic_big;$items;$price;$price2;$price3;$price4;$price5;$weight;$uid;$category;$dop_cat";
                 @$csv.=';'.getChars($vendorArray,$category);
                 @$csv.="\n"; //Конец строки
@@ -188,7 +189,7 @@ if(CheckedRules($UserStatus["csv"],1) == 1) {
         default:
             if($_GET['IDS']=="all") $string="or id>'0'";
             else {
-                $IdsArray=split(",",$IDS);
+                $IdsArray=split(",",$_GET['IDS']);
                 foreach ($IdsArray as $v)
                     @$string.="or id='$v' ";
             }

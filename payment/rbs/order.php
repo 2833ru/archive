@@ -1,17 +1,13 @@
-<?
-/*
-+-------------------------------------+
-|  PHPShop Enterprise                 |
-|  Модуль OrderFunction RBS           |
-+-------------------------------------+
-*/
+<?php
+/**
+ * Обработчик оплаты заказа через RBS
+ * @author PHPShop Software
+ * @version 1.0
+ * @package PHPShopPayment
+ */
 
 if(empty($GLOBALS['SysValue'])) exit(header("Location: /"));
 
-$cart_list=Summa_cart();
-$ChekDiscount=ChekDiscount($cart_list[1]);
-$sum_pol=(ReturnSummaNal($cart_list[1],$ChekDiscount[0])+$GetDeliveryPrice);
-	 
 // регистрационная информация
 $MERCHANTNUMBER = $SysValue['rbs']['MERCHANTNUMBER'];    //кошелек
 $MERCHANTPASSWD = $SysValue['rbs']['MERCHANTPASSWD']; 
@@ -23,7 +19,7 @@ $inv_id = $mrh_ouid[0]."".$mrh_ouid[1];     //номер счета
 
 //описание покупки
 $inv_desc  = "$inv_id";
-$out_summ  = $sum_pol*$SysValue['rbs']['kurs']; //сумма покупки
+$out_summ  = $GLOBALS['SysValue']['other']['total']*$SysValue['rbs']['kurs']; //сумма покупки
 
 
 $HASH=$MERCHANTNUMBER.$MERCHANTPASSWD.$inv_id.$KEY;

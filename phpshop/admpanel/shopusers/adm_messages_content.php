@@ -59,7 +59,7 @@ while (@$row = mysql_fetch_array($result))
 	$Subject=$row['Subject'];
 	$Message=$row['Message'];
 	@$display.="
-	<tr onmouseover=\"show_on('r".$id."')\" id=\"r".$id."\" onmouseout=\"show_out('r".$id."')\" class=row onclick=\"miniWin('adm_messagesID.php?id=$id',400,270)\">
+	<tr onmouseover=\"show_on('r".$id."')\" id=\"r".$id."\" onmouseout=\"show_out('r".$id."')\" class=row onclick=\"miniWin('adm_messagesID.php?id=$id',600,410)\">
     <td>$fl</td>
 	<td class=forma ".$color.">
 	$DataTime<BR>

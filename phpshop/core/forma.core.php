@@ -15,7 +15,7 @@ class PHPShopForma extends PHPShopCore {
         $this->debug=false;
         
         // список экшенов
-        $this->action=array("post"=>"message","nav"=>"index");
+        $this->action=array("post"=>"content","nav"=>"index");
         parent::PHPShopCore();
     }
 
@@ -33,18 +33,27 @@ class PHPShopForma extends PHPShopCore {
 
         // Подключаем шаблон
         $this->addToTemplate("forma/page_forma_list.tpl");
-        $this->parseTemplate($this->getValue('templates.page_page_list'));
 
+        // Перехват модуля
+        $this->setHook(__CLASS__,__FUNCTION__);
+
+        $this->parseTemplate($this->getValue('templates.page_page_list'));
     }
 
     /**
-     * Экшен отправка формы при получении $_POST[message]
+     * Экшен отправка формы при получении $_POST[content]
      */
-    function message() {
+    function content() {
+
+        // Перехват модуля
+        if($this->setHook(__CLASS__,__FUNCTION__,$_POST))
+                return true;
+
         if(!empty($_SESSION['text']) and $_POST['key']==$_SESSION['text']) {
             $this->send();
             $this->set('Error',"Сообщение успешно отправлено");
         }else $this->set('Error',"Ошибка ключа, повторите попытку ввода ключа");
+        $this->index();
     }
 
 
@@ -56,9 +65,13 @@ class PHPShopForma extends PHPShopCore {
         // Подключаем библиотеку отправки почты
         PHPShopObj::loadClass("mail");
 
-        if( !empty($_POST['nameP']) and !empty($_POST['subject']) and !empty($_POST['message']) and !empty($_POST['mail'])) {
+        // Перехват модуля
+        if($this->setHook(__CLASS__,__FUNCTION__,$_POST))
+                return true;
 
-            $zag=$this->$_POST['subject']." - ".$this->PHPShopSystem->getValue('name');
+		if( !empty($_POST['tema']) and !empty($_POST['name']) and !empty($_POST['content'])) {
+
+            $zag=$_POST['tema']." - ".$this->PHPShopSystem->getValue('name');
             
             $message="Вам пришло сообщение с сайта ".$this->PHPShopSystem->getValue('name')."
 
@@ -83,6 +96,5 @@ http://".$_SERVER['SERVER_NAME'];
             $PHPShopMail = new PHPShopMail($this->PHPShopSystem->getValue('adminmail2'),$_POST['mail'],$zag,$message);
         }
     }
-
 }
 ?>

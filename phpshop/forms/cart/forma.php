@@ -15,7 +15,8 @@ PHPShopObj::loadClass("cart");
 // Подключение к БД
 $PHPShopBase = new PHPShopBase("../../inc/config.ini");
 $PHPShopSystem = new PHPShopSystem();
-$PHPShopOrder = new PHPShopOrder();
+$PHPShopOrder = new PHPShopOrderFunction();
+$PHPShopValutaArray= new PHPShopValutaArray();
 $PHPShopCart = new PHPShopCart();
 
 /**
@@ -24,7 +25,8 @@ $PHPShopCart = new PHPShopCart();
  */
 function printforma($val) {
     static $n;
-    $dis=PHPShopText::tr($n+1,$val['name'],'шт.&nbsp;',$val['num'],$val['price'],$val['total']);
+    if(empty($val['ed_izm'])) $val['ed_izm']='шт.';
+    $dis=PHPShopText::tr($n+1,$val['name'],$val['ed_izm'],$val['num'],$val['price'],$val['total']);
     @$n++;
     return $dis;
 }

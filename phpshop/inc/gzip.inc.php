@@ -1,4 +1,8 @@
-<?
+<?php
+/**
+ * GZIP сжатие
+ */
+
 ob_start();
 ob_implicit_flush(0);
 function CheckCanGzip(){
@@ -14,7 +18,7 @@ function CheckCanGzip(){
 function GzDocOut($level,$debug){
     $ENCODING = CheckCanGzip();
     if ($ENCODING){
-        print "<!-- Use compress $ENCODING -->";
+        if ($debug) print "<!-- Use compress $ENCODING -->";
         $Contents = ob_get_contents();
         ob_end_clean();
         if ($debug){

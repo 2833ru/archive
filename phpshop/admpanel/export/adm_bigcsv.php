@@ -121,7 +121,7 @@ tabPane.addTabPage( document.getElementById( "intro-page" ) );
   <div style="padding:10">
   <BUTTON style="width: 15em; height: 2.2em; margin-left:5"  onclick="miniWin('sample_bigcsv.csv',500,370)">
 <img src="../img/action_save.gif" width="16" height="16" border="0" align="absmiddle" hspace="3">
-<span name=txtLang id=txtLang>Скачать пример файла</span>
+<span name=txtLang id=txtLang>Пример файла CSV</span>
 </BUTTON></div>
   </td>
 </tr>

@@ -1,19 +1,13 @@
-<?
-/*
-+-------------------------------------+
-|  PHPShop Enterprise                 |
-|  Модуль OrderFunction Robox         |
-+-------------------------------------+
-*/
+<?php
+/**
+ * Обработчик оплаты заказа через Robox
+ * @author PHPShop Software
+ * @version 1.0
+ * @package PHPShopPayment
+ */
 
 if(empty($GLOBALS['SysValue'])) exit(header("Location: /"));
 
-$cart_list=Summa_cart();
-$ChekDiscount=ChekDiscount($cart_list[1]);
-$GetDeliveryPrice=GetDeliveryPrice($_POST['dostavka_metod'],$cart_list[1],$cart_list[2]);
-$sum_pol=(ReturnSummaNal($cart_list[1],$ChekDiscount[0])+$GetDeliveryPrice);
-$sum_pol = number_format($sum_pol,2,".","");
-	 
 // регистрационная информация
 $mrh_login = $SysValue['roboxchange']['mrh_login'];    //логин
 $mrh_pass1 = $SysValue['roboxchange']['mrh_pass1'];    // пароль1
@@ -24,7 +18,7 @@ $inv_id = $mrh_ouid[0]."".$mrh_ouid[1];     //номер счета
 
 //описание покупки
 $inv_desc  = "PHPShopPaymentService";
-$out_summ  = $sum_pol*$SysValue['roboxchange']['mrh_kurs']; //сумма покупки
+$out_summ  = $GLOBALS['SysValue']['other']['total']*$SysValue['roboxchange']['mrh_kurs']; //сумма покупки
 
 // формирование подписи
 $crc  = md5("$mrh_login:$out_summ:$inv_id:$mrh_pass1");
@@ -43,12 +37,12 @@ $disp= "
 
 
 
-      <form action='https://www.roboxchange.com/ssl/calc.asp' method=POST name=\"pay\">
-      <input type=hidden name=mrh value=$mrh_login>
-      <input type=hidden name=out_summ value=$out_summ>
-      <input type=hidden name=inv_id value=$inv_id>
-      <input type=hidden name=inv_desc value=$inv_desc>
-	  <input type=hidden name=crc value=$crc>
+<form action='https://www.roboxchange.com/ssl/calc.asp' method=POST name=\"pay\">
+       <input type=hidden name=MrchLogin  value=$mrh_login>
+       <input type=hidden name=OutSum  value=$out_summ>
+       <input type=hidden name=InvId  value=$inv_id>
+       <input type=hidden name=Desc  value=$inv_desc>
+           <input type=hidden name=SignatureValue value=$crc>
 	  <table>
 <tr><td><img src=\"images/shop/icon-setup.gif\" width=\"16\" height=\"16\" border=\"0\"></td>
 	<td align=\"center\"><a href=\"javascript:history.back(1)\"><u>

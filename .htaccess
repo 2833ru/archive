@@ -12,15 +12,9 @@ RewriteEngine On
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !^((/UserFiles/Image/)|(/phpshop/templates/(.*)/images/(.*).gif)|(/phpshop/templates/(.*)/images/(.*).png)|(/phpshop/templates/(.*)/images/(.*).jpg))
 RewriteRule ^(.*)$ index.php
 
-ErrorDocument 404 /
-<IfModule mod_expires.c>
-	ExpiresActive on
-	ExpiresByType image/jpeg "access plus 3 day"
-	ExpiresByType image/gif "access plus 3 day"
-</IfModule>
- 
 <files *.lic>
 Order Deny,Allow
 Deny From All

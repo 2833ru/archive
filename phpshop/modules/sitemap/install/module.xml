@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.0</version>
+    <version>1.4</version>
     <name>Sitemap</name>
-    <description>Модуль генерации Sitemap.</description>
+    <description>Модуль генерации карты сайта. Учитываются SEO ссылки.</description>
     <icon>icon.png</icon>
     <adminmenu>
         <title>Sitemap</title>

@@ -1,24 +1,18 @@
-<?
-/*
-+-------------------------------------+
-|  PHPShop Enterprise                 |
-|  Модуль OrderFunction Platron       |
-+-------------------------------------+
-*/
+<?php
+/**
+ * Обработчик оплаты заказа через Platron
+ * @author PHPShop Software
+ * @version 1.0
+ * @package PHPShopPayment
+ */
 
 if(empty($GLOBALS['SysValue'])) exit(header("Location: /"));
-
-$cart_list=Summa_cart();
-$ChekDiscount=ChekDiscount($cart_list[1]);
-$GetDeliveryPrice=GetDeliveryPrice($_POST['dostavka_metod'],$cart_list[1],$cart_list[2]);
-$sum_pol=(ReturnSummaNal($cart_list[1],$ChekDiscount[0])+$GetDeliveryPrice);
-$sum_pol = number_format($sum_pol,2,".","");
 
 $mrh_ouid = explode("-", $_POST['ouid']);
 $inv_id = $mrh_ouid[0]."".$mrh_ouid[1];     //номер счета
 
 $OrderId=$inv_id;
-$Amount=$sum_pol;
+$Amount=$GLOBALS['SysValue']['other']['total'];
 $Currency="RUB";
 
 // регистрационная информация

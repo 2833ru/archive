@@ -25,6 +25,8 @@ $GLOBALS['PHPShopErrorlog'] = new PHPShopErrorlog();
 function myErrorHandler($errno, $errstr, $errfile, $errline) {
     global $PHPShopErrorlog;
     $enabled = $PHPShopErrorlog->enabled;
+    $errfile=str_replace('\\','/',$errfile);
+    $url=$_SERVER['REQUEST_URI'];
     switch ($errno) {
         case E_USER_ERROR:
             echo "<b>My ERROR</b> [$errno] $errstr<br />\n";
@@ -34,20 +36,20 @@ function myErrorHandler($errno, $errstr, $errfile, $errline) {
             exit(1);
             break;
 
-        case E_NOTICE:
-            if($enabled==2) $PHPShopErrorlog->write("Замечение: [$errno] $errstr $errfile $errline");
+        case 8:
+            if($enabled==2) $PHPShopErrorlog->write("Замечение: [$errno] $errstr $errfile $errline $url");
             break;
 
-       case E_DEPRECATED:
-            if($enabled==2) $PHPShopErrorlog->write("Функция: [$errno] $errstr $errfile $errline");
+       case 2:
+            if($enabled==1 or $enabled==2) $PHPShopErrorlog->write("Функция: [$errno] $errstr $errfile $errline $url");
             break;
 
         case E_USER_NOTICE:
-            if($enabled==1) $PHPShopErrorlog->write("Сообщение: [$errno] $errstr $errfile $errline");
+            if($enabled==1) $PHPShopErrorlog->write("Сообщение: [$errno] $errstr $errfile $errline $url");
             break;
 
         default:
-            if($enabled==1) $PHPShopErrorlog->write("Ошибка: [$errno] $errstr $errfile $errline");
+            if($enabled==1 or $enabled==2) $PHPShopErrorlog->write("Совет: [$errno] $errstr $errfile $errline $url");
             break;
 
     }

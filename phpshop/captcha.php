@@ -3,7 +3,7 @@ session_start();
 putenv('GDFONTPATH=' . realpath('.'));
 header("Content-type: image/png");
 $font="./lib/font/norobot_font.ttf";
-$text=substr(md5(rand(0, 100)),0,5);
+$text=substr(md5(time()),0,5);
 
 // Защитный код
 $_SESSION['text']=$text;

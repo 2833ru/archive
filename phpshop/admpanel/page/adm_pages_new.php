@@ -124,7 +124,7 @@ tabPane.addTabPage( document.getElementById( "intro-page" ) );
 	<?echo '
 <input type=text id="myName"  style="width: 550" value="'.Disp_cat($categoryID).'">
 <input type="hidden" value="'.$categoryID.'" name="category_new" id="myCat">
-<BUTTON style="width: 3em; height: 2.2em; margin-left:5"  onclick="miniWinFull(\'adm_cat.php?category='.$categoryID.'\',300,400,300,200)"><img src="../img/icon-move-banner.gif"  width="16" height="16" border="0"></BUTTON>';
+<BUTTON style="width: 3em; height: 2.2em; margin-left:5"  onclick="miniWinFull(\'adm_cat.php?category='.$categoryID.'\',300,400,300,200);return false;"><img src="../img/icon-move-banner.gif"  width="16" height="16" border="0"></BUTTON>';
 	?>
 	</FIELDSET>
 	</td>
@@ -144,7 +144,7 @@ tabPane.addTabPage( document.getElementById( "intro-page" ) );
    <td valign="top">
    <table>
    <tr>
-   <td width="200"><FIELDSET id=fldLayout>
+   <td ><FIELDSET id=fldLayout>
 <LEGEND id=lgdLayout><span name=txtLang id=txtLang><u>С</u>сылка</span></LEGEND>
 <div style="padding:10">
 <input type="text" name="link_new" style="width:150" value="<?=GetLastId()?>">.html

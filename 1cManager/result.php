@@ -4,7 +4,7 @@
  * Автономная синхронизация номенклатуры из 1С
  * @package PHPShopExchange
  * @author PHPShop Software
- * @version 1.5
+ * @version 1.7
  */
 
 // Авторизация
@@ -170,7 +170,7 @@ class ReadCsvCatalog extends PHPShopReadCsv {
 }
 
 // Обработка товаров
-class ReadCsv1C extends PHPShopReadCsv {
+class ReadCsv1C extends PHPShopReadCsvPro {
     var $CsvContent;
     var $ReadCsvRow;
     var $TableName;
@@ -189,7 +189,7 @@ class ReadCsv1C extends PHPShopReadCsv {
         $this->ObjCatalog = $ObjCatalog;
         $this->ObjSystem = $ObjSystem;
         $this->GetIdValuta = PHPShopValuta::getAll();
-        parent::PHPShopReadCsv();
+        parent::PHPShopReadCsvPro();
         $this->DoUpdatebase();
     }
 
@@ -301,6 +301,7 @@ class ReadCsv1C extends PHPShopReadCsv {
             $sql.="price4='".@$CsvToArray[10]."', ";// цена 4
             $sql.="price5='".@$CsvToArray[11]."', ";// цена 5
             $sql.="items='".@$CsvToArray[6]."', ";// склад
+            $sql.="datas='".date("U")."', ";// дата изменения
             
             // Подчиненные товары
             if(is_numeric($CsvToArray[16]) and $CsvToArray[16]==1){
@@ -508,14 +509,11 @@ if(is_array($list_file))
         $time=explode(' ', microtime());
         $start_time=$time[1]+$time[0];
 
-        @$fp = fopen($dir."/".$val, "r");
-        if ($fp) {
-            $fstat = fstat($fp);
-            $CsvContent=fread($fp,$fstat['size']);
-            fclose($fp);
-
+        //$fp = fopen($dir."/".$val, "r");
+        $fp=file($dir."/".$val);
+        if($fp) {
             // Читаем файл
-            $ReadCsv = new ReadCsv1C($CsvContent,$ReadCsvCatalog,$PS);
+            $ReadCsv = new ReadCsv1C($fp,$ReadCsvCatalog,$PS);
             $F_done.=$val.";";
             $GetItemCreate+=$ReadCsv->GetItemCreate();
             $GetItemUpdate+=$ReadCsv->GetItemUpdate();

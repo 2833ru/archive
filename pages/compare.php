@@ -4,6 +4,10 @@ $shopdir=$SysValue['other']['ShopDir'];
 $limit=4; //Максимум товаров для сравнения
 $copycompare=$_SESSION['compare']; //Копируем массив
 
+// API 2.1
+$LoadItems['Valuta']=$PHPShopValutaArray->getArray();
+$LoadItems['System']=$PHPShopSystem->getArray();
+
 /**
  * Полное имя товара для вывода сравнения
  * @package PHPShopCoreDepricated
@@ -322,11 +326,11 @@ if (count($cats)==0) {
 }
 
 // Определяем переменые
-$SysValue['other']['pageTitle']= "Сравнение товаров";
+$SysValue['other']['pageTitle']=$SysValue['other']['pageTitl']="Сравнение товаров";
 $SysValue['other']['pageContent']= $disp;
-$SysValue['other']['DispShop']=ParseTemplateReturn($SysValue['templates']['page_page_list']);
 $SysValue['other']['catalogCat']= "Сравнение товаров";
 $SysValue['other']['catalogCategory']= "Выбраны товары для сравнения";
+$SysValue['other']['DispShop']=ParseTemplateReturn($SysValue['templates']['page_page_list']);
 
 // Подключаем шаблон 
 ParseTemplate($SysValue['templates']['shop']);

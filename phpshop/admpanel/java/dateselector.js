@@ -3,26 +3,19 @@ var	fixedY = -1;
 var startAt = 1;
 var	crossobj, monthSelected, yearSelected, dateSelected, omonthSelected, oyearSelected, odateSelected, monthConstructed, yearConstructed, ctlToPlaceValue, ctlNow, dateFormat, nStartingYear
 var	bPageLoaded=false
-var	today = new	Date()
-var	dateNow  = today.getDate()
-var	monthNow = today.getMonth()
-var	yearNow  = today.getYear()
+var	today = new	Date();
+var	dateNow  = today.getDate();
+var	monthNow = today.getMonth();
+var	yearNow  = today.getYear();
 var bShow = false;
 
 /*** For language packs, month/day names should be changed here  ***/
-/*
-if(lang == "russian"){
-var	monthName =	new Array("Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь","Ноябрь", "Декабрь")
-var dayName = new Array("П","Вт","Ср","Ч","Пт","Сб","Вс")
-}
-if(lang == "english"){
-var	monthName =	new Array("Январь", "Февраль", "Март", "Апрель", "Май", "Июнь2", "Июль", "Август", "Сентябрь", "Октябрь","Ноябрь", "Декабрь")
-var dayName = new Array("П","Вт","Ср","Ч","Пт","Сб","Вс")
-}
-*/
+var	monthName =	new Array("Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь","Ноябрь", "Декабрь");
+var dayName = new Array("П","Вт","Ср","Ч","Пт","Сб","Вс");
+
 if (dom)
 {
-	document.write ("<div onclick='bShow=true' id='calendar' class='div-style'>\n");
+	document.write ("<div onclick='bShow=true' id='calendar' name='calendar' class='div-style'>\n");
 	document.write ("<table width='140' class='table-style'>\n");
 	document.write ("<tr class='title-background-style' >\n");
 	document.write ("	<td width='100%'>\n");
@@ -40,12 +33,12 @@ if (dom)
 	document.write ("		<span id='content'></span>\n");
 	document.write ("	</td>\n");
 	document.write ("</tr>");
-	document.write ("</table>")
+	document.write ("</table>");
 	document.write ("</div>");
 }
 
 function hideCalendar() {
-	crossobj.visibility="hidden"
+	crossobj.visibility="hidden";
 	showElement( 'SELECT' );
 	showElement( 'APPLET' );
 }
@@ -57,42 +50,42 @@ function padZero(num) {
 function constructDate(d,m,y)
 {
 	sTmp = dateFormat
-	sTmp = sTmp.replace	("dd","<e>")
-	sTmp = sTmp.replace	("d","<d>")
-	sTmp = sTmp.replace	("<e>",padZero(d))
-	sTmp = sTmp.replace	("<d>",d)
-	sTmp = sTmp.replace	("mmm","<o>")
-	sTmp = sTmp.replace	("mm","<n>")
-	sTmp = sTmp.replace	("m","<m>")
-	sTmp = sTmp.replace	("<m>",m+1)
-	sTmp = sTmp.replace	("<n>",padZero(m+1))
-	sTmp = sTmp.replace	("<o>",monthName[m])
-	return sTmp.replace ("yyyy",y)
+	sTmp = sTmp.replace	("dd","<e>");
+	sTmp = sTmp.replace	("d","<d>");
+	sTmp = sTmp.replace	("<e>",padZero(d));
+	sTmp = sTmp.replace	("<d>",d);
+	sTmp = sTmp.replace	("mmm","<o>");
+	sTmp = sTmp.replace	("mm","<n>");
+	sTmp = sTmp.replace	("m","<m>");
+	sTmp = sTmp.replace	("<m>",m+1);
+	sTmp = sTmp.replace	("<n>",padZero(m+1));
+	sTmp = sTmp.replace	("<o>",monthName[m]);
+	return sTmp.replace ("yyyy",y);
 }
 
 function closeCalendar() {
-	var	sTmp
+	var	sTmp;
 
 	hideCalendar();
-	ctlToPlaceValue.value = constructDate(dateSelected,monthSelected,yearSelected)
+	ctlToPlaceValue.value = constructDate(dateSelected,monthSelected,yearSelected);
 }
 
 function incMonth () {
-	monthSelected++
+	monthSelected++;
 	if (monthSelected>11) {
-		monthSelected=0
-		yearSelected++
+		monthSelected=0;
+		yearSelected++;
 	}
-	constructCalendar()
+	constructCalendar();
 }
 
 function decMonth () {
-	monthSelected--
+	monthSelected--;
 	if (monthSelected<0) {
-		monthSelected=11
-		yearSelected--
+		monthSelected=11;
+		yearSelected--;
 	}
-	constructCalendar()
+	constructCalendar();
 }
 
 
@@ -100,36 +93,36 @@ function decMonth () {
 /*** calendar ***/
 
 function constructCalendar () {
-	var dateMessage
-	var	startDate =	new	Date (yearSelected,monthSelected,1)
+	var dateMessage;
+	var	startDate =	new	Date (yearSelected,monthSelected,1);
 	var	endDate = new Date (yearSelected,monthSelected+1,1);
 	endDate = new Date (endDate	- (24*60*60*1000));
-	numDaysInMonth = endDate.getDate()
+	numDaysInMonth = endDate.getDate();
 
-	datePointer	= 0
-	dayPointer = startDate.getDay() - startAt
+	datePointer	= 0;
+	dayPointer = startDate.getDay() - startAt;
 
 	if (dayPointer < 0)
 	{
-		dayPointer = 6
+		dayPointer = 6;
 	}
 
-	sHTML = "<table width='100%' border='0' cellpadding='1' cellspacing='1' class='body-style'><tr>"
+	sHTML = "<table width='100%' border='0' cellpadding='1' cellspacing='1' class='body-style'><tr>";
 
 	for	(i=0; i<7; i++) {
-		sHTML += "<td width='15' align='center'><B>"+ dayName[i]+"</B></td>"
+		sHTML += "<td width='15' align='center'><B>"+ dayName[i]+"</B></td>";
 	}
-	sHTML +="</tr><tr>"
+	sHTML +="</tr><tr>";
 
 	for	( var i=1; i<=dayPointer;i++ )
 	{
-		sHTML += "<td>&nbsp;</td>"
+		sHTML += "<td>&nbsp;</td>";
 	}
 
 	for	( datePointer=1; datePointer<=numDaysInMonth; datePointer++ )
 	{
 		dayPointer++;
-		sHTML += "<td width='15' align='center'>"
+		sHTML += "<td width='15' align='center'>";
 
 		var sStyle="normal-day-style"; //regular day
 
@@ -140,78 +133,78 @@ function constructCalendar () {
 		if ((datePointer==odateSelected) &&	(monthSelected==omonthSelected) && (yearSelected==oyearSelected))
 		{ sStyle += " selected-day-style"; }
 
-		sHint = ""
+		sHint = "";
 
-		var regexp= /\"/g
-		sHint=sHint.replace(regexp,"&quot;")
+		var regexp= /\"/g;
+		sHint=sHint.replace(regexp,"&quot;");
 
-		sHTML += "<a class='"+sStyle+"' title=\"" + sHint + "\" href='javascript:dateSelected="+datePointer+";closeCalendar();'>" + datePointer + "</a>"
+		sHTML += "<a class='"+sStyle+"' title=\"" + sHint + "\" href='javascript:dateSelected="+datePointer+";closeCalendar();'>" + datePointer + "</a>";
 		if ((dayPointer+startAt) % 7 == startAt) {
-			sHTML += "</tr><tr>"
+			sHTML += "</tr><tr>";
 		}
 	}
 
-	document.getElementById("content").innerHTML   = sHTML
-	document.getElementById("spanMonth").innerHTML = monthName[monthSelected]
-	document.getElementById("spanYear").innerHTML = yearSelected
+	document.getElementById("content").innerHTML   = sHTML;
+	document.getElementById("spanMonth").innerHTML = monthName[monthSelected];
+	document.getElementById("spanYear").innerHTML = yearSelected;
 }
 
-function popUpCalendar(ctl,	ctl2, format) {
-	var	leftpos=0
-	var	toppos=0
+function popUpCalendar(ctl,ctl2, format) {
+	var	leftpos=0;
+	var	toppos=0;
 
   DocumentRegisterEvents();
 	if (bPageLoaded)
 	{
 		if ( crossobj.visibility ==	"hidden" ) {
-			ctlToPlaceValue = ctl2
+			ctlToPlaceValue = ctl2;
 			dateFormat=format;
 
-			formatChar = " "
-			aFormat = dateFormat.split(formatChar)
+			formatChar = " ";
+			aFormat = dateFormat.split(formatChar);
 			if (aFormat.length<3)
 			{
-				formatChar = "/"
-				aFormat = dateFormat.split(formatChar)
+				formatChar = "/";
+				aFormat = dateFormat.split(formatChar);
 				if (aFormat.length<3)
 				{
-					formatChar = "."
-					aFormat = dateFormat.split(formatChar)
+					formatChar = ".";
+					aFormat = dateFormat.split(formatChar);
 					if (aFormat.length<3)
 					{
-						formatChar = "-"
-						aFormat = dateFormat.split(formatChar)
+						formatChar = "-";
+						aFormat = dateFormat.split(formatChar);
 						if (aFormat.length<3)
 						{
 							// invalid date format
-							formatChar=""
+							formatChar="";
 						}
 					}
 				}
 			}
 
-			tokensChanged = 0
+			tokensChanged = 0;
 			if ( formatChar != "" )
 			{
 				// use user's date
-				aData = ctl2.value.split(formatChar)
+				aData = ctl2.value.split(formatChar);
 
 				for	(i=0;i<3;i++)
 				{
 					if ((aFormat[i]=="d") || (aFormat[i]=="dd"))
 					{
-						dateSelected = parseInt(aData[i], 10)
-						tokensChanged ++
+						dateSelected = parseInt(aData[i], 10);
+						tokensChanged ++;
 					}
 					else if ((aFormat[i]=="m") || (aFormat[i]=="mm"))
 					{
-						monthSelected = parseInt(aData[i], 10) - 1
-						tokensChanged ++
+						monthSelected = parseInt(aData[i], 10) - 1;
+						tokensChanged ++;
 					}
 					else if (aFormat[i]=="yyyy")
 					{
-						yearSelected = parseInt(aData[i], 10)
-						tokensChanged ++
+						yearSelected = parseInt(aData[i], 10);
+						tokensChanged ++;
 					}
 					else if (aFormat[i]=="mmm")
 					{
@@ -219,8 +212,8 @@ function popUpCalendar(ctl,	ctl2, format) {
 						{
 							if (aData[i]==monthName[j])
 							{
-								monthSelected=j
-								tokensChanged ++
+								monthSelected=j;
+								tokensChanged ++;
 							}
 						}
 					}
@@ -229,27 +222,28 @@ function popUpCalendar(ctl,	ctl2, format) {
 
 			if ((tokensChanged!=3)||isNaN(dateSelected)||isNaN(monthSelected)||isNaN(yearSelected))
 			{
-				dateSelected = dateNow
-				monthSelected = monthNow
-				yearSelected = yearNow
+				dateSelected = dateNow;
+				monthSelected = monthNow;
+				yearSelected = yearNow;
 			}
 
-			odateSelected=dateSelected
-			omonthSelected=monthSelected
-			oyearSelected=yearSelected
+			odateSelected=dateSelected;
+			omonthSelected=monthSelected;
+			oyearSelected=yearSelected;
 
-			aTag = ctl
+			aTag = ctl;
 			do {
 				aTag = aTag.offsetParent;
 				leftpos += aTag.offsetLeft;
 				toppos += aTag.offsetTop;
 			} while(aTag.tagName!="BODY");
 
-			crossobj.left = fixedX==-1 ? ctl.offsetLeft	+ leftpos :	fixedX
-			crossobj.top = fixedY==-1 ?	ctl.offsetTop + toppos + ctl.offsetHeight +	2 :	fixedY
+
+                        crossobj.left = fixedX==-1 ? ctl.offsetLeft + leftpos+'px' : fixedX;
+                        crossobj.top = fixedY==-1 ? ctl.offsetTop + toppos + ctl.offsetHeight + 2 +'px'  : fixedY
+
 			constructCalendar (1, monthSelected, yearSelected);
-			crossobj.visibility=(dom||ie)? "visible" : "show"
-			
+			crossobj.visibility=(dom||ie)? "visible" : "show";
 			hideElement( 'SELECT', document.getElementById("calendar") );
 			hideElement( 'APPLET', document.getElementById("calendar") );			
 
@@ -258,18 +252,17 @@ function popUpCalendar(ctl,	ctl2, format) {
 	}
 	else
 	{
-		DateSelectorInit()
-		popUpCalendar(ctl, ctl2, format)
+		DateSelectorInit();
+		popUpCalendar(ctl, ctl2, format);
 	}
 }
 
 function DateSelectorInit()	{
-	if (!ns4)
-	{
-		if (!ie) { yearNow += 1900	}
 
-		crossobj=(dom)?document.getElementById("calendar").style : ie? document.all.calendar : document.calendar
-		hideCalendar()
+		yearNow += 1900	;
+
+		crossobj=document.getElementById("calendar").style;
+		hideCalendar();
 
 		monthConstructed=false;
 		yearConstructed=false;
@@ -282,10 +275,9 @@ function DateSelectorInit()	{
 		sHTML1 += "</tr>\n";
 		sHTML1 += "</table>\n";
 
-		document.getElementById("caption").innerHTML  = sHTML1
+		document.getElementById("caption").innerHTML  = sHTML1;
 
-		bPageLoaded=true
-	}
+		bPageLoaded=true;
 }
 
 function DocumentRegisterEvents()

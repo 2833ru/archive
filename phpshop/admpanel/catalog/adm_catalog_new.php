@@ -426,29 +426,6 @@ tabPane.addTabPage( document.getElementById( "twer" ) );
 </tr>
 </table>
 </div>
-<div class="tab-page" id="skin" style="height:450px">
-<h2 class="tab"><span name=txtLang id=txtLang>Дизайн</span></h2>
-
-<script type="text/javascript">
-tabPane.addTabPage( document.getElementById( "skin" ) );
-</script>
-<table >
-	<tr class=adm2>
-	  <td align=left>
-	  '.GetSkins($GetSystems['skin']).'
-	  </td>
-	  <td style="padding-left:5px" valign=top>
-	  <FIELDSET >
-	  <LEGEND ><u>С</u>криншот</LEGEND>
-	  <div align="center" style="padding:10px">'.GetSkinsIcon($GetSystems['skin']).'</div>
-	  </FIELDSET>
-	  <br>
-	  <input type="checkbox" value="1" name="skin_enabled_new">  <span name=txtLang id=txtLang>Использовать дизайн</span>
-	  </td>
-	</tr>
-
-</table>
-</div>
 ');
 
 if(CheckedRules($UserStatus["cat_prod"],5) == 1){ //Если есть права на редактирование доступа к папке
@@ -579,7 +556,7 @@ if(CheckedRules($UserStatus["cat_prod"],5) == 1){
 
 
 $sql="INSERT INTO $table_name
-VALUES ('','".CleanStr(trim($name_new))."','$num_new','$parent_to_new','$yml_new','$num_row_new','$num_cow_new','".serialize($sort_new)."','$EditorContent',0,'$name_rambler_new','','$title_new','$title_enabled_new','$title_shablon_new','$descrip_new','$descrip_enabled_new','$descrip_shablon_new','$keywords_new','$keywords_enabled_new','$keywords_shablon_new','$skin_new','$skin_enabled_new','$order_by_new','$order_to_new','$sq_new')";
+VALUES ('','".CleanStr(trim($name_new))."','$num_new','$parent_to_new','$yml_new','$num_row_new','$num_cow_new','".serialize($sort_new)."','$EditorContent',0,'$name_rambler_new','','$title_new','$title_enabled_new','$title_shablon_new','$descrip_new','$descrip_enabled_new','$descrip_shablon_new','$keywords_new','$keywords_enabled_new','$keywords_shablon_new','','$skin_enabled_new','$order_by_new','$order_to_new','$sq_new')";
 $result=mysql_query($sql);
 if($reload=="true")
 echo"

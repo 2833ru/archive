@@ -17,7 +17,7 @@ while ($row = mysql_fetch_array($result))
 	$fl="<img src=\"img/icon-deactivate.gif\">";}
 	$limit_all=$row['limit_all'];
 	@$display.="
-	<tr onmouseover=\"show_on('r".$id."')\" id=\"r".$id."\" onmouseout=\"show_out('r".$id."')\" class=row onclick=\"miniWin('baner/adm_banerID.php?id=$id',630,580)\">
+	<tr onmouseover=\"show_on('r".$id."')\" id=\"r".$id."\" onmouseout=\"show_out('r".$id."')\" class=row onclick=\"miniWin('baner/adm_banerID.php?id=$id',650,600)\">
 	<td align=\"center\" class=forma>
 	$fl
 	</td>
@@ -57,7 +57,7 @@ while ($row = mysql_fetch_array($result))
 </td>
 </tr>
 </table>
-<div align=\"right\" style=\"padding:10\"><BUTTON style=\"width: 15em; height: 2.2em; margin-left:5\"  onclick=\"miniWin('baner/adm_baner_new.php',630,580)\">
+<div align=\"right\" style=\"padding:10\"><BUTTON style=\"width: 15em; height: 2.2em; margin-left:5\"  onclick=\"miniWin('baner/adm_baner_new.php',630,600)\">
 <img src=\"icon/page_add.gif\" width=\"16\" height=\"16\" border=\"0\" align=\"absmiddle\" hspace=\"5\">
 <span name=txtLang id=txtLang>Новая позиция</span>
 </BUTTON></div>

@@ -20,6 +20,9 @@ class PHPShopProduct extends PHPShopObj {
     function PHPShopProduct($objID) {
         $this->objID=$objID;
         $this->objBase=$GLOBALS['SysValue']['base']['table_name2'];
+        $this->cache=true;
+        $this->debug=false;
+        $this->cache_format=array('content');
 
         // Учет подтипов для выборки по артикулу
         if(PHPShopProductFunction::true_parent($objID)) $var='uid';
@@ -46,6 +49,15 @@ class PHPShopProduct extends PHPShopObj {
     function getValutaID() {
         return parent::getParam("baseinputvaluta");
     }
+
+    function getPrice() {
+        $price_array=array($this->objRow['price'],$this->objRow['price2'],$this->objRow['price3'],$this->objRow['price4'],$this->objRow['price5']);
+        return PHPShopProductFunction::GetPriceValuta($this->objID,$price_array,$this->objRow['baseinputvaluta']);
+    }
+
+    function getImage(){
+        return parent::getParam("pic_small");
+    }
 }
 
 /**
@@ -60,7 +72,7 @@ class PHPShopProductArray extends PHPShopArray {
      * Конструктор
      * @param string $sql SQL условие выборки
      */
-    function PHPShopProductArray($sql="") {
+    function PHPShopProductArray($sql=false) {
         $this->objSQL=$sql;
         $this->objBase=$GLOBALS['SysValue']['base']['table_name2'];
         parent::PHPShopArray('id','uid','name','category','price','price_n','sklad','odnotip','vendor','title_enabled',
@@ -71,10 +83,17 @@ class PHPShopProductArray extends PHPShopArray {
 /**
  * Библиотека функций по товарам
  * @author PHPShop Software
- * @version 1.0
+ * @version 1.1
  * @package PHPShopClass
  */
 class PHPShopProductFunction {
+
+
+    function getLink() {
+        $Arg=func_get_args();
+        $link='/shop/UID_'.$Arg[0].'.html';
+        return $link;
+    }
 
     /**
      * Проверка на подтип товара из 1С
@@ -89,40 +108,56 @@ class PHPShopProductFunction {
      * Цена с учетом валюты
      * @param int $id ИД товара
      * @param float $price стоимость товара
-     * @param int $formats кол-во знаков после запятой в стоимости
      * @param int $baseinputvaluta ИД валюты товара
      * @param bool $order параметр расчета заказе [true/false]
+     * @param bool $check_user_price учитыватьперсональную колонку цен пользователя [true/false]
      * @return format
      */
-    function GetPriceValuta($id,$price,$formats=0,$baseinputvaluta=false,$order=false) {
-        global $SysValue,$LoadItems,$PHPShopValutaArray,$PHPShopSystem;
+    function GetPriceValuta($id,$price_array,$baseinputvaluta=false,$order=false,$check_user_price=true) {
+        global $PHPShopValutaArray,$PHPShopSystem;
 
-        if(!$LoadItems) {
-            $LoadItems['Valuta']=$PHPShopValutaArray->getArray();
-            $LoadItems['System']=$PHPShopSystem->getArray();
-        }
+        if(!is_array($price_array)) $price=$price_array;
+        else $price=$price_array[0];
+
+        $LoadItems['Valuta']=$PHPShopValutaArray->getArray();
+        $LoadItems['System']=$PHPShopSystem->getArray();
+
 
         // Если выбрана другая валюта
         $format = $PHPShopSystem->getSerilizeParam("admoption.price_znak");
 
-        // Выборка из базы нужной колонки цены для автор. пользователя
-        if(!empty($_SESSION['UsersStatus'])) {
-            $PHPShopUser = new PHPShopUserStatus($_SESSION['UsersStatus']);
-            $GetUsersStatusPrice=$PHPShopUser->getPrice();
+        if(!empty($_SESSION['UsersStatus']) and !empty($check_user_price)) {
+
+            if(empty($_SESSION['UsersStatusPice'])) {
+
+                // Выборка из базы нужной колонки цены для автор. пользователя
+                $PHPShopUser = new PHPShopUserStatus($_SESSION['UsersStatus']);
+                $GetUsersStatusPrice=$PHPShopUser->getPrice();
+                $_SESSION['UsersStatusPice']=$GetUsersStatusPrice;
+            }
+            else $GetUsersStatusPrice=$_SESSION['UsersStatusPice'];
+
             if($GetUsersStatusPrice>1) {
                 $pole="price".$GetUsersStatusPrice;
-                $PHPShopProduct = new PHPShopProduct($id);
 
-                $user_price=$PHPShopProduct->getParam($pole);
+                // Если не известны другие колонки цен
+                if(!is_array($price_array)) {
+                    $PHPShopProduct = new PHPShopProduct($id);
+                    $user_price=$PHPShopProduct->getParam($pole);
+                }
+                else {
+                    // Берем цену из массива
+                    $user_price=$price_array[$GetUsersStatusPrice-1];
+                }
                 if(!empty($user_price)) $price=$user_price;
-
             }
         }
 
         // Учет валюты товара
         if ($baseinputvaluta) { //Если прислали баз. валюту
             if ($baseinputvaluta!==$LoadItems['System']['dengi']) {//Если присланная валюта отличается от базовой
-                $price=$price/$LoadItems['Valuta'][$baseinputvaluta]['kurs']; //Приводим цену в базовую валюту
+                if(!empty($LoadItems['Valuta'][$baseinputvaluta]['kurs']))
+                    $price=$price/$LoadItems['Valuta'][$baseinputvaluta]['kurs']; //Приводим цену в базовую валюту
             }
         }
 
@@ -139,4 +174,5 @@ class PHPShopProductFunction {
         return number_format($price,$format,'.','');
     }
 }
+
 ?>

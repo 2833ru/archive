@@ -1,20 +1,14 @@
-<?
-/*
-+-------------------------------------+
-|  PHPShop Enterprise                 |
-|  Модуль OrderFunction Interkassa    |
-+-------------------------------------+
-*/
+<?php
+/**
+ * Обработчик оплаты заказа через Interkassa
+ * @author PHPShop Software
+ * @version 1.0
+ * @package PHPShopPayment
+ */
 
 if(empty($GLOBALS['SysValue'])) exit(header("Location: /"));
 
 
-$cart_list=Summa_cart();
-$ChekDiscount=ChekDiscount($cart_list[1]);
-$GetDeliveryPrice=GetDeliveryPrice($_POST['dostavka_metod'],$cart_list[1]);
-$sum_pol=(ReturnSummaNal($cart_list[1],$ChekDiscount[0])+$GetDeliveryPrice);
-
- 
 // регистрационная информация
 $LMI_PAYEE_PURSE = $SysValue['interkassa']['LMI_PAYEE_PURSE'];    //кошелек
 $LMI_SECRET_KEY = $SysValue['interkassa']['LMI_SECRET_KEY'];    //кошелек
@@ -24,7 +18,7 @@ $LMI_SECRET_KEY = $SysValue['interkassa']['LMI_SECRET_KEY'];    //кошелек
 //параметры магазина
 $mrh_ouid = explode("-", $_POST['ouid']);
 $inv_id = $mrh_ouid[0]."".$mrh_ouid[1];     //номер счета
-
+$amount=$GLOBALS['SysValue']['other']['total'];
 
 //описание покупки
 $inv_desc  = "Оплата заказа №$inv_id";
@@ -32,7 +26,7 @@ $out_summ  = $sum_pol; //сумма покупки
 
 
 $ik_shop_id = $LMI_PAYEE_PURSE;
-$ik_payment_amount = $out_summ;
+$ik_payment_amount = $amount;
 $ik_payment_id = $inv_id;
 $ik_payment_desc = $inv_desc;
 $ik_paysystem_alias = '';
@@ -59,7 +53,7 @@ $disp= "
 
 <form name=\"pay\" action=\"https://interkassa.com/lib/payment.php\" method=\"post\" target=\"_top\">
 <input type=\"hidden\" name=\"ik_shop_id\" value=\"$LMI_PAYEE_PURSE\">
-<input type=\"hidden\" name=\"ik_payment_amount\" value=\"$out_summ\">
+<input type=\"hidden\" name=\"ik_payment_amount\" value=\"$amount\">
 <input type=\"hidden\" name=\"ik_payment_id\" value=\"$inv_id\">
 <input type=\"hidden\" name=\"ik_payment_desc\" value=\"$inv_desc\">
 <input type=\"hidden\" name=\"ik_paysystem_alias\" value=\"\">

@@ -1,4 +1,4 @@
-<p><font color="#FF0000">@usersError@</font></p>
+<p><font color="#FF0000">@usersError@ @mesageText@</font></p>
 <p>
 <form method="post" name="user_forma" action="/partner/">
     <table cellspacing="5" cellpadding="5">

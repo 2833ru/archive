@@ -20,7 +20,7 @@ while ($row = mysql_fetch_array($result))
 		$imgchek="<img src=\"img/icon-deactivate.gif\" width=\"16\" height=\"16\" border=\"0\">";
 		}
 	@$display.="
-	<tr onmouseover=\"show_on('r".$id."')\" id=\"r".$id."\" onmouseout=\"show_out('r".$id."')\" class=row onclick=\"miniWin('opros/adm_oprosID.php?id=$id',650,500)\">
+	<tr onmouseover=\"show_on('r".$id."')\" id=\"r".$id."\" onmouseout=\"show_out('r".$id."')\" class=row onclick=\"miniWin('opros/adm_oprosID.php?id=$id',650,550)\">
     <td align=\"center\" class=forma>
 	$imgchek
 	</td>

@@ -17,6 +17,7 @@ class Guard {
             'enterprise','.hg','awstats');
     var $src=array('php','html','tpl','js');
     var $update_url='http://www.phpshop.ru/update/guard/update.php';
+    var $update_enabled=false;
     var $backup_path='UserFiles/Files/';
     var $license_path='license/';
     var $none_chek_file=array('../phpshop/lib/JsHttpRequest/JsHttpRequest.js');
@@ -111,47 +112,51 @@ class Guard {
 
     // Обновление сигнатур
     function update() {
+        
+        // Если разрешена проверка обновлений
+        if($this->update_enabled) {
 
-        PHPShopObj::loadClass("xml");
+            PHPShopObj::loadClass("xml");
 
-        // Проверка лицензии
-        $this->license();
+            // Проверка лицензии
+            $this->license();
 
-        if($this->support > time()) {
+            if($this->support > time()) {
 
-            $this->update_url.="?from=".$_SERVER['SERVER_NAME']."&version=".$this->SysValue['upload']['version']."&support=".$this->support;
-            if(function_exists("xml_parser_create")) {
-                if(@$db=readDatabase($this->update_url,"virus")) {
+                $this->update_url.="?from=".$_SERVER['SERVER_NAME']."&version=".$this->SysValue['upload']['version']."&support=".$this->support;
+                if(function_exists("xml_parser_create")) {
+                    if(@$db=readDatabase($this->update_url,"virus")) {
 
-                    // Очищаем
-                    if(is_array($db)) {
+                        // Очищаем
+                        if(is_array($db)) {
 
-                        if($db[0]['status'] != 'passive') {
+                            if($db[0]['status'] != 'passive') {
 
-                            $PHPShopOrm = &new PHPShopOrm();
-                            $PHPShopOrm->query('TRUNCATE TABLE '.$this->SysValue['base']['guard']['guard_signature']);
+                                $PHPShopOrm = &new PHPShopOrm();
+                                $PHPShopOrm->query('TRUNCATE TABLE '.$this->SysValue['base']['guard']['guard_signature']);
 
-                            // Вставляем новые сигнатуры
-                            foreach($db as $key=>$val) {
-                                $PHPShopOrm = &new PHPShopOrm($this->SysValue['base']['guard']['guard_signature']);
-                                $PHPShopOrm->insert(array('virus_name_new'=>$val['name'],'virus_signature_new'=>$val['signature']));
+                                // Вставляем новые сигнатуры
+                                foreach($db as $key=>$val) {
+                                    $PHPShopOrm = &new PHPShopOrm($this->SysValue['base']['guard']['guard_signature']);
+                                    $PHPShopOrm->insert(array('virus_name_new'=>$val['name'],'virus_signature_new'=>$val['signature']));
+                                }
+
+                                // Обновляем дату обновления сигнатур
+                                $PHPShopOrm= &new PHPShopOrm($this->SysValue['base']['guard']['guard_system']);
+                                $PHPShopOrm->update(array('last_update_new'=>$this->date),array('id'=>'=1'));
+
+                                $this->update_result=1;
                             }
-
-                            // Обновляем дату обновления сигнатур
-                            $PHPShopOrm= &new PHPShopOrm($this->SysValue['base']['guard']['guard_system']);
-                            $PHPShopOrm->update(array('last_update_new'=>$this->date),array('id'=>'=1'));
-
-                            $this->update_result=1;
+                            else $this->update_result=0;
                         }
-                        else $this->update_result=0;
+                        else $this->update_result=2;
                     }
-                    else $this->update_result=2;
+
+
+                    // Кол-во сигнатур
+                    $this->signature_num=count($db);
+
                 }
-
-
-                // Кол-во сигнатур
-                $this->signature_num=count($db);
-
             }
         }
     }
@@ -381,10 +386,8 @@ class Guard {
     // ZIP
     function zip($dir=false,$fname=false) {
 
-        if(is_file($this->SysValue['class']['pclzip']))
-            include_once($this->SysValue['class']['pclzip']);
-        elseif(is_file("./phpshop/modules/guard/class/pclzip.class.php"))
-            include_once("./phpshop/modules/guard/class/pclzip.class.php");
+        // Библиотека ZIP
+        include_once("./phpshop/lib/zip/pclzip.lib.php");
 
         if(empty($dir)) $dir=$this->base;
 

@@ -61,7 +61,7 @@ function TipPayment($payment) {
 
 $RegTo = $SysValue['license']['regto'];
 $ProductName=$SysValue['license']['product_name'];
-$ProductNameVersion=$SysValue['license']['product_name']." (сборка ".$SysValue['upload']['version'].")";
+$ProductNameVersion=$SysValue['license']['product_name']." v.".$SysValue['upload']['version'];
 
 
 // Вывод валюты в выборе для загрузки товаров
@@ -211,6 +211,7 @@ function GetSystems(){
     $array['lang']=$lang;
     session_register('lang');
     $option['admoption']=serialize($array);
+    $option['width_icon']=100;
     
     return $option;
 }
@@ -281,7 +282,7 @@ function GetUsersStatusForma($n) {
         @$dis.="<option value=".$id." ".$sel." >".$name." - ".$discount."%</option>\n";
     }
     $disp='
-<select name=list size=1>
+<select name="list" id="list" size="1">
 <option value="" id=txtLang>Все</option>
 <option value=0 id=txtLang>Авторизованный пользователь</option>'.$dis.'</select>
 <input type=button name="btnLang" value=Показать class=but3 onclick="DoReload(\'shopusers\',\'\',document.getElementById(\'list\').value)">';
@@ -344,6 +345,7 @@ $table_name18=$SysValue['base']['table_name18'];
 $table_name19=$SysValue['base']['table_name19'];
 $table_name27=$SysValue['base']['table_name27'];
 $table_name32=$SysValue['base']['table_name32'];
+$SysValue['lang']['lang_enabled']=0;
 
 // Обновление
 define("TIME_LIMIT", 600);

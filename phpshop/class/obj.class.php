@@ -4,30 +4,46 @@ if (!defined("OBJENABLED")) define("OBJENABLED", dirname(__FILE__));
 /**
  * Родительский класс Объекта
  * @author PHPShop Software
- * @version 1.2
+ * @version 1.3
  * @package PHPShopClass
  */
 class PHPShopObj {
     /**
-     * @var int ИД объекта в БД
+     * ИД объекта в БД
+     * @var int 
      */
     var $objID;
     /**
-     * @var string имя БД
+     * имя БД
+     * @var string 
      */
     var $objBase;
     /**
-     * @var array массив данных
+     * массив данных
+     * @var array 
      */
     var $objRow;
     /**
-     * @var bool режим отладки
+     * режим отладки
+     * @var bool 
      */
     var $debug=false;
     /**
-     * @var bool проверка установки
+     * проверка установки
+     * @var bool 
      */
     var $install=true;
+    /**
+     * Режим кэширования
+     * @var bool
+     */
+    var $cache=false;
+    /**
+     * Форматирование кэша
+     * @var array
+     */
+    var $cache_format=array();
+
     /**
      * Конструктор
      * @var var поле выборки, по умолчанию id
@@ -43,8 +59,22 @@ class PHPShopObj {
         $this->loadClass("orm");
         $PHPShopOrm = &new PHPShopOrm($this->objBase);
         $PHPShopOrm->debug=$this->debug;
+        $PHPShopOrm->cache=$this->cache;
+        $PHPShopOrm->cache_format=$this->cache_format;
         $PHPShopOrm->install=$this->install;
-        $this->objRow = $PHPShopOrm->select(array('*'),array($var=>'='.$this->objID),false,array('limit'=>1));
+        $this->objRow = $PHPShopOrm->select(array('*'),array($var=>'="'.$this->objID.'"'),false,array('limit'=>1));
+    }
+
+    /**
+     * Сравнение параметра из массива
+     * @param string $paramName имя переменной
+     * @param string $paramValue значение переменной
+     * @return bool
+     */
+    function ifValue($paramName,$paramValue=false) {
+        if(empty($paramValue)) $paramValue=1;
+        if(!empty($this->objRow[$paramName]))
+            if($this->objRow[$paramName] == $paramValue) return true;
     }
 
     /**
@@ -53,6 +83,7 @@ class PHPShopObj {
      * @return mixed
      */
     function getParam($paramName) {
+        if(!empty($this->objRow[$paramName]))
         return $this->objRow[$paramName];
     }
     /**
@@ -61,8 +92,10 @@ class PHPShopObj {
      * @return mixed
      */
     function getValue($paramName) {
+        if(!empty($this->objRow[$paramName]))
         return $this->objRow[$paramName];
     }
+
     /**
      * Выдача массива значений целиком
      * @return array
@@ -80,6 +113,7 @@ class PHPShopObj {
         if(file_exists($class_path)) require_once($class_path);
         else echo "Нет файла ".$class_path;
     }
+
     /**
      * Выдача десериализованного значения
      * @param string $paramName имя параметра
@@ -87,6 +121,17 @@ class PHPShopObj {
      */
     function unserializeParam($paramName) {
         return unserialize($this->getParam($paramName));
+    }
+
+    /**
+     * Загрузка класса роутера ядра для наследования
+     * @param string $class_name имя класса, согласно config.ini
+     */
+    function importCore($class_name) {
+        global $_classPath;
+        $class_path=$_classPath.'/core/'.$class_name.".core.php";
+        if(file_exists($class_path)) require_once($class_path);
+        else echo "Нет файла ".$class_path;
     }
 }
 ?>

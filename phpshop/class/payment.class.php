@@ -10,6 +10,7 @@ if (!defined("OBJENABLED"))
  * @package PHPShopObj
  */
 class PHPShopPayment extends PHPShopObj {
+    var $debug=false;
 
     /**
      * Конструктор
@@ -17,7 +18,8 @@ class PHPShopPayment extends PHPShopObj {
      */
     function PHPShopPayment($objID) {
         $this->objID=$objID;
-        $this->objBase=$GLOBALS['SysValue']['base']['table_name48'];
+        $this->order=array('order'=>'num');
+        $this->objBase=$GLOBALS['SysValue']['base']['payment_systems'];
         parent::PHPShopObj();
     }
 
@@ -29,12 +31,31 @@ class PHPShopPayment extends PHPShopObj {
         return parent::getParam("name");
     }
 
+    function getPath() {
+        return parent::getParam("path");
+    }
+
     /**
      * ИД метода
      * @return int
      */
     function getId() {
         return parent::getParam("id");
+    }
+}
+
+/**
+ * Массив способов оплат
+ * @author PHPShop Software
+ * @version 1.0
+ * @package PHPShopArray
+ */
+class PHPShopPaymentArray extends PHPShopArray {
+
+    function PHPShopPaymentArray() {
+        $this->order=array('order'=>'num');
+        $this->objBase=$GLOBALS['SysValue']['base']['payment_systems'];
+        parent::PHPShopArray('id',"name",'path','enabled');
     }
 }
 ?>

@@ -9,7 +9,7 @@
  * timer('end','Моя отладка');
  * </code>
  * @author PHPShop Software
- * @version 1.0
+ * @version 1.2
  * @package PHPShopClass
  */
 class PHPShopDebug {
@@ -50,9 +50,16 @@ class PHPShopDebug {
     }
 
     function disp($name,$content) {
+
+        if($_GET['debug'] == 'timer') {
+            $name['Total SQL']=$this->total_sql;
+            $name['Total Seconds']=$this->total_seconds;
+            $name['Total Memory']=$this->total_memory;
+        }
         ob_start();
         print_r($name);
         $disp=$content.': '.ob_get_clean();
+
         echo  '<pre>'.strip_tags($disp).'</pre>';
     }
 
@@ -73,9 +80,13 @@ class PHPShopDebug {
 
     }
 
-    function compile() {
+    function compile($total_sql,$total_seconds,$total_memory) {
         global $PHPShopNav;
-        
+
+        $this->total_sql=$total_sql;
+        $this->total_seconds=$total_seconds;
+        $this->total_memory=$total_memory;
+
         if(!empty($_GET['debug'])) {
             $height=$this->tollbar_height_closed."px";
             $height2=($this->tollbar_height_closed-20)."px";
@@ -87,9 +98,13 @@ class PHPShopDebug {
 
 
         $metod='?';
-        if(is_array($PHPShopNav->objNav['query'])){
-        foreach($PHPShopNav->objNav['query'] as $k=>$v)
-            if($k != 'debug') $metod.=$k.'='.$v.'&';
+        if(is_array($PHPShopNav->objNav['query'])) {
+            foreach($PHPShopNav->objNav['query'] as $k=>$v)
+                    if(is_array($v)){
+                        foreach($v as $key=>$val)
+                            $metod.=$k.'['.$key.']='.$val.'&';
+                    }
+                    elseif($k != 'debug') $metod.=$k.'='.$v.'&';
 
         }
 
@@ -116,7 +131,7 @@ class PHPShopDebug {
            width: 100%;
            height: '.$height.';
            overflow: visible;
-           z-index:10000;
+           z-index:10000000;
            font-family: helvetica, arial, sans-serif;
            }
            
@@ -124,13 +139,18 @@ class PHPShopDebug {
            background-color: '.$this->tabcolor.';
 
            color: '.$this->textcolor.';
-           width: 410px;
+           width: 500px;
            padding: 3px;
            padding-right:5px;
            }
 
            #debug-kit-nav a{
            color: '.$this->texttabcolor.';
+           font-size: 12px;
+           }
+
+           #debug-kit-nav span{
+           color: white;
            font-size: 12px;
            }
 
@@ -148,8 +168,10 @@ class PHPShopDebug {
            </style>
            <div title="Развернуть" id="debug-kit-toolbar" align="right">
            <div id="debug-kit-nav">
-           <IMG border=0 alt="" src="/phpshop/admpanel/icon/debug.png" width=16 height=16 alt="Отладчик Вкл" align="absmiddle" hspace="5">
-           <a href="'.$metod.'debug=session">Session</a> |
+           <a href="javascript:location.reload();" title="Reload"><img border=0 alt="Dev" src="/phpshop/admpanel/icon/database_refresh.png" width=16 height=16 alt="Перегрузить" align="absmiddle" hspace="5"></a>
+           <span>'.$total_seconds.'</span>
+               <a href="/dev/" title="Debug Kit Option"><img border=0 alt="Dev" src="/phpshop/admpanel/icon/debug.png" width=16 height=16 alt="Отладчик Вкл" align="absmiddle" hspace="5"></a>
+           <a href="'.$metod.'debug=session">Session & Cache</a> |
            <a href="'.$metod.'debug=sysvalue">SysValue</a> |
            <a href="'.$metod.'debug=request">Request</a> |
            <a href="'.$metod.'debug=timer">Timer</a> |
@@ -160,32 +182,33 @@ class PHPShopDebug {
            <div id="debug-kit-display" onclick="debug_toolbar(this)">';
 
         if(!empty($_GET['debug']))
-        switch($_GET['debug']) {
-            case "session":
-                $this->disp($_SESSION,"_SESSION");
-                break;
-            case "sysvalue":
-                $SysValue=$GLOBALS['SysValue'];
-                $SysValue['connect']='******';
-                $SysValue['other']='******';
-                $this->disp($SysValue,"GLOBALS['SysValue']");
-                break;
-            case "request":
-                $this->disp($GLOBALS['SysValue']['nav'],"GLOBALS['SysValue']['nav']");
-                break;
-            case "log":
-                $this->log();
-                break;
-            case "variables":
-                $this->disp($GLOBALS['SysValue']['other'],"GLOBALS['SysValue']['other']");
-                break;
-            case "values":
-                $this->disp($this->value,"Values");
-                break;
-            case "timer":
-                $this->disp($this->seconds,"Timer");
-                break;
-        }
+            switch($_GET['debug']) {
+                case "session":
+                    $this->disp($_SESSION,"_SESSION");
+                    $this->disp($GLOBALS['Cache'],"GLOBALS['Cache']");
+                    break;
+                case "sysvalue":
+                    $SysValue=$GLOBALS['SysValue'];
+                    $SysValue['connect']='******';
+                    $SysValue['other']='******';
+                    $this->disp($SysValue,"GLOBALS['SysValue']");
+                    break;
+                case "request":
+                    $this->disp($GLOBALS['SysValue']['nav'],"GLOBALS['SysValue']['nav']");
+                    break;
+                case "log":
+                    $this->log();
+                    break;
+                case "variables":
+                    $this->disp($GLOBALS['SysValue']['other'],"GLOBALS['SysValue']['other']");
+                    break;
+                case "values":
+                    $this->disp($this->value,"Values");
+                    break;
+                case "timer":
+                    $this->disp($this->seconds,"Timer");
+                    break;
+            }
 
         echo '</div></div>';
     }

@@ -2,7 +2,7 @@
  * Поддержка JavaScript функций
  * @package PHPShopJavaScript
  * @author PHPShop Software
- * @version 1.5
+ * @version 1.9
  */
 
 var ROOT_PATH="";
@@ -23,9 +23,8 @@ function JtopMenuOff(id){
 }
 
 
-
 // Вывод фильтров в поиске
-function proSerch(category) {
+function proSearch(category) {
     var req = new Subsys_JsHttpRequest_Js();
     req.onreadystatechange = function() {
         if (req.readyState == 4) {
@@ -38,7 +37,7 @@ function proSerch(category) {
     // Подготваливаем объект.
     // Реальное размещение
     var dir=dirPath();
-    req.open('POST', dir+'/phpshop/search.php', true);
+    req.open('POST', dir+'/phpshop/ajax/search.php', true);
     req.send({
         category: category
     });
@@ -59,7 +58,7 @@ function calres(year,month) {
     // Подготваливаем объект.
     // Реальное размещение
     var dir=dirPath();
-    req.open('POST', dir+'/phpshop/calres.php', true);
+    req.open('POST', dir+'/phpshop/ajax/calres.php', true);
     req.send({
         year: year,
         month: month
@@ -104,7 +103,6 @@ function ButOff(Id){
     Id.className='imgOff';
 }
 
-
 // Обновить картинку
 function CapReload(){
     var dd=new Date();
@@ -124,7 +122,6 @@ function emoticon(text) {
     }
 }
 
-
 // Подсчет лимита символов
 function countSymb(lim) {
     var lim = lim || 500;
@@ -142,14 +139,13 @@ function countSymb(lim) {
     document.getElementById("count").innerHTML = document.getElementById("message").value.length;
 }
 
-
-// Комменты v1.0
+// Комментарии
 function commentList(xid,comand,page,cid) {
     var message="";
 
     if(comand == "add") {
         message = document.getElementById('message').value;
-        alert ("Комменетарий будет доступен после прохождения модерации...");
+        alert ("Комментарий будет доступен после прохождения модерации...");
     }
 
     if(comand == "edit_add"){
@@ -168,7 +164,6 @@ function commentList(xid,comand,page,cid) {
         else cid=0;
     }
 
-
     var req = new Subsys_JsHttpRequest_Js();
     req.onreadystatechange = function() {
         if (req.readyState == 4) {
@@ -180,12 +175,11 @@ function commentList(xid,comand,page,cid) {
                     document.getElementById('commentButtonEdit').style.visibility = 'visible';
                     document.getElementById('commentButtonEdit').style.display = '';
                     document.getElementById('commentEditId').value=cid;
-
                 }
                 else
                 {
                     document.getElementById('message').value = "";
-                    if(req.responseJS.status == "error") alert("Возможность добавления комментария возможна только для авторизованных пользователей.\nАвторизуйтесь или пройдите регистрацию.");
+                    if(req.responseJS.status == "error") alert("Функция добавления комментария возможна только для авторизованных пользователей.\nАвторизуйтесь или пройдите регистрацию.");
                     document.getElementById('commentList').innerHTML = (req.responseJS.comment||'');
                 }
             }
@@ -195,7 +189,7 @@ function commentList(xid,comand,page,cid) {
     // Подготваливаем объект.
     // Реальное размещение
     var dir=dirPath();
-    req.open('POST', dir+'/phpshop/comment.php', true);
+    req.open('POST', dir+'/phpshop/ajax/comment.php', true);
     req.send({
         xid: xid,
         comand: comand,
@@ -205,8 +199,7 @@ function commentList(xid,comand,page,cid) {
     });
 }
 
-
-// Изображения v2.1
+// Фотогалерея
 function fotoload(xid,fid) {
     document.getElementById('fotoload').innerHTML = document.getElementById('fotoload').innerHTML;
     var req = new Subsys_JsHttpRequest_Js();
@@ -221,14 +214,12 @@ function fotoload(xid,fid) {
     // Подготваливаем объект.
     // Реальное размещение
     var dir=dirPath();
-    req.open('POST', dir+'/phpshop/fotoload.php', true);
+    req.open('POST', dir+'/phpshop/ajax/fotoload.php', true);
     req.send({
         xid: xid,
         fid: fid
     });
 }
-
-
 
 // Просчет доставки
 function UpdateDelivery(xid) {
@@ -250,7 +241,7 @@ function UpdateDelivery(xid) {
     // Реальное размещение
     var dir=dirPath();
 		
-    req.open('POST', dir+'/phpshop/delivery.php', true);
+    req.open('POST', dir+'/phpshop/ajax/delivery.php', true);
     req.send({
         xid: xid,
         sum: sum,
@@ -258,14 +249,10 @@ function UpdateDelivery(xid) {
     });
 }
 
-
-
-
 // Очистка корзины
 function cartClean(){
     if(confirm("Вы действительно хотите очистить корзину?"))  window.location.replace('./?cart=clean');
 }
-
 
 
 // Удаление заявки
@@ -274,18 +261,18 @@ function NoticeDel(id){
         window.location.replace('./notice.html?noticeId='+id);
 }
 
-
+// Проверка наличия файла картинки, вставляем заглушку
 function NoFoto(obj,pathTemplate){
     obj.src=pathTemplate +'/images/shop/no_photo.gif';
 }
 
-
+// Проверка наличия файла картинки, прячем картинку
 function NoFoto2(obj){
     obj.height=0;
     obj.width=0;
 }
 
-
+// Коректировка размера картинки, отключена функция
 function EditFoto(obj,max_width){
 /*
 var w,h,pr,max_height;
@@ -294,19 +281,18 @@ if(w > max_width) obj.width = max_width;
 */
 }
 
-
-// Вывод полной формы
+// Вывод полной формы прайс-листа
 function GetAllForma(catId){
-    if(catId!="") window.location.replace("../shop/CID_"+catId+".html");
+    if(catId!="" && catId!="ALL") window.location.replace("../shop/CID_"+catId+".html");
+    if(catId=="ALL") alert('Для всех категорий форма с описанием не доступна! Выберите из выпадающего меню категорию и нажмите "показать". После этого форма с описание станет доступна.');
+    if(catId=="") alert('Выберите из выпадающего меню категорию и нажмите "показать". После этого форма с описание станет доступна.');
 }
-
 
 // Сортировка прайса
 function DoPriceSort(){
     var catId=document.getElementById("catId").value;
     location.replace("../price/CAT_SORT_"+catId+".html");
 }
-
 
 // Активация закладок
 function NavActive(nav){
@@ -315,7 +301,6 @@ function NavActive(nav){
         IdStyle.className='menu_bg';
     }
 }
-
 
 // Проверка формы восстанволения пароля
 function ChekUserSendForma(){
@@ -341,10 +326,10 @@ function CheckNewUserForma(){
     else d.submit();
 }
 
-// Выход
+// Выход пользователя
 function UserLogOut(){
     if(confirm("Вы действительно хотите выйти из личного кабинета?"))
-        window.location.replace('?LogOut');
+        window.location.replace('?logout=true');
 }
 
 
@@ -390,42 +375,12 @@ function ChekUserForma(){
     else alert("Ошибка заполнения формы авторизации");
 }
 
-function mp(e){
-    if(document.all){
-        if((event.button==2)||(event.button==3)){
-            alert('Copyright 2004-2006 \© PHPShop\.ru\. All rights reserved\. ');
-            return false
-            }
-        }
-    if(document.layers){
-    if(e.which==3){
-        alert('Copyright 2005 \© ShopBuilder\.ru\. All rights reserved\. ');
-        return false
-        }
-    }
-}
-
 
 function do_err(){
     return true
-    }
-    onerror=do_err;
-if(window.location.href.substring(0,4)=="file")window.location="about:blank";
+}
 
-function atlpdp1(){
-    for(wi=0;wi<document.all.length;wi++){
-        if(document.all[wi].style.visibility!='hidden'){
-            document.all[wi].style.visibility='hidden';
-            document.all[wi].id='atlpdpst'
-            }
-        }
-    }
-function atlpdp2(){
-    for (wi=0;wi<document.all.length;wi++){
-        if(document.all[wi].id=='atlpdpst')document.all[wi].style.visibility=''
-            }
-        }
-
+onerror=do_err;
 
 // Изменение кол-ва в поле
 function ChangeNumProduct(pole,znak){
@@ -445,9 +400,7 @@ function ChangeSkin(){
     document.SkinForm.submit();
 }
 
-
-
-// PHPShop CartAdder v 1.2
+// Ajax добавление в корзину
 function ToCart(xid,num,xxid) {
     var req = new Subsys_JsHttpRequest_Js();
     var same= 0;
@@ -475,27 +428,28 @@ function ToCart(xid,num,xxid) {
         addname="";
     }
 
-
-    req.open('POST', truePath+'/phpshop/cartload.php', true);
+    req.open('POST', truePath+'/phpshop/ajax/cartload.php', true);
     req.send({
         xid: xid,
         num: num,
+        xxid: xxid,
         addname: addname,
         same: same,
         test:303
     });
 }
-	
+
+// Добавление товара в корзину 1 шт.
 function AddToCart(xid) {
     var num=1;
-    var xxid=xid;
+    var xxid=0;
     if(confirm("Добавить выбранный товар ("+num+" шт.) в корзину?")){
         ToCart(xid,num,xxid);
         if(document.getElementById("order")) document.getElementById("order").style.display='block';
     }
 }	
 		
-// Если есть поле с кол-вом товара
+// Добавление товара в корзину N шт.
 function AddToCartNum(xid,pole) {
     var num=Number(document.getElementById(pole).value);
     var xxid=xid;
@@ -506,7 +460,7 @@ function AddToCartNum(xid,pole) {
     }
 }
 	
-// Если есть подчиненные товары OPTION
+// Добавление подчиненного товара в корзину N шт.
 function AddToCartParent(xxid) {
     var num=1;
     var xid=document.getElementById("parentId").value;
@@ -518,8 +472,7 @@ function AddToCartParent(xxid) {
     }
 }	
 
-
-// Добавить в сравнение
+// Добавить товара в сравнение
 function AddToCompare(xid) {
     var num=1;
     var same=0;
@@ -539,7 +492,6 @@ function AddToCompare(xid) {
                         alert("Товар уже есть в таблице сравнения!");
                     }
 
-
                     document.getElementById('numcompare').innerHTML = (req.responseJS.num||'');
 				
                 }
@@ -548,7 +500,7 @@ function AddToCompare(xid) {
         req.caching = false;
         // Подготваливаем объект.
         var truePath=dirPath();
-        req.open('POST', truePath+'/phpshop/compare.php', true);
+        req.open('POST', truePath+'/phpshop/ajax/compare.php', true);
         req.send({
             xid: xid,
             num: num,
@@ -558,19 +510,8 @@ function AddToCompare(xid) {
     }
 }	
 	
-
-
-// PhpshopButton v1.0
-function butt_on(subm){//ON
-    var MENU = document.all[subm].style;
-    MENU.background = '8BB911';
-}
-function butt_of(subm){//OF
-    var MENU = document.all[subm].style;
-    MENU.background = '999999';
-}
-
-function ReturnSortUrl(v){ // Генерим урл
+// Создание ссылки для сортировки
+function ReturnSortUrl(v){
     var s,url="";
     if(v>0){
         s=document.getElementById(v).value;
@@ -579,24 +520,26 @@ function ReturnSortUrl(v){ // Генерим урл
     return url;
 }
 
-
-// Сортировка по фильтрам
+// Сортировка по всем фильтрам
 function GetSortAll(){
     var url=ROOT_PATH+"/shop/CID_"+arguments[0]+".html?";
+    
     var i=1;
     var c=arguments.length;
+
     for(i=1; i<c; i++)
         if(document.getElementById(arguments[i])) url=url+ReturnSortUrl(arguments[i]);
+
     location.replace(url);
+    
 }
 
-
-function GetSort(id,sort){// Сортировка 
+// Сортировка по фильтрам
+function GetSort(id,sort){ 
     var path=location.pathname;
     if(sort!=0) location.replace(path+'?'+id+'='+sort);
     else location.replace(path);
 }
-
 
 // Системная информация
 function systemInfo() {
@@ -610,20 +553,16 @@ function systemInfo() {
         }
     }
     req.caching = false;
-    req.open('POST', '/phpshop/info.php', true);
+    req.open('POST', '/phpshop/ajax/info.php', true);
     req.send({
         test:303
     });
 }
 
 	
-
-// PhpGoToAdmin v3.1	
+// Перенаправление на панель управления по сочетанию клавиш
 function getKey(e){
-
-    // Реальное размещение
     var dir=dirPath();
-
 
     if (e == null) { // ie
         key = event.keyCode;
@@ -635,17 +574,15 @@ function getKey(e){
     if((key=='123') && ctrl) window.location.replace(dir+'/phpshop/admpanel/');
     if(key=='120') systemInfo();
 }
-
 document.onkeydown = getKey; 
 
-
-// Загрузка установок v1.0
+// Загрузка установок 
 function default_load(copyrigh,protect){
     if(copyrigh=="true") window.status="Powered & Developed by PHPShop.ru";
     if(protect=="true"){
         if (document.layers) {
             document.captureEvents(event.mousedown)
-            }
+        }
         document.onmousedown=mp;
     }
 }
@@ -653,18 +590,14 @@ function default_load(copyrigh,protect){
 // Загрузка позиции каталога статей
 function pressbutt_load_catalog(subm,dir){
     if(!dir) dir='';
-    var IMG2=dir+'/images/shop/arr3.gif';
     if(subm!='' && document.getElementById("p"+subm)){
-        var SUBMENU = document.getElementById("p"+subm).style;
         SUBMENU.visibility = 'visible';
         SUBMENU.position = 'relative';
-        if(document.all['i'+subm]) document.all['i'+subm].src=IMG2;
     }
 }
 
 
-// PHPSHOP JavaListCatalog v 2.0
-// Start Load Modul
+// Загрузка позиции каталога товаров
 function pressbutt_load(subm,dir,copyrigh,protect,psubm){
     var path=location.pathname;
 
@@ -701,28 +634,22 @@ function pressbutt_load(subm,dir,copyrigh,protect,psubm){
     else{
         // Каталог товаров
         if(!dir) dir='';
-        var IMG2=dir+'/images/shop/arr3.gif';
         if(subm!=''){
             var SUBMENU = document.getElementById("m"+subm).style;
             SUBMENU.visibility = 'visible';
             SUBMENU.position = 'relative';
-            if(document.all['i'+subm]) document.all['i'+subm].src=IMG2;
         }
+        // Каталог статей
         if(psubm!=''){
             var PSUBMENU = document.getElementById("m"+psubm).style;
             PSUBMENU.visibility = 'visible';
             PSUBMENU.position = 'relative';
-            if(document.all['i'+psubm]) document.all['i'+psubm].src=IMG2;
         }
-
-
     }
 }
 
-// PHPSHOP JavaListCatalog v1.3
-// Main Modul
+// Открытие подкаталогов
 function pressbutt(subm,num,dir,i,m){
-
 
     // Работа с классом
     if(document.getElementById("cat"+subm)){
@@ -735,21 +662,16 @@ function pressbutt(subm,num,dir,i,m){
     if(!dir) dir='';
     if(!m) m="m";
     if(!i) i="i";
-    var SUBMENU = document.all[m+subm].style;
-    var IMG=dir+'/images/shop/arr2.gif';
-    var IMG2=dir+'/images/shop/arr3.gif';
-
+    var SUBMENU = document.getElementById(m+subm).style;
 
     if (SUBMENU.visibility=='hidden'){
         SUBMENU.visibility = 'visible';
         SUBMENU.position = 'relative';
-        if(document.all[i+subm]) document.all[i+subm].src=IMG2;
     }
 
     else{
         SUBMENU.visibility = 'hidden';
         SUBMENU.position = 'absolute';
-        if(document.all[i+subm]) document.all[i+subm].src=IMG;
     }
 
     for(j=0;i<num;j++)
@@ -757,16 +679,18 @@ function pressbutt(subm,num,dir,i,m){
             if(document.all[m+j]){
                 document.all[m+j].style.visibility = 'hidden';
                 document.all[m+j].style.position = 'absolute';
-                if(document.all[j+subm]) document.all[i+j].src=IMG;
             }
         }
 
+
+// Проверка формы сообщений
 function CheckMessage(message){
     var message = document.getElementById("message").value;
     if(message=="") alert("Ошибка заполения формы сообщения!");
     else document.forma_message.submit();
 }
 
+// Проверка формы подписки на новости
 function NewsChek()
 {
     var s1=window.document.forms.forma_news.mail.value;
@@ -779,6 +703,7 @@ function NewsChek()
     return true;
 }
 
+// Проверка формы поиска
 function SearchChek()
 {
     var s1=window.document.forms.forma_search.words.value;
@@ -790,6 +715,7 @@ function SearchChek()
     return true;
 }
 
+// Проверка формы заказа
 function OrderChek()
 {
     var s1=window.document.forms.forma_order.mail.value;
@@ -802,7 +728,6 @@ function OrderChek()
         bad=1;
     }
 
-
     if (s1=="" || s2=="" || s3=="" || s4=="") {
         alert("Ошибка заполнения формы заказа.\nДанные отмеченные флажками заполнять обязательно! ");
     } else if (bad==1) {
@@ -812,6 +737,7 @@ function OrderChek()
     }
 }
 
+// Проверка формы отзывов
 function Fchek()
 {
     var s1=window.document.forms.forma_gbook.name_new.value;
@@ -823,78 +749,97 @@ function Fchek()
         document.forma_gbook.submit();
 }
 
-function Img_on(pic,img){
-    document.all[pic].src=img;
-}
 
-function Img_of(pic,img){
-    document.all[pic].src=img;
-}
+var combowidth='';
+var comboheight='';
 
-function cart_load(subm){
-    SUBMENU=document.all[subm].style;
-    if (SUBMENU.visibility=='hidden')
-    {
-        SUBMENU.visibility = 'visible';
-        SUBMENU.position = 'absolute';
+
+function initialize(){
+    var cartwindow=document.getElementById('cartwindow');
+    combowidth=cartwindow.offsetWidth;
+    comboheight=cartwindow.offsetHeight;
+
+    if (document.all){
+        setInterval("staticit_ie()",50);
+
+        if(navigator.appName == "Microsoft Internet Explorer"){
+            cartwindow.filters.revealTrans.Apply();
+            cartwindow.filters.revealTrans.Play();
+        }
+
+    }else{
+        setInterval("staticit_ff()",50);
     }
-    else
-    {
-        SUBMENU.visibility = 'hidden';
-        SUBMENU.position = 'absolute';
-        document.all[pic].src="images/m1.gif";
+
+    cartwindow.style.visibility="visible";
+}
+
+function initialize_off(){
+    var cartwindow=document.getElementById('cartwindow');
+    if (document.all){
+        setInterval("staticit_ie()",50);
+        cartwindow.style.visibility="hidden";
+    }
+    else{
+        setInterval("staticit_ff()",50);
+        cartwindow.style.visibility="hidden";
+    }
+// Если идет сразу переадресация на заказ
+//location.replace("/order/");
+}
+
+function staticit_ie(){
+    var cartwindow=document.getElementById('cartwindow');
+    cartwindow.style.pixelLeft=document.body.scrollLeft+document.body.clientWidth-combowidth-10;
+    cartwindow.style.pixelTop=document.body.scrollTop+document.body.clientHeight-comboheight;
+}
+
+function staticit_ff(){
+    var cartwindow=document.getElementById('cartwindow');
+    cartwindow.style.left=(document.body.scrollLeft+document.body.clientWidth-combowidth-10) + "px";
+    cartwindow.style.top=(document.body.scrollTop+document.body.clientHeight-comboheight) + "px";
+}
+
+// Для сравнения товаров
+function initialize2(){
+    var comparewindow=document.getElementById('comparewindow');
+    combowidth=comparewindow.offsetWidth;
+    comboheight=comparewindow.offsetHeight;
+    if (document.all){
+        setInterval("staticit_ie2()",50);
+
+        if(navigator.appName == "Microsoft Internet Explorer"){
+            comparewindow.filters.revealTrans.Apply();
+            comparewindow.filters.revealTrans.Play();
+        }
+
+    }else{
+        setInterval("staticit_ff2()",50);
+    }
+
+    comparewindow.style.visibility="visible";
+}
+
+function initialize_off2(){
+    var comparewindow=document.getElementById('comparewindow');
+    if (document.all){
+        setInterval("staticit_ie2()",50);
+        comparewindow.style.visibility="hidden";
+    }
+    else{
+        setInterval("staticit_ff2()",50);
+        comparewindow.style.visibility="hidden";
     }
 }
 
-function CL()
-{
-    window.close();
-}
-function CLREL()
-{
-    window.opener.location.reload();
-    window.close();
-}
-function REL(url)
-{
-    location.href=url;
-}
-function miniWin(url,w,h)
-{
-    w=window.open(url,"edit","left=100,top=100,width="+w+",height="+h+",location=0,menubar=0,resizable=1,scrollbars=0,status=0");
-    w.focus();
+function staticit_ie2(){
+    var comparewindow=document.getElementById('comparewindow');
+    comparewindow.style.pixelLeft=document.body.scrollLeft+document.body.clientWidth-combowidth-10;
+    comparewindow.style.pixelTop=document.body.scrollTop+document.body.clientHeight-comboheight;
 }
 
-function DebugWin(url,name,w,h)
-{
-    w=window.open(url,name,"left=100,top=100,width="+w+",height="+h+",location=0,menubar=0,resizable=1,scrollbars=0,status=0");
-    w.focus();
-}
-
-function miniWinFull(url,w,h)
-{
-    w=window.open(url,"edit","left=100,top=100,width="+w+",height="+h+",location=0,menubar=1,resizable=1,scrollbars=1,status=0");
-    w.focus();
-}
-
-function miniWinChek(url,w,h)
-{
-    w=window.open(url,"edit","left=0,top=0,width="+w+",height="+h+",location=0,menubar=0,resizable=1,scrollbars=1,status=0");
-    w.focus();
-}
-
-function FormaBank(url,w,h)
-{
-    window.open(url,"_blank","left=400,top=100,width="+w+",height="+h+",location=0,menubar=0,resizable=0,scrollbars=1,status=0");
-}
-function Order(page)
-{
-    window.opener.document.location.href=page;
-    window.close();
-}
-
-function Order2(page)
-{
-    window.opener.document.location.href=page;
-//window.close();
+function staticit_ff2(){
+    var comparewindow=document.getElementById('comparewindow');
+    comparewindow.style.left=(document.body.scrollLeft+document.body.clientWidth-combowidth-10) + "px";
+    comparewindow.style.top=(document.body.scrollTop+document.body.clientHeight-comboheight) + "px";
 }

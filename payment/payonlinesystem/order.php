@@ -1,19 +1,13 @@
-<?
-/*
-+-------------------------------------+
-|  PHPShop Enterprise                 |
-|  Модуль OrderFunction PayOnline     |
-+-------------------------------------+
-*/
+<?php
+/**
+ * Обработчик оплаты заказа через PayOnline
+ * @author PHPShop Software
+ * @version 1.0
+ * @package PHPShopPayment
+ */
 
 if(empty($GLOBALS['SysValue'])) exit(header("Location: /"));
 
-$cart_list=Summa_cart();
-$ChekDiscount=ChekDiscount($cart_list[1]);
-$GetDeliveryPrice=GetDeliveryPrice($_POST['dostavka_metod'],$cart_list[1],$cart_list[2]);
-$sum_pol=(ReturnSummaNal($cart_list[1],$ChekDiscount[0])+$GetDeliveryPrice);
-$sum_pol = number_format($sum_pol,2,".","");
-	 
 
 // регистрационная информация
 $PrivateSecurityKey=$SysValue['payonlinesystem']['PrivateSecurityKey'];
@@ -23,7 +17,7 @@ $mrh_ouid = explode("-", $_POST['ouid']);
 $inv_id = $mrh_ouid[0]."".$mrh_ouid[1];     //номер счета
 
 $OrderId=$inv_id;
-$Amount=$sum_pol;
+$Amount=$GLOBALS['SysValue']['other']['total'];
 $Currency="RUB";
 
 $SecurityKey=md5("MerchantId=$MerchantId&OrderId=$OrderId&Amount=$Amount&Currency=$Currency&PrivateSecurityKey=$PrivateSecurityKey");
@@ -35,6 +29,13 @@ $FailUrl="http://".$_SERVER['SERVER_NAME'].$SysValue['dir']['dir']."/fail/";
 
 // вывод HTML страницы с кнопкой для оплаты
 $disp= "
+<script>
+function CheckAgreement(){
+if(document.getElementById('agreement').checked)
+  PaymentForm.submit();
+else alert('Необходимо согласиться с условиями оферты');
+}
+</script>
 <div align=\"center\">
 
  <p><br></p>
@@ -52,6 +53,7 @@ $disp= "
 <input type=\"hidden\" name=\"Currency\" value=\"$Currency\">
 <input type=\"hidden\" name=\"SecurityKey\" value=\"$SecurityKey\">
 <input type=\"hidden\" name=\"FailUrl\" value=\"".urlencode($FailUrl)."\">
+<input type=\"checkbox\" id=\"agreement\" value=\"1\">Я согласен(на) с <a href=\"/page/agreement.html\" target=\"_blank\">условиями оферты</a>
 	<table>
 <tr><td><img src=\"images/shop/icon-setup.gif\" width=\"16\" height=\"16\" border=\"0\"></td>
 	<td align=\"center\"><a href=\"javascript:history.back(1)\"><u>
@@ -59,7 +61,8 @@ $disp= "
 	покупки</u></a></td>
 	<td width=\"20\"></td>
 	<td><img src=\"images/shop/icon-client-new.gif\" alt=\"\" width=\"16\" height=\"16\" border=\"0\" align=\"left\">
-	<a href=\"javascript:PaymentForm.submit();\">Оплатить через платежную систему</a></td>
+        
+	<a href=\"javascript:CheckAgreement();\">Оплатить через платежную систему</a></td>
 </tr>
 </table>
 </form>

@@ -5,98 +5,129 @@ session_start();
 include("../../class/obj.class.php");
 PHPShopObj::loadClass("base");
 PHPShopObj::loadClass("system");
-PHPShopObj::loadClass("order");
+PHPShopObj::loadClass("array");
+PHPShopObj::loadClass("category");
+PHPShopObj::loadClass("product");
 PHPShopObj::loadClass("valuta");
 PHPShopObj::loadClass("text");
 PHPShopObj::loadClass("parser");
 PHPShopObj::loadClass("orm");
+PHPShopObj::loadClass("core");
 
 // Подключение к БД
 $PHPShopBase = new PHPShopBase("../../inc/config.ini");
+
+$PHPShopValutaArray = new PHPShopValutaArray();
 $PHPShopSystem = new PHPShopSystem();
-include("../../inc/order.inc.php");             // Модуль кеша
-include("../../inc/engine.inc.php");            // Модуль движка
-include("../../inc/cache.inc.php");             // Модуль кеша
 
-// Подключаем кеш
-$LoadItems=CacheReturnBase($sid);
+class PHPShopPricePrint {
+    var $print;
 
-function printProduct($cat) {
-    $disp=null;
-
-    $PHPShopOrm = new PHPShopOrm();
-    $result=$PHPShopOrm->query("select id,name,price,baseinputvaluta from ".$GLOBALS['SysValue']['base']['table_name2']." where (category='$cat' or dop_cat LIKE '%#$cat#%') and enabled='1' order by name");
-    while($row = mysql_fetch_array($result)) {
-        $id=$row['id'];
-        $uid=$row['uid'];
-        $name=$row['name'];
-        $price=$row['price'];
-        $price=($price+(($price*$LoadItems['System']['percent'])/100));
-        $baseinputvaluta=$row['baseinputvaluta'];
-
-        // Выборка из базы нужной колонки цены
-        if(session_is_registered('UsersStatus')) {
-            $GetUsersStatusPrice=GetUsersStatusPrice($_SESSION['UsersStatus']);
-            if($GetUsersStatusPrice>1) {
-                $pole="price".$GetUsersStatusPrice;
-                $pricePersona=$row[$pole];
-                if(!empty($pricePersona))
-                    $price=($pricePersona+(($pricePersona*$System['percent'])/100));
-            }
-        }
-
-
-        // Если цены показывать только после аторизации
-        $admoption=unserialize($LoadItems['System']['admoption']);
-        if($admoption['user_price_activate']==1 and !$_SESSION['UsersId']) {
-            $price="~";
-            $valuta="";
-        }else {
-            $price=GetPriceValuta($price,"",$baseinputvaluta);
-            //    $price=GetPriceValuta($price);
-            $valuta=GetValuta();
-        }
-
-        $disp.=PHPShopText::tr($name,$price." ".$valuta);
+    function PHPShopPricePrint() {
+        global $PHPShopSystem;
+        $this->debug=false;
+        $this->objBase=$GLOBALS['SysValue']['base']['products'];
+        $this->PHPShopSystem = $PHPShopSystem;
     }
-    return $disp;
-}
 
-// Вывод каталогов
-function printCatalog($dir=false) {
-    global $SysValue,$LoadItems;
-    $dis=null;
+    function product($category) {
+        global $PHPShopValutaArray;
 
-    // Если задан каталог
-    if(!empty($dir)) {
-        if(!$LoadItems['Catalog'][$dir]['name']) return 404;
+        if(is_numeric($category)) $str=" (category=$category or dop_cat LIKE '%#$category#%') and ";
+        else $str="";
 
-        $parent=$LoadItems['Catalog'][$dir]['parent_to'];
-        $dis.=PHPShopText::tr(PHPShopText::b($LoadItems['Catalog'][$parent]['name']." / ".$LoadItems['Catalog'][$dir]['name']),'');
-        $dis.=printProduct($dir);
+        $ValutaArray=$PHPShopValutaArray->getArray();
+        $valuta=$ValutaArray[$this->PHPShopSystem->getValue('dengi')]['code'];
 
-    }
-    else {
+        $PHPShopOrm = new PHPShopOrm();
+        $PHPShopOrm->sql="select * from ". $this->objBase." where ".$str." enabled='1' and parent_enabled='0'";
+        $PHPShopOrm->debug=$this->debug;
+        $dataArray=$PHPShopOrm->select();
 
-        foreach($LoadItems['CatalogKeys'] as $cat=>$val) {
+        if(is_array($dataArray)) {
 
-            $podcatalog_id = array_keys($LoadItems['CatalogKeys'],$cat);
-            if(count($podcatalog_id)==0) {
-                $dis.=PHPShopText::tr(PHPShopText::b($LoadItems['Catalog'][$val]['name']." / ".$LoadItems['Catalog'][$cat]['name']),'');
-                $dis.=printProduct($cat);
+            // Категория
+            $this->print.=PHPShopText::tr(PHPShopText::b($this->category_array[$category]),'');
+
+            foreach($dataArray as $row) {
+                $price_array=array($row['price'],$row['price2'],$row['price3'],$row['price4'],$row['price5']);
+                $price=PHPShopProductFunction::GetPriceValuta($row['id'],$price_array,$row['baseinputvaluta']);
+
+                // Если цены показывать только после аторизации
+                if(!empty($user_price_activate) and !$_SESSION['UsersId']) {
+                    $price="~";
+                }
+
+                // Товар
+                $this->print.=PHPShopText::tr($row['name'],$price." ".$valuta);
             }
         }
     }
-    return $dis;
+
+
+    function category_array() {
+
+        $PHPShopCategoryArray = new PHPShopCategoryArray();
+        $Catalog=$PHPShopCategoryArray->getArray();
+        $CatalogKeys=$PHPShopCategoryArray->getKey('id.parent_to');
+
+        if(is_array($CatalogKeys))
+            foreach($CatalogKeys as $cat=>$val) {
+                $podcatalog_id = array_keys($CatalogKeys,$cat);
+                if(count($podcatalog_id)==0) {
+                    $parent=$Catalog[$cat]['parent_to'];
+                    if ($this->category==$cat) {
+                        $this->category_name=$Catalog[$parent]['name']." / ".$Catalog[$cat]['name'];
+                    }
+
+                    // Массив для вывода всех товаров
+                    $this->category_array[$cat]=$Catalog[$parent]['name']." / ".$Catalog[$cat]['name'];
+                }
+            }
+    }
+
+    function category() {
+
+        $this->category=$_GET['catId'];
+        $this->category_array();
+
+        // Безопасность
+        if(!is_numeric($this->category)) {
+
+            foreach($this->category_array as $key=>$val) {
+                $this->product($key);
+            }
+        }
+        else {
+            $this->product($this->category);
+        }
+    }
+
+    // Вывод результата
+    function compile() {
+        global $PHPShopSystem;
+
+        if(!empty($this->print)) {
+
+            PHPShopParser::set('name',$this->PHPShopSystem->getName());
+            PHPShopParser::set('price',$this->print);
+            PHPShopParser::set('date',date("d-m-y"));
+            PHPShopParser::file('../../lib/templates/print/price.tpl');
+        }
+        else  $this->setError404();
+    }
+
+    /**
+     * Генерация ошибки 404
+     */
+    function setError404() {
+        header("HTTP/1.0 404 Not Found");
+        header("Status: 404 Not Found");
+    }
+
 }
 
-
-
-if($_GET['catId'] == "ALL" or empty($_GET['catId'])) $cat=null;
-else $cat=$_GET['catId'];
-
-PHPShopParser::set('name',$PHPShopSystem->getName());
-PHPShopParser::set('price',printCatalog($cat));
-PHPShopParser::set('date',date("d-m-y"));
-PHPShopParser::file('../../lib/templates/print/price.tpl');
+$PHPShopPricePrint = new PHPShopPricePrint();
+$PHPShopPricePrint->category();
+$PHPShopPricePrint->compile();
 ?>

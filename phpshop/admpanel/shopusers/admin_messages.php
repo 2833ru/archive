@@ -13,19 +13,19 @@ $_Return='
 <table cellpadding="0" cellspacing="0">
 <tr>
    <td width="5"></td>
-   <td id="but31"  class="butoff"><img name="imgLang" src="icon/blank.gif" alt="" width="1" height="1" border="0"><img name="imgLang" src="icon/folder_key.gif" alt="Обзор статусов" width="16" height="16" border="0" onmouseover="ButOn(31)" onmouseout="ButOff(31)" onclick="DoReload(\'shopusers_status\')">
+   <td id="but31"  class="butoff"><img name="imgLang" src="icon/blank.gif" alt="" width="1" height="1" border="0"><img name="imgLang" src="icon/folder_key.gif" alt="Обзор статусов" title="Обзор статусов" width="16" height="16" border="0" onmouseover="ButOn(31)" onmouseout="ButOff(31)" onclick="DoReload(\'shopusers_status\')">
     </td>
    <td width="5"></td>
-   <td id="but32"  class="butoff"><img name="imgLang" src="icon/folder_bell.gif" alt="Обзор уведомлений" width="16" height="16" border="0" onmouseover="ButOn(32)" onmouseout="ButOff(32)" onclick="DoReload(\'shopusers_notice\')">
+   <td id="but32"  class="butoff"><img name="imgLang" src="icon/folder_bell.gif" alt="Обзор уведомлений" title="Обзор уведомлений" width="16" height="16" border="0" onmouseover="ButOn(32)" onmouseout="ButOff(32)" onclick="DoReload(\'shopusers_notice\')">
     </td>
    <td width="5"></td>
 	<td width="1" bgcolor="#ffffff"></td>
 	<td width="1" bgcolor="#808080"></td>
    <td width="5"></td>
-    <td id="but33"  class="butoff"><img name="imgLang" src="icon/page_new.gif" alt="Новое сообщение" width="16" height="16" border="0" onmouseover="ButOn(33)" onmouseout="ButOff(33)" onclick="NewUMessage()">
+    <td id="but33"  class="butoff"><img name="imgLang" src="icon/page_new.gif" alt="Новое сообщение" title="Новое сообщение" width="16" height="16" border="0" onmouseover="ButOn(33)" onmouseout="ButOff(33)" onclick="NewUMessage()">
     </td>
     <td width="5"></td>
-	<td id="but34"  class="butoff"><img name="imgLang" src="icon/layout_delete.gif" alt="Удалить сообщения" width="16" height="16" border="0" onmouseover="ButOn(34)" onmouseout="ButOff(34)" onclick="DeleteUMessages()"></td>
+	<td id="but34"  class="butoff"><img name="imgLang" src="icon/layout_delete.gif" alt="Удалить сообщения" title="Удалить сообщения" width="16" height="16" border="0" onmouseover="ButOn(34)" onmouseout="ButOff(34)" onclick="DeleteUMessages()"></td>
 <td width="5"></td>
    <td width="10"></td>
    <td>

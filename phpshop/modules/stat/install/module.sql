@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_stat_sebots` (
 INSERT INTO `phpshop_modules_stat_sebots` (`id`, `name`, `useragent`, `host`, `qvar`) VALUES
 (1, 'Google', 'google', 'htt(p|ps):\\/\\/www.google', 'q'),
 (2, 'Яндекс', 'yandex', 'http:\\/\\/yandex', 'text'),
-(3, 'Рамблер', 'rambler', 'http:\\/\\/nova.rambler.ru\\/', 'query');
+(3, 'Рамблер', 'rambler', 'http:\\/\\/nova.rambler', 'query');
 
 --
 -- Структура таблицы `phpshop_modules_stat_visitors`

@@ -1,15 +1,12 @@
-<?
-/*
-+-------------------------------------+
-|  PHPShop Enterprise                 |
-|  Success Function Activepay         |
-+-------------------------------------+
-*/
+<?php
+/**
+ * Обработчик оплаты заказа через Activepay
+ * @author PHPShop Software
+ * @version 1.0
+ * @package PHPShopPayment
+ */
 
 if(empty($GLOBALS['SysValue'])) exit(header("Location: /"));
-
-
-
 
 
 if(isset($_GET['merchant_data'])){

@@ -2,21 +2,33 @@
 /**
  * Библиотека парсинга данных
  * @author PHPShop Software
- * @version 1.0
+ * @version 1.1
  * @package PHPShopClass
  */
-
 class PHPShopParser {
-
+    /**
+     * Обработка файла шаблона, вставка переменнных
+     * @param string $path путь к файлу шаблона
+     * @param bool $return режим вывода информации или возврата информации
+     * @return string
+     */
     function file($path,$return=false) {
+
         $string=null;
         if(is_file($path)) $string = @file_get_contents($path);
         else echo "Error Tmp File: $path";
-        $newstring = @preg_replace("/@([a-zA-Z0-9_]+)@/e", '$GLOBALS["SysValue"]["other"]["\1"]', $string);
+        $replaces = array(
+                "/images\//i" => $GLOBALS['SysValue']['dir']['dir'].$GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']."/images/",
+                "/java\//i" => "/java/",
+                "/css\//i" => "/css/",
+                "/phpshop\//i" => "/phpshop/",
+        );
 
-        if(!empty($return)) return $newstring;
+        $string = @preg_replace("/@([a-zA-Z0-9_]+)@/e", '$GLOBALS["SysValue"]["other"]["\1"]', $string);
+        $string = preg_replace(array_keys($replaces), array_values($replaces), $string);
+        if(!empty($return)) return $string;
         else
-            echo $newstring;
+            echo $string;
     }
 
     /**

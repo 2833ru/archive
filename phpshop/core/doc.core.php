@@ -2,7 +2,7 @@
 /**
  * Обработчик подключаемых html файлов
  * @author PHPShop Software
- * @version 1.1
+ * @version 1.0
  * @package PHPShopCore
  */
 class PHPShopDoc extends PHPShopCore {
@@ -21,7 +21,7 @@ class PHPShopDoc extends PHPShopCore {
      * @return string
      */
     function OpenHTML($pages) {
-
+        global $SysValue;
         $dir="pageHTML/";
         $pages=$pages.".html";
         $handle=opendir($dir);
@@ -29,6 +29,7 @@ class PHPShopDoc extends PHPShopCore {
             if($file==$pages) {
                 $urlfile=fopen ("$dir$file","r");
                 $text=fread($urlfile,1000000);
+                $text=Parser($text,$this->parser);
                 return $text;
             }
         }
@@ -40,24 +41,22 @@ class PHPShopDoc extends PHPShopCore {
     function index() {
 
         // Читаем файл
-        if($dis = $this->OpenHTML($this->SysValue['nav']['name'])) {
+        $dis=$this->OpenHTML($this->SysValue['nav']['name']);
 
-            $this->meta=$this->getMeta($dis);
+        // Мета
+        $meta = $this->getMeta($dis);
 
-            // Мета
-            $this->title=$this->meta['title'].' - '.$this->PHPShopSystem->getValue("name");
-            $this->description=$this->meta['description'];
-            $this->keywords=$this->meta['keywords'];
+        $this->title=$meta['title'].' - '.$this->PHPShopSystem->getValue("name");
+        $this->description = $meta['description'];
+        $this->keywords = $meta['keywords'];
 
-            // Определяем переменые
-            $this->set('pageContent',$dis);
-            $this->set('pageTitle',$this->meta['title']);
+        // Определяем переменые
+        $this->set('pageContent',$dis);
+        $this->set('pageTitle',$this->meta[$this->SysValue['nav']['name']]);
 
 
-            // Подключаем шаблон
-            $this->parseTemplate($this->getValue('templates.page_page_list'));
-        }
-        else  $this->setError404();
+        // Подключаем шаблон
+        $this->parseTemplate($this->getValue('templates.page_page_list'));
 
     }
 
@@ -80,6 +79,7 @@ class PHPShopDoc extends PHPShopCore {
 
         return array('title'=>$title,'description'=>$description,'keywords'=>$keywords);
     }
+
 }
 
 ?>

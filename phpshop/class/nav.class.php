@@ -23,14 +23,13 @@ class PHPShopNav {
         if($root!="//")
             if($root!="\/") $url=str_replace($path_parts['dirname']."/","/",$url);
 
-        $Url=$url["path"];
         $Query=$url["query"];
         $Path=explode("/",$url["path"]);
         $File=explode("_",$Path[2]);
         $Prifix=explode(".",$File[1]);
         $Name=explode(".",$File[0]);
         $Page=explode(".",$File[2]);
-        $QueryArray=parse_str($Query,$output);
+        parse_str($Query,$output);
         $longpage=explode(".",str_replace("/page/","",$url["path"]));
 
         // Заглушка для index
@@ -57,6 +56,24 @@ class PHPShopNav {
     function getPath() {
         return $this->objNav['path'];
     }
+
+    /**
+     * Проверка условия на несоответсвие разделу
+     * @param mixed $path массив разделов
+     * @return bool
+     */
+    function notPath($path) {
+        if(is_array($path)) {
+            foreach($path as $val) {
+                if($this->objNav['path'] == $val)
+                        return false;
+            }
+            return true;
+        }
+        else if($this->objNav['path'] != $path)
+            return true;
+    }
+
     /**
      * Выдача переменной навигации nav
      * @return string
@@ -68,8 +85,10 @@ class PHPShopNav {
      * Выдача переменной навигации name
      * @return string
      */
-    function getName() {
+    function getName($longname=false) {
+        if(!empty($longname))
         return $this->objNav['longname'];
+        else return $this->objNav['name'];
     }
     /**
      * Выдача переменной навигации id
@@ -84,7 +103,13 @@ class PHPShopNav {
      * @return string
      */
     function getPage() {
-        return $this->objNav['page'];
+        if($this->objNav['page']>0 or $this->objNav['page'] == 'ALL')
+            return $this->objNav['page'];
+        else return 1;
+    }
+
+    function isPageAll() {
+        if(strtoupper($this->objNav['page']) == 'ALL') return true;
     }
 
     /**

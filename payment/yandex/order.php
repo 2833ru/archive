@@ -1,19 +1,13 @@
-<?
-/*
-+-------------------------------------+
-|  PHPShop Enterprise                 |
-|  Модуль OrderFunction Yandex        |
-+-------------------------------------+
-*/
+<?php
+/**
+ * Обработчик оплаты заказа через Yandex
+ * @author PHPShop Software
+ * @version 1.1
+ * @package PHPShopPayment
+ */
 
 if(empty($GLOBALS['SysValue'])) exit(header("Location: /"));
 
-$cart_list=Summa_cart();
-$ChekDiscount=ChekDiscount($cart_list[1]);
-$GetDeliveryPrice=GetDeliveryPrice($_POST['dostavka_metod'],$cart_list[1],$cart_list[2]);
-$sum_pol=(ReturnSummaNal($cart_list[1],$ChekDiscount[0])+$GetDeliveryPrice);
-$sum_pol = number_format($sum_pol,2,".","");
-	 
 // регистрационная информация
 $scid = $SysValue['yandex']['scid'];   
 $ShopID = $SysValue['yandex']['ShopID'];  
@@ -24,14 +18,19 @@ $inv_id = $mrh_ouid[0]."".$mrh_ouid[1];     //номер счета
 
 // описание покупки
 $inv_desc  = "PHPShopPaymentService";
-$out_summ  = $sum_pol; //сумма покупки
+$out_summ  = $GLOBALS['SysValue']['other']['total']; //сумма покупки
 
-// корзина
-$disCart='';
-if(is_array($_SESSION['cart']))
-foreach($_SESSION['cart'] as $j=>$v){
-$disCart.=$_SESSION['cart'][$j]['uid']."  ".$_SESSION['cart'][$j]['name']." (".$_SESSION['cart'][$j]['num']." шт. * ".ReturnSummaNal($_SESSION['cart'][$j]['price'],0).") -- ".ReturnSummaNal($_SESSION['cart'][$j]['price']*$_SESSION['cart'][$j]['num'],0)."
+// библиотека корзины
+$PHPShopCart = new PHPShopCart();
+
+/**
+ * Шаблон вывода таблицы корзины
+ */
+function cartpaymentdetails($val) {
+     $dis=$val['uid']."  ".$val['name']." (".$val['num']." шт. * ".$val['price'].") -- ".$val['total']."
 ";
+
+    return $dis;
 }
 
 // вывод HTML страницы с кнопкой для оплаты
@@ -50,7 +49,7 @@ $disp= '
 <input type=hidden name="CustName" value="'.$_POST['name_person'].'">
 <input type=hidden name="CustAddr" value="'.$_POST['adr_name'].'">
 <input type=hidden name="CustEMail" value="'.$_POST['mail'].'">
-<input type=hidden name="OrderDetails" value="'.$disCart.'">
+<input type=hidden name="OrderDetails" value="'.$PHPShopCart->display('cartpaymentdetails').'">
 	  <table>
 <tr><td><img src="images/shop/icon-setup.gif" width="16" height="16" border="0"></td>
 	<td align="center"><a href=\"javascript:history.back(1)"><u>

@@ -52,7 +52,7 @@ else{
 <LINK href="../css/dateselector.css" type=text/css rel=stylesheet>
 <SCRIPT language="JavaScript" src="../java/popup_lib.js"></SCRIPT>
 <SCRIPT language="JavaScript" src="/phpshop/lib/Subsys/JsHttpRequest/Js.js"></SCRIPT>
-<SCRIPT language="JavaScript" src="../../../java/prototype.js"></SCRIPT>
+<SCRIPT language="JavaScript" src="./java/prototype.js"></SCRIPT>
 <SCRIPT language="JavaScript" src="./java/upload.js"></SCRIPT>
 
 

@@ -18,8 +18,17 @@ class PHPShopUser extends PHPShopObj {
      */
     function PHPShopUser($objID) {
         $this->objID=$objID;
+        $this->cache=true;
         $this->objBase=$GLOBALS['SysValue']['base']['table_name27'];
         parent::PHPShopObj();
+    }
+
+    function getParam($str){
+        return str_replace("\"","&quot;",parent::getParam($str));
+    }
+
+    function getValue($str){
+        return $this->getParam($str);
     }
 
     /**
@@ -27,7 +36,16 @@ class PHPShopUser extends PHPShopObj {
      * @return string
      */
     function getName() {
-        return parent::getParam("name");
+        return $this->getParam("name");
+    }
+
+    function getStatus() {
+        return $this->getParam("status");
+    }
+
+    function getStatusName(){
+        $PHPShopUserStatus = new PHPShopUserStatus($this->getStatus());
+        return $PHPShopUserStatus->getParam("name");
     }
 
 }
@@ -46,6 +64,7 @@ class PHPShopUserStatus extends PHPShopObj {
      */
     function PHPShopUserStatus($objID) {
         $this->objID=$objID;
+        $this->cache=true;
         $this->objBase=$GLOBALS['SysValue']['base']['table_name28'];
         parent::PHPShopObj();
     }
@@ -65,6 +84,7 @@ class PHPShopUserStatus extends PHPShopObj {
     function getDiscount() {
         return parent::getParam("discount");
     }
+
 
 }
 

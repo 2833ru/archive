@@ -31,7 +31,7 @@ $pathTemplate=$SysValue['dir']['templates'].chr(47).$_SESSION['skin'];
 $orderID=PHPShopSecurity::TotalClean($_GET['orderID'],5);
 $datas=PHPShopSecurity::TotalClean($_GET['datas'],1);
 
-$PHPShopOrder = new PHPShopOrder($orderID);
+$PHPShopOrder = new PHPShopOrderFunction($orderID);
 
 $sql="select * from ".$SysValue['base']['table_name1']." where id='$orderID' and datas='$datas'";
 $n=1;

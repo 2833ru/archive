@@ -50,6 +50,10 @@ function ts_getInnerText(el) {
 	return str;
 }
 
+function is_numeric(val) { 
+  return ((+val) == val); 
+}
+
 function ts_resortTable(lnk) {
     // get the span
     var span;
@@ -64,7 +68,10 @@ function ts_resortTable(lnk) {
     // Work out a type for the column
     if (table.rows.length <= 1) return;
     var itm = ts_getInnerText(table.rows[1].cells[column]);
-    sortfn = ts_sort_caseinsensitive;
+	if (is_numeric(itm))
+		sortfn = ts_sort_numeric;
+	else
+		sortfn = ts_sort_caseinsensitive;
     if (itm.match(/^\d\d[\/-]\d\d[\/-]\d\d\d\d$/)) sortfn = ts_sort_date;
     if (itm.match(/^\d\d[\/-]\d\d[\/-]\d\d$/)) sortfn = ts_sort_date;
     if (itm.match(/^[£$]/)) sortfn = ts_sort_currency;

@@ -1,5 +1,7 @@
 <?
 
+include_once './phpshop/inc/page.inc.php';
+
 if($SysValue['nav']['nav']=="CID"){
 
  if($SysValue['nav']['id'] == "00")

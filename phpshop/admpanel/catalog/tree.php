@@ -186,6 +186,7 @@ return $num;
 <meta http-equiv="Content-Type" content="text/html; charset=<?=$SysValue['Lang']['System']['charset']?>">
 <LINK href="../css/dtree.css" type=text/css rel=stylesheet>
 <SCRIPT language=JavaScript src="../java/dtree.js" type=text/javascript></SCRIPT>
+<SCRIPT language=JavaScript src="../java/javaMG.js" type=text/javascript></SCRIPT>
 </head>
 <body bottommargin="0" rightmargin="0" topmargin="0" leftmargin="0" bgcolor="#ffffff">
 <div style="padding:10px">

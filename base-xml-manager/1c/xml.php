@@ -1,26 +1,110 @@
 <?php
-
-include("../../phpshop/class/obj.class.php");
+$_classPath='../../';
+include($_classPath.'phpshop/class/obj.class.php');
 PHPShopObj::loadClass("base");
 PHPShopObj::loadClass("orm");
 PHPShopObj::loadClass("xml");
 PHPShopObj::loadClass("system");
 PHPShopObj::loadClass("basexml");
+PHPShopObj::loadClass("modules");
+
+
+$_POST['log_test']='root';
+$_POST['pas_test']='I4OI1OI1OI6OI4OI1OI1OI6OI10O';
+
+$_POST['sql_test']='<?xml version="1.0" encoding="windows-1251"?>
+<phpshop>
+<sql>
+<from>table_name1</from>
+<method>update</method>
+<vars>
+<statusi>2</statusi>
+</vars>
+<where>id=121</where>
+</sql>
+</phpshop>';
 
 // Подключаем БД
-$PHPShopBase=&new PHPShopBase("../../phpshop/inc/config.ini");
+$PHPShopBase=new PHPShopBase($_classPath.'phpshop/inc/config.ini');
+
+// Настройки модулей
+$PHPShopModules = new PHPShopModules($_classPath."phpshop/modules/");
 
 class PHPShop1C extends PHPShopBaseXml {
 
     function PHPShop1C() {
         $this->debug=false;
-        $this->true_method=array('select','option','insert','update','delete','image');
-        $this->true_from=array('table_name','table_name2','table_name3','table_name24',
+        $this->true_method=array('select','option','insert','update','delete','image','order');
+        $this->true_from=array('table_name','table_name1','table_name2','table_name3','table_name24',
                 'table_name5', 'table_name6', 'table_name7','table_name8','table_name11',
                 'table_name14','table_name15','table_name17','table_name29',
                 'table_name50','table_name51');
 
         parent::PHPShopBaseXml();
+    }
+
+    function order() {
+
+        // Массив данных для вставки
+        $vars=readDatabase($this->sql,"vars",false);
+        $update=false;
+        $PHPShopOrm=new PHPShopOrm($this->PHPShopBase->getParam('base.'.$this->xml['from']));
+        $PHPShopOrm->debug=$this->debug;
+        $order_data=$PHPShopOrm->select(array('orders'),$this->xml['where'],$this->xml['order'],$this->xml['limit']);
+        $orders=unserialize($order_data["orders"]);
+
+
+        if(is_array($orders['Cart']['cart']))
+            foreach($orders['Cart']['cart'] as $key=>$product)
+                if($product['uid'] == $vars[0]['art']) {
+
+                    $orders['Cart']['cart'][$key]['num']=$vars[0]['item'];
+                    $update=true;
+
+                    // Удаление товара при нулевов кол-ве
+                    if(empty($orders['Cart']['cart'][$key]['num'])) unset($orders['Cart']['cart'][$key]);
+                }
+
+        // Добавление нового товара
+        if(empty($update) and !empty($vars[0]['item'])) {
+
+            $PHPShopOrm = new PHPShopOrm($this->PHPShopBase->getParam('base.table_name2'));
+            $PHPShopOrm->debug=$this->debug;
+            $data=$PHPShopOrm->select(array('*'),array('uid'=>'="'.$vars[0]['art'].'"'),false,array('limit'=>1));
+            if(is_array($data)) {
+                $orders['Cart']['cart'][$data['id']]=array(
+                        'id'=>$data['id'],
+                        'name'=>$data['name'],
+                        'price'=>$data['price'],
+                        'uid'=>$vars[0]['art'],
+                        'num'=>$vars[0]['item'],
+                        'weight'=>$data['weight'],
+                        'user'=>$data['user']);
+            }
+            else exit("Error Art");
+        }
+
+
+        // Пересчет общих данных корзины
+        $num=$sum=$weight=0;
+        if(is_array($orders['Cart']['cart'])) {
+            foreach($orders['Cart']['cart'] as $product) {
+                $num+=$product['num'];
+                $sum+=$product['num']*$product['price'];
+                $weight+=$product['num']*$product['weight'];
+            }
+            $orders['Cart']['num']=$num;
+            $orders['Cart']['sum']=$sum;
+            $orders['Cart']['weight']=$weight;
+        }
+
+        $order_data["orders_new"]=serialize($orders);
+
+        // Запись обновленного заказа
+        $PHPShopOrm = new PHPShopOrm($this->PHPShopBase->getParam('base.'.$this->xml['from']));
+        $PHPShopOrm->debug=$this->debug;
+        $this->data=$PHPShopOrm->update($order_data,$this->xml['where']);
+
     }
 
     function decode($code) {
@@ -34,6 +118,7 @@ class PHPShop1C extends PHPShopBaseXml {
 
 
     function admin() {
+
         $PHPShopOrm=&new PHPShopOrm($this->PHPShopBase->getParam('base.table_name19'));
         $PHPShopOrm->debug = $this->debug;
         $data=$PHPShopOrm->select(array('login,password,status'),array('enabled'=>"='1'"),false,array('limit'=>10));
@@ -49,14 +134,23 @@ class PHPShop1C extends PHPShopBaseXml {
 
     // Проверка прав
     function status($from,$flag) {
-        $path=explode("_",$this->PHPShopBase->getParam('base.'.$from));
+        global $PHPShopModules;
+        $path_core=explode("_",$this->PHPShopBase->getParam('base.'.$from));
+        $path_mod=explode("_",$PHPShopModules->getParam('base.'.$from));
+        $path=array_merge($path_core,$path_mod);
 
         // Корректировка статусов относительно имен БД
         $correct_path=array(
                 'page'=>'page_site',
                 'menu'=>'page_menu',
                 'baners'=>'baner',
-                'categories'=>'cat_prod'
+                'categories'=>'cat_prod',
+                'modules'=>'cat_prod',
+                'products'=>'cat_prod',
+                '1c'=>'visitor',
+                'orders'=>'visitor',
+                'order'=>'visitor',
+                'payment'=>'visitor'
         );
 
         if($correct_path[$path[1]]) $path=$correct_path[$path[1]];

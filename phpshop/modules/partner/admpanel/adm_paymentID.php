@@ -1,5 +1,4 @@
 <?php
-
 $_classPath="../../../";
 include($_classPath."class/obj.class.php");
 PHPShopObj::loadClass("base");
@@ -37,6 +36,7 @@ function actionUpdate() {
     $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.partner.partner_users"));
     $PHPShopOrm->debug=false;
     $data=$PHPShopOrm->select(array('id,money'),array('login'=>"='".$_POST['partnerLogin']."'"),false,array('limit'=>1));
+    print_r($data);
     if(is_array($data))
         if($data['money']>=$_POST['sum']) {
             $money=$data['money'];
@@ -75,7 +75,7 @@ function actionStart() {
     // Выборка
     $PHPShopOrm->sql='SELECT a.*, b.login, b.mail, b.money, b.content FROM '.$PHPShopModules->getParam("base.partner.partner_payment").' AS a JOIN '.$PHPShopModules->getParam("base.partner.partner_users").' AS b ON a.partner_id = b.id where a.id='.$_GET['id'];
     $data = $PHPShopOrm->select();
-    @extract($data);
+    @extract($data[0]);
 
     // Графический заголовок окна
     $PHPShopGUI->setHeader("Заявка на выплаты","Укажите данные для записи в базу.",$PHPShopGUI->dir."img/i_visa_med[1].gif");

@@ -180,18 +180,18 @@ else  $xml_support="............<img src=\"rewritemodtest/errormessage.gif\"  bo
         </div>
 
         <div align="right" class="menu">
-            <a href="http://www.phpshop.ru/" target="_blank" title="Разработчик">Домой</a> | <a href="http://help.phpshop.ru/" target="_blank" title="Техническая поддержка">Техническая поддержка</a> | <a href="http://www.phpshop.ru/help/" target="_blank" title="Учебник">Учебные материалы</a> | <a href="#" onclick="window.print();return false;" title="Печать">Печать страницы</a>
+            <a href="/" target="_blank" title="Разработчик">Домой</a> | <a href="https://help.phpshop.ru/" target="_blank" title="Техническая поддержка">Техническая поддержка</a> | <a href="http://faq.phpshop.ru/" target="_blank" title="Учебник">Учебные материалы</a> | <a href="#" onclick="window.print();return false;" title="Печать">Печать страницы</a>
         </div><div style="clear: both"></div>
 
         <table>
             <tr>
                 <td><img src="rewritemodtest/box.gif" alt="PHPShop SoftWare Box" width="120" height="143" border="0" align="left" hspace="10"></td>
                 <td>
-                    <p><strong>Установщик PHPShop SoftWare приветсвует Вас</strong>.<br>
+                    <p><strong>Установщик приветсвует Вас</strong>.<br>
 	На этой странице вы найдет всю необходимую информацию, которая поможет вам установить и настроить Интернет-магазин на своем сайте.</p> 
-	Ниже приведена инструкция для ручной установки PHPShop Software на виртуальный сервер <a href="http://www.phpshop.ru/help/Content/install/denwer_zend_optimizer.html" target="_blank">Denwer</a> или на хостинг провайдера.<br>
-                    Для <strong>упрощенной установки скрипта</strong>  следует воспользоваться готовой программой <a href="http://www.phpshop.ru/help/Content/install/phpshop_server.html" target="_blank">PHPShop Installer</a> из оболочки Windows (для начинающих пользователей).<br>
-                    Для упрощенной установки скрипта на Unix-сервер через SSH следует воспользоваться <a href="http://www.phpshop.ru/help/Content/install/phpshop_unix.html">PHPShop Unix Installer</a> (для опытных пользователей).
+	Ниже приведена инструкция для ручной установки PHPShop Software на виртуальный хостинг.<br> Перед установкой рекомендуем ознакомиться со
+        списком <a href="http://phpshop.ru/docs/hosting.html/" target="_blank" title="Хостинги">протестированных хостингов</a> на соответствие с
+        системными требованиями PHPShop SoftWare.
                 </td>
             </tr>
         </table>
@@ -225,7 +225,7 @@ else  $xml_support="............<img src=\"rewritemodtest/errormessage.gif\"  bo
 
     <h2>Установка скрипта в ручном режиме</h2>
     <ol>
-        <p>Если вы не хотите или по каким-то причинам не можете воспользоваться <strong>готовой программой для установки</strong> <a href="http://www.phpshop.ru/help/Content/install/phpshop_server.html" target="_blank">PHPShop Installer</a> на свой FTP - сервер  из оболочки Windows, то приведенная ниже информация поможет вам выполнить установку в ручном режиме (для опытных пользователей).</p>
+        <p>Если вы не хотите или по каким-то причинам не можете воспользоваться <strong>готовой программой для установки</strong> <a href="http://wiki.phpshop.ru/index.php/PHPShop_EasyControl#PHPShop_Installer" target="_blank">Windows Installer</a> или <a href="http://install.phpshop.ru" target="_blank">Web Installer</a>, то приведенная ниже информация поможет вам выполнить установку в ручном режиме (для опытных пользователей).</p>
         <li>Подключиться к своему серверу через FTP-клиент (CuteFTP, Total Commander и др.)
         <li>Загрузить распакованный архив в <strong>бинарном/двоичном режиме</strong> (задается в настройках FTP клиента)</a>
         <li>Создайте новую базу MySQL на своем сервере или узнайте пароли доступа к уже созданной базе у хост-провайдера.
@@ -267,7 +267,7 @@ else  $xml_support="............<img src=\"rewritemodtest/errormessage.gif\"  bo
             Пользователь и пароль задается при установке скрипта.<br>
             При установке пользователь и пароль задается в ручном режиме. По желанию, регистрационные данные отсылаются на e-mail. После смены пароля требуется перезапуск браузера.<br><br>
 
-        <li>Реализована возможность <strong>размещение 2-х и более независимых интернет-магазинов</strong> в любых директориях домена. Данная особенность позволяет создавать многоязычные проекты и гиппермаркеты,&nbsp;используя одну <A href="../index.html">лицензию</A>.<BR><BR>Для задания папки размещения требуется выполнить всего несколько шагов:<BR><BR>
+        <li>Реализована возможность <strong>размещение 2-х и более независимых интернет-магазинов</strong> в любых директориях домена. Данная особенность позволяет создавать многоязычные проекты и гиппермаркеты,&nbsp;используя одну <A href="http://phpshop.ru/docs/license.html" target="_blanlk">лицензию</A>.<BR><BR>Для задания папки размещения требуется выполнить всего несколько шагов:<BR><BR>
 
             <ol>
                 <li>Копируем скрипт в любую директорию, например /market/<br>
@@ -283,7 +283,7 @@ else  $xml_support="............<img src=\"rewritemodtest/errormessage.gif\"  bo
 
                 <li>Скрипт запуcкается и работает независимо от остальных&nbsp;из папки /market/<br><br>
             </ol>
-        <li>Таким образом, можно установить неограниченное кол-во интернет-магазинов на одном домене. Лицензионное соглашение <a href="../index.html">накладывает ограничение</a> на количество установленных магазинов на единую лицензию для технической поддержки.<br><br>
+        <li>Таким образом, можно установить неограниченное кол-во интернет-магазинов на одном домене. Лицензионное соглашение <a href="http://phpshop.ru/docs/license.html" target="_blank">накладывает ограничение</a> на количество установленных магазинов на единую лицензию для технической поддержки.<br><br>
             Поддерживается возможность установки нескольких магазинов в единую базу, для этого служит опция <strong>префикс</strong> в названиях таблиц:
             <p>
             <ul>
@@ -295,43 +295,8 @@ else  $xml_support="............<img src=\"rewritemodtest/errormessage.gif\"  bo
             <p class=pre>[base]<br>
                 table_name="<strong>phpshop_</strong>categories"; <br>
                 table_name1="phpshop_orders";   <br>
-                table_name2="phpshop_products";   <br>
-                table_name3="phpshop_system";    <br>
-                table_name5="phpshop_opros";        <br>
-                table_name6="phpshop_opros_categories";<br>
-                table_name7="phpshop_gbook";        <br>
-                table_name8="phpshop_news";      <br>
-                table_name9="phpshop_1c_docs";       <br>
-                table_name10="phpshop_jurnal";     <br>
-                table_name11="phpshop_page";       <br>
-                table_name14="phpshop_menu";      <br>
-                table_name15="phpshop_baners";     <br>
-                table_name16="phpshop_cache";      <br>
-                table_name17="phpshop_links";      <br>
-                table_name18="phpshop_search_jurnal";<br>
-                table_name19="phpshop_users";      <br>
-                table_name20="phpshop_sort_categories";<br>
-                table_name21="phpshop_sort";     <br>
-                table_name22="phpshop_black_list";  <br>
-                table_name23="phpshop_discount";    <br>
-                table_name24="phpshop_valuta";      <br>
-                table_name26="phpshop_search_base"; <br>
-                table_name27="phpshop_shopusers";   <br>
-                table_name28="phpshop_shopusers_status";<br>
-                table_name29="phpshop_page_categories";<br>
-                table_name30="phpshop_delivery";  <br>
-                table_name31="phpshop_servers";   <br>
-                table_name32="phpshop_order_status";   <br>
-                table_name33="phpshop_payment";   <br>
-                table_name34="phpshop_notice"; <br>
-                table_name35="phpshop_foto";<br>
-                table_name36="phpshop_comment";<br>
-                table_name37="phpshop_messages";<br>
-                table_name38="phpshop_rssgraber";<br>
-                table_name39="phpshop_rssgraber_jurnal";<br>
-                table_name50="phpshop_rating_categories";<br>
-                table_name51="phpshop_rating_charact";<br>
-                table_name52="phpshop_rating_votes";<br>
+                .....
+
             </p>
     </ol>
 </p>
@@ -353,7 +318,8 @@ else  $xml_support="............<img src=\"rewritemodtest/errormessage.gif\"  bo
 
 <h2>Перенос данных с сервера</h2>
 <p>
-    Перенос возможен как с веб-сервера на веб-сервер, так и с локального сервера (<a href="http://www.phpshop.ru/help/Content/install/phpshop_server.html" target="_blank">PHPShop Software</a> или <a href="http://www.phpshop.ru/help/Content/install/denwer_zend_optimizer.html" target="_blank">Denwer</a>).<br>
+    Перенос возможен как с веб-сервера на веб-сервер, так и с локального сервера <a href="http://wiki.phpshop.ru/index.php/PHPShop_EasyControl" target="_blank">EasyControl</a><br>
+    <br>
     Перенос выполняется по инструкции:
     <br><br>
 <ol >
@@ -405,16 +371,6 @@ else  $xml_support="............<img src=\"rewritemodtest/errormessage.gif\"  bo
     <li><b>102 Не установлены базы</b><br><br>
         <ul><li>Запустите <strong>инсталятор</strong> (имя_сайта/install/install.php) для установки БД.
         </ul><br>
-    <li><b>103 Ошибка расположения папки с файлами</b><br><br>
-        <ul><li>Проверьте настройки в установочном файле <strong>dafault_page_dir</strong>.
-        </ul><br>
-    <li><b>104 Ошибка расположения папки с шаблонами дизайна (скины)</b><br><br>
-        <ul>
-            <li>Не включена опция Register Globals ON
-            <li>Проверьте существования папки с выбранным шаблоном: <strong>phpshop/templates/имя_шаблона</strong>.
-            <li>Через <strong>панель администрирования</strong> (<b>"Настройка" => "Система"</b>) выберете существующий шаблон.
-            <li>Имя шаблона должно совпадать с именем папки (см. выше)
-        </ul><br>
     <li><b>105 Ошибка существования файла install.php</b><br><br>
         <ul>
             <li>В целях безопасности удалите папку <b>/install</b>
@@ -425,7 +381,8 @@ else  $xml_support="............<img src=\"rewritemodtest/errormessage.gif\"  bo
         </ul>
 </ol>
 
-<div class="footer">Copyright © PHPShop Software. Все права защищены © 2003-<? echo date("Y") ?>. СГРПЭ PHPShop №2006614274.
+<div class="footer">Copyright © PHPShop Software. Все права защищены © 2003-<? echo date("Y") ?>. СГРПЭ PHPShop №2006614274,2010611237.
+
 </div>
 </body>
 </html>

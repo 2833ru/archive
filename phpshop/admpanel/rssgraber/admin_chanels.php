@@ -80,22 +80,11 @@ if($i>20)$razmer="height:600;";
     </table>
 
 
-<div align=\"right\" style=\"padding:10;width:100%\"><BUTTON style=\"width: 15em; height: 2.2em; margin-left:5\"  onclick=\"miniWin('rssgraber/adm_chanels_new.php',400, 480); return false;\">
+<div align=\"right\" style=\"padding:10;width:98%\"><BUTTON style=\"width: 15em; height: 2.2em; margin-left:5\"  onclick=\"miniWin('rssgraber/adm_chanels_new.php',400, 480); return false;\">
 <img src=\"icon/page_add.gif\" width=\"16\" height=\"16\" border=\"0\" align=\"absmiddle\" hspace=\"5\">
 <span name=txtLang id=txtLang>Новая прозиция</span>
 </BUTTON></div>
-</div>
-	".'
-<div class=cMenu id=cMenuNws> 
-	<TABLE style="width:260px;"  border="0" cellspacing="0" cellpadding="0">
-	<TR><TD id="txtLang" STYLE="background: #C0D2EC;"><B>Действия</B></TD></TR>
-	<TR><TD id="txtLang" STYLE="background: #fff"><A name="tarurl" id=nameNewsrss1>Удалить</A></TD></TR>
-	<TR><TD id="txtLang" STYLE="background: #fff"><A name="tarurl" id=nameNewsrss2>Включить</A></TD></TR>	
-	<TR><TD id="txtLang" STYLE="background: #fff"><A name="tarurl" id=nameNewsrss3>Выключить</A></TD></TR>	
-	<TR><TD id="txtLang" STYLE="background: #fff"><A name="tarurl" id=nameNewsrss4>Привязать к единой дате</A></TD></TR>		
-	</TABLE>
-</div>
-';
+</div>";
 
 
 }

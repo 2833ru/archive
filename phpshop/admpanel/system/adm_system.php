@@ -12,234 +12,265 @@ require("../language/".$Lang."/language.php");
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
-<head>
-	<title>Системные Настройки</title>
-<META http-equiv=Content-Type content="text/html; charset=<?=$SysValue['Lang']['System']['charset']?>">
-<LINK href="../css/texts.css" type=text/css rel=stylesheet>
-<LINK href="../css/tab.winclassic.css" type=text/css rel=stylesheet>
-<script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
-<script type="text/javascript" src="../java/tabpane.js"></script>
-<script type="text/javascript" language="JavaScript1.2" src="../language/<?=$Lang?>/language_windows.js"></script>
-<script type="text/javascript">
-DoResize(<? echo $GetSystems['width_icon']?>,600,450);
-</script>
+    <head>
+        <title>Системные Настройки</title>
+        <META http-equiv=Content-Type content="text/html; charset=<?=$SysValue['Lang']['System']['charset']?>">
+        <LINK href="../css/texts.css" type=text/css rel=stylesheet>
+              <LINK href="../css/tab.winclassic.css" type=text/css rel=stylesheet>
+        <script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
+        <script type="text/javascript" src="../java/tabpane.js"></script>
+        <script type="text/javascript" language="JavaScript1.2" src="../language/<?=$Lang?>/language_windows.js"></script>
+        <script type="text/javascript">
+            DoResize(<? echo $GetSystems['width_icon']?>,600,450);
+        </script>
 
-</head>
-<body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0" onload="DoCheckLang(location.pathname,<?=$SysValue['lang']['lang_enabled']?>);preloader(0)">
+    </head>
+    <body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0" onload="DoCheckLang(location.pathname,<?=$SysValue['lang']['lang_enabled']?>);preloader(0)">
 
-<table id="loader">
-<tr>
-	<td valign="middle" align="center">
-		<div id="loadmes" onclick="preloader(0)">
-<table width="100%" height="100%">
-<tr>
-	<td id="loadimg"></td>
-	<td ><b><?=$SysValue['Lang']['System']['loading']?></b><br><?=$SysValue['Lang']['System']['loading2']?></td>
-</tr>
-</table>
-		</div>
-</td>
-</tr>
-</table>
+        <table id="loader">
+            <tr>
+                <td valign="middle" align="center">
+                    <div id="loadmes" onclick="preloader(0)">
+                        <table width="100%" height="100%">
+                            <tr>
+                                <td id="loadimg"></td>
+                                <td ><b><?=$SysValue['Lang']['System']['loading']?></b><br><?=$SysValue['Lang']['System']['loading2']?></td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+        </table>
 
-<SCRIPT language=JavaScript type=text/javascript>preloader(1);</SCRIPT>
-<?
+        <SCRIPT language=JavaScript type=text/javascript>preloader(1);</SCRIPT>
+        <?
 
 // Выбор языка
-function GetLang($skin){
-global $SysValue;
-$dir="../language";
-if (is_dir($dir)) {
-    if ($dh = @opendir($dir)) {
-        while (($file = readdir($dh)) !== false) {
-		
-		    if($skin == $file)
-			$sel="selected";
-			  else $sel="";
-		
-		    if($file!="." and $file!=".." and $file!="index.html")
-            @$name.= "<option value=\"$file\" $sel>$file</option>";
-        }
-        closedir($dh);
-    }
-}
-$disp="
+        function GetLang($skin) {
+            global $SysValue;
+            $dir="../language";
+            if (is_dir($dir)) {
+                if ($dh = @opendir($dir)) {
+                    while (($file = readdir($dh)) !== false) {
+
+                        if($skin == $file)
+                            $sel="selected";
+                        else $sel="";
+
+                        if($file!="." and $file!=".." and $file!="index.html")
+                            @$name.= "<option value=\"$file\" $sel>$file</option>";
+                    }
+                    closedir($dh);
+                }
+            }
+            $disp="
 <select name=\"lang_new\">
 ".@$name."
 </select>
 ";
-return @$disp;
-}
+            return @$disp;
+        }
 
 // Выбор шкуры
-function GetSkins($skin){
-global $SysValue;
-$dir="../../templates";
-if (is_dir($dir)) {
-    if ($dh = opendir($dir)) {
-        while (($file = readdir($dh)) !== false) {
-		
-		    if($skin == $file)
-			$sel="selected";
-			  else $sel="";
-		
-		    if($file!="." and $file!=".." and $file!="index.html")
-            @$name.= "<option value=\"$file\" $sel>$file</option>";
-        }
-        closedir($dh);
-    }
-}
-$disp="
+        function GetSkins($skin) {
+            global $SysValue;
+            $dir="../../templates";
+            if (is_dir($dir)) {
+                if ($dh = opendir($dir)) {
+                    while (($file = readdir($dh)) !== false) {
+
+                        if($skin == $file)
+                            $sel="selected";
+                        else $sel="";
+
+                        if($file!="." and $file!=".." and $file!="index.html")
+                            @$name.= "<option value=\"$file\" $sel>$file</option>";
+                    }
+                    closedir($dh);
+                }
+            }
+            $disp="
 <select name=\"skin_new\" style=\"height:200px;width:280px\" size=5 onchange=\"GetSkinIcon(this.value)\">
 ".@$name."
 </select>
 ";
-return @$disp;
-}
+            return @$disp;
+        }
 
 
 // Выбор иконки шкуры
-function GetSkinsIcon($skin){
-global $SysValue;
-$dir="../../templates";
-$filename=$dir.'/'.$skin.'/icon/icon.gif';
-if (file_exists($filename))
-$disp='<img src="'.$filename.'" alt="'.$skin.'" width="150" height="120" border="1" id="icon">';
-else $disp='<img src="../img/icon_non.gif" alt="Изображение не доступно" width="150" height="120" border="1" id="icon">';
-return @$disp;
-}
+        function GetSkinsIcon($skin) {
+            global $SysValue;
+            $dir="../../templates";
+            $filename=$dir.'/'.$skin.'/icon/icon.gif';
+            if (file_exists($filename))
+                $disp='<img src="'.$filename.'" alt="'.$skin.'" width="150" height="120" border="1" id="icon">';
+            else $disp='<img src="../img/icon_non.gif" alt="Изображение не доступно" width="150" height="120" border="1" id="icon">';
+            return @$disp;
+        }
 
-function GetValuta($n,$tip){ // вывод валюты
-global $SysValue;
-$sql="select * from ".$SysValue['base']['table_name24']." where enabled='1' order by num";
-$result=mysql_query($sql);
-while($row = mysql_fetch_array($result))
-    {
-    $id=$row['id'];
-    $name=$row['name'];
-	$sel="";
-	if ($id == $n) $sel="selected";
-    @$dis.="<option value=".$id." ".$sel." >".$name."</option>\n";
-	}
-@$disp="
+        /**
+         * Кодировка XML
+         */
+        function getXmlCode($code) {
+            $array=array(
+                    'default'=>'',
+                    'ISO-8859-1'=>'ISO-8859-1',
+                    'UTF-8'=>'UTF-8'
+            );
+            $dis=null;
+
+            foreach($array as $key=>$val) {
+                if($val == $code) $sel='selected';
+                else $sel=null;
+                $dis.='<option value="'.$val.'" '.$sel.'>'.$key.'</option>';
+            }
+
+            return '<select name="xmlencode_new" id="xmlencode_new" size="1">'.$dis.'</select>';
+        }
+
+        function GetValuta($n,$tip) { // вывод валюты
+            global $SysValue;
+            $sql="select * from ".$SysValue['base']['table_name24']." where enabled='1' order by num";
+            $result=mysql_query($sql);
+            while($row = mysql_fetch_array($result)) {
+                $id=$row['id'];
+                $name=$row['name'];
+                $sel="";
+                if ($id == $n) $sel="selected";
+                @$dis.="<option value=".$id." ".$sel." >".$name."</option>\n";
+            }
+            @$disp="
 <select name='$tip' size=1>
-$dis
+                    $dis
 </select>
-";
-return @$disp;
-}
+                    ";
+            return @$disp;
+        }
 
-function GetUsersStatus($n){
-global $SysValue;
-$sql="select * from ".$SysValue['base']['table_name28']." order by discount";
-$result=mysql_query($sql);
-while ($row = mysql_fetch_array($result))
-    {
-	$id=$row['id'];
-	$name=$row['name'];
-	$discount=$row['discount'];
-	$sel="";
-	if($n==$id) $sel="selected";
-	@$dis.="<option value=".$id." ".$sel." >".$name." - ".$discount."%</option>\n";
-	}
-@$disp="
+        function GetUsersStatus($n) {
+            global $SysValue;
+            $sql="select * from ".$SysValue['base']['table_name28']." order by discount";
+            $result=mysql_query($sql);
+            while ($row = mysql_fetch_array($result)) {
+                $id=$row['id'];
+                $name=$row['name'];
+                $discount=$row['discount'];
+                $sel="";
+                if($n==$id) $sel="selected";
+                @$dis.="<option value=".$id." ".$sel." >".$name." - ".$discount."%</option>\n";
+            }
+            @$disp="
 <select name=user_status_new size=1>
 <option value=0 id=txtLang>Авторизованный пользователь</option>
-$dis
+                    $dis
 </select>
-";
-return @$disp;
-}
+                    ";
+            return @$disp;
+        }
 
 
-$sql="select * from $table_name3";
-$result=mysql_query($sql);
-$row = mysql_fetch_array($result);
-	$num_row=$row['num_row'];
-	$dengi=$row['dengi'];
-	$percent=$row['percent'];
-	$title=$row['title'];
-	$keywords=$row['keywords'];
-	$skin=$row['skin'];
-	$kurs=$row['kurs'];
-	$kurs_beznal=$row['kurs_beznal'];
-	$spec_num=$row['spec_num'];
-	$new_num=$row['new_num'];
-	$dostavka=$row['dostavka'];
-	$nds=$row['nds'];
-	if($row['nds_enabled']==1) $nds_enabled="checked";
-	 else $nds_enabled="";
-	
-	switch($row['num_vitrina']){
-	case(1): $rowl="selected"; break;
-	case(2): $row2="selected"; break;
-	case(3): $row3="selected"; break;
-	}
-	
-	switch($row['num_row_adm']){
-	case(1): $cowl="selected"; break;
-	case(2): $cow2="selected"; break;
-	case(3): $cow3="selected"; break;
-	}
-	
-	
-	
-	$width_icon =$row['width_icon'];
-	$option=unserialize($row['admoption']);
-	
-	switch($option['sklad_status']){
-	case(1): $sklad_statusl="selected"; break;
-	case(2): $sklad_status2="selected"; break;
-	case(3): $sklad_status3="selected"; break;
-	}
-	
-        switch($option['nowbuy_enabled']){
-	case(0): $nowbuy_enabled0="selected"; break;
-	case(1): $nowbuy_enabled1="selected"; break;
-	case(2): $nowbuy_enabled2="selected"; break;
-        default: $nowbuy_enabled0="selected";
-	}
+        $sql="select * from $table_name3";
+        $result=mysql_query($sql);
+        $row = mysql_fetch_array($result);
+        $num_row=$row['num_row'];
+        $dengi=$row['dengi'];
+        $percent=$row['percent'];
+        $title=$row['title'];
+        $keywords=$row['keywords'];
+        $skin=$row['skin'];
+        $kurs=$row['kurs'];
+        $kurs_beznal=$row['kurs_beznal'];
+        $spec_num=$row['spec_num'];
+        $new_num=$row['new_num'];
+        $dostavka=$row['dostavka'];
+        $nds=$row['nds'];
+        $logo=$row['logo'];
+        if($row['nds_enabled']==1) $nds_enabled="checked";
+        else $nds_enabled="";
 
-	if($option['message_enabled']==1) $message_enabled="checked";
-	 else $message_enabled="";
-	
-	if($option['desktop_enabled']==1) $desktop_enabled="checked";
-	 else $desktop_enabled="";
-	
-	if($option['base_enabled']==1) $base_enabled="checked";
-	 else $base_enabled="";
-	
-	if($option['editor_enabled']==1) $editor_enabled="checked";
-	 else $editor_enabled="";
-	 
-	if($option['sklad_enabled']==1) $sklad_enabled="checked";
-	 else $sklad_enabled="";
-	 
-	if($option['sms_enabled']==1) $sms_enabled="checked";
-	 else $sms_enabled="";
-	 
-	if($option['notice_enabled']==1) $notice_enabled="checked";
-	 else $notice_enabled="";
-	
-		if($option['update_enabled']==1) $update_enabled="checked";
-	 else $update_enabled="";
-	
-	
-	if($option['seller_enabled']==1) $seller_enabled="checked";
-	if($option['user_mail_activate']==1) $user_mail_activate="checked";
-	if($option['user_skin']==1) $user_skin="checked";
-	if($option['rss_graber_enabled']==1) $rss_graber_enabled="checked";
-	if($option['user_mail_activate_pre']==1) $user_mail_activate_pre="checked";
-	if($option['user_price_activate']==1) $user_price_activate="checked";
-	if($option['user_calendar']==1) $user_calendar="checked";
-	if($option['digital_product_enabled']==1) $digital_product_enabled="checked";
-	if($option['helper_enabled']==1) $helper_enabled="checked";
-	if($option['cloud_enabled']==1) $cloud_enabled="checked";
-	if($option['image_save_source']==1) $image_save_source="checked";
-	if($option['prevpanel_enabled']==1) $prevpanel_enabled="checked";
+        switch($row['num_vitrina']) {
+            case(1): $rowl="selected";
+                break;
+            case(2): $row2="selected";
+                break;
+            case(3): $row3="selected";
+                break;
+        }
+
+        switch($row['num_row_adm']) {
+            case(1): $cowl="selected";
+                break;
+            case(2): $cow2="selected";
+                break;
+            case(3): $cow3="selected";
+                break;
+        }
+
+
+
+        $width_icon =$row['width_icon'];
+        $option=unserialize($row['admoption']);
+
+        switch($option['sklad_status']) {
+            case(1): $sklad_statusl="selected";
+                break;
+            case(2): $sklad_status2="selected";
+                break;
+            case(3): $sklad_status3="selected";
+                break;
+        }
+
+        switch($option['nowbuy_enabled']) {
+            case(0): $nowbuy_enabled0="selected";
+                break;
+            case(1): $nowbuy_enabled1="selected";
+                break;
+            case(2): $nowbuy_enabled2="selected";
+                break;
+            default: $nowbuy_enabled0="selected";
+        }
+
+        if($option['message_enabled']==1) $message_enabled="checked";
+        else $message_enabled="";
+
+        if($option['desktop_enabled']==1) $desktop_enabled="checked";
+        else $desktop_enabled="";
+
+        if($option['base_enabled']==1) $base_enabled="checked";
+        else $base_enabled="";
+
+        if($option['editor_enabled']==1) $editor_enabled="checked";
+        else $editor_enabled="";
+
+        if($option['sklad_enabled']==1) $sklad_enabled="checked";
+        else $sklad_enabled="";
+
+        if($option['sms_enabled']==1) $sms_enabled="checked";
+        else $sms_enabled="";
+
+        if($option['notice_enabled']==1) $notice_enabled="checked";
+        else $notice_enabled="";
+
+        if($option['update_enabled']==1) $update_enabled="checked";
+        else $update_enabled="";
+
+
+        if($option['seller_enabled']==1) $seller_enabled="checked";
+        if($option['user_mail_activate']==1) $user_mail_activate="checked";
+        if($option['user_skin']==1) $user_skin="checked";
+        if($option['rss_graber_enabled']==1) $rss_graber_enabled="checked";
+        if($option['user_mail_activate_pre']==1) $user_mail_activate_pre="checked";
+        if($option['user_price_activate']==1) $user_price_activate="checked";
+        if($option['user_calendar']==1) $user_calendar="checked";
+        if($option['digital_product_enabled']==1) $digital_product_enabled="checked";
+        if($option['helper_enabled']==1) $helper_enabled="checked";
+        if($option['cloud_enabled']==1) $cloud_enabled="checked";
+        if($option['image_save_source']==1) $image_save_source="checked";
+        if($option['prevpanel_enabled']==1) $prevpanel_enabled="checked";
         if($option['calibrated']==1) $calibrated="checked";
-	
-echo"
+
+        echo"
 <table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" height=\"50\" id=\"title\">
 <tr bgcolor=\"#ffffff\">
 	<td style=\"padding:10\">
@@ -271,15 +302,19 @@ tabPane.addTabPage( document.getElementById( \"intro-page\" ) );
 
 	<table >
 	<tr class=adm2>
-<form action=\"$PHP_SELF\" method=\"post\" name=\"system_forma\">
+<form  method=\"post\" name=\"system_forma\">
 	  <td align=left>
-	  ".GetSkins($skin)."
+                ".GetSkins($skin)."
 	  </td>
 	  <td style=\"padding-left:5px\" valign=top>
 	  <FIELDSET >
 	  <LEGEND ><span name=txtLang id=txtLang><u>С</u>криншот</span></LEGEND>
 	  <div align=\"center\" style=\"padding:10px\">".GetSkinsIcon($skin)."</div>
+        
 	  </FIELDSET>
+        <p><img src=\"../img/icon-filetype-jpg.gif\" width=\"16\" height=\"16\" border=\"0\" align=\"absmiddle\" hspace=\"5\" >
+        <a href=\"http://wiki.phpshop.ru/index.php/Modules#Template Edit\" target=\"_blank\" title=\"База  шаблонов\">База дополнительных шаблонов</a>
+</p>
 	  </td>
 	</tr>
 
@@ -349,34 +384,24 @@ tabPane.addTabPage( document.getElementById( \"vetrina\" ) );
 </select> шт.
 	  </td>
 	</tr>
-		<tr class=adm2>
-	  <td align=right>
-	  <span name=txtLang id=txtLang>Размер дочерних окон<br>
-	  увеличить на</span>:
-	  </td>
-	  <td align=left>
-	  <input type=text name=width_icon_new size=3 value=\"$width_icon\"> %
-        <input type=\"button\"  
-        value=\"Калибровка размера окон\" onClick=\"miniWin('../calibrate.php',650,630)\">
-	    </td>
-	</tr>
-        </tr>
-    <tr class=adm2>
-    <td align=right>
-    <span name=txtLang id=txtLang>Размер дочерних окон<br> откалиброван
-  </span>:
-    </td>
-    <td align=left>
-     <input type=\"checkbox\" value=\"1\" name=\"calibrated_new\" $calibrated> 
-	</table>
+        <tr>
+	<td align=right>
+	Логотип:
+        </td>
+        <td align=left>
+	<input type=\"text\" name=\"logo_new\" id=\"logo\" style=\"width: 350\" value=\"$logo\">
+	<BUTTON style=\"width: 3em; height: 2.2em; margin-left:5\"  onclick=\"ReturnPic('logo');return false;\"><img src=\"../img/icon-move-banner.gif\"  width=\"16\" height=\"16\" border=\"0\"></BUTTON>
 	</td>
-
-
-
-    </td>
-  </tr>
-
-
+</tr>
+         <tr>
+	<td align=right>
+	XML кодировка:
+        </td>
+        <td align=left>
+        ".getXmlCode($option['xmlencode'])."
+	</td>
+</tr>
+		
 </table>
 </div>
 <!-- begin usage page -->
@@ -398,7 +423,7 @@ tabPane.addTabPage( document.getElementById( \"usage-page\" ) );
 	  <span name=txtLang id=txtLang>Валюта по умолчанию</span>:
 	  </td>
 	  <td align=left>
-	".GetValuta($dengi,"dengi_new")."
+                ".GetValuta($dengi,"dengi_new")."
 	  </td>
 	</tr>
 	<tr class=adm2>
@@ -800,7 +825,7 @@ tabPane.addTabPage( document.getElementById( \"img\" ) );
 	<LEGEND id=lgdLayout><span name=txtLang id=txtLang><u>Н</u>астройка параметров защиты изображений от копирования</span>: </LEGEND>
 	<div style=\"padding:10\">
 	
-	<BUTTON style=\"width: 200\" onclick=\"miniWin('adm_system_watermark.php',500,640)\">
+	<BUTTON style=\"width: 200\" onclick=\"miniWin('adm_system_watermark.php',500,640);return false;\">
 	<img src=\"../icon/photo_album.gif\" width=\"16\" height=\"16\" border=\"0\" align=\"absmiddle\">
 	Настроить Watermark</BUTTON>
 	
@@ -820,63 +845,63 @@ tabPane.addTabPage( document.getElementById( \"img\" ) );
 </tr>
 </form>
 </table>
-";
+                ";
 
 
 
-if(isset($optionsSAVE))
-{
-if(CheckedRules($UserStatus["option"],1) == 1){
+        if(isset($optionsSAVE)) {
+            if(CheckedRules($UserStatus["option"],1) == 1) {
 
-  if($_SESSION['skin'] != $skin_new){
-  $skin=$skin_new;
-  session_register('skin');
-  }
-  
-$option=unserialize($GetSystems['admoption']);
-  
-  
-$option["prevpanel_enabled"]=$prevpanel_enabled_new;
-$option["sklad_status"]=$sklad_status_new;
-$option["helper_enabled"]=$helper_enabled_new;
-$option["cloud_enabled"]=$cloud_enabled_new;
-$option["digital_product_enabled"]=$digital_product_enabled_new;
-$option["user_calendar"]=$user_calendar_new;
-$option["user_price_activate"]=$user_price_activate_new;
-$option["user_mail_activate_pre"]=$user_mail_activate_pre_new;
-$option["rss_graber_enabled"]=$rss_graber_enabled_new;
-$option["image_save_source"]=$image_save_source_new;
-$option["img_wm"]=$img_wm;
-$option["img_w"]=$img_w;
-$option["img_h"]=$img_h;
-$option["img_tw"]=$img_tw;
-$option["img_th"]=$img_th;
-$option["width_podrobno"]=$width_podrobno;
-$option["width_kratko"]=$width_kratko;
-$option["message_enabled"]=$message_enabled_new;
-$option["message_time"]=$message_time_new;
-$option["desktop_enabled"]=$desktop_enabled_new;
-$option["desktop_time"]=$desktop_time_new;
-$option["seller_enabled"]=$seller_enabled_new;
-$option["base_enabled"]=$base_enabled_new;
-$option["sms_enabled"]=$sms_enabled_new;
-$option["notice_enabled"]=$notice_enabled_new;
-$option["update_enabled"]=$update_enabled_new;
-$option["base_id"]=$base_id_new;
-$option["base_host"]=$base_host_new;
-$option["lang"]=$lang_new;
-$option["sklad_enabled"]=$sklad_enabled_new;
-$option["price_znak"]=$price_znak_new;
-$option["user_mail_activate"]=$user_mail_activate_new;
-$option["user_status"]=$user_status_new;
-$option["user_skin"]=$user_skin_new;
-$option["cart_minimum"]=$cart_minimum_new;
-$option["editor_enabled"]=$editor_enabled_new;
-$option["calibrated"]=$calibrated_new;
-$option["nowbuy_enabled"]=$nowbuy_enabled_new;
-$option_new=serialize($option);
+                if($_SESSION['skin'] != $skin_new) {
+                    $skin=$skin_new;
+                    session_register('skin');
+                }
 
-$sql="UPDATE $table_name3
+                $option=unserialize($GetSystems['admoption']);
+
+
+                $option["prevpanel_enabled"]=$prevpanel_enabled_new;
+                $option["sklad_status"]=$sklad_status_new;
+                $option["helper_enabled"]=$helper_enabled_new;
+                $option["cloud_enabled"]=$cloud_enabled_new;
+                $option["digital_product_enabled"]=$digital_product_enabled_new;
+                $option["user_calendar"]=$user_calendar_new;
+                $option["user_price_activate"]=$user_price_activate_new;
+                $option["user_mail_activate_pre"]=$user_mail_activate_pre_new;
+                $option["rss_graber_enabled"]=$rss_graber_enabled_new;
+                $option["image_save_source"]=$image_save_source_new;
+                $option["img_wm"]=$img_wm;
+                $option["img_w"]=$img_w;
+                $option["img_h"]=$img_h;
+                $option["img_tw"]=$img_tw;
+                $option["img_th"]=$img_th;
+                $option["width_podrobno"]=$width_podrobno;
+                $option["width_kratko"]=$width_kratko;
+                $option["message_enabled"]=$message_enabled_new;
+                $option["message_time"]=$message_time_new;
+                $option["desktop_enabled"]=$desktop_enabled_new;
+                $option["desktop_time"]=$desktop_time_new;
+                $option["seller_enabled"]=$seller_enabled_new;
+                $option["base_enabled"]=$base_enabled_new;
+                $option["sms_enabled"]=$sms_enabled_new;
+                $option["notice_enabled"]=$notice_enabled_new;
+                $option["update_enabled"]=$update_enabled_new;
+                $option["base_id"]=$base_id_new;
+                $option["base_host"]=$base_host_new;
+                $option["lang"]=$lang_new;
+                $option["sklad_enabled"]=$sklad_enabled_new;
+                $option["price_znak"]=$price_znak_new;
+                $option["user_mail_activate"]=$user_mail_activate_new;
+                $option["user_status"]=$user_status_new;
+                $option["user_skin"]=$user_skin_new;
+                $option["cart_minimum"]=$cart_minimum_new;
+                $option["editor_enabled"]=$editor_enabled_new;
+                $option["calibrated"]=$calibrated_new;
+                $option["nowbuy_enabled"]=$nowbuy_enabled_new;
+                 $option["xmlencode"]=$xmlencode_new;
+                $option_new=serialize($option);
+
+                $sql="UPDATE $table_name3
 SET
 num_row='$num_row_new',
 num_row_adm='$num_cow_new',
@@ -891,17 +916,18 @@ width_icon='$width_icon_new',
 nds='$nds_new',
 nds_enabled='$nds_enabled_new',
 admoption='$option_new',
+logo='$logo_new',
 kurs_beznal='$kurs_beznal_new' ";
-$result=mysql_query($sql)or @die("Невозможно изменить запись".$sql.mysql_error());
-$UpdateWrite=UpdateWrite();// Обновляем LastModified
-echo"
+                $result=mysql_query($sql)or @die("Невозможно изменить запись".$sql.mysql_error());
+                $UpdateWrite=UpdateWrite();// Обновляем LastModified
+                echo"
 	 <script>
 	 CL();
 	 </script>
 	   ";
-}else $UserChek->BadUserFormaWindow();
-  }
-   
-?>
+            }else $UserChek->BadUserFormaWindow();
+        }
+
+        ?>
 
 

@@ -86,8 +86,8 @@ global $catalogID,$PHP_SELF,$table_name;
   <div style="padding:10">
   <input type=text id="myName"  style="width: 400" value="">
   <input type="hidden" value="0" name="parent_to_new" id="myCat">
-<BUTTON style="width: 3em; height: 2.2em; margin-left:5"  onclick="miniWinFull(\'adm_cat.php?category=\',300,400,300,200)"><img src="../img/icon-move-banner.gif"  width="16" height="16" border="0"></BUTTON>
-  </FIELDSET>
+  <input type="button" value="Выбрать..." onclick="miniWinFull(\'adm_cat.php?category=\',300,400,300,200);">
+</FIELDSET>
   </td>
 </tr>
 <tr>

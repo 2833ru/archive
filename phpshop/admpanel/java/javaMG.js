@@ -176,7 +176,7 @@ function helpWinParent(page){
         window.opener.top.loadhelp();
     }catch(e){
         alert("Справка отключена. Опция включается в настройках системы - режимы - интерактивная справка")
-        }
+    }
     try{
         window.opener.top.focus();
     }catch(e){}
@@ -484,14 +484,14 @@ function RoboxStatus(login,uid,crc){
             }
         }
 
-    try{
-        var str="Валюта: "+cur[0].firstChild.nodeValue+"\nДата: "+date[0].firstChild.nodeValue+"\nСумма: "+sum[0].firstChild.nodeValue+"\nСтатус: "+RoboxStatus.ReturnState(state[0].firstChild.nodeValue);
-        alert(str);
+        try{
+            var str="Валюта: "+cur[0].firstChild.nodeValue+"\nДата: "+date[0].firstChild.nodeValue+"\nСумма: "+sum[0].firstChild.nodeValue+"\nСтатус: "+RoboxStatus.ReturnState(state[0].firstChild.nodeValue);
+            alert(str);
+        }
+        catch(e){
+            alert("Статус: "+RoboxStatus.ReturnState());
+        }
     }
-    catch(e){
-        alert("Статус: "+RoboxStatus.ReturnState());
-    }
-}
 }
 
 
@@ -505,8 +505,8 @@ function DoColor(color){
 
 // Корректировка размера окна
 function DoResize(p,w,h){
-    var mywin = p/100;
-    window.resizeTo(w+w*mywin, h+h*mywin);
+//var mywin = p/100;
+//window.resizeTo(w+w*mywin, h+h*mywin);
 }
 
 var combowidth='';
@@ -528,6 +528,8 @@ function getClientHeight()
 
 
 function initialize(){
+    try{
+    cartwindow=document.getElementById('cartwindow');
     combowidth=cartwindow.offsetWidth;
     comboheight=cartwindow.offsetHeight;
     Width = getClientWidth();
@@ -545,9 +547,12 @@ function initialize(){
         cartwindow.style.top=(Height-comboheight) + "px";
     }
     cartwindow.style.visibility="visible";
+    }catch(e){}
 }
 
 function initializelicense(){
+    try{
+    licensewindow=document.getElementById('licensewindow');
     combowidth=licensewindow.offsetWidth;
     comboheight=licensewindow.offsetHeight;
     Width = getClientWidth();
@@ -565,9 +570,12 @@ function initializelicense(){
         licensewindow.style.top=(Height-comboheight) + "px";
     }
     licensewindow.style.visibility="visible";
+    }catch(e){}
 }
 
 function initializecomment(){
+    try{
+    commentwindow=document.getElementById('commentwindow');
     combowidth=commentwindow.offsetWidth;
     comboheight=commentwindow.offsetHeight;
     Width = getClientWidth();
@@ -585,10 +593,13 @@ function initializecomment(){
         commentwindow.style.top=(Height-comboheight) + "px";
     }
     commentwindow.style.visibility="visible";
+    }catch(e){}
 }
 
 
 function initializemessage(){
+    try{
+    messagewindow=document.getElementById('messagewindow');
     combowidth=messagewindow.offsetWidth;
     comboheight=messagewindow.offsetHeight;
     Width = getClientWidth();
@@ -607,11 +618,12 @@ function initializemessage(){
         messagewindow.style.top=(Height-comboheight) + "px";
     }
     messagewindow.style.visibility="visible";
+    }catch(e){}
 }
 
 function initialize_off(){
     cartwindow.style.visibility="hidden";
-//DoMessageComment();
+    DoMessageComment();
 }
 
 function initializelicense_off(){
@@ -620,7 +632,7 @@ function initializelicense_off(){
 
 function initializecomment_off(){
     commentwindow.style.visibility="hidden";
-//DoMessageMessage();
+    DoMessageMessage();
 }
 
 function initializemessage_off(){
@@ -695,7 +707,7 @@ function DoAddProductFromOrder(xid,uid) {
             } );
         }
     }
-else alert("Укажите ID товара!");
+    else alert("Укажите ID товара!");
 }
 
 // Редактируем доставку из заказа
@@ -1148,14 +1160,14 @@ function clockGetTimeRus() {
     day = dayNameFull[day];
     if (hour<10) {
         hour="0"+hour
-        }
-        if (minute<10) {
+    }
+    if (minute<10) {
         minute="0"+minute
-        }
-        if (second<10) {
+    }
+    if (second<10) {
         second="0"+second
-        }
-        document.getElementById("CSCClockRus").innerHTML=day+", "+date+" "+month+", "+hour+":"+minute+":"+second;
+    }
+    document.getElementById("CSCClockRus").innerHTML=day+", "+date+" "+month+", "+hour+":"+minute+":"+second;
     tickRus();
 }
 function tickRus() {
@@ -1169,18 +1181,18 @@ function mp(e){
         if((event.button==2)||(event.button==3)){
             alert('Copyright 2003-'+now.getYear()+' \© PHPShop\.ru\. All rights reserved\. ');
             return false
-            }
         }
+    }
     if(document.layers){
-    if(e.which==3){
-        alert('Copyright 2003-'+now.getYear()+' \© PHPShop\.ru\. All rights reserved\. ');
-        return false
+        if(e.which==3){
+            alert('Copyright 2003-'+now.getYear()+' \© PHPShop\.ru\. All rights reserved\. ');
+            return false
         }
     }
 }
 if (document.layers) {
     document.captureEvents(event.mousedown)
-        }
+}
 
 /*
 function do_err(){return true}onerror=do_err;if(window.location.href.substring(0,4)=="file")window.location="about:blank";
@@ -1326,7 +1338,7 @@ function NewDeliveryCatalog(){
     if(window.frame2.document.getElementById("catal")){
         var catal=window.frame2.document.getElementById("catal").value;
     }
-    miniWin('delivery/adm_catalog_new.php?categoryID='+catal,650,630);
+    return miniWin('delivery/adm_catalog_new.php?categoryID='+catal,650,370);
 }
 
 
@@ -1361,15 +1373,15 @@ function EditCatalogPage(){
     if(window.frame2.document.getElementById("catal")){
         var catal=window.frame2.document.getElementById("catal").value;
         if(catal != 1000 && catal != 2000)
-            miniWin('page/adm_catalogID.php?catalogID='+catal,500,370);
+            miniWin('page/adm_catalogID.php?catalogID='+catal,600,600);
     }else alert("Выберите подкаталог для редактирования");
 
 }
 
 function EditCatalogDelivery(){
-    if(window.frame2.document.getElementById("catal")){
+    if(window.frame2){
         var catal=window.frame2.document.getElementById("catal").value;
-        miniWin('delivery/adm_catalogID.php?id='+catal,500,370);
+        return miniWin('delivery/adm_catalogID.php?id='+catal,600,370);
     }else alert("Выберите подкаталог для редактирования");
 
 }
@@ -1432,6 +1444,7 @@ function ListChek(id){
 }
 
 function PromptThis(){
+    message1='Внимание!\nДанная операция может привести к потери позиции.\nВы действительно хотите выполнить данную команду?';
     if(confirm(message1)){
         document.getElementById("productDELETE").value='doIT';
         document.product_edit.submit();
@@ -1493,10 +1506,10 @@ function DoWithSelect(tip,obj,num){
         var dots=".";
     }
 
-if(document.location.href.indexOf(".php?plugin")!=-1) dots="";
-
-
-    if (document.location.href.indexOf("cat_prod")!=-1) var dots="";
+    if(document.location.href.indexOf(".php?plugin")!=-1) dots="";
+    if (document.location.href.indexOf("cat_prod")!=-1) dots="";
+    if(document.location.href.indexOf(".php?page")!=-1) dots="";
+    
     try{
         if(tip!=0){
             var IDS=new Array();
@@ -1565,7 +1578,7 @@ function myDialog(url,param,w,h)
 
 function AdmCat(pid,w,h)
 {
-    miniWin('adm_catalogID.php?tip=main&catalogID='+pid,'645','500');
+    miniWin('adm_catalogID.php?tip=main&catalogID='+pid,'650','630');
 }
 
 function winApplet(url)

@@ -73,7 +73,7 @@ cMenuOff=function(j){		//закрыть все (или указанное) конт.меню
 	} else {
 		j.style.visibility='hidden';
 	}
-	event.cancelBubble=!0;
+	//event.cancelBubble=0;
 }
 cMenuOff2=function(j){		//закрыть все (или указанное) конт.меню (убран cancelBubble, добавлен timerid)
   if (timerID) {clearInterval(timerID);}

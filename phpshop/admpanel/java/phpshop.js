@@ -1,3 +1,9 @@
+/**
+ * Библиотека JavaScript
+ * @author PHPShop Software
+ * @version 1.2
+ * @package PHPShopJS
+ */
 
 function PHPShopJS(){
 
@@ -32,6 +38,7 @@ function PHPShopJS(){
 
 var PHPShopJS = new PHPShopJS();
 
+
 // Ajax перезагрузка для модулей
 function DoReloadMainWindowModule(page,var1,var3){
     
@@ -58,11 +65,68 @@ function DoReloadMainWindowModule(page,var1,var3){
 }
 
 
-
 function onDelete(message){
     if(confirm(message)){
         document.getElementById("product_edit").action+='?delID=ok';
         document.getElementById("product_edit").submit();
+    }
+}
+
+
+function onCancel(){
+    winOpenType = GetCookie('winOpenType');
+    if(winOpenType == "") winOpenType=parent.window.winOpenType;
+    switch (winOpenType) {
+        
+        case 'highslide':
+            return parent.window.hs.close();
+            break;
+
+        default:
+            window.close(null);
+            return false;
+            break;
+
+    }
+}
+
+function onReload(){
+    winOpenType = GetCookie('winOpenType');
+    if(winOpenType == "") winOpenType=parent.window.winOpenType;
+    switch (winOpenType) {
+
+        case 'highslide':
+            return parent.window.frames[parent.window.hs.getExpander().iframe.name].location.reload(true);
+            break;
+
+        default:
+            return window.location.reload(true);
+            break;
+
+    }
+}
+
+
+// Новое окно
+function miniWin(url,w,h){
+    var winOpenType = GetCookie('winOpenType');
+
+    switch (winOpenType) {
+
+        case 'highslide':
+            //parent.window.hs.headingText=url;
+            parent.window.hs.htmlExpand(null, {
+                objectType: 'iframe',
+                src: ''+url+'',
+                width: ''+w+'',
+                height: ''+h+''
+            });
+            break;
+
+        default:
+            window.open(url,"_blank","dependent=1,left=100,top=20,width="+w+",height="+h+",location=0,menubar=0,resizable=1,scrollbars=0,status=0,titlebar=0,toolbar=0");
+            return false;
+            break;
     }
 }
 
@@ -104,7 +168,7 @@ function GetThemeIcon(skin){
 // Обзор картинок
 function ReturnPic(id){
     var pic=document.getElementById(id);
-    var path='../photo/assetmanager.php?name='+pic.value+'&tip='+id;
+    var path='../assetmanager/assetmanager.php?name='+pic.value+'&tip='+id;
     try{
         pic.value=window.showModalDialog(path,window,"dialogWidth:640px;dialogHeight:500px;edge:Raised;center:Yes;help:No;resizable:No;status:No;");
     }
@@ -122,9 +186,10 @@ function SearchPage(){
 }
 
 function EditCatalogPages(){
+    //alert(window.frame2.document.getElementById("catal").value);
     if(window.frame2.document.getElementById("catal") && (window.frame2.document.getElementById("catal").value>0)){
         var catal=window.frame2.document.getElementById("catal").value;
-        if(catal != 1000) miniWin('catalog/adm_catalogID.php?id='+catal,650,630);
+        if(catal != 1000 && catal != 2000) miniWin('catalog/adm_catalogID.php?id='+catal,650,630);
     }else alert("Выберете подкаталог для редактирования");
 
 }
@@ -146,14 +211,14 @@ function NewPage(){
         var catal=window.frame2.document.getElementById("catal").value;
     }else var catal=0;
 
-    miniWin('page/adm_pages_new.php?catalogID='+catal,650,630);
+    miniWin('page/adm_pages_new.php?catalogID='+catal,850,630);
 
 }
 
 function NewPhoto() {
     if(window.frame2.document.getElementById("catal") && (window.frame2.document.getElementById("catal").value>0)){
         var catal=window.frame2.document.getElementById("catal").value;
-        miniWin('photo/adm_photo_new.php?id='+catal,400,270)
+        miniWin('photo/swfupload/index.php?pid='+catal,500,450)
     }else alert("Выберете подкаталог для добавления фото!");
 }
 
@@ -169,8 +234,6 @@ function EditCatalogPhoto(){
 function NewPhotoCatalog(){
     miniWin('photo/adm_catalog_new.php',650,630);
 }
-
-
 
 
 
@@ -209,60 +272,7 @@ function ResizeWin(){
 }
 
 
-function mp(e){
-    if(document.all){
-        if((event.button==2)||(event.button==3)){
-            alert('Copyright 2004-2006 \© PHPShop\.ru\. All rights reserved\. ');
-            return false
-        }
-    }
-    if(document.layers){
-        if(e.which==3){
-            alert('Copyright 2005 \© ShopBuilder\.ru\. All rights reserved\. ');
-            return false
-        }
-    }
-}
-if (document.layers) {
-    document.captureEvents(event.mousedown)
-}
-//document.onmousedown=mp;
 
-
-function do_err(){
-    return true
-}
-onerror=do_err;
-if(window.location.href.substring(0,4)=="file")window.location="about:blank";
-
-function atlpdp1(){
-    for(wi=0;wi<document.all.length;wi++){
-        if(document.all[wi].style.visibility!='hidden'){
-            document.all[wi].style.visibility='hidden';
-            document.all[wi].id='atlpdpst'
-        }
-    }
-}
-function atlpdp2(){
-    for (wi=0;wi<document.all.length;wi++){
-        if(document.all[wi].id=='atlpdpst')document.all[wi].style.visibility=''
-    }
-}
-window.onbeforeprint=atlpdp1;
-window.onafterprint=atlpdp2;
-
-
-
-// Активная кнопка
-function ButOn(Id){
-    var IdStyle = document.getElementById("but"+Id);
-    IdStyle.className='buton'
-}
-
-function ButOff(Id){
-    var IdStyle = document.getElementById("but"+Id);
-    IdStyle.className='butoff'
-}
 
 
 function PromptThis(){
@@ -291,31 +301,7 @@ function SqlSend(){
 }
 
 
-function AdmCat(pid,w,h)
-{
-    window.open("adm_catalog_main.php?catalogID="+pid+"","_blank","dependent=1,left=300,top=100,width="+w+",height="+h+",location=0,menubar=0,resizable=0,scrollbars=0,status=0,titlebar=0,toolbar=0");
-}
 
-function winApplet(url)
-{
-    var h=270;
-    var w=500;
-    window.open(url,"_blank","left=300,top=100,width="+w+",height="+h+",location=0,menubar=0,resizable=0,scrollbars=0,status=0");
-}
-
-function pressbutt(subm){
-    SUBMENU = document.all[subm].style;
-    if (SUBMENU.visibility=='hidden')
-    {
-        SUBMENU.visibility = 'visible';
-        SUBMENU.position = 'relative';
-    }
-    else
-    {
-        SUBMENU.visibility = 'hidden';
-        SUBMENU.position = 'absolute';
-    }
-}
 function CL()
 {
     window.close();
@@ -331,19 +317,6 @@ function CLREL(tip)
 }
 
 
-/*
-function miniWin(url,w,h) {
-var win=window.showModelessDialog(url, "","dialogHeight: "+h+"px; dialogWidth: "+w+"px; dialogTop: px; dialogLeft:px; edge: Raised; center: Yes; help: No; resizable: 0; status: 0;scroll: 0");
-}
-*/
-
-function miniWin(url,w,h)
-{
-
-    window.open(url,"_blank","dependent=1,left=100,top=20,width="+w+",height="+h+",location=0,menubar=0,resizable=1,scrollbars=0,status=0,titlebar=0,toolbar=0");
-}
-
-
 
 function miniWinFull(url,w,h)
 {
@@ -353,33 +326,6 @@ function miniWinFull(url,w,h)
 function Ras(w,h)
 {
     var s=window.document.data_list.data_news.value;
-    var uri="news/news_to_mail.php?data="+s;
-    window.open(uri,"_blank","left=100,top=100,width="+w+",height="+h+",location=0,menubar=0,resizable=1,scrollbars=0,status=0");
-}
-
-
-function show_on(a)
-{
-    document.all[a].className='row_show_on';
-}
-function show_out(a)
-{
-    document.all[a].className='row_show_off';
-}
-
-function onPreview() {
-    var f_url = document.getElementById("f_url");
-    var url = f_url.value;
-    if (!url) {
-        alert("You have to enter an URL first");
-        f_url.focus();
-        return false;
-    }
-    window.ipreview.location.replace(url);
-    return false;
-}
-
-function onCancel() {
-    window.close(null);
-    return false;
+    var url="news/news_to_mail.php?data="+s;
+    miniWin(url,w,h);
 }

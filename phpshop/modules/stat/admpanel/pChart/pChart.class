@@ -2719,7 +2719,7 @@
            else
             $Plots[] = $Value2+$i;
           }
-         imagefilledpolygon($this->Picture,$Plots,(count($Plots)+1)/2,$C_GraphLo);
+         @imagefilledpolygon($this->Picture,$Plots,(count($Plots)+1)/2,$C_GraphLo);
 
          $Index       = count($Plots);
          if ($EnhanceColors ) {$ColorFactor = -20 + ($SpliceHeight - $i) * $ColorRatio; } else { $ColorFactor = 0; }
@@ -2734,7 +2734,7 @@
      for($Key=count($iValues)-1;$Key>=0;$Key--)
       { 
        $C_GraphLo = $this->AllocateColor($this->Picture,$this->Palette[$Key]["R"],$this->Palette[$Key]["G"],$this->Palette[$Key]["B"]);
-       imagefilledpolygon($this->Picture,$TopPlots[$Key],(count($TopPlots[$Key])+1)/2,$C_GraphLo);
+       @imagefilledpolygon($this->Picture,$TopPlots[$Key],(count($TopPlots[$Key])+1)/2,$C_GraphLo);
 
        if ( $EnhanceColors ) { $En = 10; } else { $En = 0; }
        for($j=0;$j<=count($aTopPlots[$Key])-4;$j=$j+2)

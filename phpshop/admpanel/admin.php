@@ -32,7 +32,7 @@ function GetFile($dir) {
         while (($file = readdir($dh)) !== false) {
             $fstat = explode(".",$file);
             if($fstat[1] == "lic")
-                return $SysValue['license']['dir'].chr(47).$file;
+                return 'license'.chr(47).$file;
         }
         closedir($dh);
     }
@@ -114,6 +114,7 @@ if($License['License']['RegisteredTo']!="Trial NoName"  and !getenv("COMSPEC") a
             if($db[$k]['num'] == $SysValue['upload']['version'] and !empty($db[$k]['name'])) {
                 $support_status = $db[$k]['status'];
                 @$UpdateContent.="Новая версия: ".$SysValue['license']['product_name']." ".$db[$k]['name'];
+                $_SESSION['readyUpdate']=true;
                 if ($db[$k]['upload_type'] == 'script') {
                     $upload_type = "script";
                     $new_version = $db[$k]['name'];
@@ -124,6 +125,7 @@ if($License['License']['RegisteredTo']!="Trial NoName"  and !getenv("COMSPEC") a
                 }
             }
         }
+        if(empty($_SESSION['readyUpdate']))
         $_SESSION['chekUpdate']=true;
     }
 
@@ -177,9 +179,8 @@ stm_ep();
         <META name="copyright" content="<?=$RegTo?>">
         <META name="engine-copyright" content="PHPSHOP.RU, <?=$ProductName;?>">
         <LINK href="css/texts.css" type=text/css rel=stylesheet>
-              <LINK href="css/dateselector.css" type=text/css rel=stylesheet>
-              <LINK href="css/contextmenu.css" type=text/css rel=stylesheet>
-              <LINK href="css/help.css" type=text/css rel=stylesheet>
+        <LINK href="css/dateselector.css" type=text/css rel=stylesheet>
+        <LINK href="css/help.css" type=text/css rel=stylesheet>
         <SCRIPT language="JavaScript" src="/phpshop/lib/Subsys/JsHttpRequest/Js.js"></SCRIPT>
         <script type="text/javascript" language="JavaScript" src="/phpshop/lib/JsHttpRequest/JsHttpRequest.js"></script>
         <SCRIPT type="text/javascript" language="JavaScript" src="java/popup_lib.js"></SCRIPT>
@@ -188,8 +189,7 @@ stm_ep();
         <script type="text/javascript" language="JavaScript" src="java/stm31.js"></script>
         <script type="text/javascript" language="JavaScript" src="java/sorttable.js"></script>
         <script type="text/javascript" language="JavaScript" src="java/contextmenu.js"></script>
-        <script type="text/javascript" language="JavaScript" src="language/<?
-        echo $Lang;?>/language_interface.js"></script>
+        <script type="text/javascript" language="JavaScript" src="language/<?echo $Lang;?>/language_interface.js"></script>
         <script type="text/javascript" language="JavaScript">
 
             // Проверка пароля root
@@ -243,7 +243,7 @@ stm_ep();
     // На весь экран
     window.moveTo(0,0);
     window.resizeTo(screen.availWidth,screen.availHeight);
-    window.status="<?=$SysValue['Lang']['System']['status']." ".@$logPHPSHOP." ".$SysValue['Lang']['System']['status2']." ".$SERVER_NAME?>";
+    window.status="<?=$SysValue['Lang']['System']['status']." ".$_SESSION['logPHPSHOP']." ".$SysValue['Lang']['System']['status2']." ".$_SERVER['SERVER_NAME']?>";
     //document.onmousedown=mp;
 
     // Подсказка
@@ -260,18 +260,6 @@ stm_ep();
     } function hide() {
         if(document.getElementById("CSCHint"))document.getElementById("CSCHint").style.visibility="hidden";}
         </script>
-        <?
-//Вызов калибровщика
-        if($option['calibrated'] != 1) {
-            echo '
-  <SCRIPT>
-  miniWin(\'./calibrate.php\',650,630);
-  </SCRIPT>
-  ';
-        }
-// Вызов калибровщика
-
-        ?>
     </head>
     <body id="mybody" style="background: threedface; color: windowtext;" topmargin="0" rightmargin="3" leftmargin="3" <?=$onload?>  onresize="ResizeWin('prders')" onhelp="initSlide(0);loadhelp();return false;">
         <span id="cartwindow" style="position:absolute;left:10px;top:0;visibility:hidden; width: 250px; height: 68px;Z-INDEX: 3;BACKGROUND: #C0D2EC;padding:10px;border: solid;border-width: 1px; border-color:#4D88C8;FILTER: revealTrans  (duration=1,transition=4);" >
@@ -391,10 +379,9 @@ echo $CreateModulesMenu;
     stm_bpx("p12","p1",[]);
     stm_aix("p12i0","p1i0",[0,"Техническая Поддержка","","",-1,-1,0,"http://help.phpshop.ru/","_blank","","","icon_info.gif","icon_info.gif"]);
     stm_aix("p12i0","p1i0",[0,"Справка по разделу","","",-1,-1,0,"javascript:initSlide(0);loadhelp();","_self","","","question_frame.png","question_frame.png"]);
-    stm_aix("p12i0","p1i0",[0,"Учебник","","",-1,-1,0,"http://phpshop.ru/help/","_blank","","","book.gif","book.gif"]);
+    stm_aix("p12i0","p1i0",[0,"Учебник","","",-1,-1,0,"http://faq.phpshop.ru","_blank","","","book.gif","book.gif"]);
 
     stm_aix("p12i1","p1i0",[0,"Новости","","",-1,-1,0,"http://www.phpshop.ru/news/","_blank","","","book_next.gif","book_next.gif"]);
-    stm_aix("p12i2","p1i0",[0,"Настройка Internet Explorer","","",-1,-1,0,"javascript:ChekOptionDefault()","_self","","","computer_key.gif","computer_key.gif"]);
     stm_aix("p12i3","p1i1",[]);
     stm_aix("p12i4","p1i0",[0,"Установить Order Agent Windows","","",-1,-1,0,"http://www.phpshop.ru/loads/downloadexe.php","_blank","","","plugin.gif","plugin.gif"]);
     stm_aix("p12i4","p1i0",[0,"Установить Order Agent Mobil","","",-1,-1,0,"http://www.phpshop.ru/docs/mobileagent.html","_blank","","","plugin_blue.gif","plugin_blue.gif"]);
@@ -414,9 +401,7 @@ echo $CreateModulesMenu;
         </script>
     </td>
     <td align="right" id="phpshop">
-        <a href="http://www.phpshop.ru" target="_blank" class="phpshop" title="Все права защищены
-           © www.PHPShop.ru">
-            <?= $ProductNameVersion?></a>
+        <a href="http://www.phpshop.ru" target="_blank" class="phpshop" title="PHPShop Software"><?= $ProductNameVersion?></a>
     </td>
 
 </tr>

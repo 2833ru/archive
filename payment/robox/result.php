@@ -44,7 +44,9 @@ $mrh_login = $SysValue['roboxchange']['mrh_login'];    //логин
 $mrh_pass2 = $SysValue['roboxchange']['mrh_pass2'];    // пароль2
 
 // HTTP parameters: $out_summ, $inv_id, $crc
-$crc = strtoupper($crc);   // force uppercase
+$crc = strtoupper($_POST['crc']);   // force uppercase
+$out_summ = $_POST['out_summ'];
+$inv_id = $_POST['inv_id'];
 
 // build own CRC
 $my_crc = strtoupper(md5("$out_summ:$inv_id:$mrh_pass2"));

@@ -5,6 +5,8 @@ if($SysValue['my']['time_limit_enabled']=="true") {
     if (!$is_safe_mode) @set_time_limit(TIME_LIMIT);
 }
 
+$_COOKIE['winOpenType']='default';
+
 // класс проверки пользователя
 class UserChek {
     var $logPHPSHOP;

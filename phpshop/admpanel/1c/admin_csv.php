@@ -284,7 +284,8 @@ class ReadCsv1C {
             if($_REQUEST['tip'][11] == 1) $sql.="items='".$CsvToArray[6]."', ";// склад
             if($_REQUEST['tip'][12] == 1) $sql.="weight='".$CsvToArray[12]."', ";// склад
             if($_REQUEST['tip'][12] == 1) $sql.="ed_izm='".$CsvToArray[13]."', ";// ед. измерения
-            $sql.="baseinputvaluta='".$this->GetIdValuta[$CsvToArray[14]]."' ";// валюта
+            $sql.="baseinputvaluta='".$this->GetIdValuta[$CsvToArray[14]]."', ";// валюта
+            $sql.="datas=".time();
 
             $sql.=" where uid='".$CsvToArray[0]."'";
             $result=mysql_query($sql);
@@ -546,7 +547,7 @@ if($_REQUEST['page']=="predload" and $_FILES['file']['ext']=="csv") {
 
 <TD vAlign=top style="padding-top:25">
 <div align="center"><h4><span name=txtLang2 id=txtLang2>Загрузка товарной базы 1C:Предприятие выполнена!</span></h4></div>
-<FIELDSET id=fldLayout style="width: 60em; height: 8em;">
+<FIELDSET id=fldLayout style="width: 60em;">
 <table style="border: 1px;border-style: inset;background-color: White;" cellpadding="10" width="100%">
 <tr>
 	<td width="50%" ><h4><span name=txtLang2 id=txtLang2>Отчет:</span></h4>

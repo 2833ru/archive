@@ -27,7 +27,7 @@ if($list!="") $sort=" where status='".$list."'";
 if(!empty($words))
 $sort=" where mail LIKE '%".$words."%' or login LIKE '%".$words."%'";
 
-$sql="select * from ".$SysValue['base']['table_name27']." $sort order by datas desc";
+$sql="select * from ".$SysValue['base']['table_name27']." $sort order by datas desc limit 300";
 $result=mysql_query($sql) or die ($sql);
 while ($row = mysql_fetch_array($result))
     {

@@ -3,7 +3,7 @@
  * Автономная синхронизация заказов с 1С
  * @package PHPShopExchange
  * @author PHPShop Software
- * @version 1.5
+ * @version 1.7
  */
 
 // Функции авторизации
@@ -46,6 +46,7 @@ switch($_GET['command']) {
     case("list"):
         PHPShopObj::loadClass("order");
         PHPShopObj::loadClass("delivery");
+        $csv=null;
 
         // Безопасность
         if(PHPShopSecurity::true_num($_GET['date1']) and PHPShopSecurity::true_num($_GET['date2']) and PHPShopSecurity::true_num($_GET['num'])){
@@ -53,10 +54,10 @@ switch($_GET['command']) {
         $sql="select * from ".$GLOBALS['SysValue']['base']['table_name1']." where seller!='1' and datas BETWEEN ".$_GET['date1']." AND ".$_GET['date2']." order by id desc  limit ".$_GET['num'];
         //$sql="select * from ".$PHPShopBase->getParam("base.table_name1")." where seller!='1' and datas<'".date("U")."'  order by id desc  limit 1";
 
-        @$result=mysql_query(@$sql);
-        while(@$row = mysql_fetch_array(@$result)) {
+        $result=mysql_query($sql);
+        while($row = mysql_fetch_array($result)) {
 
-            $csv=null;
+            
             $csv1="Начало личных данных\n";
             $csv2="Начало заказанных товаров\n";
             $csv3="Начало данных доставки\n";
@@ -65,14 +66,17 @@ switch($_GET['command']) {
             $uid=$row['uid'];
 
             // Подключаем класс заказа
+            if(class_exists('PHPShopOrder'))
             $PHPShopOrder = new PHPShopOrder($id);
+            else $PHPShopOrder = new PHPShopOrderFunction($id);
 
             $order=unserialize($row['orders']);
             $status=unserialize($row['status']);
             $mail=$order['Person']['mail'];
             $name=$order['Person']['name_person'];
-            $conpany=str_replace("*","\"",$order['Person']['org_name']);
+            $company=str_replace("*","\"",$order['Person']['org_name']);
             $inn=$order['Person']['org_inn'];
+            $kpp=$order['Person']['org_kpp'];
             $tel=$order['Person']['tel_code']." ".$order['Person']['tel_name'];
             $adres=str_replace("*","\"",$order['Person']['adr_name']);
             $adres=PHPShopSecurity::CleanOut($adres);
@@ -83,7 +87,7 @@ switch($_GET['command']) {
             if($discount>0) $discountStr="- скидка $discount%";
             else $discountStr="";
 
-            $csv1.="$id;$uid;$datas;$mail;$name $discountStr;$conpany;$tel;$oplata;$sum;$discount;$inn;$adres;\n";
+            $csv1.="$id;$uid;$datas;$mail;$name;$company;$tel;$oplata;$sum;$discount;$inn;$adres;$kpp;\n";
 
             if(is_array($order['Cart']['cart']))
                 foreach($order['Cart']['cart'] as $val) {
@@ -122,7 +126,7 @@ switch($_GET['command']) {
 
         // добавляем запись с доки
         $date=date("U");
-        mysql_query("INSERT INTO ".$GLOBALS['SysValue']['base']['table_name9']." VALUES ('', $id, '$cid',$date,'')");
+        mysql_query("INSERT INTO ".$GLOBALS['SysValue']['base']['table_name9']." VALUES ('', ".$_GET['id'].", '".$_GET['cid']."',$date,'')");
 
         // Шлем сообщение пользователю
         SendMailUser($id);

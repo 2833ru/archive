@@ -32,13 +32,17 @@ class PHPShopLinks extends PHPShopCore {
      */
     function index() {
 
+        // Перехват модуля
+        if($this->setHook(__CLASS__,__FUNCTION__,false,'START'))
+            return true;
+
         // Выборка данных
         $this->dataArray=parent::getListInfoItem(array('*'),array('enabled'=>"='1'"),array('order'=>'id DESC'));
 
         // 404
         if(!isset($this->dataArray)) return $this->setError404();
 
-        
+
         if(is_array($this->dataArray))
             foreach($this->dataArray as $row) {
 
@@ -47,6 +51,9 @@ class PHPShopLinks extends PHPShopCore {
                 $this->set('linksName',$row['name']);
                 $this->set('linksOpis',$row['opis']);
                 $this->set('linksLink',$row['link']);
+
+                // Перехват модуля
+                $this->setHook(__CLASS__,__FUNCTION__,$row,'MIDDLE');
 
                 // Подключаем шаблон
                 $this->addToTemplate($this->getValue('templates.main_links_forma'));
@@ -57,10 +64,13 @@ class PHPShopLinks extends PHPShopCore {
 
         // Мета
         $this->title="Полезные ссылки - ".$this->PHPShopSystem->getValue("name");
+        
+        // Перехват модуля
+        $this->setHook(__CLASS__,__FUNCTION__,$this->dataArray,'END');
 
         // Подключаем шаблон
         $this->parseTemplate($this->getValue('templates.links_page_list'));
     }
-    
+
 }
 ?>

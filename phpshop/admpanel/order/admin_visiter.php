@@ -103,25 +103,25 @@ while(@$row = mysql_fetch_array(@$result))
 	@$disp.='
 	<tr valign="top" id="r'.$id.'" class=row >
 	
-    <td valign="middle" align="center" id=Nws class=Nws onmouseover="show_on(\'r'.$id.'\')" onmouseout="show_out(\'r'.$id.'\')" onclick="miniWin(\'order/adm_visitorID.php?visitorID='.$id.'&pole1='.$pole1.'&pole2='.$pole2.'\',650,500)">'.$uid.'</td>
-	<td valign="middle" align="center" id=Nws class=Nws onmouseover="show_on(\'r'.$id.'\')" onmouseout="show_out(\'r'.$id.'\')" onclick="miniWin(\'order/adm_visitorID.php?visitorID='.$id.'&pole1='.$pole1.'&pole2='.$pole2.'\',650,500)">
+    <td valign="middle" align="center" id=Nws class=Nws onmouseover="show_on(\'r'.$id.'\')" onmouseout="show_out(\'r'.$id.'\')" onclick="miniWin(\'order/adm_visitorID.php?visitorID='.$id.'&pole1='.$pole1.'&pole2='.$pole2.'\',650,550)">'.$uid.'</td>
+	<td valign="middle" align="center" id=Nws class=Nws onmouseover="show_on(\'r'.$id.'\')" onmouseout="show_out(\'r'.$id.'\')" onclick="miniWin(\'order/adm_visitorID.php?visitorID='.$id.'&pole1='.$pole1.'&pole2='.$pole2.'\',650,550)">
 	'.dataV($datas,"shot").' </td>
-	<td class=forma id=Nws class=Nws onmouseover="show_on(\'r'.$id.'\')" onmouseout="show_out(\'r'.$id.'\')" onclick="miniWin(\'order/adm_visitorID.php?visitorID='.$id.'&pole1='.$pole1.'&pole2='.$pole2.'\',650,500)">
+	<td class=forma id=Nws class=Nws onmouseover="show_on(\'r'.$id.'\')" onmouseout="show_out(\'r'.$id.'\')" onclick="miniWin(\'order/adm_visitorID.php?visitorID='.$id.'&pole1='.$pole1.'&pole2='.$pole2.'\',650,550)">
 	'.$PaymentId.$UserId.$order['Person']['name_person'].'
 	</td>
-	<td align="center" id=Nws class=Nws onmouseover="show_on(\'r'.$id.'\')" onmouseout="show_out(\'r'.$id.'\')" onclick="miniWin(\'order/adm_visitorID.php?visitorID='.$id.'&pole1='.$pole1.'&pole2='.$pole2.'\',650,500)">
+	<td align="center" id=Nws class=Nws onmouseover="show_on(\'r'.$id.'\')" onmouseout="show_out(\'r'.$id.'\')" onclick="miniWin(\'order/adm_visitorID.php?visitorID='.$id.'&pole1='.$pole1.'&pole2='.$pole2.'\',650,550)">
 	'.$order['Cart']['num'].'
 	</td>
-	<td align="center" id=Nws class=Nws onmouseover="show_on(\'r'.$id.'\')" onmouseout="show_out(\'r'.$id.'\')" onclick="miniWin(\'order/adm_visitorID.php?visitorID='.$id.'&pole1='.$pole1.'&pole2='.$pole2.'\',650,500)">
+	<td align="center" id=Nws class=Nws onmouseover="show_on(\'r'.$id.'\')" onmouseout="show_out(\'r'.$id.'\')" onclick="miniWin(\'order/adm_visitorID.php?visitorID='.$id.'&pole1='.$pole1.'&pole2='.$pole2.'\',650,550)">
 	'.$order['Person']['discount'].'
 	</td>
-	<td align="center" id=Nws class=Nws onmouseover="show_on(\'r'.$id.'\')" onmouseout="show_out(\'r'.$id.'\')" onclick="miniWin(\'order/adm_visitorID.php?visitorID='.$id.'&pole1='.$pole1.'&pole2='.$pole2.'\',650,500)">
+	<td align="center" id=Nws class=Nws onmouseover="show_on(\'r'.$id.'\')" onmouseout="show_out(\'r'.$id.'\')" onclick="miniWin(\'order/adm_visitorID.php?visitorID='.$id.'&pole1='.$pole1.'&pole2='.$pole2.'\',650,550)">
 	'.(ReturnSumma($order['Cart']['sum'],$order['Person']['discount'])+$DeliveryPrice).'
 	</td>
-	<td align="center" id=Nws class=Nws onmouseover="show_on(\'r'.$id.'\')" onmouseout="show_out(\'r'.$id.'\')" onclick="miniWin(\'order/adm_visitorID.php?visitorID='.$id.'&pole1='.$pole1.'&pole2='.$pole2.'\',650,500)">
+	<td align="center" id=Nws class=Nws onmouseover="show_on(\'r'.$id.'\')" onmouseout="show_out(\'r'.$id.'\')" onclick="miniWin(\'order/adm_visitorID.php?visitorID='.$id.'&pole1='.$pole1.'&pole2='.$pole2.'\',650,550)">
 	'.$status['time'].'
 	</td>
-	<td  align="center" bgcolor="'.$bg.'" id=Nws class=Nws onmouseover="show_on(\'r'.$id.'\')" onmouseout="show_out(\'r'.$id.'\')" onclick="miniWin(\'order/adm_visitorID.php?visitorID='.$id.'&pole1='.$pole1.'&pole2='.$pole2.'\',650,500)">'.$status_name.'
+	<td  align="center" bgcolor="'.$bg.'" id=Nws class=Nws onmouseover="show_on(\'r'.$id.'\')" onmouseout="show_out(\'r'.$id.'\')" onclick="miniWin(\'order/adm_visitorID.php?visitorID='.$id.'&pole1='.$pole1.'&pole2='.$pole2.'\',650,550)">'.$status_name.'
 	</td>
 	<td class=forma style="padding:1px" align="center">
 	<input type=checkbox name="c'.$id.'" value="'.$id.'">
@@ -154,6 +154,9 @@ $_Return=('
 <td width="25" id=pane align=center style="padding:0px"><input type=checkbox value=1 name=DoAll onclick="SelectAllBox(this,form_flag)"></td>
 </tr>
 '.@$disp.'
+</table>
+    </td>
+</tr>
 </table>
 </form>
 </div>

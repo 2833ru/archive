@@ -19,7 +19,8 @@ class PHPShopValuta extends PHPShopObj {
      */
     function PHPShopValuta($objID) {
         $this->objID=$objID;
-        $this->objBase=$GLOBALS['SysValue']['base']['table_name24'];
+        $this->cache=true;
+        $this->objBase=$GLOBALS['SysValue']['base']['currency'];
         parent::PHPShopObj();
     }
 
@@ -62,15 +63,17 @@ class PHPShopValuta extends PHPShopObj {
      * @return array
      */
     function getAll() {
-        $sql="select * from ".$GLOBALS['SysValue']['base']['table_name24'];
-        $result=mysql_query($sql);
-        while ($row = mysql_fetch_array($result)) {
-            $id=$row['id'];
-            $iso=$row['iso'];
-            $array[$iso]=$iso;
-        }
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['currency']);
+        $PHPShopOrm->cache=true;
+        $data=$PHPShopOrm->select(array('*'),false,false,array('limit'=>100));
+        if(is_array($data))
+            foreach($data as $row) {
+                $id=$row['id'];
+                $iso=$row['iso'];
+                $array[$iso]=$iso;
+            }
 
-        return $array;
+        return $data;
     }
 
     function getArray() {
@@ -87,7 +90,7 @@ class PHPShopValuta extends PHPShopObj {
 class PHPShopValutaArray extends PHPShopArray {
 
     function PHPShopValutaArray() {
-        $this->objBase=$GLOBALS['SysValue']['base']['table_name24'];
+        $this->objBase=$GLOBALS['SysValue']['base']['currency'];
         parent::PHPShopArray('id',"name",'code','iso','kurs');
     }
 }

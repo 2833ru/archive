@@ -15,123 +15,123 @@ require("../language/".$Lang."/language.php");
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 
 <html>
-<head>
-	<title>Редактирование Товара</title>
-<META http-equiv=Content-Type content="text/html; charset=<?=$SysValue['Lang']['System']['charset']?>">
-<meta http-equiv="MSThemeCompatible" content="Yes">
-<LINK href="../css/texts.css" type=text/css rel=stylesheet>
-<LINK href="../css/tab.winclassic.css" type=text/css rel=stylesheet>
-<?
+    <head>
+        <title>Редактирование Товара</title>
+        <META http-equiv=Content-Type content="text/html; charset=<?=$SysValue['Lang']['System']['charset']?>">
+        <meta http-equiv="MSThemeCompatible" content="Yes">
+        <LINK href="../css/texts.css" type=text/css rel=stylesheet>
+              <LINK href="../css/tab.winclassic.css" type=text/css rel=stylesheet>
+              <?
 //Check user's Browser
-if(strpos($_SERVER["HTTP_USER_AGENT"],"MSIE"))
-	echo "<script language=JavaScript src='../editor3/scripts/editor.js'></script>";
-else
-	echo "<script language=JavaScript src='../editor3/scripts/moz/editor.js'></script>";
-?>
-<SCRIPT language="JavaScript" src="/phpshop/lib/Subsys/JsHttpRequest/Js.js"></SCRIPT>
-<script language="JavaScript" src="../java/javaMG.js" type="text/javascript"></script>
-<script type="text/javascript" src="../java/tabpane.js"></script>
-<script type="text/javascript" language="JavaScript" src="../language/<? 
-echo $Lang;?>/language_windows.js"></script>
-<script> 
-DoResize(<? echo $GetSystems['width_icon']?>,700,630);
-</script>
-</head>
-<body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0" onload="DoCheckLang(location.pathname,<?=$SysValue['lang']['lang_enabled']?>);preloader(0)">
-<?
+              if(strpos($_SERVER["HTTP_USER_AGENT"],"MSIE"))
+                  echo "<script language=JavaScript src='../editor3/scripts/editor.js'></script>";
+              else
+                  echo "<script language=JavaScript src='../editor3/scripts/moz/editor.js'></script>";
+              ?>
+        <SCRIPT language="JavaScript" src="/phpshop/lib/Subsys/JsHttpRequest/Js.js"></SCRIPT>
+        <script language="JavaScript" src="../java/javaMG.js" type="text/javascript"></script>
+        <script type="text/javascript" src="../java/tabpane.js"></script>
+        <script type="text/javascript" language="JavaScript" src="../language/<?
+        echo $Lang;?>/language_windows.js"></script>
+        <script>
+            DoResize(<? echo $GetSystems['width_icon']?>,700,630);
+        </script>
+    </head>
+    <body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0" onload="DoCheckLang(location.pathname,<?=$SysValue['lang']['lang_enabled']?>);preloader(0)">
+        <?
 
-function DellFotoGal($n){// удаляем картинки при удалении товара
-global $SysValue,$DOCUMENT_ROOT;
-$sql="select * from ".$SysValue['base']['table_name35']." where parent=$n";
-$result=mysql_query($sql);
+        function DellFotoGal($n) {// удаляем картинки при удалении товара
+            global $SysValue,$DOCUMENT_ROOT;
+            $sql="select * from ".$SysValue['base']['table_name35']." where parent=$n";
+            $result=mysql_query($sql);
 
-while($row = mysql_fetch_array($result)){
-    $name=$row['name'];
-	$id=$row['id'];
+            while($row = mysql_fetch_array($result)) {
+                $name=$row['name'];
+                $id=$row['id'];
 
-$pathinfo=pathinfo($name);
-$oldWD = getcwd();
-$dirWhereRenameeIs=$DOCUMENT_ROOT.$pathinfo['dirname'];
-$oldFilename=$pathinfo['basename'];
+                $pathinfo=pathinfo($name);
+                $oldWD = getcwd();
+                $dirWhereRenameeIs=$DOCUMENT_ROOT.$pathinfo['dirname'];
+                $oldFilename=$pathinfo['basename'];
 
-@chdir($dirWhereRenameeIs);
-@unlink($oldFilename);
-$oldFilename_s=str_replace(".","s.",$oldFilename);
-@unlink($oldFilename_s);
-@chdir($oldWD); 
-}
+                @chdir($dirWhereRenameeIs);
+                @unlink($oldFilename);
+                $oldFilename_s=str_replace(".","s.",$oldFilename);
+                @unlink($oldFilename_s);
+                @chdir($oldWD);
+            }
 
-mysql_query("delete from ".$SysValue['base']['table_name35']." where parent=$n");
-}
-
-
-
-if((isset($productSAVE)) and $name_new!="")// запись в базу
-{
-if(CheckedRules($UserStatus["cat_prod"],3) == 1 or $user == $_SESSION['idPHPSHOP']){
-if(CheckedRules($UserStatus["cat_prod"],1) == 1){
+            mysql_query("delete from ".$SysValue['base']['table_name35']." where parent=$n");
+        }
 
 
 
-
-if(is_array($vendor_new))
-foreach($vendor_new as $k=>$v){
-       if(is_array($v)){
-	     foreach($v as $o=>$p)
-	     @$vendor.="i".$k."-".$p."i";
-	     }
-		 else @$vendor.="i".$k."-".$v."i";
-}
+        if((isset($productSAVE)) and $name_new!="")// запись в базу
+        {
+            if(CheckedRules($UserStatus["cat_prod"],3) == 1 or $user == $_SESSION['idPHPSHOP']) {
+                if(CheckedRules($UserStatus["cat_prod"],1) == 1) {
 
 
-if(is_array($page_new))
-foreach($page_new as $value)
-@$page.=$value.",";
 
 
-$yml_bid_array_new=array(
-"bid_enabled"=>$yml_bid_enabled,
-"bid"=>$yml_bid_new,
-"cbid_enabled"=>$yml_cbid_enabled,
-"cbid"=>$yml_cbid_new
-);
+                    if(is_array($vendor_new))
+                        foreach($vendor_new as $k=>$v) {
+                            if(is_array($v)) {
+                                foreach($v as $o=>$p)
+                                    @$vendor.="i".$k."-".$p."i";
+                            }
+                            else @$vendor.="i".$k."-".$v."i";
+                        }
+
+
+                    if(is_array($page_new))
+                        foreach($page_new as $value)
+                            @$page.=$value.",";
+
+
+                    $yml_bid_array_new=array(
+                            "bid_enabled"=>$yml_bid_enabled,
+                            "bid"=>$yml_bid_new,
+                            "cbid_enabled"=>$yml_cbid_enabled,
+                            "cbid"=>$yml_cbid_new
+                    );
 
 
 // Склад<br>
-$option=unserialize($systems['admoption']);
-switch($option['sklad_status']){
-  
-       case(3):
-	   if($items_new<1) {
-	      $sklad=1;
-		  $enabled=1;
-		  }
-	     else {
-		 $sklad=0;
-		 $enabled=1;
-		 }
-	   break;
-	   
-	   case(2):
-	   if($items_new<1) {
-	     $enabled=0;
-		 $sklad=0;
-		 }
-	     else {
-		 $enabled=1;
-		 $sklad=0;
-		 }
-	   break;
-	   
-	   default: 
-	   $sklad=$numBox;
-	   $enabled=$enabled_new;
-	   break;
-  }
+                    $option=unserialize($systems['admoption']);
+                    switch($option['sklad_status']) {
+
+                        case(3):
+                            if($items_new<1) {
+                                $sklad=1;
+                                $enabled=1;
+                            }
+                            else {
+                                $sklad=0;
+                                $enabled=1;
+                            }
+                            break;
+
+                        case(2):
+                            if($items_new<1) {
+                                $enabled=0;
+                                $sklad=0;
+                            }
+                            else {
+                                $enabled=1;
+                                $sklad=0;
+                            }
+                            break;
+
+                        default:
+                            $sklad=$numBox;
+                            $enabled=$enabled_new;
+                            break;
+                    }
 
 
 
-$sql="UPDATE $table_name2
+                    $sql="UPDATE $table_name2
 SET
 category='$category_new',
 name='".CleanStr(trim(addslashes($name_new)))."',
@@ -177,10 +177,10 @@ baseinputvaluta='$baseinputvaluta_new',
 ed_izm='$edizm_new',
 dop_cat='$dop_cat_new' 
 where id='$productID'";
-$result=mysql_query($sql)or @die("".mysql_error()."");
+                    $result=mysql_query($sql)or @die("".mysql_error()."");
 
 
-echo('
+                    echo('
 <table width="100%" height="100%">
 <tr>
 	<td valign="middle" align="center">
@@ -197,19 +197,21 @@ CLREL("right");
 self.close()
 </script>
 	   ');
-   }} else $UserChek->BadUserFormaWindow();
-}
-elseif(@$productDELETE=="doIT")// Удаление записи
-{
-if(CheckedRules($UserStatus["cat_prod"],4) == 1){
-	$sql="delete from $table_name2
+                }
+            }
+            else $UserChek->BadUserFormaWindow();
+        }
+        elseif(@$productDELETE=="doIT")// Удаление записи
+        {
+            if(CheckedRules($UserStatus["cat_prod"],4) == 1) {
+                $sql="delete from $table_name2
     where id='$productID'";
-    $result=mysql_query($sql)or @die("Невозможно удалить запись");
-	
-	// Удаляем картинки
-	DellFotoGal($productID);
-	
-echo('
+                $result=mysql_query($sql)or @die("Невозможно удалить запись");
+
+                // Удаляем картинки
+                DellFotoGal($productID);
+
+                echo('
 <table width="100%" height="100%">
 <tr>
 	<td valign="middle" align="center">
@@ -225,75 +227,74 @@ echo('
 CLREL("right");
 </script>
 	   ');
-   } else $UserChek->BadUserFormaWindow();
-}
-else{
-?>
-<table id="loader">
-<tr>
-	<td valign="middle" align="center">
-		<div id="loadmes" onclick="preloader(0)">
-<table width="100%" height="100%">
-<tr>
-	<td id="loadimg"></td>
-	<td ><b><?=$SysValue['Lang']['System']['loading']?></b><br><?=$SysValue['Lang']['System']['loading2']?></td>
-</tr>
-</table>
-		</div>
-</td>
-</tr>
-</table>
+            } else $UserChek->BadUserFormaWindow();
+        }
+else {
+    ?>
+        <table id="loader">
+            <tr>
+                <td valign="middle" align="center">
+                    <div id="loadmes" onclick="preloader(0)">
+                        <table width="100%" height="100%">
+                            <tr>
+                                <td id="loadimg"></td>
+                                <td ><b><?=$SysValue['Lang']['System']['loading']?></b><br><?=$SysValue['Lang']['System']['loading2']?></td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+        </table>
 
-<SCRIPT language=JavaScript type=text/javascript>preloader(1);</SCRIPT>
-<?
-function Disp_cat_pod($category)// вывод каталогов в выборе подкаталогов
-{
-global $table_name;
-if($category==1000003) $name="Временная папка";
- else{
-$sql="select name from $table_name where id=$category";
-$result=mysql_query($sql);
-@$row = mysql_fetch_array(@$result);
-$name=$row['name'];
-}
-return @$name." -> ";
-}
+        <SCRIPT language=JavaScript type=text/javascript>preloader(1);</SCRIPT>
+            <?
+            function Disp_cat_pod($category)// вывод каталогов в выборе подкаталогов
+            {
+                global $table_name;
+                if($category==1000003) $name="Временная папка";
+                else {
+                    $sql="select name from $table_name where id=$category";
+                    $result=mysql_query($sql);
+                    @$row = mysql_fetch_array(@$result);
+                    $name=$row['name'];
+                }
+                return @$name." -> ";
+            }
 
-function Disp_cat($category)// вывод каталогов в выборе
-{
-global $table_name;
-$sql="select name,parent_to from $table_name where id=$category";
-$result=mysql_query($sql);
-$row = mysql_fetch_array($result);
-$name=$row['name'];
-$parent_to=$row['parent_to'];
-$dis=Disp_cat_pod($parent_to).$name;
-return @$dis;
-}
+            function Disp_cat($category)// вывод каталогов в выборе
+            {
+                global $table_name;
+                $sql="select name,parent_to from $table_name where id=$category";
+                $result=mysql_query($sql);
+                $row = mysql_fetch_array($result);
+                $name=$row['name'];
+                $parent_to=$row['parent_to'];
+                $dis=Disp_cat_pod($parent_to).$name;
+                return @$dis;
+            }
 
 
-function dispValue($n,$vendor_array){ // вывод характеристик
-global $SysValue;
-$sql="select * from ".$SysValue['base']['table_name21']." where category='$n' order by num";
-$result=mysql_query($sql);
-while($row = mysql_fetch_array($result))
-    {
-    $id=$row['id'];
-    $name=substr($row['name'],0,35);
-	$sel="";
-	if(is_array($vendor_array))
-	foreach($vendor_array as $k=>$v){
-	       if(is_array($v)){
-		     foreach($v as $o=>$p){
-			        if ($id == $p) $sel="selected";
-			 }
-		   }
-		   
-	if ($id == $v) $sel="selected";
-	}
-    @$dis.="<option value=".$id." ".$sel." >".$name."</option>\n";
-	}
-@$disp='
+            function dispValue($n,$vendor_array) { // вывод характеристик
+                global $SysValue;
+                $sql="select * from ".$SysValue['base']['table_name21']." where category='$n' order by num";
+                $result=mysql_query($sql);
+                while($row = mysql_fetch_array($result)) {
+                    $id=$row['id'];
+                    $name=substr($row['name'],0,35);
+                    $sel="";
+                    if(is_array($vendor_array))
+                        foreach($vendor_array as $k=>$v) {
+                            if(is_array($v)) {
+                                foreach($v as $o=>$p) {
+                                    if ($id == $p) $sel="selected";
+                                }
+                            }
+
+                            if ($id == $v) $sel="selected";
+                        }
+                    @$dis.="<option value=".$id." ".$sel." >".$name."</option>\n";
+                }
+                @$disp='
 <TABLE>
 <TR><TD>
 <select name=vendor_new['.$n.'][] id="list'.$n.'" size=1 style="width: 300; height: 50" multiple>
@@ -306,80 +307,77 @@ while($row = mysql_fetch_array($result))
 </TD></TR>
 </TABLE>
 ';
-return @$disp;
-}
+                return @$disp;
+            }
 
 
-function dispValueOLD($n,$vendor_array){ // вывод характеристик
-global $SysValue;
-$sql="select * from ".$SysValue['base']['table_name21']." where category='$n' order by num";
-$result=mysql_query($sql);
-while($row = mysql_fetch_array($result))
-    {
-    $id=$row['id'];
-    $name=substr($row['name'],0,35);
-	$sel="";
-	if(is_array($vendor_array))
-	foreach($vendor_array as $k=>$v){
-	       if(is_array($v)){
-		     foreach($v as $o=>$p){
-			        if ($id == $p) $sel="selected";
-			 }
-		   }
-		   
-	if ($id == $v) $sel="selected";
-	}
-    @$dis.="<option value=".$id." ".$sel." >".$name."</option>\n";
-	}
-@$disp="
+            function dispValueOLD($n,$vendor_array) { // вывод характеристик
+                global $SysValue;
+                $sql="select * from ".$SysValue['base']['table_name21']." where category='$n' order by num";
+                $result=mysql_query($sql);
+                while($row = mysql_fetch_array($result)) {
+                    $id=$row['id'];
+                    $name=substr($row['name'],0,35);
+                    $sel="";
+                    if(is_array($vendor_array))
+                        foreach($vendor_array as $k=>$v) {
+                            if(is_array($v)) {
+                                foreach($v as $o=>$p) {
+                                    if ($id == $p) $sel="selected";
+                                }
+                            }
+
+                            if ($id == $v) $sel="selected";
+                        }
+                    @$dis.="<option value=".$id." ".$sel." >".$name."</option>\n";
+                }
+                @$disp="
 <select name=vendor_new[".$n."][] size=1 style=\"width: 300; height: 50\" multiple>
 <option>Нет данных</option>
-$dis
+                        $dis
 </select>
-";
-return @$disp;
-}
+                        ";
+                return @$disp;
+            }
 
 
-function dispPage($array){ // вывод статей по теме
-global $SysValue;
-$array=explode(",",$array);
-$sql="select * from ".$SysValue['base']['table_name11']." where enabled='1' order by num";
-$result=mysql_query($sql);
-while($row = mysql_fetch_array($result))
-    {
-    $link=$row['link'];
-    $name=substr($row['name'],0,100);
-	$sel="";
-	if(is_array($array))
-	foreach($array as $v){
-	if ($link == $v) $sel="selected";
-	}
-    @$dis.="<option value=".$link." ".$sel." >".$name."</option>\n";
-	}
-@$disp="
+            function dispPage($array) { // вывод статей по теме
+                global $SysValue;
+                $array=explode(",",$array);
+                $sql="select * from ".$SysValue['base']['table_name11']." where enabled='1' order by num";
+                $result=mysql_query($sql);
+                while($row = mysql_fetch_array($result)) {
+                    $link=$row['link'];
+                    $name=substr($row['name'],0,100);
+                    $sel="";
+                    if(is_array($array))
+                        foreach($array as $v) {
+                            if ($link == $v) $sel="selected";
+                        }
+                    @$dis.="<option value=".$link." ".$sel." >".$name."</option>\n";
+                }
+                @$disp="
 <select name=page_new[] size=28 style=\"width: 590;\" multiple>
-$dis
+                        $dis
 </select>
-";
-return @$disp;
-}
+                        ";
+                return @$disp;
+            }
 
-function DispCatSort($category,$vendor_array){
-global $SysValue;
-$sql="select sort from ".$SysValue['base']['table_name']." where id=$category";
-$result=mysql_query($sql);
-$row = mysql_fetch_array($result);
-$sort=unserialize($row["sort"]);
-if(is_array($sort))
-foreach($sort as $v){
-$sql="select * from ".$SysValue['base']['table_name20']." where (id=$v AND goodoption!='1') order by name";
-$result=mysql_query($sql);
-while (@$row = mysql_fetch_array($result))
-    {
-	$id=$row['id'];
-	$name=$row['name'];
-@$disp.= '
+            function DispCatSort($category,$vendor_array) {
+                global $SysValue;
+                $sql="select sort from ".$SysValue['base']['table_name']." where id=$category";
+                $result=mysql_query($sql);
+                $row = mysql_fetch_array($result);
+                $sort=unserialize($row["sort"]);
+                if(is_array($sort))
+                    foreach($sort as $v) {
+                        $sql="select * from ".$SysValue['base']['table_name20']." where (id=$v AND goodoption!='1') order by name";
+                        $result=mysql_query($sql);
+                        while (@$row = mysql_fetch_array($result)) {
+                            $id=$row['id'];
+                            $name=$row['name'];
+                            @$disp.= '
 <div style="padding-top:7">
 <FIELDSET id=fldLayout >
 <LEGEND id=lgdLayout>'.$name.'</LEGEND>
@@ -389,9 +387,9 @@ while (@$row = mysql_fetch_array($result))
 </FIELDSET>
 </div>
 ';
-}
-}
-$dis='
+                        }
+                    }
+                $dis='
 <tr>
     <td align=left>
 
@@ -400,140 +398,143 @@ $dis='
 </td>
 </tr>
 ';
-return @$dis;
-}
+                return @$dis;
+            }
 
 
-function ListFotoGal($n){// Вывод картинок
-global $SysValue;
-$sql="select * from ".$SysValue['base']['table_name35']." where parent=$n order by num desc";
-$result=mysql_query($sql);
-$i=1;
-while($row = mysql_fetch_array($result))
-    {
-    $name=$row['name'];
-    $id=$row['id'];
-	$num=$row['num'];
-    @$dis.="
+            function ListFotoGal($n) {// Вывод картинок
+                global $SysValue;
+                $sql="select * from ".$SysValue['base']['table_name35']." where parent=$n order by num desc";
+                $result=mysql_query($sql);
+                $i=1;
+                while($row = mysql_fetch_array($result)) {
+                    $name=$row['name'];
+                    $id=$row['id'];
+                    $num=$row['num'];
+                    @$dis.="
 	<tr onmouseover=\"show_on('r".$id."')\" id=\"r".$id."\" onmouseout=\"show_out('r".$id."')\" class=row onclick=\"miniWinFull('adm_galeryID.php?n=$id',650,500)\">
 	<td align=center>$i</td>
 	   <td>$name</td>
 	</tr>
-	";
-	$i++;
-	}
-return @$dis;
-}
+                            ";
+                    $i++;
+                }
+                return @$dis;
+            }
 
 
 
-$sql="select * from $table_name2 where id=$productID";
-$result=mysql_query($sql);
-while($row = mysql_fetch_array($result))
-    {
-    $id=$row['id'];
-	$category=$row['category'];
-    $name=stripslashes($row['name']);
-	$content=stripslashes($row['content']);
-	$description=stripslashes($row['description']);
-	$price=$row['price'];
-	$price_n=$row['price_n'];
-	$sklad=$row['sklad'];
-	$enabled=$row['enabled'];
-	$p_enabled=$row['p_enabled'];
-	$uid=$row['uid'];
-	$spec=$row['spec'];
-	$newtip=$row['newtip'];
-	$odnotip=$row['odnotip'];
-	$vendor=$row['vendor'];
-	$vendor_array=unserialize($row['vendor_array']);
-	$yml=$row['yml'];
-	$num=$row['num'];
-	$title=$row['title'];
-	$title_enabled=$row['title_enabled'];
-	$title_shablon=$row['title_shablon'];
-	$descrip=$row['descrip'];
-	$descrip_enabled=$row['descrip_enabled'];
-	$descrip_shablon=$row['descrip_shablon'];
-	$keywords=$row['keywords'];
-	$keywords_enabled=$row['keywords_enabled'];
-	$keywords_shablon=$row['keywords_shablon'];
-	$page=$row['page'];
-	$user=$row['user'];
-	$pic_small=$row['pic_small'];
-	$pic_big=$row['pic_big'];
-	$yml_bid_array=unserialize($row['yml_bid_array']);
-	$parent=$row['parent'];
-	$parent_enabled=$row['parent_enabled'];
-	$files=unserialize($row['files']);
-	$ed_izm=$row['ed_izm'];
-	$dop_cat=$row['dop_cat'];
-	
-	if($parent_enabled == 0) { $p1="checked"; }
-	  else {$p2="checked"; $p3="visibility:hidden";}
-	
-	
-	if($title_enabled == 0) {
-	   $t1="checked"; 
-	   $t2_enabled="none";
-	   $t3_enabled="none";
-	   }elseif($title_enabled == 1) {
-	   $t2="checked";
-	   $t2_enabled="block";
-	   $t3_enabled="none";
-	   }
-	   elseif($title_enabled == 2) {
-	   $t3="checked";
-	   $t3_enabled="block";
-	   $t2_enabled="none";
-	   }
-	 
-	 if($descrip_enabled == 0) {
-	   $d1="checked"; 
-	   $d2_enabled="none";
-	   $d3_enabled="none";
-	   }elseif($descrip_enabled == 1) {
-	   $d2="checked";
-	   $d2_enabled="block";
-	   $d3_enabled="none";
-	   }
-	   elseif($descrip_enabled == 2) {
-	   $d3="checked";
-	   $d3_enabled="block";
-	   $d2_enabled="none";
-	   }
-	   
-	  if($keywords_enabled == 0) {
-	   $k1="checked"; 
-	   $k2_enabled="none";
-	   $k3_enabled="none";
-	   }elseif($keywords_enabled == 1) {
-	   $k2="checked";
-	   $k2_enabled="block";
-	   $k3_enabled="none";
-	   }
-	   elseif($keywords_enabled == 2) {
-	   $k3="checked";
-	   $k3_enabled="block";
-	   $k2_enabled="none";
-	   }
-	   
-	   $items=$row['items'];
-	   $weight=$row['weight'];
-	   $price2=$row['price2'];
-	   $price3=$row['price3'];
-	   $price4=$row['price4'];
-	   $price5=$row['price5'];
+            $sql="select * from $table_name2 where id=$productID";
+            $result=mysql_query($sql);
+            while($row = mysql_fetch_array($result)) {
+                $id=$row['id'];
+                $category=$row['category'];
+                $name=stripslashes($row['name']);
+                $content=stripslashes($row['content']);
+                $description=stripslashes($row['description']);
+                $price=$row['price'];
+                $price_n=$row['price_n'];
+                $sklad=$row['sklad'];
+                $enabled=$row['enabled'];
+                $p_enabled=$row['p_enabled'];
+                $uid=$row['uid'];
+                $spec=$row['spec'];
+                $newtip=$row['newtip'];
+                $odnotip=$row['odnotip'];
+                $vendor=$row['vendor'];
+                $vendor_array=unserialize($row['vendor_array']);
+                $yml=$row['yml'];
+                $num=$row['num'];
+                $title=$row['title'];
+                $title_enabled=$row['title_enabled'];
+                $title_shablon=$row['title_shablon'];
+                $descrip=$row['descrip'];
+                $descrip_enabled=$row['descrip_enabled'];
+                $descrip_shablon=$row['descrip_shablon'];
+                $keywords=$row['keywords'];
+                $keywords_enabled=$row['keywords_enabled'];
+                $keywords_shablon=$row['keywords_shablon'];
+                $page=$row['page'];
+                $user=$row['user'];
+                $pic_small=$row['pic_small'];
+                $pic_big=$row['pic_big'];
+                $yml_bid_array=unserialize($row['yml_bid_array']);
+                $parent=$row['parent'];
+                $parent_enabled=$row['parent_enabled'];
+                $files=unserialize($row['files']);
+                $ed_izm=$row['ed_izm'];
+                $dop_cat=$row['dop_cat'];
 
-	   $baseinputvaluta=$row['baseinputvaluta'];
+                if($parent_enabled == 0) {
+                    $p1="checked";
+                }
+                else {
+                    $p2="checked";
+                    $p3="visibility:hidden";
+                }
 
-	   $ed_izm=$row['ed_izm'];
-	   
-	   // Заводим картинку для старых версий
-	   //if($pic_small!="")
-	   //AddFotoGalUpdate($pic_small,$pic_big,$id);
-	   
-	echo ('
+
+                if($title_enabled == 0) {
+                    $t1="checked";
+                    $t2_enabled="none";
+                    $t3_enabled="none";
+                }elseif($title_enabled == 1) {
+                    $t2="checked";
+                    $t2_enabled="block";
+                    $t3_enabled="none";
+                }
+                elseif($title_enabled == 2) {
+                    $t3="checked";
+                    $t3_enabled="block";
+                    $t2_enabled="none";
+                }
+
+                if($descrip_enabled == 0) {
+                    $d1="checked";
+                    $d2_enabled="none";
+                    $d3_enabled="none";
+                }elseif($descrip_enabled == 1) {
+                    $d2="checked";
+                    $d2_enabled="block";
+                    $d3_enabled="none";
+                }
+                elseif($descrip_enabled == 2) {
+                    $d3="checked";
+                    $d3_enabled="block";
+                    $d2_enabled="none";
+                }
+
+                if($keywords_enabled == 0) {
+                    $k1="checked";
+                    $k2_enabled="none";
+                    $k3_enabled="none";
+                }elseif($keywords_enabled == 1) {
+                    $k2="checked";
+                    $k2_enabled="block";
+                    $k3_enabled="none";
+                }
+                elseif($keywords_enabled == 2) {
+                    $k3="checked";
+                    $k3_enabled="block";
+                    $k2_enabled="none";
+                }
+
+                $items=$row['items'];
+                $weight=$row['weight'];
+                $price2=$row['price2'];
+                $price3=$row['price3'];
+                $price4=$row['price4'];
+                $price5=$row['price5'];
+
+                $baseinputvaluta=$row['baseinputvaluta'];
+
+                $ed_izm=$row['ed_izm'];
+
+                // Заводим картинку для старых версий
+                //if($pic_small!="")
+                //AddFotoGalUpdate($pic_small,$pic_big,$id);
+
+                echo ('
 <table cellpadding="0" cellspacing="0" width="100%" height="50" id="title">
 <tr bgcolor="#ffffff">
 	<td style="padding:10">
@@ -570,7 +571,7 @@ tabPane.addTabPage( document.getElementById( "intro-page" ) );
 	
 <input type=text id="myName"  style="width: 500" value="'.Disp_cat($category).'">
 <input type="hidden" value="'.$category.'" name="category_new" id="myCat">
-<BUTTON style="width: 3em; height: 2.2em; margin-left:5"  onclick="miniWinFull(\'adm_cat.php?category='.$category.'\',300,400,300,200)"><img src="../img/icon-move-banner.gif"  width="16" height="16" border="0"></BUTTON>
+<BUTTON style="width: 3em; height: 2.2em; margin-left:5"  onclick="miniWinFull(\'adm_cat.php?category='.$category.'\',300,400,300,200);return false;"><img src="../img/icon-move-banner.gif"  width="16" height="16" border="0"></BUTTON>
 	
 </div>
 </FIELDSET>
@@ -586,38 +587,41 @@ tabPane.addTabPage( document.getElementById( "intro-page" ) );
 	<FIELDSET id=fldLayout >
 
 ');
-                                               
-
-$sql="select dengi from ".$SysValue['base']['table_name3'];
-$result=mysql_query($sql);
-$row = mysql_fetch_array($result);
-$defvaluta=$row['dengi'];
 
 
-$sql="select * from ".$SysValue['base']['table_name24']." WHERE enabled=\"1\" order by num";
-$result=mysql_query($sql);
-$valselected=0;
-$valler='';
-while ($row = mysql_fetch_array($result))
-    {
-	$vid=$row['id'];
-	$vname=$row['name'];
-	$vcode=$row['code'];
-	$viso=$row['iso'];
-	$vkurs=$row['kurs'];
-	$venabled=$row['enabled'];
-	$vchecked='';
-	if ($baseinputvaluta==$vid) {$valselected=1; $vchecked='checked';$cvalname=$vname;}
-	if (!$valselected) {
-		if($defvaluta==$vid) {
-			$vchecked='checked';
-			$cvalname=$vname;
-		}
-	}
-	$valler.= '<INPUT TYPE=RADIO name="baseinputvaluta_new" value="'.$vid.'" '.$vchecked.'>'.$viso;
-}
+                $sql="select dengi from ".$SysValue['base']['table_name3'];
+                $result=mysql_query($sql);
+                $row = mysql_fetch_array($result);
+                $defvaluta=$row['dengi'];
 
-echo ('
+
+                $sql="select * from ".$SysValue['base']['table_name24']." WHERE enabled=\"1\" order by num";
+                $result=mysql_query($sql);
+                $valselected=0;
+                $valler='';
+                while ($row = mysql_fetch_array($result)) {
+                    $vid=$row['id'];
+                    $vname=$row['name'];
+                    $vcode=$row['code'];
+                    $viso=$row['iso'];
+                    $vkurs=$row['kurs'];
+                    $venabled=$row['enabled'];
+                    $vchecked='';
+                    if ($baseinputvaluta==$vid) {
+                        $valselected=1;
+                        $vchecked='checked';
+                        $cvalname=$vname;
+                    }
+                    if (!$valselected) {
+                        if($defvaluta==$vid) {
+                            $vchecked='checked';
+                            $cvalname=$vname;
+                        }
+                    }
+                    $valler.= '<INPUT TYPE=RADIO name="baseinputvaluta_new" value="'.$vid.'" '.$vchecked.'>'.$viso;
+                }
+
+                echo ('
 
 <LEGEND id=lgdLayout><span name=txtLang id=txtLang><u>Ц</u>ена</span> ('.$cvalname.'): </LEGEND>
 <div style="padding:10">
@@ -632,8 +636,8 @@ echo ('
 <BUTTON onclick="miniModalPrice(\'adm_price.php\',300,280);return false;" class="option"><span name=txtLang id=txtLang>Настроить</span></BUTTON>
 <BR>
 ');
-echo $valler;
-echo ('
+                echo $valler;
+                echo ('
 </div>
 </FIELDSET>
 	</td>
@@ -758,7 +762,7 @@ echo ('
 </div>
 ');
 
-echo '
+                echo '
 
 <div class="tab-page" id="files" style="height:450px">
 <h2 class="tab"><span name=txtLang id=txtLang>Файлы</span></h2>
@@ -771,39 +775,39 @@ tabPane.addTabPage( document.getElementById( "files" ) );
   <td>
 
 ';
-?>
+        ?>
 
-<SCRIPT language=JavaScript>
-var numb;
-numb = <? echo count($files)-1;?>;
-function add_new_row() {
-    var currrow;
-    currow = document.all.tbl.rows.length; // вычислить количество строк в таблице
-    numb++;
-    document.all.tbl.insertRow(currow); // добавляем строку в таблицу
-    document.all.tbl.rows[currow].insertCell(0); // добавляем ячейки
-    document.all.tbl.rows[currow].insertCell(1);
-    document.all.tbl.rows[currow].insertCell(2);
+        <SCRIPT language=JavaScript>
+            var numb;
+            numb = <? echo count($files)-1;?>;
+            function add_new_row() {
+                var currrow;
+                currow = document.all.tbl.rows.length; // вычислить количество строк в таблице
+                numb++;
+                document.all.tbl.insertRow(currow); // добавляем строку в таблицу
+                document.all.tbl.rows[currow].insertCell(0); // добавляем ячейки
+                document.all.tbl.rows[currow].insertCell(1);
+                document.all.tbl.rows[currow].insertCell(2);
 
-    document.all.tbl.rows[currow].cells[0].className="";
-    document.all.tbl.rows[currow].cells[1].className="";
-    document.all.tbl.rows[currow].cells[2].className="";
-	
-    document.all.tbl.rows[currow].cells[0].style.padding="5px";
-    document.all.tbl.rows[currow].cells[0].innerHTML = '<INPUT TYPE=TEXT style="width:90%;" name=\"filenum[]\" id="filenum'+numb+'"><BUTTON style="width: 50px;" onclick="ReturnPic(\'filenum'+numb+'\',0);return false;"><img src="../img/icon-move-banner.gif"  width="16" height="16" border="0"></BUTTON>';
-    document.all.tbl.rows[currow].cells[1].innerHTML = '<BUTTON onclick="remove_row();"><img src="../icon/wand.gif"  width="16" height="16" border="0" align="absmiddle"> -</BUTTON>';
-}
+                document.all.tbl.rows[currow].cells[0].className="";
+                document.all.tbl.rows[currow].cells[1].className="";
+                document.all.tbl.rows[currow].cells[2].className="";
 
-function remove_row() {
-    var currrow;
-    numb--;
-    currow = document.all.tbl.rows.length-1; // вычислить количество строк в таблице
-    document.all.tbl.deleteRow(currow); // добавляем строку в таблицу
-}
-</SCRIPT>
-<?
+                document.all.tbl.rows[currow].cells[0].style.padding="5px";
+                document.all.tbl.rows[currow].cells[0].innerHTML = '<INPUT TYPE=TEXT style="width:90%;" name=\"filenum[]\" id="filenum'+numb+'"><BUTTON style="width: 50px;" onclick="ReturnPic(\'filenum'+numb+'\',0);return false;"><img src="../img/icon-move-banner.gif"  width="16" height="16" border="0"></BUTTON>';
+                document.all.tbl.rows[currow].cells[1].innerHTML = '<BUTTON onclick="remove_row();"><img src="../icon/wand.gif"  width="16" height="16" border="0" align="absmiddle"> -</BUTTON>';
+            }
 
-echo '
+            function remove_row() {
+                var currrow;
+                numb--;
+                currow = document.all.tbl.rows.length-1; // вычислить количество строк в таблице
+                document.all.tbl.deleteRow(currow); // добавляем строку в таблицу
+            }
+        </SCRIPT>
+                <?
+
+                echo '
 
 <TABLE id=tbl style="width:100%; border:1px solid gray; background:#ffffff;" CELLPADDING="0" CELLSPACING=0>
 <TR>
@@ -815,9 +819,9 @@ onclick="add_new_row();return false;">
 </TR>
 ';
 
-if (is_array($files))
-foreach ($files as $num=>$cfile) {
-	echo '
+                if (is_array($files))
+                    foreach ($files as $num=>$cfile) {
+                        echo '
 <TR><TD style="padding:5px">
 <INPUT TYPE=TEXT style="width:90%;" name="filenum[]" id="filenum'.$num.'" value="'.$cfile.'">
 <BUTTON style="width: 50px;" 
@@ -829,8 +833,8 @@ onclick="remove_row();return false;">
 <img src="../icon/wand.gif"  width="16" height="16" border="0" align="absmiddle"> -</BUTTON>
 </TD></TR>
 ';
-} //Перебор форыч файлс
-echo '
+                    } //Перебор форыч файлс
+                echo '
 </TABLE>
 
   </td>
@@ -842,7 +846,7 @@ echo '
 ';
 
 
-echo ('
+                echo ('
 <div class="tab-page" id="gal" style="height:450px">
 <h2 class="tab"><span name=txtLang id=txtLang>Изображения</span></h2>
 <script type="text/javascript">
@@ -965,10 +969,10 @@ tabPane.addTabPage( document.getElementById( "description" ) );
 <div style="padding:10">
 	');
 
-$option=unserialize($systems['admoption']);
-if($option['editor_enabled']  == 1){
-$MyStyle=$SysValue['dir']['dir'].chr(47)."phpshop".chr(47)."templates".chr(47).$systems['skin'].chr(47).$SysValue['css']['default'];
-echo'
+                $option=unserialize($systems['admoption']);
+                if($option['editor_enabled']  == 1) {
+                    $MyStyle=$SysValue['dir']['dir'].chr(47)."phpshop".chr(47)."templates".chr(47).$systems['skin'].chr(47).$SysValue['css']['default'];
+                    echo'
 <pre id="idTemporary" name="idTemporary" style="display:none">
 '.$description.'
 </pre>
@@ -982,14 +986,14 @@ echo'
 		oEdit1.RENDER(document.getElementById("idTemporary").innerHTML);
 	</script>
 	<input type="hidden" name="EditorContent" id="EditorContent">';
-}
-else{
-echo '
+                }
+                else {
+                    echo '
 <textarea name="EditorContent" id="EditorContent" style="width:100%;height:380px">'.$description.'</textarea>
 ';
-}
+                }
 
-echo('
+                echo('
 </div>
 </FIELDSET>
 	</td>
@@ -1009,8 +1013,8 @@ tabPane.addTabPage( document.getElementById( "content" ) );
 	<FIELDSET>
 <div style="padding:10">
 	');
-if($option['editor_enabled']  == 1){
-echo'
+                if($option['editor_enabled']  == 1) {
+                    echo'
 <pre id="idTemporary2" name="idTemporary2" style="display:none">
 '.$content.'
 </pre>
@@ -1024,14 +1028,14 @@ echo'
 		oEdit2.RENDER(document.getElementById("idTemporary2").innerHTML);
 	</script>
 	<input type="hidden" name="EditorContent2" id="EditorContent2">';
-	
-}
-else{
-echo '
+
+                }
+                else {
+                    echo '
 <textarea name="EditorContent2" id="EditorContent2" style="width:100%;height:380px">'.$content.'</textarea>
 ';
-}
-echo('
+                }
+                echo('
 </div>
 </FIELDSET>
 <input type="hidden" class=but  name="fullDisp" value="Edit">
@@ -1218,8 +1222,8 @@ tabPane.addTabPage( document.getElementById( "har2" ) );
 </table>
 </form>
 	');
-	}
-	}
+    }
+}
 ?>
-</body>
+    </body>
 </html>

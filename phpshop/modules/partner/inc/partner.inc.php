@@ -104,6 +104,8 @@ class PHPShopPartnerOrder {
 }
 
 $PHPShopPartnerOrder = new PHPShopPartnerOrder();
+
+ /*
 if(PHPShopSecurity::true_param($_SESSION['partner_id'],$_SESSION['cart'],$_POST['send_to_order'],$_POST['mail'],$_POST['name_person'])) {
 
     // Модуль включен
@@ -112,4 +114,5 @@ if(PHPShopSecurity::true_param($_SESSION['partner_id'],$_SESSION['cart'],$_POST[
         $PHPShopPartnerOrder->checkLog();
     }
 }
+ */
 ?>

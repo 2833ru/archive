@@ -21,6 +21,22 @@ class PHPShopFile {
         }
     }
 
+     /**
+     * Запись данных в csv файл
+     * используется стандартная функция php fputcsv
+     * @param string $file путь до файла
+     * @param array $csv данные для записи
+     */
+    function writeCsv($file,$csv) {
+        $fp = fopen($file, "w+");
+        if ($fp) {
+            foreach($csv as $value){
+                fputcsv($fp, $value,';','"');
+            }
+            //stream_set_write_buffer($fp, 0);
+            fclose($fp);
+        }
+    }
 
     /**
      * GZIP компресия файла

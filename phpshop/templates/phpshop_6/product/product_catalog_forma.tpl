@@ -1,3 +1,0 @@
-
-<p>@DispCatContent@</p>
-

@@ -2,7 +2,7 @@
 $_classPath="../../";
 include($_classPath."class/obj.class.php");
 include("class/guard.class.php");
-include("class/pclzip.class.php");
+include($_classPath."lib/zip/pclzip.lib.php");
 PHPShopObj::loadClass("base");
 PHPShopObj::loadClass("system");
 PHPShopObj::loadClass("orm");
@@ -39,7 +39,7 @@ switch($_GET['do']) {
 
 * Источник - '.$_SERVER['SERVER_NAME'].'
 * Измененных файлов - '.count($Guard->changes).'
-* Ссылка для загрузки файлов из карантина: http://'.$_SERVER['SERVER_NAME'].$quarantine_name;
+* Ссылка для загрузки файлов из карантина: http://'.$_SERVER['SERVER_NAME'].$SysValue['dir']['dir'].$quarantine_name;
 
                 PHPShopObj::loadClass("mail");
                 $PHPShopMail=&new PHPShopMail('guard@phpshop.ru',$PHPShopSystem->getParam('adminmail2'),$zag,$content);
@@ -78,6 +78,7 @@ switch($_GET['do']) {
                 $message='Период технической поддержки закочнился,
 обновление баз сигнатур вирусов невозможно.
 Требуется оплата технической поддержки.';
+               $message='Обновлений не обнаружено.';
                 break;
 
             case 1:

@@ -208,6 +208,12 @@ tabPane.addTabPage( document.getElementById( "rules" ) );
 	<td id=pane align=center><img src="../img/arrow_d.gif" alt="" width="7" height="7" border="0" hspace="5"><span name=txtLang id=txtLang>Доступ</span></td>
 </tr>
 <form name="product_edit">
+ <tr class="row">
+	<td ><span name=txtLang id=txtLang>Модули</span></td>
+	<td align="center">
+	<input type="checkbox" value="1" name="module_rul_1" <?=Checked($status['module'],0)?>> <span name=txtLang id=txtLang>Запрет установок</span>&nbsp;&nbsp;
+	</td>
+</tr>
 <tr class="row">
 	<td ><span name=txtLang id=txtLang>Отзывы</span></td>
 	<td align="center">
@@ -443,7 +449,8 @@ $statusUser=array(
 "delivery"=>Zero($delivery_rul_1)."-".Zero($delivery_rul_2)."-".Zero($delivery_rul_3),
 "servers"=>Zero($servers_rul_1)."-".Zero($servers_rul_2)."-".Zero($servers_rul_3),
 "rsschanels"=>Zero($rss_rul_1)."-".Zero($rss_rul_2)."-".Zero($rss_rul_3),
-"upload"=>Zero($upload_rul_1)
+"upload"=>Zero($upload_rul_1),
+"module"=>Zero($module_rul_1)."-".Zero($module_rul_2)
 );
 
 $sql="UPDATE $table_name19

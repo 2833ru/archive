@@ -1,7 +1,7 @@
 <?php
 /**
- * Библиотека Отправления почты
- * @version 1.0
+ * Библиотека Отправление почты
+ * @version 1.1
  * @package PHPShopClass
  * <code>
  * // example:
@@ -72,17 +72,6 @@ Powered & Developed by www.PHPShop.ru
     }
 }
 
-/**
- * Библиотека отправления почты с вложением
- * @version 1.0
- * @package PHPShopClass
- * @param string $to куда
- * @param string $from от кого
- * @param string $zag заголовок письма
- * @param string $content содежание письма
- * @param string $filename имя вложенного файла
- * @param string $file путь до файлы
- */
 class PHPShopMailFile {
 
     function PHPShopMailFile($to,$from,$zag,$content,$filename,$file) {
@@ -93,8 +82,12 @@ class PHPShopMailFile {
         $this->file=$file;
         $this->zag=$this->getZag($content);
         $header=$this->getHeader();
-        mail($this->to,$this->from,$this->zag,$header);
+        //mail($this->to,$this->from,$this->zag,$header);
+        $this->subj=$zag;
+        mail($this->to,$this->subj,$this->zag,$header);
     }
+
+
 
     function getZag($text) {
         $f = fopen($this->file,"rb");
@@ -110,6 +103,7 @@ class PHPShopMailFile {
         return $zag;
     }
 
+
     function getHeader() {
         $head= "From: $this->from\n";
         $head.= "To: $this->to\n";
@@ -120,5 +114,7 @@ class PHPShopMailFile {
         $head.= "boundary=\"----------".$this->un."\"\n\n";
         return $head;
     }
+
+
 }
 ?>

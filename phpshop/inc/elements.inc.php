@@ -1,87 +1,340 @@
 <?php
 /**
- * Элемент корзина покупок
+ * Элемент стандартных системных переменных
  * @author PHPShop Software
- * @version 1.0
+ * @version 1.1
  * @package PHPShopElements
  */
-class PHPShopCartElement extends PHPShopElements {
+class PHPShopCoreElement extends PHPShopElements {
 
-    function PHPShopCartElement() {
+    /**
+     * Конструктор
+     */
+    function PHPShopCoreElement() {
         parent::PHPShopElements();
     }
 
-    function miniCart() {
-        $cart=$_SESSION['cart'];
-        $compare=$_SESSION['compare'];
-        $sum=0;
-        $sum_r=0;
-        $num=0;
-        $numcompare=0;
+    /**
+     * Назначение текущего шаблона
+     * @return string
+     */
+    function skin() {
+        if(empty($_SESSION['skin']))
+            $_SESSION['skin']=$this->PHPShopSystem->getValue('skin');
+        return $_SESSION['skin'];
+    }
 
-        if(count($cart)>0) {
-            if(is_array($cart))
-                foreach($cart as $j=>$v) {
-                    $sum+=$cart[$j]['price']*$cart[$j]['num'];
-                    $sum_r=$sum*$this->LoadItems['System']['kurs'];
-                    $num+=$cart[$j]['num'];
-                }
-            $this->set('orderEnabled','block');
-        }
-        else {
-            $sum="--";
-            $num="--";
-            $this->set('orderEnabled','none');
-        }
-
-        if(count($compare)>0) {
-            if(is_array($compare)) {
-                foreach($compare as $j=>$v) {
-                    $numcompare=count($compare);
+    /**
+     * Проверка существования шаблона,
+     * смена на другой найденный шаблон при переименовании папки с шаблоном
+     * @return string
+     */
+    function checkskin() {
+        if (!file_exists("phpshop/templates/".$_SESSION['skin']."/index.html")) {
+            $dir=$this->getValue('dir.templates').chr(47);
+            if (is_dir($dir)) {
+                if (@$dh = opendir($dir)) {
+                    while (($file = readdir($dh)) !== false) {
+                        if(is_file($dir.$file.chr(47).'index.html')) {
+                            $_SESSION['skin']=$file;
+                            header('Location: /?status=template_error');
+                        }
+                    }
+                    closedir($dh);
                 }
             }
-            $this->set('compareEnabled','block');
-        } else {
-            $numcompare="--";
-            $this->set('compareEnabled','none');
+            exit('Template error!');
         }
+    }
 
-        // Определяем переменные
-        $this->set('tovarNow',$this->getValue('lang.cart_tovar_now'));
-        $this->set('summaNow',$this->getValue('cart_summa_now'));
-        $this->set('orderNow',$this->getValue('cart_order_now'));
-        $this->set('numcompare',$numcompare);
-        $this->set('num',$num);
-        $this->set('sum',GetPriceValuta($sum));
-        //$this->set('productValutaName',GetValuta());
+    /**
+     * Определение стандратных системных переменных для шаблонов
+     * (имя, телефон, почта администратора, дата, логотип)
+     */
+    function setdefault() {
+        $this->set('telNum',$this->PHPShopSystem->getValue('tel'));
+        $this->set('name',$this->PHPShopSystem->getValue('name'));
+        $this->set('company',$this->PHPShopSystem->getValue('company'));
+        $this->set('descrip',$this->PHPShopSystem->getValue('descrip'));
+        $this->set('adminMail',$this->PHPShopSystem->getValue('adminmail2'));
+        $this->set('pathTemplate',$this->getValue('dir.templates').chr(47).$_SESSION['skin']);
+        $this->set('serverName',$_SERVER['SERVER_NAME']);
+        $this->set('serverShop',$_SERVER['SERVER_NAME']);
+        $this->set('UserLogin',$_SESSION['UserLogin']);
+        $this->set('ShopDir',$this->getValue('dir.dir'));
+        $this->set('date',date("d-m-y H:i a"));
+        $this->set('user_ip',$_SERVER['REMOTE_ADDR']);
+
+        // Логотип
+        $this->set('logo',$this->PHPShopSystem->getLogo());
+    }
+
+    /**
+     * Стили шаблона дизайна
+     * @return string
+     */
+    function pageCss() {
+        $this->set('pathTemplate',$this->getValue('dir.templates').chr(47).$_SESSION['skin']);
+        return $this->getValue('dir.templates').chr(47).$_SESSION['skin'].chr(47).$this->getValue('css.default');
+    }
+
+}
+
+
+/**
+ * Элемент формы авторизации пользователя
+ * @author PHPShop Software
+ * @version 1.2
+ * @package PHPShopElements
+ */
+class PHPShopUserElement extends PHPShopElements {
+    /**
+     * Конструктор
+     */
+    function PHPShopUserElement() {
+        $this->debug=false;
+        $this->objBase=$GLOBALS['SysValue']['base']['shopusers'];
+        parent::PHPShopElements();
+
+        // Экшены
+        $this->setAction(array('post'=>'user_enter','get'=>'logout'));
+    }
+
+    /**
+     * Кодирование пароля
+     * @param string $str строка
+     * @return string кодированная строка
+     */
+    function encode($str) {
+        return base64_encode(trim($str));
+    }
+
+    /**
+     * Экшен выхода пользователя
+     */
+    function logout() {
+        unset($_SESSION['UsersId']);
+        unset($_SESSION['UsersStatus']);
+        $url_user = str_replace("?logout=true","",$_SERVER['REQUEST_URI']);
+        header("Location: ".$url_user);
+    }
+
+    /**
+     * Проверка авторизации
+     * @return bool
+     */
+    function autorization() {
+        if(PHPShopSecurity::true_login($_POST['login']) and PHPShopSecurity::true_passw($_POST['password'])) {
+            $PHPShopOrm = new PHPShopOrm($this->objBase);
+            $PHPShopOrm->debug=$this->debug;
+            $data=$PHPShopOrm->select(array('*'),array('login'=>'="'.trim($_POST['login']).'"','password'=>'="'.$this->encode($_POST['password']).'"','enabled'=>"='1'"),
+                    false,array('limit'=>1));
+            if(is_array($data))
+                if(PHPShopSecurity::true_num($data['id'])) {
+
+                    // ID пользователя
+                    $_SESSION['UsersId']=$data['id'];
+
+                    // Логин пользователя
+                    $_SESSION['UsersLogin']=$data['login'];
+
+                    // Статус пользователя
+                    $_SESSION['UsersStatus']=$data['status'];
+
+                    // Дата входа
+                    $this->log();
+
+                    return true;
+                }
+        }
+    }
+
+    /**
+     * Запись даты авторизации пользователя
+     */
+    function log(){
+        $PHPShopOrm = new PHPShopOrm($this->objBase);
+        $PHPShopOrm->debug=$this->debug;
+        $PHPShopOrm->update(array('datas_new'=>time()),array('id'=>'='.$_SESSION['UsersId']));
+    }
+
+    /**
+     * Экшен входа пользователя
+     */
+    function user_enter() {
+
+        if($this->autorization()) {
+
+            // Запоминаем пользователя в cookie
+            if(!empty($_POST['safe_users'])) {
+                setcookie("UserLogin", trim($_POST['login']), time()+60*60*24*30, "/",$_SERVER['SERVER_NAME'], 0);
+                setcookie("UserPassword", trim($_POST['password']), time()+60*60*24*30, "/",$_SERVER['SERVER_NAME'], 0);
+                setcookie("UserChecked", 1, time()+60*60*24*30, "/",$_SERVER['SERVER_NAME'], 0);
+            }else {
+                setcookie("UserLogin", "", time()+60*60*24*30, "/",$_SERVER['SERVER_NAME'], 0);
+                setcookie("UserPassword", "", time()+60*60*24*30, "/",$_SERVER['SERVER_NAME'], 0);
+                setcookie("UserChecked", "", time()+60*60*24*30, "/",$_SERVER['SERVER_NAME'], 0);
+            }
+
+            // Редирект
+            if(preg_match("/LogOut/",$_SERVER['REQUEST_URI']))
+                $url_user = str_replace("?LogOut","#userPage",$_SERVER['REQUEST_URI']);
+            elseif(!empty($_GET['key']))
+                $url_user = $this->getValue('dir.dir').'/users/';
+            else
+                $url_user = $_SERVER['REQUEST_URI'];
+
+            header("Location: ".$url_user);
+        }
+        else
+            $this->set('usersError',$this->lang('error_login'));
+    }
+
+    /**
+     * Форма авторизации пользователя
+     */
+    function usersDisp() {
+        if(PHPShopSecurity::true_num($_SESSION['UsersId'])){
+            $this->set('UsersLogin',$_SESSION['UsersLogin']);
+            $dis=$this->parseTemplate($this->getValue('templates.users_forma_enter'));
+        }
+        else {
+
+            // Блок авторизации, данные из cookie
+            if(PHPShopSecurity::true_num($_COOKIE['UserChecked']))
+                $this->set('UserChecked','checked');
+
+            if(PHPShopSecurity::true_login($_COOKIE['UserLogin']))
+                $this->set('UserLogin',$_COOKIE['UserLogin']);
+
+            if(PHPShopSecurity::true_passw($_COOKIE['UserPassword']))
+                $this->set('UserPassword',$_COOKIE['UserPassword']);
+
+            // Перехват модуля
+            $this->setHook(__CLASS__,__FUNCTION__);
+
+            $dis=$this->parseTemplate($this->getValue('templates.users_forma'));
+        }
+        return $dis;
     }
 }
 
-class PHPShopCurrencyElement extends PHPShopElements {
+/**
+ * Элемент каталоги страниц
+ * @author PHPShop Software
+ * @version 1.2
+ * @package PHPShopElements
+ */
+class PHPShopPageCatalogElement extends PHPShopElements {
+    /**
+     * @var bool проверять на единичные каталоги
+     */
+    var $chek_page=true;
+    var $debug=false;
 
-    function PHPShopCurrencyElement() {
+    /**
+     * Конструктор
+     */
+    function PHPShopPageCatalogElement() {
+        $this->objBase=$GLOBALS['SysValue']['base']['page_categories'];
         parent::PHPShopElements();
     }
 
-    function valutaDisp() {
-        $name=null;
+    /**
+     * Вывод навигации каталогов
+     * @return string
+     */
+    function pageCatal() {
+        $dis=null;
+        $i=0;
 
-        if(isset($_SESSION['valuta'])) $valuta=$_SESSION['valuta'];
-        else $valuta=$this->LoadItems['System']['dengi'];
+        $this->PHPShopOrm->cache=true;
+        $data = $this->PHPShopOrm->select(array('*'),array('parent_to'=>'=0'),array('order'=>'num'),array("limit"=>100));
 
-        if(is_array($this->LoadItems['Valuta']))
-            foreach($this->LoadItems['Valuta'] as $k=>$v) {
-                if($valuta == $this->LoadItems['Valuta'][$k]['id']) $sel="selected";
-                else $sel="";
-                $name.= '<option value="'.$this->LoadItems['Valuta'][$k]['id'].'" '.$sel.' >'.$this->LoadItems['Valuta'][$k]['name'].'</option>';
+        // Перехват модуля в начале
+        $hook=$this->setHook(__CLASS__,__FUNCTION__,$data,'START');
+        if($hook) return $hook;
+
+        if(is_array($data))
+            foreach($data as $row) {
+
+                // Определяем переменные
+                $this->set('catalogId',$row['id']);
+                $this->set('catalogI',$i);
+                $this->set('catalogTemplates',$this->getValue('dir.templates').chr(47).$this->PHPShopSystem->getValue('skin').chr(47));
+
+                // Если есть страницы
+                if($this->chek($row['id'])) {
+
+                    $this->set('catalogName',$row['name']);
+                    $this->set('catalogId',$row['id']);
+
+                    // Перехват модуля
+                    $this->setHook(__CLASS__,__FUNCTION__,$row, 'MIDDLE');
+
+                    $dis.=$this->parseTemplate($this->getValue('templates.catalog_page_forma_2'));
+
+                }  else {
+                    $this->set('catalogPodcatalog',$this->subcatalog($row['id']));
+                    $this->set('catalogName',$row['name']);
+
+                    // Перехват модуля
+                    $this->setHook(__CLASS__,__FUNCTION__,$row, 'END');
+
+                    $dis.=$this->parseTemplate($this->getValue('templates.catalog_page_forma'));
+                }
+
+                $i++;
             }
+        return $dis;
+    }
 
-        // Определяем переменные
-        $this->set('leftMenuName','Валюта');
-        $this->set('leftMenuContent','<form name=ValutaForm method=post><select name="valuta" onchange="ChangeValuta()">'.$name.'</select></form>');
+    /**
+     * Проверка подкаталогов
+     * @param Int $id ИД каталога
+     * @return bool
+     */
+    function chek($id) {
+        $PHPShopOrm = &new PHPShopOrm($this->getValue('base.page_categories'));
+        $PHPShopOrm->debug=$this->debug;
+        $num=$PHPShopOrm->select(array('id'),array('parent_to'=>"=$id"),false,array('limit'=>1));
+        if(empty($num['id'])) return true;
+    }
 
-        // Подключаем шаблон
-        $dis=$this->parseTemplate($this->getValue('templates.valuta_forma'));
+    /**
+     * Вывод подкаталогов
+     * @param Int $n ИД каталога
+     * @return string
+     */
+    function subcatalog($n) {
+        $dis=null;
+        $i=0;
+        $n=PHPShopSecurity::TotalClean($n,1);
+        $PHPShopOrm = &new PHPShopOrm($this->getValue('base.page_categories'));
+        $data = $PHPShopOrm->select(array('*'),array('parent_to'=>'='.$n),array('order'=>'num'),array("limit"=>100));
+
+        // Перехват модуля в начале
+        $hook=$this->setHook(__CLASS__,__FUNCTION__,$data, 'START');
+        if($hook) return $hook;
+
+        if(is_array($data))
+            foreach($data as $row) {
+
+                // Определяем переменные
+                $this->set('catalogId',$n);
+                $this->set('catalogUid',$row['id']);
+                $this->set('catalogI',$i);
+                $this->set('catalogLink','CID_'.$row['id']);
+                $this->set('catalogTemplates',$this->getValue('dir.templates').chr(47).$this->PHPShopSystem->getValue('skin').chr(47));
+                $this->set('catalogName',$row['name']);
+                $i++;
+
+                // Перехват модуля
+                $this->setHook(__CLASS__,__FUNCTION__,$row, 'MIDDLE');
+
+                // Подключаем шаблон
+                $dis.=$this->parseTemplate($this->getValue('templates.podcatalog_page_forma'));
+            }
         return $dis;
     }
 }
@@ -94,33 +347,47 @@ class PHPShopCurrencyElement extends PHPShopElements {
  * @package PHPShopElements
  */
 class PHPShopTextElement extends PHPShopElements {
+    var $debug=false;
 
-
+    /**
+     * Конструктор
+     */
     function PHPShopTextElement() {
-        $this->debug=false;
         $this->objBase=$GLOBALS['SysValue']['base']['table_name14'];
         parent::PHPShopElements();
     }
 
-
+    /**
+     * Вывод текстового блока в левую часть
+     * @return string
+     */
     function leftMenu() {
-        $dis='';
+        $dis=null;
         $data = $this->PHPShopOrm->select(array('*'),array("flag"=>"='1'",'element'=>"='0'"),array('order'=>'num'),array("limit"=>20));
         if(is_array($data))
             foreach($data as $row) {
-
                 if(empty($row['dir'])) {
+
                     // Определяем переменные
                     $this->set('leftMenuName',$row['name']);
-                    $this->set('leftMenuContent',newParser($row['content']));
+                    $this->set('leftMenuContent',Parser($row['content']));
+
+                    // Перехват модуля
+                    $this->setHook(__CLASS__,__FUNCTION__,$row);
+
+                    // Подключаем шаблон
                     $dis.=$this->parseTemplate($this->getValue('templates.left_menu'));
                 }
                 else {
                     $dirs= explode(",",$row['dir']);
                     foreach($dirs as $dir)
-                        if($dir==$_SERVER['REQUEST_URI']) {
+                        if(strpos($_SERVER['REQUEST_URI'], $dir) or $_SERVER['REQUEST_URI'] == $dir) {
                             $this->set('leftMenuName',$row['name']);
-                            $this->set('leftMenuContent',$row['content']);
+                            $this->set('leftMenuContent',Parser($row['content']));
+
+                            // Перехват модуля
+                            $this->setHook(__CLASS__,__FUNCTION__,$row);
+
                             // Подключаем шаблон
                             $dis.=$this->parseTemplate($this->getValue('templates.left_menu'));
                         }
@@ -129,26 +396,37 @@ class PHPShopTextElement extends PHPShopElements {
         return $dis;
     }
 
-
+    /**
+     * Вывод текстового блока в правую часть
+     * @return string
+     */
     function rightMenu() {
-        $dis='';
+        $dis=null;
         $PHPShopOrm = &new PHPShopOrm($this->objBase);
         $data = $PHPShopOrm->select(array('*'),array("flag"=>"='1'",'element'=>"='1'"),array('order'=>'num'),array("limit"=>20));
         if(is_array($data))
             foreach($data as $row) {
-
                 if(empty($row['dir'])) {
-                    // Определяем переменые
+
+                    // Определяем переменные
                     $this->set('leftMenuName',$row['name']);
-                    $this->set('leftMenuContent',$row['content']);
+                    $this->set('leftMenuContent',Parser($row['content']));
+
+                    // Перехват модуля
+                    $this->setHook(__CLASS__,__FUNCTION__,$row);
+
                     $dis.=$this->parseTemplate($this->getValue('templates.right_menu'));
                 }
                 else {
                     $dirs= explode(",",$row['dir']);
                     foreach($dirs as $dir)
-                        if($dir==$_SERVER['REQUEST_URI']) {
+                        if(strpos($_SERVER['REQUEST_URI'], $dir) or $_SERVER['REQUEST_URI'] == $dir) {
                             $this->set('leftMenuName',$row['name']);
-                            $this->set('leftMenuContent',$row['content']);
+                            $this->set('leftMenuContent',Parser($row['content']));
+
+                            // Перехват модуля
+                            $this->setHook(__CLASS__,__FUNCTION__,$row);
+
                             // Подключаем шаблон
                             $dis.=$this->parseTemplate($this->getValue('templates.right_menu'));
                         }
@@ -157,18 +435,26 @@ class PHPShopTextElement extends PHPShopElements {
         return $dis;
     }
 
-
+    /**
+     * Вывод главного навигационного меню
+     * @return string
+     */
     function topMenu() {
-        $dis='';
+        $dis=null;
         $objBase=$GLOBALS['SysValue']['base']['table_name11'];
         $PHPShopOrm = &new PHPShopOrm($objBase);
-        $data = $PHPShopOrm->select(array('name','link'),array("category"=>"=1000"),array('order'=>'num'),array("limit"=>20));
+        $data = $PHPShopOrm->select(array('name','link'),array("category"=>"=1000",'enabled'=>"='1'"),array('order'=>'num'),array("limit"=>20));
         if(is_array($data))
             foreach($data as $row) {
 
-                // Определяем переменые
+                // Определяем переменные
                 $this->set('topMenuName',$row['name']);
                 $this->set('topMenuLink',$row['link']);
+
+                // Перехват модуля
+                $this->setHook(__CLASS__,__FUNCTION__,$row);
+
+                // Подключаем шаблон
                 $dis.=$this->parseTemplate($this->getValue('templates.top_menu'));
 
             }
@@ -188,10 +474,16 @@ class PHPShopSkinElement extends PHPShopElements {
 
     function PHPShopSkinElement() {
         parent::PHPShopElements();
+
+        // Экшены
+        $this->setAction(array('post'=>'skin','get'=>'skin'));
     }
 
+    /**
+     * Экшен по умолчанию, вывод формы выбора шаблона
+     * @return string
+     */
     function index() {
-        $dis='';
         if($this->PHPShopSystem->getSerilizeParam("admoption.user_skin") == 1) {
             $dir=$this->getValue('dir.templates').chr(47);
             if (is_dir($dir)) {
@@ -203,17 +495,16 @@ class PHPShopSkinElement extends PHPShopElements {
                         else $sel="";
 
                         if($file!="." and $file!=".." and $file!="index.html")
-                            @$name.= "<option value=\"$file\" $sel>Шаблон $file</option>";
+                            $value[]=array($file,$file,$sel);
                     }
                     closedir($dh);
                 }
             }
 
-
-            // Определяем переменые
-            $forma="<div style=\"padding:10px\"><form name=SkinForm method=post><select name=\"skin\" onchange=\"ChangeSkin()\">".$name."</select></form></div>";
+            // Определяем переменные
+            $forma=PHPShopText::p(PHPShopText::form(PHPShopText::select('skin',$value,150,$float="none",$caption=false,$onchange="ChangeSkin()"),'SkinForm'));
             $this->set('leftMenuContent',$forma);
-            $this->set('leftMenuName',"Сменить дизайн");
+            $this->set('leftMenuName',__("Сменить дизайн"));
 
             // Подключаем шаблон
             $dis=$this->parseTemplate($this->getValue('templates.left_menu'));
@@ -221,8 +512,20 @@ class PHPShopSkinElement extends PHPShopElements {
         return $dis;
     }
 
-}
+    /**
+     * Экшен смены шаблона
+     */
+    function skin() {
+        if($this->PHPShopSystem->getValue('spec_num')) {
+            if (file_exists("phpshop/templates/".$_REQUEST['skin']."/index.html")) {
+                $skin=$_REQUEST['skin'];
+                if(PHPShopSecurity::true_login($_REQUEST['skin']))
+                    $_SESSION['skin']=$_REQUEST['skin'];
+            }
+        }
+    }
 
+}
 
 
 /**
@@ -232,19 +535,34 @@ class PHPShopSkinElement extends PHPShopElements {
  * @package PHPShopElements
  */
 class PHPShopNewsElement extends PHPShopElements {
+    /**
+     * @var bool Показывать новости только на главной
+     */
+    var $disp_only_index=false;
+    /**
+     * @var int  Кол-во новостей
+     */
+    var $limit=5;
 
-    var $disp_only_index=false; // Показывать только на главной
-    var $limit=3; // Кол-во новостей
-
+    /**
+     * Конструктор
+     */
     function PHPShopNewsElement() {
         $this->debug=false;
         $this->objBase=$GLOBALS['SysValue']['base']['table_name8'];
         parent::PHPShopElements();
     }
 
-    // Последние новости
+
+    /**
+     * Вывод последних новостей
+     * @return string
+     */
     function index() {
-        $dis='';
+        $dis=null;
+
+        // Перехват модуля
+        $this->setHook(__CLASS__,__FUNCTION__,false, 'START');
 
         // Выполнение только на главной странице
         if($this->disp_only_index) {
@@ -253,16 +571,25 @@ class PHPShopNewsElement extends PHPShopElements {
         }
         else $view=true;
 
-        if($view) {
-            $data = $this->PHPShopOrm->select(array('id','zag','datas','kratko'),false,array('order'=>'id DESC'),array("limit"=>$this->limit));
+        if(!empty($view)) {
+
+            $result = $this->PHPShopOrm->select(array('id','zag','datas','kratko'),false,array('order'=>'id DESC'),array("limit"=>$this->limit));
+
+            // Проверка на еденичню запись
+            if($this->limit>1) $data=$result;
+            else $data[]=$result;
+
             if(is_array($data))
                 foreach($data as $row) {
 
-                    // Определяем переменые
+                    // Определяем переменные
                     $this->set('newsId',$row['id']);
                     $this->set('newsZag',$row['zag']);
                     $this->set('newsData',$row['datas']);
                     $this->set('newsKratko',$row['kratko']);
+
+                    // Перехват модуля
+                    $this->setHook(__CLASS__,__FUNCTION__,$row, 'END');
 
                     // Подключаем шаблон
                     $dis.=$this->parseTemplate($this->getValue('templates.news_main_mini'));
@@ -298,7 +625,7 @@ class PHPShopOprosElement extends PHPShopElements {
         $PHPShopOrm = &new PHPShopOrm($this->getValue('base.opros_categories'));
         $PHPShopOrm->debug=$this->debug;
         $dataArray=$PHPShopOrm->select(array('*'),array('flag'=>"='1'"),array('order'=>'id DESC'),array('limit'=>10));
-        $content='';
+        $content=null;
         if(is_array($dataArray))
             foreach($dataArray as $row) {
 
@@ -312,24 +639,27 @@ class PHPShopOprosElement extends PHPShopElements {
                 }
                 else {
 
-                    // Если через запятую укзано
+                    // Если через запятую указано
                     if(strpos($row['dir'], ",")) $dirs = explode(",",$row['dir']);
                     else $dirs[] = $row['dir'];
 
                     foreach($dirs as $dir)
-                        if($dir==$_SERVER['REQUEST_URI']) {
+                        if(!empty($dir))
+                            if(strpos($_SERVER['REQUEST_URI'], $dir) or $_SERVER['REQUEST_URI'] == $dir) {
 
-                            // Определяем переменные
-                            $this->set('oprosName',$row['name']);
-                            $this->set('oprosContent',$this->getOprosValue($row['id'],"FORMA"));
+                                // Определяем переменные
+                                $this->set('oprosName',$row['name']);
+                                $this->set('oprosContent',$this->getOprosValue($row['id'],"FORMA"));
 
-                            // Подключаем шаблон
-                            $content.= $this->parseTemplate($this->getValue('templates.opros_list'));
-                        }
+                                // Перехват модуля
+                                $this->setHook(__CLASS__,__FUNCTION__,$row);
+
+                                // Подключаем шаблон
+                                $content.= $this->parseTemplate($this->getValue('templates.opros_list'));
+                            }
                 }
             }
 
-        // Подключаем шаблон
         return $content;
     }
 
@@ -340,7 +670,7 @@ class PHPShopOprosElement extends PHPShopElements {
      * @return string
      */
     function getOprosValue($n,$flag) {
-        $dis='';
+        $dis=null;
         $PHPShopOrm = &new PHPShopOrm($this->getValue('base.opros'));
         $PHPShopOrm->comment='getOprosValue';
         $PHPShopOrm->debug=$this->debug;
@@ -392,7 +722,7 @@ class PHPShopOprosElement extends PHPShopElements {
 /**
  * Элемент баннер
  * @author PHPShop Software
- * @version 1.1
+ * @version 1.3
  * @package PHPShopElements
  */
 class PHPShopBannerElement extends PHPShopElements {
@@ -403,35 +733,62 @@ class PHPShopBannerElement extends PHPShopElements {
         parent::PHPShopElements();
     }
 
-    // Вывод баннера
+    /**
+     * Вывод баннера
+     * @return string
+     */
     function index() {
 
         $this->row = $this->PHPShopOrm->select(array('*'),array("flag"=>"='1'"),array('order'=>'RAND()'),array("limit"=>1));
-        if(is_array($this->row)) {
 
-            // Определяем переменые
-            $this->set('banerContent',$this->row['content']);
-            $this->set('banerTitle',$this->row['name']);
+        if(is_array($this->row))
+            if(empty($this->row['dir'])) {
 
-            // Сообщение администратору о конце показов
-            if($this->row['count_all']>$this->row['limit_all']) $this->mail();
+                // Определяем переменные
+                $this->set('banerContent',$this->row['content']);
+                $this->set('banerTitle',$this->row['name']);
 
-            // Обновляем данные показа
-            $this->update();
+                // Сообщение администратору о конце показов
+                if($this->row['count_all']>$this->row['limit_all']) $this->mail();
 
-            // Подключаем шаблон
-            $dis=$this->parseTemplate($this->getValue('templates.baner_list_forma'));
-        }
+                // Обновляем данные показа
+                $this->update();
+
+                // Подключаем шаблон
+                $dis=$this->parseTemplate($this->getValue('templates.baner_list_forma'));
+            }
+            else {
+                $dirs= explode(",",$this->row['dir']);
+                foreach($dirs as $dir)
+                    if(!empty($dir))
+                        if(strpos($_SERVER['REQUEST_URI'], $dir) or $_SERVER['REQUEST_URI'] == $dir) {
+
+                            // Определяем переменные
+                            $this->set('banerContent',$this->row['content']);
+                            $this->set('banerTitle',$this->row['name']);
+
+                            // Сообщение администратору о конце показов
+                            if($this->row['count_all']>$this->row['limit_all']) $this->mail();
+
+                            // Обновляем данные показа
+                            $this->update();
+
+                            // Подключаем шаблон
+                            $dis=$this->parseTemplate($this->getValue('templates.baner_list_forma'));
+                        }
+
+            }
+
         return $dis;
-
     }
 
 
+    /**
+     * Запись показов баннера
+     */
     function update() {
-
         if($this->row['datas'] != date("d.m.y")) $count_today=0;
         else $count_today=$this->row['count_today']+1;
-
 
         $count_all=$this->row['count_all']+1;
         $this->PHPShopOrm->update(array('count_all'=>$count_all,'count_today'=>$count_today,'datas'=>date("d.m.y")),
@@ -439,129 +796,24 @@ class PHPShopBannerElement extends PHPShopElements {
     }
 
 
+    /**
+     * Сообщение об окончании показов баннера
+     */
     function mail() {
         $this->PHPShopOrm->update(array('flag'=>'0'),array('id'=>"=".$this->row['id']),$prefix='');
 
         // Подключаем библиотеку отправки почты
         PHPShopObj::loadClass("mail");
-        $zag="Закончились показы у банера ".$this->row['name']."";
+        $zag=__("Закончились показы у банера")." ".$this->row['name'];
 
-        $message="
-Закончились показы у банера ".$this->row['name'].".
-Для редактирования состояния баннерной сети перейдите в панель
-администрирования  http://".$_SERVER['SERVER_NAME']."/phpshop/admpanel/
+        $this->set('banner_name',$this->row['name']);
+        $this->set('banner_limit',$this->row['limit_all']);
 
-Характеристики баннера
----------------------------------------------------------
+        // Текст сообщения
+        $message=ParseTemplateReturn('./phpshop/lib/templates/banner/mail_notice.tpl',true);
 
-Название: ".$this->row['name']."
-Лимит: ".$this->row['limit_all']."
-Дата отключения: ".date("d.m.y")."
----------------------------------------------------------
-
-
-http://".$_SERVER['SERVER_NAME'];
         $PHPShopMail = &new PHPShopMail($this->PHPShopSystem->getParam('adminmail2'),
                 "robot@".str_replace("www", '', $_SERVER['SERVER_NAME']),$zag,$message);
-
-    }
-
-}
-
-
-/**
- * Элемент Облако тегов
- * @author PHPShop Software
- * @version 1.0
- * @package PHPShopElements
- */
-class PHPShopCloudElement extends PHPShopElements {
-
-    var $page_limit=100; // Лимит страниц для анализа
-    var $word_limit=30; // Лимит слов для вывода
-
-    function PHPShopCloudElement() {
-        $this->debug=false;
-        $this->objBase=$GLOBALS['SysValue']['base']['products'];
-
-        parent::PHPShopElements();
-        if($this->PHPShopSystem->getSerilizeParam('admoption.cloud_color')=="")
-            $this->color="0x518EAD";
-        else $this->color="0x".$this->PHPShopSystem->getSerilizeParam('admoption.cloud_color');
-    }
-
-    // Последние новости
-    function index() {
-        $disp='';
-
-
-        $data = $this->PHPShopOrm->select(array('keywords','id'),array('enabled'=>"='1'",'keywords'=>" !=''"),array('order'=>'RAND()'),array("limit"=>$this->page_limit));
-        if(is_array($data))
-            foreach($data as $row) {
-
-                $explode=explode(", ",$row['keywords']);
-                foreach($explode as $ev)
-                    if(!empty($ev)) {
-                        $ArrayWords[]=$ev;
-                        $ArrayLinks[$ev]=$row['id'];
-                    }
-
-            }
-        if(is_array($ArrayWords))
-            foreach($ArrayWords as $k=>$v) {
-                $count=array_keys($ArrayWords,$v);
-                $CloudCount[$v]['size']=count($count);
-            }
-
-
-        // Урезаем для наглядности
-        $i=0;
-        if(is_array($CloudCount))
-            foreach($CloudCount as $k=>$v) {
-                if($i<$this->word_limit) $CloudCountLimit[$k]=$v;
-                $i++;
-            }
-
-
-        if(is_array($CloudCountLimit))
-            foreach($CloudCountLimit as $key=>$val)
-                $disp.="<a href='".$this->getValue('dir.dir')."/shop/UID_".$ArrayLinks[$key].".html' style='font-size:12pt;'>$key</a>";
-
-        // Чистим теги
-        $disp = str_replace('\n','',$disp);
-        $disp = str_replace(chr(13),'',$disp);
-        $disp = str_replace(chr(10),'',$disp);
-
-        $disp='
-<div id="wpcumuluscontent">Загрузка флеш...</div><script type="text/javascript">
-var dd=new Date();
- var so = new SWFObject("/stockgallery/tagcloud.swf?rnd="+dd.getTime(), "tagcloudflash", "180", "180", "9", "'.$this->color.'");
-so.addParam("wmode", "transparent");
-so.addParam("allowScriptAccess", "always");
-so.addVariable("tcolor", "'.$this->color.'");
-so.addVariable("tspeed", "150");
-so.addVariable("distr", "true");
-so.addVariable("mode", "tags");
-so.addVariable("tagcloud", "<tags>'.$disp.'</tags>");
-so.write("wpcumuluscontent");</script>
-';
-
-
-        // Чистим
-        $disp = str_replace('\n','',$disp);
-        $disp = str_replace(chr(13),'',$disp);
-        $disp = str_replace(chr(10),'',$disp);
-
-
-        // Определяем переменые
-        $this->set('leftMenuName',"Облако тегов");
-        $this->set('leftMenuContent',$disp);
-
-
-        // Подключаем шаблон
-        @$dis.=$this->parseTemplate($this->getValue('templates.left_menu'));
-
-        return $dis;
     }
 }
 ?>

@@ -6,17 +6,24 @@
  * @package PHPShopClass
  */
 
-if (!defined("OBJENABLED")){
-require_once(dirname(__FILE__)."/obj.class.php");
-require_once(dirname(__FILE__)."/array.class.php");
+if (!defined("OBJENABLED")) {
+    require_once(dirname(__FILE__)."/obj.class.php");
+    require_once(dirname(__FILE__)."/array.class.php");
 }
 
+/**
+ * Массив категории страниц
+ * Упрощенный доступ к категориями
+ * @author PHPShop Software
+ * @version 1.0
+ * @package PHPShopArray
+ */
+class PHPShopPageCategoryArray extends PHPShopArray {
 
-class PHPShopPageCategoryArray extends PHPShopArray{
-	 
-	 function PHPShopPageCategoryArray(){
-	 $this->objBase=$GLOBALS['SysValue']['base']['table_name29'];
-	 parent::PHPShopArray("id","name","parent_to");
-	 }
+    function PHPShopPageCategoryArray() {
+        $this->objBase=$GLOBALS['SysValue']['base']['table_name29'];
+        $this->order=array('order'=>'num');
+        parent::PHPShopArray("id","name","parent_to");
+    }
 }
 ?>

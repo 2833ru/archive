@@ -32,7 +32,7 @@ class PHPShopHtmlCatalog extends PHPShopBaseXml {
 
     function postsql($cat=false,$limit=10) {
         if(empty($cat)) $where='spec="1" and enabled="1"';
-        else $where='category='.$cat.' and enabled="1"';
+        else $where='category='.$cat.' and enabled="1" and parent_enabled="0"';
 
         $_POST['sql']='<?xml version="1.0" encoding="windows-1251"?>
 <phpshop><sql><from>table_name2</from>

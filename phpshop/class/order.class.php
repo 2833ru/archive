@@ -6,10 +6,10 @@ if (!defined("OBJENABLED"))
 /**
  * Библиотека заказов
  * @author PHPShop Software
- * @version 1.2
+ * @version 1.3
  * @package PHPShopObj
  */
-class PHPShopOrder extends PHPShopObj {
+class PHPShopOrderFunction extends PHPShopObj {
     var $objID;
     var $productID;
     var $default_valuta_iso;
@@ -20,18 +20,20 @@ class PHPShopOrder extends PHPShopObj {
      * Конструктор
      * @param int $objID ИД заказа
      */
-    function PHPShopOrder($objID=false) {
+    function PHPShopOrderFunction($objID=false) {
         global  $PHPShopSystem;
 
         if($objID) {
             $this->objID=$objID;
             $this->objBase=$GLOBALS['SysValue']['base']['table_name1'];
             parent::PHPShopObj();
+
+            // Содержание корзины
+            $paramOrder=parent::unserializeParam("orders");
+            $this->order_metod_id=$paramOrder['Person']['order_metod'];
         }
 
-        // Содержание корзины
-        $paramOrder=parent::unserializeParam("orders");
-        $this->order_metod_id=$paramOrder['Person']['order_metod'];
+
         parent::loadClass("system");
 
         // Системные настройки
@@ -42,6 +44,19 @@ class PHPShopOrder extends PHPShopObj {
 
         // Валюта
         $this->getDefaultValutaObj();
+    }
+
+    /**
+     * Импорт данных
+     * @param array $data массив данных
+     */
+    function import($data) {
+        $this->objRow=$data;
+
+        // Содержание корзины
+        $paramOrder=parent::unserializeParam("orders");
+        $this->order_metod_id=$paramOrder['Person']['order_metod'];
+
     }
 
     /**
@@ -63,6 +78,38 @@ class PHPShopOrder extends PHPShopObj {
         $Payment= new PHPShopPayment($this->order_metod_id);
         $this->order_metod_name=$Payment->getName();
         return $this->order_metod_name;
+    }
+
+    /**
+     * Статус заказа
+     * @return string
+     */
+    function getStatus() {
+        global $PHPShopOrderStatusArray;
+
+        if(empty($PHPShopOrderStatusArray))
+            $PHPShopOrderStatusArray = new PHPShopOrderStatusArray();
+
+        $status=$this->getParam('statusi');
+        if(!empty($status))
+            return $PHPShopOrderStatusArray->getParam($this->getParam('statusi').'.name');
+        else return 'Новый заказ';
+    }
+
+    /**
+     * Цвет статуса заказа
+     * @return string
+     */
+    function getStatusColor() {
+        global $PHPShopOrderStatusArray;
+
+        if(empty($PHPShopOrderStatusArray))
+            $PHPShopOrderStatusArray = new PHPShopOrderStatusArray();
+
+        $status=$this->getParam('statusi');
+        if(!empty($status))
+            return $PHPShopOrderStatusArray->getParam($this->getParam('statusi').'.color');
+        else return 'Новый заказ';
     }
 
     /**
@@ -176,7 +223,7 @@ class PHPShopOrder extends PHPShopObj {
         $maxsum=0;
         $maxdiscount=0;
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['table_name23']);
-        $row=$PHPShopOrm->select(array('sum','discount'),array('sum'=>"<'$mysum'",'enabled'=>"='1'"),false,array('limit'=>1));
+        $row=$PHPShopOrm->select(array('sum','discount'),array('sum'=>"<'$mysum'",'enabled'=>"='1'"),array('order'=>'sum desc'),array('limit'=>1));
         if(is_array($row)) {
             $sum=$row['sum'];
             if($sum>$maxsum) {
@@ -198,7 +245,7 @@ class PHPShopOrder extends PHPShopObj {
     }
 
 
-    function cart($function) {
+    function cart($function,$option=false) {
         $list=null;
         $order=$this->unserializeParam('orders');
         if(is_array($order['Cart']['cart'])) {
@@ -212,13 +259,13 @@ class PHPShopOrder extends PHPShopObj {
         if(is_array($cart))
             foreach($cart as $v)
                 if(function_exists($function)) {
-                    $list.= call_user_func($function,$v);
+                    $list.= call_user_func_array($function, array($v,$option));
                 }
 
         return $list;
     }
 
-    function delivery($function) {
+    function delivery($function,$option=false) {
         $list=null;
         $order=$this->unserializeParam('orders');
         $PHPShopDelivery = new PHPShopDelivery($order['Person']['dostavka_metod']);
@@ -227,7 +274,7 @@ class PHPShopOrder extends PHPShopObj {
         $delivery['price']=number_format($PHPShopDelivery->getPrice($order['Cart']['sum'],$order['Cart']['weight']),$this->format,'.','');
 
         if(function_exists($function)) {
-            $list.= call_user_func($function,$delivery);
+            $list.= call_user_func_array($function, array($delivery,$option));
         }
         return $list;
     }
@@ -255,6 +302,11 @@ class PHPShopOrder extends PHPShopObj {
         return $order['Cart']['num'];
     }
 
+    function getMail() {
+        $order=$this->unserializeParam('orders');
+        return $order['Person']['mail'];
+    }
+
     function getTotal($nds=false) {
         $cart=$this->getCartSumma();
         $delivery=$this->getDeliverySumma();
@@ -266,6 +318,10 @@ class PHPShopOrder extends PHPShopObj {
         return $total;
     }
 
+    function getStatusTime() {
+        return $this->getSerilizeParam('status.time');
+    }
+
 
     function getSerilizeParam($param) {
         $param=explode(".",$param);
@@ -273,6 +329,22 @@ class PHPShopOrder extends PHPShopObj {
         if(count($param)>2) return $val[$param[1]][$param[2]];
         return $val[$param[1]];
     }
+    
 
 }
+
+
+PHPShopObj::loadClass('array');
+class PHPShopOrderStatusArray extends PHPShopArray {
+
+    /**
+     * Конструктор
+     * @param string $sql SQL условие выборки
+     */
+    function PHPShopOrderStatusArray() {
+        $this->objBase=$GLOBALS['SysValue']['base']['order_status'];
+        parent::PHPShopArray('id','name','color','sklad_action');
+    }
+}
+
 ?>

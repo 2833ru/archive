@@ -59,8 +59,8 @@ function actionStart() {
     }
     
     $option[]=array('Блокировать вывод всех ошибок',0,$enabled_chek_0);
-    $option[]=array('Показывать ошибки и отладки',1,$enabled_chek_1);
-    $option[]=array('Показывать все',2,$enabled_chek_2);
+    $option[]=array('Показывать ошибки',1,$enabled_chek_1);
+    $option[]=array('Показывать ошибки и отладки',2,$enabled_chek_2);
     $Tab1=$PHPShopGUI->setSelect('enabled_new',$option,200,$float="none",$caption='Уровень ошибок');
 
     $Info='

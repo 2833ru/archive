@@ -3,53 +3,74 @@
  * Родительский класс ядра
  * Примеры использования размещены в папке phpshop/core/
  * @author PHPShop Software
- * @version 1.4
+ * @version 1.6
  * @package PHPShopClass
  */
 
 class PHPShopCore {
     /**
-     * @var string имя БД
+     * имя БД
+     * @var string 
      */
     var $objBase;
+
     /**
-     * @var bool режим отладки
+     * Путь для навигации
+     * @var string
+     */
+    var $objPath;
+
+    /**
+     * режим отладки
+     * @var bool 
      */
     var $debug=false;
     /**
-     * @var string результат работы парсера
+     * результат работы парсера
+     * @var string 
      */
     var $Disp,$ListInfoItems;
     /**
-     * @var array массив обработки POST, GET запросов
+     * массив обработки POST, GET запросов
+     * @var array 
      */
     var $action=array("nav"=>"index");
     /**
-     * @var string метатеги
+     * префикс экшен функций (action_|a_), используется при большом количестве методов в классах
+     * @var string 
+     * 
+     */
+    var $action_prefix=null;
+    /**
+     * метатеги
+     * @var string
      */
     var $title,$description,$keywords,$lastmodified;
     /**
-     * @var string ссылка в навигации от корня
+     * ссылка в навигации от корня
+     * @var string 
      */
-    var $navigation_link='';
+    var $navigation_link,$navigation_array=null;
     /**
-     * @var string шаблон вывода
+     * шаблон вывода
+     * @var string 
      */
     var $template='templates.shop';
     /**
-     * @var string массив навигации (каталог/фото)
+     * таблица массива навигации
+     * @var string  
      */
-    var $navigationArray='CatalogPage';
+    var $navigationBase='base.categories';
+    var $arrayPath;
     /**
-     * @var string  таблица массива навигации
+     * длина пагинации для офрмаротиования длины строки
+     * @var int 
      */
-    var $navigationBase='base.table_name';
+    var $nav_len=10;
+
 
     /**
      * Конструктор
-     * @global array $PHPShopSystem
-     * @global array $PHPShopNav
-     * @global array $PHPShopModules
      */
     function PHPShopCore() {
         global $PHPShopSystem,$PHPShopNav,$PHPShopModules;
@@ -59,19 +80,30 @@ class PHPShopCore {
 
         $this->PHPShopOrm->debug=$this->debug;
         $this->SysValue=&$GLOBALS['SysValue'];
-        $this->LoadItems=&$GLOBALS['LoadItems'];
-        $this->PHPShopSystem=&$PHPShopSystem;
+        $this->PHPShopSystem=$PHPShopSystem;
+        $this->PHPShopOrm->cache=$this->cache;
         $this->num_row=$this->PHPShopSystem->getParam('num_row');
-        $this->PHPShopNav=&$PHPShopNav;
+        $this->PHPShopNav=$PHPShopNav;
         $this->PHPShopModules=&$PHPShopModules;
         $this->page=$this->PHPShopNav->getId();
         if(strlen($this->page)==0) $this->page=1;
 
         // Определяем переменные
         $this->set('pageProduct',$this->SysValue['license']['product_name']);
+                        
 
     }
 
+    /**
+     * Сравнение параметра из массива
+     * @param string $paramName имя переменной
+     * @param string $paramValue значение переменной
+     * @return bool
+     */
+    function ifValue($paramName,$paramValue=false) {
+        if(empty($paramValue)) $paramValue=1;
+        if($this->objRow[$paramName] == $paramValue) return true;
+    }
 
     /**
      * Расчет навигации хлебных крошек
@@ -79,57 +111,49 @@ class PHPShopCore {
      * @return array
      */
     function getNavigationPath($id) {
-        global $array;
         $PHPShopOrm = &new PHPShopOrm($this->getValue($this->navigationBase));
         $PHPShopOrm->debug=$this->debug;
+        $PHPShopOrm->cache=$this->cache;
 
-        if($id)
-            if(empty($this->LoadItems[$this->navigationArray][$id]['name'])) {
-                $PHPShopOrm->comment="Навигация";
-                $v=$PHPShopOrm->select(array('name','id','parent_to'),array('id'=>'='.$id),false,array('limit'=>1));
-
-                if(is_array($v)) {
-                    $array[]=array('id'=>$v['id'],'name'=>$v['name'],'parent_to'=>$v['parent_to']);
+        if(!empty($id)) {
+            $PHPShopOrm->comment="Навигация";
+            $v=$PHPShopOrm->select(array('name,id,parent_to'),array('id'=>'='.$id),false,array('limit'=>1));
+            if(is_array($v)) {
+                $this->navigation_array[]=array('id'=>$v['id'],'name'=>$v['name'],'parent_to'=>$v['parent_to']);
+                if(!empty($v['parent_to']))
                     $this->getNavigationPath($v['parent_to']);
-                }
-            }else {
-                foreach($this->LoadItems[$this->navigationArray] as $k=>$v)
-                    if($k == $id) {
-                        $array[]=array('id'=>$id,'name'=>$v['name'],'parent_to'=>$v['parent_to']);
-                        $this->getNavigationPath($v['parent_to']);
-                    }
             }
-        return $array;
+        }
     }
     /**
      * Навигация хлебных крошек
-     * @param int $id текущий ИД позиции
+     * @param int $id текущий ИД родителя
      * @param string $name имя раздела
      */
     function navigation($id,$name) {
-        $dis='';
+        $dis=null;
+
+        // Шаблоны разделителя навигации
         $spliter=ParseTemplateReturn($this->getValue('templates.breadcrumbs_splitter'));
         $home=ParseTemplateReturn($this->getValue('templates.breadcrumbs_home'));
 
-        $arrayPath=$this->getNavigationPath($id);
+        // Если нет шаблона разделителей
+        if(empty($spliter)) $spliter=' / ';
+        if(empty($home)) $home=PHPShopText::a('/',__('Главная'));
+
+        // Реверсивное построение массива категорий
+        $this->getNavigationPath($id);
+
+        if(is_array($this->navigation_array))
+            $arrayPath=array_reverse($this->navigation_array);
 
         if(is_array($arrayPath)) {
-            $arrayPath=array_reverse($arrayPath);
-
-
-            // Убираем последнее значение если каталог
-            if($this->PHPShopNav->getNav() == "CID" )
-                array_pop($arrayPath);
-
-            debug($arrayPath);
-
             foreach($arrayPath as $v) {
-                $dis.= $spliter.'<A href="/'.$this->PHPShopNav->getPath().'/CID_'.$v['id'].'.html">'.$v['name'].'</a>';
+                $dis.= $spliter.PHPShopText::a('/'.$this->PHPShopNav->getPath().'/CID_'.$v['id'].'.html',$v['name']);
             }
-
         }
 
-        $dis=$home.$dis.$spliter.'<b>'.$name.'</b>';
+        $dis=$home.$dis.$spliter.PHPShopText::b($name);
         $this->set('breadCrumbs',$dis);
 
         // Навигация для javascript в shop.tpl
@@ -140,9 +164,13 @@ class PHPShopCore {
      * Генерация даты изменения документа
      */
     function header() {
-        if($this->getValue("my.last_modified") == "true") {
-            @Header("Cache-Control: no-cache, must-revalidate");
-            @Header("Pragma: no-cache");
+        if($this->getValue("cache.last_modified") == "true") {
+
+            // Некоторые сервера требуют обзательных заголовков 200
+            //header("HTTP/1.1 200");
+            //header("Status: 200");
+            @header("Cache-Control: no-cache, must-revalidate");
+            @header("Pragma: no-cache");
 
             if(!empty($this->lastmodified)) {
                 $updateDate=@gmdate("D, d M Y H:i:s",$this->lastmodified);
@@ -151,7 +179,7 @@ class PHPShopCore {
                 $updateDate=gmdate("D, d M Y H:i:s",(date("U")-21600));
             }
 
-            @Header("Last-Modified: ".$updateDate." GMT");
+            @header("Last-Modified: ".$updateDate." GMT");
         }
     }
 
@@ -164,7 +192,7 @@ class PHPShopCore {
         else $this->set('pageTitl',$this->PHPShopSystem->getValue("title"));
 
         if(!empty($this->description)) $this->set('pageDesc',$this->description);
-        else $this->set('pageDesc',$this->PHPShopSystem->getValue("meta"));
+        else $this->set('pageDesc',$this->PHPShopSystem->getValue("descrip"));
 
         if(!empty($this->keywords)) $this->set('pageKeyw',$this->keywords);
         else $this->set('pageKeyw',$this->PHPShopSystem->getValue("keywords"));
@@ -175,8 +203,8 @@ class PHPShopCore {
      * Загрузка экшенов
      */
     function loadActions() {
-            $this->setAction();
-            $this->Compile();
+        $this->setAction();
+        $this->Compile();
     }
 
     /**
@@ -186,12 +214,13 @@ class PHPShopCore {
      * @param array $order параметры сортировки данных при выдаче
      * @return array
      */
-    function getListInfoItem($select=false,$where=false,$order=false) {
-        $this->ListInfoItems='';
+    function getListInfoItem($select=false,$where=false,$order=false,$class_name=false,$function_name=false,$sql=false) {
+        $this->ListInfoItems=null;
         $this->where=$where;
 
         // Обработка номера страницы
-        if(!PHPShopSecurity::true_num($this->page)) return $this->setError404();
+        if(!PHPShopSecurity::true_num($this->page) and strtoupper($this->page) != 'ALL')
+                return $this->setError404();
 
         if(empty($this->page)) {
             $num_ot=0;
@@ -202,19 +231,33 @@ class PHPShopCore {
             $num_do=$this->num_row;
         }
 
+        // Вывод всех страниц
+        if(strtoupper($this->page) == 'ALL'){
+            $num_ot=0;
+            $num_do=$this->max_item;
+        }
+
+
         $option=array('limit'=>$num_ot.','.$num_do);
 
         $this->set('productFound',$this->getValue('lang.found_of_products'));
         $this->set('productNumOnPage',$this->getValue('lang.row_on_page'));
         $this->set('productPage',$this->getValue('lang.page_now'));
 
-        return $this->PHPShopOrm->select($select,$where,$order,$option);
+        $this->PHPShopOrm->comment=__CLASS__.'.'.__FUNCTION__;
+
+        if(!empty($sql)){
+            $this->PHPShopOrm->sql='select * from '.$this->objBase.' where '.$sql.' limit '.$option['limit'];
+        }
+        
+        return $this->PHPShopOrm->select($select,$where,$order,$option,$class_name,$function_name);
     }
 
     /**
      * Генерация пагинатора
      */
     function setPaginator() {
+
         $SQL='';
         // Выборка по параметрам WHERE
         $nWhere=1;
@@ -227,21 +270,38 @@ class PHPShopCore {
             }
         }
 
-
         // Кол-во страниц
+        $this->PHPShopOrm->comment=__CLASS__.'.'.__FUNCTION__;
         $result=$this->PHPShopOrm->query("select COUNT('id') as count from ".$this->objBase.$SQL);
         $row = mysql_fetch_array($result);
         $this->num_page=$row['count'];
-
         $i=1;
-        $navigat='';
-        $num=$this->num_page/$this->num_row;
+        $navigat=null;
 
-        while ($i<$num+1) {
-            if($i!=$this->page) $navigat.="<a href=\"".$this->objPath.$i.".html\">$i</a> / ";
-            else $navigat.="<b> $i</b> / ";
+        // Кол-во страниц в навигации
+        $num=round(($this->num_page/$this->num_row)+0.4);
+
+        while ($i<=$num) {
+
+            if($i>1) {
+                $p_start=$this->num_row*($i-1);
+                $p_end=$p_start+$this->num_row;
+            }
+            else {
+                $p_start=$i;
+                $p_end=$this->num_row;
+            }
+            if($i!=$this->page) {
+                if($i>($this->page-$this->nav_len) and $i<($this->page+$this->nav_len))
+                $navigat.=PHPShopText::a($this->objPath.$i.'.html',$p_start.'-'.$p_end).' / ';
+                else if($i-($this->page+$this->nav_len)<3 and (($this->page-$this->nav_len)-$i)<3) $navigat.=".";
+
+            }
+            else $navigat.=PHPShopText::b($p_start.'-'.$p_end.' / ');
             $i++;
         }
+
+        // Расчет навигации вперед и назад
         if($num>1) {
             if($this->page>=$num) {
                 $p_to=$i-1;
@@ -250,9 +310,12 @@ class PHPShopCore {
                 $p_to=$this->page+1;
                 $p_do=1;
             }
-            $this->set('productPageNav',$this->getValue('lang.page_now').":
-<a href=\"".$this->objPath.($p_do).".html\">&laquo;&laquo;&nbsp;</a>&nbsp;/
-                    $navigat&nbsp<a href=\"".$this->objPath.$p_to.".html\">&nbsp;&raquo;&raquo;</a>");
+
+            $nav=$this->getValue('lang.page_now').': ';
+            $nav.=PHPShopText::a($this->objPath.($p_do).'.html','&laquo;&laquo;&nbsp;','&laquo; '.$this->lang('nav_back'));
+            $nav.=' / '.$navigat.'&nbsp';
+            $nav.=PHPShopText::a($this->objPath.($p_to).'.html','&raquo;&raquo;&nbsp;',$this->lang('nav_forw').' &raquo;');
+            $this->set('productPageNav',$nav);
         }
     }
 
@@ -263,18 +326,21 @@ class PHPShopCore {
      * @param array $order параметры сортировки данных при выдаче
      * @return array
      */
-    function getFullInfoItem($select,$where,$order=false) {
-        return $this->PHPShopOrm->select($select,$where,$order,array('limit'=>'1'));
+    function getFullInfoItem($select,$where,$class_name=false,$function_name=false) {
+        $result=$this->PHPShopOrm->select($select,$where,false,array('limit'=>'1'),$class_name,$function_name);
+        return $result;
     }
 
     /**
      * Добавление данных в вывод парсера
      * @param string $template шаблон для парсинга
+     * @param bool $mod работа в модуле
      */
-    function addToTemplate($template) {
-        $template_file=$this->getValue('dir.templates').chr(47).$_SESSION['skin'].chr(47).$template;
+    function addToTemplate($template,$mod=false) {
+        if($mod) $template_file=$template;
+        else $template_file=$this->getValue('dir.templates').chr(47).$_SESSION['skin'].chr(47).$template;
         if(is_file($template_file)) {
-            $this->ListInfoItems.=ParseTemplateReturn($template);
+            $this->ListInfoItems.=ParseTemplateReturn($template,$mod);
             $this->set('pageContent',$this->ListInfoItems);
         }else $this->setError("addToTemplate",$template_file);
     }
@@ -292,12 +358,12 @@ class PHPShopCore {
     /**
      * Парсинг шаблона и добавление в общую переменную вывода
      * @param string $template имя шаблона
+     * @param bool $mod работа в модуле
      */
-    function parseTemplate($template) {
+    function parseTemplate($template,$mod=false) {
         $this->set('productPageDis',$this->ListInfoItems);
-        $this->Disp=ParseTemplateReturn($template);
+        $this->Disp=ParseTemplateReturn($template,$mod);
     }
-
     /**
      * Сообщение об ошибке
      * @param string $name имя функции
@@ -322,11 +388,14 @@ width="32" height="32" alt="PHPShopCore Debug On"/ ><strong>Ошибка обработчика с
         // Дата модификации
         $this->header();
 
+        // Запись файла локализации
+        writeLangFile();
+
         ParseTemplate($this->getValue($this->template));
     }
 
     /**
-     * Создание системной переменной для парсинга
+     * Создание переменной шаблонизатора для парсинга
      * @param string $name имя
      * @param mixed $value значение
      * @param bool $flag [1] - добавить, [0] - переписать
@@ -337,7 +406,7 @@ width="32" height="32" alt="PHPShopCore Debug On"/ ><strong>Ошибка обработчика с
     }
 
     /**
-     * Выдача системной переменной
+     * Выдача переменной шаблонизатора
      * @param string $name
      * @return string
      */
@@ -352,72 +421,91 @@ width="32" height="32" alt="PHPShopCore Debug On"/ ><strong>Ошибка обработчика с
      */
     function getValue($param) {
         $param=explode(".",$param);
+        if(count($param)>2) return $this->SysValue[$param[0]][$param[1]][$param[2]];
         return $this->SysValue[$param[0]][$param[1]];
     }
 
     /**
-     * Назначение экшена обработки перемнных POST и GET
+     * Назначение экшена обработки переменных POST и GET
      */
     function setAction() {
-        global $SysValue;
 
         if(is_array($this->action)) {
             foreach($this->action as $k=>$v) {
 
                 switch($k) {
 
+                    // Экшен POST
                     case("post"):
 
                     // Если несколько экшенов
                         if(is_array($v)) {
                             foreach($v as $function)
                                 if(!empty($_POST[$function]) and $this->isAction($function))
-                                    call_user_func(array(&$this, $function));
+                                    return call_user_func(array(&$this, $this->action_prefix.$function));
                         } else {
                             // Если один экшен
                             if(!empty($_POST[$v]) and $this->isAction($v))
-                                call_user_func(array(&$this, $v));
+                                return call_user_func(array(&$this, $this->action_prefix.$v));
                         }
                         break;
 
+                    // Экшен GET
                     case("get"):
-
 
                     // Если несколько экшенов
                         if(is_array($v)) {
                             foreach($v as $function)
                                 if(!empty($_GET[$function]) and $this->isAction($function))
-                                    call_user_func(array(&$this, $function));
+                                    return call_user_func(array(&$this, $this->action_prefix.$function));
                         } else {
                             // Если один экшен
                             if(!empty($_GET[$v]) and $this->isAction($v))
-                                call_user_func(array(&$this, $v));
+                                return call_user_func(array(&$this, $this->action_prefix.$v));
                         }
 
                         break;
 
+                    // Экшен NAME
+                    case("name"):
+
+                    // Если несколько экшенов
+                        if(is_array($v)) {
+                            foreach($v as $function)
+                                if($this->PHPShopNav->getName() == $function and $this->isAction($function))
+                                    return call_user_func(array(&$this, $this->action_prefix.$function));
+                        } else {
+                            // Если один экшен
+                            if($this->PHPShopNav->getName() == $v and $this->isAction($v))
+                                return call_user_func(array(&$this, $this->action_prefix.$v));
+                        }
+
+                        break;
+
+
+                    // Экшен NAV
                     case("nav"):
 
-                        // Если несколько экшенов
+                    // Если несколько экшенов
                         if(is_array($v)) {
                             foreach($v as $function) {
                                 if($this->PHPShopNav->getNav() == $function and $this->isAction($function)) {
-                                    call_user_func(array(&$this, $function));
+                                    return call_user_func(array(&$this, $this->action_prefix.$function));
                                     $call_user_func = true;
                                 }
 
                             }
-                            if(empty($call_user_func)){
-                                if($this->isAction('index')) call_user_func(array(&$this, 'index'));
-                                else  $this->setError("index","метод не существует");
+                            if(empty($call_user_func)) {
+                                if($this->isAction('index')) call_user_func(array(&$this, $this->action_prefix.'index'));
+                                else  $this->setError($this->action_prefix."index","метод не существует");
                             }
- 
+
                         } else {
                             // Если один экшен
                             if($this->PHPShopNav->getNav() == $v and $this->isAction($v))
-                                call_user_func(array(&$this, $v));
-                            elseif($this->isAction('index')) call_user_func(array(&$this, 'index'));
-                            else $this->setError("index","метод не существует");
+                                return call_user_func(array(&$this, $this->action_prefix.$v));
+                            elseif($this->isAction('index')) call_user_func(array(&$this, $this->action_prefix.'index'));
+                            else $this->setError($this->action_prefix."phpshop".$this->PHPShopNav->getPath()."->index","метод не существует");
                         }
 
                         break;
@@ -433,7 +521,16 @@ width="32" height="32" alt="PHPShopCore Debug On"/ ><strong>Ошибка обработчика с
      * @return bool
      */
     function isAction($method_name) {
-        if(method_exists($this,$method_name)) return true;
+        if(method_exists($this,$this->action_prefix.$method_name)) return true;
+    }
+
+    /**
+     * Ожидание экшена
+     * @param string $method_name  имя метода
+     */
+    function waitAction($method_name) {
+        if(!empty($_REQUEST[$method_name]) and $this->isAction($method_name))
+            call_user_func(array(&$this, $this->action_prefix.$method_name));
     }
 
     /**
@@ -451,5 +548,111 @@ width="32" height="32" alt="PHPShopCore Debug On"/ ><strong>Ошибка обработчика с
         // Подключаем шаблон
         $this->parseTemplate($this->getValue('templates.error_page_forma'));
     }
+
+    /**
+     * Подключение функций из файлов ядра
+     * @param string $class_name имя класса
+     * @param string $function_name имя функции
+     * @param array $function_row массив дополнительны данных из функции
+     * @param string $path имя раздела
+     * @return mixed
+     */
+    function doLoadFunction($class_name,$function_name,$function_row=false,$path=false) {
+
+        if(empty($path))
+            $path=$GLOBALS['SysValue']['nav']['path'];
+
+        $function_path='./phpshop/core/'.$path.'.core/'.$function_name.'.php';
+        if(is_file($function_path)) {
+            include_once($function_path);
+            if(function_exists($function_name)) {
+                return call_user_func_array($function_name, array(&$this, $function_row));
+            }
+        }
+
+    }
+
+    /**
+     * Вывод языкового параметра по ключу [config.ini]
+     * @param string $str ключ языкового массива
+     * @return string
+     */
+    function lang($str) {
+        if($this->SysValue['lang'][$str])
+            return $this->SysValue['lang'][$str];
+        else return 'Не определено';
+    }
+
+    /**
+     * Запись в память
+     * @param string $param имя параметра [catalog.param]
+     * @param mixed $value значение
+     */
+    function memory_set($param,$value) {
+        if(!empty($this->memory)) {
+            $param=explode(".",$param);
+            $_SESSION['Memory'][__CLASS__][$param[0]][$param[1]]=$value;
+            $_SESSION['Memory'][__CLASS__]['time']=time();
+        }
+    }
+
+    /**
+     * Выборка из памяти
+     * @param string $param имя параметра [catalog.param]
+     * @param bool $check сравнить с нулем
+     * @return
+     */
+    function memory_get($param,$check=false) {
+        $this->memory_clean();
+        if(!empty($this->memory)) {
+            $param=explode(".",$param);
+            if(isset($_SESSION['Memory'][__CLASS__][$param[0]][$param[1]])) {
+                if(!empty($check)) {
+                    if(!empty($_SESSION['Memory'][__CLASS__][$param[0]][$param[1]])) return true;
+                }
+                else return $_SESSION['Memory'][__CLASS__][$param[0]][$param[1]];
+            }
+            elseif(!empty($check)) return true;
+        }
+        else return true;
+    }
+
+
+    /**
+     * Чистка памяти по времени
+     * @param bool $clean_now принудительная чистка
+     */
+    function memory_clean($clean_now=false) {
+        if(!empty($clean_now))
+            unset($_SESSION['Memory'][__CLASS__]);
+        elseif($_SESSION['Memory'][__CLASS__]['time']<(time()-60*10))
+            unset($_SESSION['Memory'][__CLASS__]);
+    }
+
+
+    /**
+     * Назначение перехвата события выполнения модулем
+     * @param string $class_name имя класса
+     * @param string $function_name имя метода
+     * @param mixed $data данные для обработки
+     * @param string $rout позиция вызова к функции [END | START | MIDDLE], по умолчанию END
+     * @return bool
+     */
+    function setHook($class_name, $function_name, $data=false, $rout=false) {
+        return $this->PHPShopModules->setHookHandler($class_name,$function_name, &$this, $data, $rout);
+    }
+
+    /**
+     * Сообщение
+     * @param string $title заголовок
+     * @param string $content содержание
+     * @return string
+     */
+    function message($title,$content) {
+        $message=PHPShopText::b(PHPShopText::notice($title,false,'14px')).PHPShopText::br();
+        $message.=PHPShopText::message($content,false,'12px','black');
+        return $message;
+    }
+
 }
 ?>

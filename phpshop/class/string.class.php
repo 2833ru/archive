@@ -3,8 +3,9 @@
 /**
  * Библиотека форматирования строк
  * @author PHPShop Software
- * @version 1.2
+ * @version 1.4
  * @package PHPShopClass
+ * @subpackage Helper
  */
 class PHPShopString {
 
@@ -66,9 +67,21 @@ class PHPShopString {
         $str=str_replace("-", "", $str);
         $str=str_replace(" ", "_", $str);
         $str=str_replace("!", "", $str);
+        $str=str_replace("|", "_", $str);
+        $str=str_replace(".", "_", $str);
+        $str=str_replace("№", "N", $str);
+        $str=str_replace("?", "", $str);
+        $str=str_replace("&nbsp", "_", $str);
+        $str=str_replace("&amp;",'_',$str);
+        $str=str_replace("ь", "", $str);
+        $str=str_replace("Ь", "", $str);
+        $str=str_replace("ъ", "", $str);
+        $str=str_replace("«", "", $str);
+        $str=str_replace("»", "", $str);
+        $str=str_replace("“", "", $str);
 
         $new_str='';
-        $_Array=array("а"=>"a","б"=>"b","в"=>"v","г"=>"g","д"=>"d","е"=>"e","ё"=>"e","ж"=>"gh","з"=>"z","и"=>"i","й"=>"i","к"=>"k","л"=>"l","м"=>"m","н"=>"n","о"=>"o","п"=>"p","р"=>"r","с"=>"s","т"=>"t","у"=>"u","ф"=>"f","х"=>"h","ц"=>"c","ч"=>"ch","ш"=>"sh","щ"=>"sh","ъ"=>"i","ы"=>"yi","ь"=>"i","э"=>"a","ю"=>"u","я"=>"ya","А"=>"a","Б"=>"b","В"=>"v","Г"=>"g","Д"=>"d","Ё"=>"e","Ж"=>"gh","З"=>"z","И"=>"i","Й"=>"i","К"=>"k","Л"=>"l","М"=>"m","Н"=>"n","О"=>"o","П"=>"p","Р"=>"r","С"=>"s","Т"=>"t","У"=>"u","Ф"=>"f","Х"=>"h","Ц"=>"c","Ч"=>"ch","Ш"=>"sh","Щ"=>"sh","Э"=>"a","Ю"=>"u","Я"=>"ya","."=>".","$"=>"i","%"=>"i","&"=>"and");
+        $_Array=array(" "=>"_","а"=>"a","б"=>"b","в"=>"v","г"=>"g","д"=>"d","е"=>"e","ё"=>"e","ж"=>"zh","з"=>"z","и"=>"i","й"=>"y","к"=>"k","л"=>"l","м"=>"m","н"=>"n","о"=>"o","п"=>"p","р"=>"r","с"=>"s","т"=>"t","у"=>"u","ф"=>"f","х"=>"h","ц"=>"c","ч"=>"ch","ш"=>"sh","щ"=>"sch","ъ"=>"i","ы"=>"y","ь"=>"i","э"=>"e","ю"=>"u","я"=>"ya","А"=>"a","Б"=>"b","В"=>"v","Г"=>"g","Д"=>"d","Е"=>"e","Ё"=>"e","Ж"=>"zh","З"=>"z","И"=>"i","Й"=>"y","К"=>"k","Л"=>"l","М"=>"m","Н"=>"n","О"=>"o","П"=>"p","Р"=>"r","С"=>"s","Т"=>"t","Ы"=>"Y","У"=>"u","Ф"=>"f","Х"=>"h","Ц"=>"c","Ч"=>"ch","Ш"=>"sh","Щ"=>"sch","Э"=>"e","Ю"=>"u","Я"=>"ya","."=>"_","$"=>"i","%"=>"i","&"=>"_and_");
 
         $chars = preg_split('//', $str, -1, PREG_SPLIT_NO_EMPTY);
 
@@ -76,7 +89,7 @@ class PHPShopString {
             if(empty($_Array[$val])) $new_str.=$val;
             else $new_str.=$_Array[$val];
 
-        return $new_str;
+        return trim($new_str);
     }
 
     // Отрезаем до точки
@@ -94,4 +107,5 @@ class PHPShopString {
     }
 
 }
+
 ?>

@@ -44,6 +44,7 @@ $SysValue['other'][chr(73).chr(110).chr(105).ucfirst(strtolower($section)).ucfir
 
 $LMI_SECRET_KEY=$SysValue['webmoney']['LMI_SECRET_KEY'];
 
+@extract($_POST);
 
 // build own CRC
 $HASH=$LMI_PAYEE_PURSE.$LMI_PAYMENT_AMOUNT.$LMI_PAYMENT_NO.$LMI_MODE.$LMI_SYS_INVS_NO.$LMI_SYS_TRANS_NO.$LMI_SYS_TRANS_DATE.$LMI_SECRET_KEY.$LMI_PAYER_PURSE.$LMI_PAYER_WM;

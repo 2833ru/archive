@@ -3,15 +3,16 @@ $_classPath="../../";
 include($_classPath."class/obj.class.php");
 PHPShopObj::loadClass("base");
 PHPShopObj::loadClass("order");
+PHPShopObj::loadClass("security");
 
 $PHPShopBase = new PHPShopBase($_classPath."inc/config.ini");
 $PHPShopBase->chekAdmin();
 
 
 if(isset($_GET['orderID'])){
-$PHPShopOrder = new PHPShopOrder($_GET['orderID']);
+$PHPShopOrder = new PHPShopOrderFunction($_GET['orderID']);
 
-$sql="select * from ".$SysValue['base']['table_name1']." where id='$orderID'";
+$sql="select * from ".$SysValue['base']['table_name1']." where id=".$_GET['orderID'];
 $result=mysql_query($sql);
 $num=0;
 $csv1="Начало личных данных;;;;;;;;;;\n";

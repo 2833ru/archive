@@ -1,1 +1,0 @@
-<div class="TOPcatalog_div"><span class="TOPcatalog_text2"><a href="/page/CID_@catalogId@.html">@catalogName@</a></span></div>

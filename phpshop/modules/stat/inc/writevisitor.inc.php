@@ -60,6 +60,7 @@ class VisitorsWriter {
         if (!$referer) return '';
         $bots = $this->botlist;
         foreach ($bots as $bot) {
+            $bot['host']=str_replace('//', '\/\/', $bot['host']);
             if (@preg_match('/^('.$bot['host'].')/i', $referer)){
                 $urlarr = parse_url($referer);
                 if (!empty($urlarr['query'])){

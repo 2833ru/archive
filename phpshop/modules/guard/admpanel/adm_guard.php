@@ -87,11 +87,11 @@ function actionStart() {
     else $flag_crc=$PHPShopGUI->setImage('icon/error.gif', 15, 15);
 
     $PHPShopInterface->setRow(1,'Последняя проверка файлов',$flag_chek.PHPShopDate::dataV($last_chek),$PHPShopGUI->setButton('Проверить','icon/accept.png',130,25,
-            false, "miniWin('http://".$_SERVER['SERVER_NAME']."/phpshop/modules/guard/admin.php?do=chek',500,500)"));
+            false, "miniWin('http://".$_SERVER['SERVER_NAME'].$SysValue['dir']['dir']."/phpshop/modules/guard/admin.php?do=chek',500,500)"));
     $PHPShopInterface->setRow(2,'Последнее обновление сигнатур',$flag_update.PHPShopDate::dataV($last_update),$PHPShopGUI->setButton('Обновить','icon/add.png',130,25,
-            false, "miniWin('http://".$_SERVER['SERVER_NAME']."/phpshop/modules/guard/admin.php?do=update',500,500)"));
+            false, "miniWin('http://".$_SERVER['SERVER_NAME'].$SysValue['dir']['dir']."/phpshop/modules/guard/admin.php?do=update',500,500)"));
     $PHPShopInterface->setRow(2,'Файловая база',$flag_crc.PHPShopDate::dataV($last_crc),$PHPShopGUI->setButton('Пересчитать','icon/database_refresh.png',130,25,
-            false, "miniWin('http://".$_SERVER['SERVER_NAME']."/phpshop/modules/guard/admin.php?do=create',500,500)"));
+            false, "miniWin('http://".$_SERVER['SERVER_NAME'].$SysValue['dir']['dir']."/phpshop/modules/guard/admin.php?do=create',500,500)"));
 
     $Tab1.=$PHPShopInterface->Compile();
 

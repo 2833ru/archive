@@ -6,7 +6,6 @@
  * @version 1.0
  * @package PHPShopGUI
  */
-
 class PHPShopLang {
     var $langFile;
     var $doLang=true;
@@ -19,10 +18,11 @@ class PHPShopLang {
     var $charset="windows-1251";
 
     /**
-     * Персональный ключ доступа к Google API для сайта cms.mysoft.ru (требуется указать свой)
+     * Персональный ключ доступа к Google API для сайта smart.mysoft.ru (требуется указать свой)
+     * http://code.google.com/intl/ru/apis/loader/signup.html
      * @var <type>
      */
-    var $API_KEY='ABQIAAAA6omrd4WlIP7ZNsUTTc6uYhTs25rKpcY6slOPAxU5UE5mO2UyihSysytuXFlfs05ruj4G7ct5sv_ACw';
+    var $API_KEY='ABQIAAAA6omrd4WlIP7ZNsUTTc6uYhS_ps6EECQtukvcCEaHG66DCa_iExReO2aXIGbXVvsP9gKzBbXapVrZWQ';
 
 
     /**
@@ -30,16 +30,19 @@ class PHPShopLang {
      */
     function PHPShopLang($_classPath) {
 
-        // Библиотека работы со строками
-        PHPShopObj::loadClass("string");
+        if(!empty($_SESSION['lang'])) {
 
-        // Чтение локали файла
-        $this->langFile = $_classPath.'admpanel/locale/'.$_SESSION['lang'].'.ini';
-        if(is_file($this->langFile)) {
-            if($langArray = parse_ini_file($this->langFile,1)) {
-                $this->doLang = $this->check($langArray);
+            // Библиотека работы со строками
+            PHPShopObj::loadClass("string");
+
+            // Чтение локали файла
+            $this->langFile = $_classPath.'locale/'.$_SESSION['lang'].'.ini';
+            if(is_file($this->langFile)) {
+                if($langArray = parse_ini_file($this->langFile,1)) {
+                    $this->doLang = $this->check($langArray);
+                }
+                else echo "Error parsing locale ".$this->langFile;
             }
-            else echo "Error parsing locale ".$this->langFile;
         }
         else {
             $this->doLang=false;
@@ -75,7 +78,7 @@ class PHPShopLang {
             $sourceValue = $value;
             $value = PHPShopString::toLatin($value);
 
-            if($this->LangValue['lang'][$value]) $locValue = $this->LangValue['lang'][$value];
+            if(isset($this->LangValue['lang'][$value])) $locValue = $this->LangValue['lang'][$value];
             else {
                 $locValue = 'Und: '.strip_tags($value);
                 $this->UndefinedLangValue[strip_tags($value)] = $this->translate(strip_tags($sourceValue),$this->lang_name);
@@ -83,7 +86,9 @@ class PHPShopLang {
 
         }else $locValue = $value;
 
+        if(!empty($locValue))
         return $locValue;
+        else return $value;
     }
 
     /**

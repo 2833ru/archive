@@ -53,7 +53,7 @@ $SysValue['other'][chr(73).chr(110).chr(105).ucfirst(strtolower($section)).ucfir
 
 $LMI_SECRET_KEY=$SysValue['z-payment']['LMI_SECRET_KEY'];
 
-
+@extract($_POST);
 
 
 // build own CRC

@@ -15,6 +15,10 @@ body
    padding:0px
 }
 
+.cMenu{
+    display:none;
+}
+
 #loader{
    background: ButtonFace;
    DISPLAY: none;
@@ -62,7 +66,7 @@ body
 
 a.phpshop{
    text-decoration:none;
-   padding-right:20;
+   padding-right:10;
    color:#0A246A;
    font-size:15px;
 }

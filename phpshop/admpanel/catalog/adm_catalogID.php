@@ -12,24 +12,30 @@ $Lang=$Admoption['lang'];
 require("../language/".$Lang."/language.php");
 
 // Проверка на вложенные товары
-function chekDelProduct($categoryID){
+function chekDelProduct($delCatMass){
 global $SysValue;
-$sql="select id from ".$SysValue['base']['table_name2']." where category='$categoryID'";
+$temp = "id=0";
+foreach ($delCatMass as $value)
+    $temp .= " OR category=$value";
+$sql="select id from ".$SysValue['base']['table_name2']." where $temp";
 $result=mysql_query($sql);
-$num=mysql_numrows($result);
-if($num>0) return false;
-return true;
+while($row=mysql_fetch_array($result))
+    $mass[]=$row[id];
+return $mass;
 }
 
 // Проверка на вложенные каталоги
-function chekDelCatalog($categoryID){
+function chekDelCatalogRevers($categoryID,$delCatMass){
 global $SysValue;
 $sql="select id from ".$SysValue['base']['table_name']." where parent_to='$categoryID'";
 $result=mysql_query($sql);
-$num=mysql_numrows($result);
-if($num>0) return false;
-return true;
+while($row=mysql_fetch_array($result)){
+    $delCatMass[]=$row[id];
+    @chekDelCatalogRevers($row[id],&$delCatMass);
+    }
+return "";
 }
+
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -653,31 +659,6 @@ tabPane.addTabPage( document.getElementById( "twer" ) );
 </tr>
 </table>
 </div>
-
-<div class="tab-page" id="skin" style="height:450px">
-<h2 class="tab"><span name=txtLang id=txtLang>Дизайн</span></h2>
-
-<script type="text/javascript">
-tabPane.addTabPage( document.getElementById( "skin" ) );
-</script>
-<table >
-	<tr class=adm2>
-	  <td align=left>
-	  '.GetSkins($skin).'
-	  </td>
-	  <td style="padding-left:5px" valign=top>
-	  <FIELDSET >
-	  <LEGEND ><u>С</u>криншот</LEGEND>
-	  <div align="center" style="padding:10px">'.GetSkinsIcon($skin).'</div>
-	  </FIELDSET>
-	  <br>
-	  <input type="checkbox" value="1" name="skin_enabled_new" '.@$f3.'> <span name=txtLang id=txtLang>Использовать дизайн</span>
-	  </td>
-	</tr>
-
-</table>
-
-</div>
 ');
 
 if(CheckedRules($UserStatus["cat_prod"],5) == 1){ //Если есть права на редактирование доступа к папке
@@ -783,7 +764,7 @@ echo ('
 <input type=hidden name=id value='.$id.'>
 <input type=hidden  name=catalogID value='.$id.'>
 <input type="submit"  name="productSAVE" value="OK" class=but>
-<input type="button" name="btnLang" class=but value="Удалить" onClick="PromptThis();">
+<input type="button" name="btnLang" class=but value="Удалить" onClick="PromptThis(\'Вниманние! Удаление категории! Данная операция приведёт к удалению всех подкаталогов и товаров удаляемой категории!\');">
 <input type="hidden" class=but  name="productDELETE" id="productDELETE">
 <input type="button" name="btnLang" value="Отмена" onClick="return onCancel();" class=but>
 	</td>
@@ -823,11 +804,6 @@ if(is_array($servers_new))
 foreach($servers_new as $v)
 @$servers_array.="i".$v."i";
 
-
-if($skin_enabled_new == 1)
-$skin_str="skin='$skin_new',";
-
-
 $sql="UPDATE $table_name
 SET
 name='".CleanStr(trim($name_new))."',
@@ -850,12 +826,14 @@ descrip_shablon='$descrip_shablon_new',
 keywords='$keywords_new',
 keywords_enabled='$keywords_enabled_new',
 keywords_shablon='$keywords_shablon_new',
-$skin_str
 skin_enabled='$skin_enabled_new',
 order_by='$order_by_new',
 order_to='$order_to_new'  
 where id='$id'";
 $result=mysql_query($sql)or @die("Невозможно изменить запись");
+
+unset($skin);
+
 echo"
 <script language=\"JavaScript1.2\">
 CLREL('left');
@@ -868,26 +846,43 @@ if(@$productDELETE=="doIT")// Удаление записи
 {
 if(CheckedRules($UserStatus["cat_prod"],4) == 1){
 
-    // Проверка на удаление
-    if(chekDelProduct($id)){
-	$sql="delete from $table_name
-    where id='$id'";
+    
+    // проверяем есть вложенные подкаталоги (любая вложенность), полчучаем массив ID удаляемых категорий. Который изначально содержит уже 1 эелемент равный удаляемому каталогу.
+    $delCatMass[]=$id;  // массив ID всех подкаталогов удаляемого каталога до любого уровня включая ID удаляемого каталога
+    @chekDelCatalogRevers($id,&$delCatMass);
+    
+    // удаляем каталог и все его подкаталоги всех уровней
+    $delCatID = "id = 0";
+    foreach ($delCatMass as $value)
+        $delCatID.=" OR id = $value";
+    
+    $sql="delete from $table_name
+    where $delCatID";
     $result=mysql_query($sql);
-	$chekDelProduct=true;
-	}
-	 else echo "<script language=\"JavaScript1.2\">
-alert('Внимание!\\nКаталог содержит товары, для удаления каталога сначала удалите в нем товары.');
-</script>";
-	
-	if(chekDelCatalog($id)){
-	$sql="delete from $table_name2
-    where category='$id'";
+    $chekDelCatalog=true;
+        
+    // Получаем ID всех товаров каталоги или его подкаталогов в виде массива, используя массив $delCatMass
+    $delProdMass = chekDelProduct($delCatMass);
+    
+    // удаляем все вложенные товары удаляемого каталога и его подкаталогов.
+    $delProdID = "id=0";
+    $delImageID = "id=0"; // формируем условия для удаления изображений
+    foreach ($delProdMass as $value){
+        $delProdID .= " OR id=$value";
+        $delImageID .= " OR parent=$value";
+    }
+    
+    $sql="delete from $table_name2
+    where $delProdID";
     $result=mysql_query($sql);
-	$chekDelCatalog=true;
-	}
-	 else echo "<script language=\"JavaScript1.2\">
-alert('Внимание!\\nКаталог содержит вложенные каталоги, для удаления каталога сначала удалите в нем подчиненные каталоги.');
-</script>";;
+    $chekDelProduct=true;
+    
+    // Удаляем изображения  из БД для удалённых товаров.    
+    $sql="delete from ".$SysValue['base']['table_name35']."
+    where $delImageID";
+    $result=mysql_query($sql);
+    
+    unset($skin);
 	
 	if($chekDelProduct == true and $chekDelCatalog==true)
     echo"

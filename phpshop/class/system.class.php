@@ -17,13 +17,14 @@ class PHPShopSystem extends PHPShopObj {
     function PHPShopSystem() {
         $this->objID=1;
         $this->install=false;
+        $this->cache=false;
         $this->objBase=$GLOBALS['SysValue']['base']['table_name3'];
         parent::PHPShopObj();
     }
-    
-    /** 
+
+    /**
      * ¬ывод имени сайта
-     * @return string 
+     * @return string
      */
     function getName() {
         return parent::getParam("name");
@@ -32,12 +33,23 @@ class PHPShopSystem extends PHPShopObj {
     /**
      * ¬ывод сериализованного значени€ [param.val]
      * @param string $param
-     * @return string 
+     * @return string
      */
     function getSerilizeParam($param) {
         $param=explode(".",$param);
         $val=parent::unserializeParam($param[0]);
         return $val[$param[1]];
+    }
+
+    /**
+     * —равнение сериализованного значени€ [param.val]
+     * @param string $param им€ переменной
+     * @param string $value значение переменной
+     * @return bool
+     */
+    function ifSerilizeParam($param,$value=false) {
+        if(empty($value)) $value=1;
+        if($this->getSerilizeParam($param) == $value) return true;
     }
 
     /**
@@ -59,35 +71,35 @@ class PHPShopSystem extends PHPShopObj {
     /**
      * ¬ывод курса валюты по умочанию
      * @param bool $order валюта в заказе (true)
-     * @return float 
+     * @return float
      */
     function getDefaultValutaKurs($order=false) {
         if(!class_exists("phpshopvaluta")) parent::loadClass("phpshopvaluta");
         if($order) $valuta_id = $this->getDefaultOrderValutaId();
         else $valuta_id = $this->getDefaultValutaId();
         $PV = new PHPShopValuta($valuta_id);
-        
+
         return $PV->getKurs();
     }
 
     /**
      * ¬ывод ISO валюты по умочанию
      * @param bool $order валюта в заказе (true)
-     * @return string 
+     * @return string
      */
     function getDefaultValutaIso($order=false) {
         if(!class_exists("phpshopvaluta")) parent::loadClass("valuta");
         if($order) $valuta_id = $this->getDefaultOrderValutaId();
         else $valuta_id = $this->getDefaultValutaId();
         $PV = new PHPShopValuta($valuta_id);
-        
+
         return $PV->getIso();
     }
 
     /**
      * ¬ывод кода валюты по умочанию
      * @param bool $order валюта в заказе только с курсом дл€ заказа (true)
-     * @return string 
+     * @return string
      */
     function getDefaultValutaCode($order=false) {
         if(!class_exists("phpshopvaluta")) parent::loadClass("valuta");
@@ -119,6 +131,14 @@ class PHPShopSystem extends PHPShopObj {
         foreach($array as $key=>$v)
             if(is_string($key)) $newArray[$key]=$v;
         return $newArray;
+    }
+
+    /**
+     * ¬ывод e-mail администратора
+     * @return string
+     */
+    function getEmail(){
+        return parent::getParam('adminmail2');
     }
 }
 ?>

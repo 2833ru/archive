@@ -17,7 +17,7 @@ $PHPShopBase->chekAdmin();
 $PHPShopSystem = new PHPShopSystem();
 $LoadItems['System']=$PHPShopSystem->getArray();
 
-$PHPShopOrder = new PHPShopOrder($_GET['orderID']);
+$PHPShopOrder = new PHPShopOrderFunction($_GET['orderID']);
 
 
 
@@ -183,7 +183,7 @@ $LoadBanc=unserialize($LoadItems['System']['bank']);
 	
 	<tr><td colspan=6 style="border: 0px; border-top: 1px solid #000000;">&nbsp;</td></tr>
 </table>
-<p><b>Всего наименований <?=($num+1)?>, на сумму <?=($PHPShopOrder->returnSumma($sum,$order['Person']['discount'])+$deliveryPrice)." ".$PHPShopOrder->default_valuta_code;?>
+<p><b>Всего наименований <?=(count($order['Cart']['cart'])+1)?>, на сумму <?=($PHPShopOrder->returnSumma($sum,$order['Person']['discount'])+$deliveryPrice)." ".$PHPShopOrder->default_valuta_code;?>
 <br />
 <?
 $iw=new inwords;  
