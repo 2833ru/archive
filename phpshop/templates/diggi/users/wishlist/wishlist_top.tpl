@@ -1,4 +1,4 @@
-<li role="presentation">	
+<li role="presentation" class="@hideSite@">	
 	<a class="hidden-xs hidden-sm  link" href="#" data-toggle="modal" data-target="#userModal">
 		<i class="fa fa-heart" title="Отложить"></i>
 		<span class="hidden-sm hidden-xs"> 

@@ -4,6 +4,7 @@
     <name>SMS Fly</name>
     <description>SMS оповещение дл€ ”краины.</description>
     <category>develop</category>
+    <site>true</site>
     <adminmenu>
         <title>SMS оповещение</title>
         <capability>true</capability>

@@ -32,7 +32,7 @@ function actionUpdate() {
 }
 
 function actionStart() {
-    global $PHPShopGUI, $PHPShopOrm;
+    global $PHPShopGUI, $PHPShopOrm,$hideCatalog;
 
     // Выборка
     $data = $PHPShopOrm->select();
@@ -53,6 +53,8 @@ function actionStart() {
 
     // Храненение заказов
     $o_value[] = array('отдельная база заказов', 0, $data['write_order']);
+    
+    if(empty($hideCatalog))
     $o_value[] = array('общая база заказов', 1, $data['write_order']);
 
     // Captcha
@@ -75,6 +77,7 @@ function actionStart() {
     $Tab1 .= $PHPShopGUI->setField('Вывод', $PHPShopGUI->setSelect('display_new', $d_value, 250,true));
     $Tab1 .= $PHPShopGUI->setField('Запись заказа', $PHPShopGUI->setSelect('write_order_new', $o_value, 250,true));
     
+    if(empty($hideCatalog))
     $Tab1 .= $PHPShopGUI->setField('Статус заказа', $PHPShopGUI->setSelect('status_new', $order_status_value, 250));
     
     $Tab1 .= $PHPShopGUI->setField('Защитная картинка', $PHPShopGUI->setSelect('captcha_new', $c_value, 250,true));

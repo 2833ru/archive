@@ -50,7 +50,7 @@
 
         <div class="navbar-offcanvas" id="js-bootstrap-offcanvas">
             <ul class="offcanvas-list">
-                <li class="dropdown">
+                <li class="dropdown @hideSite@">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{Каталог} <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
                         @menuCatal@
@@ -60,17 +60,17 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                         <i class="feather iconz-user"></i> {Кабинет }<span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="/users/order.html">{Отследить заказ}</a></li>
-                        <li><a href="/users/notice.html">{Уведомления о товарах}</a></li>
+                        <li class="@hideCatalog@"><a href="/users/order.html">{Отследить заказ}</a></li>
+                        <li class="@hideCatalog@"><a href="/users/notice.html">{Уведомления о товарах}</a></li>
                         <li><a href="/users/message.html">{Связь с менеджерами}</a></li>
-                        @php if($_SESSION['UsersId']) echo '<li><a href="?logout=true">{Выйти}</a></li>'; php@
+                        @php if($_SESSION['UsersId']) echo '<li><a href="?logout=true">{Выйти}</a></li>';  else echo '<li><a href="#" data-toggle="modal" data-target="#userModal">{Войти}</a></li>'; php@
                     </ul>
                 </li>
                 @topMenu@
                 <li class=""><a href="/news/">{Новости}</a></li>
                 <li class=""><a href="/gbook/">{Отзывы}</a></li>
-                <li class=""><a href="/price/">{Прайс-лист}</a></li>
-                <li class=""><a href="/map/">{Карта сайта}</a></li>
+                <li class="@hideCatalog@"><a href="/price/">{Прайс-лист}</a></li>
+                <li class="@hideSite@"><a href="/map/">{Карта сайта}</a></li>
             </ul>
         </div>
 
@@ -84,7 +84,7 @@
                             <a class="header-link-color header-top-link header-link-contact" href="tel:@telNum@"><i class="fa fa-bell-o" aria-hidden="true"></i> @telNum@</a>
                             <a class="header-link-color header-top-link header-link-contact" href="tel:@telNum2@">@telNum2@</a>
                         </div>
-                        <div class="col-xs-12 col-sm-6 col-md-6 top-mobile-fix">
+                        <div class="col-xs-12 col-sm-6 col-md-6 top-mobile-fix @hideSite@">
                             <div class="header-wishlist">
                                 <a class="header-link-color link" href="/compare/">
                                     <span class="hidden-sm hidden-xs">
@@ -124,7 +124,7 @@
                         <div class="col-md-6 col-lg-7 hidden-xs hidden-sm header-menu-wrapper">
                             <div class="row">
                                 <ul class="nav navbar-nav main-navbar-top">
-                                    <li class="catalog-menu">
+                                    <li class="catalog-menu @hideSite@">
                                         <a id="nav-catalog-dropdown-link" class="nav-catalog-dropdown-link" aria-expanded="false">{Каталог}
                                         </a>
                                         <ul class="main-navbar-list-catalog-wrapper">
@@ -132,13 +132,14 @@
                                         </ul>
                                     </li>
                                     @topBrands@
+                                    @topcatMenu@
                                     @topMenu@
                                     </li>
                                 </ul>
                             </div>
                         </div>
                         <div class="col-sm-7 col-xs-12 col-md-4 col-lg-3 hidden-xs hidden-sm bottom-mobile-fix">
-                            <div id="cart" class="btn-group header-color">
+                            <div id="cart" class="btn-group header-color @hideCatalog@">
                                 <a id="cartlink"  class="btn btn-block btn-lg dropdown-toggle" href="/order/">
                                     <span id="cart-total">
                                         <i class="feather iconz-trash"></i>
@@ -192,7 +193,7 @@
                         <div class="description-text">@mainContent@</div>
                     </div>
                 </div>
-                <div class="col-xs-12 @php __hide('specMainIcon'); php@">
+                <div class="col-xs-12 @php __hide('specMainIcon'); php@ @hideSite@">
                     <h2 class="main-page-title"><a href="/newtip/" title="{Все новинки}">{Новинки}</a></h2>
                     <div class="owl-carousel spec-main-icon" loading="lazy">
                         @specMainIcon@
@@ -205,7 +206,7 @@
                     <div class="banner-block">@banersDispHorizontal@</div>
                 </div>
 
-                <div class="col-xs-12 @php __hide('specMain'); php@">
+                <div class="col-xs-12 @php __hide('specMain'); php@ @hideSite@">
                     <h2 class="main-page-title"><a href="/spec/" title="{Все спецпредложения}">{Спецпредложения}</a></h2>
                     <div class="owl-carousel spec-main">
                         @specMain@
@@ -213,7 +214,7 @@
                 </div>
                 <div class="col-xs-12">
                     <div class="row">
-                        <div class="col-xs-12 col-md-4 @php __hide('nowBuy'); php@ hidden-xs">
+                        <div class="col-xs-12 col-md-4 @php __hide('nowBuy'); php@ hidden-xs @hideSite@">
                             <h3 class="side-heading nowbuy-title">{Популярные товары}</h3>
                             <div class="nowbuy-list">
                                 @nowBuy@
@@ -227,7 +228,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row catalog-block">@leftCatalTable@</div>
+                <div class="row catalog-block @hideSite@">@leftCatalTable@</div>
             </div>
         </div>
     </section>
@@ -276,10 +277,10 @@
                 <div class="col-md-3 col-sm-4 col-xs-12">
                     <h5>{Личный кабинет}</h5>
                     <ul>
-                        <li><a href="/users/order.html">{Отследить заказ}</a></li>
-                        <li><a href="/users/notice.html">{Уведомления о товарах}</a></li>
+                        <li class="@hideCatalog@"><a href="/users/order.html">{Отследить заказ}</a></li>
+                        <li class="@hideCatalog@"><a href="/users/notice.html">{Уведомления о товарах}</a></li>
                         @php if($_SESSION['UsersId']) echo '<li><a href="/users/message.html">{Связь с менеджерами}</a></li>
-                        <li><a href="?logout=true">{Выйти}</a></li>'; php@
+                        <li><a href="?logout=true">{Выйти}</a></li>'; else echo '<li><a href="#" data-toggle="modal" data-target="#userModal">{Войти}</a></li>'; php@
                     </ul>
                 </div>
                 <!-- My Account Links Ends -->
@@ -287,10 +288,10 @@
                 <div class="col-md-3 col-sm-4 col-xs-12">
                     <h5>{Навигация}</h5>
                     <ul>
-                        <li><a href="/price/" title="{Прайс-лист}">{Прайс-лист}</a></li>
+                        <li class="@hideCatalog@"><a href="/price/" title="{Прайс-лист}">{Прайс-лист}</a></li>
                         <li><a href="/news/" title="{Новости}">{Новости}</a></li>
                         <li><a href="/gbook/" title="{Отзывы}">{Отзывы}</a></li>
-                        <li><a href="/map/" title="{Карта сайта}">{Карта сайта}</a></li>
+                        <li class="@hideSite@"><a href="/map/" title="{Карта сайта}">{Карта сайта}</a></li>
                         <li><a href="/forma/" title="{Форма связи}">{Форма связи}</a></li>
                     </ul>
                 </div>
@@ -354,7 +355,7 @@
             <span class="icon icon-person"></span>
             <span class="tab-label">{Кабинет}</span>
         </a>
-        <a class="tab-item @cart_active@" href="/order/" id="bar-cart">
+        <a class="tab-item @cart_active@ @hideCatalog@" href="/order/" id="bar-cart">
             <span class="icon icon-download"></span> <span class="badge badge-positive" id="mobilnum">@cart_active_num@</span>
             <span class="tab-label">{Корзина}</span>
         </a>
@@ -404,7 +405,6 @@
                             <a href="/users/sendpassword.html" class="pass">{Забыли пароль}</a>
                         </div>
 
-                        @facebookAuth@ @twitterAuth@
                     </div>
                     <div class="modal-footer flex-row">
 

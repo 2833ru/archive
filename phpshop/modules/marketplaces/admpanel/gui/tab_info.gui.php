@@ -10,7 +10,8 @@ function tab_info($data) {
         <ol>
         <li>Google Merchant: <code>' . Marketplaces::getProtocol() . $_SERVER['SERVER_NAME'] .$GLOBALS['SysValue']['dir']['dir']. '/rss/google.xml</code>
         <li>AliExpress: <code>' . Marketplaces::getProtocol() . $_SERVER['SERVER_NAME'] .$GLOBALS['SysValue']['dir']['dir']. '/yml/?marketplace=' . Marketplaces::ALIEXPRESS . '</code>
-        <li>—берћаркет: <code>' . Marketplaces::getProtocol() . $_SERVER['SERVER_NAME'] .$GLOBALS['SysValue']['dir']['dir']. '/yml/?marketplace=' . Marketplaces::SBERMARKET . '</code>
+        <li>—берћегаћаркет: <code>' . Marketplaces::getProtocol() . $_SERVER['SERVER_NAME'] .$GLOBALS['SysValue']['dir']['dir']. '/yml/?marketplace=' . Marketplaces::SBERMARKET . '</code>
+        <li>яндекс.ћаркет: <code>' . Marketplaces::getProtocol() . $_SERVER['SERVER_NAME'] .$GLOBALS['SysValue']['dir']['dir']. '/yml/?marketplace=' . Marketplaces::CDEK . '</code>
         </ol>                      
       <h4>SQL запросы дл€ пакетной обработки</h4>
       <p>

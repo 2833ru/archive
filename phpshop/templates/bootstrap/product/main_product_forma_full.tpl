@@ -21,19 +21,19 @@
             <div class="alert alert-warning">
                 <h1 itemprop="name">@productName@</h1>
                 <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-                    <h2 class="text-primary">
+                    <h2 class="text-primary @hideCatalog@">
                         <span itemprop="price" class="priceService" content="@productSchemaPrice@">@productPrice@</span> 
                         <span itemprop="priceCurrency" class="rubznak" content="RUB">@productValutaName@</span>  <span class=" price-old">@productPriceOld@</span>
                     </h2>             
                 </div> 
                 @ComStartNotice@
-                <div class="outStock">@productOutStock@</div>
+                <div class="outStock @hideCatalog@">@productOutStock@</div>
                 @ComEndNotice@
                 <div class="pull-right">@oneclick@</div>
                 <p><br></p>
                 <div>
                     <div class="small">@productArt@</div>
-                    <div class="small" id="items">@productSklad@</div>
+                    <div class="small @hideCatalog@" id="items">@productSklad@</div>
 
                 </div>
 
@@ -51,7 +51,7 @@
             @productParentList@
 
             <div class="row" style="padding-bottom:20px">
-                <div class="col-xs-5 @elementCartOptionHide@">
+                <div class="col-xs-5 @elementCartOptionHide@ @hideCatalog@">
                     <div class="input-group" style="max-width: 150px">
                         <input class="form-control" data-uid="@productUid@"  type="text" style="min-width:50px" maxlength="3" value="1" placeholder="1" required="" name="quant[2]">
                         <span class="input-group-btn">
@@ -59,7 +59,7 @@
                         </span>    
                     </div>
                 </div>
-                <div class="col-xs-5 @elementCartHide@">
+                <div class="col-xs-5 @elementCartHide@ @hideCatalog@">
                     <div class="input-group" style="max-width: 150px">
                         <input class="form-control" data-uid="@productUid@"  type="text" style="min-width:50px" maxlength="3" value="1" placeholder="1" required="" name="quant[1]">
                         <span class="input-group-btn">
@@ -79,7 +79,7 @@
                     <button class="btn btn-default addToWishList" data-uid="@productUid@">{Отложить}</button>
                 </div> 
             </div>
-            <a class="btn btn-default" href="/pricemail/UID_@productUid@.html">@productBestPrice@</a>
+            <a class="btn btn-default @hideCatalog@" href="/pricemail/UID_@productUid@.html">@productBestPrice@</a>
 
             <div class="clearfix"></div>
             <br>
@@ -119,7 +119,7 @@
 
 
                     <button class="btn btn-info pull-right" onclick="$('#addComment').slideToggle();
-                                    $(this).hide();"><span class="glyphicon glyphicon-plus-sign"></span> {Новый комментарий}</button>
+                            $(this).hide();"><span class="glyphicon glyphicon-plus-sign"></span> {Новый комментарий}</button>
 
                     <div id='addComment' class="well well-sm" style='display:none;margin-top:30px;'>
 

@@ -11,7 +11,7 @@
         </button>
         <div class="clearfix"></div>
         <a class="back"><i class="fa fa-angle-left" aria-hidden="true"></i>{Назад}</a>
-        <div class="solid-menus">
+        <div class="solid-menus @hideSite@">
             <ul class="no-border-radius block parent-block">
                 @leftCatal@
             </ul>
@@ -57,8 +57,8 @@
                 <div class="col-md-6 col-lg-5 col-sm-7 col-xs-12">
                     <ul class="nav nav-pills pull-right">
                         <li class="visible-xs">|</li>
-                        <li class="visible-xs" role="presentation">@wishlist@</li>
-                        <li class="visible-xs" role="presentation">
+                        <li class="visible-xs @hideSite@" role="presentation">@wishlist@</li>
+                        <li class="visible-xs @hideSite@" role="presentation">
                             <a href="/compare/">
                                 <span class="icons-compare"></span>
                                 <span class="text">{В сравнении}</span> <span id="numcompare">@numcompare@</span> {шт.}
@@ -66,7 +66,7 @@
                         </li>
                         <li class="visible-xs">|</li>
                         @usersDisp@
-                        <li role="presentation" class="visible-xs">
+                        <li role="presentation" class="visible-xs @hideCatalog@">
                             <a href="/order/">
                                 <span class="icons-cart"></span>&nbsp;
                                 <span class="sum">@sum@</span>&nbsp;
@@ -104,8 +104,8 @@
 
             <ul class="menu-list hidden-xs">
                 @usersDisp@
-                <li role="presentation">@wishlist@</li>
-                <li role="presentation">
+                <li role="presentation" class="@hideSite@">@wishlist@</li>
+                <li role="presentation" class="@hideSite@">
                     <a href="/compare/">
 
                         <span class="text">{Сравнить}</span> <span id="numcompare">@numcompare@</span> {шт.}
@@ -116,7 +116,7 @@
 
         </div>
     </div>
-    <div class="menu-wrap">
+    <div class="menu-wrap @hideSite@">
         <div class="container-fluid menu-cont">
             <ul class="dropdown-menu no-border-radius main-menu-block">
                 @leftCatal@ 
@@ -145,7 +145,7 @@
                 <ul class="nav navbar-nav main-menu">
                     <!-- dropdown catalog menu -->
                     <li>
-                        <div class="solid-menus">
+                        <div class="solid-menus @hideSite@">
                             <nav class="navbar no-border-radius no-margin">
                                 <div id="navbar-inner-container">
 
@@ -164,7 +164,7 @@
                                                 <a class="dropdown-toggle open-menu" data-toggle="dropdown" href="javascript:void(0);" data-title="{Каталог}"><span><i class="icons-line"></i> {Каталог}</span> </a>
                                             </li>
                                             <li class="visible-xs"><a href="/users/wishlist.html">{Отложенные товары}</a></li>
-                                            <li class="visible-xs"><a href="/price/">{Прайс-лист}</a></li>
+                                            <li class="visible-xs @hideCatalog@"><a href="/price/">{Прайс-лист}</a></li>
                                         </ul> 
                                     </div>
 
@@ -176,11 +176,11 @@
 
                 </ul>
 
-                <ul class="catalog-menu-list">
+                <ul class="catalog-menu-list @hideSite@">
 
                     <li class="menu-item @php __hide('specMainIcon'); php@"><a href="/newtip/">{Новинки}</a></li>
                     <li class="menu-item brands-link @php __hide('brandsList'); php@"><a href="/brand/">{Бренды}</a></li>
-                    <li class="menu-item menu-item-flag @php __hide('specMain'); php@"><a href="/spec/">{Распродажа}</a></li>
+                    <li class="menu-item menu-item-flag @php __hide('specMain'); php@ @hideCatalog@"><a href="/spec/">{Распродажа}</a></li>
 
                 </ul>
                 <div class="catalog-menu-wrap visible-xs">
@@ -196,7 +196,7 @@
                         </div>
                     </form>
 
-                    <ul class="nav nav-pills pull-right">
+                    <ul class="nav nav-pills pull-right @hideSite@">
                         <li role="presentation">@wishlist@</li>
                         <li role="presentation">
                             <a href="/compare/">
@@ -222,7 +222,7 @@
                         <span class="third"></span>
                     </span>
                 </label>
-                <ul class="nav nav-pills pull-right">
+                <ul class="nav nav-pills pull-right @hideSite@">
                     <li role="presentation">@wishlist@</li>
                     <li role="presentation">
                         <a href="/compare/">
@@ -232,7 +232,7 @@
                     </li>
                 </ul>
 
-                <ul class="nav navbar-nav navbar-right visible-lg visible-md header-3-cart">
+                <ul class="nav navbar-nav navbar-right visible-lg visible-md header-3-cart @hideCatalog@">
 
                     <li>
                         <a class="header-cart" id="cartlink" data-trigger="click" data-container="body"

@@ -4,7 +4,7 @@ $TitlePage = __("О программе PHPShop");
 
 // Стартовый вид
 function actionStart() {
-    global $PHPShopGUI, $PHPShopModules, $version, $PHPShopBase, $TitlePage;
+    global $PHPShopGUI, $PHPShopModules, $version, $PHPShopBase, $TitlePage, $shop_type;
 
     $licFile = PHPShopFile::searchFile('../../license/', 'getLicense', true);
     @$License = parse_ini_file_true("../../license/" . $licFile, 1);
@@ -71,10 +71,13 @@ function actionStart() {
     else
         $ShowcaseLimit = __('нет');
 
+    $shop_type_value = array('интернет-магазин','каталог продукции','сайт компании');
+    
     // Содержание закладки 1
     $Tab1 = $PHPShopGUI->setCollapse('Информация', $PHPShopGUI->setField("Название программы", '<a class="btn btn-sm btn-default" href="https://www.phpshop.ru/page/compare.html?from=' . $_SERVER['SERVER_NAME'] . '" target="_blank"><span class="glyphicon glyphicon-info-sign"></span> PHPShop ' . $product_name . '</a>') .
             $PHPShopGUI->setField("Версия программы", '<a class="btn btn-sm btn-default" href="https://www.phpshop.ru/docs/update.html?from=' . $_SERVER['SERVER_NAME'] . '" target="_blank"><span class="glyphicon glyphicon-info-sign"></span> ' . substr($version, 0, strlen($version) - 1) . '</a>') .
             $PHPShopGUI->setField("Подключаемые модули", $mod_limit, false, false, false, 'text-right') .
+            $PHPShopGUI->setField("Конфигурация", $shop_type_value[$shop_type], false, false, false, 'text-right') .
             $PHPShopGUI->setField("Дополнительные витрины", $ShowcaseLimit, false, 'Многосайтовость', false, 'text-right') .
             $PHPShopGUI->setField("Окончание поддержки", $TechPodUntil . '&nbsp;&nbsp; <a class="btn btn-sm btn-default  ' . $loadLicClass . '" href="?path=support"><span class="glyphicon glyphicon-user"></span> ' . __('Задать вопрос в поддержку') . '</a>', false, false, false, 'text-right') .
             $PHPShopGUI->setField("Окончание лицензии", $LicenseUntil, false, false, false, 'text-right') .
@@ -93,12 +96,12 @@ function actionStart() {
 <input type="hidden" value="supportenterprise" name="addToCartFromPages" id="addToCartFromPages">             
 <input type="hidden" value="' . $DomenLocked . '" name="addToCartFromPagesDomen" id="addToCartFromPagesDomen">
 </form><form><a class="btn btn-sm btn-primary pay-support" href="#" target="_blank"><span class="glyphicon glyphicon-ruble"></span> ' . __('Приобрести техническую поддержку') . '</a>');
-    
-    $Tab2 = $PHPShopGUI->setCollapse('Лицензионное соглашение',$PHPShopGUI->loadLib('tab_license', false, './system/'));
+
+    $Tab2 = $PHPShopGUI->setCollapse('Лицензионное соглашение', $PHPShopGUI->loadLib('tab_license', false, './system/'));
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $License);
-    
+
     // Вывод формы закладки
     $PHPShopGUI->setTab(array("Основное", $Tab1), array("Лицензионное соглашение", $Tab2, true));
 
@@ -130,7 +133,7 @@ function actionLoadLic() {
             }
 
             // Получение новой лицензии
-            $url = $protocol. $License['License']['DomenLocked'];
+            $url = $protocol . $License['License']['DomenLocked'];
             $сurl = curl_init();
             curl_setopt_array($сurl, array(
                 CURLOPT_URL => $url,

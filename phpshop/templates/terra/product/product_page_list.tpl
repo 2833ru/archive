@@ -54,7 +54,7 @@
         <div class="filter-inner">
 			<div id="faset-filter-body">{Загрузка}...</div>
 			<div id="price-filter-body">
-				<div class="faset-filter-block-wrapper">
+				<div class="faset-filter-block-wrapper @hideCatalog@">
 					<h4>{Цена}</h4>
 					<div>
 						<form method="get" id="price-filter-form">

@@ -74,7 +74,7 @@
                                     </a>                                       
                                 </li>
                                 @wishlist@
-                                <li>
+                                <li class="@hideSite@">
                                     <a class="hidden-xs hidden-sm link" href="/compare/">
                                         <i class="fa fa-plus" title="{Сравнить}"></i>
                                         <span class="hidden-sm hidden-xs">{Сравнить} (<span id="numcompare">@numcompare@</span>)</span>
@@ -107,9 +107,10 @@
                         </div>
                     </div>
                     <!-- Header Links Ends -->
+                    
                     <!-- Shopping Cart Starts -->
                     <div class="col-md-3 col-lg-3  visible-md hidden-sm hidden-xs visible-lg">
-                        <div id="cart" class="btn-group pull-right header-color">
+                        <div id="cart" class="btn-group pull-right header-color @hideCatalog@">
                             <a id="cartlink" type="button" data-toggle="dropdown" class="btn btn-block btn-lg dropdown-toggle" data-trigger="hover" data-container="body"  data-placement="bottom" data-html="true" data-url="/order/" href="/order/" data-content='@visualcart@'>
                                 <span class="cart-title">{Корзина}</span>
                                 <i class="fa fa-shopping-cart"></i>
@@ -144,7 +145,7 @@
                         <div class=" header-menu-wrapper col-md-9">
                             <div class="row">
                                 <ul class="nav navbar-nav main-navbar-top">
-                                    <li class="main-navbar-top-catalog">
+                                    <li class="main-navbar-top-catalog @hideSite@">
                                         <a href="#" id="nav-catalog-dropdown-link" class="nav-catalog-dropdown-link" aria-expanded="false">{Весь каталог}
                                         </a>
                                         <ul class="main-navbar-list-catalog-wrapper fadeIn animated">
@@ -196,8 +197,8 @@
                         <h5 class="user-title">{Мой кабинет}</h5>
                         <ul class="user-list">
                             <li><a href="/users/">@UsersLogin@</a></li>
-                            <li><a href="/users/order.html">{Отследить заказ}</a></li>
-                            <li><a href="/users/notice.html">{Уведомления о товарах}</a></li>
+                            <li class="@hideCatalog@"><a href="/users/order.html">{Отследить заказ}</a></li>
+                            <li class="@hideCatalog@"><a href="/users/notice.html">{Уведомления о товарах}</a></li>
                             <li><a href="/users/message.html">{Связь с менеджерами}</a></li>
                             @php if($_SESSION['UsersId']) echo '<li><a href="?logout=true">{Выйти}</a></li>'; php@
                         </ul>
@@ -215,7 +216,7 @@
 
                         <div id="faset-filter-body">{Загрузка}...</div>
 
-                        <div id="price-filter-body">
+                        <div id="price-filter-body" class="@hideCatalog@">
                             <h4>{Цена}</h4>
                             <form method="get" id="price-filter-form">
                                 <div class="row">
@@ -246,10 +247,8 @@
                         @pageCatal@
                     </div>
                     @banersDisp@
-
-                    @rightMenu@
                     @leftMenu@
-                    <div class="panel panel-default  hidden-xs  hidden-sm @php __hide('productlist_list'); php@">
+                    <div class="panel panel-default  hidden-xs  hidden-sm @php __hide('productlist_list'); php@ @hideSite@">
                         <div class="panel-heading">
                             <div class="panel-title">{Похожие товары}</div>
                         </div>
@@ -260,23 +259,18 @@
 
                         </div>
                     </div>
-                    @oprosDisp@
-                    <div class="panel panel-default  hidden-xs  hidden-sm @php __hide('productlastview'); php@">
+
+                    <div class="panel panel-default  hidden-xs  hidden-sm @php __hide('productlastview'); php@ @hideSite@">
                         <div class="panel-heading">
                             <div class="panel-title">{Просмотренные товары}</div>
                         </div>
                         <div class="panel-body">
                             @productlastview@
-
                         </div>
                     </div>
-
                 </div>
-
-
             </div>
             <!-- Sidebar Ends -->
-
 
             <!-- Primary Content Starts -->
             <div class="col-md-9 col-xs-12 middle-content-block">
@@ -288,13 +282,9 @@
                     </div>
                 </div>
             </div>
-            
-            
-
             <!-- Primary Content Ends -->
         </div>
         <!-- Nested Row Ends -->
-
     </div>
 
     <!-- Main Container Ends -->
@@ -327,10 +317,10 @@
                     <h5>{Личный кабинет}</h5>
                     <ul>
                         <li><a href="/users/">@UsersLogin@</a></li>
-                        <li><a href="/users/order.html">{Отследить заказ}</a></li>
-                        <li><a href="/users/notice.html">{Уведомления о товарах}</a></li>
+                        <li class="@hideCatalog@"><a href="/users/order.html">{Отследить заказ}</a></li>
+                        <li class="@hideCatalog@"><a href="/users/notice.html">{Уведомления о товарах}</a></li>
                         @php if($_SESSION['UsersId']) echo '<li><a href="/users/message.html">{Связь с менеджерами}</a></li>
-                        <li><a href="?logout=true">{Выйти}</a></li>'; php@
+                        <li><a href="?logout=true">{Выйти}</a></li>'; else echo '<li><a href="#" data-toggle="modal" data-target="#userModal">{Войти}</a></li>'; php@
                     </ul>
                 </div>
                 <!-- My Account Links Ends -->
@@ -338,10 +328,10 @@
                 <div class="col-md-3 col-sm-4 col-xs-12">
                     <h5>{Навигация}</h5>
                     <ul>
-                        <li><a href="/price/" title="{Прайс-лист}">{Прайс-лист}</a></li>
+                        <li class="@hideCaralog@"><a href="/price/" title="{Прайс-лист}">{Прайс-лист}</a></li>
                         <li><a href="/news/" title="{Новости}">{Новости}</a></li>
                         <li><a href="/gbook/" title="{Отзывы}">{Отзывы}</a></li>
-                        <li><a href="/map/" title="{Карта сайта}">{Карта сайта}</a></li>
+                        <li class="@hideSite@"><a href="/map/" title="{Карта сайта}">{Карта сайта}</a></li>
                         <li><a href="/forma/" title="{Форма связи}">{Форма связи}</a></li>
                     </ul>
                 </div>
@@ -400,7 +390,7 @@
         <a class="tab-item @user_active@" @user_link@ data-target="#userModal">
             <span class="tab-label">{Кабинет}</span>
         </a>
-        <a class="tab-item @cart_active@" href="/order/" id="bar-cart">
+        <a class="tab-item @cart_active@ @hideCatalog@" href="/order/" id="bar-cart">
             <span class="badge badge-positive" id="mobilnum">@cart_active_num@</span>
             <span class="tab-label">{Корзина}</span>
         </a>
@@ -449,8 +439,6 @@
                             <a href="/users/sms.html" class="pass @sms_login_enabled@">SMS</a>
                             <a href="/users/sendpassword.html" class="pass">{Забыли пароль}</a>
                         </div>
-
-                        @facebookAuth@ @twitterAuth@
                     </div>
                     <div class="modal-footer flex-row">
 
@@ -463,7 +451,6 @@
         </div>
     </div>
     <!--/ Модальное окно авторизации-->
-
 
     <!-- Модальное окно returncall-->
     <div class="modal fade bs-example-modal-sm return-call" id="returnCallModal" tabindex="-1" role="dialog"  aria-hidden="true">
@@ -504,7 +491,6 @@
             </div>
         </div>
     </div>
-
 
     <!-- Модальное окно мобильного поиска -->
     <div class="modal fade bs-example-modal-sm" id="searchModal" tabindex="-1" role="dialog" aria-hidden="true">

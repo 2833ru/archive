@@ -2455,6 +2455,12 @@ transition: all 0.3s;
   }
 }
 
+@media (min-width: 768px) { 
+  .navbar-collapse.collapse.in{
+      box-shadow: none;
+  }
+}
+
 @media (max-width: 550px) {
   .catalog-wrap {
     width: calc(100%/2);

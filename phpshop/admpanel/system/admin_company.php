@@ -5,7 +5,7 @@ $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['system']);
 
 // Стартовый вид
 function actionStart() {
-    global $PHPShopGUI, $PHPShopModules, $TitlePage, $PHPShopOrm;
+    global $PHPShopGUI, $PHPShopModules, $TitlePage, $PHPShopOrm, $hideCatalog;
 
     // Выборка
     $data = $PHPShopOrm->select();
@@ -25,28 +25,31 @@ function actionStart() {
     $Tab1 .= $PHPShopGUI->setField("Телефон дополнительный", $PHPShopGUI->setInputText(null, "bank[org_tel]", $bank['org_tel']));
     $Tab1 .= $PHPShopGUI->setField("Режим работы", $PHPShopGUI->setInputText(null, "bank[org_time]", $bank['org_time']));
     $Tab1 .= $PHPShopGUI->setField("Наименование организации", $PHPShopGUI->setInputText(null, "bank[org_name]", $bank['org_name']));
-    $Tab1 .= $PHPShopGUI->setField("Юридический адрес", $PHPShopGUI->setInputText(null, "bank[org_ur_adres]", $bank['org_ur_adres']));
     $Tab1 .= $PHPShopGUI->setField("Фактический адрес", $PHPShopGUI->setInputText(null, "bank[org_adres]", $bank['org_adres']));
-    $Tab1 .= $PHPShopGUI->setField("Форма собственности", $PHPShopGUI->setSelect('bank[org_forma]', $forma_value, 350,true));
-    $Tab1 .= $PHPShopGUI->setField("ИНН", $PHPShopGUI->setInputText(null, "bank[org_inn]", $bank['org_inn'], 350));
 
-    if ($bank['org_forma'] == 1)
-        $Tab1 .= $PHPShopGUI->setField("ОГРНИП", $PHPShopGUI->setInputText(null, "bank[org_ogrn]", $bank['org_ogrn'], 350));
-    else {
-        $Tab1 .= $PHPShopGUI->setField("КПП", $PHPShopGUI->setInputText(null, "bank[org_kpp]", $bank['org_kpp'], 350));
-        $Tab1 .= $PHPShopGUI->setField("ОГРН", $PHPShopGUI->setInputText(null, "bank[org_ogrn]", $bank['org_ogrn'], 350));
+    if (empty($hideCatalog)) {
+        $Tab1 .= $PHPShopGUI->setField("Юридический адрес", $PHPShopGUI->setInputText(null, "bank[org_ur_adres]", $bank['org_ur_adres']));
+        $Tab1 .= $PHPShopGUI->setField("Форма собственности", $PHPShopGUI->setSelect('bank[org_forma]', $forma_value, 350, true));
+        $Tab1 .= $PHPShopGUI->setField("ИНН", $PHPShopGUI->setInputText(null, "bank[org_inn]", $bank['org_inn'], 350));
+
+        if ($bank['org_forma'] == 1)
+            $Tab1 .= $PHPShopGUI->setField("ОГРНИП", $PHPShopGUI->setInputText(null, "bank[org_ogrn]", $bank['org_ogrn'], 350));
+        else {
+            $Tab1 .= $PHPShopGUI->setField("КПП", $PHPShopGUI->setInputText(null, "bank[org_kpp]", $bank['org_kpp'], 350));
+            $Tab1 .= $PHPShopGUI->setField("ОГРН", $PHPShopGUI->setInputText(null, "bank[org_ogrn]", $bank['org_ogrn'], 350));
+        }
+
+        $Tab1 .= $PHPShopGUI->setField("№ Счета организации", $PHPShopGUI->setInputText(null, "bank[org_schet]", $bank['org_schet'], 350));
+        $Tab1 .= $PHPShopGUI->setLine() . $PHPShopGUI->setField("Наименование банк", $PHPShopGUI->setInputText(null, "bank[org_bank]", $bank['org_bank'], 350));
+        $Tab1 .= $PHPShopGUI->setField("БИК", $PHPShopGUI->setInputText(null, "bank[org_bic]", $bank['org_bic'], 350));
+        $Tab1 .= $PHPShopGUI->setField("№ Счета банка", $PHPShopGUI->setInputText(null, "bank[org_bank_schet]", $bank['org_bank_schet'], 350));
+        $Tab1 .= $PHPShopGUI->setField("Печать", $PHPShopGUI->setIcon($bank['org_stamp'], "bank_org_stamp", false, array('load' => false, 'server' => true, 'url' => false, 'multi' => false, 'view' => false)));
+        $Tab1 .= $PHPShopGUI->setField("Подпись руководителя", $PHPShopGUI->setIcon($bank['org_sig'], "bank_org_sig", false, array('load' => false, 'server' => true, 'url' => false, 'multi' => false, 'view' => false)));
+        $Tab1 .= $PHPShopGUI->setField("Подпись бухгалтера", $PHPShopGUI->setIcon($bank['org_sig_buh'], "bank_org_sig_buh", false, array('load' => false, 'server' => true, 'url' => false, 'multi' => false, 'view' => false)));
+        $Tab1 .= $PHPShopGUI->setField("Логотип для бланков", $PHPShopGUI->setIcon($bank['org_logo'], "bank_org_logo", false, array('load' => false, 'server' => true, 'url' => false, 'multi' => false, 'view' => false)));
     }
 
-    $Tab1 .= $PHPShopGUI->setField("№ Счета организации", $PHPShopGUI->setInputText(null, "bank[org_schet]", $bank['org_schet'], 350));
-    $Tab1 .= $PHPShopGUI->setLine() . $PHPShopGUI->setField("Наименование банк", $PHPShopGUI->setInputText(null, "bank[org_bank]", $bank['org_bank'], 350));
-    $Tab1 .= $PHPShopGUI->setField("БИК", $PHPShopGUI->setInputText(null, "bank[org_bic]", $bank['org_bic'], 350));
-    $Tab1 .= $PHPShopGUI->setField("№ Счета банка", $PHPShopGUI->setInputText(null, "bank[org_bank_schet]", $bank['org_bank_schet'], 350));
-    $Tab1 .= $PHPShopGUI->setField("Печать", $PHPShopGUI->setIcon($bank['org_stamp'], "bank_org_stamp", false, array('load' => false, 'server' => true, 'url' => false, 'multi' => false, 'view' => false)));
-    $Tab1 .= $PHPShopGUI->setField("Подпись руководителя", $PHPShopGUI->setIcon($bank['org_sig'], "bank_org_sig", false, array('load' => false, 'server' => true, 'url' => false, 'multi' => false, 'view' => false)));
-    $Tab1 .= $PHPShopGUI->setField("Подпись бухгалтера", $PHPShopGUI->setIcon($bank['org_sig_buh'], "bank_org_sig_buh", false, array('load' => false, 'server' => true, 'url' => false, 'multi' => false, 'view' => false)));
-    $Tab1 .= $PHPShopGUI->setField("Логотип для бланков", $PHPShopGUI->setIcon($bank['org_logo'], "bank_org_logo", false, array('load' => false, 'server' => true, 'url' => false, 'multi' => false, 'view' => false)));
-    
-    $PHPShopGUI->_CODE = $PHPShopGUI->setCollapse('Реквизиты',$Tab1);
+    $PHPShopGUI->_CODE = $PHPShopGUI->setCollapse('Реквизиты', $Tab1);
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);

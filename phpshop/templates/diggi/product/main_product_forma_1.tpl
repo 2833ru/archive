@@ -17,16 +17,16 @@
                 @productDes@
             </div>
             @previewSorts@
-            <div class="price">
+            <div class="price @hideCatalog@">
                 <span class="price-new">@productPrice@ <span class="rubznak">@productValutaName@</span></span> 
                 <span class="price-old">@productPriceOld@</span>
             </div>
             <div class="flex-block"> @ComStartNotice@
-                <div ñlass="outStock">@productOutStock@</div>
+                <div class="outStock @hideCatalog@">@productOutStock@</div>
                 @ComEndNotice@
 
-                <span class="product-sklad-list-block">@productSklad@</span>
-                <div class="cart-button button-group">
+                <span class="product-sklad-list-block @hideCatalog@">@productSklad@</span>
+                <div class="cart-button button-group @hideCatalog@">
                     <a class="btn btn-cart @elementCartOptionHide@" href="/shop/UID_@productUid@.html">
                         <i class="fa fa-shopping-cart"></i>
                         <span>@productSale@</span>

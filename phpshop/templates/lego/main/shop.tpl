@@ -51,7 +51,7 @@
         @container@
         <!--/ Container -->
 
-        <section class="spec @php __hide('specMain'); php@">
+        <section class="spec @php __hide('specMain'); php@ @hideSite@">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-12 col-xs-12 main">
@@ -81,7 +81,7 @@
             </div>
         </section>
 
-        <section class="spec @php __hide('productlist_list'); php@">
+        <section class="spec @php __hide('productlist_list'); php@ @hideSite@">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-12 col-xs-12 inner-nowbuy main">
@@ -113,7 +113,7 @@
                 </div>
             </div>
         </section>
-        <section class="spec @php __hide('productlastview'); php@">
+        <section class="spec @php __hide('productlastview'); php@ @hideSite@">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-12 col-xs-12 inner-nowbuy main">
@@ -144,7 +144,7 @@
                 </div>
             </div>
         </section>
-        <section class="brands @php __hide('brandsList'); php@">
+        <section class="brands @php __hide('brandsList'); php@ @hideSite@">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-12 col-xs-12 main">
@@ -241,7 +241,6 @@
                                 <a href="/users/sendpassword.html" class="pass">{Забыли пароль}</a>
                             </div>
 
-                            @facebookAuth@ @twitterAuth@
                         </div>
                         <div class="modal-footer flex-row">
 

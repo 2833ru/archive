@@ -6,6 +6,7 @@
     <description>Пакетная обработка фотографий на сервере по настройкам в меню Настройки - Изображения.</description>
     <category>template</category>
     <sign>1684841801</sign>
+    <catalog>true</catalog>
     <adminmenu>
         <title>Пакетная обработка фото</title>
         <capability>true</capability>

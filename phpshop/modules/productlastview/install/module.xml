@@ -5,6 +5,7 @@
     <faqlink>https://docs.phpshop.ru/moduli/prodazhi/product-last-view</faqlink>
     <description>Модуль просмотренные товары.</description>
     <category>sale</category>
+    <catalog>true</catalog>
     <adminmenu>
         <title>Product View</title>
         <capability>true</capability>

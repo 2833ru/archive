@@ -4,7 +4,7 @@
  * Обмен по CommerceML
  * @package PHPShopExchange
  * @author PHPShop Software
- * @version 1.9
+ * @version 2.0
  */
 class CommerceMLLoader {
 
@@ -29,6 +29,11 @@ class CommerceMLLoader {
         $this->image_result_path = $PHPShopSystem->getSerilizeParam('admoption.image_result_path');
         $this->exchange_log = $PHPShopSystem->getSerilizeParam("1c_option.exchange_log");
         $this->exchange_image = $PHPShopSystem->getSerilizeParam("1c_option.exchange_image");
+        $this->exchange_price1 = $PHPShopSystem->getSerilizeParam("1c_option.exchange_price1");
+        $this->exchange_price2 = $PHPShopSystem->getSerilizeParam("1c_option.exchange_price2");
+        $this->exchange_price3 = $PHPShopSystem->getSerilizeParam("1c_option.exchange_price3");
+        $this->exchange_price4 = $PHPShopSystem->getSerilizeParam("1c_option.exchange_price4");
+        $this->exchange_price5 = $PHPShopSystem->getSerilizeParam("1c_option.exchange_price5");
 
         // Параметры ресайзинга
         $this->img_tw = $PHPShopSystem->getSerilizeParam('admoption.img_tw');
@@ -193,7 +198,7 @@ class CommerceMLLoader {
                         $new_name = count($new_name_parts) ? $new_name_parts[1][0] . $new_name_parts[2][0] : $_GET['filename'];
                         rename($upload_path . self::$upload1c . $_GET['filename'], $upload_path . $move_path . $new_name);
 
-                        // Парсер 
+                        // Парсер
                         $this->parser($import_xml);
 
                         $response = "success";
@@ -350,13 +355,13 @@ class CommerceMLLoader {
 
                 $this->category_array[0] = array('CatalogID', 'Name', 'Parent');
 
-                // Категории    
+                // Категории
                 foreach ($xml->Классификатор->Группы[0] as $item) {
 
                     $this->parser_category(0, $item);
                 }
 
-                // Свойства    
+                // Свойства
                 foreach ($xml->Классификатор->Свойства[0] as $item) {
 
                     // Справочник
@@ -397,7 +402,7 @@ class CommerceMLLoader {
                     $this->writeCsv('sklad/' . $date . '/tree.csv', $this->category_array, true);
                 }
 
-                // Товары 
+                // Товары
                 foreach ($xml->Каталог->Товары[0] as $item) {
                     // Тест
                     /*
@@ -646,7 +651,37 @@ class CommerceMLLoader {
                     } else
                         $uid = null;
 
-                    $this->product_array[(string) $item->Ид[0]] = array($uid, (string) $item->Наименование[0], null, $image, null, $image_count, $warehouse, (string) $item->Цены->Цена[0]->ЦенаЗаЕдиницу[0], (string) $item->Цены->Цена[1]->ЦенаЗаЕдиницу[0], (string) $item->Цены->Цена[2]->ЦенаЗаЕдиницу[0], (string) $item->Цены->Цена[3]->ЦенаЗаЕдиницу[0], (string) $item->Цены->Цена[4]->ЦенаЗаЕдиницу[0], "", "", (string) $item->Цены->Цена[0]->Валюта[0], null, $parent_name, (string) $item->Ид[0], $parent_enabled);
+                    // Внешние коды цены
+                    if (!empty($this->exchange_price1)) {
+
+                        if (isset($item->Цены)) {
+                            foreach ($item->Цены->Цена as $prices) {
+
+                                if ($this->exchange_price1 == (string) $prices->ИдТипаЦены[0])
+                                    $price1 = (string) $prices->ЦенаЗаЕдиницу[0];
+
+                                elseif ($this->exchange_price2 == (string) $prices->ИдТипаЦены[0])
+                                    $price2 = (string) $prices->ЦенаЗаЕдиницу[0];
+
+                                elseif ($this->exchange_price3 == (string) $prices->ИдТипаЦены[0])
+                                    $price3 = (string) $prices->ЦенаЗаЕдиницу[0];
+
+                                elseif ($this->exchange_price4 == (string) $prices->ИдТипаЦены[0])
+                                    $price4 = (string) $prices->ЦенаЗаЕдиницу[0];
+
+                                elseif ($this->exchange_price5 == (string) $prices->ИдТипаЦены[0])
+                                    $price5 = (string) $prices->ЦенаЗаЕдиницу[0];
+                            }
+                        }
+                    } else {
+                        $price1 = (string) $item->Цены->Цена[0]->ЦенаЗаЕдиницу[0];
+                        $price2 = (string) $item->Цены->Цена[1]->ЦенаЗаЕдиницу[0];
+                        $price3 = (string) $item->Цены->Цена[2]->ЦенаЗаЕдиницу[0];
+                        $price4 = (string) $item->Цены->Цена[3]->ЦенаЗаЕдиницу[0];
+                        $price5 = (string) $item->Цены->Цена[4]->ЦенаЗаЕдиницу[0];
+                    }
+
+                    $this->product_array[(string) $item->Ид[0]] = array($uid, (string) $item->Наименование[0], null, $image, null, $image_count, $warehouse, $price1, $price2, $price3, $price4, $price5, "", "", (string) $item->Цены->Цена[0]->Валюта[0], null, $parent_name, (string) $item->Ид[0], $parent_enabled);
                 }
 
                 // Запись в файл

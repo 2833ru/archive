@@ -5,6 +5,7 @@
     <faqlink>https://docs.phpshop.ru/moduli/prodazhi/sort-selection</faqlink>
     <description>Сквозной подбор товаров по параметрам.</description>
     <category>sale</category>
+    <catalog>true</catalog>
     <sign>1652697683</sign>
     <adminmenu>
         <title>Sort Selection</title>

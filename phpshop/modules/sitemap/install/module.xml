@@ -5,6 +5,7 @@
     <faqlink>https://docs.phpshop.ru/moduli/seo/sitemap</faqlink>
     <description>Модуль генерации карты сайта. Учитываются SEO ссылки.</description>
     <category>seo</category>
+    <site>true</site>
     <adminmenu>
         <title>Sitemap</title>
         <capability>true</capability>

@@ -5,6 +5,7 @@
     <faqlink>https://docs.phpshop.ru/moduli/seo/seo-meta-novosti</faqlink>
     <description>Модуль ручной установки title,keywords и description для новостей.</description>
     <category>seo</category>
+    <site>true</site>
     <adminmenu>
         <title>Seometa Новости</title>
         <capability>true</capability>

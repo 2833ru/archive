@@ -5,6 +5,7 @@
     <faqlink>https://docs.phpshop.ru/moduli/razrabotchikam/debug</faqlink>
     <description>Отладочный модуль для разработчиков.</description>
     <category>develop</category>
+    <site>true</site>
     <adminmenu>
         <title>Debug</title>
         <capability>true</capability>

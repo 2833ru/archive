@@ -20,11 +20,22 @@ function actionStart() {
     $data = $PHPShopOrm->select();
 
     // Интструкция
-    $info='<p><h4>Как подключиться к 1С?</h4>
+    $info='<p><h4>Как подключиться к 1С внешним обработчиком PHPShop?</h4>
         <ol>
-        <li>Если 1С локальная - <a href="https://docs.phpshop.ru/sinkhronizaciya-s-1s/ustanovka-i-aktivaciya-1s-sinkhronizacii#1s-na-kompyutere" target="_blank">инструкция</a>
-        <li>Если 1С в облаке - <a href="https://docs.phpshop.ru/sinkhronizaciya-s-1s/ustanovka-i-aktivaciya-1s-sinkhronizacii#1s-v-oblake" target="_blank">инструкция</a>
-        </ol></p>';
+        <li>Если 1С локальная - <a href="https://docs.phpshop.ru/sinkhronizaciya-s-1s/ustanovka-i-aktivaciya-1s-sinkhronizacii#1s-na-kompyutere" target="_blank">инструкция по подключению</a>
+        <li>Если 1С в облаке - <a href="https://docs.phpshop.ru/sinkhronizaciya-s-1s/ustanovka-i-aktivaciya-1s-sinkhronizacii#1s-v-oblake" target="_blank">инструкция по подключению</a>
+        </ol></p>
+        <p><h4>Как подключиться к 1С встроенным типовым обменом CommerceML?</h4>
+        <ol>
+        <li>Если 1С локальная или в облаке - <a href="https://docs.phpshop.ru/sinkhronizaciya-s-1s/commerceml" target="_blank">инструкция по подключению</a>
+        </ol>
+        </p>
+        <p><h4>Как подключиться к МойСклад встроенным типовым обменом CommerceML?</h4>
+        <ol>
+        <li>Воспользуйтесь <a href="https://docs.phpshop.ru/sinkhronizaciya-s-1s/sinkhronizaciya-s-moi-sklad" target="_blank">инструкцией по подключению</a>
+        </ol>
+        </p>
+';
     
     $Tab3 = $PHPShopGUI->setPay(false, false, $data['version'], false);
 

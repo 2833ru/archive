@@ -82,7 +82,9 @@ class PHPShopCoreElement extends PHPShopElements {
                 if (!empty($showcaseData['adminmail']))
                     $this->PHPShopSystem->setParam("adminmail2", $showcaseData['adminmail']);
 
-                // Юридические лица
+                if (!empty($showcaseData['shop_type']))
+                    $this->PHPShopSystem->setParam("shop_type", $showcaseData['shop_type']);
+
                 if (!empty($showcaseData['company_id'])) {
                     $this->PHPShopSystem->setCompany($showcaseData['company_id']);
                 }
@@ -112,6 +114,9 @@ class PHPShopCoreElement extends PHPShopElements {
 
                 $admoption = unserialize($showcaseData['admoption']);
                 if (is_array($admoption)) {
+
+                    if (!empty($admoption['org_tel']))
+                        $this->PHPShopSystem->setSerilizeParam('bank.org_tel', $admoption['org_tel']);
 
                     if (isset($admoption['user_price_activate']))
                         $this->PHPShopSystem->setSerilizeParam('admoption.user_price_activate', $admoption['user_price_activate']);
@@ -254,6 +259,28 @@ class PHPShopCoreElement extends PHPShopElements {
             $this->set('pathTemplateMin', $this->getValue('dir.templates') . chr(47) . $_SESSION['skin']);
             $this->set('pathMin', null);
         }
+
+        // Тип работы
+        $shop_type = $this->PHPShopSystem->getParam("shop_type");
+
+        // Магазин
+        if (empty($shop_type)) {
+            $this->set('hideShop', 'hide d-none');
+            $this->set('showSite', 'hide d-none');
+        }
+        // Каталог
+        else if ($shop_type == 1) {
+            $this->set('hideCatalog', 'hide d-none');
+            $this->set('showSite', 'hide d-none');
+            $this->PHPShopSystem->setSerilizeParam('admoption.nowbuy_enabled', 0);
+        }
+        // Сайт
+        else if ($shop_type == 2) {
+            $this->set('hideSite', 'hide d-none');
+            $this->set('showSite', 'hide d-none');
+            $this->set('hideCatalog', 'hide d-none');
+            $this->PHPShopSystem->setSerilizeParam('admoption.nowbuy_enabled', 0);
+        }
     }
 
     /**
@@ -302,7 +329,7 @@ class PHPShopCoreElement extends PHPShopElements {
                 $js .= 'var COOKIE_AGREEMENT = true;';
         }
         else {
-             if ($this->PHPShopSystem->ifSerilizeParam("admoption.user_cookie_enabled"))
+            if ($this->PHPShopSystem->ifSerilizeParam("admoption.user_cookie_enabled"))
                 $js .= 'var COOKIE_AGREEMENT = false;';
             else
                 $js .= 'var COOKIE_AGREEMENT = true;';
@@ -1919,6 +1946,10 @@ class PHPShopRecaptchaElement extends PHPShopElements {
      */
     public function true(){
     return $this->recaptcha;
+
+
+
+
 
 
 

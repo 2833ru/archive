@@ -216,6 +216,9 @@ function setProducts_marketplaces_hook($obj, $data) {
 
     if (Marketplaces::isSbermarket())
         $add .= '<outlets><outlet id="1" instock="' . $data['val']['items'] . '"></outlet></outlets>';
+    
+    if (Marketplaces::isCdek())
+        $add .= '<count>' . $data['val']['items'] . '</count>';
 
     if (Marketplaces::isRetailCRM()) {
         $add .= '<xmlId>' . $data['val']['uid'] . '</xmlId>';

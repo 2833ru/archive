@@ -36,7 +36,7 @@ function treegenerator($array, $i, $curent) {
 }
 
 function actionStart() {
-    global $PHPShopGUI, $PHPShopSystem, $PHPShopModules, $PHPShopOrm;
+    global $PHPShopGUI, $PHPShopSystem, $PHPShopModules, $PHPShopOrm,$hideCatalog;
 
     // Выборка
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
@@ -156,7 +156,8 @@ function actionStart() {
         // Дата
         $Tab_dop .= $PHPShopGUI->setField("Дата", $PHPShopGUI->setInputDate("datas_new", PHPShopDate::get($data['datas'])));
 
-        $Tab_dop .= $PHPShopGUI->setField('Рекомендуемые товары для совместной продажи', $PHPShopGUI->setTextarea('odnotip_new', $data['odnotip'], false, false, false, __('Укажите ID товаров или воспользуйтесь') . ' <a href="#" data-target="#odnotip_new"  class="btn btn-sm btn-default tag-search"><span class="glyphicon glyphicon-search"></span> ' . __('поиском товаров') . '</a>'));
+        if (empty($hideCatalog))
+            $Tab_dop .= $PHPShopGUI->setField('Рекомендуемые товары для совместной продажи', $PHPShopGUI->setTextarea('odnotip_new', $data['odnotip'], false, false, false, __('Укажите ID товаров или воспользуйтесь') . ' <a href="#" data-target="#odnotip_new"  class="btn btn-sm btn-default tag-search"><span class="glyphicon glyphicon-search"></span> ' . __('поиском товаров') . '</a>'));
 
         // Анонс
         $oFCKeditor2 = new Editor('preview_new');

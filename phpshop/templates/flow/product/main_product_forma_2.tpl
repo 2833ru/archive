@@ -12,7 +12,7 @@
             <div class="position-absolute bottom-0 left-0 pl-1 pb-1">
                 @promotionsIcon@
             </div>
-            <div class="position-absolute top-0 right-0 pt-3 pr-3">
+            <div class="position-absolute top-0 right-0 pt-3 pr-3 @hideCatalog@">
                 <button type="button" class="btn btn-xs btn-icon btn-outline-secondary rounded-circle addToWishList @elementCartHide@" data-uid="@productUid@" title="{Отложить}">
                     <i class="fas fa-heart"></i>
                 </button>
@@ -24,7 +24,7 @@
                 <span class="d-block font-size-1">
                     <a class="text-inherit" title="@productName@" href="/shop/UID_@productUid@.html">@productName@ </a>
                 </span>
-                <div class="d-block">
+                <div class="@hideCatalog@">
                     <span class="text-dark font-weight-bold">@parentLangFrom@ @productPrice@<span class="rubznak">@productValutaName@</span></span>
                     <span class="text-body ml-1 @php __hide('productPriceOld'); php@" ><del>@productPriceOld@</del></span>
                 </div>
@@ -33,15 +33,15 @@
 
         <div class="card-footer border-0 pt-0 pb-4 px-4">
             <div class="mb-3">
-               <div class="d-inline-flex align-items-center small" >
+                <div class="d-inline-flex align-items-center small" >
                     <div class="rating text-warning mr-2">
                         @rateCid@                  
                     </div>
-                   <span class="@php __hide('avgRateNum'); php@ text-primary">@avgRateNum@</span>
+                    <span class="@php __hide('avgRateNum'); php@ text-primary">@avgRateNum@</span>
                 </div>
             </div>
-            <a class="btn btn-sm btn-outline-primary btn-pill transition-3d-hover @elementCartOptionHide@" href="/shop/UID_@productUid@.html">@productSale@</a>
-            <button type="button" class="btn btn-sm btn-outline-primary btn-pill transition-3d-hover addToCartList @elementCartHide@">@flowProductSale@</button>
+            <a class="btn btn-sm btn-outline-primary btn-pill transition-3d-hover @elementCartOptionHide@ @hideCatalog@" href="/shop/UID_@productUid@.html">@productSale@</a>
+            <button type="button" class="btn btn-sm btn-outline-primary btn-pill transition-3d-hover addToCartList @elementCartHide@ @hideCatalog@">@flowProductSale@</button>
         </div>
     </div>
     <!-- End Product -->

@@ -11,7 +11,7 @@
         </button>
         <div class="clearfix"></div>
         <a class="back"><i class="fa fa-angle-left" aria-hidden="true"></i>{Назад}</a>
-        <div class="solid-menus">
+        <div class="solid-menus @hideSite@">
             <ul class="no-border-radius block parent-block">
                 @leftCatal@
             </ul>
@@ -59,8 +59,8 @@
                             </div>
                         </li>
                         <li class="visible-xs">|</li>
-                        <li class="visible-xs" role="presentation">@wishlist@</li>
-                        <li class="visible-xs" role="presentation">
+                        <li class="visible-xs @hideSite@" role="presentation">@wishlist@</li>
+                        <li class="visible-xs @hideSite@" role="presentation">
                             <a href="/compare/">
                                 <span class="icons-compare"></span>
                                 <span class="text">{В сравнении}</span> <span id="numcompare">@numcompare@</span> {шт.}
@@ -68,7 +68,7 @@
                         </li>
                         <li class="visible-xs">|</li>
                         @usersDisp@
-                        <li role="presentation" class="visible-xs">
+                        <li role="presentation" class="visible-xs @hideCatalog@">
                             <a href="/order/">
                                 <span class="icons-cart"></span>&nbsp;
                                 <span class="sum">@sum@</span>&nbsp;
@@ -97,7 +97,7 @@
 
 
             </div>
-            <ul class="menu-list hidden-xs">
+            <ul class="menu-list hidden-xs @hideSite@">
                 <li role="presentation">@wishlist@</li>
                 <li role="presentation">
                     <a href="/compare/">
@@ -109,7 +109,7 @@
 
         </div>
     </div>
-    <div class="menu-wrap">
+    <div class="menu-wrap @hideSite@">
         <div class="container-fluid menu-cont">
             <ul class="dropdown-menu no-border-radius main-menu-block">
                 @leftCatal@ 
@@ -136,7 +136,7 @@
                         {Каталог}
                     </span>
                 </label>
-                <ul class="nav navbar-nav main-menu">
+                <ul class="nav navbar-nav main-menu @hideSite@">
                     <!-- dropdown catalog menu -->
                     <li>
                         <div class="solid-menus">
@@ -156,7 +156,7 @@
                                                             class="icons-line"></i> {Весь каталог} </span></a>
                                             </li>
                                             <li class="visible-xs"><a href="/users/wishlist.html">{Отложенные товары}</a></li>
-                                            <li class="visible-xs"><a href="/price/">{Прайс-лист}</a></li>
+                                            <li class="visible-xs @hideCatalog@"><a href="/price/">{Прайс-лист}</a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -179,7 +179,7 @@
                         </div>
                     </form>
 
-                    <ul class="nav nav-pills pull-right">
+                    <ul class="nav nav-pills pull-right @hideSite@">
                         <li role="presentation">@wishlist@</li>
                         <li role="presentation">
                             <a href="/compare/">
@@ -189,7 +189,7 @@
                         </li>
                     </ul>
                 </div>
-                <a href="/order/" class="btn-menu visible-xs"><span class="icons-cart"></span></a>
+                <a href="/order/" class="btn-menu visible-xs @hideCatalog@"><span class="icons-cart"></span></a>
                 <label class="btn-menu btn-menu-right visible-xs" for="hmt">
                     <span class="f-block-wrapper">
                         <span class="first"></span>
@@ -198,7 +198,7 @@
                     </span>
                 </label>
                 <!--/ Каталоги в главном меню-->
-                <ul class="nav navbar-nav navbar-right hidden-xs">
+                <ul class="nav navbar-nav navbar-right hidden-xs @hideCatalog@">
                     <li>
                         <a class="header-cart" id="cartlink" data-trigger="click" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-url="/order/" data-content='@visualcart@'>
                             <span class="icons-cart"></span>

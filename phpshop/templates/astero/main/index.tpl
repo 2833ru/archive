@@ -60,7 +60,7 @@
                             <div class="header-links header-color">
                                 <ul class="nav navbar-nav pull-left">
                                     @wishlist@
-                                    <li>
+                                    <li class="@hideSite@">
                                         <a class="hidden-xs hidden-sm link" href="/compare/">                                    
                                             <i class="icon-sliders" ></i><span class="">{Сравнить} (<span id="numcompare">@numcompare@</span>)</span>
                                         </a>
@@ -125,7 +125,7 @@
                         </div>
                         <!-- Logo Starts -->
                         <!-- Shopping Cart Starts -->
-                        <div class="col-md-3 col-sm-4 col-xs-12 hidden-xs">
+                        <div class="col-md-3 col-sm-4 col-xs-12 hidden-xs @hideCatalog@">
                             <div id="cart" class="btn-group btn-block header-color">
                                 <a id="cartlink" type="button"  href="/order/" class="btn btn-block btn-lg dropdown-toggle" data-trigger="hover" data-container="body"  data-placement="bottom" data-html="true" data-url="/order/"  data-content='@visualcart@'>
                                     <i class="icon-basket"></i>
@@ -167,7 +167,7 @@
                 <div class="collapse navbar-collapse navbar-cat-collapse header-menu-wrapper">
                     <div class="row">
                         <ul class="nav navbar-nav main-navbar-top">
-                            <li class="main-navbar-top-catalog">
+                            <li class="main-navbar-top-catalog @hideSite@">
                                 <a href="javascript:void(0);" id="nav-catalog-dropdown-link" class="nav-catalog-dropdown-link" aria-expanded="false">{Каталог}
                                 </a>
                                 <ul class="main-navbar-list-catalog-wrapper fadeIn animated">
@@ -207,7 +207,7 @@
         <div class="page-header product-head">
             <h2>@mainContentTitle@</h2>
         </div>
-        <div >@mainContent@</div>
+        <div>@mainContent@</div>
         <!-- Banners Starts -->
         <div class="top-col-banners">
             <div class="row">
@@ -222,7 +222,7 @@
         <!-- Banners Ends --> 
 
         <!-- Featured Products Starts -->
-        <section class="products-list @php __hide('specMainIcon'); php@">
+        <section class="products-list @php __hide('specMainIcon'); php@ @hideSite@">
             <!-- Heading Starts -->
             <h2 class="product-head page-header"><a href="/newtip/" title="{Все новинки}">{Новинки}</a></h2>
             <!-- Heading Ends -->
@@ -237,7 +237,7 @@
         <!-- Featured Products Ends -->
 
         <!-- Latest Products Starts -->
-        <section class="products-list @php __hide('specMain'); php@">         
+        <section class="products-list @php __hide('specMain'); php@ @hideSite@">         
             <div class="container">
                 <!-- Heading Starts -->
                 <h2 class="product-head page-header"><a href="/spec/" title="{Все спецпредложения}">{Спецпредложения}</a></h2>
@@ -250,7 +250,7 @@
             </div>
         </section>
         <!-- Latest Products Ends -->
-        <div class="catalog-block">@leftCatalTable@</div>
+        <div class="catalog-block @hideSite@">@leftCatalTable@</div>
 
         <!-- News Starts -->
         <h2 class="product-head page-header @php __hide('miniNews'); php@"><a href="/news/" title="{Все новости}">{Новости}</a></h2>
@@ -306,10 +306,10 @@
                     <h5>{Личный кабинет}</h5>
                     <ul>
                         <li><a href="/users/">@UsersLogin@</a></li>
-                        <li><a href="/users/order.html">{Отследить заказ}</a></li>
-                        <li><a href="/users/notice.html">{Уведомления о товарах}</a></li>
+                        <li class="@hideCatalog@"><a href="/users/order.html">{Отследить заказ}</a></li>
+                        <li class="@hideCatalog@"><a href="/users/notice.html">{Уведомления о товарах}</a></li>
                         @php if($_SESSION['UsersId']) echo '<li><a href="/users/message.html">{Связь с менеджерами}</a></li>
-                        <li><a href="?logout=true">{Выйти}</a></li>'; php@
+                        <li><a href="?logout=true">{Выйти}</a></li>';else echo '<li><a href="#" data-toggle="modal" data-target="#userModal">{Войти}</a></li>'; php@
                     </ul>
                 </div>
                 <!-- My Account Links Ends -->
@@ -317,10 +317,10 @@
                 <div class="col-md-3 col-sm-4 col-xs-12">
                     <h5>{Навигация}</h5>
                     <ul>
-                        <li><a href="/price/" title="{Прайс-лист}">{Прайс-лист}</a></li>
+                        <li class="@hideCatalog@"><a href="/price/" title="{Прайс-лист}">{Прайс-лист}</a></li>
                         <li><a href="/news/" title="{Новости}">{Новости}</a></li>
                         <li><a href="/gbook/" title="{Отзывы}">{Отзывы}</a></li>
-                        <li><a href="/map/" title="{Карта сайта}">{Карта сайта}</a></li>
+                        <li class="@hideSite@"><a href="/map/" title="{Карта сайта}">{Карта сайта}</a></li>
                         <li><a href="/forma/" title="{Форма связи}">{Форма связи}</a></li>
                     </ul>
                 </div>
@@ -365,7 +365,7 @@
 
             <span class="tab-label">{Кабинет}</span>
         </a>
-        <a class="tab-item @cart_active@" href="/order/" id="bar-cart">
+        <a class="tab-item @cart_active@ @hideCatalog@" href="/order/" id="bar-cart">
             <span class="badge badge-positive" id="mobilnum">@cart_active_num@</span>
             <span class="tab-label">{Корзина}</span>
         </a>
@@ -414,7 +414,6 @@
                             <a href="/users/sendpassword.html" class="pass">{Забыли пароль}</a>
                         </div>
 
-                        @facebookAuth@ @twitterAuth@
                     </div>
                     <div class="modal-footer flex-row">
 

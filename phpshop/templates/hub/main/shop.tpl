@@ -62,7 +62,7 @@
                                 @returncall@
                             </span>
                         </div>
-                        <div class="col-xs-12 col-sm-3 col-md-4 top-mobile-fix">
+                        <div class="col-xs-12 col-sm-3 col-md-4 top-mobile-fix @hideSite@">
                             <div class="row">
                                 <div class="header-top-dropdown hidden-xs hidden-md">
                                     <!--
@@ -111,14 +111,14 @@
                                         <li class="active visible-lg"><a href="/" title="{Домой}"><span class="glyphicon glyphicon-home"></span></a></li>
 
                                         <!-- dropdown catalog menu -->
-                                        <li id="catalog-dropdown" class="visible-lg visible-md visible-sm">
+                                        <li id="catalog-dropdown" class="visible-lg visible-md visible-sm @hideSite@">
                                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">{Каталог} <b class="caret"></b></a>        
                                             <ul class="dropdown-menu mega-menu">
                                                 @leftCatal@
                                             </ul>
                                         </li>
                                         <!-- dropdown catalog menu mobile-->
-                                        <li class="dropdown visible-xs">
+                                        <li class="dropdown visible-xs@hideSite@">
                                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{Каталог} <span class="caret"></span></a>
                                             <ul class="dropdown-menu" role="menu">
                                                 @menuCatal@
@@ -126,11 +126,11 @@
                                         </li>
 
                                         @topMenu@
-                                        <li class="visible-xs"><a href="/users/wishlist.html">{Отложенные товары}</a></li>
+                                        <li class="visible-xs @hideSite@"><a href="/users/wishlist.html">{Отложенные товары}</a></li>
                                         <li class="visible-xs"><a href="/news/">{Новости}</a></li>
                                         <li class="visible-xs"><a href="/gbook/">{Отзывы}</a></li>
-                                        <li class="visible-xs"><a href="/price/">{Прайс-лист}</a></li>
-                                        <li class="visible-xs"><a href="/map/">{Карта сайта}</a></li>
+                                        <li class="visible-xs @hideCatalog@"><a href="/price/">{Прайс-лист}</a></li>
+                                        <li class="visible-xs @hideSite@"><a href="/map/">{Карта сайта}</a></li>
                                     </ul>
 
                                 </div><!--/.nav-collapse -->
@@ -139,7 +139,7 @@
                         <div class="col-md-8 hidden-xs hidden-sm header-menu-wrapper">
                             <div class="row">
                                 <ul class="nav navbar-nav main-navbar-top">
-                                    <li class="catalog-menu">
+                                    <li class="catalog-menu @hideSite@">
                                         <a id="nav-catalog-dropdown-link" class="nav-catalog-dropdown-link" aria-expanded="false">{Каталог}
                                         </a>
                                         <ul class="main-navbar-list-catalog-wrapper">
@@ -154,7 +154,7 @@
                             </div>
                         </div>
                         <div class="col-sm-7 col-xs-12 col-md-2 hidden-xs hidden-sm header-text-right bottom-mobile-fix">
-                            <div id="cart" class="btn-group ">
+                            <div id="cart" class="btn-group @hideCatalog@">
                                 <a href="/order/" id="cartlink" type="button"  class="btn-cartlink " data-trigger="hover" data-container="body"  data-placement="bottom" data-html="true" data-url="/order/" data-content='@visualcart@'>
                                     <i class="iconz-cart"></i>
                                 </a>
@@ -208,14 +208,14 @@
                         <div class="user-title">{Личный кабинет}</div>
                         <ul class="user-list">
                             <li><a href="/users/">@UsersLogin@</a></li>
-                            <li><a href="/users/order.html">{Отследить заказ}</a></li>
-                            <li><a href="/users/notice.html">{Уведомления о товарах}</a></li>
+                            <li class="@hideCatalog@"><a href="/users/order.html">{Отследить заказ}</a></li>
+                            <li class="@hideCatalog@"><a href="/users/notice.html">{Уведомления о товарах}</a></li>
                             <li><a href="/users/message.html">{Связь с менеджерами}</a></li>
                             @php if($_SESSION['UsersId']) echo '<li><a href="?logout=true">{Выйти}</a></li>'; php@
                         </ul>
                     </div>
                     <!-- Categories Links Starts -->
-                    <div class="@php __hide('leftCatal'); php@ left-catal">
+                    <div class="@php __hide('leftCatal'); php@ left-catal @hideSite@">
                         <div class="side-heading hidden-xs hidden-sm">{Категории}</div>
                         <ul class="list-group sidebar-nav hidden-xs hidden-sm">
                             @leftCatal@
@@ -229,7 +229,6 @@
                         </div>  
                     </div> 
                     <!-- Categories Links Ends -->
-
 
                 </div>
                 <!-- Sidebar Ends -->
@@ -253,7 +252,7 @@
             <div class="top-col-banners row">@banersDispHorizontal@</div>
         </section>
         <!-- Main Container Ends -->
-        <section class="new-arrivals @php __hide('specMainIcon'); php@">
+        <section class="new-arrivals @php __hide('specMainIcon'); php@ @hideSite@">
             <div class="container">
                 <div class="row">
                     <h4 class="product-head page-header"><a href="/newtip/" title="{Все новинки}">{Новинки}</a></h4>
@@ -264,11 +263,10 @@
             </div>
         </section>
 
-        <section class="brands-slider @php __hide('topBrands'); php@">
+        <section class="brands-slider @php __hide('topBrands'); php@ @hideSite@">
             <div class="container">
                 <div class="top-brands-wrapper">
                     <ul class="owl-carousel top-brands">
-
                         @brandsList@
                     </ul>
                 </div>
@@ -319,10 +317,10 @@
                         <h5>{Личный кабинет}</h5>
                         <ul>
                             <li><a href="/users/">@UsersLogin@</a></li>
-                            <li><a href="/users/order.html">{Отследить заказ}</a></li>
-                            <li><a href="/users/notice.html">{Уведомления о товарах}</a></li>
+                            <li class="@hideCatalog@"><a href="/users/order.html">{Отследить заказ}</a></li>
+                            <li class="@hideCatalog@"><a href="/users/notice.html">{Уведомления о товарах}</a></li>
                             @php if($_SESSION['UsersId']) echo '<li><a href="/users/message.html">{Связь с менеджерами}</a></li>
-                            <li><a href="?logout=true">{Выйти}</a></li>'; php@
+                            <li><a href="?logout=true">{Выйти}</a></li>';else echo '<li><a href="#" data-toggle="modal" data-target="#userModal">{Войти}</a></li>'; php@
                         </ul>
                     </div>
                     <!-- My Account Links Ends -->
@@ -330,10 +328,10 @@
                     <div class="col-md-3 col-sm-4 col-xs-12">
                         <h5>{Навигация}</h5>
                         <ul>
-                            <li><a href="/price/" title="{Прайс-лист}">{Прайс-лист}</a></li>
+                            <li class="@hideCatalog@"><a href="/price/" title="{Прайс-лист}">{Прайс-лист}</a></li>
                             <li><a href="/news/" title="{Новости}">{Новости}</a></li>
                             <li><a href="/gbook/" title="{Отзывы}">{Отзывы}</a></li>
-                            <li><a href="/map/" title="{Карта сайта}">{Карта сайта}</a></li>
+                            <li class="@hideSite@"><a href="/map/" title="{Карта сайта}">{Карта сайта}</a></li>
                             <li><a href="/forma/" title="{Форма связи}">{Форма связи}</a></li>
                         </ul>
                     </div>
@@ -392,11 +390,11 @@
                         <span class="icon icon-search"></span>
                     </a>
                 </div>
-                <div class="wishlist-block">
+                <div class="wishlist-block @hideSite@">
                     @wishlist@
                 </div>
 
-                <div class="cart-block">
+                <div class="cart-block @hideCatalog@">
                     <a href="/order/">
                         <i class="icons-cart"></i>
                         <span class="text fix">{Моя корзина}</span>
@@ -450,7 +448,6 @@
                                 <a href="/users/sendpassword.html" class="pass">{Забыли пароль}</a>
                             </div>
 
-                            @facebookAuth@ @twitterAuth@
                         </div>
                         <div class="modal-footer flex-row">
 
@@ -475,7 +472,7 @@
                     <div class="modal-body">
                         <form  action="/search/" role="search" method="get">
                             <div class="input-group">
-                                <input name="words" maxlength="50" class="form-control" placeholder="Искать.." required="" type="search">
+                                <input name="words" maxlength="50" class="form-control" placeholder="{Искать}.." required="" type="search">
                                 <span class="input-group-btn">
                                     <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>
                                 </span>

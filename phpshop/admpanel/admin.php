@@ -1,7 +1,4 @@
 <?php
-if (empty($_GET['path']))
-    header('Location: ?path=intro');
-
 // Фрейм
 if (isset($_GET['frame'])) {
     $isFrame = ' hidden ';
@@ -25,6 +22,32 @@ $PHPShopSystem = new PHPShopSystem();
 $_SESSION['lang'] = $PHPShopSystem->getSerilizeParam("admoption.lang_adm");
 $PHPShopLang = new PHPShopLang(array('locale' => $_SESSION['lang'], 'path' => 'admin'));
 mb_internal_encoding($GLOBALS['PHPShopBase']->codBase);
+
+// Тип работы
+$shop_type = (int)$PHPShopSystem->getParam("shop_type");
+
+// Режим сайта
+if ($shop_type == 2){
+    $hideSite = $hideCatalog = 'hide';
+    $brand_type = 'Site ';
+}
+
+// Режим каталога
+elseif ($shop_type == 1){
+    $hideCatalog = 'hide';
+    $brand_type = 'Catalog ';
+}
+else{
+    $hideSite = $hideCatalog = $brand_type = null;
+}
+
+if (empty($_GET['path'])) {
+
+    if (empty($hideSite))
+        header('Location: ?path=intro');
+    else
+        header('Location: ?path=page.catalog');
+}
 
 $_SESSION['imageResultPath'] = $PHPShopSystem->getSerilizeParam('admoption.image_result_path');
 $_SESSION['imageResultDir'] = $PHPShopBase->getParam('dir.dir');
@@ -99,7 +122,7 @@ if (file_exists($loader_file)) {
 
 // Подключение меню модулей
 function modulesMenu() {
-    global $notificationList;
+    global $notificationList,$hideSite,$hideCatalog;
 
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['modules']);
     if (!empty($_SESSION['mod_limit']))
@@ -120,6 +143,14 @@ function modulesMenu() {
                 continue;
 
             if (!empty($menu_array['pro']) and empty($_SESSION['mod_pro']))
+                continue;
+
+            // Скрытие модулей для сайта
+            if (!empty($hideSite) and empty($menu_array['site']))
+                continue;
+
+            // Скрытие модулей для каталога
+            if (!empty($hideCatalog) and empty($hideSite) and ( empty($menu_array['catalog']) and empty($menu_array['site'])))
                 continue;
 
             if ($db['capability']) {
@@ -181,7 +212,7 @@ $version = null;
 $adm_title = $adm_brand = substr($PHPShopSystem->getSerilizeParam('admoption.adm_title'), 0, 70);
 foreach (str_split($GLOBALS['SysValue']['upload']['version']) as $w)
     $version .= $w . '.';
-$brand = 'PHPShop ' . substr($version, 0, 3);
+$brand = 'PHPShop ' .$brand_type. substr($version, 0, 3);
 if (empty($adm_title)) {
     $adm_title = 'PHPShop';
     $adm_brand = $brand;
@@ -267,7 +298,7 @@ if (!empty($_COOKIE['fullscreen'])) {
                                     <li><a href="?path=modules"><span class="glyphicon glyphicon-tasks"></span> <?php _e('Управление модулями'); ?></a></li>
                                     <li class="divider"></li>
                                     <li class="dropdown-header"><?php _e('Установленные модули'); ?></li>
-                                    <?php echo $modulesMenu; ?>
+<?php echo $modulesMenu; ?>
                                 </ul>
                             </li>
                             <li class="dropdown <?php echo @$menu_active_system . @$menu_active_system_company . @$menu_active_system_seo . @$menu_active_system_sync . @$menu_active_tpleditor . @$menu_active_system_image . @$menu_active_system_servers . @$menu_active_system_integration . @$menu_active_system_warehouse . @$menu_active_company ?>">
@@ -279,14 +310,14 @@ if (!empty($_COOKIE['fullscreen'])) {
                                             <li><a href="?path=company"><?php _e('Юридические лица'); ?></a></li>
                                         </ul>
                                     </li>
-                                    <li><a href="?path=system.sync"><?php _e('Документооборот'); ?></a></li>
+                                    <li class="<?php echo $hideSite; ?>"><a href="?path=system.sync"><?php _e('Документооборот'); ?></a></li>
                                     <li><a href="?path=system.seo"><?php _e('SEO заголовки'); ?></a></li>
-                                    <li><a href="?path=system.currency"><?php _e('Валюты'); ?></a></li>
+                                    <li class="<?php echo $hideSite; ?>"><a href="?path=system.currency"><?php _e('Валюты'); ?></a></li>
                                     <li><a href="?path=system.image"><?php _e('Изображения'); ?></a></li>
                                     <li><a href="?path=system.servers"><?php _e('Витрины'); ?></a></li>
-                                    <li><a href="?path=system.warehouse"><?php _e('Склады'); ?></a></li>
+                                    <li class="<?php echo $hideSite; ?>"><a href="?path=system.warehouse"><?php _e('Склады'); ?></a></li>
                                     <li><a href="?path=system.dialog"><?php _e('Диалоги'); ?></a></li>
-                                    <li><a href="?path=system.integration"><?php _e('Интеграция'); ?></a></li>
+                                    <li class="<?php echo $hideSite; ?>"><a href="?path=system.integration"><?php _e('Интеграция'); ?></a></li>
                                     <li><a href="?path=system.locale"><?php _e('Локализация'); ?></a></li>
                                     <li class="divider"></li>
                                     <li><a href="?path=tpleditor"><span class="glyphicon glyphicon-picture"></span> <?php _e('Шаблоны дизайна'); ?></a></li>
@@ -295,13 +326,13 @@ if (!empty($_COOKIE['fullscreen'])) {
                             <li class="dropdown <?php echo @$menu_active_exchange_export . @$menu_active_exchange_import . @$menu_active_exchange_sql . @$menu_active_exchange_backup . @$menu_active_exchange_service . @$menu_active_exchange_export_order . @$menu_active_exchange_export_user . @$menu_active_exchange_export_catalog . @$menu_active_exchange_import_order . @$menu_active_exchange_import_user . @$menu_active_exchange_import_catalog; ?>">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><?php _e('База'); ?> <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="?path=exchange.import"><span class="glyphicon glyphicon-import"></span> <?php _e('Импорт данных'); ?></a></li>
-                                    <li><a href="?path=exchange.export"><span class="glyphicon glyphicon-export"></span> <?php _e('Экспорт данных'); ?></a></li>
-                                    <li class="divider"></li>
+                                    <li class="<?php echo $hideSite; ?>"><a href="?path=exchange.import"><span class="glyphicon glyphicon-import"></span> <?php _e('Импорт данных'); ?></a></li>
+                                    <li class="<?php echo $hideSite; ?>"><a href="?path=exchange.export"><span class="glyphicon glyphicon-export"></span> <?php _e('Экспорт данных'); ?></a></li>
+                                    <li class="divider <?php echo $hideSite; ?>"></li>
 
                                     <li class="dropdown-submenu">
                                         <a href="?path=exchange.service"><?php _e('Обслуживание'); ?></a>
-                                        <ul class="dropdown-menu">
+                                        <ul class="dropdown-menu <?php echo $hideSite; ?>">
                                             <li><a href="?path=exchange.service"><?php _e('Очистка базы данных'); ?></a></li>
                                             <li><a href="?path=exchange.file"><?php _e('Проверка изображений'); ?></a></li>
                                             <li><a href="?path=product"><?php _e('Проверка товаров'); ?></a></li>
@@ -332,7 +363,7 @@ if (!empty($_COOKIE['fullscreen'])) {
                                     <li class="divider"></li>
                                     <li><a href="https://docs.phpshop.ru" target="_blank"><?php _e('Учебник'); ?></a></li>
                                     <li><a href="?path=support"><?php _e('Техподдержка'); ?> <span class="glyphicon glyphicon-info-sign <?php echo $update_style; ?>"></span></a></li>
-                                    <li><a href="#" id="presentation-select"><?php _e('Обучение'); ?></a></li>
+                                    <li class="<?php echo $hideSite; ?>"><a href="#" id="presentation-select"><?php _e('Обучение'); ?></a></li>
                                     <li><a href="https://www.phpshop.ru/loads/files/setup.exe" target="_blank"><?php _e('Утилиты'); ?> EasyControl</a></li>
                                     <li class="divider"></li>
 
@@ -380,7 +411,7 @@ if (!empty($_COOKIE['fullscreen'])) {
                         <ul class="nav navbar-nav">
                             <li><a href="../../" title="><?php _e('Магазин'); ?>" target="_blank" class="visible-xs"><?php _e('Магазин'); ?></a></li>
                             <li class="<?php echo @$menu_active_intro; ?>"><a href="./admin.php" title="<?php _e('Домой'); ?>" class="home"><span class="glyphicon glyphicon-home hidden-xs"></span><span class="visible-xs"><?php _e('Домой'); ?></span></a></li>
-                            <li class="dropdown <?php echo @$menu_active_order . @$menu_active_payment . @$menu_active_order_paymentlog . @$menu_active_order_status . @$menu_active_report_statorder . @$menu_active_report_statuser . @$menu_active_report_statpayment . @$menu_active_report_statproduct; ?>">
+                            <li class="dropdown <?php echo @$menu_active_order . @$menu_active_payment . @$menu_active_order_paymentlog . @$menu_active_order_status . @$menu_active_report_statorder . @$menu_active_report_statuser . @$menu_active_report_statpayment . @$menu_active_report_statproduct . $hideCatalog; ?>">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><?php _e('Заказы'); ?> <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="?path=order"><span><?php _e('Заказы'); ?></span><span class="dropdown-header"><?php _e('Просмотр и оформление заказов, распечатка счетов'); ?></span></a></li>
@@ -393,7 +424,7 @@ if (!empty($_COOKIE['fullscreen'])) {
                                 </ul>
                             </li>
 
-                            <li class="dropdown <?php echo @$menu_active_catalog . @$menu_active_catalog_list . @$menu_active_product . @$menu_active_report_searchjurnal . @$menu_active_report_searchreplace . @$menu_active_sort; ?>" id="tour-product">
+                            <li class="dropdown <?php echo @$menu_active_catalog . @$menu_active_catalog_list . @$menu_active_product . @$menu_active_report_searchjurnal . @$menu_active_report_searchreplace . @$menu_active_sort . $hideSite; ?>" id="tour-product">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><?php _e('Товары'); ?> <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="?path=catalog"><span><?php _e('Товары'); ?></span><span class="dropdown-header"><?php _e('Просмотр, добавление и редактирование товаров'); ?></span></a></li>
@@ -408,20 +439,20 @@ if (!empty($_COOKIE['fullscreen'])) {
                             <li class="dropdown <?php echo @$menu_active_shopusers . @$menu_active_shopusers_status . @$menu_active_shopusers_notice . @$menu_active_shopusers_comment . @$menu_active_dialog; ?>">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><?php _e('Пользователи'); ?> <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="?path=shopusers"><?php _e('Покупатели'); ?><span class="dropdown-header"><?php _e('Список зарегистрированных покупателей магазина'); ?></span></a></li>
+                                    <li><a href="?path=shopusers"><?php _e('Пользователи'); ?><span class="dropdown-header"><?php _e('Список зарегистрированных пользователей'); ?></span></a></li>
 
-                                    <li class="dropdown-submenu">
-                                        <a href="?path=shopusers.status"><?php _e('Статусы и скидки'); ?><span class="dropdown-header"><?php _e('Управление статусами и скидками пользователей магазина'); ?></span></a>
+                                    <li class="dropdown-submenu <?php echo $hideCatalog; ?>">
+                                        <a href="?path=shopusers.status"><?php _e('Статусы и скидки'); ?><span class="dropdown-header"><?php _e('Управление статусами и скидками пользователей'); ?></span></a>
                                         <ul class="dropdown-menu">
                                             <li><a href="?path=shopusers.status"><?php _e('Статусы пользователей'); ?><span class="dropdown-header"><?php _e('Управление накопительными скидками и статусами пользователей'); ?></span></a></li>
                                             <li><a href="?path=shopusers.discount"><?php _e('Скидки от заказа'); ?><span class="dropdown-header"><?php _e('Управление скидками от суммы заказа'); ?></span></a></li>
                                             <li><a href="?path=promotions"><span><?php _e('Промоакции'); ?></span><span class="dropdown-header"><?php _e('Промоакции и скидки'); ?></span></a></li>
                                         </ul>
                                     </li>
-                                    <li><a href="?path=shopusers.notice"><?php _e('Уведомления'); ?><span class="dropdown-header"><?php _e('Запросы от покупателей о поступлении товара на склад'); ?></span></a></li>
-                                    <li><a href="?path=shopusers.comment"><?php _e('Отзывы о товарах'); ?><span class="dropdown-header"><?php _e('Список отзывов для товаров, оставленные пользователями'); ?></span></a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="?path=dialog"><span class="glyphicon glyphicon-comment"></span> <?php _e('Диалоги с пользователями'); ?></a></li>
+                                    <li class="<?php echo $hideSite; ?>"><a href="?path=shopusers.notice"><?php _e('Уведомления'); ?><span class="dropdown-header"><?php _e('Запросы от покупателей о поступлении товара на склад'); ?></span></a></li>
+                                    <li class="<?php echo $hideSite; ?>"><a href="?path=shopusers.comment"><?php _e('Отзывы о товарах'); ?><span class="dropdown-header"><?php _e('Список отзывов для товаров, оставленные пользователями'); ?></span></a></li>
+                                    <li class="divider <?php echo $hideSite; ?>"></li>
+                                    <li class="<?php echo $hideSite; ?>"><a href="?path=dialog"><span class="glyphicon glyphicon-comment"></span> <?php _e('Диалоги с пользователями'); ?></a></li>
                                 </ul>
                             </li>
 
@@ -439,8 +470,8 @@ if (!empty($_COOKIE['fullscreen'])) {
                             <li class="dropdown <?php echo @$menu_active_slider . @$menu_active_links . @$menu_active_banner . @$menu_active_opros . @$menu_active_metrica_traffic . @$menu_active_metrica_sources_summary . @$menu_active_metrica_sources_social . @$menu_active_metrica_sources_sites . @$menu_active_metrica_search_phrases . @$menu_active_metrica_search_engines . @$menu_active_metrica . @$menu_active_promotions . @$menu_active_lead_kanban; ?>" >
                                 <a href="#" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-expanded="false"><?php _e('Маркетинг'); ?> <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="?path=lead.kanban"><span><?php _e('Канбан доска'); ?></span><span class="dropdown-header"><?php _e('Управление заказами и задачами'); ?></span></a></li>
-                                    <li><a href="?path=promotions"><span><?php _e('Промоакции'); ?></span><span class="dropdown-header"><?php _e('Промоакции и скидки'); ?></span></a></li>
+                                    <li class="<?php echo $hideCatalog; ?>"><a href="?path=lead.kanban"><span><?php _e('Канбан доска'); ?></span><span class="dropdown-header"><?php _e('Управление заказами и задачами'); ?></span></a></li>
+                                    <li class="<?php echo $hideCatalog; ?>"><a href="?path=promotions"><span><?php _e('Промоакции'); ?></span><span class="dropdown-header"><?php _e('Промоакции и скидки'); ?></span></a></li>
                                     <li><a href="?path=slider"><span><?php _e('Слайдер'); ?></span><span class="dropdown-header"><?php _e('Рекламный слайдер на главной странице'); ?></span></a></li>
                                     <li><a href="?path=news.sendmail"><?php _e('Рассылки'); ?><span class="dropdown-header"><?php _e('Создание email рассылок пользователям'); ?></span></a></li>
 
@@ -479,6 +510,9 @@ if (!empty($_COOKIE['fullscreen'])) {
                                 $search_value = PHPShopSecurity::true_search($_GET['where']['name']);
                                 break;
                         }
+
+                        if (!empty($hideSite))
+                            $search_class = 'hidden';
                         ?>
                         <form class="navbar-right <?php echo $search_class; ?>"  action="<?php echo $search_action; ?>" target="<?php echo $search_target; ?>">
                             <div class="input-group">
@@ -522,7 +556,7 @@ if (!empty($_COOKIE['fullscreen'])) {
                         $order = $PHPShopBase->getNumRows('orders', "where statusi='0'");
                         ?>
 
-                        <a class="navbar-btn btn btn-sm btn-warning navbar-right hidden-xs hidden-sm hide" href="?path=order&where[statusi]=0"><?php _e('Заказы'); ?> <span class="badge" id="orders-check"><?php echo $order; ?></span>
+                        <a class="navbar-btn btn btn-sm btn-warning navbar-right hidden-xs hidden-sm hide" href="?path=order&where[statusi]=0"><?php _e('Заказы'); ?> <span class="badge" id="<?php echo $hideCatalog; ?>orders-check"><?php echo $order; ?></span>
                         </a><audio id="play" src="images/message.mp3"></audio>
 
                     </div><!-- /.navbar-collapse -->
@@ -565,28 +599,28 @@ if (!empty($_COOKIE['fullscreen'])) {
                     <div class="panel-heading "><span class="glyphicon glyphicon-film text-primary"></span> <b class="text-primary"><?php _e('Урок 1: Создание товара'); ?></b>
                         <a class="btn btn-primary btn-xs pull-right" href="?path=product&return=catalog&action=new&video"><span class="glyphicon glyphicon-play"></span> <?php _e('Старт'); ?></a></div>
                     <div class="panel-body ">
-                        <?php _e('Обучающий урок по созданию нового товара, заполнения полей и сохранения результата'); ?>.
+<?php _e('Обучающий урок по созданию нового товара, заполнения полей и сохранения результата'); ?>.
                     </div>
                 </div>
                 <div class="panel panel-default">
                     <div class="panel-heading"><span class="glyphicon glyphicon-film text-primary"></span> <b class="text-primary"><?php _e('Урок 2: Создание каталога'); ?></b>
                         <a class="btn btn-primary btn-xs pull-right" href="?path=catalog&action=new&video"><span class="glyphicon glyphicon-play"></span> <?php _e('Старт'); ?></a></div>
                     <div class="panel-body ">
-                        <?php _e('Обучающий урок по созданию нового каталога товара, заполнения полей и сохранения результата'); ?>.
+<?php _e('Обучающий урок по созданию нового каталога товара, заполнения полей и сохранения результата'); ?>.
                     </div>
                 </div>
                 <div class="panel panel-default">
                     <div class="panel-heading"><span class="glyphicon glyphicon-film text-primary"></span> <b class="text-primary"><?php _e('Урок 3: Редактор шаблонов'); ?></b>
-                        <a class="btn btn-primary btn-xs pull-right" href="?path=tpleditor&name=bootstrap&file=/main/index.tpl&mod=html&video"><span class="glyphicon glyphicon-play"></span> <?php _e('Старт'); ?></a></div>
+                        <a class="btn btn-primary btn-xs pull-right" href="?path=tpleditor&name=<?php echo $PHPShopSystem->getParam('skin')?>&file=/main/index.tpl&mod=html&video"><span class="glyphicon glyphicon-play"></span> <?php _e('Старт'); ?></a></div>
                     <div class="panel-body">
-                        <?php _e('Обучающий урок по редактированию шаблона дизайна, описание переменных шаблонизатора, управление редактором кода'); ?>.
+<?php _e('Обучающий урок по редактированию шаблона дизайна, описание переменных шаблонизатора, управление редактором кода'); ?>.
                     </div>
                 </div>
                 <div class="panel panel-default">
-                    <div class="panel-heading"><span class="glyphicon glyphicon-film text-primary"></span> <b class="text-primary"><?php _e('Урок 4: Настройки'); ?></b><a class="btn btn-primary btn-xs pull-right" href="?path=system#1"><span class="glyphicon glyphicon-play"></span> <?php _e('Старт'); ?></a>
+                    <div class="panel-heading"><span class="glyphicon glyphicon-film text-primary"></span> <b class="text-primary"><?php _e('Урок 4: Настройки'); ?></b><a class="btn btn-primary btn-xs pull-right" href="?path=system"><span class="glyphicon glyphicon-play"></span> <?php _e('Старт'); ?></a>
                     </div>
                     <div class="panel-body">
-                        <?php _e('Выбрать общий шаблон дизайна магазина можно в <a href="?path=system#4">Настройках дизайна</a>. Изменить цветовую тему оформления панели управления можно в  <a href="?path=system#7">Настройках управления</a>'); ?>.
+<?php _e('Выбрать общий шаблон дизайна магазина можно в <a href="?path=system#4">Настройках дизайна</a>. Изменить цветовую тему оформления панели управления можно в  <a href="?path=system#7">Настройках управления</a>'); ?>.
                     </div>
                 </div>
                 <div class="checkbox text-muted">
@@ -601,7 +635,7 @@ if (!empty($_COOKIE['fullscreen'])) {
             echo '<script>var video=true;</script>';
         }
 
-        if ($_GET['path'] == 'intro' and $presentation_checked == 'checked' and ! PHPShopString::is_mobile())
+        if ($_GET['path'] == 'intro' and $presentation_checked == 'checked' and ! PHPShopString::is_mobile() and empty($isSite))
             echo '<script>var presentation_start=true;</script>';
 
         if (PHPShopString::is_mobile())
@@ -622,7 +656,7 @@ if (!empty($_COOKIE['fullscreen'])) {
                         </div>
                         <div class="modal-body">
 
-                            <?php if (!empty($selectModalBody)) echo $selectModalBody; ?>
+<?php if (!empty($selectModalBody)) echo $selectModalBody; ?>
 
                         </div>
                         <div class="modal-footer" >
@@ -703,17 +737,17 @@ if (!empty($_COOKIE['fullscreen'])) {
                 <span class="icon icon-code"></span> <span class="badge badge-positive <?php echo $dialog_mobile_check; ?>" id="dialog-mobile-check"><?php echo $dialog; ?></span>
                 <span class="tab-label"><?php _e('Диалоги'); ?></span>
             </a>
-            <a class="tab-item <?php echo $menu_active_order; ?>" href="?path=order" id="bar-cart">
+            <a class="tab-item <?php echo $menu_active_order.$hideCatalog; ?>" href="?path=order" id="bar-cart">
                 <span class="icon icon-download"></span> <span class="badge badge-positive hide" id="orders-mobile-check"><?php echo $order; ?></span>
                 <span class="tab-label"><?php _e('Заказы'); ?></span>
             </a>
-            <a class="tab-item <?php echo $menu_active_catalog; ?>" href="?path=catalog">
+            <a class="tab-item <?php echo $menu_active_catalogю.$hideSite; ?>" href="?path=catalog">
                 <span class="icon icon-compose"></span>
-                <span class="tab-label"><?php _e('Цены'); ?></span>
+                <span class="tab-label"><?php _e('Товары'); ?></span>
             </a>
             <a class="tab-item <?php echo $menu_active_shopusers; ?>"  href="?path=shopusers">
                 <span class="icon icon-person"></span>
-                <span class="tab-label"><?php _e('Покупатели'); ?></span>
+                <span class="tab-label"><?php _e('Пользователи'); ?></span>
             </a>
             <a class="tab-item" href="./?logout">
                 <span class="icon icon-share"></span>

@@ -5,6 +5,7 @@
     <faqlink>https://docs.phpshop.ru/moduli/yandeks/yandex-map</faqlink>
     <description>Модуль Яндекс.Карты.</description>
     <category>yandex</category>
+    <site>true</site>
     <adminmenu>
         <title>Яндекс.Карта</title>
         <capability>true</capability>

@@ -60,12 +60,15 @@
                                     <div class="row">
                                         <ul class="top-nav  main-top">
                                             <li class="active"><a href="/">@name@</a></li>
-                                            @topMenu@
+                                            @php
+                                            if(empty(PHPShopParser::get('hideSite')))
+                                            echo PHPShopParser::get('topMenu');
+                                            php@
                                             <li><a href="/news/">{Новости}</a></li>
                                     </div>
                                     </ul>
                                 </div>
-                                <div class="col-md-4 col-sm-5">
+                                <div class="col-md-4 col-sm-5 @hideSite@">
                                     <ul class="top-nav-right">
                                         <li><a href="/compare/"><i class="fa fa-sliders" aria-hidden="true"></i> {Сравнить}</a></li>
                                         @wishlist@
@@ -85,7 +88,6 @@
                             <a id="logo" href="/" title="@name@"><img src="@logo@" alt="" class="img-responsive" /></a>
                         </div>
 
-
                         <div class="col-md-6 col-sm-7 col-xs-12">
                             <div class="header-contacts">
                                 <a class="header-tel" href="tel:8@telNumMobile@">@telNumMobile@</a>
@@ -94,7 +96,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-3 col-sm-2 header-middle-right visible-md visible-lg">
+                        <div class="col-md-3 col-sm-2 header-middle-right hidden-xs hidden-sm @hideCatalog@">
                             <div id="cart">
                                 <a id="cartlink" class="dropdown-toggle" href="/order/">
                                     <i class="fa fa-shopping-cart" aria-hidden="true"></i>
@@ -116,8 +118,6 @@
                 </div>
             </div><!-- /header-middle -->
 
-
-
             <nav id="main-menu" class="navbar">
                 <div class="container">
                     <div class="row">
@@ -127,8 +127,14 @@
                                 <button type="button" class="btn btn-navbar navbar-toggle main-menu-button" data-toggle="collapse" data-target=".navbar-cat-collapse"><span class="sr-only">{Меню}</span><i class="fa fa-bars"></i></button>
                             </div>
 
-                            <div class="collapse navbar-collapse navbar-cat-collapse">
+                            <div class="collapse navbar-collapse navbar-cat-collapse @hideCatalog@">
                                 <ul class="nav navbar-nav main-navbar-top">
+
+                                    @php
+                                    if(!empty(PHPShopParser::get('hideSite')))
+                                    echo PHPShopParser::get('topMenu');
+                                    php@
+
                                     <li class="main-navbar-top-catalog">
                                         <a href="#" id="nav-catalog-dropdown-link" class="nav-catalog-dropdown-link"><i class="fa fa-bars"></i> {Каталог}</a>
                                         <ul class="main-navbar-list-catalog-wrapper fadeIn animated">
@@ -136,6 +142,7 @@
                                         </ul>
                                     </li>
                                     @leftCatal@
+
                                 </ul>
                             </div>
                         </div>
@@ -143,9 +150,7 @@
                     </div><!-- /row -->
                 </div>
             </nav>
-
         </header>
-
 
         <div class="container">
             <div class="row">
@@ -194,8 +199,6 @@
             <!-- Container Ends -->
         </div>
 
-
-
         <!-- Footer Section Starts -->
         <footer id="footer-area">
             <div class="footer-links">
@@ -204,7 +207,6 @@
                         <div class="col-md-3 col-sm-6 col-xs-12">
                             <a id="logo-footer @php __hide('logo'); php@" href="/" title="@name@"><img src="@logo@" alt="" class="img-responsive" /></a>
                         </div>
-
 
                         <div class="col-md-3 col-sm-6 col-xs-12">
                             <h5>{Информация}</h5>
@@ -224,27 +226,25 @@
 
                         </div>
 
-
                         <div class="col-md-3 col-sm-6 col-xs-12">
                             <h5>{Мой кабинет}</h5>
                             <ul>
                                 <li><a href="/users/">@UsersLogin@</a></li>
-                                <li><a href="/users/order.html">{Отследить заказ}</a></li>
-                                <li><a href="/users/notice.html">{Уведомления о товарах}</a></li>
+                                <li class="@hideCatalog@"><a href="/users/order.html">{Отследить заказ}</a></li>
+                                <li class="@hideCatalog@"><a href="/users/notice.html">{Уведомления о товарах}</a></li>
                                 <li><a href="/users/message.html">{Связь с менеджерами}</a></li>
                                 @php if($_SESSION['UsersId']) echo '<li><a href="/users/wishlist.html">{Отложенные товары}</a></li>
-                                <li><a href="?logout=true">{Выйти}</a></li>'; php@
+                                <li><a href="?logout=true">{Выйти}</a></li>'; else echo '<li><a href="#" data-toggle="modal" data-target="#userModal">{Войти}</a></li>'; php@
                             </ul>
                         </div>
-
 
                         <div class="col-md-3 col-sm-6 col-xs-12">
                             <h5>{Навигация}</h5>
                             <ul>
-                                <li><a href="/price/" title="Прайс-лист">{Прайс-лист}</a></li>
+                                <li class="@hideCatalog@"><a href="/price/" title="Прайс-лист">{Прайс-лист}</a></li>
                                 <li><a href="/news/" title="Новости">{Новости}</a></li>
                                 <li><a href="/gbook/" title="Отзывы">{Отзывы}</a></li>
-                                <li><a href="/map/" title="Карта сайта">{Карта сайта}</a></li>
+                                <li class="@hideSite@"><a href="/map/" title="Карта сайта">{Карта сайта}</a></li>
                                 <li><a href="/forma/" title="Форма связи">{Форма связи}</a></li>
                             </ul>
                         </div>
@@ -254,7 +254,6 @@
             </div>
         </footer>
         <!-- Footer Section Ends -->
-
 
         <!-- Fixed mobile bar -->
         <div class="bar-padding-fix visible-xs"> </div>
@@ -267,7 +266,7 @@
                 <span class="icon icon-person"></span>
                 <span class="tab-label">{Кабинет}</span>
             </a>
-            <a class="tab-item @cart_active@" href="/order/" id="bar-cart">
+            <a class="tab-item @cart_active@ @hideCatalog@" href="/order/" id="bar-cart">
                 <span class="icon icon-download"></span> <span class="badge badge-positive" id="mobilnum">@cart_active_num@</span>
                 <span class="tab-label">{Корзина}</span>
             </a>
@@ -317,7 +316,6 @@
                                 <a href="/users/sendpassword.html" class="pass">{Забыли пароль}</a>
                             </div>
 
-                            @facebookAuth@ @twitterAuth@
                         </div>
                         <div class="modal-footer flex-row">
 

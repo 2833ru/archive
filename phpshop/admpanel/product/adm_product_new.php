@@ -71,7 +71,7 @@ function treegenerator($array, $i, $curent, $dop_cat_array) {
 }
 
 function actionStart() {
-    global $PHPShopGUI, $PHPShopModules, $PHPShopOrm, $PHPShopSystem, $PHPShopBase;
+    global $PHPShopGUI, $PHPShopModules, $PHPShopOrm, $PHPShopSystem, $PHPShopBase, $hideCatalog;
 
     // получаем ИД будущего создаваемого товара
     $newId = getLastID();
@@ -248,18 +248,21 @@ function actionStart() {
         $Tab_info .= $PHPShopGUI->setFile($data['pic_small'], "pic_small_new", array('load' => false, 'server' => 'image', 'url' => false, 'view' => true));
     }
 
-    // Дополнительный склад
-    $PHPShopOrmWarehouse = new PHPShopOrm($GLOBALS['SysValue']['base']['warehouses']);
-    $dataWarehouse = $PHPShopOrmWarehouse->select(array('*'), array('enabled' => "='1'"), array('order' => 'num DESC'), array('limit' => 100));
-    if (is_array($dataWarehouse)) {
+    if (empty($hideCatalog)) {
 
-        $Tab_info .= $PHPShopGUI->setField('Общий склад', $PHPShopGUI->setInputText(false, 'items_new', $data['items'], 100, $ed_izm), 'left');
+        // Дополнительный склад
+        $PHPShopOrmWarehouse = new PHPShopOrm($GLOBALS['SysValue']['base']['warehouses']);
+        $dataWarehouse = $PHPShopOrmWarehouse->select(array('*'), array('enabled' => "='1'"), array('order' => 'num DESC'), array('limit' => 100));
+        if (is_array($dataWarehouse)) {
 
-        foreach ($dataWarehouse as $row) {
-            $Tab_info .= $PHPShopGUI->setField($row['name'], $PHPShopGUI->setInputText(false, 'items' . $row['id'] . '_new', $data['items' . $row['id']], 100, $ed_izm), 2, $row['description']);
-        }
-    } else
-        $Tab_info .= $PHPShopGUI->setField('Склад', $PHPShopGUI->setInputText(false, 'items_new', $data['items'], 100, $ed_izm), 'left');
+            $Tab_info .= $PHPShopGUI->setField('Общий склад', $PHPShopGUI->setInputText(false, 'items_new', $data['items'], 100, $ed_izm), 'left');
+
+            foreach ($dataWarehouse as $row) {
+                $Tab_info .= $PHPShopGUI->setField($row['name'], $PHPShopGUI->setInputText(false, 'items' . $row['id'] . '_new', $data['items' . $row['id']], 100, $ed_izm), 2, $row['description']);
+            }
+        } else
+            $Tab_info .= $PHPShopGUI->setField('Склад', $PHPShopGUI->setInputText(false, 'items_new', $data['items'], 100, $ed_izm), 'left');
+    }
 
     // Габариты по умолчанию
     if (!empty($_GET['cat'])) {
@@ -318,7 +321,7 @@ function actionStart() {
                 $valuta_def_name = $val['code'];
             } else
                 $check = false;
-            $valuta_area .= $PHPShopGUI->setRadio('baseinputvaluta_new', $val['id'], $val['name'], $defvaluta,false);
+            $valuta_area .= $PHPShopGUI->setRadio('baseinputvaluta_new', $val['id'], $val['name'], $defvaluta, false);
         }
 
     // Цены
@@ -332,7 +335,8 @@ function actionStart() {
     $Tab_price .= $PHPShopGUI->setField('Под заказ', $PHPShopGUI->setCheckbox('sklad_new', 1, 'Под заказ', $data['sklad']));
 
     // Валюта
-    $Tab_price .= $PHPShopGUI->setField('Валюта', $valuta_area);
+    if (empty($hideCatalog))
+        $Tab_price .= $PHPShopGUI->setField('Валюта', $valuta_area);
 
     // YML
     $data['yml_bid_array'] = unserialize($data['yml_bid_array']);
@@ -343,12 +347,15 @@ function actionStart() {
 
     // BID
     $Tab_yml .= $PHPShopGUI->setField('Ставка BID', $PHPShopGUI->setInputText(null, 'yml_bid_array[bid]', @$data['yml_bid_array']['bid'], 100));
-    $Tab1 .= $PHPShopGUI->setCollapse('Цены', $Tab_price, 'in', true, true, array('type' => 'price'));
 
-    $Tab1 .= $PHPShopGUI->setCollapse('Яндекс Маркет', $Tab_yml, false);
+    if (empty($hideCatalog)) {
+        $Tab1 .= $PHPShopGUI->setCollapse('Цены', $Tab_price, 'in', true, true, array('type' => 'price'));
+        $Tab1 .= $PHPShopGUI->setCollapse('Яндекс Маркет', $Tab_yml, false);
 
 
-    $Tab1 .= $PHPShopGUI->setCollapse('Габариты', $Tab_info_size);
+        $Tab1 .= $PHPShopGUI->setCollapse('Габариты', $Tab_info_size);
+    }
+
     $Tab_rating = $PHPShopGUI->setCollapse('Рейтинг', $Tab_rating, false);
 
     // Подтипы

@@ -51,13 +51,12 @@
                         <div class="template-slider @php __hide('imageSlider'); php@">
                             @imageSlider@
                         </div>
-                        <ul class="action-tabs" role="tablist" id="actionTab">
+                        <ul class="action-tabs @hideSite@" role="tablist" id="actionTab">
                             <li class="active @php __hide('specMain'); php@ spec "><a data-toggle="tab" href="#panel1">{Спецпредложения}</a></li>
-                            <li class="@hitMainHidden@ @php __hide('specMain'); php@ @php __hide('hitMain'); php@">|</li>
-                            <li class="@hitMainHidden@ @php __hide('hitMain'); php@"><a data-toggle="tab"
-                                                                                        href="#panel2">{Хит продаж}</a></li>
+                            <li class="@hitMainHidden@ @php __hide('specMain'); php@ @php __hide('hitMain'); php@ @hideCatalog@">|</li>
+                            <li class="@hitMainHidden@ @php __hide('hitMain'); php@ @hideCatalog@"><a data-toggle="tab" href="#panel2">{Хит продаж}</a></li>
                         </ul>
-                        <div class="tab-content action-tab-content ">
+                        <div class="tab-content action-tab-content @hideSite@">
                             <div id="panel1" class="tab-pane fade in active action-tab-pane @php __hide('specMain'); php@">
                                 <div class="swiper-slider-wrapper">
                                     <div class="swiper-button-prev-block">
@@ -102,7 +101,7 @@
                 </div>
             </div>
         </section>
-        <section class="new-arrival @php __hide('specMainIcon'); php@">
+        <section class="new-arrival @php __hide('specMainIcon'); php@ @hideSite@">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-12 col-xs-12 main">
@@ -138,9 +137,9 @@
             <div class="container-fluid">
                 <div class="row">
 
-                    <div class="col-md-3 col-lg-3 hidden-sm hidden-xs  sidebar-left @php __hide('productDay'); php@">@productDay@</div>
+                    <div class="col-md-3 col-lg-3 hidden-sm hidden-xs  sidebar-left @php __hide('productDay'); php@ @hideCatalog@">@productDay@</div>
 
-                    <div class="col-md-9 catalog-table-wrapper main-content ">
+                    <div class="col-md-9 catalog-table-wrapper main-content @hideSite@">
                         <div class="row">
                             @leftCatalTable@
                         </div>
@@ -148,7 +147,7 @@
                 </div>
             </div>
         </section>
-        <section class="">
+        <section>
 
             <div class="container-fluid">
                 <div class="row">
@@ -208,7 +207,7 @@
         </section>
         <br>
 
-        <section class="brands @php __hide('brandsList'); php@">
+        <section class="brands @php __hide('brandsList'); php@ @hideSite@">
 
             <div class="container-fluid">
                 <div class="row">
@@ -338,7 +337,6 @@
                                 <a href="/users/sendpassword.html" class="pass">{Забыли пароль}</a>
                             </div>
 
-                            @facebookAuth@ @twitterAuth@
                         </div>
                         <div class="modal-footer flex-row">
 

@@ -54,7 +54,7 @@ class PHPShopBase {
      * @param bool $error блокировка ошибок PHP
      */
     function __construct($iniPath, $connectdb = true, $error = true) {
- 
+        
         // Отладка ядра
         $this->setPHPCoreReporting($error);
 

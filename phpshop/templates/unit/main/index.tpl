@@ -41,7 +41,7 @@
         <link href="@pathTemplateMin@/style.css" type="text/css" rel="stylesheet">
 
         <!-- Header -->
-        <div class="mobile-fix-menu">
+        <div class="mobile-fix-menu @hideSite@">
             <div class="d-flex justify-content-between">
                 <span class="back-btn d-flex align-items-center"><i class="icons icons-prev2" style="backface-visibility: hidden;"></i> {Назад}</span>
                 <button type="button" class="menu-close" ><span
@@ -65,7 +65,7 @@
                     <div class="logo">
                         <a href="/"><img src="@logo@" alt=""></a>
                     </div>
-                    <div class="category-btn">
+                    <div class="category-btn @hideSite@">
 
                         <div class="category-icon">
                             <div><svg width="24" height="5"><path  stroke-width="2" d="M0 5h24"></path></svg></div>
@@ -93,7 +93,7 @@
                             </div>
                         </form>
                     </div>
-                    <ul class="header-btn d-flex align-items-center justify-content-start hidden-sm">
+                    <ul class="header-btn d-flex align-items-center justify-content-start hidden-sm @hideSite@">
                         <li role="presentation">@wishlist@</li>
                         <li role="presentation">
                             <a href="/compare/">
@@ -101,13 +101,13 @@
                             </a>
                         </li>
                     </ul>
-                    <div class="header-cart hidden-sm"><a id="cartlink" data-trigger="hover" data-container="#cart" data-toggle="popover" data-placement="bottom" data-html="true" data-url="/order/" data-content='@visualcart@' href="/order/"><span class="icons icons-blue icons-big icons-cart"></span><span id="num" class="">@num@</span> <span class="visible-lg-inline">{товаров}  {на} </span><span id="sum" class="">@sum@</span><span class="rubznak">@productValutaName@</span></a>
+                    <div class="header-cart hidden-sm @hideCatalog@"><a id="cartlink" data-trigger="hover" data-container="#cart" data-toggle="popover" data-placement="bottom" data-html="true" data-url="/order/" data-content='@visualcart@' href="/order/"><span class="icons icons-blue icons-big icons-cart"></span><span id="num" class="">@num@</span> <span class="visible-lg-inline">{товаров}  {на} </span><span id="sum" class="">@sum@</span><span class="rubznak">@productValutaName@</span></a>
                         <div id="visualcart_tmp" class="hide">@visualcart@</div>
                     </div>
                     <ul class="header-user"> @usersDisp@</ul>
                 </div>
             </div>
-            <div class="drop-menu drop">
+            <div class="drop-menu drop @hideSite@">
                 <div class="drop-shadow">
                     <div class="container">
                         <ul class="mobile-menu">
@@ -125,24 +125,7 @@
             <nav class="navbar main-navbar" id="navigation">
                 <div class="navbar-header">
                     <div class="visible-xs btn-mobile-menu"><span class="icons-menu"></span></div>
-                    <div class="filter-panel">
-                        <div class="filter-well" >
-                            <div class="filter-menu-wrapper">
-                                <div class="btn-group filter-menu" data-toggle="buttons">
-                                    <label class="btn btn-sm btn-sort @sSetCactive@">
-                                        <input type="radio" name="s" value="3"> {Популярные}
-                                    </label>
-                                    <label class="btn btn-sm btn-sort" >
-                                        <input type="radio" name="s" value="2&f=2"> {Дорогие}
-                                    </label>
-                                    <label class="btn btn-sm btn-sort " >
-                                        <input type="radio" name="s" value="2&f=1"> {Дешевые}
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <span class="filter-btn" ><span class="icons icons-filter"></span>{Фильтры}</span>
-                    </div>
+                    
                     <form action="/search/" role="search" method="get" class="visible-xs  mobile-search">
                         <div class="input-group">
                             <input name="words" maxlength="50" id="search" class="form-control" placeholder="{Искать}.." required="" type="search" data-trigger="manual" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="">
@@ -160,14 +143,15 @@
 
                                 <!-- dropdown catalog menu -->
                                 <li class="visible-xs">
-                                    <ul class="mobile-menu">
+                                    <ul class="mobile-menu @hideSite@">
                                         @leftCatal@
 
 
                                     </ul>
                                 </li>
-                                @topBrands@ @topcatMenu@ @topMenu@
-
+                                @topBrands@ 
+                                @topcatMenu@ 
+                                @topMenu@
 
                                 <li class="visible-xs"><a href="/news/">{Новости}</a></li>
                             </ul>
@@ -190,12 +174,11 @@
         </div>
         <!--/ Notification -->
 
-        <div class="container d-flex catalog-list flex-wrap main-catalog ">    @leftCatalTable@
-
+        <div class="container d-flex catalog-list flex-wrap main-catalog @hideSite@">    
+            @leftCatalTable@
         </div>
 
         <div class=" @php __hide('imageSlider'); php@ main-slider slider-desktop" >
-
             <div class="  main-slider">
                 <div class="container owl-nav-block position-relative">
                     <div class="row"></div></div>
@@ -203,7 +186,7 @@
             </div>
         </div>
 
-        <section class="specMain @php __hide('specMain'); php@">
+        <section class="specMain @php __hide('specMain'); php@ @hideSite@">
 
             <div class="container">
                 <div class="row">
@@ -235,7 +218,7 @@
                 </div>
             </div>
         </section>
-        <section class="specMain @php __hide('specMainIcon'); php@">
+        <section class="specMain @php __hide('specMainIcon'); php@ @hideSite@">
 
             <div class="container">
                 <div class="row">
@@ -282,7 +265,7 @@
                 </div>
             </div>
         </section>
-        <section class="specMain @php __hide('nowBuy'); php@">
+        <section class="specMain @php __hide('nowBuy'); php@ @hideSite@">
 
             <div class="container">
                 <div class="row">
@@ -314,7 +297,7 @@
                 </div>
             </div>
         </section>
-        <section class=" brands position-relative @php __hide('brandsList'); php@">
+        <section class=" brands position-relative @php __hide('brandsList'); php@ @hideSite@">
             <div class="container">
                 <div class="swiper-slider-wrapper">
                     <div class="position-absolute brand-wrapper">
@@ -370,17 +353,17 @@
                     <div class="h5">{Мой кабинет}</div>
 
                     <ul>
-                        <li>
+                        <li class="@hideCatalog@">
                             @php if($_SESSION['UsersId']) echo
                             '<a href="/users/order.html">{Отследить заказ}</a>';
                             else echo '
                             <a href="#" data-toggle="modal" data-target="#userModal">{Отследить заказ}</a>'; php@
                         </li>
-                        <li><a href="/users/notice.html">{Уведомления о товарах}</a></li>
+                        <li class="@hideCatalog@"><a href="/users/notice.html">{Уведомления о товарах}</a></li>
                         @php if($_SESSION['UsersId']) echo '
                         <li><a href="/users/message.html">{Связь с менеджерами}</a>
                         </li>
-                        <li><a href="?logout=true">{Выйти}</a></li>'; php@
+                        <li><a href="?logout=true">{Выйти}</a></li>';else echo '<li><a href="#" data-toggle="modal" data-target="#userModal">{Войти}</a></li>'; php@
                     </ul>
                 </div>
                 <!-- My Account Links Ends -->
@@ -407,10 +390,10 @@
                     <!-- / Социальные сети -->
                     
                     <ul>
-                        <li><a href="/price/" title="Прайс-лист">{Прайс-лист}</a></li>
+                        <li class="@hideCatalog@"><a href="/price/" title="Прайс-лист">{Прайс-лист}</a></li>
                         <li><a href="/news/" title="Новости">{Новости}</a></li>
                         <li><a href="/gbook/" title="Отзывы">{Отзывы}</a></li>
-                        <li><a href="/map/" title="Карта сайта">{Карта сайта}</a></li>
+                        <li class="@hideSite@"><a href="/map/" title="Карта сайта">{Карта сайта}</a></li>
                         <li><a href="/forma/" title="Форма связи">{Форма связи}</a></li>
                     </ul>
                 </div>
@@ -475,7 +458,6 @@
                                 <a href="/users/sendpassword.html" class="pass">{Забыли пароль}</a>
                             </div>
 
-                            @facebookAuth@ @twitterAuth@
                         </div>
                         <div class="modal-footer flex-row">
 
@@ -495,16 +477,16 @@
         <nav class="navbar navbar-fixed-bottom bar bar-tab visible-xs visible-sm">
             <div class="d-flex justify-content-between align-center">
 
-                <a class=" @cart_active@" href="/order/" id="bar-cart">
+                <a class="@cart_active@ @hideCatalog@" href="/order/" id="bar-cart">
                     <span class="icons-cart icons"></span> <span id="sum2" class="">@sum@</span><span
                         class="rubznak">@productValutaName@</span>
 
                 </a>
-                <a class="links" href="/users/wishlist.html">
+                <a class="links @hideSite@" href="/users/wishlist.html">
                     <span class="wishlistcount">@wishlistCount@</span><span class="icons icons-wishlist  icons-green icons-small"></span>
 
                 </a>
-                <a class="links " href="/compare/">
+                <a class="links @hideSite@" href="/compare/">
                     <span id="mobilnum">@numcompare@</span><span class="icons icons-compare  icons-green icons-small"></span>
 
                 </a>

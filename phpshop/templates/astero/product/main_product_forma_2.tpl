@@ -1,9 +1,10 @@
 <div class="col-md-6 col-sm-6 product-block-wrapper">
-	<span class="sale-icon-content">
-                @specIcon@
-			@newtipIcon@
-			@hitIcon@
-			@promotionsIcon@            </span>
+    <span class="sale-icon-content">
+        @specIcon@
+        @newtipIcon@
+        @hitIcon@
+        @promotionsIcon@            
+    </span>
     <div class="product-col">
         <div class="image product-img-centr">
             <a href="/shop/UID_@productUid@.html" title="@productNameClean@">
@@ -21,16 +22,17 @@
                 <div class="description-product-height-fix"></div>
             </div>
             @previewSorts@
-            <div class="price">
+            <div class="price @hideCatalog@">
                 <span class="price-new">@productPrice@<span class="rubznak">@productValutaName@</span></span> 
                 <span class="price-old">@productPriceOld@</span>
             </div>
-<div class="stock">
-@ComStartNotice@
-<div class="outStock">@productOutStock@</div>
-@ComEndNotice@
-<span class="product-sklad-list-block">@productSklad@</span>
-</div>            <div class="cart-button button-group">
+            <div class="stock @hideCatalog@">
+                @ComStartNotice@
+                <div class="outStock">@productOutStock@</div>
+                @ComEndNotice@
+                <span class="product-sklad-list-block">@productSklad@</span>
+            </div>            
+            <div class="cart-button button-group @hideCatalog@">
                 <a class="btn btn-cart @elementCartOptionHide@" href="/shop/UID_@productUid@.html">
                     <i class="icon-basket"></i>
                     <span>@productSale@</span>

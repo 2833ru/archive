@@ -39,7 +39,7 @@ class PHPShopSearch extends PHPShopShopCore {
             $this->cell = $this->PHPShopSystem->getSerilizeParam('admoption.search_row');
             $this->num_row = $this->PHPShopSystem->getSerilizeParam('admoption.search_num');
         }
-        
+
         $this->yandexSearchAPI = $this->PHPShopSystem->getSerilizeParam('admoption.yandex_search_apikey');
         $this->yandexSearchId = (int) $this->PHPShopSystem->getSerilizeParam('admoption.yandex_search_id');
         if (!empty($this->yandexSearchAPI) && !empty($this->yandexSearchId)) {
@@ -189,6 +189,22 @@ class PHPShopSearch extends PHPShopShopCore {
     }
 
     /**
+     *  Поиск по именам категорий
+     */
+    function words_page() {
+
+        if (PHPShopParser::checkFile($template)) {
+            $PHPShopOrm = new PHPShopOrm($this->getValue('base.page'));
+            $PHPShopOrm->debug = $this->debug;
+
+
+            $data = $PHPShopOrm->select(array('link', 'name'), array('name' => " REGEXP '" . explode(" ", $_REQUEST['words'])[0] . "' or content REGEXP '" . explode(" ", $_REQUEST['words'])[0] . "'", "enabled" => "!='0'",'category'=>'!=2000'), array('order' => 'name'), array('limit' => 5));
+
+            return $data;
+        }
+    }
+
+    /**
      * Yandex Speller
      */
     function speller($words) {
@@ -228,7 +244,7 @@ class PHPShopSearch extends PHPShopShopCore {
         // Русские буквы в Ajax запросе
         if (isset($_REQUEST['ajax']))
             $_REQUEST['words'] = urldecode($_REQUEST['words']);
-        
+
         // Фильтр поиска
         $_REQUEST['words'] = PHPShopSecurity::true_search($_REQUEST['words']);
 
@@ -272,9 +288,13 @@ class PHPShopSearch extends PHPShopShopCore {
             // Поиск по каталогам
             $grid_category = $this->words_category();
 
-            if (!empty($this->dataArray) or ! empty($grid_category)) {
+            // Поиск по страницам
+            $words_page = $this->words_page();
+
+            if (!empty($this->dataArray) or ! empty($grid_category) or ! empty($words_page)) {
 
                 // Пагинатор
+                if (!$this->get('hideSite'))
                 $this->setPaginator(count($this->dataArray), $order);
 
                 // Добавляем в дизайн ячейки с товарами
@@ -283,7 +303,10 @@ class PHPShopSearch extends PHPShopShopCore {
                 // Ajax Search
                 if (isset($_REQUEST['ajax'])) {
 
-                    $grid = $grid_category . $grid;
+                    // Поиск по страницам
+                    $grid_page = $this->product_grid($words_page, $this->cell, 'search/search_ajax_page_forma.tpl', $this->line);
+
+                    $grid = $grid_category . $grid . $grid_page;
 
                     // Поддержка модуля SeoUrlPro
                     if (!empty($seourlpro))
@@ -294,9 +317,18 @@ class PHPShopSearch extends PHPShopShopCore {
                 }
 
 
-                $this->add($grid, true);
-            }
-            else {
+                if (!$this->get('hideSite'))
+                    $this->add($grid, true);
+
+                // Режим сайта
+                if ($this->get('hideSite')) {
+
+                    // Поиск по страницам
+                    $grid_page = $this->product_grid($words_page, $this->cell, 'search/search_page_forma.tpl', $this->line);
+
+                    $this->add($grid_page, true);
+                }
+            } else {
                 if (isset($_REQUEST['ajax']))
                     exit('false');
                 $this->add(PHPShopText::h3(__('Ничего не найдено')), true);

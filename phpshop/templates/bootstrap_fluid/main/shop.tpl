@@ -50,8 +50,8 @@
                 <div class="col-md-12 hidden-xs">
                     <ul class="nav nav-pills pull-right">
                         @usersDisp@
-                        <li role="presentation">@wishlist@</li>
-                        <li role="presentation"><a href="/compare/"><span class="glyphicon glyphicon-eye-open"></span> {Сравнить} (<span id="numcompare">@numcompare@</span>)</a></li>
+                        <li class="@hideSite@" role="presentation">@wishlist@</li>
+                        <li class="@hideSite@" role="presentation"><a href="/compare/"><span class="glyphicon glyphicon-eye-open"></span> {Сравнить} (<span id="numcompare">@numcompare@</span>)</a></li>
                     </ul>
                 </div>
             </div>
@@ -110,7 +110,7 @@
                                 <li class="active visible-lg"><a href="/" title="Домой"><span class="glyphicon glyphicon-home"></span></a></li>
 
                                 <!-- dropdown catalog menu -->
-                                <li >
+                                <li class="@hideSite@">
                                     <div class="solid-menus">
                                         <nav class="navbar no-margin">
                                             <div id="navbar-inner-container">
@@ -133,7 +133,7 @@
                                                             </ul>
                                                         </li>
                                                         <li class="visible-xs"><a href="/users/wishlist.html">{Отложенные товары}</a></li>
-                                                        <li class="visible-xs"><a href="/price/">{Прайс-лист}</a></li>
+                                                        <li class="visible-xs @hideCatalog@"><a href="/price/">{Прайс-лист}</a></li>
                                                     </ul> 
                                                 </div>
                                             </div>
@@ -141,7 +141,7 @@
                                     </div>
                                 </li>
                                 <li class="visible-xs">                                                    
-                                    <ul class="mobile-menu">
+                                    <ul class="mobile-menu @hideSite@">
                                         @leftCatal@
                                     </ul>
                                 </li>
@@ -153,7 +153,7 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="col-md-3 col-sm-3">
+                    <div class="col-md-3 col-sm-3 @hideCatalog@">
                         <ul class="nav navbar-nav navbar-right visible-lg visible-md visible-sm" id="cart">
 
                             <li><a id="cartlink" data-trigger="hover" data-container="#cart" data-toggle="popover" data-placement="bottom" data-html="true" data-url="/order/" data-content='@visualcart@' href="/order/"><span class="glyphicon glyphicon-shopping-cart"></span> <span class="visible-lg-inline">{товаров} <span id="num" class="label label-info">@num@</span> {на} </span><span id="sum" class="label label-info">@sum@</span> <span class="rubznak">@productValutaName@</span></a>
@@ -183,14 +183,15 @@
                     <ul class="list-group sidebar-nav hidden-xs hidden-sm @php if($GLOBALS['PHPShopNav']->objNav['path']!="shop") echo "hide"; php@">
                         @leftCatal@
                 </ul> 
+                    
                 <!-- Фасетный фильтр -->
-                <div class="hide panel panel-default" id="faset-filter">
+                <div class="hide panel panel-default @hideSite@" id="faset-filter">
                     <div class="faset-filter-name"><span class="close"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></span>Фильтры</div>
                     <div class="panel-body faset-filter-block-wrapper">
 
                         <div id="faset-filter-body">{Загрузка}</div>
 
-                        <div id="price-filter-body">
+                        <div id="price-filter-body" class="@hideCatalog@">
                             <h4>{Цена}</h4>
                             <form method="get" id="price-filter-form">
                                 <div class="row">
@@ -227,7 +228,7 @@
                 <div class="news-list row hidden-xs hidden-sm">
                     @miniNews@
                 </div>
-                <div class="panel panel-default  hidden-xs  hidden-sm @php __hide('productlist_list'); php@">
+                <div class="panel panel-default  hidden-xs  hidden-sm @php __hide('productlist_list'); php@ @hideSite@">
                     <div class="panel-heading">
                         <div class="panel-title">{Похожие товары}</div>
                     </div>
@@ -239,16 +240,18 @@
 
                     </div>
                 </div>
-                @oprosDisp@
+           
             </div>
 
             <div class="bar-padding-top-fix visible-xs visible-sm"> </div>
 
             <div class="col-lg-7 col-md-9 col-xs-12 main"> 
+                
                 @DispShop@
                 @getPhotos@
+                
                 <div class="row">
-                    <div class="col-xs-12 @php __hide('now_buying'); php@">
+                    <div class="col-xs-12 @php __hide('now_buying'); php@ @hideCatalog@">
                         <h2 class="page-header">@now_buying@</h2>
 
                         <div class="row">@nowBuy@</div>
@@ -262,7 +265,7 @@
             <div class="col-md-2 sidebar hidden-md col-xs-12">
 
 
-                <div class="panel panel-default @php __hide('productlastview'); php@">
+                <div class="panel panel-default @php __hide('productlastview'); php@ @hideSite@">
                     <div class="panel-heading">
                         <div class="panel-title">{Просмотренные товары}</div>
                     </div>
@@ -272,10 +275,10 @@
                 </div>
                 @rightMenu@
 
-                <div class="page-header">
+                <div class="page-header @hideSite@">
                     <h3>@specMainTitle@</h3>
                 </div>
-                <div>@specMainIcon@</div>
+                <div class="@hideSite@">@specMainIcon@</div>
             </div>
 
 
@@ -295,14 +298,14 @@
                 <!-- My Account Links Starts -->
                 <div class="col-md-3 col-sm-4 col-xs-12" itemscope itemtype="http://schema.org/Organization">
                     <h4> <!-- Социальные сети -->
-                            <ul class="social-menu list-inline">
-                                <li class="list-inline-item @php __hide('vk'); php@"><a class="social-button header-top-link" title="ВКонтакте" href="@vk@" target="_blank"><em class="fa fa-vk" aria-hidden="true">.</em></a></li>
-                                <li class="list-inline-item @php __hide('telegram'); php@"><a class="social-button header-top-link" title="Telegram" href="@telegram@" target="_blank"> <em class="fa fa-telegram" aria-hidden="true">.</em></a></li>
-                                <li class="list-inline-item @php __hide('odnoklassniki'); php@"><a class="social-button header-top-link" title="Одноклассники" href="@odnoklassniki@" target="_blank"> <em class="fa fa-odnoklassniki" aria-hidden="true">.</em></a></li>
-                                <li class="list-inline-item @php __hide('youtube'); php@"><a class="social-button header-top-link" title="Youtube" href="@youtube@" target="_blank"><em class="fa fa-youtube" aria-hidden="true">.</em></a></li>
-                                <li class="list-inline-item  @php __hide('whatsapp'); php@"><a class="social-button header-top-link" title="WhatsApp" href="@whatsapp@" target="_blank"><em class="fa fa-whatsapp" aria-hidden="true">.</em></a></li>
-                            </ul>
-                            <!-- / Социальные сети -->
+                        <ul class="social-menu list-inline">
+                            <li class="list-inline-item @php __hide('vk'); php@"><a class="social-button header-top-link" title="ВКонтакте" href="@vk@" target="_blank"><em class="fa fa-vk" aria-hidden="true">.</em></a></li>
+                            <li class="list-inline-item @php __hide('telegram'); php@"><a class="social-button header-top-link" title="Telegram" href="@telegram@" target="_blank"> <em class="fa fa-telegram" aria-hidden="true">.</em></a></li>
+                            <li class="list-inline-item @php __hide('odnoklassniki'); php@"><a class="social-button header-top-link" title="Одноклассники" href="@odnoklassniki@" target="_blank"> <em class="fa fa-odnoklassniki" aria-hidden="true">.</em></a></li>
+                            <li class="list-inline-item @php __hide('youtube'); php@"><a class="social-button header-top-link" title="Youtube" href="@youtube@" target="_blank"><em class="fa fa-youtube" aria-hidden="true">.</em></a></li>
+                            <li class="list-inline-item  @php __hide('whatsapp'); php@"><a class="social-button header-top-link" title="WhatsApp" href="@whatsapp@" target="_blank"><em class="fa fa-whatsapp" aria-hidden="true">.</em></a></li>
+                        </ul>
+                        <!-- / Социальные сети -->
                     </h4>
                     <h5>&copy; <span itemprop="name">@company@</span>, @year@</h5>
                     <ul>
@@ -314,26 +317,26 @@
                         <li>@button@</li>
                     </ul>
                 </div>
-
+                
                 <div class="col-md-3 col-sm-4 col-xs-12">
-                    <h5>{Личный кабинет}</h5>
-
-                    <ul>
-                        <li><a href="/users/order.html">{Отследить заказ}</a></li>
-                        <li><a href="/users/notice.html">{Уведомления о товарах}</a></li>
-                        @php if($_SESSION['UsersId']) echo '<li><a href="/users/message.html">{Связь с менеджерами}</a></li>
-                        <li><a href="?logout=true">{Выйти}</a></li>'; php@
-                    </ul>
-                </div>
+                        <h5>{Личный кабинет}</h5>
+                        <ul>
+                            <li><a href="/users/">@UsersLogin@</a></li>
+                            <li class="@hideCatalog@"><a href="/users/order.html">{Отследить заказ}</a></li>
+                            <li class="@hideCatalog@"><a href="/users/notice.html">{Уведомления о товарах}</a></li>
+                            @php if($_SESSION['UsersId']) echo '<li><a href="/users/message.html">{Связь с менеджерами}</a></li>
+                            <li><a href="?logout=true">{Выйти}</a></li>'; else echo '<li><a href="#" data-toggle="modal" data-target="#userModal">{Войти}</a></li>'; php@
+                        </ul>
+                    </div>
                 <!-- My Account Links Ends -->
                 <!-- Customer Service Links Starts -->
                 <div class="col-md-3 col-sm-4 col-xs-12">
                     <h5>{Навигация}</h5>
                     <ul>
-                        <li><a href="/price/" title="{Прайс-лист}">{Прайс-лист}</a></li>
+                        <li class="@hideCatalog@"><a href="/price/" title="{Прайс-лист}">{Прайс-лист}</a></li>
                         <li><a href="/news/" title="{Новости}">{Новости}</a></li>
                         <li><a href="/gbook/" title="{Отзывы}">{Отзывы}</a></li>
-                        <li><a href="/map/" title="{Карта сайта}">{Карта сайта}</a></li>
+                        <li class="@hideSite@"><a href="/map/" title="{Карта сайта}">{Карта сайта}</a></li>
                         <li><a href="/forma/" title="{Форма связи}">{Форма связи}</a></li>
                     </ul>
                 </div>
@@ -424,23 +427,23 @@
     <!-- Fixed mobile bar -->
     <div class="bar-padding-fix visible-xs"></div>
     <nav class="navbar navbar-default navbar-fixed-bottom bar bar-tab visible-xs">
-        <a class="tab-item" href="/">
-            <span class="icon icon-home"></span>
-            <span class="tab-label">{Домой}</span>
-        </a>
+
         <a class="tab-item @user_active@" @user_link@ data-target="#userModal">
-            <span class="icon icon-person"></span>
+            <span class="glyphicon glyphicon-user"></span>
             <span class="tab-label">{Кабинет}</span>
         </a>
-        <a class="tab-item @cart_active@" href="/order/" id="bar-cart">
-            <span class="icon icon-download"></span>&nbsp;<span class="badge badge-positive" id="mobilnum">@cart_active_num@</span>
+        <a class="tab-item @cart_active@ @hideCatalog@" href="/order/" id="bar-cart">
+            <span class="glyphicon glyphicon-shopping-cart"></span> <span class="badge badge-positive" id="mobilnum">@cart_active_num@</span>
             <span class="tab-label">{Корзина}</span>
         </a>
-        <a class="tab-item" href="#" data-toggle="modal" data-target="#searchModal">
-            <span class="icon icon-search"></span>
-            <span class="tab-label">{Поиск}</span>
+        <a class="tab-item @hideSite@" href="/users/wishlist.html" >
+            <span class="glyphicon glyphicon-bookmark"></span>
+            <span class="tab-label">{Отложенные}</span>
         </a>
-
+        <a class="tab-item @hideSite@" href="/compare/" >
+            <span class="glyphicon glyphicon-eye-open"></span>
+            <span class="tab-label">{Сравнить}</span>
+        </a>
     </nav>
     <!--/ Fixed mobile bar -->
 

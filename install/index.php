@@ -22,7 +22,7 @@ $error = '<span class="glyphicon glyphicon-remove text-danger pull-right"></span
 $alert = 'list-group-item-danger';
 
 // Apache
-if (strstr($_SERVER['SERVER_SOFTWARE'], 'Apache')) {
+if (strstr($_SERVER['SERVER_SOFTWARE'], 'Apache') or strstr($_SERVER['SERVER_SOFTWARE'], 'LiteSpeed')) {
     $API = $ok;
     $api_style = null;
 } else {
@@ -35,7 +35,6 @@ if (floatval(phpversion()) < 5.6)
     $php = $error;
 else
     $php = $ok;
-
 
 // Mysql
 if ($PHPShopBase->connect(false)) {
@@ -95,10 +94,11 @@ if (!empty($_POST['version_update'])) {
     if (!empty($content)) {
 
         $sqlArray = PHPShopFile::sqlStringToArray($content);
-
-        while (list($key, $val) = each($sqlArray))
+        
+        foreach ($sqlArray as $val) {
             if (!mysqli_query($link_db, $val))
                 $result .= '<div>' . mysqli_error($link_db) . '</div>';
+        }
     }
 
     $result = mysqli_error($link_db);
@@ -140,6 +140,12 @@ elseif (!empty($_POST['password'])) {
         // Подстановка почты администратора
         $content = str_replace("admin@localhost", $_POST['mail'], $fp);
 
+        if ($_POST['shop_type'] == 1)
+            $content = str_replace("интернет-магазина", "интернет-каталога", $content);
+
+        elseif ($_POST['shop_type'] == 2)
+            $content = str_replace("интернет-магазина", "веб-сайта", $content);
+
         $sqlArray = PHPShopFile::sqlStringToArray($content);
 
         $result = null;
@@ -164,6 +170,11 @@ elseif (!empty($_POST['password'])) {
         );
 
         $PHPShopOrm->insert($insert, '');
+
+        // Тип работы
+        $PHPShopOrm = new PHPShopOrm($PHPShopBase->getParam('base.system'));
+        $data = $PHPShopOrm->select();
+        $PHPShopOrm->update(array('shop_type_new' => $_POST['shop_type']), false, '_new');
 
         // Отправка почты
         if (!empty($_POST['send-welcome'])) {
@@ -272,7 +283,7 @@ elseif (!empty($_POST['password'])) {
         <div class="container">
 
             <div class="page-header">
-                <ul class="nav nav-pills pull-right hidden-sm hidden-xs <?php if(!empty($_POST['password']) or !empty($_POST['version_update'])) echo 'hidden'; ?>">
+                <ul class="nav nav-pills pull-right hidden-sm hidden-xs <?php if (!empty($_POST['password']) or ! empty($_POST['version_update'])) echo 'hidden'; ?>">
                     <li role="presentation"><a href="#sys">Требования</a></li>
                     <li role="presentation"><a href="#inst">Установка</a></li>
                     <li role="presentation"><a href="#upd">Обновление</a></li>
@@ -299,7 +310,7 @@ elseif (!empty($_POST['password'])) {
                 Это инструкция для ручной установки PHPShop на хостинг. Перед установкой, рекомендуем ознакомиться со
                 списком <a class="btn btn-info btn-xs" href="https://phpshop.ru/page/hosting-list.html" target="_blank" title="Хостинги"><span class="glyphicon glyphicon-share-alt"></span> рекомендуемых хостингов</a> на соответствие системным требованиям PHPShop.</p>
 
-            
+
 
 
             <div class="panel panel-info <?php echo $system; ?>" id="sys">
@@ -307,7 +318,7 @@ elseif (!empty($_POST['password'])) {
                     <h3 class="panel-title"><span class="glyphicon glyphicon-signal"></span> Соответствие системным требованиям</h3>
                 </div>
                 <ul class="list-group">
-                    <li class="list-group-item <?php echo $api_style ?>">Apache <?php echo $API ?>
+                    <li class="list-group-item <?php echo $api_style ?>">Apache или LiteSpeed<?php echo $API ?>
                     <li class="list-group-item <?php echo $mysql_style ?>">MySQL <?php echo $PHPShopBase->mysql_error . $mysql ?>
                     <li class="list-group-item">PHP<?php echo $php ?>
                     <li class="list-group-item">GD Support для PHP <?php echo $gd_support ?>
@@ -594,45 +605,45 @@ dbase="mybase";         # имя базы</pre>
                                                 <div id="step-2" class="hide">
 
                                                     <h4 class="title hide">Установка</h4>
+
                                                     <div class="form-group">
-                                                        <label class="col-sm-2 control-label">Имя</label>
-                                                        <div class="col-sm-10">
+                                                        <label class="col-sm-4 control-label">Конфигурация</label>
+                                                        <div class="col-sm-5">
+                                                            <select name="shop_type" size="1" class="form-control">
+                                                                <option value="0" selected="">Интернет-магазин</option>
+                                                                <option value="1">Каталог продукции</option>
+                                                                <option value="2">Сайт компании</option></select>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label class="col-sm-4 control-label">Имя</label>
+                                                        <div class="col-sm-5">
                                                             <input type="text" name="user" required class="form-control" placeholder="Администратор" value="Администратор">
                                                         </div>
                                                     </div>
 
                                                     <div class="form-group">
-                                                        <label class="col-sm-2 control-label">Пользователь</label>
-                                                        <div class="col-sm-10">
+                                                        <label class="col-sm-4 control-label">Пользователь</label>
+                                                        <div class="col-sm-5">
                                                             <input type="text" name="login" required class="form-control" placeholder="admin" value="admin">
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label class="col-sm-2 control-label">E-mail</label>
-                                                        <div class="col-sm-10">
+                                                        <label class="col-sm-4 control-label">E-mail</label>
+                                                        <div class="col-sm-5">
                                                             <input type="email" name="mail" required class="form-control" placeholder="mail@<?php echo $_SERVER['SERVER_NAME'] ?>">
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label class="col-sm-2 control-label">Пароль</label>
-                                                        <div class="col-sm-10">
+                                                        <label class="col-sm-4 control-label">Пароль</label>
+                                                        <div class="col-sm-5">
                                                             <input type="password" name="password" required class="form-control" placeholder="Пароль">
                                                         </div>
                                                     </div>
 
-                                                    <!--<div class="form-group">
-                                                        <label class="col-sm-2 control-label">Кодировка</label>
-                                                        <div class="col-sm-10">
-                                                            <select name="code" class="form-control">
-                                                                <option value="cp1251" selected="selected">Кириллическая</option>
-                                                                <option value="utf8">Международная</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    -->
-
                                                     <div class="form-group">
-                                                        <div class="col-sm-offset-2 col-sm-10">
+                                                        <div class="col-sm-offset-4 col-sm-6">
                                                             <div class="checkbox">
                                                                 <label>
                                                                     <input type="checkbox" name="send-welcome" checked value="1"> Отправить регистрационные данные на E-mail
@@ -641,7 +652,7 @@ dbase="mybase";         # имя базы</pre>
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
-                                                        <div class="col-sm-offset-2 col-sm-10">
+                                                        <div class="col-sm-offset-4 col-sm-4">
                                                             <button type="button" class="btn btn-default" id="generator" data-password="<?php echo "P" . substr(md5(time()), 0, 6) ?>"><span class="glyphicon glyphicon-lock"></span> Генератор паролей</button>
                                                             <div id="password-message">
                                                             </div>

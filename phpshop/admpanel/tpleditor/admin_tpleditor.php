@@ -98,7 +98,6 @@ function _tpl($file) {
         'top_podcatalog_forma.tpl' => 'Форма верхнего подкаталога товаров',
         'catalog_top_menu.tpl' => 'Форма каталога товаров в главном меню',
         'banner_menu_forma.tpl' => 'Баннер в меню каталгов'
-        
     );
 
     if ($_GET['option'] != 'pro' && !empty($TemplateHelper[$file]))
@@ -113,7 +112,7 @@ function _tpl($file) {
  * Вывод товаров
  */
 function actionStart() {
-    global $PHPShopGUI, $TitlePage, $PHPShopSystem, $selectModalBody;
+    global $PHPShopGUI, $TitlePage, $PHPShopSystem, $selectModalBody, $hideSite, $hideCatalog;
 
     $PHPShopGUI->addJSFiles('./js/jquery.waypoints.min.js', './js/jquery.treegrid.js', './tpleditor/gui/tpleditor.gui.js', './tpleditor/gui/ace/ace.js', './js/bootstrap-tour.min.js');
 
@@ -156,13 +155,20 @@ function actionStart() {
     $PHPShopGUI->action_select['Урок'] = array(
         'name' => 'Обучение',
         'action' => 'presentation',
-        'icon' => 'glyphicon glyphicon-education'
+        'icon' => ''
     );
 
     $PHPShopGUI->action_select['Магазин'] = array(
         'name' => 'Архивные шаблоны',
         'url' => 'http://template.phpshop.ru/?old',
         'icon' => '',
+        'target' => '_blank'
+    );
+
+    $PHPShopGUI->action_select['Кастомизация'] = array(
+        'name' => 'Кастомизация шаблона',
+        'url' => 'https://www.phpshop.ru/calculation/brifdesign/',
+        'icon' => 'glyphicon glyphicon-ruble',
         'target' => '_blank'
     );
 
@@ -272,18 +278,21 @@ function actionStart() {
             $PHPShopGUI->_CODE .= $PHPShopGUI->loadLib('tab_map', false);
     }
 
-    $PHPShopGUI->setActionPanel(PHPShopSecurity::TotalClean($TitlePage), array('Режим 1', 'Режим 2', 'Учебник', '|', 'Урок'), array('Размер', 'Учебник', 'Выполнить'));
+    $PHPShopGUI->setActionPanel(PHPShopSecurity::TotalClean($TitlePage), array('Режим 1', 'Режим 2', 'Учебник', 'Урок', '|', 'Кастомизация'), array('Размер', 'Учебник', 'Выполнить'));
 
     $dir = "../templates/*";
     $k = 1;
 
     // Стоп лист
     if (empty($_GET['option']) or $_GET['option'] == 'lite')
-        $stop_array = array('css', 'icon', 'php', 'js', 'fonts', 'images', 'icon', 'modules', 'index.html', 'style.css', 'font', 'brands', 'breadcrumbs', 'calendar', 'clients', 'comment', 'error', 'forma', 'gbook', 'links', 'map', 'opros', 'order', 'paginator', 'price', 'print', 'search', 'slider', 'selection', 'users', 'pricemail', 'editor','assets','svg');
+        $stop_array = array('css', 'icon', 'php', 'js', 'fonts', 'images', 'icon', 'modules', 'index.html', 'style.css', 'font', 'brands', 'breadcrumbs', 'calendar', 'clients', 'comment', 'error', 'forma', 'gbook', 'links', 'map', 'opros', 'order', 'paginator', 'price', 'print', 'search', 'slider', 'selection', 'users', 'pricemail', 'editor', 'assets', 'svg');
     else
-        $stop_array = array('css', 'icon', 'php', 'js', 'fonts', 'images', 'icon', 'modules', 'index.html', 'style.css', 'font','assets','svg');
+        $stop_array = array('css', 'icon', 'php', 'js', 'fonts', 'images', 'icon', 'modules', 'index.html', 'style.css', 'font', 'assets', 'svg');
 
-
+    if ($hideSite) {
+        $stop_array[] = 'product';
+        $stop_array[] = 'catalog';
+    }
 
     if (empty($_GET['name'])) {
 

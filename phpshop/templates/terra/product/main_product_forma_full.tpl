@@ -34,7 +34,7 @@
                     <div class="rating">@rateUid@</div>
                 </div>    
 
-                <div class="row" >
+                <div class="row @hideCatalog@" >
                     <div class="col-sm-12 col-md-6 col-xs-12">
                         <div class="price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                             <span class="price-new priceService" itemprop="price" content="@productSchemaPrice@">@productPrice@</span> 
@@ -55,7 +55,7 @@
                             <button class="btn btn-wishlist addToWishList" data-uid="@productUid@"><i class="fa fa-heart-o" aria-hidden="true"></i> {Отложить}</button>
                         </div>
                         @ComStartNotice@
-                        <div class="cart-button button-group compare-list-button-wrapper">
+                        <div class="cart-button button-group compare-list-button-wrapper @hideCatalog@">
                             <a class="btn btn-cart" href="/users/notice.html?productId=@productUid@" title="@productNotice@">
                                 <i class="fa fa-envelope-o" aria-hidden="true"></i> {Уведомить}
                             </a>                                   
@@ -85,7 +85,7 @@
                     @productParentList@
                 </div>
 
-                <div class="btn_buy_block @elementCartHide@">
+                <div class="btn_buy_block @elementCartHide@ @hideCatalog@">
                     <div class="quantity">
                         <label class="label-quantity ">{Количество}</label>
                         <div class="quant input-group">
@@ -103,7 +103,7 @@
                     </div>
                 </div>
 
-                <div class="available" id="items">@productSklad@</div>
+                <div class="available @hideCatalog@" id="items">@productSklad@</div>
 
                 <div class="product-tabs">
                     <ul class="nav nav-tabs">
@@ -148,12 +148,12 @@
                                 });
                             </script>
                         </div>
-                         <div id="prodfile" class="tab-pane fade">
+                        <div id="prodfile" class="tab-pane fade">
                             <div class="content" itemprop="description">
                                 @productFiles@
                             </div>
                         </div>
-                         <div id="prodpage" class="tab-pane fade">
+                        <div id="prodpage" class="tab-pane fade">
                             <div class="content" itemprop="description">
                                 @pagetemaDisp@
                             </div>

@@ -81,7 +81,7 @@ function treegenerator($array, $i, $curent, $dop_cat_array) {
 
 // Стартовый вид
 function actionStart() {
-    global $PHPShopGUI, $PHPShopSystem, $PHPShopOrm, $PHPShopModules;
+    global $PHPShopGUI, $PHPShopSystem, $PHPShopOrm, $PHPShopModules,$shop_type;
 
     // Выборка
     $data['flag'] = 1;
@@ -155,8 +155,8 @@ function actionStart() {
     $tree_select_dop = '<select class="selectpicker show-menu-arrow hidden-edit" data-live-search="true" data-container="body"  data-style="btn btn-default btn-sm" name="dop_cat[]" data-width="100%" multiple><option value="0">' . $CategoryArray[0]['name'] . '</option>' . $tree_select_dop . '</select>';
 
     // Дополнительные каталоги
+    if(empty($shop_type))
     $Tab2 .= $PHPShopGUI->setField('Каталоги', $tree_select_dop . $PHPShopGUI->setHelp('Баннер выводится только в заданных каталогах.'));
-
 
     // Описание 
     $Tab1 .= $PHPShopGUI->setField("Описание", $PHPShopGUI->setTextarea('description_new', $data['description']));

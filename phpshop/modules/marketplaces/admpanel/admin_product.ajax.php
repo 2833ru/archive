@@ -50,7 +50,7 @@ function marketplacesAddLabels($product) {
         $PHPShopInterface->productTableRowLabels[] = '<a class="label label-success" title="' . __('Âûâîä â ÑáåðÌàðêåò') . '" href="?path=catalog' . $postfix . '&where[sbermarket]=1">' . __('Ñáåð') . '</a> ';
 
     if (isset($product['cdek']) && (int) $product['cdek'] === 1 && (int) $memory['catalog.option']['label_cdek'] === 1)
-        $PHPShopInterface->productTableRowLabels[] = '<a class="label label-success" title="' . __('Âûâîä â ÑÄÝÊ.ÌÀÐÊÅÒ') . '" href="?path=catalog' . $postfix . '&where[cdek]=1">' . __('ÑÄÝÊ') . '</a> ';
+        $PHPShopInterface->productTableRowLabels[] = '<a class="label label-success" title="' . __('Âûâîä â ÑÄÝÊ.ÌÀÐÊÅÒ') . '" href="?path=catalog' . $postfix . '&where[cdek]=1">' . __('ßÌ') . '</a> ';
 
     if (isset($product['aliexpress']) && (int) $product['aliexpress'] === 1 && (int) $memory['catalog.option']['label_aliexpress'] === 1)
         $PHPShopInterface->productTableRowLabels[] = '<a class="label label-success" title="' . __('Âûâîä â AliExpress') . '" href="?path=catalog' . $postfix . '&where[aliexpress]=1">' . __('Ali') . '</a> ';

@@ -5,6 +5,7 @@
     <faqlink>https://docs.phpshop.ru/moduli/dizain/panorama</faqlink>
     <description>Модуль загрузки панорамных фото для товаров.</description>
     <category>template</category>
+    <catalog>true</catalog>
     <adminmenu>
         <title>Панорама</title>
         <capability>true</capability>

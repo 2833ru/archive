@@ -10,20 +10,20 @@
     <li class="active">{Ваша корзина}</li>
 </ol>
 <div class="order">
-<div class="main-cart-header">
+    <div class="main-cart-header">
 
-    <h2>{Ваша корзина}</h2>
-        
-    <a href="?cart=clean" class="btn cart-clean"> {Очистить корзину}</a> 
-   
+        <h2>{Ваша корзина}</h2>
 
-</div>
-
-<div class="img_fix">
-    @orderContentCart@
-</div>
+        <a href="?cart=clean" class="btn cart-clean"> {Очистить корзину}</a> 
 
 
+    </div>
 
-@orderContent@ 
+    <div class="img_fix">
+        @orderContentCart@
+    </div>
+
+
+
+    @orderContent@ 
 </div>

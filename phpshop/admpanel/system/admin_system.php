@@ -179,7 +179,7 @@ function GetAdminSkinList($skin) {
 
 // Стартовый вид
 function actionStart() {
-    global $PHPShopGUI, $PHPShopModules, $TitlePage, $PHPShopOrm, $PHPShopBase;
+    global $PHPShopGUI, $PHPShopModules, $TitlePage, $PHPShopOrm, $PHPShopBase, $hideCatalog, $hideSite;
 
     PHPShopObj::loadClass('valuta');
     PHPShopObj::loadClass('user');
@@ -263,8 +263,16 @@ function actionStart() {
         $option['catlist_depth'] = 2;
     }
 
+    $shop_type_value[]= array('Интернет-магазин', 0, $data['shop_type']);
+    $shop_type_value[]= array('Каталог продукции', 1, $data['shop_type']);
+    $shop_type_value[]= array('Сайт компании', 2, $data['shop_type']);
+    
     // Содержание закладки 1
-    $PHPShopGUI->_CODE = $PHPShopGUI->setCollapse('Вывод', $PHPShopGUI->setField("Общая пагинация", $PHPShopGUI->setInputText(false, 'num_row_new', $data['num_row'], 50), 1, 'Количество позиций на одной странице в магазине') .
+    if(empty($hideSite))
+    $disp = 
+            $PHPShopGUI->setField('Конфигурация', $PHPShopGUI->setSelect('shop_type_new', $shop_type_value,false,true)).
+            $PHPShopGUI->setField("Общая пагинация", 
+            $PHPShopGUI->setInputText(false, 'num_row_new', $data['num_row'], 50), 1, 'Количество позиций на одной странице') .
             $PHPShopGUI->setField("Количество в Спецпредложениях", $PHPShopGUI->setInputText(false, 'spec_num_new', $data['spec_num'], 50)) .
             $PHPShopGUI->setField("Количество в Новинках", $PHPShopGUI->setInputText(false, 'new_num_new', $data['new_num'], 50)) .
             $PHPShopGUI->setField("Товарная сетка витрины", $PHPShopGUI->setSelect('num_vitrina_new', $num_vitrina_value, 50), 1, 'Товаров в длину 
@@ -272,12 +280,21 @@ function actionStart() {
             $PHPShopGUI->setField("Товарная сетка в каталоге", $PHPShopGUI->setSelect('num_row_adm_new', $num_row_adm_value, 50) . '&nbsp;' . $PHPShopGUI->setCheckbox('num_row_set', 1, 'Применить сейчас ко всем каталогам', 0), 1, 'Товаров в длину 
 	  для каталогов по умолчанию. Сетки 5 и 6 поддерживаются не всеми шаблонами') .
             $PHPShopGUI->setField("Вывод новинок", $PHPShopGUI->setSelect('option[new_enabled]', $new_enabled_value, null, true)) .
-            $PHPShopGUI->setField("Сейчас покупают", $PHPShopGUI->setSelect('option[nowbuy_enabled]', $nowbuy_enabled_value, null, true)) .
-            $PHPShopGUI->setField("Цифровые товары", $PHPShopGUI->setCheckbox('option[digital_product_enabled]', 1, 'Продажа цифровых товаров', $option['digital_product_enabled']), 1, 'Прикрепленные к товару файлы доступны после оплаты заказа в личном кабинете') .
+            $PHPShopGUI->setField("Сейчас покупают", $PHPShopGUI->setSelect('option[nowbuy_enabled]', $nowbuy_enabled_value, null, true),1,false,$hideCatalog) .
+            $PHPShopGUI->setField("Цифровые товары", $PHPShopGUI->setCheckbox('option[digital_product_enabled]', 1, 'Продажа цифровых товаров', $option['digital_product_enabled']), 1, 'Прикрепленные к товару файлы доступны после оплаты заказа в личном кабинете',$hideCatalog) .
             $PHPShopGUI->setField("Вывод товаров в каталоге", $PHPShopGUI->setCheckbox('option[catlist_enabled]', 1, 'Выводить товары в корневом каталоге', $option['catlist_enabled']), 1) .
             $PHPShopGUI->setField("Уровень вложенности вывода товаров", $PHPShopGUI->setInputText(false, 'option[catlist_depth]', $option['catlist_depth'], 50), 1) .
             $PHPShopGUI->setField("Динамическая прокрутка", $PHPShopGUI->setCheckbox('option[ajax_scroll]', 1, 'Отключить прокрутку у товаров', $option['ajax_scroll']), 1, 'Работает не во всех шаблонах') .
-            $PHPShopGUI->setField('Временная зона', $PHPShopGUI->setSelect('option[timezone]', $timezone_value)));
+            $PHPShopGUI->setField('Временная зона', $PHPShopGUI->setSelect('option[timezone]', $timezone_value)
+            );
+    else 
+        $disp =  
+            $PHPShopGUI->setField('Тип работы', $PHPShopGUI->setSelect('shop_type_new', $shop_type_value)).
+            $PHPShopGUI->setField("Общая пагинация", $PHPShopGUI->setInputText(false, 'num_row_new', $data['num_row'], 50), 1, 'Количество позиций на одной странице') .
+            $PHPShopGUI->setField('Временная зона', $PHPShopGUI->setSelect('option[timezone]', $timezone_value))
+            ;
+    
+    $PHPShopGUI->_CODE = $PHPShopGUI->setCollapse('Вывод',$disp);
 
     $warehouse_enabled = $PHPShopBase->getNumRows('warehouses', "where enabled='1'");
 
@@ -311,7 +328,7 @@ function actionStart() {
     if (empty($option['search_num']))
         $option['search_num'] = $data['num_row'];
 
-    $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Настройка поиска', $PHPShopGUI->setField('Область поиска', $PHPShopGUI->setSelect('option[search_pole]', $search_pole_value, null, true)) .
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Настройка поиска', $PHPShopGUI->setField('Область поиска', $PHPShopGUI->setSelect('option[search_pole]', $search_pole_value, null, true),1,false,$hideSite) .
             $PHPShopGUI->setField("Товарная сетка поиска", $PHPShopGUI->setSelect('option[search_row]', $search_row_value, 50), 1, 'Товаров в длину 
 	  для поиска. Сетки 5 и 6 поддерживаются не всеми шаблонами') .
             $PHPShopGUI->setField("Количество в Поиске", $PHPShopGUI->setInputText(false, 'option[search_num]', $option['search_num'], 50)) .
@@ -332,8 +349,10 @@ function actionStart() {
             $PHPShopGUI->setField("Импортировать характеристики", $PHPShopGUI->setSelect('option[update_sort_type]', $sort_value)
                     );
 
+    if(empty($hideSite))
     $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Настройка фильтра', $filter);
 
+    if(empty($hideCatalog))
     $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Настройка цен', $price);
 
     if (empty($option['user_phone_mask']))
@@ -366,6 +385,7 @@ function actionStart() {
     );
 
 
+    if(empty($hideCatalog))
     $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Настройка пользователей', $PHPShopGUI->setField("Регистрация пользователей", $PHPShopGUI->setCheckbox('option[user_mail_activate]', 1, 'Активация через E-mail', $option['user_mail_activate']) . '<br>' . $PHPShopGUI->setCheckbox('option[user_mail_activate_pre]', 1, 'Ручная активация администратором', $option['user_mail_activate_pre']) . '<br>' . $PHPShopGUI->setCheckbox('option[user_price_activate]', 1, 'Регистрация для просмотра цен', $option['user_price_activate']) . '<br>' . $PHPShopGUI->setCheckbox('option[user_items_activate]', 1, 'Регистрация для просмотра остатков', $option['user_items_activate']) . '<br>' . $PHPShopGUI->setCheckbox('option[user_servers_control]', 1, 'Разделение пользователей для витрин', $option['user_servers_control']))
             . $PHPShopGUI->setField("Статус после регистрации", $PHPShopGUI->setSelect('option[user_status]', $userstatus_value, 300))
             . $PHPShopGUI->setField("Бонусы за покупку:", $PHPShopGUI->setInputText(null, "option[bonus]", intval($option['bonus']), 100, '%'))
@@ -378,11 +398,11 @@ function actionStart() {
             $PHPShopGUI->setField("HTML-редактор по умолчанию", GetEditors($option['editor']), 1, 'Визуальный редактор контента') .
             $PHPShopGUI->setField("Цвет редактора исходного кода", GetAceSkinList($option['ace_theme']), 1, 'Стилизованная подсветка синтаксиса исходного HTML кода') .
             $PHPShopGUI->setField("Заголовок", $PHPShopGUI->setInputText(null, "option[adm_title]", substr($option['adm_title'],0,70), 300), 1, 'Брендовый заголовок в левом верхнем углу панели управления') .
-            $PHPShopGUI->setField("Multi Manager", $PHPShopGUI->setCheckbox('option[rule_enabled]', 1, 'Учет прав управления товарами для менеджеров', $option['rule_enabled'])) .
-            $PHPShopGUI->setField("Логика совместных продаж", $PHPShopGUI->setCheckbox('option[odnotip]', 1, 'Включить перекрестное добавление товаров для совместной продажи', $option['odnotip'])) .
-            $PHPShopGUI->setField("Быстрый просмотр", $PHPShopGUI->setCheckbox('option[fast_view]', 1, 'Отключить быстрый просмотр товаров в окне', $option['fast_view'])) .
+            $PHPShopGUI->setField("Multi Manager", $PHPShopGUI->setCheckbox('option[rule_enabled]', 1, 'Учет прав управления товарами для менеджеров', $option['rule_enabled']),null, null, $hideSite) .
+            $PHPShopGUI->setField("Логика совместных продаж", $PHPShopGUI->setCheckbox('option[odnotip]', 1, 'Включить перекрестное добавление товаров для совместной продажи', $option['odnotip']),null, null, $hideCatalog) .
+            $PHPShopGUI->setField("Быстрый просмотр", $PHPShopGUI->setCheckbox('option[fast_view]', 1, 'Отключить быстрый просмотр товаров в окне', $option['fast_view']),null, null, $hideSite) .
             
-            $PHPShopGUI->setField("Быстрый поиск", $PHPShopGUI->setSelect('option[search_enabled]', $search_enabled_value, null, true), 1, 'Поиск в верхнем правом углу панели управления')
+            $PHPShopGUI->setField("Быстрый поиск", $PHPShopGUI->setSelect('option[search_enabled]', $search_enabled_value, null, true), 1, 'Поиск в верхнем правом углу панели управления',$hideCatalog)
     );
 
 
@@ -432,6 +452,9 @@ function actionUpdate() {
     if (is_array($_POST['option']))
         foreach ($_POST['option'] as $key => $val)
             $option[$key] = $val;
+    
+    if($option['product_off'] == 1)
+        $option['cart_off'] = $option['product_off'];
 
     // Смена шаблона на front-end
     if ($data['skin'] != $_POST['skin_new'] and PHPShopSecurity::true_skin($_POST['skin_new']))

@@ -5,6 +5,7 @@
     <faqlink>https://docs.phpshop.ru/moduli/razrabotchikam/geoip</faqlink>
     <description>Модуль определения города по IP.</description>
     <category>develop</category>
+    <site>true</site>
     <adminmenu>
         <title>GeoIP Redirect</title>
         <capability>true</capability>

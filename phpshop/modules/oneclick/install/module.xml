@@ -5,6 +5,7 @@
     <faqlink>https://docs.phpshop.ru/moduli/prodazhi/zakaz-v-1-klik</faqlink>
     <description>Модуль заказа в один клик.</description>
     <category>sale</category>
+    <catalog>true</catalog>
     <adminmenu>
         <title>Заказ в один клик</title>
         <capability>true</capability>

@@ -5,6 +5,7 @@
     <faqlink>https://docs.phpshop.ru/moduli/razrabotchikam/cron</faqlink>
     <description>Модуль запуска задач по времени.</description>
     <category>develop</category>
+    <site>true</site>
     <adminmenu>
         <title>Задачи</title>
         <capability>true</capability>

@@ -6,7 +6,7 @@ PHPShopObj::loadClass('user');
 
 // Стартовый вид
 function actionStart() {
-    global $PHPShopGUI, $TitlePage, $PHPShopModules;
+    global $PHPShopGUI, $TitlePage, $PHPShopModules,$hideCatalog;
 
     // Начальные данные
     $data['enabled'] = 1;
@@ -46,6 +46,7 @@ function actionStart() {
     );
 
     // Адреса доставок
+    if (empty($hideCatalog))
     $Tab2 = $PHPShopGUI->loadLib('tab_addres', $data['data_adres']);
 
     // Запрос модуля на закладку

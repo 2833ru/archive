@@ -38,6 +38,7 @@ function actionStart() {
     <p><kbd>@productsgroup_button_buy@</kbd> - кнопка покупки для списков товаров, например файл шаблона: <code>/phpshop/templates/имя_шаблона/product/main_product_forma_2.tpl</code></p>
     <p>Для изменения динамически цены при выборе кол-ва товара в карточке товара, нужно внести изменения в шаблоне страницы товара <code>/phpshop/templates/имя_шаблона/product/main_product_forma_full.tpl</code>. Добавить класс "<b>priceGroupeR</b>" в тэг, содержащий цену. Пример: <pre>
 &lt;div class="tovarDivPrice12"&gt;Цена: &lt;span class="priceGroupeR"&gt;@productPrice@&lt;/span&gt; &lt;span&gt;@productValutaName@&lt;/span>&lt;/div&gt;</pre>
+    <p>Для автоматического обновления цен у групп товаров по расписанию следует добавить новую задачу в модуль <a href="https://docs.phpshop.ru/moduli/razrabotchikam/cron" target="_blank">Задачи</a> с адресом запускаемого файла <code>phpshop/modules/productsgroup/cron/products.php</code>. Цены обновляются так же при редактировании карточки товара в магазине.</p>
 
     ';
 

@@ -57,6 +57,7 @@ function actionStart() {
     $Tab2 .= $PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'));
 
     // Рекомендуемые товары
+    if(empty($hideSite))
     $Tab1 .= $PHPShopGUI->setField('Рекомендуемые товары', $PHPShopGUI->setTextarea('odnotip_new', $data['odnotip'], false, false, 00, __('Укажите ID товаров или воспользуйтесь') . ' <a href="#" data-target="#odnotip_new"  class="btn btn-sm btn-default tag-search"><span class="glyphicon glyphicon-search"></span> ' . __('поиском товаров') . '</a>'));
 
     $Tab1 = $PHPShopGUI->setCollapse('Информация', $Tab1);

@@ -5,6 +5,7 @@
     <faqlink>https://docs.phpshop.ru/moduli/dizain/count-cat</faqlink>
     <description>ћодуль подсчета количества товаров в каталогах.</description>
     <category>template</category>
+    <catalog>true</catalog>
     <adminmenu>
         <title>Count Cat</title>
         <capability>true</capability>

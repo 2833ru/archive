@@ -3,7 +3,7 @@
 /**
  * Обработчик товаров
  * @author PHPShop Software
- * @version 2.3
+ * @version 2.4
  * @package PHPShopShopCore
  */
 class PHPShopShop extends PHPShopShopCore {
@@ -61,7 +61,7 @@ class PHPShopShop extends PHPShopShopCore {
      */
     function __construct() {
         global $PHPShopAnalitica;
-
+        
         // Размещение
         $this->path = '/' . $GLOBALS['SysValue']['nav']['path'];
 
@@ -79,6 +79,7 @@ class PHPShopShop extends PHPShopShopCore {
         $this->multi_currency_search = $this->PHPShopSystem->getSerilizeParam('admoption.multi_currency_search');
 
         $this->PHPShopAnalitica = $PHPShopAnalitica;
+
     }
 
     /**
@@ -284,7 +285,7 @@ class PHPShopShop extends PHPShopShopCore {
         }
 
         // 404 ошибка
-        if (empty($row['id']))
+        if (empty($row['id']) or $this->PHPShopSystem->getParam("shop_type") == 2)
             return $this->setError404();
 
         // Категория
@@ -722,7 +723,7 @@ function CID_Product($category = null, $mode = false) {
         return true;
 
     // 404 если каталога не существует или мультибаза
-    if (empty($this->category_name) or $this->errorMultibase($this->category) or $this->PHPShopCategory->getParam('skin_enabled') == 1)
+    if (empty($this->category_name) or $this->errorMultibase($this->category) or $this->PHPShopCategory->getParam('skin_enabled') == 1 or $this->PHPShopSystem->getParam("shop_type") == 2)
         return $this->setError404();
 
     $this->set('catalogName', $this->category_name);
@@ -1061,9 +1062,9 @@ function CID_Category($mode = false) {
     $this->PHPShopCategory = new PHPShopCategory($this->category);
 
     // Скрытый каталог
-    if ($this->PHPShopCategory->getParam('skin_enabled') == 1 or $this->errorMultibase($this->category))
+    if ($this->PHPShopCategory->getParam('skin_enabled') == 1 or $this->errorMultibase($this->category) or $this->PHPShopSystem->getParam("shop_type") == 2)
         return $this->setError404();
-
+    
     // Название категории
     $this->category_name = $this->PHPShopCategory->getName();
 
@@ -1091,10 +1092,10 @@ function CID_Category($mode = false) {
     }
     switch ($this->PHPShopCategory->getValue('order_by')) {
         case(1):
-            $order = array('order' => 'name' . $order_direction);
+            $order = array('order' => 'num, name' . $order_direction);
             break;
         case(2):
-            $order = array('order' => 'name' . $order_direction);
+            $order = array('order' => 'num, name' . $order_direction);
             break;
         case(3):
             $order = array('order' => 'num' . $order_direction);

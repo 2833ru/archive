@@ -206,6 +206,7 @@ class PHPShopMap extends PHPShopCore {
         $this->category_page();
 
         // Акции
+        if (!$this->get('hideSite'))
         $this->special();
 
         // Новости

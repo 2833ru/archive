@@ -1078,6 +1078,8 @@ function product_grid($dataArray, $cell = 2, $template = false) {
             $this->set('productUid', $row['id']);
 
             $this->set('previewSorts', $this->getPreviewSorts($dataArray, $row));
+            
+            $this->set('productLink', $row['link']);
 
             // Подключение функции вывода средней оценки товара из отзывов пользователей
             $this->doLoadFunction(__CLASS__, 'comment_rate', array("row" => $row, "type" => "CID"), 'shop');

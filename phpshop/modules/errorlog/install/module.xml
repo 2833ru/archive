@@ -5,6 +5,7 @@
     <faqlink>https://docs.phpshop.ru/moduli/razrabotchikam/errorlog</faqlink>
     <description>Модуль записи ошибок и отладок.</description>
     <category>develop</category>
+    <site>true</site>
      <adminmenu>
         <title>Error Log</title>
         <capability>true</capability>

@@ -3,7 +3,7 @@
 /**
  * Файл выгрузки для Яндекс Маркет
  * @author PHPShop Software
- * @version 3.8
+ * @version 3.9
  * @package PHPShopXML
  * @example ?retailcrm [bool] Выгрузка для RetailCRM
  * @example ?marketplace=cdek [bool] Выгрузка для СДЭК (упрощенный тип YML с использованием count)
@@ -307,7 +307,7 @@ class PHPShopYml {
         if (isset($_GET['getall']))
             $where = null;
         else {
-            if (isset($_GET['marketplace']) && $_GET['marketplace'] === 'cdek' && isset($GLOBALS['SysValue']['base']['marketplaces']['marketplaces_system'])) {
+            if (isset($_GET['marketplace']) && $_GET['marketplace'] === 'yandexmarket' && isset($GLOBALS['SysValue']['base']['marketplaces']['marketplaces_system'])) {
                 $where = "cdek='1' and";
             } elseif (isset($_GET['marketplace']) && $_GET['marketplace'] === 'aliexpress' && isset($GLOBALS['SysValue']['base']['marketplaces']['marketplaces_system'])) {
                 $where = "aliexpress='1' and";

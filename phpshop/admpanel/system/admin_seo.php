@@ -5,7 +5,7 @@ $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['system']);
 
 // Стартовый вид
 function actionStart() {
-    global $PHPShopGUI, $PHPShopModules, $TitlePage, $PHPShopOrm;
+    global $PHPShopGUI, $PHPShopModules, $TitlePage, $PHPShopOrm, $hideSite;
 
     // Выборка
     $data = $PHPShopOrm->select();
@@ -24,14 +24,15 @@ function actionStart() {
     $PHPShopGUI->_CODE .= $PHPShopGUI->setField("Сжатие файлов", $PHPShopGUI->setCheckbox('option[min]', 1, 'Сжатие JS и CSS файлов для уменьшения веса страниц', $option['min']));
     $PHPShopGUI->_CODE = $PHPShopGUI->setCollapse('Основные', $PHPShopGUI->_CODE);
 
-    $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Шаблон каталога', $PHPShopGUI->loadLib('tab_headers', $data, './system/', 'catalog'));
-    $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Шаблон подкаталога', $PHPShopGUI->loadLib('tab_headers', $data, './system/', 'podcatalog'));
-    $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Шаблон товара', $PHPShopGUI->loadLib('tab_headers', $data, './system/', 'product'));
-    $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Шаблон фильтра в каталоге', $PHPShopGUI->loadLib('tab_headers', $data, './system/', 'sort'));
+    if (empty($hideSite)) {
+        $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Шаблон каталога', $PHPShopGUI->loadLib('tab_headers', $data, './system/', 'catalog'));
+        $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Шаблон подкаталога', $PHPShopGUI->loadLib('tab_headers', $data, './system/', 'podcatalog'));
+        $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Шаблон товара', $PHPShopGUI->loadLib('tab_headers', $data, './system/', 'product'));
+        $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Шаблон фильтра в каталоге', $PHPShopGUI->loadLib('tab_headers', $data, './system/', 'sort'));
+    }
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
-
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .

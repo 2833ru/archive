@@ -1,4 +1,3 @@
-
 <div class="col-md-2 col-sm-2 col-xs-12 product-block-wrapper-fix column-6" >
     <div class="thumbnail">
         <span class="sale-icon-content d-flex flex-column align-items-start">
@@ -7,9 +6,11 @@
             @hitIcon@
 
         </span>
-        <div class="product-btn"> <button class=" addToCompareList " data-uid="@productUid@"><span class="icons icons-green icons-small icons-compare"></span></button>
+        <div class="product-btn @hideCatalog@"> 
+            <button class=" addToCompareList " data-uid="@productUid@"><span class="icons icons-green icons-small icons-compare"></span></button>
             <a class=" addToWishList @elementCartOptionHide@" href="/shop/UID_@productUid@.html"><span class="icons icons-green icons-small icons-wishlist"></span></a>
-            <button class=" addToWishList @elementCartHide@" data-uid="@productUid@"><span class="icons icons-green icons-small icons-wishlist"></span></button></div>
+            <button class=" addToWishList @elementCartHide@" data-uid="@productUid@"><span class="icons icons-green icons-small icons-wishlist"></span></button>
+        </div>
         <div class="caption ">
             <a href="/shop/UID_@productUid@.html" title="@productNameClean@">
                 <div class="product-image position-relative">
@@ -26,7 +27,7 @@
                 </div>
 
             </a>
-            <div class="d-flex justify-content-between align-items-end">
+            <div class="d-flex justify-content-between align-items-end @hideCatalog@">
 
                 <div class="product-price d-flex flex-column align-items-start justify-content-end">
                     <div class=" price-old @php __hide('productPriceOld'); php@"  >@productPriceOld@</div>

@@ -32,21 +32,21 @@
 
                 <!-- List -->
                 <ul class="nav nav-sub nav-sm nav-tabs nav-list-y-2 mb-2">
-                    <li class="nav-item">
+                    <li class="nav-item @hideCatalog@">
                         <a class="nav-link" href="/order/">
                             <i class="fas fa-shopping-cart nav-icon"></i>
                             {Корзина}
                             <span class="badge badge-soft-dark badge-pill nav-link-badge" id="num">@num@</span>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item @hideSite@">
                         <a class="nav-link" href="/compare/">
                             <i class="fas fa-cogs nav-icon"></i>
                             {Сравнить}
                             <span class="badge badge-soft-dark badge-pill nav-link-badge">@numcompare@</span>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item @hideSite@">
                         <a class="nav-link" href="/users/wishlist.html">
                             <i class="fas fa-heart nav-icon"></i>
                             {Избранное}

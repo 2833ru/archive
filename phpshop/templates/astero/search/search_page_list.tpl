@@ -19,7 +19,7 @@
                 <button type="submit" class="btn btn-info" tabindex="-1"><span class="glyphicon glyphicon-search"></span></button>
             </div>
         </div>
-        <span id="helpBlock" class="help-block">
+        <span id="helpBlock" class="help-block @hideSite@">
 
             <input type="hidden" value="0" name="cat" id="cat">
 

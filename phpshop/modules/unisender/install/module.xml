@@ -5,6 +5,7 @@
     <faqlink>https://docs.phpshop.ru/moduli/crm/unisender</faqlink>
     <description>Модуль емейл рассылки и автоматизации UniSender.ru</description>
     <category>crm</category>
+    <site>true</site>
      <adminmenu>
         <title>UniSender</title>
         <capability>true</capability>

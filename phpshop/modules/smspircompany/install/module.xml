@@ -3,7 +3,8 @@
     <version>1.0</version>
     <name>PIR.Company</name>
     <description>Модуль SMS уведомления PIR Company</description>
-    <category>user</category>
+    <category>develop</category>
+    <site>true</site>
     <adminmenu>
         <title>SMS уведомления PIR Company</title>
         <capability>true</capability>

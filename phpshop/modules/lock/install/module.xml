@@ -4,6 +4,7 @@
     <name>Замок</name>
     <description>Модуль предварительной авторизации.</description>
     <category>develop</category>
+    <site>true</site>
      <adminmenu>
         <title>Замок</title>
         <capability>true</capability>

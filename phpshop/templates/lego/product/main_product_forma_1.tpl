@@ -19,24 +19,23 @@
         </div>
         <div class="product-btn">
 
-
-            <div class="price-block">
+            <div class="price-block @hideCatalog@">
 
                 <h4 class="new-price">@parentLangFrom@ @productPrice@ <span class="rubznak">@productValutaName@</span></h4>
                 <div class="h5 old-price">@productPriceOld@</div>
             </div>
             @ComStartNotice@
-            <div class="outStock">@productOutStock@</div>
+            <div class="outStock @hideCatalog@">@productOutStock@</div>
             <br>
             @ComEndNotice@
-            <a class="btn addToCartList @elementCartOptionHide@" href="/shop/UID_@productUid@.html" data-title="{Выбрать}" data-placement="top" data-toggle="tooltip"><span class="icons-cart"></span>@productSale@</a>
-            <button class="btn  addToCartList listBtn @elementCartHide@" data-uid="@productUid@" data-num="1" data-title="{Купить}" data-placement="top" data-toggle="tooltip"><span class="icons-cart"></span> <span class="btn-text">@productSale@</span></button>
+            <a class="btn addToCartList @elementCartOptionHide@ @hideCatalog@" href="/shop/UID_@productUid@.html" data-title="{Выбрать}" data-placement="top" data-toggle="tooltip"><span class="icons-cart"></span>@productSale@</a>
+            <button class="btn  addToCartList listBtn @elementCartHide@ @hideCatalog@" data-uid="@productUid@" data-num="1" data-title="{Купить}" data-placement="top" data-toggle="tooltip"><span class="icons-cart"></span> <span class="btn-text">@productSale@</span></button>
 
             <div class="btn-block">
                 <a href="#" data-role="/shop/UID_@productUid@.html" class="btn btn-cart fastView "  data-toggle="modal" data-target="#modalProductView"><span class="icons-search"></span></a>
                 <button class="btn btn-wishlist addToWishList" data-uid="@productUid@" data-title="{Отложить}" data-placement="top" data-toggle="tooltip"><span class="icons-like"></span></button>
                 <button class="btn btn-wishlist addToCompareList" data-uid="@productUid@" data-title="{Сравнить}" data-placement="top" data-toggle="tooltip"><span class="icons-compare"></span></button>
-                <a class="btn btn-cart @elementNoticeHide@" href="/users/notice.html?productId=@productUid@" title="@productNotice@"  data-title="@productNotice@" data-placement="top" data-toggle="tooltip">
+                <a class="btn btn-cart @elementNoticeHide@ @hideCatalog@" href="/users/notice.html?productId=@productUid@" title="@productNotice@"  data-title="@productNotice@" data-placement="top" data-toggle="tooltip">
                     <span class="icons-mail"></span>
                 </a>
             </div>

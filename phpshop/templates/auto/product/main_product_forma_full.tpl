@@ -92,7 +92,7 @@
             <!-- Конец блока Сравнить -->
 
             <!-- Цена -->
-            <div class="d-flex align-items-center mb-2" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+            <div class="align-items-center mb-2 @hideCatalog@" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                 <span class="text-dark font-size-2 font-weight-bold">
                     <span itemprop="price" class="priceService" content="@productSchemaPrice@">@productPrice@</span> 
                     <span itemprop="priceCurrency" class="rubznak" content="RUB">@productValutaName@</span>  
@@ -109,7 +109,7 @@
             </div>
 
             <!-- Количество -->
-            <div>    
+            <div class="@hideCatalog@">    
                 <div class="text-body space-bottom-1 small" id="items">@productSklad@</div>
                 @ComStartNotice@
                 <div class="text-danger space-bottom-1 small">@productOutStock@</div>
@@ -117,7 +117,7 @@
             </div>
 
 
-            <div class="border py-2 px-3 mb-4 @elementCartHide@">
+            <div class="border py-2 px-3 mb-4 @elementCartHide@ @hideCatalog@">
                 <div class="js-quantity-counter row align-items-center">
                     <div class="col-7">
                         <small class="d-block text-body font-weight-bold">{Выберите количество}:</small>
@@ -133,7 +133,7 @@
                     </div>
                 </div>
             </div>
-            <div class="border rounded-lg py-2 px-3 mb-3 @elementCartOptionHide@">
+            <div class="border rounded-lg py-2 px-3 mb-3 @elementCartOptionHide@ @hideCatalog@">
                 <div class="js-quantity-counter row align-items-center">
                     <div class="col-7">
                         <small class="d-block text-body font-weight-bold">{Выберите количество}:</small>
@@ -155,10 +155,10 @@
             <!-- Вывод стикера Аккордеон для карточки товара -->
             @sticker_accordion@
 
-            <div class="mb-2 @elementCartHide@">
+            <div class="mb-2 @elementCartHide@ @hideCatalog@">
                 <button type="button" class="btn btn-block btn-primary  transition-3d-hover addToCartFull" data-num="1" data-uid="@productUid@">@flowProductSale@</button>
             </div>
-            <div class="mb-2 @elementCartOptionHide@">
+            <div class="mb-2 @elementCartOptionHide@ @hideCatalog@">
                 <button type="button" class="btn btn-block btn-primary  transition-3d-hover addToCartFull" data-num="1" data-uid="@productUid@">@flowProductSale@</button>
             </div>
 
@@ -167,17 +167,17 @@
 
             <!-- Модуль Vkseller -->
             <div class="mb-4 @php __hide('vkseller_link'); php@">
-                <a class="btn btn-block btn-soft-success btn-pill transition-3d-hover" href="@vkseller_link@" target="_blank">Купить в ВКонтакте</a>
+                <a class="btn btn-block btn-soft-success btn-pill transition-3d-hover" href="@vkseller_link@" target="_blank">{Купить в ВКонтакте}</a>
             </div>
 
             <!-- Модуль Ozonseller -->
             <div class="mb-4 @php __hide('ozonseller_link'); php@">
-                <a class="btn btn-block btn-soft-success btn-pill transition-3d-hover" href="@ozonseller_link@" target="_blank">Купить в OZON</a>
+                <a class="btn btn-block btn-soft-success btn-pill transition-3d-hover" href="@ozonseller_link@" target="_blank">{Купить в} OZON</a>
             </div>
 
             <!-- Модуль Wbseller -->
             <div class="mb-4 @php __hide('wbseller_link'); php@">
-                <a class="btn btn-block btn-soft-success btn-pill transition-3d-hover" href="@wbseller_link@" target="_blank">Купить в Wildberries</a>
+                <a class="btn btn-block btn-soft-success btn-pill transition-3d-hover" href="@wbseller_link@" target="_blank">{Купить в} Wildberries</a>
             </div>
 
         </div>
@@ -284,7 +284,6 @@
             @productlist_list@
         </div>
         <!-- End Slick Carousel -->
-
 
     </div>
 </div>

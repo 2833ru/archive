@@ -2,11 +2,12 @@
 <module>
     <version>1.0</version>
     <name>WebHooks</name>
-    <description>Интеграция с использованием WebHooks.</description>
+    <description>Модуль интеграции с облачными сервисами с помощью WebHooks.</description>
     <faqlink>https://docs.phpshop.ru/moduli/razrabotchikam/webhooks</faqlink>
     <sign>1600408414</sign>
     <pro>true</pro>
     <category>develop,pro</category>
+    <catalog>true</catalog>
      <adminmenu>
         <title>WebHooks</title>
         <capability>true</capability>

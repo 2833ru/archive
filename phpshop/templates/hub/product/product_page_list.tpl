@@ -53,7 +53,7 @@
     <!-- Фасетный фильтр -->
     <div class="hide" id="faset-filter">
         <div id="faset-filter-body">{Загрузка}...</div>
-        <div id="price-filter-body">
+        <div id="price-filter-body" class="@hideCatalog@">
             <div class="faset-filter-block-wrapper">
                 <h4>{Цена}</h4>
                 <div>

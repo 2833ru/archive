@@ -454,7 +454,7 @@ function mainPageProductSlider() {
                 items: 4
             },
             1000: {
-                items: 6
+                items: 4
             }
         }
     });
@@ -486,7 +486,7 @@ function mainPageProductSlider() {
                 items: 4
             },
             1000: {
-                items: 6
+                items: 4
             }
         }
     });

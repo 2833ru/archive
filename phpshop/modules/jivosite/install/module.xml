@@ -6,6 +6,7 @@
     <description>Виджет чата и обратного звонка от JivoSite.</description>
     <category>chat</category>
     <status>Hit</status>
+    <site>true</site>
     <adminmenu>
         <title>JivoSite</title>
         <capability>true</capability>

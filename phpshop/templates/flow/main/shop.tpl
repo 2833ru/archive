@@ -164,17 +164,17 @@
                         <!-- End Logo -->
 
                         <!-- Shopping Cart -->
-                        <a class="navbar-toggler btn btn-icon btn-sm rounded-circle" href="/order/">
+                        <a class="navbar-toggler btn btn-icon btn-sm rounded-circle @hideCatalog@" href="/order/">
                             <i class="fas fa-shopping-cart"></i>
                             <sup class="avatar-status avatar-primary cartnum @php __hide('num'); php@">@num@</sup>
                         </a>
                         <!-- End Shopping Cart -->
 
-                        <a class="navbar-toggler btn btn-icon btn-sm rounded-circle" href="/users/wishlist.html" data-toggle="tooltip" data-placement="top" title="" tabindex="0" data-original-title="{Избранное}">
+                        <a class="navbar-toggler btn btn-icon btn-sm rounded-circle @hideSite@" href="/users/wishlist.html" data-toggle="tooltip" data-placement="top" title="" tabindex="0" data-original-title="{Избранное}">
                             <i class="fas fa-heart"></i>
                             <sup class="avatar-status avatar-primary wishlistcount @php __hide('wishlistCount'); php@">@wishlistCount@</sup>
                         </a>
-                        <a class="navbar-toggler btn btn-icon btn-sm rounded-circle" href="/compare/" data-toggle="tooltip" data-placement="top" title="" tabindex="0" data-original-title="{Сравнить}">
+                        <a class="navbar-toggler btn btn-icon btn-sm rounded-circle @hideSite@" href="/compare/" data-toggle="tooltip" data-placement="top" title="" tabindex="0" data-original-title="{Сравнить}">
                             <i class="fas fa-balance-scale"></i></i>
                             <sup class="avatar-status avatar-primary numcompare @php __hide('numcompare'); php@">@numcompare@</sup>
                         </a>
@@ -213,7 +213,7 @@
                                     php@
 
                                     <!-- Catalog -->
-                                    <li class="hs-has-mega-menu navbar-nav-item">
+                                    <li class="hs-has-mega-menu navbar-nav-item @hideSite@">
                                         <a id="basicMegaMenu" class="hs-mega-menu-invoker nav-link nav-link-toggle" href="javascript:;" aria-haspopup="true" aria-expanded="false">{Каталог}</a>
 
                                         <!-- Nav Item - Mega Menu -->
@@ -238,7 +238,7 @@
                                     <!-- End Catalog -->
 
                                     <!-- Brand -->
-                                    <li class="hs-has-sub-menu navbar-nav-item @php __hide('topBrands'); php@">
+                                    <li class="hs-has-sub-menu navbar-nav-item @php __hide('topBrands'); php@ @hideSite@">
                                         <a id="blogMegaMenu" class="hs-mega-menu-invoker nav-link nav-link-toggle " href="javascript:;" aria-haspopup="true" aria-expanded="false" aria-labelledby="blogSubMenu">{Бренды}</a>
 
                                         <div id="blogSubMenu" class="hs-sub-menu dropdown-menu" aria-labelledby="blogMegaMenu" style="min-width: 230px;">
@@ -247,26 +247,31 @@
 
                                     </li>
                                     <!-- End Brand -->
-
-                                    <!-- Menu -->
-                                    <li class="hs-has-sub-menu navbar-nav-item @php __hide('topMenu'); php@">
-                                        <a id="blogMegaMenu" class="hs-mega-menu-invoker nav-link nav-link-toggle " href="javascript:;" aria-haspopup="true" aria-expanded="false" aria-labelledby="blogSubMenu">{Навигация}</a>
-
-                                        <div id="blogSubMenu" class="hs-sub-menu dropdown-menu" aria-labelledby="blogMegaMenu" style="min-width: 230px;">
-                                            @topMenu@ 
-                                        </div>
-
-                                    </li>
-                                    <!-- End Menu-->
-
+                                    
                                     <!-- Catalog  Menu-->
                                     @topcatMenu@
                                     <!-- End Catalog  Menu-->
 
+                                    <!-- Menu -->
+                                    @php
+                                    if(empty(PHPShopParser::get('hideSite')))
+                                    echo '<li class="hs-has-sub-menu navbar-nav-item">
+                                        <a id="blogMegaMenu" class="hs-mega-menu-invoker nav-link nav-link-toggle " href="javascript:;" aria-haspopup="true" aria-expanded="false" aria-labelledby="blogSubMenu">{Навигация}</a>
+
+                                        <div id="blogSubMenu" class="hs-sub-menu dropdown-menu" aria-labelledby="blogMegaMenu" style="min-width: 230px;">
+                                            @topMenu@
+                                        </div>
+
+                                    </li>';
+                                    else echo '<li class="navbar-nav-item d-none d-xl-block">@topMenu@</li>';
+                                    php@
+                                    <!-- End Menu-->
+
+
                                     <!-- Button -->
                                     <!-- Shopping Cart -->
                                     <li class="navbar-nav-last-item d-none d-lg-block d-sm-none d-md-none">
-                                        <div class="hs-unfold">
+                                        <div class="hs-unfold @hideCatalog@">
                                             <a class="js-hs-unfold-invoker btn btn-icon btn-outline-primary rounded-circle" href="/order/"
                                                data-hs-unfold-options='{
                                                "target": "#shoppingCartDropdown",
@@ -299,11 +304,11 @@
                                         </div>
                                         <!-- End Shopping Cart -->
 
-                                        <a class="btn btn-icon btn-outline-primary rounded-circle" href="/users/wishlist.html" data-toggle="tooltip" data-placement="top" title="" tabindex="0" data-original-title="{Избранное}">
+                                        <a class="btn btn-icon btn-outline-primary rounded-circle @hideSite@" href="/users/wishlist.html" data-toggle="tooltip" data-placement="top" title="" tabindex="0" data-original-title="{Избранное}">
                                             <i class="fas fa-heart"></i>
                                             <sup class="avatar-status avatar-primary wishlistcount @php __hide('wishlistCount'); php@">@wishlistCount@</sup>
                                         </a>
-                                        <a class="btn btn-icon btn-outline-primary rounded-circle" href="/compare/" data-toggle="tooltip" data-placement="top" title="" tabindex="0" data-original-title="{Сравнить}">
+                                        <a class="btn btn-icon btn-outline-primary rounded-circle @hideSite@" href="/compare/" data-toggle="tooltip" data-placement="top" title="" tabindex="0" data-original-title="{Сравнить}">
                                             <i class="fas fa-balance-scale"></i></i>
                                             <sup class="avatar-status avatar-primary numcompare @php __hide('numcompare'); php@">@numcompare@</sup>
                                         </a>
@@ -378,7 +383,7 @@
 
                                 <div id="faset-filter-body">{Загрузка}</div>
 
-                                <div id="price-filter-body" class="border-bottom pb-4 mb-4">
+                                <div id="price-filter-body" class="border-bottom pb-4 mb-4 @hideCatalog@">
                                     <div class="h4">{Цена}</div>
                                     <form method="get" id="price-filter-form">
                                         <div class="row">
@@ -469,7 +474,7 @@
 
                         <!-- Nav Link -->
                         <ul class="nav nav-sm nav-x-0 flex-column">
-                            <li class="nav-item"><a class="nav-link" href="/price/">{Прайс-лист}</a></li>
+                            <li class="nav-item @hideCatalog@"><a class="nav-link" href="/price/">{Прайс-лист}</a></li>
                             <li class="nav-item @php __hide('miniNews'); php@"><a class="nav-link" href="/news/">{Новости}</a></li>
                             <li class="nav-item"><a class="nav-link" href="/gbook/">{Отзывы}</a></li>
                             <li class="nav-item"><a class="nav-link" href="/forma/">{Форма связи}</a></li>
@@ -484,12 +489,12 @@
                         <ul class="nav nav-sm nav-x-0 flex-column">
                             @php if($_SESSION['UsersId']) echo '
                             <li class="nav-item"><a class="nav-link" href="/users/">{Настройки}</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/users/order.html">{Отследить заказ}</a></li>
+                            <li class="nav-item @hideCatalog@"><a class="nav-link" href="/users/order.html">{Отследить заказ}</a></li>
                             <li class="nav-item"><a class="nav-link" href="/users/message.html">{Связь с менеджерами}</a></li>
                             <li class="nav-item"><a class="nav-link" href="?logout=true">{Выйти}</a></li>
                             ';
                             else echo '
-                            <li class="nav-item"><a class="js-hs-unfold-invoker nav-link" href="javascript:;" data-toggle="modal" data-target="#signupModal">{Отследить заказ}</a></li>
+                            <li class="nav-item"><a class="js-hs-unfold-invoker nav-link" href="javascript:;" data-toggle="modal" data-target="#signupModal">{Войти}</a></li>
                             <li class="nav-item"><a class="nav-link" href="/users/">{Зарегистрироваться}</a></li>
                             ';
                             php@

@@ -47,7 +47,7 @@
                 </div>
                 <div class="col-xs-12">
                     <div class="row">
-                        <div class="flex-block">
+                        <div class="flex-block @hideCatalog@">
                             <div class="product-page-price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                                 <span class="new-price" itemprop="price" content="@productSchemaPrice@">@productPrice@</span> 
                                 <span class="new-price rubznak" itemprop="priceCurrency" content="RUB">@productValutaName@</span>
@@ -99,7 +99,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-xs-12">
+                <div class="col-xs-12 @hideCatalog@">
                     <div class="row">
                         <div class="product-page-button">
                             <div class="@elementCartOptionHide@">

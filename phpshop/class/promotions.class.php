@@ -316,12 +316,13 @@ class PHPShopPromotions {
         }
 
         // Скидка от промо больше, применяем скидку от промо и добавляем наценку что бы не применилась скидка.
-        foreach ($this->cart->_CART as $key => $cartProduct) {
-            if ($cartProduct['id'] == $productId) {
-                $this->cart->_CART[$key]['promo_price'] = $promoPrice;
-                $this->cart->_CART[$key]['promotion_discount'] = true;
+        if (is_array($this->cart->_CART))
+            foreach ($this->cart->_CART as $key => $cartProduct) {
+                if ($cartProduct['id'] == $productId) {
+                    $this->cart->_CART[$key]['promo_price'] = $promoPrice;
+                    $this->cart->_CART[$key]['promotion_discount'] = true;
+                }
             }
-        }
 
         return $promoPrice;
     }

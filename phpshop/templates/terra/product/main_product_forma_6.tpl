@@ -11,16 +11,16 @@
         <span class="previewsorts">@previewSorts@</span>
         <div class="caption">
             <h4><a href="/shop/UID_@productUid@.html" title="@productNameClean@">@productName@</a></h4>
-            <div class="price">
+            <div class="price @hideCatalog@">
                 <span class="price-new">@parentLangFrom@ @productPrice@ <span class="rubznak">@productValutaName@</span></span> 
                 <span class="price-old">@productPriceOld@</span>
             </div>
-            <div class="stock">
+            <div class="stock @hideCatalog@">
                 @ComStartNotice@
                 <div class="outStock">@productOutStock@</div>
                 @ComEndNotice@
             </div>
-            <div class="cart-button button-group">
+            <div class="cart-button button-group @hideCatalog@">
                 <a class="btn btn-cart addToCartList @elementCartOptionHide@" href="/shop/UID_@productUid@.html" data-title="{Выбрать}" data-placement="top" data-toggle="tooltip"><span class="icons-cart"></span>@productSale@</a>
 
                 @ComStartCart@

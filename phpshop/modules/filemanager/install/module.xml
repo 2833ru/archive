@@ -5,6 +5,7 @@
     <description>Модуль файлового менеджера.</description>
     <faqlink>https://docs.phpshop.ru/moduli/dizain/filemanager</faqlink>
     <category>template</category>
+    <site>true</site>
      <adminmenu>
         <title>Файловый менеджер</title>
         <capability>true</capability>

@@ -32,7 +32,7 @@ function actionUpdate() {
 }
 
 function actionStart() {
-    global $PHPShopGUI, $PHPShopOrm;
+    global $PHPShopGUI, $PHPShopOrm,$hideSite;
 
     // Выборка
     $data = $PHPShopOrm->select();
@@ -41,13 +41,16 @@ function actionStart() {
     // Содержание закладки
     $Info = '<p>Выключение модуля приведет к потере адресов страниц вида <code>/knigi.html</code> на <code>/shop/CID_1.html</code>. Повторное включение заново создаст seo-url, на основе названия каталогов, товаров, при этом, если вы вручную вводили url в поле, он не сохранится.</p>';
 
+    if(empty($hideSite)){
     $Tab1 = $PHPShopGUI->setField('SEO пагинация', $PHPShopGUI->setRadio('paginator_new', 2, 'Включить', $data['paginator']) . $PHPShopGUI->setRadio('paginator_new', 1, 'Выключить', $data['paginator']),false,'Добавляет в теги Title и Description нумерацию страниц для уникальности индексации');
     $Tab1.=$PHPShopGUI->setField('Описание каталога на внутренних страницах', $PHPShopGUI->setRadio('cat_content_enabled_new', 1, 'Включить', $data['cat_content_enabled']) . $PHPShopGUI->setRadio('cat_content_enabled_new', 2, 'Выключить', $data['cat_content_enabled']),false,'Убирает описание каталога для внутренних страниц для сохранения уникальности первой.');
     $Tab1.= $PHPShopGUI->setField('Совет',$PHPShopGUI->setInfo($Info));
     $Tab1 .= $PHPShopGUI->setField('SEO ссылки брендов', $PHPShopGUI->setRadio('seo_brands_enabled_new', 2, 'Включить', $data['seo_brands_enabled']) . $PHPShopGUI->setRadio('seo_brands_enabled_new', 1, 'Выключить', $data['seo_brands_enabled']),false, false);
+     $Tab1 .= $PHPShopGUI->setField('SEO редиректы', $PHPShopGUI->setRadio('redirect_enabled_new', 2, 'Включить', $data['redirect_enabled']) . $PHPShopGUI->setRadio('redirect_enabled_new', 1, 'Выключить', $data['redirect_enabled']), false, '301 редиректы при миграции с другой CMS');
+    }
     $Tab1 .= $PHPShopGUI->setField('SEO ссылки новостей', $PHPShopGUI->setRadio('seo_news_enabled_new', 2, 'Включить', $data['seo_news_enabled']) . $PHPShopGUI->setRadio('seo_news_enabled_new', 1, 'Выключить', $data['seo_news_enabled']),false, false);
      $Tab1 .= $PHPShopGUI->setField('SEO ссылки страниц', $PHPShopGUI->setRadio('seo_page_enabled_new', 2, 'Включить', $data['seo_page_enabled']) . $PHPShopGUI->setRadio('seo_page_enabled_new', 1, 'Выключить', $data['seo_page_enabled']),false, false);
-      $Tab1 .= $PHPShopGUI->setField('SEO редиректы', $PHPShopGUI->setRadio('redirect_enabled_new', 2, 'Включить', $data['redirect_enabled']) . $PHPShopGUI->setRadio('redirect_enabled_new', 1, 'Выключить', $data['redirect_enabled']),false, '301 редиректы при миграции с другой CMS');
+     
 
     $Tab2 = $PHPShopGUI->setPay($serial = false, false, $data['version'], true);
 

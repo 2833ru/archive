@@ -3,7 +3,7 @@
 /**
  * Áèáëèîòåêà Dialog Bot
  * @author PHPShop Software
- * @version 1.3
+ * @version 1.4
  * @package PHPShopClass
  */
 class PHPShopBot {
@@ -360,14 +360,22 @@ class PHPShopVKBot extends PHPShopBot {
     // Îòïğàâêà ñîîáùåíèé
     public function send($id, $message, $keyboard = false) {
 
-        $data = array(
-            'peer_id' => $id,
-            'message' => $message,
-            'keyboard' => json_encode($keyboard),
-        );
+        if (strstr($id, ","))
+            $chat_ids = explode(",", $id);
+        else
+            $chat_ids[] = $id;
 
+        if (is_array($chat_ids))
+            foreach ($chat_ids as $chat_id) {
 
-        $out = $this->request('messages.send', $data);
+                $data = array(
+                    'peer_id' => trim($chat_id),
+                    'message' => $message,
+                    'keyboard' => json_encode($keyboard),
+                );
+
+                $out = $this->request('messages.send', $data);
+            }
         return $out;
     }
 
@@ -395,8 +403,8 @@ class PHPShopVKBot extends PHPShopBot {
 
         $link = $this->protocol . $_SERVER['SERVER_NAME'] . '/phpshop/admpanel/admin.php?path=dialog&id=' . $message['user_id'] . '&bot=' . $bot . '&user=' . $message['user_id'];
 
-        if(empty($message['from']['last_name']))
-            $message['from']['last_name']=null;
+        if (empty($message['from']['last_name']))
+            $message['from']['last_name'] = null;
 
         $buttons[][] = array(
             'action' => array(
@@ -557,13 +565,23 @@ class PHPShopTelegramBot extends PHPShopBot {
 
     // Îòïğàâêà ñîîáùåíèé
     public function send($id, $message) {
-        $data = array(
-            'chat_id' => $id,
-            'text' => $message,
-            'parse_mode' => "markdown"
-        );
 
-        $out = $this->request('sendMessage', $data);
+        if (strstr($id, ","))
+            $chat_ids = explode(",", $id);
+        else
+            $chat_ids[] = $id;
+
+        if (is_array($chat_ids))
+            foreach ($chat_ids as $chat_id) {
+
+                $data = array(
+                    'chat_id' => trim($chat_id),
+                    'text' => $message,
+                    'parse_mode' => "markdown"
+                );
+
+                $out = $this->request('sendMessage', $data);
+            }
         return $out;
     }
 

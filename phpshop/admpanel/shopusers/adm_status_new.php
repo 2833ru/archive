@@ -6,7 +6,7 @@ PHPShopObj::loadClass('user');
 
 // Стартовый вид
 function actionStart() {
-    global $PHPShopGUI, $TitlePage, $PHPShopModules;
+    global $PHPShopGUI, $TitlePage, $PHPShopModules,$hideCatalog,$hideSite;
 
     // Начальные данные
     $data['enabled'] = $data['warehouse'] = 1;
@@ -24,6 +24,7 @@ function actionStart() {
             $PHPShopGUI->setField("Склад", $PHPShopGUI->setRadio("warehouse_new", 1, "Вкл.", $data['warehouse']) . $PHPShopGUI->setRadio("warehouse_new", 0, "Выкл.", $data['warehouse']))
     );
 
+    if(empty($hideCatalog))
     $Tab1 .= $PHPShopGUI->setCollapse('Накопительные скидки', '<p class="text-muted hidden-xs">' . __('Для учета мгновенной скидки от текущей стоимости заказа без привязки к статусу пользователя и накопления перейдите в раздел') . ' <a href="?path=shopusers.discount"><span class="glyphicon glyphicon-share-alt"></span> ' . __('Скидки от заказа') . '</a>.<br>' . __('Для учета накопительной скидки требуется включить опцию учета скидки покупателя в нужном статусе заказа, например "Выполнен"') . '.</p>' .
             $PHPShopGUI->setCheckbox('cumulative_discount_check_new', 1, 'Использование накопительной скидки', $data['cumulative_discount_check']) .
             $PHPShopGUI->loadLib('tab_discount', $data['cumulative_discount'], 'shopusers/')

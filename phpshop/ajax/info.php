@@ -85,14 +85,15 @@ foreach (str_split($GLOBALS['SysValue']['upload']['version']) as $w)
 if (empty($License['License']['DomenLocked']))
     $License['License']['DomenLocked'] = '-';
 
-
+$shop_type_value = array('интернет-магазин','каталог продукции','сайт компании');
 
 $Info = "Информация о программе
 ---------------------------------------------
 
 Версия: PHPShop " . $product_name . "
 Сборка: " . substr($version, 0, strlen($version) - 1) . "
-Дизайн: " . $PHPShopSystem->getParam('skin') .$Template['sys']['version']." ". $theme . "
+Конфигурация: " . $shop_type_value[(int)$PHPShopSystem->getParam("shop_type")] . "
+Дизайн: " . $_SESSION['skin'] .$Template['sys']['version']." ". $theme . "
 Установлено: " . $FileDate . "
 Окончание лицензии: " . $LicenseUntil . "
 Окончание поддержки: " . $TechPodUntil . "

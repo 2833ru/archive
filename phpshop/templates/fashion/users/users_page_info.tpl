@@ -15,7 +15,7 @@
         <form name="users_password" method="post" class="form-horizontal">
 
             <!-- Form Group -->
-            <div class="row form-group">
+            <div class="row form-group @hideCatalog@">
                 <label for="currentPasswordLabel" class="col-sm-3 col-form-label input-label">{Статус}</label>
 
                 <div class="col-sm-9 p-2 text-primary">
@@ -25,7 +25,7 @@
             <!-- End Form Group -->
 
             <!-- Form Group -->
-            <div class="row form-group">
+            <div class="row form-group @hideCatalog@">
                 <label for="currentPasswordLabel" class="col-sm-3 col-form-label input-label">{Скидка}</label>
 
                 <div class="col-sm-9 p-2 text-primary">
@@ -35,7 +35,7 @@
             <!-- End Form Group -->
 
             <!-- Form Group -->
-            <div class="row form-group @php __hide('user_bonus'); php@">
+            <div class="row form-group @php __hide('user_bonus'); php@ @hideCatalog@">
                 <label for="currentPasswordLabel" class="col-sm-3 col-form-label input-label">{Бонусы}</label>
 
                 <div class="col-sm-9 p-2 text-primary">

@@ -37,7 +37,7 @@ function treegenerator($array, $i, $curent) {
 }
 
 function actionStart() {
-    global $PHPShopGUI, $PHPShopSystem, $PHPShopModules, $TitlePage;
+    global $PHPShopGUI, $PHPShopSystem, $PHPShopModules, $TitlePage,$hideCatalog;
 
     // Начальные данные
     $data = array();
@@ -150,6 +150,7 @@ function actionStart() {
         // Дата
         $Tab_dop .= $PHPShopGUI->setField("Дата", $PHPShopGUI->setInputDate("datas_new", PHPShopDate::get($data['datas'])));
 
+        if(empty($hideCatalog))
         $Tab_dop .= $PHPShopGUI->setField('Рекомендуемые товары для совместной продажи', $PHPShopGUI->setTextarea('odnotip_new', $data['odnotip'], false, false, false, __('Укажите ID товаров или воспользуйтесь') . ' <a href="#" data-target="#odnotip_new"  class="btn btn-sm btn-default tag-search"><span class="glyphicon glyphicon-search"></span> ' . __('поиском товаров') . '</a>'));
 
         // Анонс

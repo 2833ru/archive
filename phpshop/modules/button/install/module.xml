@@ -5,6 +5,7 @@
     <faqlink>https://docs.phpshop.ru/moduli/dizain/button</faqlink>
     <description>Модуль вставки кода кнопок рейтингов и счетчиков.</description>
     <category>text,template</category>
+    <site>true</site>
     <adminmenu>
         <title>Кнопки</title>
         <capability>true</capability>

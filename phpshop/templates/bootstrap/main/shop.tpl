@@ -49,8 +49,8 @@
                 <div class="col-md-12 hidden-xs">
                     <ul class="nav nav-pills pull-right">
                         @usersDisp@
-                        <li role="presentation">@wishlist@</li>
-                        <li role="presentation"><a href="/compare/"><span class="glyphicon glyphicon-eye-open"></span> {Сравнить} (<span id="numcompare">@numcompare@</span>)</a></li>
+                        <li class="@hideSite@" role="presentation">@wishlist@</li>
+                        <li class="@hideSite@" role="presentation"><a href="/compare/"><span class="glyphicon glyphicon-eye-open"></span> {Сравнить} (<span id="numcompare">@numcompare@</span>)</a></li>
                     </ul>
                 </div>
             </div>
@@ -143,7 +143,8 @@
                                         @leftCatal@
 
 
-                                    </ul></li>
+                                    </ul>
+                                </li>
                                 @topBrands@
                                 @topcatMenu@
                                 @topMenu@
@@ -152,7 +153,7 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="col-md-3 col-sm-3">
+                    <div class="col-md-3 col-sm-3 @hideCatalog@">
                         <ul class="nav navbar-nav navbar-right visible-lg visible-md visible-sm" id="cart">
 
                             <li><a id="cartlink" data-trigger="hover" data-container="#cart" data-toggle="popover" data-placement="bottom" data-html="true" data-url="/order/" data-content='@visualcart@' href="/order/"><span class="glyphicon glyphicon-shopping-cart"></span> <span class="visible-lg-inline">{товаров} <span id="num" class="label label-info">@num@</span> {на} </span><span id="sum" class="label label-info">@sum@</span> <span class="rubznak">@productValutaName@</span></a>
@@ -191,7 +192,7 @@
 
                         <div id="faset-filter-body">{Загрузка}</div>
 
-                        <div id="price-filter-body">
+                        <div id="price-filter-body" class="@hideCatalog@">
                             <h4>{Цена}</h4>
                             <form method="get" id="price-filter-form">
                                 <div class="row">
@@ -217,17 +218,13 @@
                 @productDay@
                 <!--/ ProductDay Mod -->
 
-
-
-
                 <div class="list-group left-block hidden-xs hidden-sm @php __hide('pageCatal'); php@"> 
-                    <span class="list-group-item active">{Это интересно}</span>
+                    <span class="list-group-item active">{Навигация}</span>
                     <ul class="left-block-list">
                         @pageCatal@
 
                     </ul>
                 </div>
-
 
                 <div class="panel panel-default  hidden-xs  hidden-sm @php __hide('productlastview'); php@">
 
@@ -240,10 +237,9 @@
                     </div>
                 </div>
 
-                @rightMenu@
                 @leftMenu@
 
-                <div class="panel panel-default  hidden-xs  hidden-sm @php __hide('productlist_list'); php@">
+                <div class="panel panel-default  hidden-xs  hidden-sm @php __hide('productlist_list'); php@ @hideSite@">
                     <div class="panel-heading">
                         <div class="panel-title">{Похожие товары}</div>
                     </div>
@@ -258,16 +254,15 @@
 
                 <div class="text-center banner">@banersDisp@</div>
 
-
-                @oprosDisp@
             </div>
             <div class="bar-padding-top-fix visible-xs visible-sm"></div>
             <div class="col-md-9 col-xs-12 main">
+                
                 @DispShop@
                 @getPhotos@	
 
                 <div class="row">
-                    <div class="col-xs-12 @php __hide('now_buying'); php@">
+                    <div class="col-xs-12 @php __hide('now_buying'); php@ @hideCatalog@">
                         <h2 class="page-header">@now_buying@</h2>
                         <div class="row">@nowBuy@</div>
                     </div>
@@ -315,22 +310,22 @@
                     </ul>
                 </div>
 
-                <div class="col-md-3 col-sm-4 col-xs-12">
-                    <h5>{Личный кабинет}</h5>
-
-                    <ul>
-                        <li><a href="/users/order.html">{Отследить заказ}</a></li>
-                        <li><a href="/users/notice.html">{Уведомления о товарах}</a></li>
-                        @php if($_SESSION['UsersId']) echo '<li><a href="/users/message.html">{Связь с менеджерами}</a></li>
-                        <li><a href="?logout=true">{Выйти}</a></li>'; php@
-                    </ul>
-                </div>
+                    <div class="col-md-3 col-sm-4 col-xs-12">
+                        <h5>{Личный кабинет}</h5>
+                        <ul>
+                            <li><a href="/users/">@UsersLogin@</a></li>
+                            <li class="@hideCatalog@"><a href="/users/order.html">{Отследить заказ}</a></li>
+                            <li class="@hideCatalog@"><a href="/users/notice.html">{Уведомления о товарах}</a></li>
+                            @php if($_SESSION['UsersId']) echo '<li><a href="/users/message.html">{Связь с менеджерами}</a></li>
+                            <li><a href="?logout=true">{Выйти}</a></li>';else echo '<li><a href="#" data-toggle="modal" data-target="#userModal">{Войти}</a></li>';php@
+                        </ul>
+                    </div>
                 <!-- My Account Links Ends -->
                 <!-- Customer Service Links Starts -->
                 <div class="col-md-3 col-sm-4 col-xs-12">
                     <h5>{Навигация}</h5>
                     <ul>
-                        <li><a href="/price/" title="{Прайс-лист}">{Прайс-лист}</a></li>
+                        <li class="@hideCatalog@"><a href="/price/" title="{Прайс-лист}">{Прайс-лист}</a></li>
                         <li><a href="/news/" title="{Новости}">{Новости}</a></li>
                         <li><a href="/gbook/" title="{Отзывы}">{Отзывы}</a></li>
                         <li><a href="/map/" title="{Карта сайта}">{Карта сайта}</a></li>
@@ -367,7 +362,7 @@
                 <div class="modal-body">
                     <form  action="/search/" role="search" method="get">
                         <div class="input-group">
-                            <input name="words" maxlength="50" class="form-control" placeholder="Искать.." required="" type="search">
+                            <input name="words" maxlength="50" class="form-control" placeholder="{Искать}.." required="" type="search">
                             <span class="input-group-btn">
                                 <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>
                             </span>
@@ -432,15 +427,15 @@
             <span class="glyphicon glyphicon-user"></span>
             <span class="tab-label">{Кабинет}</span>
         </a>
-        <a class="tab-item @cart_active@" href="/order/" id="bar-cart">
+        <a class="tab-item @cart_active@ @hideCatalog@" href="/order/" id="bar-cart">
             <span class="glyphicon glyphicon-shopping-cart"></span> <span class="badge badge-positive" id="mobilnum">@cart_active_num@</span>
             <span class="tab-label">{Корзина}</span>
         </a>
-        <a class="tab-item" href="/users/wishlist.html" >
+        <a class="tab-item @hideSite@" href="/users/wishlist.html" >
             <span class="glyphicon glyphicon-bookmark"></span>
             <span class="tab-label">{Отложенные}</span>
         </a>
-        <a class="tab-item " href="/compare/" >
+        <a class="tab-item @hideSite@ " href="/compare/" >
             <span class="glyphicon glyphicon-eye-open"></span>
             <span class="tab-label">{Сравнить}</span>
         </a>

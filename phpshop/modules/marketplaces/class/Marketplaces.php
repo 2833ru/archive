@@ -4,7 +4,7 @@ class Marketplaces
 {
     const SBERMARKET = 'sbermarket';
     const ALIEXPRESS = 'aliexpress';
-    const CDEK       = 'cdek';
+    const CDEK       = 'yandexmarket';
     const RETAIL_CRM = 'retailcrm';
     const IDENTIFIER = 'marketplace';
 

@@ -38,13 +38,13 @@
             <div class="row">
             </div>
         </div>
-        <div class="col-xs-12">
+        <div class="col-xs-12 @hideCatalog@">
             <div class="row">
                 <div class="product-page-price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                     <span class="price-new priceService" itemprop="price" content="@productSchemaPrice@">@productPrice@</span><span class="price-new rubznak" itemprop="priceCurrency" content="RUB">@productValutaName@</span>  <del class="price-old">@productPriceOld@</del>
                 </div>
                 @ComStartNotice@
-                <div сlass="outStock">@productOutStock@</div>
+                <div class="outStock">@productOutStock@</div>
                 @ComEndNotice@
 
             </div>
@@ -90,14 +90,14 @@
                 </div>
             </div>
         </div>
-        <div class="col-xs-12">
+        <div class="col-xs-12 @hideCatalog@">
             <div class="row">
                 <span class="product-sklad" id="items"> @productSklad@</span>
             </div>
         </div>
         <div class="col-xs-12">
             <div class="row">
-                <div class="product-page-input-number">
+                <div class="product-page-input-number @hideCatalog@">
                     <div class="quant-main">
                         <label class="control-label text-uppercase @elementCartHide@">{Количество}</label>
                         <div class="quant input-group @elementCartHide@">
@@ -122,20 +122,20 @@
                             <i class="feather iconz-heart"></i>
                         </button>                                   
                     </div>
-                    <div class="cart-button button-group cart-list-button-wrapper @elementCartHide@">
+                    <div class="cart-button button-group cart-list-button-wrapper @elementCartHide@ @hideCatalog@">
                         <button type="button" class="btn btn-cart addToCartFull" data-num="1" data-uid="@productUid@" data-cart="@productSaleReady@">
                             <i class="feather iconz-trash"></i>
                             <span>@productSale@</span>
                         </button>                                   
                     </div>
-                    <div class="cart-button button-group cart-list-button-wrapper  @elementCartOptionHide@">
+                    <div class="cart-button button-group cart-list-button-wrapper  @elementCartOptionHide@ @hideCatalog@">
                         <button type="button" class="btn btn-cart addToCartFull" data-num="1" data-uid="@productUid@" data-cart="@productSaleReady@">
                             <i class="feather iconz-trash"></i>
                             <span>@productSale@</span>
                         </button>                                   
                     </div>
                     @ComStartNotice@
-                    <div class="cart-button button-group compare-list-button-wrapper">
+                    <div class="cart-button button-group compare-list-button-wrapper @hideCatalog@">
                         <a class="btn btn-cart" href="/users/notice.html?productId=@productUid@" title="@productNotice@">
                             <i class="fa fa-envelope-o" aria-hidden="true"></i>                            
                             {Уведомить}
@@ -151,7 +151,7 @@
                     <div class="oneclick-wrapper">
                         @oneclick@
                     </div>
-                    <div class="pricemail-wrapper">
+                    <div class="pricemail-wrapper @hideCatalog@">
                         <a class="btn btn-cart" href="/pricemail/UID_@productUid@.html">@productBestPrice@</a>
                     </div>
                 </div>

@@ -46,6 +46,10 @@ class PHPShopOrder extends PHPShopCore {
         // Перехват модуля
         if ($this->setHook(__CLASS__, __FUNCTION__, false, 'START'))
             return true;
+        
+        // Тип работы
+        if($this->PHPShopSystem->getParam("shop_type") > 0)
+             return $this->setError404();
 
         // Импорт данных
         $this->import();

@@ -1304,7 +1304,7 @@ $(document).ready(function () {
         $('.cookie-message').removeClass('hide');
     }
     $('div:contains("- PHPShop")').parents('.visible-lg').css('position', 'absolute');
-    $('div:contains("- PHPShop")').parents('.visible-lg').css('bottom', '-40px');
+    $('div:contains("- PHPShop")').parents('.visible-lg').css('bottom', '-10px');
 
 // CAPTCHA
     $('body').on('click', '[data-toggle="modal"]', function () {

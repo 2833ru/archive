@@ -19,7 +19,7 @@
                                 {Настройки}
                             </a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item @hideCatalog@">
                             <a class="nav-link" href="/users/order.html">
                                 <i class="fas fa-shopping-basket nav-icon"></i>
                                 {Заказы}
@@ -31,7 +31,7 @@
                                 {Диалоги}
                             </a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item @hideCatalog@">
                             <a class="nav-link" href="/users/notice.html">
                                 <i class="fas fa-bell nav-icon"></i>
                                 {Уведомления}
@@ -46,25 +46,25 @@
                     </ul>
                     <!-- End List -->
 
-                    <h6 class="text-cap small">{Товары}</h6>
+                    <h6 class="text-cap small @hideSite@">{Товары}</h6>
 
                     <!-- List -->
                     <ul class="nav nav-sub nav-sm nav-tabs nav-list-y-2 mb-2">
-                        <li class="nav-item">
+                        <li class="nav-item @hideCatalog@">
                             <a class="nav-link" href="/order/">
                                 <i class="fas fa-shopping-cart nav-icon"></i>
                                 {Корзина}
                                 <span class="badge badge-soft-dark badge-pill nav-link-badge cartnum">@num@</span>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item @hideSite@">
                             <a class="nav-link" href="/compare/">
                                 <i class="fas fa-cogs nav-icon"></i>
                                 {Сравнить}
                                 <span class="badge badge-soft-dark badge-pill nav-link-badge numcompare">@numcompare@</span>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item @hideSite@">
                             <a class="nav-link" href="/users/wishlist.html">
                                 <i class="fas fa-heart nav-icon"></i>
                                 {Избранное}

@@ -5,6 +5,7 @@
     <description>ћодуль определени€ и переадресации мобильных устройств на мобильную версию сайта.</description>
     <category>template</category>
     <faqlink>https://docs.phpshop.ru/moduli/dizain/mobile</faqlink>
+    <site>true</site>
     <adminmenu>
         <title>Mobile</title>
         <capability>true</capability>

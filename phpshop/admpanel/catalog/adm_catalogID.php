@@ -217,7 +217,7 @@ function actionStart() {
     $order_to_value[] = array(__('убыванию'), 2, $data['order_to']);
 
     $Tab_info .= $PHPShopGUI->setField("Сортировка", $PHPShopGUI->setInputText(null, "num_new", $data['num'], 100, false, 'left') . '&nbsp' .
-            $PHPShopGUI->setSelect('order_by_new', $order_by_value, 120) . $PHPShopGUI->setSelect('order_to_new', $order_to_value, 120). '<br>' . $PHPShopGUI->setCheckbox('order_set', 1, 'Применить сейчас ко всем каталогам', 0));
+            $PHPShopGUI->setSelect('order_by_new', $order_by_value, 120) . $PHPShopGUI->setSelect('order_to_new', $order_to_value, 120) . '<br>' . $PHPShopGUI->setCheckbox('order_set', 1, 'Применить сейчас ко всем каталогам', 0));
 
     // Дополнительные каталоги
     $Tab_info .= $PHPShopGUI->setField('Дополнительные каталоги', $tree_select_dop, 1, 'Подкаталоги одновременно выводятся в нескольких каталогах.');
@@ -385,18 +385,20 @@ function actionUpdate() {
                 $_POST['dop_cat_new'] .= $v . "#";
     }
 
-    $_POST['icon_new'] = iconAdd();
+    $PHPShopCategory = new PHPShopCategory($_POST['rowID']);
+    if ($PHPShopCategory->getParam('icon') != $_POST['icon_new'])
+        $_POST['icon_new'] = iconAdd();
 
     // Очистка кеш характеристик
     if (!empty($_POST['reset_cache'])) {
         $_POST['sort_cache_new'] = '';
         $_POST['sort_cache_created_at_new'] = 0;
     }
-    
+
     // Смена сортровки у всех
     if (!empty($_POST['order_set'])) {
         $PHPShopOrmCat = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
-        $PHPShopOrmCat->update(array('order_by_new' => $_POST['order_by_new'],'order_to_new' => $_POST['order_to_new']));
+        $PHPShopOrmCat->update(array('order_by_new' => $_POST['order_by_new'], 'order_to_new' => $_POST['order_to_new']));
     }
 
     // Перехват модуля

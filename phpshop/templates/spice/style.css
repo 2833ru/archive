@@ -3524,7 +3524,7 @@ padding:0 10px;
 	transition:all 0s!important; background:transparent!important;
 
 }
-.submenu .dropdown-menu {width:100%}
+
 .additional-nav-menu #solidMenu > ul >li > a {padding: 3px 5px;}
 .additional-nav-menu  .dropdown-menu i{display:none}
 .additional-nav-menu .dropdown-menu ul {display:block; position:static; box-shadow:none; transition:all 0s!important; animation:none!important; border:none; padding-left:10px}

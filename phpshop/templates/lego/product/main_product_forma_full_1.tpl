@@ -72,7 +72,7 @@
                     <div class="product-block-btn">
                         @ComStartNotice@
 
-                        <a class="btn btn-circle" href="/users/notice.html?productId=@productUid@"
+                        <a class="btn btn-circle @hideCatalog@" href="/users/notice.html?productId=@productUid@"
                            title="@productNotice@" style="font-size:18px;"><span class="icons-mail"></span></a>
 
                         @ComEndNotice@
@@ -85,7 +85,7 @@
                         </button>
                     </div>
                 </div>
-                <div class="product-page-price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+                <div class="product-page-price @hideCatalog@" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                     <span class="new-price priceService" itemprop="price" content="@productSchemaPrice@">@productPrice@</span>
                     <span class="new-price rubznak" itemprop="priceCurrency" content="RUB">@productValutaName@</span>
                     <div class="old-price">@productPriceOld@ </div>
@@ -110,7 +110,7 @@
                 @optionsDisp@
                 <div class="odnotip odnotip-@productUid@">@productParentList@</div>
                 @productservices_list@
-                <div class="input-group addToCart">
+                <div class="input-group addToCart @hideCatalog@">
                     <div class="quant-main @legoPurchaseDisabled@">
                         <div class="quant input-group">
                             <span class="input-group-btn">
@@ -143,17 +143,17 @@
 
                 <!-- Модуль Vkseller -->
                 <div class="@php __hide('vkseller_link'); php@">
-                    <a class="oneclick-btn" href="@vkseller_link@" target="_blank">Купить в ВКонтакте</a>
+                    <a class="oneclick-btn" href="@vkseller_link@" target="_blank">{Купить в ВКонтакте}</a>
                 </div>
 
                 <!-- Модуль Ozonseller -->
                 <div class="@php __hide('ozonseller_link'); php@">
-                    <a class="oneclick-btn" href="@ozonseller_link@" target="_blank">Купить в OZON</a>
+                    <a class="oneclick-btn" href="@ozonseller_link@" target="_blank">{Купить в} OZON</a>
                 </div>
 
                 <!-- Модуль Wbseller -->
                 <div class="@php __hide('wbseller_link'); php@">
-                    <a class="oneclick-btn" href="@wbseller_link@" target="_blank">Купить в Wildberries</a>
+                    <a class="oneclick-btn" href="@wbseller_link@" target="_blank">{Купить в} Wildberries</a>
                 </div>
 
                 <div class="clearfix"></div>
@@ -163,8 +163,7 @@
                     <a class="question" href="/forma/">{Задать вопрос по продукту}</a>
                 </div>
 
-
-                <div class="flex-block">
+                <div class="flex-block @hideCatalog@">
                     <div class="product-sklad" id="items">@productSklad@</div>
                     <a class="best-price" href="/pricemail/UID_@productUid@.html">@productBestPrice@</a>
                 </div>

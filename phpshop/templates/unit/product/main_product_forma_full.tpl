@@ -1,4 +1,3 @@
-
 <style>
     .left-content, .content-product {display:none!important}
     .center-block{width:100%; padding-left:0}
@@ -22,13 +21,13 @@
         </div>
         <div class=" d-flex align-items-start justify-content-between flex-wrap">
             <div class="col-xs-12 col-md-5">
-                 <div class="sale-icon-content">
-                        @specIcon@
-                        @newtipIcon@
-                        @giftIcon@
-                        @hitIcon@
-                        @promotionsIcon@
-                 </div>
+                <div class="sale-icon-content">
+                    @specIcon@
+                    @newtipIcon@
+                    @giftIcon@
+                    @hitIcon@
+                    @promotionsIcon@
+                </div>
                 <div id="fotoload">
                     @productFotoList@
                 </div>
@@ -47,7 +46,7 @@
                             <button class=" addToWishList " data-uid="@productUid@"><span class="icons icons-dgreen icons-small icons-wishlist"></span></button>
                         </div>
                     </div>
-                    <div class="d-flex align-items-start justify-content-between price-block">
+                    <div class="d-flex align-items-start justify-content-between price-block @hideCatalog@">
                         <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
 
                             <div class="product-price">
@@ -76,7 +75,7 @@
                         @optionsDisp@
                         @productParentList@
                     </div>
-                    <div class="d-flex align-items-start justify-content-start flex-wrap   shop-panel" style="padding-bottom:30px">
+                    <div class="d-flex align-items-start justify-content-start flex-wrap shop-panel @hideCatalog@" style="padding-bottom:30px">
                         <div class="input-group addToCart @elementCartHide@">
                             <div class="quant-main">
                                 <div class="quant input-group ">
@@ -122,7 +121,7 @@
                         </a> @ComEndNotice@
                         <div class="one-click-block">@oneclick@</div>
                     </div>
-                    <div class="pay-sticker">
+                    <div class="pay-sticker @hideCatalog@">
                         {Мы принимаем к оплате}:<br> @sticker_pay@
                     </div>
                     <a href="" data-toggle="modal" data-target="#forma" class="link d-flex align-items-center "><span class="icons icons-info"></span>{Задать вопрос по продукту}</a>

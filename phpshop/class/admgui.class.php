@@ -1561,7 +1561,7 @@ class PHPShopGUI {
      * @param string $style class [btn btn-default btn-sm]
      * @return string
      */
-    function setSelect($name, $value, $width = '', $locale = false, $caption = false, $search = false, $height = false, $size = 1, $multiple = false, $id = false, $class = 'selectpicker hidden-edit', $onchange = null, $style = 'btn btn-default btn-sm') {
+    function setSelect($name, $value, $width = '', $locale = false, $caption = false, $search = false, $disabled = false, $size = 1, $multiple = false, $id = false, $class = 'selectpicker hidden-edit', $onchange = null, $style = 'btn btn-default btn-sm') {
 
         if ($search)
             $search = 'data-live-search="true" data-placeholder="123"';
@@ -1571,8 +1571,11 @@ class PHPShopGUI {
 
         if (empty($id))
             $id = $name;
+        
+        if(!empty($disabled))
+            $disabled='disabled';
 
-        $CODE = $caption . '<select class="' . $class . '" ' . $search . ' data-container="body" data-none-selected-text="' . $this->__('Не выбрано') . '" data-style="' . $style . '" data-width="' . $width . '"  name="' . $name . '" id="' . $id . '" size="' . $size . '" onchange="' . $onchange . '"   ' . $multiple . '>';
+        $CODE = $caption . '<select class="' . $class . '" ' . $search . ' '.$disabled.' data-container="body" data-none-selected-text="' . $this->__('Не выбрано') . '" data-style="' . $style . '" data-width="' . $width . '"  name="' . $name . '" id="' . $id . '" size="' . $size . '" onchange="' . $onchange . '"   ' . $multiple . '>';
         if (is_array($value))
             foreach ($value as $val) {
 
@@ -1656,6 +1659,9 @@ class PHPShopGUI {
             $toggle = 'data-toggle="toggle"';
         else
             $toggle = null;
+        
+        if(!empty($disabled))
+            $disabled='disabled';
 
         if (!empty($caption))
             $CODE = '<div class="checkbox-inline"><label><input ' . $toggle . ' type="checkbox" data-on="' . __('Вкл') . '" data-off="' . __('Выкл') . '" data-size="mini" value="' . $value . '" name="' . $name . '" id="' . $name . '" ' . $checked . ' ' . $disabled . '> ' . $this->__($caption, $locale) . '</label></div> ';

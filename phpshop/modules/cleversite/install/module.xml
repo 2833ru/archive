@@ -4,8 +4,9 @@
     <name>Cleversite</name>
     <faqlink>https://docs.phpshop.ru/moduli/chaty-i-zvonki/cleversite</faqlink>
     <description>Виджет чата и обратного звонка от Cleversite.</description>
-     <category>chat</category>
-     <adminmenu>
+    <category>chat</category>
+    <site>true</site>
+    <adminmenu>
         <title>Cleversite</title>
         <capability>true</capability>
     </adminmenu>

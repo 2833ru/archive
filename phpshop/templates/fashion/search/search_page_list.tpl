@@ -11,7 +11,7 @@
             </div>
         </div>
 
-        <div id="helpBlock" class="space-top-1 space-bottom-1">
+        <div id="helpBlock" class="space-top-1 space-bottom-1 @hideSite@">
 
             <!-- Select -->
             <select class="js-custom-select custom-select" name="cat" size="1" style="opacity: 0;"
@@ -33,6 +33,7 @@
                 </label>
             </div>
         </div>
+        <br>
     </form>
 </div>
 <div class="search-misspell">@searchMisspell@</div>

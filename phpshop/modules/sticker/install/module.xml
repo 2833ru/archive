@@ -5,6 +5,7 @@
     <faqlink>https://docs.phpshop.ru/moduli/dizain/stikery</faqlink>
     <description>Модуль стикеров.</description>
     <category>template,form</category>
+    <site>true</site>
     <adminmenu>
         <title>Стикеры</title>
         <capability>true</capability>

@@ -23,13 +23,13 @@
                 <h1 itemprop="name">@productName@</h1>
 
                 <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-                    <h2 class="text-primary">
+                    <h2 class="text-primary @hideCatalog@">
                         <span class="priceService" itemprop="price" content="@productSchemaPrice@">@productPrice@</span> 
                         <span itemprop="priceCurrency" class="rubznak" content="RUB">@productValutaName@</span>  <span class=" price-old">@productPriceOld@</span>
                     </h2>          
                 </div> 
                 @ComStartNotice@
-                <div class="outStock">@productOutStock@</div>
+                <div class="outStock @hideCatalog@">@productOutStock@</div>
                 @ComEndNotice@
                 <div class="pull-right">@oneclick@</div>
                 <p><br></p>
@@ -53,7 +53,7 @@
             @productParentList@
 
             <div class="row" style="padding-bottom:20px">
-                <div class="col-xs-5 @elementCartOptionHide@">
+                <div class="col-xs-5 @elementCartOptionHide@ @hideCatalog@">
                     <div class="input-group" style="max-width: 150px">
                         <input class="form-control" data-uid="@productUid@"  type="text" style="min-width:50px" maxlength="3" value="1" placeholder="1" required="" name="quant[2]">
                         <span class="input-group-btn">
@@ -61,7 +61,7 @@
                         </span>    
                     </div>
                 </div>
-                <div class="col-xs-5 @elementCartHide@">
+                <div class="col-xs-5 @elementCartHide@ @hideCatalog@">
                     <div class="input-group" style="max-width: 150px">
                         <input class="form-control" data-uid="@productUid@"  type="text" style="min-width:50px" maxlength="3" value="1" placeholder="1" required="" name="quant[1]">
                         <span class="input-group-btn">
@@ -70,13 +70,13 @@
                     </div>
                 </div>
                 @ComStartNotice@
-                <div class="col-xs-5">
+                <div class="col-xs-5 @hideCatalog@">
                     <a class="btn btn-primary" href="/users/notice.html?productId=@productUid@" title="@productNotice@">{Уведомить}</a>
                 </div>
                 @ComEndNotice@ 
 
             </div>
-            <a class="btn btn-default" href="/pricemail/UID_@productUid@.html">@productBestPrice@</a>
+            <a class="btn btn-default @hideCatalog@" href="/pricemail/UID_@productUid@.html">@productBestPrice@</a>
             <div class="clearfix"></div>
             <div style="padding-top:10px">
                 <button class="btn btn-info addToCompareList " data-uid="@productUid@">{Сравнить}</button>

@@ -25,8 +25,8 @@
 
 <div class="product-filter @hideSort@" id="filter-well">
     <div class="row d-flex align-items-center">
-        <div class="col-md-6 col-sm-6  col-xs-12">
-            <div class="display d-flex">
+        <div class="col-md-6 col-sm-6  col-xs-12 ">
+            <div class="display d-flex @hideCatalog@">
                 {Сначала}: <div class="filter-menu-wrapper">
                     <div class="btn-group filter-menu" data-toggle="buttons">
 

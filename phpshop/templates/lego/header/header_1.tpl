@@ -11,7 +11,7 @@
         </button>
         <div class="clearfix"></div>
         <a class="back"><i class="fa fa-angle-left" aria-hidden="true"></i>{Назад}</a>
-        <div class="solid-menus">
+        <div class="solid-menus @hideSite@">
             <ul class="no-border-radius block parent-block">
                 @leftCatal@
             </ul>
@@ -50,14 +50,18 @@
             <div class="row">
                 <div class="col-md-6 col-lg-7 col-sm-5 hidden-xs top-menu-block">
                     <ul class="top-menu-list pull-left">
-                        <li><span class="top-name-logo">@name@</span></li> @topMenu@
+                        <li><span class="top-name-logo">@name@</span></li> 
+                        @php
+                        if(empty(PHPShopParser::get('hideSite')))
+                        echo PHPShopParser::get('topMenu');
+                        php@
                     </ul>
                 </div>
                 <div class="col-md-6 col-lg-5 col-sm-7 col-xs-12">
                     <ul class="nav nav-pills pull-right">
                         <li class="visible-xs">|</li>
-                        <li role="presentation">@wishlist@</li>
-                        <li role="presentation">
+                        <li role="presentation" class="@hideSite@">@wishlist@</li>
+                        <li role="presentation" class="@hideSite@">
                             <a href="/compare/">
                                 <span class="icons-compare"></span>
                                 <span class="text">{В сравнении}</span> <span id="numcompare">@numcompare@</span> {шт.}
@@ -65,7 +69,7 @@
                         </li>
                         <li class="visible-xs">|</li>
                         @usersDisp@
-                        <li role="presentation" class="visible-xs">
+                        <li role="presentation" class="visible-xs @hideCatalog@">
                             <a href="/order/">
                                 <span class="icons-cart"></span>&nbsp;
                                 <span  class="sum">@sum@</span>&nbsp;
@@ -107,14 +111,14 @@
                     </div>
                 </form>
             </div>
-            <ul class="menu-list">
+            <ul class="menu-list @hideSite@">
                 <li class="menu-item @php __hide('specMainIcon'); php@"><a href="/newtip/">{Новинки}</a></li>
                 <li class="menu-item brands-link @php __hide('brandsList'); php@"><a href="/brand/">{Бренды}</a></li>
-                <li class="menu-item menu-item-flag @php __hide('specMain'); php@"><a href="/spec/">{Распродажа}</a></li>
+                <li class="menu-item menu-item-flag @php __hide('specMain'); php@ @hideCatalog@"><a href="/spec/">{Распродажа}</a></li>
             </ul>
         </div>
     </div>
-    <div class="menu-wrap">
+    <div class="menu-wrap @hideSite@">
         <div class="container-fluid menu-cont">
             <ul class="dropdown-menu no-border-radius main-menu-block">
                 @leftCatal@ 
@@ -130,9 +134,9 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="navbar-header"></div>
-                <div id="navbar" class="navbar-collapse collapse">
-                    <label class="btn-menu visible-xs btn-menu-left">
-                        <span class="f-block">
+                <div id="navbar" class="navbar-collapse collapse @hideSite@">
+                    <label class="btn-menu visible-xs btn-menu-left @hideSite@">
+                        <span class="f-block @hideSite@">
                             <span class="f-block-wrapper">
                                 <span class="first"></span>
                                 <span class="second"></span>
@@ -141,10 +145,10 @@
                             {Каталог}
                         </span>
                     </label>
-                    <ul class="nav navbar-nav main-menu">
+                    <ul class="nav navbar-nav main-menu ">
                         <!-- dropdown catalog menu -->
                         <li>
-                            <div class="solid-menus">
+                            <div class="solid-menus @hideSite@">
                                 <nav class="navbar no-border-radius no-margin">
                                     <div id="navbar-inner-container">
                                         <div class="navbar-header">
@@ -162,7 +166,7 @@
 
                                                 </li>
                                                 <li class="visible-xs"><a href="/users/wishlist.html">{Отложенные товары}</a></li>
-                                                <li class="visible-xs"><a href="/price/">{Прайс-лист}</a></li>
+                                                <li class="visible-xs @hideCatalog@"><a href="/price/">{Прайс-лист}</a></li>
                                             </ul>
                                         </div>
                                     </div>
@@ -172,8 +176,19 @@
                     </ul>
                     <!-- Каталоги в главном меню-->
                     <div class="catalog-menu-wrap">
+
                         <ul class="catalog-menu-list">
-                            @topcatMenu@
+
+                            @php
+                            if(!empty(PHPShopParser::get('hideSite')))
+                            echo PHPShopParser::get('topMenu');
+                            php@
+
+                            
+            
+                                    @topcatMenu@
+                                
+
                         </ul>
                         <form action="/search/" role="search" method="get">
                             <div class="input-group search-block">
@@ -184,7 +199,7 @@
                             </div>
                         </form>
 
-                        <ul class="nav nav-pills pull-right">
+                        <ul class="nav nav-pills pull-right @hideSite@">
                             <li role="presentation">@wishlist@</li>
                             <li role="presentation">
                                 <a href="/compare/">
@@ -194,7 +209,7 @@
                             </li>
                         </ul>
                     </div>
-                    <a href="/order/" class="btn-menu visible-xs"><span class="icons-cart"></span></a>
+                    <a href="/order/" class="btn-menu visible-xs @hideCatalog@"><span class="icons-cart"></span></a>
                     <label class="btn-menu btn-menu-right visible-xs" for="hmt">
                         <span class="f-block-wrapper">
                             <span class="first"></span>
@@ -203,7 +218,7 @@
                         </span>
                     </label>
                     <!--/ Каталоги в главном меню-->
-                    <ul class="nav navbar-nav navbar-right hidden-xs">
+                    <ul class="nav navbar-nav navbar-right hidden-xs @hideCatalog@">
                         <li>
                             <a class="header-cart" id="cartlink" data-trigger="click" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-url="/order/" data-content='@visualcart@'>
                                 <span class="icons-cart"></span>

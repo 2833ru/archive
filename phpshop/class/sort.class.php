@@ -406,7 +406,7 @@ class PHPShopParentNameArray extends PHPShopArray {
 class PHPShopSortSearch {
 
     /**
-     * ¬ыборка характеритик по имени
+     * ¬ыборка характеристик по имени
      * @param string $name им€ характеристики
      */
     function __construct($name) {
@@ -420,7 +420,7 @@ class PHPShopSortSearch {
 
             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort']);
             $PHPShopOrm->debug = false;
-            $data = $PHPShopOrm->select(array('id,name'), array('category' => '=' . $this->sort_category), false, array('limit' => 100));
+            $data = $PHPShopOrm->select(array('id,name'), array('category' => '=' . $this->sort_category), false, array('limit' => 1000));
             if (is_array($data)) {
                 foreach ($data as $val)
                     $this->sort_array[$val['id']] = $val['name'];

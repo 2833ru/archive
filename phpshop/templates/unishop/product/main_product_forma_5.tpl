@@ -1,12 +1,12 @@
-            <div class="col-auto col-md-3 col-sm-4 col-xs-6 product-block-wrapper">
+<div class="col-auto col-md-3 col-sm-4 col-xs-6 product-block-wrapper">
     <div class="product-block">
         <div class="product-block-top">
             <div class="product-block-image">
                 <div class="sale-icon-content">
-            @specIcon@
-			@newtipIcon@
-			@hitIcon@
-			@promotionsIcon@
+                    @specIcon@
+                    @newtipIcon@
+                    @hitIcon@
+                    @promotionsIcon@
                 </div>
                 <a class="product-block-img-link" href="/shop/UID_@productUid@.html" title="@productNameClean@">
                     <img data-src="@productImg@" alt="@productNameClean@" class="owl-lazy">
@@ -18,17 +18,17 @@
                 <a href="/shop/UID_@productUid@.html" title="@productNameClean@">@productName@</a>
             </h3>
             @previewSorts@
-            <h4 class="product-block-price">
+            <h4 class="product-block-price @hideCatalog@">
                 <span class="price-old">@productPriceOld@</span>
                 <span class="price-new">@parentLangFrom@ @productPrice@ <span class="rubznak">@productValutaName@</span></span>
             </h4>
 
-            <span class="product-sklad-list-block">@productSklad@
-			            @ComStartNotice@
-<div сlass="outStock">@productOutStock@</div>
-@ComEndNotice@
-			</span>
-            <div class="product-block-button">
+            <span class="product-sklad-list-block @hideCatalog@">@productSklad@
+                @ComStartNotice@
+                <div class="outStock">@productOutStock@</div>
+                @ComEndNotice@
+            </span>
+            <div class="product-block-button @hideCatalog@">
                 <button class="btn btn-wishlist addToCompareList" data-uid="@productUid@" data-title="{Сравнить}" data-placement="top" data-toggle="tooltip"><i class="fa fa-bar-chart-o"></i></button>
                 <button class="btn btn-wishlist addToWishList" data-uid="@productUid@" data-title="{Отложить}" data-placement="top" data-toggle="tooltip"><i class="feather iconz-heart"></i></button>
                 <a class="btn btn-cart @elementCartOptionHide@" href="/shop/UID_@productUid@.html">

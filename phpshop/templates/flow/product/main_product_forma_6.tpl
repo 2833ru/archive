@@ -21,7 +21,7 @@
                 <span class="d-block font-size-1">
                     <a class="text-inherit" title="@productName@" href="/shop/UID_@productUid@.html">@productName@ </a>
                 </span>
-                <div class="d-block">
+                <div class="@hideCatalog@">
                     <span class="text-dark font-weight-bold">@parentLangFrom@ @productPrice@<span class="rubznak">@productValutaName@</span></span>
                     <span class="text-body small ml-1 @php __hide('productPriceOld'); php@" ><del>@productPriceOld@</del></span>
                 </div>
@@ -37,8 +37,8 @@
                     <span class="@php __hide('avgRateNum'); php@ text-primary">@avgRateNum@</span>
                 </div>
             </div>
-            <a class="btn btn-sm btn-outline-primary btn-pill transition-3d-hover @elementCartOptionHide@" href="/shop/UID_@productUid@.html">@productSale@</a>
-            <button type="button" class="btn btn-sm btn-outline-primary btn-pill transition-3d-hover addToCartList @elementCartHide@" data-uid="@productUid@">@flowProductSale@</button>
+            <a class="btn btn-sm btn-outline-primary btn-pill transition-3d-hover @elementCartOptionHide@@hideCatalog@" href="/shop/UID_@productUid@.html">@productSale@</a>
+            <button type="button" class="btn btn-sm btn-outline-primary btn-pill transition-3d-hover addToCartList @elementCartHide@ @hideCatalog@" data-uid="@productUid@">@flowProductSale@</button>
         </div>
     </div>
     <!-- End Product -->

@@ -63,7 +63,7 @@ function ChekInstallModule($path, $num = false) {
 }
 
 function actionStart() {
-    global $PHPShopInterface, $PHPShopBase, $TitlePage;
+    global $PHPShopInterface, $PHPShopBase, $TitlePage, $hideCatalog, $hideSite, $shop_type;
 
 
     $PHPShopInterface->action_select['Отключить выбранные'] = array(
@@ -135,6 +135,14 @@ function actionStart() {
 
                 // Информация по модулю
                 $Info = GetModuleInfo($row['path']);
+
+                // Скрытие модулей для сайта
+                if (!empty($hideSite) and empty($Info['site']))
+                    continue;
+
+                // Скрытие модулей для каталога
+                if (!empty($hideCatalog) and empty($hideSite) and ( empty($Info['catalog']) and empty($Info['site'])))
+                    continue;
 
                 if (!empty($_SESSION['support']) and $_SESSION['support'] < $Info['sign'])
                     continue;
@@ -218,6 +226,14 @@ function actionStart() {
                     // Если выбрана категория
                     if (isset($_GET['cat']) and @ strstr($Info['category'], $_GET['cat']) and empty($Info['hidden'])) {
 
+                        // Скрытие модулей для сайта
+                        if (!empty($hideSite) and empty($Info['site']))
+                            continue;
+
+                        // Скрытие модулей для каталога
+                        if (!empty($hideCatalog) and empty($hideSite) and ( empty($Info['catalog']) and empty($Info['site'])))
+                            continue;
+
                         $ChekInstallModule = ChekInstallModule($file, $num);
 
                         // Инструкция
@@ -266,6 +282,14 @@ function actionStart() {
                     }
                     // Вывод всех модулей
                     elseif (empty($_GET['cat']) and empty($Info['hidden'])) {
+
+                        // Скрытие модулей для сайта
+                        if (!empty($hideSite) and empty($Info['site']))
+                            continue;
+
+                        // Скрытие модулей для каталога
+                        if (!empty($hideCatalog) and empty($hideSite) and ( empty($Info['catalog']) and empty($Info['site'])))
+                            continue;
 
                         $active_tree_menu = 'all';
 
@@ -328,46 +352,92 @@ function actionStart() {
         $label_class = 'label-warning';
     else
         $label_class = 'label-primary';
-
+    
+    // Кол-во модулей
+    $count_mod=[
+        0=>[
+            'pro'=>14,
+            'template'=>8,
+            'seo'=>5,
+            'delivery'=>11,
+            'chat'=>7,
+            'crm'=>6,
+            'marketplaces'=>6,
+            'payment'=>26,
+            'credit'=>3,
+            'yandex'=>2,
+            'sale'=>18,
+            'develop'=>14,
+            'minus'=>-16
+        ] ,  
+        1=>[
+            'pro'=>3,
+            'template'=>8,
+            'seo'=>5,
+            'delivery'=>11,
+            'chat'=>7,
+            'crm'=>2,
+            'yandex'=>1,
+            'sale'=>7,
+            'develop'=>13,
+            'minus'=>-4
+        ],
+        2=>[
+            'template'=>5,
+            'seo'=>4,
+            'chat'=>7,
+            'crm'=>1,
+            'yandex'=>1,
+            'sale'=>1,
+            'develop'=>11
+        ]   
+    ];
+    
+    foreach($count_mod as $k=>$count_type){
+        foreach($count_type as $mod){
+            $count_mod[$k]['all']+=$mod;
+        }
+    }
+    
     $tree = '<table class="table table-hover">
         <tr class="treegrid-all">
-           <td><a href="?path=modules" class="treegrid-parent" data-parent="treegrid-all">' . __('Все модули') . '</a> <span class="label label-primary pull-right">104</span></td>
+           <td><a href="?path=modules" class="treegrid-parent" data-parent="treegrid-all">' . __('Все модули') . '</a> <span class="label label-primary pull-right">'.$count_mod[$shop_type]['all'].'</span></td>
 	</tr>
-        <tr class="treegrid-pro">
-           <td><a href="?path=modules&cat=pro" class="treegrid-parent" data-parent="treegrid-pro">' . __('Pro') . '</a> <span class="label label-primary pull-right">14</span></td>
+        <tr class="treegrid-pro '.$hideSite.'">
+           <td><a href="?path=modules&cat=pro" class="treegrid-parent" data-parent="treegrid-pro">' . __('Pro') . '</a> <span class="label label-primary pull-right">'.$count_mod[$shop_type]['pro'].'</span></td>
 	</tr>
         <tr class="treegrid-template">
-           <td><a href="?path=modules&cat=template" class="treegrid-parent" data-parent="treegrid-template">' . __('Дизайн') . '</a> <span class="label label-primary pull-right">8</span></td>
+           <td><a href="?path=modules&cat=template" class="treegrid-parent" data-parent="treegrid-template">' . __('Дизайн') . '</a> <span class="label label-primary pull-right">'.$count_mod[$shop_type]['template'].'</span></td>
 	</tr>
         <tr class="treegrid-seo">
-           <td><a href="?path=modules&cat=seo" class="treegrid-parent" data-parent="treegrid-seo">SEO</a> <span class="label label-primary pull-right">5</span></td>
+           <td><a href="?path=modules&cat=seo" class="treegrid-parent" data-parent="treegrid-seo">SEO</a> <span class="label label-primary pull-right">'.$count_mod[$shop_type]['seo'].'</span></td>
 	</tr>
-        <tr class="treegrid-delivery">
-           <td><a href="?path=modules&cat=delivery" class="treegrid-parent" data-parent="treegrid-delivery">' . __('Доставка') . '</a> <span  class="label label-primary pull-right">11</span></td>
+        <tr class="treegrid-delivery '.$hideCatalog.'">
+           <td><a href="?path=modules&cat=delivery" class="treegrid-parent" data-parent="treegrid-delivery">' . __('Доставка') . '</a> <span  class="label label-primary pull-right">'.$count_mod[$shop_type]['delivery'].'</span></td>
 	</tr>
         <tr class="treegrid-chat">
-           <td><a href="?path=modules&cat=chat" class="treegrid-parent" data-parent="treegrid-delivery">' . __('Чаты и звонки') . '</a> <span class="label label-primary pull-right">7</span></td>
+           <td><a href="?path=modules&cat=chat" class="treegrid-parent" data-parent="treegrid-delivery">' . __('Чаты и звонки') . '</a> <span class="label label-primary pull-right">'.$count_mod[$shop_type]['chat'].'</span></td>
 	</tr>
         <tr class="treegrid-crm">
-           <td><a href="?path=modules&cat=crm" class="treegrid-parent" data-parent="treegrid-crm">CRM</a> <span class="label label-primary pull-right">6</span></td>
+           <td><a href="?path=modules&cat=crm" class="treegrid-parent" data-parent="treegrid-crm">CRM</a> <span class="label label-primary pull-right">'.$count_mod[$shop_type]['crm'].'</span></td>
 	</tr>
-        <tr class="treegrid-marketplaces">
-           <td><a href="?path=modules&cat=marketplaces" class="treegrid-parent" data-parent="treegrid-payment">' . __('Маркетплейсы') . '</a> <span class="label label-primary pull-right">6</span></td>
+        <tr class="treegrid-marketplaces '.$hideCatalog.'">
+           <td><a href="?path=modules&cat=marketplaces" class="treegrid-parent" data-parent="treegrid-payment">' . __('Маркетплейсы') . '</a> <span class="label label-primary pull-right">'.$count_mod[$shop_type]['marketplaces'].'</span></td>
 	</tr>
-        <tr class="treegrid-payment">
-           <td><a href="?path=modules&cat=payment" class="treegrid-parent" data-parent="treegrid-payment">' . __('Платежные системы') . '</a> <span class="label label-primary pull-right">26</span></td>
+        <tr class="treegrid-payment '.$hideCatalog.'">
+           <td><a href="?path=modules&cat=payment" class="treegrid-parent" data-parent="treegrid-payment">' . __('Платежные системы') . '</a> <span class="label label-primary pull-right">'.$count_mod[$shop_type]['payment'].'</span></td>
 	</tr>
-       <tr class="treegrid-credit">
-           <td><a href="?path=modules&cat=credit" class="treegrid-parent" data-parent="treegrid-payment">' . __('Кредитование') . '</a> <span class="label label-primary pull-right">3</span></td>
+       <tr class="treegrid-credit '.$hideCatalog.'">
+           <td><a href="?path=modules&cat=credit" class="treegrid-parent" data-parent="treegrid-payment">' . __('Кредитование') . '</a> <span class="label label-primary pull-right">'.$count_mod[$shop_type]['credit'].'</span></td>
 	</tr>
         <tr class="treegrid-yandex">
-           <td><a href="?path=modules&cat=yandex" class="treegrid-parent" data-parent="treegrid-yandex">' . __('Яндекс') . '</a> <span class="label label-primary pull-right">2</span></td>
+           <td><a href="?path=modules&cat=yandex" class="treegrid-parent" data-parent="treegrid-yandex">' . __('Яндекс') . '</a> <span class="label label-primary pull-right">'.$count_mod[$shop_type]['yandex'].'</span></td>
 	</tr>
         <tr class="treegrid-sale">
-           <td><a href="?path=modules&cat=sale" class="treegrid-parent" data-parent="treegrid-sale">' . __('Продажи') . '</a> <span class="label label-primary pull-right">18</span></td>
+           <td><a href="?path=modules&cat=sale" class="treegrid-parent" data-parent="treegrid-sale">' . __('Продажи') . '</a> <span class="label label-primary pull-right">'.$count_mod[$shop_type]['sale'].'</span></td>
 	</tr>
         <tr class="treegrid-develop">
-           <td><a href="?path=modules&cat=develop" class="treegrid-parent" data-parent="treegrid-develop">' . __('Разработчикам') . '</a> <span class="label label-primary pull-right">13</span></td>
+           <td><a href="?path=modules&cat=develop" class="treegrid-parent" data-parent="treegrid-develop">' . __('Разработчикам') . '</a> <span class="label label-primary pull-right">'.$count_mod[$shop_type]['develop'].'</span></td>
 	</tr>
         <tr class="treegrid-install">
            <td><a href="?path=modules&install=check" class="treegrid-parent" data-parent="treegrid-install">' . __('Установленные') . '</a> <span id="mod-install-count" class="label ' . $label_class . ' pull-right">' . $num . '</span></td>

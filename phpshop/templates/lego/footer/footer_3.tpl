@@ -22,12 +22,12 @@
             <div class="col-md-3  col-sm-6 col-xs-12">
                 <ul>
                     <li><a href="/users/">@UsersLogin@</a></li>
-                    <li><a href="/users/order.html">{Отследить заказ}</a></li>
-                    <li><a href="/users/wishlist/">{Отложенные товары}</a></li>
+                    <li class="@hideCatalog@"><a href="/users/order.html">{Отследить заказ}</a></li>
+                    <li class="@hideSite@"><a href="/users/wishlist/">{Отложенные товары}</a></li>
                     <li><a href="/users/message.html">{Связь с менеджерами}</a></li>
                     @php if($_SESSION['UsersId']) echo '
                     <li><a href="?logout=true">{Выйти}</a></li>
-                    '; php@
+                    '; else echo '<li><a href="#" data-toggle="modal" data-target="#userModal">{Войти}</a></li>'; php@
                 </ul>
             </div>
             <!-- My Account Links Ends -->

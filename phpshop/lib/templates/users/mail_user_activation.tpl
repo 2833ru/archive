@@ -139,7 +139,7 @@
                 <tr class="erase">
                     <td height="120">
                         <p style="margin: 0px; text-decoration: none; color: #adadad; font-family: Helvetica,sans-serif; font-size: 12px; margin-top: 15px;">
-                            {Интернет-магазин} <a href="http://@serverPath@">{@serverShop@}</a>
+                            {Интернет-магазин} <a href="http://@serverPath@">@serverShop@</a>
                         </p>
 
                         <a href="http://@serverPath@" target="_blank"><img src="http://@serverPath@@logo@"
@@ -168,7 +168,7 @@
                                 <tr>
                                     <td align="center" height="60"
                                         style="font-size: 18px; color: #464646; font-weight: 400; border-radius:4px;font-family:    Helvetica, sans-serif; letter-spacing: 1px; ">
-                                        {Для активации личного кабинета}, {перейдите по} <a href="http://@serverPath@/users/useractivate.html?key=@user_key@">{ссылке}</a>
+                                        {Для активации личного кабинета}, {перейдите по} <a href="http://@serverPath@users/useractivate.html?key=@user_key@">{ссылке}</a>
                                     </td>
                                 </tr>
 
@@ -234,7 +234,7 @@
                                                                                                            alt=""></a>
 
                                                         <p style="margin: 0px; text-decoration: none; color: #adadad; font-family: Helvetica,sans-serif; font-size: 12px;">
-                                                            {Интернет-магазин} <a href="http://@serverPath@">{@serverShop@}</a>
+                                                            {Интернет-магазин} <a href="http://@serverPath@">@serverShop@</a>
                                                         </p>
                                                     </td>
                                                     </td>

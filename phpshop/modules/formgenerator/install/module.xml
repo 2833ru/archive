@@ -5,6 +5,7 @@
     <faqlink>https://docs.phpshop.ru/moduli/razrabotchikam/form-generator</faqlink>
     <description>Модуль создания форм.</description>
     <category>develop</category>
+    <site>true</site>
     <adminmenu>
         <title>Генератор форм</title>
         <capability>true</capability>

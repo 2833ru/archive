@@ -10,7 +10,7 @@
     <li class="active">{Ваша корзина}</li>
 </ol>
 <div class="order">
-<div class="main-cart-header">
+<div class="main-cart-header @hideCatalog@">
 
     <h2>{Ваша корзина}</h2>
         

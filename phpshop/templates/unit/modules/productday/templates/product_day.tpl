@@ -1,4 +1,4 @@
-<div class="block hidden-xs visible-lg visible-md product-day">
+<div class="block hidden-xs product-day @hideSite@">
   <div class="block-heading">
     <div class="block-title">{Товар дня}</div>
   </div>

@@ -17,4 +17,4 @@ CREATE TABLE `phpshop_modules_marketplaces_system` (
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-INSERT INTO `phpshop_modules_marketplaces_system` VALUES (1,'', 0, '', '1.1', '');
+INSERT INTO `phpshop_modules_marketplaces_system` VALUES (1,'', 0, '', '1.2', '');

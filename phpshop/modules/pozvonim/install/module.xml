@@ -5,6 +5,7 @@
     <faqlink>https://docs.phpshop.ru/moduli/chaty-i-zvonki/pozvonim</faqlink>
     <description>Виджет удержания клиентов от Pozvonim.com.</description>
     <category>chat</category>
+    <site>true</site>
     <adminmenu>
         <title>Pozvonim</title>
         <capability>true</capability>

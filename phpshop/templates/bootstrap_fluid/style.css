@@ -2456,6 +2456,13 @@ transition: all 0.3s;
   opacity: 1 !important;
 }
 
+@media (min-width: 768px) { 
+  .navbar-collapse.collapse.in{
+      box-shadow: none;
+  }
+}
+
+
 @media (max-width: 1199px) {
   .catalog-wrap {
     width: calc(100%/4);

@@ -18,7 +18,7 @@
 
                 <!-- Select -->
                 <div class="mr-2 col-lg-12">
-                    <select name="s" id="filter-well-select" class="js-custom-select custom-select-sm select2-hidden-accessible" size="1" style="opacity: 0;" data-hs-select2-options='{
+                    <select name="s" id="filter-well-select" class="js-custom-select custom-select-sm select2-hidden-accessible @hideCatalog@" size="1" style="opacity: 0;" data-hs-select2-options='{
                             "minimumResultsForSearch": "Infinity",
                             "customClass": "custom-select custom-select-sm",
                             "dropdownAutoWidth": true,

@@ -66,7 +66,7 @@ function GetLocaleList($skin) {
 
 // Стартовый вид
 function actionStart() {
-    global $PHPShopGUI, $PHPShopOrm, $PHPShopModules, $PHPShopSystem, $PHPShopBase;
+    global $PHPShopGUI, $PHPShopOrm, $PHPShopModules, $PHPShopSystem, $PHPShopBase,$hideCatalog;
 
     PHPShopObj::loadClass(array('valuta', 'user'));
 
@@ -83,11 +83,20 @@ function actionStart() {
 
     $PHPShopGUI->setActionPanel(__("Редактирование Витрины") . ": " . $data['name'] . ' [ID ' . intval($_GET['id']) . ']', array('Удалить'), array('Сохранить', 'Сохранить и закрыть'));
 
+    $shop_type_value[] = array('Интернет-магазин', 0, $data['shop_type']);
+    $shop_type_value[] = array('Каталог продукции', 1, $data['shop_type']);
+    $shop_type_value[] = array('Сайт компании', 2, $data['shop_type']);
+
     $Tab1 = $PHPShopGUI->setField("Название", $PHPShopGUI->setInputText(null, "name_new", $data['name']));
-    $Tab1 .= $PHPShopGUI->setField("Адрес", $PHPShopGUI->setInputText('http://', "host_new", $data['host']));
+    $Tab1 .= $PHPShopGUI->setField("Адрес", $PHPShopGUI->setInputText('https://', "host_new", $data['host']));
     $Tab1 .= $PHPShopGUI->setField(
-            array("Телефоны", "E-mail оповещение"), array($PHPShopGUI->setInputText(null, "tel_new", $data['tel']),
+            array("Телефон основной", "Телефон дополнительный"), array($PHPShopGUI->setInputText(null, "tel_new", $data['tel']),
+        $PHPShopGUI->setInputText(null, "option[org_tel]", $option['org_tel'])), array(array(2, 4), array(2, 4)));
+    $Tab1 .= $PHPShopGUI->setField(
+            array("Конфигурация", "E-mail оповещение"), array($PHPShopGUI->setSelect('shop_type_new', $shop_type_value,'100%',true),
         $PHPShopGUI->setInputText(null, "adminmail_new", $data['adminmail'])), array(array(2, 4), array(2, 4)));
+    
+   
     $Tab1 .= $PHPShopGUI->setField(
             array("SMTP пользователь", "Пароль"), array($PHPShopGUI->setInputText(null, "option[smtp_user]", $option['smtp_user'], false, false, false, false, 'user@yandex.ru'),
         $PHPShopGUI->setInput('password', "option[smtp_password]", $option['smtp_password'])), array(array(2, 4), array(2, 4)));
@@ -96,9 +105,6 @@ function actionStart() {
     $Tab1 .= $PHPShopGUI->setField('Заголовок (Title)', $PHPShopGUI->setTextarea('title_new', $data['title'], false, false, 100));
     $Tab1 .= $PHPShopGUI->setField('Описание (Description)', $PHPShopGUI->setTextarea('descrip_new', $data['descrip'], false, false, 100));
 
-
-    //$Tab2 .= $PHPShopGUI->setField("Наименование организации", $PHPShopGUI->setInputText(null, "company_new", $data['company']));
-    //$Tab2 .= $PHPShopGUI->setField("Фактический адрес", $PHPShopGUI->setInputText(null, "adres_new", $data['adres']));
     // Валюты
     $PHPShopValutaArray = new PHPShopValutaArray();
     $valuta_array = $PHPShopValutaArray->getArray();
@@ -113,7 +119,7 @@ function actionStart() {
     if (empty($data['lang']))
         $data['lang'] = $PHPShopSystem->getSerilizeParam('admoption.lang');
 
-    $Tab2 .= $PHPShopGUI->setField(array('Валюта', 'Дизайн', 'Язык'), array($PHPShopGUI->setSelect('currency_new', $currency_value), GetSkinList($data['skin']), GetLocaleList($data['lang'])), array(array(2, 2), array(1, 2), array(2, 2)));
+    $Tab2 .= $PHPShopGUI->setField(array('Валюта', 'Дизайн', 'Язык'), array($PHPShopGUI->setSelect('currency_new', $currency_value,false,false,false,false,$hideCatalog), GetSkinList($data['skin']), GetLocaleList($data['lang'])), array(array(2, 2), array(1, 2), array(2, 2)));
 
     $sql_value[] = array('Не выбрано', 0, 0);
     $sql_value[] = array('Включить полное зеркало', 'on', 1);
@@ -151,7 +157,7 @@ function actionStart() {
                 $manager_status_value[] = array($manager_status['name'], $manager_status['id'], $data['admin']);
     }
 
-    $Tab2 .= $PHPShopGUI->setField(array("Пакетная обработка", 'Права', 'Колонка цен'), array($PHPShopGUI->setSelect('sql', $sql_value, false, true), $PHPShopGUI->setSelect('admin_new', $manager_status_value, false, true), $PHPShopGUI->setSelect('price_new', $PHPShopGUI->setSelectValue($data['price'], 5))), array(array(2, 2), array(1, 2), array(2, 2)));
+    $Tab2 .= $PHPShopGUI->setField(array("Пакетная обработка", 'Права', 'Колонка цен'), array($PHPShopGUI->setSelect('sql', $sql_value, false, true), $PHPShopGUI->setSelect('admin_new', $manager_status_value, false, true), $PHPShopGUI->setSelect('price_new', $PHPShopGUI->setSelectValue($data['price'], 5),false,false,false,false,$hideCatalog)), array(array(2, 2), array(1, 2), array(2, 2)));
 
     // Статусы
     $PHPShopUserStatusArray = new PHPShopUserStatusArray();
@@ -163,7 +169,7 @@ function actionStart() {
             $userstatus_value[] = array($val['name'], $val['id'], $option['user_status']);
         }
 
-    $Tab2 .= $PHPShopGUI->setField("Регистрация пользователей", $PHPShopGUI->setCheckbox('option[user_mail_activate]', 1, 'Активация через E-mail', $option['user_mail_activate']) . '<br>' . $PHPShopGUI->setCheckbox('option[user_mail_activate_pre]', 1, 'Ручная активация администратором', $option['user_mail_activate_pre']) . '<br>' . $PHPShopGUI->setCheckbox('option[user_price_activate]', 1, 'Регистрация для просмотра цен', $option['user_price_activate'])) . $PHPShopGUI->setField("Статус после регистрации", $PHPShopGUI->setSelect('option[user_status]', $userstatus_value));
+    $Tab2 .= $PHPShopGUI->setField("Регистрация пользователей", $PHPShopGUI->setCheckbox('option[user_mail_activate]', 1, 'Активация через E-mail', $option['user_mail_activate']) . '<br>' . $PHPShopGUI->setCheckbox('option[user_mail_activate_pre]', 1, 'Ручная активация администратором', $option['user_mail_activate_pre']) . '<br>' . $PHPShopGUI->setCheckbox('option[user_price_activate]', 1, 'Регистрация для просмотра цен', $option['user_price_activate'],$hideCatalog)) . $PHPShopGUI->setField("Статус после регистрации", $PHPShopGUI->setSelect('option[user_status]', $userstatus_value));
 
     // Юридические лица
     $PHPShopCompany = new PHPShopCompanyArray();
@@ -174,17 +180,17 @@ function actionStart() {
             $company_value[] = array($company['name'], $company['id'], $data['company_id']);
 
     $Tab2 .= $PHPShopGUI->setField("Юридическое лицо", $PHPShopGUI->setSelect('company_id_new', $company_value));
-    $Tab2 .= $PHPShopGUI->setField("Накрутка цены", $PHPShopGUI->setInputText(false, 'option[fee]', $option['fee'], 100, '%'));
-    
-    $Tab2 = $PHPShopGUI->setCollapse("Дополнительно",$Tab2);
+    $Tab2 .= $PHPShopGUI->setField("Накрутка цены", $PHPShopGUI->setInputText(false, 'option[fee]', $option['fee'], 100, '%'),1,null,$hideCatalog);
+
+    $Tab2 = $PHPShopGUI->setCollapse("Дополнительно", $Tab2);
 
     $Tab2 .= $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Статистика посещений', $PHPShopGUI->setField('ID сайта Яндекс.Метрика', $PHPShopGUI->setInputText(null, 'option[metrica_id]', $option['metrica_id'], 230, false, false, false, 'XXXXXXXX')) . $PHPShopGUI->setField('ID сайта Google', $PHPShopGUI->setInputText('UA-', 'option[google_id]', $option['google_id'], 230, false, false, false, 'XXXXX-Y')), 'in', true
     );
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
-    
-    $Tab1 = $PHPShopGUI->setCollapse("Основное",$Tab1);
+
+    $Tab1 = $PHPShopGUI->setCollapse("Основное", $Tab1);
 
     // Вывод формы закладки
     $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Дополнительно", $Tab2, true), array("Инструкция", $PHPShopGUI->loadLib('tab_showcase', false, './system/')));

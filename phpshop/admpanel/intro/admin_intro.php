@@ -34,7 +34,7 @@ function mailNotice($type, $until_day, $promo = null) {
 }
 
 function actionStart() {
-    global $PHPShopInterface, $PHPShopSystem, $PHPShopGUI, $TitlePage, $PHPShopBase;
+    global $PHPShopInterface, $PHPShopSystem, $PHPShopGUI, $TitlePage, $PHPShopBase,$hideCatalog,$hideSite;
 
 
     // Поисковые запросы
@@ -298,10 +298,10 @@ function actionStart() {
     $PHPShopGUI->_CODE .= '
      <div class="row intro-row">
        <div class="col-md-2 col-xs-6 ">
-          <div class="panel panel-default">
+          <div class="panel panel-default ">
              <div class="panel-heading"><span class="glyphicon glyphicon-flag"></span> ' . __('Новых заказов') . '</div>
-                <div class="panel-body text-right panel-intro">
-                <a href="?path=order&where[statusi]=0">' . $new_order . '</a>
+                <div class="panel-body text-right panel-intro ">
+                <a href="?path=order&where[statusi]=0" class="'.$hideCatalog.'">' . $new_order . '</a>
                </div>
           </div>
        </div>
@@ -332,7 +332,7 @@ function actionStart() {
        </div>
    </div>   
 
-   <div class="row intro-row">
+   <div class="row intro-row '.$hideCatalog.'">
        <div class="col-md-6 ">
            <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-shopping-cart"></span> ' . __('Заказы') . ' <a class="pull-right" href="?path=order">' . __('Показать больше') . '</a></div>
@@ -512,7 +512,7 @@ function actionStart() {
        </div>
        <div class="col-md-2 col-xs-6 col-panel">
           <div class="panel panel-default">
-             <div class="panel-heading"><span class="glyphicon glyphicon-folder-open"></span> ' . __('Категории') . '</div>
+             <div class="panel-heading"><span class="glyphicon glyphicon-folder-close"></span> ' . __('Категории') . '</div>
                 <div class="panel-body text-right panel-intro">
                  <a href="?path=catalog">' . $PHPShopBase->getNumRows('categories', "") . '</a>
                </div>
@@ -520,7 +520,7 @@ function actionStart() {
        </div>
        <div class="col-md-2 hidden-xs hidden-sm col-panel">
           <div class="panel panel-default">
-             <div class="panel-heading"><span class="glyphicon glyphicon-user"></span> ' . __('Покупатели') . '</div>
+             <div class="panel-heading"><span class="glyphicon glyphicon-user"></span> ' . __('Пользователи') . '</div>
                 <div class="panel-body text-right panel-intro">
                  <a href="?path=shopusers">' . $PHPShopBase->getNumRows('shopusers', "where enabled = '1'") . '</a>
                </div>

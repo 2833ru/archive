@@ -15,8 +15,8 @@
 
 <span class="hide" id="parentSizeMessage">@parentSizeMessage@</span>
 
-<label class="control-label text-uppercase @elementCartOptionHide@">{Количество}</label>
-<div class="quant input-group @elementCartOptionHide@">
+<label class="control-label text-uppercase @elementCartOptionHide@ @hideCatalog@">{Количество}</label>
+<div class="quant input-group @elementCartOptionHide@ @hideCatalog@">
     <span class="input-group-btn">
         <button type="button" class="btn btn-default btn-default_l btn-number"  data-type="minus" data-field="quant[2]">
             <span class="glyphicon glyphicon-minus"></span>

@@ -12,19 +12,22 @@
         <div class="caption">
             <h5><a href="/shop/UID_@productUid@.html" title="@productNameClean@">@productName@</a></h5>
 
-            <h4 class="product-price">@parentLangFrom@ @productPrice@<span class="rubznak">@productValutaName@</span><span class=" price-old">@productPriceOld@</span></h4>
+            <h4 class="product-price @hideCatalog@">@parentLangFrom@ @productPrice@<span class="rubznak">@productValutaName@</span><span class=" price-old">@productPriceOld@</span></h4>
 
         </div>
-        <div class="stock">
+        <div class="stock @hideCatalog@">
             @ComStartNotice@
             <div class="outStock">@productOutStock@</div>
             @ComEndNotice@
             <span class="product-sklad-list-block">@productSklad@</span>
         </div>
-        <a class="btn btn-primary btn-sm btn-block addToCartList @elementCartOptionHide@" href="/shop/UID_@productUid@.html">@productSale@</a>
-        <button class="btn btn-primary btn-sm btn-block addToCartList @elementCartHide@" data-uid="@productUid@" data-num="1">@productSale@</button>
-        <a class="btn btn-primary btn-sm btn-block  @elementNoticeHide@" href="/users/notice.html?productId=@productUid@" title="@productNotice@" >
-            @productNotice@                         
-        </a>  
-        <button class="btn btn-default btn-sm addToWishList btn-block" onclick="addToWishList('@productUid@');">{Отложить}</button></div>
+        <div class="@hideCatalog@">
+            <a class="btn btn-primary btn-sm btn-block addToCartList @elementCartOptionHide@" href="/shop/UID_@productUid@.html">@productSale@</a>
+            <button class="btn btn-primary btn-sm btn-block addToCartList @elementCartHide@" data-uid="@productUid@" data-num="1">@productSale@</button>
+            <a class="btn btn-primary btn-sm btn-block  @elementNoticeHide@" href="/users/notice.html?productId=@productUid@" title="@productNotice@" >
+                @productNotice@                         
+            </a>  
+            <button class="btn btn-default btn-sm addToWishList btn-block" onclick="addToWishList('@productUid@');">{Отложить}</button>
+        </div>
+    </div>
 </div>

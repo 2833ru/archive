@@ -142,11 +142,11 @@ function actionStart() {
      $Tab1 = $PHPShopGUI->setCollapse('Информация', $Tab1);
      $Tab1 .= $PHPShopGUI->setCollapse('Товары для Google Merchant', $catOption);
      
-     // Выбор каталога СДЭК.МАРКЕТ
+     // Выбор каталога Яндекс.Маркет
     $catOption =  $PHPShopGUI->setField("Размещение", $tree_select_cm . $PHPShopGUI->setCheckbox("categories_cm_all", 1, "Выбрать все категории?", 0),1,'Пакетное редактирование. Настройка не сохраняется.');
-    $catOption .= $PHPShopGUI->setField("Вывод в СДЭК.МАРКЕТ",$PHPShopGUI->setRadio("enabled_cm_all", 1, "Вкл.", 1).$PHPShopGUI->setRadio("enabled_cm_all", 0, "Выкл.",1));
+    $catOption .= $PHPShopGUI->setField("Вывод в Яндекс.Маркет",$PHPShopGUI->setRadio("enabled_cm_all", 1, "Вкл.", 1).$PHPShopGUI->setRadio("enabled_cm_all", 0, "Выкл.",1));
     
-    //$Tab1 .= $PHPShopGUI->setCollapse('Товары для СДЭК.МАРКЕТ', $catOption);
+    $Tab1 .= $PHPShopGUI->setCollapse('Товары для Яндекс.Маркет', $catOption);
     
     // Выбор каталога AliExpress
     $catOption =  $PHPShopGUI->setField("Размещение", $tree_select_ae . $PHPShopGUI->setCheckbox("categories_ae_all", 1, "Выбрать все категории?", 0),1,'Пакетное редактирование. Настройка не сохраняется.');
@@ -164,7 +164,7 @@ function actionStart() {
         $PHPShopGUI->setField('Колонка цен Google Merchant', $PHPShopGUI->setSelect('options[price_google]', $PHPShopGUI->setSelectValue($options['price_google'], 5), 100)) .
         $PHPShopGUI->setField('Наценка', $PHPShopGUI->setInputText(null, 'options[price_google_fee]', $options['price_google_fee'], 100, '%')) .
 
-        $PHPShopGUI->setField('Колонка цен СДЭК.МАРКЕТ', $PHPShopGUI->setSelect('options[price_cdek]', $PHPShopGUI->setSelectValue($options['price_cdek'], 5), 100)) .
+        $PHPShopGUI->setField('Колонка цен Яндекс.Маркет', $PHPShopGUI->setSelect('options[price_cdek]', $PHPShopGUI->setSelectValue($options['price_cdek'], 5), 100)) .
         $PHPShopGUI->setField('Наценка', $PHPShopGUI->setInputText(null, 'options[price_cdek_fee]', $options['price_cdek_fee'], 100, '%')) .
 
         $PHPShopGUI->setField('Колонка цен AliExpress', $PHPShopGUI->setSelect('options[price_ali]', $PHPShopGUI->setSelectValue($options['price_ali'], 5), 100)) .

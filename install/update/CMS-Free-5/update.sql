@@ -856,7 +856,6 @@ CREATE TABLE `phpshop_dialog_answer` (
 ALTER TABLE `phpshop_products` ADD `price_purch` FLOAT DEFAULT '0';
 ALTER TABLE `phpshop_shopusers` ADD `dialog_ban` ENUM('0','1') DEFAULT '0';
 
-
 /*622*/
 DROP TABLE IF EXISTS `phpshop_exchanges_log`;
 CREATE TABLE IF NOT EXISTS `phpshop_exchanges_log` (
@@ -896,3 +895,8 @@ ALTER TABLE `phpshop_products` ADD `external_code` varchar(64) DEFAULT '';
 
 /*637*/
 ALTER TABLE `phpshop_products` ADD INDEX(`external_code`);
+
+/*639*/
+UPDATE `phpshop_system` SET `kurs_beznal` = '0';
+ALTER TABLE `phpshop_system` CHANGE `kurs_beznal` `shop_type` ENUM('0','1','2') NULL DEFAULT '0';
+ALTER TABLE `phpshop_servers` ADD `shop_type` ENUM('0','1','2') NULL DEFAULT '0';

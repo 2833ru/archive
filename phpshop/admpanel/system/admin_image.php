@@ -34,7 +34,7 @@ function GetFonts($font) {
 
 // Стартовый вид
 function actionStart() {
-    global $PHPShopGUI, $PHPShopModules, $TitlePage, $PHPShopOrm;
+    global $PHPShopGUI, $PHPShopModules, $TitlePage, $PHPShopOrm, $hideCatalog, $hideSite;
 
 // Выборка
     $data = $PHPShopOrm->select();
@@ -49,6 +49,7 @@ function actionStart() {
 
     $PHPShopGUI->setActionPanel($TitlePage, false, array('Сохранить'));
 
+    if(empty($hideSite))
     $PHPShopGUI->_CODE = $PHPShopGUI->setField('Макс. ширина оригинала', $PHPShopGUI->setInputText(false, 'option[img_w]', $option['img_w'], 100, 'px'), 1, 'Изображение товара в подробном описании товара') .
             $PHPShopGUI->setField('Макс. высота оригинала', $PHPShopGUI->setInputText(false, 'option[img_h]', $option['img_h'], 100, 'px'), 1, 'Изображение товара в подробном описании товара') .
             $PHPShopGUI->setField('Качество оригинала', $PHPShopGUI->setInputText(false, 'option[width_podrobno]', $option['width_podrobno'], 100, '%'), 1, 'Изображение товара в подробном описании товара') .
@@ -57,15 +58,16 @@ function actionStart() {
             $PHPShopGUI->setField('Исходное название', $PHPShopGUI->setCheckbox('option[image_save_name]', 1, 'Сохранять исходное название изображения', $option['image_save_name'])) .
             $PHPShopGUI->setField('Исходный путь', $PHPShopGUI->setCheckbox('option[image_save_path]', 1, 'Сохранять исходный путь изображения на сервере', $option['image_save_path'])) .
             $PHPShopGUI->setField('SEO название', $PHPShopGUI->setCheckbox('option[image_save_seo]', 1, 'Сохранять изображения по именам товара', $option['image_save_seo'])) .
-            $PHPShopGUI->setField('Вывод в webp ', $PHPShopGUI->setCheckbox('option[image_webp]', 1, 'Конвертация изображений в формат webp для оптимизации в реальном времени', $option['image_webp']),1,'Сокращение в несколько раз веса картинок. Может приводить к замедлению сайта, требователен к ресурсам.') .
-            $PHPShopGUI->setField('Сохранение в webp', $PHPShopGUI->setCheckbox('option[image_webp_save]', 1, 'Конвертация изображений в формат webp для оптимизации при загрузке изображений на сервер', $option['image_webp_save']),1,'Сокращение в несколько раз веса картинок.') .
+            $PHPShopGUI->setField('Вывод в webp ', $PHPShopGUI->setCheckbox('option[image_webp]', 1, 'Конвертация изображений в формат webp для оптимизации в реальном времени', $option['image_webp']), 1, 'Сокращение в несколько раз веса картинок. Может приводить к замедлению сайта, требователен к ресурсам.') .
+            $PHPShopGUI->setField('Сохранение в webp', $PHPShopGUI->setCheckbox('option[image_webp_save]', 1, 'Конвертация изображений в формат webp для оптимизации при загрузке изображений на сервер', $option['image_webp_save']), 1, 'Сокращение в несколько раз веса картинок.') .
             $PHPShopGUI->setField('Добавить путь каталога', $PHPShopGUI->setCheckbox('option[image_save_catalog]', 1, 'Сохранять изображения в папках по именам каталогов', $option['image_save_catalog']), 1, 'При выключенной опции, все изображения товаров сохраняются в одну папку на сервере. Если файлов становится много, это может вызывать торможение в работе файлового менеджера и влиять на загрузку сайта, на дешевых тарифах хостинга. Активируйте опцию, чтобы фото сохранялись на сервере в автоматически созданную папку для каждого созданного каталога.') .
             $PHPShopGUI->setField('Отключить фотогалерею', $PHPShopGUI->setCheckbox('option[image_off]', 1, 'Отключить возможность добавлять изображения в фотогалерею', $option['image_off']), 1, 'Режим для товара с одной подготовленной картинкой, размещенной на сервере.') .
             $PHPShopGUI->setField("Размещение", $PHPShopGUI->setInputText($GLOBALS['SysValue']['dir']['dir'] . '/UserFiles/Image/', "option[image_result_path]", $option['image_result_path'], 400), 1, 'Путь сохранения загружаемых изображений') .
             $PHPShopGUI->setField('Макс. ширина тумбнейла', $PHPShopGUI->setInputText(false, 'option[img_tw]', $option['img_tw'], 100, 'px'), 1, 'Изображение товара в кратком описании товара') .
             $PHPShopGUI->setField('Макс. высота тумбнейла', $PHPShopGUI->setInputText(false, 'option[img_th]', $option['img_th'], 100, 'px'), 1, 'Изображение товара в кратком описании товара') .
             $PHPShopGUI->setField('Качество тумбнейла', $PHPShopGUI->setInputText(false, 'option[width_kratko]', $option['width_kratko'], 100, '%'), 1, 'Изображение товара в кратком описании товара');
-    
+
+    if(empty($hideSite))
     $PHPShopGUI->_CODE = $PHPShopGUI->setCollapse('Основные', $PHPShopGUI->_CODE);
 
     if (empty($option['watermark_text_size']))
@@ -77,6 +79,7 @@ function actionStart() {
     if (empty($option['watermark_text_color']))
         $option['watermark_text_color'] = '#cccccc';
 
+    if(empty($hideSite))
     $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Настройка ватермарка', $PHPShopGUI->setField('Защита оригинала', $PHPShopGUI->setCheckbox('option[watermark_big_enabled]', 1, 'Включить водяной знак', $option['watermark_big_enabled']), 1, 'Защиту от копирования изображений в подробном описании товара') .
             $PHPShopGUI->setField('Защита исходника', $PHPShopGUI->setCheckbox('option[watermark_source_enabled]', 1, 'Включить водяной знак', $option['watermark_source_enabled']), 1, 'Защиту от копирования исходного изображений в подробном описании товара') .
             $PHPShopGUI->setField('Защита тумбнейла', $PHPShopGUI->setCheckbox('option[watermark_small_enabled]', 1, 'Включить водяной знак', $option['watermark_small_enabled']), 1, 'Защиту от копирования изображений в кратком описании товара') .
@@ -97,11 +100,12 @@ function actionStart() {
     if (empty($option['img_th_c']))
         $option['img_th_c'] = 200;
 
+    if(empty($hideSite))
     $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Иконки для каталогов', $PHPShopGUI->setField('Обработка изображений', $PHPShopGUI->setCheckbox('option[image_cat]', 1, null, $option['image_cat'])) .
             $PHPShopGUI->setField('Максимальная ширина', $PHPShopGUI->setInputText(false, 'option[img_tw_c]', $option['img_tw_c'], 100, 'px')) .
-            $PHPShopGUI->setField('Максимальная высота', $PHPShopGUI->setInputText(false, 'option[img_th_c]', $option['img_th_c'], 100, 'px')).
-            $PHPShopGUI->setField('Адаптивность', $PHPShopGUI->setCheckbox('option[image_cat_adaptive]', 1, 'Оптимизировать изображение точно под указанные размеры', $option['image_cat_adaptive'])) 
-            );
+            $PHPShopGUI->setField('Максимальная высота', $PHPShopGUI->setInputText(false, 'option[img_th_c]', $option['img_th_c'], 100, 'px')) .
+            $PHPShopGUI->setField('Адаптивность', $PHPShopGUI->setCheckbox('option[image_cat_adaptive]', 1, 'Оптимизировать изображение точно под указанные размеры', $option['image_cat_adaptive']))
+    );
 
     if (empty($option['img_tw_s']))
         $option['img_tw_s'] = 1440;
@@ -111,9 +115,9 @@ function actionStart() {
 
     $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Слайдер', $PHPShopGUI->setField('Обработка изображений', $PHPShopGUI->setCheckbox('option[image_slider]', 1, null, $option['image_slider'])) .
             $PHPShopGUI->setField('Максимальная ширина', $PHPShopGUI->setInputText(false, 'option[img_tw_s]', $option['img_tw_s'], 100, 'px')) .
-            $PHPShopGUI->setField('Максимальная высота', $PHPShopGUI->setInputText(false, 'option[img_th_s]', $option['img_th_s'], 100, 'px')).
-            $PHPShopGUI->setField('Адаптивность', $PHPShopGUI->setCheckbox('option[image_slider_adaptive]', 1, 'Оптимизировать изображение точно под указанные размеры', $option['image_slider_adaptive'])) 
-            );
+            $PHPShopGUI->setField('Максимальная высота', $PHPShopGUI->setInputText(false, 'option[img_th_s]', $option['img_th_s'], 100, 'px')) .
+            $PHPShopGUI->setField('Адаптивность', $PHPShopGUI->setCheckbox('option[image_slider_adaptive]', 1, 'Оптимизировать изображение точно под указанные размеры', $option['image_slider_adaptive']))
+    );
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
@@ -159,7 +163,7 @@ function actionUpdate() {
     $_POST['option']['watermark_image'] = $_POST['watermark_image'];
 
     // Корректировка пустых значений
-    $PHPShopOrm->updateZeroVars('option.image_save_source', 'option.image_adaptive_resize', 'option.image_save_name', 'option.watermark_big_enabled', 'option.watermark_source_enabled', 'option.watermark_center_enabled', 'option.image_save_path', 'option.image_save_catalog', 'option.watermark_small_enabled', 'option.image_off', 'option.image_cat', 'option.image_slider','option.image_slider_adaptive','option.image_cat_adaptive', 'option.image_save_seo','option.image_webp','option.image_webp_save');
+    $PHPShopOrm->updateZeroVars('option.image_save_source', 'option.image_adaptive_resize', 'option.image_save_name', 'option.watermark_big_enabled', 'option.watermark_source_enabled', 'option.watermark_center_enabled', 'option.image_save_path', 'option.image_save_catalog', 'option.watermark_small_enabled', 'option.image_off', 'option.image_cat', 'option.image_slider', 'option.image_slider_adaptive', 'option.image_cat_adaptive', 'option.image_save_seo', 'option.image_webp', 'option.image_webp_save');
 
     if (is_array($_POST['option']))
         foreach ($_POST['option'] as $key => $val)
@@ -175,11 +179,10 @@ function actionUpdate() {
 
     if (substr($option['image_result_path'], -1) != '/' and ! empty($option['image_result_path']))
         $option['image_result_path'] .= '/';
-    
-    if (!function_exists('imagewebp')){
-        $option['image_webp']=0;
-        $option['image_webp_save']=0;
 
+    if (!function_exists('imagewebp')) {
+        $option['image_webp'] = 0;
+        $option['image_webp_save'] = 0;
     }
 
 

@@ -39,7 +39,6 @@
         <link href="@pathTemplateMin@/style.css" rel="stylesheet">
         <link href="@pathTemplateMin@css/responsive.css" rel="stylesheet">
 
-
         <!-- Стикер-полоска -->
         <div class="@php __hide('sticker_top'); php@">
             <div class="top-banner @php __hide('sticker_close','cookie'); php@">
@@ -59,12 +58,18 @@
                                     <div class="row">
                                         <ul class="top-nav  main-top">
                                             <li class="active"><a href="/">@name@</a></li>
-                                            @topMenu@
+
+                                            @php
+                                            if(empty(PHPShopParser::get('hideSite')))
+                                            echo PHPShopParser::get('topMenu');
+                                            php@
+
+
                                             <li><a href="/news/">{Новости}</a></li>
                                     </div>
                                     </ul>
                                 </div>
-                                <div class="col-md-4 col-sm-5">
+                                <div class="col-md-4 col-sm-5 @hideSite@">
                                     <ul class="top-nav-right">
                                         <li><a href="/compare/"><i class="fa fa-sliders" aria-hidden="true"></i> {Сравнить}</a></li>
                                         @wishlist@
@@ -84,7 +89,6 @@
                             <a id="logo" href="/" title="@name@"><img src="@logo@" alt="" class="img-responsive" /></a>
                         </div>
 
-
                         <div class="col-md-6 col-sm-7 col-xs-12">
                             <div class="header-contacts">
                                 <a class="header-tel" href="tel:8@telNumMobile@">@telNumMobile@</a>
@@ -93,7 +97,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-3 col-sm-2 header-middle-right visible-md visible-lg">
+                        <div class="col-md-3 col-sm-2 header-middle-right hidden-xs hidden-sm @hideCatalog@">
                             <div id="cart">
                                 <a id="cartlink" class="dropdown-toggle" href="/order/">
                                     <i class="fa fa-shopping-cart" aria-hidden="true"></i>
@@ -117,7 +121,7 @@
 
 
 
-            <nav id="main-menu" class="navbar">
+            <nav id="main-menu" class="navbar ">
                 <div class="container">
                     <div class="row">
 
@@ -127,7 +131,13 @@
                             </div>
 
                             <div class="collapse navbar-collapse navbar-cat-collapse">
-                                <ul class="nav navbar-nav main-navbar-top">
+                                <ul class="nav navbar-nav main-navbar-top ">
+
+                                    @php
+                                    if(!empty(PHPShopParser::get('hideSite')))
+                                    echo PHPShopParser::get('topMenu');
+                                    php@
+
                                     <li class="main-navbar-top-catalog">
                                         <a href="#" id="nav-catalog-dropdown-link" class="nav-catalog-dropdown-link"><i class="fa fa-bars"></i> {Каталог}</a>
                                         <ul class="main-navbar-list-catalog-wrapper fadeIn animated">
@@ -136,15 +146,14 @@
                                     </li>
                                     @leftCatal@
                                 </ul>
+
                             </div>
                         </div>
 
                     </div><!-- /row -->
                 </div>
             </nav>
-
         </header>
-
 
         <!-- jQuery -->
         <script src="@pathTemplate@/js/jquery-1.11.0.min.js"></script>
@@ -169,7 +178,7 @@
                 </div>
                 <!-- Slider Section Ends -->
 
-                <ul class="brand-list">@brandsList@</ul>
+                <ul class="brand-list @hideSite@">@brandsList@</ul>
             </div>
         </div>
     </div>
@@ -177,18 +186,18 @@
         <div class="row">
             <div class="col-xs-12">
                 <!-- Featured Products Starts -->
-                <ul class="nav nav-tabs">
+                <ul class="nav nav-tabs @hideSite@">
                     <li class="active @php __hide('specMainIcon'); php@"><a data-toggle="tab" href="#newprod">{Новинки}</a></li>
                     <li class="@php __hide('specMain'); php@"><a data-toggle="tab" href="#specprod">{Спецпредложения}</a></li>
                 </ul>
 
-                <div class="tab-content">
+                <div class="tab-content @hideSite@">
                     <div id="newprod" class="tab-pane fade in active">
                         <div class="row products-list newitems-list">
                             @specMainIcon@
                         </div>
                     </div>
-                    <div id="specprod" class="tab-pane fade">
+                    <div id="specprod" class="tab-pane fade @hideSite@">
                         <div class="row products-list spec-list">
                             @specMain@
                         </div>
@@ -197,23 +206,19 @@
                 <!-- Featured Products Ends -->
 
                 <!-- Popular Products Starts -->
-                <h2 class="product-head @php __hide('nowBuy'); php@">{Популярные товары}</h2>
-                <div class="row products-list nowbuy-list">
+                <h2 class="product-head @php __hide('nowBuy'); php@ @hideSite@">{Популярные товары}</h2>
+                <div class="row products-list nowbuy-list @hideSite@">
                     @nowBuy@
                 </div>
 
                 <!-- Popular Products Ends -->
                 <div class="row">
-                    <div class="col-md-3 @php __hide('productDay'); php@ product-day-wrap">@productDay@</div>
+                    <div class="col-md-3 @php __hide('productDay'); php@ product-day-wrap @hideCatalog@">@productDay@</div>
                     <div class="col-md-9 catalog-table-wrapper">
                         <h2 class="product-head">@mainContentTitle@</h2>
-
                         <div>@mainContent@</div></div>
-
                 </div>
-                <div class="catalog-block">@leftCatalTable@</div>
-
-
+                <div class="catalog-block @hideSite@">@leftCatalTable@</div>
             </div>
 
         </div><!-- /row -->
@@ -232,9 +237,6 @@
         <!-- Container Ends -->
     </div>
 
-
-
-
     <!-- Footer Section Starts -->
     <footer id="footer-area">
         <div class="footer-links">
@@ -243,7 +245,6 @@
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <a id="logo-footer @php __hide('logo'); php@" href="/" title="@name@"><img src="@logo@" alt="" class="img-responsive" /></a>
                     </div>
-
 
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <h5>{Информация}</h5>
@@ -261,27 +262,25 @@
                         <!-- / Социальные сети -->
                     </div>
 
-
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <h5>{Мой кабинет}</h5>
                         <ul>
                             <li><a href="/users/">@UsersLogin@</a></li>
-                            <li><a href="/users/order.html">{Отследить заказ}</a></li>
-                            <li><a href="/users/notice.html">{Уведомления о товарах}</a></li>
+                            <li class="@hideCatalog@"><a href="/users/order.html">{Отследить заказ}</a></li>
+                            <li class="@hideCatalog@"><a href="/users/notice.html">{Уведомления о товарах}</a></li>
                             <li><a href="/users/message.html">{Связь с менеджерами}</a></li>
                             @php if($_SESSION['UsersId']) echo '<li><a href="/users/wishlist.html">{Отложенные товары}</a></li>
-                            <li><a href="?logout=true">{Выйти}</a></li>'; php@
+                            <li><a href="?logout=true">{Выйти}</a></li>'; else echo '<li><a href="#" data-toggle="modal" data-target="#userModal">{Войти}</a></li>'; php@
                         </ul>
                     </div>
-
 
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <h5>{Навигация}</h5>
                         <ul>
-                            <li><a href="/price/" title="Прайс-лист">{Прайс-лист}</a></li>
+                            <li class="@hideCatalog@"><a href="/price/" title="Прайс-лист">{Прайс-лист}</a></li>
                             <li><a href="/news/" title="Новости">{Новости}</a></li>
                             <li><a href="/gbook/" title="Отзывы">{Отзывы}</a></li>
-                            <li><a href="/map/" title="Карта сайта">{Карта сайта}</a></li>
+                            <li class="@hideSite@"><a href="/map/" title="Карта сайта">{Карта сайта}</a></li>
                             <li><a href="/forma/" title="Форма связи">{Форма связи}</a></li>
                         </ul>
                     </div>
@@ -291,7 +290,6 @@
         </div>
     </footer>
     <!-- Footer Section Ends -->
-
 
     <!-- Fixed mobile bar -->
     <div class="bar-padding-fix visible-xs"> </div>
@@ -304,7 +302,7 @@
             <span class="icon icon-person"></span>
             <span class="tab-label">{Кабинет}</span>
         </a>
-        <a class="tab-item @cart_active@" href="/order/" id="bar-cart">
+        <a class="tab-item @cart_active@ @hideCatalog@" href="/order/" id="bar-cart">
             <span class="icon icon-download"></span> <span class="badge badge-positive" id="mobilnum">@cart_active_num@</span>
             <span class="tab-label">{Корзина}</span>
         </a>
@@ -353,7 +351,6 @@
                             <a href="/users/sendpassword.html" class="pass">{Забыли пароль}</a>
                         </div>
 
-                        @facebookAuth@ @twitterAuth@
                     </div>
                     <div class="modal-footer flex-row">
 

@@ -5,6 +5,7 @@
     <faqlink>https://docs.phpshop.ru/moduli/dizain/snow</faqlink>
     <description>Модуль падающего снега.</description>
     <category>template</category>
+    <site>true</site>
      <adminmenu>
         <title>Снег</title>
         <capability>true</capability>

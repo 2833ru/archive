@@ -6,7 +6,7 @@
     <!-- Фасетный фильтр -->
     <div class="hide" id="faset-filter" >
         <div id="price-filter-body">
-            <div class="faset-filter-block-wrapper ">
+            <div class="faset-filter-block-wrapper @hideCatalog@">
                 <h4>{Цена}</h4>
                 <div>
                     <form method="get" id="price-filter-form">
@@ -43,7 +43,7 @@
 <div class="product-filter @hideSort@" id="filter-well">
     <div class="row">
         <div class="col-md-6 col-sm-6  col-xs-12">
-            <div class="display d-flex">
+            <div class="display d-flex @hideCatalog@">
                 {Сначала}: <div class="filter-menu-wrapper">
                     <div class="btn-group filter-menu" data-toggle="buttons">
 

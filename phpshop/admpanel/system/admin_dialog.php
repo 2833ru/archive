@@ -80,7 +80,7 @@ function actionStart() {
     $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Telegram', $PHPShopGUI->setField("Чат бот", $PHPShopGUI->setCheckbox('option[telegram_enabled]', 1, 'Включить чат бот Telegram', $option['telegram_enabled']).'<br>'.
             $PHPShopGUI->setCheckbox('option[telegram_order]', 1, 'Включить оповещение о заказах администратору', $option['telegram_order']) ) .
             $PHPShopGUI->setField("Имя бота", $PHPShopGUI->setInputText('@', "option[telegram_bot]", $option['telegram_bot'], 300)) .
-            $PHPShopGUI->setField("Chat ID", $PHPShopGUI->setInputText(null, "option[telegram_admin]", $option['telegram_admin'], 300), 1, 'Уведомление о заказе и диалогах администратору') .
+            $PHPShopGUI->setField("Chat IDS", $PHPShopGUI->setInputText(null, "option[telegram_admin]", $option['telegram_admin'], 300), 1, 'Уведомление о заказе и диалогах администраторам. Несколько значений указывается через запятую.') .
             $PHPShopGUI->setField("API-ключ", $PHPShopGUI->setInputText(null, "option[telegram_token]", $option['telegram_token'], 300) . $PHPShopGUI->setHelp('Информация о сервисе, регистрация, получение ключей <a href="https://docs.phpshop.ru/nastroiky/dialog#telegram" target="_blank">Инструкция</a>')));
 
     // VK
@@ -89,7 +89,7 @@ function actionStart() {
             $PHPShopGUI->setField("Имя сообщества", $PHPShopGUI->setInputText(null, "option[vk_bot]", $option['vk_bot'], 300)) .
             $PHPShopGUI->setField("Код подтверждения", $PHPShopGUI->setInputText(null, "option[vk_confirmation]", $option['vk_confirmation'], 300)) .
             $PHPShopGUI->setField("Ключ подтверждения", $PHPShopGUI->setInputText(null, "option[vk_secret]", $option['vk_secret'], 300)) .
-            $PHPShopGUI->setField("Chat ID", $PHPShopGUI->setInputText(null, "option[vk_admin]", $option['vk_admin'], 300), 1, 'Уведомление о заказе и диалогах администратору') .
+            $PHPShopGUI->setField("Chat IDS", $PHPShopGUI->setInputText(null, "option[vk_admin]", $option['vk_admin'], 300), 1, 'Уведомление о заказе и диалогах администраторам. Несколько значений указывается через запятую.') .
             $PHPShopGUI->setField("API-ключ", $PHPShopGUI->setInputText(null, "option[vk_token]", $option['vk_token'], 300) . $PHPShopGUI->setHelp('Информация о сервисе, регистрация, получение ключей <a href="https://docs.phpshop.ru/nastroiky/dialog#vkontakte" target="_blank">Инструкция</a>'))
     );
 

@@ -43,10 +43,9 @@
         <link href="@pathTemplateMin@/style.css" type="text/css" rel="stylesheet">
 
         <!-- Header -->
-        <div class="mobile-fix-menu">
+        <div class="mobile-fix-menu @hideSite@">
             <div class="d-flex justify-content-between">
-                <span class="back-btn d-flex align-items-center"><i class="icons icons-prev2"
-                                                                    style="backface-visibility: hidden;"></i> {Назад}</span>
+                <span class="back-btn d-flex align-items-center"><i class="icons icons-prev2" style="backface-visibility: hidden;"></i> {Назад}</span>
                 <button type="button" class="menu-close"><span aria-hidden="true" class="fal fa-times"></span></button>
             </div>
             <ul class="m-menu">
@@ -68,7 +67,7 @@
                     <div class="logo">
                         <a href="/"><img src="@logo@" alt=""></a>
                     </div>
-                    <div class="category-btn">
+                    <div class="category-btn @hideSite@">
 
                         <div class="category-icon">
                             <div><svg width="24" height="5">
@@ -104,14 +103,14 @@
                             </div>
                         </form>
                     </div>
-                    <ul class="header-btn d-flex align-items-center justify-content-start hidden-sm">
+                    <ul class="header-btn d-flex align-items-center justify-content-start hidden-sm @hideSite@">
                         <li role="presentation">@wishlist@</li>
                         <li role="presentation">
                             <a href="/compare/">
                                 <span id="numcompare">@numcompare@</span><span class="icons icons-green icons-small icons-compare"></span></a>
                         </li>
                     </ul>
-                    <div class="header-cart hidden-sm"><a id="cartlink" data-trigger="hover" data-container="#cart" data-toggle="popover" data-placement="bottom" data-html="true" data-url="/order/" data-content='@visualcart@' href="/order/"><span
+                    <div class="header-cart hidden-sm @hideCatalog@"><a id="cartlink" data-trigger="hover" data-container="#cart" data-toggle="popover" data-placement="bottom" data-html="true" data-url="/order/" data-content='@visualcart@' href="/order/"><span
                                 class="icons icons-blue icons-big icons-cart"></span><span id="num" class="">@num@</span>
                             <span class="visible-lg-inline">{товаров} {на} </span><span id="sum" class="">@sum@</span><span
                                 class="rubznak">@productValutaName@</span></a>
@@ -120,7 +119,7 @@
                     <ul class="header-user"> @usersDisp@</ul>
                 </div>
             </div>
-            <div class="drop-menu drop">
+            <div class="drop-menu drop @hideSite@">
                 <div class="drop-shadow">
                     <div class="container">
                         <ul class="mobile-menu">
@@ -140,7 +139,7 @@
                 <div class="navbar-header">
                     <div class="visible-xs btn-mobile-menu"><span class="icons-menu"></span></div>
 
-                    <div class="filter-panel">
+                    <div class="filter-panel @hideCatalog@">
                         <div class="filter-well">
                             <div class="filter-menu-wrapper">
                                 <div class="btn-group filter-menu" data-toggle="buttons">
@@ -177,14 +176,14 @@
                             <ul class="nav  main-navbar-top">
 
                                 <!-- dropdown catalog menu -->
-                                <li class="visible-xs">
+                                <li class="visible-xs @hideSite@">
                                     <ul class="mobile-menu">
                                         @leftCatal@
-
-
                                     </ul>
                                 </li>
-                                @topBrands@ @topcatMenu@ @topMenu@
+                                @topBrands@ 
+                                @topcatMenu@ 
+                                @topMenu@
 
 
                                 <li class="visible-xs"><a href="/news/">{Новости}</a></li>
@@ -202,8 +201,7 @@
         <!-- Notification -->
         <div id="notification" class="success-notification" style="display:none">
             <div class="alert alert-success alert-dismissible" role="alert">
-                <button type="button" class="close" data-dismiss="alert"><i class="fal fa-times"
-                                                                            aria-hidden="true"></i><span class="sr-only">Close</span></button>
+                <button type="button" class="close" data-dismiss="alert"><i class="fal fa-times" aria-hidden="true"></i><span class="sr-only">Close</span></button>
                 <span class="notification-alert"> </span>
             </div>
         </div>
@@ -228,7 +226,7 @@
 
                                 <div id="faset-filter-body">{Загрузка}</div>
 
-                                <div id="price-filter-body">
+                                <div id="price-filter-body" class="@hideCatalog@">
                                     <div class="h4">{Цена}</div>
                                     <form method="get" id="price-filter-form">
                                         <div class="row">
@@ -245,7 +243,7 @@
 
                                 </div>
                                 <a href="?" id="faset-filter-reset" class="border-btn">{Сбросить фильтр}</a>
-                                <span class="filter-close  visible-xs">Применить</span>
+                                <span class="filter-close visible-xs">{Применить}</span>
                             </div>
                         </div>
                         <!--/ Фасетный фильтр -->
@@ -264,7 +262,7 @@
 
                             @leftMenu@
                             <div class="text-center banner">@banersDisp@</div>
-                            <div class="panel panel-default  hidden-xs   @php __hide('productlist_list'); php@">
+                            <div class="panel panel-default  hidden-xs   @php __hide('productlist_list'); php@ @hideSite@">
                                 <div class="panel-heading">
                                     <div class="panel-title">{Похожие товары}</div>
                                 </div>
@@ -281,7 +279,7 @@
                     <div class="center-block">
                         <div class="mobile-filter-wrapper"></div>
                         @DispShop@ @getPhotos@
-                        <div class="spec @php __hide('productlastview'); php@ content-product">
+                        <div class="spec @php __hide('productlastview'); php@ content-product @hideSite@">
                             <div class="">
                                 <div class="">
                                     <div class="inner-nowbuy main">
@@ -324,7 +322,7 @@
             <!--/ toTop -->
 
         </div>
-        <section class="specMain @php __hide('productOdnotipList'); php@">
+        <section class="specMain @php __hide('productOdnotipList'); php@ @hideSite@">
             <div class="container">
                 <div class="">
 
@@ -352,7 +350,7 @@
                 </div>
             </div>
         </section>
-        <section class="specMain @php __hide('productlist_list'); php@">
+        <section class="specMain @php __hide('productlist_list'); php@ @hideSite@">
             <div class="container">
                 <div>
                     <div class="product-head page-header not-center">
@@ -378,7 +376,7 @@
                 </div>
             </div>
         </section>
-        <section class="specMain @php __hide('productlastview'); php@ last-see-product">
+        <section class="specMain @php __hide('productlastview'); php@ last-see-product @hideSite@">
             <div class="container">
                 <div >
                     <div class="product-head page-header not-center">
@@ -425,17 +423,17 @@
                 <div class="col-md-3 col-sm-4 col-xs-12">
                     <div class="h5">{Мой кабинет}</div>
                     <ul>
-                        <li>
+                        <li class="@hideCatalog@">
                             @php if($_SESSION['UsersId']) echo
                             '<a href="/users/order.html">{Отследить заказ}</a>';
                             else echo '
                             <a href="#" data-toggle="modal" data-target="#userModal">{Отследить заказ}</a>'; php@
                         </li>
-                        <li><a href="/users/notice.html">{Уведомления о товарах}</a></li>
+                        <li class="@hideCatalog@"><a href="/users/notice.html">{Уведомления о товарах}</a></li>
                         @php if($_SESSION['UsersId']) echo '
                         <li><a href="/users/message.html">{Связь с менеджерами}</a>
                         </li>
-                        <li><a href="?logout=true">{Выйти}</a></li>'; php@
+                        <li><a href="?logout=true">{Выйти}</a></li>';else echo '<li><a href="#" data-toggle="modal" data-target="#userModal">{Войти}</a></li>';php@
                     </ul>
                 </div>
                 <!-- My Account Links Ends -->
@@ -460,10 +458,10 @@
                     <!-- / Социальные сети -->
 
                     <ul>
-                        <li><a href="/price/" title="Прайс-лист">{Прайс-лист}</a></li>
+                        <li class="@hideCatalog@"><a href="/price/" title="Прайс-лист">{Прайс-лист}</a></li>
                         <li><a href="/news/" title="Новости">{Новости}</a></li>
                         <li><a href="/gbook/" title="Отзывы">{Отзывы}</a></li>
-                        <li><a href="/map/" title="Карта сайта">{Карта сайта}</a></li>
+                        <li class="@hideSite@"><a href="/map/" title="Карта сайта">{Карта сайта}</a></li>
                         <li><a href="/forma/" title="Форма связи">{Форма связи}</a></li>
                     </ul>  
                 </div>
@@ -529,7 +527,6 @@
                             <a href="/users/sendpassword.html" class="pass">{Забыли пароль}</a>
                         </div>
 
-                        @facebookAuth@ @twitterAuth@
                     </div>
                     <div class="modal-footer flex-row">
 
@@ -550,15 +547,15 @@
     <nav class="navbar navbar-fixed-bottom bar bar-tab visible-xs visible-sm">
         <div class="d-flex justify-content-between align-center">
 
-            <a class=" @cart_active@" href="/order/" id="bar-cart">
+            <a class="@cart_active@ @hideCatalog@" href="/order/" id="bar-cart">
                 <span class="icons-cart icons"></span> <span id="sum2" class="">@sum@</span><span class="rubznak">@productValutaName@</span>
 
             </a>
-            <a class="links" href="/users/wishlist.html">
+            <a class="links @hideSite@" href="/users/wishlist.html">
                 <span class="wishlistcount">@wishlistCount@</span><span class="icons icons-wishlist  icons-green icons-small"></span>
 
             </a>
-            <a class="links " href="/compare/">
+            <a class="links @hideSite@" href="/compare/">
                 <span id="mobilnum">@numcompare@</span><span class="icons icons-compare  icons-green icons-small"></span>
 
             </a>

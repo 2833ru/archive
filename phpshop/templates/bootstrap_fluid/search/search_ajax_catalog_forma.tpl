@@ -1,5 +1,4 @@
-
-<div class='news-list'>
+<div class='news-list @hideSite@'>
     <a href="/shop/CID_@productUid@.html">
         <div class="template-pad media">
             <div class="media-body">

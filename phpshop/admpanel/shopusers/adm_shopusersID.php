@@ -1,13 +1,13 @@
 <?php
 
-$TitlePage = __('Редактирование покупателя') . ' #' . $_GET['id'];
+$TitlePage = __('Редактирование пользователя') . ' #' . $_GET['id'];
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['shopusers']);
 PHPShopObj::loadClass('user');
 
 // Стартовый вид
 function actionStart() {
-    global $PHPShopGUI, $PHPShopOrm, $PHPShopModules, $PHPShopSystem;
-
+    global $PHPShopGUI, $PHPShopOrm, $PHPShopModules, $PHPShopSystem, $hideCatalog;
+    
     // Выборка
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_REQUEST['id'])));
 
@@ -18,12 +18,14 @@ function actionStart() {
 
     $PHPShopGUI->action_select['Создать заказ'] = array(
         'name' => 'Создать заказ',
-        'url' => '?path=order&action=new&user=' . $data['id']
+        'url' => '?path=order&action=new&user=' . $data['id'],
+        'class'=> $hideCatalog
     );
 
     $PHPShopGUI->action_select['Заказы пользователя'] = array(
         'name' => 'Заказы пользователя',
-        'url' => '?path=order&where[a.user]=' . $data['id']
+        'url' => '?path=order&where[a.user]=' . $data['id'],
+        'class'=> $hideCatalog
     );
 
     $PHPShopGUI->action_select['Диалоги пользователя'] = array(
@@ -41,7 +43,6 @@ function actionStart() {
         'url' => '?path=dialog&new&user=' . $data['id'] . '&bot=message&id=' . $data['id'] . '&return=dialog'
     );
 
-
     // Яндекс.Карты
     $yandex_apikey = $PHPShopSystem->getSerilizeParam("admoption.yandex_apikey");
     if (empty($yandex_apikey))
@@ -49,7 +50,7 @@ function actionStart() {
 
     // Размер названия поля
     $PHPShopGUI->field_col = 3;
-    $PHPShopGUI->setActionPanel(__("Покупатели") . '<span class="hidden-xs">: ' . $data['name'] . '</span>', array('Создать заказ', 'Заказы пользователя', 'Диалоги пользователя', 'Создать диалог', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'));
+    $PHPShopGUI->setActionPanel(__("Пользователи") . '<span class="hidden-xs">: ' . $data['name'] . '</span>', array('Создать заказ', 'Заказы пользователя', 'Диалоги пользователя', 'Создать диалог', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'));
     $PHPShopGUI->addJSFiles('./js/validator.js');
 
     if ($GLOBALS['PHPShopBase']->codBase == 'utf-8')
@@ -82,23 +83,27 @@ function actionStart() {
             $PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/', 300, false)) .
             $PHPShopGUI->setField("Накопительная скидка", $PHPShopGUI->setInput('text', "cumulative_discount_new", $data['cumulative_discount'], null, 100, false, false, false, '%'))
     );
+    
 
     // Адреса доставок
-    $Tab2 = $PHPShopGUI->loadLib('tab_addres', $data['data_adres']);
+    if (empty($hideCatalog)) {
+        $Tab2 = $PHPShopGUI->loadLib('tab_addres', $data['data_adres']);
 
-    // Бонусы
-    $Tab3 = $PHPShopGUI->loadLib('tab_bonus', $data['id']);
+        // Бонусы
+        $Tab3 = $PHPShopGUI->loadLib('tab_bonus', $data['id']);
 
-    // Заказы
-    $_GET['user'] = $data['id'];
-    $tab_order = $PHPShopGUI->loadLib('tab_order', false, './dialog/');
-    if (!empty($tab_order))
-        $sidebarright[] = array('title' => 'Заказы', 'content' => $tab_order);
 
-    // Корзина
-    $tab_cart = $PHPShopGUI->loadLib('tab_cart', false, './dialog/');
-    if (!empty($tab_cart))
-        $sidebarright[] = array('title' => 'Корзина', 'content' => $tab_cart);
+        // Заказы
+        $_GET['user'] = $data['id'];
+        $tab_order = $PHPShopGUI->loadLib('tab_order', false, './dialog/');
+        if (!empty($tab_order))
+            $sidebarright[] = array('title' => 'Заказы', 'content' => $tab_order);
+
+        // Корзина
+        $tab_cart = $PHPShopGUI->loadLib('tab_cart', false, './dialog/');
+        if (!empty($tab_cart))
+            $sidebarright[] = array('title' => 'Корзина', 'content' => $tab_cart);
+    }
 
     // Диалоги
     $_GET['user_id'] = $data['id'];
@@ -119,7 +124,7 @@ function actionStart() {
     }
 
     // Правый сайдбар
-    if (!empty($sidebarright)) {
+    if (!empty($sidebarright) and empty($hideCatalog)) {
         $PHPShopGUI->setSidebarRight($sidebarright, 3, 'hidden-xs');
         $PHPShopGUI->sidebarLeftRight = 3;
     }

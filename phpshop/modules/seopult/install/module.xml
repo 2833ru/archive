@@ -5,6 +5,7 @@
     <faqlink>https://docs.phpshop.ru/moduli/seo/seo-pult</faqlink>
     <description>Модуль SEO-продвижения.</description>
     <category>seo</category>
+    <site>true</site>
     <adminmenu>
         <title>Promo Pult</title>
         <capability>true</capability>

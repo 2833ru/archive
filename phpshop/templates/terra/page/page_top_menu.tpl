@@ -1,6 +1,1 @@
-<li class="submenu page-submenu">
-    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">@topMenuName@ <i class="fa fa-chevron-down"></i></a>
-    <ul class="dropdown-menu" role="menu">
-       @topMenuList@
-    </ul>
-</li>
+<li class="@topMenuActive@"><a href="/page/CID_@topMenuLink@.html">@topMenuName@</a></li>

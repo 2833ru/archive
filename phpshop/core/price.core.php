@@ -29,7 +29,7 @@ class PHPShopPrice extends PHPShopShopCore {
 
         // Навигация хлебные крошки
         $this->navigation(false, __('Прайс-лист'));
-        
+
         $this->checkXLS();
     }
 
@@ -41,6 +41,10 @@ class PHPShopPrice extends PHPShopShopCore {
         // Перехват модуля
         if ($this->setHook(__CLASS__, __FUNCTION__, false, 'START'))
             return true;
+
+        // Тип работы
+        if ($this->PHPShopSystem->getParam("shop_type") > 0)
+            return $this->setError404();
 
         // Выбор категории для поиска
         $this->category_select();
@@ -119,7 +123,7 @@ class PHPShopPrice extends PHPShopShopCore {
         $this->ParentArray = $this->PHPShopCategoryArray->getKey('parent_to.id', true);
         if (is_array($this->ParentArray[0])) {
             foreach ($this->ParentArray[0] as $val) {
-                if ($this->PHPShopCategoryArray->getParam($val . '.skin_enabled') != 1 and !$this->errorMultibase($val)) {
+                if ($this->PHPShopCategoryArray->getParam($val . '.skin_enabled') != 1 and ! $this->errorMultibase($val)) {
                     $name = $this->PHPShopCategoryArray->getParam($val . '.name');
                     $this->subcategory($val, $name);
                 }
@@ -142,8 +146,7 @@ class PHPShopPrice extends PHPShopShopCore {
         if (empty($Arg[0])) {
             $style = 'class="bgprice"';
             $colspan = 3;
-        }
-        else
+        } else
             $style = 'bgcolor="' . $Arg[0] . '"';
 
         $tr = '<tr ' . $style . '>';
@@ -155,10 +158,10 @@ class PHPShopPrice extends PHPShopShopCore {
                     $width = 20;
                 else
                     $width = false;
-                $tr.=$this->td($val, $width, $colspan);
+                $tr .= $this->td($val, $width, $colspan);
             }
         }
-        $tr.='</tr>';
+        $tr .= '</tr>';
         return $tr;
     }
 
@@ -182,8 +185,7 @@ class PHPShopPrice extends PHPShopShopCore {
             $hook = $this->setHook(__CLASS__, __FUNCTION__, $row);
             if ($hook) {
                 return $hook;
-            }
-            else
+            } else
                 $this->memory_set(__CLASS__ . '.' . __FUNCTION__, 0);
         }
 
@@ -238,7 +240,7 @@ class PHPShopPrice extends PHPShopShopCore {
                     $price = null;
 
 
-                $dis.=$this->tr('#ffffff', $name, $price, $cart);
+                $dis .= $this->tr('#ffffff', $name, $price, $cart);
             }
 
         // Перехват модуля
@@ -248,15 +250,15 @@ class PHPShopPrice extends PHPShopShopCore {
 
         $this->add(PHPShopText::table($dis, 3, 1, 'left', '98%', '#D2D2D2'), true);
     }
-    
-    function getPrice($row){
-        
+
+    function getPrice($row) {
+
         // Перехват модуля
         $hook = $this->setHook(__CLASS__, __FUNCTION__, $row);
         if ($hook)
             return $hook;
-        
-        return parent::price($row,false, true);
+
+        return parent::price($row, false, true);
     }
 
     /**
@@ -299,9 +301,9 @@ class PHPShopPrice extends PHPShopShopCore {
 
     function checkXLS() {
         if (!is_file('UserFiles/Files/price.xls')) {
-            $this->set('onlinePrice','hide d-none');
-        }
-        else $this->set('onlinePrice','price-page-list');
+            $this->set('onlinePrice', 'hide d-none');
+        } else
+            $this->set('onlinePrice', 'price-page-list');
     }
 
 }

@@ -4,32 +4,26 @@
 <p><br></p>
 <form name="users_password" method="post" class="form-horizontal">
 
-    <div class="form-group hidden-lg">
+    <div class="form-group hidden-lg @hideCatalog@">
         <div class="col-xs-4">
             <a class="btn btn-info" href="/users/order.html"><span class="glyphicon glyphicon-shopping-cart"></span> {Мои заказы}</a>
         </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group @hideCatalog@">
         <label class="col-xs-12 col-sm-2 control-label">{Статус}</label>
         <div class="col-xs-4">
             <span class="btn btn-success"><span class="glyphicon glyphicon-user"></span> @user_status@</span>
         </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group @hideCatalog@">
         <label class="col-xs-12 col-sm-2 control-label">{Скидка}</label>
         <div class="col-xs-4">
             <span class="btn btn-warning">@user_cumulative_discount@ %</span>
         </div>
     </div>
-    <div class="form-group @php __hide('user_bonus'); php@">
-        <label class="col-sm-2 col-xs-12 control-label">{Бонусы}</label>
-        <div class="col-xs-4">
-            <span class="btn btn-warning">@user_bonus@</span>
-        </div>
-    </div>
-       <div class="form-group @php __hide('user_bonus'); php@">
+       <div class="form-group @php __hide('user_bonus'); php@ @hideCatalog@">
         <label class="col-sm-2 col-xs-12 control-label">{Бонусы}</label>
         <div class="col-xs-4">
             <span class="btn btn-warning">@user_bonus@ <span class="rubznak">@productValutaName@</span></span>

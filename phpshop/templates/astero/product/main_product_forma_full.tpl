@@ -26,13 +26,13 @@
             <!-- Product Name Starts -->
             <h1 itemprop="name">@productName@</h1>
             <!-- Product Name Ends -->
-            <hr>
+            <hr class="@hideCatalog@">
             <!-- Manufacturer Starts -->
             <ul class="list-unstyled manufacturer product-page-list">
                 <li>
                     @productArt@
                 </li>
-                <li id="items">
+                <li id="items @hideCatalog@">
                     @productSklad@
                 </li>
                 <li>
@@ -42,35 +42,35 @@
                 </li>
                 <li>@promotionInfo@</li>
                 <li>@oneclick@</li>
-                
+
                 <!-- Модуль Vkseller -->
                 <li class="@php __hide('vkseller_link'); php@">
-                    <a class="btn btn-cart" href="@vkseller_link@" target="_blank"><i class="fa fa-vk" aria-hidden="true"></i> Купить в ВКонтакте</a>
+                    <a class="btn btn-cart" href="@vkseller_link@" target="_blank"><i class="fa fa-vk" aria-hidden="true"></i> {Купить в ВКонтакте}</a>
                 </li>
-                
+
                 <!-- Модуль Ozonseller -->
                 <li class="@php __hide('ozonseller_link'); php@">
-                    <a class="btn btn-cart" href="@ozonseller_link@" target="_blank"><i class="fa fa-opera" aria-hidden="true"></i> Купить в OZON</a>
+                    <a class="btn btn-cart" href="@ozonseller_link@" target="_blank"><i class="fa fa-opera" aria-hidden="true"></i> {Купить в} OZON</a>
                 </li>
 
                 <!-- Модуль Wbseller -->
                 <li class="@php __hide('wbseller_link'); php@">
-                    <a class="btn btn-cart" href="@wbseller_link@" target="_blank"><i class="fa fa-wordpress" aria-hidden="true"></i> Купить в Wildberries</a>
+                    <a class="btn btn-cart" href="@wbseller_link@" target="_blank"><i class="fa fa-wordpress" aria-hidden="true"></i> {Купить в} Wildberries</a>
                 </li>
 
-                <li><a href="/pricemail/UID_@productUid@.html">@productBestPrice@</a></li>
+                <li class="@hideCatalog@"><a href="/pricemail/UID_@productUid@.html">@productBestPrice@</a></li>
             </ul>
             <!-- Manufacturer Ends -->
-            <hr>
+            <hr class="@hideCatalog@">
             <!-- Price Starts -->
-            <div class="price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+            <div class="price @hideCatalog@" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                 <span class="price-new  priceService" itemprop="price" content="@productSchemaPrice@">@productPrice@</span><span class="price-new rubznak" itemprop="priceCurrency" content="RUB">@productValutaName@</span> &nbsp;&nbsp;<span class="price-old">@productPriceOld@</span>
             </div>
             @ComStartNotice@
-            <div class="outStock">@productOutStock@</div>
+            <div class="outStock @hideCatalog@">@productOutStock@</div>
             @ComEndNotice@
             <!-- Price Ends -->
-            <hr>
+            <hr class="@hideCatalog@">
             <!-- Available Options Starts -->
 
             <div class="options fix-wrapper">
@@ -82,7 +82,7 @@
 
 
                 @productservices_list@
-                <label class="control-label text-uppercase @elementCartHide@">{Количество}</label>
+                <label class="control-label text-uppercase @elementCartHide@ @hideCatalog@">{Количество}</label>
                 <div class="quant input-group @elementCartHide@">
                     <span class="input-group-btn">
                         <button type="button" class="btn btn-default btn-default_l btn-number"  data-type="minus" data-field="quant[2]">
@@ -97,13 +97,13 @@
                     </span>
                 </div>
                 <p></p>
-                <div class="cart-button button-group cart-list-button-wrapper @elementCartHide@">
+                <div class="cart-button button-group cart-list-button-wrapper @elementCartHide@ @hideCatalog@">
                     <button type="button" class="btn btn-cart addToCartFull" data-num="1" data-uid="@productUid@" data-cart="@productSaleReady@">
                         <i class="icon-basket"></i>                                 
                         <span>@productSale@</span>
                     </button>                                   
                 </div>
-                <div class="cart-button button-group cart-list-button-wrapper  @elementCartOptionHide@">
+                <div class="cart-button button-group cart-list-button-wrapper  @elementCartOptionHide@ @hideCatalog@">
                     <button type="button" class="btn btn-cart addToCartFull" data-num="1" data-uid="@productUid@" data-cart="@productSaleReady@">
                         <i class="icon-basket"></i>                                 
                         <span>@productSale@</span>
@@ -124,13 +124,14 @@
 
 
                 @ComStartNotice@
-                <div class="cart-button button-group compare-list-button-wrapper">
+                <div class="cart-button button-group compare-list-button-wrapper @hideCatalog@">
                     <a class="btn btn-cart" href="/users/notice.html?productId=@productUid@" title="@productNotice@">
                         <i class="icon-mail" aria-hidden="true"></i>                            
                         {Уведомить}
                     </a>                                   
                 </div>
                 @ComEndNotice@ 
+
 
             </div>
 

@@ -5,6 +5,7 @@
     <faqlink>https://docs.phpshop.ru/moduli/chaty-i-zvonki/obratnyi-zvonok-s-saita</faqlink>
     <description>Модуль обратного звонка.</description>
     <category>chat</category>
+    <site>true</site>
     <adminmenu>
         <title>Обратный звонок</title>
         <capability>true</capability>

@@ -52,7 +52,7 @@
 
         <div class="navbar-offcanvas" id="js-bootstrap-offcanvas">
             <ul class="offcanvas-list">
-                <li class="dropdown">
+                <li class="dropdown @hideSite@">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{Каталог} <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
                         @menuCatal@
@@ -62,17 +62,17 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                         <i class="feather iconz-user"></i> {Кабинет }<span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="/users/order.html">{Отследить заказ}</a></li>
-                        <li><a href="/users/notice.html">{Уведомления о товарах}</a></li>
+                        <li class="@hideCatalog@"><a href="/users/order.html">{Отследить заказ}</a></li>
+                        <li class="@hideCatalog@"><a href="/users/notice.html">{Уведомления о товарах}</a></li>
                         <li><a href="/users/message.html">{Связь с менеджерами}</a></li>
-                        @php if($_SESSION['UsersId']) echo '<li><a href="?logout=true">{Выйти}</a></li>'; php@
+                        @php if($_SESSION['UsersId']) echo '<li><a href="?logout=true">{Выйти}</a></li>'; else echo '<li><a href="#" data-toggle="modal" data-target="#userModal">{Войти}</a></li>'; php@
                     </ul>
                 </li>
                 @topMenu@
                 <li class=""><a href="/news/">{Новости}</a></li>
                 <li class=""><a href="/gbook/">{Отзывы}</a></li>
-                <li class=""><a href="/price/">{Прайс-лист}</a></li>
-                <li class=""><a href="/map/">{Карта сайта}</a></li>
+                <li class="@hideCatalog@"><a href="/price/">{Прайс-лист}</a></li>
+                <li class="@hideSite@"><a href="/map/">{Карта сайта}</a></li>
             </ul>
         </div>
 
@@ -87,7 +87,7 @@
                             <a class="header-link-color header-top-link header-link-contact" href="tel:@telNum2@">@telNum2@</a>
                         </div>
                         <div class="col-xs-12 col-sm-6 col-md-6 top-mobile-fix">
-                            <div class="header-wishlist">
+                            <div class="header-wishlist @hideSite@">
                                 <a class="header-link-color link" href="/compare/">
                                     <span class="hidden-sm hidden-xs">
                                         <i class="fa fa-bar-chart-o"></i> {Сравнить} (<span id="numcompare">@numcompare@</span>)<span id="wishlist-total" ></span>
@@ -126,7 +126,7 @@
                         <div class="col-md-6 col-lg-7 hidden-xs hidden-sm header-menu-wrapper">
                             <div class="row">
                                 <ul class="nav navbar-nav main-navbar-top">
-                                    <li class="catalog-menu">
+                                    <li class="catalog-menu @hideSite@">
                                         <a id="nav-catalog-dropdown-link" class="nav-catalog-dropdown-link" aria-expanded="false">{Каталог}
                                         </a>
                                         <ul class="main-navbar-list-catalog-wrapper">
@@ -140,7 +140,7 @@
                             </div>
                         </div>
                         <div class="col-sm-7 col-xs-12 col-md-4 col-lg-3 hidden-xs hidden-sm bottom-mobile-fix">
-                            <div id="cart" class="btn-group header-color">
+                            <div id="cart" class="btn-group header-color @hideCatalog@">
                                 <a id="cartlink"  class="btn btn-block btn-lg dropdown-toggle" href="/order/">
                                     <span id="cart-total">
                                         <i class="feather iconz-trash"></i>
@@ -182,21 +182,21 @@
                             <h5 class="user-title">{Личный кабинет}</h5>
                             <ul class="user-list">
                                 <li><a href="/users/">@UsersLogin@</a></li>
-                                <li><a href="/users/order.html">{Отследить заказ}</a></li>
-                                <li><a href="/users/notice.html">{Уведомления о товарах}</a></li>
+                                <li class="@hideCatalog@"><a href="/users/order.html">{Отследить заказ}</a></li>
+                                <li class="@hideCatalog@"><a href="/users/notice.html">{Уведомления о товарах}</a></li>
                                 <li><a href="/users/message.html">{Связь с менеджерами}</a></li>
-                                @php if($_SESSION['UsersId']) echo '<li><a href="?logout=true">{Выйти}</a></li>'; php@
+                                @php if($_SESSION['UsersId']) echo '<li><a href="?logout=true">{Выйти}</a></li>'; else echo '<li><a href="#" data-toggle="modal" data-target="#userModal">{Войти}</a></li>'; php@
                             </ul>
                         </div>
-                        <h3 class="side-heading hidden-xs hidden-sm">{Категории}</h3>
-                        <ul class="list-group sidebar-nav hidden-xs hidden-sm">
+                        <h3 class="side-heading hidden-xs hidden-sm @hideSite@">{Категории}</h3>
+                        <ul class="list-group sidebar-nav hidden-xs hidden-sm @hideSite@">
                             @leftCatal@
                         </ul>
                         <div class="hide" id="faset-filter">
                             <h3 class="side-heading filter-title">{Фильтр товаров }<a href="?" id="faset-filter-reset" data-toggle="tooltip" data-placement="top" title="{Сбросить фильтр}"><span class="glyphicon glyphicon-remove"></span></a></h3>
                             <div class="list-group filter-body-fix">
                                 <div id="faset-filter-body">{Загрузка}...</div>
-                                <div id="price-filter-body">
+                                <div id="price-filter-body" class="@hideCatalog@">
                                     <h4>{Цена}</h4>
                                     <form method="get" id="price-filter-form">
                                         <div class="row">
@@ -221,8 +221,6 @@
                                 @pageCatal@
                             </div>
                             <div class="banner-block">@banersDisp@</div>
-
-                            @rightMenu@
                             @leftMenu@
                         </div>
                     </div>
@@ -240,7 +238,7 @@
                         <div class="hidden-xs banner-block">@banersDispHorizontal@</div>
                     </div>
 
-                    <div class="col-xs-12 @php __hide('now_buying'); php@">
+                    <div class="col-xs-12 @php __hide('now_buying'); php@ @hideSite@">
                         <h2 class="main-page-title">@now_buying@</h2>
                         <div class="owl-carousel nowBuy">
                             @nowBuy@
@@ -293,10 +291,10 @@
                     <div class="col-md-3 col-sm-4 col-xs-12">
                         <h5>{Личный кабинет}</h5>
                         <ul>
-                            <li><a href="/users/order.html">{Отследить заказ}</a></li>
-                            <li><a href="/users/notice.html">{Уведомления о товарах}</a></li>
+                            <li class="@hideCatalog@"><a href="/users/order.html">{Отследить заказ}</a></li>
+                            <li class="@hideCatalog@"><a href="/users/notice.html">{Уведомления о товарах}</a></li>
                             @php if($_SESSION['UsersId']) echo '<li><a href="/users/message.html">{Связь с менеджерами}</a></li>
-                            <li><a href="?logout=true">{Выйти}</a></li>'; php@
+                            <li><a href="?logout=true">{Выйти}</a></li>'; else echo '<li><a href="#" data-toggle="modal" data-target="#userModal">{Войти}</a></li>'; php@
                         </ul>
                     </div>
                     <!-- My Account Links Ends -->
@@ -304,10 +302,10 @@
                     <div class="col-md-3 col-sm-4 col-xs-12">
                         <h5>{Навигация}</h5>
                         <ul>
-                            <li><a href="/price/" title="{Прайс-лист}">{Прайс-лист}</a></li>
+                            <li class="@hideCatalog@"><a href="/price/" title="{Прайс-лист}">{Прайс-лист}</a></li>
                             <li><a href="/news/" title="{Новости}">{Новости}</a></li>
                             <li><a href="/gbook/" title="{Отзывы}">{Отзывы}</a></li>
-                            <li><a href="/map/" title="{Карта сайта}">{Карта сайта}</a></li>
+                            <li class="@hideSite@"><a href="/map/" title="{Карта сайта}">{Карта сайта}</a></li>
                             <li><a href="/forma/" title="{Форма связи}">{Форма связи}</a></li>
                         </ul>
                     </div>
@@ -371,7 +369,7 @@
                 <span class="icon icon-person"></span>
                 <span class="tab-label">{Кабинет}</span>
             </a>
-            <a class="tab-item @cart_active@" href="/order/" id="bar-cart">
+            <a class="tab-item @cart_active@ @hideSite@" href="/order/" id="bar-cart">
                 <span class="icon icon-download"></span> <span class="badge badge-positive" id="mobilnum">@cart_active_num@</span>
                 <span class="tab-label">{Корзина}</span>
             </a>
@@ -421,7 +419,6 @@
                                 <a href="/users/sendpassword.html" class="pass">{Забыли пароль}</a>
                             </div>
 
-                            @facebookAuth@ @twitterAuth@
                         </div>
                         <div class="modal-footer flex-row">
 

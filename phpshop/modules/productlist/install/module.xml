@@ -5,6 +5,7 @@
     <description>ћодуль списка товаров из текущей категории.</description>
     <category>sale</category>
     <faqlink>https://docs.phpshop.ru/moduli/prodazhi/product-list</faqlink>
+    <catalog>true</catalog>
     <adminmenu>
         <title>Product List</title>
         <capability>true</capability>
