@@ -13,6 +13,9 @@ function setModOptionGUI($name, $format, $value) {
                 $result = $PHPShopGUI->setRadio($name, 1, 'Да',$value).$PHPShopGUI->setRadio($name, 2, 'Нет',$value);
                 break;
 
+            case 'editor':
+                $result = setEditor($name, $value);
+                break;
             default:
                 $result = $PHPShopGUI->setInput($format, $name, $value);
                 break;
@@ -29,29 +32,58 @@ function addModOption($data) {
     $m_data = $PHPShopOrm->select();
     $vendor = unserialize($m_data['option']);
 
+    $Tab10 = '';
     if (is_array($vendor)) {
 
         if (!empty($vendor['option_1_name']))
-            $Tab10 = $PHPShopGUI->setField($vendor['option_1_name'], setModOptionGUI("option1_new", $vendor['option_1_format'], $data['option1']));
+            if($vendor['option_1_format'] == 'editor')
+                $Tab10 .= $PHPShopGUI->setCollapse($vendor['option_1_name'], setModOptionGUI("option1_new", $vendor['option_1_format'], $data['option1']), 'in', false);
+            else
+                $Tab10 = $PHPShopGUI->setField($vendor['option_1_name'], setModOptionGUI("option1_new", $vendor['option_1_format'], $data['option1']));
 
         if (!empty($vendor['option_2_name']))
-            $Tab10.= $PHPShopGUI->setField($vendor['option_2_name'], setModOptionGUI("option2_new", $vendor['option_2_format'], $data['option2']));
+            if($vendor['option_2_format'] == 'editor')
+                $Tab10 .= $PHPShopGUI->setCollapse($vendor['option_2_name'], setModOptionGUI("option2_new", $vendor['option_2_format'], $data['option2']), 'in', false);
+            else
+                $Tab10.= $PHPShopGUI->setField($vendor['option_2_name'], setModOptionGUI("option2_new", $vendor['option_2_format'], $data['option2']));
+
 
         if (!empty($vendor['option_3_name']))
-            $Tab10.= $PHPShopGUI->setField($vendor['option_3_name'], setModOptionGUI("option3_new", $vendor['option_3_format'], $data['option3']));
+            if($vendor['option_3_format'] == 'editor')
+                $Tab10 .= $PHPShopGUI->setCollapse($vendor['option_3_name'], setModOptionGUI("option3_new", $vendor['option_3_format'], $data['option3']), 'in', false);
+            else
+                $Tab10.= $PHPShopGUI->setField($vendor['option_3_name'], setModOptionGUI("option3_new", $vendor['option_3_format'], $data['option3']));
 
         if (!empty($vendor['option_4_name']))
-            $Tab10.= $PHPShopGUI->setField($vendor['option_4_name'], setModOptionGUI("option4_new", $vendor['option_4_format'], $data['option4']));
-        
+            if($vendor['option_4_format'] == 'editor')
+                $Tab10 .= $PHPShopGUI->setCollapse($vendor['option_4_name'], setModOptionGUI("option4_new", $vendor['option_4_format'], $data['option4']), 'in', false);
+            else
+                $Tab10.= $PHPShopGUI->setField($vendor['option_4_name'], setModOptionGUI("option4_new", $vendor['option_4_format'], $data['option4']));
+
         if (!empty($vendor['option_5_name']))
-            $Tab10.= $PHPShopGUI->setField($vendor['option_5_name'], setModOptionGUI("option5_new", $vendor['option_5_format'], $data['option5']));
+            if($vendor['option_5_format'] == 'editor')
+                $Tab10 .= $PHPShopGUI->setCollapse($vendor['option_5_name'], setModOptionGUI("option5_new", $vendor['option_5_format'], $data['option5']), 'in', false);
+            else
+                $Tab10.= $PHPShopGUI->setField($vendor['option_5_name'], setModOptionGUI("option5_new", $vendor['option_5_format'], $data['option5']));
     }
 
 
-
-    $PHPShopGUI->addTab(array("Дополнительно", $Tab10, 450));
+    if(!empty($Tab10))
+    $PHPShopGUI->addTab(array("Дополнительно", $Tab10, true));
 }
 
+function setEditor($name, $value){
+    global $PHPShopSystem, $PHPShopBase;
+    $oFCKeditor2 = new Editor($name);
+    $oFCKeditor2->Height = '450';
+    $oFCKeditor2->Config['EditorAreaCSS'] = chr(47) . "phpshop" . chr(47) . "templates" . chr(47) . $PHPShopSystem->getValue('skin') . chr(47) . $PHPShopBase->getParam('css.default');
+    $oFCKeditor2->ToolbarSet = 'Normal';
+    $oFCKeditor2->Value = $value;
+    $editor = $oFCKeditor2->AddGUI();
+    $editor .= '<hr>';
+
+    return $editor;
+}
 $addHandler = array(
     'actionStart' => 'addModOption',
     'actionDelete' => false,

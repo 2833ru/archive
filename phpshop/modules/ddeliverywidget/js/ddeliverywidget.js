@@ -13,7 +13,8 @@ function ddeliverywidgetStart() {
         change: function(data) {
 
             $('<input type="hidden" name="ddeliveryToken" value="' + data['client_token'] + '">').insertAfter('#d');
-
+            $('input[name="ddeliveryReq"]').val(data['info']);
+            
             $("#DosSumma").html(data['client_price']);
             $("#TotalSumma").html(Number(data['client_price']) + Number($('#OrderSumma').val()));
             $('input[name="ddeliverySum"').val(data['client_price']);
@@ -22,7 +23,7 @@ function ddeliverywidgetStart() {
             $('input[name="flat_new"]').val(data['to_flat']);
             $('input[name="house_new"]').val(data['to_house']);
             $('input[name="street_new"]').val(data['to_street']);
-            $('input[name="ddeliveryReq"]').val(data['info']);
+            
             $('#deliveryInfo').html(data['info']);
             $('#ddelivery-close').text('Продолжить').addClass('btn-success');
 

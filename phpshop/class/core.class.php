@@ -244,25 +244,18 @@ class PHPShopCore {
 
         if ($this->PHPShopSystem) {
 
-
-            // Мультибаза
-            if (defined("HostID")) {
-                $this->PHPShopSystem->setParam("title", HostTitle);
-                $this->PHPShopSystem->setParam("descrip", HostDescription);
-            }
-
             if (!empty($this->title))
-                $this->set('pageTitl', $this->title);
+                $this->set('pageTitl', strip_tags($this->title));
             else
                 $this->set('pageTitl', $this->PHPShopSystem->getValue("title"));
 
             if (!empty($this->description))
-                $this->set('pageDesc', $this->description);
+                $this->set('pageDesc', strip_tags($this->description));
             else
                 $this->set('pageDesc', $this->PHPShopSystem->getValue("descrip"));
 
             if (!empty($this->keywords))
-                $this->set('pageKeyw', $this->keywords);
+                $this->set('pageKeyw', strip_tags($this->keywords));
             else
                 $this->set('pageKeyw', $this->PHPShopSystem->getValue("keywords"));
         }

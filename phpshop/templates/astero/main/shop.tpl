@@ -142,7 +142,7 @@
                 <!-- Main Header Ends -->
             </div>
             <!-- Nested Container Ends -->
-            
+
             <!-- Header Area Background Block Starts -->
             <div class="header-area-background-block"></div>
             <!-- Header Area Background Block Ends -->
@@ -239,12 +239,12 @@
                         <!-- Товар дня -->
                         @productDay@
                         <!-- Товар дня -->
-                        
+
                         <h3 class="side-heading">Полезная информация</h3>
                         <div class="list-group sidebar-nav">
                             @pageCatal@
                         </div>  
-                        
+
                         @rightMenu@
                     </div>
                 </div>
@@ -255,10 +255,10 @@
                     @getPhotos@
                 </div>
                 <div class="col-xs-12">
-                    
-                        <div class="banner-block">
-                            @banersDisp@
-                        </div>
+
+                    <div class="banner-block">
+                        @banersDisp@
+                    </div>
                 </div>
                 <!-- Primary Content Ends -->
             </div>
@@ -320,6 +320,15 @@
                         <h4 class="lead">
                             Тел: <span>@telNum@</span>
                         </h4>
+                        <div class="footer-social">
+
+                            <!-- Social Button -->
+                            <a class="social-button hidden-xs hidden-sm" href="#" title="Поделится в Facebook"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                            <a class="social-button hidden-xs hidden-sm" href="#" title="Поделится в Контакте"><i class="fa fa-vk" aria-hidden="true"></i></a>
+                            <a class="social-button hidden-xs hidden-sm" href="#" title="Поделится в Одноклассники"><i class="fa fa-odnoklassniki" aria-hidden="true"></i></a>
+                            <!--/ Social Button -->
+
+                        </div>
                     </div>
                     <!-- Contact Us Ends -->
                 </div>
@@ -413,7 +422,7 @@
             </div>
         </div>
         <!--/ Модальное окно авторизации-->
-        
+
         <!-- Модальное окно мобильного поиска -->
         <div class="modal fade bs-example-modal-sm" id="searchModal" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog modal-sm">
@@ -438,7 +447,7 @@
         </div>
         <!--/ Модальное окно мобильного поиска -->
 
-    <!-- Модальное окно returncall-->
+        <!-- Модальное окно returncall-->
         <div class="modal fade bs-example-modal-sm" id="returnCallModal" tabindex="-1" role="dialog"  aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -446,9 +455,9 @@
                         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                         <h4 class="modal-title">@leftMenuName@</h4>
                     </div>
-                     <form role="form" method="post" name="user_forma" action="@ShopDir@/returncall/">
-                    <div class="modal-body">
-                       
+                    <form role="form" method="post" name="user_forma" action="@ShopDir@/returncall/">
+                        <div class="modal-body">
+
                             <div class="form-group">
                                 <input type="text" name="returncall_mod_name" class="form-control" placeholder="Имя..." required="">
                             </div>
@@ -462,18 +471,18 @@
                                 <textarea placeholder="Сообщение" class="form-control" name="returncall_mod_message"></textarea>
                             </div>
                             @returncall_captcha@
-                           
-                       
-                    </div>
-                     <div class="modal-footer">
-                                <input type="hidden" name="returncall_mod_send" value="1">
-                                <button type="submit" class="btn btn-primary">Заказать звонок</button>
-                     </div>
-                     </form>
+
+
+                        </div>
+                        <div class="modal-footer">
+                            <input type="hidden" name="returncall_mod_send" value="1">
+                            <button type="submit" class="btn btn-primary">Заказать звонок</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-        
+
 
         <!-- JQuery Plugins  -->
         <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/bootstrap.min.js"></script>

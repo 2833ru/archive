@@ -1,6 +1,6 @@
 <?php
 
-$TitlePage=__('Редактирование Текстового Блока #'.$_GET['id']);
+$TitlePage = __('Редактирование Текстового Блока #' . $_GET['id']);
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['menu']);
 
 // Заполняем выбор
@@ -8,7 +8,8 @@ function setSelectChek($n) {
     $i = 1;
     while ($i <= 10) {
         if ($n == $i)
-            $s = "selected"; else
+            $s = "selected";
+        else
             $s = "";
         $select[] = array($i, $i, $s);
         $i++;
@@ -22,7 +23,7 @@ function actionStart() {
     // Выборка
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
 
-    $PHPShopGUI->setActionPanel(__("Редактирование Блока: ").$data['name'], array('Удалить') ,array('Сохранить','Сохранить и закрыть'));
+    $PHPShopGUI->setActionPanel(__("Редактирование Блока: ") . $data['name'], array('Удалить'), array('Сохранить', 'Сохранить и закрыть'));
 
     // Редактор 1
     $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));
@@ -37,22 +38,22 @@ function actionStart() {
 
     // Содержание закладки 1
     $Tab1 = $PHPShopGUI->setField("Название:", $PHPShopGUI->setInput("text", "name_new", $data['name'], "none", 500)) .
-             $PHPShopGUI->setField("Статус:",$PHPShopGUI->setRadio("flag_new", 1, "Включить", $data['flag']) . $PHPShopGUI->setRadio("flag_new", 0, "Выключить", $data['flag'])) .
-            $PHPShopGUI->setField("Позиция:", $PHPShopGUI->setSelect("num_new", $Select1,150)) .
-            $PHPShopGUI->setField("Место:", $PHPShopGUI->setSelect("element_new", $Select2,150)) .
+            $PHPShopGUI->setField("Статус:", $PHPShopGUI->setRadio("flag_new", 1, "Включить", $data['flag']) . $PHPShopGUI->setRadio("flag_new", 0, "Выключить", $data['flag'])) .
+            $PHPShopGUI->setField("Позиция:", $PHPShopGUI->setSelect("num_new", $Select1, 150)) .
+            $PHPShopGUI->setField("Место:", $PHPShopGUI->setSelect("element_new", $Select2, 150)) .
             $PHPShopGUI->setLine() .
             $PHPShopGUI->setField("Таргетинг:", $PHPShopGUI->setInput("text", "dir_new", $data['dir']) .
                     $PHPShopGUI->setHelp(__('* Пример: /page/,/news/. Можно указать несколько адресов через запятую.')));
-    
+
     $Tab1.=$PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'));
 
-    $Tab1.= $PHPShopGUI->setField("Содержание",$oFCKeditor->AddGUI());
-    
-        // Запрос модуля на закладку
+    $Tab1.= $PHPShopGUI->setField("Содержание", $oFCKeditor->AddGUI());
+
+    // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1,true));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true));
 
 
     // Вывод кнопок сохранить и выход в футер
@@ -75,27 +76,28 @@ function actionSave() {
     // Сохранение данных
     actionUpdate();
 
-    header('Location: ?path='.$_GET['path']);
+    header('Location: ?path=' . $_GET['path']);
 }
 
 // Функция обновления
 function actionUpdate() {
     global $PHPShopOrm, $PHPShopModules;
-    
-        // Мультибаза
-    $_POST['servers_new'] = null;
+
+    // Мультибаза
+    $_POST['servers_new'] = "";
     if (is_array($_POST['servers']))
         foreach ($_POST['servers'] as $v)
-            $_POST['servers_new'].="i" . $v . "i";
+            if ($v != 'null' and !strstr($v, ','))
+                $_POST['servers_new'].="i" . $v . "i";
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
 
     if (empty($_POST['flag_new']))
         $_POST['flag_new'] = 0;
-    
+
     $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['rowID']));
-    return array('success'=>$action);
+    return array('success' => $action);
 }
 
 // Функция удаления
@@ -105,7 +107,7 @@ function actionDelete() {
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
     $action = $PHPShopOrm->delete(array('id' => '=' . $_POST['rowID']));
-    return array('success'=>$action);
+    return array('success' => $action);
 }
 
 // Обработка событий
@@ -113,5 +115,4 @@ $PHPShopGUI->getAction();
 
 // Вывод формы при старте
 $PHPShopGUI->setAction($_GET['id'], 'actionStart', 'none');
-
 ?>

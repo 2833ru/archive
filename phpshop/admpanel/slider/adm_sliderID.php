@@ -20,7 +20,7 @@ function actionStart() {
             $PHPShopGUI->setField(__("Описание"), $PHPShopGUI->setTextarea("alt_new", $data['alt'])) .
             $PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'));
 
-   
+
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
@@ -71,10 +71,11 @@ function actionUpdate() {
     $_POST['image_new'] = iconAdd();
 
     // Мультибаза
-    $_POST['servers_new'] = null;
+    $_POST['servers_new'] = "";
     if (is_array($_POST['servers']))
         foreach ($_POST['servers'] as $v)
-            $_POST['servers_new'].="i" . $v . "i";
+            if ($v != 'null' and !strstr($v, ','))
+                $_POST['servers_new'].="i" . $v . "i";
 
     $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['rowID']));
     return array('success' => $action);

@@ -16,8 +16,8 @@ PHPShopObj::loadClass("payment");
 PHPShopObj::loadClass("modules");
 PHPShopObj::loadClass("system");
 
-$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, false);
-
+$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, true);
+$PHPShopSystem = new PHPShopSystem();
 $PHPShopModules = new PHPShopModules($_classPath . "modules/");
 $PHPShopModules->checkInstall('netpay');
 

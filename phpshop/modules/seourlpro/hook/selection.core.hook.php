@@ -3,6 +3,7 @@
  * Redirect на seo страницу брендов
  */
 function v_hook($obj, $data, $rout){
+
     if($rout == "START"){
 
         // Настройки модуля

@@ -150,57 +150,62 @@ function UpdateDeliveryJq(xid, param, stop_hook) {
                 $("#adres_id").change();
 
                 // Подсказки DaData.ru
-                var
+                if (typeof $('#body').attr('data-token') !== 'undefined' && $('#body').attr('data-token').length)
+                    var DADATA_TOKEN = $('#body').attr('data-token');
+                if(DADATA_TOKEN != false){
+                    var
                         token = DADATA_TOKEN,
                         type = "ADDRESS",
                         $city = $("form[name='forma_order'] input[name='city_new']"),
                         $street = $("form[name='forma_order'] input[name='street_new']"),
                         $house = $("form[name='forma_order'] input[name='house_new']");
 
-                $city.suggestions({
-                    token: token,
-                    type: type,
-                    hint: false,
-                    bounds: "city-settlement",
-                    onSelect: showPostalCode,
-                    onSelectNothing: clearPostalCode
-                });
+                    $city.suggestions({
+                        token: token,
+                        type: type,
+                        hint: false,
+                        bounds: "city-settlement",
+                        onSelect: showPostalCode,
+                        onSelectNothing: clearPostalCode
+                    });
 
-                $street.suggestions({
-                    token: token,
-                    type: type,
-                    hint: false,
-                    bounds: "street",
-                    constraints: $city,
-                    onSelect: showPostalCode,
-                    onSelectNothing: clearPostalCode
-                });
+                    $street.suggestions({
+                        token: token,
+                        type: type,
+                        hint: false,
+                        bounds: "street",
+                        constraints: $city,
+                        onSelect: showPostalCode,
+                        onSelectNothing: clearPostalCode
+                    });
 
-                $house.suggestions({
-                    token: token,
-                    type: type,
-                    hint: false,
-                    bounds: "house",
-                    constraints: $street,
-                    onSelect: showPostalCode,
-                    onSelectNothing: clearPostalCode
-                });
-                function showPostalCode(suggestion) {
-                    $("[name='index_new']").val(suggestion.data.postal_code);
+                    $house.suggestions({
+                        token: token,
+                        type: type,
+                        hint: false,
+                        bounds: "house",
+                        constraints: $street,
+                        onSelect: showPostalCode,
+                        onSelectNothing: clearPostalCode
+                    });
+                    function showPostalCode(suggestion) {
+                        $("[name='index_new']").val(suggestion.data.postal_code);
+                    }
+                    function clearPostalCode() {
+                        $("[name='index_new']").val("");
+                    }
+                    /*
+                    $("form[name='forma_order'] input[name='fio_new']").suggestions({
+                        token: DADATA_TOKEN,
+                        type: "NAME",
+                        count: 5
+                    });*/
+                    $("form[name='forma_order'] input[name='org_name_new']").suggestions({
+                        token: DADATA_TOKEN,
+                        type: "PARTY",
+                        count: 5
+                    });
                 }
-                function clearPostalCode() {
-                    $("[name='index_new']").val("");
-                }
-                $("form[name='forma_order'] input[name='fio_new']").suggestions({
-                    token: DADATA_TOKEN,
-                    type: "NAME",
-                    count: 5
-                });
-                $("form[name='forma_order'] input[name='org_name_new']").suggestions({
-                    token: DADATA_TOKEN,
-                    type: "PARTY",
-                    count: 5
-                });
             }
         }
     });
@@ -339,18 +344,20 @@ $(document).ready(function() {
         str = ".showYurDataForPaymentClass" + $("input#order_metod:checked").val();
         if (str != "" && $(str).html()) {
             $("#showYurDataForPaymentLoad").html($(str).clone().removeClass().show());
-            $("#showYurDataForPaymentLoad input[name='org_name_new']").suggestions({
-                token: DADATA_TOKEN,
-                type: "PARTY",
-                count: 5,
-                onSelect: showSuggestion
-            });
-            $("#showYurDataForPaymentLoad input[name='org_bank_new']").suggestions({
-                token: DADATA_TOKEN,
-                type: "BANK",
-                count: 5,
-                onSelect: showSuggestionBank
-            });
+            if(DADATA_TOKEN != false){
+                $("#showYurDataForPaymentLoad input[name='org_name_new']").suggestions({
+                    token: DADATA_TOKEN,
+                    type: "PARTY",
+                    count: 5,
+                    onSelect: showSuggestion
+                });
+                $("#showYurDataForPaymentLoad input[name='org_bank_new']").suggestions({
+                    token: DADATA_TOKEN,
+                    type: "BANK",
+                    count: 5,
+                    onSelect: showSuggestionBank
+                });
+            }
         }
         else {
             $("#showYurDataForPaymentLoad").html('');

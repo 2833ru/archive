@@ -998,13 +998,14 @@ $(document).ready(function() {
         // Опции характеристики
         else if ($('#optionMessage').html()) {
             var optionCheck = true;
+            var optionValue=$('#allOptionsSet' + $(this).attr('data-uid')).val();
             $('.optionsDisp select').each(function() {
-                if ($(this).hasClass('req') && $(this).val() == "")
+                if ($(this).hasClass('req') && optionValue === '')
                     optionCheck = false;
             });
 
             if (optionCheck)
-                addToCartList($(this).attr('data-uid'), $('input[name="quant[2]"]').val(), $(this).attr('data-uid'), $('#allOptionsSet' + $(this).attr('data-uid')).val());
+                addToCartList($(this).attr('data-uid'), $('input[name="quant[2]"]').val(), $(this).attr('data-uid'), optionValue);
             else
                 showAlertMessage($('#optionMessage').html());
         }
@@ -1059,6 +1060,25 @@ $(document).ready(function() {
         });
     });
 
+    //  Social Button
+    $('.social-button').on('click', function(e) {
+        e.preventDefault();
+        
+        var u = location.href;
+        var t = document.title;
+        var h = document.location.host;
+        var d = $('meta[name="description"]').attr('content');
+
+        if ($(this).find("i").hasClass('fa-facebook'))
+            path = '//www.facebook.com/sharer/sharer.php?u=' + u;
+        else if ($(this).find("i").hasClass('fa-vk'))
+            path = '//vk.com/share.php?url=' + u + '&title=' + t + '&description=' + d + '&image=//' + h + $('#logo img').attr('src');
+        else if ($(this).find("i").hasClass('fa-odnoklassniki'))
+            path = '//ok.ru/dk?st.cmd=addShare&st._surl=' + u + '&title=' + t;
+
+        if (path)
+            window.open(path, '_blank', 'scrollbars=0, resizable=1, menubar=0, left=100, top=100, width=550, height=440, toolbar=0, status=0');
+    });
 
     // plugin bootstrap minus and plus http://jsfiddle.net/laelitenetwork/puJ6G/
     $('.btn-number').click(function(e) {
@@ -1107,6 +1127,7 @@ $(document).ready(function() {
     var DADATA_TOKEN = $('#body').attr('data-token');
     if (DADATA_TOKEN) {
 
+        /*
         $('[name="name_new"]').suggestions({
             token: DADATA_TOKEN,
             type: "NAME",
@@ -1131,6 +1152,7 @@ $(document).ready(function() {
             },
             count: 5
         });
+        */
         $('[name="oneclick_mod_name"]').suggestions({
             token: DADATA_TOKEN,
             type: "NAME",
@@ -1147,12 +1169,13 @@ $(document).ready(function() {
             },
             count: 5
         });
+        /*
         $('[type="email"]').suggestions({
             token: DADATA_TOKEN,
             type: "EMAIL",
             suggest_local: false,
             count: 5
-        });
+        });*/
         $('[name="org_name"]').suggestions({
             token: DADATA_TOKEN,
             type: "PARTY",

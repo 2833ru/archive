@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.9</version>
+    <version>2.0</version>
     <name>Яндекс.Заказ</name>
     <description>Модуль заказов через Яндекс.Маркет через CPA модель.</description>
     <faqlink>http://faq.phpshop.ru/page/yandex-cart.html</faqlink>
-    <status>update</status>
     <category>yandex,sale</category>
+    <status>update</status>
     <adminmenu>
         <title>Яндекс.Заказ</title>
         <capability>true</capability>

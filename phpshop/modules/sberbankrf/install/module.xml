@@ -4,7 +4,6 @@
     <name>Сбербанк России</name>
     <description>Модуль интеграции интернет-магазина с платежным шлюзом Сбербанка РФ</description>
     <category>payment</category>
-    <status>new</status>
      <adminmenu>
         <title>Сбербанк России</title>
         <capability>true</capability>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<module>
+    <version>1.0 Beta</version>
+    <name>Мультиязыки</name>
+    <description>Модуль дополнительных языков.</description>
+    <category>develop,template</category>
+    <faqlink>http://faq.phpshop.ru/page/multilanguages.html</faqlink>
+    <status>new</status>
+    <adminmenu>
+        <title>Мультиязыки</title>
+        <capability>true</capability>
+        <podmenu>
+            <podmenu_name>Обзор языков</podmenu_name>
+            <podmenu_action>dir.multilanguages</podmenu_action>
+        </podmenu>
+        <podmenu>
+            <podmenu_name>Новый язык</podmenu_name>
+            <podmenu_action>dir.multilanguages&amp;action=new</podmenu_action>
+        </podmenu>
+    </adminmenu>
+</module>

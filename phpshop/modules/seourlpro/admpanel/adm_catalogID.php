@@ -4,6 +4,7 @@
 function addSeoUrlPro($data) {
     global $PHPShopGUI;
 
+    // Каталоги товаров
     if (isset($data['cat_seo_name'])) {
 
         if (empty($data['cat_seo_name'])) {
@@ -20,6 +21,16 @@ function addSeoUrlPro($data) {
 
 
         $Tab3 = $PHPShopGUI->setField("SEO ссылка:", $PHPShopGUI->setInput("text", "cat_seo_name_new", $data['cat_seo_name'], "left", false, false, false, false, '/',  '.html'), 1, 'Можно использовать вложенные ссылки /sony/plazma/televizor');
+
+        $PHPShopGUI->addTab(array("SEO", $Tab3, 450));
+    }
+    // Каталог товаров
+    elseif (isset($data['page_cat_seo_name'])){
+
+        if (empty($data['page_cat_seo_name']))
+            $data['news_seo_name'] = PHPShopString::toLatin($data['name']);
+
+        $Tab3 = $PHPShopGUI->setField("SEO ссылка:", $PHPShopGUI->setInput("text", "page_cat_seo_name_new", $data['page_cat_seo_name'], "left", false, false, false, false, '/',  '.html'), 1);
 
         $PHPShopGUI->addTab(array("SEO", $Tab3, 450));
     }

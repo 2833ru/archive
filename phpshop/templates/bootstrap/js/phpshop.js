@@ -928,14 +928,16 @@ $(document).ready(function() {
         // Опции характеристики
         else if ($('#optionMessage').html()) {
             var optionCheck = true;
+            var optionValue=$('#allOptionsSet' + $(this).attr('data-uid')).val();
             $('.optionsDisp select').each(function() {
-                if ($(this).hasClass('req') && $(this).val() == "" )
+                if ($(this).hasClass('req') && optionValue === '')
                     optionCheck = false;
             });
-            
-            if(optionCheck)
-            addToCartList($(this).attr('data-uid'), $('input[name="quant[2]"]').val(), $(this).attr('data-uid'), $('#allOptionsSet' + $(this).attr('data-uid')).val());
-            else  showAlertMessage($('#optionMessage').html());
+
+            if (optionCheck)
+                addToCartList($(this).attr('data-uid'), $('input[name="quant[2]"]').val(), $(this).attr('data-uid'), optionValue);
+            else
+                showAlertMessage($('#optionMessage').html());
         }
         // Обычный товар
         else {

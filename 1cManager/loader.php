@@ -73,14 +73,33 @@ switch ($_GET['command']) {
                     $PHPShopOrder = new PHPShopOrderFunction($id);
 
                 $order = unserialize($row['orders']);
-                //$status=unserialize($row['status']);
                 $mail = $order['Person']['mail'];
                 $user = $row['user'];
-                $name = $order['Person']['name_person'] . $row['fio'];
-                $company = str_replace("&quot;", '"', $order['Person']['org_name'] . $row['org_name']);
-                $inn = $order['Person']['org_inn'] . $row['org_inn'];
-                $kpp = $order['Person']['org_kpp'] . $row['org_kpp'];
-                $tel = $order['Person']['tel_code'] . " " . $order['Person']['tel_name'] . $row['tel'];
+
+                // ФИО
+                if (empty($row['fio']))
+                    $name = $order['Person']['name_person'];
+                else
+                    $name = $row['fio'];
+
+                // Реквизиты старого образца
+                if (empty($row['org_inn'])) {
+                    $company = str_replace("&quot;", '"', $order['Person']['org_name']);
+                    $inn = $order['Person']['org_inn'];
+                    $kpp = $order['Person']['org_kpp'];
+                }
+                // Реквизиты нового образца
+                else {
+                    $company = str_replace("&quot;", '"', $row['org_name']);
+                    $inn = $row['org_inn'];
+                    $kpp = $row['org_kpp'];
+                }
+
+                if (empty($row['tel'])) {
+                    $tel = $order['Person']['tel_code'] . " " . $order['Person']['tel_name'];
+                } else {
+                    $tel = str_replace(array('&#43;', '&#43'), '+', $row['tel']);
+                }
 
                 // формируем адрес для новой структуры таблицы заказов
                 if ($row['country'])
@@ -110,7 +129,7 @@ switch ($_GET['command']) {
                 $adres = PHPShopSecurity::CleanOut($adres);
                 $oplata = $PHPShopOrder->getOplataMetodName();
                 $sum = @ReturnSumma($order['Cart']['sum'], $order['Person']['discount']);
-                $weight = $order['Cart']['weight'];
+                //$weight = $order['Cart']['weight'];
                 $discount = $order['Person']['discount'];
 
                 // формируем реквизитыдля новой структуры таблицы заказов
@@ -158,7 +177,7 @@ switch ($_GET['command']) {
     // command=update&id=63[ид заказа]&cid=12345[номер счета 1с]&accounts=true
     case("update"):
         $CheckStatusReady = CheckStatusReady();
-        $sql = "UPDATE " . $GLOBALS['SysValue']['base']['table_name1'] . " SET seller='1', statusi=".intval($CheckStatusReady)." where id=" . intval($_GET['id']);
+        $sql = "UPDATE " . $GLOBALS['SysValue']['base']['table_name1'] . " SET seller='1', statusi=" . intval($CheckStatusReady) . " where id=" . intval($_GET['id']);
         mysqli_query($link_db, $sql) or die("error");
 
         $date = time();

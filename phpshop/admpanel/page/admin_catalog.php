@@ -104,11 +104,11 @@ function actionStart() {
             $check = treegenerator($tree_array[$k], $k);
             if (empty($check))
                 $tree.='<tr class="treegrid-' . $k . ' data-tree">
-		<td><a href="?path=' . $_GET['path'] . '&cat=' . $k . '">' . $v . '</a><span class="pull-right">' . $PHPShopInterface->setDropdownAction(array('edit', 'delete', 'id' => $k)) . '</span></td>
+		<td><a href="?path=' . $_GET['path'] . '&cat=' . $k . '">' . $v . '</a><span class="pull-right">' . $PHPShopInterface->setDropdownAction(array('edit','|', 'delete', 'id' => $k)) . '</span></td>
 	</tr>';
             else
                 $tree.='<tr class="treegrid-' . $k . ' data-tree">
-		<td><a href="#" class="treegrid-parent" data-parent="treegrid-' . $k . '">' . $v . '</a><span class="pull-right">' . $PHPShopInterface->setDropdownAction(array('edit', 'delete', 'id' => $k)) . '</span></td>
+		<td><a href="#" class="treegrid-parent" data-parent="treegrid-' . $k . '">' . $v . '</a><span class="pull-right">' . $PHPShopInterface->setDropdownAction(array('edit','|','delete', 'id' => $k)) . '</span></td>
 	</tr>';
             $tree.=$check;
         }

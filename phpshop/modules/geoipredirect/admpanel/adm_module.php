@@ -30,8 +30,7 @@ function actionStart() {
     // Выборка
     $data = $PHPShopOrm->select();
 
-    $info = '<p>Модуль позволяет определять город посетителя сайта и перенаправлять его на другой сайт или <a fref="?path=system.servers">дополнительную витрину</a>.</p>
-        <p>Для определения города по IP адресу используется бесплатная версия библиотеки <a href="http://sypexgeo.net" target="_blank">Sypex Geo</a>. Для более точного определения города рекомендуется приобрести коммерческую версию этой библиотеки. Файл данных городов <kbd>SxGeoCity.dat</kbd> находится в  <code>/phpshop/modules/geoipredirect/class/SxGeoCity.dat</code> и может быть заменен на коммерческую версию.</p>';
+    $info = '<p>Для определения города по IP адресу используется бесплатная версия библиотеки <a href="http://sypexgeo.net" target="_blank">Sypex Geo</a>. Для более точного определения города рекомендуется приобрести коммерческую версию этой библиотеки. Файл данных городов <kbd>SxGeoCity.dat</kbd> должен находиться в  <code>phpshop/modules/geoipredirect/class/SxGeoCity.dat</code>. По причине большого размера <code>SxGeoCity.dat</code> в сборку этот файл не включен и должен быть скачен самостоятельно. При отсутствии файла <code>SxGeoCity.dat</code> работа модуля <kbd>GeoIP Redirect</kbd> невозможна.</p>';
 
     $Tab2 = $PHPShopGUI->setInfo($info);
 

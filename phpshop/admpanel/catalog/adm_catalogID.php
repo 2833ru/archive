@@ -290,10 +290,11 @@ function actionUpdate() {
     }
 
     // Мультибаза
-    $_POST['servers_new'] = null;
+    $_POST['servers_new'] = "";
     if (is_array($_POST['servers']))
         foreach ($_POST['servers'] as $v)
-            $_POST['servers_new'].="i" . $v . "i";
+            if ($v != 'null' and !strstr($v, ','))
+                $_POST['servers_new'].="i" . $v . "i";
 
 
     // Доп каталоги

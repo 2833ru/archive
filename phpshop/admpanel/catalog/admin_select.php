@@ -82,7 +82,8 @@ $key_name = array(
     'parent_enabled' => 'Подтип товара',
     'price_search' => 'Цена для поиска',
     'prod_seo_name' => 'SEO ссылка',
-    'vendor_array' => 'Характеристики'
+    'vendor_array' => 'Характеристики',
+    'vendor_name' => 'Производитель'
 );
 
 $key_placeholder = array(

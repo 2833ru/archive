@@ -240,7 +240,7 @@ class PHPShopGbook extends PHPShopCore {
                 // Запись в базу
                 $this->PHPShopOrm->insert(array('datas' => $date, 'name' => $name_new, 'mail' => $mail_new, 'tema' => $tema_new, 'otsiv' => $otsiv_new), $prefix = '');
 
-                $subject = "Уведомление о добалении отзыва / " . $date;
+                $subject = "Уведомление о новом отзыве";
 
                 // Пересенные для шаблона сообщения
                 $this->set('gbook_name', $name_new);

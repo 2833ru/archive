@@ -396,6 +396,10 @@ table.dataTable thead .sorting-hide:after {
     box-shadow: 0.1em 0.1em 2px rgba(122,122,122,0.5);
 }
 
+.image-skin{
+    max-height: 170px;
+}
+
 #footer{
     display:none;
 }

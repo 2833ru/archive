@@ -88,10 +88,6 @@ $PHPShopBannerElement->init('banersDisp');
 $PHPShopCloudElement = new PHPShopCloudElement();
 $PHPShopCloudElement->init('cloud');
 
-// Flash-карусель
-//$PHPShopFlashGalleryElement = new PHPShopFlashGalleryElement();
-//$PHPShopFlashGalleryElement->init('stockgallery');
-
 // Текстовый блок
 $PHPShopTextElement = new PHPShopTextElement();
 $PHPShopTextElement->init('leftMenu', true); // Вывод левого блока

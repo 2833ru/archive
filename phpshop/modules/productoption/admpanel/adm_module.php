@@ -53,6 +53,7 @@ function checkSelect($val) {
     $value[] = array('text', 'text', $val);
     $value[] = array('textarea', 'textarea', $val);
     //$value[] = array('checkbox', 'checkbox', $val);
+    $value[] = array('editor', 'editor', $val);
     $value[] = array('radio', 'radio', $val);
     return $value;
 }

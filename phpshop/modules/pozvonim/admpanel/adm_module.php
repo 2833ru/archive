@@ -136,9 +136,9 @@ function actionStart()
 
     // Вывод формы закладки
     if (isset($data['code']) && $data['code'] != '') {
-        $PHPShopGUI->setTab(array("Код виджета", $Tab12, 300), array("Регистрация", $Tab1, 300), array("Инструкция", $Tab2, 300),array("О Модуле",$Tab3,300));
+        $PHPShopGUI->setTab(array("Код виджета", $Tab12, true), array("Регистрация", $Tab1, true), array("Инструкция", $Tab2),array("О Модуле",$Tab3));
     } else {
-        $PHPShopGUI->setTab(array("Регистрация", $Tab1, 300), array("Код виджета", $Tab12, 300), array("Инструкция", $Tab2, 300),array("О Модуле",$Tab3,300));
+        $PHPShopGUI->setTab(array("Регистрация", $Tab1, true), array("Код виджета", $Tab12, true), array("Инструкция", $Tab2),array("О Модуле",$Tab3));
     }
 
     // Вывод кнопок сохранить и выход в футер

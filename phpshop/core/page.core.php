@@ -20,9 +20,8 @@ class PHPShopPage extends PHPShopCore {
      * @var bool
      */
     var $debug = false;
-    var $odnootip_cell_center  = 2;
-    var $odnootip_cell_block  = 1;
-    
+    var $odnootip_cell_center = 2;
+    var $odnootip_cell_block = 1;
 
     /**
      * Конструктор
@@ -34,8 +33,8 @@ class PHPShopPage extends PHPShopCore {
 
         // Список экшенов
         $this->action = array("nav" => "CID");
-        $this->empty_index_action=true;
-        
+        $this->empty_index_action = true;
+
         parent::__construct();
     }
 
@@ -119,22 +118,18 @@ class PHPShopPage extends PHPShopCore {
         $this->setHook(__CLASS__, __FUNCTION__, $row, 'END');
     }
 
-    
-    
-    
-
     /**
      * Экшен по умолчанию, вывод данных по странице
      * @return string
      */
     function index($link = false) {
 
-        $hook_start=$this->setHook(__CLASS__, __FUNCTION__, false, 'START');
-            if($hook_start)
-                return true;
+        $hook_start = $this->setHook(__CLASS__, __FUNCTION__, false, 'START');
+        if ($hook_start)
+            return true;
 
         // Безопасность
-        if(empty($link))
+        if (empty($link))
             $link = PHPShopSecurity::TotalClean($this->PHPShopNav->getName(true), 2);
 
         // Страницы только для аторизованных
@@ -143,11 +138,13 @@ class PHPShopPage extends PHPShopCore {
         } else {
             $sort = " and (secure !='1') ";
         }
-        
-          // Мультибаза
+
+        // Мультибаза
         if (defined("HostID")) {
             $sort.= " and servers REGEXP 'i" . HostID . "i'";
         }
+        elseif(defined("HostMain"))
+            $sort.= " and (servers = '' or servers REGEXP 'i1000i')";
 
         $PHPShopOrm = new PHPShopOrm();
         $PHPShopOrm->debug = $this->debug;
@@ -169,7 +166,7 @@ class PHPShopPage extends PHPShopCore {
         $this->set('pageTitle', $row['name']);
         $this->set('catalogCategory', $this->category_name);
         $this->set('catalogId', $this->category);
-        $this->PHPShopNav->objNav['id']=$row['id'];
+        $this->PHPShopNav->objNav['id'] = $row['id'];
 
         // Выделяем меню раздела
         $this->set('NavActive', $row['link']);
@@ -182,7 +179,7 @@ class PHPShopPage extends PHPShopCore {
             $title = $row['name'] . " - " . $this->PHPShopSystem->getValue("name");
         else
             $title = $row['title'];
-        
+
         $this->title = $title;
         $this->description = $row['description'];
         $this->keywords = $row['keywords'];
@@ -192,9 +189,9 @@ class PHPShopPage extends PHPShopCore {
         $this->navigation($row['category'], $row['name']);
 
         // Перехват модуля
-        $hook_end=$this->setHook(__CLASS__, __FUNCTION__, $row, 'END');
-        if($hook_end)
-          return true;
+        $hook_end = $this->setHook(__CLASS__, __FUNCTION__, $row, 'END');
+        if ($hook_end)
+            return true;
 
         // Подключаем шаблон
         $this->parseTemplate($this->getValue('templates.page_page_list'));

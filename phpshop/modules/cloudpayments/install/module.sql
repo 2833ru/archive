@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_cloudpayment_system` (
   `title_end` text NOT NULL,
   `publicId` varchar(64) NOT NULL default '',
   `api` varchar(64) NOT NULL default '',
-  `description` varchar(64) NOT NULL default ''
+  `description` varchar(64) NOT NULL default '',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 

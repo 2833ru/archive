@@ -95,13 +95,14 @@ $key_name = array(
     'num_cow' => 'Товаров на странице',
     'count' => 'Содержит товаров',
     'cat_seo_name'=>'SEO ссылка',
-    'sum'=>'Сумма'
+    'sum'=>'Сумма',
+    'servers'=>'Витрины'
     
    
 );
 
 // Стоп лист
-$key_stop = array('password', 'wishlist', 'sort', 'yml_bid_array', 'vendor', 'files','vid','name_rambler','servers','skin','skin_enabled','secure_groups','icon_description');
+$key_stop = array('password', 'wishlist', 'sort', 'yml_bid_array', 'vendor', 'files','vid','name_rambler','skin','skin_enabled','secure_groups','icon_description');
 
 
 switch ($subpath[2]) {

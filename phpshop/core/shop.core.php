@@ -3,7 +3,7 @@
 /**
  * Обработчик товаров
  * @author PHPShop Software
- * @version 1.9
+ * @version 2.0
  * @tutorial http://wiki.phpshop.ru/index.php/PHPShopShop
  * @package PHPShopShopCore
  */
@@ -304,7 +304,7 @@ class PHPShopShop extends PHPShopShopCore {
         $this->category_name = $this->PHPShopCategory->getName();
 
         // 404 ошибка мультибазы
-        if ($this->errorMultibase($this->category))
+        if ($this->errorMultibase($this->category,$row['dop_cat']))
             return $this->setError404();
 
         // Единица измерения
@@ -337,7 +337,11 @@ class PHPShopShop extends PHPShopShopCore {
         // Проверка режима Multibase
         //$this->checkMultibase($row['pic_small']);
 
+        // Имя товара
         $this->set('productName', $row['name']);
+        
+        // Краткое опсиание
+        $this->set('productContent', $row['description']);
 
         // Артикул
         $this->set('productArt', $row['uid']);
@@ -354,7 +358,7 @@ class PHPShopShop extends PHPShopShopCore {
         $this->set('productBack', $this->lang('product_back'));
         $this->set('productSale', $this->lang('product_sale'));
         $this->set('productSelect', $this->lang('product_select'));
-        $this->set('productValutaName', $this->currency());
+        //$this->set('productValutaName', $this->currency());
         $this->set('productUid', $row['id']);
         $this->set('productId', $row['id']);
         $this->set('productBestPrice', $this->lang('productBestPrice'));
@@ -722,7 +726,7 @@ function CID_Product($category = null, $mode = false) {
 
 
     // Валюта
-    $this->set('productValutaName', $this->currency());
+    //$this->set('productValutaName', $this->currency());
 
     // Фильтр сортировки
     $order = $this->query_filter();

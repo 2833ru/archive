@@ -20,7 +20,6 @@ PHPShopObj::loadClass("cart");
 PHPShopObj::loadClass("security");
 PHPShopObj::loadClass("user");
 
-
 // Массив валют
 $PHPShopValutaArray = new PHPShopValutaArray();
 
@@ -43,7 +42,15 @@ if (!empty($parent)) {
             if (!empty($v))
                 $parent_array_true[] = $v;
 
-    $PHPShopParentProductArray = new PHPShopProductArray(array('id' => ' IN ("' . @implode('","', $parent_array_true) . '")', 'parent' => '="' . PHPShopSecurity::true_search(urldecode($_REQUEST['size'])) . '"', 'parent2' => '="' . PHPShopSecurity::true_search(urldecode($_REQUEST['color']) . '"')));
+    $where = array('id' => ' IN ("' . @implode('","', $parent_array_true) . '")', 'parent' => '="' . PHPShopSecurity::true_search(urldecode($_REQUEST['size'])) . '"', 'parent2' => '="' . PHPShopSecurity::true_search(urldecode($_REQUEST['color']) . '"'));
+
+    // Подтипы из 1С
+    if ($PHPShopSystem->ifSerilizeParam('1c_option.update_option')) {
+        unset($where['id']);
+        $where['uid'] = ' IN ("' . @implode('","', $parent_array_true) . '")';
+    }
+
+    $PHPShopParentProductArray = new PHPShopProductArray($where);
 }
 $data = array_keys($PHPShopParentProductArray->getArray());
 

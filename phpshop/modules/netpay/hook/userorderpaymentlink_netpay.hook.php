@@ -11,44 +11,46 @@ function userorderpaymentlink_mod_netpay_hook($obj, $PHPShopOrderFunction) {
 
     // Контроль оплаты от статуса заказа
     if ($PHPShopOrderFunction->order_metod_id == 10017)
-    if ($PHPShopOrderFunction->getParam('statusi') == $option['status'] or empty($option['status'])) {
-        // Номер счета
-        $mrh_ouid = explode("-", $PHPShopOrderFunction->objRow['uid']);
-        $inv_id = $mrh_ouid[0] . "" . $mrh_ouid[1];
+        if ($PHPShopOrderFunction->getParam('statusi') == $option['status'] or empty($option['status'])) {
+            // Номер счета
+            $mrh_ouid = explode("-", $PHPShopOrderFunction->objRow['uid']);
+            $inv_id = $mrh_ouid[0] . "" . $mrh_ouid[1];
 
-        // Сумма покупки
-        $out_summ = $PHPShopOrderFunction->getTotal();
+            // Сумма покупки
+            $out_summ = $PHPShopOrderFunction->getTotal();
 
 
-        $params = array();
-        $params['description'] = "New Order № $inv_id";
-        $params['amount'] = $out_summ;
-        $params['currency'] = 'RUB';
-        $params['orderID'] = $inv_id;
-        $params['phone'] = '';
-        $params['email'] = '';
-        $params['successUrl'] = 'http://' . $_SERVER['HTTP_HOST'] . '/success/?from=netpay';
-        $params['failUrl'] = 'http://' . $_SERVER['HTTP_HOST'] . '/fail/';
+            $params = array();
+            $params['description'] = "New Order № $inv_id";
+            $params['amount'] = $out_summ;
+            $params['currency'] = 'RUB';
+            $params['orderID'] = $inv_id;
+            $params['phone'] = '';
+            $params['email'] = '';
+            $params['successUrl'] = 'http://' . $_SERVER['HTTP_HOST'] . '/success/?from=netpay';
+            $params['failUrl'] = 'http://' . $_SERVER['HTTP_HOST'] . '/fail/';
 
-        $keys = array();
-        $keys['api_key'] = $option['merchant_key'];
-        $keys['auth_signature'] = $option['merchant_skey'];
+            // Холдирование
+            if ($option['hold'] == 2)
+                $params['isHold'] = 'true';
 
-        $settings = array();
-        $settings['expiredtime'] = intval($option['expiredtime']);
+            $keys = array();
+            $keys['api_key'] = $option['merchant_key'];
+            $keys['auth_signature'] = $option['merchant_skey'];
 
-        $settings['autosubmit'] = '0';
-        $settings['target'] = '0';
+            $settings = array();
+            $settings['expiredtime'] = intval($option['expiredtime']);
 
-        $settings['submitval'] = 'Оплатить сейчас';
+            $settings['autosubmit'] = '0';
+            $settings['target'] = '0';
 
-        $netpay = new Netpay();
-        $link =  $netpay->getlink($params, $keys, $settings); 
-        $return = PHPShopText::a($link,$settings['submitval'],$settings['submitval'], false, false, '_blank', 'btn btn-success pull-right');
-        
+            $settings['submitval'] = 'Оплатить сейчас';
 
-    } elseif ($PHPShopOrderFunction->getSerilizeParam('orders.Person.order_metod') == 10017)
-        $return = ', Заказ обрабатывается менеджером';
+            $netpay = new Netpay();
+            $link = $netpay->getlink($params, $keys, $settings);
+            $return = PHPShopText::a($link, $settings['submitval'], $settings['submitval'], false, false, '_blank', 'btn btn-success pull-right');
+        } elseif ($PHPShopOrderFunction->getSerilizeParam('orders.Person.order_metod') == 10017)
+            $return = ', Заказ обрабатывается менеджером';
 
     return $return;
 }

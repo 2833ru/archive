@@ -16,11 +16,21 @@ class PHPShopBrand extends PHPShopShopCore {
 
         parent::__construct();
     }
+    
+    
+    function index (){
+
+        if($this->PHPShopNav->objNav['nav'] == '')
+            $this->setError404();
+        else
+            $this->brand();
+
+    }
 
     /**
      * SEO навигация брендов
      */
-    function index(){
+    function brand(){
 
         // Валюта
         $this->set('productValutaName', $this->currency());
@@ -30,11 +40,45 @@ class PHPShopBrand extends PHPShopShopCore {
             $this->cell = $this->calculateCell("selection", $this->PHPShopSystem->getValue('num_vitrina'));
         elseif (empty($this->cell))
             $this->cell = 3;
+        
+        switch ($_GET['gridChange']) {
+            case 1:
+                $this->set('gridSetAactive', 'active');
+                break;
+            case 2:
+                $this->set('gridSetBactive', 'active');
+                break;
+            default: $this->set('gridSetBactive', 'active');
+        }
+
+
+        switch ($_GET['s']) {
+            case 1:
+                $this->set('sSetAactive', 'active');
+                break;
+            case 2:
+                $this->set('sSetBactive', 'active');
+                break;
+            default: $this->set('sSetCactive', 'active');
+        }
+
+
+        switch ($_GET['f']) {
+            case 1:
+                $this->set('fSetAactive', 'active');
+                break;
+            case 2:
+                $this->set('fSetBactive', 'active');
+                break;
+            //default: $obj->set('fSetCactive', 'active');
+        }
 
         $PHPShopNav = new PHPShopNav();
         $seo_name = explode(".", $PHPShopNav->getNav());
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort']);
-        $vendor = $PHPShopOrm->select(array("*"), array('sort_seo_name' => "='$seo_name[0]'"));
+        $PHPShopOrm->mysql_error = false;
+
+        $vendor = $PHPShopOrm->select(array("*"), array('sort_seo_name' => "='" . PHPShopSecurity::TotalClean($seo_name[0]) . "'"));
         $v = array($vendor["category"] => $vendor["id"]);
 
         // Фильтр сортировки

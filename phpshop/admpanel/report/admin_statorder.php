@@ -131,7 +131,7 @@ function actionStart() {
             );
 
             if (empty($array_order_date[$d_array['d'] . '.' . $d_array['m']])) {
-                $array_order_date[$d_array['d'] . ' ' . $Months[$d_array['m']]] = $row['sum'];
+                $array_order_date[$d_array['d'] . ' ' . $Months[$d_array['m']]] += $row['sum'];
             }
             else
                 $array_order_date[$d_array['d'] . ' ' . $Months[$d_array['m']]]+=$row['sum'];

@@ -313,10 +313,10 @@ function actionStart() {
 
     $tree = '<table class="table table-hover">
         <tr class="treegrid-all">
-           <td><a href="?path=modules" class="treegrid-parent" data-parent="treegrid-all">Все модули</a> <span id="mod-install-count" class="label label-primary pull-right">67</span></td>
+           <td><a href="?path=modules" class="treegrid-parent" data-parent="treegrid-all">Все модули</a> <span id="mod-install-count" class="label label-primary pull-right">68</span></td>
 	</tr>
         <tr class="treegrid-template">
-           <td><a href="?path=modules&cat=template" class="treegrid-parent" data-parent="treegrid-template">Дизайн</a> <span id="mod-install-count" class="label label-primary pull-right">4</span></td>
+           <td><a href="?path=modules&cat=template" class="treegrid-parent" data-parent="treegrid-template">Дизайн</a> <span id="mod-install-count" class="label label-primary pull-right">5</span></td>
 	</tr>
         <tr class="treegrid-form">
            <td><a href="?path=modules&cat=form" class="treegrid-parent" data-parent="treegrid-form">Юзабилити</a> <span id="mod-install-count" class="label label-primary pull-right">15</span></td>
@@ -346,7 +346,7 @@ function actionStart() {
            <td><a href="?path=modules&cat=user" class="treegrid-parent" data-parent="treegrid-user">Конверсия</a> <span id="mod-install-count" class="label label-primary pull-right">8</span></td>
 	</tr>
         <tr class="treegrid-develop">
-           <td><a href="?path=modules&cat=develop" class="treegrid-parent" data-parent="treegrid-develop">Разработчикам</a> <span id="mod-install-count" class="label label-primary pull-right">10</span></td>
+           <td><a href="?path=modules&cat=develop" class="treegrid-parent" data-parent="treegrid-develop">Разработчикам</a> <span id="mod-install-count" class="label label-primary pull-right">11</span></td>
 	</tr>
         <tr class="treegrid-install">
            <td><a href="?path=modules&install=check" class="treegrid-parent" data-parent="treegrid-install">Установленные</a> <span id="mod-install-count" class="label ' . $label_class . ' pull-right">' . $num . '</span></td>

@@ -27,7 +27,7 @@ function actionStart() {
     $PHPShopInterface->setActionPanel(__("Покупатели"), array('Поиск', 'CSV', 'Удалить выбранные'), array('Добавить Пользователя'));
     $PHPShopInterface->setCaption(array(null, "2%"), array("Имя", "25%"), array("E-mail", "20%"), array("Статус", "20%"), array("Скидка %", "10%"), array("Вход", "10%"), array("", "10%"), array("Статус", "10%", array('align' => 'right')));
 
-    // Стытусы пользователей
+    // Статусы пользователей
     $PHPShopUserStatus = new PHPShopUserStatusArray();
     $PHPShopUserStatusArray = $PHPShopUserStatus->getArray();
     $PHPShopUserStatusArray[0]['name'] = 'Пользователь';

@@ -10,7 +10,7 @@ function userorderpaymentlink_mod_yandexmoney_hook($obj, $PHPShopOrderFunction) 
 
 
     // Контроль оплаты от статуса заказа
-    if ($order_metod == 10002)
+    if ($PHPShopOrderFunction->order_metod_id  == 10002)
         if ($PHPShopOrderFunction->getParam('statusi') == $option['status'] or empty($option['status'])) {
 
             // Номер счета

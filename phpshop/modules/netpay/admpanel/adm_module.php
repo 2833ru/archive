@@ -35,9 +35,12 @@ function actionStart() {
     $Tab1 = $PHPShopGUI->setField('Наименование типа оплаты', $PHPShopGUI->setInputText(false, 'title_new', $data['title']));
     $Tab1.=$PHPShopGUI->setField('API Key', $PHPShopGUI->setInputText(false, 'merchant_key_new', $data['merchant_key'], 210));
     $Tab1.=$PHPShopGUI->setField('API Signature', $PHPShopGUI->setInputText(false, 'merchant_skey_new', $data['merchant_skey'], 210));
-    $Tab1.=$PHPShopGUI->setField('Актуальность оплаты заказа', $PHPShopGUI->setInputText(false, 'expiredtime_new', $data['expiredtime'], 100,'дней'));
-    $Tab1.=$PHPShopGUI->setField('Страница описания оплаты', $PHPShopGUI->setRadio('autosubmit_new', 2, 'Вкл.', $data['autosubmit']) . 
+    $Tab1.=$PHPShopGUI->setField('Актуальность оплаты заказа', $PHPShopGUI->setInputText(false, 'expiredtime_new', $data['expiredtime'], 100, 'дней'));
+    $Tab1.=$PHPShopGUI->setField('Страница описания оплаты', $PHPShopGUI->setRadio('autosubmit_new', 2, 'Вкл.', $data['autosubmit']) .
             $PHPShopGUI->setRadio('autosubmit_new', 1, 'Выкл.', $data['autosubmit']));
+
+    $Tab1.=$PHPShopGUI->setField('Режим холдирования', $PHPShopGUI->setRadio('hold_new', 2, 'Вкл.', $data['hold']) .
+            $PHPShopGUI->setRadio('hold_new', 1, 'Выкл.', $data['hold']));
 
     // Доступые статусы заказов
     $PHPShopOrderStatusArray = new PHPShopOrderStatusArray();
@@ -52,12 +55,12 @@ function actionStart() {
 
     $Tab1.= $PHPShopGUI->setField('Сообщение перед оплатой', $PHPShopGUI->setTextarea('title_new', $data['title']));
     $Tab1.= $PHPShopGUI->setField('Сообщение предварительной проверки', $PHPShopGUI->setTextarea('title_sub_new', $data['title_sub']));
-    
+
     $info = '<h4>Настройка модуля</h4>
        <ol>
         <li>Зарегистрироваться в <a href="http://net2pay.ru/" target="_blank">Net2pay.ru</a>.
         <li>"API Key" и "API Signature" (выдаются при подключени к Net2pay.ru) скопировать в одноименные поля настроек модуля.
-        <li>Сообщить техподдержке Net2pay.ru адрес оповещения о платеже: <code>http://'.$_SERVER['SERVER_NAME'].'/phpshop/modules/netpay/payment/result.php</code>
+        <li>Сообщить техподдержке Net2pay.ru адрес оповещения о платеже: <code>http://' . $_SERVER['SERVER_NAME'] . '/phpshop/modules/netpay/payment/result.php</code>
         </ol>
         
 ';

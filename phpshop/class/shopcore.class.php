@@ -4,7 +4,7 @@
  * Родительский класс ядра вывода товаров
  * @author PHPShop Software
  * @tutorial http://wiki.phpshop.ru/index.php/PHPShopShopCore
- * @version 1.3
+ * @version 1.4
  * @package PHPShopClass
  */
 class PHPShopShopCore extends PHPShopCore {
@@ -518,21 +518,73 @@ class PHPShopShopCore extends PHPShopCore {
         return $img;
     }
 
+     /**
+     * Проверка прав каталога режима Multibase
+     * @return string 
+     */
+    function queryMultibase() {
+        global $queryMultibase;
+
+        // Мультибаза
+        if (defined("HostID")) {
+
+            // Память
+            if (!empty($queryMultibase))
+                return $queryMultibase;
+
+            $multi_cat = array();
+            $multi_dop_cat = null;
+
+            $where['servers'] = " REGEXP 'i" . HostID . "i'";
+            $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
+            $PHPShopOrm->debug = $this->debug;
+            $data = $PHPShopOrm->select(array('id'), $where, false, array('limit' => 100), __CLASS__, __FUNCTION__);
+            if (is_array($data)) {
+                foreach ($data as $row) {
+                    $multi_cat[] = $row['id'];
+                    $multi_dop_cat.=" or dop_cat REGEXP '#" . $row['id'] . "#'";
+                }
+            }
+
+            $queryMultibase = $multi_select = ' and ( category IN (' . @implode(',', $multi_cat) . ')' . $multi_dop_cat . ')';
+
+            return $multi_select;
+        }
+    }
+
     /**
-     * Проверка права каталога режима Multibase [отключено]
-     * @param int $category
+     * Проверка права каталога режима Multibase
+     * @param int $category ID каталога
+     * @param string $dop_cat #ID# дополнительных каталогов
      * @return boolean 
      */
-    function errorMultibase($category) {
+    function errorMultibase($category, $dop_cat=null) {
 
         if (defined("HostID")) {
 
             if (empty($this->multi_cat)) {
+
+                // Добавочные каталоги
+                if (!empty($dop_cat)) {
+
+                    $dop_cat_array = explode("#", $dop_cat);
+                    $dop_cat_array_true = array();
+
+                    if (is_array($dop_cat_array))
+                        foreach ($dop_cat_array as $v)
+                            if (!empty($v))
+                                $dop_cat_array_true[] = $v;
+
+                    $where['id'] = ' IN ("' . @implode('","', $dop_cat_array_true) . '")';
+                }
+
                 $where['servers'] = " REGEXP 'i" . HostID . "i'";
+
                 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
                 $PHPShopOrm->debug = $this->debug;
                 $PHPShopOrm->cache = false;
                 $data = $PHPShopOrm->select(array('id'), $where, false, array('limit' => 1000));
+
                 if (is_array($data)) {
                     foreach ($data as $row) {
                         $this->multi_cat[] = $row['id'];
@@ -540,7 +592,16 @@ class PHPShopShopCore extends PHPShopCore {
                 }
             }
 
-            if (!in_array($category, $this->multi_cat))
+            // Добавочные каталоги
+            if (count($dop_cat_array_true) > 0) {
+
+                // Категория
+                $this->category = $dop_cat_array_true[0];
+                $this->PHPShopCategory = new PHPShopCategory($this->category);
+                $this->category_name = $this->PHPShopCategory->getName();
+
+                return false;
+            } else if (!in_array($category, $this->multi_cat))
                 return true;
         }
     }
@@ -627,13 +688,21 @@ class PHPShopShopCore extends PHPShopCore {
             $this->set('ComStartCart', PHPShopText::comment('<'));
             $this->set('ComEndCart', PHPShopText::comment('>'));
             $this->set('productPrice', null);
-            $this->set('productValutaName', '');
+            $this->set('productPriceRub', null);
+            $this->set('productValutaName', null);
         }
 
         // Проверка на нулевую цену 
         if (empty($row['price'])) {
             $this->set('ComStartCart', PHPShopText::comment('<'));
             $this->set('ComEndCart', PHPShopText::comment('>'));
+
+
+            $this->set('elementCartHide', 'hide hidden');
+
+            $this->set('productPrice', null);
+            $this->set('productPriceRub', null);
+            $this->set('productValutaName', null);
         }
 
         // Проверка подтипа
@@ -641,11 +710,12 @@ class PHPShopShopCore extends PHPShopCore {
             $this->set('elementCartHide', 'hide hidden');
             $this->set('ComStartCart', PHPShopText::comment('<'));
             $this->set('ComEndCart', PHPShopText::comment('>'));
-            
-            if (empty($row['sklad'])) 
-            $this->set('elementCartOptionHide', null);
+
+            if (empty($row['sklad']))
+                $this->set('elementCartOptionHide', null);
         }
-        else $this->set('elementCartOptionHide', 'hide hidden');
+        else
+            $this->set('elementCartOptionHide', 'hide hidden');
 
         // Перехват модуля, занесение в память наличия модуля для оптимизации
         if ($this->memory_get(__CLASS__ . '.' . __FUNCTION__, true)) {

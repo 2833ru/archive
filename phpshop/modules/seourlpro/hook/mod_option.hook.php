@@ -1,13 +1,17 @@
 <?php
 
 // Настройки модуля
-PHPShopObj::loadClass("array");
 class PHPShopSeourlOption extends PHPShopArray {
-    function PHPShopSeourlOption() {
+    
+    function __construct() {
         $this->objType=3;
         $this->checkKey=true;
+        
+        // Память настроек
+        $this->memory = __CLASS__;
+        
         $this->objBase=$GLOBALS['SysValue']['base']['seourlpro']['seourlpro_system'];
-        parent::__construct('paginator','serial','cat_content_enabled', 'seo_brands_enabled');
+        parent::__construct('paginator','serial','cat_content_enabled', 'seo_brands_enabled', 'seo_news_enabled', 'seo_page_enabled');
     }
 }
 

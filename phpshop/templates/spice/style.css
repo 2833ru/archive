@@ -54,6 +54,9 @@ h5{
 h6{
     font-size:14px;
 }
+.header-color h4.modal-title {
+    color: #1c1c1c !important;
+}
 .main-heading{
     font-size:42px;
 }
@@ -738,6 +741,9 @@ hr{
     -webkit-transition: 0.5s;
     -moz-transition: 0.5s;
     transition: 0.5s;
+    background-image: url(./images/product_bottom_bg.png);
+    background-repeat: no-repeat;
+    background-position: center;
 }
 .description-link-wrapper {
     text-align: center;
@@ -3050,4 +3056,27 @@ body.overflow-fix {
 .returncall-wrapper.returncall-desctop {
     padding-top: 5px;
     margin-top: 0;
+}
+.footer-social > a {
+    border: 1px solid #e1e7ec;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    margin-right: 8px;
+    line-height: 35px;
+    text-align: center;
+    transition: all .3s;
+    background-color: transparent;
+    color: rgba(255,255,255,0.6) !important;
+    font-size: 17px;
+    display: inline-block;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    text-decoration: none;
+    vertical-align: middle;
+    border-color: rgba(255,255,255,0.1);
+}
+.footer-social > a:hover {
+    border-color: rgba(255,255,255,0.12);
+    background-color: rgba(255,255,255,0.5);
 }

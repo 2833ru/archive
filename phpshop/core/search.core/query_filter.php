@@ -7,20 +7,24 @@ function query_multibase($obj) {
     // Мультибаза
     if (defined("HostID")) {
 
+        // Основные каталоги
         $where['servers'] = " REGEXP 'i" . HostID . "i'";
+        $multi_cat = array();
+        $multi_dop_cat=null;
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
         $PHPShopOrm->debug = $obj->debug;
         $data = $PHPShopOrm->select(array('id'), $where, false, array('limit' => 100));
         if (is_array($data)) {
             foreach ($data as $row) {
-                $multi_cat.='category=' . $row['id'] . ' or ';
+                $multi_cat[] = $row['id'];
+                $multi_dop_cat.=" or dop_cat REGEXP '#".$row['id']."#'";
             }
-            $multi_cat = substr($multi_cat, 0, strlen($multi_cat) - 4);
-            $multi_cat = ' and (' . $multi_cat . ')';
         }
-    }
 
-    return $multi_cat;
+        $multi_select = ' and ( category IN (' . @implode(',', $multi_cat) . ')'.$multi_dop_cat.')';
+
+        return $multi_select;
+    }
 }
 
 /**
@@ -105,7 +109,7 @@ function query_filter($obj) {
     $sort = substr($sort, 0, strlen($sort) - 4);
 
     // По категориям
-    if ($cat != 0)
+    if (!empty($cat) and !defined("HostID"))
         $string = " category=$cat and";
     else
         $string = null;

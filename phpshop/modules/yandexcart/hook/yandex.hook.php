@@ -1,7 +1,7 @@
 <?php
 
 function setProducts_yandexcart_hook($obj, $data) {
-    $add = $list = null;
+    $add = $list = $vemdorSort = null;
 
     // Характеристики
     if (!empty($obj->vendor) or !empty($obj->param)) {
@@ -10,8 +10,10 @@ function setProducts_yandexcart_hook($obj, $data) {
             foreach ($data['val']['vendor_array'] as $v) {
 
                 // Vendor
-                if ($obj->brand_array[$v[0]] != "")
+                if ($obj->brand_array[$v[0]] != "") {
                     $add.='<vendor>' . $obj->brand_array[$v[0]] . '</vendor>';
+                    $vemdorSort = true;
+                }
 
                 // Param
                 if ($obj->param_array[$v['name']] != "" and $obj->param_array[$v[0]]['yandex_param_unit'] != "")
@@ -20,6 +22,10 @@ function setProducts_yandexcart_hook($obj, $data) {
                     $add.='<param name="' . $obj->param_array[$v[0]]['param'] . '">' . $obj->param_array[$v[0]]['name'] . '</param>';
             }
     }
+
+    // Vendor из карточки товара
+    if (empty($vemdorSort) and !empty($data['val']['vendor_name']))
+        $add.='<vendor>' . $data['val']['vendor_name'] . '</vendor>';
 
     // Подтип
     if (!empty($data['val']['group_id'])) {

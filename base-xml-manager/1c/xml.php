@@ -22,10 +22,10 @@ PHPShopObj::loadClass("valuta");
 PHPShopObj::loadClass("string");
 
 /*
-$_POST['log'] = 'admin';
-$_POST['pas'] = '49O50O51O52O53O54OI10O';
+  $_POST['log'] = 'admin';
+  $_POST['pas'] = '49O50O51O52O53O54OI10O';
 
-$_POST['sql'] = '<?xml version="1.0" encoding="windows-1251"?>
+  $_POST['sql'] = '<?xml version="1.0" encoding="windows-1251"?>
   <phpshop>
   <sql>
   <from>null</from>
@@ -36,36 +36,36 @@ $_POST['sql'] = '<?xml version="1.0" encoding="windows-1251"?>
   <operation>sell</operation>
   <json><![CDATA[
   {
-"receipt": {
-"attributes": {
-"email": "dennion@yandex.ru",
-"phone": "89024562233"
-},
-"items": [
-{
-"name": "Товар 1",
-"price": 1499.99,
-"num": 2.00,
-"sum": 2999.98
-},
-{
-"name": "Товар 2",
-"price": 300.00,
-"num": 1.00,
-"sum": 300.00
-}
-],
-"total": 3299.98,
-"payments": [
-{
-"type": 1,
-"sum": 3299.98
-}
-]
-}
-}
-]]></json>
-</vars>
+  "receipt": {
+  "attributes": {
+  "email": "dennion@yandex.ru",
+  "phone": "89024562233"
+  },
+  "items": [
+  {
+  "name": "Товар 1",
+  "price": 1499.99,
+  "num": 2.00,
+  "sum": 2999.98
+  },
+  {
+  "name": "Товар 2",
+  "price": 300.00,
+  "num": 1.00,
+  "sum": 300.00
+  }
+  ],
+  "total": 3299.98,
+  "payments": [
+  {
+  "type": 1,
+  "sum": 3299.98
+  }
+  ]
+  }
+  }
+  ]]></json>
+  </vars>
   </sql>
   </phpshop>';
 
@@ -131,7 +131,7 @@ $_POST['sql'] = '<?xml version="1.0" encoding="windows-1251"?>
  */
 
 // Подключаем БД
-$PHPShopBase = new PHPShopBase($_classPath . 'inc/config.ini',true, false);
+$PHPShopBase = new PHPShopBase($_classPath . 'inc/config.ini', true, false);
 
 // Настройки модулей
 $PHPShopModules = new PHPShopModules($_classPath . "modules/");
@@ -149,33 +149,33 @@ class PHPShop1C extends PHPShopBaseXml {
 
         $this->debug = false;
         $this->PHPShopModules = $PHPShopModules;
-        $this->true_method = array('select', 'option', 'insert', 'update', 'delete', 'image', 'order','ofd');
+        $this->true_method = array('select', 'option', 'insert', 'update', 'delete', 'image', 'order', 'ofd');
         $this->true_from = array('table_name', 'table_name1', 'table_name2', 'table_name3', 'table_name24',
             'table_name5', 'table_name6', 'table_name7', 'table_name8', 'table_name11',
             'table_name14', 'table_name15', 'table_name17', 'table_name27', 'table_name29', 'table_name32',
-            'table_name9', 'table_name48', 'table_name50', 'table_name51', 'table_name35','null');
+            'table_name9', 'table_name48', 'table_name50', 'table_name51', 'table_name35', 'null');
 
         parent::__construct();
     }
 
     function ofd() {
         global $_classPath;
-        
+
         $vars = readDatabase($this->sql, "vars", false);
         $data = json_fix_utf(json_decode(PHPShopString::win_utf8($vars[0]['json']), true));
-        
+
         $ofd = 'atol';
         include_once($_classPath . 'modules/' . substr($ofd, 0, 15) . '/api.php');
 
         if (is_array($data)) {
-            
+
             // № Чека
-            $data['id']=$vars[0]['id'];
-            $data['uid']=$vars[0]['uid'];
-            
+            $data['id'] = $vars[0]['id'];
+            $data['uid'] = $vars[0]['uid'];
+
             $this->PHPShopModules->checkInstall('atol');
-            $status = OFDStart($data,$vars[0]['operation'],true);
-            echo json_encode(array('status' => $status['status'], 'data' =>$status['data']));
+            $status = OFDStart($data, $vars[0]['operation'], true);
+            echo json_encode(array('status' => $status['status'], 'data' => $status['data']));
         }
     }
 
@@ -321,18 +321,24 @@ class PHPShop1C extends PHPShopBaseXml {
 
         if ($this->status($this->xml['from'], 1))
             parent::update();
+
+        $this->log();
     }
 
     function delete() {
 
         if ($this->status($this->xml['from'], 1))
             parent::delete();
+        
+        $this->log();
     }
 
     function insert() {
 
         if ($this->status($this->xml['from'], 2))
             parent::insert();
+        
+        $this->log();
     }
 
     function select() {
@@ -368,6 +374,12 @@ class PHPShop1C extends PHPShopBaseXml {
             closedir($dh);
         }
         $this->data = $image;
+    }
+
+    function log() {
+        header("HTTP/1.1 200");
+        header("Content-Type: application/json; charset=windows1251");
+        echo json_encode(array('status' => $this->data));
     }
 
 }

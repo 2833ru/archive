@@ -30,6 +30,7 @@ class ProductDay extends PHPShopProductElements {
             PHPShopParser::set('productDayPrice', PHPShopProductFunction::GetPriceValuta($productday['id'],$productday['price']));
             PHPShopParser::set('productDayPriceN', PHPShopProductFunction::GetPriceValuta($productday['id'],$productday['price_n']));
             PHPShopParser::set('productDayPicBig', $productday['pic_big']);
+            PHPShopParser::set('productDayPicBigSource', str_replace(".", "_big.",$productday['pic_big']));
             PHPShopParser::set('productDayPicSmall', $productday['pic_small']);
             PHPShopParser::set('productDayHourGood', $hour_good);
             PHPShopParser::set('productDayMinuteGood', $minute_good);

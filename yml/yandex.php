@@ -3,7 +3,7 @@
 /**
  * Файл выгрузки для Яндекс Маркет
  * @author PHPShop Software
- * @version 1.11
+ * @version 2.2
  * @package PHPShopXML
  * @example ?ssl [bool] SSL
  * @example ?getall [bool] Выгрузка всех товаров без учета флага YML
@@ -328,6 +328,7 @@ class PHPShopYml {
                 "yandex_min_quantity" => $row['yandex_min_quantity'],
                 "yandex_step_quantity" => $row['yandex_step_quantity'],
                 "vendor_code" => $row['vendor_code'],
+                "vendor_name" => $row['vendor_name'],
             );
 
             // Параметр сортировки

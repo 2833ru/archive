@@ -18,7 +18,7 @@
 
     </head>
     <body id="body" data-dir="@ShopDir@" data-path="@php echo $GLOBALS['PHPShopNav']->objNav['path']; php@" data-id="@php echo $GLOBALS['PHPShopNav']->objNav['id']; php@" data-token="@dadataToken@">
-        
+
         <!-- jQuery -->
         <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery-1.11.0.min.js"></script>
 
@@ -49,7 +49,7 @@
 
         <!-- Header Section Starts -->
         <header id="header-area">
-            
+
             <!-- Header Top Starts -->
             <div class="header-top">
                 <!-- Nested Container Starts -->
@@ -81,7 +81,7 @@
                                     </li>
                                     @usersDisp@
                                 </ul>
-                                 
+
                             </div>
                         </div>
                         <!-- Header Links Ends -->
@@ -102,7 +102,7 @@
                 <!-- Nested Container Ends -->
             </div>
             <!-- Header Top Ends -->
-            
+
             <div class="container">
                 <!-- Main Header Starts -->
                 <div class="main-header">
@@ -157,41 +157,41 @@
                 <!-- Main Header Ends -->
                 <!-- Main Menu Starts -->
                 <nav id="main-menu" class="navbar" role="navigation">
-                        <!-- Nav Header Starts -->
-                        <div class="navbar-header">
+                    <!-- Nav Header Starts -->
+                    <div class="navbar-header">
 
-                            <a class="navbar-brand visible-xs pull-right" href="tel:@telNumMobile@">
-                                <span class="glyphicon glyphicon-phone"></span> @telNumMobile@
-                            </a>
+                        <a class="navbar-brand visible-xs pull-right" href="tel:@telNumMobile@">
+                            <span class="glyphicon glyphicon-phone"></span> @telNumMobile@
+                        </a>
 
-                            <button type="button" class="btn btn-navbar navbar-toggle main-menu-button" data-toggle="collapse" data-target=".navbar-cat-collapse">
-                                <span class="sr-only">Toggle Navigation</span>
-                                <i class="fa fa-bars"></i>
-                            </button>
-                        </div>
-                        <!-- Nav Header Ends -->
-                        <!-- Navbar Cat collapse Starts -->
-                        <div class="collapse navbar-collapse navbar-cat-collapse">
-                            <ul class="nav navbar-nav main-navbar-top">
-                                <li class="main-navbar-top-catalog">
-                                    <a href="javascript:void(0);" id="nav-catalog-dropdown-link" class="nav-catalog-dropdown-link" aria-expanded="false">Каталог
-                                    </a>
-                                    <ul class="main-navbar-list-catalog-wrapper fadeIn animated">
-                                        @leftCatal@
-                                    </ul>
-                                </li>
-                                @topBrands@
-                                @topMenu@
-                                </li>
-                            </ul>
-                        </div>
-                        <!-- Navbar Cat collapse Ends -->
+                        <button type="button" class="btn btn-navbar navbar-toggle main-menu-button" data-toggle="collapse" data-target=".navbar-cat-collapse">
+                            <span class="sr-only">Toggle Navigation</span>
+                            <i class="fa fa-bars"></i>
+                        </button>
+                    </div>
+                    <!-- Nav Header Ends -->
+                    <!-- Navbar Cat collapse Starts -->
+                    <div class="collapse navbar-collapse navbar-cat-collapse">
+                        <ul class="nav navbar-nav main-navbar-top">
+                            <li class="main-navbar-top-catalog">
+                                <a href="javascript:void(0);" id="nav-catalog-dropdown-link" class="nav-catalog-dropdown-link" aria-expanded="false">Каталог
+                                </a>
+                                <ul class="main-navbar-list-catalog-wrapper fadeIn animated">
+                                    @leftCatal@
+                                </ul>
+                            </li>
+                            @topBrands@
+                            @topMenu@
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- Navbar Cat collapse Ends -->
                 </nav>
                 <!-- Main Menu Ends -->
             </div>
         </header>
         <!-- Header Section Ends -->
-                
+
         <!-- Slider Section Starts -->
         <div class="slider">
             <!-- Nested Container Starts -->
@@ -219,7 +219,7 @@
                     <!-- Product Starts -->
                     <div class="swiper-container spec-main-icon-slider">
                         <div class="swiper-wrapper">
-                                @specMainIcon@
+                            @specMainIcon@
                         </div>
                     </div>
                     <div class="swiper-button-prev-block">
@@ -233,12 +233,12 @@
                 </div>
             </section>
             <!-- Featured Products Ends -->
-            
+
             <!-- Banners Starts -->
             <div class="top-col-banners">@banersDisp@</div>
-            
+
             <!-- Banners Ends -->    
-            
+
             <!-- Latest Products Starts -->
             <section class="products-list">
                 <div class="swiper-slider-wrapper">
@@ -246,17 +246,17 @@
                     <h2 class="product-head page-header swiper-title"><a href="/spec/" title="Все спецпредложения">Спецпредложения</a></h2>
                     <!-- Heading Ends -->
                     <!-- Products Row Starts -->
-                        <div class="swiper-container spec-main-slider">
-                            <div class="swiper-wrapper">
-                                @specMain@
-                            </div>
+                    <div class="swiper-container spec-main-slider">
+                        <div class="swiper-wrapper">
+                            @specMain@
                         </div>
-                        <div class="swiper-button-prev-block">
-                            <div class="swiper-button-prev btn-prev2"><i class="fa fa-angle-left" aria-hidden="true"></i></div>
-                        </div>
-                        <div class="swiper-button-next-block">
-                            <div class="swiper-button-next btn-next2"><i class="fa fa-angle-right" aria-hidden="true"></i></div>
-                        </div>
+                    </div>
+                    <div class="swiper-button-prev-block">
+                        <div class="swiper-button-prev btn-prev2"><i class="fa fa-angle-left" aria-hidden="true"></i></div>
+                    </div>
+                    <div class="swiper-button-next-block">
+                        <div class="swiper-button-next btn-next2"><i class="fa fa-angle-right" aria-hidden="true"></i></div>
+                    </div>
                     <!-- Products Row Ends -->
                 </div>     
             </section>
@@ -328,6 +328,15 @@
                         <h4 class="lead">
                             Тел: <span>@telNum@</span>
                         </h4>
+                        <div class="footer-social">
+
+                            <!-- Social Button -->
+                            <a class="social-button hidden-xs hidden-sm" href="#" title="Поделится в Facebook"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                            <a class="social-button hidden-xs hidden-sm" href="#" title="Поделится в Контакте"><i class="fa fa-vk" aria-hidden="true"></i></a>
+                            <a class="social-button hidden-xs hidden-sm" href="#" title="Поделится в Одноклассники"><i class="fa fa-odnoklassniki" aria-hidden="true"></i></a>
+                            <!--/ Social Button -->
+
+                        </div>
                     </div>
                     <!-- Contact Us Ends -->
                 </div>
@@ -378,7 +387,7 @@
             </div>
         </div>
         <!--/ Notification -->
-        
+
         <!-- Модальное окно авторизации-->
         <div class="modal fade bs-example-modal-sm" id="userModal" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog modal-sm">
@@ -420,8 +429,8 @@
             </div>
         </div>
         <!--/ Модальное окно авторизации-->
-        
-                <!-- Модальное окно мобильного поиска -->
+
+        <!-- Модальное окно мобильного поиска -->
         <div class="modal fade bs-example-modal-sm" id="searchModal" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
@@ -453,9 +462,9 @@
                         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                         <h4 class="modal-title">@leftMenuName@</h4>
                     </div>
-                     <form role="form" method="post" name="user_forma" action="@ShopDir@/returncall/">
-                    <div class="modal-body">
-                       
+                    <form role="form" method="post" name="user_forma" action="@ShopDir@/returncall/">
+                        <div class="modal-body">
+
                             <div class="form-group">
                                 <input type="text" name="returncall_mod_name" class="form-control" placeholder="Имя..." required="">
                             </div>
@@ -469,14 +478,14 @@
                                 <textarea placeholder="Сообщение" class="form-control" name="returncall_mod_message"></textarea>
                             </div>
                             @returncall_captcha@
-                           
-                       
-                    </div>
-                     <div class="modal-footer">
-                                <input type="hidden" name="returncall_mod_send" value="1">
-                                <button type="submit" class="btn btn-primary">Заказать звонок</button>
-                     </div>
-                     </form>
+
+
+                        </div>
+                        <div class="modal-footer">
+                            <input type="hidden" name="returncall_mod_send" value="1">
+                            <button type="submit" class="btn btn-primary">Заказать звонок</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

@@ -5,7 +5,7 @@ $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['order_status']);
 
 // Стартовый вид
 function actionStart() {
-    global $PHPShopGUI, $PHPShopModules;
+    global $PHPShopGUI, $PHPShopModules,$PHPShopSystem;
 
     // Начальные данные
     $data['name'] = 'Новый статус';
@@ -32,6 +32,14 @@ function actionStart() {
             $PHPShopGUI->setCheckbox("sklad_action_new", 1, "Списание со склада товаров в заказе", $data['sklad_action']) . '<br>' .
             $PHPShopGUI->setCheckbox("cumulative_action_new", 1, "Учет скидки покупателя", $data['cumulative_action'])
     );
+    
+        // Сообщение
+    $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));
+    $oFCKeditor = new Editor('mail_message_new');
+    $oFCKeditor->Height = '350';
+    $oFCKeditor->Value = $data['mail_message'];
+    
+    $Tab1.=$PHPShopGUI->setField("Текст письма:", $oFCKeditor->AddGUI() . $PHPShopGUI->setHelp('Переменные: <code>@ouid@</code> - номер заказа, <code>@date@</code> - дата заказа, <code>@status@</code> - новый статус заказа, <code>@fio@</code> - имя покупателя, <code>@sum@</code> - стоимость заказа'));
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);

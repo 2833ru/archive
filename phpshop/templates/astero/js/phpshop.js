@@ -390,40 +390,40 @@ function setRubznak() {
 }
 function fasetFilterFix() {
     $('#faset-filter-body').on('click', 'h4', function() {
-            if ($(this).parents('.faset-filter-block-wrapper').hasClass('active')) {
-                $(this).parents('.faset-filter-block-wrapper').removeClass('active');
-            } else {
-                $(this).parents('.faset-filter-block-wrapper').addClass('active');
-            }
+        if ($(this).parents('.faset-filter-block-wrapper').hasClass('active')) {
+            $(this).parents('.faset-filter-block-wrapper').removeClass('active');
+        } else {
+            $(this).parents('.faset-filter-block-wrapper').addClass('active');
+        }
     });
-        $('.filter-title').on('click', function(){
-         if ($('.filter-body-fix').hasClass('active')) {
+    $('.filter-title').on('click', function() {
+        if ($('.filter-body-fix').hasClass('active')) {
             $('.filter-body-fix').removeClass('active');
-         }else{
-         $('.filter-body-fix').addClass('active');
+        } else {
             $('.filter-body-fix').addClass('active');
-         }
-         });
-        $('#price-filter-body h4').on('click', function() {
-            if ($(this).hasClass('active')) {
-                $(this).removeClass('active');
-                $('#price-filter-form').removeClass('active');
-                $('#price-filter-body').removeClass('active');
-            } else {
-                $(this).addClass('active');
-                $('#price-filter-form').addClass('active');
-                $('#price-filter-body').addClass('active');
-            }
-        });
+            $('.filter-body-fix').addClass('active');
+        }
+    });
+    $('#price-filter-body h4').on('click', function() {
+        if ($(this).hasClass('active')) {
+            $(this).removeClass('active');
+            $('#price-filter-form').removeClass('active');
+            $('#price-filter-body').removeClass('active');
+        } else {
+            $(this).addClass('active');
+            $('#price-filter-form').addClass('active');
+            $('#price-filter-body').addClass('active');
+        }
+    });
 }
 function productPageSelect() {
-    $('.table-optionsDisp select').each(function(){
+    $('.table-optionsDisp select').each(function() {
         var selectID = $(this).attr('id');
-        $('.product-page-option-wrapper').append('<div class="product-page-select '+selectID+'""></div>')
-        $(this).children('option').each(function(){
+        $('.product-page-option-wrapper').append('<div class="product-page-select ' + selectID + '""></div>')
+        $(this).children('option').each(function() {
             var optionValue = $(this).attr('value');
             var optionHtml = $(this).html();
-            $('.'+selectID+'').append('<div class="select-option" value="'+optionValue+'">'+optionHtml+'</div>')
+            $('.' + selectID + '').append('<div class="select-option" value="' + optionValue + '">' + optionHtml + '</div>')
         })
     });
 
@@ -431,17 +431,17 @@ function productPageSelect() {
         if ($(this).hasClass('active')) {
             $(this).removeClass('active');
             var optionInputValue = [];
-            $('.product-page-select .select-option.active').each(function(){
+            $('.product-page-select .select-option.active').each(function() {
                 optionInputValue.unshift($(this).attr('value'));
             });
             var optionInputNewValue = optionInputValue.join();
             $('.product-page-option-wrapper input').attr('value', optionInputNewValue);
-        }else{
-            
+        } else {
+
             $(this).siblings().removeClass('active');
             $(this).addClass('active');
             var optionInputValue = [];
-            $('.product-page-select .select-option.active').each(function(){
+            $('.product-page-select .select-option.active').each(function() {
                 optionInputValue.unshift($(this).attr('value'));
             });
             var optionInputNewValue = optionInputValue.join('');
@@ -506,7 +506,7 @@ $(document).ready(function() {
     });
 
     // Фасетный фильтр
-    if (FILTER && $('#filter-well').length){
+    if (FILTER && $('#filter-well').length) {
         $("#faset-filter-body").html($("#sorttable table td").html());
         $("#faset-filter").removeClass('hide');
     }
@@ -596,7 +596,7 @@ $(document).ready(function() {
             $.removeCookie('slider-range-max');
             $(".pagination").show();
             $("#slider-range").slider("option", "values", [price_min, price_max]);
-            
+
             // Сброс текущей страницы
             count = current;
             $('#faset-filter-body > .faset-filter-block-wrapper:first-child').addClass('active');
@@ -990,14 +990,16 @@ $(document).ready(function() {
         // Опции характеристики
         else if ($('#optionMessage').html()) {
             var optionCheck = true;
+            var optionValue = $('#allOptionsSet' + $(this).attr('data-uid')).val();
             $('.optionsDisp select').each(function() {
-                if ($(this).hasClass('req') && $(this).val() == "" )
+                if ($(this).hasClass('req') && optionValue === '')
                     optionCheck = false;
             });
-            
-            if(optionCheck)
-            addToCartList($(this).attr('data-uid'), $('input[name="quant[2]"]').val(), $(this).attr('data-uid'), $('#allOptionsSet' + $(this).attr('data-uid')).val());
-            else  showAlertMessage($('#optionMessage').html());
+
+            if (optionCheck)
+                addToCartList($(this).attr('data-uid'), $('input[name="quant[2]"]').val(), $(this).attr('data-uid'), optionValue);
+            else
+                showAlertMessage($('#optionMessage').html());
         }
         // Обычный товар
         else {
@@ -1050,6 +1052,25 @@ $(document).ready(function() {
         });
     });
 
+    //  Social Button
+    $('.social-button').on('click', function(e) {
+        e.preventDefault();
+        
+        var u = location.href;
+        var t = document.title;
+        var h = document.location.host;
+        var d = $('meta[name="description"]').attr('content');
+
+        if ($(this).find("i").hasClass('fa-facebook'))
+            path = '//www.facebook.com/sharer/sharer.php?u=' + u;
+        else if ($(this).find("i").hasClass('fa-vk'))
+            path = '//vk.com/share.php?url=' + u + '&title=' + t + '&description=' + d + '&image=//' + h + $('#logo img').attr('src');
+        else if ($(this).find("i").hasClass('fa-odnoklassniki'))
+            path = '//ok.ru/dk?st.cmd=addShare&st._surl=' + u + '&title=' + t;
+
+        if (path)
+            window.open(path, '_blank', 'scrollbars=0, resizable=1, menubar=0, left=100, top=100, width=550, height=440, toolbar=0, status=0');
+    });
 
     // plugin bootstrap minus and plus http://jsfiddle.net/laelitenetwork/puJ6G/
     $('.btn-number').click(function(e) {
@@ -1088,15 +1109,16 @@ $(document).ready(function() {
     fasetFilterFix();
     $('.order-page-num-input-fix').removeClass('hide');
 
-    $(window).resize(function(){
+    $(window).resize(function() {
         setEqualHeight('.product-description');
         setEqualHeight('.product-name-fix');
     });
-    
+
     // Подсказки DaData.ru
     var DADATA_TOKEN = $('#body').attr('data-token');
     if (DADATA_TOKEN) {
 
+        /*
         $('[name="name_new"]').suggestions({
             token: DADATA_TOKEN,
             type: "NAME",
@@ -1121,6 +1143,7 @@ $(document).ready(function() {
             },
             count: 5
         });
+        */
         $('[name="oneclick_mod_name"]').suggestions({
             token: DADATA_TOKEN,
             type: "NAME",
@@ -1137,12 +1160,14 @@ $(document).ready(function() {
             },
             count: 5
         });
+        /*
         $('[type="email"]').suggestions({
             token: DADATA_TOKEN,
             type: "EMAIL",
             suggest_local: false,
             count: 5
         });
+        */
         $('[name="org_name"]').suggestions({
             token: DADATA_TOKEN,
             type: "PARTY",

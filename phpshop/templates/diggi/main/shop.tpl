@@ -301,6 +301,15 @@
                         <h4 class="lead">
                             Тел: <span>@telNum@</span>
                         </h4>
+                                                <div class="footer-social">
+
+                            <!-- Social Button -->
+                            <a class="social-button hidden-xs hidden-sm" href="#" title="Поделится в Facebook"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                            <a class="social-button hidden-xs hidden-sm" href="#" title="Поделится в Контакте"><i class="fa fa-vk" aria-hidden="true"></i></a>
+                            <a class="social-button hidden-xs hidden-sm" href="#" title="Поделится в Одноклассники"><i class="fa fa-odnoklassniki" aria-hidden="true"></i></a>
+                            <!--/ Social Button -->
+                            
+                        </div>
                     </div>
                     <!-- Contact Us Ends -->
                 </div>

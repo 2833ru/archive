@@ -34,6 +34,9 @@ h5{
 h6{
     font-size:14px;
 }
+.header-color h4.modal-title {
+    color: #1c1c1c !important;
+}
 .main-heading{
     font-size:42px;
 }
@@ -2885,4 +2888,27 @@ thead td#allspecwhite {
 .returncall-wrapper.returncall-desctop {
     margin-top: 0px;
     padding-top: 20px;
+}
+.footer-social > a {
+    border: 1px solid #e1e7ec;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    margin-right: 8px;
+    line-height: 35px;
+    text-align: center;
+    transition: all .3s;
+    background-color: transparent;
+    color: rgba(255,255,255,0.6) !important;
+    font-size: 17px;
+    display: inline-block;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    text-decoration: none;
+    vertical-align: middle;
+    border-color: rgba(255,255,255,0.12);
+}
+.footer-social > a:hover {
+    border-color: rgba(255,255,255,0.12);
+    background-color: rgba(255,255,255,0.5);
 }

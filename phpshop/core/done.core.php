@@ -120,7 +120,7 @@ class PHPShopDone extends PHPShopCore {
             // создаём нового пользователя, или авторизуем старого
             if (!class_exists('PHPShopUsers'))
                 PHPShopObj::importCore('users');
-            
+
             $PHPShopUsers = new PHPShopUsers();
             $this->userId = $PHPShopUsers->add_user_from_order($_POST['mail']);
 
@@ -442,8 +442,9 @@ function mailcartforma($val, $option) {
     if ($hook)
         return $hook;
 
-    if (PHPShopProductFunction::true_parent($val['parent']))
-        $val['uid'] = null;
+    // Артикул
+    if (!empty($val['parent_uid']))
+        $val['uid'] = $val['parent_uid'];
 
     $dis = $val['uid'] . "  " . $val['name'] . " (" . $val['num'] . " " . $val['ed_izm'] . " * " . $val['price'] . ") -- " . ($val['price'] * $val['num']) . " " . $option['currency'] . " <br>
 ";

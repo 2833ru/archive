@@ -12,7 +12,6 @@ PHPShopObj::loadClass("category");
 $TitlePage = __('Редактирование Товара #' . $_GET['id']);
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
 
-
 // Построение дерева категорий
 function treegenerator($array, $i, $curent) {
     global $tree_array;
@@ -45,10 +44,17 @@ function treegenerator($array, $i, $curent) {
 }
 
 function actionStart() {
-    global $PHPShopGUI, $PHPShopModules, $PHPShopOrm, $PHPShopBase, $PHPShopSystem,$CategoryArray;
+    global $PHPShopGUI, $PHPShopModules, $PHPShopOrm, $PHPShopBase, $PHPShopSystem, $CategoryArray;
 
     // Выборка
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
+
+    // Редирект на родителя подтипа
+    if ($data['parent_enabled'] == 1 and empty($_GET['view'])) {
+        $data_parent = $PHPShopOrm->select(array('id'), array('parent' => "='" . $data['id'] . "' or parent LIKE '," . $data['id'] . "' or  parent LIKE '" . $data['id'] . ",'",'parent_enabled'=>"='0'"),false,array('limit'=>1));
+        if (!empty($data_parent['id']))
+            header('Location: ?path=' . $_GET['path'] . '&id=' . $data_parent['id'] . '&tab=6&return=' . $_GET['return']);
+    }
 
     // Нет данных
     if (!is_array($data)) {
@@ -182,9 +188,9 @@ function actionStart() {
     $Tab_info.=$PHPShopGUI->setField('Опции вывода:', $PHPShopGUI->setCheckbox('enabled_new', 1, 'Вывод в каталоге', $data['enabled']) .
             $PHPShopGUI->setCheckbox('spec_new', 1, 'Спецпредложение', $data['spec']) . $PHPShopGUI->setCheckbox('newtip_new', 1, 'Новинка', $data['newtip']));
     $Tab_info.=$PHPShopGUI->setField('Сортировка:', $PHPShopGUI->setInputText('№', 'num_new', $data['num'], 150));
-    
-    if($_GET['view']=='option')
-    $Tab_info.=$PHPShopGUI->setField('Связи', $PHPShopGUI->setRadio('parent_enabled_new', 0, __('Обычный товар'), $data['parent_enabled']).$PHPShopGUI->setRadio('parent_enabled_new', 1, __('Подтип товара'), $data['parent_enabled']));
+
+    if ($_GET['view'] == 'option')
+        $Tab_info.=$PHPShopGUI->setField('Связи', $PHPShopGUI->setRadio('parent_enabled_new', 0, __('Обычный товар'), $data['parent_enabled']) . $PHPShopGUI->setRadio('parent_enabled_new', 1, __('Подтип товара'), $data['parent_enabled']));
 
     $Tab1 = $PHPShopGUI->setCollapse(__('Информация'), $Tab_info);
 
@@ -200,7 +206,7 @@ function actionStart() {
             }
             else
                 $check = false;
-            $valuta_area.=$PHPShopGUI->setRadio('baseinputvaluta_new', $val['id'], $val['name'], $check,false,false,array('code'=>$val['code']));
+            $valuta_area.=$PHPShopGUI->setRadio('baseinputvaluta_new', $val['id'], $val['name'], $check, false, false, array('code' => $val['code']));
         }
 
     // Цены
@@ -215,7 +221,7 @@ function actionStart() {
     // Валюта
     $Tab_price.=$PHPShopGUI->setField(__('Валюта:'), $valuta_area);
 
-    $Tab1.=$PHPShopGUI->setCollapse(__('Цены'), $Tab_price,  'in' , true, true, array('type'=>'price'));
+    $Tab1.=$PHPShopGUI->setCollapse(__('Цены'), $Tab_price, 'in', true, true, array('type' => 'price'));
 
     // YML
     $data['yml_bid_array'] = unserialize($data['yml_bid_array']);
@@ -696,9 +702,9 @@ function actionOptionEdit() {
     $PHPShopGUI->field_col = 2;
 
     // Конвертер цвета
-   if (!empty($data['parent2']) and empty($data['color']))
+    if (!empty($data['parent2']) and empty($data['color']))
         $data['color'] = PHPShopString::getColor($data['parent2']);
- 
+
     $PHPShopGUI->_CODE.= $PHPShopGUI->setField('Размер', $PHPShopGUI->setInputArg(array('name' => 'parent_new', 'type' => 'text', 'value' => $data['parent'])));
     $PHPShopGUI->_CODE.= $PHPShopGUI->setField(array('Цвет', 'Код'), array($PHPShopGUI->setInputArg(array('name' => 'parent2_new', 'type' => 'text', 'value' => $data['parent2'])), $PHPShopGUI->setInputColor('color_new', $data['color'], 110)), array(array(2, 6), array(1, 2)));
     $PHPShopGUI->_CODE.= $PHPShopGUI->setField('Название', $PHPShopGUI->setInputArg(array('name' => 'name_new', 'type' => 'text.required', 'value' => $data['name'])) . $PHPShopGUI->setHelp(__('Полное <a href="?path=product&return=catalog.' . $data['category'] . '&id=' . $_REQUEST['id'] . '&view=option">название товара</a>, попадающего в корзину')));

@@ -4,7 +4,7 @@
     <name>Sticker</name>
     <faqlink>http://faq.phpshop.ru/page/sticker.html</faqlink>
     <description>Модуль стикеров.</description>
-    <category>form,text</category>
+    <category>template,form,text</category>
     <adminmenu>
         <title>Стикеры</title>
         <capability>true</capability>

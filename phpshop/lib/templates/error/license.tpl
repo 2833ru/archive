@@ -61,12 +61,12 @@
                     <h4>Решение проблемы</h4>
                     <ol>
                         <li>Проверить лицензию на домен через <a href="http://www.phpshop.ru/order/?from=@server@">форму проверки лицензий</a>.</li>
-                        <li>Ознакомиться с <a href="https://help.phpshop.ru/knowledgebase.php?article=291">инструкцией решения проблем в лицензиях</a></li>
+                        <li>Ознакомиться с <a href="https://help.phpshop.ru/knowledgebase/article/291">инструкцией решения проблем в лицензиях</a></li>
                         <li>Оформить <a href="http://www.phpshop.ru/order/?from=@server@#buy">заказ на покупку</a> постоянной лицензии PHPShop.</li>
                         <li>Оформить <a href="http://www.phpshop.ru/order/?from=@server@#showcase">заказ на покупку</a> лицензии для дополнительных витрин PHPShop <span class="label label-success">New</span></li>
                         <li>Оформить <a href="http://www.phpshop.ru/order/?from=@server@#rent">заказ на аренду</a> лицензии PHPShop на своем хостинге <span class="label label-success">New</span></li>
                         <li>Продлить <a href="http://www.phpshop.ru/order/?from=@server@">техническую поддержку</a> и получить новую лицензию для PHPShop.</li>
-                        <li>Пожаловаться на ошибку <a href="http://www.phpshop.ru/page/address.html">Администрации</a>.
+                        <li>Пожаловаться на ошибку <a href="http://www.phpshop.ru/page/address.html?from=@server@">Администрации</a>.
                         </li>
                     </ol>
 

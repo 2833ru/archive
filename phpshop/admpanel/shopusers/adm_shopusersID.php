@@ -65,8 +65,8 @@ function actionStart() {
     $Tab2 = $PHPShopGUI->loadLib('tab_addres', $data['data_adres']);
 
     // Карта
-    $PHPShopGUI->addJSFiles('./shopusers/gui/shopusers.gui.js', '//api-maps.yandex.ru/2.0/?load=package.standard&lang=ru-RU'); //'//api-maps.yandex.ru/1.1/?lang=ru_RU'
-    // Карта 
+    $PHPShopGUI->addJSFiles('./shopusers/gui/shopusers.gui.js', '//api-maps.yandex.ru/2.0/?load=package.standard&lang=ru-RU'); 
+
     $mass = unserialize($data['data_adres']);
     if (strlen($mass['list'][$mass['main']]['street_new']) > 5) {
         $map = '<div id="map" data-geocode="' . $mass['list'][$mass['main']]['city_new'] . ', ' . $mass['list'][$mass['main']]['street_new'] . ' ' . $mass['list'][$mass['main']]['house_new'] . '"></div>';
@@ -156,8 +156,13 @@ function actionUpdate() {
         }
     }
 
+    if(!empty($mass_decode))
     $_POST['data_adres_new']['list'] = $mass_decode;
+    
+    if(is_array($_POST['data_adres_new']))
     $_POST['data_adres_new'] = serialize($_POST['data_adres_new']);
+    
+    if(!empty($_POST['password_new']))
     $_POST['password_new'] = base64_encode($_POST['password_new']);
 
     // Перехват модуля

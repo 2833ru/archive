@@ -2,8 +2,8 @@
 
 function success_mod_nextpay_hook($obj, $value) {
 
-    if (isset($_GET['seller_ext_order_id']) and isset($_GET['seller_ext_order_id'])) {
-        $obj->order_metod = 'modules" and id="10016';
+    if ($_GET['from'] == 'netpay') {
+        $obj->order_metod = 'modules" and id="10017';
         $obj->message();
         return true;
     }

@@ -12,7 +12,7 @@
   }
  * </code>
  * @author PHPShop Software
- * @version 1.1
+ * @version 1.2
  * @package PHPShopClass
  */
 class PHPShopArray {
@@ -67,6 +67,11 @@ class PHPShopArray {
      * @var array
      */
     var $order = array();
+    /**
+     * Память
+     * @var string имя ячейки памяти
+     */
+    var $memory = null;
 
     function __construct() {
 
@@ -78,6 +83,9 @@ class PHPShopArray {
 
         $this->objArgNum = func_num_args();
         $this->setArray();
+        
+        if($this->memory)
+            $_SESSION['Memory'][$this->memory] = $this->objArray;
     }
 
     /**

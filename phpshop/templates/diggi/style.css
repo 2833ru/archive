@@ -17,6 +17,9 @@ body {
 a{
     -color:#ff8b03;
 }
+.header-color h4.modal-title {
+    color: #1c1c1c !important;
+}
 a:hover, 
 a:focus{
     -color:#ff7e00;
@@ -3319,4 +3322,27 @@ thead td#allspecwhite {
 }
 .img-thumbnail {
     border-radius: 0px;
+}
+.footer-social > a {
+    border: 1px solid #e1e7ec;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    margin-right: 8px;
+    line-height: 35px;
+    text-align: center;
+    transition: all .3s;
+    background-color: transparent;
+    color: rgba(255,255,255,0.6) !important;
+    font-size: 17px;
+    display: inline-block;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    text-decoration: none;
+    vertical-align: middle;
+    border-color: rgba(255,255,255,0.12);
+}
+.footer-social > a:hover {
+    border-color: rgba(255,255,255,0.12);
+    background-color: rgba(255,255,255,0.06);
 }

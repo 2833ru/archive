@@ -141,7 +141,7 @@
                 <!-- Main Header Ends -->
             </div>
             <!-- Nested Container Ends -->
-            
+
             <!-- Header Area Background Block Starts -->
             <div class="header-area-background-block"></div>
             <!-- Header Area Background Block Ends -->
@@ -187,9 +187,9 @@
         <!-- Slider Section Starts -->
         <div class="slider">
             <!-- Nested Container Starts -->
-                <!-- Carousel Starts -->
-                @imageSlider@
-                <!-- Carousel Ends -->
+            <!-- Carousel Starts -->
+            @imageSlider@
+            <!-- Carousel Ends -->
             <!-- Nested Container Ends -->
         </div>
         <!-- Slider Section Ends -->
@@ -198,21 +198,21 @@
 
             <!-- Featured Products Starts -->
             <section class="products-list">
-                    <div class="page-header visible-lg visible-md product-head">
-                        <h2>@mainContentTitle@</h2>
-                    </div>
-                    <div >@mainContent@</div>
+                <div class="page-header visible-lg visible-md product-head">
+                    <h2>@mainContentTitle@</h2>
+                </div>
+                <div >@mainContent@</div>
 
-                    <!-- Heading Starts -->
-                    <h2 class="product-head page-header"><a href="/newtip/" title="Все новинки">Новинки</a></h2>
-                    <!-- Heading Ends -->
-                    <!-- Products Row Starts -->
-                    <!-- Product Starts -->
-                    <div class="new-product-list">
-                        @specMainIcon@
-                    </div>
-                    <!-- Product Ends -->
-                    <!-- Products Row Ends -->
+                <!-- Heading Starts -->
+                <h2 class="product-head page-header"><a href="/newtip/" title="Все новинки">Новинки</a></h2>
+                <!-- Heading Ends -->
+                <!-- Products Row Starts -->
+                <!-- Product Starts -->
+                <div class="new-product-list">
+                    @specMainIcon@
+                </div>
+                <!-- Product Ends -->
+                <!-- Products Row Ends -->
             </section>
             <!-- Featured Products Ends -->
             <!-- Banners Starts -->
@@ -224,7 +224,7 @@
                         </ul>
                     </div>
                 </div>
-                
+
             </div>
             <!-- Banners Ends -->    
             <!-- Latest Products Starts -->
@@ -309,6 +309,16 @@
                         <h4 class="lead">
                             Тел: <span>@telNum@</span>
                         </h4>
+
+                        <div class="footer-social">
+
+                            <!-- Social Button -->
+                            <a class="social-button hidden-xs hidden-sm" href="#" title="Поделится в Facebook"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                            <a class="social-button hidden-xs hidden-sm" href="#" title="Поделится в Контакте"><i class="fa fa-vk" aria-hidden="true"></i></a>
+                            <a class="social-button hidden-xs hidden-sm" href="#" title="Поделится в Одноклассники"><i class="fa fa-odnoklassniki" aria-hidden="true"></i></a>
+                            <!--/ Social Button -->
+
+                        </div>
                     </div>
                     <!-- Contact Us Ends -->
                 </div>
@@ -359,7 +369,7 @@
             </div>
         </div>
         <!--/ Notification -->
-        
+
         <!-- Модальное окно авторизации-->
         <div class="modal fade bs-example-modal-sm" id="userModal" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog modal-sm">
@@ -401,8 +411,8 @@
             </div>
         </div>
         <!--/ Модальное окно авторизации-->
-        
-                <!-- Модальное окно мобильного поиска -->
+
+        <!-- Модальное окно мобильного поиска -->
         <div class="modal fade bs-example-modal-sm" id="searchModal" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
@@ -434,9 +444,9 @@
                         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                         <h4 class="modal-title">@leftMenuName@</h4>
                     </div>
-                     <form role="form" method="post" name="user_forma" action="@ShopDir@/returncall/">
-                    <div class="modal-body">
-                       
+                    <form role="form" method="post" name="user_forma" action="@ShopDir@/returncall/">
+                        <div class="modal-body">
+
                             <div class="form-group">
                                 <input type="text" name="returncall_mod_name" class="form-control" placeholder="Имя..." required="">
                             </div>
@@ -450,14 +460,14 @@
                                 <textarea placeholder="Сообщение" class="form-control" name="returncall_mod_message"></textarea>
                             </div>
                             @returncall_captcha@
-                           
-                       
-                    </div>
-                     <div class="modal-footer">
-                                <input type="hidden" name="returncall_mod_send" value="1">
-                                <button type="submit" class="btn btn-primary">Заказать звонок</button>
-                     </div>
-                     </form>
+
+
+                        </div>
+                        <div class="modal-footer">
+                            <input type="hidden" name="returncall_mod_send" value="1">
+                            <button type="submit" class="btn btn-primary">Заказать звонок</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

@@ -30,6 +30,10 @@ function send_to_order_mod_netpay_hook($obj, $value, $rout) {
             $params['successUrl'] = 'http://' . $_SERVER['HTTP_HOST'] . '/success/?from=netpay';
             $params['failUrl'] = 'http://' . $_SERVER['HTTP_HOST'] . '/fail/';
 
+            // Холдирование
+            if ($option['hold'] == 2)
+                $params['isHold'] = 'true';
+
             $keys = array();
             $keys['api_key'] = $option['merchant_key'];
             $keys['auth_signature'] = $option['merchant_skey'];
@@ -54,7 +58,7 @@ function send_to_order_mod_netpay_hook($obj, $value, $rout) {
             $forma = ParseTemplateReturn($GLOBALS['SysValue']['templates']['netpay']['netpay_payment_forma'], true);
         }
         else {
-            $obj->set('mesageText', $option['title_sub'] );
+            $obj->set('mesageText', $option['title_sub']);
             $forma = ParseTemplateReturn($GLOBALS['SysValue']['templates']['order_forma_mesage']);
         }
 

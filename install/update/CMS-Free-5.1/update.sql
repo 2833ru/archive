@@ -649,3 +649,9 @@ ALTER TABLE  `phpshop_comment` CHANGE  `rate`  `rate` SMALLINT( 1 ) UNSIGNED NOT
 ALTER TABLE  `phpshop_orders` ADD  `sum` FLOAT ;
 ALTER TABLE  `phpshop_categories` ADD  `dop_cat` varchar(255) DEFAULT '';
 ALTER TABLE  `phpshop_sort_categories` ADD  `product` enum('0','1') NOT NULL DEFAULT '0' ;
+ALTER TABLE `phpshop_servers` ADD `tel` varchar(255) default '';
+ALTER TABLE `phpshop_servers` ADD `company` varchar(255) default '';
+ALTER TABLE `phpshop_servers` ADD `adres` varchar(255) default '';
+ALTER TABLE `phpshop_servers` ADD `logo` varchar(255) default '';
+ALTER TABLE `phpshop_servers` ADD `adminmail` varchar(255) default '';
+ALTER TABLE `phpshop_order_status` ADD `mail_message` text default '';

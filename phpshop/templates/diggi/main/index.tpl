@@ -18,7 +18,7 @@
 
     </head>
     <body id="body" data-dir="@ShopDir@" data-path="@php echo $GLOBALS['PHPShopNav']->objNav['path']; php@" data-id="@php echo $GLOBALS['PHPShopNav']->objNav['id']; php@" data-token="@dadataToken@">
-        
+
         <!-- jQuery -->
         <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery-1.11.0.min.js"></script>
 
@@ -81,38 +81,38 @@
                             </ul>
                         </div>
                     </div>
-                        <!-- Logo Starts -->
-                        <div class="col-md-2 col-sm-12 col-xs-12 wrapper-fix">
-                            <div id="logo">
-                                <a href="/" title="@name@">
-                                    <img src="@logo@" alt="@name@" class="img-responsive" />
-                                </a>
-                            </div>
+                    <!-- Logo Starts -->
+                    <div class="col-md-2 col-sm-12 col-xs-12 wrapper-fix">
+                        <div id="logo">
+                            <a href="/" title="@name@">
+                                <img src="@logo@" alt="@name@" class="img-responsive" />
+                            </a>
                         </div>
-                        <!-- Logo Starts -->
-                        <!-- Header Links Starts -->
-                        <div class="col-sm-12 col-xs-12 col-md-7 text-center header-color">
-                            <div class="btn-group header-valuta-disp-wrapper">
-                                <h4><i class="fa fa-phone-square" aria-hidden="true"></i> Тел: @telNumMobile@</h4>
-                            </div>
-                            <div class="returncall-wrapper header-links header-color">
-                                @returncall@
-                            </div>
+                    </div>
+                    <!-- Logo Starts -->
+                    <!-- Header Links Starts -->
+                    <div class="col-sm-12 col-xs-12 col-md-7 text-center header-color">
+                        <div class="btn-group header-valuta-disp-wrapper">
+                            <h4><i class="fa fa-phone-square" aria-hidden="true"></i> Тел: @telNumMobile@</h4>
                         </div>
-                        <!-- Header Links Ends -->
-                        <!-- Shopping Cart Starts -->
-                        <div class="col-md-3 col-lg-3  visible-md hidden-sm hidden-xs visible-lg">
-                            <div id="cart" class="btn-group pull-right header-color">
-                                <button id="cartlink" type="button" data-toggle="dropdown" class="btn btn-block btn-lg dropdown-toggle" data-trigger="click" data-container="body"  data-placement="bottom" data-html="true" data-url="/order/" data-content='@visualcart@'>
-                                    <span class="cart-title">Корзина</span>
-                                    <i class="fa fa-shopping-cart"></i>
-                                    <span id="cart-total"><span><span id="num">@num@</span>шт.</span></span>
-                                    <i class="fa fa-caret-down"></i>
-                                </button>
-                                @visualcart@
-                            </div>
+                        <div class="returncall-wrapper header-links header-color">
+                            @returncall@
                         </div>
-                        <!-- Shopping Cart Ends -->
+                    </div>
+                    <!-- Header Links Ends -->
+                    <!-- Shopping Cart Starts -->
+                    <div class="col-md-3 col-lg-3  visible-md hidden-sm hidden-xs visible-lg">
+                        <div id="cart" class="btn-group pull-right header-color">
+                            <button id="cartlink" type="button" data-toggle="dropdown" class="btn btn-block btn-lg dropdown-toggle" data-trigger="click" data-container="body"  data-placement="bottom" data-html="true" data-url="/order/" data-content='@visualcart@'>
+                                <span class="cart-title">Корзина</span>
+                                <i class="fa fa-shopping-cart"></i>
+                                <span id="cart-total"><span><span id="num">@num@</span>шт.</span></span>
+                                <i class="fa fa-caret-down"></i>
+                            </button>
+                            @visualcart@
+                        </div>
+                    </div>
+                    <!-- Shopping Cart Ends -->
                     <!-- Row Ends -->
                 </div>
                 <!-- Nested Container Ends -->
@@ -124,11 +124,11 @@
                     <!-- Nav Header Starts -->
                     <div class="navbar-header">
                         <a class="navbar-brand visible-xs pull-right" href="tel:@telNumMobile@">
-                                <span class="glyphicon glyphicon-phone"></span> @telNumMobile@
+                            <span class="glyphicon glyphicon-phone"></span> @telNumMobile@
                         </a>
                         <button type="button" class="btn btn-navbar navbar-toggle main-menu-button" data-toggle="collapse" data-target=".navbar-cat-collapse">
                             <span class="sr-only">Toggle Navigation</span>
-                                <i class="fa fa-bars"></i>
+                            <i class="fa fa-bars"></i>
                         </button>
                     </div>
                     <!-- Nav Header Ends -->
@@ -137,7 +137,7 @@
                         <ul class="nav navbar-nav main-navbar-top">
                             <li class="main-navbar-top-catalog">
                                 <a href="#" id="nav-catalog-dropdown-link" class="nav-catalog-dropdown-link" aria-expanded="false">Каталог
-                                    </a>
+                                </a>
                                 <ul class="main-navbar-list-catalog-wrapper fadeIn animated">
                                     @leftCatal@
                                 </ul>
@@ -162,8 +162,8 @@
             <!-- Main Menu Ends -->
         </header>
         <!-- Header Section Ends -->
-                
-        
+
+
         <!-- Main Container Starts -->
         <div class="main-container main-page container">
             <div class="row">
@@ -192,9 +192,9 @@
                     <!-- Slider Section Starts -->
                     <div class="slider">
                         <!-- Nested Container Starts -->
-                            <!-- Carousel Starts -->
-                            @imageSlider@
-                            <!-- Carousel Ends -->
+                        <!-- Carousel Starts -->
+                        @imageSlider@
+                        <!-- Carousel Ends -->
                         <!-- Nested Container Ends -->
                     </div>
                     <!-- Slider Section Ends -->
@@ -212,7 +212,7 @@
                             <!-- Product Starts -->
                             <div class="swiper-container spec-main-icon-slider">
                                 <div class="swiper-wrapper">
-                                        @specMainIcon@
+                                    @specMainIcon@
                                 </div>
                             </div>
                             <div class="swiper-button-prev-block">
@@ -240,21 +240,21 @@
                             <h2 class="product-head page-header swiper-title">Спецпредложения</h2>
                             <!-- Heading Ends -->
                             <!-- Products Row Starts -->
-                                <div class="swiper-container spec-main-slider">
-                                    <div class="swiper-wrapper">
-                                        @specMain@
-                                    </div>
+                            <div class="swiper-container spec-main-slider">
+                                <div class="swiper-wrapper">
+                                    @specMain@
                                 </div>
-                                <div class="swiper-button-prev-block">
-                                    <div class="swiper-button-prev btn-prev2">
-                                        <span class="glyphicon glyphicon-chevron-left"></span>
-                                    </div>
+                            </div>
+                            <div class="swiper-button-prev-block">
+                                <div class="swiper-button-prev btn-prev2">
+                                    <span class="glyphicon glyphicon-chevron-left"></span>
                                 </div>
-                                <div class="swiper-button-next-block">
-                                    <div class="swiper-button-next btn-next2">
-                                        <span class="glyphicon glyphicon-chevron-right"></span>
-                                    </div>
+                            </div>
+                            <div class="swiper-button-next-block">
+                                <div class="swiper-button-next btn-next2">
+                                    <span class="glyphicon glyphicon-chevron-right"></span>
                                 </div>
+                            </div>
                             <!-- Products Row Ends -->
                         </div>     
                     </section>
@@ -263,10 +263,10 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    
-                    
-                   
-                    
+
+
+
+
                 </div>
             </div>
         </div>
@@ -327,6 +327,15 @@
                         <h4 class="lead">
                             Тел: <span>@telNum@</span>
                         </h4>
+                        <div class="footer-social">
+
+                            <!-- Social Button -->
+                            <a class="social-button hidden-xs hidden-sm" href="#" title="Поделится в Facebook"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                            <a class="social-button hidden-xs hidden-sm" href="#" title="Поделится в Контакте"><i class="fa fa-vk" aria-hidden="true"></i></a>
+                            <a class="social-button hidden-xs hidden-sm" href="#" title="Поделится в Одноклассники"><i class="fa fa-odnoklassniki" aria-hidden="true"></i></a>
+                            <!--/ Social Button -->
+                            
+                        </div>
                     </div>
                     <!-- Contact Us Ends -->
                 </div>
@@ -377,7 +386,7 @@
             </div>
         </div>
         <!--/ Notification -->
-        
+
         <!-- Модальное окно авторизации-->
         <div class="modal fade bs-example-modal-sm" id="userModal" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog modal-sm">
@@ -419,8 +428,8 @@
             </div>
         </div>
         <!--/ Модальное окно авторизации-->
-        
-                <!-- Модальное окно мобильного поиска -->
+
+        <!-- Модальное окно мобильного поиска -->
         <div class="modal fade bs-example-modal-sm" id="searchModal" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">

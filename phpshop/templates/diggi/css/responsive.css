@@ -81,10 +81,9 @@
 	}
         
         .description-product-height-fix {
-        background: linear-gradient(to bottom, rgba(0, 0, 0, 0), #fff);
-        background: -webkit-linear-gradient(to bottom, rgba(0, 0, 0, 0), #fff);
-        background: -moz-linear-gradient(to bottom, rgba(0, 0, 0, 0), #fff);
-        background: -o-linear-gradient(to bottom, rgba(0, 0, 0, 0), #fff);
+        	background-image: url(./images/description-bg.png);
+    		background-repeat: no-repeat;
+    		background-position: center;
         }
         
         .product-col .description.product-description {

@@ -64,7 +64,7 @@ class PHPShopDoc extends PHPShopCore {
     function getMeta($content) {
 
         // Title
-        $patern="/<H1>(.*)<\/H1>/i";
+        $patern="/<h1>(.*)<\/h1>/i";
         preg_match($patern,$content,$matches);
         $title = $matches[1];
 

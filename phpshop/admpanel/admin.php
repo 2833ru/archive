@@ -439,7 +439,9 @@ if (empty($adm_title)) {
             else
                 $PHPShopBase->Rule->BadUserFormaWindow();
             ?>
+            <br>
         </div>
+        
         <!-- Notification -->
         <div id="notification" class="success-notification hide">
             <div  class="alert alert-success alert-dismissible" role="alert">

@@ -38,6 +38,9 @@ $dis = $sum = $num = null;
 if (is_array($order['Cart']['cart']))
     foreach ($order['Cart']['cart'] as $val) {
 
+        if (!empty($val['parent_uid']))
+            $val['uid'] = $val['parent_uid'];
+
         if (!empty($val['uid']))
             $val['name'].= ' (' . $val['uid'] . ')';
 

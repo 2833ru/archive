@@ -13,7 +13,7 @@ function actionStart() {
         foreach ($data as $row) {
 
 
-            $PHPShopInterface->setRow($row['id'], array('name' => $row['name'], 'link' => '?path=modules.dir.sticker&id=' . $row['id'], 'align' => 'left'), $row['path'], $row['dir'], array('action' => array('edit', 'delete', 'id' => $row['id']), 'align' => 'center'), array('status' => array('enable' => $row['enabled'], 'align' => 'right', 'caption' => array('Выкл', 'Вкл'))));
+            $PHPShopInterface->setRow($row['id'], array('name' => $row['name'], 'link' => '?path=modules.dir.sticker&id=' . $row['id'], 'align' => 'left'), "@sticker_".$row['path'].'@', $row['dir'], array('action' => array('edit', '|','delete', 'id' => $row['id']), 'align' => 'center'), array('status' => array('enable' => $row['enabled'], 'align' => 'right', 'caption' => array('Выкл', 'Вкл'))));
         }
     $PHPShopInterface->Compile();
 }

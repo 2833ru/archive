@@ -42,6 +42,12 @@ function tab_cart($data, $option = false) {
 
                 if (!empty($val['id'])) {
 
+                    // Проверка подтипа товара
+                    if (!empty($val['parent']))
+                        $val['id'] = $val['parent'];
+                    if (!empty($val['parent_uid']))
+                        $val['uid'] = $val['parent_uid'];
+
                     if (!empty($val['uid']))
                         $code = 'Артикул: ' . $val['uid'];
                     else
@@ -58,7 +64,7 @@ function tab_cart($data, $option = false) {
 <div class="media">
   <div class="media-left">
     <a href="?path=product&id=' . $val['id'] . '" >
-      '.$icon.'
+      ' . $icon . '
     </a>
   </div>
    <div class="media-body">

@@ -1,1 +1,0 @@
-<span class="newtip-icon sale-icon">Новинка</span>

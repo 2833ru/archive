@@ -17,7 +17,12 @@ function sendSmsfly($data) {
 
         // Сообщение
         $msg = 'Новый статус заказа №' . $data['uid'] . ' - ' . $GetOrderStatusArray[$_POST['statusi_new']]['name'];
+
         $phone=$_POST['tel_new'];
+
+        if(!$phone)
+            $phone = $data['tel'];
+
         $PHPShopSmsfly->send($msg,$phone);
     }
 }

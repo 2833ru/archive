@@ -236,7 +236,7 @@ function actionStart() {
                     $PHPShopGUI->setCheckbox('option[sms_status_order_enabled]', 1, 'Уведомление о статусе заказа пользователю', $option['sms_status_order_enabled']) . '<br>' .
                     $PHPShopGUI->setCheckbox('option[notice_enabled]', 1, 'Уведомление о наличии товара пользователям', $option['notice_enabled']), 1, 'Используется сервис terasms.ru'
             ) .
-            $PHPShopGUI->setField(__("Мобильный телефон"), $PHPShopGUI->setInputText(null, "option[sms_phone]", $option['sms_phone'], 300), 1, 'Телефон для SMS уведомлений формата 792612345678') .
+            $PHPShopGUI->setField(__("Мобильный телефон"), $PHPShopGUI->setInputText(null, "option[sms_phone]", $option['sms_phone'], 300), 1, 'Телефон для SMS уведомлений формата 79261234567') .
             $PHPShopGUI->setField(__("Пользователь"), $PHPShopGUI->setInputText(null, "option[sms_user]", $option['sms_user'], 300), 1, 'Пользователь в системе terasms.ru') .
             $PHPShopGUI->setField(__("Пароль"), $PHPShopGUI->setInput('password', "option[sms_pass]", $option['sms_pass'], null, 300), 1, 'Пароль в системе terasms.ru') .
             $PHPShopGUI->setField(__("Имя отправителя"), $PHPShopGUI->setInputText(null, "option[sms_name]", $option['sms_name'], 300), 1, 'Зарегистрированное имя отправителя в terasms.ru')

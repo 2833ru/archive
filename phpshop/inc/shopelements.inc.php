@@ -46,7 +46,7 @@ class PHPShopBrandsElement extends PHPShopElements {
         $sortValue = substr($sortValue, 0, strlen($sortValue) - 2);
 
         if (!empty($sortValue)) {
-            
+
             // Массив значений 
             $i = 0;
             $result = $PHPShopOrm->query("select name, id, icon, category from " . $GLOBALS['SysValue']['base']['sort'] . " where $sortValue order by name");
@@ -58,16 +58,17 @@ class PHPShopBrandsElement extends PHPShopElements {
             // Проверка на уникального имени
             if (is_array($arrayVendorValue)) {
                 foreach ($arrayVendorValue as $k => $v) {
-                    
+
                     if ($i % $this->limitOnLine == 0) {
-                      $this->set('brandFirstClass', $this->firstClassName);
-                      } else {
-                      $this->set('brandFirstClass', '');
-                      }
-                      $i++;
+                        $this->set('brandFirstClass', $this->firstClassName);
+                    } else {
+                        $this->set('brandFirstClass', '');
+                    }
+                    $i++;
 
                     if (is_array($v[1])) {
                         $link = null;
+                        $this->set('brandIcon', null);
                         foreach ($v as $val) {
                             $link.='v[' . $val['category'] . ']=' . $val['id'] . '&';
 
@@ -86,7 +87,6 @@ class PHPShopBrandsElement extends PHPShopElements {
                     }
                 }
             }
-
         }
         if ($this->get('brandsList'))
             return ParseTemplateReturn('brands/top_brands_main.tpl');
@@ -269,8 +269,6 @@ class PHPShopProductIconElements extends PHPShopProductElements {
         if (empty($this->limitspec))
             return false;
 
-        // Случаные товары для больших баз
-        //$where['id']=$this->setramdom($limit);
         // Параметры выборки учета товара в новинках и наличия
         $where['newtip'] = "='1'";
         $where['enabled'] = "='1'";
@@ -286,9 +284,13 @@ class PHPShopProductIconElements extends PHPShopProductElements {
         $memory_spec = $this->memory_get('product_spec.' . $category);
 
         // Мультибаза
-        $randMultibase = $this->randMultibase();
-        if (!empty($randMultibase))
-            $where['category'] = ' IN (' . $randMultibase . '0)';
+        $queryMultibase = $this->queryMultibase();
+        if (!empty($queryMultibase))
+            $where['enabled'].= ' ' . $queryMultibase;
+        else {
+            // Случаные товары для больших баз
+            $where['id'] = $this->setramdom($limit);
+        }
 
         // Выборка новинок
         if ($memory_spec != 2 and $memory_spec != 3)
@@ -306,7 +308,8 @@ class PHPShopProductIconElements extends PHPShopProductElements {
             // Заносим в память
             $this->memory_set('product_spec.' . $category, 1);
         } else {
-            // Выборка спецпредложение
+
+            // Выборка спецпредложений
             unset($where['newtip']);
             $where['spec'] = "='1'";
 
@@ -489,7 +492,7 @@ class PHPShopProductIndexElements extends PHPShopProductElements {
             $this->limitpos = 10; // Количество выводимых позиций
             $this->limitorders = 10; // Количество запрашиваемых заказов
             $disp = $li = null;
-            $enabled = $this->PHPShopSystem->getSerilizeParam('admoption.nowbuy_enabled');
+            $this->enabled = $this->PHPShopSystem->getSerilizeParam('admoption.nowbuy_enabled');
             $sort = null;
 
             // Перехват модуля
@@ -501,7 +504,7 @@ class PHPShopProductIndexElements extends PHPShopProductElements {
             if (empty($this->cell))
                 $this->cell = $this->PHPShopSystem->getValue('num_vitrina');
 
-            if (!empty($enabled)) {
+            if ($this->enabled > 0) {
 
                 // Последние заказы
                 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
@@ -535,7 +538,7 @@ class PHPShopProductIndexElements extends PHPShopProductElements {
                         if (is_array($dataArray)) {
 
                             // Товары таблицей
-                            if ($enabled == 2) {
+                            if ($this->enabled == 2) {
 
                                 // Количество ячеек для вывода товара
                                 if (empty($this->cell))
@@ -597,32 +600,33 @@ class PHPShopProductIndexElements extends PHPShopProductElements {
 
             $this->set('productInfo', $this->lang('productInfo'));
 
-            // Случайные товары
-            $where['id'] = $this->setramdom($this->limit);
-
             // Параметры выборки учета товара в спецпредложении и наличия
             $where['spec'] = "='1'";
             $where['enabled'] = "='1'";
             $where['parent_enabled'] = "='0'";
 
             // Мультибаза
-            $randMultibase = $this->randMultibase();
-            if (!empty($randMultibase))
-                $where['category'] = ' IN (' . $randMultibase . '0)';
+            $queryMultibase = $this->queryMultibase();
+            if (!empty($queryMultibase))
+                $where['enabled'].= ' ' . $queryMultibase;
+            else {
+                // Случайные товары
+                $where['id'] = $this->setramdom($this->limit);
+            }
 
             // Выборка
             if ($this->limit > 1)
-                $this->dataArray = $this->select(array('*'), $where, array('order' => 'RAND()'), array('limit' => $this->limit), __FUNCTION__);
+                $this->dataArray = $this->select(array('*'), $where, array('order' => 'datas desc'), array('limit' => $this->limit), __FUNCTION__);
             else
-                $this->dataArray[] = $this->select(array('*'), $where, array('order' => 'RAND()'), array('limit' => $this->limit), __FUNCTION__);
+                $this->dataArray[] = $this->select(array('*'), $where, array('order' => 'datas desc'), array('limit' => $this->limit), __FUNCTION__);
 
-            // Вторая попытка вывести спецпредложения, оптимизатор RAND выключен
+            // Вторая попытка вывести спецпредложения, RAND включен
             $count = count($this->dataArray);
             if ($count < $this->limit) {
+                unset($where['spec']);
                 unset($where['id']);
                 $this->dataArray = $this->select(array('*'), $where, array('order' => 'RAND()'), array('limit' => $this->limit), __FUNCTION__);
             }
-
 
             // Добавляем в дизайн ячейки с товарами
             $this->product_grid($this->dataArray, $this->cell, $this->template);
@@ -869,6 +873,8 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
         // Мультибаза
         if (defined("HostID"))
             $where['servers'] = " REGEXP 'i" . HostID . "i'";
+        elseif (defined("HostMain"))
+            $where['skin_enabled'] .= ' and (servers ="" or servers REGEXP "i1000i")';
 
         $PHPShopOrm = new PHPShopOrm($this->objBase);
         $PHPShopOrm->cache_format = $this->cache_format;
@@ -1355,56 +1361,6 @@ so.write("wpcumuluscontent");</script>
             }
             return $dis;
         }
-    }
-
-}
-
-/**
- * Элемент Flash-карусель товаров
- * @author PHPShop Software
- * @tutorial http://wiki.phpshop.ru/index.php/PHPShopFlashGalleryElement
- * @version 1.1
- * @package PHPShopElements
- */
-class PHPShopFlashGalleryElement extends PHPShopElements {
-
-    var $width = 520;
-    var $height = 150;
-    var $background = true;
-    var $limit = 10;
-
-    /**
-     * Конструктор
-     */
-    function __construct() {
-        parent::__construct();
-    }
-
-    /**
-     * Flash-карусель товаров
-     * @return string
-     */
-    function index() {
-
-        // Перехват модуля в начале функции
-        $hook = $this->setHook(__CLASS__, __FUNCTION__);
-        if ($hook)
-            return $hook;
-
-        $dis = '
-        <div id="flashban" style="padding-top:10px;" align="center">загрузка флеш...</div>
-        <script type="text/javascript">
-        var dd = new Date();
-        var spath = "' . $this->get('dir.dir') . 'phpshop/lib/templates";
-        var so = new SWFObject(spath+"/stockgallery/banner.swf?rnd=" + dd.getTime(), "banner", "' . $this->width . '", "' . $this->height . '", "9", "#ffffff");
-        so.addParam("flashvars", "itempath="+spath+"/stockgallery/item.swf&xmlpath="+spath+"/stockgallery/banner.xml.php?background=' . $this->background . '&limit=' . $this->limit . '");
-        so.addParam("quality", "best");
-        so.addParam("scale", "noscale");
-        so.addParam("wmode", "transparent");
-        so.write("flashban");   
-        </script>';
-
-        return $dis;
     }
 
 }

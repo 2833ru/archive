@@ -3,7 +3,7 @@
 /**
  * Библиотека данных по методам оплаты
  * @author PHPShop Software
- * @version 1.3
+ * @version 1.4
  * @package PHPShopObj
  */
 class PHPShopPayment extends PHPShopObj {
@@ -160,19 +160,21 @@ class PHPShopPaymentResult {
         }
         return 101;
     }
-    
+
     /**
      * Отправка данных в ОФД
      * @param array $data данные по заказу
      */
-    function ofd($data){
-        global $_classPath;
-        
+    function ofd($data) {
+        global $_classPath, $PHPShopModules;
+
         $ofd = 'atol';
-        include_once($_classPath.'modules/'.substr($ofd,0,15).'/api.php');
-        
-        if(function_exists('OFDStart')){
-           OFDStart($data);
+        if (!empty($PHPShopModules->ModValue['base'][$ofd])) {
+            include_once($_classPath . 'modules/' . substr($ofd, 0, 15) . '/api.php');
+
+            if (function_exists('OFDStart')) {
+                OFDStart($data);
+            }
         }
     }
 
@@ -186,7 +188,7 @@ class PHPShopPaymentResult {
             // Приверяем сущ. заказа
             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
             $PHPShopOrm->debug = $this->debug;
-            $orderUid=$this->true_num($this->inv_id);
+            $orderUid = $this->true_num($this->inv_id);
             $row = $PHPShopOrm->select(array('*'), array('uid' => "='" . $orderUid . "'"), false, array('limit' => 1));
             if (!empty($row['uid'])) {
 
@@ -202,7 +204,7 @@ class PHPShopPaymentResult {
 
                 // Сообщение ОК
                 $this->done();
-                
+
                 // ОФД
                 $this->ofd($row);
             }

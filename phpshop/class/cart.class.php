@@ -8,7 +8,7 @@ if (!defined("OBJENABLED")) {
 /**
  * Корзина товаров
  * @author PHPShop Software
- * @version 1.6
+ * @version 1.7
  * @package PHPShopClass
  */
 class PHPShopCart {
@@ -89,13 +89,15 @@ class PHPShopCart {
             if (!empty($weight))
                 $cart['weight'] = $weight;
 
-            if (!empty($parentID))
-                $cart['parent'] = intval($parentID);
+            if (!empty($parentID)){
+                $objID = $cart['parent'] = intval($parentID);
+            }
 
             // Изображения главного товара
             if (empty($cart['pic_small'])) {
                 $objProductParent = new PHPShopProduct($cart['parent']);
                 $cart['pic_small'] = $objProductParent->getImage();
+                $cart['parent_uid'] = $objProductParent->getParam('uid');
             }
 
 

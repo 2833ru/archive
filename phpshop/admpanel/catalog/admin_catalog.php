@@ -238,16 +238,24 @@ function actionStart() {
     // Быстрый поиск
     if ($_GET['from'] == 'header') {
         $PHPShopOrm->Option['where'] = " or ";
-        $where['uid'] =  $where['name'];
-        
+        $where['uid'] = $where['name'];
+
         // Убираем подтипы
-        $where['id']= $where['name']." and parent_enabled='0'";
-    }
+        $where['id'] = $where['name'] . " and parent_enabled='0'";
+    } 
     else {
-        
-    // Убираем подтипы
-    $where['parent_enabled'] = "='0'";
+
+        // Убираем подтипы
+        $where['parent_enabled'] = "='0'";
     }
+    
+    
+    // Поиск размеров
+    if(!empty($_GET['parent'])){
+        $where['parent'] = "='".$_GET['parent']."'";
+        $where['parent_enabled'] = "='1'";
+    }
+    
 
     $PHPShopOrm->mysql_error = false;
     $data = $PHPShopOrm->select(array('*'), $where, $order, $limit);
@@ -292,7 +300,7 @@ function actionStart() {
                     $uid.= '<a class="label label-info" title="Яндекс.Маркете CPA" href="?path=catalog' . $postfix . '&where[cpa]=1">CPA</a> ';
 
                 // Подтип
-                if (strstr($row['parent'],','))
+                if (strstr($row['parent'], ','))
                     $uid.= '<a class="label label-default" title="Подтипы" href="?path=catalog' . $postfix . '&where[parent]=,">П</a> ';
 
                 $uid.='</div>';

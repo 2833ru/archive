@@ -1,16 +1,19 @@
 ALTER TABLE `phpshop_categories` ADD `cat_seo_name` VARCHAR(255);
 ALTER TABLE `phpshop_products` ADD `prod_seo_name` VARCHAR(255);
 ALTER TABLE `phpshop_sort` ADD `sort_seo_name` VARCHAR(255) NOT NULL;
+ALTER TABLE `phpshop_news` ADD `news_seo_name` VARCHAR(255) NOT NULL;
+ALTER TABLE `phpshop_page_categories` ADD `page_cat_seo_name` VARCHAR(255) NOT NULL;
 
 DROP TABLE IF EXISTS `phpshop_modules_seourlpro_system`;
 CREATE TABLE IF NOT EXISTS `phpshop_modules_seourlpro_system` (
   `id` int(11)  auto_increment,
   `paginator` enum('1','2') default '1',
-  `seo_brands_enabled` enum('1','2') default '2',
+  `seo_brands_enabled` enum('1','2') default '1',
   `cat_content_enabled` enum('1','2') default '1',
-  `serial` varchar(64) default '',
-  `version` FLOAT(2) DEFAULT '1.8',
+  `seo_news_enabled` enum('1','2') default '1',
+  `seo_page_enabled` enum('1','2') default '1',
+  `version` FLOAT(2) DEFAULT '2.0',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-INSERT INTO `phpshop_modules_seourlpro_system` VALUES (1,'1','2','1','','1.8');
+INSERT INTO `phpshop_modules_seourlpro_system` VALUES (1,'1','2','1','2','2','2.0');

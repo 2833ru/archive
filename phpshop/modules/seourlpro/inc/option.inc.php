@@ -23,11 +23,28 @@ class PHPShopCategorySeoProArray extends PHPShopArray {
 
 }
 
+class PHPShopPageCategorySeoProArray extends PHPShopArray {
+
+    /**
+     * Конструктор
+     * @param string $sql SQL условие выборки
+     */
+    function __construct($sql = false) {
+        $this->objSQL = $sql;
+        $this->cache = false;
+        $this->order = array('order' => 'num');
+        $this->objBase = $GLOBALS['SysValue']['base']['page_categories'];
+        parent::__construct("id", "name", "page_cat_seo_name");
+    }
+
+}
+
 class PHPShopSeoPro {
 
     var $cat_pre = 'shop/CID_';
     var $prod_pre = 'shop/UID_';
     var $prod_pre_target = 'id/';
+    var $cat_page_pre = 'page/CID_';
     var $true_dir = false;
 
     function __construct() {
@@ -110,6 +127,8 @@ class PHPShopSeoPro {
             //$this->memory['CID_' . $key . '_1'] = $this->setLatin($val['name'] . '-1');
         } elseif ($mode == 2)
             $this->memory_prod[$this->prod_pre . $id] = $this->prod_pre_target . $this->setLatin($name, $latin) . '-' . $id;
+        elseif ($mode == 3)
+            $this->memory[$this->cat_page_pre . $id] = 'page/' . $this->setLatin($name, $latin);
     }
 
     function setLatin($str, $enabled = true) {
@@ -135,6 +154,20 @@ class PHPShopSeoPro {
                 $this->setMemory($key, $val['name']);
                 $this->memory['CID_' . $key . '_1'] = $this->setLatin($val['name'] . '-1');
                 $this->memory['shop/CID_' . $key . '_ALL'] = $this->setLatin($val['name']) . '-ALL';
+            }
+        }
+    }
+
+    function catPageArrayToMemory() {
+
+        $PHPShopPageCategoryArray = new PHPShopPageCategorySeoProArray();
+
+        foreach ($PHPShopPageCategoryArray->getArray() as $key => $val) {
+
+            if (!empty($val['page_cat_seo_name'])) {
+                $this->setMemory($key, $val['page_cat_seo_name'], 3, false);
+            } else {
+                $this->setMemory($key, $val['name'], 3);
             }
         }
     }

@@ -464,7 +464,7 @@ PHPShopObj::loadClass('array');
  * Массив статусов заказов
  * Упрощенный доступ к статусам заказов
  * @author PHPShop Software
- * @version 1.0
+ * @version 1.1
  * @package PHPShopObj
  */
 class PHPShopOrderStatusArray extends PHPShopArray {
@@ -474,7 +474,7 @@ class PHPShopOrderStatusArray extends PHPShopArray {
      */
     function __construct() {
         $this->objBase = $GLOBALS['SysValue']['base']['order_status'];
-        parent::__construct('id', 'name', 'color', 'sklad_action', 'cumulative_action','mail_action');
+        parent::__construct('id', 'name', 'color', 'sklad_action', 'cumulative_action','mail_action','mail_message');
     }
 
 }

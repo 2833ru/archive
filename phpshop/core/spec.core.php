@@ -4,7 +4,7 @@
  * Обработчик спецпредложений товаров
  * @author PHPShop Software
  * @tutorial http://wiki.phpshop.ru/index.php/PHPShopSpec
- * @version 1.2
+ * @version 1.3
  * @package PHPShopShopCore
  */
 class PHPShopSpec extends PHPShopShopCore {
@@ -52,9 +52,18 @@ class PHPShopSpec extends PHPShopShopCore {
         if (!$this->num_row)
             $this->num_row = (6 - $this->cell) * $this->cell;
 
+        $where['spec'] = "='1'";
+        $where['enabled'] = "='1'";
+        $where['parent_enabled'] = "='0'";
+
+        // Мультибаза
+        $queryMultibase = $this->queryMultibase();
+        if (!empty($queryMultibase))
+            $where['enabled'].= ' ' . $queryMultibase;
+
         // Простой запрос
         if (is_array($order)) {
-            $this->dataArray = parent::getListInfoItem(array('*'), array('spec' => "='1'", 'enabled' => "='1'", 'parent_enabled'=>"='0'"), $order, __CLASS__, __FUNCTION__);
+            $this->dataArray = parent::getListInfoItem(array('*'), $where, $order, __CLASS__, __FUNCTION__);
         } else {
             // Сложный запрос
             $this->PHPShopOrm->sql = $order;

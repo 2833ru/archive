@@ -40,10 +40,11 @@ function actionInsert() {
     $_POST['image_new'] = iconAdd();
 
     // Мультибаза
-    $_POST['servers_new'] = null;
+    $_POST['servers_new'] = "";
     if (is_array($_POST['servers']))
         foreach ($_POST['servers'] as $v)
-            $_POST['servers_new'].="i" . $v . "i";
+            if ($v != 'null' and !strstr($v, ','))
+                $_POST['servers_new'].="i" . $v . "i";
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);

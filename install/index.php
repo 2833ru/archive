@@ -102,7 +102,7 @@ if (!empty($_POST['version_update'])) {
                     <h3 class="panel-title"><span class="glyphicon glyphicon-exclamation-sign"></span> Удаление установщика</h3>
                 </div>
                <div class="panel-body">
-               Необходимо удалить папку <kbd>/install</kbd> для безопасности вашего севрера.
+               Необходимо удалить папку <kbd>/install</kbd> для безопасности вашего сервера.
                </div>
             </div>';
     }
@@ -124,7 +124,9 @@ elseif (!empty($_POST['password'])) {
 
     if (!empty($fp)) {
 
-        $content = str_replace("phpshop_", $_POST['prefix'], $fp);
+        // Префикс
+        //$content = str_replace("phpshop_", $_POST['prefix'], $fp);
+        $content = $fp;
 
         // Подстановка почты администратора
         if (!empty($_POST['send-welcome'])) {
@@ -200,7 +202,7 @@ elseif (!empty($_POST['password'])) {
                     <h3 class="panel-title"><span class="glyphicon glyphicon-exclamation-sign"></span> Удаление установщика</h3>
                 </div>
                <div class="panel-body">
-               Необходимо удалить папку <kbd>/install</kbd> для безопасности вашего севрера.
+               Необходимо удалить папку <kbd>/install</kbd> для безопасности вашего сервера.
                </div>
             </div>
 ';
@@ -358,19 +360,7 @@ dbase="mybase";     # имя базы</pre>
                                     <pre>[dir]
 dir="/market";</pre>
                             </ol>
-                        <li>Таким образом, можно установить неограниченное кол-во интернет-магазинов на одном домене. Лицензионное соглашение <a href="http://phpshop.ru/page/license.html" target="_blank">накладывает ограничение</a> на количество установленных магазинов на единую лицензию для технической поддержки.<br><br>
-                            Поддерживается возможность установки нескольких магазинов в единую базу, для этого служит опция <strong>префикс</strong> в названиях таблиц:
-                            <ul>
-                                <li>phpshop_ - 1 магазин
-                                <li>phpshop2_ - 2
-                                <li>phpshop3_ - 3 и т.д.
-                            </ul>
-                            Тип префикса задается в общем конфигурационном файле <kbd>config.ini</kbd>
-                            <pre>[base]
-categories="<strong>phpshop_</strong>categories"; 
-orders="<strong>phpshop</strong>_orders"; 
-..... </pre>
-                    </ol>
+                        
                 </div>
 
             </div>
@@ -561,7 +551,7 @@ dbase="mybase";         # имя базы</pre>
                                     <div class="col-sm-10">
                                         <?php echo $update_select; ?>
                                         <p></p>
-                                        <p class="text-muted"><span class="glyphicon glyphicon-info-sign"></span> Необходимо выбрать свою текущую версию PHPShop (до обновления). Если вашей версии нет в списке, то выбрать версию выше и самую близкую к вашей в большую сторону. Например, ваша старая версия Enterprise 3.6.6.0.1, то следует выбрать в списке 3.6.7.1.3.</p><p class="text-muted">Префиксы <kbd>Start</kbd> и <kbd>CMS</kbd> обозначают одноименные сборки. Версия PHPShop 5 имеет одинаковую структуру данных у всех коммерческих версий Start, Enterprise и Pro 1C.</p><p class="text-muted">Для обновлении версий PHPShop 3 и ниже потребуется процедура восстановления пароля администратора по email.</p>
+                                        <p class="text-muted"><span class="glyphicon glyphicon-info-sign"></span> Необходимо выбрать свою текущую версию PHPShop (до обновления). Если вашей версии нет в списке, то выбрать версию выше и самую близкую к вашей в большую сторону. Например, ваша старая версия Enterprise 3.6.6.0.1, то следует выбрать в списке 3.6.7.1.3.</p><p class="text-muted">Префиксы <kbd>Start</kbd> и <kbd>CMS</kbd> обозначают одноименные сборки. Версия PHPShop 5 имеет одинаковую структуру данных у всех коммерческих версий Basic, Enterprise и Pro 1C.</p><p class="text-muted">Для обновлении версий PHPShop 3 и ниже потребуется процедура восстановления пароля администратора по email.</p>
                                     </div>
                                 </div>
                             </div>
@@ -595,12 +585,14 @@ dbase="mybase";         # имя базы</pre>
                                         <input type="password" name="password" required class="form-control" placeholder="Пароль">
                                     </div>
                                 </div>
+                                <!--
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">Префикс <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Префикс базы данных нужен для установки нескольких версий PHPShop в единую базу"></span></label>
                                     <div class="col-sm-10">
                                         <input type="text" name="prefix" required class="form-control" value="phpshop_">
                                     </div>
                                 </div>
+                                -->
                                 <div class="form-group">
                                     <div class="col-sm-offset-2 col-sm-10">
                                         <div class="checkbox">
@@ -613,9 +605,11 @@ dbase="mybase";         # имя базы</pre>
                                 <div class="form-group">
                                     <div class="col-sm-offset-2 col-sm-10">
                                         <button type="button" class="btn btn-default" id="generator" data-password="<?php echo "P" . substr(md5(time()), 0, 6) ?>"><span class="glyphicon glyphicon-lock"></span> Генератор паролей</button>
+                                        <div id="password-message">
+                                </div>
                                     </div>
                                 </div>
-
+                                
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -689,7 +683,7 @@ dbase="mybase";         # имя базы</pre>
                 $('#generator').on('click', function() {
                     var password = $(this).attr('data-password');
                     $('input[type=password]').val(password);
-                    $(this).after('<div class="alert alert-success" role="alert">Ваш пароль: <b>' + password + '</b></div>');
+                    $('#password-message').html('<div class="alert alert-success" role="alert">Ваш пароль: <b>' + password + '</b></div>');
                 });
 
                 // Подсказка

@@ -185,10 +185,10 @@ function actionStart() {
     $PHPShopOrm->debug = false;
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_REQUEST['id'])), false, array('limit' => 1));
 
-    $PHPShopGUI->addJSFiles('./js/jquery.suggestions.min.js','./order/gui/order.gui.js','./order/gui/dadata.gui.js');
+    $PHPShopGUI->addJSFiles('./js/jquery.suggestions.min.js', './order/gui/order.gui.js', './order/gui/dadata.gui.js');
     if (strlen($data['street']) > 5)
         $PHPShopGUI->addJSFiles('//api-maps.yandex.ru/2.0/?load=package.standard&lang=ru-RU');
-    
+
     $PHPShopGUI->addCSSFiles('./css/suggestions.min.css');
 
     $PHPShopGUI->action_select['Все заказы пользователя'] = array(
@@ -390,13 +390,19 @@ function sendUserMail($data) {
         $PHPShopOrderStatusArray = new PHPShopOrderStatusArray();
         if ($PHPShopOrderStatusArray->getParam($_POST['statusi_new'] . '.mail_action') == 1) {
             PHPShopParser::set('status', $PHPShopOrderStatusArray->getParam($_POST['statusi_new'] . '.name'));
-            PHPShopParser::set('user', $data['user']);
+            PHPShopParser::set('fio', $data['user']);
+            PHPShopParser::set('sum', $data['sym']);
             PHPShopParser::set('company', $PHPShopSystem->getParam('name'));
             $title = 'Cтатус заказа ' . $data['uid'] . ' изменен';
             $order = unserialize($data['orders']);
 
-            PHPShopParser::set('mail', $order['Person']['mail']);
-            PHPShopParser::set('user_name', $order['Person']['name_person']);
+            $message = $PHPShopOrderStatusArray->getParam($_POST['statusi_new'] . '.mail_message');
+
+            if (strlen($message) < 7)
+                $message = '<h3>Статус вашего заказа №' . $data['uid'] . ' от ' . PHPShopDate::dataV($data['datas'],false) . ' поменялся на "' . $PHPShopOrderStatusArray->getParam($_POST['statusi_new'] . '.name') . '"</h3>';
+
+
+            PHPShopParser::set('message', preg_replace_callback("/@([a-zA-Z0-9_]+)@/", 'PHPShopParser::SysValueReturn', $message));
 
             $PHPShopMail = new PHPShopMail($order['Person']['mail'], $PHPShopSystem->getValue('adminmail2'), $title, '', true, true);
             $content = PHPShopParser::file('../lib/templates/order/status.tpl', true);

@@ -63,6 +63,42 @@ class PHPShopCoreElement extends PHPShopElements {
      */
     function setdefault() {
 
+        // Мультибаза
+        if (defined("HostID")) {
+            $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['servers']);
+            $PHPShopOrm->debug = false;
+            $showcaseData = $PHPShopOrm->select(array('*'), array('enabled' => "='1'", 'host' => "='" . str_replace('www.', '', getenv('SERVER_NAME')) . "'"), array('order' => 'id'), array('limit' => 1));
+            if (is_array($showcaseData)) {
+
+                if (!empty($showcaseData['tel']))
+                    $this->PHPShopSystem->setParam("tel", $showcaseData['tel']);
+
+                if (!empty($showcaseData['adminmail']))
+                    $this->PHPShopSystem->setParam("adminmail2", $showcaseData['adminmail']);
+
+                if (!empty($showcaseData['company']))
+                    $this->PHPShopSystem->setParam('company', $showcaseData['company']);
+
+                if (!empty($showcaseData['name']))
+                    $this->PHPShopSystem->setParam('name', $showcaseData['name']);
+
+                if (!empty($showcaseData['title']))
+                    $this->PHPShopSystem->setParam('title', $showcaseData['title']);
+
+                if (!empty($showcaseData['descrip']))
+                    $this->PHPShopSystem->setParam('descrip', $showcaseData['descrip']);
+
+                if (!empty($showcaseData['logo']))
+                    $this->PHPShopSystem->setParam('logo', $showcaseData['logo']);
+
+                if (!empty($showcaseData['adres']))
+                    $this->set('streetAddress', $showcaseData['adres']);
+            }
+        } else {
+            $this->set('streetAddress', $this->PHPShopSystem->getSerilizeParam('bank.org_adres'));
+        }
+
+
         // Телефон
         $tel = $this->PHPShopSystem->getValue('tel');
         $this->set('telNum', $tel);
@@ -77,7 +113,6 @@ class PHPShopCoreElement extends PHPShopElements {
         $this->set('rule', $this->lang('rule'));
         $this->set('name', $this->PHPShopSystem->getValue('name'));
         $this->set('company', $this->PHPShopSystem->getValue('company'));
-        $this->set('streetAddress', $this->PHPShopSystem->getSerilizeParam('bank.org_adres'));
         $this->set('descrip', $this->PHPShopSystem->getValue('descrip'));
         $this->set('adminMail', $this->PHPShopSystem->getValue('adminmail2'));
         $this->set('pathTemplate', $this->getValue('dir.templates') . chr(47) . $_SESSION['skin']);
@@ -514,6 +549,8 @@ class PHPShopTextElement extends PHPShopElements {
         // Мультибаза
         if (defined("HostID"))
             $where['servers'] = " REGEXP 'i" . HostID . "i'";
+        elseif(defined("HostMain"))
+            $where['element'] .= ' and (servers ="" or servers REGEXP "i1000i")';
 
         $data = $this->PHPShopOrm->select(array('*'), $where, array('order' => 'num'), array("limit" => 20));
         if (is_array($data))
@@ -560,6 +597,8 @@ class PHPShopTextElement extends PHPShopElements {
         // Мультибаза
         if (defined("HostID"))
             $where['servers'] = " REGEXP 'i" . HostID . "i'";
+        elseif(defined("HostMain"))
+            $where['element'] .= ' and (servers ="" or servers REGEXP "i1000i")';
 
         $PHPShopOrm = new PHPShopOrm($this->objBase);
         $data = $PHPShopOrm->select(array('*'), $where, array('order' => 'num'), array("limit" => 20));
@@ -611,9 +650,12 @@ class PHPShopTextElement extends PHPShopElements {
         // Мультибаза
         if (defined("HostID"))
             $where['servers'] = " REGEXP 'i" . HostID . "i'";
+        elseif(defined("HostMain"))
+            $where['enabled'] .= ' and (servers ="" or servers REGEXP "i1000i")';
 
         $objBase = $GLOBALS['SysValue']['base']['page'];
         $PHPShopOrm = new PHPShopOrm($objBase);
+        $PHPShopOrm->debug = $this->debug;
         $data = $PHPShopOrm->select(array('name', 'link'), $where, array('order' => 'num'), array("limit" => 20));
         if (is_array($data))
             foreach ($data as $row) {
@@ -752,7 +794,9 @@ class PHPShopNewsElement extends PHPShopElements {
         $dis = null;
 
         // Перехват модуля
-        $this->setHook(__CLASS__, __FUNCTION__, false, 'START');
+        $hook = $this->setHook(__CLASS__, __FUNCTION__, false, 'START');
+        if ($hook)
+            return $hook;
 
         // Выполнение только на главной странице
         if ($this->disp_only_index) {
@@ -768,7 +812,7 @@ class PHPShopNewsElement extends PHPShopElements {
 
             $result = $this->PHPShopOrm->select(array('id', 'zag', 'datas', 'kratko'), false, array('order' => 'id DESC'), array("limit" => $this->limit));
 
-            // Проверка на еденичню запись
+            // Проверка на еденичную запись
             if ($this->limit > 1)
                 $data = $result;
             else
@@ -844,11 +888,13 @@ class PHPShopSliderElement extends PHPShopElements {
         else
             $view = true;
 
+        $where['enabled'] = '="1"';
+
         // Мультибаза
         if (defined("HostID"))
             $where['servers'] = " REGEXP 'i" . HostID . "i'";
-
-        $where['enabled'] = '="1"';
+        elseif(defined("HostMain"))
+            $where['enabled'].= ' and (servers ="" or servers REGEXP "i1000i")';
 
         if (!empty($view)) {
             $result = $this->PHPShopOrm->select(array('image', 'alt', 'link'), $where, array('order' => 'num, id DESC'), array("limit" => $this->limit));
@@ -1287,7 +1333,7 @@ class PHPShopRecaptchaElement extends PHPShopElements {
             $dis.='<div id="recaptcha_' . $name . '" data-size="' . $size . '" data-key="' . $this->public . '"></div>';
             $this->recaptcha = true;
         } else {
-            $dis = '<img src="phpshop/captcha3.php" align="left" style="margin-right:10px"> <input type="text" name="key" class="form-control" placeholder="Код с картинки..." style="width:100px" required="">';
+            $dis = '<img src="phpshop/lib/captcha/captcha.php" align="left" style="margin-right:10px"> <input type="text" name="key" class="form-control" placeholder="Код с картинки..." style="width:100px" required="">';
             $this->recaptcha = false;
         }
 
@@ -1300,6 +1346,14 @@ class PHPShopRecaptchaElement extends PHPShopElements {
      */
     public function true(){
     return $this->recaptcha;
+
+
+
+
+
+
+
+
 
 
 

@@ -28,13 +28,16 @@ $n = 1;
 $row = mysqli_fetch_array(@$result);
 $ouid = $row['uid'];
 $order = unserialize($row['orders']);
-$dis=null;
+$dis = null;
 if (is_array($order['Cart']['cart']))
     foreach ($order['Cart']['cart'] as $val) {
-    
-    if(!empty($val['uid'])) 
-        $val['name'].= ' ('.$val['uid'].')';
-    
+
+        if (!empty($val['parent_uid']))
+            $val['uid'] = $val['parent_uid'];
+
+        if (!empty($val['uid']))
+            $val['name'].= ' (' . $val['uid'] . ')';
+
         $dis.="
   <tr class=tablerow>
 		<td class=tablerow>" . $n . "</td>
@@ -184,7 +187,7 @@ if ($PERSON['discount'] > 0) {
         </tr>
         <tr class=tablerow>
             <td class=tablerow>Время доставки:</td>
-            <td class=tableright><?php echo $dost_ot . $row['delivtime']  ?></td>
+            <td class=tableright><?php echo $dost_ot . $row['delivtime'] ?></td>
         </tr>
         <tr class=tablerow >
             <td class=tablerow>Тип оплаты:</td>

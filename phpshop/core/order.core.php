@@ -207,7 +207,7 @@ document.getElementById('order').style.display = 'none';
                         $img = "&nbsp;<img src='{$val['icon']}' title='{$val['name']}' height='30'/>&nbsp;";
                     else
                         $img = "";
-                    $disp .= PHPShopText::div(PHPShopText::setInput("radio", "order_metod", $val['id'], "none", false, false, false, false, $img . $val['name'],'payment'.$val['id']), "left", false, false, "paymOneEl");
+                    $disp .= PHPShopText::div(PHPShopText::setInput("radio", "order_metod", $val['id'], "none", false, false, false, false, $img . $val['name'], 'payment' . $val['id']), "left", false, false, "paymOneEl");
                 }
                 // формируем набор классов для яваскрипт функции для вывода доп. полей юр. данный в оформление
                 // если для данного типа оплаты они требуются 
@@ -368,6 +368,11 @@ function ordercartforma($val, $option) {
     // Проверка подтипа товара, выдача ссылки и изображения главного товара
     if (empty($val['parent'])) {
         PHPShopParser::set('cart_id', $val['id']);
+
+        // Артикул
+        if (!empty($val['parent_uid']))
+            $val['uid'] = $val['parent_uid'];
+        
     } else {
         PHPShopParser::set('cart_id', $val['parent']);
     }
@@ -382,7 +387,7 @@ function ordercartforma($val, $option) {
     PHPShopParser::set('cart_izm', $val['ed_izm']);
 
     // Перехват модуля в конце функции
-    $PHPShopModules->setHookHandler(__FUNCTION__, __FUNCTION__,  array(&$val), $option, 'END');
+    $PHPShopModules->setHookHandler(__FUNCTION__, __FUNCTION__, array(&$val), $option, 'END');
 
     if (PHPShopParser::checkFile('order/product.tpl'))
         return ParseTemplateReturn('order/product.tpl');

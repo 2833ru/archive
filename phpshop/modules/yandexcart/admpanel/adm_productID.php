@@ -5,11 +5,13 @@ function addYandexcartCPA($data) {
 
     $PHPShopGUI->addJSFiles('../modules/yandexcart/admpanel/gui/yandexcart.gui.js');
 
-    $Tab3= $PHPShopGUI->setField("Ставка Fee", $PHPShopGUI->setInputText(null, 'fee_new', $data['fee'], 100), 1, '1% комиссии соответствует значению 100');
+    $Tab3 = $PHPShopGUI->setField("Ставка Fee", $PHPShopGUI->setInputText(null, 'fee_new', $data['fee'], 100), 1, '1% комиссии соответствует значению 100');
 
     $Tab3.=$PHPShopGUI->setField(__('CPA модель'), $PHPShopGUI->setRadio('cpa_new', 1, __('Включить'), $data['cpa']) . $PHPShopGUI->setRadio('cpa_new', 2, __('Выключить'), $data['cpa'], false, 'text-muted'));
 
     $Tab3.=$PHPShopGUI->setField(__('Гарантия производителя'), $PHPShopGUI->setRadio('manufacturer_warranty_new', 1, __('Включить'), $data['manufacturer_warranty']) . $PHPShopGUI->setRadio('manufacturer_warranty_new', 2, __('Выключить'), $data['manufacturer_warranty'], false, 'text-muted'), 1, 'Тег <manufacturer_warranty>');
+
+    $Tab3.= $PHPShopGUI->setField("Имя производителя", $PHPShopGUI->setInputText(null, 'vendor_name_new', $data['vendor_name'], 300), 1, 'Тег <vendor>');
 
     $Tab3.= $PHPShopGUI->setField("Код производителя", $PHPShopGUI->setInputText(null, 'vendor_code_new', $data['vendor_code'], 300), 1, 'Тег <vendorCode>');
 

@@ -188,7 +188,7 @@
                 <div class="col-md-9 col-xs-12 main"> 
                     <div class="bar-padding-top-fix visible-md"> </div>
                     <div class="template-slider ">
-                        @imageSlider@
+                       @imageSlider@
                     </div>
 
 

@@ -187,6 +187,7 @@ class ReadCsvCatalog extends PHPShopReadCsvNative {
             else
                 $result = mysqli_query($link_db, $sql);
 
+            if($result)
             $this->ItemCreate++;
         }
     }
@@ -331,14 +332,14 @@ class ReadCsv1C extends PHPShopReadCsvNative {
                 $sql.="price='" . @$CsvToArray[7] . "', "; // цена 1
     
             // Склад
-            if ($this->ObjSystem->getSerilizeParam("1c_option.update_items") == 1) {
+            if ($this->ObjSystem->getSerilizeParam("1c_option.update_item") == 1) {
                 switch ($this->Sklad_status) {
 
                     case(3):
                         if ($CsvToArray[6] < 1)
-                            $sql.="sklad='1', ";
+                            $sql.="sklad='1', enabled='1', ";
                         else
-                            $sql.="sklad='0', ";
+                            $sql.="sklad='0', enabled='1', ";
                         break;
 
                     case(2):
@@ -413,6 +414,7 @@ class ReadCsv1C extends PHPShopReadCsvNative {
             else
                 $result = mysqli_query($link_db, $sql);
 
+            if($result)
             $this->ItemUpdate++;
 
             // Добавляем картинки в галерею
@@ -458,7 +460,7 @@ class ReadCsv1C extends PHPShopReadCsvNative {
         } else {
             // Создаем новый товар
             // Склад
-            if ($this->ObjSystem->getSerilizeParam("1c_option.update_items") == 1) {
+            if ($this->ObjSystem->getSerilizeParam("1c_option.update_item") == 1) {
                 switch ($this->Sklad_status) {
 
                     case(3):
@@ -548,7 +550,7 @@ class ReadCsv1C extends PHPShopReadCsvNative {
             // Подчиненные товары v 2.1
             if (strstr($CsvToArray[16], "@")) {
                 $parent_array = explode("@", $CsvToArray[16]);
-                $sql.="parent='" . $parent_array[0] . "', parent2='" . $parent_array[1] . "'";
+                $sql.="parent='" . $parent_array[0] . "', parent2='" . $parent_array[1] . "',";
             }
             else
                 $sql.="parent='" . $CsvToArray[16] . "', ";
@@ -564,7 +566,7 @@ class ReadCsv1C extends PHPShopReadCsvNative {
               $sql.="parent='" . $CsvToArray[16] . "', ";
               } */
 
-            if ($this->ObjSystem->getSerilizeParam("1c_option.update_items") == 1)
+            if ($this->ObjSystem->getSerilizeParam("1c_option.update_item") == 1)
                 $sql.="items='" . $CsvToArray[6] . "',";
 
             if ($this->ObjSystem->getSerilizeParam("1c_option.update_price") == 1) {

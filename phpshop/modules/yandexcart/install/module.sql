@@ -20,6 +20,8 @@ ALTER TABLE `phpshop_delivery` ADD `yandex_order_before` int(11) DEFAULT '16';
 ALTER TABLE `phpshop_products` ADD `yandex_min_quantity` int(11) DEFAULT '0';
 ALTER TABLE `phpshop_products` ADD `yandex_step_quantity` int(11) DEFAULT '0';
 ALTER TABLE `phpshop_products` ADD `vendor_code` varchar(255) DEFAULT '';
+ALTER TABLE `phpshop_products` ADD `vendor_name` varchar(255) DEFAULT '';
+
 
 CREATE TABLE `phpshop_modules_yandexcart_system` (
   `id` int(11) NOT NULL auto_increment,
@@ -36,7 +38,7 @@ CREATE TABLE `phpshop_modules_yandexcart_system` (
   `status_cancelled_urq` int(11),
   `status_cancelled_uu` int(11),
   `region_data` text,
-  `version` varchar(64) default '1.0',
+  `version` varchar(64) default '2.0',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251 ;
 
@@ -44,7 +46,7 @@ CREATE TABLE `phpshop_modules_yandexcart_system` (
 -- Дамп данных таблицы `phpshop_modules_yandexcart_system`
 -- 
 
-INSERT INTO `phpshop_modules_yandexcart_system` VALUES (1,'','','','','','','','','','','','','','1.9');
+INSERT INTO `phpshop_modules_yandexcart_system` VALUES (1,'','','','','','','','','','','','','','2.0');
 
 CREATE TABLE IF NOT EXISTS `phpshop_modules_yandexcart_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

@@ -28,6 +28,7 @@ function tab_map() {
     global $PHPShopGUI, $MapValue;
 
     $map_name = array(
+        'unishop'=>2,
         'bootstrap' => 2,
         'bootstrap_fluid' => 3,
         'astero' => 1,

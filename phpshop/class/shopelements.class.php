@@ -72,6 +72,7 @@ class PHPShopProductElements extends PHPShopElements {
         $this->currency = $this->currency();
 
         // Настройки
+        $this->user_price_activate = $this->PHPShopSystem->getSerilizeParam('admoption.user_price_activate');
         $this->format = intval($this->PHPShopSystem->getSerilizeParam("admoption.price_znak"));
 
         // HTML опции верстки
@@ -122,33 +123,38 @@ class PHPShopProductElements extends PHPShopElements {
         // Собираем и возвращаем таблицу с товарами
         $this->compile();
     }
-    
-        /**
-     * Проверка прав каталога режима Multibase
-     * @param int $category
-     * @return boolean 
-     */
-    function randMultibase() {
 
-        $multi_cat = null;
+     /**
+     * Проверка прав каталога режима Multibase
+     * @return string 
+     */
+    function queryMultibase() {
+        global $queryMultibase;
 
         // Мультибаза
         if (defined("HostID")) {
+            
+            // Память
+            if(!empty($queryMultibase))
+                return $queryMultibase;
+            
+            $multi_cat = array();
+            $multi_dop_cat = null;
 
             $where['servers'] = " REGEXP 'i" . HostID . "i'";
-            $where['parent_to'] = " > 0";
             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
             $PHPShopOrm->debug = $this->debug;
-            $PHPShopOrm->cache = true;
             $data = $PHPShopOrm->select(array('id'), $where, false, array('limit' => 100), __CLASS__, __FUNCTION__);
-            $multi_cat=null;
             if (is_array($data)) {
                 foreach ($data as $row) {
-                    $multi_cat.=$row['id'] . ',';
+                    $multi_cat[] = $row['id'];
+                    $multi_dop_cat.=" or dop_cat REGEXP '#" . $row['id'] . "#'";
                 }
             }
+            
+            $queryMultibase = $multi_select = ' and ( category IN (' . @implode(',', $multi_cat) . ')'.$multi_dop_cat.')';
 
-            return $multi_cat;
+            return $multi_select;
         }
     }
 
@@ -231,14 +237,14 @@ class PHPShopProductElements extends PHPShopElements {
      * Проверка режима Multibase
      */
     function checkMultibase($pic_small) {
-/*
-        $base_host = $this->PHPShopSystem->getSerilizeParam('admoption.base_host');
-        if ($this->PHPShopSystem->getSerilizeParam('admoption.base_enabled') == 1 and !empty($base_host))
-            $this->set('productImg', str_replace("/UserFiles/", "http://" . $base_host . "/UserFiles/", $pic_small));
- */
+        /*
+          $base_host = $this->PHPShopSystem->getSerilizeParam('admoption.base_host');
+          if ($this->PHPShopSystem->getSerilizeParam('admoption.base_enabled') == 1 and !empty($base_host))
+          $this->set('productImg', str_replace("/UserFiles/", "http://" . $base_host . "/UserFiles/", $pic_small));
+         */
     }
 
- /**
+    /**
      * Проверка дополнительных данных товара по складу
      * @param array $row масив данных по товару
      */
@@ -336,11 +342,12 @@ class PHPShopProductElements extends PHPShopElements {
             $this->set('elementCartHide', 'hide hidden');
             $this->set('ComStartCart', PHPShopText::comment('<'));
             $this->set('ComEndCart', PHPShopText::comment('>'));
-            
-            if (empty($row['sklad'])) 
-            $this->set('elementCartOptionHide', null);
+
+            if (empty($row['sklad']))
+                $this->set('elementCartOptionHide', null);
         }
-        else $this->set('elementCartOptionHide', 'hide hidden');
+        else
+            $this->set('elementCartOptionHide', 'hide hidden');
 
         // Перехват модуля, занесение в память наличия модуля для оптимизации
         if ($this->memory_get(__CLASS__ . '.' . __FUNCTION__, true)) {
@@ -518,7 +525,7 @@ function product_grid($dataArray, $cell, $template = false, $line = true) {
             $this->setHook(__CLASS__, __FUNCTION__, $row);
 
             // Подключаем шаблон ячейки товара
-            $dis = ParseTemplateReturn($this->getValue('templates.' . $template),false,$this->template_debug);
+            $dis = ParseTemplateReturn($this->getValue('templates.' . $template), false, $this->template_debug);
 
 
             // Убераем последний разделитель в сетке

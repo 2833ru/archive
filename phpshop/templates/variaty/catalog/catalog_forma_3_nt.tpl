@@ -1,1 +1,0 @@
-<li> <a href="/shop/CID_@catalogId@@nameLat@.html"  class="leftCatNt@catalogId@">@catalogName@</a></li>

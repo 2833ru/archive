@@ -59,7 +59,7 @@
                 </div>
             </div>
 
-            <div class="promo">@promotionInfo@</div> 
+
 
         </div>
     </div>

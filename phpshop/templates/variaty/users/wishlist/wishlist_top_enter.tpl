@@ -1,1 +1,0 @@
-<a href="/users/wishlist.html">Отложенные товары (<span class="wishlistcount">@wishlistCount@</span>)<span id="wishlist-total" ></span></a>

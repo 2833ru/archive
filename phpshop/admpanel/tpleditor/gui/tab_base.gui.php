@@ -112,8 +112,9 @@ function tab_base($data) {
     $i = 1;
     $count = 0;
     $data_pic = xml2array($skin_base_path . '/template5.php', "template", true);
+    arsort($data_pic);
 
-    $title_free = '<p class="text-muted hidden-xs data-row">Ќиже представлены классические шаблоны стандарта HTML4 от предыдущих версий PHPShop. ‘ункциональность классических шаблонов может отличатьс€ от современных шаблонов. ƒл€ 100% функциональности продукта рекомендуетс€ использовать современные шаблоны стандарта HTML5.</p>';
+    $title_free = '<p class="text-muted hidden-xs data-row">Ќиже представлены классические бесплатные шаблоны от предыдущих версий PHPShop. ‘ункциональность классических шаблонов может отличатьс€ от современных шаблонов. ƒл€ 100% работоспособности продукта рекомендуетс€ использовать предустановленные шаблоны.</p>';
     $img_list_free = null;
     if (is_array($data_pic))
         foreach ($data_pic as $row) {
@@ -130,8 +131,10 @@ function tab_base($data) {
                 $panel = 'panel-default';
                 $mes = null;
             }
+            
 
-            $img_list_free.='<div class="col-md-4"><div class="panel ' . $panel . '"><div class="panel-heading">' . $row['name'] . $mes . '<span class="glyphicon glyphicon-plus pull-right btn ' . $main . ' btn-xs skin-load" data-path="' . $row['name'] . '" data-toggle="tooltip" data-placement="top" title="' . __('«агрузить') . '"></span></div><div class="panel-body text-center"><img class="image-shadow" src="' . $skin_base_path . $row['icon'] . '"></div></div></div>';
+ 
+            $img_list_free.='<div class="col-md-4"><div class="panel ' . $panel . '"><div class="panel-heading">' . $row['name'] . $mes . ' <span class="glyphicon glyphicon-plus pull-right btn ' . $main . ' btn-xs skin-load" data-path="' . $row['name'] . '" data-toggle="tooltip" data-placement="top" title="' . __('«агрузить') . '"></span></div><div class="panel-body text-center"><img class="image-shadow image-skin"  src="' . $skin_base_path . $row['icon'] . '"></div></div></div>';
 
             if ($i == 3) {
                 $img_list_free.='</div>';

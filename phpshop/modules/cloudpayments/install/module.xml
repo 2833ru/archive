@@ -5,7 +5,6 @@
     <faqlink></faqlink>
     <description>Прием оплат через CloudPayments</description>
     <category>payment</category>
-    <status>new</status>
     <adminmenu>
         <title>CloudPayments</title>
         <capability>true</capability>

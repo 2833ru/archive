@@ -72,7 +72,7 @@ function actionStart() {
     $Tab1.=$PHPShopGUI->setField("Тестовое сообщение", $PHPShopGUI->setCheckbox('test', 1, 'Отправить только тестовое сообщение на ' . $PHPShopSystem->getEmail(), 1));
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1));
+    $PHPShopGUI->setTab(array("Основное", $Tab1,true));
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
