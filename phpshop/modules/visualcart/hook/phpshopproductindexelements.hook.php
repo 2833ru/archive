@@ -17,7 +17,7 @@ function nowBuy_visualcart_hook($obj, $row, $rout) {
             $obj->set('product_nowBuy_id', $row[$rand]['id']);
             $obj->set('product_nowBuy_name', $row[$rand]['name']);
             $obj->set('product_nowBuy_items', $row[$rand]['items']);
-            $obj->set('product_nowBuy_price', number_format(PHPShopProductFunction::GetPriceValuta($row[$rand]['id'], array($row[$rand]['price'])), $obj->format, '.', ' '));
+            $obj->set('product_nowBuy_price', number_format(PHPShopProductFunction::GetPriceValuta($row[$rand]['id'], array($row[$rand]['price']), $row[$rand]['baseinputvaluta']), $obj->format, '.', ' '));
 
             $obj->set('visualcart_lib', PHPShopParser::file($GLOBALS['SysValue']['templates']['visualcart']['visualcart_nowbuy'], true, false, true),true);
         }

@@ -7,7 +7,7 @@ function getCartInfo($cart) {
     $currency = ' ' . $PHPShopSystem->getDefaultValutaCode();
     if (is_array($cart))
         foreach ($cart as $val) {
-            $dis .= '<a href="?path=product&id=' . $val['id'] . '&return=modules.dir.visualcart" data-toggle="tooltip" data-placement="top" title="' . $val['name'] . ' - ' . $val['price'] . $currency . '"><img src="' . $val['pic_small'] . '" class="media-object pull-left" alt=""></a> ';
+            $dis .= '<a href="?path=product&id=' . $val['id'] . '&return=modules.dir.visualcart" data-toggle="tooltip" data-placement="top" title="' . $val['name'] . ' - ' . $val['price'] . $currency . '"><img src="' . $val['pic_small'] . '" class="media-object pull-left" alt="" style="padding:3px"></a> ';
         }
     return substr($dis, 0, strlen($dis) - 2);
 }
@@ -45,7 +45,7 @@ function actionStart() {
     $PHPShopInterface->addJSFiles('../modules/visualcart/admpanel/gui/visualcart.gui.js');
     $PHPShopInterface->action_title['order'] = 'Создать заказ';
     $PHPShopInterface->setActionPanel(__('Брошенные корзины'), $select_name,false);
-    $PHPShopInterface->setCaption(array("Пользователь", "23%"), array("Дата", "10%"), array("Товары", "25%"), array("Источник", "15%"), array("", "10%"), array("Итого", "7%", array('align' => 'right')));
+    $PHPShopInterface->setCaption(array("Пользователь", "23%"), array("Дата", "10%"), array("Товары", "30%"), array("Источник", "15%"), array("", "10%"), array("Итого", "7%", array('align' => 'right')));
 
     // Знак рубля
     if ($PHPShopSystem->getDefaultValutaIso() == 'RUB' or $PHPShopSystem->getDefaultValutaIso() == 'RUR')

@@ -234,7 +234,7 @@ class PHPShopOrderFunction extends PHPShopObj {
         $maxsum = 0;
         $maxdiscount = 0;
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['discount']);
-        $row = $PHPShopOrm->select(array('*'), array('sum' => "<='$mysum'", 'enabled' => "='1'"), array('order' => 'sum desc'), array('limit' => 1));
+        $row = $PHPShopOrm->select(array('*'), array('sum' => "<=".intval($mysum), 'enabled' => "='1'"), array('order' => 'sum desc'), array('limit' => 1));
         if (is_array($row)) {
             $sum = $row['sum'];
             if ($sum > $maxsum) {

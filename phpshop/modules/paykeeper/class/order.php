@@ -127,9 +127,7 @@ if ($delivery_price!=0) {
                                $pk_obj->getOrderParams("client_phone") .
                                $pk_obj->getOrderParams("secret_key");
                     $sign = hash('sha256' , $to_hash);
-                    // echo '<pre>';
-                    // print_r($pk_obj);
-                    // die();
+
                     $form = '
                         <h3>"' . $form_header . '"</h3> 
                         <form name="payment" id="pay_form" action="'.$pk_obj->getOrderParams("form_url").'"  accept-charset="windows-1251" method ="post">
@@ -148,7 +146,7 @@ if ($delivery_price!=0) {
                             document.querySelector("#pay_form").submit();
                         </script>';  
 
-                        echo $form ;
+                        $obj->set('orderMesage', $form.'<br><br>');
                        
                            
                 }   else { //order form
@@ -195,7 +193,7 @@ if ($delivery_price!=0) {
                                 $form = file_get_contents($pk_obj->getOrderParams("form_url"), false, $context);
                             }
                         }
-                        echo $form;
+                        $obj->set('orderMesage', $form.'<br><br>');
                     }
                 if ($form  == "") {
                     $form = '<h3>Error of payment: </h3><p>$err_num: '.htmlspecialchars($err_text).'</p>';

@@ -12,15 +12,24 @@ function yandexcartAddOption($row)
         'editable' => 'price_yandex_dbs_new',
         'view'     => (int) $memory['catalog.option']['price_yandex_dbs']
     ];
+}
 
-    $PHPShopInterface->productTableRow[] = [
-        'name'     => $row['price_sbermarket'],
-        'sort'     => 'price_sbermarket',
-        'editable' => 'price_sbermarket_new',
-        'view'     => (int) $memory['catalog.option']['price_sbermarket']
-    ];
+function yandexAddLabels($product) {
+    global $PHPShopInterface;
+
+    $memory = $PHPShopInterface->getProductTableFields();
+
+    // Постфикс
+    if (!empty($_GET['cat']))
+        $postfix = '&cat=' . (int) $_GET['cat'];
+    else
+        $postfix = null;
+
+    if ((int) $product['yml'] === 1 && (int) $memory['catalog.option']['label_yandex_market'] === 1)
+        $PHPShopInterface->productTableRowLabels[] = '<a class="label label-success" title="' . __('Вывод в Яндекс.Маркете') . '" href="?path=catalog' . $postfix . '&where[yml]=1">' . __('Я') . '</a> ';
 }
 
 $addHandler = [
-    'grid' => 'yandexcartAddOption'
+    'grid'   => 'yandexcartAddOption',
+    'labels' => 'yandexAddLabels'
 ];

@@ -80,7 +80,7 @@ foreach ($status_array as $row) {
     $ajax[$row['name']] = array(
         "id" => "board-id-" . $row['id'],
         "uid" => $row['id'],
-        "title" => '<a href="?path=order.status&return=lead.kanban&id=' . $row['id'] . '" class="kanban-title-board" data-toggle="tooltip" data-placement="top" title="' . PHPShopString::win_utf8('Редактировать') . '">' . PHPShopString::win_utf8(substr($row['name'], 0, 19), true) . '</a>',
+        "title" => '<a href="?path=order.status&return=lead.kanban&id=' . $row['id'] . '" class="kanban-title-board" data-toggle="tooltip" data-placement="top" title="' . PHPShopString::win_utf8('Редактировать') . '">' . PHPShopString::win_utf8(substr($row['name'], 0, 17), true) . '</a>',
         "color" => PHPShopString::win_utf8($row['color']),
     );
     $n++;

@@ -78,7 +78,7 @@ class CDEKWidget {
                     'length' => $this->getDimension('length', $cartItem['id'], $cartItem['parent']),
                     'width'  => $this->getDimension('width', $cartItem['id'], $cartItem['parent']),
                     'height' => $this->getDimension('height', $cartItem['id'], $cartItem['parent']),
-                    'weight' => (!empty($cartItem['weight']) ? $cartItem['weight'] / 1000 : $this->option['weight'] / 1000),
+                    'weight' => (!empty((float)$cartItem['weight']) ? (float)$cartItem['weight'] / 1000 : (float)$this->option['weight'] / 1000),
                 ];
             }
         }
@@ -306,6 +306,7 @@ class CDEKWidget {
         PHPShopParser::set('cdek_cart', json_encode($products));
         PHPShopParser::set('cdek_ymap_key', $yandex_apikey);
         PHPShopParser::set('cdek_admin', 1);
+        PHPShopParser::set('russia_only', (int) $this->option['russia_only']);
         PHPShopParser::set('cdek_scripts', '<script type="text/javascript" src="../modules/cdekwidget/js/widjet.js" /></script><script type="text/javascript" src="../modules/cdekwidget/js/cdekwidget.js" /></script>');
 
         PHPShopParser::set('cdek_popup', ParseTemplateReturn(dirname(__DIR__) . '/templates/template.tpl', true) , true);

@@ -48,7 +48,7 @@ loadHooks();
  * Авторизация пользователей
  * @package PHPShopExchange
  * @author PHPShop Software
- * @version 1.2
+ * @version 1.3
  */
 class UserChek {
 
@@ -59,10 +59,13 @@ class UserChek {
     var $mailPHPSHOP;
     var $OkFlag = 0;
 
-    function __construct($logPHPSHOP, $pasPHPSHOP, $table_name) {
+    function __construct($logPHPSHOP, $pasPHPSHOP, $tokenPHPSHOP) {
+        global $PHPShopBase;
+        
         $this->logPHPSHOP = $logPHPSHOP;
         $this->pasPHPSHOP = $this->myDecode($pasPHPSHOP);
-        $this->ChekBase($table_name);
+        $this->tokenPHPSHOP = $tokenPHPSHOP;
+        $this->ChekBase($PHPShopBase->getParam("base.users"));
         $this->BadUser();
     }
 
@@ -74,10 +77,18 @@ class UserChek {
         $sql = "select * from " . $table_name . " where enabled='1'";
         @$result = mysqli_query($link_db, $sql);
         while (@$row = mysqli_fetch_array(@$result)) {
+            
+            // Логин и пароль
             if ($this->logPHPSHOP == $row['login']) {
+                
                 if ($hasher->CheckPassword($this->pasPHPSHOP, $row['password'])) {
                     $this->OkFlag = 1;
                 }
+            }
+            
+            // Токен
+            if ($this->tokenPHPSHOP != '' and $this->tokenPHPSHOP == $row['token']) {
+                $this->OkFlag = 1;
             }
         }
     }
@@ -100,5 +111,5 @@ class UserChek {
 }
 
 // Проверка авторизации
-$UserChek = new UserChek($_REQUEST['log'], $_REQUEST['pas'], $PHPShopBase->getParam("base.table_name19"));
+$UserChek = new UserChek($_REQUEST['log'], $_REQUEST['pas'], $_REQUEST['token']);
 ?>

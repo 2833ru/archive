@@ -1,6 +1,6 @@
 <?php
 
-$TitlePage = __('Создание пользователя');
+$TitlePage = __('Новый пользователь');
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['shopusers']);
 PHPShopObj::loadClass('user');
 
@@ -8,16 +8,13 @@ PHPShopObj::loadClass('user');
 function actionStart() {
     global $PHPShopGUI, $TitlePage, $PHPShopModules;
 
-
     // Начальные данные
     $data['enabled'] = 1;
-
 
     // Нет данных
     if (!is_array($data)) {
         header('Location: ?path=' . $_GET['path']);
     }
-
 
     $PHPShopGUI->action_select['Создать заказ'] = array(
         'name' => 'Создать заказ',
@@ -36,7 +33,7 @@ function actionStart() {
 
     // Размер названия поля
     $PHPShopGUI->field_col = 2;
-    $PHPShopGUI->setActionPanel(__("Покупатели"). ' / '.$TitlePage, false, array('Сохранить и закрыть', 'Создать и редактировать'));
+    $PHPShopGUI->setActionPanel($TitlePage, false, array('Сохранить и закрыть', 'Создать и редактировать'));
     $PHPShopGUI->addJSFiles('./js/validator.js');
 
     // Стытусы пользователей
@@ -51,9 +48,10 @@ function actionStart() {
     $Tab1 = $PHPShopGUI->setCollapse('Информация', $PHPShopGUI->setField("Имя", $PHPShopGUI->setInput('text.required', "name_new", $data['name'])) .
             $PHPShopGUI->setField("E-mail", $PHPShopGUI->setInput('email.required.6', "login_new", $data['login'])) .
             $PHPShopGUI->setField("Телефон", $PHPShopGUI->setInput('tel', "tel_new", $data['tel'])) .
-            $PHPShopGUI->setField("Пароль", $PHPShopGUI->setInput("password.required.4", "password_new", $data['password'])) .
-            $PHPShopGUI->setField("Подтверждение пароля", $PHPShopGUI->setInput("password.required.4", "password2_new", $data['password'])) .
+             $PHPShopGUI->setField("Пароль", $PHPShopGUI->setInput("password.required.4", "password_new", null,null, false, false, false, false, false, '<a href="#" class="password-view"  data-toggle="tooltip" data-placement="top" title="'.__('Показать пароль').'"><span class="glyphicon glyphicon-eye-open"></span></a>')) .
+            $PHPShopGUI->setField("Подтверждение пароля", $PHPShopGUI->setInput("password.required.4", "password2_new", null)) .
             $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("enabled_new", 1, "Вкл.", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выкл.", $data['enabled']) . '&nbsp;&nbsp;' . $PHPShopGUI->setCheckbox('sendActivationEmail', 1, 'Оповестить пользователя', 0)) .
+            $PHPShopGUI->setField("Диалоги", $PHPShopGUI->setRadio("dialog_ban_new", 0, "Вкл.", $data['dialog_ban']). $PHPShopGUI->setRadio("dialog_ban_new", 1, "Выкл.", $data['dialog_ban'])) .
             $PHPShopGUI->setField("Статус", $PHPShopGUI->setSelect('status_new', $user_status_value)).
             $PHPShopGUI->setField("Накопительная скидка", $PHPShopGUI->setInput('text', "cumulative_discount_new", $data['cumulative_discount'],null,100,false, false, false, '%')) 
     );

@@ -74,7 +74,6 @@ function actionStart() {
 
     if ($data['model'] === 'ADV' || $data['model'] === 'DBS') {
         $Tab1 .= $PHPShopGUI->setField('Пароль защиты файла', $PHPShopGUI->setInputText('http://' . $_SERVER['SERVER_NAME'] . '/yml/?pas=', 'password_new', $data['password'], 534));
-        $Tab1 .= $PHPShopGUI->setField('SSL', $PHPShopGUI->setCheckbox('options[ssl]', 1, 'Сайт использует HTTPS протокол', $options['ssl']));
         $Tab1 .= $PHPShopGUI->setField('Вывод характеристик', $PHPShopGUI->setCheckbox('use_params_new', 1, 'Включить вывод характеристик в YML', $data['use_params']));
     }
 
@@ -116,20 +115,8 @@ function actionStart() {
         $PHPShopGUI->setField('Наценка', $PHPShopGUI->setInputText(null, 'options[price_fee]', $options['price_fee'], 100, '%')) .
 
         $PHPShopGUI->setField('Колонка цен Яндекс.Маркет DBS', $PHPShopGUI->setSelect('options[price_dbs]', $PHPShopGUI->setSelectValue($options['price_dbs'], 5), 100)) .
-        $PHPShopGUI->setField('Наценка', $PHPShopGUI->setInputText(null, 'options[price_dbs_fee]', $options['price_dbs_fee'], 100, '%')) .
-
-        $PHPShopGUI->setField('Колонка цен Google Merchant', $PHPShopGUI->setSelect('options[price_google]', $PHPShopGUI->setSelectValue($options['price_google'], 5), 100)) .
-        $PHPShopGUI->setField('Наценка', $PHPShopGUI->setInputText(null, 'options[price_google_fee]', $options['price_google_fee'], 100, '%')) .
-
-        $PHPShopGUI->setField('Колонка цен СДЭК.МАРКЕТ', $PHPShopGUI->setSelect('options[price_cdek]', $PHPShopGUI->setSelectValue($options['price_cdek'], 5), 100)) .
-        $PHPShopGUI->setField('Наценка', $PHPShopGUI->setInputText(null, 'options[price_cdek_fee]', $options['price_cdek_fee'], 100, '%')) .
-
-        $PHPShopGUI->setField('Колонка цен AliExpress', $PHPShopGUI->setSelect('options[price_ali]', $PHPShopGUI->setSelectValue($options['price_ali'], 5), 100)) .
-        $PHPShopGUI->setField('Наценка', $PHPShopGUI->setInputText(null, 'options[price_ali_fee]', $options['price_ali_fee'], 100, '%')) .
-
-        $PHPShopGUI->setField('Колонка цен СберМаркет', $PHPShopGUI->setSelect('options[price_sbermarket]', $PHPShopGUI->setSelectValue($options['price_sbermarket'], 5), 100)) .
-        $PHPShopGUI->setField('Наценка', $PHPShopGUI->setInputText(null, 'options[price_sbermarket_fee]', $options['price_sbermarket_fee'], 100, '%')),
-        true
+        $PHPShopGUI->setField('Наценка', $PHPShopGUI->setInputText(null, 'options[price_dbs_fee]', $options['price_dbs_fee'], 100, '%'))
+     
     );
 
     if (empty($data['model'])) {

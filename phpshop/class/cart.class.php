@@ -93,6 +93,7 @@ class PHPShopCart {
                 "name" => str_replace('&#43;', '+', $name),
                 "price" => $this->getCartProductPrice($objProduct),
                 "price_n" => $this->getCartProductPrice($objProduct, 'price_n'),
+                "price_purch" => $this->applyCurrency($objProduct->getParam("price_purch"),true),
                 "uid" => $objProduct->getParam("uid"),
                 "num" => abs($this->_CART[$xid]['num'] + $num),
                 "ed_izm" => $objProduct->getParam("ed_izm"),

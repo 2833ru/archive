@@ -23,6 +23,7 @@ class PHPShopGUI {
     var $nav_style = 'nav-pills';
     var $productTableCaption = [];
     var $productTableRow = [];
+    var $productTableRowLabels = [];
 
     /**
      * Конструктор
@@ -934,7 +935,9 @@ class PHPShopGUI {
             $passN++;
         }
 
-
+        if(empty($id)) {
+            $id = $name;
+        }
 
         if (!empty($description) or ! empty($caption)) {
 
@@ -943,7 +946,7 @@ class PHPShopGUI {
             if (!empty($caption))
                 $CODE .= ' <div class="input-group-addon input-sm">' . __($caption, $locale) . '</div>';
 
-            $CODE .= '<input class="' . $class_array[$type] . ' ' . $class . '" type="' . $type . '" value="' . $value . '"  name="' . $name . '" id="' . $name . '" placeholder="' . $this->__($placeholder, $locale) . '">';
+            $CODE .= '<input class="' . $class_array[$type] . ' ' . $class . '" type="' . $type . '" value="' . $value . '"  name="' . $name . '" id="' . $id . '" placeholder="' . $this->__($placeholder, $locale) . '">';
 
             if (!empty($description))
                 $CODE .= '<div class="input-group-addon input-sm">' . $description . '</div>';
@@ -2211,7 +2214,7 @@ class PHPShopInterface extends PHPShopGUI {
             $options = json_decode($_COOKIE['check_memory'], true);
         }
 
-        if(!is_array($options)) {
+        if(!is_array($options) or count($options['catalog.option'])<3) {
             $options = [
                 'catalog.option' => [
                     'icon'   => 1,

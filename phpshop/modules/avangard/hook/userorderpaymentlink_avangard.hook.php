@@ -28,7 +28,6 @@ function userorderpaymentlink_mod_avangard_hook($obj, $PHPShopOrderFunction)
                 $payment_form_qr = $Avangard->getForm(true);
                 $return .= PHPShopText::form($payment_form_qr, 'avangardpay', 'post', $Avangard->getApiURL(), '_blank');
             }
-            $return .= '<div style="max-width: 300px;font-size: 10px;"><br>' . $Avangard->getOffer() . '</div>';
         } elseif ($PHPShopOrderFunction->getSerilizeParam('orders.Person.order_metod') == Avangard::PAYMENT_METHOD)
             $return = ' Заказ обрабатывается менеджером';
 

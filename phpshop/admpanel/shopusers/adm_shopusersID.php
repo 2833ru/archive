@@ -35,10 +35,10 @@ function actionStart() {
         'name' => 'Отправить письмо',
         'url' => 'mailto:' . $data['login']
     );
-    
+
     $PHPShopGUI->action_select['Создать диалог'] = array(
         'name' => 'Создать диалог',
-        'url' => '?path=dialog&new&user=' . $data['id'].'&bot=message&id='.$data['id'].'&return=dialog'
+        'url' => '?path=dialog&new&user=' . $data['id'] . '&bot=message&id=' . $data['id'] . '&return=dialog'
     );
 
 
@@ -65,11 +65,12 @@ function actionStart() {
     $Tab1 = $PHPShopGUI->setCollapse('Информация', $PHPShopGUI->setField("Имя", $PHPShopGUI->setInput('text.required', "name_new", $data['name'])) .
             $PHPShopGUI->setField("E-mail", $PHPShopGUI->setInput('email.required.6', "login_new", $data['login'])) .
             $PHPShopGUI->setField("Телефон", $PHPShopGUI->setInput('tel', "tel_new", $data['tel'])) .
-            $PHPShopGUI->setField("Пароль", $PHPShopGUI->setInput("password.required.4", "password_new", base64_decode($data['password']))) .
+            $PHPShopGUI->setField("Пароль", $PHPShopGUI->setInput("password.required.4", "password_new", base64_decode($data['password']), null, false, false, false, false, false, '<a href="#" class="password-view"  data-toggle="tooltip" data-placement="top" title="' . __('Показать пароль') . '"><span class="glyphicon glyphicon-eye-open"></span></a>')) .
             $PHPShopGUI->setField("Подтверждение пароля", $PHPShopGUI->setInput("password.required.4", "password2_new", base64_decode($data['password']))) .
             $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("enabled_new", 1, "Вкл.", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выкл.", $data['enabled']) . '&nbsp;&nbsp;' . $PHPShopGUI->setCheckbox('sendActivationEmail', 1, 'Оповестить пользователя', 0)) .
-            $PHPShopGUI->setField("Статус", $PHPShopGUI->setSelect('status_new', $user_status_value)).
-            $PHPShopGUI->setField("Накопительная скидка", $PHPShopGUI->setInput('text', "cumulative_discount_new", $data['cumulative_discount'],null,100,false, false, false, '%')) 
+            $PHPShopGUI->setField("Диалоги", $PHPShopGUI->setRadio("dialog_ban_new", 0, "Вкл.", $data['dialog_ban']) . $PHPShopGUI->setRadio("dialog_ban_new", 1, "Выкл.", $data['dialog_ban'])) .
+            $PHPShopGUI->setField("Статус", $PHPShopGUI->setSelect('status_new', $user_status_value)) .
+            $PHPShopGUI->setField("Накопительная скидка", $PHPShopGUI->setInput('text', "cumulative_discount_new", $data['cumulative_discount'], null, 100, false, false, false, '%'))
     );
 
     // Адреса доставок
@@ -78,34 +79,52 @@ function actionStart() {
     // Бонусы
     $Tab3 = $PHPShopGUI->loadLib('tab_bonus', $data['id']);
 
-    // Карта
-    $PHPShopGUI->addJSFiles('./shopusers/gui/shopusers.gui.js', '//api-maps.yandex.ru/2.0/?load=package.standard&lang=ru-RU&apikey=' . $yandex_apikey);
+    // Заказы
+    $_GET['user'] = $data['id'];
+    $tab_order = $PHPShopGUI->loadLib('tab_order', false, './dialog/');
+    if (!empty($tab_order))
+        $sidebarright[] = array('title' => 'Заказы', 'content' => $tab_order);
 
+    // Корзина
+    $tab_cart = $PHPShopGUI->loadLib('tab_cart', false, './dialog/');
+    if (!empty($tab_cart))
+        $sidebarright[] = array('title' => 'Корзина', 'content' => $tab_cart);
+
+    // Диалоги
+    $_GET['user_id'] = $data['id'];
+    $tab_dialog = $PHPShopGUI->loadLib('tab_dialog', false, './dialog/');
+    if (!empty($tab_dialog))
+        $sidebarright[] = array('title' => 'Диалоги', 'content' => $tab_dialog);
+
+    // Карта
     $mass = unserialize($data['data_adres']);
     if (strlen($mass['list'][$mass['main']]['street_new']) > 5) {
-        $map = '<div id="map" data-geocode="' . $mass['list'][$mass['main']]['city_new'] . ', ' . $mass['list'][$mass['main']]['street_new'] . ' ' . $mass['list'][$mass['main']]['house_new'] . '"></div>';
+        $PHPShopGUI->addJSFiles('./shopusers/gui/shopusers.gui.js', '//api-maps.yandex.ru/2.0/?load=package.standard&lang=ru-RU&apikey=' . $yandex_apikey);
+        $map = '<div id="map" data-geocode="' . $mass['list'][$mass['main']]['city_new'] . ', ' . $mass['list'][$mass['main']]['street_new'] . ' ' . $mass['list'][$mass['main']]['house_new'] . '" style="width: 280px;height:280px;"></div>';
 
         $sidebarright[] = array('title' => 'Адрес доставки на карте', 'content' => array($map));
+    }
 
-        // Правый сайдбар
-        $PHPShopGUI->setSidebarRight($sidebarright, 2);
-        $PHPShopGUI->sidebarLeftRight = 2;
+    // Правый сайдбар
+    if (!empty($sidebarright)) {
+        $PHPShopGUI->setSidebarRight($sidebarright, 3, 'hidden-xs');
+        $PHPShopGUI->sidebarLeftRight = 3;
     }
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
-    
+
     // Бонусы
-    if($PHPShopSystem->getSerilizeParam('admoption.bonus') > 0)
-        $PHPShopGUI->addTab(array("Бонусы <span class=badge>" . $data['bonus'] . "</span>", $Tab3,true));
-    
+    if ($PHPShopSystem->getSerilizeParam('admoption.bonus') > 0)
+        $PHPShopGUI->addTab(array("Бонусы <span class=badge>" . $data['bonus'] . "</span>", $Tab3, true));
+
     // Вывод формы закладки
     $PHPShopGUI->setTab(array("Основное", $Tab1), array("Доставка и реквизиты", $Tab2));
-    
+
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .
-            $PHPShopGUI->setInput("hidden", "bonus_new", $data['bonus']).
+            $PHPShopGUI->setInput("hidden", "bonus_new", $data['bonus']) .
             $PHPShopGUI->setInput("button", "delID", "Удалить", "right", 70, "", "but", "actionDelete.shopusers.edit") .
             $PHPShopGUI->setInput("submit", "editID", "Сохранить", "right", 70, "", "but", "actionUpdate.shopusers.edit") .
             $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionSave.shopusers.edit");
@@ -193,13 +212,13 @@ function actionUpdate() {
 	INSERT INTO `" . $GLOBALS['SysValue']['base']['bonus'] . "` 
 	(`date`, `comment`, `user_id`, `bonus_operation`) VALUES 
 	('" . time() . "','" . $_POST['comment_new'] . "','" . $_POST['rowID'] . "','" . intval($_POST['bonus_operation_new']) . "')");
-        
+
         if (intval($_POST['bonus_operation_new']) != 0) {
             $_POST['bonus_new'] = $_POST['bonus_operation_new'] + $_POST['bonus_new'];
         }
     }
 
-    
+
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);

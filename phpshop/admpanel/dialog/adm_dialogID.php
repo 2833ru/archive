@@ -5,7 +5,7 @@ $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['dialog']);
 PHPShopObj::loadClass('bot');
 
 function actionStart() {
-    global $PHPShopGUI, $PHPShopOrm, $chat_name;
+    global $PHPShopGUI, $PHPShopOrm, $chat_name,$PHPShopSystem;
 
     // Новый диалог
     if (isset($_GET['new'])) {
@@ -70,18 +70,25 @@ function actionStart() {
     // Ответы
     $answer_list = null;
     $PHPShopOrmAnswer = new PHPShopOrm($GLOBALS['SysValue']['base']['dialog_answer']);
-    $data_answer = $PHPShopOrmAnswer->select(array('*'), array('enabled'=>"='1'"), array('order' => 'num'), array('limit' => 15));
+    $data_answer = $PHPShopOrmAnswer->select(array('*'), array('enabled' => "='1'"), array('order' => 'num'), array('limit' => 15));
     if (is_array($data_answer))
         foreach ($data_answer as $row)
-            $answer_list .= '<li><a href="#" class="dialog-answer" data-content="'.str_replace('"',"",$row['message']).'">' . $row['name'] . '</a></li>';
+            $answer_list .= '<li><a href="#" class="dialog-answer" data-content="' . str_replace('"', "", $row['message']) . '">' . $row['name'] . '</a></li>';
 
     if (!empty($answer_list))
         $answer_list .= '<li role="separator" class="divider"></li>';
-    $answer = '<ul class="dropdown-menu">' . $answer_list . ' <li><a href="?path=dialog.answer&return=dialog&action=new"><span class="glyphicon glyphicon-plus"></span> '.__('Добавить ответ').'</a></li></ul>';
+    $answer = '<ul class="dropdown-menu">' . $answer_list . ' <li><a href="?path=dialog.answer&return=dialog&action=new"><span class="glyphicon glyphicon-plus"></span> ' . __('Добавить ответ') . '</a></li></ul>';
 
     $PHPShopGUI->setActionPanel(__("Диалог") . " " . $chat_name, array('Пользователь', 'Заказы пользователя', '|', 'Удалить'), array('Заказы пользователя', 'Наверх'));
 
-    $PHPShopGUI->_CODE = '
+    // Проверка на бан
+    $PHPShopOrmUser = new PHPShopOrm($GLOBALS['SysValue']['base']['shopusers']);
+    $data_user = $PHPShopOrmUser->getOne(array('*'), array('id' => "=" . intval($_GET['user'])));
+
+    if (!empty($data_user['dialog_ban']))
+        $PHPShopGUI->_CODE = $PHPShopGUI->setAlert('Диалог заблокирован', $type = 'danger');
+    else
+        $PHPShopGUI->_CODE = '
 
           <div id="message-list">' . $message . '</div>
           <div id="message-preloader"><img src="images/ajax-loader.gif" title="Загрузка"></div>
@@ -94,17 +101,17 @@ function actionStart() {
           </p>
           
           <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-6 col-xs-6">
             <a id="attachment-disp" class="text-muted" href="#f"><span class="glyphicon glyphicon-paperclip"></span> ' . __('Прикрепить файл') . '</a>
              <a id="f"></a>
              <div id="attachment" class="hide" style="max-width:70%">
              ' . $PHPShopGUI->setIcon(null, "attachment", false, array('load' => true, 'server' => true, 'url' => false, 'multi' => false, 'view' => false)) . '
              </div>
             </div>
-            <div class="col-md-4 text-right">
+            <div class="col-md-6 col-xs-6 text-right">
 
              <div class="btn-group dropup">
-             <button class="btn btn-default send-message disabled" type="button"><span class="glyphicon glyphicon-send"></span> ' . __('Отправить сообщение') . '</button>
+             <button class="btn btn-default send-message disabled" type="button"><span class="glyphicon glyphicon-send"></span> ' . __('Отправить') . '</button>
               <button type="button" class="btn btn-default dropdown-toggle " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <span class="caret"></span> <span class="sr-only">Toggle Dropdown</span> </button>
               ' . $answer . '
              
@@ -138,8 +145,36 @@ function actionStart() {
             </div></div>';
 
     $sidebarleft[] = array('title' => 'Пользователи', 'content' => $search . $PHPShopGUI->loadLib('tab_dialog', false, './dialog/'), 'title-icon' => '<div class="hidden-xs"><span class="glyphicon glyphicon-search" id="show-dialog-search" data-toggle="tooltip" data-placement="top" title="' . __('Поиск') . '"></span></div>');
+    // Информация
+    $sidebarright[] = array('id' => 'user-data-1', 'title' => 'Пользователь', 'name' => array('caption' => $data_user['name'], 'link' => '?path=shopusers&return=order.' . $data_user['id'] . '&id=' . $data_user['id'] . '&return=dialog'), 'content' => array(array('caption' => $data_user['login'], 'link' => 'mailto:' . $data_user['login']), $data_user['tel']));
+
+    // Заказы
+    $tab_order = $PHPShopGUI->loadLib('tab_order', false, './dialog/');
+    if (!empty($tab_order))
+        $sidebarright[] = array('title' => 'Заказы', 'content' => $tab_order);
+
+    // Корзина
+    $tab_cart = $PHPShopGUI->loadLib('tab_cart', false, './dialog/');
+    if (!empty($tab_cart))
+        $sidebarright[] = array('title' => 'Корзина', 'content' => $tab_cart);
+
+    // Яндекс.Карты
+    $yandex_apikey = $PHPShopSystem->getSerilizeParam("admoption.yandex_apikey");
+    if (empty($yandex_apikey))
+        $yandex_apikey = 'cb432a8b-21b9-4444-a0c4-3475b674a958';
+    
+    // Карта
+    $mass = unserialize($data_user['data_adres']);
+    if (strlen($mass['list'][$mass['main']]['street_new']) > 5) {
+        $PHPShopGUI->addJSFiles('./shopusers/gui/shopusers.gui.js', '//api-maps.yandex.ru/2.0/?load=package.standard&lang=ru-RU&apikey=' . $yandex_apikey);
+        $map = '<div id="map" data-geocode="' . $mass['list'][$mass['main']]['city_new'] . ', ' . $mass['list'][$mass['main']]['street_new'] . ' ' . $mass['list'][$mass['main']]['house_new'] . '"></div>';
+        
+    $sidebarright[] = array('title' => 'Адрес доставки на карте', 'content' => array($map));
+    }
+
     $PHPShopGUI->setSidebarLeft($sidebarleft, 3);
     $PHPShopGUI->sidebarLeftCell = 3;
+    $PHPShopGUI->setSidebarRight($sidebarright,2,'hidden-xs');
     $PHPShopGUI->Compile(false);
 }
 

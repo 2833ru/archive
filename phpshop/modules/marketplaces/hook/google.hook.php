@@ -1,13 +1,15 @@
 <?php
 
-function PHPShopRSS_yandexcart_hook($obj) {
+include_once dirname(__DIR__) . '/class/Marketplaces.php';
 
-    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['yandexcart']['yandexcart_system']);
-    $obj->yandex_module_options = $PHPShopOrm->select();
+function marketplacesRssHook($obj) {
+
+    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['marketplaces']['marketplaces_system']);
+    $obj->marketplaces_options = $PHPShopOrm->select();
 
     // Пароль
-    if (!empty($obj->yandex_module_options['password']))
-        if ($_GET['pas'] != $obj->yandex_module_options['password'])
+    if (!empty($obj->marketplaces_options['password']))
+        if ($_GET['pas'] != $obj->marketplaces_options['password'])
             exit('Login error!');
 
     // Бренды
@@ -63,17 +65,19 @@ function setProducts_google_hook($obj, $data)
     if (!empty($add))
         $data['xml'] = str_replace('</item>', $add . '</item>', $data['xml']);
 
-    $yandexOptions = unserialize($obj->yandex_module_options['options']);
+    $options = unserialize($obj->marketplaces_options['options']);
 
     // price columns
     $price = $data['val']['price'];
     $fee = 0;
 
-    if(isset($yandexOptions['price_google']) && (int) $yandexOptions['price_google'] > 1) {
-        $price = $data['val']['price' . (int) $yandexOptions['price_google']];
+    if(!empty($data['val']['price_google'])) {
+        $price = $data['val']['price_google'];
+    } elseif(isset($options['price_google']) && (int) $options['price_google'] > 1 && !empty($data['val']['price' . (int) $options['price_google']])) {
+        $price = $data['val']['price' . (int) $options['price_google']];
     }
-    if(isset($yandexOptions['price_google_fee']) && (float) $yandexOptions['price_google_fee'] > 0) {
-        $fee = (float) $yandexOptions['price_google_fee'];
+    if(isset($options['price_google_fee']) && (float) $options['price_google_fee'] > 0) {
+        $fee = (float) $options['price_google_fee'];
     }
 
     if($fee > 0) {
@@ -85,7 +89,7 @@ function setProducts_google_hook($obj, $data)
     return $data['xml'];
 }
 
-$addHandler = array (
+$addHandler = [
     'setProducts' => 'setProducts_google_hook',
-    '__construct' => 'PHPShopRSS_yandexcart_hook'
-);
+    '__construct' => 'marketplacesRssHook'
+];

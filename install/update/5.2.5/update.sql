@@ -226,3 +226,6 @@ ALTER TABLE `phpshop_dialog` ADD `attachments` VARCHAR(255);
 ALTER TABLE `phpshop_delivery` ADD `weight_max` int(11) DEFAULT '0';
 ALTER TABLE `phpshop_delivery` ADD `weight_min` int(11) DEFAULT '0';
 ALTER TABLE `phpshop_dialog` ADD `isview_user` enum('0','1') DEFAULT '1';
+
+ALTER TABLE `phpshop_products` ADD `price_purch` FLOAT DEFAULT '0';
+ALTER TABLE `phpshop_shopusers` ADD `dialog_ban` ENUM('0','1') DEFAULT '0';

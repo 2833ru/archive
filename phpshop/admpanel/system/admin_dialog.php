@@ -48,6 +48,12 @@ function actionStart() {
     if(empty($option['margin_dialog']))
         $option['margin_dialog']=0;
     
+    if(empty($option['size_dialog']))
+        $option['size_dialog']=56;
+    
+    if(empty($option['sizem_dialog']))
+        $option['sizem_dialog']=56;
+    
     if(empty($option['time_from_dialog']) and empty($option['time_until_dialog'])){
         $option['time_until_dialog'] = 20;
         $option['time_from_dialog'] = 8;
@@ -55,7 +61,6 @@ function actionStart() {
     
     $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Виджет чата',
             $PHPShopGUI->setField("Чат", $PHPShopGUI->setCheckbox('option[chat_dialog]', 1, 'Включить виджет чата', $option['chat_dialog']).'<br>'.
-            $PHPShopGUI->setCheckbox('option[mobil_dialog]', 1, 'Скрыть виджет чата для телефонов', $option['mobil_dialog']).'<br>'.
             $PHPShopGUI->setCheckbox('option[tel_dialog]', 1, 'Включить обязательное поле телефон для чата', $option['tel_dialog'])).
             $PHPShopGUI->setField("Заголовок чата", $PHPShopGUI->setInputText(null, "option[title_dialog]", $option['title_dialog'], 300)) .
             $PHPShopGUI->setField("Приветствие в чате", $PHPShopGUI->setTextarea('option[text_dialog]',$option['text_dialog'],false,300)).
@@ -66,7 +71,9 @@ function actionStart() {
                     ) .
             $PHPShopGUI->setField("Аватар сотрудника в чате", $PHPShopGUI->setIcon($option['avatar_dialog'], "avatar_dialog", false, array('load' => false, 'server' => true))).
             $PHPShopGUI->setField('Цвет чата', $PHPShopGUI->setInputColor('option[color_dialog]', $option['color_dialog'],150)).
-            $PHPShopGUI->setField("Отступ снизу", $PHPShopGUI->setInputText(null, "option[margin_dialog]", $option['margin_dialog'], 150,'px')) 
+            $PHPShopGUI->setField("Отступ снизу", $PHPShopGUI->setInputText(null, "option[margin_dialog]", $option['margin_dialog'], 150,'px')).
+            $PHPShopGUI->setField("Размер кнопки", $PHPShopGUI->setInputText(null, "option[size_dialog]", $option['size_dialog'], 150,'px')).
+            $PHPShopGUI->setField("Размер кнопки для телефонов", $PHPShopGUI->setInputText(null, "option[sizem_dialog]", $option['sizem_dialog'], 150,'px'))
             );
     
     // Telegram
@@ -129,7 +136,7 @@ function actionUpdate() {
 
     // Иконка
     $_POST['option']['avatar_dialog'] = $_POST['avatar_dialog'];
-    
+
     if (is_array($_POST['option']))
         foreach ($_POST['option'] as $key => $val)
             $option[$key] = $val;

@@ -759,3 +759,11 @@ table.dataTable th{
   margin-left: auto;
   margin-right: auto;
 }
+
+li.active .text-muted{
+    color: #fff;
+}
+
+.nav-stacked > li {
+    width:100%;
+}

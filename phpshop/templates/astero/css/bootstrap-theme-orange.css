@@ -21,9 +21,6 @@ background-size:cover;
 .header-color,.header-color a,.header-color .btn,.header-color h4,.header-links a{
 color:#ffffff !important;
 }
-#body{
---color:#ff8e71;
-}
 .side-heading,.panel-default > .panel-heading,.panel-success > .panel-heading,.product-col .btn-cart:hover,.product-info .product-details .btn-cart:hover,.product-info-box .heading,.btn-primary, .pagination > .active > a{
 background:#ff8e71 !important;
 }
@@ -126,4 +123,7 @@ filter:hue-rotate(-180deg);
 }
 .theme-color {
     color:#ff8e71;
+}
+#body{
+--color:#ff8e71;
 }

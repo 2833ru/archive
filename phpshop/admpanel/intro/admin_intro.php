@@ -55,7 +55,7 @@ function actionStart() {
     if (is_array($data)) {
         foreach ($data as $row) {
             if (strlen($row['name']) > 5)
-                $search_jurnal .= '<a href="?path=report.searchjurnal" class="btn btn-default btn-xs search_var">' . PHPShopSecurity::true_search(substr($row['name'], 0, 30)) . '</a> ';
+                $search_jurnal .= '<a href="?path=report.searchjurnal" class="btn btn-default btn-xs search_var">' . PHPShopSecurity::TotalClean(substr($row['name'], 0, 30)) . '</a> ';
         }
     }
 
@@ -565,18 +565,6 @@ function actionStart() {
 ';
 
     $PHPShopGUI->Compile();
-}
-
-function getCupon($string) {
-    $chars = 'ABCDEFGHJKLMNOPQRSTUVWXYZ';
-    $chars_array = str_split($chars);
-    $string_array = str_split($string);
-    $result = null;
-
-    foreach ($string_array as $v)
-        $result .= $chars_array[$v];
-
-    return 'SALE-' . $result;
 }
 
 ?>

@@ -228,6 +228,8 @@ $data = $PHPShopOrm->select(array('*'), $where, $order, $limit);
 if (is_array($data))
     foreach ($data as $row) {
 
+        $PHPShopInterface->productTableRowLabels = [];
+
         // Картинка родителя
         if (empty($row['pic_small']) and ! empty($parent_pic))
             $row['pic_small'] = $parent_pic;
@@ -250,35 +252,20 @@ if (is_array($data))
 
             // Новинка
             if (!empty($row['newtip']))
-                $uid .= '<a class="label label-info" title="' . __('Новинка') . '" href="?path=catalog' . $postfix . '&where[newtip]=1">' . __('Н') . '</a> ';
+                $PHPShopInterface->productTableRowLabels[] = '<a class="label label-info" title="' . __('Новинка') . '" href="?path=catalog' . $postfix . '&where[newtip]=1">' . __('Н') . '</a> ';
 
             // Спецпредложение
             if (!empty($row['spec']))
-                $uid .= '<a class="label label-success" title="' . __('Спецпредложение') . '" href="?path=catalog' . $postfix . '&where[spec]=1">' . __('С') . '</a> ';
+                $PHPShopInterface->productTableRowLabels[] = '<a class="label label-success" title="' . __('Спецпредложение') . '" href="?path=catalog' . $postfix . '&where[spec]=1">' . __('С') . '</a> ';
 
             // Под заказ
             if (!empty($row['sklad']))
-                $uid .= '<a class="label label-success" title="' . __('Под заказ') . '" href="?path=catalog' . $postfix . '&where[sklad]=1">' . __('О') . '</a> ';
+                $PHPShopInterface->productTableRowLabels[] = '<a class="label label-success" title="' . __('Под заказ') . '" href="?path=catalog' . $postfix . '&where[sklad]=1">' . __('О') . '</a> ';
 
-            // Яндекс Маркет
-            if ((int) $row['yml'] === 1)
-                $uid .= '<a class="label label-success" title="' . __('Вывод в Яндекс.Маркете') . '" href="?path=catalog' . $postfix . '&where[yml]=1">' . __('Я') . '</a> ';
+            // Перехват модуля
+            $PHPShopModules->setAdmHandler(__FILE__, 'labels', $row);
 
-            // СберМаркет
-            if (isset($row['sbermarket']) && (int) $row['sbermarket'] === 1)
-                $uid .= '<a class="label label-success" title="' . __('Вывод в СберМаркет') . '" href="?path=catalog' . $postfix . '&where[sbermarket]=1">' . __('Сбер') . '</a> ';
-
-            // СДЭК
-            if (isset($row['cdek']) && (int) $row['cdek'] === 1)
-                $uid .= '<a class="label label-success" title="' . __('Вывод в СДЭК.МАРКЕТ') . '" href="?path=catalog' . $postfix . '&where[cdek]=1">' . __('СДЭК') . '</a> ';
-
-            // AliExpress
-            if (isset($row['aliexpress']) && (int) $row['aliexpress'] === 1)
-                $uid .= '<a class="label label-success" title="' . __('Вывод в AliExpress') . '" href="?path=catalog' . $postfix . '&where[aliexpress]=1">' . __('Ali') . '</a> ';
-
-            // AliExpress
-            if (isset($row['google_merchant']) && (int) $row['google_merchant'] === 1)
-                $uid .= '<a class="label label-success" title="' . __('Вывод в Google Merchant') . '" href="?path=catalog' . $postfix . '&where[google_merchant]=1">' . __('GM') . '</a> ';
+            $uid .= implode('', $PHPShopInterface->productTableRowLabels);
 
             // Подтип
             if (strstr($row['parent'], ','))
@@ -304,7 +291,8 @@ if (is_array($data))
                 if (is_array($PHPShopSortCategory[$scat])) {
                     if (is_array($sorts))
                         foreach ($sorts as $s)
-                            $sort_list .= '<a href="?path=sort&id=' . $scat . '" class="text-muted">' . $PHPShopSort[$s]['name'] . '</a>, ';
+                            if (!empty($PHPShopSort[$s]['name']))
+                                $sort_list .= '<a href="?path=sort&id=' . $scat . '" class="text-muted">' . $PHPShopSort[$s]['name'] . '</a>, ';
                 }
             }
 
@@ -428,8 +416,17 @@ if (is_array($data))
 
 $total = $PHPShopOrm->select(array("COUNT('id') as count"), $where, $order);
 
-if (!empty($_GET['cat']))
-    $catname = $PHPShopCategory->getName();
+if (isset($_GET['cat'])) {
+
+    if ($_GET['cat'] == 1000001)
+        $catname = __('Загруженные CRM');
+    elseif ($_GET['cat'] == 0)
+        $catname = __('Загруженные CSV');
+    elseif ($_GET['cat'] == 1000004)
+        $catname = __('Удаленные товары');
+    else
+        $catname = $PHPShopCategory->getName();
+}
 elseif (isset($_GET['where']))
     $catname = __('Поиск');
 else

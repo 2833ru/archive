@@ -267,7 +267,7 @@ class PHPShopPromotions {
                 $priceDiscount = $priceDiscounItog;
             }
             if($isNeedCount) {
-                if($discount_info['action'] === 1) {
+                if($discount_info['action'] === 1 && (int) $discount_info['status'] !== 1) {
                     $priceDiscount = $this->applyRegularDiscount($priceDiscount, $row[$priceColumn], $row['id']);
                 }
 

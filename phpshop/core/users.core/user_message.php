@@ -15,7 +15,7 @@ function sendMessage($obj) {
         'date' => time(),
         'text' => $_POST['message'],
         'staffid' => 1,
-        'isview' => 0,
+        'isview' => $_SESSION['UsersBan'],
         'isview_user' => 0
     );
 

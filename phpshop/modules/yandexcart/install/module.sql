@@ -29,13 +29,8 @@ ALTER TABLE `phpshop_products` ADD `yandex_condition_reason` text;
 ALTER TABLE `phpshop_products` ADD `barcode` varchar(255) DEFAULT '';
 ALTER TABLE `phpshop_products` ADD `model` varchar(255) DEFAULT '';
 ALTER TABLE `phpshop_products` ADD `market_sku` varchar(255) DEFAULT '';
-ALTER TABLE `phpshop_products` ADD `google_merchant` enum('0','1') DEFAULT '1';
-ALTER TABLE `phpshop_products` ADD `aliexpress` enum('0','1') DEFAULT '1';
-ALTER TABLE `phpshop_products` ADD `sbermarket` enum('0','1') DEFAULT '1';
-ALTER TABLE `phpshop_products` ADD `cdek` enum('0','1') DEFAULT '1';
 ALTER TABLE `phpshop_products` ADD `cpa` enum('0','1','2') DEFAULT '1';
 ALTER TABLE `phpshop_products` ADD `price_yandex_dbs` float DEFAULT '0';
-ALTER TABLE `phpshop_products` ADD `price_sbermarket` float DEFAULT '0';
 
 CREATE TABLE `phpshop_modules_yandexcart_system` (
   `id` int(11) NOT NULL auto_increment,
@@ -57,7 +52,7 @@ CREATE TABLE `phpshop_modules_yandexcart_system` (
 -- 
 -- Дамп данных таблицы `phpshop_modules_yandexcart_system`
 --
-INSERT INTO `phpshop_modules_yandexcart_system` VALUES (1,'', '', '', '', '', '', 0, 'ADV', 0, 0, '2.11','');
+INSERT INTO `phpshop_modules_yandexcart_system` VALUES (1,'', '', '', '', '', '', 0, 'ADV', 0, 0, '3.0','');
 
 CREATE TABLE IF NOT EXISTS `phpshop_modules_yandexcart_log` (
     `id` int(11) NOT NULL AUTO_INCREMENT,

@@ -10,6 +10,7 @@ function pochtaInit(type) {
     $('input[name="pochta_mail_type"]').remove();
     $('input[name="pochta_region"]').remove();
     $('input[name="pochta_delivery_info"]').remove();
+    $('input[name="pochta_pvz_type"]').remove();
 
     $('<input type="hidden" name="pochta_cost">').insertAfter('#dop_info');
     $('<input type="hidden" name="pochta_address">').insertAfter('#dop_info');
@@ -18,6 +19,7 @@ function pochtaInit(type) {
     $('<input type="hidden" name="pochta_mail_type">').insertAfter('#dop_info');
     $('<input type="hidden" name="pochta_region">').insertAfter('#dop_info');
     $('<input type="hidden" name="pochta_delivery_info">').insertAfter('#dop_info');
+    $('<input type="hidden" name="pochta_pvz_type">').insertAfter('#dop_info');
 
     $('#pochta-frame').html('');
     $("#pochtaModal").modal("show");
@@ -91,6 +93,7 @@ function pochtaSetData(result) {
     $('input[name="pochta_index"]').val(result.indexTo);
     $('input[name="pochta_mail_type"]').val(result.mailType);
     $('input[name="pochta_region"]').val(region);
+    $('input[name="pochta_pvz_type"]').val(result.pvzType);
     $('#dop_info').val(result.comment);
 
     if($('input[name="state_new"]').length) {

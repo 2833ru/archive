@@ -237,7 +237,7 @@ class PHPShopCoreElement extends PHPShopElements {
         if (isset($_GET['demo']))
             $PHPShopBase->setParam('template_theme.demo', 'false');
     }
-    
+
     /**
      * JS настройки
      */
@@ -249,11 +249,21 @@ class PHPShopCoreElement extends PHPShopElements {
         $phone_mask_enabled = $this->PHPShopSystem->getSerilizeParam("admoption.user_phone_mask_enabled");
 
         if (!empty($phone_mask))
-            $js .= 'var PHONE_MASK = "' . str_replace('&#43;','+',$phone_mask) . '";';
-        else $js .= 'var PHONE_MASK = "";';
+            $js .= 'var PHONE_MASK = "' . str_replace('&#43;', '+', $phone_mask) . '";';
+        else
+            $js .= 'var PHONE_MASK = "";';
         if (!empty($phone_mask_enabled))
             $js .= 'var PHONE_FORMAT = false;';
-        else  $js .= 'var PHONE_FORMAT = true;';
+        else
+            $js .= 'var PHONE_FORMAT = true;';
+
+        // ƒинамическа€ прокрутка товаров
+        $ajax_scroll = $this->PHPShopSystem->getSerilizeParam("admoption.ajax_scroll");
+
+        if (empty($ajax_scroll))
+            $js .= 'var AJAX_SCROLL = true;';
+        else
+            $js .= 'var AJAX_SCROLL = false;';
 
         if (!empty($js)) {
             $this->set('editor', '
@@ -319,8 +329,10 @@ class PHPShopUserElement extends PHPShopElements {
         unset($_SESSION['UsersMail']);
         unset($_SESSION['UsersStatus']);
         unset($_SESSION['UsersStatusPice']);
+        unset($_SESSION['UsersBan']);
         unset($_COOKIE['UserLogin']);
         unset($_COOKIE['UserPassword']);
+        
         setcookie("UserLogin", '', time() + 60 * 60 * 24 * 30, "/", $_SERVER['SERVER_NAME'], 0);
         setcookie("UserPassword", '', time() + 60 * 60 * 24 * 30, "/", $_SERVER['SERVER_NAME'], 0);
 
@@ -337,18 +349,18 @@ class PHPShopUserElement extends PHPShopElements {
             $dis = $this->parseTemplate('users/wishlist/wishlist_top_enter.tpl');
         } else {
 
-            if(is_array($_SESSION['wishlist']))
+            if (is_array($_SESSION['wishlist']))
                 $wishlistCount = count($_SESSION['wishlist']);
-            else $wishlistCount = 0;
-            
-            $this->set('wishlistCount', $wishlistCoun);
+            else
+                $wishlistCount = 0;
+
+            $this->set('wishlistCount', $wishlistCount);
             $dis = $this->parseTemplate('users/wishlist/wishlist_top_enter.tpl');
         }
         return $dis;
     }
 
-    public function authorize($user)
-    {
+    public function authorize($user) {
         $PHPShopOrm = new PHPShopOrm($this->objBase);
 
         // сохран€ем вишлист который был в сессии до авторизаци.
@@ -381,9 +393,12 @@ class PHPShopUserElement extends PHPShopElements {
 
         // —татус пользовател€
         $_SESSION['UsersStatus'] = $user['status'];
-        
+
         // Bot
         $_SESSION['UsersBot'] = $user['bot'];
+        
+        // Ѕлокировка диалогов
+        $_SESSION['UsersBan'] = $user['dialog_ban'];
 
         // E-mail пользовател€ дл€ заказа
         if (PHPShopSecurity::true_email($user['login']))
@@ -499,7 +514,7 @@ class PHPShopUserElement extends PHPShopElements {
      */
     function usersDisp() {
 
-        if(empty($_SESSION['UsersId']) && (!empty($_COOKIE['UserLogin']) && !empty($_COOKIE['UserPassword']))) {
+        if (empty($_SESSION['UsersId']) && (!empty($_COOKIE['UserLogin']) && !empty($_COOKIE['UserPassword']))) {
             $PHPShopOrm = new PHPShopOrm($this->objBase);
             $PHPShopOrm->debug = $this->debug;
 
@@ -1890,6 +1905,7 @@ class PHPShopRecaptchaElement extends PHPShopElements {
      */
     public function true(){
     return $this->recaptcha;
+
 
 
 

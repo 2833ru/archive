@@ -3,6 +3,10 @@
 function setProducts_yandexcart_hook($obj, $data) {
     $add = $list = $vemdorSort = null;
 
+    if (isset($_GET['marketplace'])) {
+        return;
+    }
+
     // Характеристики
     if (!empty($obj->vendor) or !empty($obj->param)) {
 
@@ -64,9 +68,8 @@ function setProducts_yandexcart_hook($obj, $data) {
     $fee = 0;
 
     // Цена Яндекс.Маркет
-    if((!isset($_GET['cdek']) && !isset($_GET['dbs']) && !isset($_GET['sbermarket']) && !isset($_GET['aliexpress'])) ||
-        (isset($obj->yandex_module_options['model']) && $obj->yandex_module_options['model'] === 'ADV')) {
-        if(isset($yandexOptions['price']) && (int) $yandexOptions['price'] > 1) {
+    if(isset($obj->yandex_module_options['model']) && $obj->yandex_module_options['model'] === 'ADV') {
+        if(isset($yandexOptions['price']) && (int) $yandexOptions['price'] > 1 && !empty($data['val']['price' . (int) $yandexOptions['price']])) {
             $price = $data['val']['price' . (int) $yandexOptions['price']];
         }
         if(isset($yandexOptions['price_fee']) && (float) $yandexOptions['price_fee'] > 0) {
@@ -78,43 +81,11 @@ function setProducts_yandexcart_hook($obj, $data) {
     if(isset($_GET['dbs']) || (isset($obj->yandex_module_options['model']) && $obj->yandex_module_options['model'] === 'DBS')) {
         if(!empty($data['val']['price_yandex_dbs'])) {
             $price = $data['val']['price_yandex_dbs'];
-        } elseif(isset($yandexOptions['price_dbs']) && (int) $yandexOptions['price_dbs'] > 1) {
+        } elseif(isset($yandexOptions['price_dbs']) && (int) $yandexOptions['price_dbs'] > 1 && !empty($data['val']['price' . (int) $yandexOptions['price']])) {
             $price = $data['val']['price' . (int) $yandexOptions['price_dbs']];
         }
         if(isset($yandexOptions['price_dbs_fee']) && (float) $yandexOptions['price_dbs_fee'] > 0) {
             $fee = (float) $yandexOptions['price_dbs_fee'];
-        }
-    }
-
-    // Цена Сбермаркет
-    if(isset($_GET['sbermarket'])) {
-        if(!empty($data['val']['price_sbermarket'])) {
-            $price = $data['val']['price_sbermarket'];
-        } elseif(isset($yandexOptions['price_sbermarket']) && (int) $yandexOptions['price_sbermarket'] > 1) {
-            $price = $data['val']['price' . (int) $yandexOptions['price_sbermarket']];
-        }
-        if(isset($yandexOptions['price_sbermarket_fee']) && (float) $yandexOptions['price_sbermarket_fee'] > 0) {
-            $fee = (float) $yandexOptions['price_sbermarket_fee'];
-        }
-    }
-
-    // Цена СДЭК.МАРКЕТ
-    if(isset($_GET['cdek'])) {
-        if(isset($yandexOptions['price_cdek']) && (int) $yandexOptions['price_cdek'] > 1) {
-            $price = $data['val']['price' . (int) $yandexOptions['price_cdek']];
-        }
-        if(isset($yandexOptions['price_cdek_fee']) && (float) $yandexOptions['price_cdek_fee'] > 0) {
-            $fee = (float) $yandexOptions['price_cdek_fee'];
-        }
-    }
-
-    // Цена AliExpress
-    if(isset($_GET['aliexpress'])) {
-        if(isset($yandexOptions['price_ali']) && (int) $yandexOptions['price_ali'] > 1) {
-            $price = $data['val']['price' . (int) $yandexOptions['price_ali']];
-        }
-        if(isset($yandexOptions['price_ali_fee']) && (float) $yandexOptions['price_ali_fee'] > 0) {
-            $fee = (float) $yandexOptions['price_ali_fee'];
         }
     }
 
@@ -193,10 +164,6 @@ function setProducts_yandexcart_hook($obj, $data) {
     if (!empty($data['val']['yandex_step_quantity']))
         $add.='<step-quantity>' . $data['val']['yandex_step_quantity'] . '</step-quantity>';
 
-    // weight
-    if (!empty($data['val']['weight']))
-        $add.='<weight>' . round($data['val']['weight'] / 1000, 3) . '</weight>';
-
     // market-sku
     if (isset($_GET['fbs']) && !empty($data['val']['market_sku']))
         $add.='<market-sku>' . $data['val']['market_sku'] . '</market-sku>';
@@ -209,14 +176,6 @@ function setProducts_yandexcart_hook($obj, $data) {
             $add.= '<cpa>' . $data['val']['cpa'] . '</cpa>';
         }
     }
-
-    // Габариты
-    if (!empty($data['val']['length']) && !empty($data['val']['width']) && !empty($data['val']['height']))
-        $add.='<dimensions>' . sprintf('%s/%s/%s',
-                number_format($data['val']['length'], 2, '.', ''),
-                number_format($data['val']['width'], 2, '.', ''),
-                number_format($data['val']['height'], 2, '.', '')
-            ) . '</dimensions>';
 
     // Компания, которая произвела товар
     if (!empty($data['val']['manufacturer']))
@@ -244,6 +203,10 @@ function setProducts_yandexcart_hook($obj, $data) {
 }
 
 function setDelivery_yandexcart_hook($obj, $data) {
+
+    if (isset($_GET['marketplace'])) {
+        return;
+    }
 
     // Доставка
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['delivery']);
@@ -281,6 +244,10 @@ function setDelivery_yandexcart_hook($obj, $data) {
 
 function PHPShopYml_yandexcart_hook($obj) {
 
+    if (isset($_GET['marketplace'])) {
+        return;
+    }
+
     // Настройки модуля
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['yandexcart']['yandexcart_system']);
     $obj->yandex_module_options = $PHPShopOrm->select();
@@ -291,10 +258,6 @@ function PHPShopYml_yandexcart_hook($obj) {
         if ($_GET['pas'] != $obj->yandex_module_options['password'])
             exit('Login error!');
 
-    // SSL
-    if(!empty($options['ssl']))
-        $obj->ssl = 'https://';
-        
     // Колонка цен
     if($options['price']>1)
         $obj->price = 'price'.$options['price'];

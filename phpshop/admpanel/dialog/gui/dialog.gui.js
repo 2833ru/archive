@@ -1,4 +1,3 @@
-
 $().ready(function () {
 
     locale.icon_load = null;
@@ -56,7 +55,7 @@ $().ready(function () {
                             if (json['num'] > 0 && json['message'] !== "") {
                                 $('#message-list').append(json['message']);
                                 $('html').animate({scrollTop: $('#m').offset().top}, 2000);
-                                $('#badge-'+chat_id).text(0);
+                                $('#badge-' + chat_id).text(0);
                             }
                         }
                     });
@@ -70,8 +69,9 @@ $().ready(function () {
         event.preventDefault();
         var message = $("#message").val();
         $("#message").val(message + $(this).attr('data-content'));
+        $(".send-message").removeClass('disabled');
     });
-    
+
     $("textarea[name=message],input[name=file]").on('click', function (event) {
         $(".send-message").removeClass('disabled');
     });
@@ -152,10 +152,10 @@ $().ready(function () {
                 if (json['num'] > 0) {
                     $('#play-chat').trigger("play");
                     $('#message-list').append(json['message']);
-                    $('#badge-'+chat_id).text(json['num']);
+                    $('#badge-' + chat_id).text(json['num']);
                 }
-                
-                $('#message-preloader').css('visibility','hidden');
+
+                $('#message-preloader').css('visibility', 'hidden');
             }
         });
 
@@ -168,4 +168,6 @@ $().ready(function () {
             return false;
         }
     });
+
+
 });

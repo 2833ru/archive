@@ -21,9 +21,6 @@ background-size:cover;
 .header-color,.header-color a,.header-color .btn,.header-color h4,.header-links a{
 color:#ffffff !important;
 }
-#body{
---color:#3bc6e4;
-}
 
 .side-heading,.panel-default > .panel-heading,.panel-success > .panel-heading,.product-col .btn-cart:hover,.product-info .product-details .btn-cart:hover,.product-info-box .heading,.btn-primary, .pagination > .active > a{
 background:#3bc6e4 !important;
@@ -119,4 +116,7 @@ color:black;
 }
 .theme-color {
     color:#3bc6e4;
+}
+#body{
+--color:#3bc6e4;
 }

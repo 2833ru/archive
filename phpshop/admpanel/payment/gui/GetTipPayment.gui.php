@@ -4,7 +4,6 @@ function TipPayment($payment) {
     $TIP = array(
         "message" => __("Сообщение"),
         "bank" => __("Счет в банк"),
-        "webmoney" => "Webmoney",
         "modules" => __("Модуль платежной системы")
     );
 

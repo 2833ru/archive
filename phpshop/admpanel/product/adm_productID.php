@@ -263,6 +263,7 @@ function actionStart() {
         $Tab_price .= $PHPShopGUI->setField('Цена 5', $PHPShopGUI->setInputText(null, 'price5_new', $data['price5'], 150, $valuta_def_name), 2);
     }
     $Tab_price .= $PHPShopGUI->setField('Старая цена', $PHPShopGUI->setInputText(null, 'price_n_new', $data['price_n'], 150, $valuta_def_name));
+    $Tab_price .= $PHPShopGUI->setField('Закупочная цена', $PHPShopGUI->setInputText(null, 'price_purch_new', $data['price_purch'], 150, $valuta_def_name));
     $Tab_price .= $PHPShopGUI->setField('Под заказ', $PHPShopGUI->setCheckbox('sklad_new', 1, 'Под заказ', $data['sklad']));
 
     // Валюта

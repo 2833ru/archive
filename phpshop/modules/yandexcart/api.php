@@ -348,6 +348,18 @@ switch ($_SERVER["PATH_INFO"]) {
             }
         }
 
+        // Äîñòàâëåí â ÏÂÇ
+        if ($data['order']['status'] === 'PICKUP') {
+
+            $row = (new PHPShopOrm($GLOBALS['SysValue']['base']['orders']))
+                ->getOne(['*'], ['yandex_order_id' => sprintf("='%s'", $data['order']['id'])]);
+
+            $update['statusi_new'] = $statuses['pickup'];
+
+            (new PHPShopOrm($GLOBALS['SysValue']['base']['orders']))
+                ->update($update, array('id' => sprintf('="%s"', $row['id'])));
+        }
+
         setYandexcartLog([
             'parameters' => $data
         ]);

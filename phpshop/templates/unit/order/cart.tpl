@@ -46,10 +46,10 @@
     <tr class="pad-20-10">
         <td>{Доставка}:</td>
     
-        <td class=""></td>
-        <td></td>
+        <td class="" style="display: none;"></td>
+        <td style="display: none;"></td>
        
-        <td colspan="2" align="right" class="red"><span id="DosSumma">@delivery_price@</span>&nbsp; <span class="rubznak">@currency@</span></td>
+        <td colspan="4" align="right" class="red"><span id="DosSumma">@delivery_price@</span>&nbsp; <span class="rubznak">@currency@</span> <span id="deliveryInfo"></span></td>
     </tr>
     
     <tr>

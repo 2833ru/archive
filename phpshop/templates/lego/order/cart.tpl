@@ -34,9 +34,9 @@
     </tr> 
     <tr class="pad-20-10">
         <td>{Доставка}:</td>
-        <td class=""></td>
-        <td class=""></td>
-        <td align="right" class="red"><span id="DosSumma">@delivery_price@</span>&nbsp; <span class="rubznak">@currency@</span></td>
+        <td class="" style="display: none;"></td>
+        <td class="" style="display: none;"></td>
+        <td align="right" class="red" colspan="3"><span id="DosSumma">@delivery_price@</span>&nbsp; <span class="rubznak">@currency@</span> <span id="deliveryInfo"></span></td>
         <td></td>
         <td></td>
     </tr>

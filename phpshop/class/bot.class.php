@@ -3,7 +3,7 @@
 /**
  * Библиотека Dialog Bot
  * @author PHPShop Software
- * @version 1.1
+ * @version 1.2
  * @package PHPShopClass
  */
 class PHPShopBot {
@@ -87,45 +87,49 @@ class PHPShopBot {
     // Уведомление администратору
     public function notice($message, $bot = false) {
 
-        $message['from']['first_name'] = PHPShopString::win_utf8($message['chat']['first_name']);
-        $message['text'] = strip_tags($message['text']);
-        $msg = 'Сообщение в диалогах от ' . $message['chat']['first_name'];
+        // Проверка бана
+        if (empty($message['isview'])) {
 
-        if ($this->PHPShopSystem->ifSerilizeParam('admoption.telegram_dialog')) {
-            $PHPShopBot = new PHPShopTelegramBot();
-            $PHPShopBot->notice_telegram($message, $bot);
-        }
+            $message['from']['first_name'] = PHPShopString::win_utf8($message['chat']['first_name']);
+            $message['text'] = strip_tags($message['text']);
+            $msg = 'Сообщение в диалогах от ' . $message['chat']['first_name'];
 
-        if ($this->PHPShopSystem->ifSerilizeParam('admoption.vk_dialog')) {
-            $PHPShopBot = new PHPShopVKBot();
-            $PHPShopBot->notice_vk($message, $bot);
-        }
+            if ($this->PHPShopSystem->ifSerilizeParam('admoption.telegram_dialog')) {
+                $PHPShopBot = new PHPShopTelegramBot();
+                $PHPShopBot->notice_telegram($message, $bot);
+            }
 
-        if ($this->PHPShopSystem->ifSerilizeParam('admoption.push_dialog')) {
-            PHPShopObj::loadClass(array("push"));
-            $PHPShopPush = new PHPShopPush();
-            $PHPShopPush->send($msg);
-        }
+            if ($this->PHPShopSystem->ifSerilizeParam('admoption.vk_dialog')) {
+                $PHPShopBot = new PHPShopVKBot();
+                $PHPShopBot->notice_vk($message, $bot);
+            }
 
-        if ($this->PHPShopSystem->ifSerilizeParam('admoption.mail_dialog', 1)) {
-            PHPShopObj::loadClass(array("parser", "mail"));
-            $adminmail = $this->PHPShopSystem->getEmail();
-            if (empty($GLOBALS['_classPath']))
-                $GLOBALS['_classPath'] = '../phpshop/';
-            $GLOBALS['PHPShopSystem'] = $this->PHPShopSystem;
-            $PHPShopMail = new PHPShopMail($adminmail, $adminmail, $msg, '', true, true);
-            $link = '<br><a href="' . $this->protocol . $_SERVER['SERVER_NAME'] . '/phpshop/admpanel/admin.php?path=dialog&id=' . $message['user_id'] . '&bot=' . $bot . '&user=' . $message['user_id'] . '" target="_blank">' . __('Ответить') . '</a>';
+            if ($this->PHPShopSystem->ifSerilizeParam('admoption.push_dialog')) {
+                PHPShopObj::loadClass(array("push"));
+                $PHPShopPush = new PHPShopPush();
+                $PHPShopPush->send($msg);
+            }
 
-            PHPShopParser::set('message', $msg . ': ' . PHPShopString::utf8_win1251($message['text']) . $link);
-            $content = ParseTemplateReturn('./phpshop/lib/templates/order/blank.tpl', true);
-            $PHPShopMail->sendMailNow($content);
+            if ($this->PHPShopSystem->ifSerilizeParam('admoption.mail_dialog', 1)) {
+                PHPShopObj::loadClass(array("parser", "mail"));
+                $adminmail = $this->PHPShopSystem->getEmail();
+                if (empty($GLOBALS['_classPath']))
+                    $GLOBALS['_classPath'] = '../phpshop/';
+                $GLOBALS['PHPShopSystem'] = $this->PHPShopSystem;
+                $PHPShopMail = new PHPShopMail($adminmail, $adminmail, $msg, '', true, true);
+                $link = '<br><a href="' . $this->protocol . $_SERVER['SERVER_NAME'] . '/phpshop/admpanel/admin.php?path=dialog&id=' . $message['user_id'] . '&bot=' . $bot . '&user=' . $message['user_id'] . '" target="_blank">' . __('Ответить') . '</a>';
+
+                PHPShopParser::set('message', $msg . ': ' . PHPShopString::utf8_win1251($message['text']) . $link);
+                $content = ParseTemplateReturn('./phpshop/lib/templates/order/blank.tpl', true);
+                $PHPShopMail->sendMailNow($content);
+            }
         }
     }
 
     public function find($user) {
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['dialog']);
         $PHPShopOrm->debug = false;
-        $data = $PHPShopOrm->getOne(array('chat_id'), array('user_id' => '="' . intval($user) . '"','bot'=>'="'.$this->bot.'"'));
+        $data = $PHPShopOrm->getOne(array('chat_id'), array('user_id' => '="' . intval($user) . '"', 'bot' => '="' . $this->bot . '"'));
         return $data['chat_id'];
     }
 
@@ -394,7 +398,7 @@ class PHPShopVKBot extends PHPShopBot {
 
 
         if (!empty($chat_id) and ! empty($notice))
-            $this->send($chat_id, PHPShopString::win_utf8('Сообщение в диалогах: ').$message['text'], array('buttons' => $buttons, 'one_time' => false, 'inline' => true));
+            $this->send($chat_id, PHPShopString::win_utf8('Сообщение в диалогах: ') . $message['text'], array('buttons' => $buttons, 'one_time' => false, 'inline' => true));
     }
 
 }
@@ -471,7 +475,7 @@ class PHPShopTelegramBot extends PHPShopBot {
         $link = '(' . $this->protocol . $_SERVER['SERVER_NAME'] . '/phpshop/admpanel/admin.php?path=dialog&id=' . $message['user_id'] . '&bot=' . $bot . '&user=' . $message['user_id'] . '): ';
 
         if (!empty($chat_id))
-            $this->send($chat_id, PHPShopString::win_utf8('Сообщение в диалогах от') . ' [' . $message['from']['first_name'] . ' ' . $message['from']['last_name'] . ']' . $link.$message['text']);
+            $this->send($chat_id, PHPShopString::win_utf8('Сообщение в диалогах от') . ' [' . $message['from']['first_name'] . ' ' . $message['from']['last_name'] . ']' . $link . $message['text']);
     }
 
     public function init($message) {

@@ -17,9 +17,6 @@ var FILTER = true;
 // Вывод брендов
 var BRAND_MENU = true;
 
-// Динамическая прокрутка товаров
-var AJAX_SCROLL = true;
-
 // Показывать пагинацию при динамической прокрутки товаров
 var AJAX_SCROLL_HIDE_PAGINATOR = false;
 

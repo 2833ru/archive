@@ -112,7 +112,9 @@ class Settings
             array(__('С объявленной ценностью'), 'WITH_DECLARED_VALUE', $current),
             array(__('С объявленной ценностью и наложенным платежом'), 'WITH_DECLARED_VALUE_AND_CASH_ON_DELIVERY', $current),
             array(__('С объявленной ценностью и обязательным платежом'), 'WITH_DECLARED_VALUE_AND_COMPULSORY_PAYMENT', $current),
-            array(__('С обязательным платежом'), 'WITH_COMPULSORY_PAYMENT', $current)
+            array(__('С обязательным платежом'), 'WITH_COMPULSORY_PAYMENT', $current),
+            array(__('Доставка в почтомат'), 'COMBINED_ORDINARY', $current),
+            array(__('Доставка в почтомат с объявленной ценностью'), 'COMBINED_WITH_DECLARED_VALUE', $current)
         );
     }
 

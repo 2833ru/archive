@@ -88,15 +88,12 @@ function actionStart() {
         );
     }
 
-
     $PHPShopInterface->action_title['manual'] = 'Инструкция';
-
 
     if ($_SESSION['mod_limit'] > 5)
         $PHPShopInterface->setActionPanel($TitlePage, array('Отключить выбранные', 'Включить выбранные'), array('Загрузить'));
     else
         $PHPShopInterface->setActionPanel($TitlePage, false);
-
 
     $PHPShopInterface->setCaption(
             array(null, "3%", array('class' => 'hidden-xs')), array("Описание", "60%"), array("Установлено", "15%"), array("", "10%"), array("Статус" . "", "7%", array('align' => 'right'))
@@ -104,7 +101,6 @@ function actionStart() {
 
     $PHPShopInterface->addJSFiles('./js/jquery.treegrid.js', './modules/gui/modules.gui.js');
     $PHPShopInterface->path = 'modules.action';
-
 
     $where = false;
     if (!empty($_GET['cat'])) {
@@ -117,7 +113,6 @@ function actionStart() {
         $data = $PHPShopOrm->select(array('*'), false, false, array('limit' => intval($_SESSION['mod_limit'])));
         $num = count($data);
     }
-
 
     $path = "../modules/";
     $i = 1;
@@ -163,7 +158,6 @@ function actionStart() {
                         $drop_menu = array('option', 'manual', 'id' => $row['path']);
                     else
                         $drop_menu = array('option', 'id' => $row['path']);
-
 
                     // Меню модуля
                     if (is_array($Info['adminmenu']['podmenu'][0])) {
@@ -318,7 +312,7 @@ function actionStart() {
 
     $tree = '<table class="table table-hover">
         <tr class="treegrid-all">
-           <td><a href="?path=modules" class="treegrid-parent" data-parent="treegrid-all">' . __('Все модули') . '</a> <span class="label label-primary pull-right">101</span></td>
+           <td><a href="?path=modules" class="treegrid-parent" data-parent="treegrid-all">' . __('Все модули') . '</a> <span class="label label-primary pull-right">102</span></td>
 	</tr>
         <tr class="treegrid-template">
            <td><a href="?path=modules&cat=template" class="treegrid-parent" data-parent="treegrid-template">' . __('Дизайн') . '</a> <span class="label label-primary pull-right">8</span></td>
@@ -348,7 +342,7 @@ function actionStart() {
            <td><a href="?path=modules&cat=yandex" class="treegrid-parent" data-parent="treegrid-yandex">' . __('Яндекс') . '</a> <span class="label label-primary pull-right">3</span></td>
 	</tr>
         <tr class="treegrid-sale">
-           <td><a href="?path=modules&cat=sale" class="treegrid-parent" data-parent="treegrid-sale5">' . __('Продажи') . '</a> <span class="label label-primary pull-right">15</span></td>
+           <td><a href="?path=modules&cat=sale" class="treegrid-parent" data-parent="treegrid-sale5">' . __('Продажи') . '</a> <span class="label label-primary pull-right">16</span></td>
 	</tr>
         <tr class="treegrid-develop">
            <td><a href="?path=modules&cat=develop" class="treegrid-parent" data-parent="treegrid-develop">' . __('Разработчикам') . '</a> <span class="label label-primary pull-right">15</span></td>

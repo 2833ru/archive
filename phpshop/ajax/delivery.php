@@ -83,7 +83,7 @@ $PHPShopCart = new PHPShopCart();
 $totalsumma = (float) $PHPShopOrder->returnSumma($PHPShopCart->getSumPromo(true));
 
 // Итого товары без акции
-$totalsumma += (float) $PHPShopOrder->returnSumma($PHPShopCart->getSumWithoutPromo(true), $PHPShopOrder->ChekDiscount($_REQUEST['sum']), '', (float) $GetDeliveryPrice);
+$totalsumma += (float) $PHPShopOrder->returnSumma($PHPShopCart->getSumWithoutPromo(true), $PHPShopOrder->ChekDiscount((int)$_REQUEST['sum']), '', (float) $GetDeliveryPrice);
 
 $deliveryArr = delivery(false, intval($_REQUEST['xid']), $_REQUEST['sum']);
 $dellist = $deliveryArr['dellist'];

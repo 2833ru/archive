@@ -405,9 +405,7 @@ function mainNavMenuFix() {
     var body_width = $('body').width();
 
     if (body_width < 768) {
-        $('.mobile-menu .sub-marker').removeClass('sub-marker')
-
-
+        $('.mobile-menu .sub-marker').removeClass('sub-marker');
     }
     if (body_width > 767) {
         var nav_weight = $('.main-navbar-top').width();
@@ -419,6 +417,7 @@ function mainNavMenuFix() {
         if ($('.header-menu-wrapper').find('.additional-nav-menu')) {
             var nav_weight_fix = nav_weight - 46;
         }
+        
         if (nav_weight < full_weight) {
             var nav_weight_fix = nav_weight - 46;
             if ($('.header-menu-wrapper').find('.additional-nav-menu')) {
@@ -552,24 +551,19 @@ $(document).ready(function () {
 
             if ($(".airSticky").length)
                 $(".airSticky").airStickyBlock({
-                    debug: true,
+                    debug: false,
                     stopBlock: ".airSticky_stop-block"
                 });
         };
     }
     $.fn.equivalent = function () {
         //запишем значение jQuery выборки к которой будет применена эта функция в локальную переменную $blocks
-
         //примем за максимальную высоту - высоту первого блока в выборке и запишем ее в переменную maxH
         maxH = 0;
         allH = 0
         lastH = 0
         //делаем сравнение высоты каждого блока с максимальной
         $('.mobile-menu >li >ul>li').each(function () {
-
-
-
-
 
             if ($(this).height() > maxH) {
                 maxH = $(this).height();
@@ -585,10 +579,6 @@ $(document).ready(function () {
             }
 
         });
-        console.log(maxH)
-        console.log(allH)
-        console.log(lastH)
-
     }
 
     $(' .category-btn').on('click', function () {

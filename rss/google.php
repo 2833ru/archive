@@ -211,8 +211,13 @@ class PHPShopRSS {
 
         if (isset($_GET['getall']))
             $where = null;
-        else
-            $where = "google_merchant='1' and";
+        else {
+            if (isset($GLOBALS['SysValue']['base']['marketplaces']['marketplaces_system'])) {
+                $where = "google_merchant='1' and";
+            } else {
+                $where = null;
+            }
+        }
 
         // Мультибаза
         $queryMultibase = $this->queryMultibase();
@@ -274,6 +279,10 @@ class PHPShopRSS {
                 "name" => $name,
                 "picture" => $row['pic_big'],
                 "price" => $price,
+                "price2" => round($row['price2'], (int) $this->format),
+                "price3" => round($row['price3'], (int) $this->format),
+                "price4" => round($row['price4'], (int) $this->format),
+                "price5" => round($row['price5'], (int) $this->format),
                 "oldprice" => $oldprice,
                 "weight" => $row['weight'],
                 "p_enabled" => $p_enabled,
@@ -296,6 +305,7 @@ class PHPShopRSS {
                 "vendor_name" => $row['vendor_name'],
                 "condition" => $row['yandex_condition'],
                 "barcode" => $row['barcode'],
+                "price_google" => round($row['price_google'], (int) $this->format),
             );
 
             // Параметр сортировки

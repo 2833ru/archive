@@ -88,38 +88,7 @@ window.onbeforeunload = function ()
     $.cookie('cat', null);
 };
 
-
 $().ready(function () {
-
-    // Поиск в FAQ
-    $("#search").on('input', function () {
-        var words = $(this).val();
-
-        if (words.length > 2) {
-            $.ajax({
-                type: "POST",
-                url: "./search/search.php",
-                data: {
-                    words: escape(words)
-                },
-                success: function (data)
-                {
-                    // Результат поиска
-                    if (data != 'false') {
-
-                        if (data != $("#search").attr('data-content')) {
-                            $("#search").attr('data-content', data);
-
-                            $("#search").popover('show');
-                        }
-                    } else
-                        $("#search").popover('hide');
-                }
-            });
-        } else {
-            $("#search").popover('hide');
-        }
-    });
 
     // Отключение обучающих уроков
     $('body').on('change', '#presentation-check', function () {
@@ -621,11 +590,19 @@ $().ready(function () {
             success: function (json) {
                 var old_num = (Number($('#dialog-check').text()) || 0);
                 $('#dialog-check').text(json['num']);
+                $('#dialog-mobile-check').text(json['num']);
+                
+                if(json['num'] > 0){
+                  $('#dialog-mobile-check').removeClass('hide');  
+                }
+                else {
+                  $('#dialog-mobile-check').addClass('hide');  
+                }
+                
                 if (old_num < json['num']) {
                     $('#play-chat').trigger("play");
-                    $('#dialog-check').parent('.navbar-btn').removeClass('hide');
-                } else if (json['num'] == 0)
-                    $('#dialog-check').parent('.navbar-btn').addClass('hide');
+                    //$('#dialog-check').parent('.navbar-btn').removeClass('hide');
+                } 
             }
         });
 
@@ -647,6 +624,7 @@ $().ready(function () {
             success: function (json) {
                 var old_num = (Number($('#orders-check').text()) || 0);
                 $('#orders-check').text(json['num']);
+                $('#orders-mobile-check').text(json['num']);
                 if (old_num < json['num']) {
                     $('#play').trigger("play");
                     $('#orders-check').parent('.navbar-btn').removeClass('hide');
@@ -655,6 +633,13 @@ $().ready(function () {
         });
 
     }, 30000);
+    
+    
+    // Отображение пароля
+    $(".password-view").on('click', function(event) {
+        event.preventDefault();
+        $('input:password').attr("type","text");
+    });
 });
 
 // GET переменные из URL страницы

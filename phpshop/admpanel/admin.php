@@ -486,10 +486,13 @@ if (!empty($_COOKIE['fullscreen'])) {
                         if ($dialog > 99)
                             $dialog = 99;
                         ?>
-                        <a class="navbar-btn btn btn-sm btn-primary navbar-right hidden-xs hide" href="?path=dialog"><?php _e('Диалоги'); ?> <span class="badge" id="dialog-check"><?php echo intval($dialog); ?></span></a><audio id="play-chat" src="images/chat.mp3"></audio>
+                        <a class="navbar-btn btn btn-sm btn-primary navbar-right hidden-xs" href="?path=dialog"><?php _e('Диалоги'); ?> <span class="badge" id="dialog-check"><?php echo intval($dialog); ?></span></a><audio id="play-chat" src="images/chat.mp3"></audio>
 
+                        <?php
+                        $order = $PHPShopBase->getNumRows('orders', "where statusi='0'");
+                        ?>
 
-                        <a class="navbar-btn btn btn-sm btn-warning navbar-right hidden-xs hidden-sm hide" href="?path=order&where[statusi]=0"><?php _e('Заказы'); ?> <span class="badge" id="orders-check"><?php echo $PHPShopBase->getNumRows('orders', "where statusi='0'"); ?></span>
+                        <a class="navbar-btn btn btn-sm btn-warning navbar-right hidden-xs hidden-sm hide" href="?path=order&where[statusi]=0"><?php _e('Заказы'); ?> <span class="badge" id="orders-check"><?php echo $order; ?></span>
                         </a><audio id="play" src="images/message.mp3"></audio>
 
                     </div><!-- /.navbar-collapse -->
@@ -635,12 +638,19 @@ if (!empty($_COOKIE['fullscreen'])) {
         <!-- Fixed mobile bar -->
         <div class="bar-padding-fix <?php echo $isMobile . $isFrame; ?>"> </div>
         <nav class="navbar navbar-statick navbar-fixed-bottom bar bar-tab visible-xs visible-sm <?php echo $isFrame; ?>" role="navigation">
-            <a class="tab-item <?php echo $menu_active_intro; ?>" href="./admin.php">
-                <span class="icon icon-home"></span>
-                <span class="tab-label"><?php _e('Домой'); ?></span>
+            
+            <?php
+            if(empty($dialog))
+                $dialog_mobile_check = 'hide';
+            else $dialog_mobile_check = null;
+            ?>
+            
+            <a class="tab-item <?php echo $menu_active_dialog; ?>" href="?path=dialog">
+                <span class="icon icon-code"></span> <span class="badge badge-positive <?php echo $dialog_mobile_check; ?>" id="dialog-mobile-check"><?php echo $dialog; ?></span>
+                <span class="tab-label"><?php _e('Диалоги'); ?></span>
             </a>
             <a class="tab-item <?php echo $menu_active_order; ?>" href="?path=order" id="bar-cart">
-                <span class="icon icon-download"></span> <span class="badge badge-positive hide" id="orders-mobile-check"><?php echo $PHPShopBase->getNumRows('orders', "where statusi='0'"); ?></span>
+                <span class="icon icon-download"></span> <span class="badge badge-positive hide" id="orders-mobile-check"><?php echo $order; ?></span>
                 <span class="tab-label"><?php _e('Заказы'); ?></span>
             </a>
             <a class="tab-item <?php echo $menu_active_catalog; ?>" href="?path=catalog">

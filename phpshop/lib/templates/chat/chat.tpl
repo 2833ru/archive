@@ -2,7 +2,7 @@
 <link rel="stylesheet" href="phpshop/lib/templates/chat/style.css">
 <audio id="play-chat" src="phpshop/lib/templates/chat/chat.mp3"></audio>
 <div class="fabs">
-    <div class="chat" style="bottom:@margin_dialog@px">
+    <div class="chat" style="bottom:@margin_dialog@px;right:@right_dialog@px">
         <div class="chat_header" style="background: @color_dialog@">
             <div class="chat_option">
                 <div class="header_img">
@@ -22,7 +22,7 @@
             <textarea id="message" name="message" placeholder="{Ваше сообщение}" class="chat_field chat_message" required @dialogContent@></textarea>
         </div>
     </div>
-    <a id="prime" class="fab" style="background: @color_dialog@;bottom:@margin_button_dialog@px;"><i class="prime zmdi zmdi-comment-outline"></i></a>
+    <a id="prime" class="fab" style="background:@color_dialog@;bottom:@margin_button_dialog@px;width:@size_dialog@px;height:@size_dialog@px"><i class="prime zmdi zmdi-comment-outline" style="line-height:@size_dialog@px;font-size:@icon_size_dialog@em;"></i></a>
 </div>
 
 <script src="phpshop/lib/templates/chat/chat.js"></script>

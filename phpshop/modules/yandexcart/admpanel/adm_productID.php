@@ -30,9 +30,6 @@ function addYandexcartCPA($data) {
     if((int) $data['yml'] === 1) {
         $Tab3 .= $PHPShopGUI->setField('Цена Яндекс.Маркет DBS', $PHPShopGUI->setInputText(null, 'price_yandex_dbs_new', $data['price_yandex_dbs'], 150, $valuta_def_name), 2);
     }
-    if((int) $data['sbermarket'] === 1) {
-        $Tab3 .= $PHPShopGUI->setField('Цена СберМаркет', $PHPShopGUI->setInputText(null, 'price_sbermarket_new', $data['price_sbermarket'], 150, $valuta_def_name), 2);
-    }
 
     $Tab3 .= $PHPShopGUI->setField("Модель", $PHPShopGUI->setInputText(null, 'model_new', $data['model'], 300), 1, 'Тег model');
     $Tab3 .= $PHPShopGUI->setField('Гарантия', $PHPShopGUI->setRadio('manufacturer_warranty_new', 1, 'Включить', $data['manufacturer_warranty']) . $PHPShopGUI->setRadio('manufacturer_warranty_new', 2, 'Выключить', $data['manufacturer_warranty'], false, 'text-muted'), 1, 'Тег manufacturer_warranty');
@@ -70,27 +67,8 @@ function addYandexcartCPA($data) {
     $Tab3 .= $PHPShopGUI->setField("Минимальное количество", $PHPShopGUI->setInputText(null, 'yandex_min_quantity_new', $data['yandex_min_quantity'], 100), 1, ' Минимальное количество товара в одном заказе');
 
     $Tab3 .= $PHPShopGUI->setField("Минимальный шаг", $PHPShopGUI->setInputText(null, 'yandex_step_quantity_new', $data['yandex_step_quantity'], 100), 1, ' Количество товара, добавляемое к минимальному');
-    $Tab3 .= $PHPShopGUI->setField('<a href="/rss/google.php" target="_blank" title="Открыть файл">Google Merchant</a>', $PHPShopGUI->setCheckbox('google_merchant_new', 1, 'Вывод в Google Merchant', $data['google_merchant']));
-    $Tab3 .= $PHPShopGUI->setField('<a href="/yml/?cdek" target="_blank" title="Открыть файл">СДЭК.МАРКЕТ</a>', $PHPShopGUI->setCheckbox('cdek_new', 1, 'Вывод в СДЭК.МАРКЕТ', $data['cdek']));
-    $Tab3 .= $PHPShopGUI->setField('<a href="/yml/?aliexpress" target="_blank" title="Открыть файл">AliExpress</a>', $PHPShopGUI->setCheckbox('aliexpress_new', 1, 'Вывод в AliExpress', $data['aliexpress']));
-    $Tab3 .= $PHPShopGUI->setField('<a href="/yml/?sbermarket" target="_blank" title="Открыть файл">СберМаркет</a>', $PHPShopGUI->setCheckbox('sbermarket_new', 1, 'Вывод в СберМаркет', $data['sbermarket']));
 
     $PHPShopGUI->addTab(array("Яндекс", $Tab3, true));
-}
-
-function updateYandexCart($product) {
-    if(empty($_POST['google_merchant_new'])) {
-        $_POST['google_merchant_new'] = 0;
-    }
-    if(empty($_POST['cdek_new'])) {
-        $_POST['cdek_new'] = 0;
-    }
-    if(empty($_POST['aliexpress_new'])) {
-        $_POST['aliexpress_new'] = 0;
-    }
-    if(empty($_POST['sbermarket_new'])) {
-        $_POST['sbermarket_new'] = 0;
-    }
 }
 
 function addYandexCartOptions($data) {
@@ -107,7 +85,7 @@ function addYandexCartOptions($data) {
 $addHandler = array(
     'actionStart' => 'addYandexcartCPA',
     'actionDelete' => false,
-    'actionUpdate' => 'updateYandexCart',
+    'actionUpdate' => false,
     'actionOptionEdit' => 'addYandexCartOptions'
 );
 ?>

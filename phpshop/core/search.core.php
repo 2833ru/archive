@@ -269,7 +269,7 @@ class PHPShopSearch extends PHPShopShopCore {
 
 
             // Запись в журнал
-            $this->write($this->get('searchString'), @$this->num_page, @$_REQUEST['cat'], @$_REQUEST['set']);
+            $this->write($this->get('searchString'), (int) $this->num_page, (int) $_REQUEST['cat']);
 
             // Перехват модуля
             $this->setHook(__CLASS__, __FUNCTION__, $this->dataArray, 'END');
@@ -285,7 +285,7 @@ class PHPShopSearch extends PHPShopShopCore {
     /**
      * Запись в журнал поиска
      */
-    function write($name, $num, $cat, $set) {
+    function write($name, $num, $cat) {
         $PHPShopOrm = new PHPShopOrm($this->getValue('base.search_jurnal'));
         $PHPShopOrm->debug = $this->debug;
 
@@ -294,10 +294,10 @@ class PHPShopSearch extends PHPShopShopCore {
         $this->PHPShopModules->setHookHandler(__CLASS__, __FUNCTION__, $this, $arg);
 
         $PHPShopOrm->insert([
-            'name_new' => $name,
-            'num_new' => $num,
+            'name_new' => PHPShopSecurity::TotalClean($name),
+            'num_new' => intval($num),
             'datas_new' => time(),
-            'cat_new' => $cat,
+            'cat_new' => intval($cat),
             'dir_new' => $_SERVER['HTTP_REFERER'],
             'ip_new' => $_SERVER['REMOTE_ADDR']
         ]);

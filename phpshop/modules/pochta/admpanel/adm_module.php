@@ -64,12 +64,17 @@ function actionUpdate() {
 }
 
 function actionStart() {
-    global $PHPShopGUI, $PHPShopOrm;
+    global $PHPShopGUI, $PHPShopOrm,$PHPShopBase;
 
     $PHPShopGUI->addJSFiles('../modules/pochta/admpanel/gui/script.gui.js?v=1.0');
 
     // Выборка
     $data = $PHPShopOrm->select();
+    
+    // Демо-режим
+    if ($PHPShopBase->getParam('template_theme.demo') == 'true') {
+        $data['token'] = $data['login'] = $data['password']= '';
+    }
 
     $Tab1 = $PHPShopGUI->setField('Токен авторизации приложения', $PHPShopGUI->setInputText(false, 'token_new', $data['token'], 300));
     $Tab1.= $PHPShopGUI->setField('Логин пользователя', $PHPShopGUI->setInputText(false, 'login_new', $data['login'], 300));

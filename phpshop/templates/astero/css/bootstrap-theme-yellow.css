@@ -21,9 +21,6 @@ background-size:cover;
 .header-color,.header-color a,.header-color .btn,.header-color h4,.header-links a{
 color:#ffffff !important;
 }
-#body{
---color:#ffb400;
-}
 .side-heading,.panel-default > .panel-heading,.panel-success > .panel-heading,.product-col .btn-cart:hover,.product-info .product-details .btn-cart:hover,.product-info-box .heading,.btn-primary, .pagination > .active > a{
 background:#ffb400 !important;
 }
@@ -140,6 +137,9 @@ filter:hue-rotate(-215deg);
 -moz-filter:hue-rotate(-215deg);
 -editor-filter:-215;
 }
-.theme-color {
-    color:#ffb400;
+.theme-color{
+color:#ffb400;
+}
+#body{
+--color:#ffb400;
 }

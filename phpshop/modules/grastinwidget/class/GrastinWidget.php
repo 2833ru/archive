@@ -9,6 +9,7 @@ class GrastinWidget {
     private $CREATE_HERMES_METHOD = 'neworderhermes';
     private $CREATE_PARTNERS_METHOD = 'neworderpartner';
     private $CREATE_BOXBERRY_METHOD = 'neworderboxberry';
+    private $CREATE_5POST_METHOD = 'neworder5post';
     private $FIND_BOXBERRY_POST_CODE_METHOD = 'boxberrypostcode';
     private $xml;
     public $option = array();
@@ -273,6 +274,9 @@ class GrastinWidget {
             case 'partner':
                 return $this->CREATE_PARTNERS_METHOD;
                 break;
+            case '5post':
+                return $this->CREATE_5POST_METHOD;
+                break;
         }
     }
 
@@ -293,7 +297,16 @@ class GrastinWidget {
             case 'partner':
                 return $this->createOrderPartner($grastinData, $order);
                 break;
+            case '5post':
+                return $this->createOrder5Post($grastinData, $order);
+                break;
         }
+    }
+
+    private function createOrder5Post($grastinData, $order) {
+        $person = unserialize($order['orders']);
+
+        return '<Order number="' . PHPShopString::win_utf8(str_replace('-', '', $order['uid'])) . '" phone="' . str_replace(array('(', ')', ' ', '+', '-'), '', $order['tel']) . '" buyer="' . PHPShopString::win_utf8($this->setBuyer($order)) . '" summa="' . $order['sum'] . '" assessedsumma="' . $order['sum'] . '" sitename="' . $_SERVER['SERVER_NAME'] . '" pickup="' . $grastinData['pvz_id'] . '" email="' . $person['Person']['mail'] . '">' . "\n";
     }
 
     private function createOrderPost($order) {
@@ -445,9 +458,12 @@ class GrastinWidget {
             array('Hermes самовывоз', 'hermespikup', @in_array('hermespikup', $partners) ? 'hermespikup' : ''),
             array('DPD самовывоз', 'dpdpikup', @in_array('dpdpikup', $partners) ? 'dpdpikup' : ''),
             array('Партнерские ПВЗ', 'partnerpikup', @in_array('partnerpikup', $partners) ? 'partnerpikup' : ''),
+            array('5post', '5postpikup', @in_array('5postpikup', $partners) ? '5postpikup' : ''),
             array('Почта России', 'post', @in_array('post', $partners) ? 'post' : ''),
             array('Почта РФ посылка online', 'postpackageonline', @in_array('postpackageonline', $partners) ? 'postpackageonline' : ''),
-            array('Почта РФ курьер online', 'postcourieronline', @in_array('postcourieronline', $partners) ? 'postcourieronline' : '')
+            array('CDEK самовывоз', 'cdekpikup', @in_array('cdekpikup', $partners) ? 'cdekpikup' : ''),
+            array('CDEK курьер', 'cdekcourier', @in_array('cdekcourier', $partners) ? 'cdekcourier' : ''),
+            array('CDEK постаматы', 'cdekpostamat', @in_array('cdekpostamat', $partners) ? 'cdekpostamat' : ''),
         );
     }
 

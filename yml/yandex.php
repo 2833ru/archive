@@ -3,13 +3,12 @@
 /**
  * Файл выгрузки для Яндекс Маркет
  * @author PHPShop Software
- * @version 3.1
+ * @version 3.2
  * @package PHPShopXML
- * @example ?ssl [bool] SSL
- * @example ?retailcrm [bool] Выгрузка для RetailCRM
- * @example ?cdek [bool] Выгрузка для СДЭК (упрощенный тип YML с использованием count)
- * @example ?aliexpress [bool] Выгрузка для AliExpress (товары отмеченные для AliExpress)
- * @example ?sbermarket [bool] Выгрузка для СберМаркет (товары отмеченные для СберМаркет)
+ * @example ?marketplace=retailcrm [bool] Выгрузка для RetailCRM
+ * @example ?marketplace=cdek [bool] Выгрузка для СДЭК (упрощенный тип YML с использованием count)
+ * @example ?marketplace=aliexpress [bool] Выгрузка для AliExpress (товары отмеченные для AliExpress)
+ * @example ?marketplace=sbermarket [bool] Выгрузка для СберМаркет (товары отмеченные для СберМаркет)
  * @example ?getall [bool] Выгрузка всех товаров без учета флага YML. Выгрузка всех изображений.
  * @example ?from [bool] Метка в ссылки товара from
  * @example ?amount [bool] Добавление склада в тег amount для CRM
@@ -302,11 +301,11 @@ class PHPShopYml {
         if (isset($_GET['getall']))
             $where = null;
         else {
-            if (isset($_GET['cdek'])) {
+            if (isset($_GET['marketplace']) && $_GET['marketplace'] === 'cdek' && isset($GLOBALS['SysValue']['base']['marketplaces']['marketplaces_system'])) {
                 $where = "cdek='1' and";
-            } elseif (isset($_GET['aliexpress'])) {
+            } elseif (isset($_GET['marketplace']) && $_GET['marketplace'] === 'aliexpress' && isset($GLOBALS['SysValue']['base']['marketplaces']['marketplaces_system'])) {
                 $where = "aliexpress='1' and";
-            } elseif (isset($_GET['sbermarket'])) {
+            } elseif (isset($_GET['marketplace']) && $_GET['marketplace'] === 'sbermarket' && isset($GLOBALS['SysValue']['base']['marketplaces']['marketplaces_system'])) {
                 $where = "sbermarket='1' and";
             } else {
                 $where = "yml='1' and";
@@ -441,6 +440,8 @@ class PHPShopYml {
                 "cpa" => $row['cpa'],
                 "price_yandex_dbs" => round($row['price_yandex_dbs'], (int) $this->format),
                 "price_sbermarket" => round($row['price_sbermarket'], (int) $this->format),
+                "price_cdek" => round($row['price_cdek'], (int) $this->format),
+                "price_aliexpress" => round($row['price_aliexpress'], (int) $this->format),
             );
 
             // Параметр сортировки
@@ -750,29 +751,17 @@ function setProducts() {
         if ($val['price_n'] > $val['price'])
             $xml .= '<oldprice>' . $val['price_n'] . '</oldprice>';
 
-        // Склад
-        if (isset($_GET['amount']) || isset($_GET['cdek']))
-            $xml .= '<amount>' . $val['items'] . '</amount>';
-        if (isset($_GET['aliexpress']))
-            $xml .= '<count>' . $val['items'] . '</count>';
-        if (isset($_GET['sbermarket']))
-            $xml .= '<outlets><outlet id="1" instock="' . $val['items'] . '"></outlet></outlets>';
+        // weight
+        if (!empty($data['val']['weight']))
+            $add.='<weight>' . round($data['val']['weight'] / 1000, 3) . '</weight>';
 
-        if (isset($_GET['retailcrm'])) {
-            $xml .= '<xmlId>' . $val['uid'] . '</xmlId>';
-        }
-
-        if (isset($_GET['cdek'])) {
-            $ndsEnabled = $this->PHPShopSystem->getParam('nds_enabled');
-            $nds = $this->PHPShopSystem->getParam('nds');
-            if (empty($ndsEnabled)) {
-                $ndsValue = 'NO_VAT';
-            } else {
-                $ndsValue = 'VAT_' . $nds;
-            }
-
-            $xml .= '<vat>' . $ndsValue . '</vat>';
-        }
+        // Габариты
+        if (!empty($data['val']['length']) && !empty($data['val']['width']) && !empty($data['val']['height']))
+            $add.='<dimensions>' . sprintf('%s/%s/%s',
+                    number_format($data['val']['length'], 2, '.', ''),
+                    number_format($data['val']['width'], 2, '.', ''),
+                    number_format($data['val']['height'], 2, '.', '')
+                ) . '</dimensions>';
 
         $xml .= '<currencyId>' . $this->defvalutaiso . '</currencyId>
       <categoryId>' . $val['category'] . '</categoryId>

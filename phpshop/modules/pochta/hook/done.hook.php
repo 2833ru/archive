@@ -15,7 +15,9 @@ function send_to_order_pochta_hook($obj, $row, $route) {
             $_POST['pochta_settings_new'] = serialize([
                 'mail-type'     => $_POST['pochta_mail_type'],
                 'delivery_info' => $_POST['pochta_delivery_info'],
-                'address'       => $_POST['pochta_address'] === 'null' ?  null : $_POST['pochta_address'] // да, иногда с виджета почты РФ возвращается строка null.
+                'address'       => $_POST['pochta_address'] === 'null' ?  null : $_POST['pochta_address'], // да, иногда с виджета почты РФ возвращается строка null.
+                'pvz_type'      => $_POST['pochta_pvz_type'],
+                'pvz_index'     => $_POST['pochta_index']
             ]);
 
             // Заполнение полей адреса доставки данными с виджета, если они пустые.

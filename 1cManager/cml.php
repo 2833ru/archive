@@ -3,7 +3,7 @@
  * Обмен по CommerceML
  * @package PHPShopExchange
  * @author PHPShop Software
- * @version 1.0
+ * @version 1.1
  */
 class CommerceMLLoader {
 
@@ -30,6 +30,11 @@ class CommerceMLLoader {
 
         // Авторизация по ссылке
         if ($this->exchange_auth == 1 and $this->exchange_auth_path!="" and $_SERVER['PHP_SELF'] == $GLOBALS['SysValue']['dir']['dir'] . '/1cManager/' . $this->exchange_auth_path . '.php') {
+
+            $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['users']);
+            $data = $PHPShopOrm->select(array('token'), array('enabled' => "='1'"), false, array('limit' => 1));
+			$_SESSION['token'] = $data['token'];
+
             return true;
         }
 
@@ -45,6 +50,10 @@ class CommerceMLLoader {
                 foreach ($data as $row) {
                     if ($_SERVER['PHP_AUTH_USER'] == $row['login']) {
                         if ($hasher->CheckPassword($_SERVER['PHP_AUTH_PW'], $row['password'])) {
+
+                            $_SESSION['login'] = $data['login'];
+			                $_SESSION['password'] = $data['password'];
+
                             return true;
                         }
                     }
@@ -499,7 +508,11 @@ class CommerceMLLoader {
         if ($this->exchange_create == 1)
             $create = 'true';
 
-        $url = $protocol . $_SERVER['SERVER_NAME'] . '/1cManager/result.php?date=' . $date . '&files=all&log=' . $_SERVER['PHP_AUTH_USER'] . '&pas=' . $this->encode($_SERVER['PHP_AUTH_PW']) . '&create=' . $create . '&create_category=' . $create_category;
+		if(!empty($_SESSION['token']))
+		   $token = '&token='.$_SESSION['token'];
+			else $token = null;
+
+        $url = $protocol . $_SERVER['SERVER_NAME'] . '/1cManager/result.php?date=' . $date . '&files=all&log=' . $_SERVER['PHP_AUTH_USER'] . '&pas=' . $this->encode($_SERVER['PHP_AUTH_PW']) . '&create=' . $create . '&create_category=' . $create_category . $token;
 
         $сurl = curl_init();
         curl_setopt_array($сurl, array(

@@ -86,6 +86,17 @@ class Pochta
             $parameters['dimension-type'] = $this->settings->getFromOrderOrSettings('dimension_type', $pochta, 'S');
         }
 
+        if(isset($pochta['pvz_type']) && $pochta['pvz_type'] === 'postamat') {
+            if($this->settings->get('declared_percent') > 0) {
+                $parameters['mail-category'] = 'COMBINED_WITH_DECLARED_VALUE';
+            } else {
+                $parameters['mail-category'] = 'COMBINED_ORDINARY';
+            }
+            $parameters['ecom-data']['identity-methods'] = ['PIN'];
+            $parameters['ecom-data']['delivery-point-index'] = $pochta['pvz_index'];
+            $parameters['sms-notice-recipient'] = 1;
+        }
+
         $result = $this->request->createOrder($parameters);
 
         if($result['success']) {
@@ -200,7 +211,7 @@ class Pochta
                     Settings::getMailTypeVariants($this->settings->getFromOrderOrSettings('mail_type', $pochta, 'PARCEL_CLASS_1')))
             ) .
             PHPShopText::tr(
-                __('Типоразмер (только для вида РПО ECOM!)'),
+                __('Типоразмер'),
                 $PHPShopGUI->setSelect('pochta_dimension_type',
                     Settings::getDimensionVariants($this->settings->getFromOrderOrSettings('dimension_type', $pochta, 'S')))
             );

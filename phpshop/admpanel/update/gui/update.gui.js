@@ -1,20 +1,22 @@
+// Переопределение функции
+var TABLE_EVENT = true;
 
-$(document).ready(function() {
+$(document).ready(function () {
 
     // Запуск восстановления бекапа
-    $("#dropdown_action .restore").on('click', function(event) {
+    $("#dropdown_action .restore").on('click', function (event) {
         event.preventDefault();
-        var data_id=$(this).attr('data-id');
+        var data_id = $(this).attr('data-id');
 
         $.MessageBox({
             buttonDone: "OK",
             buttonFail: locale.cancel,
             message: locale.confirm_restore + ' PHPShop ' + $(this).attr('data-id') + '?'
-        }).done(function() {
-           window.location.href = '?path=update.restore&version=' + data_id;
+        }).done(function () {
+            window.location.href = '?path=update.restore&version=' + data_id;
         })
 
- 
+
     });
 
     // Восстановление БД
@@ -26,13 +28,13 @@ $(document).ready(function() {
         data.push({name: 'clean', value: 1});
         data.push({name: 'actionList[saveID]', value: 'actionSave'});
         $.ajax({
-            mimeType: 'text/html; charset='+locale.charset,
+            mimeType: 'text/html; charset=' + locale.charset,
             url: '?path=exchange.sql',
             type: 'post',
             data: data,
             dataType: "json",
             async: false,
-            success: function(json) {
+            success: function (json) {
                 if (json['success'] == 1) {
                     $('.install-restore-bd').toggleClass('hide');
                     $('.navbar-action .navbar-brand').append(' - ' + locale.done);
@@ -49,7 +51,7 @@ $(document).ready(function() {
 
 
     // Переход в журнал из списка бекапов
-    $("#dropdown_action .log").on('click', function(event) {
+    $("#dropdown_action .log").on('click', function (event) {
         event.preventDefault();
         window.open('https://www.phpshop.ru/docs/update.html#EE' + $(this).attr('data-id'));
     });
@@ -64,13 +66,13 @@ $(document).ready(function() {
         data.push({name: 'clean', value: 1});
         data.push({name: 'actionList[saveID]', value: 'actionSave'});
         $.ajax({
-            mimeType: 'text/html; charset='+locale.charset,
+            mimeType: 'text/html; charset=' + locale.charset,
             url: '?path=exchange.sql',
             type: 'post',
             data: data,
             dataType: "json",
             async: false,
-            success: function(json) {
+            success: function (json) {
                 if (json['success'] == 1) {
                     $('.install-update-bd').toggleClass('hide');
                     $('.navbar-action .navbar-brand').append(' - ' + locale.done);
@@ -86,7 +88,7 @@ $(document).ready(function() {
 
 
     // Запуск обновления
-    $(".navbar-action .update-start").on('click', function(event) {
+    $(".navbar-action .update-start").on('click', function (event) {
         event.preventDefault();
 
         $('.progress').toggleClass('hide');
@@ -94,5 +96,23 @@ $(document).ready(function() {
         $('#product_edit').submit();
     });
 
+
+    if (typeof ($.cookie('data_length')) == 'undefined')
+        var data_length = [10, 25, 50, 75, 100, 500, 1000];
+    else
+        var data_length = [parseInt($.cookie('data_length')), 10, 25, 50, 75, 100, 500, 1000];
+
+    var table = $('#data').dataTable({
+        "lengthMenu": data_length,
+        "paging": true,
+        "ordering": false,
+        "info": false,
+        "language": locale.dataTable,
+        "aaSorting": [],
+        "columnDefs": [
+            {"orderable": false, "targets": 0}
+        ]
+
+    });
 
 });

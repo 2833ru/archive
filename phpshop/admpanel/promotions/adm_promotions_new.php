@@ -48,22 +48,22 @@ function actionInsert() {
 
     $_POST['categories_new'] = "";
     if (is_array($_POST['categories']) and $_POST['categories'][0] != 'null') {
-        
-        $_POST['categories_check_new']=1;
-        
+
+        $_POST['categories_check_new'] = 1;
+
         foreach ($_POST['categories'] as $v)
-            if (!empty($v) and !strstr($v, ','))
+            if (!empty($v) and ! strstr($v, ','))
                 $_POST['categories_new'] .= $v . ",";
     }
 
-    if(!empty($_POST['products_new'])) {
+    if (!empty($_POST['products_new'])) {
         $products = array();
         $orm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
         $parents = $orm->getList(array('id', 'parent'), array('parent_enabled' => "='0' AND id IN (" . $_POST['products_new'] . ")"));
 
         foreach ($parents as $parent) {
             $products[] = $parent['id'];
-            if(!empty($parent['parent'])) {
+            if (!empty($parent['parent'])) {
                 $products = array_merge($products, explode(',', $parent['parent']));
             }
         }
@@ -110,9 +110,8 @@ function actionStart() {
     $action_value[] = array('Максимально возможная скидка', 1, $data['action']);
     $action_value[] = array('Суммировать со скидками по статусу пользователя', 2, $data['action']);
 
-    $Tab1.=$PHPShopGUI->setCollapse('Скидка', 
-            $PHPShopGUI->setField('Тип', $PHPShopGUI->setRadio("discount_tip_new", 1, "%", $data['discount_tip']) . $PHPShopGUI->setRadio("discount_tip_new", 0, "сумма", $data['discount_tip']), 'left') .
-            $PHPShopGUI->setField('Скидка', $PHPShopGUI->setInputText('', 'discount_new', $data['discount'], '160')).
+    $Tab1 .= $PHPShopGUI->setCollapse('Скидка', $PHPShopGUI->setField('Тип', $PHPShopGUI->setRadio("discount_tip_new", 1, "%", $data['discount_tip']) . $PHPShopGUI->setRadio("discount_tip_new", 0, "сумма", $data['discount_tip']), 'left') .
+            $PHPShopGUI->setField('Скидка', $PHPShopGUI->setInputText('', 'discount_new', $data['discount'], '160')) .
             $PHPShopGUI->setField('Действие', $PHPShopGUI->setRadio("sum_order_check_new", 0, "Понижение", $data['sum_order_check']) . $PHPShopGUI->setRadio("sum_order_check_new", 1, "Повышение", $data['sum_order_check'])) .
             $PHPShopGUI->setField("Формула расчета", $PHPShopGUI->setSelect('action_new', $action_value, 300))
     );
@@ -170,7 +169,10 @@ function actionStart() {
     $data_user_status = $PHPShopOrm->select(array('id,name'), false, array('order' => 'name'), array('limit' => 100));
     $status_array = unserialize($data['statuses']);
     array_unshift($data_user_status, array('id' => '-', 'name' => __('Покупатели без статуса')));
-    
+
+    if (!is_array($data_user_status))
+        $data_user_status = array('id' => '-', 'name' => __('Покупатели без статуса'));
+
     foreach ($data_user_status as $value) {
         if (is_array($status_array) && in_array($value['id'], $status_array))
             $sel = 'selected';
@@ -179,17 +181,16 @@ function actionStart() {
         $value_user_status[] = array($value['name'], $value['id'], $sel);
     }
 
-    $Tab1.=$PHPShopGUI->setCollapse('Условия', $PHPShopGUI->setField('Статус покупателя', 
-                    $PHPShopGUI->setSelect('statuses[]', $value_user_status, '300', false, false, false, '300', false, true)) .
+    $Tab1 .= $PHPShopGUI->setCollapse('Условия', $PHPShopGUI->setField('Статус покупателя', $PHPShopGUI->setSelect('statuses[]', $value_user_status, '300', false, false, false, '300', false, true)) .
             $PHPShopGUI->setField('Категории', $PHPShopGUI->setHelp('Выберите категории товаров и/или укажите ID товаров для акции.') . $PHPShopGUI->setCheckbox("categories_check_new", 1, "Учитывать категории товара", $data['categories_check']) .
                     $PHPShopGUI->setCheckbox("categories_all", 1, "Выбрать все категории?", 0) .
                     $tree_select) .
             $PHPShopGUI->setField('Товары', $PHPShopGUI->setCheckbox("products_check_new", 1, "Учитывать товары", $data['products_check']) . $PHPShopGUI->setCheckbox("block_old_price_new", 1, "Игнорировать товары со старой ценой", $data['block_old_price']) . $PHPShopGUI->setCheckbox("hide_old_price_new", 1, "Не отображать цену без скидки/наценки", $data['hide_old_price']) .
                     $PHPShopGUI->setTextarea('products_new', $data['products'], false, false, false, __('Укажите ID товаров или воспользуйтесь') . ' <a href="#" data-target="#products_new"  class="btn btn-sm btn-default tag-search"><span class="glyphicon glyphicon-search"></span> ' . __('поиском товаров') . '</a>'))
     );
-    
-    $Tab1.=$PHPShopGUI->setField('Количество в корзине', $PHPShopGUI->setInputText('', 'num_check_new', $data['num_check'],150,__('шт.')));
-    $Tab1.=$PHPShopGUI->setField('Лейбл товара на сайте', $PHPShopGUI->setInputText('', 'label_new', $data['label']));
+
+    $Tab1 .= $PHPShopGUI->setField('Количество в корзине', $PHPShopGUI->setInputText('', 'num_check_new', $data['num_check'], 150, __('шт.')));
+    $Tab1 .= $PHPShopGUI->setField('Лейбл товара на сайте', $PHPShopGUI->setInputText('', 'label_new', $data['label']));
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);

@@ -3,19 +3,19 @@
 
 <form class="col-lg-5 col-md-6 col-sm-7 col-xs-12" method="post" name="forma_message">
     <div class="form-group">
-        <input type="text" name="tema" placeholder="{Заголовок}"  value="@php  echo $_POST[tema]; php@" class="form-control" id="exampleInputEmail1"  required="">
+        <input type="text" name="tema" placeholder="{Заголовок}"  value="@php  echo $_POST['tema']; php@" class="form-control" id="exampleInputEmail1"  required="">
     </div>
     <div class="form-group">
-        <input type="text" name="name" placeholder="{Имя}" value="@php  echo $_POST[name]; php@" class="form-control" id="exampleInputEmail1"  required="">
+        <input type="text" name="name" placeholder="{Имя}" value="@php  echo $_POST['name']; php@" class="form-control" id="exampleInputEmail1"  required="">
     </div>
     <div class="form-group">
-        <input type="email" name="mail" placeholder="E-mail"  value="@php  echo $_POST[mail]; php@" class="form-control" id="exampleInputEmail1">
+        <input type="email" name="mail" placeholder="E-mail"  value="@php  echo $_POST['mail']; php@" class="form-control" id="exampleInputEmail1">
     </div>
     <div class="form-group">
-        <input type="text" name="tel" placeholder="{Телефон}" value="@php  echo $_POST[tel]; php@" class="form-control" id="exampleInputEmail1">
+        <input type="text" name="tel" placeholder="{Телефон}" value="@php  echo $_POST['tel']; php@" class="form-control" id="exampleInputEmail1">
     </div>
     <div class="form-group">
-        <textarea name="content" class="form-control" placeholder="{Сообщение}" required="">@php  echo $_POST[content]; php@</textarea>
+        <textarea name="content" class="form-control" placeholder="{Сообщение}" required="">@php  echo $_POST['content']; php@</textarea>
     </div>
     <div class="form-group">
         <p class="small">
