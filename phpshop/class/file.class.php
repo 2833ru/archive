@@ -132,6 +132,33 @@ class PHPShopFile {
             }
     }
 
+    /**
+     * @param string $sql
+     * @return array
+     */
+    public static function sqlStringToArray($sql) {
+        $sql = trim($sql);
+
+        if (strpos($sql, "\r\n")) {
+            $eol = "\r\n";
+        } elseif (strpos($sql, "\n")) {
+            $eol = "\n";
+        } else {
+            $eol = "\r";
+        }
+
+        $array = explode(";" . $eol, $sql);
+
+        foreach ($array as $key => $element) {
+            $array[$key] = trim($element);
+            if(substr($element, -1) !== ';') {
+                $array[$key] = $element . ';';
+            }
+        }
+
+        return $array;
+    }
+
 }
 
 /**

@@ -21,8 +21,14 @@ function tab_cart($data, $option = false) {
     $CART = $order['Cart'];
     $PERSON = $order['Person'];
     $cart = $CART['cart'];
-    
-    $_SESSION['selectCart'] = $cart;
+
+    $cartForSession = [];
+    foreach ($cart as $k => $item) {
+        unset($item['name']);
+        $cartForSession[$k] = $item;
+    }
+
+    $_SESSION['selectCart'] = $cartForSession;
     $num = $data_id = $sum = null;
     $n = 1;
 

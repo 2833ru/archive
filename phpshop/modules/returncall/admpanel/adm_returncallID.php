@@ -3,6 +3,12 @@
 // SQL
 $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.returncall.returncall_jurnal"));
 $TitlePage = __('Редактирование заявки ') . ' #' . $_GET['id'];
+PHPShopObj::loadClass("array");
+PHPShopObj::loadClass("order");
+
+// Настройки
+$PHPShopOrmOption = new PHPShopOrm($PHPShopModules->getParam("base.returncall.returncall_system"));
+$option = $PHPShopOrmOption->getOne(array('status'));
 
 /**
  * Генерация номера заказа
@@ -27,16 +33,26 @@ function setNum() {
 
 // Начальная функция загрузки
 function actionStart() {
-    global $PHPShopGUI, $PHPShopOrm;
+    global $PHPShopGUI, $PHPShopOrm, $option, $select_name;
 
     $PHPShopGUI->field_col = 2;
+
     $PHPShopGUI->addJSFiles('./js/bootstrap-datetimepicker.min.js', './news/gui/news.gui.js');
     $PHPShopGUI->addCSSFiles('./css/bootstrap-datetimepicker.min.css');
 
     // Выборка
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
 
-    $PHPShopGUI->setActionPanel(__("Заявка") . ' &#8470;' . $data['id'], false, array('Сохранить и закрыть'), false);
+    // Статусы заказов
+    $PHPShopOrderStatusArray = new PHPShopOrderStatusArray();
+    $OrderStatusArray = $PHPShopOrderStatusArray->getArray();
+    $order_status_value[] = array(__('Новый'), 0, $data['status'], 'data-content="<span class=\'glyphicon glyphicon-text-background\' style=\'color:#35A6E8\'></span> ' . __('Новый') . '"');
+    if (is_array($OrderStatusArray))
+        foreach ($OrderStatusArray as $order_status) {
+            $order_status_value[] = array($order_status['name'], $order_status['id'], $data['status'], 'data-content="<span class=\'glyphicon glyphicon-text-background\' style=\'color:' . $order_status['color'] . '\'></span> ' . $order_status['name'] . '"');
+        }
+
+    $PHPShopGUI->setActionPanel(__("Заявка") . ' &#8470;' . $data['id'], $select_name, array('Сохранить и закрыть'), false);
 
     $Tab1 = $PHPShopGUI->setField("Дата", $PHPShopGUI->setInputDate("date_new", PHPShopDate::dataV($data['date'], false)));
     $Tab1 .= $PHPShopGUI->setField('Имя: ', $PHPShopGUI->setInputText(false, 'name_new', $data['name'], 600), false, 'IP: ' . $data['ip']);
@@ -44,13 +60,11 @@ function actionStart() {
     $Tab1 .= $PHPShopGUI->setField('Время звонка:', $PHPShopGUI->setInputText(null, 'time_start_new', $data['time_start'] . ' ' . $data['time_end'], 300));
     $Tab1 .= $PHPShopGUI->setField('Сообщение', $PHPShopGUI->setTextarea('message_new', $data['message'], false, 600));
 
-    $status_atrray[] = array('Новая', 1, $data['status']);
-    $status_atrray[] = array('Перезвонить', 2, $data['status']);
-    $status_atrray[] = array('Недоcтупен', 3, $data['status']);
-    $status_atrray[] = array('Выполнен', 4, $data['status']);
-    $status_atrray[] = array('Переведен в заказ', 5, $data['status']);
 
-    $Tab1 .= $PHPShopGUI->setField('Статус', $PHPShopGUI->setSelect('status_new', $status_atrray, 300,true).$PHPShopGUI->setHelp('Статус "Переведен в заказ" создает пустой заказ с данными клиента'));
+    if (!empty($option['status']))
+        $help = $PHPShopGUI->setHelp('Статус "' . $OrderStatusArray[$option['status']]['name'] . '" создает пустой заказ с данными клиента');
+
+    $Tab1 .= $PHPShopGUI->setField('Статус', $PHPShopGUI->setSelect('status_new', $order_status_value, 300) . $help);
     $Tab1 .= $PHPShopGUI->setInput("hidden", "status", $data['status']);
 
 
@@ -71,26 +85,41 @@ function actionStart() {
  * Экшен сохранения
  */
 function actionSave() {
-    global $PHPShopModules;
+    global $PHPShopModules, $option;
 
-    $_POST['date_new'] = PHPShopDate::GetUnixTime($_POST['date_new']);
+    if (!empty($_POST['date_new']) and empty($_POST['ajax']))
+        $_POST['date_new'] = PHPShopDate::GetUnixTime($_POST['date_new']);
+
     $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.returncall.returncall_jurnal"));
-    $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['rowID']));
+    $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['rowID']));
 
     // Новый заказ
-    if ($_POST['status_new'] == 5 and $_POST['status'] != 5) {
+    if (!empty($_POST['status_new']) and $_POST['status_new'] == $option['status'] and $_POST['status'] != $option) {
+
+        // Выборка
+        $data_call = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_POST['rowID'])));
 
         // Запись пустого заказа для получения идентификатора заказа
-        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
-        $data['fio_new'] = $_POST['name_new'];
-        $data['tel_new'] = $_POST['tel_new'];
+        $PHPShopOrmOrder = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
+        $data['fio_new'] = $data_call['name'];
+        $data['tel_new'] = $data_call['tel'];
         $data['datas_new'] = time();
         $data['uid_new'] = setNum();
-        $data['dop_info_new'] = 'Заявка с сайта №' . $_POST['rowID'] . ' ' . $_POST['message_new'] . ' ' . $_POST['time_start_new'];
-        $id = $PHPShopOrm->insert($data);
-        header('Location: ?path=order&id=' . $id);
-        return true;
-    } else
+        $data['dop_info_new'] = 'Заявка с сайта №' . $data_call['id'] . ' ' . $data_call['message_new'] . ' ' . $data_call['time_start_new'];
+        $id = $PHPShopOrmOrder->insert($data);
+
+        // Удаление звонка
+        $PHPShopOrm->delete(array('id' => '=' . $data_call['id']));
+
+        if (!empty($_POST['ajax']))
+            return array('success' => $action);
+        else
+            header('Location: ?path=order&id=' . $id);
+    } elseif (!empty($_POST['ajax']))
+        return array('success' => $action);
+    elseif (!empty($_GET['return']))
+        header('Location: ?path=' . $_GET['return']);
+    else
         header('Location: ?path=' . $_GET['path']);
 }
 

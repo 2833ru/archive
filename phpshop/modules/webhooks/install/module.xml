@@ -5,7 +5,6 @@
     <description>Интеграция с использованием WebHooks.</description>
     <faqlink>https://docs.phpshop.ru/moduli/razrabotchikam/webhooks</faqlink>
     <sign>1600408414</sign>
-    <status>New</status>
     <pro>true</pro>
     <category>develop</category>
      <adminmenu>

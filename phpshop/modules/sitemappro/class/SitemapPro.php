@@ -35,6 +35,8 @@ class SitemapPro
                 $this->isSeoPagesEnabled = true;
             if($settings['seo_brands_enabled'] == 2)
                 $this->isSeoBrandsEnabled = true;
+
+            include_once dirname(dirname(__DIR__)) .'/seourlpro/inc/option.inc.php';
         }
     }
 
@@ -59,7 +61,7 @@ class SitemapPro
         // Пошаговая генерация товаров.
         else {
             $this->xml .= '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
-            $this->xml .= '<urlset xmlns="http://www.google.com/schemas/sitemap/0.9">' . "\n";
+            $this->xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
 
             $this->addProducts($ssl);
 
@@ -102,7 +104,7 @@ class SitemapPro
             //  SEOURLPRO
             if ($this->isSeoUrlProEnabled) {
                 if (empty($row['prod_seo_name']))
-                    $url = 'id/' . str_replace("_", "-", PHPShopString::toLatin($row['name'])) . '-' . $row['id'];
+                    $url = 'id/' . $GLOBALS['PHPShopSeoPro']->setLatin($row['name']) . '-' . $row['id'];
                 else
                     $url = 'id/' . $row['prod_seo_name'] . '-' . $row['id'];
             }
@@ -118,7 +120,7 @@ class SitemapPro
     private function addMainPage($ssl)
     {
         $this->xml .= '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
-        $this->xml .= '<urlset xmlns="http://www.google.com/schemas/sitemap/0.9">' . "\n";
+        $this->xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
         $this->xml .= '<url>' . "\n";
         $this->xml .= '<loc>'.$this->getSiteUrl($ssl) . '</loc>' . "\n";
         $this->xml .= '<changefreq>weekly</changefreq>' . "\n";

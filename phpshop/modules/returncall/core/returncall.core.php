@@ -66,8 +66,10 @@ class PHPShopReturncall extends PHPShopCore {
         else
             $message = $this->system['title'];
 
-        $PHPShopRecaptchaElement = new PHPShopRecaptchaElement();
-        $this->set('returncall_captcha', $PHPShopRecaptchaElement->captcha('returncall', 'normal'));
+        if ($this->system['captcha_enabled'] == 1) {
+            $PHPShopRecaptchaElement = new PHPShopRecaptchaElement();
+            $this->set('returncall_captcha', $PHPShopRecaptchaElement->captcha('returncall', 'normal'));
+        }
 
         // Подключаем шаблон
         $this->set('pageTitle', $message);
@@ -116,6 +118,7 @@ class PHPShopReturncall extends PHPShopCore {
         $insert['time_end_new'] = PHPShopSecurity::TotalClean($_POST['returncall_mod_time_end'], 2);
         $insert['message_new'] = PHPShopSecurity::TotalClean($_POST['returncall_mod_message'], 2);
         $insert['ip_new'] = $_SERVER['REMOTE_ADDR'];
+        $insert['status_new'] = 0;
 
         // Запись в базу
         $this->PHPShopOrm->insert($insert);
@@ -123,7 +126,7 @@ class PHPShopReturncall extends PHPShopCore {
         $zag = $this->PHPShopSystem->getValue('name') . " - " . __('Обратный звонок') . " - " . PHPShopDate::dataV();
 
         if (!empty($insert['time_end_new']))
-            $insert['time_start_new'].=' - ' . $insert['time_end_new'];
+            $insert['time_start_new'] .= ' - ' . $insert['time_end_new'];
 
         $message = "{Доброго времени}!
 
@@ -140,7 +143,7 @@ REFERER:            " . $_SERVER['HTTP_REFERER'];
 
         // Отсылаем письмо администратору
         $PHPShopMail = new PHPShopMail($this->PHPShopSystem->getValue('adminmail2'), $this->PHPShopSystem->getValue('adminmail2'), $zag, '', true, true);
-        $this->set('message',Parser($message));
+        $this->set('message', Parser($message));
         $content_adm = ParseTemplateReturn('./phpshop/lib/templates/order/blank.tpl', true);
         $PHPShopMail->sendMailNow($content_adm);
     }

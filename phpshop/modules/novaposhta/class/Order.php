@@ -53,9 +53,14 @@ class Order {
 
     public function setSender()
     {
+        $senderAddress = $this->options['sender_address'];
+        if(!empty($this->options['pvz_ref'])) {
+            $senderAddress = $this->options['pvz_ref'];
+        }
+
         $this->orderValueObject->citySender = $this->options['city_sender'];
         $this->orderValueObject->sender = $this->options['sender'];
-        $this->orderValueObject->senderAddress = $this->options['sender_address'];
+        $this->orderValueObject->senderAddress = $senderAddress;
         $this->orderValueObject->contactSender = $this->options['sender_contact'];
         $this->orderValueObject->sendersPhone = $this->options['phone'];
     }

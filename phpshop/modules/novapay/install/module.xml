@@ -4,7 +4,6 @@
     <name>NovaPay</name>
     <description>Прием оплат через платежную систему NovaPay для Украины.</description>
     <category>payment</category>
-    <status>new</status>
     <sign>1597934437</sign>
     <faqlink>https://docs.phpshop.ru/moduli/platezhnye-sistemy/novapay</faqlink>
     <adminmenu>

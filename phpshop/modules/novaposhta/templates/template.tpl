@@ -10,7 +10,7 @@
             <div class="modal-body" style="width:100%;">
                 <div id="novaposhta" style="height: 600px">
                     <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-xs-12 col-sm-12 col-md-3">
                             <div class="">
                                 <img src="phpshop/modules/novaposhta/templates/img/logo.png" alt="Новая Почта" title="Новая Почта" width="187" height="60">
                             </div>
@@ -20,7 +20,7 @@
                             </div>
                             <div class="pvz-wrapper">Оберiть мiсто i вiддiленя на картi вашого мiста.</div>
                         </div>
-                        <div class="col-md-9">
+                        <div class="col-xs-12 col-sm-12 col-md-9">
                             <div id="novaposhta-map"></div>
                         </div>
                     </div>

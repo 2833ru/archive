@@ -21,8 +21,13 @@ function userorderpaymentlink_mod_avangard_hook($obj, $PHPShopOrderFunction)
 
             $Avangard->log($payment_form, $Avangard->getOrderNumber(), 'Форма подготовлена для отправки', 'Регистрация заказа');
             $Avangard->orderState($Avangard->getOrderNumber(), Avangard::LOG_STATUS_NEW_ORDER);
-
+            
             $return = PHPShopText::form($payment_form, 'avangardpay', 'post', $Avangard->getApiURL(), '_blank');
+            
+            if($Avangard->option['qr'] == 1){
+                $payment_form_qr = $Avangard->getForm(true);
+                $return .= PHPShopText::form($payment_form_qr, 'avangardpay', 'post', $Avangard->getApiURL(), '_blank');
+            }
             $return .= '<div style="max-width: 300px;font-size: 10px;"><br>' . $Avangard->getOffer() . '</div>';
         } elseif ($PHPShopOrderFunction->getSerilizeParam('orders.Person.order_metod') == Avangard::PAYMENT_METHOD)
             $return = ' Заказ обрабатывается менеджером';

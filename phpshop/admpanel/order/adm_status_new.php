@@ -22,11 +22,8 @@ function actionStart() {
 
     // Содержание закладки 1
     $Tab1 = $PHPShopGUI->setField("Название", $PHPShopGUI->setInput("text", "name_new", $data['name'], null, 500));
-
-
-    $Tab1.=$PHPShopGUI->setField('Цвет', '<div class="input-group color" style="width:200px">
-    <input type="text" name="color_new" value="' . $data['color'] . '" class="form-control input-sm">
-    <span class="input-group-addon input-sm"><i></i></span></div>');
+    $Tab1.=$PHPShopGUI->setField('Цвет', $PHPShopGUI->setInputColor('color_new', $data['color']));
+    $Tab1.=$PHPShopGUI->setField("Приоритет", $PHPShopGUI->setInputText(null, "num_new", intval($data['num']), '100'));
 
     $Tab1.=$PHPShopGUI->setField("Дополнительно", $PHPShopGUI->setCheckbox('mail_action_new', 1, 'E-mail уведомление покупателю о смене статуса заказа', $data['mail_action']) . '<br>' .
              $PHPShopGUI->setCheckbox('sms_action_new', 1, 'SMS уведомление покупателю о смене статуса заказа', $data['sms_action']).'<br>'.

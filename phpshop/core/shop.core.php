@@ -139,9 +139,9 @@ class PHPShopShop extends PHPShopShopCore {
             if (is_array($files)) {
                 $this->set('productFiles', '');
                 foreach ($files as $cfile) {
-                    $this->set('productFiles', PHPShopText::img('images/shop/action_save.gif', 3, 'absmiddle'), true);
+                    $this->set('productFiles', '<p><span class="glyphicon glyphicon-paperclip"></span> ', true);
                     $this->set('productFiles', PHPShopText::a($cfile['path'], urldecode($cfile['name']), urldecode($cfile['name']), false, false, '_blank'), true);
-                    $this->set('productFiles', PHPShopText::br(), true);
+                    $this->set('productFiles', '</p>', true);
                 }
             } else {
                 $this->set('productFiles', __("Нет файлов"));
@@ -628,7 +628,7 @@ class PHPShopShop extends PHPShopShopCore {
 
         $this->set('productPrice', $this->price($row));
         $productPriceNew = $this->price($row, true);
-        if ((float) $productPriceNew > 0) {
+        if ((float) $productPriceNew > 0 && empty($row['sklad'])) {
             $this->set(array('productPriceOld', 'productPriceRub'), PHPShopText::strike($productPriceNew . " " . $this->currency, $this->format));
         }
 
@@ -674,11 +674,7 @@ function CID() {
             $depth = 2;
         }
 
-        $children = $this->PHPShopCategory->getChildrenCategories($depth);
-
-        foreach ($children as $category) {
-            $this->category_array[] = $category['id'];
-        }
+        $this->category_array = array_column($this->PHPShopCategory->getChildrenCategories($depth, ['id', 'parent_to']), 'id');
 
         // Ввывода товаров из подкаталогов
         if (is_array($this->category_array) and $this->PHPShopSystem->ifSerilizeParam('admoption.catlist_enabled') and PHPShopParser::check($this->getValue('templates.product_page_list'), 'ProductCatalogContent')) {
@@ -744,7 +740,7 @@ function CID_Product($category = null, $mode = false) {
         return true;
 
     // 404 если каталога не существует или мультибаза
-    if (empty($this->category_name) or $this->errorMultibase($this->category))
+    if (empty($this->category_name) or $this->errorMultibase($this->category) or $this->PHPShopCategory->getParam('skin_enabled') == 1)
         return $this->setError404();
 
     // Фильтр сортировки

@@ -53,7 +53,8 @@ function actionStart() {
 
     $work[] = array('Выбрать', '');
     $work[] = array('Бекап БД', 'phpshop/modules/cron/sample/dump.php');
-    $work[] = array('Курсы валют', 'phpshop/modules/cron/sample/currency.php');
+    $work[] = array('Курсы валют для России', 'phpshop/modules/cron/sample/currency.php');
+    $work[] = array('Курсы валют для Украины', 'phpshop/modules/cron/sample/currencyua.php');
     $work[] = array('Снятие с продаж товаров', 'phpshop/modules/cron/sample/product.php');
     $work[] = array('Разновалютый поиск', 'phpshop/modules/cron/sample/pricesearch.php');
     $work[] = array('Кеширование фильтра', 'phpshop/modules/cron/sample/filter.php');

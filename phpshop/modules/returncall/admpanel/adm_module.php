@@ -1,5 +1,6 @@
 <?php
-
+PHPShopObj::loadClass("array");
+PHPShopObj::loadClass("order");
 // SQL
 $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.returncall.returncall_system"));
 
@@ -49,15 +50,25 @@ function actionStart() {
 
     $Tab1 = $PHPShopGUI->setField('Заголовок', $PHPShopGUI->setInputText(false, 'title_new', $data['title']));
     $Tab1.=$PHPShopGUI->setField('Сообщение', $PHPShopGUI->setTextarea('title_end_new', $data['title_end']));
-    $Tab1.=$PHPShopGUI->setField('Место вывода', $PHPShopGUI->setSelect('enabled_new', $e_value, 200,true));
-    $Tab1.=$PHPShopGUI->setField('Тип вывода', $PHPShopGUI->setSelect('windows_new', $w_value, 200,true));
-    //$Tab1.=$PHPShopGUI->setField('Captcha', $PHPShopGUI->setSelect('captcha_enabled_new', $c_value, 200));
+    $Tab1.=$PHPShopGUI->setField('Место вывода', $PHPShopGUI->setSelect('enabled_new', $e_value, 300,true));
+    $Tab1.=$PHPShopGUI->setField('Тип вывода', $PHPShopGUI->setSelect('windows_new', $w_value, 300,true));
+    $Tab1.=$PHPShopGUI->setField('Защитная картинка', $PHPShopGUI->setSelect('captcha_enabled_new', $c_value, 200));
+    
+    
+        // Статусы заказов
+    $PHPShopOrderStatusArray = new PHPShopOrderStatusArray();
+    $OrderStatusArray = $PHPShopOrderStatusArray->getArray();
+    if (is_array($OrderStatusArray))
+        foreach ($OrderStatusArray as $order_status) {
+            $order_status_value[] = array($order_status['name'], $order_status['id'], $data['status'], 'data-content="<span class=\'glyphicon glyphicon-text-background\' style=\'color:' . $order_status['color'] . '\'></span> ' . $order_status['name'] . '"');
+        }
+    
+     $Tab1 .= $PHPShopGUI->setField('Статус перевода в заказ', $PHPShopGUI->setSelect('status_new', $order_status_value, 300) . $PHPShopGUI->setHelp('Создается  пустой заказ с данными клиента'));
 
     $info = 'Для произвольной вставки элемента следует выбрать парамет вывода "Кнопка звонок" и в ручном режиме вставить переменную
         <kbd>@returncall@</kbd> в свой шаблон.
         <p>Для персонализации формы вывода отредактируйте шаблоны <code>phpshop/modules/returncall/templates/</code></p>
-        <p>Для включения защитной каптчи используйте <kbd>@returncall_captcha@</kbd> в форме обратного звонка <code>
-        phpshop/modules/returncall/templates/returncall_forma.tpl</code></p>';
+ ';
 
     $Tab2 = $PHPShopGUI->setInfo($info);
 

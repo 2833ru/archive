@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Родительский класс ядра
  * Примеры использования размещены в папке phpshop/core/
@@ -110,7 +111,7 @@ class PHPShopCore {
             $this->PHPShopOrm->cache = $this->cache;
         }
         $this->SysValue = &$GLOBALS['SysValue'];
-        
+
         $this->PHPShopSystem = $PHPShopSystem;
         $this->num_row = $this->PHPShopSystem->getParam('num_row');
         $this->PHPShopNav = $PHPShopNav;
@@ -176,13 +177,13 @@ class PHPShopCore {
         $dis = null;
         // Шаблоны разделителя навигации
         $elementTemplate = $SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'] . chr(47) . $this->getValue('templates.breadcrumbs_splitter');
-        $lastElemTemplate = $SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'] . chr(47). $this->getValue('templates.breadcrumbs_splitter_last');
+        $lastElemTemplate = $SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'] . chr(47) . $this->getValue('templates.breadcrumbs_splitter_last');
 
-        if((bool) PHPShopParser::check($this->getValue('templates.breadcrumbs_splitter'), 'breadcrumbElemTitle') === false) {
+        if ((bool) PHPShopParser::check($this->getValue('templates.breadcrumbs_splitter'), 'breadcrumbElemTitle') === false) {
             $elementTemplate = './phpshop/lib/templates/breadcrumbs/breadcrumbs_splitter.tpl';
         }
         $lastTemplatePath = $this->getValue('templates.breadcrumbs_splitter_last');
-        if(empty($lastTemplatePath) || PHPShopParser::checkFile($lastElemTemplate, true) === false) {
+        if (empty($lastTemplatePath) || PHPShopParser::checkFile($lastElemTemplate, true) === false) {
             $lastElemTemplate = './phpshop/lib/templates/breadcrumbs/breadcrumbs_last.tpl';
         }
         $home = ParseTemplateReturn($this->getValue('templates.breadcrumbs_home'), false, $this->template_debug);
@@ -203,7 +204,7 @@ class PHPShopCore {
                 if ($this->PHPShopNav->getPath() == "shop")
                     $this->set('thisCat' . $i++, $v['id']);
 
-                if($name != $v['name']) {
+                if ($name != $v['name']) {
                     $this->set('breadcrumbElemLink', '/' . $this->PHPShopNav->getPath() . '/CID_' . $v['id'] . '.html');
                     $this->set('breadcrumbElemTitle', $v['name']);
                     $this->set('breadcrumbElemIndex', $currentIndex++);
@@ -256,6 +257,13 @@ class PHPShopCore {
             @header("Last-Modified: " . $updateDate . " GMT");
         }
 
+        // HSTS
+        if(!$this->PHPShopSystem instanceof PHPShopSystem) {
+            $this->PHPShopSystem = new PHPShopSystem();
+        }
+        if ($this->PHPShopSystem->ifSerilizeParam('admoption.hsts', 1))
+            @header("Strict-Transport-Security:max-age=63072000");
+
         @header("X-Powered-By: PHPShop");
     }
 
@@ -272,12 +280,12 @@ class PHPShopCore {
                 $this->set('pageTitl', $this->PHPShopSystem->getValue("title"));
 
             if (!empty($this->description))
-                $this->set('pageDesc', str_replace('"',"",strip_tags($this->description)));
+                $this->set('pageDesc', str_replace('"', "", strip_tags($this->description)));
             else
                 $this->set('pageDesc', $this->PHPShopSystem->getValue("descrip"));
 
             if (!empty($this->keywords))
-                $this->set('pageKeyw', str_replace('"',"",strip_tags($this->keywords)));
+                $this->set('pageKeyw', str_replace('"', "", strip_tags($this->keywords)));
             else
                 $this->set('pageKeyw', $this->PHPShopSystem->getValue("keywords"));
         }
@@ -440,8 +448,7 @@ class PHPShopCore {
                             $navigat .= parseTemplateReturn($template_location . "paginator/paginator_one_more.tpl", $template_location_bool);
                         }
                     }
-                }
-                else
+                } else
                     $navigat .= parseTemplateReturn($template_location . "paginator/paginator_one_selected.tpl", $template_location_bool);
 
                 $i++;
@@ -517,8 +524,7 @@ class PHPShopCore {
             $this->ListInfoItems .= $dis;
 
             $this->set('pageContent', $this->ListInfoItems);
-        }
-        else
+        } else
             $this->setError("addToTemplate", $template_file);
     }
 
@@ -643,7 +649,7 @@ class PHPShopCore {
     function getValue($param) {
         $param = explode(".", $param);
 
-        if (count($param) > 2 and !empty($this->SysValue[$param[0]][$param[1]][$param[2]]))
+        if (count($param) > 2 and ! empty($this->SysValue[$param[0]][$param[1]][$param[2]]))
             return $this->SysValue[$param[0]][$param[1]][$param[2]];
 
         if (!empty($this->SysValue[$param[0]][$param[1]]))
@@ -735,12 +741,11 @@ class PHPShopCore {
                                 if ($this->isAction('index')) {
 
                                     // Защита от битых адресов /page/page/page/****
-                                    if ($this->PHPShopNav->getNav() and !$this->empty_index_action)
+                                    if ($this->PHPShopNav->getNav() and ! $this->empty_index_action)
                                         $this->setError404();
                                     else
                                         call_user_func(array(&$this, $this->action_prefix . 'index'));
-                                }
-                                else
+                                } else
                                     $this->setError($this->action_prefix . "index", "метод не существует");
                             }
                         } else {
@@ -750,7 +755,7 @@ class PHPShopCore {
                             elseif ($this->isAction('index')) {
 
                                 // Защита от битых адресов /page/page/page/****
-                                if (@$this->PHPShopNav->getNav() and !$this->empty_index_action)
+                                if (@$this->PHPShopNav->getNav() and ! $this->empty_index_action)
                                     $this->setError404();
                                 else
                                     call_user_func(array(&$this, $this->action_prefix . 'index'));
@@ -762,8 +767,7 @@ class PHPShopCore {
                         break;
                 }
             }
-        }
-        else
+        } else
             $this->setError("action", "экшены объявлена неверно");
     }
 
@@ -867,14 +871,12 @@ class PHPShopCore {
                 if (!empty($check)) {
                     if (!empty($_SESSION['Memory'][__CLASS__][$param[0]][$param[1]]))
                         return true;
-                }
-                else
+                } else
                     return $_SESSION['Memory'][__CLASS__][$param[0]][$param[1]];
             }
             elseif (!empty($check))
                 return true;
-        }
-        else
+        } else
             return true;
     }
 
@@ -939,4 +941,5 @@ class PHPShopCore {
     }
 
 }
+
 ?>

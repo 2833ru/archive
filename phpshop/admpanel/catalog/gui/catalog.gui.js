@@ -444,4 +444,39 @@ $().ready(function() {
                 }]
         });
     }
+    $('select[name="fix_products"]').on('change', function () {
+        var msg = locale.transfer;
+        if($('select[name="fix_products"]').val() == 2) {
+            msg = locale.delete;
+        }
+        $('.fix-products').html('<span class="glyphicon glyphicon-ok"></span> ' + msg);
+    });
+
+    $('.fix-products').on('click', function () {
+        $.MessageBox({
+            buttonDone: "OK",
+            buttonFail: locale.cancel,
+            message: locale.create_db_dump
+        }).done(function() {
+            $.ajax({
+                mimeType: 'text/html; charset='+locale.charset,
+                url: '?path=catalog.list',
+                type: 'post',
+                data: {
+                    'actionList[rowID]': 'actionDeleteProducts',
+                    'rowID': 1,
+                    'mode': $('select[name="fix_products"]').val(),
+                    'ajax': 1
+                },
+                dataType: "json",
+                async: false,
+                success: function(json) {
+                    if (json['success'] == 1) {
+                        showAlertMessage(locale.products_completed + ' ' + json['count']);
+                    } else
+                        showAlertMessage(locale.save_false, true);
+                }
+            });
+        });
+    });
 });

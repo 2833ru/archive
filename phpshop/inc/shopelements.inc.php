@@ -650,7 +650,7 @@ class PHPShopProductIndexElements extends PHPShopProductElements {
                         // Мультибаза
                         $queryMultibase = $this->queryMultibase();
 
-                        $PHPShopOrm->sql = "select * from " . $this->objBase . " where (" . $sort . ") and enabled='1' " . $queryMultibase . " LIMIT 0," . $this->limitpos;
+                        $PHPShopOrm->sql = "select * from " . $this->objBase . " where (" . $sort . ") and enabled='1' and sklad != '1' " . $queryMultibase . " LIMIT 0," . $this->limitpos;
                         $PHPShopOrm->comment = __CLASS__ . '.' . __FUNCTION__;
                         $dataArray = $PHPShopOrm->select();
 

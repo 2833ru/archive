@@ -180,7 +180,7 @@
                     </ul>
                     <form action="/search/" role="search" method="post">
                         <div class="input-group search-block">
-                            <input name="words" maxlength="50" id="search" class="form-control" placeholder="{Искать}.." required="" type="search" data-trigger="manual" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="">
+                            <input name="words" maxlength="50" class="form-control search-input" placeholder="{Искать}.." required="" type="search" data-trigger="manual" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="">
                             <span class="input-group-btn">
                                 <button class="btn btn-default" type="submit"><span class="icons-search"></span></button>
                             </span>
@@ -199,7 +199,7 @@
                 </div>
                 <form action="/search/" role="search" method="post" class="hidden-xs">
                     <div class="input-group search-block">
-                        <input name="words" maxlength="50" id="search" class="form-control" placeholder="{Искать}.." required="" type="search" data-trigger="manual" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="">
+                        <input name="words" maxlength="50" class="form-control search-input" placeholder="{Искать}.." required="" type="search" data-trigger="manual" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="">
                         <span class="input-group-btn">
                             <button class="btn btn-default" type="submit"><span class="icons-search"></span></button>
                         </span>

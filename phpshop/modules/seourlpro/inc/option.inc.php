@@ -4,8 +4,10 @@ if (!defined("OBJENABLED"))
     exit(header('Location: /?error=OBJENABLED'));
 
 // Заглушка на 404 ошибку при пустом пути для SEO Pro
-if ($PHPShopNav->notPath(array('page')) and !@strpos($PHPShopNav->getName(true), '/', 2))
-    $SysValue['nav']['path'] = 'index';
+if(isset($PHPShopNav) && $PHPShopNav instanceof PHPShopNav) {
+    if ($PHPShopNav->notPath(array('page')) and !@strpos($PHPShopNav->getName(true), '/', 2))
+        $SysValue['nav']['path'] = 'index';
+}
 
 class PHPShopCategorySeoProArray extends PHPShopArray {
 

@@ -206,7 +206,7 @@ function navigation_seourl($obj, $name) {
     }
     $lastTemplatePath = $obj->getValue('templates.breadcrumbs_splitter_last');
     if(empty($lastTemplatePath) || PHPShopParser::checkFile($lastElemTemplate, true) === false) {
-        $lastElemTemplate = './phpshop/lib/templates/breadcrumbs/breadcrumbs_splitter_last.tpl';
+        $lastElemTemplate = './phpshop/lib/templates/breadcrumbs/breadcrumbs_last.tpl';
     }
 
     $currentIndex = 2;

@@ -1,8 +1,12 @@
 #novaposhtaModal .modal-lg {
-    width: 1000px;
+    max-width: 1000px;
+    width: 97%;
+}
+#novaposhta .row, #novaposhta .row .col-md-9 {
+    height: 100%;
 }
 #novaposhta-map {
-    height: 600px;
+    height: 98%;
 }
 .ui-front {
     z-index: 10000!important;

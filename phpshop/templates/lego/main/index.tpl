@@ -22,6 +22,10 @@
         <!-- Preload -->
         <link rel="preload" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/bootstrap.min.css" as="style">
         <link rel="preload" href="@pageCss@" as="style">
+        <link rel="preload" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/icomoon.css" as="style">
+        <link rel="preload" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@/fonts/rouble.woff"  as="font" type="font/woff2" crossorigin>
+        <link rel="preload" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@/fonts/StemMedium/StemMedium.woff2"  as="font" type="font/woff2" crossorigin>
+        <link rel="preload" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@/fonts/StemLight/StemLight.woff2"  as="font" type="font/woff2" crossorigin>
 
         <!-- Bootstrap -->
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/bootstrap.min.css" rel="stylesheet">

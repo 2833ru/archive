@@ -187,6 +187,17 @@ function actionInsert() {
 
     $_POST['icon_new'] = iconAdd();
 
+    $postOdnotip = explode(',', $_POST['odnotip_new']);
+    $odnotip = [];
+    if(is_array($postOdnotip)) {
+        foreach ($postOdnotip as $value) {
+            if((int) $value > 0) {
+                $odnotip[] = (int) $value;
+            }
+        }
+        $_POST['odnotip_new'] = implode(',', $odnotip);
+    }
+
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
 

@@ -29,7 +29,7 @@ foreach ($PHPShopCategoryArray->getKey('parent_to.id', true) as $k => $v) {
     foreach ($v as $cat) {
         
         if($CategoryArray[$cat]['skin_enabled'] == 1)
-            $CategoryArray[$cat]['name'].=' <span class="glyphicon glyphicon-minus-sign" title="'.PHPShopString::win_utf8(__('Скрыт')).'"></span>';
+            $CategoryArray[$cat]['name'].=' <span class="glyphicon glyphicon-minus-sign" title="'.__('Скрыт').'"></span>';
         
         $tree_array[$k]['sub'][$cat] = $CategoryArray[$cat]['name'];
     }

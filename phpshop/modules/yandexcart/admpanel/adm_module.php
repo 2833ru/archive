@@ -28,7 +28,7 @@ function actionStart() {
     // Инструкция
     $Tab2 = $PHPShopGUI->loadLib('tab_info', $data,'../modules/'.$_GET['id'].'/admpanel/');
 
-    $Tab3 = $PHPShopGUI->setPay(false, true, $data['version'], true);
+    $Tab3 = $PHPShopGUI->setPay(false, false, $data['version'], true);
 
     // Вывод формы закладки
     $PHPShopGUI->setTab(array("Основное", $Tab1,true),array("Инструкция", $Tab2), array("О Модуле", $Tab3));
@@ -44,7 +44,10 @@ function actionStart() {
 
 // Функция обновления
 function actionUpdate() {
-    global $PHPShopOrm;
+    global $PHPShopOrm, $PHPShopModules;
+
+    // Настройки витрины
+    $PHPShopModules->updateOption($_GET['id'], $_POST['servers']);
 
     $PHPShopOrm->debug = false;
     $_POST['region_data_new']=1;

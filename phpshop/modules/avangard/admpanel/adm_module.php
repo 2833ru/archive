@@ -3,6 +3,17 @@ PHPShopObj::loadClass('order');
 
 // SQL
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['avangard']['avangard_system']);
+
+// Обновление версии модуля
+function actionBaseUpdate() {
+    global $PHPShopModules, $PHPShopOrm;
+    $PHPShopOrm->clean();
+    $option = $PHPShopOrm->select();
+    $new_version = $PHPShopModules->getUpdate(number_format($option['version'], 1, '.', false));
+    $PHPShopOrm->clean();
+    $PHPShopOrm->update(array('version_new' => $new_version));
+}
+
 // Функция обновления
 function actionUpdate() {
     global $PHPShopOrm;
@@ -31,6 +42,12 @@ function actionStart() {
     $Tab2 .= $PHPShopGUI->setField('Пароль магазина:', $PHPShopGUI->setInput('password', 'password_new', $data['password'], false, 300));
     $Tab2 .= $PHPShopGUI->setField('Подпись магазина:', $PHPShopGUI->setInput('text', 'shop_sign_new', $data['shop_sign'], false, 300));
     $Tab2 .= $PHPShopGUI->setField('Подпись системы эквайринга:', $PHPShopGUI->setInput('text', 'av_sign_new', $data['av_sign'], false, 300));
+    
+    $qr_value = array(
+        array('Off', 0, $data['qr']),
+        array('On', 1, $data['qr'])
+    );
+    $Tab2 .= $PHPShopGUI->setField('Оплата по QR:', $PHPShopGUI->setSelect('qr_new', $qr_value, 0));
 
     // Доступые статусы заказов
     $PHPShopOrderStatusArray = new PHPShopOrderStatusArray();
@@ -69,9 +86,12 @@ function actionStart() {
 <li>В личном кабинете <a href="https://www.avangard.ru/rus/" target="_blank">Авангард</a> указать URL уведомления об успешном платеже: <code>' . Avangard::getProtocol() . $_SERVER['SERVER_NAME'] . '/phpshop/modules/avangard/payment/check.php</code> <br></li>
 </ol>
 ';
+	$Tab3 = $PHPShopGUI->setPay(false, false, $data['version'], true);
+	
+	$contacts = 'По вопросам работы модуля свяжитесь с нами e-com@avangard.ru';
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Настройки", $Tab2, true), array("Инструкция", $PHPShopGUI->setInfo($info), true), array("О Модуле", $PHPShopGUI->setPay()));
+    $PHPShopGUI->setTab(array("Настройки", $Tab2, true), array("Инструкция", $PHPShopGUI->setInfo($info), true), array("О Модуле", $Tab3), array("Поддержка", $PHPShopGUI->setInfo($contacts)));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionUpdate.modules.edit");

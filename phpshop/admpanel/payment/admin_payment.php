@@ -11,7 +11,7 @@ function actionStart() {
     // Таблица с данными
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['payment_systems']);
     $PHPShopOrm->debug = false;
-    $data = $PHPShopOrm->select(array('*'), false, array('order' => 'id DESC'), array('limit' => 1000));
+    $data = $PHPShopOrm->select(array('*'), false, array('order' => 'num'), array('limit' => 1000));
     if (is_array($data))
         foreach ($data as $row) {
             $color = '<span class="glyphicon glyphicon-text-background" style="color:' . $row['color'] . '"></span>';

@@ -15,11 +15,12 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_novaposhta_system` (
   `last_cities_update` int(11) NOT NULL default '0',
   `last_whtypes_update` int(11) NOT NULL default '0',
   `last_warehouses_update` int(11) NOT NULL default '0',
+  `pvz_ref` varchar(255) default '',
   `version` FLOAT(2) DEFAULT '1.0' NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-INSERT INTO `phpshop_modules_novaposhta_system` VALUES (1,'', 0, 0, '', '', '', '', '', '', '', '', 0, 0, 0, '1.0');
+INSERT INTO `phpshop_modules_novaposhta_system` VALUES (1,'', 0, 0, '', '', '', '', '', '', '', '', 0, 0, 0, '', '1.0');
 
 DROP TABLE IF EXISTS `phpshop_modules_novaposhta_cities`;
 CREATE TABLE IF NOT EXISTS `phpshop_modules_novaposhta_cities` (

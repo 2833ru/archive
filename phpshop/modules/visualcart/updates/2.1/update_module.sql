@@ -8,5 +8,6 @@ CREATE TABLE `phpshop_modules_visualcart_log` (
   `content` varchar(64) default '',
   `num` TINYINT(11) default '0',
   `product_id` INT(11) default '0',
+  `price` float(11) default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;

@@ -2,6 +2,7 @@
 $_classPath = "../phpshop/";
 include($_classPath . "class/obj.class.php");
 PHPShopObj::loadClass("base");
+PHPShopObj::loadClass("file");
 $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", false);
 
 // Редирект на Windows-1251 верссию файла
@@ -90,11 +91,7 @@ if (!empty($_POST['version_update'])) {
 
     if (!empty($content)) {
 
-        $sqlArray = explode(";\n", $content);
-        if (count($sqlArray) < 5) {
-            $sqlArray = explode(";\r\n", $content);
-        }
-        array_pop($sqlArray);
+        $sqlArray = PHPShopFile::sqlStringToArray($content);
         while (list($key, $val) = each($sqlArray))
             if (!mysqli_query($link_db, $val))
                 $result .= '<div>' . mysqli_error($link_db) . '</div>';
@@ -145,12 +142,7 @@ elseif (!empty($_POST['password'])) {
             $content = str_replace("admin@localhost", $_POST['mail'], $content);
         }
 
-
-        $sqlArray = explode(";\n", $content);
-        if (count($sqlArray) < 5) {
-            $sqlArray = explode(";\r\n", $content);
-        }
-        array_pop($sqlArray);
+        $sqlArray = PHPShopFile::sqlStringToArray($content);
         $result = null;
         foreach ($sqlArray as $val) {
             if (!mysqli_query($link_db, $val))
@@ -247,6 +239,7 @@ elseif (!empty($_POST['password'])) {
         <link rel="apple-touch-icon" href="/apple-touch-icon.png">
         <link rel="icon" href="/favicon.ico"> 
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+		<link rel="icon" href="/apple-touch-icon.png" type="image/x-icon">
         <style>
             html {
                 position: relative;
@@ -750,6 +743,10 @@ dbase="mybase";         # имя базы</pre>
                                         var password = $(this).attr('data-password');
                                         $('input[type=password]').val(password);
                                         $('#password-message').html('<div class="alert alert-success" role="alert">Ваш пароль: <b>' + password + '</b></div>');
+                                    });
+
+									$('#install').on('hidden.bs.modal', function (e) {
+                                       location.reload();
                                     });
 
                                     // Подсказка

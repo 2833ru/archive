@@ -508,7 +508,11 @@ class PHPShopOrderFunction extends PHPShopObj {
             PHPShopParser::set('company', $PHPShopSystem->getParam('name'));
             PHPShopParser::set('manager', $this->getSerilizeParam('status.maneger'));
             PHPShopParser::set('tracking', $this->getParam('tracking'));
-            PHPShopParser::set('account', '//' . $_SERVER['SERVER_NAME'] . 'phpshop/forms/account/forma.html?orderId=' . $this->objID . '&tip=2&datas=' . $this->getParam('datas'));
+            $protocol = 'http://';
+            if(!empty($_SERVER['HTTPS']) && 'off' !== strtolower($_SERVER['HTTPS'])) {
+                $protocol = 'https://';
+            }
+            PHPShopParser::set('account', $protocol . $_SERVER['SERVER_NAME'] . 'phpshop/forms/account/forma.html?orderId=' . $this->objID . '&tip=2&datas=' . $this->getParam('datas'));
             PHPShopParser::set('bonus', $this->getParam('bonus_plus'));
 
             $title = __('Cтатус заказа') . ' ' . $this->getParam('uid') . ' ' . __('поменялся на') . ' ' .$this->getStatus();
@@ -560,7 +564,7 @@ PHPShopObj::loadClass('array');
  * Массив статусов заказов
  * Упрощенный доступ к статусам заказов
  * @author PHPShop Software
- * @version 1.1
+ * @version 1.2
  * @package PHPShopObj
  */
 class PHPShopOrderStatusArray extends PHPShopArray {
@@ -570,7 +574,8 @@ class PHPShopOrderStatusArray extends PHPShopArray {
      */
     function __construct() {
         $this->objBase = $GLOBALS['SysValue']['base']['order_status'];
-        parent::__construct('id', 'name', 'color', 'sklad_action', 'cumulative_action', 'mail_action', 'mail_message', 'sms_action');
+        $this->order = array('order' => 'num');
+        parent::__construct('id', 'name', 'color', 'sklad_action', 'cumulative_action', 'mail_action', 'mail_message', 'sms_action','num');
     }
 
 }

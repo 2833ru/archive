@@ -1311,23 +1311,26 @@ $(document).ready(function () {
     $('div:contains("- PHPShop")').parents('.visible-lg').css('position', 'absolute');
     $('div:contains("- PHPShop")').parents('.visible-lg').css('bottom', '0');
 
-// reCAPTCHA
-    $('[data-toggle="modal"]').on('click', function () {
+    // reCAPTCHA
+    $('body').on('click', '[data-toggle="modal"]', function () {
+        var oneclick = $($(this).attr('data-target')).find('#recaptcha_oneclick').get(0);
+        var returncall = $($(this).attr('data-target')).find('#recaptcha_returncall').get(0);
+
         $.getScript("https://www.google.com/recaptcha/api.js?render=explicit")
-                .done(function () {
-                    if (typeof grecaptcha !== "undefined") {
+            .done(function () {
+                if (typeof grecaptcha !== "undefined") {
 
-                        grecaptcha.ready(function () {
+                    grecaptcha.ready(function () {
+                        try {
+                            if (returncall)
+                                grecaptcha.render(returncall, {"sitekey": $(returncall).attr('data-key'), "size": $(returncall).attr('data-size')});
 
-                            if ($("#recaptcha_returncall").length)
-                                grecaptcha.render("recaptcha_returncall", {"sitekey": $("#recaptcha_returncall").attr('data-key'), "size": $("#recaptcha_returncall").attr('data-size')});
-
-                            if ($("#recaptcha_oneclick").length)
-                                grecaptcha.render("recaptcha_oneclick", {"sitekey": $("#recaptcha_oneclick").attr('data-key'), "size": $("#recaptcha_oneclick").attr('data-size')});
-
-                        });
-                    }
-                });
+                            if (oneclick)
+                                grecaptcha.render(oneclick, {"sitekey": $(oneclick).attr('data-key'), "size": $(oneclick).attr('data-size')});
+                        } catch (e) {}
+                    });
+                }
+            });
     });
 
     if ($("#recaptcha_default").length) {

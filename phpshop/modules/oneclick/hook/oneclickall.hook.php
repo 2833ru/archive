@@ -38,6 +38,11 @@ class AddToTemplateOneclickElementAll extends PHPShopElements {
         if ($this->option['display'] == 0)
             return true;
 
+        $PHPShopRecaptchaElement = new PHPShopRecaptchaElement();
+
+        if($this->option['captcha'] == 1)
+            $this->set('oneclick_captcha', $PHPShopRecaptchaElement->captcha('oneclick'));
+
         $forma = PHPShopParser::file($GLOBALS['SysValue']['templates']['oneclick']['oneclick_forma'], true, false, true);
         $this->set('leftMenuContent', $forma);
         $this->set('leftMenuName', 'Быстрый заказ');
@@ -74,8 +79,12 @@ class AddToTemplateOneclickElementAll extends PHPShopElements {
 
 function product_grid_mod_oneclick_hook($obj, $row) {
     $AddToTemplateOneclickElement = new AddToTemplateOneclickElementAll();
-    $AddToTemplateOneclickElement->display($row);
-    return true;
+
+    if((int) $AddToTemplateOneclickElement->option['only_available'] === 1 && (int) $row['sklad'] === 1) {
+        $AddToTemplateOneclickElement->set('oneclick', '');
+    } else {
+        $AddToTemplateOneclickElement->display();
+    }
 }
 
 $addHandler = array

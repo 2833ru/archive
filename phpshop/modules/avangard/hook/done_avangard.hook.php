@@ -20,12 +20,17 @@ function send_avangard_hook($obj, $value, $rout) {
             $Avangard->setAmount($obj->total * 100);
             $Avangard->setOrderNumber($value['ouid']);
             $payment_form = $Avangard->getForm();
-
+            
             $Avangard->log($payment_form, $Avangard->getOrderNumber(), 'Форма подготовлена для отправки', 'Регистрация заказа');
             $Avangard->orderState($Avangard->getOrderNumber(), Avangard::LOG_STATUS_NEW_ORDER);
 
             $obj->set('payment_forma', PHPShopText::form($payment_form, 'avangardpay', 'post', $Avangard->getApiURL(), '_blank'));
-
+            
+            if($Avangard->option['qr'] == '1'){
+                $payment_form_qr = $Avangard->getForm(true);
+                $obj->set('payment_forma_qr', PHPShopText::form($payment_form_qr, 'avangardpay', 'post', $Avangard->getApiURL(), '_blank'));
+            }
+            
             $form = ParseTemplateReturn($GLOBALS['SysValue']['templates']['avangard']['avangard_payment_form'], true);
             
         } else {

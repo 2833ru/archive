@@ -184,8 +184,10 @@ function actionStart() {
     }
 
     // Сумма заказа
-    if (empty($data['is_folder']))
+    if (empty($data['is_folder'])) {
         $Tab1 .= $PHPShopGUI->setField("Блокировка при стоимости более", $PHPShopGUI->setInputText(null, "sum_max_new", $data['sum_max'], 150, $PHPShopSystem->getDefaultValutaCode()));
+        $Tab1 .= $PHPShopGUI->setField("Блокировка при стоимости менее", $PHPShopGUI->setInputText(null, "sum_min_new", $data['sum_min'], 150, $PHPShopSystem->getDefaultValutaCode()));
+    }
 
     // Цены
     if (!$catalog)

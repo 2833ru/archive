@@ -87,7 +87,7 @@ function send_to_order_mod_robokassa_hook($obj, $value, $rout) {
             // Данные в лог
             $PHPShopRobokassaArray->log(array('action' => 'done', 'MrchLogin' => trim($option['merchant_login']), 'sum' => $total, 'Email' =>$_POST['mail'], 'orderNumber' => $inv_id, 'Receipt' => $Receipt), $inv_id, 'форма готова к отправке', 'данные формы для отправки на оплату');
 
-            $obj->set('payment_forma', PHPShopText::form($payment_forma, 'pay', 'post', 'https://merchant.roboxchange.com/Index.aspx'));
+            $obj->set('payment_forma', PHPShopText::form($payment_forma, 'pay', 'post', 'https://auth.robokassa.ru/Merchant/Index.aspx'));
             $obj->set('payment_info', $option['title_end']);
             $forma = ParseTemplateReturn($GLOBALS['SysValue']['templates']['robokassa']['robokassa_payment_forma'], true);
         } else {

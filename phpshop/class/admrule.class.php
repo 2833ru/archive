@@ -42,7 +42,8 @@ class PHPShopAdminRule {
             'metrica'=>'report',
             'support'=>'report',
             'promotions'=>'system',
-            'citylist'=>'delivery'
+            'citylist'=>'delivery',
+            'lead'=>'order'
         );
     }
 

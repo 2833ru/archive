@@ -94,13 +94,19 @@ function actionStart() {
 
     $citiesArr = $NovaPoshta->getCitiesArr($data['default_city']);
 
+    if (empty($data['pvz_ref']))
+        $buttonText = 'Выбрать ПВЗ';
+    else
+        $buttonText = 'Изменить ПВЗ';
+
     $Tab1 = $PHPShopGUI->setField('API Ключ', $PHPShopGUI->setInputText(false, 'api_key_new', $data['api_key'], 300));
     $Tab1.= $PHPShopGUI->setField('API Ключ Google Map', $PHPShopGUI->setInputText(false, 'google_api_new', $data['google_api'], 300));
 
     if(empty($data['api_key'])) {
         $Tab1 .= '<div class="form-group form-group-sm "><div class="col-sm-12 text-info">'.__('Для доступа к дополнительным настройкам, введите "API Ключ" и нажмите "Сохранить"').'.</div></div>';
     } else {
-        $Tab1.= $PHPShopGUI->setField('Город на карте по умолчанию', $PHPShopGUI->setSelect('default_city_new', $citiesArr, 300, null, false, true, false, 1, false));
+        $Tab1.= $PHPShopGUI->setField('Город на карте по умолчанию', $PHPShopGUI->setSelect('default_city_new', $citiesArr, 300, null, false, true));
+        $Tab1.= $PHPShopGUI->setField('Отправка с отделения', $PHPShopGUI->setInputText(false, 'pvz_ref_new', $data['pvz_ref'], 300, '<a id="link-activate-novaposhta" onclick="novaPoshtaGetPVZ()" href="#">' . __($buttonText) . '</a>'));
         $Tab1.= $PHPShopGUI->setField('Отправитель', $PHPShopGUI->setSelect('sender_new', $senderArr, 300, null, false, false, false, 1, false));
         if(empty($data['sender'])) {
             $Tab1 .= '<div class="form-group form-group-sm "><div class="col-sm-12 text-info">'.__('Выберите Отправителя и нажмите "Сохранить" для доступа к адресам и контактным лицам Отправителя').'.</div></div>';
@@ -113,6 +119,26 @@ function actionStart() {
     $Tab1.= $PHPShopGUI->setField('Статус для отправки', $PHPShopGUI->setSelect('status_new', $status, 300));
     $Tab1.= $PHPShopGUI->setField('Доставка самовывоз', $PHPShopGUI->setSelect('delivery_id_new', $delivery, 300, null, false, false, false, 1, false));
     $Tab1 .= $PHPShopGUI->setField('Вес по умолчанию, гр.', '<input class="form-control input-sm " onkeypress="novaposhtaValidate(event)" type="number" step="1" min="1" value="' . $data['weight'] . '" name="weight_new" style="width:300px; ">');
+
+    $Tab1 .= '
+        <div class="modal fade bs-example-modal" id="novaposhtaModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">x</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">' . __('Выбрать отделение') . '</h4>
+            </div>
+            <div class="modal-body" style="width:100%;">
+               ' .
+    $PHPShopGUI->setField('Город', $PHPShopGUI->setSelect('np-pvz-city', $citiesArr, 300, null, false, true))  .
+    $PHPShopGUI->setField('Отделение', $PHPShopGUI->setSelect('np-pvz', [], 300, null, false, true)) . '
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="novaposhta-close">' . __('Выбрать') . '</button>
+            </div>
+        </div>
+    </div>
+</div>';
 
     if(!empty($data['api_key'])) {
         $checkWh = $NovaPoshta->whBaseIsNotEmpty();
@@ -149,7 +175,8 @@ function actionStart() {
         <li>Выбрать статус для передачи заказа в личный кабинет «Нова пошта».</li>
         <li>Заполнить вес по умолчанию. Будет использован, если не задан в параметрах товара.</li>
         <li>Выбрать Отправителя, нажать "Сохранить".</li>
-        <li>Выбрать Адрес отправителя и Контактное лицо отправителя.</li>
+        <li>Выбрать отделение в настройке "Отправка с отделения" или Адрес отправителя.</li>
+        <li>Выбрать Контактное лицо отправителя.</li>
         <li>Настроить автоматическое обновление справочника населенных пунктов. Добавить задачу в модуле "Задачи", исполняемый файл phpshop/modules/novaposhta/cron/city.php</li>
         <li>Настроить автоматическое обновление справочника отделений. Добавить задачу в модуле "Задачи", исполняемый файл phpshop/modules/novaposhta/cron/warehouse.php</li>
         </ol>

@@ -79,7 +79,7 @@ class Avangard
      *
      * @return string
      */
-    public function getForm()
+    public function getForm($qr = false)
     {
         $payment_forma = PHPShopText::setInput('hidden', 'shop_id', $this->option['shop_id'], false);
         $payment_forma .= PHPShopText::setInput('hidden', 'amount', $this->amount, false);
@@ -92,8 +92,13 @@ class Avangard
         $payment_forma .= PHPShopText::setInput('hidden', 'signature', $this->getSignature(), false);
         $payment_forma .= '<p>' . $this->getOffer() . '</p>';
 
-        $payment_forma .=PHPShopText::setInput('submit', 'send', $this->option['title_payment'], $float = "left;", 250);
-
+        if($qr){
+            $payment_forma .= PHPShopText::setInput('hidden', 'is_qr', 1, false);
+            $payment_forma .=PHPShopText::setInput('submit', 'send', $this->option['title_payment'] .' по QR', $float = "left;", 250);
+        } else {
+            $payment_forma .=PHPShopText::setInput('submit', 'send', $this->option['title_payment'], $float = "left;", 250);
+        }
+        
         return $payment_forma;
     }
 

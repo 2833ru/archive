@@ -377,9 +377,10 @@ if (empty($adm_title)) {
                                 </ul>
                             </li>
 
-                            <li class="dropdown <?php echo $menu_active_slider . $menu_active_links . $menu_active_banner . $menu_active_opros . $menu_active_metrica_traffic . $menu_active_metrica_sources_summary . $menu_active_metrica_sources_social . $menu_active_metrica_sources_sites . $menu_active_metrica_search_phrases . $menu_active_metrica_search_engines . $menu_active_metrica . $menu_active_promotions; ?>" >
+                            <li class="dropdown <?php echo $menu_active_slider . $menu_active_links . $menu_active_banner . $menu_active_opros . $menu_active_metrica_traffic . $menu_active_metrica_sources_summary . $menu_active_metrica_sources_social . $menu_active_metrica_sources_sites . $menu_active_metrica_search_phrases . $menu_active_metrica_search_engines . $menu_active_metrica . $menu_active_promotions . $menu_active_lead_kanban; ?>" >
                                 <a href="#" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-expanded="false"><?php _e('Маркетинг'); ?> <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
+                                     <li><a href="?path=lead.kanban"><span><?php _e('Канбан доска'); ?></span><span class="dropdown-header"><?php _e('Управление заказами и задачами'); ?></span></a></li>
                                     <li><a href="?path=promotions"><span><?php _e('Промоакции'); ?></span><span class="dropdown-header"><?php _e('Промоакции и скидки'); ?></span></a></li>
                                     <li><a href="?path=slider"><span><?php _e('Слайдер'); ?></span><span class="dropdown-header"><?php _e('Рекламный слайдер на главной странице'); ?></span></a></li>
                                     <li><a href="?path=news.sendmail"><?php _e('Рассылки'); ?><span class="dropdown-header"><?php _e('Создание email рассылок пользователям'); ?></span></a></li>
@@ -429,7 +430,7 @@ if (empty($adm_title)) {
                             </div>
                         </form>
                         <?php
-// notification
+                        // notification
                         $i_notif = 0;
                         if (is_array($notificationList))
                             foreach ($notificationList as $notification) {
@@ -443,7 +444,7 @@ if (empty($adm_title)) {
                                 $i_notif++;
                             }
 
-// update
+                         // update
                         if (!empty($_SESSION['update_check']))
                             echo '<a class="navbar-btn btn btn-sm btn-info navbar-right hidden-xs" href="?path=update" data-toggle="tooltip" data-placement="bottom" title="' . __('Доступно обновление') . '">Update <span class="badge">' . intval($_SESSION['update_check']) . '</span></a>';
 

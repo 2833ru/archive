@@ -2,7 +2,7 @@
     @breadCrumbs@
 </ol>
 <div class="page-header ">
-    <h2>@pageTitle@</h2>
+    <h1>@pageTitle@</h1>
 </div>
 @catContent@
 <div class="@php if(!isset($GLOBALS['SysValue']['other']['isPage'])) echo 'grid';  php@">

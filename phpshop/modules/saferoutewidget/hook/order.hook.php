@@ -14,6 +14,38 @@ function order_saferoutewidget_hook($obj, $row, $rout) {
         $PHPShopOrder = new PHPShopOrderFunction();
         $discount = $PHPShopOrder->ChekDiscount($PHPShopCart->getSum());
 
+        $userData = [
+            'email' => '',
+            'fio' => '',
+            'address' => []
+        ];
+        if(isset($_SESSION['UsersId']) && (int) $_SESSION['UsersId'] > 0) {
+            $user = new PHPShopUser((int) $_SESSION['UsersId']);
+            $userData['email'] = $user->getParam('mail');
+            $userData['fio'] = PHPShopString::win_utf8($user->getName());
+            $addresses = unserialize($user->objRow['data_adres']);
+
+            if(is_array($addresses)) {
+                if(isset($addresses['main']) && is_array($addresses['list'][$addresses['main']])) {
+                    $userData['address'] = [
+                        'phone'  => trim(str_replace(['(', ')', '-', '+', '&#43;'], '', $addresses['list'][$addresses['main']]['tel_new'])),
+                        'city'   => PHPShopString::win_utf8($addresses['list'][$addresses['main']]['city_new']),
+                        'street' => PHPShopString::win_utf8($addresses['list'][$addresses['main']]['street_new']),
+                        'house'  => PHPShopString::win_utf8($addresses['list'][$addresses['main']]['house_new']),
+                        'flat'   => PHPShopString::win_utf8($addresses['list'][$addresses['main']]['flat_new'])
+                    ];
+                } elseif(is_array($addresses['list'][0])) {
+                    $userData['address'] = [
+                        'phone'  => trim(str_replace(['(', ')', '-', '+', '&#43;'], '', $addresses['list'][0]['tel_new'])),
+                        'city'   => PHPShopString::win_utf8($addresses['list'][0]['city_new']),
+                        'street' => PHPShopString::win_utf8($addresses['list'][0]['street_new']),
+                        'house'  => PHPShopString::win_utf8($addresses['list'][0]['house_new']),
+                        'flat'   => PHPShopString::win_utf8($addresses['list'][0]['flat_new'])
+                    ];
+                }
+            }
+        }
+
         if (is_array($cart))
             foreach ($cart as $val) {
                 if((float) $discount > 0) {
@@ -36,6 +68,7 @@ function order_saferoutewidget_hook($obj, $row, $rout) {
             <script src="phpshop/modules/saferoutewidget/js/saferoutewidget.js"></script>
             
         <input class="cartListJson" type="hidden" value=\'' . json_encode($list) . '\'/>
+        <input class="userDataJson" type="hidden" value=\'' . json_encode($userData) . '\'/>
         <input id="ddweight" type="hidden" value="' . floatval($weight/1000) .'">
             
         <!-- Модальное окно saferoutewidget -->

@@ -1,299 +1,309 @@
 <?php
 
-/**
- * Вывод городов доставки
- * @package PHPShopCoreFunction
- * @param int $deliveryID ИД доставки
- * @return string
- */
-function delivery($obj, $deliveryID, $sum = 0) {
-    global $SysValue, $link_db;
+class PHPShopOrderDelivery {
 
-    $pred = $br = $my = $alldone = $waytodo = $disp = null;
+    private $orm;
+    private $isAjaxRequest = false;
+    private $allowedDeliveries = 0;
+    private $deliverySelected = false;
 
-    if(is_null($GLOBALS['SysValue']['templates']['delivery']) or
-        !is_file(dirname(dirname(__DIR__)) . '/templates/' . $_SESSION['skin'] . '/' . $GLOBALS['SysValue']['templates']['delivery'])) {
-        $template = dirname(dirname(__DIR__)) . '/lib/templates/order/delivery.tpl';
-    } else {
-        $template = dirname(dirname(__DIR__)) . '/templates/' . $_SESSION['skin'] . '/' . $GLOBALS['SysValue']['templates']['delivery'];
+    public function __construct()
+    {
+        if($_REQUEST['type'] === 'json') {
+            $this->isAjaxRequest = true;
+        }
+
+        $this->orm = new PHPShopOrm($GLOBALS['SysValue']['base']['delivery']);
     }
 
-    // Мультибаза
-    if (defined("HostID")) {
-        $servers= " and servers REGEXP 'i" . HostID . "i'";
-    } elseif (defined("HostMain"))
-        $servers= " and (servers = '' or servers REGEXP 'i1000i')";
-    else $servers = null;
+    // Вывод всех способов доставки.
+    public function getDeliveryMethods()
+    {
+        $html = '';
+        $where = [
+            'enabled' => '="1"',
+            'PID' => '="0"' . $this->servers()
+        ];
 
-    if (empty($SysValue['nav'])) {
-        $engineinc = 0;
-        $pathTemplate = $GLOBALS['SysValue']['dir']['dir'] . chr(47) . $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'];
-    } else {
-        $engineinc = 1;
-        $pathTemplate = $GLOBALS['SysValue']['dir']['dir'] . $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'];
+        foreach ($this->orm->getList(['*'], $where, ['order' => 'num,city']) as $delivery) {
+            $html .= $this->getOneDelivery($delivery);
+        }
+
+        // Если нет доступных доставок
+        if($this->allowedDeliveries === 0) {
+            PHPShopParser::set('deliveryId', 0);
+            PHPShopParser::set('deliveryTitle', __('[Доставка по умолчанию]'));
+
+            $html .= ParseTemplateReturn($this->getTemplate(), true);
+            $html .= '<INPUT TYPE="HIDDEN" id="makeyourchoise" VALUE="DONE">';
+        }
+        if($this->allowedDeliveries === 1) {
+            $html .= '<IMG onload="UpdateDeliveryJq(' . (int) $delivery['id'] . ',this);" SRC="' . $this->getTemplateAsset('images/shop/flag_green.gif') . '"  style="display:none;">';
+        }
+
+        return $html;
     }
 
-    $table = $SysValue['base']['delivery'];
+    // Вывод способов доставки, когда пользователь выбрал.
+    public function getDeliveryMethodsById($id)
+    {
+        $html = '';
+        $selectedDelivery = $this->orm->getOne(['*'], ['id' => sprintf('="%s"', $id)]);
 
-    if ($deliveryID > 0) {
-        $sql = "select * from " . $table . " where (enabled='1' and id='" . $deliveryID . "') ".$servers." order by num,city";
-        $result = mysqli_query($link_db, $sql);
-        $row = mysqli_fetch_array($result);
-        $isfolder = $row['is_folder'];
-        $comment = $row['comment'];
-        $PID = $row['PID'];
-
-        if ($isfolder) { //Если прислали папку, то варианты будут потомки папки
-            $sqlvariants = "select * from " . $table . " where (enabled='1' and PID='" . $deliveryID . "') ".$servers." order by num,city";
-            $PIDpr = $deliveryID; //Начальный предок, для приглашения
-            $stop = 0;
+        $where = ['enabled' => '="1"' . $this->servers()];
+        if ((int) $selectedDelivery['is_folder'] === 1) { //Если прислали папку, то варианты будут потомки папки
+            $where['PID'] = sprintf('="%s"', $id);
+            $PIDpr = $id;
         } else { //Если прислали вариант, то варианты будут соседи
-            $sqlvariants = "select * from " . $table . " where (enabled='1' and PID='" . $row['PID'] . "') ".$servers." order by num,city";
-            $PIDpr = $row['PID']; //Начальный предок, для приглашения
-            $stop = 1;
+            $where['PID'] = sprintf('="%s"', $selectedDelivery['PID']);
+            $PIDpr = $selectedDelivery['PID'];
         }
-    } else { //Если не прислали, значит стартовый набор все корневые доставки
-        $stop = 0;
-        $isfolder = 1; //Если не прислали ID, значит прислали 0 идентификатор, который является папкой корневых
-        $PID = false;
-        $deliveryID = 0; //Присваиваем нулевой идентификатор, если ничего не прислали
-        $sqlvariants = "select * from " . $table . " where (enabled='1' and PID='0') ".$servers." order by num,city";
+
+        // Кнопка вернуться назад.
+        $html .= $this->getBackBtn((int) $PIDpr);
+
+        foreach ($this->orm->getList(['*'], $where, ['order' => 'num,city']) as $delivery) {
+            $html .= $this->getOneDelivery($delivery, (int) $selectedDelivery['id'], (int) $selectedDelivery['is_folder'] === 1);
+        }
+
+        if($this->deliverySelected) {
+            $html .= '<INPUT TYPE="HIDDEN" id="makeyourchoise" VALUE="DONE">';
+        }
+
+        return $html;
     }
-    
-    $resultvariants = mysqli_query($link_db, $sqlvariants); // Принимаем варианты
 
-    if ($PID !== false) { //Если есть предки, формируем навигацию
-        $pred = '';
-        $num = 0;
-        while ($PIDpr != 0) {//Делаем пока не дойдем до самого верхнего уровня
-            $num++;
+    public function getAddressFields($deliveryId)
+    {
+        $delivery = $this->orm->getOne(['data_fields', 'city_select', 'comment', 'is_folder'], ['id' => sprintf('="%s"', $deliveryId)]);
+        $mass = unserialize($delivery['data_fields']);
 
-            //Получаем первого предка
-            $sqlpr = "select * from " . $SysValue['base']['delivery'] . " where (enabled='1' and id='" . $PIDpr . "') ".$servers." order by num,city";
-            $resultpr = mysqli_query($link_db, $sqlpr);
-            $rowpr = mysqli_fetch_array($resultpr);
+        if((int) $delivery['is_folder'] === 1 && !is_array($mass)) {
+            return __("Выберите доставку", false);
+        }
 
-            $PIDpr = $rowpr['PID']; //Меняем идентификатор предка. На уровень выше
+        if (!is_array($mass))
+            return __("Для данного типа доставки не требуется дополнительных данных", false);
 
-            $city = $rowpr['city'];
+        $num = $mass['num'];
+        asort($num);
+        $enabled = $mass['enabled'];
 
-            $predok = $rowpr['city'] . ' > ' . $predok; //Довесок, который будем дописывать каждому варианту
-
-            //Получаем количество соседей у вышестоящего.
-            $sqlprr = "select * from " . $table . " where (enabled='1' and PID='" . $PIDpr . "') ".$servers." order by num,city";
-            $resultprr = mysqli_query($link_db, $sqlprr);
-            $ii = 0;
-            while ($rowsos = mysqli_fetch_array($resultprr)) {
-                $sqlsosed = "select * from " . $table . " where (enabled='1' and PID='" . $rowsos['id'] . "') ".$servers." order by num,city";
-                $resultsosed = mysqli_query($link_db, $sqlsosed);
-                $sosed = mysqli_num_rows($resultsosed);
-                $sosfolder = $rowsos['is_folder'];
-                if ($sosfolder) {
-                    if ($sosed) {
-                        $ii++;
-                    }
-                } else {
-                    $ii++;
+        if ($delivery['city_select']) {
+            $disp = "<div id='citylist'>";
+            // Cтрана
+            if ($delivery['city_select'] == 2) {
+                $disabled = "disabled";
+                $countryOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['citylist_country']);
+                foreach ($countryOrm->getList(['country_id', 'name'], false, ['order' => 'name']) as $country) {
+                    $disOpt .= "<option value='" . $country['name'] . "' for='" . $country['country_id'] . "'>" . $country['name'] . "</option>";
                 }
+
+                $class = 'citylist form-control';
+                $star = null;
+                if ($enabled['country']['req']) {
+                    $class .= " req";
+                    $star = '<span class="required">*</span>';
+                }
+                $disp .= "$star " . $enabled['country']['name'] . "<p> <select name='country_new' class='$class'><option value='' for='0'>-----------</option>$disOpt</select></p>";
             }
 
-            //Если ((есть соседи, т.е. на верхнем уровне можно выбрать что-то другое)
-            // И (уровень доставки больше первого)), то показываем приглашение перейти на уровень выше
-            if (($ii > 1) && ($num > 0)) { //Показывать кнопку "снять" если больше 1 вариант выбора у верхнего И (либо есть потомки либо уровень доставки больше первого)
-                $pred = __('Выбрано') . ': ' . $city . ' <A href="javascript:UpdateDeliveryJq(\'' . $PIDpr . '\',this)"><img src="' . $pathTemplate . '/images/shop/check_green.svg" alt="" border="0" align="absmiddle">&nbsp;' . __('Выбрать другой способ доставки') . '</A> <BR> ' . $pred;
+            // регион
+            $rfId = 3159; // ID РФ
+            $disOpt = "";
+            $regionOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['citylist_region']);
+            $regions = $regionOrm->getList(['region_id', 'name'], ['country_id' => sprintf('="%s"', $rfId)], ['order' => 'name']);
+            foreach ($regions as $region) {
+                $disOpt .= "<option value='" . $region['name'] . "' for='" . $region['region_id'] . "'>" . $region['name'] . "</option>";
+            }
+            $class = 'citylist form-control';
+            $star = null;
+            if ($enabled['state']['req']) {
+                $class .= " req";
+                $star = '<span class="required">*</span>';
+            }
+            $disp .= "$star " . $enabled['state']['name'] . "<p><select name='state_new' class='$class' $disabled><option value='' for='0'>-----------</option>$disOpt</select></p>";
+
+            //Город
+            $class = 'citylist form-control';
+            $star = null;
+            if ($enabled['city']['req']) {
+                $class .= " req";
+                $star = '<span class="required">*</span>';
+            }
+            $disp .= "$star " . $enabled['city']['name'] . "<p> <select name='city_new' class='$class' $disabled><option value='' for='0'>-----------</option></select></p></div>";
+        }
+
+        foreach ($num as $key => $value) {
+            if ($delivery['city_select'] AND ($key == "state" OR $key == "city" OR $key == "country"))
+                continue;
+            $class = 'form-control';
+            $required = null;
+            if ($enabled[$key]['enabled'] == 1) {
+                if ($enabled[$key]['req']) {
+                    $class .= ' req';
+                    $required = 'required';
+                }
+                $disp .= '<p><input type="text" class="' . $class . '" value="" name="' . $key . '_new" ' .  $required . ' placeholder="' . $enabled[$key]['name'] . '"></p>';
             }
         }
-        if (strlen($pred)) {
-            $br = '<BR>';
-        } else {
-            $br = '';
-        } //если хоть одно приглашение есть, то Добавление переноса строки,
-    } //Если есть предки, формируем навигацию
 
+        if(!empty($delivery['comment'])) {
+            $disp = '<div class="well well-sm delivery-comment">'. $delivery['comment'] .'</div>' . $disp;
+        }
 
-    $varamount = 0;
-    $chkdone = 0; //По дефолту умолчательная доставка не указана
-    while ($row = mysqli_fetch_array($resultvariants)) {
+        return $disp;
+    }
 
+    private function checkDeliveryMethodAllow($delivery)
+    {
+        $PHPShopCart = new PHPShopCart();
+        $PHPShopSystem = new PHPShopSystem();
+
+        if ((int) $delivery['sum_max'] > 0 && (int) $delivery['sum_max'] <= $PHPShopCart->getSum()) {
+            throw new \Exception(__('Превышена максимальная сумма заказа'));
+        }
+
+        if ((int) $delivery['sum_min'] > 0 && (int) $delivery['sum_min'] >= $PHPShopCart->getSum()) {
+            throw new \Exception(
+                sprintf(__('Для данного способа доставки сумма в корзине должна быть больше: %s %s'), (int) $delivery['sum_min'], $PHPShopSystem->getDefaultValutaCode(true))
+            );
+        }
+    }
+
+    private function servers()
+    {
+        if (defined("HostID")) {
+            $servers = " and servers REGEXP 'i" . HostID . "i'";
+        } elseif (defined("HostMain"))
+            $servers = " and (servers = '' or servers REGEXP 'i1000i')";
+
+        return $servers;
+    }
+
+    private function clearVariables()
+    {
         PHPShopParser::set('deliveryActive', '');
         PHPShopParser::set('deliveryChecked', '');
         PHPShopParser::set('deliveryIcon', '');
-        PHPShopParser::set('deliveryMaxSum', '');
+        PHPShopParser::set('deliveryDisabled', '');
+        PHPShopParser::set('deliveryDisabledReason', '');
+    }
 
+    private function getOneDelivery($delivery, $selectedId = null, $isFolderSelected = false)
+    {
+        $html = '';
+        $this->clearVariables();
 
-        if (!empty($deliveryID)) {//Если присылали идентификатор
-            if ($row['id'] == $deliveryID) {
-                PHPShopParser::set('deliveryActive', 'active');
-                PHPShopParser::set('deliveryChecked', 'checked');
-            } else {
-                if ($isfolder) { //Если присланный идентификатор папка и работает стартовый файл
-                    if ($row['flag'] == 1) { //На случай доставки по умолчанию
-                        PHPShopParser::set('deliveryActive', 'active');
-                        PHPShopParser::set('deliveryChecked', 'checked');
-                        $chkdone = $row['id']; //Если выводится умолчательная доставка, то пометить что выбор завершен
-                    }
-                }
-            }
-        } elseif ($engineinc) {//Если НЕ присылали идентификатор, но производится стартовый запуск
-            if ($row['flag'] == 1) { //На случай доставки по умолчанию
-                PHPShopParser::set('deliveryActive', 'active');
-                PHPShopParser::set('deliveryChecked', 'checked');
-                $chkdone = $row['id']; //Если выводится умолчательная доставка, то пометить что выбор завершен
-            }
-        }
-
-
-        if (((int) $deliveryID > 0 && (int) $row['id'] === $deliveryID) || ($isfolder && (int) $row['flag'] === 1)) {
+        if ($this->isActiveDelivery($delivery, $selectedId)) {
             PHPShopParser::set('deliveryActive', 'active');
             PHPShopParser::set('deliveryChecked', 'checked');
+            if(is_null($selectedId)) {
+                $html .= '<IMG onload="UpdateDeliveryJq(' . (int) $delivery['id'] . ',this);" SRC="' . $this->getTemplateAsset('images/shop/flag_green.gif') . '"  style="display:none;">';
+            } else {
+                if(!$isFolderSelected) { // Завершаем выбор только если выбрана НЕ папка
+                    $this->deliverySelected = true;
+                } else {
+                    $html .= '<IMG onload="UpdateDeliveryJq(' . (int) $delivery['id'] . ',this);" SRC="' . $this->getTemplateAsset('images/shop/flag_green.gif') . '"  style="display:none;">';
+                }
+            }
         }
-        if($isfolder && (int) $row['flag'] === 1) {
-          //  $chkdone = $row['id']; //Если выводится доставка по умолчанию, то пометить что выбор завершен
-        }
 
-        // Получаем количество соседей у вышестоящего.
-        $sqlpot = "select * from " . $table . " where (enabled='1' and PID='" . $row['id'] . "') ".$servers." order by num,city";
-        $resultpot = mysqli_query($link_db, $sqlpot);
-        $pot = mysqli_num_rows($resultpot);
+        if(empty($delivery['is_folder']) || $this->getCountSubDeliveries((int) $delivery['id']) > 0) {
+            PHPShopParser::set('deliveryId', $delivery['id']);
+            PHPShopParser::set('deliveryPayment', $delivery['payment']);
+            PHPShopParser::set('deliveryIcon', $delivery['icon']);
+            PHPShopParser::set('deliveryTitle', $delivery['city']);
 
-        if ((empty($row['is_folder'])) || ($pot)) {
-
-            PHPShopParser::set('deliveryId', $row['id']);
-            PHPShopParser::set('deliveryPayment', $row['payment']);
-            PHPShopParser::set('deliveryIcon', $row['icon']);
-            PHPShopParser::set('deliveryTitle', $row['city']);
-
-            // Проверка максимальной суммы
-            if (!empty($row['sum_max']) and !empty($sum) and $row['sum_max'] <= $sum) {
-                PHPShopParser::set('deliveryMaxSum',  __('Превышена максимальная сумма заказа'));
+            try {
+                $this->checkDeliveryMethodAllow($delivery);
+                $this->allowedDeliveries++;
+            } catch (\Exception $exception) {
+                PHPShopParser::set('deliveryDisabled', 'disabled="disabled"');
+                PHPShopParser::set('deliveryDisabledReason', $exception->getMessage());
             }
 
-            $varamount++;
-            $curid = $row['id'];
-
-            $disp .= ParseTemplateReturn($template, true);
+            $html .= ParseTemplateReturn($this->getTemplate(), true);
         }
+
+        return $html;
     }
 
-    $query = "select data_fields,city_select from " . $SysValue['base']['delivery'] . " where id=$deliveryID";
-    $row = mysqli_fetch_array(mysqli_query($link_db, $query));
-    $adresDisp_save = getAdresFields(unserialize($row['data_fields']), $row['city_select']);
-    $adresDisp = __("Для заполнения адреса, пожалуйста, выберите удобный способ доставки.");
+    private function getCountSubDeliveries($id)
+    {
+        $count = $this->orm->select(['COUNT(id) as count'], ['PID' => sprintf('="%s"', $id) . $this->servers()]);
 
-    if ($varamount === 0) {
-        $makechoise = '&nbsp;<input type=radio value=0  name="dostavka_metod" id="dostavka_metod">' . __('[Доставка по умолчанию]');
-        $alldone = '<INPUT TYPE="HIDDEN" id="makeyourchoise" VALUE="DONE">';
-        $adresDisp = $adresDisp_save;
-        $deliveryID = 0;
-        $curid = $deliveryID;
-    } elseif ($varamount >= 1) {
-        //$makechoise = '<OPTION value="' . $deliveryID . '" id="makeyourchoise">Выберите доставку</OPTION>';
-        $alldone = '';
-    } else {
-        $alldone = '<INPUT TYPE="HIDDEN" id="makeyourchoise" VALUE="DONE">';
-        $adresDisp = $adresDisp_save;
+        return (int) $count['count'];
     }
 
-    if ($varamount == 1) {
-        if (!(($curid == $deliveryID)))
-            $waytodo = '<IMG onload="UpdateDeliveryJq(' . $curid . ',this);" SRC="' . $pathTemplate . '/images/shop/flag_green.gif" style="display:none;">';
+    private function isActiveDelivery($delivery, $selectedId = null)
+    {
+        // Если выбрана текущая доставка.
+        if(!is_null($selectedId) && (int) $delivery['id'] === (int) $selectedId) {
+            return true;
+        }
+
+        // Если выбран каталог доставки, а внутри него доставка по умолчанию
+        if(!is_null($selectedId) && (int) $delivery['PID'] === (int) $selectedId && (int) $delivery['flag'] === 1) {
+            return true;
+        }
+
+        // Если выбрана доставка, но не текущая
+        if(!is_null($selectedId)) {
+            return false;
+        }
+        
+        return (int) $delivery['flag'] === 1; // По умолчанию.
     }
 
-    if ($stop) {
-        $makechoise = '';
-        $alldone = '<INPUT TYPE="HIDDEN" id="makeyourchoise" VALUE="DONE">';
-        $adresDisp = $adresDisp_save;
-    } else {
-        if ($chkdone)
-            $waytodo = '<IMG onload="UpdateDeliveryJq(' . $chkdone . ',this);" SRC="' . $pathTemplate . '/images/shop/flag_green.gif"  style="display:none;">';
+    private function getBackBtn($pid)
+    {
+        if($pid === 0) {
+            return ''; // Корневой уровень, кнопка не нужна.
+        }
+
+        $parent = $this->orm->getOne(['*'], ['enabled' => '="1"', 'id' => sprintf('="%s"', $pid) . $this->servers()]);
+        $childrens = $this->orm->getList(['*'], ['enabled' => '="1"', 'PID' => sprintf('="%s"', $parent['PID']) . $this->servers()], ['order' => 'num,city']);
+
+        if(count($childrens) === 1) {
+            return ''; // На уровне выше только 1 элемент. Кнопка не нужна.
+        }
+
+        return __('Выбрано') . ': ' . $parent['city'] . ' <A href="javascript:UpdateDeliveryJq(\'' . $parent['PID'] . '\',this)"><img src="' . $this->getTemplateAsset('images/shop/check_green.svg') . '" alt="" border="0" align="absmiddle">&nbsp;' . __('Выбрать другой способ доставки') . '</A> <BR> ';
     }
 
+    private function getTemplateAsset($asset)
+    {
+        if($this->isAjaxRequest) {
+            return $GLOBALS['SysValue']['dir']['dir'] . '/' . $GLOBALS['SysValue']['dir']['templates'] . '/' . $_SESSION['skin'] . '/' . $asset;
+        }
 
-    $disp = '<DIV id="seldelivery">' . $pred . $br . $my . '
-' . $makechoise . '
-' . $disp . '
-' . $alldone . $waytodo . '</DIV>';
-    
-    // Комментарий
-    if(!empty($comment)){
-    $adresDisp='<div class="well well-sm delivery-comment">'.$comment.'</div>'.$adresDisp;
+        return $GLOBALS['SysValue']['dir']['dir'] . $GLOBALS['SysValue']['dir']['templates'] . '/' . $_SESSION['skin'] . '/' . $asset;
     }
 
-    if ($obj)
-        $obj->set('orderDelivery', $disp);
-    else {
-        return array("dellist" => $disp, "adresList" => $adresDisp);
+    private function getTemplate()
+    {
+        if(is_null($GLOBALS['SysValue']['templates']['delivery']) or
+            !is_file(dirname(dirname(__DIR__)) . '/templates/' . $_SESSION['skin'] . '/' . $GLOBALS['SysValue']['templates']['delivery'])) {
+            return dirname(dirname(__DIR__)) . '/lib/templates/order/delivery.tpl';
+        }
+        return dirname(dirname(__DIR__)) . '/templates/' . $_SESSION['skin'] . '/' . $GLOBALS['SysValue']['templates']['delivery'];
     }
 }
 
-function getAdresFields($mass, $city_select = null) {
-    global $SysValue, $link_db, $PHPShopBase;
+/**
+ * @deprecated since PHPShop 6.1.0. Use PHPShopOrderDelivery istead.
+ */
+function delivery($obj, $deliveryID, $sum = 0) {
+    $PHPShopOrderDelivery = new PHPShopOrderDelivery();
 
-    if (!is_array($mass))
-        return __("Для данного типа доставки не требуется дополнительных данных", false);
-    
-    $num = $mass[num];
-    asort($num);
-    $enabled = $mass[enabled];
+    if(is_null($deliveryID) === false) {
+        return [
+            'dellist'   => $PHPShopOrderDelivery->getDeliveryMethodsById((int) $deliveryID),
+            'adresList' => $PHPShopOrderDelivery->getAddressFields((int) $deliveryID)
+        ];
 
-    if ($city_select) {
-        $disp = "<div id='citylist'>";
-        // Cтрана
-        if ($city_select == 2) {
-            $disabled = "disabled";
-            $query = "SELECT country_id, name FROM " . $SysValue['base']['citylist_country'] . " Order BY name";
-            $result = mysqli_query($link_db, $query);
-            while ($row = mysqli_fetch_array($result)) {
-                $disOpt .= "<option value='" . $row['name'] . "' for='" . $row['country_id'] . "'>" . $row['name'] . "</option>";
-            }
-            if ($enabled['country']['req']) {
-                $req = "req";
-                $star = '<span class="required">*</span>';
-            } else {
-                $req = "";
-                $star = "";
-            }
-            $disp .= "$star " . $enabled['country']['name'] . "<p> <select name='country_new' class='citylist form-control $req '><option value='' for='0'>-----------</option>$disOpt</select></p>";
-        }
-
-        // регион
-        $rfId = 3159; // ID РФ 
-        $disOpt = "";
-        $query = "SELECT region_id, name FROM " . $SysValue['base']['citylist_region'] . " WHERE country_id = $rfId Order BY name";
-        $result = mysqli_query($link_db, $query);
-        while ($row = mysqli_fetch_array($result)) {
-            $disOpt .= "<option value='" . $row['name'] . "' for='" . $row['region_id'] . "'>" . $row['name'] . "</option>";
-        }
-        if ($enabled['state']['req']) {
-            $req = "req";
-            $star = '<span class="required">*</span>';
-        } else {
-            $req = "";
-            $star = "";
-        }
-        $disp .= "$star " . $enabled['state']['name'] . "<p><select name='state_new' class='citylist form-control $req' $disabled><option value='' for='0'>-----------</option>$disOpt</select></p>";
-
-        //Город
-        $disp .= "$star " . $enabled['city']['name'] . "<p> <select name='city_new' class='citylist form-control $req' $disabled><option value='' for='0'>-----------</option></select></p></div>";
     }
-
-    foreach ($num as $key => $value) {
-        if ($city_select AND ($key == "state" OR $key == "city" OR $key == "country"))
-            continue;
-        if ($enabled[$key]['enabled'] == 1) {
-            if ($enabled[$key]['req']) {
-                $req = 'class="req form-control"';
-                $star = '*';
-                $required = 'required';
-            } else {
-                $req = 'class="form-control"';
-                $star = "";
-                $required = null;
-            }
-            $disp .= '<p><input type="text" ' . $req . ' value="" name="' . $key . '_new" ' .  $required . ' placeholder="' . $enabled[$key]['name'] . '"></p>';
-        }
-    }
-    return $disp;
+    $obj->set('orderDelivery', PHPShopText::div($PHPShopOrderDelivery->getDeliveryMethods(), 'none', false, 'seldelivery'));
 }
-
 ?>

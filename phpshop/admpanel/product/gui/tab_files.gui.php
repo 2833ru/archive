@@ -19,7 +19,7 @@ function tab_files($row) {
             if (empty($file['name']))
                 $file['name'] = 'Τΰιλ #' . $key;
 
-            $PHPShopInterface->setRow(array('name' => urldecode($file['name']), 'link' => $file['path'], 'align' => 'left', 'class' => 'file-edit'), $PHPShopInterface->setInputArg(array('type' => 'hidden', 'name' => 'files_new[' . $key . '][path]', 'value' => $file['path'])) . $PHPShopInterface->setInputArg(array('type' => 'hidden', 'name' => 'files_new[' . $key . '][name]', 'value' => $file['name'])), array('name' => '<span class="glyphicon glyphicon-floppy-disk"></span>' . $file['path'], 'link' => $file['path'], 'target' => '_blank', 'align' => 'right', 'class' => 'file-edit-path'));
+            $PHPShopInterface->setRow(array('name' => urldecode($file['name']), 'link' => $file['path'], 'align' => 'left', 'class' => 'file-edit'), $PHPShopInterface->setInputArg(array('type' => 'hidden', 'name' => 'files_new[' . $key . '][path]', 'value' => $file['path'])) . $PHPShopInterface->setInputArg(array('type' => 'hidden', 'name' => 'files_new[' . $key . '][name]', 'value' => $file['name'])), array('name' => '<span class="glyphicon glyphicon-paperclip"></span>' . $file['path'], 'link' => $file['path'], 'target' => '_blank', 'align' => 'right', 'class' => 'file-edit-path'));
             $key++;
         }
 

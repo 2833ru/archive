@@ -70,5 +70,9 @@ search_advance_but: "գտնել",
         sInfo: "Գրառումներ կայքից _START_ to _END_ of _TOTAL_ records",
         sInfoEmpty: "Entries 0 to 0 of 0 entries",
     },
+    transfer: "Փոխանցում",
+    delete: "Նջել",
+    products_completed: "Վերամշակված ապրանքներ.",
+    create_db_dump: "Վստա՞հ եք, որ ցանկանում եք կատարել գործողությունը: Համոզվեք, որ կրկնօրինակեք ձեր տվյալների բազան նախքան շարունակելը:",
     charset: "utf-8"
 };

@@ -63,8 +63,8 @@ class PHPShopDelivery extends PHPShopObj {
      * @return float
      */
     function getPrice($sum, $weight = 0) {
-        
-        if($this->mod_price)
+
+        if($this->mod_price !== false)
             return $this->mod_price;
         
         $row = $this->objRow;
@@ -101,7 +101,7 @@ class PHPShopDelivery extends PHPShopObj {
     function checkMod($sum){
         
         $mod = parent::getParam("is_mod");
-        if($mod == 2 and !empty($sum))
+        if($mod == 2)
             $this->mod_price = $sum;
     }
    

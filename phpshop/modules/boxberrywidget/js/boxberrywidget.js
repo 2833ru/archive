@@ -53,7 +53,7 @@ function boxberrywidgetCourier() {
             data: 'type=json&xid=' + xid + '&sum=' + sum + 'weight=' + weight + '&depth=' + depth + '&height=' + height + '&width=' + width + '&zip=' + zip,
             dataType: 'json',
             success: function(json) {
-                if (json['success'] == 'index') {
+                if (json['success'] == 1) {
                     $("#DosSumma").html(json['delivery']);
                     $("#TotalSumma").html(json['total']);
                     showAlertMessage(json['message']);

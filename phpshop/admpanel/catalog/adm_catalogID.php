@@ -461,6 +461,9 @@ function actionDelete() {
     // Переносим товары с удалённого каталога во временную папку
     $PHPShopOrm->clean();
 
+    $categoryOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
+    $categoryOrm->update(array("parent_to" => "0"), array("parent_to" => "=" . $_POST['rowID']), false);
+
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
     $PHPShopOrm->update(array("category" => "1000004", "enabled" => '0', 'datas' => time()), array("category" => "=" . $_POST['rowID']), false);
 

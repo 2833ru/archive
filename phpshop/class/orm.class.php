@@ -402,7 +402,7 @@ class PHPShopOrm {
      * $PHPShopOrm = new PHPShopOrm('phpshop_categories');
      * $PHPShopOrm->delete(array('id'=>'=10'));
      * </code>
-     * @param array $where массив параметра whree
+     * @param array $where массив параметра where
      * @return mixed
      */
     function delete($where) {

@@ -30,7 +30,7 @@ class PHPShopProductListElement extends PHPShopProductElements {
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
         $PHPShopOrm->debug = $this->debug;
 
-        $data = $PHPShopOrm->select(array('*'), array('category' => '=' . intval($category), 'enabled' => "='1'", 'parent_enabled' => "='0'", 'id' => '!=' . $this->PHPShopNav->getId()), array('order' => 'datas desc'), array('limit' => $this->data['num']));
+        $data = $PHPShopOrm->select(array('*'), array('category' => '=' . intval($category), 'enabled' => "='1'", 'parent_enabled' => "='0'", 'id' => '!=' . $this->PHPShopNav->getId()), array('order' => 'RAND()'), array('limit' => $this->data['num']));
         if (is_array($data)) {
             foreach ($data as $row) {
 

@@ -216,7 +216,16 @@ function UpdateDeliveryJq(xid, param, stop_hook) {
                 $("#d").val(xid);
                 $("#TotalSumma").html(json['total']);
                 $("#seldelivery").html(json['dellist']);
-
+                if($('input[name="dostavka_metod"]:disabled').length > 0) {
+                    $('input[name="dostavka_metod"]:disabled').each(function (index, element) {
+                       if($(element).attr('title')) {
+                           $(element).closest('label').tooltip({
+                               title: $(element).attr('title'),
+                               placement: 'top'
+                           });
+                       }
+                    });
+                }
 
                 $("#userAdresData").hide();
                 $("#seldelivery").html(json['userAdresData']);
@@ -375,7 +384,7 @@ function OrderChekJq()
     } else if (badReq == 1) {
         showAlertMessage(locale_def.OrderChekJq.badReq);
     } else if (bad == 1) {
-        showAlertMessage(ocale_def.OrderChekJq.badDelivery);
+        showAlertMessage(locale_def.OrderChekJq.badDelivery);
         var destination = $('#seldelivery').offset().top;
         jQuery("html:not(:animated),body:not(:animated)").animate({scrollTop: destination}, 800);
     } else {

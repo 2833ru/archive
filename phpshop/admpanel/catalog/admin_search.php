@@ -198,7 +198,7 @@ function actionSearch() {
             else
                 $PHPShopInterface->setRow($row['id'], array('name' => $row['name'], 'align' => 'left','class'=>'product-name'), array('name' => $row['price'], 'align' => 'right'));
         }
-        
+    @header("Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0");
     exit('<table class="table table-hover ' . $class . '">' . $PHPShopInterface->getContent() . '</table><p class="clearfix"> </p>');
 }
 
@@ -238,7 +238,7 @@ function actionAdvanceSearch() {
     }
 
     $PHPShopInterface->_CODE.=$searchforma;
-
+    @header("Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0");
     exit($PHPShopInterface->getContent() . '<p class="clearfix"> </p>');
 }
 

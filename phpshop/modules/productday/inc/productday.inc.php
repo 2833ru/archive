@@ -114,7 +114,7 @@ class ProductDay extends PHPShopProductElements {
     private function setStartTime($productId)
     {
         $date = new DateTime();
-        if(date("H") >= (int) $this->option['time']) {
+        if((date("H") >= (int) $this->option['time']) || (int) $this->option['time'] === 24) {
             $date->modify('+1 day');
         }
         $date->setTime((int) $this->option['time'] === 24 ? 0 : (int) $this->option['time'], 0);

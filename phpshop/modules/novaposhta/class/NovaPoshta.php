@@ -77,11 +77,7 @@ class NovaPoshta {
     public function getPvz($city)
     {
         $PHPShopOrmWhTypes = new PHPShopOrm('phpshop_modules_novaposhta_wh_types');
-        $whTypesResult = $PHPShopOrmWhTypes->getList(array('*'));
-        $whTypes = array();
-        foreach ($whTypesResult as $wh) {
-            $whTypes[$wh['ref']] = $wh['title'];
-        }
+        $whTypes = array_column($PHPShopOrmWhTypes->getList(), 'title', 'ref');
 
         $PHPShopOrm = new PHPShopOrm('phpshop_modules_novaposhta_warehouses');
         $result = $PHPShopOrm->getList(array('*'), array('city' => "='".$city."' and type in ('$this->whRef', '$this->cargoWhRef', '$this->parcelShopRef')"));
@@ -242,13 +238,11 @@ class NovaPoshta {
      */
     public function getCitiesArr($currentCity)
     {
-        $result = array();
-        $PHPShopOrm = new PHPShopOrm('phpshop_modules_novaposhta_cities');
-        $cities = $PHPShopOrm->getList();
+        $orm = new PHPShopOrm('phpshop_modules_novaposhta_cities');
 
-        foreach ($cities as $city) {
-            $result[] = array($city['area_description'], $city['ref'], $currentCity);
-        }
+        $result = array_map(function ($city) use ($currentCity) {
+            return [$city['area_description'], $city['ref'], $currentCity];
+        }, $orm->getList());
 
         return $result;
     }

@@ -1064,8 +1064,10 @@ $(document).ready(function () {
     });
 
     // Ajax поиск
-    $("#search").on('input', function () {
+    $(".search-input").on('input', function () {
         var words = $(this).val();
+        var element = $(this);
+
         if (words.length > 2) {
             $.ajax({
                 type: "POST",
@@ -1080,18 +1082,18 @@ $(document).ready(function () {
                     // Результат поиска
                     if (data != 'false') {
 
-                        if (data != $("#search").attr('data-content')) {
-                            $("#search").attr('data-content', data);
+                        if (data != element.attr('data-content')) {
+                            element.attr('data-content', data);
 
-                            $("#search").popover('show');
+                            element.popover('show');
                         }
                     } else
-                        $("#search").popover('hide');
+                        element.popover('hide');
                 }
             });
         } else {
-            $("#search").attr('data-content', '');
-            $("#search").popover('hide');
+            element.attr('data-content', '');
+            element.popover('hide');
 
         }
     });
@@ -1752,22 +1754,25 @@ $(document).ready(function () {
     }
 
     // reCAPTCHA
-    $('[data-toggle="modal"]').on('click', function () {
+    $('body').on('click', '[data-toggle="modal"]', function () {
+        var oneclick = $($(this).attr('data-target')).find('#recaptcha_oneclick').get(0);
+        var returncall = $($(this).attr('data-target')).find('#recaptcha_returncall').get(0);
+
         $.getScript("https://www.google.com/recaptcha/api.js?render=explicit")
-                .done(function () {
-                    if (typeof grecaptcha !== "undefined") {
+            .done(function () {
+                if (typeof grecaptcha !== "undefined") {
 
-                        grecaptcha.ready(function () {
+                    grecaptcha.ready(function () {
+                        try {
+                            if (returncall)
+                                grecaptcha.render(returncall, {"sitekey": $(returncall).attr('data-key'), "size": $(returncall).attr('data-size')});
 
-                            if ($("#recaptcha_returncall").length)
-                                grecaptcha.render("recaptcha_returncall", {"sitekey": $("#recaptcha_returncall").attr('data-key'), "size": $("#recaptcha_returncall").attr('data-size')});
-
-                            if ($("#recaptcha_oneclick").length)
-                                grecaptcha.render("recaptcha_oneclick", {"sitekey": $("#recaptcha_oneclick").attr('data-key'), "size": $("#recaptcha_oneclick").attr('data-size')});
-
-                        });
-                    }
-                });
+                            if (oneclick)
+                                grecaptcha.render(oneclick, {"sitekey": $(oneclick).attr('data-key'), "size": $(oneclick).attr('data-size')});
+                        } catch (e) {}
+                    });
+                }
+            });
     });
 
     if ($("#recaptcha_default").length) {

@@ -1,5 +1,7 @@
 <?php
 
+PHPShopObj::loadClass("file");
+
 $TitlePage = __("SQL запрос к базе");
 
 // Описание полей
@@ -95,15 +97,7 @@ function actionSave() {
             $sql_file_content = PHPShopString::win_utf8($sql_file_content, true);
         }
 
-        //$crlf=PHP_EOL;
-        //$crlf="\r";
-        $crlf = '
-';
-        $sql_query = explode(";".$crlf, $sql_file_content);
-        $count = count($sql_query);
-        if ($count < 1)
-            $sql_query = explode(";", $sql_file_content);
-
+        $sql_query = PHPShopFile::sqlStringToArray($sql_file_content);
 
         foreach ($sql_query as $k => $v) {
 

@@ -555,7 +555,7 @@ class PHPShopUpdate {
  * Удаление файлов перед заменой.
  */
 function preExtractCallBack($p_event, $p_header) {
-    if ($p_header['folder'] != 1 and $_SERVER["SERVER_ADDR"] != "127.0.0.1" and ! getenv("COMSPEC")) {
+    if ($p_header['folder'] != 1 and !getenv("COMSPEC")) {
         unlink($p_header['filename']);
     }
     return 1;

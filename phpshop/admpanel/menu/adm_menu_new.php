@@ -56,8 +56,6 @@ function actionStart() {
     // Вывод формы закладки
     $PHPShopGUI->setTab(array("Основное", $Tab1, true));
 
-
-
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("submit", "saveID", "ОК", "right", 70, "", "but", "actionInsert.menu.create");
 

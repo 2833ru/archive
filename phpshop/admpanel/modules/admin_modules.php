@@ -313,10 +313,10 @@ function actionStart() {
 
     $tree = '<table class="table table-hover">
         <tr class="treegrid-all">
-           <td><a href="?path=modules" class="treegrid-parent" data-parent="treegrid-all">'.__('Все модули').'</a> <span class="label label-primary pull-right">92</span></td>
+           <td><a href="?path=modules" class="treegrid-parent" data-parent="treegrid-all">'.__('Все модули').'</a> <span class="label label-primary pull-right">93</span></td>
 	</tr>
         <tr class="treegrid-template">
-           <td><a href="?path=modules&cat=template" class="treegrid-parent" data-parent="treegrid-template">'.__('Дизайн').'</a> <span class="label label-primary pull-right">6</span></td>
+           <td><a href="?path=modules&cat=template" class="treegrid-parent" data-parent="treegrid-template">'.__('Дизайн').'</a> <span class="label label-primary pull-right">7</span></td>
 	</tr>
         <tr class="treegrid-soc">
            <td><a href="?path=modules&cat=soc" class="treegrid-parent" data-parent="treegrid-soc">'.__('Социальные сети').'</a> <span class="label label-primary pull-right">2</span></td>

@@ -244,9 +244,9 @@
         </div>
     </div>
     <div class="row ">@productsgroup_list@
-        <div class="inner-nowbuy  border-row">
+        <div class="inner-nowbuy border-row @php __hide('nowBuy'); php@">
             <h2 class="product-head page-header">
-                <a href="/newtip/" title="{Все новинки}">{Сейчас покупают}</a>
+                {Сейчас покупают}
             </h2>
             <div class="swiper-slider-wrapper">
                 <div class="swiper-button-prev-block">

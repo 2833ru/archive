@@ -48,6 +48,8 @@ class PHPShopYml {
 
     var $xml = null;
 
+    private $categories = [];
+
     /**
      * вывод характеристик
      * @var bool
@@ -186,9 +188,6 @@ class PHPShopYml {
         // Мультибаза
         if (defined("HostID") or defined("HostMain")) {
 
-
-            $multi_cat = array();
-
             // Не выводить скрытые каталоги
             $where['skin_enabled '] = "!='1'";
 
@@ -199,17 +198,17 @@ class PHPShopYml {
 
             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
             $PHPShopOrm->debug = $this->debug;
-            $data = $PHPShopOrm->select(array('id'), $where, false, array('limit' => 1000), __CLASS__, __FUNCTION__);
-            if (is_array($data)) {
-                foreach ($data as $row) {
-                    $multi_cat[] = $row['id'];
+            $this->categories = array_column($PHPShopOrm->getList(['id'], $where, false, ['limit' => 1000], __CLASS__, __FUNCTION__), 'id');
+
+            if (count($this->categories) > 0) {
+                $dop_cats = '';
+                foreach ($this->categories as $category) {
+                    $dop_cats .= ' OR dop_cat LIKE \'%#' . $category . '#%\' ';
                 }
+                $categories_str = implode("','", $this->categories);
+
+                return " (category IN ('$categories_str') " . $dop_cats . " ) and ";
             }
-
-            if (count($multi_cat) > 0)
-                $multi_select = ' category IN (' . @implode(',', $multi_cat) . ') and ';
-
-            return $multi_select;
         }
     }
 
@@ -307,7 +306,21 @@ class PHPShopYml {
 
             $id = $row['id'];
             $name = trim(strip_tags($row['name']));
+
+            // Основная категория
             $category = $row['category'];
+            // Товар с доп. каталога, основного каталога в выводе нет.
+            if(count($this->categories) > 0) {
+                if(in_array($category, $this->categories) === false) {
+                    foreach (explode('#', $row['dop_cat']) as $dopCat) {
+                        if(!empty($dopCat) && in_array($dopCat, $this->categories)) {
+                            $category = $dopCat;
+                            break;
+                        }
+                    }
+                }
+            }
+
             $uid = $row['uid'];
             $price = $row[$this->PHPShopSystem->getPriceColumn()];
             $oldprice = $row['price_n'];
@@ -664,6 +677,10 @@ function setProducts() {
         }
 
         $picture = $this->getImages($val);
+
+        if(isset($_GET['getall'])) {
+            $val['description'] = $val['content'];
+        }
 
         $xml = '
 <offer id="' . $val['id'] . '" available="' . $val['p_enabled'] . '" ' . $bid_str . $group_id . '>

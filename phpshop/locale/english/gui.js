@@ -71,5 +71,9 @@ var locale = {
         sInfo: "Entries from _START_ to _END_ of _TOTAL_ records",
         sInfoEmpty: "Entries 0 to 0 of 0 entries",
     },
+    transfer: "Transfer",
+    delete: "Delete",
+    products_completed: "Processed products:",
+    create_db_dump: "Are you sure you want to perform the operation?<br> Be sure to back up your database before proceeding!",
     charset: "windows-1251"
 };

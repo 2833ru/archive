@@ -2808,8 +2808,7 @@ span.new-price .rubznak, .price-block .rubznak{
 }
 
 .page-header h1 {
-    font-size: 18px;
-    font-family: stemMedium, Arial, "Helvetica CY", "Nimbus Sans L", sans-serif !important
+    font-size: 20px;
 }
 
 h3.page-header {
@@ -7405,4 +7404,8 @@ form[name="users_password"]{max-width:420px}
 
 .form-horizontal .form-group {
     margin-right: 0px;
+}
+.inner-nowbuy .page-header {
+    color: #343434;
+    font-family: stemMedium, Arial, "Helvetica CY", "Nimbus Sans L", sans-serif !important;
 }

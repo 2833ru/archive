@@ -12,7 +12,7 @@
     <element>
         <name>.top-banner</name>
         <description>Шапка</description>
-        <content>Цвет заливки шапки</content>
+        <content>Цвет заливки баннера в шапке</content>
         <var>
             <name>background-color</name>
             <type>color</type>

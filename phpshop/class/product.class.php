@@ -23,7 +23,7 @@ class PHPShopProduct extends PHPShopObj {
         $this->objBase = $GLOBALS['SysValue']['base']['products'];
         $this->cache = true;
         $this->debug = false;
-        $this->cache_format = array('content');
+        $this->cache_format = [];
 
         // Учет подтипов для выборки по артикулу
         if (empty($var)) {

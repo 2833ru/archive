@@ -14,8 +14,8 @@ if (!defined("OBJENABLED")) {
  */
 class PHPShopCategory extends PHPShopObj {
 
-    private $childrenDepth = 1;
-    private $categories = array();
+    private $categories = [];
+    private $cachedCategories = [];
     public $search_id;
     public $found;
 
@@ -108,38 +108,62 @@ class PHPShopCategory extends PHPShopObj {
 
         $childrens = $PHPShopCategoryArray->getArray();
 
+        if ($this->getLevel($categoryId, $this->objID) >= $depth) {
+            return $this->categories;
+        }
+
         if (!is_array($childrens) || count($childrens) === 0) {
             return $this->categories;
         }
 
-        if ($depth > $this->childrenDepth) {
-            $this->childrenDepth++;
-            foreach ($childrens as $category) {
-
-                // Поиск конечный ИД
-                if (is_array($this->search)) {
-                    if ($category['name'] == $this->search[$this->found] and $category['parent_to'] == $this->search_id) {
-                        $this->search_id = $category['id'];
-                        $this->found++;
-                    }
+        foreach ($childrens as $category) {
+            // Поиск конечный ИД
+            if (is_array($this->search)) {
+                if ($category['name'] == $this->search[$this->found] and $category['parent_to'] == $this->search_id) {
+                    $this->search_id = $category['id'];
+                    $this->found++;
                 }
+            }
 
-                // Получение строки пути каталогов
-                if ($revers) {
-                    $this->parent = $category['parent_to'];
-                    $this->search_str[] = $category['name'];
-                    $this->categories[$category['parent_to']] = $category;
-                    $this->recursive($category['parent_to'], $depth, $select, $dop_cat, $revers);
-                } else {
-                    $this->categories[$category['id']] = $category;
-                    $this->recursive($category['id'], $depth, $select, $dop_cat, $revers);
-                }
+            // Получение строки пути каталогов
+            if ($revers) {
+                $this->parent = $category['parent_to'];
+                $this->search_str[] = $category['name'];
+                $this->categories[$category['parent_to']] = $category;
+                $this->recursive($category['parent_to'], $depth, $select, $dop_cat, $revers);
+            } else {
+                $this->categories[$category['id']] = $category;
+                $this->recursive($category['id'], $depth, $select, $dop_cat, $revers);
             }
         }
 
         return $this->categories;
     }
 
+    public function getLevel($categoryId, $rootId = 0, $level = 1)
+    {
+        if(count($this->cachedCategories) === 0) {
+            $orm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
+            $this->cachedCategories = array_column($orm->getList(['id', 'parent_to'], false, false, ['limit' => 100000000]), 'parent_to', 'id');
+        }
+
+        if((int) $categoryId === (int) $rootId) {
+            return 1;
+        }
+
+        $level++;
+
+        if((int) $this->cachedCategories[$categoryId] === (int) $rootId) {
+            return $level;
+        }
+
+        // Защита от зацикливания если удален родительский каталог
+        if(!isset($this->cachedCategories[$categoryId])) {
+            return 1;
+        }
+
+        return $this->getLevel((int) $this->cachedCategories[$categoryId], $rootId, $level);
+    }
 }
 
 /**

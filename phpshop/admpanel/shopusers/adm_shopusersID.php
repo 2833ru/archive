@@ -62,7 +62,8 @@ function actionStart() {
             $PHPShopGUI->setField("Пароль", $PHPShopGUI->setInput("password.required.4", "password_new", base64_decode($data['password']))) .
             $PHPShopGUI->setField("Подтверждение пароля", $PHPShopGUI->setInput("password.required.4", "password2_new", base64_decode($data['password']))) .
             $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("enabled_new", 1, "Вкл.", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выкл.", $data['enabled']) . '&nbsp;&nbsp;' . $PHPShopGUI->setCheckbox('sendActivationEmail', 1, 'Оповестить пользователя', 0)) .
-            $PHPShopGUI->setField("Статус", $PHPShopGUI->setSelect('status_new', $user_status_value))
+            $PHPShopGUI->setField("Статус", $PHPShopGUI->setSelect('status_new', $user_status_value)).
+            $PHPShopGUI->setField("Накопительная скидка", $PHPShopGUI->setInput('text', "cumulative_discount_new", $data['cumulative_discount'],null,100,false, false, false, '%')) 
     );
 
     // Адреса доставок

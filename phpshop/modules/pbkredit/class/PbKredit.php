@@ -13,6 +13,10 @@ class PbKredit {
 
     public function render($product)
     {
+        if((int) $product['price'] === 0) {
+            return '';
+        }
+
         PHPShopParser::set('pbkredit_tt_code', $this->option['tt_code']);
         PHPShopParser::set('pbkredit_tt_name', $this->option['tt_name']);
         PHPShopParser::set('pbkredit_tt_product_price', $product['price']);

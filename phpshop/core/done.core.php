@@ -448,7 +448,7 @@ class PHPShopDone extends PHPShopCore {
 
         // Данные для записи
         $insert = $_POST;
-        $insert['datas_new'] = $this->datas = time();
+        $insert['datas_new'] = $insert['date_new'] = $this->datas = time();
         $insert['uid_new'] = $this->ouid;
         $insert['orders_new'] = $this->order;
         $insert['status_new'] = serialize($this->status);

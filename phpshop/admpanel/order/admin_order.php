@@ -75,10 +75,19 @@ function actionStart() {
         'class' => 'btn btn-default btn-sm navbar-btn',
         'type' => 'button',
         'icon' => 'glyphicon glyphicon-plus',
-        'tooltip' => 'data-toggle="tooltip" data-placement="left" title="'.__('Добавить заказ').'" '
+        'tooltip' => 'data-toggle="tooltip" data-placement="bottom" title="' . __('Добавить заказ') . '" '
     );
 
-    $PHPShopInterface->setActionPanel($TitlePage, array('Настройка', 'Редактировать выбранные', 'CSV', '|', 'Удалить выбранные'), array('Добавить заказ'));
+    $PHPShopInterface->action_button['Канбан'] = array(
+        'name' => '',
+        'class' => 'btn btn-default btn-sm navbar-btn btn-action-panel',
+        'type' => 'button',
+        'action' => 'lead.kanban',
+        'icon' => 'glyphicon glyphicon-th-large',
+        'tooltip' => 'data-toggle="tooltip" data-placement="left" title="' . __('Канбан доска') . '" '
+    );
+
+    $PHPShopInterface->setActionPanel($TitlePage, array('Настройка', 'Редактировать выбранные', 'CSV', '|', 'Удалить выбранные'), array('Канбан', 'Добавить заказ'));
 
     // Настройка полей
     if (!empty($_COOKIE['check_memory'])) {
@@ -102,7 +111,7 @@ function actionStart() {
     }
 
     $PHPShopInterface->setCaption(array(null, "3%"), array("№", "12%", array('align' => 'left', 'view' => intval($memory['order.option']['uid']))), array("ID", "10%", array('view' => intval($memory['order.option']['id']))), array("Статус", "20%", array('view' => intval($memory['order.option']['statusi']))), array("Корзина", "20%", array('view' => intval($memory['order.option']['cart']))), array("Дата", "10%", array('view' => intval($memory['order.option']['datas']))), array("Покупатель", "20%", array('view' => intval($memory['order.option']['fio']))), array("Телефон", "15%", array('view' => intval($memory['order.option']['tel']))), array("", "7%", array('view' => intval($memory['order.option']['menu']))), array("Скидка", "10%", array('view' => intval($memory['order.option']['discount']))), array("Город", "15%", array('view' => intval($memory['order.option']['city']))), array("Адрес", "25%", array('view' => intval($memory['order.option']['adres']))), array("Компания", "15%", array('view' => intval($memory['order.option']['org']))), array("Комментарий", "15%", array('view' => intval($memory['order.option']['comment']))), array("Tracking", "15%", array('view' => intval($memory['order.option']['tracking']))), array("Менеджер", "15%", array('view' => intval($memory['order.option']['admin']))), array("Итого", "17%", array('align' => 'right', 'view' => intval($memory['order.option']['sum']))));
-    $PHPShopInterface->addJSFiles('./js/bootstrap-datetimepicker.min.js', './js/bootstrap-datetimepicker.ru.js', './order/gui/order.gui.js');
+    $PHPShopInterface->addJSFiles('./js/bootstrap-datetimepicker.min.js', './order/gui/order.gui.js');
     $PHPShopInterface->addCSSFiles('./css/bootstrap-datetimepicker.min.css');
 
 
@@ -158,9 +167,9 @@ function actionStart() {
 
     if ($PHPShopBase->Rule->CheckedRules('order', 'rule'))
         $searchforma .= $PHPShopInterface->setSelect('where[a.admin]', $manager_status_value, 180);
-    
-    if(is_array($server_value))
-    $searchforma .= $PHPShopInterface->setSelect('where[a.servers]', $server_value, 180);
+
+    if (is_array($server_value))
+        $searchforma .= $PHPShopInterface->setSelect('where[a.servers]', $server_value, 180);
 
     $searchforma .= $PHPShopInterface->setSelect('where[b.status]', $user_status_value, 180);
 
@@ -172,9 +181,10 @@ function actionStart() {
     $searchforma .= $PHPShopInterface->setInputArg(array('type' => 'hidden', 'name' => 'path', 'value' => $_GET['path']));
     $searchforma .= $PHPShopInterface->setButton('Найти', 'search', 'btn-order-search pull-right');
 
-    if(isset($_GET['search']['value']))
-    $searchforma .= $PHPShopInterface->setButton('Сброс', 'remove', 'btn-order-cancel pull-left');
-    else $searchforma .= $PHPShopInterface->setButton('Сброс', 'remove', 'btn-order-cancel hide pull-left');
+    if (isset($_GET['search']['value']))
+        $searchforma .= $PHPShopInterface->setButton('Сброс', 'remove', 'btn-order-cancel pull-left');
+    else
+        $searchforma .= $PHPShopInterface->setButton('Сброс', 'remove', 'btn-order-cancel hide pull-left');
 
     // Статистика
     $stat = '<div class="order-stat-container">' . __('Сумма:') . ' <b id="stat_sum">0</b> ' . $currency . '<br>' . __('Количество:') . ' <b id="stat_num">0</b> ' . __('шт.');

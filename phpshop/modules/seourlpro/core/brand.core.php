@@ -36,13 +36,19 @@ class PHPShopBrand extends PHPShopShopCore {
 
         $PHPShopOrmSort = new PHPShopOrm($GLOBALS['SysValue']['base']['sort']);
 
+        // Мультибаза
+        $servers = '';
+        if (defined("HostID"))
+            $servers .= " and servers REGEXP 'i" . HostID . "i'";
+        elseif (defined("HostMain"))
+            $servers .= ' and (servers ="" or servers REGEXP "i1000i")';
+
         // Массив имен характеристик
         $PHPShopOrm = new PHPShopOrm();
-        $result = $PHPShopOrm->query("select * from " . $GLOBALS['SysValue']['base']['sort_categories'] . " where (brand='1' and goodoption!='1') order by num");
+        $result = $PHPShopOrm->query("select * from " . $GLOBALS['SysValue']['base']['sort_categories'] . " where (brand='1' and goodoption!='1') " . $servers . " order by num");
         while (@$row = mysqli_fetch_assoc($result)) {
             $arrayVendor[$row['id']] = $row;
         }
-
 
         if (is_array($arrayVendor))
             foreach ($arrayVendor as $key => $value) {
@@ -159,6 +165,21 @@ class PHPShopBrand extends PHPShopShopCore {
                 $this->set('fSetCchecked', 'checked="checked"');
         }
 
+        // Мультибаза
+        $servers = '';
+        if (defined("HostID"))
+            $servers .= " and servers REGEXP 'i" . HostID . "i'";
+        elseif (defined("HostMain"))
+            $servers .= ' and (servers ="" or servers REGEXP "i1000i")';
+
+        // Массив имен характеристик
+        $PHPShopOrm = new PHPShopOrm();
+        $result = $PHPShopOrm->query("select * from " . $GLOBALS['SysValue']['base']['sort_categories'] . " where (brand='1' and goodoption!='1') " . $servers . " order by num");
+        $categories = [];
+        while (@$row = mysqli_fetch_assoc($result)) {
+            $categories[] = $row['id'];
+        }
+
         $PHPShopNav = new PHPShopNav();
         $seo_name = explode(".", $PHPShopNav->getNav());
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort']);
@@ -176,8 +197,14 @@ class PHPShopBrand extends PHPShopShopCore {
             $vendorArray = $vendor;
 
         $v = array();
-        foreach ($vendorArray as $value)
-            $v[$value['category']] = $value['id'];
+        foreach ($vendorArray as $value) {
+            if(in_array($value['category'], $categories)) {
+                $v[$value['category']] = $value['id'];
+            }
+        }
+        // Нет данных, 404 ошибка
+        if (count($v) === 0)
+            return $this->setError404();
 
         // Фильтр сортировки
         $order = $this->query_filter($this, $v);

@@ -37,6 +37,8 @@ if (!empty($GLOBALS['SysValue']['base']['seourlpro']['seourlpro_system'])) {
         $seo_page_enabled = true;
     if($settings['seo_brands_enabled'] == 2)
         $seo_brands_enabled = true;
+
+    include_once dirname(dirname(__DIR__)) .'/seourlpro/inc/option.inc.php';
 }
 
 function sitemaptime($nowtime) {
@@ -45,7 +47,7 @@ function sitemaptime($nowtime) {
 
 // Библиотека
 $title = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
-$title.= '<urlset xmlns="http://www.google.com/schemas/sitemap/0.9">' . "\n";
+$title.= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
 $title.= '<url>' . "\n";
 $title.= '<loc>https://' . $_SERVER['SERVER_NAME'] . '</loc>' . "\n";
 $title.= '<changefreq>weekly</changefreq>' . "\n";
@@ -142,7 +144,7 @@ if (is_array($data))
         //  SEOURLPRO
         if (!empty($seourlpro_enabled)) {
             if (empty($row['prod_seo_name']))
-                $url = '/id/' . str_replace("_", "-", PHPShopString::toLatin($row['name'])) . '-' . $row['id'];
+                $url = '/id/' . $GLOBALS['PHPShopSeoPro']->setLatin($row['name']) . '-' . $row['id'];
             else
                 $url = '/id/' . $row['prod_seo_name'] . '-' . $row['id'];
         }

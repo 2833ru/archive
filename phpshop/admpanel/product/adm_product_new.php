@@ -522,6 +522,31 @@ function actionInsert() {
     if (isset($_POST['parent2_new']) and empty($_POST['color_new']))
         $_POST['color_new'] = PHPShopString::getColor($_POST['parent2_new']);
 
+    $postOdnotip = explode(',', $_POST['odnotip_new']);
+    $odnotip = [];
+    if(is_array($postOdnotip)) {
+        foreach ($postOdnotip as $value) {
+            if((int) $value > 0) {
+                $odnotip[] = (int) $value;
+            }
+        }
+        $_POST['odnotip_new'] = implode(',', $odnotip);
+    }
+
+    if(empty($_POST['pic_small_new']) || empty($_POST['pic_big_new'])) {
+        $orm = new PHPShopOrm($GLOBALS['SysValue']['base']['foto']);
+        $photo = $orm->getOne(['name'], ['parent' => sprintf('="%s"', $_POST['rowID'])], ['order' => 'id asc']);
+        if(empty($_POST['pic_big_new'])) {
+            $_POST['pic_big_new'] = $photo['name'];
+        }
+        if(empty($_POST['pic_small_new'])) {
+            $_POST['pic_small_new'] = str_replace(".", "s.", $photo['name']);
+            if(!file_exists($_SERVER['DOCUMENT_ROOT'] . $_POST['pic_small_new'])) {
+                $_POST['pic_small_new'] = $photo['name'];
+            }
+        }
+    }
+
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
 

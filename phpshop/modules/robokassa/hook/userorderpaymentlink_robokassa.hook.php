@@ -90,7 +90,7 @@ function userorderpaymentlink_mod_robokassa_hook($obj, $PHPShopOrderFunction) {
             // Данные в лог
             $PHPShopRobokassaArray->log(array('action' => 'user', 'MrchLogin' => trim($option['merchant_login']), 'sum' => $out_summ, 'Email' => $_POST['mail'], 'orderNumber' => $inv_id, 'Receipt' => $Receipt), $inv_id, 'форма готова к отправке', 'данные формы для отправки на оплату');
 
-            $return = PHPShopText::form($payment_forma, 'pay', 'post', 'https://merchant.roboxchange.com/Index.aspx');
+            $return = PHPShopText::form($payment_forma, 'pay', 'post', 'https://auth.robokassa.ru/Merchant/Index.aspx');
         } elseif ($PHPShopOrderFunction->getSerilizeParam('orders.Person.order_metod') == 10020)
             $return = ', Заказ обрабатывается менеджером';
 

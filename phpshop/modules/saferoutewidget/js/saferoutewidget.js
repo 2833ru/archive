@@ -9,10 +9,49 @@ function saferoutewidgetStart() {
     $('<input type="hidden" name="saferouteData">').insertAfter('#dop_info');
   $('<input type="hidden" name="saferouteReq" class="req form-control">').insertAfter('#dop_info');
 
+  var userData = $.parseJSON($("input:hidden.userDataJson").val());
+
+  var fio = userData['fio'];
+  var email = userData['email'];
+  var phone = '';
+  if(userData['address'].hasOwnProperty('phone')) {
+    phone = userData['address']['phone'];
+  }
+  var city = '';
+  if(userData['address'].hasOwnProperty('city')) {
+    city = userData['address']['city'];
+  }
+  var street = '';
+  if(userData['address'].hasOwnProperty('street')) {
+    street = userData['address']['street'];
+  }
+  var house = '';
+  if(userData['address'].hasOwnProperty('house')) {
+    house = userData['address']['house'];
+  }
+  var flat = '';
+  if(userData['address'].hasOwnProperty('flat')) {
+    flat = userData['address']['flat'];
+  }
+
+  if($('input[name="mail"]').length > 0 && $('input[name="mail"]').val().length > 0) {
+    email = $('input[name="mail"]').val();
+  }
+  if($('input[name="name_new"]').length > 0 && $('input[name="name_new"]').val().length > 0) {
+    fio = $('input[name="name_new"]').val();
+  }
+
   var widget = new SafeRouteCartWidget('saferoute-widget', {
     apiScript: '/phpshop/modules/saferoutewidget/api/saferoute-widget-api.php',
     products: $.parseJSON($("input:hidden.cartListJson").val()),
-    weight: $('#ddweight').val()
+    weight: $('#ddweight').val(),
+    userFullName: fio,
+    userPhone: phone,
+    userEmail: email,
+    regionName: city,
+    userAddressStreet: street,
+    userAddressBuilding: house,
+    userAddressApartment: flat
   });
 
   widget.on('error', function (e) {

@@ -104,7 +104,7 @@ function updateDiscount($data) {
  * Списывание со склада
  */
 function updateStore($data) {
-    global $PHPShopSystem, $PHPShopBase, $_classPath, $PHPShopOrderStatusArray,$PHPShopModules;
+    global $PHPShopSystem, $PHPShopBase, $_classPath, $PHPShopOrderStatusArray, $PHPShopModules;
 
     // Статусы заказов
     $GetOrderStatusArray = $PHPShopOrderStatusArray->getArray();
@@ -466,7 +466,10 @@ function actionSave() {
     // Сохранение данных
     actionUpdate();
 
-    header('Location: ?path=' . $_GET['path']);
+    if (!empty($_GET['return']))
+        header('Location: ?path=' . $_GET['return']);
+    else
+        header('Location: ?path=' . $_GET['path']);
 }
 
 /**
@@ -562,6 +565,7 @@ function actionUpdate() {
         $_POST['status_new'] = serialize($status);
     }
 
+    $_POST['date_new'] = time();
     $PHPShopOrm->clean();
 
     // Списывание со склада из корзины и оповещение по SMS
@@ -718,9 +722,9 @@ function actionCartUpdate() {
 
             // Обновление цены и кол-ва
             default:
-                
-                $_POST['selectAction']='productUpdate';
-                
+
+                $_POST['selectAction'] = 'productUpdate';
+
                 // Имя товара
                 if (!empty($_POST['name_value']))
                     $order['Cart']['cart'][$productID]['name'] = $_POST['name_value'];
@@ -779,7 +783,7 @@ function actionCartUpdate() {
         $PHPShopCart->clean();
 
         // Перехват модуля
-        $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, array('old'=>$data,'new'=>$update,'title'=>$_POST['selectAction']));
+        $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, array('old' => $data, 'new' => $update, 'title' => $_POST['selectAction']));
 
         $action = $PHPShopOrm->update($update, array('id' => '=' . $orderID));
 

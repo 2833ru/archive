@@ -68,7 +68,9 @@ function actionUpdate() {
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
 
-    $_POST['image_new'] = iconAdd();
+    if(empty($_POST['ajax'])) {
+        $_POST['image_new'] = iconAdd();
+    }
 
     if (empty($_POST['mobile_new']))
         $_POST['mobile_new'] = 0;

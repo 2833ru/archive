@@ -566,9 +566,34 @@ function actionUpdate() {
         if ($_POST['rate_new'] > 5)
             $_POST['rate_new'] = 5;
 
+        $postOdnotip = explode(',', $_POST['odnotip_new']);
+        $odnotip = [];
+        if(is_array($postOdnotip)) {
+            foreach ($postOdnotip as $value) {
+                if((int) $value > 0) {
+                    $odnotip[] = (int) $value;
+                }
+            }
+
+            $_POST['odnotip_new'] = implode(',', $odnotip);
+        }
 
         // Корректировка пустых значений
         $PHPShopOrm->updateZeroVars('newtip_new', 'enabled_new', 'spec_new', 'yml_new', 'sklad_new', 'pic_small_new', 'pic_big_new');
+    }
+
+    if(empty($_POST['pic_small_new']) || empty($_POST['pic_big_new'])) {
+        $orm = new PHPShopOrm($GLOBALS['SysValue']['base']['foto']);
+        $photo = $orm->getOne(['name'], ['parent' => sprintf('="%s"', $_POST['rowID'])], ['order' => 'id asc']);
+        if(empty($_POST['pic_big_new'])) {
+            $_POST['pic_big_new'] = $photo['name'];
+        }
+        if(empty($_POST['pic_small_new'])) {
+            $_POST['pic_small_new'] = str_replace(".", "s.", $photo['name']);
+            if(!file_exists($_SERVER['DOCUMENT_ROOT'] . $_POST['pic_small_new'])) {
+                $_POST['pic_small_new'] = $photo['name'];
+            }
+        }
     }
 
     // Перехват модуля

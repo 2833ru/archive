@@ -252,9 +252,8 @@ class PHPShopProductElements extends PHPShopElements {
     
     /**
      * Проверка дополнительных складов
-     * @param array $row масив данных по товару
      */
-    function getStore($product = array()) {
+    function getStore() {
 
         if(is_array($this->warehouse)) {
             return;
@@ -277,12 +276,10 @@ class PHPShopProductElements extends PHPShopElements {
         $data = $PHPShopOrm->select(array('*'), $where, array('order' => 'num'), array('limit' => 100));
         if (is_array($data))
             foreach ($data as $row) {
-                if (isset($product['items' . $row['id']])) {
-                    if (!empty($row['description']))
-                        $this->warehouse[$row['description']] = $product['items' . $row['id']];
-                    else
-                        $this->warehouse[$row['name']] = $product['items' . $row['id']];
-                }
+                if (!empty($row['description']))
+                    $this->warehouse[$row['id']] = $row['description'];
+                else
+                    $this->warehouse[$row['id']] = $row['name'];
             }
     }
 
@@ -322,8 +319,10 @@ class PHPShopProductElements extends PHPShopElements {
                 if ($this->warehouse_sum == 0)
                     $this->set('productSklad', PHPShopText::div(__('Общий склад') . ": " . $row['items'] . " " . $row['ed_izm']), true);
 
-                foreach ($this->warehouse as $store_name => $store_items) {
-                    $this->set('productSklad', PHPShopText::div($store_name . ": " . $store_items . " " . $row['ed_izm']), true);
+                foreach ($this->warehouse as $store_id => $store_name) {
+                    if(isset($row['items' . $store_id])) {
+                        $this->set('productSklad', PHPShopText::div($store_name . ": " . $row['items' . $store_id] . " " . $row['ed_izm']), true);
+                    }
                 }
             }
             else
