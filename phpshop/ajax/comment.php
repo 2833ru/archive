@@ -20,14 +20,7 @@ PHPShopObj::loadClass("product");
 
 $PHPShopSystem = new PHPShopSystem();
 $PHPShopLang = new PHPShopLang(array('locale' => $_SESSION['lang'], 'path' => 'shop'));
-
-// Подключаем библиотеку поддержки JsHttpRequest
-if ($_REQUEST['type'] != 'json') {
-    require_once $_classPath . "/lib/Subsys/JsHttpRequest/Php.php";
-    $JsHttpRequest = new Subsys_JsHttpRequest_Php("windows-1251");
-}
-else
-    $_REQUEST['message'] = PHPShopString::utf8_win1251($_REQUEST['message']);
+$_REQUEST['message'] = PHPShopString::utf8_win1251($_REQUEST['message']);
 
 /**
  * Создание запроса БД на вывод комментариев
@@ -59,7 +52,7 @@ function Page_comment($id) {
  * @return string
  */
 function Nav_comment($id) {
-    global $SysValue,$link_db;
+    global $SysValue, $link_db;
 
     $navigat = null;
     $p = $_REQUEST['page'];
@@ -69,7 +62,7 @@ function Nav_comment($id) {
     // Ко-во позиций на странице
     $num_row = 10;
     $sql = "select id from " . $SysValue['base']['comment'] . " where parent_id=" . intval($id) . " and enabled='1'";
-    @$result = mysqli_query($link_db,$sql);
+    @$result = mysqli_query($link_db, $sql);
     $num_page = mysqli_num_rows(@$result);
     $i = 1;
     $num = $num_page / $num_row;
@@ -82,8 +75,7 @@ function Nav_comment($id) {
                 $pageOt = $i + @$pageDo - $i;
 
             $pageDo = $i * $num_row;
-            $navigat.='<li class=""><a href="javascript:commentList('.$id.',\'list\','.$i.');">'.$i.'</a></li>';
-           
+            $navigat .= '<li class=""><a href="javascript:commentList(' . $id . ',\'list\',' . $i . ');">' . $i . '</a></li>';
         }
         else {
 
@@ -93,7 +85,7 @@ function Nav_comment($id) {
                 $pageOt = $i + @$pageDo - $i;
 
             $pageDo = $i * $num_row;
-            $navigat.='<li class="active"><a>'.$i.'</a></li>';
+            $navigat .= '<li class="active"><a>' . $i . '</a></li>';
         }
         $i++;
     }
@@ -105,9 +97,9 @@ function Nav_comment($id) {
         }
         $nava = '<nav>
   <ul class="pagination">
-    <li class=""><a href="javascript:commentList('.$id.',\'list\',' . ($p - 1) . ');" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
-    '.$navigat.'
-    <li class=""><a href="javascript:commentList('.$id.',\'list\',' . $p_to . ');" aria-label="Previous"><span aria-hidden="true">&raquo;</span></a></li>
+    <li class=""><a href="javascript:commentList(' . $id . ',\'list\',' . ($p - 1) . ');" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+    ' . $navigat . '
+    <li class=""><a href="javascript:commentList(' . $id . ',\'list\',' . $p_to . ');" aria-label="Previous"><span aria-hidden="true">&raquo;</span></a></li>
   </ul>
 </nav>';
     }
@@ -159,11 +151,11 @@ function returnSmile($string) {
  * @return string
  */
 function DispComment($id) {
-    global $SysValue,$link_db;
+    global $SysValue, $link_db;
 
     $dis = null;
     $sql = Page_comment($id);
-    $result = mysqli_query($link_db,$sql);
+    $result = mysqli_query($link_db, $sql);
     while ($row = mysqli_fetch_array($result)) {
         $user_id = $row['user_id'];
 
@@ -182,7 +174,7 @@ function DispComment($id) {
 
         // Подключаем шаблон
         if (is_file('../../' . $SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/comment/main_comment_forma.tpl"))
-            $dis.=PHPShopParser::file('../../' . $SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/comment/main_comment_forma.tpl", true);
+            $dis .= PHPShopParser::file('../../' . $SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/comment/main_comment_forma.tpl", true);
     }
 
     // Определяем переменные
@@ -193,7 +185,7 @@ function DispComment($id) {
     $SysValue['other']['productPageDis'] = str_replace("#imagesSavePathLabel#", "images", $dis);
 
     // Подключаем шаблон
-    $disp = PHPShopParser::file('../../' . $SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/comment/comment_page_list.tpl", true,false);
+    $disp = PHPShopParser::file('../../' . $SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/comment/comment_page_list.tpl", true, false);
     return $disp;
 }
 
@@ -201,14 +193,13 @@ function avg_rate($rate) {
 
     $oneStarWidth = 20; // ширина одной звёздочки
     $oneSpaceWidth = 0; // пробел между звёздочками
-    
     // берём параметры с конфига, если заданы
     if (@$_SESSION['Memory']["rateForComment"]["oneStarWidth"])
         $oneStarWidth = $_SESSION['Memory']["rateForComment"]["oneStarWidth"];
     if (@$_SESSION['Memory']["rateForComment"]["oneSpaceWidth"])
         $oneSpaceWidth = $_SESSION['Memory']["rateForComment"]["oneSpaceWidth"];
 
-    
+
     return $oneStarWidth * $rate + $oneSpaceWidth * ceil($rate);
 }
 
@@ -224,11 +215,11 @@ switch ($_REQUEST['comand']) {
             $myRate = 0;
         elseif ($myRate > 5)
             $myRate = 5;
-        if (!empty($_SESSION['UsersId']) and !empty($myMessage)) {
+        if (!empty($_SESSION['UsersId']) and ! empty($myMessage)) {
 
             $PHPShopUser = new PHPShopUser($_SESSION['UsersId']);
             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['comment']);
-            $PHPShopOrm->insert(array('datas_new'=>time(),'name_new'=>$PHPShopUser->getName(),'parent_id_new'=>$xid,'content_new'=>$myMessage,'user_id_new'=>intval($_SESSION['UsersId']),'enabled_new'=>0,'rate_new'=>$myRate));
+            $PHPShopOrm->insert(array('datas_new' => time(), 'name_new' => $PHPShopUser->getName(), 'parent_id_new' => $xid, 'content_new' => $myMessage, 'user_id_new' => intval($_SESSION['UsersId']), 'enabled_new' => 0, 'rate_new' => $myRate));
 
             // Имя товара
             $PHPShopProduct = new PHPShopProduct($xid);
@@ -244,13 +235,12 @@ switch ($_REQUEST['comand']) {
             $message = PHPShopParser::file("../lib/templates/comment/mail.tpl", true);
 
             $system = new PHPShopSystem();
-            $zag = __("Добавили отзыв к товару")." $name / " . $SysValue['other']['commentData'];
+            $zag = __("Добавили отзыв к товару") . " $name / " . $SysValue['other']['commentData'];
             $adminMail = $system->getValue('adminmail2');
-            new PHPShopMail($adminMail, $adminMail, $zag, $message,false,false,array('replyto'=>$PHPShopUser->getValue('mail')));
+            new PHPShopMail($adminMail, $adminMail, $zag, $message, false, false, array('replyto' => $PHPShopUser->getValue('mail')));
             $error = "done";
             writeLangFile();
-        }
-        else
+        } else
             $error = "error";
         $interfaces = DispComment($_REQUEST['xid']);
         break;
@@ -261,7 +251,7 @@ switch ($_REQUEST['comand']) {
 
     case("edit"):
         $sql = "select content from " . $SysValue['base']['table_name36'] . " where id=" . intval($_REQUEST['cid']) . " and user_id=" . $_SESSION['UsersId'];
-        $result = mysqli_query($link_db,$sql);
+        $result = mysqli_query($link_db, $sql);
         $row = mysqli_fetch_array($result);
         $interfaces = $row['content'];
         break;
@@ -269,32 +259,31 @@ switch ($_REQUEST['comand']) {
     case("edit_add"):
         $myMessage = strip_tags($_REQUEST['message']);
         $myMessage = PHPShopSecurity::TotalClean($myMessage, 2);
-        if ($_SESSION['UsersId'] > 0 and !empty($myMessage)) {
+        if ($_SESSION['UsersId'] > 0 and ! empty($myMessage)) {
             $sql = "UPDATE " . $SysValue['base']['table_name36'] . "
             SET
             datas='" . date("U") . "',
             enabled='0',
             content='" . $myMessage . "' 
             where id='" . intval($_REQUEST['cid']) . "'";
-            mysqli_query($link_db,$sql);
+            mysqli_query($link_db, $sql);
 
             // пересчитываем рейтинг для товара.
             $sql = "SELECT parent_id FROM " . $SysValue['base']['table_name36'] . " where id='" . intval($_REQUEST['cid']) . "'";
-            $result = mysqli_query($link_db,$sql);
+            $result = mysqli_query($link_db, $sql);
             $row = mysqli_fetch_array($result);
             $parent_id = $row['parent_id'];
 
-            $result = mysqli_query($link_db,"select avg(rate) as rate, count(id) as num from " . $SysValue['base']['table_name36'] . " WHERE parent_id=$parent_id AND enabled='1' AND rate>0 group by parent_id LIMIT 1");
+            $result = mysqli_query($link_db, "select avg(rate) as rate, count(id) as num from " . $SysValue['base']['table_name36'] . " WHERE parent_id=$parent_id AND enabled='1' AND rate>0 group by parent_id LIMIT 1");
             if (mysqli_num_rows($result)) {
                 $row = mysqli_fetch_array($result);
                 extract($row);
                 $rate = round($rate, 1);
-                mysqli_query($link_db,"UPDATE  " . $SysValue['base']['products'] . " SET rate = '$rate', rate_count='$num' WHERE id=$parent_id");
+                mysqli_query($link_db, "UPDATE  " . $SysValue['base']['products'] . " SET rate = '$rate', rate_count='$num' WHERE id=$parent_id");
             } else {
-                mysqli_query($link_db,"UPDATE  " . $SysValue['base']['products'] . " SET rate = '0', rate_count='0' WHERE id=$parent_id");
+                mysqli_query($link_db, "UPDATE  " . $SysValue['base']['products'] . " SET rate = '0', rate_count='0' WHERE id=$parent_id");
             }
-        }
-        else
+        } else
             $error = "error";
         $interfaces = DispComment($_REQUEST['xid']);
         break;
@@ -302,7 +291,7 @@ switch ($_REQUEST['comand']) {
     case("dell"):
         $sql = "delete from " . $SysValue['base']['table_name36'] . "
 where id='" . intval($_REQUEST['cid']) . "'";
-        mysqli_query($link_db,$sql);
+        mysqli_query($link_db, $sql);
         $interfaces = DispComment($_REQUEST['xid']);
         break;
 }
@@ -315,8 +304,6 @@ $_RESULT = array(
 );
 
 // JSON 
-if ($_REQUEST['type'] == 'json') {
-    $_RESULT['comment'] = PHPShopString::win_utf8($interfaces);
-    echo json_encode($_RESULT);
-}
+$_RESULT['comment'] = PHPShopString::win_utf8($interfaces);
+echo json_encode($_RESULT);
 ?>

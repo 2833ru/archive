@@ -7,6 +7,8 @@
  * @package PHPShopCore
  */
 class PHPShopMap extends PHPShopCore {
+    
+    var $empty_index_action = false;
 
     /**
      * Конструктор
@@ -211,6 +213,8 @@ class PHPShopMap extends PHPShopCore {
 
         // Мета
         $this->title = __("Карта сайта") . " - " . $this->PHPShopSystem->getValue("name");
+        $this->description = __("Карта сайта") . " " . $this->PHPShopSystem->getValue("name");
+        $this->keywords = __("Карта сайта") . ", " . $this->PHPShopSystem->getValue("name");
 
         $this->set('catalFound', $this->lang('found_of_catalogs'));
         $this->set('catalNum', $this->PHPShopCategoryArray->getNum());

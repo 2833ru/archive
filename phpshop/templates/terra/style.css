@@ -2800,23 +2800,6 @@ h3.panel-title {
 	max-width: 100px;
 }
 
-.chat-modal-content{
-	height:500px;
-	width:100%;
-	overflow:hidden;
-	border: 0px;
-	margin:0px;
-}
-#chatopenwindow{
-	margin-right:7px;
-}
-.chat{ 
-	position: fixed; bottom: 20px; left: 20px;
-	border-radius: 0 !important;
-	border: 0px;
-	height: 42px;
-	background: #D9D9D9 !important;
-}
 .page-price .nav>li {
 	z-index: 1 !important;
 }
@@ -4321,7 +4304,6 @@ outline: none!important;
 .additional-nav-menu + .additional-nav-menu {display:none}
 .search-misspell {
 	font-size: 14px;
-	margin-bottom: 20px;
 }
 .product-services-list  label {display:block;}
 .product-services-list label input[type="checkbox"]{border-radius:0}

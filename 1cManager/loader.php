@@ -51,7 +51,7 @@ switch ($_REQUEST['command']) {
             $where = "where seller!='1'";
 
             if (!empty($load_status))
-                $where.=" and statusi=" . intval($load_status);
+                $where .= " and statusi=" . intval($load_status);
 
             $sql = "select * from " . $GLOBALS['SysValue']['base']['orders'] . " " . $where . " and datas BETWEEN " . $_REQUEST['date1'] . " AND " . $_REQUEST['date2'] . " order by id desc  limit " . $_REQUEST['num'];
 
@@ -122,8 +122,8 @@ switch ($_REQUEST['command']) {
                     $adr_info .= ", квартира: " . $row['flat'];
                 if ($row['delivtime'])
                     $adr_info .= ", время доставки: " . $row['delivtime'];
-                if ($row['dop_info'])
-                    $adr_info .= ", дополнительная информация: " . $row['dop_info'];
+                //if ($row['dop_info'])
+                    //$adr_info .= ", дополнительная информация: " . $row['dop_info'];
 
                 $adres = PHPShopSecurity::CleanOut(str_replace("&quot;", '"', $adr_info . $order['Person']['adr_name']));
                 $oplata = $PHPShopOrder->getOplataMetodName();
@@ -141,7 +141,7 @@ switch ($_REQUEST['command']) {
                 $org_city = $row['org_city'];
 
                 // Ver 1.8
-                $csv1.="$id;$uid;$datas;$mail;$name;$company;$tel;$oplata;$sum;$discount;$inn;$adres;$kpp;$user;$org_yur_adres;$org_fakt_adres;$org_ras;$org_bank;$org_kor;$org_bik;$org_city\n";
+                $csv1 .= "$id;$uid;$datas;$mail;$name;$company;$tel;$oplata;$sum;$discount;$inn;$adres;$kpp;$user;$org_yur_adres;$org_fakt_adres;$org_ras;$org_bank;$org_kor;$org_bik;$org_city\n";
 
                 if (is_array($order['Cart']['cart']))
                     foreach ($order['Cart']['cart'] as $val) {
@@ -152,18 +152,17 @@ switch ($_REQUEST['command']) {
 
                         // Валюта
                         $valuta = $PHPShopOrder->getValutaIso($id);
-                        $csv2.="$id;$uid;$num;$sum;$valuta\n";
+                        $csv2 .= "$id;$uid;$num;$sum;$valuta\n";
                     }
 
                 // Доставка
                 $PHPShopDelivery = new PHPShopDelivery($order['Person']['dostavka_metod']);
-                $csv3.=$PHPShopDelivery->getCity() . ";" . $order['Cart']['dostavka'] . ";" . $valuta . "\n";
+                $csv3 .= $PHPShopDelivery->getCity() . ";" . $order['Cart']['dostavka'] . ";" . $valuta . "\n";
 
-                $csv.=$csv1 . $csv2 . $csv3;
+                $csv .= $csv1 . $csv2 . $csv3;
             }
             echo $csv;
-        }
-        else
+        } else
             exit('Ошибка проверки параметров блока list');
         break;
 
@@ -175,10 +174,13 @@ switch ($_REQUEST['command']) {
         $CheckStatusReady = CheckStatusReady();
         mysqli_query($link_db, "UPDATE " . $GLOBALS['SysValue']['base']['orders'] . " SET seller='1', statusi=" . intval($CheckStatusReady) . " where id=" . intval($_REQUEST['id']));
 
-        mysqli_query($link_db, "INSERT INTO " . $GLOBALS['SysValue']['base']['1c_docs'] . " (`uid`, `cid`, `datas`, `year`) VALUES (" . $_REQUEST['id'] . ", '" . $_REQUEST['cid'] . "'," . $curent_time . "," . date('Y') . ")");
+        if (!empty($_REQUEST['cid'])) {
+            mysqli_query($link_db, "INSERT INTO " . $GLOBALS['SysValue']['base']['1c_docs'] . " (`uid`, `cid`, `datas`, `year`) VALUES (" . $_REQUEST['id'] . ", '" . $_REQUEST['cid'] . "'," . $curent_time . "," . date('Y') . ")");
+        }
 
-        // Сообщение пользователю
-        SendMailUser($_REQUEST['id'], "accounts", $curent_time);
+            // Сообщение пользователю
+            SendMailUser($_REQUEST['id'], "accounts", $curent_time);
+        
         break;
 
 
@@ -197,7 +199,7 @@ switch ($_REQUEST['command']) {
         @$result = mysqli_query($link_db, "select * from " . $GLOBALS['SysValue']['base']['1c_docs'] . " where datas<'" . $_REQUEST[date2] . "' and datas>'" . $_REQUEST[date1] . "'");
         while ($row = mysqli_fetch_array($result)) {
             $cid = $row['cid'];
-            $csv.="$cid;";
+            $csv .= "$cid;";
         }
         echo $csv;
         break;

@@ -39,14 +39,11 @@
         <div class="mobile-fix-menu">
             <div class="d-flex justify-content-between">
                 <span class="back-btn d-flex align-items-center"><i class="icons icons-prev2"
-                                                                    style="backface-visibility: hidden;"></i> Назад</span>
+                                                                    style="backface-visibility: hidden;"></i> {Назад}</span>
                 <button type="button" class="menu-close"><span aria-hidden="true" class="fal fa-times"></span></button>
             </div>
             <ul class="m-menu">
-
                 @leftCatal@
-
-
             </ul>
         </div>
         <header>
@@ -71,7 +68,7 @@
                                 <path stroke="#454444" stroke-width="2" d="M0 5h24"></path>
                                 </svg></div>
 
-                        </div> <a>Категории</a>
+                        </div> <a>{Категории}</a>
                     </div>
                     <div class="header-call d-flex align-items-center justify-content-start">
                         @returncall@
@@ -83,7 +80,7 @@
                     <div class="header-search">
                         <form action="/search/" role="search" method="get">
                             <div class="input-group">
-                                <input name="words" maxlength="50" id="search-mobile" class="form-control" placeholder="{Искать}.." required="" type="search" data-trigger="manual" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="">
+                                <input name="words" maxlength="50" class="form-control search-input" placeholder="{Искать}.." required="" type="search" data-trigger="manual" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="">
                                 <span class="input-group-btn">
                                     <button class="btn btn-default" type="submit"><span
                                             class="icons icons-search"></span></button>
@@ -112,8 +109,6 @@
                     <div class="container">
                         <ul class="mobile-menu">
                             @leftCatal@
-
-
                         </ul>
                     </div>
                 </div>
@@ -124,7 +119,7 @@
 
         <!-- Fixed navbar -->
         <div class="container sticky">
-            <nav class="navbar main-navbar" role="navigation" id="navigation">
+            <nav class="navbar main-navbar" id="navigation">
 
                 <div class="navbar-header">
                     <div class="visible-xs btn-mobile-menu"><span class="icons-menu"></span></div>
@@ -134,7 +129,7 @@
                             <div class="filter-menu-wrapper">
                                 <div class="btn-group filter-menu" data-toggle="buttons">
 
-                                    <label class="btn btn-sm btn-sort @sSetCactive@" checked="checked">
+                                    <label class="btn btn-sm btn-sort @sSetCactive@">
                                         <input type="radio" name="s" value="3"> {Популярные}
                                     </label>
 
@@ -158,8 +153,6 @@
                             </span>
                         </div>
                     </form>
-
-
                 </div>
 
                 <div id="navbar" class="navbar-collapse collapse">
@@ -168,7 +161,6 @@
                             <ul class="nav  main-navbar-top">
 
                                 <!-- dropdown catalog menu -->
-
                                 <li class="visible-xs">
                                     <ul class="mobile-menu">
                                         @leftCatal@
@@ -212,14 +204,9 @@
                 <div class="d-flex container align-items-start">
                     <div class="left-content ">
 
-
-
-
-
                         <!-- Фасетный фильтр -->
-                        <div class="hide" id="faset-filter" class="left-filter">
-                            <div class="faset-filter-name text-right"><span class="close"><span class="fal fa-times"
-                                                                                                aria-hidden="true"></span></span></div>
+                        <div class="hide left-filter" id="faset-filter">
+                            <div class="faset-filter-name text-right"><span class="close"><span class="fal fa-times" aria-hidden="true"></span></span></div>
                             <div class="panel-body faset-filter-block-wrapper">
 
                                 <div id="faset-filter-body">{Загрузка}</div>
@@ -246,19 +233,17 @@
                         </div>
                         <!--/ Фасетный фильтр -->
                         <!-- ProductDay Mod -->
-                        <!--@productDay@-->
+                        @productDay@
                         <!--/ ProductDay Mod -->
                         <div class="left-info-block">
                             <div class="block  hidden-xs  @php __hide('pageCatal'); php@">
                                 <div class="block-heading">
-                                    <h3 class="block-title">Это интересно</h3>
+                                    <h3 class="block-title">{Это интересно}</h3>
                                 </div>
                                 <ul class="block-body">
                                     @pageCatal@
-
                                 </ul>
                             </div>
-
 
                             @leftMenu@
                             <div class="visible-lg visible-md text-center banner">@banersDisp@</div>
@@ -270,12 +255,8 @@
                                     <div id="productlist">
                                         <table>@productlist_list@</table>
                                     </div>
-
-
                                 </div>
                             </div>
-
-
 
                             @oprosDisp@
                         </div>
@@ -320,14 +301,11 @@
 
             </div>
 
-
             <!-- toTop -->
             <div class="visible-lg visible-md">
                 <a href="#" id="toTop"><span id="toTopHover"></span>{Наверх}</a>
             </div>
             <!--/ toTop -->
-
-
 
         </div>
         <section class="specMain @php __hide('productOdnotipList'); php@">
@@ -355,8 +333,6 @@
                             </div>
                         </div>
                     </div>
-
-
                 </div>
             </div>
         </section>
@@ -427,12 +403,20 @@
         <footer class="footer  ">
 
             <div class="container">
-                <!-- My Account Links Starts -->
+
                 <div class="col-md-3 col-sm-4 col-xs-12" itemscope itemtype="http://schema.org/Organization">
                     <div class="logo">
                         <a href="/"><img src="@logo@" alt="@name@"></a>
                     </div>
-                    @button@
+                        <ul>
+                            <li>&copy; <span itemprop="name">@company@</span>, @year@</li>
+                            <li><span itemprop="email">@adminMail@</span></li>
+                            <li><span itemprop="telephone">@telNum@</span></li>
+                            <li itemprop="telephone">@telNum2@</li>
+                            <li>@workingTime@</li>
+                            <li itemprop="address" itemscope itemtype="http://schema.org/PostalAddress"> <span itemprop="streetAddress">@streetAddress@</span></li>
+                            <li>@button@</li>
+                        </ul>
                 </div>
 
                 <div class="col-md-3 col-sm-4 col-xs-12">
@@ -489,7 +473,7 @@
                 <div class="modal-body">
                     <form action="/search/" role="search" method="get">
                         <div class="input-group">
-                            <input name="words" maxlength="50" class="form-control" placeholder="Искать.." required="" type="search">
+                            <input name="words" maxlength="50" class="form-control" placeholder="{Искать}.." required="" type="search">
                             <span class="input-group-btn">
                                 <button class="btn btn-default" type="submit"><span
                                         class="icons icons-search"></span></button>
@@ -513,7 +497,7 @@
                     <h4 class="modal-title">{Авторизация}</h4>
                     <span id="usersError" class="hide">@usersError@</span>
                 </div>
-                <form role="form" method="post" name="user_forma">
+                <form method="post" name="user_forma">
                     <div class="modal-body">
                         <div class="form-group">
 
@@ -548,12 +532,12 @@
     </div>
     <!--/ Модальное окно авторизации-->
 
-    <!-- jQuery -->
     @editor@
+    @dialog@
 
     <!-- Fixed mobile bar -->
     <div class="bar-padding-fix visible-xs visible-sm"></div>
-    <nav class="navbar navbar-fixed-bottom bar bar-tab visible-xs visible-sm" role="navigation">
+    <nav class="navbar navbar-fixed-bottom bar bar-tab visible-xs visible-sm">
         <div class="d-flex justify-content-between align-center">
 
             <a class=" @cart_active@" href="/order/" id="bar-cart">
@@ -576,15 +560,14 @@
     </nav>
     <!--/ Fixed mobile bar -->
 
-    <div class="modal fade new-modal" id="noticeModal" tabindex="-1" role="dialog" aria-labelledby="{Уведомить}" aria-hidden="true">
+    <div class="modal fade new-modal" id="noticeModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog small-modal" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="exampleModalLabel" class="d-flex">{Уведомить при появлении товара в продаже}
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
-                    </h4>
+                    <h4 class="modal-title d-flex" id="exampleModalLabel">{Уведомить при появлении товара в продаже}</h4>
                 </div>
                 <div class="modal-body">
                     <h4>
@@ -595,7 +578,7 @@
                             <div class="image notice-product-image"></div>
                         </div>
                     </div>
-                    <form role="form" method="post" name="ajax-form" action="phpshop/ajax/notice.php" data-modal="noticeModal">
+                    <form method="post" name="ajax-form" action="phpshop/ajax/notice.php" data-modal="noticeModal">
                         <div class="form-group">
                             <div class=""></div>
                             <div class="">
@@ -639,12 +622,13 @@
                                 @rule@
                             </label>
                         </p>
-                        <div class="form-group">
+                        <div class="form-group ">
                             <div class=""></div>
                             <div class="">
                                 <input type="hidden" class="notice-product-id" name="productId">
                                 <input type="hidden" name="ajax" value="1">
-                                <button type="submit" class="btn btn-main">{Уведомить}</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                                <button type="submit" class="btn btn-primary">{Уведомить}</button>
                             </div>
                         </div>
                     </form>
@@ -652,6 +636,7 @@
             </div>
         </div>
     </div>
+    
     <div id="thanks-box" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">

@@ -1,4 +1,7 @@
-#php_flag register_globals off
+DirectoryIndex cml.php
+RewriteEngine On
+RewriteCond %{REQUEST_URI} ^(/1cManager/upload/(.*))
+RewriteRule .* - [F]
 
 <files *.htm>
 Order Deny,Allow

@@ -6,7 +6,7 @@
 
 @Error@
 <div class="row">
-<form role="form" method="post" name="forma_gbook">
+<form method="post" name="forma_gbook">
     <div class="form-group">
         <label for="exampleInputEmail1"></label>
         <div class="col-xs-12 col-sm-6">

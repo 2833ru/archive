@@ -37,7 +37,7 @@
         <!-- Header -->
         <div class="mobile-fix-menu">
             <div class="d-flex justify-content-between">
-                <span class="back-btn d-flex align-items-center"><i class="icons icons-prev2" style="backface-visibility: hidden;"></i> Назад</span>
+                <span class="back-btn d-flex align-items-center"><i class="icons icons-prev2" style="backface-visibility: hidden;"></i> {Назад}</span>
                 <button type="button" class="menu-close" ><span
                         aria-hidden="true" class="fal fa-times"></span></button></div>
             <ul class="m-menu">
@@ -58,7 +58,7 @@
                             <div><svg width="24" height="5"><path stroke="#454444" stroke-width="2" d="M0 5h24"></path></svg></div>
                             <div><svg width="24" height="5"><path stroke="#454444" stroke-width="2" d="M0 5h24"></path></svg></div>
 
-                        </div> <a >Категории</a>
+                        </div> <a>{Категории}</a>
                     </div>
                     <div class="header-call d-flex align-items-center justify-content-start">
                         @returncall@
@@ -69,8 +69,8 @@
                     </div>
                     <div class="header-search">
                         <form action="/search/" role="search" method="get">
-                            <div class="input-group">
-                                <input name="words" maxlength="50" id="search-mobile" class="form-control" placeholder="{Искать}.." required="" type="search" data-trigger="manual" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="">
+                            <div class="input-group search-container">
+                                <input name="words" maxlength="50" class="form-control search-input" placeholder="{Искать}.." required="" type="search" data-trigger="manual" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="">
                                 <span class="input-group-btn">
                                     <button class="btn btn-default" type="submit"><span
                                             class="icons icons-search"></span></button>
@@ -82,46 +82,49 @@
                         <li role="presentation">@wishlist@</li>
                         <li role="presentation">
                             <a href="/compare/">
-                                <span id="numcompare">@numcompare@</span><span class="icons icons-green icons-small icons-compare"></span></a>
+                                <span id="numcompare">@numcompare@</span><span class="icons icons-green icons-small icons-compare"></span>
+                            </a>
                         </li>
                     </ul>
                     <div class="header-cart hidden-sm"><a id="cartlink" data-trigger="hover" data-container="#cart" data-toggle="popover" data-placement="bottom" data-html="true" data-url="/order/" data-content='@visualcart@' href="/order/"><span class="icons icons-blue icons-big icons-cart"></span><span id="num" class="">@num@</span> <span class="visible-lg-inline">{товаров}  {на} </span><span id="sum" class="">@sum@</span> <span class="rubznak">@productValutaName@</span></a>
                         <div id="visualcart_tmp" class="hide">@visualcart@</div>
                     </div>
                     <ul class="header-user"> @usersDisp@</ul>
-                </div></div>
-            <div class="drop-menu drop"><div class="drop-shadow"><div class="container"> 
+                </div>
+            </div>
+            <div class="drop-menu drop">
+                <div class="drop-shadow">
+                    <div class="container">
                         <ul class="mobile-menu">
                             @leftCatal@
-
-
-                        </ul></div></div></div>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </header>
 
         <!--/ Header -->
 
         <!-- Fixed navbar -->
-        <!-- Fixed navbar -->
         <div class="container sticky">
-            <nav class="navbar main-navbar" role="navigation" id="navigation">
-
+            <nav class="navbar main-navbar" id="navigation">
                 <div class="navbar-header">
                     <div class="visible-xs btn-mobile-menu"><span class="icons-menu"></span></div>
-
-                    <div class="filter-panel"><div class="filter-well" ><div class="filter-menu-wrapper">
+                    <div class="filter-panel">
+                        <div class="filter-well" >
+                            <div class="filter-menu-wrapper">
                                 <div class="btn-group filter-menu" data-toggle="buttons">
-
-                                    <label class="btn btn-sm btn-sort @sSetCactive@" checked="checked">
+                                    <label class="btn btn-sm btn-sort @sSetCactive@">
                                         <input type="radio" name="s" value="3"> {Популярные} 
                                     </label>
-
                                     <label class="btn btn-sm btn-sort" >
                                         <input type="radio" name="s" value="2&f=2"> {Дорогие}
                                     </label>
                                     <label class="btn btn-sm btn-sort " >
                                         <input type="radio" name="s" value="2&f=1"> {Дешевые}
                                     </label>
-                                </div></div>
+                                </div>
+                            </div>
                         </div>
                         <span class="filter-btn" ><span class="icons icons-filter"></span>{Фильтры}</span>
                     </div>
@@ -134,17 +137,13 @@
                             </span>
                         </div>
                     </form>
-
-
                 </div>
-
                 <div id="navbar" class="navbar-collapse collapse">
                     <div class=" header-menu-wrapper ">
                         <div class="row d-flex justify-content-between m-0">
                             <ul class="nav  main-navbar-top">
 
                                 <!-- dropdown catalog menu -->
-
                                 <li class="visible-xs">
                                     <ul class="mobile-menu">
                                         @leftCatal@
@@ -162,7 +161,6 @@
 
                 </div>
                 <!--/.nav-collapse -->
-
             </nav>
         </div>
         <!-- VisualCart Mod -->
@@ -267,35 +265,19 @@
             </div>
         </section>
         <section class="specMain">
-
             <div class="container">
-
                 <div class="row">
                     <div class="clearfix"></div>
-                    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery-2.2.5.min.js">
-                    </script>
-
-
+                    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery-2.2.5.min.js"></script>
                     <div class="col-md-12 col-xs-12 main">
-
-
                         <div class="bar-padding-top-fix visible-md"></div>
-                        <!-- Slider Section Starts -->
-                        <!-- Nested Container Starts -->
-                        <!-- Carousel Starts -->
-
-
-                        <!-- Slider Section Ends -->
-
-
                         <div class="page-header">
                             <h1>@mainContentTitle@</h1>
                         </div>
                         <div>@mainContent@</div>
-
-
                     </div>
                 </div>
+            </div>
         </section>
         <section class="specMain @php __hide('nowBuy'); php@">
 
@@ -346,39 +328,42 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>    </div>
-                    <div class="swiper-container brands-slider">
-                        <div class="swiper-wrapper">
-                            @brandsList@
                         </div>
                     </div>
+                    <div class="swiper-container brands-slider">
+                        <ul class="swiper-wrapper">
+                            @brandsList@
+                        </ul>
+                    </div>
                 </div>
-
             </div>
+        </section>
+
+        <!-- toTop -->
+        <div class="visible-lg visible-md">
+            <a href="#" id="toTop"><span id="toTopHover"></span>{Наверх}</a>
         </div>
-    </div>
-</section>
-
-<!-- toTop -->
-<div class="visible-lg visible-md">
-    <a href="#" id="toTop"><span id="toTopHover"></span>{Наверх}</a>
-</div>
-<!--/ toTop -->
-<div class="container">
-    <div class="visible-lg visible-md text-center banner">@sticker_banner@<br></div>
-</div>
-<footer class="footer  ">
-
-    <div class="container">
-        <!-- My Account Links Starts -->
-        <div class="col-md-3 col-sm-4 col-xs-12" itemscope itemtype="http://schema.org/Organization">
-            <div class="logo">
-                <a href="/"><img src="@logo@" alt="@name@"></a>
-            </div>
-            @button@
+        <!--/ toTop -->
+        <div class="container">
+            <div class="visible-lg visible-md text-center banner">@sticker_banner@<br></div>
         </div>
-
-        <div class="col-md-3 col-sm-4 col-xs-12">
+        <footer class="footer  ">
+            <div class="container">
+                <div class="col-md-3 col-sm-4 col-xs-12" itemscope itemtype="http://schema.org/Organization">
+                    <div class="logo">
+                        <a href="/"><img src="@logo@" alt="@name@"></a>
+                    </div>
+                        <ul>
+                            <li>&copy; <span itemprop="name">@company@</span>, @year@</li>
+                            <li><span itemprop="email">@adminMail@</span></li>
+                            <li><span itemprop="telephone">@telNum@</span></li>
+                            <li itemprop="telephone">@telNum2@</li>
+                            <li>@workingTime@</li>
+                            <li itemprop="address" itemscope itemtype="http://schema.org/PostalAddress"> <span itemprop="streetAddress">@streetAddress@</span></li>
+                            <li>@button@</li>
+                        </ul>
+                </div>
+                <div class="col-md-3 col-sm-4 col-xs-12">
             <h5>{Мой кабинет}</h5>
 
             <ul>
@@ -395,10 +380,9 @@
                 <li><a href="?logout=true">{Выйти}</a></li>'; php@
             </ul>
         </div>
-        <!-- My Account Links Ends -->
-
-        <!-- Information Links Starts -->
-        <div class="col-md-3 col-sm-4 col-xs-12">
+                <!-- My Account Links Ends -->
+                <!-- Information Links Starts -->
+                <div class="col-md-3 col-sm-4 col-xs-12">
             <h5>{Меню}</h5>
             <ul>
                 @bottomMenu@
@@ -406,8 +390,8 @@
             </ul>
             
         </div>
-        <!-- Information Links Ends -->
-        <div class="col-md-3 col-sm-4 col-xs-12"> @sticker_socfooter@
+                <!-- Information Links Ends -->
+                <div class="col-md-3 col-sm-4 col-xs-12"> @sticker_socfooter@
 	        <ul>
                     <li><a href="/price/" title="Прайс-лист">{Прайс-лист}</a></li>
                     <li><a href="/news/" title="Новости">{Новости}</a></li>
@@ -416,13 +400,8 @@
                     <li><a href="/forma/" title="Форма связи">{Форма связи}</a></li>
                 </ul>  
         </div>
-
-    </div>
-</footer>
-
-
-
-
+            </div>
+        </footer>
 
 <!-- Модальное окно мобильного поиска -->
 <div class="modal fade bs-example-modal-sm" id="searchModal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -438,8 +417,9 @@
                     <div class="input-group">
                         <input name="words" maxlength="50" class="form-control" placeholder="{Искать..}" required="" type="search">
                         <span class="input-group-btn">
-                            <button class="btn btn-default" type="submit"<span
-                                    class="icons icons-search"></span></span></button>
+                            <button class="btn btn-default" type="submit">
+                                <span class="icons icons-search"></span>
+                            </button>
                         </span>
                     </div>
                 </form>
@@ -460,7 +440,7 @@
                 <h4 class="modal-title">{Авторизация}</h4>
                 <span id="usersError" class="hide">@usersError@</span>
             </div>
-            <form role="form" method="post" name="user_forma">
+            <form method="post" name="user_forma">
                 <div class="modal-body">
                     <div class="form-group">
 
@@ -495,10 +475,11 @@
 </div>
 <!--/ Модальное окно авторизации-->
 @editor@
+@dialog@
 
 <!-- Fixed mobile bar -->
 <div class="bar-padding-fix visible-xs visible-sm"></div>
-<nav class="navbar navbar-fixed-bottom bar bar-tab visible-xs visible-sm" role="navigation">
+<nav class="navbar navbar-fixed-bottom bar bar-tab visible-xs visible-sm">
     <div class="d-flex justify-content-between align-center">
 
         <a class=" @cart_active@" href="/order/" id="bar-cart">
@@ -522,82 +503,82 @@
 </nav>
 <!--/ Fixed mobile bar -->
 
-<div class="modal fade new-modal" id="noticeModal" tabindex="-1" role="dialog" aria-labelledby="{Уведомить}" aria-hidden="true">
-    <div class="modal-dialog small-modal" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="exampleModalLabel" class="d-flex">{Уведомить при появлении товара в продаже}
+    <div class="modal fade new-modal" id="noticeModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog small-modal" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </h4>
-            </div>
-            <div class="modal-body">
-                <h4>
-                    <a href="#" title="" class="notice-product-link"></a>
-                </h4>
-                <div class="col-md-12">
-                    <div class="row">
-                        <div class="image notice-product-image"></div>
-                    </div>
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    <h4 class="modal-title d-flex" id="exampleModalLabel">{Уведомить при появлении товара в продаже}</h4>
                 </div>
-                <form role="form" method="post" name="ajax-form" action="phpshop/ajax/notice.php" data-modal="noticeModal">
-                    <div class="form-group">
-                        <div class=""></div>
-                        <div class="">
-                            <input placeholder="{Имя}" type="text" name="name_new" class="form-control" required="">
+                <div class="modal-body">
+                    <h4>
+                        <a href="#" title="" class="notice-product-link"></a>
+                    </h4>
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="image notice-product-image"></div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="">
+                    <form method="post" name="ajax-form" action="phpshop/ajax/notice.php" data-modal="noticeModal">
+                        <div class="form-group">
+                            <div class=""></div>
+                            <div class="">
+                                <input placeholder="{Имя}" type="text" name="name_new" class="form-control" required="">
+                            </div>
                         </div>
-                        <div class="">
-                            <input placeholder="E-mail" type="email" name="mail" class="form-control" required="">
+                        <div class="form-group">
+                            <div class="">
+                            </div>
+                            <div class="">
+                                <input placeholder="E-mail" type="email" name="mail" class="form-control" required="">
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <div></div>
-                        <div>
-                            <textarea class="form-control" name="message" id="message" placeholder="{Дополнительная информация}"></textarea>
+                        <div class="form-group">
+                            <div></div>
+                            <div>
+                                <textarea class="form-control" name="message" id="message" placeholder="{Дополнительная информация}"></textarea>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="date">{Не позднее}:</label>
-                        <div class="input-group">
-                            <select class="form-control" name="date" id="date">
-                                <option value="1" SELECTED>1 {месяца}</option>
-                                <option value="2">2 {месяцев}</option>
-                                <option value="3">3 {месяцев}</option>
-                                <option value="4">4 {месяцев}</option>
-                            </select>
+                        <div class="form-group">
+                            <label for="date">{Не позднее}:</label>
+                            <div class="input-group">
+                                <select class="form-control" name="date" id="date">
+                                    <option value="1" SELECTED>1 {месяца}</option>
+                                    <option value="2">2 {месяцев}</option>
+                                    <option value="3">3 {месяцев}</option>
+                                    <option value="4">4 {месяцев}</option>
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="">
+                        <div class="form-group">
+                            <div class="">
+                            </div>
+                            <div class="">
+                                @notice_captcha@
+                            </div>
                         </div>
-                        <div class="">
-                            @notice_captcha@
+                        <p class="small">
+                            <label>
+                                <input name="rule" value="1" required="" checked="" type="checkbox">
+                                @rule@
+                            </label>
+                        </p>
+                        <div class="form-group ">
+                            <div class=""></div>
+                            <div class="">
+                                <input type="hidden" class="notice-product-id" name="productId">
+                                <input type="hidden" name="ajax" value="1">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                                <button type="submit" class="btn btn-primary">{Уведомить}</button>
+                            </div>
                         </div>
-                    </div>
-                    <p class="small">
-                        <label>
-                            <input name="rule" value="1" required="" checked="" type="checkbox">
-                            @rule@
-                        </label>
-                    </p>
-                    <div class="form-group">
-                        <div class=""></div>
-                        <div class="">
-                            <input type="hidden" class="notice-product-id" name="productId">
-                            <input type="hidden" name="ajax" value="1">
-                            <button type="submit" class="btn btn-main">{Уведомить}</button>
-                        </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 <div id="thanks-box" class="modal fade">
     <div class="modal-dialog">

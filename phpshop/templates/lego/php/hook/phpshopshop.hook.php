@@ -78,7 +78,7 @@ function template_parent($obj, $dataArray, $rout) {
         $true_color_array = $true_size_color_array = $color_array = array();
         $size = $color = null;
 
-        if (@count($obj->select_value > 0)) {
+        if (is_array($obj->select_value) and count($obj->select_value) > 0) {
 
             foreach ($obj->select_value as $value) {
 
@@ -103,7 +103,7 @@ function template_parent($obj, $dataArray, $rout) {
                     if (empty($row['ed_izm']))
                         $row['ed_izm'] = $obj->lang('product_on_sklad_i');
 
-                    $size_color_array[$value[3]['id']] = array('id' => $row['id'], 'size' => $row['parent'], 'price' => $row['price'], 'color' => array($row['parent2']), 'image' => $row['pic_small'], 'price_n' => $row['price_n'], 'items' => $row['items'], 'ed_izm' => $row['ed_izm']);
+                    $size_color_array[$value[3]['id']] = array('id' => $row['id'], 'size' => $row['parent'], 'price' => $row['price'], 'color' => array($row['parent2']), 'image' => $row['pic_big'], 'price_n' => $row['price_n'], 'items' => $row['items'], 'ed_izm' => $row['ed_izm']);
 
                     if (!empty($value[3]['color']))
                         $color_array[$value[3]['parent2']] = $value[3]['color'];
@@ -142,7 +142,9 @@ function template_parent($obj, $dataArray, $rout) {
                     $obj->set('parentId', $val['id']);
                     $obj->set('parentPrice', $val['price']);
                     $obj->set('parentImage', $size_color_array[$val['id']]['image']);
-                    $obj->set('parentItems', $obj->lang('product_on_sklad') . " " . $val['items'] . " " . $val['ed_izm']);
+                    // Склад
+                    if ($obj->PHPShopSystem->getSerilizeParam('admoption.sklad_enabled') == 1)
+                        $obj->set('parentItems', $obj->lang('product_on_sklad') . " " . $val['items'] . " " . $val['ed_izm']);
 
                     if ((float) $size_color_array[$val['id']]['price_n'] > 0)
                         $obj->set('parentPriceOld', $size_color_array[$val['id']]['price_n']);
@@ -302,11 +304,15 @@ function sorttemplatehook($value, $n, $title, $vendor) {
             $text = $p[0];
             $checked = null;
             if (is_array($vendor)) {
-                foreach ($vendor as $v) {
-                    if (is_array($v))
+                foreach ($vendor as $sortId => $v) {
+                    if (is_array($v)) {
                         foreach ($v as $s)
                             if ($s == $p[1])
                                 $checked = 'checked';
+                    } else {
+                        if ($n == $sortId && $p[1] == $v)
+                            $checked = 'checked';
+                    }
                 }
             }
 

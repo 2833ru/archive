@@ -22,11 +22,11 @@
         </div>
         <div class="caption">
             <a class="btn btn-primary addToCartList btn-sm btn-block @elementCartOptionHide@" href="/shop/UID_@productUid@.html">@productSale@</a>
-            <button class="btn btn-primary btn-sm btn-block addToCartList @elementCartHide@" data-uid="@productUid@" role="button">@productSale@</button>
+            <button class="btn btn-primary btn-sm btn-block addToCartList @elementCartHide@" data-uid="@productUid@">@productSale@</button>
 			 <a class="btn btn-primary btn-sm btn-block  @elementNoticeHide@" href="/users/notice.html?productId=@productUid@" title="@productNotice@" >
                     @productNotice@                         
                 </a>  
-            <button class="btn btn-default addToWishList btn-sm btn-block" role="button" data-uid="@productUid@">{Отложить}</button>
+            <button class="btn btn-default addToWishList btn-sm btn-block" data-uid="@productUid@">{Отложить}</button>
             
         </div>
     </div>

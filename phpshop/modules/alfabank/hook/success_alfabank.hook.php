@@ -88,6 +88,11 @@ function alfabank_check($obj, $id, $merchant_order_id){
 
         $PHPShopAlfabankArray->log($r, $id, 'Платеж проведен', 'Запрос состояния заказа');
 
+        // Лог оплат
+        $paymentOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['payment']);
+        $paymentOrm->insert(array('uid_new' => str_replace('-', '', $id), 'name_new' => 'Альфабанк',
+            'sum_new' => $r['amount'] / 100, 'datas_new' => time()));
+
         return $r['orderStatus'];
     }
 

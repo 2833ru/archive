@@ -97,6 +97,28 @@ function tab_headers($data, $option) {
 </div>');
     }
 
+    if($option == 'sort') {
+        $disp = $PHPShopGUI->setField("Title", '
+        <textarea class="form-control" style="height:100px;" name="sort_title_shablon_new">' . $data['sort_title_shablon'] . '</textarea>
+            <div class="btn-group" role="group" aria-label="...">
+                <input type="button" value="'.__('Каталог').'" data-seo="@Catalog@" data-target="sort_title_shablon_new" class="seo-button btn btn-default btn-sm">
+                <input type="button" value="'.__('Подкаталог').'" data-seo="@Podcatalog@" data-target="sort_title_shablon_new" class="seo-button btn btn-default btn-sm">
+                <input type="button" value="'.__('Общий').'" data-seo="@System@" data-target="sort_title_shablon_new" class="seo-button btn btn-default btn-sm">
+                <input type="button" value="'.__('Характеристика').'" data-seo="@sortTitle@" data-target="sort_title_shablon_new" class="seo-button btn btn-default btn-sm">
+                <input type="button" value="'.__('Значение').'" data-seo="@valueTitle@" data-target="sort_title_shablon_new" class="seo-button btn btn-default btn-sm">
+            </div>');
+
+        $disp .= $PHPShopGUI->setField("Description", '
+        <textarea class="form-control" style="height:100px" name="sort_description_shablon_new">' . $data['sort_description_shablon'] . '</textarea>
+            <div class="btn-group" role="group" aria-label="...">
+                <input type="button" value="'.__('Каталог').'" data-seo="@Catalog@" data-target="sort_description_shablon_new" class="seo-button btn btn-default btn-sm">
+                <input type="button" value="'.__('Подкаталог').'" data-seo="@Podcatalog@" data-target="sort_description_shablon_new" class="seo-button btn btn-default btn-sm">
+                <input type="button" value="'.__('Общий').'" data-seo="@System@" data-target="sort_description_shablon_new" class="seo-button btn btn-default btn-sm">
+                <input type="button" value="'.__('Характеристика').'" data-seo="@sortTitle@" data-target="sort_description_shablon_new" class="seo-button btn btn-default btn-sm">
+                <input type="button" value="'.__('Значение').'" data-seo="@valueTitle@" data-target="sort_description_shablon_new" class="seo-button btn btn-default btn-sm">
+            </div>');
+    }
+
     return $disp;
 }
 

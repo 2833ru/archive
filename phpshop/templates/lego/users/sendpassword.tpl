@@ -1,5 +1,5 @@
 
-<form role="form" method="post" name="userpas_forma" class="form-inline">
+<form method="post" name="userpas_forma" class="form-inline">
     <div class="form-group">
         <input type="email" name="login" value="@php echo $_POST['login']; php@" class="form-control" required="" placeholder="E-mail">
     </div>

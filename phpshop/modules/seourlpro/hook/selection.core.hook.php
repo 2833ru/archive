@@ -43,7 +43,7 @@ function v_hook($obj, $data, $rout) {
                             if (!empty($vendor["sort_seo_name"])) {
                                 header('Location: ' . $obj->getValue('dir.dir') . "/brand/" . $vendor["sort_seo_name"] . '.html', true, 301);
                             } else {
-                                $seoUrl = $GLOBALS['PHPShopSeoPro']->setLatin($vendor['name']);
+                                $seoUrl = strtolower($GLOBALS['PHPShopSeoPro']->setLatin($vendor['name']));
                                 $PHPShopOrm->update(array("sort_seo_name_new" => "$seoUrl"), array('id' => '=' . $vendor['id']));
                                 header('Location: ' . $obj->getValue('dir.dir') . "/brand/" . $seoUrl . '.html', true, 301);
                             }

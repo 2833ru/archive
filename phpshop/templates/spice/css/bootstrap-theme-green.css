@@ -92,3 +92,6 @@ background-color:#30b552 !important;
 .additional-nav-menu .dropdown-menu > li:hover, .submenu .dropdown-menu > li:hover{
 background:#308e46 !important;
 }
+.theme-color {
+    color: #308e46;
+}

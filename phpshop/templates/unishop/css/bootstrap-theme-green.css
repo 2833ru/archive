@@ -84,3 +84,6 @@ span.sale-icon-content{
 #body{
 --color:#2ecc71;
 }
+.theme-color {
+	color: #2ecc71;
+}

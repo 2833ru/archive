@@ -52,6 +52,7 @@ function actionStart() {
     $Tab1.=$PHPShopGUI->setField('Сейчас покупают', $PHPShopGUI->setCheckbox('nowbuy_new', 1, 'Вывод случайного товара из последних заказов', $data['nowbuy']));
     $Tab1.=$PHPShopGUI->setField('Источник', $PHPShopGUI->setCheckbox('referal_new', 1, 'Добавлять источник перехода в комментарий менеджеру', $data['referal']));
     $Tab1.=$PHPShopGUI->setField('Место вывода', $PHPShopGUI->setSelect('enabled_new', $e_value, 150,true));
+    $Tab1.= $PHPShopGUI->setField('Рассылка уведомлений', $PHPShopGUI->setInputText(false, 'sendmail_new', $data['sendmail'],50),1,'Количество писем при рассылке за раз');
 
     // Форма регистрации
     $Tab3 = $PHPShopGUI->setPay($serial = false, false, $data['version'], true);

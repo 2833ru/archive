@@ -40,7 +40,7 @@ function send_alfabank_hook($obj, $value, $rout) {
             $total = 0;
             foreach ($orders['Cart']['cart'] as $key => $arItem) {
                 // Скидка
-                if ((float) $obj->discount > 0)
+                if ((float) $obj->discount > 0 && empty($arItem['promo_price']))
                     $price = ($arItem['price'] - ($arItem['price'] * (float) $obj->discount / 100)) * 100;
                 else
                     $price = $arItem['price'] * 100;

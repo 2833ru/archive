@@ -18,7 +18,7 @@
     <h2>{Форма объявления}</h2>
 </div>
 
-<form role="form" method="post" name="forma_gbook">
+<form method="post" name="forma_gbook">
     <div class="form-group">
         <label>{Имя}</label>
         <input type="text" name="name_new" value="@userName@" maxlength="45" class="form-control" placeholder="{Имя...}" required="">

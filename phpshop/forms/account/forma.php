@@ -63,6 +63,10 @@ if (PHPShopSecurity::true_param($_GET['tip'], $_GET['orderId'], $_GET['datas']))
         exit("Неавторизованный пользователь!");
     else
         $PHPShopOrder = new PHPShopOrderFunction($orderId);
+    
+    // Юридические лица
+    $company = $PHPShopOrder->getParam('company');
+    $PHPShopSystem->setCompany($company);
 
     // Перевод цифр в слова
     $iw = new inwords;
@@ -128,7 +132,6 @@ if (PHPShopSecurity::true_param($_GET['tip'], $_GET['orderId'], $_GET['datas']))
     PHPShopParser::set('org_adres', $PHPShopSystem->getSerilizeParam('bank.org_adres'));
     PHPShopParser::set('org_ur_adres', $PHPShopSystem->getSerilizeParam('bank.org_ur_adres'));
     PHPShopParser::set('date', date("d-m-y"));
-    PHPShopParser::set('name', $PHPShopSystem->getName());
     PHPShopParser::set('logo', $PHPShopSystem->getLogo(true));
     PHPShopParser::set('telNum', $PHPShopSystem->getValue('tel'));
     PHPShopParser::set('name', $PHPShopSystem->getValue('name'));
@@ -138,8 +141,9 @@ if (PHPShopSecurity::true_param($_GET['tip'], $_GET['orderId'], $_GET['datas']))
     PHPShopParser::set('cart', $PHPShopOrder->cart('printforma', array('currency' => $PHPShopOrder->default_valuta_code)) . $PHPShopOrder->delivery('printdelivery', array('currency' => $PHPShopOrder->default_valuta_code)));
 
     // Печати и подписи
-    $LoadItems = $PHPShopSystem->getArray();
-    $LoadBanc = unserialize($LoadItems['bank']);
+    $LoadBanc['org_sig']=$PHPShopSystem->getSerilizeParam('bank.org_sig');
+    $LoadBanc['org_sig_buh'] = $PHPShopSystem->getSerilizeParam('bank.org_sig_buh');
+    $LoadBanc['org_stamp'] = $PHPShopSystem->getSerilizeParam('bank.org_stamp');
 
     if (!empty($LoadBanc['org_sig']))
         $org_sig = '<img src="' . $LoadBanc['org_sig'] . '">';

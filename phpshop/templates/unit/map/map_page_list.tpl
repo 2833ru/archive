@@ -1,5 +1,5 @@
 <ol class="breadcrumb hidden-xs" itemscope itemtype="http://schema.org/BreadcrumbList">
-    <li itemscope itemtype="http://schema.org/ListItem">
+    <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
         <a href="/" itemprop="item">
             <span itemprop="name">{Главная}</span>
         </a>

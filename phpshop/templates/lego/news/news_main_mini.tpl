@@ -10,7 +10,7 @@
     
     <div class="news-body">
         <div class="news-img  @php __hide('newsIcon'); php@ ">
-            <img itemprop="image" src="@newsIcon@" alt="@newsZag@" title="@newsZag@"></img>
+            <img itemprop="image" src="@newsIcon@" alt="@newsZag@" title="@newsZag@">
         </div>
         <a itemprop="mainEntityOfPage" class="news-name" href="/news/ID_@newsId@.html" title="@newsZag@"><h4 itemprop="headline">@newsZag@</h4></a>
         <div class="news-text" itemprop="description">@newsKratko@

@@ -1,6 +1,6 @@
 
 @user_sms_error@
-<form role="form" method="post" name="userpas_forma" class="form-inline">
+<form method="post" name="userpas_forma" class="form-inline">
     <div class="form-group">
         <input type="text" name="token" value="@php echo $_POST['token']; php@" class="form-control" required="" placeholder="SMS">
     </div>

@@ -124,3 +124,6 @@ filter:hue-rotate(-180deg);
 -moz-filter:hue-rotate(-180deg);
 -editor-filter:-180;
 }
+.theme-color {
+    color:#ff8e71;
+}

@@ -4,10 +4,8 @@
     <div class="thumbnail">
        
         <div class="product-btn">
-        <button class=" addToCompareList " role="button" data-uid="@productUid@"><span class="icons icons-green icons-small icons-compare"></span></button>
-       
-                <button class=" addToWishList @elementCartHide@" role="button" data-uid="@productlist_product_id@"><span class="icons icons-green icons-small icons-wishlist"></span></button>
-
+        <button class=" addToCompareList " data-uid="@productUid@"><span class="icons icons-green icons-small icons-compare"></span></button>
+            <button class=" addToWishList @elementCartHide@" data-uid="@productlist_product_id@"><span class="icons icons-green icons-small icons-wishlist"></span></button>
         </div>
 
         <div class="caption ">

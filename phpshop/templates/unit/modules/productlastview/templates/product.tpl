@@ -7,8 +7,8 @@
        
         <div class="product-btn">
         
-        <button class=" addToWishList @elementCartHide@" role="button" data-uid="@productlastview_product_id@"><span class="icons icons-green icons-small icons-wishlist"></span></button>
-        <button class=" addToCompareList " role="button" data-uid="@productlastview_product_id@"><span class="icons icons-green icons-small icons-compare"></span></button>
+        <button class=" addToWishList @elementCartHide@" data-uid="@productlastview_product_id@"><span class="icons icons-green icons-small icons-wishlist"></span></button>
+        <button class=" addToCompareList " data-uid="@productlastview_product_id@"><span class="icons icons-green icons-small icons-compare"></span></button>
         </div>
         <div class="caption ">
            <a href="@shopDir@@productlastview_product_url@.html" title="@productlastview_product_name@">

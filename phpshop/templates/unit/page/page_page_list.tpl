@@ -1,4 +1,3 @@
-<style></style>
 <ol class="breadcrumb hidden-xs" itemtype="http://schema.org/BreadcrumbList">
     @breadCrumbs@
 </ol>
@@ -12,7 +11,7 @@
 <p>@pageContent@</p></div>
 <div class="clearfix"></div>
 <hr class="@php __hide('pageLast'); php@">
-<h3 class="@php __hide('pageLast'); php@  ">Интересно почитать</h3>
+<h3 class="@php __hide('pageLast'); php@  ">{Интересно почитать}</h3>
 <br>
 <div class="grid row">@pageLast@</div>
 

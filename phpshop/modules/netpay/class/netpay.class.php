@@ -79,7 +79,8 @@
  * 
  */
 
-class Netpay {
+class Netpay
+{
 
     var $w;
     var $dw;
@@ -98,7 +99,8 @@ class Netpay {
     var $dt2;
     var $dt3;
 
-    function getbutton($params, $keys, $data) {
+    function getbutton($params, $keys, $data)
+    {
         extract($data);
         if (isset($keys['api_key']) & ($keys['api_key'] != '') & ($keys['auth_signature'] != '')) {
             $netpay_url = 'https://my.net2pay.ru/billingService/paypage/';
@@ -106,38 +108,44 @@ class Netpay {
             $AuthSign = $keys['auth_signature'];
         } else {
             $netpay_url = 'https://demo.net2pay.ru/billingService/paypage/';
-            $api_key = 'js4cucpn4kkc6jl1p95np054g2';
-            $AuthSign = '1';
-        } 
-        $expire_date=$this->getexpiredate($expiredtime);
-        $cryptoKey = $this->_getcryptokey($api_key,$expire_date);
+            $api_key = 'tp7fu0im8j08ftq2466t9bphd3';
+            $AuthSign = '5';
+        }
+        $expire_date = $this->getexpiredate($expiredtime);
+        $cryptoKey = $this->_getcryptokey($api_key, $expire_date);
         $params_crypted_str = implode('&', $this->_params_crypted($params, $cryptoKey));
-        $target == '1' ? $target = 'target="_blank" ' : $target = '';
-        $button = '<form action="' . $netpay_url . '" method="POST" '.$target.'id="netpaypaymentform">                 
+//        $target == '1' ? $target = 'target="_blank" ' : $target = '';
+        // added 21.06.2021
+        $target == '1' ? $target = 'target="_self" ' : $target = '';
+
+        $button = '<form action="' . $netpay_url . '" method="POST" ' . $target . 'id="netpaypaymentform">                 
                 <input type="hidden" name="data" value="' . urlencode($params_crypted_str) . '">
                 <input type="hidden" name="auth" value="' . $AuthSign . '">
                 <input type="hidden" name="expire" value="' . urlencode($expire_date) . '">
                 <input type="submit" name="Submit"	value="' . $submitval . '"> 
         </form>';
         if ($autosubmit == '1')
-            $button.='<script type="text/javascript">document.getElementById("netpaypaymentform").submit();</script>';
+            $button .= '<script type="text/javascript">document.getElementById("netpaypaymentform").submit();</script>';
         return $button;
     }
-    
-    function getexpiredate($expiredtime) {
+
+    function getexpiredate($expiredtime)
+    {
         $dateClass = new DateTime();
         $dateClass->modify('+' . $expiredtime . ' day');
         $order_date = $dateClass->format('Y-m-dVH:i:s');
         return $order_date;
     }
-    
-    function _getcryptokey($api_key,$expire_date) {
+
+    function _getcryptokey($api_key, $expire_date)
+    {
         $md5_Api_key = base64_encode(md5($api_key, true));
         $cryptoKey = substr(base64_encode(md5($md5_Api_key . $expire_date, true)), 0, 16);
         return $cryptoKey;
     }
-    
-    function getlink($params, $keys, $data) {
+
+    function getlink($params, $keys, $data)
+    {
         extract($data);
         if (isset($keys['api_key']) & ($keys['api_key'] != '') & ($keys['auth_signature'] != '')) {
             $netpay_url = 'https://my.net2pay.ru/billingService/paypage/';
@@ -145,24 +153,26 @@ class Netpay {
             $AuthSign = $keys['auth_signature'];
         } else {
             $netpay_url = 'https://demo.net2pay.ru/billingService/paypage/';
-            $api_key = 'js4cucpn4kkc6jl1p95np054g2';
-            $AuthSign = '1';
+            $api_key = 'tp7fu0im8j08ftq2466t9bphd3';
+            $AuthSign = '5';
         }
-        $expire_date=$this->getexpiredate($expiredtime);
-        $cryptoKey = $this->_getcryptokey($api_key,$expire_date);
+        $expire_date = $this->getexpiredate($expiredtime);
+        $cryptoKey = $this->_getcryptokey($api_key, $expire_date);
         $params_crypted_str = implode('&', $this->_params_crypted($params, $cryptoKey));
-        $link = $netpay_url."?data=".urlencode($params_crypted_str)."&auth=".$AuthSign."&expire=".urlencode($expire_date);
-        $link = str_replace("%", "%25", $link);        
+        $link = $netpay_url . "?data=" . urlencode($params_crypted_str) . "&auth=" . $AuthSign . "&expire=" . urlencode($expire_date);
+        $link = str_replace("%", "%25", $link);
         return $link;
     }
-    
-    function getvariabledata($params,$keys,$expire_date) {
-        $cryptoKey = $this->_getcryptokey($keys['api_key'],$expire_date);
+
+    function getvariabledata($params, $keys, $expire_date)
+    {
+        $cryptoKey = $this->_getcryptokey($keys['api_key'], $expire_date);
         $params_crypted_str = implode('&', $this->_params_crypted($params, $cryptoKey));
         return urlencode($params_crypted_str);
     }
-    
-    function _params_crypted($params, $cryptoKey) {
+
+    function _params_crypted($params, $cryptoKey)
+    {
         $params_crypted = array();
         foreach ($params as $key => $param) {
             $cripter = $this->_encrypt($key . '=' . $param, $cryptoKey);
@@ -171,7 +181,8 @@ class Netpay {
         return $params_crypted;
     }
 
-    function _encrypt($plaintext, $key) {
+    function _encrypt($plaintext, $key)
+    {
         $this->key = $key;
         static $rcon = array(0,
             0x01000000, 0x02000000, 0x04000000, 0x08000000, 0x10000000,
@@ -216,13 +227,14 @@ class Netpay {
 
         $block_size = $this->block_size;
         $ciphertext = '';
-        for ($i = 0; $i < strlen($plaintext); $i+=$block_size) {
-            $ciphertext.= $this->_encryptBlock(substr($plaintext, $i, $block_size));
+        for ($i = 0; $i < strlen($plaintext); $i += $block_size) {
+            $ciphertext .= $this->_encryptBlock(substr($plaintext, $i, $block_size));
         }
         return $data = base64_encode($ciphertext);
     }
 
-    function _encryptBlock($in) {
+    function _encryptBlock($in)
+    {
 
         $state = array();
         $words = unpack('N*word', $in);
@@ -284,10 +296,10 @@ class Netpay {
 
             while ($i < $this->Nb) {
                 $temp[$i] = $t0[$state[$i] & 0xFF000000] ^
-                        $t1[$state[$j] & 0x00FF0000] ^
-                        $t2[$state[$k] & 0x0000FF00] ^
-                        $t3[$state[$l] & 0x000000FF] ^
-                        $w[$round][$i];
+                    $t1[$state[$j] & 0x00FF0000] ^
+                    $t2[$state[$k] & 0x0000FF00] ^
+                    $t3[$state[$l] & 0x000000FF] ^
+                    $w[$round][$i];
                 $i++;
                 $j = ($j + 1) % $Nb;
                 $k = ($k + 1) % $Nb;
@@ -308,10 +320,10 @@ class Netpay {
         $l = $c[3];
         while ($i < $this->Nb) {
             $temp[$i] = ($state[$i] & 0xFF000000) ^
-                    ($state[$j] & 0x00FF0000) ^
-                    ($state[$k] & 0x0000FF00) ^
-                    ($state[$l] & 0x000000FF) ^
-                    $w[$Nr][$i];
+                ($state[$j] & 0x00FF0000) ^
+                ($state[$k] & 0x0000FF00) ^
+                ($state[$l] & 0x000000FF) ^
+                $w[$Nr][$i];
             $i++;
             $j = ($j + 1) % $Nb;
             $k = ($k + 1) % $Nb;
@@ -324,7 +336,8 @@ class Netpay {
         return call_user_func_array('pack', $state);
     }
 
-    function _subWord($word) {
+    function _subWord($word)
+    {
         static $sbox0, $sbox1, $sbox2, $sbox3;
 
         if (empty($sbox0)) {
@@ -359,11 +372,13 @@ class Netpay {
         }
 
         return $sbox0[$word & 0x000000FF] |
-                $sbox1[$word & 0x0000FF00] |
-                $sbox2[$word & 0x00FF0000] |
-                $sbox3[$word & 0xFF000000];
+            $sbox1[$word & 0x0000FF00] |
+            $sbox2[$word & 0x00FF0000] |
+            $sbox3[$word & 0xFF000000];
     }
-    function giveanswer($data) {
+
+    function giveanswer($data)
+    {
         extract($data);
         echo '<notification>
             <orderId>' . $orderID . '</orderId>
@@ -374,8 +389,9 @@ class Netpay {
         die;
     }
 
-    function getdata($data, $expire_date, $api_key, $step = '0') {
-        if ($api_key=='') $api_key='js4cucpn4kkc6jl1p95np054g2';
+    function getdata($data, $expire_date, $api_key, $step = '0')
+    {
+        if ($api_key == '') $api_key = 'js4cucpn4kkc6jl1p95np054g2';
         $cryptoKey = $this->_getcryptokey($api_key, $expire_date);
         $arr = explode('&', $data);
         $i = '0';
@@ -395,7 +411,8 @@ class Netpay {
         }
     }
 
-    function _decrypt($ciphertext, $key) {
+    function _decrypt($ciphertext, $key)
+    {
         $ciphertext = base64_decode($ciphertext);
         static $rcon = array(0,
             0x01000000, 0x02000000, 0x04000000, 0x08000000, 0x10000000,
@@ -483,9 +500,9 @@ class Netpay {
                         $dw = $this->_subWord($this->w[$row][$j]);
 
                         $temp[$j] = $this->dt0[$dw & 0xFF000000] ^
-                                $this->dt1[$dw & 0x00FF0000] ^
-                                $this->dt2[$dw & 0x0000FF00] ^
-                                $this->dt3[$dw & 0x000000FF];
+                            $this->dt1[$dw & 0x00FF0000] ^
+                            $this->dt2[$dw & 0x0000FF00] ^
+                            $this->dt3[$dw & 0x000000FF];
                         $j++;
                     }
                     $this->dw[$row] = $temp;
@@ -500,9 +517,9 @@ class Netpay {
         $this->dw[$row] = $this->w[$row];
 
         $plaintext = '';
-        for ($i = 0; $i < strlen($ciphertext); $i+=$block_size) {
+        for ($i = 0; $i < strlen($ciphertext); $i += $block_size) {
 
-            $plaintext.= $this->_decryptBlock(substr($ciphertext, $i, $block_size));
+            $plaintext .= $this->_decryptBlock(substr($ciphertext, $i, $block_size));
         }
 
         $dec_s = strlen($plaintext);
@@ -511,7 +528,8 @@ class Netpay {
         return $plaintext;
     }
 
-    function _decryptBlock($in) {
+    function _decryptBlock($in)
+    {
         $state = array();
         $words = unpack('N*word', $in);
         $num_states = count($state);
@@ -536,10 +554,10 @@ class Netpay {
 
             while ($i < $Nb) {
                 $temp[$i] = $dt0[$state[$i] & 0xFF000000] ^
-                        $dt1[$state[$j] & 0x00FF0000] ^
-                        $dt2[$state[$k] & 0x0000FF00] ^
-                        $dt3[$state[$l] & 0x000000FF] ^
-                        $dw[$round][$i];
+                    $dt1[$state[$j] & 0x00FF0000] ^
+                    $dt2[$state[$k] & 0x0000FF00] ^
+                    $dt3[$state[$l] & 0x000000FF] ^
+                    $dw[$round][$i];
                 $i++;
                 $j = ($j + 1) % $Nb;
                 $k = ($k + 1) % $Nb;
@@ -557,10 +575,10 @@ class Netpay {
 
         while ($i < $Nb) {
             $temp[$i] = $dw[0][$i] ^
-                    $this->_invSubWord(($state[$i] & 0xFF000000) |
-                            ($state[$j] & 0x00FF0000) |
-                            ($state[$k] & 0x0000FF00) |
-                            ($state[$l] & 0x000000FF));
+                $this->_invSubWord(($state[$i] & 0xFF000000) |
+                    ($state[$j] & 0x00FF0000) |
+                    ($state[$k] & 0x0000FF00) |
+                    ($state[$l] & 0x000000FF));
             $i++;
             $j = ($j + 1) % $Nb;
             $k = ($k + 1) % $Nb;
@@ -574,7 +592,8 @@ class Netpay {
         return call_user_func_array('pack', $state);
     }
 
-    function _invSubWord($word) {
+    function _invSubWord($word)
+    {
         static $sbox0, $sbox1, $sbox2, $sbox3;
 
         if (empty($sbox0)) {
@@ -609,10 +628,11 @@ class Netpay {
         }
 
         return $sbox0[$word & 0x000000FF] |
-                $sbox1[$word & 0x0000FF00] |
-                $sbox2[$word & 0x00FF0000] |
-                $sbox3[$word & 0xFF000000];
+            $sbox1[$word & 0x0000FF00] |
+            $sbox2[$word & 0x00FF0000] |
+            $sbox3[$word & 0xFF000000];
     }
 
 }
+
 ?>

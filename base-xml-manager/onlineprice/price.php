@@ -11,6 +11,7 @@ include("../../phpshop/class/obj.class.php");
 PHPShopObj::loadClass("base");
 PHPShopObj::loadClass("orm");
 PHPShopObj::loadClass("xml");
+PHPShopObj::loadClass("array");
 PHPShopObj::loadClass("system");
 PHPShopObj::loadClass("basexml");
 

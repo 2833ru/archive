@@ -164,7 +164,7 @@ class PHPShopObj {
      * Загрузка класса роутера ядра для наследования
      * @param string $class_name имя класса, согласно config.ini
      */
-    function importCore($class_name) {
+    static function importCore($class_name) {
         global $_classPath;
         $class_path = $_classPath . '/core/' . $class_name . ".core.php";
         if (file_exists($class_path))

@@ -6602,6 +6602,11 @@ button.close {
   .navbar .dropdown-header {
     -color: #fff;
   }
+  
+  #navbar2{
+    border-top: 1px solid transparent;
+    border-color: #D9D9D9;;
+}
 }
 .btn {
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);

@@ -28,6 +28,7 @@ function order_boxberrywidget_hook($obj, $row, $rout) {
 <input type="hidden" id="boxberryFee" value="' . $BoxberryWidget->option[fee] . '">
 <input type="hidden" id="boxberryFeeType" value="' . $BoxberryWidget->option[fee_type] . '">
 <input type="hidden" id="boxberryPriceFormat" value="' . $BoxberryWidget->format . '">
+<input type="hidden" id="boxberryCourierDeliveryId" value="' . $BoxberryWidget->option[express_delivery_id] . '">
 <script type="text/javascript" src="//points.boxberry.ru/js/boxberry.js" /></script><script type="text/javascript" src="phpshop/modules/boxberrywidget/js/boxberrywidget.js" /></script>', true);
 
 

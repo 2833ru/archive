@@ -3,7 +3,7 @@
     <version>1.0</version>
     <name>Fondy</name>
     <description>Прием оплат через платёжную систему FONDY</description>
-    <faqlink>http://faq.phpshop.ru/page/fondy.html</faqlink>
+    <faqlink>https://docs.phpshop.ru/moduli/platezhnye-sistemy/fondy</faqlink>
     <category>payment</category>
      <adminmenu>
         <title>Fondy</title>

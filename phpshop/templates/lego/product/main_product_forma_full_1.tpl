@@ -77,10 +77,10 @@
 
                         @ComEndNotice@
 
-                        <button class="btn btn-circle addToCompareList" role="button" data-uid="@productUid@">
+                        <button class="btn btn-circle addToCompareList" data-uid="@productUid@">
                             <span class="icons-compare"></span>
                         </button>
-                        <button class="btn btn-circle addToWishList" role="button" data-uid="@productUid@">
+                        <button class="btn btn-circle addToWishList" data-uid="@productUid@">
                             <span class="icons-like"></span>
                         </button>
                     </div>
@@ -119,8 +119,7 @@
                                     -
                                 </button>
                             </span>
-                            <input type="text" name="quant[2]" class="form-control form-control_gr input-number"
-                                   value="1" min="1" max="100" />
+                            <input type="text" name="quant[2]" class="form-control form-control_gr input-number" value="1"/>
                             <span class="input-group-btn">
                                 <button type="button" class=" btn btn-default btn-default_r btn-number" data-type="plus"
                                         data-field="quant[2]">
@@ -217,7 +216,7 @@
                                     <label class="btn btn-success btn-sm active">
                                         <input type="radio" name="rate" value="5" checked /> +5
                                     </label>
-                                    <button role="button" class="btn btn-info btn-sm pull-right"
+                                    <button class="btn btn-info btn-sm pull-right"
                                             onclick="commentList('@productUid@', 'add', 1);">
                                         {Проголосовать}
                                     </button>
@@ -299,7 +298,7 @@
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                 <h4 class="modal-title">{Таблица размеров}</h4>
             </div>
-            <form role="form" method="post" name="user_forma_size_delivery" action="@ShopDir@/returncall/">
+            <form method="post" name="user_forma_size_delivery" action="@ShopDir@/returncall/">
                 <div class="modal-body">
                     @productOption1@
                 </div>
@@ -321,7 +320,7 @@
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                 <h4 class="modal-title">{Информация о доставке}</h4>
             </div>
-            <form role="form" method="post" name="user_forma_size_delivery" action="@ShopDir@/returncall/">
+            <form method="post" name="user_forma_size_delivery" action="@ShopDir@/returncall/">
                 <div class="modal-body">
 
                     @productOption2@

@@ -19,14 +19,14 @@ function actionStart() {
 
     // Демо-режим
     if ($PHPShopBase->getParam('template_theme.demo') == 'true') {
-        $option['metrica_token'] = '';
+        $option['metrica_token'] = $option['telegram_token'] = '';
     }
 
     // Яндекс.Метрика
-    $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Статистика посещений Яндекс.Метрика', $PHPShopGUI->setField('Токен', $PHPShopGUI->setInputText(false, 'option[metrica_token]', $option['metrica_token'], 370, '<a target="_blank" href="https://oauth.yandex.ru/authorize?response_type=token&client_id=78246cbd13f74fbd9cb2b48d8bff2559">'.__('Получить').'</a>')) .
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Статистика посещений Яндекс.Метрика', $PHPShopGUI->setField('Токен', $PHPShopGUI->setInputText(false, 'option[metrica_token]', $option['metrica_token'], 375, '<a target="_blank" href="https://oauth.yandex.ru/authorize?response_type=token&client_id=78246cbd13f74fbd9cb2b48d8bff2559">' . __('Получить') . '</a>')) .
             $PHPShopGUI->setField('ID сайта', $PHPShopGUI->setInputText(null, 'option[metrica_id]', $option['metrica_id'], 300, false, false, false, 'XXXXXXXX') .
                     $PHPShopGUI->setHelp('Отчеты доступны в разделе <a href="?path=metrica">Статистика посещений</a>')) .
-            $PHPShopGUI->setField("Код счетчика", $PHPShopGUI->setCheckbox('option[metrica_enabled]', 1, 'Включить сбор статистики и разместить код счетчика', $option['metrica_enabled']) . '<br>' . $PHPShopGUI->setCheckbox('option[metrica_ecommerce]', 1, 'Включить сбор данных электронной коммерции', $option['metrica_ecommerce']). '<br>' . $PHPShopGUI->setCheckbox('option[metrica_webvizor]', 1, 'Включить вебвизор, карту скроллинга и аналитику форм', $option['metrica_webvizor'])) .
+            $PHPShopGUI->setField("Код счетчика", $PHPShopGUI->setCheckbox('option[metrica_enabled]', 1, 'Включить сбор статистики и разместить код счетчика', $option['metrica_enabled']) . '<br>' . $PHPShopGUI->setCheckbox('option[metrica_ecommerce]', 1, 'Включить сбор данных электронной коммерции', $option['metrica_ecommerce']) . '<br>' . $PHPShopGUI->setCheckbox('option[metrica_webvizor]', 1, 'Включить вебвизор, карту скроллинга и аналитику форм', $option['metrica_webvizor'])) .
             $PHPShopGUI->setField("Виджет", $PHPShopGUI->setCheckbox('option[metrica_widget]', 1, 'Включить виджет статистики в панель инструментов', $option['metrica_widget']))
             , 'in', false
     );
@@ -39,8 +39,8 @@ function actionStart() {
 
     // Яндекс.Поиск
     $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Яндекс.Поиск', $PHPShopGUI->setField('API-ключ', $PHPShopGUI->setInputText(false, 'option[yandex_search_apikey]', $option['yandex_search_apikey'], 300) . $PHPShopGUI->setHelp('Персональные ключи для домена выдаются через <a href="https://developer.tech.yandex.ru" target="_blank">Кабинет разработчика</a>')) .
-        $PHPShopGUI->setField('Идентификатор поиска', $PHPShopGUI->setInputText(false, 'option[yandex_search_id]', $option['yandex_search_id'], 300)) .
-        $PHPShopGUI->setField("Включить Яндекс.Поиск", $PHPShopGUI->setCheckbox('option[yandex_search_enabled]', 1, 'Использовать Яндекс.Поиск на сайте, вместо стандартного поиска', $option['yandex_search_enabled'])), 'in', true
+            $PHPShopGUI->setField('Идентификатор поиска', $PHPShopGUI->setInputText(false, 'option[yandex_search_id]', $option['yandex_search_id'], 300)) .
+            $PHPShopGUI->setField("Включить Яндекс.Поиск", $PHPShopGUI->setCheckbox('option[yandex_search_enabled]', 1, 'Использовать Яндекс.Поиск на сайте, вместо стандартного поиска', $option['yandex_search_enabled'])), 'in', true
     );
 
     // Google Analitiks
@@ -55,13 +55,13 @@ function actionStart() {
             $PHPShopGUI->setField("Секретный ключ", $PHPShopGUI->setInputText(null, "option[recaptcha_skey]", $option['recaptcha_skey'], 300) . $PHPShopGUI->setHelp('Персональные ключи для домена выдаются через <a href="https://www.google.com/recaptcha" target="_blank">Google.com</a>'))
     );
 
-    $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Подсказки DaData.ru', $PHPShopGUI->setField("Подсказки", $PHPShopGUI->setCheckbox('option[dadata_enabled]', 1, 'Включить подсказки DaData.ru', $option['dadata_enabled']), 1, 'Поддерживаются только новые шаблоны') .
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Подсказки DaData.ru', $PHPShopGUI->setField("Подсказки", $PHPShopGUI->setCheckbox('option[dadata_enabled]', 1, 'Включить подсказки DaData.ru', $option['dadata_enabled'])) .
             $PHPShopGUI->setField("Публичный ключ", $PHPShopGUI->setInputText(null, "option[dadata_token]", $option['dadata_token'], 300) . $PHPShopGUI->setHelp('Информация о сервисе, регистрация, получение ключей <a href="https://dadata.ru" target="_blank">DaData.ru</a>'))
     );
 
     $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('SMS уведомления Targetsms.ru', $PHPShopGUI->setField("SMS оповещение", $PHPShopGUI->setCheckbox('option[sms_enabled]', 1, 'Уведомление о заказе администратору', $option['sms_enabled']) . '<br>' .
-                    $PHPShopGUI->setCheckbox('option[notice_enabled]', 1, 'Уведомление о наличии товара пользователям', $option['notice_enabled']).'<br>' .
-            $PHPShopGUI->setCheckbox('option[sms_login]', 1, 'Авторизация по телефону', $option['sms_login']). $PHPShopGUI->setHelp('При включенной опции, в корзине появляется поле Телефон, обязательное для заполнения')
+                    $PHPShopGUI->setCheckbox('option[notice_enabled]', 1, 'Уведомление о наличии товара пользователям', $option['notice_enabled']) . '<br>' .
+                    $PHPShopGUI->setCheckbox('option[sms_login]', 1, 'Авторизация по телефону', $option['sms_login']) . $PHPShopGUI->setHelp('При включенной опции, в корзине появляется поле Телефон, обязательное для заполнения')
             ) .
             $PHPShopGUI->setField("Мобильный телефон", $PHPShopGUI->setInputText(null, "option[sms_phone]", $option['sms_phone'], 300, false, false, false, '79261234567'), 1, 'Телефон для SMS уведомлений формата 79261234567') .
             $PHPShopGUI->setField("Пользователь", $PHPShopGUI->setInputText(null, "option[sms_user]", $option['sms_user'], 300), 1, 'Пользователь в системе Targetsms.ru') .
@@ -69,8 +69,7 @@ function actionStart() {
             $PHPShopGUI->setField("Подпись отправителя", $PHPShopGUI->setInputText(null, "option[sms_name]", $option['sms_name'], 300) . $PHPShopGUI->setHelp('Информация о сервисе, регистрация, получение ключей <a href=" https://sms.targetsms.ru/ru/reg.html?ref=phpshop" target="_blank">Targetsms.ru</a>'))
     );
 
-    $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('PUSH Уведомления', 
-            $PHPShopGUI->setField("PUSH оповещение", $PHPShopGUI->setCheckbox('option[push_enabled]', 1, 'Уведомление о заказе администратору. Требуется SSL сертификат.', $option['push_enabled'])).
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('PUSH Уведомления', $PHPShopGUI->setField("PUSH оповещение", $PHPShopGUI->setCheckbox('option[push_enabled]', 1, 'Уведомление о заказе администратору. Требуется SSL сертификат.', $option['push_enabled'])) .
             $PHPShopGUI->setField("Ключ сервера", $PHPShopGUI->setInputText(null, "option[push_token]", $option['push_token'])) .
             $PHPShopGUI->setField("Идентификатор отправителя", $PHPShopGUI->setInputText(null, "option[push_id]", $option['push_id'], 300) . $PHPShopGUI->setHelp('Информация о сервисе, регистрация, получение ключей <a href="https://console.firebase.google.com/" target="_blank">Firebase.google.com</a>'))
     );
@@ -109,27 +108,38 @@ function actionSave() {
 
 // Функция обновления
 function actionUpdate() {
-    global $PHPShopOrm, $PHPShopModules,$PHPShopSystem;
+    global $PHPShopOrm, $PHPShopModules, $PHPShopSystem;
 
     // Выборка
     $data = $PHPShopOrm->select();
     $option = unserialize($data['admoption']);
 
     // Корректировка пустых значений
-    $PHPShopOrm->updateZeroVars('option.recaptcha_enabled', 'option.dadata_enabled', 'option.sms_enabled', 'option.sms_status_order_enabled', 'option.notice_enabled', 'option.metrica_enabled', 'option.metrica_widget', 'option.metrica_ecommerce', 'option.google_enabled', 'option.google_analitics', 'option.rss_graber_enabled', 'option.yandexmap_enabled', 'option.push_enabled','option.metrica_webvizor', 'option.yandex_search_enabled','option.sms_login');
+    $PHPShopOrm->updateZeroVars('option.recaptcha_enabled', 'option.dadata_enabled', 'option.sms_enabled', 'option.sms_status_order_enabled', 'option.notice_enabled', 'option.metrica_enabled', 'option.metrica_widget', 'option.metrica_ecommerce', 'option.google_enabled', 'option.google_analitics', 'option.rss_graber_enabled', 'option.yandexmap_enabled', 'option.push_enabled', 'option.metrica_webvizor', 'option.yandex_search_enabled', 'option.sms_login');
 
     if (is_array($_POST['option']))
         foreach ($_POST['option'] as $key => $val)
             $option[$key] = $val;
 
-
     $_POST['admoption_new'] = serialize($option);
-    
-    
+
     // Удаление PUSH-токенов
-    if (empty($option['push_enabled'])){
+    if (empty($option['push_enabled'])) {
         $PHPShopPush = new PHPShopPush();
         $PHPShopPush->clean();
+    }
+
+    // Telegram регистрация вебхука
+    if (!empty($option['telegram_enabled']) and ! empty($option['telegram_token'])) {
+
+        $url = 'https://api.telegram.org/bot' . $option['telegram_token'] . '/setWebhook?url=https://' . $_SERVER['SERVER_NAME'] . '/bot/telegram.php';
+        $сurl = curl_init();
+        curl_setopt_array($сurl, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+        ));
+        $result = curl_exec($сurl);
+        curl_close($сurl);
     }
 
     // Перехват модуля

@@ -4,6 +4,7 @@
     <name>Adm Log</name>
     <description>Модуль записи действий администратора.</description>
     <category>develop</category>
+    <faqlink>https://docs.phpshop.ru/moduli/razrabotchikam/admlog</faqlink>
     <adminmenu>
         <title>Журнал событий</title>
         <capability>true</capability>

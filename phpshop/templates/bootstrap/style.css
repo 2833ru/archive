@@ -105,27 +105,6 @@ a, .btn, button {
     margin-left: 2px;
 } 
 
-.chat{ 
-    position: fixed; bottom: 50%; left: -36px;
-    border-top-left-radius: 0  !important;
-    border-bottom-left-radius: 0  !important;
-    padding:7px;
-}
-
-.chat .glyphicon{
-    padding-left:10px;
-}
-.chat-modal-content{
-    height:500px;
-    width:100%;
-    overflow:hidden;
-    border: 0px;
-    margin:0px;
-}
-#chatopenwindow{
-    margin-right:7px;
-}
-
 .page-header h1{
     font-size: 30px;
 }
@@ -2130,7 +2109,6 @@ footer .submenu{display:none}
 }
 .search-misspell {
     font-size: 14px;
-    margin-bottom: 20px;
 }
 .product-services-list  label {margin-right:15px}
 .product-services-list label  input[type="checkbox"]:checked {border: 1px solid #dfe0e1;}
@@ -2279,3 +2257,4 @@ margin-bottom:10px}
 }
 .navbar-collapse.collapse.in{max-height:400px;box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.26);}
 .overflow{overflow:hidden}
+.theme-color {color: #58daef;}

@@ -134,12 +134,8 @@ elseif (!empty($_POST['password'])) {
 
     if (!empty($fp)) {
 
-        $content = $fp;
-
         // ѕодстановка почты администратора
-        if (!empty($_POST['send-welcome'])) {
-            $content = str_replace("admin@localhost", $_POST['mail'], $content);
-        }
+        $content = str_replace("admin@localhost", $_POST['mail'], $fp);
 
         $sqlArray = PHPShopFile::sqlStringToArray($content);
 
@@ -301,7 +297,7 @@ elseif (!empty($_POST['password'])) {
             ?>   
             <p class="<?php echo $system; ?>">   
                 Ќиже приведена инструкци€ дл€ ручной установки PHPShop на виртуальный хостинг. ѕеред установкой рекомендуем ознакомитьс€ со
-                списком <a class="btn btn-info btn-xs" href="http://phpshop.ru/page/hosting-list.html" target="_blank" title="’остинги"><span class="glyphicon glyphicon-share-alt"></span> рекомендуемых хостингов</a> на соответствие с системными требовани€ми PHPShop.</p>
+                списком <a class="btn btn-info btn-xs" href="https://phpshop.ru/page/hosting-list.html" target="_blank" title="’остинги"><span class="glyphicon glyphicon-share-alt"></span> рекомендуемых хостингов</a> на соответствие с системными требовани€ми PHPShop.</p>
 
             <p class="<?php echo $system; ?>">≈сли вы не хотите или по каким-то причинам не можете воспользоватьс€ автоматическим установщиком <a href="http://install.phpshop.ru" target="_blank" class="btn btn-info btn-xs"><span class="glyphicon glyphicon-share-alt"></span> Web Installer</a>, то приведенна€ ниже информаци€, поможет вам выполнить установку в ручном режиме.</p>
 
@@ -349,6 +345,8 @@ charset="cp1251";   # кодировка базы</pre>
 /license
 /UserFiles/Image
 /UserFiles/Files
+/1cManager/upload
+/1cManager/goods
 /phpshop/admpanel/csv
 /phpshop/admpanel/dumper/backup</pre>
 
@@ -729,9 +727,9 @@ dbase="mybase";         # им€ базы</pre>
 
 
                                     $('#install').on('hidden.bs.modal', function (e) {
-                                       location.reload();
+                                        location.reload();
                                     });
-                                    
+
                                     // √енератор паролей
                                     $('#generator').on('click', function () {
                                         var password = $(this).attr('data-password');

@@ -72,7 +72,7 @@ html{
 }
 
 
-.home{
+.home, .setscreen{
     width:40px;
     text-align: center
 }
@@ -260,7 +260,7 @@ img.media-object{
     padding-right: 3px;
 }
 
-#body > .container{
+#body > .container, #body > .container-fluid{
     box-shadow: 0 0 3px rgba(122,122,122,0.2);
     background: #FFF;
     min-height: 100%;  
@@ -373,7 +373,7 @@ table#data tr.data-row td{
     height: 30px  !important;
 }
 
-table#data tr.data-row td:last-child{
+table#data tr.data-row td:last-child ,table#data tr th:last-child{
     text-align: right;
 }
 
@@ -408,7 +408,7 @@ table.dataTable thead .sorting-hide:after {
 }
 
 .image-skin{
-    max-height: 170px;
+    max-height: 230px;
 }
 
 #footer{
@@ -445,8 +445,7 @@ table.dataTable thead .sorting-hide:after {
 }
 
 .navbar-statick .navbar-btn{
-
-    margin: 5px;
+    margin: 5px 5px 5px 0px;
     width: 100px;
 }
 
@@ -476,12 +475,28 @@ form.navbar-right{
 
 @media (max-width:767px){
 
+    #data_length{
+        display: none;
+    }
+
+    .sidebar-right {
+        background: #FFF;
+    }
+
+    table#data tr.data-row td:last-child ,table#data tr th:last-child{
+        text-align: center;
+    }
+
+    .suggestions-addon[data-addon-type="clear"]{
+        background: none  !important;
+    }
+
     table.dataTable thead .sorting::after,table.dataTable thead .sorting_desc::after,table.dataTable thead .sorting_asc::after, #select_all, .data-row input[type=checkbox], .dropdown-menu .dropdown-header, .dropdown-menu .divider, .dropdown-menu .glyphicon{
         display: none;
     }
 
     table.dataTable th:first-child{
-        width: 0px !important;
+        -width: 70px !important;
     }
 
 
@@ -651,9 +666,14 @@ table.dataTable th{
 .fix-products {
     margin-left: 10px;
 }
-#kanban {
+#kanban{
     overflow-x: auto;
     padding: 10px 0;
+}
+
+#kanban-wrapper {
+    overflow-x: auto;
+    height: 20px;
 }
 
 #kanban .success {
@@ -710,4 +730,32 @@ table.dataTable th{
 
 .form-kanban {
     font-size: 13px;
+}
+
+
+.media-object-parent{
+    max-width: 40px !important;
+    max-height: 40px !important;
+    padding-left: 10px  
+}
+
+.search-sort-list {
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: 100px;   
+}
+
+.bot-icon{
+    width: 18px;
+    height: 18px;
+    margin-right: 7px;
+        
+}
+.progress{
+    margin-bottom: 10px !important;
+}
+.center-block {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }

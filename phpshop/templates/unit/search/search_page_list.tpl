@@ -14,7 +14,7 @@
 </div>
 
 <div class="">
-    <form  action="/search/" role="form">
+    <form  action="/search/">
 
         <div class="input-group">
             <input name="words" maxlength="50" class="form-control" placeholder="{Искать}.." required="" type="search" value="@searchString@">

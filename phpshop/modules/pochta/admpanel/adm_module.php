@@ -102,6 +102,9 @@ function actionStart() {
         <li>Зарегистрироваться на онлайн-сервисе <a href="https://otpravka.pochta.ru/" target="_blank">«Отправка»</a></li>
         <li>Токен авторизации пользователя можно узнать в <a href="https://otpravka.pochta.ru/settings#/api-settings" target="_blank">настройках личного кабинета</a>.</li>
         <li>Создать виджет в <a href="https://widget.pochta.ru/widgets" target="_blank">Виджет Почты России</a>.</li>
+        <li>В настройках виджетов включить <code>Callback function name</code> и вписать значение <code>pochtaCallback</code> 
+            для виджета <kbd>В пункт выдачи</kbd> и <code>pochtaCallbackCourier</code> для виджета <kbd>Курьером</kbd>.
+        </li>
         <li>Из кода виджета <kbd>В пункт выдачи</kbd> <code>ecomStartWidget({
         id: 1234,
         callbackFunction: pochtacallback,
@@ -109,7 +112,7 @@ function actionStart() {
       });</code> скопировать числовой id, в примере 1234, вставить его в поле <kbd>ID виджета</kbd> в настройках модуля.</li>
               <li>Из кода виджета <kbd>Курьером</kbd> <code>courierStartWidget({
         id: 1234,
-        callbackFunction: pochtacallback,
+        callbackFunction: pochtaCallbackCourier,
         containerId: \'ecom-widget-courier\'
       });</code> скопировать числовой id, в примере 1234, вставить его в поле <kbd>ID виджета курьерской доставки</kbd> в настройках модуля.</li>
         </ol>

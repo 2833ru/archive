@@ -5,7 +5,7 @@
     <h2>{Заказ} &#8470;@orderNum@</h2>
 </div>
 
-<form role="form" method="post" name="forma_order" id="forma_order" action="/done/">
+<form method="post" name="forma_order" id="forma_order" action="/done/">
 
     <div class="panel panel-default no-margin">
         <input type="hidden" name="ouid" value="@orderNum@" readonly="1">
@@ -15,7 +15,7 @@
         </div>
         <div class="panel-body">
             @authData@ @noAuth@                  
-<label><input type="checkbox" value="on" name="rule" class="req" checked="checked">  {Я согласен} <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html" alt="Согласие на обработку персональных данных">{на обработку моих персональных данных}</a>
+<label><input type="checkbox" value="on" name="rule" class="req" checked="checked">  {Я согласен} <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html">{на обработку моих персональных данных}</a>
                            </label>
         </div>
     </div>

@@ -1,5 +1,4 @@
-
-<div class='news-list'>
+<div class='ajaxsearch-list'>
     <a href="/shop/UID_@productUid@.html">
         <div class="template-pad media">
             <div class="media-left">
@@ -7,7 +6,7 @@
             </div>
             <div class="media-body">
                 <h4 class="media-heading">@productName@</h4>
-                <span class="btn ">@productPrice@ <span class="rubznak">@productValutaName@</span></span>
+                <span class="btn ajaxsearch-price">@productPrice@ <span class="rubznak">@productValutaName@</span></span>
             </div>
         </div>
     </a>

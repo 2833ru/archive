@@ -1,5 +1,5 @@
 
-<form name="users_password" method="post" class="form-horizontal" role="form">
+<form name="users_password" method="post" class="form-horizontal">
 
     <div class="form-group">
         <label class="col-xs-12 col-sm-2 control-label">{Статус}</label>

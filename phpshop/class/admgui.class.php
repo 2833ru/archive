@@ -21,6 +21,8 @@ class PHPShopGUI {
     var $dropdown_action_form = true;
     var $tab_key = 0;
     var $nav_style = 'nav-pills';
+    var $productTableCaption = [];
+    var $productTableRow = [];
 
     /**
      * Конструктор
@@ -96,7 +98,7 @@ class PHPShopGUI {
 
         if (!empty($option['load'])) {
             $drag = '<input type="file" name="file' . $filename . '"  data-target="' . $id . '">';
-            $add .= '<span class="btn btn-default btn-file">' . $this->__('Загрузить') . '<input type="file" name="file' . $filename . '"  data-target="' . $id . '"></span>';
+            $add .= '<span class="btn btn-default btn-file">' . $this->__('Загрузить') . '<input type="file" id="uploadimage" name="file' . $filename . '"  data-target="' . $id . '"></span>';
         }
         if (!empty($option['multi']))
             $add .= '<button type="button" class="btn btn-default" id="uploaderModal">' . $this->__('Пакетно') . '</button>';
@@ -180,11 +182,11 @@ class PHPShopGUI {
 
         if ($locale)
             $text = $this->__($text);
-        
-        if($width)
-            $width='style="width:'.$width.'px"';
 
-        return '<div class="alert alert-' . $type . ' alert-dismissible" role="alert" '.$width.'>
+        if ($width)
+            $width = 'style="width:' . $width . 'px"';
+
+        return '<div class="alert alert-' . $type . ' alert-dismissible" role="alert" ' . $width . '>
   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
   ' . $text . '</div>';
     }
@@ -192,8 +194,8 @@ class PHPShopGUI {
     /**
      *  Анимация загрузки
      * @param string $title тест сообщения
-     * @param string $width длина
      * @param string $class css класс
+     * @param string $width длина
      */
     function setProgress($title, $class = false, $width = '100%') {
         return ' 
@@ -206,8 +208,7 @@ class PHPShopGUI {
     function setSidebarLeft($data = array(), $cell = 2, $hide_mobile = false) {
         $dis = null;
         $i = 1;
-
-
+        
         if (is_array($data))
             foreach ($data as $key => $val)
                 if (is_array($val)) {
@@ -269,7 +270,7 @@ class PHPShopGUI {
     /**
      *  Правый сайдбар
      */
-    function setSidebarRight($data = array(), $cell = 2) {
+    function setSidebarRight($data = array(), $cell = 2, $class = null) {
         $dis = null;
         $i = 1;
 
@@ -319,14 +320,14 @@ class PHPShopGUI {
                     $i++;
                 }
 
-        $this->sidebarRight = '<div class="col-md-' . $cell . ' sidebar-right">' . $dis . '</div>';
+        $this->sidebarRight = '<div class="col-md-' . $cell . ' sidebar-right ' . $class . '">' . $dis . '</div>';
     }
 
     /**
      * Выпадающая экшен панель 
      */
     function setActionPanel($title, $action = array(), $button = array(), $locale = false) {
-        global $subpath,$isFrame;
+        global $subpath, $isFrame;
 
         if ($locale)
             $title = $this->__($title);
@@ -433,7 +434,7 @@ class PHPShopGUI {
         $this->action_select['Создать'] = array(
             'name' => 'Создать новый',
             'locale' => true,
-            'action' => 'new' . $GLOBALS['isFrame'],
+            'action' => 'addNewElement' . $GLOBALS['isFrame'],
             'url' => '#'
         );
 
@@ -448,18 +449,22 @@ class PHPShopGUI {
             'action' => 'divider' . $GLOBALS['isFrame'],
         );
 
+        if (!empty($_GET['return']))
+            $return = '&return=' . $_GET['return'];
+        else
+            $return = null;
+
         $this->action_select['Сделать копию'] = array(
             'name' => 'Сделать копию',
             'locale' => true,
-            'url' => '?path=' . $_GET['path'] . '&action=new&id=' . $_GET['id'] . $addFrameLink,
+            'url' => '?path=' . $_GET['path'] . '&action=new&id=' . $_GET['id'] . $return . $addFrameLink,
             'action' => $GLOBALS['isFrame']
         );
 
         if (!empty($_GET['return'])) {
             $back['url'] = $_GET['return'];
-        } 
-        elseif(!empty($_SESSION['search_memory']))
-            $back['url'] = $_GET['path'].'&'.$_SESSION['search_memory'];
+        } elseif (!empty($_SESSION['search_memory']))
+            $back['url'] = $_GET['path'] . '&' . $_SESSION['search_memory'];
         else
             $back['url'] = $_GET['path'];
 
@@ -473,7 +478,7 @@ class PHPShopGUI {
         if ($_GET['path'] == 'catalog') {
             if (!empty($_GET['id'])) {
                 $back['class'] = 'back';
-                $btnBackProduct = '<a class="btn btn-default btn-sm navbar-btn '.$isFrame.'" href="?path=catalog&cat=' . $_GET['id'] . '"> ' . $this->__('К товарам каталога') . '</a>';
+                $btnBackProduct = '<a class="btn btn-default btn-sm navbar-btn ' . $isFrame . '" href="?path=catalog&cat=' . $_GET['id'] . '"> ' . $this->__('К товарам каталога') . '</a>';
             } else {
                 $back['class'] = null;
                 $disabled = 'disabled';
@@ -542,12 +547,18 @@ class PHPShopGUI {
         }
         $CODE .= ' </ul>';
 
+        // Fullscreen
+        if (!empty($_COOKIE['fullscreen'])) {
+            $container = 'container-fluid';
+        } else {
+            $container = 'container';
+        }
 
         $this->actionPanel = '<nav class="navbar-action">
-                <div class="container" style="' . $GLOBALS['frameWidth'] . '">' . $CODE . '</div>
+                <div class="' . $container . '" style="' . $GLOBALS['frameWidth'] . '">' . $CODE . '</div>
             </nav>
          <!-- /.Action panell -->
-         <div id="fix-check" class="visible-lg"></div>
+         <div id="fix-check"></div>
 ';
     }
 
@@ -719,7 +730,7 @@ class PHPShopGUI {
         if ($form)
             echo '<form method="post" enctype="multipart/form-data" name="product_edit" id="product_edit" class="form-horizontal" role="form" data-toggle="validator">';
         echo $this->actionPanel . '
-                <div class="container row sidebarcontainer" style="' . $GLOBALS['frameWidth'] . '">
+                <div class="container-fluid row sidebarcontainer" style="' . $GLOBALS['frameWidth'] . '">
                     ' . $this->sidebarLeft . '
                     <div class="col-md-' . $cell . ' main">
                      ' . $this->_CODE . '
@@ -930,7 +941,7 @@ class PHPShopGUI {
             $CODE = ' <div class="input-group" style="' . $style . '">';
 
             if (!empty($caption))
-                $CODE .= ' <div class="input-group-addon input-sm">' . __($caption,$locale) . '</div>';
+                $CODE .= ' <div class="input-group-addon input-sm">' . __($caption, $locale) . '</div>';
 
             $CODE .= '<input class="' . $class_array[$type] . ' ' . $class . '" type="' . $type . '" value="' . $value . '"  name="' . $name . '" id="' . $name . '" placeholder="' . $this->__($placeholder, $locale) . '">';
 
@@ -1003,15 +1014,15 @@ class PHPShopGUI {
                     return $this->setRadio($arg['name'], 1, $arg['caption'], $arg['value']) . $this->setRadio($arg['name'], 0, 'Выкл.', 1);
                     break;
                 case 'editor': {
-                    $this->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));
-                    $editor = new Editor($arg['name']);
-                    $editor->Height = isset($arg['height']) ? (int) $arg['height'] : '450';
-                    $editor->Config['EditorAreaCSS'] = chr(47) . "phpshop" . chr(47) . "templates" . chr(47) . $PHPShopSystem->getValue('skin') . chr(47) . $PHPShopBase->getParam('css.default');
-                    $editor->ToolbarSet = 'Normal';
-                    $editor->Value = htmlentities($arg['value'], ENT_COMPAT, $GLOBALS['PHPShopBase']->codBase);
-                    return $editor->AddGUI();
-                    break;
-                }
+                        $this->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));
+                        $editor = new Editor($arg['name']);
+                        $editor->Height = isset($arg['height']) ? (int) $arg['height'] : '450';
+                        $editor->Config['EditorAreaCSS'] = chr(47) . "phpshop" . chr(47) . "templates" . chr(47) . $PHPShopSystem->getValue('skin') . chr(47) . $PHPShopBase->getParam('css.default');
+                        $editor->ToolbarSet = 'Normal';
+                        $editor->Value = htmlentities($arg['value'], ENT_COMPAT, $GLOBALS['PHPShopBase']->codBase);
+                        return $editor->AddGUI();
+                        break;
+                    }
                 default:
                     return $this->setInput($arg['type'], $arg['name'], htmlentities($arg['value'], ENT_COMPAT, $GLOBALS['PHPShopBase']->codBase), $arg['float'], $arg['size'], false, $arg['class'], false, $arg['caption'], $arg['description'], $arg['placeholder']);
             }
@@ -1089,9 +1100,9 @@ class PHPShopGUI {
 
 
         foreach ($Arg as $key => $val) {
-            
+
             // Отключение закладки
-            if($val[3])
+            if ($val[3])
                 continue;
 
             if ($key == $_GET['tab']) {
@@ -1274,7 +1285,7 @@ class PHPShopGUI {
      * @param array $opt массим дополнительных параметров [data-x]
      * @return string
      */
-    function setCollapse($title, $content, $collapse = 'in', $line = true, $icons = true, $opt = false, $locale=true) {
+    function setCollapse($title, $content, $collapse = 'in', $line = true, $icons = true, $opt = false, $locale = true) {
         static $collapseID;
 
         $datatoggle = 'data-toggle="collapse"';
@@ -1304,7 +1315,7 @@ class PHPShopGUI {
         if ($icons)
             $icons = '<span class="glyphicon glyphicon-triangle-' . $icon . '"></span>';
 
-        $CODE .= '<a name="set' . $collapseID . '"></a><div class="collapse-block"><h4 ' . $datatoggle . ' data-target="#collapseExample' . $collapseID . '" aria-expanded="true" aria-controls="collapseExample">' . $this->__($title,$locale) . ' ' . $icons . '</h4>
+        $CODE .= '<a name="set' . $collapseID . '"></a><div class="collapse-block"><h4 ' . $datatoggle . ' data-target="#collapseExample' . $collapseID . '" aria-expanded="true" aria-controls="collapseExample">' . $this->__($title, $locale) . ' ' . $icons . '</h4>
             <div class="collapse ' . $collapse . '" id="collapseExample' . $collapseID . '" ' . $add_option . '>' . $content . '</div></div>';
         $collapseID++;
         return $CODE;
@@ -1390,10 +1401,9 @@ class PHPShopGUI {
                     }
                     $CODE .= '</optgroup>';
                 }
-                elseif($val[0] == '|') {
+                elseif ($val[0] == '|') {
                     $CODE .= '<option data-divider="true"></option>';
-                }
-                else {
+                } else {
                     $CODE .= '<option value="' . $val[1] . '" ' . $val[2] . ' ' . $val[3] . '>' . $val[0] . '</option>';
                 }
             }
@@ -1489,8 +1499,8 @@ class PHPShopGUI {
      * @param string $style имя стиля css
      * @return string
      */
-    function setText($value, $float = "left", $style = false,$locale=true) {
-        $CODE = '<div style="float:' . $float . ';padding:' . $this->padding . 'px;' . $style . '">' . __($value,$locale) . '</div>';
+    function setText($value, $float = "left", $style = false, $locale = true) {
+        $CODE = '<div style="float:' . $float . ';padding:' . $this->padding . 'px;' . $style . '">' . __($value, $locale) . '</div>';
         return $CODE;
     }
 
@@ -1512,7 +1522,6 @@ class PHPShopGUI {
         $CODE = '<img src="' . $src . '" ' . $width . ' ' . $height . ' alt="' . $alt . '" title="' . $alt . '" border="0" align="' . $align . '" hspace="' . $hspace . '" style="' . $style . '" onclick="' . $onclick . '" class="' . $class . '">';
         return $CODE;
     }
-    
 
     /**
      * Прорисовка ссылки
@@ -1522,12 +1531,12 @@ class PHPShopGUI {
      * @param string $style имя стиля css
      * @return string
      */
-    function setLink($href, $caption, $target = '_blank', $style = false, $title = false, $class = false, $option = false,$locale=true) {
+    function setLink($href, $caption, $target = '_blank', $style = false, $title = false, $class = false, $option = false, $locale = true) {
 
         if (empty($title))
             $title = $caption;
-        
-        if($locale and $href != "#")
+
+        if ($locale and $href != "#")
             $caption = __($caption);
 
         $CODE = '<a href="' . $href . '" target="' . $target . '" title="' . $title . '" style="' . $style . '" class="' . $class . '" data-option="' . $option . '">' . $caption . '</a>';
@@ -1799,8 +1808,7 @@ class PHPShopGUI {
                </table>';
 
         //if (empty($db['reformal']))
-          //  $db['reformal'] = $path;
-
+        //  $db['reformal'] = $path;
         // Reformal
         //$CODE .= $this->setButton('Есть идея развития модуля ' . $db['name'], 'question-sign', 'idea', "http://idea.phpshop.ru/proj/?ia=" . $db['reformal']);
 
@@ -1897,7 +1905,7 @@ class PHPShopInterface extends PHPShopGUI {
 
             $CODE = '
      <div class="form-group form-group-sm">
-        <label class="col-sm-' . intval($size) . ' ' . $label . ' ' . $class . '">' . $this->__($title,$locale) . $help . '</label><div class="col-sm-' . ($max_size - intval($size)) . '">' . $content . '</div>
+        <label class="col-sm-' . intval($size) . ' ' . $label . ' ' . $class . '">' . $this->__($title, $locale) . $help . '</label><div class="col-sm-' . ($max_size - intval($size)) . '">' . $content . '</div>
      </div>';
         }
 
@@ -1925,7 +1933,7 @@ class PHPShopInterface extends PHPShopGUI {
             $id = null;
 
         $compile .= '
-        <div class="container row sidebarcontainer">
+        <div class="container-fluid row sidebarcontainer">
             ' . $this->sidebarLeft . '
             <div class="col-md-' . $cell . ' main">
             <table class="table table-hover table-responsive" id="' . $id . '">
@@ -1963,7 +1971,9 @@ class PHPShopInterface extends PHPShopGUI {
             // Чекбокс для пакетой обработки
             if ($key == 0 && $this->checkbox_action) {
                 $id = $val[0];
-                $CODE .= '<th width="' . $val[1] . '" class="sorting-hide '.$val[2]['class'].'"><input type="checkbox" value="all" id="select_all"></th>';
+
+                if(!$this->mobile)
+                $CODE .= '<th width="' . $val[1] . '" class="sorting-hide ' . $val[2]['class'] . '"><input type="checkbox" value="all" id="select_all"></th>';
             } else {
 
                 // Дополнительные настройки
@@ -2008,9 +2018,12 @@ class PHPShopInterface extends PHPShopGUI {
 
                 if (empty($val[0]))
                     $class = 'sorting-hide';
+                     
+                // размер
+                if(!empty($val[1]) and !$this->mobile)
+                   $width = 'width="' . $val[1] . '"';
 
-
-                $CODE .= '<th width="' . $val[1] . '" class="text-' . $option['align'] . ' ' . $class . '" ' . $tooltip . '>' . $val[0] . '</th>';
+                $CODE .= '<th ' . $width . ' class="text-' . $option['align'] . ' ' . $class . '" ' . $tooltip . '>' . $val[0] . '</th>';
             }
         }
 
@@ -2036,8 +2049,11 @@ class PHPShopInterface extends PHPShopGUI {
             if ($key == 0 && $this->checkbox_action) {
                 $id = $val;
                 $jsort[] = null;
+                
                 // ajax
+                if(!$this->mobile)
                 $ajax_array[] = '<input type="checkbox" value="' . $val . '" name="items" data-id="' . $val . '"><span class="data-row-order">' . $key . '</span><span class="hide">' . $val . '</span>';
+                
                 $CODE .= '<td class="hidden-xs"><input type="checkbox" value="' . $val . '" name="items" data-id="' . $val . '"><span class="data-row-order">' . $key . '</span><span class="hide">' . $val . '</span></td>';
             } else {
                 // Дополнительные настройки
@@ -2097,7 +2113,7 @@ class PHPShopInterface extends PHPShopGUI {
                     if (empty($val['class'])) {
                         $val['class'] = null;
                     }
-                    
+
                     // readonly
                     if (empty($val['readonly'])) {
                         $val['readonly'] = null;
@@ -2114,10 +2130,9 @@ class PHPShopInterface extends PHPShopGUI {
                     } else
                         $val['color'] = null;
 
-
                     // editable
                     if (!empty($val['editable'])) {
-                        $row = '<input style="width:100%' . $val['color'] . '" data-id="' . $id . '" class="editable input-hidden form-control input-sm '.$val['class'].'" data-edit="' . $val['editable'] . '" value="' . $row . '" '.$val['readonly'].'><span class="hide">' . $row . '</span>';
+                        $row = '<input style="width:100%' . $val['color'] . '" data-id="' . $id . '" class="editable input-hidden form-control input-sm ' . $val['class'] . '" data-edit="' . $val['editable'] . '" value="' . $row . '" ' . $val['readonly'] . '><span class="hide">' . $row . '</span>';
                     }
 
                     // order
@@ -2129,15 +2144,16 @@ class PHPShopInterface extends PHPShopGUI {
                     // search
                     if (!empty($val['search']))
                         $order .= ' data-search="' . $val['search'] . '" ';
-                    
+
                     // checkbox
-                    if(!empty($val['checkbox'])){
-                        
-                        if(!empty($val['checkbox']['val']))
-                            $checked='checked';
-                        else $checked=null;
-                        
-                        $row ='<input class="checkbox" type="checkbox" value="' . $val['checkbox']['val'] . '" '.$checked.' name="' . $val['checkbox']['name'] . '" data-id="' . $id . '"><span class="data-row-order">' . $val['checkbox']['val'] . '</span>';
+                    if (!empty($val['checkbox'])) {
+
+                        if (!empty($val['checkbox']['val']))
+                            $checked = 'checked';
+                        else
+                            $checked = null;
+
+                        $row = '<input class="checkbox" type="checkbox" value="' . $val['checkbox']['val'] . '" ' . $checked . ' name="' . $val['checkbox']['name'] . '" data-id="' . $id . '"><span class="data-row-order">' . $val['checkbox']['val'] . '</span>';
                     }
 
                     $CODE .= '<td style="text-align:' . $val['align'] . '" class="' . $val['class'] . '" ' . $order . '>' . $row . '</td>';
@@ -2153,14 +2169,13 @@ class PHPShopInterface extends PHPShopGUI {
             }
         }
 
-
         if ($GLOBALS['PHPShopBase']->codBase != 'utf-8')
             $this->_AJAX['data'][] = json_fix_cyr($ajax_array);
         else
             $this->_AJAX['data'][] = $ajax_array;
-
+        
         $this->_AJAX['sort'] = $jsort;
-        $this->_CODE .= '<tr class="data-row" data-row="' . $this->numRows . '">' . $CODE . '</tr>';
+        $this->_CODE .= '<tr class="data-row" data-row="' . $this->numRows . '" '.$this->tr_id.' data-id="'.$id.'">' . $CODE . '</tr>';
         $this->numRows++;
         $this->n++;
     }
@@ -2190,6 +2205,58 @@ class PHPShopInterface extends PHPShopGUI {
         return $imgchek;
     }
 
+    public function getProductTableFields()
+    {
+        if (!empty($_COOKIE['check_memory'])) {
+            $options = json_decode($_COOKIE['check_memory'], true);
+        }
+
+        if(!is_array($options)) {
+            $options = [
+                'catalog.option' => [
+                    'icon'   => 1,
+                    'name'   => 1,
+                    'price'  => 1,
+                    'price2' => 0,
+                    'price3' => 0,
+                    'price4' => 0,
+                    'price5' => 0,
+                    'item'   => 1,
+                    'menu'   => 1,
+                    'status' => 1,
+                    'label'  => 1,
+                    'uid'    => 0,
+                    'id'     => 0,
+                    'num'    => 0,
+                    'sort'   => 0
+                ]
+            ];
+
+            if(PHPShopString::is_mobile()) {
+                $options = [
+                    'catalog.option' => [
+                        'icon'   => 1,
+                        'name'   => 1,
+                        'price'  => 1,
+                        'price2' => 0,
+                        'price3' => 0,
+                        'price4' => 0,
+                        'price5' => 0,
+                        'item'   => 1,
+                        'menu'   => 0,
+                        'status' => 0,
+                        'label'  => 0,
+                        'uid'    => 0,
+                        'id'     => 0,
+                        'num'    => 0,
+                        'sort'   => 0
+                    ]
+                ];
+            }
+        }
+
+        return $options;
+    }
 }
 
 /**
@@ -2199,35 +2266,23 @@ class PHPShopInterface extends PHPShopGUI {
  */
 class PHPShopFrontInterface extends PHPShopInterface {
 
-    var $css;
-    var $js;
-
     /**
      * Компиляция результата
      * @return string
      */
-    function Compile($id = false, $form = false, $style = false) {
-
-        if ($this->numRows > 10 and ! $this->razmer)
-            $this->razmer = "height:450px;";
-
-        if (!empty($this->css))
-            $compile .= '<LINK href="' . $this->css . '" type="text/css" rel="stylesheet">';
-        if (!empty($this->js))
-            $compile .= '<SCRIPT language="JavaScript" src="' . $this->js . '"></SCRIPT>';
-
-        $compile .= '<div style="' . $this->razmer . ';overflow:auto;">
-	       <table cellpadding="0" class="phpshop-gui" cellspacing="1" border="0">' . $this->_CODE . '</table></div>';
-
+    function frontCompile($class = "table table-striped") {
+        $compile .= '<table class="' . $class . '">' . $this->_CODE . '</table>';
         return $compile;
     }
 
     /**
-     * Выдача содержимого
+     * Прорисовка элемента Form
      * @return string
      */
-    function getContent() {
-        return $this->_CODE;
+    function frontSetForm($value, $method = "post", $name = "edit", $action = false, $class = 'form-horizontal') {
+        $CODE .= '<form method="' . $method . '" enctype="multipart/form-data" action="' . $action . '" name="' . $name . '"  class="' . $class . '">
+            ' . $value . '</form>';
+        return $CODE;
     }
 
 }

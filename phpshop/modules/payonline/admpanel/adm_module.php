@@ -8,6 +8,10 @@ $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['payonline']['payonlin
 function actionUpdate() {
     global $PHPShopOrm;
     $PHPShopOrm->debug = false;
+
+    if (empty($_POST["fiskalization_new"]))
+        $_POST["fiskalization_new"] = 0;
+
     $action = $PHPShopOrm->update($_POST);
     header('Location: ?path=modules&id=' . $_GET['id']);
     return $action;
@@ -32,9 +36,7 @@ function actionStart() {
 
     // Статус заказа
     $Tab2 .= $PHPShopGUI->setField('Оплата при статусе:', $PHPShopGUI->setSelect('status_new', $order_status_value, 300));
-
     $Tab2 .= $PHPShopGUI->setField('Сообщение предварительной проверки:', $PHPShopGUI->setTextarea('title_sub_new', $data['title_sub'],true,300));
-
     $Tab2 .= $PHPShopGUI->setField('Описание оплаты:', $PHPShopGUI->setTextarea('title_payment_new', $data['title_payment'],true,300));
 
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['page']);
@@ -48,7 +50,7 @@ function actionStart() {
         }
 
     $Tab2.=$PHPShopGUI->setField('Страница Договора Оферты:', $PHPShopGUI->setSelect('page_id_new', $value, 300));
-
+    $Tab2 .= $PHPShopGUI->setField('Фискализация', $PHPShopGUI->setCheckbox("fiskalization_new", 1, "Включить фискализацию платежей", $data["fiskalization"]));
 
     // Инструкция
     $info = '

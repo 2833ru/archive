@@ -9,20 +9,34 @@ PHPShopObj::loadClass("delivery");
 PHPShopObj::loadClass("date");
 PHPShopObj::loadClass("valuta");
 
-$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
+$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini",true,true);
 $PHPShopBase->chekAdmin();
 
 $PHPShopSystem = new PHPShopSystem();
 $LoadItems['System'] = $PHPShopSystem->getArray();
+$PHPShopOrder = new PHPShopOrderFunction($_GET['orderID']);
+
+// Юридические лица
+$company = $PHPShopOrder->getParam('company');
+$PHPShopSystem->setCompany($company);
 
 $blank_org_name = $PHPShopSystem->getSerilizeParam('bank.org_name');
 $blank_org_inn = $PHPShopSystem->getSerilizeParam('bank.org_inn');
 $blank_org_kpp = $PHPShopSystem->getSerilizeParam('bank.org_kpp');
 $blank_org_ur_adres = $PHPShopSystem->getSerilizeParam('bank.org_ur_adres');
 $blank_org_adres = $PHPShopSystem->getSerilizeParam('bank.org_adres');
-$LoadBanc = unserialize($LoadItems['System']['bank']);
 
-$PHPShopOrder = new PHPShopOrderFunction($_GET['orderID']);
+
+
+$LoadBanc = unserialize($LoadItems['System']['bank']);
+$LoadBanc['org_sig'] = $PHPShopSystem->getSerilizeParam('bank.org_sig');
+$LoadBanc['org_sig_buh'] = $PHPShopSystem->getSerilizeParam('bank.org_sig_buh');
+$LoadBanc['org_stamp'] = $PHPShopSystem->getSerilizeParam('bank.org_stamp');
+$LoadBanc['org_stamp'] = $PHPShopSystem->getSerilizeParam('bank.org_stamp');
+$LoadBanc['org_adres']=$PHPShopSystem->getSerilizeParam('bank.org_adres');
+$LoadBanc['org_inn']=$PHPShopSystem->getSerilizeParam('bank.org_inn');
+$LoadBanc['org_kpp']=$PHPShopSystem->getSerilizeParam('bank.org_kpp');
+$LoadItems['System']['company']=$PHPShopSystem->getParam('company');
 
 $fio = $PHPShopOrder->getParam('fio');
 if(!empty($fio))
@@ -30,8 +44,29 @@ if(!empty($fio))
 else
     $blank_person_user = $PHPShopOrder->getSerilizeParam('orders.Person.name_person');
 
-$blank_person_org = $PHPShopOrder->getSerilizeParam('orders.Person.org_name') . $PHPShopOrder->getParam('org_name') . ' ИНН ' . $PHPShopOrder->getSerilizeParam('orders.Person.org_inn') . $PHPShopOrder->getParam('org_inn') . ' КПП ' . $PHPShopOrder->getSerilizeParam('orders.Person.org_kpp') . $PHPShopOrder->getParam('org_kpp') . ' Юр. адрес ' . $PHPShopOrder->getParam('org_yur_adres');
+$orgData = $PHPShopOrder->getSerilizeParam('orders.Person.org_name');
+if(empty($orgData)) {
+    $orgData = $PHPShopOrder->getParam('org_name');
+}
+$inn = $PHPShopOrder->getSerilizeParam('orders.Person.org_inn');
+if(empty($inn)) {
+    $inn = $PHPShopOrder->getParam('org_inn');
+}
+if(!empty($inn)) {
+    $orgData .= ' ИНН ' . $inn;
+}
 
+$kpp = $PHPShopOrder->getSerilizeParam('orders.Person.org_kpp');
+if(empty($kpp)) {
+    $kpp =$PHPShopOrder->getParam('org_kpp');
+}
+if(!empty($kpp)) {
+    $orgData .= ' КПП ' . $kpp;
+}
+
+if(!empty($PHPShopOrder->getParam('org_yur_adres'))) {
+    $orgData .= ' Юр. адрес ' .  $PHPShopOrder->getParam('org_yur_adres');
+}
 
 // Подключаем реквизиты
 $SysValue['bank'] = unserialize($LoadItems['System']['bank']);
@@ -162,9 +197,9 @@ if ($row['flat'])
 $adr_info = substr($adr_info, 2);
 ?>
 
-<!DOCTYPE html
-    PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0//EN" "http://www.w3.org/Math/DTD/mathml2/xhtml-math11-f.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!doctype html>
+<html>
+    <head>
     <title>Унифицированная форма ТОРГ-12 №<?php echo @$ouid ?></title>
     <meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
         <link href="style.css" type=text/css rel=stylesheet>
@@ -353,7 +388,7 @@ $adr_info = substr($adr_info, 2);
                                                         <td colspan="6" style="text-align:left;width:0.185cm; " class="Таблица1_Y4"><p class="P28">Форма по ОКУД </p></td>
                                                         <td style="text-align:left;width:2.124cm; " class="Таблица1_e4"><p class="P27">0310001</p></td>
                                                     </tr>
-                                                    <tr class="Таблица15">    <td colspan="25" style="text-align:left;width:0.924cm; " class="Таблица1_A5"><p class="P30"> </p></td>
+                                                    <tr class="Таблица15">    <td colspan="25" style="text-align:left;width:0.924cm; " class="Таблица1_A5"><p class="P30"><?php echo $blank_org_name ?>, &nbsp;ИНН&nbsp;<?php echo$blank_org_inn ?>, КПП&nbsp;<?php echo $blank_org_kpp ?>, Юр. адрес:&nbsp;<?php echo $blank_org_ur_adres ?>, Почтовый адрес:&nbsp;<?php echo $blank_org_adres ?></p></td>
                                                         <td colspan="5" style="text-align:left;width:1.326cm; " class="Таблица1_Y4"><p class="P28">по ОКПО </p></td>
                                                         <td style="text-align:left;width:2.124cm; " class="Таблица1_e4"><p class="P31"> </p></td>
                                                     </tr>
@@ -373,7 +408,7 @@ $adr_info = substr($adr_info, 2);
                                                         <td style="text-align:left;width:2.124cm; " class="Таблица1_e7"><p class="P31"> </p></td>
                                                     </tr>
                                                     <tr class="Таблица113">   <td colspan="3" style="text-align:left;width:0.924cm; " class="Таблица1_A1"><p class="P29">Грузополучатель</p></td>
-                                                        <td colspan="22" style="text-align:left;width:4.884cm; " class="Таблица1_A5"><p class="P29"><?php echo $blank_person_user ?> <?php echo $blank_person_org ?></p></td>
+                                                        <td colspan="22" style="text-align:left;width:4.884cm; " class="Таблица1_A5"><p class="P29"><?php if(empty($orgData)) echo $blank_person_user; else echo $orgData; ?></p></td>
                                                         <td style="text-align:left;width:0.319cm; " class="Таблица1_A1"><p class="P24"></p></td>
                                                         <td colspan="4" style="text-align:left;width:1.326cm; " class="Таблица1_Y4"><p class="P28">по ОКПО </p></td>
                                                         <td style="text-align:left;width:2.124cm; " class="Таблица1_e4"><p class="P31"> </p></td>
@@ -405,7 +440,7 @@ $adr_info = substr($adr_info, 2);
 
                                                     <tr class="Таблица110">   <td colspan="2" style="text-align:left;width:0.924cm; " class="Таблица1_A1"><p class="P29">Плательщик</p></td>
                                                         <td style="text-align:left;width:0.212cm; " class="Таблица1_A1"><p class="P13"> </p></td>
-                                                        <td colspan="22" style="text-align:left;width:4.884cm; " class="Таблица1_A1"><p class="P29"><?php echo $blank_person_user ?> <?php echo $blank_person_org ?></p></td>
+                                                        <td colspan="22" style="text-align:left;width:4.884cm; " class="Таблица1_A1"><p class="P29"><?php if(empty($orgData)) echo $blank_person_user; else echo $orgData; ?></p></td>
                                                         <td style="text-align:left;width:0.319cm; " class="Таблица1_A1"><p class="P12"> </p></td>
                                                         <td colspan="4" style="text-align:left;width:1.326cm; " class="Таблица1_Y4"><p class="P28"></p></td>
                                                         <td style="text-align:left;width:2.124cm; " class="Таблица1_e4"><p class="P31"> </p></td>
@@ -445,9 +480,9 @@ $adr_info = substr($adr_info, 2);
                                                     <tr class="Таблица12">
                                                         <td colspan="6" style="text-align:left;width:2.148cm; " class="Таблица1_Y4"><p class="P35">ТОВАРНАЯ НАКЛАДНАЯ</p></td>
                                                         <td colspan="5" style="text-align:left;width:0.873cm; " class="Таблица1_e3">
-                                                            <p class="P32"><?php echo $ouid;?> </p></td>
+                                                            <p class="P32"><input title="Изменить" style="font-size: 14px;font-weight: normal;" value="<?php echo  $ouid;?>"></p></td>
                                                         <td colspan="4" style="text-align:left;width:1.353cm; " class="Таблица1_e3">
-                                                            <p class="P32"><?php echo PHPShopDate::dataV(false, false, false,'.', false); ?></p>
+                                                            <p class="P32"><input title="Изменить" style="font-size: 14px;font-weight: normal;" value="<?php echo PHPShopDate::get($row['datas'],false, false,'.', false) ?>"></p>
                                                         </td>
                                                         <td colspan="9" style="text-align:left;width:0.423cm; " class="Таблица1_A1"><p class="P4"> </p></td>
                                                         <td colspan="1" style="text-align:left;width:1.295cm; " class="Таблица1_A1"><p class="P4"> </p></td>
@@ -839,8 +874,8 @@ $adr_info = substr($adr_info, 2);
                                                                if (!empty($LoadBanc['org_stamp']))
                         echo '<img src="' . $LoadBanc['org_stamp'] . '" align="left">';
                     else echo " М. П.   ";
-                                                              ?>
-                                                           <p class="P61" style="padding-top:70px;padding-left:200px"> <?php echo PHPShopDate::dataV(false, false, false,' ', true); ?> года</p></p></td>
+                                                              ?></p>
+                                                           <p class="P61" style="padding-top:70px;padding-left:200px"> <?php echo PHPShopDate::dataV(false, false, false,' ', true); ?> года</p></td>
                                                         <td style="text-align:left;width:0.088cm; " class="Таблица2_A8"><p class="P59"> </p></td>
                                                         <td style="text-align:left;width:0.743cm; " class="Таблица2_A8"><p class="P10"> </p></td>
                                                         <td style="text-align:left;width:0.088cm; " class="Таблица2_a17"><p class="P10"> </p></td>

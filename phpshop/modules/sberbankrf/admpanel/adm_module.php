@@ -15,6 +15,8 @@ function actionUpdate() {
         $_POST["dev_mode_new"] = 0;
     if (empty($_POST["notification_new"]))
         $_POST["notification_new"] = 0;
+    if (empty($_POST["force_payment_new"]))
+        $_POST["force_payment_new"] = 0;
 
     $action = $PHPShopOrm->update($_POST);
     header('Location: ?path=modules&id=' . $_GET['id']);
@@ -55,6 +57,7 @@ function actionStart() {
     // Статус заказа
     $Tab2 .= $PHPShopGUI->setField('Оплата при статусе', $PHPShopGUI->setSelect('status_new', $order_status_value, 300));
     $Tab2 .= $PHPShopGUI->setField('Режим разработки', $PHPShopGUI->setCheckbox("dev_mode_new", 1, "Отправка данных на тестовую среду Сбербанка РФ", $data["dev_mode"]));
+    $Tab2 .= $PHPShopGUI->setField('Переходить к оплате без подтверждения', $PHPShopGUI->setCheckbox("force_payment_new", 1, "После оформления заказа открывать страницу оплаты", $data["force_payment"]));
     $Tab2 .= $PHPShopGUI->setField('Сообщение предварительной проверки', $PHPShopGUI->setTextarea('title_sub_new', $data['title_sub'], true, 300));
     $Tab2 .= $PHPShopGUI->setField('Уведомление об оплате', $PHPShopGUI->setCheckbox("notification_new", 1, "Уведомление об оплате на Email администратора", $data["notification"]));
 

@@ -52,10 +52,15 @@ function userorderpaymentlink_mod_robokassa_hook($obj, $PHPShopOrderFunction) {
             if (is_array($order['Cart']['cart'])) {
 
                 foreach ($order['Cart']['cart'] as $product) {
+                    if((float) $order['Person']['discount'] > 0 && empty($product['promo_price']))
+                        $price = $product['price']  - ($product['price']  * (float) $order['Person']['discount'] / 100);
+                    else
+                        $price = $product['price'];
+
                     $ym_merchant_receipt['items'][] = array(
                         'name' => $product['name'],
                         'quantity' => floatval(number_format($product['num'], 3, '.', '')),
-                        'sum' => floatval(number_format($product['price'], 2, '.', '')) * floatval(number_format($product['num'], 3, '.', '')),
+                        'sum' => floatval(number_format($price, 2, '.', '')) * floatval(number_format($product['num'], 3, '.', '')),
                         'tax' => $tax,
                         'payment_method' => 'full_prepayment',
                         'payment_object' => 'commodity'

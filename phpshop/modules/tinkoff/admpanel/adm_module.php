@@ -26,6 +26,9 @@ function actionUpdate(){
     // Настройки витрины
     $PHPShopModules->updateOption($_GET['id'], $_POST['servers']);
 
+    if (empty($_POST["force_payment_new"]))
+        $_POST["force_payment_new"] = 0;
+
     $PHPShopOrm->debug = false;
     $action = $PHPShopOrm->update($_POST);
     header('Location: ?path=modules&id=' . $_GET['id']);
@@ -50,6 +53,7 @@ function actionStart()
     $Tab1 .= $PHPShopGUI->setField('Шлюз', $PHPShopGUI->setInputText(false, 'gateway_new', $data['gateway'], 300));
     $Tab1 .= $PHPShopGUI->setField('Терминал', $PHPShopGUI->setInputText(false, 'terminal_new', $data['terminal'], 300));
     $Tab1 .= $PHPShopGUI->setField('Секретный ключ', $PHPShopGUI->setInputText(false, 'secret_key_new', $data['secret_key'], 300));
+    $Tab1 .= $PHPShopGUI->setField('Переходить к оплате без подтверждения', $PHPShopGUI->setCheckbox("force_payment_new", 1, "После оформления заказа открывать страницу оплаты", $data["force_payment"]));
 
     $onclick = "function toggleTaxation() { document.getElementsByClassName('tinkoff-taxation')[0].classList.toggle('hidden'); }     
         toggleTaxation();";

@@ -29,10 +29,6 @@ var ROOT_PATH = '';
 // Фиксация главного меню
 var FIXED_NAVBAR = true;
 
-// Формат ввода телефона
-var PHONE_FORMAT = true;
-var PHONE_MASK = "(999) 999-9999";
-
 // DaData.ru Token
 var DADATA_TOKEN = false;
 
@@ -214,6 +210,7 @@ function UpdateDeliveryJq(xid, param, stop_hook) {
             if (json['success']) {
                 $("#DosSumma").html(json['delivery']);
                 $("#d").val(xid);
+                $("#d").data('free', json['free_delivery']);
                 $("#TotalSumma").html(json['total']);
                 $("#seldelivery").html(json['dellist']);
                 if($('input[name="dostavka_metod"]:disabled').length > 0) {

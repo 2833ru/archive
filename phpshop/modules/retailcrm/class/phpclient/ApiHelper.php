@@ -67,13 +67,13 @@ public function processOrders($orders, $nocheck = false)
                 time_nanosleep(0, 250000000);
                 if (!$response->isSuccessful()) {
                     if (isset($response['errors'])) {
-                        Tools::logger($response['errors'], 'send_order', iconv('UTF-8', 'Windows-1251', 'Ошибка передачи заказа в RetailCRM'), $order_id);
+                        Tools::logger(['request' => $orders, 'response' => $response['errors']], 'send_order', iconv('UTF-8', 'Windows-1251', 'Ошибка передачи заказа в RetailCRM'), $order_id);
                     }
                 } else {
-                    Tools::logger($response->response, 'send_order', iconv('UTF-8', 'Windows-1251', 'Заказ передан в RetailCRM'), $order_id);
+                    Tools::logger(['request' => $orders, 'response' => $response->response], 'send_order', iconv('UTF-8', 'Windows-1251', 'Заказ передан в RetailCRM'), $order_id);
                 }
             } catch (CurlException $e) {
-                Tools::logger(array('error' => $e->getMessage()), 'connect', iconv('UTF-8', 'Windows-1251', 'Ошибка соединения с RetailCRM'), $order_id);
+                Tools::logger(['request' => $orders, 'response' => ['error' => $e->getMessage()]], 'connect', iconv('UTF-8', 'Windows-1251', 'Ошибка соединения с RetailCRM'), $order_id);
                 return false;
             }
         }

@@ -229,9 +229,9 @@
                                 </div>
                             </div>
                             <div class="swiper-container brands-slider">
-                                <div class="swiper-wrapper">
+                                <ul class="swiper-wrapper">
                                     @brandsList@
-                                </div>
+                                </ul>
                             </div>
                         </div>
 
@@ -320,7 +320,7 @@
                         <h4 class="modal-title">{Авторизация}</h4>
                         <span id="usersError" class="hide">@usersError@</span>
                     </div>
-                    <form role="form" method="post" name="user_forma">
+                    <form method="post" name="user_forma">
                         <div class="modal-body">
                             <div class="form-group">
 

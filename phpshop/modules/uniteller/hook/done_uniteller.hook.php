@@ -32,7 +32,7 @@ function send_uniteller_hook($obj, $value, $rout) {
             foreach ($aCart as $key => $arItem) {
 
                 // Скидка
-                if($obj->discount > 0)
+                if($obj->discount > 0 && empty($arItem['promo_price']))
                     $price = number_format($arItem['price']  - ($arItem['price']  * $obj->discount  / 100), 2, '.', '');
                 else
                     $price = number_format($arItem['price'], 2, '.', '');

@@ -7,7 +7,7 @@ function getCartInfo($cart) {
     $currency = ' ' . $PHPShopSystem->getDefaultValutaCode();
     if (is_array($cart))
         foreach ($cart as $val) {
-            $dis .= '<a href="?path=product&id=' . $val['id'] . '&return=modules.dir.visualcart" data-toggle="tooltip" data-placement="top" title="' . $val['name'] . ' - ' . $val['price'] . $currency . '"><img src="' . $val['pic_small'] . '" class="media-object pull-left"></a> ';
+            $dis .= '<a href="?path=product&id=' . $val['id'] . '&return=modules.dir.visualcart" data-toggle="tooltip" data-placement="top" title="' . $val['name'] . ' - ' . $val['price'] . $currency . '"><img src="' . $val['pic_small'] . '" class="media-object pull-left" alt=""></a> ';
         }
     return substr($dis, 0, strlen($dis) - 2);
 }

@@ -3,7 +3,7 @@
 </div>
 
 <div class="well">
-    <form  action="/search/" role="form">
+    <form  action="/search/">
 
         <div class="input-group">
             <input name="words" maxlength="50" class="form-control" placeholder="{Искать}.." required="" type="search" value="@searchString@">
@@ -35,6 +35,6 @@
     </form>
 </div>
 <div class="search-misspell">@searchMisspell@</div>
-@productPageDis@
+<div class="template-product-list products-list">@productPageDis@</div>
 
 @searchPageNav@

@@ -86,7 +86,7 @@ function template_parent($obj, $dataArray, $rout) {
         $true_color_array = $true_size_color_array = $color_array = array();
         $size = $color = null;
 
-        if (@count($obj->select_value > 0)) {
+        if (is_array($obj->select_value) and count($obj->select_value > 0)) {
 
             foreach ($obj->select_value as $value) {
 
@@ -150,7 +150,9 @@ function template_parent($obj, $dataArray, $rout) {
                     $obj->set('parentId', $val['id']);
                     $obj->set('parentPrice', $val['price']);
                     $obj->set('parentImage', $size_color_array[$val['id']]['image']);
-                    $obj->set('parentItems', $obj->lang('product_on_sklad') . " " . $val['items'] . " " . $val['ed_izm']);
+                    // Склад
+                    if ($obj->PHPShopSystem->getSerilizeParam('admoption.sklad_enabled') == 1)
+                        $obj->set('parentItems', $obj->lang('product_on_sklad') . " " . $val['items'] . " " . $val['ed_izm']);
 
                     if ((float) $size_color_array[$val['id']]['price_n'] > 0)
                         $obj->set('parentPriceOld', $size_color_array[$val['id']]['price_n']);
@@ -252,11 +254,15 @@ function sorttemplatehook($value, $n, $title, $vendor) {
             $text = $p[0];
             $checked = null;
             if (is_array($vendor)) {
-                foreach ($vendor as $v) {
-                    if (is_array($v))
+                foreach ($vendor as $sortId => $v) {
+                    if (is_array($v)) {
                         foreach ($v as $s)
                             if ($s == $p[1])
                                 $checked = 'checked';
+                    } else {
+                        if ($n == $sortId && $p[1] == $v)
+                            $checked = 'checked';
+                    }
                 }
             }
 
@@ -333,7 +339,7 @@ function template_image_gallery($obj, $array) {
 
             $bxslider.= '<div><a class href="#"><img src="' . $name . '" title="'.$array['name'].'" alt="'.$array['name'].'" /></a></div>';
             $bxsliderbig.= '<li><a class href=\'#\'><img src=\'' . $name_bigstr . '\' title=\''.$array['name'].'\' alt=\''.$array['name'].'\'></a></li>';
-            $bxpager.='<a data-slide-index=\'' . $i . '\' href=\'\'><img class=\'img-thumbnail\'  src=\'' . $name_s . '\'></a>';
+            $bxpager.='<a data-slide-index=\'' . $i . '\' href=\'\'><img class=\'img-thumbnail\'  src=\'' . $name_s . '\' data-big-image="' . $name . '"></a>';
             $i++;
         }
 

@@ -4,9 +4,14 @@ function cdekwidgetWidget() {
         path = '../';
     }
 
+    var country = 'all';
+    if(Number(PHPShopCDEKOptions.russiaOnly) === 1) {
+        country = 'Россия';
+    }
+
     new ISDEKWidjet({
         defaultCity: PHPShopCDEKOptions.defaultCity,
-        country: 'Россия',
+        country: country,
         cityFrom: PHPShopCDEKOptions.cityFrom,
         link: 'forpvz',
         popup: true,

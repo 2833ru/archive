@@ -37,7 +37,7 @@ class BoxberryWidget {
         return $this->isPvzDelivery($deliveryId) || $this->isCourierDeliveryId($deliveryId);
     }
 
-    public function request($method) {
+    public function request($method, $orderId) {
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $this->option['api_url'] . '/json.php');
@@ -52,7 +52,7 @@ class BoxberryWidget {
         if($data['err']) {
             $this->log(
                 array('error' => PHPShopString::utf8_win1251($data['err']), 'parameters' => $this->parameters),
-                $this->parameters['order_id'],
+                $orderId,
                 'Ошибка передачи заказа',
                 'Передача заказа службе доставки Boxberry',
                 'error'
@@ -67,7 +67,7 @@ class BoxberryWidget {
         $data['parameters'] = $this->parameters;
         $this->log(
             $data,
-            $this->parameters['order_id'],
+            $orderId,
             'Успешная передача заказа',
             'Передача заказа службе доставки Boxberry',
             'success',
@@ -166,7 +166,7 @@ class BoxberryWidget {
         if (count($cart) > 0) {
             foreach ($cart as $product) {
 
-                if($discount > 0)
+                if($discount > 0 && empty($product['promo_price']))
                     $price = number_format($product['price']  - ($product['price']  * $discount  / 100), 2, '.', '');
                 else
                     $price = number_format($product['price'], 2, '.', '');
@@ -248,19 +248,17 @@ class BoxberryWidget {
     /**
      * Запись лога
      * @param array $message содержание запроса в ту или иную сторону
-     * @param string $order_id номер заказа
+     * @param string $order_id id заказа
      * @param string $status статус отправки
      * @param string $type request
      */
     public function log($message, $order_id, $status, $type, $status_code = 'succes', $traking = '')
     {
-
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['boxberrywidget']['boxberrywidget_log']);
-        $id = explode("-", $order_id);
 
         $log = array(
             'message_new' => serialize($message),
-            'order_id_new' => $id[0],
+            'order_id_new' => $order_id,
             'status_new' => $status,
             'type_new' => $type,
             'date_new' => time(),

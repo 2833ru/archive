@@ -43,6 +43,86 @@ function setProducts_yandexcart_hook($obj, $data) {
     if (!empty($data['val']['oldprice']))
         $data['xml'] = str_replace('<price>' . $data['val']['price'] . '</price>', '<price>' . $data['val']['price'] . '</price><oldprice>' . $data['val']['oldprice'] . '</oldprice>', $data['xml']);
 
+    // description template
+    if(!empty($obj->yandex_module_options['description_template'])) {
+        $orm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
+        $obj->yandex_categories = array_column($orm->getList(['id', 'name', 'parent_to'], false, false, ['limit' => 100000]), null, 'id');
+
+        $data['xml'] = str_replace(
+            '<description>' . $obj->cleanStr($data['val']['description']) . '</description>',
+            '<description><![CDATA[' . $obj->cleanStr(
+                yandexReplaceDescriptionVariables($obj, $data['val'], $obj->yandex_module_options['description_template'])
+            ) . ']]></description>',
+            $data['xml']
+        );
+    }
+
+    $yandexOptions = unserialize($obj->yandex_module_options['options']);
+
+    // price columns
+    $price = $data['val']['price'];
+    $fee = 0;
+
+    // Цена Яндекс.Маркет
+    if((!isset($_GET['cdek']) && !isset($_GET['dbs']) && !isset($_GET['sbermarket']) && !isset($_GET['aliexpress'])) ||
+        (isset($obj->yandex_module_options['model']) && $obj->yandex_module_options['model'] === 'ADV')) {
+        if(isset($yandexOptions['price']) && (int) $yandexOptions['price'] > 1) {
+            $price = $data['val']['price' . (int) $yandexOptions['price']];
+        }
+        if(isset($yandexOptions['price_fee']) && (float) $yandexOptions['price_fee'] > 0) {
+            $fee = (float) $yandexOptions['price_fee'];
+        }
+    }
+
+    // Цена Яндекс.Маркет DBS
+    if(isset($_GET['dbs']) || (isset($obj->yandex_module_options['model']) && $obj->yandex_module_options['model'] === 'DBS')) {
+        if(!empty($data['val']['price_yandex_dbs'])) {
+            $price = $data['val']['price_yandex_dbs'];
+        } elseif(isset($yandexOptions['price_dbs']) && (int) $yandexOptions['price_dbs'] > 1) {
+            $price = $data['val']['price' . (int) $yandexOptions['price_dbs']];
+        }
+        if(isset($yandexOptions['price_dbs_fee']) && (float) $yandexOptions['price_dbs_fee'] > 0) {
+            $fee = (float) $yandexOptions['price_dbs_fee'];
+        }
+    }
+
+    // Цена Сбермаркет
+    if(isset($_GET['sbermarket'])) {
+        if(!empty($data['val']['price_sbermarket'])) {
+            $price = $data['val']['price_sbermarket'];
+        } elseif(isset($yandexOptions['price_sbermarket']) && (int) $yandexOptions['price_sbermarket'] > 1) {
+            $price = $data['val']['price' . (int) $yandexOptions['price_sbermarket']];
+        }
+        if(isset($yandexOptions['price_sbermarket_fee']) && (float) $yandexOptions['price_sbermarket_fee'] > 0) {
+            $fee = (float) $yandexOptions['price_sbermarket_fee'];
+        }
+    }
+
+    // Цена СДЭК.МАРКЕТ
+    if(isset($_GET['cdek'])) {
+        if(isset($yandexOptions['price_cdek']) && (int) $yandexOptions['price_cdek'] > 1) {
+            $price = $data['val']['price' . (int) $yandexOptions['price_cdek']];
+        }
+        if(isset($yandexOptions['price_cdek_fee']) && (float) $yandexOptions['price_cdek_fee'] > 0) {
+            $fee = (float) $yandexOptions['price_cdek_fee'];
+        }
+    }
+
+    // Цена AliExpress
+    if(isset($_GET['aliexpress'])) {
+        if(isset($yandexOptions['price_ali']) && (int) $yandexOptions['price_ali'] > 1) {
+            $price = $data['val']['price' . (int) $yandexOptions['price_ali']];
+        }
+        if(isset($yandexOptions['price_ali_fee']) && (float) $yandexOptions['price_ali_fee'] > 0) {
+            $fee = (float) $yandexOptions['price_ali_fee'];
+        }
+    }
+
+    if($fee > 0) {
+        $price = $price + ($price * $fee / 100);
+    }
+
+    $data['xml'] = str_replace('<price>' . $data['val']['price'] . '</price>', '<price>' . $price . '</price>', $data['xml']);
 
     // Доставка
     if ($data['val']['delivery'] == 1)
@@ -117,13 +197,18 @@ function setProducts_yandexcart_hook($obj, $data) {
     if (!empty($data['val']['weight']))
         $add.='<weight>' . round($data['val']['weight'] / 1000, 3) . '</weight>';
 
-    // rec
-    if (!empty($data['val']['rec']))
-        $add.='<rec>' . $data['val']['rec'] . '</rec>';
+    // market-sku
+    if (isset($_GET['fbs']) && !empty($data['val']['market_sku']))
+        $add.='<market-sku>' . $data['val']['market_sku'] . '</market-sku>';
 
-    // Артикул
-    if (!empty($data['val']['uid']))
-        $add.='<shop-sku>' . $data['val']['uid'] . '</shop-sku>';
+    // shop-sku, count, cpa
+    if (isset($obj->yandex_module_options['model']) && $obj->yandex_module_options['model'] === 'DBS') {
+        $add .= '<count>' . $data['val']['items'] . '</count>';
+        $add.='<shop-sku>' . $data['val']['id'] . '</shop-sku>';
+        if((int) $data['val']['cpa'] !== 2) {
+            $add.= '<cpa>' . $data['val']['cpa'] . '</cpa>';
+        }
+    }
 
     // Габариты
     if (!empty($data['val']['length']) && !empty($data['val']['width']) && !empty($data['val']['height']))
@@ -196,15 +281,133 @@ function setDelivery_yandexcart_hook($obj, $data) {
 
 function PHPShopYml_yandexcart_hook($obj) {
 
-        // Настройки модуля
-        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['yandexcart']['yandexcart_system']);
-        $option = $PHPShopOrm->select();
+    // Настройки модуля
+    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['yandexcart']['yandexcart_system']);
+    $obj->yandex_module_options = $PHPShopOrm->select();
+    $options = unserialize($obj->yandex_module_options['options']);
 
-        // Пароль
-        if (!empty($option['password']))
-            if ($_GET['pas'] != $option['password'])
-                exit('Login error!');
+    // Пароль
+    if (!empty($obj->yandex_module_options['password']))
+        if ($_GET['pas'] != $obj->yandex_module_options['password'])
+            exit('Login error!');
+
+    // SSL
+    if(!empty($options['ssl']))
+        $obj->ssl = 'https://';
+        
+    // Колонка цен
+    if($options['price']>1)
+        $obj->price = 'price'.$options['price'];
+
+    if(isset($obj->yandex_module_options['use_params'])) {
+        $obj->vendor = (bool) $obj->yandex_module_options['use_params'];
     }
+}
+
+function yandexReplaceDescriptionVariables($obj, $product, $template)
+{
+    if(stripos($template, '@Content@') !== false) {
+        $template = str_replace('@Content@', $product['raw_content'], $template);
+    }
+    if(stripos($template, '@Description@') !== false) {
+        $template = str_replace('@Description@', $product['raw_description'], $template);
+    }
+    if(stripos($template, '@Attributes@') !== false) {
+        $template = str_replace('@Attributes@', yandexSortTable($product), $template);
+    }
+    if(stripos($template, '@Catalog@') !== false) {
+        $template = str_replace('@Catalog@', $obj->yandex_categories[$product['category']]['name'], $template);
+    }
+    if(stripos($template, '@Product@') !== false) {
+        $template = str_replace('@Product@', $product['name'], $template);
+    }
+    if(stripos($template, '@Subcatalog@') !== false) {
+        $getPath = function ($categories, $id, $path = []) use(&$getPath) {
+            if (!empty($id)) {
+                if (isset($categories[$id])) {
+                    $path[] = $categories[$id];
+                    if (!empty($categories[$id]['parent_to']))
+                        return $getPath($categories, $categories[$id]['parent_to'], $path);
+                }
+            }
+
+            return $path;
+        };
+
+        $path = $getPath($obj->yandex_categories, $obj->yandex_categories[$product['category']]['id']);
+
+        $subcat = '';
+        array_shift($path);
+        foreach ($path as $subcategory) {
+            $subcat .= $subcategory['name'] . ' - ';
+        }
+
+
+        $subcat = substr($subcat, 0, strlen($subcat) - 3);
+
+        $template = str_replace('@Subcatalog@', $subcat, $template);
+    }
+
+    return $template;
+}
+
+function yandexSortTable($product) {
+
+    $category = new PHPShopCategory((int) $product['category']);
+
+    $sort = $category->unserializeParam('sort');
+    $dis = $sortCat = $sortValue = null;
+    $arrayVendorValue = [];
+
+    if (is_array($sort))
+        foreach ($sort as $v) {
+            $sortCat .= (int) $v . ',';
+        }
+
+    if (!empty($sortCat)) {
+
+        // Массив имен характеристик
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']);
+        $arrayVendor = array_column($PHPShopOrm->getList(['*'], ['id' => sprintf(' IN (%s 0)', $sortCat)], ['order' => 'num']), null, 'id');
+
+        if (is_array($product['vendor_array']))
+            foreach ($product['vendor_array'] as $v) {
+                foreach ($v as $value)
+                    if (is_numeric($value))
+                        $sortValue.= (int) $value . ',';
+            }
+
+        if (!empty($sortValue)) {
+
+            // Массив значений характеристик
+            $PHPShopOrm = new PHPShopOrm();
+            $result = $PHPShopOrm->query("select * from " . $GLOBALS['SysValue']['base']['sort'] . " where id IN ( $sortValue 0) order by num");
+            while (@$row = mysqli_fetch_array($result)) {
+                $arrayVendorValue[$row['category']]['name'][$row['id']] = $row['name'];
+                $arrayVendorValue[$row['category']]['id'][] = $row['id'];
+            }
+
+            if (is_array($arrayVendor))
+                foreach ($arrayVendor as $idCategory => $value) {
+
+                    if (!empty($arrayVendorValue[$idCategory]['name'])) {
+                        if (!empty($value['name'])) {
+                            $arr = array();
+                            foreach ($arrayVendorValue[$idCategory]['id'] as $valueId) {
+                                $arr[] = $arrayVendorValue[$idCategory]['name'][(int)$valueId];
+                            }
+
+                            $sortValueName = implode(', ', $arr);
+
+                            $dis.=PHPShopText::li($value['name'] . ': ' . $sortValueName, null, '');
+                        }
+                    }
+                }
+
+            return PHPShopText::ul($dis, '');
+        }
+    }
+}
 
 $addHandler = array
     (

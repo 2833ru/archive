@@ -34,7 +34,7 @@ function send_to_order_mod_robokassa_hook($obj, $value, $rout) {
             $orders = unserialize($obj->order);
             $total = 0;
             foreach ($orders['Cart']['cart'] as $product) {
-                if((float) $obj->discount > 0)
+                if((float) $obj->discount > 0 && empty($product['promo_price']))
                     $price = $product['price']  - ($product['price']  * (float) $obj->discount / 100);
                 else
                     $price = $product['price'];

@@ -56,12 +56,17 @@ function grastinPvzWidgetCallback(result) {
 }
 
 function grastinSetResult(result) {
+    var deliveryCost = result.cost;
+    if($("#d").data('free') === 1) {
+        deliveryCost = 0;
+    }
+
     $('input[data-option="payment3"]').attr('disabled', false);
     $('input[name="city_new"]').val(result.cityTo);
     $('input[name="grastinPartnerId"]').val(result.partnerId);
-    $('input[name="grastinSum"]').val(result.cost);
-    $("#DosSumma").html(result.cost);
-    $("#TotalSumma").html(Number(result.cost) + Number($('#OrderSumma').val()));
+    $('input[name="grastinSum"]').val(deliveryCost);
+    $("#DosSumma").html(deliveryCost);
+    $("#TotalSumma").html(Number(deliveryCost) + Number($('#OrderSumma').val()));
     $('#grastin-submit').attr('disabled', false);
 }
 

@@ -83,7 +83,7 @@
                                 </div>
                             </div>
                         </div>
-                        <nav class="navbar-default hidden-md hidden-lg" role="navigation" id="navigation main-menu">
+                        <nav class="navbar-default hidden-md hidden-lg" id="navigation main-menu">
                             <div class="container nav-bar-menu-header">
                                 <div class="navbar-header">
                                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -353,7 +353,7 @@
                             <li class="footer-email"><a href="mailto:@adminMail@">@adminMail@</a></li>                              
                         </ul>
                         <div class="form-group">
-                            <form id="search_form" action="/search/" role="search" method="post" class="footer-search-form">
+                            <form id="search_form" action="/search/" role="search" method="get" class="footer-search-form">
                                 <input class="form-search-footer form-control input-lg" name="words" maxlength="50"  placeholder="{Поиск}..." required="" type="search" data-trigger="manual" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true"  data-content="">
                                 <button class="footer-search-button" type="submit">
                                     <i class="fa fa-search" aria-hidden="true"></i>
@@ -388,7 +388,7 @@
         <!-- Fixed mobile bar -->
 
         <div class=""> </div>
-        <nav class="navbar navbar-default navbar-fixed-bottom bar bar-tab" role="navigation">
+        <nav class="navbar navbar-default navbar-fixed-bottom bar bar-tab">
             <div class="container">
                 <div class="nav-user">
                     @usersDisp@
@@ -434,7 +434,7 @@
                         <h4 class="modal-title">{Авторизация}</h4>
                         <span id="usersError" class="hide">@usersError@</span>
                     </div>
-                    <form role="form" method="post" name="user_forma">
+                    <form method="post" name="user_forma">
                         <div class="modal-body">
                             <div class="form-group">
 
@@ -451,6 +451,7 @@
                                         <input type="checkbox" value="1" name="safe_users" @UserChecked@> {Запомнить}
                                     </label>
                                 </div>
+                                <a href="/users/sms.html" class="pass @sms_login_enabled@">SMS</a>
                                 <a href="/users/sendpassword.html" class="pass">{Забыли пароль}</a>
                             </div>
 
@@ -477,7 +478,7 @@
                         <h4 class="modal-title">{Поиск}</h4>
                     </div>
                     <div class="modal-body">
-                        <form  action="/search/" role="search" method="post">
+                        <form  action="/search/" role="search" method="get">
                             <div class="input-group">
                                 <input name="words" maxlength="50" class="form-control" placeholder="{Искать}.." required="" type="search">
                                 <span class="input-group-btn">
@@ -493,7 +494,7 @@
         <!--/ Модальное окно мобильного поиска -->
 
         <div class="search-big-block">
-            <form id="search_form_small" action="/search/" role="search" method="post" class="header-search-form">
+            <form id="search_form_small" action="/search/" role="search" method="get" class="header-search-form">
                 <input class="form-control input-lg" name="words" maxlength="50"  placeholder="{Поиск}..." required="" type="search" data-trigger="manual" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true"  data-content="">
                 <button class="header-search-button" type="submit">
                     <i class="fa fa-search" aria-hidden="true"></i>

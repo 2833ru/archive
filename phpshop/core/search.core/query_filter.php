@@ -88,7 +88,9 @@ function query_filter($obj) {
     // Ajax поиск        
     if (!empty($_POST['ajax'])) {
         foreach ($_WORDS as $w)
-            $sort.="(name REGEXP '\x20*$w' or uid REGEXP '^$w' or keywords REGEXP '$w') or ";
+            if(!empty($w)) {
+                $sort.="(name REGEXP '\x20*$w' or uid REGEXP '^$w' or keywords REGEXP '$w') or ";
+            }
     }
     // Обычный поиск
     else {

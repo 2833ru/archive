@@ -90,7 +90,7 @@ class PHPShopCart {
             // Массив корзины
             $cart = array(
                 "id" => $objProduct->getParam("id"),
-                "name" => $name,
+                "name" => str_replace('&#43;', '+', $name),
                 "price" => $this->getCartProductPrice($objProduct),
                 "price_n" => $this->getCartProductPrice($objProduct, 'price_n'),
                 "uid" => $objProduct->getParam("uid"),
@@ -389,21 +389,40 @@ class PHPShopCart {
      * @return format
      */
     public function getCartProductPrice($product, $column = 'price') {
+        global $PHPShopSystem;
+
         // Перехват модуля
         $hook = $this->setHook(__CLASS__, __FUNCTION__, array('product' => $product, 'column' => $column));
         if ($hook)
             return $hook['result'];
 
+        $price_n = $product->getParam('price_n');
+
         // Промоакции
         $PHPShopPromotions = new PHPShopPromotions();
         $promotions = $PHPShopPromotions->getPrice($product->objRow);
+
+        $prices = [
+            'price'  => $product->getParam('price'),
+            'price2' => $product->getParam('price2'),
+            'price3' => $product->getParam('price3'),
+            'price4' => $product->getParam('price4'),
+            'price5' => $product->getParam('price5')
+        ];
+        $priceColumn = $PHPShopSystem->getPriceColumn();
+
         if (is_array($promotions)) {
-            $price = $promotions[$column];
+            $prices[$priceColumn] = $promotions[$column];
+            if(!empty($promotions['price_n'])) {
+                $price_n = $promotions['price_n'];
+            }
         } else {
-            $price = $product->getParam($column);
+            if($column !== 'price_n') {
+                $prices[$priceColumn] = $product->getParam($priceColumn);
+            }
         }
 
-        return PHPShopProductFunction::GetPriceValuta($product->objID, $price, $product->getParam("baseinputvaluta"), true);
+        return PHPShopProductFunction::GetPriceValuta($product->objID, $column === 'price_n' ? $price_n : array_values($prices), $product->getParam("baseinputvaluta"), true, $column !== 'price_n');
     }
 
     public function setHook($class_name, $function_name, $data = false, $rout = false) {

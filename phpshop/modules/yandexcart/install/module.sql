@@ -15,6 +15,8 @@ ALTER TABLE `phpshop_products` ADD `pickup` enum('1','2') DEFAULT '2';
 ALTER TABLE `phpshop_products` ADD `store` enum('1','2') DEFAULT '2';
 ALTER TABLE `phpshop_sort_categories` ADD `yandex_param` enum('1','2') DEFAULT '1';
 ALTER TABLE `phpshop_sort_categories` ADD `yandex_param_unit` varchar(64) DEFAULT '';
+ALTER TABLE `phpshop_delivery` ADD `yandex_delivery_points` text;
+ALTER TABLE `phpshop_delivery` ADD `yandex_region_id` int(11) DEFAULT '0';
 ALTER TABLE `phpshop_delivery` ADD `yandex_day_min` int(11) DEFAULT '1';
 ALTER TABLE `phpshop_delivery` ADD `yandex_order_before` int(11) DEFAULT '16';
 ALTER TABLE `phpshop_products` ADD `yandex_min_quantity` int(11) DEFAULT '0';
@@ -26,17 +28,45 @@ ALTER TABLE `phpshop_products` ADD `yandex_condition` enum('1','2','3') DEFAULT 
 ALTER TABLE `phpshop_products` ADD `yandex_condition_reason` text;
 ALTER TABLE `phpshop_products` ADD `barcode` varchar(255) DEFAULT '';
 ALTER TABLE `phpshop_products` ADD `model` varchar(255) DEFAULT '';
+ALTER TABLE `phpshop_products` ADD `market_sku` varchar(255) DEFAULT '';
+ALTER TABLE `phpshop_products` ADD `google_merchant` enum('0','1') DEFAULT '1';
+ALTER TABLE `phpshop_products` ADD `aliexpress` enum('0','1') DEFAULT '1';
+ALTER TABLE `phpshop_products` ADD `sbermarket` enum('0','1') DEFAULT '1';
+ALTER TABLE `phpshop_products` ADD `cdek` enum('0','1') DEFAULT '1';
+ALTER TABLE `phpshop_products` ADD `cpa` enum('0','1','2') DEFAULT '1';
+ALTER TABLE `phpshop_products` ADD `price_yandex_dbs` float DEFAULT '0';
+ALTER TABLE `phpshop_products` ADD `price_sbermarket` float DEFAULT '0';
 
 CREATE TABLE `phpshop_modules_yandexcart_system` (
   `id` int(11) NOT NULL auto_increment,
   `password` varchar(64),
-  `version` varchar(64) default '2.6',
+  `auth_token` varchar(64),
+  `client_id` varchar(255),
+  `client_token` varchar(255),
+  `campaign_id` varchar(64),
+  `description_template` varchar(255),
+  `delivery_id` varchar(64),
+  `model` varchar(64),
+  `import_from` int(11) default 0,
+  `use_params` enum('0','1') DEFAULT '0',
+  `version` varchar(64) default '2.0',
+  `options` BLOB,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251 ;
 
 -- 
 -- Дамп данных таблицы `phpshop_modules_yandexcart_system`
--- 
+--
+INSERT INTO `phpshop_modules_yandexcart_system` VALUES (1,'', '', '', '', '', '', 0, 'ADV', 0, 0, '2.11','');
 
-INSERT INTO `phpshop_modules_yandexcart_system` VALUES (1,'','2.6');
-  
+CREATE TABLE IF NOT EXISTS `phpshop_modules_yandexcart_log` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `date` int(11) NOT NULL,
+    `message` text CHARACTER SET utf8 NOT NULL,
+    `order_id` varchar(64) NOT NULL DEFAULT '',
+    `status` enum('1','2') NOT NULL DEFAULT '1',
+    `path` varchar(64) NOT NULL DEFAULT '',
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+
+ALTER TABLE `phpshop_orders` ADD `yandex_order_id` varchar(255) NOT NULL DEFAULT '';

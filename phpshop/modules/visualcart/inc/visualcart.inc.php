@@ -52,6 +52,18 @@ class AddToTemplateVisualCart extends PHPShopElements {
         $url = parse_url($_SERVER['HTTP_REFERER']);
         $referal = $url["host"];
 
+        // Поиск UTM меток
+        parse_str($url['query'], $query);
+        $q = null;
+
+        if (is_array($query))
+            foreach ($query as $k => $v)
+                if (in_array($k, array('utm_source', 'utm_medium', 'utm_campaign')))
+                    $q .= $k . '=' . PHPShopSecurity::TotalClean ($v) . '&';
+
+        if (!empty($q))
+            $referal .= '?' . substr($q, 0, strlen($q) - 1);
+
         if (isset($_COOKIE['ps_referal']))
             $partner = base64_encode(base64_decode($_COOKIE['ps_referal']) . "," . $referal);
         else
@@ -197,6 +209,11 @@ class AddToTemplateVisualCart extends PHPShopElements {
             $insert['referal_new'] = base64_decode($_COOKIE['ps_referal']);
         else
             $insert['referal_new'] = $this->data['referal'];
+        
+         if (defined("HostID"))
+            $insert['server_new'] = HostID;
+         
+        $insert['sendmail_new']=0;
 
         $PHPShopOrm->insert($insert);
     }

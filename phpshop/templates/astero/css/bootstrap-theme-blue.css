@@ -129,3 +129,6 @@ filter:hue-rotate(-30deg);
 #body{
 --color:#68b1ff;
 }
+.theme-color {
+    color:#68b1ff;
+}

@@ -120,7 +120,7 @@
             </div>
             <!-- Header Top Ends -->
             <!-- Main Menu Starts -->
-            <nav id="main-menu" class="navbar" role="navigation">
+            <nav id="main-menu" class="navbar">
                 <div class="container">
                     <!-- Nav Header Starts -->
                     <div class="navbar-header">
@@ -396,7 +396,7 @@
 
     <!-- Fixed mobile bar -->
     <div class="bar-padding-fix visible-xs"> </div>
-    <nav class="navbar navbar-default navbar-fixed-bottom bar bar-tab visible-xs visible-sm" role="navigation">
+    <nav class="navbar navbar-default navbar-fixed-bottom bar bar-tab visible-xs visible-sm">
         <a class="tab-item active" href="/">
            
             <span class="tab-label">{Домой}</span>
@@ -433,7 +433,7 @@
                     <h4 class="modal-title">{Авторизация}</h4>
                     <span id="usersError" class="hide">@usersError@</span>
                 </div>
-                <form role="form" method="post" name="user_forma">
+                <form method="post" name="user_forma">
                     <div class="modal-body">
                         <div class="form-group">
 
@@ -450,6 +450,7 @@
                                     <input type="checkbox" value="1" name="safe_users" @UserChecked@> {Запомнить}
                                 </label>
                             </div>
+                            <a href="/users/sms.html" class="pass @sms_login_enabled@">SMS</a>
                             <a href="/users/sendpassword.html" class="pass">{Забыли пароль}</a>
                         </div>
 
@@ -476,7 +477,7 @@
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                 <h4 class="modal-title">{Обратный звонок}</h4>
             </div>
-            <form role="form" method="post" name="user_forma" action="@ShopDir@/returncall/">
+            <form method="post" name="user_forma" action="@ShopDir@/returncall/">
                 <div class="modal-body">
 
                     <div class="form-group">
@@ -496,7 +497,7 @@
                         <textarea class="form-control" name="returncall_mod_message" placeholder="{Сообщение}"></textarea>
                     </div>
                     @returncall_captcha@
-<p class="small"><label><input type="checkbox" value="on" name="rule" class="req" checked="checked">  {Я согласен} <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html" alt="{Согласие на обработку персональных данных}">{на обработку моих персональных данных}</a></label></p>
+<p class="small"><label><input type="checkbox" value="on" name="rule" class="req" checked="checked">  {Я согласен} <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html">{на обработку моих персональных данных}</a></label></p>
                 </div>
                 <div class="modal-footer">
                     <input type="hidden" name="returncall_mod_send" value="1">

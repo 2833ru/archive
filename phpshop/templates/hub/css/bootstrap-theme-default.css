@@ -63,3 +63,6 @@ color:#fff;
 --color:#9055a2;
 }
 .productsgroup_list .btn-primary {background-color: var(--color);border-color:var(--color)}
+.theme-color {
+    color: #9055a2;
+}

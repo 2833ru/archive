@@ -43,7 +43,9 @@ class PHPShopAdminRule {
             'support'=>'report',
             'promotions'=>'system',
             'citylist'=>'delivery',
-            'lead'=>'order'
+            'lead'=>'order',
+            'company'=>'system',
+            'dialog'=>'shopusers'
         );
     }
 

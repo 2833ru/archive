@@ -154,6 +154,7 @@ class PHPShopPhoto extends PHPShopCore {
 
         $disp.=PHPShopText::ul($dis);
 
+        $this->set('isPage', true);
         $this->set('pageContent', Parser($disp));
         $this->set('pageTitle', $this->category_name);
 

@@ -1,0 +1,1 @@
+ALTER TABLE `phpshop_modules_tinkoff_system` ADD `force_payment` enum('0','1') NOT NULL default '0';

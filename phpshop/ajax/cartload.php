@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Корзина
  * @package PHPShopAjaxElements
@@ -8,7 +9,7 @@ session_start();
 $_classPath = "../";
 include($_classPath . "class/obj.class.php");
 PHPShopObj::loadClass("base");
-$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini",true,true);
+$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, true);
 PHPShopObj::loadClass("array");
 PHPShopObj::loadClass("orm");
 PHPShopObj::loadClass("product");
@@ -21,14 +22,10 @@ PHPShopObj::loadClass("user");
 PHPShopObj::loadClass("lang");
 PHPShopObj::loadClass("order");
 
-// Подключаем библиотеку поддержки JsHttpRequest
-if($_REQUEST['type'] != 'json'){
-require_once $_classPath . "/lib/Subsys/JsHttpRequest/Php.php";
-new Subsys_JsHttpRequest_Php("windows-1251");
-}
-else{
-    $_REQUEST['addname']=PHPShopString::utf8_win1251($_REQUEST['addname']);
-}
+$_REQUEST['addname'] = PHPShopString::utf8_win1251($_REQUEST['addname']);
+
+// Мультибаза
+$PHPShopBase->checkMultibase("../../");
 
 // Массив валют
 $PHPShopValutaArray = new PHPShopValutaArray();
@@ -36,7 +33,7 @@ $PHPShopValutaArray = new PHPShopValutaArray();
 // Системные настройки
 $PHPShopSystem = new PHPShopSystem();
 
-$PHPShopLang = new PHPShopLang(array('locale'=>$_SESSION['lang'],'path'=>'shop'));
+$PHPShopLang = new PHPShopLang(array('locale' => $_SESSION['lang'], 'path' => 'shop'));
 
 // Корзина
 $PHPShopCart = new PHPShopCart();
@@ -55,19 +52,17 @@ setcookie("cart_update_time", time(), 0, "/", $_SERVER['SERVER_NAME'], 0);
 // Формируем результат
 $_RESULT = array(
     "num" => $PHPShopCart->getNum(),
-    "sum" => $PHPShopCart->getSum(true,' '),
+    "sum" => $PHPShopCart->getSum(true, ' '),
     "message" => $PHPShopCart->getMessage(),
     "success" => $add
 );
 
 // Перехват модуля в начале функции
-$hook = $PHPShopModules->setHookHandler('cartload', 'cartload', false, array($_RESULT, $_REQUEST,$PHPShopCart));
-if(is_array($hook))
+$hook = $PHPShopModules->setHookHandler('cartload', 'cartload', false, array($_RESULT, $_REQUEST, $PHPShopCart));
+if (is_array($hook))
     $_RESULT = $hook;
 
 // JSON 
-if($_REQUEST['type'] == 'json'){
-    $_RESULT['message']=PHPShopString::win_utf8($_RESULT['message']);
-    echo json_encode($_RESULT);
-}
+$_RESULT['message'] = PHPShopString::win_utf8($_RESULT['message']);
+echo json_encode($_RESULT);
 ?>

@@ -67,3 +67,6 @@ background-color:transparent;
 #body{
 --color:#ff9000;
 }
+.theme-color {
+    color: #ff9000;
+}

@@ -4,10 +4,69 @@ $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.visualcart.visualca
 
 // Функция удаления
 function actionDelete() {
-    global $PHPShopOrm, $PHPShopModules;
+    global $PHPShopOrm;
 
     $action = $PHPShopOrm->delete(array('id' => '=' . $_POST['rowID']));
     return array('success' => $action);
+}
+
+function generatePassword($length = 8) {
+    $chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    $numChars = strlen($chars);
+    $string = '';
+    for ($i = 0; $i < $length; $i++) {
+        $string .= substr($chars, rand(1, $numChars) - 1, 1);
+    }
+    return base64_encode($string);
+}
+
+/**
+ * Запись нового пользователя в БД
+ * @return Int ИД нового пользователя в БД
+ */
+function user_add($mail,$name,$tel) {
+    global $PHPShopSystem;
+
+    $user_mail_activate = 1;
+    $subscribe = 1;
+    $user_status = $PHPShopSystem->getSerilizeParam('admoption.user_status');
+
+    // Массив данных нового пользователя
+    $insert = array(
+        'login_new' => PHPShopSecurity::TotalClean($mail, 3),
+        'password_new' => generatePassword(),
+        'datas_new' => time(),
+        'mail_new' => PHPShopSecurity::TotalClean($mail, 3),
+        'name_new' => PHPShopSecurity::TotalClean($name),
+        'tel_new' => PHPShopSecurity::TotalClean($tel),
+        'enabled_new' => $user_mail_activate,
+        'status_new' => $user_status,
+        'subscribe_new' => $subscribe
+    );
+
+    // Запись в БД
+    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['shopusers']);
+    $result = $PHPShopOrm->insert($insert);
+
+    // Возвращаем ИД нового пользователя
+    return $result;
+}
+
+/**
+ * Экшен проверки существования пользователя по email. Если существует, возвращает ИД
+ */
+function user_check_by_email($login,$name,$tel) {
+    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['shopusers']);
+    $PHPShopOrm->Option['where'] = " or ";
+    if (PHPShopSecurity::true_email($login)) {
+        $data = $PHPShopOrm->select(array('id'), array('mail' => '="' . trim($login) . '"', 'login' => '="' . trim($login) . '"'), array('order' => 'id desc'), array('limit' => 1));
+        if (is_array($data) AND PHPShopSecurity::true_num($data['id'])) {
+            return $data['id'];
+        } else {
+            return user_add($login,$name,$tel);
+        }
+    }
+    return false;
 }
 
 /**
@@ -25,7 +84,7 @@ function actionUpdate() {
         $name = PHPShopSecurity::TotalClean($data['name'], 2);
 
     if (empty($data['tel']))
-        $phone = 'тел. не указан';
+        $phone = '';
     else
         $phone = PHPShopSecurity::TotalClean($data['tel'], 2);
 
@@ -65,15 +124,22 @@ function actionUpdate() {
     $insert['orders_new'] = serialize($order);
     $insert['fio_new'] = $name;
     $insert['tel_new'] = $phone;
-    $insert['user_new'] = $data['user'];
+
+    // пользователь
+    if (!empty($data['user']))
+        $insert['user_new'] = $data['user'];
+    elseif (!empty($mail)) {
+        $insert['user_new'] = user_check_by_email($mail,$name,$phone);
+    }
+
     $insert['statusi_new'] = 0;
     $insert['status_new'] = serialize(array("maneger" => 'Брошенная корзина'));
 
     // Запись в базу
     $PHPShopOrmOrder = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
     $action = $PHPShopOrmOrder->insert($insert);
-    if(!empty($action))
-        $action=true;
+    if (!empty($action))
+        $action = true;
 
     $PHPShopOrm->delete(array('id' => '=' . intval($_POST['rowID'])));
     return array('success' => $action);
@@ -100,5 +166,4 @@ function order_num() {
 
 // Обработка событий
 $PHPShopGUI->getAction();
-
 ?>

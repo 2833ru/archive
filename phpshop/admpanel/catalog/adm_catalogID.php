@@ -274,7 +274,7 @@ function actionStart() {
     if (empty($GLOBALS['isFrame'])) {
 
         // Левый сайдбар
-        $sidebarleft[] = array('title' => 'Категории', 'content' => $search . '<div id="tree">' . $treebar . '</div>', 'title-icon' => '<span class="glyphicon glyphicon-plus new" data-toggle="tooltip" data-placement="top" title="Добавить каталог"></span>&nbsp;<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="Развернуть"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="Свернуть"></span>&nbsp;<span class="glyphicon glyphicon-search" id="show-category-search" data-toggle="tooltip" data-placement="top" title="Поиск"></span>');
+        $sidebarleft[] = array('title' => 'Категории', 'content' => $search . '<div id="tree">' . $treebar . '</div>', 'title-icon' => '<span class="glyphicon glyphicon-plus addNewElement" data-toggle="tooltip" data-placement="top" title="Добавить каталог"></span>&nbsp;<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="Развернуть"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="Свернуть"></span>&nbsp;<span class="glyphicon glyphicon-search" id="show-category-search" data-toggle="tooltip" data-placement="top" title="Поиск"></span>');
         $PHPShopGUI->setSidebarLeft($sidebarleft, 3);
         $PHPShopGUI->sidebarLeftCell = 3;
     }
@@ -304,7 +304,7 @@ function actionSave() {
 
 /**
  * Экшен обновления
- * @return bool 
+ * @return bool
  */
 function actionUpdate() {
     global $PHPShopModules, $PHPShopBase;
@@ -374,7 +374,7 @@ function actionUpdate() {
     return array('success' => $action);
 }
 
-// Добавление изображения 
+// Добавление изображения
 function iconAdd() {
     global $PHPShopSystem;
 

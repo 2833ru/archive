@@ -83,11 +83,10 @@
 
                         @ComEndNotice@
 
-                        <button class="btn btn-circle addToCompareList" role="button" data-uid="@productUid@"><span
+                        <button class="btn btn-circle addToCompareList" data-uid="@productUid@"><span
                                 class="icons-compare"></span></button>
 
-
-                        <button class="btn btn-circle addToWishList" role="button" data-uid="@productUid@"><span
+                        <button class="btn btn-circle addToWishList" data-uid="@productUid@"><span
                                 class="icons-like"></span></button>
                     </div>
                 </div>
@@ -127,8 +126,7 @@
                                     -
                                 </button>
                             </span>
-                            <input type="text" name="quant[2]" class="form-control form-control_gr input-number"
-                                   value="1" min="1" max="100">
+                            <input type="text" name="quant[2]" class="form-control form-control_gr input-number" value="1">
                             <span class="input-group-btn">
                                 <button type="button" class=" btn btn-default btn-default_r btn-number" data-type="plus"
                                         data-field="quant[2]">
@@ -169,8 +167,8 @@
             <div role="tabpanel" class="tabpanel-wrapper  product-panel">
                 <!-- Nav tabs -->
                 <ul class="nav panel-tabs nav-tabs " role="tablist">
-                    <li role="presentation" class="active hidden-xs @php __hide('productDes'); php@" id="descTab" ><a href="#desc" aria-controls="home" role="tab" data-toggle="tab">{Описание}</a></li>
-                    <li role="presentation" class="hidden-xs " id="settingsTab"><a href="#setting" aria-controls="settings" role="tab" data-toggle="tab">{Характеристики}</a></li>
+                    <li role="presentation" class="active hidden-xs @php __hide('productDes'); php@" id="descTab" ><a href="#desc" aria-controls="desc" role="tab" data-toggle="tab">{Описание}</a></li>
+                    <li role="presentation" class="hidden-xs " id="settingsTab"><a href="#setting" aria-controls="setting" role="tab" data-toggle="tab">{Характеристики}</a></li>
                     <li role="presentation" class="hidden-xs" id="commentTab"><a href="#messages" id="commentLoad" data-uid="@productUid@" aria-controls="messages" role="tab" data-toggle="tab">{Отзывы}</a></li>
                     <li role="presentation" id="filesTab" class="hidden-xs"><a href="#files" aria-controls="files" role="tab" data-toggle="tab">{Файлы}</a></li>
                     <li role="presentation" id="pagesTab" class="hide hidden-xs"><a href="#pages" aria-controls="pages" role="tab" data-toggle="tab">{Статьи}</a></li>
@@ -215,7 +213,7 @@
                                 <label class="btn btn-success btn-sm active">
                                     <input type="radio" name="rate" value="5" checked> +5
                                 </label>
-                                <button role="button" class="btn btn-info btn-sm pull-right" onclick="commentList('@productUid@', 'add', 1);">{Проголосовать}</button>
+                                <button class="btn btn-info btn-sm pull-right" onclick="commentList('@productUid@', 'add', 1);">{Проголосовать}</button>
                             </div>
 
                         </div>
@@ -257,7 +255,7 @@
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                 <h4 class="modal-title">{Таблица размеров}</h4>
             </div>
-            <form role="form" method="post" name="user_forma_size_delivery" action="@ShopDir@/returncall/">
+            <form method="post" name="user_forma_size_delivery" action="@ShopDir@/returncall/">
                 <div class="modal-body">
 
 
@@ -281,7 +279,7 @@
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                 <h4 class="modal-title">{Информация о доставке}</h4>
             </div>
-            <form role="form" method="post" name="user_forma_size_delivery" action="@ShopDir@/returncall/">
+            <form method="post" name="user_forma_size_delivery" action="@ShopDir@/returncall/">
                 <div class="modal-body">
 
                     @productOption2@

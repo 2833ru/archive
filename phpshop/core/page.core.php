@@ -3,7 +3,7 @@
 /**
  * Обработчик страниц
  * @author PHPShop Software
- * @version 1.5
+ * @version 1.6
  * @package PHPShopCore
  */
 class PHPShopPage extends PHPShopCore {
@@ -54,6 +54,7 @@ class PHPShopPage extends PHPShopCore {
         // Мета
         $title = __('Блог');
         $this->title = $title . " - " . $this->PHPShopSystem->getValue("name");
+        $this->description = $title . ", " . $this->PHPShopSystem->getValue("name");
 
         $PHPShopOrm = new PHPShopOrm($this->getValue('base.page_categories'));
         $PHPShopOrm->debug = $this->debug;

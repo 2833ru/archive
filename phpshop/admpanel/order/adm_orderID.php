@@ -64,35 +64,36 @@ function updateDiscount($data) {
         $row_st = mysqli_fetch_array($query_st);
         $status_user = $row_st['status'];
 
-        //Запрос алгоритма расчета персональной скидки
+        // Запрос алгоритма расчета персональной скидки
         $sql_d = "SELECT * FROM `" . $GLOBALS['SysValue']['base']['shopusers_status'] . "` WHERE `id` =" . intval($status_user) . " ";
         $query_d = mysqli_query($link_db, $sql_d);
         $row_d = mysqli_fetch_array($query_d);
         $cumulative_array = unserialize($row_d['cumulative_discount']);
         $cumulative_array_check = $row_d['cumulative_discount_check'];
         if ($cumulative_array_check == 1) {
-            //Список заказов
+
+            // Список заказов
             $sql_order = "SELECT " . $GLOBALS['SysValue']['base']['orders'] . ".* FROM `" . $GLOBALS['SysValue']['base']['orders'] . "`
             LEFT JOIN `" . $GLOBALS['SysValue']['base']['order_status'] . "` ON " . $GLOBALS['SysValue']['base']['orders'] . ".statusi=" . $GLOBALS['SysValue']['base']['order_status'] . ".id
             WHERE " . $GLOBALS['SysValue']['base']['orders'] . ".user =  " . $data['user'] . "
             AND " . $GLOBALS['SysValue']['base']['order_status'] . ".cumulative_action='1' ";
             $query_order = mysqli_query($link_db, $sql_order);
             $row_order = mysqli_fetch_array($query_order);
-            $sum = '0'; //Очистка суммы
+            $sum = '0'; // Очистка суммы
             do {
                 $orders = unserialize($row_order['orders']);
                 $sum += $orders['Cart']['sum'];
             } while ($row_order = mysqli_fetch_array($query_order));
 
-            //Узнаем скидку
-            $q_cumulative_discount = '0'; //Очистка скидки
+            // Узнаем скидку
+            $q_cumulative_discount = '0'; // Очистка скидки
             foreach ($cumulative_array as $key => $value) {
                 if ($sum >= $value['cumulative_sum_ot'] and $sum <= $value['cumulative_sum_do']) {
                     $q_cumulative_discount = $value['cumulative_discount'];
                     break;
                 }
             }
-            //Обновляем скидку
+            // Обновляем скидку
             mysqli_query($link_db, "UPDATE  `" . $GLOBALS['SysValue']['base']['shopusers'] . "` SET `cumulative_discount` =  '" . $q_cumulative_discount . "' WHERE `id` =" . intval($data['user']));
         } else {
             mysqli_query($link_db, "UPDATE  `" . $GLOBALS['SysValue']['base']['shopusers'] . "` SET `cumulative_discount` =  '0' WHERE `id` =" . intval($data['user']));
@@ -143,6 +144,14 @@ function actionStart() {
         'name' => 'Напоминание об оплате',
         'action' => 'order-reminder',
     );
+    
+    $PHPShopGUI->action_select['Новый заказ'] = array(
+            'name' => 'Новый заказ пользователя',
+            'locale' => true,
+            'url' => '?path=' . $_GET['path'] . '&action=new&cart=false&id=' . $_GET['id'],
+            'action' => $GLOBALS['isFrame']
+        );
+    
 
     // Библиотека заказа
     $PHPShopOrder = new PHPShopOrderFunction($data['id'], $data);
@@ -157,7 +166,7 @@ function actionStart() {
     else
         $currency = $PHPShopOrder->default_valuta_iso;
 
-    $PHPShopGUI->setActionPanel(__("Заказ") . ' &#8470; ' . $data['uid'] . ' <span class="hidden-xs hidden-md">/ ' . PHPShopDate::dataV($data['datas']) . $update_date . ' / ' . __("Итого") . ': ' . $PHPShopOrder->getTotal(false, ' ') . $currency . '</span>', array('Сделать копию', 'Все заказы пользователя', 'Напоминание', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'), false);
+    $PHPShopGUI->setActionPanel(__("Заказ") . ' &#8470; ' . $data['uid'] . ' <span class="hidden-xs hidden-md">/ ' . PHPShopDate::dataV($data['datas']) . $update_date . ' / ' . __("Итого") . ': ' . $PHPShopOrder->getTotal(false, ' ') . $currency . '</span>', array('Сделать копию', 'Новый заказ', 'Все заказы пользователя', 'Напоминание', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'), false);
 
     // Нет данных
     if (!is_array($data)) {
@@ -166,7 +175,7 @@ function actionStart() {
 
     $order = unserialize($data['orders']);
     $status = unserialize($data['status']);
-    
+
     $PHPShopUser = new PHPShopUser($data['user']);
 
     $house = $porch = $flat = null;
@@ -179,16 +188,19 @@ function actionStart() {
     if (!empty($data['flat']))
         $flat = ', ' . __('кв.') . ' ' . $data['flat'];
 
-    if (empty($data['fio']) and !empty($order['Person']['name_person']))
+    if (empty($data['fio']) and ! empty($order['Person']['name_person']))
         $data['fio'] = $order['Person']['name_person'];
-    elseif(empty($data['fio'])) 
-        $data['fio']=$PHPShopUser->getParam('name');
-    
-    if(empty($data['tel']))
-        $data['tel']=$PHPShopUser->getParam('tel');
-    
+    elseif (empty($data['fio']))
+        $data['fio'] = $PHPShopUser->getParam('name');
+    if (empty($data['tel']))
+        $data['tel'] = $PHPShopUser->getParam('tel');
+
+    $mail = $PHPShopUser->getParam('login');
+    if (empty($mail))
+        $mail = $order['Person']['mail'];
+
     // Информация о покупателе
-    $sidebarleft[] = array('id' => 'user-data-1', 'title' => 'Информация о покупателе', 'name' => array('caption' => $data['fio'], 'link' => '?path=shopusers&return=order.' . $data['id'] . '&id=' . $data['user']), 'content' => array(array('caption' => $order['Person']['mail'], 'link' => 'mailto:' . $order['Person']['mail']), $data['tel']));
+    $sidebarleft[] = array('id' => 'user-data-1', 'title' => 'Информация о покупателе', 'name' => array('caption' => $data['fio'], 'link' => '?path=shopusers&return=order.' . $data['id'] . '&id=' . $data['user']), 'content' => array(array('caption' => $mail, 'link' => 'mailto:' . $order['Person']['mail']), $data['tel']));
 
     // Адрес доставки
     $sidebarleft[] = array('id' => 'user-data-2', 'title' => 'Адрес доставки', 'name' => $data['fio'], 'content' => array($data['tel'], $data['street'] . $house . $porch . $flat));
@@ -224,7 +236,7 @@ function actionStart() {
         }
 
     // Статус заказа
-    $status_dropdown = $PHPShopGUI->setSelect('statusi_new', $order_status_value, 180);
+    $status_dropdown = $PHPShopGUI->setSelect('statusi_new', $order_status_value, '100%');
     $sidebarright[] = array('title' => 'Статус заказа', 'content' => $status_dropdown);
 
     // Время обработки заказа
@@ -248,7 +260,7 @@ function actionStart() {
         }
 
     // Тип оплаты
-    $payment_dropdown = $PHPShopGUI->setSelect('person[order_metod]', $payment_value, 180);
+    $payment_dropdown = $PHPShopGUI->setSelect('person[order_metod]', $payment_value, '100%');
 
     // Информация об оплате
     $sidebarright[] = array('title' => 'Информация об оплате', 'content' => $payment_dropdown);
@@ -275,7 +287,7 @@ function actionStart() {
     $delivery_value[] = array(null, 'div', 'ider', 'data-divider="true"');
     $delivery_value[] = array(__('Изменить стоимость доставки'), 0, 1, 'data-change-cost="1" data-subtext="<span class=\'glyphicon glyphicon-cog\'></span>"');
 
-    $delivery_content[] = $PHPShopGUI->setSelect('person[dostavka_metod]', $delivery_value, 180);
+    $delivery_content[] = $PHPShopGUI->setSelect('person[dostavka_metod]', $delivery_value, '100%');
 
     $sidebarright[] = array('title' => 'Информация о доставке', 'content' => $delivery_content);
 
@@ -292,11 +304,22 @@ function actionStart() {
                 $admin_value[] = array($row['name'], $row['id'], $data['admin']);
             }
 
-        $sidebarright[] = array('title' => 'Управление', 'content' => $PHPShopGUI->setSelect('admin_new', $admin_value, 180));
+        $sidebarright[] = array('title' => 'Управление', 'content' => $PHPShopGUI->setSelect('admin_new', $admin_value, '100%'));
     }
 
-    $sidebarright[] = array('title' => 'Печатные бланки', 'content' => $Tab_print, 'idelement' => 'letterheads');
+    // Юридические лица
+    $PHPShopCompany = new PHPShopCompanyArray();
+    $PHPShopCompanyArray = $PHPShopCompany->getArray();
+    $company_value[] = array($PHPShopSystem->getSerilizeParam("bank.org_name"), 0, $data['company']);
+    if (is_array($PHPShopCompanyArray))
+        foreach ($PHPShopCompanyArray as $company)
+            $company_value[] = array($company['name'], $company['id'], $data['company']);
 
+    if (is_array($PHPShopCompanyArray))
+        $sidebarright[] = array('title' => 'Юридическое лицо', 'content' => $PHPShopGUI->setSelect('company_new', $company_value, '100%'));
+
+
+    $sidebarright[] = array('title' => 'Печатные бланки', 'content' => $Tab_print, 'idelement' => 'letterheads');
 
     // Корзина
     $Tab2 = $PHPShopGUI->loadLib('tab_cart', $data);
@@ -313,6 +336,9 @@ function actionStart() {
     // Бонусы
     $Tab6 = $PHPShopGUI->loadLib('tab_bonus', $data);
 
+    // Диалог
+    $Tab7 = $PHPShopGUI->loadLib('tab_dialog', $data);
+
     // Правый сайдбар
     $PHPShopGUI->setSidebarRight($sidebarright);
 
@@ -322,6 +348,20 @@ function actionStart() {
     // Бонусы
     if (!empty($data['bonus_minus']) or ! empty($data['bonus_plus']))
         $PHPShopGUI->addTab(array("Бонусы <span class=badge>" . $data['bonus_minus'] . "</span>", $Tab6, true));
+
+    // Диалог
+    $dialog = $PHPShopBase->getNumRows('dialog', "where isview='0' and staffid='1' and user_id='" . $data['user'] . "' group by chat_id");
+
+    if ($dialog > 99)
+        $dialog = 99;
+    
+    if (empty($dialog))
+        $dialog_enabled = $PHPShopBase->getNumRows('dialog', "where user_id='" . $data['user'] . "' group by chat_id");
+    else $dialog_enabled=true;
+    
+    if (!empty($dialog_enabled))
+        $PHPShopGUI->addTab(array("Диалог <span class=badge>" . $dialog . "</span>", $Tab7, true, 'dialog'));
+
 
     // Вывод формы закладки
     $PHPShopGUI->setTab(array("Корзина", $Tab2), array("Данные покупателя", $Tab3), array("Заказы пользователя", $Tab4), array("Документы", $Tab5));
@@ -414,7 +454,6 @@ function actionUpdate() {
         $discount = $PHPShopOrder->ChekDiscount($sum);
         if ($order['Person']['discount'] > $discount)
             $discount = $order['Person']['discount'];
-
 
         $order['Person']['discount'] = $discount;
 
@@ -658,10 +697,10 @@ function actionCartUpdate() {
         $PHPShopOrm->clean();
         $PHPShopCart->clean();
 
+        $action = $PHPShopOrm->update($update, array('id' => '=' . $orderID));
+
         // Перехват модуля
         $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, array('old' => $data, 'new' => $update, 'title' => $_POST['selectAction']));
-
-        $action = $PHPShopOrm->update($update, array('id' => '=' . $orderID));
 
         return array('success' => $action);
     }

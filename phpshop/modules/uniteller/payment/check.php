@@ -74,6 +74,9 @@ class Payment extends PHPShopPaymentResult {
                 // Изменение статуса платежа
                 (new PHPShopOrderFunction((int) $row['id']))->changeStatus((int) $this->set_order_status_101(), $row['statusi']);
 
+                $PHPShopSystem = new PHPShopSystem();
+                $content = 'Заказ №' . $row['uid'] . ' оплачен платежной системой Uniteller.';
+                new PHPShopMail($PHPShopSystem->getParam('adminmail2'), $PHPShopSystem->getParam('adminmail2'),"Оплата заказа №".$row['uid'], $content);
             }
             else
                 $this->Uniteller->log($_POST, $_POST['Order_ID'], 'Ошибка оплаты заказа ' . $_POST['Order_ID'], 'Уведомление о платеже');

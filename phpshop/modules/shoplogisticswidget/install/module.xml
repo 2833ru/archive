@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.0</version>
+    <version>1.1</version>
     <name>Shop-Logistics Widget</name>
     <faqlink>https://docs.phpshop.ru/moduli/dostavka/shop-logistics-widget</faqlink>
-    <description>Виджет расчета доставки shop-logistics.ru</description>
+    <description>Виджет расчета доставки shop-logistics.com</description>
     <category>delivery</category>
     <sign>1542198276</sign>
     <adminmenu>

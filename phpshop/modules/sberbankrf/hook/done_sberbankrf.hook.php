@@ -27,8 +27,12 @@ function send_sberbankrf_hook($obj, $value, $rout) {
             );
 
             if(!empty($payment["formUrl"])) {
-                $obj->set('paymenturl', $payment["formUrl"]);
-                $forma = ParseTemplateReturn($GLOBALS['SysValue']['templates']['sberbankrf']['sberbankrf_payment_forma'], true);
+                if((int) $Sberbank->options['force_payment'] === 1) {
+                    header('Location: ' . $payment["formUrl"]);
+                } else {
+                    $obj->set('paymenturl', $payment["formUrl"]);
+                    $forma = ParseTemplateReturn($GLOBALS['SysValue']['templates']['sberbankrf']['sberbankrf_payment_forma'], true);
+                }
             }
         } else {
             $obj->set('mesageText', $Sberbank->options['title_sub'] );

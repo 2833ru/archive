@@ -192,12 +192,11 @@ class PHPShopOrderFunction extends PHPShopObj {
         $PHPShopBonus = new PHPShopBonus($_SESSION['UsersId']);
         $this->bonus_minus = $PHPShopBonus->getUserBonus($sum);
         $this->bonus_plus = $PHPShopBonus->setUserBonus($sum);
-        
+
         $sum = $sum - $this->bonus_minus;
 
         return number_format($sum + $delivery, $this->format, ".", $def);
     }
-    
 
     /**
      * Поправки по курсу безнал
@@ -215,9 +214,10 @@ class PHPShopOrderFunction extends PHPShopObj {
     /**
      * Выдача максимальной скидки пользователя
      * @param float $mysum сумма заказа
+     * @param ?array $cart корзина товаров
      * @return float
      */
-    function ChekDiscount($mysum) {
+    function ChekDiscount($mysum, $cart = null) {
 
         if (!class_exists('PHPShopUserStatus'))
             PHPShopObj::loadClass("user");
@@ -228,6 +228,9 @@ class PHPShopOrderFunction extends PHPShopObj {
         if (!class_exists('PHPShopSecurity'))
             PHPShopObj::loadClass("security");
 
+        if (!class_exists('PHPShopCart'))
+            PHPShopObj::loadClass("cart");
+
         $maxsum = 0;
         $maxdiscount = 0;
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['discount']);
@@ -235,6 +238,26 @@ class PHPShopOrderFunction extends PHPShopObj {
         if (is_array($row)) {
             $sum = $row['sum'];
             if ($sum > $maxsum) {
+                $PHPShopCart = new PHPShopCart();
+                // Отключаем определенные товары из акции
+                if (!is_null($cart) && is_array($cart)) {
+                    foreach ($cart as $key => $product) {
+                        unset($PHPShopCart->_CART[$key]['promo_price']);
+                        unset($PHPShopCart->_CART[$key]['order_discount_disabled']);
+
+                        if (isset($row['block_old_price']) && (int) $row['block_old_price'] === 1 && (int) $product['price_n'] > 0) {
+                            $PHPShopCart->_CART[$key]['promo_price'] = $product['price'];
+                            $PHPShopCart->_CART[$key]['order_discount_disabled'] = true;
+                        }
+
+                        $category_ar = array_diff(explode(',', $row['block_categories']), ['']);
+                        if (in_array($product['category'], $category_ar)) {
+                            $PHPShopCart->_CART[$key]['promo_price'] = $product['price'];
+                            $PHPShopCart->_CART[$key]['order_discount_disabled'] = true;
+                        }
+                    }
+                }
+
                 $maxsum = $sum;
                 $action = $row['action'];
                 $maxdiscount = $row['discount'];
@@ -265,7 +288,7 @@ class PHPShopOrderFunction extends PHPShopObj {
      * Шаблонизатор вывода корзины в заказе
      * @param string $function имя функции шаблона вывода
      * @param atrray $option дополнительные опции, передающиеся в шаблон
-     * @return string 
+     * @return string
      */
     function cart($function, $option = false) {
         $list = null;
@@ -290,7 +313,7 @@ class PHPShopOrderFunction extends PHPShopObj {
     /**
      * Вывод юр. данных по заказу.
      * @param atrray $row данные заказа
-     * @return string 
+     * @return string
      */
     function yurData($row) {
         $fielsName = array(
@@ -319,7 +342,7 @@ class PHPShopOrderFunction extends PHPShopObj {
      * Шаблонизатор вывода доставки в заказе
      * @param string $function имя функции шаблона вывода
      * @param atrray $option дополнительные опции, передающиеся в шаблон
-     * @return string 
+     * @return string
      */
     function delivery($function, $option = false) {
         $list = null;
@@ -330,7 +353,7 @@ class PHPShopOrderFunction extends PHPShopObj {
         $delivery['id'] = $order['Person']['dostavka_metod'];
         $name = $PHPShopDelivery->getCity();
 
-        if (empty($order['Cart']['dostavka']))
+        if (!isset($order['Cart']['dostavka']))
             $delivery['price'] = number_format($PHPShopDelivery->getPrice($order['Cart']['sum'], $order['Cart']['weight']), $this->format, '.', '');
         else
             $delivery['price'] = number_format($order['Cart']['dostavka'], $this->format, '.', '');
@@ -355,7 +378,7 @@ class PHPShopOrderFunction extends PHPShopObj {
 
     /**
      * Выдача суммы товаров в заказе
-     * @return float 
+     * @return float
      */
     function getCartSumma() {
         $order = $this->unserializeParam('orders');
@@ -372,7 +395,7 @@ class PHPShopOrderFunction extends PHPShopObj {
 
     /**
      * Выдача стоимости доставки в заказе
-     * @return float 
+     * @return float
      */
     function getDeliverySumma() {
         $order = $this->unserializeParam('orders');
@@ -396,7 +419,7 @@ class PHPShopOrderFunction extends PHPShopObj {
 
     /**
      * Выдача скидки в заказе
-     * @return float 
+     * @return float
      */
     function getDiscount() {
         $order = $this->unserializeParam('orders');
@@ -408,7 +431,7 @@ class PHPShopOrderFunction extends PHPShopObj {
 
     /**
      * Выдача количества товаров в заказе
-     * @return int 
+     * @return int
      */
     function getNum() {
         $order = $this->unserializeParam('orders');
@@ -420,7 +443,7 @@ class PHPShopOrderFunction extends PHPShopObj {
 
     /**
      * Выдача почты покупателя в заказе
-     * @return string 
+     * @return string
      */
     function getMail() {
         $order = $this->unserializeParam('orders');
@@ -430,7 +453,7 @@ class PHPShopOrderFunction extends PHPShopObj {
     /**
      * Выдача итоговой сумма заказа
      * @param bool $nds учет НДС
-     * @return float 
+     * @return float
      */
     function getTotal($nds = false, $def = '') {
 
@@ -452,7 +475,7 @@ class PHPShopOrderFunction extends PHPShopObj {
 
     /**
      * Выдача времени изменения состояния заказа
-     * @return string 
+     * @return string
      */
     function getStatusTime() {
         return $this->getSerilizeParam('status.time');
@@ -461,7 +484,7 @@ class PHPShopOrderFunction extends PHPShopObj {
     /**
      * Выдача сериализованного значения
      * @param string $param
-     * @return string 
+     * @return string
      */
     function getSerilizeParam($param) {
         $param = explode(".", $param);
@@ -488,103 +511,37 @@ class PHPShopOrderFunction extends PHPShopObj {
         $orm->update(array('paid_new' => (int) $paymentStatus), array('id' => "='" . $this->objID . "'"));
     }
 
-    public function changeStatus($statusId, $oldStatus)
-    {
+    public function changeStatus($statusId, $oldStatus) {
         global $PHPShopBase, $_classPath;
 
         $order = $this->unserializeParam('orders');
         $statusObj = new PHPShopOrderStatusArray();
         $statuses = $statusObj->getArray();
-
-        // Нет данных или статус не изменился
-        if(!is_array($order['Cart']['cart']) || $oldStatus === $statusId) {
-            return;
-        }
-
-        // Доставка
         $DeliveryArray = (new PHPShopDeliveryArray())->getArray();
         $warehouseID = $DeliveryArray[$order['Person']['dostavka_metod']]['warehouse'];
+
+        // Нет данных или статус не изменился
+        if (!is_array($order['Cart']['cart']) || $oldStatus === $statusId) {
+            return;
+        }
 
         $PHPShopSystem = new PHPShopSystem();
 
         // Если новый статус Аннулирован, а был статус не Новый заказ, то мы не списываем, а добавляем обратно
         if ((int) $oldStatus != 0 && $statusId == 1) {
             if ((int) $PHPShopSystem->getSerilizeParam('admoption.sklad_status') > 1) {
-
                 foreach ($order['Cart']['cart'] as $val) {
-
-                    // Данные по складу
-                    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
-                    $product_row = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($val['id'])), false, array('limit' => 1));
-                    if (is_array($product_row)) {
-
-                        // Склад
-                        if (empty($warehouseID))
-                            $product_update['items_new'] = $product_row['items'] + $val['num'];
-                        else {
-                            $product_update['items' . $warehouseID . '_new'] = $product_row['items' . $warehouseID] + $val['num'];
-                            $product_update['items_new'] = $product_row['items'] + $val['num'];
-                        }
-
-                        $product_update['sklad_new'] = 0;
-                        $product_update['enabled_new'] = 1;
-
-                        // Обновляем данные
-                        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
-                        $PHPShopOrm->debug = false;
-                        $PHPShopOrm->update($product_update, array('id' => '=' . $val['id']));
+                    $product = new PHPShopProduct((int) $val['id']);
+                    if (is_array($product->objRow)) {
+                        $product->addToWarehouse($val['num'], (int) $val['parent'], $warehouseID);
                     }
                 }
             }
         } else if ($statuses[$statusId]['sklad_action'] == 1 and $statuses[$oldStatus]['sklad_action'] != 1) {
-
             foreach ($order['Cart']['cart'] as $val) {
-
-                // Данные по складу
-                $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
-                $product_row = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($val['id'])), false, array('limit' => 1));
-                if (is_array($product_row)) {
-
-                    // Склад
-                    if (empty($warehouseID))
-                        $product_update['items_new'] = $product_row['items'] - $val['num'];
-                    else {
-                        $product_update['items' . $warehouseID . '_new'] = $product_row['items' . $warehouseID] - $val['num'];
-                        $product_update['items_new'] = $product_row['items'] - $val['num'];
-                    }
-
-                    // Списывание со склада
-                    switch ($PHPShopSystem->getSerilizeParam('admoption.sklad_status')) {
-
-                        case(3):
-                            if ($product_update['items_new'] < 1) {
-                                $product_update['sklad_new'] = 1;
-                                $product_update['enabled_new'] = 1;
-                                $product_update['p_enabled_new'] = 0;
-                            } else {
-                                $product_update['sklad_new'] = 0;
-                                $product_update['enabled_new'] = 1;
-                                $product_update['p_enabled_new'] = 1;
-                            }
-                            break;
-
-                        case(2):
-                            if ($product_update['items_new'] < 1) {
-                                $product_update['enabled_new'] = 0;
-                                $product_update['sklad_new'] = 0;
-                                $product_update['p_enabled_new'] = 0;
-                            } else {
-                                $product_update['enabled_new'] = 1;
-                                $product_update['sklad_new'] = 0;
-                                $product_update['p_enabled_new'] = 1;
-                            }
-                            break;
-                        default:
-                            break;
-                    }
-
-                    // Обновляем данные
-                    $PHPShopOrm->update($product_update, array('id' => '=' . intval($val['id'])));
+                $product = new PHPShopProduct((int) $val['id']);
+                if (is_array($product->objRow)) {
+                    $product->removeFromWarehouse($val['num'], (int) $val['parent'], $warehouseID);
                 }
             }
         }
@@ -608,16 +565,66 @@ class PHPShopOrderFunction extends PHPShopObj {
         }
 
         // Email оповещение
-        if((int) $statusObj->getParam($statusId . '.mail_action') === 1) {
+        if ((int) $statusObj->getParam($statusId . '.mail_action') === 1) {
             $this->sendStatusChangedMail();
+        }
+
+        // Оповещение в мессенджеры
+        if ((int) $statusObj->getParam($statusId . '.bot_action') === 1) {
+
+            PHPShopObj::loadClass('bot');
+            $message = $PHPShopBase->getParam('lang.sms_user') . $this->objRow['uid'] . " - " . $statuses[$statusId]['name'];
+            $user_id = $this->getParam('user');
+
+            // Telegram
+            if ($this->PHPShopSystem->ifSerilizeParam('admoption.telegram_enabled', 1)) {
+                $bot = new PHPShopTelegramBot();
+                $chat_id = $bot->find($user_id);
+                if (!empty($chat_id))
+                    $bot->send($chat_id, PHPShopString::win_utf8($message));
+            }
+
+            // Vk
+            if ($this->PHPShopSystem->ifSerilizeParam('admoption.vk_enabled', 1)) {
+                $bot = new PHPShopVKBot();
+                $chat_id = $bot->find($user_id);
+                if (!empty($chat_id))
+                    $bot->send($chat_id, PHPShopString::win_utf8($message));
+            }
+
+
+            // Диалоги
+            $insert = array(
+                'user_id' => $user_id,
+                'chat' => array
+                    (
+                    'id' => $chat_id,
+                    'first_name' => "Администрация",
+                    'last_name' => "",
+                ),
+                'date' => time(),
+                'text' => $message,
+                'staffid' => 0,
+                'attachments' => null,
+                'isview' => 1,
+                'order_id' => $this->getParam('id')
+            );
+
+            if ($bot)
+                $bot->dialog($insert);
         }
 
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
         $PHPShopOrm->debug = false;
 
-        $update = ['statusi_new' => $statusId];
+        $serializedStatus = $this->unserializeParam('status');
+        $serializedStatus['time'] = PHPShopDate::dataV();
+        $update = [
+            'statusi_new' => $statusId,
+            'status_new'  => serialize($serializedStatus)
+        ];
         // Если статус "Оплачено платежными системами" - отмечаем заказ оплаченным
-        if($statusId === 101) {
+        if ($statusId === 101) {
             $update['paid_new'] = 1;
         }
 
@@ -644,13 +651,13 @@ class PHPShopOrderFunction extends PHPShopObj {
         PHPShopParser::set('tracking', $this->getParam('tracking'));
 
         $protocol = 'http://';
-        if(!empty($_SERVER['HTTPS']) && 'off' !== strtolower($_SERVER['HTTPS'])) {
+        if (!empty($_SERVER['HTTPS']) && 'off' !== strtolower($_SERVER['HTTPS'])) {
             $protocol = 'https://';
         }
         PHPShopParser::set('account', $protocol . $_SERVER['SERVER_NAME'] . 'phpshop/forms/account/forma.html?orderId=' . $this->objID . '&tip=2&datas=' . $this->getParam('datas'));
         PHPShopParser::set('bonus', $this->getParam('bonus_plus'));
 
-        $title = __('Cтатус заказа') . ' ' . $this->getParam('uid') . ' ' . __('поменялся на') . ' ' .$this->getStatus();
+        $title = __('Cтатус заказа') . ' ' . $this->getParam('uid') . ' ' . __('поменялся на') . ' ' . $this->getStatus();
 
         $message = $PHPShopOrderStatusArray->getParam($this->getParam('statusi') . '.mail_message');
 
@@ -661,11 +668,11 @@ class PHPShopOrderFunction extends PHPShopObj {
         $PHPShopMail = new PHPShopMail($this->getMail(), $PHPShopSystem->getValue('adminmail2'), $title, '', true, true);
 
         // Если заказ с витрины
-        if((int) $this->getParam('servers') > 0) {
+        if ((int) $this->getParam('servers') > 0) {
             $orm = new PHPShopOrm($GLOBALS['SysValue']['base']['servers']);
             $showcaseData = $orm->getOne(['*'], ['id' => sprintf("='%s'", (int) $this->getParam('servers'))]);
 
-            if(is_array($showcaseData)) {
+            if (is_array($showcaseData)) {
                 PHPShopParser::set('serverPath', $showcaseData['host'] . "/" . $GLOBALS['SysValue']['dir']['dir']);
 
                 if (!empty($showcaseData['name']))
@@ -689,6 +696,7 @@ class PHPShopOrderFunction extends PHPShopObj {
             $PHPShopMail->sendMailNow($content);
         }
     }
+
 }
 
 PHPShopObj::loadClass('array');
@@ -708,7 +716,7 @@ class PHPShopOrderStatusArray extends PHPShopArray {
     function __construct() {
         $this->objBase = $GLOBALS['SysValue']['base']['order_status'];
         $this->order = array('order' => 'num');
-        parent::__construct('id', 'name', 'color', 'sklad_action', 'cumulative_action', 'mail_action', 'mail_message', 'sms_action','num');
+        parent::__construct('id', 'name', 'color', 'sklad_action', 'cumulative_action', 'mail_action', 'mail_message', 'sms_action', 'num', 'bot_action');
     }
 
 }

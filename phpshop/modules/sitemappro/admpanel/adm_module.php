@@ -9,6 +9,9 @@ $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.sitemappro.sitemapp
 function actionUpdate() {
     global $PHPShopOrm;
 
+    if (empty($_POST["use_filter_combinations_new"]))
+        $_POST["use_filter_combinations_new"] = 0;
+
     $action = $PHPShopOrm->update($_POST);
     header('Location: ?path=modules&id=' . $_GET['id']);
 
@@ -57,18 +60,26 @@ function actionStart() {
 
     $data = $PHPShopOrm->select();
 
-    $status = 'Генерация всех элементов, кроме товаров';
-    if((int) $data['is_products_step'] === 1) {
-        $status = sprintf('Генерация товаров с %s до %s', (int) $data['processed_products'], (int) $data['processed_products'] + (int) $data['limit_products']);
+    switch ($data['step']) {
+        case SitemapPro::FILTER_COMBINATIONS_STEP:
+            $status = sprintf('Генерация комбинаций фильтра товаров с %s до %s', (int) $data['processed'], (int) $data['processed'] + SitemapPro::FILTER_COMBINATIONS_STEP_LIMIT);
+            break;
+        case SitemapPro::PRODUCTS_STEP:
+            $status = sprintf('Генерация товаров с %s до %s', (int) $data['processed'], (int) $data['processed'] + (int) $data['limit_products']);
+            break;
+        default:
+            $status = 'Генерация категорий, страниц, новостей';
     }
 
     $Tab1 = $PHPShopGUI->setField('Товаров в одном файле', $PHPShopGUI->setInputText(false, 'limit_products_new', $data['limit_products'], 150));
+    $Tab1 .= $PHPShopGUI->setField('Комбинации значений фильтра', $PHPShopGUI->setCheckbox("use_filter_combinations_new", 1, "Добавить в карту сайта страницы категорий с комбинациями значений фильтра", $data["use_filter_combinations"]));
     $Tab1 .= $PHPShopGUI->setField('Следующий этап',sprintf('<div class="well well-sm" style="max-width:300px" role="alert">%s.</div>', $status));
 
     $Info = '
         <ol>
         <li>Для автоматического создания sitemap.xml установите модуль <kbd>Cron</kbd> и добавьте в него новую задачу с адресом
         исполняемого файла:<br>  <code>phpshop/modules/sitemappro/cron/sitemap_generator.php</code> или <code>phpshop/modules/sitemappro/cron/sitemap_generator.php?ssl</code> для поддержки HTTPS.
+        <li>Для использования опции <kbd>Комбинации значений фильтра</kbd> у значений характеристик фильтра должны быть заполнены поля <kbd>Meta заголовок</kbd> и <kbd>Meta описание</kbd> или должны быть настроены <kbd>Шаблоны фильтра в каталоге</kbd> в <kbd>SEO заголовки</kbd>.</li>
         <li>В поисковиках (Яндекс.Вебмастер и т.д.) укажите адрес <code>http://' . $_SERVER['SERVER_NAME'] . '/sitemap.xml</code> для автоматической обработки поисковыми ботами.         
         <li>Для генерации карты сайта у дополнительных витрин следует добавить отдельную задачу через модуль <kbd>Cron</kbd> и в настройках задачи модуля указать требуемую витрину. Адрес карты сайта витрины примет вид <code>http://адрес_витрины/sitemap_ХХ.xml</code>, где ХХ - ID витрины. ID витрины можно увидеть в интерфейсе настройки витрины (1 - 10).
         <li>Установите опцию CHMOD 775 на папки <code>/</code> и <code>/UserFiles/Files/</code> для записи в нее файлов sitemap.xml

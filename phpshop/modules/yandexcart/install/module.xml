@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>2.6</version>
+    <version>2.11</version>
     <name>Яндекс.Маркет</name>
-    <description>Модуль продаж через Яндекс.Маркет.</description>
+    <description>Модуль продаж через Яндекс.Маркет и другие маркет плейсы.</description>
     <faqlink>https://docs.phpshop.ru/moduli/yandeks/yandex-cart</faqlink>
     <category>yandex</category>
-    <sign>1598626297</sign>
+    <sign>1627559743</sign>
+    <status>Hit</status>
     <adminmenu>
         <title>Яндекс.Маркет</title>
         <capability>true</capability>
+        <podmenu>
+            <podmenu_name>Журнал операций</podmenu_name>
+            <podmenu_action>dir.yandexcart</podmenu_action>
+        </podmenu>
     </adminmenu>
 </module>

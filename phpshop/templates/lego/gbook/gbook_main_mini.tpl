@@ -4,7 +4,7 @@
         <div class="gbook-wrap">
             <div class="gbook-body">
                 <span itemprop="itemReviewed" itemscope itemtype="https://schema.org/Organization">
-                <h3 itemprop="name">"@gbookTema@"</h3>
+                    <span class="h3" itemprop="name">"@gbookTema@"</span>
                 </span>
                 <span itemprop="reviewBody">@gbookOtsiv@</span>
                 

@@ -7930,3 +7930,6 @@ fieldset[disabled] .btn-success.active {
 .bx-wrapper .bx-loading {
 	min-height: 50px;
 background: url(images/bx_loader2.gif) center center no-repeat #fff;}
+.theme-color {
+    color: #55968F;
+}

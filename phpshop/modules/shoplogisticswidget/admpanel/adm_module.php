@@ -112,7 +112,7 @@ function actionStart() {
     $info =
        '<h4>Настройка модуля</h4>
         <ol>
-        <li>Зарегистрироваться в <a href="http://shop-logistics.ru" target="_blank">Shop-Logistics</a>, заключить договор.</li>
+        <li>Зарегистрироваться в <a href="http://shop-logistics.com" target="_blank">Shop-Logistics</a>, заключить договор.</li>
         <li>Скопировать из <a href="https://client-shop-logistics.ru/index.php?route=account/account" target="_blank">Ваши данные</a> API ID в соответствующее поле настроек модуля.</li>
         <li>Перейти в <a href="https://client-shop-logistics.ru/index.php?route=calculate/options" target="_blank">Настройки калькулятора</a> добавить и настроить новый калькулятор.</li>
         <li>Скопировать Ключ добавленного калькулятора в соответствующее поле настроек модуля.</li>

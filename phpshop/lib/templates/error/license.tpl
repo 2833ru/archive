@@ -65,9 +65,9 @@
                         <li>Ознакомиться с <a href="https://help.phpshop.ru/knowledgebase/article/291">инструкцией решения проблем в лицензиях</a></li>
                         <li>Оформить <a href="https://www.phpshop.ru/order/?from=@server@#buy">заказ на покупку</a> постоянной лицензии PHPShop.</li>
                         <li>Оформить <a href="https://www.phpshop.ru/order/?from=@server@#showcase">заказ на покупку</a> лицензии для дополнительных витрин PHPShop.</li>
-                        <li>Оформить <a href="https://www.phpshop.ru/order/?from=@server@#rent">заказ на аренду</a> лицензии PHPShop на своем хостинге <span class="label label-success">New</span></li>
+                        <li>Оформить <a href="https://www.phpshop.ru/order/?from=@server@#rent">заказ на аренду</a> лицензии PHPShop на своем хостинге</li>
+                        <li>Оформить <a href="https://www.phpshop.ru/order/?from=@server@#credit">заказ на рассрочку</a> постоянной лицензии PHPShop <span class="label label-success">New</span></li>
                         <li>Продлить <a href="https://www.phpshop.ru/order/?from=@server@">техническую поддержку</a> и получить новую лицензию для PHPShop.</li>
-                        <li>Пожаловаться на ошибку <a href="https://www.phpshop.ru/page/address.html?from=@server@">Администрации</a>.
                         </li>
                     </ol>
 

@@ -32,6 +32,10 @@ function setShopLogistics(request) {
         $('#deliveryInfo').html(info);
     }
     var shoplogistics_sum = request['price'];
+    if($("#d").data('free') === 1) {
+        shoplogistics_sum = 0;
+    }
+
     $('input[name="DeliverySum"]').val(shoplogistics_sum);
     $('input[name="shoplogistics_delivery_date"]').val(request['srok_dostavki']);
     $("#DosSumma").html(shoplogistics_sum);

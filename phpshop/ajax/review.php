@@ -10,7 +10,8 @@ include_once($_classPath . "core/users.core.php");
 PHPShopObj::loadClass(['base', 'system', 'security', 'valuta', 'lang', 'security', 'product', 'parser', 'user']);
 
 // Подключение к БД
-$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
+$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini",true,true);
+
 // Объекты, нужные как глобальные в разных частях системы.
 $PHPShopSystem = new PHPShopSystem();
 $PHPShopValutaArray = new PHPShopValutaArray();
@@ -43,10 +44,12 @@ class AjaxReview
     {
         if($this->security()) {
             $PHPShopUsers = new PHPShopUsers();
-            $userId = $PHPShopUsers->add_user_from_order($email);
-
+            $PHPShopUsers->stop_redirect = true;
+            
             $_POST['name_new'] = PHPShopString::utf8_win1251(strip_tags($_POST['name_new']));
             $_POST['name_new'] = PHPShopSecurity::TotalClean($_POST['name_new'], 4);
+            
+            $userId = $PHPShopUsers->add_user_from_order($email,$_POST['name_new']);
             $message = PHPShopString::utf8_win1251(strip_tags($_REQUEST['message']));
             $message = PHPShopSecurity::TotalClean($message, 2);
             $myRate = abs(intval($_REQUEST['rate']));

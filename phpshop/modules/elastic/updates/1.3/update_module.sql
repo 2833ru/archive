@@ -1,0 +1,1 @@
+ALTER TABLE `phpshop_modules_elastic_system` ADD `available_sort` enum('0','1') NOT NULL default '1';

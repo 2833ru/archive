@@ -74,3 +74,6 @@ background-color:#960403 !important;
 .additional-nav-menu .dropdown-menu > li:hover, .submenu .dropdown-menu > li:hover{
 background:#de0605 !important;
 }
+.theme-color {
+    color: #dd0504;
+}

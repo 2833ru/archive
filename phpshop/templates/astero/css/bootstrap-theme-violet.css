@@ -124,3 +124,6 @@ filter:hue-rotate(-100deg);
 -moz-filter:hue-rotate(-100deg);
 -editor-filter:-100;
 }
+.theme-color {
+    color:#f588ff;
+}

@@ -20,7 +20,7 @@
 
 @Error@
 <div class="row">
-<form role="form" method="post" name="forma_gbook">
+<form method="post" name="forma_gbook">
     <div class="form-group">
         <label for="exampleInputEmail1"></label>
         <div class="col-xs-12">
@@ -48,7 +48,7 @@
                         <div class="form-group">
                             <div class="col-xs-12">
                             <input type="checkbox" value="on" name="rule" class="req" checked="checked"> 
-                            {Я согласен}  <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html" alt="{Согласие на обработку персональных данных}">{на обработку моих персональных данных}</a> 
+                            {Я согласен}  <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html">{на обработку моих персональных данных}</a>
                             </div>
                         </div>
     <div class="form-group">

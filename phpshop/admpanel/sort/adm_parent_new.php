@@ -17,7 +17,7 @@ function actionStart() {
     $PHPShopGUI->setActionPanel($TitlePage, false, array('Сохранить и закрыть'));
 
     $Tab1 = $PHPShopGUI->setField("Наименование подтипа", $PHPShopGUI->setInputArg(array('type' => 'text.required', 'name' => "name_new", 'value' => $data['name'], 'placeholder' => 'Размер'))) .
-            $PHPShopGUI->setField("Наименование цвета", $PHPShopGUI->setInputArg(array('type' => 'text.required', 'name' => "color_new", 'value' => $data['color'], 'placeholder' => 'Цвет'))) .
+            $PHPShopGUI->setField("Наименование цвета", $PHPShopGUI->setInputArg(array('type' => 'text', 'name' => "color_new", 'value' => $data['color'], 'placeholder' => 'Цвет'))) .
             $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("enabled_new", 1, "Вкл.", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выкл.", $data['enabled']) . '&nbsp;&nbsp;');
 
     // Вывод формы закладки

@@ -93,12 +93,38 @@ function actionStart() {
     } else {
         // Создание копии товара
         $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
-        $data['id'] = $newId;
         $data['prod_seo_name'] = null;
 
+        // Копирование подтипов
+        if (!empty($data['parent']) and empty($data['parent_enabled'])) {
+            $parent = explode(',', $data['parent']);
+            if (is_array($parent)) {
+
+                foreach ($parent as $parent_id) {
+                    $parent_data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($parent_id)));
+
+                    if (is_array($parent_data)) {
+                        unset($parent_data['id']);
+                        $PHPShopOrmParent = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
+                        $parent_list[] = $PHPShopOrmParent->insert($parent_data, null);
+                    }
+                }
+
+                $data['parent'] = implode(',', $parent_list);
+            }
+
+            // получаем ИД будущего создаваемого товара после создания подтипов
+            $newId = getLastID();
+        }
+
+        $data['id'] = $newId;
+
         // Копирование галереи
-        if (!empty($data['pic_small']))
-            imgCopy($_GET['id'], $newId);
+        if (!empty($data['pic_small'])){
+            $images = imgCopy($_GET['id'], $newId, $data['pic_big']);
+            $data['pic_small'] = $images['pic_small'];
+            $data['pic_big'] = $images['pic_big'];
+        }
     }
 
     $PHPShopGUI->action_select['Урок'] = array(
@@ -184,8 +210,13 @@ function actionStart() {
     // Иконка
     if ($PHPShopSystem->ifSerilizeParam("admoption.image_off", 1)) {
         $Tab_info .= $PHPShopGUI->setField("Изображение", $PHPShopGUI->setIcon($data['pic_big'], "pic_big_new", true, array('load' => false, 'server' => true, 'url' => true)), 1, 'Активирован режим для товара с одной картинкой, заранее подготовленной на сервере. Для загрузки дополнительных фото товара, снимите запрет на фотогалерею, снимите галку в Настройка - Изображения - Отключить фотогалерею.');
-        
+
         $Tab_info .= $PHPShopGUI->setField("Превью", $PHPShopGUI->setFile($data['pic_small'], "pic_small_new", array('load' => false, 'server' => 'image', 'url' => true)), 1, 'Активирован режим для товара с одной картинкой, заранее подготовленной на сервере. Для загрузки дополнительных фото товара, снимите запрет на фотогалерею, снимите галку в Настройка - Изображения - Отключить фотогалерею.');
+    }
+    // Копирование
+    else if (!empty($_GET['id'])) {
+        $Tab_info .= $PHPShopGUI->setField("Изображение", $PHPShopGUI->setIcon($data['pic_big'], "pic_big_new", true, array('load' => false, 'server' => true, 'url' => true, 'view' => true)));
+        $Tab_info .= $PHPShopGUI->setFile($data['pic_small'], "pic_small_new", array('load' => false, 'server' => 'image', 'url' => false, 'view' => true));
     }
 
     // Единица измерения
@@ -262,11 +293,14 @@ function actionStart() {
 
     // BID
     $Tab_yml .= $PHPShopGUI->setField('Ставка BID', $PHPShopGUI->setInputText(null, 'yml_bid_array[bid]', $data['yml_bid_array']['bid'], 100));
-    $Tab_yml .= $PHPShopGUI->setField('Ставка CBID', $PHPShopGUI->setInputText(null, 'yml_bid_array[cbid]', $data['yml_bid_array']['cbid'], 100));
     $Tab1 .= $PHPShopGUI->setCollapse('Яндекс Маркет', $Tab_yml, false);
 
     // Подтипы
     $option_info = '<p class="text-muted">' . __('Для добавления новых подтипов необходимо сначала создать основной товар и затем перейти в его редактирование') . ' <span href="?path=sort" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-floppy-saved"></span> ' . __('Создать и редактировать') . '</span>.</p>';
+    // Подтипы
+    if (!empty($data['parent']))
+        $Tab1 .= $PHPShopGUI->setInputArg(array('name' => 'parent_new', 'type' => 'hidden', 'value' => $data['parent']));
+
     $Tab_option = $PHPShopGUI->setCollapse('Подтипы', $option_info, $collapse = 'none', false, false);
 
     // Редактор краткого описания
@@ -328,7 +362,7 @@ function actionStart() {
 /**
  * Копирование галереи товара
  */
-function imgCopy($j, $n) {
+function imgCopy($j, $n, $main) {
 
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['foto']);
     $data = $PHPShopOrm->select(array('*'), array('parent' => '=' . intval($j)), false, array('limit' => 100));
@@ -392,10 +426,19 @@ function imgCopy($j, $n) {
                 $insert['num_new'] = $num;
                 $insert['info_new'] = $info;
 
+                // Проверка главного изображения
+                if ($name == $main) {
+                    $result['pic_big'] = $insert['name_new'];
+                    $result['pic_small'] = str_replace(array('.png', '.jpg', '.gif', '.jpeg'), array('s.png', 's.jpg', 's.gif', 's.jpeg'), $insert['name_new']);
+                }
+
+
                 $PHPShopOrm->clean();
                 $PHPShopOrm->insert($insert);
             }
         }
+        
+    return $result;
 }
 
 /**
@@ -524,27 +567,46 @@ function actionInsert() {
 
     $postOdnotip = explode(',', $_POST['odnotip_new']);
     $odnotip = [];
-    if(is_array($postOdnotip)) {
+    if (is_array($postOdnotip)) {
         foreach ($postOdnotip as $value) {
-            if((int) $value > 0) {
+            if ((int) $value > 0) {
                 $odnotip[] = (int) $value;
             }
         }
         $_POST['odnotip_new'] = implode(',', $odnotip);
     }
 
-    if(empty($_POST['pic_small_new']) || empty($_POST['pic_big_new'])) {
+    if (empty($_POST['pic_small_new']) || empty($_POST['pic_big_new'])) {
         $orm = new PHPShopOrm($GLOBALS['SysValue']['base']['foto']);
         $photo = $orm->getOne(['name'], ['parent' => sprintf('="%s"', $_POST['rowID'])], ['order' => 'id asc']);
-        if(empty($_POST['pic_big_new'])) {
+        if (empty($_POST['pic_big_new'])) {
             $_POST['pic_big_new'] = $photo['name'];
         }
-        if(empty($_POST['pic_small_new'])) {
+        if (empty($_POST['pic_small_new'])) {
             $_POST['pic_small_new'] = str_replace(".", "s.", $photo['name']);
-            if(!file_exists($_SERVER['DOCUMENT_ROOT'] . $_POST['pic_small_new'])) {
+            if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $_POST['pic_small_new'])) {
                 $_POST['pic_small_new'] = $photo['name'];
             }
         }
+    }
+
+    if(isset($_POST['price_new'])) {
+        $_POST['price_new'] = str_replace(',', '.', $_POST['price_new']);
+    }
+    if(isset($_POST['price_n_new'])) {
+        $_POST['price_n_new'] = str_replace(',', '.', $_POST['price_n_new']);
+    }
+    if(isset($_POST['price2_new'])) {
+        $_POST['price2_new'] = str_replace(',', '.', $_POST['price2_new']);
+    }
+    if(isset($_POST['price3_new'])) {
+        $_POST['price3_new'] = str_replace(',', '.', $_POST['price3_new']);
+    }
+    if(isset($_POST['price4_new'])) {
+        $_POST['price4_new'] = str_replace(',', '.', $_POST['price4_new']);
+    }
+    if(isset($_POST['price5_new'])) {
+        $_POST['price5_new'] = str_replace(',', '.', $_POST['price5_new']);
     }
 
     // Перехват модуля
@@ -578,7 +640,7 @@ function actionInsert() {
         else
             $tab = null;
 
-        header('Location: ?path=product&return=catalog&id=' . $_POST['rowID'] . $tab);
+        header('Location: ?path=product&return=catalog&id=' . $action . $tab);
     } else
         header('Location: ?path=catalog&cat=' . $_POST['category_new']);
 
@@ -631,9 +693,9 @@ function fotoAdd() {
         if (!is_dir($_SERVER['DOCUMENT_ROOT'] . $path))
             @mkdir($_SERVER['DOCUMENT_ROOT'] . $path, 0777, true);
     }
-    
+
     // Корекция
-    $path = str_replace('//','/',$path);
+    $path = str_replace('//', '/', $path);
 
     // Соль
     $RName = substr(abs(crc32(time())), 0, 5);
@@ -691,22 +753,20 @@ function fotoAdd() {
                 $file_big = $_SERVER['DOCUMENT_ROOT'] . $path . $name_big;
                 @copy($file, $file_big);
             }
-        } 
+        }
         // SEO название
         elseif ($PHPShopSystem->ifSerilizeParam('admoption.image_save_seo')) {
 
-            if(!empty($_POST['prod_seo_name'])) {
-                $seo_name=$_POST['prod_seo_name'];
+            if (!empty($_POST['prod_seo_name'])) {
+                $seo_name = $_POST['prod_seo_name'];
             } else {
                 PHPShopObj::loadClass("string");
                 $seo_name = str_replace(array("_", "+", '&#43;'), array("-", "", ""), PHPShopString::toLatin($_POST['name_new']));
             }
-            $name_s = $seo_name .'-' . $_POST['rowID']  .'-' . $RName . 's.' . strtolower($thumb->getFormat());
-            $name = $seo_name .'-' . $_POST['rowID']  .'-' . $RName . '.' . strtolower($thumb->getFormat());
-            $name_big = $seo_name .'-' . $_POST['rowID']  .'-' . $RName . '_big.' . strtolower($thumb->getFormat());
-
-        } 
-        else {
+            $name_s = $seo_name . '-' . $_POST['rowID'] . '-' . $RName . 's.' . strtolower($thumb->getFormat());
+            $name = $seo_name . '-' . $_POST['rowID'] . '-' . $RName . '.' . strtolower($thumb->getFormat());
+            $name_big = $seo_name . '-' . $_POST['rowID'] . '-' . $RName . '_big.' . strtolower($thumb->getFormat());
+        } else {
             $name_s = 'img' . $_POST['rowID'] . '_' . $RName . 's.' . strtolower($thumb->getFormat());
             $name = 'img' . $_POST['rowID'] . '_' . $RName . '.' . strtolower($thumb->getFormat());
             $name_big = 'img' . $_POST['rowID'] . '_' . $RName . '_big.' . strtolower($thumb->getFormat());

@@ -1,7 +1,7 @@
 
 @Error@
 
-<form role="form" method="post" name="forma_message" class="template-sm  registration-area">
+<form method="post" name="forma_message" class="template-sm  registration-area">
     <div class="form-group">
         <div class="">
             <input placeholder="Заголовок" type="text" name="tema" value="@php  echo $_POST[tema]; php@" class="form-control" id="exampleInputEmail1"  required="">
@@ -42,7 +42,7 @@
 	    <div class="form-group">
         <div class=""></div>
         <div class="">
-<p class="small"><label><input type="checkbox" value="on" name="rule" class="req" checked="checked">  {Я согласен} <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html" alt="Согласие на обработку персональных данных">{на обработку моих персональных данных}</a></label></p>       
+<p class="small"><label><input type="checkbox" value="on" name="rule" class="req" checked="checked">  {Я согласен} <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html">{на обработку моих персональных данных}</a></label></p>
  </div>
     </div>
     <div class="form-group">

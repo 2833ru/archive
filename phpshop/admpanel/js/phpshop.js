@@ -25,10 +25,9 @@ function showAlertMessage(message, danger, hide) {
     }
 
     var messageBox = '.success-notification';
-
     var innerBox = '#notification .notification-alert';
 
-    if ($(messageBox).length > 0) {
+    if ($(messageBox).length > 0 && typeof is_mobile == 'undefined') {
         $(messageBox).removeClass('hide');
         $(innerBox).html(message);
         $(messageBox).fadeIn('slow');
@@ -83,6 +82,11 @@ window.escape = function (str)
     }
 };
 
+// Очистка категории при перезагурзки
+window.onbeforeunload = function ()
+{
+    $.cookie('cat', null);
+};
 
 
 $().ready(function () {
@@ -123,6 +127,24 @@ $().ready(function () {
             path: '/',
             expires: 365
         });
+    });
+
+    // Размер экрана
+    $('.setscreen').on('click', function (event) {
+        event.preventDefault();
+
+        if ($.cookie('fullscreen') == undefined || $.cookie('fullscreen') == 0)
+            var fullscreen = 1;
+
+        else
+            var fullscreen = 0;
+
+        $.cookie('fullscreen', fullscreen, {
+            path: '/',
+            expires: 365
+        });
+
+        location.reload();
     });
 
     // Выбор обучающих уроков
@@ -276,7 +298,7 @@ $().ready(function () {
     });
 
     // Создать новый из карточки
-    $(".new").on('click', function (event) {
+    $(".addNewElement").on('click', function (event) {
         event.preventDefault();
         cat = $('[name="addNew"]').attr('data-cat') || $.getUrlVar('id');
         if (cat > 0)
@@ -336,7 +358,6 @@ $().ready(function () {
                 data.push({name: $(this).attr('name'), value: escape($(this).val())});
             }
         });
-        //data.push({name: 'ajax', value: 1});
 
         $('#product_edit').ajaxSubmit({
             data: data,
@@ -474,7 +495,7 @@ $().ready(function () {
     $(".go2front").on('click', function () {
         if ($('.front').length) {
             $(this).attr('href', $('.front').attr('href'));
-        } else if ($.cookie('cat')) {
+        } else if ($.cookie('cat') !== 'null') {
             $(this).attr('href', '../../shop/CID_' + $.cookie('cat') + '.html');
         }
     });
@@ -484,6 +505,11 @@ $().ready(function () {
         event.preventDefault();
         window.open($(this).attr('name'));
     });
+
+    if (typeof is_mobile !== 'undefined') {
+        locale.dataTable.paginate.next = "»";
+        locale.dataTable.paginate.previous = "«";
+    }
 
     // Таблица сортировки
     if (typeof (TABLE_EVENT) == 'undefined') {
@@ -541,6 +567,12 @@ $().ready(function () {
         $('#orders-mobile-check').removeClass('hide');
     }
 
+    // Новые диалоги
+    if ($('#dialog-check').html() > 0) {
+        $('#dialog-check').parent('.navbar-btn').removeClass('hide');
+    }
+
+
     // Уроки
     if (typeof presentation_start != 'undefined') {
         $('#presentation-select').click();
@@ -573,6 +605,32 @@ $().ready(function () {
         }, 500);
     }
 
+    // Новые диалоги
+    setInterval(function () {
+        var data = [];
+        data.push({name: 'selectID', value: 1});
+        data.push({name: 'actionList[selectID]', value: 'actionGetNew'});
+
+        $.ajax({
+            mimeType: 'text/html; charset=' + locale.charset,
+            url: '?path=dialog',
+            type: 'post',
+            data: data,
+            dataType: "json",
+            async: false,
+            success: function (json) {
+                var old_num = (Number($('#dialog-check').text()) || 0);
+                $('#dialog-check').text(json['num']);
+                if (old_num < json['num']) {
+                    $('#play-chat').trigger("play");
+                    $('#dialog-check').parent('.navbar-btn').removeClass('hide');
+                } else if (json['num'] == 0)
+                    $('#dialog-check').parent('.navbar-btn').addClass('hide');
+            }
+        });
+
+    }, 30000);
+
     // Новые заказы
     setInterval(function () {
         var data = [];
@@ -591,12 +649,12 @@ $().ready(function () {
                 $('#orders-check').text(json['num']);
                 if (old_num < json['num']) {
                     $('#play').trigger("play");
+                    $('#orders-check').parent('.navbar-btn').removeClass('hide');
                 }
             }
         });
 
     }, 30000);
-
 });
 
 // GET переменные из URL страницы

@@ -2,7 +2,7 @@
     @user_error@
 </div>
 <p><br></p>
-<form name="users_password" method="post" class="form-horizontal" role="form">
+<form name="users_password" method="post" class="form-horizontal">
 
     <div class="form-group">
         <label class="col-xs-12 col-sm-2 control-label">{Статус}</label>
@@ -26,10 +26,15 @@
     <div class="form-group">
         <label class="col-xs-12 col-sm-2 control-label">Email</label>
         <div class="col-xs-12 col-sm-4">
-            <input type="email" class="form-control input-width-fix" value="@user_login@" required="" disabled>
+            <input type="email" class="form-control input-width-fix" value="@user_login@" required="">
         </div>
     </div>
-
+    <div class="form-group">
+        <label class="col-xs-12 col-sm-2 control-label">{Телефон}</label>
+        <div class="col-xs-8 col-md-4">
+            <input type="tel" class="form-control" name="tel_new" value="@user_tel@" @sms_login_control@>
+        </div>
+    </div>
     <div class="form-group">
         <label class="col-xs-12 col-sm-2 control-label">{Рассылка}</label>
         <div class="checkbox col-xs-12 col-sm-6">
@@ -46,18 +51,11 @@
         </div>
     </div>
 
-    <div class="form-group" id="password_repeat" class="hidden" style="display: none;">
-        <label class="col-xs-12 col-sm-2 control-label">{Повторите пароль}</label>
-        <div class="col-xs-4">
-            <input type="password" class="form-control input-width-fix" name="password_new2" required="">
-        </div>
-    </div>
-
     <div class="form-group">
         <label class="col-xs-12 col-sm-2 control-label"></label>
         <div class="col-xs-4">
-            <input type="hidden" value="1" name="update_password">
-            <button type="submit" onclick="$('#password_repeat').slideToggle();" class="btn btn-primary">{Сохранить изменение}</button>
+            <input type="hidden" value="1" name="update_user">
+            <button type="submit" class="btn btn-primary">{Сохранить изменение}</button>
 
         </div>
     </div>

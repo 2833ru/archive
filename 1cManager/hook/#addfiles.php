@@ -12,8 +12,10 @@ function mod_option($option) {
 
 // Добавление полного пути к файлам
 function mod_addfiles_path($files){
-    foreach($files as $f)
-        $files_with_path[]=$GLOBALS['SysValue']['dir']['dir'] . "/UserFiles/Files/".$f;
+    foreach($files as $k=>$f){
+        $path_parts = pathinfo($f);
+        $files_with_path[]=array('name'=>$path_parts['basename'],'path'=>$GLOBALS['SysValue']['dir']['dir'] . "/UserFiles/Files/".$f);
+    }
     
     return $files_with_path;
 }

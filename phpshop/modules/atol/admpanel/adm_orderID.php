@@ -81,13 +81,14 @@ function addAtolDocs($data) {
             </table>
             </div>
             ' . $refundButton;
-            $PHPShopGUI->addTab(array("Касса", $Tab, false, '7'));
+            $PHPShopGUI->addTab(array("Касса", $Tab, false, '117'));
         }
     }
     // Выписать новый кассовый чек
     else {
         $Tab = '<button class="btn btn-default btn-md" data-operation="sell" id="atol" data-id="' . $data['id'] . '"><span class="glyphicon glyphicon-bookmark"></span> Выписать кассовый чек прихода</button>';
-        $PHPShopGUI->addTab(array("Касса", $Tab, true, '7'));
+
+        $PHPShopGUI->addTab(array("Касса", $Tab, true, '117'));
     }
 }
 

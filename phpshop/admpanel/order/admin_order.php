@@ -72,45 +72,77 @@ function actionStart() {
     $PHPShopInterface->action_button['Добавить заказ'] = array(
         'name' => '',
         'action' => 'addNew',
-        'class' => 'btn btn-default btn-sm navbar-btn',
+        'class' => 'btn btn-default btn-sm navbar-btn hidden-xs',
         'type' => 'button',
         'icon' => 'glyphicon glyphicon-plus',
         'tooltip' => 'data-toggle="tooltip" data-placement="bottom" title="' . __('Добавить заказ') . '" '
     );
 
+    $PHPShopInterface->action_button['Настройка'] = array(
+        'name' => '',
+        'action' => '',
+        'class' => 'btn btn-default btn-sm navbar-btn visible-xs option',
+        'type' => 'button',
+        'icon' => 'glyphicon glyphicon-cog',
+        'tooltip' => ' title="' . __('Настройка') . '" '
+    );
+
     $PHPShopInterface->action_button['Канбан'] = array(
         'name' => '',
-        'class' => 'btn btn-default btn-sm navbar-btn btn-action-panel',
+        'class' => 'btn btn-default btn-sm navbar-btn btn-action-panel hidden-xs',
         'type' => 'button',
         'action' => 'lead.kanban',
         'icon' => 'glyphicon glyphicon-th-large',
         'tooltip' => 'data-toggle="tooltip" data-placement="left" title="' . __('Канбан доска') . '" '
     );
 
-    $PHPShopInterface->setActionPanel($TitlePage, array('Настройка', 'Редактировать выбранные', 'CSV', '|', 'Удалить выбранные'), array('Канбан', 'Добавить заказ'));
+    $PHPShopInterface->setActionPanel($TitlePage, array('Настройка', 'Редактировать выбранные', 'CSV', '|', 'Удалить выбранные'), array('Настройка', 'Добавить заказ', 'Канбан'));
 
     // Настройка полей
     if (!empty($_COOKIE['check_memory'])) {
         $memory = json_decode($_COOKIE['check_memory'], true);
     }
+    
     if (!is_array($memory['order.option'])) {
-        $memory['order.option']['uid'] = 1;
-        $memory['order.option']['statusi'] = 1;
-        $memory['order.option']['datas'] = 1;
-        $memory['order.option']['fio'] = 1;
-        $memory['order.option']['menu'] = 1;
-        $memory['order.option']['tel'] = 1;
-        $memory['order.option']['sum'] = 1;
-        $memory['order.option']['city'] = 0;
-        $memory['order.option']['adres'] = 0;
-        $memory['order.option']['org'] = 0;
-        $memory['order.option']['comment'] = 0;
-        $memory['order.option']['cart'] = 0;
-        $memory['order.option']['tracking'] = 0;
-        $memory['order.option']['admin'] = 0;
+
+        // Мобильная версия
+        if (PHPShopString::is_mobile()) {
+            $memory['order.option']['uid'] = 1;
+            $memory['order.option']['statusi'] = 1;
+            $memory['order.option']['datas'] = 1;
+            $memory['order.option']['fio'] = 0;
+            $memory['order.option']['menu'] = 0;
+            $memory['order.option']['tel'] = 0;
+            $memory['order.option']['sum'] = 1;
+            $memory['order.option']['city'] = 0;
+            $memory['order.option']['adres'] = 0;
+            $memory['order.option']['org'] = 0;
+            $memory['order.option']['comment'] = 0;
+            $memory['order.option']['cart'] = 0;
+            $memory['order.option']['tracking'] = 0;
+            $memory['order.option']['admin'] = 0;
+            $PHPShopInterface->mobile = true;
+        } else {
+            $memory['order.option']['uid'] = 1;
+            $memory['order.option']['statusi'] = 1;
+            $memory['order.option']['datas'] = 1;
+            $memory['order.option']['fio'] = 1;
+            $memory['order.option']['menu'] = 1;
+            $memory['order.option']['tel'] = 1;
+            $memory['order.option']['sum'] = 1;
+            $memory['order.option']['city'] = 0;
+            $memory['order.option']['adres'] = 0;
+            $memory['order.option']['org'] = 0;
+            $memory['order.option']['comment'] = 0;
+            $memory['order.option']['cart'] = 0;
+            $memory['order.option']['tracking'] = 0;
+            $memory['order.option']['admin'] = 0;
+        }
     }
 
-    $PHPShopInterface->setCaption(array(null, "3%"), array("№", "12%", array('align' => 'left', 'view' => intval($memory['order.option']['uid']))), array("ID", "10%", array('view' => intval($memory['order.option']['id']))), array("Статус", "20%", array('view' => intval($memory['order.option']['statusi']))), array("Корзина", "20%", array('view' => intval($memory['order.option']['cart']))), array("Дата", "10%", array('view' => intval($memory['order.option']['datas']))), array("Покупатель", "20%", array('view' => intval($memory['order.option']['fio']))), array("Телефон", "15%", array('view' => intval($memory['order.option']['tel']))), array("", "7%", array('view' => intval($memory['order.option']['menu']))), array("Скидка", "10%", array('view' => intval($memory['order.option']['discount']))), array("Город", "15%", array('view' => intval($memory['order.option']['city']))), array("Адрес", "25%", array('view' => intval($memory['order.option']['adres']))), array("Компания", "15%", array('view' => intval($memory['order.option']['org']))), array("Комментарий", "15%", array('view' => intval($memory['order.option']['comment']))), array("Tracking", "15%", array('view' => intval($memory['order.option']['tracking']))), array("Менеджер", "15%", array('view' => intval($memory['order.option']['admin']))), array("Итого", "17%", array('align' => 'right', 'view' => intval($memory['order.option']['sum']))));
+
+
+    $PHPShopInterface->setCaption(array(null, "2%"), array("№", "12%", array('align' => 'left', 'view' => intval($memory['order.option']['uid']))), array("ID", "10%", array('view' => intval($memory['order.option']['id']))), array("Статус", "20%", array('view' => intval($memory['order.option']['statusi']))), array("Корзина", "20%", array('view' => intval($memory['order.option']['cart']))), array("Дата", "15%", array('view' => intval($memory['order.option']['datas']))), array("Покупатель", "20%", array('view' => intval($memory['order.option']['fio']))), array("Телефон", "15%", array('view' => intval($memory['order.option']['tel']))), array("", "7%", array('view' => intval($memory['order.option']['menu']))), array("Скидка", "10%", array('view' => intval($memory['order.option']['discount']))), array("Город", "15%", array('view' => intval($memory['order.option']['city']))), array("Адрес", "25%", array('view' => intval($memory['order.option']['adres']))), array("Компания", "15%", array('view' => intval($memory['order.option']['org']))), array("Комментарий", "15%", array('view' => intval($memory['order.option']['comment']))), array("Tracking", "15%", array('view' => intval($memory['order.option']['tracking']))), array("Менеджер", "15%", array('view' => intval($memory['order.option']['admin']))), array("Юр. лицо", "15%", array('view' => intval($memory['order.option']['company']))), array("Итого", "17%", array('align' => 'right', 'view' => intval($memory['order.option']['sum']))));
     $PHPShopInterface->addJSFiles('./js/bootstrap-datetimepicker.min.js', './order/gui/order.gui.js');
     $PHPShopInterface->addCSSFiles('./css/bootstrap-datetimepicker.min.css');
 
@@ -144,6 +176,15 @@ function actionStart() {
                 $manager_status_value[] = array($manager_status['name'], $manager_status['id'], $_GET['where']['b.status']);
     }
 
+    // Юридические лица
+    $PHPShopCompany = new PHPShopCompanyArray();
+    $PHPShopCompanyArray = $PHPShopCompany->getArray();
+    if (is_array($PHPShopCompanyArray)) {
+        $company_value[] = array($PHPShopSystem->getSerilizeParam("bank.org_name"), 0, $_GET['where']['a.company']);
+        foreach ($PHPShopCompanyArray as $company)
+            $company_value[] = array($company['name'], $company['id'], $data['company']);
+    }
+
     // Витрины
     $PHPShopServerOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['servers']);
     $data_server = $PHPShopServerOrm->select(array('*'), array('enabled' => "='1'"), false, array('limit' => 1000));
@@ -155,23 +196,25 @@ function actionStart() {
         }
     }
 
-
     // Статус заказа
     $PHPShopInterface->field_col = 1;
     $searchforma .= $PHPShopInterface->setInputDate("date_start", $date_start, 'margin-bottom:10px', null, 'Дата начала отбора');
     $searchforma .= $PHPShopInterface->setInputDate("date_end", $date_end, false, null, 'Дата конца отбора');
-    $searchforma .= $PHPShopInterface->setSelect('where[statusi]', $order_status_value, 180);
+    $searchforma .= $PHPShopInterface->setSelect('where[statusi]', $order_status_value, '100%');
     $searchforma .= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[a.uid]', 'placeholder' => '№ Заказа', 'value' => $_GET['where']['a.uid']));
     $searchforma .= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[a.fio]', 'placeholder' => 'ФИО Покупателя', 'value' => $_GET['where']['a.fio']));
     $searchforma .= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[a.org_name]', 'placeholder' => 'Компания', 'value' => $_GET['where']['a.org_name']));
 
     if ($PHPShopBase->Rule->CheckedRules('order', 'rule'))
-        $searchforma .= $PHPShopInterface->setSelect('where[a.admin]', $manager_status_value, 180);
+        $searchforma .= $PHPShopInterface->setSelect('where[a.admin]', $manager_status_value, '100%');
 
     if (is_array($server_value))
-        $searchforma .= $PHPShopInterface->setSelect('where[a.servers]', $server_value, 180);
+        $searchforma .= $PHPShopInterface->setSelect('where[a.servers]', $server_value, '100%');
 
-    $searchforma .= $PHPShopInterface->setSelect('where[b.status]', $user_status_value, 180);
+    if (is_array($company_value))
+        $searchforma .= $PHPShopInterface->setSelect('where[a.company]', $company_value, '100%');
+
+    $searchforma .= $PHPShopInterface->setSelect('where[b.status]', $user_status_value, '100%');
 
     $searchforma .= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[b.mail]', 'placeholder' => 'E-mail', 'value' => $_GET['where']['b.mail']));
     $searchforma .= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[a.tel]', 'placeholder' => 'Телефон', 'value' => $_GET['where']['a.tel']));
@@ -194,7 +237,7 @@ function actionStart() {
     // Правый сайдбар
     $sidebarright[] = array('title' => 'Расширенный поиск', 'content' => $PHPShopInterface->setForm($searchforma, false, "order_search", false, false, 'form-sidebar'));
 
-    $PHPShopInterface->setSidebarRight($sidebarright, 2);
+    $PHPShopInterface->setSidebarRight($sidebarright, 2, 'hidden-xs');
 
     $PHPShopInterface->Compile(2);
 }

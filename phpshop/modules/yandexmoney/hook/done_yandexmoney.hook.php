@@ -26,7 +26,7 @@ function send_to_order_mod_yandexmoney_hook($obj, $value, $rout) {
             $payment_forma.= PHPShopText::setInput('hidden', 'formcomment', PHPShopString::win_utf8($PHPShopSystem->getParam('name') . ': Заказ ') . $value['ouid'], false, 10);
             $payment_forma.= PHPShopText::setInput('hidden', 'short-dest', PHPShopString::win_utf8($PHPShopSystem->getParam('name') . ': Заказ ') . $value['ouid'], false, 10);
             // Тип оплаты
-            $v[]=array('Оплата со счета в Яндекс.Деньгах','PC',false);
+            $v[]=array('Оплата со счета в ЮMoney','PC',false);
             $v[]=array('Оплата с банковской карты','AC',false);
 
             $payment_forma.=PHPShopText::select('paymentType', $v, 250, 'left').' ';
@@ -41,7 +41,7 @@ function send_to_order_mod_yandexmoney_hook($obj, $value, $rout) {
             $payment_forma.=PHPShopText::setInput('submit', 'send', $option['title'], $float = "left; margin-left:10px;", 250);
             $payment_forma.=PHPShopText::setInput('hidden', 'cms_name', 'phpshop', false, 10);
 
-            $obj->set('payment_forma', PHPShopText::form($payment_forma, 'yandexpay', 'post', 'https://money.yandex.ru/quickpay/confirm.xml','_blank'));
+            $obj->set('payment_forma', PHPShopText::form($payment_forma, 'yandexpay', 'post', 'https://yoomoney.ru/quickpay/confirm.xml','_blank'));
             $obj->set('payment_info', $option['title_end']);
             $forma = ParseTemplateReturn($GLOBALS['SysValue']['templates']['yandexmoney']['yandexmoney_payment_forma'], true);
         } else {

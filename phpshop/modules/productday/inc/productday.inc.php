@@ -3,6 +3,8 @@
 if (!defined("OBJENABLED"))
     exit(header('Location: /?error=OBJENABLED'));
 
+PHPShopObj::loadClass('order');
+
 class ProductDay extends PHPShopProductElements {
 
     var $debug = false;

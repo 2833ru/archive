@@ -16,6 +16,67 @@ $().ready(function() {
         minView: 2,
         forceParse: 0
     });
+    
+    // Настройка полей - 2 шаг
+    $("body").on('click', "#selectModal .modal-footer .option-send", function(event) {
+        event.preventDefault();
+
+        if ($('#selectModal input:checkbox:checked').length) {
+            var data = [];
+            $('#selectModal input:checkbox:checked').each(function() {
+                data.push({name: 'option[' + $(this).attr('name') + ']', value: $(this).val()});
+
+            });
+
+            data.push({name: 'selectID', value: 1});
+            data.push({name: 'ajax', value: 1});
+            data.push({name: 'actionList[selectID]', value: 'actionOptionSave'});
+            $.ajax({
+                mimeType: 'text/html; charset='+locale.charset,
+                url: '?path=page.catalog',
+                type: 'post',
+                data: data,
+                dataType: "json",
+                async: false,
+                success: function() {
+                    window.location.reload();
+                }
+
+            });
+        }
+        else
+            alert(locale.select_no);
+    });
+
+    
+    // Настройка полей - 1 шаг
+    $(".option").on('click', function(event) {
+        event.preventDefault();
+
+        var data = [];
+        data.push({name: 'selectID', value: 1});
+        data.push({name: 'ajax', value: 1});
+        data.push({name: 'cat', value: cat});
+        data.push({name: 'actionList[selectID]', value: 'actionOption'});
+
+        $.ajax({
+            mimeType: 'text/html; charset='+locale.charset,
+            url: '?path=page.catalog',
+            type: 'post',
+            data: data,
+            dataType: "html",
+            async: false,
+            success: function(data) {
+                $('#selectModal .modal-dialog').removeClass('modal-lg');
+                $('#selectModal .modal-title').html(locale.option_title);
+                $('#selectModal .modal-footer .btn-primary').addClass('option-send');
+                $('#selectModal .modal-footer .btn-delete').addClass('hidden');
+                $('#selectModal .modal-footer .btn-primary').html(locale.ok);
+                $('#selectModal .modal-body').html(data);
+                $('#selectModal').modal('show');
+            }
+        });
+    });
 
     // Указать ID товара в виде тега - Поиск
     $("body").on('click', "#selectModal .search-action", function(event) {

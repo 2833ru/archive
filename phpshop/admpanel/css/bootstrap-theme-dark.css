@@ -7401,3 +7401,11 @@ h1.title{
 .data-row .editable{
    -color: #272b30 !important;
 }
+
+.clearfix{
+   background-color: #3E444C !important; 
+}
+
+.container-fluid{
+   background-color: #3E444C !important; 
+}

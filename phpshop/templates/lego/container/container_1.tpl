@@ -7,7 +7,7 @@
 					
 					<div class="pageCatal pages">
 					<div class="left-header"><a href="/page/">{Блог}</a></div>
-					<div class="pageCatalContent">@pageCatal@</div></div>
+					<ul class="pageCatalContent">@pageCatal@</ul></div>
 					@leftMenu@
                     <!--/ ћеню дублирующих категорий -->
                     <div class="@hitMainHidden@ @php __hide('hit'); php@">

@@ -1,1 +1,1 @@
- <a href="/socauth/vk/" title="авторизоваться через vk"><img src="phpshop/modules/socauth/templates/vk.png" border="0"></a>
+ <a href="/socauth/vk/" title="авторизоваться через vk"><img src="phpshop/modules/socauth/templates/vk.png" alt="Вконтакте"></a>

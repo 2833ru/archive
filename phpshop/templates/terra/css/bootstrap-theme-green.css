@@ -67,3 +67,6 @@ background-color:transparent;
 #body{
 --color:#308e46;
 }
+.theme-color {
+    color: #308e46;
+}

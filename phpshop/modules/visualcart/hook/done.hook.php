@@ -21,6 +21,9 @@ function send_to_order_visyalcart_hook($obj, $row, $rout) {
     if ($rout == 'END' and PHPShopSecurity::true_search($_COOKIE['visualcart_memory'])) {
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['visualcart']['visualcart_memory']);
         $PHPShopOrm->delete(array('memory' => "='" . $_COOKIE['visualcart_memory'] . "'"));
+        
+        // Удаление cookie
+        setcookie("ps_referal", '', time() - 10000, "/", $_SERVER['SERVER_NAME'], 0);
     }
 }
 

@@ -62,3 +62,6 @@ footer .social-menu em:before {
 .sidebar-nav > li a {background:#fff}
 ul.sidebar-nav a:hover{color: #541b2c!Important;}
 ul.sidebar-nav > li > ul.active > li.active > a{background:#dd4814!important; color: #fff!important;}
+.theme-color {
+    color: #dd4814;
+}

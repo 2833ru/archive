@@ -43,7 +43,7 @@ function xml2array($filename, $keyName = false, $file = true) {
 /**
  * Содержание объекта
  */
-class XMLparser {
+class PHPShopXMLparser {
 
     var $ar;
 
@@ -122,7 +122,7 @@ function parseDatabase($mvalues) {
     for ($i = 0; $i < count($mvalues); $i++)
         $mol[$mvalues[$i]["tag"]] = utf8_win1251($mvalues[$i]["value"]);
 
-    $db = new XMLparser($mol);
+    $db = new PHPShopXMLparser($mol);
     $array = $db->ar;
     return $array;
 }

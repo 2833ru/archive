@@ -96,6 +96,10 @@ class AddToTemplateVisualCartAjax {
      * Затирание старой памяти
      */
     function clean_memory() {
+        
+        // Сохранение личных данных покупателя
+        $this->get_memory(false);
+        
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['visualcart']['visualcart_memory']);
         $PHPShopOrm->delete(array('memory' => "='" . $this->memory . "'"));
     }
@@ -145,6 +149,9 @@ class AddToTemplateVisualCartAjax {
         $insert['sum_new'] = $this->PHPShopCart->getSum();
         $insert['ip_new'] = $_SERVER["REMOTE_ADDR"];
 
+        if (defined("HostID"))
+            $insert['server_new'] = HostID;
+
         if (!empty($_SESSION['UsersTel']))
             $insert['tel_new'] = $_SESSION['UsersTel'];
         else
@@ -165,6 +172,8 @@ class AddToTemplateVisualCartAjax {
         else
             $insert['referal_new'] = $this->data['referal'];
 
+        $insert['sendmail_new'] = 0;
+
         $PHPShopOrm->insert($insert);
     }
 
@@ -182,13 +191,14 @@ class AddToTemplateVisualCartAjax {
         return preg_match("/^[a-zA-Z0-9_]{4,35}$/", $str);
     }
 
-    function get_memory() {
+    function get_memory($cart = true) {
         if ($this->true_key($_COOKIE['visualcart_memory'])) {
             $this->memory = $_COOKIE['visualcart_memory'];
             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['visualcart']['visualcart_memory']);
             $data = $PHPShopOrm->select(array('*'), array('memory' => "='" . $this->memory . "'"), false, array('limit' => 1));
             if (is_array($data)) {
-                $_SESSION['cart'] = unserialize($data['cart']);
+                if ($cart)
+                    $_SESSION['cart'] = unserialize($data['cart']);
                 $this->data = $data;
             }
         }

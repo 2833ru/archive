@@ -1,0 +1,2 @@
+ALTER TABLE `phpshop_modules_elastic_system` ADD `search_filter` varchar(255) NOT NULL default '';
+ALTER TABLE `phpshop_modules_elastic_system` ADD `ajax_search_filter` varchar(255) NOT NULL default '';

@@ -5,7 +5,7 @@
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                 <h4 class="modal-title">{Быстрый заказ}</h4>
             </div>
-            <form role="form" method="post" name="user_forma" action="@ShopDir@/oneclick/">
+            <form method="post" name="user_forma" action="@ShopDir@/oneclick/">
                 <div class="modal-body">
 
                     <div class="form-group">
@@ -18,7 +18,7 @@
                     </div>
 					
                     @oneclick_captcha@
-<p class="small"><label><input type="checkbox" value="on" name="rule" class="req" checked="checked">  {Я согласен} <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html" alt="Согласие на обработку персональных данных">{на обработку моих персональных данных}</a></label></p>    
+<p class="small"><label><input type="checkbox" value="on" name="rule" class="req" checked="checked">  {Я согласен} <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html">{на обработку моих персональных данных}</a></label></p>
                 </div>
                 <div class="modal-footer">
                     <input type="hidden" name="oneclick_mod_product_id" value="@productUid@">

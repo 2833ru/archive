@@ -38,6 +38,8 @@ function actionUpdate() {
 
     if (empty($_POST['test_new']))
         $_POST['test_new'] = 0;
+    if (empty($_POST['russia_only_new']))
+        $_POST['russia_only_new'] = 0;
 
     $_POST['city_from_code_new'] = getCityCode($_POST['city_from_new']);
 
@@ -97,6 +99,7 @@ function actionStart() {
     $Tab1 = $PHPShopGUI->setField('Аккаунт интеграции', $PHPShopGUI->setInputText(false, 'account_new', $data['account'], 300));
     $Tab1.= $PHPShopGUI->setField('Пароль интеграции', $PHPShopGUI->setInput("password", 'password_new', $data['password'], false, 300));
     $Tab1.= $PHPShopGUI->setField('Режим разработки', $PHPShopGUI->setCheckbox("test_new", 1, "Отправка данных на тестовую среду СДЭК", $data["test"]));
+    $Tab1.= $PHPShopGUI->setField('Только регионы РФ', $PHPShopGUI->setCheckbox("russia_only_new", 1, "Отображать в виджете только города России", $data["russia_only"]));
     $Tab1.= $PHPShopGUI->setField('Статус для отправки', $PHPShopGUI->setSelect('status_new', $status, 300));
     $Tab1.= $PHPShopGUI->setField('Доставка', $PHPShopGUI->setSelect('delivery_id_new[]', $delivery_value, 300, null, false, $search = false, false, $size = 1, $multiple = true));
     $Tab1.= $PHPShopGUI->setField('Город отправки отправлений', $PHPShopGUI->setInputText(false, 'city_from_new', $data['city_from'], 300));

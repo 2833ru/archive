@@ -181,3 +181,6 @@ border-color:
 ul.sidebar-nav, ul.sidebar-nav > li a{border-color: #fbc9e7!important}
 ul.sidebar-nav a:hover{color: #541b2c!Important;}
 ul.sidebar-nav > li > ul.active > li.active > a{background:#fbc9e7!important; color: #541b2c;}
+.theme-color {
+    color:#a55d70!important;
+}

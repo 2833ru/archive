@@ -122,3 +122,6 @@ color:#a0a0a0;
     border: 1px solid var(--color);
     background-color: var(--color);
 }
+.theme-color {
+    color: #337ab7;
+}

@@ -34,11 +34,11 @@
                 <a class="btn btn-cart @elementCartOptionHide@" href="/shop/UID_@productUid@.html"  data-title="@productSale@" data-toggle="tooltip">
                     <i class="fa fa-shopping-cart"></i>                     
                 </a>
-                <button type="button" class="btn btn-cart addToCartList @elementCartHide@" role="button" data-num="1" data-uid="@productUid@" data-cart="@productSaleReady@" data-title="@productSale@" data-toggle="tooltip">
+                <button type="button" class="btn btn-cart addToCartList @elementCartHide@" data-num="1" data-uid="@productUid@" data-cart="@productSaleReady@" data-title="@productSale@" data-toggle="tooltip">
                     <i class="fa fa-shopping-cart"></i>                     
                 </button>
-                <button class="btn btn-wishlist addToWishList" role="button" data-uid="@productUid@" data-title="{Этложить}" data-placement="top" data-toggle="tooltip"><i class="fa fa-heart"></i></button>
-                <button class="btn btn-wishlist addToCompareList" role="button" data-uid="@productUid@" data-title="{Чравнить}" data-placement="top" data-toggle="tooltip"><i class="fa fa-bar-chart-o"></i></button>
+                <button class="btn btn-wishlist addToWishList" data-uid="@productUid@" data-title="{Этложить}" data-placement="top" data-toggle="tooltip"><i class="fa fa-heart"></i></button>
+                <button class="btn btn-wishlist addToCompareList" data-uid="@productUid@" data-title="{Чравнить}" data-placement="top" data-toggle="tooltip"><i class="fa fa-bar-chart-o"></i></button>
 
                 <a class="btn btn-cart @elementNoticeHide@" href="/users/notice.html?productId=@productUid@" title="@productNotice@"  data-title="@productNotice@" data-placement="top" data-toggle="tooltip">
                     <i class="fa fa-envelope-o" aria-hidden="true"></i>                            

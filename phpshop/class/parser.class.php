@@ -316,7 +316,7 @@ function ParseTemplateReturn($TemplateName, $mod = false, $debug = false) {
         $file = tmpGetFile($SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'] . chr(47) . $TemplateName);
     $dis = Parser($file);
 
-    $add = ' id="data-source" data-toggle="tooltip" data-placement="auto" data-source="' . $TemplateName . '" title="' . __('Показать') . ' [Ctrl + &crarr;]" ';
+    $add = ' id="data-source" class="data-source" contenteditable="false" data-toggle="tooltip" data-placement="auto" data-source="' . $TemplateName . '" title="' . __('Показать') . ' [Ctrl + &crarr;]" ';
 
 
     if ($debug and ! empty($_COOKIE['debug_template'])) {
@@ -418,7 +418,7 @@ function Parser($string, $debug = false) {
     $dis = @preg_replace_callback("/@([a-zA-Z0-9_]+)@/", 'SysValueReturn', @preg_replace_callback("/(@php)(.*)(php@)/sU", "evalstr", str_replace('&#43;', '+', $string)));
     $dis = preg_replace_callback("/({)([а-яА-ЯёЁ0-9_ ,.\"\-\/]+)(})/", "PHPShopParser::locale", $dis);
 
-    $add = ' id="data-source" data-toggle="tooltip" data-placement="auto" data-source="' . $debug . '" title="' . __('Показать') . ' [Ctrl + &crarr;]" ';
+    $add = ' id="data-source" class="data-source" contenteditable="false"  data-toggle="tooltip" data-placement="auto" data-source="' . $debug . '" title="' . __('Показать') . ' [Ctrl + &crarr;]" ';
 
     if ($debug and ! empty($_COOKIE['debug_template'])) {
         if (strstr($dis, '<li') or strstr($dis, 'class="product-col"'))

@@ -1,4 +1,4 @@
-<form role="form" method="post" name="user_forma" action="@ShopDir@/returncall/">
+<form method="post" name="user_forma" action="@ShopDir@/returncall/">
     <div class="form-group">
         <label>{»м€}</label>
         <input type="text" name="returncall_mod_name" class="form-control" placeholder="{»м€}..." required="">
@@ -17,7 +17,7 @@
     </div>
 	
     @returncall_captcha@
-	<p class="small"><label><input type="checkbox" value="on" name="rule" class="req" checked="checked">  {я согласен} <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html" alt="—огласие на обработку персональных данных">{на обработку моих персональных данных}</a></label></p>
+	<p class="small"><label><input type="checkbox" value="on" name="rule" class="req" checked="checked">  {я согласен} <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html">{на обработку моих персональных данных}</a></label></p>
     <div class="pull-right">
         <input type="hidden" name="returncall_mod_send" value="1">
         <button type="submit" class="btn btn-primary">{«аказать звонок}</button>

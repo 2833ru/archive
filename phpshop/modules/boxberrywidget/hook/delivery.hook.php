@@ -16,7 +16,11 @@ function boxberrywidget_delivery_hook($obj, $data) {
 
     try {
         if($BoxberryWidget->isCourierDeliveryId((int) $data[1]) && (int) $_POST['zip'] > 0) {
-            $result['delivery'] = $BoxberryWidget->getCourierPrice((int) $_POST['zip'], $_POST['weight'], $_POST['depth'], $_POST['height'], $_POST['width']);
+            if((int) $result['free_delivery'] === 1) {
+                $result['delivery'] = 0;
+            } else {
+                $result['delivery'] = $BoxberryWidget->getCourierPrice((int) $_POST['zip'], $_POST['weight'], $_POST['depth'], $_POST['height'], $_POST['width']);
+            }
             $result['total'] = $PHPShopOrder->returnSumma((float) $_REQUEST['sum'], $PHPShopOrder->ChekDiscount($_REQUEST['sum']),' ', $result['delivery']);
             $result['message'] = PHPShopString::win_utf8('—тоимость доставки по индексу ' . (int) $_POST['zip'] . ' составит ' . $result['delivery'] . ' руб.');
 

@@ -136,7 +136,7 @@ if (is_array($data))
                 $ico = 'glyphicon-shopping-cart';
 
                 if ($row['sum'] > 0)
-                    $sum = '<span class="text-primary strong">' . $row['sum'] . $currency . '</span>';
+                    $sum = '<span class="text-primary strong">' . $row['sum'] . PHPShopString::win_utf8($currency) . '</span>';
 
                 $link = '?path=order&id=';
         }

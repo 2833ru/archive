@@ -368,6 +368,8 @@ function actionSave() {
             if ($v != 'null' and ! strstr($v, ','))
                 $_POST['dop_cat_new'] .= $v . "#";
     }
+    else if(isset($_POST['dop_cat']))
+        $_POST['dop_cat_new']='';
 
     // Файлы
     if (is_array($_POST['files_new'])) {
@@ -444,6 +446,8 @@ function viewCatalog($name = 'category_new', $multi = false) {
 
     $tree_select = '<select class="selectpicker show-menu-arrow hidden-edit" data-live-search="true" data-container="" data-width="100%" data-style="btn btn-default btn-sm" name="' . $name . '" ' . $multi . '>';
 
+    $tree_select .= '<option value="" selected>Ничего не выбрано</option>';
+
     if (is_array($tree_array[0]['sub']))
         foreach ($tree_array[0]['sub'] as $k => $v) {
             $check = treegenerator($tree_array[$k], 1, $data['category']);
@@ -500,7 +504,7 @@ function actionStart() {
                 elseif ($val['Field'] == 'vendor_array') {
                     if (!empty($_GET['cat']) and $_GET['cat'] != 'undefined') {
                         PHPShopObj::loadClass("sort");
-                        $PHPShopSort = new PHPShopSort((int) $_GET['cat'], false, false, 'sorttemplate', false, false, false, false, null, true);
+                        $PHPShopSort = new PHPShopSort((int) $_GET['cat'], false, false, 'sorttemplate', false, false, true, false, null, true);
                         $PHPShopGUI->_CODE .= $PHPShopSort->disp;
                     } else {
                         $select_error = 'Редактировать характеристики можно только у товаров из общей категории: <a href="?path=catalog"><span class="glyphicon glyphicon-share-alt"></span> Выбрать</a>';
@@ -591,7 +595,7 @@ function sorttemplate($value, $n, $title, $vendor) {
  * Настройка полей - 1 шаг
  */
 function actionOption() {
-    global $PHPShopInterface;
+    global $PHPShopInterface, $PHPShopModules;
 
     // Память выбранных полей
     if (!empty($_COOKIE['check_memory'])) {
@@ -616,10 +620,14 @@ function actionOption() {
             $PHPShopInterface->setCheckbox('uid', 1, 'Артикул', $memory['catalog.option']['uid']) .
             $PHPShopInterface->setCheckbox('id', 1, 'ID', $memory['catalog.option']['id']) .
             $PHPShopInterface->setCheckbox('price', 1, 'Цена', $memory['catalog.option']['price']) .
+            $PHPShopInterface->setCheckbox('price2', 1, 'Цена 2', $memory['catalog.option']['price2']) .
+            $PHPShopInterface->setCheckbox('price3', 1, 'Цена 3', $memory['catalog.option']['price3']) . '<br>' .
+            $PHPShopInterface->setCheckbox('price4', 1, 'Цена 4', $memory['catalog.option']['price4']) .
+            $PHPShopInterface->setCheckbox('price5', 1, 'Цена 5', $memory['catalog.option']['price5']) .
             $PHPShopInterface->setCheckbox('status', 1, 'Статус', $memory['catalog.option']['status']) .
-            $PHPShopInterface->setCheckbox('item', 1, 'Количество', $memory['catalog.option']['item']) . '<br>' .
+            $PHPShopInterface->setCheckbox('item', 1, 'Количество', $memory['catalog.option']['item']) .
             $PHPShopInterface->setCheckbox('menu', 1, 'Экшен меню', $memory['catalog.option']['menu']) .
-            $PHPShopInterface->setCheckbox('num', 1, 'Сортировка', $memory['catalog.option']['num']) .
+            $PHPShopInterface->setCheckbox('num', 1, 'Сортировка', $memory['catalog.option']['num']) . '<br>' .
             $PHPShopInterface->setCheckbox('label', 1, 'Лейблы статусов', $memory['catalog.option']['label']) .
             $PHPShopInterface->setCheckbox('sort', 1, 'Характеристики', $memory['catalog.option']['sort']);
     
@@ -632,8 +640,7 @@ function actionOption() {
         foreach ($dataWarehouse as $row) {
             $searchforma .= $PHPShopInterface->setCheckbox('items' . $row['id'], 1, $row['name'], $memory['catalog.option']['items'. $row['id']]);
         }
-    } 
-  
+    }
 
     $searchforma .= $PHPShopInterface->setInputArg(array('type' => 'hidden', 'name' => 'path', 'value' => 'catalog'));
     $searchforma .= $PHPShopInterface->setInputArg(array('type' => 'hidden', 'name' => 'cat', 'value' => $_REQUEST['cat']));
@@ -642,6 +649,9 @@ function actionOption() {
 
 
     $PHPShopInterface->_CODE .= $searchforma;
+
+    // Перехват модуля
+    $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, null);
 
     exit($PHPShopInterface->getContent() . '<p class="clearfix"> </p>');
 }

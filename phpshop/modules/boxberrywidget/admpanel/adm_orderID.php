@@ -18,7 +18,7 @@ function boxberrywidgetSend($data) {
             $BoxberryWidget->isPvzDelivery((int) $order['Person']['dostavka_metod']) ? $vid = 1 : $vid = 2;
             $BoxberryWidget->setData($data, $vid, (int) $order['Person']['discount']);
 
-            $result = $BoxberryWidget->request('ParselCreate');
+            $result = $BoxberryWidget->request('ParselCreate', $data['id']);
             if($result) {
                 $_POST['boxberry_pvz_id_new'] = '';
             }

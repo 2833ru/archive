@@ -132,8 +132,8 @@ function actionStart() {
     );
 
     $PHPShopGUI->action_select['Учебник'] = array(
-        'name' => 'Учебник HTML',
-        'url' => 'http://www.wisdomweb.ru/HTML5/',
+        'name' => 'Инструкция',
+        'url' => 'https://docs.phpshop.ru/dizain/nastroika-shablona',
         'target' => '_blank'
     );
 
@@ -249,7 +249,7 @@ function actionStart() {
             $PHPShopGUI->_CODE.= $PHPShopGUI->loadLib('tab_map', $root);
     }
 
-    $PHPShopGUI->setActionPanel(PHPShopSecurity::TotalClean($TitlePage), array('Режим 1', 'Режим 2', 'Учебник', 'Магазин', '|', 'Урок'), array('Размер', 'Учебник', 'Выполнить'));
+    $PHPShopGUI->setActionPanel(PHPShopSecurity::TotalClean($TitlePage), array('Режим 1', 'Режим 2', 'Учебник', '|', 'Урок'), array('Размер', 'Учебник', 'Выполнить'));
 
     $dir = "../templates/*";
     $k = 1;

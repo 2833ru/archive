@@ -75,12 +75,17 @@ function pochtaSetData(result) {
         region = result.areaTo; // В ручном вводе адреса курьерской доставки область\регион в поле района
     }
 
+    var deliveryCost = result.cashOfDelivery / 100;
+    if($("#d").data('free') === 1) {
+        deliveryCost = 0;
+    }
+
     $("#makeyourchoise").val('DONE');
 
-    $("#DosSumma").html(result.cashOfDelivery / 100);
-    $("#TotalSumma").html(Number(result.cashOfDelivery / 100) + Number($('#OrderSumma').val()));
+    $("#DosSumma").html(deliveryCost);
+    $("#TotalSumma").html(Number(deliveryCost) + Number($('#OrderSumma').val()));
 
-    $('input[name="pochta_cost"]').val(result.cashOfDelivery / 100);
+    $('input[name="pochta_cost"]').val(deliveryCost);
     $('input[name="pochta_address"]').val(result.addressTo);
     $('input[name="pochta_city"]').val(result.cityTo);
     $('input[name="pochta_index"]').val(result.indexTo);

@@ -1,4 +1,4 @@
-<form role="form" method="post" name="user_forma" action="@ShopDir@/returncall/">
+<form method="post" name="user_forma" action="@ShopDir@/returncall/">
     <div class="form-group">
         <label>{Имя}</label>
         <input type="text" name="returncall_mod_name" class="form-control" placeholder="{Имя}..." required="">

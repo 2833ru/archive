@@ -71,3 +71,6 @@ text-decoration:none;
 #body{
 --color:#0a87cf;
 }
+.theme-color {
+    color: #0a87cf;
+}

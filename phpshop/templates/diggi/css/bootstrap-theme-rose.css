@@ -103,3 +103,6 @@ color:black;
 #body{
     --color:#383838;
 }
+.theme-color {
+    color: #E65C6C;
+}

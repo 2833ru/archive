@@ -53,7 +53,7 @@ function actionStart() {
     <div class="row">
        <div class="col-md-3 col-xs-6">
           <div class="panel panel-default">
-             <div class="panel-heading"><span class="glyphicon glyphicon-eye-open"></span> ' . __('На витрине') . '</div>
+             <div class="panel-heading"><span class="glyphicon glyphicon-eye-open"></span> ' . __('Видимые каталоги') . '</div>
              <div class="panel-body text-right panel-intro">
                  <a>' . $PHPShopBase->getNumRows('categories', "where skin_enabled='0'") . '</a>
              </div>
@@ -61,7 +61,7 @@ function actionStart() {
        </div>
        <div class="col-md-3 col-xs-6">
           <div class="panel panel-default">
-             <div class="panel-heading"><span class="glyphicon glyphicon-eye-close"></span> ' . __('Скрыто') . '</div>
+             <div class="panel-heading"><span class="glyphicon glyphicon-eye-close"></span> ' . __('Скрытые каталоги') . '</div>
                 <div class="panel-body text-right panel-intro">
                  <a>' . $PHPShopBase->getNumRows('categories', "where skin_enabled='1'") . '</a>
                </div>
@@ -69,7 +69,7 @@ function actionStart() {
        </div>
         <div class="col-md-3 col-xs-6">
           <div class="panel panel-default">
-             <div class="panel-heading"><span class="glyphicon glyphicon-th-list"></span> ' . __('Главное меню') . '</div>
+             <div class="panel-heading"><span class="glyphicon glyphicon-th-list"></span> ' . __('Каталоги в топ меню') . '</div>
                 <div class="panel-body text-right panel-intro">
                 <a>' . $PHPShopBase->getNumRows('categories', "where menu='1'") . '</a>
                </div>
@@ -89,15 +89,15 @@ function actionStart() {
     <div class="row">
        <div class="col-md-3 col-xs-6">
           <div class="panel panel-default">
-             <div class="panel-heading"><span class="glyphicon glyphicon-thumbs-up"></span> ' . __('Спецпредложения') . '</div>
+             <div class="panel-heading"><span class="glyphicon glyphicon-thumbs-up"></span> ' . __('Акционные товары') . '</div>
              <div class="panel-body text-right panel-intro">
-                 <a href="?path=catalog&where[spec]=1">' . $PHPShopBase->getNumRows('products', "where spec='1' and parent_enabled='0'") . '</a>
+                 <a href="?path=catalog&where[spec]=1&where[newtip]=1">' . $PHPShopBase->getNumRows('products', "where spec='1' and newtip='1' and parent_enabled='0'") . '</a>
              </div>
           </div>
        </div>
        <div class="col-md-3 col-xs-6">
           <div class="panel panel-default">
-             <div class="panel-heading"><span class="glyphicon glyphicon-open"></span> ' . __('Яндекс и Google') . '</div>
+             <div class="panel-heading"><span class="glyphicon glyphicon-open"></span> ' . __('Товары Яндекс и Google') . '</div>
                 <div class="panel-body text-right panel-intro">
                  <a href="?path=catalog&where[yml]=1">' . $PHPShopBase->getNumRows('products', "where yml='1'") . '</a>
                </div>
@@ -105,7 +105,7 @@ function actionStart() {
        </div>
         <div class="col-md-3 col-xs-6">
           <div class="panel panel-default">
-             <div class="panel-heading"><span class="glyphicon glyphicon-flash"></span> ' . __('Без цен') . '</div>
+             <div class="panel-heading"><span class="glyphicon glyphicon-flash"></span> ' . __('Товары без цен') . '</div>
                 <div class="panel-body text-right panel-intro">
                 <a href="?path=catalog&where[price]=0&core=eq">' . $PHPShopBase->getNumRows('products', "where price='0' and parent_enabled='0'") . '</a>
                </div>
@@ -113,7 +113,7 @@ function actionStart() {
        </div>
        <div class="col-md-3 col-xs-6">
           <div class="panel panel-default">
-             <div class="panel-heading"><span class="glyphicon glyphicon-picture"></span> ' . __('Без картинок') . '</div>
+             <div class="panel-heading"><span class="glyphicon glyphicon-picture"></span> ' . __('Товары без картинок') . '</div>
                 <div class="panel-body text-right panel-intro">
                  <a href="?path=catalog&where[pic_small]=null&core=eq">' . $PHPShopBase->getNumRows('products', "where pic_small='' and parent_enabled='0'") . '</a>
                </div>

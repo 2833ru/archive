@@ -62,7 +62,13 @@ if (is_array($_GET['where'])) {
             $where .= ' and ';
         else
             $where = ' where ';
-        $where .= ' a.datas between ' . (PHPShopDate::GetUnixTime($_GET['date_start']) - 1) . ' and ' . (PHPShopDate::GetUnixTime($_GET['date_end']) + 259200 / 2) . '  ';
+        $fromArr = $array = explode('-', $_GET['date_start']);
+        $toArr = $array = explode('-', $_GET['date_end']);
+
+        $start = mktime(0, 0, 0, $fromArr[1], $fromArr[0], $fromArr[2]);
+        $end = mktime(23, 59, 59, $toArr[1], $toArr[0], $toArr[2]);
+
+        $where .= ' a.datas between ' . $start . ' and ' . $end . '  ';
     }
 }
 
@@ -77,22 +83,43 @@ else
 if (!empty($_COOKIE['check_memory'])) {
     $memory = json_decode($_COOKIE['check_memory'], true);
 }
+
 if (!is_array($memory['order.option'])) {
-    $memory['order.option']['uid'] = 1;
-    $memory['order.option']['statusi'] = 1;
-    $memory['order.option']['datas'] = 1;
-    $memory['order.option']['fio'] = 1;
-    $memory['order.option']['menu'] = 1;
-    $memory['order.option']['tel'] = 1;
-    $memory['order.option']['sum'] = 1;
-    $memory['order.option']['city'] = 0;
-    $memory['order.option']['adres'] = 0;
-    $memory['order.option']['org'] = 0;
-    $memory['order.option']['comment'] = 0;
-    $memory['order.option']['cart'] = 0;
-    $memory['order.option']['tracking'] = 0;
-    $memory['order.option']['admin'] = 0;
-}
+
+        // Мобильная версия
+        if (PHPShopString::is_mobile()) {
+            $memory['order.option']['uid'] = 1;
+            $memory['order.option']['statusi'] = 1;
+            $memory['order.option']['datas'] = 1;
+            $memory['order.option']['fio'] = 0;
+            $memory['order.option']['menu'] = 0;
+            $memory['order.option']['tel'] = 0;
+            $memory['order.option']['sum'] = 1;
+            $memory['order.option']['city'] = 0;
+            $memory['order.option']['adres'] = 0;
+            $memory['order.option']['org'] = 0;
+            $memory['order.option']['comment'] = 0;
+            $memory['order.option']['cart'] = 0;
+            $memory['order.option']['tracking'] = 0;
+            $memory['order.option']['admin'] = 0;
+            $PHPShopInterface->mobile = true;
+        } else {
+            $memory['order.option']['uid'] = 1;
+            $memory['order.option']['statusi'] = 1;
+            $memory['order.option']['datas'] = 1;
+            $memory['order.option']['fio'] = 1;
+            $memory['order.option']['menu'] = 1;
+            $memory['order.option']['tel'] = 1;
+            $memory['order.option']['sum'] = 1;
+            $memory['order.option']['city'] = 0;
+            $memory['order.option']['adres'] = 0;
+            $memory['order.option']['org'] = 0;
+            $memory['order.option']['comment'] = 0;
+            $memory['order.option']['cart'] = 0;
+            $memory['order.option']['tracking'] = 0;
+            $memory['order.option']['admin'] = 0;
+        }
+    }
 
 // Расширенная сортировка из JSON
 if (is_array($_GET['order']) and ! empty($_SESSION['jsort'][$_GET['order']['0']['column']])) {
@@ -150,6 +177,15 @@ if ($PHPShopBase->Rule->CheckedRules('order', 'rule')) {
     if (is_array($data_manager))
         foreach ($data_manager as $manager_status)
             $manager_status_value[$manager_status['id']] = $manager_status['name'];
+}
+
+// Юридические лица
+$PHPShopCompany = new PHPShopCompanyArray();
+$PHPShopCompanyArray = $PHPShopCompany->getArray();
+if (is_array($PHPShopCompanyArray)) {
+    $company_value[] = $PHPShopSystem->getSerilizeParam("bank.org_name");
+    foreach ($PHPShopCompanyArray as $company)
+        $company_value[$company['id']] = $company['name'];
 }
 
 $sum = $num = 0;
@@ -225,7 +261,7 @@ if (is_array($data))
         $sum += $row['sum'];
         $num++;
 
-        $PHPShopInterface->setRow($row['id'], array('name' => '<span class="hidden-xs">' . __('Заказ') . '</span> ' . $row['uid'], 'link' => '?path=order&id=' . $row['id'], 'align' => 'left', 'sort' => 'uid', 'order' => $row['id'], 'view' => intval($memory['order.option']['uid'])), array('name' => $row['id'], 'sort' => 'id', 'view' => intval($memory['order.option']['id']), 'link' => '?path=order&id=' . $row['id']), array('status' => array('enable' => $row['statusi'], 'caption' => $status, 'passive' => true, 'color' => $PHPShopOrder->getStatusColor()), 'sort' => 'statusi', 'block_locale' => true, 'view' => intval($memory['order.option']['statusi'])), array('name' => $carts, 'order' => $row['datas'], 'sort' => 'datas', 'view' => intval($memory['order.option']['cart'])), array('name' => $datas, 'order' => $row['datas'], 'sort' => 'datas', 'view' => intval($memory['order.option']['datas'])), array('name' => $row['fio'], 'sort' => 'fio', 'link' => $user_link, 'view' => intval($memory['order.option']['fio'])), array('name' => '<span class="hidden" id="order-' . $row['id'] . '-email">' . $row['mail'] . '</span>' . $row['tel'], 'sort' => 'tel', 'view' => intval($memory['order.option']['tel'])), array('action' => array('edit', 'email', 'copy', '|', 'delete', 'id' => $row['id']), 'align' => 'center', 'view' => intval($memory['order.option']['menu'])), array('name' => $discount . '%', 'order' => $discount, 'view' => intval($memory['order.option']['discount'])), array('name' => $row['city'], 'sort' => 'city', 'view' => intval($memory['order.option']['city'])), array('name' => $adres, 'view' => intval($memory['order.option']['adres'])), array('name' => $row['org_name'], 'sort' => 'org_name', 'view' => intval($memory['order.option']['org'])), array('name' => $comment, 'view' => intval($memory['order.option']['comment'])), array('name' => $row['tracking'], 'view' => intval($memory['order.option']['tracking'])), array('name' => $manager_status_value[$row['admin']], 'view' => intval($memory['order.option']['admin'])), array('name' => $PHPShopOrder->getTotal(false, ' ') . $currency, 'align' => 'right', 'order' => $row['sum'], 'sort' => 'sum', 'view' => intval($memory['order.option']['sum'])));
+        $PHPShopInterface->setRow($row['id'], array('name' => '<span class="hidden-xs">' . __('Заказ') . '</span> ' . $row['uid'], 'link' => '?path=order&id=' . $row['id'], 'align' => 'left', 'sort' => 'uid', 'order' => $row['id'], 'view' => intval($memory['order.option']['uid'])), array('name' => $row['id'], 'sort' => 'id', 'view' => intval($memory['order.option']['id']), 'link' => '?path=order&id=' . $row['id']), array('status' => array('enable' => $row['statusi'], 'caption' => $status, 'passive' => true, 'color' => $PHPShopOrder->getStatusColor()), 'sort' => 'statusi', 'block_locale' => true, 'view' => intval($memory['order.option']['statusi'])), array('name' => $carts, 'order' => $row['datas'], 'sort' => 'datas', 'view' => intval($memory['order.option']['cart'])), array('name' => $datas, 'order' => $row['datas'], 'sort' => 'datas', 'view' => intval($memory['order.option']['datas'])), array('name' => $row['fio'], 'sort' => 'fio', 'link' => $user_link, 'view' => intval($memory['order.option']['fio'])), array('name' => '<span class="hidden" id="order-' . $row['id'] . '-email">' . $row['mail'] . '</span>' . $row['tel'], 'sort' => 'tel', 'view' => intval($memory['order.option']['tel'])), array('action' => array('edit', 'email', 'copy', '|', 'delete', 'id' => $row['id']), 'align' => 'center', 'view' => intval($memory['order.option']['menu'])), array('name' => $discount . '%', 'order' => $discount, 'view' => intval($memory['order.option']['discount'])), array('name' => $row['city'], 'sort' => 'city', 'view' => intval($memory['order.option']['city'])), array('name' => $adres, 'view' => intval($memory['order.option']['adres'])), array('name' => $row['org_name'], 'sort' => 'org_name', 'view' => intval($memory['order.option']['org'])), array('name' => $comment, 'view' => intval($memory['order.option']['comment'])), array('name' => $row['tracking'], 'view' => intval($memory['order.option']['tracking'])), array('name' => $manager_status_value[$row['admin']], 'view' => intval($memory['order.option']['admin'])), array('name' => $company_value[$row['company']], 'view' => intval($memory['order.option']['company'])), array('name' => $PHPShopOrder->getTotal(false, ' ') . $currency, 'align' => 'right', 'order' => $row['sum'], 'sort' => 'sum', 'view' => intval($memory['order.option']['sum'])));
     }
 
 

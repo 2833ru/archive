@@ -62,7 +62,7 @@ class PHPShopString {
             return $in_text;
 
         if (function_exists('iconv')) {
-            $output = iconv("windows-1251", "utf-8", $in_text);
+            $output = iconv("windows-1251", "utf-8//IGNORE", $in_text);
         } else {
 
             $output = null;
@@ -76,13 +76,13 @@ class PHPShopString {
             $other[1111] = "¿";
 
             for ($i = 0; $i < strlen($in_text); $i++) {
-                if (ord($in_text{$i}) > 191) {
-                    $output .= "&#" . (ord($in_text{$i}) + 848) . ";";
+                if (ord($in_text[$i]) > 191) {
+                    $output .= "&#" . (ord($in_text[$i]) + 848) . ";";
                 } else {
-                    if (array_search($in_text{$i}, $other) === false) {
-                        $output .= $in_text{$i};
+                    if (array_search($in_text[$i], $other) === false) {
+                        $output .= $in_text[$i];
                     } else {
-                        $output .= "&#" . array_search($in_text{$i}, $other) . ";";
+                        $output .= "&#" . array_search($in_text[$i], $other) . ";";
                     }
                 }
             }
@@ -170,7 +170,7 @@ class PHPShopString {
             return $str;
 
         for ($i = 1; $i <= $a; $i++) {
-            if ($str{$i} == ".")
+            if ($str[$i] == ".")
                 $T = $i;
         }
 

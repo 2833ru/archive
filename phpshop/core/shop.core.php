@@ -51,6 +51,8 @@ class PHPShopShop extends PHPShopShopCore {
     var $category;
     /** @var array id подкаталогов */
     var $category_array = array();
+    /** @var array выбранные значения фильтра */
+    var $selected_filter = [];
 
     /**
      * Конструктор
@@ -223,20 +225,6 @@ class PHPShopShop extends PHPShopShopCore {
     }
 
     /**
-     * Вывод рейтинга товаров
-     * Функция вынесена в отдельный файл rating.php
-     * @return mixed
-     */
-    function rating($row) {
-
-        // Перехват модуля
-        if ($this->setHook(__CLASS__, __FUNCTION__, $row))
-            return true;
-
-        $this->doLoadFunction(__CLASS__, __FUNCTION__, $row);
-    }
-
-    /**
      * Вывод средней оценки к товару из отзывов пользователей
      * Функция вынесена в отдельный файл commentRate.php
      * @return mixed
@@ -336,7 +324,6 @@ class PHPShopShop extends PHPShopShopCore {
         $this->option_select($row);
 
         // Рейтинг
-        $this->rating($row);
         if(empty($row['rate'])){
             $rate=5;
             $rate_count=1;
@@ -595,9 +582,6 @@ class PHPShopShop extends PHPShopShopCore {
         if (is_array($Product) and !empty($row['price']) and empty($row['priceSklad']) and (!empty($row['items']) or (empty($row['items']) and $sklad_status == 1))) {
             $this->select_value[] = array($row['name'] . " -  (" . $this->price($row) . "
                     " . $this->currency . ')', $row['id'], $row['items'], $row);
-        } else {
-            $this->set('ComStartNotice', PHPShopText::comment('<'));
-            $this->set('ComEndNotice', PHPShopText::comment('>'));
         }
 
         // Выпадающий список товаров
@@ -693,7 +677,7 @@ function CID() {
  * Функция вынесена в отдельный файл query_filter.php
  * @return mixed
  */
-function query_filter($where = false) {
+function query_filter($where = false,$v=false) {
 
     // Перехват модуля
     $hook = $this->setHook(__CLASS__, __FUNCTION__);
@@ -773,6 +757,7 @@ function CID_Product($category = null, $mode = false) {
                 return $this->setError404();
 
             if (isset($_POST['ajax'])) {
+                header('Content-type: text/html; charset='.$GLOBALS['PHPShopLang']->charset);
                 exit(PHPShopText::h4($this->lang('empty_product_list'), 'empty_product_list'));
             }
 
@@ -781,7 +766,10 @@ function CID_Product($category = null, $mode = false) {
         }
 
         // Пагинатор
-        $this->setPaginator(count($this->dataArray), $order['sql']);
+        if(is_array($this->dataArray))
+           $count = count($this->dataArray);
+        else $count = 0;
+        $this->setPaginator($count, $order['sql']);
 
         if ($this->PHPShopSystem->getSerilizeParam('admoption.filter_cache_enabled') == 1 && $this->PHPShopSystem->getSerilizeParam('admoption.filter_products_count') == 1)
             $this->update_cache('count_products');
@@ -833,7 +821,7 @@ function CID_Product($category = null, $mode = false) {
 
     // Фильтр товаров
     PHPShopObj::loadClass('sort');
-    $PHPShopSort = new PHPShopSort($this->category, $this->PHPShopCategory->getParam('sort'), true, $this->sort_template, false, true, true, true, $this->cat_template);
+    $PHPShopSort = new PHPShopSort($this->category, $this->PHPShopCategory->getParam('sort'), true, $this->sort_template, isset($_GET['v']) ? $_GET['v'] : false, true, true, true, $this->cat_template);
 
     // Ajax Filter
     if (isset($_REQUEST['ajaxfilter'])) {
@@ -869,8 +857,8 @@ function CID_Product($category = null, $mode = false) {
 
     $data = $this->select($search_where, $where, $group);
 
-    $this->price_max = $data['max'] + 6;
-    $this->price_min = $data['min'];
+    $this->price_max = intval($data['max']) + 6;
+    $this->price_min = intval($data['min']);
 
     if ($this->price_min == $this->price_max)
         $this->price_min = intval($this->price_max / 2);
@@ -924,7 +912,7 @@ function catalog_content() {
     $this->setActiveMenu();
 
     // Мета заголовки
-    $this->set_meta(array($this->PHPShopCategory->getArray(), $parent_category_row));
+    $this->set_meta(array($this->PHPShopCategory->getArray(), $parent_category_row, $this->selected_filter));
 
     // Дублирующая навигация
     $this->other_cat_navigation($cat);
@@ -960,6 +948,7 @@ function other_cat_navigation($parent) {
     $dis = null;
 
     // Использование глобального кэша
+    if(is_array($GLOBALS['Cache'][$GLOBALS['SysValue']['base']['categories']]))
     foreach ($GLOBALS['Cache'][$GLOBALS['SysValue']['base']['categories']] as $val) {
         if ($val['parent_to'] == $parent and $val['skin_enabled'] != 1)
             $dataArray[] = $val;
@@ -1114,7 +1103,7 @@ function CID_Category($mode = false) {
     $this->setActiveMenu();
 
     // Мета заголовки
-    $this->set_meta(array($this->PHPShopCategory->getArray(), $parent_category_row));
+    $this->set_meta(array($this->PHPShopCategory->getArray(), $parent_category_row, $this->selected_filter));
 
     // Навигация хлебных крошек для новых шаблонов
     $this->navigation($this->PHPShopCategory->getParam('parent_to'), $this->category_name);

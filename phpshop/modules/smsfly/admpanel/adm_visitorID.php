@@ -10,7 +10,7 @@ function sendSmsfly($data) {
     include $_classPath."modules/smsfly/hook/mod_option.hook.php";
     
     // SMS оповещение пользователю о смене статуса заказа
-    if (intval($data['statusi']) != intval($_POST['statusi_new']) and $PHPShopSystem->ifSerilizeParam('admoption.sms_status_order_enabled')) {
+    if (intval($data['statusi']) != intval($_POST['statusi_new']) && (int) $GetOrderStatusArray[$_POST['statusi_new']]['sms_action'] === 1) {
         
         // Настройки модуля
         $PHPShopSmsfly = new PHPShopSmsfly();

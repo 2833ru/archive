@@ -19,6 +19,7 @@ function yandexdelivery_delivery_hook($obj, $data) {
         $hook['delivery'] = $data[0]['delivery'];
         $hook['total'] = $data[0]['total'];
         $hook['adresList'] = $data[0]['adresList'];
+        $hook['free_delivery'] = $data[0]['free_delivery'];
         $hook['success'] = 1;
 
         return $hook;

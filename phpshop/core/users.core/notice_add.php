@@ -65,10 +65,10 @@ function notice_mail($obj) {
 
         // Отправка e-mail пользователя
         $PHPShopMail = new PHPShopMail($admin_mail, $admin_mail, $title, '', true, true,array('replyto'=>$PHPShopUser->getValue('mail')));
-        
+
         // Содержание e-mail
-        $content = ParseTemplateReturn('./phpshop/lib/templates/users/mail_notice_add.tpl', true);
-        
+        $content = ParseTemplateReturn(dirname(dirname(__DIR__)) . '/lib/templates/users/mail_notice_add.tpl', true);
+
         // отправляем письмо
         $PHPShopMail->sendMailNow($content);
     }

@@ -76,7 +76,7 @@
   #topBox a {text-decoration:none;}
   #topBox a:hover {text-decoration:underline;}
   #topBox small {font-size:10px; }
-  #topBox img {margin-right:15px;}
+  #topBox img {margin-right:5px;}
   
   /* Bottom Box */
   #bottomBox h1 {font-size:20px; margin-top:0;}
@@ -182,7 +182,7 @@ php@</p>
 <p>{Вы можете проверить статус заказа, загрузить файлы, распечатать платежные документы, через} 
     <a href='http://@serverPath@users/order.html?order_info=@ouid@#Order'>{Личный кабинет}</a>.
 </p>
-<p>{Если у Вас есть вопрос, задайте его нам в Личном кабинете в разделе} <a href="http://@serverPath@users/message.html">{Связь с менеджером}</a>. </p>   
+<p>{Получайте уведомления о заказе, задайте нам вопрос}@bot@ {через раздел} <a href="http://@serverPath@users/message.html" target="_blank">{Связь с менеджером}</a>.</p>
         </td>
     </tr>
          

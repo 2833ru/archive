@@ -1,13 +1,13 @@
 
 <style>
-.left-content, .content-product {display:none!important}
-.center-block{width:100%; padding-left:0}
-.last-see-product{display:block}
-.head-block{min-height:0}
-.bar-padding-fix {
-    height: 90px !important;
-}
-@media(max-width:767px){.breadcrumb{display:none!important}}
+    .left-content, .content-product {display:none!important}
+    .center-block{width:100%; padding-left:0}
+    .last-see-product{display:block}
+    .head-block{min-height:0}
+    .bar-padding-fix {
+        height: 90px !important;
+    }
+    @media(max-width:767px){.breadcrumb{display:none!important}}
 </style>
 <div class="main-product airSticky_stop-block" itemscope itemtype="http://schema.org/Product">
     <meta itemprop="image" content="@productImg@">
@@ -16,175 +16,161 @@
         <meta itemprop="ratingCount" content="@productRatingCount@">
     </div>
     <div class="">
-    <div class=" d-flex align-items-center justify-content-between main-product-name ">
-      <h1 itemprop="name" class="">@productName@</h1>
-       <div class="">@brandUidDescription@</div>
-    </div>
-      <div class=" d-flex align-items-start justify-content-between flex-wrap">
-        <div class="col-6">
-  <div id="fotoload">
-                @productFotoList@
-				
-            </div> 
+        <div class=" d-flex align-items-center justify-content-between main-product-name ">
+            <h1 itemprop="name" class="">@productName@</h1>
+            <div class="">@brandUidDescription@</div>
         </div>
-        <div class="col-6">
-        <div class="airSticky">
-           <div class="d-flex align-items-center justify-content-between info-block">
-            <div class="">@productArt@</div>
-            <div class="d-flex align-items-center justify-content-between">   <div class="rating-amount"><a href="#messages">{Отзывы}: @avgRateNum@ </a></div>  <div class="hidden-xs rating">
-                            @rateUid@
-                        </div>
-                       
-                    </div>
-                    <div class="d-flex align-items-center justify-content-between">     
-            <button class=" addToCompareList " role="button" data-uid="@productUid@"><span class="icons icons-dgreen icons-small icons-compare"></span></button>
-            <button class=" addToWishList " role="button" data-uid="@productUid@"><span class="icons icons-dgreen icons-small icons-wishlist"></span></button>
-                  
-               </div>
-          </div>
-             <div class="d-flex align-items-start justify-content-between price-block">
-                <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+        <div class=" d-flex align-items-start justify-content-between flex-wrap">
+            <div class="col-6">
+                <div id="fotoload">
+                    @productFotoList@
 
- <div class="product-price">
-                 <div class="d-flex align-items-center justify-content-between @php __hide('productPriceOld'); php@">   <div class=" price-old  ">  @productPriceOld@</div>&nbsp;&nbsp;&nbsp; <span class="">
-                        @specIcon@</span></div>
-                    <div class="price-new"  ><span itemprop="price" class="priceService" content="@productSchemaPrice@">@productPrice@</span> 
-                        <span itemprop="priceCurrency" class="rubznak" content="RUB">@productValutaName@</span></div>
-
-
-
-
-                </div>
-
-                     <button class="best-btn" data-toggle="modal" data-target="#bestPriceModal"><span class="icons icons-comment"></span>@productBestPrice@</button>
                 </div> 
-                <div>    <div class="sklad" id="items">@productSklad@</div>
-                @ComStartNotice@
-                <div class="outStock">@productOutStock@</div>
-                @ComEndNotice@</div>
-             </div>
-            <div class="">
-             
-              
-               
-               
-                <div>
-                 
-               
-
-                </div>
-
-              
-                @promotionInfo@
-
-                @saferouteCart@
-                @productservices_list@
             </div>
-<div class="option-block">
-            @optionsDisp@
-            @productParentList@
-</div>
-            <div class="d-flex align-items-start justify-content-start flex-wrap   shop-panel" style="padding-bottom:30px">
-  <div class="input-group addToCart @elementCartHide@">
-                    <div class="quant-main">
-                        <div class="quant input-group ">
-                            <span class="input-group-btn">
-                                <button type="button" class="btn btn btn-default btn-default_l btn-number"  data-type="minus" data-field="quant[2]">
-                                -
-                                </button>
-                            </span>
-                            <input type="text" name="quant[2]" class="form-control form-control_gr input-number" value="1" min="1" max="100">
-                            <span class="input-group-btn">
-                                <button type="button" class=" btn btn-default btn-default_r btn-number" data-type="plus" data-field="quant[2]">
-                                +
-                                </button>
-                            </span>
+            <div class="col-6">
+                <div class="airSticky">
+                    <div class="d-flex align-items-center justify-content-between info-block">
+                        <div class="">@productArt@</div>
+                        <div class="d-flex align-items-center justify-content-between">   <div class="rating-amount"><a href="#messages">{Отзывы}: @avgRateNum@ </a></div>  <div class="hidden-xs rating">
+                                @rateUid@
+                            </div>
+
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between">     
+                            <button class=" addToCompareList " data-uid="@productUid@"><span class="icons icons-dgreen icons-small icons-compare"></span></button>
+                            <button class=" addToWishList " data-uid="@productUid@"><span class="icons icons-dgreen icons-small icons-wishlist"></span></button>
                         </div>
                     </div>
+                    <div class="d-flex align-items-start justify-content-between price-block">
+                        <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+
+                            <div class="product-price">
+                                <div class="d-flex align-items-center justify-content-between @php __hide('productPriceOld'); php@">   <div class=" price-old  ">  @productPriceOld@</div>&nbsp;&nbsp;&nbsp; <span class="">
+                                        @specIcon@</span></div>
+                                <div class="price-new"  ><span itemprop="price" class="priceService" content="@productSchemaPrice@">@productPrice@</span> 
+                                    <span itemprop="priceCurrency" class="rubznak" content="RUB">@productValutaName@</span></div>
+
+                            </div>
+
+                            <button class="best-btn" data-toggle="modal" data-target="#bestPriceModal"><span class="icons icons-comment"></span>@productBestPrice@</button>
+                        </div> 
+                        <div>    <div class="sklad" id="items">@productSklad@</div>
+                            @ComStartNotice@
+                            <div class="outStock">@productOutStock@</div>
+                            @ComEndNotice@</div>
+                    </div>
+                    <div>
+
+                        @promotionInfo@
+
+                        @saferouteCart@
+                        @productservices_list@
+                    </div>
+                    <div class="option-block">
+                        @optionsDisp@
+                        @productParentList@
+                    </div>
+                    <div class="d-flex align-items-start justify-content-start flex-wrap   shop-panel" style="padding-bottom:30px">
+                        <div class="input-group addToCart @elementCartHide@">
+                            <div class="quant-main">
+                                <div class="quant input-group ">
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn btn-default btn-default_l btn-number"  data-type="minus" data-field="quant[2]">
+                                            -
+                                        </button>
+                                    </span>
+                                    <input type="text" name="quant[2]" class="form-control form-control_gr input-number" value="1" min="1" max="100">
+                                    <span class="input-group-btn">
+                                        <button type="button" class=" btn btn-default btn-default_r btn-number" data-type="plus" data-field="quant[2]">
+                                            +
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
                             <button class=" addToCartFull " data-num="1" data-uid="@productUid@">
                                 @unitProductSale@
                             </button>
                         </div>  <div class="input-group addToCart @elementCartOptionHide@">
-                    <div class="quant-main">
-                        <div class="quant input-group ">
-                            <span class="input-group-btn">
-                                <button type="button" class="btn btn btn-default btn-default_l btn-number"  data-type="minus" data-field="quant[2]">
-                                -
-                                </button>
-                            </span>
-                            <input type="text" name="quant[2]" class="form-control form-control_gr input-number" value="1" min="1" max="100">
-                            <span class="input-group-btn">
-                                <button type="button" class=" btn btn-default btn-default_r btn-number" data-type="plus" data-field="quant[2]">
-                                +
-                                </button>
-                            </span>
+                            <div class="quant-main">
+                                <div class="quant input-group ">
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn btn-default btn-default_l btn-number"  data-type="minus" data-field="quant[2]">
+                                            -
+                                        </button>
+                                    </span>
+                                    <input type="text" name="quant[2]" class="form-control form-control_gr input-number" value="1" min="1" max="100">
+                                    <span class="input-group-btn">
+                                        <button type="button" class=" btn btn-default btn-default_r btn-number" data-type="plus" data-field="quant[2]">
+                                            +
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                            <button class=" addToCartFull " data-num="1" data-uid="@productUid@">
+                                @unitProductSale@
+                            </button>
                         </div>
+                        @ComStartNotice@
+                        <a href="#" class="notice-btn" title="@productNotice@" class="btn btn-primary noticeBtn one" data-product-id="@productUid@">
+                            {Уведомить}<span class="icons icons-notice"></span>
+                        </a> @ComEndNotice@
+                        <div class="one-click-block">@oneclick@</div>
                     </div>
-                    <button class=" addToCartFull " data-num="1" data-uid="@productUid@">
-                        @unitProductSale@
-                    </button>
+                    <div class="pay-sticker">
+                        Мы принимаем к оплате:<br> @sticker_pay@
+                    </div>
+                    <a href="" data-toggle="modal" data-target="#forma" class="link d-flex align-items-center "><span class="icons icons-info"></span>{Задать вопрос по продукту}</a>
+                    <div class="clearfix"></div>
                 </div>
-                @ComStartNotice@
-                <a href="#" class="notice-btn" title="@productNotice@" class="btn btn-primary noticeBtn one" data-product-id="@productUid@">
-                    {Уведомить}<span class="icons icons-notice"></span>
-                </a> @ComEndNotice@
-                <div class="one-click-block">@oneclick@</div>
             </div>
-            <div class="pay-sticker">
-                Мы принимаем к оплате:<br> @sticker_pay@
-            </div>
-            <a href="" data-toggle="modal" data-target="#forma" class="link d-flex align-items-center "><span class="icons icons-info"></span>Задать вопрос по продукту</a>
-            <div class="clearfix"></div>
         </div>
-    </div>
-      </div>
     </div>
     <div class="">
         <div role="tabpanel" class="col-6">
-            <!-- Nav tabs -->
-  				<div class="main-tabs">
-                    <ul class="nav nav-tabs product-tabs">
-                        <li role="presentation" class=" hidden-xs @php __hide('productDes'); php@"><a href="#home" aria-controls="home"> {Описание}</a></li>
-                        <li role="presentation" class="hidden-xs @php __hide('vendorDisp'); php@" id="settingsTab"><a href="#settings" aria-controls="settings" role="tab"> {Характеристики}</a></li>
-                        <li role="presentation" class="hidden-xs"><a href="#messages" id="commentLoad" data-uid="@productUid@" aria-controls="messages" role="tab"> {Отзывы}</a></li>
-                        @productFilesStart@<li role="presentation" class="hidden-xs"><a href="#files" aria-controls="files" role="tab"> {Файлы}</a></li>@productFilesEnd@
-                        <li  id="pagesTab" class=" @php __hide('pagetemaDisp'); php@ hidden-xs"><a href="#pages" > {Обзоры}</a></li>
-                    </ul>
-                    <p></p>
-                  
-                    <div class="tab-content">
-                        <div class=" active @php __hide('productDes'); php@" id="home" itemprop="description" role="tabpanel">
-                            <div class="tab-name">Описание товара</div>
-                            @productDes@ 
-                        </div>
-                        <div role="tabpanel" class="@php __hide('vendorDisp'); php@" id="settings" role="tabpanel">
-                            <div class="tab-name">Характеристики</div>
-                            <div class="row">
-                                <div class="col-md-8 tab-content">@vendorDisp@</div>
+            <!-- Nav tabs -->@panorama360@
+            <div class="main-tabs">
+                <ul class="nav nav-tabs product-tabs">
+                    <li role="presentation" class=" hidden-xs @php __hide('productDes'); php@"><a href="#home" aria-controls="home"> {Описание}</a></li>
+                    <li role="presentation" class="hidden-xs @php __hide('vendorDisp'); php@" id="settingsTab"><a href="#settings" aria-controls="settings" role="tab"> {Характеристики}</a></li>
+                    <li role="presentation" class="hidden-xs"><a href="#messages" id="commentLoad" data-uid="@productUid@" aria-controls="messages" role="tab"> {Отзывы}</a></li>
+                    @productFilesStart@<li role="presentation" class="hidden-xs"><a href="#files" aria-controls="files" role="tab"> {Файлы}</a></li>@productFilesEnd@
+                    <li  id="pagesTab" class=" @php __hide('pagetemaDisp'); php@ hidden-xs"><a href="#pages" > {Обзоры}</a></li>
+                </ul>
+                <p></p>
 
-                            </div>
+                <div class="tab-content">
+                    <div class=" active @php __hide('productDes'); php@" id="home" itemprop="description" role="tabpanel">
+                        <div class="tab-name">{Описание товара}</div>
+                        @productDes@ 
+                    </div>
+                    <div role="tabpanel" class="@php __hide('vendorDisp'); php@" id="settings" role="tabpanel">
+                        <div class="tab-name">{Характеристики}</div>
+                        <div class="row">
+                            <div class="col-md-8 tab-content">@vendorDisp@</div>
 
                         </div>
-                        <div role="tabpanel" id="messages">
-                            <div class="tab-name">Отзывы</div>
-                            <div id="commentList"></div>
-							<div class="comment-more hide-click">Показать еще</div>
-<br>
-<br>
-                            <a href="" class="otz" data-toggle="modal" data-target="#reviewModal">{Оставить отзыв}</a>
-                        </div>
-                        @productFilesStart@
-                        <div role="tabpanel" id="files">
-                            <div class="tab-name">{Файлы}</div>
-                            @productFiles@
-                        </div>
-                        @productFilesEnd@
-                        <div role="tabpanel" id="pages" class="@php __hide('pagetemaDisp'); php@">
-                            <div class="tab-name">Обзоры</div>
-                            <div class="tab-content">@pagetemaDisp@</div>
-                        </div>
-                    </div> 
-					</div>
+
+                    </div>
+                    <div role="tabpanel" id="messages">
+                        <div class="tab-name">{Отзывы}</div>
+                        <div id="commentList"></div>
+                        <div class="comment-more hide-click">{Показать еще}</div>
+                        <br>
+                        <br>
+                        <a href="" class="otz" data-toggle="modal" data-target="#reviewModal">{Оставить отзыв}</a>
+                    </div>
+                    @productFilesStart@
+                    <div role="tabpanel" id="files">
+                        <div class="tab-name">{Файлы}</div>
+                        @productFiles@
+                    </div>
+                    @productFilesEnd@
+                    <div role="tabpanel" id="pages" class="@php __hide('pagetemaDisp'); php@">
+                        <div class="tab-name">{Обзоры}</div>
+                        <div class="tab-content">@pagetemaDisp@</div>
+                    </div>
+                </div> 
+            </div>
         </div>
     </div>
 </div>
@@ -215,12 +201,10 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">Таблица размеров</h4>
+                <h4 class="modal-title">{Таблица размеров}</h4>
             </div>
-            <form role="form" method="post" name="user_forma_size_delivery" action="@ShopDir@/returncall/">
+            <form method="post" name="user_forma_size_delivery" action="@ShopDir@/returncall/">
                 <div class="modal-body">
-
-
                     @productOption1@
                 </div>
                 <div class="modal-footer">
@@ -239,9 +223,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">Информация о доставке</h4>
+                <h4 class="modal-title">{Информация о доставке}</h4>
             </div>
-            <form role="form" method="post" name="user_forma_size_delivery" action="@ShopDir@/returncall/">
+            <form method="post" name="user_forma_size_delivery" action="@ShopDir@/returncall/">
                 <div class="modal-body">
 
                     @productOption2@
@@ -279,7 +263,7 @@
                         </div>
                     </div>
                 </div>
-                <form id="addComment" role="form" method="post" name="ajax-form" action="phpshop/ajax/review.php" data-modal="reviewModal">
+                <form id="addComment" method="post" name="ajax-form" action="phpshop/ajax/review.php" data-modal="reviewModal">
                     <h4>{Оцените товар}</h4>
                     <div class="btn-group rating-group" data-toggle="buttons">
                         <label class="btn ">
@@ -365,7 +349,7 @@
                         <div class="caption">
                             <div class="price">
                                 <span class="price-new">@productPrice@ <span
-                                            class="rubznak">@productValutaName@</span></span>
+                                        class="rubznak">@productValutaName@</span></span>
                                 <span class="price-old">@productPriceOld@</span>
 
                             </div>
@@ -375,7 +359,7 @@
                         </div>
                     </div>
                 </div>
-                <form role="form" method="post" name="ajax-form" action="phpshop/ajax/pricemail.php" data-modal="bestPriceModal">
+                <form method="post" name="ajax-form" action="phpshop/ajax/pricemail.php" data-modal="bestPriceModal">
                     <div class="form-group">
                         <div class="">
                         </div>
@@ -418,8 +402,7 @@
                             @captcha@
                         </div>
                     </div>
-                    <p class="small"><label><input name="rule" value="1" required="" checked="" type="checkbox">
-                            @rule@</label></p>
+                    <p class="small"><label><input name="rule" value="1" required="" checked="" type="checkbox">@rule@</label></p>
                     <div class="form-group">
                         <div class=""></div>
                         <div class="">
@@ -445,39 +428,39 @@
             </div>
             <div class="modal-body">
                 <h4><a href="/shop/UID_@productUid@.html" title="@productName@">@productName@</a></h4>
-				<br>
-                <form role="form" method="post" name="ajax-form" data-modal="forma" action="/forma/">
-    <div class="form-group">
-        <input type="text" name="tema" placeholder="{Заголовок}"  value="@php  echo $_POST[tema]; php@" class="form-control" id="exampleInputEmail1"  required="">
-    </div>
-    <div class="form-group">
-        <input type="text" name="name" placeholder="{Имя}" value="@php  echo $_POST[name]; php@" class="form-control" id="exampleInputEmail1"  required="">
-    </div>
-    <div class="form-group">
-        <input type="email" name="mail" placeholder="E-mail"  value="@php  echo $_POST[mail]; php@" class="form-control" id="exampleInputEmail1">
-    </div>
-    <div class="form-group">
-        <input type="text" name="tel" placeholder="{Телефон}" value="@php  echo $_POST[tel]; php@" class="form-control" id="exampleInputEmail1">
-    </div>
-    <div class="form-group">
-        <textarea name="content" class="form-control" placeholder="{Сообщение}" required="">@php  echo $_POST[content]; php@</textarea>
-    </div>
-                        <div class="form-group">
-                            <p class="small">
+                <br>
+                <form method="post" name="ajax-form" data-modal="forma" action="/forma/">
+                    <div class="form-group">
+                        <input type="text" name="tema" placeholder="{Заголовок}"  value="@php  echo $_POST[tema]; php@" class="form-control" id="exampleInputEmail1"  required="">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="name" placeholder="{Имя}" value="@php  echo $_POST[name]; php@" class="form-control" id="exampleInputEmail1"  required="">
+                    </div>
+                    <div class="form-group">
+                        <input type="email" name="mail" placeholder="E-mail"  value="@php  echo $_POST[mail]; php@" class="form-control" id="exampleInputEmail1">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="tel" placeholder="{Телефон}" value="@php  echo $_POST[tel]; php@" class="form-control" id="exampleInputEmail1">
+                    </div>
+                    <div class="form-group">
+                        <textarea name="content" class="form-control" placeholder="{Сообщение}" required="">@php  echo $_POST[content]; php@</textarea>
+                    </div>
+                    <div class="form-group">
+                        <p class="small">
                             <input type="checkbox" value="on" name="rule" class="req" checked="checked"> 
-                            {Я согласен}  <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html" alt="{Согласие на обработку персональных данных}">{на обработку моих персональных данных}</a> 
-                            </p>
-                        </div>    <div class="form-group">
-	 @forma_captcha@
-	 <br/>
-        <span class="">
-            <input type="hidden" name="send" value="1">
-            <input type="hidden" name="ajax" value="1">
-            <button type="submit" class="btn btn-main"">{Отправить сообщение}</button>
-        </span>
-      
-    </div>
-</form>    
+                            {Я согласен}  <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html">{на обработку моих персональных данных}</a>
+                        </p>
+                    </div>    <div class="form-group">
+                        @forma_captcha@
+                        <br/>
+                        <span class="">
+                            <input type="hidden" name="send" value="1">
+                            <input type="hidden" name="ajax" value="1">
+                            <button type="submit" class="btn btn-main">{Отправить сообщение}</button>
+                        </span>
+
+                    </div>
+                </form>    
             </div>
         </div>
     </div>

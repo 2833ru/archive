@@ -35,18 +35,12 @@ function runOrder($ouid, $type)
 
         $persone = isset($order["orders"]["Person"]) ? $order["orders"]["Person"] : array();
 
-        $phone = "";
-        if (isset($order["orders"]["Person"])) {
-            $phone = (!empty($order["orders"]["Person"]["cellphone"])) ?
-            $order["orders"]["Person"]["cellphone"] :
-            $order["orders"]["Person"]["tel_code"] . $order["orders"]["Person"]["tel_name"];
-        }
         $tmp = array(
             "number"          => $order["uid"],
             "externalId"      => $order["id"],
             "createdAt"       => date("Y-m-d H:i:s", $order["datas"]),
             "discount"        => isset($order["orders"]["Person"]["discount"]) ? $order["orders"]["Person"]["discount"] : 0,
-            "phone"           => $phone,
+            "phone"           => str_replace(['(', ')', ' ', '+', '-', '&#43;'], '', $order['tel']),
             "email"           => isset($order["orders"]["Person"]["mail"]) ? $order["orders"]["Person"]["mail"] : "",
             "customerComment" => $order["status"]["maneger"],
 
@@ -59,20 +53,33 @@ function runOrder($ouid, $type)
             "orderMethod"     => "shopping-cart",
             "delivery"        => array(
                 "address" => array(
-                    "region"       => isset($persone["region"]) ? $persone["region"] : "",
-                    "city"         => isset($persone["city"]) ? $persone["city"] : "",
-                    "street"       => isset($persone["street"]) ? $persone["street"] : "",
+                    "region"       => isset($order["state"]) ? $order["state"] : "",
+                    "city"         => isset($order["city"]) ? $order["city"] : "",
+                    "street"       => isset($order["street"]) ? $order["street"] : "",
                     "building"     => !empty($persone["building"]) ? $persone["building"] : $persone["corpus"],
-                    "flat"         => !empty($persone["office"]) ? $persone["office"] : $persone["appartment"],
+                    "flat"         => !empty($order["flat"]) ? $order["flat"] : $persone["appartment"],
                     "intercomCode" => isset($persone["domofon"]) ? $persone["domofon"] : "",
                     "floor"        => is_int($persone["floor"]) ? $persone["floor"] : "",
                     "block"        => is_int($persone["entrance"]) ? $persone["entrance"] : "",
-                    "house"        => isset($persone["house"]) ? $persone["house"] : "",
+                    "house"        => isset($order["house"]) ? $order["house"] : "",
                     "metro"        => isset($persone["metro"]) ? $persone["metro"] : "",
                     "notes"        => ($persone["elevator"] > 0) ? "Этаж: " . $persone["elevator"] : "",
                 )
             ),
         );
+
+        if(empty($order['fio']))
+            $fio = $order['orders']['Person']['name_person'];
+        else
+            $fio = $order['fio'];
+        $fioArr = explode(' ', $fio);
+        $tmp['lastName'] = $fioArr[0];
+        if(isset($fioArr[1])) {
+            $tmp['firstName'] = $fioArr[1];
+        }
+        if(isset($fioArr[2])) {
+            $tmp['patronymic'] = $fioArr[2];
+        }
 
         if (!empty($order["orders"]["Person"]["order_metod"]) && isset($value["payment"][$order["orders"]["Person"]["order_metod"]])) {
             $tmp["paymentType"] = $value["payment"][$order["orders"]["Person"]["order_metod"]];

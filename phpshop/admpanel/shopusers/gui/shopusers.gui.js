@@ -203,6 +203,12 @@ $().ready(function() {
             myMap.geoObjects.add(firstGeoObject);
         });
     }
+    
+    // Мобильная навигация
+    if (typeof is_mobile !== 'undefined'){
+        locale.dataTable.paginate.next="»";
+        locale.dataTable.paginate.previous="«";
+    }
 
     // Таблица данных
     if ($.getUrlVar('path') == 'shopusers') {
@@ -227,7 +233,6 @@ $().ready(function() {
                 "serverSide": true,
                 "paging": true,
                 "ordering": true,
-                "order": [[3, "desc"]],
                 "info": false,
                 "searching": true,
                 "lengthMenu": data_length,

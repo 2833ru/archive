@@ -84,8 +84,10 @@ class PHPShopCoreElement extends PHPShopElements {
                 if (!empty($showcaseData['adminmail']))
                     $this->PHPShopSystem->setParam("adminmail2", $showcaseData['adminmail']);
 
-                if (!empty($showcaseData['company']))
-                    $this->PHPShopSystem->setParam('company', $showcaseData['company']);
+                // Юридические лица
+                if (!empty($showcaseData['company_id'])) {
+                    $this->PHPShopSystem->setCompany($showcaseData['company_id']);
+                }
 
                 if (!empty($showcaseData['name']))
                     $this->PHPShopSystem->setParam('name', $showcaseData['name']);
@@ -98,12 +100,9 @@ class PHPShopCoreElement extends PHPShopElements {
 
                 if (!empty($showcaseData['logo']))
                     $this->PHPShopSystem->setParam('logo', $showcaseData['logo']);
-                
+
                 if (!empty($showcaseData['icon']))
                     $this->PHPShopSystem->setParam('icon', $showcaseData['icon']);
-
-                if (!empty($showcaseData['adres']))
-                    $this->set('streetAddress', $showcaseData['adres']);
 
                 if (!empty($showcaseData['skin']))
                     define("HostSkin", $showcaseData['skin']);
@@ -131,37 +130,38 @@ class PHPShopCoreElement extends PHPShopElements {
                     if (isset($admoption['smtp_password']))
                         $this->PHPShopSystem->setSerilizeParam('admoption.mail_smtp_pass', $admoption['smtp_password']);
 
-                    if(isset($admoption['user_status']))
+                    if (isset($admoption['user_status']))
                         $this->PHPShopSystem->setSerilizeParam('admoption.user_status', $admoption['user_status']);
-                    
-                    if(isset($admoption['metrica_id']))
+
+                    if (isset($admoption['metrica_id']))
                         $this->PHPShopSystem->setSerilizeParam('admoption.metrica_id', $admoption['metrica_id']);
-                    
-                    if(isset($admoption['google_id']))
+
+                    if (isset($admoption['google_id']))
                         $this->PHPShopSystem->setSerilizeParam('admoption.google_id', $admoption['google_id']);
                 }
             }
         } else {
-            $this->set('streetAddress', $this->PHPShopSystem->getSerilizeParam('bank.org_adres'));
             $lang = $this->PHPShopSystem->getSerilizeParam("admoption.lang");
         }
 
+        $this->set('streetAddress', $this->PHPShopSystem->getSerilizeParam('bank.org_adres'));
+
         $_SESSION['lang'] = $lang;
-            
+
         // Язык
         $GLOBALS['PHPShopLang'] = new PHPShopLang(array('locale' => $lang, 'path' => 'shop'));
         $this->set('charset', $GLOBALS['PHPShopLang']->charset);
         $this->set('lang', $GLOBALS['PHPShopLang']->code);
-  
+
         // Телефон
         $tel = $this->PHPShopSystem->getValue('tel');
         $this->set('telNum', $tel);
         $this->set('telNum2', $this->PHPShopSystem->getSerilizeParam("bank.org_tel"));
         $this->set('workingTime', $this->PHPShopSystem->getSerilizeParam("bank.org_time"));
-        
+
         // SMS
-        if($this->PHPShopSystem->getSerilizeParam("admoption.sms_login")!=1)
-         $this->set('sms_login_enabled', 'hidden');
+        if ($this->PHPShopSystem->getSerilizeParam("admoption.sms_login") != 1)
+            $this->set('sms_login_enabled', 'hidden');
         else {
             $this->set('sms_login_enabled', 'req');
             $this->set('sms_login_control', 'required=""');
@@ -237,6 +237,29 @@ class PHPShopCoreElement extends PHPShopElements {
         if (isset($_GET['demo']))
             $PHPShopBase->setParam('template_theme.demo', 'false');
     }
+    
+    /**
+     * JS настройки
+     */
+    function setjs() {
+        $js = null;
+
+        // Маска телефона
+        $phone_mask = $this->PHPShopSystem->getSerilizeParam("admoption.user_phone_mask");
+        $phone_mask_enabled = $this->PHPShopSystem->getSerilizeParam("admoption.user_phone_mask_enabled");
+
+        if (!empty($phone_mask))
+            $js .= 'var PHONE_MASK = "' . str_replace('&#43;','+',$phone_mask) . '";';
+        else $js .= 'var PHONE_MASK = "";';
+        if (!empty($phone_mask_enabled))
+            $js .= 'var PHONE_FORMAT = false;';
+        else  $js .= 'var PHONE_FORMAT = true;';
+
+        if (!empty($js)) {
+            $this->set('editor', '
+        <script>' . $js . '</script>', true);
+        }
+    }
 
     /**
      * Стили шаблона дизайна
@@ -296,6 +319,11 @@ class PHPShopUserElement extends PHPShopElements {
         unset($_SESSION['UsersMail']);
         unset($_SESSION['UsersStatus']);
         unset($_SESSION['UsersStatusPice']);
+        unset($_COOKIE['UserLogin']);
+        unset($_COOKIE['UserPassword']);
+        setcookie("UserLogin", '', time() + 60 * 60 * 24 * 30, "/", $_SERVER['SERVER_NAME'], 0);
+        setcookie("UserPassword", '', time() + 60 * 60 * 24 * 30, "/", $_SERVER['SERVER_NAME'], 0);
+
         $url_user = str_replace("?logout=true", "", $_SERVER['REQUEST_URI']);
         header("Location: " . $url_user);
     }
@@ -308,11 +336,63 @@ class PHPShopUserElement extends PHPShopElements {
             $this->set('wishlistCount', $_SESSION['wishlistCount']);
             $dis = $this->parseTemplate('users/wishlist/wishlist_top_enter.tpl');
         } else {
-            //$this->set('wishlistCount', 0);
-            $this->set('wishlistCount', @count($_SESSION['wishlist']));
+
+            if(is_array($_SESSION['wishlist']))
+                $wishlistCount = count($_SESSION['wishlist']);
+            else $wishlistCount = 0;
+            
+            $this->set('wishlistCount', $wishlistCoun);
             $dis = $this->parseTemplate('users/wishlist/wishlist_top_enter.tpl');
         }
         return $dis;
+    }
+
+    public function authorize($user)
+    {
+        $PHPShopOrm = new PHPShopOrm($this->objBase);
+
+        // сохраняем вишлист который был в сессии до авторизаци.
+        $wishlist = unserialize($user['wishlist']);
+        if (!is_array($wishlist))
+            $wishlist = array();
+        if (is_array($_SESSION['wishlist']))
+            foreach ($_SESSION['wishlist'] as $key => $value) {
+                $wishlist[$key] = 1;
+            }
+        $_SESSION['wishlistCount'] = count($wishlist);
+
+        // Очищаем вишлист из сессии, он сохранён в БД
+        unset($_SESSION['wishlist']);
+
+        $wishlist = serialize($wishlist);
+        $PHPShopOrm->update(array('wishlist' => $wishlist), array('id' => '=' . $user['id']), false);
+
+        // ID пользователя
+        $_SESSION['UsersId'] = $user['id'];
+
+        // Логин пользователя
+        $_SESSION['UsersLogin'] = $user['login'];
+
+        // Имя пользователя
+        $_SESSION['UsersName'] = $user['name'];
+
+        // Телефон пользователя
+        $_SESSION['UsersTel'] = $user['tel'];
+
+        // Статус пользователя
+        $_SESSION['UsersStatus'] = $user['status'];
+        
+        // Bot
+        $_SESSION['UsersBot'] = $user['bot'];
+
+        // E-mail пользователя для заказа
+        if (PHPShopSecurity::true_email($user['login']))
+            $_SESSION['UsersMail'] = $user['login'];
+        else
+            $_SESSION['UsersMail'] = $user['mail'];
+
+        // Дата входа
+        $this->log();
     }
 
     /**
@@ -333,51 +413,16 @@ class PHPShopUserElement extends PHPShopElements {
             $data = $PHPShopOrm->select(array('*'), $where, false, array('limit' => 1));
             if (is_array($data) AND PHPShopSecurity::true_num($data['id'])) {
 
-                // сохраняем вишлист который был в сессии до авторизаци.
-                $wishlist = unserialize($data['wishlist']);
-                if (!is_array($wishlist))
-                    $wishlist = array();
-                if (is_array($_SESSION['wishlist']))
-                    foreach ($_SESSION['wishlist'] as $key => $value) {
-                        $wishlist[$key] = 1;
-                    }
-                $_SESSION['wishlistCount'] = count($wishlist);
+                $GLOBALS['SysValue']['other']['user_link'] = 'href="/users/"';
+                $GLOBALS['SysValue']['other']['user_active'] = 'active';
 
-                // Очищаем вишлист из сессии, он сохранён в БД
-                unset($_SESSION['wishlist']);
-
-                $wishlist = serialize($wishlist);
-                $PHPShopOrm->update(array('wishlist' => $wishlist), array('id' => '=' . $data['id']), false);
-
-                // ID пользователя
-                $_SESSION['UsersId'] = $data['id'];
-
-                // Логин пользователя
-                $_SESSION['UsersLogin'] = $data['login'];
-
-                // Имя пользователя
-                $_SESSION['UsersName'] = $data['name'];
-                
-                // Телефон пользователя
-                $_SESSION['UsersTel'] = $data['tel'];
-
-                // Статус пользователя
-                $_SESSION['UsersStatus'] = $data['status'];
-
-                // E-mail пользователя для заказа
-                if (PHPShopSecurity::true_email($data['login']))
-                    $_SESSION['UsersMail'] = $data['login'];
-                else
-                    $_SESSION['UsersMail'] = $data['mail'];
-
-                // Дата входа
-                $this->log();
+                $this->authorize($data);
 
                 // Перехват модуля
                 $this->setHook(__CLASS__, __FUNCTION__, $data);
-                
+
                 // Редирект если активация
-                if(!empty($_GET['key']))
+                if (!empty($_GET['key']))
                     header('Location: /users/');
 
                 return true;
@@ -397,7 +442,7 @@ class PHPShopUserElement extends PHPShopElements {
     }
 
     /**
-     * Экшен входа регистраци пользователя по страницы оформления заказа
+     * Экшен входа регистрации пользователя по страницы оформления заказа
      */
     function user_register() {
         // Импортируем роутер личного кабинета для возможности регистрации со страницы оформления заказа
@@ -434,8 +479,8 @@ class PHPShopUserElement extends PHPShopElements {
             else
                 $url_user = $_SERVER['REQUEST_URI'];
 
-            // header("Location: " . $url_user);
-            $this->checkRedirect();
+            header("Location: " . $url_user);
+            //$this->checkRedirect();
         } else
             $this->set('usersError', $this->lang('error_login'));
     }
@@ -453,6 +498,23 @@ class PHPShopUserElement extends PHPShopElements {
      * Форма авторизации пользователя
      */
     function usersDisp() {
+
+        if(empty($_SESSION['UsersId']) && (!empty($_COOKIE['UserLogin']) && !empty($_COOKIE['UserPassword']))) {
+            $PHPShopOrm = new PHPShopOrm($this->objBase);
+            $PHPShopOrm->debug = $this->debug;
+
+            $where = array('login' => '="' . trim($_COOKIE['UserLogin']) . '"', 'password' => '="' . $this->encode($_COOKIE['UserPassword']) . '"', 'enabled' => "='1'");
+
+            // Мультибаза
+            if ($this->PHPShopSystem->ifSerilizeParam("admoption.user_servers_control"))
+                $where['servers'] = '=' . intval(HostID);
+
+            $user = $PHPShopOrm->select(array('*'), $where, false, array('limit' => 1));
+            if (is_array($user) AND PHPShopSecurity::true_num($user['id'])) {
+                $this->authorize($user);
+            }
+        }
+
         if (!empty($_SESSION['UsersId']) and PHPShopSecurity::true_num($_SESSION['UsersId'])) {
             $this->set('UsersLogin', $_SESSION['UsersLogin']);
             $this->set('UsersName', $_SESSION['UsersName']);
@@ -985,7 +1047,7 @@ class PHPShopTextElement extends PHPShopElements {
 }
 
 /**
- * Элемент cмена шаблонов
+ * Элемент смена шаблонов
  * @author PHPShop Software
  * @version 1.1
  * @package PHPShopElements
@@ -1127,7 +1189,7 @@ class PHPShopGbookElement extends PHPShopElements {
                         $d_mail = PHPShopText::b($row['name']);
 
                     // Определяем переменые
-                    $this->set('gbookData', PHPShopDate::dataV($row['datas'], false,true));
+                    $this->set('gbookData', PHPShopDate::dataV($row['datas'], false, true));
                     $this->set('gbookName', $row['name']);
                     $this->set('gbookTema', $row['tema']);
                     $this->set('gbookMail', $d_mail);
@@ -1287,7 +1349,7 @@ class PHPShopSliderElement extends PHPShopElements {
             'mobile' => '="0"'
         ];
 
-        if($isMobile) {
+        if ($isMobile) {
             $where['mobile'] = '="1"';
         }
 
@@ -1332,6 +1394,7 @@ class PHPShopSliderElement extends PHPShopElements {
     public function imageSliderMobile() {
         return $this->index(true);
     }
+
 }
 
 /**
@@ -1459,7 +1522,7 @@ class PHPShopOprosElement extends PHPShopElements {
 /**
  * Элемент баннер
  * @author PHPShop Software
- * @version 1.7
+ * @version 1.8
  * @package PHPShopElements
  */
 class PHPShopBannerElement extends PHPShopElements {
@@ -1478,6 +1541,7 @@ class PHPShopBannerElement extends PHPShopElements {
     function index() {
 
         $where['flag'] = "='1'";
+        $result = null;
 
         // Мультибаза
         if (defined("HostID"))
@@ -1494,6 +1558,9 @@ class PHPShopBannerElement extends PHPShopElements {
         if (!empty($true_cid))
             $where['flag'] .= " and ( dop_cat REGEXP '#" . $true_cid . "#' or dop_cat='') ";
 
+        // Размер
+        $size_value = array('modal-sm', '', 'modal-lg');
+
         $data = $this->PHPShopOrm->select(array('*'), $where, array('order' => 'RAND()'), array("limit" => 100));
 
         if (is_array($data))
@@ -1509,9 +1576,34 @@ class PHPShopBannerElement extends PHPShopElements {
                     // Определяем переменные
                     $this->set('banerContent', $row['content']);
                     $this->set('banerTitle', $row['name']);
+                    $this->set('popupSize', $size_value[$row['size']]);
+                    $this->set('popupId', $row['id']);
 
-                    // Подключаем шаблон
-                    return $this->parseTemplate($this->getValue('templates.baner_list_forma'));
+                    // Баннер
+                    if (empty($row['type']))
+                        $result = $this->parseTemplate($this->getValue('templates.baner_list_forma'));
+                    // PopUp
+                    else {
+
+                        // Первый заход на сайт
+                        if ($row['display'] == 1) {
+
+                            if (empty($_COOKIE['popup' . $row['id'] . '_close'])) {
+                                if (PHPShopParser::checkFile($this->getValue('templates.banner_window_forma'))) {
+                                    $this->result = $this->parseTemplate($this->getValue('templates.banner_window_forma'));
+                                } else {
+                                    $this->result = $this->parseTemplate('phpshop/lib/templates/banner/banner_window_forma.tpl', true);
+                                }
+                            }
+                        } else {
+
+                            if (PHPShopParser::checkFile($this->getValue('templates.banner_window_forma'))) {
+                                $this->result = $this->parseTemplate($this->getValue('templates.banner_window_forma'));
+                            } else {
+                                $this->result = $this->parseTemplate('phpshop/lib/templates/banner/banner_window_forma.tpl', true);
+                            }
+                        }
+                    }
                 } else {
                     $dirs = explode(",", $row['dir']);
 
@@ -1526,12 +1618,48 @@ class PHPShopBannerElement extends PHPShopElements {
                                 // Определяем переменные
                                 $this->set('banerContent', $row['content']);
                                 $this->set('banerTitle', $row['name']);
+                                $this->set('popupSize', $size_value[$row['size']]);
+                                $this->set('popupId', $row['id']);
 
-                                // Подключаем шаблон
-                                return $this->parseTemplate($this->getValue('templates.baner_list_forma'));
+                                // Баннер
+                                if (empty($row['type'])) {
+
+                                    $result = $this->parseTemplate($this->getValue('templates.baner_list_forma'));
+                                }
+                                // PopUp
+                                else {
+
+                                    // Первый заход на сайт
+                                    if ($row['display'] == 1) {
+
+                                        if (empty($_COOKIE['popup' . $row['id'] . '_close'])) {
+                                            if (PHPShopParser::checkFile($this->getValue('templates.banner_window_forma'))) {
+                                                $this->result = $this->parseTemplate($this->getValue('templates.banner_window_forma'));
+                                            } else {
+                                                $this->result = $this->parseTemplate('phpshop/lib/templates/banner/banner_window_forma.tpl', true);
+                                            }
+                                        }
+                                    } else {
+
+                                        if (PHPShopParser::checkFile($this->getValue('templates.banner_window_forma'))) {
+                                            $this->result = $this->parseTemplate($this->getValue('templates.banner_window_forma'));
+                                        } else {
+                                            $this->result = $this->parseTemplate('phpshop/lib/templates/banner/banner_window_forma.tpl', true);
+                                        }
+                                    }
+                                }
                             }
                 }
             }
+        return $result;
+    }
+
+    /**
+     * Вывод popup
+     * @return string
+     */
+    function getPopup() {
+        echo $this->result;
     }
 
 }
@@ -1762,6 +1890,28 @@ class PHPShopRecaptchaElement extends PHPShopElements {
      */
     public function true(){
     return $this->recaptcha;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
+
 }
+
 ?>

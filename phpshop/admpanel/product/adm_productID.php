@@ -279,7 +279,6 @@ function actionStart() {
 
     // BID
     $Tab_yml .= $PHPShopGUI->setField('Ставка BID', $PHPShopGUI->setInputText(null, 'yml_bid_array[bid]', $data['yml_bid_array']['bid'], 100));
-    $Tab_yml .= $PHPShopGUI->setField('Ставка CBID', $PHPShopGUI->setInputText(null, 'yml_bid_array[cbid]', $data['yml_bid_array']['cbid'], 100));
     $Tab1 .= $PHPShopGUI->setCollapse('Яндекс Маркет', $Tab_yml, false);
 
     $Tab_rating = $PHPShopGUI->setField('Значение', $PHPShopGUI->setInputText(null, 'rate_new', $data['rate'], 50), 1, 'Значение от 0 до 5');
@@ -368,13 +367,13 @@ function actionSave() {
 function actionUpdate() {
     global $PHPShopModules, $PHPShopSystem, $PHPShopOrm;
 
+    $PHPShopProduct = new PHPShopProduct($_POST['rowID']);
 
     // Поиск минимальной цены подтипов
     if ($PHPShopSystem->ifSerilizeParam('admoption.parent_price_enabled') != 1) {
 
         $PHPShopOrm->mysql_error = false;
 
-        $PHPShopProduct = new PHPShopProduct($_POST['rowID']);
         $parent_enabled = $PHPShopProduct->getParam('parent_enabled');
 
         $parentIds = $PHPShopProduct->getParam('parent');
@@ -412,37 +411,6 @@ function actionUpdate() {
                 if (!empty($ParentData['price_n']))
                     $_POST['price_n_new'] = $ParentData['price_n'];
             }
-        }
-    }
-
-
-    // Списывание со склада
-    if (isset($_POST['items_new'])) {
-        switch ($PHPShopSystem->getSerilizeParam('admoption.sklad_status')) {
-
-            case(3):
-                if ($_POST['items_new'] < 1) {
-                    $_POST['sklad_new'] = 1;
-                    $_POST['p_enabled_new'] = 0;
-                } else {
-                    $_POST['sklad_new'] = 0;
-                    $_POST['enabled_new'] = 1;
-                    $_POST['p_enabled_new'] = 1;
-                }
-                break;
-
-            case(2):
-                if ($_POST['items_new'] < 1) {
-                    $_POST['enabled_new'] = 0;
-                    $_POST['p_enabled_new'] = 0;
-                } else {
-                    $_POST['enabled_new'] = 1;
-                    $_POST['p_enabled_new'] = 1;
-                }
-                break;
-
-            default:
-                break;
         }
     }
 
@@ -515,6 +483,8 @@ function actionUpdate() {
         if (is_array($_POST['vendor_array_new']))
             foreach ($_POST['vendor_array_new'] as $k => $v) {
                 if (is_array($v)) {
+                    $v = array_unique($v);
+                    $_POST['vendor_array_new'][$k] = $v;
                     foreach ($v as $key => $p) {
                         $_POST['vendor_new'] .= "i" . $k . "-" . $p . "i";
                         if (empty($p))
@@ -596,6 +566,25 @@ function actionUpdate() {
         }
     }
 
+    if(isset($_POST['price_new'])) {
+        $_POST['price_new'] = str_replace(',', '.', $_POST['price_new']);
+    }
+    if(isset($_POST['price_n_new'])) {
+        $_POST['price_n_new'] = str_replace(',', '.', $_POST['price_n_new']);
+    }
+    if(isset($_POST['price2_new'])) {
+        $_POST['price2_new'] = str_replace(',', '.', $_POST['price2_new']);
+    }
+    if(isset($_POST['price3_new'])) {
+        $_POST['price3_new'] = str_replace(',', '.', $_POST['price3_new']);
+    }
+    if(isset($_POST['price4_new'])) {
+        $_POST['price4_new'] = str_replace(',', '.', $_POST['price4_new']);
+    }
+    if(isset($_POST['price5_new'])) {
+        $_POST['price5_new'] = str_replace(',', '.', $_POST['price5_new']);
+    }
+
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
 
@@ -613,7 +602,16 @@ function actionUpdate() {
     $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['rowID']));
     $PHPShopOrm->clean();
 
-    return array('success' => $action, 'enabled' => $_POST['enabled_new'], 'sklad' => $_POST['sklad_new'], 'id' => $_POST['rowID']);
+    // Списывание со склада
+    if (isset($_POST['items_new'])) {
+        $PHPShopProduct->objRow['items']   = $_POST['items_new'];
+        $PHPShopProduct->objRow['enabled'] = $_POST['enabled_new'];
+        $PHPShopProduct->objRow['sklad']   = $_POST['sklad_new'];
+        $PHPShopProduct->applyWarehouseControl();
+
+    }
+
+    return array('success' => $action, 'enabled' => $PHPShopProduct->objRow['enabled'], 'sklad' => $PHPShopProduct->objRow['sklad'], 'id' => $_POST['rowID']);
 }
 
 // Добавление изображения в фотогалерею

@@ -12,6 +12,7 @@ if (!defined("OBJENABLED"))
 class PHPShopSystem extends PHPShopObj {
 
     var $timezone = null;
+    var $company = null;
 
     /**
      * Конструктор
@@ -45,13 +46,36 @@ class PHPShopSystem extends PHPShopObj {
     }
 
     /**
+     * Реквизиты юридических лиц
+     * @param int $company
+     */
+    function setCompany($company) {
+        if (!empty($company)) {
+            $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['company']);
+            $data = $PHPShopOrm->getOne(array('*'), array('id' => '=' . (int) $company, 'enabled' => "='1'"));
+            if (is_array($data)) {
+                $this->company['bank'] = unserialize($data['bank']);
+                $this->company['bank']['org_name'] = $data['name'];
+                parent::setParam('nds', $this->company['bank']['nds']);
+                parent::setParam('company', $data['name']);
+            }
+        }
+    }
+
+    /**
      * Вывод сериализованного значения [param.val]
      * @param string $param
      * @return string
      */
     function getSerilizeParam($param) {
+
         $param = explode(".", $param);
-        $val = parent::unserializeParam($param[0]);
+
+        if (!empty($this->company) && isset($this->company[$param[0]]))
+            $val = $this->company[$param[0]];
+        else
+            $val = parent::unserializeParam($param[0]);
+
         return $val[$param[1]];
     }
 
@@ -251,14 +275,31 @@ class PHPShopSystem extends PHPShopObj {
         return $option;
     }
 
-    public function getPriceColumn()
-    {
-        $column = 'price';
+    public function getPriceColumn() {
+        $column = 'price'; // цена по умолчанию
+
+        // Колонка цены по статусу пользователя
+        if (!empty($_SESSION['UsersStatus'])) {
+            if (empty($_SESSION['UsersStatusPice'])) {
+                // Выборка из базы нужной колонки цены для автор. пользователя
+                $PHPShopUser = new PHPShopUserStatus($_SESSION['UsersStatus']);
+                $GetUsersStatusPrice = $PHPShopUser->getPrice();
+                $_SESSION['UsersStatusPice'] = $GetUsersStatusPrice;
+            }
+            else
+                $GetUsersStatusPrice = $_SESSION['UsersStatusPice'];
+
+            if ($GetUsersStatusPrice > 1) {
+                return "price" . $GetUsersStatusPrice;
+            }
+        }
+
+        // Колонка цены витрины
         if (defined("HostPrice") && HostPrice > 1) {
             return $column . HostPrice;
         }
 
-        if(defined("HostID") && HostID > 0) {
+        if (defined("HostID") && HostID > 0) {
             $orm = new PHPShopOrm($GLOBALS['SysValue']['base']['servers']);
             $showcase = $orm->getOne(array('*'), array('id' => sprintf('="%s"', HostID)));
 
@@ -270,6 +311,23 @@ class PHPShopSystem extends PHPShopObj {
 
         return $column;
     }
+
+}
+
+/**
+ * Массив данных по юридическим лицам
+ * @author PHPShop Software
+ * @version 1.0
+ * @package PHPShopArray
+ */
+class PHPShopCompanyArray extends PHPShopArray {
+
+    function __construct() {
+        $this->objBase = $GLOBALS['SysValue']['base']['company'];
+        $this->objSQL = array('enabled' => "='1'");
+        parent::__construct('id', "name", 'bank');
+    }
+
 }
 
 ?>

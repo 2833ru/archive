@@ -1,1 +1,1 @@
-<a href="/socauth/twitter/" title="авторизоваться через twitter"><img src="phpshop/modules/socauth/templates/twitter.png" border="0"></a>
+<a href="/socauth/twitter/" title="авторизоваться через twitter"><img src="phpshop/modules/socauth/templates/twitter.png" alt="Twitter"></a>

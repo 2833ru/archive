@@ -74,7 +74,7 @@ function actionStart() {
         foreach ($data as $row) {
 
             if (!empty($row['name']))
-                $icon = '<img src="' . $row['name'] . '" onerror="imgerror(this)" class="media-object" lowsrc="./images/no_photo.gif">';
+                $icon = '<img src="' . str_replace(".", "s.", $row['name']) . '" onerror="imgerror(this)" class="media-object" lowsrc="./images/no_photo.gif">';
             else
                 $icon = '<img class="media-object" src="./images/no_photo.gif">';
 

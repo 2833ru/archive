@@ -54,7 +54,7 @@
                 <div class="col-md-9 col-xs-12 col-sm-9">
                     <div class="row">
                         <div class="col-md-7 col-sm-5  col-xs-12"><div class="header-tel"><a class="header-phone" href="tel:@telNumMobile@"> @telNumMobile@</a> <br> <a class="header-phone" href="tel:@telNum2@"> @telNum2@</a> </div> @returncall@</div>
-                        <div class="col-md-5 col-sm-7  hidden-xs"><form action="/search/" role="search" method="post">
+                        <div class="col-md-5 col-sm-7  hidden-xs"><form action="/search/" role="search" method="get">
                                 <div class="input-group">
                                     <input name="words" maxlength="50" id="search" class="form-control" placeholder="{Искать}.." required="" type="search" data-trigger="manual" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true"  data-content="">
                                     <span class="input-group-btn">
@@ -72,11 +72,11 @@
         <!--/ Header -->
 
         <!-- Fixed navbar -->
-        <nav class="navbar navbar-default" role="navigation" id="navigation">
+        <nav class="navbar navbar-default" id="navigation">
             <div class="container-fluid">
                 <div class="navbar-header">
 
-                    <form action="/search/" role="search" method="post" class="visible-xs col-xs-9 mobile-search">
+                    <form action="/search/" role="search" method="get" class="visible-xs col-xs-9 mobile-search">
                         <div class="input-group">
                             <input name="words" maxlength="50" id="search" class="form-control" placeholder="{Искать}.." required="" type="search" data-trigger="manual" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true"  data-content="">
                             <span class="input-group-btn">
@@ -326,7 +326,7 @@
                         <h4 class="modal-title">{Поиск}</h4>
                     </div>
                     <div class="modal-body">
-                        <form  action="/search/" role="search" method="post">
+                        <form  action="/search/" role="search" method="get">
                             <div class="input-group">
                                 <input name="words" maxlength="50" class="form-control" placeholder="{Искать..}" required="" type="search">
                                 <span class="input-group-btn">
@@ -350,7 +350,7 @@
                         <h4 class="modal-title">{Авторизация}</h4>
                         <span id="usersError" class="hide">@usersError@</span>
                     </div>
-                    <form role="form" method="post" name="user_forma">
+                    <form method="post" name="user_forma">
                         <div class="modal-body">
                             <div class="form-group">
 
@@ -367,6 +367,7 @@
                                         <input type="checkbox" value="1" name="safe_users" @UserChecked@> {Запомнить}
                                     </label>
                                 </div>
+                                <a href="/users/sms.html" class="pass @sms_login_enabled@">SMS</a>
                                 <a href="/users/sendpassword.html" class="pass">{Забыли пароль}</a>
                             </div>
 
@@ -388,7 +389,7 @@
 
         <!-- Fixed mobile bar -->
         <div class="bar-padding-fix visible-xs"></div>
-        <nav class="navbar navbar-default navbar-fixed-bottom bar bar-tab visible-xs" role="navigation">
+        <nav class="navbar navbar-default navbar-fixed-bottom bar bar-tab visible-xs">
             <a class="tab-item active" href="/">
                 <span class="icon icon-home"></span>
                 <span class="tab-label">{Домой}</span>
@@ -412,6 +413,7 @@
         <!-- Согласие на использование cookie  -->
         <div class="cookie-message hide"><p></p><a href="#" class="btn btn-default btn-sm">Ok</a></div>
 
+        <link rel="stylesheet" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/font-awesome.min.css"> 
         <link rel="stylesheet" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/solid-menu.css"> 
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/menu.css" rel="stylesheet">
         <link href="java/highslide/highslide.css" rel="stylesheet">

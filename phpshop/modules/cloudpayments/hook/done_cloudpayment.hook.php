@@ -34,7 +34,7 @@ function send_to_order_mod_cloudpayment_hook($obj, $value, $rout)
             foreach ($aCart as $key => $arItem) {
 
                 // Скидка
-                if($obj->discount > 0)
+                if($obj->discount > 0 && empty($arItem['promo_price']))
                     $price = $arItem['price']  - ($arItem['price']  * $obj->discount  / 100);
                 else $price = $arItem['price'];
 

@@ -9,7 +9,7 @@ $PHPShopOrder = new PHPShopOrderFunction();
 /**
  * Обработчик записи заказа
  * @author PHPShop Software
- * @version 1.4
+ * @version 1.5
  * @package PHPShopCore
  */
 class PHPShopDone extends PHPShopCore {
@@ -22,6 +22,7 @@ class PHPShopDone extends PHPShopCore {
     public $delivery_mod = false;
     public $manager_comment = null;
     public $delivery_free = false;
+    public $bot_enabled = false;
 
     /**
      * Конструктор
@@ -41,6 +42,9 @@ class PHPShopDone extends PHPShopCore {
 
         PHPShopObj::loadClass('cart');
         $this->PHPShopCart = new PHPShopCart();
+
+        // Номер заказа
+        $this->setNum();
 
         $this->PHPShopOrder = $PHPShopOrder;
 
@@ -81,6 +85,25 @@ class PHPShopDone extends PHPShopCore {
     }
 
     /**
+     * Генерация номера заказа
+     */
+    function setNum() {
+        $row = $this->PHPShopOrm->select(array('uid'), false, array('order' => 'id desc'), array('limit' => 1));
+        $last = $row['uid'];
+        $all_num = explode("-", $last);
+        $ferst_num = $all_num[0];
+        $order_num = $ferst_num + 1;
+
+        if (empty($_SESSION['order_prefix']))
+            $_SESSION['order_prefix'] = substr(rand(1000, 99999), 0, $this->format);
+
+        $this->ouid = $order_num . "-" . $_SESSION['order_prefix'];
+
+        // Перехват модуля
+        $this->setHook(__CLASS__, __FUNCTION__, $row);
+    }
+
+    /**
      * Сообщение
      * @param string $title заголовок
      * @param string $content содержание
@@ -115,21 +138,28 @@ class PHPShopDone extends PHPShopCore {
             if (isset($_SESSION['UsersLogin']) AND ! empty($_SESSION['UsersLogin']))
                 $_POST['mail'] = ($_SESSION['UsersMail']);
 
-
-            // создаём нового пользователя, или авторизуем старого
+            // Создаём нового пользователя, или авторизуем старого
             if (!class_exists('PHPShopUsers'))
                 PHPShopObj::importCore('users');
+
+            // Анонимный покупатель
+            if (empty($_POST['mail']))
+                $_POST['mail'] = 'guest@' . $_SERVER['SERVER_NAME'];
 
             $PHPShopUsers = new PHPShopUsers();
             $this->userId = $PHPShopUsers->add_user_from_order($_POST['mail']);
 
             if (PHPShopSecurity::true_email($_POST['mail']) AND $this->userId) {
-                $this->ouid = $_POST['ouid'];
+                //$this->ouid = $_POST['ouid'];
+                $_POST['ouid'] = $this->ouid;
 
                 $order_metod = intval($_POST['order_metod']);
                 $PHPShopOrm = new PHPShopOrm($this->getValue('base.payment_systems'));
-                $row = $PHPShopOrm->select(array('path'), array('id' => '=' . $order_metod, 'enabled' => "='1'"), false, array('limit' => 1));
+                $row = $PHPShopOrm->select(array('path', 'company'), array('id' => '=' . $order_metod, 'enabled' => "='1'"), false, array('limit' => 1));
                 $path = $row['path'];
+
+                // Юр. лицо
+                $this->company = $row['company'];
 
                 // Поддержка старого API
                 $LoadItems['System'] = $this->PHPShopSystem->getArray();
@@ -178,12 +208,12 @@ class PHPShopDone extends PHPShopCore {
 
                 $this->discount_sum = number_format($discount_sum * $this->PHPShopSystem->getDefaultValutaKurs(true), $PHPShopOrder->format, '.', ' ');
 
-                // Перехат модуля в середине функции
-                $this->setHook(__CLASS__, __FUNCTION__, $_POST, 'MIDDLE');
-
                 // Итого
                 $this->total = $sum_discount_on + $this->delivery;
                 $this->set('total', $this->total);
+
+                // Перехат модуля в середине функции
+                $this->setHook(__CLASS__, __FUNCTION__, $_POST, 'MIDDLE');
 
                 // Аналитика
                 $PHPShopAnalitica->init(__FUNCTION__, $this);
@@ -195,11 +225,11 @@ class PHPShopDone extends PHPShopCore {
                     exit("Нет файла ./payment/$path/order.php");
 
                 // Запись заказа в БД
-                $orderId = $this->write();
+                $this->orderId = $this->write();
 
                 // Ссылка на счет
                 if ($path == 'bank')
-                    $this->set('account', '//' . $_SERVER['SERVER_NAME'] . '/phpshop/forms/account/forma.html?orderId=' . $orderId . '&tip=1&datas=' . $this->datas);
+                    $this->set('account', '//' . $_SERVER['SERVER_NAME'] . '/phpshop/forms/account/forma.html?orderId=' . $this->orderId . '&tip=1&datas=' . $this->datas);
 
                 // Данные от способа оплаты
                 if (!empty($disp))
@@ -215,8 +245,8 @@ class PHPShopDone extends PHPShopCore {
                 $this->push();
 
                 // Запись бонусов
-                $this->bonus($orderId);
-                
+                $this->bonus($this->orderId);
+
                 // Принудительная очистка корзины
                 if ($this->cart_clean_enabled)
                     $this->PHPShopCart->clean();
@@ -240,14 +270,73 @@ class PHPShopDone extends PHPShopCore {
         // Подключаем шаблон
         $this->parseTemplate($this->getValue('templates.order_forma_mesage_main'));
     }
-    
+
     /**
      *  Обновление бонусов
      */
-    function bonus($orderId){
+    function bonus($orderId) {
         $PHPShopBonus = new PHPShopBonus($_SESSION['UsersId']);
-        $PHPShopBonus->updateUserBonus($this->bonus_minus,0);
+        $PHPShopBonus->updateUserBonus($this->bonus_minus, 0);
         $PHPShopBonus->updateBonusLog($orderId, $this->ouid, $this->bonus_minus, 0);
+    }
+
+    /**
+     * Чат бот
+     */
+    function bot() {
+
+        // Привязка бота к пользователю
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['shopusers']);
+        $data = $PHPShopOrm->getOne(array('name,bot'), array('id' => '=' . $this->userId));
+
+        if ($this->PHPShopSystem->ifSerilizeParam('admoption.telegram_enabled', 1)) {
+            $this->bot = 'telegram';
+            $bot = $this->PHPShopSystem->getSerilizeParam('admoption.telegram_bot');
+            $this->bot_path = 'https://telegram.me/' . $bot . '?start=' . $data['bot'];
+            $this->set('bot', ' ' . __('в') . ' <a href="' . $this->bot_path . '" target="_blank"><img src="http://' . $_SERVER['SERVER_NAME'] . '/phpshop/lib/templates/messenger/' . $this->bot . '.svg" width="18" height="18" alt=" " title="' . $this->bot . '">' . ucfirst($this->bot) . '</a> ' . __('или'), true);
+        }
+
+        if ($this->PHPShopSystem->ifSerilizeParam('admoption.vk_enabled', 1)) {
+            $this->bot = 'vk';
+            $bot = $this->PHPShopSystem->getSerilizeParam('admoption.vk_bot');
+            $this->bot_path = 'https://vk.me/' . $bot . '?ref=' . $data['bot'];
+            $this->set('bot', ' ' . __('в') . ' <a href="' . $this->bot_path . '" target="_blank"><img src="http://' . $_SERVER['SERVER_NAME'] . '/phpshop/lib/templates/messenger/' . $this->bot . '.svg" width="18" height="18" alt=" " title="' . $this->bot . '">' . ucfirst($this->bot) . '</a> ' . __('или'), true);
+        }
+
+        // Уведомление админу 
+        if ($this->bot) {
+            PHPShopObj::loadClass('bot');
+
+            // Telegram
+            $chat_id_telegram = $this->PHPShopSystem->getSerilizeParam('admoption.telegram_admin');
+            if (!empty($chat_id_telegram) and $this->PHPShopSystem->ifSerilizeParam('admoption.telegram_order', 1)) {
+
+                $bot = new PHPShopTelegramBot();
+                $link = '(' . $bot->protocol . $_SERVER['SERVER_NAME'] . '/phpshop/admpanel/admin.php?path=order&id=' . $this->orderId . ')';
+
+                $msg = $this->lang('mail_title_adm') . $this->ouid . " - " . $data['name'] . " [" . $this->total . " " . $this->currency . ']' . $link;
+                $bot->send($chat_id_telegram, PHPShopString::win_utf8($msg));
+            }
+
+            // VK
+            $chat_id_vk = $this->PHPShopSystem->getSerilizeParam('admoption.vk_admin');
+            if (!empty($chat_id_telegram) and $this->PHPShopSystem->ifSerilizeParam('admoption.vk_order', 1)) {
+
+                $bot = new PHPShopVKBot();
+                $link = $bot->protocol . $_SERVER['SERVER_NAME'] . '/phpshop/admpanel/admin.php?path=order&id=' . $this->orderId;
+
+                $buttons[][] = array(
+                    'action' => array(
+                        'type' => 'open_link',
+                        'link' => $link,
+                        'label' => PHPShopString::win_utf8($this->total . " " . $this->currency)
+                    )
+                );
+
+                $msg = $this->lang('mail_title_adm') . $this->ouid . " - " . $data['name'];
+                $bot->send($chat_id_vk, PHPShopString::win_utf8($msg), array('buttons' => $buttons, 'one_time' => false, 'inline' => true));
+            }
+        }
     }
 
     /**
@@ -260,7 +349,7 @@ class PHPShopDone extends PHPShopCore {
             return true;
 
         $this->set('sum', $this->currencyMultibase($this->sum));
-        $this->set('cart', $this->PHPShopCart->display('mailcartforma', array('currency' => $this->currency,'rate'=>$this->rate)));
+        $this->set('cart', $this->PHPShopCart->display('mailcartforma', array('currency' => $this->currency, 'rate' => $this->rate)));
         $this->set('currency', $this->currency);
         $this->set('discount', $this->discount);
         $this->set('discount_sum', $this->discount_sum);
@@ -271,6 +360,9 @@ class PHPShopDone extends PHPShopCore {
         $this->set('date', date("d-m-y"));
         $this->set('adr_name', PHPShopSecurity::CleanStr($_POST['adr_name']));
         $this->set('mail', $_POST['mail']);
+
+        // Чат бот
+        $this->bot();
 
         if ($this->PHPShopPayment)
             $this->set('payment', $this->PHPShopPayment->getName());
@@ -301,7 +393,7 @@ class PHPShopDone extends PHPShopCore {
             $this->set('dop_info', $_POST['dop_info']);
 
         // Заголовок письма покупателю
-        $title = $this->lang('mail_title_user_start') . $_POST['ouid'] . $this->lang('mail_title_user_end');
+        $title = $this->lang('mail_title_user_start') . $this->ouid . $this->lang('mail_title_user_end');
 
         // Перехват модуля в середине функции
         if ($this->setHook(__CLASS__, __FUNCTION__, $_POST, 'MIDDLE'))
@@ -316,7 +408,7 @@ class PHPShopDone extends PHPShopCore {
         $this->set('time', date("d-m-y H:i a"));
         $this->set('ip', $_SERVER['REMOTE_ADDR']);
 
-        $title_adm = $this->lang('mail_title_adm') . $_POST['ouid'] . "/" . date("d-m-y");
+        $title_adm = $this->lang('mail_title_adm') . $this->ouid . "/" . date("d-m-y");
 
         // Отсылаем письмо администратору
         $PHPShopMail = new PHPShopMail($this->adminmail, $this->adminmail, $title_adm, '', true, true, array('replyto' => $_POST['mail']));
@@ -368,24 +460,23 @@ class PHPShopDone extends PHPShopCore {
             SendSMS($msg, $phone);
         }
     }
-    
+
     /**
      * Учет валюты витрины
      * @param float $sum
      */
-    function currencyMultibase($sum){
+    function currencyMultibase($sum) {
 
-         if (defined("HostID")){
-               $this->rate = $this->PHPShopSystem->getDefaultValutaKurs(true);
-               $sum = $sum * $this->rate;
-               $sum = number_format($sum, $this->PHPShopOrder->format, '.', ' ');
-               $this->currency = $this->PHPShopSystem->getDefaultValutaCode(true);
-         }
-         else {
-              $this->rate=1;
-         }
-         
-         return $sum;
+        if (defined("HostID")) {
+            $this->rate = $this->PHPShopSystem->getDefaultValutaKurs(true);
+            $sum = $sum * $this->rate;
+            $sum = number_format($sum, $this->PHPShopOrder->format, '.', ' ');
+            $this->currency = $this->PHPShopSystem->getDefaultValutaCode(true);
+        } else {
+            $this->rate = 1;
+        }
+
+        return $sum;
     }
 
     /**
@@ -460,24 +551,27 @@ class PHPShopDone extends PHPShopCore {
         $insert['user_new'] = $this->userId;
         $insert['dop_info_new'] = PHPShopSecurity::CleanStr($_POST['dop_info']);
         $insert['sum_new'] = $this->total;
-        $insert['servers_new'] = HostID;
-        $insert['admin_new'] = HostAdmin;
-        $insert['bonus_minus_new']=$this->bonus_minus;
-        $insert['bonus_plus_new']=$this->bonus_plus;
 
-        // формируем данные для записи адреса к пользователю в аккаунт
-        // записываем новый адрес или обновляем старый.
-        // Импортируем роутер личного кабинета для возможности регистрации со страницы оформления заказа
+        if (defined('HostID')) {
+            $insert['servers_new'] = HostID;
+            $insert['admin_new'] = HostAdmin;
+        }
+        
+        $insert['bonus_minus_new'] = $this->bonus_minus;
+        $insert['bonus_plus_new'] = $this->bonus_plus;
+        $insert['company_new'] = $this->company;
+
+        // Формируем данные для записи адреса к пользователю в аккаунт
         if (!class_exists('PHPShopUsers'))
             PHPShopObj::importCore('users');
         $PHPShopUsers = new PHPShopUsers();
         $adresData = $PHPShopUsers->update_user_adres();
-        
-        if(empty($insert['tel_new'])){
-            $insert['tel_new']=$_SESSION['UsersTel'];
+
+        if (empty($insert['tel_new'])) {
+            $insert['tel_new'] = $_SESSION['UsersTel'];
         }
-        if(empty($insert['fio_new'])){
-            $insert['fio_new']=$_SESSION['UsersName'];
+        if (empty($insert['fio_new'])) {
+            $insert['fio_new'] = $_SESSION['UsersName'];
         }
 
         if (is_array($adresData))
@@ -492,7 +586,6 @@ class PHPShopDone extends PHPShopCore {
 
         // ОФД Тест
         //$this->ofd($result);
-        
         // Проверка ошибок при записи заказа
         $this->error_report($result, array("Cart" => $cart, "Person" => $person, 'insert' => $insert));
 
@@ -510,7 +603,7 @@ class PHPShopDone extends PHPShopCore {
         if (!is_int($result)) {
 
             // Заголовок письма администратору
-            $title = 'Ошибка записи заказа №' . $_POST['ouid'] . ' на ' . $this->PHPShopSystem->getName() . "/" . date("d-m-y");
+            $title = 'Ошибка записи заказа №' . $this->ouid . ' на ' . $this->PHPShopSystem->getName() . "/" . date("d-m-y");
 
             $content = 'Причина отказа записи: ' . $result . '
 Дамп:
@@ -534,7 +627,7 @@ class PHPShopDone extends PHPShopCore {
  * Шаблон вывода таблицы корзины
  */
 function mailcartforma($val, $option) {
-    global $PHPShopModules,$PHPShopOrder;
+    global $PHPShopModules, $PHPShopOrder;
 
     if (empty($val['name']))
         return true;
@@ -547,11 +640,11 @@ function mailcartforma($val, $option) {
     // Артикул
     if (!empty($val['parent_uid']))
         $val['uid'] = $val['parent_uid'];
-    
-    $val['price']*=$option['rate'];
+
+    $val['price'] *= $option['rate'];
     $val['price'] = number_format($val['price'], $PHPShopOrder->format, '.', '');
 
-    $dis = '<p><img style="max-width:50px;max-height:50px" src="http://'.$_SERVER['SERVER_NAME'].$val['pic_small'].'" align="left" alt="">'.$val['uid'] . "  " . $val['name'] . " (" . $val['num'] . " " . $val['ed_izm'] . " * " . $val['price'] . ") -- " . ($val['price'] * $val['num']) . " " . $option['currency'] . "</p>
+    $dis = '<p><img style="max-width:50px;max-height:50px" src="http://' . $_SERVER['SERVER_NAME'] . $val['pic_small'] . '" align="left" alt="">' . $val['uid'] . "  " . $val['name'] . " (" . $val['num'] . " " . $val['ed_izm'] . " * " . $val['price'] . ") -- " . ($val['price'] * $val['num']) . " " . $option['currency'] . "</p>
 ";
     return $dis;
 }

@@ -8094,3 +8094,6 @@ background: url(images/bx_loader1.gif) center center no-repeat #fff;}
 .pagination > .active > span:focus,
 .pagination > li > a:hover {color:#1179f4!important}
 /*# sourceMappingURL=color1.css.map */
+.theme-color {
+    color: #1179f4;
+}

@@ -1,5 +1,7 @@
 <?php
 
+PHPShopObj::loadClass('order');
+
 /**
  * Библиотека промоакций
  * @author PHPShop Software
@@ -237,36 +239,42 @@ class PHPShopPromotions {
             $isNeedCount = $this->promotion_check_cart((int) $discount_info['num_check'], $this->getCntPromoProdsInCart((int) $discount_info['id']));
         }
 
+        $system = new PHPShopSystem();
         $discount = $discount_info['percent'];
         $discountsum = $discount_info['sum'];
         $status = $discount_info['status'];
+        $priceColumn = $system->getPriceColumn();
+        if(empty($row[$priceColumn])) {
+            $priceColumn = 'price';
+        }
 
         // Если есть скидка
         if (!empty($discount) || !empty($discountsum)) {
 
             // Скидка
             if ($status == 0) {
-                $priceDiscount[] = $row['price'] - ($row['price'] * $discount);
-                $priceDiscount[] = $row['price'] - $discountsum;
+
+                $priceDiscount[] = $row[$priceColumn] - ($row[$priceColumn] * $discount);
+                $priceDiscount[] = $row[$priceColumn] - $discountsum;
                 $priceDiscounItog = min($priceDiscount);
                 $priceDiscount = $priceDiscounItog;
             }
             // Наценка
             else {
-                $priceDiscount[] = $row['price'] + ($row['price'] * $discount);
-                $priceDiscount[] = $row['price'] + $discountsum;
+                $priceDiscount[] = $row[$priceColumn] + ($row[$priceColumn] * $discount);
+                $priceDiscount[] = $row[$priceColumn] + $discountsum;
                 $priceDiscounItog = max($priceDiscount);
                 $priceDiscount = $priceDiscounItog;
             }
             if($isNeedCount) {
                 if($discount_info['action'] === 1) {
-                    $priceDiscount = $this->applyRegularDiscount($priceDiscount, $row['price'], $row['id']);
+                    $priceDiscount = $this->applyRegularDiscount($priceDiscount, $row[$priceColumn], $row['id']);
                 }
 
                 $productPrice = $priceDiscount;
-                $productPriceNew = $priceDiscount < $row['price'] ? $row['price'] : $row['price_n'];
+                $productPriceNew = $priceDiscount < $row[$priceColumn] ? $row[$priceColumn] : $row['price_n'];
             } else {
-                $productPrice = $row['price'];
+                $productPrice = $row[$priceColumn];
                 $productPriceNew = $row['price_n'];
             }
 

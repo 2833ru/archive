@@ -76,3 +76,6 @@ color:black;
 #body{
     --color:#3498db;
 }
+.theme-color {
+    color: #3498DB;
+}

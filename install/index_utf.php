@@ -138,10 +138,8 @@ elseif (!empty($_POST['password'])) {
 		$content = PHPShopString::win_utf8($fp,true);
 
         // Подстановка почты администратора
-        if (!empty($_POST['send-welcome'])) {
-            $content = str_replace("admin@localhost", $_POST['mail'], $content);
-        }
-
+        $content = str_replace("admin@localhost", $_POST['mail'], $content);
+        
         $sqlArray = PHPShopFile::sqlStringToArray($content);
         $result = null;
         foreach ($sqlArray as $val) {

@@ -15,7 +15,7 @@
 
 <div class="col-md-12">
 <div class="row">
-    <form  action="/search/" role="form" name="search-form">
+    <form  action="/search/" name="search-form">
 
         <div class="input-group">
             <input name="words" maxlength="50" class="form-control" placeholder="{Искать}.." required="" type="search" value="@searchString@">
@@ -49,7 +49,7 @@
 </div>
 <div class="clearfix"></div>
 <div class="search-misspell">@searchMisspell@</div>
-<br><br>
+<br>
 
 @productPageDis@
 

@@ -32,8 +32,7 @@ class PHPShopCoretest extends PHPShopCore {
 <ul>
 <li> Cоздаем файл с заданным именем
 <p>
-Cоздаем файл с заданным именем в папке phpshop/core/,
-содержаший навигационный путь, например, этот файл называется
+Cоздаем файл с заданным именем в папке phpshop/core/, содержащий навигационный путь, например, этот файл называется
 <b>coretest.class.php</b> и обрабатывается при наборе адреса
 http://'.$_SERVER['SERVER_NAME'].'/coretest/
  </p>
@@ -41,7 +40,7 @@ http://'.$_SERVER['SERVER_NAME'].'/coretest/
 <li>Создаем класс заданного формата<br>
 <p>
 Имя класса должно содержать навигационный путь и совпадать с
-именем файла,например, этот класс называется <b>PHPShopCoretest</b>
+именем файла, например, этот класс называется <b>PHPShopCoretest</b>
 
 
 <pre>
@@ -60,23 +59,15 @@ function index() {
 
  // Определяем переменные
  $this->set(\'pageContent\',\'PHPShop Core работет!\');
- $this->set(\'pageTitle\',
- \'Подключение PHP логики через API\');
-
+ $this->set(\'pageTitle\', \'Подключение PHP логики через API\');
 
   // Подключаем шаблон
-  $this->parseTemplate($this->getValue(\'templates.
-        page_page_list\'));
-
+  $this->parseTemplate($this->getValue(\'templates. page_page_list\'));
     }
 }
-
-
-
 </pre>
    <li>В итоге получаем вывод сообщения "PHPShop Core работет!" в общем дизайне сайта.
 </ul>
-
 </p>
 ';
 

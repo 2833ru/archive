@@ -127,11 +127,15 @@
         <div class="row">
             <div class="navbar-header"></div>
             <div id="navbar" class="navbar-collapse collapse">
-
-                <label class="btn-menu visible-xs btn-menu-left" for="hmt">
-                    <div class="f-block"> <div >  <span class="first"></span>
-                            <span class="second"></span>
-                            <span class="third"></span></div>{Каталог}</div>
+                <label class="btn-menu visible-xs btn-menu-left">
+                     <span class="f-block">
+                         <span class="f-block-wrapper">
+                             <span class="first"></span>
+                             <span class="second"></span>
+                             <span class="third"></span>
+                         </span>
+                         {Каталог}
+                     </span>
                 </label>
                 <ul class="nav navbar-nav main-menu">
                     <!-- dropdown catalog menu -->
@@ -207,9 +211,11 @@
                 </form>	
 				<a href="/order/" class="btn-menu visible-xs"><span class="icons-cart"></span></a>
                 <label class="btn-menu btn-menu-right visible-xs" for="hmt">
-                    <span class="first"></span>
-                    <span class="second"></span>
-                    <span class="third"></span>
+                    <span class="f-block-wrapper">
+                        <span class="first"></span>
+                        <span class="second"></span>
+                        <span class="third"></span>
+                    </span>
                 </label>
                 <ul class="nav nav-pills pull-right">
                     <li role="presentation">@wishlist@</li>

@@ -125,7 +125,7 @@
                         <!-- Logo Starts -->
                         <!-- Search Starts -->
                         <div class="col-md-3 hidden-xs">
-                            <form id="search_form" action="/search/" role="search" method="post" class="header-color">
+                            <form id="search_form" action="/search/" role="search" method="get" class="header-color">
                                 <div class="input-group">
                                     <input class="form-control input-lg" name="words" maxlength="50" id="search"  placeholder="{Искать}..." required="" type="search" data-trigger="manual" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true"  data-content="">
                                     <span class="input-group-btn">
@@ -155,7 +155,7 @@
                 </div>
                 <!-- Main Header Ends -->
                 <!-- Main Menu Starts -->
-                <nav id="main-menu" class="navbar" role="navigation">
+                <nav id="main-menu" class="navbar">
                     <!-- Nav Header Starts -->
                     <div class="navbar-header">
 
@@ -406,7 +406,7 @@
 
     <!-- Fixed mobile bar -->
     <div class="bar-padding-fix visible-xs"> </div>
-    <nav class="navbar navbar-default navbar-fixed-bottom bar bar-tab visible-xs visible-sm" role="navigation">
+    <nav class="navbar navbar-default navbar-fixed-bottom bar bar-tab visible-xs visible-sm">
         <a class="tab-item" href="/">
             <span class="icon icon-home"></span>
             <span class="tab-label">{Домой}</span>
@@ -444,7 +444,7 @@
                     <h4 class="modal-title">{Авторизация}</h4>
                     <span id="usersError" class="hide">@usersError@</span>
                 </div>
-                <form role="form" method="post" name="user_forma">
+                <form method="post" name="user_forma">
                     <div class="modal-body">
                         <div class="form-group">
 
@@ -461,6 +461,7 @@
                                     <input type="checkbox" value="1" name="safe_users" @UserChecked@> {Запомнить}
                                 </label>
                             </div>
+                            <a href="/users/sms.html" class="pass @sms_login_enabled@">SMS</a>
                             <a href="/users/sendpassword.html" class="pass">{Забыли пароль}</a>
                         </div>
 
@@ -487,7 +488,7 @@
                     <h4 class="modal-title">{Поиск}</h4>
                 </div>
                 <div class="modal-body">
-                    <form  action="/search/" role="search" method="post">
+                    <form  action="/search/" role="search" method="get">
                         <div class="input-group">
                             <input name="words" maxlength="50" class="form-control" placeholder="{Искать}.." required="" type="search">
                             <span class="input-group-btn">

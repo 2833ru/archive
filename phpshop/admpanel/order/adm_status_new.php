@@ -25,8 +25,10 @@ function actionStart() {
     $Tab1.=$PHPShopGUI->setField('Цвет', $PHPShopGUI->setInputColor('color_new', $data['color']));
     $Tab1.=$PHPShopGUI->setField("Приоритет", $PHPShopGUI->setInputText(null, "num_new", intval($data['num']), '100'));
 
-    $Tab1.=$PHPShopGUI->setField("Дополнительно", $PHPShopGUI->setCheckbox('mail_action_new', 1, 'E-mail уведомление покупателю о смене статуса заказа', $data['mail_action']) . '<br>' .
-             $PHPShopGUI->setCheckbox('sms_action_new', 1, 'SMS уведомление покупателю о смене статуса заказа', $data['sms_action']).'<br>'.
+    $Tab1.=$PHPShopGUI->setField("Дополнительно", 
+            $PHPShopGUI->setCheckbox('mail_action_new', 1, 'Email уведомление', $data['mail_action']) . '<br>' .
+            $PHPShopGUI->setCheckbox('sms_action_new', 1, 'SMS уведомление', $data['sms_action']) . '<br>' .
+            $PHPShopGUI->setCheckbox('bot_action_new', 1, 'Уведомление в мессенджеры', $data['bot_action']) . '<br>' .
             $PHPShopGUI->setCheckbox("sklad_action_new", 1, "Списание со склада товаров в заказе", $data['sklad_action']) . '<br>' .
             $PHPShopGUI->setCheckbox("cumulative_action_new", 1, "Учет скидки покупателя", $data['cumulative_action']).$PHPShopGUI->setHelp(__('Сумма заказа пользователя будет засчитана в накопительную сумму, указанную в').' <a href="?path=shopusers.status"><span class="glyphicon glyphicon-share-alt"></span>'.__('Статусах и скидках покупателей').'</a>',false,false)
     );

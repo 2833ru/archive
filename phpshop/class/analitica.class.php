@@ -13,6 +13,8 @@ class PHPShopAnalitica {
 
     public function __construct() {
 
+        $options = $GLOBALS['PHPShopSystem']->unserializeParam('admoption');
+
         // OpenGraph
         PHPShopParser::set('ogTitle', $GLOBALS['PHPShopSystem']->getName());
         PHPShopParser::set('ogImage', $GLOBALS['PHPShopSystem']->getLogo());
@@ -20,15 +22,15 @@ class PHPShopAnalitica {
         PHPShopParser::set('ogDescription', $GLOBALS['PHPShopSystem']->getParam('descrip'));
 
         // Метрика
-        $this->metrica_enabled = $GLOBALS['PHPShopSystem']->getSerilizeParam('admoption.metrica_enabled');
-        $this->metrica_id = intval($GLOBALS['PHPShopSystem']->getSerilizeParam('admoption.metrica_id'));
-        $this->ecommerce = $GLOBALS['PHPShopSystem']->getSerilizeParam('admoption.metrica_ecommerce');
-        $this->webvizor = $GLOBALS['PHPShopSystem']->getSerilizeParam('admoption.metrica_webvizor');
+        $this->metrica_enabled = $options['metrica_enabled'];
+        $this->metrica_id = intval($options['metrica_id']);
+        $this->ecommerce = $options['metrica_ecommerce'];
+        $this->webvizor = $options['metrica_webvizor'];
 
         // Аналитика
-        $this->google_enabled = $GLOBALS['PHPShopSystem']->getSerilizeParam('admoption.google_enabled');
-        $this->google_id = "UA-" . $GLOBALS['PHPShopSystem']->getSerilizeParam('admoption.google_id');
-        $this->analitics = $GLOBALS['PHPShopSystem']->getSerilizeParam('admoption.google_analitics');
+        $this->google_enabled = $options['google_enabled'];
+        $this->google_id = "UA-" . $options['google_id'];
+        $this->analitics = $options['google_analitics'];
     }
 
     /**

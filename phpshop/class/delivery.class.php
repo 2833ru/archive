@@ -40,12 +40,12 @@ class PHPShopDelivery extends PHPShopObj {
     function getAdresListFromOrderData($option, $delim = "<br>") {
         $data_fields = unserialize($this->getParam('data_fields'));
         if (is_array($data_fields)) {
-            $num = $data_fields[num];
+            $num = $data_fields['num'];
             asort($num);
-            $enabled = $data_fields[enabled];
+            $enabled = $data_fields['enabled'];
             foreach ($num as $key => $value) {
                 if ($enabled[$key]['enabled'] == 1) {
-                    $adres .= __($enabled[$key][name]) . ": " . $option[$key . "_new"] . $delim;
+                    $adres .= __($enabled[$key]['name']) . ": " . $option[$key . "_new"] . $delim;
                 }
             }
         }
@@ -123,6 +123,11 @@ class PHPShopDelivery extends PHPShopObj {
     {
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['delivery']);
         $PHPShopOrm->update(array('is_mod_new' => (string) $value), array('id' => '="' . (int) $this->objID . '"'));
+    }
+
+    public function isFree($sum)
+    {
+        return (int) $this->getParam('price_null_enabled') === 1 && $sum >= $this->getParam('price_null');
     }
 }
 

@@ -1,6 +1,8 @@
 <?php
 
 class PHPShopReturncall extends PHPShopCore {
+    
+    var $empty_index_action = false;
 
     /**
      * Конструктор
@@ -31,6 +33,8 @@ class PHPShopReturncall extends PHPShopCore {
 
         // Мета
         $this->title = $this->system['title'] . " - " . $this->PHPShopSystem->getValue("name");
+        $this->description = $this->system['title'] . " " . $this->PHPShopSystem->getValue("name");
+        $this->keywords = $this->system['title'] . ", " . $this->PHPShopSystem->getValue("name");
     }
 
     /**

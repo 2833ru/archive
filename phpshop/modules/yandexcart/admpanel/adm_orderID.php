@@ -1,177 +1,64 @@
 <?php
 
-/**
- * Шаблон вывода таблицы корзины
- */
-function yandexcart_mailcartforma($val, $option) {
+include_once dirname(__DIR__) . '/class/YandexMarket.php';
 
-    if (PHPShopProductFunction::true_parent($val['parent']))
-        $val['uid'] = null;
+function yandexcartChangeStatus($data)
+{
+    $yandex = new YandexMarket();
 
-    $dis = $val['uid'] . "  " . $val['name'] . " (" . $val['num'] . " " . $val['ed_izm'] . " * " . $val['price'] . ") -- " . ($val['price'] * $val['num']) . " " . $option['currency'] . " <br>
-";
-    return $dis;
-}
+    if($yandex->options['model'] === 'DBS') {
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
 
-function yandexcart_sendmail($data) {
-    global $PHPShopSystem, $PHPShopBase, $PHPShopOrder;
+        $order = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_POST['rowID'])));
 
-    PHPShopObj::loadClass('parser');
+        if((int) $order['statusi'] !== (int) $_POST['statusi_new']) {
+            $options = unserialize($yandex->options['options']);
 
-    $PHPShopOrder = new PHPShopOrderFunction($data['id'], $data);
+            isset($options['statuses']) && is_array($options['statuses']) ? $statuses = $options['statuses'] : $statuses = array();
 
+            foreach ($statuses as $statusYandex => $statusSite) {
 
-    $order = unserialize($data['orders']);
+                if((int) $statusSite === (int) $_POST['statusi_new']) {
 
-    // Доставка
-    $PHPShopCart = new PHPShopCart($order['Cart']['cart']);
-    $PHPShopDelivery = new PHPShopDelivery($order['Person']['dostavka_metod']);
-    $currency = $PHPShopSystem->getDefaultValutaCode();
-    PHPShopParser::set('cart', $PHPShopCart->display('yandexcart_mailcartforma', array('currency' => $currency)));
+                    // Status DELIVERY
+                    if($statusYandex === 'delivery') {
+                        $yandex->changeStatus($order['yandex_order_id'], array('order' => array('status' => 'DELIVERY')));
+                    }
 
-    $sum = $PHPShopCart->getSum(false);
-    $delivery = $PHPShopDelivery->getPrice($sum, $PHPShopCart->getWeight());
-    $total = $sum + $delivery;
+                    // Status PICKUP
+                    if($statusYandex === 'pickup') {
+                        $yandex->changeStatus($order['yandex_order_id'], array('order' => array('status' => 'PICKUP')));
+                    }
 
-    PHPShopParser::set('sum', $sum);
-    PHPShopParser::set('currency', $currency);
-    PHPShopParser::set('discount', $order['Person']['discount']);
-    PHPShopParser::set('deliveryPrice', $delivery);
-    PHPShopParser::set('total', $total);
-    PHPShopParser::set('shop_name', $PHPShopSystem->getName());
-    PHPShopParser::set('ouid', $data['uid']);
-    PHPShopParser::set('date', date("d-m-y"));
-    PHPShopParser::set('deliveryCity', $PHPShopDelivery->getCity());
-    PHPShopParser::set('mail', $order['Person']['mail']);
-    PHPShopParser::set('payment', $PHPShopOrder->getOplataMetodName());
-    PHPShopParser::set('user_name', $data['fio']);
-    PHPShopParser::set('dop_info', $data['dop_info']);
+                    // Status DELIVERED
+                    if($statusYandex === 'delivered') {
+                        $yandex->changeStatus($order['yandex_order_id'], array('order' => array('status' => 'DELIVERED')));
+                    }
 
-    // формируем список данных полей доставки.
-    PHPShopParser::set('adresList', $PHPShopDelivery->getAdresListFromOrderData($_POST, "\n"));
+                    // Status CANCELLED
+                    if($statusYandex === 'cancelled_shop_failed' or $statusYandex === 'cancelled_replacing_order' or $statusYandex === 'cancelled_user_changed_mind') {
+                        $substatus = 'SHOP_FAILED';
+                        if($statusYandex === 'cancelled_replacing_order') {
+                            $substatus = 'REPLACING_ORDER';
+                        }
+                        if($statusYandex === 'cancelled_user_changed_mind') {
+                            $substatus = 'USER_CHANGED_MIND';
+                        }
 
-
-    // Заголовок письма покупателю
-    $title = $PHPShopBase->getParam('lang.mail_title_user_start') . $_POST['ouid'] . $PHPShopBase->getParam('lang.mail_title_user_end');
-
-
-    // Отсылаем письмо покупателю
-    $PHPShopMail = new PHPShopMail($order['Person']['mail'], $PHPShopSystem->getParam('adminmail2'), $title, '', true, true);
-    $content = PHPShopParser::file('../lib/templates/order/usermail.tpl', true);
-
-    // Замены
-    $content = str_replace('Наши менеджеры свяжутся с Вами по координатам, оставленным в форме заказа.', 'Ваш заказ подтвержден, ожидайте звонка курьера, для согласования времени доставки.', $content);
-
-    $PHPShopMail->sendMailNow($content);
-}
-
-function yandexcartCheckOrder($data) {
-    global $_classPath;
-    
-    if ($data['statusi'] != $_POST['statusi_new']) {
-        
-        // Rest Yandex
-        include_once($_classPath.'modules/yandexcart/class/yandexmarket.class.php');
-
-        $YandexMarketRest = new YandexMarketRest();
-
-        if ($YandexMarketRest->isYandex($data['dop_info'])) {
-
-            $OrderId = $YandexMarketRest->yandexOrderId;
-
-            switch ($_POST['statusi_new']) {
-
-                // Передан в службу доставки
-                case $YandexMarketRest->option['status_delivery']:
-
-                    $result = $YandexMarketRest->setOrderStatus($OrderId, array("status" => "DELIVERY"));
-                    $YandexMarketRest->log($OrderId, $result);
-
-
-                    break;
-
-                //  Подтвержден на доставку
-                case $YandexMarketRest->option['status_processing']:
-
-                    $result = $YandexMarketRest->setOrderStatus($OrderId, array("status" => "PROCESSING"));
-                    $YandexMarketRest->log($OrderId, $result);
-
-                    // Сообщение покупателю о заказе
-                    yandexcart_sendmail($data);
-
-                    break;
-
-                //  Доставлен
-                case $YandexMarketRest->option['status_delivered']:
-                    
-                    // Если не менялся статус на PROCESSING -> DELIVERY
-                    $result = $YandexMarketRest->setOrderStatus($OrderId, array("status" => "DELIVERY"));
-                    $YandexMarketRest->log($OrderId, $result);
-                    
-
-                    $result = $YandexMarketRest->setOrderStatus($OrderId, array("status" => "DELIVERED"));
-                    $YandexMarketRest->log($OrderId, $result);
-
-                    // Сообщение покупателю о заказе
-                    //yandexcart_sendmail($data);
-
-                    break;
-
-                //  Отменен  SHOP_FAILED
-                case $YandexMarketRest->option['status_cancelled']:
-
-                    $result = $YandexMarketRest->setOrderStatus($OrderId, array("status" => "CANCELLED", "substatus" => "SHOP_FAILED"));
-                    $YandexMarketRest->log($OrderId, $result);
-
-                    break;
-
-                //  Отменен  USER_CHANGED_MIND
-                case $YandexMarketRest->option['status_cancelled_ucm']:
-
-                    $result = $YandexMarketRest->setOrderStatus($OrderId, array("status" => "CANCELLED", "substatus" => "USER_CHANGED_MIND"));
-                    $YandexMarketRest->log($OrderId, $result);
-
-                    break;
-
-                //  Отменен  USER_REFUSED_DELIVERY
-                case $YandexMarketRest->option['status_cancelled_urd']:
-
-                    $result = $YandexMarketRest->setOrderStatus($OrderId, array("status" => "CANCELLED", "substatus" => "USER_REFUSED_DELIVERY"));
-                    $YandexMarketRest->log($OrderId, $result);
-
-                    break;
-
-                //  Отменен  USER_REFUSED_PRODUCT
-                case $YandexMarketRest->option['status_cancelled_urp']:
-
-                    $result = $YandexMarketRest->setOrderStatus($OrderId, array("status" => "CANCELLED", "substatus" => "USER_REFUSED_PRODUCT"));
-                    $YandexMarketRest->log($OrderId, $result);
-
-                    break;
-
-                //  Отменен  USER_REFUSED_QUALITY
-                case $YandexMarketRest->option['status_cancelled_urq']:
-
-                    $result = $YandexMarketRest->setOrderStatus($OrderId, array("status" => "CANCELLED", "substatus" => "USER_REFUSED_QUALITY"));
-                    $YandexMarketRest->log($OrderId, $result);
-
-                    break;
-
-                //  Отменен  USER_UNREACHABLE
-                case $YandexMarketRest->option['status_cancelled_uu']:
-
-                    $result = $YandexMarketRest->setOrderStatus($OrderId, array("status" => "CANCELLED", "substatus" => "USER_UNREACHABLE"));
-                    $YandexMarketRest->log($OrderId, $result);
-
-                    break;
+                        $yandex->changeStatus(
+                            $order['yandex_order_id'],
+                            array('order' => array('status' => 'CANCELLED', 'substatus' => $substatus))
+                        );
+                    }
+                }
             }
         }
     }
 }
 
-$addHandler = array(
-    'actionStart' => false,
-    'actionDelete' => false,
-    'actionUpdate' => 'yandexcartCheckOrder'
+$addHandler=array(
+    'actionStart'=>false,
+    'actionDelete'=>false,
+    'actionUpdate'=>'yandexcartChangeStatus',
+    'actionSave'=>false
 );
-?>

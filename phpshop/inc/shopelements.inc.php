@@ -1,6 +1,440 @@
 <?php
 
 /**
+ * Виджет чата
+ * @author PHPShop Software
+ * @version 1.2
+ * @package PHPShopElements
+ */
+class PHPShopDialogElement extends PHPShopElements {
+
+    /**
+     * Конструктор
+     */
+    public function __construct() {
+
+        parent::__construct();
+
+        // Иконка
+        $icon = $this->PHPShopSystem->getSerilizeParam('admoption.avatar_dialog');
+        if (empty($icon))
+            $icon = '/phpshop/lib/templates/chat/avatar.png';
+
+        $this->avatar = $icon;
+        $this->set('icon_dialog', str_replace('/phpshop', 'phpshop/', $this->avatar));
+
+        // Цвет
+        $color = $this->PHPShopSystem->getSerilizeParam('admoption.color_dialog');
+        if (empty($color))
+            $color = '#42a5f5';
+        $this->set('color_dialog', $color);
+        $this->color_dialog = $color;
+
+        // Отступ
+        $margin = $this->PHPShopSystem->getSerilizeParam('admoption.margin_dialog');
+        if (empty($margin))
+            $margin = 0;
+        $this->set('margin_dialog', ($margin + 10));
+        $this->set('margin_button_dialog', $margin);
+    }
+
+    public function dialog() {
+        $dialog = null;
+
+        if ($this->PHPShopSystem->ifSerilizeParam("admoption.chat_dialog", 1) and $this->PHPShopNav->objNav['truepath'] != '/users/message.html') {
+
+            if (empty($_SESSION['UsersId'])) {
+                $this->set('dialogContent', 'disabled');
+            }
+
+            // Заголовок
+            $title = $this->PHPShopSystem->getSerilizeParam('admoption.title_dialog');
+            if (empty($title))
+                $title = 'Консультант';
+            $this->set('title_dialog', $title);
+
+            // Время работы
+            $time = (int) date("H", time());
+            $time_from = (int) $this->PHPShopSystem->getSerilizeParam('admoption.time_from_dialog');
+            $time_until = (int) $this->PHPShopSystem->getSerilizeParam('admoption.time_until_dialog');
+            $day_work = (int) $this->PHPShopSystem->getSerilizeParam('admoption.day_dialog');
+            $day = date("D", time());
+
+            $day_work_array[1] = array('Sunday', 'Saturday');
+            $day_work_array[2] = array('Saturday');
+            $day_work_array[3] = array();
+
+            if (($time_from <= $time and $time < $time_until) and ! in_array($day, $day_work_array[$day_work])) {
+                $this->set('status_dialog', __('Оператор online'));
+                $this->set('status_dialog_style', 'online');
+                $time_off = false;
+            } else {
+                $this->set('status_dialog', __('Сейчас недоступен'));
+                $this->set('status_dialog_style', 'offline');
+                $time_off = true;
+            }
+
+            // Подключение шаблона
+            $dialog = ParseTemplateReturn('phpshop/lib/templates/chat/chat.tpl', true);
+        }
+
+        // Отключение на мобильных
+        if (($this->PHPShopSystem->ifSerilizeParam('admoption.mobil_dialog', 1) and PHPShopString::is_mobile()) or ( $this->PHPShopSystem->ifSerilizeParam('admoption.time_off_dialog', 1) and ! empty($time_off)))
+            $dialog = null;
+
+        $this->set('editor', $dialog, true);
+    }
+
+    public function sendMessage($obj) {
+        PHPShopObj::loadClass('bot');
+        $bot = new PHPShopBot();
+
+        $insert = array(
+            'user_id' => $obj->UsersId,
+            'chat' => array
+                (
+                'id' => $obj->UsersId,
+                'first_name' => $obj->UserName,
+                'last_name' => "",
+            ),
+            'date' => time(),
+            'text' => $_POST['message'],
+            'staffid' => 1,
+            'isview' => 0,
+            'isview_user' => 0
+        );
+
+        $bot->dialog($insert);
+        $bot->notice($insert, 'message');
+    }
+
+    /**
+     * Создание нового пользователя
+     */
+    public function add_user($mail, $name, $pas, $tel) {
+
+        if (!class_exists('PHPShopUsers'))
+            PHPShopObj::importCore('users');
+
+        if (PHPShopSecurity::true_email($mail)) {
+            $PHPShopUsers = new PHPShopUsers();
+
+            // Проверка почты
+            $check = $PHPShopUsers->user_check_by_email($mail);
+
+            // Новый пользователь
+            if (!$check) {
+
+                $PHPShopUsers->stop_redirect = true;
+                $_SESSION['UsersId'] = $PHPShopUsers->add_user_from_order($mail, PHPShopSecurity::TotalClean($name), PHPShopSecurity::TotalClean($tel));
+                $message = __('Здравствуйте') . ', ' . $name . '.' . $this->messenger_button();
+                $status = 1;
+            }
+            // Авторизация
+            else if ($check and ! empty($pas)) {
+
+                $_POST['login'] = $mail;
+                $_POST['password'] = $pas;
+                $_POST['tel'] = $tel;
+                $PHPShopUserElement = new PHPShopUserElement();
+                if ($PHPShopUserElement->autorization()) {
+                    $message = __('Здравствуйте') . ', ' . $name . '.' . $this->messenger_button();
+                    $status = 1;
+                } else {
+                    $message = '<form class="message_form">' . __('Ошибка авторизации, введите правильный пароль') . ':<input type="password" name="password" class="form-control" placeholder="' . __('Пароль') . '" required=""><button class="send-message" type="button">' . __('Отправить') . '</button></form>';
+                    $status = 0;
+                }
+            }
+            // Старый пользователь
+            else {
+                $message = '<form class="message_form">' . __('Пользователь с таким email уже существует, введите пароль') . ':<input type="password" name="password" class="form-control" placeholder="' . __('Пароль') . '" required=""><button class="send-message" type="button">' . __('Отправить') . '</button></form>';
+                $status = 0;
+            }
+        } else {
+            $message = __('Ошибка ввода данных');
+        }
+
+        $data[] = array(
+            'user_id' => 0,
+            'date' => time(),
+            'name' => __('Администрация'),
+            'message' => $message,
+            'staffid' => 0,
+            'isview' => 1,
+            'isview_user' => 1,
+            'date' => false
+        );
+
+        $result = array('message' => $this->viewMessage($data), 'count' => 1, 'status' => $status, 'bot' => $_SESSION['UsersBot']);
+        return $result;
+    }
+
+    /**
+     *  Социальные кнопки
+     */
+    public function messenger_button() {
+
+        $messenger = null;
+        if ($this->PHPShopSystem->ifSerilizeParam('admoption.telegram_enabled', 1)) {
+            $bot = $this->PHPShopSystem->getSerilizeParam('admoption.telegram_bot');
+            $messenger .= '<li class="messenger-button" data-url="telegram.me/' . $bot . '?start=' . $_SESSION['UsersBot'] . '">' . __('Telegram') . '</li>';
+        }
+
+        if ($this->PHPShopSystem->ifSerilizeParam('admoption.vk_enabled', 1)) {
+            $bot = $this->PHPShopSystem->getSerilizeParam('admoption.vk_bot');
+            $messenger .= '<li class="messenger-button" data-url="vk.me/' . $bot . '?ref=' . $_SESSION['UsersBot'] . '">' . __('ВКонтакте') . '</li>';
+        }
+
+        if (!empty($messenger))
+            $messenger = __('<br>Вы можете открыть чат в:') . '<ul class="chat_category">' . $messenger . '</ul>';
+
+        return $messenger;
+    }
+
+    /**
+     *  Подсказки кнопки
+     */
+    public function answer_button($id = false) {
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['dialog_answer']);
+        $PHPShopOrm->debug = false;
+        $answer = null;
+        $data = $PHPShopOrm->select(array('*'), array('view' => "='1'", 'enabled' => "='1'"), array('order' => 'id DESC'), array('limit' => 15));
+        if (is_array($data)) {
+            $answer = '<ul class="chat_category">';
+            foreach ($data as $row) {
+
+                if ($id == $row['id'])
+                    $active = 'active';
+                else
+                    $active = '';
+
+                $answer .= '<li class="dialog-answer ' . $active . '" data-answer="' . $row['id'] . '">' . $row['name'] . '</li>';
+            }
+            $answer .= '<li class="dialog-answer" data-answer="0">' . __('Начать чат') . '</li></ul>';
+        }
+
+        return $answer;
+    }
+
+    /**
+     *  Подсказки
+     */
+    public function answer($id) {
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['dialog_answer']);
+        $PHPShopOrm->debug = false;
+
+        // Подсказки
+        $answer = $this->answer_button($id);
+
+        $row = $PHPShopOrm->getOne(array('*'), array('view' => "='1'", 'id' => '=' . intval($id)));
+        if (is_array($row)) {
+            $data[] = array(
+                'user_id' => 0,
+                'date' => time(),
+                'name' => __('Администрация'),
+                'message' => $row['message'] . $answer,
+                'staffid' => 0,
+                'isview' => 1,
+                'isview_user' => 1,
+                'date' => false
+            );
+
+            $result['message'] = $this->viewMessage($data);
+        } else {
+            $result = $this->message(0, false, true);
+        }
+
+        $result['count'] = 1;
+        $result['animation'] = $GLOBALS['animation'];
+
+        return $result;
+    }
+
+    /**
+     * Сообщения
+     * @return string
+     */
+    public function message($user, $new = false, $skip_welcom = false, $path = 'chat') {
+
+
+        if (empty($new))
+            $where = array('bot' => '="message"', 'chat_id' => '=' . intval($user), 'isview_user' => "='1'");
+        else
+            $where = array('bot' => '="message"', 'chat_id' => '=' . intval($user), 'isview_user' => "='0'");
+
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['dialog']);
+        $PHPShopOrm->debug = false;
+        $data = $PHPShopOrm->select(array('*'), $where, array('order' => 'id'), array('limit' => 500));
+
+        if (!is_array($data) and empty($new) and ! $_SESSION['UsersId']) {
+
+            $text_dialog = $this->PHPShopSystem->getSerilizeParam('admoption.text_dialog');
+
+            if (!empty($text_dialog))
+                $welcom = $this->PHPShopSystem->getSerilizeParam('admoption.text_dialog');
+            else
+                $welcom = __('Здравствуйте');
+
+            // Подсказки
+            $answer = $this->answer_button();
+
+            if (empty($skip_welcom))
+                $data[] = array(
+                    'user_id' => 0,
+                    'date' => time(),
+                    'name' => __('Администрация'),
+                    'message' => $welcom . $answer,
+                    'staffid' => 0,
+                    'isview' => 1,
+                    'isview_user' => 1,
+                    'date' => false
+                );
+
+
+            // Телефон
+            if ($this->PHPShopSystem->ifSerilizeParam('admoption.tel_dialog', 1)) {
+                $tel = '<span class="dialog-reg-tel"><input type="tel" name="tel" class="form-control" placeholder="' . __('Телефон') . '" required=""></span>';
+            } else
+                $tel = null;
+
+            if (empty($answer) or ! empty($skip_welcom))
+                $data[] = array(
+                    'user_id' => 0,
+                    'date' => time(),
+                    'name' => __('Администрация'),
+                    'message' => __('Для начала диалога заполните пожалуйста все поля:') . '<form class="message_form"><span class="dialog-reg-name"><input type="text" name="name" class="form-control" placeholder="' . __('Имя') . '" required=""></span><span class="dialog-reg-mail"><input type="email" name="mail" class="form-control" placeholder="Email" required=""></span>' . $tel . '<div class="dialog-reg-rule"><input type="checkbox" value="on" name="rule" checked="checked"> ' . __('Я согласен <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html" target="_blank" title="' . __('Согласие на обработку персональных данных') . '">на обработку моих персональных данных') . '</a></div><button class="send-message" type="button">' . __('Отправить') . '</button></form>',
+                    'staffid' => 0,
+                    'isview' => 1,
+                    'isview_user' => 1,
+                    'date' => false
+                );
+        } else if (!is_array($data) and empty($new) and ! empty($_SESSION['UsersId'])) {
+            $data[] = array(
+                'user_id' => $_SESSION['UsersId'],
+                'date' => time(),
+                'name' => __('Администрация'),
+                'message' => __('Здравствуйте') . ', ' . $_SESSION['UsersName'] . '.' . $this->messenger_button(),
+                'staffid' => 0,
+                'isview' => 1,
+                'isview_user' => 1,
+                'date' => false
+            );
+        }
+
+        $result['message'] = $this->viewMessage($data, $path);
+
+        if (!empty($result['message']) and ! empty($new)) {
+            $PHPShopOrm->update(array('isview_user_new' => 1), array('id' => ' IN (' . implode($GLOBALS['chat_ids'], ',') . ')'));
+        }
+
+        if (!empty($result['message'])) {
+            $result['count'] = count($data);
+        }
+
+        $result['animation'] = $GLOBALS['animation'];
+
+        return $result;
+    }
+
+    /**
+     * Список сообщений
+     */
+    private function viewMessage($data, $path='chat') {
+        global $chat_ids, $animation;
+
+        if (is_array($data)) {
+            foreach ($data as $row) {
+
+                if (empty($row['message']) and empty($row['attachments']))
+                    continue;
+
+                $chat_ids[] = $row['id'];
+
+                if (empty($row['staffid']))
+                    $animation = 1;
+                else
+                    $animation = 0;
+
+                // Ссылки
+                $row['message'] = preg_replace("~(http|https|ftp|ftps)://(.*?)(\s|\n|[,.?!](\s|\n)|$)~", '<a href="$1://$2" target="_blank">$1://$2</a>$3', $row['message']);
+
+                // Файлы
+                if (!empty($row['attachments'])) {
+
+                    if (in_array(PHPShopSecurity::getExt($row['attachments']), array('gif', 'png', 'jpg', 'jpeg'))) {
+                        $flist = '
+                             <a href="' . $row['attachments'] . '" class="thumbnail" target="_blank" title="' . $row['attachments'] . '"><img src="' . $row['attachments'] . '" alt="" ></a>';
+                    } else {
+                        $pathinfo = pathinfo($row['attachments']);
+                        $flist = '<a title="" target="_blank" href="' . $row['attachments'] . '"><span class="glyphicon glyphicon-paperclip"></span> ' . $pathinfo['basename'] . '</a>';
+                    }
+                } else
+                    $flist = null;
+
+                // Чат
+                if ($path == 'chat') {
+
+                    if (!empty($row['staffid'])) {
+                        $message .= '
+               <div class="chat_msg_item chat_msg_item_user" style="background: ' . $this->color_dialog . '">
+                ' . nl2br($row['message']) . '
+               </div>
+               ';
+                    } else {
+
+                        // Дата
+                        if (!isset($row['date'])) {
+                            $status = '<div class="status">' . PHPShopDate::get($row['time'], true) . '</div>';
+                            $style_adm = null;
+                        } else {
+                            $status = null;
+                            $style_adm = 'chat_form';
+                        }
+
+                        $message .= '
+                <div class="chat_msg_item chat_msg_item_admin ' . $style_adm . '">
+                  <div class="chat_avatar">
+                    <img src="' . $this->avatar . '"/>
+                  </div>' . nl2br($row['message']) . '
+                  <div class="file">' . $flist . '</div>
+                  ' . $status . '
+               </div> 
+               ';
+                    }
+                }
+                // Диалоги
+                else {
+                    
+                    if (!empty($row['staffid'])) {
+                        $message .= '
+             <div class="incoming_msg">
+              <div class="received_msg">
+                <div class="received_withd_msg">
+                   <span class="time_date">' . PHPShopDate::get($row['time'], true) . '</span>
+                    <p>' . nl2br($row['message']) . '</p>
+                    <span class="time_date"><div class="row">' . $flist . '</div></span>
+                 </div>
+              </div>
+            </div>';
+                    } else {
+                        $message .= '
+            <div class="outgoing_msg">
+              <div class="sent_msg">
+                <span class="time_date text-right">' . $row['name'] . ': ' . PHPShopDate::get($row['time'], true) . '</span>
+                <p>' . nl2br($row['message']) . '</p>
+                <span class="time_date"><div class="row">' . $flist . '</div></span>
+               </div>
+            </div>';
+                    }
+                }
+            }
+        }
+        return $message;
+    }
+
+}
+
+/**
  * Элемент подбора по брендам
  * @author PHPShop Software
  * @version 1.4
@@ -14,7 +448,6 @@ class PHPShopBrandsElement extends PHPShopElements {
     public $limitOnLine = 5;
     public $firstClassName = 'span-first-child';
     public $debug = false;
-
     // Хранение брендов и значений к ним, что бы не делать лишних запросов при использовании в циклах.
     private static $brands = [];
     private static $brandValues = [];
@@ -62,13 +495,12 @@ class PHPShopBrandsElement extends PHPShopElements {
             return ParseTemplateReturn('brands/top_brands_main.tpl');
     }
 
-    public static function getCategoryBrands($categoryId)
-    {
+    public static function getCategoryBrands($categoryId) {
         global $PHPShopShopCatalogElement;
 
         PHPShopParser::set('categoryBrandsList', null);
 
-        if(is_array($PHPShopShopCatalogElement->CategoryArray)) {
+        if (is_array($PHPShopShopCatalogElement->CategoryArray)) {
             $category = $PHPShopShopCatalogElement->CategoryArray[(int) $categoryId];
         } else {
             $category = (new PHPShopCategory((int) $categoryId))->objRow;
@@ -78,9 +510,9 @@ class PHPShopBrandsElement extends PHPShopElements {
         $categoryBrands = [];
 
         $sorts = unserialize($category['sort']);
-        if(is_array($sorts)) {
+        if (is_array($sorts)) {
             foreach ($sorts as $sort) {
-                if(isset($brands[$sort])) {
+                if (isset($brands[$sort])) {
                     $categoryBrands[] = (int) $sort;
                 }
             }
@@ -97,14 +529,13 @@ class PHPShopBrandsElement extends PHPShopElements {
             PHPShopParser::set('categoryBrandsList', ParseTemplateReturn('brands/category_brands_one.tpl'), true);
         }
 
-        if(!empty(PHPShopParser::get('categoryBrandsList'))) {
+        if (!empty(PHPShopParser::get('categoryBrandsList'))) {
             return ParseTemplateReturn('brands/category_brands.tpl');
         }
     }
 
-    private static function getBrands()
-    {
-        if(count(self::$brands) > 0) {
+    private static function getBrands() {
+        if (count(self::$brands) > 0) {
             return self::$brands;
         }
 
@@ -122,9 +553,8 @@ class PHPShopBrandsElement extends PHPShopElements {
         return self::$brands;
     }
 
-    private static function getBrandsValues($categories = null)
-    {
-        if(count(self::$brandValues) === 0) {
+    public static function getBrandsValues($categories = null) {
+        if (count(self::$brandValues) === 0) {
             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort']);
             $PHPShopOrm->mysql_error = false;
 
@@ -138,11 +568,11 @@ class PHPShopBrandsElement extends PHPShopElements {
         }
 
         // Значения для бренда категории
-        if(is_array($categories)) {
+        if (is_array($categories)) {
             $result = [];
             foreach (self::$brandValues as $brandName => $brandValue) {
                 foreach ($brandValue as $value) {
-                    if(in_array((int) $value['category'], $categories)) {
+                    if (in_array((int) $value['category'], $categories)) {
                         $result[$brandName][] = $value;
                     }
                 }
@@ -155,15 +585,14 @@ class PHPShopBrandsElement extends PHPShopElements {
         return self::$brandValues;
     }
 
-    private static function getBrandLink($values)
-    {
+    public static function getBrandLink($values) {
         // Учет модуля SEOURLPRO
         if (!empty($GLOBALS['SysValue']['base']['seourlpro']['seourlpro_system'])) {
-            if(is_null($GLOBALS['PHPShopSeoPro'])) {
+            if (is_null($GLOBALS['PHPShopSeoPro'])) {
                 include_once dirname(__DIR__) . '/modules/seourlpro/inc/option.inc.php';
                 $GLOBALS['PHPShopSeoPro'] = new PHPShopSeoPro();
             }
-            $seourlpro = $GLOBALS['PHPShopSeoPro']->getSettings();;
+            $seourlpro = $GLOBALS['PHPShopSeoPro']->getSettings();
         }
 
         $link = null;
@@ -171,7 +600,7 @@ class PHPShopBrandsElement extends PHPShopElements {
         foreach ($values as $key => $val) {
             $link .= 'v[' . $val['category'] . ']=' . $val['id'] . '&';
 
-            if($key > 0 && $val['seo'] !== $values[$key-1]['seo']) {
+            if ($key > 0 && $val['seo'] !== $values[$key - 1]['seo']) {
                 $isSeoNameIdentical = false;
             }
         }
@@ -182,6 +611,7 @@ class PHPShopBrandsElement extends PHPShopElements {
 
         return $GLOBALS['SysValue']['dir']['dir'] . '/selection/?' . substr($link, 0, strlen($link) - 1);
     }
+
 }
 
 /**
@@ -390,7 +820,11 @@ class PHPShopProductIconElements extends PHPShopProductElements {
         }
 
         // Вторая попытка вывести, оптимизатор RAND выключен
-        $count = @count($this->dataArray);
+        if (is_array($this->dataArray))
+            $count = count($this->dataArray);
+        else
+            $count = 0;
+
         if ($count < $this->limitspec) {
             unset($where['id']);
             $this->dataArray = $this->select(array('*'), $where, array('order' => 'RAND()'), array('limit' => $this->limitspec), __FUNCTION__);
@@ -612,7 +1046,7 @@ class PHPShopProductIndexElements extends PHPShopProductElements {
 
             if (!empty($this->enabled)) {
 
-                $where['statusi']=" !=1";
+                $where['statusi'] = " !=1";
 
                 // Мультибаза
                 if (defined("HostID"))
@@ -746,7 +1180,11 @@ class PHPShopProductIndexElements extends PHPShopProductElements {
                 $this->dataArray[] = $this->select(array('*'), $where, array('order' => 'RAND()'), array('limit' => $this->limit), __FUNCTION__);
 
             // Вторая попытка вывести спецпредложения, оптимизатор RAND выключен
-            $count = count($this->dataArray);
+            if (is_array($this->dataArray))
+                $count = count($this->dataArray);
+            else
+                $count = 0;
+
             if ($count < $this->limit) {
                 unset($where['id']);
                 $this->dataArray = $this->select(array('*'), $where, array('order' => 'RAND()'), array('limit' => $this->limit), __FUNCTION__);

@@ -118,21 +118,22 @@ function modulesMenu() {
                 continue;
 
             if ($db['capability']) {
-                
+
                 if (is_array($db['podmenu'])) {
                     $dis .= '<li class="dropdown-submenu"><a href="?path=modules&id=' . $path . '">' . __($db['title']) . '</a>';
                     $dis .= '<ul class="dropdown-menu">';
-                    
-                    if(!is_array($db['podmenu'][0]))
-                        $db_podmenu[0]=$db['podmenu'];
-                    else $db_podmenu=$db['podmenu'];
-                    
+
+                    if (!is_array($db['podmenu'][0]))
+                        $db_podmenu[0] = $db['podmenu'];
+                    else
+                        $db_podmenu = $db['podmenu'];
+
                     foreach ($db_podmenu as $podmenu)
                         $dis .= '<li><a href="?path=modules.' . $podmenu['podmenu_action'] . '">' . __($podmenu['podmenu_name']) . '</a></li>';
 
                     $dis .= '</ul></li>';
-                }
-                else $dis .= '<li><a href="?path=modules&id=' . $path . '">' . __($db['title']) . '</a></li>';
+                } else
+                    $dis .= '<li><a href="?path=modules&id=' . $path . '">' . __($db['title']) . '</a></li>';
             }
 
             // Notification
@@ -179,6 +180,15 @@ if (empty($adm_title)) {
     $adm_title = 'PHPShop';
     $adm_brand = $brand;
 }
+
+// Fullscreen
+if (!empty($_COOKIE['fullscreen'])) {
+    $container = 'container-fluid';
+    $fullscreen = 'glyphicon-retweet';
+} else {
+    $container = 'container';
+    $fullscreen = 'glyphicon-fullscreen';
+}
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo $GLOBALS['PHPShopLang']->code; ?>">
@@ -213,7 +223,7 @@ if (empty($adm_title)) {
         <!-- Localization -->
         <script src="../locale/<?php echo $_SESSION['lang']; ?>/gui.js" data-rocketoptimized="false" data-cfasync="false"></script>
 
-        <div class="container" style="<?php echo $frameWidth; ?>">
+        <div class="<?php echo $container; ?>" style="<?php echo $frameWidth; ?>">
 
             <nav class="navbar navbar-default <?php echo $isFrame; ?>">
                 <div>
@@ -243,17 +253,22 @@ if (empty($adm_title)) {
 
                                 </ul>
                             </li>
-                            <li class="dropdown <?php echo $menu_active_system . $menu_active_system_company . $menu_active_system_seo . $menu_active_system_sync . $menu_active_tpleditor . $menu_active_system_image . $menu_active_system_servers . $menu_active_system_integration . $menu_active_system_warehouse; ?>">
+                            <li class="dropdown <?php echo $menu_active_system . $menu_active_system_company . $menu_active_system_seo . $menu_active_system_sync . $menu_active_tpleditor . $menu_active_system_image . $menu_active_system_servers . $menu_active_system_integration . $menu_active_system_warehouse . $menu_active_company ?>">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><?php _e('Настройки'); ?> <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="?path=system"><?php _e('Основные'); ?></a></li>
-                                    <li><a href="?path=system.company"><?php _e('Реквизиты'); ?></a></li>
+                                    <li class="dropdown-submenu"><a href="?path=system.company"><?php _e('Реквизиты'); ?></a>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="?path=company"><?php _e('Юридические лица'); ?></a></li>
+                                        </ul>
+                                    </li>
                                     <li><a href="?path=system.sync"><?php _e('Документооборот'); ?></a></li>
                                     <li><a href="?path=system.seo"><?php _e('SEO заголовки'); ?></a></li>
                                     <li><a href="?path=system.currency"><?php _e('Валюты'); ?></a></li>
                                     <li><a href="?path=system.image"><?php _e('Изображения'); ?></a></li>
                                     <li><a href="?path=system.servers"><?php _e('Витрины'); ?></a></li>
                                     <li><a href="?path=system.warehouse"><?php _e('Склады'); ?></a></li>
+                                    <li><a href="?path=system.dialog"><?php _e('Диалоги'); ?></a></li>
                                     <li><a href="?path=system.integration"><?php _e('Интеграция'); ?></a></li>
                                     <li class="divider"></li>
                                     <li><a href="?path=tpleditor"><span class="glyphicon glyphicon-picture"></span> <?php _e('Шаблоны дизайна'); ?></a></li>
@@ -270,17 +285,30 @@ if (empty($adm_title)) {
                                     <li><a href="?path=exchange.backup"><?php _e('Резервное копирование'); ?></a></li>
                                 </ul>
                             </li>
+
+                            <?php
+                            if ($_SESSION['update'] == 1)
+                                $update_style = 'text-success';
+                            else if ($_SESSION['update'] == 2)
+                                $update_style = 'text-warning';
+                            else if ($_SESSION['update'] == 3)
+                                $update_style = 'text-danger';
+                            else
+                                $update_style = null;
+                            ?>
+
                             <li class="dropdown <?php echo $menu_active_update . $menu_active_update_restore . $menu_active_system_about ?>">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><?php _e('Справка'); ?> <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="?path=system.about"><?php _e('О программе'); ?></a></li>
                                     <li class="divider"></li>
                                     <li><a href="https://docs.phpshop.ru" target="_blank"><?php _e('Учебник'); ?></a></li>
-                                    <li><a href="?path=support"><?php _e('Техподдержка'); ?></a></li>
+                                    <li><a href="?path=support"><?php _e('Техподдержка'); ?> <span class="glyphicon glyphicon-info-sign <?php echo $update_style; ?>"></span></a></li>
                                     <li><a href="#" id="presentation-select"><?php _e('Обучение'); ?></a></li>
                                     <li><a href="https://www.phpshop.ru/loads/files/setup.exe" target="_blank"><?php _e('Утилиты'); ?> EasyControl</a></li>
                                     <li class="divider"></li>
-                                    <li><a href="?path=update"><span class="glyphicon glyphicon-cloud-download"></span> <?php _e('Мастер обновления'); ?></a></li>
+
+                                    <li><a href="?path=update"><span class="glyphicon glyphicon-cloud-download <?php echo $update_style; ?>"></span> <?php _e('Мастер обновления'); ?></a></li>
 
                                 </ul>
                             </li>
@@ -289,9 +317,9 @@ if (empty($adm_title)) {
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="glyphicon glyphicon-user hidden-xs"></span> <span class="visible-xs"><?php _e('Администратор'); ?> <span class="caret"></span></span><span class="caret  hidden-xs"></span></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li class="dropdown-header"><?php
-                                        _e('Вошел как');
-                                        echo ' ' . $_SESSION['logPHPSHOP'];
-                                        ?></li>
+                            _e('Вошел как');
+                            echo ' ' . $_SESSION['logPHPSHOP'];
+                            ?></li>
                                     <li class="divider"></li>
                                     <li><a href="?path=users&id=<?php echo $_SESSION['idPHPSHOP']; ?>"><?php _e('Профиль'); ?></a></li>
                                     <li><a href="?path=users"><?php _e('Все администраторы'); ?></a></li>
@@ -300,6 +328,7 @@ if (empty($adm_title)) {
                                     <li><a href="./?logout"><span class="glyphicon glyphicon-transfer"></span> <?php _e('Выйти'); ?></a></li>
                                 </ul>
                             </li>
+                            <li><a href="#" title="<?php _e('Изменить размер'); ?>" class="setscreen hidden-xs"><span class="glyphicon <?php echo $fullscreen; ?>"></span></a></li>
                             <li><a href="../../" title="<?php _e('Перейти в магазин'); ?>" class="home go2front hidden-xs" target="_blank"><span class="glyphicon glyphicon-share-alt"></span></a></li>
                         </ul>
                     </div><!-- /.navbar-collapse -->
@@ -308,7 +337,7 @@ if (empty($adm_title)) {
             <nav class="navbar navbar-inverse navbar-statick <?php echo $isFrame; ?>">
                 <div>
 
-                    <div class="navbar-header pull-left">
+                    <div class="navbar-header">
                         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar2" aria-expanded="false" aria-controls="navbar">
                             <span class="sr-only">Toggle navigation</span>
                             <span class="icon-bar"></span>
@@ -348,7 +377,7 @@ if (empty($adm_title)) {
                                 </ul>
                             </li>
 
-                            <li class="dropdown <?php echo $menu_active_shopusers . $menu_active_shopusers_status . $menu_active_shopusers_notice . $menu_active_shopusers_comment . $menu_active_shopusers_messages; ?>">
+                            <li class="dropdown <?php echo $menu_active_shopusers . $menu_active_shopusers_status . $menu_active_shopusers_notice . $menu_active_shopusers_comment . $menu_active_dialog; ?>">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><?php _e('Пользователи'); ?> <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="?path=shopusers"><?php _e('Покупатели'); ?><span class="dropdown-header"><?php _e('Список зарегистрированных покупателей магазина'); ?></span></a></li>
@@ -363,7 +392,8 @@ if (empty($adm_title)) {
                                     </li>
                                     <li><a href="?path=shopusers.notice"><?php _e('Уведомления'); ?><span class="dropdown-header"><?php _e('Заявки о поступлении товара на склад от пользователей магазина'); ?></span></a></li>
                                     <li><a href="?path=shopusers.comment"><?php _e('Комментарии'); ?><span class="dropdown-header"><?php _e('Список комментариев для товаров, оставленные пользователями'); ?></span></a></li>
-                                    <li><a href="?path=shopusers.messages"><?php _e('Переписка'); ?><span class="dropdown-header"><?php _e('Переписка с покупателями магазина из личного кабинета'); ?></span></a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="?path=dialog"><span class="glyphicon glyphicon-comment"></span> <?php _e('Диалоги с пользователями'); ?></a></li>
                                 </ul>
                             </li>
 
@@ -381,13 +411,13 @@ if (empty($adm_title)) {
                             <li class="dropdown <?php echo $menu_active_slider . $menu_active_links . $menu_active_banner . $menu_active_opros . $menu_active_metrica_traffic . $menu_active_metrica_sources_summary . $menu_active_metrica_sources_social . $menu_active_metrica_sources_sites . $menu_active_metrica_search_phrases . $menu_active_metrica_search_engines . $menu_active_metrica . $menu_active_promotions . $menu_active_lead_kanban; ?>" >
                                 <a href="#" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-expanded="false"><?php _e('Маркетинг'); ?> <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
-                                     <li><a href="?path=lead.kanban"><span><?php _e('Канбан доска'); ?></span><span class="dropdown-header"><?php _e('Управление заказами и задачами'); ?></span></a></li>
+                                    <li><a href="?path=lead.kanban"><span><?php _e('Канбан доска'); ?></span><span class="dropdown-header"><?php _e('Управление заказами и задачами'); ?></span></a></li>
                                     <li><a href="?path=promotions"><span><?php _e('Промоакции'); ?></span><span class="dropdown-header"><?php _e('Промоакции и скидки'); ?></span></a></li>
                                     <li><a href="?path=slider"><span><?php _e('Слайдер'); ?></span><span class="dropdown-header"><?php _e('Рекламный слайдер на главной странице'); ?></span></a></li>
                                     <li><a href="?path=news.sendmail"><?php _e('Рассылки'); ?><span class="dropdown-header"><?php _e('Создание email рассылок пользователям'); ?></span></a></li>
 
                                     <li><a href="?path=links"><span><?php _e('Ссылки'); ?></span><span class="dropdown-header"><?php _e('Обмен ссылками с сайтами'); ?></span></a></li>
-                                    <li><a href="?path=banner"><?php _e('Баннеры'); ?><span class="dropdown-header"><?php _e('Вывод графических изображений'); ?></span></a></li>
+                                    <li><a href="?path=banner"><?php _e('Баннеры и pop-up'); ?><span class="dropdown-header"><?php _e('Вывод баннеров и уведомлений'); ?></span></a></li>
                                     <li><a href="?path=opros"><?php _e('Опросы'); ?><span class="dropdown-header"><?php _e('Опросы для пользователей на сайте'); ?></span></a></li>                                    <li class="divider"></li>
                                     <li><a href="?path=metrica"><span class="glyphicon glyphicon-equalizer"></span> <?php _e('Статистика посещений'); ?></a></li>
                                 </ul>
@@ -433,27 +463,31 @@ if (empty($adm_title)) {
                         <?php
                         // notification
                         $i_notif = 0;
-                        if (is_array($notificationList))
-                            foreach ($notificationList as $notification) {
-                                if ($i_notif < 3) {
-                                    include_once($_classPath . 'modules/' . $notification . '/admpanel/notification.php');
-                                    $notification_function = 'notification' . ucfirst($notification);
-                                    if (function_exists($notification_function)) {
-                                        call_user_func($notification_function);
+                        if (empty($_SESSION['update_check']))
+                            if (is_array($notificationList))
+                                foreach ($notificationList as $notification) {
+                                    if ($i_notif < 3) {
+                                        include_once($_classPath . 'modules/' . $notification . '/admpanel/notification.php');
+                                        $notification_function = 'notification' . ucfirst($notification);
+                                        if (function_exists($notification_function)) {
+                                            call_user_func($notification_function);
+                                        }
                                     }
+                                    $i_notif++;
                                 }
-                                $i_notif++;
-                            }
 
-                         // update
+                        // update
                         if (!empty($_SESSION['update_check']))
                             echo '<a class="navbar-btn btn btn-sm btn-info navbar-right hidden-xs" href="?path=update" data-toggle="tooltip" data-placement="bottom" title="' . __('Доступно обновление') . '">Update <span class="badge">' . intval($_SESSION['update_check']) . '</span></a>';
 
-// message
-                        $messages = $PHPShopBase->getNumRows('messages', "where enabled='0'");
-                        if (!empty($messages) and empty($_SESSION['update_check']))
-                            echo '<a class="navbar-btn btn btn-sm btn-primary navbar-right hidden-xs" href="?path=shopusers.messages">' . __('Письма') . ' <span class="badge">' . intval($messages) . '</span></a>';
+
+                        // dialog
+                        $dialog = $PHPShopBase->getNumRows('dialog', "where isview='0' and staffid='1' group by chat_id");
+                        if ($dialog > 99)
+                            $dialog = 99;
                         ?>
+                        <a class="navbar-btn btn btn-sm btn-primary navbar-right hidden-xs hide" href="?path=dialog"><?php _e('Диалоги'); ?> <span class="badge" id="dialog-check"><?php echo intval($dialog); ?></span></a><audio id="play-chat" src="images/chat.mp3"></audio>
+
 
                         <a class="navbar-btn btn btn-sm btn-warning navbar-right hidden-xs hidden-sm hide" href="?path=order&where[statusi]=0"><?php _e('Заказы'); ?> <span class="badge" id="orders-check"><?php echo $PHPShopBase->getNumRows('orders', "where statusi='0'"); ?></span>
                         </a><audio id="play" src="images/message.mp3"></audio>
@@ -480,7 +514,6 @@ if (empty($adm_title)) {
             } else
                 $PHPShopBase->Rule->BadUserFormaWindow();
             ?>
-            <br>
         </div>
 
         <!-- Notification -->
@@ -535,8 +568,11 @@ if (empty($adm_title)) {
             echo '<script>var video=true;</script>';
         }
 
-        if ($_GET['path'] == 'intro' and $presentation_checked == 'checked')
+        if ($_GET['path'] == 'intro' and $presentation_checked == 'checked' and ! PHPShopString::is_mobile())
             echo '<script>var presentation_start=true;</script>';
+
+        if (PHPShopString::is_mobile())
+            echo '<script>var is_mobile=true;</script>';
         ?>
 
         <!--/ Presentation -->

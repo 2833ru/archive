@@ -3,7 +3,7 @@
 /**
  * Библиотека подключения к БД
  * @author PHPShop Software
- * @version 1.9
+ * @version 1.10
  * @package PHPShopClass
  * @param string $iniPath путь до конфигурационного файла config.ini
  * @param bool $connectdb подключение к MySQL
@@ -129,7 +129,7 @@ class PHPShopBase {
      * @param string $message текст сообщения
      * @param string $error текст ошибки
      */
-    function errorConnect($e = false, $message = "Нет соединения с базой", $error = false) {
+    static function errorConnect($e = false, $message = "Нет соединения с базой", $error = false) {
 
         $message = '<strong>' . $message . '</strong><br><em>Ошибка: ' . $error . '</em>';
 
@@ -278,10 +278,13 @@ class PHPShopBase {
             } else {
                 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['servers']);
                 $PHPShopOrm->debug = false;
-                $data = $PHPShopOrm->select(array('id,name,company,logo'), array('enabled' => "='1'", 'host' => '="' . str_replace('www.', '', $_SERVER['HTTP_HOST']) . '"'), false, array('limit' => 1));
+                $data = $PHPShopOrm->select(array('id', 'name', 'company', 'logo', 'price'), array('enabled' => "='1'", 'host' => '="' . str_replace('www.', '', $_SERVER['HTTP_HOST']) . '"'), false, array('limit' => 1));
 
                 if (is_array($data)) {
                     define("HostID", intval($data['id']));
+
+                    if (!empty($data['price']))
+                        define("HostPrice", $data['price']);
 
                     if ($PHPShopSystem) {
 

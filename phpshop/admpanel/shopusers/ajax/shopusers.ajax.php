@@ -29,20 +29,40 @@ if (isset($_GET['start']))
 else
     $limit = array('limit' => 30000);
 
+// Мобильная версия
+if (PHPShopString::is_mobile()) {
+    $memory['shopusers.option']['name'] = 1;
+    $memory['shopusers.option']['mail'] = 0;
+    $memory['shopusers.option']['menu'] = 0;
+    $memory['shopusers.option']['status'] = 1;
+    $memory['shopusers.option']['discount'] = 1;
+    $memory['shopusers.option']['action'] =0;
+    $memory['shopusers.option']['date'] = 1;
+    $PHPShopInterface->mobile=true;
+} else {
+    $memory['shopusers.option']['name'] = 1;
+    $memory['shopusers.option']['mail'] = 1;
+    $memory['shopusers.option']['menu'] = 1;
+    $memory['shopusers.option']['status'] = 1;
+    $memory['shopusers.option']['discount'] = 1;
+    $memory['shopusers.option']['date'] = 1;
+    $memory['shopusers.option']['action'] =1;
+    
+}
 
-$where['id']='>0';
+
+$where['id'] = '>0';
 
 // Расширенная сортировка из JSON
-if (is_array($_GET['order']) and !empty($_SESSION['jsort'][$_GET['order']['0']['column']])) {
+if (is_array($_GET['order']) and ! empty($_SESSION['jsort'][$_GET['order']['0']['column']])) {
     $order = array('order' => $_SESSION['jsort'][$_GET['order']['0']['column']] . ' ' . $_GET['order']['0']['dir']);
-    $test=$_SESSION['jsort'][$_GET['order']['0']['column']] . ' ' . $_GET['order']['0']['dir'];
-}
-else  $order = array('order' => 'id desc');
+    $test = $_SESSION['jsort'][$_GET['order']['0']['column']] . ' ' . $_GET['order']['0']['dir'];
+} else
+    $order = array('order' => 'id desc');
 
 // Поиск на странице JSON
-if(!empty($_GET['search']['value'])){
-     $where['id'].= " and (login LIKE '%" . PHPShopString::utf8_win1251(PHPShopSecurity::TotalClean($_GET['search']['value'])) . "%' or name LIKE '%" . PHPShopString::utf8_win1251(PHPShopSecurity::TotalClean($_GET['search']['value'])) . "%')";
-
+if (!empty($_GET['search']['value'])) {
+    $where['id'] .= " and (login LIKE '%" . PHPShopString::utf8_win1251(PHPShopSecurity::TotalClean($_GET['search']['value'])) . "%' or name LIKE '%" . PHPShopString::utf8_win1251(PHPShopSecurity::TotalClean($_GET['search']['value'])) . "%')";
 }
 
 // Таблица с данными
@@ -67,12 +87,10 @@ if (is_array($data))
         }
 
         $PHPShopInterface->setRow(
-                $row['id'], array('name' => $row['name'], 'link' => '?path=shopusers&id=' . $row['id'], 'align' => 'left', 'sort'=>'name', 'class' => $enabled), array('name' => $row['login'], 'sort'=>'login', 'link' => 'mailto:' . $row['login'], 'class' => $enabled), array('name'=>$PHPShopUserStatusArray[$row['status']]['name'], 'sort'=>'status'), array('name'=>$discount_td, 'sort'=>'cumulative_discount'), array('name' => '<span class="hide">' . $row['datas'] . '</span>' . PHPShopDate::get($row['datas']),'sort'=>'datas'),
-                array('action' => array('edit', 'order', '|', 'delete', 'id' => $row['id']), 'align' => 'center'),
-                array('status' => array('enable' => $row['enabled'], 'align' => 'right', 'sort'=>'enabled','caption' => array('Выкл', 'Вкл'))));
+                $row['id'], array('name' => $row['name'], 'link' => '?path=shopusers&id=' . $row['id'], 'align' => 'left', 'sort' => 'name', 'class' => $enabled,'view' => intval($memory['shopusers.option']['name'])), array('name' => $row['login'], 'sort' => 'login', 'link' => 'mailto:' . $row['login'], 'class' => $enabled,'view' => intval($memory['shopusers.option']['mail'])), array('name' => $PHPShopUserStatusArray[$row['status']]['name'], 'sort' => 'status','view' => intval($memory['shopusers.option']['status'])), array('name' => $discount_td, 'sort' => 'cumulative_discount','view' => intval($memory['shopusers.option']['discount'])), array('name' => '<span class="hide">' . $row['datas'] . '</span>' . PHPShopDate::get($row['datas']), 'sort' => 'datas','view' => intval($memory['shopusers.option']['date'])), array('action' => array('edit', 'order', '|', 'delete', 'id' => $row['id']), 'align' => 'center','view' => intval($memory['shopusers.option']['menu'])), array('view' => intval($memory['shopusers.option']['action']),'status' => array('enable' => $row['enabled'], 'align' => 'right', 'sort' => 'enabled', 'caption' => array('Выкл', 'Вкл'))));
     }
-    
-    
+
+
 
 $total = $PHPShopOrm->select(array("COUNT('id') as count"), $where, $order);
 
@@ -83,7 +101,7 @@ if (!empty($total['count'])) {
     $PHPShopInterface->_AJAX["recordsFiltered"] = 0;
 }
 
-$_SESSION['jsort']=$PHPShopInterface->_AJAX["sort"];
+$_SESSION['jsort'] = $PHPShopInterface->_AJAX["sort"];
 unset($PHPShopInterface->_AJAX["sort"]);
 
 header("Content-Type: application/json");

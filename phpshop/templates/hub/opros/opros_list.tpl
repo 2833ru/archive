@@ -4,7 +4,7 @@
     </div>
     <div class="panel-body">
         <h4>@oprosName@</h4>
-        <form action="/opros/" method="post" role="form">
+        <form action="/opros/" method="post">
             @oprosContent@
             <div>
                 <button type="submit" class="btn btn-primary">{Голосовать}</button>

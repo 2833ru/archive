@@ -53,9 +53,9 @@ function actionStart() {
 
 
     // ‘орма регистрации
-    $Tab3 = $PHPShopGUI->setPay($data['serial'], false, $data['version'], true);
+    $Tab3 = $PHPShopGUI->setPay($data['serial'], false, $data['version'],false);
     
-            $info='ƒл€ работы модул€ требуетс€ настроить форму HTTP-уведомлени€ по ссылке: <a href="https://sp-money.yandex.ru/myservices/online.xml" target="_blank">https://sp-money.yandex.ru/myservices/online.xml</a>. ¬ качестве адреса дл€ уведомлений нужно указать <code>http://'.$_SERVER['SERVER_NAME'].'/phpshop/modules/yandexmoney/payment/result.php</code>. 
+            $info='ƒл€ работы модул€ требуетс€ настроить форму HTTP-уведомлени€ по ссылке: <a href="https://yoomoney.ru/transfer/myservices/http-notification" target="_blank">https://yoomoney.ru/transfer/myservices/http-notification</a>. ¬ качестве адреса дл€ уведомлений нужно указать <code>http://'.$_SERVER['SERVER_NAME'].'/phpshop/modules/yandexmoney/payment/result.php</code>. 
                 <p>
 ¬ поле "—екрет" нужно указать свое любое значение или оставить предложенное системой. Ётот секрет нужно скопировать в закладку "ќсновное" настройки модул€ в одноименное поле.</p>';
 

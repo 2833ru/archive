@@ -135,7 +135,7 @@ class PHPShopOrder extends PHPShopCore {
         $cart = $this->PHPShopCart->display('ordercartforma');
         $this->set('display_cart', $cart);
         $this->set('cart_num', $this->PHPShopCart->getNum());
-        $this->set('discount', $PHPShopOrder->ChekDiscount($this->PHPShopCart->getSum(true)));
+        $this->set('discount', $PHPShopOrder->ChekDiscount($this->PHPShopCart->getSum(true), $this->PHPShopCart->getArray()));
         
         $sum_cart = $this->PHPShopCart->getSum(true);
         $sum_discount_off = $this->PHPShopCart->getSumNoDiscount(true);

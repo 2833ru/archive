@@ -3,7 +3,7 @@
 @order_action_add@
 
 <!-- Form Starts -->
-<form class="form-horizontal" role="form" method="post" name="forma_order" id="forma_order" action="/done/">
+<form class="form-horizontal" method="post" name="forma_order" id="forma_order" action="/done/">
     <div class="row">
     
         <!-- Shipping & Shipment Block Starts -->

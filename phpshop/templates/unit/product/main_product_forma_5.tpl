@@ -7,9 +7,9 @@
             @hitIcon@
             
         </span>
-        <div class="product-btn"> <button class=" addToCompareList " role="button" data-uid="@productUid@"><span class="icons icons-green icons-small icons-compare"></span></button>
+        <div class="product-btn"> <button class=" addToCompareList " data-uid="@productUid@"><span class="icons icons-green icons-small icons-compare"></span></button>
          <a class=" addToWishList @elementCartOptionHide@" href="/shop/UID_@productUid@.html"><span class="icons icons-green icons-small icons-wishlist"></span></a>
-         <button class=" addToWishList @elementCartHide@" role="button" data-uid="@productUid@"><span class="icons icons-green icons-small icons-wishlist"></span></button></div>
+         <button class=" addToWishList @elementCartHide@" data-uid="@productUid@"><span class="icons icons-green icons-small icons-wishlist"></span></button></div>
         <div class="caption ">
         <a href="/shop/UID_@productUid@.html" title="@productName@">
             <div class="product-image position-relative">
@@ -36,7 +36,7 @@
                 <div class="d-flex flex-column align-items-end justify-content-end"> <span class="">
                         @specIcon@</span>
                     <a class=" addToCartList @elementCartOptionHide@" href="/shop/UID_@productUid@.html">@productSale@ <span class="icons icons-cart"></span></a>
-                    <button class=" addToCartList @elementCartHide@" data-uid="@productUid@" role="button">@productSale@ <span class="icons icons-cart"></span></button>
+                    <button class=" addToCartList @elementCartHide@" data-uid="@productUid@">@productSale@ <span class="icons icons-cart"></span></button>
                          <button class="notice-btn  @elementNoticeHide@" title="@productNotice@" data-product-id="@productUid@">
                 @productNotice@
             </button>

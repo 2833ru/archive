@@ -29,7 +29,7 @@ function template_CID_Product($obj, $data, $rout) {
                 break;
             case 2:
                 $obj->set('sSetBactive', 'active');
-                if((int) $_GET['f'] === 1) {
+                if ((int) $_GET['f'] === 1) {
                     $obj->set('unitPriceLowActive', 'active');
                     $obj->set('unitPriceLowChecked', 'checked="checked"');
                 } else {
@@ -68,7 +68,7 @@ function template_parent($obj, $dataArray, $rout) {
         $true_color_array = $true_size_color_array = $color_array = array();
         $size = $color = null;
 
-        if (@count($obj->select_value > 0)) {
+        if (is_array($obj->select_value) and count($obj->select_value) > 0) {
 
             foreach ($obj->select_value as $value) {
 
@@ -132,7 +132,10 @@ function template_parent($obj, $dataArray, $rout) {
                     $obj->set('parentId', $val['id']);
                     $obj->set('parentPrice', $val['price']);
                     $obj->set('parentImage', $size_color_array[$val['id']]['image']);
-                    $obj->set('parentItems', $obj->lang('product_on_sklad') . " " . $val['items'] . " " . $val['ed_izm']);
+
+                    // Ñêëàä
+                    if ($obj->PHPShopSystem->getSerilizeParam('admoption.sklad_enabled') == 1)
+                        $obj->set('parentItems', $obj->lang('product_on_sklad') . " " . $val['items'] . " " . $val['ed_izm']);
 
                     if ((float) $size_color_array[$val['id']]['price_n'] > 0)
                         $obj->set('parentPriceOld', $size_color_array[$val['id']]['price_n']);
@@ -186,7 +189,7 @@ function template_parent($obj, $dataArray, $rout) {
 
             $obj->set('parentListSize', $size, true);
 
-           if (!empty($color))
+            if (!empty($color))
                 $obj->set('parentListColorTitle', $obj->parent_color);
 
             $obj->set('parentListColor', $color, true);
@@ -224,8 +227,8 @@ function template_UID($obj, $dataArray, $rout) {
             $obj->set('newtipIcon', '');
 
         $cart = new PHPShopCart();
-        
-        if($cart->isItemInCart($dataArray['id'])) {
+
+        if ($cart->isItemInCart($dataArray['id'])) {
             $obj->set('unitProductSale', $obj->lang('productSaleReady') . '<span class="icons icons-incart"></span>');
         } else {
             $obj->set('unitProductSale', $obj->lang('product_sale') . '<span class="icons icons-cart"></span>');
@@ -247,11 +250,15 @@ function sorttemplatehook($value, $n, $title, $vendor) {
             $text = $p[0];
             $checked = null;
             if (is_array($vendor)) {
-                foreach ($vendor as $v) {
-                    if (is_array($v))
+                foreach ($vendor as $sortId => $v) {
+                    if (is_array($v)) {
                         foreach ($v as $s)
                             if ($s == $p[1])
                                 $checked = 'checked';
+                    } else {
+                        if ($n == $sortId && $p[1] == $v)
+                            $checked = 'checked';
+                    }
                 }
             }
 
@@ -298,8 +305,8 @@ function sortñattemplatehook($value, $n, $title, $vendor) {
             $checked = null;
             if (is_array($vendor)) {
                 foreach ($vendor as $v) {
-                     if ($v == $p[1])
-                         $checked = 'active';
+                    if ($v == $p[1])
+                        $checked = 'active';
                 }
             }
             if ($p[3] != null)
@@ -351,7 +358,7 @@ function template_image_gallery($obj, $array) {
             if (!$obj->PHPShopSystem->ifSerilizeParam('admoption.image_save_source') or ! file_exists($_SERVER['DOCUMENT_ROOT'] . $name_bigstr))
                 $name_bigstr = $name;
 
-            if(!file_exists($_SERVER['DOCUMENT_ROOT'] . $name_s)) {
+            if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $name_s)) {
                 $name_s = $name;
             }
 
@@ -366,9 +373,9 @@ function template_image_gallery($obj, $array) {
             $bxpager = null;
 
 
-       $obj->set('productFotoList', '<img itemprop="image" content="http://' . $_SERVER['SERVER_NAME'] . $array['pic_big'] . '" class="bxslider-pre" alt="' . $array['name'] . '" src="' . $array['pic_big'] . '" /><div class="bxslider hide bigslider">' . $bxslider . '</div><div class="bx-pager">' . $bxpager . '</div>');
+        $obj->set('productFotoList', '<img itemprop="image" content="http://' . $_SERVER['SERVER_NAME'] . $array['pic_big'] . '" class="bxslider-pre" alt="' . $array['name'] . '" src="' . $array['pic_big'] . '" /><div class="bxslider hide bigslider">' . $bxslider . '</div><div class="bx-pager">' . $bxpager . '</div>');
         $obj->set('productFotoListBig', '<ul class="bxsliderbig" data-content="' . $bxsliderbig . '" data-page="' . $bxpager . '"></ul><div class="bx-pager-big">' . $bxpager . '</div>');
-        $obj->set('productSliderOneImage', sprintf('<img class="one-image-slider" src="%s" alt="%s" title="%s"/>', !empty($array['pic_big']) ? $array['pic_big'] : $data[0]['name'] , $productTitle, $productTitle));
+        $obj->set('productSliderOneImage', sprintf('<img class="one-image-slider" src="%s" alt="%s" title="%s"/>', !empty($array['pic_big']) ? $array['pic_big'] : $data[0]['name'], $productTitle, $productTitle));
         return true;
     }
 }

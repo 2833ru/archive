@@ -30,6 +30,7 @@ class PHPShopArray {
      */
     var $debug = false;
     var $cache = true;
+    var $ignor_select = false;
 
     /**
      * вывод ошибок mysql
@@ -143,7 +144,7 @@ class PHPShopArray {
             }
 
         // Игнорирование полей   
-        if (@count($this->ignor_select) > 0) {
+        if (is_array($this->ignor_select) and count($this->ignor_select) > 0) {
             foreach ($array as $k => $v)
                 foreach ($v as $key => $val)
                     if (in_array($key, $this->ignor_select)) {

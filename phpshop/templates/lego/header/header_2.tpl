@@ -121,11 +121,15 @@
         <div class="row">
             <div class="navbar-header"></div>
             <div id="navbar" class="navbar-collapse collapse">
-                <input type="checkbox" id="hmt" class="hidden-menu-ticker ">
-                <label class="btn-menu visible-xs btn-menu-left" for="hmt">
-                    <div class="f-block"> <div >  <span class="first"></span>
+                <label class="btn-menu visible-xs btn-menu-left">
+                    <span class="f-block">
+                        <span class="f-block-wrapper">
+                            <span class="first"></span>
                             <span class="second"></span>
-                            <span class="third"></span></div>{Каталог}</div>
+                            <span class="third"></span>
+                        </span>
+                        {Каталог}
+                    </span>
                 </label>
                 <ul class="nav navbar-nav main-menu">
                     <!-- dropdown catalog menu -->
@@ -182,9 +186,11 @@
                 </div>
 				<a href="/order/" class="btn-menu visible-xs"><span class="icons-cart"></span></a>
                 <label class="btn-menu btn-menu-right visible-xs" for="hmt">
-                    <span class="first"></span>
-                    <span class="second"></span>
-                    <span class="third"></span>
+                    <span class="f-block-wrapper">
+                        <span class="first"></span>
+                        <span class="second"></span>
+                        <span class="third"></span>
+                    </span>
                 </label>
                 <!--/ Каталоги в главном меню-->
                 <ul class="nav navbar-nav navbar-right hidden-xs">

@@ -35,7 +35,7 @@
         <h1 class="page-title hide">{Личные данные}</h1>
     </div>
 
-    <form role="form" method="post" name="forma_message" class="col-md-6">
+    <form method="post" name="forma_message" class="col-md-6">
         <div class="form-group">
             <div class="">
             </div>
@@ -83,7 +83,7 @@
 
 
             <span class="glyphicon glyphicon-remove form-control-feedback hide" aria-hidden="true"></span>
-            <p class="small"><label><input type="checkbox" value="on" name="rule" class="req" checked="checked">  {Я согласен} <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html" alt="{Согласие на обработку персональных данных}">{на обработку моих персональных данных}</a></label></p>    
+            <p class="small"><label><input type="checkbox" value="on" name="rule" class="req" checked="checked">  {Я согласен} <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html">{на обработку моих персональных данных}</a></label></p>
         </div>
         <div>
             @captcha@

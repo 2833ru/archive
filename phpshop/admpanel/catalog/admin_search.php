@@ -39,7 +39,7 @@ function treegenerator($array, $i, $curent) {
 function viewCatalog($name = "search_category", $category = 0) {
 
     if (!empty($category))
-        $_REQUEST['cat'] = $category;
+        $_GET['cat'] = $category;
 
     $PHPShopCategoryArray = new PHPShopCategoryArray();
     $CategoryArray = $PHPShopCategoryArray->getArray();
@@ -58,14 +58,14 @@ function viewCatalog($name = "search_category", $category = 0) {
 
     $GLOBALS['tree_array'] = &$tree_array;
 
-    $tree_select = '<select class="form-control input-sm" name="' . $name . '" style="width:240px">
+    $tree_select = '<select id="search-select-category" class="form-control input-sm" name="' . $name . '" style="width:100%">
         <option value=""> - '.__('Все категории').' - </option>';
 
     if (is_array($tree_array[0]['sub']))
         foreach ($tree_array[0]['sub'] as $k => $v) {
-            $check = treegenerator($tree_array[$k], 1, $_REQUEST['cat']);
+            $check = treegenerator($tree_array[$k], 1, $_POST['cat']);
 
-            if ($k == $_REQUEST['cat'])
+            if ($k == $_POST['cat'])
                 $selected = 'selected';
             else
                 $selected = null;
@@ -132,8 +132,8 @@ function actionSearch() {
         $where['( name'] = " REGEXP '\x20*" . PHPShopSecurity::true_search($_REQUEST['words']) . "' or uid  REGEXP '^" . PHPShopSecurity::true_search($_REQUEST['words']) . "' or id='" . intval($_REQUEST['words']) . "' )";
     }
 
-    if (!empty($_REQUEST['cat']))
-        $where['category'] = "=" . intval($_REQUEST['cat']);
+    if (!empty($_GET['cat']))
+        $where['category'] = "=" . intval($_GET['cat']);
 
     if (!empty($_REQUEST['price_end']))
         $where['price'] = " BETWEEN " . intval($_REQUEST['price_start']) . " AND " . intval($_REQUEST['price_end']);
@@ -214,28 +214,30 @@ function actionAdvanceSearch() {
     parse_str(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_QUERY), $query);
 
     $searchforma = $PHPShopInterface->setField('Название товара', $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[name]', 'placeholder' => '', 'class' => 'pull-left', 'value' => $query['where']['name'])));
-    $searchforma.= $PHPShopInterface->setField('Артикул', $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[uid]', 'size' => 200, 'placeholder' => '', 'class' => 'pull-left', 'value' => $query['where']['uid'])));
-    $searchforma.= $PHPShopInterface->setField('ID', $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[id]', 'size' => 200, 'placeholder' => '1005', 'class' => 'pull-left', 'value' => $query['where']['id'])));
-     $searchforma.= $PHPShopInterface->setField('Подтип', $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'parent', 'size' => 200, 'placeholder' => '52', 'class' => 'pull-left', 'value' => $query['parent'])));
+    $searchforma.= $PHPShopInterface->setField('Артикул', $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[uid]',  'placeholder' => '', 'class' => 'pull-left', 'value' => $query['where']['uid'])));
+    $searchforma.= $PHPShopInterface->setField('ID', $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[id]', 'placeholder' => '1005', 'class' => 'pull-left', 'value' => $query['where']['id'])));
+     $searchforma.= $PHPShopInterface->setField('Подтип', $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'parent', 'placeholder' => '52', 'class' => 'pull-left', 'value' => $query['parent'])));
     $searchforma.= $PHPShopInterface->setField('Характеристика', $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'sort', 'placeholder' => 'Характеристика:Значение', 'class' => 'pull-left', 'value' => $query['sort'])));
     $searchforma.= $PHPShopInterface->setField('Категория', viewCatalog('where[category]', $query['where']['category']));
-    $searchforma.= $PHPShopInterface->setField('Вывод', $PHPShopInterface->setCheckbox('where[spec]', 1, 'Спецпредложение', intval($query['where']['spec'])) .
+    $searchforma.= $PHPShopInterface->setField('Вывод', $PHPShopInterface->setCheckbox('where[spec]', 1, 'Спец.', intval($query['where']['spec'])) .
             $PHPShopInterface->setCheckbox('where[newtip]', 1, 'Новинка', intval($query['where']['newtip'])) .
-            $PHPShopInterface->setCheckbox('where[sklad]', 1, 'Под заказ', intval($query['where']['sklad'])) . '<br>' .
+            $PHPShopInterface->setCheckbox('where[sklad]', 1, 'Под заказ', intval($query['where']['sklad'])) .
             $PHPShopInterface->setCheckbox('where[enabled]', 0, 'Не выводить', intval($query['where']['enabled'])));
     $value_search[] = array(__('Вхождение фразы'), 'reg', 'reg');
     $value_search[] = array(__('Точное сопадение'), 'eq', '');
-    $searchforma.= $PHPShopInterface->setField('Логика', $PHPShopInterface->setSelect('core', $value_search, false, false, false, false, false, false, false, false, 'form-control') . $PHPShopInterface->setHelp('Вхождение фразы поддерживает REGEXP [^ - начало, $ - конец]'));
+    $searchforma.= $PHPShopInterface->setField('Логика', $PHPShopInterface->setSelect('core', $value_search, false, false, false, false, false, false, false, false, 'form-control') . $PHPShopInterface->setHelp('Вхождение фразы REGEXP [^ - начало, $ - конец]'));
     $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'hidden', 'name' => 'path', 'value' => 'catalog'));
-    $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'hidden', 'name' => 'cat', 'value' => $_REQUEST['cat']));
+    $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'hidden', 'name' => 'cat', 'value' => $_GET['cat']));
 
-    $searchforma.='<p class="clearfix"> </p>';
+    $searchforma.='<div class="clearfix search-sort-list">';
 
-    if (!empty($_REQUEST['cat']) && (int) $_REQUEST['cat'] > 0) {
+    if (!empty($_POST['cat']) && (int) $_POST['cat'] > 0) {
         PHPShopObj::loadClass("sort");
-        $PHPShopSort = new PHPShopSort((int) $_REQUEST['cat'], false, false, 'sorttemplate', false, false, false, false, null, true);
+        $PHPShopSort = new PHPShopSort((int) $_POST['cat'], false, false, 'sorttemplate', false, false, false, false, null, true);
         $searchforma.=$PHPShopSort->disp;
     }
+    
+    $searchforma.='</div>';
 
     $PHPShopInterface->_CODE.=$searchforma;
     @header("Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0");

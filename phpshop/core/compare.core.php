@@ -151,7 +151,7 @@ class PHPShopCompare extends PHPShopCore {
 
         // Выбор каталога для показа
         if (!$COMCID) { //Если не указан каталог
-            if (@count($green) > 0) {//Если хоть один каталог можно показать
+            if (is_array($green) and @count($green) > 0) {//Если хоть один каталог можно показать
                 krsort($green);
                 foreach ($green as $c) {
                     $COMCID = $c;

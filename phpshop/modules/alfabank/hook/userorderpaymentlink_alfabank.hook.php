@@ -46,7 +46,7 @@ function userorderpaymentlink_mod_alfabank_hook($obj, $PHPShopOrderFunction) {
         foreach ($order['Cart']['cart'] as $key => $arItem) {
 
             // Скидка
-            if ($order['Person']['discount'] > 0)
+            if ($order['Person']['discount'] > 0 && empty($arItem['promo_price']))
                 $price = ($arItem['price'] - ($arItem['price'] * $order['Person']['discount'] / 100)) * 100;
             else
                 $price = $arItem['price'] * 100;

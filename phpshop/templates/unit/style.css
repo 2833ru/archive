@@ -170,31 +170,6 @@ button {
   margin-left: 0.125rem;
 }
 
-.chat {
-  position: fixed;
-  bottom: 50%;
-  left: -2.25rem;
-  border-top-left-radius: 0 !important;
-  border-bottom-left-radius: 0 !important;
-  padding: 0.4375rem;
-}
-
-.chat .glyphicon {
-  padding-left: 0.625rem;
-}
-
-.chat-modal-content {
-  height: 31.25rem;
-  width: 100%;
-  overflow: hidden;
-  border: 0rem;
-  margin: 0rem;
-}
-
-#chatopenwindow {
-  margin-right: 0.4375rem;
-}
-
 .page-header h1 {
   font-size: 1.875rem;
 }
@@ -321,10 +296,7 @@ a#faset-filter-reset span {
   margin: 0.1875rem;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-}
+
 
 .editor_empty a {
   text-decoration: none !important;
@@ -2669,7 +2641,6 @@ color:#fff;}
 
 .search-misspell {
   font-size: 0.875rem;
-  margin-bottom: 1.25rem;
 }
 
 .product-services-list label {
@@ -4824,7 +4795,7 @@ background-size: 0.75rem 0.75rem;height:0.75rem}
 
 @media (max-width: 991px) {
   #faset-filter {
-    position: fixed;
+    position: absolute;
     top: 0;
     width: 100%;
     background: #fff;
@@ -6411,7 +6382,7 @@ font-size: 18px;color: #3F3E3E;*/margin-bottom:10px; margin-top:0; }
 .new-modal h4 a {color: #3F3E3E;}
 .new-modal img{width:100%; margin:0 10px 10px 0; max-width:125px;}
 .new-modal .image {margin:0 10px 10px 0}
-.new-modal .btn{font-size: 17px; transition:all 0.3s;background:#f0f0f0;}
+.new-modal .btn{font-size: 17px; transition:all 0.3s;-background:#f0f0f0;}
 .new-modal .btn:hover{opacity:0.7}
 .rating-group .btn{background-color:#fff; width:23px; height:23px; background:url(images/star_blank.svg)}
 .rating-group .btn.hover{background-color:#fff; width:23px; height:23px; background:url(images/star_active.svg)}
@@ -6464,4 +6435,23 @@ border-bottom: 1px dashed #61C183;}
 }
 .template-product-list .media-body {
   width: 100%!important;
+}
+.ajaxsearch-list h4 {
+  color: #333333;
+  font-size: 14px;
+}
+.ajaxsearch-list img {
+  max-height: 50px;
+  width: auto;
+  margin: 0 auto;
+}
+.ajaxsearch-price {
+  font-weight: 500;
+  font-size: 1rem;
+  line-height: 1.375rem;
+  color: #333;
+}
+#admin-modal {
+  width: 100%;
+  height: 600px
 }

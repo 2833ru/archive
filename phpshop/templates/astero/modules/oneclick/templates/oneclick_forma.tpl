@@ -1,4 +1,4 @@
-<form role="form" method="post" name="user_forma" action="@ShopDir@/oneclick/">
+<form method="post" name="user_forma" action="@ShopDir@/oneclick/">
     <div class="form-group">
         <label>{Имя}</label>
         <input type="text" name="oneclick_mod_name" class="form-control" placeholder="{Имя}" required="">

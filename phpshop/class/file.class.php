@@ -3,7 +3,7 @@
 /**
  * Библиотека для работы с файлами
  * @author PHPShop Software
- * @version 1.2
+ * @version 1.3
  * @package PHPShopClass
  */
 class PHPShopFile {
@@ -43,7 +43,6 @@ class PHPShopFile {
 
     /**
      * Запись данных в csv файл
-     * используется стандартная функция php fputcsv
      * @param string $file путь до файла
      * @param array $csv данные для записи
      * @param bool $error вывод ошибки
@@ -54,7 +53,6 @@ class PHPShopFile {
             foreach ($csv as $value) {
                 fputcsv($fp, $value, ';', '"');
             }
-            //stream_set_write_buffer($fp, 0);
             fclose($fp);
         } elseif ($error)
             echo 'Нет файла ' . $file;
@@ -63,19 +61,54 @@ class PHPShopFile {
     /**
      * Чтение CSV файла
      * @param string $file адрес файла
-     * @param string $function имя функции обработчика 
+     * @param string $function имя функции обработчика
      * @param string $delim разделитель
      * @return bool
      */
     static function readCsv($file, $function, $delim = ';') {
         $fp = @fopen($file, "r");
         if ($fp) {
-            while (($data = @fgetcsv($fp, 10000, $delim)) !== FALSE) {
+            while (($data = @fgetcsv($fp, 0, $delim)) !== FALSE) {
                 call_user_func($function, $data);
             }
             fclose($fp);
             return true;
         }
+    }
+
+    /**
+     * Генератор
+     */
+    static function getLines($file, $delim) {
+        $fp = fopen($file, 'r');
+        try {
+            while ($line = @fgetcsv($fp, 0, $delim)) {
+                yield $line;
+            }
+        } finally {
+            fclose($fp);
+        }
+    }
+
+    /**
+     * Чтение CSV файла с генератором
+     * @param string $file адрес файла
+     * @param string $function имя функции обработчика
+     * @param string $delim разделитель
+     * @param string $limit массив значений интервала (0,500)
+     * @return bool
+     */
+    static function readCsvGenerators($file, $function, $delim = ';', $limit = array(0, 500)) {
+
+        foreach (self::getLines($file, $delim) as $n => $line) {
+             if ($n==0 or ($limit[0] <= $n and $n < $limit[1]))
+                call_user_func($function, $line);
+            else
+                continue;
+        }
+
+        if (file_exists($file))
+            return true;
     }
 
     /**
@@ -93,14 +126,12 @@ class PHPShopFile {
                 while (!feof($fp_in))
                     gzwrite($fp_out, fread($fp_in, 1024 * 512));
                 fclose($fp_in);
-            }
-            else
+            } else
                 $error = true;
             gzclose($fp_out);
             unlink($source);
             //rename($dest, $source . '.bz2');
-        }
-        else
+        } else
             $error = true;
         if ($error)
             return false;
@@ -109,7 +140,7 @@ class PHPShopFile {
     }
 
     /**
-     * Поиск файлов 
+     * Поиск файлов
      * @param string $dir папка
      * @param string $function функция обработки
      * @param bool $return функция возвратить первый найденный файл
@@ -121,7 +152,7 @@ class PHPShopFile {
             if (@$dh = opendir($dir)) {
                 while (($file = readdir($dh)) !== false) {
                     if ($file != '.' and $file != '..') {
-                        $user_func_result.=call_user_func_array($function, array($file));
+                        $user_func_result .= call_user_func_array($function, array($file));
                         if ($return)
                             return $user_func_result;
                     }
@@ -151,7 +182,7 @@ class PHPShopFile {
 
         foreach ($array as $key => $element) {
             $array[$key] = trim($element);
-            if(substr($element, -1) !== ';') {
+            if (substr($element, -1) !== ';') {
                 $array[$key] = $element . ';';
             }
         }

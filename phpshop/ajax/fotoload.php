@@ -12,18 +12,12 @@ PHPShopObj::loadClass("system");
 $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
 $PHPShopSystem = new PHPShopSystem();
 
-// Подключаем библиотеку поддержки JsHttpRequest
-if ($_REQUEST['type'] != 'json') {
-    require_once $_classPath . "lib/Subsys/JsHttpRequest/Php.php";
-    $JsHttpRequest = new Subsys_JsHttpRequest_Php("windows-1251");
-}
-
 function getFotoIconPodrobno($n, $f) {
-    global $SysValue,$FotoArray,$link_db;
+    global $SysValue, $FotoArray, $link_db;
 
     $fRComSatrt = null;
     $sql = "select * from " . $SysValue['base']['foto'] . " where parent='" . intval($n) . "' order by num";
-    $result = mysqli_query($link_db,$sql);
+    $result = mysqli_query($link_db, $sql);
     $num = mysqli_num_rows($result);
     while (@$row = mysqli_fetch_array(@$result)) {
         $name = $row['name'];
@@ -89,7 +83,7 @@ function getFotoIconPodrobno($n, $f) {
 
     $d = $dBig;
     if ($num > 1)
-        $d.='<table class="foto">' . $disp . '</table>';
+        $d .= '<table class="foto">' . $disp . '</table>';
     return $d;
 }
 
@@ -97,11 +91,10 @@ if (PHPShopSecurity::true_num($_REQUEST['xid'])) {
 
     $_RESULT = array(
         'foto' => PHPShopString::win_utf8(getFotoIconPodrobno($_REQUEST['xid'], $_REQUEST['fid'])),
-        'current'=>$FotoArray[$_REQUEST['fid']]["name"],
+        'current' => $FotoArray[$_REQUEST['fid']]["name"],
         "success" => 1
     );
 
-    if ($_REQUEST['type'] == 'json')
-        echo json_encode($_RESULT);
+    echo json_encode($_RESULT);
 }
 ?>

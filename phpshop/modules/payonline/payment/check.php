@@ -78,9 +78,13 @@ class Payment extends PHPShopPaymentResult {
         $PHPShopOrm->debug = $this->debug;
         (new PHPShopOrderFunction((int) $row['id']))->changeStatus((int) $this->set_order_status_101(), $row['statusi']);
 
-        $this->ofd($row);
+        if((int) $this->PayOnline->option['fiskalization'] === 1) {
+            $this->PayOnline->fiskalize($row, $_REQUEST['TransactionID'], $_REQUEST['Provider'], $_REQUEST['PaymentAmount']);
+        } else {
+            $this->ofd($row);
+        }
 
-        exit();
+        die("OK");
     }
 
     private function setPaymentLog($id)

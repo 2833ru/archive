@@ -60,13 +60,9 @@
  @ComStartNotice@
               
                     <a class="btn btn-circle" href="/users/notice.html?productId=@productUid@" title="@productNotice@" style="font-size:18px;"><span class="icons-mail"></span></a>
-               
-                @ComEndNotice@ 
-              
-                    <button class="btn btn-circle addToCompareList" role="button" data-uid="@productUid@"><span class="icons-compare"></span></button>
-                
-               
-                    <button class="btn btn-circle addToWishList" role="button" data-uid="@productUid@"><span class="icons-like"></span></button>
+                @ComEndNotice@
+                    <button class="btn btn-circle addToCompareList" data-uid="@productUid@"><span class="icons-compare"></span></button>
+                    <button class="btn btn-circle addToWishList" data-uid="@productUid@"><span class="icons-like"></span></button>
                </div>
 			   </div>
 				 <p><br></p>
@@ -115,7 +111,7 @@
 												-
 											</button>
 										</span>
-										<input type="text" name="quant[2]" class="form-control form-control_gr input-number" value="1" min="1" max="100">
+										<input type="text" name="quant[2]" class="form-control form-control_gr input-number" value="1">
 										<span class="input-group-btn">
 											<button type="button" class=" btn btn-default btn-default_r btn-number" data-type="plus" data-field="quant[2]">
 												+
@@ -136,7 +132,7 @@
 												-
 											</button>
 										</span>
-										<input type="text" name="quant[2]" class="form-control form-control_gr input-number" value="1" min="1" max="100">
+										<input type="text" name="quant[2]" class="form-control form-control_gr input-number" value="1">
 										<span class="input-group-btn">
 											<button type="button" class=" btn btn-default btn-default_r btn-number" data-type="plus" data-field="quant[2]">
 												+

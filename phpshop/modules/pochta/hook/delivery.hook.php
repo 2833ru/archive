@@ -13,6 +13,7 @@ function pochta_delivery_hook($obj, $data) {
         $hook['delivery'] = $result['delivery'];
         $hook['total'] = $result['total'];
         $hook['adresList'] = $result['adresList'];
+        $hook['free_delivery'] = $result['free_delivery'];
         $hook['success'] = 1;
 
         return $hook;

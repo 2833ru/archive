@@ -36,3 +36,6 @@ color:#343434;
 .main-container,.modal-dialog,.popover-content,.modal-footer{
 --btncolorover:#88ceeb;
 }
+.theme-color {
+    color: #88CEEB;
+}

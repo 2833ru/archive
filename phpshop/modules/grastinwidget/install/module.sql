@@ -16,11 +16,12 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_grastinwidget_system` (
   `weight` varchar(64) default '1',
   `status` int(11),
   `delivery_id` varchar(64) default '',
+  `payment_service` text,
   `version` varchar(64) DEFAULT '1.0',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-INSERT INTO `phpshop_modules_grastinwidget_system` VALUES (1, '', 0, 'Москва', 'Москва', '', 0, 0, 0, 0, '', 1, 0, 1, '', '', '1.0');
+INSERT INTO `phpshop_modules_grastinwidget_system` VALUES (1, '', 0, 'Москва', 'Москва', '', 0, 0, 0, 0, '', 1, 0, 1, '', '', '', '1.0');
 
 CREATE TABLE IF NOT EXISTS `phpshop_modules_grastinwidget_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

@@ -7,9 +7,9 @@
                 @hitIcon@
                 @promotionsIcon@
             </span>
-            <div class="product-btn"> <button class=" addToCompareList " role="button" data-uid="@productUid@"><span class="icons icons-green icons-small icons-compare"></span></button>
-         <button class=" addToWishList " role="button" data-uid="@productUid@"><span class="icons icons-green icons-small icons-wishlist"></span></button></div>
-            <a class="media-left text-center" href="/shop/UID_@productUid@.html" title="@productName@" style="min-width:200px"><img data-src="@productImg@" alt="@productName@"></a>
+            <div class="product-btn"> <button class=" addToCompareList " data-uid="@productUid@"><span class="icons icons-green icons-small icons-compare"></span></button>
+         <button class=" addToWishList " data-uid="@productUid@"><span class="icons icons-green icons-small icons-wishlist"></span></button></div>
+            <a class="media-left text-center" href="/shop/UID_@productUid@.html" style="min-width:200px" title="@productName@"><img data-src="@productImg@" alt="@productName@"></a>
             <div class="media-body">
                 <div class="product-name"><a href="/shop/UID_@productUid@.html" title="@productName@">@productName@</a></div>
                 <p>@productDes@</p>
@@ -23,7 +23,7 @@
 </div>
                 <div class="pull-right">
                      <a class=" addToCartList @elementCartOptionHide@" href="/shop/UID_@productUid@.html">@productSale@ <span class="icons icons-cart"></span></a>
-                    <button class=" addToCartList @elementCartHide@" data-uid="@productUid@" role="button">@productSale@ <span class="icons icons-cart"></span></button>
+                    <button class=" addToCartList @elementCartHide@" data-uid="@productUid@">@productSale@ <span class="icons icons-cart"></span></button>
                          <button class="notice-btn  @elementNoticeHide@" title="@productNotice@" data-product-id="@productUid@">
                 @productNotice@
             </button>

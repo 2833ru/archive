@@ -83,7 +83,7 @@ class PHPShopNewtip extends PHPShopShopCore {
 
                 case 2:
                     $this->query_filter("enabled='1'");
-                    $order=array('order'=>'datas desc');
+                    $order=array('order'=>'id DESC');
                     break;
             }
 

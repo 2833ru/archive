@@ -8,13 +8,6 @@ session_start();
  */
 $_classPath = "../";
 
-// Подключаем библиотеку поддержки JsHttpRequest
-if ($_REQUEST['type'] != 'json') {
-    require_once $_classPath . "/lib/Subsys/JsHttpRequest/Php.php";
-    $JsHttpRequest = new Subsys_JsHttpRequest_Php("windows-1251");
-}
-
-
 // Библиотеки
 include($_classPath . "class/obj.class.php");
 PHPShopObj::loadClass("base");
@@ -81,21 +74,21 @@ else
 
 $version = null;
 foreach (str_split($GLOBALS['SysValue']['upload']['version']) as $w)
-    $version.=$w . '.';
+    $version .= $w . '.';
 
-if(empty($License['License']['DomenLocked']))
-    $License['License']['DomenLocked']='-';
+if (empty($License['License']['DomenLocked']))
+    $License['License']['DomenLocked'] = '-';
 
 $Info = "Информация о программе
 ---------------------------------------------
 
 Версия: PHPShop " . $product_name . "
-Сборка: " . substr($version, 0, strlen($version)-1). "
+Сборка: " . substr($version, 0, strlen($version) - 1) . "
 Дизайн: " . $PHPShopSystem->getParam('skin') . " " . $theme . "
 Установлено: " . $FileDate . "
 Окончание лицензии: " . $LicenseUntil . "
 Окончание поддержки: " . $TechPodUntil . "
-Ограничение на домен: ".$License['License']['DomenLocked']."
+Ограничение на домен: " . $License['License']['DomenLocked'] . "
 
 ---------------------------------------------
 
@@ -108,8 +101,6 @@ $_RESULT = array(
 );
 
 // JSON 
-if ($_REQUEST['type'] == 'json') {
-    $_RESULT['info'] = PHPShopString::win_utf8($_RESULT['info']);
-    echo json_encode($_RESULT);
-}
+$_RESULT['info'] = PHPShopString::win_utf8($_RESULT['info']);
+echo json_encode($_RESULT);
 ?>

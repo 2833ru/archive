@@ -4,10 +4,13 @@ if (!defined("OBJENABLED"))
     exit(header('Location: /?error=OBJENABLED'));
 
 // Заглушка на 404 ошибку при пустом пути для SEO Pro
-if(isset($PHPShopNav) && $PHPShopNav instanceof PHPShopNav) {
-    if ($PHPShopNav->notPath(array('page')) and !@strpos($PHPShopNav->getName(true), '/', 2))
-        $SysValue['nav']['path'] = 'index';
+if(!isset($PHPShopNav) && is_null($PHPShopNav)) {
+    PHPShopObj::loadClass('nav');
+    $PHPShopNav = new PHPShopNav();
 }
+
+if ($PHPShopNav->notPath(array('page')) and !strpos($PHPShopNav->getName(true), '/', 1))
+    $SysValue['nav']['path'] = 'index';
 
 class PHPShopCategorySeoProArray extends PHPShopArray {
 
@@ -153,7 +156,7 @@ class PHPShopSeoPro {
 
     function setLatin($str, $enabled = true) {
         if ($enabled) {
-            $str = PHPShopString::toLatin(trim($str));
+            $str = PHPShopString::toLatin(trim(strip_tags($str)));
             $str = str_replace("_", "-", $str);
             //$str = str_replace("/", "-", $str);
         }

@@ -26,14 +26,19 @@ function actionStart() {
         'url' => '?path=order&where[a.user]=' . $data['id']
     );
 
-    $PHPShopGUI->action_select['Сообщения пользователя'] = array(
-        'name' => 'Сообщения пользователя',
-        'url' => '?path=shopusers.messages&where[a.UID]=' . $data['id']
+    $PHPShopGUI->action_select['Диалоги пользователя'] = array(
+        'name' => 'Диалоги пользователя',
+        'url' => '?path=dialog&uid=' . $data['id']
     );
 
     $PHPShopGUI->action_select['Отправить письмо'] = array(
         'name' => 'Отправить письмо',
         'url' => 'mailto:' . $data['login']
+    );
+    
+    $PHPShopGUI->action_select['Создать диалог'] = array(
+        'name' => 'Создать диалог',
+        'url' => '?path=dialog&new&user=' . $data['id'].'&bot=message&id='.$data['id'].'&return=dialog'
     );
 
 
@@ -44,7 +49,7 @@ function actionStart() {
 
     // Размер названия поля
     $PHPShopGUI->field_col = 2;
-    $PHPShopGUI->setActionPanel(__("Покупатели") . '<span class="hidden-xs"> / ' . $data['name'] . '</span>', array('Отправить письмо', 'Создать заказ', 'Заказы пользователя', 'Сообщения пользователя', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'));
+    $PHPShopGUI->setActionPanel(__("Покупатели") . '<span class="hidden-xs">: ' . $data['name'] . '</span>', array('Создать заказ', 'Заказы пользователя', 'Диалоги пользователя', 'Создать диалог', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'));
     $PHPShopGUI->addJSFiles('./js/validator.js', './js/jquery.suggestions.min.js', './order/gui/dadata.gui.js');
     $PHPShopGUI->addCSSFiles('./css/suggestions.min.css');
 

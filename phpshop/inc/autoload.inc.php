@@ -36,6 +36,9 @@ foreach ($GLOBALS['SysValue']['autoload'] as $val)
     if (is_file($val))
         include_once($val);
 
+// JS настройки
+$PHPShopCoreElement->init('setjs');
+
 // Выбор валюты
 $PHPShopCurrencyElement = new PHPShopCurrencyElement();
 $PHPShopCurrencyElement->init('valutaDisp');
@@ -128,6 +131,10 @@ if(PHPShopString::is_mobile()){
 } else {
     unset($GLOBALS['SysValue']['other']['imageSliderMobile']);
 }
+
+// Диалоги
+$PHPShopDialogElement = new PHPShopDialogElement();
+$PHPShopDialogElement->dialog();
 
 // RSS грабер новостей
 new PHPShopRssParser();

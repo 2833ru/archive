@@ -255,6 +255,15 @@ function faset_filter_click(obj) {
 
     if (AJAX_SCROLL) {
 
+        var hash;
+        var hashes = window.location.href.split('#')[0].slice(window.location.href.indexOf('?') + 1).split('&');
+        for(var i = 0; i < hashes.length; i++) {
+            hash = hashes[i].split('=');
+            if(hash[0].match(/v\[(.*)\]/) && window.location.hash.indexOf(hash[0] + '=' + hash[1]) === -1) {
+                window.location.hash += hash[0] + '=' + hash[1] + '&';
+            }
+        }
+
         $(".pagination").hide();
 
         if ($(obj).prop('checked')) {
@@ -1063,11 +1072,11 @@ $(document).ready(function () {
                         $('[itemscope] .price-old').html('');
 
                     // Смена картинки
-                    var parent_img = json['image'];
+                    var parent_img = json['image_big'];
                     if (parent_img != "") {
 
                         $(".bx-pager img").each(function (index, el) {
-                            if ($(this).attr('src') == parent_img) {
+                            if ($(this).attr('data-big-image') == parent_img) {
                                 slider.goToSlide(index);
                             }
 

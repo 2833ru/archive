@@ -405,7 +405,7 @@ border-collapse: separate;}
                 <tr CLASS=R0>
                    
                     
-                    <td align="left" CLASS=R0C38><SPAN STYLE="white-space:nowrap">@org_name@, @company@</SPAN></td>
+                    <td align="left" CLASS=R0C38><SPAN STYLE="white-space:nowrap">@org_name@</SPAN></td>
                     <TD width="20">&nbsp;</TD>
 					<td rowspan="5"  valign="top">@comment_start@<IMG SRC = "@logo@" STYLE = "max-width:200px; margin-top:0px;float:right;">@comment_end@</td>
 					 <TD width="20">&nbsp;</TD>

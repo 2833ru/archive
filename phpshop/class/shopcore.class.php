@@ -99,6 +99,7 @@ class PHPShopShopCore extends PHPShopCore {
         // Настройки
         $this->parent_price_enabled = $this->PHPShopSystem->getSerilizeParam('admoption.parent_price_enabled');
         $this->user_price_activate = $this->PHPShopSystem->getSerilizeParam('admoption.user_price_activate');
+        $this->user_items_activate = $this->PHPShopSystem->getSerilizeParam('admoption.user_items_activate');
         $this->sklad_enabled = $this->PHPShopSystem->getSerilizeParam('admoption.sklad_enabled');
         $this->sklad_status = $this->PHPShopSystem->getSerilizeParam('admoption.sklad_status');
         $this->format = intval($this->PHPShopSystem->getSerilizeParam("admoption.price_znak"));
@@ -122,7 +123,7 @@ class PHPShopShopCore extends PHPShopCore {
      * @param string $where параметр отбора
      * @return mixed
      */
-    function query_filter($where = false) {
+    function query_filter($where = false,$v=false) {
 
         if (!empty($where))
             $where .= ' and ';
@@ -672,9 +673,15 @@ class PHPShopShopCore extends PHPShopCore {
         // Промоакции
         $promotions = $this->PHPShopPromotions->getPrice($row);
         if (is_array($promotions)) {
-            $row['price'] = $promotions['price'];
+            $priceColumn = $this->PHPShopSystem->getPriceColumn();
+            $row[$priceColumn] = $promotions['price'];
             $row['price_n'] = $promotions['price_n'];
             $row['promo_label'] = $promotions['label'];
+        }
+        
+        // Если склад показывать только после авторизации
+        if ($this->user_items_activate == 1 and empty($_SESSION['UsersId'])) {
+            $this->sklad_enabled = false;
         }
 
         // Показывать состояние склада
@@ -727,6 +734,8 @@ class PHPShopShopCore extends PHPShopCore {
             $this->set('ComEndNotice', PHPShopText::comment('>'));
             $this->set('elementCartHide', null);
             $this->set('elementNoticeHide', 'hide hidden');
+            $this->set('productOutStock', null);
+            $this->set('productPriceRub', null);
         }
 
         // Товар под заказ
@@ -796,7 +805,6 @@ class PHPShopShopCore extends PHPShopCore {
             $this->set('productSale', $this->lang('product_sale'));
         }
 
-
         // Если цены показывать только после авторизации
         if ($this->user_price_activate == 1 and empty($_SESSION['UsersId'])) {
             $this->set('ComStartCart', PHPShopText::comment('<'));
@@ -809,8 +817,7 @@ class PHPShopShopCore extends PHPShopCore {
             $this->set('parentLangFrom', null);
             $this->set('productPriceOld', null);
         }
-
-
+        
         // Промоакции лейблы
         if (!empty($row['promo_label'])) {
             $this->set('promoLabel', $row['promo_label']);
@@ -1156,7 +1163,7 @@ public function getPreviewSorts($products, $currentProduct) {
 
     if(is_null($this->sortCategories)) {
         $sortCategoryOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']);
-        $this->sortCategories = $sortCategoryOrm->getList(array('id', 'name'), array('show_preview' => '="1"'));
+        $this->sortCategories = $sortCategoryOrm->getList(['id', 'name'], ['show_preview' => '="1"'], ['order' => 'num, name']);
     }
 
     if (\count($this->sortCategories) === 0) {

@@ -1,4 +1,4 @@
-<form role="form" method="post" name="user_forma" action="@ShopDir@/oneclick/">
+<form method="post" name="user_forma" action="@ShopDir@/oneclick/">
     <div class="form-group">
         <label>Имя</label>
         <input type="text" name="oneclick_mod_name" class="form-control" placeholder="Имя" required="">
@@ -8,7 +8,7 @@
         <input type="text" name="oneclick_mod_tel" class="form-control" placeholder="Телефон" required="">
     </div>
     <p>@oneclick_captcha@</p>
-	<p class="small"><label><input type="checkbox" value="on" name="rule" class="req" checked="checked">  {Я согласен} <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html" alt="Согласие на обработку персональных данных">{на обработку моих персональных данных}</a></label></p>
+	<p class="small"><label><input type="checkbox" value="on" name="rule" class="req" checked="checked">  {Я согласен} <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html">{на обработку моих персональных данных}</a></label></p>
     <div class="text-center">
         <input type="hidden" name="oneclick_mod_product_id" value="@productUid@">
         <input type="hidden" name="oneclick_mod_send" value="1">

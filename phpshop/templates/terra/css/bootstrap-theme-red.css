@@ -72,3 +72,6 @@ background-color:#f5f5f5;
 #body{
 --color:#dd0504;
 }
+.theme-color {
+    color: #dd0504;
+}

@@ -161,13 +161,17 @@ NovaPoshta = function () {
             data: {cityRef: pvz['city'], weight: self.weight},
             dataType: 'json',
             success: function(json) {
+                var deliveryCost = json['price'];
+                if($("#d").data('free') === 1) {
+                    deliveryCost = 0;
+                }
 
-                $("#DosSumma").html(json['price']);
-                $("#TotalSumma").html(Number(json['price']) + Number($('#OrderSumma').val()));
+                $("#DosSumma").html(deliveryCost);
+                $("#TotalSumma").html(Number(deliveryCost) + Number($('#OrderSumma').val()));
                 $('#deliveryInfo').html('ПВЗ: №' + pvz['number'] + ' ' + self.cityInput.val());
                 $('input[name="novaposhtaInfo"]').val('Мiсто: ' + self.cityInput.val() + ' ПВЗ: №' + pvz['number'] + ', ' + pvz['address']);
                 $('input[name="novaposhtaPvz"]').val(pvz['number']);
-                $('input[name="novaposhtaDeliveryCost"]').val(json['price']);
+                $('input[name="novaposhtaDeliveryCost"]').val(deliveryCost);
                 $('input[name="novaposhtaCityRegion"]').val(self.region);
                 $('input[name="city_new"]').val(self.cityName);
                 $('input[name="recipientCityRef"]').val(pvz['city']);
@@ -179,7 +183,7 @@ NovaPoshta = function () {
                     '<p><b>Адреса: </b>' + pvz['address'] + '</p>' +
                     '<p><b>Телефон: </b>+' + pvz['phone'] + '</p>' +
                     '<p><b>Тип: </b>' + pvz['type_title'] + '</p>' +
-                    '<p><b>Вартiсть доставки: </b>' + json['price'] + ' грн.</p>' +
+                    '<p><b>Вартiсть доставки: </b>' + deliveryCost + ' грн.</p>' +
                     '</div>'
                 );
             }

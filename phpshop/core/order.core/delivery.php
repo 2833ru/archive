@@ -169,6 +169,20 @@ class PHPShopOrderDelivery {
                 sprintf(__('Для данного способа доставки сумма в корзине должна быть больше: %s %s'), (int) $delivery['sum_min'], $PHPShopSystem->getDefaultValutaCode(true))
             );
         }
+
+        $weight = $PHPShopCart->getWeight();
+
+        if((int) $weight > 0) {
+            if ((int) $delivery['weight_max'] > 0 && (int) $delivery['weight_max'] <= $weight) {
+                throw new \Exception(__('Превышен максимальный вес заказа'));
+            }
+
+            if ((int) $delivery['weight_min'] > 0 && (int) $delivery['weight_min'] >= $weight) {
+                throw new \Exception(
+                    sprintf(__('Для данного способа доставки вес в корзине должен быть больше: %s кг.'), (int) $delivery['weight_min'] / 1000)
+                );
+            }
+        }
     }
 
     private function servers()

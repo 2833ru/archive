@@ -36,9 +36,10 @@ class Sberbank {
             $total = $items['total'];
         }
 
-        $array = array(
-            "customerDetails" => array("email" => $email),
-            "cartItems" => array("items" => $items['items']));
+        $array = ["cartItems" => ["items" => $items['items']]];
+        if(strpos($email, str_replace("www.", "", $_SERVER['SERVER_NAME'])) === false) {
+            $array['customerDetails'] = ["email" => $email];
+        }
 
         $orderBundle = json_encode($array);
 
@@ -96,7 +97,7 @@ class Sberbank {
         $i = 1;
         foreach ($cart as $product) {
             // Скидка
-            if ((float) $discount > 0)
+            if ((float) $discount > 0 && empty($product['promo_price']))
                 $price = ($product['price'] - ($product['price'] * (float) $discount / 100)) * 100;
             else
                 $price = $product['price'] * 100;

@@ -61,7 +61,7 @@
                     <div class="input-group" style="max-width: 150px">
                         <input class="form-control" data-uid="@productUid@"  type="text" style="min-width:50px" maxlength="3" value="1" placeholder="1" required="" name="quant[2]">
                         <span class="input-group-btn">
-                            <button class="btn btn-primary addToCartFull" role="button" data-num="1" data-uid="@productUid@">@productSale@</button>
+                            <button class="btn btn-primary addToCartFull" data-num="1" data-uid="@productUid@">@productSale@</button>
                         </span>    
                     </div>
                 </div>
@@ -69,7 +69,7 @@
                     <div class="input-group" style="max-width: 150px">
                         <input class="form-control" data-uid="@productUid@"  type="text" style="min-width:50px" maxlength="3" value="1" placeholder="1" required="" name="quant[1]">
                         <span class="input-group-btn">
-                            <button class="btn btn-primary addToCartFull" role="button" data-num="1" data-uid="@productUid@">@productSale@</button>
+                            <button class="btn btn-primary addToCartFull" data-num="1" data-uid="@productUid@">@productSale@</button>
                         </span>    
                     </div>
                 </div>
@@ -83,8 +83,8 @@
 			 <a class="btn btn-default" href="/pricemail/UID_@productUid@.html">@productBestPrice@</a>
 <div class="clearfix"></div>
 <div style="padding-top:10px">
-                    <button class="btn btn-info addToCompareList " role="button" data-uid="@productUid@">{Сравнить}</button>
-                    <button class="btn btn-default addToWishList" role="button" data-uid="@productUid@">{Отложить}</button>
+                    <button class="btn btn-info addToCompareList " data-uid="@productUid@">{Сравнить}</button>
+                    <button class="btn btn-default addToWishList" data-uid="@productUid@">{Отложить}</button>
 </div>               
                 
                 
@@ -126,7 +126,7 @@
                     <div id="commentList"> </div>
 
 
-                    <button role="button" class="btn btn-info pull-right" onclick="$('#addComment').slideToggle();
+                    <button class="btn btn-info pull-right" onclick="$('#addComment').slideToggle();
                             $(this).hide();"><span class="glyphicon glyphicon-plus-sign"></span> {Новый комментарий}</button>
 
                     <div id='addComment' class="well well-sm" style='display:none;margin-top:30px;'>
@@ -152,7 +152,7 @@
                             <label class="btn btn-success btn-sm active">
                                 <input type="radio" name="rate" value="5" checked> +5
                             </label>
-                            <button role="button" class="btn btn-info btn-sm pull-right" onclick="commentList('@productUid@', 'add', 1);">{Проголосовать}</button>
+                            <button class="btn btn-info btn-sm pull-right" onclick="commentList('@productUid@', 'add', 1);">{Проголосовать}</button>
                         </div>
 
                     </div>
@@ -198,7 +198,7 @@
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                 <h4 class="modal-title">Таблица размеров</h4>
             </div>
-            <form role="form" method="post" name="user_forma_size_delivery" action="@ShopDir@/returncall/">
+            <form method="post" name="user_forma_size_delivery" action="@ShopDir@/returncall/">
                 <div class="modal-body">
 
 
@@ -222,7 +222,7 @@
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                 <h4 class="modal-title">Информация о доставке</h4>
             </div>
-            <form role="form" method="post" name="user_forma_size_delivery" action="@ShopDir@/returncall/">
+            <form method="post" name="user_forma_size_delivery" action="@ShopDir@/returncall/">
                 <div class="modal-body">
 
                     @productOption2@

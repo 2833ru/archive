@@ -101,7 +101,7 @@ class PHPShopCdekService extends ISDEKservice
 
         $delivery = new PHPShopDelivery((int) static::$deliveryId);
 
-        return (int) $delivery->objRow['price_null_enabled'] === 1 && $cart->getSum(false) >= (int) $delivery->objRow['price_null'];
+        return $delivery->isFree($cart->getSum(false));
     }
 }
 

@@ -50,6 +50,11 @@ function OFDStart($data, $operation = 'sell', $json = false) {
     if (class_exists('AtolRest')) {
         $AtolRest = new AtolRest($OrderId);
 
+        // Только ручная отправка.
+        if((int) $AtolRest->option['manual_control'] === 1 && !isset($_REQUEST['manual'])) {
+            exit;
+        }
+
         $sell['timestamp'] = date('d.m.Y H:m:s');
         $sell['external_id'] = $OrderId;
         $sell['receipt'] = array(

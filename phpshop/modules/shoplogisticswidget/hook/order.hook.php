@@ -18,7 +18,7 @@ function order_shoplogisticswidget_hook($obj, $row, $rout) {
         if(empty($weight))
             $weight = $ShopLogistics->option['weight'];
         if($ShopLogistics->option['dev_mode'] == 1) {
-            $script = '<script type="text/javascript" src="https://test.client-shop-logistics.ru/index.php?route=widget/lkwidget/bootstart"></script>';
+            $script = '<script type="text/javascript" src="https://test.client-shop-logistics.com/index.php?route=widget/lkwidget/bootstart"></script>';
         } else {
             $script = '<script type="text/javascript" src="https://client-shop-logistics.ru/index.php?route=widget/lkwidget/bootstart"></script>';
         }

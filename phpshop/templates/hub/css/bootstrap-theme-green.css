@@ -92,3 +92,6 @@ background:#36f543;
 --color:#008000;
 }
 .productsgroup_list .btn-primary {background-color: var(--color);border-color:var(--color)}
+.theme-color {
+    color: #008000;
+}

@@ -5,7 +5,7 @@
    
     <div class="pageCatalContent">
         <h4>@oprosName@</h4>
-        <form action="/opros/" method="post" role="form">
+        <form action="/opros/" method="post">
             @oprosContent@
             <div class="d-flex">
                 <button type="submit" class="btn btn-primary">{Голосовать}</button>

@@ -13,7 +13,7 @@ function actionStart() {
     $PHPShopGUI->setActionPanel(__("Редактирование Слайдера") . " №" . $data['id'], array('Удалить'), array('Сохранить', 'Сохранить и закрыть'));
 
     // Содержание закладки 1
-    $Tab1 = $PHPShopGUI->setField("Изображение", $PHPShopGUI->setIcon($data['image'], "image_new", false)) .
+    $Tab1 = $PHPShopGUI->setField("Изображение", $PHPShopGUI->setIcon($data['image'], "image_new", false, array('load' => true, 'server' => true, 'url' => false, 'multi' => false, 'view' => false))) .
             $PHPShopGUI->setField("Цель", $PHPShopGUI->setInput("text", "link_new", $data['link'], "none", 300) . $PHPShopGUI->setHelp("Пример: /pages/info.html или http://google.com")) .
             $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("enabled_new", 1, "Включить", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выключить", $data['enabled'])) .
             $PHPShopGUI->setField("Мобильный", $PHPShopGUI->setCheckbox("mobile_new", 1, "Отображать только на мобильных устройствах", $data['mobile'])) .

@@ -11,7 +11,7 @@
     <h1 class="main-heading2">{Расширенный поиск}</h1>
 
 <div class="well">
-    <form  action="/search/" role="form">
+    <form  action="/search/">
 
         <div class="input-group">
             <input name="words" maxlength="50" class="form-control" placeholder="{Искать}.." required="" type="search" value="@searchString@">

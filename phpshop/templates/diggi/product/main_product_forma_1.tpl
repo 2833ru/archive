@@ -30,7 +30,7 @@
                     <span>@productSale@</span>
                 </a>
 
-                <button type="button" class="btn btn-cart addToCartList @elementCartHide@" data-uid="@productUid@" role="button" data-cart="@productSaleReady@">
+                <button type="button" class="btn btn-cart addToCartList @elementCartHide@" data-uid="@productUid@" data-cart="@productSaleReady@">
                     <i class="fa fa-shopping-cart"></i>                             
                     <span>@productSale@</span>
                 </button>
@@ -39,8 +39,8 @@
                     {Уведомить}
                 </a>                                   
 
-                <button class="btn btn-wishlist addToWishList" role="button" data-uid="@productUid@" data-title="{Отложить}" data-placement="top" data-toggle="tooltip"><i class="fa fa-heart"></i></button>
-                <button class="btn btn-wishlist addToCompareList" role="button" data-uid="@productUid@" data-title="{Сравнить}" data-placement="top" data-toggle="tooltip"><i class="fa fa-bar-chart-o"></i></button>
+                <button class="btn btn-wishlist addToWishList" data-uid="@productUid@" data-title="{Отложить}" data-placement="top" data-toggle="tooltip"><i class="fa fa-heart"></i></button>
+                <button class="btn btn-wishlist addToCompareList" data-uid="@productUid@" data-title="{Сравнить}" data-placement="top" data-toggle="tooltip"><i class="fa fa-bar-chart-o"></i></button>
 
 
             </div>

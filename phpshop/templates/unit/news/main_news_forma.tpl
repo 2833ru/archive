@@ -7,6 +7,5 @@
            <div>@newsKratko@</div>
            <p>@newsData@</p>
         </div>
-        </div>
     </div>
 </a>

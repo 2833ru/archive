@@ -27,6 +27,11 @@ function actionStart() {
         'url' => '?path=' . $_GET['path'] . '&action=new',
         'class' => 'enabled'
     );
+    
+    $PHPShopInterface->action_select['Настройка'] = array(
+        'name' => 'Настройка полей',
+        'action' => 'option enabled'
+    );
 
     if (empty($_GET['cat']))
         $PHPShopInterface->action_select['Редактировать каталог']['class'] = 'disabled';
@@ -43,10 +48,22 @@ function actionStart() {
         'icon' => 'glyphicon glyphicon-plus',
         'tooltip' => 'data-toggle="tooltip" data-placement="left" title="Добавить страницу" data-cat="' . $_GET['cat'] . '"'
     );
+    
+    // Настройка полей
+    if (!empty($_COOKIE['check_memory'])) {
+        $memory = json_decode($_COOKIE['check_memory'], true);
+    }
+    
+    if (!is_array($memory['page.option']) or count($memory['page.option']) < 1) {
+        $memory['page.option']['link'] = 1;
+        $memory['page.option']['name'] = 1;
+        $memory['page.option']['server'] = 0;
+        $memory['page.option']['menu'] = 1;
+        $memory['page.option']['status'] = 1;
+    }
 
-
-    $PHPShopInterface->setActionPanel($TitlePage . $catname, array('Новый каталог', 'Редактировать каталог', '|', 'Удалить выбранные'), array('Добавить страницу'));
-    $PHPShopInterface->setCaption(array(null, "3%"), array("Ссылка", "15%"), array("Название", "40%"), array("", "7%"), array("Статус" . "", "7%", array('align' => 'right')));
+    $PHPShopInterface->setActionPanel($TitlePage . $catname, array('Новый каталог','Настройка','Редактировать каталог', '|', 'Удалить выбранные'), array('Добавить страницу'));
+    $PHPShopInterface->setCaption(array(null, "3%"), array("Ссылка", "15%", array('view' => intval($memory['page.option']['link']))), array("Название", "40%", array('view' => intval($memory['page.option']['name']))),array("Витрина", "15%", array('view' => intval($memory['page.option']['server']))), array("", "7%", array('view' => intval($memory['page.option']['menu']))), array("Статус" . "", "7%", array('align' => 'right','view' => intval($memory['page.option']['status']))));
 
     $PHPShopInterface->addJSFiles('./js/jquery.treegrid.js', './js/bootstrap-datetimepicker.min.js','./page/gui/page.gui.js');
 
@@ -54,6 +71,18 @@ function actionStart() {
     $where = false;
     if (!empty($_GET['cat'])) {
         $where = array('category' => '=' . intval($_GET['cat']));
+    }
+    
+    // Витрины
+    $PHPShopServerOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['servers']);
+    $data_server = $PHPShopServerOrm->select(array('*'), array('enabled' => "='1'"), false, array('limit' => 1000));
+
+    if (is_array($data_server)) {
+        $server_value[1000] = __('Главный сайт');
+        foreach ($data_server as $row) {
+            $server_value[$row['id']] = PHPShopString::check_idna($row['host'], true);
+        }
+        
     }
 
     // Таблица с данными
@@ -69,10 +98,19 @@ function actionStart() {
                 $enabled = 'text-muted';
             else
                 $enabled = null;
+            
+            // Витрины
+            if(!empty($row['servers'])){
+               $servers = preg_split('/i/', $row['servers'], -1, PREG_SPLIT_NO_EMPTY);
+               $server=null;
+               if(is_array($servers))
+                   foreach($servers as $s)
+                       $server.=$server_value[$s].'<br>';
+            }
 
             $PHPShopInterface->path = 'page&return=page.catalog';
             $PHPShopInterface->setRow(
-                    $row['id'], array('name' => $row['link'], 'link' => '?path=page&return=' . $_GET['path'] . '&id=' . $row['id'], 'align' => 'left', 'class' => 'page-url '.$enabled), array('name' => $row['name'], 'link' => '?path=page&return=' . $_GET['path'] . '&id=' . $row['id'], 'align' => 'left','class' => $enabled), array('action' => array('edit', 'url', '|', 'delete', 'id' => $row['id']), 'align' => 'center'), array('status' => array('enable' => intval($row['enabled']), 'align' => 'right', 'caption' => array('Выкл', 'Вкл')))
+                    $row['id'], array('name' => $row['link'], 'link' => '?path=page&return=' . $_GET['path'] . '&id=' . $row['id'], 'align' => 'left', 'class' => 'page-url '.$enabled, 'view' => intval($memory['page.option']['link'])), array('name' => $row['name'], 'link' => '?path=page&return=' . $_GET['path'] . '&id=' . $row['id'], 'align' => 'left','class' => $enabled, 'view' => intval($memory['page.option']['name'])), array('name' => $server, 'align' => 'left', 'class'=>'text-muted', 'view' => intval($memory['page.option']['server'])), array('action' => array('edit', 'url', '|', 'delete', 'id' => $row['id']), 'view' => intval($memory['page.option']['menu']), 'align' => 'center'), array('status' => array('enable' => intval($row['enabled']), 'align' => 'right', 'caption' => array('Выкл', 'Вкл')), 'view' => intval($memory['page.option']['status']))
             );
         }
 
@@ -125,7 +163,7 @@ function actionStart() {
     var cat="' . intval($_GET['cat']) . '";
     </script>';
 
-    $sidebarleft[] = array('title' => 'Категории', 'content' => $tree, 'title-icon' => '<span class="glyphicon glyphicon-plus new" data-toggle="tooltip" data-placement="top" title="'.__('Добавить каталог').'"></span>&nbsp;<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="'.__('Развернуть все').'"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="'.__('Свернуть').'"></span>');
+    $sidebarleft[] = array('title' => 'Категории', 'content' => $tree, 'title-icon' => '<span class="glyphicon glyphicon-plus addNewElement" data-toggle="tooltip" data-placement="top" title="'.__('Добавить каталог').'"></span>&nbsp;<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="'.__('Развернуть все').'"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="'.__('Свернуть').'"></span>');
     $PHPShopInterface->setSidebarLeft($sidebarleft, 3);
 
     $PHPShopInterface->Compile(3);
@@ -155,4 +193,65 @@ function treegenerator($array, $parent) {
     return $tree;
 }
 
+/**
+ * Настройка полей - 1 шаг
+ */
+function actionOption() {
+    global $PHPShopInterface;
+
+    // Память выбранных полей
+    if (!empty($_COOKIE['check_memory'])) {
+        $memory = json_decode($_COOKIE['check_memory'], true);
+    }
+    if (!is_array($memory['page.option']) or count($memory['page.option']) < 1) {
+        $memory['page.option']['link'] = 1;
+        $memory['page.option']['name'] = 1;
+        $memory['page.option']['server'] = 0;
+        $memory['page.option']['menu'] = 1;
+        $memory['page.option']['status'] = 1;
+    }
+
+    $message = '<p class="text-muted">' . __('Вы можете изменить перечень полей в таблице отображения страниц') . '.</p>';
+    
+    $searchforma = $message .
+            $PHPShopInterface->setCheckbox('link', 1, 'Ссылка', $memory['page.option']['link']) .
+            $PHPShopInterface->setCheckbox('name', 1, 'Название', $memory['page.option']['name']) .
+            $PHPShopInterface->setCheckbox('server', 1, 'Витрина', $memory['page.option']['server']) .
+            $PHPShopInterface->setCheckbox('menu', 1, 'Экшен меню', $memory['page.option']['menu']) .
+            $PHPShopInterface->setCheckbox('status', 1, 'Статус', $memory['page.option']['status']);
+    
+    
+    $searchforma .= $PHPShopInterface->setInputArg(array('type' => 'hidden', 'name' => 'path', 'value' => 'page.catalog'));
+    $searchforma .= $PHPShopInterface->setInputArg(array('type' => 'hidden', 'name' => 'cat', 'value' => $_REQUEST['cat']));
+
+    $searchforma .= '<p class="clearfix"> </p>';
+
+
+    $PHPShopInterface->_CODE .= $searchforma;
+
+    exit($PHPShopInterface->getContent() . '<p class="clearfix"> </p>');
+}
+
+/**
+ * Настройка полей - 2 шаг
+ */
+function actionOptionSave() {
+
+    // Память выбранных полей
+    if (is_array($_POST['option'])) {
+
+        $memory = json_decode($_COOKIE['check_memory'], true);
+        unset($memory['page.option']);
+        foreach ($_POST['option'] as $k => $v) {
+            $memory['page.option'][$k] = $v;
+        }
+        if (is_array($memory))
+            setcookie("check_memory", json_encode($memory), time() + 3600000 * 6, $GLOBALS['SysValue']['dir']['dir'] . '/phpshop/admpanel/');
+    }
+
+    return array('success' => true);
+}
+
+// Обработка событий
+$PHPShopGUI->getAction();
 ?>

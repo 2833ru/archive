@@ -212,7 +212,7 @@ class PHPShopRSS {
         if (isset($_GET['getall']))
             $where = null;
         else
-            $where = "yml='1' and";
+            $where = "google_merchant='1' and";
 
         // Мультибаза
         $queryMultibase = $this->queryMultibase();
@@ -240,6 +240,9 @@ class PHPShopRSS {
                 $p_enabled = "in stock";
             else
                 $p_enabled = "out of stock";
+
+            if (empty($row['description']))
+                $row['description'] = $row['content'];
 
             // $description = htmlspecialchars(trim(PHPShopString::mySubstr($row['description'], 300)), null, 'windows-1251');
             $description = '<![CDATA[' . trim(strip_tags($row['description'], '<p><h3><ul><li><br>')) . ']]>';
@@ -292,6 +295,7 @@ class PHPShopRSS {
                 "vendor_code" => $row['vendor_code'],
                 "vendor_name" => $row['vendor_name'],
                 "condition" => $row['yandex_condition'],
+                "barcode" => $row['barcode'],
             );
 
             // Параметр сортировки

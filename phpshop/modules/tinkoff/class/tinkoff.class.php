@@ -58,7 +58,7 @@ class Tinkoff
         foreach ($obj->tinkoff_cart as $product) {
 
             // Скидка
-            if($obj->discount > 0)
+            if($obj->discount > 0 && empty($product['promo_price']))
                 $price = $product['price']  - ($product['price']  * $obj->discount  / 100);
             else $price = $product['price'];
             $receiptItems[] = array(

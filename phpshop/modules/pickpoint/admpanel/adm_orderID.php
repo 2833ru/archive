@@ -9,7 +9,7 @@ function pickpointSend($data) {
 
     if((int) $order['Person']['dostavka_metod'] === $PickPoint->getPickpointDeliveryId()) {
         if ($data['statusi'] != $_POST['statusi_new'] or !empty($_POST['pickpoint_send_now'])) {
-            if ((int) $_POST['statusi_new'] === $PickPoint->options['status']) {
+            if (((int) $_POST['statusi_new'] === $PickPoint->options['status']) or !empty($_POST['pickpoint_send_now'])) {
                 $PickPoint->createOrder($data);
             }
         }

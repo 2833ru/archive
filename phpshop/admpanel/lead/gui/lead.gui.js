@@ -4,6 +4,7 @@ var ajax_path = "./lead/ajax/";
 
 $().ready(function () {
 
+
     // datetimepicker
     if ($(".date").length) {
         $.fn.datetimepicker.dates['ru'] = locale;
@@ -160,8 +161,8 @@ $().ready(function () {
                                 showAlertMessage(locale.save_done);
 
                                 KanbanTest.addElement(boardId, {
-                                    title: '<div class="text-muted">' +json['date']+ '<span class="glyphicon glyphicon-bookmark pull-right"></span></div><div>Событие '+json['id']+'</div><span class="text-muted">'+text+'</span>',
-                                    id: "item-id-"+json['id'],
+                                    title: '<div class="text-muted">' + json['date'] + '<span class="glyphicon glyphicon-bookmark pull-right"></span></div><div>Событие ' + json['id'] + '</div><span class="text-muted">' + text + '</span>',
+                                    id: "item-id-" + json['id'],
                                     uid: json['id'],
                                     link: '?path=lead.kanban&id=',
                                     user: null
@@ -203,7 +204,16 @@ $().ready(function () {
             }
         });
 
-
+        // Верхняя прокрутка
+        $(".kanban-wrapper-container").css('width', $(".kanban-container").css('width'));
+        $("#kanban-wrapper").scroll(function () {
+            $("#kanban")
+                    .scrollLeft($("#kanban-wrapper").scrollLeft());
+        });
+        $("#kanban").scroll(function () {
+            $("#kanban-wrapper")
+                    .scrollLeft($("#kanban").scrollLeft());
+        });
 
     }
 });

@@ -1,8 +1,9 @@
 <?php
+
 /**
  * Библиотека связи с МойСклад
  * @author PHPShop Software
- * @version 1.0
+ * @version 1.1
  * @package PHPShopClass
  * @subpackage RestApi
  */
@@ -21,12 +22,13 @@ class MoySklad {
     const GET_CHARACTER = 'variant/metadata';
     const CREATE_CHARACTER = 'variant/metadata/characteristics';
     const GET_PRICETYPE = '../context/companysettings/pricetype';
+    const WEBHOOK = 'webhook';
 
     public function __construct($order = array()) {
 
         $this->PHPShopOrm = new PHPShopOrm();
-        $PHPShopSystem = new PHPShopSystem();
-        $this->nds = $PHPShopSystem->getParam('nds');
+        $this->PHPShopSystem = new PHPShopSystem();
+        $this->nds = $this->PHPShopSystem->getParam('nds');
 
         /*
          * Опции модуля
@@ -34,16 +36,17 @@ class MoySklad {
         $this->PHPShopOrm->objBase = $GLOBALS['SysValue']['base']['moysklad']['moysklad_system'];
         $this->option = $this->PHPShopOrm->select();
         $this->token = $this->option['token'];
+        $this->account = $this->option['account'];
 
         /*
          * Код валюты
          */
-        $this->iso = $PHPShopSystem->getDefaultValutaIso();
+        $this->iso = $this->PHPShopSystem->getDefaultValutaIso();
 
         /*
          * Исходное изображение
          */
-        $this->image_source = $PHPShopSystem->ifSerilizeParam('admoption.image_save_source');
+        $this->image_source = $this->PHPShopSystem->ifSerilizeParam('admoption.image_save_source');
 
         /*
          * Заказ
@@ -61,10 +64,187 @@ class MoySklad {
         $this->deal();
     }
 
+    /**
+     * Авторизация
+     * @param string $accountId
+     * @return boolean
+     */
+    public function checkauth($accountId) {
+        if ($this->account == $accountId)
+            return true;
+    }
+
+    /**
+     * Обновление склада товара
+     * @param string $url
+     */
+    public function updateWarehouse($url) {
+
+        if (!empty($url)) {
+            $fields = $this->get($url, true);
+
+            $positions = $this->get($fields['positions']['meta']['href'], true);
+            $warehouse = array();
+
+            if (is_array($positions['rows']))
+                foreach ($positions['rows'] as $row) {
+
+
+                    $products = $this->get('https://online.moysklad.ru/api/remap/1.2/report/stock/bystore?filter=product=' . $row['assortment']['meta']['href'], true);
+                    $path_parts = pathinfo($row['assortment']['meta']['href']);
+
+                    if (is_array($products['rows']))
+                        foreach ($products['rows'] as $rows) {
+
+                            foreach ($rows['stockByStore'] as $stores) {
+                                $warehouse[$path_parts['filename']] += $stores['stock'];
+                            }
+                        }
+                }
+
+
+            if (is_array($warehouse) and $this->PHPShopSystem->getSerilizeParam("1c_option.update_item") == 1) {
+                $this->PHPShopOrm->objBase = $GLOBALS['SysValue']['base']['products'];
+                $this->PHPShopOrm->_SQL = '';
+                $this->PHPShopOrm->debug = false;
+
+                foreach ($warehouse as $id => $stock) {
+                    $update['items_new'] = $stock;
+                    $result = $this->PHPShopOrm->update($update, array('moysklad_product_id=' => '"' . $id . '"'));
+
+                    // Журнал
+                    if (!empty($result))
+                        $this->log(array('parameters' => $products, 'response' => $update), null, 'Успешное обновление склада товара', 'updateWarehouse', 'success');
+                }
+            }
+        }
+    }
+
+    /**
+     * Обновление данных товара
+     * @param string $url
+     */
+    public function updateProducts($url) {
+
+        if (!empty($url)) {
+            $fields = $this->get($url, true);
+
+            // Тест
+            //$fields[id]='0dc7fe7c-e902-11ea-0a80-064c0016071a';
+
+            if (is_array($fields)) {
+
+                if ($this->PHPShopSystem->getSerilizeParam("1c_option.update_name") == 1 and ! empty($fields['name']))
+                    $update['name_new'] = iconv('UTF-8', 'Windows-1251', $fields['name']);
+
+                if ($this->PHPShopSystem->getSerilizeParam("1c_option.update_description") == 1 and ! empty($fields['description']))
+                    $update['description_new'] = iconv('UTF-8', 'Windows-1251', $fields['description']);
+
+                $update['uid_new'] = iconv('UTF-8', 'Windows-1251', $fields['article']);
+                $update['weight_new'] = $fields['weight'];
+
+                if ($this->PHPShopSystem->getSerilizeParam("1c_option.update_price") == 1 and ! empty($fields['salePrices'][0]['value'])) {
+                    $update['price_new'] = $fields['salePrices'][0]['value']/100;
+                    $update['price2_new'] = $fields['salePrices'][1]['value']/100;
+                    $update['price3_new'] = $fields['salePrices'][2]['value']/100;
+                    $update['price4_new'] = $fields['salePrices'][3]['value']/100;
+                    $update['price5_new'] = $fields['salePrices'][4]['value']/100;
+                }
+
+                $this->PHPShopOrm->objBase = $GLOBALS['SysValue']['base']['products'];
+                $this->PHPShopOrm->_SQL = '';
+                $result = $this->PHPShopOrm->update($update, array('moysklad_product_id=' => '"' . $fields[id] . '"'));
+
+                // Журнал
+                if (!empty($result))
+                    $this->log(array('parameters' => $fields, 'response' => $update), null, 'Успешное обновление данных товара', 'updateProducts', 'success');
+            }
+        }
+    }
+
+    /**
+     *  Работа c веб-хуками
+     */
+    public function webhook($action = 'list') {
+
+        $protocol = 'http://';
+        if (!empty($_SERVER['HTTPS']) && 'off' !== strtolower($_SERVER['HTTPS'])) {
+            $protocol = 'https://';
+        }
+        $url = $protocol . $_SERVER['SERVER_NAME'] . '/phpshop/modules/moysklad/api.php';
+
+        switch ($action) {
+
+            case "list":
+                $result = $this->get(self::WEBHOOK);
+                break;
+
+            case "on":
+
+                // Обновление товаров
+                $fields = array(
+                    "url" => $url,
+                    "action" => "UPDATE",
+                    "entityType" => "product"
+                );
+                $result = $this->post(self::WEBHOOK, $fields);
+
+                // Приемка
+                $fields = array(
+                    "url" => $url,
+                    "action" => "CREATE",
+                    "entityType" => "supply"
+                );
+                $result = $this->post(self::WEBHOOK, $fields);
+
+                // Оприходование
+                $fields = array(
+                    "url" => $url,
+                    "action" => "CREATE",
+                    "entityType" => "enter"
+                );
+                $result = $this->post(self::WEBHOOK, $fields);
+
+                // Отгрузка
+                $fields = array(
+                    "url" => $url,
+                    "action" => "CREATE",
+                    "entityType" => "demand"
+                );
+                $result = $this->post(self::WEBHOOK, $fields);
+
+                // Списание
+                $fields = array(
+                    "url" => $url,
+                    "action" => "CREATE",
+                    "entityType" => "loss"
+                );
+                $result = $this->post(self::WEBHOOK, $fields);
+
+                // Розничная продажа
+                $fields = array(
+                    "url" => $url,
+                    "action" => "CREATE",
+                    "entityType" => "retaildemand"
+                );
+                $result = $this->post(self::WEBHOOK, $fields);
+                break;
+
+            case "off": // Удаление хуков
+                $result = $this->get(self::WEBHOOK);
+
+                if (is_array($result['rows']))
+                    foreach ($result['rows'] as $rows) {
+                        $result = $this->delete($rows['meta']['href']);
+                    }
+
+                break;
+        }
+        return $result;
+    }
+
     /*
      * Добавление услуги доставки.
-     *
-     * @return void
      */
 
     public function delivery() {
@@ -584,11 +764,12 @@ class MoySklad {
     public function getOrganizations($currentOrganization) {
         $organizations = $this->get(self::GET_ORGANIZATIONS);
         $result = array();
-        if (is_array($organizations['rows']))
+        if (is_array($organizations['rows'])) {
+            $this->account = $organizations['rows'][0]['accountId'];
             foreach ($organizations['rows'] as $organization) {
                 $result[] = array($organization['name'], $organization['id'], $currentOrganization);
             }
-
+        }
         return $result;
     }
 
@@ -644,10 +825,33 @@ class MoySklad {
      * @param $method
      * @return array
      */
-    public function get($method) {
+    public function get($method, $url = false) {
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, self::API_URL . '/' . $method);
+
+        if ($url)
+            curl_setopt($ch, CURLOPT_URL, $method);
+        else
+            curl_setopt($ch, CURLOPT_URL, self::API_URL . '/' . $method);
+
         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Authorization: Bearer ' . $this->token,
+            'Content-Type: application/json',
+        ));
+
+        return $this->request($ch, $method);
+    }
+
+    /**
+     * @param $method
+     * @return array
+     */
+    public function delete($url ) {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
             'Authorization: Bearer ' . $this->token,

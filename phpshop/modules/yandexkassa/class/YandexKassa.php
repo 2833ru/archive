@@ -40,7 +40,7 @@ class YandexKassa {
         $items = array();
         $total = 0;
         foreach ($cart as $product) {
-            if($discount > 0)
+            if($discount > 0 && empty($product['promo_price']))
                 $price = $product['price']  - ($product['price']  * $discount  / 100);
             else
                 $price = $product['price'];

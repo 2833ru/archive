@@ -109,7 +109,7 @@ function countcat_hook_option() {
 function subcatalog_countcat_hook_get_count($cat) {
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
     $PHPShopOrm->debug = false;
-    $action = $PHPShopOrm->select(array('COUNT(id) as count'), array('category' => '=' . intval($cat), 'enabled' => "='1'"), false, array('limit' => 1));
+    $action = $PHPShopOrm->select(array('COUNT(id) as count'), array('(category' => '="' . intval($cat) . '" OR dop_cat LIKE "%#' . intval($cat) . '#%")', 'enabled' => "='1'"), false, array('limit' => 1));
     return $action['count'];
 }
 

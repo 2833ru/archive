@@ -162,4 +162,62 @@ class PayOnline {
 
         $PHPShopOrm->insert($log);
     }
+
+    public function fiskalize($order, $transactionId, $paymentType, $total)
+    {
+        $PHPShopSystem = new PHPShopSystem();
+        $ndsEnabled = $PHPShopSystem->getParam('nds_enabled');
+        $nds = $PHPShopSystem->getParam('nds');
+        $cart = unserialize($order['orders']);
+        $delivery = new PHPShopDelivery($cart['Person']['dostavka_metod']);
+
+        $goods = [];
+        foreach ($cart['Cart']['cart'] as $product) {
+            if ((float) $cart['Person']['discount'] > 0 && empty($product['promo_price']))
+                $price = ($product['price'] - ($product['price'] * (float) $cart['Person']['discount'] / 100));
+            else
+                $price = $product['price'];
+
+            $goods[] =  [
+                'description' => PHPShopString::win_utf8($product['name']),
+                'quantity'    => number_format((string) $product['num'], 2, ".", ""),
+                'amount'      => number_format((string) $price, 2, ".", ""),
+                'tax'         => !empty($ndsEnabled) ? 'vat' . $nds : 'none'
+            ];
+        }
+        if ((float) $cart['Cart']['dostavka'] > 0) {
+            $goods[] = [
+                'description' => PHPShopString::win_utf8('Доставка'),
+                'quantity'    => '1.00',
+                'amount'      =>  number_format((string) $cart['Cart']['dostavka'], 2, ".", ""),
+                'tax'         => !empty($ndsEnabled) ? 'vat' . $delivery->getParam('ofd_nds') : 'none'
+            ];
+        }
+        $params = [
+            'operation' => 'Benefit',
+            'transactionId' => $transactionId,
+            'paymentSystemType' => $paymentType,
+            'totalAmount' => $total,
+            'goods' => $goods,
+            'email' => $cart['Person']['mail']
+        ];
+
+        $body = json_encode($params);
+        $key = md5('RequestBody='.$body.'&MerchantId='.$this->option['merchant_id'].'&PrivateSecurityKey='.$this->option['key']);
+        $url = 'https://secure.payonlinesystem.com/Services/Fiscal/Request.ashx?MerchantId='.$this->option['merchant_id'].'&SecurityKey='.$key;
+
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($body)
+        ]);
+
+        $result = curl_exec($ch);
+
+        $this->log(json_decode($result), $this->getOrderId(), 'Фискализация', 'Результат фискализации');
+    }
 }

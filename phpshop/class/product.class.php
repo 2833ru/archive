@@ -83,6 +83,168 @@ class PHPShopProduct extends PHPShopObj {
         return parent::getParam("pic_small");
     }
 
+    // Удалить товар со склада
+    public function removeFromWarehouse($count, $parent = 0, $warehouseId = null)
+    {
+        // Склад
+        if (!empty($warehouseId)) {
+            $this->objRow['items' . $warehouseId] -= $count;
+        }
+        $this->objRow['items'] -= $count;
+
+        $this->applyWarehouseControl($parent, $warehouseId);
+    }
+
+    // Добавить товар на склад
+    public function addToWarehouse($count, $parent = 0, $warehouseId = null)
+    {
+        // Склад
+        if (!empty($warehouseId)) {
+            $this->objRow['items' . $warehouseId] += $count;
+        }
+        $this->objRow['items'] += $count;
+
+        $this->applyWarehouseControl($parent, $warehouseId);
+    }
+
+    // Контроль склада
+    public function applyWarehouseControl($parent = 0, $warehouseId = null)
+    {
+        $PHPShopSystem = new PHPShopSystem();
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
+        $PHPShopOrm->debug = false;
+
+        $product_update = [
+            'items_new' => $this->objRow['items']
+        ];
+        if(!empty($warehouseId)) {
+            $product_update['items' . $warehouseId . '_new'] = $this->objRow['items' . $warehouseId];
+        }
+
+        $disabled = true;
+        // Если товар НЕ подтип - проверяем наличие подтипов и их наличие на складе
+        if((int) $this->getParam('parent_enabled') === 0) {
+            $parentsIds = explode(",", $this->getParam('parent'));
+
+            if(is_array($parentsIds)) {
+                $parentsIds = array_diff($parentsIds, ['']);
+                if(count($parentsIds) > 0) {
+                    // Выбираем включенные и НЕ под заказ подтипы
+                    if ($PHPShopSystem->ifSerilizeParam('1c_option.update_option'))
+                        $parents = $PHPShopOrm->getList(['*'], ['uid' => ' IN ("' . @implode('","', $parentsIds) . '")', 'enabled' => "='1'", 'sklad' => "!='1'"]);
+                    else
+                        $parents = $PHPShopOrm->getList(['*'], ['id' => ' IN ("' . @implode('","', $parentsIds) . '")', 'enabled' => "='1'", 'sklad' => "!='1'"]);
+
+                    foreach ($parents as $parentItem) {
+                        if((int) $parentItem['items'] > 0) {
+                            $disabled = false;
+                            break;
+                        }
+                    }
+                } else {
+                    $disabled = $this->objRow['items'] < 1;
+                }
+            }
+        } else {
+            $disabled = $this->objRow['items'] < 1;
+        }
+
+        switch ($PHPShopSystem->getSerilizeParam('admoption.sklad_status')) {
+            case(3):
+                if ($disabled) {
+                    $product_update['sklad_new'] = 1;
+                    $this->objRow['sklad'] = 1;
+                    $product_update['enabled_new'] = 1;
+                    $this->objRow['enabled'] = 1;
+                    $product_update['p_enabled_new'] = 0;
+                    $this->objRow['p_enabled'] = 0;
+                } else {
+                    $product_update['sklad_new'] = 0;
+                    $this->objRow['sklad'] = 0;
+                    $product_update['enabled_new'] = 1;
+                    $this->objRow['enabled'] = 1;
+                    $product_update['p_enabled_new'] = 1;
+                    $this->objRow['p_enabled'] = 1;
+                }
+                break;
+
+            case(2):
+                if ($disabled) {
+                    $product_update['enabled_new'] = 0;
+                    $this->objRow['enabled'] = 0;
+                    $product_update['sklad_new'] = 0;
+                    $this->objRow['sklad'] = 0;
+                    $product_update['p_enabled_new'] = 0;
+                    $this->objRow['p_enabled'] = 0;
+                } else {
+                    $product_update['enabled_new'] = 1;
+                    $this->objRow['enabled'] = 1;
+                    $product_update['sklad_new'] = 0;
+                    $this->objRow['sklad'] = 0;
+                    $product_update['p_enabled_new'] = 1;
+                    $this->objRow['p_enabled'] = 1;
+                }
+                break;
+            default:
+                break;
+        }
+
+        // Обновляем данные
+        $PHPShopOrm->update($product_update, ['id' => '=' . (int) $this->objID]);
+
+        if($parent > 0) {
+            $mainProduct = new PHPShopProduct($parent);
+            $parentsIds = explode(",", $mainProduct->getParam('parent'));
+
+            if(is_array($parentsIds)) {
+                $mainProductDisabled = true; // по умолчанию выключен, если есть в наличии какой-то подтип - включим
+                // Выбираем включенные и НЕ под заказ подтипы
+                if ($PHPShopSystem->ifSerilizeParam('1c_option.update_option'))
+                    $parents = $PHPShopOrm->getList(['*'], ['uid' => ' IN ("' . @implode('","', $parentsIds) . '")', 'enabled' => "='1'", 'sklad' => "!='1'"]);
+                else
+                    $parents = $PHPShopOrm->getList(['*'], ['id' => ' IN ("' . @implode('","', $parentsIds) . '")', 'enabled' => "='1'", 'sklad' => "!='1'"]);
+
+                foreach ($parents as $parentItem) {
+                    if((int) $parentItem['items'] > 0) {
+                        $mainProductDisabled = false;
+                        break;
+                    }
+                }
+
+                $mainProductUpdate = [];
+                switch ($PHPShopSystem->getSerilizeParam('admoption.sklad_status')) {
+                    case(3):
+                        if ($mainProductDisabled) {
+                            $mainProductUpdate['sklad_new'] = 1;
+                            $mainProductUpdate['enabled_new'] = 1;
+                            $mainProductUpdate['p_enabled_new'] = 0;
+                        } else {
+                            $mainProductUpdate['sklad_new'] = 0;
+                            $mainProductUpdate['enabled_new'] = 1;
+                            $mainProductUpdate['p_enabled_new'] = 1;
+                        }
+                        break;
+
+                    case(2):
+                        if ($mainProductDisabled) {
+                            $mainProductUpdate['enabled_new'] = 0;
+                            $mainProductUpdate['sklad_new'] = 0;
+                            $mainProductUpdate['p_enabled_new'] = 0;
+                        } else {
+                            $mainProductUpdate['enabled_new'] = 1;
+                            $mainProductUpdate['sklad_new'] = 0;
+                            $mainProductUpdate['p_enabled_new'] = 1;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+
+                // Обновляем данные
+                $PHPShopOrm->update($mainProductUpdate, ['id' => '=' . (int) $parent]);
+            }
+        }
+    }
 }
 
 /**

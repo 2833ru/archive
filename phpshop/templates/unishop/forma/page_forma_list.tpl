@@ -1,7 +1,7 @@
 
 @Error@
 <style type="text/css">.order-page-sidebar-user-block{display: block;}</style>
-<form role="form" method="post" name="forma_message" class="template-sm  registration-area">
+<form method="post" name="forma_message" class="template-sm  registration-area">
     <div class="form-group">
         <div class="">
             <input placeholder="{Заголовок}" type="text" name="tema" value="@php  echo $_POST[tema]; php@" class="form-control" id="exampleInputEmail1"  required="">

@@ -108,7 +108,7 @@ function actionStart() {
     if ($PHPShopBase->Rule->CheckedRules('update', 'view'))
         if (!isset($_SESSION['update_check'])) {
             define("UPDATE_PATH", "http://www.phpshop.ru/update/update5.php?from=" . $License['License']['DomenLocked'] . "&version=" . $GLOBALS['SysValue']['upload']['version'] . "&support=" . $License['License']['SupportExpires'] . '&serial=' . $License['License']['Serial'] . '&path=intro');
-            
+
             $update_enable = @xml2array(UPDATE_PATH, "update", true);
             if (is_array($update_enable) and $update_enable['status'] != 'no_update') {
                 $_SESSION['update_check'] = intval($update_enable['name'] - $update_enable['num']);
@@ -130,6 +130,7 @@ function actionStart() {
         if (is_numeric($LicenseUntilUnixTime))
             if ($until_day < 8 and $until_day > 0) {
                 mailNotice('support', $until_day);
+                $_SESSION['update'] = 3;
                 $search_jurnal = __('До конца месяца, для вас действует льготное продление техподдержки: при оплате полугода, вы получаете целый год техподдержки.');
                 $search_jurnal_title = __('Техническая поддержка заканчивается через') . ' <span class="label label-warning">' . abs(round($until_day)) . '  ' . __('дн.') . '</span><a class="pull-right btn btn-xs btn-default" href="https://www.phpshop.ru/order/" target="_blank"><span class="glyphicon glyphicon-ruble"></span> ' . __('Купить') . '</a>';
                 $search_jurnal_class = 'panel-success';
@@ -138,7 +139,7 @@ function actionStart() {
     }
 
     // Заканчивается лицензия
-    $LicenseUntilUnixTime = $License['License']['Expires'];
+    $LicenseUntilUnixTime = intval($License['License']['Expires']);
     $until = $LicenseUntilUnixTime - time();
     $until_day = round($until / (24 * 60 * 60));
 
@@ -295,6 +296,17 @@ function actionStart() {
         }
     $product_list = $PHPShopInterface->getContent();
 
+    $new_order = $PHPShopBase->getNumRows('orders', 'where statusi=0');
+    if (!empty($new_order))
+        $new_order = '+' . $new_order;
+
+    $new_dialog = $PHPShopBase->getNumRows('dialog', "where isview='0'");
+    if (!empty($new_dialog))
+        $new_dialog = '+' . $new_dialog;
+
+    $new_comment = $PHPShopBase->getNumRows('comment', "where enabled != '1'");
+    if (!empty($new_comment))
+        $new_comment = '+' . $new_comment;
 
     $PHPShopGUI->_CODE .= '
      <div class="row intro-row">
@@ -302,15 +314,15 @@ function actionStart() {
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-flag"></span> ' . __('Новых заказов') . '</div>
                 <div class="panel-body text-right panel-intro">
-                <a href="?path=order&where[statusi]=0">' . $PHPShopBase->getNumRows('orders', 'where statusi=0') . '</a>
+                <a href="?path=order&where[statusi]=0">' . $new_order . '</a>
                </div>
           </div>
        </div>
        <div class="col-md-2 col-xs-6">
           <div class="panel panel-default">
-             <div class="panel-heading"><span class="glyphicon glyphicon-envelope"></span> ' . __('Cообщений') . '</div>
+             <div class="panel-heading"><span class="glyphicon glyphicon-comment"></span> ' . __('Диалогов') . '</div>
                 <div class="panel-body text-right panel-intro">
-                 <a href="?path=shopusers.messages">' . $PHPShopBase->getNumRows('messages', "where enabled='0'") . '</a>
+                 <a href="?path=dialog">' . $new_dialog . '</a>
                </div>
           </div>
        </div>
@@ -318,12 +330,12 @@ function actionStart() {
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-list-alt"></span> ' . __('Комментариев') . '</div>
                 <div class="panel-body text-right panel-intro">
-                 <a href="?path=shopusers.comment">' . $PHPShopBase->getNumRows('comment', "where enabled != '1'") . '</a>
+                 <a href="?path=shopusers.comment">' . $new_comment . '</a>
                </div>
           </div>
        </div>
 
-       <div class="col-md-6 col-xs-12">
+       <div class="col-md-6 col-xs-12 hidden-xs">
           <div class="panel panel-default ' . $search_jurnal_class . '">
              <div class="panel-heading"><span class="glyphicon glyphicon-' . $search_jairnal_icon . '"></span> ' . $search_jurnal_title . '</div>
                 <div class="panel-body">
@@ -527,16 +539,16 @@ function actionStart() {
        </div>
        <div class="col-md-2 hidden-xs hidden-sm">
           <div class="panel panel-default">
-             <div class="panel-heading"><span class="glyphicon glyphicon-shopping-cart"></span> ' . __('Заказы') . '</div>
+             <div class="panel-heading"><span class="glyphicon glyphicon-tasks"></span> ' . __('Модули') . '</div>
                 <div class="panel-body text-right panel-intro">
-                 <a href="?path=order">' . $PHPShopBase->getNumRows('orders', "") . '</a>
+                 <a href="?path=modules&install=check">' . $PHPShopBase->getNumRows('modules', "") . '</a>
                </div>
           </div>
        </div>
    </div>';
 
     // Журнал авторизации
-    $PHPShopGUI->_CODE .= '<div class="row intro-row">
+    $PHPShopGUI->_CODE .= '<div class="row intro-row hidden-xs">
        <div class="col-md-6 col-xs-12">
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-user"></span> ' . __('Журнал авторизации') . ' <a class="pull-right" href="?path=users.jurnal">' . __('Показать больше') . '</a></div>

@@ -14,15 +14,19 @@ function boxberryWidget(result) {
     var info = 'Код выбранного ПВЗ: ' + result.id + ', город ' + result.name + ', адрес выбранного ПВЗ ' + result.address + ', телефон выбранного ПВЗ ' + result.phone;
 
     var boxberry_sum = Number(result.price);
-    var boxberryFee = Number($('#boxberryFee').val());
-    if(boxberryFee > 0) {
-        if(Number($('#boxberryFeeType').val()) == 1) {
-            boxberry_sum = boxberry_sum + (boxberry_sum * boxberryFee / 100);
-        } else {
-            boxberry_sum = boxberry_sum + boxberryFee;
+    if($("#d").data('free') === 1) {
+        boxberry_sum = 0;
+    } else {
+        var boxberryFee = Number($('#boxberryFee').val());
+        if(boxberryFee > 0) {
+            if(Number($('#boxberryFeeType').val()) == 1) {
+                boxberry_sum = boxberry_sum + (boxberry_sum * boxberryFee / 100);
+            } else {
+                boxberry_sum = boxberry_sum + boxberryFee;
+            }
         }
+        boxberry_sum = Number(boxberry_sum.toFixed(Number($('#boxberryPriceFormat').val())));
     }
-    boxberry_sum = Number(boxberry_sum.toFixed(Number($('#boxberryPriceFormat').val())));
 
     $('input[name="boxberryInfo"]').val(info);
     $('input[name="boxberry_pvz_id_new"]').val(result.id);
@@ -75,6 +79,8 @@ function boxberrywidgetCourier() {
 
 $(document).ready(function() {
     $('body').on('change', 'input[name="index_new"]', function() {
-        boxberrywidgetCourier();
+        if($('#boxberryCourierDeliveryId').val() == $("#d").val()) {
+            boxberrywidgetCourier();
+        }
     });
 });

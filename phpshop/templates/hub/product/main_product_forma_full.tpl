@@ -102,19 +102,19 @@
             <div class="row">
                 <div class="product-page-button">
                     <div class="cart-button button-group cart-list-button-wrapper @elementCartHide@">
-                        <button type="button" class="btn btn-cart addToCartFull" role="button" data-num="1" data-uid="@productUid@" data-cart="@productSaleReady@">
+                        <button type="button" class="btn btn-cart addToCartFull" data-num="1" data-uid="@productUid@" data-cart="@productSaleReady@">
                             <i class="icons-cart" aria-hidden="true"></i>
                             <span>@productSale@</span>
                         </button>                                   
                     </div>
                     <div class="cart-button button-group compare-list-button-wrapper">
-                        <button type="button" class="btn btn-cart addToWishList" role="button" data-uid="@productUid@" data-title="{Отложить}" data-placement="top" data-toggle="tooltip">
+                        <button type="button" class="btn btn-cart addToWishList" data-uid="@productUid@" data-title="{Отложить}" data-placement="top" data-toggle="tooltip">
                             <i class="icons-wishlist" aria-hidden="true"></i>
                            {Отложить}
                         </button>                                   
                     </div>
                     <div class="cart-button button-group cart-list-button-wrapper  @elementCartOptionHide@">
-                        <button type="button" class="btn btn-cart addToCartFull" role="button" data-num="1" data-uid="@productUid@" data-cart="@productSaleReady@">
+                        <button type="button" class="btn btn-cart addToCartFull" data-num="1" data-uid="@productUid@" data-cart="@productSaleReady@">
                             <i class="icons-cart"></i>
                             <span>@productSale@</span>
                         </button>                                   
@@ -169,7 +169,7 @@
                     <div id="commentList"> </div>
 
 
-                    <button role="button" class="btn btn-main pull-right" onclick="$('#addComment').slideToggle();
+                    <button class="btn btn-main pull-right" onclick="$('#addComment').slideToggle();
                             $(this).hide();"><span class="glyphicon glyphicon-plus-sign"></span> {Новый комментарий}</button>
 
                     <div id='addComment' class="well well-sm" style='display:none;margin-top:30px;'>
@@ -195,7 +195,7 @@
                             <label class="btn btn-success btn-sm active" style="border: none;outline: none;">
                                 <input type="radio" name="rate" value="5" checked> +5
                             </label>
-                            <button role="button" class="btn btn-main btn-sm pull-right" onclick="commentList('@productUid@', 'add', 1);">{Проголосовать}</button>
+                            <button class="btn btn-main btn-sm pull-right" onclick="commentList('@productUid@', 'add', 1);">{Проголосовать}</button>
                         </div>
 
                     </div>

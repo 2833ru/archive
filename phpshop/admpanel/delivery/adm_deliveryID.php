@@ -129,7 +129,6 @@ function actionStart() {
     // Цены
     $Tab_price = $PHPShopGUI->setField("Стоимость", $PHPShopGUI->setInputText(false, 'price_new', $data['price'], '150', $PHPShopSystem->getDefaultValutaCode()));
 
-    if($data['is_mod'] == 1)
     $Tab_price .= $PHPShopGUI->setField("Бесплатная доставка свыше", $PHPShopGUI->setInputText(false, 'price_null_new', $data['price_null'], '150', $PHPShopSystem->getDefaultValutaCode()) . $PHPShopGUI->setCheckbox('price_null_enabled_new', 1, "Учитывать", $data['price_null_enabled']));
 
     // Такса
@@ -187,6 +186,8 @@ function actionStart() {
     if (empty($data['is_folder'])) {
         $Tab1 .= $PHPShopGUI->setField("Блокировка при стоимости более", $PHPShopGUI->setInputText(null, "sum_max_new", $data['sum_max'], 150, $PHPShopSystem->getDefaultValutaCode()));
         $Tab1 .= $PHPShopGUI->setField("Блокировка при стоимости менее", $PHPShopGUI->setInputText(null, "sum_min_new", $data['sum_min'], 150, $PHPShopSystem->getDefaultValutaCode()));
+        $Tab1 .= $PHPShopGUI->setField("Блокировка при весе более", $PHPShopGUI->setInputText(null, "weight_max_new", $data['weight_max'], 150, 'грамм'));
+        $Tab1 .= $PHPShopGUI->setField("Блокировка при весе менее", $PHPShopGUI->setInputText(null, "weight_min_new", $data['weight_min'], 150, 'грамм'));
     }
 
     // Цены
@@ -287,6 +288,8 @@ function actionUpdate() {
     if (isset($_POST['payment_new'])) {
         if (is_array($_POST['payment_new']))
             $_POST['payment_new'] = @implode(',', $_POST['payment_new']);
+    } else {
+        $_POST['payment_new'] = '';
     }
 
     // Мультибаза

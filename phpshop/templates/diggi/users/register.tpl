@@ -8,7 +8,7 @@
                 </div>
                 <div class="panel-body">
                     <!-- Registration Form Starts -->
-                    <form role="form" method="post" name="user_forma_register">
+                    <form method="post" name="user_forma_register">
                         <span id="user_error">@user_error@</span>
                         <div class="form-group">
                             <div class="">
@@ -18,6 +18,11 @@
                         <div class="form-group">
                             <div class="">
                                 <input placeholder="E-mail" type="email" name="login_new" value="@php echo $_POST['login_new']; php@" class="form-control" required="" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="">
+                                <input type="tel" name="tel_new" placeholder="{Телефон}"  value="@php echo $_POST['tel_new']; php@" class="form-control" @sms_login_control@>
                             </div>
                         </div>
                         <div class="form-group">
@@ -38,7 +43,7 @@
                                @captcha@
                             </div>
                         </div>
-<p class="small"><label><input type="checkbox" value="on" name="rule" class="req" checked="checked">  {Я согласен} <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html" alt="Согласие на обработку персональных данных">{на обработку моих персональных данных}</a></label></p>
+<p class="small"><label><input type="checkbox" value="on" name="rule" class="req" checked="checked">  {Я согласен} <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html">{на обработку моих персональных данных}</a></label></p>
                         <div class="form-group">
                             <div class="">
                                 <input type="hidden" value="1" name="add_user">

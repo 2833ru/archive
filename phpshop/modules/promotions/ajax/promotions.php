@@ -179,6 +179,7 @@ if ($_REQUEST['promocode'] != '*') {
                                     $_SESSION['cart'][$rs]['discount'] = $discount;
                                     $_SESSION['cart'][$rs]['discount_tip'] = $tip_disc;
                                     $_SESSION['cart'][$rs]['test'] = 1;
+                                    $_SESSION['cart'][$rs]['promo_price'] = $valuecart['price'];
                                 }
                             } else { //если сумма
                                 //скидка и тип
@@ -192,6 +193,7 @@ if ($_REQUEST['promocode'] != '*') {
                                     $_SESSION['cart'][$rs]['discount_tip_sum'] = $tip_disc;
                                     $_SESSION['cart'][$rs]['promo_code'] = $_REQUEST['promocode'];
                                     $_SESSION['cart'][$rs]['test'] = 2;
+                                    $_SESSION['cart'][$rs]['promo_price'] = $valuecart['price'];
                                 }
                             }
                         else:
@@ -350,13 +352,35 @@ if ($_REQUEST['promocode'] != '*') {
             unset($_SESSION['cart'][$k]['promo_code']);
             unset($_SESSION['cart'][$k]['discount_tip_sum']);
             unset($_SESSION['cart'][$k]['promo_percent']);
+            if(!isset($_SESSION['cart'][$k]['promotion_discount']) && !isset($_SESSION['cart'][$k]['order_discount_disabled'])) {
+                unset($_SESSION['cart'][$k]['promo_price']);
+            }
         }
 }
+
+$PHPShopCart = new PHPShopCart();
+
+$promoSum = 0;
+foreach ($PHPShopCart->getArray() as $product) {
+    // Сумма
+    if (!empty($product['promo_sum'])) {
+        $promoSum+=$product['num'] * number_format($product['price'] - $product['promo_sum'] / $product['num'], $PHPShopOrder->format, '.', '');
+    }
+    // Процент от суммы
+    else if (!empty($product['promo_percent'])) {
+        $promoSum+=$product['num'] * number_format($product['price'] - ($product['price'] * $product['promo_percent'] / 100), $PHPShopOrder->format, '.', '');
+    }
+}
+// Итого товары по акции
+$total = $promoSum;
+
+// Итого товары без акции, применяем скидку статуса пользователя\суммы заказа
+$total += (float) $PHPShopOrder->returnSumma($PHPShopCart->getSumWithoutPromo(true), $PHPShopOrder->ChekDiscount($totalsumma), '', (float) $delivery);
 
 // Результат
 $_RESULT = array(
     'delivery' => $delivery,
-    'total' => number_format($totalsumma + $delivery, $PHPShopSystem->format, '.', ' '),
+    'total' => number_format($total, $PHPShopSystem->format, '.', ' '),
     'discount' => $data['discount'],
     'discountall' => $discountAll,
     'mes' => $messageinfo,

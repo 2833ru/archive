@@ -32,7 +32,7 @@
 	</div>
 
 	<div class="cart-button-wrapper">
-		<button type="button" class="btn btn-cart addToCartFull" role="button" data-num="1" data-uid="@productUid@" data-cart="@productSaleReady@">{Купить}</button>
+		<button type="button" class="btn btn-cart addToCartFull" data-num="1" data-uid="@productUid@" data-cart="@productSaleReady@">{Купить}</button>
 	</div>
 </div>
 

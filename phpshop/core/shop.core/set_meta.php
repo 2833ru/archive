@@ -9,7 +9,7 @@
  */
 function catalog_meta($array,$flag) {
     global $PHPShopSystem;
-    
+
     // Массив текущего каталога
     $row=$array[0];
 
@@ -18,6 +18,49 @@ function catalog_meta($array,$flag) {
 
     $tip=$row[$flag.'_enabled'];
     $cat=$row['parent_to'];
+
+    if(is_array($array[2]) && count($array[2]) === 1) {
+        $sortValues = array_shift($array[2]);
+        if(count($sortValues) === 1) {
+            $sort = mysqli_fetch_assoc((new PHPShopOrm())
+                ->query('SELECT 
+                        a.name, a.category, a.title, a.meta_description, b.name as categoryTitle FROM ' . $GLOBALS['SysValue']['base']['sort'] .
+                    ' AS a JOIN ' . $GLOBALS['SysValue']['base']['sort_categories'] . ' AS b ON a.category = b.id where a.id = ' .
+                    (int) array_shift($sortValues) . ' limit 1'
+                ));
+
+            if($sort) {
+                if($flag === 'title') {
+                    $Shablon = $sort['title'];
+                    if(empty($Shablon)) {
+                        $Shablon = $PHPShopSystem->getParam('sort_title_shablon');
+                    }
+
+                    if(!empty($Shablon)) {
+                        return str_replace(
+                            ['@Catalog@', '@Podcatalog@', '@System@', '@valueTitle@', '@sortTitle@'],
+                            [$parent_row['name'], $row['name'], $PHPShopSystem->getParam($flag), $sort['name'], $sort['categoryTitle']],
+                            $Shablon
+                        );
+                    }
+                }
+                if ($flag === 'descrip') {
+                    $Shablon = $sort['meta_description'];
+                    if(empty($Shablon)) {
+                        $Shablon = $PHPShopSystem->getParam('sort_description_shablon');
+                    }
+
+                    if(!empty($Shablon)) {
+                        return str_replace(
+                            ['@Catalog@', '@Podcatalog@', '@System@', '@valueTitle@', '@sortTitle@'],
+                            [$parent_row['name'], $row['name'], $PHPShopSystem->getParam($flag), $sort['name'], $sort['categoryTitle']],
+                            $Shablon
+                        );
+                    }
+                }
+            }
+        }
+    }
     
     if($cat != 0) {
         if($tip == 0) $Shablon=$PHPShopSystem->getParam($flag.'_shablon');

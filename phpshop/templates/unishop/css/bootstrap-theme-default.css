@@ -79,3 +79,6 @@ z-index:5;
 #body{
 --color:#0da9ef;
 }
+.theme-color {
+    color: #0da9ef;
+}

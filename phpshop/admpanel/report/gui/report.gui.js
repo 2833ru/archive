@@ -64,6 +64,7 @@ $().ready(function() {
 
     // datetimepicker
     if ($(".date").length) {
+        $.fn.datetimepicker.dates['ru'] = locale;
         $(".date").datetimepicker({
             format: 'dd-mm-yyyy',
             pickerPosition:'bottom-left',

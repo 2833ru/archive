@@ -85,25 +85,25 @@
                 </div>
                 <p></p>
                 <div class="cart-button button-group cart-list-button-wrapper @elementCartHide@">
-                    <button type="button" class="btn btn-cart addToCartFull" role="button" data-num="1" data-uid="@productUid@" data-cart="@productSaleReady@">
+                    <button type="button" class="btn btn-cart addToCartFull" data-num="1" data-uid="@productUid@" data-cart="@productSaleReady@">
                         <i class="fa fa-shopping-cart"></i>                                 
                         <span>@productSale@</span>
                     </button>                                   
                 </div>
                <div class="cart-button button-group cart-list-button-wrapper  @elementCartOptionHide@">
-                    <button type="button" class="btn btn-cart addToCartFull" role="button" data-num="1" data-uid="@productUid@" data-cart="@productSaleReady@">
+                    <button type="button" class="btn btn-cart addToCartFull" data-num="1" data-uid="@productUid@" data-cart="@productSaleReady@">
                         <i class="fa fa-shopping-cart"></i>                                 
                         <span>@productSale@</span>
                     </button>                                   
                 </div>
                 <div class="cart-button button-group compare-list-button-wrapper">
-                    <button type="button" class="btn btn-cart addToWishList" role="button" data-uid="@productUid@" data-title="{Отложить}" data-placement="top" data-toggle="tooltip">
+                    <button type="button" class="btn btn-cart addToWishList" data-uid="@productUid@" data-title="{Отложить}" data-placement="top" data-toggle="tooltip">
                         <i class="fa fa-heart" aria-hidden="true"></i>                            
                         {Отложить}
                     </button>                                   
                 </div>
                 <div class="cart-button button-group compare-list-button-wrapper">
-                    <button type="button" class="btn btn-cart addToCompareList" role="button" data-uid="@productUid@" data-title="{Сравнить}" data-placement="top" data-toggle="tooltip">
+                    <button type="button" class="btn btn-cart addToCompareList" data-uid="@productUid@" data-title="{Сравнить}" data-placement="top" data-toggle="tooltip">
                         <i class="fa fa-refresh" aria-hidden="true"></i>                            
                         {Сравнить}
                     </button>                                   
@@ -147,7 +147,7 @@
         <h4 class="heading">{Отзывы}</h4>
         <div class="content panel-smart">
             <div id="commentList"></div>
-            <button role="button" class="btn btn-info btn-show-comment-add-block" onclick="$('#addComment').slideToggle();
+            <button class="btn btn-info btn-show-comment-add-block" onclick="$('#addComment').slideToggle();
                     $(this).hide();"><span class="glyphicon glyphicon-plus-sign"></span> {Новый комментарий}</button>
             <div id='addComment' class="well well-sm" style='display:none;margin-top:30px;'>
                 <div class="comment-head">{Оставьте свой отзыв}</div>
@@ -170,7 +170,7 @@
                     <label class="btn btn-success btn-sm active">
                         <input type="radio" name="rate" value="5" checked> +5
                     </label>
-                    <button role="button" class="btn btn-info btn-sm pull-right" onclick="commentList('@productUid@', 'add', 1);">{Проголосовать}</button>
+                    <button class="btn btn-info btn-sm pull-right" onclick="commentList('@productUid@', 'add', 1);">{Проголосовать}</button>
                 </div>
             </div>
         </div>

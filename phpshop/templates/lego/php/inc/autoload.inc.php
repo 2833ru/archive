@@ -117,7 +117,7 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or !empty($_SESSION
                         <h4 class="modal-title">{Найти файл}</h4>
                     </div>
                     <div class="modal-body">
-                        <iframe class="elfinder-modal-content" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" data-path="image" data-option="return=icon_new" width="100%" height="510"></iframe>
+                        <iframe class="elfinder-modal-content" data-path="image" data-option="return=icon_new" id="admin-modal-filemanager"></iframe>
 
                     </div>
                 </div>
@@ -187,7 +187,7 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or !empty($_SESSION
         
             $PHPShopGUI->nav_style = 'nav-tabs';
     $css_edit.=$PHPShopGUI->setTab(array('Темы', $css_edit_theme), array('Стили', $css_edit_add));
-        
+
     // Сохранить
     if (!empty($_SESSION['logPHPSHOP'])) {
         $css_edit.=$PHPShopGUI->setButton('Сохранить', 'floppy-disk', 'saveTheme');

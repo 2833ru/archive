@@ -45,7 +45,7 @@ class PHPShopUser extends PHPShopObj {
             $dis = "";
             foreach ($data_adres_one as $key => $value) {
                 if ($value)
-                    $dis .= " ," . $value;
+                    $dis .= ", " . $value;
             }
             if ($dis) {
                 if ($index == $data_adres['main'])
@@ -77,6 +77,14 @@ class PHPShopUser extends PHPShopObj {
         return $this->getParam($str);
     }
 
+    /**
+     * Вывод логина пользователя
+     * @return string
+     */
+    function getLogin() {
+        return $this->getParam("login");
+    }
+    
     /**
      * Вывод имени пользователя
      * @return string

@@ -4,6 +4,75 @@ var ajax_path = "./order/ajax/";
 
 $().ready(function () {
 
+    // Поиск пользователя
+    $(".search_user").on('input', function () {
+        
+        var words = $(this).val();
+        var s = $(this);
+        var set = s.attr('data-set');
+        if (words.length > 3) {
+            $.ajax({
+                type: "POST",
+                url: "?path=shopusers",
+                data: {
+                    words: escape(words),
+                    set: set,
+                    ajax: 1,
+                    selectID: 1,
+                    'actionList[selectID]': 'actionOrderSearch'
+                },
+                success: function (data)
+
+                {
+                    // Результат поиска
+                    if (data != '') {
+                        s.attr('data-content', data);
+                        s.popover('show');
+                        
+                        // Отключение DADATA
+                        if ($('#body').attr('data-token') != "") 
+                        $("[name='fio_new']").suggestions().disable();
+                    } else{
+                        s.popover('hide');
+                        
+                        // Включение DADATA
+                        if ($('#body').attr('data-token') != "") 
+                        $("[name='fio_new']").suggestions().enable();
+                    }
+                }
+            });
+
+        } else {
+            s.attr('data-content', '');
+            s.popover('hide');
+        }
+    });
+    
+    // Закрыть поиск пользователя
+    $('body').on('click', '.close', function (event) {
+        event.preventDefault();
+        $('[data-toggle="popover"]').popover('hide');
+    });
+
+    // Выбор в поиске пользователя
+    $('body').on('click', '.select-search', function (event) {
+        event.preventDefault();
+
+        $('[name="user_search"]').val($(this).text());
+        $('[name="user_new"]').val($(this).attr('data-id'));
+        $('[name="fio_new"]').val($(this).attr('data-name'));
+        $('[name="tel_new"]').val($(this).attr('data-tel'));
+        $('[name="person[mail]"]').val($(this).attr('data-mail'));
+        $('[data-toggle="popover"]').popover('hide');
+    });
+
+    $('[data-toggle="popover"]').popover({
+        "html": true,
+        "placement": "bottom",
+        "template": '<div class="popover" role="tooltip" style="max-width:600px"><div class="arrow"></div><div class="popover-content"></div></div>'
+
+    });
+
     // Напоминание об оплате
     $(".order-reminder").on('click', function (event) {
         event.preventDefault();
@@ -27,7 +96,7 @@ $().ready(function () {
                 dataType: "json",
                 async: false,
                 success: function () {
-                   showAlertMessage(locale.save_done);
+                    showAlertMessage(locale.save_done);
                 }
 
             });
@@ -636,10 +705,16 @@ $().ready(function () {
 
     // Обновление данных
     $("button[name=editID]").on('click', function () {
-        $('#user-data-1 .sidebar-data-0').text($('#product_edit input[name=fio_new]').val());
-        $('#user-data-1 .sidebar-data-2').text($('#product_edit input[name=tel_new]').val());
-        $('#user-data-2 .sidebar-data-0').text($('#product_edit input[name=fio_new]').val());
-        $('#user-data-2 .sidebar-data-1').text($('#product_edit input[name=tel_new]').val());
+
+        if ($('#product_edit input[name=fio_new]').val() != "") {
+            $('#user-data-1 .sidebar-data-0').text($('#product_edit input[name=fio_new]').val());
+            $('#user-data-2 .sidebar-data-0').text($('#product_edit input[name=fio_new]').val());
+        }
+
+        if ($('#product_edit input[name=tel_new]').val() != "") {
+            $('#user-data-1 .sidebar-data-2').text($('#product_edit input[name=tel_new]').val());
+            $('#user-data-2 .sidebar-data-1').text($('#product_edit input[name=tel_new]').val());
+        }
     });
 
     // Карта
@@ -669,6 +744,11 @@ $().ready(function () {
         $(this).find('#dropdown_action').hide();
     });
 
+    // Мобильная навигация
+    if (typeof is_mobile !== 'undefined'){
+        locale.dataTable.paginate.next="»";
+        locale.dataTable.paginate.previous="«";
+    }
 
     // Таблица данных
     if (typeof ($.cookie('data_length')) == 'undefined')

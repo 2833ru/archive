@@ -29,7 +29,7 @@ function userorderpaymentlink_mod_uniteller_hook($obj, $PHPShopOrderFunction)
             foreach ($order['Cart']['cart'] as $key => $arItem) {
 
                 // Скидка
-                if($order['Person']['discount'] > 0)
+                if($order['Person']['discount'] > 0 && empty($arItem['promo_price']))
                     $price = number_format($arItem['price'] - ($arItem['price'] * $order['Person']['discount'] / 100), 2, '.', '');
                 else
                     $price = number_format($arItem['price'], 2, '.', '');

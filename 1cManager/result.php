@@ -241,8 +241,6 @@ class ReadCsv1C extends PHPShopReadCsvNative {
     var $TableName;
     var $Sklad_status;
     var $seourlpro_enabled = false;
-    // Изменение SEO ссылки при обновлении
-    var $seo_update = true;
     var $ObjCatalog, $ObjSystem;
     var $ItemCreate = 0;
     var $ItemUpdate = 0;
@@ -253,6 +251,7 @@ class ReadCsv1C extends PHPShopReadCsvNative {
         $this->TableName = $GLOBALS['SysValue']['base']['products'];
         $this->TableNameFoto = $GLOBALS['SysValue']['base']['foto'];
         $this->Sklad_status = $ObjSystem->getSerilizeParam("admoption.sklad_status");
+        $this->seo_update = $ObjSystem->getSerilizeParam("admoption.seo_update");
         $this->ObjCatalog = $ObjCatalog;
         $this->ObjSystem = $ObjSystem;
         $this->GetIdValuta = PHPShopValuta::getAll(true);
@@ -401,7 +400,7 @@ class ReadCsv1C extends PHPShopReadCsvNative {
             if ($this->ObjSystem->getSerilizeParam("1c_option.update_category") == 1 and ! empty($CsvToArray[15]))
                 $sql .= "category='" . trim($CsvToArray[15]) . "', "; // категория
 
-            if ($this->ObjSystem->getSerilizeParam("1c_option.update_price") == 1 and ! empty($CsvToArray[7]))
+            if ($this->ObjSystem->getSerilizeParam("1c_option.update_price") == 1)
                 $sql .= "price='" . @$CsvToArray[7] . "', "; // цена 1
          
             // Склад

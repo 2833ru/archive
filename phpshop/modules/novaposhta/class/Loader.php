@@ -23,22 +23,32 @@ class Loader {
 
     public function getWarehouses()
     {
-        $result = $this->request->post(Request::ADDRESS_MODEL, Request::WAREHOUSES_METHOD);
+        $PHPShopOrm = new PHPShopOrm('phpshop_modules_novaposhta_warehouses');
+        $PHPShopOrm->query('TRUNCATE `phpshop_modules_novaposhta_warehouses`');
 
-        if($result['success']) {
-            $query_values = array();
-            $PHPShopOrm = new PHPShopOrm('phpshop_modules_novaposhta_warehouses');
-            $PHPShopOrm->query('TRUNCATE `phpshop_modules_novaposhta_warehouses`');
-            foreach ($result['data'] as $warehouse) {
-                $query_values[] = "(" . "'" . str_replace("'", '`', $warehouse['Description']) . "','" .
-                    $warehouse['Ref'] . "','" . str_replace("'", '`', $warehouse['ShortAddress']) . "','" . $warehouse['Phone'] . "','" .
-                    $warehouse['TypeOfWarehouse'] . "','" . $warehouse['Number'] . "','" . $warehouse['SettlementRef'] . "','" .
-                    $warehouse['Longitude'] . "','" . $warehouse['Latitude'] . "')";
+        $loaded = 0;
+        $total =  1;
+        for($page = 1; $loaded < $total; $page++) {
+            $result = $this->request->post(Request::ADDRESS_MODEL, Request::WAREHOUSES_METHOD, [
+                'Page' => $page,
+                'Limit' => 500
+            ]);
+            $total = $result['info']['totalCount'];
+
+            if($result['success']) {
+                $query_values = [];
+                foreach ($result['data'] as $warehouse) {
+                    $query_values[] = "(" . "'" . str_replace("'", '`', $warehouse['Description']) . "','" .
+                        $warehouse['Ref'] . "','" . str_replace("'", '`', $warehouse['ShortAddress']) . "','" . $warehouse['Phone'] . "','" .
+                        $warehouse['TypeOfWarehouse'] . "','" . $warehouse['Number'] . "','" . $warehouse['SettlementRef'] . "','" .
+                        $warehouse['Longitude'] . "','" . $warehouse['Latitude'] . "')";
+                    $loaded++;
+                }
+
+                $PHPShopOrm->query('INSERT INTO `phpshop_modules_novaposhta_warehouses` (`title`, `ref`, `address`, `phone`, `type`, `number`, `city`, `longitude`, `latitude`) VALUES ' . implode(',', $query_values));
             }
-            $PHPShopOrm->query('INSERT INTO `phpshop_modules_novaposhta_warehouses` (`title`, `ref`, `address`, `phone`, `type`, `number`, `city`, `longitude`, `latitude`) VALUES ' . implode(',', $query_values));
-
-            $PHPShopOrm->query('UPDATE `phpshop_modules_novaposhta_system` SET `last_warehouses_update`="' . time() . '" WHERE `id`=1');
         }
+        $PHPShopOrm->query('UPDATE `phpshop_modules_novaposhta_system` SET `last_warehouses_update`="' . time() . '" WHERE `id`=1');
     }
 
     public function getWarehouseTypes()

@@ -57,7 +57,7 @@ function actionStart() {
         foreach ($data as $row) {
         
             $PHPShopInterface->setRow(
-                    $row['id'], array('name' => $row['login'], 'link' => '?path=users&id=' . $row['id'], 'align' => 'left'), $row['name'], array('name' => $row['mail'], 'link' => 'mailto:' . $row['mail']), array('action' => array('edit', 'delete', 'id' => $row['id']), 'align' => 'center'), array('status' => array('enable' => $row['enabled'], 'align' => 'right', 'caption' => array('Выкл', 'Вкл'))));
+                    $row['id'], array('name' => $row['login'], 'link' => '?path=users&id=' . $row['id'], 'align' => 'left'), $row['name'], array('name' => $row['mail'], 'link' => 'mailto:' . $row['mail']), array('action' => array('edit', '|', 'delete', 'id' => $row['id']), 'align' => 'center'), array('status' => array('enable' => $row['enabled'], 'align' => 'right', 'caption' => array('Выкл', 'Вкл'))));
         }
     $PHPShopInterface->Compile();
 }

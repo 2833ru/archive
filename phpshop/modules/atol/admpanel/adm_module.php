@@ -19,11 +19,12 @@ function actionStart() {
 
     // Выборка
     $data = $PHPShopOrm->select();
-    $Tab1.= $PHPShopGUI->setField('Логин в Атол', $PHPShopGUI->setInputText(false, 'login_new', $data['login'], 300));
+    $Tab1 = $PHPShopGUI->setField('Логин в Атол', $PHPShopGUI->setInputText(false, 'login_new', $data['login'], 300));
     $Tab1.= $PHPShopGUI->setField('Пароль в Атол', $PHPShopGUI->setInputText(false, 'password_new', $data['password'],300));
     $Tab1.= $PHPShopGUI->setField('Код группы в Атол', $PHPShopGUI->setInputText(false, 'group_code_new', $data['group_code'], 300));
     $Tab1.= $PHPShopGUI->setField('URL магазина в Атол', $PHPShopGUI->setInputText(false, 'payment_address_new', $data['payment_address'], 300));
     $Tab1.= $PHPShopGUI->setField('ИНН в Атол', $PHPShopGUI->setInputText(false, 'inn_new', $data['inn'], 300));
+    $Tab1.= $PHPShopGUI->setField('Ручное управление', $PHPShopGUI->setCheckbox("manual_control_new", 1, "Отключить автоматическое создание чеков", $data["manual_control"]));
 
     // Интструкция
     $info='<h4>Регистрация в АТОЛ Онлайн</h4>
@@ -83,6 +84,10 @@ function actionUpdate() {
 
     $PHPShopOrm->debug = false;
     $_POST['region_data_new']=1;
+
+    if (empty($_POST["manual_control_new"]))
+        $_POST["manual_control_new"] = 0;
+
     $action = $PHPShopOrm->update($_POST);
     header('Location: ?path=modules&id=' . $_GET['id']);
     return $action;

@@ -85,7 +85,7 @@ class NetPayPayment extends PHPShopPaymentResult {
 		$token = md5($preToken.base64_encode(md5($this->option['apikey'], true)).';');
 		
 		$is_testmode = ($this->option['work'] != 1);
-		
+
 		if ($getData['auth'] == $this->option['auth']) {
 			if ($token === $getData['token']) {
 				if (in_array($getData['error'], array('000', '00', '0'))) {
@@ -96,16 +96,15 @@ class NetPayPayment extends PHPShopPaymentResult {
 					if (isset($getData['orderNumber'])) {
 						$order_id = $getData['orderNumber'];
 					}
-					
-					$connect_cfg = $GLOBALS['SysValue']["connect"];
-					$table_orders = $GLOBALS['SysValue']['base']['orders'];
-					mysql_connect($connect_cfg['host'], $connect_cfg['user_db'], $connect_cfg['pass_db'])
-					&& mysql_select_db($connect_cfg['dbase']);
-					
+
 					$this->inv_id = $order_id;
 					$error = '';
 					$status = $getData['status'];
 					$trans_type = $getData['transactionType'];
+
+                    $order = (new PHPShopOrm($GLOBALS['SysValue']['base']['orders']))
+                        ->getOne(['id', 'statusi'], ['uid' => sprintf('="%s"', $this->true_num($this->inv_id))]);
+
 					if ($status === 'APPROVED') { 
 						if (in_array(
 							$trans_type, 
@@ -118,8 +117,7 @@ class NetPayPayment extends PHPShopPaymentResult {
 								'sum_new' => $getData['amount'], 
 								'datas_new' => time()
 								));
-                            $order = (new PHPShopOrm($GLOBALS['SysValue']['base']['orders']))
-                                ->getOne(['id', 'statusi'], ['uid' => sprintf('="%s"', $this->true_num($this->inv_id))]);
+
 
                             if($order) {
                                 (new PHPShopOrderFunction((int) $order['id']))->changeStatus((int) $this->set_order_status_101(), $order['statusi']);
@@ -128,7 +126,11 @@ class NetPayPayment extends PHPShopPaymentResult {
 						elseif (in_array($trans_type, 
 							array('Cancel','Refund','Refund_Qiwi','Refund_WebMoney','Refund_YaMoney')
 							)) {
-							mysql_query("update `$table_orders` set statusi='{$this->option['status_refund']}' where uid='".mysql_escape_string($this->true_num($this->inv_id))."'");
+
+						    if(!empty($this->option['status_refund'])) {
+                                (new PHPShopOrderFunction((int) $order['id']))->changeStatus((int) $this->option['status_refund'], $order['statusi']);
+                            }
+
 							$this->done($this->inv_id, $trans_type, $error, $status);
 							exit;
 						}
@@ -141,7 +143,11 @@ class NetPayPayment extends PHPShopPaymentResult {
 						//$this->out_summ = $_REQUEST['sum'];
 						//$this->crc = true;
 						//$this->my_crc = true;
-						mysql_query("update `$table_orders` set statusi='{$this->option['status_hold']}' where uid='".mysql_escape_string($this->true_num($this->inv_id))."'");
+
+                        if(!empty($this->option['status_hold'])) {
+                            (new PHPShopOrderFunction((int) $order['id']))->changeStatus((int) $this->option['status_hold'], $order['statusi']);
+                        }
+
 						$this->done($this->inv_id, $trans_type, $error, $status);
 						exit;
 					}

@@ -78,5 +78,6 @@ var locale = {
     create_db_dump: "Are you sure you want to perform the operation?<br> Be sure to back up your database before proceeding!",
     product_operations: "Choose what you want to do with the products in the category and subcategories.",
     charset: "windows-1251",
-    confirm_create_order: "¬ы действительно хотите создать заказ?"
+    confirm_create_order: "¬ы действительно хотите создать заказ?",
+    confirm_change_price: "The new price differs by more than 20%. Are you sure?",
 };

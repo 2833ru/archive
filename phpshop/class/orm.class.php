@@ -133,7 +133,7 @@ class PHPShopOrm {
         $param = explode(".", $param);
 
         // Проверка на лимит кэша
-        if (@count($this->Items[$param[0]]) < $this->cache_limit) {
+        if (is_array($this->Items[$param[0]]) and count($this->Items[$param[0]]) < $this->cache_limit) {
             $this->Items[$param[0]][$param[1]] = $value;
 
             // Форматирование массива
@@ -249,14 +249,16 @@ class PHPShopOrm {
         if ($this->debug) {
             if (empty($this->cache) and !empty($class_name))
                 $this->comment = $class_name . '.' . $function_name;
-            $this->setError("SQL Запрос: ", $this->_SQL,false, false, "info");
+            $this->setError("SQL Запрос: ", $this->_SQL, false, false, "info");
         }
 
         // Возвращаем данные в виде массива
         if ($this->install) {
-            if ($this->mysql_error)
-                $result = mysqli_query($this->link_db, $this->_SQL) or die($this->setError("SQL Ошибка для [" . $this->_SQL . "] ", mysqli_error($this->link_db), true,$this->objBase));
-            else
+            if ($this->mysql_error){
+                $result = mysqli_query($this->link_db, $this->_SQL);
+                if(empty($result)) 
+                    $this->setError("SQL Ошибка для [" . $this->_SQL . "] ", mysqli_error($this->link_db), false,$this->objBase);
+            }else
                 $result = mysqli_query($this->link_db, $this->_SQL);
         }
         else
@@ -272,9 +274,8 @@ class PHPShopOrm {
                     $this->_DATA = $row;
         }
 
-
         // Счетчик запросов
-        @$GLOBALS['SysValue']['sql']['num']++;
+        $GLOBALS['SysValue']['sql']['num']++;
 
         // Проверка на большой массив, убирается чистка на слеши для экономии памяти
         if ($num > 1000)

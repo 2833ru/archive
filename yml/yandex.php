@@ -3,14 +3,20 @@
 /**
  * Файл выгрузки для Яндекс Маркет
  * @author PHPShop Software
- * @version 2.9
+ * @version 3.1
  * @package PHPShopXML
  * @example ?ssl [bool] SSL
+ * @example ?retailcrm [bool] Выгрузка для RetailCRM
+ * @example ?cdek [bool] Выгрузка для СДЭК (упрощенный тип YML с использованием count)
+ * @example ?aliexpress [bool] Выгрузка для AliExpress (товары отмеченные для AliExpress)
+ * @example ?sbermarket [bool] Выгрузка для СберМаркет (товары отмеченные для СберМаркет)
  * @example ?getall [bool] Выгрузка всех товаров без учета флага YML. Выгрузка всех изображений.
  * @example ?from [bool] Метка в ссылки товара from
  * @example ?amount [bool] Добавление склада в тег amount для CRM
  * @example ?search [bool] Убрать подтипы из выгрузки (для Яндекс.Поиск по сайту)
  * @example ?utf [bool] Вывод в кодировке UTF-8
+ * @example ?price [int] Колонка цен (2/3/4/5)
+ * @example ?available [bool] Выводить только в наличии
  */
 $_classPath = "../phpshop/";
 include($_classPath . "class/obj.class.php");
@@ -126,9 +132,16 @@ class PHPShopYml {
         // SSL
         if (isset($_GET['ssl']))
             $this->ssl = 'https://';
+        else if (!empty($_SERVER['HTTPS']) && 'off' !== strtolower($_SERVER['HTTPS']))
+            $this->ssl = 'https://';
 
         // Исходное изображение
         $this->image_source = $this->PHPShopSystem->ifSerilizeParam('admoption.image_save_source');
+
+        // Колонка цен
+        $this->price = $this->PHPShopSystem->getPriceColumn();
+        if ($_GET['price'] > 1)
+            $this->price = 'price' . intval($_GET['price']);
 
         $this->setHook(__CLASS__, __FUNCTION__);
     }
@@ -253,7 +266,7 @@ class PHPShopYml {
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
 
         // Не выводить скрытые каталоги
-        if (isset($_GET['getall']))
+        if (isset($_GET['getall']) or isset($_GET['retailcrm']))
             $where = null;
         else
             $where['skin_enabled'] = "!='1'";
@@ -269,7 +282,7 @@ class PHPShopYml {
             foreach ($data as $row) {
                 if ($row['id'] != $row['parent_to']) {
                     $Catalog[$row['id']]['id'] = $row['id'];
-                    $Catalog[$row['id']]['name'] = '<![CDATA[' . $row['name'] . ']]>';
+                    $Catalog[$row['id']]['name'] = $row['name'];
                     $Catalog[$row['id']]['parent_to'] = $row['parent_to'];
                 }
             }
@@ -288,8 +301,21 @@ class PHPShopYml {
 
         if (isset($_GET['getall']))
             $where = null;
-        else
-            $where = "yml='1' and";
+        else {
+            if (isset($_GET['cdek'])) {
+                $where = "cdek='1' and";
+            } elseif (isset($_GET['aliexpress'])) {
+                $where = "aliexpress='1' and";
+            } elseif (isset($_GET['sbermarket'])) {
+                $where = "sbermarket='1' and";
+            } else {
+                $where = "yml='1' and";
+            }
+
+            if (isset($_GET['available'])) {
+                $where .= " p_enabled='1' and";
+            }
+        }
 
         // Мультибаза
         $queryMultibase = $this->queryMultibase();
@@ -326,7 +352,8 @@ class PHPShopYml {
             }
 
             $uid = $row['uid'];
-            $price = $row[$this->PHPShopSystem->getPriceColumn()];
+
+            $price = $row[$this->price];
             $oldprice = $row['price_n'];
 
             // Промоакции
@@ -372,6 +399,10 @@ class PHPShopYml {
                 "name" => str_replace(array('&#43;', '&#43'), '+', $name),
                 "picture" => htmlspecialchars($row['pic_big']),
                 "price" => $price,
+                "price2" => round($row['price2'], (int) $this->format),
+                "price3" => round($row['price3'], (int) $this->format),
+                "price4" => round($row['price4'], (int) $this->format),
+                "price5" => round($row['price5'], (int) $this->format),
                 "oldprice" => $oldprice,
                 "weight" => $row['weight'],
                 "length" => $row['length'],
@@ -382,13 +413,14 @@ class PHPShopYml {
                 "uid" => $uid,
                 "vkurs" => $vkurs,
                 "description" => $description,
+                "raw_description" => $row['description'],
                 "content" => $content,
+                "raw_content" => $row['content'],
                 "prod_seo_name" => $row['prod_seo_name'],
                 "manufacturer_warranty" => $row['manufacturer_warranty'],
                 "sales_notes" => $row['sales_notes'],
                 "country_of_origin" => $row['country_of_origin'],
                 "adult" => $row['adult'],
-                "rec" => $row['odnotip'],
                 "delivery" => $row['delivery'],
                 "pickup" => $row['pickup'],
                 "store" => $row['store'],
@@ -405,6 +437,10 @@ class PHPShopYml {
                 "gift_items" => $row['gift_items'],
                 "barcode" => $row['barcode'],
                 "model" => $row['model'],
+                "market_sku" => $row['market_sku'],
+                "cpa" => $row['cpa'],
+                "price_yandex_dbs" => round($row['price_yandex_dbs'], (int) $this->format),
+                "price_sbermarket" => round($row['price_sbermarket'], (int) $this->format),
             );
 
             // Параметр сортировки
@@ -449,7 +485,7 @@ class PHPShopYml {
         $id = $row['id'];
         $name = trim(strip_tags($row['name']));
         $uid = $row['uid'];
-        $price = $row[$this->PHPShopSystem->getPriceColumn()];
+        $price = $row[$this->price];
         $oldprice = $row['price_n'];
 
         // Промоакции
@@ -499,6 +535,8 @@ class PHPShopYml {
             "yml_bid_array" => $parent_array['yml_bid_array'],
             "uid" => $uid,
             "description" => $parent_array['description'],
+            "raw_description" => $parent_array['raw_description'],
+            "raw_content" => $parent_array['raw_content'],
             "prod_seo_name" => $parent_array['prod_seo_name'],
             "fee" => $parent_array['fee'],
             "cpa" => $parent_array['cpa'],
@@ -506,7 +544,6 @@ class PHPShopYml {
             "sales_notes" => $parent_array['sales_notes'],
             "country_of_origin" => $parent_array['country_of_origin'],
             "adult" => $parent_array['adult'],
-            "rec" => $parent_array['odnotip'],
             "delivery" => $parent_array['delivery'],
             "pickup" => $parent_array['pickup'],
             "store" => $parent_array['store'],
@@ -520,6 +557,7 @@ class PHPShopYml {
             "gift_items" => $row['gift_items'],
             "barcode" => $row['barcode'],
             "model" => $row['model'],
+            "market_sku" => $row['market_sku'],
         );
 
         $Products[$id] = $array;
@@ -559,9 +597,11 @@ function setCategories() {
     $category = $this->category();
     foreach ($category as $val) {
         if (empty($val['parent_to']))
-            $this->xml .= '<category id="' . $val['id'] . '">' . $val['name'] . '</category>';
+            $this->xml .= '<category id="' . $val['id'] . '">' . $this->cleanStr($val['name']) . '</category>
+';
         else
-            $this->xml .= '<category id="' . $val['id'] . '" parentId="' . $val['parent_to'] . '">' . $val['name'] . '</category>';
+            $this->xml .= '<category id="' . $val['id'] . '" parentId="' . $val['parent_to'] . '">' . $this->cleanStr($val['name']) . '</category>
+';
     }
 
     $this->xml .= '</categories>';
@@ -592,7 +632,9 @@ function setDelivery() {
  */
 function cleanStr($string) {
     $string = html_entity_decode($string, ENT_QUOTES, 'windows-1251');
-    return str_replace('&#43;', '+', $string);
+    $string = str_replace('&#43;', '+', $string);
+    $string = str_replace(array('"','&','>','<',"'"),array('&quot;','&amp;','&gt;','&lt;','&apos;'),$string);
+    return $string;
 }
 
 /**
@@ -629,9 +671,6 @@ function setProducts() {
         if (!empty($val['yml_bid_array']['bid']))
             $bid_str = '  bid="' . $val['yml_bid_array']['bid'] . '" ';
 
-        // Если есть cbid
-        if (!empty($val['yml_bid_array']['cbid']))
-            $bid_str .= '  cbid="' . $val['yml_bid_array']['cbid'] . '" ';
 
         // Стандартный урл
         $url = '/shop/UID_' . $val['id'];
@@ -690,8 +729,20 @@ function setProducts() {
             $val['description'] = $val['content'];
         }
 
+        $name = '<name>' . $this->cleanStr($val['name']) . '</name>';
+        $type = '';
+        if (!empty($val['model']) && !empty($val['vendor_name']) && !isset($_GET['cdek'])) {
+            $name = '<typePrefix>' . $this->cleanStr($val['name']) . '</typePrefix>';
+            $type = ' type="vendor.model"';
+        }
+
+        $retailQuantity = '';
+        if (isset($_GET['retailcrm'])) {
+            $retailQuantity = sprintf('quantity="%s"', $val['items']);
+        }
+
         $xml = '
-<offer id="' . $val['id'] . '" available="' . $val['p_enabled'] . '" ' . $bid_str . $group_id . '>
+<offer id="' . $val['id'] . '" available="' . $val['p_enabled'] . '" ' . $bid_str . $group_id . $type . $retailQuantity . '>
  <url>' . $this->ssl . $_SERVER['SERVER_NAME'] . $GLOBALS['SysValue']['dir']['dir'] . $url . '.html' . $group_postfix . '</url>
       <price>' . $val['price'] . '</price>';
 
@@ -700,15 +751,34 @@ function setProducts() {
             $xml .= '<oldprice>' . $val['price_n'] . '</oldprice>';
 
         // Склад
-        if (isset($_GET['amount']))
+        if (isset($_GET['amount']) || isset($_GET['cdek']))
             $xml .= '<amount>' . $val['items'] . '</amount>';
+        if (isset($_GET['aliexpress']))
+            $xml .= '<count>' . $val['items'] . '</count>';
+        if (isset($_GET['sbermarket']))
+            $xml .= '<outlets><outlet id="1" instock="' . $val['items'] . '"></outlet></outlets>';
 
+        if (isset($_GET['retailcrm'])) {
+            $xml .= '<xmlId>' . $val['uid'] . '</xmlId>';
+        }
+
+        if (isset($_GET['cdek'])) {
+            $ndsEnabled = $this->PHPShopSystem->getParam('nds_enabled');
+            $nds = $this->PHPShopSystem->getParam('nds');
+            if (empty($ndsEnabled)) {
+                $ndsValue = 'NO_VAT';
+            } else {
+                $ndsValue = 'VAT_' . $nds;
+            }
+
+            $xml .= '<vat>' . $ndsValue . '</vat>';
+        }
 
         $xml .= '<currencyId>' . $this->defvalutaiso . '</currencyId>
       <categoryId>' . $val['category'] . '</categoryId>
       ' . $picture . '
-      <name><![CDATA[' . $this->cleanStr($val['name']) . ']]></name>
-      <description>' . $this->cleanStr($val['description']) . '</description>
+      ' . $name . '
+      <description>' . $val['description'] . '</description>
 </offer>';
 
         $hook = $this->setHook(__CLASS__, __FUNCTION__, array('xml' => $xml, 'val' => $val));

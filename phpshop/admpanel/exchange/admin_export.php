@@ -303,8 +303,9 @@ function actionSave() {
             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['shopusers']);
             break;
         case 'order':
-            PHPShopObj::loadClass('order');
+            PHPShopObj::loadClass(array('order','user'));
             $PHPShopOrderStatusArray = new PHPShopOrderStatusArray();
+            $PHPShopUserStatusArray = new PHPShopUserStatusArray();
             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
             break;
         default: $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
@@ -460,6 +461,7 @@ function actionSave() {
                             foreach ($order['Cart']['cart'] as $k => $v) {
                                 $csv_line .= '[' . $v['name'] . '(' . $v['num'] . '*' . $v['price'] . ')]';
                             }
+                        $csv_line .= '[' . __('Доставка') . '(' . $order['Cart']['dostavka'] . ')]';
                         $csv_line .= '"' . $delim;
                     }
 

@@ -25,9 +25,9 @@ function actionStart() {
         $LicenseUntil = PHPShopDate::get($LicenseUntilUnixTime);
     else
         $LicenseUntil = " " . __("áåç îãğàíè÷åíèé");
-    
-     if (getenv("COMSPEC"))
-         $License['License']['Pro'] = 'Enabled';
+
+    if (getenv("COMSPEC"))
+        $License['License']['Pro'] = 'Enabled';
 
     if ($License['License']['Pro'] == 'Start') {
         $product_name = 'Basic';
@@ -121,8 +121,13 @@ function actionLoadLic() {
         if (@unlink("../../license/" . $licFile)) {
             $action = true;
 
+            $protocol = 'http://';
+            if (!empty($_SERVER['HTTPS']) && 'off' !== strtolower($_SERVER['HTTPS'])) {
+                $protocol = 'https://';
+            }
+
             // Ïîëó÷åíèå íîâîé ëèöåíçèè
-            $url = 'http://' . $License['License']['DomenLocked'];
+            $url = $protocol. $License['License']['DomenLocked'];
             $ñurl = curl_init();
             curl_setopt_array($ñurl, array(
                 CURLOPT_URL => $url,

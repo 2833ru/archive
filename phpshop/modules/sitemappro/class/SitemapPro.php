@@ -2,6 +2,11 @@
 
 class SitemapPro
 {
+    const CONTENT_STEP = 'content';
+    const PRODUCTS_STEP = 'products';
+    const FILTER_COMBINATIONS_STEP = 'filter';
+    const FILTER_COMBINATIONS_STEP_LIMIT = 100;
+
     private $options = [];
     private $xml = '';
 
@@ -42,52 +47,169 @@ class SitemapPro
 
     public function generateSitemap($ssl = false)
     {
-        // Генерация всего, кроме товаров.
-        if((int) $this->options['is_products_step'] === 0) {
-            $this->addMainPage($ssl);
-            $this->addPages($ssl);
-            $this->addNews($ssl);
-            $this->addCategories($ssl);
-
-            if($this->isSeoUrlProEnabled && $this->isSeoBrandsEnabled) {
-                $this->addBrands($ssl);
+        switch ($this->options['step']) {
+            case self::PRODUCTS_STEP: {
+                $this->xml .= '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+                $this->xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
+                $this->addProducts($ssl);
+                $this->xml .= '</urlset>';
             }
+            break;
+            case self::FILTER_COMBINATIONS_STEP: {
+                $this->addFilterCombinations($ssl);
+            }
+            break;
+            default: {
+                $this->addMainPage($ssl);
+                $this->addPages($ssl);
+                $this->addNews($ssl);
+                $this->addCategories($ssl);
 
-            $this->xml .= '</urlset>';
+                if($this->isSeoUrlProEnabled && $this->isSeoBrandsEnabled) {
+                    $this->addBrands($ssl);
+                }
 
-            $orm = new PHPShopOrm('phpshop_modules_sitemappro_system');
-            $orm->update(['is_products_step_new' => '1'], ['id' => '="1"']);
-        }
-        // Пошаговая генерация товаров.
-        else {
-            $this->xml .= '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
-            $this->xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
+                $this->xml .= '</urlset>';
 
-            $this->addProducts($ssl);
-
-            $this->xml .= '</urlset>';
+                $orm = new PHPShopOrm('phpshop_modules_sitemappro_system');
+                $orm->update(['step_new' => self::PRODUCTS_STEP], ['id' => '="1"']);
+            }
         }
 
         $this->compile($ssl);
     }
 
+    private function addFilterCombinations($ssl)
+    {
+        $from = (int) $this->options['processed'];
+        $to = self::FILTER_COMBINATIONS_STEP_LIMIT;
+
+        if($from === 0) {
+            $host = '';
+            if (defined("HostID"))
+                $host = '_' . HostID;
+
+            $filterIndex = 1;
+            while(file_exists(dirname(dirname(dirname(dirname(__DIR__)))) . sprintf('/UserFiles/Files/sitemap_filter%s_%s.xml', $host, $filterIndex))) {
+                unlink(dirname(dirname(dirname(dirname(__DIR__)))) . sprintf('/UserFiles/Files/sitemap_filter%s_%s.xml', $host, $filterIndex));
+                $filterIndex++;
+            }
+        }
+
+        $system = new PHPShopSystem();
+
+        $titleTemplate = $system->getParam('sort_title_shablon');
+        $descrTemplate = $system->getParam('sort_description_shablon');
+
+        $orm = new PHPShopOrm();
+        $result = $orm->query("select `id`, `category`, `title`, `meta_description` from " . $GLOBALS['SysValue']['base']['sort'] . " limit $from, $to");
+
+        // Выбрано меньше чем лимит, значит характеристики закончились. Изменяем операцию.
+       $systemOrm = new PHPShopOrm('phpshop_modules_sitemappro_system');
+        if(mysqli_num_rows($result) < self::FILTER_COMBINATIONS_STEP_LIMIT) {
+            $systemOrm->update(['step_new' => self::CONTENT_STEP, 'processed_new' => '0'], ['id' => '="1"']);
+        } else {
+            $systemOrm->update(['processed_new' => (int) $this->options['processed'] + self::FILTER_COMBINATIONS_STEP_LIMIT], ['id' => '="1"']);
+        }
+
+        $ormCategories = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
+
+        $where['skin_enabled'] = "!='1'";
+
+        // Мультибаза
+        if (defined("HostID"))
+            $where['servers'] = " REGEXP 'i" . HostID . "i'";
+        elseif (defined("HostMain"))
+            $where['skin_enabled'] .= ' and (servers ="" or servers REGEXP "i1000i")';
+
+        $categories = array_map(function ($category) {
+            $category['sort'] = unserialize($category['sort']);
+            return $category;
+        }, $ormCategories->getList(['id', 'name', 'sort', 'cat_seo_name'], $where, false, ['limit' => 100000]));
+
+        while ($row = mysqli_fetch_assoc($result)) {
+
+            // Нет meta title, meta description и шаблонов для их генерации. Пропускаем такую характеристику.
+            if((empty($row['title']) || empty($row['meta_description'])) && (empty($titleTemplate) || empty($descrTemplate))) {
+                continue;
+            }
+
+            foreach ($categories as $category) {
+                // У каталога нет такой характеристики, пропускаем.
+                if(!is_array($category['sort'])) {
+                    continue;
+                }
+
+                $count = mysqli_fetch_assoc($orm->query(
+                    "select COUNT(`id`) as count from " . $GLOBALS['SysValue']['base']['products'] . " WHERE (`category`='" . $category['id'] . "' or `dop_cat` LIKE '%#" . $category['id'] . "#%') and `vendor` REGEXP 'i" . $row['category'] . "-" . $row['id'] . "i'"
+                ));
+
+                // Есть мета (или можно сгенерировать), есть характеристика у каталога - генерим ссылку.
+                if(in_array($row['category'], $category['sort']) && (int) $count['count'] > 0) {
+                    // Стандартный урл
+                    $url = 'shop/CID_' . $category['id'];
+
+                    // SEOURL
+                    if ($this->isSeoUrlEnabled)
+                        $url.= '_' . PHPShopString::toLatin($category['name']);
+
+                    //  SEOURLPRO
+                    if ($this->isSeoUrlProEnabled) {
+                        if (empty($category['cat_seo_name']))
+                            $url = str_replace("_", "-", PHPShopString::toLatin($category['name']));
+                        else
+                            $url = $category['cat_seo_name'];
+                    }
+
+                    $sortLink = sprintf('?v[%s]=%s', $row['category'], $row['id']);
+
+                    if(empty($this->xml)) {
+                        $this->xml .= '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+                        $this->xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
+                    }
+
+                    $this->xml .= '<url>' . "\n";
+                    $this->xml .= '<loc>' . $this->getSiteUrl($ssl) . $url  . '.html' . $sortLink . '</loc>' . "\n";
+                    $this->xml .= '<changefreq>weekly</changefreq>' . "\n";
+                    $this->xml .= '<priority>0.5</priority>' . "\n";
+                    $this->xml .= '</url>' . "\n";
+                }
+            }
+        }
+
+        if(!empty($this->xml)) {
+            $this->xml .= '</urlset>';
+        }
+    }
+
     private function addProducts($ssl)
     {
-        $from = (int) $this->options['processed_products'];
+        $from = (int) $this->options['processed'];
         $to = (int) $this->options['limit_products'];
+
+        $system = new PHPShopSystem();
+        $enabled = "and enabled='1'";
+        if((int) $system->getSerilizeParam('admoption.safe_links') === 1) {
+            $enabled = '';
+        }
 
         // Мультибаза
         $queryMultibase = $this->productsMultibase();
 
         $orm = new PHPShopOrm();
-        $result = $orm->query("select * from " . $GLOBALS['SysValue']['base']['products'] . " where $queryMultibase enabled='1' and parent_enabled='0' and price>0 limit $from, $to");
+        $result = $orm->query("select * from " . $GLOBALS['SysValue']['base']['products'] . " where $queryMultibase parent_enabled='0' $enabled and price>0 limit $from, $to");
 
         $orm = new PHPShopOrm('phpshop_modules_sitemappro_system');
-        // Выбрано меньше чем лимит, значит товары закончились. Обнуляем настройки, что бы процесс начался заново.
+        // Выбрано меньше чем лимит, значит товары закончились. Изменяем операцию.
         if(mysqli_num_rows($result) < (int) $this->options['limit_products']) {
-            $orm->update(['is_products_step_new' => '0', 'processed_products_new' => '0'], ['id' => '="1"']);
+            $step = self::CONTENT_STEP;
+            if((int) $this->options['use_filter_combinations'] === 1) {
+                $step =  self::FILTER_COMBINATIONS_STEP;
+            }
+
+            $orm->update(['step_new' => $step, 'processed_new' => '0'], ['id' => '="1"']);
         } else {
-            $orm->update(['processed_products_new' => (int) $this->options['processed_products'] + (int) $this->options['limit_products']], ['id' => '="1"']);
+            $orm->update(['processed_new' => (int) $this->options['processed'] + (int) $this->options['limit_products']], ['id' => '="1"']);
         }
 
         while ($row = mysqli_fetch_assoc($result)) {
@@ -332,17 +454,33 @@ class SitemapPro
 
     private function compile($ssl)
     {
+        if(empty($this->xml)) {
+            return;
+        }
+
         $files = [];
 
         $host = '';
         if (defined("HostID"))
             $host = '_' . HostID;
 
-        if((int) $this->options['is_products_step'] === 0) {
-            $file = sprintf('sitemap%s_1', $host);
-        } else {
-            $index = (((int) $this->options['processed_products'] + (int) $this->options['limit_products']) / (int) $this->options['limit_products']) + 1;
-            $file = sprintf('sitemap%s_%s', $host, $index);
+        switch ($this->options['step']) {
+            case self::PRODUCTS_STEP: {
+                $index = (((int) $this->options['processed'] + (int) $this->options['limit_products']) / (int) $this->options['limit_products']) + 1;
+                $file = sprintf('sitemap%s_%s', $host, $index);
+            }
+            break;
+            case self::FILTER_COMBINATIONS_STEP: {
+                $file = sprintf('sitemap_filter%s_1', $host);
+                $filterIndex = 1;
+                while(file_exists(dirname(dirname(dirname(dirname(__DIR__)))) . sprintf('/UserFiles/Files/sitemap_filter%s_%s.xml', $host, $filterIndex))) {
+                    $filterIndex++;
+                    $file = sprintf('sitemap_filter%s_%s', $host, $filterIndex);
+                }
+            }
+            break;
+            default:
+                $file = sprintf('sitemap%s_1', $host);
         }
 
         // Запись в файл
@@ -350,6 +488,9 @@ class SitemapPro
 
         for ($fileIndex = 1; file_exists(dirname(dirname(dirname(dirname(__DIR__)))) . sprintf('/UserFiles/Files/sitemap%s_%s.xml', $host, $fileIndex)); $fileIndex++) {
             $files[] = $this->getSiteUrl($ssl) . sprintf('UserFiles/Files/sitemap%s_%s.xml', $host, $fileIndex);
+        }
+        for ($filterIndex = 1; file_exists(dirname(dirname(dirname(dirname(__DIR__)))) . sprintf('/UserFiles/Files/sitemap_filter%s_%s.xml', $host, $filterIndex)); $filterIndex++) {
+            $files[] = $this->getSiteUrl($ssl) . sprintf('UserFiles/Files/sitemap_filter%s_%s.xml', $host, $filterIndex);
         }
 
         $xml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";

@@ -5,7 +5,6 @@
     <faqlink>https://docs.phpshop.ru/moduli/chaty-i-zvonki/googletranslate</faqlink>
     <description>Виджет переводчика Google Translate.</description>
     <category>chat</category>
-    <status>New</status>
      <adminmenu>
         <title>Google Translate</title>
         <capability>true</capability>

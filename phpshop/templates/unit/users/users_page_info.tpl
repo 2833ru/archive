@@ -2,7 +2,7 @@
     @user_error@
 </div>
 
-<form name="users_password" method="post" class="form-horizontal" role="form">
+<form name="users_password" method="post" class="form-horizontal">
 
     <div class="form-group hidden-lg">
         <div class="col-xs-12">

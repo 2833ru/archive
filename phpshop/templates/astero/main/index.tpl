@@ -91,7 +91,7 @@
                         </div>
                         <!-- Search Starts -->
                         <div class="col-sm-3 hidden-xs">
-                            <form id="search_form" action="/search/" role="search" method="post" class="header-color">
+                            <form id="search_form" action="/search/" role="search" method="get" class="header-color">
                                 <div class="input-group">
                                     <input class="form-control input-lg" name="words" maxlength="50" id="search"  placeholder="{Искать}..." required="" type="search" data-trigger="manual" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true"  data-content="">
                                     <span class="input-group-btn">
@@ -140,7 +140,7 @@
         </header>
         <!-- Header Section Ends -->
         <!-- Main Menu Starts -->
-        <nav id="main-menu" class="navbar" role="navigation">
+        <nav id="main-menu" class="navbar">
             <!-- Nested Container Starts -->
             <div class="container">
                 <!-- Nav Header Starts -->
@@ -342,7 +342,7 @@
 
         <!-- Fixed mobile bar -->
 
-          <nav class="navbar navbar-default navbar-fixed-bottom bar bar-tab visible-xs visible-sm" role="navigation">
+          <nav class="navbar navbar-default navbar-fixed-bottom bar bar-tab visible-xs visible-sm">
         <a class="tab-item" href="/">
           
             <span class="tab-label">{Домой}</span>
@@ -379,7 +379,7 @@
                         <h4 class="modal-title">{Авторизация}</h4>
                         <span id="usersError" class="hide">@usersError@</span>
                     </div>
-                    <form role="form" method="post" name="user_forma">
+                    <form method="post" name="user_forma">
                         <div class="modal-body">
                             <div class="form-group">
 
@@ -396,6 +396,7 @@
                                         <input type="checkbox" value="1" name="safe_users" @UserChecked@> {Запомнить}
                                     </label>
                                 </div>
+                                <a href="/users/sms.html" class="pass @sms_login_enabled@">SMS</a>
                                 <a href="/users/sendpassword.html" class="pass">{Забыли пароль}</a>
                             </div>
 
@@ -422,7 +423,7 @@
                         <h4 class="modal-title">{Поиск}</h4>
                     </div>
                     <div class="modal-body">
-                        <form  action="/search/" role="search" method="post">
+                        <form  action="/search/" role="search" method="get">
                             <div class="input-group">
                                 <input name="words" maxlength="50" class="form-control" placeholder="{Искать}.." required="" type="search">
                                 <span class="input-group-btn">
@@ -446,7 +447,7 @@
                         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                         <h4 class="modal-title">{Обратный звонок}</h4>
                     </div>
-                    <form role="form" method="post" name="user_forma" action="@ShopDir@/returncall/">
+                    <form method="post" name="user_forma" action="@ShopDir@/returncall/">
                         <div class="modal-body">
 
                             <div class="form-group">
@@ -469,7 +470,7 @@
 
                                 <p class="small">
                                     <input type="checkbox" value="on" name="rule" class="req" checked="checked"> 
-                                    {Я согласен}  <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html" alt="{Согласие на обработку персональных данных}">{на обработку моих персональных данных}</a> 
+                                    {Я согласен}  <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html">{на обработку моих персональных данных}</a>
                                 </p>
 
                             </div>

@@ -21,9 +21,9 @@ PHPShopParser::set('serverPath', $_SERVER['SERVER_NAME']);
 
 // Модули
 $PHPShopModules = new PHPShopModules($_classPath . "modules/");
-    
+
 // Перехват модуля
-$PHPShopModules->setHookHandler('signin','signin');
+$PHPShopModules->setHookHandler('signin', 'signin');
 
 // Редактор GUI
 $PHPShopGUI = new PHPShopGUI();
@@ -169,7 +169,7 @@ function actionUpdate() {
 // Экшен входа
 function actionEnter() {
     global $PHPShopOrm, $PHPShopModules;
-    
+
     $_POST['log'] = trim($_POST['log']);
     $_POST['pas'] = trim($_POST['pas']);
 
@@ -183,6 +183,7 @@ function actionEnter() {
                 $_SESSION['logPHPSHOP'] = $_POST['log'];
                 $_SESSION['pasPHPSHOP'] = $_POST['pas'];
                 $_SESSION['idPHPSHOP'] = $row['id'];
+                $_SESSION['namePHPSHOP'] = $row['name'];
 
                 // Запрос модуля на закладку
                 $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
@@ -219,16 +220,23 @@ function actionStart() {
     global $PHPShopSystem, $PHPShopBase, $notification;
 
     $License = parse_ini_file_true("../../license/" . PHPShopFile::searchFile('../../license/', 'getLicense', true), 1);
-    if ($License['License']['Expires'] != 'Never' and $License['License']['RegisteredTo'] == 'Trial NoName')
-        $_SESSION['chat'] = true;
+    if ($License['License']['SupportExpires'] > time() and $License['License']['RegisteredTo'] != 'Trial NoName')
+        $_SESSION['update'] = 1;
+    elseif ($License['License']['SupportExpires'] > time() and $License['License']['RegisteredTo'] == 'Trial NoName')
+        $_SESSION['update'] = 2;
+    else
+        $_SESSION['update'] = 0;
 
-    if ($License['License']['Pro'] == 'Start') 
+
+    if ($License['License']['Pro'] == 'Start')
         $_SESSION['mod_limit'] = 5;
-    elseif($License['License']['Pro'] == 'Enabled')
+    elseif ($License['License']['Pro'] == 'Enabled'){
         $_SESSION['mod_pro'] = true;
+        $_SESSION['mod_limit'] = 100;
+    }
     else
         $_SESSION['mod_limit'] = 50;
-    
+
     if (getenv("COMSPEC"))
         $_SESSION['mod_pro'] = true;
 

@@ -2,7 +2,7 @@
 
 class PHPShopOneclick extends PHPShopCore {
 
-    /** @var array */
+    var $empty_index_action = false;
     var $system;
 
     /**
@@ -32,6 +32,8 @@ class PHPShopOneclick extends PHPShopCore {
 
         // Мета
         $this->title = $this->system['title'] . " - " . $this->PHPShopSystem->getValue("name");
+        $this->description = $this->system['title'] . " " . $this->PHPShopSystem->getValue("name");
+        $this->keywords = $this->system['title'] . ", " . $this->PHPShopSystem->getValue("name");
     }
 
     /**
@@ -91,10 +93,10 @@ class PHPShopOneclick extends PHPShopCore {
         if ($this->security(array('url' => false, 'captcha' => (bool) $this->system['captcha'], 'referer' => true))) {
             $product = new PHPShopProduct((int) $_POST['oneclick_mod_product_id']);
 
-            if(isset($_POST['ajax'])) {
-                $_POST['oneclick_mod_name']    = PHPShopString::utf8_win1251($_POST['oneclick_mod_name']);
+            if (isset($_POST['ajax'])) {
+                $_POST['oneclick_mod_name'] = PHPShopString::utf8_win1251($_POST['oneclick_mod_name']);
                 $_POST['oneclick_mod_message'] = PHPShopString::utf8_win1251($_POST['oneclick_mod_message']);
-                $_POST['oneclick_mod_mail']    = PHPShopString::utf8_win1251($_POST['oneclick_mod_mail']);
+                $_POST['oneclick_mod_mail'] = PHPShopString::utf8_win1251($_POST['oneclick_mod_mail']);
             }
 
             if ($this->system['write_order'] == 0)
@@ -107,8 +109,8 @@ class PHPShopOneclick extends PHPShopCore {
             // SMS администратору
             $this->sms($product);
 
-            if(isset($_POST['ajax'])) {
-                if(empty($this->system['title']) && empty($this->system['title_end'])) {
+            if (isset($_POST['ajax'])) {
+                if (empty($this->system['title']) && empty($this->system['title_end'])) {
                     $message = $GLOBALS['SysValue']['lang']['oneclick_done'];
                 } else {
                     $message = $this->system['title'] . '<br>' . $this->system['title_end'];
@@ -127,7 +129,7 @@ class PHPShopOneclick extends PHPShopCore {
 
         $message = __($GLOBALS['SysValue']['lang']['oneclick_error']);
 
-        if(isset($_POST['ajax'])) {
+        if (isset($_POST['ajax'])) {
             echo json_encode([
                 'message' => PHPShopString::win_utf8($message),
                 'success' => false
@@ -237,7 +239,7 @@ class PHPShopOneclick extends PHPShopCore {
         $insert['fio_new'] = $name;
         $insert['tel_new'] = $phone;
         $insert['statusi_new'] = $this->system['status'];
-        $insert['status_new'] = serialize(array("maneger"=>'Быстрый заказ'));
+        $insert['status_new'] = serialize(array("maneger" => 'Быстрый заказ'));
 
         // Запись в базу
         $PHPShopOrm->insert($insert);
@@ -271,7 +273,7 @@ class PHPShopOneclick extends PHPShopCore {
         $zag = $this->PHPShopSystem->getValue('name') . " - " . __('Быстрый заказ') . " - " . PHPShopDate::dataV();
 
         $productId = " / ID " . $product->objID . " / ";
-        if($product->getParam('uid') != "") {
+        if ($product->getParam('uid') != "") {
             $productId .= "{Артикул} " . $product->getParam('uid') . " / ";
         }
 
@@ -300,8 +302,7 @@ class PHPShopOneclick extends PHPShopCore {
     /**
      * @param PHPShopProduct $product
      */
-    private function getPrice($product)
-    {
+    private function getPrice($product) {
         global $PHPShopPromotions;
 
         $price = $product->getPrice();
@@ -310,11 +311,12 @@ class PHPShopOneclick extends PHPShopCore {
         $promotions = $PHPShopPromotions->getPrice($product->objRow);
         if (is_array($promotions)) {
             $prices = [$promotions['price'], $product->objRow['price2'], $product->objRow['price3'], $product->objRow['price4'], $product->objRow['price5']];
-            $price = PHPShopProductFunction::GetPriceValuta($product->objID, $prices , $product->objRow['baseinputvaluta']);
+            $price = PHPShopProductFunction::GetPriceValuta($product->objID, $prices, $product->objRow['baseinputvaluta']);
         }
 
         return $price;
     }
+
 }
 
 ?>

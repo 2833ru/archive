@@ -1,11 +1,14 @@
 <div id="usersError" class="hide">@usersError@</div>
-<form role="form" method="post" name="user_forma_register" class="template-sm">
+<form method="post" name="user_forma_register" class="template-sm">
     <span id="user_error">@user_error@</span>
     <div class="form-group">
         <input type="text"  placeholder="{Имя}" name="name_new" value="@php echo $_POST['name_new']; php@"  class="form-control" required="" >
     </div>
     <div class="form-group">
         <input type="email"  placeholder="E-mail" name="login_new" value="@php echo $_POST['login_new']; php@" class="form-control" required="" >
+    </div>
+    <div class="form-group">
+        <input type="tel" name="tel_new" placeholder="{Телефон}"  value="@php echo $_POST['tel_new']; php@" class="form-control" @sms_login_control@>
     </div>
     <div class="form-group">
         <input placeholder="{Пароль}" type="password" name="password_new"  class="form-control"  required="" >
@@ -22,7 +25,7 @@
                         <div class="form-group">
                             <p class="small">
                             <input type="checkbox" value="on" name="rule" class="req" checked="checked"> 
-                            {Я согласен}  <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html" alt="{Согласие на обработку персональных данных}">{на обработку моих персональных данных}</a> 
+                            {Я согласен}  <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html">{на обработку моих персональных данных}</a>
                             </p>
                         </div>
     <p>

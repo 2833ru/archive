@@ -49,11 +49,15 @@ function actionStart() {
         $PHPShopOrm->debug = false;
         $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
         $data['id'] = null;
-        $order = unserialize($data['orders']);
-        unset($order['Person']['discount']);
-        unset($order['Cart']);
-        $data['orders'] = serialize($order);
-        $data['sum'] = 0;
+
+        // Очистка корзины
+        if (!empty($_GET['cart'])) {
+            $order = unserialize($data['orders']);
+            unset($order['Person']['discount']);
+            unset($order['Cart']);
+            $data['orders'] = serialize($order);
+            $data['sum'] = 0;
+        }
     }
 
     // Копия заказа из карточки пользователя

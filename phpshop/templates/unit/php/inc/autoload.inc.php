@@ -139,6 +139,8 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or ! empty($GLOBALS
 
     // Память коллапса
     $collapseCSS = $collapseAdmin = null;
+    unset($_COOKIE['style_collapse_collapseCSS']);
+    unset($_COOKIE['style_collapse_collapseAdmin']);
     if (isset($_COOKIE['style_collapse_collapseCSS'])) {
         $collapseCSS = null;
         $collapseIconCSS = 'glyphicon-menu-down';
@@ -154,8 +156,8 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or ! empty($GLOBALS
         $collapseIconAdmin = 'glyphicon-menu-up';
     }
 
-    if ($collapseCSS == $collapseAdmin)
-        $collapseAdmin = null;
+    //if ($collapseCSS == $collapseAdmin)
+        //$collapseAdmin = null;
 
     if (!empty($_SESSION['logPHPSHOP']))
         $admin_help = __('Вы можете управлять содержанием текущей страницы');
@@ -171,7 +173,7 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or ! empty($GLOBALS
         </a>
       </h4>
     </div>
-    <div id="collapseCSS" class="panel-collapse collapse ' . $collapseCSS . ' form-horizontal" role="tabpanel" aria-labelledby="headingOne">
+    <div id="collapseCSS" class="panel-collapse collapse ' . $collapseCSS . ' form-horizontal" role="tabpanel">
       <div class="panel-body">
      
          ' . $css_edit . $theme_menu . '
@@ -187,7 +189,7 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or ! empty($GLOBALS
         </a>
       </h4>
     </div>
-    <div id="collapseAdmin" class="panel-collapse collapse ' . $collapseAdmin . '" role="tabpanel" aria-labelledby="headingTwo">
+    <div id="collapseAdmin" class="panel-collapse collapse ' . $collapseAdmin . '" role="tabpanel">
       <div class="panel-body">
       <p class="text-muted">' . $admin_help . '</p>
 ' . $admin_edit . '

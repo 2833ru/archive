@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.5</version>
+    <version>1.6</version>
     <name>Сбербанк России</name>
     <description>Прием оплат через Сбербанк в соответствии с 54-ФЗ.</description>
     <faqlink>https://docs.phpshop.ru/moduli/platezhnye-sistemy/sberbank</faqlink>
     <category>payment</category>
-    <sign>1599635205</sign>
+    <sign>1614854931</sign>
     <adminmenu>
         <title>Сбербанк России</title>
         <capability>true</capability>

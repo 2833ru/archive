@@ -29,13 +29,23 @@ function actionStart() {
     $oFCKeditor->Height = '300';
     $oFCKeditor->ToolbarSet = 'Normal';
     $oFCKeditor->Value = $data['message'];
+    
+    // Юридические лица
+    $PHPShopCompany = new PHPShopCompanyArray();
+    $PHPShopCompanyArray = $PHPShopCompany->getArray();
+    $company_value[] = array($PHPShopSystem->getSerilizeParam("bank.org_name"), 0, $data['company']);
+    if (is_array($PHPShopCompanyArray))
+        foreach ($PHPShopCompanyArray as $company)
+            $company_value[] = array($company['name'], $company['id'], $data['company']);
+    
 
     // Содержание 
     $Tab1 = $PHPShopGUI->setCollapse('Информация', $PHPShopGUI->setField("Наименование", $PHPShopGUI->setInput("text", "name_new", $data['name'])) .
             $PHPShopGUI->setField("Вывод", $PHPShopGUI->setRadio("enabled_new", 1, "Показывать", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Скрыть", $data['enabled'])) .
             $PHPShopGUI->setField("Приоритет", $PHPShopGUI->setInputText(null, "num_new", $data['num'], '100')) .
             $PHPShopGUI->setField("Юридические данные", $PHPShopGUI->setCheckbox("yur_data_flag_new", 1, "Обязательно заполнять", $data['yur_data_flag'])) .
-            $PHPShopGUI->setField("Тип подключения", $PHPShopGUI->setSelect("path_new", $PHPShopGUI->loadLib('GetTipPayment', $data['path']), 350))
+            $PHPShopGUI->setField("Тип подключения", $PHPShopGUI->setSelect("path_new", $PHPShopGUI->loadLib('GetTipPayment', $data['path']), 350)).
+            $PHPShopGUI->setField("Юридическое лицо", $PHPShopGUI->setSelect('company_new', $company_value,350))
     );
 
     $Tab1.=$PHPShopGUI->setField("Иконка", $PHPShopGUI->setIcon($data['icon'], "icon_new", false));

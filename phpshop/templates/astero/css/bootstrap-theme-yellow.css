@@ -140,3 +140,6 @@ filter:hue-rotate(-215deg);
 -moz-filter:hue-rotate(-215deg);
 -editor-filter:-215;
 }
+.theme-color {
+    color:#ffb400;
+}

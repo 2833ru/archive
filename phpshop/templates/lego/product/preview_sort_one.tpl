@@ -1,1 +1,1 @@
-@previewSortTitle@:	@previewSortValue@<br>
+<div class="preview-sort">@previewSortTitle@:	@previewSortValue@</div>

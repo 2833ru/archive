@@ -29,17 +29,6 @@ function query_filter($obj) {
     $f = intval($_REQUEST['f']);
     $l = @$_REQUEST['l'];
 
-    if ($obj->PHPShopNav->isPageAll())
-        $p = PHPShopSecurity::TotalClean($p, 1);
-
-    // Кол-во товаров на странице
-    $num_row = $obj->PHPShopCategory->getParam('num_row');
-
-    if (!empty($num_row))
-        $num_row = $num_row;
-    else // если 0 делаем по формуле кол-во колонок * 2 строки.
-        $num_row = (6 - $obj->cell) * $obj->cell;
-
     // Сортировка по характеристикам
     if (is_array($v)) {
         foreach ($v as $key => $value) {
@@ -49,6 +38,7 @@ function query_filter($obj) {
                 $sort.=" and (";
                 foreach ($value as $v) {
                     if (PHPShopSecurity::true_num($key) and PHPShopSecurity::true_num($v)) {
+                        $obj->selected_filter[$key][] = $v;
                         $hash = $key . "-" . $v;
                         $sort.=" vendor REGEXP 'i" . $hash . "i' or";
                     }
@@ -58,6 +48,7 @@ function query_filter($obj) {
             }
             // Обычный отбор []
             elseif (PHPShopSecurity::true_num($key) and PHPShopSecurity::true_num($value)) {
+                $obj->selected_filter[$key][] = $value;
                 $hash = $key . "-" . $value;
                 $sort.=" and vendor REGEXP 'i" . $hash . "i' ";
             }

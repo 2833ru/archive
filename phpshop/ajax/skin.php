@@ -8,13 +8,6 @@ session_start();
 
 $_classPath = "../";
 
-
-// Подключаем библиотеку поддержки JsHttpRequest
-if ($_REQUEST['type'] != 'json') {
-    require_once $_classPath . "/lib/Subsys/JsHttpRequest/Php.php";
-    $JsHttpRequest = new Subsys_JsHttpRequest_Php("windows-1251");
-}
-
 include($_classPath . "class/obj.class.php");
 PHPShopObj::loadClass("base");
 $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
@@ -98,10 +91,10 @@ if (!empty($_SESSION['logPHPSHOP']) and PHPShopSecurity::true_skin($_COOKIE[$_RE
 
         $admoption[$_REQUEST['template'] . '_theme'] = $_COOKIE[$_REQUEST['template'] . '_theme'];
         $admoption[$_REQUEST['template'] . '_fluid_theme'] = $_COOKIE[$_REQUEST['template'] . '_theme'];
-        
+
         // Блоки
         $admoption[$_REQUEST['template'] . '_editor'] = $_SESSION['editor'][$_REQUEST['template']];
-        
+
         $update['admoption_new'] = serialize($admoption);
         $PHPShopOrm->update($update);
 
@@ -110,12 +103,10 @@ if (!empty($_SESSION['logPHPSHOP']) and PHPShopSecurity::true_skin($_COOKIE[$_RE
             "success" => 1
         );
 
-        if ($_REQUEST['type'] == 'json') {
-            $_RESULT['status'] = PHPShopString::win_utf8($_RESULT['status']);
-            header("HTTP/1.1 200");
-            header("Content-Type: application/json");
-            echo json_encode($_RESULT);
-        }
+        $_RESULT['status'] = PHPShopString::win_utf8($_RESULT['status']);
+        header("HTTP/1.1 200");
+        header("Content-Type: application/json");
+        echo json_encode($_RESULT);
     }
 }
 ?>

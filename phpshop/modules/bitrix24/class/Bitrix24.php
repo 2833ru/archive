@@ -13,11 +13,6 @@ class Bitrix24 {
     private $products = array();
 
     /*
-     * ID пользователя
-     */
-    private $client_id;
-
-    /*
      * ID товара доставки в Битрикс24
      */
     private $delivery_id;
@@ -69,11 +64,11 @@ class Bitrix24 {
 
         $this->products();
 
-        $this->customer();
+        $user = $this->customer();
 
         $this->delivery();
 
-        $this->deal();
+        $this->deal($user);
     }
 
     /*
@@ -190,22 +185,23 @@ class Bitrix24 {
     /*
      * Синхронизация покупателя.
      *
-     * @return void
+     * @return array
      */
     public function customer()
     {
         $this->PHPShopOrm->objBase = $GLOBALS['SysValue']['base']['shopusers'];
         $this->PHPShopOrm->_SQL = '';
-        $bitrix24_client_id = $this->PHPShopOrm->select(array('bitrix24_client_id'), array('id=' => '"' . $this->order['user'] . '"'));
+        $user = $this->PHPShopOrm->select(array('bitrix24_client_id', 'bitrix24_company_id'), array('id=' => '"' . $this->order['user'] . '"'));
 
-        if($bitrix24_client_id['bitrix24_client_id'] > 0)
-            $this->client_id = $bitrix24_client_id['bitrix24_client_id'];
-        else {
-            if(!empty($this->order['org_name']))
-                $this->addCompany();
-            else
-                $this->addContact();
+        if((int) $user['bitrix24_client_id'] === 0) {
+            $user['bitrix24_client_id'] = $this->addContact();
         }
+
+        if((int) $user['bitrix24_company_id'] === 0 && !empty($this->order['org_name'])) {
+            $user['bitrix24_company_id'] = $this->addCompany();
+        }
+
+        return $user;
     }
 
     /*
@@ -246,11 +242,12 @@ class Bitrix24 {
         if(is_int($result['result'])) {
             $this->PHPShopOrm->objBase = $GLOBALS['SysValue']['base']['shopusers'];
             $this->PHPShopOrm->_SQL = '';
-            $this->PHPShopOrm->update(array('bitrix24_client_id_new' => "$result[result]"), array('id=' => '"' . $this->order['user'] . '"'));
-            $this->client_id = $result['result'];
-        } else {
-            $this->log(array('parameters' => $fields, 'response' => $result), $this->order['uid'], 'Ошибка создания компании', 'createCompany', 'error');
+            $this->PHPShopOrm->update(array('bitrix24_company_id_new' => "$result[result]"), array('id=' => '"' . $this->order['user'] . '"'));
+
+            return $result['result'];
         }
+
+        $this->log(array('parameters' => $fields, 'response' => $result), $this->order['uid'], 'Ошибка создания компании', 'createCompany', 'error');
     }
 
     /*
@@ -305,11 +302,11 @@ class Bitrix24 {
             $this->PHPShopOrm->objBase = $GLOBALS['SysValue']['base']['shopusers'];
             $this->PHPShopOrm->_SQL = '';
             $this->PHPShopOrm->update(array('bitrix24_client_id_new' => "$result[result]"), array('id=' => '"' . $this->order['user'] . '"'));
-            $this->client_id = $result['result'];
-        } else {
-            $this->log(array('parameters' => $fields, 'response' => $result), $this->order['uid'], 'Ошибка создания контакта', 'createContact', 'error');
+
+            return $result['result'];
         }
 
+        $this->log(array('parameters' => $fields, 'response' => $result), $this->order['uid'], 'Ошибка создания контакта', 'createContact', 'error');
     }
 
     /*
@@ -366,7 +363,7 @@ class Bitrix24 {
      *
      * @return void
      */
-    public function deal()
+    public function deal($user)
     {
         $this->PHPShopOrm->objBase = $GLOBALS['SysValue']['base']['payment_systems'];
         $this->PHPShopOrm->_SQL = '';
@@ -387,8 +384,19 @@ class Bitrix24 {
         if(!empty($this->order['flat']))
             $adress .= ', кв. ' . $this->order['flat'];
 
+        $urdata = '';
+        if(!empty($this->order['org_inn'])) {
+            $urdata .= 'ИНН ' . $this->order['org_inn'];
+        }
+        if(!empty($this->order['org_ras'])) {
+            $urdata .= '<br>Р/С ' . $this->order['org_ras'];
+        }
+        if(!empty($this->order['org_kpp'])) {
+            $urdata .= '<br>КПП ' . $this->order['org_kpp'];
+        }
+
         if(!empty($this->order['dop_info']))
-            $comment = '. Комментарий: ' . $this->order['dop_info'];
+            $comment = 'Комментарий: ' . $this->order['dop_info'];
         else
             $comment = '.';
 
@@ -399,15 +407,15 @@ class Bitrix24 {
                 'STAGE_ID'    => 'NEW',
                 'CURRENCY_ID' => $this->iso,
                 'OPPORTUNITY' => $this->order['sum'],
-                'COMMENTS'    => PHPShopString::win_utf8('Способ оплаты: ' . $payment_method['name'] . $adress . $comment),
+                'COMMENTS'    => PHPShopString::win_utf8('Способ оплаты: ' . $payment_method['name'] . '<br>' . $urdata . '<br>' . $adress . '<br>' . $comment),
             )
         );
 
-        // Компания или физическое лицо
-        if(!empty($this->order['org_name']))
-            $fields['fields']['COMPANY_ID'] = $this->client_id;
-        else
-            $fields['fields']['CONTACT_ID'] = $this->client_id;
+        if(!empty($user['bitrix24_company_id'])) {
+            $fields['fields']['COMPANY_ID'] = $user['bitrix24_company_id'];
+        }
+
+        $fields['fields']['CONTACT_ID'] = $user['bitrix24_client_id'];
 
         $result = $this->request('crm.deal.add', $fields);
 

@@ -14,7 +14,7 @@ PHPShopObj::loadClass("lang");
 PHPShopObj::loadClass("delivery");
 PHPShopObj::loadClass("cart");
 
-$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini",true,true);
+$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, true);
 
 // Мультибаза
 $PHPShopBase->checkMultibase("../../");
@@ -23,39 +23,34 @@ $PHPShopBase->checkMultibase("../../");
 $PHPShopSystem = new PHPShopSystem();
 $PHPShopOrder = new PHPShopOrderFunction();
 
-$PHPShopLang = new PHPShopLang(array('locale'=>$_SESSION['lang'],'path'=>'shop'));
+$PHPShopLang = new PHPShopLang(array('locale' => $_SESSION['lang'], 'path' => 'shop'));
 
 // Модули
 $PHPShopModules = new PHPShopModules($_classPath . "modules/");
 
-// Подключаем библиотеку поддержки.
-if ($_REQUEST['type'] != 'json') {
-    require_once $_classPath . "lib/Subsys/JsHttpRequest/Php.php";
-    $JsHttpRequest = new Subsys_JsHttpRequest_Php("windows-1251");
-}
-
 // Подключаем библиотеку доставки
 require_once $_classPath . "core/order.core/delivery.php";
 
-function GetDeliveryPrice($deliveryID, $sum, $weight = 0) {
-    global $SysValue,$link_db;
+$PHPShopDelivery = new PHPShopDelivery((int) $_REQUEST['xid']);
 
-    $PHPShopDelivery = new PHPShopDelivery();
+function GetDeliveryPrice($deliveryID, $sum, $weight = 0) {
+    global $SysValue, $link_db, $PHPShopDelivery;
+
 
     if (!empty($deliveryID)) {
         $sql = "select * from " . $SysValue['base']['delivery'] . " where id='$deliveryID' and enabled='1'";
-        $result = mysqli_query($link_db,$sql);
+        $result = mysqli_query($link_db, $sql);
         $num = mysqli_num_rows($result);
         $row = mysqli_fetch_array($result);
 
         if ($num == 0) {
             $sql = "select * from " . $SysValue['base']['delivery'] . " where flag='1' and enabled='1'";
-            $result = mysqli_query($link_db,$sql);
+            $result = mysqli_query($link_db, $sql);
             $row = mysqli_fetch_array($result);
         }
     } else {
         $sql = "select * from " . $SysValue['base']['delivery'] . " where flag='1' and enabled='1'";
-        $result = mysqli_query($link_db,$sql);
+        $result = mysqli_query($link_db, $sql);
         $row = mysqli_fetch_array($result);
     }
 
@@ -81,7 +76,7 @@ function GetDeliveryPrice($deliveryID, $sum, $weight = 0) {
 }
 
 $GetDeliveryPrice = GetDeliveryPrice(intval($_REQUEST['xid']), $_REQUEST['sum'], floatval($_REQUEST['wsum']));
-$GetDeliveryPrice = $GetDeliveryPrice*$PHPShopSystem->getDefaultValutaKurs(true);
+$GetDeliveryPrice = $GetDeliveryPrice * $PHPShopSystem->getDefaultValutaKurs(true);
 
 $PHPShopCart = new PHPShopCart();
 // Итого товары по акции
@@ -90,7 +85,7 @@ $totalsumma = (float) $PHPShopOrder->returnSumma($PHPShopCart->getSumPromo(true)
 // Итого товары без акции
 $totalsumma += (float) $PHPShopOrder->returnSumma($PHPShopCart->getSumWithoutPromo(true), $PHPShopOrder->ChekDiscount($_REQUEST['sum']), '', (float) $GetDeliveryPrice);
 
-$deliveryArr = delivery(false, intval($_REQUEST['xid']),$_REQUEST['sum']);
+$deliveryArr = delivery(false, intval($_REQUEST['xid']), $_REQUEST['sum']);
 $dellist = $deliveryArr['dellist'];
 $adresList = $deliveryArr['adresList'];
 $format = $PHPShopSystem->getSerilizeParam("admoption.price_znak");
@@ -99,8 +94,9 @@ $format = $PHPShopSystem->getSerilizeParam("admoption.price_znak");
 $_RESULT = array(
     'delivery' => number_format($GetDeliveryPrice, $format, '.', ' '),
     'dellist' => $dellist,
-    'discount'=>$PHPShopOrder->ChekDiscount($_REQUEST['sum']),
+    'discount' => $PHPShopOrder->ChekDiscount($_REQUEST['sum']),
     'adresList' => $adresList,
+    'free_delivery' => (int) $PHPShopDelivery->isFree($_REQUEST['sum']),
     'total' => number_format($totalsumma, $PHPShopOrder->format, '.', ' '),
     'wsum' => floatval($_REQUEST['wsum']),
     'success' => 1
@@ -108,13 +104,12 @@ $_RESULT = array(
 
 // Перехват модуля в начале функции
 $hook = $PHPShopModules->setHookHandler('delivery', 'delivery', false, array($_RESULT, $_REQUEST['xid']));
-if(is_array($hook))
+if (is_array($hook))
     $_RESULT = $hook;
 
-if ($_REQUEST['type'] == 'json'){
-    $_RESULT['dellist']=PHPShopString::win_utf8($_RESULT['dellist'],false);
-    $_RESULT['adresList']=PHPShopString::win_utf8($_RESULT['adresList'],false);
 
-    echo json_encode($_RESULT);
-}
+$_RESULT['dellist'] = PHPShopString::win_utf8($_RESULT['dellist'], false);
+$_RESULT['adresList'] = PHPShopString::win_utf8($_RESULT['adresList'], false);
+
+echo json_encode($_RESULT);
 ?>

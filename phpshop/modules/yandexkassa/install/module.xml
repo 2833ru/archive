@@ -2,7 +2,7 @@
 <module>
     <version>1.5</version>
     <name>ЮKassa</name>
-    <faqlink>https://docs.phpshop.ru/moduli/yandeks/yandex-kassa</faqlink>
+    <faqlink>https://docs.phpshop.ru/moduli/platezhnye-sistemy/yookassa</faqlink>
     <description>Прием оплат через ЮKassa в соответствии с 54-ФЗ.</description>
     <category>payment</category>
     <status>Hit</status>

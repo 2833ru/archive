@@ -29,6 +29,7 @@ function order_cdek_hook($obj, $row, $rout) {
             $yandex_apikey = 'cb432a8b-21b9-4444-a0c4-3475b674a958';
 
         PHPShopParser::set('cdek_city_from', $CDEKWidget->option['city_from']);
+        PHPShopParser::set('russia_only', (int) $CDEKWidget->option['russia_only']);
         PHPShopParser::set('cdek_default_city', $defaultCity);
         PHPShopParser::set('cdek_cart', json_encode($cart));
         PHPShopParser::set('cdek_ymap_key', $yandex_apikey);

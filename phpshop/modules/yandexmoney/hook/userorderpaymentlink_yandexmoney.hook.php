@@ -32,7 +32,7 @@ function userorderpaymentlink_mod_yandexmoney_hook($obj, $PHPShopOrderFunction) 
             $payment_forma.=PHPShopText::setInput('hidden', 'sum', $out_summ, false, 10);
             $payment_forma.=PHPShopText::setInput('submit', 'send', $option['title'], $float = "none", 250);
 
-            $return = PHPShopText::form($payment_forma, 'yandexpay', 'post', 'https://money.yandex.ru/quickpay/confirm.xml', '_blank');
+            $return = PHPShopText::form($payment_forma, 'yandexpay', 'post', 'https://yoomoney.ru/quickpay/confirm.xml', '_blank');
         } elseif ($PHPShopOrderFunction->getSerilizeParam('orders.Person.order_metod') == 10002)
             $return = ', Заказ обрабатывается менеджером';
 

@@ -40,8 +40,6 @@ function actionStart() {
         $_GET['where']['disabled'] = true;
     }
 
-
-
     $PHPShopInterface->action_select['Предпросмотр'] = array(
         'name' => 'Предпросмотр',
         'class' => 'cat-view hide',
@@ -58,12 +56,10 @@ function actionStart() {
         'action' => 'option enabled'
     );
 
-
     $PHPShopInterface->action_select['Поиск'] = array(
         'name' => '<span class=\'glyphicon glyphicon-search\'></span> Расширенный поиск',
         'action' => 'search enabled'
     );
-
 
     $PHPShopInterface->action_select['Редактировать каталог'] = array(
         'name' => 'Редактировать каталог',
@@ -71,7 +67,6 @@ function actionStart() {
         'class' => 'cat-select hide',
         'url' => '?path=' . $_GET['path'] . '&id=' . intval($_COOKIE['cat']) . '&return=catalog.' . intval($_COOKIE['cat'])
     );
-
 
     $PHPShopInterface->action_title['copy'] = 'Сделать копию';
     $PHPShopInterface->action_title['url'] = 'Открыть URL';
@@ -87,35 +82,12 @@ function actionStart() {
 
     $PHPShopInterface->setActionPanel($TitlePage . $catname, array('Поиск', '|', 'Предпросмотр', 'Настройка', 'Редактировать каталог', 'Редактировать выбранные', 'CSV', '|', 'Удалить выбранные'), array('Добавить товар'));
 
-    // Настройка полей
-    if (!empty($_COOKIE['check_memory'])) {
-        $memory = json_decode($_COOKIE['check_memory'], true);
-    }
-
-    if (!is_array($memory['catalog.option']) or count($memory['catalog.option']) < 3) {
-        $memory['catalog.option']['icon'] = 1;
-        $memory['catalog.option']['name'] = 1;
-        $memory['catalog.option']['price'] = 1;
-        $memory['catalog.option']['item'] = 1;
-        $memory['catalog.option']['menu'] = 1;
-        $memory['catalog.option']['status'] = 1;
-        $memory['catalog.option']['label'] = 1;
-        $memory['catalog.option']['uid'] = 0;
-        $memory['catalog.option']['id'] = 0;
-        $memory['catalog.option']['num'] = 0;
-        $memory['catalog.option']['sort'] = 0;
-    }
-
-    // Дополнительный склад
-    $PHPShopOrmWarehouse = new PHPShopOrm($GLOBALS['SysValue']['base']['warehouses']);
-    $dataWarehouse = $PHPShopOrmWarehouse->select(array('*'), array('enabled' => "='1'"), array('order' => 'num DESC'), array('limit' => 100));
-
     $PHPShopInterface->setCaption(
-            array(null, "3%"), array("Иконка", "5%", array('sort' => 'none', 'view' => intval($memory['catalog.option']['icon']))), array("Название", "40%", array('view' => intval($memory['catalog.option']['name']))), array("№", "10%", array('view' => intval($memory['catalog.option']['num']))), array("ID", "10%", array('view' => intval($memory['catalog.option']['id']))), array("Артикул", "15%", array('view' => intval($memory['catalog.option']['uid']))), array("Цена", "15%", array('view' => intval($memory['catalog.option']['price']))), array("Кол-во", "10%", array('view' => intval($memory['catalog.option']['item']))), array($dataWarehouse[0]['name'], "10%", array('view' => intval($memory['catalog.option']['items1']))), array($dataWarehouse[1]['name'], "10%", array('view' => intval($memory['catalog.option']['items2']))), array($dataWarehouse[2]['name'], "10%", array('view' => intval($memory['catalog.option']['items3']))), array("", "7%", array('view' => intval($memory['catalog.option']['menu']))), array("Характеристики", "30%", array('view' => intval($memory['catalog.option']['sort']))), array("Статус", "7%", array('align' => 'right', 'view' => intval($memory['catalog.option']['status'])))
+       ...getTableCaption()
     );
 
-    $PHPShopInterface->addJSFiles('./catalog/gui/catalog.gui.js', './js/bootstrap-treeview.min.js');
-    $PHPShopInterface->addCSSFiles('./css/bootstrap-treeview.min.css');
+    $PHPShopInterface->addJSFiles('./catalog/gui/catalog.gui.js', './js/bootstrap-treeview.min.js','./js/bootstrap-colorpicker.min.js');
+    $PHPShopInterface->addCSSFiles('./css/bootstrap-treeview.min.css', './css/bootstrap-colorpicker.min.css');
     $PHPShopInterface->path = 'catalog';
 
     // Прогрессбар
@@ -133,11 +105,54 @@ function actionStart() {
                  </span>
             </div></div>';
 
-    $sidebarleft[] = array('title' => 'Категории', 'content' => $search . '<div id="tree">' . $treebar . '</div>', 'title-icon' => '<div class="hidden-xs"><span class="glyphicon glyphicon-plus new" data-toggle="tooltip" data-placement="top" title="' . __('Добавить каталог') . '"></span>&nbsp;<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="' . __('Развернуть все') . '"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="' . __('Свернуть') . '"></span>&nbsp;<span class="glyphicon glyphicon-search" id="show-category-search" data-toggle="tooltip" data-placement="top" title="' . __('Поиск') . '"></span></div>');
+    $sidebarleft[] = array('title' => 'Категории', 'content' => $search . '<div id="tree">' . $treebar . '</div>', 'title-icon' => '<div class="hidden-xs"><span class="glyphicon glyphicon-plus addNewElement" data-toggle="tooltip" data-placement="top" title="' . __('Добавить каталог') . '"></span>&nbsp;<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="' . __('Развернуть все') . '"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="' . __('Свернуть') . '"></span>&nbsp;<span class="glyphicon glyphicon-search" id="show-category-search" data-toggle="tooltip" data-placement="top" title="' . __('Поиск') . '"></span></div>');
 
     $PHPShopInterface->setSidebarLeft($sidebarleft, 3);
 
     $PHPShopInterface->Compile(3);
+}
+
+function getTableCaption()
+{
+    global $PHPShopInterface, $PHPShopModules;
+
+    $memory = $PHPShopInterface->getProductTableFields();
+
+    // Мобильная версия
+    if (PHPShopString::is_mobile()) {
+        $PHPShopInterface->mobile=true;
+    }
+
+    // Дополнительный склад
+    $PHPShopOrmWarehouse = new PHPShopOrm($GLOBALS['SysValue']['base']['warehouses']);
+    $dataWarehouse = $PHPShopOrmWarehouse->select(array('*'), array('enabled' => "='1'"), array('order' => 'num DESC'), array('limit' => 100));
+
+    $PHPShopInterface->productTableCaption = [
+        [null, "2%"],
+        ["Иконка", "5%", ['sort' => 'none', 'view' => (int) $memory['catalog.option']['icon']]],
+        ["Название", "40%", ['view' => (int) $memory['catalog.option']['name']]],
+        ["№", "10%", ['view' => (int) $memory['catalog.option']['num']]],
+        ["ID", "10%", ['view' => (int) $memory['catalog.option']['id']]],
+        ["Артикул", "15%", ['view' => (int) $memory['catalog.option']['uid']]],
+        ["Цена", "15%", ['view' => (int) $memory['catalog.option']['price']]],
+        ["Цена 2", "15%", ['view' => (int) $memory['catalog.option']['price2']]],
+        ["Цена 3", "15%", ['view' => (int) $memory['catalog.option']['price3']]],
+        ["Цена 4", "15%", ['view' => (int) $memory['catalog.option']['price4']]],
+        ["Цена 5", "15%", ['view' => (int) $memory['catalog.option']['price5']]],
+        ["Кол-во", "10%", ['view' => (int) $memory['catalog.option']['item']]],
+        [$dataWarehouse[0]['name'], "10%", ['view' => (int) $memory['catalog.option']['items1']]],
+        [$dataWarehouse[1]['name'], "10%", ['view' => (int) $memory['catalog.option']['items2']]],
+        [$dataWarehouse[2]['name'], "10%", ['view' => (int) $memory['catalog.option']['items3']]],
+        ["Характеристики", "30%", ['view' => (int) $memory['catalog.option']['sort']]]
+    ];
+
+    // Перехват модуля
+    $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $PHPShopInterface->productTableCaption);
+
+    $PHPShopInterface->productTableCaption[] = ["", "7%", ['view' => (int) $memory['catalog.option']['menu']]];
+    $PHPShopInterface->productTableCaption[] = ["Статус", "7%", ['align' => 'right', 'view' => (int) $memory['catalog.option']['status']]];
+
+    return $PHPShopInterface->productTableCaption;
 }
 
 // Обработка событий

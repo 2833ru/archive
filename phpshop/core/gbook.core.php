@@ -7,6 +7,8 @@
  * @package PHPShopCore
  */
 class PHPShopGbook extends PHPShopCore {
+    
+    var $empty_index_action = false;
 
     /**
      * Конструктор

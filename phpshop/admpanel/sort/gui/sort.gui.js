@@ -12,7 +12,7 @@ $().ready(function() {
         data.push({name: 'rowID', value: id});
         data.push({name: 'selectID', value: 1});
         data.push({name: 'ajax', value: 1});
-        data.push({name: 'actionList[selectID]', value: 'actionUpdate'});
+        data.push({name: 'actionList[selectID]', value: 'actionUpdate.sort.edit'});
 
         $.ajax({
             mimeType: 'text/html; charset=' + locale.charset,
@@ -116,7 +116,7 @@ $().ready(function() {
         data.push({name: 'selectID', value: id});
         data.push({name: 'parentID', value: parent});
         data.push({name: 'ajax', value: 1});
-        data.push({name: 'actionList[selectID]', value: 'actionValueEdit'});
+        data.push({name: 'actionList[selectID]', value: 'actionValueEdit.sort.view'});
 
         $.ajax({
             mimeType: 'text/html; charset='+locale.charset,
@@ -324,7 +324,7 @@ $().ready(function() {
         event.preventDefault();
 
         var data = [];
-        data.push({name: 'actionList[resetCache]', value: 'actionResetCache'});
+        data.push({name: 'actionList[resetCache]', value: 'actionResetCache.sort.edit'});
         data.push({name: 'resetCache', value: '1'});
         data.push({name: 'ajax', value: 1});
 

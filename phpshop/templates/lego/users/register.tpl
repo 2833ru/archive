@@ -3,7 +3,7 @@
 </style>
 <div id="usersError" class="hide">@usersError@</div>
 
-<form role="form" method="post" name="user_forma_register" class="register-form">
+<form method="post" name="user_forma_register" class="register-form">
     <span id="user_error">@user_error@</span>
     <div class="form-group">
         <label>{Имя}</label>
@@ -25,7 +25,7 @@
         <label>{Повторите пароль}</label>
         <input type="password" name="password_new2"  class="form-control" required="">
         <span class="glyphicon glyphicon-remove form-control-feedback hide" aria-hidden="true"></span
-<p class="small"><label><input type="checkbox" value="on" name="rule" class="req" checked="checked">  {Я согласен} <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html" alt="Согласие на обработку персональных данных">{на обработку моих персональных данных}</a></label></p>    
+<p class="small"><label><input type="checkbox" value="on" name="rule" class="req" checked="checked">  {Я согласен} <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html">{на обработку моих персональных данных}</a></label></p>
 </div>
     <div>
        @captcha@

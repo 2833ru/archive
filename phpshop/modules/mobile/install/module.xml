@@ -4,6 +4,7 @@
     <name>Mobile</name>
     <description>ћодуль определени€ и переадресации мобильных устройств на мобильную версию сайта.</description>
     <category>template</category>
+    <faqlink>https://docs.phpshop.ru/moduli/dizain/mobile</faqlink>
     <adminmenu>
         <title>Mobile</title>
         <capability>true</capability>

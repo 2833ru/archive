@@ -22,6 +22,7 @@
         cityFrom: '@cdek_city_from@',
         products: $.parseJSON('@cdek_cart@'),
         ymapApiKey: '@cdek_ymap_key@',
-        admin: @cdek_admin@
+        admin: @cdek_admin@,
+        russiaOnly: @russia_only@
     };
 </script>

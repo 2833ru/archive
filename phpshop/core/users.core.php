@@ -839,7 +839,7 @@ class PHPShopUsers extends PHPShopCore {
         $this->set('user_kpp', $this->PHPShopUser->getParam('kpp'));
         $this->set('user_cumulative_discount', $discount);
 
-        if ($this->PHPShopSystem->getSerilizeParam('admoption.order_bonus') > 0)
+        if ($this->PHPShopSystem->getSerilizeParam('admoption.bonus') > 0)
             $this->set('user_bonus', $this->PHPShopUser->getBonus());
 
         if ($this->PHPShopUser->getParam('sendmail') == 0)
@@ -874,6 +874,7 @@ class PHPShopUsers extends PHPShopCore {
         if (PHPShopSecurity::true_num($_SESSION['UsersId'])) {
             $this->UsersId = $_SESSION['UsersId'];
             $this->UsersStatus = $_SESSION['UsersStatus'];
+            $this->UserName = $_SESSION['UsersName'];
             return true;
         }
     }
@@ -1029,7 +1030,8 @@ class PHPShopUsers extends PHPShopCore {
             'kpp_new' => PHPShopSecurity::TotalClean($_POST['kpp_new']),
             'subscribe_new' => $subscribe,
             'tel_code_new' => PHPShopSecurity::TotalClean($_POST['tel_code_new']),
-            'servers_new' => HostID
+            'servers_new' => HostID,
+            'bot_new' => md5($_POST['login_new'] . time())
         );
 
         // Перехват модуля
@@ -1076,7 +1078,7 @@ class PHPShopUsers extends PHPShopCore {
     /**
      * Экшен добавления нового пользователя со страницы оформления заказа
      */
-    function add_user_from_order($login) {
+    function add_user_from_order($login, $name = false, $tel = false) {
 
         // Отключение активации в заказе
         $this->activation = false;
@@ -1086,6 +1088,13 @@ class PHPShopUsers extends PHPShopCore {
 
         // логин и есть емейл
         $_POST['mail_new'] = $_POST['login_new'] = $login;
+
+        if (!empty($tel))
+            $_POST['tel_new'] = $tel;
+
+        if (!empty($name))
+            $_POST['name_new'] = $name;
+
         $_POST['password_new'] = $_POST['password_new2'] = $this->generatePassword();
 
         $this->UsersId = $this->user_check_by_email($login);
@@ -1217,7 +1226,7 @@ class PHPShopUsers extends PHPShopCore {
      * Редирект в ЛК пользователя.
      */
     function redirectToUserInfo() {
-        if ($this->PHPShopNav->getPath() != "done" AND $this->PHPShopNav->getName() != "newsletter")
+        if ($this->PHPShopNav->getPath() != "done" AND $this->PHPShopNav->getName() != "newsletter" AND ! $this->stop_redirect)
             header("Location: " . $GLOBALS['SysValue']['dir']['dir'] . "/users/");
     }
 

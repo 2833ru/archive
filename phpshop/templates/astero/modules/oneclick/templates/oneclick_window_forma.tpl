@@ -6,7 +6,7 @@
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                 <h4 class="modal-title">{Быстрый заказ}</h4>
             </div>
-            <form role="form" method="post" name="user_forma" action="@ShopDir@/oneclick/">
+            <form method="post" name="user_forma" action="@ShopDir@/oneclick/">
                 <div class="modal-body">
 
                     <div class="form-group">
@@ -20,7 +20,7 @@
 
                         <p class="small">
                             <input type="checkbox" value="on" name="rule" class="req" checked="checked"> 
-                            {Я согласен}  <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html" alt="{Согласие на обработку персональных данных}">{на обработку моих персональных данных}</a> 
+                            {Я согласен}  <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html">{на обработку моих персональных данных}</a>
                         </p>
 
                     </div>

@@ -90,7 +90,7 @@ function actionStart() {
     // Содержание закладки 1
     $Tab1 = $PHPShopGUI->setField("Название", $PHPShopGUI->setInput("text", "name_new", $data['name'])) .
             $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("flag_new", 1, "Включить", $data['flag']) . $PHPShopGUI->setRadio("flag_new", 0, "Выключить", $data['flag']));
-
+    
     $Tab2 = $PHPShopGUI->setField("Таргетинг:", $PHPShopGUI->setInput("text", "dir_new", $data['dir']) . $PHPShopGUI->setHelp('* Пример: /,page,news. Можно указать несколько адресов через запятую.'));
 
     $PHPShopCategoryArray = new PHPShopCategoryArray();
@@ -158,6 +158,19 @@ function actionStart() {
     // Витрина
     $Tab2.=$PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'));
     $Tab2.=$PHPShopGUI->setField('Дизайн', GetSkinList($data['skin']));
+    
+    // Условия показа
+    $Tab2 .= $PHPShopGUI->setField("Тип", $PHPShopGUI->setRadio("type_new", 0, "Баннер", $data['type']) . $PHPShopGUI->setRadio("type_new", 1, "Всплывающее окно", $data['type']));
+
+    $Tab2 .= $PHPShopGUI->setField("Условия показа окна", $PHPShopGUI->setRadio("display_new", 0, "Показывать всегда", $data['display']) .
+            $PHPShopGUI->setRadio("display_new", 1, "Первый заход на сайт", $data['display'])
+    );
+    
+    $size_value[]=array('Маленькое', 0, $data['size']);
+    $size_value[]=array('Среднее', 1, $data['size']);
+    $size_value[]=array('Большое', 2, $data['size']);
+    
+    $Tab2 .= $PHPShopGUI->setField("Размер окна",$PHPShopGUI->setSelect('size_new', $size_value,300));
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
@@ -222,6 +235,7 @@ function actionUpdate() {
                     $_POST['dop_cat_new'].=$v . "#";
         }
     }
+    
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);

@@ -101,6 +101,10 @@ $_RESULT = array(
     "success" => 1
 );
 
+// Не показывать склад
+if($PHPShopSystem->getSerilizeParam('admoption.sklad_enabled') == 0 or ($PHPShopSystem->getSerilizeParam('admoption.user_items_activate') == 1 and empty($_SESSION['UsersId'])))
+  $_RESULT['items'] = null;
+
 
 // Перехват модуля в начале функции
 $hook = $PHPShopModules->setHookHandler('option', 'option', false, array($_RESULT, $_REQUEST));

@@ -121,7 +121,7 @@ function actionStart() {
 
     $Tab1.=$PHPShopGUI->setField('Ключ доступа к API ', $PHPShopGUI->setInput('text.required', "key_new", $data['key'], false, 300));
 
-    $Tab2 = $PHPShopGUI->setInfo('<p>Модуль позволяет автоматически выгружать данные покупателей из интернет-магазина в сервис увеличения повторных продаж через емейл рассылку <a href="http://unisender.com/?a=phpshop" target="_blank">UniSender.com</a>.</p>
+    $Tab2 = $PHPShopGUI->setInfo('<p>Модуль позволяет автоматически выгружать данные покупателей из интернет-магазина в сервис увеличения повторных продаж через емейл рассылку <a href="https://unisender.com/?a=phpshop" target="_blank">UniSender.com</a>.</p>
 <p>    
 Ключ доступа к API для использования текущего модуля можно получить в настройках аккаунта Unisender в закладке <kbd>Интеграция и API</kbd>.<br>Опция <code>Текущий статус API</code> должна быть в режиме <kbd>Включен</kbd>.</p>');
 

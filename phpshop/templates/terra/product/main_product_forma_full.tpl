@@ -99,7 +99,7 @@
                         </div>
                     </div>
                     <div class="cart-button-wrapper">
-                        <button type="button" class="btn btn-cart addToCartFull" role="button" data-num="1" data-uid="@productUid@" data-cart="@productSaleReady@">Купить</button>                                   
+                        <button type="button" class="btn btn-cart addToCartFull" data-num="1" data-uid="@productUid@" data-cart="@productSaleReady@">Купить</button>
                     </div>
                 </div>
 
@@ -120,7 +120,7 @@
                         <div id="prodrev" class="tab-pane fade">
                             <div class="content">
                                 <div id="commentList"></div>
-                                <button role="button" class="btn btn-info btn-show-comment-add-block" onclick="$('#addComment').slideToggle();
+                                <button class="btn btn-info btn-show-comment-add-block" onclick="$('#addComment').slideToggle();
                                         $(this).hide();"><span class="glyphicon glyphicon-plus-sign"></span> {Новый комментарий}</button>
 
                                 <div id='addComment' class="well well-sm" style='display:none;margin-top:30px;'>
@@ -134,7 +134,7 @@
                                         <label class="btn btn-success btn-sm"><input type="radio" name="rate" value="3"> +3</label>
                                         <label class="btn btn-success btn-sm"><input type="radio" name="rate" value="4"> +4</label>
                                         <label class="btn btn-success btn-sm active"><input type="radio" name="rate" value="5" checked> +5</label>
-                                        <button role="button" class="btn btn-info btn-sm pull-right" onclick="commentList('@productUid@', 'add', 1);">{Проголосовать}</button>
+                                        <button class="btn btn-info btn-sm pull-right" onclick="commentList('@productUid@', 'add', 1);">{Проголосовать}</button>
                                     </div>
                                 </div>
                             </div>

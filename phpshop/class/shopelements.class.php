@@ -79,6 +79,7 @@ class PHPShopProductElements extends PHPShopElements {
 
         // Настройки
         $this->user_price_activate = $this->PHPShopSystem->getSerilizeParam('admoption.user_price_activate');
+        $this->user_items_activate = $this->PHPShopSystem->getSerilizeParam('admoption.user_items_activate');
         $this->format = intval($this->PHPShopSystem->getSerilizeParam("admoption.price_znak"));
         $this->sklad_enabled = $this->PHPShopSystem->getSerilizeParam('admoption.sklad_enabled');
         $this->warehouse_sum = $this->PHPShopSystem->getSerilizeParam('admoption.sklad_sum_enabled');
@@ -304,6 +305,11 @@ class PHPShopProductElements extends PHPShopElements {
             $row['price_n'] = $promotions['price_n'];
             $row['promo_label'] = $promotions['label'];
         }
+        
+        // Если склад показывать только после авторизации
+        if ($this->user_items_activate == 1 and empty($_SESSION['UsersId'])) {
+            $this->sklad_enabled = false;
+        }
 
         // Показывать состояние склада
         if ($this->sklad_enabled == 1) {
@@ -348,7 +354,6 @@ class PHPShopProductElements extends PHPShopElements {
 
         // Если товар на складе
         if (empty($row['sklad'])) {
-
             $this->set('Notice', '');
             $this->set('ComStartCart', '');
             $this->set('ComEndCart', '');
@@ -356,6 +361,8 @@ class PHPShopProductElements extends PHPShopElements {
             $this->set('ComEndNotice', PHPShopText::comment('>'));
             $this->set('elementCartHide', null);
             $this->set('elementNoticeHide', 'hide hidden');
+            $this->set('productOutStock', null);
+            $this->set('productPriceRub', null);
         }
 
         // Товар под заказ

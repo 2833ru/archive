@@ -1,6 +1,6 @@
 <?php
 
-$TitlePage = __("SEO Настройки");
+$TitlePage = __("SEO заголовки");
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['system']);
 
 // Стартовый вид
@@ -13,7 +13,7 @@ function actionStart() {
 
     // Размер названия поля
     $PHPShopGUI->field_col = 3;
-    $PHPShopGUI->addJSFiles('./js/jquery.waypoints.min.js', './system/gui/system.gui.js', './system/gui/tab_headers.gui.js');
+    $PHPShopGUI->addJSFiles('./js/jquery.waypoints.min.js', './system/gui/system.gui.js', './system/gui/headers.gui.js');
     $PHPShopGUI->setActionPanel($TitlePage, false, array('Сохранить'));
 
     $PHPShopGUI->_CODE .= '<p></p>' . $PHPShopGUI->setField('Основной заголовок (Title)', $PHPShopGUI->setTextarea('title_new', $data['title'], false, false, 100));
@@ -26,6 +26,7 @@ function actionStart() {
     $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Шаблон каталога', $PHPShopGUI->loadLib('tab_headers', $data, './system/', 'catalog'));
     $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Шаблон подкаталога', $PHPShopGUI->loadLib('tab_headers', $data, './system/', 'podcatalog'));
     $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Шаблон товара', $PHPShopGUI->loadLib('tab_headers', $data, './system/', 'product'));
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Шаблон фильтра в каталоге', $PHPShopGUI->loadLib('tab_headers', $data, './system/', 'sort'));
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);

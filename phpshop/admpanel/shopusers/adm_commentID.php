@@ -79,6 +79,13 @@ function actionDelete() {
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
 
+    // Активация из спиcка
+    if (empty($_POST['parentID'])) {
+        $data = $PHPShopOrm->select(array('parent_id'), array('id' =>'='.intval($_POST['rowID'])), false, array('limit' => 1));
+        if (!empty($data['parent_id']))
+            $_POST['parentID'] = $data['parent_id'];
+    }
+
     $action = $PHPShopOrm->delete(array('id' => '=' . $_POST['rowID']));
 
     // Пересчет рейтинга товара
@@ -103,18 +110,12 @@ function actionSave() {
  */
 function ratingUpdate() {
 
-    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['comment']);
-    $PHPShopOrm->debug = false;
-
-    // Активация из спиcка
-    if (empty($_POST['parentID'])) {
-        $data = $PHPShopOrm->select(array('parent_id'), array('id' =>'='.intval($_POST['rowID'])), false, array('limit' => 1));
-        if (!empty($data['parent_id']))
-            $_POST['parentID'] = $data['parent_id'];
-        else
-            return false;
+    if(empty($_POST['parentID'])) {
+        return false;
     }
 
+    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['comment']);
+    $PHPShopOrm->debug = false;
 
     $result = $PHPShopOrm->query("select avg(rate) as rate, count(id) as num from " . $GLOBALS['SysValue']['base']['comment'] . " WHERE parent_id=" . intval($_POST['parentID']) . " AND enabled='1' AND rate>0 group by parent_id LIMIT 1");
     if (mysqli_num_rows($result)) {
@@ -138,7 +139,14 @@ function actionUpdate() {
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
 
     $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['rowID']));
-    
+
+    // Активация из спиcка
+    if (empty($_POST['parentID'])) {
+        $data = $PHPShopOrm->select(array('parent_id'), array('id' =>'='.intval($_POST['rowID'])), false, array('limit' => 1));
+        if (!empty($data['parent_id']))
+            $_POST['parentID'] = $data['parent_id'];
+    }
+
     // Пересчет рейтинга товара
     ratingUpdate();
     

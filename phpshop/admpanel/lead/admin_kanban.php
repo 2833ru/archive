@@ -40,7 +40,7 @@ function actionStart() {
     
     $PHPShopGUI->action_button['Список'] = array(
         'name' => '',
-        'class' => 'btn btn-default btn-sm navbar-btn btn-action-panel',
+        'class' => 'btn btn-default btn-sm navbar-btn btn-action-panel hidden-xs',
         'type' => 'button',
         'action' => 'lead',
         'icon' => 'glyphicon glyphicon-align-justify',
@@ -49,7 +49,7 @@ function actionStart() {
     
     $PHPShopGUI->action_button['Канбан'] = array(
         'name' => '',
-        'class' => 'btn btn-default btn-sm navbar-btn active',
+        'class' => 'btn btn-default btn-sm navbar-btn active hidden-xs',
         'type' => 'button',
         'icon' => 'glyphicon glyphicon-th-large',
         'tooltip' => 'data-toggle="tooltip" data-placement="left" title="' . __('Канбан') . '" '
@@ -58,7 +58,7 @@ function actionStart() {
     $PHPShopGUI->action_button['Добавить статус'] = array(
         'name' => '',
         'action' => 'order.status&action=new&return=lead.kanban',
-        'class' => 'btn btn-default btn-sm navbar-btn btn-action-panel',
+        'class' => 'btn btn-default btn-sm navbar-btn btn-action-panel hidden-xs',
         'type' => 'button',
         'icon' => 'glyphicon glyphicon-plus',
         'tooltip' => 'data-toggle="tooltip" data-placement="bottom" title="'.__('Добавить статус').'" '
@@ -111,6 +111,10 @@ function actionStart() {
     $PHPShopGUI->_CODE='<div id="data_wrapper" class="row">
           <div class="col-sm-12">
           </div>
+        </div>
+        <div id="kanban-wrapper">
+            <div class="kanban-wrapper-container">&nbsp;
+           </div>
         </div>
         <div id="kanban"></div>';
 

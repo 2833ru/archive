@@ -191,7 +191,7 @@ function tab_base($data) {
                 $new = null;
 
 
-            $img_list_default .= '<div class="col-md-4"><div class="panel ' . $panel . '"><div class="panel-heading">' . $row['name'] . $new . $mes . '</div><div class="panel-body text-center"><img class="image-shadow image-skin"  src="' . $skin_base_path . $row['icon'] . '"></div>
+            $img_list_default .= '<div class="col-md-4"><div class="panel ' . $panel . '"><div class="panel-heading">' . $row['name'] . $new . $mes . '</div><div class="panel-body text-center"><img class="image-shadow image-skin"  src="https://mini.s-shot.ru/1024x1024/400/png/?https://myphpshop.ru/?skin=' . $row['name'].'&demo&r=1"></div>
                 
            <div class="text-center panel-footer">
                     
@@ -242,7 +242,7 @@ function tab_base($data) {
         if (stristr($_SESSION['lang'], "utf"))
             $promo = __($promo);
 
-        //$PHPShopGUI->addTab(array('Персональный дизайн', $promo, true));
+        $PHPShopGUI->addTab(array('Персональный дизайн', $promo, true));
         $PHPShopGUI->setTab(array('Доступные шаблоны', $title_default . $img_list_default, true));
     } else
         $disp = $PHPShopGUI->setAlert('Ошибка связи с сервером ' . $skin_base_path, $type = 'warning');

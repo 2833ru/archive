@@ -69,9 +69,14 @@ PHPShopYandexDelivery = function () {
     self.onOpenSuccess = function (widget) {
         widget.showDeliveryOptions(self.cart);
         widget.on('submitDeliveryOption', function (deliveryOption) {
-            $("#DosSumma").html(deliveryOption['deliveryOption']['cost']['deliveryForCustomer']);
-            $("#TotalSumma").html(Number(deliveryOption['deliveryOption']['cost']['deliveryForCustomer']) + Number($('#OrderSumma').val()));
-            $('input[name="yadelivery_sum"]').val(deliveryOption['deliveryOption']['cost']['deliveryForCustomer']);
+            var deliveryCost = deliveryOption['deliveryOption']['cost']['deliveryForCustomer'];
+            if($("#d").data('free') === 1) {
+                deliveryCost = 0;
+            }
+
+            $("#DosSumma").html(deliveryCost);
+            $("#TotalSumma").html(Number(deliveryCost) + Number($('#OrderSumma').val()));
+            $('input[name="yadelivery_sum"]').val(deliveryCost);
             $('input[name="yadelivery_tariff_id"]').val(deliveryOption['deliveryOption']['tariffId']);
             $('input[name="yadelivery_partner_id"]').val(deliveryOption['deliveryOption']['partner']);
 

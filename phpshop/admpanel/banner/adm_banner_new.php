@@ -10,7 +10,7 @@ $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['banner']);
 function GetSkinList($skin) {
     global $PHPShopGUI;
     $dir = "../templates/";
-    
+
     $value[] = array('Не выбрано', '', '');
 
     if (is_dir($dir)) {
@@ -23,15 +23,15 @@ function GetSkinList($skin) {
                     else
                         $sel = "";
 
-                    if ($file != "." and $file != ".." and !strpos($file, '.'))
+                    if ($file != "." and $file != ".." and ! strpos($file, '.'))
                         $value[] = array($file, $file, $sel);
                 }
             }
             closedir($dh);
         }
     }
-    
-    return $PHPShopGUI->setSelect('skin_new', $value,300);
+
+    return $PHPShopGUI->setSelect('skin_new', $value, 300);
 }
 
 // Построение дерева категорий
@@ -60,20 +60,20 @@ function treegenerator($array, $i, $curent, $dop_cat_array) {
                 }
 
             if (empty($check['select'])) {
-                $tree_select.='<option value="' . $k . '" ' . $selected . '>' . $del . $v . '</option>';
+                $tree_select .= '<option value="' . $k . '" ' . $selected . '>' . $del . $v . '</option>';
 
                 if ($k < 1000000)
-                    $tree_select_dop.='<option value="' . $k . '" ' . $selected_dop . '>' . $del . $v . '</option>';
+                    $tree_select_dop .= '<option value="' . $k . '" ' . $selected_dop . '>' . $del . $v . '</option>';
 
                 $i = 1;
             } else {
-                $tree_select.='<option value="' . $k . '" ' . $selected . ' disabled>' . $del . $v . '</option>';
+                $tree_select .= '<option value="' . $k . '" ' . $selected . ' disabled>' . $del . $v . '</option>';
                 if ($k < 1000000)
-                    $tree_select_dop.='<option value="' . $k . '" ' . $selected_dop . ' disabled >' . $del . $v . '</option>';
+                    $tree_select_dop .= '<option value="' . $k . '" ' . $selected_dop . ' disabled >' . $del . $v . '</option>';
             }
 
-            $tree_select.=$check['select'];
-            $tree_select_dop.=$check['select_dop'];
+            $tree_select .= $check['select'];
+            $tree_select_dop .= $check['select_dop'];
         }
     }
     return array('select' => $tree_select, 'select_dop' => $tree_select_dop);
@@ -100,7 +100,7 @@ function actionStart() {
     $oFCKeditor->Value = $data['content'];
 
     // Содержание закладки 1
-    $Tab1.= $PHPShopGUI->setField("Содержание", $oFCKeditor->AddGUI());
+    $Tab1 .= $PHPShopGUI->setField("Содержание", $oFCKeditor->AddGUI());
 
     $Tab2 = $PHPShopGUI->setField("Таргетинг:", $PHPShopGUI->setInput("text", "dir_new", $data['dir']) . $PHPShopGUI->setHelp('* Пример: /,page,news. Можно указать несколько адресов через запятую.'));
 
@@ -147,21 +147,34 @@ function actionStart() {
                 $disabled = ' disabled';
 
 
-            $tree_select_dop.='<option value="' . $k . '" ' . $selected_dop . $disabled . '>' . $v . '</option>';
+            $tree_select_dop .= '<option value="' . $k . '" ' . $selected_dop . $disabled . '>' . $v . '</option>';
 
-            $tree_select_dop.=$check['select_dop'];
+            $tree_select_dop .= $check['select_dop'];
         }
 
     $tree_select_dop = '<select class="selectpicker show-menu-arrow hidden-edit" data-live-search="true" data-container=""  data-style="btn btn-default btn-sm" name="dop_cat[]" data-width="100%" multiple><option value="0">' . $CategoryArray[0]['name'] . '</option>' . $tree_select_dop . '</select>';
 
     // Дополнительные каталоги
-    $Tab2.=$PHPShopGUI->setField('Каталоги', $tree_select_dop . $PHPShopGUI->setHelp('Баннер выводится только в заданных каталогах.'));
+    $Tab2 .= $PHPShopGUI->setField('Каталоги', $tree_select_dop . $PHPShopGUI->setHelp('Баннер выводится только в заданных каталогах.'));
 
     // Витрина
-    $Tab2.=$PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'));
-    $Tab2.=$PHPShopGUI->setField('Дизайн', GetSkinList($data['skin']));
-    
-     // Запрос модуля на закладку
+    $Tab2 .= $PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'));
+    $Tab2 .= $PHPShopGUI->setField('Дизайн', GetSkinList($data['skin']));
+
+    // Условия показа
+    $Tab2 .= $PHPShopGUI->setField("Тип", $PHPShopGUI->setRadio("type_new", 0, "Баннер", $data['type']) . $PHPShopGUI->setRadio("type_new", 1, "Всплывающее окно", $data['type']));
+
+    $Tab2 .= $PHPShopGUI->setField("Условия показа окна", $PHPShopGUI->setRadio("display_new", 0, "Показывать всегда", $data['display']) .
+            $PHPShopGUI->setRadio("display_new", 1, "Первый заход на сайт", $data['display'])
+    );
+
+    $size_value[]=array('Маленькое', 0, $data['size']);
+    $size_value[]=array('Среднее', 1, $data['size']);
+    $size_value[]=array('Большое', 2, $data['size']);
+
+    $Tab2 .= $PHPShopGUI->setField("Размер окна", $PHPShopGUI->setSelect('size_new', $size_value, 300));
+
+    // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод формы закладки
@@ -183,8 +196,8 @@ function actionInsert() {
     if (is_array($_POST['servers'])) {
         $_POST['servers_new'] = "";
         foreach ($_POST['servers'] as $v)
-            if ($v != 'null' and !strstr($v, ','))
-                $_POST['servers_new'].="i" . $v . "i";
+            if ($v != 'null' and ! strstr($v, ','))
+                $_POST['servers_new'] .= "i" . $v . "i";
     }
 
     // Доп каталоги
@@ -192,8 +205,8 @@ function actionInsert() {
     if (is_array($_POST['dop_cat'])) {
         $_POST['dop_cat_new'] = "#";
         foreach ($_POST['dop_cat'] as $v)
-            if ($v != 'null' and !strstr($v, ','))
-                $_POST['dop_cat_new'].=$v . "#";
+            if ($v != 'null' and ! strstr($v, ','))
+                $_POST['dop_cat_new'] .= $v . "#";
     }
 
     // Перехват модуля

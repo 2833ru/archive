@@ -101,7 +101,7 @@ class ProductLastView extends PHPShopProductElements {
      */
     function first_remove() {
         $i = 0;
-        if (count($this->_PRODUCT) > $this->option['num']) {
+        if (is_array($this->_PRODUCT) and count($this->_PRODUCT) > $this->option['num']) {
             foreach ($this->_PRODUCT as $key => $v) {
                 if (empty($i)) {
                     unset($this->_PRODUCT[$key]);
@@ -201,7 +201,7 @@ class ProductLastView extends PHPShopProductElements {
         $this->set('productlastview_pic_width', $this->option['pic_width']);
 
         // Если есть товары в корзине
-        if (count($this->_PRODUCT) > 0) {
+        if (is_array($this->_PRODUCT) and count($this->_PRODUCT) > 0) {
             $list = $this->display('productlastviewform', array('currency' => $this->currency, 'user_price_activate' => $this->user_price_activate, 'format' => $this->format));
             $this->set('productlastview_list', $list, true);
             $product = PHPShopParser::file($GLOBALS['SysValue']['templates']['productlastview']['productlastview_forma'], true, false, true);
@@ -244,11 +244,19 @@ function productlastviewform($val, $option) {
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($val['id'])), false, array('limit' => 1));
 
+    if(!isset($data['id'])) {
+        return;
+    }
+
     // Учет модуля SEOURLPRO
     if (!empty($GLOBALS['SysValue']['base']['seourlpro']['seourlpro_system'])) {
+        if(is_null($GLOBALS['PHPShopSeoPro'])) {
+            include_once dirname(dirname(dirname(__DIR__))) . '/modules/seourlpro/inc/option.inc.php';
+            $GLOBALS['PHPShopSeoPro'] = new PHPShopSeoPro();
+        }
 
         if (empty($data['prod_seo_name']))
-            $url = '/id/' . str_replace("_", "-", PHPShopString::toLatin($data['name'])) . '-' . $data['id'];
+            $url = '/id/' . str_replace("_", "-", $GLOBALS['PHPShopSeoPro']->setLatin($data['name'])) . '-' . $data['id'];
         else
             $url = '/id/' . $data['prod_seo_name'] . '-' . $data['id'];
 

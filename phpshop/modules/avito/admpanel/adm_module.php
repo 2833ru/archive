@@ -19,12 +19,26 @@ function actionStart() {
     $data = $PHPShopOrm->select();
 
     $Tab1 = $PHPShopGUI->setField('Пароль защиты XML файла', $PHPShopGUI->setInputText(
-        'http://'.$_SERVER['SERVER_NAME'].'/phpshop/modules/avito/xml/appliances.php?pas=', 'password_new', $data['password'], 500)
+        'http://'.$_SERVER['SERVER_NAME'].'/phpshop/modules/avito/xml/appliances.php?pas=', 'password_new', $data['password'], 534)
     );
-    $Tab1 .= $PHPShopGUI->setField('ФИО менеджера', $PHPShopGUI->setInputText( false, 'manager_new', $data['manager'], 500));
-    $Tab1 .= $PHPShopGUI->setField('Телефон менеджера', $PHPShopGUI->setInputText( false, 'phone_new', $data['phone'], 500));
-    $Tab1 .= $PHPShopGUI->setField('Дополнение к описанию', $PHPShopGUI->setTextarea( 'additional_description_new', $data['additional_description'], true, 500));
-    $Tab1 .= $PHPShopGUI->setField('Добавить характеристики', $PHPShopGUI->setCheckbox("use_params_new", 1, "Добавить характеристики в конец объявления", $data["use_params"]));
+    $Tab1 .= $PHPShopGUI->setField('ФИО менеджера', $PHPShopGUI->setInputText( false, 'manager_new', $data['manager'], 534));
+    $Tab1 .= $PHPShopGUI->setField('Телефон менеджера', $PHPShopGUI->setInputText( false, 'phone_new', $data['phone'], 534));
+    $Tab1 .= $PHPShopGUI->setField('Адрес', $PHPShopGUI->setInputText( false, 'address_new', $data['address'], 534));
+    $Tab1 .= $PHPShopGUI->setField('Шаблон генерации описания', '<div id="avitotitleShablon">
+<textarea class="form-control avito-shablon" name="preview_description_template_new" rows="3" style="max-width: 534px;height: 70px;">' . $data['preview_description_template'] . '</textarea>
+    <div class="btn-group" role="group" aria-label="...">
+    <input  type="button" value="'.__('Описание').'" onclick="AvitoShablonAdd(\'@Content@\')" class="btn btn-default btn-sm">
+    <input  type="button" value="'.__('Краткое описание').'" onclick="AvitoShablonAdd(\'@Description@\')" class="btn btn-default btn-sm">
+    <input  type="button" value="'.__('Характеристики').'" onclick="AvitoShablonAdd(\'@Attributes@\')" class="btn btn-default btn-sm">
+<input  type="button" value="'.__('Каталог').'" onclick="AvitoShablonAdd(\'@Catalog@\')" class="btn btn-default btn-sm">
+<input  type="button" value="'.__('Подкаталог').'" onclick="AvitoShablonAdd(\'@Subcatalog@\')" class="btn btn-default btn-sm">
+<input  type="button" value="'.__('Товар').'" onclick="AvitoShablonAdd(\'@Product@\',)" class="btn btn-default btn-sm">
+    </div>
+</div>
+<script>function AvitoShablonAdd(variable) {
+    var shablon = $(".avito-shablon").val() + " " + variable;
+    $(".avito-shablon").val(shablon);
+}</script>');
 
     // Инструкция
     $Tab2 = $PHPShopGUI->loadLib('tab_info', $data,'../modules/'.$_GET['id'].'/admpanel/');

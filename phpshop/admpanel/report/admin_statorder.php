@@ -188,10 +188,10 @@ function actionStart() {
     $searchforma.=$PHPShopInterface->setInputDate("date_start", $date_start, 'margin-bottom:10px', null, 'Дата начала отбора');
     $searchforma.=$PHPShopInterface->setInputDate("date_end", $date_end, false, null, 'Дата конца отбора');
 
-    $searchforma.= $PHPShopInterface->setSelect('where[statusi]', $order_status_value, 180);
+    $searchforma.= $PHPShopInterface->setSelect('where[statusi]', $order_status_value, '100%');
     $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[a.fio]', 'placeholder' => 'ФИО Покупателя', 'value' => $_GET['where']['a.fio']));
 
-    $searchforma.=$PHPShopInterface->setSelect('where[b.status]', $user_status_value, 180);
+    $searchforma.=$PHPShopInterface->setSelect('where[b.status]', $user_status_value, '100%');
 
     $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[b.mail]', 'placeholder' => 'E-mail', 'value' => $_GET['where']['b.mail']));
     $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[a.tel]', 'placeholder' => 'Телефон', 'value' => $_GET['where']['a.tel']));

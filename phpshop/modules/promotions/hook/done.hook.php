@@ -39,7 +39,7 @@ function promotions_send_to_order($obj, $data, $rout) {
 
 
         // Обновление цен в корзине
-        $sum = $sum_promo = 0;
+        $sum = $sum_promo = $sum_disc_off = 0;
         $sum_check = false;
         foreach ($_SESSION['cart'] as $key => $product) {
 
@@ -70,7 +70,12 @@ function promotions_send_to_order($obj, $data, $rout) {
             
             // Остальные
             else {
-                 $sum+=$product['num'] * $product['price'];
+                // Товары с отключенными скидками
+                if(!empty($product['promo_price'])) {
+                   $sum_disc_off+=$product['promo_price'] * $product['num'];
+                } else {
+                    $sum+=$product['num'] * $product['price'];
+                }
             }
         }
         
@@ -82,11 +87,13 @@ function promotions_send_to_order($obj, $data, $rout) {
         // Возвращаем бонусы обратно для корректного подсчета total
         PHPShopObj::loadClass('bonus');
         $PHPShopBonus = new PHPShopBonus($_SESSION['UsersId']);
-        $bonus = $PHPShopBonus->getUserBonus($sum);
+        $bonus = $PHPShopBonus->getUserBonus($sum + $sum_disc_off);
 
-        $obj->sum = $obj->PHPShopOrder->returnSumma($sum_promo) + $obj->PHPShopOrder->returnSumma($sum) + (float) $bonus;
-        $obj->total = $obj->PHPShopOrder->returnSumma((float) $obj->sum + (float) $bonus, $obj->discount) + $obj->delivery;
-        
+        $obj->sum = $obj->PHPShopOrder->returnSumma($sum_promo) + $obj->PHPShopOrder->returnSumma($sum) + $obj->PHPShopOrder->returnSumma($sum_disc_off) + (float) $bonus;
+        $obj->total = $obj->PHPShopOrder->returnSumma((float) $sum + (float) $bonus, $obj->discount) + $obj->delivery;
+        $obj->total += $obj->PHPShopOrder->returnSumma($sum_promo);
+        $obj->total += $obj->PHPShopOrder->returnSumma($sum_disc_off);
+
         unset($_SESSION['totalsummainput']);
     }
 }

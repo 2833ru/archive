@@ -21,7 +21,7 @@
 
 @Error@
 <div class="row">
-<form role="form" method="post" name="forma_gbook">
+<form method="post" name="forma_gbook">
     <div class="form-group">
        
         <input type="text" name="name_new" class="form-control" id="exampleInputEmail1" placeholder="{Èìÿ}" required="">

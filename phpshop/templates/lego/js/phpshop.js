@@ -257,6 +257,15 @@ function faset_filter_click(obj) {
 
     if (AJAX_SCROLL) {
 
+        var hash;
+        var hashes = window.location.href.split('#')[0].slice(window.location.href.indexOf('?') + 1).split('&');
+        for(var i = 0; i < hashes.length; i++) {
+            hash = hashes[i].split('=');
+            if(hash[0].match(/v\[(.*)\]/) && window.location.hash.indexOf(hash[0] + '=' + hash[1]) === -1) {
+                window.location.hash += hash[0] + '=' + hash[1] + '&';
+            }
+        }
+
         $(".pagination").hide();
 
         if ($(obj).prop('checked')) {
@@ -934,19 +943,18 @@ $(document).ready(function () {
 
         // Подтип
         if ($("#parentSizeMessage").html()) {
-            
+
             // Размер
             if ($('input[name="parentColor"]').val() === undefined && $('input[name="parentSize"]:checked').val() !== undefined) {
-                addToWishList($('input[name="parentSize"]').val(),$(this).attr('data-uid'));
+                addToWishList($('input[name="parentSize"]').val(), $(this).attr('data-uid'));
             }
             // Размер  и цвет
             else if ($('input[name="parentSize"]:checked').val() > 0 && $('input[name="parentColor"]:checked').val() > 0) {
-                addToWishList($('input[name="parentColor"]').val(),$(this).attr('data-uid'));
-            }
-            else
+                addToWishList($('input[name="parentColor"]').val(), $(this).attr('data-uid'));
+            } else
                 showAlertMessage($("#parentSizeMessage").html());
-        }
-        else addToWishList($(this).attr('data-uid'));
+        } else
+            addToWishList($(this).attr('data-uid'));
 
     });
 
@@ -1555,13 +1563,11 @@ $(document).ready(function () {
             // Смена картинки
             var parent_img = $(this).attr('data-image');
             if (parent_img != "") {
-
-                $(".bx-pager img").each(function (index, el) {
-                    if ($(this).attr('src') == parent_img) {
-                        slider.goToSlide(index);
-                    }
-
-                });
+                var options = $('.bigThumbs div[data-big-image="' + parent_img + '"]').attr('data-options');
+                if (options) {
+                    var touchNSwipe = TouchNSwipe.get("productSlider");
+                    touchNSwipe.index(Number(options[options.search(/index:.+/) + 6]));
+                }
             }
 
             // Смена склада
@@ -1681,20 +1687,21 @@ $(document).ready(function () {
         var returncall = $($(this).attr('data-target')).find('#recaptcha_returncall').get(0);
 
         $.getScript("https://www.google.com/recaptcha/api.js?render=explicit")
-            .done(function () {
-                if (typeof grecaptcha !== "undefined") {
+                .done(function () {
+                    if (typeof grecaptcha !== "undefined") {
 
-                    grecaptcha.ready(function () {
-                        try {
-                            if (returncall)
-                                grecaptcha.render(returncall, {"sitekey": $(returncall).attr('data-key'), "size": $(returncall).attr('data-size')});
+                        grecaptcha.ready(function () {
+                            try {
+                                if (returncall)
+                                    grecaptcha.render(returncall, {"sitekey": $(returncall).attr('data-key'), "size": $(returncall).attr('data-size')});
 
-                            if (oneclick)
-                                grecaptcha.render(oneclick, {"sitekey": $(oneclick).attr('data-key'), "size": $(oneclick).attr('data-size')});
-                        } catch (e) {}
-                    });
-                }
-            });
+                                if (oneclick)
+                                    grecaptcha.render(oneclick, {"sitekey": $(oneclick).attr('data-key'), "size": $(oneclick).attr('data-size')});
+                            } catch (e) {
+                            }
+                        });
+                    }
+                });
     });
 
     if ($("#recaptcha_default").length) {

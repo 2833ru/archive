@@ -15,10 +15,6 @@ PHPShopObj::loadClass("sort");
 PHPShopObj::loadClass("security");
 PHPShopObj::loadClass("text");
 
-require_once $_classPath."lib/Subsys/JsHttpRequest/Php.php";
-$JsHttpRequest = new Subsys_JsHttpRequest_Php("windows-1251");
-
-
 class PHPShopSortAjax extends PHPShopSort{
 
     function display(){

@@ -15,6 +15,7 @@ $().ready(function() {
             data.push({name: 'operation', value:  operation});
             data.push({name: 'ajax', value: 1});
             data.push({name: 'id', value: $(this).attr('data-id')});
+            data.push({name: 'manual', value: 1});
             $.ajax({
                 mimeType: 'text/html; charset='+locale.charset,
                 url: '../modules/atol/api.php',
@@ -24,7 +25,7 @@ $().ready(function() {
                 async: false,
                 success: function(json) {
                     if (json['status'] == 1) {
-                        window.location.href += '&tab=7';
+                        window.location.href += '&tab=117';
                     } else {
                         alert(locale.save_false);
                     }

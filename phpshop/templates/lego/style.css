@@ -2782,30 +2782,6 @@ button {
 span.new-price .rubznak, .price-block .rubznak{
     font-family: ALSRubl, StemLight, Arial, "Helvetica CY", "Nimbus Sans L", sans-serif !important
 }
-.chat {
-    position: fixed;
-    bottom: 50%;
-    left: -36px;
-    border-top-left-radius: 0 !important;
-    border-bottom-left-radius: 0 !important;
-    padding: 7px
-}
-
-.chat .glyphicon {
-    padding-left: 10px
-}
-
-.chat-modal-content {
-    width: 100%;
-    height: 500px;
-    overflow: hidden;
-    margin: 0;
-    border: 0
-}
-
-#chatopenwindow {
-    margin-right: 7px
-}
 
 .page-header h1 {
     font-size: 20px;
@@ -3131,6 +3107,22 @@ select.reqActiv {
     padding-left: 5px;
     cursor: pointer;
     padding-bottom: 10px
+}
+
+.paymOneEl label {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-align-content: center;
+    align-content: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-flex-direction: row;
+    flex-direction: row;
+    -webkit-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+    line-height: normal!important;
 }
 
 #fotoload {
@@ -4473,7 +4465,7 @@ a.noticeBtn {
     width: 110px;
     height: 110px;
     padding: 0;
-    margin-right: 15px;
+    margin-left: 15px;
     margin-bottom: 15px
 }
 
@@ -4681,7 +4673,7 @@ a.noticeBtn {
     margin-bottom: 0
 }
 
-.btn-menu span:not(.icons-cart) {
+.btn-menu span:not(.icons-cart):not(.f-block):not(.f-block-wrapper) {
     display: block;
     position: relative;
     width: 16px;
@@ -4690,6 +4682,10 @@ a.noticeBtn {
     -webkit-transition: all .1s linear .23s;
     transition: all .1s linear .23s;
     background-color: #343434
+}
+.btn-menu-right .f-block-wrapper {
+    margin-top: -3px;
+    display: block;
 }
 a.btn-menu{padding-top:6px!important}
 .btn-menu span.icons-cart {
@@ -6354,7 +6350,7 @@ h4.modal-title {
     border: none
 }
 
-.miniGbook h3 {
+.miniGbook .h3 {
     transition-duration: 0.3s;
     color: #343434;
     font-family: "stemMedium";
@@ -6362,7 +6358,8 @@ h4.modal-title {
     line-height: 24px;
     font-weight: 500;
     transition-property: all;
-    margin-bottom: 20px
+    margin-bottom: 20px;
+    display: block;
 }
 
 .miniGbook footer {
@@ -7076,7 +7073,7 @@ a:hover{
     align-items: center;
     color:#343434; margin-top:-3px
 }
-.f-block div {
+.f-block .f-block-wrapper {
     margin-right: 15px;
 }
 .mobile-s {
@@ -7407,4 +7404,19 @@ form[name="users_password"]{max-width:420px}
 .inner-nowbuy .page-header {
     color: #343434;
     font-family: stemMedium, Arial, "Helvetica CY", "Nimbus Sans L", sans-serif !important;
+}
+.preview-sort {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 12px;
+    color: #808285;
+}
+#admin-modal-filemanager {
+    width: 100%;
+    height: 510px
+}
+#admin-modal {
+    width: 100%;
+    height: 600px
 }

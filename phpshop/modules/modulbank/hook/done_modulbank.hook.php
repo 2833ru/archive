@@ -22,12 +22,12 @@ function send_modulbank_hook($obj, $value, $rout) {
         // Контроль оплаты от статуса заказа
         if (empty($Modulbank->option['status'])) {
 
-            $Modulbank->parameters['amount']          = number_format($obj->total, 2, '.', '');
             $Modulbank->parameters['order_id']        = $value['ouid'];
             $Modulbank->parameters['receipt_contact'] = $_POST['mail'];
-            $Modulbank->parameters['description']     = PHPShopString::win_utf8($PHPShopSystem->getName() . ' оплата заказа ' . $Modulbank->parameters['order_id']);
+            $Modulbank->parameters['description']     = PHPShopString::win_utf8(str_replace('"', '', $PHPShopSystem->getName() . ' оплата заказа ' . $Modulbank->parameters['order_id']));
 
             // Содержимое корзины
+            $total = 0;
             foreach ($orders['Cart']['cart'] as $key => $arItem) {
 
                 // Скидка
@@ -42,6 +42,7 @@ function send_modulbank_hook($obj, $value, $rout) {
                     "payment_method" => 'full_prepayment',
                     'vat'            => $tax
                 );
+                $total = number_format($total + (int) $arItem['num'] * $price, 2, '.', '');
             }
 
             // Доставка
@@ -72,10 +73,11 @@ function send_modulbank_hook($obj, $value, $rout) {
                     "payment_method" => 'full_prepayment',
                     'vat'            => $tax_delivery
                 );
-
+                $total = number_format($total + $obj->delivery, 2, '.', '');
             }
 
             $Modulbank->parameters['receipt_items'] = json_encode($aItem);
+            $Modulbank->parameters['amount'] = number_format($total, 2, '.', '');
 
             $payment_form = $Modulbank->getForm();
 

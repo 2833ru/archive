@@ -5,6 +5,65 @@ locale.icon_load = locale.file_load;
 
 $().ready(function () {
 
+    // Автоматизация загрузки файла
+    if ($('.bot-progress .progress-bar').hasClass('active')) {
+
+        $(window).bind("beforeunload", function () {
+            return "Are you sure you want to exit? Please complete sign up or the app will get deleted.";
+        });
+
+        var time = performance.now();
+
+        var min = $('[name="time_limit"]').val();
+        var limit = Number($('[name="line_limit"]').val());
+        var start = limit;
+        var end = limit + limit;
+        var csv_file = $('[name="csv_file"]').val();
+        var total = $('[name="total"]').val();
+        var count = Number($('#total-update').html());
+        var refreshId = setInterval(function () {
+
+            var data = [];
+            data.push({name: 'selectID', value: 1});
+            data.push({name: 'actionList[selectID]', value: 'actionSave'});
+            data.push({name: 'start', value: start});
+            data.push({name: 'end', value: end});
+            data.push({name: 'time', value: min});
+            data.push({name: 'performance', value: performance.now() - time});
+            data.push({name: 'ajax', value: true});
+            data.push({name: 'csv_file', value: csv_file});
+            data.push({name: 'total', value: total});
+
+            $('#product_edit').ajaxSubmit({
+                data: data,
+                dataType: "json",
+                contentType: false,
+                processData: false,
+                success: function (json) {
+                    $('#bot_result').html(json['result']);
+                    count += json['count'];
+                    $('#total-update').html(count);
+                    if (json['success'] == 'done') {
+                        clearInterval(refreshId);
+                        $('.progress-bar').css('width', '100%');
+                        $('.progress-bar').removeClass('active').html('100%');
+                        $('#play').trigger("play");
+                        $(window).unbind("beforeunload");
+                        $('#total-min').html(0);
+                    } else if (json['success']) {
+                        start += limit;
+                        end += limit;
+                        $('.progress-bar').css('width', json['bar'] + '%').html(json['bar'] + '%');
+                    }
+
+                }
+
+            });
+
+        }, min * 60000);
+
+    }
+
     // Модальное окно таблиц
     $('#selectModal').on('show.bs.modal', function (event) {
         $('#selectModal .modal-title').html($('[data-target="#selectModal"]').attr('data-title'));
@@ -40,17 +99,16 @@ $().ready(function () {
     // Корректировка обязательных полей update/insert
     $('#export_action').on('changed.bs.select', function () {
         $('kbd.enabled').toggle();
-        if ($('#export_action').val() == 'update'){
+        if ($('#export_action').val() == 'update') {
             $('#export_uniq').attr('disabled', 'disabled');
             $('#export_key').attr('disabled', null);
-        }
-        else{
+        } else {
             $('#export_uniq').attr('disabled', null);
             $('#export_key').attr('disabled', 'disabled');
         }
     });
-    
-    if ($('#export_action').val() == 'update'){
+
+    if ($('#export_action').val() == 'update') {
         $('#export_uniq').attr('disabled', 'disabled');
     }
 
@@ -63,7 +121,7 @@ $().ready(function () {
         data.push({name: 'ajax', value: 1});
         data.push({name: 'actionList[selectID]', value: 'actionSelect'});
         $.ajax({
-            mimeType: 'text/html; charset='+locale.charset,
+            mimeType: 'text/html; charset=' + locale.charset,
             url: '?path=exchange.export.product',
             type: 'post',
             data: data,
@@ -92,7 +150,7 @@ $().ready(function () {
             data.push({name: 'ajax', value: 1});
             data.push({name: 'actionList[saveID]', value: 'actionSave'});
             $.ajax({
-                mimeType: 'text/html; charset='+locale.charset,
+                mimeType: 'text/html; charset=' + locale.charset,
                 url: '?path=exchange.service',
                 type: 'get',
                 data: data,
@@ -133,7 +191,7 @@ $().ready(function () {
                     data.push({name: 'ajax', value: 1});
                     data.push({name: 'actionList[saveID]', value: 'actionSave'});
                     $.ajax({
-                        mimeType: 'text/html; charset='+locale.charset,
+                        mimeType: 'text/html; charset=' + locale.charset,
                         url: '?path=exchange.service',
                         type: 'get',
                         data: data,
@@ -168,7 +226,7 @@ $().ready(function () {
             data.push({name: 'ajax', value: 1});
             data.push({name: 'actionList[saveID]', value: 'actionSave'});
             $.ajax({
-                mimeType: 'text/html; charset='+locale.charset,
+                mimeType: 'text/html; charset=' + locale.charset,
                 url: '?path=exchange.sql',
                 type: 'post',
                 data: data,

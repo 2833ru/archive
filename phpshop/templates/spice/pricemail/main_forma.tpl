@@ -33,7 +33,7 @@
     </div>
 
 
-<form role="form" method="post" name="forma_message" class="template-sm">
+<form method="post" name="forma_message" class="template-sm">
     <div class="form-group">
         <div class="">
         </div>

@@ -131,7 +131,7 @@ class PochtaRequest
             array(
                 'message_new'   => serialize($message),
                 'order_uid_new' => $orderUid,
-                'status_new'    => $response['success'] ? 'Успешно' : 'Ошибка',
+                'status_new'    => isset($response['errors'][0]) ? 'Ошибка' : 'Успешно',
                 'method_new'    => $method,
                 'date_new'      => time()
             )

@@ -2,7 +2,7 @@
 
 /**
  * Библиотека работы с CommerceML
- * @version 1.0
+ * @version 1.1
  * @package PHPShopClass
  */
 class PHPShopCommerceML {
@@ -11,7 +11,9 @@ class PHPShopCommerceML {
      * Конструктор
      */
     function __construct() {
-        
+        global $PHPShopSystem;
+
+        $this->exchange_key = $PHPShopSystem->getSerilizeParam("1c_option.exchange_key");
     }
 
     /**
@@ -100,14 +102,19 @@ class PHPShopCommerceML {
         // Товары
         foreach ($data as $row)
             if (is_array($row)) {
-                
+
                 // Убираем подтипы
-                if($row['parent_enabled'] == 1)
+                if ($row['parent_enabled'] == 1)
                     continue;
-                
+
+                if (!empty($row['uid']) and $this->exchange_key == 'external')
+                    $id = $row['uid'];
+                else
+                    $id = $row['id'];
+
                 $item .= '
                         <Товар>
-			<Ид>' . $row['id'] . '</Ид>
+			<Ид>' . $id . '</Ид>
 			<Артикул>' . $row['uid'] . '</Артикул>
 			<Наименование>' . $row['name'] . '</Наименование>
                         <БазоваяЕдиница Код="796 " НаименованиеПолное="Штука" МеждународноеСокращение="PCE">' . $row['ed_izm'] . '</БазоваяЕдиница>
@@ -137,7 +144,7 @@ class PHPShopCommerceML {
                 ';
             }
 
-                $items = ' <Каталог СодержитТолькоИзменения="false">
+        $items = ' <Каталог СодержитТолькоИзменения="false">
 	<Ид>1</Ид>
         <ИдКлассификатора>1</ИдКлассификатора>
 	<Наименование>Основной каталог товаров</Наименование>
@@ -146,7 +153,7 @@ class PHPShopCommerceML {
 		</Товары>
 	</Каталог>';
 
-                $xml = '<?xml version="1.0" encoding="windows-1251"?>
+        $xml = '<?xml version="1.0" encoding="windows-1251"?>
 <КоммерческаяИнформация ВерсияСхемы="2.04" ДатаФормирования="' . PHPShopDate::get(time(), false, true) . '">
     <Классификатор>
     <Ид>1</Ид>
@@ -162,8 +169,7 @@ class PHPShopCommerceML {
     </Классификатор>
     ' . $items . '
 </КоммерческаяИнформация>';
-                return $xml;
-            
+        return $xml;
     }
 
     /**
@@ -179,6 +185,7 @@ class PHPShopCommerceML {
             if (is_array($row)) {
 
                 $PHPShopOrder = new PHPShopOrderFunction($row['id']);
+                $this->update_status[] = $row['id'];
 
                 $num = 0;
                 $id = $row['id'];
@@ -195,8 +202,7 @@ class PHPShopCommerceML {
                         $num = $val['num'];
                         $sum = $PHPShopOrder->returnSumma($val['price'] * $num, $order['Person']['discount']);
 
-                        $item .= '
-                        <Товар>
+                        $item .= '<Товар>
 				<Ид>' . $val['id'] . '</Ид>
 				<Штрихкод></Штрихкод>
 				<Артикул>' . $val['uid'] . '</Артикул>
@@ -205,8 +211,7 @@ class PHPShopCommerceML {
 				<Количество>' . $val['num'] . '</Количество>
 				<Сумма>' . $sum . '</Сумма>
 				<Единица>шт</Единица>
-			</Товар>
-                        ';
+			</Товар>';
                     }
 
                 if (empty($row['fio']))
@@ -214,21 +219,24 @@ class PHPShopCommerceML {
 
                 $xml .= '
 	<Документ>
+                <Ид>' . $row['id'] . '</Ид>
 		<Номер>' . $row['uid'] . '</Номер>
 		<Дата>' . PHPShopDate::get($row['datas'], false, true) . '</Дата>
 		<ХозОперация>Заказ товара</ХозОперация>
 		<Роль>Продавец</Роль>
 		<Валюта>' . $PHPShopSystem->getDefaultValutaIso() . '</Валюта>
 		<Сумма>' . $row['sum'] . '</Сумма>
-                <Комментарий>'.$status['maneger'].'</Комментарий>
-		<Контрагент>
-                    <Ид>'.$row['user'].'</Ид>
-		    <Наименование>' . $row['fio'] . '</Наименование>
-		    <ПолноеНаименование>' . $row['org_name'] . '</ПолноеНаименование>
-		    <ИНН>' . $row['org_inn'] . '</ИНН>
-		    <КПП>' . $row['org_kpp'] . '</КПП>
-		    <Роль>Покупатель</Роль>
-		</Контрагент>
+                <Комментарий>' . $status['maneger'] . '</Комментарий>
+                <Контрагенты>
+		   <Контрагент>
+              <Ид>' . $row['user'] . '</Ид>
+		      <Наименование>' . $row['fio'] . '</Наименование>
+		      <ПолноеНаименование>' . $row['org_name'] . '</ПолноеНаименование>
+		      <ИНН>' . $row['org_inn'] . '</ИНН>
+		      <КПП>' . $row['org_kpp'] . '</КПП>
+		      <Роль>Покупатель</Роль>
+		   </Контрагент>
+                </Контрагенты>
 		<Товары>
 ' . $item . '
 		</Товары>
@@ -240,6 +248,7 @@ class PHPShopCommerceML {
 <КоммерческаяИнформация ВерсияСхемы="2.04" ДатаФормирования="' . PHPShopDate::get(time(), false, true) . '">
 	' . $xml . '
 </КоммерческаяИнформация>';
+
             return $xml;
         }
     }

@@ -83,19 +83,19 @@
             <div class="row">
                 <div class="product-page-button">
                     <div class="cart-button button-group cart-list-button-wrapper @elementCartHide@">
-                        <button type="button" class="btn btn-cart addToCartFull" role="button" data-num="1" data-uid="@productUid@" data-cart="@productSaleReady@">
+                        <button type="button" class="btn btn-cart addToCartFull" data-num="1" data-uid="@productUid@" data-cart="@productSaleReady@">
                             <i class="fa fa-shopping-cart" aria-hidden="true"></i>
                             <span>@productSale@</span>
                         </button>                                   
                     </div>
                     <div class="cart-button button-group compare-list-button-wrapper">
-                        <button type="button" class="btn btn-cart addToWishList" role="button" data-uid="@productUid@" data-title="{Отложить}" data-placement="top" data-toggle="tooltip">
+                        <button type="button" class="btn btn-cart addToWishList" data-uid="@productUid@" data-title="{Отложить}" data-placement="top" data-toggle="tooltip">
                             <i class="fa fa-heart-o" aria-hidden="true"></i>
                             {Отложить}
                         </button>                                   
                     </div>
                    <div class="cart-button button-group cart-list-button-wrapper  @elementCartOptionHide@">
-                        <button type="button" class="btn btn-cart addToCartFull" role="button" data-num="1" data-uid="@productUid@" data-cart="@productSaleReady@">
+                        <button type="button" class="btn btn-cart addToCartFull" data-num="1" data-uid="@productUid@" data-cart="@productSaleReady@">
                             <i class="feather iconz-trash"></i>
                             <span>@productSale@</span>
                         </button>                                   

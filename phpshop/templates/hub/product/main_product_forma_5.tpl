@@ -8,12 +8,12 @@
             <a class="btn btn-cart @elementCartOptionHide@" href="/shop/UID_@productUid@.html" data-placement="top" data-toggle="tooltip" data-title="@productSale@" data-toggle="tooltip">
             <i class="icons-cart"></i>
             </a>
-            <button type="button" class="btn btn-cart addToCartList @elementCartHide@" role="button" data-placement="top" data-toggle="tooltip" data-num="1" data-uid="@productUid@" data-cart="@productSaleReady@" data-title="@productSale@" >
+            <button type="button" class="btn btn-cart addToCartList @elementCartHide@" data-placement="top" data-toggle="tooltip" data-num="1" data-uid="@productUid@" data-cart="@productSaleReady@" data-title="@productSale@" >
                 <i class="icons-cart"></i>
             </button>
             <a href="#" data-role="/shop/UID_@productUid@.html" class="btn btn-cart fastView" data-toggle="modal" data-target="#modalProductView" data-title="{Подробнее}" data-placement="top" data-toggle="tooltip"><i class="icons-view"></i></a>
-            <button class="btn btn-wishlist addToWishList" role="button" data-uid="@productUid@" data-title="{Отложить}" data-placement="top" data-toggle="tooltip"><i class="icons-wishlist"></i></button>
-            <button class="btn btn-wishlist addToCompareList" role="button" data-uid="@productUid@" data-title="{Сравнить}" data-placement="top" data-toggle="tooltip"><i class="icons-compare"></i></button>
+            <button class="btn btn-wishlist addToWishList" data-uid="@productUid@" data-title="{Отложить}" data-placement="top" data-toggle="tooltip"><i class="icons-wishlist"></i></button>
+            <button class="btn btn-wishlist addToCompareList" data-uid="@productUid@" data-title="{Сравнить}" data-placement="top" data-toggle="tooltip"><i class="icons-compare"></i></button>
 
             <a class="btn btn-cart @elementNoticeHide@" href="/users/notice.html?productId=@productUid@" title="@productNotice@"  data-title="@productNotice@" data-placement="top" data-toggle="tooltip">
                 <i class="fa fa-envelope-o" aria-hidden="true"></i>                            

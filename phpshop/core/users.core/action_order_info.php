@@ -66,7 +66,7 @@ function action_order_info($obj, $tip) {
             $yurData = $PHPShopOrderFunction->yurData($row);
 
             // Итого
-            $total = PHPShopText::tr(PHPShopText::b(__('Итого с учетом скидки ') . $PHPShopOrderFunction->getDiscount() . '%'), PHPShopText::b($PHPShopOrderFunction->getNum() + 1) . ' ' . __('шт.'), PHPShopText::b($PHPShopOrderFunction->getTotal()) . ' ' . $currency);
+            $total = PHPShopText::tr(PHPShopText::b(__('Итого с учетом скидки ') . $PHPShopOrderFunction->getDiscount() . '%'), '', PHPShopText::b($PHPShopOrderFunction->getTotal()) . ' ' . $currency);
 
             // Комментарии по заказу
             if ($PHPShopOrderFunction->getSerilizeParam('status.maneger') != '')

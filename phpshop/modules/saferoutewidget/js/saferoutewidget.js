@@ -66,13 +66,17 @@ function saferoutewidgetStart() {
 
   widget.on('change', function (data) {
     if(data.delivery) {
-      var total = data.delivery.totalPrice + Number($('#OrderSumma').val());
+      var deliveryCost = data.delivery.totalPrice;
+      if($("#d").data('free') === 1) {
+        deliveryCost = 0;
+      }
+      var total = deliveryCost + Number($('#OrderSumma').val());
 
       $('input[name="saferouteDop"]').val(data._meta.commonDeliveryData);
       $('#deliveryInfo').html(data._meta.commonDeliveryData);
-      $('#DosSumma').html(data.delivery.totalPrice);
+      $('#DosSumma').html(deliveryCost);
       $('#TotalSumma').html(total.toFixed(2));
-      $('#saferouteSum').val(data.delivery.totalPrice);
+      $('#saferouteSum').val(deliveryCost);
     }
 
     $('input[name="name_new"]').val(data.contacts.fullName);

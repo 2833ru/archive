@@ -41,11 +41,6 @@ class PHPShopUpdate {
         else
             $this->_user_ftp_dir = $GLOBALS['SysValue']['user_ftp']['dir'];
 
-        // Настройка уровня оповещения отладчика
-        if (function_exists('error_reporting')) {
-            error_reporting('E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT');
-        }
-
         set_time_limit($this->_timeLimit);
     }
 

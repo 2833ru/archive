@@ -9,6 +9,8 @@ if ($PHPShopNav->notPath('print')) {
     $PHPShopModules->setHookHandler('footer', 'footer');
 }
 
+// PopUp
+$PHPShopBannerElement->getPopup();
 
 // Аналитика
 $PHPShopAnalitica->counter();

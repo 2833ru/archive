@@ -43,7 +43,7 @@ class CDEKWidget {
         $products = array();
         $cartWeight = 0;
         foreach ($cart as $product) {
-            if($discount > 0)
+            if($discount > 0 && empty($product['promo_price']))
                 $price = $product['price']  - ($product['price']  * $discount  / 100);
             else
                 $price = $product['price'];
@@ -169,11 +169,6 @@ class CDEKWidget {
                 'postal_code'  => $this->option['index_from'],
 
             ],
-            'to_location' => [
-                'code'         => $cdek_data['city_id'],
-                'country_code' => 'RU',
-                'address'      => $cdek_data['type'] === 'pvz' ? PHPShopString::win_utf8('ÏÂÇ: ') . $cdek_data['cdek_pvz_id'] : $address
-            ],
             'packages' => [
                 [
                     'number' => $order['uid'],
@@ -185,6 +180,14 @@ class CDEKWidget {
                 ]
             ]
         ];
+
+        if($cdek_data['type'] !== 'pvz') {
+            $parameters['to_location'] = [
+                'code'         => $cdek_data['city_id'],
+                'country_code' => 'RU',
+                'address'      => $address
+            ];
+        }
 
         $result = $this->request($this->orderUrl, $parameters);
 

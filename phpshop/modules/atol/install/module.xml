@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.1</version>
+    <version>1.2</version>
     <name>Онлайн касса Атол</name>
     <description>Модуль онлайн кассы Атол.</description>
     <faqlink>https://docs.phpshop.ru/moduli/platezhnye-sistemy/atol-onlain</faqlink>
     <category>payment</category>
-    <sign>1545904926</sign>
+    <sign>1613127188</sign>
     <adminmenu>
         <title>Онлайн касса Атол</title>
         <capability>true</capability>

@@ -24,7 +24,7 @@ function send_to_order_boxberrywidget_hook($obj, $row, $rout)
                 if(is_array($order)) {
                     $BoxberryWidget->isPvzDelivery((int) $_POST['d']) ? $vid = 1 : $vid = 2;
                     $BoxberryWidget->setData($order, $vid, (int) $obj->discount);
-                    $result = $BoxberryWidget->request('ParselCreate');
+                    $result = $BoxberryWidget->request('ParselCreate', $order['id']);
 
                     if($result) {
                         $_POST['boxberry_pvz_id_new'] = '';

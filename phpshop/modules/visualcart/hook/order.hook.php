@@ -10,9 +10,25 @@ function id_delete_visyalcart_hook($obj, $row) {
     }
 }
 
+/**
+ * Сохраненные личные данные
+ */
+function index_visyalcart_hook($obj, $row, $rout) {
+    if ($rout == 'START' and preg_match("/^[a-zA-Z0-9_]{4,35}$/", $_COOKIE['visualcart_memory'])) {
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['visualcart']['visualcart_memory']);
+        $data = $PHPShopOrm->select(array('*'), array('memory' => "='" . $_COOKIE['visualcart_memory'] . "'"), false, array('limit' => 1));
+        if (is_array($data)) {
+            $_POST['mail']=$data['mail'];
+            $_POST['name_new']=$data['name'];
+            $_POST['tel_new']=$data['tel'];
+        }
+    }
+}
+
 $addHandler = array
     (
     '#id_delete' => 'id_delete_visyalcart_hook',
     'cart' => 'id_delete_visyalcart_hook',
+    'index' => 'index_visyalcart_hook'
 );
 ?>

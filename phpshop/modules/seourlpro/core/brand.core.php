@@ -101,6 +101,7 @@ class PHPShopBrand extends PHPShopShopCore {
         $title = __('Бренды');
         $this->set('pageTitle', $title);
         $this->title = $title . " - " . $this->PHPShopSystem->getParam('title');
+        $this->description = $title . ", " . $this->PHPShopSystem->getParam('title');
         $this->set('pageContent', PHPShopText::p($charList, false, 'brands-list-content') . $brandsList);
 
         // Навигация хлебные крошки
@@ -185,6 +186,10 @@ class PHPShopBrand extends PHPShopShopCore {
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort']);
         $PHPShopOrm->mysql_error = false;
 
+        if(strtolower($seo_name[0]) !== $seo_name[0]) {
+            return $this->setError404();
+        }
+
         $vendor = $PHPShopOrm->select(array("*"), array('sort_seo_name' => "='" . PHPShopSecurity::TotalClean($seo_name[0]) . "'"));
 
         // Нет данных, 404 ошибка
@@ -261,12 +266,16 @@ class PHPShopBrand extends PHPShopShopCore {
         $this->set('sortName', $brandTitle);
 
         // Заголовок
-        if (empty($row['title']))
+        if (empty($vendor['title']))
             $this->title = __('Бренд') . " - " . $brandTitle . " - " . $this->PHPShopSystem->getParam('title');
         else
-            $this->title = $row['title'];
+            $this->title = $vendor['title'];
 
-        $this->description = $brandTitle . ', '.$this->PHPShopSystem->getParam('descrip');
+        if(empty($vendor['meta_description']))
+            $this->description = $brandTitle . ', '.$this->PHPShopSystem->getParam('descrip');
+        else
+            $this->description = $vendor['meta_description'];
+
         $this->keywords = $brandTitle;
 
         $this->parseTemplate($this->getValue('templates.product_selection_list'));
@@ -275,7 +284,7 @@ class PHPShopBrand extends PHPShopShopCore {
     /**
      * Cортировка товаров по бренду
      */
-    function query_filter($obj, $v) {
+    function query_filter($obj=false, $v=false) {
         global $SysValue;
 
         $s = intval(@$_REQUEST['s']);
@@ -354,7 +363,7 @@ class PHPShopBrand extends PHPShopShopCore {
     /**
      * Генерация пагинатора
      */
-    function setPaginator($count, $sql = null) {
+    function setPaginator($count = null, $sql = null) {
 
         // проверяем наличие шаблонов пагинации в папке шаблона
         // если отсутствуют, то используем шаблоны из lib

@@ -1,7 +1,7 @@
 
 @Error@
 
-<form class="col-lg-5 col-md-6 col-sm-7 col-xs-12"  role="form" method="post" name="forma_message">
+<form class="col-lg-5 col-md-6 col-sm-7 col-xs-12" method="post" name="forma_message">
     <div class="form-group">
         <input type="text" name="tema" placeholder="{Заголовок}"  value="@php  echo $_POST[tema]; php@" class="form-control" id="exampleInputEmail1"  required="">
     </div>
@@ -20,7 +20,7 @@
     <div class="form-group">
         <p class="small">
             <input type="checkbox" value="on" name="rule" class="req" checked="checked"> 
-            {Я согласен}  <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html" alt="{Согласие на обработку персональных данных}">{на обработку моих персональных данных}</a> 
+            {Я согласен}  <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html">{на обработку моих персональных данных}</a>
         </p>
     </div>    <div class="form-group">
         @captcha@

@@ -57,3 +57,6 @@ background-color:#d62c1a;
 #body{
 --color:#e74c3c;
 }
+.theme-color {
+    color: #e74c3c;
+}
