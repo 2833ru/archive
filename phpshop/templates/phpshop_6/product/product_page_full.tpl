@@ -9,11 +9,7 @@
 
 <a name="up"></a>
 
-<table cellpadding="0" cellspacing="0" border="0" width="100%">
-    <tbody>
-        <tr>
-            <td align="left" valign="top" width="70%">@productPageDis@</td>
-            <td valign="top" class="odnotipDisp" width="30%">@odnotipDisp@</td>
-        </tr>
-    </tbody>
-</table>
+@productPageDis@
+
+
+@odnotipDisp@

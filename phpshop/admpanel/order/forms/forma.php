@@ -96,6 +96,8 @@ $datas = PHPShopDate::dataV($datas, "false");
 // время доставки под старый формат данных в заказе
 if (!empty($order['Person']['dos_ot']) OR !empty($order['Person']['dos_do']))
     $dost_ot = " От: " . $order['Person']['dos_ot'] . ", до: " . $order['Person']['dos_do'];
+elseif ($row['delivtime'])
+    $dost_ot = $row['delivtime'];
 
 // формируем адрес доставки с учётом старого формата данных в заказах
 if ($row['country'])

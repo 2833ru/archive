@@ -3,7 +3,7 @@
 /**
  * Библиотека данных по методам оплаты
  * @author PHPShop Software
- * @version 1.1
+ * @version 1.2
  * @package PHPShopObj
  */
 class PHPShopPayment extends PHPShopObj {
@@ -147,7 +147,7 @@ class PHPShopPaymentResult {
 
         if (!is_array($data)) {
             $PHPShopOrm->clean();
-            $PHPShopOrm->insert(array('id_new' => 101, 'name_new' => __('Оплачено платежными системами'), 'color_new' => '#ccff00'));
+            $PHPShopOrm->insert(array('id_new' => 101, 'name_new' => 'Оплачено платежными системами', 'color_new' => '#ccff00'));
         }
         return 101;
     }
@@ -162,12 +162,12 @@ class PHPShopPaymentResult {
             // Приверяем сущ. заказа
             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
             $PHPShopOrm->debug = $this->debug;
-            $row = $PHPShopOrm->select(array('uid'), array('uid' => "='" . $this->inv_id . "'"), false, array('limit' => 1));
+            $row = $PHPShopOrm->select(array('uid'), array('uid' => "='" . $this->true_num($this->inv_id). "'"), false, array('limit' => 1));
             if (!empty($row['uid'])) {
 
                 // Лог оплат
                 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['payment']);
-                $PHPShopOrm->insert(array('uid_new' => $this->result_var['order_id'], 'name_new' => $this->payment_name,
+                $PHPShopOrm->insert(array('uid_new' => $this->inv_id, 'name_new' => $this->payment_name,
                     'sum_new' => $this->out_summ, 'datas_new' => time()));
 
                 // Изменение статуса платежа
@@ -214,7 +214,7 @@ class PHPShopPaymentResult {
 ';
                 }
 
-            $content = "
+            $content.= "
   " . $this->payment_name . " Payment Start ------------------
   " . $content . " 
   " . $this->payment_name . " Payment End --------------------

@@ -69,7 +69,7 @@ function dispAdr($id, $mass) {
                 $main = "";
 
             @$disp.='
-            <tr onclick="miniWin(\'adm_adrID.php?adrId=' . $adrId . '&id=' . $id . '\',500,400)"  onmouseover="show_on(\'r' . $adrId . '\')" id="r' . $adrId . '" onmouseout="show_out(\'r' . $adrId . '\')" class=row>
+            <tr onclick="miniWin(\'adm_adrID.php?adrId=' . $adrId . '&id=' . $id . '\',710,500)"  onmouseover="show_on(\'r' . $adrId . '\')" id="r' . $adrId . '" onmouseout="show_out(\'r' . $adrId . '\')" class=row>
                 <td class="forma" align=center>' . $main . '</td>
                 <td class="forma">' . $adr_info . '</td>
                 <td class="forma">' . $yur_info . '</td>
@@ -170,26 +170,57 @@ $dis
                 </tr>
                 <tr>
                     <td colspan="3">
-                        <FIELDSET id=fldLayout style="width: 480; height: 8em;">
+                        <FIELDSET id=fldLayout style="width: 480; height: 9em;">
                             <LEGEND id=lgdLayout><span name=txtLang id=txtLang><u>Д</u>оступ</span></LEGEND>
                             <div style="padding:10">
                                 <table>
                                     <tr>
-                                        <td>E-mail</td>
+                                        <td>
+                                            <? if ($mail != $login) { ?>
+                                                <input type="hidden" name="mail_new" value="<?= $mail ?>">
+                                                Логин
+                                            <? } else { ?>
+                                                E-mail
+                                            <? } ?>
+                                        </td>
                                         <td width="10"></td>
-                                        <td><input type="text" name="login_new" value="<?= $login ?>" style="width:250px;" ></td>
-                                        <td rowspan="2" valign="top" style="padding-left:10">
+                                        <td>
+                                            <? if ($mail != $login) { ?>
+                                                Логин для старых аккаунтов версии 3:
+                                            <? } ?>
+                                            <input type="text" name="login_new" value="<?= $login ?>" style="width:250px;" >
+
+                                        </td>
+
+                                        <td valign="top" style="padding-left:10">
                                             <button style="width: 14em; height: 2.2em; margin-left:5"  onclick="miniWin('../order/adm_visitor_new.php?userAdd=<?= $id ?>', 670, 550);
-                return false;">
+                                                    return false;">
                                                 <img src="../img/page_attachment.gif" border="0" align="absmiddle" hspace=5>
                                                 <span name=txtLang id=txtLang>Новый заказ</span></button>
                                             </div>
                                         </td>
                                     </tr>
+                                    <? if ($mail != $login) { ?>
+                                        <tr>
+                                            <td>E-mail</td>
+                                            <td width="10"></td>
+                                            <td>
+                                                <input type="text" name="mail_new" value="<?= $mail ?>" style="width:250px;" >
+                                            </td>
+                                        </tr>
+                                    <? } ?>
                                     <tr>
                                         <td>Password</td>
                                         <td width="10"></td>
                                         <td><input type="text" name="password_new" style="width:250px;" value="<?= base64_decode($password); ?>"></td>
+                                        <td valign="top" style="padding-left:10">
+                                            <button style="width: 14em; height: 2.2em; margin-left:5" name="allorder"  onclick="DoReload('orders', '', '', '<?= $mail ?>');">
+                                                <img src="../img/page_attachment.gif" border="0" align="absmiddle" hspace=5>
+                                                <span name=txtLang id="txtLang">Все заказы</span>
+                                            </button>
+
+                                            </div>
+                                        </td>
                                     </tr>
                                 </table>
 
@@ -209,7 +240,7 @@ $dis
                                         <td><input type="text" name="name_new" style="width:150px;" value="<?= $name; ?>"></td>
                                         <td>
                                             <BUTTON style="width: 15em; height: 2.2em;"  onclick="miniWin('adm_adrID.php?adrId=new&id=<?= $id ?>', 710, 500);
-                return false;">
+                                                    return false;">
                                                 <img src="../icon/page_add.gif" width="16" height="16" border="0" align="absmiddle" hspace="5">
                                                 <span name=txtLang id=txtLang>Добавить адрес</span>
                                             </BUTTON></td>
@@ -241,12 +272,23 @@ $dis
             </table>
         </form>
         <?
+        if (isset($allorder)) {
+            echo"
+<script>
+DoReloadMainWindow('orders','','','" . $login_new . "');
+</script>
+       ";
+        }
         if (isset($editID) and !empty($login_new) and !empty($password_new)) {
             if (CheckedRules($UserStatus["shopusers"], 1) == 1) {
+
+                if (!isset($mail_new))
+                    $mail_new = $login_new;
+
                 $sql = "UPDATE " . $SysValue['base']['table_name27'] . "
 SET
 login='$login_new',
-mail='$login_new',
+mail='$mail_new',
 password='" . base64_encode($password_new) . "',
 name='$name_new',
 company='$company_new',
@@ -260,6 +302,46 @@ tel_code='$tel_code_new'
 where id='$userID'";
                 $result = mysql_query($sql) or @die("Невозможно изменить запись");
 
+                //Обновляем персональную скидку
+                //Запрос алгоритма расчета персональной скидки
+                $sql_d = "SELECT * FROM `" . $SysValue['base']['table_name28'] . "` WHERE `id` =" . $status_new . " ";
+                $query_d = mysql_query($sql_d);
+                $row_d = mysql_fetch_array($query_d);
+                $cumulative_array = unserialize($row_d['cumulative_discount']);
+                $cumulative_array_check = $row_d['cumulative_discount_check'];
+                if ($cumulative_array_check == 1) {
+                    //Список заказов
+                    $sql_order = "SELECT " . $SysValue['base']['table_name1'] . ".* FROM `" . $SysValue['base']['table_name1'] . "` 
+                            LEFT JOIN `" . $SysValue['base']['table_name32'] . "` ON " . $SysValue['base']['table_name1'] . ".statusi=" . $SysValue['base']['table_name32'] . ".id 
+                            WHERE " . $SysValue['base']['table_name1'] . ".user =  " . $userID . " 
+                            AND " . $SysValue['base']['table_name32'] . ".cumulative_action='1' ";
+                    $query_order = mysql_query($sql_order);
+                    $row_order = mysql_fetch_array($query_order);
+                    $sum = '0'; //Очистка суммы
+                    do {
+                        $orders = unserialize($row_order['orders']);
+                        $sum += $orders['Cart']['sum'];
+                    } while ($row_order = mysql_fetch_array($query_order));
+
+                    //Узнаем скидку
+                    $q_cumulative_discount = '0'; //Очистка скидки
+                    foreach ($cumulative_array as $key => $value) {
+                        if ($sum >= $value['cumulative_sum_ot'] and $sum <= $value['cumulative_sum_do']) {
+                            $q_cumulative_discount = $value['cumulative_discount'];
+                            break;
+                        }
+                    }
+                    //Обновляем скидку
+                    $sql_update = "UPDATE  `" . $SysValue['base']['table_name27'] . "` SET `cumulative_discount` =  '" . $q_cumulative_discount . "' WHERE `id` =" . $userID . " ";
+                    mysql_query($sql_update);
+                } else {
+                    $sql_update = "UPDATE  `" . $SysValue['base']['table_name27'] . "` SET `cumulative_discount` =  '0' WHERE `id` =" . $userID . " ";
+                    mysql_query($sql_update);
+                }
+
+
+
+
                 // отправляем пиьсьмо пользователю об его активации, если админ выбрал данную опцию
                 if ($enabled_new AND $sendActivationEmail) {
                     // подключаем используемые классы
@@ -268,6 +350,7 @@ where id='$userID'";
                     PHPShopObj::loadClass("system");
                     PHPShopObj::loadClass("parser");
                     PHPShopObj::loadClass("mail");
+                    
 
                     $GetSystems = GetSystems();
 
@@ -276,7 +359,7 @@ where id='$userID'";
                     PHPShopParser::set('password', $password_new);
 
 
-//                                            $zag_adm = $GetSystems['name'] . " -  Сообщение от Администратора";
+                    // $zag_adm = $GetSystems['name'] . " -  Сообщение от Администратора";
                     $zag_adm = "Ваш аккаунт был успешно активирован Администратором";
                     //отсылаем письмо
                     $PHPShopMail = new PHPShopMail($login_new, $GetSystems['adminmail2'], $zag_adm, '', true, true);

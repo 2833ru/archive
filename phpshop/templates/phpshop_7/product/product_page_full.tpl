@@ -8,8 +8,6 @@
 
 @productPageDis@
 
-<div class="productOdnotipTitleDiv">
-    <div class="productOdnotipTitDiv1">&nbsp;</div>
-</div>
+
 
 <div class="inShopTip">@odnotipDisp@</div>

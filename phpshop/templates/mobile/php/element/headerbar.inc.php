@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Элемент вывода случайного товарав перменную @showcase@
+ * Элемент вывода случайного товара в перменную @showcase@
  */
 class AddToTemplate extends PHPShopProductElements {
 
@@ -16,7 +16,7 @@ class AddToTemplate extends PHPShopProductElements {
     function header_bar() {
         global $PHPShopSystem;
 
-        $this->set('version', ', Mobile Template 1.6', true);
+        $this->set('version', ', Mobile Template 1.7', true);
 
         // Иконка
         $logo=$this->memory_get('mobile.logo');
@@ -25,8 +25,9 @@ class AddToTemplate extends PHPShopProductElements {
         
         // Телефон
         $returncall=$this->memory_get('mobile.returncall');
-        if($returncall ==1)
-           $this->set('tel',  '<a href="tel:@telNum@">'. $this->get('telNum').'</a>');
+        
+        if($returncall == 1)
+           $this->set('tel',  '<a href="tel:'. $this->get('telNum').'">'. $this->get('telNum').'</a>');
         else {
             $_SESSION['mod_returncall_captcha']='off';
             $this->set('tel',  '<span class="icon icon-sound2"></span> <a href="#setRetunCall" onclick="modal_on(this.hash)">Заказать звонок</a>');

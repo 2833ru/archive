@@ -27,6 +27,7 @@ class ReadCsv1C extends PHPShopReadCsv{
    
    function ReadCsv1C($file){
    $this->CsvContent = parent::readFile($file);
+   echo $this->CsvContent;
    $this->TableName = $GLOBALS['SysValue']['base']['table_name27'];
    parent::PHPShopReadCsv();
    
@@ -239,8 +240,8 @@ $interface.='
 
 <TD vAlign=top style="padding-top:25">
 <div align="center"><h4><span name=txtLang2 id=txtLang2>Загрузка контрагентов 1C:Предприятие выполнена!</span></h4></div>
-<FIELDSET id=fldLayout style="width: 60em; height: 8em;">
-<table style="border: 1px;border-style: inset;background-color: White;" cellpadding="10" width="100%">
+<FIELDSET>
+<table style="border: 0px;border-style: inset;background-color: White;" cellpadding="10" width="100%">
 <tr>
 	<td width="50%" ><h4><span name=txtLang2 id=txtLang2>Отчет:</span></h4>
 <ol>

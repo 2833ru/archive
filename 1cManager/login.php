@@ -1,5 +1,10 @@
 <?php
 
+// UTF-8 Env Fix
+if (ini_get("mbstring.func_overload") > 0) {
+    ini_set("mbstring.internal_encoding", null);
+}
+
 $_classPath = "../phpshop/";
 include($_classPath . "class/obj.class.php");
 include($_classPath . "lib/phpass/passwordhash.php");

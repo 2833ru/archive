@@ -3,7 +3,7 @@
 /**
  * Подключение модулей и дизайн хуков
  * @author PHPShop Software
- * @version 1.12
+ * @version 1.14
  * @package PHPShopClass
  * @tutorial http://doc.phpshop.ru/PHPShopClass/PHPShopModules.html
  */
@@ -471,24 +471,31 @@ class PHPShopModules {
                     }
             }
 
-        if (!empty($this->addHandler[$class_name][$function_name]) and is_array($this->addHandler[$class_name][$function_name]))
+        if (!empty($this->addHandler[$class_name][$function_name]) and is_array($this->addHandler[$class_name][$function_name])){
+            $user_func_result=null;
             foreach ($this->addHandler[$class_name][$function_name] as $hook_function_name) {
 
                 // Включаем таймер
                 $time = microtime(true);
 
-                $user_func_result = call_user_func_array($hook_function_name, array(&$obj, &$data, $rout));
+                $result= call_user_func_array($hook_function_name, array(&$obj, &$data, $rout));
+                
+                // Обработка результата для реверсных методов
+                if($user_func_result === true)
+                   $user_func_result.=$result;
+                elseif (!empty($result))
+                    return $result;
 
                 // Выключаем таймер
                 $seconds = round(microtime(true) - $time, 6);
 
-
                 // Время выполнения хука
                 $this->handlerDone[$class_name][$hook_function_name][$rout] = $seconds;
-
-                if (!empty($user_func_result))
-                    return $user_func_result;
             }
+            
+            if (!empty($user_func_result))
+                   return $user_func_result;
+        }
     }
 
     /**

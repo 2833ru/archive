@@ -120,14 +120,14 @@ require("../language/russian/language.php");
             if (CheckedRules($UserStatus["valuta"], 1) == 1) {
                 $sql = "UPDATE " . $SysValue['base']['table_name24'] . "
 SET
-name='$name_new',
-code='$code_new',
-kurs='$kurs_new',
-iso='$iso_new',
-num='$num_new',
-enabled='$enabled_new' 
-where id='$id'";
-                $result = mysql_query($sql) or @die("" . mysql_error() . "");
+name='".addslashes($name_new)."',
+code='".addslashes($code_new)."',
+kurs='".addslashes($kurs_new)."',
+iso='".addslashes($iso_new)."',
+num='".addslashes($num_new)."',
+enabled='".addslashes($enabled_new)."' 
+where id=".intval($id);
+                $result = mysql_query($sql);
                 echo"
 	  <script>
 DoReloadMainWindow('valuta');
@@ -140,7 +140,7 @@ DoReloadMainWindow('valuta');
         if (@$productDELETE == "doIT") {// Удаление
             if (CheckedRules($UserStatus["valuta"], 1) == 1) {
                 $sql = "delete from " . $SysValue['base']['table_name24'] . "
-where id='$id'";
+where id=".intval($id);
                 $result = mysql_query($sql) or @die("Невозможно изменить запись");
                 echo"
 	  <script>

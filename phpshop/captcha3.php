@@ -1,9 +1,9 @@
 <?php
 
 require_once './lib/captcha/php-captcha.inc.php';
-$imagesPath = './lib/font/'; 
+$imagesPath = './lib/font/';
 
-$aFonts = array( 
+$aFonts = array(
     $imagesPath . 'VeraBd.ttf',
     $imagesPath . 'VeraIt.ttf',
     $imagesPath . 'Vera.ttf'

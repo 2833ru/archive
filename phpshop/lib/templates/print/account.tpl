@@ -10,7 +10,6 @@
         table.invoice_bank_rekv > tbody > tr > td, table.invoice_bank_rekv > tr > td { border: 1px solid; }
         table.invoice_items { border: 1px solid; border-collapse: collapse;}
         table.invoice_items td, table.invoice_items th { border: 1px solid;}
-        <STYLE TYPE="text/css">
 body {
     background: #ffffff;
     margin: 0;

@@ -199,6 +199,7 @@ function actionInsert() {
         }
     }
 
+    header('Location: ?path=' . $_GET['path']);
     return $action;
 }
 

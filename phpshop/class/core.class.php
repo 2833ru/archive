@@ -5,7 +5,7 @@
  * Примеры использования размещены в папке phpshop/core/
  * @author PHPShop Software
  * @tutorial http://wiki.phpshop.ru/index.php/PHPShopCore
- * @version 1.7
+ * @version 1.8
  * @package PHPShopClass
  */
 class PHPShopCore {
@@ -82,7 +82,7 @@ class PHPShopCore {
      * длина пагинации для форматирования длины строки
      * @var int 
      */
-    var $nav_len = 10;
+    var $nav_len = 3;
     var $cache = false;
 
     /**
@@ -96,6 +96,8 @@ class PHPShopCore {
      * @var bool
      */
     var $empty_index_action = true;
+    var $memory = true;
+    var $max_item = 300;
 
     /**
      * Конструктор
@@ -204,7 +206,7 @@ class PHPShopCore {
      * Генерация даты изменения документа
      */
     function header() {
-        if ($this->getValue("cache.last_modified") == "true") {
+        if ($this->getValue("cache.last_modified") == "true" and empty($_SESSION['cart'])) {
 
             // Некоторые сервера требуют обзательных заголовков 200
             //header("HTTP/1.1 200");
@@ -281,7 +283,7 @@ class PHPShopCore {
         }
 
 
-        $option = array('limit' => $num_ot . ',' . $num_do);
+        $option = array('limit' => intval($num_ot) . ',' . intval($num_do));
 
         $this->set('productFound', $this->getValue('lang.found_of_products'));
         $this->set('productNumOnPage', $this->getValue('lang.row_on_page'));
@@ -296,12 +298,30 @@ class PHPShopCore {
         return $this->PHPShopOrm->select($select, $where, $order, $option, $class_name, $function_name);
     }
 
-    /**
-     * Генерация пагинатора
-     */
     function setPaginator($count = null, $sql = null) {
 
+        // проверяем наличие шаблонов пагинации в папке шаблона
+        // если отсутствуют, то используем шаблоны из lib
+        $type = $this->memory_get(__CLASS__ . '.' . __FUNCTION__);
+        if (!$type) {
+            if (!PHPShopParser::checkFile("paginator/paginator_one_link.tpl")) {
+                $type = "lib";
+            } else {
+                $type = "templates";
+            }
+
+            $this->memory_set(__CLASS__ . '.' . __FUNCTION__, $type);
+        }
+
+        if ($type == "lib") {
+            $template_location = "./phpshop/lib/templates/";
+            $template_location_bool = true;
+        }
+
+        // Кол-во данных
+        $this->count = $count;
         $SQL = null;
+
         // Выборка по параметрам WHERE
         $nWhere = 1;
         if (is_array($this->where)) {
@@ -314,38 +334,23 @@ class PHPShopCore {
             }
         }
 
-        // Кол-во страниц
+        // Всего страниц
         $this->PHPShopOrm->comment = __CLASS__ . '.' . __FUNCTION__;
         $result = $this->PHPShopOrm->query("select COUNT('id') as count from " . $this->objBase . $SQL);
         $row = mysql_fetch_array($result);
         $this->num_page = $row['count'];
+
         $i = 1;
-        $navigat = null;
 
         // Кол-во страниц в навигации
         $num = ceil($this->num_page / $this->num_row);
+        $this->max_page = $num;
 
-        while ($i <= $num) {
-
-            if ($i > 1) {
-                $p_start = $this->num_row * ($i - 1);
-                $p_end = $p_start + $this->num_row;
-            } else {
-                $p_start = $i;
-                $p_end = $this->num_row;
-            }
-            if ($i != $this->page) {
-                if ($i > ($this->page - $this->nav_len) and $i < ($this->page + $this->nav_len))
-                    $navigat.=PHPShopText::a($this->objPath . $i . '.html', $p_start . '-' . $p_end) . ' / ';
-                else if ($i - ($this->page + $this->nav_len) < 3 and (($this->page - $this->nav_len) - $i) < 3)
-                    $navigat.=".";
-            }
-            else
-                $navigat.=PHPShopText::b($p_start . '-' . $p_end . ' / ');
-            $i++;
+        // 404 ошибка при ошибочной пагинации
+        if ($this->page > $this->num_page and $this->page != 'ALL') {
+            return $this->setError404();
         }
 
-        // Расчет навигации вперед и назад
         if ($num > 1) {
             if ($this->page >= $num) {
                 $p_to = $i - 1;
@@ -355,11 +360,77 @@ class PHPShopCore {
                 $p_do = 1;
             }
 
-            $nav = $this->getValue('lang.page_now') . ': ';
-            $nav.=PHPShopText::a($this->objPath . ($p_do) . '.html', '&laquo;&laquo;&nbsp;', '&laquo; ' . $this->lang('nav_back'));
-            $nav.=' / ' . $navigat . '&nbsp';
-            $nav.=PHPShopText::a($this->objPath . ($p_to) . '.html', '&raquo;&raquo;&nbsp;', $this->lang('nav_forw') . ' &raquo;');
+
+            if ($this->page != 'ALL')
+                $this->set("paginPageCurnet", $this->page);
+            else
+                $this->set("paginPageCurnet", '-');
+            $this->set("paginPageCount", $num);
+
+            while ($i <= $num) {
+                if ($i > 1) {
+                    $p_start = $this->num_row * ($i - 1) + 1;
+                    $p_end = $p_start + $this->num_row;
+                } else {
+                    $p_start = $i;
+                    $p_end = $this->num_row;
+                }
+
+                $this->set("paginPageRangeStart", $p_start);
+                $this->set("paginPageRangeEnd", $p_end);
+                $this->set("paginPageNumber", $i);
+
+                if ($i != $this->page) {
+                    if ($i == 1) {
+                        $this->set("paginLink", substr($this->objPath, 0, strlen($this->objPath) - 1) . '.html' . $sort);
+                        $navigat.= parseTemplateReturn($template_location . "paginator/paginator_one_link.tpl", $template_location_bool);
+                    } else {
+                        if ($i > ($this->page - $this->nav_len) and $i < ($this->page + $this->nav_len)) {
+                            $this->set("paginLink", $this->objPath . $i . '.html' . $sort);
+                            $navigat.= parseTemplateReturn($template_location . "paginator/paginator_one_link.tpl", $template_location_bool);
+                        } else if ($i - ($this->page + $this->nav_len) < 3 and (($this->page - $this->nav_len) - $i) < 3) {
+                            $navigat.= parseTemplateReturn($template_location . "paginator/paginator_one_more.tpl", $template_location_bool);
+                        }
+                    }
+                }
+                else
+                    $navigat.= parseTemplateReturn($template_location . "paginator/paginator_one_selected.tpl", $template_location_bool);
+
+                $i++;
+            }
+
+            $this->set("pageNow", $this->getValue('lang.page_now'));
+            $this->set("navBack", $this->lang('nav_back'));
+            $this->set("navNext", $this->lang('nav_forw'));
+            $this->set("navigation", $navigat);
+
+            // Убираем дубль первой страницы CID_X_1.html
+            if ($p_do == 1)
+                $this->set("previousLink", substr($this->objPath, 0, strlen($this->objPath) - 1) . '.html' . $sort);
+            else
+                $this->set("previousLink", $this->objPath . ($p_do) . '.html' . $sort);
+
+
+            // Убираем дубль первой страницы CID_X_0.html
+            if ($p_to == 0)
+                $this->set("nextLink", substr($this->objPath, 0, strlen($this->objPath) - 1) . '.html' . $sort);
+            else
+                $this->set("nextLink", $this->objPath . ($p_to) . '.html' . $sort);
+
+            // Добавлем ссылку показать все
+            if (strtoupper($this->page) == 'ALL')
+                $this->set("allPages", parseTemplateReturn($template_location . "paginator/paginator_all_pages_link_selected.tpl", $template_location_bool));
+            else {
+                $this->set("allPagesLink", $this->objPath . 'ALL.html' . $sort);
+                $this->set("allPages", parseTemplateReturn($template_location . "paginator/paginator_all_pages_link.tpl", $template_location_bool));
+            }
+
+            // Назначаем переменную шаблонизатора
+            $nav = parseTemplateReturn($template_location . "paginator/paginator_main.tpl", $template_location_bool);
             $this->set('productPageNav', $nav);
+
+            // Перехват модуля в конце функции
+            $this->setHook(__CLASS__, __FUNCTION__, $nav, 'END');
         }
     }
 
@@ -657,6 +728,10 @@ width="32" height="32" alt="PHPShopCore Debug On"/ ><strong>Ошибка обработчика с
      * Генерация ошибки 404
      */
     function setError404() {
+
+        // Перехват модуля
+        if ($this->setHook(__CLASS__, __FUNCTION__))
+            return true;
 
         // Титл
         $this->title = "Ошибка 404  - " . $this->PHPShopSystem->getValue("name");

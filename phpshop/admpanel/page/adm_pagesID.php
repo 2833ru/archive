@@ -192,6 +192,8 @@ function actionUpdate() {
     $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['pageID']));
     $PHPShopOrm->clean();
 
+    $_SESSION['editpageId'] = $_POST['pageID'];
+
     return $action;
 }
 

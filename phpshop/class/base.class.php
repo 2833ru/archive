@@ -3,7 +3,7 @@
 /**
  * Библиотека подключения к БД
  * @author PHPShop Software
- * @version 1.4
+ * @version 1.5
  * @package PHPShopClass
  * @param string $iniPath путь до конфигурационного файла config.ini
  */
@@ -48,14 +48,16 @@ class PHPShopBase {
     /**
      * Подключения к БД
      * @param string $iniPath путь до конфигурационного файла config.ini
+     * @param bool $connectdb подюченеи к БД
+     * @param bool $error обработка ошибок PHP
      */
-    function PHPShopBase($iniPath, $connectdb = true) {
+    function PHPShopBase($iniPath, $connectdb = true, $error = false) {
 
         // Временная зона
         $this->setTimeZone();
 
         // Отладка ядра
-        $this->setPHPCoreReporting();
+        $this->setPHPCoreReporting($error);
 
         $this->iniPath = $iniPath;
         $this->SysValue = parse_ini_file($this->iniPath, 1);
@@ -196,9 +198,9 @@ class PHPShopBase {
     /**
      *  Настройка уровня оповещения отладчика
      */
-    function setPHPCoreReporting() {
-        if (function_exists('error_reporting')) {
-            error_reporting('E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT');
+    function setPHPCoreReporting($error) {
+        if (empty($error) and function_exists('error_reporting')) {
+            error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT);
             if ($this->phpversion() and function_exists('ini_set')) {
                 ini_set('allow_call_time_pass_reference', 1);
             }
@@ -214,7 +216,8 @@ class PHPShopBase {
         if ((phpversion() * 1) >= $version)
             return true;
     }
-    
+
+   
 }
 
 ?>

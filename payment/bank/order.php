@@ -1,34 +1,25 @@
-<?
-/*
-+-------------------------------------+
-|  PHPShop Enterprise                 |
-|  Модуль OrderFunction Счет в банк   |
-+-------------------------------------+
-*/
+<?php
+/**
+ * Платежный шлюз счет в банк.
+ * @author PHPShop Software
+ * @version 1.1
+ * @package PHPShopPayment
+ */
 
 if(empty($GLOBALS['SysValue'])) exit(header("Location: /"));
 
-$sql="select message,message_header  from ".$SysValue['base']['table_name48']." where id=".$_POST['order_metod'];
-$result=mysql_query(@$sql);
-$row = mysql_fetch_array(@$result);
-
-$message=$row['message'];
-$message_header=$row['message_header'];
-
-// Определяем переменные
-$SysValue['other']['mesageText']= "<FONT style=\"font-size:14px;color:red\">
-<B>".$message_header."</B></FONT><BR>".$message;
-
-// Подключаем шаблон
-$disp=ParseTemplateReturn($SysValue['templates']['order_forma_mesage']);
-
-$disp.="
-<script>
+$PHPShopPayment = new PHPShopPayment(intval($_POST['order_metod']));
+$mesageText=PHPShopText::notice($PHPShopPayment->getValue('message_header'),false, '14px');
+$mesageText.=$PHPShopPayment->getValue('message');
+$GLOBALS['SysValue']['other']['mesageText']=$mesageText;
+$disp=ParseTemplateReturn($GLOBALS['SysValue']['templates']['order_forma_mesage']);
+$disp.="<script>
+// Очистка корзина
 if(window.document.getElementById('num')){
 window.document.getElementById('num').innerHTML='0';
 window.document.getElementById('sum').innerHTML='0';
-}
-</script>";
+}</script>";
 
+// Очищаем корзину
 unset($_SESSION['cart']);
 ?>

@@ -16,8 +16,13 @@ PHPShopObj::loadClass("parser");
 PHPShopObj::loadClass("mail");
 PHPShopObj::loadClass("system");
 
-require_once $_classPath . "lib/Subsys/JsHttpRequest/Php.php";
-$JsHttpRequest = new Subsys_JsHttpRequest_Php("windows-1251");
+// Подключаем библиотеку поддержки JsHttpRequest
+if ($_REQUEST['type'] != 'json') {
+    require_once $_classPath . "/lib/Subsys/JsHttpRequest/Php.php";
+    $JsHttpRequest = new Subsys_JsHttpRequest_Php("windows-1251");
+}
+else
+    $_REQUEST['message'] = PHPShopString::utf8_win1251($_REQUEST['message']);
 
 /**
  * Создание запроса БД на вывод комментариев
@@ -28,7 +33,7 @@ $JsHttpRequest = new Subsys_JsHttpRequest_Php("windows-1251");
 function Page_comment($id) {
     global $SysValue;
 
-    $p = $_REQUEST['page'];
+    $p = intval($_REQUEST['page']);
     if (empty($p))
         $p = 1;
     $num_row = 10;
@@ -115,7 +120,6 @@ function Nav_comment($id) {
  * @return string
  */
 function returnSmile($string) {
-    global $SysValue;
 
     $Smile = array(
         ':-D' => '<img src="images/smiley/grin.gif" alt="Смеется" border="0">',
@@ -175,7 +179,8 @@ function DispComment($id) {
         $SysValue['other']['commentContent'] = returnSmile($row['content']);
 
         // Подключаем шаблон
-        $dis.=PHPShopParser::file('../../' . $SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/comment/main_comment_forma.tpl", true);
+        if (is_file('../../' . $SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/comment/main_comment_forma.tpl"))
+            $dis.=PHPShopParser::file('../../' . $SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/comment/main_comment_forma.tpl", true);
     }
 
     // Определяем переменные
@@ -187,7 +192,7 @@ function DispComment($id) {
     $SysValue['other']['productPageDis'] = str_replace("#imagesSavePathLabel#", "images", $dis);
 
     // Подключаем шаблон
-    $disp = PHPShopParser::file('../../' . $SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/comment/comment_page_list.tpl", true);
+    $disp = PHPShopParser::file('../../' . $SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/comment/comment_page_list.tpl", true,false);
     return $disp;
 }
 
@@ -195,13 +200,19 @@ function avg_rate($id) {
     global $SysValue;
     $oneStarWidth = 16; // ширина одной звёздочки
     $oneSpaceWidth = 0; // пробел между звёздочками
+    // берём параметры с конфига, если заданы
+    if (@$_SESSION['Memory']["rateForComment"]["oneStarWidth"])
+        $oneStarWidth = $_SESSION['Memory']["rateForComment"]["oneStarWidth"];
+    if (@$_SESSION['Memory']["rateForComment"]["oneSpaceWidth"])
+        $oneSpaceWidth = $_SESSION['Memory']["rateForComment"]["oneSpaceWidth"];
+
     $sql = "select rate, rate_count from " . $SysValue['base']['products'] . " WHERE id=" . intval($id) . " LIMIT 1";
     $result = mysql_query($sql);
     if (mysql_num_rows($result)) {
         $row = mysql_fetch_array($result);
         extract($row);
         $rate = round($rate, 1);
-        $SysValue['other']['avgRateWidth'] = 16 * $rate + $oneSpaceWidth * ceil($rate);
+        $SysValue['other']['avgRateWidth'] = $oneStarWidth * $rate + $oneSpaceWidth * ceil($rate);
         $SysValue['other']['avgRateNum'] = $rate_count;
         $SysValue['other']['avgRate'] = $rate;
     } else {
@@ -210,7 +221,8 @@ function avg_rate($id) {
         $SysValue['other']['avgRate'] = 0;
     }
     // Подключаем шаблон
-    $disp = PHPShopParser::file('../../' . $SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/comment/avg_rate.tpl", true);
+    if (is_file('../../' . $SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/comment/avg_rate.tpl"))
+        $disp = PHPShopParser::file('../../' . $SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/comment/avg_rate.tpl", true);
     return $disp;
 }
 
@@ -225,7 +237,7 @@ switch ($_REQUEST['comand']) {
             $myRate = 0;
         elseif ($myRate > 5)
             $myRate = 5;
-        if ($_SESSION['UsersId'] > 0 and $myMessage != "") {
+        if (!empty($_SESSION['UsersId']) and !empty($myMessage)) {
 
             $PHPShopUser = new PHPShopUser($_SESSION['UsersId']);
 
@@ -257,6 +269,7 @@ switch ($_REQUEST['comand']) {
             $zag = "Добавили отзыв к товару $name / " . $SysValue['other']['commentData'];
             $adminMail = $system->getValue('adminmail2');
             new PHPShopMail($adminMail, $PHPShopUser->getValue('mail'), $zag, $message);
+            $error = "done";
         }
         else
             $error = "error";
@@ -318,6 +331,13 @@ where id='" . intval($_REQUEST['cid']) . "'";
 
 $_RESULT = array(
     'comment' => $interfaces,
-    'status' => $error
+    'status' => $error,
+    'success' => 1
 );
+
+// JSON 
+if ($_REQUEST['type'] == 'json') {
+    $_RESULT['comment'] = PHPShopString::win_utf8($interfaces);
+    echo json_encode($_RESULT);
+}
 ?>

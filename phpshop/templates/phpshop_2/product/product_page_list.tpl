@@ -8,10 +8,10 @@
 
         <td >
             <div id="allspec2">
-                <table style="margin-top:5px" cellpadding="0" cellspacing="0" >
+                <table  cellpadding="0" cellspacing="0" >
                     <tr>
-                        <td  style="padding-bottom:5px; padding-left:5;"  class="black">
-                            Сортировка по: <a href="./CID_@productId@_@productPageThis@.html?v=@productVendor@&f=@productSortNext@&s=@productSort@" title="Изменить направление"><img src="images/shop/@productSortImg@.gif" alt="Изменить направление" hspace="3" border="0" align="absmiddle"></a><a href="./CID_@productId@_@productPageThis@.html?v=@productVendor@&f=@productSortTo@&s=1" class="@productSortA@">алфавиту</a> - <a href="./CID_@productId@_@productPageThis@.html?v=@productVendor@&f=@productSortTo@&s=2"  class="@productSortB@">цене</a> - <a href="./CID_@productId@_@productPageThis@.html?v=@productVendor@&f=@productSortTo@&s=3"  class="@productSortC@">популярности</a>
+                        <td  style="padding:10px 0px 10px 3px;"  class="black">
+                            Сортировка по: <a href="?v=@productVendor@&f=@productSortNext@&s=@productSort@" title="Изменить направление"><img src="images/shop/@productSortImg@.gif" alt="Изменить направление" hspace="3" border="0" align="absmiddle"></a><a href="?v=@productVendor@&f=@productSortTo@&s=1" class="@productSortA@">алфавиту</a> - <a href="?v=@productVendor@&f=@productSortTo@&s=2"  class="@productSortB@">цене</a> - <a href="?v=@productVendor@&f=@productSortTo@&s=3"  class="@productSortC@">популярности</a>
                         </td>
                     </tr>
 
@@ -29,14 +29,8 @@
 
                         </td>
                     </tr>
-                    <tr>
-                        <td style="padding-left:5; padding-top:5px">
-                            @productPageNav@
-                        </td>
-                    </tr>
-
-
-                </table></div>
+                </table>
+            </div>
 
         </td>
 

@@ -3,7 +3,7 @@
 /**
  * PHPShop Guard
  * @author PHPShop Software
- * @version 1.3
+ * @version 1.4
  * @package PHPShopInc
  */
 class Guard {
@@ -466,15 +466,15 @@ class Guard {
         if (($this->date - $this->system['last_update']) > (86400 * 30))
             $content.='
 
-          !!!!!!!!!
-          ---
-          ВНИМАНИЕ:
+!!!!!!!!!
+---
+ВНИМАНИЕ:
 
-          Антивирусная база PHPShop Guard устарела, с даты последнего обновления сигнатур прошло более 30 дней. Для защиты вашего сайта необходимо обновить сигнатуры web-вирусов в настройках модуля Gurad!
-          ---
-          !!!!!!!!!
+Антивирусная база PHPShop Guard устарела, с даты последнего обновления сигнатур прошло более 30 дней. Для защиты вашего сайта необходимо обновить сигнатуры web-вирусов в настройках модуля Gurad!
+---
+!!!!!!!!!
 
-          ';
+';
 
 
         if (is_array($this->new)) {
@@ -529,13 +529,14 @@ class Guard {
 http://' . $_SERVER['SERVER_NAME'] . '/phpshop/modules/guard/admin.php?do=create&backup=' . $last_backup . '
 ';
         // Отправить в карантин
+        /*
         $this->license();
         if (($this->date) < ($this->support) and is_array($this->changes))
             $content.='
 Если изменения файлов было несанкционированным и есть подозрение, что произошло заражение вирусом, то перейдите по ссылке
 для анализа измененных файлов из карантина службой поддержки PHPShop Guard:
 http://' . $_SERVER['SERVER_NAME'] . '/phpshop/modules/guard/admin.php?do=quarantine&backup=' . $last_backup . '
-';
+';*/
 
         $content.='
 ---

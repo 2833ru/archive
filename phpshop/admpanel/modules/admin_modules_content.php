@@ -5,6 +5,7 @@ PHPShopObj::loadClass("base");
 PHPShopObj::loadClass("system");
 PHPShopObj::loadClass("security");
 PHPShopObj::loadClass("xml");
+PHPShopObj::loadClass("file");
 
 $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
 $PHPShopBase->chekAdmin();
@@ -15,6 +16,17 @@ $PHPShopSystem = new PHPShopSystem();
 // Редактор GUI
 PHPShopObj::loadClass("admgui");
 $PHPShopInterface = new PHPShopInterface();
+
+function getFileInfo($file){
+    $f=parse_ini_file("../../../license/".$file, 1);
+    return $f['License']['SupportExpires'];
+}
+
+$SupportExpires = PHPShopFile::searchFile("../../../license/", 'getFileInfo');
+if (!empty($SupportExpires))
+    define("EXPIRES",$SupportExpires);
+else
+    define("EXPIRES", time());
 
 // Информация по модулю
 function GetModuleInfo($name) {
@@ -136,7 +148,7 @@ function actionStart() {
                         $ModuleHomePage = '<img src="' . $path . $file . '/install/' . $Info['icon'] . '" align="absmiddle">
 <a href="' . $wikiPath . '" target="_blank" title="Описание модуля" class="blue">' . $Info['name'] . ' ' . $Info['version'] . $trial . '</a> ' . $new;
 
-                        if (CheckedRules($UserStatus["module"], 0)) {
+                        if (CheckedRules($UserStatus["module"], 0) or EXPIRES < $Info['sign'] ) {
                             $ChekInstallModule[1] = "<BUTTON style=\"width: 10em; height: 2.2em; margin-left:5\" >
 <img src=\"../img/errormessage.gif\"  border=\"0\" align=\"absmiddle\">
 Нет прав
@@ -172,7 +184,7 @@ function actionStart() {
 <a href="' . $wikiPath . '" target="_blank" title="Описание модуля" class="blue">' . $Info['name'] . ' ' . $Info['version'] . $trial . '</a> ' . $new;
 
 
-                        if (CheckedRules($UserStatus["module"], 0)) {
+                        if (CheckedRules($UserStatus["module"], 0) or EXPIRES < $Info['sign']) {
                             $ChekInstallModule[1] = "<BUTTON style=\"width: 10em; height: 2.2em; margin-left:5\" >
 <img src=\"../img/errormessage.gif\"  border=\"0\" align=\"absmiddle\">
 Нет прав

@@ -1,6 +1,7 @@
 
 <div>
 <h1>@productName@</h1>
+
 </div>
 
 <div id="allspec" align="center">
@@ -14,6 +15,7 @@
 @ComStart@
 @optionsDisp@
 <strong>@productSklad@</strong><br>@oneclick@<br><br>
+@promotionInfo@
  
  <table width="100%" align="center" class="bg_product_forma_full">
 <tr>

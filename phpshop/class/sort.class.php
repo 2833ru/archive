@@ -8,7 +8,7 @@ if (!defined("OBJENABLED")) {
 /**
  * Сортировки и фильтры товаров
  * @author PHPShop Software
- * @version 1.7
+ * @version 1.8
  * @package PHPShopClass
  */
 class PHPShopSort {
@@ -54,7 +54,7 @@ class PHPShopSort {
             $sql_add.=" and goodoption!='1' ";
 
         // Список для выборки
-        $sortList=null;
+        $sortList = null;
         if (is_array($sort)) {
             foreach ($sort as $value) {
                 $sortList.=' id=' . trim($value) . ' OR';
@@ -159,17 +159,20 @@ class PHPShopSort {
 
         // Показать выбрать все
         if (!empty($all) and empty($template)) {
-            $value[] = array($title , '', $all_sel);
+            $value[] = array($title, '', $all_sel);
         }
 
         $all_sel = 'selected';
         $PHPShopOrm = new PHPShopOrm();
         $PHPShopOrm->debug = $this->debug;
         $PHPShopOrm->comment = __CLASS__ . '.' . __FUNCTION__;
-        $result = $PHPShopOrm->query("select * from " . $SysValue['base']['sort'] . " where category=".intval($n)." order by name,num");
+        $result = $PHPShopOrm->query("select * from " . $SysValue['base']['sort'] . " where category=" . intval($n) . " order by num,name");
         while ($row = mysql_fetch_array($result)) {
             $id = $row['id'];
-            $name = substr($row['name'], 0, 35);
+            if (empty($template))
+                $name = substr($row['name'], 0, 35);
+            else
+                $name = $row['name'];
             $sel = null;
             if (is_array($vendor))
                 foreach ($vendor as $v) {
@@ -214,8 +217,8 @@ class PHPShopSort {
             $v_ids = substr($v_ids, 0, $len - 1);
 
             // Кнопка применить и сбросить фильтра
-            $SysValue['other']['vendorSelectDisp'] = PHPShopText::button($SysValue['lang']['sort_apply'], $onclick = 'GetSortAll(' . $SysValue['nav']['id'] . ',' . $v_ids . ')');
-            $SysValue['other']['vendorSelectDisp'].=PHPShopText::button($SysValue['lang']['sort_reset'], $onclick = 'window.location.replace(\'?\')');
+            $SysValue['other']['vendorSelectDisp'] = PHPShopText::button($SysValue['lang']['sort_apply'], $onclick = 'GetSortAll(' . $SysValue['nav']['id'] . ',' . $v_ids . ')', 'ok', 'vendorActionButton');
+            $SysValue['other']['vendorSelectDisp'].=' ' . PHPShopText::button($SysValue['lang']['sort_reset'], $onclick = 'window.location.replace(\'?\')');
             $SysValue['other']['vendorDispTitle'] = PHPShopText::div(PHPShopText::b($SysValue['lang']['sort_title']));
         }
 
@@ -285,7 +288,7 @@ class PHPShopSortArray extends PHPShopArray {
         $this->objSQL = $sql;
         $this->debug = $debug;
         $this->objBase = $GLOBALS['SysValue']['base']['table_name21'];
-        parent::PHPShopArray('id', 'name', 'page');
+        parent::PHPShopArray('id', 'name', 'page', 'category');
     }
 
 }

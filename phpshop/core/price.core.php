@@ -4,7 +4,7 @@
  * Обработчик прайс-листов
  * @author PHPShop Software
  * @tutorial http://wiki.phpshop.ru/index.php/PHPShopPrice
- * @version 1.4
+ * @version 1.5
  * @package PHPShopShopCore
  */
 class PHPShopPrice extends PHPShopShopCore {
@@ -17,11 +17,13 @@ class PHPShopPrice extends PHPShopShopCore {
     var $debug = false;
     var $memory = true;
     var $category;
+    var $limit = 2000;
 
     function PHPShopPrice() {
 
         // Список экшенов
         $this->action = array("nav" => array("CAT"));
+
         parent::PHPShopShopCore();
 
         $this->title = $this->lang('price_title') . ' - ' . $this->PHPShopSystem->getValue("title");
@@ -53,12 +55,16 @@ class PHPShopPrice extends PHPShopShopCore {
      * @return bool
      */
     function subcategory($cat, $parent_name = false) {
-        
-        if (!empty($this->ParentArray[$cat]) and is_array($this->ParentArray[$cat]) ) {
+
+        if (!empty($this->ParentArray[$cat]) and is_array($this->ParentArray[$cat])) {
             foreach ($this->ParentArray[$cat] as $val) {
 
                 $name = $this->PHPShopCategoryArray->getParam($val . '.name');
                 $sup = $this->subcategory($val, $parent_name . ' / ' . $name);
+
+                if ($cat == $this->category)
+                    $this->set('priceCatName', $name);
+
                 if (empty($sup) and $this->PHPShopCategoryArray->getParam($val . '.skin_enabled') != 1) {
 
                     // Запоминаем параметр каталога
@@ -77,14 +83,17 @@ class PHPShopPrice extends PHPShopShopCore {
         }
         else {
             //Запоминаем параметр каталога
-            if ( $this->category == $cat)
+            if ($this->category == $cat)
                 $sel = 'selected';
             else
                 $sel = false;
-            
 
-            if(!$this->errorMultibase($cat) and $this->PHPShopCategoryArray->getParam($cat . '.skin_enabled') != 1)
-            $this->value[] = array($parent_name, $cat, $sel);
+
+            if (!$this->errorMultibase($cat) and $this->PHPShopCategoryArray->getParam($cat . '.skin_enabled') != 1)
+                $this->value[] = array($parent_name, $cat, $sel);
+
+            if ($cat == $this->category)
+                $this->set('priceCatName', $parent_name);
 
             // Массив для вывода всех товаров
             $this->category_array[$cat] = $parent_name;
@@ -98,26 +107,26 @@ class PHPShopPrice extends PHPShopShopCore {
      */
     function category_select() {
 
- 
-            // Блокировка вывода всех позиций при большой базе
-            if ($_SESSION['max_item'] < 1000)
-                $this->value[] = array($this->lang('search_all_cat'), 'ALL', false);
 
-            $this->PHPShopCategoryArray = new PHPShopCategoryArray();
-            $this->ParentArray = $this->PHPShopCategoryArray->getKey('parent_to.id', true);
-            if (is_array($this->ParentArray[0])) {
-                foreach ($this->ParentArray[0] as $val) {
-                    if ($this->PHPShopCategoryArray->getParam($val . '.skin_enabled') != 1 and !$this->errorMultibase($val)) {
-                        $name = $this->PHPShopCategoryArray->getParam($val . '.name');
-                        $this->subcategory($val, $name);
-                    }
+        // Блокировка вывода всех позиций при большой базе
+        if ($_SESSION['max_item'] < 1000)
+            $this->value[] = array($this->lang('search_all_cat'), 'ALL', false);
+
+        $this->PHPShopCategoryArray = new PHPShopCategoryArray();
+        $this->ParentArray = $this->PHPShopCategoryArray->getKey('parent_to.id', true);
+        if (is_array($this->ParentArray[0])) {
+            foreach ($this->ParentArray[0] as $val) {
+                if ($this->PHPShopCategoryArray->getParam($val . '.skin_enabled') != 1 and !$this->errorMultibase($val)) {
+                    $name = $this->PHPShopCategoryArray->getParam($val . '.name');
+                    $this->subcategory($val, $name);
                 }
             }
-        
-        
+        }
+
+
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__, $this->ParentArray);
-        $this->set('searchPageCategory', PHPShopText::select('catId', $this->value, $width = null, $float = "none"));
+        $this->set('searchPageCategory', PHPShopText::select('catId', $this->value, '400', $float = "left"));
     }
 
     /**
@@ -171,7 +180,8 @@ class PHPShopPrice extends PHPShopShopCore {
             $hook = $this->setHook(__CLASS__, __FUNCTION__, $row);
             if ($hook) {
                 return $hook;
-            } else
+            }
+            else
                 $this->memory_set(__CLASS__ . '.' . __FUNCTION__, 0);
         }
 
@@ -192,10 +202,17 @@ class PHPShopPrice extends PHPShopShopCore {
         if (!PHPShopSecurity::true_num($category))
             return $this->setError404();
 
+        // дополнительные категории
+        if (is_numeric($category))
+            $str = " (category=$category or dop_cat LIKE '%#$category#%') and ";
+        else
+            $str = "";
+
         // Выборка данных
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
+        $PHPShopOrm->sql = "select * from " . $PHPShopOrm->objBase . " where " . $str . " enabled='1' and parent_enabled='0' ORDER BY num LIMIT " . $this->limit;
         $PHPShopOrm->debug = $this->debug;
-        $data = $PHPShopOrm->select(array('*'), array('category' => '=' . $category, 'enabled' => "='1'", 'parent_enabled' => "='0'"), array('order' => 'num'), array('limit' => 500));
+        $data = $PHPShopOrm->select();
 
         if (!empty($this->category_name))
             $dis = $this->tr(false, $this->category_name);
@@ -235,6 +252,10 @@ class PHPShopPrice extends PHPShopShopCore {
      */
     function CAT() {
 
+        // Перехват модуля
+        if ($this->setHook(__CLASS__, __FUNCTION__, null, 'START'))
+            return true;
+
         $this->category = $GLOBALS['SysValue']['nav']['page'];
 
         // Выбор каталога
@@ -246,7 +267,7 @@ class PHPShopPrice extends PHPShopShopCore {
 
             foreach ($this->category_array as $key => $val) {
                 $dis = $this->tr(false, $val);
-                $this->add(PHPShopText::table($dis, 3, 1, 'center', '98%', '#D2D2D2',0,__CLASS__.'_'.__FUNCTION__), true);
+                $this->add(PHPShopText::table($dis, 3, 1, 'center', '98%', '#D2D2D2', 0, __CLASS__ . '_' . __FUNCTION__), true);
                 $this->product($key);
             }
         } else {
@@ -256,8 +277,9 @@ class PHPShopPrice extends PHPShopShopCore {
 
         $this->set('PageCategory', $this->category);
 
+
         // Перехват модуля
-        $this->setHook(__CLASS__, __FUNCTION__, $this->category_array);
+        $this->setHook(__CLASS__, __FUNCTION__, $this->category_array, 'END');
 
         // Подключаем шаблон
         $this->parseTemplate($this->getValue('templates.price_page_list'));

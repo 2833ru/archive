@@ -73,8 +73,19 @@ function image_gallery_nt_hook($obj, $row) {
 
             $d = $dBig;
         } else {
-            $d = '<a class=highslide onclick="return hs.expand(this)" href="' . $obj->checkMultibase($name_b, true) . '" target=_blank getParams="null"><div align="center" id="IMGloader" style="padding-bottom: 10px">
- <img src="' . $obj->checkMultibase($pic_big, true) . '" border="1" class="imgOn"  onerror="NoFoto2(this)"></a></div>';
+            // Подбор исходного изображения
+            $name_bigstr = str_replace(".", "_big.", $pic_big);
+            $name_big = $_SERVER['DOCUMENT_ROOT'] . $name_bigstr;
+            if (file_exists($name_big))
+                $name_b = $name_bigstr;
+            else
+                $name_b = $pic_big;
+
+            $d = '<div class="image">
+                                <a href="' . $obj->checkMultibase($pic_big_b, true) . '" class="jqzoom" rel="gal1"  title="' . $name_foto . '">
+                                    <img src="' . $obj->checkMultibase($pic_big, true) . '" title="' . $name_foto . '" alt="' . $name_foto . '" id="image">
+                                </a>
+                        </div>';
         }
 
         $obj->set('productFotoList', $d);
@@ -140,12 +151,89 @@ function cid_category_nt_hook($obj, $dataArray, $rout) {
     }
 }
 
+function template_CID_Product($obj, $data, $rout) {
+    if ($rout == 'START') {
+
+
+        // Фасетный фильтр
+        $obj->sort_template = 'sorttemplatehook';
+
+        switch ($_REQUEST['gridChange']) {
+            case 1:
+                $obj->set('gridSetAactive', 'active');
+                break;
+            case 2:
+                $obj->set('gridSetBactive', 'active');
+                break;
+            default: $obj->set('gridSetBactive', 'active');
+        }
+
+
+        switch ($_REQUEST['s']) {
+            case 1:
+                $obj->set('sSetAactive', 'active');
+                break;
+            case 2:
+                $obj->set('sSetBactive', 'active');
+                break;
+            //default: $obj->set('sSetAactive', 'active');
+        }
+
+
+        switch ($_REQUEST['f']) {
+            case 1:
+                $obj->set('fSetAactive', 'active');
+                break;
+            case 2:
+                $obj->set('fSetBactive', 'active');
+                break;
+            //default: $obj->set('fSetBactive', 'active');
+        }
+    }
+}
+
+/**
+ * Шаблон вывода характеристик
+ */
+function sorttemplatehook($value, $n, $title, $vendor) {
+    $disp = null;
+
+    if (is_array($value)) {
+        foreach ($value as $p) {
+
+            $text = $p[0];
+            $checked = null;
+            if (is_array($vendor)) {
+                foreach ($vendor as $v) {
+                    if (is_array($v))
+                        foreach ($v as $s)
+                            if ($s == $p[1])
+                                $checked = 'checked';
+                }
+            }
+
+            // Определение цвета
+            if ($text[0] == '#')
+                $text = '<span class="filter-color" style="background:' . $text . '">&nbsp;&nbsp;&nbsp;&nbsp;</span>';
+
+
+            $disp.= '<label >
+    <input type="checkbox" value="1" name="' . $n . '-' . $p[1] . '" ' . $checked . ' data-url="v[' . $n . ']=' . $p[1] . '"  data-name="' . $n . '-' . $p[1] . '">
+    <span class="filter-item"  title="' . $p[0] . '">' . $text . '</span>
+  </label><br>
+';
+        }
+    }
+    return '<h5>' . $title . '</h5>' . $disp;
+}
+
 $addHandler = array
     (
     'image_gallery' => 'image_gallery_nt_hook',
     'CID_Category' => 'cid_category_nt_hook',
     'parent' => 'parent_nt_hook',
-    'UID' => 'uid_nt_hook'
+    'UID' => 'uid_nt_hook',
+    'CID_Product' => 'template_CID_Product'
 );
 
 /**

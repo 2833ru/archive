@@ -30,7 +30,7 @@ function send_to_order_mod_yandexmoney_hook($obj, $value, $rout) {
             $v[]=array('Оплата с банковской карты','AC',false);
             //$v[]=array('Оплата по коду через терминал','GP',false);
             //$v[]=array('Оплата со счета мобильного телефона','MC',false);
-            //$v[]=array('Оплата со счета в Webmoney','WM',false);
+            $v[]=array('Оплата со счета в Webmoney','WM',false);
             $payment_forma.=PHPShopText::select('paymentType', $v, 250, 'left').' ';
             
             $payment_forma.=PHPShopText::setInput('hidden', 'writable-targets', "false", false, 10);

@@ -34,13 +34,13 @@ class PHPShopSeoPro {
 
         $this->memory = $GLOBALS['modules']['seourlpro']['map'];
         $this->memory_prod = $GLOBALS['modules']['seourlpro']['map_prod'];
-        $this->url = pathinfo($_SERVER["REQUEST_URI"]);
+        $url=explode("?",$_SERVER["REQUEST_URI"]);
+        $this->url = pathinfo($url[0]);
     }
 
     /*
      *  Расчет пагинации и ссылки
      */
-
     function getNav() {
         $url = $this->url;
 
@@ -51,7 +51,7 @@ class PHPShopSeoPro {
                 $url['filename'] = substr($url['dirname'], 1, strlen($url['dirname']) - 1) . '/' . $url['filename'];
             }
         }
-
+        
         $array_seo_name = explode('-', $url['filename']);
         $page = $array_seo_name[count($array_seo_name) - 1];
 
@@ -168,10 +168,17 @@ class PHPShopSeoPro {
     function Compile($obj) {
         global $PHPShopModules;
 
+		if(!empty($_SESSION['PHPShopSeoProError']))
+			$this->catArrayToMemory();
+
         // Обработка массива памяти категорий
-        //$this->catCacheToMemory();
+       // $this->catCacheToMemory();
+	    //$this->catArrayToMemory();
         //print_r($this->memory);
         //print_r($this->memory_prod);
+
+
+
         // Каталоги
         if (is_array($this->memory)) {
             $array_str = array_values($this->memory);
@@ -197,14 +204,20 @@ class PHPShopSeoPro {
 
         echo $result;
 
-        if ($GLOBALS['SysValue']['nav']['truepath'] != '/' and in_array($GLOBALS['SysValue']['nav']['path'], array('index', 'cat', 'id')) and $GLOBALS['RegTo']['CopyrightEnabled'] == 'Yes') {
-            echo '<!-- Copyright PHPShop -->
-<div style="clear: both; width:100%">
-   <div align="center" style="display:block;padding:5px;color:#595959;font-size:11px">
-   <a href="http://www.phpshop.ru" title="Создание интернет-магазина"  style="color:#595959;font-size:11px" target="_blank">Создание Интернет-магазина</a> ' . $_SERVER['SERVER_NAME'] . ' - PHPShop. Все права защищены © 2003-' . date("Y") . '.
-   </div>
-</div>';
-            $PHPShopModules->setHookHandler('footer', 'footer');
+        if ($GLOBALS['SysValue']['nav']['truepath'] != '/' and $GLOBALS['SysValue']['nav']['truepath'] != '//' and in_array($GLOBALS['SysValue']['nav']['path'], array('index', 'cat', 'id')) and $GLOBALS['RegTo']['CopyrightEnabled'] == 'Yes') {
+            echo '
+           <!-- Copyright PHPShop -->
+           <div style="clear: both; width:100%">
+                <div style="text-align:center;display:block;padding:5px;color:#595959;font-size:11px">
+                <a href="http://www.phpshop.ru" title="Создание интернет-магазина"  style="color:#595959;font-size:11px" target="_blank">Создание Интернет-магазина</a> ' . $_SERVER['SERVER_NAME'] . ' - PHPShop. Все права защищены © 2003-' . date("Y") . '.
+               </div>
+          </div>';
+            
+     $PHPShopModules->setHookHandler('footer', 'footer');
+            
+            echo '
+      </body>
+</html>';
         }
     }
 

@@ -1,7 +1,7 @@
 <p><font color="#FF0000">@usersError@</font></p>
 <p>
-<form method="post" name="user_forma" action="/partner/">
-    <table cellspacing="5" cellpadding="5">
+<form method="post" name="user_forma" action="/partner/" class="template-sm">
+    <table cellspacing="5" cellpadding="5" class="table table-striped">
         <tr>
             <td align="right">	Логин:
             </td>

@@ -1,8 +1,8 @@
 <?php
 
 if (substr(phpversion(), 0, 3) > 5.2) {
-    include_once( $_SERVER['DOCUMENT_ROOT'] . '/phpshop/modules/ddelivery/class/application/bootstrap.php');
-    include_once( $_SERVER['DOCUMENT_ROOT'] . '/phpshop/modules/ddelivery/class/mrozk/IntegratorShop.php' );
+    include_once( $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'].'/phpshop/modules/ddelivery/class/application/bootstrap.php');
+    include_once( $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir']. '/phpshop/modules/ddelivery/class/mrozk/IntegratorShop.php' );
 }
 
 /**
@@ -24,7 +24,7 @@ function search_ddelivery_delivery() {
 /**
  * Õóê
  */
-function delivery_hook($obj, $data) {
+function ddelivery_hook($obj, $data) {
 
 
     if (substr(phpversion(), 0, 3) > 5.2) {
@@ -55,6 +55,7 @@ function delivery_hook($obj, $data) {
             $hook['adresList'] = $_RESULT['adresList'];
             $hook['dellist']=$_RESULT['dellist'];
             $hook['hook']='DDeliveryIntegration.openPopup();';
+            $hook['success'] = 1;
 
             return $hook;
         }
@@ -62,6 +63,6 @@ function delivery_hook($obj, $data) {
 }
 
 $addHandler = array(
-    'delivery' => 'delivery_hook'
+    'delivery' => 'ddelivery_hook'
 );
 ?>

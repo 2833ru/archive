@@ -34,11 +34,11 @@ class AddToTemplateReturnCallElement extends PHPShopElements {
 
         // Защитная каптча
         if ($this->option['captcha_enabled'] == 1) {
-            $captcha = parseTemplateReturn($GLOBALS['SysValue']['templates']['returncall']['returncall_captcha_forma'], true);
+            $captcha = PHPShopParser::file($GLOBALS['SysValue']['templates']['returncall']['returncall_captcha_forma'], true, false, true);
             $this->set('returncall_captcha', $captcha);
         }
 
-        $forma = parseTemplateReturn($GLOBALS['SysValue']['templates']['returncall']['returncall_forma'], true);
+        $forma = PHPShopParser::file($GLOBALS['SysValue']['templates']['returncall']['returncall_forma'], true, false, true);
         $this->set('leftMenuContent', $forma);
         $this->set('leftMenuName', $this->option['title']);
 
@@ -47,9 +47,9 @@ class AddToTemplateReturnCallElement extends PHPShopElements {
             $dis = $this->parseTemplate($this->getValue('templates.left_menu'));
         else {
             if (empty($this->option['enabled']))
-                $dis = parseTemplateReturn($GLOBALS['SysValue']['templates']['returncall']['returncall_window_forma'], true);
+                $dis = PHPShopParser::file($GLOBALS['SysValue']['templates']['returncall']['returncall_window_forma'], true, false, true);
             else {
-                $this->set('leftMenuContent', parseTemplateReturn($GLOBALS['SysValue']['templates']['returncall']['returncall_window_forma'], true));
+                 $this->set('leftMenuContent', PHPShopParser::file($GLOBALS['SysValue']['templates']['returncall']['returncall_window_forma'], true, false, true));
                 $dis = $this->parseTemplate($this->getValue('templates.left_menu'));
             }
         }

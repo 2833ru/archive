@@ -136,7 +136,7 @@ function tab_cart($data, $option = false) {
 	<LEGEND><span name=txtLang id=txtLang><u>Д</u>обавить в заказ</span></LEGEND>
 	<div style=\"padding:10px\">
 
-<span name=txtLang id=txtLang>ID/ART товара</span>: <input type=\"text\" id=\"new_product_id\" name=\"new_product_id\"> <input type=\"button\" id=btnAdd class=but value=\"Добавить\" onClick=\"DoAddProductFromOrder(new_product_id.value," . $data['id'] . ")\">
+<span name=txtLang id=txtLang>ID/ART товара</span>: <input onkeydown='if (event.keyCode == 13) {return false; }' type=\"text\" id=\"new_product_id\" name=\"new_product_id\"> <input type=\"button\" id=btnAdd class=but value=\"Добавить\" onClick=\"DoAddProductFromOrder(new_product_id.value," . $data['id'] . ")\">
 </div>
 </FIELDSET >
 	</td>
@@ -144,7 +144,7 @@ function tab_cart($data, $option = false) {
 	<FIELDSET style=\"padding-top:5px\">
 	<LEGEND><span name=txtLang id=txtLang><u>С</u>кидка</span></LEGEND>
 	<div style=\"padding:10px\">
-% <input type=\"text\" id=\"new_discount\" name=\"new_discount\" value=\"" . $order['Person']['discount'] . "\"> <input type=\"button\" id=btnChange class=but value=\"Изменить\" onClick=\"DoUpdateDiscountFromOrder(new_discount.value," . $data['id'] . ")\">
+% <input type=\"text\" id=\"new_discount\" onkeydown='if (event.keyCode == 13) {return false; }' name=\"new_discount\" value=\"" . $order['Person']['discount'] . "\"> <input type=\"button\" id=btnChange class=but value=\"Изменить\" onClick=\"DoUpdateDiscountFromOrder(new_discount.value," . $data['id'] . ")\">
 </div>
 </FIELDSET >
 	</td>

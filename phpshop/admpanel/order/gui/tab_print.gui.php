@@ -26,6 +26,9 @@ function tab_print($data) {
     $disp.=$PHPShopGUI->setButton(__('Сбербанк'), '../img/action_print.gif', 130, 30, $float = "left", $onclick = "DoPrint('../../../phpshop/forms/receipt/forma.html?orderId=".$data['id']."&tip=2&datas=".$data['datas']."'); return false;");
     // Счет-Фактура
     $disp.=$PHPShopGUI->setButton(__('Счет-Фактура'), '../img/action_print.gif', 130, 30, $float = "left", $onclick = "DoPrint('forms/forma4.php?orderID=" . $data['id'] . "'); return false;");
+    // Торг12
+    $disp.=$PHPShopGUI->setButton(__('Торг-12'), '../img/action_print.gif', 130, 30, $float = "left", $onclick = "DoPrint('forms/forma5.php?orderID=" . $data['id'] . "'); return false;");
+
 
     // Почта
     $order = unserialize($data['orders']);

@@ -15,7 +15,9 @@
                 <div class="tovar_compare"><a href="javascript:AddToCompare(@productUid@)" title="Сравнить @productName@"><img src="images/clothes_38.gif" border="0"></a></div>@ComEnd@
 				@productParentList@
                 <SCRIPT type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@javascript/links/links.js"></SCRIPT>
-				<div class="full-links"><SCRIPT type="text/javascript">share42("","","@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@")</SCRIPT></div>
+				<div class="full-links"><SCRIPT type="text/javascript">share42("","","@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@")</SCRIPT>
+				</div>
+				<br>@promotionInfo@
           </td>
       </tr>
     </tbody>

@@ -4,6 +4,7 @@ include_once( $_SERVER['DOCUMENT_ROOT'] . '/phpshop/modules/ddelivery/class/appl
 include_once( $_SERVER['DOCUMENT_ROOT'] . '/phpshop/modules/ddelivery/class/mrozk/IntegratorShop.php' );
 
 function send_to_order_ddelivery_hook($obj, $row, $rout) {
+    global $SysValue;
 
     if ($rout == 'START' && !empty($_POST['ddelivery_id'])) {
         if ($obj->PHPShopCart->getNum() > 0) {
@@ -158,7 +159,7 @@ function write_ddelivery_hook($obj, $row, $rout) {
 
 $addHandler = array
     (
-    '#send_to_order' => 'send_to_order_ddelivery_hook',
+    'send_to_order' => 'send_to_order_ddelivery_hook',
     'write' => 'write_ddelivery_hook'
 );
 ?>

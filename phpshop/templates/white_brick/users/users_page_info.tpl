@@ -10,6 +10,11 @@
             <td><b>@user_status@</b></td>
         </tr>
         <tr>
+            <td width="180">Скидка:<br><br></td>
+            <td width="10"></td>
+            <td><b>@user_cumulative_discount@ %</b></td>
+        </tr>
+        <tr>
             <td width="180">E-mail:</td>
             <td width="10"></td>
             <td><input type="text" name="login_new" value="@user_login@" style="width:250px;" ><img src="images/shop/flag_green.gif" alt="" width="16" height="16" border="0" hspace="5" align="absmiddle"></td>

@@ -92,7 +92,7 @@ class PHPShopSecurity {
      * @return bool
      */
     static function true_skin($skin) {
-        return preg_match("/^[a-zA-Z0-9_\.]{2,30}$/", trim($skin));
+        return preg_match("/^[a-zA-Z0-9\-_\.\/]{2,30}$/", trim($skin));
     }
 
     /**
@@ -110,7 +110,7 @@ class PHPShopSecurity {
      * @return bool
      */
     static function true_num($num) {
-        return preg_match("/^[0-9]{1,20}$/", $num);
+        return @preg_match("/^[0-9]{1,20}$/", $num);
     }
 
     /**

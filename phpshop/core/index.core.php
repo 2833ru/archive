@@ -52,8 +52,9 @@ class PHPShopIndex extends PHPShopCore {
      */
     function seoguard() {
         if ($this->PHPShopNav->index()) {
-            $key=array_keys($_GET);
-            if (!empty($_GET) and (count($_GET)>1 or !in_array($key[0],$this->true_get_params))) {
+            parse_str($_SERVER['QUERY_STRING'],$val);
+            $keys=array_keys($val);
+            if (!empty($_GET) and array_diff($keys,$this->true_get_params)) {
                 $this->setError404();
                 if ($this->default_server_error_page)
                     exit();

@@ -38,7 +38,7 @@ function CheckPayment($id) {
     return $num;
 }
 
-function Visitor($pole1, $pole2, $words, $liststr) {// вывод покупателей
+function Visitor($pole1, $pole2, $words, $liststr, $pageParam) {// вывод покупателей
     global $table_name1;
 
     $sec = md5(date('y-m-d') . $_SESSION['pasPHPSHOP']);
@@ -120,7 +120,19 @@ function Visitor($pole1, $pole2, $words, $liststr) {// вывод покупателей
                 // товары
                 case 1:
 
-                    if (empty($search)) {
+                    if($pageParam=='oneload') {
+                         // первое поле это название каталога
+                        $catName = $massCatData[$massProdCats[$id]]['name'];
+                        //прибыль
+                        $table[$catName][1] += ($data['price'] * $data['num'] * 0.3);
+                        // кол-во
+                        $table[$catName][2] += $data['num'];
+                        // выручка
+                        $table[$catName][3] += ($data['price'] * $data['num']);
+                        $rowName = " атегори€ товаров";
+                        //$grName = "ќтчЄт по категори€м товаров";
+                    }
+                    elseif (empty($search)) {
 
                         // первое поле это название каталога
                         $catName = $massCatData[$massProdCats[$id]]['name'];
@@ -257,13 +269,13 @@ function Visitor($pole1, $pole2, $words, $liststr) {// вывод покупателей
     require_once '../../lib/chart/open-flash-chart.php';
 
 
-    $bar_1 = new bar(50, '#' . gencolor());
+    $bar_1 = new bar(50, '#bdda7c');
     $bar_1->key(cp1251_to_utf8('ѕрибыль'), 10);
 
-    $bar_2 = new bar(50, '#' . gencolor());
+    $bar_2 = new bar(50, '#cb89ca');
     $bar_2->key(cp1251_to_utf8('¬ыручка'), 10);
 
-    $bar_3 = new bar(50, '#' . gencolor());
+    $bar_3 = new bar(50, '#55a339');
     $bar_3->key(cp1251_to_utf8(' оличество (x1000)'), 10);
 
 
@@ -329,13 +341,13 @@ function Visitor($pole1, $pole2, $words, $liststr) {// вывод покупателей
 
     $_Return = ('
         
-    <div id="graph"  style="' . $stat_graph_style . 'width:100%; text-align:center;padding-left:5px;"> 
-        ' . open_flash_chart_object('100%', 350, './csv/orders_stat1_graph_' . $sec . '.csv', false, $baseURL) . ' 
+    <div id="graph"  style="' . $stat_graph_style . 'width:99%; height:350px; text-align:center;padding-left:5px;"> 
+        ' . open_flash_chart_object('100%', '100%', './csv/orders_stat1_graph_' . $sec . '.csv', false, $baseURL) . ' 
     </div>
 <div align="left" id="interfacesWin" name="interfacesWin"  style="width:100%;' . @$razmer . ';overflow:auto"> 
 
 
-<table width="100%"  cellpadding="0" cellspacing="0" style="border: 1px;">
+<table width="100%"  cellpadding="0" cellspacing="0" class="tdStat" style="border: 1px;">
 <tr>
 	<td valign="top">
 

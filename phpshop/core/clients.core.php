@@ -32,7 +32,7 @@ class PHPShopClients extends PHPShopUsers {
     /**
      * Ёкшен по умочанию
      */
-    function action_index() {
+    function index() {
 
         $this->set('formaContent',ParseTemplateReturn($this->getValue('templates.clients_forma')));
         $this->set('formaTitle',__('On-line проверка состо€ни€ заказа'));
@@ -61,7 +61,7 @@ class PHPShopClients extends PHPShopUsers {
     /**
      * Ёкшен вывода данных по заказу
      */
-    function action_order() {
+    function order() {
 
         // ѕроверка прохождени€ авторизации
         if($this->true_user()) {
@@ -78,7 +78,7 @@ class PHPShopClients extends PHPShopUsers {
         }
         else {
             // ‘орма ввода заказа
-            $this->action_index();
+            $this->index();
         }
     }
 }

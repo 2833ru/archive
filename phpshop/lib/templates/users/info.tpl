@@ -36,35 +36,40 @@
             <td><b>@user_status@</b></td>
         </tr>
         <tr>
+            <td width="180">Скидка:&nbsp;&nbsp;&nbsp;
+            </td>
+            <td><b>@user_cumulative_discount@ %</b></td>
+        </tr>
+        <tr>
             <td width="180">Контактное лицо:&nbsp;&nbsp;&nbsp;
             </td>
-            <td ><input type="text" name="name_new" value="@user_name@" style="width:300px"><img src="images/shop/flag_green.gif" alt="" width="16" height="16" border="0" hspace="5" align="absmiddle"></td>
+            <td ><input type="text" name="name_new" value="@user_name@" style="width:250px"><img src="images/shop/flag_green.gif" alt="" width="16" height="16" border="0" hspace="5" align="absmiddle"></td>
         </tr>
         <tr>
             <td>E-mail:
             </td>
-            <td><input type="text" name="mail_new" value="@user_mail@" style="width:300px"><img src="images/shop/flag_green.gif" alt="" width="16" height="16" border="0" hspace="5" align="absmiddle"></td>
+            <td><input type="text" name="mail_new" value="@user_mail@" style="width:250px"><img src="images/shop/flag_green.gif" alt="" width="16" height="16" border="0" hspace="5" align="absmiddle"></td>
         </tr>
         <tr>
             <td>Компания: </td>
-            <td><input type="text" name="company_new" style="width:300px;" value="@user_company@"></td>
+            <td><input type="text" name="company_new" style="width:250px;" value="@user_company@"></td>
         </tr>
         <tr>
             <td>ИНН:</td>
-            <td><input type="text" name="inn_new" style="width:300px;" value="@user_inn@"></td>
+            <td><input type="text" name="inn_new" style="width:250px;" value="@user_inn@"></td>
         </tr>
         <tr>
             <td>КПП:</td>
-            <td><input type="text" name="kpp_new" style="width:300px;" value="@user_kpp@"></td>
+            <td><input type="text" name="kpp_new" style="width:250px;" value="@user_kpp@"></td>
         </tr>
         <tr>
             <td>Телефон:</td>
             <td><input type="text" name="tel_code_new" style="width:50px;" value="@user_tel_code@"> -
-                <input type="text" name="tel_new" style="width:230px;" value="@user_tel@"></td>
+                <input type="text" name="tel_new" style="width:190px;" value="@user_tel@"></td>
         </tr>
         <tr>
             <td valign="top">Адрес:</td>
-            <td><textarea style="width:300px; height:100px;" name="adres_new">@user_adres@</textarea>
+            <td><textarea style="width:250px; height:100px;" name="adres_new">@user_adres@</textarea>
             </td>
         </tr>
         <tr>

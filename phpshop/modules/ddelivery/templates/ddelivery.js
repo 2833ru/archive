@@ -38,62 +38,18 @@ if (typeof(topWindow.DDeliveryIntegration) == 'undefined')
             document.getElementsByTagName('body')[0].style.overflow = "";
         }
 
-
-        // просчёт доставки
-        function UpdateDeliveryJq2(xid, order_id) {
-            var req = new Subsys_JsHttpRequest_Js();
-            var sum = document.getElementById('OrderSumma').value;
-            var wsum = document.getElementById('WeightSumma').innerHTML;
-
-            // $("form[name='forma_order'] input[name=dostavka_metod]").attr('disabled', true);
-            $(this).html(waitText);
-
-            req.onreadystatechange = function() {
-                if (req.readyState == 4) {
-                    if (req.responseJS) {
-                        document.getElementById('DosSumma').innerHTML = (req.responseJS.delivery || '');
-                        document.getElementById('d').value = xid;
-                        document.getElementById('TotalSumma').innerHTML = (req.responseJS.total || '');
-                        // document.getElementById('seldelivery').innerHTML = (req.responseJS.dellist || '');
-
-                        //$("#userAdresData").hide();
-                        //document.getElementById('userAdresData').innerHTML = (req.responseJS.adresList || '');
-                        //$("#userAdresData").fadeIn("slow");
-
-                        // заполняем фио значением из личных данных
-                        if ($("form[name='forma_order'] input[name='fio_new']").val() == "")
-                            $("form[name='forma_order'] input[name='fio_new']").val($("form[name='forma_order'] input[name='name_new']").val());
-
-                        //заполняем данными адрес, если выбран
-                        $("#adres_id").change();
-                    }
-                }
-            }
-            req.caching = false;
-            // Подготваливаем объект.
-            // Реальное размещение
-            var dir = dirPath();
-
-            req.open('POST', dir + '/phpshop/ajax/delivery.php', true);
-            req.send({
-                xid: xid,
-                sum: sum,
-                wsum: wsum,
-                order_id:order_id
-            });
-        }
-
         function orderCallBack(data, dostavka_metod) {
             $('[name="fio_new"]').val(data.userInfo.firstName);
-            $('[name="tel_new"]').val(data.userInfo.toPhone);
             $('[name="dop_info"]').text(data.comment);
-
+            
             if(data.type == '2'){
                 $('[name="index_new"]').val(data.userInfo.toIndex);
                 $('[name="street_new"]').val(data.userInfo.toStreet);
                 $('[name="house_new"]').val(data.userInfo.toHouse);
                 $('[name="flat_new"]').val(data.userInfo.toFlat);
+                
             }
+            $('[name="tel_new"]').val(data.userInfo.toPhone);
             $('#ddelivery_id').val(data.orderId);
             $('.dd_comment').text(data.comment);
         }
@@ -130,14 +86,14 @@ if (typeof(topWindow.DDeliveryIntegration) == 'undefined')
                     change: function(data) {
                         var dostavka_metod = getActiveDelivery();
                         orderCallBack(data, dostavka_metod);
-                        UpdateDeliveryJq2( dostavka_metod, data.orderId );
+                        //UpdateDeliveryJq( dostavka_metod, '&order_id='+data.orderId, 'stophook' );
                         console.log(data);
                         disablePaymentDelivery( data.payment );
                         hideCover();
                     }
                 };
                 var forma_order = $('#forma_order').serialize();
-                getActiveDelivery()
+                getActiveDelivery();
 
                 DDelivery.delivery('ddelivery_popup', ddeliveryConfig.url + '?' + forma_order /*'@DDorderUrl@' + paramsString */, { }, callback);
                 return void(0);

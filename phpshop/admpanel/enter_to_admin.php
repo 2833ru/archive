@@ -5,7 +5,7 @@ require_once dirname(__FILE__) . '/../lib/phpass/passwordhash.php';
 
 // Настройка уровня оповещения отладчика
 if (function_exists('error_reporting')) {
-    error_reporting('E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT');
+   error_reporting('E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT');
 }
 
 // Снимаем ограничения на выполнение

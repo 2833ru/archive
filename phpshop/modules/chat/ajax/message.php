@@ -51,16 +51,16 @@ function smile($string) {
     return $string;
 }
 
-function get_file_link($matches){
+function get_file_link($matches) {
     $path_parts = pathinfo($matches[0]);
-    $url=parse_url($matches[0]);
-    
-   if($url['scheme'] == 'file')
-    return '<a href="'.chr(47).$GLOBALS['SysValue']['dir']['dir'].'UserFiles/Image/'.$_SESSION['chat_dir'].$path_parts['basename'].'" target="_blank">'.$path_parts['basename'].'</a>'; 
-    else if($url['host'] != $_SERVER['SERVER_NAME'])
-       return '<a href="'.$matches[0].'" target="_blank">'.$matches[0].'</a>'; 
-      else 
-    return '<a href="http://'.$url['host'].chr(47).$GLOBALS['SysValue']['dir']['dir'].'UserFiles/Image/'.$_SESSION['chat_dir'].$path_parts['basename'].'" target="_blank">'.$path_parts['basename'].'</a>'; 
+    $url = parse_url($matches[0]);
+
+    if ($url['scheme'] == 'file')
+        return '<a href="' . chr(47) . $GLOBALS['SysValue']['dir']['dir'] . 'UserFiles/Image/' . $_SESSION['chat_dir'] . $path_parts['basename'] . '" target="_blank">' . $path_parts['basename'] . '</a>';
+    else if ($url['host'] != $_SERVER['SERVER_NAME'])
+        return '<a href="' . $matches[0] . '" target="_blank">' . $matches[0] . '</a>';
+    else
+        return '<a href="http://' . $url['host'] . chr(47) . $GLOBALS['SysValue']['dir']['dir'] . 'UserFiles/Image/' . $_SESSION['chat_dir'] . $path_parts['basename'] . '" target="_blank">' . $path_parts['basename'] . '</a>';
 }
 
 function check_content($content) {
@@ -123,17 +123,19 @@ if (!empty($_SESSION['mod_chat_user_session'])) {
 
             // »конка
             if ($_SESSION['mod_chat_user_name'] == $row['name']) {
-                $icon = 'user.png';
-                $name = PHPShopText::b($row['name']);
-                $div_class = 'text_user';
+                //$icon = 'user.png';
+                $name = '<h4>' . $row['name'] . '</h4>';
+                $div_class = 'text_user panel panel-body';
             } else {
-                $icon = 'admin.png';
-                $name = PHPShopText::b($row['name']);
-                $div_class = 'text_admin';
+                //$icon = 'admin.png';
+                if (!empty($row['avatar']))
+                    $icon = '<img src="'.$row['avatar'].'" alt="" onerror="imgerror(this)" class="img-thumbnail avatar">';
+                $name = '<h4 class="pull-right">' . $row['name'] . $icon . '</h4>';
+                $div_class = 'text_admin panel panel-body';
             }
 
-            $name = PHPShopText::img('./templates/' . $icon, 3, 'absmiddle') . $name;
-            $content.=PHPShopText::div($name . ': ' . check_content($row['content']), "left", false, false, $div_class);
+            //$name = PHPShopText::img('./templates/' . $icon, 3, 'absmiddle') . $name;
+            $content.=PHPShopText::div(check_content($row['content']) . $name, "left", false, false, $div_class);
             $time = $row['date'];
         }
     }

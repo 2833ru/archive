@@ -18,6 +18,7 @@ Disallow: /users/
 Disallow: /shop/*.html?*$
 Disallow: /shop/?$
 Disallow: /*_ALL.html
+Disallow: /*-ALL.html
 Disallow: /*_0.html
 Disallow: /*_.html
 Disallow: /*_.htm$
@@ -46,6 +47,7 @@ Disallow: /users/
 Disallow: /shop/*.html?*$
 Disallow: /shop/?$
 Disallow: /*_ALL.html
+Disallow: /*-ALL.html
 Disallow: /*_0.html
 Disallow: /*_.html
 Disallow: /*_.htm$
@@ -74,6 +76,7 @@ Disallow: /users/
 Disallow: /shop/*.html?*$
 Disallow: /shop/?$
 Disallow: /*_ALL.html
+Disallow: /*-ALL.html
 Disallow: /*_0.html
 Disallow: /*_.html
 Disallow: /*_.htm$

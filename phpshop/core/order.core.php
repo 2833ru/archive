@@ -139,7 +139,10 @@ class PHPShopOrder extends PHPShopCore {
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__, false, 'END');
 
-        return ParseTemplateReturn('phpshop/lib/templates/order/cart.tpl', true);
+        if (PHPShopParser::checkFile('order/cart.tpl'))
+            return ParseTemplateReturn('order/cart.tpl');
+        else
+            return ParseTemplateReturn('phpshop/lib/templates/order/cart.tpl', true);
     }
 
     /**
@@ -163,8 +166,8 @@ class PHPShopOrder extends PHPShopCore {
     function error() {
         $message = $this->message($this->lang('bad_cart_1'), $this->lang('bad_order_mesage_2'));
         $message.="<script language='JavaScript'>
-document.getElementById('num').innerHTML = '--';
-document.getElementById('sum').innerHTML = '';
+document.getElementById('num').innerHTML = '0';
+document.getElementById('sum').innerHTML = '0';
 document.getElementById('order').style.display = 'none';
 </script>";
         $this->set('mesageText', $message);
@@ -289,7 +292,7 @@ document.getElementById('order').style.display = 'none';
                 else
                     $this->set('noAuthAdr', parseTemplateReturn($this->getValue('templates.main_order_forma_no_auth_adr_nt'), true));
             }
-            
+
             // Перехват модуля в конце функции
             $this->setHook(__CLASS__, __FUNCTION__, false, 'MIDDLE');
 
@@ -369,6 +372,7 @@ function ordercartforma($val, $option) {
 
     PHPShopParser::set('cart_xid', $option['xid']);
     PHPShopParser::set('cart_name', $val['name']);
+    PHPShopParser::set('cart_art', $val['uid']);
     PHPShopParser::set('cart_pic_small', $val['pic_small']);
     PHPShopParser::set('cart_num', $val['num']);
     PHPShopParser::set('cart_price', $val['price']);
@@ -378,7 +382,9 @@ function ordercartforma($val, $option) {
     // Перехват модуля в конце функции
     $PHPShopModules->setHookHandler(__FUNCTION__, __FUNCTION__, $val, $option, 'END');
 
-    return ParseTemplateReturn('./phpshop/lib/templates/order/product.tpl', true);
+    if (PHPShopParser:: checkFile('order/product.tpl'))
+        return ParseTemplateReturn('order/product.tpl');
+    else return ParseTemplateReturn('./phpshop/lib/templates/order/product.tpl', true);
 }
 
 ?>

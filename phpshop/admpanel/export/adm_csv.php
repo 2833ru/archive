@@ -27,7 +27,7 @@ function getChars($allCharsArray, $categoryID) {
     $allCharsID = unserialize($row['sort']); //Забираем все характеристики каталога
 
     foreach ($allCharsID as $charID) {
-        $sql2 = 'select name from ' . $SysValue['base']['table_name20'] . ' WHERE id=' . $charID; //Получаем названия хар-к
+        $sql2 = 'select name from ' . $SysValue['base']['table_name20'] . ' WHERE id=' . $charID . ' AND category != 0'; //Получаем названия хар-к
         $result2 = mysql_query($sql2);
         $row2 = mysql_fetch_array($result2);
         @$res.=PHPShopSecurity::CleanOut($row2['name']) . ';'; //Формируем ряд. Имена характеристик
@@ -152,9 +152,10 @@ if (CheckedRules($UserStatus["csv"], 1) == 1) {
                 $items = trim($row['items']);
                 $weight = trim($row['weight']);
                 $dop_cat = PHPShopSecurity::CleanOut($row['dop_cat']);
+                $odnotip = PHPShopSecurity::CleanOut($row['odnotip']);
 
                 //@$csv.=str_replace('"";', '";', "$id;\"$name\";\"$description \";\"$pic_small \";\"$content \";\"$pic_big \";$items;$price;$price2;$price3;$price4;$price5;$weight;\"$uid\";$category;$dop_cat");
-                @$csv.="$id;\"$name\";\"$description\";$pic_small;\"$content\";$pic_big;$items;$price;$price2;$price3;$price4;$price5;$weight;\"$uid \";$category;$dop_cat";
+                @$csv.="$id;\"$name\";\"$description\";$pic_small;\"$content\";$pic_big;$items;$price;$price2;$price3;$price4;$price5;$weight;\"$uid \";$category;$odnotip;$dop_cat";
                 @$csv.=';' . getChars($vendorArray, $category);
                 @$csv.="\n"; //Конец строки
 
@@ -170,7 +171,7 @@ if (CheckedRules($UserStatus["csv"], 1) == 1) {
                 @$charsFiller.=';Характеристика;Значение';
             }
 
-            $csv = "Код ID;Наименование;Краткое описание;Маленькая картинка;Подробное описание;Большая картинка;Склад;Цена1;Цена2;Цена3;Цена4;Цена5;Вес;Артикул;Кaтегория ID; Доп. каталоги$charsFiller\n" . $csv;
+            $csv = "Код ID;Наименование;Краткое описание;Маленькая картинка;Подробное описание;Большая картинка;Склад;Цена1;Цена2;Цена3;Цена4;Цена5;Вес;Артикул;Кaтегория ID;Рекомендуемые товары; Доп. каталоги$charsFiller\n" . $csv;
 
             $sorce = "../csv/base_" . date("d_m_y_His") . ".csv";
             PHPShopFile::write($sorce, $csv);

@@ -62,7 +62,9 @@ DoResize(<? echo $GetSystems['width_icon']?>,460,270);
 <LEGEND><span name=txtLang id=txtLang><u>Н</u>аименование</span> </LEGEND>
 <div style="padding:10">
 <input type="text" name="name_new" class="full" ><br><br>
-<input type="checkbox" value="1" name="sklad_action_new"> Списывать со склада
+<label><input type="checkbox" value="1" name="sklad_action_new"> Списывать со склада<br></label>
+<label><input type="checkbox" value="1" name="cumulative_action_new"> Перерасчет накопительной скидки</label>
+
 </div>
 </FIELDSET>
 	</td>
@@ -122,7 +124,7 @@ if(isset($editID))// Запись редактирования
 {
 if(CheckedRules($UserStatus["visitor"],2) == 1){
 $sql="INSERT INTO ".$SysValue['base']['table_name32']."
-VALUES ('','$name_new','$color_new','$sklad_action_new')";
+VALUES ('','$name_new','$color_new','$sklad_action_new','$cumulative_action_new')";
 $result=mysql_query($sql) or die("".$sql.mysql_error()."");
 echo('
 <script>

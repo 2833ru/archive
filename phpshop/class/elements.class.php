@@ -365,8 +365,18 @@ class PHPShopElements {
      * @param string $class_name имя класса
      */
     function setHtmlOption($class_name) {
-        if (!empty($GLOBALS['SysValue']['html'][strtolower($class_name)])){
-            $this->cell_type = $GLOBALS['SysValue']['html'][strtolower($class_name)];
+        $html=$GLOBALS['SysValue']['html'][strtolower($class_name)];
+        
+        if (!empty($html)){
+            
+            // Назначение сетки
+            if(strstr($html,'-')){
+               $option=explode("-",$html);
+               $html=$option[0];
+               $this->cell=$option[1];
+            }
+            
+            $this->cell_type = $html;
             //$this->cell=1;
             $this->product_grid = null;
         }

@@ -1,12 +1,13 @@
+<div itemscope itemtype="http://schema.org/Product">
 <div class="product-info">
     <div class="left"> @productFotoList@ </div>
     <div class="right">
         <div class="buy">
             <header class="product-name">
-                <h1>@productName@</h1>
+                <h1 itemprop="name">@productName@</h1>
             </header>
             <div class="price">
-                <div> @ComStartCart@   @productPrice@ @productValutaName@    @ComEndCart@  <span class="price-tax">@productPriceRub@</span></div>
+                <div itemprop="offers" itemscope itemtype="http://schema.org/Offer"> @ComStartCart@   <span itemprop="price">@productPrice@</span> <span itemprop="priceCurrency">@productValutaName@</span>    @ComEndCart@  <span class="price-tax">@productPriceRub@</span></div><br>@promotionInfo@
             </div>
             <div class="review"> @rateUid@ </div>
             <div class="description">
@@ -44,7 +45,7 @@
 
                     @ComStartNotice@<a href="/users/notice.html?productId=@productUid@" title="@productNotice@" class="button-exclusive" id="button-cart">Уведомить</a>@ComEndNotice@ </div>
                 <br>
-                <div class="wishlist-compare"><a href="javascript:addToWishList(@productUid@)"><span class="wishlist"></span>Отложить</a> &nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:AddToCompare(@productUid@)" title="Сравнить @productName@"><span class="compare"></span>Сравнить</a></div>
+                <div class="wishlist-compare"><a class="addToWishList" data-uid="@productUid@" title="Отложить @productName@"><span class="wishlist"></span>Отложить</a> &nbsp;&nbsp;&nbsp;&nbsp;<a class="addToCompareList"  data-uid="@productUid@" title="Сравнить @productName@"><span class="compare"></span>Сравнить</a></div>
             </div>
             @ComEnd@
             @productParentList@
@@ -52,7 +53,7 @@
         </div>
         <div class="share hidden-desktop">
             <div class="share42init"></div>
-            <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@javascript/share/share42.js"></script>
+            <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/share/share42.js"></script>
         </div>
     </div>
     <div id="right-sm"> @brandUidDescription@
@@ -60,7 +61,7 @@
             <div class="product-share">
                 <div class="share">
                     <div class="share42init"></div>
-                    <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@javascript/share/share42.js"></script>
+                    <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/share/share42.js"></script>
                 </div>
             </div>
         </div>
@@ -77,7 +78,7 @@
     </div>
     <div style="clear:both"></div>
     <div id="tab-description" class="tab-content" >
-        <article class="tab-content2">@productDes@</article>
+        <article class="tab-content2" itemprop="description">@productDes@</article>
     </div>
     <div id="tab-vendor" class="tab-content" >
         <article class="tab-content2">@vendorDisp@</article>
@@ -128,6 +129,7 @@
             </script>
         </article>
     </div>
+ 
     @pagetemaDispStart@
     <div id="tab-art" class="tab-content" >
         <article class="tab-content2"> @pagetemaDisp@</article>

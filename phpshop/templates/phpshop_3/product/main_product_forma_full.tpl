@@ -2,6 +2,7 @@
 		
 			<TD colspan="2">
 				<h1>@productName@</h1>
+				<br>@promotionInfo@
 		
 			</TD>
 		</TR>

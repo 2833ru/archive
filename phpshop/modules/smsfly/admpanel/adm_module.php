@@ -62,18 +62,21 @@ function actionStart() {
 
 
     // Графический заголовок окна
-    $PHPShopGUI->setHeader("Настройка модуля 'Sms Fly'", "Настройки подключения", "../install/logo_header.png");
+    $PHPShopGUI->setHeader("Настройка модуля 'Sms Fly'", "Настройки подключения", $PHPShopGUI->dir."img/i_display_settings_med[1].gif");
 
     $Tab1 = $PHPShopGUI->setField('№ Телефона для SMS', $PHPShopGUI->setInputText(false, 'phone_new', $phone,false,' * В формате 380631234567'));
     $Tab1.=$PHPShopGUI->setField('Пользователь', $PHPShopGUI->setInputText(false, 'merchant_user_new', $merchant_user, 210), 'left');
     $Tab1.=$PHPShopGUI->setField('Пароль', $PHPShopGUI->setInputText(false, 'merchant_pwd_new', $merchant_pwd, 210), 'left');
+     $Tab1.=$PHPShopGUI->setField('Отправитель (Alfaname)', $PHPShopGUI->setInputText(false, 'alfaname_new', $alfaname, 210), 'left');
+    
     
     // Sandbox
     $sandbox_value[] = array('Включен', 1, $sandbox);
     $sandbox_value[] = array('Выключен', 2, $sandbox);
     $Tab1.= $PHPShopGUI->setField('Тестовый режим', $PHPShopGUI->setSelect('sandbox_new', $sandbox_value), 'left');
+   
  
-    $Tab2 = $PHPShopGUI->setPay(false, false, $version, true);
+    $Tab2 = $PHPShopGUI->setPay();
 
    
     // Вывод формы закладки

@@ -3,7 +3,7 @@
 /**
  * Библиотека запросов к БД на основе объектов типа доступа
  * @author PHPShop Software
- * @version 1.8
+ * @version 1.9
  * @package PHPShopClass
  */
 class PHPShopOrm {
@@ -19,7 +19,7 @@ class PHPShopOrm {
      * @var bool
      */
     var $debug = false;
-    
+
     /**
      * вывод ошибок mysql
      * @var bool 
@@ -79,9 +79,10 @@ class PHPShopOrm {
         $param = explode(".", str_replace('"', '', $params));
         if ($this->cache_check($param)) {
             if (is_array($orm_array)) {
-                
-                if(empty($param[1])) $param[1]='?';
-                
+
+                if (empty($param[1]))
+                    $param[1] = '?';
+
                 $this->comment = 'Кэширование - ' . $param[0] . '.' . $param[1] . '.' . $this->cache_sort . '.' . $orm_array['class_name'] . '.' . $orm_array['function_name'];
                 $result = $this->select_native($orm_array['select'], $orm_array['where'], $orm_array['order'], $orm_array['option']);
 
@@ -112,7 +113,7 @@ class PHPShopOrm {
      * Проверка на наличие записи
      */
     function cache_check($param) {
-        
+
         if (!is_array(@$this->Items[$param[0]][$param[1]])) {
             return true;
         }
@@ -246,21 +247,24 @@ class PHPShopOrm {
         }
 
         // Возвращаем данные в виде массива
-        if ($this->install){
-            if($this->mysql_error)
-            $result = mysql_query($this->_SQL) or die($this->setError("SQL Ошибка для [" . $this->_SQL . "] ", mysql_error() . ""));
-            else  $result = mysql_query($this->_SQL);
+        if ($this->install) {
+            if ($this->mysql_error)
+                $result = mysql_query($this->_SQL) or die($this->setError("SQL Ошибка для [" . $this->_SQL . "] ", mysql_error() . ""));
+            else
+                $result = mysql_query($this->_SQL);
         }
         else
             $result = mysql_query($this->_SQL) or die(PHPShopBase::errorConnect(102));
 
-        $num = mysql_numrows($result);
-        $this->numrows = $num;
-        while ($row = mysql_fetch_assoc($result))
-            if ($num > 1 or $option['limit'] > 1 or strlen($option['limit']) > 1)
-                $this->_DATA[] = $row;
-            else
-                $this->_DATA = $row;
+        if ($result) {
+            $num = mysql_numrows($result);
+            $this->numrows = $num;
+            while ($row = mysql_fetch_assoc($result))
+                if ($num > 1 or $option['limit'] > 1 or strlen($option['limit']) > 1)
+                    $this->_DATA[] = $row;
+                else
+                    $this->_DATA = $row;
+        }
 
 
         // Счетчик запросов
@@ -426,9 +430,10 @@ width="32" height="32" alt="PHPShopOrm Debug On"/ ><strong>' . $name . '</strong
         if ($this->debug)
             $this->setError("SQL Запрос: ", $this->_SQL);
 
-        if($this->mysql_error)
-        $result = mysql_query($this->_SQL) or die($this->setError("SQL Ошибка для [" . $this->_SQL . "] ", mysql_error() . ""));
-        else $result = mysql_query($this->_SQL);
+        if ($this->mysql_error)
+            $result = mysql_query($this->_SQL) or die($this->setError("SQL Ошибка для [" . $this->_SQL . "] ", mysql_error() . ""));
+        else
+            $result = mysql_query($this->_SQL);
 
         // Счетчик запросов
         $GLOBALS['SysValue']['sql']['num']++;

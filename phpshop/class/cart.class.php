@@ -93,15 +93,21 @@ class PHPShopCart {
                 $this->_CART[$xid] = $cart;
 
             // сообщение для вывода во всплывающее окно
-            $this->message = "Вы успешно добавили <a href='/shop/UID_$objID.html' title='Подробное описание'>$name</a> 
-            в вашу <a href='/order/' title='Перейти в вашу корзину'>корзину</a>";
+            if ($cart['num'] == 0 AND $this->store_check)
+                $this->message = "Товара <a href='".$GLOBALS['SysValue']['dir']['dir']."/shop/UID_$objID.html' title='Подробное описание'>$name</a> 
+            не достаточно на складе для добавления в <a href='".$GLOBALS['SysValue']['dir']['dir']."/order/' title='Перейти в вашу корзину'>корзину</a>";
+            else
+            $this->message = "Вы успешно добавили <a href='".$GLOBALS['SysValue']['dir']['dir']."/shop/UID_$objID.html' title='Подробное описание'>$name</a> 
+            в вашу <a href='".$GLOBALS['SysValue']['dir']['dir']."/order/' title='Перейти в вашу корзину'>корзину</a>";
+            
+            return true;
         }
     }
 
     /**
      * Получение сообщения для всплывающего окна
      */
-    function getMessage($objID) {
+    function getMessage() {
         return $this->message;
     }
 

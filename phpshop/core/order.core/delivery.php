@@ -13,10 +13,10 @@ function delivery($obj, $deliveryID) {
 
     if (empty($SysValue['nav'])) {
         $engineinc = 0;
-        $pathTemplate = '/' . chr(47) . $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . chr(47); // путь до шаблона
+        $pathTemplate = $GLOBALS['SysValue']['dir']['dir']. chr(47) . $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . chr(47); // путь до шаблона
     } else {
         $engineinc = 1;
-        $pathTemplate = '';
+        $pathTemplate = '../../';
     }
 
     $table = $SysValue['base']['table_name30'];
@@ -85,7 +85,7 @@ function delivery($obj, $deliveryID) {
             //≈сли ((есть соседи, т.е. на верхнем уровне можно выбрать что-то другое)
             // » (уровень доставки больше первого)), то показываем приглашение перейти на уровень выше
             if (($ii > 1) && ($num > 0)) { //ѕоказывать кнопку "сн€ть" если больше 1 вариант выбора у верхнего » (либо есть потомки либо уровень доставки больше первого)
-                $pred = '¬ыбрано: ' . $city . ' <A href="javascript:UpdateDeliveryJq(' . $PIDpr . ',this)" title="¬ыбрать другой способ доставки"><img src="../' . $pathTemplate . '/images/shop/icon-activate.gif" alt=""  border="0" align="absmiddle">¬ыбрать другой способ доставки</A> <BR> ' . $pred;
+                $pred = '¬ыбрано: ' . $city . ' <A href="javascript:UpdateDeliveryJq(' . $PIDpr . ',this)" title="¬ыбрать другой способ доставки"><img src="' . $pathTemplate . '/images/shop/icon-activate.gif" alt=""  border="0" align="absmiddle">¬ыбрать другой способ доставки</A> <BR> ' . $pred;
             }
         }
         if (strlen($pred)) {
@@ -169,7 +169,7 @@ function delivery($obj, $deliveryID) {
 
     if ($varamount == 1) {
         if (!(($curid == $deliveryID)))
-            $waytodo = '<IMG onload="UpdateDeliveryJq(' . $curid . ',this);" SRC="../' . $pathTemplate . '/images/shop/flag_green.gif" style="display:none;">';
+            $waytodo = '<IMG onload="UpdateDeliveryJq(' . $curid . ',this);" SRC="' . $pathTemplate . '/images/shop/flag_green.gif" style="display:none;">';
     }
 
     if ($stop) {
@@ -178,7 +178,7 @@ function delivery($obj, $deliveryID) {
         $adresDisp = $adresDisp_save;
     } else {
         if ($chkdone)
-            $waytodo = '<IMG onload="UpdateDeliveryJq(' . $chkdone . ',this);" SRC="../' . $pathTemplate . '/images/shop/flag_green.gif"  style="display:none;">';
+            $waytodo = '<IMG onload="UpdateDeliveryJq(' . $chkdone . ',this);" SRC="' . $pathTemplate . '/images/shop/flag_green.gif"  style="display:none;">';
     }
 
 
@@ -252,13 +252,15 @@ function getAdresFields($mass, $city_select = null) {
             continue;
         if ($enabled[$key]['enabled'] == 1) {
             if ($enabled[$key]['req']) {
-                $req = "class='req'";
+                $req = "class='req form-control'";
                 $star = '<span class="required">*</span>';
+                $required = 'required';
             } else {
-                $req = "";
+                $req = "class='form-control'";
                 $star = "";
+                $required = null;
             }
-            $disp .= $star . " " . $enabled[$key][name] . "<br><input type='text' $req value='' name='" . $key . "_new'><br><br>";
+            $disp .= $star . " " . $enabled[$key][name] . "<br><input type='text' $req value='' name='" . $key . "_new' $required><br><br>";
         }
     }
     return $disp;

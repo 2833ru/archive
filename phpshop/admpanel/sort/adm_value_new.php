@@ -183,7 +183,7 @@ $dis
         <?
         if (isset($editID) and !empty($name_new)) {// Запись редактирования
             if (CheckedRules($UserStatus["cat_prod"], 2) == 1) {
-                $sql = "INSERT INTO " . $SysValue['base']['table_name21'] . " VALUES ('','$name_new','$category_new','$num_new','$page_new','$icon_new')";
+                $sql = "INSERT INTO " . $SysValue['base']['table_name21'] . " (`id`, `name`, `category`, `num`, `page`)  VALUES ('','$name_new','$category_new','$num_new','$page_new')";
                 $result = mysql_query($sql) or @die("" . mysql_error() . "");
                 echo"
 <script>

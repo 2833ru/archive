@@ -8,16 +8,15 @@
         <tbody>
             <tr>
                 <td align="left" valign="bottom"><div class="catalogOption_zag"><div class="plashka_zag">@catalogCategory@</div></div></td>
-                <td align="right" valign="bottom"><div class="divSortPageList">Сортировать по: наименованию ( <span class="spanSortPageList"><a href="./CID_@productId@_@productPageThis@.html?v=@productVendor@&f=1&amp;s=1">убыв</a> / <a href="./CID_@productId@_@productPageThis@.html?v=@productVendor@&f=2&amp;s=1">возр</a></span> ), цене ( <span class="spanSortPageList"><a href="./CID_@productId@_@productPageThis@.html?v=@productVendor@&f=1&amp;s=2">убыв</a> / <a href="./CID_@productId@_@productPageThis@.html?v=@productVendor@&f=2&amp;s=2">возр</a></span> )</div></td>
+                <td align="right" valign="bottom"><div class="divSortPageList">Сортировать по: наименованию ( <span class="spanSortPageList"><a href="?v=@productVendor@&f=1&amp;s=1">убыв</a> / <a href="?v=@productVendor@&f=2&amp;s=1">возр</a></span> ), цене ( <span class="spanSortPageList"><a href="?v=@productVendor@&f=1&amp;s=2">убыв</a> / <a href="?v=@productVendor@&f=2&amp;s=2">возр</a></span> )</div></td>
             </tr>
         </tbody>
     </table>
     <table cellpadding="0" cellspacing="0" border="0" width="100%">
         <tbody>
             <tr>
-                <td align="left" valign="top"><div class="page_nav_top">@productPageNav@</div></td>
                 <td align="right" valign="top"><table cellpadding="0" cellspacing="0" border="0" class="vendorDisp"><tr>@vendorDisp@<td>@vendorSelectDisp@</td></tr></table>
-                    <div class="vendorDispTitle">@vendorDispTitle@</div></td>
+            </td>
             </tr>
         </tbody>
     </table></form>
@@ -38,7 +37,7 @@
         <tbody>
             <tr>
                 <td align="left" valign="bottom"><div class="page_nav_bot">@productPageNav@</div></td>
-                
+
             </tr>
         </tbody>
     </table>

@@ -38,7 +38,7 @@ function CheckPayment($id) {
     return $num;
 }
 
-function Visitor($pole1, $pole2, $words, $list) {// вывод покупателей
+function Visitor($pole1, $pole2, $words, $list, $pageParam) {// вывод покупателей
     global $table_name1, $UserStatus, $_SESSION, $SysValue;
 
     if (empty($pole1))
@@ -67,7 +67,7 @@ function Visitor($pole1, $pole2, $words, $list) {// вывод покупателей
         if (is_numeric($words))
             $sql = "select * from $table_name1 where uid=" . $words . " ";
         else
-            $sql = "select * from $table_name1 where orders REGEXP '" . $words . "' or orders REGEXP '" . ucfirst($words) . "'";
+            $sql = "select * from $table_name1 where orders REGEXP '" . $words . "' or orders REGEXP '" . ucfirst($words) . "' or fio REGEXP '" . $words . "' or fio REGEXP '" . ucfirst($words) . "'";
     }
     else
         $sql = "select * from $table_name1 where datas<'$pole2' and datas>'$pole1' $sort order by id desc";
@@ -113,37 +113,73 @@ function Visitor($pole1, $pole2, $words, $list) {// вывод покупателей
             $style_r = null;
         }
 
+        if($id==$_SESSION['editOrderId']) {
+            $style_r = ' prod_hover';
+        }
+
+        if($_REQUEST['pageParam']=='yes') {
+            $linkOrderMain = '&pageParam=yes';
+        }
+
+        if($_REQUEST['pageParam']!='yes') {
+            $orderCheckbox = '
+            <td class=forma style="padding:1px" align="center">
+                <input type=checkbox name="c' . $id . '" value="' . $id . '">
+            </td>';
+        }
+
         $disp.='
-<tr class="row ' . $style_r . '" id="r' . $id . '">
-	<td class=forma style="padding:1px" align="center" onmouseover="show_on(\'r' . $id . '\')" onmouseout="show_out(\'r' . $id . '\')">
-	<input type=checkbox name="c' . $id . '" value="' . $id . '">
-	</td>
-        <td valign="middle" align="center" onmouseover="show_on(\'r' . $id . '\')" onmouseout="show_out(\'r' . $id . '\')" onclick="miniWin(\'order/adm_visitorID.php?visitorID=' . $id . '&pole1=' . $pole1 . '&pole2=' . $pole2 . '\',680,505)">' . $uid . '</td>
-	<td valign="middle" align="center"  onmouseover="show_on(\'r' . $id . '\')" onmouseout="show_out(\'r' . $id . '\')" onclick="miniWin(\'order/adm_visitorID.php?visitorID=' . $id . '&pole1=' . $pole1 . '&pole2=' . $pole2 . '\',680,505)">
+<tr class="row ' . $style_r . '" id="r' . $id . '" onclick="hoverList(' . $id . ')" >
+	' . $orderCheckbox . '
+    <td valign="middle" align="center" onclick="miniWin(\'order/adm_visitorID.php?visitorID=' . $id . '&pole1=' . $pole1 . '&pole2=' . $pole2 . $linkOrderMain . '\',680,510)">' . $uid . '</td>
+	<td valign="middle" align="center" onclick="miniWin(\'order/adm_visitorID.php?visitorID=' . $id . '&pole1=' . $pole1 . '&pole2=' . $pole2 . $linkOrderMain . '\',680,510)">
 	' . dataV($datas, "shot") . ' </td>
-	<td class=forma onmouseover="show_on(\'r' . $id . '\')" onmouseout="show_out(\'r' . $id . '\')" onclick="miniWin(\'order/adm_visitorID.php?visitorID=' . $id . '&pole1=' . $pole1 . '&pole2=' . $pole2 . '\',680,505)">
-	' . $PaymentId . $UserId . $order['Person']['name_person'] . $row['fio'] . ' (' . $order['Person']['mail'] . ')' . '
+	<td class=forma onclick="miniWin(\'order/adm_visitorID.php?visitorID=' . $id . '&pole1=' . $pole1 . '&pole2=' . $pole2 . $linkOrderMain . '\',680,510)">';
+        
+        if($_REQUEST['pageParam']!='yes') {
+            $disp.=$PaymentId . $UserId . $order['Person']['name_person'] . $row['fio'] . ' (' . $order['Person']['mail'] . ')';
+        }
+        else{
+            if(!empty($row['fio'])) $disp.=$PaymentId . $UserId . $order['Person']['name_person'] . $row['fio']; 
+            else $disp.=$PaymentId . $UserId . $order['Person']['mail'];
+        }
+        
+	$disp.='
 	</td>
-	<td align="center" onmouseover="show_on(\'r' . $id . '\')" onmouseout="show_out(\'r' . $id . '\')" onclick="miniWin(\'order/adm_visitorID.php?visitorID=' . $id . '&pole1=' . $pole1 . '&pole2=' . $pole2 . '\',680,505)">
+	<td align="center" onclick="miniWin(\'order/adm_visitorID.php?visitorID=' . $id . '&pole1=' . $pole1 . '&pole2=' . $pole2 . $linkOrderMain . '\',680,510)">
 	' . $order['Cart']['num'] . '
 	</td>
-	<td align="center" onmouseover="show_on(\'r' . $id . '\')" onmouseout="show_out(\'r' . $id . '\')" onclick="miniWin(\'order/adm_visitorID.php?visitorID=' . $id . '&pole1=' . $pole1 . '&pole2=' . $pole2 . '\',680,505)">
+	<td align="center" onclick="miniWin(\'order/adm_visitorID.php?visitorID=' . $id . '&pole1=' . $pole1 . '&pole2=' . $pole2 . $linkOrderMain . '\',680,510)">
 	' . $order['Person']['discount'] . '
 	</td>
-	<td align="center" onmouseover="show_on(\'r' . $id . '\')" onmouseout="show_out(\'r' . $id . '\')" onclick="miniWin(\'order/adm_visitorID.php?visitorID=' . $id . '&pole1=' . $pole1 . '&pole2=' . $pole2 . '\',680,505)">
+	<td align="center" onclick="miniWin(\'order/adm_visitorID.php?visitorID=' . $id . '&pole1=' . $pole1 . '&pole2=' . $pole2 . $linkOrderMain . '\',680,510)">
 	' . (ReturnSumma($order['Cart']['sum'], $order['Person']['discount']) + $DeliveryPrice) . '
 	</td>
-	<td align="center" onmouseover="show_on(\'r' . $id . '\')" onmouseout="show_out(\'r' . $id . '\')" onclick="miniWin(\'order/adm_visitorID.php?visitorID=' . $id . '&pole1=' . $pole1 . '&pole2=' . $pole2 . '\',680,505)">
+	<td align="center" onclick="miniWin(\'order/adm_visitorID.php?visitorID=' . $id . '&pole1=' . $pole1 . '&pole2=' . $pole2 . $linkOrderMain . '\',680,510)">
 	' . $status['time'] . '
 	</td>
-	<td  align="center" bgcolor="' . $bg . '" onclick="miniWin(\'order/adm_visitorID.php?visitorID=' . $id . '&pole1=' . $pole1 . '&pole2=' . $pole2 . '\',680,505)">' . $status_name . '
+	<td  align="center" style="background:' . $bg . ' !important;" onclick="miniWin(\'order/adm_visitorID.php?visitorID=' . $id . '&pole1=' . $pole1 . '&pole2=' . $pole2 . $linkOrderMain . '\',680,510)">' . $status_name . '
 	</td>
 </tr>
 	';
         @$i++;
     }
-    if ($i > 30)
-        $razmer = "height:600;";
+    if($pageParam=='') {
+        if ($i > 30)
+            $razmer = "height:600;";
+    }
+
+    if($_REQUEST['pageParam']!='yes') {
+        $checkboxOrderMain = ' <td width="25" id=pane align=center style="padding:0px"><input type=checkbox value=1 name=DoAll onclick="SelectAllBox(this,form_flag)"></td>';
+        $pane_title['sale']='Скидка %';
+        $pane_title['sum']='Сумма ' . GetIsoValutaOrder();
+    }
+    else{
+        $pane_title['sale']='Скидка';
+        $pane_title['sum']='Сумма';
+    }
+    
+
     $_Return = ('
 <div align="left" id="interfacesWin" name="interfacesWin"  style="width:100%;' . @$razmer . ';overflow:auto"> 
 
@@ -155,13 +191,13 @@ function Visitor($pole1, $pole2, $words, $list) {// вывод покупателей
 
 <table cellpadding="0" cellspacing="1" width="100%" border="0" class="sortable" id="sort">
 <tr>
-        <td width="25" id=pane align=center style="padding:0px"><input type=checkbox value=1 name=DoAll onclick="SelectAllBox(this,form_flag)"></td>
+    ' . $checkboxOrderMain . '
 	<td width="100" id="pane" align="center"><img  src="icon/blank.gif"  width="1" height="1" border="0" align="left"><img src=img/arrow_d.gif width=7 height=7 border=0 hspace=5><span name=txtLang id=txtLang>№</span></td>
 	<td id="pane" width="130" align="center"><img src=img/arrow_d.gif width=7 height=7 border=0 hspace=5><span name=txtLang id=txtLang>Поступление</span></td>
 	<td width="300" id="pane" align="center"><img src=img/arrow_d.gif width=7 height=7 border=0 hspace=5><span name=txtLang id=txtLang>Покупатель</span></td>
 <td width="100" id="pane" align="center"><img src=img/arrow_d.gif width=7 height=7 border=0 hspace=5><span name=txtLang id=txtLang>Кол-во</span></td>
-<td width="100" id="pane" align="center"><img src=img/arrow_d.gif width=7 height=7 border=0 hspace=5><span name=txtLang id=txtLang>Скидка</span> %</td>
-<td width="100" id="pane" align="center"><img src=img/arrow_d.gif width=7 height=7 border=0 hspace=5><span name=txtLang id=txtLang>Сумма</span> ' . GetIsoValutaOrder() . '</td>
+<td width="100" id="pane" align="center"><img src=img/arrow_d.gif width=7 height=7 border=0 hspace=5>'.$pane_title['sale'].'</td>
+<td width="100" id="pane" align="center"><img src=img/arrow_d.gif width=7 height=7 border=0 hspace=5>' . $pane_title['sum'] . '</td>
 <td width="130" id="pane" align="center"><img src=img/arrow_d.gif width=7 height=7 border=0 hspace=5><span name=txtLang id=txtLang>Обработан</span></td>
 <td width="200" id="pane" align="center"><img src=img/arrow_d.gif width=7 height=7 border=0 hspace=5><span name=txtLang id=txtLang>Статус</span></td>
 </tr>

@@ -130,7 +130,7 @@ class PHPShopGbook extends PHPShopCore {
         // Мета
         $this->title = $row['tema'] . " - " . $this->PHPShopSystem->getValue("name");
         $this->description = strip_tags($row['otsiv']);
-        $this->lastmodified = PHPShopDate::GetUnicTime($row['datas']);
+        $this->lastmodified = PHPShopDate::GetUnixTime($row['datas']);
 
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__, $row, 'END');
@@ -174,7 +174,7 @@ class PHPShopGbook extends PHPShopCore {
         if ($this->setHook(__CLASS__, __FUNCTION__, $_POST, 'START'))
             return true;
 
-        if (!empty($_SESSION['text']) and $_POST['key'] == $_SESSION['text']) {
+        if (!empty($_SESSION['text']) and strtoupper($_POST['key']) == strtoupper($_SESSION['text'])) {
             $this->write();
             header("Location: ../gbook/?write=ok");
         } else {

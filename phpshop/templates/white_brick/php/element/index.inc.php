@@ -1,5 +1,10 @@
 <?php
 
+// мен€ем параметры дл€ звЄзд в отзывах
+$_SESSION['Memory']["rateForComment"]["oneStarWidth"] = 0; // ширина одной звЄздочки
+$_SESSION['Memory']["rateForComment"]["oneSpaceWidth"] = 0; // пробел между звЄздочками
+
+
 /**
  * Ёлемент вывода случайного товарав перменную @showcase@
  */

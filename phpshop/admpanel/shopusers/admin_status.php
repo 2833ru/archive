@@ -14,7 +14,7 @@ function ShopUsersStatus() {// Вывод
             $checked = "<img src=img/icon-deactivate.gif  width=\"16\" height=\"16\" alt=\"Отсутствует\">";
         };
         @$display.="
-	<tr onmouseover=\"show_on('r" . $id . "')\" id=\"r" . $id . "\" onmouseout=\"show_out('r" . $id . "')\" class=row onclick=\"miniWin('shopusers/adm_statusID.php?id=$id',450,270,event)\">
+	<tr onmouseover=\"show_on('r" . $id . "')\" id=\"r" . $id . "\" onmouseout=\"show_out('r" . $id . "')\" class=row onclick=\"miniWin('shopusers/adm_statusID.php?id=$id',450,420,event)\">
     <td align=center class=forma>$checked</td>
     <td class=forma>
 	" . $name . "
@@ -48,7 +48,7 @@ function ShopUsersStatus() {// Вывод
 </tr>
     </table>
 
-<div align=\"right\" style=\"padding:10;width:50%\"><BUTTON style=\"width: 15em; height: 2.2em; margin-left:5\"  onclick=\"miniWin('shopusers/adm_status_new.php',450, 270)\">
+<div align=\"right\" style=\"padding:10;width:50%\"><BUTTON style=\"width: 15em; height: 2.2em; margin-left:5\"  onclick=\"miniWin('shopusers/adm_status_new.php',450, 420)\">
 <img src=\"icon/page_add.gif\" width=\"16\" height=\"16\" border=\"0\" align=\"absmiddle\" hspace=\"5\">
 <span name=txtLang id=txtLang>Новая позиция</span>
 </BUTTON></div>

@@ -10,7 +10,7 @@ PHPShopObj::loadClass('delivery');
  * Обработчик кабинета пользователя
  * @author PHPShop Software
  * @tutorial http://wiki.phpshop.ru/index.php/PHPShopUsers
- * @version 1.2
+ * @version 1.3
  * @package PHPShopCore
  */
 class PHPShopUsers extends PHPShopCore {
@@ -349,6 +349,9 @@ class PHPShopUsers extends PHPShopCore {
             $this->ParseTemplate($this->getValue('templates.users_page_list'));
         } else {
 
+            // Сообщение об обязательной авторизации
+            $this->set('usersError', __('Требуется авторация пользователя'));
+
             // Форма регистрации нового пользователя
             $this->action_register();
         }
@@ -364,50 +367,76 @@ class PHPShopUsers extends PHPShopCore {
                 $data_adres = unserialize($data['data_adres']);
 
             // формируем массив нового адреса
-            $newAdres['country_new'] = PHPShopSecurity::CleanStr(@$_POST['country_new']);
-            $newAdres['state_new'] = PHPShopSecurity::CleanStr(@$_POST['state_new']);
-            $newAdres['city_new'] = PHPShopSecurity::CleanStr(@$_POST['city_new']);
-            $newAdres['index_new'] = PHPShopSecurity::CleanStr(@$_POST['index_new']);
-            $newAdres['fio_new'] = PHPShopSecurity::CleanStr(@$_POST['fio_new']);
-            $newAdres['tel_new'] = PHPShopSecurity::CleanStr(@$_POST['tel_new']);
-            $newAdres['street_new'] = PHPShopSecurity::CleanStr(@$_POST['street_new']);
-            $newAdres['house_new'] = PHPShopSecurity::CleanStr(@$_POST['house_new']);
-            $newAdres['porch_new'] = PHPShopSecurity::CleanStr(@$_POST['porch_new']);
-            $newAdres['door_phone_new'] = PHPShopSecurity::CleanStr(@$_POST['door_phone_new']);
-            $newAdres['flat_new'] = PHPShopSecurity::CleanStr(@$_POST['flat_new']);
-            $newAdres['delivtime_new'] = PHPShopSecurity::CleanStr(@$_POST['delivtime_new']);
-            $newAdres['org_name_new'] = PHPShopSecurity::CleanStr(@$_POST['org_name_new']);
-            $newAdres['org_inn_new'] = PHPShopSecurity::CleanStr(@$_POST['org_inn_new']);
-            $newAdres['org_kpp_new'] = PHPShopSecurity::CleanStr(@$_POST['org_kpp_new']);
-            $newAdres['org_yur_adres_new'] = PHPShopSecurity::CleanStr(@$_POST['org_yur_adres_new']);
-            $newAdres['org_fakt_adres_new'] = PHPShopSecurity::CleanStr(@$_POST['org_fakt_adres_new']);
-            $newAdres['org_ras_new'] = PHPShopSecurity::CleanStr(@$_POST['org_ras_new']);
-            $newAdres['org_bank_new'] = PHPShopSecurity::CleanStr(@$_POST['org_bank_new']);
-            $newAdres['org_kor_new'] = PHPShopSecurity::CleanStr(@$_POST['org_kor_new']);
-            $newAdres['ogr_bik_new'] = PHPShopSecurity::CleanStr(@$_POST['ogr_bik_new']);
-            $newAdres['org_city_new'] = PHPShopSecurity::CleanStr(@$_POST['org_city_new']);
+            if (!empty($_POST['country_new']))
+                $newAdres['country_new'] = PHPShopSecurity::CleanStr(@$_POST['country_new']);
+            if (!empty($_POST['state_new']))
+                $newAdres['state_new'] = PHPShopSecurity::CleanStr(@$_POST['state_new']);
+            if (!empty($_POST['city_new']))
+                $newAdres['city_new'] = PHPShopSecurity::CleanStr(@$_POST['city_new']);
+            if (!empty($_POST['index_new']))
+                $newAdres['index_new'] = PHPShopSecurity::CleanStr(@$_POST['index_new']);
+            if (!empty($_POST['fio_new']))
+                $newAdres['fio_new'] = PHPShopSecurity::CleanStr(@$_POST['fio_new']);
+            if (!empty($_POST['tel_new']))
+                $newAdres['tel_new'] = PHPShopSecurity::CleanStr(@$_POST['tel_new']);
+            if (!empty($_POST['street_new']))
+                $newAdres['street_new'] = PHPShopSecurity::CleanStr(@$_POST['street_new']);
+            if (!empty($_POST['house_new']))
+                $newAdres['house_new'] = PHPShopSecurity::CleanStr(@$_POST['house_new']);
+            if (!empty($_POST['porch_new']))
+                $newAdres['porch_new'] = PHPShopSecurity::CleanStr(@$_POST['porch_new']);
+            if (!empty($_POST['door_phone_new']))
+                $newAdres['door_phone_new'] = PHPShopSecurity::CleanStr(@$_POST['door_phone_new']);
+            if (!empty($_POST['flat_new']))
+                $newAdres['flat_new'] = PHPShopSecurity::CleanStr(@$_POST['flat_new']);
+            if (!empty($_POST['delivtime_new']))
+                $newAdres['delivtime_new'] = PHPShopSecurity::CleanStr(@$_POST['delivtime_new']);
 
-            // если прислан ИД используемого адреса, обновляем его
-            if (isset($_POST['adres_id']) AND is_numeric($_POST['adres_id'])) {
-                $id = intval($_POST['adres_id']);
-                $data_adres['list'][$id] = $newAdres;
-            } else {
-                // Если новый адрес сохраняем его в массив
-                $data_adres['list'][] = $newAdres;
-                // получаем Ид добавленного адреса
-                end($data_adres['list']);         // move the internal pointer to the end of the array
-                $id = key($data_adres['list']);
+            if (!empty($_POST['org_name_new']))
+                $newAdres['org_name_new'] = PHPShopSecurity::CleanStr(@$_POST['org_name_new']);
+            if (!empty($_POST['org_inn_new']))
+                $newAdres['org_inn_new'] = PHPShopSecurity::CleanStr(@$_POST['org_inn_new']);
+            if (!empty($_POST['org_kpp_new']))
+                $newAdres['org_kpp_new'] = PHPShopSecurity::CleanStr(@$_POST['org_kpp_new']);
+            if (!empty($_POST['org_yur_adres_new']))
+                $newAdres['org_yur_adres_new'] = PHPShopSecurity::CleanStr(@$_POST['org_yur_adres_new']);
+            if (!empty($_POST['org_fakt_adres_new']))
+                $newAdres['org_fakt_adres_new'] = PHPShopSecurity::CleanStr(@$_POST['org_fakt_adres_new']);
+            if (!empty($_POST['org_ras_new']))
+                $newAdres['org_ras_new'] = PHPShopSecurity::CleanStr(@$_POST['org_ras_new']);
+            if (!empty($_POST['org_bank_new']))
+                $newAdres['org_bank_new'] = PHPShopSecurity::CleanStr(@$_POST['org_bank_new']);
+            if (!empty($_POST['org_kor_new']))
+                $newAdres['org_kor_new'] = PHPShopSecurity::CleanStr(@$_POST['org_kor_new']);
+            if (!empty($_POST['org_bik_new']))
+                $newAdres['org_bik_new'] = PHPShopSecurity::CleanStr(@$_POST['org_bik_new']);
+            if (!empty($_POST['org_city_new']))
+                $newAdres['org_city_new'] = PHPShopSecurity::CleanStr(@$_POST['org_city_new']);
+
+            if (is_array($newAdres) AND count($newAdres)) {
+                // если прислан ИД используемого адреса, обновляем его
+                if (isset($_POST['adres_id']) AND is_numeric($_POST['adres_id'])) {
+                    $id = intval($_POST['adres_id']);
+                    if (is_array($newAdres))
+                        $data_adres['list'][$id] = array_merge($data_adres['list'][$id], $newAdres);
+                } else {
+                    // Если новый адрес сохраняем его в массив
+                    $data_adres['list'][] = $newAdres;
+                    // получаем Ид добавленного адреса
+                    end($data_adres['list']);         // move the internal pointer to the end of the array
+                    $id = key($data_adres['list']);
+                }
+
+                if ((!empty($_POST['adres_this_default']) AND $_POST['adres_this_default']) OR !isset($data_adres['main']) OR !isset($data_adres['list'][$data_adres['main']])) {
+                    $data_adres['main'] = $id;
+                }
+
+                $data_adres = serialize($data_adres);
+
+                $this->PHPShopOrm->clean();
+                $this->PHPShopOrm->update(array(
+                    'data_adres_new' => $data_adres), array('mail' => "='" . $_POST['mail'] . "'"));
             }
-
-            if ((!empty($_POST['adres_this_default']) AND $_POST['adres_this_default']) OR !isset($data_adres['main']) OR !isset($data_adres['list'][$data_adres['main']])) {
-                $data_adres['main'] = $id;
-            }
-
-            $data_adres = serialize($data_adres);
-
-            $this->PHPShopOrm->clean();
-            $this->PHPShopOrm->update(array(
-                'data_adres_new' => $data_adres), array('mail' => "='" . $_POST['mail'] . "'"));
             // Перехват модуля
             $this->setHook(__CLASS__, __FUNCTION__, $_POST);
 
@@ -460,7 +489,13 @@ class PHPShopUsers extends PHPShopCore {
      */
     function action_sendpassword() {
         $this->set('formaTitle', __('Восстановление пароля'));
-        $this->set('formaContent', ParseTemplateReturn('phpshop/lib/templates/users/sendpassword.tpl', true));
+
+        // Шаблон формы восстановления пароля
+        if (PHPShopParser::checkFile("users/register.tpl"))
+            $this->set('formaContent', ParseTemplateReturn('users/sendpassword.tpl'));
+        else
+            $this->set('formaContent', ParseTemplateReturn('phpshop/lib/templates/users/sendpassword.tpl', true));
+
         $this->setHook(__CLASS__, __FUNCTION__);
         $this->ParseTemplate($this->getValue('templates.users_page_list'));
     }
@@ -625,6 +660,9 @@ class PHPShopUsers extends PHPShopCore {
         if ($this->get('user_status') == "")
             $this->set('user_status', __('Авторизованный пользователь'));
 
+        //Максимальная скидка
+        $discount = 0 + max($this->PHPShopUser->getDiscount(), $this->PHPShopUser->getParam('cumulative_discount'));
+
         $this->set('user_login', $this->PHPShopUser->getParam('login'));
         $this->set('user_password', $this->decode($this->PHPShopUser->getParam('password')));
         $this->set('user_name', $this->PHPShopUser->getName());
@@ -635,10 +673,16 @@ class PHPShopUsers extends PHPShopCore {
         $this->set('user_tel_code', $this->PHPShopUser->getParam('tel_code'));
         $this->set('user_adres', $this->PHPShopUser->getParam('adres'));
         $this->set('user_kpp', $this->PHPShopUser->getParam('kpp'));
+        $this->set('user_cumulative_discount', $discount);
 
         // Форма личного кабинета пользователя
         $this->set('formaTitle', $this->lang('user_info_title'));
-        $this->set('formaContent', ParseTemplateReturn('phpshop/lib/templates/users/info.tpl', true));
+
+        // Шаблон смены паролей
+        if (PHPShopParser::checkFile("users/users_page_info.tpl"))
+            $this->set('formaContent', ParseTemplateReturn('users/users_page_info.tpl'));
+        else
+            $this->set('formaContent', ParseTemplateReturn('phpshop/lib/templates/users/info.tpl', true));
 
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__, $this->PHPShopUser, 'END');
@@ -752,6 +796,11 @@ class PHPShopUsers extends PHPShopCore {
             $this->user_status = md5(time());
         }
 
+        //Подписка
+        if ($_POST['subscribe_new'] == 'on') {
+            $subscribe = 1;
+        }
+
         // Массив данных нового пользователя
         $insert = array(
             'login_new' => PHPShopSecurity::TotalClean($_POST['login_new'], 3),
@@ -766,6 +815,7 @@ class PHPShopUsers extends PHPShopCore {
             'enabled_new' => $user_mail_activate,
             'status_new' => $this->user_status,
             'kpp_new' => PHPShopSecurity::TotalClean($_POST['kpp_new']),
+            'subscribe_new' => $subscribe,
             'tel_code_new' => PHPShopSecurity::TotalClean($_POST['tel_code_new'])
         );
 
@@ -787,7 +837,7 @@ class PHPShopUsers extends PHPShopCore {
     function user_check_by_email($login) {
         $PHPShopOrm = new PHPShopOrm($this->getValue('base.shopusers'));
         $PHPShopOrm->debug = $this->debug;
-        $data = $PHPShopOrm->select(array('id'), array('login' => '="' . trim($login) . '"'), false, array('limit' => 1));
+        $data = $PHPShopOrm->select(array('id'), array('mail' => '="' . trim($login) . '"'), false, array('limit' => 1));
         if (is_array($data) AND PHPShopSecurity::true_num($data['id'])) {
             return $data['id'];
         }
@@ -911,6 +961,7 @@ class PHPShopUsers extends PHPShopCore {
      * Результат заполнения формы обработывается в action_add_user()
      */
     function action_register() {
+
         // Проверка прохождения авторизации
         if ($this->true_user()) {
             // Форма редактирования персональных данных
@@ -919,8 +970,15 @@ class PHPShopUsers extends PHPShopCore {
         }
 
         $this->set('formaTitle', $this->lang('user_register_title'));
-        $this->set('formaContent', ParseTemplateReturn('phpshop/lib/templates/users/register.tpl', true));
+
+        // Шаблон регистрации
+        if (PHPShopParser::checkFile("users/register.tpl"))
+            $this->set('formaContent', ParseTemplateReturn('users/register.tpl'));
+        else
+            $this->set('formaContent', ParseTemplateReturn('phpshop/lib/templates/users/register.tpl', true));
+
         $this->setHook(__CLASS__, __FUNCTION__);
+
         $this->ParseTemplate($this->getValue('templates.users_page_list'));
     }
 

@@ -10,7 +10,9 @@
                     </tr>
                 </table><div class="cartFullSklad">@productSklad@<br>@oneclick@</div><div class="cartFullFilter">@optionsDisp@</div>@ComEnd@@productParentList@
                 <SCRIPT type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@javascript/links/links.js"></SCRIPT>
-                <div class="full-links"><SCRIPT type="text/javascript">share42("","","@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@")</SCRIPT></div></td>
+                <div class="full-links"><SCRIPT type="text/javascript">share42("","","@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@")</SCRIPT></div>
+               <br>@promotionInfo@
+                </td>
         </tr></tbody></table>
 
 <div class="tabPaneFull" id="tabPaneFull">

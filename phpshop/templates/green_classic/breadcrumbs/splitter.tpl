@@ -1,1 +1,0 @@
- <img src="images/shop/arr2.gif" alt="" width="16" height="16" border="0" align="absmiddle">  

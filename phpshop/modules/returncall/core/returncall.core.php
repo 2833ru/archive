@@ -25,7 +25,12 @@ class PHPShopReturncall extends PHPShopCore {
             'name' => 'done',
             'nav' => 'index'
         );
+
+
         parent::PHPShopCore();
+
+        // Хлебные крошки
+        $this->navigation(null, __('Обратный звонок'));
 
         // Мета
         $this->title = $this->system['title'] . " - " . $this->PHPShopSystem->getValue("name");
@@ -47,6 +52,8 @@ class PHPShopReturncall extends PHPShopCore {
         if (empty($message))
             $message = $GLOBALS['SysValue']['lang']['returncall_done'];
         $this->set('pageTitle', $this->system['title']);
+        $this->set('retuncallDone', $message);
+        $message = PHPShopParser::file($GLOBALS['SysValue']['templates']['returncall']['returncall_done'], true, false, true);
         $this->set('pageContent', $message);
         $this->parseTemplate($this->getValue('templates.page_page_list'));
     }
@@ -63,14 +70,14 @@ class PHPShopReturncall extends PHPShopCore {
             $message = $this->system['title'];
 
         // Защитная каптча
-        if($this->system['captcha_enabled'] == 1){
-        $captcha = parseTemplateReturn($GLOBALS['SysValue']['templates']['returncall']['returncall_captcha_forma'], true);
-        $this->set('returncall_captcha', $captcha);
+        if ($this->system['captcha_enabled'] == 1) {
+            $captcha = PHPShopParser::file($GLOBALS['SysValue']['templates']['returncall']['returncall_captcha_forma'], true, false, true);
+            $this->set('returncall_captcha', $captcha);
         }
 
         // Подключаем шаблон
         $this->set('pageTitle', $message);
-        $this->set('pageContent', parseTemplateReturn($GLOBALS['SysValue']['templates']['returncall']['returncall_forma'], true));
+        $this->set('pageContent', PHPShopParser::file($GLOBALS['SysValue']['templates']['returncall']['returncall_forma'], true, false, true));
         $this->parseTemplate($this->getValue('templates.page_page_list'));
     }
 
@@ -82,7 +89,7 @@ class PHPShopReturncall extends PHPShopCore {
         $error = false;
 
         // Проверка каптчи
-        if($this->system['captcha_enabled'] == 1){
+        if ($this->system['captcha_enabled'] == 1) {
 
             if (empty($_SESSION['mod_returncall_captcha']) or strtolower($_SESSION['mod_returncall_captcha']) != strtolower($_POST['key']))
                 $error = true;
@@ -118,6 +125,8 @@ class PHPShopReturncall extends PHPShopCore {
         $this->PHPShopOrm->insert($insert);
 
         $zag = $this->PHPShopSystem->getValue('name') . " - Обратный звонок - " . PHPShopDate::dataV($date);
+        
+
         $message = "
 Доброго времени!
 ---------------
@@ -133,7 +142,7 @@ class PHPShopReturncall extends PHPShopCore {
 Сообщение:          " . $insert['message_new'] . "
 Дата:               " . PHPShopDate::dataV($insert['date_new']) . "
 IP:                 " . $_SERVER['REMOTE_ADDR'] . "
-
+REFERER:            ".$_SERVER['HTTP_REFERER']." 
 ---------------
 
 С уважением,

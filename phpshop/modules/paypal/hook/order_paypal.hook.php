@@ -12,11 +12,21 @@ function payment_mod_paypal_hook($obj) {
  * Добавление кнопки быстрого заказа
  */
 function order_mod_paypal_hook($obj, $row, $rout) {
+    /*
       if ($rout == "MIDDLE-END")
       if ($obj->temp)
       $obj->set('orderContent', parseTemplateReturn('phpshop/modules/paypal/templates/main_order_forma_nt.tpl', true));
       else
-      $obj->set('orderContent', parseTemplateReturn('phpshop/modules/paypal/templates/main_order_forma.tpl', true));
+      $obj->set('orderContent', parseTemplateReturn('phpshop/modules/paypal/templates/main_order_forma.tpl', true));*/
+    
+    
+     if ($rout == 'MIDDLE') {
+           $order_action_add = "
+           <script type=\"text/javascript\" src='phpshop/modules/paypal/templates/paypal.js'></script>
+           ";
+                       // Добавляем JS в форму заказа
+            $obj->set('order_action_add', $order_action_add, true);
+     }
 }
 
 $addHandler = array

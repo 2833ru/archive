@@ -1,6 +1,6 @@
 @activationNotice@
-<form method="post" name="user_forma" action="@ShopDir@/partner/">
-    <table cellspacing="5">
+<form method="post" name="user_forma" action="@ShopDir@/partner/" class="template-sm">
+    <table cellspacing="5" class="table table-striped">
         <tr>
             <td align="right">	Логин:
             </td>

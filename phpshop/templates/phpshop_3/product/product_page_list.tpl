@@ -6,34 +6,28 @@
 <table width="100%" cellpadding="0" cellspacing="0">
     <tr>
 
-        <td width="100%" bgcolor="#FAFAFA" id=allspec2 >
+        <td width="100%" bgcolor="#FAFAFA" id="allspec2">
     <NOINDEX>
-        <form method="post" action="./CID_@productId@.html" name="sort">
+        <form method="post" action="/shop/CID_@productId@.html" name="sort">
             <table  width="100%" cellpadding="0" cellspacing="10" >
                 <tr>
                     <td class="black">
-                        Сортировка по: <a href="./CID_@productId@_@productPageThis@.html?@productVendor@&f=@productSortNext@&s=@productSort@" title="Изменить направление"><img src="images/shop/@productSortImg@.gif" alt="Изменить направление" hspace="3" border="0" align="absmiddle"></a><a href="./CID_@productId@_@productPageThis@.html?@productVendor@&f=@productSortTo@&s=1" class="@productSortA@">алфавиту</a> - <a href="./CID_@productId@_@productPageThis@.html?@productVendor@&f=@productSortTo@&s=2"  class="@productSortB@">цене</a> - <a href="./CID_@productId@_@productPageThis@.html?@productVendor@&f=@productSortTo@&s=3"  class="@productSortC@">популярности</a>
+                        Сортировка по: <a href="?@productVendor@&f=@productSortNext@&s=@productSort@" title="Изменить направление"><img src="images/shop/@productSortImg@.gif" alt="Изменить направление" hspace="3" border="0" align="absmiddle"></a><a href="?@productVendor@&f=@productSortTo@&s=1" class="@productSortA@">алфавиту</a> - <a href="?@productVendor@&f=@productSortTo@&s=2"  class="@productSortB@">цене</a> - <a href="?@productVendor@&f=@productSortTo@&s=3"  class="@productSortC@">популярности</a>
                     </td>
                 </tr>
-                
-                
+
+
                 <tr>
                     <td>
                         <table cellspacing="0" cellpadding="0">
                             <tr>
                                 @vendorDisp@
-                                <td> @vendorSelectDisp@</td>
+                                <td>&nbsp;@vendorSelectDisp@</td>
                             </tr>
                         </table>
 
                     </td>
                 </tr>
-                <tr>
-                    <td style="padding-left:10px;padding-top:5px">
-                        @productPageNav@
-                    </td>
-                </tr>
-
             </table>
         </form>
     </NOINDEX>

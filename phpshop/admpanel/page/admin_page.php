@@ -17,7 +17,7 @@ function actionStart() {
     // Форма поиска
     $Search = $PHPShopIcon->setForm(
             $PHPShopIcon->setInputText(__('Поиск: '), 'words', '', $size = 180, false, "left",false, $GLOBALS['SysValue']['Lang']['Help']['4']) .
-            $PHPShopIcon->setInput("button", "search_but", "Искать", "right", 70,'PHPShopJS.page.search(search.words.value)','but small'), $action = false, $name = "search", 'get');
+            $PHPShopIcon->setInput("button", "search_but", "Искать", "right", 70,'PHPShopJS.page.search(search.words.value)','but small'), $action = false, $name = "search", 'get', false, "PHPShopJS.page.search(search.words.value); return false;");
 
     $Tab1 = $PHPShopIcon->add($Search,300);
     

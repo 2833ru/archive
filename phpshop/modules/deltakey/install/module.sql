@@ -17,4 +17,4 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_deltakey_system` (
 
 INSERT INTO `phpshop_modules_deltakey_system` VALUES (1,0,'Платежная система DeltaKey','Оплатите пожалуйста свой заказ','','','','','1.0');
 
-INSERT INTO `phpshop_payment_systems` VALUES (10011, 'DeltaKey', 'modules', '0', 0, '', '', '', '');
+INSERT INTO `phpshop_payment_systems` VALUES (10011, 'DeltaKey', 'modules', '0', 0, '', '', '', '/UserFiles/Image/Payments/visa.png');

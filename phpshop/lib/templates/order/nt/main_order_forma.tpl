@@ -1,8 +1,8 @@
 
-<SCRIPT language="JavaScript" type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></SCRIPT>
+<SCRIPT language="JavaScript" type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></SCRIPT>
 <SCRIPT language="JavaScript" type="text/javascript" src="java/jqfunc.js"></SCRIPT>
 @order_action_add@
-<link href="phpshop/lib/templates/order/style.css" type="text/css" rel="stylesheet">
+<link href="phpshop/lib/templates/orde&#114/style.css" type="text/css" rel="stylesheet">
 <form method="post" name="forma_order" action="/done/">
     <div id="checkout">
         <div id="checkout">

@@ -34,6 +34,7 @@ $PHPShopGUI->debug_close_window = false;
 $PHPShopGUI->debug = false;
 $PHPShopGUI->addJSFiles('/phpshop/lib/Subsys/JsHttpRequest/Js.js', '/phpshop/lib/JsHttpRequest/JsHttpRequest.js');
 $PHPShopGUI->addJSFiles('../java/sorttable.js');
+$PHPShopGUI->addJSFiles('../java/javaMG.js');
 $PHPShopGUI->dir = $_classPath . "admpanel/";
 
 // SQL
@@ -45,6 +46,66 @@ PHPShopObj::loadClass("modules");
 $PHPShopModules = new PHPShopModules($_classPath . "modules/");
 
 /**
+ * Перерасчет скидки
+ */
+function updateDiscount($data) {
+    global $PHPShopSystem, $PHPShopBase, $_classPath;
+
+    // Статусы заказов
+    $PHPShopOrderStatusArray = new PHPShopOrderStatusArray();
+    $GetOrderStatusArray = $PHPShopOrderStatusArray->getArray();
+
+    //Если нужно пересчитать персональную скидку пользователя
+    //if ($GetOrderStatusArray[$_POST['statusi_new']]['cumulative_action'] == 1) {
+
+        //Запрос статуса пользователя
+        $sql_st = "SELECT * FROM `".$GLOBALS['SysValue']['base']['table_name27']."` WHERE `id` =".$data['user']." ";
+        $query_st = mysql_query($sql_st);
+        $row_st = mysql_fetch_array($query_st);
+        $status_user = $row_st['status'];
+
+
+        //Запрос алгоритма расчета персональной скидки
+        $sql_d = "SELECT * FROM `".$GLOBALS['SysValue']['base']['table_name28']."` WHERE `id` =".$status_user." ";
+        $query_d = mysql_query($sql_d);
+        $row_d = mysql_fetch_array($query_d);
+        $cumulative_array = unserialize($row_d['cumulative_discount']);
+        $cumulative_array_check = $row_d['cumulative_discount_check'];
+        if($cumulative_array_check==1) {
+            //Список заказов
+            $sql_order = "SELECT ".$GLOBALS['SysValue']['base']['table_name1'].".* FROM `".$GLOBALS['SysValue']['base']['table_name1']."` 
+            LEFT JOIN `".$GLOBALS['SysValue']['base']['table_name32']."` ON ".$GLOBALS['SysValue']['base']['table_name1'].".statusi=".$GLOBALS['SysValue']['base']['table_name32'].".id 
+            WHERE ".$GLOBALS['SysValue']['base']['table_name1'].".user =  ".$data['user']." 
+            AND ".$GLOBALS['SysValue']['base']['table_name32'].".cumulative_action='1' ";
+            $query_order = mysql_query($sql_order);
+            $row_order = mysql_fetch_array($query_order);
+            $sum = '0'; //Очистка суммы
+            do {
+                $orders = unserialize($row_order['orders']);
+                $sum += $orders['Cart']['sum'];
+            }
+            while ($row_order = mysql_fetch_array($query_order));
+
+            //Узнаем скидку
+            $q_cumulative_discount = '0'; //Очистка скидки
+            foreach ($cumulative_array as $key => $value) {
+                if($sum>=$value['cumulative_sum_ot'] and $sum<=$value['cumulative_sum_do']) {
+                    $q_cumulative_discount = $value['cumulative_discount'];
+                    break;
+                }
+            }
+            //Обновляем скидку
+            $sql_update = "UPDATE  `".$GLOBALS['SysValue']['base']['table_name27']."` SET `cumulative_discount` =  '".$q_cumulative_discount."' WHERE `id` =".intval($data['user'])." ";
+            mysql_query($sql_update);
+        }
+        else {
+            $sql_update = "UPDATE  `".$GLOBALS['SysValue']['base']['table_name27']."` SET `cumulative_discount` =  '0' WHERE `id` =".intval($data['user'])." ";
+            mysql_query($sql_update);
+        }
+    //}
+}
+
+/**
  * Списывание со склада
  */
 function updateStore($data) {
@@ -54,10 +115,11 @@ function updateStore($data) {
     $PHPShopOrderStatusArray = new PHPShopOrderStatusArray();
     $GetOrderStatusArray = $PHPShopOrderStatusArray->getArray();
 
+
     // SMS оповещение пользователю о смене статуса заказа
     if ($data['statusi'] != $_POST['statusi_new'] and $PHPShopSystem->ifSerilizeParam('admoption.sms_status_order_enabled')) {
 
-        $phone = $_POST['person']['tel_code'] . $_POST['person']['tel_name'];
+        $phone = $_POST['tel_new'];
         $msg = strtoupper($_SERVER['SERVER_NAME']) . ': ' . $PHPShopBase->getParam('lang.sms_user') . $data['uid'] . " - " . $GetOrderStatusArray[$_POST['statusi_new']]['name'];
 
         // Проверка на первую 7 или 8
@@ -69,6 +131,7 @@ function updateStore($data) {
         include_once $lib;
         SendSMS($msg, $phone);
     }
+
 
     // Если новый статус Аннулирован, а был статус не Новый заказ, то мы не списываем, а добавляем обратно
     if ($data['statusi'] != 0 && $_POST['statusi_new'] == 1) {
@@ -203,7 +266,10 @@ function actionStart() {
     else
         $userLink = $order['Person']['mail'];
 
-    $Tab1 .= PHPShopText::div(PHPShopText::b("Покупатель:" . "<br>") . PHPShopText::p($userLink . "<br>" . PHPShopText::b($data['fio'] . $order['Person']['name_person'])), "left", "float:left;padding:5px;margin-left:0px;height:39px; width:200px;");
+        $allOrderLink = "<p><a href='' onclick=\"DoReloadMainWindow('orders','','','".$order['Person']['mail']."'); return false;\">Посмотреть все заказы</a></p>";
+
+
+    $Tab1 .= PHPShopText::div(PHPShopText::b("Покупатель:" . "<br>") . PHPShopText::p($userLink . "  " . PHPShopText::b($data['fio'] . $order['Person']['name_person']) . PHPShopText::b("<br>".$allOrderLink) ), "left", "float:left;padding:5px;margin-left:0px;height:39px; width:200px;");
 
     // Дополнительная информация от пользователя к заказу
     $Tab1 .= $PHPShopGUI->setField(__("Дополнительная информация к заказу от пользователя:"), $PHPShopGUI->setTextarea('dop_info_new', $data['dop_info'], 'none', '393px'), "left", 'left');
@@ -228,8 +294,8 @@ function actionStart() {
     // выводим сгрупппированные данные пользователя
     if ($data['fio'] OR $order['Person']['name_person'])
         $adr_info .= ", ФИО: " . $data['fio'] . $order['Person']['name_person'];
-    if ($data['tel'] or $_POST['person']['tel_code'] or $_POST['person']['tel_name'])
-        $adr_info .= ", тел.: " . $data['tel'] . $_POST['person']['tel_code'] . $_POST['person']['tel_name'];
+    if ($data['tel'] or $order['Person']['tel_code'] or $order['Person']['tel_name'])
+        $adr_info .= ", тел.: " . $data['tel'] . $order['Person']['tel_code'] . $order['Person']['tel_name'];
     if ($data['country'])
         $adr_info .= ", страна: " . $data['country'];
     if ($data['state'])
@@ -287,11 +353,11 @@ function actionStart() {
     $Tab1_2 = $PHPShopGUI->loadLib('tab_advance', $data);
 
     // Пометка менеджера
-    $Tab1_2 .=$PHPShopGUI->setField(__("Пометка менеджера (видна заказчику в ЛК)"), $PHPShopGUI->setTextarea('status[maneger]', $status['maneger'], 'none', '290px'), 'left') . $PHPShopGUI->setLine();
+    $Tab1_3=$PHPShopGUI->setField(__("Пометка менеджера (видна заказчику в ЛК)"), $PHPShopGUI->setTextarea('status[maneger]', $status['maneger'], 'none', '290px'), 'left') . $PHPShopGUI->setLine();
 
     // Платежные документы
     $PHPShopInterface = new PHPShopInterface('_pretab2_');
-    $PHPShopInterface->setTab(array(__("Печатные бланки"), $Tab1_1, 75), array(__("Дополнительно"), $Tab1_2, 75));
+    $PHPShopInterface->setTab(array(__("Печатные бланки"), $Tab1_1, 75), array(__("Дополнительно"), $Tab1_2, 75),array(__("Комментарий"), $Tab1_3, 75));
     $Tab1.=$PHPShopGUI->setDiv('left', $PHPShopInterface->getContent(), 'float:left;padding-left:0px; width:630px;');
 
     // Корзина
@@ -430,9 +496,18 @@ function actionUpdate() {
 
     // Оповещение пользователя о новом статусе
     sendUserMail($data);
+    
+    // Загрузка в 1С для нового заказа
+    if(empty($_POST['statusi_new']))
+        $_POST['seller_new']=0;
 
     $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['visitorID']));
     $PHPShopOrm->clean();
+
+    // Персональная скидка
+    updateDiscount($data);
+
+    $_SESSION['editOrderId'] = $_POST['visitorID'];
 
     return $action;
 }

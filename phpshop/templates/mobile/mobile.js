@@ -15,7 +15,7 @@ function setOption(style) {
     ga.href = '/phpshop/templates/mobile/ratchet/css/' + style;
     var s = document.getElementsByTagName('script')[0];
     s.parentNode.insertBefore(ga, s);
-    
+
     setCookie('mobile_skin', style, 10);
 }
 
@@ -36,4 +36,14 @@ function setCookie(name, value, days) {
     var today = new Date();
     expires = new Date(today.getTime() + days * 24 * 60 * 60 * 1000);
     document.cookie = name + "=" + escape(value) + "; expires=" + expires.toGMTString();
+}
+
+function addCartOption(xid) {
+    var name = "allOptionsSet" + xid;
+    if (document.getElementById(name)) {
+        addname = document.getElementById(name).value;
+    } else {
+        addname = "";
+    }
+    window.location.replace('/order/?from=html&id='+xid+'&addname=t'+addname);
 }

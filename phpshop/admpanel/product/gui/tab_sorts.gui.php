@@ -31,8 +31,8 @@ function sorttemplate($value, $n, $title, $vendor) {
 
     $value = $PHPShopGUI->setSelect('vendor_array_new[' . $n . '][]', $value_new, '100%', false, false, false, false, false, $n,'list'.$n);
     
-    $disp=$PHPShopGUI->setLine().$PHPShopGUI->setField($title, $value,'left',false,false,array('width'=>'200px;')).
-            $PHPShopGUI->setField(__('Добавить и активировать новое значение характеристики'), $PHPShopGUI->setInputText(false, 'addval'.$n, null, $size = 300).$PHPShopGUI->setInput("button", "", "Добавить", "right", 70, "return enterchar($n);", "but").'<B id="sta'.$n.'"></B>','left');
+    $disp=$PHPShopGUI->setLine().$PHPShopGUI->setField($title, $value,'left',false,false,array('width'=>'45%;')).
+            $PHPShopGUI->setField(__('Добавить и активировать новое значение характеристики'), $PHPShopGUI->setInputText(false, 'addval'.$n).$PHPShopGUI->setInput("button", "", "Добавить", "right", 70, "return enterchar($n);", "but").'<B id="sta'.$n.'"></B>','left');
     
     return $disp;
 }

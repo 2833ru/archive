@@ -35,8 +35,8 @@ function MessageList($UID = 0) {
             $color = '';
         }
         $DataTime = $row['DateTime'];
-        $Subject = $row['Subject'];
-        $Message = $row['Message'];
+        $Subject = PHPShopSecurity::TotalClean($row['Subject']);
+        $Message = strip_tags($row['Message'],'<b><hr><br>');
 
         if (strlen($Subject) > 1) {
             $Subject = '<B>' . $Subject . '</B><BR>';
@@ -226,7 +226,7 @@ IP:" . $_SERVER['REMOTE_ADDR'];
 
     if ($i) {
         $display = '<H3>История сообщений</H3>
-<table id=allspecwhite cellpadding="1" cellspacing="1" width="100%">
+<table id="allspecwhite" cellpadding="1" cellspacing="1" width="100%" class="table table-striped">
 <tr>
 	<td width="20%"  id=allspec><span name=txtLang id=txtLang>Дата</span></td>
 	<td width="80%"  id=allspec><span name=txtLang id=txtLang>Сообщение</span></td>
@@ -241,13 +241,14 @@ IP:" . $_SERVER['REMOTE_ADDR'];
 <table style="width:80%;">
 <tr>
   <td style="width:80%;height:100px;">
-  <form method="post" name="forma_message">
+  <form method="post" name="forma_message" id="forma_message">
   <B>Заголовок сообщения</B><BR>
   <input type="TEXT" style="width:80%;" value="' . $Subject . '" ' . $Subjectreadonly . ' name="Subject"><BR>
   ' . $oldmessage . '
   <textarea style="width:80%;height:100px;" name="message" id="message"></textarea>
   <div>
-  <input type="button" value="Задать вопрос менеджеру" onclick="CheckMessage()">
+  <br>
+  <input type="button" value="Задать вопрос менеджеру" id="CheckMessage" onclick="if(typeof checkMessageText == \'function\') checkMessageText();">
   </div>
   </form>
   </td>

@@ -23,13 +23,12 @@
         <td> @vendorSelectDisp@</td>
       </tr>
     </table>
-    <div> @vendorDispTitle@ </div>
 </div>
 <table cellpadding="0" cellspacing="0" border="0" class="catalogOptionTable1">
 	<tbody>
 		<tr>
 		  <td align="left" valign="middle" class="catOptionTD"><div class="page_nav_top">@productPageNav@</div></td>
-		  <td align="right" valign="middle"><div class="divSortPageList">÷ена: &nbsp; <a href="./CID_@productId@_@productPageThis@.html?v=@productVendor@&f=2&amp;s=2"><img src="images/furniture_24.gif" align="absmiddle" border="0"></a> <span class="spanSortPageList"><a href="./CID_@productId@_@productPageThis@.html?v=@productVendor@&f=2&amp;s=2">убыв</a> <a href="./CID_@productId@_@productPageThis@.html?v=@productVendor@&f=1&amp;s=2"><img src="images/furniture_25.gif" align="absmiddle" border="0"></a> <a href="./CID_@productId@_@productPageThis@.html?v=@productVendor@&f=1&amp;s=2">возр</a></span></div></td>
+		  <td align="right" valign="middle"><div class="divSortPageList">÷ена: &nbsp; <a href="?v=@productVendor@&f=2&amp;s=2"><img src="images/furniture_24.gif" align="absmiddle" border="0"></a> <span class="spanSortPageList"><a href="?v=@productVendor@&f=2&amp;s=2">убыв</a> <a href="?v=@productVendor@&f=1&amp;s=2"><img src="images/furniture_25.gif" align="absmiddle" border="0"></a> <a href="?v=@productVendor@&f=1&amp;s=2">возр</a></span></div></td>
 		</tr>
 	</tbody>
 </table>
@@ -44,7 +43,7 @@
 	<tbody>
 		<tr>
 		  <td align="left" valign="middle" class="catOptionTD"><div class="page_nav_bot">@productPageNav@</div></td>
-          <td align="right" valign="middle"><div class="divSortPageList">÷ена: &nbsp; <a href="./CID_@productId@_@productPageThis@.html?v=@productVendor@&f=2&amp;s=2"><img src="images/furniture_24.gif" align="absmiddle" border="0"></a> <span class="spanSortPageList"><a href="./CID_@productId@_@productPageThis@.html?v=@productVendor@&f=2&amp;s=2">убыв</a> <a href="./CID_@productId@_@productPageThis@.html?v=@productVendor@&f=1&amp;s=2"><img src="images/furniture_25.gif" align="absmiddle" border="0"></a> <a href="./CID_@productId@_@productPageThis@.html?v=@productVendor@&f=1&amp;s=2">возр</a></span></div></td>
+          <td align="right" valign="middle"><div class="divSortPageList">÷ена: &nbsp; <a href="?v=@productVendor@&f=2&amp;s=2"><img src="images/furniture_24.gif" align="absmiddle" border="0"></a> <span class="spanSortPageList"><a href="?v=@productVendor@&f=2&amp;s=2">убыв</a> <a href="?v=@productVendor@&f=1&amp;s=2"><img src="images/furniture_25.gif" align="absmiddle" border="0"></a> <a href="?v=@productVendor@&f=1&amp;s=2">возр</a></span></div></td>
 		</tr>
 	</tbody>
 </table>

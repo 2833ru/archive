@@ -76,7 +76,7 @@
         <td width="55" ></td>
         <td class="mobHideCol" width="30"></td>
         <td align="right" class="red" class="mobHideCol"></td>
-        <td align="right" class="red"><span id="SkiSumma">@discount@</span>&nbsp;%</td>
+        <td align="right" class="red" id="SkiSummaAll"><span id="SkiSumma">@discount@</span>&nbsp;%</td>
         <td align="right" class="red"></td>
 
     </tr>

@@ -57,6 +57,7 @@ class PHPShopCoreElement extends PHPShopElements {
         $this->set('telNum', $this->PHPShopSystem->getValue('tel'));
         $this->set('name', $this->PHPShopSystem->getValue('name'));
         $this->set('company', $this->PHPShopSystem->getValue('company'));
+        $this->set('streetAddress', $this->PHPShopSystem->getSerilizeParam('bank.org_adres'));
         $this->set('descrip', $this->PHPShopSystem->getValue('descrip'));
         $this->set('adminMail', $this->PHPShopSystem->getValue('adminmail2'));
         $this->set('pathTemplate', $this->getValue('dir.templates') . chr(47) . $_SESSION['skin']);
@@ -73,6 +74,19 @@ class PHPShopCoreElement extends PHPShopElements {
         $this->set('version', substr($v, 0, 1) . '.' . substr($v, 1, 1));
         $this->set('hcs', '<!--');
         $this->set('hce', '-->');
+
+        // Цветовая тема шаблона
+        $theme = $this->PHPShopSystem->getSerilizeParam('admoption.' . $_SESSION['skin'] . '_theme');
+        if (!empty($theme))
+            $this->set($_SESSION['skin'] . '_theme', $theme);
+
+        $theme2 = $this->PHPShopSystem->getSerilizeParam('admoption.' . $_SESSION['skin'] . '_theme2');
+        if (!empty($theme2))
+            $this->set($_SESSION['skin'] . '_theme2', $theme2);
+
+        $theme3 = $this->PHPShopSystem->getSerilizeParam('admoption.' . $_SESSION['skin'] . '_theme3');
+        if (!empty($theme3))
+            $this->set($_SESSION['skin'] . '_theme3', $theme3);
 
         // Логотип
         $this->set('logo', $this->PHPShopSystem->getLogo());
@@ -186,9 +200,10 @@ class PHPShopUserElement extends PHPShopElements {
                 $_SESSION['UsersStatus'] = $data['status'];
 
                 // E-mail пользователя для заказа
-                if(PHPShopSecurity::true_email($data['login']))
-                $_SESSION['UsersMail'] = $data['login'];
-                else $_SESSION['UsersMail'] = $data['mail'];
+                if (PHPShopSecurity::true_email($data['login']))
+                    $_SESSION['UsersMail'] = $data['login'];
+                else
+                    $_SESSION['UsersMail'] = $data['mail'];
 
                 // Дата входа
                 $this->log();
@@ -535,6 +550,12 @@ class PHPShopTextElement extends PHPShopElements {
                 $this->set('topMenuName', $row['name']);
                 $this->set('topMenuLink', $row['link']);
 
+                // Активная страница
+                if ($row['link'] == $this->PHPShopNav->getName(true))
+                    $this->set('topMenuActive', 'active');
+                else
+                    $this->set('topMenuActive', '');
+
                 // Перехват модуля
                 $this->setHook(__CLASS__, __FUNCTION__, $row);
 
@@ -578,16 +599,27 @@ class PHPShopSkinElement extends PHPShopElements {
                             else
                                 $sel = "";
 
-                            if ($file != "." and $file != ".." and $file != "index.html")
-                                $value[] = array($file, $file, $sel);
+                            if ($file != "." and $file != ".." and $file != "index.html") {
+
+                                if (in_array($file, array('bootstrap', 'bootstrap_fluid', 'white_brick')))
+                                    $value_up[] = array($file, $file, $sel);
+                                else
+                                    $value_down[] = array($file, $file, $sel);
+                            }
                         }
                     }
                     closedir($dh);
                 }
             }
 
+
+            if (is_array($value_up))
+                $value = array_merge($value_up, $value_down);
+            else
+                $value = $value_down;
+
             // Определяем переменные
-            $forma = PHPShopText::p(PHPShopText::form(PHPShopText::select('skin', $value, 150, $float = "none", $caption = false, $onchange = "ChangeSkin()"), 'SkinForm', null, ""));
+            $forma = PHPShopText::div(PHPShopText::form(PHPShopText::select('skin', $value, 150, $float = "none", $caption = false, $onchange = "ChangeSkin()"), 'SkinForm', 'get'),'left','padding:10px');
             $this->set('leftMenuContent', $forma);
             $this->set('leftMenuName', __("Сменить дизайн"));
 

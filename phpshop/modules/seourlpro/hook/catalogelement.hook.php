@@ -5,10 +5,12 @@
  */
 function template_cat_table_seourl_hook($obj, $val) {
 
-    if (!empty($val['cat_seo_name']))
-        $GLOBALS['PHPShopSeoPro']->setMemory($val['id'], $val['cat_seo_name'],1,false);
-    else
-        $GLOBALS['PHPShopSeoPro']->setMemory($val['id'], $val['name']);
+    if ($GLOBALS['PHPShopSeoPro']) {
+        if (!empty($val['cat_seo_name']))
+            $GLOBALS['PHPShopSeoPro']->setMemory($val['id'], $val['cat_seo_name'], 1, false);
+        else
+            $GLOBALS['PHPShopSeoPro']->setMemory($val['id'], $val['name']);
+    }
 }
 
 /**
@@ -18,7 +20,7 @@ function leftCatal_seourl_hook($obj, $row, $rout) {
     if ($rout == 'END') {
 
         if (!empty($row['cat_seo_name']))
-            $GLOBALS['PHPShopSeoPro']->setMemory($row['id'], $row['cat_seo_name'],1,false);
+            $GLOBALS['PHPShopSeoPro']->setMemory($row['id'], $row['cat_seo_name'], 1, false);
         else
             $GLOBALS['PHPShopSeoPro']->setMemory($row['id'], $row['name']);
     }
@@ -29,10 +31,14 @@ function leftCatal_seourl_hook($obj, $row, $rout) {
  */
 function subcatalog_seourl_hook($obj, $row) {
 
-    if (!empty($row['cat_seo_name']))
-        $GLOBALS['PHPShopSeoPro']->setMemory($row['id'], $row['cat_seo_name'],1,false);
-    else
-        $GLOBALS['PHPShopSeoPro']->setMemory($row['id'], $row['name']);
+    if (!empty($row['cat_seo_name'])) {
+        if (!$GLOBALS['PHPShopSeoPro']->setMemory($row['id'], $row['cat_seo_name'], 1, false))
+            $_SESSION['PHPShopSeoProError'] = true;
+    }
+    else {
+        if (!$GLOBALS['PHPShopSeoPro']->setMemory($row['id'], $row['name']))
+            $_SESSION['PHPShopSeoProError'] = true;
+    }
 }
 
 $addHandler = array

@@ -369,6 +369,7 @@ function actionUpdate() {
     // Комментарий и время обработки
     $_POST['status']['time'] = PHPShopDate::dataV();
     $_POST['status_new'] = serialize($_POST['status']);
+    $_POST['seller_new'] = 0;
 
     $PHPShopOrm->clean();
 

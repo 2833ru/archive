@@ -12,6 +12,8 @@ $var1 = @$_REQUEST['var1'];
 $var2 = @$_REQUEST['var2'];
 $var3 = @$_REQUEST['var3'];
 $var4 = @$_REQUEST['var4'];
+$p2 = @$_REQUEST['page2'];
+$pageParam = @$_REQUEST['pageParam'];
 $tit = @$_REQUEST['tit'];
 
 
@@ -127,7 +129,7 @@ switch ($p) {
 <form method="post" name=calendar>
 <table cellpadding="0" cellspacing="0">
 <tr>
-	<td><input type="text" style="width:80" name="pole1" value="' . @$var1 . '">
+	<td><input type="text" style="width:80px" name="pole1" value="' . @$var1 . '">
 	<IMG onclick="popUpCalendar(this, calendar.pole1, \'dd-mm-yyyy\');" height=16 hspace=3 src="icon/date.gif" width=16 border=0 align="absmiddle"  class="icon">
 	</td>
 	<td><input type="text" style="width:80" value="';
@@ -208,23 +210,22 @@ switch ($p) {
 <table width="100%" cellpadding="0" cellpadding="0" class="iconpane border-bottom">
 <tr>
 <td>
-<form method="post" name=calendar>
 <table cellpadding="0" cellspacing="0">
 <tr>
-	<td><input type="text" style="width:80" name="pole1" value="' . @$var1 . '">
-	<IMG onclick="popUpCalendar(this, calendar.pole1, \'dd-mm-yyyy\');" height=16 hspace=3 src="icon/date.gif" width=16 border=0 align="absmiddle" class="icon">
+	<td><input type="text" style="width:80" name="pole1" id="pole1" value="' . @$var1 . '">
+	<IMG onclick="popUpCalendar(this, document.getElementById(\'pole1\'), \'dd-mm-yyyy\');" height=16 hspace=3 src="icon/date.gif" width=16 border=0 align="absmiddle" class="icon">
 	</td>
 	<td><input type="text" style="width:80" value="';
         if (!$var2)
             $interface.= date("d-m-Y");
         else
             $interface.= @$var2;
-        $interface.='" name="pole2">
+        $interface.='" name="pole2" id="pole2">
 	</td>
-	<td><IMG onclick="popUpCalendar(this, calendar.pole2, \'dd-mm-yyyy\');" height=16 hspace=3 src="icon/date.gif" width=16 border=0 align="absmiddle" class="icon">
+	<td><IMG onclick="popUpCalendar(this, document.getElementById(\'pole2\'), \'dd-mm-yyyy\');" height=16 hspace=3 src="icon/date.gif" width=16 border=0 align="absmiddle" class="icon">
 	</td>
 	<td>
-	<input type=button id=btnShow value="Показать" class="but small" onclick="DoReload(\'order_payment\',calendar.pole1.value, calendar.pole2.value)">
+	<input type=button id=btnShow value="Показать" class="but small" onclick="DoReload(\'order_payment\',document.getElementById(\'pole1\').value, document.getElementById(\'pole2\').value)">
 	</td>
 	<td width="10"></td>
 	<td width="1" bgcolor="#ffffff"></td>
@@ -234,8 +235,9 @@ switch ($p) {
 	<table cellspacing="0" cellpadding="0" >
 <tr>
     <td>
+    <form method="post" name=orderse onSubmit="DoReload(\'order_payment\',document.getElementById(\'pole1\').value,document.getElementById(\'pole2\').value,document.getElementById(\'order_serach\').value; return false;">
 	<input type=text name="order_serach" id="order_serach" size=30  value="' . $var3 . '">
-	<input type=button value=Поиск class="but small" onclick="DoReload(\'order_payment\',calendar.pole1.value,calendar.pole2.value,document.getElementById(\'order_serach\').value)">
+	<input type=button value=Поиск class="but small" onclick="DoReload(\'order_payment\',document.getElementById(\'pole1\').value,document.getElementById(\'pole2\').value,document.getElementById(\'order_serach\').value)">
 	</td>
 </tr>
 </table>
@@ -243,11 +245,12 @@ switch ($p) {
 	
 </tr>
 </table>
-</form>
 </td>
 </td>
 </tr>
 </table>
+</form>
+
 	 ';
         require("../payment/admin_webpayment.php");
         if (CheckedRules($UserStatus["visitor"], 0) == 1)
@@ -439,22 +442,23 @@ switch ($p) {
       <FIELDSET id=fldLayout >
 <LEGEND id=lgdLayout><span name=txtLang id=txtLang><u>Д</u>анные, отмечанные флажками будут изменены/добавлены</span></LEGEND>
 <div style="padding:10">
-<input type="checkbox" value="1" id="tip_1" checked> <span name=txtLang id=txtLang>Наименование&nbsp;&nbsp;</span>
-<input type="checkbox" value="1" id="tip_2" checked> <span name=txtLang id=txtLang>Краткое описание&nbsp;&nbsp;</span>
-<input type="checkbox" value="1" id="tip_3" checked> <span name=txtLang id=txtLang>Маленькая картинка&nbsp;&nbsp;</span>
-<input type="checkbox" value="1" id="tip_4" checked> <span name=txtLang id=txtLang>Подробное описание&nbsp;&nbsp;</span>
-<input type="checkbox" value="1" id="tip_5" checked> <span name=txtLang id=txtLang>Большая картинка&nbsp;&nbsp;</span>
-<input type="checkbox" value="1" id="tip_6" checked> <span name=txtLang id=txtLang>Цена1&nbsp;&nbsp;</span>
-<input type="checkbox" value="1" id="tip_7" checked> <span name=txtLang id=txtLang>Цена2&nbsp;&nbsp;</span>
-<input type="checkbox" value="1" id="tip_8" checked> <span name=txtLang id=txtLang>Цена3&nbsp;&nbsp;</span>
-<input type="checkbox" value="1" id="tip_9" checked> <span name=txtLang id=txtLang>Цена4&nbsp;&nbsp;</span>
-<input type="checkbox" value="1" id="tip_10" checked> <span name=txtLang id=txtLang>Цена5&nbsp;&nbsp;</span>
-<input type="checkbox" value="1" id="tip_11" checked> <span name=txtLang id=txtLang>Склад&nbsp;&nbsp;</span>
-<input type="checkbox" value="1" id="tip_13" checked> <span name=txtLang id=txtLang>Артикул&nbsp;&nbsp;</span>
-<input type="checkbox" value="1" id="tip_14" checked> <span name=txtLang id=txtLang>Категория&nbsp;&nbsp;</span>
-<input type="checkbox" value="1" id="tip_15" checked> <span name=txtLang id=txtLang>Характеристики&nbsp;&nbsp;</span>
-<input type="checkbox" value="1" id="tip_17" checked> <span name=txtLang id=txtLang>Доп. категория&nbsp;&nbsp;</span>
-<input type="checkbox" value="1" id="tip_12" checked disabled> <span name=txtLang id=txtLang>Вес&nbsp;&nbsp;</span>
+<label><input type="checkbox" value="1" id="tip_1" checked> <span name=txtLang id=txtLang>Наименование&nbsp;&nbsp;</span></label>
+<label><input type="checkbox" value="1" id="tip_2" checked> <span name=txtLang id=txtLang>Краткое описание&nbsp;&nbsp;</span></label>
+<label><input type="checkbox" value="1" id="tip_3" checked> <span name=txtLang id=txtLang>Маленькая картинка&nbsp;&nbsp;</span></label>
+<label><input type="checkbox" value="1" id="tip_4" checked> <span name=txtLang id=txtLang>Подробное описание&nbsp;&nbsp;</span></label>
+<label><input type="checkbox" value="1" id="tip_5" checked> <span name=txtLang id=txtLang>Большая картинка&nbsp;&nbsp;</span></label>
+<label><input type="checkbox" value="1" id="tip_6" checked> <span name=txtLang id=txtLang>Цена1&nbsp;&nbsp;</span></label>
+<label><input type="checkbox" value="1" id="tip_7" checked> <span name=txtLang id=txtLang>Цена2&nbsp;&nbsp;</span></label>
+<label><input type="checkbox" value="1" id="tip_8" checked> <span name=txtLang id=txtLang>Цена3&nbsp;&nbsp;</span></label>
+<label><input type="checkbox" value="1" id="tip_9" checked> <span name=txtLang id=txtLang>Цена4&nbsp;&nbsp;</span></label>
+<label><input type="checkbox" value="1" id="tip_10" checked> <span name=txtLang id=txtLang>Цена5&nbsp;&nbsp;</span></label>
+<label><input type="checkbox" value="1" id="tip_11" checked> <span name=txtLang id=txtLang>Склад&nbsp;&nbsp;</span></label>
+<label><input type="checkbox" value="1" id="tip_13" checked> <span name=txtLang id=txtLang>Артикул&nbsp;&nbsp;</span></label>
+<label><input type="checkbox" value="1" id="tip_14" checked> <span name=txtLang id=txtLang>Категория&nbsp;&nbsp;</span></label>
+<label><input type="checkbox" value="1" id="tip_15" checked> <span name=txtLang id=txtLang>Характеристики&nbsp;&nbsp;</span><br></label>
+<label><input type="checkbox" value="1" id="tip_18" checked> <span name=txtLang id=txtLang>Рекомендуемые товары&nbsp;&nbsp;</span></label>
+<label><input type="checkbox" value="1" id="tip_17" checked> <span name=txtLang id=txtLang>Доп. категория&nbsp;&nbsp;</span></label>
+<label><input type="checkbox" value="1" id="tip_12" checked disabled> <span name=txtLang id=txtLang>Вес&nbsp;&nbsp;</span></label>
 Валюта: ' . ChoiceValuta() . ' 
 </div>
 </div>
@@ -827,7 +831,7 @@ switch ($p) {
 	<td width="1" bgcolor="#ffffff"></td>
 	<td width="1" bgcolor="#808080" class="separator"></td>
    <td width="5"></td>
-	 <td id="but2" class="butoff"><img name="imgLang" src="icon/blank.gif" alt="" width="1" height="1" border="0"><img src="icon/group_add.gif" name="imgLang" title="Новая позиция" width="16" height="16" border="0" onmouseover="ButOn(2)" onmouseout="ButOff(2)" onclick="miniWin(\'shopusers/adm_users_new.php\',500,570)"></td>
+	 <td id="but2" class="butoff"><img name="imgLang" src="icon/blank.gif" alt="" width="1" height="1" border="0"><img src="icon/group_add.gif" name="imgLang" title="Новая позиция" width="16" height="16" border="0" onmouseover="ButOn(2)" onmouseout="ButOff(2)" onclick="miniWin(\'shopusers/adm_users_new.php\',500,400)"></td>
 <td width="5"></td>
 <td id="but39" class="butoff"><img src="icon/folder_key.gif" name="imgLang" title="Статусы пользователей" width="16" height="16" border="0" onmouseover="ButOn(39)" onmouseout="ButOff(39)" onclick="DoReload(\'shopusers_status\')"></td>
 <td width="5"></td>
@@ -873,7 +877,7 @@ switch ($p) {
 	 <table width="100%" cellpadding="0" cellpadding="0" class="iconpane border-bottom">
 <tr>
 <td>
-<form method="post" name="search">
+<form method="post" name="search" onsubmit="SearchProducts(search.words.value); return false;">
 <table cellpadding="0" cellspacing="0">
 <tr>
 <td><span name=txtLang id=txtLang>Поиск</span>: 
@@ -969,7 +973,6 @@ switch ($p) {
 <table width="100%" cellspacing="0" cellpadding="0" class="iconpane">
 <tr>
 <td>
-<form method="post" name=calendar>
 <table cellpadding="0" cellspacing="0">
 <tr>
 	<td>
@@ -978,23 +981,23 @@ switch ($p) {
             $interface.= date("d-m-Y");
         else
             $interface.= @$var1;
-        $interface.='" name="pole1" title="' . $SysValue['Lang']['Help']['forma_1'] . '">
+        $interface.='" name="pole1" id="pole1" title="' . $SysValue['Lang']['Help']['forma_1'] . '">
 
 </td>
 	<td>
-	<IMG onclick="popUpCalendar(this, calendar.pole1, \'dd-mm-yyyy\');" height=16 hspace=3 src="icon/date.gif" width=16 border=0 align="absmiddle" class="icon">
+	<IMG onclick="popUpCalendar(this, document.getElementById(\'pole1\'), \'dd-mm-yyyy\');" height=16 hspace=3 src="icon/date.gif" width=16 border=0 align="absmiddle" class="icon">
 	</td>
 	<td><input type="text" style="width:80px" value="';
         if (!$var2)
             $interface.= date("d-m-Y");
         else
             $interface.= @$var2;
-        $interface.='" name="pole2" title="' . $SysValue['Lang']['Help']['forma_2'] . '">
+        $interface.='" name="pole2" id="pole2" title="' . $SysValue['Lang']['Help']['forma_2'] . '">
 	</td>
-	<td><IMG onclick="popUpCalendar(this, calendar.pole2, \'dd-mm-yyyy\');" height=16 hspace=3 src="icon/date.gif" width=16 border=0 align="absmiddle" class="icon">
+	<td><IMG onclick="popUpCalendar(this, document.getElementById(\'pole2\'), \'dd-mm-yyyy\');" height=16 hspace=3 src="icon/date.gif" width=16 border=0 align="absmiddle" class="icon">
 	</td>
 	<td>
-	<input type=button value="Показать" class="but small" onclick="DoReload(\'orders\',calendar.pole1.value, calendar.pole2.value)">
+	<input type=button value="Показать" class="but small" onclick="DoReload(\'orders\',document.getElementById(\'pole1\').value, document.getElementById(\'pole2\').value)">
 	</td>
 	<td width="10"></td>
 	<td width="1" bgcolor="#ffffff"></td>
@@ -1004,9 +1007,10 @@ switch ($p) {
 	<table cellspacing="0" cellpadding="0" >
 <tr>
     <td>
-	<input type=text name="order_serach" placeholder="' . $SysValue['Lang']['Help']['forma_3'] . '" id="order_serach" size=50 class=s title="' . $SysValue['Lang']['Help']['forma_3'] . '" value="' . $var3 . '">
-	<input type=button value="Поиск"  class="but small"   onclick="DoReload(\'orders\',calendar.pole1.value,calendar.pole2.value,document.getElementById(\'order_serach\').value)">
-	</td>
+    <form method="post" name=orderse onSubmit="DoReload(\'orders\',document.getElementById(\'pole1\').value,document.getElementById(\'pole2\').value,document.getElementById(\'order_serach\').value); return false;">
+	<input type=text name="order_serach" placeholder="' . $SysValue['Lang']['Help']['forma_3'] . '" id="order_serach" style="width:200px" class=s title="' . $SysValue['Lang']['Help']['forma_3'] . '" value="' . $var3 . '">
+	<input type=button value="Поиск"  class="but small"   onclick="DoReload(\'orders\',document.getElementById(\'pole1\').value,document.getElementById(\'pole2\').value,document.getElementById(\'order_serach\').value)">
+    </td>
 </tr>
 </table>
 	</td>
@@ -1016,7 +1020,7 @@ switch ($p) {
    <td width="10"></td>
    <td>
    <span name=txtLang id=txtLang>Статус</span>: ' . GetOrderStatusApi($var4) . '
-   <input type=button id=btnStatus value="Показать" class="but small" onclick="DoReload(\'orders\',calendar.pole1.value, calendar.pole2.value,\'\',document.getElementById(\'list\').value);">
+   <input type=button id=btnStatus value="Показать" class="but small" onclick="DoReload(\'orders\',document.getElementById(\'pole1\').value, document.getElementById(\'pole2\').value,\'\',document.getElementById(\'list\').value);">
    </td>
     <td width="10"></td>
 	<td width="1" bgcolor="#ffffff"></td>
@@ -1027,11 +1031,12 @@ switch ($p) {
 	
 </tr>
 </table>
-</form>
+
 </td>
 </td>
 </tr>
 </table>
+</form>
 <table width="100%" cellpadding="0" cellpadding="0" class="iconpane border-both">
 <tr>
 	
@@ -1090,11 +1095,21 @@ switch ($p) {
 </table>
 
 	 ';
+
+        if($pageParam=='yes'):
+            $interface = '<table width="50%" style="float:right;"><tr><td width="50%"><div id="ordersMain" style="overflow-y: scroll;">';
+        endif;
+
         require("../order/admin_visiter.php");
         if (CheckedRules($UserStatus["visitor"], 0) == 1)
-            $interface.=Visitor($var1, $var2, $var3, $var4);
+            $interface.=Visitor($var1, $var2, $var3, $var4, $pageParam);
         else
             $interface = $UserChek->BadUserForma();
+
+        if($pageParam=='yes'):
+            $interface .= '</div></td></tr></table>';
+        endif;
+
         break;
 
     // Отчет по продажам
@@ -1150,7 +1165,7 @@ switch ($p) {
    <td width="10"></td>
    <td>
    <span name=txtLang id=txtLang>Тип статистики</span>: ' . GetOrderStat1select($var4) . '
-   <span name=txtLang id=txtLang>Поиск</span>:    <input type="text" id="items_search" name="items_search" style="width:150px" value="">
+   <span name=txtLang id=txtLang>Поиск</span>:    <input type="text" id="items_search" name="items_search" style="width:200px" value="">
    <input type=button id=btnStatus value="Показать" class="but small" onclick="DoReload(\'orders_stat1\',calendar.pole1.value, calendar.pole2.value,document.getElementById(\'order_serach\').value,document.getElementById(\'list\').value+\'|\'+document.getElementById(\'items_search\').value)";>
    </td>
     <td width="10"></td>
@@ -1170,11 +1185,94 @@ switch ($p) {
 </tr>
 </table>
 	 ';
+
+        if($pageParam=='oneload'):
+            $interface = '
+                <table width="100%" cellspacing="0" cellpadding="0" class="iconpane">
+<tr>
+<td>
+<table cellpadding="0" cellspacing="0">
+<tr>
+    <td>
+<input type="text" style="width:80" value="';
+        if (!$var1)
+            $interface.= date("d-m-Y");
+        else
+            $interface.= @$var1;
+        $interface.='" name="pole1" id="pole1" title="' . $SysValue['Lang']['Help']['forma_1'] . '">
+
+</td>
+    <td>
+    <IMG onclick="popUpCalendar(this, document.getElementById(\'pole1\'), \'dd-mm-yyyy\');" height=16 hspace=3 src="icon/date.gif" width=16 border=0 align="absmiddle" class="icon">
+    </td>
+    <td><input type="text" style="width:80px" value="';
+        if (!$var2)
+            $interface.= date("d-m-Y");
+        else
+            $interface.= @$var2;
+        $interface.='" name="pole2" id="pole2" title="' . $SysValue['Lang']['Help']['forma_2'] . '">
+    </td>
+    <td><IMG onclick="popUpCalendar(this, document.getElementById(\'pole2\'), \'dd-mm-yyyy\');" height=16 hspace=3 src="icon/date.gif" width=16 border=0 align="absmiddle" class="icon">
+    </td>
+    <td>
+    <input type=button value="Показать" class="but small" onclick="DoReload(\'orders_stat1\',document.getElementById(\'pole1\').value, document.getElementById(\'pole2\').value,\'\',\'1\',\'orders\',\'oneload\')">
+    </td>
+    <td width="10"></td>
+    <td width="1" bgcolor="#ffffff"></td>
+    <td width="1" class="separator"></td>
+         <td width="10"></td>
+    <td>
+    <table cellspacing="0" cellpadding="0" >
+<tr>
+    <td>
+        <form method="post" name=orderse onSubmit="DoReload(\'orders_stat1\',document.getElementById(\'pole1\').value,document.getElementById(\'pole2\').value,document.getElementById(\'order_serach\').value,\'\',\'orders\',\'oneload\'); return false;">
+
+    <input type=text name="order_serach" placeholder="' . $SysValue['Lang']['Help']['forma_3'] . '" id="order_serach" size=50 class=s title="' . $SysValue['Lang']['Help']['forma_3'] . '" value="' . $var3 . '">
+    <input type=button value="Поиск"  class="but small"   onclick="DoReload(\'orders_stat1\',document.getElementById(\'pole1\').value,document.getElementById(\'pole2\').value,document.getElementById(\'order_serach\').value,\'\',\'orders\',\'oneload\')">
+    </td>
+</tr>
+</table>
+    </td>
+    <td width="10"></td>
+    <td width="1" bgcolor="#ffffff"></td>
+    <td width="1" class="separator"></td>
+   <td width="10"></td>
+   <td>
+   <span name=txtLang id=txtLang>Статус</span>: ' . GetOrderStatusApi($var4) . '
+   <input type=button id=btnStatus value="Показать" class="but small" onclick="DoReload(\'orders\',document.getElementById(\'pole1\').value, document.getElementById(\'pole2\').value,\'\',document.getElementById(\'list\').value);">
+   </td>
+    <td width="10"></td>
+    <td width="1" bgcolor="#ffffff"></td>
+    <td width="1" class="separator"></td>
+         <td width="10"></td>
+        <td id="but30"  class="butoff"><img name="imgLang" src="icon/coins.gif" title="Электронные платежи" width="16" height="16" border="0" onmouseover="ButOn(30)" onmouseout="ButOff(30)" onclick="DoReload(\'order_payment\')"></td>
+    <td width="3"></td>
+    
+</tr>
+</table>
+</form>
+</td>
+</td>
+</tr>
+</table>
+   </td>
+</tr>
+</table>
+                     ';
+            $interface .= '<table width="50%" style="float:right;"><tr><td width="50%">';
+        endif;
+
         require("../order_stat/order_stat1.php");
         if (CheckedRules($UserStatus["visitor"], 0) == 1)
-            $interface.=Visitor($var1, $var2, $var3, $var4);
+            $interface.=Visitor($var1, $var2, $var3, $var4, $pageParam);
         else
             $interface = $UserChek->BadUserForma();
+
+        if($pageParam=='oneload'):
+            $interface .= '</td></tr></table>';
+        endif;
+
+
         break;
 
     // Отчет по сотрудникам
@@ -1288,7 +1386,7 @@ switch ($p) {
         if (!$var4)
             $var4 = 30;
 
-        $interface.='" name="pole2>
+        $interface.='" name="pole2">
 	</td>
 	<td><IMG onclick="popUpCalendar(this, calendar.pole2, \'dd-mm-yyyy\');" height=16 hspace=3 src="icon/date.gif" width=16 border=0 align="absmiddle" class="icon">
 	</td>

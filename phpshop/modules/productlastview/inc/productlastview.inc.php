@@ -240,8 +240,21 @@ function productlastviewform($val, $option) {
         }
         // Учет модуля SEOURLPRO
         elseif (!empty($GLOBALS['SysValue']['base']['seourlpro']['seourlpro_system'])) {
-            if($GLOBALS['PHPShopSeoPro'])
-            $GLOBALS['PHPShopSeoPro']->setMemory($val['id'], $val['name'], 2);
+
+            //Запрос к базе товаров
+            $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
+            $url = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($val['id'])), false, array('limit' => 1));
+
+            if($GLOBALS['PHPShopSeoPro']) {
+                if (!empty($url['prod_seo_name'])) {
+                    $GLOBALS['PHPShopSeoPro']->setMemory($row['id'], $url['prod_seo_name'], 2, false);
+                }
+                else{
+                    $GLOBALS['PHPShopSeoPro']->setMemory($val['id'], $val['name'], 2);
+                }
+                
+            }
+
             PHPShopParser::set('productlastview_product_seo', null);
         }
     } else {

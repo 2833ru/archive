@@ -5,7 +5,7 @@
  * Для включения поменяйте значение enabled на true
  */
 // Включение
-$enabled = true;
+$enabled = false;
 
 // Авторизация
 if (empty($enabled))
@@ -47,7 +47,8 @@ if (!$xml = simplexml_load_file($url))
 
 foreach ($xml->Valute as $m) {
     if(in_array($m->CharCode,$iso)){
-        $curs[(string) $m->CharCode] = (float) str_replace(",", ".", 1 / (string) $m->Value);
+        $val_kurs = (float) str_replace(",", ".", (string) $m->Value);
+        $curs[(string) $m->CharCode] = 1 / $val_kurs;
     }
 }
 

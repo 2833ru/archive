@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<module>
+    <version>1.3</version>
+    <name>Мой Склад</name>
+    <faqlink>http://faq.phpshop.ru/page/moysklad.html</faqlink>
+    <description>Модуль CRM Мой Склад.</description>
+    <icon>icon.png</icon>
+    <category>sale</category>
+    <sign>1423218824</sign>
+    <status>update</status>
+    <adminmenu>
+        <title>Мой Склад</title>
+        <podmenu>
+            <podmenu_name>Настройка</podmenu_name>
+            <podmenu_icon>icon.png</podmenu_icon>
+            <podmenu_action>javascript:miniWin('../modules/moysklad/admpanel/adm_module.php',510,510);</podmenu_action>
+        </podmenu>
+         <podmenu>
+            <podmenu_name>Выгрузка товарной базы </podmenu_name>
+            <podmenu_icon>excel.png</podmenu_icon>
+            <podmenu_action>javascript:miniWin('../modules/moysklad/admpanel/file.php',450,450);</podmenu_action>
+        </podmenu>
+         <podmenu>
+            <podmenu_name>Журнал операций</podmenu_name>
+            <podmenu_icon>log.png</podmenu_icon>
+            <podmenu_action>javascript:DoReload('modules','moysklad');</podmenu_action>
+        </podmenu>
+    </adminmenu>
+</module>

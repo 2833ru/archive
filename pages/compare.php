@@ -310,7 +310,7 @@ if (!empty($_SESSION['compare']))
         //троим таблицу по матрице
         $rows = count($TDR[0]);
         $cols = count($goodstowork) + 1;
-        $disp.='<TABLE class=sort_table cellpadding=3 width="95%">';
+        $disp.='<TABLE class="table table-striped">';
 
         for ($row = 0; $row < $rows; $row++) {
             $disp.='<TR>';
@@ -336,7 +336,11 @@ $SysValue['other']['pageTitle'] = $SysValue['other']['pageTitl'] = "Сравнение то
 $SysValue['other']['pageContent'] = '<div class="compare_list">'.$disp.'</div>';
 $SysValue['other']['catalogCat'] = "Сравнение товаров";
 $SysValue['other']['catalogCategory'] = "Выбраны товары для сравнения";
-$SysValue['other']['DispShop'] = ParseTemplateReturn($SysValue['templates']['page_page_list']);
+
+ if (PHPShopParser::checkFile("users/compare/compare_page_list.tpl"))
+$SysValue['other']['DispShop'] = ParseTemplateReturn('users/compare/compare_page_list.tpl');
+ else $SysValue['other']['DispShop'] = ParseTemplateReturn($SysValue['templates']['page_page_list']);
+
 
 // Подключаем шаблон 
 ParseTemplate($SysValue['templates']['shop']);

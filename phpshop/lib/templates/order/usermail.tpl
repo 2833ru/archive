@@ -114,7 +114,7 @@
 <tbody>    
     <tr bgcolor="#fafafa" id="header" valign="top">
         <td id="logo" align="left" valign="bottom">
-            <div align="center" style="padding-top:30px;"><a href="http://@serverPath@" target="_blank"><img src="http://@serverPath@@logo@" alt="logo @serverPath@" border="0" style="display: block;" title="@serverPath@"></a>
+            <div align="center" style="padding-top:30px;"><a href="http://@serverPath@" target="_blank"><img src="http://@serverPath@@logo@" alt="logo @serverShop@" border="0" style="display: block;"></a>
             <p><h1>@shopName@</h1></p></div>
         </td>     
     </tr>
@@ -225,7 +225,7 @@ php@
         <td align="left" valign="top" height="100%">
             <p><b>С уважением, @shopName@.</b></p>
       <p>@org_name@<br>
-      Интернет-магазин <a href="http://@serverPath@">@serverPath@</a><br>
+      Интернет-магазин <a href="http://@serverPath@">@serverShop@</a><br>
       Отдел продаж: @telNum@<br>
       E-mail: @adminMail@<br>
       @org_adres@</p></td>

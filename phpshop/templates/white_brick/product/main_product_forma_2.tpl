@@ -1,12 +1,12 @@
 <div class="pbox" style="position:relative">
-    <div class="image">
+    <div class="image image-2">
         <span class="sale-iconBl">
             @specIcon@
             @newtipIcon@
         </span>
         <table width="100%" border="0" cellspacing="0" cellpadding="0">
             <tr>
-                <td align="center" height="150"> <a href="/shop/UID_@productUid@@nameLat@.html" title="@productName@"><img src="@productImg@" lowsrc="images/shop/no_photo.gif"  onerror="NoFoto(this,'@pathTemplate@')" onload="EditFoto(this, @productImgWidth@)" alt="@productName@" title="@productName@" border="0"></a></td>
+                <td align="center" height="150"> <a href="/shop/UID_@productUid@@nameLat@.html" title="@productName@"><img src="@productImg@" alt="@productName@" title="@productName@" border="0"></a></td>
             </tr>
         </table>
     </div>
@@ -20,10 +20,10 @@
 
         @ComEnd@ </div>
     <div class="cart">
-        @ComStartCart@<a class="button" href="javascript:AddToCart(@productUid@)" title="@productSale@">@productSale@</a>@ComEndCart@
+        @ComStartCart@<a class="button addToCartList" data-uid="@productUid@" title="@productSale@">@productSale@</a>@ComEndCart@
         @ComStartNotice@<a class="button" href="/users/notice.html?productId=@productUid@" title="@productNotice@">@productNotice@</a>@ComEndNotice@
     </div>
-    <div class="wishlist"><a href="javascript:addToWishList(@productUid@)" >Отложить</a></div>
-    <div class="compare"><a href="javascript:AddToCompare(@productUid@)" title="Сравнить @productName@">Сравнить</a></div>
+    <div class="wishlist"><a class="addToWishList" data-uid="@productUid@" title="Отложить @productName@">Отложить</a></div>
+    <div class="compare"><a class="addToCompareList" data-uid="@productUid@" title="Сравнить @productName@">Сравнить</a></div>
 </div>
 

@@ -16,14 +16,14 @@ PHPShopObj::loadClass("system");
 PHPShopObj::loadClass("security");
 PHPShopObj::loadClass("compare");
 
-// Подключаем библиотеку поддержки.
-require_once $_classPath . "lib/Subsys/JsHttpRequest/Php.php";
-$JsHttpRequest = new Subsys_JsHttpRequest_Php("windows-1251");
+// Подключаем библиотеку поддержки JsHttpRequest
+if ($_REQUEST['type'] != 'json') {
+    require_once $_classPath . "lib/Subsys/JsHttpRequest/Php.php";
+    $JsHttpRequest = new Subsys_JsHttpRequest_Php("windows-1251");
+}
 
 // Получаем запрос.
-$q = $_REQUEST['q'];
 $xid = intval($_REQUEST['xid']);
-$_num = $_REQUEST['num'];
 
 //Получаем входящее количество товаров для сравнения
 $compar = count($_SESSION['compare']);
@@ -42,9 +42,15 @@ if ($compar == $PHPShopCompare->getNum()) {
 
 // Формируем результат
 $_RESULT = array(
-    "q" => $q,
     "num" => $PHPShopCompare->getNum(),
     "same" => $same,
     "message" => $PHPShopCompare->getMessage(),
+    "success"=>1
 );
+
+
+if ($_REQUEST['type'] == 'json'){
+    $_RESULT['message']=PHPShopString::win_utf8($_RESULT['message']);
+    echo json_encode($_RESULT);
+}
 ?>

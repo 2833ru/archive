@@ -188,10 +188,10 @@ class PHPShopOrderFunction extends PHPShopObj {
         } else {
             $kurs = $PHPShopSystem->getDefaultValutaKurs(true);
         }
-
+        
         $sum*=$kurs;
         $sum = $sum - ($sum * $disc / 100);
-        return number_format($sum, $this->format, ".", "");
+        return number_format($sum, intval($this->format), ".", "");
     }
 
     /**

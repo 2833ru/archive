@@ -20,12 +20,72 @@
     color:#6C809A !important;
 }
 
+#phone{
+    position: absolute;
+    float: left;
+    right: 350px;
+    top:10px;
+    width: 300px;
+    font-size: 20px !important;
+    font-weight: normal !important;
+    color: #8394AA !important;
+}
+
+.sort-color{
+    width:25px !important;
+    height:25px !important;
+    -webkit-border-radius:3px;
+    -moz-border-radius:3px;
+    border-radius:3px;
+}
+
+.filter-color{
+    width:20px;
+    height:20px;
+    -webkit-border-radius:2px;
+    -moz-border-radius:2px;
+    border-radius:2px;
+    border: solid 1px #CCC;
+ 
+}
+
+.image-3 img{
+    max-width: 200px;
+}
+
+.image-2 img{
+    max-width: 300px;
+}
+
 .progress {
     background: #fff url(images/zoomloader.gif) no-repeat center;
     padding:10px;
 }
 
-    #oneclick_mod_name{
+.ajaxsearch{
+    top: 35px !important;
+    right: 0px !important;
+}
+
+
+.bootstrap-theme{
+    width:30px;
+    height:30px;
+    background:#CCC;
+    float:left;
+    padding: 3px;
+    -webkit-border-radius:3px;
+    -moz-border-radius:3px;
+    border-radius:3px;
+    margin:3px;
+    cursor:pointer;
+}
+
+.bootstrap-theme:hover{
+    box-shadow: 0 0 5px #BFDBFF;
+}
+
+#oneclick_mod_name{
     width: 90px;
 }
 
@@ -74,7 +134,6 @@ img.template:hover{
 }
 tr.bgprice td b {
     color: #222222;
-    !important
 }
 #pri table td {
     border:1px #ccc solid;
@@ -454,7 +513,7 @@ a.button, input.button, a.button-exclusive, input.button-exclusive {
 
 #t-header #cart .heading a span {color: #8394aa!important;}
 #t-header #cart.active .heading a span {color: #B09F84!important;}
-#t-header #cart .heading a span {
+#t-header #cart .heading a > span {
     background: url(images/icon_cart_1.png) 96% 50% no-repeat;
     padding: 10px 40px 10px 0;
 }

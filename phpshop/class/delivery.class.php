@@ -1,15 +1,23 @@
 <?php
 
-if (!defined("OBJENABLED"))
+if (!defined("OBJENABLED")){
     require_once(dirname(__FILE__) . "/obj.class.php");
+    require_once(dirname(__FILE__) . "/array.class.php");
+}
 
 /**
  * Библиотека доставки
  * @author PHPShop Software
- * @version 1.1
+ * @version 1.2
  * @package PHPShopClass
  */
 class PHPShopDelivery extends PHPShopObj {
+    
+    /**
+     * Тариф расчета массы покупки в граммах
+     * @var int 
+     */
+    var $fee = 500;
 
     /**
      * Конструктор
@@ -58,11 +66,11 @@ class PHPShopDelivery extends PHPShopObj {
             return 0;
         } else {
             if ($row['taxa'] > 0) {
-                $addweight = $weight - 500;
+                $addweight = $weight - $this->fee;
                 if ($addweight < 0) {
                     $addweight = 0;
                 }
-                $addweight = ceil($addweight / 500) * $row['taxa'];
+                $addweight = ceil($addweight / $this->fee) * $row['taxa'];
                 $endprice = $row['price'] + $addweight;
                 return $endprice;
             } else {

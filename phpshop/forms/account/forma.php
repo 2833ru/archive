@@ -86,7 +86,7 @@ if (PHPShopSecurity::true_param($_GET['tip'], $_GET['orderId'], $_GET['datas']))
     PHPShopParser::set('org_bic', $PHPShopSystem->getSerilizeParam('bank.org_bic'));
     PHPShopParser::set('org_bank', $PHPShopSystem->getSerilizeParam('bank.org_bank'));
     PHPShopParser::set('org_name', $PHPShopSystem->getSerilizeParam('bank.org_name'));
-    PHPShopParser::set('org_schet', $PHPShopSystem->getSerilizeParam('bank.org_schet') . "сч");
+    PHPShopParser::set('org_schet', $PHPShopSystem->getSerilizeParam('bank.org_schet'));
     PHPShopParser::set('org_kpp', $PHPShopSystem->getSerilizeParam('bank.org_kpp'));
     PHPShopParser::set('org_inn', $PHPShopSystem->getSerilizeParam('bank.org_inn'));
     PHPShopParser::set('org_adres', $PHPShopSystem->getSerilizeParam('bank.org_adres'));

@@ -21,11 +21,14 @@ class PHPShopOneclick extends PHPShopCore {
 
         // Список экшенов
         $this->action = array(
-            'post' => 'oneclick_mod_product_id', 
-            'name'=>'done',
-            'nav'=>'index'
-            );
+            'post' => 'oneclick_mod_product_id',
+            'name' => 'done',
+            'nav' => 'index'
+        );
         parent::PHPShopCore();
+
+        // Хлебные крошки
+        $this->navigation(null, __('Быстрый заказ'));
 
         // Мета
         $this->title = $this->system['title'] . " - " . $this->PHPShopSystem->getValue("name");
@@ -38,25 +41,25 @@ class PHPShopOneclick extends PHPShopCore {
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['oneclick']['oneclick_system']);
         $this->system = $PHPShopOrm->select();
     }
-    
+
     /**
      * Сообщение об удачной заявке
      */
-    function done(){
-        $message=$this->system['title_end'];
-        if(empty($message)) $message=$GLOBALS['SysValue']['lang']['oneclick_done'];
-        $this->set('pageTitle',$this->system['title']);
-        $this->set('pageContent',$message);
+    function done() {
+        $message = $this->system['title_end'];
+        if (empty($message))
+            $message = $GLOBALS['SysValue']['lang']['oneclick_done'];
+        $this->set('pageTitle', $this->system['title']);
+        $this->set('pageContent', $message);
         $this->parseTemplate($this->getValue('templates.page_page_list'));
     }
 
     /**
      * Экшен по умолчанию, вывод формы звонка
      */
-    function index($message=false) {
-        
+    function index($message = false) {
+
         return $this->setError404();
-            
     }
 
     /**
@@ -68,7 +71,7 @@ class PHPShopOneclick extends PHPShopCore {
             header('Location: ./done.html');
             exit();
         } else {
-            $message= $GLOBALS['SysValue']['lang']['oneclick_error'];
+            $message = $GLOBALS['SysValue']['lang']['oneclick_error'];
         }
         $this->index($message);
     }
@@ -77,12 +80,12 @@ class PHPShopOneclick extends PHPShopCore {
      * Запись в базу
      */
     function write() {
-        
+
         $PHPShopProduct = new PHPShopProduct(intval($_POST['oneclick_mod_product_id']));
 
         // Подключаем библиотеку отправки почты
         PHPShopObj::loadClass("mail");
-        $insert=array();
+        $insert = array();
         $insert['name_new'] = PHPShopSecurity::TotalClean($_POST['oneclick_mod_name'], 2);
         $insert['tel_new'] = PHPShopSecurity::TotalClean($_POST['oneclick_mod_tel'], 2);
         $insert['date_new'] = time();
@@ -90,7 +93,7 @@ class PHPShopOneclick extends PHPShopCore {
         $insert['ip_new'] = $_SERVER['REMOTE_ADDR'];
         $insert['product_name_new'] = $PHPShopProduct->getName();
         $insert['product_id_new'] = intval($_POST['oneclick_mod_product_id']);
-        $insert['product_price_new'] = PHPShopProductFunction::GetPriceValuta(intval($_POST['oneclick_mod_product_id']),$PHPShopProduct->getPrice(),$PHPShopProduct->getParam('baseinputvaluta'),true).' '.$this->PHPShopSystem->getDefaultValutaCode();
+        $insert['product_price_new'] = $PHPShopProduct->getPrice() . ' ' . $this->PHPShopSystem->getDefaultValutaCode();
 
         // Запись в базу
         $this->PHPShopOrm->insert($insert);
@@ -107,7 +110,7 @@ class PHPShopOneclick extends PHPShopCore {
 
 Имя:                " . $insert['name_new'] . "
 Телефон:            " . $insert['tel_new'] . "
-Товар:              ".$insert['product_name_new']." / ID ".$insert['product_id_new']." / ".$insert['product_price_new']."
+Товар:              " . $insert['product_name_new'] . " / ID " . $insert['product_id_new'] . " / " . $insert['product_price_new'] . "
 Сообщение:          " . $insert['message_new'] . "
 Дата:               " . PHPShopDate::dataV($insert['date_new']) . "
 IP:                 " . $_SERVER['REMOTE_ADDR'] . "

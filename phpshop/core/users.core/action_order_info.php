@@ -99,7 +99,7 @@ function action_order_info($obj, $tip) {
             $payment = userorderpaymentlink($obj, $PHPShopOrderFunction, $tip, $row);
             // Описание столбцов
             $caption = $obj->caption(__('Статус заказа'), __('Способ оплаты'));
-            $table .= PHPShopText::p(PHPShopText::table($caption . $payment = $obj->tr($time, $payment), 3, 1, 'center', '99%', false, 0, 'allspecwhite', 'list'));
+            $table .= PHPShopText::p(PHPShopText::table($caption . $payment = $obj->tr($time, $payment), 3, 1, 'center', '99%', false, 0, 'allspecwhite', 'list table table-striped table-bordered'));
 
             // Описание столбцов
             if (!empty($yurData)) {
@@ -115,7 +115,7 @@ function action_order_info($obj, $tip) {
             // содержание заказа.
             // Описание столбцов
             $caption = $obj->caption(__('Наименование'), __('Кол-во'), __('Сумма'));
-            $table .= PHPShopText::p(PHPShopText::table($caption . $cart . $delivery['tr'] . $total . $docs . $files, 3, 1, 'center', '99%', false, 0, 'allspecwhite', 'list'));
+            $table .= PHPShopText::p(PHPShopText::table($caption . $cart . $delivery['tr'] . $total . $docs . $files, 3, 1, 'center', '99%', false, 0, 'allspecwhite', 'list table table-striped table-bordered'));
 
 
             $obj->set('formaContent', $table, true);

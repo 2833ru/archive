@@ -56,6 +56,12 @@ function ShopUsers($list, $words) {// Вывод
 
         $display.='<tr class="row ' . $style_r . '" id="r' . $id . '" onmouseover="PHPShopJS.rowshow_on(this)" onmouseout="PHPShopJS.rowshow_out(this,\'' . $style_r . '\')">';
 
+        //Персональная скидка
+        $disc_group = GetUsersStatus2($status, "discount");
+        $disc_user = $row['cumulative_discount'];
+        $discount_real = max($disc_group, $disc_user);
+
+
         $display.="
         <td>
 	<input type=checkbox name=\"c" . $id . "\" value=\"$id\">
@@ -73,7 +79,7 @@ function ShopUsers($list, $words) {// Вывод
 	" . GetUsersStatus2($status, "name") . "
 	</td>
 	<td onclick=\"miniWin('shopusers/adm_userID.php?id=$id',550,570)\">
-	" . GetUsersStatus2($status, "discount") . "
+	" . $discount_real . "
 	</td>
 	<td onclick=\"miniWin('shopusers/adm_userID.php?id=$id',550,570)\">
 	" . dataV($row['datas']) . "

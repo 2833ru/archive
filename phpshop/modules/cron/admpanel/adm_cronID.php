@@ -63,7 +63,7 @@ function actionStart() {
     
     $Tab1=$PHPShopGUI->setField("Название задачи:",$PHPShopGUI->setInput("text","name_new",$name,"left",400));
     $Tab1.=$PHPShopGUI->setField("Запускаемый Файл:".$PHPShopGUI->setCheckbox("enabled_new",1,"Включить",$enabled),$PHPShopGUI->setInput("text","path_new",$path,"left",400).$PHPShopGUI->setLine("* phpshop/modules/cron/sample/dump.php"));
-    $Tab1.=$PHPShopGUI->setCheckbox("last_execute_new",'100',"Обнулить данные последенего выполнения",0);
+    $Tab1.=$PHPShopGUI->setCheckbox("last_execute_new",'100',"Обнулить данные последнего выполнения",0);
     $Tab1.=$PHPShopGUI->setLine();
     $Tab1.=$PHPShopGUI->setSelect('execute_day_num_new',$PHPShopGUI->setSelectValue($execute_day_num),50,false,'Количество запусков в день:');
    

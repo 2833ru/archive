@@ -31,10 +31,10 @@ function PHPShopJS() {
     }
 
     this.rowshow_out = function(a, line) {
-        if (line != ' line2')
-            this.classStyle(a.id, 'row_show_off');
+        if (line == ' line2' || line == ' prod_hover')
+            this.classStyle(a.id, 'row '+line);
         else
-            this.classStyle(a.id, 'row line2');
+            this.classStyle(a.id, 'row_show_off');
 
     }
 
@@ -136,7 +136,7 @@ function DoUpdateModules(action, xid, pid) {
     req.onreadystatechange = function() {
         if (req.readyState == 4) {
             if (req.responseJS) {
-                window.top.location.replace('../admin.php?page=modules&var2=' + pid);
+                window.top.location.replace('../admin.php?page=modules&pageParam=modules&var2=' + pid);
             }
         }
     }
@@ -815,7 +815,7 @@ function DoLoad(value, page, name, pages) {
 
 
 // Интерфейс перезагрузка
-function DoReloadMainWindow(page, var1, var2)
+function DoReloadMainWindow(page, var1, var2, var3, var4)
 {
     if (window.opener.document.getElementById('licensewindow')) {
         if (page != "") {
@@ -846,6 +846,8 @@ function DoReloadMainWindow(page, var1, var2)
                 tit: 1,
                 var1: var1,
                 var2: var2,
+                var3: var3,
+                var4: var4,
                 test: 304
             });
         }
@@ -858,17 +860,43 @@ function DoReloadMainWindow(page, var1, var2)
 }
 
 // Интерфейс
-function DoReload(page, var1, var2, var3, var4) {
-
+function DoReload(page, var1, var2, var3, var4, page2, pageParam) {
     domenu = 0;
+    
+    //применяем дату
+    if(page=='orders' || page=='order_payment' || page=='orders_stat1' || page=='orders_stat2' || page=='orders_stat3') {
+        //Записываем дату в куки
+        if(var1) {
+            SetCookie('orders_date', var1, 10);
+        }
+        var orders_date = GetCookie('orders_date');
+        if(orders_date) {
+            var1 = orders_date;
+        }
+    }
     var req = new Subsys_JsHttpRequest_Js();
     req.onreadystatechange = function() {
         if (req.readyState == 4) {
             if (req.responseJS) {
 
+
                 // Записываем в <div> результат работы.
-                document.getElementById('interfaces').innerHTML = (req.responseJS.xid || '');
-                document.title = (req.responseJS.tit || '');
+                if(pageParam=='yes') {
+                    document.getElementById('interfaces').innerHTML += (req.responseJS.xid || '');
+                    document.title = (req.responseJS.tit || '');
+                }
+                else {
+                    document.getElementById('interfaces').innerHTML = (req.responseJS.xid || '');
+                    document.title = (req.responseJS.tit || '');
+                }
+
+                //Вторая страница
+                if(page2) {
+                    DoReload(page2, var1, var2, var3, '','','yes');
+                }
+
+                lo();
+                lor();
 
                 // Загрузка дополнительного JS по требованию
                 if (req.responseJS.js !== null)
@@ -877,8 +905,67 @@ function DoReload(page, var1, var2, var3, var4) {
                 // Сортировка
                 sortables_init();
 
+                if(pageParam=='') {
+                    //window.close();
+                }
+
                 //preloader(0);
                 // ResizeWin(page);
+
+            }
+        }
+    }
+    req.caching = false;
+    // Подготваливаем объект.
+    req.open('POST', './interface/api.php', true);
+    req.send({
+        xid: 1,
+        page: page,
+        tit: 1,
+        var1: var1,
+        var2: var2,
+        var3: var3,
+        var4: var4,
+        page2: page2,
+        pageParam: pageParam,
+        test: 304
+    });
+}
+
+// Интерфейс-Запрос
+function DoReloadWinSelect(page, var1, var2, var3, var4) {
+
+    domenu = 0;
+    var req = new Subsys_JsHttpRequest_Js();
+    req.onreadystatechange = function() {
+        if (req.readyState == 4) {
+            if (req.responseJS) {
+
+                if (window.opener.document.getElementById('interfaces')) {
+
+                    // Записываем в <div> результат работы.
+                    document.getElementById('interfaces').innerHTML = (req.responseJS.xid || '');
+                    document.title = (req.responseJS.tit || '');
+
+                    // Загрузка дополнительного JS по требованию
+                    if (req.responseJS.js !== null)
+                        PHPShopJS.loadjs(page);
+
+                    // Сортировка
+                    sortables_init();
+
+                    //preloader(0);
+                    // ResizeWin(page);
+
+                    //DoCheckInterfaceLang(page,'top');
+                    //ResizeWin(page);
+                    //preloadertop(0);
+                    window.close();
+                    //setTimeout("window.close()",500);
+                }
+
+
+                
 
             }
         }
@@ -1279,7 +1366,7 @@ function DoWithSelect(tip, obj, num) {
                 if (j > 1)
                     alert('Внимание!\nДанная операция может быть выполнена только с одним объектом.\nУберите ненужные флажки.');
                 if (j == 1)
-                    miniWin(dots + './order/adm_visitor_new.php?orderAdd=' + IDS, 650, 500);
+                    miniWin(dots + './order/adm_visitor_new.php?orderAdd=' + IDS, 680, 510);
             }
 
             else if (IDS.length > 0)
@@ -1399,6 +1486,12 @@ function miniWin(url, w, h) {
 function miniWinFull(url, w, h)
 {
     window.open(url, "_blank", "left=300,top=100,width=" + w + ",height=" + h + ",location=0,menubar=0,resizable=1,scrollbars=1,status=0,titlebar=0,toolbar=0");
+}
+function hoverList(id) {
+        $('.row').removeClass("hoverlist");
+        $('.row').removeClass("prod_hover");
+        $("#r"+id).addClass("hoverlist");
+    
 }
 
 

@@ -21,10 +21,14 @@ PHPShopObj::loadClass("security");
 PHPShopObj::loadClass("user");
 
 
-// Подключаем библиотеку поддержки.
+// Подключаем библиотеку поддержки JsHttpRequest
+if($_REQUEST['type'] != 'json'){
 require_once $_classPath . "/lib/Subsys/JsHttpRequest/Php.php";
-
 $JsHttpRequest = new Subsys_JsHttpRequest_Php("windows-1251");
+}
+else{
+    $_REQUEST['addname']=PHPShopString::utf8_win1251($_REQUEST['addname']);
+}
 
 // Массив валют
 $PHPShopValutaArray = new PHPShopValutaArray();
@@ -48,5 +52,12 @@ $_RESULT = array(
     "num" => $PHPShopCart->getNum(),
     "sum" => $PHPShopCart->getSum(),
     "message" => $PHPShopCart->getMessage(),
+    "success" => 1
 );
+
+// JSON 
+if($_REQUEST['type'] == 'json'){
+    $_RESULT['message']=PHPShopString::win_utf8($_RESULT['message']);
+    echo json_encode($_RESULT);
+}
 ?>

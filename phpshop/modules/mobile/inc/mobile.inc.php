@@ -20,6 +20,8 @@ class AddToTemplateMDetect extends PHPShopProductElements {
 
         parent::PHPShopProductElements();
 
+        // Настройки
+        $option = $this->option();
 
         if (!empty($_GET['mobile']) and $_GET['mobile'] == 'true') {
             if (file_exists("phpshop/templates/" . $skin . "/index.html")) {
@@ -54,7 +56,7 @@ class AddToTemplateMDetect extends PHPShopProductElements {
     function message() {
 
         if ($this->detect() and empty($_SESSION['MobileDetectConfirm'])) {
-            
+
             // Настройки
             $option = $this->option();
 

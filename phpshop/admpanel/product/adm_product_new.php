@@ -152,9 +152,10 @@ function actionStart() {
 
     // Иконка
     if (!empty($data['pic_small'])) {
+        $img_width = $PHPShopSystem->getSerilizeParam('admoption.img_tw');
         $PHPShopInterface = new PHPShopInterface('_pretab1_');
-        $PHPShopInterface->setTab(array(__("Изображение"), $PHPShopGUI->setLink('../../../shop/UID_' . $data['id'] . '.html', $PHPShopGUI->setImage($data['pic_small'], $PHPShopSystem->getSerilizeParam('admoption.img_tw'), $PHPShopSystem->getSerilizeParam('admoption.img_tw')), '_blank', false, 'Перейти'), 120));
-        $Tab1.=$PHPShopGUI->setDiv('left', $PHPShopInterface->getContent(), 'width:' . ($PHPShopSystem->getSerilizeParam('admoption.img_tw') + 50) . 'px;float:left');
+        $PHPShopInterface->setTab(array(__("Изображение"), $PHPShopGUI->setFrame('img', $data['pic_small'], 200, 100, 'none', 0, 'Yes'), 120));
+        $Tab1.=$PHPShopGUI->setDiv('left', $PHPShopInterface->getContent(), 'width:' . ($img_width + 50) . 'px;float:left');
     }
 
     // YML
@@ -297,8 +298,8 @@ function imgCopy($j, $n) {
 
                 $PHPShopOrm->clean();
                 $PHPShopOrm->insert($insert);
-  }
-  }
+            }
+        }
 }
 
 /**
@@ -350,6 +351,12 @@ function getCatPath($category) {
 function actionInsert() {
     global $PHPShopModules, $PHPShopOrm;
 
+    // Цена для сортировки
+    $PHPShopValuta = new PHPShopValuta($_POST['baseinputvaluta_new']);
+    $kurs = $PHPShopValuta->getKurs();
+    if (empty($kurs))
+        $kurs = 1;
+    $_POST['price_search_new'] = $_POST['price_new'] / $kurs;
 
     $_POST['datas_new'] = date('U');
 

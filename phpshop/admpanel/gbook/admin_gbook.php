@@ -80,7 +80,7 @@ function actionStart() {
     // Форма поиска
     $Search = $PHPShopIcon->setForm(
             $PHPShopIcon->setInputText(__('Поиск: '), 'words', $search_text, $size = 180, $description = false, $float = "left", false, __('Поиск по id, дате или содержанию')) .
-            $PHPShopIcon->setInput("button", "search_but", "Искать", "right", 70, "DoReload('gbook','search',search.words.value, 'core');"), $action = false, $name = "search", 'get');
+            $PHPShopIcon->setInput("button", "search_but", "Искать", "right", 70, "DoReload('gbook','search',search.words.value, 'core');"), $action = false, $name = "search", 'get', false, "DoReload('gbook','search',search.words.value, 'core'); return false;");
 
     $Tab1.= $PHPShopIcon->add($Search, 300, 5) .
             $PHPShopIcon->setBorder();

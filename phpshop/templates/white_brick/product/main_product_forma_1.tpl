@@ -10,8 +10,8 @@
             <div class="name" ><a style="padding-top:0px; margin:0px 0px 10px 0px;" href="/shop/UID_@productUid@@nameLat@.html" title="@productName@">@productName@</a></div>
             <div class="rate_l">  <div class="rating hidden-phone hidden-tablet">@rateCid@</div> </div>
             <div class="description2">@productDes@</div>
-            <div class="wishlist"><a href="javascript:addToWishList(@productUid@)" >Отложить</a></div>
-            <div class="compare"><a href="javascript:AddToCompare(@productUid@)" title="Сравнить @productName@">Сравнить</a></div>
+            <div class="wishlist"><a class="addToWishList" data-uid="@productUid@" title="Отложить @productName@">Отложить</a></div>
+            <div class="compare"><a class="addToCompareList" data-uid="@productUid@" title="Сравнить @productName@">Сравнить</a></div>
         </div>
     </div>
     <div class="span2">
@@ -20,7 +20,7 @@
 
             @ComEnd@ </div>
         <div class="cart center2">
-            @ComStartCart@<a class="button" href="javascript:AddToCart(@productUid@)" title="@productSale@">@productSale@</a>@ComEndCart@
+            @ComStartCart@<a class="button addToCartList"  title="@productSale@" data-uid="@productUid@">@productSale@</a>@ComEndCart@
             @ComStartNotice@<a class="button" href="/users/notice.html?productId=@productUid@" title="@productNotice@">@productNotice@</a>@ComEndNotice@
         </div>
     </div>

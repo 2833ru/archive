@@ -59,7 +59,7 @@ function charsGenerator($parent_id, $CsvToArray, $addcats) {//‘ункци€ генерирует
         }
     }
 
-    for ($i = 16; $i < count($CsvToArray); $i = $i + 2) { //Ќачинаем обрабатывать все €чейки после дополнительного каталога
+    for ($i = 17; $i < count($CsvToArray); $i = $i + 2) { //Ќачинаем обрабатывать все €чейки после дополнительного каталога
         $charName = trim($CsvToArray[$i]);
         $charValues = trim($CsvToArray[$i + 1]); //ѕолучаем значени€
         $charValues = split("&&", $charValues); //–азбиваем && список в массив
@@ -241,10 +241,14 @@ class ReadCsv1C {
             if ($_REQUEST['tip'][6] == 1)
                 $sql.="price='" . PHPShopString::toFloat($CsvToArray[7], true) . "', "; // цена 1
             if ($_REQUEST['tip'][17] == 1) {
-                $sql.="dop_cat='" . $CsvToArray[15] . "', "; //  дополнительные каталоги
-                $addcats = $CsvToArray[15];
+                $sql.="dop_cat='" . $CsvToArray[16] . "', "; //  дополнительные каталоги
+                $addcats = $CsvToArray[16];
             } else {
                 $addcats = false;
+            }
+
+            if ($_REQUEST['tip'][18] == 1) {
+                $sql.="odnotip='" . $CsvToArray[15] . "', "; //  дополнительные каталоги
             }
 // —клад
             if ($_REQUEST['tip'][11] == 1) {
@@ -372,10 +376,10 @@ class ReadCsv1C {
                 $CsvToArray[13] = ""; // 13 артикул
 //if($_REQUEST['tip'][17] != 1) $CsvToArray[15]="";// дополнительные каталоги
             if ($_REQUEST['tip'][17] == 1) {
-                $addcats = $CsvToArray[15];
+                $addcats = $CsvToArray[16];
             } else {
                 $addcats = "";
-                $CsvToArray[15] = ""; // дополнительные каталоги
+                $CsvToArray[16] = ""; // –екомендуемые товары
             }
             if ($_REQUEST['tip'][14] == 1) { // 14 категори€
                 //  атегори€
@@ -431,7 +435,8 @@ class ReadCsv1C {
             price4='" . PHPShopString::toFloat($CsvToArray[10], true) . "',
             price5='" . PHPShopString::toFloat($CsvToArray[11], true) . "',
             baseinputvaluta='" . $_REQUEST['tip'][16] . "',
-            dop_cat='" . $CsvToArray[15] . "'";
+            odnotip='" . $CsvToArray[15] . "',
+            dop_cat='" . $CsvToArray[16] . "'";
 
             if (mysql_query($sql))
                 $this->TotalCreate++;
@@ -563,7 +568,8 @@ if ($_REQUEST['page'] == "predload" and $_FILES['file']['ext'] == "csv") {
 <input type="hidden" id="tip_14" value="' . $_REQUEST['tip'][14] . '">
 <input type="hidden" id="tip_15" value="' . $_REQUEST['tip'][15] . '">
 <input type="hidden" id="tip_16" value="' . $_REQUEST['tip'][16] . '">
-<input type="hidden" id="tip_17" value="' . $_REQUEST['tip'][17] . '">
+<input type="hidden" id="tip_18" value="' . $_REQUEST['tip'][17] . '">
+<input type="hidden" id="tip_17" value="' . $_REQUEST['tip'][18] . '">
 </form></div>
     ';
         }

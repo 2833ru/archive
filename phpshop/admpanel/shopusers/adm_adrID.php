@@ -83,7 +83,7 @@ function actionStart() {
 
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Данные пользователя", $Tab1, 385), array("Юр. данные пользователя", $Tab2, 350));
+    $PHPShopGUI->setTab(array("Данные пользователя", $Tab1, 300), array("Юр. данные пользователя", $Tab2, 300));
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler($_SERVER["SCRIPT_NAME"], __FUNCTION__, $data);

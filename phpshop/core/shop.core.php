@@ -3,7 +3,7 @@
 /**
  * Обработчик товаров
  * @author PHPShop Software
- * @version 1.6
+ * @version 1.7
  * @tutorial http://wiki.phpshop.ru/index.php/PHPShopShop
  * @package PHPShopShopCore
  */
@@ -39,6 +39,12 @@ class PHPShopShop extends PHPShopShopCore {
      */
     var $sort_template = null;
     var $ed_izm = null;
+    
+    /**
+     * Сортировка по цене среди мультивалютных товаров
+     * @var bool 
+     */
+    var $multi_currency_search = false;
 
     /**
      * Конструктор
@@ -86,6 +92,7 @@ class PHPShopShop extends PHPShopShopCore {
 
         $this->set('thisCat', $this->PHPShopCategory->getParam('parent_to'));
 
+
         // Верхний уловень каталога
         $cat = $this->get('thisCat');
         if (empty($cat))
@@ -98,6 +105,7 @@ class PHPShopShop extends PHPShopShopCore {
         $PHPShopOrm->cache_format = array('content', 'description');
         $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($this->get('thisCat'))), false, array('limit' => 1));
         $ParentTest = $data['parent_to'];
+        $this->set('thisCatName', $data['name']);
 
         if (!empty($ParentTest)) {
             $this->set('thisCat', $ParentTest);
@@ -259,6 +267,7 @@ class PHPShopShop extends PHPShopShopCore {
      * Экшен выборки подробной информации при наличии переменной навигации UID
      */
     function UID() {
+        $this->ajaxTemplate = 'product/main_product_forma_full_ajax.tpl';
 
         // Перехват модуля в начале функции
         if ($this->setHook(__CLASS__, __FUNCTION__, null, 'START'))
@@ -326,6 +335,8 @@ class PHPShopShop extends PHPShopShopCore {
         $this->set('productPriceMoney', $this->dengi);
         $this->set('productBack', $this->lang('product_back'));
         $this->set('productSale', $this->lang('product_sale'));
+        $this->set('productSelect', $this->lang('product_select'));
+
         $this->set('productValutaName', $this->currency());
         $this->set('productUid', $row['id']);
         $this->set('productId', $row['id']);
@@ -343,6 +354,16 @@ class PHPShopShop extends PHPShopShopCore {
         $this->setHook(__CLASS__, __FUNCTION__, $row, 'MIDDLE');
 
         // Подключаем шаблон
+        // Ajax Search
+        if (isset($_REQUEST['ajax'])) {
+            $disp = ParseTemplateReturn($this->ajaxTemplate);
+            if (!empty($GLOBALS['SysValue']['base']['seourlpro']['seourlpro_system']))
+                $disp = $GLOBALS['PHPShopSeoPro']->AjaxCompile($disp);
+
+            header('Content-type: text/html; charset=windows-1251');
+            exit(PHPShopParser::replacedir($disp));
+        }
+        else
         $this->add(ParseTemplateReturn($this->getValue('templates.main_product_forma_full')), true);
 
         // Однотипные товары
@@ -404,7 +425,7 @@ class PHPShopShop extends PHPShopShopCore {
     function odnotip($row) {
         global $PHPShopProductIconElements;
 
-        $this->odnotip_setka_num = 1;
+        $this->odnotip_setka_num = null;
         $this->line = false;
         $this->template_odnotip = 'main_spec_forma_icon';
 
@@ -437,7 +458,23 @@ class PHPShopShop extends PHPShopShopCore {
         else
             $chek_items = null;
 
+
+
         if (!empty($odnotipList)) {
+
+            // Вставка в центральную часть
+            if (PHPShopParser::check($this->getValue('templates.main_product_odnotip_list'), 'productOdnotipList')) {
+                if (empty($this->odnotip_setka_num))
+                    $this->odnotip_setka_num = $this->PHPShopSystem->getParam('num_vitrina');
+                $productOdnotipList = true;
+                $this->template_odnotip = 'main_product_forma_' . $this->odnotip_setka_num;
+            }
+            else {
+                $productOdnotipList = false;
+                if (empty($this->odnotip_setka_num))
+                    $this->odnotip_setka_num = 1;
+                $this->template_odnotip = 'main_spec_forma_icon';
+            }
 
             $PHPShopOrm = new PHPShopOrm();
             $PHPShopOrm->debug = $this->debug;
@@ -453,7 +490,7 @@ class PHPShopShop extends PHPShopShopCore {
 
         if (!empty($disp)) {
             // Вставка в центральную часть
-            if (PHPShopParser::check($this->getValue('templates.main_product_odnotip_list'), 'productOdnotipList')) {
+            if (!empty($productOdnotipList)) {
                 $this->set('productOdnotipList', $disp);
                 $this->set('productOdnotip', __('Рекомендуемые товары'));
             } else {
@@ -464,7 +501,6 @@ class PHPShopShop extends PHPShopShopCore {
 
             // Перехват модуля в середине функции
             $this->setHook(__CLASS__, __FUNCTION__, $row, 'MIDDLE');
-
             $odnotipDisp = ParseTemplateReturn($this->getValue('templates.main_product_odnotip_list'));
             $this->set('odnotipDisp', $odnotipDisp);
         }
@@ -671,6 +707,9 @@ function CID_Product($category = null) {
     if (!empty($GLOBALS['SysValue']['base']['seourlpro']['seourlpro_system'])) {
         $this->set('page_prefix', '-');
         $seourlpro = true;
+    } elseif (!empty($GLOBALS['SysValue']['base']['seourl']['seourl_system'])) {
+        $this->set('seomod', $GLOBALS['seourl_pref'] . PHPShopString::toLatin($this->category_name));
+        $this->set('page_prefix', '_');
     }
     else
         $this->set('page_prefix', '_');
@@ -679,11 +718,12 @@ function CID_Product($category = null) {
     $this->set('max_page', $this->max_page);
     if (isset($_POST['ajax'])) {
 
-       // Поддержка модуля SeoUrlPro
-       if (!empty($seourlpro))
+        // Поддержка модуля SeoUrlPro
+        if (!empty($seourlpro))
             $grid = $GLOBALS['PHPShopSeoPro']->AjaxCompile($grid);
 
-        exit(PHPShopParser::replacedir($this->separator.$grid));
+        header('Content-type: text/html; charset=windows-1251');
+        exit(PHPShopParser::replacedir($this->separator . $grid));
     }
 
     if (empty($grid))
@@ -711,6 +751,14 @@ function CID_Product($category = null) {
     // Фильтр товаров
     PHPShopObj::loadClass('sort');
     $PHPShopSort = new PHPShopSort($this->category, $this->PHPShopCategory->getParam('sort'), true, $this->sort_template);
+
+    // Ajax Filter
+    if (isset($_REQUEST['ajaxfilter'])) {
+
+        header('Content-type: text/html; charset=windows-1251');
+        exit($PHPShopSort->display());
+    }
+
     $this->set('vendorDisp', $PHPShopSort->display());
 
     // Выделение текущего каталог в меню
@@ -727,6 +775,11 @@ function CID_Product($category = null) {
 
     // Описание каталога
     $this->set('catalogContent', Parser($this->PHPShopCategory->getContent()));
+
+    // Максимальная цена
+    $this->set('price_max', $this->price_max);
+    $this->set('price_min', $this->price_min);
+
 
     // Облако тегов
     $this->cloud($this->dataArray);
@@ -883,6 +936,7 @@ function CID_Category() {
     $this->set('catalogName', $this->category_name);
     $this->set('catalogList', $disp);
     $this->set('thisCat', $this->PHPShopNav->getId());
+
 
     // Данные родительской категории для meta
     $cat = $this->PHPShopCategory->getValue('parent_to');

@@ -1,6 +1,6 @@
 <?php
 
-function setOptionGUI($name, $format, $value) {
+function setModOptionGUI($name, $format, $value) {
     global $PHPShopGUI;
     
         switch ($format) {
@@ -21,7 +21,7 @@ function setOptionGUI($name, $format, $value) {
     return $result;
 }
 
-function addOption($data) {
+function addModOption($data) {
     global $PHPShopGUI, $PHPShopModules;
 
     // SQL
@@ -33,19 +33,19 @@ function addOption($data) {
     if (is_array($vendor)) {
 
         if (!empty($vendor['option_1_name']))
-            $Tab10 = $PHPShopGUI->setField($vendor['option_1_name'], setOptionGUI("option1_new", $vendor['option_1_format'], $data['option1']));
+            $Tab10 = $PHPShopGUI->setField($vendor['option_1_name'], setModOptionGUI("option1_new", $vendor['option_1_format'], $data['option1']));
 
         if (!empty($vendor['option_2_name']))
-            $Tab10.= $PHPShopGUI->setField($vendor['option_2_name'], setOptionGUI("option2_new", $vendor['option_2_format'], $data['option2']));
+            $Tab10.= $PHPShopGUI->setField($vendor['option_2_name'], setModOptionGUI("option2_new", $vendor['option_2_format'], $data['option2']));
 
         if (!empty($vendor['option_3_name']))
-            $Tab10.= $PHPShopGUI->setField($vendor['option_3_name'], setOptionGUI("option3_new", $vendor['option_3_format'], $data['option3']));
+            $Tab10.= $PHPShopGUI->setField($vendor['option_3_name'], setModOptionGUI("option3_new", $vendor['option_3_format'], $data['option3']));
 
         if (!empty($vendor['option_4_name']))
-            $Tab10.= $PHPShopGUI->setField($vendor['option_4_name'], setOptionGUI("option4_new", $vendor['option_4_format'], $data['option4']));
+            $Tab10.= $PHPShopGUI->setField($vendor['option_4_name'], setModOptionGUI("option4_new", $vendor['option_4_format'], $data['option4']));
         
         if (!empty($vendor['option_5_name']))
-            $Tab10.= $PHPShopGUI->setField($vendor['option_5_name'], setOptionGUI("option5_new", $vendor['option_5_format'], $data['option5']));
+            $Tab10.= $PHPShopGUI->setField($vendor['option_5_name'], setModOptionGUI("option5_new", $vendor['option_5_format'], $data['option5']));
     }
 
 
@@ -54,7 +54,7 @@ function addOption($data) {
 }
 
 $addHandler = array(
-    'actionStart' => 'addOption',
+    'actionStart' => 'addModOption',
     'actionDelete' => false,
     'actionUpdate' => false
 );

@@ -224,13 +224,13 @@ function Visitor($pole1, $pole2, $words, $list) {// вывод покупателей
     require_once '../../lib/chart/open-flash-chart.php';
 
 
-    $bar_1 = new bar(50, '#' . gencolor());
+    $bar_1 = new bar(50, '#bdda7c');
     $bar_1->key(cp1251_to_utf8('Прибыль'), 10);
 
-    $bar_2 = new bar(50, '#' . gencolor());
+    $bar_2 = new bar(50, '#cb89ca');
     $bar_2->key(cp1251_to_utf8('Выручка'), 10);
 
-    $bar_3 = new bar(50, '#' . gencolor());
+    $bar_3 = new bar(50, '#55a339');
     $bar_3->key(cp1251_to_utf8('Количество (x1000)'), 10);
 
 
@@ -287,8 +287,8 @@ function Visitor($pole1, $pole2, $words, $list) {// вывод покупателей
     
     $_Return = ('
         
-    <div id="graph"  style="'.$stat_graph_style.'width:100%; text-align:center;padding-left:5px;"> 
-        ' . open_flash_chart_object('100%', 350, './csv/orders_stat2_graph_'.$sec.'.csv', false, $baseURL) . ' 
+    <div id="graph"  style="'.$stat_graph_style.'width:99%; text-align:center;padding-left:5px;"> 
+        ' . open_flash_chart_object('100%', '100%', './csv/orders_stat2_graph_'.$sec.'.csv', false, $baseURL) . ' 
     </div>
         
 <div align="left" id="interfacesWin" name="interfacesWin"  style="width:100%;' . @$razmer . ';overflow:auto"> 

@@ -73,7 +73,8 @@ function PHPShopChat_get() {
                 if(req.responseJS.message != null){
                     document.getElementById('chat_mod_content').innerHTML+='<span id="chat_mod_scroll_point_'+req.responseJS.time+'"></span>';
                     document.getElementById('chat_mod_scroll_point_'+req.responseJS.time+'').scrollIntoView(false);
-                    mySound.play();      
+                    document.getElementById('audio').play();
+                
                     window.document.title='!!! Новое сообщение в чате !!!';
                     
                     // Чат закрыт менеджером
@@ -110,7 +111,7 @@ function PHPShopChat_write(post) {
                     if(req.responseJS.message != null){
                         document.getElementById('chat_mod_content').innerHTML+='<span id="chat_mod_scroll_point_'+req.responseJS.time+'"></span>';
                         document.getElementById('chat_mod_scroll_point_'+req.responseJS.time+'').scrollIntoView(false);
-                        window.document.title='PHPShop.Chat Free';
+                        window.document.title='Чат онлайн';
                     }
                 }
             }
@@ -127,7 +128,7 @@ function PHPShopChat_write(post) {
     }
     else{
         window.opener.location.replace('/forma/');
-        self.close();
+        self.close();  
     }
 }
 
@@ -141,6 +142,7 @@ function PHPShopChat_email(){
         else{
             document.getElementById('chat_mod_send_button_icon').src='./templates/email.gif';
             document.getElementById('chat_mod_send_button_text').innerHTML='E-mail';
+           
         }
     }
 }

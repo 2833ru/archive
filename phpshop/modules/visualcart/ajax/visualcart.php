@@ -1,8 +1,7 @@
 <?php
-
 session_start();
-
 $_classPath = "../../../";
+
 include($_classPath . "class/obj.class.php");
 PHPShopObj::loadClass("base");
 $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
@@ -22,9 +21,10 @@ PHPShopObj::loadClass("parser");
 PHPShopObj::loadClass("text");
 
 // Подключаем библиотеку поддержки.
-require_once $_classPath . "/lib/Subsys/JsHttpRequest/Php.php";
-
-$JsHttpRequest = new Subsys_JsHttpRequest_Php("windows-1251");
+if ($_REQUEST['type'] != 'json') {
+    require_once $_classPath . "/lib/Subsys/JsHttpRequest/Php.php";
+    $JsHttpRequest = new Subsys_JsHttpRequest_Php("windows-1251");
+}
 
 // Массив валют
 $PHPShopValutaArray = new PHPShopValutaArray();
@@ -172,7 +172,7 @@ class AddToTemplateVisualCartAjax {
                 $this->add_cookie();
             }
 
-            return '<table>' . $list . '</table>';
+            return $list;
         }
     }
 
@@ -182,6 +182,7 @@ class AddToTemplateVisualCartAjax {
  * Шаблон вывода таблицы корзины
  */
 function visualcartform($val, $option) {
+    global $_classPath;
 
     // Проверка подтипа товара, выдача ссылки главного товара
     if (empty($val['parent'])) {
@@ -203,7 +204,13 @@ function visualcartform($val, $option) {
     PHPShopParser::set('visualcart_product_currency', $option['currency']);
     PHPShopParser::set('visualcart_product_num', $val['num']);
 
-    $dis = PHPShopParser::file('../templates/product.tpl', true);
+    // Проверка персонального шаблона модуля
+    $path='../templates/product.tpl';
+   $path_template =$_classPath. 'templates/'. $_SESSION['skin'].'/modules/visualcart/templates/product.tpl';
+    if (is_file($path_template))
+        $path = $path_template;
+
+    $dis = PHPShopParser::file($path, true, true, true);
     return $dis;
 }
 
@@ -228,7 +235,7 @@ if (!empty($_SESSION['cart']))
 elseif (!empty($_REQUEST['xid']) and empty($_SESSION['cart'])) {
 
     $_RESULT = array(
-        "visualcart" => $SysValue['lang']['visualcart_empty'],
+        "visualcart" => "<tr><td>" . $SysValue['lang']['visualcart_empty'] . "</td></tr>",
         "sum" => $AddToTemplateVisualCartAjax->PHPShopCart->getSum(),
         "num" => $AddToTemplateVisualCartAjax->PHPShopCart->getNum()
     );
@@ -236,4 +243,10 @@ elseif (!empty($_REQUEST['xid']) and empty($_SESSION['cart'])) {
 
 // Обнуление даты обновления корзины
 setcookie("cart_update_time", '', 0, "/", $_SERVER['SERVER_NAME'], 0);
+
+if ($_REQUEST['type'] == 'json') {
+    $_RESULT['success'] = 1;
+    $_RESULT['visualcart'] = PHPShopString::win_utf8($_RESULT['visualcart']);
+    echo json_encode($_RESULT);
+}
 ?>

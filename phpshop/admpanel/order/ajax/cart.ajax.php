@@ -98,6 +98,7 @@ switch ($_GET['do']) {
                 if (!empty($productID)) {
 
                     // Библиотека корзины
+                    $_SESSION['cart']=null;
                     $PHPShopCart = new PHPShopCart($order['Cart']['cart']);
 
                     // Добавляем новый товар 1 шт по ID
@@ -107,23 +108,27 @@ switch ($_GET['do']) {
                         $order['Cart']['cart'] = $PHPShopCart->getArray();
                         $order['Cart']['num'] = $PHPShopCart->getNum();
                         $order['Cart']['sum'] = $PHPShopCart->getSum(false);
-                    } else {
+                        $add = true;
+                    } elseif($PHPShopCart->add($productID, 1, false, 'uid')) {
                         // Добавляем новый товар 1 шт по артикулу
-                        $PHPShopCart->add($productID, 1, false, 'uid');
+                        $add = true;
                     }
 
-                        // Возвращаем массив измененной корзины
-                        $order['Cart']['cart'] = $PHPShopCart->getArray();
-                        $order['Cart']['num'] = $PHPShopCart->getNum();
-                        $order['Cart']['sum'] = $PHPShopCart->getSum(false);
+                    // Возвращаем массив измененной корзины
+                    $order['Cart']['cart'] = $PHPShopCart->getArray();
+                    $order['Cart']['num'] = $PHPShopCart->getNum();
+                    $order['Cart']['sum'] = $PHPShopCart->getSum(false);
                     $order['Cart']['weight'] = $PHPShopCart->getWeight();
                     $order['Cart']['dostavka'] = $PHPShopDelivery->getPrice($PHPShopCart->getSum(false), $PHPShopCart->getWeight());
-                    }
+                }
 
-                // Сериализация данных заказа
-                $update['orders_new'] = serialize($order);
-                $PHPShopOrm->clean();
-                $PHPShopOrm->update($update, array('id' => '=' . $orderID));
+                if ($add) {
+
+                    // Сериализация данных заказа
+                    $update['orders_new'] = serialize($order);
+                    $PHPShopOrm->clean();
+                    $PHPShopOrm->update($update, array('id' => '=' . $orderID));
+                }
             }
         }
         break;
@@ -177,6 +182,7 @@ switch ($_GET['do']) {
                 $PHPShopCart = new PHPShopCart($order['Cart']['cart']);
 
                 $order['Cart']['sum'] = $PHPShopCart->getSum(true);
+                $order['Cart']['num'] = $PHPShopCart->getNum();
                 $order['Cart']['weight'] = $PHPShopCart->getWeight();
                 $order['Cart']['dostavka'] = $PHPShopDelivery->getPrice($PHPShopCart->getSum(false), $PHPShopCart->getWeight());
 

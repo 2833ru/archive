@@ -54,7 +54,7 @@ function query_filter($obj) {
     else
         $p = 1;
 
-    $cat = intval(@$_REQUEST['cat'], 1);
+    $cat = intval(@$_REQUEST['cat']);
     $words = trim(PHPShopSecurity::true_search(@$_REQUEST['words']));
     $num_row = $obj->num_row;
     $num_ot = 0;
@@ -80,11 +80,11 @@ function query_filter($obj) {
     if ($set == 1) {
         switch ($pole) {
             case(1):
-                $sort.="(name REGEXP '$words' or keywords REGEXP '$words') and ";
+                $sort.="(name REGEXP '^$words' or keywords REGEXP '$words') and ";
                 break;
 
             case(2):
-                $sort.="(name REGEXP '$words' or content REGEXP '$words' or description REGEXP '$words' or keywords REGEXP '$words' or uid REGEXP '$words' or id = '$words') and ";
+                $sort.="(name REGEXP '^$words' or content REGEXP '$words' or description REGEXP '$words' or keywords REGEXP '$words' or uid REGEXP '$words' or id = '$words') and ";
                 break;
         }
     } else {
@@ -93,13 +93,15 @@ function query_filter($obj) {
         $_WORDS = explode(" ", $words);
         switch ($pole) {
             case(1):
+ 
                 foreach ($_WORDS as $w)
-                    $sort.="(name REGEXP '$w' or uid REGEXP '$w' or id = '$w' or keywords REGEXP '$w') and ";
+                    $sort.="(name REGEXP '^$w' or uid REGEXP '$w' or id = '$w' or keywords REGEXP '$w') or ";
                 break;
 
             case(2):
+               
                 foreach ($_WORDS as $w)
-                    $sort.="(name REGEXP '$w' or content REGEXP '$w' or description REGEXP '$w' or keywords REGEXP '$w' or uid REGEXP '$w' or id = '$w') and ";
+                    $sort.="(name REGEXP '^$w' or content REGEXP '$w' or description REGEXP '$w' or keywords REGEXP '$w' or uid REGEXP '$w' or id = '$w') or ";
                 break;
         }
     }
@@ -125,7 +127,7 @@ function query_filter($obj) {
     else
         while ($q < $p) {
 
-            $sql = "select * from " . $SysValue['base']['table_name2'] . " where enabled='1' and parent_enabled='0' and $string $sort $prewords $sortV $multibase LIMIT $num_ot, $num_row";
+            $sql = "select * from " . $SysValue['base']['table_name2'] . " where enabled='1' and parent_enabled='0' and $string ($sort) $prewords $sortV $multibase LIMIT $num_ot, $num_row";
             $q++;
             $num_ot = $num_ot + $num_row;
         }

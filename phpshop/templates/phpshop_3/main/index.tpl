@@ -129,7 +129,7 @@
                                         <td valign="top" width="9"><img src="images/spacer.gif" alt="" width="9" height="1"></td>
                                         <td valign="top" width="529">
 
-                                            @stockgallery@
+                                            
 
                                             <div id="bg_catalog_1" style="background: none">@mainContentTitle@</div>
                                             <div id="about">@mainContent@</div>

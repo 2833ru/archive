@@ -140,7 +140,7 @@ if (isset($_GET['visitorID'])) {
             if (CheckedRules($UserStatus["shopusers"], 2) == 1) {
                 $sql = "INSERT INTO " . $SysValue['base']['table_name27'] . "
 VALUES ('','$login_new','" . base64_encode($password_new) . "','" . date("U") . "','$login_new','$name_new','','','','','$enabled_new','$status_new',
-'','','','')";
+'','','','','')";
                 $result = mysql_query($sql) or @die("Невозможно изменить запись");
 
 

@@ -4,6 +4,8 @@
 // в стандартной реализации не сохраняется и сортировка в подборе не используется.
 function v_nt_hook($obj, $row, $rout) {
     if ($rout == 'START') {
+        
+        
         // Сортировка по характеристикам сохраняем значения
         if (is_array($_GET['v'])) {
             foreach ($_GET['v'] as $k => $v)
@@ -12,6 +14,39 @@ function v_nt_hook($obj, $row, $rout) {
         }
         if ($productVendor)
             $obj->set('productVendor', $productVendor);
+
+
+        switch ($_GET['gridChange']) {
+            case 1:
+                $obj->set('gridSetAactive', 'active');
+                break;
+            case 2:
+                $obj->set('gridSetBactive', 'active');
+                break;
+            default: $obj->set('gridSetAactive', 'active');
+        }
+
+
+        switch ($_GET['s']) {
+            case 1:
+                $obj->set('sSetAactive', 'active');
+                break;
+            case 2:
+                $obj->set('sSetBactive', 'active');
+                break;
+            default: $obj->set('sSetCactive', 'active');
+        }
+
+
+        switch ($_GET['f']) {
+            case 1:
+                $obj->set('fSetAactive', 'active');
+                break;
+            case 2:
+                $obj->set('fSetBactive', 'active');
+                break;
+            //default: $obj->set('fSetCactive', 'active');
+        }
     }
 }
 

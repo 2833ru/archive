@@ -119,7 +119,7 @@ class PHPShopDone extends PHPShopCore {
             if (PHPShopSecurity::true_email($_POST['mail']) AND $this->userId) {
                 $this->ouid = $_POST['ouid'];
 
-                $order_metod = PHPShopSecurity::TotalClean($_POST['order_metod'], 1);
+                $order_metod = intval($_POST['order_metod']);
                 $PHPShopOrm = new PHPShopOrm($this->getValue('base.payment_systems'));
                 $row = $PHPShopOrm->select(array('path'), array('id' => '=' . $order_metod, 'enabled' => "='1'"), false, array('limit' => 1));
                 $path = $row['path'];
@@ -135,7 +135,9 @@ class PHPShopDone extends PHPShopCore {
                 $this->currency = $this->PHPShopOrder->default_valuta_code;
 
                 // Ñòîèìîñòü äîñòàâêè
+                if($this->PHPShopDelivery)
                 $this->delivery = $this->PHPShopDelivery->getPrice($this->PHPShopCart->getSum(false), $this->PHPShopCart->getWeight());
+                else $this->delivery=0;
 
                 // Ñêèäêà
                 $this->discount = $this->PHPShopOrder->ChekDiscount($this->PHPShopCart->getSum());
@@ -335,7 +337,7 @@ class PHPShopDone extends PHPShopCore {
         $this->order = serialize(array("Cart" => $cart, "Person" => $person));
 
         // Ïåğåõâàò ìîäóëÿ
-        if ($this->setHook(__CLASS__, __FUNCTION__, $_POST, 'END'))
+        if ($this->setHook(__CLASS__, __FUNCTION__, $_POST, 'MIDDLE'))
             return true;
 
         // Äàííûå äëÿ çàïèñè
@@ -356,7 +358,12 @@ class PHPShopDone extends PHPShopCore {
         $PHPShopUsers = new PHPShopUsers();
         $adresData = $PHPShopUsers->update_user_adres();
 
-        $insert = array_merge($insert, $adresData);
+        if (is_array($adresData))
+            $insert = array_merge($insert, $adresData);
+
+        // Ïåğåõâàò ìîäóëÿ
+        if ($this->setHook(__CLASS__, __FUNCTION__, $insert, 'END'))
+            return true;
 
         // Çàïèñü çàêàçà â ÁÄ
         $result = $this->PHPShopOrm->insert($insert);

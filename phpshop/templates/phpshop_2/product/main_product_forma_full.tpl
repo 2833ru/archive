@@ -36,6 +36,7 @@
                                 <font class=black>@productPriceRub@</font><br>
                                 <b>@productSklad@</b>
                                  <br>@oneclick@
+                                 
                             </TD>
                         </TR>
                     </TABLE>
@@ -112,11 +113,14 @@
                 </td>
             </TR>
         </TABLE>
+        
         @ComEnd@
         @productParentList@
+        
     </TD>
 </TR>
 </TABLE>
+
 <div class="tab-pane" id="tabPane1" style="margin-top: 20px">
     <script type="text/javascript">
         tp1 = new WebFXTabPane(document.getElementById("tabPane1"));
@@ -210,3 +214,4 @@
 	</div>
 	
 </div>
+@promotionInfo@

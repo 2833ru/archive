@@ -42,6 +42,38 @@ function GetFile($dir) {
     }
 }
 
+// функция определения мобильных браузеров.
+function mobdetect() {
+    $ipad = strpos($_SERVER['HTTP_USER_AGENT'], "iPad");
+    $iphone = strpos($_SERVER['HTTP_USER_AGENT'], "iPhone");
+    $android = strpos($_SERVER['HTTP_USER_AGENT'], "Android");
+    $palmpre = strpos($_SERVER['HTTP_USER_AGENT'], "webOS");
+    $berry = strpos($_SERVER['HTTP_USER_AGENT'], "BlackBerry");
+    $ipod = strpos($_SERVER['HTTP_USER_AGENT'], "iPod");
+    $mobile = strpos($_SERVER['HTTP_USER_AGENT'], "Mobile");
+    $symb = strpos($_SERVER['HTTP_USER_AGENT'], "Symbian");
+    $operam = strpos($_SERVER['HTTP_USER_AGENT'], "Opera M");
+    $htc = strpos($_SERVER['HTTP_USER_AGENT'], "HTC_");
+    $fennec = strpos($_SERVER['HTTP_USER_AGENT'], "Fennec/");
+    $winphone = strpos($_SERVER['HTTP_USER_AGENT'], "Windows Phone");
+    $wp7 = strpos($_SERVER['HTTP_USER_AGENT'], "WP7");
+    $wp8 = strpos($_SERVER['HTTP_USER_AGENT'], "WP8");
+
+    if ($ipad || $iphone || $ipod === true)
+        $detect = 'ios';
+    elseif ($android)
+        $detect = 'android';
+    elseif ($winphone || $wp7 || $wp8 === true)
+        $detect = 'wp';
+    elseif ($symb)
+        $detect = 'symbian';
+    elseif ($palmpre || $berry || $mobile || $operam || $htc || $fennec === true)
+        $detect = 'other';
+
+    if ($detect)
+        return $detect;
+}
+
 $num = explode(" ", $SysValue['license']['product_name']);
 $product_num = str_replace(".", "", trim($num[1]));
 
@@ -223,6 +255,7 @@ else
         <script type="text/javascript" language="JavaScript" src="java/stm31.js"></script>
         <script type="text/javascript" language="JavaScript" src="java/sorttable.js"></script>
         <script type="text/javascript" language="JavaScript" src="language/<? echo $Lang; ?>/language_interface.js"></script>
+        <script type="text/javascript" language="JavaScript" src="java/jquery-1.11.0.min.js"></script>
         <script type="text/javascript" language="JavaScript">
 
             // Проверка пароля root
@@ -277,6 +310,17 @@ else
             window.status = "<?= $SysValue['Lang']['System']['status'] . " " . $_SESSION['logPHPSHOP'] . " " . $SysValue['Lang']['System']['status2'] . " " . $_SERVER['SERVER_NAME'] ?>";
             //document.onmousedown=mp;
         </script>
+        <style>
+            .hoverlist {
+                background: #C0D2EC !important;
+            }
+            tr.prod_hover {
+                background: #bcd1ef !important;
+            }
+            tr.row:hover {
+                background: #bcd1ef;
+            }
+        </style>
     </head>
     <body id="mybody"  topmargin="0" rightmargin="3" leftmargin="3">
         <script>
@@ -533,7 +577,7 @@ echo $CreateModulesMenu[0];
                         </tr>
                     </table>
                 </td>
-                <td style="padding-right:5px" align="right">
+                <td style="padding-right:5px" align="right" id="status">
                     <span class="display" onclick="DoReload('orders')" title="Заказы">Новых заказов: <b id="new_order">0</b></span>
                     <span class="display" onclick="DoReload('shopusers_messages')" title="Сообщения">Новых сообщений: <b id="new_message">0</b></span>
                     <span class="display" onclick="DoReload('comment')" title="Комментарии">Новых комментариев: <b id="new_comment">0</b></span>
@@ -541,12 +585,11 @@ echo $CreateModulesMenu[0];
             </tr>
         </table>
         <?
-// Fix bug FF
-        if (empty($_GET['page']))
-            $_GET['page'] = 'orders';
+        if ($_GET['pageParam'] != '') {
+            $pageParam = $_GET['pageParam'];
+        }
 
-
-// Поддержка модулей CMS Free c передачей параметров  $_SERVER['QUERY_STRING'] в переменной $_GET['var2']
+        // Поддержка модулей CMS Free c передачей параметров  $_SERVER['QUERY_STRING'] в переменной $_GET['var2']
         if (!empty($_GET['plugin'])) {
             $_GET['page'] = 'modules';
             $_GET['var1'] = $_GET['plugin'];
@@ -557,12 +600,69 @@ echo $CreateModulesMenu[0];
                 if (count($cms_var_array) > 4)
                     $_GET['var2'] = base64_encode($_SERVER['QUERY_STRING']);
             }
+            $pageParam = 1;
+        }
+        else {
+            if ($_SERVER['QUERY_STRING'] == '') {
+                $_GET['page2'] = 'orders';
+                $pageParam = 'oneload';
+                if (empty($_GET['var4']))
+                    $_GET['var4'] = '1';
+
+                //Если есть куки, то ставим дату
+                if ($_COOKIE['orders_date'] != '') {
+                    $_GET['var1'] = $_COOKIE['orders_date'];
+                } else {
+                    //по умолчанию на месяц
+                    $date_today = date("d-m-Y");
+                    $d = time() - 86400 * 7; // отчет за неделю
+                    $_GET['var1'] = PHPShopDate::dataV($d, false);
+                }
+            }
+        }
+
+
+        if (empty($_GET['page'])) {
+            if (mobdetect()){
+                $_GET['page'] = 'orders';
+                $_GET['page2']=null;
+            }
+            else
+                $_GET['page'] = 'orders_stat1';
         }
         ?>
 
         <div align="center" id="interfaces" name="interfaces">
             <script>
-            setTimeout("DoReload('<?= $_GET['page'] ?>','<?= $_GET['var1'] ?>','<?= $_GET['var2'] ?>')", 500);
+            setTimeout("DoReload('<?= $_GET['page'] ?>','<?= $_GET['var1'] ?>','<?= $_GET['var2'] ?>','<?= $_GET['var3'] ?>','<?= $_GET['var4'] ?>','<?= $_GET['page2'] ?>','<?= $pageParam ?>');", 500);
+            //setTimeout("lo();", 1500);
+            //setTimeout("lor();", 2500);
+            setTimeout("SetCookie('stat_graph', 1, 10)", 0);
+            </script>
+            <script>
+                function lo() {
+                    $(document).ready(function() {
+                        var heightw = $(window).height();
+                        height = heightw - $("#interfacesWin").height() - 90;
+                        $("#graph").css({"height": height});
+                    });
+                }
+                function lor() {
+                    $(document).ready(function() {
+                        var heightw = $(window).height();
+                        heightright = heightw - 90;
+                        $("#ordersMain").css({"height": heightright});
+                    });
+                }
+
+                $(document).ready(function() {
+                    $(window).resize(function() {
+                        height = $(window).height() - $("#interfacesWin").height() - 90;
+                        $("#graph").css({"height": height});
+                        heightright = $(window).height() - 90;
+                        $("#ordersMain").css({"height": heightright});
+                    });
+                });
             </script>
         </div>
         <div id="CSCHint"></div>

@@ -50,6 +50,7 @@ function actionStart() {
      $work[]=array('Выбрать','');
      $work[]=array('Бекап БД','phpshop/modules/cron/sample/dump.php');
      $work[]=array('Курсы валют','phpshop/modules/cron/sample/currency.php');
+     $work[]=array('Снятие с продаж товаров','phpshop/modules/cron/sample/product.php');
     
     $Tab1=$PHPShopGUI->setField("Название задачи:",$PHPShopGUI->setInput("text","name_new",'Новая задача',"left",400));
     $Tab1.=$PHPShopGUI->setField("Запускаемый Файл:".$PHPShopGUI->setCheckbox("enabled_new",1,"Включить",1),$PHPShopGUI->setInput("text","path_new",false,"left",400).$PHPShopGUI->setSelect('work', $work, 100, 'left', false, 'document.getElementById(\'path_new\').value=this.value').$PHPShopGUI->setLine("* phpshop/modules/cron/sample/testcron.php"));

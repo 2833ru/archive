@@ -14,39 +14,46 @@
         <LINK rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
         <LINK rel="icon" href="/favicon.ico" type="image/x-icon">
         <SCRIPT language="JavaScript" type="text/javascript" src="java/tabpane.js"></SCRIPT>
-        <SCRIPT language="JavaScript" type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@javascript/js.js"></SCRIPT>
+        <SCRIPT language="JavaScript" type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/js.js"></SCRIPT>
         <SCRIPT language="JavaScript" type="text/javascript" src="phpshop/lib/Subsys/JsHttpRequest/Js.js"></SCRIPT>
-        <SCRIPT language="JavaScript" type="text/javascript" src="java/swfobject.js" ></SCRIPT>
-        <link rel="stylesheet" type="text/css" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@bootstrap.css">
-        <link rel="stylesheet" type="text/css" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@stylesheet.css">
-        <link rel="stylesheet" type="text/css" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@mobile.css">
-        <link rel="stylesheet" type="text/css" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@ui.totop.css" media="screen" />
-        <link rel="stylesheet" type="text/css" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@tipTip.css">
-        <link rel="stylesheet" type="text/css" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@slideshow.css" media="screen">
-        <link rel="stylesheet" type="text/css" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@carousel.css" media="screen">
-        <link rel="stylesheet" type="text/css" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@flexslider.css">
-        <link rel="stylesheet" type="text/css" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@elastic_slideshow.css">
-        <link rel="stylesheet" type="text/css" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@camera.css">
-        <link rel="stylesheet" type="text/css" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@cloud-zoom.css">
-        <link rel="stylesheet" type="text/css" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@dcaccordion.css">
-        <link rel="stylesheet" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@jquery.jqzoom.css" type="text/css">
-        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@/javascript/widgets.js" id="twitter-wjs"></script>
-        <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@javascript/jquery-1.7.1.min.js"></script>
-        <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@javascript/jquery-ui-1.8.16.custom.min.js"></script>
-        <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@javascript/lc_dropdown.js"></script>
-        <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@javascript/jquery.dcjqaccordion.js"></script>
-        <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@javascript/jquery.flexslider-min.js"></script>
-        <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@javascript/jquery.elastislide.js"></script>
-        <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@javascript/jquery.bxSlider.js"></script>
-        <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@javascript/jquery.jqzoom-core.js"></script>
-        <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@javascript/jqfunc.js"></script>
-        <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@javascript/camera.js"></script>
-        <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@javascript/custom.js"></script>
-        <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@javascript/nivo_slider.js"></script>
-        <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@javascript/jCarousel.js"></script>
-        <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@javascript/tabs.js"></script>
-                <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@javascript/waypoints.min.js"></script>
-               
+        <link rel="stylesheet" type="text/css" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/stylesheet.css">
+        <link rel="stylesheet" type="text/css" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/mobile.css">
+        <link rel="stylesheet" type="text/css" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/ui.totop.css" media="screen" />
+        <link rel="stylesheet" type="text/css" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/tipTip.css">
+        <link rel="stylesheet" type="text/css" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/slideshow.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/carousel.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/flexslider.css">
+        <link rel="stylesheet" type="text/css" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/elastic_slideshow.css">
+        <link rel="stylesheet" type="text/css" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/camera.css">
+        <link rel="stylesheet" type="text/css" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/cloud-zoom.css">
+        <link rel="stylesheet" type="text/css" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/dcaccordion.css">
+        <link rel="stylesheet" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/jquery.jqzoom.css" type="text/css">
+
+        <!-- UI -->
+        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/jquery-ui.min.css" rel="stylesheet" />
+
+        <!-- Font-awesome -->
+        <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+
+        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@/js/widgets.js" id="twitter-wjs"></script>
+        <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery-1.7.1.min.js"></script>
+        <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery-ui-1.8.16.custom.min.js"></script>
+        <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.dcjqaccordion.js"></script>
+        <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.flexslider-min.js"></script>
+        <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.elastislide.js"></script>
+        <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.bxSlider.js"></script>
+        <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.jqzoom-core.js"></script>
+        <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jqfunc.js"></script>
+        <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/camera.js"></script>
+        <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/custom.js"></script>
+        <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/nivo_slider.js"></script>
+        <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jCarousel.js"></script>
+        <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/tabs.js"></script>
+        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.waypoints.min.js"></script>
+        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/inview.min.js"></script>
+
         <SCRIPT language="JavaScript" type="text/javascript" src="java/phpshop.js"></SCRIPT>
         <SCRIPT language="JavaScript" type="text/javascript" src="java/jqfunc.js"></SCRIPT>
         <script> document.createElement('header');
@@ -55,50 +62,51 @@
             document.createElement('aside');
             document.createElement('nav');
             document.createElement('footer');</script>
-        <LINK href="@pageCss@" type="text/css" rel="stylesheet">
+        <link id="bootstrap_theme" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@@white_brick_theme@.css" rel="stylesheet">
         <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,700italic,400italic&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
         <link href='http://fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
         <!--[if lt IE 9]> 
         <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script> 
         <![endif]-->
         <!--[if IE 8]>
-        <link rel="stylesheet" type="text/css" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@ie8.css" />
+        <link rel="stylesheet" type="text/css" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@css/e8.css" />
         <![endif]-->
         <!--[if IE 7]>
-        <link rel="stylesheet" type="text/css" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@ie7.css" />
+        <link rel="stylesheet" type="text/css" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@css/ie7.css" />
         <![endif]-->
         <!--[if lt IE 7]>
-        <link rel="stylesheet" type="text/css" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@ie6.css" />
+        <link rel="stylesheet" type="text/css" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@css/ie6.css" />
         <![endif]-->
     </HEAD>
     <BODY onLoad="pressbutt_load('@thisCat@', '@pathTemplate@', 'false', 'false');
                 NavActive('@NavActive@');
                 LoadPath('@ShopDir@');" class="bod" style="float:none;margin:0">
-                 @oldBrowserMessage@
+        @oldBrowserMessage@
         <div class="black_overlay" id="fade"></div>
         <div id="light" class="white_content">
             <div style="position:relative;" class="usbg">
-                <form method="post" name="user_forma" action="/users/">
+                <form method="post" name="user_forma">
+                    <span id="usersError" class="hide">@usersError@</span>
                     <table width="210" border="0" cellspacing="0" cellpadding="0" align="center">
                         <tr>
                             <td valign="top" ><table style="margin-top:30px;" width="100%" border="0" cellspacing="0" cellpadding="0">
                                     <tr>
                                         <td><h2>Авторизация</h2></td>
-                                        <td align="right" valign="top"><div class="closeX"><a href="javascript:void(0)" onClick="document.getElementById('light').style.display = 'none';
-                document.getElementById('fade').style.display = 'none'">закрыть</a></div></td>
+                                        <td align="right" valign="top"><div class="closeX"><a href="javascript:void(0)" onClick="$('#light').toggle();
+                $('#fade').toggle();">закрыть</a></div></td>
                                     </tr>
                                 </table></td>
                         </tr>
                         <tr>
-                            <td valign="top" height="40" ><input type="text" onFocus="" name="login" value="@UserLogin@" placeholder="E-mail">
+                            <td valign="top" height="40" ><input type="email" name="login" value="@UserLogin@" placeholder="E-mail" required="">
                             </td>
                         </tr>
                         <tr>
-                            <td valign="top" height="37" ><input type="password" name="password" onFocus="" value="@UserPassword@" placeholder="Пароль" >
+                            <td valign="top" height="40" ><input type="password" name="password" value="@UserPassword@"  placeholder="Пароль"  required="">
                             </td>
                         </tr>
                         <tr>
-                            <td><table style="margin-top:10px" width="100%" border="0" cellspacing="0" cellpadding="0">
+                            <td  ><table style="margin-top:10px" width="100%" border="0" cellspacing="0" cellpadding="0">
                                     <tr>
                                         <td  ><table  border="0" cellspacing="0" cellpadding="0">
                                                 <tr>
@@ -106,16 +114,17 @@
                                                     <td><label for="zap">Запомнить</label></td>
                                                 </tr>
                                             </table></td>
-                                        <td align="right"><a href="/users/sendpassword.html" class="forg2">Забыли пароль?</a> </td>
+                                        <td  align="right"><a href="/users/sendpassword.html" class="forg2" >Забыли пароль?</a> </td>
                                     </tr>
                                 </table>
                                 <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                     <tr>
                                         <td width="50%" height="40" > @facebookAuth@ @twitterAuth@ </td>
-                                        <td width="50%" align="right"><input name="button" type="submit"  onclick="ChekUserForma()" value="    Войти    "   >
+                                        <td width="50%" align="right"><input name="button" type="submit"  value="    Войти    "   >
                                             <input type="hidden" value="1" name="user_enter"></td>
                                     </tr>
-                                </table></td>
+                                </table>
+                            </td>
                         </tr>
                     </table>
                 </form>
@@ -128,20 +137,29 @@
                 <div id="t-header" class="row">
                     <div id="logo"><a title="@name@" href="/"><img src="@logo@" alt="@name@"></a></div>
                     <div id="lc_dropdown">
+                        <div id="phone" class="hidden-phone">Тел: @telNum@</div>
                         <div id="currency" class="dropdown_l"> @valutaDisp@</div>
                     </div>
                     <div class="links"> @usersDisp@ @wishlist@ <a href="/order/">Оформить заказ</a></div>
                     <div id="cart">
-                        <div class="heading"> <a href="/order/"><span id="cart-total"><b id="num">@num@</b> товаров - <b id="sum">@sum@</b> @productValutaName@</span></a></div>
+                        <div class="heading"> <a href="/order/"><span id="cart-total"><b id="num">@num@</b> <span id="lang-cart">товар</span> - <b id="sum">@sum@</b> @productValutaName@</span></a></div>
                         <div class="content">
                             <div>@visualcart@</div>
                         </div>
                     </div>
                     <div id="search" class="span4">
+
                         <div class="button-search" onClick="return SearchChek()"></div>
                         <form method="post" name="forma_search" action="/search/" onSubmit="return SearchChek()">
-                            <input class="search" name="words" maxLength="30" placeholder="Поиск" value="Поиск" onFocus="this.value = ''">
+                            <input class="search" name="words" maxLength="30" placeholder="Поиск..." value="">
                         </form>
+                        <div id="cart" class="ajaxsearch">
+                            <div class="content">
+                                <table class="ajaxsearch-content" >
+                                </table>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
                 <div class="navbar visible-phone">
@@ -182,7 +200,7 @@
                     </div>
                 </div>
                 <nav id="menu" class="row hidden-phone">
-                    <div id="homepage"><a href="/"><img src="images/main.gif" alt="Главная"></a></div>
+                    <div id="homepage"><a href="/"><img src="images/homepage.png" alt="Главная"></a></div>
                     <div id="menu-category-wall">
                         <ul>
                             <li><a>Каталог</a>
@@ -261,6 +279,48 @@
                                 </div>
                             </div>
                         </div>
+
+
+                        <!-- Фасетный фильтр -->
+
+                        <div class="box" id="faset-filter">
+                            <div class="box-heading">                      
+                                <h2>Фильтр товаров <a href="?" class="pull-right" id="faset-filter-reset" data-original-title="Сбросить фильтр"  rel="tooltip"><span class="icon-remove"></span></a></h2>
+                            </div>
+
+                            <div class="box-content">
+                                <div class="box-category">
+                                    <div style="clear:both"></div>
+                                    <div>
+
+                                        <div id="faset-filter-body">Загрузка...</div>
+
+                                        <div id="price-filter-body">
+                                            <h5>Цена</h5>
+                                            <form method="get" id="price-filter-form">
+                                                <div class="row-fluid">
+                                                    <div class="span6" id="price-filter-val-min">
+                                                        от <input type="text"   name="min" value="@price_min@" style="width:60px"> 
+                                                    </div>
+
+                                                    <div class="span6" id="price-filter-val-max">
+                                                        до <input type="text"  name="max" value="@price_max@" style="width:60px"> 
+                                                    </div>
+                                                </div>
+                                            </form>
+                                            <p>
+                                            <div id="slider-range"></div>
+                                            </p>
+                                        </div>
+
+
+                                    </div>
+                                    <div style="clear:both"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--/ Фасетный фильтр -->
+
                         @oprosDisp@
                         @rightMenu@
                         @leftMenu@
@@ -272,9 +332,9 @@
                         <script type="text/javascript" src="java/highslide/highslide-p.js"></script>
                         <link rel="stylesheet" type="text/css" href="java/highslide/highslide.css"/>
                         <script type="text/javascript">
-                                        hs.registerOverlay({html: '<div class="closebutton" onclick="return hs.close(this)" title="Закрыть"></div>', position: 'top right', fade: 2});
-                                        hs.graphicsDir = 'java/highslide/graphics/';
-                                        hs.wrapperClassName = 'borderless';
+                            hs.registerOverlay({html: '<div class="closebutton" onclick="return hs.close(this)" title="Закрыть"></div>', position: 'top right', fade: 2});
+                            hs.graphicsDir = 'java/highslide/graphics/';
+                            hs.wrapperClassName = 'borderless';
                         </script>
                         @DispShop@
                         @banersDisp@ 
@@ -315,7 +375,7 @@
                                 <li><a href="/users/notice.html">Уведомления о товарах</a></li>
                                 <li><a href="/users/wishlist.html">Отложенные товары</a></li>
                                 <li><a href="/users/message.html">Связь с менеджерами</a></li>
-                              @php if($_SESSION['UsersId']) echo '<li><a href="javascript:UserLogOut();">Выйти</a></li>'; php@
+                                @php if($_SESSION['UsersId']) echo '<li><a href="javascript:UserLogOut();">Выйти</a></li>'; php@
                             </ul>
                         </div>
                     </div>
@@ -368,7 +428,7 @@
                                         <li><a href="/users/wishlist.html">Отложенные товары</a></li>
                                         <li><a href="/users/message.html">Связь с менеджерами</a></li>
                                         <li><a href="" onClick="javascript:UserLogOut();
-                                            return false;">Выйти</a></li>
+                                return false;">Выйти</a></li>
                                     </ul>
                                 </li>
                             </ul>
@@ -378,27 +438,28 @@
             </div>
             <div id="footer_cr"><div style="padding-right:10px;" align="right">@button@</div>
                 <div class="container">
-  
-            </div>
+
+                </div>
+
+                <!--schema.org  -->
+                <div itemscope itemtype="http://schema.org/Organization" class="hide">
+                    <span itemprop="name">@company@</span>
+                    <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+                        <span itemprop="streetAddress">@streetAddress@</span>
+                    </div>
+                    <span itemprop="telephone">@telNum@</span>
+                    <span itemprop="email">@adminMail@</span>
+                </div>
+                <!--/ schema.org -->
+
         </footer>
     </div>
-    <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@javascript/cloud-zoom.js"></script>
-    <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@javascript/jquery.tipTip.js"></script>
-    <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@javascript/bootstrap-dropdown.js"></script>
-    <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@javascript/bootstrap-collapse.js"></script>
-    <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@javascript/jquery.ui.totop.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function() {
-            /*
-             var defaults = {
-             containerID: 'toTop', // fading element id
-             containerHoverID: 'toTopHover', // fading element hover id
-             scrollSpeed: 1200,
-             easingType: 'linear' 
-             };
-             */
-            $().UItoTop({easingType: 'easeOutQuart'});
-        });
-    </script>
-
-   
+    <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/cloud-zoom.js"></script>
+    <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.tipTip.js"></script>
+    <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/bootstrap-dropdown.js"></script>
+    <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/bootstrap-collapse.js"></script>
+    <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/bootstrap-tooltip.js"></script>
+    <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.ui.totop.js"></script>
+    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@/js/jquery.cookie.js"></script>
+    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.maskedinput.min.js"></script>
+    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery-ui.min.js"></script>

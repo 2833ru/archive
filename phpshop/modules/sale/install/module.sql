@@ -10,4 +10,8 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_sale_system` (
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 
-INSERT INTO `phpshop_modules_sale_system` VALUES (1,'1','','1.0');
+INSERT INTO `phpshop_modules_sale_system` VALUES (1,'1','','1.4');
+
+ALTER TABLE `phpshop_products` ADD `old_price_sale`  float NOT NULL DEFAULT '0';
+
+UPDATE `phpshop_products` SET `old_price_sale`=`price`;

@@ -46,7 +46,7 @@ if (PHPShopSecurity::true_num($_SESSION['UsersId'])) {
     $wishlist = serialize($wishlist);
     $PHPShopOrm->update(array("wishlist" => "$wishlist"), array('id' => "=$UsersId"), $prefix = '');
 
-    if (PHPShopParser::checkFile('../../' . $SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/users/wishlist/wishlist_add_alert_done.tpl"))
+    if (PHPShopParser::checkFile('../../' . $SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/users/wishlist/wishlist_add_alert_done.tpl", true))
         $message = PHPShopParser::file('../../' . $SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/users/wishlist/wishlist_add_alert_done.tpl", true);
     else
         $message = PHPShopParser::file('../lib/templates/wishlist/wishlist_add_alert_done.tpl', true);
@@ -54,7 +54,7 @@ if (PHPShopSecurity::true_num($_SESSION['UsersId'])) {
     $_SESSION['wishlist'][$product_id] = 1;
     $count = count($_SESSION['wishlist']);
 
-    if (PHPShopParser::checkFile('../../' . $SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/users/wishlist/wishlist_add_alert_auth.tpl"))
+    if (PHPShopParser::checkFile('../../' . $SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/users/wishlist/wishlist_add_alert_auth.tpl", true))
         $message = PHPShopParser::file('../../' . $SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/users/wishlist/wishlist_add_alert_auth.tpl", true);
     else
         $message = PHPShopParser::file('../lib/templates/wishlist/wishlist_add_alert_auth.tpl', true);

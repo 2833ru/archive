@@ -10,6 +10,8 @@ if (strstr($_SERVER['REQUEST_URI'], 'index.php')) {
     exit();
 }
 
+
+
 // Шаблон дизайна по умолчанмю
 $PHPShopCoreElement = new PHPShopCoreElement();
 $PHPShopCoreElement->init('skin',false,false);
@@ -22,6 +24,7 @@ $PHPShopSkinElement->init('skinSelect');
 
 // Стили шаблона дизайна
 $PHPShopCoreElement->init('pageCss',false,false);
+
 
 // Загрузка модулей
 PHPShopObj::loadClass('modules');
@@ -37,6 +40,10 @@ foreach ($SysValue['autoload'] as $val)
 //$PHPShopSortElement = new PHPShopSortElement();
 //$PHPShopSortElement->brand('brand',14,'Бренды');
 
+// Выбор валюты
+$PHPShopCurrencyElement = new PHPShopCurrencyElement();
+$PHPShopCurrencyElement->init('valutaDisp');    
+    
 // Авторизация пользователей
 $PHPShopUserElement = new PHPShopUserElement();
 $PHPShopUserElement->init('usersDisp');
@@ -53,6 +60,7 @@ $PHPShopProductIndexElements->init('nowBuy');
 $PHPShopShopCatalogElement = new PHPShopShopCatalogElement();
 $PHPShopShopCatalogElement->init('leftCatal');
 $PHPShopShopCatalogElement->init('leftCatalTable');
+
 
 // Новинки в колонку
 $PHPShopProductIconElements = new PHPShopProductIconElements();
@@ -83,17 +91,14 @@ $PHPShopCloudElement = new PHPShopCloudElement();
 $PHPShopCloudElement->init('cloud');
 
 // Flash-карусель
-$PHPShopFlashGalleryElement = new PHPShopFlashGalleryElement();
-$PHPShopFlashGalleryElement->init('stockgallery');
+//$PHPShopFlashGalleryElement = new PHPShopFlashGalleryElement();
+//$PHPShopFlashGalleryElement->init('stockgallery');
 
 // Текстовый блок
 $PHPShopTextElement = new PHPShopTextElement();
 $PHPShopTextElement->init('leftMenu', true); // Вывод левого блока
 $PHPShopTextElement->init('rightMenu', true); // Вывод правого блока
 $PHPShopTextElement->init('topMenu', true); // Вывод главного меню
-// Выбор валюты
-$PHPShopCurrencyElement = new PHPShopCurrencyElement();
-$PHPShopCurrencyElement->init('valutaDisp');
 
 // Корзина
 $PHPShopCartElement = new PHPShopCartElement();

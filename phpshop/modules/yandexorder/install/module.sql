@@ -9,4 +9,4 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_yandexorder_system` (
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 
-INSERT INTO `phpshop_modules_yandexorder_system` VALUES (1,'http://cards2.yandex.net/hlp-get/4412/png/4.png','');
+INSERT INTO `phpshop_modules_yandexorder_system` VALUES (1,'https://help.yandex.ru/help.yandex.ru/partnermarket/image/4.png','');

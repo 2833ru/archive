@@ -135,8 +135,8 @@ class PHPShopGUI {
      * @param string $target параметр target
      * @return string
      */
-    function setForm($value, $action = false, $name = "product_edit", $style = false, $target = false) {
-        $CODE.='<form method="post" target="' . $target . '" enctype="multipart/form-data" action="' . $action . '" name="' . $name . '" id="' . $name . '" style="' . $style . '">
+    function setForm($value, $action = false, $name = "product_edit", $style = false, $target = false, $onsubmit = false) {
+        $CODE.='<form method="post" target="' . $target . '" enctype="multipart/form-data" action="' . $action . '" name="' . $name . '" id="' . $name . '" style="' . $style . '" onsubmit="' . $onsubmit . '" >
             ' . $value . '</form>';
         return $CODE;
     }
@@ -1148,10 +1148,14 @@ class PHPShopInterface extends PHPShopGUI {
             $style_r = null;
         }
 
+        if($Arg[0]==$_SESSION['editpageId']) {
+            $style_r = ' prod_hover';
+        }
+
 
 
         //$this->_CODE.='<tr class="row'.$style_r.'" onmouseover="show_on(\'' . $this->idRows . $this->n . '\',this.className)" id="' . $this->idRows . $this->n . '" onmouseout="show_out(\'' . $this->idRows . $this->n . '\',this.className)" >' . $CODE . '</tr>';
-        $this->_CODE.='<tr class="row' . $style_r . '" id="' . $this->idRows . $this->n . '" onmouseover="PHPShopJS.rowshow_on(this)" onmouseout="PHPShopJS.rowshow_out(this,\'' . $style_r . '\')">' . $CODE . '</tr>';
+        $this->_CODE.='<tr class="row' . $style_r . '" id="' . $this->idRows . $this->n . '" onclick="hoverList(' . $this->n . ')">' . $CODE . '</tr>';
         $this->n++;
     }
 

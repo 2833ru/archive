@@ -18,7 +18,7 @@
                 <div style="float:left;"><input type="text" class="sort" name="priceOT" title="от" onfocus="this.value = ''" value="от"></div>
                 <div style="float:left;line-height: 17px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
                 <div class="left"><input type="text" class="sort" title="до" onfocus="this.value = ''" name="priceDO" value="до"></div>
-                <div class="pad_6"><span><a href="./CID_@productId@_@productPageThis@.html?@productVendor@&f=@productSortNext@&s=@productSort@" title="Изменить направление"></a><a href="./CID_@productId@_@productPageThis@.html?@productVendor@&f=@productSortTo@&s=1" class="@productSortA@">алфавиту</a> - <a href="./CID_@productId@_@productPageThis@.html?@productVendor@&f=@productSortTo@&s=2"  class="@productSortB@">цене</a> - <a href="./CID_@productId@_@productPageThis@.html?@productVendor@&f=@productSortTo@&s=3"  class="@productSortC@">популярности</a></span></div>
+                <div class="pad_6"><span><a href="?@productVendor@&f=@productSortNext@&s=@productSort@" title="Изменить направление"></a><a href="?@productVendor@&f=@productSortTo@&s=1" class="@productSortA@">алфавиту</a> - <a href="?@productVendor@&f=@productSortTo@&s=2"  class="@productSortB@">цене</a> - <a href="?@productVendor@&f=@productSortTo@&s=3"  class="@productSortC@">популярности</a></span></div>
             </div>
 
             <div id="product_cart_3" class="pad_8">
@@ -34,16 +34,12 @@
 <div class="link_prise">
     <img src="images/shop/page_excel.gif" alt="" border="0" align="absmiddle" hspace="5"><a href="/price/CAT_SORT_@pcatalogId@.html" title="Прайс-лист каталога @catalogCategory@">Прайс-лист каталога</a>
 </div>
-<div class="page_nava" style="padding-bottom:10px;">
-    <div class="page_nav">@productPageNav@</div>
-
-</div>
 
 <table cellpadding="0" cellspacing="0" border="0">
     @productPageDis@
 </table>
 
-<div class="page_nava" style="margin-top:20px;">
+<div class="page_nava">
     <div class="page_nav">@productPageNav@</div>
 
 </div>

@@ -80,7 +80,7 @@ function actionStart() {
     // Форма поиска
     $Search = $PHPShopIcon->setForm(
             $PHPShopIcon->setInputText(__('Поиск: '), 'words', $search_text, $size = 180, $description = false, $float = "left", false, __('Поиск по id, дате или содержанию')) .
-            $PHPShopIcon->setInput("button", "search_but", "Искать", "right", 70, "DoReload('news','search',search.words.value, 'core');", 'but small'), $action = false, $name = "search", 'get');
+            $PHPShopIcon->setInput("button", "search_but", "Искать", "right", 70, "DoReload('news','search',search.words.value, 'core');", 'but small'), $action = false, $name = "search", 'get', false, "DoReload('news','search',search.words.value, 'core'); return false");
 
     $Tab1.= $PHPShopIcon->add($Search, 300, 5) .
             $PHPShopIcon->setBorder();
@@ -104,7 +104,7 @@ function actionStart() {
     $PHPShopIcon->setTab($Tab1);
     $PHPShopInterface->addTop($PHPShopIcon->Compile(true));
 
-    $PHPShopInterface->setAddItem('news/adm_news_new.php');
+    //$PHPShopInterface->setAddItem('news/adm_news_new.php');
     $PHPShopInterface->Compile('interfaces', 'flag_form', null);
 }
 

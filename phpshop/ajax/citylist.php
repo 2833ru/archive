@@ -21,7 +21,7 @@ $country = intval($_REQUEST['country']);
 $region = intval($_REQUEST['region']);
 $par = $_REQUEST['par'];
 
-
+header('Content-type: text/html; charset=windows-1251');
 switch ($par) {
     case "country_new":
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['citylist_region']);

@@ -271,7 +271,7 @@ class PHPShopProductElements extends PHPShopElements {
 
         // Перехват модуля, занесение в память наличия модуля для оптимизации
         if ($this->memory_get(__CLASS__ . '.' . __FUNCTION__, true)) {
-            $hook = $this->setHook(__CLASS__, __FUNCTION__, $row);
+            $hook = $this->setHook(__CLASS__, __FUNCTION__, $row, $newprice);
             if ($hook) {
                 return $hook;
             }
@@ -289,211 +289,279 @@ class PHPShopProductElements extends PHPShopElements {
     }
 
     /**
-     * Генератор сетки товаров
-     * @param array $dataArray массив данных
-     * @param int $cell разрад сетки [1-5]
-     * @param string $template файл шаблона
-     * @param bool $line показывать сетку разделитель
-     * @return string
+     * Вывод подтипов товаров
+     * @param array $row массив значений
      */
-    function product_grid($dataArray, $cell, $template = false, $line = true) {
+    function parent($row) {
 
-        if (!empty($line))
-            $this->grid = true;
-        else
-            $this->grid = false;
+    // Перехват модуля в начале функции
+    if($this->setHook(__CLASS__, __FUNCTION__, $row, 'START'))
+        return true;
 
-        if (empty($cell))
-            $cell = 2;
-        $this->cell = $cell;
+    $this->select_value = array();
+    $row['parent'] = PHPShopSecurity::CleanOut($row['parent']);
 
-        $this->setka_footer = true;
+    if (!empty($row['parent'])) {
+        $parent = explode(",", $row['parent']);
 
-        $table = null;
-        $j = 1;
-        $item = 1;
+        // Учет склада
+        $sklad_status = $this->PHPShopSystem->getSerilizeParam('admoption.sklad_status');
 
-        $this->set('productInfo', $this->lang('productInfo'));
-        $this->set('productSale', $this->lang('productSale'));
-        $this->set('productValutaName', $this->currency());
+        // Убираем добавление в корзину главного товара
+        $this->set('ComStartCart', '<!--');
+        $this->set('ComEndCart', '-->');
 
-        $d1 = $d2 = $d3 = $d4 = $d5 = $d6 = $d7 = null;
-        if (is_array($dataArray)) {
-            $this->total = count($dataArray);
-            foreach ($dataArray as $row) {
-
-                // Определяем переменные
-                $this->set('productName', $row['name']);
-                $this->set('productArt', $row['uid']);
-                $this->set('productDes', $row['description']);
-                $this->set('productPageThis', $this->PHPShopNav->getPage());
-
-                // Пустая картинка
-                if (empty($row['pic_small']))
-                    $this->set('productImg', $this->no_photo);
+        // Собираем массив товаров
+        if (is_array($parent))
+            foreach ($parent as $value) {
+                if (PHPShopProductFunction::true_parent($value))
+                    $Product[$value] = $this->select(array('*'), array('uid' => '="' . $value . '"', 'enabled' => "='1'", 'sklad' => "!='1'"), false, false, __FUNCTION__);
                 else
-                    $this->set('productImg', $row['pic_small']);
-
-                // Проверка режима Multibase
-                $this->checkMultibase($row['pic_small']);
-
-                $this->set('productImgBigFoto', $row['pic_big']);
-                $this->set('productPriceMoney', $this->PHPShopSystem->getValue('dengi'));
-
-                $this->set('productUid', $row['id']);
-                $this->set('catalog', $this->lang('catalog'));
-
-                // Подключение функции вывода средней оценки товара из отзывов пользователей
-                $this->doLoadFunction(__CLASS__, 'comment_rate', array("row" => $row, "type" => "CID"), 'shop');
-
-                // Опции склада
-                $this->checkStore($row);
-
-                // Шаблон ячейки товара
-                if (empty($template))
-                    $template = 'main_product_forma_' . $this->cell;
-
-
-                // Перехват модуля
-                $this->setHook(__CLASS__, __FUNCTION__, $row);
-
-                // Подключаем шаблон ячейки товара
-                $dis = ParseTemplateReturn($this->getValue('templates.' . $template));
-
-
-                // Убераем последний разделитель в сетке
-                if ($item == $this->total)
-                    $this->setka_footer = false;
-
-                $cell_name = 'd' . $j;
-                $$cell_name = $dis;
-
-                if ($j == $this->cell) {
-                    $table.=$this->setCell($d1, $d2, $d3, $d4, $d5, $d6, $d7);
-                    $d1 = $d2 = $d3 = $d4 = $d5 = $d6 = $d7 = null;
-                    $j = 0;
-                } elseif ($item == $this->total) {
-                    $table.=$this->setCell($d1, $d2, $d3, $d4, $d5, $d6, $d7);
-                }
-
-                $j++;
-                $item++;
+                    $Product[intval($value)] = $this->select(array('*'), array('id' => '=' . intval($value), 'enabled' => "='1'"), false, false, __FUNCTION__);
             }
+
+        // Цена главного товара
+        if (!empty($row['price']) and empty($row['priceSklad']) and (!empty($row['items']) or (empty($row['items']) and $sklad_status == 1))) {
+            $this->select_value[] = array($row['name'] . " -  (" . $this->price($row) . "
+                    " . $this->get('productValutaName') . ')', $row['id'], false);
+        } else {
+            $this->set('ComStartNotice', PHPShopText::comment('<'));
+            $this->set('ComEndNotice', PHPShopText::comment('>'));
         }
-        $this->product_grid = $table;
-        return $table;
+
+        // Выпадающий список товаров
+        if (is_array($Product))
+            foreach ($Product as $p) {
+                if (!empty($p)) {
+
+                    // Если товар на складе
+                    if (empty($p['priceSklad']) and (!empty($p['items']) or (empty($p['items']) and $sklad_status == 1))) {
+                        $price = $this->price($p);
+                        $this->select_value[] = array($p['name'] . ' -  (' . $price . ' ' . $this->get('productValutaName') . ')', $p['id'], false);
+                    }
+                }
+            }
+
+        if (count($this->select_value) > 0) {
+            $this->set('parentList', PHPShopText::select('parentId', $this->select_value, "; max-width:300px;"));
+            $this->set('productParentList', ParseTemplateReturn("product/product_odnotip_product_parent.tpl"));
+        }
+
+        $this->set('productPrice', '');
+        $this->set('productPriceRub', '');
+        $this->set('productValutaName', '');
+
+        // Перехват модуля в конце функции
+        $this->setHook(__CLASS__, __FUNCTION__, $row, 'END');
+    }
+}
+
+/**
+ * Генератор сетки товаров
+ * @param array $dataArray массив данных
+ * @param int $cell разрад сетки [1-5]
+ * @param string $template файл шаблона
+ * @param bool $line показывать сетку разделитель
+ * @return string
+ */
+function product_grid($dataArray, $cell, $template = false, $line = true) {
+
+    if (!empty($line))
+        $this->grid = true;
+    else
+        $this->grid = false;
+
+    if (empty($cell))
+        $cell = 2;
+    $this->cell = $cell;
+
+    $this->setka_footer = true;
+
+    $table = null;
+    $j = 1;
+    $item = 1;
+
+    $this->set('productInfo', $this->lang('productInfo'));
+    $this->set('productSale', $this->lang('productSale'));
+    $this->set('productValutaName', $this->currency());
+
+    $d1 = $d2 = $d3 = $d4 = $d5 = $d6 = $d7 = null;
+    if (is_array($dataArray)) {
+        $this->total = count($dataArray);
+        foreach ($dataArray as $row) {
+
+            // Определяем переменные
+            $this->set('productName', $row['name']);
+            $this->set('productArt', $row['uid']);
+            $this->set('productDes', $row['description']);
+            $this->set('productPageThis', $this->PHPShopNav->getPage());
+
+            // Пустая картинка
+            if (empty($row['pic_small']))
+                $this->set('productImg', $this->no_photo);
+            else
+                $this->set('productImg', $row['pic_small']);
+
+            // Проверка режима Multibase
+            $this->checkMultibase($row['pic_small']);
+
+            $this->set('productImgBigFoto', $row['pic_big']);
+            $this->set('productPriceMoney', $this->PHPShopSystem->getValue('dengi'));
+
+            $this->set('productUid', $row['id']);
+            $this->set('catalog', $this->lang('catalog'));
+
+            // Подключение функции вывода средней оценки товара из отзывов пользователей
+            $this->doLoadFunction(__CLASS__, 'comment_rate', array("row" => $row, "type" => "CID"), 'shop');
+
+            // Опции склада
+            $this->checkStore($row);
+
+            // Шаблон ячейки товара
+            if (empty($template))
+                $template = 'main_product_forma_' . $this->cell;
+
+
+            // Перехват модуля
+            $this->setHook(__CLASS__, __FUNCTION__, $row);
+
+            // Подключаем шаблон ячейки товара
+            $dis = ParseTemplateReturn($this->getValue('templates.' . $template));
+
+
+            // Убераем последний разделитель в сетке
+            if ($item == $this->total)
+                $this->setka_footer = false;
+
+            $cell_name = 'd' . $j;
+            $$cell_name = $dis;
+
+            if ($j == $this->cell) {
+                $table.=$this->setCell($d1, $d2, $d3, $d4, $d5, $d6, $d7);
+                $d1 = $d2 = $d3 = $d4 = $d5 = $d6 = $d7 = null;
+                $j = 0;
+            } elseif ($item == $this->total) {
+                $table.=$this->setCell($d1, $d2, $d3, $d4, $d5, $d6, $d7);
+            }
+
+            $j++;
+            $item++;
+        }
+    }
+    $this->product_grid = $table;
+    return $table;
+}
+
+/**
+ * Форма ячеек с товарами
+ * @return string
+ */
+function setCell() {
+
+    // Оформление разделителя ячеек
+    if ($this->grid)
+        $this->grid_style = 'class="setka"';
+    else
+        $this->grid_style = '';
+
+    $Arg = func_get_args();
+    $item = 1;
+
+    foreach ($Arg as $key => $value)
+        if ($key < $this->cell and $this->total >= $this->cell)
+            $args[] = $value;
+        elseif (!empty($value))
+            $args[] = $value;
+
+    $num = count($args);
+
+    // Расчет CSS стилей сетки товара
+    switch ($num) {
+
+        // Сетка в 1 ячейку
+        case 1:
+            $panel = array('panel_l panel_1_1');
+            break;
+
+        // Сетка в 2 ячейки
+        case 2:
+            $panel = array('panel_l panel_2_1', 'panel_r panel_2_2');
+            break;
+
+        // Сетка в 3 ячейки
+        case 3:
+            $panel = array('panel_l panel_3_1', 'panel_r panel_3_2', 'panel_l panel_3_2');
+            break;
+
+        // Сетка в 4 ячейки
+        case 4:
+            $panel = array('panel_l panel_4_1', 'panel_r panel_4_2', 'panel_l panel_4_3', 'panel_r panel_4_4',);
+            break;
+
+        // Сетка в 5 ячейки
+        case 5:
+            $panel = array('panel_l panel_5_1', 'panel_r panel_5_2', 'panel_l panel_5_3', 'panel_l panel_5_4', 'panel_l panel_5_5');
+            break;
+
+        default: $panel = array('panel_l', 'panel_r', 'panel_l', 'panel_r', 'panel_l', 'panel_r', 'panel_l');
     }
 
-    /**
-     * Форма ячеек с товарами
-     * @return string
-     */
-    function setCell() {
 
-        // Оформление разделителя ячеек
-        if ($this->grid)
-            $this->grid_style = 'class="setka"';
-        else
-            $this->grid_style = '';
+    switch ($this->cell_type) {
 
-        $Arg = func_get_args();
-        $item = 1;
+        // Списки
+        case 'li':
+            if (is_array($args))
+                foreach ($args as $key => $val) {
+                    $tr.='<li class="' . $this->cell_type_class . '">' . $val . '</li>';
+                    $item++;
+                }
+            break;
 
-        foreach ($Arg as $key => $value)
-            if ($key < $this->cell and $this->total >= $this->cell)
-                $args[] = $value;
-            elseif (!empty($value))
-                $args[] = $value;
-
-        $num = count($args);
-
-        // Расчет CSS стилей сетки товара
-        switch ($num) {
-
-            // Сетка в 1 ячейку
-            case 1:
-                $panel = array('panel_l panel_1_1');
-                break;
-
-            // Сетка в 2 ячейки
-            case 2:
-                $panel = array('panel_l panel_2_1', 'panel_r panel_2_2');
-                break;
-
-            // Сетка в 3 ячейки
-            case 3:
-                $panel = array('panel_l panel_3_1', 'panel_r panel_3_2', 'panel_l panel_3_2');
-                break;
-
-            // Сетка в 4 ячейки
-            case 4:
-                $panel = array('panel_l panel_4_1', 'panel_r panel_4_2', 'panel_l panel_4_3', 'panel_r panel_4_4',);
-                break;
-
-            // Сетка в 5 ячейки
-            case 5:
-                $panel = array('panel_l panel_5_1', 'panel_r panel_5_2', 'panel_l panel_5_3', 'panel_l panel_5_4', 'panel_l panel_5_5');
-                break;
-
-            default: $panel = array('panel_l', 'panel_r', 'panel_l', 'panel_r', 'panel_l', 'panel_r', 'panel_l');
-        }
+        // Блоки
+        case 'div':
+            if (is_array($args))
+                foreach ($args as $key => $val) {
+                    $tr.='<div class="' . $this->cell_type_class . '">' . $val . '</div>';
+                    $item++;
+                }
+            //$this->cell = 1;
+            break;
 
 
-        switch ($this->cell_type) {
+        // Bootstrap
+        case 'bootstrap':
+            $tr = '<div class="row">';
+            if (is_array($args))
+                foreach ($args as $key => $val) {
+                    $tr.=$val;
+                    $item++;
+                }
+            $tr.='</div>';
+            break;
 
-            // Списки
-            case 'li':
-                if (is_array($args))
-                    foreach ($args as $key => $val) {
-                        $tr.='<li class="' . $this->cell_type_class . '">' . $val . '</li>';
-                        $item++;
-                    }
-                break;
+        // Табличная
+        default:
 
-            // Блоки
-            case 'div':
-                if (is_array($args))
-                    foreach ($args as $key => $val) {
-                        $tr.='<div class="' . $this->cell_type_class . '">' . $val . '</div>';
-                        $item++;
-                    }
-                //$this->cell = 1;
-                break;
+            $tr = '<tr>';
+            if (is_array($args))
+                foreach ($args as $key => $val) {
+                    $tr.='<td class="' . $panel[$key] . '" valign="top">' . $val . '</td>';
 
+                    if ($item < $num and $num == $this->cell)
+                        $tr.='<td ' . $this->grid_style . '><img src="images/spacer.gif" width="1"></td>';
 
-            // Bootstrap
-            case 'bootstrap':
-                $tr = '<div class="row">';
-                if (is_array($args))
-                    foreach ($args as $key => $val) {
-                        $tr.=$val;
-                        $item++;
-                    }
-                $tr.='</div>';
-                break;
+                    $item++;
+                }
+            $tr.='</tr>';
 
-            // Табличная
-            default:
-
-                $tr = '<tr>';
-                if (is_array($args))
-                    foreach ($args as $key => $val) {
-                        $tr.='<td class="' . $panel[$key] . '" valign="top">' . $val . '</td>';
-
-                        if ($item < $num and $num == $this->cell)
-                            $tr.='<td ' . $this->grid_style . '><img src="images/spacer.gif" width="1"></td>';
-
-                        $item++;
-                    }
-                $tr.='</tr>';
-
-                if (!empty($this->setka_footer))
-                    $tr.='<tr><td ' . $this->grid_style . ' colspan="' . ($this->cell * 2) . '" height="1"><img height="1" src="images/spacer.gif"></td></tr>';
-        }
-
-
-        return $tr;
+            if (!empty($this->setka_footer))
+                $tr.='<tr><td ' . $this->grid_style . ' colspan="' . ($this->cell * 2) . '" height="1"><img height="1" src="images/spacer.gif"></td></tr>';
     }
+
+
+    return $tr;
+}
 
 }
 

@@ -442,6 +442,7 @@ class ReadCsv1C extends PHPShopReadCsvPro {
             // Родительская категория
             if ($this->ObjSystem->getSerilizeParam("1c_option.update_category") == 1 and !empty($CsvToArray[15]))
                 $sql.="category='" . trim($CsvToArray[15]) . "',";
+            else $sql.="category='1000001',";
 
             $sql.="name='" . addslashes(trim($CsvToArray[1])) . "',
             description='" . addslashes($CsvToArray[2]) . "',

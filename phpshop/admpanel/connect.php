@@ -96,13 +96,13 @@ function dataV($nowtime, $flag = "true") {
 
     $curDateM = date("m", $nowtime);
     if ($flag == "true")
-        $t = date("d", $nowtime) . " " . $Months[$curDateM] . " " . date("Y", $nowtime) . "ã." . date("H:i ", $nowtime);
+        $t = date("d", $nowtime) . " " . $Months[$curDateM] . " " . date("y", $nowtime) . " " . date("H:i ", $nowtime);
     elseif ($flag == "shot")
-        $t = date("d", $nowtime) . "." . $curDateM . "." . date("Y", $nowtime) . "ã. " . date("H:i ", $nowtime);
+        $t = date("d", $nowtime) . "." . $curDateM . "." . date("y", $nowtime) . " " . date("H:i ", $nowtime);
     elseif ($flag == "update")
-        $t = date("d", $nowtime) . "-" . $curDateM . "-" . date("Y", $nowtime);
+        $t = date("d", $nowtime) . "-" . $curDateM . "-" . date("y", $nowtime);
     else
-        $t = date("d", $nowtime) . " " . $Months[$curDateM] . " " . date("Y", $nowtime) . "ã.";
+        $t = date("d", $nowtime) . " " . $Months[$curDateM] . " " . date("y", $nowtime);
     return $t;
 }
 

@@ -6,7 +6,6 @@
     <description>Модуль пунктов выдачи товара PickPoint</description>
     <icon>icon.png</icon>
     <category>sale</category>
-    <status>update</status>
     <adminmenu>
         <title>PickPoint</title>
         <podmenu>

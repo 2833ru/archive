@@ -19,7 +19,7 @@ class PHPShopUser extends PHPShopObj {
     function PHPShopUser($objID) {
         $this->objID = $objID;
         $this->cache = true;
-        $this->objBase = $GLOBALS['SysValue']['base']['table_name27'];
+        $this->objBase = $GLOBALS['SysValue']['base']['shopusers'];
         parent::PHPShopObj();
     }
 
@@ -41,20 +41,22 @@ class PHPShopUser extends PHPShopObj {
         if (!is_array($data_adres) OR !count($data_adres['list']))
             return "";
 
-        foreach ($data_adres['list'] as $index => $data_adres_one) {
-            $dis = "";
-            foreach ($data_adres_one as $key => $value) {
-                if ($value)
-                    $dis .= " ," . $value;
+        if (is_array($data_adres['list']))
+            foreach ($data_adres['list'] as $index => $data_adres_one) {
+                $dis = "";
+                if (is_array($data_adres_one))
+                    foreach ($data_adres_one as $key => $value) {
+                        if ($value)
+                            $dis .= " ," . $value;
+                    }
+                if ($dis) {
+                    if ($index == $data_adres['main'])
+                        $sel = 'selected="selected"';
+                    else
+                        $sel = "";
+                    $disp .= '<option value="' . $index . '" ' . $sel . '>' . substr($dis, 2) . '</option>';
+                }
             }
-            if ($dis) {
-                if ($index == $data_adres['main'])
-                    $sel = 'selected="selected"';
-                else
-                    $sel = "";
-                $disp .= '<option value="' . $index . '" ' . $sel . '>' . substr($dis, 2) . '</option>';
-            }
-        }
         if ($disp)
             $disp = '
                 <h2>Выбрать адрес доставки</h2>    
@@ -83,6 +85,14 @@ class PHPShopUser extends PHPShopObj {
      */
     function getName() {
         return $this->getParam("name");
+    }
+
+    /**
+     * Вывод персональной скидки
+     * @return string
+     */
+    function getPersonalDiscount() {
+        return $this->getParam("cumulative_discount");
     }
 
     /**
@@ -146,7 +156,15 @@ class PHPShopUserStatus extends PHPShopObj {
      * @return float
      */
     function getDiscount() {
-        return parent::getParam("discount");
+        //Скидка по статусу
+        $discount_status = parent::getParam("discount");
+        //Персональная скидка
+        $PHPShopUser = new PHPShopUser($_SESSION['UsersId']);
+        $discount_user = $PHPShopUser->getPersonalDiscount();
+        //Максимальная
+        $discount = max($discount_status, $discount_user);
+
+        return $discount;
     }
 
 }

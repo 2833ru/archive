@@ -26,10 +26,17 @@ function comment_rate($obj, $args) {
 class rateForComment {
 
     function rateForComment($rate, $num) {
-        $oneSpaceWidth=1;
+        $oneStarWidth = 16; // ширина одной звёздочки
+        $oneSpaceWidth = 0; // пробел между звёздочками
+        // берём параметры с конфига, если заданы
+        if (@$_SESSION['Memory']["rateForComment"]["oneStarWidth"])
+            $oneStarWidth = $_SESSION['Memory']["rateForComment"]["oneStarWidth"];
+        if (@$_SESSION['Memory']["rateForComment"]["oneSpaceWidth"])
+            $oneSpaceWidth = $_SESSION['Memory']["rateForComment"]["oneSpaceWidth"];
+
         if ($num) {
             $rate = round($rate, 1);
-            $GLOBALS['SysValue']['other']['avgRateWidth'] = 16 * $rate + $oneSpaceWidth * ceil($rate);
+            $GLOBALS['SysValue']['other']['avgRateWidth'] = $oneStarWidth * $rate + $oneSpaceWidth * ceil($rate);
             $GLOBALS['SysValue']['other']['avgRateNum'] = $num;
             $GLOBALS['SysValue']['other']['avgRate'] = $rate;
         } else {
@@ -44,7 +51,7 @@ class rateForComment {
         // Подключаем шаблон
         $path = './' . $SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/comment/avg_rate_cid.tpl";
         if (PHPShopParser::checkFile($path, true))
-            return PHPShopParser::file ($path, true);
+            return PHPShopParser::file($path, true);
         return null;
     }
 
@@ -53,7 +60,7 @@ class rateForComment {
         // Подключаем шаблон
         $path = './' . $SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/comment/avg_rate_uid.tpl";
         if (PHPShopParser::checkFile($path, true))
-            return PHPShopParser::file ($path, true);
+            return PHPShopParser::file($path, true);
         return null;
     }
 

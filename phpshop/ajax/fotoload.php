@@ -12,9 +12,11 @@ PHPShopObj::loadClass("system");
 $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
 $PHPShopSystem = new PHPShopSystem();
 
-// Подключаем библиотеку поддержки.
-require_once $_classPath . "lib/Subsys/JsHttpRequest/Php.php";
-$JsHttpRequest = new Subsys_JsHttpRequest_Php("windows-1251");
+// Подключаем библиотеку поддержки JsHttpRequest
+if ($_REQUEST['type'] != 'json') {
+    require_once $_classPath . "lib/Subsys/JsHttpRequest/Php.php";
+    $JsHttpRequest = new Subsys_JsHttpRequest_Php("windows-1251");
+}
 
 function checkMultibase($img) {
     global $PHPShopSystem;
@@ -28,10 +30,10 @@ function checkMultibase($img) {
 }
 
 function getFotoIconPodrobno($n, $f) {
-    global $SysValue;
+    global $SysValue,$FotoArray;
 
     $fRComSatrt = null;
-    $sql = "select * from " . $SysValue['base']['table_name35'] . " where parent='".intval($n)."' order by num";
+    $sql = "select * from " . $SysValue['base']['table_name35'] . " where parent='" . intval($n) . "' order by num";
     $result = mysql_query($sql);
     $num = mysql_num_rows($result);
     while (@$row = mysql_fetch_array(@$result)) {
@@ -40,7 +42,7 @@ function getFotoIconPodrobno($n, $f) {
         $name_b = str_replace(".", "_big.", $name);
 
         // Подбор исходного изображения
-        if (!fopen( "http://" . $_SERVER['HTTP_HOST'] .$name_b, "r"))
+        if (!@fopen("http://" . $_SERVER['HTTP_HOST'] . $name_b, "r"))
             $name_b = $name;
 
         $id = $row['id'];
@@ -105,7 +107,12 @@ function getFotoIconPodrobno($n, $f) {
 if (PHPShopSecurity::true_num($_REQUEST['xid'])) {
 
     $_RESULT = array(
-        'foto' => getFotoIconPodrobno($_REQUEST['xid'], $_REQUEST['fid'])
+        'foto' => PHPShopString::win_utf8(getFotoIconPodrobno($_REQUEST['xid'], $_REQUEST['fid'])),
+        'current'=>$FotoArray[$_REQUEST['fid']]["name"],
+        "success" => 1
     );
+
+    if ($_REQUEST['type'] == 'json')
+        echo json_encode($_RESULT);
 }
 ?>

@@ -1,6 +1,87 @@
 <?php
 
 /**
+ * Элемент подбора по брендам
+ * @author PHPShop Software
+ * @version 1.0
+ * @package PHPShopElements
+ */
+class PHPShopBrandsElement extends PHPShopElements {
+
+    /**
+     * @var int  Кол-во брендов
+     */
+    var $limitOnLine = 5;
+    var $firstClassName = 'span-first-child';
+
+    /**
+     * Конструктор
+     */
+    function PHPShopBrandsElement() {
+        $this->debug = false;
+        parent::PHPShopElements();
+    }
+
+    /**
+     * Вывод
+     * @return string
+     */
+    function index() {
+        global $SysValue;
+        // Массив имен характеристик
+        $PHPShopOrm = new PHPShopOrm($SysValue['base']['table_name20']);
+        $PHPShopOrm->debug = $this->debug;
+        $PHPShopOrm->mysql_error = false;
+        $result = $PHPShopOrm->query("select * from " . $SysValue['base']['table_name20'] . " where (brand='1' and goodoption!='1') order by num");
+        while (@$row = mysql_fetch_assoc($result)) {
+            $arrayVendor[$row['id']] = $row;
+        }
+        if (is_array($arrayVendor))
+            foreach ($arrayVendor as $k => $v) {
+                if (is_numeric($k))
+                    $sortValue.=' category=' . $k . ' OR';
+            }
+        $sortValue = substr($sortValue, 0, strlen($sortValue) - 2);
+
+        if (!empty($sortValue)) {
+            // Массив значений 
+            $i = 0;
+            $result = $PHPShopOrm->query("select distinct name, id, icon, category from " . $SysValue['base']['table_name21'] . " where $sortValue group by name");
+            while (@$row = mysql_fetch_array($result)) {
+                @$arrayVendorValue[$row['category']]['name'].= ", " . $row['name'];
+                if ($arrayVendor[$row['category']]['brand']) {
+                    if ($i % $this->limitOnLine == 0) {
+                        $this->set('brandFirstClass', $this->firstClassName);
+                    } else {
+                        $this->set('brandFirstClass', '');
+                    }
+                    $i++;
+
+                    $this->set('brandIcon', $row['icon']);
+                    $this->set('brandName', $row['name']);
+                    $desc = '';
+                    if ($row['page']) {
+                        $PHPShopOrm->clean();
+                        $res = $PHPShopOrm->query("select content from " . $SysValue['base']['page'] . " where link = '$row[page]' LIMIT 1");
+                        $page = mysql_fetch_array($res);
+                        $desc = $page['content'];
+                    }
+
+                    $this->set('brandPageLink', $GLOBALS['SysValue']['dir']['dir'].'/selection/?v[' . $row['category'] . ']=' . $row['id']);
+                    $this->set('brandDescr', $desc);
+
+                    $this->set('brandsList', ParseTemplateReturn('brands/top_brands_one.tpl'), true);
+                }
+            }
+        }
+        if ($this->get('brandsList'))
+            return ParseTemplateReturn('brands/top_brands_main.tpl');
+    }
+
+}
+
+
+/**
  * Элемент характеристик товаров
  * @author PHPShop Software
  * @tutorial http://wiki.phpshop.ru/index.php/PHPShopSortElements
@@ -107,10 +188,16 @@ class PHPShopProductIconElements extends PHPShopProductElements {
      * @param int $limit ограничение на вывод
      * @return string
      */
-    function specMainIcon($force = false, $category = null, $cell = 1, $limit = null, $line = false) {
+    function specMainIcon($force = false, $category = null, $cell = null, $limit = null, $line = false) {
 
         $this->limitspec = $limit;
-        $this->cell = $cell;
+
+        
+        if (!empty($cell))
+            $this->cell = $cell;
+
+        elseif (empty($this->cell))
+            $this->cell = 1;
 
 
         switch ($GLOBALS['SysValue']['nav']['nav']) {
@@ -245,12 +332,14 @@ class PHPShopProductIconElements extends PHPShopProductElements {
 
         // Количество ячеек для вывода товара
         if (empty($cell))
-            $cell = $this->PHPShopSystem->getParam('num_vitrina');
+            $this->cell = $this->PHPShopSystem->getParam('num_vitrina');
+        else $this->cell=$cell;
+
 
         $this->set('productInfo', $this->lang('productInfo'));
 
         // Добавляем в дизайн ячейки с товарами
-        $this->product_grid($row, $cell, $template, $line);
+        $this->product_grid($row, $this->cell, $template, $line);
 
         // Собираем и возвращаем таблицу с товарами
         return $this->compile();
@@ -391,6 +480,10 @@ class PHPShopProductIndexElements extends PHPShopProductElements {
                             foreach ($cart as $good) {
                                 if ($i > $this->limitpos)
                                     break;
+                                // Проверка подчиненного товара
+                                if(!empty($good['parent'])) 
+                                    $good['id']=$good['parent'];
+                                
                                 $sort.=' id=' . intval($good['id']) . ' OR';
                             }
                     }
@@ -474,7 +567,7 @@ class PHPShopProductIndexElements extends PHPShopProductElements {
         // Проверка запуска главной страницы
         if ($this->PHPShopNav->index()) {
 
-            
+
             // Количество ячеек для вывода товара
             if (empty($this->cell))
                 $this->cell = $this->PHPShopSystem->getParam('num_vitrina');
@@ -615,6 +708,9 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
     function PHPShopShopCatalogElement() {
         $this->objBase = $GLOBALS['SysValue']['base']['categories'];
         parent::PHPShopElements();
+
+        // HTML опции верстки
+        $this->setHtmlOption(__CLASS__);
     }
 
     /**
@@ -661,12 +757,12 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
         // Выполнение только в Index
         if ($this->PHPShopNav->index()) {
 
-
-
             $dis = null;
             $podcatalog = null;
 
-            $this->cell = $this->PHPShopSystem->getParam('num_row_adm');
+            // Количество ячеек
+            if (empty($this->cell))
+                $this->cell = $this->PHPShopSystem->getValue('num_vitrina');
 
             $table = null;
             $j = 1;
@@ -685,6 +781,9 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
                     $this->set('catalogTemplates', $this->getValue('dir.templates') . chr(47) . $_SESSION['skin'] . chr(47));
                     $this->set('catalogTitle', $row['name']);
                     $this->set('catalogName', $row['name']);
+                    if (empty($row['icon']))
+                        $row['icon'] = $this->no_photo;
+                    $this->set('catalogIcon', $row['icon']);
 
                     // Проверка на наличие иконки в описании категории
                     if (stristr($row['content'], 'img') and strlen($row['content']) < $this->cat_description_limit)
@@ -741,6 +840,8 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
         $dis = null;
         $i = 0;
 
+        $this->set('thisCat', $this->PHPShopNav->getId());
+
         // Перехват модуля
         $hook = $this->setHook(__CLASS__, __FUNCTION__, $where, 'START');
         if ($hook)
@@ -778,6 +879,12 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
                 $this->set('catalogTitle', $row['title']);
                 $this->set('catalogName', $row['name']);
 
+                // Иконка
+                if (empty($row['icon']))
+                    $row['icon'] = $this->no_photo;
+                $this->set('catalogIcon', $row['icon']);
+                $this->set('catalogIconDesc', $row['icon_description']);
+
                 // Перехват модуля
                 $this->setHook(__CLASS__, __FUNCTION__, $row, 'END');
 
@@ -814,6 +921,7 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
 
         // ID родителя
         $n = $parent_data['id'];
+        $i=1;
 
         $dis = null;
 
@@ -862,6 +970,13 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
                 // Определяем переменные
                 $this->set('catalogName', $row['name']);
                 $this->set('catalogUid', $row['id']);
+                $row['i']= $i;
+
+                // Иконка
+                if (empty($row['icon']))
+                    $row['icon'] = $this->no_photo;
+                $this->set('catalogIcon', $row['icon']);
+                $this->set('catalogIconDesc', $row['icon_description']);
 
                 $PHPShopCategory = new PHPShopCategory($n);
                 $this->set('catalogTitle', $PHPShopCategory->getName());
@@ -871,6 +986,7 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
 
                 // Подключаем шаблон
                 $dis.=ParseTemplateReturn($this->getValue('templates.podcatalog_forma'));
+                $i++;
             }
         return $dis;
     }
@@ -1188,9 +1304,9 @@ class PHPShopCloudElement extends PHPShopElements {
                     $key = str_replace('"', '', $key);
                     $key = str_replace("'", '', $key);
                     if ($tip == "words")
-                        $disp.='<div><a href="/search/?words=' . $key . '">' . $key . '</a></div>';
+                        $disp.='<div><a href="/search/?words=' . urlencode($key) . '">' . $key . '</a></div>';
                     else
-                        $disp.="<a href='/search/?words=" . $key . "' style='font-size:12pt;'>$key</a>";
+                        $disp.="<a href='/search/?words=" . urlencode($key) . "' style='font-size:12pt;'>$key</a>";
                 }
 
             // Чистим теги
@@ -1223,7 +1339,7 @@ so.write("wpcumuluscontent");</script>
                 $this->set('leftMenuContent', '<div class="product-tags">' . $disp . '</div>');
 
                 // Перехват модуля в конце функции
-                $this->setHook(__CLASS__, __FUNCTION__, $row, 'END');
+                $this->setHook(__CLASS__, __FUNCTION__, $disp, 'END');
 
                 // Подключаем шаблон
                 $dis.=$this->parseTemplate($this->getValue('templates.left_menu'));

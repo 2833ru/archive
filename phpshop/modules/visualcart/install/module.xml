@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.7</version>
+    <version>1.8</version>
     <name>Visual Cart</name>
-   <faqlink>http://faq.phpshop.ru/page/visualcart.html</faqlink>
- <description>Модуль управляемой мини-корзины, сохранение корзины в базе.</description>
+    <faqlink>http://faq.phpshop.ru/page/visualcart.html</faqlink>
+    <description>Модуль управляемой мини-корзины, сохранение корзины в базе.</description>
     <icon>icon.png</icon>
     <category>form</category>
     <adminmenu>

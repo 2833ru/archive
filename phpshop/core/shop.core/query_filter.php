@@ -3,7 +3,7 @@
 /**
  * Cортировка товаров
  * @author PHPShop Software
- * @version 1.3
+ * @version 1.4
  * @package PHPShopCoreFunction
  * @param obj $obj объект класса
  * @return mixed
@@ -14,15 +14,15 @@ function query_filter($obj) {
     $n = $obj->category;
 
     $v = @$_REQUEST['v'];
-    $s = PHPShopSecurity::TotalClean(@$_REQUEST['s'], 1);
-    $f = PHPShopSecurity::TotalClean(@$_REQUEST['f'], 1);
+    $s = intval(@$_REQUEST['s']);
+    $f = intval(@$_REQUEST['f']);
 
     if ($obj->PHPShopNav->isPageAll())
         $p = PHPShopSecurity::TotalClean($p, 1);
 
     // Кол-во товаров на странице
     $num_row = $obj->PHPShopCategory->getParam('num_row');
-    if (!empty($num_cow))
+    if (!empty($num_row))
         $num_row = $num_row;
     else // если 0 делаем по формуле кол-во колонок * 2 строки.
         $num_row = (6 - $obj->cell) * $obj->cell;
@@ -30,7 +30,21 @@ function query_filter($obj) {
     // Сортировка по характеристикам
     if (is_array($v)) {
         foreach ($v as $key => $value) {
-            if (PHPShopSecurity::true_num($key) and PHPShopSecurity::true_num($value)) {
+
+            // Множественный отбор [][]
+            if (is_array($value)) {
+                $sort.=" and (";
+                foreach ($value as $v) {
+                    if (PHPShopSecurity::true_num($key) and PHPShopSecurity::true_num($v)) {
+                        $hash = $key . "-" . $v;
+                        $sort.=" vendor REGEXP 'i" . $hash . "i' or";
+                    }
+                }
+                $sort = substr($sort, 0, strlen($sort) - 2);
+                $sort.=")";
+            }
+            // Обычный отбор []
+            elseif (PHPShopSecurity::true_num($key) and PHPShopSecurity::true_num($value)) {
                 $hash = $key . "-" . $value;
                 $sort.=" and vendor REGEXP 'i" . $hash . "i' ";
             }
@@ -58,13 +72,19 @@ function query_filter($obj) {
             case(1): $order = array('order' => 'name' . $order_direction);
                 $obj->set('productSortA', 'sortActiv');
                 break;
-            case(2): $order = array('order' => 'price' . $order_direction);
+            case(2):
+                // Сортировка по цене среди мультивалютных товаров
+                if ($obj->multi_currency_search)
+                    $order = array('order' => 'price_search,price' . $order_direction);
+                else
+                    $order = array('order' => 'price' . $order_direction);
+
                 $obj->set('productSortB', 'sortActiv');
                 break;
-            case(3): $order = array('order' => 'num' . $order_direction);
+            case(3): $order = array('order' => 'num' . $order_direction . ", items desc");
                 $obj->set('productSortC', 'sortActiv');
                 break;
-            default: $order = array('order' => 'num' . $order_direction);
+            default: $order = array('order' => 'num' . $order_direction . ", items desc");
                 $obj->set('productSortC', 'sortActiv');
                 break;
         }
@@ -83,7 +103,12 @@ function query_filter($obj) {
         switch ($s) {
             case(1): $order = array('order' => 'name' . $order_direction);
                 break;
-            case(2): $order = array('order' => 'price' . $order_direction);
+            case(2):
+                // Сортировка по цене среди мультивалютных товаров
+                if ($obj->multi_currency_search)
+                    $order = array('order' => 'price_search,price' . $order_direction);
+                else
+                    $order = array('order' => 'price' . $order_direction);
                 break;
             case(3): $order = array('order' => 'num' . $order_direction);
                 break;
@@ -92,7 +117,7 @@ function query_filter($obj) {
     }
 
     // Учет добавочных категорий
-    $catt = '(category=' . $n . ' OR dop_cat LIKE \'%#' . $n . '#%\')';
+    $catt = '(category=' . $n . ' OR dop_cat LIKE \'%#' . $n . '#%\') ';
 
     // Преобзазуем массив уловия сортировки в строку
     foreach ($order as $key => $val)
@@ -103,36 +128,32 @@ function query_filter($obj) {
         $sql = " ($catt and enabled='1' and parent_enabled='0') " . $sort . " " . $string . ' limit ' . $obj->max_item;
     }
 
-    // Поиск по цене
-    elseif (isset($_POST['priceSearch'])) {
 
-        $priceOT = PHPShopSecurity::TotalClean($_POST['priceOT'], 1);
-        $priceDO = PHPShopSecurity::TotalClean($_POST['priceDO'], 1);
+    // Поиск по цене
+    if (PHPShopSecurity::true_param($_REQUEST['min'], $_REQUEST['max'])) {
+
+        $priceOT = intval($_REQUEST['min']) - 1;
+        $priceDO = intval($_REQUEST['max']) + 1;
 
         $percent = $obj->PHPShopSystem->getValue('percent');
 
-        // Бесконечность
-        if ($priceDO == 0)
+        if (empty($priceDO))
             $priceDO = 1000000000;
 
-        if (empty($priceOT))
-            $priceOT = 0;
 
         // Цена с учетом выбранной валюты
         $priceOT/=$obj->currency('kurs');
         $priceDO/=$obj->currency('kurs');
 
-        $sql = "$catt and enabled='1' and parent_enabled='0' and price >= " .
-                ($priceOT / (100 + $percent) * 100) . " AND price <= " . ($priceDO / (100 + $percent) * 100) . " " . $sort . $string . ' limit 0,' . $obj->max_item;
-    }
-    elseif (!empty($sort)) {
-        return array('sql' => $catt . " and enabled='1' and parent_enabled='0' " . $sort . $string);
-    } else {
-        return array('sql' => $catt . " and enabled='1' and parent_enabled='0' " . $sort . $string);
+        // Сортировки по прайсу среди мультивалютных товаров
+        if ($obj->multi_currency_search)
+            $sort.= " and (price_search BETWEEN " . ($priceOT / (100 + $percent) * 100) . " AND " . ($priceDO / (100 + $percent) * 100) . ") ";
+        else
+            $sort.= " and (price BETWEEN " . ($priceOT / (100 + $percent) * 100) . " AND " . ($priceDO / (100 + $percent) * 100) . ") ";
     }
 
-    // Возвращаем SQL 
-    return $sql;
+
+    return array('sql' => $catt . " and enabled='1' and parent_enabled='0' " . $sort . $string);
 }
 
 ?>

@@ -129,7 +129,7 @@ class PHPShopReadCsv {
     }
 
     function ReadCsvRow() {
-        $this->ReadCsvRow = split("\n",$this->CsvContent);
+        $this->ReadCsvRow = explode("\n",$this->CsvContent);
         array_shift($this->ReadCsvRow);
         array_pop($this->ReadCsvRow);
     }
@@ -142,7 +142,7 @@ class PHPShopReadCsv {
 
     function CsvToArray() {
         while (list($key, $val) = each($this->ReadCsvRow)) {
-            $array1=split(";",$val);
+            $array1=explode(";",$val);
 
             if(!(@$OutArray[$array1[0]])) $OutArray[$array1[0]]=$this->CleanStr($array1);
             else $OutArray[]=$this->CleanStr($array1);

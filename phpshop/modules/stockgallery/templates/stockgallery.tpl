@@ -1,5 +1,9 @@
-<script type="text/javascript" language="javascript" src="phpshop/modules/stockgallery/lib/jquery.js"></script>
-<script type="text/javascript" language="javascript" src="phpshop/modules/stockgallery/lib/jquery.carouFredSel-5.6.1-packed.js"></script>
+<script>
+    if (!window.jQuery)
+        document.write(unescape('<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">%3C/script%3E'));
+</script>
+
+<script type="text/javascript" language="javascript" src="phpshop/modules/stockgallery/lib/jquery.carouFredSel-6.2.1.js"></script>
 <script type="text/javascript" language="javascript">
     $(function() {
         // Basic carousel, no options
@@ -36,7 +40,7 @@
 <div class="wrapper" align="center">
     <div class="list_carousel">
         <ul id="foo0">
-      @stockgallery_list@
+            @stockgallery_list@
         </ul>
     </div>
 </div>

@@ -582,7 +582,7 @@ button.help{
     border-color: #4D88C8;
     background-color: #C0D2EC;
     border-width: 1px;
-    cursor: hand;
+    cursor: pointer;
 }
 form{
     margin:0; 
@@ -593,4 +593,15 @@ sup{
     color:#FFFFFF;
     background-color: #2CAE00;
     padding: 1px;
+}
+
+#phpshop,#status{
+    display:none;
+}
+
+@media (min-width: 1200px){
+    #phpshop,#status{
+        display:block;
+        padding-top:5px;
+    }
 }

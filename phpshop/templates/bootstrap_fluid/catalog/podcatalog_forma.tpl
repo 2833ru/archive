@@ -1,0 +1,1 @@
+<li class='template-menu-line @catalogClass@'><a href="/shop/CID_@catalogUid@.html">@catalogName@</a></li>

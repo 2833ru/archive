@@ -47,7 +47,13 @@ function sort_table($obj, $row) {
             $PHPShopOrm->debug = $obj->debug;
             $result = $PHPShopOrm->query("select * from " . $SysValue['base']['table_name21'] . " where $sortValue order by num");
             while (@$row = mysql_fetch_array($result)) {
+
+                // Определение цвета
+                if ($row['name'][0] == '#')
+                    @$arrayVendorValue[$row['category']]['name'].= '  <div class="sort-color" style="width:25px;height:25px;background:' . $row['name'] . ';float:left;padding:3px;margin:3px;"></div>  ';
+                else 
                 @$arrayVendorValue[$row['category']]['name'].= ", " . $row['name'];
+                
                 @$arrayVendorValue[$row['category']]['page'].= $row['page'];
                 if ($arrayVendor[$row['category']]['brand']) {
                     $obj->set('brandIcon', $row['icon']);
@@ -56,7 +62,7 @@ function sort_table($obj, $row) {
                         $PHPShopOrm->clean();
                         $res = $PHPShopOrm->query("select content from " . $SysValue['base']['page'] . " where link = '$row[page]' LIMIT 1");
                         $page = mysql_fetch_array($res);
-                        $desc =  stripslashes($page['content']);
+                        $desc = stripslashes($page['content']);
                     }
 
                     $obj->set('brandPageLink', '/selection/?v[' . $row['category'] . ']=' . $row['id']);
@@ -73,9 +79,11 @@ function sort_table($obj, $row) {
 
             // Создаем таблицу характеристик с учетом сортировки
             if (is_array($arrayVendor))
-                foreach ($arrayVendor as $idCategory => $value)
+                foreach ($arrayVendor as $idCategory => $value) {
+
                     if (!empty($arrayVendorValue[$idCategory]['name'])) {
                         if (!empty($value['name'])) {
+
                             if (!empty($value['page']))
                                 $sortName = PHPShopText::a('../page/' . $value['page'] . '.html', $value['name']);
                             else
@@ -89,8 +97,9 @@ function sort_table($obj, $row) {
                             $dis.=PHPShopText::tr($sortName . ': ', $sortValueName);
                         }
                     }
+                }
 
-            $disp = PHPShopText::table($dis);
+            $disp = PHPShopText::table($dis, $cellpadding = 3, $cellspacing = 1, $align = '', $width = '98%', $bgcolor = false, $border = 0, $id = false, 'vendorenabled');
             $obj->set('vendorDisp', $disp);
         }
     }

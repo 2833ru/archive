@@ -73,3 +73,13 @@ function tab_on(obj) {
     }
     obj.style.background = "#CCCCCC";
 }
+
+function addCartOption(xid) {
+    var name = "allOptionsSet" + xid;
+    if (document.getElementById(name)) {
+        addname = document.getElementById(name).value;
+    } else {
+        addname = "";
+    }
+    window.location.replace('/order/?from=html&id='+xid+'&addname=t'+addname);
+}

@@ -6,28 +6,27 @@
 <div align="left" style="padding:5px 0px"> @sortDes@ </div>
 <div align="left" style="padding:5px 0px"> @DispCatNav@ </div>
 
+<div class="product-filter" id="filter-selection-well">
+    <div class="display">Вывод товаров:&nbsp;&nbsp; 
 
-<NOINDEX>
-    <form method="post" action="/shop/CID_@productId@.html" name="sort">
-        <div class="product-filter">
-            <div class="display">Вывод товаров:&nbsp;&nbsp;
-                <a href="?@productVendor@&f=@php echo $_GET['f']; php@&s=@php echo $_GET['s']; php@&gridChange=1"><img src="images/icon_list.png" alt="Список" title="Список" /></a>&nbsp;
-                <a href="?@productVendor@&f=@php echo $_GET['f']; php@&s=@php echo $_GET['s']; php@&gridChange=2"><img src="images/icon_grid.png" alt="Сетка" title="Сетка" /></a>    
-            </div>
-            <div class="product-compare" style="display:@compare Enabled@; "><a href="/compare/" id="compare-total">Сравнить товары (<span id="numcompare">@numcompare@</span> шт.)</a></div>
-            <div class="sort"> Сортировать по
-                <select onchange="location = this.value;">
-                    <option value="?">умолчанию</option>
-                    <option value="?@productVendor@&f=1&s=1">наименованию (возр)</option>
-                    <option value="?@productVendor@&f=2&s=1">наименованию (убыв)</option>
-                    <option value="?@productVendor@&f=1&s=2">цене (возр)</option>
-                    <option value="?@productVendor@&f=2&s=2">цене (убыв)</option>
-                </select>
-            </div>
-            <div style="clear:both"></div>
+        <div class="btn-group pull-right">
+            <button class="btn @gridSetAactive@" name="gridChange"  value="1" data-original-title="Товары списком"  rel="tooltip" data-url="?@productVendor@@php if(isset($_GET['f'])) echo '&f='.$_GET['f']; if(isset($_GET['s'])) echo  '&s='.$_GET['s']; php@&gridChange=1"><span class="icon-th-list"></span></button>
+            <button class="btn @gridSetBactive@"  name="gridChange"  value="2" data-original-title="Товары сеткой"  rel="tooltip" data-url="?@productVendor@@php if(isset($_GET['f'])) echo '&f='.$_GET['f']; if(isset($_GET['s'])) echo  '&s='.$_GET['s']; php@&gridChange=2"><span class="icon-th"></span></button>
         </div>
-    </form>
-</NOINDEX>
+    </div>
+    <div class="product-compare" style="display:@compare Enabled@; "><a href="/compare/" id="compare-total">Сравнить товары (<span id="numcompare">@numcompare@</span> шт.)</a></div>
+    <div class="sort"> Сортировка:&nbsp;&nbsp; 
+        <div class="btn-group pull-right">
+            <button class="btn @sSetAactive@" name="s" value="1" data-original-title="Наименование"  rel="tooltip" data-url="?@productVendor@&s=1@php if(isset($_GET['f'])) echo  '&f='.$_GET['f']; if(isset($_GET['gridChange'])) echo '&gridChange='.$_GET['gridChange']; php@"><span class="fa fa-sort-alpha-asc"></span></button>
+            <button class="btn @sSetBactive@" name="s" value="2" data-original-title="Цена"  rel="tooltip" data-url="?@productVendor@&s=2@php if(isset($_GET['f'])) echo  '&f='.$_GET['f']; if(isset($_GET['gridChange'])) echo '&gridChange='.$_GET['gridChange']; php@"><span class="fa fa-sort-numeric-asc"></span></button>
+
+            <button class="btn @fSetAactive@" name="f" value="1" data-original-title="По возрастанию"  rel="tooltip" data-url="?@productVendor@&f=1@php if(isset($_GET['s'])) echo  '&s='.$_GET['s']; if(isset($_GET['gridChange'])) echo '&gridChange='.$_GET['gridChange']; php@"><span class="fa fa-sort-amount-asc"></span></button>
+            <button class="btn @fSetBactive@"  name="f" value="2" data-original-title="По убыванию"  rel="tooltip" data-url="?@productVendor@&f=2@php if(isset($_GET['s'])) echo  '&s='.$_GET['s']; if(isset($_GET['gridChange'])) echo '&gridChange='.$_GET['gridChange']; php@"><span class="fa fa-sort-amount-desc"></span></button>
+        </div>
+    </div>
+    <div style="clear:both"></div>
+</div>
+
 
 
 <div class="product-grid">

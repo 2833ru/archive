@@ -39,12 +39,15 @@ function actionUpdate() {
     global $PHPShopOrm;
     
     // Обязательное заполнение / в конце директории
+    /*
     if(substr($_POST['upload_dir_new'], -1) != '/')
            $_POST['upload_dir_new'].='/';
     
     // Попытка проставить права 775 на папку для файлов
-    @chmod($_SERVER['DOCUMENT_ROOT'] .$GLOBALS['SysValue']['dir']['dir'].'/UserFiles/Image/'.$_POST['upload_dir_new'],$_POST['chmod_new']);
+    @chmod($_SERVER['DOCUMENT_ROOT'] .$GLOBALS['SysValue']['dir']['dir'].'/UserFiles/Image/'.$_POST['upload_dir_new'],$_POST['chmod_new']);*/
 
+    $_SESSION['chat_skin']=$_POST['skin_new'];
+    
     $PHPShopOrm->debug=false;
     $action = $PHPShopOrm->update($_POST);
     return $action;
@@ -59,7 +62,7 @@ function GetSkinList($skin) {
         if (@$dh = opendir($dir)) {
             while (($file = readdir($dh)) !== false) {
 
-                $file=str_replace('.css','',$file);
+                $file=str_replace(array('.css','bootstrap-theme-'),'',$file);
                 
                 if($skin == $file)
                     $sel="selected";
@@ -101,14 +104,14 @@ function actionStart() {
     // Графический заголовок окна
     $PHPShopGUI->setHeader("Настройка модуля 'Чат'","Настройки подключения",$PHPShopGUI->dir."img/i_display_settings_med[1].gif");
 
-    $Tab1=$PHPShopGUI->setField('Заголовок',$PHPShopGUI->setInputText(false,'title_new', $title),'left');
-    $Tab1.=$PHPShopGUI->setField('CHMOD',$PHPShopGUI->setInputText(false, 'chmod_new', $chmod,100,'* 0775'),'left');
+    $Tab1=$PHPShopGUI->setField('Заголовок',$PHPShopGUI->setInputText(false,'title_new', $title,'615'),'left');
+    //$Tab1.=$PHPShopGUI->setField('CHMOD',$PHPShopGUI->setInputText(false, 'chmod_new', $chmod,100,'* 0775'),'left');
     $Tab1.=$PHPShopGUI->setLine().$PHPShopGUI->setField('Приветственое сообщение', $PHPShopGUI->setTextarea('title_start_new', $title_start));
     $Tab1.=$PHPShopGUI->setField('Cообщение выключенного режима', $PHPShopGUI->setTextarea('title_end_new', $title_end));
     $Tab1.=$PHPShopGUI->setField('Место вывода',$PHPShopGUI->setSelect('enabled_new',$e_value,100),'left');
     $Tab1.=$PHPShopGUI->setField('Дизайн',GetSkinList($data['skin']),'left');
-    $Tab1.=$PHPShopGUI->setField('Файлы пользователей',$PHPShopGUI->setInputText('/UserFiles/Image/','upload_dir_new', $upload_dir,100),'left');
-    //$Tab1.=$PHPShopGUI->setField('Тип вывода',$PHPShopGUI->setSelect('windows_new',$w_value,150),'left');
+    //$Tab1.=$PHPShopGUI->setField('Файлы пользователей',$PHPShopGUI->setInputText('/UserFiles/Image/','upload_dir_new', $upload_dir,100),'left');
+    $Tab1.=$PHPShopGUI->setField('Тип вывода',$PHPShopGUI->setSelect('windows_new',$w_value,150),'left');
     
     $info='
 
@@ -131,7 +134,7 @@ $PHPShopGUI->setImage('../templates/tray.png',16,16,$align='absmiddle',$hspace="
     $Tab2.=$Load;
 
     // Форма регистрации
-    $Tab3 = $PHPShopGUI->setPay($serial, false, $version, true);
+    $Tab3 = $PHPShopGUI->setPay($serial, false, $version, true);;
 
     // Вывод формы закладки
     $PHPShopGUI->setTab(array("Основное",$Tab1,290),array("Инструкция",$Tab2,290),array("О Модуле",$Tab3,290));

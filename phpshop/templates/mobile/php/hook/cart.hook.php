@@ -31,7 +31,7 @@ function ordercartforma_hook($val, $option, $rout) {
                 </form>
                 
 <form name="forma_cart_del" method="post" id="forma_cart_del" action="./">
-<input type=hidden name="id_delete" value="' . $val['id'] . '">
+<input type=hidden name="id_delete" value="' . $option['xid'] . '">
 <button class="btn btn-negative btn-block"><span class="icon icon-trash"></span> Удалить </button>
 </form>
 

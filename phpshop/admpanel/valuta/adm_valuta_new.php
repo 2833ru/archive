@@ -127,8 +127,8 @@ DoResize(<? echo $GetSystems['width_icon']?>,400,350);
 if(isset($editID) and !empty($name_new))// Запись редактирования
 {
 if(CheckedRules($UserStatus["valuta"],2) == 1){
-$sql="INSERT INTO ".$SysValue['base']['table_name24']." VALUES ('','$name_new','$code_new','$iso_new','$kurs_new','$num_new','$enabled_new')";
-$result=mysql_query($sql)or @die("".mysql_error()."");
+$sql="INSERT INTO ".$SysValue['base']['table_name24']." VALUES ('','".addslashes($name_new)."','".addslashes($code_new)."','".addslashes($iso_new)."','".addslashes($kurs_new)."','".addslashes($num_new)."','".addslashes($enabled_new)."')";
+$result=mysql_query($sql);
 echo"
 	  <script>
 DoReloadMainWindow('valuta');

@@ -65,6 +65,12 @@ class PHPShopShopCore extends PHPShopCore {
     var $cell_type_class = 'product-block';
 
     /**
+     * Максимальная и минимальная цена
+     */
+    var $price_min = 0;
+    var $price_max = 0;
+
+    /**
      * Конструктор
      */
     function PHPShopShopCore() {
@@ -102,21 +108,25 @@ class PHPShopShopCore extends PHPShopCore {
         $this->set('productRriceOT', 0);
         $this->set('productRriceDO', 0);
 
-        $v = @$SysValue['nav']['query']['v'];
-        $s = PHPShopSecurity::TotalClean(@$SysValue['nav']['query']['s'], 1);
-        $f = PHPShopSecurity::TotalClean(@$SysValue['nav']['query']['f'], 1);
+        $v = @$_GET['v'];
+        $s = intval(@$_GET['s']);
+        $f = intval(@$_GET['f']);
 
         if ($this->PHPShopNav->isPageAll())
             $p = PHPShopSecurity::TotalClean($p, 1);
 
         // Сортировка по характеристикам
         if (is_array($v)) {
-            foreach ($v as $key => $value) {
-                if (PHPShopSecurity::true_num($key) and PHPShopSecurity::true_num($value)) {
-                    $hash = $key . "-" . $value;
-                    $sort.=" and vendor REGEXP 'i" . $hash . "i' ";
+
+            $sort.=" and (";
+            foreach ($v as $key => $val) {
+                if (PHPShopSecurity::true_num($key) and PHPShopSecurity::true_num($val)) {
+                    $hash = $key . "-" . $val;
+                    $sort.=" vendor REGEXP 'i" . $hash . "i' or";
                 }
             }
+            $sort = substr($sort, 0, strlen($sort) - 2);
+            $sort.=") ";
         }
 
 
@@ -278,6 +288,8 @@ class PHPShopShopCore extends PHPShopCore {
             $row['price2'] = $row['price3'] = $row['price4'] = $row['price5'] = null;
         }
 
+
+
         return PHPShopProductFunction::GetPriceValuta($row['id'], array($price, $row['price2'], $row['price3'], $row['price4'], $row['price5']), $row['baseinputvaluta']);
     }
 
@@ -327,19 +339,27 @@ class PHPShopShopCore extends PHPShopCore {
         else
             $SQL = $sql;
 
-        // Сортировка
+        
         $sort = '?';
+
+        // Фильтры
+        if (!empty($_GET['v']) and is_array($_GET['v']))
+            foreach ($_GET['v'] as $key => $val) {
+
+                if (is_array($val)) {
+
+                    foreach ($val as $v)
+                        $sort.='v[' . $key . '][]=' . $v . '&';
+                } else if (is_numeric($key) and is_numeric($val))
+                    $sort.='v[' . $key . ']=' . $val . '&';
+            }
+
+        // Сортировка
         if (!empty($_GET['s']) and is_numeric($_GET['s']))
             $sort.='s=' . $_GET['s'] . '&';
         if (!empty($_GET['f']) and is_numeric($_GET['f']))
             $sort.='f=' . $_GET['f'] . '&';
 
-        // Фильтры
-        if (!empty($_GET['v']) and is_array($_GET['v']))
-            foreach ($_GET['v'] as $key => $val) {
-                if (is_numeric($key) and is_numeric($val))
-                    $sort.='v[' . $key . ']=' . $val . '&';
-            }
 
         $sort = substr($sort, 0, strlen($sort) - 1);
 
@@ -380,7 +400,7 @@ class PHPShopShopCore extends PHPShopCore {
             while ($i <= $num) {
                 if ($i > 1) {
                     $p_start = $this->num_row * ($i - 1) + 1;
-                    $p_end = $p_start + $this->num_row;
+                    $p_end = $p_start + $this->num_row - 1;
                 } else {
                     $p_start = $i;
                     $p_end = $this->num_row;
@@ -392,11 +412,11 @@ class PHPShopShopCore extends PHPShopCore {
 
                 if ($i != $this->page) {
                     if ($i == 1) {
-                        $this->set("paginLink", substr($this->objPath, 0, strlen($this->objPath) - 1) . '.html' . $sort);
+                        $this->set("paginLink", $GLOBALS['SysValue']['dir']['dir'] . substr($this->objPath, 0, strlen($this->objPath) - 1) . '.html' . $sort);
                         $navigat.= parseTemplateReturn($template_location . "paginator/paginator_one_link.tpl", $template_location_bool);
                     } else {
                         if ($i > ($this->page - $this->nav_len) and $i < ($this->page + $this->nav_len)) {
-                            $this->set("paginLink", $this->objPath . $i . '.html' . $sort);
+                            $this->set("paginLink", $GLOBALS['SysValue']['dir']['dir'] . $this->objPath . $i . '.html' . $sort);
                             $navigat.= parseTemplateReturn($template_location . "paginator/paginator_one_link.tpl", $template_location_bool);
                         } else if ($i - ($this->page + $this->nav_len) < 3 and (($this->page - $this->nav_len) - $i) < 3) {
                             $navigat.= parseTemplateReturn($template_location . "paginator/paginator_one_more.tpl", $template_location_bool);
@@ -414,18 +434,19 @@ class PHPShopShopCore extends PHPShopCore {
             $this->set("navNext", $this->lang('nav_forw'));
             $this->set("navigation", $navigat);
 
+
             // Убираем дубль первой страницы CID_X_1.html
             if ($p_do == 1)
-                $this->set("previousLink", substr($this->objPath, 0, strlen($this->objPath) - 1) . '.html' . $sort);
+                $this->set("previousLink", $GLOBALS['SysValue']['dir']['dir'] . substr($this->objPath, 0, strlen($this->objPath) - 1) . '.html' . $sort);
             else
-                $this->set("previousLink", $this->objPath . ($p_do) . '.html' . $sort);
+                $this->set("previousLink", $GLOBALS['SysValue']['dir']['dir'] . $this->objPath . ($p_do) . '.html' . $sort);
 
 
             // Убираем дубль первой страницы CID_X_0.html
-            if ($p_to == 0)
-                $this->set("nextLink", substr($this->objPath, 0, strlen($this->objPath) - 1) . '.html' . $sort);
+            if ($p_to == 0 or strtoupper($this->page) == 'ALL')
+                $this->set("nextLink", $GLOBALS['SysValue']['dir']['dir'] . substr($this->objPath, 0, strlen($this->objPath) - 1) . '.html' . $sort);
             else
-                $this->set("nextLink", $this->objPath . ($p_to) . '.html' . $sort);
+                $this->set("nextLink", $GLOBALS['SysValue']['dir']['dir'] . $this->objPath . ($p_to) . '.html' . $sort);
 
             // Добавлем ссылку показать все
             if (strtoupper($this->page) == 'ALL')
@@ -506,6 +527,22 @@ class PHPShopShopCore extends PHPShopCore {
         else
             $this->set('productSklad', '');
 
+
+        $price = $this->price($row);
+
+        // Расчет минимальной и максимальной цены
+        if ($price > $this->price_max)
+            $this->price_max = $price;
+
+        if (empty($this->price_min))
+            $this->price_min = $price;
+
+        if ($price < $this->price_min)
+            $this->price_min = $price;
+
+        if ($this->price_min == $this->price_max)
+            $this->price_min = intval($this->price_max / 2);
+
         // Если товар на складе
         if (empty($row['sklad'])) {
 
@@ -517,13 +554,14 @@ class PHPShopShopCore extends PHPShopCore {
 
             // Если нет новой цены
             if (empty($row['price_n'])) {
-                $this->set('productPrice', $this->price($row));
+
+                $this->set('productPrice', $price);
                 $this->set('productPriceRub', '');
             }
 
             // Если есть новая цена
             else {
-                $productPrice = $this->price($row);
+                $productPrice = $price;
                 $productPriceNew = $this->price($row, true);
                 $this->set('productPrice', $productPrice);
                 $this->set('productPriceRub', PHPShopText::strike($productPriceNew . " " . $this->currency()));
@@ -532,7 +570,7 @@ class PHPShopShopCore extends PHPShopCore {
 
         // Товар под заказ
         else {
-            $this->set('productPrice', $this->price($row));
+            $this->set('productPrice', $price);
             $this->set('productPriceRub', $this->lang('sklad_mesage'));
             $this->set('ComStartNotice', null);
             $this->set('ComEndNotice', null);
@@ -634,6 +672,17 @@ class PHPShopShopCore extends PHPShopCore {
                     }
                 break;
 
+            // Bootstrap
+            case 'bootstrap':
+                $tr = '<div class="row">';
+                if (is_array($args))
+                    foreach ($args as $key => $val) {
+                        $tr.=$val;
+                        $item++;
+                    }
+                $tr.='</div>';
+                break;
+
             // Табличная
             default:
 
@@ -667,19 +716,103 @@ class PHPShopShopCore extends PHPShopCore {
      * @param Int $num_row  кол-во колонок в категории по умолчанию
      */
     function calculateCell($category, $num_row) {
-        if (isset($_REQUEST['gridChange']) AND $_REQUEST['gridChange'] > 0) {
+        if (!empty($_REQUEST['gridChange'])) {
             if ($_REQUEST['gridChange'] == 2 AND $num_row > 1) {
                 $_SESSION['gridChange'][$category] = $num_row;
+                $this->set("gridChange2", "btn-primary");
                 return $num_row;
+            } elseif ($_REQUEST['gridChange'] == 2) {
+                $_SESSION['gridChange'][$category] = 2;
+                $this->set("gridChange2", "btn-primary");
+                return 2;
             } else {
+
                 $_SESSION['gridChange'][$category] = 1;
+                $this->set("gridChange", "btn-primary");
                 return 1;
             }
-        } elseif (isset($_SESSION['gridChange'][$category]))
+        } elseif (isset($_SESSION['gridChange'][$category])) {
+            if ($_SESSION['gridChange'][$category] > 1)
+                $this->set("gridChange2", "btn-primary");
+            else
+                $this->set("gridChange", "btn-primary");
             return $_SESSION['gridChange'][$category];
+        }
+        if ($num_row > 1)
+            $this->set("gridChange2", "btn-primary");
         else
-            return $num_row;
+            $this->set("gridChange", "btn-primary");
+        return $num_row;
     }
+    
+    /**
+     * Вывод подтипов товаров
+     * @param array $row массив значений
+     */
+    function parent($row) {
+
+    // Перехват модуля в начале функции
+    if($this->setHook(__CLASS__, __FUNCTION__, $row, 'START'))
+        return true;
+
+    $this->select_value = array();
+    $row['parent'] = PHPShopSecurity::CleanOut($row['parent']);
+
+    if (!empty($row['parent'])) {
+        $parent = explode(",", $row['parent']);
+
+        // Учет склада
+        $sklad_status = $this->PHPShopSystem->getSerilizeParam('admoption.sklad_status');
+
+        // Убираем добавление в корзину главного товара
+        $this->set('ComStartCart', '<!--');
+        $this->set('ComEndCart', '-->');
+
+        // Собираем массив товаров
+        if (is_array($parent))
+            foreach ($parent as $value) {
+                if (PHPShopProductFunction::true_parent($value))
+                    $Product[$value] = $this->select(array('*'), array('uid' => '="' . $value . '"', 'enabled' => "='1'", 'sklad' => "!='1'"), false, false, __FUNCTION__);
+                else
+                    $Product[intval($value)] = $this->select(array('*'), array('id' => '=' . intval($value), 'enabled' => "='1'"), false, false, __FUNCTION__);
+            }
+
+        // Цена главного товара
+        if (!empty($row['price']) and empty($row['priceSklad']) and (!empty($row['items']) or (empty($row['items']) and $sklad_status == 1))) {
+            $this->select_value[] = array($row['name'] . " -  (" . $this->price($row) . "
+                    " . $this->get('productValutaName') . ')', $row['id'], false);
+        } else {
+            $this->set('ComStartNotice', PHPShopText::comment('<'));
+            $this->set('ComEndNotice', PHPShopText::comment('>'));
+        }
+
+        // Выпадающий список товаров
+        if (is_array($Product))
+            foreach ($Product as $p) {
+                if (!empty($p)) {
+
+                    // Если товар на складе
+                    if (empty($p['priceSklad']) and (!empty($p['items']) or (empty($p['items']) and $sklad_status == 1))) {
+                        $price = $this->price($p);
+                        $this->select_value[] = array($p['name'] . ' -  (' . $price . ' ' . $this->get('productValutaName') . ')', $p['id'], false);
+                    }
+                }
+            }
+
+        if (count($this->select_value) > 0) {
+            $this->set('parentList', PHPShopText::select('parentId', $this->select_value, "; max-width:300px;"));
+            $this->set('productParentList', ParseTemplateReturn("product/product_odnotip_product_parent.tpl"));
+        }
+
+        $this->set('productPrice', '');
+        $this->set('productPriceRub', '');
+        $this->set('productValutaName', '');
+
+        // Перехват модуля в конце функции
+        $this->setHook(__CLASS__, __FUNCTION__, $row, 'END');
+    }
+}
+
 
     /**
      * Генератор сетки товаров
@@ -687,7 +820,7 @@ class PHPShopShopCore extends PHPShopCore {
      * @param int $cell разрадя сетки [1-5]
      * @return string
      */
-    function product_grid($dataArray, $cell = 2) {
+    function product_grid($dataArray, $cell = 2, $template = false) {
 
         if (empty($cell))
             $cell = 2;
@@ -759,8 +892,11 @@ class PHPShopShopCore extends PHPShopCore {
                 // Перехват модуля
                 $this->setHook(__CLASS__, __FUNCTION__, $row);
 
+                if (empty($template))
+                    $template = $this->getValue('templates.main_product_forma_' . $this->cell);
+
                 // Подключаем шаблон ячейки товара
-                $dis = ParseTemplateReturn($this->getValue('templates.main_product_forma_' . $this->cell));
+                $dis = ParseTemplateReturn($template);
 
 
                 // Убераем последний разделитель в сетке

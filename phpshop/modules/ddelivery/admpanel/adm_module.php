@@ -351,6 +351,8 @@ function actionStart() {
     // Форма регистрации
     $Tab8 = $PHPShopGUI->setPay($serial, false);
 
+       // История изменений
+    $Tab8.= $PHPShopGUI->setLine('<br>').$PHPShopGUI->setHistory();
 
 
     // Вывод формы закладки

@@ -21,9 +21,9 @@
 
         @ComEnd@ </div>
     <div class="cart">
-        @ComStartCart@<a class="button" href="javascript:AddToCart(@productUid@)" title="@productSale@">@productSale@</a>@ComEndCart@
+        @ComStartCart@<a class="button addToCartList" data-uid="@productUid@" title="@productSale@">@productSale@</a>@ComEndCart@
         @ComStartNotice@<a class="button" href="/users/notice.html?productId=@productUid@" title="@productNotice@">@productNotice@</a>@ComEndNotice@
     </div>
-    <div class="wishlist"><a onclick="addToWishList(@productUid@)">Отложить</a></div>
-    <div class="compare"><a onclick="addToCompare('@productUid@');">Сравнить</a></div>
+    <div class="wishlist"><a class="addToWishList" data-uid="@productUid@" title="Отложить @productName@">Отложить</a></div>
+    <div class="compare"><a class="addToCompareList"  data-uid="@productUid@">Сравнить</a></div>
 </div>

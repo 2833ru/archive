@@ -12,13 +12,19 @@ PHPShopObj::loadClass('cart');
 class AddToTemplateVisualCart extends PHPShopElements {
 
     var $debug = false;
+    var $store_check = true;
 
     /**
      * Конструктор
      */
     function AddToTemplateVisualCart() {
+        global $PHPShopSystem;
 
         $this->option();
+
+        // Режим проверки остатков на складе
+        if ($PHPShopSystem->getSerilizeParam('admoption.sklad_status') == 1)
+            $this->store_check = false;
 
         if ($this->option['memory'] == 1) {
             $this->check_user_memory();
@@ -59,7 +65,7 @@ class AddToTemplateVisualCart extends PHPShopElements {
      *  JS библиотека
      */
     function addJS() {
-        $this->set('visualcart_lib', '<SCRIPT language="JavaScript" type="text/javascript" src="' . $this->get('shopDir') . 'phpshop/modules/visualcart/js/visualcart.js"></SCRIPT>');
+        $this->set('visualcart_lib', '<script src="' . $this->get('shopDir') . 'phpshop/modules/visualcart/js/visualcart.js"></script>');
     }
 
     /**
@@ -107,10 +113,34 @@ class AddToTemplateVisualCart extends PHPShopElements {
 
                 if (is_array($data)) {
                     $this->memory = $data['memory'];
-                    $_SESSION['cart'] = unserialize($data['cart']);
+                    $_SESSION['cart'] = $this->update_price(unserialize($data['cart']));
                 }
             }
         }
+    }
+
+    /**
+     * Проверка цен на измение
+     * @param array $cart
+     * @return array
+     */
+    function update_price($cart) {
+        if (is_array($cart)) {
+            foreach ($cart as $k=>$v) {
+
+                // Данные по товару
+                $objProduct = new PHPShopProduct($k);
+
+                // Проверка кол-ва товара на складе
+                if ($this->store_check) {
+                    if ($cart[$k]['num'] > PHPShopSecurity::TotalClean($objProduct->getParam("items"), 1))
+                        $cart[$k]['num'] = PHPShopSecurity::TotalClean($objProduct->getParam("items"), 1);
+                }
+
+               $cart[$k]['price'] = PHPShopProductFunction::GetPriceValuta($k, $objProduct->getParam("price"), $objProduct->getParam("baseinputvaluta"), true);
+            }
+        }
+        return $cart;
     }
 
     /**
@@ -134,14 +164,15 @@ class AddToTemplateVisualCart extends PHPShopElements {
         // Если есть товары в корзине
         if ($this->PHPShopCart->getNum() > 0) {
             $list = $this->PHPShopCart->display('visualcartform', array('currency' => $this->currency));
-            $this->set('visualcart_list', '<table>' . $list . '</table>', true);
+            $this->set('visualcart_list', $list , true);
             $this->set('visualcart_order', '');
         } else {
-            $this->set('visualcart_list', $this->lang('visualcart_empty'), true);
+            $this->set('visualcart_list', $this->lang('visualcart_empty'), true) ;
             $this->set('visualcart_order', 'display:none');
         }
 
-        $this->cart = parseTemplateReturn($GLOBALS['SysValue']['templates']['visualcart']['visualcart_cart'], true);
+        //$this->cart = parseTemplateReturn($GLOBALS['SysValue']['templates']['visualcart']['visualcart_cart'], true);
+        $this->cart = PHPShopParser::file($GLOBALS['SysValue']['templates']['visualcart']['visualcart_cart'], true, false, true);
 
         $this->set('leftMenuContent', $this->cart);
         $this->set('leftMenuName', $this->option['title']);
@@ -173,28 +204,28 @@ PHPShopObj::loadClass('parser');
 
 function visualcartform($val, $option) {
     global $SysValue;
-    
+
     // Проверка подтипа товара, выдача ссылки главного товара
     if (empty($val['parent'])) {
         PHPShopParser::set('visualcart_product_id', $val['id']);
-        
+
         // Учет модуля SEOURL
         if (!empty($GLOBALS['SysValue']['base']['seourl']['seourl_system'])) {
             PHPShopParser::set('visualcart_product_seo', '_' . PHPShopString::toLatin($val['name']));
         }
     } else {
         PHPShopParser::set('visualcart_product_id', $val['parent']);
-            PHPShopParser::set('visualcart_product_seo', null);
+        PHPShopParser::set('visualcart_product_seo', null);
     }
-    
-    PHPShopParser::set('visualcart_product_xid',$val['id']);
+
+    PHPShopParser::set('visualcart_product_xid', $val['id']);
     PHPShopParser::set('visualcart_product_name', $val['name']);
     PHPShopParser::set('visualcart_product_pic_small', $val['pic_small']);
     PHPShopParser::set('visualcart_product_price', $val['price'] * $val['num']);
     PHPShopParser::set('visualcart_product_currency', $option['currency']);
     PHPShopParser::set('visualcart_product_num', $val['num']);
 
-    $dis = parseTemplateReturn($SysValue['templates']['visualcart']['visualcart_product'], true);
+    $dis = PHPShopParser::file($GLOBALS['SysValue']['templates']['visualcart']['visualcart_product'], true, false, true);
     return $dis;
 }
 

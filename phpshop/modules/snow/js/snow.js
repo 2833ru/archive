@@ -8,8 +8,10 @@ Visit http://rainbow.arch.scriptmania.com/scripts/
 // Set the number of snowflakes (more than 30 - 40 not recommended)
 var snowmax=35
 
+
+
 // Set the colors for the snow. Add as many colors as you like
-var snowcolor=new Array("#AAAACC","#DDDDFF","#CCCCDD","#F3F3F3","#F0FFFF")
+var color=new Array("#AAAACC","#DDDDFF","#CCCCDD","#F3F3F3","#F0FFFF")
 
 // Set the fonts, that create the snowflakes. Add as many fonts as you like
 var snowtype=new Array("Arial Black","Arial Narrow","Times","Comic Sans MS")
@@ -30,6 +32,10 @@ var snowminsize=8
 // Set 1 for all-over-snowing, set 2 for left-side-snowing 
 // Set 3 for center-snowing, set 4 for right-side-snowing
 var snowingzone=1
+
+if(typeof(mod_snow_color))
+  	var snowcolor = new Array(mod_snow_color);
+	else var snowcolor = color;
 
   /*
    //   * NO CONFIGURATION BELOW HERE *

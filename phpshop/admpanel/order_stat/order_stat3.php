@@ -201,7 +201,7 @@ function Visitor($pole1, $pole2, $words, $list) {// вывод покупателей
     foreach ($table as $year => $yearV) {
 
 
-        $bar_1 = new line_hollow(2, 4, '#' . gencolor(), 'Spoon sales', 10);
+        $bar_1 = new line_hollow(2, 4, '#55a339', 'Spoon sales', 10);
         $bar_1->key(cp1251_to_utf8('ѕрибыль за ' . $year . ' год'), 10);
 
         $bar_1->data = array("January" => 0, "February" => 0,
@@ -256,7 +256,7 @@ function Visitor($pole1, $pole2, $words, $list) {// вывод покупателей
     foreach ($table as $year => $yearV) {
 
 
-        $bar_1 = new line_hollow(2, 4, '#' . gencolor(), 'Spoon sales', 10);
+        $bar_1 = new line_hollow(2, 4, '#55a339', 'Spoon sales', 10);
         $bar_1->key(cp1251_to_utf8('ѕрибыль за ' . $year . ' год'), 10);
 
         $bar_1->data = array("January" => 0, "February" => 0,
@@ -315,8 +315,8 @@ function Visitor($pole1, $pole2, $words, $list) {// вывод покупателей
     
     $_Return = ('
         
-   <div id="graph"  style="'.$stat_graph_style.'width:100%; text-align:center;padding-left:5px;"> 
-        ' . open_flash_chart_object('100%', 350, './csv/orders_stat3_graph_'.$sec.'.csv', false, $baseURL) . ' 
+   <div id="graph"  style="'.$stat_graph_style.'width:99%; text-align:center;padding-left:5px;"> 
+        ' . open_flash_chart_object('100%', '100%', './csv/orders_stat3_graph_'.$sec.'.csv', false, $baseURL) . ' 
     </div>
 <div align="left" id="interfacesWin" name="interfacesWin"  style="width:100%;' . @$razmer . ';overflow:auto"> 
 

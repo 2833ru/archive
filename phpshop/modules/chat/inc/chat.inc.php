@@ -32,13 +32,21 @@ class AddToTemplateChatElement extends PHPShopElements {
      */
     function display() {
 
-        $forma = parseTemplateReturn($GLOBALS['SysValue']['templates']['chat']['chat_forma'], true);
+        $forma = PHPShopParser::file($GLOBALS['SysValue']['templates']['chat']['chat_forma'], true, false, true);
         $this->set('leftMenuContent', $forma);
         $this->set('leftMenuName', $this->option['title']);
 
         // Подключаем шаблон
-        $dis = $this->parseTemplate($this->getValue('templates.left_menu'));
-
+        if (empty($this->option['windows']))
+            $dis = $this->parseTemplate($this->getValue('templates.left_menu'));
+        else {
+            if (empty($this->option['enabled']))
+                $dis = PHPShopParser::file($GLOBALS['SysValue']['templates']['chat']['chat_forma_window'], true, false, true);
+            else {
+                $this->set('leftMenuContent', PHPShopParser::file($GLOBALS['SysValue']['templates']['chat']['chat_forma_window'], true, false, true));
+                $dis = $this->parseTemplate($this->getValue('templates.left_menu'));
+            }
+        }
 
         // Назначаем переменную шаблона
         //if ($this->option['operator'] == 1)

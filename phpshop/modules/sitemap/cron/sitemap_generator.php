@@ -33,6 +33,11 @@ function sitemaptime($nowtime) {
 // Библиотека
 $title = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
 $title.= '<urlset xmlns="http://www.google.com/schemas/sitemap/0.84">' . "\n";
+$title.= '<url>' . "\n";
+$title.= '<loc>http://' . $_SERVER['SERVER_NAME'] . '</loc>' . "\n";
+$title.= '<changefreq>weekly</changefreq>' . "\n";
+$title.= '<priority>1.0</priority>' . "\n";
+$title.= '</url>' . "\n";
 
 // Страницы
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['table_name11']);

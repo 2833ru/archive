@@ -259,7 +259,6 @@ if (!isset($editID) or empty($link_new)) {
 	num='$num_n', 
 	aoption = '$aoption' 
 	where id='1'";
-
                 $result = mysql_query($sql) or @die("" . mysql_error() . "");
                 echo('
 <script>

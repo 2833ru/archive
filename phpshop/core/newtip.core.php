@@ -77,6 +77,9 @@ class PHPShopNewtip extends PHPShopShopCore {
         // Заголовок
         $this->title = $this->lang('newprod') . " - " . $this->PHPShopSystem->getParam('title');
 
+        // Навигация хлебные крошки
+        $this->navigation(null, __('Новинки'));
+
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__, $this->dataArray, 'END');
 

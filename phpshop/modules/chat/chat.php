@@ -50,97 +50,97 @@ function smile($string) {
     return $string;
 }
 
-
-function get_file_link($matches){
+function get_file_link($matches) {
     $path_parts = pathinfo($matches[0]);
-    $url=parse_url($matches[0]);
-    
-   if($url['scheme'] == 'file')
-    return '<a href="'.chr(47).$GLOBALS['SysValue']['dir']['dir'].'UserFiles/Image/'.$_SESSION['chat_dir'].$path_parts['basename'].'" target="_blank">'.$path_parts['basename'].'</a>'; 
-    else if($url['host'] != $_SERVER['SERVER_NAME'])
-       return '<a href="'.$matches[0].'" target="_blank">'.$matches[0].'</a>'; 
-      else 
-    return '<a href="http://'.$url['host'].chr(47).$GLOBALS['SysValue']['dir']['dir'].'UserFiles/Image/'.$_SESSION['chat_dir'].$path_parts['basename'].'" target="_blank">'.$path_parts['basename'].'</a>'; 
+    $url = parse_url($matches[0]);
+
+    if ($url['scheme'] == 'file')
+        return '<a href="' . chr(47) . $GLOBALS['SysValue']['dir']['dir'] . 'UserFiles/Image/' . $_SESSION['chat_dir'] . $path_parts['basename'] . '" target="_blank">' . $path_parts['basename'] . '</a>';
+    else if ($url['host'] != $_SERVER['SERVER_NAME'])
+        return '<a href="' . $matches[0] . '" target="_blank">' . $matches[0] . '</a>';
+    else
+        return '<a href="http://' . $url['host'] . chr(47) . $GLOBALS['SysValue']['dir']['dir'] . 'UserFiles/Image/' . $_SESSION['chat_dir'] . $path_parts['basename'] . '" target="_blank">' . $path_parts['basename'] . '</a>';
 }
 
-function check_content($content){
+function check_content($content) {
 
     $str = smile($content);
     $str = preg_replace_callback('/((www|http:\/\/|file:\/\/)[^ ]+)/', 'get_file_link', $str);
-    
+
     return $str;
 }
 
-
 // Начало чата
 if (empty($_SESSION['mod_chat_user_session'])) {
-    
-    if (!empty($_REQUEST['name'])) {
 
-        // Проверка присутствия оператора
-        $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.chat.chat_system"));
-        $PHPShopOrm->debug = false;
-        $data_system = $PHPShopOrm->select(array('*'), false, false, array('limit' => 1));
-        
-        
-        // Дизайн чата
-        if(!empty($data_system['skin']))
-        $_SESSION['chat_skin']=$data_system['skin'];
-        else $_SESSION['chat_skin']='default';
-        
-        // Размещение
-        $_SESSION['chat_dir']=$data_system['upload_dir'];
-        
-        if ($data_system['operator'] == 2) {
-            $block = 'disabled';
-            $content = $data_system['title_end'];
-        } else {
-            $block = null;
+    if (empty($_REQUEST['name']))
+        $_REQUEST['name'] = 'Посетитель';
 
-            // Новый пользователь
-            $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.chat.chat_users"));
-            $PHPShopOrm->debug = false;
-            $insert = array();
-            $insert['name_new'] = PHPShopString::utf8_win1251((string)$_REQUEST['name']);
-            $insert['date_new'] = time();
-            $insert['user_session_new'] = md5(time());
-            $insert['ip_new'] = $_SERVER['REMOTE_ADDR'];
-            $_SESSION['mod_chat_user_session'] = $insert['user_session_new'];
-            $_SESSION['mod_chat_user_name'] = $insert['name_new'];
-            $PHPShopOrm->insert($insert);
+    // Проверка присутствия оператора
+    $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.chat.chat_system"));
+    $PHPShopOrm->debug = false;
+    $data_system = $PHPShopOrm->select(array('*'), false, false, array('limit' => 1));
 
-            // Новое сообщение хочет начать чат
-            unset($insert);
-            $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.chat.chat_jurnal"));
-            $insert['user_session_new'] = $_SESSION['mod_chat_user_session'];
-            $insert['content_new'] = htmlspecialchars('Пользователь ' . $_SESSION['mod_chat_user_name'] . ' хочет начать чат');
-            $insert['status_new'] = 1;
-            $insert['name_new'] = $_SESSION['mod_chat_user_name'];
-            $insert['date_new'] = time();
-            $PHPShopOrm->insert($insert);
-            
-            // Новое сообщение System
-            unset($insert);
-            $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.chat.chat_jurnal"));
-            $insert['user_session_new'] = $_SESSION['mod_chat_user_session'];
-            $insert['content_new']= htmlspecialchars($data_system['title_start']);
-            $insert['status_new'] = 1;
-            $insert['name_new'] = 'System';
-            $insert['date_new'] = time();
-            $PHPShopOrm->insert($insert);
 
-        }
+    // Дизайн чата
+    if (!empty($data_system['skin']))
+        $_SESSION['chat_skin'] = $data_system['skin'];
+    else
+        $_SESSION['chat_skin'] = 'default';
+
+    // Размещение
+    $_SESSION['chat_dir'] = $data_system['upload_dir'];
+
+    if ($data_system['operator'] == 2) {
+        $block = 'disabled';
+        $block_display = true;
+        $name = '<h4 class="pull-right">Консультант</h4>';
+        $div_class = 'text_admin panel panel-body';
+        $name.='<div class="text-muted"><br>Хотите оставить сообщение? <button class="btn btn-danger btn-xs" id="no">Нет</button> / <button class="btn btn-success btn-xs" id="yes">Да</button></div>';
+        $content = PHPShopText::div($data_system['title_end'] . $name, "left", false, false, $div_class);
     } else {
-        PHPShopParser::file('./templates/chat_window_go.tpl');
-        exit();
+        $block = null;
+        $block_display = false;
+
+        // Новый пользователь
+        $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.chat.chat_users"));
+        $PHPShopOrm->debug = false;
+        $insert = array();
+        $insert['name_new'] = PHPShopString::utf8_win1251((string) $_REQUEST['name']);
+        $insert['date_new'] = time();
+        $insert['user_session_new'] = md5(time());
+        $insert['ip_new'] = $_SERVER['REMOTE_ADDR'];
+        $_SESSION['mod_chat_user_session'] = $insert['user_session_new'];
+        $_SESSION['mod_chat_user_name'] = $insert['name_new'];
+        $PHPShopOrm->insert($insert);
+
+        // Новое сообщение хочет начать чат
+        unset($insert);
+        $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.chat.chat_jurnal"));
+        $insert['user_session_new'] = $_SESSION['mod_chat_user_session'];
+        $insert['content_new'] = htmlspecialchars('Пользователь ' . $_SESSION['mod_chat_user_name'] . ' хочет начать чат');
+        $insert['status_new'] = 1;
+        $insert['name_new'] = $_SESSION['mod_chat_user_name'];
+        $insert['date_new'] = time();
+        $PHPShopOrm->insert($insert);
+
+        // Новое сообщение System
+        unset($insert);
+        $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.chat.chat_jurnal"));
+        $insert['user_session_new'] = $_SESSION['mod_chat_user_session'];
+        $insert['content_new'] = htmlspecialchars($data_system['title_start']);
+        $insert['status_new'] = 1;
+        $insert['name_new'] = 'Консультант';
+        $insert['date_new'] = time();
+        $PHPShopOrm->insert($insert);
     }
 }
 
 // Список сообщений
-if(!empty($_SESSION['mod_chat_user_session'])){
-$PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.chat.chat_jurnal"));
-$PHPShopOrm->debug = false;
-$data = $PHPShopOrm->select(array('*'), array('user_session' => "='" . $_SESSION['mod_chat_user_session'] . "'"), array('order' => 'id'), array('limit' => 100));
+if (!empty($_SESSION['mod_chat_user_session'])) {
+    $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.chat.chat_jurnal"));
+    $PHPShopOrm->debug = false;
+    $data = $PHPShopOrm->select(array('*'), array('user_session' => "='" . $_SESSION['mod_chat_user_session'] . "'"), array('order' => 'id'), array('limit' => 100));
 }
 $time = time();
 if (is_array($data)) {
@@ -149,35 +149,54 @@ if (is_array($data)) {
 
         // Иконка
         if ($_SESSION['mod_chat_user_name'] == $row['name']) {
-            $icon = 'user.png';
-            $name = PHPShopText::b($row['name']);
-            $div_class = 'text_user';
+            //$icon = 'user.png';
+            $name = '<h4>' . $row['name'] . '</h4>';
+            $div_class = 'text_user panel panel-body';
         } else {
-            $icon = 'admin.png';
-            $name = PHPShopText::b($row['name']);
-            $div_class = 'text_admin';
+            //$icon = 'admin.png';
+            if (!empty($row['avatar']))
+                $icon = '<img src="' . $row['avatar'] . '" alt="" onerror="imgerror(this)" class="img-thumbnail avatar">';
+            $name = '<h4 class="pull-right">' . $row['name'] . $icon . '</h4>';
+            $div_class = 'text_admin panel panel-body';
         }
 
-        $name = PHPShopText::img('./templates/' . $icon, 3, 'absmiddle') . $name;
-        $content.=PHPShopText::div($name . ': ' . check_content($row['content']), "left", false, false, $div_class);
+        //$name = PHPShopText::img('./templates/' . $icon, 3, 'absmiddle') . $name;
 
+        $content.=PHPShopText::div(check_content($row['content']) . $name, "left", false, false, $div_class);
         $time = $row['date'];
     }
 } else {
-    $icon = 'admin.png';
-    $name = PHPShopText::b('Администрация');
-    $div_class = 'text_admin';
-    $name = PHPShopText::img('./templates/' . $icon, 3, 'absmiddle') . $name;
-    $content=PHPShopText::div($name . ': ' .check_content($content), "left", false, false, $div_class);
+    //$icon = 'admin.png';
+    $name = '<h4 class="pull-right">' . $row['name'] . '</h4>';
+    $div_class = 'text_admin panel panel-body';
+    //$name = PHPShopText::img('./templates/' . $icon, 3, 'absmiddle') . $name;
 
+    if (empty($block_display))
+        $content.=PHPShopText::div(check_content($row['content']) . $name, "left", false, false, $div_class);
 }
 
+
+
+
 PHPShopParser::set('chat_mod_product_name', $GLOBALS['SysValue']['license']['product_name']);
-PHPShopParser::set('chat_mod_skin',$_SESSION['chat_skin']);
+PHPShopParser::set('chat_mod_skin', $_SESSION['chat_skin']);
 PHPShopParser::set('chat_mod_disable', $block);
 PHPShopParser::set('chat_mod_time', $time);
 PHPShopParser::set('chat_mod_dir', $_SESSION['chat_dir']);
 PHPShopParser::set('chat_mod_content', $content);
 PHPShopParser::set('chat_mod_sound', $PHPShopModules->getParam("templates.chat_sound"));
-PHPShopParser::file('./templates/chat_window.tpl');
+PHPShopParser::set('serverName',$_SERVER['SERVER_NAME'].$GLOBALS['dir']['dir']);
+
+
+// bootstrap
+PHPShopParser::set('bootstrap_theme', $_SESSION['skin']);
+
+// поиск файла в шаблоне
+$path = './templates/chat_window.tpl';
+$path_template = str_replace('./templates', $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . '/' . $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . '/modules/chat/templates', $path);
+
+if (is_file($path_template))
+    $path = $path_template;
+
+PHPShopParser::file($path);
 ?>

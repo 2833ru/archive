@@ -2,6 +2,7 @@
 		
 			<TD colspan="2">
 				<h1>@productName@</h1>
+			
 			</TD>
 		</TR>
 		<TR>
@@ -21,6 +22,7 @@
 		<font class=black>@productPriceRub@</font><br>
 		<b>@productSklad@</b>
 		<br>@oneclick@
+		
 		</TD>
 	</TR>
 </TABLE>
@@ -102,7 +104,7 @@
 			</TD>
 		</TR>
 	</TABLE>
-
+	<br>@promotionInfo@
 
 
 	<div class="tab-pane" id="tabPane1" style="margin-top: 20px">

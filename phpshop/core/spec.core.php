@@ -77,6 +77,9 @@ class PHPShopSpec extends PHPShopShopCore {
         // Заголовок
         $this->title = $this->lang('specprod') . " - " . $this->PHPShopSystem->getParam('title');
 
+        // Навигация хлебные крошки
+        $this->navigation(null, __('Спецпредложения'));
+
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__, $this->dataArray, 'END');
 

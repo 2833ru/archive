@@ -49,8 +49,8 @@ class AddToTemplateSortElement extends PHPShopElements {
                 }
 
             //array_pop($value);
-                array_shift($value);
-            
+            array_shift($value);
+
             // —ортировка по имени
             sort($value);
             $size = (strlen($this->option['title']) + 10) * 7;
@@ -60,7 +60,7 @@ class AddToTemplateSortElement extends PHPShopElements {
             if ($this->option['flag'] == 1) {
                 $this->set('sortbrand_value', $values);
                 //$forma=PHPShopText::p(PHPShopText::form($value.PHPShopText::button('OK','SortSelect.submit()'),'SortSelect','get','/selection/',false,'ok'));
-                $forma = parseTemplateReturn($GLOBALS['SysValue']['templates']['sortbrand']['sortbrand_forma'], true);
+                $forma = PHPShopParser::file($GLOBALS['SysValue']['templates']['sortbrand']['sortbrand_forma'], true, false, true);
             }
             // —сылки
             else {
@@ -69,7 +69,7 @@ class AddToTemplateSortElement extends PHPShopElements {
                     foreach ($value as $row) {
                         $link = PHPShopText::a('/selection/?v[' . $this->option['sort'] . ']=' . $row[1], $row[0], $row[0], false, false, false, 'sortbrand');
                         $this->set('sortbrand_value', $link);
-                        $forma.=parseTemplateReturn($GLOBALS['SysValue']['templates']['sortbrand']['sortbrand_links'], true);
+                        $forma.= PHPShopParser::file($GLOBALS['SysValue']['templates']['sortbrand']['sortbrand_links'], true, false, true);
                     }
             }
 

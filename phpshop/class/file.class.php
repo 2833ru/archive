@@ -12,15 +12,16 @@ class PHPShopFile {
      * Права на запись файла
      * @param string $file имя файла
      */
-    function chmod($file, $error=false) {
+    function chmod($file, $error = false) {
         if (function_exists('chmod')) {
-            if(@chmod($file, 0775))
-                    return true;
-            elseif($error) echo 'Нет файла '.$file;
+            if (@chmod($file, 0775))
+                return true;
+            elseif ($error)
+                echo 'Нет файла ' . $file;
         }
-        elseif($error) echo __FUNCTION__.'() запрещена';
+        elseif ($error)
+            echo __FUNCTION__ . '() запрещена';
     }
-    
 
     /**
      * Запись данных в файл
@@ -29,14 +30,14 @@ class PHPShopFile {
      * @param string $type параметр записи
      * @param bool $error вывод ошибки
      */
-    function write($file, $csv, $type = 'w+', $error=false) {
+    function write($file, $csv, $type = 'w+', $error = false) {
         $fp = @fopen($file, $type);
         if ($fp) {
             //stream_set_write_buffer($fp, 0);
             fputs($fp, $csv);
             fclose($fp);
-        }
-        elseif($error) echo 'Нет файла '.$file;
+        } elseif ($error)
+            echo 'Нет файла ' . $file;
     }
 
     /**
@@ -46,7 +47,7 @@ class PHPShopFile {
      * @param array $csv данные для записи
      * @param bool $error вывод ошибки
      */
-    function writeCsv($file, $csv, $error=false) {
+    function writeCsv($file, $csv, $error = false) {
         $fp = @fopen($file, "w+");
         if ($fp) {
             foreach ($csv as $value) {
@@ -54,8 +55,8 @@ class PHPShopFile {
             }
             //stream_set_write_buffer($fp, 0);
             fclose($fp);
-        }
-        elseif($error) echo 'Нет файла '.$file;
+        } elseif ($error)
+            echo 'Нет файла ' . $file;
     }
 
     /**
@@ -99,6 +100,26 @@ class PHPShopFile {
             return false;
         else
             return $dest;
+    }
+
+    /**
+     * Поиск файлы в папке
+     * @param string $dir папка
+     * @param string $function функция обработки
+     * @return mixed
+     */
+    function searchFile($dir, $function) {
+        $user_func_result = null;
+        if (is_dir($dir))
+            if (@$dh = opendir($dir)) {
+                while (($file = readdir($dh)) !== false) {
+                    if($file != '.' and $file != '..')
+                    $user_func_result.=call_user_func_array($function, array($file));
+                }
+
+                return $user_func_result;
+                closedir($dh);
+            }
     }
 
 }

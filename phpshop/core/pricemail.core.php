@@ -89,7 +89,7 @@ class PHPShopPricemail extends PHPShopCore {
 
             if (PHPShopSecurity::true_email($_POST['mail'])) {
                 PHPShopObj::loadClass('mail');
-                $PHPShopMail = new PHPShopMail($this->PHPShopSystem->getEmail(), $_POST['mail'], $title, $content);
+                $PHPShopMail = new PHPShopMail($this->PHPShopSystem->getEmail(), $_POST['mail'], $title, $content,true);
             }
 
             $this->redirect();

@@ -7,8 +7,9 @@
     }
 </style>
 <div class="mini-cart-info">
-    <div id="visualcart" class="visualcart">
+
+    <table id="visualcart" class="visualcart">
         @visualcart_list@
-    </div>
+    </table>
 </div>
 <p align="center" id="visualcart_order" style="@visualcart_order@"><a class="button" href="@shopDir@/order/" title="ќформить заказ">ќформить заказ</a></p>

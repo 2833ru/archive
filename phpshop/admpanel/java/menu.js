@@ -1,5 +1,6 @@
 stm_bm(["menu4fd9",730,"icon/","blank.gif",0,"","",0,3,0,0,1000,1,0,0,"","100%",0,0,1,1,"default","hand",""],this);
 stm_bp("p0",[0,4,0,0,0,0,0,0,100,"",-2,"",-2,90,0,0,MenuTextColor,"","",3,0,0,MenuTextColor]);
+stm_ai("p0i0",[0,"Главная","","",-1,-1,0,"admin.php","_self","","","","",0,0,0,"","",0,0,0,1,1,"",0,MenuColorActive,0,"","",3,3,1,1,MenuColor,MenuColorActive,MenuTextColor,MenuTextColor,"8pt 'Tahoma','Arial'","8pt 'Tahoma','Arial'",0,0],60,20);
 stm_ai("p0i0",[0,"Товары","","",-1,-1,0,"","_self","","","","",0,0,0,"","",0,0,0,1,1,"",0,MenuColorActive,0,"","",3,3,1,1,MenuColor,MenuColorActive,MenuTextColor,MenuTextColor,"8pt 'Tahoma','Arial'","8pt 'Tahoma','Arial'",0,0],60,20);
 stm_bp("p1",[1,4,0,0,2,3,16,0,100,"",-2,"",-2,100,2,3,MenuTextColor,MenuColor,"",3,1,1,MenuColorActiveBorder]);
 stm_aix("p1i0","p0i0",[0,"Просмотр содержимого","","",-1,-1,0,"javascript:DoReload('cat_prod')","_self","","","folder_images.gif","folder_images.gif",16,16,0,"","",0,0,0,0]);
@@ -53,7 +54,7 @@ stm_aix("p6i0","p1i0",[0,"Обзор заказов","","",-1,-1,0,"javascript:DoReload('ord
 stm_aix("p6i1","p1i0",[0,"Электронные платежи","","",-1,-1,0,"javascript:DoReload('order_payment')","_self","","","coins.gif","coins.gif"]);
 stm_aix("p10i4","p1i0",[0,"Способы оплаты","","",-1,-1,0,"javascript:DoReload('payment')","_self","","","money.gif","money.gif"]);
 stm_aix("p6i1","p1i0",[0,"Статусы заказов","","",-1,-1,0,"javascript:DoReload('order_status')","_self","","","palette.gif","palette.gif"]);
-stm_aix("p6i1","p1i0",[0,"Отчет по продажам","","",-1,-1,0,"javascript:DoReload('orders_stat1')","_self","","","chart_bar.gif","chart_bar.gif"]);
+stm_aix("p6i1","p1i0",[0,"Отчет по продажам","","",-1,-1,0,"javascript:DoReload('orders_stat1','','','0','1','')","_self","","","chart_bar.gif","chart_bar.gif"]);
 stm_aix("p6i1","p1i0",[0,"Отчет по сотрудникам","","",-1,-1,0,"javascript:DoReload('orders_stat2')","_self","","","chart_bar.gif","chart_bar.gif"]);
 stm_aix("p6i1","p1i0",[0,"Динамика прибыли","","",-1,-1,0,"javascript:DoReload('orders_stat3')","_self","","","chart_bar.gif","chart_bar.gif"]);
 stm_ep();
@@ -67,8 +68,8 @@ stm_aix("p4i7","p1i0",[0,"Отзывы","","",-1,-1,0,"javascript:DoReload('comment')"
 stm_aix("p7i2","p1i1",[]);
 stm_aix("p7i3","p1i2",[]);
 stm_bpx("p8","p2",[]);
-stm_aix("p8i0","p1i0",[0,"Новый пользователь","","",-1,-1,0,"javascript:miniWin('shopusers/adm_users_new.php',500,560)","_self","","","group_add.gif","group_add.gif"]);
-stm_aix("p8i1","p1i0",[0,"Новый статус","","",-1,-1,0,"javascript:miniWin('shopusers/adm_status_new.php',400, 270)","_self","","","key_add.gif","key_add.gif"]);
+stm_aix("p8i0","p1i0",[0,"Новый пользователь","","",-1,-1,0,"javascript:miniWin('shopusers/adm_users_new.php',500,400)","_self","","","group_add.gif","group_add.gif"]);
+stm_aix("p8i1","p1i0",[0,"Новый статус","","",-1,-1,0,"javascript:miniWin('shopusers/adm_status_new.php',450, 420)","_self","","","key_add.gif","key_add.gif"]);
 stm_ep();
 stm_ep();
 stm_aix("p0i4","p0i0",[0,"Администраторы"],100,20);

@@ -26,6 +26,9 @@ class PHPShopNewprice extends PHPShopShopCore {
 
         parent::PHPShopShopCore();
         $this->PHPShopOrm->cache_format = $this->cache_format;
+
+        // Навигация хлебные крошки
+        $this->navigation(null, __('Распродажа'));
     }
 
     /**

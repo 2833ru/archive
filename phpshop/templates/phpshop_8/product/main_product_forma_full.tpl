@@ -21,7 +21,9 @@
                     
                 </div>
                 <div class="productCompare"><a href="javascript:AddToCompare(@productUid@)" title="Сравнить @productName@"><img src="images/furniture_30.gif" border="0"></a></div>
-                @ComEnd@@productParentList@</td>
+                @ComEnd@@productParentList@
+                <br>@promotionInfo@
+                </td>
         </tr>
     </tbody>
 </table>

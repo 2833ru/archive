@@ -20,8 +20,10 @@ $PHPShopOrder = new PHPShopOrderFunction();
 $PHPShopModules = new PHPShopModules($_classPath . "modules/");
 
 // Подключаем библиотеку поддержки.
-require_once $_classPath . "lib/Subsys/JsHttpRequest/Php.php";
-$JsHttpRequest = new Subsys_JsHttpRequest_Php("windows-1251");
+if ($_REQUEST['type'] != 'json') {
+    require_once $_classPath . "lib/Subsys/JsHttpRequest/Php.php";
+    $JsHttpRequest = new Subsys_JsHttpRequest_Php("windows-1251");
+}
 
 // Подключаем библиотеку доставки
 require_once $_classPath . "core/order.core/delivery.php";
@@ -73,16 +75,26 @@ $deliveryArr = delivery(false, intval($_REQUEST['xid']));
 $dellist = $deliveryArr['dellist'];
 $adresList = $deliveryArr['adresList'];
 
+
+
 // Результат
 $_RESULT = array(
     'delivery' => $GetDeliveryPrice,
     'dellist' => $dellist,
     'adresList' => $adresList,
-    'total' => $totalsumma
+    'total' => $totalsumma,
+    'success' => 1
 );
 
 // Перехват модуля в начале функции
 $hook = $PHPShopModules->setHookHandler('delivery', 'delivery', false, array($_RESULT, $_REQUEST['xid']));
 if ($hook)
     $_RESULT = $hook;
+
+
+if ($_REQUEST['type'] == 'json'){
+    $_RESULT['dellist']=PHPShopString::win_utf8($_RESULT['dellist']);
+    $_RESULT['adresList']=PHPShopString::win_utf8($_RESULT['adresList']);
+    echo json_encode($_RESULT);
+}
 ?>

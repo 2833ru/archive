@@ -202,6 +202,18 @@ function parent_mob_hook($obj, $row, $rout) {
             $obj->set('productPriceRub', '');
             $obj->set('productValutaName', '');
         }
+        // Опции товара
+        elseif ($obj->get('optionsDisp') != '') {
+
+            // Убираем добавление в корзину главного товара
+            $obj->set('ComStartCart', '<!--');
+            $obj->set('ComEndCart', '-->');
+
+            $obj->set('parentList', $obj->get('optionsDisp'). ' <A href="javascript:addCartOption(\''.$row['id'].'\')"><button class="btn btn-positive btn-block"><span class="icon icon-download"></span> Купить за '.$obj->price($row).' ' . $obj->get('productValutaName') . '</button></a>');
+            $obj->set('productParentList', ParseTemplateReturn("product/product_odnotip_product_parent.tpl"));
+        }
+
+
         return true;
     }
 }

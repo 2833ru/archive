@@ -7,7 +7,7 @@ function order_pickpoint_hook($obj, $row, $rout) {
 
     if ($rout == 'MIDDLE') {
         $order_action_add = "
-<script type=\"text/javascript\" src=\"http://pickpoint.ru/select/postamat.js\"></script>
+<script type=\"text/javascript\" src=\"//pickpoint.ru/select/postamat.js\"></script>
 <script>
 function pickpoint_phpshop(result){
 // устанавливаем в скрытое поле ID терминала

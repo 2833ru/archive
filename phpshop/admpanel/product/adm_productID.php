@@ -167,7 +167,7 @@ function actionStart() {
     // Подтипы
     $Tab1_4 = $PHPShopGUI->setField(__('Связи'), $PHPShopGUI->setRadio('parent_enabled_new', 0, __('Обычный товар'), $data['parent_enabled']) .
             $PHPShopGUI->setRadio('parent_enabled_new', 1, __('Добавочная опция для ведущего товара'), $data['parent_enabled']));
-    $Tab1_4.=$PHPShopGUI->setField(__('ID подтипов'),$PHPShopGUI->setTextarea('parent_new', $data['parent'], "none", '99%', '40px') .
+    $Tab1_4.=$PHPShopGUI->setField(__('ID подтипов'), $PHPShopGUI->setTextarea('parent_new', $data['parent'], "none", '99%', '40px') .
             $PHPShopGUI->setLine() .
             $PHPShopGUI->setImage('../icon/icon_info.gif', 16, 16) .
             __('Введите ID товаров-подтипов через запятую без пробела (100,101). '));
@@ -317,6 +317,12 @@ function actionUpdate() {
             break;
     }
 
+    // Цена для сортировки
+    $PHPShopValuta = new PHPShopValuta($_POST['baseinputvaluta_new']);
+    $kurs = $PHPShopValuta->getKurs();
+    if (empty($kurs))
+        $kurs = 1;
+    $_POST['price_search_new'] = $_POST['price_new'] / $kurs;
 
     $_POST['datas_new'] = date('U');
 
@@ -367,6 +373,8 @@ function actionUpdate() {
     $PHPShopOrm->debug = false;
     $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['productID']));
     $PHPShopOrm->clean();
+
+    $_SESSION['editProductId'] = $_POST['productID'];
 
     return $action;
 }

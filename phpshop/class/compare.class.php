@@ -64,7 +64,7 @@ class PHPShopCompare {
     /**
      * ѕолучение сообщени€ дл€ всплывающего окна
      */
-    function getMessage($objID) {
+    function getMessage() {
         return $this->message;
     }
 

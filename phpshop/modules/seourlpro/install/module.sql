@@ -11,4 +11,4 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_seourlpro_system` (
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-INSERT INTO `phpshop_modules_seourlpro_system` VALUES (1,'1','1','','1.6');
+INSERT INTO `phpshop_modules_seourlpro_system` VALUES (1,'1','1','','1.7');

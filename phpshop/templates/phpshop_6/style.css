@@ -3,17 +3,17 @@
 * PHPShop Editor 
 */
 .editor_empty{
-   color:#6C809A;
-   text-align: center;
-   padding:5px;
-   background: #FFE785;
-   border: dashed 1px #6C809A;
-   border-radius:4px;
-   margin:3px;
+    color:#6C809A;
+    text-align: center;
+    padding:5px;
+    background: #FFE785;
+    border: dashed 1px #6C809A;
+    border-radius:4px;
+    margin:3px;
 }
 .editor_empty a{
-   text-decoration:none !important;
-   color:#6C809A !important;
+    text-decoration:none !important;
+    color:#6C809A !important;
 }
 
 /* 
@@ -21,10 +21,10 @@
 */
 
 .product-tags div{
-float:left;
-background: #F7F7F7;
-padding:1 1 1 1px;
-margin:1px;
+    float:left;
+    background: #F7F7F7;
+    padding:1 1 1 1px;
+    margin:1px;
 }
 
 .product-tags a:link{
@@ -32,25 +32,25 @@ margin:1px;
 }
 
 .product-tags div:hover {
-background:#E7ECF2;
+    background:#E7ECF2;
 }
 
 
 .compare_list img{
- max-width: 70px;
+    max-width: 70px;
 }
 
 a.highslide img{
-   max-width: 100px;
-   padding:5px;
+    max-width: 100px;
+    padding:5px;
 }
 
 #fotoload a.highslide img{
-   max-width: 600px !important;
+    max-width: 600px !important;
 }
 
 #fotoload img.imgOn, #fotoload img.imgOff{
-   max-width: 100px;
+    max-width: 100px;
 }
 
 
@@ -64,7 +64,7 @@ a.highslide img{
 }
 
 #checkout{
-   padding:5px;
+    padding:5px;
 }
 
 body,td,th {
@@ -480,7 +480,7 @@ a:active {
     padding-right:20px;
 }
 .userroom_password .divinput4{
-   padding-right:10px;
+    padding-right:10px;
 }
 .userroom_password .divinput1{
     float: left;
@@ -2328,10 +2328,9 @@ a.link:active {
 
 
 #allspecwhite{
-    #allspecwhite{
-	padding: 10px;
-BORDER-TOP: #cccccc 1px solid;
-}
+    padding: 10px;
+    BORDER-TOP: #cccccc 1px solid;
+
 }
 
 .sortActiv{

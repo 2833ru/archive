@@ -182,6 +182,10 @@ function CategoryID($categoryID) {// выборка каталогов и вывод в правое поле
             $style_r = null;
         }
 
+        if($id==$_SESSION['editProductId']) {
+            $style_r = ' prod_hover';
+        }
+
         $dis.="
 	<tr class='row $style_r' id=\"r" . $id . "\" onmouseover=\"PHPShopJS.rowshow_on(this)\" onmouseout=\"PHPShopJS.rowshow_out(this,'" . $style_r . "')\">
           <td align=center>

@@ -1,8 +1,11 @@
-<?
+<?php
+
+// БД
 require("../connect.php");
 @mysql_connect("$host", "$user_db", "$pass_db") or @die("Невозможно подсоединиться к базе");
 mysql_select_db("$dbase") or @die("Невозможно подсоединиться к базе");
 require("../enter_to_admin.php");
+
 // Языки
 $GetSystems = GetSystems();
 $option = unserialize($GetSystems['admoption']);
@@ -91,7 +94,7 @@ a{
   <td>
   <h1>Здравствуйте, представляем новости с сайта "' . $GetSystems['name'] . '"</h1>
   </td>
-  <td align="right"><a href="http://' . $_SERVER['SERVER_NAME'] . $SysValue['dir']['dir'] . '" target="_blank" title="' . $SERVER_NAME . '"><img src="http://' . $_SERVER['SERVER_NAME'] . $SysValue['dir']['dir'] . $GetSystems['logo'] . '" alt="' . $GetSystems['name'] . '"  border="0"></a></td>
+  <td align="right"><a href="http://' . $_SERVER['SERVER_NAME'] . $SysValue['dir']['dir'] . '" target="_blank" title="' . $_SERVER['SERVER_NAME'] . '"><img src="http://' . $_SERVER['SERVER_NAME'] . $SysValue['dir']['dir'] . $GetSystems['logo'] . '" alt="' . $GetSystems['name'] . '"  border="0"></a></td>
 </tr>
 <tr>
    <td colspan="2" style="background-color:#1982C6;" height="3"></td>
@@ -833,6 +836,13 @@ where id='0' $string";
 SET
 statusi='$statusi_new'
 where id='0' $string";
+
+                    
+
+
+                    
+
+
                     $pageReload = "orders";
                 } elseif ($DO == 41) {// удалить комментарии
                     foreach ($IdsArray as $v)
@@ -1411,10 +1421,75 @@ window.open('../1c/orders_export.php?IDS=" . $IDS . "');
 //echo($vendor);
                 }
 
+
                 $result = mysql_query($sql);
+                if ($DO == 37) {
+                  //перезаписать скидку персональную
+                  foreach ($IdsArray as $v) {
+                    //Запрос заказа, чтобы узать ID пользователя
+                    $sql_or = "SELECT * FROM `".$SysValue['base']['table_name1']."` WHERE `id` =".$v." ";
+                    $query_or = mysql_query($sql_or);
+                    $row_or = mysql_fetch_array($query_or);
+                    if($row_or['user']!=0)
+                      $id_user[] = $row_or['user'];
+                  }
+                  //Только уникальные пользователи
+                  $id_user = array_unique($id_user);
+                                    //Формирование SQL
+                  foreach ($id_user as $id_user_v) {
+                    //Запрос статуса пользователя
+                    $sql_st = "SELECT * FROM `".$SysValue['base']['table_name27']."` WHERE `id` =".$id_user_v." ";
+                    $query_st = mysql_query($sql_st);
+                    $row_st = mysql_fetch_array($query_st);
+                    $status_user = $row_st['status'];
+
+                    //Запрос алгоритма расчета персональной скидки
+                    $sql_d = "SELECT * FROM `".$SysValue['base']['table_name28']."` WHERE `id` =".$status_user." ";
+                    $query_d = mysql_query($sql_d);
+                    $row_d = mysql_fetch_array($query_d);
+                    $cumulative_array = unserialize($row_d['cumulative_discount']);
+                    $cumulative_array_check = $row_d['cumulative_discount_check'];
+                    if($cumulative_array_check==1) {
+                        //Список заказов
+                        $sql_order = "SELECT ".$SysValue['base']['table_name1'].".* FROM `".$SysValue['base']['table_name1']."` 
+                        LEFT JOIN `".$SysValue['base']['table_name32']."` ON ".$SysValue['base']['table_name1'].".statusi=".$SysValue['base']['table_name32'].".id 
+                        WHERE ".$SysValue['base']['table_name1'].".user =  ".$id_user_v." 
+                        AND ".$SysValue['base']['table_name32'].".cumulative_action='1' ";
+                        $query_order = mysql_query($sql_order);
+                        $row_order = mysql_fetch_array($query_order);
+                        $sum = '0'; //Очистка суммы
+                        do {
+                            $orders = unserialize($row_order['orders']);
+                            $sum += $orders['Cart']['sum'];
+                        }
+                        while ($row_order = mysql_fetch_array($query_order));
+
+                        //Узнаем скидку
+                        $q_cumulative_discount = '0'; //Очистка скидки
+                        foreach ($cumulative_array as $key => $value) {
+                            if($sum>=$value['cumulative_sum_ot'] and $sum<=$value['cumulative_sum_do']) {
+                                $q_cumulative_discount = $value['cumulative_discount'];
+                                break;
+                            }
+                        }
+                        //Обновляем скидку
+                        $sql_update = "UPDATE  `".$SysValue['base']['table_name27']."` SET `cumulative_discount` =  '".$q_cumulative_discount."' WHERE `id` =".$id_user_v." ";
+                        mysql_query($sql_update);
+                    }
+                    else {
+                        $sql_update = "UPDATE  `".$SysValue['base']['table_name27']."` SET `cumulative_discount` =  '0' WHERE `id` =".$id_user_v." ";
+                        mysql_query($sql_update);
+                    }
+                  }
+                }
 ///*
                 echo"
    <script>
+   if (window.opener.top.frame2){
+      window.opener.top.frame2.location.reload();
+      self.close();
+      }
+   else 
    DoReloadMainWindow('$pageReload');
    </script>
      ";

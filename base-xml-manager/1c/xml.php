@@ -66,7 +66,7 @@ class PHPShop1C extends PHPShopBaseXml {
         $this->true_from = array('table_name', 'table_name1', 'table_name2', 'table_name3', 'table_name24',
             'table_name5', 'table_name6', 'table_name7', 'table_name8', 'table_name11',
             'table_name14', 'table_name15', 'table_name17', 'table_name27', 'table_name29', 'table_name32',
-            'table_name9', 'table_name48', 'table_name50', 'table_name51');
+            'table_name9', 'table_name48', 'table_name50', 'table_name51', 'table_name35');
 
         parent::PHPShopBaseXml();
     }
@@ -185,7 +185,8 @@ class PHPShop1C extends PHPShopBaseXml {
             '1c' => 'visitor',
             'orders' => 'visitor',
             'order' => 'visitor',
-            'payment' => 'visitor'
+            'payment' => 'visitor',
+            'foto'=>'cat_prod',
         );
 
         if ($correct_path[$path[1]])

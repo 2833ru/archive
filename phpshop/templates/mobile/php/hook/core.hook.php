@@ -23,8 +23,7 @@ function Compile_mob_hook($obj) {
     
     // Cookie для JS
     if(empty($_SESSION['MobileDetect'])){
-        setcookie("PCDetect", 1);
-        
+        @setcookie("PCDetect", 1);
     }
     
         

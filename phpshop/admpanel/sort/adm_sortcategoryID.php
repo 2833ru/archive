@@ -13,6 +13,22 @@ require("../language/russian/language.php");
         <LINK href="../skins/<?= $_SESSION['theme'] ?>/texts.css" type=text/css rel=stylesheet>
         <SCRIPT language="JavaScript" src="/phpshop/lib/Subsys/JsHttpRequest/Js.js"></SCRIPT>
         <script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
+        <script>
+            window.onmousedown = function (e) {
+                var el = e.target;
+                if (el.tagName.toLowerCase() == 'option' && el.parentNode.hasAttribute('multiple')) {
+                    e.preventDefault();
+
+                    // toggle selection
+                    if (el.hasAttribute('selected')) el.removeAttribute('selected');
+                    else el.setAttribute('selected', '');
+
+                    // hack to correct buggy behavior
+                    var select = el.parentNode.cloneNode(true);
+                    el.parentNode.parentNode.replaceChild(select, el.parentNode);
+                }
+            }
+        </script>
     </head>
     <body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0">
         <?

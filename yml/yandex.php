@@ -3,7 +3,7 @@
 /**
  * Файл выгрузки для Яндекс Маркет
  * @author PHPShop Software
- * @version 1.4
+ * @version 1.5
  * @package PHPShopXML
  */
 $_classPath = "../phpshop/";
@@ -81,7 +81,7 @@ class PHPShopSortSearch {
 
 
         return '
-                        <' . $tag_start . '>None</' . $tag_end . '>';
+                        <' . $tag_start . '></' . $tag_end . '>';
     }
 
 }
@@ -259,7 +259,8 @@ class PHPShopYml {
                 "yml_bid_array" => unserialize($row['yml_bid_array']),
                 "uid" => $uid,
                 "description" => $description,
-                "content" => $content
+                "content" => $content,
+                "prod_seo_name"=>$row['prod_seo_name']
             );
 
             // Параметр сортировки

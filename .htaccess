@@ -34,10 +34,11 @@ RewriteEngine On
 
 #Options FollowSymLinks
 #Options SymLinksIfOwnerMatch
+#RewriteBase /
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_URI} (((.*)\.html)|((.*)/))$
-RewriteCond %{REQUEST_URI} !((.*)\.html/)$
+RewriteCond %{REQUEST_URI} (((.*)\.html$)|((.*)/))$
+RewriteCond %{REQUEST_URI} !((.*)\.(.*)/)$
 RewriteRule ^(.*)$ index.php
 
 # Страница 404 ошибки
@@ -69,7 +70,7 @@ RewriteRule ^(.*)$ /$1/ [L,R=302]
 
 # Запрет выполнения php в загружаемых папках
 # default - off
-#RewriteCond %{REQUEST_URI} ^((/UserFiles/(.*).(php\d?|phtml))|(/phpshop/templates/(.*).(php\d?|phtml))|(/phpshop/admpanel/csv/(.*).(php\d?|phtml)))$
+#RewriteCond %{REQUEST_URI} ^((/files/price/(.*).(php\d?|phtml))|(/UserFiles/(.*).(php\d?|phtml))|(/phpshop/templates/(.*).(php\d?|phtml))|(/phpshop/admpanel/csv/(.*).(php\d?|phtml)))$
 #RewriteRule .* - [F]
 
 
@@ -78,3 +79,4 @@ RewriteRule ^(.*)$ /$1/ [L,R=302]
 Order Deny,Allow
 Deny From All
 </files>
+

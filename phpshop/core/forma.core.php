@@ -31,11 +31,14 @@ class PHPShopForma extends PHPShopCore {
         // Определяем переменные
         $this->set('pageTitle', 'Форма связи');
 
-        // Подключаем шаблон
-        $this->addToTemplate("forma/page_forma_list.tpl");
+        // Навигация хлебные крошки
+        $this->navigation(null, 'Форма связи');
 
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__);
+
+        // Подключаем шаблон
+        $this->addToTemplate("forma/page_forma_list.tpl");
 
         $this->parseTemplate($this->getValue('templates.page_page_list'));
     }
@@ -56,7 +59,7 @@ class PHPShopForma extends PHPShopCore {
         if ($this->setHook(__CLASS__, __FUNCTION__, $_POST))
             return true;
 
-        if (!empty($_SESSION['text']) and $_POST['key'] == $_SESSION['text']) {
+        if (!empty($_SESSION['text']) and strtoupper($_POST['key']) == strtoupper($_SESSION['text'])) {
             $this->send();
         }
         else

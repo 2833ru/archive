@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_chat_system` (
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 
-INSERT INTO `phpshop_modules_chat_system` VALUES (1,'1','Чат','Чем Вам помочь?','Оператора нет на месте...','','0','2','default','','0775','1.6');
+INSERT INTO `phpshop_modules_chat_system` VALUES (1,'1','Чат','Чем Вам помочь?','Оператора нет на месте...','','0','2','default','','0775','1.8');
 
 DROP TABLE IF EXISTS `phpshop_modules_chat_users`;
 CREATE TABLE `phpshop_modules_chat_users` (
@@ -38,6 +38,7 @@ CREATE TABLE `phpshop_modules_chat_jurnal` (
   `user_session` varchar(255) NOT NULL default '',
   `name` varchar(64) NOT NULL default '',
   `content` text NOT NULL,
+  `avatar` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 

@@ -39,7 +39,7 @@ function option_select($obj, $data) {
             $name = $row['name'];
             $opt_sel = option_select_add($vendor_array, $id, $name, $numel, $xid, $row['optionname'], $obj->debug);
             if (!empty($opt_sel)) {
-                $disp.= '<TR><TD>' . $opt_sel . '</TD></TR>';
+                $disp.= '<tr><td>' . $opt_sel . '</td></tr>';
                 $adder.='+document.getElementById("opt' . $numel . $xid . '").value';
                 $numel++;
             }
@@ -47,13 +47,13 @@ function option_select($obj, $data) {
     }
 
     if (!empty($num)) {
-        $disp = '<SCRIPT>
+        $disp = '<script>
 function alloptions' . $xid . '() {
 var optsvalue=""' . $adder . '
 document.getElementById("allOptionsSet' . $xid . '").value=optsvalue;
 }
-</SCRIPT>
-<TABLE>' . $disp . '</TABLE><INPUT TYPE=HIDDEN id="allOptionsSet' . $xid . '" value="">';
+</script>
+<table class="table-optionsDisp">' . $disp . '</table><input type="hidden" id="allOptionsSet' . $xid . '" value="">';
 
         $obj->set('optionsDisp', $disp);
     }

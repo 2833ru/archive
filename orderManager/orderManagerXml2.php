@@ -192,8 +192,7 @@ $GetOplataMetodArray = GetOplataMetodArray();
 
 // Форматирование строки
 function Clean($s) {
-    $a = htmlspecialchars($s, ENT_QUOTES);
-    return $a;
+    return PHPShopSecurity::TotalClean($s);
 }
 
 /**
@@ -488,8 +487,6 @@ switch ($_REQUEST['command']) {
                 $adr_info .= Clean(", код домофона: " . $OrdersReturn['row']['door_phone']);
             if ($OrdersReturn['row']['flat'])
                 $adr_info .= Clean(", квартира: " . $OrdersReturn['row']['flat']);
-            if ($OrdersReturn['row']['delivtime'] OR $OrdersReturn['order']['dos_ot'])
-                $adr_info .= Clean(", время доставки: " . $OrdersReturn['row']['delivtime'] . $OrdersReturn['order']['dos_ot']);
 
             // Данные по заказу
             $XML.='<order>
@@ -501,7 +498,7 @@ switch ($_REQUEST['command']) {
 		  <tel_code>' . Clean($OrdersReturn['order']['tel_code']) . '</tel_code>
 		  <tel_name>' . Clean($OrdersReturn['order']['tel_name'] . $OrdersReturn['row']['tel']) . '</tel_name>
 		  <adres>' . Clean($OrdersReturn['order']['adr_name'] . $adr_info) . '</adres>
-		  <dos_ot>' . Clean($OrdersReturn['order']['dos_ot']) . '</dos_ot>
+		  <dos_ot>' . Clean($OrdersReturn['row']['delivtime']) . '</dos_ot>
 		  <dos_do>' . Clean($OrdersReturn['order']['dos_do']) . '</dos_do>
 		  <discount>' . (Clean($OrdersReturn['order']['discount']) + 0) . '</discount>
 		  <manager>' . Clean($OrdersReturn['row']['dop_info']) . '</manager>

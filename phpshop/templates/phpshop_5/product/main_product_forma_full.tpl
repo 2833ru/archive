@@ -2,6 +2,7 @@
 		
 			<TD colspan="2">
 				<h1>@productName@</h1>
+				
 			</TD>
 		</TR>
 		<TR>
@@ -99,6 +100,7 @@
 				<br>@oneclick@
 				@ComEnd@
 				@productParentList@
+				<br>@promotionInfo@
 			</TD>
 		</TR>
 	</TABLE>

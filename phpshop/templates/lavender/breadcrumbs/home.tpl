@@ -1,1 +1,0 @@
-<A class="link" href="/">Главная</A>

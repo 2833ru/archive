@@ -23,6 +23,9 @@ class PHPShopPartner extends PHPShopCore {
         $this->icon = 'phpshop/modules/partner/templates/message.gif';
         $this->system();
         parent::PHPShopCore();
+
+        // Навигация хлебные крошки
+        $this->navigation(null, 'Партнерская программа');
     }
 
     /**
@@ -48,9 +51,7 @@ class PHPShopPartner extends PHPShopCore {
                 PHPShopObj::loadClass("mail");
 
                 // Сообщение администратору о заявке на вывод
-                new PHPShopMail($this->PHPShopSystem->getValue('adminmail2'), $_SESSION['partnerMail'],
-                                $this->PHPShopSystem->getValue('name') . ' - заявка на вывод средств от ' . $_SESSION['partnerName'],
-                                $GLOBALS['SysValue']['lang']['partner_money_mail'] . ' ' . $_POST['get_money_new'] . ' ' . $this->PHPShopSystem->getDefaultValutaCode());
+                new PHPShopMail($this->PHPShopSystem->getValue('adminmail2'), $_SESSION['partnerMail'], $this->PHPShopSystem->getValue('name') . ' - заявка на вывод средств от ' . $_SESSION['partnerName'], $GLOBALS['SysValue']['lang']['partner_money_mail'] . ' ' . $_POST['get_money_new'] . ' ' . $this->PHPShopSystem->getDefaultValutaCode());
             }
             unset($_POST['get_money_new']);
             $this->index($notice);
@@ -124,6 +125,7 @@ class PHPShopPartner extends PHPShopCore {
      * Экшен по умолчанию, личный кабинет
      */
     function index($notice = false) {
+
         if (PHPShopSecurity::true_num($_SESSION['partnerId'])) {
 
             // Библиотека графики
@@ -255,12 +257,12 @@ class PHPShopPartner extends PHPShopCore {
             $TabName = explode("|", $GLOBALS['SysValue']['lang']['partner_menu']);
 
             // Вывод табов сучетом опции проверки ключей
-            if ($this->data['key_enabled'] == 1) 
-            $Forma = $PHPShopFrontGUI->getContent($PHPShopFrontGUI->setTab(array($TabName[0], $Tab4, 550), array($TabName[1], $Tab3, 550), array($TabName[2], $Tab1, 550), array($TabName[3], $Tab2, 550), array($TabName[4], $Tab5, 700), array($TabName[5], $Tab6, 600)));
-            else 
+            if ($this->data['key_enabled'] == 1)
+                $Forma = $PHPShopFrontGUI->getContent($PHPShopFrontGUI->setTab(array($TabName[0], $Tab4, 550), array($TabName[1], $Tab3, 550), array($TabName[2], $Tab1, 550), array($TabName[3], $Tab2, 550), array($TabName[4], $Tab5, 700), array($TabName[5], $Tab6, 600)));
+            else
                 $Forma = $PHPShopFrontGUI->getContent($PHPShopFrontGUI->setTab(array($TabName[0], $Tab4, 550), array($TabName[1], $Tab3, 550), array($TabName[2], $Tab1, 550), array($TabName[3], $Tab2, 550), array($TabName[4], $Tab5, 700)));
-           
-            
+
+
             // Подключаем шаблон
             $this->set('pageContent', $notice . $Forma);
             $this->set('pageTitle', $GLOBALS['SysValue']['lang']['partner_path_name']);
@@ -271,7 +273,6 @@ class PHPShopPartner extends PHPShopCore {
             // Подключаем шаблон
             $this->parseTemplate($this->getValue('templates.page_page_list'));
         }
-
         else
             $this->enter();
     }
@@ -289,7 +290,7 @@ class PHPShopPartner extends PHPShopCore {
         $this->set('pageTitle', __('Авторизация партнера'));
 
         // Мета
-        $this->title = __("Кабинет партнера - Авторизация - "). $this->PHPShopSystem->getValue("name");
+        $this->title = __("Кабинет партнера - Авторизация - ") . $this->PHPShopSystem->getValue("name");
 
         // Подключаем шаблон
         $this->parseTemplate($this->getValue('templates.page_page_list'));
@@ -398,7 +399,8 @@ class PHPShopPartner extends PHPShopCore {
                 }
                 else
                     $convert = PHPShopString::utf8_win1251($IDN->decode($dom_name));
-            } else
+            }
+            else
                 $convert = $server_name;
         }
         else
@@ -426,7 +428,7 @@ class PHPShopPartner extends PHPShopCore {
             $content = __('Доброго времени, ') . $row['login'] . '
 ----------------
 
-Для доступа к сайту http://' . $this->convert($_SERVER['SERVER_NAME']) .$this->getValue('dir.dir'). '/partner/ используйте данные:
+Для доступа к сайту http://' . $this->convert($_SERVER['SERVER_NAME']) . $this->getValue('dir.dir') . '/partner/ используйте данные:
 Логин: ' . $row['login'] . '
 Пароль: ' . base64_decode($row['password']) . '
 
@@ -528,9 +530,9 @@ class PHPShopPartner extends PHPShopCore {
                     $content = 'Доброго времени
 ----------------
 
-Для активации партнера ' . $login . ' перейдите по ссылке: http://' . $this->convert($_SERVER['SERVER_NAME']).$this->getValue('dir.dir') . '/partner/?activation=' . $check_text . '
+Для активации партнера ' . $login . ' перейдите по ссылке: http://' . $this->convert($_SERVER['SERVER_NAME']) . $this->getValue('dir.dir') . '/partner/?activation=' . $check_text . '
 
-Для доступа к сайту http://' . $this->convert($_SERVER['SERVER_NAME']).$this->getValue('dir.dir') . '/partner/ после активации используйте данные:
+Для доступа к сайту http://' . $this->convert($_SERVER['SERVER_NAME']) . $this->getValue('dir.dir') . '/partner/ после активации используйте данные:
 Логин: ' . $login . '
 Пароль: ' . $password . '
 

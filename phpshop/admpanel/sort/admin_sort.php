@@ -77,7 +77,11 @@ function Sorts() {// Вывод сортировки
 
         $id = $row['id'];
         $name = $row['name'];
-        $description = $row['description'];
+        
+        if(!empty($row['description']))
+        $description = ' - '.$row['description'];
+        else $description=null;
+        
         if ($row['filtr'] == 1) {
             $fl = "<img src=\"img/icon-duplicate-acl.gif\" alt=\"Фильтр\">";
         } else {
@@ -96,7 +100,7 @@ function Sorts() {// Вывод сортировки
         $display.="
 <td align=\"center\">$fl $gl</td>
 	<td>
-	$name
+	$name $description
 	</td>
     </tr>
 	";
@@ -114,7 +118,7 @@ function Sorts() {// Вывод сортировки
     <td width=\"10%\" id=pane>+/-</td>
 	<td width=\"90%\" id=pane><span name=txtLang id=txtLang>Наименование</span></td>
 </tr>
-	" . $display . "
+	" . $display . " 
     </table>
 	</td>
 	</tr>

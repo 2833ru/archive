@@ -22,7 +22,7 @@ function search_pickpoin_delivery($city, $xid) {
 /**
  * Õóê
  */
-function delivery_hook($obj, $data) {
+function pickpoin_delivery_hook($obj, $data) {
 
     $_RESULT = $data[0];
     $xid = $data[1];
@@ -40,6 +40,7 @@ function delivery_hook($obj, $data) {
             $hook['delivery'] = $_RESULT['delivery'];
             $hook['total'] = $_RESULT['total'];
             $hook['adresList'] = $_RESULT['adresList'];
+            $hook['success'] = 1;
 
             return $hook;
         }
@@ -47,6 +48,6 @@ function delivery_hook($obj, $data) {
 
 $addHandler = array
     (
-    'delivery' => 'delivery_hook'
+    'delivery' => 'pickpoin_delivery_hook'
 );
 ?>

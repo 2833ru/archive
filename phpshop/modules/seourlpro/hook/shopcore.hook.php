@@ -29,7 +29,7 @@ function toLatin_hook($str) {
     $str = str_replace("®", "", $str);
 
     $new_str = '';
-    $_Array = array(" " => "_", "а" => "a", "б" => "b", "в" => "v", "г" => "g", "д" => "d", "е" => "e", "ё" => "e", "ж" => "zh", "з" => "z", "и" => "i", "й" => "y", "к" => "k", "л" => "l", "м" => "m", "н" => "n", "о" => "o", "п" => "p", "р" => "r", "с" => "s", "т" => "t", "у" => "u", "ф" => "f", "х" => "h", "ц" => "c", "ч" => "ch", "ш" => "sh", "щ" => "sch", "ъ" => "i", "ы" => "y", "ь" => "i", "э" => "e", "ю" => "u", "я" => "ya", "А" => "a", "Б" => "b", "В" => "v", "Г" => "g", "Д" => "d", "Е" => "e", "Ё" => "e", "Ж" => "zh", "З" => "z", "И" => "i", "Й" => "y", "К" => "k", "Л" => "l", "М" => "m", "Н" => "n", "О" => "o", "П" => "p", "Р" => "r", "С" => "s", "Т" => "t", "Ы" => "Y", "У" => "u", "Ф" => "f", "Х" => "h", "Ц" => "c", "Ч" => "ch", "Ш" => "sh", "Щ" => "sch", "Э" => "e", "Ю" => "u", "Я" => "ya", "." => "_", "$" => "i", "%" => "i", "&" => "_and_");
+    $_Array = array(" " => "_", "а" => "a", "б" => "b", "в" => "v", "г" => "g", "д" => "d", "е" => "e", "ё" => "e", "ж" => "zh", "з" => "z", "и" => "i", "й" => "y", "к" => "k", "л" => "l", "м" => "m", "н" => "n", "о" => "o", "п" => "p", "р" => "r", "с" => "s", "т" => "t", "у" => "u", "ф" => "f", "х" => "h", "ц" => "c", "ч" => "ch", "ш" => "sh", "щ" => "sch", "ъ" => "i", "ы" => "y", "ь" => "i", "э" => "e", "ю" => "u", "я" => "ya", "А" => "a", "Б" => "b", "В" => "v", "Г" => "g", "Д" => "d", "Е" => "e", "Ё" => "e", "Ж" => "zh", "З" => "z", "И" => "i", "Й" => "y", "К" => "k", "Л" => "l", "М" => "m", "Н" => "n", "О" => "o", "П" => "p", "Р" => "r", "С" => "s", "Т" => "t", "Ы" => "Y", "У" => "u", "Ф" => "f", "Х" => "h", "Ц" => "c", "Ч" => "ch", "Ш" => "sh", "Щ" => "sch", "Э" => "e", "Ю" => "u", "Ы" => "y", "Я" => "ya", "." => "_", "$" => "i", "%" => "i", "&" => "_and_");
 
     $chars = preg_split('//', $str, -1, PREG_SPLIT_NO_EMPTY);
 
@@ -78,6 +78,7 @@ function CID_Product_seourlpro_hook($obj, $row, $rout) {
         else
             $url_true_nav = $url_true . '-' . $obj->PHPShopNav->getPage();
 
+
         $url_pack = '/shop/CID_' . $obj->PHPShopNav->getId();
         $url_nav = '/shop/CID_' . $obj->PHPShopNav->getId() . '_' . $obj->PHPShopNav->getPage();
         $url_old_seo = '/shop/CID_' . $obj->PHPShopNav->getId() . '_' . str_replace("-", "_", toLatin_hook($catalog_name));
@@ -90,6 +91,7 @@ function CID_Product_seourlpro_hook($obj, $row, $rout) {
         else
             $url_query = null;
 
+
         // Если ссылка не сходится
         if ($url != $url_true and $url != $url_pack and $url != $url_true_nav and $url != $url_nav and $url != $url_old_seo and $url != $url_old_seo_nav) {
             $obj->ListInfoItems = parseTemplateReturn($obj->getValue('templates.error_page_forma'));
@@ -98,7 +100,10 @@ function CID_Product_seourlpro_hook($obj, $row, $rout) {
             $obj->setError404();
             return true;
         } elseif ($url == $url_pack or $url == $url_nav or $url == $url_old_seo or $url == $url_old_seo_nav) {
-            header('Location: ' . $obj->getValue('dir.dir') . $url_true_nav . '.html' . $url_query, true, 301);
+            if ($url_true != '/')
+                header('Location: ' . $obj->getValue('dir.dir') . $url_true_nav . '.html' . $url_query, true, 301);
+            else
+                $obj->setError404();
             return true;
         }
     }

@@ -51,7 +51,9 @@ DoResize(<? echo $GetSystems['width_icon']?>,460,270);
 	  $name=$row['name'];
 	  $color=$row['color'];
 	  $sklad_action=$row['sklad_action'];
+	  $cumulative_action=$row['cumulative_action'];
 	  if($sklad_action == 1) $f1="checked";
+	  if($cumulative_action == 1) $f2="checked";
 	  ?>
 <form name="product_edit"  method=post>
 <table cellpadding="0" cellspacing="0" width="100%" height="50" id="title">
@@ -73,7 +75,8 @@ DoResize(<? echo $GetSystems['width_icon']?>,460,270);
 <LEGEND><span name=txtLang id=txtLang><u>Н</u>аименование</span> </LEGEND>
 <div style="padding:10">
 <input type="text" name="name_new" class="full" value="<?=$name?>"><br><br>
-<input type="checkbox" value="1" name="sklad_action_new" <?=@$f1?>> Списывать со склада
+<label><input type="checkbox" value="1" name="sklad_action_new" <?=@$f1?>> Списывать со склада<br></label>
+<label><input type="checkbox" value="1" name="cumulative_action_new" <?=@$f2?>> Перерасчет накопительной скидки</label>
 </div>
 </FIELDSET>
 	</td>
@@ -139,7 +142,8 @@ $sql="UPDATE ".$SysValue['base']['table_name32']."
 SET
 name='$name_new',
 color='$color_new',
-sklad_action='$sklad_action_new' 
+sklad_action='$sklad_action_new',
+cumulative_action='$cumulative_action_new' 
 where id='$id'";
 $result=mysql_query($sql)or @die("".mysql_error()."");
 echo"

@@ -175,11 +175,13 @@ class PHPShopProductFunction {
                     $price = $user_price;
             }
         }
+        
+        
 
         // Учет валюты товара
         if ($baseinputvaluta) { //Если прислали баз. валюту
             if ($baseinputvaluta !== $LoadItems['System']['dengi']) {//Если присланная валюта отличается от базовой
-                if (!empty($LoadItems['Valuta'][$baseinputvaluta]['kurs']))
+                if ($LoadItems['Valuta'][$baseinputvaluta]['kurs']>0)
                     $price = $price / $LoadItems['Valuta'][$baseinputvaluta]['kurs']; //Приводим цену в базовую валюту
             }
         }

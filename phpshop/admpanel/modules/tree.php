@@ -47,7 +47,7 @@ class MainCatalogTree extends CatalogTree {
                         <?
                         // Дерево каталогов
                         $CatalogTree = new MainCatalogTree(null);
-                        $CatalogTree->addcat(0, -1, '<b>Модули</b>', '');
+                        $CatalogTree->addcat(0, -1, '<b>Модули</b>', 'admin_modules_content.php');
                         $CatalogTree->addcat(1, 0, 'Дизайн', 'admin_modules_content.php?pid=template', '../img/imgfolder.gif');
                         $CatalogTree->addcat(2, 0, 'Юзабилити', 'admin_modules_content.php?pid=form', '../img/imgfolder.gif');
                         $CatalogTree->addcat(3, 0, 'Социальные сети', 'admin_modules_content.php?pid=soc', '../img/imgfolder.gif');

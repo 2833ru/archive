@@ -37,15 +37,15 @@ function Valuta() {// Вывод валют
         $display.="
 <td align=\"center\">$checked</td>
 <td class=forma>
-	$name
+	".htmlentities($name,ENT_QUOTES, 'windows-1251')."
 	</td>
 	<td class=forma>
-	$code
+	".htmlentities($code,ENT_QUOTES, 'windows-1251')."
 	</td>
 	<td class=forma>
-	$iso
+	".htmlentities($iso,ENT_QUOTES, 'windows-1251')."
 	</td>
-	<td class=forma>$kurs</td>
+	<td class=forma>".htmlentities($kurs,ENT_QUOTES, 'windows-1251')."</td>
     </tr>
 	";
         @$i++;

@@ -1,7 +1,7 @@
 <p><font color="#FF0000">@usersError@ @mesageText@</font></p>
 <p>
 <form method="post" name="user_forma" action="@ShopDir@/partner/">
-    <table cellspacing="5" cellpadding="5">
+    <table cellspacing="5" cellpadding="5" class="table table-striped">
         <tr>
             <td align="right">	Логин:
             </td>

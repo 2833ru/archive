@@ -398,7 +398,7 @@ $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", false);
                     </FIELDSET> </TD>
             </TR>
     </TABLE><br>
-    &nbsp;&nbsp;<input type="checkbox" name="selectLic">я принимаю услови€ лицензионного соглашени€
+    &nbsp;&nbsp;<label><input type="checkbox" name="selectLic">я принимаю услови€ лицензионного соглашени€</label>
     </DIV>
     <br>
     <hr>

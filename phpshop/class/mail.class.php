@@ -2,7 +2,7 @@
 
 /**
  * Библиотека Отправление почты
- * @version 1.2
+ * @version 1.4
  * @package PHPShopClass
  * @tutorial http://doc.phpshop.ru/PHPShopClass/PHPShopMail.html
  * <code>
@@ -50,7 +50,13 @@ class PHPShopMail {
         if (class_exists('PHPShopSystem') and $noSend)
             $this->PHPShopSystem = new PHPShopSystem();
 
-        $this->from = $from;
+        if (strstr($from, ',')) {
+            $from_array = explode(",", $from);
+            $this->from = trim($from_array[0]);
+        }
+        else
+            $this->from = $from;
+
         $this->zag = "=?" . $this->codepage . "?B?" . base64_encode($zag) . "?=";
         $this->to = $to;
         $header = $this->getHeader();
@@ -68,9 +74,13 @@ class PHPShopMail {
      */
     function getHeader() {
         $header = "MIME-Version: " . $this->mime . "\n";
-        if($this->PHPShopSystem)
-        $header.= "From:  " . $this->PHPShopSystem->getParam('name') . " <" . $this->from . ">\n";
-        else  $header.= "From: <" . $this->from . ">\n";
+        
+        if ($this->PHPShopSystem and $this->PHPShopSystem->getParam('adminmail2') == $this->from){
+            $header.= "From:  " . $this->PHPShopSystem->getParam('name') . " <" . $this->from . ">\n";
+        }
+        else
+            $header.= "From: <" . $this->from . ">\n";
+        
         $header.= "Reply-To: $this->from\n";
         $header.= "Content-Type: " . $this->type . "; charset=" . $this->codepage . "\n";
         $header.= "Content-Transfer-Encoding: 8bit\n";
@@ -91,7 +101,6 @@ class PHPShopMail {
         $GLOBALS['SysValue']['other']['shopName'] = $this->PHPShopSystem->getName();
         $GLOBALS['SysValue']['other']['serverPath'] = $_SERVER['SERVER_NAME'] . "/" . $GLOBALS['SysValue']['dir']['dir'];
         $GLOBALS['SysValue']['other']['date'] = date("d-m-y H:i a");
-
     }
 
     /**
@@ -99,7 +108,7 @@ class PHPShopMail {
      * @param string $content содержание
      */
     function sendMailNow($content) {
-        mail($this->to, $this->zag, $content, $this->header);
+        mail($this->to, $this->zag, $content, $this->header, '-f' . $this->from);
     }
 
     /**
@@ -108,7 +117,7 @@ class PHPShopMail {
      * @param strong $header заголовок
      */
     function sendMail($content, $header) {
-        mail($this->to, $this->zag, $content, $header);
+        mail($this->to, $this->zag, $content, $header, '-f' . $this->from);
     }
 
     /**
@@ -140,7 +149,7 @@ class PHPShopMailFile {
         $header = $this->getHeader();
         //mail($this->to,$this->from,$this->zag,$header);
         $this->subj = $zag;
-        mail($this->to, $this->subj, $this->zag, $header);
+        mail($this->to, $this->subj, $this->zag, $header, '-f' . $this->from);
     }
 
     function getZag($text) {

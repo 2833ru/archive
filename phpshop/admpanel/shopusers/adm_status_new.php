@@ -65,6 +65,84 @@ require("../language/russian/language.php");
                         </FIELDSET>
                     </td>
                 </tr>
+                <tr>
+                    <td colspan="3">
+                        <FIELDSET>
+                            <LEGEND><span name="txtLang" id="txtLang"><u>Н</u>акопительная скидка</span> </LEGEND>
+                            <div style="padding:10">
+        
+                                <label><input type="checkbox" name="cumulative_discount_check_new" <?=$cumulative_check?> > Использование накопительной скидки <i>(да/нет)</i></label><br><br>
+                                <div class="sum-cumulative" id="sum-cumulative-1">Сумма от <input type="text" style="width:50px" name="cumulative_sum_ot[]"> до <input type="text" style="width:50px" name="cumulative_sum_do[]"> Cкидка: <input type="text" style="width:30px" name="cumulative_discount[]"> % <button type="button" class="btn btn-danger" onclick="removeCumulatuve(1)">Удалить</button></div>
+                                <div class="sum-cumulative" id="sum-cumulative-2">Сумма от <input type="text" style="width:50px" name="cumulative_sum_ot[]"> до <input type="text" style="width:50px" name="cumulative_sum_do[]"> Cкидка: <input type="text" style="width:30px" name="cumulative_discount[]"> % <button type="button" class="btn btn-danger" onclick="removeCumulatuve(2)">Удалить</button></div>
+                                <div id="add-block-sum-cumulative"></div>
+                                <input type="hidden" name="cache-n" id="cache-n" value="1">
+                                <button type="button" class="btn btn-success" onclick="addCumulatuve()">+ Добавить параметр</button>
+                            </div>
+                            <script>
+                            function addCumulatuve() {
+                                var idd = document.getElementById('cache-n').value;
+                                // элемент-список
+                                var list = document.getElementById('add-block-sum-cumulative');
+                                // новый элемент
+                                var div = document.createElement('div');
+                                div.innerHTML = '<div class="sum-cumulative" id="sum-cumulative-new-'+idd+'">Сумма от <input type="text" style="width:50px" name="cumulative_sum_ot[]"> до <input type="text" style="width:50px" name="cumulative_sum_do[]"> Cкидка: <input type="text" style="width:30px" name="cumulative_discount[]"> % <button type="button" class="btn btn-danger" onclick="removeCumulatuveNew('+idd+')">Удалить</button></div>';
+                                // добавление в конец
+                                list.appendChild(div);
+                                // обновление счетчика
+                                var su = Number(idd)+1;
+                                // запись данных счетчика в hidden input
+                                document.getElementById('cache-n').value = su;
+                            }
+                            function removeCumulatuve(id) {
+                                if (confirm("Параметр скидки будет удален! Вы уверены?")) {
+                                  var element = document.getElementById("sum-cumulative-"+id);
+                                  element.parentNode.removeChild(element);
+                                }
+                            }
+                            function removeCumulatuveNew(id) {
+                                //if (confirm("Параметр скидки будет удален! Вы уверены?")) {
+                                    var element = document.getElementById("sum-cumulative-new-"+id);
+                                    element.parentNode.removeChild(element);
+                                //}
+                            }
+                            </script>
+                            <style>
+                            #add-block-sum-cumulative {
+                                margin-bottom: 10px;
+                            }
+                            .sum-cumulative {
+                                margin-bottom: 3px;
+                            }
+                            .btn {
+                                font-size: 10px;
+                                margin-left: 15px;
+                            }
+                            .btn-danger {
+                                color: #fff;
+                                background: #d9534f;
+                                border-color: #d43f3a;
+                            }
+                            .btn-success {
+                                color: #fff;
+                                background: #5cb85c;
+                                border-color: #4cae4c;
+                                margin-left: 0;
+                                width: 150px;
+                            }
+                            .btn-danger:hover {
+                                color: #fff;
+                                background: #c9302c;
+                                border-color: #ac2925;
+                            }
+                            .btn-success:hover {
+                                color: #fff;
+                                background: #449d44;
+                                border-color: #398439;
+                            }
+                            </style>
+                        </FIELDSET>
+                    </td>
+                </tr>
             </table>
             <hr>
             <table cellpadding="0" cellspacing="0" width="100%" height="50" >
@@ -82,9 +160,24 @@ require("../language/russian/language.php");
         </form>
         <?
         if (isset($editID) and !empty($name_new)) {// Запись редактирования
+            //Использование массива (да/нет)
+            if($cumulative_discount_check_new=='on')
+                $cumulative_discount_check = 1;
+
+            //Создание массива с условиями накопительной скидки
+            foreach ($_POST['cumulative_sum_ot'] as $key => $value) {
+                if($_POST['cumulative_discount'][$key]!=''):
+                    $cumulative_array[$key]['cumulative_sum_ot'] = $value;
+                    $cumulative_array[$key]['cumulative_sum_do'] = $_POST['cumulative_sum_do'][$key];
+                    $cumulative_array[$key]['cumulative_discount'] = $_POST['cumulative_discount'][$key];
+                endif;
+            }
+            //Сериализация
+            $cumulative_discount = serialize($cumulative_array);
+
             if (CheckedRules($UserStatus["discount"], 2) == 1) {
                 $sql = "INSERT INTO " . $SysValue['base']['table_name28'] . "
-VALUES ('','$name_new','$discount_new','$price_new','$enabled_new')";
+VALUES ('','$name_new','$discount_new','$price_new','$enabled_new','".$cumulative_discount_check."','".$cumulative_discount."')";
                 $result = mysql_query($sql) or @die("" . mysql_error() . "");
                 echo"
 	  <script>

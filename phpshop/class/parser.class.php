@@ -44,7 +44,6 @@ class PHPShopParser {
             "/images\//i" => $GLOBALS['SysValue']['dir']['dir'] . $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/images/",
             "/!images!\//i" => "images/",
             "/java\//i" => "/java/",
-            "/css\//i" => "/css/",
             "/phpshop\//i" => "/phpshop/",
         );
         return $string = preg_replace(array_keys($replaces), array_values($replaces), $string);
@@ -55,11 +54,23 @@ class PHPShopParser {
      * @param string $path путь к файлу шаблона
      * @param bool $return режим вывода информации или возврата информации
      * @param bool $replace режим замены 
+     * @param bool $check_template поиск файла в шаблоне
      * @return string
      */
-    static function file($path, $return = false, $replace = true) {
+    static function file($path, $return = false, $replace = true, $check_template = false) {
 
         $string = null;
+
+        // Поиск шаблона модуля в основном шаблоне
+        if ($check_template) {
+            
+            $path_template = str_replace('./phpshop', $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'], $path);
+            if (is_file($path_template))
+                $path = $path_template;
+        }
+       
+
+
         if (is_file($path))
             $string = @file_get_contents($path);
         else

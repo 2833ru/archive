@@ -4,7 +4,7 @@
  * Обработчик поиска товаров
  * @author PHPShop Software
  * @tutorial http://wiki.phpshop.ru/index.php/PHPShopSearch 
- * @version 1.4
+ * @version 1.5
  * @package PHPShopShopCore
  */
 class PHPShopSearch extends PHPShopShopCore {
@@ -23,7 +23,7 @@ class PHPShopSearch extends PHPShopShopCore {
     function PHPShopSearch() {
 
         // Список экшенов
-        $this->action = array("post" => "words", "nav" => "index", "get" => "words");
+        $this->action = array("post" => "words", "get" => "words", "nav" => "index");
         parent::PHPShopShopCore();
     }
 
@@ -39,6 +39,9 @@ class PHPShopSearch extends PHPShopShopCore {
 
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__);
+
+        if (isset($_REQUEST['ajax']))
+            exit();
 
         // Подключаем шаблон
         $this->parseTemplate($this->getValue('templates.search_page_list'));
@@ -119,7 +122,7 @@ class PHPShopSearch extends PHPShopShopCore {
 
 
         // Перехват модуля
-        $this->setHook(__CLASS__, __FUNCTION__, $this->ParentArray);
+        $this->setHook(__CLASS__, __FUNCTION__, $this->value);
     }
 
     /**
@@ -157,14 +160,36 @@ class PHPShopSearch extends PHPShopShopCore {
         // Фильтры поиска
         $this->sort_select();
 
+        // Русские буквы в Ajax запросе
+        if (isset($_REQUEST['ajax']))
+            $_REQUEST['words'] = urldecode($_REQUEST['words']);
+
         // Фильтр поиска
         $_REQUEST['words'] = PHPShopSecurity::true_search($_REQUEST['words']);
 
+
         if (!empty($_REQUEST['words'])) {
+
+            // Ajax Search
+            if (isset($_REQUEST['ajax'])) {
+                $this->cell = 1;
+                $this->num_row = 5;
+                $template = 'search/search_ajax_product_forma.tpl';
+
+                if (!empty($GLOBALS['SysValue']['base']['seourlpro']['seourlpro_system'])) {
+                    $seourlpro = true;
+                }
+            }
+            else
+                $template = false;
+
+
+
             $order = $this->query_filter();
 
             // Сложный запрос
             $this->PHPShopOrm->sql = $order;
+            $this->PHPShopOrm->debug = false;
             $this->PHPShopOrm->mysql_error = false;
             $this->PHPShopOrm->comment = __CLASS__ . '.' . __FUNCTION__;
             $this->dataArray = $this->PHPShopOrm->select();
@@ -176,11 +201,29 @@ class PHPShopSearch extends PHPShopShopCore {
                 $this->setPaginator(count($this->dataArray), $order);
 
                 // Добавляем в дизайн ячейки с товарами
-                $grid = $this->product_grid($this->dataArray, $this->cell, $template = false, $this->line);
+                $grid = $this->product_grid($this->dataArray, $this->cell, $template, $this->line);
+
+                // Ajax Search
+                if (isset($_REQUEST['ajax'])) {
+
+
+                    // Поддержка модуля SeoUrlPro
+                    if (!empty($seourlpro))
+                        $grid = $GLOBALS['PHPShopSeoPro']->AjaxCompile($grid);
+
+                    header('Content-type: text/html; charset=windows-1251');
+                    exit(PHPShopParser::replacedir($this->separator . $grid));
+                }
+
+
                 $this->add($grid, true);
             }
-            else
+            else {
+                if (isset($_REQUEST['ajax']))
+                    exit('false');
                 $this->add(PHPShopText::h3(__('Ничего не найдено')), true);
+            }
+
 
             // Запись в журнал
             $this->write($this->get('searchString'), @$this->num_page, @$_REQUEST['cat'], @$_REQUEST['set']);
@@ -188,6 +231,9 @@ class PHPShopSearch extends PHPShopShopCore {
             // Перехват модуля
             $this->setHook(__CLASS__, __FUNCTION__, $this->dataArray, 'END');
         }
+
+        if (isset($_REQUEST['ajax']))
+            exit('false');
 
         // Подключаем шаблон
         $this->parseTemplate($this->getValue('templates.search_page_list'));
@@ -212,6 +258,24 @@ class PHPShopSearch extends PHPShopShopCore {
      */
     function setPaginator($count, $sql = null) {
 
+        // проверяем наличие шаблонов пагинации в папке шаблона
+        // если отсутствуют, то используем шаблоны из lib
+        $type = $this->memory_get(__CLASS__ . '.' . __FUNCTION__);
+        if (!$type) {
+            if (!PHPShopParser::checkFile("paginator/paginator_one_link.tpl")) {
+                $type = "lib";
+            } else {
+                $type = "templates";
+            }
+
+            $this->memory_set(__CLASS__ . '.' . __FUNCTION__, $type);
+        }
+
+        if ($type == "lib") {
+            $template_location = "./phpshop/lib/templates/";
+            $template_location_bool = true;
+        }
+
         // Кол-во данных
         $this->count = $count;
 
@@ -231,7 +295,7 @@ class PHPShopSearch extends PHPShopShopCore {
 
         $i = 1;
         $navigat = null;
-        $num = round(($this->num_page / $this->num_row) + 0.4);
+        $num = ceil($this->num_page / $this->num_row);
         if (empty($_GET['p']))
             $_GET['p'] = 1;
         $this->page = $_GET['p'];
@@ -254,23 +318,49 @@ class PHPShopSearch extends PHPShopShopCore {
                     $p_start = $i;
                     $p_end = $this->num_row;
                 }
+
+
+                $this->set("paginPageRangeStart", $p_start);
+                $this->set("paginPageRangeEnd", $p_end);
+                $this->set("paginPageNumber", $i);
+
+
                 if ($i != $this->page) {
-                    $navigat.=PHPShopText::a("./?words=" . $this->search_order['words'] . "&pole=" .
-                                    $this->search_order['pole'] . "&set=" . $this->search_order['set'] . "&p=" . $i . "&cat=" . $this->search_order['cat'], $p_start . '-' . $p_end) . ' / ';
+                    if ($i == 1) {
+                        $this->set("paginLink", "?words=" . $this->search_order['words'] . "&pole=" . $this->search_order['pole'] . "&set=" . $this->search_order['set'] . "&p=" . $i . "&cat=" . $this->search_order['cat']);
+                        $navigat.= parseTemplateReturn($template_location . "paginator/paginator_one_link.tpl", $template_location_bool);
+                    } else {
+                        if ($i > ($this->page - $this->nav_len) and $i < ($this->page + $this->nav_len)) {
+                             $this->set("paginLink", "?words=" . $this->search_order['words'] . "&pole=" . $this->search_order['pole'] . "&set=" . $this->search_order['set'] . "&p=" . $i . "&cat=" . $this->search_order['cat']);
+                            $navigat.= parseTemplateReturn($template_location . "paginator/paginator_one_link.tpl", $template_location_bool);
+                        } else if ($i - ($this->page + $this->nav_len) < 3 and (($this->page - $this->nav_len) - $i) < 3) {
+                            $navigat.= parseTemplateReturn($template_location . "paginator/paginator_one_more.tpl", $template_location_bool);
+                        }
+                    }
                 }
                 else
-                    $navigat.=PHPShopText::b($p_start . '-' . $p_end . ' / ');
+                    $navigat.= parseTemplateReturn($template_location . "paginator/paginator_one_selected.tpl", $template_location_bool);
+
                 $i++;
             }
 
 
             $nav = $this->getValue('lang.page_now') . ': ';
-            $nav.=PHPShopText::a("./?words=" . $this->search_order['words'] . "&pole=" .
-                            $this->search_order['pole'] . "&set=" . $this->search_order['set'] . "&p=" . $p_do . "&cat=" . $this->search_order['cat'], PHPShopText::img('images/shop/3.gif', 1, 'absmiddle'), $this->lang('nav_back'));
-            $nav.=$navigat;
-            $nav.=PHPShopText::a("./?words=" . $this->search_order['words'] . "&pole=" .
-                            $this->search_order['pole'] . "&set=" . $this->search_order['set'] . "&p=" . $p_to . "&cat=" . $this->search_order['cat'], PHPShopText::img('images/shop/4.gif', 1, 'absmiddle'), $this->lang('nav_forw'));
 
+            $this->set("previousLink", "?words=" . $this->search_order['words'] . "&pole=" . $this->search_order['pole'] . "&set=" . $this->search_order['set'] . "&p=" . $p_do . "&cat=" . $this->search_order['cat']);
+
+            $this->set("nextLink", "?words=" . $this->search_order['words'] . "&pole=" . $this->search_order['pole'] . "&set=" . $this->search_order['set'] . "&p=" . $p_to . "&cat=" . $this->search_order['cat']);
+
+            $nav.=$navigat;
+
+
+            $this->set("pageNow", $this->getValue('lang.page_now'));
+            $this->set("navBack", $this->lang('nav_back'));
+            $this->set("navNext", $this->lang('nav_forw'));
+            $this->set("navigation", $navigat);
+
+            // Назначаем переменную шаблонизатора
+            $nav = parseTemplateReturn($template_location . "paginator/paginator_main.tpl", $template_location_bool);
             $this->set('searchPageNav', $nav);
 
             // Перехват модуля
