@@ -14,7 +14,7 @@ $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
 function treegenerator($array, $i, $parent) {
     global $tree_array;
     $del = '¦&nbsp;&nbsp;&nbsp;&nbsp;';
-    $tree = $tree_select = $check = false;
+    $tree_select = $check = false;
     $del = str_repeat($del, $i);
     if (is_array($array['sub'])) {
         foreach ($array['sub'] as $k => $v) {
@@ -31,18 +31,12 @@ function treegenerator($array, $i, $parent) {
                 $i = 1;
             } else {
                 $tree_select.='<option value="' . $k . '" ' . $selected . '>' . $del . $v . '</option>';
-                //$i++;
             }
 
-            $tree.='<tr class="treegrid-' . $k . ' treegrid-parent-' . $parent . ' data-tree" style="display:none">
-		<td><a href="?path=catalog&id=' . $k . '">' . $v . '</a></td>
-                    </tr>';
-
             $tree_select.=$check['select'];
-            $tree.=$check['tree'];
         }
     }
-    return array('select' => $tree_select, 'tree' => $tree);
+    return array('select' => $tree_select);
 }
 
 /**
@@ -53,7 +47,8 @@ function actionStart() {
 
     // Размер названия поля
     $PHPShopGUI->field_col = 2;
-    $PHPShopGUI->addJSFiles('./js/jquery.treegrid.js','./catalog/gui/catalog.gui.js');
+    $PHPShopGUI->addJSFiles('./js/jquery.treegrid.js', './catalog/gui/catalog.gui.js', './js/bootstrap-treeview.min.js');
+    $PHPShopGUI->addCSSFiles('./css/bootstrap-treeview.min.css');
 
     // Выборка
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_REQUEST['id'])));
@@ -76,7 +71,7 @@ function actionStart() {
         'url' => '?path=' . $_GET['path'] . '&cat=' . intval($_GET['id'])
     );
 
-    $PHPShopGUI->setActionPanel(__("Каталог") . ': ' . $data['name']. ' [ID ' . $data['id'] . ']', array('Товары', 'Создать', 'Предпросмотр', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'));
+    $PHPShopGUI->setActionPanel(__("Каталог") . ': ' . $data['name'] . ' [ID ' . $data['id'] . ']', array('Товары', 'Создать', 'Предпросмотр', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'));
 
     // Наименование
     $Tab_info = $PHPShopGUI->setField(__("Название:"), $PHPShopGUI->setInputText(false, 'name_new', $data['name'], '100%'));
@@ -86,8 +81,9 @@ function actionStart() {
     $CategoryArray = $PHPShopCategoryArray->getArray();
     $GLOBALS['count'] = count($CategoryArray);
     $cat_limit = $PHPShopSystem->getSerilizeParam('admoption.adm_cat_limit');
-    if(empty($cat_limit)) $cat_limit=100;
-    
+    if (empty($cat_limit))
+        $cat_limit = 100;
+
     // Лимит вывода каталогов
     if ($GLOBALS['count'] > $cat_limit) {
         $tree_save = 1;
@@ -114,16 +110,12 @@ function actionStart() {
     $_GET['parent_to'] = $data['parent_to'];
 
     $tree_select = '<select class="selectpicker show-menu-arrow hidden-edit" data-live-search="true" data-container=""  data-style="btn btn-default btn-sm" name="parent_to_new" data-width="100%"><option value="0">' . $CategoryArray[0]['name'] . '</option>';
-    $tree = '<table class="tree table table-hover">';
     if ($k == $data['parent_to'])
         $selected = 'selected';
     if (is_array($tree_array[0]['sub']))
         foreach ($tree_array[0]['sub'] as $k => $v) {
             $check = treegenerator($tree_array[$k], 1, $k);
 
-            $tree.='<tr class="treegrid-' . $k . ' data-tree">
-		<td><a href="?path=catalog&id=' . $k . '">' . $v . '</a></td>
-                    </tr>';
 
             if ($k == $data['parent_to'])
                 $selected = 'selected';
@@ -131,16 +123,9 @@ function actionStart() {
                 $selected = null;
 
             $tree_select.='<option value="' . $k . '"  ' . $selected . '>' . $v . '</option>';
-
             $tree_select.=$check['select'];
-            $tree.=$check['tree'];
         }
     $tree_select.='</select>';
-    $tree.='</table><script>
-    var cat="' . intval($_GET['id']) . '";
-    var tree_save=' . $tree_save . ';   
-    </script>';
-
 
     // Выбор каталога
     $Tab_info.= $PHPShopGUI->setField(__("Размещение:"), $tree_select);
@@ -189,8 +174,6 @@ function actionStart() {
     $editor->Value = $data['content'];
     $Tab2 = $editor->AddGUI();
 
-
-
     // Заголовки
     $Tab7 = $PHPShopGUI->loadLib('tab_headers', $data);
 
@@ -210,12 +193,26 @@ function actionStart() {
     // Вывод формы закладки
     $PHPShopGUI->setTab(array(__("Основное"), $Tab1), array(__("Описание"), $Tab2), array(__("Заголовки"), $Tab7), array(__("Характеристики"), $Tab8));
 
+    // Прогрессбар
+    if ($GLOBALS['count'] > 500)
+        $treebar = '<div class="progress">
+  <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%">
+    <span class="sr-only">Загрузка..</span>
+  </div>
+</div>';
+
+    // Поиск категорий
+    $search = '<div class="none" id="category-search" style="padding-bottom:5px;"><div class="input-group input-sm">
+                <input type="input" class="form-control input-sm" type="search" id="input-category-search" placeholder="' . __('Искать в категориях...') . '" value="">
+                 <span class="input-group-btn">
+                  <a class="btn btn-default btn-sm" id="btn-search" type="submit"><span class="glyphicon glyphicon-search"></span></a>
+                 </span>
+            </div></div>';
 
     // Левый сайдбар
-    $sidebarleft[] = array('title' => 'Категории', 'content' => $tree, 'title-icon' => '<span class="glyphicon glyphicon-plus new" data-toggle="tooltip" data-placement="top" title="Добавить каталог"></span>&nbsp;<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="Развернуть"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="Свернуть"></span>');
+    $sidebarleft[] = array('title' => 'Категории', 'content' => $search.'<div id="tree">' . $treebar . '</div>', 'title-icon' => '<span class="glyphicon glyphicon-plus new" data-toggle="tooltip" data-placement="top" title="Добавить каталог"></span>&nbsp;<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="Развернуть"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="Свернуть"></span>&nbsp;<span class="glyphicon glyphicon-search" id="show-category-search" data-toggle="tooltip" data-placement="top" title="Поиск"></span>');
     $PHPShopGUI->setSidebarLeft($sidebarleft, 3);
     $PHPShopGUI->sidebarLeftCell = 3;
-
 
 
     // Вывод кнопок сохранить и выход в футер
@@ -238,7 +235,7 @@ function actionSave() {
     // Сохранение данных
     actionUpdate();
 
-    header('Location: ?path=' . $_GET['path']);
+    header('Location: ?path=' . $_GET['path'] . '&cat=' . $_POST['rowID']);
 }
 
 /**

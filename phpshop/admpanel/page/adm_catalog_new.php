@@ -50,7 +50,7 @@ function treegenerator($array, $i, $parent) {
  * Экшен загрузки форм редактирования
  */
 function actionStart() {
-    global $PHPShopGUI, $PHPShopModules, $PHPShopOrm, $PHPShopSystem;
+    global $PHPShopGUI, $PHPShopModules, $TitlePage, $PHPShopSystem;
 
     // Размер названия поля
     $PHPShopGUI->field_col = 2;

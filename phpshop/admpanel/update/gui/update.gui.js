@@ -5,7 +5,7 @@ $(document).ready(function() {
     $("#dropdown_action .restore").on('click', function(event) {
         event.preventDefault();
 
-        if (confirm(locale.confirm_restore + ' PHPShop '+$(this).attr('data-id')+'?'))
+        if (confirm(locale.confirm_restore + ' PHPShop ' + $(this).attr('data-id') + '?'))
             window.location.href = '?path=update.restore&version=' + $(this).attr('data-id');
     });
 
@@ -31,7 +31,7 @@ $(document).ready(function() {
                     $('.install-restore-bd').toggleClass('hide');
                     $('.install-restore-bd-danger').toggleClass('hide');
                     $('.install-restore-bd-danger').html('<strong>' + locale.backup_false + '</strong><br>' + json['error']);
-                   
+
                 }
             }
 
@@ -63,7 +63,7 @@ $(document).ready(function() {
             success: function(json) {
                 if (json['success'] == 1) {
                     $('.install-update-bd').toggleClass('hide');
-                     $('.navbar-action .navbar-brand').append(' - ' + locale.done);
+                    $('.navbar-action .navbar-brand').append(' - ' + locale.done);
                 } else {
                     $('.install-update-bd').toggleClass('hide');
                     $('.install-update-bd-danger').toggleClass('hide');
@@ -81,6 +81,10 @@ $(document).ready(function() {
 
         $('.progress').toggleClass('hide');
 
+        $('#product_edit').append('<input type="hidden" name="saveID" value="1">');
+        $('#product_edit').submit();
+
+        /*
         var data = [];
         data.push({name: 'saveID', value: 1});
         data.push({name: 'actionList[saveID]', value: 'actionCreate'});
@@ -100,7 +104,7 @@ $(document).ready(function() {
                     showAlertMessage(locale.save_false, true);
             }
 
-        });
+        });*/
 
     });
 

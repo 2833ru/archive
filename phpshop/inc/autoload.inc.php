@@ -108,6 +108,10 @@ $PHPShopTextElement->init('topMenu', true); // Вывод главного меню
 $PHPShopCartElement = new PHPShopCartElement();
 $PHPShopCartElement->init('miniCart');
 
+// Фотогалерея
+$PHPShopPhotoElement = new PHPShopPhotoElement();
+$PHPShopPhotoElement->init('getPhotos');
+
 // RSS грабер новостей
 new PHPShopRssParser();
 ?>

@@ -294,6 +294,7 @@ $(document).ready(function () {
     // Validator Fix brands url
     $('.brands-list a').on('click', function (event) {
         event.preventDefault();
+        if($(this).attr('data-url'))
         window.location.replace($(this).attr('data-url'));
     });
 

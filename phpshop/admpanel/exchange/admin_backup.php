@@ -77,19 +77,17 @@ function actionSave() {
             $result_message = $PHPShopGUI->setAlert('SQL ошибка: ' . mysqli_error($link_db), 'danger');
         }
     }
-
-
-
-
-    //return true;
 }
 
 function getFileInfo($file) {
     global $PHPShopInterface;
     static $i;
-    $i++;
-    $stat = stat("./dumper/backup/" . $file);
-    $PHPShopInterface->setRow($i, array('name' => $file, 'link' => '?path=exchange.backup&file=' . $file, 'align' => 'left'), array('name' => PHPShopDate::get($stat['mtime'], true), 'order' => $stat['mtime']), '<span class="hide">' . $stat['mtime'] . '</span>', array('action' => array('load', 'restore', '|', 'delete', 'id' => $i), 'align' => 'center'), array('name' => number_format($stat['size']/ 1024/ 1024, 2, ',', ' ') . ' MB', 'align' => 'right', 'order' => $stat['size']));
+
+    if (is_file("./dumper/backup/" . $file)) {
+        $i++;
+        $stat = stat("./dumper/backup/" . $file);
+        $PHPShopInterface->setRow($i, array('name' => $file, 'link' => '?path=exchange.backup&file=' . $file, 'align' => 'left'), array('name' => PHPShopDate::get($stat['mtime'], true), 'order' => $stat['mtime']), '<span class="hide">' . $stat['mtime'] . '</span>', array('action' => array('load', 'restore', '|', 'delete', 'id' => $i), 'align' => 'center'), array('name' => number_format($stat['size'] / 1024 / 1024, 2, ',', ' ') . ' MB', 'align' => 'right', 'order' => $stat['size']));
+    }
 }
 
 // Стартовый вид

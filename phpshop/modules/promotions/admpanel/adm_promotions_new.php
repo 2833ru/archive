@@ -138,6 +138,11 @@ function actionInsert() {
         $_POST['categories_new'] = '';
     }
 
+     //Общая скидка
+    if ($_POST['code_new'] == "") {
+        $_POST['code_new'] = '*';
+    }
+
 
     if ($_POST['code_new'] != '*') {
         if ($_POST['code_new'] != ''):

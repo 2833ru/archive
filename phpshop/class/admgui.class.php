@@ -189,7 +189,7 @@ class PHPShopGUI {
                     $dis.='<div class="row">';
 
                     if (!empty($val['icon'])) {
-                        $cell_icon = 2;
+                        $cell_icon = 1;
                         $cell_info = 10;
                     } else {
                         $cell_icon = 0;
@@ -898,15 +898,18 @@ class PHPShopGUI {
 
         $Arg = func_get_args();
         foreach ($Arg as $val) {
+            
+            if(!empty($val[2]))
+                $val[1]='<hr>'.$val[1];
 
             $this->addTabName.='<li role="presentation"><a href="#tabs-' . $this->tab_key . '" aria-controls="tabs-' . $this->tab_key . '" role="tab" data-toggle="tab" data-id="' . $val[0] . '">' . $val[0] . '</a></li>';
-            $this->addTabContent.='<div role="tabpanel" class="tab-pane fade" id="tabs-' . $this->tab_key . '"><hr>' . $val[1] . '</div>';
+            $this->addTabContent.='<div role="tabpanel" class="tab-pane fade" id="tabs-' . $this->tab_key . '">' . $val[1] . '</div>';
 
             $this->tab_key++;
         }
     }
 
-    /**
+        /**
      * Прорисовка закладок Tab
      * <code>
      * // example:
@@ -928,7 +931,7 @@ class PHPShopGUI {
                 $active = null;
 
             // Переход на страницу
-            if (!empty($val[2]) and !is_numeric($val[2])) {
+            if (!empty($val[2]) and !is_numeric($val[2]) and !is_bool($val[2])) {
                 $toggle = null;
                 $href = $val[2];
             } else {
@@ -936,23 +939,22 @@ class PHPShopGUI {
                 $href = '#tabs-' . $this->tab_key;
             }
 
+            if (is_bool($val[2])) {
+                $hr = '<hr>';
+            } else {
+                $hr = null;
+            }
+
             $name.='<li role="presentation" class="' . $active . '"><a href="' . $href . '" aria-controls="tabs-' . $this->tab_key . '" role="tab" ' . $toggle . ' data-id="' . $val[0] . '">' . $val[0] . '</a></li>';
-            $content.='<div role="tabpanel" class="tab-pane ' . $active . ' fade" id="tabs-' . $this->tab_key . '">' . $val[1] . '</div>';
+            $content.='<div role="tabpanel" class="tab-pane ' . $active . ' fade" id="tabs-' . $this->tab_key . '">' . $hr . $val[1] . '</div>';
 
             $this->tab_key++;
-        }
-
-        if (count($Arg) == 1) {
-            $hr = '<hr>';
-            $this->hr_enabled = true;
-        } else {
-            $hr = $this->hr_enabled = null;
         }
 
         $this->_CODE = '
             <div role="tabpanel">
                <ul class="nav nav-pills" role="tablist">' . $name . $this->addTabName . '</ul>
-               <div class="tab-content">' . $hr . '<p>' . $content . $this->addTabContent . '</p></div>
+               <div class="tab-content"><p>' . $content . $this->addTabContent . '</p></div>
             </div>';
     }
 

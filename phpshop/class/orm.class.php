@@ -64,7 +64,7 @@ class PHPShopOrm {
      * Конструктор
      * @param string $Base имя таблицы
      */
-    function PHPShopOrm($Base = false) {
+    function __construct($Base = false) {
         global $PHPShopBase;
 
         $this->objBase = $Base;
@@ -335,7 +335,7 @@ class PHPShopOrm {
 
         foreach ($_KEY as $key => $v)
             if (isset($value[$key . $prefix])) {
-                $this->_SQL.="`" . $key . "`='" . addslashes($value[$key . $prefix]) . "',";
+                $this->_SQL.="`" . $key . "`='" . @addslashes($value[$key . $prefix]) . "',";
             }
         $this->_SQL = substr($this->_SQL, 0, strlen($this->_SQL) - 1);
 

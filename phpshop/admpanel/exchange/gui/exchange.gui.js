@@ -275,9 +275,6 @@ $().ready(function() {
         "ordering": true,
         "order": [[3, "desc"]],
         "info": false,
-        "language": locale.dataTable,
-        "columnDefs": [
-            {"orderable": false, "targets": 0}
-        ]
+        "language": locale.dataTable
     });
 });

@@ -1,7 +1,6 @@
 <?php
 
 $TitlePage = __("Администраторы");
-PHPShopObj::loadClass('user');
 
 function actionStart() {
     global $PHPShopInterface,$TitlePage;
@@ -45,11 +44,6 @@ function actionStart() {
     $PHPShopInterface->setActionPanel($TitlePage, array('Удалить выбранные','Черный список','Журнал авторизации'), array('Добавить Администратора', 'Журнал авторизации'));
     $PHPShopInterface->setCaption(array(null, "2%"), array("Логин", "15%"), array("Имя", "20%"), array("E-mail", "20%"), array("Вход", "20%"), array("", "10%"), array("Статус &nbsp;&nbsp;&nbsp;", "10%", array('align' => 'right')));
 
-    // Стытусы пользователей
-    $PHPShopUserStatus = new PHPShopUserStatusArray();
-    $PHPShopUserStatusArray = $PHPShopUserStatus->getArray();
-    $PHPShopUserStatusArray[0]['name'] = 'Пользователь';
-    $PHPShopUserStatusArray[0]['discount'] = 0;
 
     // Таблица с данными
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['users']);

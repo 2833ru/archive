@@ -45,12 +45,14 @@ function actionStart() {
                     $PHPShopGUI->setHelp(__('* Пример: /page/,/news/. Можно указать несколько адресов через запятую.')));
 
     $Tab1.= $PHPShopGUI->setField("Содержание",$oFCKeditor->AddGUI());
+    
+        // Запрос модуля на закладку
+    $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод формы закладки
     $PHPShopGUI->setTab(array("Основное", $Tab1));
 
-    // Запрос модуля на закладку
-    $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
+
 
     // Вывод кнопок сохранить и выход в футер
  $ContentFooter = $PHPShopGUI->setInput("submit", "saveID", "ОК", "right", 70, "", "but", "actionInsert.menu.create");

@@ -140,12 +140,13 @@ function actionStart() {
     $SecurityValue[] = array('Только зарегистрированным пользователям', 1, $data['secure']);
     $Tab1.=$PHPShopGUI->setCollapse(__('Доступность'), $PHPShopGUI->setField("Показывать", $PHPShopGUI->setSelect("secure_new", $SecurityValue, 300)));
 
-
+    // Запрос модуля на закладку
+    $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
+    
     // Вывод формы закладки
     $PHPShopGUI->setTab(array("Основное", $Tab1), array("Содержание", $oFCKeditor->AddGUI()));
 
-    // Запрос модуля на закладку
-    $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
+
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =

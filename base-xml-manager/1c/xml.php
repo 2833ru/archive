@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Синхронизация с 1C
+ * @package PHPShopExchange
+ * @author PHPShop Software
+ * @version 1.3
+ */
+
 $_classPath = '../../';
 include($_classPath . 'phpshop/class/obj.class.php');
 include($_classPath . "phpshop/lib/phpass/passwordhash.php");
@@ -140,6 +147,9 @@ class PHPShop1C extends PHPShopBaseXml {
         }
 
         $order_data["orders_new"] = serialize($orders);
+        
+        // Итого
+        $order_data['sum_new'] =  $orders['Cart']['sum'] + $orders['Cart']['dostavka'];
 
         // Запись обновленного заказа
         $PHPShopOrm = new PHPShopOrm($this->PHPShopBase->getParam('base.' . $this->xml['from']));

@@ -46,7 +46,7 @@ function actionStart() {
 
     // bootstrap-colorpicker
     $PHPShopGUI->addCSSFiles('./css/bootstrap-colorpicker.min.css');
-    $PHPShopGUI->addJSFiles('./js/bootstrap-colorpicker.min.js');
+    $PHPShopGUI->addJSFiles('./js/bootstrap-colorpicker.min.js','./js/jquery.waypoints.min.js', './system/gui/system.gui.js');
 
     $PHPShopGUI->setActionPanel($TitlePage, false, array('Сохранить'));
 
@@ -57,7 +57,7 @@ function actionStart() {
             $PHPShopGUI->setField('Исходное изображение', $PHPShopGUI->setCheckbox('option[image_save_source]', 1, 'Сохранять исходное изображение при ресайзинге', $option['image_save_source'])) .
             $PHPShopGUI->setField('Адаптивность', $PHPShopGUI->setCheckbox('option[image_adaptive_resize]', 1, 'Оптимизировать изображение точно под указанные размеры', $option['image_adaptive_resize'])) .
             $PHPShopGUI->setField('Исходное название', $PHPShopGUI->setCheckbox('option[image_save_name]', 1, 'Сохранять исходное название изображения', $option['image_save_name'])) .
-            $PHPShopGUI->setField(__("Размещение"), $PHPShopGUI->setInputText('/UserFiles/Image/', "option[image_result_path]", $option['image_result_path'], 400), 1, 'Путь сохранения загружаемых изображений') .
+            $PHPShopGUI->setField(__("Размещение"), $PHPShopGUI->setInputText($GLOBALS['SysValue']['dir']['dir'].'/UserFiles/Image/', "option[image_result_path]", $option['image_result_path'], 400), 1, 'Путь сохранения загружаемых изображений') .
             $PHPShopGUI->setField('Макс. ширина тумбнейла', $PHPShopGUI->setInputText(false, 'option[img_tw]', $option['img_tw'], 100, 'px'), 1, 'Изображение товара в кратком описании товара') .
             $PHPShopGUI->setField('Макс. высота тумбнейла', $PHPShopGUI->setInputText(false, 'option[img_th]', $option['img_th'], 100, 'px'), 1, 'Изображение товара в кратком описании товара') .
             $PHPShopGUI->setField('Качество тумбнейла', $PHPShopGUI->setInputText(false, 'option[width_kratko]', $option['width_kratko'], 100, '%'), 1, 'Изображение товара в кратком описании товара');
@@ -145,6 +145,9 @@ function actionUpdate() {
     unset($option['calibrated']);
     unset($option['editor_enabled']);
     unset($option['xmlencode']);
+    
+    // Счетчик сообщений о поддержке
+    unset($option['support_notice']);
 
     // Ватермарк PNG
     $_POST['option']['watermark_image'] = $_POST['watermark_image'];

@@ -59,8 +59,8 @@ foreach ($order['Cart']['cart'] as $val) {
     <td align=\"center\">---</td>
   </tr>
   ";
-    @$total_summa_nds+=$summa_nds;
-    @$total_summa+=$PHPShopOrder->returnSumma(($val['price'] * $val['num']), $order['Person']['discount']);
+ 
+    $total_summa=$row['sum'];
 
 //Определение и суммирование веса
     $goodid = $val['id'];
@@ -262,7 +262,7 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
                         <td colspan="8"><b>Всего к оплате</b></td>
 
                         <td align="right"><? echo $this_nds_summa + $summa_nds_dos; ?></td>
-                        <td align="right"><? echo $total_summa + $deliveryPrice; ?></td>
+                        <td align="right"><? echo $row['sum']; ?></td>
                         <td colspan="3">&nbsp;</td>
 
                     </tr>

@@ -33,7 +33,10 @@ if (strpos($_GET['path'], '.')) {
 
     // Редирект [cat.id]
     if (is_numeric($subpath[1])) {
-        header('Location: ?path=' . $subpath[0] . '&id=' . $subpath[1]);
+        if ($subpath[0] == 'catalog')
+            header('Location: ?path=' . $subpath[0] . '&cat=' . $subpath[1]);
+        else
+            header('Location: ?path=' . $subpath[0] . '&id=' . $subpath[1]);
     }
     else
         $loader_file = $subpath[0] . '/admin_' . $subpath[1] . '.php';
@@ -187,7 +190,7 @@ if (empty($adm_title)) {
 
                                 </ul>
                             </li>
-                            <li class="dropdown <?= $menu_active_system . $menu_active_system_company . $menu_active_system_seo . $menu_active_system_sync . $menu_active_tpleditor; ?>">
+                            <li class="dropdown <?= $menu_active_system . $menu_active_system_company . $menu_active_system_seo . $menu_active_system_sync . $menu_active_tpleditor . $menu_active_system_image; ?>">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Настройки <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="?path=system">Основные</a></li>
@@ -200,7 +203,7 @@ if (empty($adm_title)) {
                                     <li><a href="?path=tpleditor"><span class="glyphicon glyphicon-picture"></span> Шаблоны дизайна</a></li>
                                 </ul>
                             </li>
-                            <li class="dropdown <?= $menu_active_exchange_export . $menu_active_exchange_import . $menu_active_exchange_sql . $menu_active_exchange_backup; ?>">
+                            <li class="dropdown <?= $menu_active_exchange_export . $menu_active_exchange_import . $menu_active_exchange_sql . $menu_active_exchange_backup . $menu_active_exchange_service . $menu_active_exchange_export_order . $menu_active_exchange_export_user . $menu_active_exchange_export_catalog . $menu_active_exchange_import_order . $menu_active_exchange_import_user . $menu_active_exchange_import_catalog; ?>">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">База <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="?path=exchange.import"><span class="glyphicon glyphicon-import"></span> Импорт данных</a></li>
@@ -214,11 +217,15 @@ if (empty($adm_title)) {
                             <li class="dropdown <?= $menu_active_update . $menu_active_update_restore . $menu_active_system_about ?>">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Справка <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
+                                    <li><a href="?path=system.about">О программе</a></li>
+                                    <li class="divider"></li>
                                     <li><a href="http://faq.phpshop.ru" target="_blank">Учебник</a></li>
                                     <li><a href="https://help.phpshop.ru" target="_blank">Техподдержка</a></li>
                                     <li><a href="#" id="presentation-select">Обучение</a></li>
-                                    <li><a href="?path=system.about">О программе</a></li>
                                     <li><a href="http://idea.phpshop.ru" target="_blank">Предложить идею</a></li>
+                                    <li class="divider"></li>
+                                    <li class="dropdown-header">Дополнительно</li>
+                                    <li><a href="http://template.phpshop.ru" target="_blank">Магазин дизайнов</a></li>
                                     <li><a href="http://phpshop.ru/loads/files/setup.exe" target="_blank">Утилиты EasyControl</a></li>
                                     <li class="divider"></li>
                                     <li><a href="?path=update"><span class="glyphicon glyphicon-cloud-download"></span> Мастер обновления</a></li>
@@ -268,7 +275,7 @@ if (empty($adm_title)) {
                                     <li><a href="?path=order.paymentlog">Электронные платежи<span class="dropdown-header">Просмотр журнала оплаты заказов платежными системами</span></a></li>
                                     <li><a href="?path=payment">Способы оплаты<span class="dropdown-header">Просмотр, добавление и редактирование способов оплаты заказов</span></a></li>
                                     <li><a href="?path=order.status">Статусы заказов<span class="dropdown-header">Просмотр, добавление и редактирование статусов заказов</span></a></li>
-                                    <li><a href="?path=delivery">Доставка<span class="dropdown-header">Просмотр, добавление и редактирование доставки заказов</span></a></li>
+                                    <li><a href="?path=delivery">Доставка<span class="dropdown-header">Просмотр и редактирование доставки. Настройка полей для заполнения заказа</span></a></li>
                                     <li class="divider"></li>
                                     <li><a href="?path=report.statorder">Отчеты по продажам<span class="dropdown-header">Детальная статистика продаж</span></a></li>
                                 </ul>
@@ -301,6 +308,7 @@ if (empty($adm_title)) {
                                 <a href="#" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-expanded="false">Веб-сайт <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="?path=page.catalog">Страницы<span class="dropdown-header">Создание и публикация страниц</span></a></li>
+                                    <li><a href="?path=photo.catalog">Фотогалерея<span class="dropdown-header">Фотогалерея изображений на сайте</span></a></li>
                                     <li><a href="?path=menu">Текстовые блоки<span class="dropdown-header">Вывод текстовых блоков в блок-меню</span></a></li>
                                     <li><a href="?path=gbook">Отзывы<span class="dropdown-header">Отзывы пользователей о сайте</span></a></li>
                                     <li><a href="?path=news">Новости<span class="dropdown-header">Новостная лента сайта</span></a></li>
@@ -320,12 +328,11 @@ if (empty($adm_title)) {
                             </li>
                         </ul>
                         <?php
-                        
                         // Быстрый поиск
                         switch ($PHPShopSystem->getSerilizeParam('admoption.search_enabled')) {
                             case 1:
                                 $search_class = 'hidden';
-                                $search_id = $search_name = $search_placeholder = $search_action = null;
+                                $search_id = $search_name = $search_placeholder = $search_action = $search_value = null;
                                 break;
 
                             case 3:
@@ -334,6 +341,7 @@ if (empty($adm_title)) {
                                 $search_action = '?path=catalog';
                                 $search_target = '_self';
                                 $search_name = 'where[name]';
+                                $search_value = PHPShopSecurity::true_search($_GET['where']['name']);
                                 break;
 
                             default:
@@ -343,11 +351,12 @@ if (empty($adm_title)) {
                                 $search_id = 'search';
                                 $search_target = '_blank';
                                 $search_name = 'words';
+                                $search_value = null;
                         }
                         ?>
                         <form class="navbar-right <?php echo $search_class; ?>"  action="<?php echo $search_action; ?>" target="<?php echo $search_target; ?>">
                             <div class="input-group">
-                                <input name="<?php echo $search_name; ?>" maxlength="50" value="<?php echo PHPShopSecurity::true_search($_GET['where']['name']); ?>" id="<?php echo $search_id; ?>" class="form-control input-sm" placeholder="<?php echo $search_placeholder; ?>" required="" type="search"  data-container="body" data-toggle="popover" data-placement="bottom" data-html="true"  data-content="">
+                                <input name="<?php echo $search_name; ?>" maxlength="50" value="<?php echo $search_value; ?>" id="<?php echo $search_id; ?>" class="form-control input-sm" placeholder="<?php echo $search_placeholder; ?>" required="" type="search"  data-container="body" data-toggle="popover" data-placement="bottom" data-html="true"  data-content="">
                                 <input type="hidden" name="path" value="catalog">
                                 <span class="input-group-btn">
                                     <button class="btn btn-default btn-sm" type="submit"><span class="glyphicon glyphicon-search"></span></button>
@@ -359,7 +368,7 @@ if (empty($adm_title)) {
                             echo '<a class="navbar-btn btn btn-sm btn-info navbar-right hidden-xs" href="?path=update">Update <span class="badge">' . intval($_SESSION['update_check']) . '</span></a>';
                         ?>
 
-                        <a class="navbar-btn btn btn-sm btn-warning navbar-right hidden-xs hide" href="?path=order&where[statusi]=0">
+                        <a class="navbar-btn btn btn-sm btn-warning navbar-right hidden-xs hidden-sm hide" href="?path=order&where[statusi]=0">
                             Заказы <span class="badge" id="orders-check"><?php echo $PHPShopBase->getNumRows('orders', "where statusi='0'"); ?></span>
                         </a>
 
@@ -414,12 +423,18 @@ if (empty($adm_title)) {
                     Обучающий урок по созданию нового каталога товара, заполнения полей и сохранения результата.
                 </div>
             </div>
-
             <div class="panel panel-default">
                 <div class="panel-heading"><span class="glyphicon glyphicon-film text-primary"></span> <b class="text-primary">Урок 3: Редактор шаблонов</b>
                     <a class="btn btn-primary btn-xs pull-right" href="?path=tpleditor&name=bootstrap&file=/main/index.tpl&mod=html&video"><span class="glyphicon glyphicon-play"></span> Старт</a></div>
                 <div class="panel-body">
                     Обучающий урок по редактированию шаблона дизайна, описание переменных шаблонизатора, управление редактором кода.
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading"><span class="glyphicon glyphicon-film text-primary"></span> <b class="text-primary">Урок 4: Создание фотогалереи</b>
+                    <a class="btn btn-primary btn-xs pull-right" href="?path=photo&action=new&video"><span class="glyphicon glyphicon-play"></span> Старт</a></div>
+                <div class="panel-body ">
+                    Обучающий урок по созданию новой фотогалереи, заполнения полей и сохранения результата.
                 </div>
             </div>
 

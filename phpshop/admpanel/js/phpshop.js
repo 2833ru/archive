@@ -70,10 +70,9 @@ window.escape = function(str)
     return escapeOrig(String.fromCharCode.apply(null, ret));
 };
 
-
-// placehold.it
+// Нет изображения
 function imgerror(obj) {
-    //obj.src = '//placehold.it/250x250';
+    obj.onerror=null;
     obj.src = './images/no_photo.gif';
 }
 
@@ -174,8 +173,7 @@ $().ready(function() {
         $(this).next('span').html(locale.select_file);
         $(this).toggleClass('hide');
         $(this).closest('.form-group').find(".img-thumbnail").attr('src', './images/no_photo.gif');
-        //$("input[name=icon_new]").val('');
-        $("input[name=" + $(this).attr('data-return') + "]").val(null);
+        $("input[name=" + $(this).attr('data-return') + "]").val('');
     });
 
     // Ссылка на иконке
@@ -361,6 +359,7 @@ $().ready(function() {
                     if (json['success'] == 1) {
                         if (typeof(table) != 'undefined')
                             table.fnDeleteRow(id.attr('data-row'));
+                        else id.remove();
                         showAlertMessage(locale.save_done);
                     } else
                         showAlertMessage(locale.save_false, true);
@@ -443,9 +442,9 @@ $().ready(function() {
             "lengthMenu": data_length,
             "paging": true,
             "ordering": true,
-            "order": [[0, "desc"]],
             "info": false,
             "language": locale.dataTable,
+            "aaSorting": [],
             "columnDefs": [
                 {"orderable": false, "targets": 0}
             ]
@@ -501,7 +500,22 @@ $().ready(function() {
         $('#elfinderModal').modal('hide');
     });
 
+});
 
-
-
+// GET переменные из URL страницы
+$.extend({
+  getUrlVars: function(){
+    var vars = [], hash;
+    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    for(var i = 0; i < hashes.length; i++)
+    {
+      hash = hashes[i].split('=');
+      vars.push(hash[0]);
+      vars[hash[0]] = hash[1];
+    }
+    return vars;
+  },
+  getUrlVar: function(name){
+    return $.getUrlVars()[name];
+  }
 });

@@ -9,12 +9,15 @@
 function promotions_write($obj, $data, $rout) {
     global $link_db;
 
-
+    
     if ($_SESSION['totalsumma'] > 0) {
         $sumn = $_SESSION['totalsumma'];
     } else {
         $sumn = $obj->sum;
     }
+    
+    //$sumn = $obj->sum;
+    
 
     if ($_SESSION['freedelivery'] == 0) {
         $deliveryn = 0;

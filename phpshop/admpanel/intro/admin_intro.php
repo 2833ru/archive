@@ -92,12 +92,12 @@ function actionStart() {
         'icon' => 'glyphicon glyphicon-time'
     );
 
-    @$License = parse_ini_file("../../license/" . PHPShopFile::searchFile('../../license/', 'getLicense'), 1);
+    $License = @parse_ini_file("../../license/" . PHPShopFile::searchFile('../../license/', 'getLicense'), 1);
 
 
     // Проверка обновлений
     if (!isset($_SESSION['update_check'])) {
-        define("UPDATE_PATH", "http://phpshop.ru/update/update5.php?from=" . $_SERVER['SERVER_NAME'] . "&version=" . $GLOBALS['SysValue']['upload']['version'] . "&support=" . $License['License']['SupportExpires']);
+        define("UPDATE_PATH", "http://phpshop.ru/update/update5.php?from=" . $_SERVER['SERVER_NAME'] . "&version=" . $GLOBALS['SysValue']['upload']['version'] . "&support=" . $License['License']['SupportExpires'].'&serial='. $License['License']['Serial'].'&path=intro');
         
         $update_enable = @xml2array(UPDATE_PATH, "update", true);
         if(is_array($update_enable) and  $update_enable['status'] == 'active'){
@@ -254,7 +254,7 @@ function actionStart() {
                </div>
           </div>
        </div>
-       <div class="col-md-2 hidden-xs">
+       <div class="col-md-2 hidden-xs hidden-sm">
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-list-alt"></span> Комментариев</div>
                 <div class="panel-body text-right panel-intro">
@@ -276,7 +276,7 @@ function actionStart() {
    <div class="row intro-row">
        <div class="col-xs-12 col-md-12 col-lg-6">
            <div class="panel panel-default">
-             <div class="panel-heading"><span class="glyphicon glyphicon-shopping-cart"></span> Последние заказы</div>
+             <div class="panel-heading"><span class="glyphicon glyphicon-shopping-cart"></span> Последние заказы <a class="pull-right" href="?path=order">Показать больше</a></div>
                    <table class="table table-hover intro-list">' . $order_list . '</table>
           </div>
        </div>
@@ -344,7 +344,7 @@ function actionStart() {
                </div>
           </div>
        </div>
-       <div class="col-md-2 hidden-xs">
+       <div class="col-md-2 hidden-xs hidden-sm">
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-user"></span> Покупатели</div>
                 <div class="panel-body text-right panel-intro">
@@ -352,7 +352,7 @@ function actionStart() {
                </div>
           </div>
        </div>
-       <div class="col-md-2 hidden-xs">
+       <div class="col-md-2 hidden-xs hidden-sm">
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-shopping-cart"></span> Заказы</div>
                 <div class="panel-body text-right panel-intro">
@@ -369,7 +369,7 @@ function actionStart() {
                 <table class="table table-hover intro-list">' . $user_list . '</table>
           </div>
        </div>
-       <div class="col-md-6 hidden-xs">
+       <div class="col-md-6 hidden-xs hidden-sm">
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-refresh"></span> Обновление товаров <a class="pull-right" href="?path=catalog&order[datas]=desc">Показать больше</a></div>
                 <table class="table table-hover intro-list">' . $product_list . '</table>

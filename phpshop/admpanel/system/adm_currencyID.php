@@ -19,7 +19,7 @@ function actionStart() {
     }
 
 
-    $PHPShopGUI->setActionPanel(__("Редактирование Валюты: " . $data['name']), array('Удалить'), array('Сохранить', 'Сохранить и закрыть'));
+    $PHPShopGUI->setActionPanel(__("Редактирование Валюты: " . $data['name'].' [ID '.intval($_GET['id']).']'), array('Удалить'), array('Сохранить', 'Сохранить и закрыть'));
 
 
     $Tab1 = $PHPShopGUI->setField("Название:", $PHPShopGUI->setInputText(null, "name_new", $data['name'], 300));

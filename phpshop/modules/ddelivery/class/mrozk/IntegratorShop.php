@@ -9,8 +9,8 @@
 use DDelivery\Order\DDeliveryProduct;
 use DDelivery\Adapter\PluginFilters;
 use DDelivery\Order\DDStatusProvider;
-//ini_set("display_errors", "1");
-//error_reporting(E_ALL);
+ini_set("display_errors", "1");
+error_reporting(E_ALL & ~E_NOTICE );
 
 class IntegratorShop extends PluginFilters {
 
@@ -33,13 +33,12 @@ class IntegratorShop extends PluginFilters {
 
     public function __construct( $fields = array() )
     {
-        global $link_db;
+	global $PHPShopBase;
         $this->fields = $fields;
-        $this-$link_db = $link_db;
+        $this->link_db = $PHPShopBase->link_db;
         $query = 'SELECT * FROM ddelivery_module_system WHERE id = 1';
         $cur = mysqli_query($this->link_db,$query);
-        $this->cmsSettings = mysql_fetch_assoc($cur);
-
+        $this->cmsSettings = mysqli_fetch_assoc($cur);
     }
 
 
@@ -153,7 +152,7 @@ class IntegratorShop extends PluginFilters {
         $orders = $GLOBALS['SysValue']['base']['orders'];
         $query = 'UPDATE ' . $orders . ' SET statusi = ' . $status . ' WHERE id = ' . $cmsOrderID;
         $cur = mysqli_query($this->link_db,$query);
-        $this->cmsSettings = mysql_fetch_assoc($cur);
+        $this->cmsSettings = mysqli_fetch_assoc($cur);
     }
 
     public function getOrderIDsByStatus(){

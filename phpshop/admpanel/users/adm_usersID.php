@@ -2,7 +2,6 @@
 
 $TitlePage = __('Редактирование администатора #' . $_GET['id']);
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['users']);
-PHPShopObj::loadClass('user');
 
 function hidePassword($pas) {
     $num = strlen($pas) / 3;
@@ -140,7 +139,7 @@ function actionUpdate() {
         "servers" => rules_zero($_POST[servers_rul_1]) . "-" . rules_zero($_POST[servers_rul_2]) . "-" . rules_zero($_POST[servers_rul_3]),
         "rsschanels" => rules_zero($_POST[rss_rul_1]) . "-" . rules_zero($_POST[rss_rul_2]) . "-" . rules_zero($_POST[rss_rul_3]),
         "update" => rules_zero($_POST[update_rul_1]),
-        "modules" => rules_zero($_POST[modules_rul_1]) . "-" . rules_zero($_POST[modules_rul_2]) . "-" . rules_zero($_POST[modules_rul_3]) . "-" . rules_zero($_POST[module_rul_4]) . "-" . rules_zero($_POST[modules_rul_5])
+        "modules" => rules_zero($_POST[modules_rul_1]) . "-" . rules_zero($_POST[modules_rul_2]) . "-" . rules_zero($_POST[modules_rul_3]) . "-" . rules_zero($_POST[modules_rul_4]) . "-" . rules_zero($_POST[modules_rul_5])
     );
 
     $_POST['status_new'] = serialize($statusUser);

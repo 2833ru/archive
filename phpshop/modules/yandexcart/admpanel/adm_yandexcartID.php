@@ -1,25 +1,27 @@
 <?php
 
-
 // SQL
 $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.yandexcart.yandexcart_log"));
 
 // Начальная функция загрузки
 function actionStart() {
-    global $PHPShopGUI, $PHPShopOrm;
+    global $PHPShopGUI, $PHPShopOrm,$TitlePage,$select_name;
 
     // Выборка
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . $_GET['id']));
+    
+    // Панель заголовка
+    $PHPShopGUI->setActionPanel($TitlePage. ' №'.$data['order_id'], $select_name, array('Закрыть'));
 
     // Переводим в читаемый вид
     ob_start();
     print_r(unserialize($data['message']));
     $log = ob_get_clean();
 
-    $Tab1 = $PHPShopGUI->setTextarea(null, $data['path'].PHPShopString::utf8_win1251($log), $float = "none", false, $height = '340');
+    $Tab1 = $PHPShopGUI->setTextarea(null, PHPShopString::utf8_win1251($log), "none", false, '450');
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Информация о заказе", $Tab1, 370));
+    $PHPShopGUI->setTab(array($data['path'], $Tab1, 370));
 
 
     $PHPShopGUI->setFooter($ContentFooter);

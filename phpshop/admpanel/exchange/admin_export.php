@@ -244,7 +244,7 @@ function actionSave() {
         else
             $name = $cols_name;
 
-        $csv.=$name . $delim;
+        $csv.='"'.$name .'"'. $delim;
     }
 
     $csv = substr($csv, 0, (strlen($csv) - 1)) . "\n";

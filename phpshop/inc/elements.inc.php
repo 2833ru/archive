@@ -54,19 +54,20 @@ class PHPShopCoreElement extends PHPShopElements {
      * (имя, телефон, почта администратора, дата, логотип)
      */
     function setdefault() {
-        
+
         // Телефон
-        $tel=$this->PHPShopSystem->getValue('tel');
+        $tel = $this->PHPShopSystem->getValue('tel');
         $this->set('telNum', $tel);
-        
+
         // Телефон для звонков
-        if(strstr($tel,","))
-        $tel_xs = explode(" ",$tel);
-        else $tel_xs[]=$tel;
-        
+        if (strstr($tel, ","))
+            $tel_xs = explode(" ", $tel);
+        else
+            $tel_xs[] = $tel;
+
         $this->set('telNumMobile', $tel_xs[0]);
-        
-       
+
+
         $this->set('name', $this->PHPShopSystem->getValue('name'));
         $this->set('company', $this->PHPShopSystem->getValue('company'));
         $this->set('streetAddress', $this->PHPShopSystem->getSerilizeParam('bank.org_adres'));
@@ -1032,6 +1033,84 @@ class PHPShopBannerElement extends PHPShopElements {
         $message = ParseTemplateReturn('./phpshop/lib/templates/banner/mail_notice.tpl', true);
 
         new PHPShopMail($this->PHPShopSystem->getParam('adminmail2'), "robot@" . str_replace("www", '', $_SERVER['SERVER_NAME']), $zag, $message);
+    }
+
+}
+
+/**
+ * Элемент фото галерея
+ * @author PHPShop Software
+ * @version 1.2
+ * @package PHPShopElements
+ */
+class PHPShopPhotoElement extends PHPShopElements {
+
+    /**
+     * Конструктор
+     */
+    function __construct() {
+
+        // Отладка
+        $this->debug = false;
+
+        // Имя Бд
+        $this->objBase = $GLOBALS['SysValue']['base']['photo_categories'];
+        parent::__construct();
+    }
+
+    /**
+     * Вывод фото по таргетингу
+     * @return string
+     */
+    function getPhotos() {
+        $dis = null;
+        $url = addslashes(substr($this->SysValue['nav']['url'], 1));
+        if (empty($url))
+            $url = '/';
+
+        $PHPShopOrm = new PHPShopOrm($this->getValue('base.photo_categories'));
+        $PHPShopOrm->debug = $this->debug;
+        $data = $PHPShopOrm->select(array('*'), array('enabled' => "='1'", "page" => " LIKE '%$url%'"), array('order' => 'num'), array("limit" => 100));
+
+        if (is_array($data))
+            foreach ($data as $row) {
+                $this->set('photoTitle', $row['name']);
+                $this->set('photoLink', $row['id']);
+                $this->set('photoContent', $this->ListPhoto($row['id'], $row['num']));
+                $dis.=$this->parseTemplate('./phpshop/lib/templates/photo/photo_list_forma.tpl', true);
+            }
+        return $dis;
+    }
+
+    /**
+     * Вывод фото
+     * @param int $cat ИД категории фото
+     * @param int $num кол-во фото для вывода
+     * @return string
+     */
+    function ListPhoto($cat, $num) {
+        $dis = null;
+
+        // Выборка данных
+        $PHPShopOrm = new PHPShopOrm($this->getValue('base.photo'));
+        $PHPShopOrm->debug = $this->debug;
+        $data = $PHPShopOrm->select(array('*'), array('category' => '=' . intval($cat), 'enabled' => "='1'"), array('order' => 'num'), array('limit' => $num));
+        if ($num == 1)
+            $this->dataArray[] = $data;
+        else
+            $this->dataArray = $data;
+
+        if (is_array($this->dataArray))
+            foreach ($this->dataArray as $row) {
+
+                $name_s = str_replace(".", "s.", $row['name']);
+                $this->set('photoIcon', $name_s);
+                $this->set('photoInfo', $row['info']);
+                $this->set('photoImg', $row['name']);
+
+                $dis.=$this->parseTemplate('./phpshop/lib/templates/photo/photo_element_forma.tpl', true);
+            }
+        return $dis;
     }
 
 }

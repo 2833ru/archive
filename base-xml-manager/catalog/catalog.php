@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Синхронизация с Shop4Partner
+ * @package PHPShopExchange
+ * @author PHPShop Software
+ * @version 1.3
+ */
+
 $_classPath = "../../phpshop/";
 include($_classPath . "class/obj.class.php");
 include($_classPath . "lib/phpass/passwordhash.php");

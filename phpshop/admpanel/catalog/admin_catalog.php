@@ -9,7 +9,7 @@ PHPShopObj::loadClass('sort');
  * Вывод товаров
  */
 function actionStart() {
-    global $PHPShopInterface, $PHPShopSystem, $TitlePage;
+    global $PHPShopInterface, $TitlePage;
 
     $PHPShopCategoryArray = new PHPShopCategoryArray();
     $PHPShopCategoryArray->order = array('order' => 'num, name');
@@ -19,8 +19,17 @@ function actionStart() {
 
     if (!empty($CategoryArray[$_GET['cat']]['name']))
         $catname = " / " . $CategoryArray[$_GET['cat']]['name'];
+    elseif (!empty($CategoryArray[$_GET['sub']]['name']))
+        $catname = " / " . $CategoryArray[$_GET['sub']]['name'];
     else
         $catname = " / " . __('Новые товары');
+
+    $PHPShopInterface->action_select['Предпросмотр'] = array(
+        'name' => 'Предпросмотр',
+        'url' => '../../shop/CID_' . $_GET['cat'] . '.html',
+        'action' => 'front enabled',
+        'target' => '_blank'
+    );
 
     $PHPShopInterface->action_select['Редактировать выбранные'] = array(
         'name' => 'Редактировать выбранные',
@@ -60,7 +69,7 @@ function actionStart() {
     );
 
 
-    $PHPShopInterface->setActionPanel($TitlePage . $catname, array('Поиск', '|', 'Настройка', 'Редактировать каталог', 'Редактировать выбранные', 'CSV', '|', 'Удалить выбранные'), array('Добавить товар'));
+    $PHPShopInterface->setActionPanel($TitlePage . $catname, array('Поиск', '|', 'Предпросмотр', 'Настройка', 'Редактировать каталог', 'Редактировать выбранные', 'CSV', '|', 'Удалить выбранные'), array('Добавить товар'));
 
     // Настройка полей
     if (!empty($_COOKIE['check_memory'])) {
@@ -76,22 +85,36 @@ function actionStart() {
         $memory['catalog.option']['label'] = 1;
         $memory['catalog.option']['uid'] = 0;
         $memory['catalog.option']['id'] = 0;
+        $memory['catalog.option']['num'] = 0;
     }
 
     $PHPShopInterface->setCaption(
-            array(null, "3%"), array("Иконка", "5%", array('sort' => 'none', 'view' => intval($memory['catalog.option']['icon']))), array("Название", "40%", array('view' => intval($memory['catalog.option']['name']))), array("ID", "10%", array('view' => intval($memory['catalog.option']['id']))), array("Артикул", "15%", array('view' => intval($memory['catalog.option']['uid']))), array("Цена", "15%", array('view' => intval($memory['catalog.option']['price']))), array("Кол-во", "10%", array('view' => intval($memory['catalog.option']['item']))), array("", "7%", array('view' => intval($memory['catalog.option']['menu']))), array("Статус" . "", "7%", array('align' => 'right', 'view' => intval($memory['catalog.option']['status'])))
+            array(null, "3%"), array("Иконка", "5%", array('sort' => 'none', 'view' => intval($memory['catalog.option']['icon']))), array("Название", "40%", array('view' => intval($memory['catalog.option']['name']))), array("№", "10%", array('view' => intval($memory['catalog.option']['num']))), array("ID", "10%", array('view' => intval($memory['catalog.option']['id']))), array("Артикул", "15%", array('view' => intval($memory['catalog.option']['uid']))), array("Цена", "15%", array('view' => intval($memory['catalog.option']['price']))), array("Кол-во", "10%", array('view' => intval($memory['catalog.option']['item']))), array("", "7%", array('view' => intval($memory['catalog.option']['menu']))), array("Статус" . "", "7%", array('align' => 'right', 'view' => intval($memory['catalog.option']['status'])))
     );
 
-    $PHPShopInterface->addJSFiles('./js/jquery.treegrid.js', './catalog/gui/catalog.gui.js');
+    $PHPShopInterface->addJSFiles('./js/jquery.treegrid.js', './catalog/gui/catalog.gui.js', './js/bootstrap-treeview.min.js');
+    $PHPShopInterface->addCSSFiles('./css/bootstrap-treeview.min.css');
 
 
     if (isset($_GET['where']['category']) and $_GET['where']['category'] != $_GET['cat'])
         unset($_GET['cat']);
 
-    $where = false;
-    if (isset($_GET['cat'])) {
+    // Тип поиска
+    switch ($_GET['core']) {
+        case 'reg':
+            $core = 'REGEXP';
+            break;
+        case 'eq':
+            $core = ' = ';
+            break;
+        default: $core = 'REGEXP';
+    }
 
-        if (!empty($_GET['cat']) or $_GET['sub'] == 'csv')
+
+    $where = false;
+    if (isset($_GET['cat']) or isset($_GET['sub'])) {
+
+        if (!empty($_GET['cat']) or $_GET['sub'] == 'csv' or isset($_GET['sub']))
             $where = array('category' => '=' . intval($_GET['cat']));
 
         $limit = array('limit' => 3000);
@@ -149,7 +172,7 @@ function actionStart() {
                         $where[PHPShopSecurity::TotalClean($k)] = $vendor;
                 }
                 else
-                    $where[PHPShopSecurity::TotalClean($k)] = " LIKE '%" . PHPShopSecurity::TotalClean($v) . "%'";
+                    $where[PHPShopSecurity::TotalClean($k)] = " " . $core . " '" . PHPShopSecurity::TotalClean($v) . "'";
             }
         }
     }
@@ -185,7 +208,7 @@ function actionStart() {
             else
                 $icon = '<img class="media-object" src="./images/no_photo.gif">';
 
-            $PHPShopInterface->path = 'product';
+            $PHPShopInterface->path = 'product&return=catalog';
 
             // Артикул
             if (!empty($row['uid']) and empty($memory['catalog.option']['uid']))
@@ -222,9 +245,11 @@ function actionStart() {
             else
                 $enabled = null;
 
+            if ($row['items'] < 0)
+                $row['items'] = 0;
 
             $PHPShopInterface->setRow(
-                    $row['id'], array('name' => $icon, 'link' => '?path=product&return=catalog&id=' . $row['id'], 'align' => 'left', 'view' => intval($memory['catalog.option']['icon'])), array('name' => $row['name'], 'link' => '?path=product&return=catalog&id=' . $row['id'], 'align' => 'left', 'addon' => $uid, 'class' => $enabled, 'view' => intval($memory['catalog.option']['name'])), array('name' => $row['id'], 'view' => intval($memory['catalog.option']['id'])), array('name' => $row['uid'], 'view' => intval($memory['catalog.option']['uid'])), array('name' => $row['price'], 'editable' => 'price_new', 'view' => intval($memory['catalog.option']['price'])), array('name' => $row['items'], 'align' => 'center', 'editable' => 'items_new', 'view' => intval($memory['catalog.option']['item'])), array('action' => array('edit', 'copy', 'url', '|', 'delete', 'id' => $row['id']), 'align' => 'center', 'view' => intval($memory['catalog.option']['menu'])), array('status' => array('enable' => $row['enabled'], 'align' => 'right', 'caption' => array('Выкл', 'Вкл')), 'view' => intval($memory['catalog.option']['status']))
+                    $row['id'], array('name' => $icon, 'link' => '?path=product&return=catalog.' . $row['category'] . '&id=' . $row['id'], 'align' => 'left', 'view' => intval($memory['catalog.option']['icon'])), array('name' => $row['name'], 'link' => '?path=product&return=catalog.' . $row['category'] . '&id=' . $row['id'], 'align' => 'left', 'addon' => $uid, 'class' => $enabled, 'view' => intval($memory['catalog.option']['name'])), array('name' => $row['num'], 'align' => 'center', 'editable' => 'num_new', 'view' => intval($memory['catalog.option']['num'])), array('name' => $row['id'], 'view' => intval($memory['catalog.option']['id'])), array('name' => $row['uid'], 'view' => intval($memory['catalog.option']['uid'])), array('name' => $row['price'], 'editable' => 'price_new', 'view' => intval($memory['catalog.option']['price'])), array('name' => $row['items'], 'align' => 'center', 'editable' => 'items_new', 'view' => intval($memory['catalog.option']['item'])), array('action' => array('edit', 'copy', 'url', '|', 'delete', 'id' => $row['id']), 'align' => 'center', 'view' => intval($memory['catalog.option']['menu'])), array('status' => array('enable' => $row['enabled'], 'align' => 'right', 'caption' => array('Выкл', 'Вкл')), 'view' => intval($memory['catalog.option']['status']))
             );
         }
 
@@ -243,128 +268,27 @@ function actionStart() {
 
     $PHPShopInterface->path = 'catalog';
 
-    $tree = '<table class="tree table table-hover">';
-    $sub = intval($_GET['sub']);
-    $indent = null;
-    if (!empty($sub)) {
-        $tree.='<tr class="treegrid-active data-tree">
-           <td><span class="glyphicon glyphicon-triangle-bottom"></span> <a href="#">' . substr($CategoryArray[$sub]['name'], 0, 27) . '</a><span class="pull-right">' . $PHPShopInterface->setDropdownAction(array('edit', 'delete', 'id' => $sub)) . '</span></td>
-	</tr>';
-        $indent = '<span class="treegrid-sub"></span>';
+    // Прогрессбар
+    if ($GLOBALS['count'] > 500)
+        $treebar = '<div class="progress">
+  <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%">
+    <span class="sr-only">Загрузка..</span>
+  </div>
+</div>';
 
-        $PHPShopCategory = new PHPShopCategory($sub);
-        $parent = $PHPShopCategory->getParam('parent_to');
+    // Поиск категорий
+    $search = '<div class="none" id="category-search" style="padding-bottom:5px;"><div class="input-group input-sm">
+                <input type="input" class="form-control input-sm" type="search" id="input-category-search" placeholder="' . __('Искать в категориях...') . '" value="">
+                 <span class="input-group-btn">
+                  <a class="btn btn-default btn-sm" id="btn-search" type="submit"><span class="glyphicon glyphicon-search"></span></a>
+                 </span>
+            </div></div>';
 
-        $sidebarleft_title = '<a href="?path=catalog&sub=' . intval($parent) . '" class="data-row"><span class="glyphicon glyphicon-chevron-left"></span>' . __('Предыдущая') . '</a>';
-    }
-    else
-        $sidebarleft_title = __('Категории');
+    $sidebarleft[] = array('title' => __('Категории'), 'content' => $search.'<div id="tree">' . $treebar . '</div>', 'title-icon' => '<span class="glyphicon glyphicon-plus new" data-toggle="tooltip" data-placement="top" title="Добавить каталог"></span>&nbsp;<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="Развернуть все"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="Свернуть"></span>&nbsp;<span class="glyphicon glyphicon-search" id="show-category-search" data-toggle="tooltip" data-placement="top" title="Поиск"></span>');
 
-    $cat_limit = $PHPShopSystem->getSerilizeParam('admoption.adm_cat_limit');
-    if (empty($cat_limit))
-        $cat_limit = 100;
-
-    if (is_array($tree_array[$sub]['sub']))
-        foreach ($tree_array[$sub]['sub'] as $k => $v) {
-
-            // Лимит вывода каталогов
-            if ($GLOBALS['count'] > $cat_limit) {
-                $check = treegenerator($tree_array[$k], $k);
-                $tree_save = 1;
-            } else {
-                $check = treegenerator_lite($tree_array[$k], $k);
-                $tree_save = 1;
-            }
-
-
-            if (empty($check))
-                $tree.='<tr class="treegrid-' . $k . ' data-tree">
-		<td>' . $indent . '<a href="?path=catalog&cat=' . $k . '&sub=' . $sub . '" title="' . $v . '">' . substr($v, 0, 26) . '</a><span class="pull-right">' . $PHPShopInterface->setDropdownAction(array('edit', 'delete', 'id' => $k)) . '</span></td>
-	</tr>';
-            else
-                $tree.='<tr class="treegrid-' . $k . ' data-tree">
-		<td>' . $indent . '<a href="#" class="treegrid-parent" data-parent="treegrid-' . $k . '" title="' . $v . '">' . substr($v, 0, 26) . '</a><span class="pull-right">' . $PHPShopInterface->setDropdownAction(array('edit', 'delete', 'id' => $k)) . '</span></td>
-	</tr>';
-            $tree.=$check;
-        }
-
-    if (empty($sub)) {
-        $tree.='
-        <tr class="treegrid-1000000">
-           <td><a href="#" class="treegrid-parent" data-parent="treegrid-1000000">Неопределенные товары</a></td>
-	</tr>
-        <tr class="treegrid-1000001 treegrid-parent-1000000 data-row">
-           <td><a href="?path=catalog&cat=1000001"><span class="glyphicon glyphicon-download-alt"></span>Загруженные CRM</a></td>
-	</tr>
-       <tr class="treegrid-1000002 treegrid-parent-1000000 data-row">
-           <td><a href="?path=catalog&cat=0&sub=csv"><span class="glyphicon glyphicon-download-alt"></span>Загруженные CSV</a></td>
-	</tr>
-         <tr class="treegrid-1000004 treegrid-parent-1000000 data-row">
-           <td><a href="?path=catalog&cat=1000004"><span class="glyphicon glyphicon-trash"></span>Удаленные</a></td>
-    </tr>';
-    }
-    $tree.='
-</table>
-    <script>
-    var cat="' . intval($_GET['cat']) . '";
-    var tree_save=' . $tree_save . ';
-    </script>';
-
-
-
-
-
-    $sidebarleft[] = array('title' => $sidebarleft_title, 'content' => $tree, 'title-icon' => '<span class="glyphicon glyphicon-plus new" data-toggle="tooltip" data-placement="top" title="Добавить каталог"></span>&nbsp;<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="Развернуть все"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="Свернуть"></span>');
     $PHPShopInterface->setSidebarLeft($sidebarleft, 3);
 
     $PHPShopInterface->Compile(3);
-}
-
-// Построение дерева категорий > 100
-function treegenerator($array, $parent) {
-    global $PHPShopInterface, $tree_array;
-    $tree = $check = false;
-    if (is_array($array['sub'])) {
-        foreach ($array['sub'] as $k => $v) {
-
-            if (!is_array($tree_array[$k]['sub']))
-                $tree.='<tr class="treegrid-' . $k . ' treegrid-parent-' . $parent . ' data-tree" style="display:none">
-		<td><a href="?path=catalog&cat=' . $k . '" title="' . $v . '">' . substr($v, 0, 30) . '</a><span class="pull-right">' . $PHPShopInterface->setDropdownAction(array('edit', 'delete', 'id' => $k)) . '</span></td>
-	</tr>';
-            else {
-
-                $tree.='<tr class="treegrid-' . $k . ' treegrid-parent-' . $parent . ' data-tree" style="display:none">
-		<td><span class="glyphicon glyphicon-triangle-right"></span> <a href="?path=catalog&sub=' . $k . '" data-parent="treegrid-' . $k . '" title="' . $v . '">' . substr($v, 0, 30) . '</a><span class="pull-right">' . $PHPShopInterface->setDropdownAction(array('edit', 'delete', 'id' => $k)) . '</span></td>
-            </tr>';
-            }
-
-            $tree.=$check;
-        }
-    }
-    return $tree;
-}
-
-// Построение дерева категорий < 100
-function treegenerator_lite($array, $parent) {
-    global $PHPShopInterface, $tree_array;
-    $tree = $check = false;
-    if (is_array($array['sub'])) {
-        foreach ($array['sub'] as $k => $v) {
-            $check = treegenerator_lite($tree_array[$k], $k);
-
-            if (empty($check))
-                $tree.='<tr class="treegrid-' . $k . ' treegrid-parent-' . $parent . ' data-tree">
-		<td><a href="?path=catalog&cat=' . $k . '">' . $v . '</a><span class="pull-right">' . $PHPShopInterface->setDropdownAction(array('edit', 'delete', 'id' => $k)) . '</span></td>
-	</tr>';
-            else
-                $tree.='<tr class="treegrid-' . $k . ' treegrid-parent-' . $parent . ' data-tree">
-		<td><a href="#" class="treegrid-parent" data-parent="treegrid-' . $k . '">' . $v . '</a><span class="pull-right">' . $PHPShopInterface->setDropdownAction(array('edit', 'delete', 'id' => $k)) . '</span></td>
-	</tr>';
-
-            $tree.=$check;
-        }
-    }
-    return $tree;
 }
 
 ?>

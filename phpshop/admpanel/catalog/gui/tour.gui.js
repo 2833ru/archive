@@ -45,7 +45,7 @@ $().ready(function() {
             {
                 element: '.link-thumbnail',
                 title: "Изображение",
-                content: 'Укажите мконку каталога для навигации',
+                content: 'Укажите иконку каталога для навигации',
                 placement: 'top',
                 onNext: function() {
                     $('[data-id="Описание"]').tab('show');

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.4</version>
+    <version>1.5</version>
     <name>Sales</name>
     <faqlink>http://faq.phpshop.ru/page/price-increase-reduction.html</faqlink>
     <description>Модуль распродаж и наценок.</description>

@@ -58,7 +58,7 @@ function viewCatalog($name="search_category",$category=0) {
 
     $GLOBALS['tree_array'] = &$tree_array;
 
-    $tree_select = '<select class="form-control input-sm" name="'.$name.'" style="width:250px;">
+    $tree_select = '<select class="form-control input-sm" name="'.$name.'" style="width:100%">
         <option value=""> - Все категории - </option>';
 
     if (is_array($tree_array[0]['sub']))
@@ -204,6 +204,9 @@ function actionAdvanceSearch() {
     $PHPShopInterface->setCheckbox('where[newtip]', 1, __('Новинка'), intval($query['where']['newtip'])).
     $PHPShopInterface->setCheckbox('where[sklad]', 1, __('Под заказ'), intval($query['where']['sklad'])).'<br>'.
     $PHPShopInterface->setCheckbox('where[enabled]', 0, __('Не выводить'), intval($query['where']['enabled'])));
+    $value_search[] = array('Вхождение фразы','reg',  'reg');
+    $value_search[] = array('Точное сопадение','eq', '');
+    $searchforma.= $PHPShopInterface->setField(__('Логика'),$PHPShopInterface->setSelect('core', $value_search, false,false , false, false, false, false,false,false,'form-control').$PHPShopInterface->setHelp('Вхождение фразы поддерживает REGEXP [^ - начало, $ - конец]'));
     $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'hidden', 'name' => 'path', 'value' => 'catalog'));
     $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'hidden', 'name' => 'cat', 'value' => $_REQUEST['cat']));
     

@@ -2,7 +2,7 @@
 
 /**
  * Библиотека Отправление почты
- * @version 1.4
+ * @version 1.5
  * @package PHPShopClass
  * @tutorial http://doc.phpshop.ru/PHPShopClass/PHPShopMail.html
  * <code>
@@ -80,7 +80,8 @@ class PHPShopMail {
         $header = "MIME-Version: " . $this->mime . "\n";
 
         if ($this->PHPShopSystem and $this->PHPShopSystem->getParam('adminmail2') == $this->from) {
-            $header.= "From:  " . $this->PHPShopSystem->getParam('name') . " <" . $this->from . ">\n";
+            //$header.= "From:  " . $this->PHPShopSystem->getParam('name') . " <" . $this->from . ">\n";
+            $header.= "From: =?" . $this->codepage . "?B?" . base64_encode($this->PHPShopSystem->getParam('name')) . "?= <" . $this->from . ">\n";
         }
         else
             $header.= "From: <" . $this->from . ">\n";

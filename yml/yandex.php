@@ -179,12 +179,14 @@ class PHPShopYml {
                 if (!empty($check)) {
                     if (!empty($_SESSION['Memory'][__CLASS__][$param[0]][$param[1]]))
                         return true;
-                } else
+                }
+                else
                     return $_SESSION['Memory'][__CLASS__][$param[0]][$param[1]];
             }
             elseif (!empty($check))
                 return true;
-        } else
+        }
+        else
             return true;
     }
 
@@ -199,9 +201,11 @@ class PHPShopYml {
 
         if (is_array($data))
             foreach ($data as $row) {
-                $Catalog[$row['id']]['id'] = $row['id'];
-                $Catalog[$row['id']]['name'] = $row['name'];
-                $Catalog[$row['id']]['parent_to'] = $row['parent_to'];
+                if ($row['id'] != $row['parent_to']) {
+                    $Catalog[$row['id']]['id'] = $row['id'];
+                    $Catalog[$row['id']]['name'] = $row['name'];
+                    $Catalog[$row['id']]['parent_to'] = $row['parent_to'];
+                }
             }
 
         return $Catalog;
@@ -215,11 +219,12 @@ class PHPShopYml {
         $Products = array();
 
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
-        
-        if(isset($_GET['getall']))
-            $where=null;
-        else $where="yml='1' and";
-        
+
+        if (isset($_GET['getall']))
+            $where = null;
+        else
+            $where = "yml='1' and";
+
         $result = $PHPShopOrm->query("select * from " . $GLOBALS['SysValue']['base']['products'] . " where $where enabled='1' and parent_enabled='0'");
         while ($row = mysqli_fetch_array($result)) {
             $id = $row['id'];
@@ -265,7 +270,7 @@ class PHPShopYml {
                 "uid" => $uid,
                 "description" => $description,
                 "content" => $content,
-                "prod_seo_name"=>$row['prod_seo_name']
+                "prod_seo_name" => $row['prod_seo_name']
             );
 
             // Параметр сортировки
@@ -320,16 +325,16 @@ class PHPShopYml {
      */
     function setDelivery() {
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['table_name30']);
-        $data = $PHPShopOrm->select(array('price'), array('flag' => "='1'",'is_folder'=>"='0'"), false, array('limit' => 1));
+        $data = $PHPShopOrm->select(array('price'), array('flag' => "='1'", 'is_folder' => "='0'"), false, array('limit' => 1));
         if (is_array($data))
             $this->xml.='<local_delivery_cost>' . $data['price'] . '</local_delivery_cost>';
     }
-    
+
     /**
      * Очистка спецсимволов
      */
-    function cleanStr($string){
-        $string = html_entity_decode($string,ENT_QUOTES,'windows-1251');
+    function cleanStr($string) {
+        $string = html_entity_decode($string, ENT_QUOTES, 'windows-1251');
         return str_replace('&#43;', '+', $string);
     }
 
@@ -386,25 +391,26 @@ class PHPShopYml {
             // Если есть bid
             if (!empty($val['yml_bid_array']['bid']))
                 $bid_str = '  bid="' . $val['yml_bid_array']['bid'] . '" ';
-            
-            
+
+
 
             // Если есть cbid
             if (!empty($val['yml_bid_array']['cbid']))
                 $bid_str.='  cbid="' . $val['yml_bid_array']['cbid'] . '" ';
-            
+
             // Стандартный урл
-            $url='/shop/UID_' . $val['id'] ;
+            $url = '/shop/UID_' . $val['id'];
 
             // SEOURL
             if (!empty($seourl_enabled))
                 $url.= '_' . PHPShopString::toLatin($val['name']);
 
             // SEOURLPRO
-            if (!empty($seourlpro_enabled)){
-                if(empty($val['prod_seo_name']))
-                $url = '/id/' . str_replace("_", "-", PHPShopString::toLatin($val['name'])).'-'.$val['id'];
-                else $url = '/id/' . $val['prod_seo_name'].'-'.$val['id'];
+            if (!empty($seourlpro_enabled)) {
+                if (empty($val['prod_seo_name']))
+                    $url = '/id/' . str_replace("_", "-", PHPShopString::toLatin($val['name'])) . '-' . $val['id'];
+                else
+                    $url = '/id/' . $val['prod_seo_name'] . '-' . $val['id'];
             }
 
             $xml = '
@@ -435,7 +441,8 @@ class PHPShopYml {
                     $this->xml.= $xml;
                     $this->memory_set(__CLASS__ . '.' . __FUNCTION__, 0);
                 }
-            } else
+            }
+            else
                 $this->xml.= $xml;
         }
         $this->xml.='

@@ -23,6 +23,7 @@
       <div class="product-price"> <span><span class="strike-through">@productPriceRub@</span> @ComStartCart@@productPrice@ @productValutaName@@ComEndCart@</span></div>
       <div class="hidden-xs">@oneclick@</div>
       <div class="product-rate clearfix"> @rateUid@ </div>
+      <div class="hidden-xs">@promotionInfo@ </div>
       <div class="product-info">
         <div class="vendor-disp">@vendorDisp@</div>
       </div>
@@ -40,7 +41,7 @@
           <div class="visible-desktop"> @cloud@ </div>
         </div>
         <form method="post" action="page">
-          <div class="controls-row"> @optionsDisp@
+          <div class="controls-row @elementCartHide@"> @optionsDisp@
             @productParentList@ </div>
           <div>
 		   @ComStartCart@

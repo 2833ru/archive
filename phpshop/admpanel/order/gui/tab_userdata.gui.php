@@ -4,6 +4,8 @@ function tab_userdata($data, $order) {
     global $PHPShopGUI;
     
     $PHPShopGUI->field_col=3;
+    
+    $help='<p class="text-muted hidden-xs data-row">Дополнительные поля в заказе и требование к их обязательному заполнению можно настроить в разделе  <a href="?path=delivery"><span class="glyphicon glyphicon-share-alt"></span>Управление доставкой</a></p><hr>';
 
     // Данные покупателя
     $disp1 = $PHPShopGUI->setField(__("ФИО"), $PHPShopGUI->setInputText('', 'fio_new', $data['fio'] . $order['Person']['name_person'])) .
@@ -16,8 +18,7 @@ function tab_userdata($data, $order) {
             $PHPShopGUI->setField(__("Дом"), $PHPShopGUI->setInputText('', 'house_new', $data['house'])) .
             $PHPShopGUI->setField(__("Подъезд"), $PHPShopGUI->setInputText('', 'porch_new', $data['porch'])) .
             $PHPShopGUI->setField(__("Код домофона"), $PHPShopGUI->setInputText('', 'door_phone_new', $data['door_phone'])) .
-            $PHPShopGUI->setField(__("Квартира"), $PHPShopGUI->setInputText('', 'flat_new', $data['flat'])) .
-            $PHPShopGUI->setField(__("Время доставки"), $PHPShopGUI->setInputText('', 'delivtime_new', $data['delivtime']));
+            $PHPShopGUI->setField(__("Квартира"), $PHPShopGUI->setInputText('', 'flat_new', $data['flat']));
 
     // Юр. данные покупателя
     $disp2 = $PHPShopGUI->setField(__("Компания"), $PHPShopGUI->setInputText('', 'org_name_new', $data['org_name'] . $order['Person']['org_name'])) .
@@ -29,10 +30,11 @@ function tab_userdata($data, $order) {
             $PHPShopGUI->setField(__("Банк"), $PHPShopGUI->setInputText('', 'org_bank_new', $data['org_bank'])) .
             $PHPShopGUI->setField(__("Кор. счёт"), $PHPShopGUI->setInputText('', 'org_kor_new', $data['org_kor'])) .
             $PHPShopGUI->setField(__("БИК"), $PHPShopGUI->setInputText('', 'org_bik_new', $data['org_bik'])) .
-            $PHPShopGUI->setField(__("Город"), $PHPShopGUI->setInputText('', 'org_city_new', $data['org_city']));
+            $PHPShopGUI->setField(__("Город"), $PHPShopGUI->setInputText('', 'org_city_new', $data['org_city'])).
+            $PHPShopGUI->setField(__("Время доставки"), $PHPShopGUI->setInputText('', 'delivtime_new', $data['delivtime']));
 
 
-    return $PHPShopGUI->setGrid(array($disp1, 6), array($disp2, 6));
+    return $help.$PHPShopGUI->setGrid(array($disp1, 6), array($disp2, 6));
 }
 
 ?>

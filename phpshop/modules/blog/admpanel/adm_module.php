@@ -34,7 +34,7 @@ function actionStart() {
     $Select[] = array("Справа", 1, $s1);
     $Select[] = array("Слева", 0, $s0);
 
-    $Tab1 = $PHPShopGUI->setField("Статус", $PHPShopGUI->setCheckbox("enabled_new", 1, "Вывод блока на сайте", $data['enabled']) . '<br>' .
+    $Tab1 = '<hr>'.$PHPShopGUI->setField("Статус", $PHPShopGUI->setCheckbox("enabled_new", 1, "Вывод блока на сайте", $data['enabled']) . '<br>' .
             $PHPShopGUI->setCheckbox("enabled_menu_new", 1, "Добавить в топ-меню ссылку", $data['enabled_menu']));
     $Tab1.= $PHPShopGUI->setField("Расположение блока:", $PHPShopGUI->setSelect("flag_new", $Select, 100, 1));
     $Tab1.=$PHPShopGUI->setLine();
@@ -50,7 +50,7 @@ function actionStart() {
     $Tab3 = $PHPShopGUI->setPay();
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1, 270), array("Описание", $Tab2, 270), array("О Модуле", $Tab3, 270));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, 270), array("Описание", $Tab2, 270), array("О Модуле", $Tab3, 270),array("Обзор записей блога", 0,'?path=modules.dir.blog'));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =

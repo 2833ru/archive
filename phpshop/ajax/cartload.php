@@ -39,6 +39,9 @@ $PHPShopSystem = new PHPShopSystem();
 // Корзина
 $PHPShopCart = new PHPShopCart();
 
+// Модули
+$PHPShopModules = new PHPShopModules($_classPath . "modules/");
+
 // Добавлем товар
 if (PHPShopSecurity::true_param($_REQUEST['xid'], $_REQUEST['num'])) {
     $productData = $PHPShopCart->add($_REQUEST['xid'], $_REQUEST['num'], $_REQUEST['xxid']);
@@ -54,6 +57,11 @@ $_RESULT = array(
     "message" => $PHPShopCart->getMessage(),
     "success" => 1
 );
+
+// Перехват модуля в начале функции
+$hook = $PHPShopModules->setHookHandler('cartload', 'cartload', false, array($_RESULT, $_REQUEST['xid']));
+if(is_array($hook))
+    $_RESULT = $hook;
 
 // JSON 
 if($_REQUEST['type'] == 'json'){

@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Синхронизация с 1C
+ * @package PHPShopExchange
+ * @author PHPShop Software
+ * @version 1.3
+ */
+
 $_classPath = '../../';
 include($_classPath . 'phpshop/class/obj.class.php');
 include($_classPath . "phpshop/lib/phpass/passwordhash.php");

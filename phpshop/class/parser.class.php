@@ -3,7 +3,7 @@
 /**
  * Библиотека парсинга данных
  * @author PHPShop Software
- * @version 1.4
+ * @version 1.5
  * @package PHPShopClass
  */
 class PHPShopParser {
@@ -46,6 +46,7 @@ class PHPShopParser {
             "/java\//i" => "/java/",
             "/css\//i" => "/css/",
             "/phpshop\//i" => "/phpshop/",
+            "/\/id\//i" => $GLOBALS['SysValue']['dir']['dir'] . "/id/",
         );
         return $string = preg_replace(array_keys($replaces), array_values($replaces), $string);
     }

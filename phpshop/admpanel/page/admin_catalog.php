@@ -58,7 +58,6 @@ function actionStart() {
         $where = array('category' => '=' . intval($_GET['cat']));
     }
 
-
     // Таблица с данными
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['page']);
     $PHPShopOrm->Option['where'] = ' or ';
@@ -73,7 +72,7 @@ function actionStart() {
             else
                 $enabled = null;
 
-            $PHPShopInterface->path = 'page';
+            $PHPShopInterface->path = 'page&return=page.catalog';
             $PHPShopInterface->setRow(
                     $row['id'], array('name' => $row['link'], 'link' => '?path=page&return=' . $_GET['path'] . '&id=' . $row['id'], 'align' => 'left', 'class' => 'page-url '.$enabled), array('name' => $row['name'], 'link' => '?path=page&return=' . $_GET['path'] . '&id=' . $row['id'], 'align' => 'left','class' => $enabled), array('action' => array('edit', 'url', '|', 'delete', 'id' => $row['id']), 'align' => 'center'), array('status' => array('enable' => intval($row['enabled']), 'align' => 'right', 'caption' => array('Выкл', 'Вкл')))
             );
@@ -118,10 +117,10 @@ function actionStart() {
            <td><a href="#" class="treegrid-parent" data-parent="treegrid-100000">Меню</a></td>
 	</tr>
          <tr class="treegrid-1000 treegrid-parent-100000 data-row">
-           <td><a href="?path=' . $_GET['path'] . '&cat=1000">Главное меню сайта</a></td>
+           <td><a href="?path=' . $_GET['path'] . '&cat=1000"><span class="glyphicon glyphicon-th-list"></span>Главное меню сайта</a></td>
 	</tr>
-        <tr class="treegrid-2000 treegrid-parent-100000">
-           <td><a href="?path=' . $_GET['path'] . '&cat=2000">Начальная страница</a></td>
+        <tr class="treegrid-2000 treegrid-parent-100000 data-row">
+           <td><a href="?path=' . $_GET['path'] . '&cat=2000"><span class="glyphicon glyphicon-bookmark"></span>Начальная страница</a></td>
 	</tr>
 </table>
   <script>

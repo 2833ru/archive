@@ -1,4 +1,7 @@
 $().ready(function() {
+    
+    // Id каталога
+    var cat = $.getUrlVar('cat');
 
     // Настройка полей - 2 шаг
     $("body").on('click', "#selectModal .modal-footer .option-send", function(event) {
@@ -66,7 +69,7 @@ $().ready(function() {
         var data = [];
         data.push({name: 'selectID', value: 1});
         data.push({name: 'ajax', value: 1});
-        data.push({name: 'cat', value: cat});
+        data.push({name: 'cat', value: $.getUrlVar('cat')});
         data.push({name: 'actionList[selectID]', value: 'actionAdvanceSearch'});
 
         $.ajax({
@@ -212,15 +215,14 @@ $().ready(function() {
 
 
     // Управление деревом категорий
-    if (typeof(TREEGRID_LOAD) != 'undefined')
-        $('.title-icon .glyphicon-chevron-down').on('click', function() {
-            $('.tree').treegrid('expandAll');
-        });
 
-    if (typeof(TREEGRID_LOAD) != 'undefined')
-        $('.title-icon .glyphicon-chevron-up').on('click', function() {
-            $('.tree').treegrid('collapseAll');
-        });
+    $('.title-icon .glyphicon-chevron-down').on('click', function() {
+        $('#tree').treeview('expandAll', {silent: true});
+    });
+
+    $('.title-icon .glyphicon-chevron-up').on('click', function() {
+        $('#tree').treeview('collapseAll', {silent: true});
+    });
 
     // Изменение данных из списка (цена, склад)
     $('.editable').on('change', function() {
@@ -246,47 +248,68 @@ $().ready(function() {
         });
     });
 
-    if (typeof tree_save === "undefined") {
-        tree_save = false;
-    }
-
     // Дерево категорий
-    if (typeof(TREEGRID_LOAD) != 'undefined') {
-        $('.tree').treegrid({
-            saveState: tree_save,
-            initialState: 'collapsed',
-            expanderExpandedClass: 'glyphicon glyphicon-triangle-bottom',
-            expanderCollapsedClass: 'glyphicon glyphicon-triangle-right'
+    $('#tree [role="progressbar"]').css('width', '90%');
+    if ($('#tree').length) {
+
+        $.ajax({
+            type: "GET",
+            url: "./catalog/gui/tree.gui.php",
+            data: "id=" + $.getUrlVar('id') + '&cat=' + $.getUrlVar('cat') + '&action=' + $.getUrlVar('action'),
+            dataType: "html",
+            async: false,
+            success: function(json)
+            {
+                $('#tree').treeview({
+                    data: json,
+                    enableLinks: false,
+                    showIcon: true,
+                    color: "#2fa4e7",
+                    showBorder: false,
+                    selectedBackColor: "#2EA4E7",
+                    onhoverColor: "#FFF",
+                    backColor: "transparent",
+                    expandIcon: 'glyphicon glyphicon-triangle-right',
+                    collapseIcon: 'glyphicon glyphicon-triangle-bottom'
+                });
+
+                // Путь node
+                $('#tree').treeview('getExpanded').forEach(function(entry) {
+                    $('#tree').treeview('revealNode', [entry['nodeId'], {silent: true}]);
+                });
+
+            }
         });
     }
 
-    $('.data-tree .dropdown-toggle').addClass('btn-xs');
-
-    // Раскрытие категорий
-    if (typeof(TREEGRID_LOAD) != 'undefined')
-        $(".treegrid-parent").on('click', function(event) {
-            event.preventDefault();
-            $('.' + $(this).attr('data-parent')).treegrid('toggle');
-        });
-
-    // Редактировать категорию в дереве
-    $(".tree .edit").on('click', function(event) {
-        event.preventDefault();
-        window.location.href += '&id=' + $(this).attr('data-id');
+    // Ссылка в Node
+    $('#tree').on('nodeSelected', function(event, data) {
+        if (data['href'])
+            window.location.href = './admin.php' + data['href'];
     });
 
-    // Удалить категорию в дереве
-    $(".tree .delete").on('click', function(event) {
-        event.preventDefault();
-        var id = $(this).closest('.data-tree');
-        if (confirm(locale.confirm_delete)) {
-            $('.list_edit_' + $(this).attr('data-id')).ajaxSubmit({
-                success: function() {
-                    id.empty();
-                    showAlertMessage(locale.save_done);
-                }
-            });
+    // Поиск категоий
+    var search = function(e) {
+        var pattern = $('#input-category-search').val();
+        var options = {
+            ignoreCase: true, // case insensitive
+            exactMatch: false, // like or equals
+            revealResults: true // reveal matching nodes
+        };
+        var results = $('#tree').treeview('search', [pattern, options]);
+    };
+    $('#btn-search').on('click', search);
+
+    $('#show-category-search').on('click', function() {
+        $('#category-search').slideToggle('slow');
+    });
+
+    $('#input-category-search').keyup(function(event) {
+        if (event.keyCode == '13') {
+            event.preventDefault();
+            search();
         }
+        return false;
     });
 
     // Создать новый из списка

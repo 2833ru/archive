@@ -3,8 +3,7 @@
 $_classPath = "../../../";
 include($_classPath . "class/obj.class.php");
 include($_classPath . "lib/phpass/passwordhash.php");
-include("../class/basexml.class.php");
-//include("../class/base.class.php");
+PHPShopObj::loadClass("basexml");
 PHPShopObj::loadClass("base");
 PHPShopObj::loadClass("orm");
 PHPShopObj::loadClass("xml");

@@ -132,8 +132,8 @@ function actionStart() {
     $Tab_info.=$PHPShopGUI->setField('Артикул:', $PHPShopGUI->setInputText(null, 'uid_new', $data['uid'], 250));
 
     // Иконка
-    $Tab_info.=$PHPShopGUI->setField(__("Изображение"), $PHPShopGUI->setIcon($data['pic_big'], "pic_big_new", false, array('load' => false, 'server' => true, 'url' => false)), 1, 'Загрузите сюда фото товара. Превью фото для краткого описания товара будет создано автоматически.');
-    $Tab_info.=$PHPShopGUI->setField(__("Превью"), $PHPShopGUI->setFile($data['pic_small'], "pic_small_new", array('load' => false, 'server' => 'image', 'url' => false)), 1, 'Превью главного фото товара создается автоматически, когда вы загружаете картинку. Но вы можете загрузить превью отдельно здесь.');
+    $Tab_info.=$PHPShopGUI->setField(__("Изображение"), $PHPShopGUI->setIcon($data['pic_big'], "pic_big_new", false, array('load' => false, 'server' => true, 'url' => false)), 1, 'Главное изображение товара создается автоматически при загрузке через закладку Изображение. Но вы можете загрузить главное фото отдельно здесь.');
+    $Tab_info.=$PHPShopGUI->setField(__("Превью"), $PHPShopGUI->setFile($data['pic_small'], "pic_small_new", array('load' => false, 'server' => 'image', 'url' => false)), 1, 'Превью изображения товара создается автоматически при загрузке через закладку Изображение. Но вы можете загрузить превью отдельно здесь.');
 
     // Склад
     if (empty($data['ed_izm']))
@@ -316,11 +316,11 @@ function actionUpdate() {
 
             case(2):
                 if ($_POST['items_new'] < 1) {
-                    //$_POST['enabled_new'] = 0;
-                    $_POST['sklad_new'] = 0;
+                    $_POST['enabled_new'] = 0;
+                    //$_POST['sklad_new'] = 0;
                 } else {
-                    //$_POST['enabled_new'] = 1;
-                    $_POST['sklad_new'] = 0;
+                    $_POST['enabled_new'] = 1;
+                    //$_POST['sklad_new'] = 0;
                 }
                 break;
 
@@ -371,7 +371,7 @@ function actionUpdate() {
         // Статьи
         if (isset($_POST['editID']))
             $_POST['page_new'] = array_pop($_POST['page_new']);
-        else
+        elseif (@strpos($_POST['page_new'], ''))
             $_POST['page_new'] = implode(',', $_POST['page_new']);
 
         // Файлы
@@ -392,18 +392,25 @@ function actionUpdate() {
         }
 
         // Корректировка пустых значений
-        $PHPShopOrm->updateZeroVars('newtip_new', 'enabled_new', 'spec_new', 'yml_new', 'sklad_new', 'pic_small', 'pic_big');
+        $PHPShopOrm->updateZeroVars('newtip_new', 'enabled_new', 'spec_new', 'yml_new', 'sklad_new', 'pic_small_new', 'pic_big_new');
     }
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
 
+    // Добавление изображения в фотогалерею
+    $insert = fotoAdd();
+    if (empty($_POST['pic_small_new']) and !empty($insert['pic_small_new']))
+        $_POST['pic_small_new'] = $insert['pic_small_new'];
+    if (empty($_POST['pic_big_new']) and !empty($insert['name_new']))
+        $_POST['pic_big_new'] = $insert['name_new'];
+
+
     $PHPShopOrm->debug = false;
     $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['rowID']));
     $PHPShopOrm->clean();
 
-    // Добавление изображения в фотогалерею
-    fotoAdd();
+
 
     return array('success' => $action);
 }
@@ -418,13 +425,18 @@ function fotoAdd() {
     $img_th = $PHPShopSystem->getSerilizeParam('admoption.img_th');
     $img_w = $PHPShopSystem->getSerilizeParam('admoption.img_w');
     $img_h = $PHPShopSystem->getSerilizeParam('admoption.img_h');
+    $img_tw = empty($img_tw) ? 150 : $img_tw;
+    $img_th = empty($img_th) ? 150 : $img_th;
+    $img_w = empty($img_w) ? 300 : $img_w;
+    $img_h = empty($img_h) ? 300 : $img_h;
+
     $img_adaptive = $PHPShopSystem->getSerilizeParam('admoption.image_adaptive_resize');
     $image_save_source = $PHPShopSystem->getSerilizeParam('admoption.image_save_source');
     $width_kratko = $PHPShopSystem->getSerilizeParam('admoption.width_kratko');
     $width_podrobno = $PHPShopSystem->getSerilizeParam('admoption.width_podrobno');
 
     // Папка сохранения
-    $path = '/UserFiles/Image/' . $PHPShopSystem->getSerilizeParam('admoption.image_result_path');
+    $path = $GLOBALS['SysValue']['dir']['dir'] . '/UserFiles/Image/' . $PHPShopSystem->getSerilizeParam('admoption.image_result_path');
 
     // Соль
     $RName = substr(abs(crc32(time())), 0, 5);
@@ -433,11 +445,11 @@ function fotoAdd() {
     if (!empty($_FILES['file']['name'])) {
         $_FILES['file']['ext'] = PHPShopSecurity::getExt($_FILES['file']['name']);
         if (in_array($_FILES['file']['ext'], array('gif', 'png', 'jpg', 'jpeg'))) {
-            if (move_uploaded_file($_FILES['file']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . $path . $_FILES['file']['name'])) {
-                $file = $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['dir']['dir'] . $path . $_FILES['file']['name'];
+            if (move_uploaded_file($_FILES['file']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . $path . $_FILES['file']['name'])) {
+                $file = $_SERVER['DOCUMENT_ROOT'] . $path . $_FILES['file']['name'];
                 $file_name = $_FILES['file']['name'];
                 $path_parts = pathinfo($file);
-                $tmp_file = $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['dir']['dir'] . $path . $_FILES['file']['name'];
+                $tmp_file = $_SERVER['DOCUMENT_ROOT'] . $path . $_FILES['file']['name'];
             }
         }
     }
@@ -473,7 +485,12 @@ function fotoAdd() {
         if ($PHPShopSystem->ifSerilizeParam('admoption.image_save_name')) {
             $name_s = $path_parts['filename'] . 's.' . strtolower($thumb->getFormat());
             $name = $path_parts['filename'] . '.' . strtolower($thumb->getFormat());
-            $name_big = $path_parts['filename']. '_big.' . strtolower($thumb->getFormat());
+            $name_big = $path_parts['filename'] . '_big.' . strtolower($thumb->getFormat());
+
+            if (!empty($image_save_source)) {
+                $file_big = $_SERVER['DOCUMENT_ROOT'] . $path . $name_big;
+                @copy($file, $file_big);
+            }
         } else {
             $name_s = 'img' . $_POST['rowID'] . '_' . $RName . 's.' . strtolower($thumb->getFormat());
             $name = 'img' . $_POST['rowID'] . '_' . $RName . '.' . strtolower($thumb->getFormat());
@@ -481,7 +498,7 @@ function fotoAdd() {
         }
 
 
-        $thumb->save($_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . $path . $name_s);
+        $thumb->save($_SERVER['DOCUMENT_ROOT'] . $path . $name_s);
 
         // Большое изображение
         $thumb = new PHPThumb($file);
@@ -502,20 +519,22 @@ function fotoAdd() {
         if ($PHPShopSystem->ifSerilizeParam('admoption.watermark_big_enabled')) {
 
             // Image
-            if (!empty($watermark) and file_exists($_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . $watermark))
-                $thumb->createWatermark($_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . $watermark, $PHPShopSystem->getSerilizeParam('admoption.watermark_right'), $PHPShopSystem->getSerilizeParam('admoption.watermark_bottom'));
+            if (!empty($watermark) and file_exists($_SERVER['DOCUMENT_ROOT'] . $watermark))
+                $thumb->createWatermark($_SERVER['DOCUMENT_ROOT'] . $watermark, $PHPShopSystem->getSerilizeParam('admoption.watermark_right'), $PHPShopSystem->getSerilizeParam('admoption.watermark_bottom'));
             // Text
             elseif (!empty($watermark_text))
                 $thumb->createWatermarkText($watermark_text, $PHPShopSystem->getSerilizeParam('admoption.watermark_text_size'), $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . '/phpshop/lib/font/' . $PHPShopSystem->getSerilizeParam('admoption.watermark_text_font') . '.ttf', $PHPShopSystem->getSerilizeParam('admoption.watermark_right'), $PHPShopSystem->getSerilizeParam('admoption.watermark_bottom'), $PHPShopSystem->getSerilizeParam('admoption.watermark_text_color'), $PHPShopSystem->getSerilizeParam('admoption.watermark_text_alpha'), 0);
         }
 
-        $thumb->save($_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . $path . $name);
+        $thumb->save($_SERVER['DOCUMENT_ROOT'] . $path . $name);
 
         // Исходное изображение
         if (!empty($image_save_source)) {
-           
-            $file_big = $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . $path . $name_big;
-            @copy($file, $file_big);
+
+            if (!$PHPShopSystem->ifSerilizeParam('admoption.image_save_name')) {
+                $file_big = $_SERVER['DOCUMENT_ROOT'] . $path . $name_big;
+                @copy($file, $file_big);
+            }
 
             // Ватермарк
             if ($PHPShopSystem->ifSerilizeParam('admoption.watermark_source_enabled')) {
@@ -525,8 +544,8 @@ function fotoAdd() {
                 $thumb->setWorkingImage($thumb->getOldImage());
 
                 // Image
-                if (!empty($watermark) and file_exists($_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . $watermark))
-                    $thumb->createWatermark($_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . $watermark, $PHPShopSystem->getSerilizeParam('admoption.watermark_right'), $PHPShopSystem->getSerilizeParam('admoption.watermark_bottom'));
+                if (!empty($watermark) and file_exists($_SERVER['DOCUMENT_ROOT'] . $watermark))
+                    $thumb->createWatermark($_SERVER['DOCUMENT_ROOT'] . $watermark, $PHPShopSystem->getSerilizeParam('admoption.watermark_right'), $PHPShopSystem->getSerilizeParam('admoption.watermark_bottom'));
                 // Text
                 elseif (!empty($watermark_text))
                     $thumb->createWatermarkText($watermark_text, $PHPShopSystem->getSerilizeParam('admoption.watermark_text_size'), $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . '/phpshop/lib/font/' . $PHPShopSystem->getSerilizeParam('admoption.watermark_text_font') . '.ttf', $PHPShopSystem->getSerilizeParam('admoption.watermark_right'), $PHPShopSystem->getSerilizeParam('admoption.watermark_bottom'), $PHPShopSystem->getSerilizeParam('admoption.watermark_text_color'), $PHPShopSystem->getSerilizeParam('admoption.watermark_text_alpha'), 0);
@@ -542,17 +561,19 @@ function fotoAdd() {
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['foto']);
         $insert['parent_new'] = $_POST['rowID'];
         $insert['name_new'] = $path . $name;
+        $insert['pic_small_new'] = $path . $name_s;
         //$insert['info_new'] = $_POST['info_img_new'][0];
         $PHPShopOrm->insert($insert);
+        return $insert;
     }
 }
 
 // Удаление фотогалереи
-function fotoDelete($where=null) {
-    
-    if(!is_array($where))
-        $where=array('parent' => '=' . intval($_POST['rowID']));
-    
+function fotoDelete($where = null) {
+
+    if (!is_array($where))
+        $where = array('parent' => '=' . intval($_POST['rowID']));
+
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['foto']);
     $data = $PHPShopOrm->select(array('*'), $where, false, array('limit' => 100));
     if (is_array($data)) {
@@ -560,7 +581,7 @@ function fotoDelete($where=null) {
             $name = $row['name'];
             $pathinfo = pathinfo($name);
             $oldWD = getcwd();
-            $dirWhereRenameeIs = $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . $pathinfo['dirname'];
+            $dirWhereRenameeIs = $_SERVER['DOCUMENT_ROOT'] . $pathinfo['dirname'];
             $oldFilename = $pathinfo['basename'];
 
             @chdir($dirWhereRenameeIs);
@@ -619,8 +640,8 @@ function actionImgDelete() {
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
 
-    $action=fotoDelete(array('id'=>'='.$_POST['rowID']));
-    
+    $action = fotoDelete(array('id' => '=' . $_POST['rowID']));
+
     return array("success" => $action);
 }
 

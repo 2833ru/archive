@@ -19,7 +19,7 @@
                     </h2> @productPriceRub@</div> 
                 
 
-                <div class="pull-right hidden-xs">@oneclick@</div>
+                <div class="pull-right">@oneclick@</div>
                 <p><br></p>
                 <div>
                     <div class="small">@productArt@</div>
@@ -27,7 +27,7 @@
 
                 </div>
                 <div class="review hidden-xs"> @rateUid@ </div>
-
+           @promotionInfo@ 
             </div>
 
 

@@ -8,8 +8,7 @@ $PHPShopUpdate = new PHPShopUpdate();
 
 $License = @parse_ini_file(PHPShopFile::searchFile("../../license/", 'getLicense'), 1);
 
-define("UPDATE_PATH", "http://phpshop.ru/update/update5.php?from=" . $_SERVER['SERVER_NAME'] . "&version=" . $GLOBALS['SysValue']['upload']['version'] . "&support=" . $License['License']['SupportExpires']);
-
+define("UPDATE_PATH", "http://www.phpshop.ru/update/update5.php?from=" . $_SERVER['SERVER_NAME'] . "&version=" . $GLOBALS['SysValue']['upload']['version'] . "&support=" . $License['License']['SupportExpires'].'&serial='. $License['License']['Serial'].'&path=update');
 
 // Функция обновления
 function actionUpdate() {
@@ -25,7 +24,7 @@ function actionUpdate() {
     if ($PHPShopUpdate->isReady()) {
 
         // Бекап БД
-        $PHPShopUpdate->checkBD();
+        //$PHPShopUpdate->checkBD();
 
         // Соединение с FTP
         $PHPShopUpdate->ftpConnect();
@@ -112,7 +111,7 @@ function actionStart() {
     );
 
     // Прогресс бар
-    $result_message.=$PHPShopGUI->setProgress(__('Создание резервной копии базы данных...'), 'hide');
+    $result_message.=$PHPShopGUI->setProgress(__('Создание резервной копии файлов...'), 'hide');
 
 
     // Размер названия поля

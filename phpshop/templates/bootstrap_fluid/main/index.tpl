@@ -160,6 +160,11 @@
                         @catalogMenu@
                     </ul>
                     <!--/ Меню дублирующих категорий -->
+                    
+                                        
+                    <!-- ProductDay Mod -->
+                    @productDay@
+                    <!--/ ProductDay Mod -->
 
                     <div class="list-group">
                         <span class="list-group-item active">Навигация</span>

@@ -16,7 +16,7 @@ function getFileInfo($file) {
 
 if (!getenv("COMSPEC"))
     define("EXPIRES", PHPShopFile::searchFile("../../license/", 'getFileInfo'));
-else{
+else {
     define("EXPIRES", time() + 100000);
     $_SESSION['mod_limit'] = 50;
 }
@@ -33,7 +33,7 @@ function ChekInstallModule($path, $num = false) {
     $return = array();
     $sql = 'SELECT a.*, b.key FROM ' . $GLOBALS['SysValue']['base']['modules'] . ' AS a LEFT OUTER JOIN ' . $GLOBALS['SysValue']['base']['modules_key'] . ' AS b ON a.path = b.path where a.path="' . $path . '"';
 
-    $result = mysqli_query($link_db,$sql);
+    $result = mysqli_query($link_db, $sql);
     $row = mysqli_fetch_array($result);
     if (mysqli_num_rows($result) > 0) {
         $return[0] = "#C0D2EC";
@@ -73,12 +73,23 @@ function actionStart() {
         'url' => '#'
     );
 
+    if ($PHPShopBase->Rule->CheckedRules('modules', 'remove')) {
+        $PHPShopInterface->action_button['Загрузить'] = array(
+            'name' => '',
+            'action' => '',
+            'class' => 'btn btn-default btn-sm navbar-btn load-module',
+            'type' => 'button',
+            'icon' => 'glyphicon glyphicon-plus',
+            'tooltip' => 'data-toggle="tooltip" data-placement="left" title="Загрузить модуль"'
+        );
+    }
+
 
     $PHPShopInterface->action_title['manual'] = 'Инструкция';
 
 
     if ($_SESSION['mod_limit'] > 5)
-        $PHPShopInterface->setActionPanel(__("Модули"), array('Отключить выбранные', 'Включить выбранные'));
+        $PHPShopInterface->setActionPanel(__("Модули"), array('Отключить выбранные', 'Включить выбранные'), array('Загрузить'));
     else
         $PHPShopInterface->setActionPanel(__("Модули"), false);
 
@@ -87,7 +98,7 @@ function actionStart() {
             array(null, "3%"), array("Описание", "60%"), array("Установлено", "15%"), array("", "10%"), array("Статус" . "", "7%", array('align' => 'right'))
     );
 
-    $PHPShopInterface->addJSFiles('./js/jquery.treegrid.js','./modules/gui/modules.gui.js');
+    $PHPShopInterface->addJSFiles('./js/jquery.treegrid.js', './modules/gui/modules.gui.js');
     $PHPShopInterface->path = 'modules.action';
 
 
@@ -322,9 +333,6 @@ function actionStart() {
     <script>
     var modcat="' . $active_tree_menu . '";
     </script>';
-
-
-
 
     $sidebarleft[] = array('title' => 'Категории', 'content' => $tree);
     $PHPShopInterface->setSidebarLeft($sidebarleft, 2);

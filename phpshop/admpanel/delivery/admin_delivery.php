@@ -6,7 +6,7 @@ PHPShopObj::loadClass('delivery');
 function actionStart() {
     global $PHPShopInterface, $PHPShopSystem;
 
-    $PHPShopCategoryArray = new PHPShopDeliveryArray(array('is_folder'=>"='1'"));
+    $PHPShopCategoryArray = new PHPShopDeliveryArray(array('is_folder' => "='1'"));
     $CategoryArray = $PHPShopCategoryArray->getArray();
 
     if (!empty($CategoryArray[$_GET['cat']]['name']))
@@ -15,13 +15,13 @@ function actionStart() {
 
     $PHPShopInterface->setActionPanel(__("Доставка" . $catname), array('Удалить выбранные'), array('Добавить'));
     $PHPShopInterface->setCaption(
-            array(null, "2%"), array("Иконка", "5%", array('sort' => 'none')), array("Название", "35%"), array("Цена ".$PHPShopSystem->getDefaultValutaCode(), "12%"), array("Бесплатно ", "10%",array('tooltip'=>'Бесплатно свыше')), array("", "7%"), array("Статус" . "", "7%", array('align' => 'right'))
+            array(null, "2%"), array("Иконка", "5%", array('sort' => 'none')), array("Название", "35%"), array("Цена " . $PHPShopSystem->getDefaultValutaCode(), "12%"), array("Бесплатно ", "10%", array('tooltip' => 'Бесплатно свыше')), array("", "7%"), array("Статус" . "", "7%", array('align' => 'right'))
     );
 
-    $PHPShopInterface->addJSFiles('./js/jquery.treegrid.js','./delivery/gui/delivery.gui.js');
+    $PHPShopInterface->addJSFiles('./js/jquery.treegrid.js', './delivery/gui/delivery.gui.js');
 
 
-    $where = array('is_folder'=>"!='1'");
+    $where = array('is_folder' => "!='1'");
     if (!empty($_GET['cat'])) {
         $where = array('PID' => '=' . intval($_GET['cat']));
     }
@@ -79,7 +79,11 @@ function actionStart() {
 
 
 
-    $sidebarleft[] = array('title' => 'Категории', 'content' => $tree,'title-icon'=>'<span class="glyphicon glyphicon-plus newcat" data-toggle="tooltip" data-placement="top" title="Добавить каталог"></span>&nbsp;<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="Развернуть все"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="Свернуть"></span>');
+    $sidebarleft[] = array('title' => 'Категории', 'content' => $tree, 'title-icon' => '<span class="glyphicon glyphicon-plus newcat" data-toggle="tooltip" data-placement="top" title="Добавить каталог"></span>&nbsp;<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="Развернуть все"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="Свернуть"></span>');
+
+    $help = '<p class="text-muted">У каждого типа доставки можно настроить обязательные и дополнительные поля для заполнения заказа в закладке управления доставкой <kbd>Адреса пользователя</kbd></p>';
+
+    $sidebarleft[] = array('title' => 'Подсказка', 'content' => $help);
     $PHPShopInterface->setSidebarLeft($sidebarleft, 3);
 
     $PHPShopInterface->Compile(3);
@@ -92,15 +96,16 @@ function treegenerator($array, $parent) {
     if (is_array($array['sub'])) {
         foreach ($array['sub'] as $k => $v) {
             $check = treegenerator($tree_array[$k], $k);
-            
-            if(empty($check)) 
-            $tree.='<tr class="treegrid-' . $k . ' treegrid-parent-' . $parent . ' data-tree">
+
+            if (empty($check))
+                $tree.='<tr class="treegrid-' . $k . ' treegrid-parent-' . $parent . ' data-tree">
 		<td><a href="?path=delivery&cat=' . $k . '">' . $v . '</a><span class="pull-right">' . $PHPShopInterface->setDropdownAction(array('edit', 'delete', 'id' => $k)) . '</span></td>
 	</tr>';
-            else  $tree.='<tr class="treegrid-' . $k . ' treegrid-parent-' . $parent . ' data-tree">
+            else
+                $tree.='<tr class="treegrid-' . $k . ' treegrid-parent-' . $parent . ' data-tree">
 		<td><a href="#" class="treegrid-parent" data-parent="treegrid-' . $k . '">' . $v . '</a><span class="pull-right">' . $PHPShopInterface->setDropdownAction(array('edit', 'delete', 'id' => $k)) . '</span></td>
 	</tr>';
-           
+
             $tree.=$check;
         }
     }

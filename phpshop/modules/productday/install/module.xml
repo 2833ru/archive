@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<module>
+    <version>1.0</version>
+    <name>Товар дня</name>
+    <description>Модуль вывода товара дня с обратным отсчетом.</description>
+    <category>form,develop</category>
+    <status>New</status>
+    <adminmenu>
+        <title>Товар дня</title>
+        <capability>true</capability>
+    </adminmenu>
+</module>

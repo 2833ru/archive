@@ -2,7 +2,7 @@
 
 $TitlePage = __('Создание Администратора');
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['users']);
-PHPShopObj::loadClass('user');
+
 
 function hidePassword($pas) {
     $num = strlen($pas);

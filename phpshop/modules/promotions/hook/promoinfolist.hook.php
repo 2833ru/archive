@@ -121,42 +121,19 @@ function UID_odnotip_hook($obj, $row, $rout) {
 
         if (isset($data)) {
             foreach ($data as $value) {
-                //массив товаров промо-кодов
+                //массив категорий промо-кодов
                 if ($value['categories_check'] == 1):
                     //категории массив
                     $category_ar = explode(',', $value['categories']);
                     //Создаем запрос для создания массива товаров по ID категорий
                     if (isset($category_ar)):
-                        $sqlyou = '';
-                        $val_cat = '';
                         foreach ($category_ar as $val_cat) {
-                            if ($val_cat != '') {
-                                if ($sqlyou == '') {
-                                    $sqlyou = '="' . $val_cat . '" ';
-                                } else {
-                                    $sqlyou .= 'OR category="' . $val_cat . '" ';
-                                }
-                            }
+                            if($val_cat==$row['category'])
+                                $inf_text_code[$value['id']] = '<div>' . $value['description'] . '</div>';
                         }
                     endif;
-                    //узнаем ID товаров по ID категорий
-                    $PHPShopOrmN = new PHPShopOrm($SysValue['base']['products']);
-                    $PHPShopOrmN->debug = false;
-                    $whereN['enabled'] = '="1"';
-                    if ($sqlyou != '') {
-                        $whereN['category'] = $sqlyou;
-                    }
-                    $data_prod = $PHPShopOrmN->select(array('id'), $whereN, array('order' => 'id'), array('limit' => 500));
-                    if (isset($data_prod)) {
-                        foreach ($data_prod as $val_prod) {
-                            if ($row['id'] == $val_prod['id']) {
-                                //массив с описанием акции
-                                $inf_text_code[$value['id']] = '<div>' . $value['description'] . '</div>';
-                            }
-                        }
-                    }
                 endif;
-                //массив категорий промо-кодов
+                //массив товаров промо-кодов
                 if ($value['products_check'] == 1):
                     //категории массив
                     $products_ar = explode(',', $value['products']);

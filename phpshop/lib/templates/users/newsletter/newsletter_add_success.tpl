@@ -1,0 +1,1 @@
+<div class="mesagge-for-email">Ваш email успешно добавлен в рассыку.</div>

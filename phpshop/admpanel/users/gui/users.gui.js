@@ -114,4 +114,30 @@ $(document).ready(function() {
         });
     });
 
+
+    // datetimepicker
+    if ($(".date").length) {
+        $(".date").datetimepicker({
+            format: 'dd-mm-yyyy',
+            language: 'ru',
+            weekStart: 1,
+            todayBtn: 1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            minView: 2,
+            forceParse: 0
+        });
+    }
+    
+   // Поиск - очистка
+    $(".btn-order-cancel").on('click', function() {
+        window.location.replace('?path=users.jurnal');
+    });
+
+    // Поиск 
+    $(".btn-order-search").on('click', function() {
+        $('#order_search').submit();
+    });
+
 });

@@ -16,4 +16,4 @@
         </div>
     </div>
 </div>
- <button class="btn btn-success" data-num="1" role="button" data-toggle="modal" data-target="#optionModal"><span class="glyphicon glyphicon-tasks"></span> @productSelect@</button>
+ <button class="btn btn-success @elementCartHide@" data-num="1" role="button" data-toggle="modal" data-target="#optionModal"><span class="glyphicon glyphicon-tasks"></span> @productSelect@</button>

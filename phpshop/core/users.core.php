@@ -30,7 +30,7 @@ class PHPShopUsers extends PHPShopCore {
 
         // Список экшенов
         $this->action = array('get' => array('productId', 'noticeId'), 'post' => array('add_notice', 'update_password', 'add_user', 'update_user', 'passw_send'),
-            'name' => array('register', 'order', 'wishlist', 'useractivate', 'sendpassword', 'notice', 'message'), 'nav' => 'index');
+            'name' => array('register', 'order', 'wishlist', 'useractivate', 'sendpassword', 'notice', 'message', 'newsletter'), 'nav' => 'index');
 
         // Префикс для экшенов методов
         $this->action_prefix = 'action_';
@@ -154,8 +154,7 @@ class PHPShopUsers extends PHPShopCore {
                 $PHPShopOrm->debug = $this->debug;
                 $PHPShopOrm->delete(array('user_id' => '=' . $this->UsersId, 'id' => '=' . $_GET['noticeId']));
                 $this->action_notice();
-            }
-            else
+            } else
                 $this->setError404();
         }
         else {
@@ -193,8 +192,7 @@ class PHPShopUsers extends PHPShopCore {
                 $this->setHook(__CLASS__, __FUNCTION__, $PHPShopProduct, 'END');
 
                 $this->ParseTemplate($this->getValue('templates.users_page_list'));
-            }
-            else
+            } else
                 $this->setError404();
         }
     }
@@ -321,8 +319,7 @@ class PHPShopUsers extends PHPShopCore {
             $this->setHook(__CLASS__, __FUNCTION__, $data, 'END');
 
             $this->ParseTemplate($this->getValue('templates.users_page_list'));
-        }
-        else
+        } else
             $this->action_register();
     }
 
@@ -427,7 +424,7 @@ class PHPShopUsers extends PHPShopCore {
                     $id = key($data_adres['list']);
                 }
 
-                if ((!empty($_POST['adres_this_default']) AND $_POST['adres_this_default']) OR !isset($data_adres['main']) OR !isset($data_adres['list'][$data_adres['main']])) {
+                if ((!empty($_POST['adres_this_default']) AND $_POST['adres_this_default']) OR ! isset($data_adres['main']) OR ! isset($data_adres['list'][$data_adres['main']])) {
                     $data_adres['main'] = $id;
                 }
 
@@ -753,7 +750,7 @@ class PHPShopUsers extends PHPShopCore {
     function add_user_check() {
 
         // Проверка на защитную картинку
-        if (empty($_SESSION['text']) or (strtolower($_POST['key']) != strtolower($_SESSION['text']))) {
+        if (empty($_SESSION['text']) or ( strtolower($_POST['key']) != strtolower($_SESSION['text']))) {
             $this->error[] = $this->lang('error_key');
             return false;
         }
@@ -766,9 +763,9 @@ class PHPShopUsers extends PHPShopCore {
             $data = $this->PHPShopOrm->select(array('id'), array('login' => "='" . $_POST['login_new'] . "'"), false, array('limit' => 1));
             if (!empty($data['id']))
                 $this->error[] = $this->lang('error_id');
-        }
-        else
+        } else {
             $this->error[] = $this->lang('error_login');
+        }
 
         // Проверка равности паролей 1 и 2
         if ($_POST['password_new'] != $_POST['password_new2'])
@@ -892,6 +889,65 @@ class PHPShopUsers extends PHPShopCore {
     }
 
     /**
+     * Экшен добавления нового пользователя с формы подписки на рассылку
+     */
+    function action_newsletter() {
+
+        // Отключение активации в заказе
+//        $this->activation = true;
+
+        $_SESSION['text'] = $_POST['key'] = "fromOrder";
+        // логин и есть емейл
+        $login = $_REQUEST['newsletter_email'];
+        $_POST['mail_new'] = $_POST['login_new'] = $login;
+        $_POST['password_new'] = $_POST['password_new2'] = $this->generatePassword();
+        $_POST['name_new'] = "Участник рассылки";
+
+        $this->UsersId = $this->user_check_by_email($login);
+        // если пользователь существующий, авторизуем его
+        if ($this->UsersId) {
+            // пользователь уже добавлен в рассылку, сообщаем об этом
+            if (PHPShopParser::checkFile("users/newsletter/newsletter_user_exist.tpl"))
+                $this->Disp = ParseTemplateReturn('users/newsletter/newsletter_user_exist.tpl');
+            else
+                $this->Disp = ParseTemplateReturn('phpshop/lib/templates/users/newsletter/newsletter_user_exist.tpl', true);
+
+            return true;
+        }
+
+        if (!$this->UsersId) {
+            $this->action_add_user();
+        }
+
+        if (count($this->error)) {
+            // выводим сообщение об ошибке добавления в рассылку
+            if (PHPShopParser::checkFile("users/newsletter/newsletter_add_error.tpl"))
+                $this->Disp = ParseTemplateReturn('users/newsletter/newsletter_add_error.tpl');
+            else
+                $this->Disp = ParseTemplateReturn('phpshop/lib/templates/users/newsletter/newsletter_add_error.tpl', true);
+
+            return true;
+        }
+
+        if ($this->UsersId) {
+            if (!$this->activation) {
+                // выводим сообщение об успешном добавлении в рассылку
+                if (PHPShopParser::checkFile("users/newsletter/newsletter_add_success.tpl"))
+                    $this->Disp = ParseTemplateReturn('users/newsletter/newsletter_add_success.tpl');
+                else
+                    $this->Disp = ParseTemplateReturn('phpshop/lib/templates/users/newsletter/newsletter_add_success.tpl', true);
+            }
+            else {
+                // выводим сообщение об успешном добавлении в рассылку + что нужно активировать email
+                if (PHPShopParser::checkFile("users/newsletter/newsletter_add_success_need_activation.tpl"))
+                    $this->Disp = ParseTemplateReturn('users/newsletter/newsletter_add_success_need_activation.tpl');
+                else
+                    $this->Disp = ParseTemplateReturn('phpshop/lib/templates/users/newsletter/newsletter_add_success_need_activation.tpl', true);
+            }
+        }
+    }
+
+    /**
      * Экшен добавления нового пользователя
      */
     function action_add_user() {
@@ -949,7 +1005,7 @@ class PHPShopUsers extends PHPShopCore {
      * Редирект в ЛК пользователя.
      */
     function redirectToUserInfo() {
-        if ($this->PHPShopNav->getPath() != "done")
+        if ($this->PHPShopNav->getPath() != "done" AND $this->PHPShopNav->getName() != "newsletter")
             header("Location: " . $GLOBALS['SysValue']['dir']['dir'] . "/users/");
     }
 

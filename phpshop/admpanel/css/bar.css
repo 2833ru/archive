@@ -166,7 +166,7 @@ background-color: white;
     src: url("../fonts/ratchicons.eot");
     src: url("../fonts/ratchicons.eot?#iefix") format("embedded-opentype"), url("../fonts/ratchicons.woff") format("woff"), url("../fonts/ratchicons.ttf") format("truetype"), url("../fonts/ratchicons.svg#svgFontName") format("svg");
 }
-.icon {
+.tab-item .icon {
     display: inline-block;
     font-family: Ratchicons;
     font-size: 24px;

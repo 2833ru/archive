@@ -19,7 +19,7 @@
                     </h2> @productPriceRub@</div> 
 
 
-                <div class="pull-right hidden-xs">@oneclick@</div>
+                <div class="pull-right">@oneclick@</div>
                 <p><br></p>
                 <div>
                     <div class="small">@productArt@</div>
@@ -27,15 +27,16 @@
 
                 </div>
                 <div class="review hidden-xs"> @rateUid@ </div>
-
+                
+                @promotionInfo@ 
             </div>
-
 
             <div class="row">
                 <div class="col-xs-5">
                     @ComStart@
                     @optionsDisp@
                     @ComStartCart@
+
                     <div class="input-group" style="max-width: 150px">
                         <input class="form-control addToCartListNum" data-uid="@productUid@"  type="text" style="min-width:50px" maxlength="3" value="1" placeholder="1" required="">
                         <span class="input-group-btn">

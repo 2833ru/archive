@@ -1,5 +1,4 @@
 <?php
-
 $_classPath = "../../../";
 include($_classPath . "class/obj.class.php");
 PHPShopObj::loadClass("base");
@@ -25,7 +24,7 @@ $pathTemplate = $SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'];
 
 $sql = "select * from " . $SysValue['base']['table_name1'] . " where id=" . intval($_GET['orderID']);
 $n = 1;
-@$result = mysqli_query($link_db,$sql);
+@$result = mysqli_query($link_db, $sql);
 $row = mysqli_fetch_array(@$result);
 $id = $row['id'];
 $datas = $row['datas'];
@@ -46,11 +45,11 @@ if (is_array($order['Cart']['cart']))
 	</tr>
   ";
 
-       //Определение и суммирование веса
+        //Определение и суммирование веса
         $goodid = $val['id'];
         $goodnum = $val['num'];
         $wsql = 'select weight from ' . $SysValue['base']['table_name2'] . ' where id=\'' . $goodid . '\'';
-        $wresult = mysqli_query($link_db,$wsql);
+        $wresult = mysqli_query($link_db, $wsql);
         $wrow = mysqli_fetch_array($wresult);
         $cweight = $wrow['weight'] * $goodnum;
         if (!$cweight) {
@@ -119,6 +118,13 @@ if ($row['flat'])
     $adr_info .= ", квартира: " . $row['flat'];
 
 $adr_info = substr($adr_info, 2);
+
+$PERSON = $order['Person'];
+if ($PERSON['discount'] > 0) {
+    $discount = $PERSON['discount'] . '%';
+} else {
+    $discount = ($PERSON['tip_disc'] == 1 ? $PERSON['discount_promo'] . '%' : $PERSON['discount_promo']);
+}
 ?>
 <head>
     <title>Бланк Заказа № <?= $ouid ?></title>
@@ -184,7 +190,7 @@ $adr_info = substr($adr_info, 2);
         </tr>
         <tr class=tablerow >
             <td class=tablerow style="border-bottom: 1px solid #000000;">Комментарии:</td>
-            <td class=tableright style="border-bottom: 1px solid #000000;">&nbsp;<?=  $row['dop_info']; ?></td>
+            <td class=tableright style="border-bottom: 1px solid #000000;">&nbsp;<?= $row['dop_info']; ?></td>
         </tr>
     </table>
     <p><br></p>
@@ -199,12 +205,12 @@ $adr_info = substr($adr_info, 2);
         </tr>
         <?
         echo @$dis;
-        $my_total = $PHPShopOrder->returnSumma($sum, $order['Person']['discount']) + $deliveryPrice;
+        $my_total = $row['sum'];
         $my_nds = number_format($my_total * $LoadItems['System']['nds'] / (100 + $LoadItems['System']['nds']), "2", ".", "");
         ?>
         <tr>
             <td colspan=5 align=right style="border-top: 1px solid #000000;border-left: 1px solid #000000;">Скидка:</td>
-            <td class=tableright nowrap><b><?= @$order['Person']['discount'] ?>%</b></td>
+            <td class=tableright nowrap><b><?= $discount ?></b></td>
         </tr>
         <tr>
             <td colspan=5 align=right style="border-top: 1px solid #000000;border-left: 1px solid #000000;">Итого:</td>
@@ -218,12 +224,12 @@ $adr_info = substr($adr_info, 2);
         <? } ?>
         <tr><td colspan=6 style="border: 0px; border-top: 1px solid #000000;">&nbsp;</td></tr>
     </table>
-    
-    <p><b>Всего наименований <?= ($num + 1) ?>, на сумму <?= ($PHPShopOrder->returnSumma($sum, $order['Person']['discount']) + $deliveryPrice) . " " . $PHPShopOrder->default_valuta_code; ?>
+
+    <p><b>Всего наименований <?= ($num + 1) ?>, на сумму <?= ($row['sum']) . " " . $PHPShopOrder->default_valuta_code; ?>
             <br />
             <?
             $iw = new inwords;
-            $s = $iw->get($PHPShopOrder->returnSumma($sum, $order['Person']['discount']) + $deliveryPrice);
+            $s = $iw->get($my_total);
             $v = $PHPShopOrder->default_valuta_code;
             if (preg_match("/руб/i", $v))
                 echo $s;

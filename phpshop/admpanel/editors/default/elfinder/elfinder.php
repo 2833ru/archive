@@ -10,6 +10,16 @@ if (empty($_GET['resizable']))
     $resizable = 'false';
 else
     $resizable = 'true';
+
+//  UTF-8 Default Charset Fix
+ if (stristr(ini_get("default_charset"), "utf") and function_exists('ini_set')) {
+    ini_set("default_charset", "cp1251");
+}
+
+// UTF-8 Env Fix
+if (ini_get("mbstring.func_overload") > 0 and function_exists('ini_set')) {
+            ini_set("mbstring.internal_encoding", null);
+ }
 ?>
 <!DOCTYPE html>
 <html>

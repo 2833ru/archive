@@ -60,7 +60,7 @@ if (!RedactorPlugins) var RedactorPlugins = {};
 					columns = $('#redactor-table-columns').val(),
 					$tableBox = $('<div>'),
 					tableId = Math.floor(Math.random() * 99999),
-					$table = $('<table id="table' + tableId + '"><tbody></tbody></table>'),
+					$table = $('<table id="table' + tableId + '" class="table table-bordered"><tbody></tbody></table>'),
 					i, $row, z, $column;
 
 				for (i = 0; i < rows; i++)

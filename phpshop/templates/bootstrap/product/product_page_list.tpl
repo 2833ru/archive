@@ -72,7 +72,6 @@
 
 @productPageNav@
 
-
 <script type="text/javascript">
 
     var max_page = new Number('@max_page@');

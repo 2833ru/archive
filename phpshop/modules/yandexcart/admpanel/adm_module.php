@@ -26,7 +26,7 @@ function actionStart() {
     $payment_delivery_value[] = array('Наличный расчет при получении', 2, $data['payment_delivery']);
 
 
-    $Tab1 = '<hr>'.$PHPShopGUI->setField('Токен для работы с Маркетом', $PHPShopGUI->setInputText(false, 'token_new', $data['token'],400));
+    $Tab1 = $PHPShopGUI->setField('Токен для работы с Маркетом', $PHPShopGUI->setInputText(false, 'token_new', $data['token'],400));
     $Tab1.= $PHPShopGUI->setField('ID Компании в Маркете', $PHPShopGUI->setInputText(false, 'campaign_new', $data['campaign'],400));
     $Tab1.= $PHPShopGUI->setField('Пароль авторизации внешних запросов', $PHPShopGUI->setInputText(false, 'password_new', $data['password'],400));
     $Tab1.= $PHPShopGUI->setField('Способы оплаты', $PHPShopGUI->setSelect('payment_delivery_new', $payment_delivery_value));
@@ -41,12 +41,14 @@ function actionStart() {
             $status_processing_value[] = array($order_status['name'], $order_status['id'], $data['status_processing']);
             $status_cancelled_value[] = array($order_status['name'], $order_status['id'], $data['status_cancelled']);
             $status_delivery_value[] = array($order_status['name'], $order_status['id'], $data['status_delivery']);
+            $status_delivered_value[] = array($order_status['name'], $order_status['id'], $data['status_delivered']);
         }
 
     // Статус заказа
     $Tab1.= $PHPShopGUI->setField('Статус подтвержден на доставку', $PHPShopGUI->setSelect('status_processing_new', $status_processing_value));
     $Tab1.= $PHPShopGUI->setField('Статус отменен', $PHPShopGUI->setSelect('status_cancelled_new', $status_cancelled_value));
     $Tab1.= $PHPShopGUI->setField('Статус передан в службу доставки', $PHPShopGUI->setSelect('status_delivery_new', $status_delivery_value));
+    $Tab1.= $PHPShopGUI->setField('Статус доставлен', $PHPShopGUI->setSelect('status_delivered_new', $status_delivered_value));
 
     $Info = '<p><h4>Получение токена приложения</h4>
         <ol>

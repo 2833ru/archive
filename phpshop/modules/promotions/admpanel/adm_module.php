@@ -20,7 +20,7 @@ function actionStart() {
     $Tab3 = $PHPShopGUI->setPay('О модуле', false);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Инструкция", $Tab2, 270), array("О Модуле", $Tab3, 270));
+    $PHPShopGUI->setTab(array("Инструкция", $Tab2), array("О Модуле", $Tab3),array("Промоакции", null,'?path=modules.dir.promotions'));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionUpdate.modules.edit");

@@ -96,21 +96,22 @@ if ($zeroweight) {
     $weight = 0;
 }
 
+$total_summa_nds=number_format($row['sum'], "2", ".", "");
+$total_summa=$total_summa_nds;
 
 $PHPShopDelivery = new PHPShopDelivery($order['Person']['dostavka_metod']);
 $deliveryPrice = $PHPShopDelivery->getPrice($sum, $weight);
 
 $summa_nds_dos = number_format($deliveryPrice * $nds / (100 + $nds), "2", ".", "");
 
-
+$sum = $row['sum'];
 
 if ($LoadItems['System']['nds_enabled']) {
     $nds = $LoadItems['System']['nds'];
     @$nds = number_format($sum * ($nds / (100 + $nds)), "2", ".", "");
 }
-@$sum = number_format($sum, "2", ".", "");
 
-$name_person = $order['Person']['name_person'];
+
 
 if ($row['org_name'] or $order['Person']['org_name'])
     $org_name = $order['Person']['org_name'] . $row['org_name'];
@@ -149,10 +150,6 @@ if ($row['flat'])
 
 $adr_info = substr($adr_info, 2);
 
-
-// Генерим номер товарного чека
-$chek_num = substr(abs(crc32(uniqid(rand(), true))), 0, 5);
-$LoadBanc = unserialize($LoadItems['System']['bank']);
 ?>
 
 <!DOCTYPE html

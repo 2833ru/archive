@@ -32,7 +32,7 @@ php@
     $Tab3 = $PHPShopGUI->setPay();
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Инструкция", $Tab2), array("О Модуле", $Tab3),array("Обзор стикеров", null,'?path=modules.dir.sticker'));
+    $PHPShopGUI->setTab(array("Инструкция", $Tab2), array("О Модуле", $Tab3),array("Стикеры", null,'?path=modules.dir.sticker'));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =

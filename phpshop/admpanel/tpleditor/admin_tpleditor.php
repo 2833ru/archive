@@ -77,7 +77,7 @@ function _tpl($file) {
 function actionStart() {
     global $PHPShopGUI, $TitlePage, $PHPShopSystem, $selectModalBody;
 
-    $PHPShopGUI->addJSFiles('./js/jquery.waypoints.min.js','./js/jquery.treegrid.js','./tpleditor/gui/tpleditor.gui.js', './tpleditor/gui/ace/ace.js', './js/bootstrap-tour.min.js','./tpleditor/gui/tour.gui.js');
+    $PHPShopGUI->addJSFiles('./js/jquery.waypoints.min.js', './js/jquery.treegrid.js', './tpleditor/gui/tpleditor.gui.js', './tpleditor/gui/ace/ace.js', './js/bootstrap-tour.min.js', './tpleditor/gui/tour.gui.js');
     $ace = false;
 
     if (empty($_GET['option']) or $_GET['option'] == 'lite') {
@@ -111,7 +111,14 @@ function actionStart() {
     $PHPShopGUI->action_select['Урок'] = array(
         'name' => 'Обучение',
         'action' => 'presentation',
-        'icon' =>'glyphicon glyphicon-education'
+        'icon' => 'glyphicon glyphicon-education'
+    );
+
+    $PHPShopGUI->action_select['Магазин'] = array(
+        'name' => 'Магазин дизайнов',
+        'url' => 'http://template.phpshop.ru/?from='.$_SERVER['SERVER_NAME'],
+        'icon' => 'glyphicon glyphicon-shopping-cart',
+        'target' => '_blank'
     );
 
     if (!empty($_GET['file'])) {
@@ -209,7 +216,7 @@ function actionStart() {
         $PHPShopGUI->_CODE = '<p class="text-muted hidden-xs data-row">Выберите установленный шаблон и файл для редактирования в левом меню.  
             Установка шаблона для отображения на сайте производится в основных системных настройках, закладка <a href="?path=system#1"><span class="glyphicon glyphicon-share-alt"></span>Настройка дизайна</a>. Цветовая тема подсветки синтаксиса меняется в основных системных настройках, закладка <a href="?path=system#4"><span class="glyphicon glyphicon-share-alt"></span>Настройка управления</a>.</p>';
 
-    $PHPShopGUI->setActionPanel(PHPShopSecurity::TotalClean($TitlePage), array('Режим 1', 'Режим 2', 'Учебник','|','Урок'), array('Размер', 'Учебник', 'Выполнить'));
+    $PHPShopGUI->setActionPanel(PHPShopSecurity::TotalClean($TitlePage), array('Режим 1', 'Режим 2', 'Учебник','|', 'Магазин', '|', 'Урок'), array('Размер', 'Учебник', 'Выполнить'));
 
     $dir = "../templates/*";
     $k = 1;
@@ -292,6 +299,9 @@ function actionStart() {
     }
 
     $tree.='</table>';
+    
+    $market='<p class="text-muted hidden-xs data-row">PHPShop.Market предлагает более 3000 уникальных и современных дизайнов для PHPShop. <a href="http://template.phpshop.ru/?from='.$_SERVER['SERVER_NAME'].'" target="_blank"><span class="glyphicon glyphicon-shopping-cart"></span>Выбрать дизайн</a></p>';
+
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("submit", "editID", "Применить", "right", 80, "", "but", "actionSave.system.edit");
@@ -299,6 +309,7 @@ function actionStart() {
     $PHPShopGUI->setFooter($ContentFooter);
 
     $sidebarleft[] = array('title' => __('Шаблоны в системе'), 'content' => $tree, 'title-icon' => $title_icon);
+    $sidebarleft[] = array('title' => __('Магазин дизайнов'), 'content' => $market);
 
     $PHPShopGUI->sidebarLeftCell = 3;
     $PHPShopGUI->setSidebarLeft($sidebarleft, 3);
@@ -312,7 +323,7 @@ function actionSave() {
     $info = PHPShopSecurity::getExt($file);
     if (file_exists($file) and in_array($info, array('tpl', 'css'))) {
         PHPShopFile::chmod($file);
-        if (PHPShopFile::write($file, $content = str_replace(array('area','&#43;'), array('textarea','+'), $_POST['editor_src'])))
+        if (PHPShopFile::write($file, $content = str_replace(array('area', '&#43;'), array('textarea', '+'), $_POST['editor_src'])))
             $action = true;
         else
             $action = false;

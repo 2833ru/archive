@@ -30,8 +30,6 @@
                 <script src="http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE9.js"></script>
                 <link rel="stylesheet" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@/font-awesome-ie7.css">
         <![endif]-->
-        <!-- Favicons
-        ================================================== -->
         <link rel="stylesheet" type="text/css" href="java/highslide/highslide.css"/>
         <LINK href="@pageCss@" type="text/css" rel="stylesheet">
         <link rel="stylesheet" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/style.css">

@@ -162,6 +162,11 @@
                         @catalogMenu@
                     </ul>
                     <!--/ Меню дублирующих категорий -->
+                    
+                    
+                    <!-- ProductDay Mod -->
+                    @productDay@
+                    <!--/ ProductDay Mod -->
 
                     <div class="list-group ">
                         <span class="list-group-item active">Навигация</span>
@@ -219,8 +224,10 @@
                 <div class="bar-padding-top-fix visible-xs visible-sm"> </div>
                 <div class="col-md-9 col-xs-12 main">
                     @DispShop@
+                    @getPhotos@
                 </div>
 
+                
                 <div class="visible-lg visible-md text-center">@banersDisp@<br></div>
             </div>
 

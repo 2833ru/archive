@@ -405,6 +405,8 @@ class PHPShopUpdate {
 
         // Обновление БД присутствует
         if ($this->base_update_enabled) {
+            
+            /*
             if (!file_exists("dumper/backup/upload_dump.sql.gz")) {
                 $this->log("Не создана резервная копия базы данных", 'warning', 'remove');
                 return false;
@@ -418,6 +420,7 @@ class PHPShopUpdate {
             if (!unlink("dumper/backup/upload_dump.sql.gz")) {
                 $this->log("Не удаётся удалить upload_backup.sql", 'warning', 'info');
             }
+            */
 
             if (!copy($this->_backup_path . "temp/update.sql", "dumper/backup/update.sql")) {
                 $this->log("Не удаётся скопировать обновление базы данных update.sql", 'warning', 'remove');

@@ -59,7 +59,7 @@ function actionStart() {
     );
 
     $PHPShopInterface->setActionPanel($TitlePage, array('Редактировать выбранные','CSV', '|', 'Удалить выбранные'), false);
-    $PHPShopInterface->setCaption(array(null, "3%"), array("№", "12%"), array("Статус", "15%"), array("Дата", "10%"), array("Покупатель", "20%"), array("Телефон", "15%"), array("", "15%"), array(__("Итого"), "17%", array('align' => 'right')));
+    $PHPShopInterface->setCaption(array(null, "3%"), array("№", "12%"), array("Статус", "20%"), array("Дата", "10%"), array("Покупатель", "20%"), array("Телефон", "15%"), array("", "7%"), array(__("Итого"), "17%", array('align' => 'right')));
     $PHPShopInterface->addJSFiles('./js/bootstrap-datetimepicker.min.js', './js/bootstrap-datetimepicker.ru.js', './order/gui/order.gui.js');
     $PHPShopInterface->addCSSFiles('./css/bootstrap-datetimepicker.min.css');
 

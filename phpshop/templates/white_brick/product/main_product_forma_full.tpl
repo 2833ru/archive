@@ -12,12 +12,12 @@
             <div class="review"> @rateUid@ </div>
             <div class="description">
                 <div class="tovar_art"> </div>
-                <b>@productSklad@</b><br>@oneclick@
+                <b>@productSklad@</b><br>@oneclick@ @promotionInfo@
                 <div>@productOnSklad@</div>
                 <div>@productArt@</div>
             </div>
             <div class="options"> @ComStart@
-                <div class="tovar_optionsDisp">@optionsDisp@</div>
+                <div class="tovar_optionsDisp @elementCartHide@">@optionsDisp@</div>
             </div>
             <div class="cart">
                 <div class="add-to-cart">

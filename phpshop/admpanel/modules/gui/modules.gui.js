@@ -4,6 +4,32 @@ var TABLE_EVENT = true;
 
 $().ready(function() {
 
+    // Загрузка модуля
+    $('body').on('click', '.load-module', function() {
+        var file = prompt('URL');
+        //file = 'http://mod.phpshop.ru/example.zip';
+        if (file.length > 0) {
+
+            var data = [];
+            data.push({name: 'ajax', value: 1});
+            data.push({name: 'url', value: file});
+            $.ajax({
+                mimeType: 'text/html; charset=windows-1251',
+                url: '?path=modules.load&id=load',
+                type: 'post',
+                data: data,
+                dataType: "json",
+                async: false,
+                success: function(json) {
+                    if (json['success'] == 1) {
+                        showAlertMessage(json['result']);
+                    } else
+                        showAlertMessage(json['result'], true, true);
+                }
+            });
+        }
+    });
+
 
     // Есть идеи развития?
     $(".idea").on('click', function(event) {
@@ -313,11 +339,11 @@ $().ready(function() {
 
     // Дерево категорий
     if (typeof(TREEGRID_LOAD) != 'undefined')
-    $('.tree').treegrid({
-        saveState: true,
-        expanderExpandedClass: 'glyphicon glyphicon-triangle-bottom',
-        expanderCollapsedClass: 'glyphicon glyphicon-triangle-right'
-    });
+        $('.tree').treegrid({
+            saveState: true,
+            expanderExpandedClass: 'glyphicon glyphicon-triangle-bottom',
+            expanderCollapsedClass: 'glyphicon glyphicon-triangle-right'
+        });
 
 
     if (typeof($.cookie('data_length')) == 'undefined')

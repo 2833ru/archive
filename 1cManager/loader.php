@@ -4,7 +4,7 @@
  * Автономная синхронизация заказов с 1С
  * @package PHPShopExchange
  * @author PHPShop Software
- * @version 1.8
+ * @version 1.9
  */
 // Функции авторизации
 include_once("login.php");
@@ -141,7 +141,8 @@ switch ($_GET['command']) {
 
                 // Доставка
                 $PHPShopDelivery = new PHPShopDelivery($order['Person']['dostavka_metod']);
-                $csv3.=$PHPShopDelivery->getCity() . ";" . $PHPShopDelivery->getPrice($sum, $weight) . ";" . $valuta . "\n";
+                //$csv3.=$PHPShopDelivery->getCity() . ";" . $PHPShopDelivery->getPrice($sum, $weight) . ";" . $valuta . "\n";
+                $csv3.=$PHPShopDelivery->getCity() . ";" . $order['Cart']['dostavka'] . ";" . $valuta . "\n";
 
                 $csv.=$csv1 . $csv2 . $csv3;
             }

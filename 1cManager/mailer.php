@@ -27,8 +27,9 @@ function SendMailUser($id,$flag="accounts") {
     $mail=$order['Person']['mail'];
     $name=$order['Person']['name_person'];
     $uid=$row['uid'];
-    $zag="Бухгалтерские документы по заказу №".$row['uid'];
-    $from="robot@".str_replace("www.","",$_SERVER['SERVER_NAME']);
+
+    $PHPShopSystem = new PHPShopSystem();
+    
     $content="Уважаемый(ая) пользователь ".$name.", по заказу №".$uid." стали доступны бухгалтерские документы в личном кабинете.
 
 Вы можете проверить статус заказа, загрузить файлы, распечатать платежные 
@@ -39,6 +40,7 @@ function SendMailUser($id,$flag="accounts") {
 ";
 
     // Отправление сообщения
-    new PHPShopMail($mail,$from,$zag,$content);
+    $PHPShopMail = new PHPShopMail($mail,$PHPShopSystem->getParam('adminmail2'),"Бухгалтерские документы по заказу №".$row['uid'],'', 'text/plain', true, false);
+    $PHPShopMail->sendMailNow($content);
 }
 ?>

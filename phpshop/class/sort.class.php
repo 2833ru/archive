@@ -306,6 +306,7 @@ class PHPShopSortCategoryArray extends PHPShopArray {
     function __construct($sql = false, $debug = false) {
         $this->objSQL = $sql;
         $this->debug = $debug;
+        $this->order = array('order'=>'num desc, name');
         $this->objBase = $GLOBALS['SysValue']['base']['sort_categories'];
         parent::__construct('id', 'name', 'category', 'filtr', 'page', 'optionname', 'goodoption');
     }

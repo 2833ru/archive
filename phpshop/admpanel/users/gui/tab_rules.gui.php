@@ -193,7 +193,7 @@ function tab_rules($row, $autofill = false) {
                                 <td>' . $PHPShopGUI->setCheckbox('modules_rul_2', 1, false, rules_checked($status[modules], 1)) . '</td>
                                 <td>' . $PHPShopGUI->setCheckbox('modules_rul_3', 1, false, rules_checked($status[modules], 2)) . '</td>
                                 <td>-</td>
-                                <td>-</td>
+                                <td>' . $PHPShopGUI->setCheckbox('modules_rul_4', 1, 'Загрузка модулей', rules_checked($status[modules], 3)) . '</td>
                             </tr>
                             <tr>
                             <td>Обновление ПО</td>

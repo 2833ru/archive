@@ -30,13 +30,13 @@ function OrdersArray($p1, $p2, $words, $list) {
     $words = MyStripSlashes(base64_decode($words));
 
     if (empty($p1))
-        $p1 = date("U") - 86400;
+        $p1 = date("U") - 432000;
     else
-        $p1 = PHPShopDate::GetUnixTime($p1) - 86400;
+        $p1 = PHPShopDate::GetUnixTime($p1) - 432000;
     if (empty($p2))
         $p2 = date("U");
     else
-        $p2 = PHPShopDate::GetUnixTime($p2) + 86400;
+        $p2 = PHPShopDate::GetUnixTime($p2) + 432000;
 
 
     if ($list == "all" or !$list)
@@ -190,11 +190,27 @@ function GetOplataMetodArray() {
     return $Status;
 }
 
+// Тип доставки
+function GetDeliveryMetodArray() {
+    global $link_db;
+    $sql = "select * from " . $GLOBALS['SysValue']['base']['table_name30'] . " where enabled='1' order by id";
+    $result = mysqli_query($link_db,$sql);
+    while ($row = mysqli_fetch_array($result)) {
+        $array = array(
+            "id" => $row['id'],
+            "name" => $row['city']
+        );
+        $Status[$row['id']] = $array;
+    }
+    return $Status;
+}
+
 $GetOrderStatusArray = GetOrderStatusArray();
 $GetOrderStatusArray[0]['name'] = "Новый заказ";
 $GetOrderStatusArray[0]['color'] = "C0D2EC";
 $GetOrderStatusArray[0]['id'] = 0;
 $GetOplataMetodArray = GetOplataMetodArray();
+$GetDeliveryMetodArray = GetDeliveryMetodArray();
 
 // Форматирование строки
 function Clean($s) {
@@ -400,6 +416,19 @@ function ReturnSumma($sum, $id, $disc) {
     return number_format($sum, "2", ".", "");
 }
 
+function ReturnCarrency($id) {
+    $PHPShopProduct = new PHPShopProduct($id);
+    $getValutaID = $PHPShopProduct->getValutaID();
+
+    if (empty($getValutaID)) {
+        $System = new PHPShopSystem();
+        $getValutaID = $System->getDefaultValutaId();
+    }
+
+    $PHPShopValuta = new PHPShopValuta($getValutaID);
+    return $PHPShopValuta->getIso();
+}
+
 // Обработка комманд
 switch ($_REQUEST['command']) {
 
@@ -451,6 +480,7 @@ switch ($_REQUEST['command']) {
         //error_reporting(0);
         $XMLS = null;
         $XMLM = null;
+        $XMLD = null;
 
         if (!empty($_REQUEST['id'])) {
             $OrdersReturn = OrdersReturn($_REQUEST['id']);
@@ -474,6 +504,16 @@ switch ($_REQUEST['command']) {
                           <pname>' . $metod['name'] . '</pname>
                    </pay>
                    ';
+
+            if (is_array($GetDeliveryMetodArray))
+                foreach ($GetDeliveryMetodArray as $metod)
+                    $XMLD.='
+                    <deliv>
+                      <did>' . $metod['id'] . '</did>
+                          <dname>' . $metod['name'] . '</dname>
+                   </deliv>
+                   ';
+
 
             // выводим сгрупппированные данные пользователя
             if ($OrdersReturn['row']['fio'] OR $OrdersReturn['order']['name_person'])
@@ -503,12 +543,32 @@ switch ($_REQUEST['command']) {
             $XML.='<order>
 	      <data>' . PHPShopDate::dataV($OrdersReturn['order']['data']) . '</data>
           <datas>' . $OrdersReturn['datas'] . '</datas>
-		  <uid>' . $OrdersReturn['order']['ouid'] . '</uid>
+		  <uid>' . $OrdersReturn['row']['uid'] . '</uid>
 		  <name>' . Clean($OrdersReturn['order']['name_person'] . $OrdersReturn['row']['fio']) . '</name>
 		  <mail>' . Clean($OrdersReturn['order']['mail']) . '</mail>
 		  <tel_code>' . Clean($OrdersReturn['order']['tel_code']) . '</tel_code>
 		  <tel_name>' . Clean($OrdersReturn['order']['tel_name'] . $OrdersReturn['row']['tel']) . '</tel_name>
 		  <adres>' . Clean($OrdersReturn['order']['adr_name'] . $adr_info) . '</adres>
+		  <country>' . Clean($OrdersReturn['order']['country'] . $OrdersReturn['row']['country']) . '</country>
+		  <state>' . Clean($OrdersReturn['order']['state'] . $OrdersReturn['row']['state']) . '</state>
+		  <city>' . Clean($OrdersReturn['order']['city'] . $OrdersReturn['row']['city']) . '</city>
+		  <index>' . Clean($OrdersReturn['order']['index'] . $OrdersReturn['row']['index']) . '</index>
+		  <street>' . Clean($OrdersReturn['order']['street'] . $OrdersReturn['row']['street']) . '</street>
+		  <house>' . Clean($OrdersReturn['order']['house'] . $OrdersReturn['row']['house']) . '</house>
+		  <porch>' . Clean($OrdersReturn['order']['country'] . $OrdersReturn['row']['porch']) . '</porch>
+		  <door_phone>' . Clean($OrdersReturn['order']['door_phone'] . $OrdersReturn['row']['door_phone']) . '</door_phone>
+		  <flat>' . Clean($OrdersReturn['order']['flat'] . $OrdersReturn['row']['flat']) . '</flat>
+		  <org_name>' . Clean($OrdersReturn['order']['org_name'] . $OrdersReturn['row']['org_name']) . '</org_name>
+		  <org_inn>' . Clean($OrdersReturn['order']['org_inn'] . $OrdersReturn['row']['org_inn']) . '</org_inn>
+		  <org_kpp>' . Clean($OrdersReturn['order']['org_kpp'] . $OrdersReturn['row']['org_kpp']) . '</org_kpp>
+		  <org_yur_adres>' . Clean($OrdersReturn['order']['org_yur_adres'] . $OrdersReturn['row']['org_yur_adres']) . '</org_yur_adres>
+		  <org_fakt_adres>' . Clean($OrdersReturn['order']['org_fakt_adres'] . $OrdersReturn['row']['org_fakt_adres']) . '</org_fakt_adres>
+		  <org_ras>' . Clean($OrdersReturn['order']['org_ras'] . $OrdersReturn['row']['org_ras']) . '</org_ras>
+		  <org_bank>' . Clean($OrdersReturn['order']['org_bank'] . $OrdersReturn['row']['org_bank']) . '</org_bank>
+		  <org_kor>' . Clean($OrdersReturn['order']['org_kor'] . $OrdersReturn['row']['org_kor']) . '</org_kor>
+		  <org_bik>' . Clean($OrdersReturn['order']['org_bik'] . $OrdersReturn['row']['org_bik']) . '</org_bik>
+		  <org_city>' . Clean($OrdersReturn['order']['org_city'] . $OrdersReturn['row']['org_city']) . '</org_city>
+		  <dop_info>' . Clean($OrdersReturn['order']['dop_info'] . $OrdersReturn['row']['dop_info']) . '</dop_info>
 		  <dos_ot>' . Clean($OrdersReturn['row']['delivtime']) . '</dos_ot>
 		  <dos_do>' . Clean($OrdersReturn['order']['dos_do']) . '</dos_do>
 		  <discount>' . (Clean($OrdersReturn['order']['discount']) + 0) . '</discount>
@@ -517,7 +577,6 @@ switch ($_REQUEST['command']) {
 		  <place_price>' . GetDeliveryPrice($OrdersReturn['order']['dostavka_metod'], $OrdersReturn['cart']['sum'], $OrdersReturn['cart']['weight']) . '</place_price>
 		  <metod>' . OplataMetod($OrdersReturn['order']['order_metod']) . '</metod>
 		  <metod_id>' . $OrdersReturn['order']['order_metod'] . '</metod_id>
-		  <org_name>' . Clean($OrdersReturn['order']['org_name'] . $OrdersReturn['row']['org_name']) . '</org_name>
 		  <statusi>' . $OrdersReturn['statusi'] . '</statusi>
 		  <status>' . $GetOrderStatusArray[$OrdersReturn['statusi']]['name'] . '</status>
 		  <time>' . $OrdersReturn['time'] . '</time>
@@ -527,6 +586,9 @@ switch ($_REQUEST['command']) {
 		  <paylist>
 		  ' . $XMLM . '
 		  </paylist>
+		  <delivlist>
+		  ' . $XMLD . '
+		  </delivlist>
 		  </order>
 		  <productlist>
 		  ';
@@ -541,6 +603,7 @@ switch ($_REQUEST['command']) {
 	<p_name>' . PHPShopSecurity::TotalClean($vals['name']) . '</p_name>
 	<pic>' . ReturnPic($vals['id']) . '</pic>
 	<price>' . ReturnSumma($vals['price'], $vals['id'], $OrdersReturn['order']['discount']) . '</price>
+	<currency>' . ReturnCarrency($vals['id']) . '</currency>
 	<num>' . $vals['num'] . '</num>
  </product>
  ';

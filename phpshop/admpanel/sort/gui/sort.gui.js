@@ -11,7 +11,7 @@ $().ready(function() {
             
             var data = [];
             data.push({name: 'delID', value: '1'});
-            data.push({name: 'actionList[delID]', value: 'actionDelete'});
+            data.push({name: 'actionList[delID]', value: 'actionDelete.sort.edit'});
             
             $('#modal-form').attr('action', '?path=sort.value&id=' + id);
             $('#modal-form').ajaxSubmit({
@@ -42,7 +42,7 @@ $().ready(function() {
 
         var data = [];
         data.push({name: 'editID', value: '1'});
-        data.push({name: 'actionList[rowID]', value: 'actionUpdate'});
+        data.push({name: 'actionList[rowID]', value: 'actionUpdate.sort.edit'});
         $('#modal-form .form-control, #modal-form .hidden-edit, #modal-form input:radio:checked, #modal-form input:checkbox:checked').each(function() {
             if ($(this).attr('name') !== undefined) {
                 data.push({name: $(this).attr('name'), value: escape($(this).val())});
@@ -111,7 +111,7 @@ $().ready(function() {
         var num = $(this).closest('.data-row').find('input[name=num_value]').val();
 
         var data = [];
-        data.push({name: 'actionList[saveID]', value: 'actionInsert'});
+        data.push({name: 'actionList[saveID]', value: 'actionInsert.sort.create'});
         data.push({name: 'saveID', value: 1});
         data.push({name: 'name_value', value: escape(name)});
         data.push({name: 'num_value', value: num});
@@ -144,7 +144,7 @@ $().ready(function() {
             var data = [];
             data.push({name: 'rowID', value: $(this).attr('data-id')});
             data.push({name: 'deleteID', value: 1});
-            data.push({name: 'actionList[deleteID]', value: 'actionDelete'});
+            data.push({name: 'actionList[deleteID]', value: 'actionDelete.sort.edit'});
             $.ajax({
                 mimeType: 'text/html; charset=windows-1251', // ! Need set mimeType only when run from local file
                 url: '?path=sort.value&id=' + $(this).attr('data-id'),

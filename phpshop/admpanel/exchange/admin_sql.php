@@ -84,9 +84,9 @@ function actionSave() {
 
         // GZIP
         if ($path_parts['extension'] == 'gz') {
-            $zd = gzopen($csv_file, "r");
-            $sql_file_content = gzread($zd, 1024 * 512);
-            gzclose($zd);
+            ob_start();
+            readgzfile($csv_file);
+            $sql_file_content = ob_get_clean();
         }
         else
             $sql_file_content = file_get_contents($csv_file);
@@ -199,6 +199,8 @@ TRUNCATE ' . $GLOBALS['SysValue']['base']['sort_categories'].';
 UPDATE ' . $GLOBALS['SysValue']['base']['products'] . ' set vendor=\'\', vendor_array=\'\';
 UPDATE ' . $GLOBALS['SysValue']['base']['categories'] . ' set sort=\'\';', '');
     $query_value[] = array('Удалить каталог товаров', 'DELETE FROM ' . $GLOBALS['SysValue']['base']['categories'] . ' WHERE ID=', '');
+    $query_value[] = array('Удалить все каталоги', 'TRUNCATE ' . $GLOBALS['SysValue']['base']['categories'], '');
+    $query_value[] = array('Удалить все товары', 'TRUNCATE ' . $GLOBALS['SysValue']['base']['products'], '');
     $query_value[] = array('Удалить товары в каталоге', 'DELETE FROM ' . $GLOBALS['SysValue']['base']['products'] . ' WHERE category=', '');
     $query_value[] = array('Удалить страницу', 'DELETE FROM ' . $GLOBALS['SysValue']['base']['page'] . ' WHERE ID=', '');
     $query_value[] = array('Очистить базу', $TRUNCATE, '');

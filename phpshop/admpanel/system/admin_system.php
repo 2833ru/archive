@@ -278,6 +278,9 @@ function actionUpdate() {
     // Выборка
     $data = $PHPShopOrm->select();
     $option = unserialize($data['admoption']);
+    
+    // Счетчик сообщений о поддержке
+    unset($option['support_notice']);
 
     // Корректировка пустых значений
     $PHPShopOrm->updateZeroVars('option.user_calendar','option.cloud_enabled','option.digital_product_enabled','option.parent_price_enabled','option.user_skin','option.sms_enabled','option.sms_status_order_enabled','option.notice_enabled','option.user_mail_activate','option.user_mail_activate_pre','option.user_price_activate','option.rss_graber_enabled');

@@ -606,8 +606,9 @@ class PHPShopShopCore extends PHPShopCore {
         else {
             $this->set('productPrice', $price);
             $this->set('productPriceRub', $this->lang('sklad_mesage'));
-            $this->set('ComStartNotice', null);
-            $this->set('ComEndNotice', null);
+            $this->set('ComStartNotice', '');
+            $this->set('ComEndNotice', '');
+            $this->set('elementCartHide', 'hide hidden');
             $this->set('ComStartCart', PHPShopText::comment('<'));
             $this->set('ComEndCart', PHPShopText::comment('>'));
             $this->set('productNotice', $this->lang('product_notice'));
@@ -813,7 +814,7 @@ class PHPShopShopCore extends PHPShopCore {
                 if (PHPShopProductFunction::true_parent($value))
                     $Product[$value] = $this->select(array('*'), array('uid' => '="' . $value . '"', 'enabled' => "='1'", 'sklad' => "!='1'"), false, false, __FUNCTION__);
                 else
-                    $Product[intval($value)] = $this->select(array('*'), array('id' => '=' . intval($value), 'enabled' => "='1'"), false, false, __FUNCTION__);
+                    $Product[intval($value)] = $this->select(array('*'), array('id' => '=' . intval($value), 'enabled' => "='1'", 'sklad' => "!='1'"), false, false, __FUNCTION__);
             }
 
         // Цена главного товара

@@ -544,7 +544,7 @@ class PHPShopShop extends PHPShopShopCore {
                 if (PHPShopProductFunction::true_parent($value))
                     $Product[$value] = $this->select(array('*'), array('uid' => '="' . $value . '"', 'enabled' => "='1'", 'sklad' => "!='1'"), false, false, __FUNCTION__);
                 else
-                    $Product[intval($value)] = $this->select(array('*'), array('id' => '=' . intval($value), 'enabled' => "='1'"), false, false, __FUNCTION__);
+                    $Product[intval($value)] = $this->select(array('*'), array('id' => '=' . intval($value), 'enabled' => "='1'", 'sklad' => "!='1'"), false, false, __FUNCTION__);
             }
 
         // Цена главного товара
@@ -581,7 +581,8 @@ class PHPShopShop extends PHPShopShopCore {
         if (count($this->select_value) > 0) {
             $this->set('parentList', PHPShopText::select('parentId', $this->select_value, "; max-width:300px;"));
             $this->set('productParentList', ParseTemplateReturn("product/product_odnotip_product_parent.tpl"));
-        }
+            
+        }else $this->set('elementCartHide', 'hide hidden');
 
 
 

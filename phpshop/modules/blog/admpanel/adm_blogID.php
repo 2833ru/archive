@@ -7,6 +7,10 @@ $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.blog.blog_log"));
 function actionStart() {
     global $PHPShopGUI, $PHPShopSystem, $PHPShopOrm;
 
+    // Выбор даты
+    $PHPShopGUI->addJSFiles('./js/bootstrap-datetimepicker.min.js', './news/gui/news.gui.js');
+    $PHPShopGUI->addCSSFiles('./css/bootstrap-datetimepicker.min.css');
+
     // Выборка
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . $_GET['id']));
 
@@ -17,14 +21,14 @@ function actionStart() {
     $oFCKeditor->Value = $data['description'];
 
     // Содержание закладки 1
-    $Tab1 = $PHPShopGUI->setField("Дата:", $PHPShopGUI->setInputDate("date_new", PHPShopDate::get($data['date']))) .
+    $Tab1 = '<hr>' . $PHPShopGUI->setField("Дата:", $PHPShopGUI->setInputDate("date_new", $data['date'])) .
             $PHPShopGUI->setField("Заголовок:", $PHPShopGUI->setInput("text", "title_new", $data['title']));
 
     $Tab1.=$PHPShopGUI->setField("Анонс:", $oFCKeditor->AddGUI());
 
     // Редактор 2
     $oFCKeditor = new Editor('content_new');
-    $oFCKeditor->Height = '320';
+    $oFCKeditor->Height = '550';
     $oFCKeditor->ToolbarSet = 'Normal';
     $oFCKeditor->Value = $data['content'];
 
@@ -74,7 +78,7 @@ function actionUpdate() {
         $_POST['enabled_new'] = 0;
 
     $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['rowID']));
-    return array('success'=>$action);
+    return array('success' => $action);
 }
 
 // Обработка событий 

@@ -7,7 +7,7 @@ $PHPShopOrder = new PHPShopOrderFunction();
  * Обработчик оформления заказа
  * @author PHPShop Software
  * @tutorial http://wiki.phpshop.ru/index.php/PHPShopOrder
- * @version 1.2
+ * @version 1.3
  * @package PHPShopCore
  */
 class PHPShopOrder extends PHPShopCore {
@@ -308,7 +308,7 @@ document.getElementById('order').style.display = 'none';
             $this->setHook(__CLASS__, __FUNCTION__, false, 'MIDDLE-END');
         } else {
             // форма сообщения, что сумма заказа меньше минимальной.
-            $this->set('orderContent', $this->message($this->lang('cart_minimum') . ' ' . $cart_min, $this->lang('bad_order_mesage_2')));
+            $this->set('orderContent', $this->message($this->lang('cart_minimum') . ' ' . $cart_min.' '.$this->get('currency'), $this->lang('bad_order_mesage_2')));
         }
 
         // Перехват модуля в конце функции

@@ -28,8 +28,6 @@ function DoZero($price) {
 
 // Подключаем реквизиты
 $SysValue['bank'] = unserialize($LoadItems['System']['bank']);
-$pathTemplate = $SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'];
-
 
 $sql = "select * from " . $SysValue['base']['table_name1'] . " where id=" . intval($_GET['orderID']);
 $n = 1;
@@ -93,15 +91,15 @@ if ($LoadItems['System']['nds_enabled']) {
     @$nds = number_format($sum * $nds / (100 + $nds), "2", ".", "");
 }
 @$sum = number_format($sum, "2", ".", "");
-$summa_nds_dos = number_format($deliveryPrice * $nds / (100 + $nds), "2", ".", "");
 
-$name_person = $order['Person']['name_person'];
-$org_name = $order['Person']['org_name'];
-$datas = PHPShopDate::dataV($datas, "false");
+$PERSON = $order['Person'];
+if ($PERSON['discount'] > 0) {
+    $discount = $PERSON['discount'] . '%';
+} else {
+    $discount = ($PERSON['tip_disc'] == 1 ? $PERSON['discount_promo'] . '%' : $PERSON['discount_promo']);
+}
 
-
-
-// Генерим номер товарного чека
+// номер товарного чека
 $chek_num = substr(abs(crc32(uniqid(rand(), true))), 0, 5);
 $LoadBanc = unserialize($LoadItems['System']['bank']);
 ?>
@@ -163,11 +161,11 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
     </tr>
     <?
     echo @$dis;
-    $my_total = $PHPShopOrder->returnSumma($sum, $order['Person']['discount']) + $deliveryPrice;
+    $my_total = $row['sum'];
     $my_nds = number_format($my_total * $LoadItems['System']['nds'] / (100 + $LoadItems['System']['nds']), "2", ".", "");
     ?>
     <tr>
-        <td colspan=5 align=right style="border-top: 1px solid #000000;border-left: 1px solid #000000;border-right: 1px solid #000000;">Скидка: <?= @$order['Person']['discount'] ?>%</td>
+        <td colspan=5 align=right style="border-top: 1px solid #000000;border-left: 1px solid #000000;border-right: 1px solid #000000;">Скидка: <?= $discount ?></td>
     </tr>
     <tr>
         <td colspan=5 align=right style="border-top: 1px solid #000000;border-left: 1px solid #000000;border-right: 1px solid #000000;">Итого:

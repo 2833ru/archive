@@ -51,20 +51,21 @@ function actionStart() {
 
     // Размер названия поля
     $PHPShopGUI->field_col = 2;
-    $PHPShopGUI->addJSFiles('./js/jquery.treegrid.js','./delivery/gui/delivery.gui.js');
+    $PHPShopGUI->addJSFiles('./js/jquery.treegrid.js', './delivery/gui/delivery.gui.js');
 
-    if ($_GET['target'] == 'cat'){
+    if ($_GET['target'] == 'cat') {
         $catalog = true;
-        $data['is_folder']=1;
+        $data['is_folder'] = 1;
     }
     else
         $catalog = false;
 
     // Начальные данные
-    if($catalog)
-    $data['city'] = 'Новая категория доставки';
-    else $data['city'] = 'Новая доставка';
-    
+    if ($catalog)
+        $data['city'] = 'Новая категория доставки';
+    else
+        $data['city'] = 'Новая доставка';
+
     $data['enabled'] = 1;
     $data['PID'] = $_GET['cat'];
 
@@ -74,9 +75,9 @@ function actionStart() {
     $PHPShopGUI->setActionPanel(__("Доставка") . ' / ' . $data['city'], false, array('Создать и редактировать', 'Сохранить и закрыть'));
 
     // Наименование
-    $Tab_info = $PHPShopGUI->setField(__("Название:"), $PHPShopGUI->setInputText(false, 'city_new', $data['city'], '100%').$PHPShopGUI->setInput('hidden','is_folder_new',$data['is_folder']));
-    
-    
+    $Tab_info = $PHPShopGUI->setField(__("Название:"), $PHPShopGUI->setInputText(false, 'city_new', $data['city'], '100%') . $PHPShopGUI->setInput('hidden', 'is_folder_new', $data['is_folder']));
+
+
     $PHPShopCategoryArray = new PHPShopDeliveryArray(array('is_folder' => "='1'"));
     $CategoryArray = $PHPShopCategoryArray->getArray();
 
@@ -168,13 +169,19 @@ function actionStart() {
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод формы закладки
-    if(!$catalog)
-    $PHPShopGUI->setTab(array(__("Основное"), $Tab1), array(__("Адреса пользователя"), $Tab2));
-    else $PHPShopGUI->setTab(array(__("Основное"), $Tab1));
+    if (!$catalog)
+        $PHPShopGUI->setTab(array(__("Основное"), $Tab1), array(__("Адреса пользователя"), $Tab2));
+    else
+        $PHPShopGUI->setTab(array(__("Основное"), $Tab1));
 
 
     // Левый сайдбар
     $sidebarleft[] = array('title' => 'Категории', 'content' => $tree, 'title-icon' => '<span class="glyphicon glyphicon-plus newcat" data-toggle="tooltip" data-placement="top" title="Добавить каталог"></span>&nbsp;<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="Развернуть"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="Свернуть"></span>');
+
+    $help = '<p class="text-muted">У каждого типа доставки можно настроить обязательные и дополнительные поля для заполнения заказа в закладке управления доставкой <kbd>Адреса пользователя</kbd></p>';
+
+    $sidebarleft[] = array('title' => 'Подсказка', 'content' => $help);
+
     $PHPShopGUI->setSidebarLeft($sidebarleft, 3);
     $PHPShopGUI->sidebarLeftCell = 3;
 
@@ -189,9 +196,9 @@ function actionStart() {
 // Функция записи
 function actionInsert() {
     global $PHPShopOrm, $PHPShopModules;
-    
+
     $PHPShopOrm->updateZeroVars('flag_new', 'enabled_new', 'price_null_enabled_new');
-    
+
     $_POST['icon_new'] = iconAdd('icon_new');
 
     // Перехват модуля
@@ -208,8 +215,8 @@ function actionInsert() {
 }
 
 // Добавление изображения 
-function iconAdd($name='icon_new') {
-    
+function iconAdd($name = 'icon_new') {
+
 
     // Папка сохранения
     $path = '/UserFiles/Image/';

@@ -54,7 +54,7 @@ function mysqlbackup($dbname,$structure_only,$pattern_table=false) {
 
     
     //$res = @mysql_list_tables($dbname);
-	$res = mysqli_query($link_db,"SHOW TABLES FROM ".$dbname);
+	$res = mysqli_query($link_db,"SHOW TABLES FROM `".$dbname."`");
     $nt = mysqli_num_rows($res);
 
     for ($a = 0; $a < $nt; $a++) {

@@ -59,7 +59,7 @@ function tab_cart_new($data, $option = false) {
       </tr>
       <tr>
       <td>Промо код:</td>
-      <td class="text-right">
+      <td class="text-right text-warning">
       ' . $PERSON['promocode']  . '
       </td>
       </tr>

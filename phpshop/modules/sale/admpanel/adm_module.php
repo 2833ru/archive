@@ -5,10 +5,10 @@ $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.sale.sale_system"))
 
 // Функция обновления
 function actionUpdate() {
-    global $PHPShopOrm, $LoadItems;
+    global $PHPShopOrm, $PHPShopSystem;
 
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
-    $price = ($price + (($price * $LoadItems['System']['percent']) / 100));
+    $price = ($price + (($price * $PHPShopSystem->getSerilizeParam('admoption.percent')) / 100));
     $pr = $_POST['mod_sale_price'] / 100;
 
     switch ($_POST['mod_sale_old']) {
@@ -29,6 +29,9 @@ function actionUpdate() {
         else
             $price_action = null;
 
+		if($_POST['mod_sale_opt'] == "plus")
+			$_POST['mod_sale_opt'] = "+";
+
         $price_action.=' price=price' . $_POST['mod_sale_opt'] . '(price*' . $pr . ')';
     }
 
@@ -36,7 +39,8 @@ function actionUpdate() {
     $PHPShopOrm->sql = 'update ' . $GLOBALS['SysValue']['base']['products'] . ' set 
     ' . $price_n . $price_action;
 
-    $action = $PHPShopOrm->update();
+    $action = $PHPShopOrm->update(false); 
+	$PHPShopOrm->sql = " ";
     header('Location: ?path=modules&install=check');
     return $action;
 }
@@ -47,7 +51,7 @@ function actionStart() {
     // Выборка
     $data = $PHPShopOrm->select();
 
-    $sel_value[] = array('+', '+', false);
+    $sel_value[] = array('+', 'plus', false);
     $sel_value[] = array('-', '-', 'selected');
     $Tab1 = $PHPShopGUI->setField('Новая цена изменить', $PHPShopGUI->setInputText(false, 'mod_sale_price', "", '100', '%', 'left') . $PHPShopGUI->set_() . $PHPShopGUI->setSelect('mod_sale_opt', $sel_value, 50, 'left'));
 

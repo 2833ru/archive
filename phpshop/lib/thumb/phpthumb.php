@@ -73,10 +73,12 @@ abstract class PHPThumbLibrary {
      * @return bool
      */
     protected function validateRequestedResource($filename) {
+        
+        /*
         if (false !== filter_var($filename, FILTER_VALIDATE_URL)) {
             $this->remoteImage = true;
             return true;
-        }
+        }*/
 
         if (file_exists($filename)) {
             return true;

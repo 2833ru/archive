@@ -7,7 +7,7 @@ if (!RedactorPlugins) var RedactorPlugins = {};
 		return {
 			init: function ()
 			{
-				var fonts = [ 'Arial', 'Helvetica', 'Georgia', 'Times New Roman', 'Monospace' ];
+				var fonts = [ 'Arial', 'Helvetica', 'Georgia', 'Times New Roman', 'Monospace','Verdana',' Tahoma','Century Gotic'];
 				var that = this;
 				var dropdown = {};
 

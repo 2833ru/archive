@@ -1,7 +1,6 @@
 <?php
 
 $TitlePage = __("Черный список IP");
-PHPShopObj::loadClass('user');
 
 function actionStart() {
     global $PHPShopInterface;
@@ -34,12 +33,6 @@ function actionStart() {
 
     $PHPShopInterface->setActionPanel(__("Черный список IP"), array('Удалить выбранные'), array('Добавить IP','Журнал авторизации'));
     $PHPShopInterface->setCaption(array(null, "2%"), array("IP", "40%"),array("Дата добавления", "20%"), array("", "20%"), array('Whois',"10%",array('align'=>'right','sort'=>'none')));
-
-    // Стытусы пользователей
-    $PHPShopUserStatus = new PHPShopUserStatusArray();
-    $PHPShopUserStatusArray = $PHPShopUserStatus->getArray();
-    $PHPShopUserStatusArray[0]['name'] = 'Пользователь';
-    $PHPShopUserStatusArray[0]['discount'] = 0;
 
     // Таблица с данными
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['black_list']);

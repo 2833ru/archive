@@ -20,14 +20,14 @@ function actionStart() {
     $oFCKeditor->ToolbarSet = 'Normal';
 
     // Содержание закладки 1
-    $Tab1 = $PHPShopGUI->setField("Дата:", $PHPShopGUI->setInputDate("date_new", PHPShopDate::get($data['date']))).
+    $Tab1 = '<hr>'.$PHPShopGUI->setField("Дата:", $PHPShopGUI->setInputDate("date_new", PHPShopDate::get($data['date']))).
             $PHPShopGUI->setField("Заголовок:", $PHPShopGUI->setInput("text.required", "title_new", $data['title']));
 
     $Tab1.=$PHPShopGUI->setField("Анонс:", $oFCKeditor->AddGUI());
 
     // Редактор 2
     $oFCKeditor = new Editor('content_new');
-    $oFCKeditor->Height = '320';
+    $oFCKeditor->Height = '550';
     $oFCKeditor->ToolbarSet = 'Normal';
 
     // Содержание закладки 2

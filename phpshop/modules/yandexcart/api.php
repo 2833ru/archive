@@ -24,7 +24,7 @@ $PHPShopValutaArray = new PHPShopValutaArray();
 // Лог
 function setYandexcartLog($data) {
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['yandexcart']['yandexcart_log']);
-    
+
     $log = array(
         'message_new' => serialize($data),
         'order_id_new' => $data['order']['id'],
@@ -37,23 +37,21 @@ function setYandexcartLog($data) {
 }
 
 // Проверка пользователя в базе
-function checkUser($data){
+function checkUser($data) {
 
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['shopusers']);
-    $row = $PHPShopOrm->select(array('id'),array('login'=>"='".$data['order']['buyer']['email']."'"),false,array('limit'=>1));
-    $userId=$row['id'];
-    if(empty($userId)){
+    $row = $PHPShopOrm->select(array('id'), array('login' => "='" . $data['order']['buyer']['email'] . "'"), false, array('limit' => 1));
+    $userId = $row['id'];
+    if (empty($userId)) {
         $PHPShopOrm->clean();
-        $insert['login_new']=$insert['name_new']=$data['order']['buyer']['email'];
-        $insert['name_new']=iconv("utf-8", "cp1251", $data['order']['buyer']['firstName']) . ' ' . iconv("utf-8", "cp1251", $data['order']['buyer']['lastName']);
-        $insert['tel_new']=$data['order']['buyer']['phone'];
-        $insert['password_new']=base64_encode($data['order']['id']);
-        $insert['enabled_new']=1;
-        $PHPShopOrm->insert($insert);
-        
-        $userId=mysql_insert_id();
+        $insert['login_new'] = $insert['name_new'] = $data['order']['buyer']['email'];
+        $insert['name_new'] = iconv("utf-8", "cp1251", $data['order']['buyer']['firstName']) . ' ' . iconv("utf-8", "cp1251", $data['order']['buyer']['lastName']);
+        $insert['tel_new'] = $data['order']['buyer']['phone'];
+        $insert['password_new'] = base64_encode($data['order']['id']);
+        $insert['enabled_new'] = 1;
+        $userId = $PHPShopOrm->insert($insert);
     }
-    
+
     return $userId;
 }
 
@@ -93,7 +91,12 @@ switch ($_SERVER["PATH_INFO"]) {
                 $PHPShopProduct = new PHPShopProduct($item["offerId"]);
                 $PHPShopProduct->debug = false;
                 $mi["price"] = intval(PHPShopProductFunction::GetPriceValuta($item["offerId"], $PHPShopProduct->getPrice()));
-                $mi["count"] = intval($PHPShopProduct->getValue('items'));
+                $mi["count"] = $PHPShopProduct->getValue('items');
+
+                if ($PHPShopSystem->getSerilizeParam('admoption.sklad_status') != 1 and $mi["count"] < 0)
+                    $mi["count"] = 0;
+                else
+                    $mi["count"] = 10;
 
                 $priceTotal += $mi["price"] * $item['count'];
                 $mi["delivery"] = true;
@@ -109,22 +112,22 @@ switch ($_SERVER["PATH_INFO"]) {
         // Проверка на бесплатную доставку
         //if (!empty($deliveryPrice['price_null_enabled']) and $deliveryPrice['price_null_enabled'] and $priceTotal > $deliveryPrice['price_null'])
         //$deliveryPrice = 0;
-
+        
         if (is_array($deliveryPrice))
             foreach ($deliveryPrice as $delivery) {
                 if ($delivery['id'])
                     $result["cart"]["deliveryOptions"][] = array(
                         "id" => $delivery['id'],
                         "type" => "DELIVERY",
-                        "serviceName" => iconv("cp1251", "utf-8", $delivery['city']),
+                        "serviceName" => iconv("cp1251", "utf-8", substr($delivery['city'], 0, 50)),
                         "price" => intval($delivery['price']),
-                        "dates" => array("fromDate" => date("d-m-Y"))
+                        "dates" => array("fromDate" => date("d-m-Y"),'toDate'=>date("d-m-Y", strtotime("+2 day")))
                     );
             }
 
-        $paymentMethods[0]=array('CASH_ON_DELIVERY', 'CARD_ON_DELIVERY');
-        $paymentMethods[1]=array('CASH_ON_DELIVERY', 'CARD_ON_DELIVERY');
-        $paymentMethods[2]=array('CASH_ON_DELIVERY');
+        $paymentMethods[0] = array('CASH_ON_DELIVERY', 'CARD_ON_DELIVERY');
+        $paymentMethods[1] = array('CASH_ON_DELIVERY', 'CARD_ON_DELIVERY');
+        $paymentMethods[2] = array('CASH_ON_DELIVERY');
 
         $result["cart"]["paymentMethods"] = $paymentMethods[intval($option['payment_delivery'])];
 
@@ -145,12 +148,16 @@ switch ($_SERVER["PATH_INFO"]) {
                 $product_price = $product["price"];
                 $product_num = $product["count"];
                 $sum += $product_price * $product_num;
+
+                $PHPShopProduct = new PHPShopProduct($product_id);
+
                 $rcart[$product_id] = array(
                     'id' => $product_id,
                     'name' => iconv("utf-8", "cp1251", $product_name),
                     'price' => $product_price,
                     'uid' => $product_id,
-                    'num' => $product_num
+                    'num' => $product_num,
+                    'pic_small' => $PHPShopProduct->getParam("pic_small")
                 );
             }
         $result["Cart"]["cart"] = $rcart;
@@ -198,15 +205,18 @@ switch ($_SERVER["PATH_INFO"]) {
         $update['country_new'] = iconv("utf-8", "cp1251", $data['order']['delivery']['address']['country']);
         $update['city_new'] = iconv("utf-8", "cp1251", $data['order']['delivery']['address']['city']);
         $update['house_new'] = iconv("utf-8", "cp1251", $data['order']['delivery']['address']['house']);
+
+        $update['door_phone_new'] = iconv("utf-8", "cp1251", $data['order']['delivery']['address']['entryphone']);
         $update['tel_new'] = iconv("utf-8", "cp1251", $data['order']['delivery']['address']['phone']);
         $update['porch_new'] = iconv("utf-8", "cp1251", $data['order']['delivery']['address']['entrance']);
-        $update['flat_new'] = iconv("utf-8", "cp1251", $data['order']['delivery']['address']['entryphone']);
+        $update['flat_new'] = iconv("utf-8", "cp1251", $data['order']['delivery']['address']['apartment']);
 
         $insert['datas_new'] = time();
         $insert['uid_new'] = $order_num;
         $insert['orders_new'] = serialize($result);
-        $insert['status_new'] = serialize(array('maneger' => 'YANDEX ACCEPTED'));
+        $insert['status_new'] = serialize(array('maneger' => iconv("utf-8", "cp1251", $data['order']['notes'])));
         $insert['dop_info_new'] = 'yandex' . $data['order']['id'];
+
 
         // Запись заказа в БД
         $PHPShopOrm->insert($insert);
@@ -230,14 +240,14 @@ switch ($_SERVER["PATH_INFO"]) {
 
         // Проведен
         if ($data['order']['status'] == 'PROCESSING') {
-            
+
             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
-            $row = $PHPShopOrm->select(array('*'), array('dop_info' => "='" . $order_uid . "'"));
+            $row = $PHPShopOrm->select(array('*'), array('dop_info' => "='yandex" . $order_uid . "'"));
             if (is_array($row)) {
                 $orders = unserialize($row['orders']);
-                $orders["Person"]['name_person'] = iconv("utf-8", "cp1251", $data['order']['buyer']['firstName']) . ' ' . iconv("utf-8", "cp1251", $data['order']['buyer']['lastName']) . ' ';
+                $orders["Person"]['name_person'] = null;
                 $orders["Person"]['mail'] = $data['order']['buyer']['email'];
-                $orders["Person"]['tel_name'] = $data['order']['buyer']['phone'];
+                $orders["Person"]['tel_name'] = null;
 
                 $update['orders_new'] = serialize($orders);
             }
@@ -246,7 +256,14 @@ switch ($_SERVER["PATH_INFO"]) {
             $update['street_new'] = iconv("utf-8", "cp1251", $data['order']['delivery']['address']['street']);
             $update['country_new'] = iconv("utf-8", "cp1251", $data['order']['delivery']['address']['country']);
             $update['city_new'] = iconv("utf-8", "cp1251", $data['order']['delivery']['address']['city']);
-            $update['house_new'] = iconv("utf-8", "cp1251", $data['order']['delivery']['address']['house']);
+            $full_adress = $data['order']['delivery']['address']['house'];
+
+            // Корпус 
+            if (!empty($data['order']['delivery']['address']['block']))
+                $full_adress.= ' k' . $data['order']['delivery']['address']['block'];
+
+            $update['house_new'] = iconv("utf-8", "cp1251", $full_adress);
+
             $update['tel_new'] = iconv("utf-8", "cp1251", $data['order']['delivery']['address']['phone']);
             $update['porch_new'] = iconv("utf-8", "cp1251", $data['order']['delivery']['address']['entrance']);
             $update['flat_new'] = iconv("utf-8", "cp1251", $data['order']['delivery']['address']['entryphone']);

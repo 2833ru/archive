@@ -31,14 +31,14 @@ class PHPShopAdminRule {
             'rss' => 'rsschanels',
             'modules' => 'module',
             'system' => 'visitor',
-            'exchange'=>'cat_prod',
+            'exchange' => 'cat_prod',
             'sort' => 'catalog',
             'catpage' => 'page',
+            'photo' => 'page',
             'intro' => 'report',
-            'upload'=>'update',
-            'currency'=>'valuta',
-            'tpleditor'=>'system'
-            
+            'upload' => 'update',
+            'currency' => 'valuta',
+            'tpleditor' => 'system'
         );
     }
 
@@ -107,6 +107,35 @@ class PHPShopAdminRule {
           <div class="alert alert-danger" id="rules-message" role="alert"><span class="glyphicon glyphicon-exclamation-sign"></span> <strong>Внимание!</strong> Недостаточно прав для выполнения. <a href="#" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-arrow-left"></span> Вернуться</a> или поменять <a href="?path=users&id=' . $_SESSION['idPHPSHOP'] . '&tab=1" class="btn btn-xs btn-primary">Права <span class="glyphicon glyphicon-arrow-right"></span></a> Администратора.</div>
 ';
         return true;
+    }
+
+    /**
+     * Раскодирование пароля для CRM обмена
+     * @param string $disp
+     * @return string
+     */
+    static function decodeCrm($disp) {
+        $decode = substr($disp, 0, strlen($disp) - 4);
+        $decode = str_replace("I", 11, $decode);
+        $decode = explode("O", $decode);
+        $disp_pass = null;
+        for ($i = 0; $i < (count($decode) - 1); $i++)
+            $disp_pass.=chr($decode[$i]);
+        return $disp_pass;
+    }
+
+    /**
+     * Кодирование пароля для CRM обмена
+     * @param string $pas
+     * @return string
+     */
+    static function encodeCrm($pas) {
+        $encode = null;
+        for ($i = 0; $i < (strlen($pas)); $i++)
+            $encode.=ord($pas[$i]) . "O";
+
+        $encode = str_replace(11, "I", $encode);
+        return $encode . "I10O";
     }
 
 }

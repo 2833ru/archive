@@ -176,8 +176,8 @@ E-mail: ' . $mail . '
             ' . Parser($this->fixtags($data['content'])) . '
                 <p id="formgenerator_buttons">
             <input type="hidden" name="forma_id" value="' . $data['id'] . '">
-            <input class="user" type="reset" value="Очистить">
-            <input class="user" type="submit" name="forma_send" value="Отправить">
+            <input class="btn btn-default" type="reset" value="Очистить">
+            <input class="btn btn-primary" type="submit" name="forma_send" value="Отправить">
              </p>
 </form>';
 

@@ -32,6 +32,7 @@ var TREEGRID_LOAD=true;
          * @returns {Object[]}
          */
         initNode: function(settings) {
+            
             return this.each(function() {
                 var $this = $(this);
                 $this.treegrid('setTreeContainer', settings.getTreeGridContainer.apply(this));

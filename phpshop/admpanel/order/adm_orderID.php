@@ -196,6 +196,12 @@ function actionStart() {
         'url' => '?path=' . $_GET['path'] . '&where[a.user]=' . $data['user']
     );
 
+    $PHPShopGUI->action_select['Отчет по заказам'] = array(
+        'name' => 'Отчет по заказам',
+        'action' => 'order-list',
+        'url' => '?path=report.statorder&where[a.user]=' . $data['user'].'&date_start=01-01-2010&date_end='.PHPShopDate::get()
+    );
+
 
     // Библиотека заказа
     $PHPShopOrder = new PHPShopOrderFunction($data['id'], $data);
@@ -211,7 +217,7 @@ function actionStart() {
         $currency = $PHPShopOrder->default_valuta_iso;
 
 
-    $PHPShopGUI->setActionPanel(__("Заказ") . ' № ' . $data['uid'] . ' <span class="hidden-xs hidden-md">/ ' . PHPShopDate::dataV($data['datas']) . $update_date . ' / ' . __("Итого") . ': ' . $PHPShopOrder->getTotal(false, ' ') . $currency . '</span>', array('Сделать копию', 'Все заказы пользователя', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'));
+    $PHPShopGUI->setActionPanel(__("Заказ") . ' № ' . $data['uid'] . ' <span class="hidden-xs hidden-md">/ ' . PHPShopDate::dataV($data['datas']) . $update_date . ' / ' . __("Итого") . ': ' . $PHPShopOrder->getTotal(false, ' ') . $currency . '</span>', array('Сделать копию', 'Все заказы пользователя','Отчет по заказам', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'));
 
     // Нет данных
     if (!is_array($data)) {
@@ -254,8 +260,9 @@ function actionStart() {
     $OrderStatusArray = $PHPShopOrderStatusArray->getArray();
     $order_status_value[] = array(__('Новый заказ'), 0, $data['statusi'], 'data-content="<span class=\'glyphicon glyphicon-text-background\' style=\'color:#35A6E8\'></span> ' . __('Новый заказ') . '"');
     if (is_array($OrderStatusArray))
-        foreach ($OrderStatusArray as $order_status)
+        foreach ($OrderStatusArray as $k => $order_status) {
             $order_status_value[] = array($order_status['name'], $order_status['id'], $data['statusi'], 'data-content="<span class=\'glyphicon glyphicon-text-background\' style=\'color:' . $order_status['color'] . '\'></span> ' . $order_status['name'] . '"');
+        }
 
     // Статус заказа
     $status_dropdown = $PHPShopGUI->setSelect('statusi_new', $order_status_value, 180);
@@ -264,7 +271,6 @@ function actionStart() {
     // Время обработки заказа
     if (empty($status['time']))
         $status['time'] = PHPShopDate::dataV($data['datas'], true, false, ' ', true);
-
 
     // Доступые типы оплат
     $PHPShopPaymentArray = new PHPShopPaymentArray();
@@ -322,6 +328,9 @@ function actionStart() {
     // Данные покупателя
     $Tab3 = $PHPShopGUI->loadLib('tab_userdata', $data);
 
+    // Все заказы пользователя
+    $Tab4 = $PHPShopGUI->loadLib('tab_userorders', $data, false, array('status' => $OrderStatusArray, 'currency' => $currency, 'color' => $OrderStatusArray));
+
     // Правый сайдбар
     $PHPShopGUI->setSidebarRight($sidebarright);
 
@@ -329,7 +338,7 @@ function actionStart() {
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array(__("Корзина"), $Tab2), array(__("Данные покупателя"), $Tab3));
+    $PHPShopGUI->setTab(array(__("Корзина"), $Tab2), array(__("Данные покупателя"), $Tab3), array(__("Заказы пользователя"), $Tab4));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =
@@ -395,13 +404,14 @@ function sendUserMail($data) {
 function actionUpdate() {
     global $PHPShopModules, $PHPShopOrm;
 
-    // Перехват модуля
-    $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
 
     // Данные по заказу
     $PHPShopOrm->debug = false;
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_POST['rowID'])));
     $order = unserialize($data['orders']);
+
+    // Перехват модуля
+    $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Новые данные
     if (is_array($_POST['person']))
@@ -511,7 +521,7 @@ function actionCartUpdate() {
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . $orderID), false, array('limit' => 1));
     if (is_array($data)) {
         $order = unserialize($data['orders']);
-        $PHPShopDelivery= new PHPShopDelivery($order['Person']['dostavka_metod']);
+        $PHPShopDelivery = new PHPShopDelivery($order['Person']['dostavka_metod']);
 
         // Библиотека корзины
         $PHPShopCart = new PHPShopCart($order['Cart']['cart']);

@@ -17,4 +17,4 @@
         </div>
     </div>
 </div>
- <button class="btn btn-primary" role="button" data-toggle="modal" data-target="#parentModal"><span class="glyphicon glyphicon-tasks"></span> @productSelect@</button>
+ <button class="btn btn-primary @elementCartHide@" role="button" data-toggle="modal" data-target="#parentModal"><span class="glyphicon glyphicon-tasks"></span> @productSelect@</button>

@@ -9,7 +9,7 @@ if (!defined("OBJENABLED")) {
  * Категории товаров
  * Упрощенный доступ к категориями
  * @author PHPShop Software
- * @version 1.1
+ * @version 1.2
  * @package PHPShopObj
  */
 class PHPShopCategory extends PHPShopObj {
@@ -169,4 +169,77 @@ class PHPShopCategoryArray extends PHPShopArray {
 
 }
 
+
+/**
+ * Категории фотогалереи
+ * Упрощенный доступ к категориям фотогалереи 
+ * @author PHPShop Software
+ * @version 1.0
+ * @package PHPShopObj
+ */
+class PHPShopPhotoCategory extends PHPShopObj {
+
+    /**
+     * Конструктор
+     * @param int $objID ИД категории
+     */
+    function __construct($objID) {
+        $this->objID = $objID;
+        $this->objBase = $GLOBALS['SysValue']['base']['photo_categories'];
+        $this->cache = true;
+        $this->debug = false;
+        parent::__construct('id');
+    }
+
+    /**
+     * Выдача имени категории
+     * @return string
+     */
+    function getName() {
+        return parent::getParam("name");
+    }
+
+    /**
+     * Выдача описания категории
+     * @return string
+     */
+    function getContent() {
+        return parent::getParam("content");
+    }
+
+    /**
+     * Проверка на существование
+     * @return bool
+     */
+    function init() {
+        $id = parent::getParam("id");
+        if (!empty($id))
+            return true;
+    }
+
+}
+
+
+/**
+ * Массив категории фотогалереи
+ * Упрощенный доступ к категориями фотогалереи
+ * @author PHPShop Software
+ * @version 1.1
+ * @package PHPShopArray
+ */
+class PHPShopPhotoCategoryArray extends PHPShopArray {
+
+    /**
+     * Конструктор
+     * @param string $sql SQL условие выборки
+     */
+    function __construct($sql = false) {
+        $this->objSQL = $sql;
+        $this->cache = false;
+        $this->order = array('order' => 'num');
+        $this->objBase = $GLOBALS['SysValue']['base']['photo_categories'];
+        parent::__construct("id", "name", "parent_to", "link");
+    }
+
+}
 ?>

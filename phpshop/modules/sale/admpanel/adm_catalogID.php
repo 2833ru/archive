@@ -1,9 +1,11 @@
 <?php
 
 function updateAllPrice() {
-    global $LoadItems;
+    global $PHPShopSystem;
+   
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
-    $price = ($price + (($price * $LoadItems['System']['percent']) / 100));
+    $PHPShopOrm->debug=false;
+    $price = ($price + (($price * $PHPShopSystem->getSerilizeParam('admoption.percent')) / 100));
     $pr = $_POST['mod_sale_price'] / 100;
 
     switch ($_POST['mod_sale_old']) {
@@ -21,23 +23,25 @@ function updateAllPrice() {
         
         if(!empty($price_n)) $price_action=',';
         else $price_action=null;
+
+		if($_POST['mod_sale_opt'] == "plus")
+			$_POST['mod_sale_opt'] = "+";
         
         $price_action.=' price=price' . $_POST['mod_sale_opt'] . '(price*' . $pr . ')';
     }
 
     $PHPShopOrm->sql = 'update ' . $GLOBALS['SysValue']['base']['products'] . ' set 
     ' . $price_n .$price_action.' 
-    where category=' . intval($_POST['catalogID']);
+    where category=' . intval($_GET['id']);
     $PHPShopOrm->update(false);
 }
 
 function addFieldSale($data) {
     global $PHPShopGUI;
-
     if (isset($data['icon'])) {
 
         // Добавляем значения в функцию actionStart
-        $sel_value[] = array('+', '+', false);
+        $sel_value[] = array('+', 'plus', false);
         $sel_value[] = array('-', '-', 'selected');
         //$sel = $PHPShopGUI->setSelect('mod_sale_opt', $sel_value, 40);
         //$Tab9 = $PHPShopGUI->setField('Новая цена', $PHPShopGUI->setInputText('Поменять цену на ' . $sel, 'mod_sale_price', null, '30', '%'));

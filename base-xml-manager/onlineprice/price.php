@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Синхронизация с Excel
+ * @package PHPShopExchange
+ * @author PHPShop Software
+ * @version 1.3
+ */
+
 include("../../phpshop/class/obj.class.php");
 PHPShopObj::loadClass("base");
 PHPShopObj::loadClass("orm");

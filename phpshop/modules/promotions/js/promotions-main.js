@@ -17,6 +17,8 @@
         }
         //var dir = dirPath();
 
+
+
         $("#promotion_load").show();
 
         $.ajax({

@@ -12,7 +12,7 @@ PHPShopObj::loadClass("orm");
 PHPShopObj::loadClass("admgui");
 PHPShopObj::loadClass("update");
 
-$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
+$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, true);
 $PHPShopSystem = new PHPShopSystem();
 
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['users']);
