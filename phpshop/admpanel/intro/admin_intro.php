@@ -107,7 +107,7 @@ function actionStart() {
     // Проверка обновлений
     if ($PHPShopBase->Rule->CheckedRules('update', 'view'))
         if (!isset($_SESSION['update_check'])) {
-            define("UPDATE_PATH", "http://phpshop.ru/update/update5.php?from=" . $_SERVER['SERVER_NAME'] . "&version=" . $GLOBALS['SysValue']['upload']['version'] . "&support=" . $License['License']['SupportExpires'] . '&serial=' . $License['License']['Serial'] . '&path=intro');
+            define("UPDATE_PATH", "http://www.phpshop.ru/update/update5.php?from=" . $_SERVER['SERVER_NAME'] . "&version=" . $GLOBALS['SysValue']['upload']['version'] . "&support=" . $License['License']['SupportExpires'] . '&serial=' . $License['License']['Serial'] . '&path=intro');
 
             $update_enable = @xml2array(UPDATE_PATH, "update", true);
             if (is_array($update_enable) and $update_enable['status'] != 'no_update') {
@@ -204,9 +204,9 @@ function actionStart() {
             // Библиотека заказа
             $PHPShopOrder = new PHPShopOrderFunction($row['id'], $row);
 
-            if (empty($row['fio']) and !empty($row['name'])) 
+            if (empty($row['fio']) and !empty($row['name']))
                 $row['fio'] = $row['name'];
-            elseif(empty($row['fio']) and empty($row['name']))
+            elseif (empty($row['fio']) and empty($row['name']))
                 $row['fio'] = $row['mail'];
 
             $datas = PHPShopDate::get($row['datas']);
@@ -342,6 +342,8 @@ function actionStart() {
     <li class="disabled"><a href="#" class="canvas-line">' . __('Линейная диаграмма') . '</a></li>
     <li><a href="#" class="canvas-bar">' . __('Гистограмма') . '</a></li>
     <li><a href="#" class="canvas-radar">' . __('Радар диаграмма') . '</a></li>
+    <li class="divider"></li>
+    <li><a href="?path=report.statorder">' . __('Показать больше') . '</a></li>
   </ul>
 </div>
 
@@ -366,7 +368,7 @@ function actionStart() {
 
         $PHPShopInterface = new PHPShopInterface();
         $PHPShopInterface->checkbox_action = false;
-        $PHPShopInterface->setCaption(array("Дата", "10%"), array("Визит", "10%",array('align' => 'center')), array("Посетители", "10%",array('align' => 'center')), array("Просмотры", "10%",array('align' => 'center')), array("Время ", "10%", array('align' => 'right')));
+        $PHPShopInterface->setCaption(array("Дата", "10%"), array("Визит", "10%", array('align' => 'center')), array("Посетители", "10%", array('align' => 'center')), array("Просмотры", "10%", array('align' => 'center')), array("Время ", "10%", array('align' => 'right')));
 
         $ctx = stream_context_create(array('http' =>
             array(
@@ -385,7 +387,18 @@ function actionStart() {
         );
 
         $url = 'https://api-metrika.yandex.ru/stat/v1/data?' . http_build_query($array_url_data);
-        $json_data = json_decode(file_get_contents($url,false,$ctx), true);
+        $сurl = curl_init();
+        curl_setopt_array($сurl, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER => array('Authorization: OAuth ' . $metrica_token),
+        ));
+
+        $json_data = json_decode(curl_exec($сurl), true);
+        curl_close($сurl);
+
+        if (empty($json_data))
+            $json_data = json_decode(file_get_contents($url), true);
 
         if (is_array($json_data)) {
 
@@ -398,7 +411,7 @@ function actionStart() {
                 $pageviews = $value[metrics][2];
                 $avgVisitDurationSeconds = $value[metrics][6] / 60;
 
-                $PHPShopInterface->setRow(array('name'=>date('d.m.Y', strtotime($date)),'align' => 'left'), array('name'=>$visits,'align' => 'center'), array('name'=>$users,'align' => 'center'), array('name'=>$pageviews,'align' => 'center'), array('name' => round($avgVisitDurationSeconds, 2), 'align' => 'right'));
+                $PHPShopInterface->setRow(array('name' => date('d.m.Y', strtotime($date)), 'align' => 'left'), array('name' => $visits, 'align' => 'center'), array('name' => $users, 'align' => 'center'), array('name' => $pageviews, 'align' => 'center'), array('name' => round($avgVisitDurationSeconds, 2), 'align' => 'right'));
             }
 
 

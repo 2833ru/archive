@@ -4,7 +4,7 @@
  * Автономная синхронизация заказов с 1С
  * @package PHPShopExchange
  * @author PHPShop Software
- * @version 2.1
+ * @version 2.2
  */
 // Функции авторизации
 include_once("login.php");
@@ -12,6 +12,8 @@ include_once("login.php");
 // Функции работы с почтой
 include_once("mailer.php");
 
+// Время записи документа
+$curent_time = time();
 
 // Заводим статус обработанного заказа
 function CheckStatusReady() {
@@ -21,7 +23,7 @@ function CheckStatusReady() {
 
     // Запись нового статуса
     if (empty($num))
-        mysqli_query($link_db, "INSERT INTO " . $GLOBALS['SysValue']['base']['order_status'] . " (`id`, `name`, `color`) VALUES (100, 'Передано в бухгалтерию', '#EC971F')");       
+        mysqli_query($link_db, "INSERT INTO " . $GLOBALS['SysValue']['base']['order_status'] . " (`id`, `name`, `color`) VALUES (100, 'Передано в бухгалтерию', '#EC971F')");
     return 100;
 }
 
@@ -38,20 +40,20 @@ switch ($_GET['command']) {
     // Выводим список всех заказов
     // command=list&date1=123456&date2=24255
     case("list"):
-        PHPShopObj::loadClass(array("order","delivery"));
+        PHPShopObj::loadClass(array("order", "delivery"));
         $csv = $adr_info = null;
 
         // Безопасность
         if (PHPShopSecurity::true_num($_GET['date1']) and PHPShopSecurity::true_num($_GET['date2']) and PHPShopSecurity::true_num($_GET['num'])) {
-            
+
             $PHPShopSystem = new PHPShopSystem();
             $load_status = $PHPShopSystem->getSerilizeParam('1c_option.1c_load_status');
-            $where="where seller!='1'";
-            
-            if(!empty($load_status))
-                  $where.=" and statusi=".intval($load_status);
+            $where = "where seller!='1'";
 
-            $sql = "select * from " . $GLOBALS['SysValue']['base']['orders'] . " ".$where." and datas BETWEEN " . $_GET['date1'] . " AND " . $_GET['date2'] . " order by id desc  limit " . $_GET['num'];
+            if (!empty($load_status))
+                $where.=" and statusi=" . intval($load_status);
+
+            $sql = "select * from " . $GLOBALS['SysValue']['base']['orders'] . " " . $where . " and datas BETWEEN " . $_GET['date1'] . " AND " . $_GET['date2'] . " order by id desc  limit " . $_GET['num'];
 
             $result = mysqli_query($link_db, $sql);
             while ($row = mysqli_fetch_array($result)) {
@@ -173,10 +175,10 @@ switch ($_GET['command']) {
         $CheckStatusReady = CheckStatusReady();
         mysqli_query($link_db, "UPDATE " . $GLOBALS['SysValue']['base']['orders'] . " SET seller='1', statusi=" . intval($CheckStatusReady) . " where id=" . intval($_GET['id']));
 
-        mysqli_query($link_db, "INSERT INTO " . $GLOBALS['SysValue']['base']['1c_docs'] . " (`uid`, `cid`, `datas`, `year`) VALUES (" . $_GET['id'] . ", '" . $_GET['cid'] . "'," . time() . "," . date('Y') . ")");
+        mysqli_query($link_db, "INSERT INTO " . $GLOBALS['SysValue']['base']['1c_docs'] . " (`uid`, `cid`, `datas`, `year`) VALUES (" . $_GET['id'] . ", '" . $_GET['cid'] . "'," . $curent_time . "," . date('Y') . ")");
 
         // Сообщение пользователю
-        SendMailUser($_GET['id'], "accounts");
+        SendMailUser($_GET['id'], "accounts", $curent_time);
         break;
 
 
@@ -203,7 +205,7 @@ switch ($_GET['command']) {
     // Обновление даты для Счет-фактур
     // command=update_f&cid=1234[номер счета 1с]&date=123456
     case("update_f"):
-        
+
         mysqli_query($link_db, "UPDATE " . $GLOBALS['SysValue']['base']['1c_docs'] . " SET datas_f='" . $_GET[date] . "' where cid='" . $_GET[cid] . "' and year='" . date('Y', $_GET[date]) . "'");
 
         // Сообщение пользователю

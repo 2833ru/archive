@@ -82,9 +82,7 @@ class PHPShopPrint extends PHPShopShopCore {
         // Таблица характеристик
         $this->sort_table($row);
 
-        // Проверка режима Multibase
-        $this->checkMultibase($row['pic_small']);
-
+        
         $this->set('productName',$row['name']);
         $this->set('productArt',$row['uid']);
         $this->set('productDes',$row['content']);

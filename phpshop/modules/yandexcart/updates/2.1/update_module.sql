@@ -1,0 +1,1 @@
+ALTER TABLE `phpshop_modules_yandexcart_system` ADD `password` varchar(64);

@@ -1,6 +1,6 @@
 <?php
 
-$TitlePage = __('Редактирование RSS').' #' . $_GET['id'];
+$TitlePage = __('Редактирование RSS') . ' #' . $_GET['id'];
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['rssgraber']);
 
 function actionStart() {
@@ -10,23 +10,24 @@ function actionStart() {
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
 
     $PHPShopGUI->field_col = 2;
-    
-        // datetimepicker
+
+    // datetimepicker
     $PHPShopGUI->addJSFiles('./js/bootstrap-datetimepicker.min.js', './news/gui/news.gui.js');
     $PHPShopGUI->addCSSFiles('./css/bootstrap-datetimepicker.min.css');
 
     $PHPShopGUI->setActionPanel(__("Редактирование RSS"), array('Удалить'), array('Сохранить', 'Сохранить и закрыть'));
 
     $Tab1 = $PHPShopGUI->setField("URL", $PHPShopGUI->setInputText(null, "link_new", $data['link'])) .
-            $PHPShopGUI->setField("Дата начала", $PHPShopGUI->setInputDate("start_date_new", PHPShopDate::get($data['start_date']))) .
+            $PHPShopGUI->setField("Дата начала", $PHPShopGUI->setInputDate("start_date_new", PHPShopDate::get($data['start_date'])), 1, 'Последняя загрузка ' . PHPShopDate::get($data['start_date'])) .
             $PHPShopGUI->setField("Дата завершения", $PHPShopGUI->setInputDate("end_date_new", PHPShopDate::get($data['end_date']))) .
             $PHPShopGUI->setField("Забирать новости", $PHPShopGUI->setInputText(null, "day_num_new", $data['day_num'], 100, 'в день')) .
             $PHPShopGUI->setField("Новостей в заборе", $PHPShopGUI->setInputText(null, "news_num_new", $data['news_num'], 100, 'за раз')) .
+            $PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/')) .
             $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("enabled_new", 1, "Вкл.", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выкл.", $data['enabled']) . '&nbsp;&nbsp;');
 
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1,true));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true));
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
@@ -50,7 +51,6 @@ function actionSave() {
 
     // Сохранение данных
     actionUpdate();
-
     header('Location: ?path=' . $_GET['path']);
 }
 
@@ -58,24 +58,36 @@ function actionSave() {
 function actionUpdate() {
     global $PHPShopOrm, $PHPShopModules;
 
-    if (!empty($_POST['start_date_new']))
-        $_POST['start_date_new'] = PHPShopDate::GetUnixTime($_POST['start_date_new']);
-    else
-        $_POST['start_date_new'] = time();
+    if (empty($_POST['ajax'])) {
 
-    if (!empty($_POST['end_date_new']))
-        $_POST['end_date_new'] = PHPShopDate::GetUnixTime($_POST['end_date_new']);
-    else
-        $_POST['end_date_new'] = time();
-    
+        // Мультибаза
+        if (is_array($_POST['servers'])) {
+            $_POST['servers_new'] = "";
+            foreach ($_POST['servers'] as $v)
+                if ($v != 'null' and !strstr($v, ','))
+                    $_POST['servers_new'].="i" . $v . "i";
+        }
+
+        if (!empty($_POST['start_date_new']))
+            $_POST['start_date_new'] = PHPShopDate::GetUnixTime($_POST['start_date_new']);
+        else
+            $_POST['start_date_new'] = time();
+
+        if (!empty($_POST['end_date_new']))
+            $_POST['end_date_new'] = PHPShopDate::GetUnixTime($_POST['end_date_new']);
+        else
+            $_POST['end_date_new'] = time();
+
+
         // Корректировка пустых значений
-    $PHPShopOrm->updateZeroVars('enabled_new');
+        $PHPShopOrm->updateZeroVars('enabled_new');
+    }
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
     $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['rowID']));
-    
-    return array("success" =>  $action);
+
+    return array("success" => $action);
 }
 
 // Функция удаления
@@ -87,7 +99,7 @@ function actionDelete() {
 
 
     $action = $PHPShopOrm->delete(array('id' => '=' . $_POST['rowID']));
-    return array("success" =>  $action);
+    return array("success" => $action);
 }
 
 // Обработка событий

@@ -5,7 +5,6 @@
     <faqlink>http://faq.phpshop.ru/page/easypay.html</faqlink>
     <description>Прием оплат через Easypay c ЕРИП для Белоруссии.</description>
     <category>payment</category>
-    <status>new</status>
     <adminmenu>
         <title>Прием оплат Easypay</title>
         <capability>true</capability>

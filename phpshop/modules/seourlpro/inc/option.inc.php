@@ -84,12 +84,29 @@ class PHPShopSeoPro {
         return array('page' => $page, 'file' => $file, 'name' => $url['filename']);
     }
 
+    /**
+     * Получение реального ID каталога 
+     */
+    function getCID() {
+        $getNav = $this->getNav();
+        $array_true = array_flip($this->memory);
+        return str_replace($this->cat_pre, '', $array_true[$getNav['file']]);
+    }
+
+    /**
+     * Получение реального ID товара
+     */
+    function getID() {
+        $getNav = $this->getNav();
+        return $getNav['page'];
+    }
+
     function setRout($mode = 1) {
 
         $getNav = $this->getNav();
         $file = $getNav['file'];
         $page = $getNav['page'];
-        $name = $getNav['name'];
+        //$name = $getNav['name'];
 
         if ($page == 'ALL')
             $GLOBALS['PHPShopNav']->objNav['page'] = $page;

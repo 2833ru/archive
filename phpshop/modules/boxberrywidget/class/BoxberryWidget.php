@@ -35,17 +35,23 @@ class BoxberryWidget {
                 array('error' => PHPShopString::utf8_win1251($data['err']), 'parameters' => $this->parameters),
                 $this->parameters['order_id'],
                 'Ошибка передачи заказа',
-                'Передача заказа службе доставки Boxberry'
+                'Передача заказа службе доставки Boxberry',
+                'error'
             );
         }
         else
         {
+            if(isset($data['track']))
+                $tracking = $data['track'];
+
             $data['parameters'] = $this->parameters;
             $this->log(
                 $data,
                 $this->parameters['order_id'],
                 'Успешная передача заказа',
-                'Передача заказа службе доставки Boxberry'
+                'Передача заказа службе доставки Boxberry',
+                'success',
+                $tracking
             );
         }
     }
@@ -225,7 +231,7 @@ class BoxberryWidget {
      * @param string $status статус отправки
      * @param string $type request
      */
-    public function log($message, $order_id, $status, $type)
+    public function log($message, $order_id, $status, $type, $status_code = 'succes', $traking = '')
     {
 
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['boxberrywidget']['boxberrywidget_log']);
@@ -236,7 +242,9 @@ class BoxberryWidget {
             'order_id_new' => $id[0],
             'status_new' => $status,
             'type_new' => $type,
-            'date_new' => time()
+            'date_new' => time(),
+            'status_code_new' => $status_code,
+            'tracking_new'    => $traking
         );
         $PHPShopOrm->insert($log);
     }

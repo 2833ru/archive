@@ -501,24 +501,6 @@ class PHPShopShopCore extends PHPShopCore {
     }
 
     /**
-     * Проверка изображений режима Multibase [отключено]
-     * @param string $img адрес изображения
-     * @param bool $return возврат измененной страницы
-     */
-    function checkMultibase($img) {
-        /*
-          $base_host = $this->PHPShopSystem->getSerilizeParam('admoption.base_host');
-          if ($this->PHPShopSystem->getSerilizeParam('admoption.base_enabled') == 1 and !empty($base_host)) {
-          $source_img = str_replace("/UserFiles/", "http://" . $base_host . "/UserFiles/", $img);
-          return $source_img;
-          }
-          else
-          return $img; */
-
-        return $img;
-    }
-
-    /**
      * Проверка прав каталога режима Multibase
      * @return string 
      */
@@ -566,23 +548,23 @@ class PHPShopShopCore extends PHPShopCore {
      * @return boolean 
      */
     function errorMultibase($category, $dop_cat = null) {
-       
+
         if (defined("HostID") or defined("HostMain")) {
 
             if (empty($this->multi_cat)) {
 
                 // Добавочные каталоги
-                if (!empty($dop_cat)) {
+                if (strstr($dop_cat, "#")) {
 
                     $dop_cat_array = explode("#", $dop_cat);
-                    $dop_cat_array_true = array();
 
                     if (is_array($dop_cat_array))
                         foreach ($dop_cat_array as $v)
                             if (!empty($v))
-                                $dop_cat_array_true[] = $v;
+                                $dop_cat_array_true[] = intval($v);
 
-                    $where['id'] = ' IN ("' . @implode('","', $dop_cat_array_true) . '")';
+                    if (is_array($dop_cat_array_true))
+                        $where['id'] = ' IN ("' . @implode('","', $dop_cat_array_true) . '")';
                 }
 
                 // Не выводить скрытые каталоги
@@ -596,7 +578,7 @@ class PHPShopShopCore extends PHPShopCore {
                 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
                 $PHPShopOrm->debug = $this->debug;
                 $PHPShopOrm->cache = false;
-                $data = $PHPShopOrm->select(array('id'), $where, false, array('limit' => 1000));
+                $data = $PHPShopOrm->select(array('id'), $where, false, array('limit' => 10000));
 
                 if (is_array($data)) {
                     foreach ($data as $row) {
@@ -1016,14 +998,14 @@ function product_grid($dataArray, $cell = 2, $template = false) {
                 $lastmodified = $row['datas'];
 
             // Маленькая картинка
-            $this->set('productImg', $this->checkMultibase($row['pic_small']));
+            $this->set('productImg', $row['pic_small']);
 
             // Пустая картинка, заглушка
             if (empty($row['pic_small']))
                 $this->set('productImg', $this->no_photo);
 
             // Большая картинка
-            $this->set('productImgBigFoto', $this->checkMultibase($row['pic_big']));
+            $this->set('productImgBigFoto', $row['pic_big']);
 
             // Ид товара
             $this->set('productUid', $row['id']);

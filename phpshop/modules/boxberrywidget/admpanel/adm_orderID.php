@@ -9,13 +9,13 @@ function boxberrywidgetSend($data) {
         $BoxberryWidget = new BoxberryWidget();
         $order = unserialize($data['orders']);
 
-        if(!empty($data['boxberry_pvz_id'])) {
+        if(!empty($_POST['boxberry_send_now'])) {
             if ($_POST['statusi_new'] == $BoxberryWidget->option['status'] or !empty($_POST['boxberry_send_now'])) {
 
                 $BoxberryWidget->setDataFromOrderEdit($data);
                 $BoxberryWidget->setProducts($order['Cart']['cart'], $order['Person']['discount']);
 
-                if(in_array($order['Person']['dostavka_metod'], @explode(",", $BoxberryWidget->option['delivery_id'])))
+                if(in_array($order['Person']['dostavka_metod'], explode(",", $BoxberryWidget->option['delivery_id'])))
                     $BoxberryWidget->parameters['vid'] = 1;
                 else {
                     if(!empty($data['street']))
@@ -47,11 +47,32 @@ function boxberrywidgetSend($data) {
 }
 
 function addBoxberryTab($data) {
-    global $PHPShopGUI;
+    global $PHPShopGUI, $_classPath;
 
-    if(!empty($data['boxberry_pvz_id'])) {
-        $Tab1 = $PHPShopGUI->setField(__('Ñèíõğîíèçàöèÿ çàêàçà'), $PHPShopGUI->setCheckbox('boxberry_send_now', 1, 'Îòïğàâèòü çàêàç â Boxberry ñåé÷àñ', 0));
-        $PHPShopGUI->addTab(array("Boxberry", $Tab1, true));
+    include_once($_classPath . 'modules/boxberrywidget/class/BoxberryWidget.php');
+    $BoxberryWidget = new BoxberryWidget();
+    $order = unserialize($data['orders']);
+
+    if(in_array($order['Person']['dostavka_metod'], explode(",", $BoxberryWidget->option['delivery_id'])) or in_array($order['Person']['dostavka_metod'], explode(",", $BoxberryWidget->option['express_delivery_id']))) {
+        $PHPShopOrm = new PHPShopOrm("phpshop_modules_boxberrywidget_log");
+
+        $log = $PHPShopOrm->select(array('*'), array('order_id=' => $data['id'], 'status=' => '"Óñïåøíàÿ ïåğåäà÷à çàêàçà"'));
+
+        if(empty($log)) {
+            $Tab1 = $PHPShopGUI->setField(__('Ñèíõğîíèçàöèÿ çàêàçà'), $PHPShopGUI->setCheckbox('boxberry_send_now', 1, 'Îòïğàâèòü çàêàç â Boxberry ñåé÷àñ', 0));
+            $PHPShopGUI->addTab(array("Boxberry", $Tab1, true));
+        }
+
+        // Îáíîâëåíèå òğåêèíãà
+        if(isset($data['tracking']) and empty($data['tracking']))
+        {
+            $tracking = $PHPShopOrm->select(array('tracking'), array('status_code=' => '"success"', 'order_id=' => $data['id']));
+
+            if(!empty($tracking['tracking'])) {
+                $PHPShopOrmOrder = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
+                $PHPShopOrmOrder->update(array('tracking_new' => "$tracking[tracking]"), array('id=' => $data['id']));
+            }
+        }
     }
 }
 

@@ -10,7 +10,6 @@ function actionUpdate() {
     // Настройки витрины
     $PHPShopModules->updateOption($_GET['id'], $_POST['servers']);
     
-    
     $PHPShopOrm->debug = false;
     $action = $PHPShopOrm->update($_POST);
     header('Location: ?path=modules&id=' . $_GET['id']);

@@ -246,6 +246,12 @@ $().ready(function() {
     if (typeof cat != 'undefined') {
         $('.treegrid-' + cat).addClass('treegrid-active');
     }
+    
+        // Создать копию из списка dropdown
+    $(".data-row .copy").on('click', function(event) {
+        event.preventDefault();
+        window.location.href = '?path=sort&action=new&id=' + $(this).attr('data-id');
+    });
 
 
     // Активация из списка dropdown

@@ -68,7 +68,7 @@ function GetLocaleList($skin) {
 function actionStart() {
     global $PHPShopGUI, $PHPShopOrm, $PHPShopModules, $PHPShopSystem;
 
-    PHPShopObj::loadClass(array('valuta','user'));
+    PHPShopObj::loadClass(array('valuta', 'user'));
 
     $PHPShopGUI->field_col = 2;
 
@@ -112,6 +112,8 @@ function actionStart() {
     $Tab2 .= $PHPShopGUI->setField(array('Валюта', 'Дизайн', 'Язык'), array($PHPShopGUI->setSelect('currency_new', $currency_value), GetSkinList($data['skin']), GetLocaleList($data['lang'])), array(array(2, 2), array(1, 2), array(1, 2)));
 
     $sql_value[] = array('Не выбрано', 0, 0);
+    $sql_value[] = array('Включить полное зеркало', 'on', 1);
+    $sql_value[] = array('Выключить полное зеркало', 'off', 1);
     $sql_value[] = array('Включить все каталоги', 1, 0);
     $sql_value[] = array('Выключить все каталоги', 2, 0);
     $sql_value[] = array('Включить все страницы', 3, 0);
@@ -122,7 +124,9 @@ function actionStart() {
     $sql_value[] = array('Выключить все слайдеры', 8, 0);
     $sql_value[] = array('Включить все новости', 9, 0);
     $sql_value[] = array('Выключить все новости', 10, 0);
-    
+    $sql_value[] = array('Включить все доставки', 11, 0);
+    $sql_value[] = array('Выключить все доставки', 12, 0);
+
     $Tab2.=$PHPShopGUI->setField("Пакетная обработка", $PHPShopGUI->setSelect('sql', $sql_value, false, true));
 
     // Статусы
@@ -186,9 +190,25 @@ function iconAdd($name = 'icon_new') {
     return $file;
 }
 
+// Удаление витрины
+function serversClean() {
+
+    $PHPShopOrm = new PHPShopOrm();
+    $PHPShopOrm->query('update ' . $GLOBALS['SysValue']['base']['categories'] . ' set `servers`=REPLACE(`servers`,"i' . $_POST['rowID'] . 'i",  "")');
+    $PHPShopOrm->query('update ' . $GLOBALS['SysValue']['base']['news'] . ' set `servers`=REPLACE(`servers`,"i' . $_POST['rowID'] . 'i",  "")');
+    $PHPShopOrm->query('update ' . $GLOBALS['SysValue']['base']['page'] . ' set `servers`=REPLACE(`servers`,"i' . $_POST['rowID'] . 'i",  "")');
+    $PHPShopOrm->query('update ' . $GLOBALS['SysValue']['base']['menu'] . ' set `servers`=REPLACE(`servers`,"i' . $_POST['rowID'] . 'i",  "")');
+    $PHPShopOrm->query('update ' . $GLOBALS['SysValue']['base']['page_categories'] . ' set `servers`=REPLACE(`servers`,"i' . $_POST['rowID'] . 'i",  "")');
+    $PHPShopOrm->query('update ' . $GLOBALS['SysValue']['base']['modules'] . ' set `servers`=REPLACE(`servers`,"i' . $_POST['rowID'] . 'i",  "")');
+    $PHPShopOrm->query('update ' . $GLOBALS['SysValue']['base']['slider'] . ' set `servers`=REPLACE(`servers`,"i' . $_POST['rowID'] . 'i",  "")');
+}
+
 // Функция удаления
 function actionDelete() {
     global $PHPShopOrm, $PHPShopModules;
+
+    // Удаление витрины
+    serversClean();
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
@@ -229,56 +249,89 @@ function actionUpdate() {
         $_POST['admoption_new'] = serialize($option);
     }
 
+    
     // Команды
+    $set_on=' set `servers`=CONCAT("i' . $_POST['rowID'] . 'ii1000i", `servers` )';
+    $set_off=' set `servers`=REPLACE(`servers`,"i' . $_POST['rowID'] . 'i",  "")';
     switch ($_POST['sql']) {
 
         case 1:
             $PHPShopOrmCat = new $PHPShopOrm();
-            $PHPShopOrmCat->query('update ' . $GLOBALS['SysValue']['base']['categories'] . ' set `servers`=CONCAT("i' . $_POST['rowID'] . 'ii1000i", `servers` )');
+            $PHPShopOrmCat->query('update ' . $GLOBALS['SysValue']['base']['categories'] . $set_on);
             break;
 
         case 2:
             $PHPShopOrmCat = new $PHPShopOrm();
-            $PHPShopOrmCat->query('update ' . $GLOBALS['SysValue']['base']['categories'] . ' set `servers`=REPLACE(`servers`,"i' . $_POST['rowID'] . 'i",  "")');
+            $PHPShopOrmCat->query('update ' . $GLOBALS['SysValue']['base']['categories']. $set_off);
             break;
 
         case 3:
             $PHPShopOrmCat = new $PHPShopOrm();
-            $PHPShopOrmCat->query('update ' . $GLOBALS['SysValue']['base']['page'] . ' set `servers`=CONCAT("i' . $_POST['rowID'] . 'ii1000i", `servers` )');
+            $PHPShopOrmCat->query('update ' . $GLOBALS['SysValue']['base']['page'] .$set_on);
             break;
 
         case 4:
             $PHPShopOrmCat = new $PHPShopOrm();
-            $PHPShopOrmCat->query('update ' . $GLOBALS['SysValue']['base']['page'] . ' set `servers`=REPLACE(`servers`,"i' . $_POST['rowID'] . 'i",  "")');
+            $PHPShopOrmCat->query('update ' . $GLOBALS['SysValue']['base']['page'] . $set_off);
             break;
         case 5:
             $PHPShopOrmCat = new $PHPShopOrm();
-            $PHPShopOrmCat->query('update ' . $GLOBALS['SysValue']['base']['menu'] . ' set `servers`=CONCAT("i' . $_POST['rowID'] . 'ii1000i", `servers` )');
+            $PHPShopOrmCat->query('update ' . $GLOBALS['SysValue']['base']['menu'] . $set_on);
             break;
 
         case 6:
             $PHPShopOrmCat = new $PHPShopOrm();
-            $PHPShopOrmCat->query('update ' . $GLOBALS['SysValue']['base']['menu'] . ' set `servers`=REPLACE(`servers`,"i' . $_POST['rowID'] . 'i",  "")');
+            $PHPShopOrmCat->query('update ' . $GLOBALS['SysValue']['base']['menu'] . $set_off);
             break;
 
         case 7:
             $PHPShopOrmCat = new $PHPShopOrm();
-            $PHPShopOrmCat->query('update ' . $GLOBALS['SysValue']['base']['slider'] . ' set `servers`=CONCAT("i' . $_POST['rowID'] . 'ii1000i", `servers` )');
+            $PHPShopOrmCat->query('update ' . $GLOBALS['SysValue']['base']['slider'] . $set_on);
             break;
 
         case 8:
             $PHPShopOrmCat = new $PHPShopOrm();
-            $PHPShopOrmCat->query('update ' . $GLOBALS['SysValue']['base']['slider'] . ' set `servers`=REPLACE(`servers`,"i' . $_POST['rowID'] . 'i",  "")');
+            $PHPShopOrmCat->query('update ' . $GLOBALS['SysValue']['base']['slider'] . $set_off);
             break;
-        
+
         case 9:
             $PHPShopOrmCat = new $PHPShopOrm();
-            $PHPShopOrmCat->query('update ' . $GLOBALS['SysValue']['base']['news'] . ' set `servers`=CONCAT("i' . $_POST['rowID'] . 'ii1000i", `servers` )');
+            $PHPShopOrmCat->query('update ' . $GLOBALS['SysValue']['base']['news'] . $set_on);
+            break;
+
+        case 10:
+            $PHPShopOrmCat = new $PHPShopOrm();
+            $PHPShopOrmCat->query('update ' . $GLOBALS['SysValue']['base']['news'] . $set_off);
+            break;
+
+        case 11:
+            $PHPShopOrmCat = new $PHPShopOrm();
+            $PHPShopOrmCat->query('update ' . $GLOBALS['SysValue']['base']['delivery'] . $set_on);
+            break;
+
+        case 12:
+            $PHPShopOrmCat = new $PHPShopOrm();
+            $PHPShopOrmCat->query('update ' . $GLOBALS['SysValue']['base']['delivery'] . $set_off);
+            break;
+
+        case "on":
+            $PHPShopOrmCat = new $PHPShopOrm();
+            $PHPShopOrmCat->query('update ' . $GLOBALS['SysValue']['base']['categories'] . $set_on);
+            $PHPShopOrmCat->query('update ' . $GLOBALS['SysValue']['base']['page'] . $set_on);
+            $PHPShopOrmCat->query('update ' . $GLOBALS['SysValue']['base']['menu'] . $set_on);
+            $PHPShopOrmCat->query('update ' . $GLOBALS['SysValue']['base']['slider'] . $set_on);
+            $PHPShopOrmCat->query('update ' . $GLOBALS['SysValue']['base']['news'] . $set_on);
+            $PHPShopOrmCat->query('update ' . $GLOBALS['SysValue']['base']['delivery'] . $set_on);
             break;
         
-         case 10:
+        case "off":
             $PHPShopOrmCat = new $PHPShopOrm();
-            $PHPShopOrmCat->query('update ' . $GLOBALS['SysValue']['base']['news'] . ' set `servers`=REPLACE(`servers`,"i' . $_POST['rowID'] . 'i",  "")');
+            $PHPShopOrmCat->query('update ' . $GLOBALS['SysValue']['base']['categories'] . $set_off);
+            $PHPShopOrmCat->query('update ' . $GLOBALS['SysValue']['base']['page'] . $set_off);
+            $PHPShopOrmCat->query('update ' . $GLOBALS['SysValue']['base']['menu'] . $set_off);
+            $PHPShopOrmCat->query('update ' . $GLOBALS['SysValue']['base']['slider'] . $set_off);
+            $PHPShopOrmCat->query('update ' . $GLOBALS['SysValue']['base']['news'] . $set_off);
+            $PHPShopOrmCat->query('update ' . $GLOBALS['SysValue']['base']['delivery'] . $set_off);
             break;
     }
 

@@ -8,6 +8,7 @@ $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.assist.assistmoney_
 // Обновление версии модуля
 function actionBaseUpdate() {
     global $PHPShopModules, $PHPShopOrm;
+    
     $PHPShopOrm->clean();
     $option = $PHPShopOrm->select();
     $new_version = $PHPShopModules->getUpdate($option['version']);
@@ -18,11 +19,15 @@ function actionBaseUpdate() {
 
 // Функция обновления
 function actionUpdate() {
-    global $PHPShopOrm;
+    global $PHPShopOrm,$PHPShopModules;
+    
+     // Настройки витрины
+    $PHPShopModules->updateOption($_GET['id'], $_POST['servers']);
+    
     if (empty($_POST['enabled_new']))
         $_POST['enabled_new'] = 0;
     $action = $PHPShopOrm->update($_POST);
-    header('Location: ?path=modules&install=check');
+    header('Location: ?path=modules&id=' . $_GET['id']);
     return $action;
 }
 
@@ -52,7 +57,7 @@ function actionStart() {
 
 
     // Форма регистрации
-    $Tab3 = $PHPShopGUI->setPay(false, false, $data['version'], true);
+    $Tab3 = $PHPShopGUI->setPay(false, false, $data['version'], false);
 
     $info = 'Настройте параметры "ID Магазина", "Секретное слово", "URL" - введя значения, полученные от Assist-а. <p>Указать коллбек-урл в настройках аккаунта Ассист: <kbd>http://' . $_SERVER['SERVER_NAME'] . '/phpshop/modules/assist/payment/result.php</kbd></p>
 ';

@@ -8,6 +8,7 @@
 class PHPShopAnalitica {
     
     var $status = false;
+    var $code;
 
     public function __construct() {
 
@@ -384,15 +385,27 @@ class PHPShopAnalitica {
 
         if ($this->google_enabled) {
 
-            echo "<!-- Google Analytics -->
+            if($this->analitics)
+            echo "
+                <!-- Google Analytics -->
 <script>
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
 m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 </script>
-<!-- End Google Analytics -->";
-            echo $this->code;
+<!--/ Google Analytics -->";
+            else echo "
+                <!-- Google Analytics -->
+<script async src=\"https://www.googletagmanager.com/gtag/js?id=".$this->google_id."\"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', '".$this->google_id."');
+</script>
+<!--/ Google Analytics -->
+";
         }
 
 
@@ -404,8 +417,9 @@ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
             else
                 $ecommerce = null;
 
-            echo '<!-- Yandex.Metrika counter -->
-<script>
+            echo '
+                <!-- Yandex.Metrika counter -->
+  <script>
     (function (d, w, c) {
         (w[c] = w[c] || []).push(function() {
             try {
@@ -431,19 +445,18 @@ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
     })(document, window, "yandex_metrika_callbacks2");
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/' . $this->metrica_id . '" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->';
-            
-            echo $this->code;
-            
+<!--/ Yandex.Metrika counter -->'; 
         }
         
+
         // Не сработала инициализация
         if ($this->analitics or $this->ecommerce) {
             if(!$this->status){
                 $this->click();
-                echo $this->code;
             }
         }
+        
+        echo $this->code;
     }
 
 }

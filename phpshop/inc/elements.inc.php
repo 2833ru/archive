@@ -4,7 +4,7 @@
  * Ёлемент стандартных системных переменных
  * @author PHPShop Software
  * @tutorial http://wiki.phpshop.ru/index.php/PHPShopCoreElement
- * @version 1.3
+ * @version 1.4
  * @package PHPShopElements
  */
 class PHPShopCoreElement extends PHPShopElements {
@@ -62,6 +62,7 @@ class PHPShopCoreElement extends PHPShopElements {
      * (им€, телефон, почта администратора, дата, логотип)
      */
     function setdefault() {
+        global $PHPShopBase;
 
         // ћультибаза
         if (defined("HostID")) {
@@ -71,15 +72,9 @@ class PHPShopCoreElement extends PHPShopElements {
             if (is_array($showcaseData)) {
 
                 if (!empty($showcaseData['currency']) and $this->PHPShopNav->notPath('order')) {
-
                     $_SESSION['valuta'] = $showcaseData['currency'];
                     $_SESSION['lang'] = $showcaseData['lang'];
-                    //$this->PHPShopSystem->setParam("dengi", $showcaseData['currency']);
-                    //$this->PHPShopSystem->setParam("kurs", $showcaseData['currency']);
-                    //$this->PHPShopSystem->setParam("kurs_beznal", $showcaseData['currency']);
                 }
-
-
 
                 if (!empty($showcaseData['tel']))
                     $this->PHPShopSystem->setParam("tel", $showcaseData['tel']);
@@ -185,6 +180,10 @@ class PHPShopCoreElement extends PHPShopElements {
         }
         else
             $this->set('dadataToken', null);
+
+        // Demo режим
+        if (isset($_GET['demo']))
+            $PHPShopBase->setParam('template_theme.demo', 'false');
     }
 
     /**
@@ -535,7 +534,7 @@ class PHPShopPageCatalogElement extends PHPShopElements {
         $n = PHPShopSecurity::TotalClean($n, 1);
 
         $where = array('parent_to' => '=' . $n);
-        
+
         // ћультибаза
         if (defined("HostID"))
             $where['servers'] = " REGEXP 'i" . HostID . "i'";
@@ -1123,7 +1122,7 @@ class PHPShopOprosElement extends PHPShopElements {
  * Ёлемент баннер
  * @author PHPShop Software
  * @tutorial http://wiki.phpshop.ru/index.php/PHPShopBannerElement
- * @version 1.4
+ * @version 1.5
  * @package PHPShopElements
  */
 class PHPShopBannerElement extends PHPShopElements {
@@ -1141,7 +1140,24 @@ class PHPShopBannerElement extends PHPShopElements {
      */
     function index() {
 
-        $data = $this->PHPShopOrm->select(array('*'), array("flag" => "='1'"), array('order' => 'RAND()'), array("limit" => 30));
+        $where['flag'] = "='1'";
+
+        // ћультибаза
+        if (defined("HostID"))
+            $where['servers'] = " REGEXP 'i" . HostID . "i'";
+        elseif (defined("HostMain"))
+            $where['flag'] .= ' and (servers ="" or servers REGEXP "i1000i")';
+
+        //  аталоги
+        if (!empty($GLOBALS['SysValue']['base']['seourlpro']['seourlpro_system']))
+            $true_cid = $GLOBALS['PHPShopSeoPro']->getCID();
+        else
+            $true_cid = $this->PHPShopNav->getId();
+
+        if (!empty($true_cid))
+            $where['flag'] .= " and ( dop_cat REGEXP '#" . $true_cid . "#' or dop_cat='') ";
+
+        $data = $this->PHPShopOrm->select(array('*'), $where, array('order' => 'RAND()'), array("limit" => 100));
 
         if (is_array($data))
             foreach ($data as $row) {
@@ -1400,6 +1416,9 @@ class PHPShopRecaptchaElement extends PHPShopElements {
      */
     public function true(){
     return $this->recaptcha;
+
+
+
 
 
 

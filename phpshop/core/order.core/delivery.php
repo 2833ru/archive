@@ -11,6 +11,12 @@ function delivery($obj, $deliveryID, $sum = 0) {
 
     $pred = $br = $my = $alldone = $waytodo = $disp = null;
 
+    // Мультибаза
+    if (defined("HostID")) {
+        $servers= " and servers REGEXP 'i" . HostID . "i'";
+    } elseif (defined("HostMain"))
+        $servers= " and (servers = '' or servers REGEXP 'i1000i')";
+    else $servers = null;
 
     if (empty($SysValue['nav'])) {
         $engineinc = 0;
@@ -23,19 +29,19 @@ function delivery($obj, $deliveryID, $sum = 0) {
     $table = $SysValue['base']['delivery'];
 
     if ($deliveryID > 0) {
-        $sql = "select * from " . $table . " where (enabled='1' and id='" . $deliveryID . "') order by num,city";
+        $sql = "select * from " . $table . " where (enabled='1' and id='" . $deliveryID . "') ".$servers." order by num,city";
         $result = mysqli_query($link_db, $sql);
         $row = mysqli_fetch_array($result);
         $isfolder = $row['is_folder'];
         $PID = $row['PID'];
-        $sqlvariants = "select * from " . $table . " where (enabled='1' and PID='" . $row['PID'] . "') order by num,city";
+        $sqlvariants = "select * from " . $table . " where (enabled='1' and PID='" . $row['PID'] . "') ".$servers." order by num,city";
 
         if ($isfolder) { //Если прислали папку, то варианты будут потомки папки
-            $sqlvariants = "select * from " . $table . " where (enabled='1' and PID='" . $deliveryID . "') order by num,city";
+            $sqlvariants = "select * from " . $table . " where (enabled='1' and PID='" . $deliveryID . "') ".$servers." order by num,city";
             $PIDpr = $deliveryID; //Начальный предок, для приглашения
             $stop = 0;
         } else { //Если прислали вариант, то варианты будут соседи
-            $sqlvariants = "select * from " . $table . " where (enabled='1' and PID='" . $row['PID'] . "') order by num,city";
+            $sqlvariants = "select * from " . $table . " where (enabled='1' and PID='" . $row['PID'] . "') ".$servers." order by num,city";
             $PIDpr = $row['PID']; //Начальный предок, для приглашения
             $stop = 1;
         }
@@ -44,11 +50,11 @@ function delivery($obj, $deliveryID, $sum = 0) {
         $isfolder = 1; //Если не прислали ID, значит прислали 0 идентификатор, который является папкой корневых
         $PID = false;
         $deliveryID = 0; //Присваиваем нулевой идентификатор, если ничего не прислали
-        $sqlvariants = "select * from " . $table . " where (enabled='1' and PID='0') order by num,city";
+        $sqlvariants = "select * from " . $table . " where (enabled='1' and PID='0') ".$servers." order by num,city";
     }
+    
     $resultvariants = mysqli_query($link_db, $sqlvariants); // Принимаем варианты
     $varamount = mysqli_num_rows($resultvariants);
-
 
     if ($PID !== false) { //Если есть предки, формируем навигацию
         $pred = '';
@@ -58,7 +64,7 @@ function delivery($obj, $deliveryID, $sum = 0) {
             $num++;
 
             //Получаем первого предка
-            $sqlpr = "select * from " . $SysValue['base']['delivery'] . " where (enabled='1' and id='" . $PIDpr . "') order by num,city";
+            $sqlpr = "select * from " . $SysValue['base']['delivery'] . " where (enabled='1' and id='" . $PIDpr . "') ".$servers." order by num,city";
             $resultpr = mysqli_query($link_db, $sqlpr);
             $rowpr = mysqli_fetch_array($resultpr);
 
@@ -66,11 +72,11 @@ function delivery($obj, $deliveryID, $sum = 0) {
             $city = $rowpr['city'];
             $predok = $rowpr['city'] . ' > ' . $predok; //Довесок, который будем дописывать каждому варианту
             //Получаем количество соседей у вышестоящего.
-            $sqlprr = "select * from " . $table . " where (enabled='1' and PID='" . $PIDpr . "') order by num,city";
+            $sqlprr = "select * from " . $table . " where (enabled='1' and PID='" . $PIDpr . "') ".$servers." order by num,city";
             $resultprr = mysqli_query($link_db, $sqlprr);
             $ii = 0;
             while ($rowsos = mysqli_fetch_array($resultprr)) {
-                $sqlsosed = "select * from " . $table . " where (enabled='1' and PID='" . $rowsos['id'] . "') order by num,city";
+                $sqlsosed = "select * from " . $table . " where (enabled='1' and PID='" . $rowsos['id'] . "') ".$servers." order by num,city";
                 $resultsosed = mysqli_query($link_db, $sqlsosed);
                 $sosed = mysqli_num_rows($resultsosed);
                 $sosfolder = $rowsos['is_folder'];
@@ -126,7 +132,7 @@ function delivery($obj, $deliveryID, $sum = 0) {
         }
 
         // Получаем количество соседей у вышестоящего.
-        $sqlpot = "select * from " . $table . " where (enabled='1' and PID='" . $row['id'] . "') order by num,city";
+        $sqlpot = "select * from " . $table . " where (enabled='1' and PID='" . $row['id'] . "') ".$servers." order by num,city";
         $resultpot = mysqli_query($link_db, $sqlpot);
         $pot = mysqli_num_rows($resultpot);
 
@@ -141,7 +147,7 @@ function delivery($obj, $deliveryID, $sum = 0) {
 
             // Проверка максимальной суммы
             if (!empty($row['sum_max']) and !empty($sum) and $row['sum_max'] <= $sum) {
-                 $disp .= '<span class="delivOneEl"><label><input type="radio"  value="' . $row['id'] . '" ' . $chk . '  name="dostavka_metod" id="dostavka_metod" data-option="' . $row['payment'] . '" disabled="disabled"> <span class="deliveryName" data-toggle="tooltip" data-placement="top" title="Превышена максимальная сумма заказа">' . $img . $city . '</span></span></label>';
+                $disp .= '<span class="delivOneEl"><label><input type="radio"  value="' . $row['id'] . '" ' . $chk . '  name="dostavka_metod" id="dostavka_metod" data-option="' . $row['payment'] . '" disabled="disabled"> <span class="deliveryName" data-toggle="tooltip" data-placement="top" title="Превышена максимальная сумма заказа">' . $img . $city . '</span></span></label>';
             } else {
                 $disp .= '<span class="delivOneEl"><label><input type="radio" value="' . $row['id'] . '" ' . $chk . '  name="dostavka_metod" id="dostavka_metod" data-option="' . $row['payment'] . '"> <span class="deliveryName" >' . $img . $city . '</span></span></label>';
                 $varamount++;
@@ -149,7 +155,6 @@ function delivery($obj, $deliveryID, $sum = 0) {
             }
         }
     }
-
 
     $query = "select data_fields,city_select from " . $SysValue['base']['delivery'] . " where id=$deliveryID";
     $row = mysqli_fetch_array(mysqli_query($link_db, $query));
@@ -169,7 +174,6 @@ function delivery($obj, $deliveryID, $sum = 0) {
         $alldone = '<INPUT TYPE="HIDDEN" id="makeyourchoise" VALUE="DONE">';
         $adresDisp = $adresDisp_save;
     }
-
 
     if ($varamount == 1) {
         if (!(($curid == $deliveryID)))
@@ -201,9 +205,9 @@ function delivery($obj, $deliveryID, $sum = 0) {
 function getAdresFields($mass, $city_select = null) {
     global $SysValue, $link_db;
 
-
     if (!is_array($mass))
         return "Для данного типа доставки не требуется дополнительных данных";
+    
     $num = $mass[num];
     asort($num);
     $enabled = $mass[enabled];
@@ -234,7 +238,7 @@ function getAdresFields($mass, $city_select = null) {
         $query = "SELECT region_id, name FROM " . $SysValue['base']['citylist_region'] . " WHERE country_id = $rfId Order BY name";
         $result = mysqli_query($link_db, $query);
         while ($row = mysqli_fetch_array($result)) {
-            $disOpt .= "<option value='" . $row['name'] . "' for='" . $row['region_id'] . "' $ch>" . $row['name'] . "</option>";
+            $disOpt .= "<option value='" . $row['name'] . "' for='" . $row['region_id'] . "'>" . $row['name'] . "</option>";
         }
         if ($enabled['state']['req']) {
             $req = "req";

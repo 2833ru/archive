@@ -11,34 +11,55 @@ $TitlePage = __('Новый каталог');
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
 
 // Построение дерева категорий
-function treegenerator($array, $i, $parent) {
+function treegenerator($array, $i, $curent, $dop_cat_array) {
     global $tree_array;
-
     $del = '¦&nbsp;&nbsp;&nbsp;&nbsp;';
-    $tree_select = $check = false;
+    $tree_select = $tree_select_dop =  $check = false;
+
     $del = str_repeat($del, $i);
     if (is_array($array['sub'])) {
         foreach ($array['sub'] as $k => $v) {
 
-            $check = treegenerator($tree_array[$k], $i + 1, $k);
+            $check = treegenerator($tree_array[$k], $i + 1, $k, $dop_cat_array);
 
+            if ($k == $_GET['parent_to'])
+                $selected = 'selected';
+            else
+                $selected = null;
+            
             if ($k == $_GET['id'])
                 $selected = 'selected';
             else
                 $selected = null;
 
+            // Допкаталоги
+            $selected_dop = null;
+            if (is_array($dop_cat_array))
+                foreach ($dop_cat_array as $vs) {
+                    if ($k == $vs)
+                        $selected_dop = "selected";
+                }
+
             if (empty($check['select'])) {
-                $tree_select.='<option value="' . $k . '" ' . $selected . '>' . $del . $v . '</option>';
+                $tree_select.='<option value="' . $k . '" ' . $selected .$disabled. '>' . $del . $v . '</option>';
+
+                if ($k < 1000000)
+                    $tree_select_dop.='<option value="' . $k . '" ' . $selected_dop .$disabled. '>' . $del .$v . '</option>';
+
                 $i = 1;
             } else {
-                $tree_select.='<option value="' . $k . '" ' . $selected . '>' . $del . $v . '</option>';
+                $tree_select.='<option value="' . $k . '" ' . $selected . $disabled.' >' . $del . $v . '</option>';
+                if ($k < 1000000)
+                    $tree_select_dop.='<option value="' . $k . '" ' . $selected_dop . $disabled.'>' .$del . $v . '</option>';
             }
 
             $tree_select.=$check['select'];
+            $tree_select_dop.=$check['select_dop'];
         }
     }
-    return array('select' => $tree_select);
+    return array('select' => $tree_select, 'select_dop' => $tree_select_dop);
 }
+
 
 /**
  * Экшен загрузки форм редактирования
@@ -48,8 +69,8 @@ function actionStart() {
 
     // Размер названия поля
     $PHPShopGUI->field_col = 2;
-    $PHPShopGUI->addJSFiles('./js/jquery.tagsinput.min.js', './js/jquery.treegrid.js', './catalog/gui/catalog.gui.js', './js/bootstrap-treeview.min.js', './js/bootstrap-tour.min.js', './catalog/gui/tour.gui.js');
-    $PHPShopGUI->addCSSFiles('./css/bootstrap-treeview.min.css', './css/jquery.tagsinput.css');
+    $PHPShopGUI->addJSFiles('./js/jquery.treegrid.js', './catalog/gui/catalog.gui.js', './js/bootstrap-treeview.min.js', './js/bootstrap-tour.min.js', './catalog/gui/tour.gui.js');
+    $PHPShopGUI->addCSSFiles('./css/bootstrap-treeview.min.css');
 
     // Начальные данные
     $data = array();
@@ -88,7 +109,7 @@ function actionStart() {
     $CategoryArray = $PHPShopCategoryArray->getArray();
     $GLOBALS['count'] = count($CategoryArray);
 
-    $CategoryArray[0]['name'] = '- '.__('Корневой уровень').' -';
+    $CategoryArray[0]['name'] = '- ' . __('Корневой уровень') . ' -';
     $tree_array = array();
 
     foreach ($PHPShopCategoryArray->getKey('parent_to.id', true) as $k => $v) {
@@ -101,27 +122,36 @@ function actionStart() {
             $tree_array[$k]['selected'] = true;
     }
 
-
-
     $GLOBALS['tree_array'] = &$tree_array;
     $_GET['parent_to'] = $data['parent_to'];
 
-    $tree_select = '<select class="selectpicker show-menu-arrow hidden-edit" data-live-search="true" data-container=""  data-style="btn btn-default btn-sm" name="parent_to_new" data-width="100%"><option value="0">' . $CategoryArray[0]['name'] . '</option>';
+    // Допкаталоги
+    $dop_cat_array = preg_split('/#/', $data['dop_cat'], -1, PREG_SPLIT_NO_EMPTY);
+
     if ($k == $data['parent_to'])
         $selected = 'selected';
     if (is_array($tree_array[0]['sub']))
         foreach ($tree_array[0]['sub'] as $k => $v) {
-            $check = treegenerator($tree_array[$k], 1, $k);
+            $check = treegenerator($tree_array[$k], 1, $k, $dop_cat_array);
 
             if ($k == $data['parent_to'])
                 $selected = 'selected';
             else
                 $selected = null;
 
+
             $tree_select.='<option value="' . $k . '"  ' . $selected . '>' . $v . '</option>';
+
+            if ($k < 1000000)
+                $tree_select_dop.='<option value="' . $k . '">' . $v . '</option>';
+
             $tree_select.=$check['select'];
+            $tree_select_dop.=$check['select_dop'];
         }
-    $tree_select.='</select>';
+
+    $tree_select_dop = '<select class="selectpicker show-menu-arrow hidden-edit" data-live-search="true" data-container=""  data-style="btn btn-default btn-sm" name="dop_cat[]" data-width="100%" multiple><option value="0">' . $CategoryArray[0]['name'] . '</option>' . $tree_select_dop . '</select>';
+
+    $tree_select = '<select class="selectpicker show-menu-arrow hidden-edit" data-live-search="true" data-container=""  data-style="btn btn-default btn-sm" name="parent_to_new"  data-width="100%"><option value="0">' . $CategoryArray[0]['name'] . '</option>' . $tree_select . '</select>';
 
     // Выбор каталога
     $Tab_info.= $PHPShopGUI->setField("Размещение", $tree_select);
@@ -153,7 +183,7 @@ function actionStart() {
             $PHPShopGUI->setSelect('order_by_new', $order_by_value, 120) . $PHPShopGUI->setSelect('order_to_new', $order_to_value, 120), 'left');
 
     // Дополнительные каталоги
-    $Tab_info.=$PHPShopGUI->setField('Дополнительные каталоги:', $PHPShopGUI->setTextarea('dop_cat_new', $data['dop_cat'], true, false, false, 'Введите ID каталога'), 1, 'Подкаталоги одновременно выводятся в нескольких каталогах.');
+    $Tab_info.=$PHPShopGUI->setField('Дополнительные каталоги:', $tree_select_dop, 1, 'Подкаталоги одновременно выводятся в нескольких каталогах.');
 
     $Tab1 = $PHPShopGUI->setCollapse('Информация', $Tab_info);
 
@@ -197,7 +227,7 @@ function actionStart() {
     if ($GLOBALS['count'] > 500)
         $treebar = '<div class="progress">
   <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%">
-    <span class="sr-only">'.__('Загрузка').'..</span>
+    <span class="sr-only">' . __('Загрузка') . '..</span>
   </div>
 </div>';
 
@@ -210,7 +240,7 @@ function actionStart() {
             </div></div>';
 
     // Левый сайдбар
-    $sidebarleft[] = array('title' => __('Категории'), 'content' => $search . '<div id="tree">' . $treebar . '</div>', 'title-icon' => '<span class="glyphicon glyphicon-plus new" data-toggle="tooltip" data-placement="top" title="'.__('Добавить каталог').'"></span>&nbsp;<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="'.__('Развернуть').'"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="'.__('Свернуть').'"></span>&nbsp;<span class="glyphicon glyphicon-search" id="show-category-search" data-toggle="tooltip" data-placement="top" title="'.__('Поиск').'"></span>');
+    $sidebarleft[] = array('title' => __('Категории'), 'content' => $search . '<div id="tree">' . $treebar . '</div>', 'title-icon' => '<span class="glyphicon glyphicon-plus new" data-toggle="tooltip" data-placement="top" title="' . __('Добавить каталог') . '"></span>&nbsp;<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="' . __('Развернуть') . '"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="' . __('Свернуть') . '"></span>&nbsp;<span class="glyphicon glyphicon-search" id="show-category-search" data-toggle="tooltip" data-placement="top" title="' . __('Поиск') . '"></span>');
 
     $PHPShopGUI->setSidebarLeft($sidebarleft, 3);
     $PHPShopGUI->sidebarLeftCell = 3;
@@ -248,6 +278,15 @@ function actionInsert() {
             if ($v != 'null' and !strstr($v, ','))
                 $_POST['servers_new'].="i" . $v . "i";
 
+    // Доп каталоги
+    $_POST['dop_cat_new'] = "";
+    if (is_array($_POST['dop_cat']) and $_POST['dop_cat'][0] != 'null') {
+        $_POST['dop_cat_new'] = "#";
+        foreach ($_POST['dop_cat'] as $v)
+            if ($v != 'null' and !strstr($v, ','))
+                $_POST['dop_cat_new'].=$v . "#";
+    }
+
     // Проверка прав редактирования
     if ($PHPShopBase->Rule->CheckedRules('catalog', 'rule')) {
 
@@ -265,11 +304,6 @@ function actionInsert() {
     }
 
     $_POST['icon_new'] = iconAdd();
-
-    // Доп каталоги
-    if (!empty($_POST['dop_cat_new']) and substr($_POST['dop_cat_new'], 1) != '#') {
-        $_POST['dop_cat_new'] = '#' . $_POST['dop_cat_new'] . '#';
-    }
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
@@ -289,7 +323,7 @@ function iconAdd() {
     // Копируем от пользователя
     if (!empty($_FILES['file']['name'])) {
         $_FILES['file']['ext'] = PHPShopSecurity::getExt($_FILES['file']['name']);
-        if (in_array($_FILES['file']['ext'], array('gif', 'png', 'jpg', 'jpeg','svg'))) {
+        if (in_array($_FILES['file']['ext'], array('gif', 'png', 'jpg', 'jpeg', 'svg'))) {
             if (move_uploaded_file($_FILES['file']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['dir']['dir'] . $path . $_FILES['file']['name'])) {
                 $file = $GLOBALS['dir']['dir'] . $path . $_FILES['file']['name'];
             }

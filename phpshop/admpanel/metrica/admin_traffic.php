@@ -21,7 +21,6 @@ function actionStart() {
     $PHPShopInterface->addJSFiles('./js/bootstrap-datetimepicker.min.js', './js/bootstrap-datetimepicker.ru.js', 'js/chart.min.js', 'metrica/gui/metrica.gui.js');
     $PHPShopInterface->addCSSFiles('./css/bootstrap-datetimepicker.min.css');
 
-
     if (empty($_GET['date_start'])) {
         $date_start = date('Y-m-d', strtotime("-7 day"));
     } else {
@@ -53,7 +52,18 @@ function actionStart() {
         );
 
         $url = 'https://api-metrika.yandex.ru/stat/v1/data?' . http_build_query($array_url_data);
-        $json_data = json_decode(file_get_contents($url), true);
+        $сurl = curl_init();
+        curl_setopt_array($сurl, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER => array('Authorization: OAuth ' . $metrica_token),
+        ));
+
+        $json_data = json_decode(curl_exec($сurl), true);
+        curl_close($сurl);
+
+        if (empty($json_data))
+            $json_data = json_decode(file_get_contents($url), true);
 
         $PHPShopInterface->setActionPanel($TitlePage, $select_name, array('Показать в Метрике'));
         $PHPShopInterface->setCaption(array("Дата", "10%"), array("Визит", "10%"), array("Посетители", "10%"), array("Просмотры", "10%"), array("Доля новых ", "10%"), array("Отказы", "10%"), array("Глубина", "10%"), array("Время", "10%", array('align' => 'left')));
@@ -63,7 +73,7 @@ function actionStart() {
             $PHPShopInterface->setRow('Итого и средние', $json_data[totals][0], $json_data[totals][1], $json_data[totals][2], round($json_data[totals][3], 2) . '%', round($json_data[totals][4], 2) . '%', round($json_data[totals][5], 2), round($json_data[totals][6] / 60, 2));
 
 
-            $canvas_data=$json_data = $json_data[data];
+            $canvas_data = $json_data = $json_data[data];
             $canvas_value = $canvas_label = null;
             foreach ($json_data as $key => $value) {
                 $date = $json_data[$key][dimensions][0][id];
@@ -77,8 +87,8 @@ function actionStart() {
 
                 $PHPShopInterface->setRow(date('d.m.Y', strtotime($date)), $visits, $users, $pageviews, round($percentNewVisitors, 2) . '%', round($bounceRate, 2) . '%', round($pageDepth, 2), array('name' => round($avgVisitDurationSeconds, 2), 'align' => 'left'));
             }
-            
-            
+
+
             // График
             if (is_array($canvas_data)) {
                 krsort($canvas_data);
@@ -99,7 +109,7 @@ function actionStart() {
              
 <div class="dropdown">
   <button class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-    <span class="glyphicon glyphicon-cog"></span> '.__('График').'
+    <span class="glyphicon glyphicon-cog"></span> ' . __('График') . '
     <span class="caret"></span>
   </button>
   <ul class="dropdown-menu dropdown-menu-right canvas-select">
@@ -119,8 +129,8 @@ function actionStart() {
           </div>
        </div>
      </div>';
-    } 
-    
+    }
+
     $searchforma.=$PHPShopInterface->setInputDate("date_start", $date_start, 'margin-bottom:10px', null, 'Дата начала отбора');
     $searchforma.=$PHPShopInterface->setInputDate("date_end", $date_end, false, null, 'Дата конца отбора');
     $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'hidden', 'name' => 'path', 'value' => $_GET['path']));

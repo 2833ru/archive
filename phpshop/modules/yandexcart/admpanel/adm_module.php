@@ -16,11 +16,14 @@ function actionBaseUpdate() {
 function actionStart() {
     global $PHPShopGUI, $PHPShopOrm;
 
-    $PHPShopGUI->field_col = 4;
+    $PHPShopGUI->field_col = 2;
     PHPShopObj::loadClass("order");
 
     // Выборка
     $data = $PHPShopOrm->select();
+    
+    
+    $Tab1=$PHPShopGUI->setField('Пароль защиты YML файла', $PHPShopGUI->setInputText('http://'.$_SERVER['SERVER_NAME'].'/yml/?pas=', 'password_new', $data['password'], 400));
 
     // Инструкция
     $Tab2 = $PHPShopGUI->loadLib('tab_info', $data,'../modules/'.$_GET['id'].'/admpanel/');
@@ -28,7 +31,7 @@ function actionStart() {
     $Tab3 = $PHPShopGUI->setPay(false, false, $data['version'], true);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Инструкция", $Tab2), array("О Модуле", $Tab3));
+    $PHPShopGUI->setTab(array("Основное", $Tab1,true),array("Инструкция", $Tab2), array("О Модуле", $Tab3));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =

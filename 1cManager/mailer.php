@@ -8,19 +8,24 @@ include_once('../phpshop/class/mail.class.php');
 function GetNumOrders($cid) {
     global $link_db;
 
-    $sql = "select uid from " . $GLOBALS['SysValue']['base']['table_name9'] . " where cid='$cid'";
+    $sql = "select uid,datas from " . $GLOBALS['SysValue']['base']['table_name9'] . " where cid='$cid'";
     $result = mysqli_query($link_db, $sql);
     @$row = mysqli_fetch_array(@$result);
     return $row['uid'];
 }
 
 // Сообщение пользователю
-function SendMailUser($id, $flag = "accounts") {
+function SendMailUser($id, $flag, $datas=false) {
     global $link_db, $PHPShopSystem;
 
     // Счет-фактура, поиск номера заказа
-    if ($flag == "invoice")
-        $id = GetNumOrders($id);
+    if ($flag == "invoice"){
+        $order_info = GetNumOrders($id);
+        $id = $order_info['id'];
+        $datas = $order_info['datas'];
+        $name_doc = "Счет-фактуры";
+    }
+    else $name_doc="Счета на оплату";
 
     $sql = "select * from " . $GLOBALS['SysValue']['base']['table_name1'] . " where id=" . intval($id);
     $result = mysqli_query($link_db, $sql);
@@ -32,12 +37,11 @@ function SendMailUser($id, $flag = "accounts") {
 
     $PHPShopSystem = new PHPShopSystem();
     if ($PHPShopSystem->ifSerilizeParam('1c_option.1c_load_status_email')) {
+        
+        $content = "Уважаемый(ая) пользователь " . $name . ", по заказу №" . $uid . " стала доступна печатная форма \"".$name_doc."\".
 
-        $content = "Уважаемый(ая) пользователь " . $name . ", по заказу №" . $uid . " стали доступны бухгалтерские документы в личном кабинете.
-
-Вы можете проверить статус заказа, загрузить файлы, распечатать платежные 
-документы он-лайн через 'Личный кабинет' или по ссылке http://" . $_SERVER['SERVER_NAME'] . $GLOBALS['SysValue']['dir']['dir'] . "/users/
-    
+Вы можете проверить статус заказа, загрузить файлы, распечатать платежные документы он-лайн в \"Личном кабинете\" или скачать по ссылке: http://" . $_SERVER['SERVER_NAME'] . $GLOBALS['SysValue']['dir']['dir'] . "/files/docsSave.php?orderId=" . $id . "&list=".$flag."&datas=" . $datas."&user=".$row['user']."
+       
 Дата: " . date("d-m-y H:s a") . "
     
 ";

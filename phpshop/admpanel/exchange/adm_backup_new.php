@@ -55,7 +55,7 @@ function actionStart() {
             
 ' . $PHPShopGUI->setHelp('Для выбора более одной записи нажмите левой кнопкой мыши на запись, удерживая клавишу CTRL')) .
             $PHPShopGUI->setField('GZIP сжатие', $PHPShopGUI->setCheckbox('export_gzip', 1, 'Включить', 1), 1, 'Сокращает размер создаваемого файла') .
-            $PHPShopGUI->setField('Варианты копирования', $PHPShopGUI->setSelect('export_structure', $structure_value, 300,true)));
+            $PHPShopGUI->setField('Варианты копирования', $PHPShopGUI->setSelect('export_structure', $structure_value, 300,true)),'in',false);
 
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, false);
 

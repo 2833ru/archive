@@ -37,13 +37,11 @@ function setNum() {
  * Экшен загрузки форм редактирования
  */
 function actionStart() {
-    global $PHPShopOrm,$PHPShopBase,$subpath;
-    
-    
+    global $PHPShopOrm, $PHPShopBase, $subpath, $PHPShopModules;
+
     if (!$PHPShopBase->Rule->CheckedRules($subpath[0], 'create')) {
         return $PHPShopBase->Rule->BadUserFormaWindow();
     }
-
 
     // Копия заказа из карточки заказа
     if (!empty($_GET['id'])) {
@@ -118,14 +116,17 @@ function actionStart() {
     $data['datas'] = time();
     $data['uid'] = setNum();
     $data['statusi'] = 0;
-    $data['seller']=0;
+    $data['seller'] = 0;
     $data['sum_new'] = $order['Cart']['sum'];
-    $data['ofd']='';
-    $data['ofd_status']=0;
+    $data['ofd'] = '';
+    $data['ofd_status'] = 0;
 
     // Запись пустого заказа для получения идентификатора заказа
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
     $id = $PHPShopOrm->insert($data, '');
+
+    // Перехват модуля
+    $PHPShopModules->setAdmHandler(__FILE_, _FUNCTION__, $id);
 
     header('Location: ?path=order&id=' . $id);
     return true;

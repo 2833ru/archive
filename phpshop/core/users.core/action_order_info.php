@@ -83,7 +83,6 @@ function action_order_info($obj, $tip) {
             else
                 $docs = null;
 
-
             // Документооборот файлы
             $docs.= userorderfiles($row['files'], $obj);
 
@@ -102,6 +101,7 @@ function action_order_info($obj, $tip) {
                     $editTime . $comment;
             // Способ оплаты
             $payment = userorderpaymentlink($obj, $PHPShopOrderFunction, $tip, $row);
+            
             // Описание столбцов
             $caption = $obj->caption(__('Статус заказа'), __('Способ оплаты'));
             $table .= PHPShopText::p(PHPShopText::table($caption . $payment = PHPShopText::tr($time, $payment), 3, 1, 'left', '99%', false, 0, 'allspecwhite', 'list table table-striped table-bordered'));
@@ -116,6 +116,10 @@ function action_order_info($obj, $tip) {
             }
 
             $table .= PHPShopText::p(PHPShopText::table($caption . $temp, 3, 1, 'left', '99%', false, 0, 'allspecwhite', 'list table table-striped table-bordered'));
+            
+            // Трекинг
+            if(!empty($row['tracking']))
+             $table .= PHPShopText::p(PHPShopText::table($obj->caption(__('Код отслеживания')).PHPShopText::tr($row['tracking']), 3, 1, 'left', '99%', false, 0, 'allspecwhite', 'list table table-striped table-bordered'));
 
             // Описание столбцов
             $caption = $obj->caption(__('Наименование'), __('Кол-во'), __('Сумма'));

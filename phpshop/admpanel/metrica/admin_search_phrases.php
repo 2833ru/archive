@@ -21,10 +21,9 @@ function actionStart() {
     $PHPShopInterface->addJSFiles('./js/bootstrap-datetimepicker.min.js', './js/bootstrap-datetimepicker.ru.js', 'metrica/gui/metrica.gui.js');
     $PHPShopInterface->addCSSFiles('./css/bootstrap-datetimepicker.min.css');
 
-
     if (empty($_GET['date_start']))
         $date_start = date('Y-m-d');
-    else{
+    else {
         $date_start = $_GET['date_start'];
         $clean = true;
     }
@@ -37,8 +36,7 @@ function actionStart() {
     if (empty($_GET['group'])) {
         $_GET['group'] = 'day';
     }
-    
-    
+
     // Интервал
     if (!empty($_GET['group_date'])) {
         switch ($_GET['group_date']) {
@@ -47,29 +45,28 @@ function actionStart() {
                 $date_end = date('Y-m-d');
                 break;
             case "yesterday":
-                $date_start = date('Y-m-d',strtotime("-1 day"));
+                $date_start = date('Y-m-d', strtotime("-1 day"));
                 $date_end = date('Y-m-d');
                 break;
             case "week":
-                $date_start = date('Y-m-d',strtotime("-7 day"));
+                $date_start = date('Y-m-d', strtotime("-7 day"));
                 $date_end = date('Y-m-d');
                 break;
             case "month":
-                $date_start = date('Y-m-d',strtotime("-1 month"));
+                $date_start = date('Y-m-d', strtotime("-1 month"));
                 $date_end = date('Y-m-d');
                 break;
-             case "quart":
-                $date_start = date('Y-m-d',strtotime("-3 month"));
+            case "quart":
+                $date_start = date('Y-m-d', strtotime("-3 month"));
                 $date_end = date('Y-m-d');
                 break;
-             case "year":
-                $date_start = date('Y-m-d',strtotime("-12 month"));
+            case "year":
+                $date_start = date('Y-m-d', strtotime("-12 month"));
                 $date_end = date('Y-m-d');
                 break;
         }
     }
-    
-    
+
     $TitlePage.=' с ' . $date_start . ' по ' . $date_end;
 
     $array_url_data = array(
@@ -83,10 +80,21 @@ function actionStart() {
     );
 
     $url = 'https://api-metrika.yandex.ru/stat/v1/data?' . http_build_query($array_url_data);
-    $json_data = json_decode(file_get_contents($url), true);
+    $сurl = curl_init();
+    curl_setopt_array($сurl, array(
+        CURLOPT_URL => $url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_HTTPHEADER => array('Authorization: OAuth ' . $metrica_token),
+    ));
+
+    $json_data = json_decode(curl_exec($сurl), true);
+    curl_close($сurl);
+
+    if (empty($json_data))
+        $json_data = json_decode(file_get_contents($url), true);
 
     $PHPShopInterface->setActionPanel($TitlePage, $select_name, array('Показать в Метрике'));
-    $PHPShopInterface->setCaption(array("Поисковая фраза, Поисковая система", "40%"), array("Визиты", "10%"), array("Посетители", "10%"), array("Отказы", "10%"), array("Глубина", "10%"), array("Время", "10%", array('align' => 'left')));
+    $PHPShopInterface->setCaption(array("Поисковая фраза", "40%"), array("Визиты", "10%"), array("Посетители", "10%"), array("Отказы", "10%"), array("Глубина", "10%"), array("Время", "10%", array('align' => 'left')));
 
     if (is_array($json_data)) {
 
@@ -108,7 +116,8 @@ function actionStart() {
             // Коррекция
             if ($name_1 == 'Яндекс')
                 $name = '<a target="_blank" href="https://yandex.ru/search/?text=' . $name . '">' . PHPShopSecurity::TotalClean($name) . '</a>';
-            else $name=PHPShopSecurity::TotalClean($name);
+            else
+                $name = PHPShopSecurity::TotalClean($name);
 
             $PHPShopInterface->setRow($icon . $name, $visits, $users, round($bounceRate, 2) . '%', round($pageDepth, 2), round($avgVisitDurationSeconds, 2));
         }
@@ -119,11 +128,11 @@ function actionStart() {
     $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'hidden', 'name' => 'path', 'value' => $_GET['path']));
 
     /*
-    $group_value[] = array(__('По дням'), 'day', $_GET['group']);
-    $group_value[] = array(__('По неделям'), 'week', $_GET['group']);
-    $group_value[] = array(__('По месяцам'), 'month', $_GET['group']);
-    $searchforma.= $PHPShopInterface->setSelect('group', $group_value, 180);
-    */
+      $group_value[] = array(__('По дням'), 'day', $_GET['group']);
+      $group_value[] = array(__('По неделям'), 'week', $_GET['group']);
+      $group_value[] = array(__('По месяцам'), 'month', $_GET['group']);
+      $searchforma.= $PHPShopInterface->setSelect('group', $group_value, 180);
+     */
 
     $group_date_value[] = array(__('Интервал'), 0, $_GET['group_date']);
     $group_date_value[] = array(__('Сегодня'), 'today', $_GET['group_date']);

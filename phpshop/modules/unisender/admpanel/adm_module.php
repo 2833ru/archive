@@ -65,11 +65,11 @@ function actionBase() {
             }
             fclose($fp);
 
-            $response = split("\r\n\r\n", $res);
+            $response = explode("\r\n\r\n", $res);
             $header = $response[0];
             $responsecontent = $response[1];
             if (!(strpos($header, "Transfer-Encoding: chunked") === false)) {
-                $aux = split("\r\n", $responsecontent);
+                $aux = explode("\r\n", $responsecontent);
                 for ($i = 0; $i < count($aux); $i++)
                     if ($i == 0 || ($i % 2 == 0))
                         $aux[$i] = "";

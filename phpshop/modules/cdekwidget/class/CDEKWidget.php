@@ -42,18 +42,24 @@ class CDEKWidget {
                 array('error' => PHPShopString::utf8_win1251($data['Order'][0]['@attributes']['Msg']), 'parameters' => $this->parameters),
                 $this->orderId,
                 'Ошибка передачи заказа',
-                'Передача заказа службе доставки СДЭК'
+                'Передача заказа службе доставки СДЭК',
+                'error'
             );
         }
         else
         {
+            if(isset($data['Order'][0]['@attributes']['DispatchNumber']))
+                $tracking = $data['Order'][0]['@attributes']['DispatchNumber'];
+
             $data['parameters'] = $this->parameters;
             $data['Order'][1]['@attributes']['Msg'] = PHPShopString::utf8_win1251($data['Order'][1]['@attributes']['Msg']);
             $this->log(
                 $data,
                 $this->orderId,
                 'Успешная передача заказа',
-                'Передача заказа службе доставки СДЭК'
+                'Передача заказа службе доставки СДЭК',
+                'success',
+                $tracking
             );
         }
     }
@@ -166,18 +172,21 @@ class CDEKWidget {
      * @param string $status статус отправки
      * @param string $type request
      */
-    public function log($message, $order_id, $status, $type) {
+    public function log($message, $order_id, $status, $type, $status_code = 'succes', $traking = '') {
 
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['cdekwidget']['cdekwidget_log']);
         $id = explode("-", $order_id);
 
         $log = array(
-            'message_new' => serialize($message),
-            'order_id_new' => $id[0],
-            'status_new' => $status,
-            'type_new' => $type,
-            'date_new' => time()
+            'message_new'     => serialize($message),
+            'order_id_new'    => $id[0],
+            'status_new'      => $status,
+            'type_new'        => $type,
+            'date_new'        => time(),
+            'status_code_new' => $status_code,
+            'tracking_new'    => $traking
         );
         $PHPShopOrm->insert($log);
     }
+
 }

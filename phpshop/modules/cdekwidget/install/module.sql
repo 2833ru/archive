@@ -13,11 +13,11 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_cdekwidget_system` (
   `weight` varchar(64) default '',
   `width` varchar(64) default '',
   `height` varchar(64) default '',
-  `version` FLOAT(2) DEFAULT '1.0' NOT NULL,
+  `version` varchar(64) DEFAULT '1.1',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-INSERT INTO `phpshop_modules_cdekwidget_system` VALUES (1, '', '', '0', '', '', '', '', '', '','', '', '', '1.0');
+INSERT INTO `phpshop_modules_cdekwidget_system` VALUES (1, '', '', '0', '', '', '', '', '', '','', '', '', '1.1');
 
 CREATE TABLE IF NOT EXISTS `phpshop_modules_cdekwidget_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -25,6 +25,8 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_cdekwidget_log` (
   `message` text NOT NULL,
   `order_id` int(11) NOT NULL,
   `status` varchar(255) NOT NULL,
+  `status_code` varchar(64) default 'success',
+  `tracking` varchar(64) default '',
   `type` varchar(64) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;

@@ -5,7 +5,6 @@
     <description>Прием оплат через Tinkoff.</description>
     <category>payment</category>
     <faqlink>http://faq.phpshop.ru/page/tinkoff.html</faqlink>
-    <status>update</status>
     <adminmenu>
         <title>Прием оплат Tinkoff</title>
         <capability>true</capability>

@@ -58,6 +58,8 @@ if (strpos($_GET['path'], '.')) {
     if (is_numeric($subpath[1])) {
         if ($subpath[0] == 'catalog')
             header('Location: ?path=' . $subpath[0] . '&cat=' . $subpath[1]);
+        else if ($subpath[0] == 'sort')
+            header('Location: ?path=' . $subpath[0] . '&cat=' . $subpath[1]);
         else
             header('Location: ?path=' . $subpath[0] . '&id=' . $subpath[1]);
     }
@@ -264,8 +266,8 @@ if (empty($adm_title)) {
                                     <li><a href="http://idea.phpshop.ru" target="_blank"><?php _e('Предложить идею'); ?></a></li>
                                     <li class="divider"></li>
                                     <li class="dropdown-header"><?php _e('Дополнительно'); ?></li>
-                                    <li><a href="http://www.phpshop.ru/loads/files/setup.exe" target="_blank"><?php _e('Утилиты'); ?> EasyControl</a></li>
-                                    <li><a href="http://www.phpshop.ru/page/yandex-webmaster.html" target="_blank">SEO <?php _e('оптимизация'); ?></a></li>
+                                    <li><a href="https://www.phpshop.ru/loads/files/setup.exe" target="_blank"><?php _e('Утилиты'); ?> EasyControl</a></li>
+                                    <li><a href="https://www.phpshop.ru/page/yandex-webmaster.html" target="_blank">SEO <?php _e('оптимизация'); ?></a></li>
                                     <li><a href="https://beget.com/p566" target="_blank"><?php _e('Хостинг сайта'); ?></a></li>
                                     <li class="divider"></li>
                                     <li><a href="?path=update"><span class="glyphicon glyphicon-cloud-download"></span> <?php _e('Мастер обновления'); ?></a></li>
@@ -354,7 +356,6 @@ if (empty($adm_title)) {
                                     <li><a href="?path=menu"><?php _e('Текстовые блоки'); ?><span class="dropdown-header"><?php _e('Вывод текстовых блоков в блок-меню'); ?></span></a></li>
                                     <li><a href="?path=gbook"><?php _e('Отзывы'); ?><span class="dropdown-header"><?php _e('Отзывы пользователей о сайте'); ?></span></a></li>
                                     <li><a href="?path=news"><?php _e('Новости'); ?><span class="dropdown-header"><?php _e('Новостная лента сайта'); ?></span></a></li>
-                                    <li><a href="?path=news.rss"><?php _e('RSS каналы'); ?><span class="dropdown-header"><?php _e('Импорт новостей из источников'); ?></span></a></li>
                                 </ul>
                             </li>
 

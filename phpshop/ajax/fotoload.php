@@ -18,17 +18,6 @@ if ($_REQUEST['type'] != 'json') {
     $JsHttpRequest = new Subsys_JsHttpRequest_Php("windows-1251");
 }
 
-function checkMultibase($img) {
-    global $PHPShopSystem;
-    $base_host = $PHPShopSystem->getSerilizeParam('admoption.base_host');
-    if ($PHPShopSystem->getSerilizeParam('admoption.base_enabled') == 1 and !empty($base_host)) {
-        $source_img = str_replace("/UserFiles/", "http://" . $base_host . "/UserFiles/", $img);
-        return $source_img;
-    }
-    else
-        return $img;
-}
-
 function getFotoIconPodrobno($n, $f) {
     global $SysValue,$FotoArray,$link_db;
 
@@ -50,9 +39,9 @@ function getFotoIconPodrobno($n, $f) {
 
         $FotoArray[] = array(
             "id" => $id,
-            "name" => checkMultibase($name, true),
-            "name_s" => checkMultibase($name_s, true),
-            "name_b" => checkMultibase($name_b, true),
+            "name" => $name,
+            "name_s" => $name_s,
+            "name_b" => $name_b,
             "info" => $info
         );
     }

@@ -337,8 +337,6 @@ class PHPShopShop extends PHPShopShopCore {
         // Оценки из отзывов к товару.
         $this->comment_rate($row);
 
-        // Проверка режима Multibase
-        //$this->checkMultibase($row['pic_small']);
         // Имя товара
         $this->set('productName', $row['name']);
 

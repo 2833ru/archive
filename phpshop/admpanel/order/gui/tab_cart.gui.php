@@ -42,7 +42,6 @@ function tab_cart($data, $option = false) {
 
                 if (!empty($val['id'])) {
                     
-
                     // Проверка подтипа товара
                     if (!empty($val['parent']))
                         $val['id'] = $val['parent'];
@@ -59,13 +58,10 @@ function tab_cart($data, $option = false) {
                     if(!empty($val['promo_code']) and !empty($val['promo_price']))
                         $code= 'Купон: <span class="text-success">'.$val['promo_code'].'</span>';
                     
-
-
                     if (!empty($val['pic_small']))
                         $icon = '<img src="' . $val['pic_small'] . '" onerror="this.onerror = null;this.src = \'./images/no_photo.gif\'" class="media-object">';
                     else
                         $icon = '<img class="media-object" src="./images/no_photo.gif">';
-
 
                     $name = '
 <div class="media">
@@ -80,7 +76,6 @@ function tab_cart($data, $option = false) {
   </div>
 </div>';
 
-
                     $PHPShopInterface->setRow(array('name' => $name, 'align' => 'left'), $PHPShopOrder->ReturnSumma($val['price'], 0, ' '), array('name' => $val['num'], 'align' => 'center'), array('action' => array('cart-value-edit', '|', 'cart-value-remove', 'id' => $key), 'align' => 'center'), array('name' => $PHPShopOrder->ReturnSumma($val['price'] * $val['num'], 0, ' ') . $currency, 'align' => 'right'));
 
                     $n++;
@@ -88,8 +83,6 @@ function tab_cart($data, $option = false) {
                     $sum+=$val['price'] * $val['num'];
                 }
             }
-
-
 
     $total = '<table class="pull-right totals">
       <tbody>
@@ -129,8 +122,6 @@ function tab_cart($data, $option = false) {
         $discount = $PERSON['discount'];
     else
         $discount = null;
-
-
 
     $disp = '<table class="table table-hover cart-list">' . $PHPShopInterface->getContent() . '</table>
 <div class="row">

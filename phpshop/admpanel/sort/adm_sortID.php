@@ -25,7 +25,7 @@ else
     // Размер названия поля
     $PHPShopGUI->field_col = 2;
     $PHPShopGUI->addJSFiles('./sort/gui/sort.gui.js');
-    $PHPShopGUI->setActionPanel($TitlePage . ': ' . $data['name'], array('Создать', '|', 'Удалить',), array('Сохранить', 'Сохранить и закрыть'));
+    $PHPShopGUI->setActionPanel($TitlePage . ': ' . $data['name'], array('Создать','Сделать копию', '|', 'Удалить',), array('Сохранить', 'Сохранить и закрыть'));
 
     // Страницы
     $page_value[] = array('- '.__('Нет описания').' - ', null, $data['page']);
@@ -98,9 +98,10 @@ function actionDelete() {
 function actionSave() {
 
     // Сохранение данных
-    actionUpdate();
+   actionUpdate();
 
-   header('Location: ?path=' . $_GET['path']);
+
+   header('Location: ?path=' . $_GET['path'].'&cat=' . $_POST['category_new']);
 }
 
 // Функция обновления

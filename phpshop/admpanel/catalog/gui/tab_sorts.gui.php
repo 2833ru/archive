@@ -45,7 +45,7 @@ function tab_sorts_val($n, $sort) {
                 if ($id == $v)
                     $sel = "selected";
             }
-        $dis.="<option value=" . $id . " " . $sel . ">" . $name . "</option>\n";
+        $dis.="<option value=" . $id . " " . $sel . " data-subtext=\"".$row['description']."\">" . $name . "</option>\n";
     }
     return $dis;
 }

@@ -24,18 +24,18 @@ function actionStart() {
 
     if (empty($_GET['date_start']))
         $date_start = date('Y-m-d');
-    else{
+    else {
         $date_start = $_GET['date_start'];
-         $clean = true;
+        $clean = true;
     }
 
     if (empty($_GET['date_end']))
         $date_end = date('Y-m-d');
     else
         $date_end = $_GET['date_end'];
-    
-    
-        // Интервал
+
+
+    // Интервал
     if (!empty($_GET['group_date'])) {
         switch ($_GET['group_date']) {
             case "today":
@@ -43,28 +43,27 @@ function actionStart() {
                 $date_end = date('Y-m-d');
                 break;
             case "yesterday":
-                $date_start = date('Y-m-d',strtotime("-1 day"));
+                $date_start = date('Y-m-d', strtotime("-1 day"));
                 $date_end = date('Y-m-d');
                 break;
             case "week":
-                $date_start = date('Y-m-d',strtotime("-7 day"));
+                $date_start = date('Y-m-d', strtotime("-7 day"));
                 $date_end = date('Y-m-d');
                 break;
             case "month":
-                $date_start = date('Y-m-d',strtotime("-1 month"));
+                $date_start = date('Y-m-d', strtotime("-1 month"));
                 $date_end = date('Y-m-d');
                 break;
-             case "quart":
-                $date_start = date('Y-m-d',strtotime("-3 month"));
+            case "quart":
+                $date_start = date('Y-m-d', strtotime("-3 month"));
                 $date_end = date('Y-m-d');
                 break;
-             case "year":
-                $date_start = date('Y-m-d',strtotime("-12 month"));
+            case "year":
+                $date_start = date('Y-m-d', strtotime("-12 month"));
                 $date_end = date('Y-m-d');
                 break;
         }
     }
-    
 
     $TitlePage.=' с ' . $date_start . ' по ' . $date_end;
 
@@ -83,24 +82,35 @@ function actionStart() {
     );
 
     $url = 'https://api-metrika.yandex.ru/stat/v1/data?' . http_build_query($array_url_data);
-    $json_data = json_decode(file_get_contents($url), true);
+    $сurl = curl_init();
+    curl_setopt_array($сurl, array(
+        CURLOPT_URL => $url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_HTTPHEADER => array('Authorization: OAuth ' . $metrica_token),
+    ));
+
+    $json_data = json_decode(curl_exec($сurl), true);
+    curl_close($сurl);
+
+    if (empty($json_data))
+        $json_data = json_decode(file_get_contents($url), true);
 
     $PHPShopInterface->setActionPanel($TitlePage, $select_name, array('Показать в Метрике'));
-    $PHPShopInterface->setCaption(array("Адрес страницы", "40%"), array("Визиты", "10%"), array("Посетители", "10%"));
+    $PHPShopInterface->setCaption(array("Адрес страницы", "40%"), array("Визиты", "10%", array('align' => 'center')), array("Посетители", "10%", array('align' => 'center')));
 
     if (is_array($json_data)) {
 
         $json_data = $json_data[data];
-        
+
         foreach ($json_data as $key => $value) {
 
             $name = $json_data[$key][dimensions][4][name];
             $favicon = $json_data[$key][dimensions][4][favicon];
             $visits = $json_data[$key][metrics][0];
             $users = $json_data[$key][metrics][1];
-            $icon = '<img src="//favicon.yandex.net/favicon/'.$favicon.'/" style="padding-right:5px;width:21px" />';
+            $icon = '<img src="//favicon.yandex.net/favicon/' . $favicon . '/" style="padding-right:5px;width:21px" />';
 
-            $PHPShopInterface->setRow(array('name'=>$icon.PHPShopString::utf8_win1251($name),'link'=> $name,'target'=>'_blank'), $visits,$users);
+            $PHPShopInterface->setRow(array('name' => $icon . PHPShopString::utf8_win1251($name), 'link' => $name, 'target' => '_blank'), array('name' => $visits, 'align' => 'center'), array('name' => $users, 'align' => 'center'));
         }
     }
 

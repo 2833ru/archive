@@ -541,3 +541,7 @@ form.navbar-right{
 #presentation-content .panel{
     margin: 7px !important;
 }
+
+.redactor-editor{
+    color: #333;
+}

@@ -180,16 +180,22 @@ function updateStore($data) {
  */
 function actionStart() {
     global $PHPShopGUI, $PHPShopModules, $PHPShopOrm, $PHPShopSystem;
-    
+
     // Выборка
     $PHPShopOrm->debug = false;
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_REQUEST['id'])), false, array('limit' => 1));
 
-    $PHPShopGUI->addJSFiles('./js/jquery.suggestions.min.js', './order/gui/order.gui.js', './order/gui/dadata.gui.js');
+    // Подсказки
+    if ($PHPShopSystem->ifSerilizeParam('admoption.dadata_enabled')) {
+        $PHPShopGUI->addJSFiles('./js/jquery.suggestions.min.js', './order/gui/dadata.gui.js');
+        $PHPShopGUI->addCSSFiles('./css/suggestions.min.css');
+    }
+
+    $PHPShopGUI->addJSFiles('./order/gui/order.gui.js');
+    
     if (strlen($data['street']) > 5)
         $PHPShopGUI->addJSFiles('//api-maps.yandex.ru/2.0/?load=package.standard&lang=ru-RU');
 
-    $PHPShopGUI->addCSSFiles('./css/suggestions.min.css');
 
     $PHPShopGUI->action_select['Все заказы пользователя'] = array(
         'name' => 'Все заказы пользователя',
@@ -249,7 +255,7 @@ function actionStart() {
 
     if (!empty($data['flat']))
         $flat = ', кв. ' . $data['flat'];
-    
+
     if (empty($data['fio']) and !empty($order['Person']['name_person']))
         $data['fio'] = $order['Person']['name_person'];
 
@@ -262,7 +268,7 @@ function actionStart() {
     // Карта
     if ($PHPShopSystem->ifSerilizeParam('admoption.yandexmap_enabled')) {
         if (strlen($data['street']) > 5) {
-            $map = '<div id="map" class="visible-lg" data-geocode="' . $data['city'] . ', ' . $data['street'] . ' ' . $data['house'] . '" data-title="'.__('Заказ').' №' . $data['uid'] . '"></div><div class="data-row"><a href="http://maps.yandex.ru/?&source=wizgeo&text=' . urlencode(PHPShopString::win_utf8($data['city'] . ', ' . $data['street'] . ' ' . $data['house'])) . '" target="_blank" class="text-muted"><span class="glyphicon glyphicon-map-marker"></span>'.__('Увеличить карту').'</a></div>';
+            $map = '<div id="map" class="visible-lg" data-geocode="' . $data['city'] . ', ' . $data['street'] . ' ' . $data['house'] . '" data-title="' . __('Заказ') . ' №' . $data['uid'] . '"></div><div class="data-row"><a href="http://maps.yandex.ru/?&source=wizgeo&text=' . urlencode(PHPShopString::win_utf8($data['city'] . ', ' . $data['street'] . ' ' . $data['house'])) . '" target="_blank" class="text-muted"><span class="glyphicon glyphicon-map-marker"></span>' . __('Увеличить карту') . '</a></div>';
             $sidebarleft[] = array('title' => 'Адрес доставки на карте', 'content' => array($map));
         }
     }

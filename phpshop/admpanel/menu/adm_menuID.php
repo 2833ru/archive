@@ -84,11 +84,12 @@ function actionUpdate() {
     global $PHPShopOrm, $PHPShopModules;
 
     // Мультибаза
-    $_POST['servers_new'] = "";
-    if (is_array($_POST['servers']))
+    if (is_array($_POST['servers'])){
+        $_POST['servers_new'] = "";
         foreach ($_POST['servers'] as $v)
             if ($v != 'null' and !strstr($v, ','))
                 $_POST['servers_new'].="i" . $v . "i";
+    }
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);

@@ -65,7 +65,7 @@ function GetAdminSkinList($skin) {
         'cake' => '#E3D2BA',
         'dark' => '#3E444C'
     );
-    
+
     if (is_dir($dir)) {
         if (@$dh = opendir($dir)) {
             while (($file = readdir($dh)) !== false) {
@@ -81,7 +81,13 @@ function GetAdminSkinList($skin) {
                         $sel = "";
 
                     if ($file != "." and $file != ".." and !strpos($file, '.')) {
-                        $value[] = array($file, $file, $sel, 'data-content="<span class=\'glyphicon glyphicon-picture\' style=\'color:' . $icon . '\'></span> ' . $file . '"');
+
+                        if ($file == 'default')
+                            $name = 'тема';
+                        else
+                            $name = $file;
+
+                        $value[] = array($file, $file, $sel, 'data-content="<span class=\'glyphicon glyphicon-picture\' style=\'color:' . $icon . '\'></span> ' . $name . '"');
                         $id++;
                     }
                 }
@@ -226,12 +232,12 @@ function actionStart() {
         header('Location: ./admin.php');
     }
 
-    // Тема офомления
+    // Тема оформления
     if (empty($_SESSION['admin_theme']))
         $theme = PHPShopSecurity::TotalClean($PHPShopSystem->getSerilizeParam('admoption.theme'));
-    elseif(!file_exists('./css/bootstrap-theme-' . $theme . '.css'))
+    else
         $theme = $_SESSION['admin_theme'];
-    else 
+    if (!file_exists('./css/bootstrap-theme-' . $theme . '.css'))
         $theme = 'default';
 
     // Демо-режим

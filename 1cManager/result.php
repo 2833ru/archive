@@ -4,7 +4,7 @@
  * Автономная синхронизация номенклатуры из 1С
  * @package PHPShopExchange
  * @author PHPShop Software
- * @version 2.4
+ * @version 2.5
  */
 // Авторизация
 include_once("login.php");
@@ -171,7 +171,7 @@ class ReadCsvCatalog extends PHPShopReadCsvNative {
 
     function __construct($file) {
         $this->CsvContent = $this->read($file);
-        $this->TableName = $GLOBALS['SysValue']['base']['table_name'];
+        $this->TableName = $GLOBALS['SysValue']['base']['categories'];
     }
 
     function read($file) {
@@ -361,20 +361,23 @@ class ReadCsv1C extends PHPShopReadCsvNative {
             if ($this->ObjSystem->getSerilizeParam("1c_option.update_item") == 1) {
                 switch ($this->Sklad_status) {
 
+                    // Товар ставится под заказ
                     case(3):
                         if ($CsvToArray[6] < 1)
-                            $sql.="sklad='1', enabled='1', ";
+                            $sql.="sklad='1', enabled='1', p_enabled='0', ";
                         else
-                            $sql.="sklad='0', enabled='1', ";
+                            $sql.="sklad='0', enabled='1', p_enabled='1', ";
                         break;
 
+                    // Товар убирается с продаж
                     case(2):
                         if ($CsvToArray[6] < 1)
-                            $sql.="enabled='0', ";
+                            $sql.="enabled='0', p_enabled='0', ";
                         else
-                            $sql.="enabled='1', sklad='0',";
+                            $sql.="enabled='1', sklad='0', p_enabled='1', ";
                         break;
 
+                    // Не исползуется
                     default: $sql.="";
                 }
             }
@@ -405,24 +408,13 @@ class ReadCsv1C extends PHPShopReadCsvNative {
                 $sql.="parent_enabled='0', ";
             }
 
-            // Подчиненные товары v 2.1
+            // Подчиненные товары
             if (strstr($CsvToArray[16], "@")) {
                 $parent_array = explode("@", $CsvToArray[16]);
                 $sql.="parent='" . $parent_array[0] . "', parent2='" . $parent_array[1] . "',";
             }
             else
                 $sql.="parent='" . $CsvToArray[16] . "', ";
-
-            // Подчиненные товары 2.0
-            ///$sql.="parent='" . $CsvToArray[16] . "', ";
-            // Подчиненные товары v 1.5
-            /*
-              if (is_numeric($CsvToArray[16]) and $CsvToArray[16] == 1) {
-              $sql.="parent_enabled='1', ";
-              } else {
-              $sql.="parent_enabled='0', ";
-              $sql.="parent='" . $CsvToArray[16] . "', ";
-              } */
 
             // вес
             if (!empty($CsvToArray[12]))
@@ -503,32 +495,36 @@ class ReadCsv1C extends PHPShopReadCsvNative {
             if ($this->ObjSystem->getSerilizeParam("1c_option.update_item") == 1) {
                 switch ($this->Sklad_status) {
 
+                    // Товар ставится под заказ
                     case(3):
                         if ($CsvToArray[6] < 1) {
                             $sklad = 1;
                             $enabled = 1;
+                            $p_enabled = 0;
                         } else {
                             $sklad = 0;
-                            $enabled = 1;
+                            $enabled = $p_enabled = 1;
                         }
                         break;
 
+                    // Товар убирается с продаж
                     case(2):
                         if ($CsvToArray[6] < 1)
-                            $enabled = 0;
+                            $enabled = $p_enabled = 0;
                         else
-                            $enabled = 1;
+                            $enabled = $p_enabled = 1;
                         break;
 
+                    // Не исползуется
                     default:
                         $sklad = 0;
-                        $enabled = 1;
+                        $enabled = $p_enabled = 1;
                         break;
                 }
             }
             else {
                 $sklad = 0;
-                $enabled = 1;
+                $enabled = $p_enabled = 1;
             }
 
             // Добавляем характеристики
@@ -571,11 +567,11 @@ class ReadCsv1C extends PHPShopReadCsvNative {
             content='" . addslashes($CsvToArray[4]) . "',
             price='" . $CsvToArray[7] . "',
             sklad='" . $sklad . "',
-            p_enabled='" . PHPShopMath::Zero($CsvToArray[9]) . "',
+            p_enabled='" . $p_enabled . "',
             enabled='" . $enabled . "',
             uid='" . $CsvToArray[0] . "',
             yml='1',
-            datas='" . date("U") . "',
+            datas='" . time() . "',
             vendor='" . $vendor . "',
             vendor_array='" . $vendor_array . "',";
 

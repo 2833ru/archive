@@ -7,7 +7,6 @@ function cdekwidgetSend($data) {
 
         include_once($_classPath . 'modules/cdekwidget/class/CDEKWidget.php');
         $CDEKWidget = new CDEKWidget();
-        $order = unserialize($data['orders']);
 
         if(!empty($data['cdek_order_data'])) {
             if ($_POST['statusi_new'] == $CDEKWidget->option['status'] or !empty($_POST['cdek_send_now'])) {
@@ -21,11 +20,30 @@ function cdekwidgetSend($data) {
 }
 
 function addCdekTab($data) {
-    global $PHPShopGUI;
+    global $PHPShopGUI, $PHPShopModules, $_classPath;
 
-    if(!empty($data['cdek_order_data'])) {
-        $Tab1 = $PHPShopGUI->setField(__('Ñèíõğîíèçàöèÿ çàêàçà'), $PHPShopGUI->setCheckbox('cdek_send_now', 1, 'Îòïğàâèòü çàêàç â ÑÄİÊ ñåé÷àñ', 0));
-        $PHPShopGUI->addTab(array("ÑÄİÊ", $Tab1, true));
+    include_once($_classPath . 'modules/cdekwidget/class/CDEKWidget.php');
+    $CDEKWidget = new CDEKWidget();
+
+    $order = unserialize($data['orders']);
+
+    if(in_array($order['Person']['dostavka_metod'], explode(",", $CDEKWidget->option['delivery_id']))) {
+        if(!empty($data['cdek_order_data'])) {
+            $Tab1 = $PHPShopGUI->setField(__('Ñèíõğîíèçàöèÿ çàêàçà'), $PHPShopGUI->setCheckbox('cdek_send_now', 1, 'Îòïğàâèòü çàêàç â ÑÄİÊ ñåé÷àñ', 0));
+            $PHPShopGUI->addTab(array("ÑÄİÊ", $Tab1, true));
+        }
+
+        // Îáíîâëåíèå òğåêèíãà
+        if(isset($data['tracking']) and empty($data['tracking']))
+        {
+            $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.cdekwidget.cdekwidget_log"));
+            $tracking = $PHPShopOrm->select(array('tracking'), array('status_code=' => '"success"', 'order_id=' => $data['id']));
+
+            if(!empty($tracking['tracking'])) {
+                $PHPShopOrmOrder = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
+                $PHPShopOrmOrder->update(array('tracking_new' => "$tracking[tracking]"), array('id=' => $data['id']));
+            }
+        }    
     }
 }
 

@@ -13,34 +13,48 @@ $TitlePage = __('Редактирование Товара') . ' #' . $_GET['id'];
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
 
 // Построение дерева категорий
-function treegenerator($array, $i, $curent) {
+function treegenerator($array, $i, $curent, $dop_cat_array) {
     global $tree_array;
     $del = '¦&nbsp;&nbsp;&nbsp;&nbsp;';
-    $tree_select = $check = false;
+    $tree_select = $tree_select_dop = $check = false;
 
     $del = str_repeat($del, $i);
     if (is_array($array['sub'])) {
         foreach ($array['sub'] as $k => $v) {
 
-            $check = treegenerator($tree_array[$k], $i + 1, $curent);
-
+            $check = treegenerator($tree_array[$k], $i + 1, $curent, $dop_cat_array);
+  
             if ($k == $curent)
                 $selected = 'selected';
             else
                 $selected = null;
+            
+            // Допкаталоги
+            $selected_dop = null;
+            if (is_array($dop_cat_array))
+                foreach ($dop_cat_array as $vs) {
+                    if ($k == $vs)
+                        $selected_dop = "selected";
+                }
 
             if (empty($check['select'])) {
                 $tree_select.='<option value="' . $k . '" ' . $selected . '>' . $del . $v . '</option>';
+                
+                if($k < 1000000)
+                $tree_select_dop.='<option value="' . $k . '" ' . $selected_dop . '>' .$del. $v . '</option>';
+                
                 $i = 1;
             } else {
                 $tree_select.='<option value="' . $k . '" ' . $selected . ' disabled>' . $del . $v . '</option>';
-                //$i++;
+                if($k < 1000000)
+                $tree_select_dop.='<option value="' . $k . '" ' . $selected_dop . ' disabled >' .$del. $v . '</option>';
             }
 
             $tree_select.=$check['select'];
+            $tree_select_dop.=$check['select_dop'];
         }
     }
-    return array('select' => $tree_select);
+    return array('select' => $tree_select,'select_dop' => $tree_select_dop);
 }
 
 function actionStart() {
@@ -113,16 +127,25 @@ function actionStart() {
 
     $GLOBALS['tree_array'] = &$tree_array;
 
-    $tree_select = '<select class="selectpicker show-menu-arrow hidden-edit" data-live-search="true" data-container=""  data-style="btn btn-default btn-sm" name="category_new"  data-width="100%"><option value="0">' . $CategoryArray[0]['name'] . '</option>';
+    // Допкаталоги
+    $dop_cat_array = preg_split('/#/', $data['dop_cat'], -1, PREG_SPLIT_NO_EMPTY);
 
     if (is_array($tree_array[0]['sub']))
         foreach ($tree_array[0]['sub'] as $k => $v) {
-            $check = treegenerator($tree_array[$k], 1, $data['category']);
+            $check = treegenerator($tree_array[$k], 1, $data['category'],$dop_cat_array);
 
             if ($k == $data['category'])
                 $selected = 'selected';
             else
                 $selected = null;
+
+            // Допкаталоги
+            $selected_dop = null;
+            if (is_array($dop_cat_array))
+                foreach ($dop_cat_array as $vs) {
+                    if ($k == $vs)
+                        $selected_dop = "selected";
+                }
 
             if (empty($tree_array[$k]))
                 $disabled = null;
@@ -130,10 +153,17 @@ function actionStart() {
                 $disabled = ' disabled';
 
             $tree_select.='<option value="' . $k . '" ' . $selected . $disabled . '>' . $v . '</option>';
+            
+            if($k < 1000000)
+            $tree_select_dop.='<option value="' . $k . '" ' . $selected_dop . $disabled . '>' . $v . '</option>';
 
             $tree_select.=$check['select'];
+            $tree_select_dop.=$check['select_dop'];
         }
-    $tree_select.='</select>';
+
+    $tree_select_dop = '<select class="selectpicker show-menu-arrow hidden-edit" data-live-search="true" data-container=""  data-style="btn btn-default btn-sm" name="dop_cat[]" data-width="100%" multiple><option value="0">' . $CategoryArray[0]['name'] . '</option>' . $tree_select_dop . '</select>';
+
+    $tree_select = '<select class="selectpicker show-menu-arrow hidden-edit" data-live-search="true" data-container=""  data-style="btn btn-default btn-sm" name="category_new"  data-width="100%"><option value="0">' . $CategoryArray[0]['name'] . '</option>' . $tree_select . '</select>';
 
     // Выбор каталога
     $Tab_info = $PHPShopGUI->setField("Размещение", $tree_select, 1, __('Вывод в каталоге ID') . ' ' . $data['category'] . '. ' . __('Изменено') . ' ' . PHPShopDate::get($data['datas'], true), false, 'control-label', false);
@@ -182,7 +212,7 @@ function actionStart() {
     $Tab_info.=$PHPShopGUI->setField('Рекомендуемые товары для совместной продажи', $PHPShopGUI->setTextarea('odnotip_new', $data['odnotip'], false, false, false, __('Укажите ID товаров или воспользуйтесь') . ' <a href="#" data-target="#odnotip_new"  class="btn btn-sm btn-default tag-search"><span class="glyphicon glyphicon-search"></span> ' . __('поиском товаров') . '</a>'));
 
     // Дополнительные каталоги
-    $Tab_info.=$PHPShopGUI->setField('Дополнительные каталоги', $PHPShopGUI->setTextarea('dop_cat_new', $data['dop_cat'], true, false, false, 'Введите ID каталога'), 1, 'Товары одновременно выводятся в нескольких каталогах.');
+    $Tab_info.=$PHPShopGUI->setField('Дополнительные каталоги', $tree_select_dop, 1, 'Товары одновременно выводятся в нескольких каталогах.');
 
     // Опции вывода
     $Tab_info.=$PHPShopGUI->setField('Опции вывода', $PHPShopGUI->setCheckbox('enabled_new', 1, 'Вывод в каталоге', $data['enabled']) .
@@ -234,16 +264,6 @@ function actionStart() {
     $Tab_yml.=$PHPShopGUI->setField('Ставка BID', $PHPShopGUI->setInputText(null, 'yml_bid_array[bid]', $data['yml_bid_array']['bid'], 100));
     $Tab_yml.=$PHPShopGUI->setField('Ставка CBID', $PHPShopGUI->setInputText(null, 'yml_bid_array[cbid]', $data['yml_bid_array']['cbid'], 100));
     $Tab1.=$PHPShopGUI->setCollapse('Яндекс Маркет', $Tab_yml, false);
-
-    // Подтипы
-    /*
-      $Tab_option = $PHPShopGUI->setField(__('Связи'), $PHPShopGUI->setRadio('parent_enabled_new', 0, __('Обычный товар'), $data['parent_enabled']) .
-      $PHPShopGUI->setRadio('parent_enabled_new', 1, __('Добавочная опция для ведущего товара'), $data['parent_enabled']));
-
-      $Tab_option.=$PHPShopGUI->setField(__('ID подтипов'), $PHPShopGUI->setTextarea('parent_new', $data['parent'], "none", false, false, __('Укажите ID товаров или воспользуйтесь <a href="#"  data-target="#parent_new" class="btn btn-sm btn-default tag-search"><span class="glyphicon glyphicon-search"></span> поиском товаров</a>')));
-
-      // Подтипы
-      $Tab1.=$PHPShopGUI->setCollapse(__('Подтипы'), $Tab_option, false); */
 
     // Редактор краткого описания
     $Tab2 = $PHPShopGUI->loadLib('tab_description', $data);
@@ -443,8 +463,12 @@ function actionUpdate() {
             $_POST['files_new'] = serialize($_POST['files_new']);
 
         // Доп каталоги
-        if (!empty($_POST['dop_cat_new']) and substr($_POST['dop_cat_new'], 1) != '#') {
-            $_POST['dop_cat_new'] = '#' . $_POST['dop_cat_new'] . '#';
+        $_POST['dop_cat_new'] = "";
+        if (is_array($_POST['dop_cat']) and $_POST['dop_cat'][0] != 'null') {
+            $_POST['dop_cat_new'] = "#";
+            foreach ($_POST['dop_cat'] as $v)
+                if ($v != 'null' and !strstr($v, ','))
+                    $_POST['dop_cat_new'].=$v . "#";
         }
 
         // Конвертер цвета
@@ -497,7 +521,7 @@ function fotoAdd() {
 
     // Папка сохранения
     $path = $GLOBALS['SysValue']['dir']['dir'] . '/UserFiles/Image/' . $PHPShopSystem->getSerilizeParam('admoption.image_result_path');
-    
+
     // Соль
     $RName = substr(abs(crc32(time())), 0, 5);
 
@@ -526,9 +550,10 @@ function fotoAdd() {
         $file = $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['dir']['dir'] . $_POST['img_new'];
         $path_parts = pathinfo($file);
         $file_name = $path_parts['basename'];
-        
+
         // Сохранение пути файла
-        $path = $GLOBALS['SysValue']['dir']['dir'] . str_replace($_SERVER['DOCUMENT_ROOT'],'',$path_parts['dirname']).'/';
+        if ($PHPShopSystem->ifSerilizeParam('admoption.image_save_path'))
+            $path = $GLOBALS['SysValue']['dir']['dir'] . str_replace($_SERVER['DOCUMENT_ROOT'], '', $path_parts['dirname']) . '/';
     }
 
     if (!empty($file)) {

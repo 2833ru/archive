@@ -104,6 +104,7 @@ class PHPShopNav {
      * @return string
      */
     function getId() {
+        
         return $this->objNav['id'];
     }
 
@@ -129,10 +130,11 @@ class PHPShopNav {
      * Проверка на главную страницу
      * @return bool
      */
-    function index($check=true) {
+    function index($check = true) {
         if ($this->objNav['path'] == 'index' or $check)
             return true;
     }
+
 }
 
 ?>

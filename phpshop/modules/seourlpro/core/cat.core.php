@@ -32,8 +32,9 @@ class PHPShopSeoProCore extends PHPShopShop {
     function query_filter($where = false) {
 
         // Перехват модуля
-        if ($this->setHook(get_parent_class(), __FUNCTION__, $row))
-            return true;
+        $hook = $this->setHook(get_parent_class(), __FUNCTION__);
+        if (!empty($hook))
+            return $hook;
 
         return parent::doLoadFunction(__CLASS__, __FUNCTION__, false, 'shop');
     }

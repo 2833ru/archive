@@ -35,9 +35,10 @@ function UID_promotions_hook($obj, $row, $rout) {
     
                 //ставим лэйбл
                 $obj->set('promotionsIcon', $discount_info['label']);
-                $obj->set('promotionInfo', $discount_info['description']);
             }
         }
+        
+        $obj->set('promotionInfo', $discount_info['description']);
     }
 }
 

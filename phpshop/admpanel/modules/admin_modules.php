@@ -310,7 +310,7 @@ function actionStart() {
 
     $tree = '<table class="table table-hover">
         <tr class="treegrid-all">
-           <td><a href="?path=modules" class="treegrid-parent" data-parent="treegrid-all">'.__('Все модули').'</a> <span id="mod-install-count" class="label label-primary pull-right">77</span></td>
+           <td><a href="?path=modules" class="treegrid-parent" data-parent="treegrid-all">'.__('Все модули').'</a> <span id="mod-install-count" class="label label-primary pull-right">78</span></td>
 	</tr>
         <tr class="treegrid-template">
            <td><a href="?path=modules&cat=template" class="treegrid-parent" data-parent="treegrid-template">'.__('Дизайн').'</a> <span id="mod-install-count" class="label label-primary pull-right">5</span></td>
@@ -325,13 +325,13 @@ function actionStart() {
            <td><a href="?path=modules&cat=seo" class="treegrid-parent" data-parent="treegrid-seo">SEO</a> <span id="mod-install-count" class="label label-primary pull-right">5</span></td>
 	</tr>
         <tr class="treegrid-delivery">
-           <td><a href="?path=modules&cat=delivery" class="treegrid-parent" data-parent="treegrid-delivery">'.__('Доставка').'</a> <span id="mod-install-count" class="label label-primary pull-right">6</span></td>
+           <td><a href="?path=modules&cat=delivery" class="treegrid-parent" data-parent="treegrid-delivery">'.__('Доставка').'</a> <span id="mod-install-count" class="label label-primary pull-right">7</span></td>
 	</tr>
         <tr class="treegrid-chat">
            <td><a href="?path=modules&cat=chat" class="treegrid-parent" data-parent="treegrid-delivery">'.__('Чаты и звонки').'</a> <span id="mod-install-count" class="label label-primary pull-right">6</span></td>
 	</tr>
         <tr class="treegrid-crm">
-           <td><a href="?path=modules&cat=crm" class="treegrid-parent" data-parent="treegrid-crm">CRM</a> <span id="mod-install-count" class="label label-primary pull-right">2</span></td>
+           <td><a href="?path=modules&cat=crm" class="treegrid-parent" data-parent="treegrid-crm">CRM</a> <span id="mod-install-count" class="label label-primary pull-right">1</span></td>
 	</tr>
         <tr class="treegrid-payment">
            <td><a href="?path=modules&cat=payment" class="treegrid-parent" data-parent="treegrid-payment">'.__('Платежные системы').'</a> <span id="mod-install-count" class="label label-primary pull-right">19</span></td>
@@ -346,7 +346,7 @@ function actionStart() {
            <td><a href="?path=modules&cat=user" class="treegrid-parent" data-parent="treegrid-user">'.__('Конверсия').'</a> <span id="mod-install-count" class="label label-primary pull-right">8</span></td>
 	</tr>
         <tr class="treegrid-develop">
-           <td><a href="?path=modules&cat=develop" class="treegrid-parent" data-parent="treegrid-develop">'.__('Разработчикам').'</a> <span id="mod-install-count" class="label label-primary pull-right">11</span></td>
+           <td><a href="?path=modules&cat=develop" class="treegrid-parent" data-parent="treegrid-develop">'.__('Разработчикам').'</a> <span id="mod-install-count" class="label label-primary pull-right">12</span></td>
 	</tr>
         <tr class="treegrid-install">
            <td><a href="?path=modules&install=check" class="treegrid-parent" data-parent="treegrid-install">'.__('Установленные').'</a> <span id="mod-install-count" class="label ' . $label_class . ' pull-right">' . $num . '</span></td>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<module>
+    <version>1.0</version>
+    <name>Shop-Logistics Widget</name>
+    <faqlink>http://faq.phpshop.ru/page/shoplogistics-widget.html</faqlink>
+    <description>Виджет расчета доставки shop-logistics.ru</description>
+    <category>sale,delivery</category>
+    <status>new</status>
+    <sign>1542198276</sign>
+    <adminmenu>
+        <title>Shop-Logistics Widget</title>
+        <capability>true</capability>
+        <podmenu>
+            <podmenu_name>Журнал операций</podmenu_name>
+            <podmenu_action>dir.shoplogisticswidget</podmenu_action>
+        </podmenu>
+    </adminmenu>
+</module>

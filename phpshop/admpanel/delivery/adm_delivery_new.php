@@ -59,7 +59,7 @@ function actionStart() {
     }
     else
         $catalog = false;
-    $data['is_mod']=1;
+    $data['is_mod'] = 1;
 
     // Начальные данные
     if ($catalog)
@@ -147,7 +147,7 @@ function actionStart() {
     $city_select_value[] = array('Все страны мира', 2, $data['city_select']);
 
     if (!$catalog)
-        $Tab_info.=$PHPShopGUI->setField("Помощь подбора регионов и городов", $PHPShopGUI->setSelect('city_select_new', $city_select_value,null,true));
+        $Tab_info.=$PHPShopGUI->setField("Помощь подбора регионов и городов", $PHPShopGUI->setSelect('city_select_new', $city_select_value, null, true));
 
     $Tab1 = $PHPShopGUI->setCollapse('Информация', $Tab_info);
 
@@ -172,21 +172,24 @@ function actionStart() {
         }
 
     // Оплаты
-    if ($_GET['target'] != 'cat'){
+    if ($_GET['target'] != 'cat') {
         $Tab1.=$PHPShopGUI->setField("Блокировка оплат", $PHPShopGUI->setSelect('payment_new[]', $payment_value, false, null, false, $search = false, false, $size = 1, $multiple = true));
-    
+
         // Для модулей
-    if(isset($data['is_mod']))
-     $Tab1.=$PHPShopGUI->setField(__('Не изменять стоимость'), $PHPShopGUI->setRadio('is_mod_new', 1, __('Выключить'), $data['is_mod'], false, 'text-warning') .$PHPShopGUI->setRadio('is_mod_new', 2, __('Включить'), $data['is_mod']));
+        if (isset($data['is_mod']))
+            $Tab1.=$PHPShopGUI->setField(__('Не изменять стоимость'), $PHPShopGUI->setRadio('is_mod_new', 1, __('Выключить'), $data['is_mod'], false, 'text-warning') . $PHPShopGUI->setRadio('is_mod_new', 2, __('Включить'), $data['is_mod']));
     }
 
     // Сумма заказа
-    if($_GET['target'] != 'cat')
-    $Tab1.=$PHPShopGUI->setField("Блокировка при стоимости более", $PHPShopGUI->setInputText(null, "sum_max_new", $data['sum_max'], 150,$PHPShopSystem->getDefaultValutaCode()));
-    
+    if ($_GET['target'] != 'cat')
+        $Tab1.=$PHPShopGUI->setField("Блокировка при стоимости более", $PHPShopGUI->setInputText(null, "sum_max_new", $data['sum_max'], 150, $PHPShopSystem->getDefaultValutaCode()));
+
     // Цены
     if (!$catalog)
         $Tab1.= $PHPShopGUI->setCollapse('Цены', $Tab_price);
+
+    // Витрина
+    $Tab1.=$PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'));
 
     // Дополнительные поля
     if (!$catalog)
@@ -204,7 +207,7 @@ function actionStart() {
     // Левый сайдбар
     $sidebarleft[] = array('title' => 'Категории', 'content' => $tree, 'title-icon' => '<span class="glyphicon glyphicon-plus newcat" data-toggle="tooltip" data-placement="top" title="Добавить каталог"></span>&nbsp;<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="Развернуть"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="Свернуть"></span>');
 
-    $help = '<p class="text-muted">'.__('У каждого типа доставки можно настроить обязательные и дополнительные поля для заполнения заказа в закладке управления доставкой <kbd>Адреса пользователя</kbd>').'</p>';
+    $help = '<p class="text-muted">' . __('У каждого типа доставки можно настроить обязательные и дополнительные поля для заполнения заказа в закладке управления доставкой <kbd>Адреса пользователя</kbd>') . '</p>';
 
     $sidebarleft[] = array('title' => 'Подсказка', 'content' => $help);
     $PHPShopGUI->setSidebarLeft($sidebarleft, 3);
@@ -231,6 +234,13 @@ function actionInsert() {
         if (is_array($_POST['payment_new']))
             $_POST['payment_new'] = @implode(',', $_POST['payment_new']);
     }
+
+    // Мультибаза
+    $_POST['servers_new'] = "";
+    if (is_array($_POST['servers']))
+        foreach ($_POST['servers'] as $v)
+            if ($v != 'null' and !strstr($v, ','))
+                $_POST['servers_new'].="i" . $v . "i";
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);

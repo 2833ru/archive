@@ -35,7 +35,7 @@ function actionStart() {
     $PHPShopGUI->_CODE.=$PHPShopGUI->setCollapse('Статистика посещений Google',
             $PHPShopGUI->setField('Идентификатор отслеживания', $PHPShopGUI->setInputText('UA-', 'option[google_id]', $option['google_id'], 300, false, false, false, 'XXXXX-Y').
                     $PHPShopGUI->setHelp('Отчеты доступны в разделе <a href="https://analytics.google.com/analytics/web/" target="_blank">Google Аналитика</a>')) .
-            $PHPShopGUI->setField("Код счетчика", $PHPShopGUI->setCheckbox('option[google_enabled]', 1, 'Включить сбор статистики и разместить код счетчика', $option['google_enabled']) . '<br>' . $PHPShopGUI->setCheckbox('option[google_analitics]', 1, 'Включить сбор данных Google Analitics', $option['google_analitics'])) 
+            $PHPShopGUI->setField("Код счетчика", $PHPShopGUI->setCheckbox('option[google_enabled]', 1, 'Включить сбор статистики и разместить код счетчика', $option['google_enabled']) . '<br>' . $PHPShopGUI->setCheckbox('option[google_analitics]', 1, 'Включить сбор данных электронной коммерции', $option['google_analitics'])) 
             , 'in', true
     );
 

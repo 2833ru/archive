@@ -1,48 +1,62 @@
 <?php
-
 PHPShopObj::loadClass("valuta");
 PHPShopObj::loadClass("array");
 PHPShopObj::loadClass("page");
 PHPShopObj::loadClass("security");
 PHPShopObj::loadClass("category");
 
-
 $TitlePage = __('Редактирование Категории') . ' #' . $_GET['id'];
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
 
 // Построение дерева категорий
-function treegenerator($array, $i, $parent) {
+function treegenerator($array, $i, $curent, $dop_cat_array) {
     global $tree_array;
     $del = '¦&nbsp;&nbsp;&nbsp;&nbsp;';
-    $tree_select = $check = false;
+    $tree_select = $tree_select_dop =  $check = false;
+
     $del = str_repeat($del, $i);
     if (is_array($array['sub'])) {
         foreach ($array['sub'] as $k => $v) {
 
-            $check = treegenerator($tree_array[$k], $i + 1, $k);
+            $check = treegenerator($tree_array[$k], $i + 1, $k, $dop_cat_array);
 
             if ($k == $_GET['parent_to'])
                 $selected = 'selected';
             else
                 $selected = null;
-
-            // Проверка зацикливания
+            
+             // Проверка зацикливания
             if ($k == $_GET['id'])
                 $disabled = ' disabled ';
             else
                 $disabled = null;
 
+            // Допкаталоги
+            $selected_dop = null;
+            if (is_array($dop_cat_array))
+                foreach ($dop_cat_array as $vs) {
+                    if ($k == $vs)
+                        $selected_dop = "selected";
+                }
+
             if (empty($check['select'])) {
-                $tree_select.='<option value="' . $k . '" ' . $selected . $disabled . '>' . $del . $v . '</option>';
+                $tree_select.='<option value="' . $k . '" ' . $selected .$disabled. '>' . $del . $v . '</option>';
+
+                if ($k < 1000000)
+                    $tree_select_dop.='<option value="' . $k . '" ' . $selected_dop .$disabled. '>' . $del .$v . '</option>';
+
                 $i = 1;
             } else {
-                $tree_select.='<option value="' . $k . '" ' . $selected . $disabled . '>' . $del . $v . '</option>';
+                $tree_select.='<option value="' . $k . '" ' . $selected . $disabled.' >' . $del . $v . '</option>';
+                if ($k < 1000000)
+                    $tree_select_dop.='<option value="' . $k . '" ' . $selected_dop . $disabled.'>' .$del . $v . '</option>';
             }
 
             $tree_select.=$check['select'];
+            $tree_select_dop.=$check['select_dop'];
         }
     }
-    return array('select' => $tree_select);
+    return array('select' => $tree_select, 'select_dop' => $tree_select_dop);
 }
 
 /**
@@ -53,7 +67,7 @@ function actionStart() {
 
     // Размер названия поля
     $PHPShopGUI->field_col = 2;
-    $PHPShopGUI->addJSFiles('./js/jquery.tagsinput.min.js', './js/jquery.treegrid.js', './catalog/gui/catalog.gui.js', './js/bootstrap-treeview.min.js');
+    $PHPShopGUI->addJSFiles('./js/jquery.treegrid.js', './catalog/gui/catalog.gui.js', './js/bootstrap-treeview.min.js');
     $PHPShopGUI->addCSSFiles('./css/bootstrap-treeview.min.css', './css/jquery.tagsinput.css');
 
     // Выборка
@@ -70,7 +84,6 @@ function actionStart() {
         'action' => 'front' . $GLOBALS['isFrame'],
         'target' => '_blank'
     );
-
 
     $PHPShopGUI->action_select['Товары'] = array(
         'name' => 'Товары в каталоге',
@@ -111,18 +124,29 @@ function actionStart() {
     $GLOBALS['tree_array'] = &$tree_array;
     $_GET['parent_to'] = $data['parent_to'];
 
-    $tree_select = '<select class="selectpicker show-menu-arrow hidden-edit" data-live-search="true" data-container=""  data-style="btn btn-default btn-sm" name="parent_to_new" data-width="100%"><option value="0">' . $CategoryArray[0]['name'] . '</option>';
+    // Допкаталоги
+    $dop_cat_array = preg_split('/#/', $data['dop_cat'], -1, PREG_SPLIT_NO_EMPTY);
+
     if ($k == $data['parent_to'])
         $selected = 'selected';
     if (is_array($tree_array[0]['sub']))
         foreach ($tree_array[0]['sub'] as $k => $v) {
-            $check = treegenerator($tree_array[$k], 1, $k);
+            $check = treegenerator($tree_array[$k], 1, $k, $dop_cat_array);
 
 
             if ($k == $data['parent_to'])
                 $selected = 'selected';
             else
                 $selected = null;
+
+            // Допкаталоги
+            $selected_dop = null;
+            if (is_array($dop_cat_array))
+                foreach ($dop_cat_array as $vs) {
+                    if ($k == $vs)
+                        $selected_dop = "selected";
+                }
+
 
             // Проверка зацикливания
             if ($k == $_GET['id'])
@@ -131,9 +155,17 @@ function actionStart() {
                 $disabled = null;
 
             $tree_select.='<option value="' . $k . '"  ' . $selected . $disabled . '>' . $v . '</option>';
+
+            if ($k < 1000000)
+                $tree_select_dop.='<option value="' . $k . '" ' . $selected_dop . $disabled . '>' . $v . '</option>';
+
             $tree_select.=$check['select'];
+            $tree_select_dop.=$check['select_dop'];
         }
-    $tree_select.='</select>';
+
+    $tree_select_dop = '<select class="selectpicker show-menu-arrow hidden-edit" data-live-search="true" data-container=""  data-style="btn btn-default btn-sm" name="dop_cat[]" data-width="100%" multiple><option value="0">' . $CategoryArray[0]['name'] . '</option>' . $tree_select_dop . '</select>';
+
+    $tree_select = '<select class="selectpicker show-menu-arrow hidden-edit" data-live-search="true" data-container=""  data-style="btn btn-default btn-sm" name="parent_to_new"  data-width="100%"><option value="0">' . $CategoryArray[0]['name'] . '</option>' . $tree_select . '</select>';
 
     // Выбор каталога
     $Tab_info.= $PHPShopGUI->setField("Размещение", $tree_select);
@@ -152,7 +184,7 @@ function actionStart() {
     $Tab_info.=$PHPShopGUI->setField("Опции вывода", $vid);
 
     // Товаров на странице
-    $Tab_info.=$PHPShopGUI->setLine() . $PHPShopGUI->setField("Товаров на странице", $PHPShopGUI->setInputText(false, 'num_cow_new', $data['num_cow'], '100',  __('шт.')), 'left');
+    $Tab_info.=$PHPShopGUI->setLine() . $PHPShopGUI->setField("Товаров на странице", $PHPShopGUI->setInputText(false, 'num_cow_new', $data['num_cow'], '100', __('шт.')), 'left');
 
     // Тип сортировки
     $order_by_value[] = array('по имени', 1, $data['order_by']);
@@ -164,7 +196,7 @@ function actionStart() {
             $PHPShopGUI->setSelect('order_by_new', $order_by_value, 120) . $PHPShopGUI->setSelect('order_to_new', $order_to_value, 120), 'left');
 
     // Дополнительные каталоги
-    $Tab_info.=$PHPShopGUI->setField('Дополнительные каталоги', $PHPShopGUI->setTextarea('dop_cat_new', $data['dop_cat'], true, false, false, 'Введите ID каталога'), 1, 'Подкаталоги одновременно выводятся в нескольких каталогах.');
+    $Tab_info.=$PHPShopGUI->setField('Дополнительные каталоги', $tree_select_dop, 1, 'Подкаталоги одновременно выводятся в нескольких каталогах.');
 
     $Tab1 = $PHPShopGUI->setCollapse('Информация', $Tab_info);
 
@@ -205,8 +237,6 @@ function actionStart() {
     }
     else
         $Tab8 = $PHPShopGUI->setHelp('Характеристики доступны только в подкаталогах с товарами.');
-
-
 
     // Мультибаза
     $Tab9.=$PHPShopGUI->setCollapse('Показывать на витринах', $PHPShopGUI->loadLib('tab_multibase', $data));
@@ -282,7 +312,6 @@ function actionUpdate() {
     // Характеристики
     $_POST['sort_new'] = serialize($_POST['sort_new']);
 
-
     // Проверка прав редактирования
     if ($PHPShopBase->Rule->CheckedRules('catalog', 'rule')) {
 
@@ -306,10 +335,13 @@ function actionUpdate() {
             if ($v != 'null' and !strstr($v, ','))
                 $_POST['servers_new'].="i" . $v . "i";
 
-
     // Доп каталоги
-    if (!empty($_POST['dop_cat_new']) and substr($_POST['dop_cat_new'], 1) != '#') {
-        $_POST['dop_cat_new'] = '#' . $_POST['dop_cat_new'] . '#';
+    $_POST['dop_cat_new'] = "";
+    if (is_array($_POST['dop_cat']) and $_POST['dop_cat'][0] != 'null') {
+        $_POST['dop_cat_new'] = "#";
+        foreach ($_POST['dop_cat'] as $v)
+            if ($v != 'null' and !strstr($v, ','))
+                $_POST['dop_cat_new'].=$v . "#";
     }
 
     $_POST['icon_new'] = iconAdd();

@@ -97,6 +97,8 @@ function promotion_get_discount($row, $with_desc = false) {
         }
     }
     
+    //if ($with_desc) { print_r($data); die(0); }
+    
     $promo_discount = $promo_discountsum = 0; 
     $description = $lab = '';
     $labels = $descriptions = array();
@@ -152,35 +154,45 @@ function promotion_get_discount($row, $with_desc = false) {
                 unset($category_ar);
                 unset($products_ar);
                 
-                if ($sumche == 1 || $sumchep == 1) {
+                if ($sumche == 1 || $sumchep == 1) { 
                     //если процент
                     if ($pro['discount_tip'] == 1) {
-                        $discount[] = $pro['discount'];
-                        $labels[$pro['discount']] = $pro['label'];
-                        if ($with_desc) $descriptions[$pro['id']] = '<div>' . $pro['description'] . '</div>';
+                        if ( $with_desc && $pro['code_check'] == 1 ) 
+                            $discount[] = 0; 
+                        else {
+                            $discount[] = $pro['discount'];    
+                            $labels[$pro['discount']] = $pro['label'];
+                        } 
+                        if ( $with_desc ) $descriptions[$pro['id']] = '<div>' . $pro['description'] . '</div>';
                     }
                     if ($pro['discount_tip'] == 0) {
-                        $discountsum[] = $pro['discount'];
-                        $labels[$pro['discount']] = $pro['label'];
-                        if ($with_desc) $descriptions[$pro['id']] = '<div>' . $pro['description'] . '</div>';
+                        if ( $with_desc && $pro['code_check'] == 1 ) 
+                            $discountsum[] = 0; 
+                        else {
+                            $discountsum[] = $pro['discount'];    
+                            $labels[$pro['discount']] = $pro['label'];
+                        }
+                        if ( $with_desc ) $descriptions[$pro['id']] = '<div>' . $pro['description'] . '</div>';
                     }
                 }
             }
         }
-        
+         
         //Берем самую большую скидку
-        if (isset($discount)) {
+        if ( isset($discount) ) {
             $promo_discount = max($discount) / 100;
             $lab = $labels[$promo_discount*100];
         }
 
-        if (isset($discountsum)) {
+        if ( isset($discountsum) ) {
             $promo_discountsum = max($discountsum);
             $lab = $labels[$promo_discountsum];            
         }
         
-        if ($with_desc && !empty($descriptions))
+        if ( $with_desc && !empty($descriptions) )
             $description = implode('', $descriptions);
+        else
+            $description = null;
     }
     
     return array('percent' => $promo_discount, 'sum' => $promo_discountsum, 'label' => $lab, 'description' => $description);

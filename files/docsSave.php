@@ -35,12 +35,12 @@ class DocSave {
             if (empty($_GET['check_file'])) {
                 if (!empty($_SESSION['UsersId']))
                     $where['user'] = '=' . $_SESSION['UsersId'];
-                else
-                    $where['user'] = '=0';
+                elseif(!empty($_GET['user']))
+                    $where['user'] = '='.intval($_GET['user']);
+                else return false;
             }
 
             $data = $PHPShopOrm->select(array('id'), $where, false, array('limit' => 1));
-
 
             if (is_array($data))
                 return true;

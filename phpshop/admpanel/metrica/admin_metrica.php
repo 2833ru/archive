@@ -98,7 +98,20 @@ function actionStart() {
         );
 
         $url = 'https://api-metrika.yandex.ru/stat/v1/data?' . http_build_query($array_url_data);
-        $json_data = json_decode(file_get_contents($url, false, $ctx), true);
+
+
+        $Òurl = curl_init();
+        curl_setopt_array($Òurl, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER => array('Authorization: OAuth ' . $metrica_token),
+        ));
+
+        $json_data = json_decode(curl_exec($Òurl), true);
+        curl_close($Òurl);
+
+        if (empty($json_data))
+            $json_data = json_decode(file_get_contents($url), true);
 
         $canvas_value = $canvas_label = null;
         if (is_array($json_data)) {
@@ -212,7 +225,19 @@ function actionStart() {
         );
 
         $url = 'https://api-metrika.yandex.ru/stat/v1/data?' . http_build_query($array_url_data);
-        $json_data = json_decode(file_get_contents($url, false, $ctx), true);
+
+        $Òurl = curl_init();
+        curl_setopt_array($Òurl, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER => array('Authorization: OAuth ' . $metrica_token),
+        ));
+
+        $json_data = json_decode(curl_exec($Òurl), true);
+        curl_close($Òurl);
+
+        if (empty($json_data))
+            $json_data = json_decode(file_get_contents($url), true);
 
         $PHPShopInterface = new PHPShopInterface();
         $PHPShopInterface->checkbox_action = false;
@@ -272,7 +297,19 @@ function actionStart() {
             );
 
             $url = 'https://api-metrika.yandex.ru/stat/v1/data?' . http_build_query($array_url_data);
-            $json_data = json_decode(file_get_contents($url, false, $ctx), true);
+
+            $Òurl = curl_init();
+            curl_setopt_array($Òurl, array(
+                CURLOPT_URL => $url,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_HTTPHEADER => array('Authorization: OAuth ' . $metrica_token),
+            ));
+
+            $json_data = json_decode(curl_exec($Òurl), true);
+            curl_close($Òurl);
+
+            if (empty($json_data))
+                $json_data = json_decode(file_get_contents($url), true);
 
             if (is_array($json_data)) {
                 $n = 0;
@@ -360,7 +397,19 @@ function actionStart() {
         );
 
         $url = 'https://api-metrika.yandex.ru/stat/v1/data?' . http_build_query($array_url_data);
-        $json_data = json_decode(file_get_contents($url, false, $ctx), true);
+
+        $Òurl = curl_init();
+        curl_setopt_array($Òurl, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER => array('Authorization: OAuth ' . $metrica_token),
+        ));
+
+        $json_data = json_decode(curl_exec($Òurl), true);
+        curl_close($Òurl);
+
+        if (empty($json_data))
+            $json_data = json_decode(file_get_contents($url), true);
 
         $PHPShopInterface = new PHPShopInterface();
         $PHPShopInterface->checkbox_action = false;
@@ -409,7 +458,19 @@ function actionStart() {
         );
 
         $url = 'https://api-metrika.yandex.ru/stat/v1/data?' . http_build_query($array_url_data);
-        $json_data = json_decode(file_get_contents($url, false, $ctx), true);
+
+        $Òurl = curl_init();
+        curl_setopt_array($Òurl, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER => array('Authorization: OAuth ' . $metrica_token),
+        ));
+
+        $json_data = json_decode(curl_exec($Òurl), true);
+        curl_close($Òurl);
+
+        if (empty($json_data))
+            $json_data = json_decode(file_get_contents($url), true);
 
         $PHPShopInterface = new PHPShopInterface();
         $PHPShopInterface->checkbox_action = false;
@@ -426,7 +487,8 @@ function actionStart() {
 
                 if ($name_1 == 'ﬂÌ‰ÂÍÒ')
                     $name = '<a target="_blank" href="https://yandex.ru/search/?text=' . $name . '">' . PHPShopSecurity::TotalClean($name) . '</a>';
-                else $name=PHPShopSecurity::TotalClean($name);
+                else
+                    $name = PHPShopSecurity::TotalClean($name);
 
                 if (!empty($name) and $n < 7) {
                     $PHPShopInterface->setRow($icon . $name, array('name' => $visits, 'align' => 'right'));

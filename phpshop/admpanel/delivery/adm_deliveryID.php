@@ -3,7 +3,7 @@
 PHPShopObj::loadClass(array('delivery', 'payment'));
 
 
-$TitlePage = __('Редактирование Доставки').' #' . $_GET['id'];
+$TitlePage = __('Редактирование Доставки') . ' #' . $_GET['id'];
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['delivery']);
 
 // Построение дерева категорий
@@ -30,7 +30,6 @@ function treegenerator($array, $i, $parent) {
                 $tree_select.='<option value="' . $k . '" ' . $selected . '>' . $del . $v . '</option>';
                 //$i++;
             }
-
 
             $tree.='<tr class="treegrid-' . $k . ' treegrid-parent-' . $parent . ' data-tree">
 		<td><a href="?path=delivery&cat=' . $k . '">' . $v . '</a></td>
@@ -132,10 +131,10 @@ function actionStart() {
 
     // Такса
     $Tab_price.=$PHPShopGUI->setField("Такса за каждые 0.5 кг веса", $PHPShopGUI->setInputText(false, 'taxa_new', $data['taxa'], '150', $PHPShopSystem->getDefaultValutaCode()) . $PHPShopGUI->setHelp('Используется для задания дополнительной тарификации (например, для "Почта России").<br>Каждые дополнительные 0.5 кг свыше базовых 0.5 кг будут стоить указанную сумму.'));
-    
+
     if ($data['ofd_nds'] == '')
         $data['ofd_nds'] = $PHPShopSystem->getParam('nds');
-    
+
     $Tab_price.= $PHPShopGUI->setField("Значение НДС", $PHPShopGUI->setInputText(null, 'ofd_nds_new', $data['ofd_nds'], 100, '%'));
 
     // Тип сортировки
@@ -147,7 +146,7 @@ function actionStart() {
     $city_select_value[] = array('Все страны мира', 2, $data['city_select']);
 
     if (!$catalog)
-        $Tab_info.=$PHPShopGUI->setField("Помощь подбора регионов и городов", $PHPShopGUI->setSelect('city_select_new', $city_select_value,null,true));
+        $Tab_info.=$PHPShopGUI->setField("Помощь подбора регионов и городов", $PHPShopGUI->setSelect('city_select_new', $city_select_value, null, true));
 
     $Tab1 = $PHPShopGUI->setCollapse('Информация', $Tab_info);
 
@@ -172,25 +171,27 @@ function actionStart() {
         }
 
     // Оплаты
-    if(empty($data['is_folder']))
-    $Tab1.=$PHPShopGUI->setField("Блокировка оплат", $PHPShopGUI->setSelect('payment_new[]', $payment_value, false, true, false, $search = false, false, $size = 1, $multiple = true));
-    
+    if (empty($data['is_folder']))
+        $Tab1.=$PHPShopGUI->setField("Блокировка оплат", $PHPShopGUI->setSelect('payment_new[]', $payment_value, false, true, false, $search = false, false, $size = 1, true));
+
     // Для модулей
-    if(isset($data['is_mod']))
-     $Tab1.=$PHPShopGUI->setField(__('Не изменять стоимость'), $PHPShopGUI->setRadio('is_mod_new', 1, __('Выключить'), $data['is_mod'], false, 'text-warning') .$PHPShopGUI->setRadio('is_mod_new', 2, __('Включить'), $data['is_mod']));
-    
+    if (isset($data['is_mod']))
+        $Tab1.=$PHPShopGUI->setField(__('Не изменять стоимость'), $PHPShopGUI->setRadio('is_mod_new', 1, __('Выключить'), $data['is_mod'], false, 'text-warning') . $PHPShopGUI->setRadio('is_mod_new', 2, __('Включить'), $data['is_mod']));
+
     // Сумма заказа
-    if(empty($data['is_folder']))
-    $Tab1.=$PHPShopGUI->setField("Блокировка при стоимости более", $PHPShopGUI->setInputText(null, "sum_max_new", $data['sum_max'], 150,$PHPShopSystem->getDefaultValutaCode()));
+    if (empty($data['is_folder']))
+        $Tab1.=$PHPShopGUI->setField("Блокировка при стоимости более", $PHPShopGUI->setInputText(null, "sum_max_new", $data['sum_max'], 150, $PHPShopSystem->getDefaultValutaCode()));
 
     // Цены
     if (!$catalog)
         $Tab1.= $PHPShopGUI->setCollapse('Цены', $Tab_price);
 
+    // Витрина
+    $Tab1.=$PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'));
+
     // Дополнительные поля
     if (!$catalog)
         $Tab2 = $PHPShopGUI->loadLib('tab_option', $data);
-
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
@@ -201,18 +202,15 @@ function actionStart() {
     else
         $PHPShopGUI->setTab(array("Основное", $Tab1));
 
-
     // Левый сайдбар
     $sidebarleft[] = array('title' => 'Категории', 'content' => $tree, 'title-icon' => '<span class="glyphicon glyphicon-plus newcat" data-toggle="tooltip" data-placement="top" title="Добавить каталог"></span>&nbsp;<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="Развернуть"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="Свернуть"></span>');
 
-    $help = '<p class="text-muted">'.__('У каждого типа доставки можно настроить обязательные и дополнительные поля для заполнения заказа в закладке управления доставкой <kbd>Адреса пользователя</kbd>').'</p>';
+    $help = '<p class="text-muted">' . __('У каждого типа доставки можно настроить обязательные и дополнительные поля для заполнения заказа в закладке управления доставкой <kbd>Адреса пользователя</kbd>') . '</p>';
 
     $sidebarleft[] = array('title' => 'Подсказка', 'content' => $help);
 
     $PHPShopGUI->setSidebarLeft($sidebarleft, 3);
     $PHPShopGUI->sidebarLeftCell = 3;
-
-
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =
@@ -248,7 +246,6 @@ function actionSave() {
 function actionUpdate() {
     global $PHPShopOrm, $PHPShopModules;
 
-
     if (is_array($_POST['data_fields'])) {
 
         if (is_array($_POST[data_fields][enabled]))
@@ -275,6 +272,13 @@ function actionUpdate() {
             $_POST['payment_new'] = @implode(',', $_POST['payment_new']);
     }
 
+    // Мультибаза
+    if (is_array($_POST['servers'])){
+        $_POST['servers_new'] = "";
+        foreach ($_POST['servers'] as $v)
+            if ($v != 'null' and !strstr($v, ','))
+                $_POST['servers_new'].="i" . $v . "i";
+    }
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
@@ -326,7 +330,7 @@ function actionDelete() {
 
 
     $action = $PHPShopOrm->delete(array('id' => '=' . $_POST['rowID']));
-    $PHPShopOrm->debug=true;
+    $PHPShopOrm->debug = true;
     return array('success' => $action);
 }
 

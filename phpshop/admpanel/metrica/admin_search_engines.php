@@ -83,7 +83,20 @@ function actionStart() {
     );
 
     $url = 'https://api-metrika.yandex.ru/stat/v1/data?' . http_build_query($array_url_data);
-    $json_data = json_decode(file_get_contents($url), true);
+
+
+    $сurl = curl_init();
+    curl_setopt_array($сurl, array(
+        CURLOPT_URL => $url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_HTTPHEADER => array('Authorization: OAuth ' . $metrica_token),
+    ));
+
+    $json_data = json_decode(curl_exec($сurl), true);
+    curl_close($сurl);
+    
+    if(empty($json_data))
+      $json_data = json_decode(file_get_contents($url), true);
 
     $PHPShopInterface->setActionPanel($TitlePage, $select_name, array('Показать в Метрике'));
     $PHPShopInterface->setCaption(array("Поисковая система, Поисковая фраза", "40%"), array("Визиты", "10%"), array("Посетители", "10%"), array("Отказы", "10%"), array("Глубина", "10%"), array("Время", "10%", array('align' => 'left')));
@@ -110,9 +123,9 @@ function actionStart() {
                 $name_1 = '<a target="_blank" href="https://yandex.ru/search/?text=' . $name_1 . '">' . $name_1 . '</a>';
 
             if (!empty($name_1))
-                $name.=' &rarr; ' .$name_1;
+                $name.=' &rarr; ' . $name_1;
 
-            $PHPShopInterface->setRow($icon . $name , $visits, $users, round($bounceRate, 2) . '%', round($pageDepth, 2), round($avgVisitDurationSeconds, 2));
+            $PHPShopInterface->setRow($icon . $name, $visits, $users, round($bounceRate, 2) . '%', round($pageDepth, 2), round($avgVisitDurationSeconds, 2));
         }
     }
 

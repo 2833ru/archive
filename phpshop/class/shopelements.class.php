@@ -152,7 +152,7 @@ class PHPShopProductElements extends PHPShopElements {
 
             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
             $PHPShopOrm->debug = $this->debug;
-            $data = $PHPShopOrm->select(array('id'), $where, false, array('limit' => 100), __CLASS__, __FUNCTION__);
+            $data = $PHPShopOrm->select(array('id'), $where, false, array('limit' => 10000), __CLASS__, __FUNCTION__);
             if (is_array($data)) {
                 foreach ($data as $row) {
                     $multi_cat[] = $row['id'];
@@ -244,17 +244,6 @@ class PHPShopProductElements extends PHPShopElements {
     }
 
     /**
-     * ѕроверка режима Multibase
-     */
-    function checkMultibase($pic_small) {
-        /*
-          $base_host = $this->PHPShopSystem->getSerilizeParam('admoption.base_host');
-          if ($this->PHPShopSystem->getSerilizeParam('admoption.base_enabled') == 1 and !empty($base_host))
-          $this->set('productImg', str_replace("/UserFiles/", "http://" . $base_host . "/UserFiles/", $pic_small));
-         */
-    }
-
-    /**
      * ѕроверка дополнительных данных товара по складу
      * @param array $row масив данных по товару
      */
@@ -274,9 +263,7 @@ class PHPShopProductElements extends PHPShopElements {
         else
             $this->set('productSklad', '');
 
-
         $price = $this->price($row);
-
 
         // –асчет минимальной и максимальной цены
         if ($price > $this->price_max)
@@ -516,9 +503,6 @@ function product_grid($dataArray, $cell, $template = false, $line = true) {
                 $this->set('productImg', $this->no_photo);
             else
                 $this->set('productImg', $row['pic_small']);
-
-            // ѕроверка режима Multibase
-            //$this->checkMultibase($row['pic_small']);
 
             $this->set('productImgBigFoto', $row['pic_big']);
             $this->set('productPriceMoney', $this->PHPShopSystem->getValue('dengi'));

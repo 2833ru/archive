@@ -1,6 +1,6 @@
 <?php
 
-$TitlePage = __('Редактирование Отзыва').' #' . $_GET['id'];
+$TitlePage = __('Редактирование Отзыва') . ' #' . $_GET['id'];
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['gbook']);
 
 function actionStart() {
@@ -20,7 +20,7 @@ function actionStart() {
         'target' => '_blank'
     );
 
-    $PHPShopGUI->setActionPanel(__("Редактирование Отзыва от") . " ".$data['name'], array('Предпросмотр', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'));
+    $PHPShopGUI->setActionPanel(__("Редактирование Отзыва от") . " " . $data['name'], array('Предпросмотр', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'));
 
     // Редактор 1
     $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));
@@ -46,7 +46,7 @@ function actionStart() {
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1,true));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true));
 
 
     // Вывод кнопок сохранить и выход в футер
@@ -68,12 +68,12 @@ function sendMail($name, $mail) {
     // Подключаем библиотеку отправки почты
     PHPShopObj::loadClass("mail");
 
-    $zag = __("Ваш отзыв добавлен на сайт")." " . $PHPShopSystem->getValue('name');
-    $message = __("Уважаемый")." " . $name . ",
+    $zag = __("Ваш отзыв добавлен на сайт") . " " . $PHPShopSystem->getValue('name');
+    $message = __("Уважаемый") . " " . $name . ",
 
-".__("Ваш отзыв добавлен на сайт по адресу").": http://" . $_SERVER['SERVER_NAME'] . $PHPShopBase->getParam('dir.dir') . "/gbook/
+" . __("Ваш отзыв добавлен на сайт по адресу") . ": http://" . $_SERVER['SERVER_NAME'] . $PHPShopBase->getParam('dir.dir') . "/gbook/
 
-".__("Спасибо за проявленный интерес.");
+" . __("Спасибо за проявленный интерес.");
     new PHPShopMail($mail, $PHPShopSystem->getEmail(), $zag, $message);
 }
 
@@ -95,7 +95,9 @@ function actionUpdate() {
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
 
-    $_POST['datas_new'] = PHPShopDate::GetUnixTime($_POST['datas_new']);
+    if (empty($_POST['ajax'])) {
+        $_POST['datas_new'] = PHPShopDate::GetUnixTime($_POST['datas_new']);
+    }
     if (empty($_POST['flag_new']))
         $_POST['flag_new'] = 0;
     else if (!empty($_POST['mail_new']))

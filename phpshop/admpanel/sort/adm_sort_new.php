@@ -14,7 +14,18 @@ function actionStart() {
     global $PHPShopGUI, $PHPShopOrm, $PHPShopModules, $TitlePage;
 
     // Выборка
-    $data['id'] = getLastID();
+    $newId = getLastID();
+
+    if (empty($_GET['id'])) {
+        $data['id'] = $newId;
+    } else {
+        // Создание копии 
+        $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
+        $data['id'] = $newId;
+
+        // Копирование характеристик
+        valueCopy($_GET['id'], $newId);
+    }
 
     // Размер названия поля
     $PHPShopGUI->field_col = 2;
@@ -22,7 +33,7 @@ function actionStart() {
     $PHPShopGUI->setActionPanel($TitlePage, false, array('Создать и редактировать', 'Сохранить и закрыть'));
 
     // Страницы
-    $page_value[] = array('- '.__('Нет описания').' - ', null, $data['page']);
+    $page_value[] = array('- ' . __('Нет описания') . ' - ', null, $data['page']);
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['page']);
     $data_page = $PHPShopOrm->select(array('*'), false, false, array('limit' => 1000));
     if (is_array($data_page))
@@ -77,6 +88,28 @@ function getLastID() {
     if (is_array($data)) {
         return $data[0]['Auto_increment'];
     }
+}
+
+/**
+ * Копирование галереи товара
+ */
+function valueCopy($j, $n) {
+
+    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort']);
+    $data = $PHPShopOrm->select(array('*'), array('category' => "=" . intval($j)), array('order' => 'num,name DESC'), array('limit' => 1000));
+    if (is_array($data))
+        foreach ($data as $row) {
+
+            $insert['category_new'] = $n;
+            $insert['name_new'] = $row['name'];
+            $insert['num_new'] = $row['num'];
+            $insert['icon_new'] = $row['icon'];
+            $insert['page_new'] = $row['page'];
+            $insert['sort_seo_name_new'] = $row['sort_seo_name'];
+
+            $PHPShopOrm->clean();
+            $PHPShopOrm->insert($insert);
+        }
 }
 
 /**

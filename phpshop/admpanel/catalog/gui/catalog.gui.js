@@ -337,19 +337,6 @@ $().ready(function() {
     });
 
 
-    if ($('#dop_cat_new').length)
-        $('#dop_cat_new').tagsInput({
-            'height': '100px',
-            'width': '100%',
-            'interactive': true,
-            'defaultText': locale.enter,
-            'removeWithBackspace': true,
-            'minChars': 0,
-            'delimiter': ['#'],
-            'maxChars': 0, // if not provided there is no limit
-            'placeholderColor': '#666666'
-        });
-
     // Активация из списка dropdown
     $('.data-row, .data-tree').hover(
             function() {

@@ -14,6 +14,10 @@ PHPShopObj::loadClass("lang");
 
 $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
 
+
+// Мультибаза
+$PHPShopBase->checkMultibase("../../");
+
 // Функции для заказа
 $PHPShopOrder = new PHPShopOrderFunction();
 

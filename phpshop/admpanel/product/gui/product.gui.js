@@ -387,18 +387,6 @@ $().ready(function() {
         'placeholderColor': '#666666'
     });
 
-    $('#dop_cat_new').tagsInput({
-        'height': '100px',
-        'width': '100%',
-        'interactive': true,
-        'defaultText': locale.enter,
-        'removeWithBackspace': true,
-        'minChars': 0,
-        'delimiter': ['#'],
-        'maxChars': 0, 
-        'placeholderColor': '#666666'
-    });
-
     // Редактирование изображения товара
     $(".img-main").on('click', function(event) {
         event.preventDefault();

@@ -3,19 +3,21 @@
 /**
  * Библиотека работы с RSS каналами
  * @author PHPShop Software
- * @version 1.5
+ * @version 1.6
  * @package PHPShopClass
  */
 class PHPShopRssParser {
 
     var $debug = false;
+    var $servers = null;
 
     function __construct() {
         global $PHPShopNav, $PHPShopSystem;
 
         // Запуск граббера только на главной странице
-        if ($PHPShopNav->index() and $PHPShopSystem->getSerilizeParam('admoption.rss_graber_enabled') == 1)
+        if ($PHPShopNav->index() and $PHPShopSystem->getSerilizeParam('admoption.rss_graber_enabled') == 1) {
             $this->rss_graber();
+        }
     }
 
     /**
@@ -27,7 +29,7 @@ class PHPShopRssParser {
             return iconv("utf-8", "windows-1251", $s);
         } else {
 
-             $s = strtr($s, array("\xD0\xB0" => "а", "\xD0\x90" => "А", "\xD0\xB1" => "б", "\xD0\x91" => "Б", "\xD0\xB2" => "в", "\xD0\x92" => "В", "\xD0\xB3" => "г", "\xD0\x93" => "Г", "\xD0\xB4" => "д", "\xD0\x94" => "Д", "\xD0\xB5" => "е", "\xD0\x95" => "Е", "\xD1\x91" => "ё", "\xD0\x81" => "Ё", "\xD0\xB6" => "ж", "\xD0\x96" => "Ж", "\xD0\xB7" => "з", "\xD0\x97" => "З", "\xD0\xB8" => "и", "\xD0\x98" => "И", "\xD0\xB9" => "й", "\xD0\x99" => "Й", "\xD0\xBA" => "к", "\xD0\x9A" => "К", "\xD0\xBB" => "л", "\xD0\x9B" => "Л", "\xD0\xBC" => "м", "\xD0\x9C" => "М", "\xD0\xBD" => "н", "\xD0\x9D" => "Н", "\xD0\xBE" => "о", "\xD0\x9E" => "О", "\xD0\xBF" => "п", "\xD0\x9F" => "П", "\xD1\x80" => "р", "\xD0\xA0" => "Р", "\xD1\x81" => "с", "\xD0\xA1" => "С", "\xD1\x82" => "т", "\xD0\xA2" => "Т", "\xD1\x83" => "у", "\xD0\xA3" => "У", "\xD1\x84" => "ф", "\xD0\xA4" => "Ф", "\xD1\x85" => "х", "\xD0\xA5" => "Х", "\xD1\x86" => "ц", "\xD0\xA6" => "Ц", "\xD1\x87" => "ч", "\xD0\xA7" => "Ч", "\xD1\x88" => "ш", "\xD0\xA8" => "Ш", "\xD1\x89" => "щ", "\xD0\xA9" => "Щ", "\xD1\x8A" => "ъ", "\xD0\xAA" => "Ъ", "\xD1\x8B" => "ы", "\xD0\xAB" => "Ы", "\xD1\x8C" => "ь", "\xD0\xAC" => "Ь", "\xD1\x8D" => "э", "\xD0\xAD" => "Э", "\xD1\x8E" => "ю", "\xD0\xAE" => "Ю", "\xD1\x8F" => "я", "\xD0\xAF" => "Я"));
+            $s = strtr($s, array("\xD0\xB0" => "а", "\xD0\x90" => "А", "\xD0\xB1" => "б", "\xD0\x91" => "Б", "\xD0\xB2" => "в", "\xD0\x92" => "В", "\xD0\xB3" => "г", "\xD0\x93" => "Г", "\xD0\xB4" => "д", "\xD0\x94" => "Д", "\xD0\xB5" => "е", "\xD0\x95" => "Е", "\xD1\x91" => "ё", "\xD0\x81" => "Ё", "\xD0\xB6" => "ж", "\xD0\x96" => "Ж", "\xD0\xB7" => "з", "\xD0\x97" => "З", "\xD0\xB8" => "и", "\xD0\x98" => "И", "\xD0\xB9" => "й", "\xD0\x99" => "Й", "\xD0\xBA" => "к", "\xD0\x9A" => "К", "\xD0\xBB" => "л", "\xD0\x9B" => "Л", "\xD0\xBC" => "м", "\xD0\x9C" => "М", "\xD0\xBD" => "н", "\xD0\x9D" => "Н", "\xD0\xBE" => "о", "\xD0\x9E" => "О", "\xD0\xBF" => "п", "\xD0\x9F" => "П", "\xD1\x80" => "р", "\xD0\xA0" => "Р", "\xD1\x81" => "с", "\xD0\xA1" => "С", "\xD1\x82" => "т", "\xD0\xA2" => "Т", "\xD1\x83" => "у", "\xD0\xA3" => "У", "\xD1\x84" => "ф", "\xD0\xA4" => "Ф", "\xD1\x85" => "х", "\xD0\xA5" => "Х", "\xD1\x86" => "ц", "\xD0\xA6" => "Ц", "\xD1\x87" => "ч", "\xD0\xA7" => "Ч", "\xD1\x88" => "ш", "\xD0\xA8" => "Ш", "\xD1\x89" => "щ", "\xD0\xA9" => "Щ", "\xD1\x8A" => "ъ", "\xD0\xAA" => "Ъ", "\xD1\x8B" => "ы", "\xD0\xAB" => "Ы", "\xD1\x8C" => "ь", "\xD0\xAC" => "Ь", "\xD1\x8D" => "э", "\xD0\xAD" => "Э", "\xD1\x8E" => "ю", "\xD0\xAE" => "Ю", "\xD1\x8F" => "я", "\xD0\xAF" => "Я"));
             return $s;
         }
     }
@@ -38,17 +40,25 @@ class PHPShopRssParser {
     function get_list() {
         global $SysValue, $link_db;
 
+        // Мультибаза
+        if (defined("HostID")) {
+            $servers = " and f.servers REGEXP 'i" . HostID . "i'";
+        } elseif (defined("HostMain"))
+            $servers = " and (f.servers = '' or f.servers REGEXP 'i1000i')";
+        else $servers=null;
+
         $date1 = strtotime(date("Y-m-d"));
         $date = time();
         $sec_day = 86400;
         $sql = "
-  SELECT f.link, f.id, f.news_num, s.date, f.day_num, f.last_load, count(s.id)
-  FROM " . $SysValue['base']['table_name38'] . " as f LEFT JOIN " . $SysValue['base']['table_name39'] . " as s
+  SELECT f.link, f.id, f.news_num, s.date, f.day_num, f.last_load, count(s.id), f.servers 
+  FROM " . $SysValue['base']['rssgraber'] . " as f LEFT JOIN " . $SysValue['base']['rssgraber_jurnal'] . " as s
   ON f.id = s.link_id AND s.status = '1' AND s.date > $date1
   WHERE
   f.enabled = '1' AND
   f.start_date <= $date AND
-  f.end_date >= $date
+  f.end_date >= $date 
+  " . $servers . "    
   GROUP BY f.id
   HAVING COUNT(s.id) < f.day_num AND
   ($sec_day/(f.day_num+1)) < ($date - f.last_load)
@@ -91,25 +101,17 @@ class PHPShopRssParser {
         else
             $date = time();
 
-        $sql = "
-  UPDATE " . $SysValue['base']['table_name38'] . "
-  set
-  last_load = '$date' WHERE id = '$link_id'
-                ";
+        $sql = "UPDATE " . $SysValue['base']['rssgraber'] . " set last_load = '$date' WHERE id = '$link_id'";
         mysqli_query($link_db, $sql);
 
-        $sql = "
-  INSERT INTO " . $SysValue['base']['table_name39'] . "
-  VALUES ('','$date','$link_id','$status')
-                ";
-
+        $sql = "INSERT INTO " . $SysValue['base']['rssgraber_jurnal'] . " VALUES ('','$date','$link_id','$status')";
         mysqli_query($link_db, $sql);
     }
 
     /**
      * Запись новости в БД
      */
-    function add_news($news, $num) {
+    function add_news($news, $num, $servers) {
         global $SysValue, $PHPShopModules, $link_db;
 
         $date = date("d-m-Y");
@@ -119,16 +121,21 @@ class PHPShopRssParser {
             // Название
             $title = $this->utf8_win($news[$i]['title']);
 
-            $sql = "
-    SELECT id FROM " . $SysValue['base']['table_name8'] . "
-    WHERE zag LIKE '$title' LIMIT 1
-                    ";
+            // Мультибаза
+            if (defined("HostID")) {
+                $sort = " and servers REGEXP 'i" . HostID . "i'";
+            } elseif (defined("HostMain"))
+                $sort = " and (servers = '' or servers REGEXP 'i1000i')";
+            else
+                $sort = null;
+
+            $sql = "SELECT id FROM " . $SysValue['base']['news'] . " WHERE zag LIKE '$title' " . $sort . " LIMIT 1";
             @$result = mysqli_query($link_db, @$sql);
             @$n = mysqli_num_rows(@$result);
 
             if (empty($n) and !empty($title)) {
 
-                $PHPShopOrm = new PHPShopOrm($SysValue['base']['table_name8']);
+                $PHPShopOrm = new PHPShopOrm($SysValue['base']['news']);
                 $PHPShopOrm->debug = $this->debug;
 
                 // Краткое описание
@@ -138,7 +145,7 @@ class PHPShopRssParser {
                 $content = $description . '<p><a href="' . $news[$i]['link'] . '" target="_blank">Источник...</a><p>';
 
                 // Массив данных
-                $data_array = array('datas_new' => $date, 'zag_new' => $title, 'kratko_new' => $description, 'podrob_new' => $content, 'datau_new' => $dateU);
+                $data_array = array('datas_new' => $date, 'zag_new' => $title, 'kratko_new' => $description, 'podrob_new' => $content, 'datau_new' => $dateU, 'servers_new' => $servers);
 
                 // Перехват модуля
                 $PHPShopModules->setHookHandler(__CLASS__, __FUNCTION__, $this, array(&$data_array));
@@ -156,16 +163,12 @@ class PHPShopRssParser {
         global $SysValue, $link_db;
         mysqli_query($link_db, "SET NAMES `cp1251`");
 
-        $sql = "SELECT rss_use FROM " . $SysValue['base']['table_name3'] . " WHERE 1";
+        $sql = "SELECT rss_use FROM " . $SysValue['base']['system'] . " WHERE 1";
         $result = mysqli_query($link_db, $sql);
         $row = mysqli_fetch_array($result);
         if (!$row['rss_use']) {
 
-            $sql = "
-  UPDATE " . $SysValue['base']['table_name3'] . "
-  SET
-  rss_use = '1'
-  ";
+            $sql = "UPDATE " . $SysValue['base']['system'] . " SET rss_use = '1'";
             mysqli_query($link_db, $sql);
 
             $result = $this->get_list();
@@ -173,7 +176,7 @@ class PHPShopRssParser {
                 while ($row = @mysqli_fetch_array($result)) {
                     $news = $this->parse_rss($row['link'], $row['news_num']);
                     if ($news) {
-                        $this->add_news($news, $row['news_num']);
+                        $this->add_news($news, $row['news_num'],$row['servers']);
                         $this->add_rss_jurnal($row['id'], 1, $row['last_load'], $row['day_num']);
                     }
                     else
@@ -181,11 +184,7 @@ class PHPShopRssParser {
                 }
         }
 
-        $sql = "
-  UPDATE " . $SysValue['base']['table_name3'] . "
-  SET
-  rss_use = '0'
-  ";
+        $sql = "UPDATE " . $SysValue['base']['system'] . " SET rss_use = '0'";
         mysqli_query($link_db, $sql);
     }
 

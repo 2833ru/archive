@@ -2,7 +2,7 @@
 
 class PHPShopFormgeneratorElement {
     
-    function PHPShopFormgeneratorElement() {
+    function __construct() {
         $this->objBase=$GLOBALS['SysValue']['base']['formgenerator']['formgenerator_forms'];
     }
     

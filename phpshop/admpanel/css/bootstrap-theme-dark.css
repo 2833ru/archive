@@ -7397,3 +7397,7 @@ h1.title{
   border-bottom-right-radius: 0px !important;
   border-bottom-left-radius: 0px !important;
 }
+
+.data-row .editable{
+   color: #272b30 !important;
+}

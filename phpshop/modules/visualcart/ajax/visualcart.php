@@ -19,6 +19,7 @@ PHPShopObj::loadClass('order');
 PHPShopObj::loadClass("modules");
 PHPShopObj::loadClass("parser");
 PHPShopObj::loadClass("text");
+PHPShopObj::loadClass("lang");
 
 // Подключаем библиотеку поддержки.
 if ($_REQUEST['type'] != 'json') {

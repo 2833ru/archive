@@ -160,9 +160,22 @@ function setDelivery_yandexcart_hook($obj, $data) {
     return $data['xml'];
 }
 
+function PHPShopYml_yandexcart_hook($obj) {
+
+        // Настройки модуля
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['yandexcart']['yandexcart_system']);
+        $option = $PHPShopOrm->select();
+
+        // Пароль
+        if (!empty($option['password']))
+            if ($_GET['pas'] != $option['password'])
+                exit('Login error!');
+    }
+
 $addHandler = array
     (
     'setProducts' => 'setProducts_yandexcart_hook',
-    'setDelivery' => 'setDelivery_yandexcart_hook'
+    'setDelivery' => 'setDelivery_yandexcart_hook',
+    '__construct' => 'PHPShopYml_yandexcart_hook'
 );
 ?>

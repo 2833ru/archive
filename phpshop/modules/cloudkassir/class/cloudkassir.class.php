@@ -60,7 +60,7 @@ class CloudPaymentsRest {
         $result = curl_exec($ch); // run the whole process
 
         curl_close($ch);
-        $response = split("\r\n\r\n", $result);
+        $response = explode("\r\n\r\n", $result);
         $success = json_decode($response[1], true);
 
         return $success;

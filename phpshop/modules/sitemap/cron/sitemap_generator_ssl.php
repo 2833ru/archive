@@ -42,7 +42,7 @@ function sitemaptime($nowtime) {
 
 // Библиотека
 $title = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
-$title.= '<urlset xmlns="http://www.google.com/schemas/sitemap/0.84">' . "\n";
+$title.= '<urlset xmlns="http://www.google.com/schemas/sitemap/0.9">' . "\n";
 $title.= '<url>' . "\n";
 $title.= '<loc>https://' . $_SERVER['SERVER_NAME'] . '</loc>' . "\n";
 $title.= '<changefreq>weekly</changefreq>' . "\n";
