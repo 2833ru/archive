@@ -79,7 +79,7 @@ class PHPShopFormgenerator extends PHPShopCore {
                     $i++;
 
                     $content.='
-' . str_replace('formgenerator_', '', $k) . ': ' . $v . '<br>';
+' . str_replace('formgenerator_', '', $k) . ': ' . $v . '';
                 }
 
 
@@ -91,9 +91,9 @@ class PHPShopFormgenerator extends PHPShopCore {
                 $product_name = $PHPShopProduct->getName();
                 if (!empty($product_name)) {
                     $content.= '
-Товар: ' . $product_name . '<br>
-ID: ' . $product_id . '<br>
-Артикул: ' . $PHPShopProduct->getParam('uid') . '<br>
+Товар: ' . $product_name . '
+ID: ' . $product_id . '
+Артикул: ' . $PHPShopProduct->getParam('uid') . '
 Ссылка: http://' . $_SERVER['SERVER_NAME'] . '/shop/UID_' . $product_id . '.html
                     ';
                 }
@@ -107,9 +107,9 @@ ID: ' . $product_id . '<br>
                 $zag = $data['name'] . " - " . $this->PHPShopSystem->getValue("name");
                 $content = 'Доброго времени,
 
-' . $data['name'] . '<br>
----------------- <br>
-E-mail: ' . $mail . '<br>
+' . $data['name'] . '
+---------------- 
+E-mail: ' . $mail . '
 ' . $content . '
 Источник: ' . $_SERVER['HTTP_REFERER'] . '
 ';

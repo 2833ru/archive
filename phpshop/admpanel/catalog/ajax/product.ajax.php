@@ -33,7 +33,7 @@ if (PHPShopString::is_mobile()) {
     $PHPShopInterface->mobile = true;
     $product_class = null;
 }
-else $product_class = ' adminModal';
+elseif($PHPShopSystem->getSerilizeParam('admoption.fast_view') != 1) $product_class = ' adminModal';
 
 // Характеристики
 if (!empty($memory['catalog.option']['sort'])) {

@@ -20,12 +20,12 @@ function addMarketplacesTab($data) {
     $Tab .= $PHPShopGUI->setField('<a href="/rss/google.php" target="_blank" title="Открыть файл">Google Merchant</a>', $PHPShopGUI->setCheckbox('google_merchant_new', 1, 'Вывод в Google Merchant', $data['google_merchant']));
     $Tab .= $PHPShopGUI->setField('<a href="/yml/?marketplace=' . Marketplaces::CDEK . '" target="_blank" title="Открыть файл">СДЭК.МАРКЕТ</a>', $PHPShopGUI->setCheckbox('cdek_new', 1, 'Вывод в СДЭК.МАРКЕТ', $data['cdek']));
     $Tab .= $PHPShopGUI->setField('<a href="/yml/?marketplace=' . Marketplaces::ALIEXPRESS . '" target="_blank" title="Открыть файл">AliExpress</a>', $PHPShopGUI->setCheckbox('aliexpress_new', 1, 'Вывод в AliExpress', $data['aliexpress']));
-    $Tab .= $PHPShopGUI->setField('<a href="/yml/?marketplace=' . Marketplaces::SBERMARKET . '" target="_blank" title="Открыть файл">СберМаркет</a>', $PHPShopGUI->setCheckbox('sbermarket_new', 1, 'Вывод в СберМаркет', $data['sbermarket']));
+    $Tab .= $PHPShopGUI->setField('<a href="/yml/?marketplace=' . Marketplaces::SBERMARKET . '" target="_blank" title="Открыть файл">СберМегаМаркет</a>', $PHPShopGUI->setCheckbox('sbermarket_new', 1, 'Вывод в СберМегаМаркет', $data['sbermarket']));
 
     $Tab .= $PHPShopGUI->setField('Цена Google Merchant', $PHPShopGUI->setInputText(null, 'price_google_new', $data['price_google'], 150, $valuta_def_name), 2);
     $Tab .= $PHPShopGUI->setField('Цена СДЭК.МАРКЕТ', $PHPShopGUI->setInputText(null, 'price_cdek_new', $data['price_cdek'], 150, $valuta_def_name), 2);
     $Tab .= $PHPShopGUI->setField('Цена AliExpress', $PHPShopGUI->setInputText(null, 'price_aliexpress_new', $data['price_aliexpress'], 150, $valuta_def_name), 2);
-    $Tab .= $PHPShopGUI->setField('Цена СберМаркет', $PHPShopGUI->setInputText(null, 'price_sbermarket_new', $data['price_sbermarket'], 150, $valuta_def_name), 2);
+    $Tab .= $PHPShopGUI->setField('Цена СберМегаМаркет', $PHPShopGUI->setInputText(null, 'price_sbermarket_new', $data['price_sbermarket'], 150, $valuta_def_name), 2);
 
     $PHPShopGUI->addTab(["Маркетплейсы", $Tab, true]);
 }

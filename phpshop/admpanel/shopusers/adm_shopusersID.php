@@ -125,7 +125,7 @@ function actionStart() {
 
     // Бонусы
     if ($PHPShopSystem->getSerilizeParam('admoption.bonus') > 0)
-        $PHPShopGUI->addTab(array("Бонусы <span class=badge>" . $data['bonus'] . "</span>", $Tab3, true));
+        $PHPShopGUI->addTabSeparate(array("Бонусы <span class=badge>" . $data['bonus'] . "</span>", $Tab3, true));
 
     // Вывод формы закладки
     $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Доставка и реквизиты", $Tab2, true));

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.5</version>
+    <version>1.6</version>
     <name>Умный поиск</name>
     <description>Умный поиск и фильтр с использованием облачного кеширования данных.</description>
     <faqlink>https://docs.phpshop.ru/moduli/prodazhi/umniy-poisk-elastica</faqlink>

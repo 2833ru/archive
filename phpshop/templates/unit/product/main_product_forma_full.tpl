@@ -182,7 +182,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="myModalLabel">@productName@</h4>
+                <div class="h4 modal-title" id="myModalLabel">@productName@</div>
             </div>
             <div class="modal-body">
                 @productFotoListBig@
@@ -201,7 +201,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">{Таблица размеров}</h4>
+                <div class="h4 modal-title">{Таблица размеров}</div>
             </div>
             <form method="post" name="user_forma_size_delivery" action="@ShopDir@/returncall/">
                 <div class="modal-body">
@@ -223,7 +223,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">{Информация о доставке}</h4>
+                <div class="h4 modal-title">{Информация о доставке}</div>
             </div>
             <form method="post" name="user_forma_size_delivery" action="@ShopDir@/returncall/">
                 <div class="modal-body">
@@ -246,11 +246,11 @@
     <div class="modal-dialog small-modal" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="exampleModalLabel" class="d-flex">{Оставить отзыв}
+                <div class="h4 modal-title" id="exampleModalLabel" class="d-flex">{Оставить отзыв}
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                </h4>
+                </div>
             </div>
             <div class="modal-body">
                 <h4><a href="/shop/UID_@productUid@.html" title="@productNameClean@">@productName@</a></h4>
@@ -329,9 +329,9 @@
     <div class="modal-dialog small-modal" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="exampleModalLabel" class="d-flex">{Пожаловаться на цену} <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <div class="h4 modal-title" id="exampleModalLabel" class="d-flex">{Пожаловаться на цену} <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
-                    </button></h4>
+                    </button></div >
             </div>
             <div class="modal-body">
                 <h4><a href="/shop/UID_@productUid@.html" title="@productNameClean@">@productName@</a></h4>
@@ -421,13 +421,13 @@
     <div class="modal-dialog small-modal" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="exampleModalLabel" class="d-flex">{Задать вопрос по продукту} <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <div class="h4 modal-title" id="exampleModalLabel" class="d-flex">{Задать вопрос по продукту} <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                </h4>
+                </div>
             </div>
             <div class="modal-body">
-                <h4><a href="/shop/UID_@productUid@.html" title="@productNameClean@">@productName@</a></h4>
+                <div class="h4"><a href="/shop/UID_@productUid@.html" title="@productNameClean@">@productName@</a></div>
                 <br>
                 <form method="post" name="ajax-form" data-modal="forma" action="/forma/">
                     <div class="form-group">

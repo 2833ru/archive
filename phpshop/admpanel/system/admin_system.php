@@ -236,6 +236,9 @@ function actionStart() {
 
     $search_pole_value[] = array('Наименование', 1, $option['search_pole']);
     $search_pole_value[] = array('Учитывать все', 2, $option['search_pole']);
+    
+    $filter_logic_value[] = array('Перекрестная', 1, $option['filter_logic']);
+    $filter_logic_value[] = array('Объединенная', 0, $option['filter_logic']);
 
     $timezone_value[] = array('Europe/Moscow', 'Europe/Moscow', $option['timezone']);
     $timezone_value[] = array('Europe/Kiev', 'Europe/Kiev', $option['timezone']);
@@ -272,6 +275,7 @@ function actionStart() {
             $PHPShopGUI->setField("Отображать количество товара", $PHPShopGUI->setCheckbox('option[filter_products_count]', 1, 'Выводить количество товара рядом со значением фильтра', $option['filter_products_count']), 1) .
             $PHPShopGUI->setField("Динамическая прокрутка",$PHPShopGUI->setCheckbox('option[ajax_scroll]', 1, 'Отключить прокрутку у товаров', $option['ajax_scroll']), 1,'Работает не во всех шаблонах') .
             $PHPShopGUI->setField('Область поиска', $PHPShopGUI->setSelect('option[search_pole]', $search_pole_value, null, true)) .
+            $PHPShopGUI->setField('Логика фильтра', $PHPShopGUI->setSelect('option[filter_logic]', $filter_logic_value, null, true)) .
             $PHPShopGUI->setField('Временная зона', $PHPShopGUI->setSelect('option[timezone]', $timezone_value)));
 
     $warehouse_enabled = $PHPShopBase->getNumRows('warehouses', "where enabled='1'");
@@ -331,6 +335,7 @@ function actionStart() {
             $PHPShopGUI->setField("Цвет редактора исходного кода", GetAceSkinList($option['ace_theme']), 1, 'Стилизованная подсветка синтаксиса исходного HTML кода') .
             $PHPShopGUI->setField("Заголовок", $PHPShopGUI->setInputText(null, "option[adm_title]", $option['adm_title'], 300), 1, 'Брендовый заголовок в левом верхнем углу панели управления') .
             $PHPShopGUI->setField("Multi Manager", $PHPShopGUI->setCheckbox('option[rule_enabled]', 1, 'Учет прав управления товарами для менеджеров', $option['rule_enabled'])) .
+            $PHPShopGUI->setField("Быстрый просмотр", $PHPShopGUI->setCheckbox('option[fast_view]', 1, 'Отключить быстрый просмотр товаров в окне', $option['fast_view'])).
             $PHPShopGUI->setField("Быстрый поиск", $PHPShopGUI->setSelect('option[search_enabled]', $search_enabled_value, null, true), 1, 'Поиск в верхнем правом углу панели управления (back-end)')
     );
 
@@ -375,7 +380,7 @@ function actionUpdate() {
     unset($option['support_notice']);
 
     // Корректировка пустых значений
-    $PHPShopOrm->updateZeroVars('option.user_calendar', 'option.cloud_enabled', 'option.digital_product_enabled', 'option.parent_price_enabled', 'option.user_skin', 'option.user_mail_activate', 'option.user_mail_activate_pre', 'option.user_price_activate', 'option.mail_smtp_enabled', 'option.mail_smtp_debug', 'option.multi_currency_search', 'option.mail_smtp_auth', 'option.sklad_enabled', 'option.rule_enabled', 'option.catlist_enabled', 'option.filter_cache_enabled', 'option.filter_products_count', 'option.chat_enabled', 'option.new_enabled', 'option.sklad_sum_enabled','option.user_servers_control','option.user_phone_mask_enabled','option.user_items_activate','option.ajax_scroll','option.ajax_scroll_paginator');
+    $PHPShopOrm->updateZeroVars('option.user_calendar', 'option.cloud_enabled', 'option.digital_product_enabled', 'option.parent_price_enabled', 'option.user_skin', 'option.user_mail_activate', 'option.user_mail_activate_pre', 'option.user_price_activate', 'option.mail_smtp_enabled', 'option.mail_smtp_debug', 'option.multi_currency_search', 'option.mail_smtp_auth', 'option.sklad_enabled', 'option.rule_enabled', 'option.catlist_enabled', 'option.filter_cache_enabled', 'option.filter_products_count', 'option.chat_enabled', 'option.new_enabled', 'option.sklad_sum_enabled','option.user_servers_control','option.user_phone_mask_enabled','option.user_items_activate','option.ajax_scroll','option.ajax_scroll_paginator','option.fast_view');
 
     if (is_array($_POST['option']))
         foreach ($_POST['option'] as $key => $val)

@@ -10,45 +10,59 @@ function pochtavalidate(evt) {
 }
 
 $(document).ready(function () {
-    $('#pochta_payment_status').click(function () {
+    
+    $('body').on('change', '#pochta_payment_status', function () {
         pochtaChangePaymentStatus($('#pochta_payment_status').prop('checked'));
     });
-    $('#pochta_completeness-checking').click(function () {
+    
+    $('body').on('change', '#pochta_completeness-checking', function () {
         pochtaChangeSettings($('#pochta_completeness-checking').prop('checked'), 'completeness_checking');
     });
-    $('#pochta_easy_return').click(function () {
+    
+    $('body').on('change', '#pochta_easy_return', function () {
         pochtaChangeSettings($('#pochta_easy_return').prop('checked'), 'easy_return');
     });
-    $('#pochta_no_return').click(function () {
+    
+    $('body').on('change', '#pochta_no_return', function () {
         pochtaChangeSettings($('#pochta_no_return').prop('checked'), 'no_return');
     });
-    $('#pochta_fragile').click(function () {
+    
+    $('body').on('change', '#pochta_fragile', function () {
         pochtaChangeSettings($('#pochta_fragile').prop('checked'), 'fragile');
     });
-    $('#pochta_sms_notice').click(function () {
+    
+    $('body').on('change', '#pochta_sms_notice', function () {
         pochtaChangeSettings($('#pochta_sms_notice').prop('checked'), 'sms_notice');
     });
-    $('#pochta_electronic_notice').click(function () {
+    
+    $('body').on('change', '#pochta_electronic_notice', function () {
         pochtaChangeSettings($('#pochta_electronic_notice').prop('checked'), 'electronic_notice');
     });
-    $('#pochta_order_of_notice').click(function () {
+    
+    $('body').on('change', '#pochta_order_of_notice', function () {
         pochtaChangeSettings($('#pochta_order_of_notice').prop('checked'), 'order_of_notice');
     });
-    $('#pochta_simple_notice').click(function () {
+    
+    $('body').on('change', '#pochta_simple_notice', function () {
         pochtaChangeSettings($('#pochta_simple_notice').prop('checked'), 'simple_notice');
     });
-    $('#pochta_wo_mail_rank').click(function () {
+    
+    $('body').on('change', '#pochta_wo_mail_rank', function () {
         pochtaChangeSettings($('#pochta_wo_mail_rank').prop('checked'), 'wo_mail_rank');
     });
-    $('#pochta_vsd').click(function () {
+    
+    $('body').on('change', '#pochta_vsd', function () {
         pochtaChangeSettings($('#pochta_vsd').prop('checked'), 'vsd');
     });
+    
     $('#pochta_mail_category').change(function () {
         pochtaChangeSettings($(this).val(), 'mail_category');
     });
+    
     $('#pochta_mail_type').change(function () {
         pochtaChangeSettings($(this).val(), 'mail_type');
     });
+    
     $('#pochta_dimension_type').change(function () {
         pochtaChangeSettings($(this).val(), 'dimension_type');
     });

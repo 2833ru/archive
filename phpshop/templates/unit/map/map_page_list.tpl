@@ -13,7 +13,7 @@
         @catalFound@: <b>@catalNum@</b><br>
         @producFound@: <b>@productNum@</b>
     </div>
-    <h2>{Карта сайта}</h2>
+    <h1>{Карта сайта}</h1>
 </div>
 
 

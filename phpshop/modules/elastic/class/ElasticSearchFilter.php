@@ -22,10 +22,12 @@ class ElasticSearchFilter implements ElasticSearchFilterInterface
             'size'    => $size,
             'query' => [
                 'bool' => [
-                    'must' => [
-                        'multi_match' => [
-                            'query'  => strtolower($query),
-                            'fields' => $fields
+                    'should' => [
+                        [
+                            'multi_match' => [
+                                'query'  => strtolower($query),
+                                'fields' => $fields
+                            ]
                         ]
                     ],
                     'filter' => self::$filterActive
@@ -57,11 +59,22 @@ class ElasticSearchFilter implements ElasticSearchFilterInterface
         ];
 
         if(!empty($categories)) {
-            $filter['query']['bool']['filter']['bool']['must'][1]['terms']['categories'] = $categories;
+            $filter['query']['bool']['filter']['bool']['should'][1]['terms']['categories'] = $categories;
         }
 
         if (Elastic::isFuzziness((int) Elastic::getOption('misprints'), strlen($query))) {
-            $filter['query']['bool']['must']['multi_match']['fuzziness'] = (int) Elastic::getOption('misprints');
+            $filter['query']['bool']['should'][0]['multi_match']['fuzziness'] = (int) Elastic::getOption('misprints');
+        }
+
+        if (Elastic::getOption('search_uid_first')) {
+            $filter['query']['bool']['should'][1] = [
+                'match' => [
+                    'article' => [
+                        'query' => strtolower($query),
+                        'boost' => 10
+                    ]
+                ]
+            ];
         }
 
         if ((int) Elastic::getOption('available_sort') === 1) {

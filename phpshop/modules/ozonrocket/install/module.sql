@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_ozonrocket_system` (
 `btn_text` varchar(64) NOT NULL,
 `default_city` varchar(64) default '',
 `type_transfer` varchar(64) default 'DropOff',
-`from_place_id` varchar(64) default '9042178932000',
+`from_place_id` varchar(64) default '',
 `hide_pvz` enum('0','1') DEFAULT '0',
 `hide_postamat` enum('0','1') DEFAULT '0',
 `show_delivery_time` enum('0','1') DEFAULT '1',
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_ozonrocket_system` (
 PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-INSERT INTO `phpshop_modules_ozonrocket_system` VALUES (1, '', '', '', '0', '', '', 'DropOff', '9042178932000', '0', '0', '1', '1', '0', '', '', '', '', '', 0 , 1, '1.0');
+INSERT INTO `phpshop_modules_ozonrocket_system` VALUES (1, '', '', '', '0', '', '', 'DropOff', '', '0', '0', '1', '1', '0', '', '', '', '', '', 0 , 1, '1.0');
 
 CREATE TABLE IF NOT EXISTS `phpshop_modules_ozonrocket_log` (
 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -39,4 +39,3 @@ PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 ALTER TABLE `phpshop_orders` ADD `ozonrocket_order_data` text default '';
-ALTER TABLE `phpshop_delivery` ADD `is_mod` enum('1','2') DEFAULT '1';

@@ -79,6 +79,7 @@ function actionStart() {
         $data['num_row'] = 3;
 
     $data['num'] = 1;
+    $data['skin_enabled'] = 1;
 
     $data = $PHPShopGUI->valid($data, 'name', 'parent_to', 'dop_cat', 'vid', 'skin_enabled', 'menu', 'tile', 'order_by', 'order_to', 'icon', 'content', 'title', 'title_enabled', 'title_shablon', 'descrip', 'descrip_enabled', 'descrip_shablon', 'keywords', 'keywords_enabled', 'keywords_shablon', 'secure_groups', 'servers', 'sort');
 

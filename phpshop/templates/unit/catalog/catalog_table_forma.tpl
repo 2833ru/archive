@@ -3,5 +3,5 @@
             <img src="@catalogIcon@">
         
         </div>
-         <h2  class="catalog-name">@catalogName@</h2></a>
+        <div  class="catalog-name">@catalogName@</div></a>
 </div>

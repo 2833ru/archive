@@ -298,7 +298,7 @@ function sorttemplatehook($value, $n, $title, $vendor) {
         $help = __('Скрыть');
     }
 
-    return '<h4 data-toggle="collapse" data-target="#collapseSort' . $n . '" title="' . $help . '">' . $title . ' <i class="' . $chevron . '"></i></h4><div class="' . $style . '" id="collapseSort' . $n . '">' . $disp . '</div>';
+    return '<div class="h4" data-toggle="collapse" data-target="#collapseSort' . $n . '" title="' . $help . '">' . $title . ' <i class="' . $chevron . '"></i></div><div class="' . $style . '" id="collapseSort' . $n . '">' . $disp . '</div>';
 }
 
 /**

@@ -145,10 +145,10 @@ function actionStart() {
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['shopusers_status']);
     $data_user_status = $PHPShopOrm->select(array('id,name'), false, array('order' => 'name'), array('limit' => 100));
     $status_array = unserialize($data['statuses']);
-    array_unshift($data_user_status, array('id' => '-', 'name' => __('Покупатели без статуса')));
+    array_unshift($data_user_status, array('id' => '0', 'name' => __('Покупатели без статуса')));
     
     if(!is_array($data_user_status))
-        $data_user_status[] = array('id' => '-', 'name' => __('Покупатели без статуса'));
+        $data_user_status[] = array('id' => '0', 'name' => __('Покупатели без статуса'));
 
     foreach ($data_user_status as $value) {
         if (is_array($status_array) && in_array($value['id'], $status_array))

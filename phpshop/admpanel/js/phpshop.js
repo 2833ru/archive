@@ -150,7 +150,8 @@ $().ready(function () {
         var id = $(this).attr('data-target');
 
         $('[data-icon="' + id + '"]').html(log);
-        $("input[name='" + id + "']").val('/UserFiles/Image/' + log);
+        //$("input[name='" + id + "']").val('/UserFiles/Image/' + log);
+        $("input[name='" + id + "']").val(log);
         $('[data-icon="' + id + '"]').prev('.glyphicon').removeClass('hide');
 
         if (locale.icon_load != null)

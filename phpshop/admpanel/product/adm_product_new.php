@@ -562,9 +562,14 @@ function actionInsert() {
 
     // Характеристики
     $_POST['vendor_new'] = null;
-    if (is_array($_POST['vendor_array_new']))
+
+    if (is_array($_POST['vendor_array_new'])) {
+
         foreach ($_POST['vendor_array_new'] as $k => $v) {
             if (is_array($v)) {
+                $v = array_unique($v);
+                $_POST['vendor_array_new'][$k] = $v;
+
                 foreach ($v as $key => $p) {
                     $_POST['vendor_new'] .= "i" . $k . "-" . $p . "i";
                     if (empty($p))
@@ -573,6 +578,8 @@ function actionInsert() {
             } else
                 $_POST['vendor_new'] .= "i" . $k . "-" . $v . "i";
         }
+    }
+
     $_POST['vendor_array_new'] = serialize($_POST['vendor_array_new']);
 
     // Статьи

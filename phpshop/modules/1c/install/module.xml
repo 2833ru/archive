@@ -5,6 +5,7 @@
     <description>Модуль настройки синхронизации с 1С.</description>
     <faqlink>https://docs.phpshop.ru/moduli/crm/1c</faqlink>
     <category>crm,pro</category>
+    <pro>true</pro>
     <adminmenu>
         <title>1С синхронизация</title>
         <capability>true</capability>

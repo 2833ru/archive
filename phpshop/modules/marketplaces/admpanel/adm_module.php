@@ -156,9 +156,9 @@ function actionStart() {
     
      // Выбор каталога СберМаркет
     $catOption =  $PHPShopGUI->setField("Размещение", $tree_select_sm . $PHPShopGUI->setCheckbox("categories_sm_all", 1, "Выбрать все категории?", 0));
-    $catOption .= $PHPShopGUI->setField("Вывод в СберМаркет",$PHPShopGUI->setRadio("enabled_sm_all", 1, "Вкл.", 1).$PHPShopGUI->setRadio("enabled_sm_all", 0, "Выкл.",1));
+    $catOption .= $PHPShopGUI->setField("Вывод в СберМегаМаркет",$PHPShopGUI->setRadio("enabled_sm_all", 1, "Вкл.", 1).$PHPShopGUI->setRadio("enabled_sm_all", 0, "Выкл.",1));
     
-    $Tab1 .= $PHPShopGUI->setCollapse('Товары для СберМаркет', $catOption);
+    $Tab1 .= $PHPShopGUI->setCollapse('Товары для СберМегаМаркет', $catOption);
     
     $Tab1.= $PHPShopGUI->setCollapse('Настройка цен',
         $PHPShopGUI->setField('Колонка цен Google Merchant', $PHPShopGUI->setSelect('options[price_google]', $PHPShopGUI->setSelectValue($options['price_google'], 5), 100)) .

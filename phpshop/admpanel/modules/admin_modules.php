@@ -325,10 +325,10 @@ function actionStart() {
 
     $tree = '<table class="table table-hover">
         <tr class="treegrid-all">
-           <td><a href="?path=modules" class="treegrid-parent" data-parent="treegrid-all">' . __('Все модули') . '</a> <span class="label label-primary pull-right">103</span></td>
+           <td><a href="?path=modules" class="treegrid-parent" data-parent="treegrid-all">' . __('Все модули') . '</a> <span class="label label-primary pull-right">104</span></td>
 	</tr>
         <tr class="treegrid-template">
-           <td><a href="?path=modules&cat=pro" class="treegrid-parent" data-parent="treegrid-template">' . __('Pro') . '</a> <span class="label label-primary pull-right">9</span></td>
+           <td><a href="?path=modules&cat=pro" class="treegrid-parent" data-parent="treegrid-template">' . __('Pro') . '</a> <span class="label label-primary pull-right">10</span></td>
 	</tr>
         <tr class="treegrid-template">
            <td><a href="?path=modules&cat=template" class="treegrid-parent" data-parent="treegrid-template">' . __('Дизайн') . '</a> <span class="label label-primary pull-right">8</span></td>
@@ -355,7 +355,7 @@ function actionStart() {
            <td><a href="?path=modules&cat=credit" class="treegrid-parent" data-parent="treegrid-payment">' . __('Кредитование') . '</a> <span class="label label-primary pull-right">3</span></td>
 	</tr>
         <tr class="treegrid-yandex">
-           <td><a href="?path=modules&cat=yandex" class="treegrid-parent" data-parent="treegrid-yandex">' . __('Яндекс') . '</a> <span class="label label-primary pull-right">3</span></td>
+           <td><a href="?path=modules&cat=yandex" class="treegrid-parent" data-parent="treegrid-yandex">' . __('Яндекс') . '</a> <span class="label label-primary pull-right">4</span></td>
 	</tr>
         <tr class="treegrid-sale">
            <td><a href="?path=modules&cat=sale" class="treegrid-parent" data-parent="treegrid-sale5">' . __('Продажи') . '</a> <span class="label label-primary pull-right">16</span></td>

@@ -4,7 +4,7 @@
  * Автономная синхронизация номенклатуры из 1С
  * @package PHPShopExchange
  * @author PHPShop Software
- * @version 3.1
+ * @version 3.2
  */
 // Авторизация
 include_once("login.php");
@@ -403,15 +403,16 @@ class ReadCsv1C extends PHPShopReadCsvNative {
             if ($this->ObjSystem->getSerilizeParam("1c_option.update_price") == 1 and $CsvToArray[7] != "")
                 $sql .= "price='" . $CsvToArray[7] . "', "; // цена 1
 
+
                 
-            // Склад
+// Склад
             if ($this->ObjSystem->getSerilizeParam("1c_option.update_item") == 1) {
 
                 // Многоскладовость
                 if (strstr($CsvToArray[6], '/')) {
                     $sql .= $this->getWarehouse($CsvToArray[6]);
                     $CsvToArray[6] = $this->items;
-                } elseif($CsvToArray[6] !="")
+                } elseif ($CsvToArray[6] != "")
                     $sql .= "items='" . $CsvToArray[6] . "', ";
 
                 switch ($this->Sklad_status) {
@@ -442,8 +443,14 @@ class ReadCsv1C extends PHPShopReadCsvNative {
             }
 
             if (!empty($CsvToArray[3])) {
-                $sql .= "pic_small='" . $this->ImagePlus($CsvToArray[3]) . "_1s." . $this->ImageSrc . "',";
-                $sql .= "pic_big='" . $this->ImagePlus($CsvToArray[3]) . "_1." . $this->ImageSrc . "',";
+                
+                $last_id = $this->getIdForImages($CsvToArray[0]);
+                $ready_num_img = $this->GetNumFoto($last_id);
+
+                if ($ready_num_img < $CsvToArray[5]) {
+                    $sql .= "pic_small='" . $this->ImagePlus($CsvToArray[3]) . "_1s." . $this->ImageSrc . "',";
+                    $sql .= "pic_big='" . $this->ImagePlus($CsvToArray[3]) . "_1." . $this->ImageSrc . "',";
+                }
             }
 
             if ($this->ObjSystem->getSerilizeParam("1c_option.update_price") == 1) {
@@ -507,8 +514,6 @@ class ReadCsv1C extends PHPShopReadCsvNative {
 
             // Добавляем картинки в галерею
             if (!empty($CsvToArray[3])) {
-                $last_id = $this->getIdForImages($CsvToArray[0]);
-                $ready_num_img = $this->GetNumFoto($last_id);
                 $img_num = $CsvToArray[5] - $ready_num_img;
                 $img_num = +$ready_num_img;
                 while ($img_num < $CsvToArray[5]) {
@@ -638,6 +643,7 @@ class ReadCsv1C extends PHPShopReadCsvNative {
 
             if ($this->ObjSystem->getSerilizeParam("1c_option.update_price") == 1 and ! empty($CsvToArray[7]))
                 $sql .= "price='" . $CsvToArray[7] . "', "; // цена 1
+
 
 
 

@@ -8,13 +8,13 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_visualcart_system` (
   `memory` enum('0','1') default '1',
   `nowbuy` enum('0','1') default '1',
   `referal` enum('0','1') default '0',
-  `version` varchar(64) DEFAULT '2.2',
+  `version` varchar(64) DEFAULT '1.0',
   `sendmail` INT(11) DEFAULT '10',
   `day` INT(11) DEFAULT '10',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-INSERT INTO `phpshop_modules_visualcart_system` VALUES (1, '0', '1', 'Корзина', 50,'1','1','0','2.4','10','10');
+INSERT INTO `phpshop_modules_visualcart_system` VALUES (1, '0', '1', 'Корзина', 50,'1','1','0','2.5','10','10');
 
 DROP TABLE IF EXISTS `phpshop_modules_visualcart_memory`;
 CREATE TABLE `phpshop_modules_visualcart_memory` (

@@ -3,6 +3,14 @@ var TABLE_EVENT = true;
 locale.icon_load = locale.file_load;
 
 $().ready(function () {
+    
+    // Блокировка
+    /*
+    $('body').on('change', '#export_imgload', function () {
+         if ($(this).prop('checked') === true){
+             $('#export_imgpath').bootstrapToggle('on');
+         }
+    });*/
 
     // Выбор сохраненной настройки
     $('body').on('change', '#exchanges', function () {

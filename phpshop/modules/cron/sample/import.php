@@ -33,6 +33,7 @@ $PHPShopInterface = new PHPShopInterface();
 include($_classPath . "admpanel/exchange/admin_import.php");
 
 $_POST['exchanges'] = intval($_GET['id']);
+$_POST['exchanges_cron'] = true;
 actionSave();
 echo __('Обработано').' '.$GLOBALS['csv_load_count'].' '.__('строк');
 ?>

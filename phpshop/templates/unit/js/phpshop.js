@@ -111,7 +111,7 @@ function NoFoto2(obj) {
 
 // Проверка наличия файла картинки, вставляем заглушку
 function NoFoto(obj, pathTemplate) {
-    obj.src = pathTemplate + '/images/shop/no_photo.gif';
+    obj.src = ROOT_PATH+pathTemplate + '/images/shop/no_photo.gif';
 }
 
 // Сортировка по всем фильтрам
@@ -1275,22 +1275,19 @@ $(document).ready(function () {
             filter_load(window.location.hash);
         } else {
 
-            /*
-             var href = window.location.href.split('?')[1];
-             
-             if (href == undefined)
-             href = '';
-             
-             var last = href.substring((href.length - 1), href.length);
-             if (last != '&' && last != '')
-             href += '&';
-             
-             href = href.split($(this).attr('name') + '=1&').join('');
-             href = href.split($(this).attr('name') + '=2&').join('');
-             href += $(this).attr('name') + '=' + $(this).attr('value');
-             window.location.href = '?' + href;
-             */
-            window.location.href = $(this).attr('data-url');
+            var href = window.location.href.split('?')[1];
+
+            if (href == undefined)
+                href = '';
+
+            var last = href.substring((href.length - 1), href.length);
+            if (last != '&' && last != '')
+                href += '&';
+
+            href = href.split($(this).attr('name') + '=1&').join('');
+            href = href.split($(this).attr('name') + '=2&').join('');
+            href += $(this).attr('name') + '=' + $(this).attr('value');
+            window.location.href = '?' + href;
         }
     });
 
@@ -1418,7 +1415,7 @@ $(document).ready(function () {
 
     // ошибка загрузки изображения
     $('.highslide img').on('error', function () {
-        $(this).attr('src', '/phpshop/templates/bootstrap/images/shop/no_photo.gif');
+        $(this).attr('src', ROOT_PATH+'/phpshop/templates/bootstrap/images/shop/no_photo.gif');
         return true;
     });
     $('.rating-group .btn').bind(' mouseover click', function () {
@@ -2125,7 +2122,7 @@ $('body').on('click', '.notice-btn', function (e) {
         url: '/phpshop/ajax/notice.php',
         data: {loadForm: 1, productId: $(this).attr('data-product-id')},
         success: function (data) {
-            $('.notice-product-link').attr('href', data['link']).html(data['title']);
+            $('.notice-product-link').attr('href', ROOT_PATH+data['link']).html(data['title']);
             $('.notice-product-image').html(data['image']);
             $('.notice-product-id').val(data['id']);
 

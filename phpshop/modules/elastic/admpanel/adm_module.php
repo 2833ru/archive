@@ -36,6 +36,10 @@ function actionUpdate() {
         $_POST["available_sort_new"] = 0;
     if (empty($_POST["use_additional_categories_new"]))
         $_POST["use_additional_categories_new"] = 0;
+    if (empty($_POST["use_proxy_new"]))
+        $_POST["use_proxy_new"] = 0;
+    if (empty($_POST["search_uid_first_new"]))
+        $_POST["search_uid_first_new"] = 0;
 
     $PHPShopOrm->debug = false;
     $action = $PHPShopOrm->update($_POST);
@@ -88,6 +92,7 @@ function actionStart() {
     }
 
     $Tab1 = $PHPShopGUI->setField('API идентификатор', $PHPShopGUI->setInputText(false, 'api_new', $data['api'], 300, $registerLink));
+    $Tab1 .= $PHPShopGUI->setField('Использовать Proxy', $PHPShopGUI->setCheckbox('use_proxy_new', 1, 'Использовать альтернативный адрес подключения', $data['use_proxy']), 1, 'Используйте только в том случае, если у вас наблюдаются проблемы с подключением к поисковому серверу.');
 
     if(!empty($error)) {
         $Tab1 .= sprintf('<div class="alert alert-danger" role="alert">%s</div>', $error);
@@ -132,7 +137,8 @@ function actionStart() {
             $PHPShopGUI->setField('Товаров в быстром поиске', $PHPShopGUI->setInputText(false, 'ajax_search_products_cnt_new', $data['ajax_search_products_cnt'], 300)) .
             $PHPShopGUI->setField('Файл фильтр поиска', $PHPShopGUI->setInputText(false, 'search_filter_new', $data['search_filter'], 300), 1, 'Файл с уникальной логикой поиска. Должен имплементировать интерфейс ElasticSearchFilterInterface.php') .
             $PHPShopGUI->setField('Файл фильтр быстрого поиска', $PHPShopGUI->setInputText(false, 'ajax_search_filter_new', $data['ajax_search_filter'], 300), 1, 'Файл с уникальной логикой быстрого поиска. Должен имплементировать интерфейс ElasticAjaxSearchFilterInterface.php') .
-            $PHPShopGUI->setField('Сначала в наличии', $PHPShopGUI->setCheckbox('available_sort_new', 1, 'Выводить сначала товары в наличии', $data['available_sort']))
+            $PHPShopGUI->setField('Сначала в наличии', $PHPShopGUI->setCheckbox('available_sort_new', 1, 'Выводить сначала товары в наличии', $data['available_sort'])) .
+            $PHPShopGUI->setField('Искать сначала по артикулу', $PHPShopGUI->setCheckbox('search_uid_first_new', 1, 'Сначала искать по точному совпадению артикула', $data['search_uid_first']))
         );
 
         $Tab1 .= $PHPShopGUI->setCollapse('Настройки фильтра товаров', $filterSettings);

@@ -1126,7 +1126,7 @@ class PHPShopGUI {
      */
     function setPanel($header, $content, $class = 'panel-default', $body = true) {
         $result = '<div class="panel ' . $class . '">
-         <div class="panel-heading">' . $header . '</div>';
+         <div class="panel-heading text-muted">' . $header . '</div>';
         if ($body)
             $result .= '<div class="panel-body">';
         $result .= $content;
@@ -1226,8 +1226,8 @@ class PHPShopGUI {
 
             if ($val[4] == true and $this->tab_key_mod > 1)
                 $grid = "masonry-grid";
-            else
-                $grid = 'block-grid';
+            //else
+                //$grid = 'block-grid';
 
             $this->addTabName .= '<li role="presentation" class="' . $active . '"><a href="#tabs-' . $this->tab_key_uid . '" aria-controls="tabs-' . $this->tab_key_uid . '" role="tab" data-toggle="tab" data-id="' . $val[0] . '">' . __($val[0]) . '</a></li>';
             $this->addTabContent .= '<div role="tabpanel" class="tab-pane fade" id="tabs-' . $this->tab_key_uid . '">' . $hr . '<div class="' . $grid . '">' . $val[1] . '</div></div>';
@@ -2273,7 +2273,7 @@ class PHPShopInterface extends PHPShopGUI {
                     // Сортировка JSON
                     $jsort[] = @$val['sort'];
 
-                    if (empty($val['name']))
+                    if (!isset($val['name']))
                         $val['name'] = null;
 
                     // Ссылка

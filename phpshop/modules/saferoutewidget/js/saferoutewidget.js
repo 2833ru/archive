@@ -62,7 +62,7 @@ function saferoutewidgetStart() {
   widget.on('done', function (response) {
     $('<input type="hidden" name="saferouteToken" value="' + response.id + '">').insertAfter('#d');
     $('input[name="saferouteReq"]').val($('input[name="saferouteDop"]').val());
-    $('#saferoute-close').text('Продолжить').addClass('btn-success');
+    $('#saferoute-close').text(locale.close).addClass('btn-success');
   });
 
   widget.on('change', function (data) {

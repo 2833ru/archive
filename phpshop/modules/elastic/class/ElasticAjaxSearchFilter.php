@@ -22,11 +22,13 @@ class ElasticAjaxSearchFilter implements ElasticAjaxSearchFilterInterface
             'size'    => $limit,
             'query' => [
                 'bool' => [
-                    'must' => [
-                        'multi_match' => [
-                            'query'  => strtolower($query),
-                            'fields' => [ 'title.autocomplete^3', 'article^2', 'keywords' ],
-                            'operator'  =>  'and'
+                    'should' => [
+                        [
+                            'multi_match' => [
+                                'query'  => strtolower($query),
+                                'fields' => [ 'title.autocomplete^4', 'title^3', 'article^2', 'keywords' ],
+                                'operator'  =>  'and'
+                            ]
                         ]
                     ],
                     'filter' => self::$filterActive
@@ -43,7 +45,7 @@ class ElasticAjaxSearchFilter implements ElasticAjaxSearchFilterInterface
                                 'must' => [
                                     'multi_match' => [
                                         'query'  => strtolower($query),
-                                        'fields' => [ 'title.autocomplete^3', 'article^2', 'keywords' ],
+                                        'fields' => [ 'title.autocomplete^4', 'title^3', 'article^2', 'keywords' ],
                                         'operator'  =>  'and'
                                     ]
                                 ],
@@ -61,7 +63,18 @@ class ElasticAjaxSearchFilter implements ElasticAjaxSearchFilterInterface
         }
 
         if (Elastic::isFuzziness((int) Elastic::getOption('misprints_ajax'), strlen($query))) {
-            $filter['query']['bool']['must']['multi_match']['fuzziness'] = (int) Elastic::getOption('misprints_ajax');
+            $filter['query']['bool']['should'][0]['multi_match']['fuzziness'] = (int) Elastic::getOption('misprints_ajax');
+        }
+
+        if ((int) Elastic::getOption('search_uid_first') === 1) {
+            $filter['query']['bool']['should'][1] = [
+                'match' => [
+                    'article' => [
+                        'query' => strtolower($query),
+                        'boost' => 10
+                    ]
+                ]
+            ];
         }
 
         if ((int) Elastic::getOption('available_sort') === 1) {

@@ -10,9 +10,26 @@ function ozonrocketvalidate(evt) {
 }
 
 $(document).ready(function (){
-    if(Number($.getUrlVar('tab')) === 107) {
-        $('a[href="#tabs-107"]').tab('show');
+    
+
+    if(Number($.getUrlVar('tab')) === 4) {
+        $('a[href="#tabs-4"]').tab('show');
     }
+    
+    // Блокировка
+    $('body').on('change', '#hide_pvz_new', function () {
+         if ($(this).prop('checked') === true){
+             $('#hide_postamat_new').bootstrapToggle('off');
+         }
+    });
+    
+    // Блокировка
+    $('body').on('change', '#hide_postamat_new', function () {
+         if ($(this).prop('checked') === true){
+             $('#hide_pvz_new').bootstrapToggle('off');
+         }
+    });
+    
     // Изменение статуса оплаты
     $('#payment_status').on('change', function () {
         var paymentStatus = 0;
@@ -21,7 +38,7 @@ $(document).ready(function (){
         }
         $.ajax({
             mimeType: 'text/html; charset='+locale.charset,
-            url: '/phpshop/modules/ozonrocket/ajax/ajax.php',
+            url: '../modules/ozonrocket/ajax/ajax.php',
             type: 'post',
             data: {
                 operation: 'paymentStatus',
@@ -46,7 +63,7 @@ $(document).ready(function (){
     $('.ozonrocket-send').on('click', function () {
         $.ajax({
             mimeType: 'text/html; charset='+locale.charset,
-            url: '/phpshop/modules/ozonrocket/ajax/ajax.php',
+            url: '../modules/ozonrocket/ajax/ajax.php',
             type: 'post',
             data: {
                 operation: 'send',
@@ -56,8 +73,8 @@ $(document).ready(function (){
             async: false,
             success: function(json) {
                 if(json['success']) {
-                    if(Number($.getUrlVar('tab')) !== 107) {
-                        window.location.href += '&tab=107';
+                    if(Number($.getUrlVar('tab')) !== 4) {
+                        window.location.href += '&tab=4';
                     } else {
                         location.reload();
                     }
@@ -83,7 +100,7 @@ function ozonRocketChangeAddress(data)
 {
     $.ajax({
         mimeType: 'text/html; charset='+locale.charset,
-        url: '/phpshop/modules/ozonrocket/ajax/ajax.php',
+        url: '../modules/ozonrocket/ajax/ajax.php',
         type: 'post',
         data: {
             operation: 'changeAddress',
@@ -97,8 +114,8 @@ function ozonRocketChangeAddress(data)
         async: false,
         success: function(json) {
             if(json['success']) {
-                if(Number($.getUrlVar('tab')) !== 107) {
-                    window.location.href += '&tab=107';
+                if(Number($.getUrlVar('tab')) !== 4) {
+                    window.location.href += '&tab=4';
                 } else {
                     location.reload();
                 }

@@ -85,6 +85,12 @@ class Pochta
         if($parameters['mail-type'] === 'ECOM') {
             $parameters['dimension-type'] = $this->settings->getFromOrderOrSettings('dimension_type', $pochta, 'S');
         }
+        
+        // Наложенный платеж
+        if($parameters['mail-category'] === 'WITH_DECLARED_VALUE_AND_CASH_ON_DELIVERY') {
+            unset($parameters['compulsory-payment']);
+            $parameters['insr-value']=$parameters['payment'];
+        }
 
         if(isset($pochta['pvz_type']) && $pochta['pvz_type'] === 'postamat') {
             if($this->settings->get('declared_percent') > 0) {

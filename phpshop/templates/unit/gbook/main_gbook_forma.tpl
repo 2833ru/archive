@@ -3,7 +3,8 @@
     <div class="panel panel-default">
         <div class="panel-body">
             <blockquote>
-                <h3>"@gbookTema@"</h3>@gbookOtsiv@
+                <h2 class="h3">@gbookTema@</h2>
+                @gbookOtsiv@
                 <footer><cite>@gbookName@, @gbookData@ </cite></footer>
             </blockquote>
         @gbookOtvet@

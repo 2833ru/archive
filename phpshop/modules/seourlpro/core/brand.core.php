@@ -26,8 +26,7 @@ class PHPShopBrand extends PHPShopShopCore {
                 $this->index_content();
             else
                 $this->brand();
-        }
-        else
+        } else
             $this->setError404();
     }
 
@@ -50,12 +49,12 @@ class PHPShopBrand extends PHPShopShopCore {
             $arrayVendor[$row['id']] = $row;
         }
 
-        $sortValue=$brands=$charList=$brandsList=null;
-        
+        $sortValue = $brands = $charList = $brandsList = null;
+
         if (!empty($arrayVendor) and is_array($arrayVendor))
             foreach ($arrayVendor as $key => $value) {
                 if (is_numeric($key))
-                    $sortValue.=' category=' . $key . ' OR';
+                    $sortValue .= ' category=' . $key . ' OR';
             }
         $sortValue = substr($sortValue, 0, strlen($sortValue) - 2);
 
@@ -77,10 +76,10 @@ class PHPShopBrand extends PHPShopShopCore {
             foreach ($arrForSort as $value => $key) {
                 $charOld = $char;
                 $char = substr(strtoupper($value), 0, 1);
-                
+
                 if ($charOld != $char) {
                     if (!empty($char))
-                        $charList.= '   ' . PHPShopText::a("#" . $char, PHPShopText::b($char), $char);
+                        $charList .= '   ' . PHPShopText::a("#" . $char, PHPShopText::b($char), $char);
                     if (!empty($charOld)) {
                         $this->set('brandChar', $charOld);
                         $this->set('brands', $brands);
@@ -93,12 +92,10 @@ class PHPShopBrand extends PHPShopShopCore {
                     $seoLink = $GLOBALS['PHPShopSeoPro']->setLatin($value);
                     $PHPShopOrmSort->update(array("sort_seo_name_new" => "$seoLink"), array('id' => '=' . $key));
                     $brands .= PHPShopText::li($value, $GLOBALS['PHPShopSeoPro']->setLatin($value) . '.html');
-                }
-                else
+                } else
                     $brands .= PHPShopText::li($value, '/brand/' . $arrSeo[$value] . '.html');
             }
-        }
-        else
+        } else
             return $this->setError404();
 
         $title = __('Бренды');
@@ -133,44 +130,44 @@ class PHPShopBrand extends PHPShopShopCore {
         elseif (empty($this->cell))
             $this->cell = 3;
 
-        if(!empty($_GET['gridChange']))
-        switch ($_GET['gridChange']) {
-            case 1:
-                $this->set('gridSetAactive', 'active');
-                break;
-            case 2:
-                $this->set('gridSetBactive', 'active');
-                break;
-            default: $this->set('gridSetBactive', 'active');
-        }
+        if (!empty($_GET['gridChange']))
+            switch ($_GET['gridChange']) {
+                case 1:
+                    $this->set('gridSetAactive', 'active');
+                    break;
+                case 2:
+                    $this->set('gridSetBactive', 'active');
+                    break;
+                default: $this->set('gridSetBactive', 'active');
+            }
 
 
-        if(!empty($_GET['s']))
-        switch ($_GET['s']) {
-            case 1:
-                $this->set('sSetAactive', 'active');
-                break;
-            case 2:
-                $this->set('sSetBactive', 'active');
-                break;
-            default: $this->set('sSetCactive', 'active');
-        }
+        if (!empty($_GET['s']))
+            switch ($_GET['s']) {
+                case 1:
+                    $this->set('sSetAactive', 'active');
+                    break;
+                case 2:
+                    $this->set('sSetBactive', 'active');
+                    break;
+                default: $this->set('sSetCactive', 'active');
+            }
 
 
-        if(!empty($_GET['f']))
-        switch ($_GET['f']) {
-            case 1:
-                $this->set('fSetAactive', 'active');
-                $this->set('fSetAchecked', 'checked="checked"');
-                break;
-            case 2:
-                $this->set('fSetBactive', 'active');
-                $this->set('fSetBchecked', 'checked="checked"');
-                break;
-            default: 
-                $this->set('fSetCactive', 'active');
-                $this->set('fSetCchecked', 'checked="checked"');
-        }
+        if (!empty($_GET['f']))
+            switch ($_GET['f']) {
+                case 1:
+                    $this->set('fSetAactive', 'active');
+                    $this->set('fSetAchecked', 'checked="checked"');
+                    break;
+                case 2:
+                    $this->set('fSetBactive', 'active');
+                    $this->set('fSetBchecked', 'checked="checked"');
+                    break;
+                default:
+                    $this->set('fSetCactive', 'active');
+                    $this->set('fSetCchecked', 'checked="checked"');
+            }
 
         // Мультибаза
         $servers = '';
@@ -192,7 +189,7 @@ class PHPShopBrand extends PHPShopShopCore {
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort']);
         $PHPShopOrm->mysql_error = false;
 
-        if(strtolower($seo_name[0]) !== $seo_name[0]) {
+        if (strtolower($seo_name[0]) !== $seo_name[0]) {
             return $this->setError404();
         }
 
@@ -209,7 +206,7 @@ class PHPShopBrand extends PHPShopShopCore {
 
         $v = array();
         foreach ($vendorArray as $value) {
-            if(in_array($value['category'], $categories)) {
+            if (in_array($value['category'], $categories)) {
                 $v[$value['category']] = $value['id'];
             }
         }
@@ -254,7 +251,7 @@ class PHPShopBrand extends PHPShopShopCore {
         } else {
             // Описание и имя характеристики. Первое, которое заполнено в массиве характеристик (если их больше 1).
             foreach ($vendorArray as $brand) {
-                if(!empty($brand['description'])) {
+                if (!empty($brand['description'])) {
                     $this->set('sortDes', stripslashes($brand['description']));
                     $brandTitle = $brand['name'];
                     break;
@@ -263,7 +260,7 @@ class PHPShopBrand extends PHPShopShopCore {
         }
 
         // Если описание из страницы или его нигде нет в характеристиках - берем имя с первого бренда.
-        if(empty($brandTitle)) {
+        if (empty($brandTitle)) {
             $firstBrand = array_shift($vendorArray);
             $brandTitle = $firstBrand['name'];
         }
@@ -277,12 +274,15 @@ class PHPShopBrand extends PHPShopShopCore {
         else
             $this->title = $vendor['title'];
 
-        if(empty($vendor['meta_description']))
-            $this->description = $brandTitle . ', '.$this->PHPShopSystem->getParam('descrip');
+        if (empty($vendor['meta_description']))
+            $this->description = $brandTitle . ', ' . $this->PHPShopSystem->getParam('descrip');
         else
             $this->description = $vendor['meta_description'];
 
         $this->keywords = $brandTitle;
+
+        // Навигация хлебные крошки
+        $this->navigation(0, $brandTitle,['url'=>'./','name'=>__('Бренды')]);
 
         $this->parseTemplate($this->getValue('templates.product_selection_list'));
     }
@@ -290,7 +290,7 @@ class PHPShopBrand extends PHPShopShopCore {
     /**
      * Cортировка товаров по бренду
      */
-    function query_filter($obj=false, $v=false) {
+    function query_filter($obj = false, $v = false) {
         global $SysValue;
 
         $s = intval(@$_REQUEST['s']);
@@ -308,18 +308,18 @@ class PHPShopBrand extends PHPShopShopCore {
 
         // Сортировка по характеристикам
         if (is_array($v)) {
-            $sort.= ' and (';
+            $sort .= ' and (';
             foreach ($v as $key => $value) {
 
                 // Обычный отбор []
                 if (PHPShopSecurity::true_num($key) and PHPShopSecurity::true_num($value)) {
                     $hash = $key . "-" . $value;
-                    $sort.=" vendor REGEXP 'i" . $hash . "i' or";
+                    $sort .= " vendor REGEXP 'i" . $hash . "i' or";
                     $sortQuery .= "&v[$key]=$value";
                 }
             }
             $sort = substr($sort, 0, strlen($sort) - 2);
-            $sort.=")";
+            $sort .= ")";
         }
 
         // Сортировка принудительная пользователем
@@ -348,8 +348,7 @@ class PHPShopBrand extends PHPShopShopCore {
         // Все страницы
         if ($p == "all") {
             $sql = "select * from " . $SysValue['base']['products'] . " where enabled='1' and parent_enabled='0' $sort  $string";
-        }
-        else
+        } else
             while ($q < $p) {
 
                 $sql = "select * from " . $SysValue['base']['products'] . " where enabled='1' and parent_enabled='0' $sort  $string LIMIT $num_ot, $num_row";
@@ -394,8 +393,7 @@ class PHPShopBrand extends PHPShopShopCore {
 
         if (is_array($this->selection_order)) {
             $SQL = " where enabled='1' and parent_enabled='0' " . $this->selection_order['sortV'];
-        }
-        else
+        } else
             $SQL = null;
 
 
@@ -443,17 +441,16 @@ class PHPShopBrand extends PHPShopShopCore {
                 if ($i != $this->page) {
                     $this->set("paginLink", "?f=" . $_REQUEST['f'] . "&s=" . $_REQUEST['s'] . $this->selection_order['sortQuery'] . "&p=" . $i);
                     if ($i == 1) {
-                        $navigat.= parseTemplateReturn($template_location . "paginator/paginator_one_link.tpl", $template_location_bool);
+                        $navigat .= parseTemplateReturn($template_location . "paginator/paginator_one_link.tpl", $template_location_bool);
                     } else {
                         if ($i > ($this->page - $this->nav_len) and $i < ($this->page + $this->nav_len)) {
-                            $navigat.= parseTemplateReturn($template_location . "paginator/paginator_one_link.tpl", $template_location_bool);
-                        } else if ($i - ($this->page + $this->nav_len) < 3 and (($this->page - $this->nav_len) - $i) < 3) {
-                            $navigat.= parseTemplateReturn($template_location . "paginator/paginator_one_more.tpl", $template_location_bool);
+                            $navigat .= parseTemplateReturn($template_location . "paginator/paginator_one_link.tpl", $template_location_bool);
+                        } else if ($i - ($this->page + $this->nav_len) < 3 and ( ($this->page - $this->nav_len) - $i) < 3) {
+                            $navigat .= parseTemplateReturn($template_location . "paginator/paginator_one_more.tpl", $template_location_bool);
                         }
                     }
-                }
-                else
-                    $navigat.= parseTemplateReturn($template_location . "paginator/paginator_one_selected.tpl", $template_location_bool);
+                } else
+                    $navigat .= parseTemplateReturn($template_location . "paginator/paginator_one_selected.tpl", $template_location_bool);
 
                 $i++;
             }
@@ -465,7 +462,7 @@ class PHPShopBrand extends PHPShopShopCore {
 
             $this->set("nextLink", "?f=" . $_REQUEST['f'] . "&s=" . $_REQUEST['s'] . "&p=" . $p_to);
 
-            $nav.=$navigat;
+            $nav .= $navigat;
 
 
             $this->set("pageNow", $this->getValue('lang.page_now'));

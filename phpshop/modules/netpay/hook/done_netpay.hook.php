@@ -2,7 +2,7 @@
 
 function send_to_order_mod_netpay_hook($obj, $value, $rout) {
 
-    if ($rout == 'MIDDLE' and $value['order_metod'] == 10017) {
+    if ($rout == 'END' and $value['order_metod'] == 10017) {
 
         // Настройки модуля
         include_once(dirname(__FILE__) . '/mod_option.hook.php');

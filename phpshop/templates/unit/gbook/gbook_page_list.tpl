@@ -11,7 +11,7 @@
 @Error@
 
 <div class="page-header">
-    <h2>{Отзывы} <a href="/gbook/?add_forma=true" class="btn btn-default pull-right"><span class="glyphicon glyphicon-plus-sign"></span> {Создать новый отзыв}</a></h2>
+    <h1>{Отзывы} <a href="/gbook/?add_forma=true" class="btn btn-default pull-right"><span class="glyphicon glyphicon-plus-sign"></span> {Создать новый отзыв}</a></h1>
 </div>
 
 <div class="news-list">

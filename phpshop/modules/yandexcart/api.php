@@ -3,7 +3,7 @@
 $_classPath = "../../";
 include($_classPath . "class/obj.class.php");
 PHPShopObj::loadClass("base");
-$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, false);
+$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, true);
 PHPShopObj::loadClass("orm");
 PHPShopObj::loadClass("system");
 PHPShopObj::loadClass("text");
@@ -149,7 +149,7 @@ switch ($_SERVER["PATH_INFO"]) {
                 $deliveryOption = array(
                     'id'          => $delivery['id'],
                     'price'       => (float) yandexDeliveryPrice($delivery, $sum, $weight),
-                    'serviceName' => PHPShopString::win_utf8($delivery['city']),
+                    'serviceName' => PHPShopString::win_utf8(substr($delivery['city'],0,50)),
                     'type'        => $type,
                     'dates'       => array(
                         'fromDate' => $from->format('d-m-Y'),

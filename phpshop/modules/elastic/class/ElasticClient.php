@@ -5,6 +5,7 @@ include_once dirname(__DIR__) . '/class/include.php';
 class ElasticClient
 {
     const API_URL = 'https://elastica.host/api/';
+    const PROXY_API_URL = 'https://estrellas.dev/api/';
 
     public function getClientInfo()
     {
@@ -181,7 +182,7 @@ class ElasticClient
         }
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, self::API_URL . $method);
+        curl_setopt($ch, CURLOPT_URL, $this->getApiUrl() . $method);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'X-AUTH-TOKEN: ' . Elastic::getOption('api'),
@@ -206,5 +207,14 @@ class ElasticClient
         }
 
         return json_decode($result, true);
+    }
+
+    private function getApiUrl()
+    {
+        if ((int) Elastic::getOption('use_proxy') === 1) {
+            return self::PROXY_API_URL;
+        }
+
+        return self::API_URL;
     }
 }

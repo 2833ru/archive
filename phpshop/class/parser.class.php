@@ -271,7 +271,6 @@ function ParseTemplate($TemplateName) {
             "/\/done\//i" => $root . "done/",
             "/\/print\//i" => $root . "print/",
             "/\/links\//i" => $root . "links/",
-            "/\/files\//i" => $root . "files/",
             "/\/opros\//i" => $root . "opros/",
             "/\/page\//i" => $root . "page/",
             "/\/news\//i" => $root . "news/",
@@ -295,6 +294,7 @@ function ParseTemplate($TemplateName) {
             "/\/spec\//i" => $root . "spec/",
             "/\/forma\//i" => $root . "forma/",
             "/\/newprice\//i" => $root . "newprice/",
+            "/\/selection\//i" => $root . "selection/",
         );
     } else {
         $replaces = array(

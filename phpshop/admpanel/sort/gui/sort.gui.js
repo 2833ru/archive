@@ -92,7 +92,7 @@ $().ready(function() {
 
 
         var data = [];
-        data.push({name: 'editID', value: '1'});
+        data.push({name: 'rowID', value: '1'});
         data.push({name: 'actionList[rowID]', value: 'actionUpdate.sort.edit'});
 
         $('#modal-form .form-control, #modal-form .hidden-edit, #modal-form input:radio:checked, #modal-form input:checkbox:checked').each(function() {

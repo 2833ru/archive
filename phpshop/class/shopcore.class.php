@@ -359,7 +359,12 @@ class PHPShopShopCore extends PHPShopCore {
         // Перехват модуля в начале функции
         if ($this->setHook(__CLASS__, __FUNCTION__, array('count' => $count, 'sql' => $sql), 'START'))
             return true;
-
+        
+        // Директория установки
+        $dir = $this->getValue('dir.dir');
+        if($this->PHPShopNav->objNav['path'] != 'shop')
+            $dir = null;
+  
         // проверяем наличие шаблонов пагинации в папке шаблона
         // если отсутствуют, то используем шаблоны из lib
         $type = $this->memory_get(__CLASS__ . '.' . __FUNCTION__);
@@ -465,15 +470,14 @@ class PHPShopShopCore extends PHPShopCore {
                 $this->set("paginPageRangeStart", $p_start);
                 $this->set("paginPageRangeEnd", $p_end);
                 $this->set("paginPageNumber", $i);
-
                 if ($i != $this->page) {
                     if ($i == 1) {
-                        $this->set("paginLink", $GLOBALS['SysValue']['dir']['dir'] . substr($this->objPath, 0, strlen($this->objPath) - 1) . '.html' . $sort);
-                        $this->set("catalogFirstPage", $GLOBALS['SysValue']['dir']['dir'] . substr($this->objPath, 0, strlen($this->objPath) - 1) . '.html');
+                        $this->set("paginLink", $dir.substr($this->objPath, 0, strlen($this->objPath) - 1) . '.html' . $sort);
+                        $this->set("catalogFirstPage", $dir.substr($this->objPath, 0, strlen($this->objPath) - 1) . '.html');
                         $navigat .= parseTemplateReturn($template_location . "paginator/paginator_one_link.tpl", $template_location_bool);
                     } else {
                         if ($i > ($this->page - $this->nav_len) and $i < ($this->page + $this->nav_len)) {
-                            $this->set("paginLink", $GLOBALS['SysValue']['dir']['dir'] . $this->objPath . $i . '.html' . $sort);
+                            $this->set("paginLink", $dir.$this->objPath . $i . '.html' . $sort);
                             $navigat .= parseTemplateReturn($template_location . "paginator/paginator_one_link.tpl", $template_location_bool);
                         } else if ($i - ($this->page + $this->nav_len) < 3 and ( ($this->page - $this->nav_len) - $i) < 3) {
                             $navigat .= parseTemplateReturn($template_location . "paginator/paginator_one_more.tpl", $template_location_bool);
@@ -493,16 +497,16 @@ class PHPShopShopCore extends PHPShopCore {
 
             // Убираем дубль первой страницы CID_X_1.html
             if ($p_do == 1)
-                $this->set("previousLink", $GLOBALS['SysValue']['dir']['dir'] . substr($this->objPath, 0, strlen($this->objPath) - 1) . '.html' . $sort);
+                $this->set("previousLink", $dir.substr($this->objPath, 0, strlen($this->objPath) - 1) . '.html' . $sort);
             else
-                $this->set("previousLink", $GLOBALS['SysValue']['dir']['dir'] . $this->objPath . ($p_do) . '.html' . $sort);
+                $this->set("previousLink", $dir.$this->objPath . ($p_do) . '.html' . $sort);
 
 
             // Убираем дубль первой страницы CID_X_0.html
             if ($p_to == 0 or strtoupper($this->page) == 'ALL')
-                $this->set("nextLink", $GLOBALS['SysValue']['dir']['dir'] . substr($this->objPath, 0, strlen($this->objPath) - 1) . '.html' . $sort);
+                $this->set("nextLink", $dir.substr($this->objPath, 0, strlen($this->objPath) - 1) . '.html' . $sort);
             else
-                $this->set("nextLink", $GLOBALS['SysValue']['dir']['dir'] . $this->objPath . ($p_to) . '.html' . $sort);
+                $this->set("nextLink", $dir.$this->objPath . ($p_to) . '.html' . $sort);
 
             // Добавлем ссылку показать все
             if (strtoupper($this->page) == 'ALL')
@@ -1166,12 +1170,12 @@ public function getPreviewSorts($products, $currentProduct) {
         $this->sortCategories = $sortCategoryOrm->getList(['id', 'name'], ['show_preview' => '="1"'], ['order' => 'num, name']);
     }
 
-    if (\count($this->sortCategories) === 0) {
+    if (count($this->sortCategories) === 0) {
         return null;
     }
 
     // Выполняется над всеми товарами сразу только на первой итерации
-    if (\is_null($this->previewSorts)) {
+    if (is_null($this->previewSorts)) {
         $sortValueIds = array();
         foreach ($products as $product) {
             $vendorArray = unserialize($product['vendor_array']);
@@ -1184,7 +1188,7 @@ public function getPreviewSorts($products, $currentProduct) {
             }
         }
 
-        if (\count($sortValueIds) === 0) {
+        if (count($sortValueIds) === 0) {
             return null;
         }
 
@@ -1200,10 +1204,10 @@ public function getPreviewSorts($products, $currentProduct) {
     $html = '';
     foreach ($this->sortCategories as $sortCategory) {
         if (isset($vendorArray[$sortCategory['id']])) {
+            $titles = array();
             foreach ($vendorArray[$sortCategory['id']] as $value) {
-                $titles = array();
                 if (isset($this->previewSorts[(int) $value])) {
-                    $titles[] = $this->previewSorts[(int) $value];
+                    $titles[(int) $value] = $this->previewSorts[(int) $value];
                 }
             }
             $this->set('previewSortTitle', $sortCategory['name']);

@@ -210,9 +210,9 @@
                 <div class="row">
                     <div class="">
 
-                        <h3 class="product-head page-header">
+                        <div class="product-head page-header">
                             {Спецпредложения}
-                        </h3>
+                        </div>
 
                         <div class="swiper-slider-wrapper">
                             <div class="swiper-button-prev-block">
@@ -242,9 +242,9 @@
                 <div class="row">
                     <div class="">
 
-                        <h3 class="product-head page-header">
+                        <div class="product-head page-header">
                             {Новинки}
-                        </h3>
+                        </div>
 
                         <div class="swiper-slider-wrapper">
                             <div class="swiper-button-prev-block">
@@ -289,9 +289,9 @@
                 <div class="row">
                     <div class="">
 
-                        <h3 class="product-head page-header">
+                        <div class="product-head page-header">
                             {Бестселлеры}
-                        </h3>
+                        </div>
 
                         <div class="swiper-slider-wrapper">
                             <div class="swiper-button-prev-block">
@@ -368,7 +368,7 @@
                     </ul>
                 </div>
                 <div class="col-md-3 col-sm-4 col-xs-12">
-                    <h5>{Мой кабинет}</h5>
+                    <div class="h5">{Мой кабинет}</div>
 
                     <ul>
                         <li>
@@ -387,7 +387,7 @@
                 <!-- My Account Links Ends -->
                 <!-- Information Links Starts -->
                 <div class="col-md-3 col-sm-4 col-xs-12">
-                    <h5>{Меню}</h5>
+                    <div class="h5">{Меню}</div>
                     <ul>
                         @bottomMenu@
 
@@ -414,7 +414,7 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">x</span><span
                                 class="sr-only">Close</span></button>
-                        <h4 class="modal-title">{Поиск}</h4>
+                        <div class="h4 modal-title">{Поиск}</div>
                     </div>
                     <div class="modal-body">
                         <form action="/search/" role="search" method="get">
@@ -441,7 +441,7 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal"><span
                                 aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                        <h4 class="modal-title">{Авторизация}</h4>
+                        <div class="h4 modal-title">{Авторизация}</div>
                         <span id="usersError" class="hide">@usersError@</span>
                     </div>
                     <form method="post" name="user_forma">
@@ -514,12 +514,12 @@
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
-                        <h4 class="modal-title d-flex" id="exampleModalLabel">{Уведомить при появлении товара в продаже}</h4>
+                        <div class="h4 modal-title d-flex" id="exampleModalLabel">{Уведомить при появлении товара в продаже}</div>
                     </div>
                     <div class="modal-body">
-                        <h4>
+                        <div class="h4">
                             <a href="#" title="" class="notice-product-link"></a>
-                        </h4>
+                        </div>
                         <div class="col-md-12">
                             <div class="row">
                                 <div class="image notice-product-image"></div>

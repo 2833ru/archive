@@ -25,10 +25,16 @@ $(document).ready(function () {
                 if (data) {
                     $("#faset-filter-body").html(data);
                     $("#faset-filter-body").html($("#faset-filter-body").find('td').html());
-                    ElasticaFilterInstance.updateFilter(false);
+                    if (ElasticaFilterInstance.updatedOnLoad === false) {
+                        ElasticaFilterInstance.updateFilter(false);
+                    }
                 }
             }
         });
+    }
+
+    if (ElasticaFilterInstance.updatedOnLoad === false) {
+        ElasticaFilterInstance.updateFilter(false);
     }
 });
 
@@ -37,6 +43,7 @@ var ElasticaFilter = function () {
     self.showCount = false;
     self.disableValues = false;
     self.hideValues = false;
+    self.updatedOnLoad = false;
 
     self.init = function () {
         self.showCount = Number($('[data-show-counts]').attr('data-show-counts')) === 1;
@@ -51,6 +58,10 @@ var ElasticaFilter = function () {
 
     self.updateFilter = function (current) {
         var selected = self.getSelected();
+
+        if (selected.length === 0) {
+            return;
+        }
 
         $.ajax({
             type: "POST",
@@ -119,6 +130,8 @@ var ElasticaFilter = function () {
                 }
             }
         });
+
+        self.updatedOnLoad = true;
     };
 
     self.getSelected = function () {

@@ -1,6 +1,6 @@
 
 <div class="page-header not-center">
-    <h2>@newsZag@</h2>
+    <h1>@newsZag@</h1>
 </div>
 
 <div>@newsKratko@</div>

@@ -150,15 +150,15 @@ class PHPShopBot {
 }
 
 /**
- * Библиотека Telegram Bot
+ * Библиотека VK Bot
  * @author PHPShop Software
- * @version 1.1
+ * @version 1.2
  * @package PHPShopClass
  */
 class PHPShopVKBot extends PHPShopBot {
 
     protected $bot = 'vk';
-    protected $version = '5.70';
+    protected $version = '5.81';
 
     /**
      * Конструктор

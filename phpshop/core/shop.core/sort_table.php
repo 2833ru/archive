@@ -52,6 +52,8 @@ function sort_table($obj, $row) {
                 // Определение цвета
                 if ($row['name'][0] == '#')
                     $arrayVendorValue[$row['category']]['name'][$row['id']] = '  <div class="sort-color" style="width:25px;height:25px;background:' . $row['name'] . ';float:left;padding:3px;margin:3px;"></div>  ';
+                elseif(!empty($row['icon']))
+                    $arrayVendorValue[$row['category']]['name'][$row['id']] = PHPShopText::img($row['icon']).$row['name'];
                 else
                     $arrayVendorValue[$row['category']]['name'][$row['id']] = $row['name'];
 
@@ -73,7 +75,7 @@ function sort_table($obj, $row) {
                     }
 
                     $obj->set('brandPageLink', '/selection/?v[' . $row['category'] . ']=' . $row['id']);
-                    if (@$desc) {
+                    if (!empty($desc)) {
                         $obj->set('brandDescr', $desc);
                     } else {
                         $obj->set('brandDescr', '');

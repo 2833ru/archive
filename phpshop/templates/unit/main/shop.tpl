@@ -11,7 +11,7 @@
         <link rel="apple-touch-icon" href="@icon@">
         <link rel="icon" href="@icon@" type="image/x-icon">
         <link rel="mask-icon" href="@icon@">
-        
+
         <!-- OpenGraph -->
         <meta property="og:title" content="@ogTitle@">
         <meta property="og:image" content="http://@serverName@@ogImage@">
@@ -205,7 +205,7 @@
 
         <div class="container  main-block-content ">
             <div class="text-center banner banner-top">@banersDispHorizontal@</div>
-            
+
             <!-- Стикер-полоска -->
             <div class="top_banner_parent @php __hide('sticker_top'); php@">
                 <div class="top-banner @php __hide('sticker_close','cookie'); php@">
@@ -229,7 +229,7 @@
                                 <div id="faset-filter-body">{Загрузка}</div>
 
                                 <div id="price-filter-body">
-                                    <h4>{Цена}</h4>
+                                    <div class="h4">{Цена}</div>
                                     <form method="get" id="price-filter-form">
                                         <div class="row">
                                             <div class="col-md-6 col-xs-6" id="price-filter-val-min">
@@ -255,7 +255,7 @@
                         <div class="left-info-block">
                             <div class="block  hidden-xs  @php __hide('pageCatal'); php@">
                                 <div class="block-heading">
-                                    <h3 class="block-title">{Это интересно}</h3>
+                                    <div class="block-title">{Это интересно}</div>
                                 </div>
                                 <ul class="block-body">
                                     @pageCatal@
@@ -287,9 +287,9 @@
                                 <div class="">
                                     <div class="inner-nowbuy main">
 
-                                        <h2 class="product-head page-header not-center">
+                                        <div class="product-head page-header not-center">
                                             @productlastview_title@
-                                        </h2>
+                                        </div>
 
                                         <div class="swiper-slider-wrapper">
                                             <div class="swiper-button-prev-block">
@@ -329,9 +329,9 @@
             <div class="container">
                 <div class="">
 
-                    <h2 class="product-head page-header not-center">
+                    <div class="product-head page-header not-center">
                         @productOdnotip@
-                    </h2>
+                    </div>
 
                     <div class="swiper-slider-wrapper">
                         <div class="swiper-button-prev-block">
@@ -355,14 +355,10 @@
         </section>
         <section class="specMain @php __hide('productlist_list'); php@">
             <div class="container">
-                <div class="">
-
-
-                    <h2 class="product-head page-header not-center">
+                <div>
+                    <div class="product-head page-header not-center">
                         {Похожие товары}
-
-                    </h2>
-
+                    </div>
                     <div class="swiper-slider-wrapper">
                         <div class="swiper-button-prev-block">
                             <div class="swiper-button-prev btn-prev6">
@@ -380,20 +376,15 @@
                             </div>
                         </div>
                     </div>
-
-
                 </div>
             </div>
         </section>
         <section class="specMain @php __hide('productlastview'); php@ last-see-product">
             <div class="container">
-                <div class="">
-
-
-                    <h2 class="product-head page-header not-center">
+                <div >
+                    <div class="product-head page-header not-center">
                         @productlastview_title@
-                    </h2>
-
+                    </div>
                     <div class="swiper-slider-wrapper">
                         <div class="swiper-button-prev-block">
                             <div class="swiper-button-prev btn-prev3">
@@ -411,34 +402,29 @@
                             </div>
                         </div>
                     </div>
-
-
                 </div>
             </div>
         </section>
 
-        <footer class="footer  ">
-
+        <footer class="footer">
             <div class="container">
-
                 <div class="col-md-3 col-sm-4 col-xs-12" itemscope itemtype="http://schema.org/Organization">
                     <div class="logo">
                         <a href="/"><img src="@logo@" alt="@name@"></a>
                     </div>
-                        <ul>
-                            <li>&copy; <span itemprop="name">@company@</span>, @year@</li>
-                            <li><span itemprop="email">@adminMail@</span></li>
-                            <li><span itemprop="telephone">@telNum@</span></li>
-                            <li itemprop="telephone">@telNum2@</li>
-                            <li>@workingTime@</li>
-                            <li itemprop="address" itemscope itemtype="http://schema.org/PostalAddress"> <span itemprop="streetAddress">@streetAddress@</span></li>
-                            <li>@button@</li>
-                        </ul>
+                    <ul>
+                        <li>&copy; <span itemprop="name">@company@</span>, @year@</li>
+                        <li><span itemprop="email">@adminMail@</span></li>
+                        <li><span itemprop="telephone">@telNum@</span></li>
+                        <li itemprop="telephone">@telNum2@</li>
+                        <li>@workingTime@</li>
+                        <li itemprop="address" itemscope itemtype="http://schema.org/PostalAddress"> <span itemprop="streetAddress">@streetAddress@</span></li>
+                        <li>@button@</li>
+                    </ul>
                 </div>
 
                 <div class="col-md-3 col-sm-4 col-xs-12">
-                    <h5>{Мой кабинет}</h5>
-
+                    <div class="h5">{Мой кабинет}</div>
                     <ul>
                         <li>
                             @php if($_SESSION['UsersId']) echo
@@ -457,21 +443,20 @@
 
                 <!-- Information Links Starts -->
                 <div class="col-md-3 col-sm-4 col-xs-12">
-                    <h5>{Меню}</h5>
+                    <div class="h5">{Меню}</div>
                     <ul>
                         @bottomMenu@
-
                     </ul>
                 </div>
                 <!-- Information Links Ends -->
                 <div class="col-md-3 col-sm-4 col-xs-12"> @sticker_socfooter@
-	                <ul>
-                    <li><a href="/price/" title="Прайс-лист">{Прайс-лист}</a></li>
-                    <li><a href="/news/" title="Новости">{Новости}</a></li>
-                    <li><a href="/gbook/" title="Отзывы">{Отзывы}</a></li>
-                    <li><a href="/map/" title="Карта сайта">{Карта сайта}</a></li>
-                    <li><a href="/forma/" title="Форма связи">{Форма связи}</a></li>
-                </ul>  
+                    <ul>
+                        <li><a href="/price/" title="Прайс-лист">{Прайс-лист}</a></li>
+                        <li><a href="/news/" title="Новости">{Новости}</a></li>
+                        <li><a href="/gbook/" title="Отзывы">{Отзывы}</a></li>
+                        <li><a href="/map/" title="Карта сайта">{Карта сайта}</a></li>
+                        <li><a href="/forma/" title="Форма связи">{Форма связи}</a></li>
+                    </ul>  
                 </div>
 
             </div>
@@ -485,7 +470,7 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">x</span><span
                             class="sr-only">Close</span></button>
-                    <h4 class="modal-title">{Поиск}</h4>
+                    <div class="modal-title">{Поиск}</div>
                 </div>
                 <div class="modal-body">
                     <form action="/search/" role="search" method="get">
@@ -511,7 +496,7 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span
                             aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title">{Авторизация}</h4>
+                    <div class="h4 modal-title">{Авторизация}</div>
                     <span id="usersError" class="hide">@usersError@</span>
                 </div>
                 <form method="post" name="user_forma">
@@ -582,14 +567,14 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    <h4 class="modal-title d-flex" id="exampleModalLabel">{Уведомить при появлении товара в продаже}</h4>
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <div class="h4 modal-title d-flex" id="exampleModalLabel">{Уведомить при появлении товара в продаже}</div>
                 </div>
                 <div class="modal-body">
-                    <h4>
+                    <div class="h4">
                         <a href="#" title="" class="notice-product-link"></a>
-                    </h4>
+                    </div>
                     <div class="col-md-12">
                         <div class="row">
                             <div class="image notice-product-image"></div>
@@ -645,7 +630,7 @@
                                 <input type="hidden" class="notice-product-id" name="productId">
                                 <input type="hidden" name="ajax" value="1">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
-                                <button type="submit" class="btn btn-primary">{Уведомить}</button>
+                                <button type="submit" class="btn btn-default">{Уведомить}</button>
                             </div>
                         </div>
                     </form>
@@ -653,7 +638,7 @@
             </div>
         </div>
     </div>
-    
+
     <div id="thanks-box" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -732,8 +717,8 @@
     </script>
     <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.suggestions.min.js">
     </script>
-<script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/solid-menu.js">
-</script>
+    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/solid-menu.js">
+    </script>
 
-@visualcart_lib@
-<div class="visible-lg visible-md">
+    @visualcart_lib@
+    <div class="visible-lg visible-md">

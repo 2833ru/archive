@@ -104,8 +104,9 @@ $adr_info=null;
 
 if(is_array($deliveryName['enabled']))
     foreach($deliveryName['enabled'] as $k=>$v){
-        if(!empty($row[$k]) and $v['name'] != 'ิศฮ')
+        if(!empty($row[$k]) and $v['name'] != 'ิศฮ'){
             $adr_info.=", ".$v['name'].': '.$row[$k];
+        }
     }
 
 $adr_info = substr($adr_info, 2);

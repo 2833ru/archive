@@ -602,6 +602,11 @@ class PHPShopOrderFunction extends PHPShopObj {
                     $bot->send($chat_id, PHPShopString::win_utf8($message));
             }
 
+            // Чат
+            if(!$bot){
+               $bot = new PHPShopBot(); 
+               $chat_id = $user_id;
+            }
 
             // Диалоги
             $insert = array(

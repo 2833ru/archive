@@ -4,8 +4,8 @@
     <name>Ozon Rocket</name>
     <description>Виджет расчета доставки Ozon Rocket</description>
     <category>delivery</category>
-    <status>new</status>
     <sign>1634543879</sign>
+    <status>Hit</status>
     <faqlink>https://docs.phpshop.ru/moduli/dostavka/ozon-rocket</faqlink>
     <adminmenu>
         <title>Ozon Rocket</title>

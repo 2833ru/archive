@@ -523,11 +523,12 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_sticker_system` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `serial` varchar(64) NOT NULL DEFAULT '',
   `version` varchar(64) DEFAULT '1.0',
+  `editor` enum('0','1') default '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-INSERT INTO `phpshop_modules_sticker_system` (`id`, `serial`, `version`) VALUES
-(1, '', '1.2');
+INSERT INTO `phpshop_modules_sticker_system` (`id`, `serial`, `version`,`editor`) VALUES
+(1, '', '1.3','0');
 
 DROP TABLE IF EXISTS `phpshop_modules_visualcart_log`;
 CREATE TABLE IF NOT EXISTS `phpshop_modules_visualcart_log` (
@@ -571,13 +572,13 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_visualcart_system` (
   `memory` enum('0','1') DEFAULT '1',
   `nowbuy` enum('0','1') DEFAULT '1',
   `referal` enum('0','1') DEFAULT '0',
-  `version` varchar(64) DEFAULT '2.2',
+  `version` varchar(64) DEFAULT '2.5',
   `sendmail` int(11) DEFAULT '10',
+  `day` INT(11) DEFAULT '10',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-INSERT INTO `phpshop_modules_visualcart_system` (`id`, `enabled`, `flag`, `title`, `pic_width`, `memory`, `nowbuy`, `referal`, `version`, `sendmail`) VALUES
-(1, '0', '1', 'Корзина', 50, '1', '1', '0', '2.4', 10);
+INSERT INTO `phpshop_modules_visualcart_system` VALUES (1, '0', '1', 'Корзина', 50,'1','1','0','2.5','10','10');
 
 DROP TABLE IF EXISTS `phpshop_modules_yandexkassa_log`;
 CREATE TABLE IF NOT EXISTS `phpshop_modules_yandexkassa_log` (
@@ -871,7 +872,7 @@ CREATE TABLE IF NOT EXISTS `phpshop_products` (
   `uid` varchar(64) DEFAULT '',
   `spec` enum('0','1') DEFAULT '0',
   `odnotip` varchar(64) DEFAULT '',
-  `vendor` varchar(255) DEFAULT '',
+  `vendor` text,
   `vendor_array` blob,
   `yml` enum('0','1') DEFAULT '0',
   `num` int(11) DEFAULT '1',
@@ -1313,5 +1314,16 @@ CREATE TABLE IF NOT EXISTS `phpshop_warehouses` (
   `enabled` enum('0','1') DEFAULT '1',
   `num` int(11) DEFAULT NULL,
   `servers` varchar(64) DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
+DROP TABLE IF EXISTS `phpshop_exchanges_log`;
+CREATE TABLE IF NOT EXISTS `phpshop_exchanges_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `date` int(11) NOT NULL,
+  `file` varchar(255) NOT NULL,
+  `status` enum('0','1') NOT NULL DEFAULT '0',
+  `info` text NOT NULL,
+  `option` blob NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;

@@ -168,6 +168,7 @@ function actionStart() {
     unset($baseArray['phpshop_valuta']);
     unset($baseArray['phpshop_modules_key']);
     unset($baseArray['phpshop_payment_systems']);
+    unset($baseArray['phpshop_exchanges_log']);
 
 
     $TRUNCATE = null;

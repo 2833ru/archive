@@ -20,7 +20,7 @@ function OzonRocketWidgetStart() {
 window.addEventListener("message", receiveMessage, false);
 function receiveMessage(event)
 {
-    if (event.origin !== "https://rocket.ozon.ru" && event.origin !== "https://rocket-demo.ozonru.me")
+    if (event.origin !== "https://rocket.ozon.ru" && event.origin !== "https://rocket-demo.ozonru.me" || typeof event.data !== "string")
         return;
     var data = JSON.parse(event.data);
     $("#makeyourchoise").val('DONE');

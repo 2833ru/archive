@@ -85,7 +85,7 @@ class AjaxNotice {
             'id' => $productId,
             'link' => sprintf('/shop/UID_%s.html', $productId),
             'title' => PHPShopString::win_utf8($product->getName()),
-            'image' => sprintf('<a href="/shop/UID_%s.html" title="%s">
+            'image' => sprintf('<a href="'.$GLOBALS['SysValue']['dir']['dir'].'/shop/UID_%s.html" title="%s">
                                    <img class="one-image-slider" src="%s" alt="%s" title="%s"/>
                                 </a>', $productId, PHPShopString::win_utf8($product->getName()), $product->getImage(), PHPShopString::win_utf8($product->getName()), PHPShopString::win_utf8($product->getName()))
         ];

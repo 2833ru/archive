@@ -10,7 +10,7 @@
 </ol>
 
 <div class="page-header hidden-xs">
-    <h2>{Расширенный поиск}</h2>
+    <h1>{Расширенный поиск}</h1>
 </div>
 
 <div class="">

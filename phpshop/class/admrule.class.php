@@ -79,7 +79,7 @@ class PHPShopAdminRule {
         if (!empty($_SERVER['QUERY_STRING']))
             $_SESSION['return'] = $_SERVER['QUERY_STRING'];
 
-        header("Location: /phpshop/admpanel/");
+        header("Location: ".$GLOBALS['SysValue']['dir']['dir']."/phpshop/admpanel/");
         exit("No access");
     }
 

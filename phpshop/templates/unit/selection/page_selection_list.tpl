@@ -9,7 +9,7 @@
 </ol>
 
 <div class="page-header">
-    <h2>@sortName@</h2>
+    <h1>@sortName@</h1>
 </div>
 
 

@@ -2,7 +2,7 @@
 <div class="block" style="background-image: url(@banerImage@);">
     <a href="@banerLink@"> 
 	    <div class="banner-header not-center">
-            <h3 class="block-title">@banerTitle@</h3>
+            <div class="h4 block-title">@banerTitle@</div>
             	@banerContent@
             <span class="slider-icon label">@banerDescription@</span>
         </div>

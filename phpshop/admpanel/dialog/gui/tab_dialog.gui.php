@@ -75,7 +75,8 @@ function tab_dialog() {
                 $count = 0;
 
             if (empty($data_chat[0]['staffid'])) {
-                $row['name'] = $PHPShopOrm->getOne(array('name'), array('staffid' => "='1'", 'chat_id' => '=' . intval($row['chat_id'])))['name'];
+                $row = $PHPShopOrm->select(array('*'), array('staffid' => "='1'", 'chat_id' => '=' . intval($row['chat_id'])),array('order' => 'id desc'),array('limit'=>1));
+                
                 if (empty($row['name']) and $data_chat[0]['bot'] != 'message')
                     continue;
             }

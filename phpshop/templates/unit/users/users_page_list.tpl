@@ -15,7 +15,7 @@
 </ol>
 
 <div class="page-header">
-    <h2>@formaTitle@</h2>
+    <h1>@formaTitle@</h1>
 </div>
 <div class="formaContent">
 @formaContent@ 

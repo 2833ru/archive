@@ -575,9 +575,9 @@ class PHPShopShop extends PHPShopShopCore {
 
         // Подтипы из 1С
         if ($this->PHPShopSystem->ifSerilizeParam('1c_option.update_option'))
-            $Product = $this->select(array('*'), array('uid' => ' IN ("' . @implode('","', $parent) . '")', 'enabled' => "='1'", 'sklad' => "!='1'"), array('order' => 'length(parent),parent'), array('limit' => 100), __FUNCTION__, false, false);
+            $Product = $this->select(array('*'), array('uid' => ' IN ("' . @implode('","', $parent) . '")', 'enabled' => "='1'", 'sklad' => "!='1'"), array('order' => 'num,length(parent),parent'), array('limit' => 100), __FUNCTION__, false, false);
         else
-            $Product = $this->select(array('*'), array('id' => ' IN ("' . @implode('","', $parent) . '")', 'enabled' => "='1'", 'sklad' => "!='1'"), array('order' => 'length(parent),parent'), array('limit' => 100), __FUNCTION__, false, false);
+            $Product = $this->select(array('*'), array('id' => ' IN ("' . @implode('","', $parent) . '")', 'enabled' => "='1'", 'sklad' => "!='1'"), array('order' => 'num,length(parent),parent'), array('limit' => 100), __FUNCTION__, false, false);
 
         // Цена главного товара
         if (is_array($Product) and ! empty($row['price']) and empty($row['priceSklad']) and ( !empty($row['items']) or ( empty($row['items']) and $sklad_status == 1))) {

@@ -1,5 +1,10 @@
 <?php
 
+// PHP Version Warning
+if(floatval(phpversion()) < 5.6){
+   exit("PHP ".phpversion()." не поддерживается. Требуется PHP 5.6 или выше.");
+}
+
 session_start();
 $_classPath = "../";
 include($_classPath . "class/obj.class.php");

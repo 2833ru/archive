@@ -120,7 +120,7 @@ button {
   margin: 0.125rem;
 }
 
-#faset-filter h4 {
+#faset-filter .h4 {
   cursor: pointer;
   font-size: 0.9375rem;
   font-weight: bolder;
@@ -3806,16 +3806,16 @@ ul.main-navbar-top {
   font-weight: bold;
   font-size: 1.75rem;
   line-height: 2.375rem;
-  text-align: center;
   margin-top: 1.5625rem;
   padding-bottom: 0.9375rem;
+  text-align: center;
 }
 
 .page-header a {
   color: #454444;
 }
 
-.breadcrumb + .page-header h2 {
+.breadcrumb + .page-header h1 {
   text-align: left !important;
 }
 
@@ -4716,7 +4716,7 @@ background-size: 0.75rem 0.75rem;height:0.75rem}
   padding-bottom: 0rem;
 }
 
-#faset-filter h4 {
+#faset-filter .h4 {
   font-weight: normal;
   font-size: 1rem;
   padding-top: 0rem;
@@ -4732,7 +4732,7 @@ background-size: 0.75rem 0.75rem;height:0.75rem}
   font-size: 1rem;
 }
 
-#faset-filter-body h4:first-child {
+#faset-filter-body .h4:first-child {
   border-top: 0;
 }
 
@@ -4873,7 +4873,7 @@ margin: -15px -2px 10px;
   border-bottom: 0.0625rem solid #F5F9FF;
 }
 
-.block-heading h3.block-title {
+.block-heading .block-title {
   margin: 0;
   padding: 0.9375rem 0;
   font-size: 1.375rem;
@@ -5760,7 +5760,7 @@ footer {
   padding-bottom: 2.0625rem;
 }
 
-footer h5 {
+footer .h5 {
   font-weight: bold;
   font-size: 1.25rem;
   line-height: 1.5rem;
@@ -6547,4 +6547,12 @@ border-bottom: 1px dashed #61C183;}
     top: 13px;
     right: 10px;
     font-size: 14px
+}
+
+.h4{
+    font-size: 18px;
+}
+
+.vendorenabled img{
+    max-width: 50px;
 }

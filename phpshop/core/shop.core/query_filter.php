@@ -43,6 +43,12 @@ function query_filter($obj) {
         $l = $_REQUEST['l'];
     else
         $l = null;
+    
+    // Логика поиска
+    $filter_logic = (int) $obj->PHPShopSystem->getSerilizeParam('admoption.filter_logic');
+    if(empty($filter_logic))
+        $filter_sort = 'and';
+    else $filter_sort = 'or';
 
     // Сортировка по характеристикам
     if (is_array($v)) {
@@ -55,10 +61,10 @@ function query_filter($obj) {
                     if (PHPShopSecurity::true_num($key) and PHPShopSecurity::true_num($v)) {
                         $obj->selected_filter[$key][] = $v;
                         $hash = $key . "-" . $v;
-                        $sort .= " vendor REGEXP 'i" . $hash . "i' and";
+                        $sort .= " vendor REGEXP 'i" . $hash . "i' ".$filter_sort;
                     }
                 }
-                $sort = substr($sort, 0, strlen($sort) - 3);
+                $sort = substr($sort, 0, strlen($sort) - strlen($filter_sort));
                 $sort .= ")";
             }
             // Обычный отбор []

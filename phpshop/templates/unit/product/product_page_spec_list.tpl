@@ -53,6 +53,5 @@
     <a name="sort"></a>  
 </div>
 <div class="template-product-list">@productPageDis@</div>
-
-
+<div class="clearfix"></div>
 @productPageNav@

@@ -3,7 +3,7 @@
 </ol>
 <div class="clearfix"></div>
 <div class="page-header not-center">
-    <h2>@pageTitle@</h2>
+    <h1>@pageTitle@</h1>
 </div>
 
 @catContent@
@@ -11,7 +11,7 @@
 <p>@pageContent@</p></div>
 <div class="clearfix"></div>
 <hr class="@php __hide('pageLast'); php@">
-<h3 class="@php __hide('pageLast'); php@  ">{Интересно почитать}</h3>
+<div class="h4 @php __hide('pageLast'); php@  ">{Интересно почитать}</div
 <br>
 <div class="grid row">@pageLast@</div>
 
