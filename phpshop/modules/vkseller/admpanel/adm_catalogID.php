@@ -23,7 +23,7 @@ function addVksellerTab($data) {
             $tree_value[] = array(__('Ничего не выбрано'), 0, $data['category_vkseller']);
             if (is_array($data_vk)) {
                 foreach ($data_vk as $row) {
-                    $tree_value[] = [PHPShopString::utf8_win1251($row['section']['name'], true) . ' &rarr; ' . PHPShopString::utf8_win1251($row['name'], true), $row['id'], $data['category_vkseller']];
+                    $tree_value[] = [PHPShopString::utf8_win1251($row['section']['name']) . ' &rarr; ' . PHPShopString::utf8_win1251($row['name']), $row['id'], $data['category_vkseller']];
                 }
             }
 

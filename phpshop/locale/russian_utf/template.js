@@ -26,7 +26,15 @@ var locale = {
         hours:"часов",
         minutes:"минут",
         seconds:"секунд"
-    }
+    },
+	cdek: {
+        express_delivery: "Курьерская доставка",
+		pickup_code: "Код выбранного ПВЗ",
+		city: "город",
+		pickup_address: "адрес выбранного ПВЗ",
+		pickup_phone_number: "телефон выбранного ПВЗ",
+		pickup: "ПВЗ",
+	}
     
 };
 

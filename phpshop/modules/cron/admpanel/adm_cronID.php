@@ -102,7 +102,7 @@ function actionStart() {
     $Tab1 = $PHPShopGUI->setField("Название задачи:", $PHPShopGUI->setInput("text.requared", "name_new", $data['name']));
     $Tab1 .= $PHPShopGUI->setField("Запускаемый Файл:", $PHPShopGUI->setInputArg(array('type' => "text.requared", 'name' => "path_new", 'size' => '70%', 'float' => 'left', 'placeholder' => 'phpshop/modules/cron/sample/testcron.php', 'value' => $data['path'])) . '&nbsp;' . $PHPShopGUI->setSelect('work', $work, '29%', true, false, false, false, false, false, false, 'selectpicker', '$(\'input[name=path_new]\').val(this.value);'));
     $Tab1 .= $PHPShopGUI->setField("Статус", $PHPShopGUI->setCheckbox("enabled_new", 1, "Включить", $data['enabled']));
-    $Tab1 .= $PHPShopGUI->setField("Кол-во запусков в день", $PHPShopGUI->setSelect('execute_day_num_new', $PHPShopGUI->setSelectValue($data['execute_day_num']), 70));
+    $Tab1 .= $PHPShopGUI->setField("Кол-во запусков в день", $PHPShopGUI->setInputText(null,'execute_day_num_new', (int)$data['execute_day_num'], 70));
     $Tab1 .= $PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'));
 
 

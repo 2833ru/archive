@@ -954,9 +954,6 @@ class PHPShopGUI {
                 // Язык
                 $title[$k] = $this->__($title[$k], $locale);
 
-                //if (!strpos($title[$k], ':') and ! empty($title[$k]))
-                //$title[$k] .= ':';
-
                 $CODE .= '<label class="col-sm-' . intval(@$size[$k][0]) . ' ' . $label . '">' . @$title[$k] . @$help[$k] . '</label><div class="col-sm-' . intval(@$size[$k][1]) . '">' . $content_value . '</div>';
             }
             $CODE .= ' 
@@ -1084,15 +1081,18 @@ class PHPShopGUI {
         if (empty($id)) {
             $id = $name;
         }
+        
+        if($name == "editID" or $name == "saveID" or $name =='delID')
+            $value=$this->__($value);
 
         if (!empty($description) or ! empty($caption)) {
 
             $CODE = ' <div class="input-group" style="' . $style . '">';
 
             if (!empty($caption))
-                $CODE .= ' <div class="input-group-addon input-sm">' . __($caption, $locale) . '</div>';
+                $CODE .= ' <div class="input-group-addon input-sm">' . $this->__($caption, $locale) . '</div>';
 
-            $CODE .= '<input class="' . $class_array[$type] . ' ' . $class . '" type="' . $type . '" value="' . $value . '"  name="' . $name . '" id="' . $id . '" placeholder="' . $this->__($placeholder, $locale) . '" ' . $required . '>';
+            $CODE .= '<input class="' . $class_array[$type] . ' ' . $class . '" type="' . $type . '" value="' .$value . '"  name="' . $name . '" id="' . $id . '" placeholder="' . $this->__($placeholder, $locale) . '" ' . $required . '>';
 
             if (!empty($description))
                 $CODE .= '<div class="input-group-addon input-sm">' . $description . '</div>';
@@ -1243,7 +1243,7 @@ class PHPShopGUI {
             //else
             //$grid = 'block-grid';
 
-            $this->addTabName .= '<li role="presentation" class="' . $active . '"><a href="#tabs-' . $this->tab_key_uid . '" aria-controls="tabs-' . $this->tab_key_uid . '" role="tab" data-toggle="tab" data-id="' . $val[0] . '">' . __($val[0]) . '</a></li>';
+            $this->addTabName .= '<li role="presentation" class="' . $active . '"><a href="#tabs-' . $this->tab_key_uid . '" aria-controls="tabs-' . $this->tab_key_uid . '" role="tab" data-toggle="tab" data-id="' . $this->__($val[0]) . '">' . $this->__($val[0]) . '</a></li>';
             $this->addTabContent .= '<div role="tabpanel" class="tab-pane fade" id="tabs-' . $this->tab_key_uid . '">' . $hr . '<div class="' . $grid . '">' . $val[1] . '</div></div>';
 
             $this->tab_key++;
@@ -1313,7 +1313,7 @@ class PHPShopGUI {
             if (empty($this->collapse_count) and ! defined('SkinName'))
                 $val[1] = $this->setCollapse('Настройки', $val[1]);
 
-            $name .= '<li role="presentation" class="' . $active . '"><a href="' . $href . '" aria-controls="tabs-' . $this->tab_key . '" role="tab" ' . $toggle . ' data-id="' . $val[0] . '">' . $this->__($val[0]) . '</a></li>';
+            $name .= '<li role="presentation" class="' . $active . '"><a href="' . $href . '" aria-controls="tabs-' . $this->tab_key . '" role="tab" ' . $toggle . ' data-id="' . $this->__($val[0]) . '">' . $this->__($val[0]) . '</a></li>';
             $content .= '<div role="tabpanel" class="tab-pane ' . $active . ' fade" id="tabs-' . $this->tab_key . '">' . $hr . '<div class="' . $grid . '">' . $val[1] . '</div></div>';
 
             $this->tab_key++;
@@ -1670,13 +1670,12 @@ class PHPShopGUI {
      * @param string $value значение
      * @param string $caption описание
      * @param mixed $checked checked
-     * @param string $onchange имя javascript функции по экшену onchange
+     * @param bool $locale локализация вкл/выкл
      * @param string $class имя класса css
      * @param array $opt массив дополнительных параметров [data-x]
-     * @param bool $locale локализация вкл/выкл
      * @return string
      */
-    function setRadio($name, $value, $caption, $checked = "checked", $onchange = false, $class = false, $opt = false, $locale = true) {
+    function setRadio($name, $value, $caption, $checked = "checked", $locale = true, $class = false, $opt = false) {
 
         // Автовыделение 
         if ($value == $checked)
@@ -1698,7 +1697,7 @@ class PHPShopGUI {
             $onchange = 'onchange="' . $onchange . '"';
 
         $CODE = '
-	 <div class="radio-inline ' . $class . '"><label><input type="radio" value="' . $value . '" name="' . $name . '" id="' . $name . '" ' . $checked . ' ' . $onchange . ' ' . $add_option . '>' . $this->__($caption, $locale) . '<i class="fa fa-circle-o small"></i></label></div>
+	 <div class="radio-inline ' . $class . '"><label><input type="radio" value="' . $value . '" name="' . $name . '" id="' . $name . '" ' . $checked . '  ' . $add_option . '>' . $this->__($caption, $locale) . '<i class="fa fa-circle-o small"></i></label></div>
 	 ';
         return $CODE;
     }
@@ -2322,7 +2321,7 @@ class PHPShopInterface extends PHPShopGUI {
 
                         $row = '<a href="' . $val['link'] . '" ' . $popover . ' ' . $modal . ' class="' . $val['class'] . '" target="' . $val['target'] . '" title="' . $val['title'] . '" data-id="' . $val['id'] . '">' . $val['name'] . '</a>' . $val['addon'];
                     } else
-                        $row = $val['name'];
+                        $row = $val['name']. $val['addon'];
 
                     // id
                     if (!empty($val['id']))

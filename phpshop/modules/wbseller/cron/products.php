@@ -71,7 +71,7 @@ if (is_array($data)) {
 
         $stocks[] = [
             'barcode_wb' => (string) $prod['barcode_wb'],
-            'uid' => (string) $prod['uid'],
+            'uid' => (string) PHPShopString::win_utf8($prod['uid']),
             'enabled' => (int) $prod['enabled'],
             'items' => (int) $prod['items'],
             'price' => (int) $WbSeller->price($price, $prod['baseinputvaluta']),

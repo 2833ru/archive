@@ -54,7 +54,7 @@ function actionStart() {
                continue;
 
 
-            $PHPShopInterface->setRow(['name' => $row['id'], 'link' => '?path=modules.dir.vkseller.order&id=' . $row['id'] . '&user=' . $row['user_id']], __($status_array[$row['status']]),PHPShopDate::get($row['date'],true), PHPShopString::utf8_win1251($row['recipient']['name'],true),PHPShopString::utf8_win1251($row['recipient']['phone'],true),  ['name'=>number_format(round($row['total_price']['amount'] / 100), 0, '', ' ') . $currency, 'link' => '?path=modules.dir.vkseller.order&id=' . $row['id'] . '&user=' . $row['user_id'],'align'=>'right']);
+            $PHPShopInterface->setRow(['name' => $row['id'], 'link' => '?path=modules.dir.vkseller.order&id=' . $row['id'] . '&user=' . $row['user_id']], __($status_array[$row['status']]),PHPShopDate::get($row['date'],true), PHPShopString::utf8_win1251($row['recipient']['name']),PHPShopString::utf8_win1251($row['recipient']['phone'],true),  ['name'=>number_format(round($row['total_price']['amount'] / 100), 0, '', ' ') . $currency, 'link' => '?path=modules.dir.vkseller.order&id=' . $row['id'] . '&user=' . $row['user_id'],'align'=>'right']);
         }
 
     $order_status_value[] = array(__('Новые заказы'), 'new', $_GET['status']);

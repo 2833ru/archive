@@ -69,6 +69,6 @@ function PHPShopYml_vkseller_hook($obj) {
 $addHandler = [
     'setProducts' => 'setProducts_vkseller_hook',
     '__construct' => 'PHPShopYml_vkseller_hook',
-    'setCategories' => 'setCategories_vkseller_hook'
+    '#setCategories' => 'setCategories_vkseller_hook'
 ];
 ?>

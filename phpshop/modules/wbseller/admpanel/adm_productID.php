@@ -75,6 +75,30 @@ function WbsellerUpdate() {
 
         // Склад
         $WbSeller->setProductStock([$data]);
+        
+        // Цены
+        $price = $data['price'];
+
+        if (!empty($data['price_wb'])) {
+            $price = $data['price_wb'];
+        } elseif (!empty($data['price' . (int) $data['price']])) {
+            $price = $data['price' . (int) $WbSeller->price];
+        }
+
+        if ($WbSeller->fee > 0) {
+            if ($WbSeller->fee_type == 1) {
+                $price = $price - ($price * $WbSeller->fee / 100);
+            } else {
+                $price = $price + ($price * $WbSeller->fee / 100);
+            }
+        }
+        
+        $prices[] = [
+            'nmId' => (int) $data['export_wb_id'],
+            'price' => (int) $WbSeller->price($price, $data['baseinputvaluta']),
+        ];
+        
+        $WbSeller->sendPrices($prices);
 
         // Информация
         if (empty($data['export_wb_id'])) {

@@ -18,7 +18,8 @@ function modulesSubMenu($subpath) {
         $path = $data['path'];
         $menu = "../modules/" . $path . "/install/module.xml";
         $db = xml2array($menu, false, true);
-
+        if (!empty($_SESSION['support']) and $_SESSION['support'] < $db['sign'])
+            header('Location: ./admin.php?path=modules');
         if (is_array($db['adminmenu']['podmenu'][0])) {
             foreach ($db['adminmenu']['podmenu'] as $val) {
 
@@ -37,10 +38,10 @@ function modulesSubMenu($subpath) {
             $TitlePage = $db['adminmenu']['podmenu']['podmenu_name'];
         }
 
-        $TitlePage.= ' - ' . $db['name'];
+        $TitlePage .= ' - ' . $db['name'];
     }
 
-    $TitlePage=__($TitlePage);
+    $TitlePage = __($TitlePage);
 
     $action_select['|'] = array(
         'name' => '|',
@@ -74,7 +75,7 @@ $PHPShopInterface->action_button['Добавить +'] = array(
     'class' => 'btn btn-default btn-sm navbar-btn',
     'type' => 'button',
     'icon' => 'glyphicon glyphicon-plus',
-    'tooltip' => 'data-toggle="tooltip" data-placement="left" title="'.__('Добавить').'"'
+    'tooltip' => 'data-toggle="tooltip" data-placement="left" title="' . __('Добавить') . '"'
 );
 
 $PHPShopInterface->field_col = 2;

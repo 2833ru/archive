@@ -628,11 +628,11 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_robokassa_system` (
   `merchant_key` varchar(64) NOT NULL default '',
   `merchant_skey` varchar(64) NOT NULL default '',
   `dev_mode` enum ('0','1') default '0',
-  `version` varchar(64) DEFAULT '1.3',
+  `version` varchar(64) DEFAULT '1.0',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-INSERT INTO `phpshop_modules_robokassa_system` (`id`, `status`, `title`, `title_sub`, `merchant_login`, `merchant_key`, `merchant_skey`, `version`, `dev_mode`) VALUES (1, 0, 'Оплатить заказ', 'Заказ находится на ручной проверке.', 'phpshop-test', 'GVLmxkec34f90GSdraZ0', 'eBQ8rxUXwbg6Al361uKE', '1.3', '1');
+INSERT INTO `phpshop_modules_robokassa_system` (`id`, `status`, `title`, `title_sub`, `merchant_login`, `merchant_key`, `merchant_skey`, `version`, `dev_mode`) VALUES (1, 0, 'Оплатить заказ', 'Заказ находится на ручной проверке.', 'phpshop-test', 'GVLmxkec34f90GSdraZ0', 'eBQ8rxUXwbg6Al361uKE', '1.4', '1');
 
 INSERT INTO `phpshop_payment_systems` (`id`, `name`, `path`, `enabled`, `num`, `message`, `message_header`, `yur_data_flag`, `icon`) VALUES
 (10020, 'Visa, Mastercard, МИР, ЯPay (Robokassa)', 'modules', '0', 0, '<p>Ваш заказ оплачен!</p>', 'Спасибо', '', '/UserFiles/Image/trial/credit.png');
@@ -941,10 +941,12 @@ CREATE TABLE IF NOT EXISTS `phpshop_products` (
   `height` varchar(64) DEFAULT '',
   `price_purch` float DEFAULT '0',
   `yandex_vat_code` int(11) default 0,
+  `external_code` varchar(64) DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `category` (`category`),
   KEY `enabled` (`enabled`),
-  KEY `uid` (`uid`)
+  KEY `uid` (`uid`),
+  KEY `external_code` (`external_code`)
 ) ENGINE=MyISAM AUTO_INCREMENT=22 DEFAULT CHARSET=cp1251;
 
 INSERT INTO `phpshop_products` (`id`, `category`, `name`, `description`, `content`, `price`, `price_n`, `sklad`, `p_enabled`, `enabled`, `uid`, `spec`, `odnotip`, `vendor`, `vendor_array`, `yml`, `num`, `newtip`, `title`, `title_enabled`, `datas`, `page`, `user`, `descrip`, `descrip_enabled`, `title_shablon`, `descrip_shablon`, `keywords`, `keywords_enabled`, `keywords_shablon`, `pic_small`, `pic_big`, `yml_bid_array`, `parent_enabled`, `parent`, `items`, `weight`, `price2`, `price3`, `price4`, `price5`, `files`, `baseinputvaluta`, `ed_izm`, `dop_cat`, `rate`, `rate_count`, `price_search`, `parent2`, `color`, `vendor_code`, `vendor_name`, `productday`, `hit`, `prod_seo_name`, `prod_seo_name_old`, `length`, `width`, `height`, `price_purch`) VALUES

@@ -115,7 +115,8 @@ class PHPShopProduct extends PHPShopObj {
         $PHPShopOrm->debug = false;
 
         $product_update = [
-            'items_new' => $this->objRow['items']
+            'items_new' => $this->objRow['items'],
+            'datas_new' => time()
         ];
         if(!empty($warehouseId)) {
             $product_update['items' . $warehouseId . '_new'] = $this->objRow['items' . $warehouseId];

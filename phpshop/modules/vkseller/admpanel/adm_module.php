@@ -104,7 +104,7 @@ function actionStart() {
 
     if ($data['model'] === 'API') {
         $PHPShopGUI->action_button['Ёкспортировать данные'] = [
-            'name' => 'Ёкспортировать данные',
+            'name' => __('Ёкспортировать данные'),
             'class' => 'btn btn-default btn-sm navbar-btn vk-export',
             'type' => 'button',
             'icon' => 'glyphicon glyphicon-export'

@@ -129,11 +129,11 @@ function actionStart() {
         $icon = $PHPShopGUI->setIcon('./images/no_photo.gif', "pic", true, array('load' => false, 'server' => true, 'url' => true, 'view' => true));
 
 
-    $Tab1 = $PHPShopGUI->setField("Название", $PHPShopGUI->setTextarea('name_new', PHPShopString::utf8_win1251($product_info['title'], true)));
-    $Tab1 .= $PHPShopGUI->setField("Артикул", $PHPShopGUI->setInputText(null, 'uid_new', PHPShopString::utf8_win1251($product_info['sku'], true)));
+    $Tab1 = $PHPShopGUI->setField("Название", $PHPShopGUI->setTextarea('name_new', PHPShopString::utf8_win1251($product_info['title'])));
+    $Tab1 .= $PHPShopGUI->setField("Артикул", $PHPShopGUI->setInputText(null, 'uid_new', PHPShopString::utf8_win1251($product_info['sku'])));
     $Tab1 .= $PHPShopGUI->setField("Изображения", $icon);
     $Tab1 .= $PHPShopGUI->setField("VK ID", $PHPShopGUI->setText($PHPShopGUI->setLink('https://vk.com/market-' . $VkSeller->owner_id . '?screen=cart&w=product-' . $VkSeller->owner_id . '_' . $product_info['id'] . '%2Fquery', $product_info['id'])) . $PHPShopGUI->setInput("hidden", "export_wb_id_new", $product_info['nmID']));
-    $Tab1 .= $PHPShopGUI->setField("Категория в ВКонтакте", $PHPShopGUI->setText(PHPShopString::utf8_win1251($product_info['category']['section']['name'], true) . ' &rarr; ' . PHPShopString::utf8_win1251($product_info['category']['name'], true)) . $PHPShopGUI->setInput("hidden", "category_vkseller", $product_info['category']['id']));
+    $Tab1 .= $PHPShopGUI->setField("Категория в ВКонтакте", $PHPShopGUI->setText(PHPShopString::utf8_win1251($product_info['category']['section']['name']) . ' &rarr; ' . PHPShopString::utf8_win1251($product_info['category']['name']), "left", false, false) . $PHPShopGUI->setInput("hidden", "category_vkseller", $product_info['category']['id']));
 
     // Выбор каталога
     $Tab1 .= $PHPShopGUI->setField("Размещение", $tree_select);
@@ -163,7 +163,7 @@ function actionStart() {
     $valuta_area = null;
     if (is_array($valuta_array))
         foreach ($valuta_array as $val) {
-            $valuta_area .= $PHPShopGUI->setRadio('baseinputvaluta_new', $val['id'], $val['name'], $baseinputvaluta);
+            $valuta_area .= $PHPShopGUI->setRadio('baseinputvaluta_new', $val['id'], $val['name'], $baseinputvaluta,false);
         }
 
     // Валюта

@@ -5,7 +5,6 @@
     <description>Модуль продаж через ВКонтакте.</description>
     <category>marketplaces</category>
     <sign>1682684488</sign>
-    <status>New</status>
     <faqlink>https://docs.phpshop.ru/moduli/marketpleisy/vk</faqlink>
     <adminmenu>
         <title>VK Товары</title>

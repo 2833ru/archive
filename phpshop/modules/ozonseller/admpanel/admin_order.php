@@ -10,7 +10,7 @@ function actionStart() {
     $PHPShopInterface->addJSFiles('./js/bootstrap-datetimepicker.min.js', '../modules/ozonseller/admpanel/gui/order.gui.js');
     $PHPShopInterface->addCSSFiles('./css/bootstrap-datetimepicker.min.css');
     $PHPShopInterface->setActionPanel($TitlePage, $select_name, false);
-    $PHPShopInterface->setCaption(array("&#8470; Заказа", "15%"), array("Тип", "10%"), array("Статус", "15%"), array("Поступил", "15%"), array("Обработан", "15%"), array("Доставка", "15%"), array("Итого", "10%", array('align' => 'right')));
+    $PHPShopInterface->setCaption(array("&#8470; Заказа", "7%"), array("Иконка", "7%"),  array("Наименование", "30%"), array("Обработан", "15%"),  array("Итого", "10%", array('align' => 'right')));
 
     // Знак рубля
     if ($PHPShopSystem->getDefaultValutaIso() == 'RUB' or $PHPShopSystem->getDefaultValutaIso() == 'RUR')
@@ -21,7 +21,7 @@ function actionStart() {
     if (isset($_GET['date_start']))
         $date_start = $_GET['date_start'];
     else
-        $date_start = PHPShopDate::get((time() - 2592000), false, true);
+        $date_start = PHPShopDate::get((time() - 2592000 / 30), false, true);
 
     if (isset($_GET['date_end']))
         $date_end = $_GET['date_end'];
@@ -38,34 +38,15 @@ function actionStart() {
             $ordersFbs['result']['postings'][$k]['type'] = 'fbs';
     }
 
-    // Отладка FBS
-    /*
-      $ordersFbs['result'][] = [
-      'order_number' => '56274213-0001-1',
-      'in_process_at' => '03.03.2022',
-      'addressee' => ['name' => 'Денис', 'phone' => '98562853696'],
-      'tracking_number'=>'',
-      'product' => [['price' => 3000, 'quantity' => 1]]
-      ]; */
-
-
     // Заказы FBO
     $ordersFbo = $OzonSeller->getOrderListFbo($date_start, $date_end, $_GET['status']);
 
-    // Отладка FBO
-    /*
-      $ordersFbo['result'][] = [
-      'posting_number' => '56274213-0001-2',
-      'in_process_at' => '08.03.2022',
-      'addressee' => ['name' => 'Семен', 'phone' => '98562853696'],
-      'products' => [['price' => 5000, 'quantity' => 1]]
-      ]; */
-
     if (is_array($ordersFbs['result']['postings']) and is_array($ordersFbo['result']))
         $orders = array_merge($ordersFbs['result']['postings'], $ordersFbo['result']);
-    elseif(is_array($ordersFbs['result']['postings']))
-        $orders =$ordersFbs['result']['postings'];
-    else $orders =$ordersFbo['result'];
+    elseif (is_array($ordersFbs['result']['postings']))
+        $orders = $ordersFbs['result']['postings'];
+    else
+        $orders = $ordersFbo['result'];
 
     $total = 0;
 
@@ -77,6 +58,7 @@ function actionStart() {
                 continue;
 
             $sum = 0;
+            $icon = null;
             if (is_array($row['products']))
                 foreach ($row['products'] as $product)
                     $sum += $product['price'] * $product['quantity'];
@@ -86,9 +68,31 @@ function actionStart() {
             else
                 $type = "FBO";
 
+            $prod = (new PHPShopOrm($GLOBALS['SysValue']['base']['products']))->getOne(['id,uid,name,pic_small'], [$type => '="' . (string) PHPShopString::utf8_win1251($product['offer_id']) . '"']);
+
+            if (empty($prod)) {
+                $product_info = $OzonSeller->getProductAttribures($product['offer_id'], 'offer_id')['result'][0];
+                $image = $product_info['images'][0]['file_name'] ;
+                $link = 'https://www.ozon.ru/product/' . $product['sku'];
+                $prod['name']=PHPShopString::utf8_win1251($product_info['name']);
+                $uid = '<div class="text-muted">' . __('Арт') . ' ' . PHPShopString::utf8_win1251($product['offer_id']) . '</div>';
+            } else {
+                $image = $product['pic_small'];
+                $link = '?path=product&id=' . $product['id'] . '&return=modules.dir.ozonseller';
+                $uid = '<div class="text-muted">' . __('Арт') . ' ' . $prod['uid'] . '</div>';
+            }
+            
+            $status = '<div class="text-muted">' . __($OzonSeller->getStatus($row['status'])) . '</div>';
+
+           if (!empty($image))
+                $icon .= '<img src="' . $image . '" onerror="this.onerror = null;this.src = \'./images/no_photo.gif\'" class="media-object">';
+            else
+                $icon .= '<img class="media-object" src="./images/no_photo.gif">';
+            
+
             $total += $sum;
 
-            $PHPShopInterface->setRow(['name' => $row['posting_number'], 'link' => '?path=modules.dir.ozonseller.order&id=' . $row['posting_number'] . '&type=' . $type], $type, __($OzonSeller->getStatus($row['status'])), $OzonSeller->getTime($row['created_at']), $OzonSeller->getTime($row['in_process_at']), $OzonSeller->getTime($row['shipment_date']), $sum . $currency);
+            $PHPShopInterface->setRow(['name' => $row['posting_number'], 'link' => '?path=modules.dir.ozonseller.order&id=' . $row['posting_number'] . '&type=' . $type], $icon, array('name' => $prod['name'], 'addon' => $uid, 'link' => $link,'target'=>'_blank'), ['name'=>$OzonSeller->getTime($row['in_process_at']),'addon'=>$status],  $sum . $currency);
         }
 
     $order_status_value[] = array(__('Все заказы'), null, $_GET['status']);

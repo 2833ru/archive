@@ -12,6 +12,7 @@ function setProducts_ozonseller_hook($obj, $data) {
 
         // price columns
         $price = $data['val']['price'];
+        $oldprice = $data['val']['oldprice'];
         $fee = 0;
 
         if (!empty($data['val']['price_ozon'])) {
@@ -24,15 +25,17 @@ function setProducts_ozonseller_hook($obj, $data) {
         }
 
         if ($fee > 0) {
-
             if ($obj->ozon_options['fee_type'] == 1) {
                 $price = $price - ($price * $fee / 100);
+                $oldprice = $oldprice - ($oldprice * $fee / 100);
             } else {
                 $price = $price + ($price * $fee / 100);
+                $oldprice = $oldprice + ($oldprice * $fee / 100);
             }
         }
 
-        $data['xml'] = str_replace('<price>' . $data['val']['price'] . '</price>', '<price>' . $price . '</price>', $data['xml']);
+        $data['xml'] = str_replace('<price>' . $data['val']['price'] . '</price>', '<price>' . $price . '</price><oldprice>' . $oldprice . '</oldprice>', $data['xml']);
+        
 
         $outlets = null;
         if (is_array($obj->warehouse)){

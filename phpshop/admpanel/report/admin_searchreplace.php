@@ -3,10 +3,10 @@
 $TitlePage = __("Переадресация поиска");
 
 function actionStart() {
-    global $PHPShopInterface;
+    global $PHPShopInterface,$TitlePage;
 
     $PHPShopInterface->action_button['Журнал'] = array(
-        'name' => 'Журнал',
+        'name' => __('Журнал'),
         'action' => 'report.searchjurnal',
         'class' => 'btn btn-default btn-sm navbar-btn btn-action-panel',
         'type' => 'button',
@@ -19,10 +19,10 @@ function actionStart() {
         'class' => 'btn btn-default btn-sm navbar-btn',
         'type' => 'button',
         'icon' => 'glyphicon glyphicon-plus',
-        'tooltip' => 'data-toggle="tooltip" data-placement="left" title="Добавить Переадресацию"'
+        'tooltip' => 'data-toggle="tooltip" data-placement="left" title="'.__('Добавить Переадресацию').'"'
     );
 
-    $PHPShopInterface->setActionPanel(__("Переадресация поиска"), array('Удалить выбранные'), array('Добавить Переадресацию', 'Журнал'));
+    $PHPShopInterface->setActionPanel($TitlePage, array('Удалить выбранные'), array('Добавить Переадресацию', 'Журнал'));
     $PHPShopInterface->setCaption(array(null, "2%"), array("Запрос", "30%"), array("Товары", "40%"), array("Каталог", "15%"), array("", "10%"), array("Статус", "10%"));
 
 

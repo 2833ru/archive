@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
     <version>1.2</version>
-    <name>Генерация превью картинок</name>
+    <name>Пакетная обработка фото на сервере</name>
     <faqlink>https://docs.phpshop.ru/moduli/dizain/thumbnail</faqlink>
-    <description>Генерация новых превью картинок товаров с учетом формата сжатия Webp. </description>
+    <description>Пакетная обработка фотографий на сервере по настройкам в меню Настройки - Изображения.</description>
     <category>template</category>
     <sign>1684841801</sign>
     <adminmenu>
-        <title>Генерация превью картинок</title>
+        <title>Пакетная обработка фото</title>
         <capability>true</capability>
     </adminmenu>
 </module>

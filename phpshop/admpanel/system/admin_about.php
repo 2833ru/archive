@@ -10,6 +10,7 @@ function actionStart() {
     @$License = parse_ini_file_true("../../license/" . $licFile, 1);
 
     $TechPodUntilUnixTime = $License['License']['SupportExpires'];
+    $_SESSION['support'] = $TechPodUntilUnixTime;
     if (is_numeric($TechPodUntilUnixTime))
         $TechPodUntil = PHPShopDate::get($TechPodUntilUnixTime);
     else

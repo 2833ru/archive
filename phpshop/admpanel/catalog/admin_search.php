@@ -58,7 +58,7 @@ function viewCatalog($name = "search_category", $category = 0) {
 
     $GLOBALS['tree_array'] = &$tree_array;
 
-    $tree_select = '<select id="search-select-category" class="form-control input-sm" name="' . $name . '" style="width:100%">
+    $tree_select = '<select id="search-select-category" class="form-control input-sm" name="' . $name . '" style="max-width:280px">
         <option value=""> - ' . __('Все категории') . ' - </option>';
 
     if (is_array($tree_array[0]['sub']))

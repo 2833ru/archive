@@ -21,7 +21,7 @@ function actionStart() {
         'class' => 'btn btn-default btn-sm navbar-btn',
         'type' => 'button',
         'icon' => 'glyphicon glyphicon-plus',
-        'tooltip' => 'data-toggle="tooltip" data-placement="left" title="Добавить характеристику" data-cat="' . $_GET['cat'] . '"'
+        'tooltip' => 'data-toggle="tooltip" data-placement="left" title="'.__('Добавить характеристику').'" data-cat="' . $_GET['cat'] . '"'
     );
 
     $PHPShopInterface->action_select['Добавить группу'] = array(

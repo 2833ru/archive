@@ -4,7 +4,7 @@
  * Авторизация для 1С
  * @package PHPShopExchange
  * @author PHPShop Software
- * @version 2.3
+ * @version 2.4
  */
 // UTF-8 Env Fix
 if (ini_get("mbstring.func_overload") > 0) {
@@ -23,21 +23,30 @@ $PHPShopBase = new PHPShopBase($_classPath . "/inc/config.ini", true, true);
 $PHPShopModules = new PHPShopModules($_classPath . "modules/");
 
 // Подключение хука
-function loadHooks() {
+function loadHooks($file = false) {
 
     $path = "hook";
-    if (@$dh = opendir('hook')) {
-        while (($file = readdir($dh)) !== false) {
-            $fstat = explode(".", $file);
-            if ($fstat[1] == "php" and ! strstr($fstat[0], '#'))
-                include_once($path . '/' . $file);
+
+    if (empty($file)) {
+
+        if (@$dh = opendir('hook')) {
+            while (($file = readdir($dh)) !== false) {
+                $fstat = explode(".", $file);
+                if ($fstat[1] == "php" and ! strstr($fstat[0], '#'))
+                    include_once($path . '/' . $file);
+            }
+            closedir($dh);
         }
-        closedir($dh);
-    }
+    } else
+        include_once($path . '/' . $file);
 }
 
 // Подключение хука
 loadHooks();
+
+// CML
+if (!empty($_GET['cml']))
+   loadHooks('#cml.php');
 
 /**
  * Авторизация пользователей
@@ -56,7 +65,7 @@ class UserChek {
 
     function __construct($logPHPSHOP, $pasPHPSHOP, $tokenPHPSHOP) {
         global $PHPShopBase;
-        
+
         $this->logPHPSHOP = $logPHPSHOP;
         $this->pasPHPSHOP = $this->myDecode($pasPHPSHOP);
         $this->tokenPHPSHOP = $tokenPHPSHOP;
@@ -72,15 +81,15 @@ class UserChek {
         $sql = "select * from " . $table_name . " where enabled='1'";
         @$result = mysqli_query($link_db, $sql);
         while (@$row = mysqli_fetch_array(@$result)) {
-            
+
             // Логин и пароль
             if ($this->logPHPSHOP == $row['login']) {
-                
+
                 if ($hasher->CheckPassword($this->pasPHPSHOP, $row['password'])) {
                     $this->OkFlag = 1;
                 }
             }
-            
+
             // Токен
             if ($this->tokenPHPSHOP != '' and $this->tokenPHPSHOP == $row['token']) {
                 $this->OkFlag = 1;

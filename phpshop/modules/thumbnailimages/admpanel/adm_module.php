@@ -112,7 +112,7 @@ function actionStart() {
     $PHPShopGUI->field_col = 4;
     
     $PHPShopGUI->action_button['Ñãåíåğèğîâàòü ïğåâüş'] = [
-        'name' => 'Ñãåíåğèğîâàòü ïğåâüş',
+        'name' => __('Ñãåíåğèğîâàòü ïğåâüş'),
         'action' => 'saveIDthumb',
         'class' => 'btn  btn-default btn-sm navbar-btn',
         'type' => 'submit',
@@ -120,7 +120,7 @@ function actionStart() {
     ];
 
     $PHPShopGUI->action_button['Ñãåíåğèğîâàòü áîëüøèå'] = [
-        'name' => 'Ñãåíåğèğîâàòü áîëüøèå',
+        'name' => __('Ñãåíåğèğîâàòü áîëüøèå'),
         'action' => 'saveIDorig',
         'class' => 'btn  btn-default btn-sm navbar-btn',
         'type' => 'submit',

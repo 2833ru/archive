@@ -7,7 +7,7 @@ PHPShopObj::loadClass('category');
 
 // Построение дерева категорий
 function treegenerator($array, $i, $curent) {
-    global $tree_array,$CategoryArray;
+    global $tree_array, $CategoryArray;
     $del = '&brvbar;&nbsp;&nbsp;&nbsp;&nbsp;';
     $tree_select = $tree_select_dop = $check = false;
 
@@ -59,7 +59,7 @@ function actionStart() {
         );
 
 
-    $PHPShopGUI->setActionPanel(__('Товар') . ': ' . PHPShopString::utf8_win1251($product_info['name'], true) . ' [ID ' . $_GET['id'] . ']', false, array('Загрузить товар'));
+    $PHPShopGUI->setActionPanel(__('Товар') . ': ' . PHPShopString::utf8_win1251($product_info['name']) . ' [ID ' . $_GET['id'] . ']', false, array('Загрузить товар'));
 
     // Знак рубля
     if ($PHPShopSystem->getDefaultValutaIso() == 'RUB' or $PHPShopSystem->getDefaultValutaIso() == 'RUR')
@@ -75,7 +75,7 @@ function actionStart() {
 
 
     $PHPShopCategoryArray = new PHPShopCategoryArray(false, ["id", "name", "parent_to", "category_ozonseller"]);
-    $GLOBALS['CategoryArray'] =$CategoryArray = $PHPShopCategoryArray->getArray();
+    $GLOBALS['CategoryArray'] = $CategoryArray = $PHPShopCategoryArray->getArray();
     $GLOBALS['count'] = count($CategoryArray);
 
     $CategoryArray[0]['name'] = '- ' . __('Выбрать каталог') . ' -';
@@ -129,12 +129,12 @@ function actionStart() {
         $icon = $PHPShopGUI->setIcon('./images/no_photo.gif', "pic", true, array('load' => false, 'server' => true, 'url' => true, 'view' => true));
 
 
-    $Tab1 = $PHPShopGUI->setField("Название", $PHPShopGUI->setTextarea('name_new', PHPShopString::utf8_win1251($product_info['name'], true)));
-    $Tab1 .= $PHPShopGUI->setField("Артикул", $PHPShopGUI->setInputText(null, 'uid_new', $product_info['offer_id']));
+    $Tab1 = $PHPShopGUI->setField("Название", $PHPShopGUI->setTextarea('name_new', PHPShopString::utf8_win1251($product_info['name'])));
+    $Tab1 .= $PHPShopGUI->setField("Артикул", $PHPShopGUI->setInputText(null, 'uid_new', PHPShopString::utf8_win1251($product_info['offer_id'])));
     $Tab1 .= $PHPShopGUI->setField("Изображение", $icon);
-    $Tab1 .= $PHPShopGUI->setField("OZON ID", $PHPShopGUI->setText($PHPShopGUI->setLink('https://www.ozon.ru/product/' . $product_info['id'], $product_info['id'])));
+    $Tab1 .= $PHPShopGUI->setField("OZON ID", $PHPShopGUI->setText($product_info['id']));
     $Tab1 .= $PHPShopGUI->setField("Шрихкод", $PHPShopGUI->setInputText(null, 'barcode_ozon_new', $product_info['barcode']));
-    $Tab1 .= $PHPShopGUI->setField("Категория в Ozon", $PHPShopGUI->setText($category) . $PHPShopGUI->setInput("hidden", "category_ozonseller", $product_info['category_id']));
+    $Tab1 .= $PHPShopGUI->setField("Категория в Ozon", $PHPShopGUI->setText($category,"left", false, false) . $PHPShopGUI->setInput("hidden", "category_ozonseller", $product_info['category_id']));
 
     // Выбор каталога
     $Tab1 .= $PHPShopGUI->setField("Размещение", $tree_select);
@@ -158,9 +158,10 @@ function actionStart() {
     $PHPShopValutaArray = new PHPShopValutaArray();
     $valuta_array = $PHPShopValutaArray->getArray();
     $valuta_area = null;
+    
     if (is_array($valuta_array))
         foreach ($valuta_array as $val) {
-            $valuta_area .= $PHPShopGUI->setRadio('baseinputvaluta_new', $val['id'], $val['name'], $baseinputvaluta);
+            $valuta_area .= $PHPShopGUI->setRadio('baseinputvaluta_new', $val['id'], $val['name'], $baseinputvaluta,false);
         }
 
     // Валюта
@@ -179,7 +180,7 @@ function actionStart() {
     $sort_ozon_data = $OzonSeller->getTreeAttribute(["category_id" => [$product_info['category_id']], "attribute_type" => "REQUIRED"]);
     if (is_array($sort_ozon_data['result'][0]['attributes'])) {
         foreach ($sort_ozon_data['result'][0]['attributes'] as $sort_ozon_value) {
-            $attribute[$sort_ozon_value['id']] = PHPShopString::utf8_win1251($sort_ozon_value['name'], true);
+            $attribute[$sort_ozon_value['id']] = PHPShopString::utf8_win1251($sort_ozon_value['name'],true);
         }
     }
 
@@ -189,7 +190,7 @@ function actionStart() {
             if (!empty($attribute[$attributes['attribute_id']]) and ! empty($attributes['values'][0]['dictionary_value_id'])) {
                 unset($value_new);
                 $value_new[] = [__('Ничего не выбрано'), 0];
-                $value_new[] = array(PHPShopString::utf8_win1251($attributes['values'][0]['value'], true), PHPShopString::utf8_win1251($attributes['values'][0]['value'], true), PHPShopString::utf8_win1251($attributes['values'][0]['value'], true));
+                $value_new[] = array(PHPShopString::utf8_win1251($attributes['values'][0]['value']), PHPShopString::utf8_win1251($attributes['values'][0]['value']), PHPShopString::utf8_win1251($attributes['values'][0]['value']));
 
                 $Tab_sort .= $PHPShopGUI->setField($attribute[$attributes['attribute_id']], $PHPShopGUI->setSelect('vendor_array[' . $attributes['attribute_id'] . ']', $value_new, '100%', false, false, false, false, 1, false, false, 'selectpicker'));
             }
@@ -363,14 +364,17 @@ function actionSave() {
     $sort_ozon_data = $OzonSeller->getTreeAttribute(["category_id" => [$category_ozonseller], "attribute_type" => "REQUIRED"]);
     if (is_array($sort_ozon_data['result'][0]['attributes'])) {
         foreach ($sort_ozon_data['result'][0]['attributes'] as $sort_ozon_value) {
-            $attribute[$sort_ozon_value['id']] = PHPShopString::utf8_win1251($sort_ozon_value['name'], true);
+            $attribute[$sort_ozon_value['id']] = PHPShopString::utf8_win1251($sort_ozon_value['name']);
         }
     }
 
     $vendor_array = [];
     if (is_array($_POST['vendor_array']))
         foreach ($_POST['vendor_array'] as $sort_id => $sort_value) {
-            $vendor_array += ozon_sort($attribute[$sort_id], $sort_id, $sort_value, $category);
+            $ozon_sort = ozon_sort($attribute[$sort_id], $sort_id, $sort_value, $category);
+
+            if (is_array($ozon_sort))
+                $vendor_array += $ozon_sort;
         }
 
     if (is_array($vendor_array)) {
@@ -390,6 +394,8 @@ function actionSave() {
 
     // Дата измененения
     $_POST['datas_new'] = time();
+    $_POST['export_ozon_new'] = 1;
+    $_POST['export_ozon_id_new'] = $_POST['rowID'];
 
     // Корректировка пустых значений
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
@@ -401,6 +407,9 @@ function actionSave() {
     $width_kratko = $PHPShopSystem->getSerilizeParam('admoption.width_kratko');
     $img_tw = $PHPShopSystem->getSerilizeParam('admoption.img_tw');
     $img_th = $PHPShopSystem->getSerilizeParam('admoption.img_th');
+    $img_w = $PHPShopSystem->getSerilizeParam('admoption.img_w');
+    $img_h = $PHPShopSystem->getSerilizeParam('admoption.img_h');
+    $image_save_source = $PHPShopSystem->getSerilizeParam('admoption.image_save_source');
 
     // Папка картинок
     $path = $PHPShopSystem->getSerilizeParam('admoption.image_result_path');
@@ -432,13 +441,22 @@ function actionSave() {
                 if (!file_exists($name) and file_exists($file)) {
 
                     // Генерация тубнейла 
-                    if (!empty($_POST['export_imgproc'])) {
-                        $thumb = new PHPThumb($file);
-                        $thumb->setOptions(array('jpegQuality' => $width_kratko));
-                        $thumb->resize($img_tw, $img_th);
-                        $thumb->save($name);
-                    } else
-                        copy($file, $name);
+                    $thumb = new PHPThumb($file);
+                    $thumb->setOptions(array('jpegQuality' => $width_kratko));
+                    $thumb->resize($img_tw, $img_th);
+                    $thumb->save($name);
+
+                    // Исходное изображение
+                    if (!empty($image_save_source)) {
+                        $name_big = str_replace(array(".png", ".jpg", ".jpeg", ".gif", ".PNG", ".JPG", ".JPEG", ".GIF"), array("_big.png", "_big.jpg", "_big.jpeg", "_big.gif", "_big.png", "_big.jpg", "_big.jpeg", "_big.gif"), $file);
+                        @copy($file, $name_big);
+                    }
+
+                    // Основное изображение
+                    $thumb = new PHPThumb($file);
+                    $thumb->setOptions(array('jpegQuality' => $width_kratko));
+                    $thumb->resize($img_w, $img_h);
+                    $thumb->save($file);
                 }
 
                 // Главное изображение

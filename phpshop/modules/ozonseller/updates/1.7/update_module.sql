@@ -1,0 +1,1 @@
+ALTER TABLE `phpshop_modules_ozonseller_system` ADD `create_products` enum('0','1') NOT NULL default '0';

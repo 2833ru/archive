@@ -88,6 +88,8 @@ class VkSeller {
 
         curl_setopt($ch, CURLOPT_URL, $api);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
         $result = curl_exec($ch);
         curl_close($ch);
@@ -293,7 +295,7 @@ class VkSeller {
 
 
         // создание временной картинки для WEBP
-        if (!stristr($image, '.webp')) {
+        if (stristr($image, '.webp')) {
             require_once $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . '/phpshop/lib/thumb/phpthumb.php';
             $thumb = new PHPThumb($_SERVER['DOCUMENT_ROOT'] . $image);
             $thumb->setFormat('JPG');

@@ -39,7 +39,7 @@ function actionStart() {
     // Статусы пользователей
     $PHPShopUserStatus = new PHPShopUserStatusArray();
     $PHPShopUserStatusArray = $PHPShopUserStatus->getArray();
-    $user_status_value[] = array('Не выбрано', '', '');
+    $user_status_value[] = array(__('Не выбрано'), '', '');
     if (is_array($PHPShopUserStatusArray))
         foreach ($PHPShopUserStatusArray as $user_status)
             $user_status_value[] = array($user_status['name'], $user_status['id'], $data['status']);

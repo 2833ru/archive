@@ -45,7 +45,7 @@ function actionStart() {
 
 
             // Проверка товара в локальной базе
-            $PHPShopProduct = new PHPShopProduct($products_list['offer_id'], $type);
+            $PHPShopProduct = new PHPShopProduct(PHPShopString::utf8_win1251($products_list['offer_id']), $type);
             if (!empty($PHPShopProduct->getName())) {
                 
                 // Пропускаем
@@ -87,16 +87,16 @@ function actionStart() {
             if (!empty($row['primary_image']))
                 $icon = '<img src="' . $row['primary_image'] . '" onerror="this.onerror = null;this.src = \'./images/no_photo.gif\'" class="media-object">';
             else
-                $icon = '<img class="media-object" src="./images/no_photo.gif">';
+                continue;
 
             // Артикул
             if (!empty($row['offer_id']))
-                $uid = '<div class="text-muted">' . $type_name . ' ' . $row['offer_id'] . '</div>';
+                $uid = '<div class="text-muted">' . $type_name . ' ' . PHPShopString::utf8_win1251($row['offer_id']) . '</div>';
             else
                 $uid = null;
 
 
-            $PHPShopInterface->setRow($icon, array('name' => PHPShopString::utf8_win1251($row['name'], true), 'addon' => $uid, 'link' => $row['link']), $row['category'], $status[$row['status']]);
+            $PHPShopInterface->setRow($icon, array('name' => PHPShopString::utf8_win1251($row['name']), 'addon' => $uid, 'link' => $row['link']), $row['category'], $status[$row['status']]);
         }
 
         
@@ -106,12 +106,12 @@ function actionStart() {
     $status_value[] = ['Товары, которые не видны покупателям', 'INVISIBLE', $_GET['status']];
     $status_value[] = ['Товары в архиве', 'ARCHIVED', $_GET['status']];
 
-    $searchforma = $PHPShopInterface->setSelect('status', $status_value, '100%');
+    $searchforma = $PHPShopInterface->setSelect('status', $status_value, '100%',true);
     $searchforma .= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'offer_id', 'placeholder' => 'Артикул', 'value' => $_GET['offer_id']));
     $searchforma .= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'product_id', 'placeholder' => 'OZON ID', 'value' => $_GET['product_id']));
     
     if(empty($_GET['limit']))
-        $_GET['limit']=100;
+        $_GET['limit']=50;
     
     $searchforma .= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'limit', 'placeholder' => 'Лимит товаров', 'value' => $_GET['limit']));
     

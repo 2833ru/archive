@@ -4,8 +4,9 @@
  * Обмен по CommerceML
  * @package PHPShopExchange
  * @author PHPShop Software
- * @version 1.5
+ * @version 1.6
  */
+
 class CommerceMLLoader {
 
     private static $session_name = "CommerceMLLoader";
@@ -124,8 +125,8 @@ class CommerceMLLoader {
                     }
                     $response = "zip=" . ((intval($this->exchange_zip) == 1) ? 'yes' : 'no');
                     $response .= "\nfile_limit=" . self::parse_size(ini_get("upload_max_filesize"));
-					
-					// Поддержка CML 2.04
+
+                    // Поддержка CML 2.04
                     //$response .= "\n" . self::sessid_get();
                     //$response .= "\nversion=2.04";
                     break;
@@ -341,7 +342,8 @@ class CommerceMLLoader {
             }
 
             $properties = null;
-            $this->product_array[] = array("Артикул", "Наименование", "Краткое описание", "Имя картинки", "Подробное описание", "Кол-во картинок", "Остаток", "Цена1", "Цена2", "Цена3", "Цена4", "Цена5", "Вес", "Ед.измерения", "ISO", "Category ID", "Parent", "Характеристика", "Значение");
+            $this->product_array=[];
+            $this->product_array[] = array("Артикул", "Наименование", "Краткое описание", "Имя картинки", "Подробное описание", "Кол-во картинок", "Остаток", "Цена1", "Цена2", "Цена3", "Цена4", "Цена5", "Вес", "Ед.измерения", "ISO", "Category ID", "Parent", "Внешний код", "Характеристика", "Значение");
 
 
             // import.xml
@@ -358,21 +360,29 @@ class CommerceMLLoader {
                 // Свойства    
                 foreach ($xml->Классификатор->Свойства[0] as $item) {
 
+                    // Справочник
+                    if (isset($item->ВариантыЗначений)) {
+                        foreach ($item->ВариантыЗначений->Справочник as $directory) {
+
+                            $directory_array[(string) $directory->ИдЗначения[0]] = (string) $directory->Значение[0];
+                        }
+                    }
+
                     $properties_array[(string) $item->Ид[0]] = (string) $item->Наименование[0];
                 }
 
-				// Загрузка дополнительных полей справочника из МойСклад
+                // Загрузка дополнительных полей справочника из МойСклад
                 /*
-                $file = 'http://priceexport.sklad24.online';
-                $handle = fopen($file, "r");
-                $i = 0;
-                while ($data = fgetcsv($handle, 0, ';')) {
-                    if (empty($i))
-                        $csv_name = $data;
-                    else
-                        $csv_data[$data[0]] = $data;
-                    $i++;
-                }*/
+                  $file = 'http://priceexport.sklad24.online';
+                  $handle = fopen($file, "r");
+                  $i = 0;
+                  while ($data = fgetcsv($handle, 0, ';')) {
+                  if (empty($i))
+                  $csv_name = $data;
+                  else
+                  $csv_data[$data[0]] = $data;
+                  $i++;
+                  } */
 
                 // Запись в файл
                 if (count($this->category_array) > 1) {
@@ -419,6 +429,10 @@ class CommerceMLLoader {
                     if (isset($item->ЗначенияСвойств[0])) {
                         foreach ($item->ЗначенияСвойств[0] as $req) {
 
+                            // Проверка в справочнике
+                            if (isset($directory_array[(string) $req->Значение[0]]))
+                                $req->Значение[0] = $directory_array[(string) $req->Значение[0]];
+
                             $properties[] = [$properties_array[(string) $req->Ид[0]], (string) $req->Значение[0]];
                         }
                     }
@@ -463,52 +477,30 @@ class CommerceMLLoader {
                             if (!empty($this->image_save_source))
                                 copy(dirname(__FILE__) . $this->exchange_path . '/' . self::$upload1c . $img, $this->exchange_image_path . $this->image_result_path . $new_name_big);
 
-                            //copy(dirname(__FILE__) . $this->exchange_path . '/' . self::$upload1c . $img, $this->exchange_image_path . $new_name_s);
-                            //copy(dirname(__FILE__) . $this->exchange_path . '/' . self::$upload1c . $img, $this->exchange_image_path . $new_name_big);
-                            //rename(dirname(__FILE__) . $this->exchange_path . '/' . self::$upload1c . $img, '..' . $this->exchange_image_path . $this->image_result_path . $new_name);
                             $image = $this->image_result_path . 'img' . $this->crc16((string) $item->Ид[0]);
                             $image_count++;
                         }
                     }
 
 
-                    // Артикул
-                    if (!empty((string) $item->Артикул[0]) and $this->exchange_key == 'uid') {
+                    if (!empty((string) $item->Код[0]) and $this->exchange_key == 'code')
+                        $uid = (string) $item->Код[0];
+                    else
+                        $uid = (string) $item->Артикул[0];
 
-                        $this->product_array[(string) $item->Артикул[0]] = array((string) $item->Артикул[0], (string) $item->Наименование[0], $description, $image, $content, $image_count, "", "", "", "", "", "", "", "", "", $category, $parent);
-
-                        // Характеристики
-                        if (is_array($sort_array[(string) $item->Ид[0]])) {
-
-                            foreach ($sort_array[(string) $item->Ид[0]] as $sort)
-                                $this->product_array[(string) $item->Артикул[0]][] = $sort;
-                        }
-
-                        // Свойства
-                        if (is_array($properties))
-                            foreach ($properties as $val)
-                                if (is_array($val))
-                                    foreach ($val as $value)
-                                        $this->product_array[(string) $item->Артикул[0]][] = $value;
+                    // Подтипы 18#141
+                    if (strstr((string) $item->Ид[0], '#')) {
+                        $p = explode("#", (string) $item->Ид[0]);
+                        $item->Ид[0] = $p[1];
                     }
+                    $this->product_array[(string) $item->Ид[0]] = array($uid, (string) $item->Наименование[0], $description, $image, $content, $image_count, "", "", "", "", "", "", "", "", "", $category, $parent, (string) $item->Ид[0]);
 
-                    // Внешний код
-                    elseif (!empty((string) $item->Ид[0]) and $this->exchange_key == 'external') {
-
-                        // Подтипы 18#141
-                        if (strstr((string) $item->Ид[0], '#')) {
-                            $p = explode("#", (string) $item->Ид[0]);
-                            $item->Ид[0] = $p[1];
-                        }
-                        $this->product_array[(string) $item->Ид[0]] = array((string) $item->Ид[0], (string) $item->Наименование[0], $description, $image, $content, $image_count, "", "", "", "", "", "", "", "", "", $category, $parent);
-
-                        // Свойства
-                        if (is_array($properties))
-                            foreach ($properties as $val)
-                                if (is_array($val))
-                                    foreach ($val as $value)
-                                        $this->product_array[(string) $item->Ид[0]][] = $value;
-                    }
+                    // Свойства
+                    if (is_array($properties))
+                        foreach ($properties as $val)
+                            if (is_array($val))
+                                foreach ($val as $value)
+                                    $this->product_array[(string) $item->Ид[0]][] = $value;
                 }
 
 
@@ -526,6 +518,8 @@ class CommerceMLLoader {
 
             // offers.xml
             else if (isset($xml->ПакетПредложений->Предложения) or $_GET['filename'] = 'offers.xml') {
+                
+                
 
                 $parent_check = false;
                 foreach ($xml->ПакетПредложений->Предложения->Предложение as $item) {
@@ -596,23 +590,13 @@ class CommerceMLLoader {
                     }
 
 
-
-                    // Артикул
-                    if (!empty((string) $item->Артикул[0]) and $this->exchange_key == 'uid') {
-                        $this->product_array[(string) $item->Артикул[0]] = array((string) $item->Артикул[0], (string) $item->Наименование[0], null, null, null, null, $warehouse, (string) $item->Цены->Цена[0]->ЦенаЗаЕдиницу[0], (string) $item->Цены->Цена[1]->ЦенаЗаЕдиницу[0], (string) $item->Цены->Цена[2]->ЦенаЗаЕдиницу[0], (string) $item->Цены->Цена[3]->ЦенаЗаЕдиницу[0], (string) $item->Цены->Цена[4]->ЦенаЗаЕдиницу[0], "", "", (string) $item->Цены->Цена[0]->Валюта[0], null, $parent);
+                    // Подтипы 18#141
+                    if (strstr((string) $item->Ид[0], '#')) {
+                        $p = explode("#", (string) $item->Ид[0]);
+                        $item->Ид[0] = $p[1];
                     }
 
-                    // Внешний код
-                    elseif (!empty((string) $item->Ид[0]) and $this->exchange_key == 'external') {
-
-                        // Подтипы 18#141
-                        if (strstr((string) $item->Ид[0], '#')) {
-                            $p = explode("#", (string) $item->Ид[0]);
-                            $item->Ид[0] = $p[1];
-                        }
-
-                        $this->product_array[(string) $item->Ид[0]] = array((string) $item->Ид[0], (string) $item->Наименование[0], null, null, null, null, $warehouse, (string) $item->Цены->Цена[0]->ЦенаЗаЕдиницу[0], (string) $item->Цены->Цена[1]->ЦенаЗаЕдиницу[0], (string) $item->Цены->Цена[2]->ЦенаЗаЕдиницу[0], (string) $item->Цены->Цена[3]->ЦенаЗаЕдиницу[0], (string) $item->Цены->Цена[4]->ЦенаЗаЕдиницу[0], "", "", (string) $item->Цены->Цена[0]->Валюта[0], null, $parent);
-                    }
+                    $this->product_array[(string) $item->Ид[0]] = array("", (string) $item->Наименование[0], null, null, null, null, $warehouse, (string) $item->Цены->Цена[0]->ЦенаЗаЕдиницу[0], (string) $item->Цены->Цена[1]->ЦенаЗаЕдиницу[0], (string) $item->Цены->Цена[2]->ЦенаЗаЕдиницу[0], (string) $item->Цены->Цена[3]->ЦенаЗаЕдиницу[0], (string) $item->Цены->Цена[4]->ЦенаЗаЕдиницу[0], "", "", (string) $item->Цены->Цена[0]->Валюта[0], null, $parent, $item->Ид[0]);
                 }
 
                 // Запись в файл
@@ -670,13 +654,13 @@ class CommerceMLLoader {
         else
             $token = null;
 
-        $url = $protocol . $_SERVER['SERVER_NAME'] . '/1cManager/result.php?date=' . $date . '&files=all&log=' . $_SERVER['PHP_AUTH_USER'] . '&pas=' . $this->encode($_SERVER['PHP_AUTH_PW']) . '&create=' . $create . '&create_category=' . $create_category . $token;
+        $url = $protocol . $_SERVER['SERVER_NAME'] . '/1cManager/result.php?date=' . $date . '&files=all&log=' . $_SERVER['PHP_AUTH_USER'] . '&pas=' . $this->encode($_SERVER['PHP_AUTH_PW']) . '&create=' . $create . '&create_category=' . $create_category . $token . '&cml=true';
 
         $сurl = curl_init();
         curl_setopt_array($сurl, array(
             CURLOPT_URL => $url,
             CURLOPT_RETURNTRANSFER => true,
-			CURLOPT_SSL_VERIFYHOST => false,
+            CURLOPT_SSL_VERIFYHOST => false,
             CURLOPT_SSL_VERIFYPEER => false
         ));
         $action = curl_exec($сurl);

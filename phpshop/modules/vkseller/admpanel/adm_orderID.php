@@ -45,15 +45,15 @@ function actionStart() {
     $Tab3 = $PHPShopGUI->setTextarea(null, PHPShopString::utf8_win1251($log), $float = "none", $width = '100%', $height = '500');
     $Tab1 = $PHPShopGUI->setField("&#8470; заказа", $PHPShopGUI->setText($order_info['id']));
     $Tab1 .= $PHPShopGUI->setField("Дата поступления", $PHPShopGUI->setText(PHPShopDate::get($order_info['date'], true)));
-    $Tab1 .= $PHPShopGUI->setField("Статус", $PHPShopGUI->setText(__($status_array[$order_info['status']])));
+    $Tab1 .= $PHPShopGUI->setField("Статус", $PHPShopGUI->setText($status_array[$order_info['status']]));
 
     $user = $VkSeller->getUser($order_info['user_id'])['response'][0]['screen_name'];
 
-    $Tab1 .= $PHPShopGUI->setField("Покупатель", $PHPShopGUI->setText($PHPShopGUI->setLink('https://vk.com/' . $user, PHPShopString::utf8_win1251($order_info['recipient']['name'], true))));
-    $Tab1 .= $PHPShopGUI->setField("Телефон", $PHPShopGUI->setText(PHPShopString::utf8_win1251($order_info['recipient']['phone'], true)));
-    $Tab1 .= $PHPShopGUI->setField("Доставка", $PHPShopGUI->setText(PHPShopString::utf8_win1251($order_info['delivery']['address'], true)));
-    $Tab1 .= $PHPShopGUI->setField("Оплата", $PHPShopGUI->setText(PHPShopString::utf8_win1251($order_info['payment']['status'], true)));
-    $Tab1 .= $PHPShopGUI->setField("Комментарий", $PHPShopGUI->setText(PHPShopString::utf8_win1251($order_info['comment'], true)));
+    $Tab1 .= $PHPShopGUI->setField("Покупатель", $PHPShopGUI->setText($PHPShopGUI->setLink('https://vk.com/' . $user, PHPShopString::utf8_win1251($order_info['recipient']['name']), '_blank', false, false, false, false, false), "left", false, false));
+    $Tab1 .= $PHPShopGUI->setField("Телефон", $PHPShopGUI->setText(PHPShopString::utf8_win1251($order_info['recipient']['phone']), "left", false, false));
+    $Tab1 .= $PHPShopGUI->setField("Доставка", $PHPShopGUI->setText(PHPShopString::utf8_win1251($order_info['delivery']['address']), "left", false, false));
+    $Tab1 .= $PHPShopGUI->setField("Оплата", $PHPShopGUI->setText(PHPShopString::utf8_win1251($order_info['payment']['status']), "left", false, false));
+    $Tab1 .= $PHPShopGUI->setField("Комментарий", $PHPShopGUI->setText(PHPShopString::utf8_win1251($order_info['comment']), "left", false, false));
 
     $Tab1 .= $PHPShopGUI->setInput("hidden", "date_start", $_GET['date_start']);
     $Tab1 .= $PHPShopGUI->setInput("hidden", "date_end", $_GET['date_end']);

@@ -332,7 +332,7 @@ $().ready(function () {
     });
 
 
-    // логика кнопки оформления заказа 
+    // логика кнопки оформления заказа
     $("button.orderCheckButton").on("click", function (e) {
         e.preventDefault();
         OrderChekJq();
@@ -501,6 +501,15 @@ $().ready(function () {
 
             // Сброс текущей страницы
             count = current;
+
+            // Сброс слайдера
+            var max = $("#slider-range").slider("option", "max");
+            var min = $("#slider-range").slider("option", "min");
+            $('#price-filter-body input[name=min]').val(max);
+            $('#price-filter-body input[name=max]').val(min);
+            $("#slider-range").slider({
+                values: [min, max]
+            });
         }
 
     });
@@ -624,7 +633,7 @@ $().ready(function () {
             $("#forma_message").submit();
     });
 
-    // Подсказки 
+    // Подсказки
     $('[data-toggle="tooltip"]').tooltip({container: 'body'});
 
     // Переход из прайса на форму с описанием
@@ -755,7 +764,7 @@ $().ready(function () {
 
     });
 
-    // выбор цвета 
+    // выбор цвета
     $('body').on('change', 'input[name="parentColor"]', function () {
 
         $('input[name="parentColor"]').each(function () {

@@ -12,7 +12,7 @@ function actionStart() {
     );
 
     $PHPShopInterface->action_button['Переадресация'] = array(
-        'name' => 'Переадресация',
+        'name' => __('Переадресация'),
         'action' => 'report.searchreplace',
         'class' => 'btn btn-default btn-sm navbar-btn btn-action-panel',
         'type' => 'button',

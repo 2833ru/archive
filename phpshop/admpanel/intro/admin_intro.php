@@ -117,6 +117,7 @@ function actionStart() {
     // Заканчивается поддержка
     if ($License['License']['RegisteredTo'] != 'Trial NoName') {
         $LicenseUntilUnixTime = $License['License']['SupportExpires'];
+        $_SESSION['support'] = $LicenseUntilUnixTime;
         $until = $LicenseUntilUnixTime - date("U");
         $until_day = round($until / (24 * 60 * 60));
         if (is_numeric($LicenseUntilUnixTime))

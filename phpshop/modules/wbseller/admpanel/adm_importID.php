@@ -42,11 +42,20 @@ $WbSeller = new WbSeller();
 
 // Начальная функция загрузки
 function actionStart() {
-    global $PHPShopGUI, $PHPShopSystem, $WbSeller, $PHPShopModules;
+    global $PHPShopGUI, $PHPShopSystem, $WbSeller;
 
     $PHPShopGUI->field_col = 4;
 
-    $product_info = $WbSeller->getProduct([$_GET['id']])['data'][0];
+    $product_array = $WbSeller->getProduct([$_GET['id']])['data'];
+
+    if (is_array($product_array))
+        foreach ($product_array as $row) {
+
+            if ($row['vendorCode'] == $_GET['id'])
+                $product_info = $row;
+            else
+                continue;
+        }
 
 
     if (!empty($product_info['nmID']))
@@ -60,7 +69,7 @@ function actionStart() {
         );
 
 
-    $PHPShopGUI->setActionPanel(__('Товар') . ': ' . $_GET['id'] . '', false, array('Загрузить товар'));
+    $PHPShopGUI->setActionPanel(__('Товар') . ': ' . PHPShopString::utf8_win1251($_GET['id']) . '', false, array('Загрузить товар'));
 
     // Знак рубля
     if ($PHPShopSystem->getDefaultValutaIso() == 'RUB' or $PHPShopSystem->getDefaultValutaIso() == 'RUR')
@@ -150,23 +159,23 @@ function actionStart() {
     if (is_array($product_info['mediaFiles']) and count($product_info['mediaFiles']) > 0) {
         $icon = null;
         foreach ($product_info['mediaFiles'] as $img)
-            if (!empty($img))
+            if (!empty($img) and ! stristr($img, '.mp4'))
                 $icon .= '<div class="pull-left" style="padding:3px">' . $PHPShopGUI->setIcon($img, "images[]", true, array('load' => false, 'server' => true, 'url' => true, 'view' => true)) . '</div>';
     } else
         $icon = $PHPShopGUI->setIcon('./images/no_photo.gif', "pic", true, array('load' => false, 'server' => true, 'url' => true, 'view' => true));
 
 
     $Tab1 = $PHPShopGUI->setField("Название", $PHPShopGUI->setTextarea('name_new', PHPShopString::utf8_win1251($product_info['name'], true)));
-    $Tab1 .= $PHPShopGUI->setField("Артикул", $PHPShopGUI->setInputText(null, 'uid_new', $_GET['id']));
+    $Tab1 .= $PHPShopGUI->setField("Артикул", $PHPShopGUI->setInputText(null, 'uid_new', PHPShopString::utf8_win1251($_GET['id'])));
     $Tab1 .= $PHPShopGUI->setField("Изображения", $icon);
-    $Tab1 .= $PHPShopGUI->setField("WB ID", $PHPShopGUI->setText($PHPShopGUI->setLink('https://www.wildberries.ru/catalog/' . $product_info['nmID'] . '/detail.aspx', $product_info['nmID'])). $PHPShopGUI->setInput("hidden", "export_wb_id_new", $product_info['nmID']));
+    $Tab1 .= $PHPShopGUI->setField("WB ID", $PHPShopGUI->setText($PHPShopGUI->setLink('https://www.wildberries.ru/catalog/' . $product_info['nmID'] . '/detail.aspx', $product_info['nmID'])) . $PHPShopGUI->setInput("hidden", "export_wb_id_new", $product_info['nmID']));
     $Tab1 .= $PHPShopGUI->setField("Шрихкод", $PHPShopGUI->setInputText(null, 'barcode_wb_new', $product_info['sizes'][0]['skus'][0]));
     $Tab1 .= $PHPShopGUI->setField("Категория в WB", $PHPShopGUI->setText(PHPShopString::utf8_win1251($product_info['category'], true)) . $PHPShopGUI->setInput("hidden", "category_wbseller", PHPShopString::utf8_win1251($product_info['category'])));
 
     // Выбор каталога
     $Tab1 .= $PHPShopGUI->setField("Размещение", $tree_select);
-    
-    $Tab1 .=  $PHPShopGUI->setField('Склад', $PHPShopGUI->setInputText(false, 'items_new', 1, 150, __('шт.')));
+
+    $Tab1 .= $PHPShopGUI->setField('Склад', $PHPShopGUI->setInputText(false, 'items_new', 1, 150, __('шт.')));
 
     // Опции вывода
     $Tab1 .= $PHPShopGUI->setField('Опции вывода', $PHPShopGUI->setCheckbox('enabled_new', 1, 'Вывод в каталоге', 1) . '<br>' .
@@ -208,8 +217,6 @@ function actionStart() {
 
     $Tab_sort = null;
 
-    //print_r($product_info['characteristics']);
-
     if (is_array($product_info['characteristics']))
         foreach ($product_info['characteristics'] as $attributes) {
 
@@ -219,12 +226,13 @@ function actionStart() {
                 if ($key == PHPShopString::win_utf8('Наименование') or $key == PHPShopString::win_utf8('Предмет') or $key == PHPShopString::win_utf8('Описание')) {
                     continue;
                 }
-                
-                if(is_array($val))
-                    $sort_name =  PHPShopString::utf8_win1251($val[0], true);
-                else $sort_name =  PHPShopString::utf8_win1251($val, true);
 
-                
+                if (is_array($val))
+                    $sort_name = PHPShopString::utf8_win1251($val[0], true);
+                else
+                    $sort_name = PHPShopString::utf8_win1251($val, true);
+
+
                 $value_new[] = [__('Ничего не выбрано'), 0];
                 $value_new[] = array($sort_name, $sort_name, $sort_name);
 
@@ -238,42 +246,13 @@ function actionStart() {
     $PHPShopGUI->setTab(array("Информация", $Tab1 . $Tab2, true, false, true));
 
     // Вывод кнопок сохранить и выход в футер
-    $ContentFooter = $PHPShopGUI->setInput("hidden", "rowID", $_GET['id'], "right", 70, "", "but") .
+    $ContentFooter = $PHPShopGUI->setInput("hidden", "rowID", PHPShopString::toLatin($_GET['id']), "right", 70, "", "but") .
             $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionSave.catalog.edit");
 
     // Футер
     $PHPShopGUI->setFooter($ContentFooter);
 
     return true;
-}
-
-// Загрузка изображения по ссылке 
-function downloadFile($url, $path) {
-    $newfname = $path;
-
-    $arrContextOptions = array(
-        "ssl" => array(
-            "verify_peer" => false,
-            "verify_peer_name" => false,
-        ),
-    );
-
-    $file = fopen($url, 'rb', false, stream_context_create($arrContextOptions));
-    if ($file) {
-        $newf = fopen($newfname, 'wb');
-        if ($newf) {
-            while (!feof($file)) {
-                fwrite($newf, fread($file, 1024 * 8), 1024 * 8);
-            }
-        }
-    }
-    if ($file) {
-        fclose($file);
-    }
-    if ($newf) {
-        fclose($newf);
-        return true;
-    }
 }
 
 /**
@@ -383,9 +362,9 @@ function wb_sort($sort_name, $sort_value, $category) {
  * Экшен загрузки товара
  */
 function actionSave() {
-    global $PHPShopSystem;
-    
-    $_POST['export_wb_task_status_new']=time();
+    global $PHPShopSystem,$WbSeller;
+
+    $_POST['export_wb_task_status_new'] = time();
     $_POST['export_wb_new'] = 1;
 
     // Поиск привязки категории Озон
@@ -401,10 +380,13 @@ function actionSave() {
 
     $vendor_array = [];
 
-   
+
     if (is_array($_POST['vendor_array']))
         foreach ($_POST['vendor_array'] as $sort_id => $sort_value) {
-            $vendor_array += wb_sort($sort_id, $sort_value, $category);
+            $wb_sort = wb_sort($sort_id, $sort_value, $category);
+
+            if (is_array($wb_sort))
+                $vendor_array += $wb_sort;
         }
 
     if (is_array($vendor_array)) {
@@ -450,7 +432,7 @@ function actionSave() {
                 $path_parts['basename'] = $_POST['rowID'] . '_' . $path_parts['basename'];
 
                 // Файл загружен
-                if (downloadFile($img, $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['dir']['dir'] . '/UserFiles/Image/' . $path . $path_parts['basename']))
+                if ($WbSeller->downloadFile($img, $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['dir']['dir'] . '/UserFiles/Image/' . $path . $path_parts['basename']))
                     $img_load++;
                 else
                     continue;

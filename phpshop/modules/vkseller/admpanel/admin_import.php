@@ -51,12 +51,12 @@ function actionStart() {
             } else {
 
                 $data[$products_list['id']]['id'] = $products_list['id'];
-                $data[$products_list['id']]['name'] = PHPShopString::utf8_win1251($products_list['title'], true);
+                $data[$products_list['id']]['name'] = PHPShopString::utf8_win1251($products_list['title']);
                 $data[$products_list['id']]['status'] = '<span class="text-success">' . __('Готов к загрузке') . '</span>';
                 $data[$products_list['id']]['image'] = $products_list['thumb_photo'];
                 $data[$products_list['id']]['link'] = '?path=modules.dir.vkseller.import&id=' . $products_list['id'];
                 $data[$products_list['id']]['uid'] = $products_list['sku'];
-                $data[$products_list['id']]['category'] = PHPShopString::utf8_win1251($products_list['category']['parent']['name'], true) . ' &rarr; ' . PHPShopString::utf8_win1251($products_list['category']['name'], true);
+                $data[$products_list['id']]['category'] = PHPShopString::utf8_win1251($products_list['category']['parent']['name']) . ' &rarr; ' . PHPShopString::utf8_win1251($products_list['category']['name']);
             }
         }
     }

@@ -12,7 +12,7 @@ function actionStart() {
     global $PHPShopGUI, $PHPShopSystem, $PHPShopInterface, $WbSeller;
 
     // Данные по заказу
-    $orders = $WbSeller->getOrderList($_GET['date_start'], $_GET['date_end'])['orders'];
+    $orders = $WbSeller->getOrderList($_GET['date_start'], $_GET['date_end'], $_GET['status'])['orders'];
 
     if (is_array($orders)) {
         foreach ($orders as $order) {
@@ -72,8 +72,30 @@ function actionStart() {
         $type = 'id';
     }
 
-    // Данные по товару
+    // Данные по товару в БД
     $prod = (new PHPShopOrm($GLOBALS['SysValue']['base']['products']))->getOne(['id,uid,name,pic_small'], [$type => '="' . (string) $order_info['article'] . '"']);
+
+    // Даннеы по товары из WB
+    if (empty($prod)) {
+        $product_info = $WbSeller->getProduct([$order_info['article']])['data'][0];
+        $prod['pic_small'] = $product_info['mediaFiles'][0];
+        $prod['uid'] = PHPShopString::utf8_win1251($order_info['article']);
+
+        // Поиск имени
+        if (is_array($product_info['characteristics']))
+            foreach ($product_info['characteristics'] as $characteristics) {
+
+                if (!empty($characteristics[PHPShopString::win_utf8('Наименование')]))
+                    $prod['name'] = PHPShopString::utf8_win1251($characteristics[PHPShopString::win_utf8('Наименование')]);
+            }
+
+        $link = 'https://www.wildberries.ru/catalog/' . $product_info['nmID'] . '/detail.aspx';
+    }
+    else {
+        $link = '?path=product&id=' . $prod['id'];
+    }
+
+
 
     if (!empty($prod['pic_small']))
         $icon = '<img src="' . $prod['pic_small'] . '" onerror="this.onerror = null;this.src = \'./images/no_photo.gif\'" class="media-object">';
@@ -83,13 +105,13 @@ function actionStart() {
     $name = '
 <div class="media">
   <div class="media-left">
-    <a href="?path=product&id=' . $prod['id'] . '" >
+    <a href="'.$link.'" target="_blank" >
       ' . $icon . '
     </a>
   </div>
    <div class="media-body">
-    <div class="media-heading"><a href="?path=product&id=' . $prod['id'] . '&return=modules.dir.ozonseller" >' . $prod['name'] . '</a></div>
-    ' . $type_name . ': ' . $order_info['article'] . '
+    <div class="media-heading"><a href="'.$link.'" target="_blank">' . $prod['name'] . '</a></div>
+    ' . $type_name . ': ' . $prod['uid'] . '
   </div>
 </div>';
 
@@ -148,6 +170,14 @@ function actionSave() {
 
     // Данные по товару
     $product = (new PHPShopOrm($GLOBALS['SysValue']['base']['products']))->getOne(['id,uid,name,pic_small'], [$type => '="' . (string) $order_info['article'] . '"']);
+
+    if (empty($product) and ! empty($WbSeller->create_products)) {
+
+        // Создание товара
+        $product_id = $WbSeller->addProduct($order_info['article']);
+        $product = (new PHPShopOrm($GLOBALS['SysValue']['base']['products']))->getOne(['id,uid,name,pic_small'], ['id' => '=' . (int) $product_id]);
+    }
+
 
     $order['Cart']['cart'][$product['id']]['id'] = $product['id'];
     $order['Cart']['cart'][$product['id']]['uid'] = $product["uid"];

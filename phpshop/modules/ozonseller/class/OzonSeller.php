@@ -5,7 +5,7 @@ PHPShopObj::loadClass("valuta");
 /**
  * Библиотека работы с Ozon Seller API
  * @author PHPShop Software
- * @version 1.9
+ * @version 2.2
  * @package PHPShopModules
  * @todo https://docs.ozon.ru/api/seller/#tag/Environment
  */
@@ -28,6 +28,7 @@ class OzonSeller {
     const GET_PRODUCT_DESCRIPTION = "/v1/product/info/description";
     const GET_PRODUCT_ATTRIBUTES = '/v3/products/info/attributes';
     const GET_PRODUCT_PRICES = '/v4/product/info/prices';
+    const UPDATE_PRODUCT_PRICES = '/v1/product/import/prices';
 
     public $api_key;
     public $client_id;
@@ -56,6 +57,7 @@ class OzonSeller {
         $this->warehouse = unserialize($this->options['warehouse']);
         $this->status_import = $this->options['status_import'];
         $this->delivery = $this->options['delivery'];
+        $this->create_products = $this->options['create_products'];
 
         $this->status_list = [
             'acceptance_in_progress' => 'идёт приёмка',
@@ -74,6 +76,153 @@ class OzonSeller {
             $this->ssl = 'https://';
         else
             $this->ssl = 'http://';
+    }
+
+    /**
+     *  Создание товара
+     */
+    public function addProduct($id) {
+        global $PHPShopSystem;
+
+        $product_info = $this->getProductAttribures($id,'offer_id')['result'][0];
+        
+        $insert['name_new'] = PHPShopString::utf8_win1251($product_info['name']);
+        $insert['uid_new'] = PHPShopString::utf8_win1251($product_info['offer_id']);
+        $insert['export_ozon_id_new'] = $product_info['id'];
+        $insert['export_ozon_new'] = 1;
+        $insert['datas_new'] = time();
+        $insert['user_new'] = $_SESSION['idPHPSHOP'];
+        $insert['export_ozon_task_status_new'] = time();
+        $insert['barcode_ozon_new'] = $product_info['barcode'];
+
+        // Категория
+        $insert['category_new'] = (new PHPShopOrm($GLOBALS['SysValue']['base']['categories']))->getOne(['id,name'], ['category_ozonseller' => '="' . $product_info['category_id'] . '"'])['id'];
+
+        $insert['items_new'] = 1;
+        $insert['enabled_new'] = 1;
+
+        // Цена
+        $product_price = $this->getProductPrices($product_info['id'])['result']['items'][0]['price'];
+        $insert['price_new'] = $product_price['price'];
+        $insert['price_n_new'] = $product_price['old_price'];
+        
+        $insert['baseinputvaluta_new'] = $PHPShopSystem->getDefaultOrderValutaId();
+        $insert['weight_new'] = $product_info['weight'];
+        $insert['height_new'] = $product_info['height'];
+        $insert['width_new'] = $product_info['width'];
+        $insert['length_new'] = $product_info['depth'];
+        $insert['content_new'] = PHPShopString::utf8_win1251($this->getProductDescription($product_info['id'])['result']['description']);
+
+        $prodict_id = (new PHPShopOrm($GLOBALS['SysValue']['base']['products']))->insert($insert);
+
+        // Создание изображений
+        $this->addProductImage($product_info['images'], $prodict_id);
+
+        return $prodict_id;
+    }
+
+    /**
+     *  Создание изображений
+     */
+    public function addProductImage($mediaFiles, $prodict_id) {
+        global $PHPShopSystem;
+
+        require_once $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . '/phpshop/lib/thumb/phpthumb.php';
+        $width_kratko = $PHPShopSystem->getSerilizeParam('admoption.width_kratko');
+        $img_tw = $PHPShopSystem->getSerilizeParam('admoption.img_tw');
+        $img_th = $PHPShopSystem->getSerilizeParam('admoption.img_th');
+
+        // Папка картинок
+        $path = $PHPShopSystem->getSerilizeParam('admoption.image_result_path');
+        if (!empty($path))
+            $path = $path . '/';
+
+        $img_load = 0;
+
+
+        if (is_array($mediaFiles)) {
+            foreach ($mediaFiles as $k => $image) {
+                
+                $img = $image['file_name'];
+                
+                if (!empty($img) and ! stristr($img, '.mp4')) {
+
+                    $path_parts = pathinfo($img);
+
+                    $path_parts['basename'] = $prodict_id . '_' . $path_parts['basename'];
+
+                    // Файл загружен
+                    if ($this->downloadFile($img, $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['dir']['dir'] . '/UserFiles/Image/' . $path . $path_parts['basename']))
+                        $img_load++;
+                    else
+                        continue;
+
+                    // Новое имя
+                    $img = $GLOBALS['dir']['dir'] . '/UserFiles/Image/' . $path . $path_parts['basename'];
+
+                    // Запись в фотогалерее
+                    $PHPShopOrmImg = new PHPShopOrm($GLOBALS['SysValue']['base']['foto']);
+                    $PHPShopOrmImg->insert(array('parent_new' => intval($prodict_id), 'name_new' => $img, 'num_new' => $k));
+
+                    $file = $_SERVER['DOCUMENT_ROOT'] . $img;
+                    $name = str_replace(array(".png", ".jpg", ".jpeg", ".gif", ".PNG", ".JPG", ".JPEG", ".GIF"), array("s.png", "s.jpg", "s.jpeg", "s.gif", "s.png", "s.jpg", "s.jpeg", "s.gif"), $file);
+
+                    if (!file_exists($name) and file_exists($file)) {
+
+                        // Генерация тубнейла 
+                        if (!empty($_POST['export_imgproc'])) {
+                            $thumb = new PHPThumb($file);
+                            $thumb->setOptions(array('jpegQuality' => $width_kratko));
+                            $thumb->resize($img_tw, $img_th);
+                            $thumb->save($name);
+                        } else
+                            copy($file, $name);
+                    }
+
+                    // Главное изображение
+                    if ($k == 0 and ! empty($file)) {
+
+                        $update['pic_big_new'] = $img;
+
+                        // Главное превью
+                        $update['pic_small_new'] = str_replace(array(".png", ".jpg", ".jpeg", ".gif", ".PNG", ".JPG", ".JPEG", ".GIF"), array("s.png", "s.jpg", "s.jpeg", "s.gif", "s.png", "s.jpg", "s.jpeg", "s.gif"), $img);
+                    }
+                }
+            }
+
+            (new PHPShopOrm($GLOBALS['SysValue']['base']['products']))->update($update, ['id' => '=' . intval($prodict_id)]);
+        }
+    }
+
+    /**
+     *  Загрузка изображения по ссылке 
+     */
+    public function downloadFile($url, $path) {
+        $newfname = $path;
+
+        $arrContextOptions = array(
+            "ssl" => array(
+                "verify_peer" => false,
+                "verify_peer_name" => false,
+            ),
+        );
+
+        $file = fopen($url, 'rb', false, stream_context_create($arrContextOptions));
+        if ($file) {
+            $newf = fopen($newfname, 'wb');
+            if ($newf) {
+                while (!feof($file)) {
+                    fwrite($newf, fread($file, 1024 * 8), 1024 * 8);
+                }
+            }
+        }
+        if ($file) {
+            fclose($file);
+        }
+        if ($newf) {
+            fclose($newf);
+            return true;
+        }
     }
 
     /**
@@ -125,29 +274,99 @@ class OzonSeller {
     }
 
     /**
-     * Изменение остатка на складе
+     * Изменение цены
      */
-    public function setProductStock($product, $warehouse) {
+    public function setProductPrice($products) {
 
-        // Если нет OZON ID
-        if (empty($product['export_ozon_id'])) {
-            $info = $this->sendProductsInfo($product)['result']['items'][0];
-        } else {
-            $info['offer_id'] = $product['uid'];
-            $info['product_id'] = $product['export_ozon_id'];
+        if (is_array($products)) {
+            foreach ($products as $product) {
+
+                // Если нет OZON ID
+                if (empty($product['export_ozon_id'])) {
+                    $info = $this->sendProductsInfo($product)['result']['items'][0];
+                } else {
+                    $info['offer_id'] = $product['uid'];
+                    $info['product_id'] = $product['export_ozon_id'];
+                }
+
+                // price columns
+                $price = $product['price'];
+                $oldprice = $product['price_n'];
+
+                if (!empty($product['price_ozon'])) {
+                    $price = $product['price_ozon'];
+                } elseif (!empty($product['price' . (int) $this->price])) {
+                    $price = $product['price' . (int) $this->price];
+                }
+
+                if ($this->fee > 0) {
+                    if ($this->fee_type == 1) {
+                        $price = $price - ($price * $this->fee / 100);
+                        $oldprice = $oldprice - ($oldprice * $this->fee / 100);
+                    } else {
+                        $price = $price + ($price * $this->fee / 100);
+                        $oldprice = $oldprice - ($oldprice * $this->fee / 100);
+                    }
+                }
+
+                $params['prices'][] = [
+                    'offer_id' => PHPShopString::win_utf8($info['offer_id']),
+                    'product_id' => $info['product_id'],
+                    'price' => (string) $this->price($price, $product['baseinputvaluta']),
+                    'old_price' => (string) $this->price($oldprice, $product['baseinputvaluta']),
+                ];
+            }
+
+            $result = $this->request(self::UPDATE_PRODUCT_PRICES, $params);
         }
 
-        if (empty($product['enabled']))
-            $product['items'] = 0;
+        // Журнал
+        $log['params'] = $params;
+        $log['result'] = $result;
 
-        $params['stocks'][] = [
-            'offer_id' => $info['offer_id'],
-            'product_id' => $info['product_id'],
-            'stock' => (int) $product['items'],
-            'warehouse_id' => $warehouse
-        ];
+        $this->log($log, $product['id'], self::UPDATE_PRODUCT_PRICES);
 
-        $result = $this->request(self::UPDATE_PRODUCT_STOCKS, $params);
+        return $result;
+    }
+
+    /**
+     * Изменение остатка на складе
+     */
+    public function setProductStock($products, $warehouse) {
+
+        if (is_array($products)) {
+            foreach ($products as $product) {
+
+                // Если нет OZON ID
+                if (empty($product['export_ozon_id'])) {
+                    $info = $this->sendProductsInfo($product)['result']['items'][0];
+                } else {
+
+                    $info['product_id'] = $product['export_ozon_id'];
+
+                    // Ключ обновления артикул
+                    if ($this->type == 2) {
+                        $info['offer_id'] = PHPShopString::win_utf8($product['uid']);
+                    } else {
+                        $info['offer_id'] = $product['id'];
+                    }
+                }
+
+
+
+                if (empty($product['enabled']))
+                    $product['items'] = 0;
+
+                $params['stocks'][] = [
+                    'offer_id' => $info['offer_id'],
+                    'product_id' => $info['product_id'],
+                    'stock' => (int) $product['items'],
+                    'warehouse_id' => $warehouse
+                ];
+            }
+
+            $result = $this->request(self::UPDATE_PRODUCT_STOCKS, $params);
+        }
 
         // Журнал
         $log['params'] = $params;
@@ -273,11 +492,11 @@ class OzonSeller {
     /**
      * Атрибуты товара из Ozon
      */
-    public function getProductAttribures($product_id) {
+    public function getProductAttribures($product_id,$flag='product_id') {
 
         $params = [
             'filter' => [
-                'product_id' => [$product_id],
+                $flag => [$product_id],
                 'visibility' => 'ALL',
             ],
             'limit' => 1,
@@ -340,7 +559,7 @@ class OzonSeller {
     public function getProductList($visibility = "ALL", $offer_id = null, $product_id = null, $limit = null) {
 
         if (empty($limit))
-            $limit = 100;
+            $limit = 50;
 
         $params = [
             'filter' => [
@@ -637,6 +856,7 @@ class OzonSeller {
 
             // price columns
             $price = $prod['price'];
+            $oldprice = $prod['price_n'];
 
             if (!empty($prod['price_ozon'])) {
                 $price = $prod['price_ozon'];
@@ -647,14 +867,16 @@ class OzonSeller {
             if ($this->fee > 0) {
                 if ($this->fee_type == 1) {
                     $price = $price - ($price * $this->fee / 100);
+                    $oldprice = $oldprice - ($oldprice * $this->fee / 100);
                 } else {
                     $price = $price + ($price * $this->fee / 100);
+                    $oldprice = $oldprice - ($oldprice * $this->fee / 100);
                 }
             }
 
             // Ключ обновления артикул
             if ($this->type == 2) {
-                $offer_id = $prod['uid'];
+                $offer_id = PHPShopString::win_utf8($prod['uid']);
             } else
                 $offer_id = $prod['id'];
 
@@ -671,7 +893,7 @@ class OzonSeller {
                 "images360" => [],
                 "name" => PHPShopString::win_utf8($prod['name']),
                 "offer_id" => $offer_id,
-                "old_price" => (string) $this->price($prod['price_n'], $prod['baseinputvaluta']),
+                "old_price" => (string) $this->price($oldprice, $prod['baseinputvaluta']),
                 "pdf_list" => [],
                 "premium_price" => "",
                 "price" => (string) $this->price($price, $prod['baseinputvaluta']),
@@ -738,6 +960,8 @@ class OzonSeller {
         ];
         curl_setopt($ch, CURLOPT_URL, $api . $method);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
 
         if (!empty($params)) {

@@ -52,7 +52,7 @@ function actionStart() {
     $Tab1.=$PHPShopGUI->setField('Сообщение', $PHPShopGUI->setTextarea('title_end_new', $data['title_end']));
     $Tab1.=$PHPShopGUI->setField('Место вывода', $PHPShopGUI->setSelect('enabled_new', $e_value, 300,true));
     $Tab1.=$PHPShopGUI->setField('Тип вывода', $PHPShopGUI->setSelect('windows_new', $w_value, 300,true));
-    $Tab1.=$PHPShopGUI->setField('Защитная картинка', $PHPShopGUI->setSelect('captcha_enabled_new', $c_value, 200));
+    $Tab1.=$PHPShopGUI->setField('Защитная картинка', $PHPShopGUI->setSelect('captcha_enabled_new', $c_value, 300,true));
     
     
         // Статусы заказов

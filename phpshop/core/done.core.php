@@ -355,7 +355,7 @@ class PHPShopDone extends PHPShopCore {
 
             // VK
             $chat_id_vk = $this->PHPShopSystem->getSerilizeParam('admoption.vk_admin');
-            if (!empty($chat_id_telegram) and $this->PHPShopSystem->ifSerilizeParam('admoption.vk_order', 1)) {
+            if (!empty($chat_id_vk) and $this->PHPShopSystem->ifSerilizeParam('admoption.vk_order', 1)) {
 
                 $bot = new PHPShopVKBot();
                 $link = $bot->protocol . $_SERVER['SERVER_NAME'] . '/phpshop/admpanel/admin.php?path=order&id=' . $this->orderId;

@@ -106,7 +106,7 @@ function actionStart() {
     $Tab1.= $PHPShopGUI->setField('Почтовый индекс города отправителя', '<input class="form-control input-sm " onkeypress="cdekvalidate(event)" type="text" value="' . $data['index_from'] . '" name="index_from_new" style="width:300px; ">');
     $Tab1.= $PHPShopGUI->setField('Город на карте по умолчанию', $PHPShopGUI->setInputText(false, 'default_city_new', $data['default_city'], 300));
     $Tab1.= $PHPShopGUI->setField('Добавить наценку', '<input class="form-control input-sm " onkeypress="cdekvalidate(event)" type="number" step="0.1" min="0" value="' . $data['fee'] . '" name="fee_new" style="width:300px;">');
-    $Tab1.= $PHPShopGUI->setField('Тип наценки', $PHPShopGUI->setSelect('fee_type_new', array(array('%', 1, $data['fee_type']), array('Руб.', 2, $data['fee_type'])), 300, null, false, $search = false, false, $size = 1));
+    $Tab1.= $PHPShopGUI->setField('Тип наценки', $PHPShopGUI->setSelect('fee_type_new', array(array('%', 1, $data['fee_type']), array('Руб.', 2, $data['fee_type'])), 300, true, false, $search = false, false, $size = 1));
     
     $Tab1= $PHPShopGUI->setCollapse('Настройки',$Tab1);
     $Tab1.= $PHPShopGUI->setCollapse('Вес и габариты по умолчанию',
@@ -172,6 +172,8 @@ function getCityCode($city) {
     if ( $curl = curl_init() ) {
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($curl, CURLOPT_POST, true);
         curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($params));
         $responce = json_decode(curl_exec($curl), true);

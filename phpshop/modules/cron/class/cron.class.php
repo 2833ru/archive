@@ -3,14 +3,14 @@
 /**
  * Библиотека выполнения задач через заданные промежутки времени.
  * @author PHPShop Software
- * @version 1.3
+ * @version 1.4
  * @package PHPShopClass
  */
 class PHPShopCron {
 
     var $check_host = null;
 
-    function PHPShopCron() {
+    function __construct() {
         global $PHPShopSystem;
         $this->PHPShopSystem = $PHPShopSystem;
         $this->SysValue = $GLOBALS['SysValue'];
@@ -54,9 +54,9 @@ class PHPShopCron {
                 $protocol = 'https://';
             }
             if (!empty($path[1]))
-                $true_path = $protocol . $_SERVER['SERVER_NAME'] . "/" . $job['path'] . '&s=' . $cron_secure . $this->check_host;
+                $true_path = $protocol . $_SERVER['SERVER_NAME'].$GLOBALS['SysValue']['dir']['dir'] . "/" . $job['path'] . '&s=' . $cron_secure . $this->check_host;
             else
-                $true_path = $protocol . $_SERVER['SERVER_NAME'] . "/" . $job['path'] . '?s=' . $cron_secure . $this->check_host;
+                $true_path = $protocol . $_SERVER['SERVER_NAME'].$GLOBALS['SysValue']['dir']['dir'] . "/" . $job['path'] . '?s=' . $cron_secure . $this->check_host;
 
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $true_path);

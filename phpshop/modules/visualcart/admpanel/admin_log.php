@@ -26,9 +26,9 @@ function actionStart() {
         foreach ($data as $row) {
 
             if ($row['status'] == 1)
-                $status = 'добавлено';
+                $status = __('добавлено');
             else
-                $status = '<span class="text-warning">нет на складе</span>';
+                $status = '<span class="text-warning">'.__('нет на складе').'</span>';
 
             $PHPShopInterface->setRow(array('name' => $row['content'], 'link' => '?path=product&id=' . $row['product_id']), $row['price'],$row['num'], getUserName($row['user'], $row['ip']), array('name' => PHPShopDate::get($row['date'], true), 'order' => $row['date']), $status);
         }

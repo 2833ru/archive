@@ -66,7 +66,7 @@ function actionUpdate() {
         actionUpdateCategory();
 
     //  орректировка пустых значений
-    $PHPShopOrm->updateZeroVars('link_new');
+    $PHPShopOrm->updateZeroVars('link_new','create_products_new');
 
     // —кладs
     if (is_array($_POST['warehouse'])) {
@@ -177,7 +177,7 @@ function actionStart() {
 
     if ($data['token'] !== '' and $data['client_id'] !== '') {
         $PHPShopGUI->action_button['Ёкспортировать данные'] = [
-            'name' => 'Ёкспортировать данные',
+            'name' => __('Ёкспортировать данные'),
             'class' => 'btn btn-default btn-sm navbar-btn ozon-export',
             'type' => 'button',
             'icon' => 'glyphicon glyphicon-export'
@@ -241,7 +241,7 @@ function actionStart() {
     $Tab1 .= $PHPShopGUI->setField('Ѕаза категорий', $PHPShopGUI->setText($category['num'] . ' ' . __('записей в локальной базе'), null, false, false) . '<br>' . $PHPShopGUI->setCheckbox('load', 1, 'ќбновить базу категорий товаров дл€ OZON', 0));
 
     $Tab1 .= $PHPShopGUI->setField('—сылка на товар', $PHPShopGUI->setCheckbox('link_new', 1, 'ѕоказать ссылку на товар в OZON', $data['link']));
-
+    $Tab1 .= $PHPShopGUI->setField('—оздавать товар', $PHPShopGUI->setCheckbox('create_products_new', 1, '—оздавать автоматически товар из заказа', $data['create_products']));
 
 
     if ($data['fee_type'] == 1) {
@@ -263,7 +263,7 @@ function actionStart() {
                         $selected = "selected";
             }
 
-            $warehouse_value[] = array(PHPShopString::utf8_win1251($warehouse['name'], true), $warehouse['warehouse_id'], $selected);
+            $warehouse_value[] = array(PHPShopString::utf8_win1251($warehouse['name']), $warehouse['warehouse_id'], $selected);
         }
 
 
@@ -356,7 +356,7 @@ function actionStart() {
 function actionCategorySearch() {
 
     $PHPShopOrm = new PHPShopOrm('phpshop_modules_ozonseller_categories');
-    $data = $PHPShopOrm->getList(['*'], ['name' => " LIKE '%" . PHPShopString::utf8_win1251($_POST['words'], true) . "%'", 'parent_to' => '!=0']);
+    $data = $PHPShopOrm->getList(['*'], ['name' => " LIKE '%" . PHPShopString::utf8_win1251($_POST['words']) . "%'", 'parent_to' => '!=0']);
     if (is_array($data)) {
         foreach ($data as $row) {
 
@@ -366,7 +366,7 @@ function actionCategorySearch() {
             if ($child)
                 continue;
 
-            $result .= '<a href=\'#\' class=\'select-search\' data-id=\'' . $row['id'] . '\'  data-name=\'' . PHPShopString::utf8_win1251($row['name'], true) . '\'    >' . $parent . ' &rarr; ' . $row['name'] . '</a><br>';
+            $result .= '<a href=\'#\' class=\'select-search\' data-id=\'' . $row['id'] . '\'  data-name=\'' . PHPShopString::utf8_win1251($row['name']) . '\'    >' . $parent . ' &rarr; ' . $row['name'] . '</a><br>';
         }
         $result .= '<button type="button" class="close pull-right" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
 

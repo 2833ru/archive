@@ -34,6 +34,7 @@ function actionStart() {
     if (is_array($OrderStatusArray))
         foreach ($OrderStatusArray as $order_status)
             $order_status_value[] = array($order_status['name'], $order_status['id'], $option['1c_load_status']);
+    
 
     $PHPShopGUI->_CODE = $PHPShopGUI->setCollapse('Данные', $PHPShopGUI->setField("Данные для синхронизации номенклатуры", $PHPShopGUI->setCheckbox('option[update_name]', 1, 'Наименование номенклатуры', $option['update_name']) . '<br>' .
                     $PHPShopGUI->setCheckbox('option[update_description]', 1, 'Краткое описание', $option['update_description']) . '<br>' .
@@ -56,9 +57,10 @@ function actionStart() {
                     , 1, 'Оригинальные документы выгружаются из 1С при синхронизации заказов с помощью PHPShop Exchange.')
     );
 
-    // Ключ обновления
+    // Артикул
     $key_value[] = array(__('Артикул'), 'uid', $option['exchange_key']);
     $key_value[] = array(__('Внешний код'), 'external', $option['exchange_key']);
+    $key_value[] = array(__('Код 1С'), 'code', $option['exchange_key']);
 
     // Авторизация
     $auth_value[] = array(__('Логин и пароль'), 0, $option['exchange_auth']);
@@ -69,7 +71,7 @@ function actionStart() {
     } else
         $protocol = 'http://';
 
-    $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('CommerceML', $PHPShopGUI->setField("Ключ обновления", $PHPShopGUI->setSelect('option[exchange_key]', $key_value, 300) . '<br>' .
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('CommerceML', $PHPShopGUI->setField("Артикул на сайте", $PHPShopGUI->setSelect('option[exchange_key]', $key_value, 300) . '<br>' .
                     $PHPShopGUI->setCheckbox('option[exchange_zip]', 1, 'Сжатие данных ZIP', $option['exchange_zip']) . '<br>' .
                     $PHPShopGUI->setCheckbox('option[exchange_create]', 1, 'Создавать новые товары', $option['exchange_create']) . '<br>' .
                     $PHPShopGUI->setCheckbox('option[exchange_create_category]', 1, 'Создавать новые каталоги', $option['exchange_create_category']) . '<br>' .
@@ -77,7 +79,12 @@ function actionStart() {
                     $PHPShopGUI->setCheckbox('option[exchange_log]', 1, 'Журнал соединений', $option['exchange_log']) . '<br>'
             ) .
             $PHPShopGUI->setField("Авторизация", $PHPShopGUI->setSelect('option[exchange_auth]', $auth_value, 300)) .
-            $PHPShopGUI->setField("Имя файла", $PHPShopGUI->setInputText($protocol . $_SERVER['SERVER_NAME'] . '/1cManager/', 'option[exchange_auth_path]', $option['exchange_auth_path'], 400, '.php', false, false, 'secret_cml_path')));
+            $PHPShopGUI->setField($PHPShopGUI->setLink('../../1cManager/'.$option['exchange_auth_path'].'.php', 'Имя файла', '_blank', false, __('Открыть ссылку')), $PHPShopGUI->setInputText($protocol . $_SERVER['SERVER_NAME'] . '/1cManager/', 'option[exchange_auth_path]', $option['exchange_auth_path'], 400, '.php', false, false, 'secret_cml_path')));
+    
+    if (empty($_SESSION['mod_pro'])){
+        $PHPShopGUI->_CODE= $PHPShopGUI->setAlert('Раздел настройки документооборота для 1С и CML доступен только в версии <a class="btn btn-sm btn-info" href="https://www.phpshop.ru/page/compare.html?from='.$_SERVER['SERVER_NAME'].'" target="_blank"><span class="glyphicon glyphicon-info-sign"></span> PHPShop Pro</a>', 'info',true);
+    }
+        
 
 
     // Запрос модуля на закладку

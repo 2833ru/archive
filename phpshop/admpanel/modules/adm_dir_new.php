@@ -10,21 +10,21 @@ function modulesSubMenu($subpath) {
         $path = $data['path'];
         $menu = "../modules/" . $path . "/install/module.xml";
         $db = xml2array($menu, "adminmenu.podmenu", true);
+        if (!empty($_SESSION['support']) and $_SESSION['support'] < $db['sign'])
+            header('Location: ./admin.php?path=modules');
+        if (is_array($db))
+            foreach ($db as $val) {
 
-            if (is_array($db))
-                foreach ($db as $val) {
-                
-                         
-                    // Текущая ссылка
-                    if ($val['podmenu_action'] != $subpath[1] . '.' . $subpath[2] . '&action=new') {
-                        $action_select[$val['podmenu_name']] = array(
-                            'name' => $val['podmenu_name'],
-                            'url' => '?path=modules.' . $val['podmenu_action'],
-                        );
-                    }
-                    else $TitlePage = $val['podmenu_name'];
-                }
-        
+
+                // Текущая ссылка
+                if ($val['podmenu_action'] != $subpath[1] . '.' . $subpath[2] . '&action=new') {
+                    $action_select[$val['podmenu_name']] = array(
+                        'name' => $val['podmenu_name'],
+                        'url' => '?path=modules.' . $val['podmenu_action'],
+                    );
+                } else
+                    $TitlePage = $val['podmenu_name'];
+            }
     }
 
 
@@ -56,13 +56,13 @@ foreach ($mod_podmenu as $title) {
 
 
 $PHPShopGUI->field_col = 2;
-$TitlePage=__($TitlePage);
+$TitlePage = __($TitlePage);
 $PHPShopGUI->setActionPanel($TitlePage, $select_name, array('Сохранить и закрыть'));
 
 if (empty($subpath[3]))
     $path = '../modules/' . $subpath[2] . '/admpanel/adm_' . $subpath[2] . '_new.php';
 else
     $path = '../modules/' . $subpath[2] . '/admpanel/adm_' . $subpath[3] . '_new.php';
-if(is_file($path))
-include_once($path);
+if (is_file($path))
+    include_once($path);
 ?>

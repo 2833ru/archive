@@ -2,7 +2,7 @@
 
 /**
  * Библиотека работы с CommerceML
- * @version 1.2
+ * @version 1.3
  * @package PHPShopClass
  */
 class PHPShopCommerceML {
@@ -52,7 +52,7 @@ class PHPShopCommerceML {
         foreach ($category as $val) {
             $xml .= '<Группа>
                 <Ид>' . $val['id'] . '</Ид>
-		<Наименование>' . $val['name'] . '</Наименование>';
+		<Наименование>' . str_replace(['&', '<', '>'], '', $val['name']) . '</Наименование>';
             $parent = $this->setCategories($val['id']);
             if (!empty($parent))
                 $xml .= $parent;
@@ -107,16 +107,30 @@ class PHPShopCommerceML {
                 if ($row['parent_enabled'] == 1)
                     continue;
 
-                if (!empty($row['uid']) and $this->exchange_key == 'external')
+                if ($this->exchange_key == 'code') {
+                    $code = $row['uid'];
+                    $uid = null;
+                    $id = $row['external_code'];
+                }
+
+                if ($this->exchange_key == 'uid') {
+                    $code = null;
+                    $uid = $row['uid'];
+                    $id = $row['external_code'];
+                }
+
+                if ($this->exchange_key == 'external') {
+                    $code = null;
+                    $uid = null;
                     $id = $row['uid'];
-                else
-                    $id = $row['id'];
+                }
 
                 $item .= '
                         <Товар>
 			<Ид>' . $id . '</Ид>
-			<Артикул>' . $row['uid'] . '</Артикул>
-			<Наименование>' . $row['name'] . '</Наименование>
+                        <Код>' . $code . '</Код>
+			<Артикул>' . $uid . '</Артикул>
+			<Наименование>' . str_replace(['&', '<', '>'], '', $row['name']) . '</Наименование>
                         <БазоваяЕдиница Код="796 " НаименованиеПолное="Штука" МеждународноеСокращение="PCE">' . $row['ed_izm'] . '</БазоваяЕдиница>
                         <ПолноеНаименование><![CDATA[' . $row['description'] . ']]></ПолноеНаименование>
 			<Группы>
@@ -202,16 +216,32 @@ class PHPShopCommerceML {
                             $num = $val['num'];
                             $sum = $PHPShopOrder->returnSumma($val['price'] * $num, $order['Person']['discount']);
 
-                            if (!empty($val['uid']) and $this->exchange_key == 'external') {
-                                $id = $val['uid'];
+                            if ($this->exchange_key == 'code') {
+                                $code = $val['uid'];
                                 $uid = null;
-                            } else {
-                                $id = $val['id'];
-                                $uid = $val['uid'];
+                                $id = (new PHPShopOrm($GLOBALS['SysValue']['base']['products']))->getOne(['external_code'])['external_code'];
                             }
 
+                            if ($this->exchange_key == 'uid') {
+                                $code = null;
+                                $uid = $val['uid'];
+                                $id = $val['external_code'];
+                            }
+
+                            if ($this->exchange_key == 'external') {
+                                $code = null;
+                                $uid = null;
+                                $id = $val['uid'];
+                            }
+                            
+                            // Подтип
+                            if(!empty($val['parent'])){
+                                $id=$val['parent'].'#'.$id;
+                            }
+                                
                             $item .= '<Товар>
 				<Ид>' . $id . '</Ид>
+                                <Код>' . $code . '</Код>
 				<Штрихкод></Штрихкод>
 				<Артикул>' . $uid . '</Артикул>
 				<Наименование>' . $val['name'] . '</Наименование>

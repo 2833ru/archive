@@ -10,7 +10,7 @@ function actionStart() {
     // Выборка
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
 
-    $PHPShopGUI->setActionPanel(__("Редактирование Слайдера") . " №" . $data['id'], array('Удалить'), array('Сохранить', 'Сохранить и закрыть'));
+    $PHPShopGUI->setActionPanel(__("Редактирование Слайдера") . " &#8470; " . $data['id'], array('Удалить'), array('Сохранить', 'Сохранить и закрыть'));
     $PHPShopGUI->field_col = 3;
 
     // Содержание закладки 1

@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.1</version>
+    <version>1.3</version>
     <name>WB Partners</name>
     <description>Модуль продаж через Wildberries.</description>
     <category>pro,marketplaces</category>
-    <sign>1680674076</sign>
-    <status>New</status>
+    <sign>1688623308</sign>
     <faqlink>https://docs.phpshop.ru/moduli/prodazhi/wb-partners</faqlink>
     <pro>true</pro>
     <adminmenu>

@@ -62,7 +62,7 @@ class PHPShopSecurity {
     static function CleanOut($str) {
         $str = stripslashes($str);
         $str = preg_replace('([\r\n\t;])', '', $str);
-        $str = @html_entity_decode($str, null, 'windows-1251');
+        $str = @html_entity_decode($str, null, $GLOBALS['PHPShopLang']->charset);
 
         return $str;
     }
@@ -148,7 +148,7 @@ class PHPShopSecurity {
                 break;
 
             case 2:
-                return htmlspecialchars(stripslashes($str), ENT_QUOTES, 'windows-1251');
+                return htmlspecialchars(stripslashes($str), ENT_QUOTES, $GLOBALS['PHPShopLang']->charset);
                 break;
 
             case 3:
@@ -160,7 +160,7 @@ class PHPShopSecurity {
             case 4:
                 if (preg_match("/[^(\w)|(\x7F-\xFF)|(\s)]/", $str))
                     $str = "";
-                return htmlspecialchars(stripslashes($str), ENT_COMPAT, 'windows-1251');
+                return htmlspecialchars(stripslashes($str), ENT_COMPAT, $GLOBALS['PHPShopLang']->charset);
                 break;
 
             case 5:
@@ -182,6 +182,7 @@ class PHPShopSecurity {
      * @return string
      */
     static function true_search($search, $option = false) {
+        
         $count = strlen($search);
         $search = strtolower($search);
         $i = 0;

@@ -24,7 +24,7 @@ function actionUpdate() {
     global $PHPShopModules,$PHPShopOrm;
 
     // Корректировка пустых значений
-    $PHPShopOrm->updateZeroVars('link_new');
+    $PHPShopOrm->updateZeroVars('link_new','create_products_new');
 
     $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.wbseller.wbseller_system"));
     $PHPShopOrm->debug = false;
@@ -36,7 +36,7 @@ function actionUpdate() {
 }
 
 function actionStart() {
-    global $PHPShopGUI, $PHPShopOrm, $WbSeller, $PHPShopModules;
+    global $PHPShopGUI, $PHPShopOrm, $WbSeller;
 
     $PHPShopGUI->field_col = 4;
 
@@ -61,8 +61,37 @@ function actionStart() {
 
     $Tab1 = $PHPShopGUI->setField('API key', $PHPShopGUI->setTextarea('token_new', $data['token'], false, '100%', '100'));
     $Tab1 .= $PHPShopGUI->setField('Статус нового заказа', $PHPShopGUI->setSelect('status_new', $order_status_value, '100%'));
+    
+    
+    // Статусы автоматической загрузки
+    $order_status_import_value[] = array(__('Ничего не выбрано'), 0, $data['status_import']);
+    foreach ($WbSeller->status_list as $k => $status_val) {
+        $order_status_import_value[] = array(__($status_val), $k, $data['status_import']);
+    }
+    $Tab1 .= $PHPShopGUI->setField('Статус заказа в WB для автоматической загрузки', $PHPShopGUI->setSelect('status_import_new', $order_status_import_value, '100%'));
+    
+        // Доставка
+    $PHPShopDeliveryArray = new PHPShopDeliveryArray();
+
+    $DeliveryArray = $PHPShopDeliveryArray->getArray();
+    if (is_array($DeliveryArray))
+        foreach ($DeliveryArray as $delivery) {
+
+            // Длинные наименования
+            if (strpos($delivery['city'], '.')) {
+                $name = explode(".", $delivery['city']);
+                $delivery['city'] = $name[0];
+            }
+
+            $delivery_value[] = array($delivery['city'], $delivery['id'], $data['delivery'], 'data-subtext="' . $delivery['price'] . '"');
+        }
+
+    $Tab1 .= $PHPShopGUI->setField('Доставка', $PHPShopGUI->setSelect('delivery_new', $delivery_value, '100%'));
+
+    
     $Tab1 .= $PHPShopGUI->setField('Ключ обновления', $PHPShopGUI->setRadio("type_new", 1, "ID товара", $data['type']) . $PHPShopGUI->setRadio("type_new", 2, "Артикул товара", $data['type']));
     $Tab1 .= $PHPShopGUI->setField('Ссылка на товар', $PHPShopGUI->setCheckbox('link_new', 1, 'Показать ссылку на товар в Wildberries', $data['link']));
+    $Tab1 .= $PHPShopGUI->setField('Создавать товар', $PHPShopGUI->setCheckbox('create_products_new', 1, 'Создавать автоматически товар из заказа', $data['create_products']));
 
     $Tab1 = $PHPShopGUI->setCollapse('Настройки', $Tab1);
 
@@ -76,12 +105,12 @@ function actionStart() {
     $getWarehouse = $WbSeller->getWarehouse();
     if (is_array($getWarehouse))
         foreach ($getWarehouse as $warehouse)
-            $warehouse_value[] = array(PHPShopString::utf8_win1251($warehouse['name'],true), $warehouse['id'], $data['warehouse']);
+            $warehouse_value[] = array(PHPShopString::utf8_win1251($warehouse['name']), $warehouse['id'], $data['warehouse_id']);
 
     $Tab3 = $PHPShopGUI->setCollapse('Цены', $PHPShopGUI->setField('Колонка цен WB', $PHPShopGUI->setSelect('price_new', $PHPShopGUI->setSelectValue($data['price'], 5), 100)) .
             $PHPShopGUI->setField('Наценка', $PHPShopGUI->setInputText($status_pre, 'fee_new', $data['fee'], 100, '%')) .
             $PHPShopGUI->setField('Действие', $PHPShopGUI->setRadio("fee_type_new", 1, "Понижение", $data['fee_type']) . $PHPShopGUI->setRadio("fee_type_new", 2, "Повышение", $data['fee_type'])) .
-            $PHPShopGUI->setField("Склад WB", $PHPShopGUI->setSelect('warehouse_new', $warehouse_value, '100%'))
+            $PHPShopGUI->setField("Склад WB", $PHPShopGUI->setSelect('warehouse_id_new', $warehouse_value, '100%'))
     );
 
     // Инструкция
@@ -112,7 +141,7 @@ function actionCategorySearch() {
     if (is_array($data)) {
         foreach ($data as $row) {
 
-            $result .= '<a href=\'#\' class=\'select-search\' data-name=\'' . PHPShopString::utf8_win1251($row['objectName'], true) . '\'>' . PHPShopString::utf8_win1251($row['parentName'], true) . ' &rarr; ' . PHPShopString::utf8_win1251($row['objectName'], true) . '</a><br>';
+            $result .= '<a href=\'#\' class=\'select-search\' data-name=\'' . PHPShopString::utf8_win1251($row['objectName']) . '\'>' . PHPShopString::utf8_win1251($row['parentName']) . ' &rarr; ' . PHPShopString::utf8_win1251($row['objectName']) . '</a><br>';
         }
         $result .= '<button type="button" class="close pull-right" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
 

@@ -318,7 +318,7 @@ function actionStart() {
                 $valuta_def_name = $val['code'];
             } else
                 $check = false;
-            $valuta_area .= $PHPShopGUI->setRadio('baseinputvaluta_new', $val['id'], $val['name'], $defvaluta);
+            $valuta_area .= $PHPShopGUI->setRadio('baseinputvaluta_new', $val['id'], $val['name'], $defvaluta,false);
         }
 
     // Цены

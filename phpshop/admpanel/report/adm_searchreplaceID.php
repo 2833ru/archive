@@ -7,7 +7,7 @@ $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['search_base']);
 // Построение дерева категорий
 function treegenerator($array, $i, $parent) {
     global $tree_array;
-    $del = '¦&nbsp;&nbsp;&nbsp;&nbsp;';
+    $del = '&brvbar;&nbsp;&nbsp;&nbsp;&nbsp;';
     $tree = $tree_select = $check = false;
     $del = str_repeat($del, $i);
     if (!empty($array['sub']) and is_array($array['sub'])) {

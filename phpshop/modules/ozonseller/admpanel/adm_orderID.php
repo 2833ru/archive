@@ -50,8 +50,8 @@ function actionStart() {
     $Tab1 .= $PHPShopGUI->setField("Статус", $PHPShopGUI->setText($OzonSeller->getStatus($order_info['result']['status'])));
     $Tab1 .= $PHPShopGUI->setField("Дата поступления", $PHPShopGUI->setText($order_info['result']['in_process_at']));
     $Tab1 .= $PHPShopGUI->setField("Дата доставки", $PHPShopGUI->setText($order_info['result']['shipment_date']));
-    $Tab1 .= $PHPShopGUI->setField("Склад", $PHPShopGUI->setText(PHPShopString::utf8_win1251($order_info['result']['delivery_method']['warehouse'],true)));
-    $Tab1 .= $PHPShopGUI->setField("Доставка", $PHPShopGUI->setText(PHPShopString::utf8_win1251($order_info['result']['delivery_method']['name'],true).' - '.(int)$order_info['result']['delivery_price'].$currency, "left", false, false));
+    $Tab1 .= $PHPShopGUI->setField("Склад", $PHPShopGUI->setText(PHPShopString::utf8_win1251($order_info['result']['delivery_method']['warehouse']), "left", false, false));
+    $Tab1 .= $PHPShopGUI->setField("Доставка", $PHPShopGUI->setText(PHPShopString::utf8_win1251($order_info['result']['delivery_method']['name']) . ' - ' . (int) $order_info['result']['delivery_price'] . $currency, "left", false, false));
 
     $Tab1 = $PHPShopGUI->setCollapse('Данные', $Tab1);
     $Tab3 = $PHPShopGUI->setCollapse('JSON данные', $Tab3);
@@ -61,31 +61,42 @@ function actionStart() {
 
     // Ключ обновления
     if ($OzonSeller->type == 2)
-        $ozon_type = 'uid';
+        $type = 'uid';
     else
-        $ozon_type = 'id';
+        $type = 'id';
 
     $data = $order_info['result']['products'];
+
+
     if (is_array($data))
         foreach ($data as $row) {
 
-            $product = new PHPShopProduct($row['offer_id'], $ozon_type);
+            $product = (new PHPShopOrm($GLOBALS['SysValue']['base']['products']))->getOne(['id,uid,name,pic_small'], [$type => '="' . (string) PHPShopString::utf8_win1251($row['offer_id']) . '"']);
 
-            if (!empty($product->getValue('pic_small')))
-                $icon = '<img src="' . $product->getValue('pic_small') . '" onerror="this.onerror = null;this.src = \'./images/no_photo.gif\'" class="media-object">';
+            if (empty($product)) {
+                $product_info = $OzonSeller->getProductAttribures($row['offer_id'], 'offer_id')['result'][0];
+                $image = $product_info['images'][0]['file_name'];
+                $link = 'https://www.ozon.ru/product/' .$row['sku'];
+            } else{
+                $image = $product['pic_small'];
+                $link = '?path=product&id=' . $product['id'] . '&return=modules.dir.ozonseller';
+            }
+
+            if (!empty($image))
+                $icon = '<img src="' . $image . '" onerror="this.onerror = null;this.src = \'./images/no_photo.gif\'" class="media-object">';
             else
                 $icon = '<img class="media-object" src="./images/no_photo.gif">';
 
             $name = '
 <div class="media">
   <div class="media-left">
-    <a href="?path=product&id=' . $row['offer_id'] . '" >
+    <a href="'.$link.'" target="_blank">
       ' . $icon . '
     </a>
   </div>
    <div class="media-body">
-    <div class="media-heading"><a href="?path=product&id=' . $row['offer_id'] . '&return=modules.dir.ozonseller" >' . PHPShopString::utf8_win1251($row['name']) . '</a></div>
-    ' . __('Код') . ': ' . $row['sku'] . '
+    <div class="media-heading"><a href="'.$link.'" target="_blank">' . PHPShopString::utf8_win1251($row['name']) . '</a></div>
+    ' . __('Код') . ': ' . $row['offer_id'] . '
   </div>
 </div>';
 
@@ -135,26 +146,40 @@ function actionSave() {
     if (is_array($data))
         foreach ($data as $row) {
 
-            $product = new PHPShopProduct($row['offer_id'], $ozon_type);
-            $order['Cart']['cart'][$row['offer_id']]['id'] = $product->getParam('id');
-            $order['Cart']['cart'][$row['offer_id']]['uid'] = $product->getParam("uid");
-            $order['Cart']['cart'][$row['offer_id']]['name'] = $product->getName();
-            $order['Cart']['cart'][$row['offer_id']]['price'] = $row['price'];
-            $order['Cart']['cart'][$row['offer_id']]['num'] = $row['quantity'];
-            $order['Cart']['cart'][$row['offer_id']]['weight'] = '';
-            $order['Cart']['cart'][$row['offer_id']]['ed_izm'] = '';
-            $order['Cart']['cart'][$row['offer_id']]['pic_small'] = $product->getImage();
-            $order['Cart']['cart'][$row['offer_id']]['parent'] = 0;
-            $order['Cart']['cart'][$row['offer_id']]['user'] = 0;
+            // Данные по товару
+            $product = (new PHPShopOrm($GLOBALS['SysValue']['base']['products']))->getOne(['id,uid,name,pic_small'], [$type => '="' . (string) PHPShopString::utf8_win1251($row['offer_id']) . '"']);
+
+
+            if (empty($product) and ! empty($OzonSeller->create_products)) {
+
+                // Создание товара
+                $product_id = $OzonSeller->addProduct($row['offer_id']);
+                $product = (new PHPShopOrm($GLOBALS['SysValue']['base']['products']))->getOne(['id,uid,name,pic_small'], ['id' => '=' . (int) $product_id]);
+            }
+
+
+            if (empty($product))
+                continue;
+
+            $order['Cart']['cart'][$product['id']]['id'] = $product['id'];
+            $order['Cart']['cart'][$product['id']]['uid'] = $product['uid'];
+            $order['Cart']['cart'][$product['id']]['name'] = $product['name'];
+            $order['Cart']['cart'][$product['id']]['price'] = $row['price'];
+            $order['Cart']['cart'][$product['id']]['num'] = $row['quantity'];
+            $order['Cart']['cart'][$product['id']]['weight'] = '';
+            $order['Cart']['cart'][$product['id']]['ed_izm'] = '';
+            $order['Cart']['cart'][$product['id']]['pic_small'] = $product['pic_small'];
+            $order['Cart']['cart'][$product['id']]['parent'] = 0;
+            $order['Cart']['cart'][$product['id']]['user'] = 0;
             $qty += $row['quantity'];
             $sum += $row['price'] * $row['quantity'];
-            $weight += $product->getParam('weight');
+            $weight += $product['weight'];
         }
 
     $order['Cart']['num'] = $qty;
     $order['Cart']['sum'] = $sum;
     $order['Cart']['weight'] = $weight;
-    $order['Cart']['dostavka'] = (int)$order_info['result']['delivery_price'];
+    $order['Cart']['dostavka'] = (int) $order_info['result']['delivery_price'];
 
     $order['Person']['ouid'] = '';
     $order['Person']['data'] = time();
@@ -181,9 +206,9 @@ function actionSave() {
     $insert['orders_new'] = serialize($order);
     $insert['fio_new'] = $name;
     $insert['tel_new'] = $phone;
-    $insert['city_new'] = PHPShopString::utf8_win1251($order_info['result']['delivery_method']['name'],true);
+    $insert['city_new'] = PHPShopString::utf8_win1251($order_info['result']['delivery_method']['name'], true);
     $insert['statusi_new'] = $OzonSeller->status;
-    $insert['status_new'] = serialize(array("maneger" => __('OZON заказ').' &#8470;' . $_POST['rowID']));
+    $insert['status_new'] = serialize(array("maneger" => __('OZON заказ') . ' &#8470;' . $_POST['rowID']));
     $insert['sum_new'] = $order['Cart']['sum'];
     $insert['ozonseller_order_data_new'] = $_POST['rowID'];
 

@@ -241,6 +241,7 @@ function actionStart() {
     $License = parse_ini_file_true("../../license/" . PHPShopFile::searchFile('../../license/', 'getLicense', true), 1);
 
     if (is_array($License)) {
+        $_SESSION['support'] = $License['License']['SupportExpires'];
         if ($License['License']['SupportExpires'] > time() and $License['License']['RegisteredTo'] != 'Trial NoName')
             $_SESSION['update'] = 1;
         elseif ($License['License']['SupportExpires'] > time() and $License['License']['RegisteredTo'] == 'Trial NoName')

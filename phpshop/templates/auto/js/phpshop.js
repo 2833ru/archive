@@ -501,6 +501,15 @@ $().ready(function () {
 
             // —брос текущей страницы
             count = current;
+
+            // —брос слайдера
+            var max = $("#slider-range").slider("option", "max");
+            var min = $("#slider-range").slider("option", "min");
+            $('#price-filter-body input[name=min]').val(max);
+            $('#price-filter-body input[name=max]').val(min);
+            $("#slider-range").slider({
+                values: [min, max]
+            });
         }
 
     });

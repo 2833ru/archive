@@ -44,7 +44,7 @@ $OzonSeller = new OzonSeller();
 if (isset($_GET['date_start']))
     $date_start = $_GET['date_start'];
 else
-    $date_start = PHPShopDate::get((time() - 2592000), false, true);
+    $date_start = PHPShopDate::get((time() - 2592000 / 30), false, true);
 
 if (isset($_GET['date_end']))
     $date_end = $_GET['date_end'];
@@ -84,7 +84,7 @@ if (is_array($orders))
 
         // Данные по заказу Озон
         $order_info = $OzonSeller->getOrderFbs($posting_number)['result'];
-        
+
         // Проверка статуса
         if ($order_info['status'] != $OzonSeller->status_import) {
             continue;
@@ -102,34 +102,52 @@ if (is_array($orders))
 
         // Ключ обновления
         if ($OzonSeller->type == 2)
-            $ozon_type = 'uid';
+            $type = 'uid';
         else
-            $ozon_type = 'id';
+            $type = 'id';
 
         $data = $order_info['products'];
         if (is_array($data))
             foreach ($data as $row) {
 
-                $product = new PHPShopProduct($row['offer_id'], $ozon_type);
-                $order['Cart']['cart'][$row['offer_id']]['id'] = $product->getParam('id');
-                $order['Cart']['cart'][$row['offer_id']]['uid'] = $product->getParam("uid");
-                $order['Cart']['cart'][$row['offer_id']]['name'] = $product->getName();
-                $order['Cart']['cart'][$row['offer_id']]['price'] = $row['price'];
-                $order['Cart']['cart'][$row['offer_id']]['num'] = $row['quantity'];
-                $order['Cart']['cart'][$row['offer_id']]['weight'] = '';
-                $order['Cart']['cart'][$row['offer_id']]['ed_izm'] = '';
-                $order['Cart']['cart'][$row['offer_id']]['pic_small'] = $product->getImage();
-                $order['Cart']['cart'][$row['offer_id']]['parent'] = 0;
-                $order['Cart']['cart'][$row['offer_id']]['user'] = 0;
+                // Данные по товару
+                $product = (new PHPShopOrm($GLOBALS['SysValue']['base']['products']))->getOne(['id,uid,name,pic_small'], [$type => '="' . (string) PHPShopString::utf8_win1251($row['offer_id']) . '"']);
+
+
+                if (empty($product) and ! empty($OzonSeller->create_products)) {
+
+                    // Создание товара
+                    $product_id = $OzonSeller->addProduct($row['offer_id']);
+                    $product = (new PHPShopOrm($GLOBALS['SysValue']['base']['products']))->getOne(['id,uid,name,pic_small'], ['id' => '=' . (int) $product_id]);
+                }
+
+
+                if (empty($product))
+                    continue;
+
+                $order['Cart']['cart'][$product['id']]['id'] = $product['id'];
+                $order['Cart']['cart'][$product['id']]['uid'] = $product['uid'];
+                $order['Cart']['cart'][$product['id']]['name'] = $product['name'];
+                $order['Cart']['cart'][$product['id']]['price'] = $row['price'];
+                $order['Cart']['cart'][$product['id']]['num'] = $row['quantity'];
+                $order['Cart']['cart'][$product['id']]['weight'] = '';
+                $order['Cart']['cart'][$product['id']]['ed_izm'] = '';
+                $order['Cart']['cart'][$product['id']]['pic_small'] = $product['pic_small'];
+                $order['Cart']['cart'][$product['id']]['parent'] = 0;
+                $order['Cart']['cart'][$product['id']]['user'] = 0;
                 $qty += $row['quantity'];
                 $sum += $row['price'] * $row['quantity'];
-                $weight += $product->getParam('weight');
+                $weight += $product['weight'];
             }
+
+
+        if (empty($order['Cart']['cart']))
+            continue;
 
         $order['Cart']['num'] = $qty;
         $order['Cart']['sum'] = $sum;
         $order['Cart']['weight'] = $weight;
-        $order['Cart']['dostavka'] = (int)$order_info['delivery_price'];
+        $order['Cart']['dostavka'] = (int) $order_info['delivery_price'];
 
         $order['Person']['ouid'] = '';
         $order['Person']['data'] = time();
@@ -156,7 +174,7 @@ if (is_array($orders))
         $insert['orders_new'] = serialize($order);
         $insert['fio_new'] = $name;
         $insert['tel_new'] = $phone;
-        $insert['city_new'] = PHPShopString::utf8_win1251($order_info['result']['delivery_method']['name'],true);
+        $insert['city_new'] = PHPShopString::utf8_win1251($order_info['result']['delivery_method']['name'], true);
         $insert['statusi_new'] = $OzonSeller->status;
         $insert['status_new'] = serialize(array("maneger" => __('OZON заказ') . ' &#8470;' . $posting_number));
         $insert['sum_new'] = $order['Cart']['sum'];
@@ -165,12 +183,34 @@ if (is_array($orders))
         // Запись в базу
         $orderId = $PHPShopOrm->insert($insert);
 
+
         // Оповещение пользователя о новом статусе и списание со склада
-        if (!empty($insert['statusi_new'])) {
-            PHPShopObj::loadClass("order");
-            $PHPShopOrderFunction = new PHPShopOrderFunction($orderId);
-            $PHPShopOrderFunction->changeStatus($insert['statusi_new'], 0);
+        PHPShopObj::loadClass("order");
+        $PHPShopOrderFunction = new PHPShopOrderFunction($orderId);
+        $PHPShopOrderFunction->changeStatus($insert['statusi_new'], 0);
+
+        // Telegram
+        $chat_id_telegram = $PHPShopSystem->getSerilizeParam('admoption.telegram_admin');
+        if (!empty($chat_id_telegram) and $PHPShopSystem->ifSerilizeParam('admoption.telegram_order', 1)) {
+
+            PHPShopObj::loadClass('bot');
+
+            $bot = new PHPShopTelegramBot();
+            $msg = $PHPShopBase->SysValue['lang']['mail_title_adm'] . $order_info['id'] . " - " . $product['name'] . " [" . $insert['sum_new'] . " " . $PHPShopOrderFunction->default_valuta_name . ']';
+            $bot->send($chat_id_telegram, PHPShopString::win_utf8($msg));
         }
+
+        // VK
+        $chat_id_vk = $PHPShopSystem->getSerilizeParam('admoption.vk_admin');
+        if (!empty($chat_id_vk) and $PHPShopSystem->ifSerilizeParam('admoption.vk_order', 1)) {
+
+            PHPShopObj::loadClass('bot');
+
+            $bot = new PHPShopVKBot();
+            $msg = $PHPShopBase->SysValue['lang']['mail_title_adm'] . $order_info['id'] . " - " . $product['name'] . " [" . $insert['sum_new'] . " " . $PHPShopOrderFunction->default_valuta_name . ']';
+            $bot->send($chat_id_vk, PHPShopString::win_utf8($msg));
+        }
+
 
         $count++;
     }

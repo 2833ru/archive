@@ -208,7 +208,7 @@ function actionStart() {
         $Tab2 = $PHPShopGUI->setField("Блокировка оплат", $PHPShopGUI->setSelect('payment_new[]', $payment_value, '100%', null, false, $search = false, false, 1, true));
 
 
-        $Tab2 .= $PHPShopGUI->setField('Не изменять стоимость', $PHPShopGUI->setRadio('is_mod_new', 1, __('Выключить'), $data['is_mod'], false, 'text-warning') . $PHPShopGUI->setRadio('is_mod_new', 2, __('Включить'), $data['is_mod']));
+        $Tab2 .= $PHPShopGUI->setField('Не изменять стоимость', $PHPShopGUI->setRadio('is_mod_new', 1, 'Выключить', $data['is_mod'], true, 'text-warning') . $PHPShopGUI->setRadio('is_mod_new', 2, 'Включить', $data['is_mod']));
     }
 
 

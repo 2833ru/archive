@@ -87,6 +87,13 @@ var locale = {
     product_operations: "Выберите, что необходимо сделать с товарами в каталоге и подкаталогах.",
     charset: "utf-8",
     confirm_change_price: "Новая цена отличается более чем на 20%. Вы уверены?",
+	help: "Помощь",
+	cdek: {
+        express_delivery: "Курьерская доставка",
+		pickup_code: "Код выбранного ПВЗ",
+		city: "город",
+		pickup_address: "адрес выбранного ПВЗ",
+		pickup_phone_number: "телефон выбранного ПВЗ",
+		pickup: "ПВЗ",
+	}
 };
-
-

@@ -5,7 +5,7 @@ PHPShopObj::loadClass("valuta");
 /**
  * Библиотека работы с Wildberries Seller API
  * @author PHPShop Software
- * @version 1.1
+ * @version 1.3
  * @package PHPShopModules
  * @todo https://openapi.wb.ru/
  */
@@ -48,12 +48,194 @@ class WbSeller {
         $this->fee = $this->options['fee'];
         $this->price = $this->options['price'];
         $this->type = $this->options['type'];
-        $this->warehouse = $this->options['warehouse'];
+        $this->warehouse = $this->options['warehouse_id'];
+        $this->status_import = $this->options['status_import'];
+        $this->delivery = $this->options['delivery'];
+        $this->create_products = $this->options['create_products'];
+
+        $this->status_list = [
+            'new' => 'Новые заказы',
+            'all' => 'Все заказы',
+        ];
 
         if (!empty($_SERVER['HTTPS']) && 'off' !== strtolower($_SERVER['HTTPS']))
             $this->ssl = 'https://';
         else
             $this->ssl = 'http://';
+    }
+
+    /**
+     *  Создание товара
+     */
+    public function addProduct($id) {
+        global $PHPShopSystem;
+
+        $product_array = $this->getProduct([$id])['data'];
+
+        if (is_array($product_array))
+            foreach ($product_array as $row) {
+
+                if ($row['vendorCode'] == $id)
+                    $product_info = $row;
+                else
+                    continue;
+            }
+
+        // Поиск имени
+        if (is_array($product_info['characteristics']))
+            foreach ($product_info['characteristics'] as $characteristics) {
+
+                if (!empty($characteristics[PHPShopString::win_utf8('Наименование')]))
+                    $product_info['name'] = $characteristics[PHPShopString::win_utf8('Наименование')];
+
+                if (!empty($characteristics[PHPShopString::win_utf8('Предмет')]))
+                    $product_info['category'] = $characteristics[PHPShopString::win_utf8('Предмет')];
+
+                if (!empty($characteristics[PHPShopString::win_utf8('Описание')]))
+                    $product_info['description'] = $characteristics[PHPShopString::win_utf8('Описание')];
+
+                if (!empty($characteristics[PHPShopString::win_utf8('Вес товара с упаковкой (г)')]))
+                    $product_info['weight'] = $characteristics[PHPShopString::win_utf8('Вес товара с упаковкой (г)')][0];
+
+                if (!empty($characteristics[PHPShopString::win_utf8('Ширина предмета')]))
+                    $product_info['width'] = $characteristics[PHPShopString::win_utf8('Ширина предмета')][0] * 100;
+
+                if (!empty($characteristics[PHPShopString::win_utf8('Высота упаковки')]))
+                    $product_info['height'] = $characteristics[PHPShopString::win_utf8('Высота упаковки')][0] * 100;
+
+                if (!empty($characteristics[PHPShopString::win_utf8('Длина упаковки')]))
+                    $product_info['length'] = $characteristics[PHPShopString::win_utf8('Длина упаковки')][0] * 100;
+            }
+
+        $insert['name_new'] = PHPShopString::utf8_win1251($product_info['name']);
+        $insert['uid_new'] = PHPShopString::utf8_win1251($product_info['vendorCode']);
+        $insert['export_wb_id_new'] = PHPShopString::utf8_win1251($product_info['nmID']);
+        $insert['export_wb_new'] = 1;
+        $insert['datas_new'] = time();
+        $insert['user_new'] = $_SESSION['idPHPSHOP'];
+        $insert['export_wb_task_status_new'] = time();
+        $insert['barcode_wb_new'] = PHPShopString::utf8_win1251($product_info['sizes'][0]['skus'][0]);
+
+        // Категория
+        $insert['category_new'] = (new PHPShopOrm($GLOBALS['SysValue']['base']['categories']))->getOne(['id,name'], ['category_wbseller' => '="' . PHPShopString::utf8_win1251($product_info['category']) . '"'])['id'];
+      
+        $insert['items_new'] = 1;
+        $insert['enabled_new'] = 1;
+        $insert['price_new'] = $product_info['sizes'][0]['price'];
+        $insert['baseinputvaluta_new'] = $PHPShopSystem->getDefaultOrderValutaId();
+        $insert['weight_new'] = $product_info['weight'];
+        $insert['height_new'] = $product_info['height'];
+        $insert['width_new'] = $product_info['width'];
+        $insert['length_new'] = $product_info['length'];
+        $insert['content_new'] = PHPShopString::utf8_win1251($product_info['description']);
+
+        $prodict_id = (new PHPShopOrm($GLOBALS['SysValue']['base']['products']))->insert($insert);
+
+        // Создание изображений
+        $this->addProductImage($product_info['mediaFiles'], $prodict_id);
+
+        return $prodict_id;
+    }
+
+    /**
+     *  Создание изображений
+     */
+    public function addProductImage($mediaFiles, $prodict_id) {
+        global $PHPShopSystem;
+
+        require_once $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . '/phpshop/lib/thumb/phpthumb.php';
+        $width_kratko = $PHPShopSystem->getSerilizeParam('admoption.width_kratko');
+        $img_tw = $PHPShopSystem->getSerilizeParam('admoption.img_tw');
+        $img_th = $PHPShopSystem->getSerilizeParam('admoption.img_th');
+
+        // Папка картинок
+        $path = $PHPShopSystem->getSerilizeParam('admoption.image_result_path');
+        if (!empty($path))
+            $path = $path . '/';
+
+        $img_load = 0;
+
+
+        if (is_array($mediaFiles)) {
+            foreach ($mediaFiles as $k => $img) {
+                if (!empty($img) and ! stristr($img, '.mp4')) {
+
+                    $path_parts = pathinfo($img);
+
+                    $path_parts['basename'] = $prodict_id . '_' . $path_parts['basename'];
+
+                    // Файл загружен
+                    if ($this->downloadFile($img, $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['dir']['dir'] . '/UserFiles/Image/' . $path . $path_parts['basename']))
+                        $img_load++;
+                    else
+                        continue;
+
+                    // Новое имя
+                    $img = $GLOBALS['dir']['dir'] . '/UserFiles/Image/' . $path . $path_parts['basename'];
+
+                    // Запись в фотогалерее
+                    $PHPShopOrmImg = new PHPShopOrm($GLOBALS['SysValue']['base']['foto']);
+                    $PHPShopOrmImg->insert(array('parent_new' => intval($prodict_id), 'name_new' => $img, 'num_new' => $k));
+
+                    $file = $_SERVER['DOCUMENT_ROOT'] . $img;
+                    $name = str_replace(array(".png", ".jpg", ".jpeg", ".gif", ".PNG", ".JPG", ".JPEG", ".GIF"), array("s.png", "s.jpg", "s.jpeg", "s.gif", "s.png", "s.jpg", "s.jpeg", "s.gif"), $file);
+
+                    if (!file_exists($name) and file_exists($file)) {
+
+                        // Генерация тубнейла 
+                        if (!empty($_POST['export_imgproc'])) {
+                            $thumb = new PHPThumb($file);
+                            $thumb->setOptions(array('jpegQuality' => $width_kratko));
+                            $thumb->resize($img_tw, $img_th);
+                            $thumb->save($name);
+                        } else
+                            copy($file, $name);
+                    }
+
+                    // Главное изображение
+                    if ($k == 0 and ! empty($file)) {
+
+                        $update['pic_big_new'] = $img;
+
+                        // Главное превью
+                        $update['pic_small_new'] = str_replace(array(".png", ".jpg", ".jpeg", ".gif", ".PNG", ".JPG", ".JPEG", ".GIF"), array("s.png", "s.jpg", "s.jpeg", "s.gif", "s.png", "s.jpg", "s.jpeg", "s.gif"), $img);
+                    }
+                }
+            }
+
+            (new PHPShopOrm($GLOBALS['SysValue']['base']['products']))->update($update, ['id' => '=' . intval($prodict_id)]);
+        }
+    }
+
+    /**
+     *  Загрузка изображения по ссылке 
+     */
+    public function downloadFile($url, $path) {
+        $newfname = $path;
+
+        $arrContextOptions = array(
+            "ssl" => array(
+                "verify_peer" => false,
+                "verify_peer_name" => false,
+            ),
+        );
+
+        $file = fopen($url, 'rb', false, stream_context_create($arrContextOptions));
+        if ($file) {
+            $newf = fopen($newfname, 'wb');
+            if ($newf) {
+                while (!feof($file)) {
+                    fwrite($newf, fread($file, 1024 * 8), 1024 * 8);
+                }
+            }
+        }
+        if ($file) {
+            fclose($file);
+        }
+        if ($newf) {
+            fclose($newf);
+            return true;
+        }
     }
 
     /**
@@ -189,7 +371,7 @@ class WbSeller {
                     "withPhoto" => (int) 1
                 ],
                 'sort' => [
-                    "sortColumn" => "updateAt",
+                    "sortColumn" => "",
                     "ascending" > false
                 ]
             ],
@@ -216,7 +398,7 @@ class WbSeller {
         if ($status == 'new')
             $method = self::GET_ORDER_NEW;
         else
-            $method = self::GET_ORDER_LIST . '?dateFrom=' . PHPShopDate::GetUnixTime($date1, '-', true) . '&dateTo=' . PHPShopDate::GetUnixTime($date2, '-', true) . '&limit=100&next=0';
+            $method = self::GET_ORDER_LIST . '?dateFrom=' . PHPShopDate::GetUnixTime($date1, '-', true) . '&dateTo=' . PHPShopDate::GetUnixTime($date2, '-', true) . '&limit=1000&next=0';
 
         $result = $this->request($method);
 
@@ -447,7 +629,7 @@ class WbSeller {
 
                 $params[] = [[
                 "characteristics" => $this->getAttributes($prod),
-                "vendorCode" => (string) $prod['uid'],
+                "vendorCode" => (string) PHPShopString::win_utf8($prod['uid']),
                 "sizes" => [[
                 'price' => (int) $this->price($price, $prod['baseinputvaluta']),
                 'skus' => [$prod['barcode_wb']]
@@ -525,6 +707,8 @@ class WbSeller {
 
         curl_setopt($ch, CURLOPT_URL, $api . $method);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
 
         if (!empty($params)) {

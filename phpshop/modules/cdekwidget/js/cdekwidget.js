@@ -29,34 +29,34 @@ function cdekwidgetWidget() {
 
 // Курьерская доставка выбор точного адреса доставки. Корзина
 function cdekwidgetonChooseAddress(result) {
-    var info = 'Курьерская доставка: ' + result.address;
+    var info = locale.cdek.express_delivery + ': ' + result.address;
 
     $('input[name="cdek_type"]').val('courier');
     $('input[name="cdekInfo"]').val(info);
-    $('#deliveryInfo').html('Курьерская доставка: ' + result.address);
+    $('#deliveryInfo').html(locale.cdek.express_delivery +': ' + result.address);
 
     cdekwidgetOnChoose(result);
 }
 
 // Доставка до ПВЗ. Корзина
 function cdekWidgetOnChoosePvz(result) {
-    var info = 'Код выбранного ПВЗ: ' + result.id + ', город ' + result.cityName + ', адрес выбранного ПВЗ ' + result.PVZ.Address + ', телефон выбранного ПВЗ ' + result.PVZ.Phone;
+    var info = locale.cdek.pickup_code +': ' + result.id + ', '+locale.cdek.city +' '+ result.cityName + ', '+locale.cdek.pickup_address+' ' + result.PVZ.Address + ', '+locale.cdek.pickup_phone+' ' + result.PVZ.Phone;
 
     $('input[name="cdekInfo"]').val(info);
     $('input[name="cdek_pvz_id"]').val(result.id);
     $('input[name="cdek_type"]').val('pvz');
-    $('#deliveryInfo').html('ПВЗ: ' + result.PVZ.Address);
+    $('#deliveryInfo').html(locale.cdek.pickup+': ' + result.PVZ.Address);
 
     cdekwidgetOnChoose(result);
 }
 
 // Курьерская доставка выбор города. Корзина
 function cdekwidgetOnChooseProfile(result) {
-    var info = 'Курьерская доставка: город ' + result.cityName;
+    var info = locale.cdek.express_delivery+': ' +locale.cdek.city+ ' '+result.cityName;
 
     $('input[name="cdek_type"]').val('courier');
     $('input[name="cdekInfo"]').val(info);
-    $('#deliveryInfo').html('Курьерская доставка: город ' + result.cityName);
+    $('#deliveryInfo').html(info);
 
     cdekwidgetOnChoose(result);
 }

@@ -21,7 +21,7 @@ function actionStart() {
     if (isset($_GET['date_start']))
         $date_start = $_GET['date_start'];
     else
-        $date_start = PHPShopDate::get((time() - 2592000), false, true);
+        $date_start = PHPShopDate::get((time() - 2592000 / 30), false, true);
 
     if (isset($_GET['date_end']))
         $date_end = $_GET['date_end'];
@@ -31,6 +31,8 @@ function actionStart() {
     if (empty($_GET['status']))
         $_GET['status'] = 'new';
 
+    $status = $_GET['status'];
+
     $WbSeller = new WbSeller();
 
     // Заказы
@@ -38,7 +40,8 @@ function actionStart() {
 
     $total = 0;
 
-    if (is_array($orders))
+    if (is_array($orders)) {
+        $orders = array_reverse($orders);
         foreach ($orders as $row) {
 
             // Заказ уже загружен
@@ -53,10 +56,29 @@ function actionStart() {
                 $type = 'id';
             }
 
-            // Данные по товару
-            $prod = (new PHPShopOrm($GLOBALS['SysValue']['base']['products']))->getOne(['id,uid,name,pic_small'], [$type => '="' . (string) $row['article'].'"']);
-            if (empty($prod))
-                continue;
+            // Данные по товару в БД
+            $prod = (new PHPShopOrm($GLOBALS['SysValue']['base']['products']))->getOne(['id,uid,name,pic_small'], [$type => '="' . (string) $row['article'] . '"']);
+            // Данные по товары из WB
+            if (empty($prod)) {
+                $product_info = $WbSeller->getProduct([$row['article']])['data'][0];
+                $prod['pic_small'] = $product_info['mediaFiles'][0];
+                $prod['uid']=PHPShopString::utf8_win1251($row['article']);
+
+                // Поиск имени
+                if (is_array($product_info['characteristics']))
+                    foreach ($product_info['characteristics'] as $characteristics) {
+
+                        if (!empty($characteristics[PHPShopString::win_utf8('Наименование')]))
+                            $prod['name'] = PHPShopString::utf8_win1251($characteristics[PHPShopString::win_utf8('Наименование')]);
+
+                    }
+                    
+                $link='https://www.wildberries.ru/catalog/' . $product_info['nmID'] . '/detail.aspx';
+            }
+            else {
+                $link = '?path=product&id=' . $prod['id'];
+            }
+
 
             if (!empty($prod['pic_small']))
                 $icon = '<img src="' . $prod['pic_small'] . '" onerror="this.onerror = null;this.src = \'./images/no_photo.gif\'" class="media-object">';
@@ -70,16 +92,12 @@ function actionStart() {
                 $uid = null;
 
 
-            $PHPShopInterface->setRow(['name' => $row['id'], 'link' => '?path=modules.dir.wbseller.order&id=' . $row['id'] . '&date1=' . $_GET['date_start'] . '&date2=' . $_GET['date_end']], $WbSeller->getTime($row['createdAt']), $icon, array('name' => $prod['name'], 'addon' => $uid, 'link' => '?path=product&id=' . $prod['id']), round($row['price'] / 100) . $currency);
+            $PHPShopInterface->setRow(['name' => $row['id'], 'link' => '?path=modules.dir.wbseller.order&id=' . $row['id'] . '&date_start=' . $date_start . '&date_end=' . $date_end . '&status=' . $status], $WbSeller->getTime($row['createdAt']), $icon, array('name' => $prod['name'], 'addon' => $uid, 'link' => $link,'target'=>'_blank'), round($row['price'] / 100) . $currency);
         }
+    }
 
     $order_status_value[] = array(__('Новые заказы'), 'new', $_GET['status']);
     $order_status_value[] = array(__('Все заказы'), 'all', $_GET['status']);
-
-    /*
-      foreach ($OzonSeller->status_list as $k => $status_val) {
-      $order_status_value[] = array(__($status_val), $k, $_GET['status']);
-      } */
 
 
     $searchforma = $PHPShopInterface->setInputDate("date_start", $date_start, 'margin-bottom:10px', null, 'Дата начала отбора');

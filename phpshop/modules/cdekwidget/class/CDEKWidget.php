@@ -444,6 +444,8 @@ class CDEKWidget {
         }
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         if($post) {
             curl_setopt($ch, CURLOPT_POST, true);

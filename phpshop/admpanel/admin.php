@@ -116,9 +116,11 @@ function modulesMenu() {
             $db_podmenu = $podmenu = null;
             $db = $menu_array["adminmenu"];
 
-            if (!empty($menu_array['pro']) and empty($_SESSION['mod_pro']))
+            if (!empty($_SESSION['support']) and $_SESSION['support'] < $menu_array['sign'])
                 continue;
 
+            if (!empty($menu_array['pro']) and empty($_SESSION['mod_pro']))
+                continue;
 
             if ($db['capability']) {
 
@@ -176,7 +178,7 @@ if (!file_exists('./css/bootstrap-theme-' . $theme . '.css'))
     $theme = 'default';
 
 $version = null;
-$adm_title = $adm_brand = substr($PHPShopSystem->getSerilizeParam('admoption.adm_title'),0,70);
+$adm_title = $adm_brand = substr($PHPShopSystem->getSerilizeParam('admoption.adm_title'), 0, 70);
 foreach (str_split($GLOBALS['SysValue']['upload']['version']) as $w)
     $version .= $w . '.';
 $brand = 'PHPShop ' . substr($version, 0, 3);
@@ -616,7 +618,7 @@ if (!empty($_COOKIE['fullscreen'])) {
                     <form class="form-horizontal" role="form" data-toggle="validator" id="modal-form" method="post" enctype="multipart/form-data">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                            <h4 class="modal-title" id="selectModalLabel">Заголовок</h4>
+                            <h4 class="modal-title" id="selectModalLabel"></h4>
                         </div>
                         <div class="modal-body">
 

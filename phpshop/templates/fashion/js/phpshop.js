@@ -501,6 +501,15 @@ $().ready(function () {
 
             // —брос текущей страницы
             count = current;
+
+            // —брос слайдера
+            var max = $("#slider-range").slider("option", "max");
+            var min = $("#slider-range").slider("option", "min");
+            $('#price-filter-body input[name=min]').val(max);
+            $('#price-filter-body input[name=max]').val(min);
+            $("#slider-range").slider({
+                values: [min, max]
+            });
         }
 
     });
@@ -576,7 +585,7 @@ $().ready(function () {
         addToCartList($(this).attr('data-uid'), $(this).attr('data-num'));
         $(this).attr('disabled', 'disabled');
         $(this).find('i').removeClass('fa-shopping-cart').addClass('fa-cart-arrow-down');
-        $(this).attr('title',locale.incart);
+        $(this).attr('title', locale.incart);
         $('#order').removeClass('d-none');
     });
 
