@@ -718,7 +718,7 @@ class PHPShopUsers extends PHPShopCore {
         $user_error = null;
         if (is_array($this->error))
             foreach ($this->error as $val)
-                $user_error .= PHPShopText::ul(PHPShopText::li($val));
+                $user_error .= PHPShopText::div($val);
 
         $this->set('user_error', $user_error);
     }

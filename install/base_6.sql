@@ -212,6 +212,8 @@ CREATE TABLE IF NOT EXISTS `phpshop_delivery` (
   `is_mod` enum('1','2') DEFAULT '1',
   `warehouse` int(11) DEFAULT '0',
   `comment` text,
+  `categories_check` ENUM('0','1') DEFAULT '0', 
+  `categories` VARCHAR(255),
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 

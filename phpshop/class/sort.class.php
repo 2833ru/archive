@@ -179,7 +179,7 @@ class PHPShopSort {
      * @param string $title Название
      * @param bool $all Показывать опцию выбрать все
      * @param string $template Имя функции шаблона вывода
-     * @param int $v ID характеристики родителя
+     * @param int $vendor ID характеристики родителя
      * @param string $help Подсказка
      * @return string
      */
@@ -209,7 +209,7 @@ class PHPShopSort {
         while ($row = mysqli_fetch_array($result)) {
             $id = $row['id'];
 
-            $name = substr($row['name'], 0, 35);
+            $name = substr($row['name'], 0, 100);
             $sel = null;
             if (is_array($vendor))
                 foreach ($vendor as $v) {

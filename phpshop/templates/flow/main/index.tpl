@@ -163,6 +163,22 @@
                         </a>
                         <!-- End Logo -->
 
+                        <!-- Shopping Cart -->
+                        <a class="navbar-toggler btn btn-icon btn-sm rounded-circle" href="/order/">
+                            <i class="fas fa-shopping-cart"></i>
+                            <sup class="avatar-status avatar-primary cartnum @php __hide('num'); php@">@num@</sup>
+                        </a>
+                        <!-- End Shopping Cart -->
+
+                        <a class="navbar-toggler btn btn-icon btn-sm rounded-circle" href="/users/wishlist.html" data-toggle="tooltip" data-placement="top" title="" tabindex="0" data-original-title="{Избранное}">
+                            <i class="fas fa-heart"></i>
+                            <sup class="avatar-status avatar-primary wishlistcount @php __hide('wishlistCount'); php@">@wishlistCount@</sup>
+                        </a>
+                        <a class="navbar-toggler btn btn-icon btn-sm rounded-circle" href="/compare/" data-toggle="tooltip" data-placement="top" title="" tabindex="0" data-original-title="{Сравнить}">
+                            <i class="fas fa-balance-scale"></i></i>
+                            <sup class="avatar-status avatar-primary numcompare @php __hide('numcompare'); php@">@numcompare@</sup>
+                        </a>
+
                         <!-- Responsive Toggle Button -->
                         <button type="button" class="navbar-toggler btn btn-icon btn-sm rounded-circle"
                                 aria-label="Toggle navigation"
@@ -448,7 +464,7 @@
                                         <li class="list-inline-item  @php __hide('whatsapp'); php@"><a class="btn btn-xs btn-icon btn-soft-primary" title="WhatsApp" href="@whatsapp@" target="_blank"><em class="fab fa-whatsapp" aria-hidden="true"></em></a></li>
                                     </ul>
                                     <!-- / Социальные сети -->
-                                    
+
                                 </li>
                             </ul>
                         </div>
@@ -728,6 +744,26 @@
             </div>
         </div>
         <!-- End Cookie Alert -->
+
+        <!-- Модальное окно Спасибо-->
+        <div id="thanks-box" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- Заголовок модального окна -->
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <div class="h4 modal-title">{Сообщение}</div>
+                    </div>
+                    <!-- Основное содержимое модального окна -->
+                    <div class="modal-body">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/ Модальное окно Спасибо-->
 
         <!-- JS Global Compulsory  -->
         <script src="@pathTemplate@/assets/vendor/jquery/dist/jquery.min.js"></script>

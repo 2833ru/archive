@@ -666,13 +666,6 @@ class PHPShopOrderFunction extends PHPShopObj {
         PHPShopParser::set('manager', $this->getSerilizeParam('status.maneger'));
         PHPShopParser::set('tracking', $this->getParam('tracking'));
 
-        // Социальные сети
-        PHPShopParser::set('vk', $PHPShopSystem->getSerilizeParam('bank.vk'));
-        PHPShopParser::set('telegram', $PHPShopSystem->getSerilizeParam('bank.telegram'));
-        PHPShopParser::set('odnoklassniki', $PHPShopSystem->getSerilizeParam('bank.odnoklassniki'));
-        PHPShopParser::set('whatsapp', $PHPShopSystem->getSerilizeParam('bank.whatsapp'));
-        PHPShopParser::set('youtube', $PHPShopSystem->getSerilizeParam('bank.youtube'));
-
         $protocol = 'http://';
         if (!empty($_SERVER['HTTPS']) && 'off' !== strtolower($_SERVER['HTTPS'])) {
             $protocol = 'https://';

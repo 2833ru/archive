@@ -2,7 +2,7 @@
  * Поддержка JQuery функций
  * @package PHPShopJavaScript
  * @author PHPShop Software
- * @version 1.6
+ * @version 1.7
  */
 
 // Иконки в основном меню категорий
@@ -14,7 +14,6 @@ var CATALOG_MENU = true;
 // Фасетный фильтр
 var FILTER = true;
 
-// Вывод брендов
 var BRAND_MENU = true;
 
 // Показывать пагинацию при динамической прокрутки товаров
@@ -29,8 +28,7 @@ var FIXED_NAVBAR = true;
 // DaData.ru Token
 var DADATA_TOKEN = false;
 
-// Согласие на COOKIE
-var COOKIE_AGREEMENT = true;
+
 
 // HTML анимации загрузки при аякс запросах
 var waitText = '<span class="wait">&nbsp;</span>';

@@ -5860,6 +5860,7 @@ footer a {
 
 .catalog-list {
   margin-top: 0.625rem;
+  justify-content: center;
 }
 
 .form-group .glyphicon.glyphicon-remove {

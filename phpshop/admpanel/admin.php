@@ -119,8 +119,6 @@ function modulesMenu() {
             if (!empty($menu_array['pro']) and empty($_SESSION['mod_pro']))
                 continue;
 
-            if (!empty($menu_array['sign']) and empty($_SESSION['update']))
-                continue;
 
             if ($db['capability']) {
 

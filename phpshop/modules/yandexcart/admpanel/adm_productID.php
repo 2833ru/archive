@@ -9,11 +9,10 @@ function addYandexcartCPA($data) {
     $options = $PHPShopOrm->select();
 
     $Tab3 = '';
-    if($options['model'] === 'DBS') {
-        $Tab3 .=  $PHPShopGUI->setField('CPA модель',
-            $PHPShopGUI->setRadio('cpa_new', 1,'Включить', $data['cpa']) .
-            $PHPShopGUI->setRadio('cpa_new', 0,'Выключить', $data['cpa']) .
-            $PHPShopGUI->setRadio('cpa_new', 2,'Не использовать CPA', $data['cpa'], false, 'text-muted')
+    if ($options['model'] === 'DBS') {
+        $Tab3 .= $PHPShopGUI->setField('CPA модель', $PHPShopGUI->setRadio('cpa_new', 1, 'Включить', $data['cpa']) .
+                $PHPShopGUI->setRadio('cpa_new', 0, 'Выключить', $data['cpa']) .
+                $PHPShopGUI->setRadio('cpa_new', 2, 'Не использовать CPA', $data['cpa'], false, 'text-muted')
         );
     }
 
@@ -27,8 +26,10 @@ function addYandexcartCPA($data) {
             }
         }
 
-    if((int) $data['yml'] === 1) {
+    if ((int) $data['yml'] === 1 and $options['model'] === 'DBS') {
         $Tab3 .= $PHPShopGUI->setField('Цена Яндекс.Маркет DBS', $PHPShopGUI->setInputText(null, 'price_yandex_dbs_new', $data['price_yandex_dbs'], 150, $valuta_def_name), 2);
+    } else if ((int) $data['yml'] === 1 and $options['model'] === 'FBS') {
+        $Tab3 .= $PHPShopGUI->setField('Яндекс.Маркет FBS', $PHPShopGUI->setCheckbox('export_dbs_now', 1, 'Выгрузить товар сейчас', 0));
     }
 
     $Tab3 .= $PHPShopGUI->setField("Модель", $PHPShopGUI->setInputText(null, 'model_new', $data['model'], 300), 1, 'Тег model');
@@ -39,7 +40,7 @@ function addYandexcartCPA($data) {
     $Tab3 .= $PHPShopGUI->setField("Код производителя", $PHPShopGUI->setInputText(null, 'vendor_code_new', $data['vendor_code'], 300), 1, 'Тег vendorCode');
 
     $Tab3 .= $PHPShopGUI->setField("Компания производитель, адрес и рег. номер (если есть)", $PHPShopGUI->setInputText(null, 'manufacturer_new', $data['manufacturer'], 300), 1, 'Тег manufacturer');
-    
+
     $Tab3 .= $PHPShopGUI->setField("Штрихкод", $PHPShopGUI->setInputText(null, 'barcode_new', $data['barcode'], 300), 1, 'Тег barcode');
 
     $Tab3 .= $PHPShopGUI->setField("Комментарий", $PHPShopGUI->setInputText(null, 'sales_notes_new', $data['sales_notes'], 300), 1, 'Тег sales_notes');
@@ -54,25 +55,25 @@ function addYandexcartCPA($data) {
     $condition[] = array(__('Бывший в употреблении'), 2, $data['yandex_condition']);
     $condition[] = array(__('Витринный образец'), 3, $data['yandex_condition']);
     $condition[] = array(__('Уцененный товар'), 4, $data['yandex_condition']);
-    
+
     $quality[] = array(__('Новый товар'), 1, $data['yandex_quality']);
     $quality[] = array(__('Как новый, товар в идеальном состоянии'), 2, $data['yandex_quality']);
     $quality[] = array(__('Отличный, следы использования или дефекты едва заметные'), 3, $data['yandex_quality']);
     $quality[] = array(__('Хороший, есть заметные следы использования или дефекты'), 4, $data['yandex_quality']);
 
-    $Tab3 .= $PHPShopGUI->setField('Состояние товара', $PHPShopGUI->setSelect('yandex_condition_new', $condition,300), 1, 'Тег condition');
-    $Tab3 .= $PHPShopGUI->setField('Внешний вид товара', $PHPShopGUI->setSelect('yandex_quality_new', $quality,300), 1, 'Тег quality');
-    $Tab3 .= $PHPShopGUI->setField('Причина уценки', $PHPShopGUI->setTextarea('yandex_condition_reason_new', $data['yandex_condition_reason'],true,300), 1, 'Тег reason');
-    
+    $Tab3 .= $PHPShopGUI->setField('Состояние товара', $PHPShopGUI->setSelect('yandex_condition_new', $condition, 300), 1, 'Тег condition');
+    $Tab3 .= $PHPShopGUI->setField('Внешний вид товара', $PHPShopGUI->setSelect('yandex_quality_new', $quality, 300), 1, 'Тег quality');
+    $Tab3 .= $PHPShopGUI->setField('Причина уценки', $PHPShopGUI->setTextarea('yandex_condition_reason_new', $data['yandex_condition_reason'], true, 300), 1, 'Тег reason');
+
     $service_life_days[] = array(__('Ничего не выбрано'), '', $data['yandex_service_life_days']);
     $service_life_days[] = array(__('6 месяцев'), 'P6M', $data['yandex_service_life_days']);
     $service_life_days[] = array(__('1 год'), 'P1Y', $data['yandex_service_life_days']);
     $service_life_days[] = array(__('2 года'), 'P2Y', $data['yandex_service_life_days']);
     $service_life_days[] = array(__('3 года'), 'P3Y', $data['yandex_service_life_days']);
- 
-    $Tab3 .= $PHPShopGUI->setField('Срок годности', $PHPShopGUI->setSelect('yandex_service_life_days_new', $service_life_days,300), 1, 'Тег period-of-validity-days');
-    
-   
+
+    $Tab3 .= $PHPShopGUI->setField('Срок годности', $PHPShopGUI->setSelect('yandex_service_life_days_new', $service_life_days, 300), 1, 'Тег period-of-validity-days');
+
+
 
     $Tab3 .= $PHPShopGUI->setField('Курьерская доставка', $PHPShopGUI->setRadio('delivery_new', 1, 'Включить', $data['delivery']) . $PHPShopGUI->setRadio('delivery_new', 2, 'Выключить', $data['delivery'], false, 'text-muted'), 1, 'Тег delivery');
 
@@ -84,17 +85,17 @@ function addYandexcartCPA($data) {
 
     $Tab3 .= $PHPShopGUI->setField("Минимальный шаг", $PHPShopGUI->setInputText(null, 'yandex_step_quantity_new', $data['yandex_step_quantity'], 100), 1, ' Количество товара, добавляемое к минимальному');
 
-    $PHPShopGUI->addTabSeparate(array("Яндекс", $PHPShopGUI->setPanel(null,$Tab3,'panel'), true));
+    $PHPShopGUI->addTabSeparate(array("Яндекс", $PHPShopGUI->setPanel(null, $Tab3, 'panel'), true));
 }
 
 function addYandexCartOptions($data) {
     global $PHPShopGUI;
 
     $PHPShopGUI->field_col = 5;
-    
+
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['yandexcart']['yandexcart_system']);
     $options = $PHPShopOrm->select();
-    
+
     // Валюты
     $PHPShopValutaArray = new PHPShopValutaArray();
     $valuta_array = $PHPShopValutaArray->getArray();
@@ -107,18 +108,47 @@ function addYandexCartOptions($data) {
 
     $Tab = $PHPShopGUI->setField("Штрихкод", $PHPShopGUI->setInputText(null, 'barcode_new', $data['barcode']), 1, 'Тег barcode');
     $Tab .= $PHPShopGUI->setField("Код производителя", $PHPShopGUI->setInputText(null, 'vendor_code_new', $data['vendor_code']), 1, 'Тег vendorCode');
-    
-    if($options['model'] === 'DBS') {
+
+    if ($options['model'] === 'DBS') {
         $Tab .= $PHPShopGUI->setField('Цена Яндекс.Маркет DBS', $PHPShopGUI->setInputText(null, 'price_yandex_dbs_new', $data['price_yandex_dbs'], 150, $valuta_def_name), 2);
     }
 
     $PHPShopGUI->addTab(["Яндекс", $Tab, true]);
 }
 
+function YandexcartUpdate() {
+    if (!empty($_POST['export_dbs_now'])) {
+
+        include_once dirname(__FILE__) . '/../class/YandexMarket.php';
+        PHPShopObj::loadClass('modules');
+        PHPShopObj::loadClass('system');
+        PHPShopObj::loadClass('security');
+        PHPShopObj::loadClass('order');
+        PHPShopObj::loadClass("valuta");
+        PHPShopObj::loadClass("string");
+        PHPShopObj::loadClass("cart");
+        PHPShopObj::loadClass("promotions");
+
+        // Массив валют
+        $PHPShopValutaArray = new PHPShopValutaArray();
+
+        // Системные настройки
+        $PHPShopSystem = new PHPShopSystem();
+
+        $PHPShopLang = new PHPShopLang(array('locale' => $_SESSION['lang'], 'path' => 'shop'));
+
+        // Корзина
+        $PHPShopCart = new PHPShopCart();
+
+        $Market = new YandexMarket();
+        $Market->importProducts(0, 0, $_POST['rowID']);
+    }
+}
+
 $addHandler = array(
     'actionStart' => 'addYandexcartCPA',
     'actionDelete' => false,
-    'actionUpdate' => false,
+    'actionUpdate' => 'YandexcartUpdate',
     'actionOptionEdit' => 'addYandexCartOptions'
 );
 ?>

@@ -590,8 +590,8 @@ $().ready(function () {
         e.preventDefault();
         addToCartList($(this).attr('data-uid'), $(this).attr('data-num'));
         $(this).attr('disabled', 'disabled');
-        $(this).addClass('btn-soft-primary');
-        $(this).text(locale.incart);
+        $(this).find('i').removeClass('fa-shopping-cart').addClass('fa-cart-arrow-down');
+        $(this).attr('title',locale.incart);
         $('#order').removeClass('d-none');
     });
 

@@ -54,7 +54,7 @@ CREATE TABLE `phpshop_modules_yandexcart_system` (
 -- 
 -- Дамп данных таблицы `phpshop_modules_yandexcart_system`
 --
-INSERT INTO `phpshop_modules_yandexcart_system` VALUES (1,'', '', '', '', '', '', 0, 'ADV', 0, 0, '3.5','','0');
+INSERT INTO `phpshop_modules_yandexcart_system` VALUES (1,'', '', '', '', '', '', 0, 'ADV', 0, 0, '3.7','','0');
 
 CREATE TABLE IF NOT EXISTS `phpshop_modules_yandexcart_log` (
     `id` int(11) NOT NULL AUTO_INCREMENT,

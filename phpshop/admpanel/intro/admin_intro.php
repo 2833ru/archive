@@ -65,7 +65,7 @@ function actionStart() {
 
     // Поиск
     $where = null;
-    if (array_key_exists('where',$_GET) and is_array($_GET['where'])) {
+    if (array_key_exists('where', $_GET) and is_array($_GET['where'])) {
         foreach ($_GET['where'] as $k => $v) {
             if (!empty($v))
                 $where .= ' ' . $k . ' = "' . $v . '" or';
@@ -179,9 +179,9 @@ function actionStart() {
     $PHPShopOrm->sql = 'SELECT a.*, b.mail, b.name FROM ' . $GLOBALS['SysValue']['base']['orders'] . ' AS a 
         LEFT JOIN ' . $GLOBALS['SysValue']['base']['shopusers'] . ' AS b ON a.user = b.id  ' . $where . ' 
             order by a.id desc limit 8';
-    $canvas_value = $canvas_label = null;
     $data = $PHPShopOrm->select();
     $canvas_data = $data;
+    $array_order_date = [];
 
     if (is_array($data))
         foreach ($data as $row) {
@@ -218,15 +218,27 @@ function actionStart() {
             $PHPShopInterface->setRow(array('name' => '<span class="hidden-xs hidden-md label label-info" title="' . $status_name . '" style="background-color:' . $PHPShopOrder->getStatusColor() . '"><span class="hidden-xs hidden-md">' . mb_substr($status_name, 0, 20) . '</span></span>', 'link' => '?path=order&return=intro&id=' . $row['id'], 'class' => 'label-link'), array('name' => $uid, 'link' => '?path=order&return=intro&id=' . $row['id']), array('name' => mb_substr($row['fio'], 0, 20), 'link' => $user_link, 'title' => $row['fio']), array('name' => $datas, 'class' => 'text-muted hidden-xs'), array('name' => $PHPShopOrder->getTotal(false, ' ') . ' ' . $currency, 'align' => 'right', 'class' => 'strong'));
         }
 
-    if (is_array($canvas_data)) {
-        krsort($canvas_data);
-        foreach ($canvas_data as $row) {
-            $canvas_value .= '"' . $row['sum'] . '",';
-            $canvas_label .= '"' . date("d", $row['datas']) . '.' . date("m", $row['datas']) . '",';
+    $order_list = $PHPShopInterface->getContent();
+
+    // График заказов
+    $PHPShopOrm->sql = 'SELECT sum,datas FROM ' . $GLOBALS['SysValue']['base']['orders'] . ' order by id desc limit 30';
+    $canvas_value = $canvas_label = null;
+    $data = $PHPShopOrm->select();
+
+    if (is_array($data)) {
+        foreach ($data as $row) {
+            $d = date("d", $row['datas']) . '.' . date("m", $row['datas']);
+            $array_order_date[$d] += $row['sum'];
+        }
+
+        if (is_array($array_order_date)) {
+            $array_order_date = array_reverse($array_order_date);
+            foreach ($array_order_date as $date => $sum) {
+                $canvas_value .= '"' . $sum . '",';
+                $canvas_label .= '"' . $date . '",';
+            }
         }
     }
-
-    $order_list = $PHPShopInterface->getContent();
 
     // Авторизация
     $PHPShopInterface = new PHPShopInterface();
@@ -268,7 +280,7 @@ function actionStart() {
 
 
             $PHPShopInterface->setRow(
-                    array('name' => $row['name'], 'link' => '?path=product&return=catalog&id=' . $row['id'], 'align' => 'left'), array('name' => PHPShopDate::get($row['datas'], false), 'align' => 'right','class'=>'text-nowrap'));
+                    array('name' => $row['name'], 'link' => '?path=product&return=catalog&id=' . $row['id'], 'align' => 'left'), array('name' => PHPShopDate::get($row['datas'], false), 'align' => 'right', 'class' => 'text-nowrap'));
         }
     $product_list = $PHPShopInterface->getContent();
 

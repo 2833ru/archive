@@ -783,8 +783,8 @@ function actionReminder() {
     $rate = 1;
 
     PHPShopParser::set('sum', $order['Cart']['sum']);
-    PHPShopParser::set('serverShop', PHPShopString::check_idna($_SERVER['SERVER_NAME'],true));
-    PHPShopParser::set('serverPath', PHPShopString::check_idna($_SERVER['SERVER_NAME'],true));
+    PHPShopParser::set('serverShop', PHPShopString::check_idna($_SERVER['SERVER_NAME'], true));
+    PHPShopParser::set('serverPath', PHPShopString::check_idna($_SERVER['SERVER_NAME'], true));
     PHPShopParser::set('cart', $PHPShopCart->display('mailcartforma', array('currency' => $currency, 'rate' => $rate)));
     PHPShopParser::set('currency', $currency);
     PHPShopParser::set('deliveryPrice', $order['Cart']['dostavka']);
@@ -795,7 +795,7 @@ function actionReminder() {
     PHPShopParser::set('mail', $PHPShopUser->getParam("mail"));
     PHPShopParser::set('company', $PHPShopSystem->getParam('name'));
     PHPShopParser::set('user_name', $PHPShopUser->getParam("name"));
-   
+
     PHPShopParser::set('shopName', $PHPShopSystem->getValue('company'));
     PHPShopParser::set('adminMail', $PHPShopSystem->getEmail());
     PHPShopParser::set('telNum', $PHPShopSystem->getValue('tel'));
@@ -804,7 +804,8 @@ function actionReminder() {
     // Заголовок письма покупателю
     $title = __('Уведомление об неоплаченном заказе') . ' №' . $data['uid'];
 
-    new PHPShopMail($PHPShopUser->getParam("mail"), $PHPShopSystem->getEmail(), $title, PHPShopParser::file('tpl/reminder.mail.tpl', true), true);
+    (new PHPShopMail($PHPShopUser->getParam("mail"), $PHPShopSystem->getEmail(), $title, '', true, true))->sendMailNow(PHPShopParser::file('tpl/reminder.mail.tpl', true,false));
+    
     return array('success' => true);
 }
 
@@ -825,31 +826,30 @@ function mailcartforma($val, $option) {
     // Артикул
     if (!empty($val['parent_uid']))
         $val['uid'] = $val['parent_uid'];
-        
+
     if (empty($val['ed_izm']))
         $val['ed_izm'] = __('шт.');
 
     $val['price'] *= $option['rate'];
 
     $price = number_format($val['price'], $PHPShopOrder->format, '.', ' ');
-	$price_n = number_format($val['price_n'], $PHPShopOrder->format, '.', ' ');
-	$sum = number_format($val['price'] * $val['num'], $PHPShopOrder->format, '.', ' ');
+    $price_n = number_format($val['price_n'], $PHPShopOrder->format, '.', ' ');
+    $sum = number_format($val['price'] * $val['num'], $PHPShopOrder->format, '.', ' ');
 
- 
-    PHPShopParser::set('product_mail_price',$price);
-    PHPShopParser::set('product_mail_price_n',$price_n);
-    PHPShopParser::set('product_mail_pic',$val['pic_small']);
-    PHPShopParser::set('product_mail_uid',$val['uid']);
-    PHPShopParser::set('product_mail_name',$val['name']);
-    PHPShopParser::set('product_mail_num',$val['num']);
-    PHPShopParser::set('product_mail_sum',$sum);
-    PHPShopParser::set('product_mail_ed_izm',$val['ed_izm']);
-    PHPShopParser::set('product_mail_currency',$option['currency']);
-    PHPShopParser::set('product_mail_id',$val['id']);
-    
-    return PHPShopParser::file('../lib/templates/order/product_mail.tpl', true,true,true);
+
+    PHPShopParser::set('product_mail_price', $price);
+    PHPShopParser::set('product_mail_price_n', $price_n);
+    PHPShopParser::set('product_mail_pic', $val['pic_small']);
+    PHPShopParser::set('product_mail_uid', $val['uid']);
+    PHPShopParser::set('product_mail_name', $val['name']);
+    PHPShopParser::set('product_mail_num', $val['num']);
+    PHPShopParser::set('product_mail_sum', $sum);
+    PHPShopParser::set('product_mail_ed_izm', $val['ed_izm']);
+    PHPShopParser::set('product_mail_currency', $option['currency']);
+    PHPShopParser::set('product_mail_id', $val['id']);
+
+    return PHPShopParser::file('../lib/templates/order/product_mail.tpl', true, true, true);
 }
-
 
 // Обработка событий
 $PHPShopGUI->getAction();

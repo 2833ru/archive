@@ -133,7 +133,7 @@ class PHPShopNews extends PHPShopCore {
             $where['datau'].= ' and (servers ="" or servers REGEXP "i1000i")';
 
         // Выборка данных
-        $this->dataArray = parent::getListInfoItem(array('*'), $where, array('order' => 'id DESC'));
+        $this->dataArray = parent::getListInfoItem(array('*'), $where, array('order' => 'datau DESC'));
 
         // 404
         if (!isset($this->dataArray))

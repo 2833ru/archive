@@ -5,7 +5,7 @@ $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['dialog']);
 PHPShopObj::loadClass('bot');
 
 function actionStart() {
-    global $PHPShopGUI, $PHPShopOrm, $chat_name,$PHPShopSystem;
+    global $PHPShopGUI, $PHPShopOrm, $chat_name, $PHPShopSystem;
 
     // Новый диалог
     if (isset($_GET['new'])) {
@@ -131,11 +131,10 @@ function actionStart() {
          </form>
       ';
 
-    if (empty($_GET['search'])){
+    if (empty($_GET['search'])) {
         $class = 'none';
-        $_GET['search']=null;
-    }
-    else
+        $_GET['search'] = null;
+    } else
         $class = null;
 
     // Поиск диалогов
@@ -164,19 +163,19 @@ function actionStart() {
     $yandex_apikey = $PHPShopSystem->getSerilizeParam("admoption.yandex_apikey");
     if (empty($yandex_apikey))
         $yandex_apikey = 'cb432a8b-21b9-4444-a0c4-3475b674a958';
-    
+
     // Карта
     $mass = unserialize($data_user['data_adres']);
     if (strlen($mass['list'][$mass['main']]['street_new']) > 5) {
         $PHPShopGUI->addJSFiles('./shopusers/gui/shopusers.gui.js', '//api-maps.yandex.ru/2.0/?load=package.standard&lang=ru-RU&apikey=' . $yandex_apikey);
         $map = '<div id="map" data-geocode="' . $mass['list'][$mass['main']]['city_new'] . ', ' . $mass['list'][$mass['main']]['street_new'] . ' ' . $mass['list'][$mass['main']]['house_new'] . '"></div>';
-        
-    $sidebarright[] = array('title' => 'Адрес доставки на карте', 'content' => array($map));
+
+        $sidebarright[] = array('title' => 'Адрес доставки на карте', 'content' => array($map));
     }
 
     $PHPShopGUI->setSidebarLeft($sidebarleft, 3);
     $PHPShopGUI->sidebarLeftCell = 3;
-    $PHPShopGUI->setSidebarRight($sidebarright,2,'hidden-xs');
+    $PHPShopGUI->setSidebarRight($sidebarright, 2, 'hidden-xs');
     $PHPShopGUI->Compile(false);
 }
 
@@ -248,9 +247,8 @@ function actionReplies() {
         $PHPShopUser = new PHPShopUser($_POST['user_id']);
         $title = __('Новый ответ в диалоге') . ' - ' . $PHPShopSystem->getName();
         $PHPShopMail = new PHPShopMail($PHPShopUser->getLogin(), $PHPShopSystem->getEmail(), $title, '', true, true);
-        $text = PHPShopString::utf8_win1251('<b>' . __('Администрация') . '</b>: ' . $_POST['message']) . ' ' . preg_replace("~(http|https|ftp|ftps)://(.*?)(\s|\n|[,.?!](\s|\n)|$)~", '<a href="$1://$2" target="_blank">$1://$2</a>$3', $file) . '<div><br>' . __('Если у Вас есть вопрос, задайте его нам в') . ' <a href="' . $bot->protocol . $_SERVER['SERVER_NAME']  . $GLOBALS['SysValue']['dir']['dir'] . '/users/message.html" target="_blank">' . __('Личном кабинете') . '</a></div> ';
+        $text = PHPShopString::utf8_win1251('<b>' . __('Администрация') . '</b>: ' . $_POST['message']) . ' ' . preg_replace("~(http|https|ftp|ftps)://(.*?)(\s|\n|[,.?!](\s|\n)|$)~", '<a href="$1://$2" target="_blank">$1://$2</a>$3', $file) . '<div><br>' . __('Вы можете ответить нам в') . ' <a href="' . $bot->protocol . $_SERVER['SERVER_NAME'] . $GLOBALS['SysValue']['dir']['dir'] . '/users/message.html" target="_blank">' . __('Личном кабинете') . '</a></div> ';
         PHPShopParser::set('content', $text);
-        PHPShopParser::set('logo', $_SERVER['SERVER_NAME']  . $GLOBALS['SysValue']['dir']['dir'] .$PHPShopSystem->getParam('logo'));
         $content = PHPShopParser::file('tpl/sendmail.mail.tpl', true, false);
         $PHPShopMail->sendMailNow($content);
     }
@@ -323,7 +321,7 @@ function viewMessage($data, $ajax = false) {
                 $flist = null;
 
             if (empty($row['staffid'])) {
-                
+
                 $message .= '
              <div class="incoming_msg">
               <div class="received_msg">
@@ -365,15 +363,14 @@ function actionGetNew() {
     }
 
     if (!empty($message) and is_array($GLOBALS['chat_ids'])) {
-        $PHPShopOrm->update(array('isview_new' => 1), array('id' => ' IN (' . implode(',',$GLOBALS['chat_ids']) . ')'));
+        $PHPShopOrm->update(array('isview_new' => 1), array('id' => ' IN (' . implode(',', $GLOBALS['chat_ids']) . ')'));
     }
 
     if (!empty($message)) {
         $count = count($data);
-    }
-    else {
-        $count=0;
-        $message=null;
+    } else {
+        $count = 0;
+        $message = null;
     }
 
     header("Content-Type: application/json");

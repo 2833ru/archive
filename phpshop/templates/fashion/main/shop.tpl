@@ -106,9 +106,9 @@
                 <!-- Topbar -->
                 <div class="container header-hide-content pt-2">
                     <div class="d-flex align-items-center">
-                        
+
                         <ul class="list-inline ml-2 mb-0">
-								
+
                             @usersDisp@
                         </ul>
                         <a href="/"><p class="small text-muted mb-0 d-none d-sm-flex">@name@</p></a>
@@ -119,32 +119,32 @@
 
                             <!-- Links -->
                             <div class="nav nav-sm nav-y-0  ml-sm-auto">
-                            <!-- Search -->
-                            <li class="list-inline-item btn btn-xs btn-icon btn-soft-primary">
-                                <div class="hs-unfold">
+                                <!-- Search -->
+                                <li class="list-inline-item btn btn-xs btn-icon btn-soft-primary">
+                                    <div class="hs-unfold">
 
-                                    <a class="js-hs-search-unfold-invoker btn btn-xs btn-icon btn-ghost-primary search-slide-down-trigger" href="javascript:;" role="button"
-                                       data-hs-unfold-options='{
-                                       "target": "#searchSlideDown",
-                                       "type": "css-animation",
-                                       "animationIn": "fadeIn search-slide-down-show",
-                                       "animationOut": "fadeOutUp",
-                                       "cssAnimatedClass": null,
-                                       "hasOverlay": true,
-                                       "overlayClass": ".search-slide-down-bg-overlay",
-                                       "overlayStyles": {
-                                       "background": "rgba(55, 125, 255, .1)"
-                                       },
-                                       "duration": 800,
-                                       "hideOnScroll": false
-                                       }'>
-                                        <i class="fas fa-search search-slide-down-trigger-icon"></i>
-                                    </a>
+                                        <a class="js-hs-search-unfold-invoker btn btn-xs btn-icon btn-ghost-primary search-slide-down-trigger" href="javascript:;" role="button"
+                                           data-hs-unfold-options='{
+                                           "target": "#searchSlideDown",
+                                           "type": "css-animation",
+                                           "animationIn": "fadeIn search-slide-down-show",
+                                           "animationOut": "fadeOutUp",
+                                           "cssAnimatedClass": null,
+                                           "hasOverlay": true,
+                                           "overlayClass": ".search-slide-down-bg-overlay",
+                                           "overlayStyles": {
+                                           "background": "rgba(55, 125, 255, .1)"
+                                           },
+                                           "duration": 800,
+                                           "hideOnScroll": false
+                                           }'>
+                                            <i class="fas fa-search search-slide-down-trigger-icon"></i>
+                                        </a>
 
-                                </div>
-                            </li>
-                            <!-- End Search -->
-	                            
+                                    </div>
+                                </li>
+                                <!-- End Search -->
+
                                 @returncall@
                                 <p class="nav-link small text-muted mb-0"><a href="tel:@telNumMobile@">@telNum@</a></p>
                                 <p class="nav-link small text-muted mb-0 d-none d-sm-flex"><a href="tel:@telNum2@">@telNum2@</a></p>
@@ -153,53 +153,53 @@
                         </div>
 
                         <ul class="list-inline ml-2 mb-0">
-	                             <!-- Button -->
-                                    <!-- Shopping Cart -->
-                                    <li class="navbar-nav-last-item d-none d-lg-block d-sm-none d-md-none">
-                                        <div class="hs-unfold">
-                                            <a class="js-hs-unfold-invoker btn btn-icon " href="/order/"
-                                               data-hs-unfold-options='{
-                                               "target": "#shoppingCartDropdown",
-                                               "type": "css-animation",
-                                               "event": "hover",
-                                               "hideOnScroll": "true"
-                                               }'>
-                                                <i class="fas fa-shopping-cart"></i>
-                                                <sup class="avatar-status avatar-primary cartnum @php __hide('num'); php@">@num@</sup>
-                                            </a>
+                            <!-- Button -->
+                            <!-- Shopping Cart -->
+                            <li class="navbar-nav-last-item d-none d-lg-block d-sm-none d-md-none">
+                                <div class="hs-unfold">
+                                    <a class="js-hs-unfold-invoker btn btn-icon " href="/order/"
+                                       data-hs-unfold-options='{
+                                       "target": "#shoppingCartDropdown",
+                                       "type": "css-animation",
+                                       "event": "hover",
+                                       "hideOnScroll": "true"
+                                       }'>
+                                        <i class="fas fa-shopping-cart"></i>
+                                        <sup class="avatar-status avatar-primary cartnum @php __hide('num'); php@">@num@</sup>
+                                    </a>
 
-                                            <div id="shoppingCartDropdown" class="hs-unfold-content dropdown-menu dropdown-menu-right dropdown-card" style="min-width: 275px;">
-                                                <div class="card">
-                                                    <div class="card-body text-center">
-                                                        <figure class="max-w-5rem mx-auto">
-                                                            <img class="img-fluid" src="images/icon-66.svg" alt="">
-                                                        </figure>
-                                                        <span class="cartnum">@num@</span>
-                                                        <span class="visible-lg-inline">{товаров} {на} </span><span id="sum" class="">@sum@</span> <span
-                                                            class="rubznak">@productValutaName@</span></a>
-                                                    </div>
+                                    <div id="shoppingCartDropdown" class="hs-unfold-content dropdown-menu dropdown-menu-right dropdown-card" style="min-width: 275px;">
+                                        <div class="card">
+                                            <div class="card-body text-center">
+                                                <figure class="max-w-5rem mx-auto">
+                                                    <img class="img-fluid" src="images/icon-66.svg" alt="">
+                                                </figure>
+                                                <span class="cartnum">@num@</span>
+                                                <span class="visible-lg-inline">{товаров} {на} </span><span id="sum" class="">@sum@</span> <span
+                                                    class="rubznak">@productValutaName@</span></a>
+                                            </div>
 
-                                                    @visualcart@
+                                            @visualcart@
 
-                                                    <div class="card-footer text-center @php __hide('num'); php@" id="order">
-                                                        <a class="btn btn-primary btn-pill transition-3d-hover px-5"  href="/order/">{Оформить заказ}</a>
-                                                    </div>
-                                                </div>
+                                            <div class="card-footer text-center @php __hide('num'); php@" id="order">
+                                                <a class="btn btn-primary btn-pill transition-3d-hover px-5"  href="/order/">{Оформить заказ}</a>
                                             </div>
                                         </div>
-                                        <!-- End Shopping Cart -->
+                                    </div>
+                                </div>
+                                <!-- End Shopping Cart -->
 
-                                        <a class="btn btn-icon" href="/users/wishlist.html" data-toggle="tooltip" data-placement="top" title="" tabindex="0" data-original-title="{Избранное}">
-                                            <i class="fas fa-heart"></i>
-                                            <sup class="avatar-status avatar-primary wishlistcount @php __hide('wishlistCount'); php@">@wishlistCount@</sup>
-                                        </a>
-                                        <a class="btn btn-icon" href="/compare/" data-toggle="tooltip" data-placement="top" title="" tabindex="0" data-original-title="{Сравнить}">
-                                            <i class="fas fa-balance-scale"></i></i>
-                                            <sup class="avatar-status avatar-primary numcompare @php __hide('numcompare'); php@">@numcompare@</sup>
-                                        </a>
-                                    </li>
-                                    <!-- End Button -->
-						</ul>
+                                <a class="btn btn-icon" href="/users/wishlist.html" data-toggle="tooltip" data-placement="top" title="" tabindex="0" data-original-title="{Избранное}">
+                                    <i class="fas fa-heart"></i>
+                                    <sup class="avatar-status avatar-primary wishlistcount @php __hide('wishlistCount'); php@">@wishlistCount@</sup>
+                                </a>
+                                <a class="btn btn-icon" href="/compare/" data-toggle="tooltip" data-placement="top" title="" tabindex="0" data-original-title="{Сравнить}">
+                                    <i class="fas fa-balance-scale"></i></i>
+                                    <sup class="avatar-status avatar-primary numcompare @php __hide('numcompare'); php@">@numcompare@</sup>
+                                </a>
+                            </li>
+                            <!-- End Button -->
+                        </ul>
                     </div>
                 </div>
                 <!-- End Topbar -->
@@ -232,6 +232,22 @@
                             </span>
                         </button>
                         <!-- End Responsive Toggle Button -->
+
+                        <!-- Shopping Cart -->
+                        <a class="navbar-toggler btn btn-icon btn-sm rounded-circle" href="/order/">
+                            <i class="fas fa-shopping-cart"></i>
+                            <sup class="avatar-status avatar-primary cartnum @php __hide('num'); php@">@num@</sup>
+                        </a>
+                        <!-- End Shopping Cart -->
+
+                        <a class="navbar-toggler btn btn-icon btn-sm rounded-circle" href="/users/wishlist.html" data-toggle="tooltip" data-placement="top" title="" tabindex="0" data-original-title="{Избранное}">
+                            <i class="fas fa-heart"></i>
+                            <sup class="avatar-status avatar-primary wishlistcount @php __hide('wishlistCount'); php@">@wishlistCount@</sup>
+                        </a>
+                        <a class="navbar-toggler btn btn-icon btn-sm rounded-circle" href="/compare/" data-toggle="tooltip" data-placement="top" title="" tabindex="0" data-original-title="{Сравнить}">
+                            <i class="fas fa-balance-scale"></i></i>
+                            <sup class="avatar-status avatar-primary numcompare @php __hide('numcompare'); php@">@numcompare@</sup>
+                        </a>
 
                         <!-- Navigation -->
                         <div id="navBar" class="collapse navbar-collapse navbar-nav-wrap-collapse">
@@ -270,6 +286,17 @@
                                     </li>
                                     <!-- End Catalog -->
 
+                                    <!-- Menu -->
+                                    <li class="hs-has-sub-menu navbar-nav-item @php __hide('topMenu'); php@">
+                                        <a id="blogMegaMenu" class="hs-mega-menu-invoker nav-link nav-link-toggle " href="javascript:;" aria-haspopup="true" aria-expanded="false" aria-labelledby="blogSubMenu">{Навигация}</a>
+
+                                        <div id="blogSubMenu" class="hs-sub-menu dropdown-menu" aria-labelledby="blogMegaMenu" style="min-width: 230px;">
+                                            @topMenu@
+                                        </div>
+
+                                    </li>
+                                    <!-- End Menu-->
+
 
                                     <!-- Catalog  Menu-->
                                     @topcatMenu@
@@ -277,7 +304,7 @@
                                 </ul>
                             </div>
                         </div>
-                        
+
                         <!-- End Navigation -->
                     </nav>
                     <!-- End Nav -->
@@ -318,7 +345,7 @@
             if($GLOBALS['PHPShopNav']->objNav['name'] == 'UID' or  $GLOBALS['PHPShopNav']->objNav['path'] == 'order' or  $GLOBALS['PHPShopNav']->objNav['path'] == 'done' or $GLOBALS['PHPShopNav']->objNav['path'] == 'news' or $GLOBALS['PHPShopNav']->objNav['path'] == 'users' or $GLOBALS['PHPShopNav']->objNav['path'] == 'page'){
             $GLOBALS['container_style'] = null;
             $GLOBALS['container_col'] = 12;
-	        $GLOBALS['SysValue']['other']['leftCatal'] = null;
+            $GLOBALS['SysValue']['other']['leftCatal'] = null;
             $GLOBALS['SysValue']['other']['leftMenu'] = null;
             $GLOBALS['SysValue']['other']['banersDisp'] = null;
             }
@@ -328,7 +355,7 @@
             }
             php@
 
-            <div class="container space-top-1 space-top-md-1 space-bottom-1">
+            <div class="container space-top-1 space-top-md-1 space-bottom-1" style="min-height: 43vh;">
                 <div class="row">
                     <div class="col-3 d-none @php echo $GLOBALS['container_style']; php@">
 
@@ -362,7 +389,7 @@
                         </div>
                         <!--/ Фасетный фильтр -->
                         <div class="mb-2">
-                            @leftCatal@ 
+                            @leftCatal@
                         </div>
                         @leftMenu@
 
@@ -507,7 +534,7 @@
                             @returncall_captcha@
                             <div class="form-group">
                                 <p class="small">
-                                    <input type="checkbox" value="on" name="rule" class="req" checked="checked"> 
+                                    <input type="checkbox" value="on" name="rule" class="req" checked="checked">
                                     {Я согласен}  <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html">{на обработку моих персональных данных}</a>
                                 </p>
                             </div>
@@ -698,6 +725,26 @@
             </div>
         </div>
         <!-- End Cookie Alert -->
+
+        <!-- Модальное окно Спасибо-->
+        <div id="thanks-box" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- Заголовок модального окна -->
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <div class="h4 modal-title">{Сообщение}</div>
+                    </div>
+                    <!-- Основное содержимое модального окна -->
+                    <div class="modal-body">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/ Модальное окно Спасибо-->
 
         <!-- JS Global Compulsory  -->
         <script src="@pathTemplate@/assets/vendor/jquery-migrate/dist/jquery-migrate.min.js"></script>

@@ -519,3 +519,8 @@ body.modal-open{
 .filter-item-hide{
     color: #ddd !important;
 }
+
+.img-responsive{
+  max-width: 100%;
+  height: auto;
+}

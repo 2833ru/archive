@@ -208,20 +208,23 @@ function actionUpdate($option = false) {
 
     // Òåñò
     if (!empty($_POST['test'])) {
+        
+        if (!empty($_POST['saveID'])) {
+            PHPShopParser::set('user', $_SESSION['logPHPSHOP']);
+            PHPShopParser::set('email', $from);
+            PHPShopParser::set('content', preg_replace_callback("/@([a-zA-Z0-9_]+)@/", 'PHPShopParser::SysValueReturn', $_POST['content_new']));
 
-        PHPShopParser::set('user', $_SESSION['logPHPSHOP']);
-        PHPShopParser::set('email', $from);
-        PHPShopParser::set('content', preg_replace_callback("/@([a-zA-Z0-9_]+)@/", 'PHPShopParser::SysValueReturn', $_POST['content_new']));
+            $PHPShopMail = new PHPShopMail($from, $from, $_POST['name_new'], '', true, true);
+            $content = PHPShopParser::file('tpl/sendmail.mail.tpl', true);
 
-        $PHPShopMail = new PHPShopMail($from, $from, $_POST['name_new'], '', true, true);
-        $content = PHPShopParser::file('tpl/sendmail.mail.tpl', true);
-
-        if (!empty($content)) {
-            if ($PHPShopMail->sendMailNow($content))
-                $n++;
-            else
-                $error++;
+            if (!empty($content)) {
+                if ($PHPShopMail->sendMailNow($content))
+                    $n++;
+                else
+                    $error++;
+            }
         }
+        
     } else {
 
         // Àâòîìàòèçàöèÿ
@@ -245,9 +248,10 @@ function actionUpdate($option = false) {
         $where['sendmail'] = "='1'";
 
         // Ìóëüòèáàçà
-        if ($_POST['servers_new'] == 1000) 
-            $where['servers']='='. (int) $_POST['servers_new'].' or servers=0';
-        else  $where['servers']='='. (int) $_POST['servers_new'];
+        if ($_POST['servers_new'] == 1000)
+            $where['servers'] = '=' . (int) $_POST['servers_new'] . ' or servers=0';
+        else
+            $where['servers'] = '=' . (int) $_POST['servers_new'];
 
         $data = $PHPShopOrm->select(array('id', 'mail', 'name', 'password'), $where, array('order' => 'id desc'), array('limit' => $limit));
 

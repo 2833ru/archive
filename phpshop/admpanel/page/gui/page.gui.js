@@ -142,6 +142,7 @@ $().ready(function () {
             if ($('#odnotip_new').tagExist(id))
             {
                 this.disabled;
+                $(selectTarget).removeTag(id);
             } else
                 $(selectTarget).addTag(id);
         });

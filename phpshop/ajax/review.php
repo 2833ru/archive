@@ -72,23 +72,23 @@ class AjaxReview
                 ]);
 
                 // Имя товара
-                $PHPShopProduct = new PHPShopProduct((int) $_REQUEST['productId']);
-                $name = $PHPShopProduct->getName();
+                $product = new PHPShopProduct((int) $_REQUEST['productId']);
+                $name = $product->getName();
 
                 // Письмо администратору
-                $GLOBALS['SysValue']['other']['commentData'] = PHPShopDate::dataV(false, false);
-                $GLOBALS['SysValue']['other']['commentUserName'] = $_POST['name_new'];
-                $GLOBALS['SysValue']['other']['commentMessage'] = $message;
-                $GLOBALS['SysValue']['other']['commentProdName'] = $name;
+                PHPShopParser::set('mail',$email);
+                PHPShopParser::set('content',$message);
+                PHPShopParser::set('name',$_POST['name_new']);
+                PHPShopParser::set('product',$name);
+                PHPShopParser::set('product_id', $product->objID);
+                PHPShopParser::set('rating',$myRate);
+                PHPShopParser::set('date',PHPShopDate::dataV(false, false));
 
-                // Подключаем шаблон
-                $message = PHPShopParser::file("../lib/templates/comment/mail.tpl", true);
                 $system = new PHPShopSystem();
-                $zag = __("Добавили отзыв к товару")." $name / " . $GLOBALS['SysValue']['other']['commentData'];
+                $title = __("Добавлен отзыв к товару").' "'.$name.'"';
 
-                $adminMail = $system->getValue('adminmail2');
-                new PHPShopMail($adminMail, $adminMail, $zag, $message,false,false,['replyto' => $email]);
-                //writeLangFile();
+                (new PHPShopMail($system->getValue('adminmail2'), $system->getValue('adminmail2'), $title, '', true, true,['replyto' => $email]))->sendMailNow(PHPShopParser::file('../lib/templates/users/mail_admin_review.tpl', true,false));
+                
                 $this->lead();
             }
         } else {

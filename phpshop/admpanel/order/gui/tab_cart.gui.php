@@ -92,7 +92,7 @@ function tab_cart($data, $option = false) {
 </div>';
                     // Цена
                     $price = $PHPShopOrder->ReturnSumma($val['price']).$currency;
-                    if (!empty($val['price_n'])){
+                    if (!empty((int)$val['price_n'])){
                         $price .= '<br><s class="text-muted">' . $PHPShopOrder->ReturnSumma($val['price_n']) . '</s>'.$currency;
                         $promo++;
                     }

@@ -2,7 +2,7 @@
 
 /**
  * Панель изображений товара
- * @param array $row массив данных
+ * @param array $data массив данных
  * @return string 
  */
 function tab_img($data) {
@@ -97,7 +97,7 @@ function tab_img($data) {
             if (empty($row['info']))
                 $row['info'] = str_replace(array('"', '\''), array('', ''), $data['name']);
 
-            $img = str_replace(array('.png', '.jpg', '.gif', '.jpeg'), array('s.png', 's.jpg', 's.gif', 's.jpeg'), $row['name']);
+            $img = str_replace(array('.png', '.jpg', '.gif', '.jpeg','.webp'), array('s.png', 's.jpg', 's.gif', 's.jpeg','s.webp'), $row['name']);
             if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $img))
                 $img = $row['name'];
 

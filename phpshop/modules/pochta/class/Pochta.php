@@ -93,6 +93,8 @@ class Pochta
         }
 
         if(isset($pochta['pvz_type']) && $pochta['pvz_type'] === 'postamat') {
+            
+            $parameters['dimension-type'] = $this->settings->getFromOrderOrSettings('dimension_type', $pochta, 'S'); 
             if($this->settings->get('declared_percent') > 0) {
                 $parameters['mail-category'] = 'COMBINED_WITH_DECLARED_VALUE';
             } else {

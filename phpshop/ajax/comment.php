@@ -207,39 +207,46 @@ function avg_rate($rate) {
 switch ($_REQUEST['comand']) {
 
     case("add"):
-        $myMessage = strip_tags($_REQUEST['message']);
-        $myMessage = PHPShopSecurity::TotalClean($myMessage, 2);
+        $message = strip_tags($_REQUEST['message']);
+        $message = PHPShopSecurity::TotalClean($message, 2);
         $myRate = abs(intval($_REQUEST['rateVal']));
         $xid = intval($_REQUEST['xid']);
         if (!$myRate)
             $myRate = 0;
         elseif ($myRate > 5)
             $myRate = 5;
-        if (!empty($_SESSION['UsersId']) and ! empty($myMessage)) {
+        if (!empty($_SESSION['UsersId']) and ! empty($message)) {
 
             $PHPShopUser = new PHPShopUser($_SESSION['UsersId']);
             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['comment']);
-            $PHPShopOrm->insert(array('datas_new' => time(), 'name_new' => $PHPShopUser->getName(), 'parent_id_new' => $xid, 'content_new' => $myMessage, 'user_id_new' => intval($_SESSION['UsersId']), 'enabled_new' => 0, 'rate_new' => $myRate));
+            $PHPShopOrm->insert(array('datas_new' => time(), 'name_new' => $PHPShopUser->getName(), 'parent_id_new' => $xid, 'content_new' => $message, 'user_id_new' => intval($_SESSION['UsersId']), 'enabled_new' => 0, 'rate_new' => $myRate));
+
 
             // Имя товара
-            $PHPShopProduct = new PHPShopProduct($xid);
-            $name = $PHPShopProduct->getName();
+            $product = new PHPShopProduct((int) $xid);
+            $name = $product->getName();
 
             // Письмо администратору
-            $SysValue['other']['commentData'] = PHPShopDate::dataV(false, false);
-            $SysValue['other']['commentUserName'] = $PHPShopUser->getName();
-            $SysValue['other']['commentMessage'] = $myMessage;
-            $SysValue['other']['commentProdName'] = $name;
+            PHPShopParser::set('mail', $PHPShopUser->getLogin());
+            PHPShopParser::set('content', $message);
+            PHPShopParser::set('name', $PHPShopUser->getName());
+            PHPShopParser::set('product', $name);
+            PHPShopParser::set('product_id', $product->objID);
+            PHPShopParser::set('rating', $myRate);
+            PHPShopParser::set('date', PHPShopDate::dataV(false, false));
+
 
             // Подключаем шаблон
             $message = PHPShopParser::file("../lib/templates/comment/mail.tpl", true);
 
             $system = new PHPShopSystem();
-            $zag = __("Добавили отзыв к товару") . " $name / " . $SysValue['other']['commentData'];
-            $adminMail = $system->getValue('adminmail2');
-            new PHPShopMail($adminMail, $adminMail, $zag, $message, false, false, array('replyto' => $PHPShopUser->getValue('mail')));
+            $title = __("Добавлен отзыв к товару") . ' "' . $name . '"';
+
+            (new PHPShopMail($system->getValue('adminmail2'), $system->getValue('adminmail2'), $title, '', true, true, ['replyto' => $email]))->sendMailNow(PHPShopParser::file('../lib/templates/users/mail_admin_review.tpl', true, false));
+
+
             $error = "done";
-            writeLangFile();
+            //writeLangFile();
         } else
             $error = "error";
         $interfaces = DispComment($_REQUEST['xid']);

@@ -2,6 +2,7 @@
 
 // Библиотека работы с почтой
 include_once('../phpshop/class/system.class.php');
+include_once('../phpshop/class/parser.class.php');
 include_once('../phpshop/class/mail.class.php');
 
 // Номер заказа для счет-фактуры

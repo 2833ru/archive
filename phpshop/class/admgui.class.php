@@ -1680,6 +1680,7 @@ class PHPShopGUI {
         // Автовыделение 
         if ($value == $checked)
             $checked = "checked";
+        else $checked=null;
 
         // Параметры
         $add_option = null;

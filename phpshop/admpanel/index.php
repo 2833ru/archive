@@ -239,12 +239,16 @@ function actionStart() {
     global $PHPShopSystem, $PHPShopBase, $PHPShopGUI, $notification;
 
     $License = parse_ini_file_true("../../license/" . PHPShopFile::searchFile('../../license/', 'getLicense', true), 1);
-    if ($License['License']['SupportExpires'] > time() and $License['License']['RegisteredTo'] != 'Trial NoName')
-        $_SESSION['update'] = 1;
-    elseif ($License['License']['SupportExpires'] > time() and $License['License']['RegisteredTo'] == 'Trial NoName')
-        $_SESSION['update'] = 2;
-    else
-        $_SESSION['update'] = 0;
+
+    if (is_array($License)) {
+        if ($License['License']['SupportExpires'] > time() and $License['License']['RegisteredTo'] != 'Trial NoName')
+            $_SESSION['update'] = 1;
+        elseif ($License['License']['SupportExpires'] > time() and $License['License']['RegisteredTo'] == 'Trial NoName')
+            $_SESSION['update'] = 2;
+        else
+            $_SESSION['update'] = 0;
+    }
+    else  $_SESSION['update']='trial';
 
 
     if ($License['License']['Pro'] == 'Start')

@@ -212,6 +212,22 @@
                         </a>
                         <!-- End Logo -->
 
+                        <!-- Shopping Cart -->
+                        <a class="navbar-toggler btn btn-icon btn-sm rounded-circle" href="/order/">
+                            <i class="fas fa-shopping-cart"></i>
+                            <sup class="avatar-status avatar-primary cartnum @php __hide('num'); php@">@num@</sup>
+                        </a>
+                        <!-- End Shopping Cart -->
+
+                        <a class="navbar-toggler btn btn-icon btn-sm rounded-circle" href="/users/wishlist.html" data-toggle="tooltip" data-placement="top" title="" tabindex="0" data-original-title="{Избранное}">
+                            <i class="fas fa-heart"></i>
+                            <sup class="avatar-status avatar-primary wishlistcount @php __hide('wishlistCount'); php@">@wishlistCount@</sup>
+                        </a>
+                        <a class="navbar-toggler btn btn-icon btn-sm rounded-circle" href="/compare/" data-toggle="tooltip" data-placement="top" title="" tabindex="0" data-original-title="{Сравнить}">
+                            <i class="fas fa-balance-scale"></i></i>
+                            <sup class="avatar-status avatar-primary numcompare @php __hide('numcompare'); php@">@numcompare@</sup>
+                        </a>
+
                         <!-- Responsive Toggle Button -->
                         <button type="button" class="navbar-toggler btn btn-icon btn-sm "
                                 aria-label="Toggle navigation"
@@ -347,7 +363,7 @@
             if($GLOBALS['PHPShopNav']->objNav['name'] == 'UID' or  $GLOBALS['PHPShopNav']->objNav['path'] == 'order' or  $GLOBALS['PHPShopNav']->objNav['path'] == 'done' or $GLOBALS['PHPShopNav']->objNav['path'] == 'news' or $GLOBALS['PHPShopNav']->objNav['path'] == 'users' or $GLOBALS['PHPShopNav']->objNav['path'] == 'page'){
             $GLOBALS['container_style'] = null;
             $GLOBALS['container_col'] = 12;
-	        $GLOBALS['SysValue']['other']['leftCatal'] = null;
+            $GLOBALS['SysValue']['other']['leftCatal'] = null;
             $GLOBALS['SysValue']['other']['leftMenu'] = null;
             $GLOBALS['SysValue']['other']['banersDisp'] = null;
             }
@@ -357,7 +373,7 @@
             }
             php@
 
-            <div class="container space-top-1 space-top-md-1 space-bottom-1">
+            <div class="container space-top-1 space-top-md-1 space-bottom-1" style="min-height: 43vh;">
                 <div class="row">
                     <div class="col-3 d-none @php echo $GLOBALS['container_style']; php@">
 
@@ -389,7 +405,7 @@
                                 <a href="?" id="faset-filter-reset" class="btn btn-sm btn-block btn-soft-secondary transition-3d-hover">{Сбросить фильтр}</a>
                             </div>
                         </div>
-                        
+
                         <!--/ Фасетный фильтр -->
                         <div class="mb-2">
                             @leftCatal@ 
@@ -728,6 +744,26 @@
             </div>
         </div>
         <!-- End Cookie Alert -->
+
+        <!-- Модальное окно Спасибо-->
+        <div id="thanks-box" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- Заголовок модального окна -->
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <div class="h4 modal-title">{Сообщение}</div>
+                    </div>
+                    <!-- Основное содержимое модального окна -->
+                    <div class="modal-body">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/ Модальное окно Спасибо-->
 
         <!-- JS Global Compulsory  -->
         <script src="@pathTemplate@/assets/vendor/jquery-migrate/dist/jquery-migrate.min.js"></script>

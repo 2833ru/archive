@@ -299,33 +299,22 @@ class PHPShopOneclick extends PHPShopCore {
     public function sendMail($product) {
         PHPShopObj::loadClass("mail");
 
-        $zag = $this->PHPShopSystem->getValue('name') . " - " . __('Быстрый заказ') . " - " . PHPShopDate::dataV();
+        $title = $this->PHPShopSystem->getValue('name') . " - " . __('Быстрый заказ') . " - " . PHPShopDate::dataV();
 
         $productId = " / ID " . $product->objID . " / ";
         if ($product->getParam('uid') != "") {
             $productId .= "{Артикул} " . $product->getParam('uid') . " / ";
         }
 
-        $message = "{Доброго времени}!
- ---------------
+        PHPShopParser::set('tel', PHPShopSecurity::TotalClean($_POST['oneclick_mod_tel'], 2));
+        PHPShopParser::set('content', PHPShopSecurity::TotalClean($_POST['oneclick_mod_message'], 2));
+        PHPShopParser::set('name', PHPShopSecurity::TotalClean($_POST['oneclick_mod_name'], 2));
+        PHPShopParser::set('product', $product->getName() . $productId . $this->getPrice($product) . " " . $this->PHPShopSystem->getDefaultValutaCode());
+        PHPShopParser::set('product_id', $product->objID);
+        PHPShopParser::set('date', PHPShopDate::dataV(false, false));
+        PHPShopParser::set('uid', $this->order_num);
 
-{С сайта} " . $this->PHPShopSystem->getValue('name') . " {пришел быстрый заказ} №" . $this->order_num . "
-
-{Данные о пользователе}:
-----------------------
-
-{Имя}:                " . PHPShopSecurity::TotalClean($_POST['oneclick_mod_name'], 2) . "
-{Телефон}:            " . PHPShopSecurity::TotalClean($_POST['oneclick_mod_tel'], 2) . "
-{Товар}:              " . $product->getName() . $productId . $this->getPrice($product) . " " . $this->PHPShopSystem->getDefaultValutaCode() . "
-{Сообщение}:          " . PHPShopSecurity::TotalClean($_POST['oneclick_mod_message'], 2) . "
-{Дата}:               " . PHPShopDate::dataV(time()) . "
-IP:                   " . $_SERVER['REMOTE_ADDR'] . "
-
----------------
-
-http://" . $_SERVER['SERVER_NAME'];
-
-        new PHPShopMail($this->PHPShopSystem->getValue('adminmail2'), $this->PHPShopSystem->getValue('adminmail2'), $zag, Parser($message));
+        (new PHPShopMail($this->PHPShopSystem->getValue('adminmail2'), $this->PHPShopSystem->getValue('adminmail2'), $title, '', true, true))->sendMailNow(PHPShopParser::file('./phpshop/lib/templates/users/mail_admin_one_click.tpl', true, false));
     }
 
     /**

@@ -37,17 +37,28 @@ class YandexMarket {
 
         return (int) $data['count'];
     }
+    
 
-    public function importProducts($from, $imported) {
+    public function importProducts($from, $imported, $id = false) {
         $limit = 100;
         if (($imported + $limit) >= 5000) {
             $limit = 5000 - $imported;
         }
 
         $orm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
-        $products = $orm->getList(
-                ['*'], self::IMPORT_CONDITION, ['order' => 'id ASC'], ['limit' => $from . ', ' . $limit]
-        );
+
+        if (empty($id)) {
+            $products = $orm->getList(
+                    ['*'], self::IMPORT_CONDITION, ['order' => 'id ASC'], ['limit' => $from . ', ' . $limit]
+            );
+        }
+        else {
+            $where = self::IMPORT_CONDITION;
+            $where['id']='='.$id;
+            $products = $orm->getList(
+                    ['*'], $where, ['order' => 'id ASC'], ['limit' =>'10']
+            );
+        }
 
         if (count($products) === 0) {
             return 0;
@@ -107,9 +118,7 @@ class YandexMarket {
                 $pictures[] = $this->getFullUrl($product['pic_big']);
             }
 
-            if (empty($product['description']))
-                $product['description'] = $product['content'];
-
+ 
             $options = unserialize($this->options['options']);
 
             // Блокировка изображений
@@ -118,7 +127,7 @@ class YandexMarket {
 
             // Блокировка описаний
             if (empty($options['block_content']))
-                $product['description'] = null;
+                $product['content'] = null;
 
             $offer = [
                 'offer' => [
@@ -132,7 +141,7 @@ class YandexMarket {
                     'vendor' => $product['vendor_name'],
                     'vendorCode' => $product['vendor_code'],
                     'barcodes' => !empty($product['barcode']) ? [$product['barcode']] : null,
-                    'description' => trim(strip_tags($product['description'], '<p><h3><ul><li><br>')),
+                    'description' => trim(strip_tags($product['content'], '<p><h3><ul><li><br>')),
                     'weightDimensions' => [
                         'length' => str_replace(',', '.', $product['length']),
                         'width' => str_replace(',', '.', $product['width']),

@@ -3,11 +3,17 @@
 /**
  * Вывод иконок распродажи и спецпредложений в кратком описании товаров.
  */
+
 /**
  * Оптовые акции
  */
 function elements_product_grid_wholesale_hook($obj, $row) {
 
+    if (empty($GLOBALS['PHPShopWholesale'])) {
+        include_once $GLOBALS['SysValue']['class']['wholesale'];
+        $GLOBALS['PHPShopWholesale'] = new PHPShopWholesale();
+    }
+    
     $opt = $GLOBALS['PHPShopWholesale']->getOpt($row);
 
     // Есть акция

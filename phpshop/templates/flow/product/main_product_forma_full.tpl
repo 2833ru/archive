@@ -1,7 +1,7 @@
 <!-- Hero Section -->
 <div class="container space-top-1 space-top-sm-1" itemscope itemtype="http://schema.org/Product">
     <meta itemprop="image" content="@productImgBigFoto@">
-     <div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+    <div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
         <meta itemprop="ratingValue" content="@productRatingValue@">
         <meta itemprop="ratingCount" content="@productRatingCount@">
     </div>
@@ -54,10 +54,10 @@
 
         <!-- Product Description -->
         <div class="col-lg-5 col-md-5">
-	        <div class="mb-5 mb-0">
-	        	                        @productArt@
+            <div class="mb-5 mb-0">
+                @productArt@
 
-	    </div>
+            </div>
 
             <!-- Rating -->
             <div class="d-flex align-items-center small mb-5">
@@ -91,7 +91,7 @@
                 </div>
             </div>
             <!-- Конец блока Сравнить -->
- @wholesaleInfo@
+            @wholesaleInfo@
 
             <!-- Цена -->
             <div class="d-flex align-items-center mb-2" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
@@ -135,7 +135,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="border rounded-lg py-2 px-3 mb-3 @elementCartOptionHide@">
                 <div class="js-quantity-counter row align-items-center">
                     <div class="col-7">
@@ -161,7 +161,7 @@
             <div class="mb-4 @elementCartHide@">
                 <button type="button" class="btn btn-block btn-primary btn-pill transition-3d-hover addToCartFull" data-num="1" data-uid="@productUid@">@flowProductSale@</button>
             </div>
-            
+
             <div class="mb-4 @elementCartOptionHide@">
                 <button type="button" class="btn btn-block btn-primary btn-pill transition-3d-hover addToCartFull" data-num="1" data-uid="@productUid@">@flowProductSale@</button>
             </div>
@@ -226,154 +226,48 @@
             @productFilesEnd@
 
         </div>
-        
-    		</div>
 
-        <!-- End Product Description Section -->
-		<div class="w-lg-100 border-top space-2 mx-lg-auto @php __hide('productlist_list'); php@">
-			<div class="mb-3 mb-sm-5">
-				<h4>{Похожие товары}</h4> 
-			</div>
-		<!-- Slick Carousel -->
+    </div>
+
+    <!-- End Product Description Section -->
+    <div class="w-lg-100 border-top space-2 mx-lg-auto @php __hide('productlist_list'); php@">
+        <div class="mb-3 mb-sm-5">
+            <h4>{Похожие товары}</h4> 
+        </div>
+        <!-- Slick Carousel -->
         <div class="js-slick-carousel slick slick-gutters-3 slick-equal-height z-index-2 mx-md-auto mb-5 mb-md-9" data-hs-slick-carousel-options='{
-               "slidesToShow": 5,
-				"slidesToScroll": 3,
-	           "dots": true,
-               "dotsClass": "slick-pagination",
-               "responsive": [{
-                 "breakpoint": 1200,
-                   "settings": {
-                     "slidesToShow": 5
-                   }
-                 }, {
-                 "breakpoint": 992,
-                 "settings": {
-                   "slidesToShow": 4
-                   }
-                 }, {
-                 "breakpoint": 768,
-                 "settings": {
-                   "slidesToShow": 3
-                   }
-                 }, {
-                 "breakpoint": 554,
-                 "settings": {
-                   "slidesToShow": 2,
-	               "slidesToScroll": 2
+             "slidesToShow": 5,
+             "slidesToScroll": 3,
+             "dots": true,
+             "dotsClass": "slick-pagination",
+             "responsive": [{
+             "breakpoint": 1200,
+             "settings": {
+             "slidesToShow": 5
+             }
+             }, {
+             "breakpoint": 992,
+             "settings": {
+             "slidesToShow": 4
+             }
+             }, {
+             "breakpoint": 768,
+             "settings": {
+             "slidesToShow": 3
+             }
+             }, {
+             "breakpoint": 554,
+             "settings": {
+             "slidesToShow": 2,
+             "slidesToScroll": 2
 
-                 }
-               }]
+             }
+             }]
              }'>
 
-		@productlist_list@
+            @productlist_list@
         </div>
         <!-- End Slick Carousel -->
-        
 
-        <!-- Модальное окно отзыва-->
-        <div class="modal fade new-modal" id="reviewModal" tabindex="-1" role="dialog" aria-labelledby="{Оставить отзыв}" aria-hidden="true">
-            <div class="modal-dialog small-modal" role="document">
-                <div class="modal-content">
-
-                    <div class="modal-body">
-                        <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        <h4><a href="/shop/UID_@productUid@.html" title="@productNameClean@">@productName@</a></h4>
-                        <div class="col-md-12">
-                            <div class="row">
-                                <div class="image">
-                                    <a href="/shop/UID_@productUid@.html" title="@productNameClean@">
-                                        @productSliderOneImage@
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <form id="addComment" method="post" name="ajax-form" action="phpshop/ajax/review.php" data-modal="reviewModal">
-                            <h4>{Оцените товар}</h4>
-                            <div class="btn-group rating-group" data-toggle="buttons">
-                                <label class="btn ">
-                                    <input type="radio" name="rate" value="1">
-                                </label>
-                                <label class="btn ">
-                                    <input type="radio" name="rate" value="2">
-                                </label>
-                                <label class="btn ">
-                                    <input type="radio" name="rate" value="3">
-                                </label>
-                                <label class="btn ">
-                                    <input type="radio" name="rate" value="4">
-                                </label>
-                                <label class="btn ">
-                                    <input type="radio" name="rate" value="5" checked>
-                                </label>
-                            </div>
-                            <div class="form-group">
-                                <div class=""></div>
-                                <div class="">
-                                    <textarea placeholder="{Комментарий}" name="message" id="message" class="form-control"></textarea>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="">
-                                </div>
-                                <div class="">
-                                    <input placeholder="{Имя}" type="text" name="name_new" value="" class="form-control" required="">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="">
-                                </div>
-                                <div class="">
-                                    <input placeholder="E-mail" type="email" name="mail" value="" class="form-control" required="">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="">
-                                </div>
-                                <div class="">
-                                    @review_captcha@
-                                </div>
-                            </div>
-                            <p class="small"><label><input name="rule" value="1" required="" checked="" type="checkbox">
-                                    @rule@</label></p>
-                            <div class="form-group">
-                                <div class=""></div>
-                                <div class="">
-                                    <input type="hidden" name="send_price_link" value="ok">
-                                    <input type="hidden" name="ajax" value="1">
-                                    <input type="hidden" name="productId" value="@productUid@">
-                                    <button type="submit" class="btn btn-block btn-primary btn-pill transition-3d-hover">{Оставить отзыв}</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--/ Модальное окно отзыва-->
-
-        <!-- Модальное окно отзыва-->
-        <div id="thanks-box" class="modal fade">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <!-- Заголовок модального окна -->
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        <div class="h4 modal-title">{Сообщение}</div>
-                    </div>
-                    <!-- Основное содержимое модального окна -->
-                    <div class="modal-body">
-
-                    </div>
-                    <!-- Футер модального окна 
-                    <div class="modal-footer">
-        
-                    </div>
-                    -->
-                </div>
-            </div>
-        </div>
-        <!--/ Модальное окно отзыва-->
+    </div>
+</div>

@@ -296,6 +296,20 @@ class PHPShopCoreElement extends PHPShopElements {
         else
             $js .= 'var FILTER_COUNT = false;';
 
+        // Согласие на COOKIE
+        if (defined('isMobil')) {
+            if ($this->PHPShopSystem->ifSerilizeParam("admoption.user_cookie_mobile_enabled"))
+                $js .= 'var COOKIE_AGREEMENT = false;';
+            else
+                $js .= 'var COOKIE_AGREEMENT = true;';
+        }
+        else {
+             if ($this->PHPShopSystem->ifSerilizeParam("admoption.user_cookie_enabled"))
+                $js .= 'var COOKIE_AGREEMENT = false;';
+            else
+                $js .= 'var COOKIE_AGREEMENT = true;';
+        }
+
         if (!empty($js)) {
             $this->set('editor', '
         <script>' . $js . '</script>', true);
@@ -1327,7 +1341,7 @@ class PHPShopNewsElement extends PHPShopElements {
 
         if (!empty($view)) {
 
-            $result = $this->PHPShopOrm->select(array('*'), $where, array('order' => 'id DESC'), array("limit" => $this->limit));
+            $result = $this->PHPShopOrm->select(array('*'), $where, array('order' => 'datau DESC'), array("limit" => $this->limit));
 
             // Проверка на еденичную запись
             if ($this->limit > 1)
@@ -1907,6 +1921,8 @@ class PHPShopRecaptchaElement extends PHPShopElements {
      */
     public function true(){
     return $this->recaptcha;
+
+
 
 
 

@@ -134,7 +134,7 @@
                                         </ul>
                                     </li>
                                     @topBrands@
-                                    @topcatMenu@
+                                    @topMenu@
                                     </li>
                                 </ul>
                             </div>

@@ -760,3 +760,8 @@ color: #4e5360 !important;
 .filter-item-hide{
    color: #ddd !important;;
 }
+
+.img-responsive{
+  max-width: 100%;
+  height: auto;
+}

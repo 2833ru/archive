@@ -105,36 +105,36 @@
                 <div class="container header-hide-content pt-2">
                     <div class="d-flex align-items-center">
                         <p class="small text-muted mb-0 d-none d-sm-flex">@name@</p>
-                            <!-- Search -->
-                            <li class="list-inline-item d-sm-block d-md-block d-lg-none ">
-                                <div class="hs-unfold">
+                        <!-- Search -->
+                        <li class="list-inline-item d-sm-block d-md-block d-lg-none ">
+                            <div class="hs-unfold">
 
-                                    <a class="js-hs-search-unfold-invoker btn btn-xs btn-icon btn-ghost-secondary search-slide-down-trigger" href="javascript:;" role="button"
-                                       data-hs-unfold-options='{
-                                       "target": "#searchSlideDown",
-                                       "type": "css-animation",
-                                       "animationIn": "fadeIn search-slide-down-show",
-                                       "animationOut": "fadeOutUp",
-                                       "cssAnimatedClass": null,
-                                       "hasOverlay": true,
-                                       "overlayClass": ".search-slide-down-bg-overlay",
-                                       "overlayStyles": {
-                                       "background": "rgba(55, 125, 255, .1)"
-                                       },
-                                       "duration": 800,
-                                       "hideOnScroll": false
-                                       }'>
-                                        <i class="fas fa-search search-slide-down-trigger-icon"></i>
-                                    </a>
+                                <a class="js-hs-search-unfold-invoker btn btn-xs btn-icon btn-ghost-secondary search-slide-down-trigger" href="javascript:;" role="button"
+                                   data-hs-unfold-options='{
+                                   "target": "#searchSlideDown",
+                                   "type": "css-animation",
+                                   "animationIn": "fadeIn search-slide-down-show",
+                                   "animationOut": "fadeOutUp",
+                                   "cssAnimatedClass": null,
+                                   "hasOverlay": true,
+                                   "overlayClass": ".search-slide-down-bg-overlay",
+                                   "overlayStyles": {
+                                   "background": "rgba(55, 125, 255, .1)"
+                                   },
+                                   "duration": 800,
+                                   "hideOnScroll": false
+                                   }'>
+                                    <i class="fas fa-search search-slide-down-trigger-icon"></i>
+                                </a>
 
-                                </div>
-                            </li>
-                            <!-- End Search -->
+                            </div>
+                        </li>
+                        <!-- End Search -->
 
-                            @usersDisp@
+                        @usersDisp@
 
-                                    </li>
-                                    <!-- End Button -->
+                        </li>
+                        <!-- End Button -->
 
                         <div class="ml-auto">
 
@@ -149,50 +149,50 @@
                         </div>
 
                         <ul class="list-inline ml-2 mb-0">
-	                        
 
-                                    <!-- Button -->
-                                    <!-- Shopping Cart -->
-                                    <li class="navbar-nav-last-item d-none d-lg-block d-sm-none d-md-none">
-                                        <div class="hs-unfold">
-                                            <a class="js-hs-unfold-invoker btn btn-icon" href="/order/"
-                                               data-hs-unfold-options='{
-                                               "target": "#shoppingCartDropdown",
-                                               "type": "css-animation",
-                                               "event": "hover",
-                                               "hideOnScroll": "true"
-                                               }'>
-                                                <i class="fas fa-shopping-cart"></i>
-                                                <sup class="avatar-status avatar-primary cartnum @php __hide('num'); php@">@num@</sup>
-                                            </a>
 
-                                            <div id="shoppingCartDropdown" class="hs-unfold-content dropdown-menu dropdown-menu-right dropdown-card" style="min-width: 275px;">
-                                                <div class="card">
-                                                    <div class="card-body text-center">
-                                                        <span class="cartnum">@num@</span>
-                                                        <span class="visible-lg-inline">{товаров} {на} </span><span id="sum" class="">@sum@</span> <span
-                                                            class="rubznak">@productValutaName@</span></a>
-                                                    </div>
+                            <!-- Button -->
+                            <!-- Shopping Cart -->
+                            <li class="navbar-nav-last-item d-none d-lg-block d-sm-none d-md-none">
+                                <div class="hs-unfold">
+                                    <a class="js-hs-unfold-invoker btn btn-icon" href="/order/"
+                                       data-hs-unfold-options='{
+                                       "target": "#shoppingCartDropdown",
+                                       "type": "css-animation",
+                                       "event": "hover",
+                                       "hideOnScroll": "true"
+                                       }'>
+                                        <i class="fas fa-shopping-cart"></i>
+                                        <sup class="avatar-status avatar-primary cartnum @php __hide('num'); php@">@num@</sup>
+                                    </a>
 
-                                                    @visualcart@
+                                    <div id="shoppingCartDropdown" class="hs-unfold-content dropdown-menu dropdown-menu-right dropdown-card" style="min-width: 275px;">
+                                        <div class="card">
+                                            <div class="card-body text-center">
+                                                <span class="cartnum">@num@</span>
+                                                <span class="visible-lg-inline">{товаров} {на} </span><span id="sum" class="">@sum@</span> <span
+                                                    class="rubznak">@productValutaName@</span></a>
+                                            </div>
 
-                                                    <div class="card-footer text-center @php __hide('num'); php@" id="order">
-                                                        <a class="btn btn-primary  transition-3d-hover px-5"  href="/order/">{Оформить заказ}</a>
-                                                    </div>
-                                                </div>
+                                            @visualcart@
+
+                                            <div class="card-footer text-center @php __hide('num'); php@" id="order">
+                                                <a class="btn btn-primary  transition-3d-hover px-5"  href="/order/">{Оформить заказ}</a>
                                             </div>
                                         </div>
-                                        <!-- End Shopping Cart -->
+                                    </div>
+                                </div>
+                                <!-- End Shopping Cart -->
 
-                                        <a class="btn btn-icon" href="/users/wishlist.html" data-toggle="tooltip" data-placement="top" title="" tabindex="0" data-original-title="{Избранное}">
-                                            <i class="fas fa-heart"></i>
-                                            <sup class="avatar-status avatar-primary wishlistcount @php __hide('wishlistCount'); php@">@wishlistCount@</sup>
-                                        </a>
-                                        <a class="btn btn-icon" href="/compare/" data-toggle="tooltip" data-placement="top" title="" tabindex="0" data-original-title="{Сравнить}">
-                                            <i class="fas fa-balance-scale"></i></i>
-                                            <sup class="avatar-status avatar-primary numcompare @php __hide('numcompare'); php@">@numcompare@</sup>
-                                        </a>
-                                        
+                                <a class="btn btn-icon" href="/users/wishlist.html" data-toggle="tooltip" data-placement="top" title="" tabindex="0" data-original-title="{Избранное}">
+                                    <i class="fas fa-heart"></i>
+                                    <sup class="avatar-status avatar-primary wishlistcount @php __hide('wishlistCount'); php@">@wishlistCount@</sup>
+                                </a>
+                                <a class="btn btn-icon" href="/compare/" data-toggle="tooltip" data-placement="top" title="" tabindex="0" data-original-title="{Сравнить}">
+                                    <i class="fas fa-balance-scale"></i></i>
+                                    <sup class="avatar-status avatar-primary numcompare @php __hide('numcompare'); php@">@numcompare@</sup>
+                                </a>
+
 
                         </ul>
                     </div>
@@ -208,6 +208,22 @@
                             <img src="@logo@" alt="">
                         </a>
                         <!-- End Logo -->
+
+                        <!-- Shopping Cart -->
+                        <a class="navbar-toggler btn btn-icon btn-sm rounded-circle" href="/order/">
+                            <i class="fas fa-shopping-cart"></i>
+                            <sup class="avatar-status avatar-primary cartnum @php __hide('num'); php@">@num@</sup>
+                        </a>
+                        <!-- End Shopping Cart -->
+
+                        <a class="navbar-toggler btn btn-icon btn-sm rounded-circle" href="/users/wishlist.html" data-toggle="tooltip" data-placement="top" title="" tabindex="0" data-original-title="{Избранное}">
+                            <i class="fas fa-heart"></i>
+                            <sup class="avatar-status avatar-primary wishlistcount @php __hide('wishlistCount'); php@">@wishlistCount@</sup>
+                        </a>
+                        <a class="navbar-toggler btn btn-icon btn-sm rounded-circle" href="/compare/" data-toggle="tooltip" data-placement="top" title="" tabindex="0" data-original-title="{Сравнить}">
+                            <i class="fas fa-balance-scale"></i></i>
+                            <sup class="avatar-status avatar-primary numcompare @php __hide('numcompare'); php@">@numcompare@</sup>
+                        </a>
 
                         <!-- Responsive Toggle Button -->
                         <button type="button" class="navbar-toggler btn btn-icon btn-sm"
@@ -243,7 +259,7 @@
 
                                     <!-- Catalog -->
                                     <li class="hs-has-mega-menu navbar-nav-item">
-                                    
+
                                         <a id="basicMegaMenu" class="hs-mega-menu-invoker nav-link nav-link-toggle" href="javascript:;" aria-haspopup="true" aria-expanded="false">{Каталог}</a>
 
                                         <!-- Nav Item - Mega Menu -->
@@ -292,7 +308,7 @@
                                     <!-- Catalog  Menu-->
                                     @topcatMenu@
                                     <!-- End Catalog  Menu-->
-                                    
+
                                     <div class="col-md-6 navbar-nav-last-item d-none d-lg-block d-sm-none d-md-none">
                                         <form class="input-group" action="/search/" method="get">
                                             <input type="search" name="words" class="form-control form-control-sm" placeholder="{Артикул или наименование}" aria-label="{Артикул, наименование}">
@@ -319,23 +335,23 @@
             <div class="fluid @php __hide('imageSlider'); php@">
                 <div class="js-slick-carousel slick slick-equal-height"
                      data-hs-slick-carousel-options='{
-	                     	   "autoplay": true,
-       "autoplaySpeed": 5000,
+                     "autoplay": true,
+                     "autoplaySpeed": 5000,
 
-       "prevArrow": "<span class=\"fas fa-arrow-left slick-arrow slick-arrow-soft-white slick-arrow-left slick-arrow-centered-y rounded-circle ml-sm-2 ml-xl-4\"></span>",
-       "nextArrow": "<span class=\"fas fa-arrow-right slick-arrow slick-arrow-soft-white slick-arrow-right slick-arrow-centered-y rounded-circle mr-sm-2 mr-xl-4\"></span>",
-       "draggable": false
-     }'>
+                     "prevArrow": "<span class=\"fas fa-arrow-left slick-arrow slick-arrow-soft-white slick-arrow-left slick-arrow-centered-y rounded-circle ml-sm-2 ml-xl-4\"></span>",
+                     "nextArrow": "<span class=\"fas fa-arrow-right slick-arrow slick-arrow-soft-white slick-arrow-right slick-arrow-centered-y rounded-circle mr-sm-2 mr-xl-4\"></span>",
+                     "draggable": false
+                     }'>
                     @imageSlider@
                 </div>
             </div>
             <!-- End Images Carousel Section -->
-            
-	      <!-- Selection Section -->
-			<div class="sortselectionmain ">
-                    @sortselection@
+
+            <!-- Selection Section -->
+            <div class="sortselectionmain ">
+                @sortselection@
             </div>
-          <!-- End Selection Section -->
+            <!-- End Selection Section -->
 
             <!-- Features Section -->
             <div class="bg-soft-dark">
@@ -362,8 +378,8 @@
                 </div>
             </div>
             <!-- End Features Section -->
-            
-            
+
+
             <!-- Categories Section -->
             <div class="container space-2 space-lg-2">
                 <!-- Вывод отмеченных каталогов -->
@@ -392,7 +408,7 @@
 
             <!-- Спецпредложения -->
             <div class="container space-2 space-lg-2 @php __hide('specMain'); php@ border-top" >
-	            
+
                 <!-- Title -->
                 <div class="w-md-80 w-lg-40 text-center mx-md-auto mb-5 mb-md-9">
                     <h2>{Спецпредложения}</h2>
@@ -400,43 +416,43 @@
                 <!-- End Title -->
 
                 <!-- Вывод товаров -->
-	                
-        <!-- Slick Carousel -->
-        <div class="js-slick-carousel slick z-index-2 mx-md-auto mb-5 mb-md-9" data-hs-slick-carousel-options='{
-               "slidesToShow": 6,
-				"slidesToScroll": 3,
-				"autoplay": true,
-				"autoplaySpeed": 5000,
-	           "dots": true,
-               "dotsClass": "slick-pagination",
-               "responsive": [{
-                 "breakpoint": 1200,
-                   "settings": {
+
+                <!-- Slick Carousel -->
+                <div class="js-slick-carousel slick z-index-2 mx-md-auto mb-5 mb-md-9" data-hs-slick-carousel-options='{
+                     "slidesToShow": 6,
+                     "slidesToScroll": 3,
+                     "autoplay": true,
+                     "autoplaySpeed": 5000,
+                     "dots": true,
+                     "dotsClass": "slick-pagination",
+                     "responsive": [{
+                     "breakpoint": 1200,
+                     "settings": {
                      "slidesToShow": 5
-                   }
-                 }, {
-                 "breakpoint": 992,
-                 "settings": {
-                   "slidesToShow": 4
-                   }
-                 }, {
-                 "breakpoint": 768,
-                 "settings": {
-                   "slidesToShow": 3
-                   }
-                 }, {
-                 "breakpoint": 554,
-                 "settings": {
-                   "slidesToShow": 2,
-	               "slidesToScroll": 2
+                     }
+                     }, {
+                     "breakpoint": 992,
+                     "settings": {
+                     "slidesToShow": 4
+                     }
+                     }, {
+                     "breakpoint": 768,
+                     "settings": {
+                     "slidesToShow": 3
+                     }
+                     }, {
+                     "breakpoint": 554,
+                     "settings": {
+                     "slidesToShow": 2,
+                     "slidesToScroll": 2
 
-                 }
-               }]
-             }'>
+                     }
+                     }]
+                     }'>
 
-		@specMain@
-        </div>
-        <!-- End Slick Carousel -->
+                    @specMain@
+                </div>
+                <!-- End Slick Carousel -->
 
 
                 <div class="text-center">
@@ -444,7 +460,7 @@
                 </div>
             </div>
             <!-- End Спецпредложения -->
-            
+
 
             <!-- News Section -->
             <div class="space-2 container space-bottom-2 @php __hide('miniNews'); php@ border-top border-bottom">
@@ -459,16 +475,16 @@
                 </div>
             </div>
             <!-- End News Section -->
-            
-            
-            
-            
-                <!-- Title -->
-                <div class="w-md-80 w-lg-60 text-center mx-md-auto space-2 @php __hide('mainContent'); php@">
-                    <h2>@mainContentTitle@</h2>
-                    <p>@mainContent@</p>
-                </div>
-                <!-- End Title -->
+
+
+
+
+            <!-- Title -->
+            <div class="w-md-80 w-lg-60 text-center mx-md-auto space-2 @php __hide('mainContent'); php@">
+                <h2>@mainContentTitle@</h2>
+                <p>@mainContent@</p>
+            </div>
+            <!-- End Title -->
             <!-- Баннер -->
             <div class="@php __hide('banersDispHorizontal'); php@">
                 @banersDispHorizontal@
@@ -493,7 +509,7 @@
                                 <li class="nav-item small text-muted mb-0">@workingTime@</li>
                                 <li class="nav-item small text-muted mb-0" itemprop="address" itemscope itemtype="http://schema.org/PostalAddress"><span itemprop="streetAddress">@streetAddress@</span></li>
                                 <li class="nav-item">
-                                    
+
                                     <!-- Социальные сети -->
                                     <ul class="list-inline">
                                         <li class="list-inline-item @php __hide('vk'); php@"><a class="btn btn-xs btn-icon btn-soft-primary" title="ВКонтакте" href="@vk@" target="_blank"><em class="fab fa-vk" aria-hidden="true"></em></a></li>
@@ -779,6 +795,26 @@
             </div>
         </div>
         <!-- End Cookie Alert -->
+
+        <!-- Модальное окно Спасибо-->
+        <div id="thanks-box" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- Заголовок модального окна -->
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <div class="h4 modal-title">{Сообщение}</div>
+                    </div>
+                    <!-- Основное содержимое модального окна -->
+                    <div class="modal-body">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/ Модальное окно Спасибо-->
 
         <!-- JS Global Compulsory  -->
         <script src="@pathTemplate@/assets/vendor/jquery/dist/jquery.min.js"></script>

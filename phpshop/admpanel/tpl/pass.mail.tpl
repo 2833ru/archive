@@ -136,38 +136,24 @@
         <tbody width="100%" style="width: 100%; " align="center">
             <!-- Padding Top -->
             <tr class="erase">
-                <td height="30"></td>
+                <td height="120">
+                <p style="margin: 0px; text-decoration: none; color: #adadad; font-family: Helvetica,sans-serif; font-size: 12px; margin-top: 15px;">
+                    {Интернет-магазин} <a href="http://@serverPath@">@serverShop@</a>
+                </p>
+
+                <a href="http://@serverPath@" target="_blank"><img src="http://@serverPath@@logo@"
+                        border="0" style="display: block;max-width: 150px;height: auto; max-height: 80px; margin:20px;" alt=""></a>
+                </td>
             </tr>
             <tr>
                 <td align="center">
-                    <table class="full" align="center"
-                        style="margin: 0px auto; padding: 0px; background: #ffffff; border-left:1px solid #ededed;border-top:1px solid #ededed; border-right: 1px solid #ededed;border-radius: 5px 5px 0px 0px;"
-                        bgcolor="#ffffff" width="600" cellspacing="0" cellpadding="0" border="0">
-                        <tbody>
-                            <tr>
-                                <td colspan="1" width="600"></td>
-                            </tr>
-                            <tr>
-                                <td align="center" height="90" width="100%">
-                                    <a href="http://@serverPath@" target="_blank"><img src="http://@serverPath@@logo@"
-                                            border="0" style="display: block;max-width: 200px;height: auto;" alt=""></a>
-                                </td>
-                            </tr>
-                            <!-- Gray Line -->
-                            <tr>
-                                <td height="1" bgcolor="#f3f3f3" style="background: #f3f3f3; ">
-                                    <p style="margin:0;line-height: 1px; font-size: 1px">&nbsp;</p>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
                     <!-- Header text -->
                     <table class="full" align="center"
                         style="margin: 0px auto; padding: 0px; font-family:  Helvetica, sans-serif; background: #ffffff;border-left:1px solid #ededed; border-right: 1px solid #ededed;"
                         bgcolor="#ffffff" width="600" cellspacing="0" cellpadding="0" border="0">
                         <tbody>
                             <tr>
-                                <td height="25" colspan="5" bgcolor="#ffffff" style="background: #ffffff;"></td>
+                                <td height="15" colspan="5" bgcolor="#ffffff" style="background: #ffffff;"></td>
                             </tr>
                             <tr>
                                 <td colspan="5" width="600"></td>
@@ -179,11 +165,8 @@
                                 <td width="15" rowspan="5"></td>
                             </tr>
                             <tr>
-                                <td height="25"></td>
-                            </tr>
-                            <tr>
                                 <td bgcolor="#f3f3f3" align="center" height="60"
-                                    style="font-size: 20px; color: #464646; font-weight: 700; background: #f3f3f3; border-radius:4px;font-family:    Helvetica, sans-serif; letter-spacing: 4px; ">
+                                    style="font-size: 18px; color: #464646; font-weight: 700; background: #f3f3f3; border-radius:4px;font-family:    Helvetica, sans-serif; letter-spacing: 1px; ">
                                     {Обновление пароля пользователя} @login@
                                 </td>
                             </tr>
@@ -241,91 +224,103 @@
             </tr>
         </tbody>
     </table>
-    <!-- Footer -->
-    <table class="full" align="center"
-        style="margin: 0px auto; padding: 0px; font-family: Helvetica, sans-serif;background: #f3f3f3; "
-        bgcolor="#f3f3f3" width="600" cellspacing="0" cellpadding="0" border="0">
-        <tbody>
-            <tr>
-                <td height="35"></td>
-            </tr>
-            <tr>
-                <td colspan="3" width="600"></td>
-            </tr>
-            <tr>
-                <td class="full liquid-center" width="60%" style="width: 60%; ">
-                    <table width="100%" align="left" cellspacing="0" cellpadding="0" border="0">
-                        <tbody>
-                            <tr>
-                                <td width="10" rowspan="10"></td>
-                                <td align="left" class="liquid-center">
-                                    <a href="http://@serverPath@" target="_blank"><img src="http://@serverPath@@logo@"
-                                            border="0" style="display: block;max-width: 100px;height: auto;"
-                                            alt="@shopName@"></a>
-                                </td>
-                                <td width="10" rowspan="10"></td>
-                            </tr>
-                            <tr>
-                                <td height="20"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </td>
-                <td class="full mobile-margin" width="40%" style="width: 40%; ">
-                    <table width="100%" cellspacing="0" cellpadding="0" border="0">
-                        <tbody>
-                            <tr>
-                                <td align="right" class="liquid-center">
-
-                                    <span class="@php __hide('whatsapp'); php@"><a href="@whatsapp@" target="_blank" title="WhatsApp"><img
-                                            src="http://@serverPath@/UserFiles/Image/Payments/whatsapp.png"
-                                            width="25" height="25" alt=""></a></span>
-                                            
-                                    <span class="@php __hide('telegram'); php@"><a href="@telegram@" target="_blank" title="Telegram"><img
-                                            src="http://@serverPath@/UserFiles/Image/Payments/telegram.png"
-                                            width="25" height="25" alt=""></a></span>
-                                            
-                                    <span class="@php __hide('vk'); php@"><a href="@vk@" target="_blank" title="Vkontakte"><img
-                                            src="http://@serverPath@/UserFiles/Image/Payments/vk.png" width="25"
-                                            height="25" alt=""></a></span>
-                                            
-                                    <span class="@php __hide('youtube'); php@"><a href="@youtube@" target="_blank" title="Youtube"><img
-                                            src="http://@serverPath@/UserFiles/Image/Payments/youtube.png"
-                                            width="25" height="25" alt=""></a></span>
-                                </td>
-                            <tr>
-                                <td align="right" style="color: #adadad;line-height: 21px; " class="liquid-center">
-                                    <p style="margin: 0px;">
-                                        <a style="text-decoration: none; color: #adadad; font-family: Helvetica,sans-serif; font-size: 12px;"
-                                            href="tel:@telNum@">@telNum@</a>
-                                    </p>
-                                    <p style="margin: 0px;">
-                                        <a style="text-decoration: none; color: #adadad; font-family: Helvetica,sans-serif; font-size: 12px;"
-                                            href="mailto:@adminMail@">@adminMail@</a>
-                                    </p>
-                                    <p style="margin: 0px; text-decoration: none; color: #adadad; font-family: Helvetica,sans-serif; font-size: 12px;">
-                                        @org_adres@
-                                    </p>
-
-                                </td>
-                            </tr>
-            </tr>
-            <tr>
-                <td height="10"></td>
-            </tr>
-        </tbody>
-    </table>
-    </td>
+<!-- Footer -->
+<table class="full" align="center"
+style="margin: 0px auto; padding: 0px; font-family: Helvetica, sans-serif;background: #f3f3f3; "
+bgcolor="#f3f3f3" width="600" cellspacing="0" cellpadding="0" border="0">
+<tbody>
+    <tr>
+        <td height="35"></td>
     </tr>
+    <tr>
+        <td class="full liquid-center" width="60%" style="width: 60%; ">
+            <table width="100%" align="left" cellspacing="0" cellpadding="0" border="0">
+                <tbody>
+                    <tr>
+                        <td width="10" rowspan="10"></td>
+                        <td align="left" class="liquid-center erase">
+                            <a href="http://@serverPath@" target="_blank"><img src="http://@serverPath@@logo@"
+                                    border="0" style="display: block;max-width: 150px;height: auto; max-height: 54px; margin-bottom: 15px;"
+                                    alt=""></a>
+                                    
+                            <p style="margin: 0px; text-decoration: none; color: #adadad; font-family: Helvetica,sans-serif; font-size: 12px;">
+                                {Интернет-магазин} <a href="http://@serverPath@">@serverShop@</a>
+                            </p>
+                        </td>
+                        </td>
+                        <td width="10" rowspan="10">
+            <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tbody>
+                    <tr>
+                        <td align="right" class="liquid-center" style="min-width: 183px;">
+
+                            <span class="@php __hide('whatsapp'); php@"><a href="@whatsapp@" target="_blank" title="WhatsApp"><img
+                                    src="http://@serverPath@/UserFiles/Image/Payments/whatsapp.png"
+                                    width="25" height="25" alt=""></a></span>
+                                    
+                            <span class="@php __hide('telegram'); php@"><a href="@telegram@" target="_blank" title="Telegram"><img
+                                    src="http://@serverPath@/UserFiles/Image/Payments/telegram.png"
+                                    width="25" height="25" alt=""></a></span>
+                                    
+                            <span class="@php __hide('vk'); php@"><a href="@vk@" target="_blank" title="Vkontakte"><img
+                                    src="http://@serverPath@/UserFiles/Image/Payments/vk.png" width="25"
+                                    height="25" alt=""></a></span>
+                                    
+                            <span class="@php __hide('youtube'); php@"><a href="@youtube@" target="_blank" title="Youtube"><img
+                                    src="http://@serverPath@/UserFiles/Image/Payments/youtube.png"
+                                    width="25" height="25" alt=""></a></span>
+                            <span class="@php __hide('odnoklassniki'); php@"><a href="@odnoklassniki@" target="_blank" title="odnoklassniki"><img
+                                    src="http://@serverPath@/UserFiles/Image/Payments/odnoklassniki.png"
+                                    width="25" height="25" alt=""></a></span>
+                        </td>
+                    <tr>
+                        <td align="right" style="color: #adadad;line-height: 21px; " class="liquid-center">
+                            <p style="margin: 0px;">
+                                <a style="text-decoration: none; color: #adadad; font-family: Helvetica,sans-serif; font-size: 12px;"
+                                    href="tel:@telNum@">@telNum@</a>
+                            </p>
+                            <p style="margin: 0px;">
+                                <a style="text-decoration: none; color: #adadad; font-family: Helvetica,sans-serif; font-size: 12px;"
+                                    href="mailto:@adminMail@">@adminMail@</a>
+                            </p>
+                            <p style="margin: 0px; text-decoration: none; color: #adadad; font-family: Helvetica,sans-serif; font-size: 12px;">
+                                @org_adres@
+                            </p>
+
+                        </td>
+                    </tr>
+		            <tr>
+		                <td height="10"></td>
+		            </tr>
+		        </tbody>
+		    </table>
+		</td>
+	</tr>
     <tr>
         <td height="50"></td>
     </tr>
-    </tbody>
-    </table>
-    </td>
-    </tr>
-    </tbody>
-    </table>
-</body>
+	</tbody>
+	</table>
+</td>
+</tr>
+<tr>
+<td height="20">
+</td>
+</tr>
+</tbody>
+</table>
+        </td>
+	</tr>
+</tbody>
+</table>
+<!-- End Footer -->
 
+		</td>
+		    </tr>
+		</tbody>
+		</table>
+
+	</tbody>
+	</table>
+</body>
 </html>

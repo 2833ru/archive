@@ -2,7 +2,7 @@
 
 /**
  * Библиотека Отправление почты
- * @version 2.5
+ * @version 2.6
  * @package PHPShopClass
  * <code>
  * // example:
@@ -37,7 +37,7 @@ class PHPShopMail {
 
         if (empty($_classPath))
             $_classPath = './phpshop/';
-        
+
         if ($GLOBALS['PHPShopBase']->codBase == 'utf-8')
             $this->codepage = 'utf-8';
 
@@ -103,8 +103,7 @@ class PHPShopMail {
         if (strstr($from, ',')) {
             $from_array = explode(",", $from);
             $this->from = trim($from_array[0]);
-        }
-        else
+        } else
             $this->from = $from;
 
         $this->mail->setFrom($this->from, $PHPShopSystem->getName());
@@ -121,8 +120,7 @@ class PHPShopMail {
                     else
                         $this->mail->addBCC($mail);
             }
-        }
-        else
+        } else
             $this->mail->addAddress($to);
 
 
@@ -147,10 +145,20 @@ class PHPShopMail {
             $GLOBALS['SysValue']['other']['org_adres'] = $this->PHPShopSystem->getSerilizeParam('bank.org_adres');
             $GLOBALS['SysValue']['other']['logo'] = $this->PHPShopSystem->getLogo(true);
             $GLOBALS['SysValue']['other']['charset'] = $this->codepage;
-
             $GLOBALS['SysValue']['other']['shopName'] = $this->PHPShopSystem->getName();
             $GLOBALS['SysValue']['other']['serverPath'] = $_SERVER['SERVER_NAME'] . "/" . $GLOBALS['SysValue']['dir']['dir'];
             $GLOBALS['SysValue']['other']['date'] = date("d-m-y H:i");
+
+            // Адрес сайта
+            PHPShopParser::set('serverName', PHPShopString::check_idna($_SERVER['SERVER_NAME']));
+            PHPShopParser::set('serverShop', PHPShopString::check_idna($_SERVER['SERVER_NAME']));
+
+            // Социальные сети
+            PHPShopParser::set('vk', $this->PHPShopSystem->getSerilizeParam('bank.vk'));
+            PHPShopParser::set('telegram', $this->PHPShopSystem->getSerilizeParam('bank.telegram'));
+            PHPShopParser::set('odnoklassniki', $this->PHPShopSystem->getSerilizeParam('bank.odnoklassniki'));
+            PHPShopParser::set('whatsapp', $this->PHPShopSystem->getSerilizeParam('bank.whatsapp'));
+            PHPShopParser::set('youtube', $this->PHPShopSystem->getSerilizeParam('bank.youtube'));
         }
     }
 
@@ -196,8 +204,8 @@ class PHPShopMailFile extends PHPShopMail {
     function __construct($to, $from, $subject, $content, $filename, $file, $option = false) {
         parent::__construct($to, $from, $subject, $content, true, true, $option);
         $this->mail->addAttachment($file, $filename);
-        if(empty($content))
-            $content=$filename;
+        if (empty($content))
+            $content = $filename;
         $this->sendMailNow($content);
     }
 
