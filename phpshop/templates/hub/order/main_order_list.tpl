@@ -20,7 +20,7 @@
 		<div class="col-xs-12 col-lg-12">
 			<div class="row top-button-order-row">
 				<div class="pull-left">
-						<h1 class="page-title hide">Заказ №@orderNum@</h1>
+						<h1 class="page-title hide">{Заказ} &#8470;@orderNum@</h1>
 				</div>
 				<div class="pull-right">
 					<a href="?cart=clean" class="btn btn-main"><span class="glyphicon glyphicon-remove"></span> {Очистить корзину}</a> 

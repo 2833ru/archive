@@ -19,13 +19,13 @@ function actionStart() {
     $data = $PHPShopOrm->select();
 
     $Tab1 = $PHPShopGUI->setField('Пароль защиты XML файла', $PHPShopGUI->setInputText(
-        'http://'.$_SERVER['SERVER_NAME'].'/phpshop/modules/avito/xml/appliances.php?pas=', 'password_new', $data['password'], 534)
+        'http://'.$_SERVER['SERVER_NAME'].'/phpshop/modules/avito/xml/appliances.php?pas=', 'password_new', $data['password'], 600)
     );
-    $Tab1 .= $PHPShopGUI->setField('ФИО менеджера', $PHPShopGUI->setInputText( false, 'manager_new', $data['manager'], 534));
-    $Tab1 .= $PHPShopGUI->setField('Телефон менеджера', $PHPShopGUI->setInputText( false, 'phone_new', $data['phone'], 534));
-    $Tab1 .= $PHPShopGUI->setField('Адрес', $PHPShopGUI->setInputText( false, 'address_new', $data['address'], 534));
+    $Tab1 .= $PHPShopGUI->setField('ФИО менеджера', $PHPShopGUI->setInputText( false, 'manager_new', $data['manager'], 600));
+    $Tab1 .= $PHPShopGUI->setField('Телефон менеджера', $PHPShopGUI->setInputText( false, 'phone_new', $data['phone'], 600));
+    $Tab1 .= $PHPShopGUI->setField('Адрес', $PHPShopGUI->setInputText( false, 'address_new', $data['address'], 600));
     $Tab1 .= $PHPShopGUI->setField('Шаблон генерации описания', '<div id="avitotitleShablon">
-<textarea class="form-control avito-shablon" name="preview_description_template_new" rows="3" style="max-width: 534px;height: 70px;">' . $data['preview_description_template'] . '</textarea>
+<textarea class="form-control avito-shablon" name="preview_description_template_new" rows="3" style="max-width: 600px;height: 70px;">' . $data['preview_description_template'] . '</textarea>
     <div class="btn-group" role="group" aria-label="...">
     <input  type="button" value="'.__('Описание').'" onclick="AvitoShablonAdd(\'@Content@\')" class="btn btn-default btn-sm">
     <input  type="button" value="'.__('Краткое описание').'" onclick="AvitoShablonAdd(\'@Description@\')" class="btn btn-default btn-sm">
@@ -33,6 +33,7 @@ function actionStart() {
 <input  type="button" value="'.__('Каталог').'" onclick="AvitoShablonAdd(\'@Catalog@\')" class="btn btn-default btn-sm">
 <input  type="button" value="'.__('Подкаталог').'" onclick="AvitoShablonAdd(\'@Subcatalog@\')" class="btn btn-default btn-sm">
 <input  type="button" value="'.__('Товар').'" onclick="AvitoShablonAdd(\'@Product@\',)" class="btn btn-default btn-sm">
+<input  type="button" value="'.__('Артикул').'" onclick="AvitoShablonAdd(\'@Article@\',)" class="btn btn-default btn-sm">
     </div>
 </div>
 <script>function AvitoShablonAdd(variable) {

@@ -1,43 +1,44 @@
 function ozonrocketvalidate(evt) {
     var theEvent = evt || window.event;
     var key = theEvent.keyCode || theEvent.which;
-    key = String.fromCharCode( key );
+    key = String.fromCharCode(key);
     var regex = /[0-9]|\./;
-    if( !regex.test(key) ) {
+    if (!regex.test(key)) {
         theEvent.returnValue = false;
-        if(theEvent.preventDefault) theEvent.preventDefault();
+        if (theEvent.preventDefault)
+            theEvent.preventDefault();
     }
 }
 
-$(document).ready(function (){
-    
+$(document).ready(function () {
 
-    if(Number($.getUrlVar('tab')) === 4) {
+
+    if (Number($.getUrlVar('tab')) === 4) {
         $('a[href="#tabs-4"]').tab('show');
     }
-    
+
     // Блокировка
     $('body').on('change', '#hide_pvz_new', function () {
-         if ($(this).prop('checked') === true){
-             $('#hide_postamat_new').bootstrapToggle('off');
-         }
+        if ($(this).prop('checked') === true) {
+            $('#hide_postamat_new').bootstrapToggle('off');
+        }
     });
-    
+
     // Блокировка
     $('body').on('change', '#hide_postamat_new', function () {
-         if ($(this).prop('checked') === true){
-             $('#hide_pvz_new').bootstrapToggle('off');
-         }
+        if ($(this).prop('checked') === true) {
+            $('#hide_pvz_new').bootstrapToggle('off');
+        }
     });
-    
+
     // Изменение статуса оплаты
     $('#payment_status').on('change', function () {
         var paymentStatus = 0;
-        if($('#payment_status').prop('checked')) {
+        if ($('#payment_status').prop('checked')) {
             paymentStatus = 1;
         }
         $.ajax({
-            mimeType: 'text/html; charset='+locale.charset,
+            mimeType: 'text/html; charset=' + locale.charset,
             url: '../modules/ozonrocket/ajax/ajax.php',
             type: 'post',
             data: {
@@ -47,8 +48,8 @@ $(document).ready(function (){
             },
             dataType: "json",
             async: false,
-            success: function(json) {
-                if(json['success']) {
+            success: function (json) {
+                if (json['success']) {
                 } else {
                     console.log(json['error'])
                 }
@@ -62,7 +63,7 @@ $(document).ready(function (){
 
     $('.ozonrocket-send').on('click', function () {
         $.ajax({
-            mimeType: 'text/html; charset='+locale.charset,
+            mimeType: 'text/html; charset=' + locale.charset,
             url: '../modules/ozonrocket/ajax/ajax.php',
             type: 'post',
             data: {
@@ -71,9 +72,9 @@ $(document).ready(function (){
             },
             dataType: "json",
             async: false,
-            success: function(json) {
-                if(json['success']) {
-                    if(Number($.getUrlVar('tab')) !== 4) {
+            success: function (json) {
+                if (json['success']) {
+                    if (Number($.getUrlVar('tab')) !== 4) {
                         window.location.href += '&tab=4';
                     } else {
                         location.reload();
@@ -93,13 +94,15 @@ function adminReceiveMessage(event)
     if (event.origin !== "https://rocket.ozon.ru" && event.origin !== "https://rocket-demo.ozonru.me")
         return;
     var data = JSON.parse(event.data);
-    ozonRocketChangeAddress(data);
+
+    if (data["price"] > 0)
+        ozonRocketChangeAddress(data);
 }
 
 function ozonRocketChangeAddress(data)
 {
     $.ajax({
-        mimeType: 'text/html; charset='+locale.charset,
+        mimeType: 'text/html; charset=' + locale.charset,
         url: '../modules/ozonrocket/ajax/ajax.php',
         type: 'post',
         data: {
@@ -112,9 +115,9 @@ function ozonRocketChangeAddress(data)
         },
         dataType: "json",
         async: false,
-        success: function(json) {
-            if(json['success']) {
-                if(Number($.getUrlVar('tab')) !== 4) {
+        success: function (json) {
+            if (json['success']) {
+                if (Number($.getUrlVar('tab')) !== 4) {
                     window.location.href += '&tab=4';
                 } else {
                     location.reload();

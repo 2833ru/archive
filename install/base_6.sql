@@ -513,7 +513,7 @@ INSERT INTO `phpshop_modules_sticker_forms` (`id`, `name`, `path`, `content`, `m
 (19, 'Полоска над шапкой', 'top', 'Бесплатная доставка при заказе от 3000 рублей. <a href=\"/page/address.html\">Подробности</a>', '', '1', '', ''),
 (9, 'Соцсети для мобильной версии сайта', 'social', '<ul class=\"social\">\r\n<li class=\"skype\"><a href=\"https://msng.link/sk/login\">&nbsp;</a></li>\r\n<li class=\"whatsapp\"><a href=\"https://msng.link/wa/7926000000\">&nbsp;</a></li>\r\n<li class=\"viber\"><a href=\"https://msng.link/vi/7926000000\">&nbsp;</a></li>\r\n</ul>', '', '1', '', ''),
 (10, 'Мы принимаем к оплате', 'pay', '<p><img src=\"/UserFiles/Image/trial/pay.png\" alt=\"Payment methods\" width=\"250\" height=\"25\" /></p>', '', '1', '', ''),
-(11, 'Иконки социальных сетей в подвале сайта', 'socfooter', '<ul class=\"social-menu list-inline\">\r\n<li class=\"list-inline-item\"><a class=\"social-button header-top-link btn btn-xs btn-icon btn-soft-secondary\" title=\"Facebook\" href=\"#\"> <em class=\"fa fa-facebook\" aria-hidden=\"true\">.</em></a></li>\r\n<li class=\"list-inline-item\"><a class=\"social-button  header-top-link\" title=\"ВКонтакте\" href=\"#\"><em class=\"fa fa-vk\" aria-hidden=\"true\">.</em></a></li>\r\n<li class=\"list-inline-item\"><a class=\"social-button  header-top-link\" title=\"Одноклассники\" href=\"#\"><em class=\"fa fa-odnoklassniki\" aria-hidden=\"true\">.</em></a></li>\r\n</ul>', '', '1', '', ''),
+(11, 'Иконки социальных сетей в подвале сайта', 'socfooter', '<ul class=\"social-menu list-inline\">\r\n<li class=\"list-inline-item\"><a class=\"social-button header-top-link btn btn-xs btn-icon btn-soft-secondary\" title=\"Telegram\" href=\"#\"> <em class=\"fa fa-telegram\" aria-hidden=\"true\">.</em></a></li>\r\n<li class=\"list-inline-item\"><a class=\"social-button  header-top-link\" title=\"ВКонтакте\" href=\"#\"><em class=\"fa fa-vk\" aria-hidden=\"true\">.</em></a></li>\r\n<li class=\"list-inline-item\"><a class=\"social-button  header-top-link\" title=\"Одноклассники\" href=\"#\"><em class=\"fa fa-odnoklassniki\" aria-hidden=\"true\">.</em></a></li>\r\n</ul>', '', '1', '', ''),
 (15, 'Надежно', 'slogan1', '<div class=\"media\">\r\n<figure class=\"w-100 max-w-8rem mr-4\"><img class=\"img-fluid\" src=\"assets/svg/icons/lock.png\" alt=\"Безопасность\" /></figure>\r\n<div class=\"media-body\">\r\n<h4 class=\"mb-1\">Надежно</h4>\r\n<p class=\"font-size-1 mb-0\">Это слоган в меню Модули - Стикеры - Надежно.</p>\r\n</div>\r\n</div>', '', '1', '/', 'flow'),
 (16, '30 дней на возврат', 'slogan2', '<div class=\"media\">\r\n<figure class=\"w-100 max-w-8rem mr-4\"><img class=\"img-fluid\" src=\"assets/svg/icons/refund.png\" alt=\"Возврат 14 дней\" /></figure>\r\n<div class=\"media-body\">\r\n<h4 class=\"mb-1\">30 дней на возврат</h4>\r\n<p class=\"font-size-1 mb-0\">Это слоган в меню Модули - Стикеры - 30 дней на возврат.</p>\r\n</div>\r\n</div>', '', '1', '/', 'flow'),
 (17, 'Удобная доставка', 'slogan3', '<div class=\"media\">\r\n<figure class=\"w-100 max-w-8rem mr-4\"><img class=\"img-fluid\" src=\"assets/svg/icons/delivery-man.png\" alt=\"Бесплатная доставка\" /></figure>\r\n<div class=\"media-body\">\r\n<h4 class=\"mb-1\">Удобная доставка</h4>\r\n<p class=\"font-size-1 mb-0\">Это слоган в меню Модули - стикеры - Удобная доставка.</p>\r\n</div>\r\n</div>', '', '1', '/', 'flow');
@@ -601,12 +601,12 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_yandexkassa_system` (
   `title_end` text NOT NULL,
   `shop_id` varchar(64) NOT NULL DEFAULT '',
   `api_key` varchar(255) NOT NULL DEFAULT '',
-  `version` varchar(64) NOT NULL DEFAULT '1.5',
+  `version` varchar(64) NOT NULL DEFAULT '1.6',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 INSERT INTO `phpshop_modules_yandexkassa_system` (`id`, `status`, `title`, `title_end`, `shop_id`, `api_key`, `version`) VALUES
-(1, 0, 'Оплатить сейчас', 'Оплатите пожалуйста свой заказ', '665601', 'test_IBkYJDzgL1-gaz04YTHNxQekxtaGz6z-7_40u0rRlYs', '1.5');
+(1, 0, 'Оплатить сейчас', 'Оплатите пожалуйста свой заказ', '665601', 'test_IBkYJDzgL1-gaz04YTHNxQekxtaGz6z-7_40u0rRlYs', '1.6');
 
 DROP TABLE IF EXISTS `phpshop_news`;
 CREATE TABLE IF NOT EXISTS `phpshop_news` (
@@ -630,6 +630,7 @@ CREATE TABLE IF NOT EXISTS `phpshop_newsletter` (
   `content` text,
   `template` int(11) DEFAULT '0',
   `date` int(11) DEFAULT '0',
+  `servers` INT(11) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
@@ -919,6 +920,7 @@ CREATE TABLE IF NOT EXISTS `phpshop_products` (
   `width` varchar(64) DEFAULT '',
   `height` varchar(64) DEFAULT '',
   `price_purch` float DEFAULT '0',
+  `yandex_vat_code` int(11) default 0,
   PRIMARY KEY (`id`),
   KEY `category` (`category`),
   KEY `enabled` (`enabled`),

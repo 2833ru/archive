@@ -9,12 +9,17 @@ function actionStart() {
 
     // Исходное изображение
     $image_source = $PHPShopSystem->ifSerilizeParam('admoption.image_save_source');
-
     $PHPShopInterface->addJSFiles('./exchange/gui/exchange.gui.js');
-    $PHPShopInterface->setActionPanel($TitlePage, false, false);
-    $PHPShopInterface->checkbox_action = false;
+    
+     $PHPShopInterface->action_select['Удалить изображения'] = array(
+        'name' => 'Удалить изображения',
+        'action' => 'image-clean',
+        'class' => 'disabled'
+    );
+    
+    $PHPShopInterface->setActionPanel($TitlePage, array('Удалить изображения'), false);
 
-    $PHPShopInterface->setCaption(array("Иконка", "5%", array('sort' => 'none')), array("Название товара", "50%"), array("Вывод", "10%", array('align' => 'center')), array("Отсутствующие файлы", "35%", array('align' => 'right', array('sort' => 'none'))));
+    $PHPShopInterface->setCaption(array(null, "3%"),array("Иконка", "5%", array('sort' => 'none')), array("Название товара", "35%"), array("Вывод", "10%", array('align' => 'center')), array("", "10%"),array("Отсутствующие файлы", "35%", array('align' => 'right', array('sort' => 'none'))));
 
     if (empty($_GET['limit']))
         $_GET['limit'] = '0,10000';
@@ -25,7 +30,7 @@ function actionStart() {
     $PHPShopOrm->debug = false;
     $PHPShopOrm->mysql_error = false;
 
-    $PHPShopOrm->sql = 'SELECT a.id, a.uid, a.name, a.enabled, a.yml, b.name as img FROM ' . $GLOBALS['SysValue']['base']['products'] . ' AS a 
+    $PHPShopOrm->sql = 'SELECT a.id, a.uid, a.name, a.enabled, a.yml, b.name as img, b.id as img_id FROM ' . $GLOBALS['SysValue']['base']['products'] . ' AS a 
         RIGHT JOIN ' . $GLOBALS['SysValue']['base']['foto'] . ' AS b ON a.id = b.parent order by a.id desc 
             limit ' . $_GET['limit'];
 
@@ -37,8 +42,8 @@ function actionStart() {
                 continue;
 
             $row['pic_big'] = $row['img'];
-            $row['pic_small'] = str_replace(array('.jpg', '.png'), array('s.jpg', 's.png'), $row['img']);
-            $row['pic_source'] = str_replace(array('.jpg', '.png'), array('_big.jpg', '_big.png'), $row['img']);
+            $row['pic_small'] = str_replace(array('.jpg', '.png','.JPG', '.PNG'), array('s.jpg', 's.png','s.jpg', 's.png'), $row['img']);
+            $row['pic_source'] = str_replace(array('.jpg', '.png','.JPG', '.PNG'), array('_big.jpg', '_big.png','_big.jpg', '_big.png'), $row['img']);
 
             if (!file_exists('../..' . $row['pic_small']) and !strstr($row['pic_small'],'http'))
                 $error[] = $row['pic_small'];
@@ -63,7 +68,7 @@ function actionStart() {
             if (!empty($row['uid']))
                 $uid = '<div class="text-muted">' . __('Арт') . ' ' . $row['uid'] . '</div>';
             else
-                $uid = null;
+                $uid = '<div class="text-muted"></div>';
 
             // Вывод
             if (empty($row['enabled'])) {
@@ -73,12 +78,11 @@ function actionStart() {
                 $enabled =  $enabled_css = null;
             }
 
-
             // YML
             if (!empty($row['yml']))
                 $uid .= '<span class="label label-success" title="Вывод в Яндекс.Маркете">Я</span>';
 
-            $PHPShopInterface->setRow(array('name' => $icon, 'link' => '?path=product&return=' . $_GET['path'] . '&id=' . $row['id']), array('name' => $row['name'], 'link' => '?path=product&return=' . $_GET['path'] . '&id=' . $row['id'], 'addon' => $uid,'class'=>$enabled_css), array('name' => $enabled, 'align' => 'center'), array('name' => $file, 'align' => 'right'));
+            $PHPShopInterface->setRow($row['img_id'], array('name' => $icon, 'link' => '?path=product&return=' . $_GET['path'] . '&id=' . $row['id']), array('name' => $row['name'], 'link' => '?path=product&return=' . $_GET['path'] . '&id=' . $row['id'], 'addon' => $uid,'class'=>$enabled_css), array('name' => $enabled, 'align' => 'center'), array('action' => array('delete', 'id' => $row['img_id']), 'align' => 'center'),array('name' => $file, 'align' => 'right'));
 
             unset($error);
         }
@@ -102,6 +106,10 @@ function actionStart() {
     return true;
 }
 
+
 // Обработка событий
 $PHPShopGUI->getAction();
+
+// Вывод формы при старте
+$PHPShopGUI->setAction($_GET['id'], 'actionStart', 'none');
 ?>

@@ -22,9 +22,14 @@ class ElasticSearch
             $categories = [$category];
         }
 
-        $fields = [ 'title^5', 'title.eng^5', 'article^4', 'description^2', 'short_description^3', 'keywords' ];
+        $article = 'article^4';
+        if ((int) Elastic::getOption('search_uid_first') === 1) {
+            $article = 'article^9';
+        }
+
+        $fields = [ 'title^5', 'title.eng^5', $article, 'description^2', 'short_description^3', 'keywords' ];
         if($pole === 1) {
-            $fields = [ 'title^3', 'title.eng^3', 'article^2', 'keywords' ];
+            $fields = [ 'title^5', 'title.eng^5', $article, 'keywords' ];
         }
 
         $result = $this->client->searchByQuery(Elastic::getFilter($query, $fields, $from, $size, array_values($categories)));
@@ -35,10 +40,16 @@ class ElasticSearch
             return ['products' => [] , 'total' => 0];
         }
 
+        $dop_cats = '';
+        foreach (array_keys($this->getServerCategories()) as $cat) {
+            $dop_cats .= ' OR dop_cat LIKE \'%#' . $cat . '#%\' ';
+        }
+        $categories_str = implode("','", array_keys($this->getServerCategories()));
+        $catt = "(category IN ('$categories_str') " . $dop_cats . " ) ";
+
         $products = (new PHPShopOrm($GLOBALS['SysValue']['base']['products']))
             ->getList(['*'], [
-                'elastic_id' => sprintf(" IN ('%s')", implode("','", $ids)),
-                'category' => sprintf(' IN (%s)', implode(',', array_keys($this->getServerCategories())))
+                'elastic_id' => sprintf(" IN ('%s')", implode("','", $ids)) . ' and ' . $catt
             ],
                 ['order' => sprintf(" FIELD(elastic_id, '%s')", implode("','", $ids))]
             );

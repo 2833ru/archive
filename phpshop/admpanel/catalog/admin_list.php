@@ -51,7 +51,7 @@ function actionStart() {
 
     $PHPShopInterface->_CODE .= '   
     <div class="row">
-       <div class="col-md-3 col-xs-6">
+       <div class="col-md-3 col-xs-6 col-panel">
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-eye-open"></span> ' . __('Видимые каталоги') . '</div>
              <div class="panel-body text-right panel-intro">
@@ -59,7 +59,7 @@ function actionStart() {
              </div>
           </div>
        </div>
-       <div class="col-md-3 col-xs-6">
+       <div class="col-md-3 col-xs-6 col-panel">
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-eye-close"></span> ' . __('Скрытые каталоги') . '</div>
                 <div class="panel-body text-right panel-intro">
@@ -67,7 +67,7 @@ function actionStart() {
                </div>
           </div>
        </div>
-        <div class="col-md-3 col-xs-6">
+        <div class="col-md-3 col-xs-6 col-panel">
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-th-list"></span> ' . __('Каталоги в топ меню') . '</div>
                 <div class="panel-body text-right panel-intro">
@@ -75,7 +75,7 @@ function actionStart() {
                </div>
           </div>
        </div>
-       <div class="col-md-3 col-xs-6">
+       <div class="col-md-3 col-xs-6 col-panel">
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-th-large"></span> ' . __('Плитка на главной') . '</div>
                 <div class="panel-body text-right panel-intro">
@@ -87,7 +87,7 @@ function actionStart() {
     
         $PHPShopInterface->_CODE .= '   
     <div class="row">
-       <div class="col-md-3 col-xs-6">
+       <div class="col-md-3 col-xs-6 col-panel">
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-thumbs-up"></span> ' . __('Акционные товары') . '</div>
              <div class="panel-body text-right panel-intro">
@@ -95,7 +95,7 @@ function actionStart() {
              </div>
           </div>
        </div>
-       <div class="col-md-3 col-xs-6">
+       <div class="col-md-3 col-xs-6 col-panel">
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-open"></span> ' . __('Товары Яндекс') . '</div>
                 <div class="panel-body text-right panel-intro">
@@ -103,7 +103,7 @@ function actionStart() {
                </div>
           </div>
        </div>
-        <div class="col-md-3 col-xs-6">
+        <div class="col-md-3 col-xs-6 col-panel">
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-flash"></span> ' . __('Товары без цен') . '</div>
                 <div class="panel-body text-right panel-intro">
@@ -111,7 +111,7 @@ function actionStart() {
                </div>
           </div>
        </div>
-       <div class="col-md-3 col-xs-6">
+       <div class="col-md-3 col-xs-6 col-panel">
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-picture"></span> ' . __('Товары без картинок') . '</div>
                 <div class="panel-body text-right panel-intro">

@@ -98,12 +98,12 @@ html{
 }
 
 #navbar1 .dropdown-menu{
-   font-size: 13px;
-   min-width: 200px;
+    font-size: 13px;
+    min-width: 200px;
 }
 
 .dropdown-menu{
-   font-size: 13px;
+    font-size: 13px;
 }
 
 .elfinder-modal-content{
@@ -789,7 +789,7 @@ li.active .text-muted{
 }
 
 .block-grid .col-block{
-   max-width: 50%; 
+    max-width: 50%; 
 }
 
 .masonry-grid .col-block{
@@ -827,9 +827,9 @@ li.active .text-muted{
 }
 
 #template-tree-block{
-   overflow-y: scroll;
-   overflow-x: hidden;
-   max-height: 870px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    max-height: 870px;
 }
 
 .toggle.btn-xs {
@@ -839,4 +839,24 @@ li.active .text-muted{
 
 .modal-open {    
     overflow: hidden;
+}
+
+.row .col-panel {
+    padding-left: 0px;
+}
+
+.row .col-panel:first-child{
+    padding-left: 15px;
+}
+
+@media (max-width:700px) {
+    
+    .row .col-panel:nth-child(odd):not(.col-panel-not){
+        padding-left: 15px;
+    }
+
+    .row .col-panel-not{
+        padding-left: 10px;
+    }
+
 }

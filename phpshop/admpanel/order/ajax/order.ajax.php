@@ -291,6 +291,8 @@ if (is_array($total)) {
 
     $sum = $num = 0;
     foreach ($total as $row) {
+        if(empty($row['sum']))
+            $row['sum']=0;
         $sum += $row['sum'];
         $num++;
     }

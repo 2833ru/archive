@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.0</version>
+    <version>1.1</version>
     <name>Tinkoff Credit</name>
     <description>Покупка в кредит от Tinkoff Credit.</description>
     <faqlink>https://docs.phpshop.ru/moduli/kreditovanie/kupi-v-kredit-tinkoff</faqlink>

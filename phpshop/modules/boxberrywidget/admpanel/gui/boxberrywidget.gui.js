@@ -16,7 +16,7 @@ $(document).ready(function() {
 
         $.ajax({
             mimeType: 'text/html; charset='+locale.charset,
-            url: '/phpshop/modules/boxberrywidget/ajax/ajax.php',
+            url: '../modules/boxberrywidget/ajax/ajax.php',
             type: 'post',
             data: {
                 operation: 'changePaymentStatus',

@@ -15,8 +15,8 @@
         </div>
         <div class="panel-body">
             @authData@ @noAuth@                  
-<label><input type="checkbox" value="on" name="rule" class="req" checked="checked">  {Я согласен} <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html">{на обработку моих персональных данных}</a>
-                           </label>
+            <label><input type="checkbox" value="on" name="rule" class="req" checked="checked">  {Я согласен} <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html">{на обработку моих персональных данных}</a>
+            </label>
         </div>
     </div>
 
@@ -33,7 +33,7 @@
                     <div class="radio">
                         @orderDelivery@
                     </div>  
-  
+
                     @UserAdresList@
 
                 </div>
@@ -43,8 +43,8 @@
                     @noAuthAdr@
                     <div id="userAdresData">
                     </div>
-                   
-                   <textarea class="form-control" placeholder="{Дополнительная информация к заказу}" name="dop_info" id="dop_info"></textarea>
+
+                    <textarea class="form-control" placeholder="{Дополнительная информация к заказу}" name="dop_info" id="dop_info"></textarea>
 
                 </div>
             </div>
@@ -69,15 +69,15 @@
         </div>
     </div>
     <div class="btn-border">
- 
-    <p class="text-left">
-        <input type="hidden" name="send_to_order" value="ok" >
-        <input type="hidden" name="d" id="d" value="@deliveryId@">
-        <input type="hidden" name="nav" value="done">
-        <button type="reset" class="btn btn-default btn-lg "> {Очистить}</button> 
-        <button type="submit" class="btn btn-success btn-lg orderCheckButton"> {Оформить заказ}</button>
-    </p>
+
+        <p class="text-left">
+            <input type="hidden" name="send_to_order" value="ok" >
+            <input type="hidden" name="d" id="d" value="@deliveryId@">
+            <input type="hidden" name="nav" value="done">
+            <button type="reset" class="btn btn-default btn-lg "> {Очистить}</button> 
+            <button type="submit" class="btn btn-success btn-lg orderCheckButton"> {Оформить заказ}</button>
+        </p>
     </div>
-  
+
 </form>
 @showYurDataForPayment@

@@ -4,7 +4,7 @@
  * Автономная синхронизация заказов с 1С
  * @package PHPShopExchange
  * @author PHPShop Software
- * @version 2.2
+ * @version 2.3
  */
 // Функции авторизации
 include_once("login.php");
@@ -123,7 +123,7 @@ switch ($_REQUEST['command']) {
                 if ($row['delivtime'])
                     $adr_info .= ", время доставки: " . $row['delivtime'];
                 if ($row['dop_info'])
-                    $dop_info =  $row['dop_info'];
+                    $dop_info =  PHPShopSecurity::CleanOut($row['dop_info']);
 
                 $adres = PHPShopSecurity::CleanOut(str_replace("&quot;", '"', $adr_info . $order['Person']['adr_name']));
                 $oplata = $PHPShopOrder->getOplataMetodName();

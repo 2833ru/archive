@@ -50,9 +50,14 @@ function actionStart() {
             , 'in', true
     );
 
-    $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Безопасность Google reCAPTCHA', $PHPShopGUI->setField("reCAPTCHA", $PHPShopGUI->setCheckbox('option[recaptcha_enabled]', 1, 'Включить режим усиленной проверки от ботов', $option['recaptcha_enabled']), 1, 'Поддерживаются только новые шаблоны') .
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Безопасность Google reCAPTCHA', $PHPShopGUI->setField("reCAPTCHA", $PHPShopGUI->setCheckbox('option[recaptcha_enabled]', 1, 'Включить режим усиленной проверки от ботов', $option['recaptcha_enabled'])) .
             $PHPShopGUI->setField("Публичный ключ", $PHPShopGUI->setInputText(null, "option[recaptcha_pkey]", $option['recaptcha_pkey'], 300)) .
             $PHPShopGUI->setField("Секретный ключ", $PHPShopGUI->setInputText(null, "option[recaptcha_skey]", $option['recaptcha_skey'], 300) . $PHPShopGUI->setHelp('Персональные ключи для домена выдаются через <a href="https://www.google.com/recaptcha" target="_blank">Google.com</a>'))
+    );
+    
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Безопасность hCaptcha', $PHPShopGUI->setField("hCaptcha", $PHPShopGUI->setCheckbox('option[hcaptcha_enabled]', 1, 'Включить альтернативный режим усиленной проверки от ботов', $option['hcaptcha_enabled'])) .
+            $PHPShopGUI->setField("Публичный ключ", $PHPShopGUI->setInputText(null, "option[hcaptcha_pkey]", $option['hcaptcha_pkey'], 300)) .
+            $PHPShopGUI->setField("Секретный ключ", $PHPShopGUI->setInputText(null, "option[hcaptcha_skey]", $option['hcaptcha_skey'], 300) . $PHPShopGUI->setHelp('Персональные ключи для домена выдаются через <a href="https://hCaptcha.com/?r=235b1c9fa5a4" target="_blank">hCaptcha.com</a>'))
     );
 
     $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Подсказки DaData.ru', $PHPShopGUI->setField("Подсказки", $PHPShopGUI->setCheckbox('option[dadata_enabled]', 1, 'Включить подсказки DaData.ru', $option['dadata_enabled'])) .
@@ -115,7 +120,7 @@ function actionUpdate() {
     $option = unserialize($data['admoption']);
 
     // Корректировка пустых значений
-    $PHPShopOrm->updateZeroVars('option.recaptcha_enabled', 'option.dadata_enabled', 'option.sms_enabled', 'option.sms_status_order_enabled', 'option.notice_enabled', 'option.metrica_enabled', 'option.metrica_widget', 'option.metrica_ecommerce', 'option.google_enabled', 'option.google_analitics', 'option.rss_graber_enabled', 'option.yandexmap_enabled', 'option.push_enabled', 'option.metrica_webvizor', 'option.yandex_search_enabled', 'option.sms_login');
+    $PHPShopOrm->updateZeroVars('option.recaptcha_enabled', 'option.dadata_enabled', 'option.sms_enabled', 'option.sms_status_order_enabled', 'option.notice_enabled', 'option.metrica_enabled', 'option.metrica_widget', 'option.metrica_ecommerce', 'option.google_enabled', 'option.google_analitics', 'option.rss_graber_enabled', 'option.yandexmap_enabled', 'option.push_enabled', 'option.metrica_webvizor', 'option.yandex_search_enabled', 'option.sms_login','option.hcaptcha_enabled');
 
     if (is_array($_POST['option']))
         foreach ($_POST['option'] as $key => $val)

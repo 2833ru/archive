@@ -821,7 +821,7 @@ class PHPShopGUI {
      * @param string $path путь до папки gui
      * @param mixed $option дополнительные параметры 
      */
-    function loadLib($file, $data, $path = false, $option = false) {
+    function loadLib($file, $data, $path = false, $option = false, $option2 = true) {
 
         if (empty($path))
             $path = $_GET['path'] . '/';
@@ -829,7 +829,7 @@ class PHPShopGUI {
         $class_path = $path . 'gui/' . $file . '.gui.php';
         if (file_exists($class_path)) {
             require_once($class_path);
-            return $file($data, $option);
+            return $file($data, $option, $option2);
         } else
             echo "Нет файла " . $class_path;
     }
@@ -1164,7 +1164,7 @@ class PHPShopGUI {
                     }
                 default: {
 
-                        $arg = $this->valid($arg, 'float', 'size', 'class', 'caption', 'placeholder', 'description', 'value');
+                        $arg = $this->valid($arg, 'float', 'size', 'class', 'caption', 'placeholder', 'description');
 
                         return $this->setInput($arg['type'], $arg['name'], htmlentities($arg['value'], ENT_COMPAT, $GLOBALS['PHPShopBase']->codBase), $arg['float'], $arg['size'], false, $arg['class'], false, $arg['caption'], $arg['description'], $arg['placeholder']);
                     }
@@ -2007,11 +2007,6 @@ class PHPShopGUI {
                   <td>' . $tab_multibase . '</td>
                </tr>
                </table>';
-
-        //if (empty($db['reformal']))
-        //  $db['reformal'] = $path;
-        // Reformal
-        //$CODE .= $this->setButton('Есть идея развития модуля ' . $db['name'], 'question-sign', 'idea', "http://idea.phpshop.ru/proj/?ia=" . $db['reformal']);
 
         if (!$pay)
             return $CODE;

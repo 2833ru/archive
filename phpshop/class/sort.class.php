@@ -66,7 +66,7 @@ class PHPShopSort {
 
         // Учет фильтров
         if ($filter)
-            $sql_add.=" and filtr='1' ";
+            $sql_add.=" and (`filtr`='1' or `virtual`='1') ";
 
         // Учет опций
         if (empty($goodoption))

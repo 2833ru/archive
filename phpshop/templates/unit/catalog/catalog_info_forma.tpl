@@ -10,7 +10,7 @@
     <h1>@catalogName@</h1>
 </div>
 
-
+<div class="hidden-xs">@catalogContent@</div>
 
 <div class="catalog-block">@catalogList@</div></div>
 

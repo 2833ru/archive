@@ -352,19 +352,21 @@ class PHPShopAnalitica {
         ga('create', '" . $this->google_id . "', 'auto');
         ga('require', 'ec');";
 
-            if ($this->ecommerce)
+            if ($this->ecommerce){
+                $purchase = null;
                 $this->code .= "
         /* Yandex */      
         window.dataLayer = window.dataLayer || [];
         dataLayer.push({'ecommerce': {'purchase': {'actionField': {'id' : '" . $obj->ouid . "'},
                             'products': [";
+            }
 
             // Товары из корзины 
             foreach ($obj->PHPShopCart->_CART as $cart_prod) {
 
                 // Данные для Яндекса
                 if ($this->ecommerce)
-                    $this->code .= "{
+                    $purchase .= "{
                     'id': '" . $cart_prod['id'] . "',
                     'name': '" . $cart_prod['name'] . "',
                     'price': '" . $cart_prod['price'] . "',
@@ -384,7 +386,7 @@ class PHPShopAnalitica {
 
             // Закрываем код Яндекса
             if ($this->ecommerce)
-                $this->code .= "]}}});";
+                $this->code .=$purchase. "]}}});";
 
             // Информация о заказе для Гугла + закрываем код
             if ($this->analitics)

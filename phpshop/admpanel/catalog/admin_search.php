@@ -92,7 +92,7 @@ function actionSearch() {
 
     $PHPShopInterface->field_col = 2;
 
-    $PHPShopInterface->_CODE .= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'search_name', 'size' => '280px', 'placeholder' => 'Наименование товара, атикул или ID', 'class' => 'pull-left', 'value' => PHPShopSecurity::true_search($_REQUEST['words'])));
+    $PHPShopInterface->_CODE .= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'search_name', 'size' => '280px', 'placeholder' => 'Наименование товара, артикул или ID', 'class' => 'pull-left', 'value' => PHPShopSecurity::true_search($_REQUEST['words'])));
 
     if (empty($_POST['frame'])) {
         $PHPShopInterface->_CODE .= $PHPShopInterface->set_(3);

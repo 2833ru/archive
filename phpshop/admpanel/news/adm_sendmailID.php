@@ -49,7 +49,7 @@ function actionStart() {
     $oFCKeditor->Value = $data['content'];
 
     // Содержание закладки 1
-    $Tab1= $PHPShopGUI->setField("Тема", $PHPShopGUI->setInput("text.requared", "name_new", $data['name']));
+    $Tab1 = $PHPShopGUI->setField("Тема", $PHPShopGUI->setInput("text.requared", "name_new", $data['name']));
 
     // Новости
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['news']);
@@ -62,9 +62,10 @@ function actionStart() {
             $value[] = array($val['zag'] . ' &rarr;  ' . $val['datas'], $val['id'], false);
         }
 
-    $Tab1.=$PHPShopGUI->setField('Содержание из новости', $PHPShopGUI->setSelect('template', $value, '100%', false, false, false, false, false, false));
-    $Tab1.=$PHPShopGUI->setField('Лимит рассылок', $PHPShopGUI->setInputText(null, 'send_limit', '0,300', 150), 1, 'Пользователям c 1 по 300');
-    $Tab1.=$PHPShopGUI->setField("Тестовое сообщение", $PHPShopGUI->setCheckbox('test', 1, __('Отправить только тестовое сообщение на') . ' ' . $PHPShopSystem->getEmail(), 1, false, false));
+    $Tab1 .= $PHPShopGUI->setField('Содержание из новости', $PHPShopGUI->setSelect('template', $value, '100%', false, false, false, false, false, false));
+    $Tab1 .= $PHPShopGUI->setField('Лимит рассылок', $PHPShopGUI->setInputText(null, 'send_limit', '0,300', 150), 1, 'Пользователям c 1 по 300');
+    $Tab1 .= $PHPShopGUI->setField("Тестовое сообщение", $PHPShopGUI->setCheckbox('test', 1, __('Отправить тестовое сообщение ') . ' ' . $PHPShopSystem->getEmail(), 1, false, false));
+    $Tab1 .= $PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/', '100%', false));
 
     if (empty($_POST['time_limit']))
         $_POST['time_limit'] = 15;
@@ -75,24 +76,23 @@ function actionStart() {
     $Tab2 = $PHPShopGUI->setField('Сообщений в рассылке', $PHPShopGUI->setInputText(null, 'message_limit', $_POST['message_limit'], 150), 1, 'Задается хостингом');
     $Tab2 .= $PHPShopGUI->setField('Временной интервал', $PHPShopGUI->setInputText(null, 'time_limit', $_POST['time_limit'], 150, __('минут')), 1, 'Задается хостингом');
     $Tab2 .= $PHPShopGUI->setField("Помощник", $PHPShopGUI->setCheckbox('bot', 1, __('Умная рассылка для соблюдения правила ограничений на хостинге'), 0, false, false));
-    
-    $Tab1= $PHPShopGUI->setCollapse('Информация',$Tab1);
-    
-    $Tab1.= $PHPShopGUI->setCollapse('Автоматизация',$Tab2);
-    
-    $Tab1.=$PHPShopGUI->setCollapse("Текст письма", $oFCKeditor->AddGUI() . $PHPShopGUI->setHelp('Переменные: <code>@url@</code> - адрес сайта, <code>@user@</code> - имя подписчика, <code>@email@</code> - email подписчика, <code>@name@</code> - название магазина, <code>@tel@</code> - телефон компании'));
-    
-    
-    
+
+    $Tab1 = $PHPShopGUI->setCollapse('Информация', $Tab1);
+
+    $Tab1 .= $PHPShopGUI->setCollapse('Автоматизация', $Tab2);
+
+    $Tab1 .= $PHPShopGUI->setCollapse("Текст письма", $oFCKeditor->AddGUI() . $PHPShopGUI->setHelp('Переменные: <code>@url@</code> - адрес сайта, <code>@user@</code> - имя подписчика, <code>@email@</code> - email подписчика, <code>@name@</code> - название магазина, <code>@tel@</code> - телефон компании'));
+
+
+
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
-    
+
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1, true,false,true));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true, false, true));
 
     // Вывод кнопок сохранить и выход в футер
-    $ContentFooter =
-            $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .
+    $ContentFooter = $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .
             $PHPShopGUI->setInput("button", "delID", "Удалить", "right", 70, "", "but", "actionDelete.news.edit") .
             $PHPShopGUI->setInput("submit", "editID", "Сохранить", "right", 70, "", "but", "actionUpdate.news.edit") .
             $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionSave.news.edit");
@@ -135,8 +135,7 @@ function actionBot() {
         $action['bar'] = round($_POST['start'] * 100 / $total);
 
         return $action;
-    }
-    else
+    } else
         return array("success" => 'done', "result" => PHPShopString::win_utf8('Успешно разослано по <strong>' . $total . '</strong> адресам с ограничением ' . ($_POST['end'] - $_POST['start']) . ' e-mail через каждые ' . $_POST['time'] . ' мин. за  ' . round($_POST['performance'] / 60000, 1) . ' мин.'));
 }
 
@@ -155,6 +154,33 @@ function actionUpdate($option = false) {
     PHPShopParser::set('logo', $PHPShopSystem->getLogo());
     $from = $PHPShopSystem->getEmail();
 
+    // Мультибаза
+    if (!empty($_POST['servers_new']) and $_POST['servers_new'] != 1000) {
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['servers']);
+        $PHPShopOrm->debug = false;
+        $showcaseData = $PHPShopOrm->select(array('*'), array('enabled' => "='1'", 'id' => "=" . (int) $_POST['servers_new']), false, array('limit' => 1));
+        if (is_array($showcaseData)) {
+
+            if (!empty($showcaseData['tel']))
+                $PHPShopSystem->setParam("tel", $showcaseData['tel']);
+
+            if (!empty($showcaseData['adminmail']))
+                $from = $showcaseData['adminmail'];
+
+            if (!empty($showcaseData['name']))
+                $PHPShopSystem->setParam('name', $showcaseData['name']);
+
+            if (!empty($showcaseData['title']))
+                $PHPShopSystem->setParam('title', $showcaseData['title']);
+
+            if (!empty($showcaseData['logo']))
+                $PHPShopSystem->setParam('logo', $showcaseData['logo']);
+
+            if (!empty($showcaseData['icon']))
+                $PHPShopSystem->setParam('url', $showcaseData['host']);
+        }
+    }
+
 
     // Рассылка новости
     if (!empty($_POST['template'])) {
@@ -168,15 +194,16 @@ function actionUpdate($option = false) {
     }
 
     $n = $error = 0;
-    
+
     if (!empty($_SERVER['HTTPS']) && 'off' !== strtolower($_SERVER['HTTPS']))
-            $ssl = 'https://';
-    else $ssl = 'http://';
-    
+        $ssl = 'https://';
+    else
+        $ssl = 'http://';
+
     // Добавление http
-    if(!strstr($_POST['content_new'],"http:") and !strstr($_POST['content_new'],"https:")){
-            $_POST['content_new'] = str_replace('../../UserFiles/', "/UserFiles/", $_POST['content_new']);
-            $_POST['content_new'] = str_replace("/UserFiles/",$ssl.$_SERVER['SERVER_NAME']."/UserFiles/",$_POST['content_new']);
+    if (!strstr($_POST['content_new'], "http:") and ! strstr($_POST['content_new'], "https:")) {
+        $_POST['content_new'] = str_replace('../../UserFiles/', "/UserFiles/", $_POST['content_new']);
+        $_POST['content_new'] = str_replace("/UserFiles/", $ssl . $_SERVER['SERVER_NAME'] . "/UserFiles/", $_POST['content_new']);
     }
 
     // Тест
@@ -215,7 +242,14 @@ function actionUpdate($option = false) {
         // Рассылка пользователям
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['shopusers']);
         $PHPShopOrm->debug = false;
-        $data = $PHPShopOrm->select(array('id', 'mail', 'name', 'password'), array('sendmail' => "='1'"), array('order' => 'id desc'), array('limit' => $limit));
+        $where['sendmail'] = "='1'";
+
+        // Мультибаза
+        if ($_POST['servers_new'] == 1000) 
+            $where['servers']='='. (int) $_POST['servers_new'].' or servers=0';
+        else  $where['servers']='='. (int) $_POST['servers_new'];
+
+        $data = $PHPShopOrm->select(array('id', 'mail', 'name', 'password'), $where, array('order' => 'id desc'), array('limit' => $limit));
 
         if (is_array($data))
             foreach ($data as $row) {
@@ -255,7 +289,7 @@ function actionUpdate($option = false) {
   </div>
 </div>');
     } else {
-        $result_ajax = 'Успешно разослано по <strong>' . $n . '</strong> адресам с ограничением ' . $limit . ' записей. Ошибок <strong>' . $error . '</strong>.';  
+        $result_ajax = 'Успешно разослано по <strong>' . $n . '</strong> адресам с ограничением ' . $limit . ' записей. Ошибок <strong>' . $error . '</strong>.';
         $result_message = $PHPShopGUI->setAlert($result_ajax);
         $action = true;
     }

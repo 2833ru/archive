@@ -3,7 +3,7 @@
     <version>1.0</version>
     <name>1С синхронизация</name>
     <description>Модуль настройки синхронизации с 1С.</description>
-    <faqlink>https://docs.phpshop.ru/moduli/crm/1c</faqlink>
+    <faqlink>https://docs.phpshop.ru/sinkhronizaciya-s-1s/ustanovka-i-aktivaciya-1s-sinkhronizacii</faqlink>
     <category>crm,pro</category>
     <pro>true</pro>
     <adminmenu>

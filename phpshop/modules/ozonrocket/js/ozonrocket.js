@@ -1,6 +1,8 @@
 function OzonRocketWidgetStart() {
-    if(typeof $().modal !== "function") {
-        setTimeout(function () {OzonRocketWidgetStart();}, 1000);
+    if (typeof $().modal !== "function") {
+        setTimeout(function () {
+            OzonRocketWidgetStart();
+        }, 1000);
         return;
     }
     $('input[name="ozonrocketSum"]').remove();
@@ -15,28 +17,33 @@ function OzonRocketWidgetStart() {
 
     $("#makeyourchoise").val(null);
     $("#ozonrocketwidgetModal").modal("toggle");
-    $('#ozonrocketwidget iframe').attr('src', $('#ozonrocketwidget iframe' ).data('src'));
+    $('#ozonrocketwidget iframe').attr('src', $('#ozonrocketwidget iframe').data('src'));
 }
 window.addEventListener("message", receiveMessage, false);
 function receiveMessage(event)
 {
     if (event.origin !== "https://rocket.ozon.ru" && event.origin !== "https://rocket-demo.ozonru.me" || typeof event.data !== "string")
         return;
+
     var data = JSON.parse(event.data);
-    $("#makeyourchoise").val('DONE');
-    $("#DosSumma").html(data["price"]);
-    $('#deliveryInfo').html(data['type'] + '. ' + data['address']);
-    $("#TotalSumma").html(Number(data["price"]) + Number($('#OrderSumma').val()));
-    $("#ozonrocketSum").val(data["price"]);
-    $("#ozonrocketType").val(data['type']);
-    $('#delivery_id').val(data['id']);
-    $('#address').val(data['address']);
-    $("#ozonrocketwidgetModal").modal("toggle");
+
+    if (data["price"] > 0) {
+
+        $("#makeyourchoise").val('DONE');
+        $("#DosSumma").html(data["price"]);
+        $('#deliveryInfo').html(data['type'] + '. ' + data['address']);
+        $("#TotalSumma").html(Number(data["price"]) + Number($('#OrderSumma').val()) - Number($('#SkiSumma').attr('data-discount')));
+        $("#ozonrocketSum").val(data["price"]);
+        $("#ozonrocketType").val(data['type']);
+        $('#delivery_id').val(data['id']);
+        $('#address').val(data['address']);
+        $("#ozonrocketwidgetModal").modal("toggle");
+    }
 }
 
-$(document).ready(function (){
-    $('.ozonwidgetproductstart').on('click', function (){
-        $('#ozonrocketwidget iframe').attr('src', $('#ozonrocketwidget iframe' ).data('src'));
+$(document).ready(function () {
+    $('.ozonwidgetproductstart').on('click', function () {
+        $('#ozonrocketwidget iframe').attr('src', $('#ozonrocketwidget iframe').data('src'));
     })
 });
 

@@ -24,6 +24,7 @@ function pickpoint_phpshop(result){
                 $('#pickpoint_sum').val(json['cost']);
                 $('#DosSumma').html(json['cost']);
                 $('#TotalSumma').html(Number(json['cost']) + Number($('#OrderSumma').val()));
+                
             } else {
                 console.log(json['error']);
             }
@@ -32,6 +33,7 @@ function pickpoint_phpshop(result){
     // устанавливаем в скрытое поле ID терминала
     document.getElementById('pickpoint_id').value=result['id'];
     // показываем пользователю название точки и адрес доствки
+    $('#makeyourchoise').val('DONE');
     document.getElementById('dop_info').value=result['name']+', '+result['address'];
 }
 

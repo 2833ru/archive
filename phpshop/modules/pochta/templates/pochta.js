@@ -85,7 +85,7 @@ function pochtaSetData(result) {
     $("#makeyourchoise").val('DONE');
 
     $("#DosSumma").html(deliveryCost);
-    $("#TotalSumma").html(Number(deliveryCost) + Number($('#OrderSumma').val()));
+    $("#TotalSumma").html(Number(deliveryCost) + Number($('#OrderSumma').val())- Number($('#SkiSumma').attr('data-discount')));
 
     $('input[name="pochta_cost"]').val(deliveryCost);
     $('input[name="pochta_address"]').val(result.addressTo);

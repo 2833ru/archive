@@ -5,7 +5,10 @@ $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.countcat.countcat_s
 
 // Функция обновления
 function actionUpdate() {
-    global $PHPShopOrm;
+    global $PHPShopOrm,$PHPShopModules;
+    
+    // Настройки витрины
+    $PHPShopModules->updateOption($_GET['id'], $_POST['servers']);
 
     if (empty($_POST['enabled_new']))
         $_POST['enabled_new'] = 0;
@@ -28,21 +31,21 @@ function actionStart() {
     $PHPShopGUI->field_col = 1;
 
 
-    $info = 'Для вывода количества товаров в подкаталоге добавьте переменную <kbd>@catalogCount@</kbd> в шаблон вывода подкаталога 
+    $Tab2 = 'Для вывода количества товаров в подкаталоге добавьте переменную <kbd>@catalogCount@</kbd> в шаблон вывода подкаталога 
         phpshop/templates/имя шаблона/catalog/pogcatalog_forma.tpl
         <p>При первом включении модуля будет произведен автоматический расчет товаров в подкаталогах с занесением в базу модуля. 
         Для дальнейшей корректировки этого параметра используйте одноименное поле в карточке редактировния подкаталога в закладке
         <kbd>Count</kbd>.</p>
 ';
 
-    $Tab1 = $PHPShopGUI->setInfo($info, 200, '96%');
-    $Tab1.=$PHPShopGUI->setField('Вывод', $PHPShopGUI->setCheckbox("enabled_new", 1, 'Добавить количество товара к имени каталога', $data['enabled']).'<br>'.
+
+    $Tab1=$PHPShopGUI->setField('Вывод', $PHPShopGUI->setCheckbox("enabled_new", 1, 'Добавить количество товара к имени каталога', $data['enabled']).'<br>'.
     $PHPShopGUI->setCheckbox("clean", 1, 'Пересчитать ранее установленные значения кол-ва товара в категориях', 0));
 
-    $Tab2 = $PHPShopGUI->setPay();
+    $Tab3 = $PHPShopGUI->setPay();
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Инструкция", $Tab1), array("О Модуле", $Tab2));
+    $PHPShopGUI->setTab(array("Настройки", $Tab1), array("Инструкция", $PHPShopGUI->setInfo($Tab2)), array("О Модуле", $Tab3));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =

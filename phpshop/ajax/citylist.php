@@ -26,7 +26,7 @@ switch ($par) {
     case "country_new":
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['citylist_region']);
         //$PHPShopOrm->debug=true;
-        $data = $PHPShopOrm->select(array('*'), array('country_id' => "=$country"));
+        $data = $PHPShopOrm->select(array('*'), array('country_id' => "=$country"),false,array('limit'=>300));
         // регион
         $disOpt = "<option value='' for='0'>-----------</option>";
         foreach ($data as $row) {
@@ -37,8 +37,8 @@ switch ($par) {
 
     case "state_new":
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['citylist_city']);
-        //$PHPShopOrm->debug=true;
-        $data = $PHPShopOrm->select(array('*'), array('region_id' => "=$region"));
+        $data = $PHPShopOrm->select(array('*'), array('region_id' => "=$region"),false,array('limit'=>300));
+        
         // регион
         $disOpt = "<option value='' for='0'>-----------</option>";
         foreach ($data as $row) {

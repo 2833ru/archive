@@ -150,7 +150,7 @@ class PHPShopMail {
 
             $GLOBALS['SysValue']['other']['shopName'] = $this->PHPShopSystem->getName();
             $GLOBALS['SysValue']['other']['serverPath'] = $_SERVER['SERVER_NAME'] . "/" . $GLOBALS['SysValue']['dir']['dir'];
-            $GLOBALS['SysValue']['other']['date'] = date("d-m-y H:i a");
+            $GLOBALS['SysValue']['other']['date'] = date("d-m-y H:i");
         }
     }
 

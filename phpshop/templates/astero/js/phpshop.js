@@ -474,7 +474,7 @@ $(document).ready(function () {
 
 
     // формат ввода телефона
-    $( "form[name='forma_order'], input[name=returncall_mod_tel],input[name=tel],input[name=oneclick_mod_tel]").on("click", function () {
+    $( "form[name='forma_order'], input[name=returncall_mod_tel],input[name=tel],input[name=tel_new],input[name=oneclick_mod_tel]").on("click", function () {
         if (PHONE_FORMAT && PHONE_MASK) {
             $("input[name=tel_new], input[name=returncall_mod_tel],input[name=tel],input[name=oneclick_mod_tel]").mask(PHONE_MASK);
         }
@@ -1231,36 +1231,6 @@ $(document).ready(function () {
     // Подсказки DaData.ru
     var DADATA_TOKEN = $('#body').attr('data-token');
     if (DADATA_TOKEN) {
-
-        /*
-         $('[name="name_new"]').suggestions({
-         token: DADATA_TOKEN,
-         partner: "PHPSHOP",
-         type: "NAME",
-         params: {
-         parts: ["NAME"]
-         },
-         count: 5
-         });
-         $('[name="name"]').suggestions({
-         token: DADATA_TOKEN,
-         partner: "PHPSHOP",
-         type: "NAME",
-         params: {
-         parts: ["NAME"]
-         },
-         count: 5
-         });
-         $('[name="name_person"]').suggestions({
-         token: DADATA_TOKEN,
-         partner: "PHPSHOP",
-         type: "NAME",
-         params: {
-         parts: ["NAME"]
-         },
-         count: 5
-         });
-         */
         $('[name="oneclick_mod_name"]').suggestions({
             token: DADATA_TOKEN,
             partner: "PHPSHOP",
@@ -1279,15 +1249,6 @@ $(document).ready(function () {
             },
             count: 5
         });
-        /*
-         $('[type="email"]').suggestions({
-         token: DADATA_TOKEN,
-         partner: "PHPSHOP",
-         type: "EMAIL",
-         suggest_local: false,
-         count: 5
-         });
-         */
         $('[name="org_name"]').suggestions({
             token: DADATA_TOKEN,
             partner: "PHPSHOP",
@@ -1320,41 +1281,105 @@ $(document).ready(function () {
     $('div:contains("- PHPShop")').parents('.visible-lg').css('position', 'absolute');
     $('div:contains("- PHPShop")').parents('.visible-lg').css('bottom', '0');
 
+    // CAPTCHA
+$('body').on('click', '[data-toggle="modal"]', function () {
+
     // reCAPTCHA
-    $('body').on('click', '[data-toggle="modal"]', function () {
-        var oneclick = $($(this).attr('data-target')).find('#recaptcha_oneclick').get(0);
-        var returncall = $($(this).attr('data-target')).find('#recaptcha_returncall').get(0);
+    var oneclick = $($(this).attr('data-target')).find('#recaptcha_oneclick').get(0);
+    var returncall = $($(this).attr('data-target')).find('#recaptcha_returncall').get(0);
+    var notice = $($(this).attr('data-target')).find('#recaptcha_notice').get(0);
+    var pricemail = $($(this).attr('data-target')).find('#recaptcha_pricemail').get(0);
+    var review = $($(this).attr('data-target')).find('#recaptcha_review').get(0);
+    var forma = $($(this).attr('data-target')).find('#recaptcha_forma').get(0);
 
-        $.getScript("https://www.google.com/recaptcha/api.js?render=explicit")
-            .done(function () {
-                if (typeof grecaptcha !== "undefined") {
-
-                    grecaptcha.ready(function () {
-                        try {
-                            if (returncall)
-                                grecaptcha.render(returncall, {"sitekey": $(returncall).attr('data-key'), "size": $(returncall).attr('data-size')});
-
-                            if (oneclick)
-                                grecaptcha.render(oneclick, {"sitekey": $(oneclick).attr('data-key'), "size": $(oneclick).attr('data-size')});
-                        } catch (e) {}
-                    });
-                }
-            });
-    });
-
-    if ($("#recaptcha_default").length) {
+    if (typeof oneclick !== "undefined" || typeof returncall !== "undefined" || typeof notice !== "undefined" || typeof pricemail !== "undefined" || typeof review !== "undefined" || typeof forma !== "undefined"){
         $.getScript("https://www.google.com/recaptcha/api.js?render=explicit")
                 .done(function () {
                     if (typeof grecaptcha !== "undefined") {
+
                         grecaptcha.ready(function () {
-
-                            if ($("#recaptcha_default").length)
-                                grecaptcha.render("recaptcha_default", {"sitekey": $("#recaptcha_default").attr('data-key'), "size": $("#recaptcha_default").attr('data-size')});
-
+                            try {
+                                if (returncall)
+                                    grecaptcha.render(returncall, {"sitekey": $(returncall).attr('data-key'), "size": $(returncall).attr('data-size')});
+                                if (oneclick)
+                                    grecaptcha.render(oneclick, {"sitekey": $(oneclick).attr('data-key'), "size": $(oneclick).attr('data-size')});
+                                if (notice)
+                                    grecaptcha.render(notice, {"sitekey": $(notice).attr('data-key'), "size": $(notice).attr('data-size')});
+                                if (pricemail)
+                                    grecaptcha.render(pricemail, {"sitekey": $(pricemail).attr('data-key'), "size": $(pricemail).attr('data-size')});
+                                if (review)
+                                    grecaptcha.render(review, {"sitekey": $(review).attr('data-key'), "size": $(review).attr('data-size')});
+                                if (forma)
+                                    grecaptcha.render(forma, {"sitekey": $(forma).attr('data-key'), "size": $(forma).attr('data-size')});
+                            } catch (e) {
+                            }
                         });
                     }
                 });
+            }
+    else {
+
+        // hCAPTCHA
+        var oneclick = $($(this).attr('data-target')).find('#hcaptcha_oneclick').get(0);
+        var returncall = $($(this).attr('data-target')).find('#hcaptcha_returncall').get(0);
+        var notice = $($(this).attr('data-target')).find('#hcaptcha_notice').get(0);
+        var pricemail = $($(this).attr('data-target')).find('#hcaptcha_pricemail').get(0);
+        var review = $($(this).attr('data-target')).find('#hcaptcha_review').get(0);
+        var forma = $($(this).attr('data-target')).find('#hcaptcha_forma').get(0);
+
+        if (typeof oneclick !== "undefined" || typeof returncall !== "undefined" || typeof notice !== "undefined" || typeof pricemail !== "undefined" || typeof review !== "undefined" || typeof forma !== "undefined") {
+
+            $.getScript("https://js.hcaptcha.com/1/api.js?render=explicit")
+                    .done(function () {
+                        if (typeof hcaptcha !== "undefined") {
+                            try {
+                                if (returncall)
+                                    hcaptcha.render(returncall, {"sitekey": $(returncall).attr('data-key'), "size": $(returncall).attr('data-size')});
+                                if (oneclick)
+                                    hcaptcha.render(oneclick, {"sitekey": $(oneclick).attr('data-key'), "size": $(oneclick).attr('data-size')});
+                                if (notice)
+                                    hcaptcha.render(notice, {"sitekey": $(notice).attr('data-key'), "size": $(notice).attr('data-size')});
+                                if (pricemail)
+                                    hcaptcha.render(pricemail, {"sitekey": $(pricemail).attr('data-key'), "size": $(pricemail).attr('data-size')});
+                                if (review)
+                                    hcaptcha.render(review, {"sitekey": $(review).attr('data-key'), "size": $(review).attr('data-size')});
+                                if (forma)
+                                    hcaptcha.render(forma, {"sitekey": $(forma).attr('data-key'), "size": $(forma).attr('data-size')});
+                            } catch (e) {
+                            }
+
+                        }
+                    });
+        }
     }
+});
+
+// Recaptcha
+if ($("#recaptcha_default").length) {
+    $.getScript("https://www.google.com/recaptcha/api.js?render=explicit")
+            .done(function () {
+                if (typeof grecaptcha !== "undefined") {
+                    grecaptcha.ready(function () {
+
+                        if ($("#recaptcha_default").length)
+                            grecaptcha.render("recaptcha_default", {"sitekey": $("#recaptcha_default").attr('data-key'), "size": $("#recaptcha_default").attr('data-size')});
+
+                    });
+                }
+            });
+}
+
+// Hcaptcha
+if ($("#hcaptcha_default").length) {
+    $.getScript("https://js.hcaptcha.com/1/api.js?render=explicit")
+            .done(function () {
+                if (typeof hcaptcha !== "undefined") {
+                    if ($("#hcaptcha_default").length)
+                        hcaptcha.render("hcaptcha_default", {"sitekey": $("#hcaptcha_default").attr('data-key'), "size": $("#hcaptcha_default").attr('data-size')});
+                }
+            });
+}
+
     
      // Закрыть стикер в шапке
     $('.sticker-close').on('click', function (e) {

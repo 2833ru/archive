@@ -152,4 +152,17 @@ $().ready(function() {
         event.preventDefault();
         $('[name=product_upgrade]').submit();
     });
+    
+    
+    // Выбор captcha
+    $('body').on('change', '[name="option[hcaptcha_enabled]"]', function () {
+         if ($(this).prop('checked') === true){
+             $('[name="option[recaptcha_enabled]"]').bootstrapToggle('off');
+         }
+    });
+    $('body').on('change', '[name="option[recaptcha_enabled]"]', function () {
+         if ($(this).prop('checked') === true){
+             $('[name="option[hcaptcha_enabled]"]').bootstrapToggle('off');
+         }
+    });
 });

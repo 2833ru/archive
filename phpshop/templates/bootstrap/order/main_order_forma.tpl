@@ -2,7 +2,7 @@
 @order_action_add@
 
 <div class="page-header cart-header">
-    <h2>{Заказ} №@orderNum@</h2>
+    <h2>{Заказ} &#8470;@orderNum@</h2>
 </div>
 
 <form method="post" name="forma_order" id="forma_order" action="/done/">

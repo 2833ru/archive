@@ -272,6 +272,8 @@ class PHPShopWebhooks {
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($properties));
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
             'Content-Type: application/json',
@@ -288,6 +290,8 @@ class PHPShopWebhooks {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $method . '?' . http_build_query($properties));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 
         return $this->request($ch);
     }
@@ -297,6 +301,10 @@ class PHPShopWebhooks {
             $result = $this->post($hook['url'], $properties);
         else
             $result = $this->get($hook['url'], $properties);
+        
+        if(empty($result))
+            $result="Send";
+        
         return $result;
     }
 

@@ -521,6 +521,11 @@ class PHPShopOrderFunction extends PHPShopObj {
         $orm->update(array('paid_new' => (int) $paymentStatus), array('id' => "='" . $this->objID . "'"));
     }
 
+    /**
+     * Смена статуса заказа
+     * @param Int $statusId ИД нового статуса
+     * @param Int $oldStatus ИД старого статуса
+     */
     public function changeStatus($statusId, $oldStatus) {
         global $PHPShopBase, $_classPath;
 

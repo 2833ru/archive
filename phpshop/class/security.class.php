@@ -3,7 +3,7 @@
 /**
  * Библиотека проверки безопасности
  * @author PHPShop Software
- * @version 1.4
+ * @version 1.5
  * @package PHPShopClass
  * @subpackage Helper
  */
@@ -184,11 +184,14 @@ class PHPShopSecurity {
         $i = 0;
         while ($i < ($count / 7)) {
             $search = str_replace("'", "", $search);
+            $search = str_replace("\"", "", $search);
             $search = str_replace("\\", "", $search);
             $search = str_replace("union", "", $search);
             $search = str_replace("select", "", $search);
             $search = str_replace("insert", "", $search);
             $search = str_replace("delete", "", $search);
+            $search = str_replace("<", "", $search);
+            $search = str_replace(">", "", $search);
 
             if (empty($option)) {
                 $search = str_replace(")", "", $search);

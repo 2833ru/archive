@@ -108,9 +108,11 @@ class OzonRocketWidget {
         }
         $delivery = new PHPShopDelivery($order['Person']['dostavka_metod']);
         $nds = $delivery->getParam('ofd_nds');
-        if (empty($nds)) {
-            $nds = 20;
-        }
+
+        /*
+          if (empty($nds)) {
+          $nds = 20;
+          } */
 
         try {
             $packagesDimensions = $this->getCart($cart['Cart']['cart']);
@@ -123,12 +125,28 @@ class OzonRocketWidget {
 
         $packages = [];
         $number = 1;
-        foreach ($packagesDimensions as $product) {
+
+        // Общая упаковка
+        if ($this->options['one_package'] == 1) {
             $packages[] = [
                 'packageNumber' => (string) $number,
-                'dimensions' => $product
-            ];
-            $number++;
+                'dimensions' => [
+                    'weight' => (int) $this->options['weight'],
+                    'length' => (int) $this->options['length'],
+                    'width' => (int) $this->options['width'],
+                    'height' => (int) $this->options['height']
+            ]];
+        }
+        // Отдельная упаковка
+        else {
+
+            foreach ($packagesDimensions as $product) {
+                $packages[] = [
+                    'packageNumber' => (string) $number,
+                    'dimensions' => $product
+                ];
+                $number++;
+            }
         }
 
         $orderLines = [];
@@ -154,7 +172,9 @@ class OzonRocketWidget {
                 'attributes' => ['isDangerous' => false],
                 'resideInPackages' => [(string) $number]
             ];
-            $number++;
+
+            if ($this->options['one_package'] == 0)
+                $number++;
         }
 
         $parameters = [

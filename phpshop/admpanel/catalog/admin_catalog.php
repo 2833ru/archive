@@ -57,6 +57,12 @@ function actionStart() {
         'action' => 'edit-select',
         'class' => 'disabled'
     );
+    
+    $PHPShopInterface->action_select['Скопировать ID выбранных'] = array(
+        'name' => 'Скопировать ID выбранных',
+        'action' => 'copy-id-select',
+        'class' => 'disabled'
+    );
 
     $PHPShopInterface->action_select['Настройка'] = array(
         'name' => 'Настройка полей',
@@ -87,7 +93,7 @@ function actionStart() {
         'tooltip' => 'data-toggle="tooltip" data-placement="left" title="' . __('Добавить товар') . '" data-cat="' . $_GET['cat'] . '"'
     );
 
-    $PHPShopInterface->setActionPanel($TitlePage . $catname, array('Поиск', '|', 'Предпросмотр', 'Настройка', 'Редактировать каталог', 'Редактировать выбранные', 'CSV', '|', 'Удалить выбранные'), array('Добавить товар'));
+    $PHPShopInterface->setActionPanel($TitlePage . $catname, array('Поиск', '|', 'Предпросмотр', 'Настройка', 'Редактировать каталог', 'Редактировать выбранные', 'Скопировать ID выбранных','CSV', '|', 'Удалить выбранные'), array('Добавить товар'));
 
     $PHPShopInterface->setCaption(
             ...getTableCaption()

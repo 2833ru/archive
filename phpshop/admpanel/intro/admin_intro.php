@@ -25,14 +25,6 @@ function mailNotice($type, $until_day, $promo = null) {
                 new PHPShopMail($PHPShopSystem->getEmail(), $PHPShopSystem->getEmail(), __('Заканчивается техническая поддержка для сайта') . ' ' . $_SERVER['SERVER_NAME'], $userContent, "text/html");
 
                 break;
-            /*
-              case "promo":
-              PHPShopParser::set('promo', $promo);
-              PHPShopParser::set('day', $until_day);
-              $userContent = PHPShopParser::file("tpl/promo.mail.tpl", true, false);
-              new PHPShopMail($PHPShopSystem->getEmail(), $PHPShopSystem->getEmail(), __('Получите скидку 2500 руб. на покупку для сайта') . ' ' . $_SERVER['SERVER_NAME'], $userContent, "text/html");
-
-              break; */
         }
 
         $option[$type . '_notice'] = true;
@@ -149,23 +141,7 @@ function actionStart() {
     $min = ($until_promo / 60) % 60;
     if (is_numeric($LicenseUntilUnixTime)) {
         $until_promo_str = $LicenseUntilUnixTime - 15 * 24 * 60 * 60;
-        //mailNotice('promo', PHPShopDate::get($until_promo_str, true), getCupon($LicenseUntilUnixTime));
-        // Купон
-        /*
-          if ($until_promo > 0) {
 
-          if ($day <= 3)
-          $css_promo = "text-danger";
-          else
-          $css_promo = null;
-
-
-          $search_jurnal = __('Используйте купон <b class="text-success">' . getCupon($LicenseUntilUnixTime) . '</b> при оформлении заказа и получите скидку <b>2500 руб.</b> До конца акции осталось <span class="' . $css_promo . '"><b>' . $day . '</b> дней <b>' . ($hour % 24) . '</b> часов <b>' . $min . '</b> минут</span>.');
-          $search_jurnal_title = __('Получите скидку') . '<a class="pull-right btn btn-xs btn-default" href="http://phpshop.ru/order/?code=' . getCupon($LicenseUntilUnixTime) . '" target="_blank"><span class="glyphicon glyphicon-ruble"></span> ' . __('Купить') . '</a>';
-          $search_jurnal_class = 'panel-primary';
-          $search_jairnal_icon = 'exclamation-sign';
-          }
-         */
         // Сообщение
         if ($until_day < 8 and $until_day > 0) {
             mailNotice('license', $until_day);
@@ -310,7 +286,7 @@ function actionStart() {
 
     $PHPShopGUI->_CODE .= '
      <div class="row intro-row">
-       <div class="col-md-2 col-xs-6">
+       <div class="col-md-2 col-xs-6 ">
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-flag"></span> ' . __('Новых заказов') . '</div>
                 <div class="panel-body text-right panel-intro">
@@ -318,7 +294,7 @@ function actionStart() {
                </div>
           </div>
        </div>
-       <div class="col-md-2 col-xs-6">
+       <div class="col-md-2 col-xs-6 col-panel">
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-comment"></span> ' . __('Диалогов') . '</div>
                 <div class="panel-body text-right panel-intro">
@@ -326,7 +302,7 @@ function actionStart() {
                </div>
           </div>
        </div>
-       <div class="col-md-2 hidden-xs hidden-sm">
+       <div class="col-md-2 hidden-xs hidden-sm col-panel">
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-list-alt"></span> ' . __('Комментариев') . '</div>
                 <div class="panel-body text-right panel-intro">
@@ -335,7 +311,7 @@ function actionStart() {
           </div>
        </div>
 
-       <div class="col-md-6 col-xs-12 hidden-xs">
+       <div class="col-md-6 col-xs-12 hidden-xs col-panel">
           <div class="panel panel-default ' . $search_jurnal_class . '">
              <div class="panel-heading"><span class="glyphicon glyphicon-' . $search_jairnal_icon . '"></span> ' . $search_jurnal_title . '</div>
                 <div class="panel-body">
@@ -346,13 +322,13 @@ function actionStart() {
    </div>   
 
    <div class="row intro-row">
-       <div class="col-md-6">
+       <div class="col-md-6 ">
            <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-shopping-cart"></span> ' . __('Заказы') . ' <a class="pull-right" href="?path=order">' . __('Показать больше') . '</a></div>
                    <table class="table table-hover intro-list">' . $order_list . '</table>
           </div>
        </div>
-       <div class="hidden-xs hidden-sm col-md-6">
+       <div class="hidden-xs hidden-sm col-md-6 col-panel">
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-stats"></span> ' . __('Статистика заказов') . ' 
              <span class="pull-right hidden-xs">
@@ -484,7 +460,7 @@ function actionStart() {
                </div>
           </div>
        </div>
-              <div class="col-md-6 ">
+           <div class="col-md-6 col-panel">
        
            <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-dashboard"></span> ' . __('Посещаемость') . ' <a class="pull-right" href="?path=metrica.traffic">' . __('Показать больше') . '</a></div>
@@ -507,7 +483,7 @@ function actionStart() {
                </div>
           </div>
        </div>
-       <div class="col-md-2 col-xs-6">
+       <div class="col-md-2 col-xs-6 col-panel">
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-eye-close"></span> ' . __('Скрыто') . '</div>
                 <div class="panel-body text-right panel-intro">
@@ -515,7 +491,7 @@ function actionStart() {
                </div>
           </div>
        </div>
-       <div class="col-md-2 col-xs-6">
+       <div class="col-md-2 col-xs-6 col-panel-not col-panel">
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-bell"></span> ' . __('Нет в наличии') . '</div>
                 <div class="panel-body text-right panel-intro">
@@ -523,7 +499,7 @@ function actionStart() {
                </div>
           </div>
        </div>
-       <div class="col-md-2 col-xs-6">
+       <div class="col-md-2 col-xs-6 col-panel">
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-folder-open"></span> ' . __('Категории') . '</div>
                 <div class="panel-body text-right panel-intro">
@@ -531,7 +507,7 @@ function actionStart() {
                </div>
           </div>
        </div>
-       <div class="col-md-2 hidden-xs hidden-sm">
+       <div class="col-md-2 hidden-xs hidden-sm col-panel">
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-user"></span> ' . __('Покупатели') . '</div>
                 <div class="panel-body text-right panel-intro">
@@ -539,7 +515,7 @@ function actionStart() {
                </div>
           </div>
        </div>
-       <div class="col-md-2 hidden-xs hidden-sm">
+       <div class="col-md-2 hidden-xs hidden-sm col-panel">
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-tasks"></span> ' . __('Модули') . '</div>
                 <div class="panel-body text-right panel-intro">
@@ -557,7 +533,7 @@ function actionStart() {
                 <table class="table table-hover intro-list">' . $user_list . '</table>
           </div>
        </div>
-       <div class="col-md-6 hidden-xs hidden-sm">
+       <div class="col-md-6 hidden-xs hidden-sm col-panel">
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-refresh"></span> ' . __('Обновление товаров') . ' <a class="pull-right" href="?path=catalog">' . __('Показать больше') . '</a></div>
                 <table class="table table-hover intro-list">' . $product_list . '</table>

@@ -9,7 +9,7 @@
 </ol>
 
 <div class="page-header">
-    <h1 class="main-heading2">Прайс-лист @priceCatName@</h1>
+    <h1 class="main-heading2">{Прайс-лист} @priceCatName@</h1>
 </div>
 
 

@@ -84,7 +84,7 @@ function template_pricecore_CAT_hook($obj, $data, $rout) {
 }
 
 function template_category_select_hook($obj) {
-    $catdrop = '<li role="presentation"><a role="menuitem" tabindex="-1" href="/price/CAT_SORT_ALL.html">Все каталоги</a></li>';
+    $catdrop = '<li role="presentation"><a role="menuitem" tabindex="-1" href="/price/CAT_SORT_ALL.html">'.__('Все каталоги').'</a></li>';
     if (is_array($obj->category_array))
         foreach ($obj->category_array as $k => $v) {
             $catdrop.='<li role="presentation"><a role="menuitem" tabindex="-1" href="/price/CAT_SORT_' . $k . '.html">' . $v . '</a></li>';

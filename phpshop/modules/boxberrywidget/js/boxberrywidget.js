@@ -1,4 +1,5 @@
 function boxberrywidgetStart() {
+    $("#makeyourchoise").val(null);
     var api_token = $('#boxberryApiKey').val();
     var city = $('#boxberryCity').val();
     var weight = $('#boxberryCartWeight').val();
@@ -33,11 +34,12 @@ function boxberryWidget(result) {
     $('input[name="DeliverySum"]').val(boxberry_sum);
 
     $("#DosSumma").html(boxberry_sum);
-    $("#TotalSumma").html(boxberry_sum + Number($('#OrderSumma').val()));
+    $("#TotalSumma").html(boxberry_sum + Number($('#OrderSumma').val())- Number($('#SkiSumma').attr('data-discount')));
 
 
     $('input[name="city_new"]').val(result.name);
     $('#deliveryInfo').html('ПВЗ: ' + result.address);
+    $("#makeyourchoise").val('DONE');
 }
 
 function boxberrywidgetCourier() {
@@ -61,6 +63,7 @@ function boxberrywidgetCourier() {
                     $("#DosSumma").html(json['delivery']);
                     $("#TotalSumma").html(json['total']);
                     showAlertMessage(json['message']);
+                    $("#makeyourchoise").val('DONE');
 
                     $('input[name="DeliverySum"]').val(json['delivery']);
                     $('input[name="boxberryInfo"]').val('Курьерская доставка Boxberry по индексу ' + zip);

@@ -275,7 +275,6 @@
                                 </div>
                             </div>
 
-                            @oprosDisp@
                         </div>
                     </div>
                     <div class="bar-padding-top-fix visible-xs visible-sm"></div>

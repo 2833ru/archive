@@ -164,7 +164,7 @@ class PHPShopOrder extends PHPShopCore {
         $this->set('delivery_price', PHPShopDelivery::getPriceDefault());
 
         // Итоговая стоимость
-        $this->set('total', number_format($sum_cart + $this->get('delivery_price'), $PHPShopOrder->format, '.', ' '));
+        $this->set('total', number_format($sum_cart + $this->get('delivery_price')-$discount_sum, $PHPShopOrder->format, '.', ' '));
 
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__, false, 'END');

@@ -111,7 +111,7 @@ $PHPShopCartElement->init('miniCart');
 $PHPShopPhotoElement = new PHPShopPhotoElement();
 $PHPShopPhotoElement->init('getPhotos');
 
-// Recaptcha
+// Captcha
 $PHPShopRecaptchaElement = new PHPShopRecaptchaElement();
 $PHPShopRecaptchaElement->init('captcha');
 PHPShopParser::set('pricemail_captcha', $PHPShopRecaptchaElement->captcha('pricemail'));

@@ -185,7 +185,7 @@ function actionStart() {
     // Менеджеры
     if ($PHPShopBase->Rule->CheckedRules('order', 'rule')) {
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['users']);
-        $data_manager = $PHPShopOrm->select(array('*'), array('enabled' => "='1'", 'id' => '!=' . $_SESSION['idPHPSHOP']), array('order' => 'id DESC'), array('limit' => 100));
+        $data_manager = $PHPShopOrm->select(array('*'), array('enabled' => "='1'"), array('order' => 'id DESC'), array('limit' => 100));
         $manager_status_value[] = array(__('Все менеджеры'), '', '');
         if (is_array($data_manager))
             foreach ($data_manager as $manager_status)

@@ -57,11 +57,16 @@ function UpdatePromotion(promo) {
                         $(".paymOneEl").addClass("paymOneElr");
                        // $(".paymOneEl").removeClass("paymOneEl");
 
-                        if (json['deliverymethodcheck'] == 1) {
-                            $('input[name=order_metod]').attr("disabled", true);
-                            $('input[name=order_metod]:checked').attr("disabled", false);
-                            $(".paymOneElr").click(function() {
-                                showAlertMessage('Для данного промо-кода невозможно выбрать другой тип оплаты!');
+                        if (json['deliverymethodcheck'] != 0) {
+
+                            $("input[name=order_metod]").change(function() {
+                                if(this.value != json['deliverymethodcheck']){
+                                    $(this).closest('.paymOneEl').removeClass('active').attr("disabled", true);
+                                    $('#order_metod[value="'+json['deliverymethodcheck']+'"]').closest('.paymOneElr').addClass('active');
+                                    $('#order_metod[value="'+json['deliverymethodcheck']+'"]').prop('checked', true);
+                                    showAlertMessage('Для данного промо-кода невозможно выбрать другой тип оплаты!');
+                                }
+
                             });
                         }
 
@@ -95,7 +100,7 @@ function UpdatePromotion(promo) {
                     $("#promocode").parent('.form-group').removeClass("has-success");
                     $("#promocode").parent('.form-group').removeClass("has-error");
 
-                    if (json['deliverymethodcheck'] == 1) {
+                    if (json['deliverymethodcheck'] != 0) {
                         $('input[name=order_metod]').attr("disabled", true);
                         $('input[name=order_metod]:checked').attr("disabled", false);
                         $(".paymOneElr").click(function() {

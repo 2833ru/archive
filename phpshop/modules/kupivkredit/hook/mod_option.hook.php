@@ -9,6 +9,6 @@ class PHPShopKVKArray extends PHPShopArray
     {
         $this->objType = 3;
         $this->objBase = $GLOBALS['SysValue']['base']['kupivkredit']['kupivkredit_system'];
-        parent::__construct('shop_id', 'showcase_id', 'dev_mode');
+        parent::__construct('shop_id', 'showcase_id', 'promo');
     }
 }

@@ -3129,6 +3129,7 @@ header > .container > div {
 
 .logo {
   padding: 0rem;
+  min-width: 9rem;
 }
 
 .logo img {

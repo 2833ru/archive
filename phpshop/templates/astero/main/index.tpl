@@ -167,7 +167,7 @@
                 <div class="collapse navbar-collapse navbar-cat-collapse header-menu-wrapper">
                     <div class="row">
                         <ul class="nav navbar-nav main-navbar-top">
-                            <li class="main-navbar-top-catalog hidden-xs">
+                            <li class="main-navbar-top-catalog">
                                 <a href="javascript:void(0);" id="nav-catalog-dropdown-link" class="nav-catalog-dropdown-link" aria-expanded="false">{Каталог}
                                 </a>
                                 <ul class="main-navbar-list-catalog-wrapper fadeIn animated">

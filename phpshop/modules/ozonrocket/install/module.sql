@@ -21,11 +21,12 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_ozonrocket_system` (
 `height` varchar(64) default '',
 `fee` int(11) default 0,
 `fee_type` enum('1','2') DEFAULT '1',
+`one_package` enum('0','1') DEFAULT '0',
 `version` varchar(64) DEFAULT '1.0',
 PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-INSERT INTO `phpshop_modules_ozonrocket_system` VALUES (1, '', '', '', '0', '', '', 'DropOff', '', '0', '0', '1', '1', '0', '', '', '', '', '', 0 , 1, '1.0');
+INSERT INTO `phpshop_modules_ozonrocket_system` VALUES (1, '', '', '', '0', '', '', 'DropOff', '', '0', '0', '1', '1', '0', '', '', '', '', '', 0 , 1,'0','1.2');
 
 CREATE TABLE IF NOT EXISTS `phpshop_modules_ozonrocket_log` (
 `id` int(11) NOT NULL AUTO_INCREMENT,

@@ -21,7 +21,7 @@ function actionStart() {
 
     // SQL
     $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.partner.partner_log"));
-    $data = $PHPShopOrm->select(array('*'), $where, array('order' => 'id DESC'), array('limit' => 100));
+    $data = $PHPShopOrm->select(array('*'), $where, array('order' => 'id DESC'), array('limit' => 1000));
     if (is_array($data))
         foreach ($data as $row) {
 

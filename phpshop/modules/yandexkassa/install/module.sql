@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_yandexkassa_system` (
   `title_end` text NOT NULL,
   `shop_id` varchar(64) NOT NULL default '',
   `api_key` varchar(255) NOT NULL default '',
-  `version` varchar(64) DEFAULT '1.5' NOT NULL
+  `version` varchar(64) DEFAULT '1.5' NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 

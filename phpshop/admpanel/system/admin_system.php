@@ -237,12 +237,13 @@ function actionStart() {
     $search_pole_value[] = array('Наименование', 1, $option['search_pole']);
     $search_pole_value[] = array('Учитывать все', 2, $option['search_pole']);
     
-    $filter_logic_value[] = array('Перекрестная', 1, $option['filter_logic']);
-    $filter_logic_value[] = array('Объединенная', 0, $option['filter_logic']);
+    $filter_logic_value[] = array('Перекрестная', 0, $option['filter_logic']);
+    $filter_logic_value[] = array('Объединенная', 1, $option['filter_logic']);
 
     $timezone_value[] = array('Europe/Moscow', 'Europe/Moscow', $option['timezone']);
     $timezone_value[] = array('Europe/Kiev', 'Europe/Kiev', $option['timezone']);
     $timezone_value[] = array('Europe/Minsk', 'Europe/Minsk', $option['timezone']);
+    $timezone_value[] = array('Asia/Novosibirsk ', 'Asia/Novosibirsk ', $option['timezone']);
     $timezone_value[] = array(__('Определяется сервером'), '', $option['timezone']);
 
     if (empty($data['num_row_adm']))

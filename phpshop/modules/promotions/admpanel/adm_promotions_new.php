@@ -69,7 +69,7 @@ function actionStart() {
 
     $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.promotions.promotions_codes"));
     $PHPShopOrm->debug = false;
-    $id = $select['end'] + 1;
+    $id = (int) $select['end'] + 1;
     $count_all = $PHPShopOrm->select(array('count("id") as count'), array('promo_id' => "='$id'"));
 
     $qty_all_count = $count_all['count'];
@@ -169,10 +169,12 @@ function actionStart() {
     $Tab1 .= $PHPShopGUI->setCollapse('Условия', $PHPShopGUI->setField('Статус покупателя', $PHPShopGUI->setCheckbox('status_check_new', 1, 'Учитывать статус покупателя', $data['status_check']) . '<br>' .
                     $PHPShopGUI->setSelect('statuses[]', $value_user_status, '300', true, false, false, '300', false, true)) .
             $PHPShopGUI->setField('Категории', $PHPShopGUI->setHelp('Выберите категории товаров и/или укажите ID товаров для акции.') .
-                    $PHPShopGUI->setCheckbox("categories_check_new", 1, "Учитывать категории товара", $data['categories_check']) .
+                    $PHPShopGUI->setCheckbox("categories_check_new", 1, "Учитывать категории товара", $data['categories_check']) .'<br>'.
                     $PHPShopGUI->setCheckbox("categories_all", 1, "Выбрать все категории?", 0) .
                     $tree_select) .
-            $PHPShopGUI->setField('Товары', $PHPShopGUI->setCheckbox("products_check_new", 1, "Учитывать товары", $data['products_check']) . $PHPShopGUI->setCheckbox("block_old_price_new", 1, "Игнорировать товары со старой ценой", $data['block_old_price']) .
+            $PHPShopGUI->setField('Товары', 
+                    $PHPShopGUI->setCheckbox("products_check_new", 1, "Учитывать товары", $data['products_check']) . '<br>'.
+                    $PHPShopGUI->setCheckbox("block_old_price_new", 1, "Игнорировать товары со старой ценой", $data['block_old_price']) .
                     $PHPShopGUI->setTextarea('products_new', $data['products'], false, false, false, __('Укажите ID товаров или воспользуйтесь') . ' <a href="#" data-target="#products_new"  class="btn btn-sm btn-default tag-search"><span class="glyphicon glyphicon-search"></span> ' . __('поиском товаров') . '</a>')) .
             $PHPShopGUI->setField('Сумма заказа', $PHPShopGUI->setInputText(null, 'sum_order_new', $data['sum_order'], '300', $PHPShopSystem->getDefaultValutaCode())) .
             $PHPShopGUI->setField('Способ оплаты', $PHPShopGUI->setSelect('delivery_method_new', $value_payment_systems, 300))
@@ -213,7 +215,7 @@ function actionStart() {
     $PHPShopGUI->setTab(array("Основное", $Tab1,true,false,true), array("Дополнительно", $Tab2,true,false,true));
 
     // Вывод кнопок сохранить и выход в футер
-    $ContentFooter = $PHPShopGUI->setInput("hidden", "rowID", $select['end'] + 1, "right", 70, "", "but") . $PHPShopGUI->setInput("submit", "saveID", "Сохранить", "right", false, false, false, "actionInsert.modules.create");
+    $ContentFooter = $PHPShopGUI->setInput("hidden", "rowID", (int) $select['end'] + 1, "right", 70, "", "but") . $PHPShopGUI->setInput("submit", "saveID", "Сохранить", "right", false, false, false, "actionInsert.modules.create");
 
     $PHPShopGUI->setFooter($ContentFooter);
     return true;

@@ -434,9 +434,10 @@ function csv_update($data) {
             // Полный путь к изображениями
             if (!strstr($row['pic_big'], '/UserFiles/Image/') and ! strstr($row['pic_big'], 'http'))
                 $_POST['export_imgpath'] = true;
+            else $_POST['export_imgpath'] = false;
 
 
-            if (!empty($_POST['export_imgpath']) and isset($_POST['export_imgpath'])) {
+            if (!empty($_POST['export_imgpath']) and !empty($_POST['export_imgpath'])) {
                 if (!empty($row['pic_small']))
                     $row['pic_small'] = '/UserFiles/Image/' . $row['pic_small'];
             }
@@ -469,16 +470,18 @@ function csv_update($data) {
                     if (!empty($img)) {
 
                         // Полный путь к изображениям
-                        if (isset($_POST['export_imgpath']) and ! isset($_POST['export_imgload']))
+                        if (!empty($_POST['export_imgpath']) and ! isset($_POST['export_imgload']))
                             $img = '/UserFiles/Image/' . $img;
 
                         // Загрузка изображений по ссылке
                         if (isset($_POST['export_imgload']) and strstr($img, 'http')) {
 
                             $path_parts = pathinfo($img);
+                            
+                            // Файл загружен
                             if (downloadFile($img, $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['dir']['dir'] . '/UserFiles/Image/' . $path_parts['basename']))
                                 $img_load++;
-
+                            else  continue;
 
                             // Новое имя
                             $img = $GLOBALS['dir']['dir'] . '/UserFiles/Image/' . $path_parts['basename'];
@@ -497,7 +500,7 @@ function csv_update($data) {
                             $PHPShopOrmImg->insert(array('parent_new' => intval($row['id']), 'name_new' => $img, 'num_new' => $k));
 
                             $file = $_SERVER['DOCUMENT_ROOT'] . $img;
-                            $name = str_replace(array(".png", ".jpg", ".jpeg", ".gif"), array("s.png", "s.jpg", "s.jpeg", "s.gif"), $file);
+                            $name = str_replace(array(".png", ".jpg", ".jpeg", ".gif", ".PNG",".JPG",".JPEG",".GIF"), array("s.png", "s.jpg", "s.jpeg", "s.gif","s.png", "s.jpg", "s.jpeg", "s.gif"), $file);
 
                             if (!file_exists($name) and file_exists($file)) {
 
@@ -518,7 +521,7 @@ function csv_update($data) {
 
                                 // Главное превью
                                 if (empty($row['pic_small']))
-                                    $row['pic_small'] = str_replace(array(".png", ".jpg", ".jpeg", ".gif"), array("s.png", "s.jpg", "s.jpeg", "s.gif"), $img);
+                                    $row['pic_small'] = str_replace(array(".png", ".jpg", ".jpeg", ".gif", ".PNG",".JPG",".JPEG",".GIF"), array("s.png", "s.jpg", "s.jpeg", "s.gif","s.png", "s.jpg", "s.jpeg", "s.gif"), $img);
                             }
                         }
                     }
@@ -1067,20 +1070,7 @@ function actionStart() {
         $class = 'hide';
     }
 
-    $PHPShopGUI->_CODE .= '<p class="text-muted hidden-xs">' . __('Ниже приведен список полей, которые может содержать ваш файл. Одно из выделенных полей являются обязательными. Если вы импортируете данные, содержащие специальные символы (запятые, точки с запятыми и т.д.), соответствующие поля должны быть заключены в кавычки') . '.</p>';
-    $PHPShopGUI->_CODE .= '<div class="panel panel-default"><div class="panel-body">' . $list . '</div></div>';
     $PHPShopGUI->setActionPanel($TitlePage . $exchanges_name, false, array('Импорт'));
-
-    // Память полей
-    if (!empty($_POST['export_sortdelim']))
-        $export_sortdelim = $_POST['export_sortdelim'];
-    else
-        $export_sortdelim = '#';
-
-    if (!empty($_POST['export_sortsdelim']))
-        $export_sortdelim = $_POST['export_sortsdelim'];
-
-
 
     $delim_value[] = array('Точка с запятой', ';', @$memory[$_GET['path']]['export_delim']);
     $delim_value[] = array('Запятая', ',', @$memory[$_GET['path']]['export_delim']);
@@ -1193,7 +1183,7 @@ function actionStart() {
     $Tab4 .= $PHPShopGUI->setField("Помощник", $PHPShopGUI->setCheckbox('bot', 1, __('Умная загрузка для соблюдения правила ограничений на хостинге'), $_POST['bot'], false, false));
 
     $Tab1 = $PHPShopGUI->setCollapse('Настройки', $Tab1);
-    $Tab2 = $PHPShopGUI->setCollapse('Подсказка', $PHPShopGUI->setHelp('Если вы загружаете файл, который скачали в меню "База" &rarr; "Экспорт базы", и он содержит штатные заголовки столбцов – сопоставление полей делать <b>не нужно</b>. Если это сторонний прайс со своими названиями колонок, сделайте <b>Cопоставление полей</b>.')) .
+    $Tab2 = $PHPShopGUI->setCollapse('Подсказка', $PHPShopGUI->setHelp('Если вы загружаете файл, который скачали в меню "База" &rarr; "Экспорт базы", и он содержит <a name="import-col-name" href="#">штатные заголовки столбцов</a> – сопоставление полей делать <b>не нужно</b>. Если это сторонний прайс со своими названиями колонок, сделайте <b>Cопоставление полей</b>.<div style="margin-top:10px" id="import-col-name" class="none panel panel-default"><div class="panel-body">' . $list . '</div></div>')) .
             $PHPShopGUI->setCollapse('Сопоставление полей', $Tab2);
 
     $Tab3 = $PHPShopGUI->setCollapse('Сохраненные настройки', $Tab3);

@@ -52,6 +52,7 @@ $data = json_decode(file_get_contents('php://input'), true);
 // Авторизация
 if ($option['auth_token'] !== $_REQUEST['auth-token']) {
     $data['order']['status'] = 'Invalid token';
+    $data['parameters'] = $_REQUEST;
     setYandexcartLog($data);
     header("HTTP/1.1 403 Unauthorized");
     die('Invalid token');

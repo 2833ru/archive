@@ -64,6 +64,7 @@ function actionStart() {
         }
 
     $Tab1.=$PHPShopGUI->setField('Содержание из новости', $PHPShopGUI->setSelect('template', $value, '100%', false, false, false, false, false, false));
+    $Tab1 .= $PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/','100%'));
     
     $Tab1= $PHPShopGUI->setCollapse('Информация',$Tab1);
     

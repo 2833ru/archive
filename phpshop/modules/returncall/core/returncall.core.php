@@ -140,6 +140,8 @@ class PHPShopReturncall extends PHPShopCore {
         if(isset($_POST['ajax'])) {
             $_POST['returncall_mod_name']    = PHPShopString::utf8_win1251($_POST['returncall_mod_name']);
             $_POST['returncall_mod_message'] = PHPShopString::utf8_win1251($_POST['returncall_mod_message']);
+            $_POST['returncall_mod_time_start'] = PHPShopString::utf8_win1251($_POST['returncall_mod_time_start']);
+            $_POST['returncall_mod_time_end'] = PHPShopString::utf8_win1251($_POST['returncall_mod_time_end']);
         }
 
         $insert = array();

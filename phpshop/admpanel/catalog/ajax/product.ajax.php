@@ -288,7 +288,7 @@ if (is_array($data))
             $uid .= implode('', $PHPShopInterface->productTableRowLabels);
 
             // Подтип
-            if (strstr($row['parent'], ','))
+            if (!empty($row['parent']))
                 $uid .= '<a class="label label-default view-parent" title="' . __('Подтипы') . '" href="#" data-id="' . $row['id'] . '">' . __('П') . '<span class="caret"></span></a> ';
 
             $uid .= '</div>';

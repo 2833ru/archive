@@ -1524,10 +1524,10 @@ class PHPShopBannerElement extends PHPShopElements {
             $true_cid = $this->PHPShopNav->getId();
 
         if (!empty($true_cid))
-           $where['flag'] .= " and ( dop_cat REGEXP '#" . $true_cid . "#' or dop_cat='') ";
+            $where['flag'] .= " and ( dop_cat REGEXP '#" . $true_cid . "#' or dop_cat='') ";
 
         $data = $this->PHPShopOrm->select(array('*'), $where, array('order' => 'RAND()'), array("limit" => 100));
-        
+
         if (is_array($data))
             foreach ($data as $row) {
                 if (empty($row['dir'])) {
@@ -1539,29 +1539,24 @@ class PHPShopBannerElement extends PHPShopElements {
                     $dirs = explode(",", $row['dir']);
                     if (!is_array($dirs))
                         $dirs[] = $row['dir'];
-                    
+
                     // Таргетинг
                     foreach ($dirs as $dir) {
                         if (!empty($dir))
-                    
-                            if ($this->PHPShopNav->objNav['truepath'] == trim($dir) or !empty($true_cid)) {
-                                
+                            if ($this->PHPShopNav->objNav['truepath'] == trim($dir) or ! empty($true_cid)) {
+
                                 // Проверка индекса
                                 if ($dir == '/' and $this->PHPShopNav->objNav['truepath'] != '/')
                                     continue;
 
                                 // Шаблон
                                 $this->template($row);
-                                
                             }
                     }
 
-                    
-                   if (!empty($row['dop_cat']) and empty($true_cid))
-                        continue;
-         
 
-                    
+                    if (!empty($row['dop_cat']) and empty($true_cid))
+                        continue;
                 }
             }
     }
@@ -1671,38 +1666,58 @@ class PHPShopPhotoElement extends PHPShopElements {
 }
 
 /**
- * Элемент защитной картинки Recaptcha
+ * Элемент защитной картинки Captcha
  * @author PHPShop Software
- * @version 1.0
+ * @version 1.1
  * @package PHPShopElements
  */
 class PHPShopRecaptchaElement extends PHPShopElements {
 
-    /**
-     * Секретные ключи по умолчанию общие
-     * @var string
-     */
+    // Общие ключи Recaptcha 
     public $secret = '6LdhAiYUAAAAAGzO0wlENkavrN49gFhHiHqH9vkv';
     public $public = '6LdhAiYUAAAAAO1uc9b8KfotAyfoInSrWuygbQKC';
-
-    /**
-     * API URL
-     * @var string
-     */
     protected $api = 'https://www.google.com/recaptcha/api/siteverify';
+    
+    // Общие ключи Hcaptcha         
+    public $hsecret = '0xba1b193f433F4656778a3C7a96326CA412769E3D';
+    public $hpublic = '6756c855-3f50-4360-a799-4f7b4855c927';
+    protected $hapi = 'https://hcaptcha.com/siteverify';
 
     public function __construct() {
 
         parent::__construct();
 
-        $public = $this->PHPShopSystem->getSerilizeParam('admoption.recaptcha_pkey');
-        if (!empty($public))
-            $this->public = $public;
+        // Recaptcha
+        if ($this->PHPShopSystem->ifSerilizeParam('admoption.recaptcha_enabled')) {
 
-        $secret = $this->PHPShopSystem->getSerilizeParam('admoption.recaptcha_skey');
+            $public = $this->PHPShopSystem->getSerilizeParam('admoption.recaptcha_pkey');
+            if (!empty($public))
+                $this->public = $public;
 
-        if (!empty($secret))
-            $this->secret = $secret;
+            $secret = $this->PHPShopSystem->getSerilizeParam('admoption.recaptcha_skey');
+
+            if (!empty($secret))
+                $this->secret = $secret;
+            
+            $this->check = $_POST['g-recaptcha-response'];
+        }
+        // Hcaptcha
+        elseif ($this->PHPShopSystem->ifSerilizeParam('admoption.hcaptcha_enabled')) {
+
+            $public = $this->PHPShopSystem->getSerilizeParam('admoption.hcaptcha_pkey');
+            if (!empty($public))
+                $this->public = $public;
+            else $this->public = $this->hpublic;
+
+            $secret = $this->PHPShopSystem->getSerilizeParam('admoption.hcaptcha_skey');
+
+            if (!empty($secret))
+                $this->secret = $secret;
+            else $this->secret = $this->hsecret;
+            
+            $this->check = $_POST['h-captcha-response'];
+            $this->api = $this->hapi;
+        }
     }
 
     /**
@@ -1710,7 +1725,7 @@ class PHPShopRecaptchaElement extends PHPShopElements {
      * @return boolean
      */
     public function check() {
-        if (!empty($_POST['g-recaptcha-response'])) {
+        if (!empty($this->check)) {
             $res = $this->request();
 
             if (!empty($res['success']))
@@ -1758,13 +1773,12 @@ class PHPShopRecaptchaElement extends PHPShopElements {
     }
 
     /**
-     * Проверка каптчи в Google
+     * Проверка каптчи на сервере
      * @return array
      */
     protected function request() {
 
-        $recaptcha = $_POST['g-recaptcha-response'];
-        $rout = "?secret=" . $this->secret . "&response=" . $recaptcha;
+        $rout = "?secret=" . $this->secret . "&response=" . $this->check;
 
         // Локальный режим
         if ($_SERVER["SERVER_ADDR"] == "127.0.0.1" and getenv("COMSPEC")) {
@@ -1794,7 +1808,7 @@ class PHPShopRecaptchaElement extends PHPShopElements {
     }
 
     /**
-     * Вывод зашитной картинки recaptcha
+     * Вывод защитной картинки captcha
      * @param string $name ИД каптчи
      * @param string $size размер каптчи [normal|compact]   
      * @return string
@@ -1804,7 +1818,12 @@ class PHPShopRecaptchaElement extends PHPShopElements {
         if ($this->PHPShopSystem->ifSerilizeParam('admoption.recaptcha_enabled')) {
             $dis = '<div id="recaptcha_' . $name . '" data-size="' . $size . '" data-key="' . $this->public . '"></div>';
             $this->recaptcha = true;
-        } else {
+        } 
+        else if ($this->PHPShopSystem->ifSerilizeParam('admoption.hcaptcha_enabled')) {
+            $dis = '<div id="hcaptcha_' . $name . '" data-size="' . $size . '" data-key="' . $this->public . '"></div>';
+            $this->recaptcha = true;
+        } 
+        else {
             $dis = '<img src="phpshop/lib/captcha/captcha.php" align="left" style="margin-right:10px"> <input type="text" name="key" class="form-control" placeholder="' . __('Код с картинки') . '..." style="width:100px" required="">';
             $this->recaptcha = false;
         }
@@ -1817,42 +1836,7 @@ class PHPShopRecaptchaElement extends PHPShopElements {
      * @return boolen
      */
     public function true(){
-    return $this->recaptcha;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+       return $this->recaptcha;
     }
-
 }
-
 ?>

@@ -25,6 +25,9 @@ function tab_dialog() {
         $limit = array('limit' => 5);
         $empty=true;
     }
+    elseif(!empty($_GET['id'])){
+        $limit = array('limit' => 50);
+	}
 
     $PHPShopOrm->debug = false;
 

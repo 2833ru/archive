@@ -46,10 +46,10 @@ function actionStart()
 
     $Tab1 = $PHPShopGUI->setField('ShopID', $PHPShopGUI->setInputText(false, 'shop_id_new', $data['shop_id'], 300), 1, "Уникальный идентификатор магазина, выдается банком при подключении.");
     $Tab1 .= $PHPShopGUI->setField('ShowcaseID', $PHPShopGUI->setInputText(false, 'showcase_id_new', $data['showcase_id'], 300), 1, "Идентификатор витрины магазина. В случае единственной витрины можно не указывать.");
-    $Tab1 .= $PHPShopGUI->setField('Режим разработки', $PHPShopGUI->setCheckbox("dev_mode_new", 1, "Отправка данных на тестовую среду Tinkoff Credit", $data["dev_mode"]));
+    $Tab1 .= $PHPShopGUI->setField('Промокод в заказе', $PHPShopGUI->setInputText(false, 'promo_new', $data['promo'], 300));
     
     // Форма регистрации
-    $Tab3 = $PHPShopGUI->setPay(null, false, $data['version'], true);
+    $Tab3 = $PHPShopGUI->setPay(null, false, $data['version'], false);
 
     // Инструкция
     $info = '
@@ -67,7 +67,6 @@ function actionStart()
 <li>Сообщите банку, что готовы к прохождению модерации.</li>
 <li>Значения <kbd>ShopId</kbd>, <kbd>ShowcaseId</kbd> и <kbd>PromoCode</kbd> для работы в боевом режиме магазину отправляет менеджер банка при успешной интеграции с тестовыми параметрами. Заполнить эти значения в настройках модуля.</li>
 <li>Включить доступным для продажи в кредит товарам признак "Кредит доступен" в закдадке <kbd>Кредит</kbd>, указать Промокод (опционально, если получен от менеджера банка).</li>
-<li>Отключить "Режим разработки".</li>
 <li>Для персонализации формы вывода отредактируйте шаблоны <code>phpshop/modules/kupivkredit/templates/</code></li>
 </ol>
 ';

@@ -33,6 +33,12 @@ $().ready(function () {
             // Toggle
             $('.toggle-event').bootstrapToggle();
 
+            // Инструкция из списка
+            $(".data-row .manual").on('click', function (event) {
+                event.preventDefault();
+                window.open($(this).closest('.data-row').find('.modules-list > a').attr('data-wiki'));
+            });
+
             // Установленные модули
             $('table#data tr').each(function (key, value) {
                 if (key > 0) {
@@ -395,12 +401,6 @@ $().ready(function () {
                 window.open($(this).attr('data-wiki'));
         } else
             window.location.href = $(this).attr('href');
-    });
-
-    // Инструкция из списка
-    $(".data-row .manual").on('click', function (event) {
-        event.preventDefault();
-        window.open($(this).closest('.data-row').find('.modules-list > a').attr('data-wiki'));
     });
 
     // Настройка из списка

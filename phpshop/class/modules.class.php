@@ -136,7 +136,7 @@ class PHPShopModules {
                         @mysqli_query($link_db, $val);
                 }
         }
-        $db = $this->getXml('../modules/' . $this->path . '../install/module.xml');
+        $db = $this->getXml('../modules/' . $this->path . '/install/module.xml');
         return $db['version'];
     }
 

@@ -4,8 +4,9 @@
     <name>Avito</name>
     <faqlink>https://docs.phpshop.ru/moduli/prodazhi/avito</faqlink>
     <description>Экспорт товаров на Авито.</description>
-    <category>sale</category>
+    <category>sale,pro</category>
     <sign>1611317675</sign>
+    <pro>true</pro>
     <adminmenu>
         <title>Avito</title>
         <capability>true</capability>

@@ -17,6 +17,7 @@
  * @example ?price [int] Колонка цен (2/3/4/5)
  * @example ?available [bool] Выводить только в наличии
  * @example ?image_source [bool]  Показывать исходные изображения _big
+ * @example ?allimage [bool] Выгрузка всех изображений.
  */
 $_classPath = "../phpshop/";
 include($_classPath . "class/obj.class.php");
@@ -237,7 +238,7 @@ class PHPShopYml {
     function getImages($product_row) {
 
         $xml = null;
-        if (isset($_GET['getall'])) {
+        if (isset($_GET['getall']) or isset($_GET['allimage'])) {
             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['foto']);
             $data = $PHPShopOrm->select(array('*'), array('parent' => '=' . $product_row['id']), false, array('limit' => 10000));
 
@@ -311,7 +312,10 @@ class PHPShopYml {
                 $where = "aliexpress='1' and";
             } elseif (isset($_GET['marketplace']) && $_GET['marketplace'] === 'sbermarket' && isset($GLOBALS['SysValue']['base']['marketplaces']['marketplaces_system'])) {
                 $where = "sbermarket='1' and";
-            } else {
+            }
+            elseif (isset($_GET['marketplace']) && $_GET['marketplace'] === 'ozon' && isset($GLOBALS['SysValue']['base']['ozonseller']['ozonseller_system'])) {
+                $where = "export_ozon='1' and";
+            }else {
                 $where = "yml='1' and";
             }
 
@@ -446,6 +450,7 @@ class PHPShopYml {
                 "price_sbermarket" => round($row['price_sbermarket'], (int) $this->format),
                 "price_cdek" => round($row['price_cdek'], (int) $this->format),
                 "price_aliexpress" => round($row['price_aliexpress'], (int) $this->format),
+                "price_ozon" => round($row['price_ozon'], (int) $this->format),
             );
 
             // Параметр сортировки
@@ -602,6 +607,13 @@ function setCurrencies() {
  * Категории
  */
 function setCategories() {
+    
+     // Перехват модуля
+    $hook = $this->setHook(__CLASS__, __FUNCTION__);
+    if ($hook) {
+        return $hook;
+    }
+    
     $this->xml .= '<categories>';
     $category = $this->category();
     foreach ($category as $val) {
@@ -614,6 +626,8 @@ function setCategories() {
     }
 
     $this->xml .= '</categories>';
+    
+   
 }
 
 /**
@@ -761,7 +775,7 @@ function setProducts() {
 
         // weight
         if (!empty($val['weight']))
-            $xml .= '<weight>' . round($val['weight']/1000,3). '</weight>';
+            $xml .= '<weight>' . round($val['weight'] / 1000, 3) . '</weight>';
 
         // Габариты
         if (!empty($val['length']) && !empty($val['width']) && !empty($val['height']))
@@ -819,7 +833,10 @@ function compile() {
     $this->setHeader();
     $this->setCurrencies();
     $this->setCategories();
-    $this->setDelivery();
+
+    if (!isset($_GET['getall']))
+        $this->setDelivery();
+
     $this->setProducts();
     $this->serFooter();
 

@@ -312,4 +312,26 @@ class Elastic
         else
             return false;
     }
+
+    public static function getCategoriesByIds($categoryIds)
+    {
+        $where = [
+            'id' => sprintf(' IN (%s)', implode(',', $categoryIds)),
+            'skin_enabled ' => "!='1'"
+        ];
+        if (defined("HostID"))
+            $where['servers'] = " REGEXP 'i" . HostID . "i'";
+        elseif (defined("HostMain"))
+            $where['skin_enabled'] .= ' and (servers ="" or servers REGEXP "i1000i")';
+
+        return array_column((new PHPShopOrm('phpshop_categories'))
+            ->getList(
+                ['id', 'name', 'icon'],
+                $where,
+                ['order' => sprintf(' FIELD(id, %s)', implode(',', $categoryIds))]
+            ),
+            null,
+            'id'
+        );
+    }
 }

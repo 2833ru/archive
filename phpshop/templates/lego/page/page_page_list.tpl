@@ -9,6 +9,6 @@
     @pageContent@
 </div>
 <div class="clearfix"></div>
-<h3 class="@php __hide('pageLast'); php@  page-header last-header">Интересно почитать</h3>
+<h3 class="@php __hide('pageLast'); php@  page-header last-header">{Интересно почитать}</h3>
 <div class="@php if(!empty($GLOBALS['SysValue']['other']['pageLast'])) echo 'grid'; php@">@pageLast@</div>
 <p>@odnotipDisp@</p>

@@ -44,6 +44,9 @@ function actionUpdate()
     if (empty($_POST['dev_mode_new'])) {
         $_POST['dev_mode_new'] = 0;
     }
+    if (empty($_POST['one_package_new'])) {
+        $_POST['one_package_new'] = 0;
+    }
     
     $_POST['token_new'] = str_replace('=','%3D',$_POST['token_new']);
     
@@ -92,6 +95,7 @@ function actionStart()
     $Tab1.= $PHPShopGUI->setField('Client id', $PHPShopGUI->setInputText(false, 'client_id_new', $data['client_id'], 300));
     $Tab1.= $PHPShopGUI->setField('Client secret', $PHPShopGUI->setInputText(false, 'client_secret_new', $data['client_secret'], 300));
     $Tab1.= $PHPShopGUI->setField('Режим разработки', $PHPShopGUI->setCheckbox("dev_mode_new", 1,"Отправка данных на тестовую среду", $data["dev_mode"]));
+    $Tab1.= $PHPShopGUI->setField('Общая упаковка', $PHPShopGUI->setCheckbox("one_package_new", 1,"Все товары в одной коробке", $data["one_package"]));
     $Tab1.= $PHPShopGUI->setField('Доставка', $PHPShopGUI->setSelect('delivery_id_new', $deliveryValue, 300));
     $Tab1.= $PHPShopGUI->setField('Город на карте по умолчанию', $PHPShopGUI->setInputText(false, 'default_city_new', $data['default_city'], 300));
     $Tab1.= $PHPShopGUI->setField('Статус для отправки', $PHPShopGUI->setSelect('status_new', $status, 300));

@@ -50,8 +50,11 @@ class PHPShopPhoto extends PHPShopCore {
      */
     function index() {
 
-        // Подключаем шаблон ошибки
-        $this->parseTemplate($this->getValue('templates.error_page_forma'));
+        // Мета
+        $this->category_name = __('Фотогалереи');
+        $this->title = $this->category_name . " - " . $this->PHPShopSystem->getValue("title");
+        $this->description = $this->category_name . ", " . $this->PHPShopSystem->getValue("descrip");
+        $this->ListCategory();
     }
 
     /**
@@ -66,9 +69,13 @@ class PHPShopPhoto extends PHPShopCore {
         if (empty($this->category_name))
             $this->category_name = __('Фотогалереи');
 
+        if (empty($this->category)) {
+            return $this->setError404();
+        }
+
         $PHPShopOrm = new PHPShopOrm($this->getValue('base.photo_categories'));
         $PHPShopOrm->debug = $this->debug;
-        $row = $PHPShopOrm->select(array('id,name'), array('parent_to' => "=" . $this->category, 'enabled' => "='1'"), false, array('limit' => 1));
+        $row = $PHPShopOrm->select(array('id,name'), array('parent_to' => "=" . (int) $this->category, 'enabled' => "='1'"), false, array('limit' => 1));
 
         // Если фото
         if (empty($row['id'])) {
@@ -107,7 +114,7 @@ class PHPShopPhoto extends PHPShopCore {
                 // Перехват модуля
                 $this->setHook(__CLASS__, __FUNCTION__, $row, 'MIDDLE');
 
-                $disp.=ParseTemplateReturn('./phpshop/lib/templates/photo/photo_element_forma.tpl', true);
+                $disp .= ParseTemplateReturn('./phpshop/lib/templates/photo/photo_element_forma.tpl', true);
             }
         // Если есть описание каталога
         if (empty($this->LoadItems['CatalogPhoto'][$this->category]))
@@ -122,7 +129,8 @@ class PHPShopPhoto extends PHPShopCore {
         $this->setPaginator();
 
         // Мета
-        $this->title = $this->category_name . " - " . $this->PHPShopSystem->getValue("name");
+        $this->title = $this->category_name . " - " . $this->PHPShopSystem->getValue("title");
+        $this->description = $this->category_name . ", " . $this->PHPShopSystem->getValue("descrip");
 
         // Навигация хлебные крошки
         $this->navigation($row['parent_to'], $this->category_name);
@@ -142,17 +150,18 @@ class PHPShopPhoto extends PHPShopCore {
         // Выборка данных
         $PHPShopOrm = new PHPShopOrm($this->getValue('base.photo_categories'));
         $PHPShopOrm->debug = $this->debug;
-        $dataArray = $PHPShopOrm->select(array('name', 'id'), array('parent_to' => '=' . $this->category), array('order' => 'num'), array('limit' => 100));
+
+        $dataArray = $PHPShopOrm->select(array('name', 'id'), array('parent_to' => '=' . (int) $this->category), array('order' => 'num'), array('limit' => 100));
         if (is_array($dataArray))
             foreach ($dataArray as $row) {
-                $dis.=PHPShopText::li($row['name'], "/photo/CID_" . $row['id'] . ".html");
+                $dis .= PHPShopText::li($row['name'], "/photo/CID_" . $row['id'] . ".html");
             }
 
         // Если есть описание каталога
         if (!empty($this->LoadItems['CatalogPhoto'][$this->category]['content_enabled']))
-            $disp.=$this->PHPShopPhotoCategory->getContent();
+            $disp .= $this->PHPShopPhotoCategory->getContent();
 
-        $disp.=PHPShopText::ul($dis);
+        $disp .= PHPShopText::ul($dis);
 
         $this->set('isPage', true);
         $this->set('pageContent', Parser($disp));
@@ -160,6 +169,7 @@ class PHPShopPhoto extends PHPShopCore {
 
         // Мета
         $this->title = $this->category_name . " - " . $this->PHPShopSystem->getValue("name");
+        $this->description = $this->category_name . ", " . $this->PHPShopSystem->getValue("descrip");
 
         // Навигация хлебные крошки
         $this->navigation($this->category, $this->category_name);

@@ -521,10 +521,10 @@ $().ready(function () {
 
         var table = $('#data').dataTable({
             "lengthMenu": data_length,
-            "paging": false,
+            "paging": true,
             "ordering": true,
             "info": false,
-            "searching": false,
+            "searching": true,
             "language": locale.dataTable,
             "aaSorting": [],
             "columnDefs": [

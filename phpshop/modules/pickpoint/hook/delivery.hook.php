@@ -14,7 +14,7 @@ function pickpoin_delivery_hook($obj, $data) {
 
     if ((int) $xid === (int) $PickPoint->getPickpointDeliveryId()) {
         $hook['dellist']=$_RESULT['dellist'];
-        $hook['hook']='PickPoint.open(pickpoint_phpshop);';
+        $hook['hook']='PickPoint.open(pickpoint_phpshop);$("#makeyourchoise").val(null);';
         $hook['delivery'] = $_RESULT['delivery'];
         $hook['total'] = $_RESULT['total'];
         $hook['adresList'] = $_RESULT['adresList'];

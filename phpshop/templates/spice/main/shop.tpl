@@ -44,7 +44,7 @@
         <link id="bootstrap_theme" data-name="@php echo $_SESSION['skin']; php@" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/@spice_theme@.css" rel="stylesheet">
 
         <!-- Стикер-полоска -->
-        <div class="@php __hide('sticker_top'); php@">
+        <div class="@php __hide('sticker_top'); php@ hidden-xs">
             <div class="top-banner @php __hide('sticker_close','cookie'); php@">
                 <div class="sticker-text">@sticker_top@</div>
                 <span class="close sticker-close">x</span>

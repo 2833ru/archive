@@ -82,6 +82,7 @@ function actionStart() {
     $CategoryDeliveryArray = $PHPShopDeliveryArray->getArray();
 
     $CategoryDeliveryArray[0]['city'] = '- ' . __('Корневой уровень') . ' -';
+    $CategoryDeliveryArray[0]['id'] = 0;
 
     foreach ($CategoryDeliveryArray as $val) {
         $city_value[] = array($val['city'], $val['id'], $data['PID']);
@@ -137,12 +138,12 @@ function actionStart() {
         }
 
 
-    $tree_select = '<select class="selectpicker show-menu-arrow hidden-edit" data-live-search="true" data-container=""  data-style="btn btn-default btn-sm" name="categories[]"  data-width="100%" multiple>' . $tree_select . '</select>';
+    $tree_select = '<select class="selectpicker show-menu-arrow hidden-edit" data-live-search="true" data-container="body"  data-style="btn btn-default btn-sm" name="categories[]"  data-width="100%" multiple>' . $tree_select . '</select>';
 
 
     // Выбор каталога
     if (!$catalog)
-        $Tab_info .= $PHPShopGUI->setField("Каталог", $tree_select,'100%');
+        $Tab_info .= $PHPShopGUI->setField("Каталог", $PHPShopGUI->setSelect('PID_new', $city_value, '100%'));
 
     // Вывод
     $Tab_info .= $PHPShopGUI->setField("Статус", $PHPShopGUI->setCheckbox('enabled_new', 1, null, $data['enabled']));
@@ -201,7 +202,7 @@ function actionStart() {
         }
 
     // Оплаты
-    if (!empty($_GET['target']) and $_GET['target'] != 'cat') {
+    if (@$_GET['target'] != 'cat') {
         $Tab2 = $PHPShopGUI->setField("Блокировка оплат", $PHPShopGUI->setSelect('payment_new[]', $payment_value, '100%', null, false, $search = false, false, 1, true));
 
 

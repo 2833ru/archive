@@ -58,7 +58,7 @@ function index() {
  $this->keywords=\'php\';
 
  // Определяем переменные
- $this->set(\'pageContent\',\'PHPShop Core работет!\');
+ $this->set(\'pageContent\',\'PHPShop Core работает!\');
  $this->set(\'pageTitle\', \'Подключение PHP логики через API\');
 
   // Подключаем шаблон

@@ -27,8 +27,7 @@ function template_CID_Product($obj, $data, $rout) {
             }
 
 
-        if (!empty($_GET['s']))
-        switch ($_GET['s']) {
+        switch (@$_GET['s']) {
             case 1:
                 $obj->set('sSetAactive', 'active');
                 break;
@@ -39,8 +38,7 @@ function template_CID_Product($obj, $data, $rout) {
         }
 
 
-        if (!empty($_GET['f']))
-        switch ($_GET['f']) {
+        switch (@$_GET['f']) {
             case 1:
                 $obj->set('fSetAactive', 'active');
                 break;
@@ -344,7 +342,7 @@ function sorttemplatehook($value, $n, $title, $vendor) {
         $help = '';
     }
 
-    return '<div class="faset-filter-block-wrapper grid-item"><h4>' . $title . '</h4><div>' . $disp . '<div class="clearfix"></div></div></div></div>';
+    return '<div class="faset-filter-block-wrapper grid-item"><h4>' . $title . '</h4><div>' . $disp . '<div class="clearfix"></div></div></div>';
 }
 
 /**

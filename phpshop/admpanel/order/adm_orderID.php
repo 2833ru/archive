@@ -292,7 +292,7 @@ function actionStart() {
         }
 
     $delivery_value[] = array(null, 'div', 'ider', 'data-divider="true"');
-    $delivery_value[] = array(__('Изменить стоимость доставки'), 0, 1, 'data-change-cost="1" data-subtext="<span class=\'glyphicon glyphicon-cog\'></span>"');
+    $delivery_value[] = array(__('Изменить стоимость доставки'), 0, 1);
 
     $delivery_content[] = $PHPShopGUI->setSelect('person[dostavka_metod]', $delivery_value, '100%');
 
@@ -301,7 +301,7 @@ function actionStart() {
     // Права
     if ($PHPShopBase->Rule->CheckedRules('order', 'rule')) {
         $PHPShopOrmAdmin = new PHPShopOrm($GLOBALS['SysValue']['base']['users']);
-        $data_admin = $PHPShopOrmAdmin->select(array('*'), array('enabled' => "='1'", 'id' => '!=' . $_SESSION['idPHPSHOP']), array('order' => 'name'), array('limit' => 300));
+        $data_admin = $PHPShopOrmAdmin->select(array('*'), array('enabled' => "='1'"), array('order' => 'name'), array('limit' => 300));
 
         $admin_value[] = array(__('Не выбрано'), 0, $data['admin']);
         if (is_array($data_admin))

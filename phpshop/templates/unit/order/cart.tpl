@@ -41,7 +41,7 @@
         <td class=""></td>
         <td></td>
        
-        <td colspan="2" align="right" class="red" id="SkiSummaAll"><span id="SkiSumma" class="text-danger">- @discount_sum@</span><span class="rubznak text-danger">@currency@</span></td>
+        <td colspan="2" align="right" class="red" id="SkiSummaAll"><span id="SkiSumma" class="text-danger" data-discount="@discount_sum@">- @discount_sum@</span><span class="rubznak text-danger">@currency@</span></td>
     </tr> 
     <tr class="pad-20-10">
         <td>{Доставка}:</td>

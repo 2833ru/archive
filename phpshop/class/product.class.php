@@ -8,7 +8,7 @@ if (!defined("OBJENABLED")) {
 /**
  * Библиотека данных по товарам
  * @author PHPShop Software
- * @version 1.4
+ * @version 1.5
  * @package PHPShopObj
  */
 class PHPShopProduct extends PHPShopObj {
@@ -92,7 +92,7 @@ class PHPShopProduct extends PHPShopObj {
         }
         $this->objRow['items'] -= $count;
 
-        $this->applyWarehouseControl($parent, $warehouseId);
+        $this->applyWarehouseControl($parent, $warehouseId,$count);
     }
 
     // Добавить товар на склад
@@ -104,11 +104,11 @@ class PHPShopProduct extends PHPShopObj {
         }
         $this->objRow['items'] += $count;
 
-        $this->applyWarehouseControl($parent, $warehouseId);
+        $this->applyWarehouseControl($parent, $warehouseId,$count);
     }
 
     // Контроль склада
-    public function applyWarehouseControl($parent = 0, $warehouseId = null)
+    public function applyWarehouseControl($parent = 0, $warehouseId = null,$count = 0)
     {
         $PHPShopSystem = new PHPShopSystem();
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
@@ -122,6 +122,7 @@ class PHPShopProduct extends PHPShopObj {
         }
 
         $disabled = true;
+        
         // Если товар НЕ подтип - проверяем наличие подтипов и их наличие на складе
         if((int) $this->getParam('parent_enabled') === 0) {
             $parentsIds = explode(",", $this->getParam('parent'));
@@ -192,6 +193,7 @@ class PHPShopProduct extends PHPShopObj {
         // Обновляем данные
         $PHPShopOrm->update($product_update, ['id' => '=' . (int) $this->objID]);
 
+        // Если товар подтип
         if($parent > 0) {
             $mainProduct = new PHPShopProduct($parent);
             $parentsIds = explode(",", $mainProduct->getParam('parent'));
@@ -239,6 +241,9 @@ class PHPShopProduct extends PHPShopObj {
                     default:
                         break;
                 }
+                
+                // Склад главного товара
+                $mainProductUpdate['items_new'] = $mainProduct->getParam('items') - $count;
 
                 // Обновляем данные
                 $PHPShopOrm->update($mainProductUpdate, ['id' => '=' . (int) $parent]);

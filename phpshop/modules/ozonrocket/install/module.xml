@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.0</version>
+    <version>1.2</version>
     <name>Ozon Rocket</name>
     <description>Виджет расчета доставки Ozon Rocket</description>
     <category>delivery</category>
-    <sign>1634543879</sign>
+    <sign>1649154724</sign>
     <status>Hit</status>
     <faqlink>https://docs.phpshop.ru/moduli/dostavka/ozon-rocket</faqlink>
     <adminmenu>

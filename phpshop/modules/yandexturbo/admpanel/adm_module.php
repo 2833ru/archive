@@ -11,6 +11,7 @@ function actionBaseUpdate() {
     $PHPShopOrm->clean();
     $option = $PHPShopOrm->select();
     $new_version = $PHPShopModules->getUpdate($option['version']);
+    
     $PHPShopOrm->clean();
     $action = $PHPShopOrm->update(array('version_new' => $new_version));
     header('Location: ?path=modules&id=' . $_GET['id']);
@@ -63,12 +64,16 @@ function actionStart() {
                 $delivery['city'] = $name[0];
             }
             $delivery_value[] = array($delivery['city'], $delivery['id'], $data['delivery_id']);
+            $delivery_pickup_value[] = array($delivery['city'], $delivery['id'], $data['delivery_id_pickup']);
+            $delivery_post_value[] = array($delivery['city'], $delivery['id'], $data['delivery_id_post']);
         }
     }
 
     $Tab1 = $PHPShopGUI->setField('Авторизационный токен API', $PHPShopGUI->setInputText(null, 'auth_token_new', $data['auth_token'], 300));
     $Tab1 .= $PHPShopGUI->setField('Статус заказа', $PHPShopGUI->setSelect('statuses', $order_status_value, 300));
-    $Tab1 .= $PHPShopGUI->setField('Доставка', $PHPShopGUI->setSelect('delivery_id_new', $delivery_value, 300));
+    $Tab1 .= $PHPShopGUI->setField('Доставка курьером', $PHPShopGUI->setSelect('delivery_id_new', $delivery_value, 300));
+    $Tab1 .= $PHPShopGUI->setField('Самовывоз', $PHPShopGUI->setSelect('delivery_id_pickup_new', $delivery_pickup_value, 300));
+    $Tab1 .= $PHPShopGUI->setField('Доставка почтой', $PHPShopGUI->setSelect('delivery_id_post_new', $delivery_post_value, 300));
 
     $Tab1 = $PHPShopGUI->setCollapse('Настройки', $Tab1);
 

@@ -10,5 +10,5 @@ else if (!empty($_GET['partner']))
 if (strlen($_SERVER['HTTP_REFERER']) > 5 and ! strpos($_SERVER['HTTP_REFERER'], $_SERVER['SERVER_NAME']) and !empty($partner)) {
     require_once "./phpshop/modules/partner/class/partner.class.php";
     $PHPShopPartnerOrder = new PHPShopPartnerOrder();
-    $PHPShopPartnerOrder->setPartner();
+    $PHPShopPartnerOrder->setPartner($partner);
 }

@@ -20,11 +20,6 @@ function actionStart() {
     if (is_array($data))
         foreach ($data as $row) {
 
-            if ($row['discount_tip'] == 1)
-                $discount_tip_name = '%';
-            else
-                $discount_tip_name = '';
-
             $PHPShopInterface->setRow($row['id'], array('name' => $row['name'], 'link' => '?path=modules.dir.webhooks&id=' . $row['id'], 'align' => 'left'),  $type_value[$row['type']],$send_value[$row['send']],  array('action' => array('edit', '|','delete', 'id' => $row['id']), 'align' => 'center'), array('status' => array('enable' => $row['enabled'], 'align' => 'right', 'caption' => array('Выкл', 'Вкл'))));
         }
     $PHPShopInterface->Compile();

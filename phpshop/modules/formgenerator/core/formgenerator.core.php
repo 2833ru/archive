@@ -154,6 +154,7 @@ E-mail: ' . $mail . '
 
                 // Не заполнены обязательные поля
                 $this->set('formamail', $mail);
+                $this->set('isPage',true);
 
                 if (!empty($data['dir']))
                     header("Location: " . $_SERVER['HTTP_REFERER'] . "?error=error_message");
@@ -193,11 +194,14 @@ E-mail: ' . $mail . '
 
             if (!empty($_GET['error']))
                 $error = $data['error_message'];
+            
+            $this->set('isPage',true);
 
+            if(!empty($error))
+                $error=PHPShopText::alert($error);
 
-            $forma_content = '
-                <p><b>' . $error . '</b></p>
-<form method="post" enctype="multipart/form-data" name="formgenerator" id="formgenerator" action="/formgenerator/' . $path . '/">
+            
+            $forma_content = $error.'<form method="post" enctype="multipart/form-data" name="formgenerator" id="formgenerator" action="/formgenerator/' . $path . '/">
             ' . Parser($this->fixtags($data['content']));
 
             // Защитная каптча

@@ -100,9 +100,9 @@ class PHPShopOneclick extends PHPShopCore {
             }
 
             if ($this->system['write_order'] == 0)
-                $this->write($product);
+                $this->order_num = $this->write($product);
             else
-                $this->write_main_order($product);
+                $this->order_num = $this->write_main_order($product);
 
             $this->sendMail($product);
 
@@ -172,7 +172,7 @@ class PHPShopOneclick extends PHPShopCore {
         $insert['product_price_new'] = $this->getPrice($product);
 
         // Запись в базу
-        $this->PHPShopOrm->insert($insert);
+        return $this->PHPShopOrm->insert($insert);
     }
 
     /**
@@ -240,9 +240,38 @@ class PHPShopOneclick extends PHPShopCore {
         $insert['tel_new'] = $phone;
         $insert['statusi_new'] = $this->system['status'];
         $insert['status_new'] = serialize(array("maneger" => __('Быстрый заказ')));
+        $insert['sum_new'] = $order['Cart']['sum'];
 
         // Запись в базу
-        $PHPShopOrm->insert($insert);
+        $orderId = $PHPShopOrm->insert($insert);
+
+        // Учет модуля Partner
+        if (!empty($GLOBALS['SysValue']['base']['partner']['partner_system']) and PHPShopSecurity::true_param($_SESSION['partner_id'])) {
+
+            require_once("./phpshop/modules/partner/class/partner.class.php");
+            $PHPShopPartnerOrder = new PHPShopPartnerOrder();
+
+            // Модуль включен
+            if ($PHPShopPartnerOrder->option['enabled'] == 1) {
+                $_POST['ouid'] = $insert['uid_new'];
+                $PHPShopPartnerOrder->writeLog($orderId, $insert['sum_new']);
+            }
+        }
+
+        // Учет модуля Webhooks
+        if (!empty($GLOBALS['SysValue']['base']['webhooks']['webhooks_system'])) {
+
+            include_once('./phpshop/modules/webhooks/class/webhooks.class.php');
+
+            $orm = new PHPShopOrm('phpshop_orders');
+            $order = $orm->getOne(array('*'), array('id' => "='" . $orderId . "'"));
+
+            $PHPShopWebhooks = new PHPShopWebhooks($order);
+            $PHPShopWebhooks->getHooks(1);
+            $PHPShopWebhooks->init();
+        }
+
+        return $insert['uid_new'];
     }
 
     // номер заказа
@@ -278,23 +307,23 @@ class PHPShopOneclick extends PHPShopCore {
         }
 
         $message = "{Доброго времени}!
-                ---------------
+ ---------------
 
-                {С сайта} " . $this->PHPShopSystem->getValue('name') . " {пришел быстрый заказ}
+{С сайта} " . $this->PHPShopSystem->getValue('name') . " {пришел быстрый заказ} №" . $this->order_num . "
 
-                {Данные о пользователе}:
-                ----------------------
+{Данные о пользователе}:
+----------------------
 
-                {Имя}:                " . PHPShopSecurity::TotalClean($_POST['oneclick_mod_name'], 2) . "
-                {Телефон}:            " . PHPShopSecurity::TotalClean($_POST['oneclick_mod_tel'], 2) . "
-                {Товар}:              " . $product->getName() . $productId . $this->getPrice($product) . " " . $this->PHPShopSystem->getDefaultValutaCode() . "
-                {Сообщение}:          " . PHPShopSecurity::TotalClean($_POST['oneclick_mod_message'], 2) . "
-                {Дата}:               " . PHPShopDate::dataV(time()) . "
-                IP:                   " . $_SERVER['REMOTE_ADDR'] . "
+{Имя}:                " . PHPShopSecurity::TotalClean($_POST['oneclick_mod_name'], 2) . "
+{Телефон}:            " . PHPShopSecurity::TotalClean($_POST['oneclick_mod_tel'], 2) . "
+{Товар}:              " . $product->getName() . $productId . $this->getPrice($product) . " " . $this->PHPShopSystem->getDefaultValutaCode() . "
+{Сообщение}:          " . PHPShopSecurity::TotalClean($_POST['oneclick_mod_message'], 2) . "
+{Дата}:               " . PHPShopDate::dataV(time()) . "
+IP:                   " . $_SERVER['REMOTE_ADDR'] . "
 
-                ---------------
+---------------
 
-                http://" . $_SERVER['SERVER_NAME'];
+http://" . $_SERVER['SERVER_NAME'];
 
         new PHPShopMail($this->PHPShopSystem->getValue('adminmail2'), $this->PHPShopSystem->getValue('adminmail2'), $zag, Parser($message));
     }

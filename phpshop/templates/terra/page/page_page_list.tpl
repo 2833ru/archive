@@ -8,6 +8,6 @@
 <div class="clearfix"></div>
 
 <hr class="@php __hide('pageLast'); php@">
-<h3 class="@php __hide('pageLast'); php@   main-heading2">Интересно почитать</h3>
+<h3 class="@php __hide('pageLast'); php@   main-heading2">{Интересно почитать}</h3>
 <div class="grid">@pageLast@</div>
 <p>@odnotipDisp@</p>

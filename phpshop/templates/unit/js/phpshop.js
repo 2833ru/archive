@@ -20,7 +20,6 @@ function addToCartList(product_id, num, parent, addname) {
             if (json['success']) {
                 showAlertMessage(json['message']);
                 $("#num").html(json['num']);
-                $("#mobilnum").html(json['num']);
                 $("#sum").html(json['sum']);
                 $("#sum2").html(json['sum']);
                 $("#bar-cart, #order").addClass('active');
@@ -111,7 +110,7 @@ function NoFoto2(obj) {
 
 // Проверка наличия файла картинки, вставляем заглушку
 function NoFoto(obj, pathTemplate) {
-    obj.src = ROOT_PATH+pathTemplate + '/images/shop/no_photo.gif';
+    obj.src = ROOT_PATH + pathTemplate + '/images/shop/no_photo.gif';
 }
 
 // Сортировка по всем фильтрам
@@ -416,7 +415,7 @@ function mainNavMenuFix() {
         if ($('.header-menu-wrapper').find('.additional-nav-menu')) {
             var nav_weight_fix = nav_weight - 46;
         }
-        
+
         if (nav_weight < full_weight) {
             var nav_weight_fix = nav_weight - 46;
             if ($('.header-menu-wrapper').find('.additional-nav-menu')) {
@@ -433,7 +432,7 @@ function mainNavMenuFix() {
 
         }
         /* $('.main-navbar-top').addClass('active');*/
-        $('.main-navbar-top').css('overflow','visible');
+        $('.main-navbar-top').css('overflow', 'visible');
     }
 }
 
@@ -1415,7 +1414,7 @@ $(document).ready(function () {
 
     // ошибка загрузки изображения
     $('.highslide img').on('error', function () {
-        $(this).attr('src', ROOT_PATH+'/phpshop/templates/bootstrap/images/shop/no_photo.gif');
+        $(this).attr('src', ROOT_PATH + '/phpshop/templates/bootstrap/images/shop/no_photo.gif');
         return true;
     });
     $('.rating-group .btn').bind(' mouseover click', function () {
@@ -1623,7 +1622,7 @@ $(document).ready(function () {
     }
 
     // формат ввода телефона
-    $("form[name='forma_order'], input[name=returncall_mod_tel],input[name=tel],input[name=oneclick_mod_tel]").on("click", function () {
+    $("form[name='forma_order'], input[name=returncall_mod_tel],input[name=tel],input[name=tel_new],input[name=oneclick_mod_tel]").on("click", function () {
         if (PHONE_FORMAT && PHONE_MASK) {
             $("input[name=tel_new], input[name=returncall_mod_tel],input[name=tel],input[name=oneclick_mod_tel]").mask(PHONE_MASK);
         }
@@ -1729,7 +1728,7 @@ $(document).ready(function () {
             // Размер
             if ($('input[name="parentColor"]').val() === undefined && $('input[name="parentSize"]:checked').val() !== undefined) {
                 addToCartList($('input[name="parentSize"]:checked').val(), count, $('input[name="parentSize"]:checked').attr('data-parent'));
-                $(this).html(locale.incart+' <span class="icons icons-incart"></span>')
+                $(this).html(locale.incart + ' <span class="icons icons-incart"></span>')
             }
             // Размер  и цвет
             else if ($('input[name="parentSize"]:checked').val() > 0 && $('input[name="parentColor"]:checked').val() > 0) {
@@ -1737,7 +1736,7 @@ $(document).ready(function () {
                 var color = $('input[name="parentColor"]:checked').attr('data-color');
                 var size = $('input[name="parentSize"]:checked').attr('data-name');
                 var parent = $('input[name="parentColor"]:checked').attr('data-parent');
-                $(this).html(locale.incart+' <span class="icons icons-incart"></span>')
+                $(this).html(locale.incart + ' <span class="icons icons-incart"></span>')
                 $.ajax({
                     url: ROOT_PATH + '/phpshop/ajax/option.php',
                     type: 'post',
@@ -1748,7 +1747,7 @@ $(document).ready(function () {
                         if (json['id'] > 0) {
                             if ($('input[name="parentSize"]:checked').val() > 0 && $('input[name="parentColor"]:checked').val() > 0) {
                                 addToCartList(json['id'], count, $('input[name="parentColor"]:checked').attr('data-parent'));
-                                $(this).html(locale.incart+' <span class="icons icons-incart"></span>')
+                                $(this).html(locale.incart + ' <span class="icons icons-incart"></span>')
                             } else {
                                 blinkParentVariants();
                                 showAlertMessage($('#parentSizeMessage').html());
@@ -1772,7 +1771,7 @@ $(document).ready(function () {
 
             if (optionCheck) {
                 addToCartList($(this).attr('data-uid'), count, $(this).attr('data-uid'), optionValue);
-                $(this).html(locale.incart+'<span class="icons icons-incart"></span>')
+                $(this).html(locale.incart + '<span class="icons icons-incart"></span>')
             } else {
                 showAlertMessage($('#optionMessage').html());
                 blinkOptions();
@@ -1781,7 +1780,7 @@ $(document).ready(function () {
         // Обычный товар
         else {
             addToCartList($(this).attr('data-uid'), count);
-            $(this).html(locale.incart+' <span class="icons icons-incart"></span>')
+            $(this).html(locale.incart + ' <span class="icons icons-incart"></span>')
         }
 
     });
@@ -1928,7 +1927,7 @@ $(document).ready(function () {
                     input.val(currentVal - 1).change();
                 }
                 if (parseInt(input.val()) == input.attr('min')) {
-                    $(this).attr('disabled', true);
+                    // $(this).attr('disabled', true);
                 }
 
             } else if (type == 'plus') {
@@ -1937,7 +1936,7 @@ $(document).ready(function () {
                     input.val(currentVal + 1).change();
                 }
                 if (parseInt(input.val()) == input.attr('max')) {
-                    $(this).attr('disabled', true);
+                    // $(this).attr('disabled', true);
                 }
 
             }
@@ -2077,12 +2076,12 @@ $(document).ready(function () {
                 .children(".addToCartFull")
                 .attr("data-num", num);
     });
-    
+
     $(".top-banner .close").on('click', function () {
         $(".top-banner").remove();
     });
-    
-    
+
+
     // Закрыть стикер в шапке
     $('.sticker-close').on('click', function (e) {
         e.preventDefault();
@@ -2092,7 +2091,7 @@ $(document).ready(function () {
             expires: 365
         });
     });
-    
+
 });
 
 $('form[name="ajax-form"]').on('submit', function (e) {
@@ -2122,64 +2121,87 @@ $('body').on('click', '.notice-btn', function (e) {
         url: '/phpshop/ajax/notice.php',
         data: {loadForm: 1, productId: $(this).attr('data-product-id')},
         success: function (data) {
-            $('.notice-product-link').attr('href', ROOT_PATH+data['link']).html(data['title']);
+            $('.notice-product-link').attr('href', ROOT_PATH + data['link']).html(data['title']);
             $('.notice-product-image').html(data['image']);
             $('.notice-product-id').val(data['id']);
-
-            $.getScript("https://www.google.com/recaptcha/api.js?render=explicit")
-                    .done(function () {
-                        if (typeof grecaptcha !== "undefined") {
-
-                            grecaptcha.ready(function () {
-
-                                if ($("#recaptcha_notice").length)
-                                    grecaptcha.render("recaptcha_notice", {
-                                        "sitekey": $("#recaptcha_notice").attr('data-key'),
-                                        "size": $("#recaptcha_notice").attr('data-size')
-                                    });
-                            });
-                        }
-                    });
-
             $('#noticeModal').modal('toggle');
         }
     });
 });
 
-// reCAPTCHA
-$('body').on('click', '[data-toggle="modal"]', function () {
+// CAPTCHA
+$('body').on('click', '[data-toggle="modal"],.notice-btn', function () {
+
+    // reCAPTCHA
     var oneclick = $($(this).attr('data-target')).find('#recaptcha_oneclick').get(0);
     var returncall = $($(this).attr('data-target')).find('#recaptcha_returncall').get(0);
-    var notice = $($(this).attr('data-target')).find('#recaptcha_notice').get(0);
+    var notice = $('#recaptcha_notice').get(0);
     var pricemail = $($(this).attr('data-target')).find('#recaptcha_pricemail').get(0);
     var review = $($(this).attr('data-target')).find('#recaptcha_review').get(0);
     var forma = $($(this).attr('data-target')).find('#recaptcha_forma').get(0);
 
-    $.getScript("https://www.google.com/recaptcha/api.js?render=explicit")
-            .done(function () {
-                if (typeof grecaptcha !== "undefined") {
+    if (typeof oneclick !== "undefined" || typeof returncall !== "undefined" || typeof notice !== "undefined" || typeof pricemail !== "undefined" || typeof review !== "undefined" || typeof forma !== "undefined") {
+        $.getScript("https://www.google.com/recaptcha/api.js?render=explicit")
+                .done(function () {
+                    if (typeof grecaptcha !== "undefined") {
 
-                    grecaptcha.ready(function () {
-                        try {
-                            if (returncall)
-                                grecaptcha.render(returncall, {"sitekey": $(returncall).attr('data-key'), "size": $(returncall).attr('data-size')});
-                            if (oneclick)
-                                grecaptcha.render(oneclick, {"sitekey": $(oneclick).attr('data-key'), "size": $(oneclick).attr('data-size')});
-                            if (notice)
-                                grecaptcha.render(notice, {"sitekey": $(notice).attr('data-key'), "size": $(notice).attr('data-size')});
-                            if (pricemail)
-                                grecaptcha.render(pricemail, {"sitekey": $(pricemail).attr('data-key'), "size": $(pricemail).attr('data-size')});
-                            if (review)
-                                grecaptcha.render(review, {"sitekey": $(review).attr('data-key'), "size": $(review).attr('data-size')});
-                            if (forma)
-                                grecaptcha.render(forma, {"sitekey": $(forma).attr('data-key'), "size": $(forma).attr('data-size')});
-                        } catch (e) {
+                        grecaptcha.ready(function () {
+                            try {
+                                if (returncall)
+                                    grecaptcha.render(returncall, {"sitekey": $(returncall).attr('data-key'), "size": $(returncall).attr('data-size')});
+                                if (oneclick)
+                                    grecaptcha.render(oneclick, {"sitekey": $(oneclick).attr('data-key'), "size": $(oneclick).attr('data-size')});
+                                if (notice)
+                                    grecaptcha.render(notice, {"sitekey": $(notice).attr('data-key'), "size": $(notice).attr('data-size')});
+                                if (pricemail)
+                                    grecaptcha.render(pricemail, {"sitekey": $(pricemail).attr('data-key'), "size": $(pricemail).attr('data-size')});
+                                if (review)
+                                    grecaptcha.render(review, {"sitekey": $(review).attr('data-key'), "size": $(review).attr('data-size')});
+                                if (forma)
+                                    grecaptcha.render(forma, {"sitekey": $(forma).attr('data-key'), "size": $(forma).attr('data-size')});
+                            } catch (e) {
+                            }
+                        });
+                    }
+                });
+    } else {
+
+        // hCAPTCHA
+        var oneclick = $($(this).attr('data-target')).find('#hcaptcha_oneclick').get(0);
+        var returncall = $($(this).attr('data-target')).find('#hcaptcha_returncall').get(0);
+        var notice = $('#hcaptcha_notice').get(0);
+        var pricemail = $($(this).attr('data-target')).find('#hcaptcha_pricemail').get(0);
+        var review = $($(this).attr('data-target')).find('#hcaptcha_review').get(0);
+        var forma = $($(this).attr('data-target')).find('#hcaptcha_forma').get(0);
+
+        if (typeof oneclick !== "undefined" || typeof returncall !== "undefined" || typeof notice !== "undefined" || typeof pricemail !== "undefined" || typeof review !== "undefined" || typeof forma !== "undefined") {
+
+            $.getScript("https://js.hcaptcha.com/1/api.js?render=explicit")
+                    .done(function () {
+                        if (typeof hcaptcha !== "undefined") {
+                            try {
+                                if (returncall)
+                                    hcaptcha.render(returncall, {"sitekey": $(returncall).attr('data-key'), "size": $(returncall).attr('data-size')});
+                                if (oneclick)
+                                    hcaptcha.render(oneclick, {"sitekey": $(oneclick).attr('data-key'), "size": $(oneclick).attr('data-size')});
+                                if (notice)
+                                    hcaptcha.render(notice, {"sitekey": $(notice).attr('data-key'), "size": $(notice).attr('data-size')});
+                                if (pricemail)
+                                    hcaptcha.render(pricemail, {"sitekey": $(pricemail).attr('data-key'), "size": $(pricemail).attr('data-size')});
+                                if (review)
+                                    hcaptcha.render(review, {"sitekey": $(review).attr('data-key'), "size": $(review).attr('data-size')});
+                                if (forma)
+                                    hcaptcha.render(forma, {"sitekey": $(forma).attr('data-key'), "size": $(forma).attr('data-size')});
+                            } catch (e) {
+                            }
+
                         }
                     });
-                }
-            });
+        }
+    }
 });
 
+// Recaptcha
 if ($("#recaptcha_default").length) {
     $.getScript("https://www.google.com/recaptcha/api.js?render=explicit")
             .done(function () {
@@ -2194,6 +2216,16 @@ if ($("#recaptcha_default").length) {
             });
 }
 
+// Hcaptcha
+if ($("#hcaptcha_default").length) {
+    $.getScript("https://js.hcaptcha.com/1/api.js?render=explicit")
+            .done(function () {
+                if (typeof hcaptcha !== "undefined") {
+                    if ($("#hcaptcha_default").length)
+                        hcaptcha.render("hcaptcha_default", {"sitekey": $("#hcaptcha_default").attr('data-key'), "size": $("#hcaptcha_default").attr('data-size')});
+                }
+            });
+}
 
 function blinkParentVariants() {
     if ($('input[name="parentSize"]:checked').length === 0) {

@@ -270,7 +270,7 @@ if ($_REQUEST['promocode'] != '*') {
                             $status = '1'; //скидка применена
                             //система оплаты
                             if ($data['delivery_method_check'] == 1) {
-                                $delivery_method_check = 1;
+                                $delivery_method_check = $data['delivery_method'];
 
                                 //$totalsummainput = $sumtot_new + $sumtot_old;
                             } else {

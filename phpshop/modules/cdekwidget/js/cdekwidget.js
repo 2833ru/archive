@@ -59,7 +59,7 @@ function cdekwidgetOnChoose(result) {
         $('input[name="city_new"]').val(result.cityName);
         $('#cdekSum').val(result.price);
         $("#DosSumma").html(result.price);
-        $("#TotalSumma").html(Number(result.price) + Number($('#OrderSumma').val()));
+        $("#TotalSumma").html(Number(result.price) + Number($('#OrderSumma').val()) - Number($('#SkiSumma').attr('data-discount')));
     }
 
     $('input[name="cdek_city_id"]').val(result.city);

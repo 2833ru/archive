@@ -342,7 +342,7 @@ class GrastinWidget {
             }
         }
 
-        return '<Order number="' . PHPShopString::win_utf8(str_replace('-', '', $order['uid'])) . '" address="' . $address . '" buyer="' . PHPShopString::win_utf8($this->setBuyer($order)) . '" summa="' . $order['sum'] . '" ' . $this->setTest() . ' takewarehouse="' . PHPShopString::win_utf8($this->option['from_city']) . '" email="' . $person['Person']['mail'] . '"  phone1="' . str_replace(array('(', ')', ' ', '+', '-'), '', $order['tel']) . '" service="' . $service . '" assessedsumma="' . $order['sum'] . '" shippingdate="' . $shippingDate . '"  sitename="' . $_SERVER['SERVER_NAME'] . '">' . "\n";
+        return '<Order number="' . PHPShopString::win_utf8(str_replace('-', '', $order['uid'])) . '" address="' . $address . '" buyer="' . PHPShopString::win_utf8($this->setBuyer($order)) . '" summa="' . $order['sum'] . '" ' . $this->setTest() . ' takewarehouse="' . PHPShopString::win_utf8($this->option['from_city']) . '" email="' . $person['Person']['mail'] . '"  phone1="' . str_replace(array('(', ')', ' ', '+', '-'), '', $order['tel']) . '" service="' . $service . '" assessedsumma="' . $order['sum'] . '" shippingdate="' . $shippingDate->format('dmY') . '"  sitename="' . $_SERVER['SERVER_NAME'] . '">' . "\n";
     }
 
     private function createOrderBoxberry($grastinData, $order) {

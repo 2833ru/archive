@@ -10,7 +10,7 @@ function actionStart() {
 
     // SQL
     $PHPShopOrm = new PHPShopOrm();
-    $result = $PHPShopOrm->query('SELECT a.*, b.login FROM ' . $PHPShopModules->getParam("base.partner.partner_payment") . ' AS a JOIN ' . $PHPShopModules->getParam("base.partner.partner_users") . ' AS b ON a.partner_id = b.id order by a.id DESC limit 300');
+    $result = $PHPShopOrm->query('SELECT a.*, b.login FROM ' . $PHPShopModules->getParam("base.partner.partner_payment") . ' AS a JOIN ' . $PHPShopModules->getParam("base.partner.partner_users") . ' AS b ON a.partner_id = b.id order by a.id DESC limit 1000');
 
     while ($row = mysqli_fetch_array($result)) {
         $sum = number_format($row['sum'], "2", ".", "");

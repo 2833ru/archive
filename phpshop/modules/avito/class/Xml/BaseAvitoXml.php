@@ -309,6 +309,9 @@ class BaseAvitoXml
         if(stripos($template, '@Product@') !== false) {
             $template = str_replace('@Product@', $product['name'], $template);
         }
+        if(stripos($template, '@Article@') !== false) {
+            $template = str_replace('@Article@', __('Артикул').': '.$product['uid'], $template);
+        }
         if(stripos($template, '@Subcatalog@') !== false) {
             if(count($this->categoriesForPath) === 0) {
                 $orm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);

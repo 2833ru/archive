@@ -74,6 +74,7 @@ function actionStart() {
     $CategoryDeliveryArray = $PHPShopDeliveryArray->getArray();
 
     $CategoryDeliveryArray[0]['city'] = '- ' . __('Корневой уровень') . ' -';
+    $CategoryDeliveryArray[0]['id'] = 0;
 
     foreach ($CategoryDeliveryArray as $val) {
         $city_value[] = array($val['city'], $val['id'], $data['PID']);
@@ -129,7 +130,7 @@ function actionStart() {
         }
 
 
-    $tree_select = '<select class="selectpicker show-menu-arrow hidden-edit" data-live-search="true" data-container=""  data-style="btn btn-default btn-sm" name="categories[]"  data-width="100%" multiple>' . $tree_select . '</select>';
+    $tree_select = '<select class="selectpicker show-menu-arrow hidden-edit" data-live-search="true" data-container="body"  data-style="btn btn-default btn-sm" name="categories[]"  data-width="100%" multiple>' . $tree_select . '</select>';
 
     // Выбор каталога
     if (!$catalog)

@@ -76,7 +76,7 @@ function actionStart() {
     $Tab4=$PHPShopGUI->setInfo($Info);
 
     // Содержание закладки 2
-    $Tab2 = $PHPShopGUI->setPay($data['serial'], false, $data['version'], true);
+    $Tab2 = $PHPShopGUI->setPay($data['serial'], false, $data['version'], false);
 
     $Tab3 = $oFCKeditor->AddGUI();
 

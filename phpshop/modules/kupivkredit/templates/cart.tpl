@@ -2,7 +2,7 @@
     <form action="@kvk_url@" method="post" name="kvkForm" style="display: inline;">
         <input name="shopId" value="@kvk_shop_id@" type="hidden">
         @kvk_showcase_id@
-        <input name="promoCode" value="default" type="hidden">
+        <input name="promoCode" value="@kvk_promo@" type="hidden">
         <input name="sum" value="@kvk_sum@" type="hidden">
         <input name="orderNumber" value="@kvk_ouid@" type="hidden">
         <input name="customerEmail" value="@kvk_mail@" type="hidden">

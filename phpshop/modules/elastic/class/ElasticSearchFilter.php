@@ -16,6 +16,19 @@ class ElasticSearchFilter implements ElasticSearchFilterInterface
 
     public static function getFilter($query, $fields, $from, $size, $categories = null)
     {
+        if ((int) Elastic::getOption('search_uid_first') === 1) {
+            array_unshift($filter['query']['bool']['should'],
+                [
+                    'match' => [
+                        'article' => [
+                            'query' => self::escape(strtolower($query)),
+                            'boost' => 50
+                        ]
+                    ]
+                ]
+            );
+        }
+
         $filter = [
             '_source' => ['id'],
             'from'    => $from,
@@ -25,11 +38,27 @@ class ElasticSearchFilter implements ElasticSearchFilterInterface
                     'should' => [
                         [
                             'multi_match' => [
-                                'query'  => strtolower($query),
-                                'fields' => $fields
+                                'query'  => self::escape(strtolower($query)),
+                                'fields' => $fields,
+                                'boost' => 30
                             ]
-                        ]
+                        ],
+                        [
+                            'query_string' => [
+                                'query'  => self::escape(strtolower($query)),
+                                'fields' => $fields,
+                                'boost' => 20
+                            ]
+                        ],
+                        [
+                            'query_string' => [
+                                'query'  => '*' . self::escape(strtolower($query)) . '*',
+                                'fields' => $fields,
+                                'boost' => 10
+                            ]
+                        ],
                     ],
+                    'minimum_should_match' => 1,
                     'filter' => self::$filterActive
                 ]
             ],
@@ -59,22 +88,24 @@ class ElasticSearchFilter implements ElasticSearchFilterInterface
         ];
 
         if(!empty($categories)) {
-            $filter['query']['bool']['filter']['bool']['should'][1]['terms']['categories'] = $categories;
+            $filter['query']['bool']['filter']['bool']['must'][]['terms']['categories'] = $categories;
         }
 
         if (Elastic::isFuzziness((int) Elastic::getOption('misprints'), strlen($query))) {
             $filter['query']['bool']['should'][0]['multi_match']['fuzziness'] = (int) Elastic::getOption('misprints');
         }
 
-        if (Elastic::getOption('search_uid_first')) {
-            $filter['query']['bool']['should'][1] = [
-                'match' => [
-                    'article' => [
-                        'query' => strtolower($query),
-                        'boost' => 10
-                    ]
-                ]
-            ];
+        if ((int) Elastic::getOption('search_uid_first') === 1) {
+             array_unshift($filter['query']['bool']['should'],
+                 [
+                     'match' => [
+                         'article' => [
+                             'query' => self::escape(strtolower($query)),
+                             'boost' => 50
+                         ]
+                     ]
+                 ]
+             );
         }
 
         if ((int) Elastic::getOption('available_sort') === 1) {
@@ -85,5 +116,15 @@ class ElasticSearchFilter implements ElasticSearchFilterInterface
         }
 
         return $filter;
+    }
+
+    static function escape($string) {
+        $regex = "/[\\+\\-\\=\\&\\|\\!\\(\\)\\{\\}\\[\\]\\^\\\"\\~\\*\\<\\>\\?\\:\\\\\\/]/";
+        $string = preg_replace_callback ($regex,
+            function ($matches) {
+                return "\\" . $matches[0];
+            }, $string);
+
+        return $string;
     }
 }

@@ -55,7 +55,7 @@ function actionStart() {
     
     $info = '<h4>Настройка Robokassa</h4>
        <ol>
-        <li>Зарегистрироваться в <a href="https://www.robokassa.ru/" target="_blank">Robokassa.ru</a>.
+        <li>Зарегистрироваться в <a href="https://partner.robokassa.ru/Reg/Register?PromoCode=01phpshop&culture=ru" target="_blank">Robokassa.ru</a>
         <li>Result Url: <code>http://'.$_SERVER['SERVER_NAME'].'/phpshop/modules/robokassa/payment/result.php</code>
         <li>Метод отсылки данных по Result Url: POST
         <li>Success Url: <code>http://'.$_SERVER['SERVER_NAME'].'/success/</code>

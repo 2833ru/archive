@@ -463,17 +463,21 @@ function tmpGetFile($path) {
  * @param string $name имя переменной для сравнения
  * @param string $typ тип переменной для сравнения [ parser | cookie | session | global | requet]
  */
-function __hide($name, $type = 'parser') {
+function __hide($name, $type = 'parser', $class = 'hide') {
     if ($type == 'parser' and empty($GLOBALS['SysValue']['other'][$name]))
-        echo 'hide';
+        echo $class;
     else if ($type == 'cookie' and ! empty($_COOKIE[$name]))
-        echo 'hide';
+        echo $class;
     else if ($type == 'session' and ! empty($_SESSION[$name]))
-        echo 'hide';
+        echo $class;
     else if ($type == 'global' and ! empty($GLOBALS[$name]))
-        echo 'hide';
+        echo $class;
     else if ($type == 'requet' and ! empty($_REQUEST[$name]))
-        echo 'hide';
+        echo $class;
+    else if ($type == 'isset' and isset($GLOBALS['SysValue']['other'][$name]))
+        echo $class;
+    else if ($type == 'class' and isset($GLOBALS['SysValue']['other'][$name]))
+        echo $class;
 }
 
 ?>

@@ -13,7 +13,7 @@ $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
 $PHPShopSystem = new PHPShopSystem();
 
 function getFotoIconPodrobno($n, $f) {
-    global $SysValue, $FotoArray, $link_db;
+    global $SysValue, $FotoArray, $link_db,$PHPShopSystem;
 
     $fRComSatrt = null;
     $sql = "select * from " . $SysValue['base']['foto'] . " where parent='" . intval($n) . "' order by num";
@@ -25,7 +25,7 @@ function getFotoIconPodrobno($n, $f) {
         $name_b = str_replace(".", "_big.", $name);
 
         // Подбор исходного изображения
-        if (!@fopen("http://" . $_SERVER['HTTP_HOST'] . $name_b, "r"))
+        if (!$PHPShopSystem->ifSerilizeParam('admoption.image_save_source') or ! file_exists($_SERVER['DOCUMENT_ROOT'] . $name_b))
             $name_b = $name;
 
         $id = $row['id'];

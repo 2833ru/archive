@@ -130,7 +130,7 @@ if (PHPShopSecurity::true_param($_GET['tip'], $_GET['orderId'], $_GET['datas']))
     PHPShopParser::set('org_inn', $PHPShopSystem->getSerilizeParam('bank.org_inn'));
     PHPShopParser::set('org_adres', $PHPShopSystem->getSerilizeParam('bank.org_adres'));
     PHPShopParser::set('org_ur_adres', $PHPShopSystem->getSerilizeParam('bank.org_ur_adres'));
-    PHPShopParser::set('date', date("d-m-y"));
+    PHPShopParser::set('date', PHPShopDate::dataV($datas, false));
     PHPShopParser::set('logo', $PHPShopSystem->getLogo(true));
     PHPShopParser::set('telNum', $PHPShopSystem->getValue('tel'));
     PHPShopParser::set('name', $PHPShopSystem->getValue('name'));

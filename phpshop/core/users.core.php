@@ -643,7 +643,7 @@ class PHPShopUsers extends PHPShopCore {
                 $title = __('Восстановление пароля пользователя') . " " . $_POST['login'];
 
                 // Отправка e-mail пользователю
-                $PHPShopMail = new PHPShopMail($data['login'], $this->PHPShopSystem->getParam('adminmail2'), $title, '', true, true);
+                $PHPShopMail = new PHPShopMail($data['login'], $this->PHPShopSystem->getEmail(), $title, '', true, true);
 
                 // Содержание e-mail пользователю
                 $content = ParseTemplateReturn('./phpshop/lib/templates/users/mail_sendpassword.tpl', true);

@@ -30,6 +30,10 @@ function actionStart() {
 
     if (is_array($data))
         foreach ($data as $row) {
+        
+            if(empty($row['order_id']))
+                $row['status']=__('Ошибка передачи заказа');
+        
             $PHPShopInterface->setRow(array('name' => $row['type'], 'link' => '?path=modules.dir.grastinwidget&id=' . $row['id']), array('name' => $row['order_id'], 'link' => '?path=order&id=' . $id[$row['order_id']]), PHPShopDate::get($row['date'], true), $row['status']);
         }
     $PHPShopInterface->Compile();

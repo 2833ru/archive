@@ -79,12 +79,8 @@ function tab_headers($row) {
 <input  type="button" value="'.__('Каталог').'" onclick="ShablonAdd(\'@Catalog@\',\'Shablon\')" class="buttonSh">
 <input  type="button" value="'.__('Подкаталог').'" onclick="ShablonAdd(\'@Podcatalog@\',\'Shablon\')" class="buttonSh">
 <input  type="button" value="'.__('Товар').'" onclick="ShablonAdd(\'@Product@\',\'Shablon\')" class="buttonSh">
+<input  type="button" value="'.__('Цена').'" onclick="ShablonAdd(\'@Price@\',\'Shablon\')" class="buttonSh">
 <input type="button"   value="'.__('Общий').'" onclick="ShablonAdd(\'@System@\',\'Shablon\')" class="buttonSh">
-<input type="button" value="," onclick="ShablonAdd(\',\',\'Shablon\')" class="buttonSh">
-<input type="button" value="-" onclick="ShablonAdd(\'-\',\'Shablon\')" class="buttonSh">
-<input type="button" value="/" onclick="ShablonAdd(\'/\',\'Shablon\')" class="buttonSh">
-<input type="button"  value="'.__('Пробел').'" onclick="ShablonAdd(\' \',\'Shablon\')" class="buttonSh">
-<input type="button"  value="'.__('Ввести слово').'" onclick="ShablonPromt(\'Shablon\')" class="buttonSh">
 <input type="button"  value="'.__('Сбросить').'" onclick="ShablonDell(\'Shablon\')" class="buttonSh">
    </div>
 </div>
@@ -104,12 +100,8 @@ function tab_headers($row) {
 <input type="button"  value="'.__('Каталог').'" onclick="ShablonAdd(\'@Catalog@\',\'ShablonD\')" class="buttonSh">
 <input type="button"  value="'.__('Подкаталог').'" onclick="ShablonAdd(\'@Podcatalog@\',\'ShablonD\')" class="buttonSh">
 <input  type="button" value="'.__('Товар').'" onclick="ShablonAdd(\'@Product@\',\'ShablonD\')" class="buttonSh">
+<input  type="button" value="'.__('Цена').'" onclick="ShablonAdd(\'@Price@\',\'ShablonD\')" class="buttonSh">
 <input type="button"  value="'.__('Общий').'" onclick="ShablonAdd(\'@System@\',\'ShablonD\')" class="buttonSh">
-<input type="button" value="," onclick="ShablonAdd(\',\',\'ShablonD\')" class="buttonSh">
-<input type="button" value="-" onclick="ShablonAdd(\'-\',\'ShablonD\')" class="buttonSh">
-<input type="button" value="/" onclick="ShablonAdd(\'/\',\'ShablonD\')" class="buttonSh">
-<input type="button"  value="'.__('Пробел').'" onclick="ShablonAdd(\' \',\'ShablonD\')" class="buttonSh">
-<input type="button"  value="'.__('Ввести слово').'" onclick="ShablonPromt(\'ShablonD\')" class="buttonSh">
 <input type="button"  value="'.__('Сбросить').'" onclick="ShablonDell(\'ShablonD\')" class="buttonSh">
  </div>
 </div>
@@ -130,13 +122,9 @@ function tab_headers($row) {
 <input type="button"  value="'.__('Каталог').'" onclick="ShablonAdd(\'@Catalog@\',\'ShablonK\')" class="buttonSh">
 <input type="button"  value="'.__('Подкаталог').'" onclick="ShablonAdd(\'@Podcatalog@\',\'ShablonK\')" class="buttonSh">
 <input  type="button" value="'.__('Товар').'" onclick="ShablonAdd(\'@Product@\',\'ShablonK\')" class="buttonSh">
+<input  type="button" value="'.__('Цена').'" onclick="ShablonAdd(\'@Price@\',\'ShablonK\')" class="buttonSh">
 <input type="button"  value="'.__('Общий').'" onclick="ShablonAdd(\'@System@\',\'ShablonK\')" class="buttonSh">
 <input type="button"  value="'.__('Автопобор').'" onclick="ShablonAdd(\'@Generator@\',\'ShablonK\')" class="buttonSh">
-<input type="button" value="," onclick="ShablonAdd(\',\',\'ShablonK\')" class="buttonSh">
-<input type="button" value="-" onclick="ShablonAdd(\'-\',\'ShablonK\')" class="buttonSh">
-<input type="button" value="/" onclick="ShablonAdd(\'/\',\'ShablonK\')" class="buttonSh">
-<input type="button"  value="'.__('Пробел').'" onclick="ShablonAdd(\' \',\'ShablonK\')" class="buttonSh">
-<input type="button"  value="'.__('Слово').'" onclick="ShablonPromt(\'ShablonK\')" class="buttonSh">
 <input type="button"  value="'.__('Сбросить').'" onclick="ShablonDell(\'ShablonK\')" class="buttonSh">
 </div>
 </div>

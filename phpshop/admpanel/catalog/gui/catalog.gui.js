@@ -114,14 +114,14 @@ $().ready(function () {
     $('#adminModal').on('hidden.bs.modal', function (event) {
         $('.product-modal-content').attr('src', null);
 
-            if (adminModal.is_change) {
-                var cat = adminModal.window.$('[name=category_new]').selectpicker('val');
-                if (cat > 0)
-                    parent.window.location.href = '?path=catalog&cat=' + cat;
-                else
-                    parent.window.location.reload();
-            }
-        
+        if (adminModal.is_change) {
+            var cat = adminModal.window.$('[name=category_new]').selectpicker('val');
+            if (cat > 0)
+                parent.window.location.href = '?path=catalog&cat=' + cat;
+            else
+                parent.window.location.reload();
+        }
+
 
     });
 
@@ -139,7 +139,7 @@ $().ready(function () {
             event.preventDefault();
             window.location.href = '?path=catalog&id=' + $.cookie('cat');
         }
-        
+
     });
 
     // Дерево категорий
@@ -386,6 +386,33 @@ $().ready(function () {
         $('#selectModal input:checkbox').each(function () {
             this.checked = true;
         });
+    });
+
+    // Копировать ID с выбранными
+    $(".select-action .copy-id-select").on('click', function (event) {
+        event.preventDefault();
+
+        if ($('#data input[name="items"]:checkbox:checked').length) {
+            var data = '';
+            $('#data input[name="items"]:checkbox:checked').each(function () {
+                if (this.value != 'all')
+                    data += $(this).attr('data-id') + ',';
+            });
+
+            var $tmp = $("<textarea>");
+            $("body").append($tmp);
+            $tmp.val(data.substring(0,data.length - 1)).select();
+            document.execCommand("copy");
+            $tmp.remove();
+
+            $.MessageBox({
+                buttonDone: locale.close,
+                message: locale.copy
+            });
+
+
+        } else
+            alert(locale.select_no);
     });
 
     // Редактировать с выбранными - 1 шаг

@@ -35,7 +35,7 @@ function actionStart() {
 
             $PHPShopInterface->setRow(
                 $row['id'],
-                ['name' => $row['name'], 'align' => 'left', 'link' => $GLOBALS['SysValue']['dir']['dir'] . '/search/?words=' . $row['name'] . '&cat=' . $row['cat'] . '&set=' . $row['set'], 'target' => '_blank'],
+                ['name' => substr($row['name'],0,30), 'align' => 'left', 'link' => $GLOBALS['SysValue']['dir']['dir'] . '/search/?words=' . $row['name'] . '&cat=' . $row['cat'] . '&set=' . $row['set'], 'target' => '_blank'],
                 PHPShopDate::get($row['datas'], true),
                 ['name' => $row['ip'], 'align' => 'center'],
                 ['action' => ['delete','|', 'add-search-base', 'id' => $row['id']], 'align' => 'center'],

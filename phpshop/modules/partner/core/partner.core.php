@@ -1,8 +1,5 @@
 <?php
 
-if (!defined("OBJENABLED"))
-    exit(header('Location: /?error=OBJENABLED'));
-
 class PHPShopPartner extends PHPShopCore {
 
     /**
@@ -219,10 +216,13 @@ class PHPShopPartner extends PHPShopCore {
             if (!empty($row['id'])) {
                 $_SESSION['partnerName'] = $row['login'];
                 $_SESSION['partnerId'] = $row['id'];
+            } else {
+                $this->set('Error', PHPShopText::alert(__("Ошибка авторизации, повторите попытку ввода E-mail и Пароля")));
             }
+        } else
+            $this->set('Error', PHPShopText::alert(__("Ошибка авторизации, повторите попытку ввода E-mail и Пароля")));
 
-            $this->index();
-        }
+        $this->index();
     }
 
     /**
@@ -257,28 +257,35 @@ class PHPShopPartner extends PHPShopCore {
 
         $login = PHPShopSecurity::TotalClean($_POST['login'], 2);
 
-        // Выборка данных
-        $PHPShopOrm = new PHPShopOrm($this->objBase);
-        $PHPShopOrm->Option['where'] = ' OR ';
-        $row = $PHPShopOrm->select(array('*'), array('login' => "='" . $login . "'"), false, array('limit' => 1));
+        if (PHPShopSecurity::true_email($login)) {
 
-        if (!empty($row['login'])) {
+            // Выборка данных
+            $PHPShopOrm = new PHPShopOrm($this->objBase);
+            $PHPShopOrm->Option['where'] = ' OR ';
+            $row = $PHPShopOrm->select(array('*'), array('login' => "='" . $login . "'"), false, array('limit' => 1));
 
-            PHPShopObj::loadClass("mail");
-            $zag = __("Напоминание пароля в ") . $this->PHPShopSystem->getValue("name");
-            $content = __('Доброго времени, ') . $row['login'] . '
-----------------
+            if (!empty($row['login'])) {
 
+                PHPShopObj::loadClass("mail");
+                $zag = __("Напоминание пароля в ") . $this->PHPShopSystem->getValue("name");
+                $content = __('Доброго времени, ') . $row['login'] . '
 Для доступа к сайту http://' . $_SERVER['SERVER_NAME'] . $this->getValue('dir.dir') . '/partner/ используйте данные:
 Логин: ' . $row['login'] . '
 Пароль: ' . base64_decode($row['password']) . '
-
----
 ';
+                $this->set('message', nl2br($content));
 
-            // Сообщение пользователю
-            $PHPShopMail = new PHPShopMail($row['login'], $this->PHPShopSystem->getValue("admin_mail"), $zag, $content);
+                // Отправка e-mail пользователю
+                $PHPShopMail = new PHPShopMail($row['login'], $this->PHPShopSystem->getEmail(), $zag, '', true, true);
+
+                $content = ParseTemplateReturn('./phpshop/lib/templates/order/blank.tpl', true);
+                $PHPShopMail->sendMailNow($content);
+
+                $this->set('Error', PHPShopText::alert(__("Сообщение с паролем отправлено")));
+            }
         }
+
+        $this->index();
     }
 
     /**
@@ -359,23 +366,23 @@ class PHPShopPartner extends PHPShopCore {
     function add_user() {
         $mes = null;
 
-        $login = PHPShopSecurity::TotalClean($_POST['login'], 3);
-        $password = PHPShopSecurity::TotalClean($_POST['password'], 2);
+        $login = $_POST['login'];
+        $password = $_POST['password'];
 
         if ($this->security()) {
-            if (PHPShopSecurity::true_param($login, $password) and PHPShopSecurity::true_email($login)) {
+            if (PHPShopSecurity::true_email($login) and PHPShopSecurity::true_passw($password)) {
 
                 // проверка на уникальность имени
                 if ($this->chek($login)) {
 
                     $PHPShopOrm = new PHPShopOrm($this->objBase);
                     $PHPShopOrm->debug = $this->debug;
-                    $PHPShopOrm->insert(array('date' => date("d-m-y"), 'login' => $login, 'password' => base64_encode($password), 'enabled' => '1'), $prefix = '');
+                    $_SESSION['partnerId'] = $PHPShopOrm->insert(array('date' => date("d-m-y"), 'login' => $login, 'password' => base64_encode($password), 'enabled' => '1'), '');
 
-                    // Переход в личный кабинет
-                    $this->enter(true);
-                }
-                else
+                    $_SESSION['partnerName'] = $login;
+
+                    $this->index();
+                } else
                     $mes = __('Партнер с таким логином уже зарегистрирован');
             } else
                 $mes = __('Ошибка заполнения формы регистрации');

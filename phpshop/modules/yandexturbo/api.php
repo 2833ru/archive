@@ -33,10 +33,21 @@ function setYandexcartLog($data) {
         'order_id_new' => $data['parameters']['order']['id'],
         'date_new' => time(),
         'status_new' => $data['order']['status'],
-        'path_new' => $_SERVER["PATH_INFO"]
+        'path_new' => $_SERVER["PATH_INFO"],
+        'yandex_order_id_new' => $data['parameters']['order']['yandex_order_id']
     );
 
     $PHPShopOrm->insert($log);
+}
+
+function generatePassword($length = 8) {
+    $chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    $numChars = strlen($chars);
+    $string = '';
+    for ($i = 0; $i < $length; $i++) {
+        $string .= substr($chars, rand(1, $numChars) - 1, 1);
+    }
+    return base64_encode($string);
 }
 
 // Настройки модуля
@@ -47,10 +58,22 @@ $jsonOptions = unserialize($option['options']);
 // Входящие данные
 $data = json_decode(file_get_contents('php://input'), true);
 
-// Авторизация
+// Авторизация APACHE
 $headers = apache_request_headers();
+
+// Авторизация CGI
+if (!isset($headers['Authorization'])) {
+    $headers = explode("/", $_GET['token']);
+    if (is_array($headers)) {
+        $headers['Authorization'] = $headers[0];
+        $_SERVER["PATH_INFO"] = '/' . $headers[1] . '/' . $headers[2];
+    }
+}
+
 if ($option['auth_token'] !== $headers['Authorization']) {
     $data['order']['status'] = 'Invalid token';
+    $data['parameters'] = $headers;
+
     setYandexcartLog($data);
     header("HTTP/1.1 403 Unauthorized");
     die('Invalid token');
@@ -84,9 +107,17 @@ switch ($_SERVER["PATH_INFO"]) {
         $order["Cart"]["sum"] = $sum;
 
         // Доставка
-        $deliveryId = $option['delivery_id'];
+        if (strstr(PHPShopString::utf8_win1251($data['order']['notes']), 'Почтой'))
+            $deliveryId = $option['delivery_id_post'];
+        elseif (strstr(PHPShopString::utf8_win1251($data['order']['notes']), 'Курьером'))
+            $deliveryId = $option['delivery_id'];
+        elseif (strstr(PHPShopString::utf8_win1251($data['order']['notes']), 'Самовывоз'))
+            $deliveryId = $option['delivery_id_pickup'];
+        else
+            $deliveryId = $option['delivery_id'];
+
         $orm = new PHPShopOrm($GLOBALS['SysValue']['base']['delivery']);
-        $delivery = $orm->getOne(['*'], ['id' => '="' . $option['delivery_id'] . '"']);
+        $delivery = $orm->getOne(['*'], ['id' => '="' . $deliveryId . '"']);
         $order["Cart"]["dostavka"] = yandexDeliveryPrice($delivery, $sum, $weight);
 
         // Номер заказа
@@ -145,10 +176,11 @@ switch ($_SERVER["PATH_INFO"]) {
         $insert['orders_new'] = serialize($order);
         $insert['yandex_order_id_new'] = $data['order']['id'];
         $insert['sum_new'] = $sum + $order["Cart"]["dostavka"];
-        $insert['dop_info_new'] = PHPShopString::utf8_win1251('Яндекс.Турбо Заказ №'.$data['order']['id'].'
-'.$data['order']['notes']);
+        $insert['dop_info_new'] = PHPShopString::utf8_win1251('Яндекс.Турбо Заказ №' . $data['order']['id'] . '
+' . $data['order']['notes']);
 
         // Запись заказа в БД
+        $data['order']['yandex_order_id'] = $insert['yandex_order_id_new'];
         $data['order']['id'] = $PHPShopOrm->insert($insert);
 
         $result['order'] = array(
@@ -168,6 +200,34 @@ switch ($_SERVER["PATH_INFO"]) {
         // Проведен
         if ($data['order']['status'] === 'PROCESSING') {
 
+            // Проверка пользователя
+            $PHPShopUsersOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['shopusers']);
+            $user_data = $PHPShopUsersOrm->getOne(['id'], ['mail' => '="' . $data['order']['buyer']['email'] . '"']);
+
+            // Новый пользователь
+            if (empty($user_data['id'])) {
+                $PHPShopUsersOrm->clean();
+                $insert_user['login_new'] = $insert_user['mail_new'] = $data['order']['buyer']['email'];
+                $insert_user['datas_new'] = time();
+                $insert_user['name_new'] = PHPShopString::utf8_win1251($data['order']['buyer']['name']);
+                $insert_user['tel_new'] = $data['order']['buyer']['phone'];
+                $insert_user['password_new'] = generatePassword();
+                $insert_user['enabled_new'] = 1;
+                $user_data['id'] = $PHPShopUsersOrm->insert($insert_user);
+
+                // Письмо с паролями
+                PHPShopParser::set('user_mail',$insert_user['login_new']);
+                PHPShopParser::set('user_name', $insert_user['name_new']);
+                PHPShopParser::set('user_login', $insert_user['login_new']);
+                PHPShopParser::set('user_password', base64_decode($insert_user['password_new']));
+
+                $title =  __("Активация регистрации пользователя")." ". $insert_user['name_new'];
+                $PHPShopMail = new PHPShopMail($insert_user['login_new'], $PHPShopSystem->getParam('adminmail2'), $title, $content, true, true);
+                $content = PHPShopParser::file($_classPath.'lib/templates/users/mail_user_register_success.tpl', true);
+                $PHPShopMail->sendMailNow($content);
+            }
+
+
             $row = (new PHPShopOrm($GLOBALS['SysValue']['base']['orders']))
                     ->getOne(['*'], ['yandex_order_id' => sprintf("='%s'", $data['order']['id'])]);
 
@@ -175,7 +235,8 @@ switch ($_SERVER["PATH_INFO"]) {
             $update['statusi_new'] = $jsonOptions['statuses'];
             $update['fio_new'] = PHPShopString::utf8_win1251($data['order']['buyer']['name']);
             $update['tel_new'] = $data['order']['buyer']['phone'];
-            
+            $update['user_new'] = $user_data['id'];
+
             $order = unserialize($row['orders']);
             $order["Person"]['mail'] = $data['order']['buyer']['email'];
             $update['orders_new'] = serialize($order);
@@ -187,6 +248,7 @@ switch ($_SERVER["PATH_INFO"]) {
             new PHPShopMail($PHPShopSystem->getEmail(), $PHPShopSystem->getEmail(), 'Поступил заказ №' . $row['uid'], 'Заказ оформлен на Яндекс.Турбо', false, false);
         }
 
+        $data['order']['yandex_order_id'] = $data['order']['id'];
         $data['order']['id'] = $row['id'];
 
         setYandexcartLog([

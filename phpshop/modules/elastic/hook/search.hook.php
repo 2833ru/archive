@@ -65,34 +65,34 @@ function words_elastic_hook($obj, $request, $route)
         }
 
         $grid = '';
-        if((int) Elastic::getOption('search_show_informer_string') === 1) {
-            $obj->set('elastic_categories_count', is_array($categoryIds) && count($categoryIds) > 0 ? count($categoryIds) : 0);
-            $obj->set('elastic_products_count', $result['total']);
-            $grid = PHPShopParser::file($GLOBALS['SysValue']['templates']['elastic']['search_informer_string'], true, false, true);
-        }
 
         // Блок "Найдено в категориях".
-        if(is_array($categoryIds) && count($categoryIds) > 0 && ((int) Elastic::getOption('find_in_categories') === 1 || (int) Elastic::getOption('find_in_categories') === 2)) {
-            $categories = array_column((new PHPShopOrm('phpshop_categories'))->getList(
-                ['id', 'name', 'icon'],
-                ['id' => sprintf(' IN (%s)', implode(',', $categoryIds))],
-                ['order' => sprintf(' FIELD(id, %s)', implode(',', $categoryIds))]), null, 'id');
+        if(is_array($categoryIds) && count($categoryIds) > 0) {
+            $categories = Elastic::getCategoriesByIds($categoryIds);
 
-            $categoriesHtml = '';
-            if(count($result['categories']) > 0) {
-                foreach ($result['categories'] as $cat) {
-                    if(isset($categories[$cat['key']])) {
-                        $obj->set('elastic_category_title', $categories[$cat['key']]['name']);
-                        $obj->set('elastic_category_count', $cat['doc_count']);
-                        $obj->set('elastic_category_icon', $categories[$cat['key']]['icon']);
-                        $obj->set('elastic_category_url', '/search/' . "?words=" . $query . "&pole=" . $pole . "&p=" . $page . "&cat=" . $categories[$cat['key']]['id']);
+            if((int) Elastic::getOption('search_show_informer_string') === 1) {
+                $obj->set('elastic_categories_count', is_array($categories) && count($categories) > 0 ? count($categories) : 0);
+                $obj->set('elastic_products_count', $result['total']);
+                $grid = PHPShopParser::file($GLOBALS['SysValue']['templates']['elastic']['search_informer_string'], true, false, true);
+            }
 
-                        $categoriesHtml .=  PHPShopParser::file(ElasticSearch::getCategoriesTemplate(), true, false, true);
+            if ((int) Elastic::getOption('find_in_categories') === 1 || (int) Elastic::getOption('find_in_categories') === 2) {
+                $categoriesHtml = '';
+                if(count($result['categories']) > 0) {
+                    foreach ($result['categories'] as $cat) {
+                        if(isset($categories[$cat['key']])) {
+                            $obj->set('elastic_category_title', $categories[$cat['key']]['name']);
+                            $obj->set('elastic_category_count', $cat['doc_count']);
+                            $obj->set('elastic_category_icon', $categories[$cat['key']]['icon']);
+                            $obj->set('elastic_category_url', '/search/' . "?words=" . $query . "&pole=" . $pole . "&p=" . $page . "&cat=" . $categories[$cat['key']]['id']);
+
+                            $categoriesHtml .=  PHPShopParser::file(ElasticSearch::getCategoriesTemplate(), true, false, true);
+                        }
                     }
-                }
 
-                $obj->set('elastic_search_categories', $categoriesHtml);
-                $grid .= PHPShopParser::file(ElasticSearch::getCategoriesWrapperTemplate(), true, false, true);
+                    $obj->set('elastic_search_categories', $categoriesHtml);
+                    $grid .= PHPShopParser::file(ElasticSearch::getCategoriesWrapperTemplate(), true, false, true);
+                }
             }
         }
 
