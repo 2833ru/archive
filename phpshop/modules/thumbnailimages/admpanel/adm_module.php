@@ -22,13 +22,23 @@ function actionGenerateOriginal() {
     $thumbnailImages = new ThumbnailImages();
     $result = $thumbnailImages->generateOriginal();
 
+    if((int) $result['count'] < (int) $data['limit']) {
+        $message = '<div class="alert alert-success" id="rules-message"  role="alert">' .
+            __(sprintf('Обработано изображений: с %s до %s. Все доступные изображения обработаны. Следующее нажатие кнопки запустит операцию с 0.', (int) $data['processed'], (int) $data['processed'] + (int) $result['count']))
+            . '</div>';
+    }
+
     if('original' !== $data['last_operation']) {
         $data['processed'] = 0;
     }
 
-    echo '<div class="alert alert-success" id="rules-message"  role="alert">' .
-        __(sprintf('Выполнено. Обработано изображений: с %s до %s', (int) $data['processed'], (int) $data['processed'] + (int) $result['count']))
-        . '</div>';
+    if(!isset($message)) {
+        $message = '<div class="alert alert-success" id="rules-message"  role="alert">' .
+            __(sprintf('Выполнено. Обработано изображений: с %s до %s', (int) $data['processed'], (int) $data['processed'] + (int) $result['count']))
+            . '</div>';
+    }
+
+    echo $message;
 
     if(count($result['skipped']) > 0) {
         $skipped = '';
@@ -47,13 +57,23 @@ function actionGenerateThumbnail() {
     $thumbnailImages = new ThumbnailImages();
     $result = $thumbnailImages->generateThumbnail();
 
+    if((int) $result['count'] < (int) $data['limit']) {
+        $message = '<div class="alert alert-success" id="rules-message"  role="alert">' .
+            __(sprintf('Обработано изображений: с %s до %s. Все доступные изображения обработаны. Следующее нажатие кнопки запустит операцию с 0.', (int) $data['processed'], (int) $data['processed'] + (int) $result['count']))
+            . '</div>';
+    }
+
     if('thumb' !== $data['last_operation']) {
         $data['processed'] = 0;
     }
 
-    echo '<div class="alert alert-success" id="rules-message"  role="alert">' .
-        __(sprintf('Выполнено. Обработано изображений: с %s до %s', (int) $data['processed'], (int) $data['processed'] + (int) $result['count']))
-        . '</div>';
+    if(!isset($message)) {
+        $message = '<div class="alert alert-success" id="rules-message"  role="alert">' .
+            __(sprintf('Выполнено. Обработано изображений: с %s до %s', (int) $data['processed'], (int) $data['processed'] + (int) $result['count']))
+            . '</div>';
+    }
+
+    echo $message;
 
     if(count($result['skipped']) > 0) {
         $skipped = '';

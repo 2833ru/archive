@@ -6,7 +6,7 @@ include($_classPath . "class/obj.class.php");
 PHPShopObj::loadClass(array("base", "system", "admgui", "orm", "date", "xml", "security", "string", "parser", "mail", "lang", "order"));
 $subpath[0] = 'order';
 
-$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, false);
+$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, true);
 $PHPShopBase->chekAdmin();
 
 PHPShopObj::loadClass('valuta');
@@ -33,6 +33,7 @@ else
 PHPShopObj::loadClass('order');
 $PHPShopOrderStatusArray = new PHPShopOrderStatusArray();
 $status_array = $PHPShopOrderStatusArray->getArray();
+$status_array[0]['color'] = '#33A5E7';
 $status[] = __('Новый');
 $order_status_value[] = array(__('Новый'), 0, '');
 
@@ -63,9 +64,9 @@ if (!empty($GLOBALS['SysValue']['base']['returncall']['returncall_jurnal'])) {
 }
 
 if (empty($returncall)) {
-    $PHPShopOrm->sql = 'SELECT id,uid,date,statusi,fio,tel,user,sum FROM ' . $GLOBALS['SysValue']['base']['orders'] . ' UNION SELECT id,2,date,status,null,null,null,message FROM ' . $GLOBALS['SysValue']['base']['notes'] . ' order by date desc limit '.$limit;
+    $PHPShopOrm->sql = 'SELECT id,uid,date,statusi,fio,tel,user,sum FROM ' . $GLOBALS['SysValue']['base']['orders'] . ' UNION SELECT id,2,date,status,null,tel,null,message FROM ' . $GLOBALS['SysValue']['base']['notes'] . ' order by date desc limit '.$limit;
 } else {
-    $PHPShopOrm->sql = 'SELECT id,uid,date,statusi,fio,tel,user,sum FROM ' . $GLOBALS['SysValue']['base']['orders'] . ' UNION SELECT id,1,date,status,message,tel,null,message FROM ' . $GLOBALS['SysValue']['base']['returncall']['returncall_jurnal'] . ' UNION SELECT id,2,date,status,message,null,null,message FROM ' . $GLOBALS['SysValue']['base']['notes'] . ' order by date desc limit '.$limit;
+    $PHPShopOrm->sql = 'SELECT id,uid,date,statusi,fio,tel,user,sum FROM ' . $GLOBALS['SysValue']['base']['orders'] . ' UNION SELECT id,1,date,status,message,tel,null,message FROM ' . $GLOBALS['SysValue']['base']['returncall']['returncall_jurnal'] . ' UNION SELECT id,2,date,status,message,tel,null,message FROM ' . $GLOBALS['SysValue']['base']['notes'] . ' order by date desc limit '.$limit;
 }
 
 // Отладка
@@ -91,7 +92,6 @@ if (is_array($data))
                 $user_link = null;
                 $type = __('Звонок') . ' ' . $row['id'];
                 $link = '?path=modules.dir.returncall&return=lead&id=' . $row['id'];
-                $status_list = $status[$row['statusi']];
                 break;
 
             // Записка
@@ -99,7 +99,6 @@ if (is_array($data))
                 $user_link = null;
                 $type = __('Событие') . ' ' . $row['id'];
                 $link = '?path=lead.kanban&return=lead&id='. $row['id'];
-                $status_list = $status[$row['statusi']];
                 break;
                 
             // Заказ
@@ -107,11 +106,10 @@ if (is_array($data))
                 $user_link = '?path=shopusers&return=lead&id=' . $row['user'];
                 $type = __('Заказ') . ' ' . $row['uid'];
                 $link = '?path=order&return=lead&id=' . $row['id'];
-                $status_list = array('status' => array('enable' => $row['statusi'], 'caption' => $status, 'passive' => true, 'color' => $PHPShopOrder->getStatusColor()), 'sort' => 'statusi', 'block_locale' => true);
         }
 
         $PHPShopInterface->setRow(
-                array('name' => $type, 'link' => $link, 'align' => 'left', 'sort' => 'uid', 'order' => $row['id']), $status_list, array('name' => $datas, 'order' => $row['date'], 'sort' => 'date'), array('name' => $row['fio'], 'sort' => 'fio', 'link' => $user_link), array('name' => $row['tel'], 'sort' => 'tel')
+                array('name' => $type, 'link' => $link, 'align' => 'left', 'sort' => 'uid', 'order' => $row['id']), '<span style="color:'.$status_array[$row['statusi']]['color'].'">'.$status[$row['statusi']].'</span>', array('name' => $datas, 'order' => $row['date'], 'sort' => 'date'), array('name' => $row['fio'], 'sort' => 'fio', 'link' => $user_link), array('name' => $row['tel'], 'sort' => 'tel')
         );
     }
 

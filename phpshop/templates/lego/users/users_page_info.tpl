@@ -1,6 +1,3 @@
-<div id="allspec">
-    @user_error@
-</div>
 
 <form name="users_password" method="post" class="form-horizontal" role="form">
 
@@ -25,11 +22,22 @@
             <span class="btn btn-warning">@user_bonus@ <span class="rubznak">@productValutaName@</span></span>
         </div>
     </div>
-
+    <div class="form-group">
+        <label class="col-xs-12 col-sm-2 control-label">{Имя}</label>
+        <div class="col-xs-8 col-md-9">
+            <input type="text" class="form-control" name="name_new" value="@user_name@">
+        </div>
+    </div>
     <div class="form-group">
         <label class="col-xs-12 col-sm-2 control-label">Email</label>
         <div class="col-xs-8 col-md-9">
-            <input type="email" class="form-control" value="@user_login@" required="" disabled>
+            <input type="mail" class="form-control" name="login_new" value="@user_login@" required="">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-12 col-sm-2 control-label">{Телефон}</label>
+        <div class="col-xs-8 col-md-9">
+            <input type="tel" class="form-control" name="tel_new" value="@user_tel@" @sms_login_control@>
         </div>
     </div>
 
@@ -45,22 +53,14 @@
     <div class="form-group">
         <label class="col-xs-12 col-sm-2 control-label">{Пароль}</label>
         <div class="col-xs-8 col-md-9">
-            <input type="password" class="form-control" name="password_new" value="@user_password@" required="">
+            <input type="password" class="form-control" name="password_new" value="@user_password@" required="" onclick="$(this).attr('type','text')">
         </div>
     </div>
-
-    <div class="form-group" id="password_repeat" class="hidden" style="display: none;">
-        <label class="col-xs-12 col-sm-2 control-label">Повторите пароль:</label>
-        <div class="col-xs-8 col-md-9">
-            <input type="password" class="form-control" name="password_new2" required="">
-        </div>
-    </div>
-
     <div class="form-group">
         <label class="col-sm-2 control-label"></label>
         <div class="col-xs-8">
-            <input type="hidden" value="1" name="update_password">
-            <button type="submit" onclick="$('#password_repeat').slideToggle();" class="btn btn-primary col-xs-12">{Сохранить изменение}</button>
+            <input type="hidden" value="1" name="update_user">
+            <button type="submit" class="btn btn-primary col-xs-12">{Сохранить изменение}</button>
 
         </div>
     </div>

@@ -1,55 +1,17 @@
 <?php
 header('Access-Control-Allow-Origin: *');
 error_reporting(0);
-ISDEKservice::setTarifPriority(
-	array(233, 137, 139, 16, 18, 11, 1, 3, 61, 60, 59, 58, 57, 83),
-    array(234, 136, 138, 15, 17, 10, 12, 5, 62, 63)
-);
-
-/** PHPShop code */
-session_start();
-$_classPath = "../../../";
-include_once($_classPath . "class/obj.class.php");
-include_once($_classPath . "modules/cdekwidget/class/CDEKWidget.php");
-PHPShopObj::loadClass("base");
-PHPShopObj::loadClass("orm");
-PHPShopObj::loadClass("system");
-$PHPShopBase = new PHPShopBase("../../../../phpshop/inc/config.ini");
-$CDEKWidget = new CDEKWidget();
-ISDEKservice::setAuth($CDEKWidget->option['account'], $CDEKWidget->option['password']);
-ISDEKservice::setFee($CDEKWidget->option['fee'], $CDEKWidget->option['fee_type']);
-/** END PHPShop code */
-
-
-$action = $_REQUEST['isdek_action'];
-if (method_exists('ISDEKservice', $action)) {
-	ISDEKservice::$action($_REQUEST);
-}
 
 class ISDEKservice
 {
 	// auth
-	protected static $account = false;
-	protected static $key     = false;
-    private static $fee;
-    private static $fee_type;
+	protected static $account = false; //укажите логин
+	protected static $key     = false; //укажите ключ
+	
 
 	protected static $tarifPriority = false;
 
-    // Данные авторизации
-    public static function setAuth($account, $key)
-    {
-        self::$account = $account;
-        self::$key = $key;
-    }
-
-    public static function setFee($fee = 0, $fee_type = 1) {
-        self::$fee = (int) $fee;
-        self::$fee_type = (int) $fee_type;
-    }
-
-
-    // Workout
+	// Workout
 	public static function setTarifPriority($arCourier, $arPickup)
 	{
 		self::$tarifPriority = array(
@@ -110,28 +72,244 @@ class ISDEKservice
 	public static function getCity($data)
 	{
 		if ($data['city']) {
-			$result = self::sendToCity($data['city']);
-			if ($result && $result['code'] == 200) {
-				$result = json_decode($result['result']);
-				if (!isset($result->geonames)) {
-					self::toAnswer(array('error' => 'No cities found'));
-				} else {
-					self::toAnswer(array(
-						'id'      => $result->geonames[0]->id,
-						'city'    => $result->geonames[0]->cityName,
-						'region'  => $result->geonames[0]->regionName,
-						'country' => $result->geonames[0]->countryName
-					));
-				}
-			} else {
-				self::toAnswer(array('error' => 'Wrong answer code from server : ' . $result['code']));
-			}
-		} else {
+            self::toAnswer(self::getCityByName($data['city']));
+		} elseif($data['address']){
+		    self::toAnswer(self::getCityByAddress($data['address']));
+        } else{
 			self::toAnswer(array('error' => 'No city to search given'));
 		}
 
 		self::printAnswer();
 	}
+
+	protected static function getCityByName($name,$single=true){
+	    $arReturn = array();
+        $result = self::sendToCity($name);
+        if ($result && $result['code'] == 200) {
+            $result = json_decode($result['result']);
+            if (!isset($result->geonames)) {
+                $arReturn = array('error' => 'No cities found');
+            } else {
+                if($single) {
+                    $arReturn = array(
+                        'id'      => $result->geonames[0]->id,
+                        'city'    => $result->geonames[0]->cityName,
+                        'region'  => $result->geonames[0]->regionName,
+                        'country' => $result->geonames[0]->countryName
+                    );
+                } else {
+                    $arReturn['cities'] = array();
+                    foreach ($result->geonames as $city){
+                        $arReturn['cities'][] = array(
+                            'id' => $city->id,
+                            'city' => $city->cityName,
+                            'region' => $city->regionName,
+                            'country' => $city->countryName
+                        );
+                    }
+                }
+            }
+        } else {
+            $arReturn = array('error' => 'Wrong answer code from server : ' . $result['code']);
+        }
+
+        return $arReturn;
+    }
+
+    public static function getCityByAddress($address){
+        $arReturn = array();
+        $arStages = array('country'=>false,'region'=>false,'subregion'=>false);
+        $arAddress = explode(',',$address);
+
+        $ind = 0;
+        // finging country in address
+        if(in_array($arAddress[0],self::getCountries())){
+            $arStages['country'] = mb_strtolower(trim($arAddress[0]));
+            $ind++;
+        }
+        // finding region in address
+        foreach (self::getRegion() as $regionStr){
+            $search = mb_strtolower(trim($arAddress[$ind]));
+            $indSearch = strpos($search,$regionStr);
+            if($indSearch !== false){
+                if($indSearch){
+                    $arStages['region'] = mb_substr($search,0,strpos($search,$regionStr));
+                } else {
+                    $arStages['region'] = mb_substr($search,mb_strlen($regionStr));
+                }
+                $arStages['region'] = trim($arStages['region']);
+                $ind++;
+                break;
+            }
+        }
+        // finding subregions
+        foreach (self::getSubRegion() as $subRegionStr){
+            $search = mb_strtolower(trim($arAddress[$ind]));
+            $indSearch = strpos($search,$subRegionStr);
+            if($indSearch !== false){
+                if($indSearch){
+                    $arStages['subregion'] = mb_substr($search,0,strpos($search,$subRegionStr));
+                } else {
+                    $arStages['subregion'] = mb_substr($search,mb_strlen($subRegionStr));
+                }
+                $arStages['subregion'] = trim($arStages['subregion']);
+                $ind++;
+                break;
+            }
+        }
+        // finding city
+        $cityName = trim($arAddress[$ind]);
+        $cdekCity = self::getCityByName($cityName,false);
+
+        if($cdekCity['error']){
+            foreach(self::getCityDef() as $placeLbl){
+                $search = str_replace('ё', 'е', mb_strtolower(trim($arAddress[$ind])));
+                $indSearch = strpos($search,$placeLbl);
+                if($indSearch !== false){
+                    if($indSearch){
+                        $search = mb_substr($search,0,strpos($search,$placeLbl));
+                    } else {
+                        $search = mb_substr($search,mb_strlen($placeLbl));
+                    }
+                    $search = trim($search);
+                    $cityName = $search;
+                    $cdekCity = self::getCityByName($search,false);
+                    break;
+                }
+            }
+        }
+
+        if($cdekCity['error']){
+            $arReturn['error'] = $cdekCity['error'];
+        } else {
+            if(count($cdekCity['cities']) > 0){
+                $pretend = false;
+                $arPretend = array();
+                // parseCountry
+                if($arStages['country']){
+                    foreach ($cdekCity['cities'] as $arCity) {
+                        $possCountry = mb_strtolower($arCity['country']);
+                        if (!$possCountry || mb_stripos($arStages['country'], $possCountry) !== false) {
+                            $arPretend [] = $arCity;
+                        }
+                    }
+                } else {
+                    $arPretend = $cdekCity['cities'];
+                }
+
+                // parseRegion
+                if(count($arPretend) > 1){
+                    if($arStages['region']) {
+                        $_arPretend = array();
+                        foreach ($arPretend as $arCity) {
+                            $possRegion = str_replace(self::getRegion(), '', mb_strtolower(trim($arCity['region'])));
+                            if(!$possRegion || mb_stripos($possRegion, str_replace(self::getRegion(), '',$arStages['region'])) !== false){
+                                $_arPretend []= $arCity;
+                            }
+                        }
+                        $arPretend = $_arPretend;
+                    }
+                }
+
+                // parseSubRegion
+                if(count($arPretend) > 1){
+                    if($arStages['subregion']) {
+                        $_arPretend = array();
+                        foreach ($arPretend as $arCity) {
+                            $possSubRegion = mb_strtolower($arCity['city']);
+                            if(!$possSubRegion || mb_stripos($possSubRegion,$arStages['subregion']) !== false){
+                                $_arPretend []= $arCity;
+                            }
+                        }
+                        $arPretend = $_arPretend;
+                    }
+                }
+                // parseUndefined
+                    // not full city name
+                if(count($arPretend) > 1) {
+                    $_arPretend = array();
+                    foreach ($arPretend as $arCity) {
+                        if (mb_stripos($arCity['city'], ',') === false) {
+                            $_arPretend [] = $arCity;
+                        }
+                    }
+                    $arPretend = $_arPretend;
+                }
+                if(count($arPretend) > 1){
+                    $_arPretend = array();
+                    foreach ($arPretend as $arCity) {
+                        if(mb_strlen($arCity['city']) === mb_strlen($cityName)){
+                            $_arPretend []= $arCity;
+                        }
+                    }
+                    $arPretend = $_arPretend;
+                }
+                    // federalCities
+                if(count($arPretend) > 1) {
+                    $_arPretend = array();
+                    foreach ($arPretend as $arCity) {
+                        if ($arCity['city'] === $arCity['region']) {
+                            $_arPretend [] = $arCity;
+                        }
+                    }
+                    $arPretend = $_arPretend;
+                }
+
+
+                // end
+                if(count($arPretend) === 1){
+                    $pretend = array_pop($arPretend);
+                }
+            } else {
+                $pretend = $cdekCity['cities'][0];
+            }
+            if($pretend){
+                $arReturn['city'] = $pretend;
+            } else {
+                $arReturn['error'] = 'Undefined city';
+            }
+        }
+        return $arReturn;
+    }
+
+    protected static function getCountries()
+    {
+        return array('Россия', 'Беларусь', 'Армения', 'Казахстан', 'Киргизия', 'Молдова', 'Таджикистан', 'Узбекистан');
+    }
+
+    protected static function getRegion()
+    {
+        return array('автономная область','область','республика','автономный округ','округ','край','обл.');
+    }
+
+    protected static function getSubRegion()
+    {
+        return array('муниципальный район','район','городской округ');
+    }
+
+    protected static function getCityDef()
+    {
+        return [
+            'поселок городского типа',
+            'населенный пункт',
+            'курортный поселок',
+            'дачный поселок',
+            'рабочий поселок',
+            'почтовое отделение',
+            'сельское поселение',
+            'ж/д станция',
+            'станция',
+            'городок',
+            'деревня',
+            'микрорайон',
+            'станица',
+            'хутор',
+            'аул',
+            'поселок',
+            'село',
+            'снт'
+        ];
+    }
 
 	// PVZ
 	protected static function getPVZFile()
@@ -149,8 +327,7 @@ class ISDEKservice
 			return false;
 		}
 
-		$request = self::sendToSDEK('pvzlist', false, 'type=ALL' .(isset($_REQUEST['lang'])? '&lang='.$_REQUEST['lang'] : '') );
-		$arLL = array();
+		$request = self::sendToSDEK('type=ALL' .(isset($_REQUEST['lang'])? '&lang='.$_REQUEST['lang'] : '') );
 		if ($request && $request['code'] == 200) {
 			$xml = simplexml_load_string($request['result']);
 
@@ -164,12 +341,12 @@ class ISDEKservice
 
 				$cityCode = (string)$val['CityCode'];
 				$type = 'PVZ';
-				$city = (string)$val["City"];
+				$city = (string)$val['City'];
 				if (strpos($city, '(') !== false)
-					$city = trim(substr($city, 0, strpos($city, '(')));
+					$city = trim(mb_substr($city, 0, strpos($city, '(')));
 				if (strpos($city, ',') !== false)
-					$city = trim(substr($city, 0, strpos($city, ',')));
-				$code = (string)$val["Code"];
+					$city = trim(mb_substr($city, 0, strpos($city, ',')));
+				$code = (string)$val['Code'];
 
 				$arList[$type][$cityCode][$code] = array(
 					'Name'           => (string)$val['Name'],
@@ -179,8 +356,9 @@ class ISDEKservice
 					'Note'           => (string)$val['Note'],
 					'cX'             => (string)$val['coordX'],
 					'cY'             => (string)$val['coordY'],
-					'Dressing'       => ($val['IsDressingRoom'] == 'true'),
-					'Cash'           => ($val['HaveCashless'] == 'true'),
+					'Dressing'       => ((string)$val['IsDressingRoom'] == 'true'),
+					'Cash'           => ((string)$val['HaveCashless'] == 'true'),
+					'Postamat'       => (strtolower($val['Type']) == 'postamat'),
 					'Station'        => (string)$val['NearestStation'],
 					'Site'           => (string)$val['Site'],
 					'Metro'          => (string)$val['MetroStation'],
@@ -195,14 +373,9 @@ class ISDEKservice
 				}
 
 				$arImgs = array();
-				if (!is_array($val->OfficeImage)) {
-					$arToCheck = array(array('url' => (string)$val->OfficeImage['url']));
-				} else {
-					$arToCheck = $val->OfficeImage;
-				}
 
 				foreach ($val->OfficeImage as $img) {
-					if (strstr($_tmpUrl = (string)$img['url'], 'http') === false) {
+					if (strpos($_tmpUrl = (string)$img['url'], 'http') === false) {
 						continue;
 					}
 					$arImgs[] = (string)$img['url'];
@@ -224,7 +397,6 @@ class ISDEKservice
 			}
 
 			krsort($arList['PVZ']);
-
 			return $arList;
 		} elseif ($request) {
 			self::toAnswer(array('error' => 'Wrong answer code from server : ' . $request['code']));
@@ -251,7 +423,7 @@ class ISDEKservice
 
 		if ($shipment['tariffList']) {
 			foreach ($shipment['tariffList'] as $priority => $tarif) {
-				$tarif = intval($tarif);
+				$tarif = (int)$tarif;
 				$arData['tariffList'] [] = array(
 					'priority' => $priority + 1,
 					'id'       => $tarif
@@ -274,14 +446,8 @@ class ISDEKservice
 		$result = self::sendToCalculate($arData);
 
 		if ($result && $result['code'] == 200) {
-			if (!is_null(json_decode($result['result']))) {
-
-			    $result =  json_decode($result['result'], true);
-			    if(self::$fee > 0) {
-                    $result['result']['price'] = self::plusFee($result['result']['price']);
-                }
-
-			    return $result;
+			if (!\is_null(json_decode($result['result']))) {
+				return json_decode($result['result'], true);
 			} else {
 				self::toAnswer(array('error' => 'Wrong server answer'));
 				return false;
@@ -293,15 +459,10 @@ class ISDEKservice
 	}
 
 	// API
-	protected static function sendToSDEK($where, $XML = false, $get = false)
+	protected static function sendToSDEK($get = false)
 	{
-		$where .= '.php' . (($get) ? "?" . $get : '');
-		$where = 'https://integration.cdek.ru/' . $where;
-
-		if ($XML)
-			$XML = array('xml_request' => $XML);
-
-		return self::client($where, $XML);
+		$where = 'https://integration.cdek.ru/pvzlist/v1/xml' . (($get) ? '?' . $get : '');
+		return self::client($where);
 	}
 
 	protected static function getHeaders()
@@ -372,11 +533,12 @@ class ISDEKservice
 				'TERM'       => 'Срок',
 				'PRICE'      => 'Стоимость',
 				'DAY'        => 'дн.',
-				'RUB'        => 'руб.',
+				'RUB'        => ' руб.',
 				'NODELIV'    => 'Нет доставки',
 				'CITYSEARCH' => 'Поиск города',
 				'ALL'        => 'Все',
 				'PVZ'        => 'Пункты выдачи',
+                'POSTOMAT'   => 'Постаматы',
 				'MOSCOW'     => 'Москва',
 				'RUSSIA'     => 'Россия',
 				'COUNTING'   => 'Идет расчет',
@@ -384,6 +546,9 @@ class ISDEKservice
 				'NO_AVAIL'          => 'Нет доступных способов доставки',
 				'CHOOSE_TYPE_AVAIL' => 'Выберите способ доставки',
 				'CHOOSE_OTHER_CITY' => 'Выберите другой населенный пункт',
+
+				'TYPE_ADDRESS'      => 'Уточните адрес',
+				'TYPE_ADDRESS_HERE' => 'Введите адрес доставки',
 
 				'L_ADDRESS' => 'Адрес пункта выдачи заказов',
 				'L_TIME'    => 'Время работы',
@@ -394,8 +559,12 @@ class ISDEKservice
 				'H_PROFILE' => 'Способ доставки',
 				'H_CASH'    => 'Расчет картой',
 				'H_DRESS'   => 'С примеркой',
+				'H_POSTAMAT'   => 'Постаматы СДЭК',
 				'H_SUPPORT' => 'Служба поддержки',
 				'H_QUESTIONS' => 'Если у вас есть вопросы, можете<br> задать их нашим специалистам',
+
+                'ADDRESS_WRONG'   => 'Невозможно определить выбранное местоположение. Уточните адрес из выпадающего списка в адресной строке.',
+                'ADDRESS_ANOTHER' => 'Ознакомьтесь с новыми условиями доставки для выбранного местоположения.'
 		),
 			'eng' => array(
 				'YOURCITY'   => 'Your city',
@@ -409,6 +578,7 @@ class ISDEKservice
 				'CITYSEARCH' => 'Search for a city',
 				'ALL'        => 'All',
 				'PVZ'        => 'Points of self-delivery',
+                'POSTOMAT'   => 'Postamats',
 				'MOSCOW'     => 'Moscow',
 				'RUSSIA'     => 'Russia',
 				'COUNTING'   => 'Calculation',
@@ -426,8 +596,12 @@ class ISDEKservice
 				'H_PROFILE' => 'Shipping method',
 				'H_CASH'    => 'Payment by card',
 				'H_DRESS'   => 'Dressing room',
+                'H_POSTAMAT'   => 'Postamats CDEK',
 				'H_SUPPORT' => 'Support',
 				'H_QUESTIONS' => 'If you have any questions,<br> you can ask them to our specialists',
+
+                'ADDRESS_WRONG' => 'Impossible to define address. Please, recheck the address.',
+                'ADDRESS_ANOTHER' => 'Read the new terms and conditions.'
 			)
 
 		);
@@ -463,15 +637,6 @@ class ISDEKservice
 	{
 		echo json_encode(self::$answer);
 	}
-
-	private static function plusFee($price)
-    {
-        if(self::$fee_type == 1) {
-            return number_format($price  + ($price  * self::$fee  / 100), 0, '.', '');
-        }
-
-        return number_format($price  + self::$fee, 0, '.', '');
-    }
 }
 
 ?>

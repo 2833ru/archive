@@ -83,7 +83,7 @@ $key_name = array(
     'tracking' => 'Код отслеживания',
     'path' => 'Путь каталога',
     'length' => 'Длина',
-    'width' =>'Ширина',
+    'width' => 'Ширина',
     'height' => 'Высота',
     'moysklad_product_id' => 'МойСклад Id'
 );
@@ -341,7 +341,7 @@ function csv_update($data) {
 
                     while (count($category->search) != $category->found) {
                         $PHPShopOrmCat = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
-                        $PHPShopOrmCat->debug=false;
+                        $PHPShopOrmCat->debug = false;
                         $category->search_id = $PHPShopOrmCat->insert(array('name_new' => $category->search[$category->found], 'parent_to_new' => $category->search_id));
                         $category->found++;
                     }
@@ -378,16 +378,16 @@ function csv_update($data) {
                 if (!empty($row['pic_small']))
                     $row['pic_small'] = '/UserFiles/Image/' . $row['pic_small'];
             }
-            
+
 
             // Дополнительные изображения
             if (!empty($_POST['export_imgdelim']) and strstr($row['pic_big'], $_POST['export_imgdelim'])) {
                 $data_img = explode($_POST['export_imgdelim'], $row['pic_big']);
             } else
                 $data_img[] = $row['pic_big'];
-            
+
             if (is_array($data_img)) {
-                
+
                 // Получение ID товара по артикулу
                 if (empty($row['id']) and ! empty($row['uid'])) {
                     $PHPShopOrmProd = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
@@ -409,10 +409,10 @@ function csv_update($data) {
                         // Полный путь к изображениям
                         if (isset($_POST['export_imgpath']))
                             $img = '/UserFiles/Image/' . $img;
-                        
+
                         // Проверка существования изображения
                         $PHPShopOrmImg = new PHPShopOrm($GLOBALS['SysValue']['base']['foto']);
-                        $PHPShopOrmImg->debug=false;
+                        $PHPShopOrmImg->debug = false;
                         $check = $PHPShopOrmImg->select(array('name'), array('name' => '="' . $img . '"', 'parent' => '=' . intval($row['id'])), false, array('limit' => 1));
 
                         // Создаем новую
@@ -501,28 +501,36 @@ function csv_update($data) {
             }
             // Обновление данных
             else {
-                // Обновление по ID
-                if (isset($row['id'])) {
-                    $where = array('id' => '="' . intval($row['id']) . '"');
-                    unset($row['id']);
-                }
 
-                // Обновление по артикулу
-                elseif (isset($row['uid'])) {
-                    $where = array('uid' => '="' . $row['uid'] . '"');
-                    unset($row['uid']);
-                }
+                // Настраиваемый ключ
+                if (!empty($_POST['export_key'])) {
+                    $where = array($_POST['export_key'] => '="' . $row[$_POST['export_key']] . '"');
+                    unset($row[$_POST['export_key']]);
+                } else {
 
-                // Обновление по логину
-                elseif (isset($row['login'])) {
-                    $where = array('login' => '="' . $row['login'] . '"');
-                    unset($row['login']);
-                }
+                    // Обновление по ID
+                    if (isset($row['id'])) {
+                        $where = array('id' => '="' . intval($row['id']) . '"');
+                        unset($row['id']);
+                    }
 
-                // Ошибка
-                else {
-                    unset($row);
-                    return false;
+                    // Обновление по артикулу
+                    elseif (isset($row['uid'])) {
+                        $where = array('uid' => '="' . $row['uid'] . '"');
+                        unset($row['uid']);
+                    }
+
+                    // Обновление по логину
+                    elseif (isset($row['login'])) {
+                        $where = array('login' => '="' . $row['login'] . '"');
+                        unset($row['login']);
+                    }
+
+                    // Ошибка
+                    else {
+                        unset($row);
+                        return false;
+                    }
                 }
 
                 // Списывание со склада
@@ -557,7 +565,6 @@ function csv_update($data) {
                     $PHPShopOrm->debug = false;
                     if ($PHPShopOrm->update($row, $where, '') === true) {
 
-
                         // Обновляем ID в фотогалереи товара по артикулу
                         if (!empty($where['uid']) and is_array($data_img) and $PHPShopOrmImg) {
 
@@ -568,7 +575,7 @@ function csv_update($data) {
                         }
 
                         // Счетчик
-                        $csv_load_count++;
+                        $csv_load_count+=$PHPShopOrm->get_affected_rows();
                     }
                 }
             }
@@ -760,8 +767,13 @@ function actionStart() {
                 $help = null;
             }
 
-            if (!in_array($key, $key_stop))
+            if (!in_array($key, $key_stop)) {
                 $select_value[] = array(ucfirst($name), ucfirst($name), false, $help);
+
+                // Ключ обнвления
+                if ($key != 'id' and $key != 'uid' and $key != 'vendor' and $key != 'vendor_array')
+                    $key_value[] = array(ucfirst($name), $key, false);
+            }
         }
     } else
         $list = '<span class="text-warning hidden-xs">' . __('Недостаточно данных для создания карты полей. Создайте одну запись в нужном разделе в ручном режиме для начала работы') . '.</span>';
@@ -826,7 +838,6 @@ function actionStart() {
     $delim_sortvalue[] = array('#', '#', $export_sortdelim);
     $delim_sortvalue[] = array('@', '@', $export_sortdelim);
     $delim_sortvalue[] = array('$', '$', $export_sortdelim);
-    $delim_sortvalue[] = array('|', '|', $export_sortdelim);
 
     $delim_sort[] = array('/', '/', $export_sortsdelim);
     $delim_sort[] = array('\\', '\\', $export_sortsdelim);
@@ -841,6 +852,8 @@ function actionStart() {
     $code_value[] = array('ANSI', 'ansi', 'selected');
     $code_value[] = array('UTF-8', 'utf', '');
 
+    $key_value[] = array('Id или Артикул', 0, 'selected');
+
     // Закладка 1
     $Tab1 = $PHPShopGUI->setField('Действие', $PHPShopGUI->setSelect('export_action', $action_value, 150, true)) .
             $PHPShopGUI->setField('CSV-разделитель', $PHPShopGUI->setSelect('export_delim', $delim_value, 150, true)) .
@@ -850,6 +863,7 @@ function actionStart() {
             $PHPShopGUI->setField('Обработка изображений', $PHPShopGUI->setCheckbox('export_imgproc', 1, 'Включить', $memory[$_GET['path']]['export_imgproc']), 1, 'Создание тумбнейла и ватермарка', $class) .
             $PHPShopGUI->setField('Разделитель для изображений', $PHPShopGUI->setSelect('export_imgdelim', $delim_imgvalue, 150), 1, 'Дополнительные изображения', $class) .
             $PHPShopGUI->setField('Кодировка текста', $PHPShopGUI->setSelect('export_code', $code_value, 150)) .
+            $PHPShopGUI->setField('Ключ обновления', $PHPShopGUI->setSelect('export_key', $key_value, 150, false, false, true), 1, 'Изменение ключа обновления может привести к порче данных', $class) .
             $PHPShopGUI->setField('Проверка уникальности', $PHPShopGUI->setCheckbox('export_uniq', 1, 'Включить', $memory[$_GET['path']]['export_uniq']), 1, 'Исключает дублирование данных при создании') .
             $PHPShopGUI->setField("Файл", $PHPShopGUI->setFile());
 

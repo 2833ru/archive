@@ -60,7 +60,8 @@ function actionStart() {
     );
 
     $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('SMS уведомления Targetsms.ru', $PHPShopGUI->setField("SMS оповещение", $PHPShopGUI->setCheckbox('option[sms_enabled]', 1, 'Уведомление о заказе администратору', $option['sms_enabled']) . '<br>' .
-                    $PHPShopGUI->setCheckbox('option[notice_enabled]', 1, 'Уведомление о наличии товара пользователям', $option['notice_enabled'])
+                    $PHPShopGUI->setCheckbox('option[notice_enabled]', 1, 'Уведомление о наличии товара пользователям', $option['notice_enabled']).'<br>' .
+            $PHPShopGUI->setCheckbox('option[sms_login]', 1, 'Авторизация по телефону', $option['sms_login']). $PHPShopGUI->setHelp('При включенной опции, в корзине появляется поле Телефон, обязательное для заполнения')
             ) .
             $PHPShopGUI->setField("Мобильный телефон", $PHPShopGUI->setInputText(null, "option[sms_phone]", $option['sms_phone'], 300, false, false, false, '79261234567'), 1, 'Телефон для SMS уведомлений формата 79261234567') .
             $PHPShopGUI->setField("Пользователь", $PHPShopGUI->setInputText(null, "option[sms_user]", $option['sms_user'], 300), 1, 'Пользователь в системе Targetsms.ru') .
@@ -115,7 +116,7 @@ function actionUpdate() {
     $option = unserialize($data['admoption']);
 
     // Корректировка пустых значений
-    $PHPShopOrm->updateZeroVars('option.recaptcha_enabled', 'option.dadata_enabled', 'option.sms_enabled', 'option.sms_status_order_enabled', 'option.notice_enabled', 'option.metrica_enabled', 'option.metrica_widget', 'option.metrica_ecommerce', 'option.google_enabled', 'option.google_analitics', 'option.rss_graber_enabled', 'option.yandexmap_enabled', 'option.push_enabled','option.metrica_webvizor', 'option.yandex_search_enabled');
+    $PHPShopOrm->updateZeroVars('option.recaptcha_enabled', 'option.dadata_enabled', 'option.sms_enabled', 'option.sms_status_order_enabled', 'option.notice_enabled', 'option.metrica_enabled', 'option.metrica_widget', 'option.metrica_ecommerce', 'option.google_enabled', 'option.google_analitics', 'option.rss_graber_enabled', 'option.yandexmap_enabled', 'option.push_enabled','option.metrica_webvizor', 'option.yandex_search_enabled','option.sms_login');
 
     if (is_array($_POST['option']))
         foreach ($_POST['option'] as $key => $val)

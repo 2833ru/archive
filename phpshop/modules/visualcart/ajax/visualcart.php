@@ -1,10 +1,11 @@
 <?php
+
 session_start();
 $_classPath = "../../../";
 
 include($_classPath . "class/obj.class.php");
 PHPShopObj::loadClass("base");
-$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
+$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, false);
 
 PHPShopObj::loadClass("array");
 PHPShopObj::loadClass("orm");
@@ -65,6 +66,10 @@ class AddToTemplateVisualCartAjax {
         if (empty($_SESSION['cart_sig'])) {
             $this->get_memory();
         }
+
+        if (isset($_POST['update'])) {
+            $this->update_memory(true);
+        }
     }
 
     /**
@@ -96,6 +101,33 @@ class AddToTemplateVisualCartAjax {
     }
 
     /**
+     * Обновление брошенной корзины
+     */
+    function update_memory($order = false) {
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['visualcart']['visualcart_memory']);
+        $update['date_new'] = time();
+
+        if (empty($order)) {
+            $update['cart_new'] = serialize($_SESSION['cart']);
+            $update['sum_new'] = $this->PHPShopCart->getSum();
+        }
+
+        if (PHPShopSecurity::true_tel($_POST['tel']))
+            $update['tel_new'] = $_POST['tel'];
+
+        if (PHPShopSecurity::true_email($_POST['mail']))
+            $update['mail_new'] = $_POST['mail'];
+
+        if (!empty($_POST['name']))
+            $update['name_new'] = PHPShopSecurity::TotalClean(PHPShopString::utf8_win1251($_POST['name']));
+
+        $PHPShopOrm->update($update, array('memory' => '="' . $this->memory . '"'));
+
+        if ($order)
+            exit();
+    }
+
+    /**
      * Запись корзины в БД
      */
     function add_memory() {
@@ -103,18 +135,41 @@ class AddToTemplateVisualCartAjax {
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['visualcart']['visualcart_memory']);
         $insert['memory_new'] = $this->memory;
         $insert['date_new'] = time();
-        $insert['user_new'] = $_SESSION['UsersId'];
+
+        if (!empty($_SESSION['UsersId']))
+            $insert['user_new'] = $_SESSION['UsersId'];
+        else
+            $insert['user_new'] = $this->data['user'];
+
         $insert['cart_new'] = serialize($_SESSION['cart']);
+        $insert['sum_new'] = $this->PHPShopCart->getSum();
         $insert['ip_new'] = $_SERVER["REMOTE_ADDR"];
+
+        if (!empty($_SESSION['UsersTel']))
+            $insert['tel_new'] = $_SESSION['UsersTel'];
+        else
+            $insert['tel_new'] = $this->data['tel'];
+
+        if (!empty($_SESSION['UsersLogin']))
+            $insert['mail_new'] = $_SESSION['UsersLogin'];
+        else
+            $insert['mail_new'] = $this->data['mail'];
+
+        if (!empty($_SESSION['UsersName']))
+            $insert['name_new'] = $_SESSION['UsersName'];
+        else
+            $insert['name_new'] = $this->data['name'];
 
         if (isset($_COOKIE['ps_referal']))
             $insert['referal_new'] = base64_decode($_COOKIE['ps_referal']);
+        else
+            $insert['referal_new'] = $this->data['referal'];
 
         $PHPShopOrm->insert($insert);
     }
 
     /**
-     * Номер записи памяти в кукус
+     * Номер записи памяти в cookie
      */
     function add_cookie() {
         setcookie("visualcart_memory", $this->memory, time() + 60 * 60 * 24 * 90, "/", $_SERVER['SERVER_NAME'], 0);
@@ -131,9 +186,10 @@ class AddToTemplateVisualCartAjax {
         if ($this->true_key($_COOKIE['visualcart_memory'])) {
             $this->memory = $_COOKIE['visualcart_memory'];
             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['visualcart']['visualcart_memory']);
-            $data = $PHPShopOrm->select(array('cart'), array('memory' => "='" . $this->memory . "'"), false, array('limit' => 1));
+            $data = $PHPShopOrm->select(array('*'), array('memory' => "='" . $this->memory . "'"), false, array('limit' => 1));
             if (is_array($data)) {
                 $_SESSION['cart'] = unserialize($data['cart']);
+                $this->data = $data;
             }
         }
     }
@@ -206,8 +262,8 @@ function visualcartform($val, $option) {
     PHPShopParser::set('visualcart_product_num', $val['num']);
 
     // Проверка персонального шаблона модуля
-    $path='../templates/product.tpl';
-   $path_template =$_classPath. 'templates/'. $_SESSION['skin'].'/modules/visualcart/templates/product.tpl';
+    $path = '../templates/product.tpl';
+    $path_template = $_classPath . 'templates/' . $_SESSION['skin'] . '/modules/visualcart/templates/product.tpl';
     if (is_file($path_template))
         $path = $path_template;
 
@@ -230,14 +286,14 @@ $visualcart = $AddToTemplateVisualCartAjax->visualcart();
 if (!empty($_SESSION['cart']))
     $_RESULT = array(
         "visualcart" => $visualcart,
-        "sum" => $AddToTemplateVisualCartAjax->PHPShopCart->getSum(true,' '),
+        "sum" => $AddToTemplateVisualCartAjax->PHPShopCart->getSum(true, ' '),
         "num" => $AddToTemplateVisualCartAjax->PHPShopCart->getNum()
     );
 elseif (!empty($_REQUEST['xid']) and empty($_SESSION['cart'])) {
 
     $_RESULT = array(
         "visualcart" => "<tr><td>" . $GLOBALS['SysValue']['lang']['visualcart_empty'] . "</td></tr>",
-        "sum" => $AddToTemplateVisualCartAjax->PHPShopCart->getSum(true,' '),
+        "sum" => $AddToTemplateVisualCartAjax->PHPShopCart->getSum(true, ' '),
         "num" => $AddToTemplateVisualCartAjax->PHPShopCart->getNum()
     );
 }
@@ -248,8 +304,8 @@ setcookie("cart_update_time", '', 0, "/", $_SERVER['SERVER_NAME'], 0);
 if ($_REQUEST['type'] == 'json') {
     $_RESULT['success'] = 1;
     $_RESULT['visualcart'] = PHPShopString::win_utf8($_RESULT['visualcart']);
-    
-    if(!isset($_REQUEST['load']))
-      echo json_encode($_RESULT);
+
+    if (!isset($_REQUEST['load']))
+        echo json_encode($_RESULT);
 }
 ?>

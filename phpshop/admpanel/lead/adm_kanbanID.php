@@ -1,14 +1,14 @@
 <?php
+
 PHPShopObj::loadClass("array");
 PHPShopObj::loadClass("order");
 // SQL
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['notes']);
 $TitlePage = __('Редактирование события ') . ' #' . $_GET['id'];
 
-
 // Начальная функция загрузки
 function actionStart() {
-    global $PHPShopGUI, $PHPShopOrm;
+    global $PHPShopGUI, $PHPShopOrm,$TitlePage;
 
     $PHPShopGUI->field_col = 2;
 
@@ -27,11 +27,15 @@ function actionStart() {
             $order_status_value[] = array($order_status['name'], $order_status['id'], $data['status'], 'data-content="<span class=\'glyphicon glyphicon-text-background\' style=\'color:' . $order_status['color'] . '\'></span> ' . $order_status['name'] . '"');
         }
 
-    $PHPShopGUI->setActionPanel(__("Редактирование События"), array('Удалить'), array('Сохранить и закрыть'));
+    $PHPShopGUI->setActionPanel($TitlePage, array('Удалить'), array('Сохранить и закрыть'));
 
     $Tab1 = $PHPShopGUI->setField("Дата", $PHPShopGUI->setInputDate("date_new", PHPShopDate::dataV($data['date'], false)));
-    $Tab1 .= $PHPShopGUI->setField('Сообщение', $PHPShopGUI->setTextarea('message_new', $data['message'], false, 600));
-    $Tab1 .= $PHPShopGUI->setField('Статус', $PHPShopGUI->setSelect('status_new', $order_status_value, 300) . $help);
+    $Tab1 .= $PHPShopGUI->setField('Статус', $PHPShopGUI->setSelect('status_new', $order_status_value, 300));
+    $Tab1 .= $PHPShopGUI->setField("Имя", $PHPShopGUI->setInput("text", "name_new", $data['name'],null, 300));
+    $Tab1 .= $PHPShopGUI->setField("Телефон", $PHPShopGUI->setInput("text", "tel_new", $data['tel'], null,300));
+    $Tab1 .= $PHPShopGUI->setField("Email", $PHPShopGUI->setInput("email", "mail_new", $data['mail'],null, 300));
+    $Tab1 .= $PHPShopGUI->setField('Заголовок', $PHPShopGUI->setTextarea('message_new', $data['message'], false, 600));
+    $Tab1 .= $PHPShopGUI->setField('Содержание', $PHPShopGUI->setTextarea('content_new', $data['content'], false, 600,200));
     $Tab1 .= $PHPShopGUI->setInput("hidden", "status", $data['status']);
 
 
@@ -61,7 +65,7 @@ function actionSave() {
 
     if (!empty($_POST['ajax']))
         return array('success' => $action);
-    elseif(!empty($_GET['return']))
+    elseif (!empty($_GET['return']))
         header('Location: ?path=' . $_GET['return']);
     else
         header('Location: ?path=' . $_GET['path']);

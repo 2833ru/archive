@@ -179,8 +179,11 @@ function usercartforma($val, $option) {
         $link = '/shop/UID_' . $val['id'] . '.html';
     else
         $link = '/shop/UID_' . $val['parent'] . '.html';
+    
+    if(!empty($val['pic_small']))
+        $img=PHPShopText::img($val['pic_small'],null,'left', 'width:30px;padding-right:5px');
 
-    $dis = PHPShopText::tr(PHPShopText::a($link, $val['name'], $val['name'], false, false, '_blank', 'b'), $val['num'], $val['total'] . ' ' . $option['currency']);
+    $dis = PHPShopText::tr($img.PHPShopText::a($link, $val['name'], $val['name'], false, false, '_blank', 'b'), $val['num'], $val['total'] . ' ' . $option['currency']);
     return $dis;
 }
 

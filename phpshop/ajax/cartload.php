@@ -19,6 +19,7 @@ PHPShopObj::loadClass("cart");
 PHPShopObj::loadClass("security");
 PHPShopObj::loadClass("user");
 PHPShopObj::loadClass("lang");
+PHPShopObj::loadClass("order");
 
 // Подключаем библиотеку поддержки JsHttpRequest
 if($_REQUEST['type'] != 'json'){

@@ -111,6 +111,7 @@ function modulesMenu() {
             $path = $row['path'];
             $menu = "../modules/" . $path . "/install/module.xml";
             $menu_array = xml2array($menu, false, true);
+            $db_podmenu = $podmenu = null;
             $db = $menu_array["adminmenu"];
 
             if (!empty($menu_array['pro']) and empty($_SESSION['mod_pro']))

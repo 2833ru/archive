@@ -50,47 +50,6 @@ require_once($_classPath . 'modules/promotions/inc/promotionselement.inc.php');
 $PHPShopSystem = new PHPShopSystem();
 $currency = $PHPShopSystem->getDefaultValutaCode();
 
-function GetDeliveryPrice($deliveryID, $sum, $weight = 0) {
-    global $SysValue, $link_db;
-
-    if (!empty($deliveryID)) {
-        $sql = "select * from " . $SysValue['base']['delivery'] . " where id='$deliveryID' and enabled='1'";
-        $result = mysqli_query($link_db, $sql);
-        $num = mysqli_num_rows($result);
-        $row = mysqli_fetch_array($result);
-
-        if ($num == 0) {
-            $sql = "select * from " . $SysValue['base']['delivery'] . " where flag='1' and enabled='1'";
-            $result = mysqli_query($link_db, $sql);
-            $row = mysqli_fetch_array($result);
-        }
-    } else {
-        $sql = "select * from " . $SysValue['base']['delivery'] . " where flag='1' and enabled='1'";
-        $result = mysqli_query($link_db, $sql);
-        $row = mysqli_fetch_array($result);
-    }
-
-    if ($row['price_null_enabled'] == 1 and $sum >= $row['price_null']) {
-        return 0;
-    } else {
-        if ($row['taxa'] > 0) {
-            $addweight = $weight - 500;
-            if ($addweight < 0) {
-                $addweight = 0;
-                $at = '';
-            } else {
-                $at = '';
-                //$at='Вес: '.$weight.' гр. Превышение: '.$addweight.' гр. Множитель:'.ceil($addweight/500).' = ';
-            }
-            $addweight = ceil($addweight / 500) * $row['taxa'];
-            $endprice = $row['price'] + $addweight;
-            return $at . $endprice;
-        } else {
-            return $row['price'];
-        }
-    }
-}
-
 // Генератор кодов 10 знаков
 if (trim(mb_strlen($_REQUEST['promocode']) == 10)) {
     $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.promotions.promotions_codes"));
@@ -302,7 +261,7 @@ if ($_REQUEST['promocode'] != '*') {
                             //галочка убрана для бесплатной доставки
                             $_SESSION['freedelivery'] = 1;
                             if ($_REQUEST['dostavka'] > 0)
-                                $delivery = GetDeliveryPrice(intval($_REQUEST['dostavka']), $totalsumma_t, $_REQUEST['wsum']);
+                                $delivery = intval($_REQUEST['dostavka']);
                         endif;
 
                         if ($sumordercheck == 1):
@@ -374,6 +333,23 @@ if ($_REQUEST['promocode'] != '*') {
         foreach ($_SESSION['cart'] as $cartjs) {
             $discountcart[$cartjs['id']]['n'] = $numc;
             $numc++;
+        }
+} else {
+    unset($_SESSION['discpromo']);
+    unset($_SESSION['freedelivery']);
+    unset($_SESSION['tip_disc']);
+    unset($_SESSION['totalsumma']);
+    unset($_SESSION['promocode']);
+    unset($_SESSION['codetip']);
+    unset($_SESSION['discpromo']);
+
+    // Чистка скидки при перезагрузке страницы
+    if(is_array($_SESSION['cart']))
+        foreach($_SESSION['cart'] as $k=>$cart){
+            unset($_SESSION['cart'][$k]['promo_sum']);
+            unset($_SESSION['cart'][$k]['promo_code']);
+            unset($_SESSION['cart'][$k]['discount_tip_sum']);
+            unset($_SESSION['cart'][$k]['promo_percent']);
         }
 }
 

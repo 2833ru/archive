@@ -28,7 +28,7 @@ class PHPShopUsers extends PHPShopCore {
 
         // Список экшенов
         $this->action = array('get' => array('productId', 'noticeId'), 'post' => array('add_notice', 'update_password', 'add_user', 'update_user', 'passw_send'),
-            'name' => array('register', 'order', 'wishlist', 'useractivate', 'sendpassword', 'notice', 'message', 'newsletter'), 'nav' => 'index');
+            'name' => array('register', 'order', 'wishlist', 'useractivate', 'sendpassword', 'notice', 'message', 'newsletter', 'sms'), 'nav' => 'index');
 
         // Префикс для экшенов методов
         $this->action_prefix = 'action_';
@@ -66,6 +66,104 @@ class PHPShopUsers extends PHPShopCore {
         } else {
             // Форма регистрации нового пользователя
             $this->action_register();
+        }
+    }
+
+    /**
+     * Экшен авторизации по SMS
+     */
+    function action_sms() {
+
+        // Проверка режима SMS
+        if ($this->PHPShopSystem->getSerilizeParam("admoption.sms_login") != 1) {
+            $this->setError404();
+            return true;
+        }
+
+        if (PHPShopSecurity::true_tel($_POST['tel'])) {
+
+            $PHPShopOrm = new PHPShopOrm($this->objBase);
+            $PHPShopOrm->debug = false;
+
+            if (!empty($_POST['token'])) {
+                if (!empty($this->true_sms($_POST['tel'], $_POST['token']))) {
+                    header('Location: /users/');
+                    return true;
+                } else
+                    $this->set('user_sms_error', PHPShopText::alert(__('Ошибка проверочного кода в SMS')));
+            }
+
+            $until = time() + 180;
+            $data = $PHPShopOrm->getOne(array('*'), array('tel' => '="' . $_POST['tel'] . '"'));
+
+            if (is_array($data)) {
+                if (!empty($data['tel'])) {
+
+                    // Заносим в базу проверочный SMS 5 символов
+                    if ($data['token_time'] < $until) {
+                        $token_new = substr(rand(10000, 100000), 0, 5);
+                        $PHPShopOrm->update(array('token_new' => $token_new, 'token_time_new' => $until), array('id' => '=' . $data['id']));
+                        $phone = trim(str_replace(array('(', ')', '-', '+', '&#43;'), '', $data['tel']));
+
+                        // Проверка на первую 7 или 8
+                        $first_d = substr($phone, 0, 1);
+                        if ($first_d != 8 and $first_d != 7)
+                            $phone = '7' . $phone;
+
+                        include_once $this->getValue('file.sms');
+                        $msg = __('Проверочный код для авторизации ' . $token_new);
+                        $send = SendSMS($msg, $phone);
+                    }
+
+                    $this->set('userTel', $data['tel']);
+
+                    // Шаблон ввода SMS
+                    if (PHPShopParser::checkFile("users/sms.tpl"))
+                        $this->set('formaContent', ParseTemplateReturn('users/sms.tpl'));
+                    else
+                        $this->set('formaContent', ParseTemplateReturn('phpshop/lib/templates/users/sms.tpl', true));
+
+                    $this->setHook(__CLASS__, __FUNCTION__);
+                }
+            } else {
+
+                $this->set('user_sms_error', PHPShopText::alert(__('Ошибка номера телефона')));
+
+                // Шаблон ввода телефона
+                if (PHPShopParser::checkFile("users/tel.tpl"))
+                    $this->set('formaContent', ParseTemplateReturn('users/tel.tpl'));
+                else
+                    $this->set('formaContent', ParseTemplateReturn('phpshop/lib/templates/users/tel.tpl', true));
+            }
+        }
+        else {
+
+            // Шаблон ввода телефона
+            if (PHPShopParser::checkFile("users/tel.tpl"))
+                $this->set('formaContent', ParseTemplateReturn('users/tel.tpl'));
+            else
+                $this->set('formaContent', ParseTemplateReturn('phpshop/lib/templates/users/tel.tpl', true));
+
+            $this->set('usersError', null);
+        }
+
+
+        $this->set('formaTitle', __('Авторизация по телефону'));
+        $this->ParseTemplate($this->getValue('templates.users_page_list'));
+    }
+
+    /**
+     * Проверка введенного SMS
+     * @param string $sms
+     */
+    function true_sms($tel, $sms) {
+        global $PHPShopUserElement;
+        $PHPShopOrm = new PHPShopOrm($this->objBase);
+        $data = $PHPShopOrm->getOne(array('*'), array('tel' => '="' . $tel . '"', 'token' => '=' . intval($sms)), array('order' => 'id'));
+        if (is_array($data)) {
+            $_POST['login'] = $data['login'];
+            $_POST['password'] = base64_decode($data['password']);
+            return $PHPShopUserElement->autorization();
         }
     }
 
@@ -466,19 +564,27 @@ class PHPShopUsers extends PHPShopCore {
             //  $this->error[] = $this->lang('error_name');
 
             if (count($this->error) == 0) {
-                // обновляем имя в сессии для вывода в топе.
-                $_SESSION['UsersName'] = PHPShopSecurity::TotalClean($_POST['name_new']);
 
-                $this->PHPShopOrm->update(array(
-                    //'mail_new' => $_POST['mail_new'],
-                    'name_new' => PHPShopSecurity::TotalClean($_POST['name_new']),
-                    'company_new' => PHPShopSecurity::TotalClean($_POST['company_new']),
-                    'inn_new' => PHPShopSecurity::TotalClean($_POST['inn_new']),
-                    'tel_new' => PHPShopSecurity::TotalClean($_POST['tel_new']),
-                    'adres_new' => PHPShopSecurity::TotalClean($_POST['adres_new']),
-                    'kpp_new' => PHPShopSecurity::TotalClean($_POST['kpp_new']),
-                    'sendmail_new' => $_POST['sendmail_new'],
-                    'tel_code_new' => PHPShopSecurity::TotalClean($_POST['tel_code_new'])), array('id' => '=' . $_SESSION['UsersId']));
+                if (!empty($_POST['sendmail_new']))
+                    $update['sendmail_new'] = 0;
+                else
+                    $update['sendmail_new'] = 1;
+
+                if (PHPShopSecurity::true_email($_POST['login_new']))
+                    $update['login_new'] = PHPShopSecurity::TotalClean($_POST['login_new']);
+
+                if (PHPShopSecurity::true_tel($_POST['tel_new']))
+                    $update['tel_new'] = PHPShopSecurity::TotalClean($_POST['tel_new']);
+
+                if (!empty($_POST['name_new'])) {
+                    $_SESSION['UsersName'] = PHPShopSecurity::TotalClean($_POST['name_new']);
+                    $update['name_new'] = $_SESSION['UsersName'];
+                }
+
+                if (!empty($_POST['password_new']))
+                    $update['password_new'] = $this->encode($_POST['password_new']);
+
+                $this->PHPShopOrm->update($update, array('id' => '=' . $_SESSION['UsersId']));
 
                 $this->error[] = $this->lang('done');
 
@@ -667,21 +773,20 @@ class PHPShopUsers extends PHPShopCore {
                         $this->set('prodPic', $objProduct->getParam("pic_small"));
 
                     // Проверка подтипа
-                    if ($value > 1){
-        
+                    if ($value > 1) {
+
                         // Данные по родителю
                         $objProductParent = new PHPShopProduct($value);
                         $this->set('prodUid', $value);
-                        
-                        if($this->get('prodPic') == "")
-                           $this->set('prodPic', $objProductParent->getParam("pic_small"));  
-                        
+
+                        if ($this->get('prodPic') == "")
+                            $this->set('prodPic', $objProductParent->getParam("pic_small"));
+
                         $this->set('wishlistCartHide', null);
                     }
-                    elseif($objProduct->getParam("parent") != ""){
+                    elseif ($objProduct->getParam("parent") != "") {
                         $this->set('wishlistCartHide', 'hide');
-                    }
-                    else {
+                    } else {
                         $this->set('prodUid', $key);
                         $this->set('wishlistCartHide', null);
                     }
@@ -707,7 +812,6 @@ class PHPShopUsers extends PHPShopCore {
      * Персональные данные пользователя
      */
     function user_info() {
-
         // Перехват модуля
         if ($this->setHook(__CLASS__, __FUNCTION__, false, 'START'))
             return true;
@@ -725,7 +829,7 @@ class PHPShopUsers extends PHPShopCore {
 
         $this->set('user_login', $this->PHPShopUser->getParam('login'));
         $this->set('user_password', $this->decode($this->PHPShopUser->getParam('password')));
-        $this->set('user_name', $this->PHPShopUser->getName());
+        $this->set('user_name', $this->PHPShopUser->getParam('name'));
         $this->set('user_mail', $this->PHPShopUser->getParam('mail'));
         $this->set('user_company', $this->PHPShopUser->getParam('company'));
         $this->set('user_inn', $this->PHPShopUser->getParam('inn'));

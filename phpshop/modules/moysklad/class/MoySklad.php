@@ -403,7 +403,6 @@ class MoySklad {
             $fields['email'] = $this->order['orders']['Person']['mail'];
         }
         $result = $this->post(self::GET_AGENT, $fields);
-        print_r($result);
         if (!empty($result['id'])) {
             $this->PHPShopOrm->objBase = $GLOBALS['SysValue']['base']['shopusers'];
             $this->PHPShopOrm->_SQL = '';

@@ -130,7 +130,7 @@ function actionStart() {
         if (is_numeric($LicenseUntilUnixTime))
             if ($until_day < 8 and $until_day > 0) {
                 mailNotice('support', $until_day);
-                $search_jurnal = __('До конца месяца для вас действует <b>скидка 50%</b> на продление техподдержки, чтобы вы смогли своевременно получать обновления и технические консультации в течение года.');
+                $search_jurnal = __('До конца месяца, для вас действует льготное продление техподдержки: при оплате полугода, вы получаете целый год техподдержки.');
                 $search_jurnal_title = __('Техническая поддержка заканчивается через') . ' <span class="label label-warning">' . abs(round($until_day)) . '  ' . __('дн.') . '</span><a class="pull-right btn btn-xs btn-default" href="https://www.phpshop.ru/order/" target="_blank"><span class="glyphicon glyphicon-ruble"></span> ' . __('Купить') . '</a>';
                 $search_jurnal_class = 'panel-success';
                 $search_jairnal_icon = 'exclamation-sign';

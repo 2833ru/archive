@@ -720,7 +720,6 @@ class PHPShopShopCore extends PHPShopCore {
 
         // Если товар на складе
         if (empty($row['sklad'])) {
-
             $this->set('Notice', '');
             $this->set('ComStartCart', '');
             $this->set('ComEndCart', '');
@@ -728,32 +727,10 @@ class PHPShopShopCore extends PHPShopCore {
             $this->set('ComEndNotice', PHPShopText::comment('>'));
             $this->set('elementCartHide', null);
             $this->set('elementNoticeHide', 'hide hidden');
-
-            // Если нет новой цены
-            if (empty($row['price_n'])) {
-
-                $this->set('productPrice', $price);
-                $this->set('productPriceRub', null);
-                $this->set('productLabelDiscount', null);
-                $this->set('productPriceOld', null);
-            }
-
-            // Если есть новая цена
-            else {
-                $productPrice = $price;
-                $productPriceNew = $this->price($row, true, false);
-                $this->set('productPrice', $productPrice);
-                $this->set('productPriceRub', PHPShopText::strike($productPriceNew . " " . $this->currency, $this->format));
-                $this->set('productPriceOld', PHPShopText::strike($productPriceNew . " " . $this->currency, $this->format));
-
-                // Метка % скидки 
-                $this->set('productLabelDiscount', '-' . ceil(($row['price_n'] - $row['price']) * 100 / $row['price_n']) . '%');
-            }
         }
 
         // Товар под заказ
         else {
-            $this->set('productPrice', $price);
             $this->set('productPriceRub', $this->lang('sklad_mesage'));
             $this->set('productOutStock', $this->lang('sklad_mesage'));
             $this->set('ComStartNotice', '');
@@ -767,6 +744,25 @@ class PHPShopShopCore extends PHPShopCore {
             $this->set('productSklad', '');
             $this->set('productPriceOld', '');
             $this->set('productLabelDiscount', '');
+        }
+
+        // Если нет новой цены
+        if (empty($row['price_n'])) {
+
+            $this->set('productPrice', $price);
+            $this->set('productLabelDiscount', null);
+            $this->set('productPriceOld', null);
+        }
+
+        // Если есть новая цена
+        else {
+            $productPrice = $price;
+            $productPriceNew = $this->price($row, true, false);
+            $this->set('productPrice', $productPrice);
+            $this->set('productPriceOld', PHPShopText::strike($productPriceNew . " " . $this->currency, $this->format));
+
+            // Метка % скидки
+            $this->set('productLabelDiscount', '-' . ceil(($row['price_n'] - $row['price']) * 100 / $row['price_n']) . '%');
         }
 
         // Проверка на нулевую цену 

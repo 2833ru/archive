@@ -273,7 +273,7 @@ class PHPShopBase {
 
         if (is_array($this->LicenseParse) and strstr($this->LicenseParse['License']['HardwareLocked'], 'Showcase')) {
 
-            if (getenv('SERVER_NAME') == $this->LicenseParse['License']['DomenLocked'] or 'www.' . getenv('SERVER_NAME') == $this->LicenseParse['License']['DomenLocked']) {
+            if (getenv('SERVER_NAME') == $this->LicenseParse['License']['DomenLocked'] or getenv('SERVER_NAME') == 'www.' . $this->LicenseParse['License']['DomenLocked']) {
                 define("HostMain", true);
             } else {
                 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['servers']);

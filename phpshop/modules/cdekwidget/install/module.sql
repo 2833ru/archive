@@ -34,7 +34,4 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_cdekwidget_log` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 ALTER TABLE `phpshop_orders` ADD `cdek_order_data` text default '';
-ALTER TABLE `phpshop_products` ADD `cdek_length` varchar(255) default '';
-ALTER TABLE `phpshop_products` ADD `cdek_width` varchar(255) default '';
-ALTER TABLE `phpshop_products` ADD `cdek_height` varchar(255) default '';
 ALTER TABLE `phpshop_delivery` ADD `is_mod` enum('1','2') DEFAULT '1';

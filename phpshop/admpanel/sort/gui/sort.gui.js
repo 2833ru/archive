@@ -1,5 +1,36 @@
 
 $().ready(function() {
+    
+    // Быстрое изменение checkbox
+    $("body").on('click', ".data-row .checkbox", function (event) {
+
+        var data = [];
+        var id = $(this).attr('data-id');
+        var name=$(this).attr('name');
+        
+        data.push({name: name+'_new', value: this.checked ? 1:0});
+        data.push({name: 'rowID', value: id});
+        data.push({name: 'selectID', value: 1});
+        data.push({name: 'ajax', value: 1});
+        data.push({name: 'actionList[selectID]', value: 'actionUpdate'});
+
+        $.ajax({
+            mimeType: 'text/html; charset=' + locale.charset,
+            url: '?path=sort&id=' + id,
+            data: data,
+            dataType: "json",
+            type: 'post',
+            async: false,
+            success: function (json) {
+                if (json['success'] != '') {
+                    showAlertMessage(locale.save_done);
+
+                } else
+                    showAlertMessage(locale.save_false, true);
+            }
+
+        });
+    });
 
     // Удаление характеристики
     $("body").on('click', "#selectModal .modal-footer .value-delete", function(event) {

@@ -13,3 +13,5 @@ CREATE TABLE `phpshop_modules_visualcart_log` (
   `product_id` INT(11) default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
+ALTER TABLE `phpshop_modules_visualcart_memory` ADD `tel` VARCHAR(64), ADD `mail` VARCHAR(64), ADD `name` VARCHAR(64), `sum` FLOAT ;

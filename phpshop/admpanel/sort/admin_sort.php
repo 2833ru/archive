@@ -1,7 +1,6 @@
 <?php
 
 PHPShopObj::loadClass('sort');
-
 $TitlePage = __("Характеристики");
 
 $PHPShopSortCategoryArray = new PHPShopSortCategoryArray(array('category' => '=0'));
@@ -62,28 +61,16 @@ function actionStart() {
         foreach ($data as $row) {
 
             // Фильтр
-            if (!empty($row['filtr']))
-                $filtr = '<span class="glyphicon glyphicon-ok"><span class="hide">1</span></span>';
-            else
-                $filtr = '<span class="hide">0</span>';
+            $filtr=array('checkbox' => array('val' => $row['filtr'],'name'=>'filtr'), 'align' => 'center');
 
             // Опция
-            if (!empty($row['goodoption']))
-                $goodoption = '<span class="glyphicon glyphicon-ok"><span class="hide">1</span></span>';
-            else
-                $goodoption = '<span class="hide">0</span>';
+            $goodoption=array('checkbox' => array('val' => $row['goodoption'],'name'=>'goodoption'), 'align' => 'center');
 
             // Бренд
-            if (!empty($row['brand']))
-                $brand = '<span class="glyphicon glyphicon-ok"><span class="hide">1</span></span>';
-            else
-                $brand = '<span class="hide">0</span>';
-            
+            $brand=array('checkbox' => array('val' => $row['brand'],'name'=>'brand'), 'align' => 'center');
+
             // Виртуальный каталог
-            if (!empty($row['virtual']))
-                $virtual = '<span class="glyphicon glyphicon-ok"><span class="hide">1</span></span>';
-            else
-                $virtual = '<span class="hide">0</span>';
+            $virtual=array('checkbox' => array('val' => $row['virtual'],'name'=>'virtual'), 'align' => 'center');
 
             // Описание
             if (!empty($row['description']))
@@ -91,8 +78,7 @@ function actionStart() {
             else $help=null;
 
             $PHPShopInterface->path = 'sort';
-            $PHPShopInterface->setRow($row['id'], array('name' => $row['name'], 'link' => '?path=sort&id=' . $row['id'], 'align' => 'left','addon' => $help), array('action' => array('edit', 'copy', '|', 'delete', 'id' => $row['id']), 'align' => 'center'), array('name' => $virtual, 'align' => 'center'), array('name' => $brand, 'align' => 'center'), array('name' => $goodoption, 'align' => 'center'), array('name' => $filtr, 'align' => 'center')
-            );
+            $PHPShopInterface->setRow($row['id'], array('name' => $row['name'], 'link' => '?path=sort&id=' . $row['id'], 'align' => 'left','addon' => $help), array('action' => array('edit', 'copy', '|', 'delete', 'id' => $row['id']), 'align' => 'center'), $virtual, $brand, $goodoption, $filtr);
         }
 
     $sidebarleft[] = array('title' => 'Группы', 'content' => $PHPShopInterface->loadLib('tab_menu_sort', false, './sort/'), 'title-icon' => '<span class="glyphicon glyphicon-plus newsub" data-toggle="tooltip" data-placement="top" title="' . __('Добавить группу') . '"></span>');

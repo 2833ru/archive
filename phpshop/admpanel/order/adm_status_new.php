@@ -65,6 +65,8 @@ function actionInsert() {
 
     if ($_POST['saveID'] == 'Создать и редактировать')
         header('Location: ?path=' . $_GET['path'] . '&id=' . $action);
+    else if (!empty($_GET['return']))
+        header('Location: ?path=' . $_GET['return']);
     else
         header('Location: ?path=' . $_GET['path']);
 

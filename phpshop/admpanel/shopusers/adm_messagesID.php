@@ -34,7 +34,7 @@ function actionStart() {
     $Tab1 = $PHPShopGUI->setCollapse('Информация', $PHPShopGUI->setField("Отправитель", $user) .
             $PHPShopGUI->setInput("hidden", "login", $data['login']) .
             $PHPShopGUI->setField("Тема", $PHPShopGUI->setInput('text.required', "Subject_new", $data['Subject'])) .
-            $PHPShopGUI->setField("Переписка", $message) . $PHPShopGUI->setInput('hidden', "Message_new", $data['Message']) .
+            $PHPShopGUI->setField("Переписка", $message) . $PHPShopGUI->setInput('hidden', "Message_new", str_replace('"', "'", $data['Message'])) .
             $PHPShopGUI->setField("Ответ", $PHPShopGUI->setTextarea('respond', null, false, '100%', 100, false, __('Текст сообщения...')))
     );
 

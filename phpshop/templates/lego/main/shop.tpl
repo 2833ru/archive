@@ -38,7 +38,7 @@
 
         <link id="bootstrap_theme" data-name="@php echo $_SESSION['skin']; php@" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/@lego_theme@.css" rel="stylesheet">
         <link href="@pageCss@" type="text/css" rel="stylesheet">
-
+                
         <!-- Header -->
         @header@
         <!--/ Header -->
@@ -195,7 +195,7 @@
                         <h4 class="modal-title">{Поиск}</h4>
                     </div>
                     <div class="modal-body">
-                        <form  action="/search/" role="search" method="post">
+                        <form  action="/search/" role="search" method="get">
                             <div class="input-group">
                                 <input name="words" maxlength="50" class="form-control" placeholder="Искать.." required="" type="search">
                                 <span class="input-group-btn">
@@ -236,6 +236,7 @@
                                         <input type="checkbox" value="1" name="safe_users" @UserChecked@> {Запомнить}
                                     </label>
                                 </div>
+                                <a href="/users/sms.html" class="pass @sms_login_enabled@">SMS</a>
                                 <a href="/users/sendpassword.html" class="pass">{Забыли пароль}</a>
                             </div>
 
@@ -245,6 +246,7 @@
 
                             <input type="hidden" value="1" name="user_enter">
                             <button type="submit" class="btn btn-primary">{Войти}</button>
+                            
                             <a href="/users/register.html">{Зарегистрироваться}</a>
                         </div>
                     </form>
@@ -252,11 +254,11 @@
             </div>
         </div>
         <!--/ Модальное окно авторизации-->
-
+        
         @editor@
 
         <div class="search-big-block">
-            <form id="search_form_small" action="/search/" role="search" method="post" class="header-search-form">
+            <form id="search_form_small" action="/search/" role="search" method="get" class="header-search-form">
                 <input class="form-control input-lg" name="words" maxlength="50"  placeholder="{Поиск}..." required="" type="search" data-trigger="manual" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true"  data-content="">
                 <button class="header-search-button" type="submit">
                     <i class="icons-search"></i>
@@ -282,8 +284,6 @@
     <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/hammer.min.js" type="text/javascript"></script>
     <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/TweenMax.min.js" type="text/javascript"></script>
     <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.touchnswipe.min.js" type="text/javascript"></script>
-    <!--<script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/tns_mouse_input.min.js" type="text/javascript"></script>-->
-
     <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/bootstrap.min.js"></script>
     <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/swiper.min.js"></script>
     <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.elevatezoom.js"></script>
@@ -304,6 +304,6 @@
     <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.bxslider.min.js"></script>
     <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.suggestions.min.js"></script>
     <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.ui.touch-punch.min.js"></script>
-
+    
     @visualcart_lib@
     <div class="visible-lg visible-md">

@@ -12,7 +12,7 @@ function id_delete_visyalcart_hook($obj, $row) {
 
 $addHandler = array
     (
-    'id_delete' => 'id_delete_visyalcart_hook',
+    '#id_delete' => 'id_delete_visyalcart_hook',
     'cart' => 'id_delete_visyalcart_hook',
 );
 ?>

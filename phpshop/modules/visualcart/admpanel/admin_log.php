@@ -11,9 +11,11 @@ function getUserName($id, $ip) {
 
 function actionStart() {
     global $PHPShopInterface, $PHPShopModules, $TitlePage, $select_name;
+    
+    unset($select_name[0]);
 
     $PHPShopInterface->checkbox_action = false;
-    $PHPShopInterface->setActionPanel($TitlePage, $select_name, false);
+    $PHPShopInterface->setActionPanel(__('Журнал добавления в корзину'), $select_name, false);
 
     $PHPShopInterface->setCaption(array("Товар", "45%"), array("Цена", "10%"), array("Кол-во", "10%"),array("Пользователь", "15%"), array("Дата", "10%"), array("Статус", "15%", array('align' => 'right')));
 

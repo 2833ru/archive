@@ -86,7 +86,7 @@ function actionStart() {
         array("SMTP пользователь", "Пароль"), array($PHPShopGUI->setInputText(null, "option[smtp_user]", '', false, false, false, false, 'user@yandex.ru'),
         $PHPShopGUI->setInput('password',  "option[smtp_password]", '')), array(array(2, 4), array(2, 4)));
     $Tab1.=$PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("enabled_new", 1, "Вкл.", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выкл.", $data['enabled']));
-    $Tab1.=$PHPShopGUI->setField("Логотип", $PHPShopGUI->setIcon($data['logo'], "logo_new", false));
+    $Tab1 .= $PHPShopGUI->setField(array("Логотип","Favicon"), array($PHPShopGUI->setIcon($data['logo'], "logo_new", false), $PHPShopGUI->setIcon($data['icon'], "icon_new", false, array('load' => false, 'server' => true, 'url' => true, 'multi' => false, 'view' => false))), array(array(2, 4), array(2, 4)));
     $Tab1.=$PHPShopGUI->setField('Заголовок (Title)', $PHPShopGUI->setTextarea('title_new', $data['title'], false, false, 100));
     $Tab1.=$PHPShopGUI->setField('Описание (Description)', $PHPShopGUI->setTextarea('descrip_new', $data['descrip'], false, false, 100));
     $Tab2 .= $PHPShopGUI->setField("Наименование организации", $PHPShopGUI->setInputText(null, "company_new", $data['company']));

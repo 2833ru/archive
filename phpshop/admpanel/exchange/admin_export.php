@@ -756,6 +756,7 @@ function actionStart() {
         $select_message = '<p class="text-muted">' . __('Вы можете выбрать конкретные объекты для экспорта, отметив их галочками и выбрав в меню <span class="glyphicon glyphicon-cog"></span><span class="caret"></span> <em>"Экспортировать выбранные"</em>. По умолчанию будут экспортированы все позиции') . '. <a href="?path=' . $select_path . '"><span class="glyphicon glyphicon-share-alt"></span> ' . __('Выбрать') . '</a></p>';
 
     $sidebarleft[] = array('title' => 'Тип данных', 'content' => $PHPShopGUI->loadLib('tab_menu', false, './exchange/'));
+    $sidebarleft[] = array('title' => 'Прайс-лист', 'content' => $PHPShopGUI->loadLib('tab_menu_xml', false, './exchange/'));
 
     if (!empty($select_path))
         $sidebarleft[] = array('title' => 'Подсказка', 'content' => $select_message, 'class' => 'hidden-xs');

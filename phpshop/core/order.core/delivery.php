@@ -269,7 +269,7 @@ class PHPShopOrderDelivery {
             return ''; // На уровне выше только 1 элемент. Кнопка не нужна.
         }
 
-        return __('Выбрано') . ': ' . $parent['city'] . ' <A href="javascript:UpdateDeliveryJq(\'' . $parent['PID'] . '\',this)"><img src="' . $this->getTemplateAsset('images/shop/check_green.svg') . '" alt="" border="0" align="absmiddle">&nbsp;' . __('Выбрать другой способ доставки') . '</A> <BR> ';
+        return __('Выбрано') . ': ' . $parent['city'] . ' <A href="javascript:UpdateDeliveryJq(\'' . $parent['PID'] . '\',this)"><img src="' . $this->getTemplateAsset('images/shop/check_green.svg') . '" alt="" border="0" align="absmiddle">&nbsp;' . __('Выбрать другой способ доставки') . '</A> <BR><BR> ';
     }
 
     private function getTemplateAsset($asset)

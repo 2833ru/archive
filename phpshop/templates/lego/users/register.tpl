@@ -14,6 +14,10 @@
         <input type="email" name="login_new" value="@php echo $_POST['login_new']; php@" class="form-control" required="" >
     </div>
     <div class="form-group">
+        <label>{Телефон}</label>
+        <input type="tel" name="tel_new" value="@php echo $_POST['tel_new']; php@" class="form-control" @sms_login_control@>
+    </div>
+    <div class="form-group">
         <label>{Пароль}</label>
         <input type="password" name="password_new"  class="form-control"  required="" >
     </div>

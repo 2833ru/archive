@@ -13,9 +13,6 @@ background-size:cover;
 #header-area,#footer-area{
 background-color:#2f353b;
 }
-#body{
---color:#2f353b;
-}
 .header-color,.header-color a,.header-color .btn,.header-color h4,.header-links a{
 color:#ffffff !important;
 }
@@ -102,4 +99,7 @@ background:#dd0504 !important;
 }
 .side-heading a:hover{
 color:black;
+}
+#body{
+    --color:#2f353b;
 }

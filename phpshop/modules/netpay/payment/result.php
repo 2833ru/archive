@@ -7,7 +7,9 @@ session_start();
 
 $_classPath = "../../../";
 include($_classPath . "class/obj.class.php");
+include_once($_classPath . "class/mail.class.php");
 PHPShopObj::loadClass("base");
+PHPShopObj::loadClass("lang");
 PHPShopObj::loadClass("order");
 PHPShopObj::loadClass("file");
 PHPShopObj::loadClass("xml");
@@ -15,9 +17,12 @@ PHPShopObj::loadClass("orm");
 PHPShopObj::loadClass("payment");
 PHPShopObj::loadClass("modules");
 PHPShopObj::loadClass("system");
+PHPShopObj::loadClass("security");
+PHPShopObj::loadClass("parser");
+PHPShopObj::loadClass("string");
 
 $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, true);
-
+$PHPShopSystem = new PHPShopSystem();
 $PHPShopModules = new PHPShopModules($_classPath . "modules/");
 $PHPShopModules->checkInstall('netpay');
 
@@ -106,13 +111,19 @@ class NetPayPayment extends PHPShopPaymentResult {
 							$trans_type, 
 							array('Capture', 'Sale', 'Sale_Qiwi', 'Sale_YaMoney', 'Sale_WebMoney')
 							)) {
-							$PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['payment']);
+						    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['payment']);
 							$PHPShopOrm->insert(array(
 								'uid_new' => $this->inv_id, 
 								'name_new' => $this->payment_name,
 								'sum_new' => $getData['amount'], 
 								'datas_new' => time()
 								));
+                            $order = (new PHPShopOrm($GLOBALS['SysValue']['base']['orders']))
+                                ->getOne(['id', 'statusi'], ['uid' => sprintf('="%s"', $this->true_num($this->inv_id))]);
+
+                            if($order) {
+                                (new PHPShopOrderFunction((int) $order['id']))->changeStatus((int) $this->set_order_status_101(), $order['statusi']);
+                            }
 						}
 						elseif (in_array($trans_type, 
 							array('Cancel','Refund','Refund_Qiwi','Refund_WebMoney','Refund_YaMoney')

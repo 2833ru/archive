@@ -3,8 +3,8 @@
 class PochtaRequest
 {
     const API_URL = 'https://otpravka-api.pochta.ru';
-    const CALCULATE_URL = '/1.0/tariff';
     const CREATE_ORDER_URL = '/1.0/user/backlog';
+    const NORMALIZE_ADDRESS = '/1.0/clean/address';
 
     /** @var Settings */
     private $settings;
@@ -12,13 +12,6 @@ class PochtaRequest
     public function __construct($settings)
     {
         $this->settings = $settings;
-    }
-
-    public function getCost($parameters)
-    {
-        $result = $this->request(self::CALCULATE_URL, $parameters);
-
-        return ((float) $result['total-rate'] + (float) $result['total-vat']) / 100;
     }
 
     public function createOrder($parameters)
@@ -39,7 +32,23 @@ class PochtaRequest
         return array('success' => true);
     }
 
-    private function request($url, $parameters = array(), $skipLog = true, $orderNumber = null, $method = '')
+    /**
+     * Нормализация адреса из строки.
+     */
+    public function normalizeAddress($address)
+    {
+        $parameters = [
+            'id'               => 1,
+            'original-address' => PHPShopString::win_utf8($address)
+        ];
+
+        $result = $this->request(self::NORMALIZE_ADDRESS, [$parameters]);
+        $result = $this->utf8ToWindows1251($result, self::NORMALIZE_ADDRESS);
+
+        return $result[0];
+    }
+
+    private function request($url, $parameters = [], $skipLog = true, $orderNumber = null, $method = '')
     {
         $request = json_encode($parameters);
 
@@ -73,15 +82,26 @@ class PochtaRequest
     private function utf8ToWindows1251($data, $method)
     {
         switch ($method) {
-            case self::CALCULATE_URL: {
-                $data['desc'] = PHPShopString::utf8_win1251($data['desc']);
-                break;
-            }
             case self::CREATE_ORDER_URL: {
                 if(isset($data['errors'][0]['error-codes']) && is_array($data['errors'][0]['error-codes'])) {
                     foreach ($data['errors'][0]['error-codes'] as $key => $error) {
                         $data['errors'][0]['error-codes'][$key]['description'] = PHPShopString::utf8_win1251($data['errors'][0]['error-codes'][$key]['description']);
                     }
+                }
+                break;
+            }
+            case self::NORMALIZE_ADDRESS: {
+                if(isset($data[0]['original-address'])) {
+                    $data[0]['original-address'] = PHPShopString::utf8_win1251($data[0]['original-address']);
+                }
+                if(isset($data[0]['place'])) {
+                    $data[0]['place'] = PHPShopString::utf8_win1251($data[0]['place']);
+                }
+                if(isset($data[0]['region'])) {
+                    $data[0]['region'] = PHPShopString::utf8_win1251($data[0]['region']);
+                }
+                if(isset($data[0]['street'])) {
+                    $data[0]['street'] = PHPShopString::utf8_win1251($data[0]['street']);
                 }
                 break;
             }
@@ -109,11 +129,11 @@ class PochtaRequest
 
        $PHPShopOrm->insert(
             array(
-                'message_new'  => serialize($message),
+                'message_new'   => serialize($message),
                 'order_uid_new' => $orderUid,
-                'status_new'   => $response['success'] ? 'Успешно' : 'Ошибка',
-                'method_new'   => $method,
-                'date_new'     => time()
+                'status_new'    => $response['success'] ? 'Успешно' : 'Ошибка',
+                'method_new'    => $method,
+                'date_new'      => time()
             )
         );
     }

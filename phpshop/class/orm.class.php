@@ -382,6 +382,14 @@ class PHPShopOrm {
         else
             return mysqli_error($this->link_db);
     }
+    
+    /**
+     * Количество обновленных записей
+     * @return int
+     */
+    function get_affected_rows(){
+        return mysqli_affected_rows($this->link_db);
+    }
 
     /**
      * Анализатор БД на наличие ячеек с заданным именем (PHP 7)

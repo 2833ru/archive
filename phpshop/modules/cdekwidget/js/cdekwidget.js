@@ -11,7 +11,7 @@ function cdekwidgetWidget() {
         link: 'forpvz',
         popup: true,
         path: path + 'modules/cdekwidget/templates/scripts/',
-        servicepath: path + 'modules/cdekwidget/api/service.php',
+        servicepath: path + 'modules/cdekwidget/api/PHPShopCdekService.php',
         templatepath: path + 'modules/cdekwidget/templates/scripts/template.php',
         goods: PHPShopCDEKOptions.products,
         onChoose: cdekWidgetOnChoosePvz,

@@ -3,16 +3,22 @@
 /**
  * Обработчик формы сообщения с сайта
  * @author PHPShop Software
- * @version 1.0
+ * @version 1.2
  * @package PHPShopCore
  */
 class PHPShopForma extends PHPShopCore {
+
+    private $ajax = false;
 
     /**
      * Конструктор
      */
     function __construct() {
         $this->debug = false;
+
+        if(isset($_POST['ajax'])) {
+            $this->ajax = true;
+        }
 
         // список экшенов
         $this->action = array("post" => "content", "post" => "name", "nav" => "index");
@@ -69,16 +75,47 @@ class PHPShopForma extends PHPShopCore {
         if ($this->setHook(__CLASS__, __FUNCTION__, $_POST))
             return true;
 
+        if($this->ajax) {
+            $_POST['tema']    = PHPShopString::utf8_win1251($_POST['tema']);
+            $_POST['name']    = PHPShopString::utf8_win1251($_POST['name']);
+            $_POST['content'] = PHPShopString::utf8_win1251($_POST['content']);
+            $_POST['mail']    = PHPShopString::utf8_win1251($_POST['mail']);
+        }
+
         // Безопасность
         if ($this->security()) {
+            $this->lead();
             $this->send();
+
+            if($this->ajax) {
+                echo json_encode([
+                    'message' => PHPShopString::win_utf8($this->get('Error'))
+                ]);
+                exit;
+            }
         }
-        else
+        else {
+            if($this->ajax) {
+                echo json_encode([
+                    'message' => PHPShopString::win_utf8(__("Ошибка ключа, повторите попытку ввода ключа"))
+                ]);
+                exit;
+            }
             $this->set('Error', __("Ошибка ключа, повторите попытку ввода ключа"));
+        }
         
         $this->index();
     }
 
+    /**
+     * Добавление лида
+     */
+    function lead(){
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['notes']);
+        $insert=array('date_new'=>time(),'message_new'=>$_POST['tema'],'name_new'=>$_POST['name'],'mail_new'=>$_POST['mail'],'tel_new'=>$_POST['tel'],'content_new'=> PHPShopSecurity::TotalClean($_POST['content']));
+        $PHPShopOrm->insert($insert);
+    }
+    
     /**
      * Генерация сообщения
      */
@@ -99,6 +136,9 @@ class PHPShopForma extends PHPShopCore {
 ----------------------
 ";
             unset($_POST['g-recaptcha-response']);
+            unset($_POST['ajax']);
+            unset($_POST['send']);
+            unset($_POST['rule']);
 
             // Информация по сообщению
             foreach ($_POST as $k => $val) {
@@ -113,7 +153,8 @@ IP: " . $_SERVER['REMOTE_ADDR'];
 
             new PHPShopMail($this->PHPShopSystem->getEmail(), $this->PHPShopSystem->getEmail(), $subject, Parser($message), false, false, array('replyto' => $_POST['mail']));
 
-            $this->set('Error', __("Сообщение успешно отправлено"));
+            $this->set('Error', __("Спасибо!
+Мы свяжемся с вами с ближайшее время."));
         }
         else
             $this->set('Error', __("Не заполнены обязательные поля"));

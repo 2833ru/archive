@@ -74,6 +74,8 @@ function actionStart() {
     $Tab1 = $PHPShopGUI->setField('Токен авторизации приложения', $PHPShopGUI->setInputText(false, 'token_new', $data['token'], 300));
     $Tab1.= $PHPShopGUI->setField('Логин пользователя', $PHPShopGUI->setInputText(false, 'login_new', $data['login'], 300));
     $Tab1.= $PHPShopGUI->setField('Пароль пользователя', $PHPShopGUI->setInput('password', 'password_new', $data['password'], false, 300));
+    $Tab1.= $PHPShopGUI->setField('ID виджета', $PHPShopGUI->setInputText(false, 'widget_id_new', $data['widget_id'], 300));
+    $Tab1.= $PHPShopGUI->setField('ID виджета курьерской доставки', $PHPShopGUI->setInputText(false, 'courier_widget_id_new', $data['courier_widget_id'], 300));
     $Tab1.= $PHPShopGUI->setField('Статус для отправки', $PHPShopGUI->setSelect('status_new', Settings::getStatusesVariants($data['status']), 300));
     $Tab1.= $PHPShopGUI->setField('Доставка', $PHPShopGUI->setSelect('delivery_id_new', Settings::getDeliveryVariants($data['delivery_id']), 300));
     $Tab1.= $PHPShopGUI->setField('Доставка курьером', $PHPShopGUI->setSelect('delivery_courier_id_new', Settings::getDeliveryVariants($data['delivery_courier_id']), 300));
@@ -82,9 +84,7 @@ function actionStart() {
     $Tab1.= $PHPShopGUI->setField('Типоразмер', $PHPShopGUI->setSelect('dimension_type_new', Settings::getDimensionVariants($data['dimension_type']), 300));
     $Tab1.= $PHPShopGUI->setField('Почтовый индекс города отправителя', '<input class="form-control input-sm " onkeypress="pochtavalidate(event)" type="text" value="' . $data['index_from'] . '" name="index_from_new" style="width:300px; ">');
     $Tab1.= $PHPShopGUI->setField('Объявленная ценность', $PHPShopGUI->setInputText('От суммы корзины', 'declared_percent_new', $data['declared_percent'], 300,'%'));
-    $Tab1.= $PHPShopGUI->setField('Добавить наценку', '<input class="form-control input-sm " onkeypress="pochtavalidate(event)" type="number" step="0.1" min="0" value="' . $data['fee'] . '" name="fee_new" style="width:300px;">');
-    $Tab1.= $PHPShopGUI->setField('Тип наценки', $PHPShopGUI->setSelect('fee_type_new', array(array('%', 1, $data['fee_type']), array('Руб.', 2, $data['fee_type'])), 300, null, false, $search = false, false, $size = 1));
-    $Tab1.= $PHPShopGUI->setCollapse('Дополнительные настройки',
+    $Tab1.= $PHPShopGUI->setCollapse('Настройки отправляемого заказа',
         $PHPShopGUI->setField('Лёгкий возврат', $PHPShopGUI->setCheckbox('easy_return_new', 1, 'Отметка "Лёгкий возврат"', $data["easy_return"])) .
         $PHPShopGUI->setField('Возврату не подлежит', $PHPShopGUI->setCheckbox('no_return_new', 1, 'Отметка "Возврату не подлежит"', $data["no_return"])) .
         $PHPShopGUI->setField('Осторожно/Хрупкое', $PHPShopGUI->setCheckbox('fragile_new', 1, 'Отметка "Осторожно/Хрупкое"', $data["fragile"])) .
@@ -101,6 +101,17 @@ function actionStart() {
        <ol>
         <li>Зарегистрироваться на онлайн-сервисе <a href="https://otpravka.pochta.ru/" target="_blank">«Отправка»</a></li>
         <li>Токен авторизации пользователя можно узнать в <a href="https://otpravka.pochta.ru/settings#/api-settings" target="_blank">настройках личного кабинета</a>.</li>
+        <li>Создать виджет в <a href="https://widget.pochta.ru/widgets" target="_blank">Виджет Почты России</a>.</li>
+        <li>Из кода виджета <kbd>В пункт выдачи</kbd> <code>ecomStartWidget({
+        id: 1234,
+        callbackFunction: pochtacallback,
+        containerId: \'ecom-widget\'
+      });</code> скопировать числовой id, в примере 1234, вставить его в поле <kbd>ID виджета</kbd> в настройках модуля.</li>
+              <li>Из кода виджета <kbd>Курьером</kbd> <code>courierStartWidget({
+        id: 1234,
+        callbackFunction: pochtacallback,
+        containerId: \'ecom-widget-courier\'
+      });</code> скопировать числовой id, в примере 1234, вставить его в поле <kbd>ID виджета курьерской доставки</kbd> в настройках модуля.</li>
         </ol>
         
        <h4>Настройка модуля</h4>

@@ -180,7 +180,7 @@ $().ready(function() {
     });
 
     // Переход на страницу из списка
-    $("#dropdown_action  .url").on('click', function(event) {
+    $("body").on('click','#dropdown_action .url', function(event) {
         event.preventDefault();
         window.open('../../shop/UID_' + $(this).attr('data-id') + '.html');
     });
@@ -473,6 +473,42 @@ $().ready(function() {
                 success: function(json) {
                     if (json['success'] == 1) {
                         showAlertMessage(locale.products_completed + ' ' + json['count']);
+                    } else
+                        showAlertMessage(locale.save_false, true);
+                }
+            });
+        });
+    });
+
+    $(".delete-category").on('click', function (event) {
+        event.preventDefault();
+
+        $.MessageBox({
+            message: locale.product_operations,
+            buttonDone: {
+                delete: {
+                    text: locale.delete
+                },
+                move: {
+                    text: locale.move_to_temporary_folder
+                }
+            },
+        }).done(function (data, button) {
+            $('#product_edit').append('<input type="hidden" name="delID" value="1">');
+            $('#product_edit').append('<input type="hidden" name="products_operation" value="' + button + '">');
+            $('#product_edit').append('<input type="hidden" name="ajax" value="1">');
+            $('#product_edit').ajaxSubmit({
+                dataType: "json",
+                success: function (json) {
+                    if (json['success'] == 1) {
+                        if(json['count'] > 0) {
+                            showAlertMessage(locale.products_completed + ' ' + json['count']);
+                            setTimeout(function () {
+                                window.location.href = '?path=' + $('#path').val();
+                            }, 1500);
+                        } else {
+                            window.location.href = '?path=' + $('#path').val();
+                        }
                     } else
                         showAlertMessage(locale.save_false, true);
                 }

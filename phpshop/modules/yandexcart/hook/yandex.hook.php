@@ -92,6 +92,14 @@ function setProducts_yandexcart_hook($obj, $data) {
     // Страна
     if (!empty($data['val']['country_of_origin']))
         $add.='<country_of_origin>' . $data['val']['country_of_origin'] . '</country_of_origin>';
+    
+    // Модель
+    if (!empty($data['val']['model']))
+        $add.='<model>' . $data['val']['model'] . '</model>';
+    
+    // Штрихкод
+    if (!empty($data['val']['barcode']))
+        $add.='<barcode>' . $data['val']['barcode'] . '</barcode>';
 
     // Adult
     if ($data['val']['adult'] == 1)

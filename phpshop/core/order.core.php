@@ -139,7 +139,12 @@ class PHPShopOrder extends PHPShopCore {
         
         $sum_cart = $this->PHPShopCart->getSum(true);
         $sum_discount_off = $this->PHPShopCart->getSumNoDiscount(true);
-        $sum_discount_on = $PHPShopOrder->returnSumma($this->PHPShopCart->getSum(true), $this->get('discount'));
+
+        // Итого товары по акции
+        $sum_discount_on = $PHPShopOrder->returnSumma($this->PHPShopCart->getSumPromo(true));
+
+        // Итого товары без акции
+        $sum_discount_on += $PHPShopOrder->returnSumma($this->PHPShopCart->getSumWithoutPromo(true), $this->get('discount'));
 
         // Сумма скидки
         if ($sum_cart > $sum_discount_on)

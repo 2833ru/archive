@@ -3,15 +3,17 @@
 /**
  * Обработчик жалобы на цену
  * @author PHPShop Software
- * @version 1.5
+ * @version 1.6
  * @package PHPShopCore
  */
 class PHPShopPricemail extends PHPShopShopCore {
 
+    private $productId;
+
     /**
      * Конструктор
      */
-    function __construct() {
+    function __construct($productId = null) {
 
         // Отладка
         $this->debug = false;
@@ -19,6 +21,11 @@ class PHPShopPricemail extends PHPShopShopCore {
         // список экшенов
         $this->action = array("nav" => "index", "post" => "send_price_link");
         parent::__construct();
+
+        if(is_null($productId)) {
+            $productId = $this->PHPShopNav->getId();
+        }
+        $this->productId = $productId;
     }
 
     /**
@@ -54,11 +61,21 @@ class PHPShopPricemail extends PHPShopShopCore {
 
         if ($this->security()) {
             $this->send();
+            $this->lead();
             $this->set('Error', PHPShopText::alert(__("Сообщение успешно отправлено"), 'success'));
-        }
-        else
+        } else
             $this->set('Error', PHPShopText::alert(__("Ошибка ключа, повторите попытку ввода ключа")));
         $this->index();
+    }
+
+    /**
+     * Добавление лида
+     */
+    function lead() {
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['notes']);
+        $content="Для товара http://".$_SERVER['SERVER_NAME'] . "/shop/UID_" . $this->PHPShopNav->getId() . ".html"." указана ссылка с меньшей ценой ".$_POST['link_to_page'].' '.$_POST['adr_name'];
+        $insert = array('date_new' => time(), 'message_new' => __('Нашли дешевле'), 'name_new' => $_POST['name_person'], 'mail_new' => $_POST['mail'], 'tel_new' => $_POST['tel_name'], 'content_new' => PHPShopSecurity::TotalClean($content));
+        $PHPShopOrm->insert($insert);
     }
 
     /**
@@ -72,6 +89,13 @@ class PHPShopPricemail extends PHPShopShopCore {
 
         if (PHPShopSecurity::true_param($_POST['mail'], $_POST['name_person'], $_POST['link_to_page'])) {
 
+            if(isset($_REQUEST['ajax'])) {
+                $_POST['name_person']  = PHPShopString::utf8_win1251($_POST['name_person']);
+                $_POST['link_to_page'] = PHPShopString::utf8_win1251($_POST['link_to_page']);
+                $_POST['org_name']     = PHPShopString::utf8_win1251($_POST['org_name']);
+                $_POST['adr_name']     = PHPShopString::utf8_win1251($_POST['adr_name']);
+            }
+
             // Заголовок e-mail пользователю
             $this->title_mail = __('Сообщение о меньшей цене');
 
@@ -84,24 +108,27 @@ class PHPShopPricemail extends PHPShopShopCore {
             $this->set('link_to_page', $_POST['link_to_page']);
 
             // Данные по товару
-            $PHPShopProduct = new PHPShopProduct($this->PHPShopNav->getId());
+            $PHPShopProduct = new PHPShopProduct($this->productId);
+
             $this->set('product_name', $PHPShopProduct->getName());
             $this->set('product_art', $PHPShopProduct->getParam('uid'));
-            $this->set('product_id', $this->PHPShopNav->getId());
-            $this->set('product_link', $_SERVER['SERVER_NAME'] . "/shop/UID_" . $this->PHPShopNav->getId() . ".html");
+            $this->set('product_id', $this->productId);
+            $this->set('product_link', $_SERVER['SERVER_NAME'] . "/shop/UID_" . $this->productId . ".html");
 
             // Перехват модуля
             $this->setHook(__CLASS__, __FUNCTION__, $_POST, 'END');
 
             // Содержание e-mail пользователю
-            $content = ParseTemplateReturn('./phpshop/lib/templates/users/mail_pricemail.tpl', true);
+            $content = ParseTemplateReturn(dirname(__DIR__) . '/lib/templates/users/mail_pricemail.tpl', true);
 
             if (PHPShopSecurity::true_email($_POST['mail'])) {
                 PHPShopObj::loadClass('mail');
                 new PHPShopMail($this->PHPShopSystem->getEmail(), $this->PHPShopSystem->getEmail(), $this->title_mail, $content, true);
             }
 
-            $this->redirect();
+            if(!isset($_REQUEST['ajax'])) {
+                $this->redirect();
+            }
         }
     }
 
@@ -133,7 +160,7 @@ class PHPShopPricemail extends PHPShopShopCore {
 
         $row = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($currency)), false, array('limit' => 1), __FUNCTION__, array('base' => $this->getValue('base.currency'), 'cache' => 'true'));
 
-        if ($name == 'code' and ($row['iso'] == 'RUR' or $row['iso'] == "RUB"))
+        if ($name == 'code' and ( $row['iso'] == 'RUR' or $row['iso'] == "RUB"))
             return 'p';
 
         return $row[$name];
@@ -158,10 +185,11 @@ class PHPShopPricemail extends PHPShopShopCore {
             $this->set(array('productPriceRub', 'productPriceOld'), number_format($promotions['price_n'], $this->format, '.', ' ') . ' ' . $this->PHPShopSystem->getValutaIcon());
         } else {
             $this->set('productPrice', number_format($PHPShopProduct->getPrice(), $this->format, '.', ' '));
-            
-            if($PHPShopProduct->getPriceOld()>0)
-            $this->set(array('productPriceRub', 'productPriceOld'), number_format($PHPShopProduct->getPriceOld(), $this->format, '.', ' ') . ' ' . $this->PHPShopSystem->getValutaIcon());
-            else $this->set(array('productPriceRub', 'productPriceOld'), '');
+
+            if ($PHPShopProduct->getPriceOld() > 0)
+                $this->set(array('productPriceRub', 'productPriceOld'), number_format($PHPShopProduct->getPriceOld(), $this->format, '.', ' ') . ' ' . $this->PHPShopSystem->getValutaIcon());
+            else
+                $this->set(array('productPriceRub', 'productPriceOld'), '');
         }
 
         $this->set('productName', $PHPShopProduct->getName());

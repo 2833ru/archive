@@ -50,6 +50,7 @@ function actionStart() {
     // Содержание закладки 1
     $Tab1 = $PHPShopGUI->setCollapse('Информация', $PHPShopGUI->setField("Имя", $PHPShopGUI->setInput('text.required', "name_new", $data['name'])) .
             $PHPShopGUI->setField("E-mail", $PHPShopGUI->setInput('email.required.6', "login_new", $data['login'])) .
+            $PHPShopGUI->setField("Телефон", $PHPShopGUI->setInput('tel', "tel_new", $data['tel'])) .
             $PHPShopGUI->setField("Пароль", $PHPShopGUI->setInput("password.required.4", "password_new", $data['password'])) .
             $PHPShopGUI->setField("Подтверждение пароля", $PHPShopGUI->setInput("password.required.4", "password2_new", $data['password'])) .
             $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("enabled_new", 1, "Вкл.", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выкл.", $data['enabled']) . '&nbsp;&nbsp;' . $PHPShopGUI->setCheckbox('sendActivationEmail', 1, 'Оповестить пользователя', 0)) .

@@ -157,8 +157,13 @@ class PHPShopDone extends PHPShopCore {
 
                 $sum_cart = $this->PHPShopCart->getSum();
                 $sum_discount_off = $this->PHPShopCart->getSumNoDiscount();
-                $sum_discount_on = $PHPShopOrder->returnSumma($sum_cart, $this->discount);
-                
+
+                // Èòîãî òîâàğû ïî àêöèè
+                $sum_discount_on = $PHPShopOrder->returnSumma($this->PHPShopCart->getSumPromo(false));
+
+                // Èòîãî òîâàğû áåç àêöèè
+                $sum_discount_on += $PHPShopOrder->returnSumma($this->PHPShopCart->getSumWithoutPromo(false), $this->discount);
+
                 // Áîíóñû
                 $this->bonus_minus = $PHPShopOrder->bonus_minus;
                 $this->bonus_plus = $PHPShopOrder->bonus_plus;
@@ -177,7 +182,7 @@ class PHPShopDone extends PHPShopCore {
                 $this->setHook(__CLASS__, __FUNCTION__, $_POST, 'MIDDLE');
 
                 // Èòîãî
-                $this->total = $this->PHPShopOrder->returnSumma($this->sum, $this->discount) + $this->delivery;
+                $this->total = $sum_discount_on + $this->delivery;
                 $this->set('total', $this->total);
 
                 // Àíàëèòèêà
@@ -467,6 +472,13 @@ class PHPShopDone extends PHPShopCore {
             PHPShopObj::importCore('users');
         $PHPShopUsers = new PHPShopUsers();
         $adresData = $PHPShopUsers->update_user_adres();
+        
+        if(empty($insert['tel_new'])){
+            $insert['tel_new']=$_SESSION['UsersTel'];
+        }
+        if(empty($insert['fio_new'])){
+            $insert['fio_new']=$_SESSION['UsersName'];
+        }
 
         if (is_array($adresData))
             $insert = array_merge($insert, $adresData);
@@ -480,6 +492,7 @@ class PHPShopDone extends PHPShopCore {
 
         // ÎÔÄ Òåñò
         //$this->ofd($result);
+        
         // Ïğîâåğêà îøèáîê ïğè çàïèñè çàêàçà
         $this->error_report($result, array("Cart" => $cart, "Person" => $person, 'insert' => $insert));
 

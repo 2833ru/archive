@@ -8,6 +8,9 @@
  */
 class PHPShopPromotions {
 
+    /** @var PHPShopCart */
+    private $cart;
+
     /**
      * Конструктор
      */
@@ -16,6 +19,8 @@ class PHPShopPromotions {
         $PHPShopOrm->debug = false;
         $where['enabled'] = '="1"';
         $this->promotionslist = $PHPShopOrm->select(array('*'), $where, array('order' => 'id'), array('limit' => 1000), __CLASS__, __FUNCTION__);
+
+        $this->cart = new PHPShopCart();
     }
 
     /**
@@ -99,7 +104,7 @@ class PHPShopPromotions {
         $promo_discount = $promo_discountsum = $num_check = 0;
         $lab = null;
         $id = null;
-        $labels = $ids = $hidePrices = $numChecks = array();
+        $labels = $ids = $hidePrices = $numChecks = $actions = [];
 
         if (isset($data)) {
             foreach ($data as $pro) {
@@ -173,6 +178,7 @@ class PHPShopPromotions {
 
                             $ids[$pro['discount']] = $pro['id'];
                             $numChecks[$pro['discount']] = $pro['num_check'];
+                            $actions[$pro['discount']] = $pro['action'];
                         }
                     }
                 }
@@ -185,6 +191,7 @@ class PHPShopPromotions {
                 $hidePrice = $hidePrices[$promo_discount * 100];
                 $id = $ids[$promo_discount * 100];
                 $num_check = $numChecks[$promo_discount * 100];
+                $action = $actions[$promo_discount * 100];
             }
 
             if (isset($discountsum)) {
@@ -193,10 +200,20 @@ class PHPShopPromotions {
                 $hidePrice = $hidePrices[$promo_discountsum];
                 $id = $ids[$promo_discountsum];
                 $num_check = $numChecks[$promo_discountsum];
+                $action = $actions[$promo_discountsum];
             }
         }
 
-        return array('status' => $sum_order_check, 'percent' => $promo_discount, 'sum' => $promo_discountsum, 'label' => $lab, 'hidePrice' => $hidePrice, 'num_check' => $num_check, 'id'=>$id);
+        return [
+            'status'    => $sum_order_check,
+            'percent'   => $promo_discount,
+            'sum'       => $promo_discountsum,
+            'label'     => $lab,
+            'hidePrice' => $hidePrice,
+            'num_check' => $num_check,
+            'id'        => $id,
+            'action'    => (int) $action
+        ];
     }
 
     /**
@@ -208,6 +225,10 @@ class PHPShopPromotions {
 
         // Получаем информацию о скидках по действующим промоакциям
         $discount_info = $this->promotion_get_discount($row);
+
+        if(isset($this->cart->_CART[$row['id']]) && isset($this->cart->_CART[$row['id']]['promotion_discount'])) {
+            unset($this->cart->_CART[$row['id']]['promo_price']);
+        }
 
         // Проверяем количество в корзине
         $isNeedCount = true;
@@ -229,11 +250,6 @@ class PHPShopPromotions {
                 $priceDiscount[] = $row['price'] - $discountsum;
                 $priceDiscounItog = min($priceDiscount);
                 $priceDiscount = $priceDiscounItog;
-
-                // Обнуляем если в минус уходит
-                if ($priceDiscount < 0) {
-                    $priceDiscount = 0;
-                }
             }
             // Наценка
             else {
@@ -242,10 +258,13 @@ class PHPShopPromotions {
                 $priceDiscounItog = max($priceDiscount);
                 $priceDiscount = $priceDiscounItog;
             }
-
             if($isNeedCount) {
+                if($discount_info['action'] === 1) {
+                    $priceDiscount = $this->applyRegularDiscount($priceDiscount, $row['price'], $row['id']);
+                }
+
                 $productPrice = $priceDiscount;
-                $productPriceNew = $row['price'];
+                $productPriceNew = $priceDiscount < $row['price'] ? $row['price'] : $row['price_n'];
             } else {
                 $productPrice = $row['price'];
                 $productPriceNew = $row['price_n'];
@@ -262,9 +281,8 @@ class PHPShopPromotions {
 
     private function getCntPromoProdsInCart($discountId)
     {
-        $cart = new PHPShopCart();
         $num = 0;
-        foreach ($cart->_CART as $k => $cartProduct) {
+        foreach ($this->cart->_CART as $k => $cartProduct) {
             $discount = $this->promotion_get_discount($cartProduct);
             if(!empty($discount['sum']) or !empty($discount['percent']) and (int) $discount['id'] === $discountId) {
                 $num += $cartProduct['num'];
@@ -272,6 +290,32 @@ class PHPShopPromotions {
         }
 
         return $num;
+    }
+
+    private function applyRegularDiscount($promoPrice, $price, $productId)
+    {
+        $order = new PHPShopOrderFunction();
+        $regularDiscount = (float) $order->ChekDiscount($this->cart->getSum());
+        if($regularDiscount === 0) {
+            return $promoPrice;
+        }
+
+        $regularDiscountPrice = $price - ($price * $regularDiscount / 100);
+
+        // Скидка от заказа больше, не применяем промо - возвращаем оригинальную цену товара - что бы применилась скидка от заказа.
+        if($regularDiscountPrice < $promoPrice) {
+            return $price;
+        }
+
+        // Скидка от промо больше, применяем скидку от промо и добавляем наценку что бы не применилась скидка.
+        foreach ($this->cart->_CART as $key => $cartProduct) {
+            if($cartProduct['id'] == $productId) {
+                $this->cart->_CART[$key]['promo_price'] = $promoPrice;
+                $this->cart->_CART[$key]['promotion_discount'] = true;
+            }
+        }
+
+        return $promoPrice;
     }
 }
 

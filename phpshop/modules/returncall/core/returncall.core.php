@@ -95,11 +95,33 @@ class PHPShopReturncall extends PHPShopCore {
 
         if ($this->security() and PHPShopSecurity::true_param($_POST['returncall_mod_name'], $_POST['returncall_mod_tel'])) {
             $this->write();
+
+            if(isset($_POST['ajax'])) {
+                $message = $this->system['title_end'];
+                if (empty($message))
+                    $message = $GLOBALS['SysValue']['lang']['returncall_done'];
+
+                echo json_encode([
+                    'message' => PHPShopString::win_utf8($message),
+                    'success' => true
+                ]);
+                exit;
+            }
+
             header('Location: ./done.html');
             exit();
         } else {
             $message = $GLOBALS['SysValue']['lang']['returncall_error'];
+
+            if(isset($_POST['ajax'])) {
+                echo json_encode([
+                    'message' => PHPShopString::win_utf8($message),
+                    'success' => false
+                ]);
+                exit;
+            }
         }
+
         $this->index($message);
     }
 
@@ -110,6 +132,12 @@ class PHPShopReturncall extends PHPShopCore {
 
         // Подключаем библиотеку отправки почты
         PHPShopObj::loadClass("mail");
+
+        if(isset($_POST['ajax'])) {
+            $_POST['returncall_mod_name']    = PHPShopString::utf8_win1251($_POST['returncall_mod_name']);
+            $_POST['returncall_mod_message'] = PHPShopString::utf8_win1251($_POST['returncall_mod_message']);
+        }
+
         $insert = array();
         $insert['name_new'] = PHPShopSecurity::TotalClean($_POST['returncall_mod_name'], 2);
         $insert['tel_new'] = PHPShopSecurity::TotalClean($_POST['returncall_mod_tel'], 2);

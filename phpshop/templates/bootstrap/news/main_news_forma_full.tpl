@@ -5,3 +5,4 @@
 
 <div>@newsKratko@</div>
 <div>@newsPodrob@</div>
+<div>@odnotipDisp@</div>

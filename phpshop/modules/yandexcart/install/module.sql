@@ -24,11 +24,13 @@ ALTER TABLE `phpshop_products` ADD `vendor_name` varchar(255) DEFAULT '';
 ALTER TABLE `phpshop_products` ADD `manufacturer` varchar(255) DEFAULT '';
 ALTER TABLE `phpshop_products` ADD `yandex_condition` enum('1','2','3') DEFAULT '1';
 ALTER TABLE `phpshop_products` ADD `yandex_condition_reason` text;
+ALTER TABLE `phpshop_products` ADD `barcode` varchar(255) DEFAULT '';
+ALTER TABLE `phpshop_products` ADD `model` varchar(255) DEFAULT '';
 
 CREATE TABLE `phpshop_modules_yandexcart_system` (
   `id` int(11) NOT NULL auto_increment,
   `password` varchar(64),
-  `version` varchar(64) default '2.5',
+  `version` varchar(64) default '2.6',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251 ;
 
@@ -36,5 +38,5 @@ CREATE TABLE `phpshop_modules_yandexcart_system` (
 -- Дамп данных таблицы `phpshop_modules_yandexcart_system`
 -- 
 
-INSERT INTO `phpshop_modules_yandexcart_system` VALUES (1,'','2.5');
+INSERT INTO `phpshop_modules_yandexcart_system` VALUES (1,'','2.6');
   

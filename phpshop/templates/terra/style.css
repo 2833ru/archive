@@ -837,12 +837,12 @@ max-width: 196px !important;}
 	position: absolute;
 	bottom: 30px;
 	left: auto;
-	right: 12%;
+	right: 50%;
 	z-index: 15;
 	width: auto;
 	padding: 0;
 	margin: 0;
-	text-align: right;
+	text-align: center;
 }
 #main-carousel .carousel-indicators li{
 	margin:0 8px;	   
@@ -4356,6 +4356,9 @@ font-size: 16px;
 font-weight: bold;
 line-height: 26px;
 text-transform: uppercase;}
+.page-submenu {
+	background: none!important;
+}
 @media(max-width:768px){.productsgroup_block{width:33%}}
 @media(max-width:550px){.productsgroup_block{width:50%}}
 .product-page-input-number{display:flex; align-items:center;}

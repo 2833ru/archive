@@ -8,6 +8,7 @@ session_start();
 
 $_classPath = $_SERVER['DOCUMENT_ROOT']."/phpshop/";
 include($_classPath . "class/obj.class.php");
+include_once($_classPath . "class/mail.class.php");
 PHPShopObj::loadClass("base");
 PHPShopObj::loadClass("lang");
 PHPShopObj::loadClass("order");
@@ -17,10 +18,13 @@ PHPShopObj::loadClass("payment");
 PHPShopObj::loadClass("modules");
 PHPShopObj::loadClass("system");
 PHPShopObj::loadClass("user");
+PHPShopObj::loadClass("security");
+PHPShopObj::loadClass("parser");
+PHPShopObj::loadClass("string");
 
 
 $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
-
+$PHPShopSystem = new PHPShopSystem();
 $PHPShopModules = new PHPShopModules($_classPath . "modules/");
 $PHPShopModules->checkInstall('cloudpayments');
 
@@ -122,9 +126,7 @@ class Payment extends PHPShopPaymentResult
             $row = $PHPShopOrm->select(array('id','uid','statusi'), array('id' => "=" .$orderId. ""), array('order'=>'id DESC'), array('limit' => 1));
 
             if (!empty($row['uid'])) {
-                $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
-                $status = $this->set_order_status_101();
-           		$PHPShopOrm->query("UPDATE `phpshop_orders` SET `statusi`='$status', `paid` = 1 WHERE `id`=$orderId");
+                (new PHPShopOrderFunction((int) $row['id']))->changeStatus((int) $this->set_order_status_101(), $row['statusi']);
 
                 include_once(dirname(__FILE__) . '/../hook/mod_option.hook.php');
                 $CPay = new PHPShopcloudpaymentArray();

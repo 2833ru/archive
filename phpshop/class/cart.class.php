@@ -244,22 +244,14 @@ class PHPShopCart {
      * @return float
      */
     function getSum($order = true, $format = '') {
-        global $PHPShopSystem;
 
         $sum = 0;
         if (is_array($this->_CART))
             foreach ($this->_CART as $val)
                 $sum += $val['num'] * $val['price'];
 
-        // Если выбрана другая валюта
-        if ($order and isset($_SESSION['valuta'])) {
-            $valuta = $_SESSION['valuta'];
-            $kurs = $this->Valuta[$valuta]['kurs'];
-        } else
-            $kurs = $PHPShopSystem->getDefaultValutaKurs();
-
         // Поправки по курсу
-        return number_format($sum * $kurs, $this->format, '.', $format);
+        return number_format($this->applyCurrency($sum, $order), $this->format, '.', $format);
     }
 
     /**
@@ -268,7 +260,6 @@ class PHPShopCart {
      * @return float
      */
     function getSumNoDiscount($order = true) {
-        global $PHPShopSystem;
 
         $sum_n = 0;
         if (is_array($this->_CART))
@@ -279,15 +270,35 @@ class PHPShopCart {
                     $sum_n += $val['num'] * $val['price'];
             }
 
-        // Если выбрана другая валюта
-        if ($order && isset($_SESSION['valuta'])) {
-            $valuta = $_SESSION['valuta'];
-            $kurs = $this->Valuta[$valuta]['kurs'];
-        } else
-            $kurs = $PHPShopSystem->getDefaultValutaKurs();
+        // Поправки по курсу
+        return number_format($this->applyCurrency($sum_n, $order), $this->format, '.', '');
+    }
+
+    function getSumWithoutPromo($order = true) {
+
+        $sum = 0;
+        if (is_array($this->_CART))
+            foreach ($this->_CART as $val) {
+                if (empty($val['promo_price'])) {
+                    $sum += $val['num'] * $val['price'];
+                }
+            }
 
         // Поправки по курсу
-        return number_format($sum_n * $kurs, $this->format, '.', '');
+        return (float) $this->applyCurrency($sum, $order);
+    }
+
+    function getSumPromo($order = true) {
+        $sum = 0;
+        if (is_array($this->_CART))
+            foreach ($this->_CART as $val) {
+                if (!empty($val['promo_price'])) {
+                    $sum += $val['num'] * $val['price'];
+                }
+            }
+
+        // Поправки по курсу
+        return (float) $this->applyCurrency($sum, $order);
     }
 
     /**
@@ -347,6 +358,22 @@ class PHPShopCart {
         return $PHPShopOrder->ReturnSumma($this->getSum(), $PHPShopOrder->ChekDiscount($this->getSum()));
     }
 
+    public function isItemInCart($productId)
+    {
+        foreach ($this->_CART as $product) {
+            // Товар в корзине
+            if((int) $product['id'] === (int) $productId) {
+                return true;
+            }
+            // В корзине подтип товара
+            if(isset($product['parent']) && (int) $product['parent'] === (int) $productId) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * Массив корзины
      * @return array
@@ -384,6 +411,22 @@ class PHPShopCart {
             return $this->PHPShopModules->setHookHandler($class_name, $function_name, array(&$this), $data, $rout);
     }
 
+    /**
+     * Применение курса к сумме.
+     */
+    private function applyCurrency($sum, $order)
+    {
+        global $PHPShopSystem;
+
+        // Если выбрана другая валюта
+        if ($order and isset($_SESSION['valuta'])) {
+            $valuta = $_SESSION['valuta'];
+            $kurs = $this->Valuta[$valuta]['kurs'];
+        } else
+            $kurs = $PHPShopSystem->getDefaultValutaKurs();
+
+        return $sum * $kurs;
+    }
 }
 
 ?>

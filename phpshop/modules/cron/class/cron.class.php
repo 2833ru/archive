@@ -49,36 +49,33 @@ class PHPShopCron {
             // Безопасность
             $cron_secure = md5($this->SysValue['connect']['host'] . $this->SysValue['connect']['dbase'] . $this->SysValue['connect']['user_db'] . $this->SysValue['connect']['pass_db']);
 
+            $protocol = 'http://';
+            if(!empty($_SERVER['HTTPS']) && 'off' !== strtolower($_SERVER['HTTPS'])) {
+                $protocol = 'https://';
+            }
             if (!empty($path[1]))
-                $true_path = "http://" . $_SERVER['SERVER_NAME'] . "/" . $job['path'] . '&s=' . $cron_secure . $this->check_host;
+                $true_path = $protocol . $_SERVER['SERVER_NAME'] . "/" . $job['path'] . '&s=' . $cron_secure . $this->check_host;
             else
-                $true_path = "http://" . $_SERVER['SERVER_NAME'] . "/" . $job['path'] . '?s=' . $cron_secure . $this->check_host;
+                $true_path = $protocol . $_SERVER['SERVER_NAME'] . "/" . $job['path'] . '?s=' . $cron_secure . $this->check_host;
 
-            $handle = @fopen($true_path, "r");
-            if ($handle) {
-                
-                $contents = fread($handle, 1000);
-                fclose($handle);
-                
-                if(empty($contents))
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $true_path);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+            $data = curl_exec($ch);
+            $info = curl_getinfo($ch);
+            curl_close($ch);
+
+            if ((int) $info['http_code'] === 200) {
+
+                if(empty($data))
                     $result = 'Выполнено';
-                else $result = $contents;
+                else $result = $data;
 
                 return $result;
             } else
                 return 'Ошибка вызова файла';
-        } else
-            return 'Ошибка размещения файла';
-    }
-
-    // Выполнение задачи для отключения fopen_url
-    function _execute($job) {
-
-        if (is_file($job['path'])) {
-            if (fopen($_SERVER['DOCUMENT_ROOT'] . $job['path'], "r"))
-                return 'Выполнено';
-            else
-                return 'Ошибка вызова файл';
         } else
             return 'Ошибка размещения файла';
     }

@@ -47,8 +47,9 @@ class PHPShopSeoProCore extends PHPShopShop {
     }
 
     function set_meta($row) {
-        global $seourl_option;
 
+        $seourl_option = $GLOBALS['PHPShopSeoPro']->getSettings();
+        
         // Перехват модуля
         if ($this->setHook(get_parent_class(), __FUNCTION__, $row))
             return true;

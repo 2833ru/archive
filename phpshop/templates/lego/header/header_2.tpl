@@ -160,7 +160,7 @@
                     <ul class="catalog-menu-list">
                         @topcatMenu@
                     </ul>
-                    <form action="/search/" role="search" method="post">
+                    <form action="/search/" role="search" method="get">
                         <div class="input-group search-block">
                             <input name="words" maxlength="50" class="form-control search-input" placeholder="{Искать}.." required="" type="search" data-trigger="manual" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="">
                             <span class="input-group-btn">

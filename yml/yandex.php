@@ -3,13 +3,14 @@
 /**
  * Файл выгрузки для Яндекс Маркет
  * @author PHPShop Software
- * @version 2.7
+ * @version 2.9
  * @package PHPShopXML
  * @example ?ssl [bool] SSL
  * @example ?getall [bool] Выгрузка всех товаров без учета флага YML. Выгрузка всех изображений.
  * @example ?from [bool] Метка в ссылки товара from
  * @example ?amount [bool] Добавление склада в тег amount для CRM
- * @example ?search [bool] Убрать подтипы из выгрузки (для Яндекс.Поиск по сайту).
+ * @example ?search [bool] Убрать подтипы из выгрузки (для Яндекс.Поиск по сайту)
+ * @example ?utf [bool] Вывод в кодировке UTF-8
  */
 $_classPath = "../phpshop/";
 include($_classPath . "class/obj.class.php");
@@ -25,6 +26,7 @@ PHPShopObj::loadClass("security");
 PHPShopObj::loadClass("modules");
 PHPShopObj::loadClass("file");
 PHPShopObj::loadClass("promotions");
+PHPShopObj::loadClass("order");
 
 // Настройки
 $PHPShopSystem = new PHPShopSystem();
@@ -47,7 +49,6 @@ $PHPShopModules = new PHPShopModules($_classPath . "modules/");
 class PHPShopYml {
 
     var $xml = null;
-
     private $categories = [];
 
     /**
@@ -231,7 +232,10 @@ class PHPShopYml {
                     if (!empty($this->image_source))
                         $row['name'] = str_replace(".", "_big.", $row['name']);
 
-                    $xml .= '<picture>' . $this->ssl . $_SERVER['SERVER_NAME'] . $row['name'] . '</picture>';
+                    if (strpos($row['name'], 'http:') === false && strpos($row['name'], 'https:') === false)
+                        $xml .= '<picture>' . $this->ssl . $_SERVER['SERVER_NAME'] . htmlspecialchars($row['name']) . '</picture>';
+                    else
+                        $xml .= '<picture>' . htmlspecialchars($row['name']) . '</picture>';
                 }
         }
         if (empty($xml))
@@ -310,10 +314,10 @@ class PHPShopYml {
             // Основная категория
             $category = $row['category'];
             // Товар с доп. каталога, основного каталога в выводе нет.
-            if(count($this->categories) > 0) {
-                if(in_array($category, $this->categories) === false) {
+            if (count($this->categories) > 0) {
+                if (in_array($category, $this->categories) === false) {
                     foreach (explode('#', $row['dop_cat']) as $dopCat) {
-                        if(!empty($dopCat) && in_array($dopCat, $this->categories)) {
+                        if (!empty($dopCat) && in_array($dopCat, $this->categories)) {
                             $category = $dopCat;
                             break;
                         }
@@ -366,7 +370,7 @@ class PHPShopYml {
                 "id" => $id,
                 "category" => $category,
                 "name" => str_replace(array('&#43;', '&#43'), '+', $name),
-                "picture" => $row['pic_big'],
+                "picture" => htmlspecialchars($row['pic_big']),
                 "price" => $price,
                 "oldprice" => $oldprice,
                 "weight" => $row['weight'],
@@ -399,6 +403,8 @@ class PHPShopYml {
                 "gift" => $row['gift'],
                 "gift_check" => $row['gift_check'],
                 "gift_items" => $row['gift_items'],
+                "barcode" => $row['barcode'],
+                "model" => $row['model'],
             );
 
             // Параметр сортировки
@@ -482,7 +488,7 @@ class PHPShopYml {
             "color" => $row['parent2'],
             "category" => $parent_array['category'],
             "name" => str_replace(array('&#43;', '&#43'), '+', $name),
-            "picture" => $row['pic_big'],
+            "picture" => htmlspecialchars($row['pic_big']),
             "price" => $price,
             "oldprice" => $oldprice,
             "weight" => $parent_array['weight'],
@@ -512,6 +518,8 @@ class PHPShopYml {
             "gift" => $row['gift'],
             "gift_check" => $row['gift_check'],
             "gift_items" => $row['gift_items'],
+            "barcode" => $row['barcode'],
+            "model" => $row['model'],
         );
 
         $Products[$id] = $array;
@@ -523,7 +531,7 @@ class PHPShopYml {
  * Заголовок
  */
 function setHeader() {
-    $this->xml .= '<?xml version="1.0" encoding="windows-1251"?>
+    $this->xml .= '<?xml version="1.0" encoding="' . $this->encoding . '"?>
 <!DOCTYPE yml_catalog SYSTEM "shops.dtd">
 <yml_catalog date="' . date('Y-m-d H:m') . '">
 <shop>
@@ -678,7 +686,7 @@ function setProducts() {
 
         $picture = $this->getImages($val);
 
-        if(isset($_GET['getall'])) {
+        if (isset($_GET['getall'])) {
             $val['description'] = $val['content'];
         }
 
@@ -734,19 +742,34 @@ function serFooter() {
  * Компиляция документа, вывод результата
  */
 function compile() {
+
+    if (isset($_GET['utf'])) {
+        $this->encoding = 'utf-8';
+        $this->charset = 'utf-8';
+    } else {
+        $this->charset = 'cp1251';
+        $this->encoding = 'windows-1251';
+    }
+
     $this->setHeader();
     $this->setCurrencies();
     $this->setCategories();
     $this->setDelivery();
     $this->setProducts();
     $this->serFooter();
+
+    if (isset($_GET['utf'])) {
+        $this->xml = PHPShopString::win_utf8($this->xml);
+        $this->charset = 'utf-8';
+    } else
+        $this->charset = 'cp1251';
     echo $this->xml;
 }
 
 }
 
-header("HTTP/1.1 200");
-header("Content-Type: application/xml; charset=cp1251");
 $PHPShopYml = new PHPShopYml();
+header("HTTP/1.1 200");
+header("Content-Type: application/xml; charset=" . $PHPShopYml->charset);
 $PHPShopYml->compile();
 ?>

@@ -98,6 +98,9 @@ class PHPShopCoreElement extends PHPShopElements {
 
                 if (!empty($showcaseData['logo']))
                     $this->PHPShopSystem->setParam('logo', $showcaseData['logo']);
+                
+                if (!empty($showcaseData['icon']))
+                    $this->PHPShopSystem->setParam('icon', $showcaseData['icon']);
 
                 if (!empty($showcaseData['adres']))
                     $this->set('streetAddress', $showcaseData['adres']);
@@ -155,6 +158,14 @@ class PHPShopCoreElement extends PHPShopElements {
         $this->set('telNum', $tel);
         $this->set('telNum2', $this->PHPShopSystem->getSerilizeParam("bank.org_tel"));
         $this->set('workingTime', $this->PHPShopSystem->getSerilizeParam("bank.org_time"));
+        
+        // SMS
+        if($this->PHPShopSystem->getSerilizeParam("admoption.sms_login")!=1)
+         $this->set('sms_login_enabled', 'hidden');
+        else {
+            $this->set('sms_login_enabled', 'req');
+            $this->set('sms_login_control', 'required=""');
+        }
 
         // Телефон для звонков
         if (strstr($tel, ","))
@@ -346,6 +357,9 @@ class PHPShopUserElement extends PHPShopElements {
 
                 // Имя пользователя
                 $_SESSION['UsersName'] = $data['name'];
+                
+                // Телефон пользователя
+                $_SESSION['UsersTel'] = $data['tel'];
 
                 // Статус пользователя
                 $_SESSION['UsersStatus'] = $data['status'];

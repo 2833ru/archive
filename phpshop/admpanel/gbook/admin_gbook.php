@@ -22,7 +22,7 @@ function actionStart() {
             if(!empty($row['otvet'])) $otvet='<span class="glyphicon glyphicon-ok"></span>';
             else $otvet='<span class="glyphicon glyphicon-remove"></span>';
             
-            $PHPShopInterface->setRow($row['id'], array('name' => $row['tema'], 'link' => '?path=gbook&id=' . $row['id'], 'align' => 'left'), $row['name'], array('name' => PHPShopDate::get($row['datas']), 'align' => 'center'), array('name' => $otvet, 'align' => 'center'), array('action' => array('edit', 'delete', 'id' => $row['id']), 'align' => 'center'), array('status' => array('enable' => $row['flag'], 'align' => 'right', 'caption' => array('Выкл', 'Вкл'))));
+            $PHPShopInterface->setRow($row['id'], array('name' => $row['tema'], 'link' => '?path=gbook&id=' . $row['id'], 'align' => 'left'), $row['name'], array('name' => PHPShopDate::get($row['datas']), 'align' => 'center'), array('name' => $otvet, 'align' => 'center'), array('action' => array('edit', '|','delete', 'id' => $row['id']), 'align' => 'center'), array('status' => array('enable' => $row['flag'], 'align' => 'right', 'caption' => array('Выкл', 'Вкл'))));
         }
 
 

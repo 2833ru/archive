@@ -75,8 +75,7 @@ class Payment extends PHPShopPaymentResult {
             $PHPShopOrm->debug = false;
             $row = $PHPShopOrm->getOne(array('*'), array('uid' => "='" . $this->orderNumber . "'"));
             if (!empty($row['id'])) {
-                // Изменение статуса платежа
-                $PHPShopOrm->update(array('statusi_new' => $this->set_order_status_101(), 'paid_new' => 1), array('id' => '="' . $row['id'] . '"'));
+                (new PHPShopOrderFunction((int) $row['id']))->changeStatus((int) $this->set_order_status_101(), $row['statusi']);
 
                 // Лог оплат
                 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['payment']);

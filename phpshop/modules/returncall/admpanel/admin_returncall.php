@@ -22,7 +22,7 @@ function actionStart() {
         foreach ($data as $row) {
         
             $time = null;
-            $PHPShopInterface->setRow($row['id'], array('name' => $row['name'], 'link' => '?path=modules.dir.' . $subpath[2] . '&id=' . $row['id'], 'align' => 'left'), PHPShopDate::get($row['date'], true), $row['tel'], $row['time_start'] . ' ' . $row['time_end'], array('action' => array('edit', 'delete', 'id' => $row['id']), 'align' => 'center'), '<span style="color:'.$OrderStatusArray[$row['status']]['color'].'">'.$OrderStatusArray[$row['status']]['name'].'</span>');
+            $PHPShopInterface->setRow($row['id'], array('name' => $row['name'], 'link' => '?path=modules.dir.' . $subpath[2] . '&id=' . $row['id'], 'align' => 'left'), PHPShopDate::get($row['date'], true), $row['tel'], $row['time_start'] . ' ' . $row['time_end'], array('action' => array('edit','|', 'delete', 'id' => $row['id']), 'align' => 'center'), '<span style="color:'.$OrderStatusArray[$row['status']]['color'].'">'.$OrderStatusArray[$row['status']]['name'].'</span>');
         }
 
     $PHPShopInterface->Compile();

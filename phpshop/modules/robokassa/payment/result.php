@@ -7,7 +7,9 @@ session_start();
 
 $_classPath = "../../../";
 include($_classPath . "class/obj.class.php");
+include_once($_classPath . "class/mail.class.php");
 PHPShopObj::loadClass("base");
+PHPShopObj::loadClass("lang");
 PHPShopObj::loadClass("order");
 PHPShopObj::loadClass("file");
 PHPShopObj::loadClass("xml");
@@ -15,9 +17,12 @@ PHPShopObj::loadClass("orm");
 PHPShopObj::loadClass("payment");
 PHPShopObj::loadClass("modules");
 PHPShopObj::loadClass("system");
+PHPShopObj::loadClass("security");
+PHPShopObj::loadClass("parser");
+PHPShopObj::loadClass("string");
 
 $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, true);
-
+$PHPShopSystem = new PHPShopSystem();
 $PHPShopModules = new PHPShopModules($_classPath . "modules/");
 $PHPShopModules->checkInstall('robokassa');
 
@@ -63,7 +68,7 @@ class Payment extends PHPShopPaymentResult {
             // Проверяем сущ. заказа
             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
             $PHPShopOrm->debug = $this->debug;
-            $row = $PHPShopOrm->select(array('uid'), array('uid' => "='" . $this->true_num($this->inv_id) . "'"), false, array('limit' => 1));
+            $row = $PHPShopOrm->select(array('uid', 'id', 'statusi'), array('uid' => "='" . $this->true_num($this->inv_id) . "'"), false, array('limit' => 1));
             if (!empty($row['uid'])) {
 
                 // Лог оплат
@@ -72,10 +77,7 @@ class Payment extends PHPShopPaymentResult {
                     'sum_new' => $this->out_summ, 'datas_new' => time()));
 
                 // Изменение статуса платежа
-                $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
-                $PHPShopOrm->debug = $this->debug;
-
-                $PHPShopOrm->update(array('statusi_new' => $this->set_order_status_101(), 'paid_new' => 1), array('uid' => '="' . $this->true_num($this->inv_id) . '"'));
+                (new PHPShopOrderFunction((int) $row['id']))->changeStatus((int) $this->set_order_status_101(), $row['statusi']);
 
                 // данные в лог
                 $this->PHPShopRobokassaArray->log($_REQUEST, $this->inv_id, 'заказ найден, статус изменён, запись в лог электронных плетежей занесена', 'запрос Result c сервера робокассы');

@@ -49,6 +49,7 @@ function SendSMS($msg, $phone = false) {
     $res = curl_exec($ch);
     $result = json_decode($res, true);
     curl_close($ch);
+    return $result;
 }
 
 ?>

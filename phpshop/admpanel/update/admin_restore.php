@@ -1,7 +1,7 @@
 <?php
 
 $TitlePage = __("Мастер восстановления");
-PHPShopObj::loadClass('update');
+PHPShopObj::loadClass(['update', 'restore']);
 
 $PHPShopRestore = new PHPShopRestore();
 
@@ -9,7 +9,7 @@ $PHPShopRestore = new PHPShopRestore();
 function actionRestore() {
     global $PHPShopRestore, $TitlePage;
 
-    $TitlePage.=' - ' . __('Восстановление файлов');
+    $TitlePage .= ' - ' . __('Восстановление файлов');
 
     // Проверка обновлений
     $PHPShopRestore->checkRestore($_REQUEST['version']);
@@ -35,24 +35,26 @@ function getFileInfo($file) {
     global $PHPShopInterface;
     static $i;
 
-    $i++;
-    $stat = stat("../../backup/backups/" . $file . '/files.zip');
-    $stat_bd = stat("../../backup/backups/" . $file . '/restore.sql');
+    if ($file != '.gitignore') {
 
-    foreach (str_split($file) as $w)
-        $version.=$w . '.';
-    $version = __('Версия') . ' ' . substr($version, 0, strlen($version) - 1);
+        $i++;
+        $stat = stat("../../backup/backups/" . $file . '/files.zip');
+
+        foreach (str_split($file) as $w)
+            $version .= $w . '.';
+        $version = __('Версия') . ' ' . substr($version, 0, strlen($version) - 1);
 
 
-    if ($GLOBALS['SysValue']['upload']['version'] > $file)
-        $menu = array('restore', 'log', 'id' => $file);
-    else {
-        $menu = array('log', 'id' => $file);
-        $version = '<span class="text-danger">' . $version . '</span>';
+        if ($GLOBALS['SysValue']['upload']['version'] > $file)
+            $menu = array('restore', 'log', 'id' => $file);
+        else {
+            $menu = array('log', 'id' => $file);
+            $version = '<span class="text-danger">' . $version . '</span>';
+        }
+
+
+        $PHPShopInterface->setRow(array('name' => $version, 'align' => 'left'), PHPShopDate::get($stat['mtime'], true), array('name' => number_format($stat['size'], 0, ',', ' ') . ' ' . __('байт')), array('action' => $menu, 'align' => 'right'));
     }
-
-
-    $PHPShopInterface->setRow(array('name' => $version, 'align' => 'left'), PHPShopDate::get($stat['mtime'], true), array('name' => number_format($stat['size'], 0, ',', ' ') . ' ' . __('байт')), array('action' => $menu, 'align' => 'right'));
 }
 
 // Стартовый вид
@@ -60,17 +62,17 @@ function actionStart() {
     global $PHPShopInterface, $TitlePage, $PHPShopModules, $PHPShopGUI, $PHPShopRestore, $help;
 
     $PHPShopGUI->addJSFiles('./update/gui/update.gui.js');
-   
+
     $PHPShopGUI->action_button['Журнал'] = array(
         'name' => 'Журнал обновлений',
         'class' => 'btn btn-default btn-sm navbar-btn btn-action-panel-blank',
-        'action' => 'http://phpshop.ru/docs/update.html',
+        'action' => 'https://www.phpshop.ru/docs/update.html',
         'type' => 'button',
-        'locale'=>true,
+        'locale' => true,
         'icon' => 'glyphicon glyphicon-gift'
     );
-    
-     $PHPShopGUI->setActionPanel($TitlePage, false, array('Журнал'));
+
+    $PHPShopGUI->setActionPanel($TitlePage, false, array('Журнал'));
 
     if (!empty($_GET['version']))
         $restore_result = actionRestore();
@@ -88,9 +90,9 @@ function actionStart() {
         PHPShopFile::searchFile("../../backup/backups/", 'getFileInfo');
 
 
-        $PHPShopGUI->_CODE.='<table class="table table-hover" id="data">' . $PHPShopInterface->getContent() . '</table>';
+        $PHPShopGUI->_CODE .= '<table class="table table-hover" id="data">' . $PHPShopInterface->getContent() . '</table>';
     } else {
-        $PHPShopGUI->_CODE.=$PHPShopRestore->getLog();
+        $PHPShopGUI->_CODE .= $PHPShopRestore->getLog();
     }
 
     // Вывод кнопок сохранить и выход в футер

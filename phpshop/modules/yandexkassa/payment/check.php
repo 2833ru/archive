@@ -9,6 +9,7 @@ session_start();
 
 $_classPath = "../../../";
 include($_classPath . "class/obj.class.php");
+include_once($_classPath . "class/mail.class.php");
 include_once($_classPath . "modules/yandexkassa/class/YandexKassa.php");
 PHPShopObj::loadClass("base");
 PHPShopObj::loadClass("lang");
@@ -19,9 +20,12 @@ PHPShopObj::loadClass("orm");
 PHPShopObj::loadClass("payment");
 PHPShopObj::loadClass("modules");
 PHPShopObj::loadClass("system");
+PHPShopObj::loadClass("security");
+PHPShopObj::loadClass("parser");
+PHPShopObj::loadClass("string");
 
 $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
-
+$PHPShopSystem = new PHPShopSystem();
 $PHPShopModules = new PHPShopModules($_classPath . "modules/");
 $PHPShopModules->checkInstall('yandexkassa');
 
@@ -68,9 +72,7 @@ class Payment extends PHPShopPaymentResult {
                     'sum_new' => $order['amount']['value'], 'datas_new' => time()));
 
                 // Изменение статуса платежа
-                $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
-                $PHPShopOrm->debug = false;
-                $PHPShopOrm->update(array('statusi_new' => $this->set_order_status_101(), 'paid_new' => 1), array('id' => '="' . $row['id'] . '"'));
+                (new PHPShopOrderFunction((int) $row['id']))->changeStatus((int) $this->set_order_status_101(), $row['statusi']);
 
                 $this->YandexKassa->log($order, $row['id'], 'Заказ оплачен, статус заказа изменен', 'Уведомление Яндекс.Кассы');
             } else {

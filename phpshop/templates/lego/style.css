@@ -7382,7 +7382,6 @@ h3.last-header{font-size:24px}
     padding: 0;
     max-height: 390px;
     max-width: 390px;
-    width: 100%;
 }
 .glyphicon.glyphicon-remove.form-control-feedback{display:none!important}
 form[name="users_password"]{max-width:420px}

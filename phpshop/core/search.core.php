@@ -32,7 +32,7 @@ class PHPShopSearch extends PHPShopShopCore {
 
         $this->yandexSearchAPI = $this->PHPShopSystem->getSerilizeParam('admoption.yandex_search_apikey');
         $this->yandexSearchId = (int) $this->PHPShopSystem->getSerilizeParam('admoption.yandex_search_id');
-        if(!empty($this->yandexSearchAPI) && !empty($this->yandexSearchId)) {
+        if (!empty($this->yandexSearchAPI) && !empty($this->yandexSearchId)) {
             $this->isYandexSearch = (bool) $this->PHPShopSystem->getSerilizeParam('admoption.yandex_search_enabled');
         }
 
@@ -49,7 +49,7 @@ class PHPShopSearch extends PHPShopShopCore {
         $this->set('searchSetA', 'checked');
         $this->set('searchSetC', 'checked');
 
-        if($this->isYandexSearch) {
+        if ($this->isYandexSearch) {
             $this->set('hideSearchType', 'hidden');
         }
 
@@ -127,7 +127,7 @@ class PHPShopSearch extends PHPShopShopCore {
         $this->ParentArray = $this->PHPShopCategoryArray->getKey('parent_to.id', true);
         if (is_array($this->ParentArray[0])) {
             foreach ($this->ParentArray[0] as $val) {
-                if ($this->PHPShopCategoryArray->getParam($val . '.skin_enabled') != 1 and !$this->errorMultibase($val)) {
+                if ($this->PHPShopCategoryArray->getParam($val . '.skin_enabled') != 1 and ! $this->errorMultibase($val)) {
                     $name = $this->PHPShopCategoryArray->getParam($val . '.name');
                     $this->subcategory($val, $name);
                 }
@@ -157,6 +157,23 @@ class PHPShopSearch extends PHPShopShopCore {
                     $this->setHook(__CLASS__, __FUNCTION__, $PHPShopSort);
                 }
             }
+    }
+
+    /**
+     *  Поиск по именам категорий
+     */
+    function words_category() {
+
+        $template = 'search/search_ajax_catalog_forma.tpl';
+        if (PHPShopParser::checkFile($template)) {
+            $PHPShopOrm = new PHPShopOrm($this->getValue('base.categories'));
+            $PHPShopOrm->debug = $this->debug;
+
+
+            $data = $PHPShopOrm->select(array('id', 'name'), array('name' => " REGEXP '" . explode(" ", $_REQUEST['words'])[0] . "'"), array('order' => 'name'), array('limit' => 5));
+
+            return $this->product_grid($data, $this->cell, $template, $this->line);
+        }
     }
 
     /**
@@ -195,13 +212,12 @@ class PHPShopSearch extends PHPShopShopCore {
                 if (!empty($GLOBALS['SysValue']['base']['seourlpro']['seourlpro_system'])) {
                     $seourlpro = true;
                 }
-            }
-            else
+            } else
                 $template = false;
 
             $order = $this->query_filter();
 
-            if(!empty($order)) {
+            if (!empty($order)) {
                 // Сложный запрос
                 $this->PHPShopOrm->sql = $order;
                 $this->PHPShopOrm->debug = $this->debug;
@@ -213,12 +229,15 @@ class PHPShopSearch extends PHPShopShopCore {
 
             if (is_array($dataArray) and is_array($this->dataArray))
                 $this->dataArray += $dataArray;
-            elseif(is_array($dataArray))
-                $this->dataArray = $dataArray;    
-            
+            elseif (is_array($dataArray))
+                $this->dataArray = $dataArray;
+
             $this->PHPShopOrm->clean();
 
-            if (!empty($this->dataArray)) {
+            // Поиск по каталогам
+            $grid_category = $this->words_category();
+
+            if (!empty($this->dataArray) or ! empty($grid_category)) {
 
                 // Пагинатор
                 $this->setPaginator(count($this->dataArray), $order);
@@ -229,12 +248,13 @@ class PHPShopSearch extends PHPShopShopCore {
                 // Ajax Search
                 if (isset($_REQUEST['ajax'])) {
 
+                    $grid = $grid_category . $grid;
 
                     // Поддержка модуля SeoUrlPro
                     if (!empty($seourlpro))
                         $grid = $GLOBALS['PHPShopSeoPro']->AjaxCompile($grid);
 
-                    header('Content-type: text/html; charset='.$GLOBALS['PHPShopLang']->charset);
+                    header('Content-type: text/html; charset=' . $GLOBALS['PHPShopLang']->charset);
                     exit(PHPShopParser::replacedir($this->separator . $grid));
                 }
 
@@ -274,12 +294,12 @@ class PHPShopSearch extends PHPShopShopCore {
         $this->PHPShopModules->setHookHandler(__CLASS__, __FUNCTION__, $this, $arg);
 
         $PHPShopOrm->insert([
-            'name_new'  => $name,
-            'num_new'   => $num,
+            'name_new' => $name,
+            'num_new' => $num,
             'datas_new' => time(),
-            'cat_new'   => $cat,
-            'dir_new'   => $_SERVER['HTTP_REFERER'],
-            'ip_new'    => $_SERVER['REMOTE_ADDR']
+            'cat_new' => $cat,
+            'dir_new' => $_SERVER['HTTP_REFERER'],
+            'ip_new' => $_SERVER['REMOTE_ADDR']
         ]);
     }
 
@@ -312,8 +332,7 @@ class PHPShopSearch extends PHPShopShopCore {
         if (is_array($this->search_order)) {
             $SQL = " where (" . $this->search_order['string'] . " " . $this->search_order['sort'] . "
                  " . $this->search_order['prewords'] . " " . $this->search_order['sortV'] . ") and enabled='1' and parent_enabled='0' ";
-        }
-        else
+        } else
             $SQL = null;
 
 
@@ -358,18 +377,17 @@ class PHPShopSearch extends PHPShopShopCore {
                 if ($i != $this->page) {
                     if ($i == 1) {
                         $this->set("paginLink", "?words=" . $this->search_order['words'] . "&pole=" . $this->search_order['pole'] . "&p=" . $i . "&cat=" . $this->search_order['cat']);
-                        $navigat.= parseTemplateReturn($template_location . "paginator/paginator_one_link.tpl", $template_location_bool);
+                        $navigat .= parseTemplateReturn($template_location . "paginator/paginator_one_link.tpl", $template_location_bool);
                     } else {
                         if ($i > ($this->page - $this->nav_len) and $i < ($this->page + $this->nav_len)) {
                             $this->set("paginLink", "?words=" . $this->search_order['words'] . "&pole=" . $this->search_order['pole'] . "&p=" . $i . "&cat=" . $this->search_order['cat']);
-                            $navigat.= parseTemplateReturn($template_location . "paginator/paginator_one_link.tpl", $template_location_bool);
-                        } else if ($i - ($this->page + $this->nav_len) < 3 and (($this->page - $this->nav_len) - $i) < 3) {
-                            $navigat.= parseTemplateReturn($template_location . "paginator/paginator_one_more.tpl", $template_location_bool);
+                            $navigat .= parseTemplateReturn($template_location . "paginator/paginator_one_link.tpl", $template_location_bool);
+                        } else if ($i - ($this->page + $this->nav_len) < 3 and ( ($this->page - $this->nav_len) - $i) < 3) {
+                            $navigat .= parseTemplateReturn($template_location . "paginator/paginator_one_more.tpl", $template_location_bool);
                         }
                     }
-                }
-                else
-                    $navigat.= parseTemplateReturn($template_location . "paginator/paginator_one_selected.tpl", $template_location_bool);
+                } else
+                    $navigat .= parseTemplateReturn($template_location . "paginator/paginator_one_selected.tpl", $template_location_bool);
 
                 $i++;
             }
@@ -381,7 +399,7 @@ class PHPShopSearch extends PHPShopShopCore {
 
             $this->set("nextLink", "?words=" . $this->search_order['words'] . "&pole=" . $this->search_order['pole'] . "&p=" . $p_to . "&cat=" . $this->search_order['cat']);
 
-            $nav.=$navigat;
+            $nav .= $navigat;
 
 
             $this->set("pageNow", $this->getValue('lang.page_now'));
@@ -410,8 +428,7 @@ class PHPShopSearch extends PHPShopShopCore {
             $hook = $this->setHook(__CLASS__, __FUNCTION__, $Arg);
             if ($hook) {
                 return $hook;
-            }
-            else
+            } else
                 $this->memory_set(__CLASS__ . '.' . __FUNCTION__, 0);
         }
 

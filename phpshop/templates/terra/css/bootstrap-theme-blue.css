@@ -31,7 +31,7 @@ background:#303030 !important;
 #main-menu .navbar-form .form-control, #main-menu .navbar-form .btn, #main-menu .navbar-nav > li > a:hover, .dropdown-menu.mega-menu, #main-menu .navbar-nav > li.open a,.main-navbar-list-catalog-wrapper, .user-dropdown > .dropdown-menu,.nav-catalog-dropdown-link.open, .sidebar-nav ul.active, .sidebar-nav ul.active li a, #main-menu .navbar-nav > li.active a, #main-menu.navbar{
 background:#1a7eb8 !important;
 }
-.main-navbar-list-catalog-wrapper.open li a:hover, .main-navbar-list-catalog-hidden.active,.user-dropdown > .dropdown-menu li a:hover,.main-navbar-list-catalog-wrapper.open li a.active, .sidebar-nav > li > ul.active > li.active > a, .sidebar-nav ul.active li:hover a, .btn-main:hover, .submenu{
+.main-navbar-list-catalog-wrapper.open li a:hover, .main-navbar-list-catalog-hidden.active,.user-dropdown > .dropdown-menu li a:hover,.main-navbar-list-catalog-wrapper.open li a.active, .sidebar-nav > li > ul.active > li.active > a, .sidebar-nav ul.active li:hover a, .btn-main:hover, .submenu {
 background:#1a7eb8 !important;
 }
 .product-col .btn-cart,.product-info .product-details .btn-cart, #cart-total, .sale-icon-content .label.newtip-icon{

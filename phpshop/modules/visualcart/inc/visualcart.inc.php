@@ -57,7 +57,7 @@ class AddToTemplateVisualCart extends PHPShopElements {
         else
             $partner = base64_encode($referal);
 
-        if (strlen($_SERVER['HTTP_REFERER']) > 5 and !strpos($_SERVER['HTTP_REFERER'], $_SERVER['SERVER_NAME']))
+        if (strlen($_SERVER['HTTP_REFERER']) > 5 and ! strpos($_SERVER['HTTP_REFERER'], $_SERVER['SERVER_NAME']))
             setcookie("ps_referal", $partner, time() + 60 * 60 * 24 * 90, "/", $_SERVER['SERVER_NAME'], 0);
     }
 
@@ -114,6 +114,7 @@ class AddToTemplateVisualCart extends PHPShopElements {
                 if (is_array($data)) {
                     $this->memory = $data['memory'];
                     $_SESSION['cart'] = $this->update_price(unserialize($data['cart']));
+                    $this->data = $data;
 
                     // Чистка
                     $this->clean_memory();
@@ -168,12 +169,34 @@ class AddToTemplateVisualCart extends PHPShopElements {
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['visualcart']['visualcart_memory']);
         $insert['memory_new'] = $this->memory;
         $insert['date_new'] = time();
-        $insert['user_new'] = $_SESSION['UsersId'];
+
+        if (!empty($_SESSION['UsersId']))
+            $insert['user_new'] = $_SESSION['UsersId'];
+        else
+            $insert['user_new'] = $this->data['user'];
+
         $insert['cart_new'] = serialize($_SESSION['cart']);
         $insert['ip_new'] = $_SERVER["REMOTE_ADDR"];
 
+        if (!empty($_SESSION['UsersTel']))
+            $insert['tel_new'] = $_SESSION['UsersTel'];
+        else
+            $insert['tel_new'] = $this->data['tel'];
+
+        if (!empty($_SESSION['UsersLogin']))
+            $insert['mail_new'] = $_SESSION['UsersLogin'];
+        else
+            $insert['mail_new'] = $this->data['mail'];
+
+        if (!empty($_SESSION['UsersName']))
+            $insert['name_new'] = $_SESSION['UsersName'];
+        else
+            $insert['name_new'] = $this->data['name'];
+
         if (isset($_COOKIE['ps_referal']))
             $insert['referal_new'] = base64_decode($_COOKIE['ps_referal']);
+        else
+            $insert['referal_new'] = $this->data['referal'];
 
         $PHPShopOrm->insert($insert);
     }
@@ -264,7 +287,7 @@ function visualcartform($val, $option) {
 }
 
 // Добавляем в шаблон элемент
-if ($PHPShopNav->notPath(array('order', 'done'))) {
+if ($PHPShopNav->notPath(array('done'))) {
     $GLOBALS['AddToTemplateVisualCart'] = new AddToTemplateVisualCart();
     $GLOBALS['AddToTemplateVisualCart']->visualcart();
 }

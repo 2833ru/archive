@@ -26,8 +26,6 @@ $().ready(function () {
     });
 
 
-
-
     // Таблица данных
     if (typeof ($.cookie('data_length')) == 'undefined')
         var data_length = [10, 25, 50, 75, 100, 500];

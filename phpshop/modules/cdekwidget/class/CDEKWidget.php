@@ -10,10 +10,10 @@ class CDEKWidget {
     const STATUS_ORDER_PREPARED = 'prepared';
     const STATUS_ORDER_PROCESS_SENT = 'process_sent';
     const STATUS_ORDER_ERROR = 'error';
-    const STATUS_ORDER_SENT = 'sent';
     const STATUS_ORDER_DELIVERED = 'delivered';
     const STATUS_ORDER_CANCELED = 'canceled';
 
+    public $option;
     public $isTest = false;
     private $testDomain = 'https://api.edu.cdek.ru/';
     private $domain = 'https://api.cdek.ru/';
@@ -71,19 +71,15 @@ class CDEKWidget {
 
     public function getCart($cart)
     {
-        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
-
-        $list = array();
+        $list = [];
         foreach ($cart as $cartItem) {
-            $product = $PHPShopOrm->select(array('cdek_length', 'cdek_width', 'cdek_height'), array('`id`=' => '"' . $cartItem['id'] . '"'));
-
             for($i = 1; $i <= $cartItem['num']; $i++) {
-                $list[] = array(
-                    'length' => (!empty($product['cdek_length']) ? (float) $product['cdek_length'] : (float) $this->option['length']),
-                    'width'  => (!empty($product['cdek_width'])  ? (float) $product['cdek_width']  : (float) $this->option['width']),
-                    'height' => (!empty($product['cdek_height']) ? (float) $product['cdek_height'] : (float) $this->option['height']),
+                $list[] = [
+                    'length' => $this->getDimension('length', $cartItem['id'], $cartItem['parent']),
+                    'width'  => $this->getDimension('width', $cartItem['id'], $cartItem['parent']),
+                    'height' => $this->getDimension('height', $cartItem['id'], $cartItem['parent']),
                     'weight' => (!empty($cartItem['weight']) ? $cartItem['weight'] / 1000 : $this->option['weight'] / 1000),
-                );
+                ];
             }
         }
 
@@ -152,40 +148,43 @@ class CDEKWidget {
 
         $products = $this->getProducts($cart['Cart']['cart'], $cart['Person']['discount'], (int) $order['paid']);
 
-        $parameters = array(
+        $parameters = [
             'type' => 1,
             'number' => $order['uid'],
             'tariff_code' => $cdek_data['tariff'],
             'delivery_point' => $cdek_data['type'] === 'pvz' ? $cdek_data['cdek_pvz_id'] : null,
-            'delivery_recipient_cost' => array(
+            'delivery_recipient_cost' => [
                 'value' => (int) $order['paid'] === 1 ? 0 : $cart['Cart']['dostavka']
-            ),
-            'recipient' => array(
-                'name' => PHPShopString::win_utf8($name),
-                'email' => $cart['Person']['mail'],
-                'phones' => array(
-                    array('number' => str_replace(array('(', ')', ' ', '+', '-', '&#43;'), '', $order['tel']))
-                )
-            ),
-            'from_location' => array(
+            ],
+            'recipient' => [
+                'name'   => PHPShopString::win_utf8($name),
+                'email'  => $cart['Person']['mail'],
+                'phones' => [
+                    ['number' => str_replace(['(', ')', ' ', '+', '-', '&#43;'], '', $order['tel'])]
+                ]
+            ],
+            'from_location' => [
                 'country_code' => 'RU',
-                'code' => $this->option['city_from_code'],
-                'postal_code' => $this->option['index_from'],
+                'code'         => $this->option['city_from_code'],
+                'postal_code'  => $this->option['index_from'],
 
-            ),
-            'to_location' => array(
-                'code' => $cdek_data['city_id'],
+            ],
+            'to_location' => [
+                'code'         => $cdek_data['city_id'],
                 'country_code' => 'RU',
-                'address' => $cdek_data['type'] === 'pvz' ? PHPShopString::win_utf8('ÏÂÇ: ') . $cdek_data['cdek_pvz_id'] : $address
-            ),
-            'packages' => array(
-                array(
+                'address'      => $cdek_data['type'] === 'pvz' ? PHPShopString::win_utf8('ÏÂÇ: ') . $cdek_data['cdek_pvz_id'] : $address
+            ],
+            'packages' => [
+                [
                     'number' => $order['uid'],
                     'weight' => $products['weight'],
-                    'items' => $products['items']
-                )
-            )
-        );
+                    'items'  => $products['items'],
+                    'length' => $this->getMaxDimension($cart['Cart']['cart'], 'length'),
+                    'width'  => $this->getMaxDimension($cart['Cart']['cart'], 'width'),
+                    'height' => $this->getMaxDimension($cart['Cart']['cart'], 'height')
+                ]
+            ]
+        ];
 
         $result = $this->request($this->orderUrl, $parameters);
 
@@ -237,7 +236,7 @@ class CDEKWidget {
             'status_text'    => 'Îæèäàåò îòïðàâêè â ÑÄÝÊ'
         ));
 
-        $orm->update(array('cdek_order_data_new' => $cdekOrderData, 'orders_new' => serialize($cart), 'sum_new' => $sum), array('id' => "='" . $order['id'] . "'"));
+        $orm->update(['cdek_order_data_new' => $cdekOrderData, 'orders_new' => serialize($cart), 'sum_new' => $sum], ['id' => "='" . $order['id'] . "'"]);
     }
 
     public function buildInfoTable($order)
@@ -477,5 +476,36 @@ class CDEKWidget {
         $token = json_decode($result, true);
 
         $this->token = $token['access_token'];
+    }
+
+    private function getDimension($field, $productId, $parent = null)
+    {
+        $product = new PHPShopProduct((int) $productId);
+
+        if(!empty($product->getParam($field))) {
+            return $product->getParam($field);
+        }
+
+        if(is_null($parent) === false) {
+            $product = new PHPShopProduct((int) $parent);
+            if(!empty($product->getParam($field))) {
+                return $product->getParam($field);
+            }
+        }
+
+        return $this->option[$field];
+    }
+
+    private function getMaxDimension($cart, $side)
+    {
+        $maxDimension = 0;
+        foreach ($cart as $cartItem) {
+            $productDimension = $this->getDimension($side, $cartItem['id'], $cartItem['parent']);
+            if($productDimension > $maxDimension) {
+                $maxDimension = $productDimension;
+            }
+        }
+
+        return $maxDimension;
     }
 }

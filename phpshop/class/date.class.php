@@ -3,7 +3,7 @@
 /**
  * Библиотека работы с датами
  * @author PHPShop Software
- * @version 1.3
+ * @version 1.4
  * @package PHPShopClass
  * @subpackage Helper
  */
@@ -65,8 +65,8 @@ class PHPShopDate {
         $array = explode($delim, $data);
         
         if(empty($revers))
-        $time = @mktime(1, 0, 0, $array[1], $array[0], $array[2]);
-        else $time = @mktime(1, 0, 0, $array[1], $array[2], $array[0]);
+        $time = @mktime(date('H'), date('i'), date('s'), $array[1], $array[0], $array[2]);
+        else $time = @mktime(date('H'), date('i'), date('s'), $array[1], $array[2], $array[0]);
 
         return $time;
     }

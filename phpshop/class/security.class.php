@@ -96,7 +96,7 @@ class PHPShopSecurity {
     }
 
     /**
-     * Проверка номера зааказа
+     * Проверка номера заказа
      * @param string $num номер заказа
      * @return bool
      */
@@ -112,6 +112,16 @@ class PHPShopSecurity {
     static function true_num($num) {
         return preg_match("/^[0-9]{1,20}$/", $num);
     }
+    
+    /**
+     * Проверка телефона
+     * @param int $num номер
+     * @return bool
+     */
+    static function true_tel($num) {
+        return preg_match("/^[0-9-() +]{10,25}$/", $num);
+    }
+    
 
     /**
      * Проверка пароля

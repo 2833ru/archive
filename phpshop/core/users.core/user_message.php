@@ -234,7 +234,7 @@ IP:" . $_SERVER['REMOTE_ADDR'];
     }
 
     $disp = '
-<table class="user-table-fix" style="width:80%;">
+<table class="user-table-fix">
 <tr>
   <td>
   <form method="post" name="forma_message" id="forma_message">

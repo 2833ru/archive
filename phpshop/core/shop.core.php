@@ -628,7 +628,7 @@ class PHPShopShop extends PHPShopShopCore {
 
         $this->set('productPrice', $this->price($row));
         $productPriceNew = $this->price($row, true);
-        if ((float) $productPriceNew > 0 && empty($row['sklad'])) {
+        if ((float) $productPriceNew > 0) {
             $this->set(array('productPriceOld', 'productPriceRub'), PHPShopText::strike($productPriceNew . " " . $this->currency, $this->format));
         }
 
@@ -780,11 +780,11 @@ function CID_Product($category = null, $mode = false) {
                 $this->update_cache('filter');
         }
 
-        if ($this->PHPShopSystem->getSerilizeParam('admoption.filter_cache_enabled') == 1 && $this->PHPShopSystem->getSerilizeParam('admoption.filter_products_count') == 1)
-            $this->update_cache('count_products');
-
         // Пагинатор
         $this->setPaginator(count($this->dataArray), $order['sql']);
+
+        if ($this->PHPShopSystem->getSerilizeParam('admoption.filter_cache_enabled') == 1 && $this->PHPShopSystem->getSerilizeParam('admoption.filter_products_count') == 1)
+            $this->update_cache('count_products');
     } else {
         // Сложный запрос
         $this->PHPShopOrm->sql = 'select * from ' . $this->SysValue['base']['products'] . ' where ' . $order;
@@ -858,9 +858,9 @@ function CID_Product($category = null, $mode = false) {
 
     // Максимальная и минимальная цена для всех товаров
     if ($this->multi_currency_search)
-        $search_where = array('max(' . $this->PHPShopSystem->getPriceColumn() . ') as max', 'min(' . $this->PHPShopSystem->getPriceColumn() . ') as min', 'min(price_search) as min_search', 'max(price_search) as max_search', 'baseinputvaluta');
+        $search_where = array('min(price_search) as min', 'max(price_search) as max');
     else
-        $search_where = array('max(' . $this->PHPShopSystem->getPriceColumn() . ') as max', 'min(' . $this->PHPShopSystem->getPriceColumn() . ') as min', 'baseinputvaluta');
+        $search_where = array('max(' . $this->PHPShopSystem->getPriceColumn() . ') as max', 'min(' . $this->PHPShopSystem->getPriceColumn() . ') as min');
 
     if (!$PHPShopBase->phpversion())
         $group = array('group' => $this->PHPShopSystem->getPriceColumn());
@@ -869,23 +869,8 @@ function CID_Product($category = null, $mode = false) {
 
     $data = $this->select($search_where, $where, $group);
 
-    $kurs = $this->Valuta[$data['baseinputvaluta']]['kurs'];
-    if (empty($kurs))
-        $kurs = 1;
-    $this->price_max_all = $data['max'] / $kurs + 6;
-    $this->price_min_all = $data['min'] / $kurs;
-
-    if ($data['max_search'] > $this->price_max_all)
-        $this->price_max_all = $data['max_search'];
-
-    if ($data['min_search'] > $this->price_min_all)
-        $this->price_min_all = $data['min_search'];
-
-    if ($this->price_max_all > $this->price_max)
-        $this->price_max = $this->price_max_all;
-
-    if ($this->price_min_all < $this->price_min)
-        $this->price_min = $this->price_min_all;
+    $this->price_max = $data['max'] + 6;
+    $this->price_min = $data['min'];
 
     if ($this->price_min == $this->price_max)
         $this->price_min = intval($this->price_max / 2);
@@ -1187,7 +1172,7 @@ function update_cache($type) {
                             foreach ($_REQUEST['v'] as $k => $v)
                                 if (is_array($v))
                                     foreach ($v as $key => $val)
-                                        $cache['products'][$k][intval($val)] = count($this->dataArray);
+                                        $cache['products'][$k][intval($val)] = (int) $this->num_page;
                         $PHPShopOrm->update(
                                 array(
                             'sort_cache_new' => serialize($cache)), array(
@@ -1211,11 +1196,12 @@ function update_cache($type) {
                             'id=' => $this->category
                         ));
                     }elseif ($type = 'count_products') {
+
                         if (is_array($_REQUEST['v']))
                             foreach ($_REQUEST['v'] as $k => $v)
                                 if (is_array($v))
                                     foreach ($v as $key => $val)
-                                        $cache['products'][$k][intval($val)] = count($this->dataArray);
+                                        $cache['products'][$k][intval($val)] = (int) $this->num_page;
                         $PHPShopOrm->update(
                                 array(
                             'sort_cache_new' => serialize($cache),

@@ -126,10 +126,6 @@ $key_name = array(
     'door_phone' => 'Домофон',
     'flat' => 'Квартира',
     'delivtime' => 'Время доставки',
-    'door_phone' => 'Домофон',
-    'tel' => 'Телефон',
-    'house' => 'Дом',
-    'porch' => 'Подъезд',
     'org_name' => 'Компания',
     'org_inn' => 'ИНН',
     'org_kpp' => 'КПП',
@@ -244,11 +240,11 @@ function actionSave() {
     $oldStatuses = $PHPShopOrm->getList(array('statusi', 'id'), $where);
 
     if ($PHPShopOrm->update($_POST, $where)) {
-        // Оповещение пользователя о новом статусе
+        // Оповещение пользователя о новом статусе и списание со склада
         foreach ($oldStatuses as $status) {
             if ((int) $status['statusi'] !== (int) $_POST['statusi_new']) {
                 $PHPShopOrderFunction = new PHPShopOrderFunction((int) $status['id']);
-                $PHPShopOrderFunction->sendStatusChangedMail();
+                $PHPShopOrderFunction->changeStatus((int) $_POST['statusi_new'], (int) $status['statusi']);
             }
         }
 

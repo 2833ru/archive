@@ -101,134 +101,6 @@ function updateDiscount($data) {
 }
 
 /**
- * Списывание со склада
- */
-function updateStore($data) {
-    global $PHPShopSystem, $PHPShopBase, $_classPath, $PHPShopOrderStatusArray, $PHPShopModules;
-
-    // Статусы заказов
-    $GetOrderStatusArray = $PHPShopOrderStatusArray->getArray();
-
-    // SMS оповещение пользователю о смене статуса заказа
-    if ($data['statusi'] != $_POST['statusi_new'] and ! empty($GetOrderStatusArray[$_POST['statusi_new']]['sms_action'])) {
-
-        if (!empty($_POST['tel_new']))
-            $phone = $_POST['tel_new'];
-        else
-            $phone = $data['tel'];
-
-        $msg = strtoupper(PHPShopString::check_idna($_SERVER['SERVER_NAME'], true)) . ': ' . $PHPShopBase->getParam('lang.sms_user') . $data['uid'] . " - " . $GetOrderStatusArray[$_POST['statusi_new']]['name'];
-
-        $phone = trim(str_replace(array('(', ')', '-', '+', '&#43;'), '', $phone));
-        // Проверка на первую 7 или 8
-        $first_d = substr($phone, 0, 1);
-        if ($first_d != 8 and $first_d != 7)
-            $phone = '7' . $phone;
-
-        $lib = str_replace('./phpshop/', $_classPath, $PHPShopBase->getParam('file.sms'));
-        include_once $lib;
-        SendSMS($msg, $phone);
-    }
-
-    // Доставка
-    $PHPShopDeliveryArray = new PHPShopDeliveryArray();
-    $DeliveryArray = $PHPShopDeliveryArray->getArray();
-    $order = unserialize($data['orders']);
-    $warehouseID = $DeliveryArray[$order['Person']['dostavka_metod']]['warehouse'];
-
-    // Если новый статус Аннулирован, а был статус не Новый заказ, то мы не списываем, а добавляем обратно
-    if ($data['statusi'] != 0 && $_POST['statusi_new'] == 1) {
-        if (is_array($data) && (int) $PHPShopSystem->getSerilizeParam('admoption.sklad_status') > 1) {
-            if (is_array($order['Cart']['cart']))
-                foreach ($order['Cart']['cart'] as $val) {
-
-                    // Данные по складу
-                    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
-                    $product_row = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($val['id'])), false, array('limit' => 1));
-                    if (is_array($product_row)) {
-
-                        // Склад
-                        if (empty($warehouseID))
-                            $product_update['items_new'] = $product_row['items'] + $val['num'];
-                        else {
-                            $product_update['items' . $warehouseID . '_new'] = $product_row['items' . $warehouseID] + $val['num'];
-                            $product_update['items_new'] = $product_row['items'] + $val['num'];
-                        }
-
-                        $product_update['sklad_new'] = 0;
-                        $product_update['enabled_new'] = 1;
-
-                        // Обновляем данные
-                        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
-                        $PHPShopOrm->debug = false;
-                        $PHPShopOrm->update($product_update, array('id' => '=' . $val['id']));
-                    }
-                }
-        }
-    } else if ($GetOrderStatusArray[$_POST['statusi_new']]['sklad_action'] == 1 and $GetOrderStatusArray[$data['statusi']]['sklad_action'] != 1) {
-        if (is_array($data)) {
-
-            if (is_array($order['Cart']['cart']))
-                foreach ($order['Cart']['cart'] as $val) {
-
-                    // Данные по складу
-                    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
-                    $product_row = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($val['id'])), false, array('limit' => 1));
-                    if (is_array($product_row)) {
-
-                        // Склад
-                        if (empty($warehouseID))
-                            $product_update['items_new'] = $product_row['items'] - $val['num'];
-                        else {
-                            $product_update['items' . $warehouseID . '_new'] = $product_row['items' . $warehouseID] - $val['num'];
-                            $product_update['items_new'] = $product_row['items'] - $val['num'];
-                        }
-
-                        // Списывание со склада
-                        switch ($PHPShopSystem->getSerilizeParam('admoption.sklad_status')) {
-
-                            case(3):
-                                if ($product_update['items_new'] < 1) {
-                                    $product_update['sklad_new'] = 1;
-                                    $product_update['enabled_new'] = 1;
-                                    $product_update['p_enabled_new'] = 0;
-                                } else {
-                                    $product_update['sklad_new'] = 0;
-                                    $product_update['enabled_new'] = 1;
-                                    $product_update['p_enabled_new'] = 1;
-                                }
-                                break;
-
-                            case(2):
-                                if ($product_update['items_new'] < 1) {
-                                    $product_update['enabled_new'] = 0;
-                                    $product_update['sklad_new'] = 0;
-                                    $product_update['p_enabled_new'] = 0;
-                                } else {
-                                    $product_update['enabled_new'] = 1;
-                                    $product_update['sklad_new'] = 0;
-                                    $product_update['p_enabled_new'] = 1;
-                                }
-                                break;
-
-                            default:
-                                break;
-                        }
-
-                        // Перехват модуля
-                        $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, array($product_row));
-
-                        // Обновляем данные
-                        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
-                        $PHPShopOrm->debug = false;
-                        $PHPShopOrm->update($product_update, array('id' => '=' . intval($val['id'])));
-                    }
-                }
-        }
-    }
-}
-
-/**
  * Экшен загрузки форм редактирования
  */
 function actionStart() {
@@ -294,6 +166,8 @@ function actionStart() {
 
     $order = unserialize($data['orders']);
     $status = unserialize($data['status']);
+    
+    $PHPShopUser = new PHPShopUser($data['user']);
 
     $house = $porch = $flat = null;
     if (!empty($data['house']))
@@ -305,9 +179,14 @@ function actionStart() {
     if (!empty($data['flat']))
         $flat = ', ' . __('кв.') . ' ' . $data['flat'];
 
-    if (empty($data['fio']) and ! empty($order['Person']['name_person']))
+    if (empty($data['fio']) and !empty($order['Person']['name_person']))
         $data['fio'] = $order['Person']['name_person'];
-
+    elseif(empty($data['fio'])) 
+        $data['fio']=$PHPShopUser->getParam('name');
+    
+    if(empty($data['tel']))
+        $data['tel']=$PHPShopUser->getParam('tel');
+    
     // Информация о покупателе
     $sidebarleft[] = array('id' => 'user-data-1', 'title' => 'Информация о покупателе', 'name' => array('caption' => $data['fio'], 'link' => '?path=shopusers&return=order.' . $data['id'] . '&id=' . $data['user']), 'content' => array(array('caption' => $order['Person']['mail'], 'link' => 'mailto:' . $order['Person']['mail']), $data['tel']));
 
@@ -568,15 +447,12 @@ function actionUpdate() {
     $_POST['date_new'] = time();
     $PHPShopOrm->clean();
 
-    // Списывание со склада из корзины и оповещение по SMS
-    updateStore($data);
-
     $action = $PHPShopOrm->update($_POST, array('id' => '=' . intval($_POST['rowID'])));
 
-    // Оповещение пользователя о новом статусе
+    // Оповещение пользователя о новом статусе и списание со склада
     if ($data['statusi'] != $_POST['statusi_new']) {
         $PHPShopOrderFunction = new PHPShopOrderFunction((int) $_POST['rowID']);
-        $PHPShopOrderFunction->sendStatusChangedMail();
+        $PHPShopOrderFunction->changeStatus((int) $_POST['statusi_new'], (int) $data['statusi']);
     }
 
     // Персональная скидка

@@ -21,48 +21,26 @@ class Pochta
     }
 
     /**
-     * @param $deliveryId
-     * @param null|int $index
-     * @return int
-     * @throws Exception
-     */
-    public function getCost($deliveryId, $index = null)
-    {
-        if($index === null || strlen((int) $index) !== 6) {
-            throw new \Exception(__('Неверно введен индекс получателя!'));
-        }
-
-        $parameters = array(
-            'completeness-checking' => (bool) $this->settings->get('completeness_checking'),
-            'courier' => $this->isCourier($deliveryId),
-            'declared-value' => (int) ((float) str_replace(' ', '', (float) $_REQUEST['sum']) * $this->settings->get('declared_percent')),
-            'entries-type' => 'SALE_OF_GOODS',
-            'fragile' => (bool) $this->settings->get('fragile'),
-            'index-from' => $this->settings->get('index_from'),
-            'index-to' => (int) $index,
-            'mail-direct' => 643,
-            'mail-category' => $this->settings->get('mail_category'),
-            'mail-type' => $this->settings->get('mail_type'),
-            'mass' => $this->getWeight($_SESSION['cart']),
-            'transport-type' => 'SURFACE',
-            'vsd' => (bool) $this->settings->get('vsd'),
-            'dimension-type' => $this->settings->get('dimension_type'),
-            'sms-notice-recipient' => (int) $this->settings->get('sms_notice'),
-            'with-electronic-notice' => (bool) $this->settings->get('electronic_notice'),
-            'with-order-of-notice' => (bool) $this->settings->get('order_of_notice'),
-            'with-simple-notice' => (bool) $this->settings->get('simple_notice')
-        );
-
-        return $this->applyFee($this->request->getCost($parameters));
-    }
-
-    /**
      * @param array $order
      */
     public function send($order)
     {
         $cart = unserialize($order['orders']);
         $pochta = unserialize($order['pochta_settings']);
+
+        if(!empty($pochta['address'])) {
+            $normalized = $this->request->normalizeAddress(sprintf('%s %s %s %s', $order['index'], $order['city'], $order['state'], $pochta['address']));
+
+            if(empty($order['street']) && isset($order['street'])) {
+                $order['street'] = $normalized['street'];
+            }
+            if(empty($order['house']) && isset($order['house'])) {
+                $order['house'] = $normalized['house'];
+            }
+            if(empty($order['flat']) && isset($order['flat'])) {
+                $order['flat'] = $normalized['room'];
+            }
+        }
 
         if(empty($order['fio']))
             $name = $cart['Person']['name_person'];
@@ -151,6 +129,10 @@ class Pochta
             PHPShopText::tr(
                 __('Статус заказа'),
                 '<span class="pochta-status">' . __($this->getOrderStatusText($order['pochta_order_status'])) . '</span>'
+            ) .
+            PHPShopText::tr(
+                __('Адрес доставки с виджета'),
+                '<span>' . $pochta['delivery_info'] . '</span>'
             ) .
             PHPShopText::tr(
                 __('Статус оплаты'),
@@ -254,24 +236,5 @@ class Pochta
         }
 
         return $weight;
-    }
-
-    /**
-     * @param $cost
-     * @return float|int
-     */
-    private function applyFee($cost)
-    {
-        $fee = $this->settings->get('fee');
-
-        if(empty($fee)) {
-            return round($cost, $this->settings->format);
-        }
-
-        if((int) $this->settings->get('fee_type') == 1) {
-            return  round($cost + ($cost * $fee / 100), $this->settings->format);
-        }
-
-        return round($cost + $fee, $this->settings->format);
     }
 }

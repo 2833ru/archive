@@ -71,9 +71,11 @@ var locale = {
         sInfo: "Entries from _START_ to _END_ of _TOTAL_ records",
         sInfoEmpty: "Entries 0 to 0 of 0 entries",
     },
-    transfer: "Transfer",
+    transfer: "Move",
+    move_to_temporary_folder: "Move to deleted products",
     delete: "Delete",
     products_completed: "Processed products:",
     create_db_dump: "Are you sure you want to perform the operation?<br> Be sure to back up your database before proceeding!",
+    product_operations: "Choose what you want to do with the products in the category and subcategories.",
     charset: "utf-8"
 };

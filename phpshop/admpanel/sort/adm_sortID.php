@@ -25,7 +25,7 @@ function actionStart() {
     // Размер названия поля
     $PHPShopGUI->field_col = 2;
     $PHPShopGUI->addJSFiles('./sort/gui/sort.gui.js');
-    $PHPShopGUI->setActionPanel($TitlePage . ': ' . $data['name']. ' [ID ' . $data['id'] . ']', array('Создать', 'Сделать копию', '|', 'Удалить',), array('Сохранить', 'Сохранить и закрыть'));
+    $PHPShopGUI->setActionPanel($TitlePage . ': ' . $data['name'] . ' [ID ' . $data['id'] . ']', array('Создать', 'Сделать копию', '|', 'Удалить',), array('Сохранить', 'Сохранить и закрыть'));
 
     // Страницы
     $page_value[] = array('- ' . __('Нет описания') . ' - ', null, $data['page']);
@@ -48,10 +48,10 @@ function actionStart() {
                 $PHPShopGUI->setField("Бренд:", $PHPShopGUI->setCheckbox('brand_new', 1, 'Вкл.', $data['brand']), 1, 'Характеристика становится брендом и отображается в списке брендов') .
                 $PHPShopGUI->setField("Переключение", $PHPShopGUI->setCheckbox('product_new', 1, 'Вкл.', $data['product']), 1, 'Вместо значений хар-ки выводить Рекомендуемые товары для совместной продажи, указанные в карточке товара') .
                 $PHPShopGUI->setField("Опции", $PHPShopGUI->setCheckbox('filtr_new', 1, 'Фильтр', $data['filtr']) .
-                    $PHPShopGUI->setCheckbox('goodoption_new', 1, 'Товарная опция', $data['goodoption']) .
-                    $PHPShopGUI->setCheckbox('optionname_new', 1, 'Не обязательна для добавления в корзину', $data['optionname']) .
-                    $PHPShopGUI->setCheckbox('virtual_new', 1, 'Виртуальный каталог', $data['virtual']) .
-                    $PHPShopGUI->setCheckbox('show_preview_new', 1, 'Отображать в превью товара', $data['show_preview'])
+                        $PHPShopGUI->setCheckbox('goodoption_new', 1, 'Товарная опция', $data['goodoption']) .
+                        $PHPShopGUI->setCheckbox('optionname_new', 1, 'Не обязательна для добавления в корзину', $data['optionname']) .
+                        $PHPShopGUI->setCheckbox('virtual_new', 1, 'Виртуальный каталог', $data['virtual']) .
+                        $PHPShopGUI->setCheckbox('show_preview_new', 1, 'Отображать в превью товара', $data['show_preview'])
                 ) .
                 $PHPShopGUI->setField("Описание", $PHPShopGUI->setSelect('page_new', $page_value, '100%', false, false, true), 1, 'Имя характеристики (в таблице характеристик в подробном описании товара) становится ссылкой на указанную страницу с описанием.');
     }
@@ -66,7 +66,7 @@ function actionStart() {
 
     // Варианты
     if (empty($_GET['type']))
-        $Tab1.=$PHPShopGUI->setCollapse('Значения', $PHPShopGUI->setField("Варианты", $PHPShopGUI->loadLib('tab_value', $data)));
+        $Tab1 .= $PHPShopGUI->setCollapse('Значения', $PHPShopGUI->setField("Варианты", $PHPShopGUI->loadLib('tab_value', $data)));
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
@@ -75,8 +75,7 @@ function actionStart() {
     $PHPShopGUI->setTab(array("Основное", $Tab1));
 
     // Вывод кнопок сохранить и выход в футер
-    $ContentFooter =
-            $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .
+    $ContentFooter = $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .
             $PHPShopGUI->setInput("button", "delID", "Удалить", "right", 70, "", "but", "actionDelete.sort.edit") .
             $PHPShopGUI->setInput("submit", "editID", "Сохранить", "right", 70, "", "but", "actionUpdate.sort.edit") .
             $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionSave.sort.edit");
@@ -114,17 +113,21 @@ function actionSave() {
 function actionUpdate() {
     global $PHPShopOrm, $PHPShopModules;
 
-    $_POST['category_new'] = intval($_POST['category_new']);
+    if (empty($_POST['ajax'])) {
 
-    // Корректировка пустых значений
-    $PHPShopOrm->updateZeroVars('brand_new', 'filtr_new', 'goodoption_new', 'optionname_new', 'product_new', 'virtual_new', 'show_preview_new');
+        if (!empty($_POST['category_new']))
+            $_POST['category_new'] = intval($_POST['category_new']);
 
-    // Мультибаза
-    if (is_array($_POST['servers'])) {
-        $_POST['servers_new'] = "";
-        foreach ($_POST['servers'] as $v)
-            if ($v != 'null' and !strstr($v, ','))
-                $_POST['servers_new'].="i" . $v . "i";
+        // Корректировка пустых значений
+        $PHPShopOrm->updateZeroVars('brand_new', 'filtr_new', 'goodoption_new', 'optionname_new', 'product_new', 'virtual_new', 'show_preview_new');
+
+        // Мультибаза
+        if (is_array($_POST['servers'])) {
+            $_POST['servers_new'] = "";
+            foreach ($_POST['servers'] as $v)
+                if ($v != 'null' and ! strstr($v, ','))
+                    $_POST['servers_new'] .= "i" . $v . "i";
+        }
     }
 
     // Перехват модуля

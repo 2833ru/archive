@@ -6,7 +6,7 @@ include($_classPath . "class/obj.class.php");
 PHPShopObj::loadClass(array("base", "system", "admgui", "orm", "date", "xml", "security", "string", "parser", "mail", "lang", "order"));
 $subpath[0] = 'order';
 
-$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, false);
+$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, true);
 $PHPShopBase->chekAdmin();
 
 PHPShopObj::loadClass('valuta');
@@ -69,9 +69,9 @@ if (!empty($GLOBALS['SysValue']['base']['returncall']['returncall_jurnal'])) {
 }
 
 if (empty($returncall)) {
-    $PHPShopOrm->sql = 'SELECT id,uid,date,statusi,fio,tel,user,sum FROM ' . $GLOBALS['SysValue']['base']['orders'] . ' UNION SELECT id,2,date,status,null,null,null,message FROM ' . $GLOBALS['SysValue']['base']['notes'] . ' order by date desc limit 50';
+    $PHPShopOrm->sql = 'SELECT id,uid,date,statusi,fio,tel,user,sum FROM ' . $GLOBALS['SysValue']['base']['orders'] . ' UNION SELECT id,2,date,status,name,tel,null,message FROM ' . $GLOBALS['SysValue']['base']['notes'] . ' order by date desc limit 50';
 } else {
-    $PHPShopOrm->sql = 'SELECT id,uid,date,statusi,fio,tel,user,sum FROM ' . $GLOBALS['SysValue']['base']['orders'] . ' UNION SELECT id,1,date,status,name,tel,null,message FROM ' . $GLOBALS['SysValue']['base']['returncall']['returncall_jurnal'] . ' UNION SELECT id,2,date,status,null,null,null,message FROM ' . $GLOBALS['SysValue']['base']['notes'] . ' order by date desc limit 50';
+    $PHPShopOrm->sql = 'SELECT id,uid,date,statusi,fio,tel,user,sum FROM ' . $GLOBALS['SysValue']['base']['orders'] . ' UNION SELECT id,1,date,status,name,tel,null,message FROM ' . $GLOBALS['SysValue']['base']['returncall']['returncall_jurnal'] . ' UNION SELECT id,2,date,status,name,tel,mail,message FROM ' . $GLOBALS['SysValue']['base']['notes'] . ' order by date desc limit 50';
 }
 
 // Статусы
@@ -80,7 +80,7 @@ foreach ($status_array as $row) {
     $ajax[$row['name']] = array(
         "id" => "board-id-" . $row['id'],
         "uid" => $row['id'],
-        "title" => '<a href="?path=order.status&return=lead.kanban&id=' . $row['id'] . '" class="kanban-title-board" data-toggle="tooltip" data-placement="top" title="' . PHPShopString::win_utf8('Редактировать') . '">' . PHPShopString::win_utf8($row['name'], true) . '</a>',
+        "title" => '<a href="?path=order.status&return=lead.kanban&id=' . $row['id'] . '" class="kanban-title-board" data-toggle="tooltip" data-placement="top" title="' . PHPShopString::win_utf8('Редактировать') . '">' . PHPShopString::win_utf8(substr($row['name'], 0, 19), true) . '</a>',
         "color" => PHPShopString::win_utf8($row['color']),
     );
     $n++;
@@ -93,6 +93,10 @@ if (is_array($data))
     foreach ($data as $row) {
 
         $sum = null;
+
+        // Вывод не более 15
+        if ($count[$status_array_name[$row['statusi']]['name']] > 15)
+            continue;
 
         switch ($row['uid']) {
 
@@ -109,9 +113,16 @@ if (is_array($data))
             // Записка
             case "2":
                 $user_link = null;
-                $type = __('Событие') . ' ' . $row['id'];
+                if (empty($row['fio']))
+                    $type = __('Событие') . ' ' . $row['id'];
+                else
+                    $type = $row['fio'];
                 $pref = 'c_';
                 $ico = 'glyphicon-bookmark';
+                
+                if(empty($row['tel']))
+                    $row['tel']=$row['user'];
+                
                 $sum = '<span class="text-muted">' . PHPShopString::win_utf8($row['sum']) . '</span>';
                 $link = '?path=lead.kanban&id=';
                 break;
@@ -148,6 +159,8 @@ if (is_array($data))
             "user" => $user_link,
             "date" => $row['datas'] . $row['date']
         );
+
+        $count[$status_array_name[$row['statusi']]['name']] ++;
     }
 
 if (is_array($ajax))

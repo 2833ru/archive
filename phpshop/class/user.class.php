@@ -18,7 +18,7 @@ class PHPShopUser extends PHPShopObj {
      */
     function __construct($objID) {
         $this->objID = $objID;
-        $this->cache = true;
+        $this->cache = false;
         $this->objBase = $GLOBALS['SysValue']['base']['shopusers'];
         parent::__construct();
     }

@@ -91,6 +91,12 @@ class PHPShopOneclick extends PHPShopCore {
         if ($this->security(array('url' => false, 'captcha' => (bool) $this->system['captcha'], 'referer' => true))) {
             $product = new PHPShopProduct((int) $_POST['oneclick_mod_product_id']);
 
+            if(isset($_POST['ajax'])) {
+                $_POST['oneclick_mod_name']    = PHPShopString::utf8_win1251($_POST['oneclick_mod_name']);
+                $_POST['oneclick_mod_message'] = PHPShopString::utf8_win1251($_POST['oneclick_mod_message']);
+                $_POST['oneclick_mod_mail']    = PHPShopString::utf8_win1251($_POST['oneclick_mod_mail']);
+            }
+
             if ($this->system['write_order'] == 0)
                 $this->write($product);
             else
@@ -101,11 +107,33 @@ class PHPShopOneclick extends PHPShopCore {
             // SMS администратору
             $this->sms($product);
 
+            if(isset($_POST['ajax'])) {
+                if(empty($this->system['title']) && empty($this->system['title_end'])) {
+                    $message = $GLOBALS['SysValue']['lang']['oneclick_done'];
+                } else {
+                    $message = $this->system['title'] . '<br>' . $this->system['title_end'];
+                }
+
+                echo json_encode([
+                    'message' => PHPShopString::win_utf8(__($message)),
+                    'success' => true
+                ]);
+                exit;
+            }
+
             header('Location: ./done.html');
             exit();
         }
 
         $message = __($GLOBALS['SysValue']['lang']['oneclick_error']);
+
+        if(isset($_POST['ajax'])) {
+            echo json_encode([
+                'message' => PHPShopString::win_utf8($message),
+                'success' => false
+            ]);
+            exit;
+        }
 
         $this->index($message);
     }

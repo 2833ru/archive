@@ -83,7 +83,42 @@ function actionStart() {
                </div>
           </div>
        </div>
-       
+   </div>';
+    
+        $PHPShopInterface->_CODE .= '   
+    <div class="row">
+       <div class="col-md-3 col-xs-6">
+          <div class="panel panel-default">
+             <div class="panel-heading"><span class="glyphicon glyphicon-thumbs-up"></span> ' . __('Спецпредложения') . '</div>
+             <div class="panel-body text-right panel-intro">
+                 <a href="?path=catalog&where[spec]=1">' . $PHPShopBase->getNumRows('products', "where spec='1' and parent_enabled='0'") . '</a>
+             </div>
+          </div>
+       </div>
+       <div class="col-md-3 col-xs-6">
+          <div class="panel panel-default">
+             <div class="panel-heading"><span class="glyphicon glyphicon-open"></span> ' . __('Яндекс и Google') . '</div>
+                <div class="panel-body text-right panel-intro">
+                 <a href="?path=catalog&where[yml]=1">' . $PHPShopBase->getNumRows('products', "where yml='1'") . '</a>
+               </div>
+          </div>
+       </div>
+        <div class="col-md-3 col-xs-6">
+          <div class="panel panel-default">
+             <div class="panel-heading"><span class="glyphicon glyphicon-flash"></span> ' . __('Без цен') . '</div>
+                <div class="panel-body text-right panel-intro">
+                <a href="?path=catalog&where[price]=0&core=eq">' . $PHPShopBase->getNumRows('products', "where price='0' and parent_enabled='0'") . '</a>
+               </div>
+          </div>
+       </div>
+       <div class="col-md-3 col-xs-6">
+          <div class="panel panel-default">
+             <div class="panel-heading"><span class="glyphicon glyphicon-picture"></span> ' . __('Без картинок') . '</div>
+                <div class="panel-body text-right panel-intro">
+                 <a href="?path=catalog&where[pic_small]=null&core=eq">' . $PHPShopBase->getNumRows('products', "where pic_small='' and parent_enabled='0'") . '</a>
+               </div>
+          </div>
+       </div>
    </div>';
 
     $fixVariants = [
@@ -111,15 +146,33 @@ function actionDeleteProducts()
     $mode = (int) $_REQUEST['mode'];
 
     $orm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
-    $categories = array_column($orm->select(['id'], false, false, ['limit' => 1000000]), 'id');
+    $categories = array_column($orm->select(['id', 'parent_to'], false, false, ['limit' => 1000000]), 'parent_to', 'id');
+
+    // Ищем у каких категорий удалена родительская, собираем в массив id таких категорий и всех их подкатегорий
+    $childrens = [];
+    foreach ($categories as $id => $parentId) {
+        if((int) $parentId > 0 && !isset($categories[$parentId])) {
+            $category = new PHPShopCategory((int) $id);
+            $childrens[] = (int) $id;
+            foreach (array_column($category->getChildrenCategories(1000, ['id'], false), 'id') as $child) {
+                $childrens[] = (int) $child;
+            }
+        }
+    }
+
+    // Удаляем их с БД и массива категорий
+    $orm->delete(['id' => sprintf(' IN (%s)', implode(',', $childrens))]);
+    foreach ($childrens as $children) {
+        unset($categories[$children]);
+    }
 
     $orm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
-    $count = $orm->select(["COUNT('id') as count"], ['category' => sprintf(' NOT IN (%s)', implode(',', $categories))]);
+    $count = $orm->select(["COUNT('id') as count"], ['category' => sprintf(' NOT IN (%s)', implode(',', array_keys($categories)))]);
     if((int) $count['count'] > 0) {
         if($mode === 1) {
-            $orm->update(['category_new' => 1000004], ['category' => sprintf(' NOT IN (%s)', implode(',', $categories))]);
+            $orm->update(['category_new' => 1000004], ['category' => sprintf(' NOT IN (%s)', implode(',', array_keys($categories)))]);
         } else {
-            $orm->delete(['category' => sprintf(' NOT IN (%s)', implode(',', $categories))]);
+            $orm->delete(['category' => sprintf(' NOT IN (%s)', implode(',', array_keys($categories)))]);
         }
     }
 

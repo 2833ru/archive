@@ -12,6 +12,7 @@ PHPShopObj::loadClass("order");
 PHPShopObj::loadClass("modules");
 PHPShopObj::loadClass("lang");
 PHPShopObj::loadClass("delivery");
+PHPShopObj::loadClass("cart");
 
 $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini",true,true);
 
@@ -81,7 +82,14 @@ function GetDeliveryPrice($deliveryID, $sum, $weight = 0) {
 
 $GetDeliveryPrice = GetDeliveryPrice(intval($_REQUEST['xid']), $_REQUEST['sum'], floatval($_REQUEST['wsum']));
 $GetDeliveryPrice = $GetDeliveryPrice*$PHPShopSystem->getDefaultValutaKurs(true);
-$totalsumma = $_REQUEST['sum'];
+
+$PHPShopCart = new PHPShopCart();
+// Итого товары по акции
+$totalsumma = (float) $PHPShopOrder->returnSumma($PHPShopCart->getSumPromo(true));
+
+// Итого товары без акции
+$totalsumma += (float) $PHPShopOrder->returnSumma($PHPShopCart->getSumWithoutPromo(true), $PHPShopOrder->ChekDiscount($_REQUEST['sum']), '', (float) $GetDeliveryPrice);
+
 $deliveryArr = delivery(false, intval($_REQUEST['xid']),$_REQUEST['sum']);
 $dellist = $deliveryArr['dellist'];
 $adresList = $deliveryArr['adresList'];
@@ -93,7 +101,7 @@ $_RESULT = array(
     'dellist' => $dellist,
     'discount'=>$PHPShopOrder->ChekDiscount($_REQUEST['sum']),
     'adresList' => $adresList,
-    'total' => $PHPShopOrder->returnSumma($totalsumma,$PHPShopOrder->ChekDiscount($_REQUEST['sum']),' ',$GetDeliveryPrice),
+    'total' => number_format($totalsumma, $PHPShopOrder->format, '.', ' '),
     'wsum' => floatval($_REQUEST['wsum']),
     'success' => 1
 );

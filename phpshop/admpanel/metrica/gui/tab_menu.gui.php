@@ -22,7 +22,7 @@ function tab_menu() {
        <li class="' . $menu_active_search_engines . '"><a href="?path=metrica.search_engines' . $date . '">' . __('Поисковые системы') . '</a></li>
        <li class="' . $menu_active_tech_devices . '"><a href="?path=metrica.tech_devices' . $date . '">' . __('Устройства') . '</a></li>
        <li class="' . $menu_active_sources_direct_summary . '"><a href="?path=metrica.sources_direct_summary' . $date . '">' . __('Директ, сводка') . '</a></li>
-       <li class="' . $menu_active_sources_direct_platforms . '"><a href="?path=metrica.sources_direct_platforms' . $date . '">' . __('Директ, площадки') . '</a>';
+       <li class="' . $menu_active_sources_direct_platforms . '"><a href="?path=metrica.sources_direct_platforms' . $date . '">' . __('Директ, площадки') . '</a></li>';
 
     if ($PHPShopSystem->ifSerilizeParam('admoption.metrica_ecommerce')) {
         $tree .= ' <li class="' . $menu_active_top_products . '"><a href="?path=metrica.top_products' . $date . '">' . __('Популярные товары') . '</a></li>

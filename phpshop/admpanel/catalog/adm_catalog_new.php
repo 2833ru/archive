@@ -170,7 +170,7 @@ function actionStart() {
     // Тип сортировки
     $order_by_value[] = array('по имени', 1, $data['order_by']);
     $order_by_value[] = array('по цене', 2, $data['order_by']);
-    $order_by_value[] = array('по номеру', 3, $data['order_by']);
+    $order_by_value[] = array('по складу', 3, $data['order_by']);
     $order_to_value[] = array('возрастанию', 1, $data['order_to']);
     $order_to_value[] = array('убыванию', 2, $data['order_to']);
     $Tab_info .= $PHPShopGUI->setField("Сортировка", $PHPShopGUI->setInputText(null, "num_new", $data['num'], 100, false, 'left') . '&nbsp' .

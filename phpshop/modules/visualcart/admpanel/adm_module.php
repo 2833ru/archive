@@ -53,19 +53,11 @@ function actionStart() {
     $Tab1.=$PHPShopGUI->setField('Источник', $PHPShopGUI->setCheckbox('referal_new', 1, 'Добавлять источник перехода в комментарий менеджеру', $data['referal']));
     $Tab1.=$PHPShopGUI->setField('Место вывода', $PHPShopGUI->setSelect('enabled_new', $e_value, 150,true));
 
-    $info = '<p>Для произвольной вставки элемента следует выбрать парамет вывода "Корзина" и в ручном режиме вставить переменную
-        <kbd>@visualcart@</kbd> в свой шаблон. Или через панель управления создайте текстовый блок, переключитесь в режим исходного кода (Система - Настройка - Режимы - Визуальный редактор),
-        внесите метку <kbd>@visualcart@</kbd> - теперь блок будет выводить корзину в нужном вам месте.</p>
-        <p>Для персонализации формы вывода отредактируйте шаблоны <code>phpshop/templates/имя_шаблона/modules/visualcart/templates/</code></p>
-';
-
-    $Tab2 = $PHPShopGUI->setInfo($info);
-
     // Форма регистрации
     $Tab3 = $PHPShopGUI->setPay($serial = false, false, $data['version'], true);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Инструкция", $Tab2), array("О Модуле", $Tab3), array("Незавершенные заказы", null, '?path=modules.dir.visualcart'), array("Журнал добавления в корзину", null, '?path=modules.dir.visualcart.log'));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Брошенные корзины", null, '?path=modules.dir.visualcart'), array("Журнал добавления в корзину", null, '?path=modules.dir.visualcart.log'), array("О Модуле", $Tab3));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =

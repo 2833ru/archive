@@ -7,18 +7,15 @@ function pochta_delivery_hook($obj, $data) {
     $result = $data[0];
     $Pochta = new Pochta();
 
-    if (($Pochta->isCourier((int) $data[1]) || $Pochta->isPostOffice((int) $data[1])) && (int) $_POST['index'] > 0) {
-        try {
-            $PHPShopOrder = new PHPShopOrderFunction();
+    if ($Pochta->isCourier((int) $data[1]) || $Pochta->isPostOffice((int) $data[1])) {
+        $hook['dellist'] = $result['dellist'];
+        $hook['hook'] = $Pochta->isCourier((int) $data[1]) ? "pochtaInit('courier');" : "pochtaInit('pvz');";
+        $hook['delivery'] = $result['delivery'];
+        $hook['total'] = $result['total'];
+        $hook['adresList'] = $result['adresList'];
+        $hook['success'] = 1;
 
-            $result['delivery'] = $Pochta->getCost($data[1], (int) $_POST['index']);
-            $result['total'] = $PHPShopOrder->returnSumma((float) $_REQUEST['sum'], $PHPShopOrder->ChekDiscount($_REQUEST['sum']),' ', $result['delivery']);
-            $result['message'] = PHPShopString::win_utf8('—тоимость доставки по индексу ' . (int) $_POST['index'] . ' составит ' . $result['delivery'] . ' руб.');
-        } catch (Exception $exception) {
-            $result['success'] = false;
-            $result['message'] = PHPShopString::win_utf8($exception->getMessage());
-        }
-        return $result;
+        return $hook;
     }
 }
 

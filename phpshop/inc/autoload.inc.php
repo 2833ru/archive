@@ -116,11 +116,13 @@ $PHPShopPhotoElement->init('getPhotos');
 // Recaptcha
 $PHPShopRecaptchaElement = new PHPShopRecaptchaElement();
 $PHPShopRecaptchaElement->init('captcha');
+PHPShopParser::set('pricemail_captcha', $PHPShopRecaptchaElement->captcha('pricemail'));
+PHPShopParser::set('notice_captcha', $PHPShopRecaptchaElement->captcha('notice'));
+PHPShopParser::set('review_captcha', $PHPShopRecaptchaElement->captcha('review'));
+PHPShopParser::set('forma_captcha', $PHPShopRecaptchaElement->captcha('forma'));
 
 // Очистка скрытых элементов
 if(PHPShopString::is_mobile()){
-  unset($GLOBALS['SysValue']['other']['leftMenu']);
-  unset($GLOBALS['SysValue']['other']['rightMenu']); 
   unset($GLOBALS['SysValue']['other']['imageSlider']);
   unset($GLOBALS['SysValue']['other']['banersDisp']);
 } else {

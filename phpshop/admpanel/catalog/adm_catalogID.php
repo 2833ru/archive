@@ -64,7 +64,7 @@ function treegenerator($array, $i, $curent, $dop_cat_array) {
  * Экшен загрузки форм редактирования
  */
 function actionStart() {
-    global $PHPShopGUI, $PHPShopModules, $PHPShopOrm, $PHPShopSystem, $PHPShopBase;
+    global $PHPShopGUI, $PHPShopModules, $PHPShopOrm, $PHPShopSystem, $PHPShopBase,$isFrame;
 
     // Размер названия поля
     $PHPShopGUI->field_col = 2;
@@ -92,7 +92,15 @@ function actionStart() {
         'class' => $GLOBALS['isFrame']
     );
 
-    $PHPShopGUI->setActionPanel(__("Каталог") . ': ' . $data['name'] . ' [ID ' . $data['id'] . ']', array('Товары', 'Создать', 'Предпросмотр', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'));
+    $PHPShopGUI->action_select['Удалить каталог'] = array(
+        'name' => 'Удалить <span class="glyphicon glyphicon-trash"></span>',
+        'locale' => true,
+        'action' => 'delete-category',
+        'url' => '#'
+    );
+
+
+    $PHPShopGUI->setActionPanel('<span class="'.$isFrame.'">'.__("Каталог") . ': </span>' . $data['name'] . ' [ID ' . $data['id'] . ']', array('Товары', 'Создать', 'Предпросмотр', '|', 'Удалить каталог'), array('Сохранить', 'Сохранить и закрыть'));
 
     // Наименование
     $Tab_info = $PHPShopGUI->setField("Название", $PHPShopGUI->setInputText(false, 'name_new', $data['name'], '100%'));
@@ -190,7 +198,7 @@ function actionStart() {
     // Тип сортировки
     $order_by_value[] = array(__('по имени'), 1, $data['order_by']);
     $order_by_value[] = array(__('по цене'), 2, $data['order_by']);
-    $order_by_value[] = array(__('по номеру'), 3, $data['order_by']);
+    $order_by_value[] = array(__('по складу'), 3, $data['order_by']);
     $order_to_value[] = array(__('возрастанию'), 1, $data['order_to']);
     $order_to_value[] = array(__('убыванию'), 2, $data['order_to']);
     $Tab_info .= $PHPShopGUI->setField("Сортировка", $PHPShopGUI->setInputText(null, "num_new", $data['num'], 100, false, 'left') . '&nbsp' .
@@ -456,18 +464,28 @@ function actionDelete() {
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
-    $action = $PHPShopOrm->delete(array('id' => '=' . intval($_POST['rowID'])));
 
-    // Переносим товары с удалённого каталога во временную папку
-    $PHPShopOrm->clean();
+    $category = new PHPShopCategory((int) $_POST['rowID']);
+    $categories = array_column($category->getChildrenCategories(1000, ['id'], false), 'id');
+    if(count($categories) > 0) {
+        $orm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
+        $count = $orm->select(["COUNT('id') as count"], ['category' => sprintf(' IN (%s)', implode(',', $categories))]);
+        if((int) $count['count'] > 0) {
+            if($_POST['products_operation'] === 'delete') {
+                $orm->delete(['category' => sprintf(' IN (%s)', implode(',', $categories))]);
+            } else {
+                $orm->update(['category_new' => 1000004, 'datas_new' => time()], ['category' => sprintf(' IN (%s)', implode(',', $categories))]);
+            }
+        }
+    } else {
+        $count['count'] = 0;
+    }
 
-    $categoryOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
-    $categoryOrm->update(array("parent_to" => "0"), array("parent_to" => "=" . $_POST['rowID']), false);
+    $categories[] = (int) $_POST['rowID'];
 
-    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
-    $PHPShopOrm->update(array("category" => "1000004", "enabled" => '0', 'datas' => time()), array("category" => "=" . $_POST['rowID']), false);
+    $action = $PHPShopOrm->delete(['id' => sprintf(' IN (%s)', implode(',', $categories))]);
 
-    return array("success" => $action);
+    return array("success" => $action, 'count' => $count['count']);
 }
 
 // Обработка событий

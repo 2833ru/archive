@@ -1,42 +1,102 @@
-function pochtaCalculate() {
+function pochtaInit(type) {
 
-    var index = $('input[name="index_new"]').val();
-    var sum = $("#OrderSumma").val();
-    var wsum = $("#WeightSumma").html();
-    var xid = $("#d").val();
+    $("#makeyourchoise").val(null);
 
-    $.ajax({
-        url: ROOT_PATH + '/phpshop/ajax/delivery.php',
-        type: 'post',
-        data: 'type=json&xid=' + xid + '&sum=' + sum + '&wsum=' + (wsum/1000) + '&index=' + index,
-        dataType: 'json',
-        success: function(json) {
-            if (json['success']) {
-                $("#DosSumma").html(json['delivery']);
-                $("#TotalSumma").html(json['total']);
-                showAlertMessage(json['message']);
-                $('input[name="city_new"]').val(json['city']);
-                $('input[name="pochta_delivery_cost"]').remove();
-                $('<input type="hidden" name="pochta_delivery_cost">').insertAfter('#dop_info');
-                $('input[name="pochta_delivery_cost"]').val(json['delivery']);
-            } else if (json['success'] === false) {
-                $('input[name="index_new"]').val('');
-                showAlertMessage(json['message']);
-            }
-        }
-    });
+    $('input[name="pochta_cost"]').remove();
+    $('input[name="pochta_address"]').remove();
+    $('input[name="pochta_type"]').remove();
+    $('input[name="pochta_city"]').remove();
+    $('input[name="pochta_index"]').remove();
+    $('input[name="pochta_mail_type"]').remove();
+    $('input[name="pochta_region"]').remove();
+    $('input[name="pochta_delivery_info"]').remove();
+
+    $('<input type="hidden" name="pochta_cost">').insertAfter('#dop_info');
+    $('<input type="hidden" name="pochta_address">').insertAfter('#dop_info');
+    $('<input type="hidden" name="pochta_city">').insertAfter('#dop_info');
+    $('<input type="hidden" name="pochta_index">').insertAfter('#dop_info');
+    $('<input type="hidden" name="pochta_mail_type">').insertAfter('#dop_info');
+    $('<input type="hidden" name="pochta_region">').insertAfter('#dop_info');
+    $('<input type="hidden" name="pochta_delivery_info">').insertAfter('#dop_info');
+
+    $('#pochta-frame').html('');
+    $("#pochtaModal").modal("show");
+
+    if(type === 'pvz') {
+        $('<input type="hidden" name="pochta_type" value="pvz">').insertAfter('#dop_info');
+        ecomStartWidget({
+            id: $('input[name="pochta_widget_id"]').val(),
+            weight: $('input[name="pochta_weight"]').val(),
+            sumoc: $('input[name="pochta_ins_value"]').val(),
+            callbackFunction: pochtaCallback,
+            containerId: 'pochta-frame'
+        });
+    } else {
+        $('<input type="hidden" name="pochta_type" value="courier">').insertAfter('#dop_info');
+        courierStartWidget({
+            id: $('input[name="pochta_courier_widget_id"]').val(),
+            weight: $('input[name="pochta_weight"]').val(),
+            sumoc: $('input[name="pochta_ins_value"]').val(),
+            callbackFunction: pochtaCallbackCourier,
+            containerId: 'pochta-frame'
+        });
+    }
 }
 
-$(document).ready(function() {
+function pochtaCallback(result) {
 
-    $("#adres_id").change(function() {
-        pochtaCalculate();
-    }).change();
+    var message = 'Почта России, отделение №: ' + result.indexTo + ', ' + result.deliveryDescription.description;
+    $('#deliveryInfo').html(message);
+    $('input[name="pochta_delivery_info"]').val(message);
 
+    pochtaSetData(result);
+}
 
-    $('body').on('change', 'input[name="index_new"]', function() {
-        if ($('input[name="index_new"]').val() >= 6) {
-            pochtaCalculate()
+function pochtaCallbackCourier(result) {
+    if(!result.hasOwnProperty('cashOfDelivery')) {
+        if(typeof showAlertMessage === "function"){
+            showAlertMessage('Ошибка тарификации. Проверьте правильность введенного индекса', true);
+        } else {
+            alert('Ошибка тарификации. Проверьте правильность введенного индекса');
         }
-    });
-});
+        return;
+    }
+
+    var message = 'Почта России, курьерская доставка: ' + result.cityTo + ', ' + result.addressTo + ', ' + result.delivery.description;
+    $('#deliveryInfo').html(message);
+    $('input[name="pochta_delivery_info"]').val(message);
+
+    pochtaSetData(result);
+}
+
+function pochtaSetData(result) {
+    var region = result.regionTo;
+    if(!region) {
+        region = result.areaTo; // В ручном вводе адреса курьерской доставки область\регион в поле района
+    }
+
+    $("#makeyourchoise").val('DONE');
+
+    $("#DosSumma").html(result.cashOfDelivery / 100);
+    $("#TotalSumma").html(Number(result.cashOfDelivery / 100) + Number($('#OrderSumma').val()));
+
+    $('input[name="pochta_cost"]').val(result.cashOfDelivery / 100);
+    $('input[name="pochta_address"]').val(result.addressTo);
+    $('input[name="pochta_city"]').val(result.cityTo);
+    $('input[name="pochta_index"]').val(result.indexTo);
+    $('input[name="pochta_mail_type"]').val(result.mailType);
+    $('input[name="pochta_region"]').val(region);
+    $('#dop_info').val(result.comment);
+
+    if($('input[name="state_new"]').length) {
+        $('input[name="state_new"]').val(region);
+    }
+    if($('input[name="city_new"]').length) {
+        $('input[name="city_new"]').val(result.cityTo);
+    }
+    if($('input[name="index_new"]').length) {
+        $('input[name="index_new"]').val(result.indexTo);
+    }
+
+    $("#pochtaModal").modal("hide");
+}

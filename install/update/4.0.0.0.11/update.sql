@@ -210,3 +210,11 @@ CREATE TABLE `phpshop_notes` (
   `status` int(11) default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
+ALTER TABLE `phpshop_system` CHANGE `width_icon` `icon` varchar(255) default ''; 
+
+ALTER TABLE `phpshop_promotions` ADD `action` ENUM('1', '2') DEFAULT '1';
+ALTER TABLE `phpshop_shopusers` ADD `token` INT(11);
+ALTER TABLE `phpshop_shopusers` ADD `token_time` INT(11);
+ALTER TABLE `phpshop_servers` ADD `icon` VARCHAR(255);
+ALTER TABLE `phpshop_notes` ADD `name` VARCHAR(64), ADD `tel` VARCHAR(64), ADD `mail` VARCHAR(64), ADD `content` TEXT;

@@ -132,7 +132,7 @@ class PHPShopCommerceML {
 					<«начение>' . $row['weight'] . '</«начение>
 				</«начение–еквизита>
 			</«начени€–еквизитов>
-                        ' . $this->getImages($row['id']) . '
+                        ' . $this->getImages($row) . '
 		</“овар>
                 ';
             }

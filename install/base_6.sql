@@ -37,7 +37,7 @@ CREATE TABLE phpshop_baners (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-INSERT INTO phpshop_baners VALUES ('4', 'Баннер в колонке', '<p><img src="/UserFiles/Image/Trial/banner_vert.jpg" width="414" height="648" /></p>', '0', '0', '1', '', '0', '', '', '', 'lego');
+INSERT INTO phpshop_baners VALUES ('4', 'Баннер в колонке', '<p><img src="/UserFiles/Image/Trial/banner_vert.jpg" width="414" height="648" /></p>', '0', '0', '1', '', '0', '', '', '', '');
 DROP TABLE IF EXISTS phpshop_black_list;
 CREATE TABLE phpshop_black_list (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -564,6 +564,7 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_productday_system` (
   `status` enum('1','2','3') default '1',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+INSERT INTO `phpshop_modules_productday_system` VALUES (1,'24','1.3','1');
 
 
 DROP TABLE IF EXISTS phpshop_modules_productlastview_memory;
@@ -682,17 +683,21 @@ CREATE TABLE phpshop_modules_sticker_system (
 
 INSERT INTO phpshop_modules_sticker_system VALUES ('1', '', '1.2');
 
-DROP TABLE IF EXISTS phpshop_modules_visualcart_memory;
-CREATE TABLE phpshop_modules_visualcart_memory (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `memory` varchar(64) DEFAULT '',
-  `cart` text,
-  `date` int(11) DEFAULT '0',
-  `user` int(11) DEFAULT '0',
-  `ip` varchar(64) DEFAULT '',
-  `referal` text,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+DROP TABLE IF EXISTS `phpshop_modules_visualcart_memory`;
+CREATE TABLE `phpshop_modules_visualcart_memory` (
+  `id` int(11) NOT NULL auto_increment,
+  `memory` varchar(64) default '',
+  `cart` text ,
+  `date` int(11) default '0',
+  `user` int(11) default '0',
+  `ip` varchar(64) default '',
+  `referal` text ,
+  `tel` VARCHAR(64), 
+  `mail` VARCHAR(64),
+  `name` VARCHAR(64),
+  `sum` FLOAT,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 DROP TABLE IF EXISTS `phpshop_modules_visualcart_log`;
 CREATE TABLE `phpshop_modules_visualcart_log` (
@@ -721,7 +726,7 @@ CREATE TABLE phpshop_modules_visualcart_system (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
-INSERT INTO phpshop_modules_visualcart_system VALUES ('1', '0', '1', 'Корзина', '50', '1', '', '1', '2.2');
+INSERT INTO phpshop_modules_visualcart_system VALUES ('1', '0', '1', 'Корзина', '50', '1', '', '1', '2.3');
 DROP TABLE IF EXISTS phpshop_modules_yandexcart_system;
 CREATE TABLE phpshop_modules_yandexcart_system (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -730,7 +735,7 @@ CREATE TABLE phpshop_modules_yandexcart_system (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-INSERT INTO phpshop_modules_yandexcart_system VALUES ('1', '', '2.4');
+INSERT INTO `phpshop_modules_yandexcart_system` VALUES (1,'','2.5');
 DROP TABLE IF EXISTS phpshop_news;
 CREATE TABLE phpshop_news (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1240,6 +1245,7 @@ CREATE TABLE phpshop_promotions (
   `date_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `block_old_price` enum('0','1') DEFAULT '0',
   `hide_old_price` enum('0','1') DEFAULT '0',
+  `action` ENUM('1', '2') DEFAULT '1',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
@@ -1347,6 +1353,7 @@ CREATE TABLE phpshop_servers (
   `warehouse` int(11) DEFAULT '0',
   `price` enum('1','2','3','4','5') DEFAULT '1',
   `admin` int(11) default 0,
+  `icon` VARCHAR(255),
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
@@ -1372,11 +1379,13 @@ CREATE TABLE phpshop_shopusers (
   `sendmail` enum('0','1') DEFAULT '1',
   `servers` int(11) default 0,
   `bonus` int(11) DEFAULT '0',
+  `token` INT(11),
+  `token_time` INT(11),
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-INSERT INTO phpshop_shopusers VALUES ('31', 'test@mail.ru', 'eXF2bDI5MGQ=', '1574888495', 'test@mail.ru', 'Иван Иванов', '', '', '+7 (098) 700-00-00', '', '1', '0', '', '', 'a:0:{}', 'a:2:{s:4:"list";a:1:{i:0;a:2:{s:7:"tel_new";s:18:"+7 (098) 709-86-09";s:13:"delivtime_new";s:6:"765765";}}s:4:"main";i:0;}', '0', '1','','0');
-INSERT INTO phpshop_shopusers VALUES ('32', 'test@gmail.com', 'NHg1eWU4dGw=', '1575019417', 'test@gmail.com', 'Мария Волкова', '', '', '+7 (098) 700-22-09', '', '1', '0', '', '', 'a:0:{}', 'a:2:{s:4:"list";a:1:{i:0;a:2:{s:7:"tel_new";s:18:"+7 (098) 709-86-09";s:13:"delivtime_new";s:4:"с 13";}}s:4:"main";i:0;}', '0', '1','','0');
+INSERT INTO phpshop_shopusers VALUES ('31', 'test@mail.ru', 'eXF2bDI5MGQ=', '1574888495', 'test@mail.ru', 'Иван Иванов', '', '', '+7 (098) 700-00-00', '', '1', '0', '', '', 'a:0:{}', 'a:2:{s:4:"list";a:1:{i:0;a:2:{s:7:"tel_new";s:18:"+7 (098) 709-86-09";s:13:"delivtime_new";s:6:"765765";}}s:4:"main";i:0;}', '0', '1','','0','','');
+INSERT INTO phpshop_shopusers VALUES ('32', 'test@gmail.com', 'NHg1eWU4dGw=', '1575019417', 'test@gmail.com', 'Мария Волкова', '', '', '+7 (098) 700-22-09', '', '1', '0', '', '', 'a:0:{}', 'a:2:{s:4:"list";a:1:{i:0;a:2:{s:7:"tel_new";s:18:"+7 (098) 709-86-09";s:13:"delivtime_new";s:4:"с 13";}}s:4:"main";i:0;}', '0', '1','','0','','');
 DROP TABLE IF EXISTS phpshop_shopusers_status;
 CREATE TABLE phpshop_shopusers_status (
   `id` tinyint(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -1554,7 +1563,7 @@ CREATE TABLE phpshop_system (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-INSERT INTO phpshop_system VALUES ('1', 'Название интернет-магазина', 'Продавец', '8', '0', '6', '0', 'lego', 'admin@localhost', 'Демо-версия скрипта интернет-магазина PHPShop', 'скрипт магазина, купить интернет-магазин', '6', '8', '8', '&#43;7(495)111-22-33', 'a:12:{s:8:"org_name";s:14:"ООО "Продавец"";s:12:"org_ur_adres";s:41:"000000 г. Москва, ул. Юридическая, дом 1.";s:9:"org_adres";s:30:"Москва, ул. Физическая, дом 1.";s:7:"org_inn";s:9:"777777777";s:7:"org_kpp";s:10:"8888888888";s:9:"org_schet";s:16:"1111111111111111";s:8:"org_bank";s:23:"ОАО "Ваш тестовый банк"";s:7:"org_bic";s:8:"46778888";s:14:"org_bank_schet";s:15:"222222222222222";s:9:"org_stamp";s:32:"/UserFiles/Image/Trial/stamp.png";s:7:"org_sig";s:36:"/UserFiles/Image/Trial/facsimile.png";s:11:"org_sig_buh";s:36:"/UserFiles/Image/Trial/facsimile.png";}', '4', '', '1409661405', '18', '1', 'a:100:{s:12:"sklad_status";s:1:"1";s:13:"cloud_enabled";i:0;s:23:"digital_product_enabled";i:0;s:13:"user_calendar";i:0;s:19:"user_price_activate";i:0;s:22:"user_mail_activate_pre";i:0;s:18:"rss_graber_enabled";i:0;s:17:"image_save_source";i:0;s:6:"img_wm";N;s:5:"img_w";s:4:"1000";s:5:"img_h";s:4:"1000";s:6:"img_tw";s:3:"300";s:6:"img_th";s:3:"300";s:14:"width_podrobno";s:3:"100";s:12:"width_kratko";s:3:"100";s:12:"base_enabled";N;s:11:"sms_enabled";i:0;s:14:"notice_enabled";i:0;s:7:"base_id";s:0:"";s:9:"base_host";s:0:"";s:13:"sklad_enabled";s:1:"1";s:10:"price_znak";s:1:"0";s:18:"user_mail_activate";i:0;s:11:"user_status";s:1:"0";s:9:"user_skin";s:1:"1";s:12:"cart_minimum";s:0:"";s:13:"watermark_big";a:21:{s:14:"big_mergeLevel";i:70;s:11:"big_enabled";s:1:"1";s:8:"big_type";s:3:"png";s:12:"big_png_file";s:30:"/UserFiles/Image/shop_logo.png";s:12:"big_copyFlag";s:1:"0";s:6:"big_sm";i:0;s:16:"big_positionFlag";s:1:"4";s:13:"big_positionX";i:0;s:13:"big_positionY";i:0;s:9:"big_alpha";i:70;s:8:"big_text";s:0:"";s:21:"big_text_positionFlag";i:0;s:8:"big_size";i:0;s:9:"big_angle";i:0;s:18:"big_text_positionX";i:0;s:18:"big_text_positionY";i:0;s:10:"big_colorR";i:0;s:10:"big_colorG";i:0;s:10:"big_colorB";i:0;s:14:"big_text_alpha";i:0;s:8:"big_font";s:16:"norobot_font.ttf";}s:15:"watermark_small";a:21:{s:16:"small_mergeLevel";i:100;s:13:"small_enabled";s:1:"1";s:10:"small_type";s:3:"png";s:14:"small_png_file";s:25:"/UserFiles/Image/logo.png";s:14:"small_copyFlag";s:1:"0";s:8:"small_sm";i:0;s:18:"small_positionFlag";s:1:"1";s:15:"small_positionX";i:0;s:15:"small_positionY";i:0;s:11:"small_alpha";i:50;s:10:"small_text";s:0:"";s:23:"small_text_positionFlag";i:0;s:10:"small_size";i:0;s:11:"small_angle";i:0;s:20:"small_text_positionX";i:0;s:20:"small_text_positionY";i:0;s:12:"small_colorR";i:0;s:12:"small_colorG";i:0;s:12:"small_colorB";i:0;s:16:"small_text_alpha";i:0;s:10:"small_font";s:16:"norobot_font.ttf";}s:15:"watermark_ishod";a:21:{s:16:"ishod_mergeLevel";i:100;s:13:"ishod_enabled";N;s:10:"ishod_type";s:3:"png";s:14:"ishod_png_file";s:0:"";s:14:"ishod_copyFlag";s:1:"0";s:8:"ishod_sm";i:0;s:18:"ishod_positionFlag";s:1:"1";s:15:"ishod_positionX";i:0;s:15:"ishod_positionY";i:0;s:11:"ishod_alpha";i:0;s:10:"ishod_text";s:0:"";s:23:"ishod_text_positionFlag";i:0;s:10:"ishod_size";i:0;s:11:"ishod_angle";i:0;s:20:"ishod_text_positionX";i:0;s:20:"ishod_text_positionY";i:0;s:12:"ishod_colorR";i:0;s:12:"ishod_colorG";i:0;s:12:"ishod_colorB";i:0;s:16:"ishod_text_alpha";i:0;s:10:"ishod_font";s:16:"norobot_font.ttf";}s:14:"nowbuy_enabled";s:1:"2";s:6:"editor";s:7:"tinymce";s:5:"theme";s:7:"default";s:24:"sms_status_order_enabled";i:0;s:17:"mail_smtp_replyto";s:0:"";s:9:"sms_phone";s:0:"";s:8:"sms_user";s:0:"";s:8:"sms_pass";s:0:"";s:8:"sms_name";s:0:"";s:9:"ace_theme";s:4:"dawn";s:9:"adm_title";s:0:"";s:14:"search_enabled";s:1:"3";s:14:"mail_smtp_host";s:0:"";s:14:"mail_smtp_port";s:0:"";s:14:"mail_smtp_user";s:0:"";s:14:"mail_smtp_pass";s:0:"";s:20:"parent_price_enabled";i:0;s:17:"mail_smtp_enabled";i:0;s:15:"mail_smtp_debug";i:0;s:14:"mail_smtp_auth";i:0;s:12:"rule_enabled";i:0;s:15:"catlist_enabled";s:1:"1";s:17:"recaptcha_enabled";s:1:"1";s:14:"recaptcha_pkey";s:0:"";s:14:"recaptcha_skey";s:0:"";s:14:"dadata_enabled";s:1:"1";s:12:"dadata_token";s:0:"";s:21:"multi_currency_search";i:0;s:17:"image_result_path";s:0:"";s:14:"watermark_text";s:8:"YOURLOGO";s:20:"watermark_text_color";s:7:"#cccccc";s:19:"watermark_text_size";s:2:"20";s:19:"watermark_text_font";s:4:"Vera";s:15:"watermark_right";s:2:"20";s:16:"watermark_bottom";s:2:"30";s:20:"watermark_text_alpha";s:2:"40";s:15:"watermark_image";s:0:"";s:21:"image_adaptive_resize";i:0;s:15:"image_save_name";i:0;s:21:"watermark_big_enabled";s:1:"1";s:24:"watermark_source_enabled";i:0;s:17:"yandexmap_enabled";s:1:"1";s:9:"hub_theme";s:23:"bootstrap-theme-default";s:15:"hub_fluid_theme";s:23:"bootstrap-theme-default";s:24:"watermark_center_enabled";i:0;s:19:"filter_cache_period";s:0:"";s:20:"filter_cache_enabled";i:0;s:21:"filter_products_count";s:1:"1";s:12:"promo_notice";b:1;s:15:"image_save_path";i:0;s:11:"new_enabled";i:0;s:12:"chat_enabled";i:0;s:18:"image_save_catalog";i:1;s:23:"watermark_small_enabled";i:0;s:12:"astero_theme";s:20:"bootstrap-theme-blue";s:18:"astero_fluid_theme";s:20:"bootstrap-theme-blue";s:13:"astero_editor";N;s:10:"lego_theme";s:23:"bootstrap-theme-default";s:16:"lego_fluid_theme";s:23:"bootstrap-theme-default";s:11:"lego_editor";a:5:{s:1:"h";i:1;s:1:"f";i:1;s:1:"c";i:1;s:1:"p";i:2;s:1:"s";i:2;}s:13:"metrica_token";s:0:"";s:10:"metrica_id";s:0:"";s:13:"yandex_apikey";s:0:"";s:9:"google_id";s:0:"";s:15:"metrica_enabled";i:0;s:14:"metrica_widget";i:0;s:17:"metrica_ecommerce";i:0;s:14:"google_enabled";i:0;s:16:"google_analitics";i:0;s:4:"lang";s:7:"russian";s:17:"sklad_sum_enabled";s:1:"1";}', '6', 'PHPShop – это готовое решение для быстрого создания интернет-магазина.', '@Podcatalog@, @Catalog@, @System@', '@Podcatalog@ - @Catalog@ - @System@', '@Podcatalog@, @Catalog@, @Generator@', '@Product@ - @Podcatalog@ - @Catalog@', '@Product@, @Podcatalog@, @Catalog@', '@Product@,@System@', '/UserFiles/Image/Trial/php_logo.svg', '', '@Catalog@ - @System@', '@Catalog@', '@Catalog@', '0', '0', '0', 'a:7:{s:11:"update_name";s:1:"1";s:14:"update_content";s:1:"1";s:18:"update_description";s:1:"1";s:15:"update_category";s:1:"1";s:11:"update_sort";s:1:"1";s:12:"update_price";s:1:"1";s:11:"update_item";s:1:"1";}');
+INSERT INTO phpshop_system VALUES ('1', 'Название интернет-магазина', 'Продавец', '8', '0', '6', '0', 'unit', 'admin@localhost', 'Демо-версия скрипта интернет-магазина PHPShop', 'скрипт магазина, купить интернет-магазин', '6', '8', '8', '&#43;7(495)111-22-33', 'a:12:{s:8:"org_name";s:14:"ООО "Продавец"";s:12:"org_ur_adres";s:41:"000000 г. Москва, ул. Юридическая, дом 1.";s:9:"org_adres";s:30:"Москва, ул. Физическая, дом 1.";s:7:"org_inn";s:9:"777777777";s:7:"org_kpp";s:10:"8888888888";s:9:"org_schet";s:16:"1111111111111111";s:8:"org_bank";s:23:"ОАО "Ваш тестовый банк"";s:7:"org_bic";s:8:"46778888";s:14:"org_bank_schet";s:15:"222222222222222";s:9:"org_stamp";s:32:"/UserFiles/Image/Trial/stamp.png";s:7:"org_sig";s:36:"/UserFiles/Image/Trial/facsimile.png";s:11:"org_sig_buh";s:36:"/UserFiles/Image/Trial/facsimile.png";}', '4', '', '1409661405', '18', '1', 'a:100:{s:12:"sklad_status";s:1:"1";s:13:"cloud_enabled";i:0;s:23:"digital_product_enabled";i:0;s:13:"user_calendar";i:0;s:19:"user_price_activate";i:0;s:22:"user_mail_activate_pre";i:0;s:18:"rss_graber_enabled";i:0;s:17:"image_save_source";i:0;s:6:"img_wm";N;s:5:"img_w";s:4:"1000";s:5:"img_h";s:4:"1000";s:6:"img_tw";s:3:"300";s:6:"img_th";s:3:"300";s:14:"width_podrobno";s:3:"100";s:12:"width_kratko";s:3:"100";s:12:"base_enabled";N;s:11:"sms_enabled";i:0;s:14:"notice_enabled";i:0;s:7:"base_id";s:0:"";s:9:"base_host";s:0:"";s:13:"sklad_enabled";s:1:"1";s:10:"price_znak";s:1:"0";s:18:"user_mail_activate";i:0;s:11:"user_status";s:1:"0";s:9:"user_skin";s:1:"1";s:12:"cart_minimum";s:0:"";s:13:"watermark_big";a:21:{s:14:"big_mergeLevel";i:70;s:11:"big_enabled";s:1:"1";s:8:"big_type";s:3:"png";s:12:"big_png_file";s:30:"/UserFiles/Image/shop_logo.png";s:12:"big_copyFlag";s:1:"0";s:6:"big_sm";i:0;s:16:"big_positionFlag";s:1:"4";s:13:"big_positionX";i:0;s:13:"big_positionY";i:0;s:9:"big_alpha";i:70;s:8:"big_text";s:0:"";s:21:"big_text_positionFlag";i:0;s:8:"big_size";i:0;s:9:"big_angle";i:0;s:18:"big_text_positionX";i:0;s:18:"big_text_positionY";i:0;s:10:"big_colorR";i:0;s:10:"big_colorG";i:0;s:10:"big_colorB";i:0;s:14:"big_text_alpha";i:0;s:8:"big_font";s:16:"norobot_font.ttf";}s:15:"watermark_small";a:21:{s:16:"small_mergeLevel";i:100;s:13:"small_enabled";s:1:"1";s:10:"small_type";s:3:"png";s:14:"small_png_file";s:25:"/UserFiles/Image/logo.png";s:14:"small_copyFlag";s:1:"0";s:8:"small_sm";i:0;s:18:"small_positionFlag";s:1:"1";s:15:"small_positionX";i:0;s:15:"small_positionY";i:0;s:11:"small_alpha";i:50;s:10:"small_text";s:0:"";s:23:"small_text_positionFlag";i:0;s:10:"small_size";i:0;s:11:"small_angle";i:0;s:20:"small_text_positionX";i:0;s:20:"small_text_positionY";i:0;s:12:"small_colorR";i:0;s:12:"small_colorG";i:0;s:12:"small_colorB";i:0;s:16:"small_text_alpha";i:0;s:10:"small_font";s:16:"norobot_font.ttf";}s:15:"watermark_ishod";a:21:{s:16:"ishod_mergeLevel";i:100;s:13:"ishod_enabled";N;s:10:"ishod_type";s:3:"png";s:14:"ishod_png_file";s:0:"";s:14:"ishod_copyFlag";s:1:"0";s:8:"ishod_sm";i:0;s:18:"ishod_positionFlag";s:1:"1";s:15:"ishod_positionX";i:0;s:15:"ishod_positionY";i:0;s:11:"ishod_alpha";i:0;s:10:"ishod_text";s:0:"";s:23:"ishod_text_positionFlag";i:0;s:10:"ishod_size";i:0;s:11:"ishod_angle";i:0;s:20:"ishod_text_positionX";i:0;s:20:"ishod_text_positionY";i:0;s:12:"ishod_colorR";i:0;s:12:"ishod_colorG";i:0;s:12:"ishod_colorB";i:0;s:16:"ishod_text_alpha";i:0;s:10:"ishod_font";s:16:"norobot_font.ttf";}s:14:"nowbuy_enabled";s:1:"2";s:6:"editor";s:7:"tinymce";s:5:"theme";s:7:"default";s:24:"sms_status_order_enabled";i:0;s:17:"mail_smtp_replyto";s:0:"";s:9:"sms_phone";s:0:"";s:8:"sms_user";s:0:"";s:8:"sms_pass";s:0:"";s:8:"sms_name";s:0:"";s:9:"ace_theme";s:4:"dawn";s:9:"adm_title";s:0:"";s:14:"search_enabled";s:1:"3";s:14:"mail_smtp_host";s:0:"";s:14:"mail_smtp_port";s:0:"";s:14:"mail_smtp_user";s:0:"";s:14:"mail_smtp_pass";s:0:"";s:20:"parent_price_enabled";i:0;s:17:"mail_smtp_enabled";i:0;s:15:"mail_smtp_debug";i:0;s:14:"mail_smtp_auth";i:0;s:12:"rule_enabled";i:0;s:15:"catlist_enabled";s:1:"1";s:17:"recaptcha_enabled";s:1:"1";s:14:"recaptcha_pkey";s:0:"";s:14:"recaptcha_skey";s:0:"";s:14:"dadata_enabled";s:1:"1";s:12:"dadata_token";s:0:"";s:21:"multi_currency_search";i:0;s:17:"image_result_path";s:0:"";s:14:"watermark_text";s:8:"YOURLOGO";s:20:"watermark_text_color";s:7:"#cccccc";s:19:"watermark_text_size";s:2:"20";s:19:"watermark_text_font";s:4:"Vera";s:15:"watermark_right";s:2:"20";s:16:"watermark_bottom";s:2:"30";s:20:"watermark_text_alpha";s:2:"40";s:15:"watermark_image";s:0:"";s:21:"image_adaptive_resize";i:0;s:15:"image_save_name";i:0;s:21:"watermark_big_enabled";s:1:"1";s:24:"watermark_source_enabled";i:0;s:17:"yandexmap_enabled";s:1:"1";s:9:"hub_theme";s:23:"bootstrap-theme-default";s:15:"hub_fluid_theme";s:23:"bootstrap-theme-default";s:24:"watermark_center_enabled";i:0;s:19:"filter_cache_period";s:0:"";s:20:"filter_cache_enabled";i:0;s:21:"filter_products_count";s:1:"1";s:12:"promo_notice";b:1;s:15:"image_save_path";i:0;s:11:"new_enabled";i:0;s:12:"chat_enabled";i:0;s:18:"image_save_catalog";i:1;s:23:"watermark_small_enabled";i:0;s:12:"astero_theme";s:20:"bootstrap-theme-blue";s:18:"astero_fluid_theme";s:20:"bootstrap-theme-blue";s:13:"astero_editor";N;s:10:"lego_theme";s:23:"bootstrap-theme-default";s:16:"lego_fluid_theme";s:23:"bootstrap-theme-default";s:11:"lego_editor";a:5:{s:1:"h";i:1;s:1:"f";i:1;s:1:"c";i:1;s:1:"p";i:2;s:1:"s";i:2;}s:13:"metrica_token";s:0:"";s:10:"metrica_id";s:0:"";s:13:"yandex_apikey";s:0:"";s:9:"google_id";s:0:"";s:15:"metrica_enabled";i:0;s:14:"metrica_widget";i:0;s:17:"metrica_ecommerce";i:0;s:14:"google_enabled";i:0;s:16:"google_analitics";i:0;s:4:"lang";s:7:"russian";s:17:"sklad_sum_enabled";s:1:"1";}', '6', 'PHPShop – это готовое решение для быстрого создания интернет-магазина.', '@Podcatalog@, @Catalog@, @System@', '@Podcatalog@ - @Catalog@ - @System@', '@Podcatalog@, @Catalog@, @Generator@', '@Product@ - @Podcatalog@ - @Catalog@', '@Product@, @Podcatalog@, @Catalog@', '@Product@,@System@', '/UserFiles/Image/Trial/php_logo.svg', '', '@Catalog@ - @System@', '@Catalog@', '@Catalog@', '0', '0', '0', 'a:7:{s:11:"update_name";s:1:"1";s:14:"update_content";s:1:"1";s:18:"update_description";s:1:"1";s:15:"update_category";s:1:"1";s:11:"update_sort";s:1:"1";s:12:"update_price";s:1:"1";s:11:"update_item";s:1:"1";}');
 DROP TABLE IF EXISTS phpshop_templates_key;
 CREATE TABLE phpshop_templates_key (
   `path` varchar(64) NOT NULL DEFAULT '',
@@ -1663,5 +1672,9 @@ CREATE TABLE `phpshop_notes` (
   `date` int(11) default '0',
   `message` text ,
   `status` int(11) default '0',
+  `name` VARCHAR(64), 
+  `tel` VARCHAR(64),
+  `mail` VARCHAR(64),
+  `content` TEXT,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;

@@ -63,6 +63,10 @@ function tab_cart($data, $option = false) {
                     // Промокод
                     if(!empty($val['promo_code']) and !empty($val['promo_price']))
                         $code= 'Купон: <span class="text-success">'.$val['promo_code'].'</span>';
+
+                    // Скидка не применилась
+                    if(!empty($val['promotion_discount']))
+                        $code= '<span class="text-success">Применена скидка промоакции.</span>';
                     
                     if (!empty($val['pic_small']))
                         $icon = '<img src="' . $val['pic_small'] . '" onerror="this.onerror = null;this.src = \'./images/no_photo.gif\'" class="media-object">';

@@ -240,13 +240,12 @@ class ProductLastView extends PHPShopProductElements {
 function productlastviewform($val, $option) {
     global $SysValue, $PHPShopSystem;
 
+    //Запрос к базе товаров
+    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
+    $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($val['id'])), false, array('limit' => 1));
 
     // Учет модуля SEOURLPRO
     if (!empty($GLOBALS['SysValue']['base']['seourlpro']['seourlpro_system'])) {
-
-        //Запрос к базе товаров
-        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
-        $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($val['id'])), false, array('limit' => 1));
 
         if (empty($data['prod_seo_name']))
             $url = '/id/' . str_replace("_", "-", PHPShopString::toLatin($data['name'])) . '-' . $data['id'];
@@ -270,10 +269,37 @@ function productlastviewform($val, $option) {
     PHPShopParser::set('productlastview_product_id', $val['id']);
     PHPShopParser::set('productlastview_product_xid', $val['id']);
     PHPShopParser::set('productlastview_product_name', $val['name']);
-    PHPShopParser::set('productlastview_product_pic_small', $val['pic_small']);
+    PHPShopParser::set('productlastview_product_pic_small', !empty($val['pic_small']) ? $val['pic_small'] : 'images/shop/no_photo.gif');
     PHPShopParser::set('productlastview_product_price', $val['price']);
     PHPShopParser::set('productlastview_product_currency', $option['currency']);
     PHPShopParser::set('productlastview_product_rating', $option['rate']);
+
+    // Товар в наличии
+    if (empty($data['sklad'])) {
+        PHPShopParser::set('productlastview_com_start_cart', '');
+        PHPShopParser::set('productlastview_com_end_cart', '');
+        PHPShopParser::set('productlastview_com_start_notice', PHPShopText::comment('<'));
+        PHPShopParser::set('productlastview_com_end_notice', PHPShopText::comment('>'));
+    }
+
+    // Товар под заказ
+    else {
+        PHPShopParser::set('productlastview_com_start_notice', '');
+        PHPShopParser::set('productlastview_com_end_notice', '');
+        PHPShopParser::set('productlastview_com_start_cart', PHPShopText::comment('<'));
+        PHPShopParser::set('productlastview_com_end_cart', PHPShopText::comment('>'));
+    }
+
+    // Проверка подтипа
+    if (!empty($data['parent']) && empty($data['sklad'])) {
+        PHPShopParser::set('productlastview_com_start_cart', PHPShopText::comment('<'));
+        PHPShopParser::set('productlastview_com_end_cart', PHPShopText::comment('>'));
+        PHPShopParser::set('productlastview_com_start_parent', '');
+        PHPShopParser::set('productlastview_com_end_parent', '');
+    } else {
+        PHPShopParser::set('productlastview_com_start_parent', PHPShopText::comment('<'));
+        PHPShopParser::set('productlastview_com_end_parent', PHPShopText::comment('>'));
+    }
 
     if ((float) $val['price_n'] > 0)
         PHPShopParser::set('productlastview_product_price_old', number_format($val['price_n'], $option['format'], '.', ' ') . ' ' . $PHPShopSystem->getValutaIcon());

@@ -3,7 +3,7 @@
 /**
  * Библиотека парсинга данных
  * @author PHPShop Software
- * @version 1.8
+ * @version 1.9
  * @package PHPShopParser
  */
 class PHPShopParser {
@@ -109,7 +109,7 @@ class PHPShopParser {
      */
     static function set($name, $value, $flag = false) {
         if ($flag)
-            $GLOBALS['SysValue']['other'][$name].=$value;
+            $GLOBALS['SysValue']['other'][$name] .= $value;
         else
             $GLOBALS['SysValue']['other'][$name] = $value;
     }
@@ -217,15 +217,15 @@ class PHPShopCssParser {
         $css = null;
         if (is_array($this->css_array))
             foreach ($this->css_array as $k => $v) {
-                $css.='
+                $css .= '
 ' . $k . '{
 ';
                 if (is_array($v))
                     foreach ($v as $name => $rule)
-                        $css.=$name . ':' . $rule . ';
+                        $css .= $name . ':' . $rule . ';
 ';
 
-                $css.='}';
+                $css .= '}';
             }
         return $css;
     }
@@ -316,16 +316,17 @@ function ParseTemplateReturn($TemplateName, $mod = false, $debug = false) {
         $file = tmpGetFile($SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'] . chr(47) . $TemplateName);
     $dis = Parser($file);
 
-    $add = ' id="data-source" data-toggle="tooltip" data-placement="auto" data-source="' . $TemplateName . '" title="'.__('Показать').' [Ctrl + &crarr;]" ';
+    $add = ' id="data-source" data-toggle="tooltip" data-placement="auto" data-source="' . $TemplateName . '" title="' . __('Показать') . ' [Ctrl + &crarr;]" ';
 
 
-    if ($debug and !empty($_COOKIE['debug_template'])) {
+    if ($debug and ! empty($_COOKIE['debug_template'])) {
         if (strstr($dis, '<li') or strstr($dis, 'class="product-col"'))
             $result = str_replace(array('<li', 'class="product-col"'), array('<li' . $add, 'class="product-col"' . $add), $dis);
+        elseif (strstr($dis, 'product-block-wrapper-fix'))
+            $result = str_replace(array('product-block-wrapper-fix"'), array('product-block-wrapper-fix" '.$add), $dis);
         else
             $result = '<div ' . $add . '>' . $dis . '</div>';
-    }
-    else
+    } else
         $result = $dis;
 
     return $result;
@@ -417,15 +418,16 @@ function Parser($string, $debug = false) {
     $dis = @preg_replace_callback("/@([a-zA-Z0-9_]+)@/", 'SysValueReturn', @preg_replace_callback("/(@php)(.*)(php@)/sU", "evalstr", str_replace('&#43;', '+', $string)));
     $dis = preg_replace_callback("/({)([а-яА-ЯёЁ0-9_ ,.\"\-\/]+)(})/", "PHPShopParser::locale", $dis);
 
-    $add = ' id="data-source" data-toggle="tooltip" data-placement="auto" data-source="' . $debug . '" title="'.__('Показать').' [Ctrl + &crarr;]" ';
+    $add = ' id="data-source" data-toggle="tooltip" data-placement="auto" data-source="' . $debug . '" title="' . __('Показать') . ' [Ctrl + &crarr;]" ';
 
-    if ($debug and !empty($_COOKIE['debug_template'])) {
+    if ($debug and ! empty($_COOKIE['debug_template'])) {
         if (strstr($dis, '<li') or strstr($dis, 'class="product-col"'))
             $result = str_replace(array('<li', 'class="product-col"'), array('<li' . $add, 'class="product-col"' . $add), $dis);
+         elseif (strstr($dis, 'product-block-wrapper-fix'))
+            $result = str_replace(array('product-block-wrapper-fix"'), array('product-block-wrapper-fix" '.$add), $dis);
         else
             $result = '<div ' . $add . '>' . $dis . '</div>';
-    }
-    else
+    } else
         $result = $dis;
 
 
@@ -444,8 +446,7 @@ function tmpGetFile($path) {
         if (!$file)
             return false;
         return $file;
-    }
-    else
+    } else
         return false;
 }
 
@@ -457,13 +458,13 @@ function tmpGetFile($path) {
 function __hide($name, $type = 'parser') {
     if ($type == 'parser' and empty($GLOBALS['SysValue']['other'][$name]))
         echo 'hide';
-    else if ($type == 'cookie' and !empty($_COOKIE[$name]))
+    else if ($type == 'cookie' and ! empty($_COOKIE[$name]))
         echo 'hide';
-    else if ($type == 'session' and !empty($_SESSION[$name]))
+    else if ($type == 'session' and ! empty($_SESSION[$name]))
         echo 'hide';
-    else if ($type == 'global' and !empty($GLOBALS[$name]))
+    else if ($type == 'global' and ! empty($GLOBALS[$name]))
         echo 'hide';
-    else if ($type == 'requet' and !empty($_REQUEST[$name]))
+    else if ($type == 'requet' and ! empty($_REQUEST[$name]))
         echo 'hide';
 }
 

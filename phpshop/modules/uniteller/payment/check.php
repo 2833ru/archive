@@ -7,6 +7,7 @@ header('Content-Type: text/html; charset=utf-8');
 
 $_classPath = "../../../";
 include($_classPath . "class/obj.class.php");
+include_once($_classPath . "class/mail.class.php");
 PHPShopObj::loadClass("base");
 PHPShopObj::loadClass("lang");
 PHPShopObj::loadClass("order");
@@ -16,6 +17,8 @@ PHPShopObj::loadClass("payment");
 PHPShopObj::loadClass("modules");
 PHPShopObj::loadClass("system");
 PHPShopObj::loadClass("parser");
+PHPShopObj::loadClass("security");
+PHPShopObj::loadClass("string");
 
 $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
 $PHPShopSystem = new PHPShopSystem();
@@ -69,8 +72,7 @@ class Payment extends PHPShopPaymentResult {
                     'sum_new' => $row['sum'], 'datas_new' => time()));
 
                 // Изменение статуса платежа
-                $PHPShopOrm->debug = $this->debug;
-                $PHPShopOrm->update(array('statusi_new' => $this->set_order_status_101(), 'paid_new' => 1), array('uid' => '="' . $row['uid'] . '"'));
+                (new PHPShopOrderFunction((int) $row['id']))->changeStatus((int) $this->set_order_status_101(), $row['statusi']);
 
             }
             else

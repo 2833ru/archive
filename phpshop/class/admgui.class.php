@@ -326,7 +326,7 @@ class PHPShopGUI {
      * Выпадающая экшен панель 
      */
     function setActionPanel($title, $action = array(), $button = array(), $locale = false) {
-        global $subpath;
+        global $subpath,$isFrame;
 
         if ($locale)
             $title = $this->__($title);
@@ -473,7 +473,7 @@ class PHPShopGUI {
         if ($_GET['path'] == 'catalog') {
             if (!empty($_GET['id'])) {
                 $back['class'] = 'back';
-                $btnBackProduct = '<a class="btn btn-default btn-sm navbar-btn" href="?path=catalog&cat=' . $_GET['id'] . '"> ' . $this->__('К товарам каталога') . '</a>';
+                $btnBackProduct = '<a class="btn btn-default btn-sm navbar-btn '.$isFrame.'" href="?path=catalog&cat=' . $_GET['id'] . '"> ' . $this->__('К товарам каталога') . '</a>';
             } else {
                 $back['class'] = null;
                 $disabled = 'disabled';
@@ -622,6 +622,7 @@ class PHPShopGUI {
         $this->action_title['on'] = 'Включить';
         $this->action_title['off'] = 'Выключить';
         $this->action_title['email'] = 'Связь по E-mail';
+        $this->action_title['url'] = 'Перейти';
         $this->action_title['|'] = '|';
 
         $CODE = '
@@ -885,6 +886,7 @@ class PHPShopGUI {
             'text' => 'form-control input-sm',
             'password' => 'form-control input-sm',
             'email' => 'form-control input-sm',
+            'tel' => 'form-control input-sm',
             'submit' => 'btn btn-primary',
             'button' => 'btn btn-default',
             'hidden' => 'hidden-edit',
@@ -2127,6 +2129,16 @@ class PHPShopInterface extends PHPShopGUI {
                     // search
                     if (!empty($val['search']))
                         $order .= ' data-search="' . $val['search'] . '" ';
+                    
+                    // checkbox
+                    if(!empty($val['checkbox'])){
+                        
+                        if(!empty($val['checkbox']['val']))
+                            $checked='checked';
+                        else $checked=null;
+                        
+                        $row ='<input class="checkbox" type="checkbox" value="' . $val['checkbox']['val'] . '" '.$checked.' name="' . $val['checkbox']['name'] . '" data-id="' . $id . '"><span class="data-row-order">' . $val['checkbox']['val'] . '</span>';
+                    }
 
                     $CODE .= '<td style="text-align:' . $val['align'] . '" class="' . $val['class'] . '" ' . $order . '>' . $row . '</td>';
 

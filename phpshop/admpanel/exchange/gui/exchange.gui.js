@@ -42,10 +42,17 @@ $().ready(function () {
         $('kbd.enabled').toggle();
         if ($('#export_action').val() == 'update'){
             $('#export_uniq').attr('disabled', 'disabled');
+            $('#export_key').attr('disabled', null);
         }
-        else
+        else{
             $('#export_uniq').attr('disabled', null);
+            $('#export_key').attr('disabled', 'disabled');
+        }
     });
+    
+    if ($('#export_action').val() == 'update'){
+        $('#export_uniq').attr('disabled', 'disabled');
+    }
 
     // Удалить диапазон
     $(".select-remove").on('click', function (event) {

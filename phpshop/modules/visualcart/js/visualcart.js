@@ -11,15 +11,14 @@ function visualCart(xid) {
             type: 'post',
             data: 'xid=' + xid + '&type=json',
             dataType: 'json',
-            success: function(json) {
+            success: function (json) {
                 if (json['success']) {
 
                     $('#visualcart').html(json['visualcart']);
 
                     if (json['num'] == 0) {
                         $('#visualcart_order').hide();
-                    }
-                    else if ($('#visualcart_order') || json['visualcart'] != '') {
+                    } else if ($('#visualcart_order') || json['visualcart'] != '') {
                         $('#visualcart_order').show();
                     }
 
@@ -51,5 +50,52 @@ function VisualCartGetCookie(cookieName) {
     return cookieValue;
 }
 
-// Проверка новой корзины через промежуток времени
-setInterval("visualCart(0)", 1000);
+
+$().ready(function () {
+
+    $('body').on('change', '[name="name_new"]', function () {
+        var data = [];
+        data.push({name: 'update', value: 1});
+        data.push({name: 'type', value: 'json'});
+        data.push({name: 'name', value: this.value});
+        
+        $.ajax({
+            url: ROOT_PATH + '/phpshop/modules/visualcart/ajax/visualcart.php',
+            type: 'post',
+            data: data,
+            dataType: 'json'
+        });
+    });
+    
+    $('body').on('change', '[name="tel_new"]', function () {
+        var data = [];
+        data.push({name: 'update', value: 1});
+        data.push({name: 'type', value: 'json'});
+        data.push({name: 'tel', value: this.value});
+        
+        $.ajax({
+            url: ROOT_PATH + '/phpshop/modules/visualcart/ajax/visualcart.php',
+            type: 'post',
+            data: data,
+            dataType: 'json'
+        });
+    });
+    
+    $('body').on('change', '[name="mail"]', function () {
+        var data = [];
+        data.push({name: 'update', value: 1});
+        data.push({name: 'type', value: 'json'});
+        data.push({name: 'mail', value: this.value});
+        
+        $.ajax({
+            url: ROOT_PATH + '/phpshop/modules/visualcart/ajax/visualcart.php',
+            type: 'post',
+            data: data,
+            dataType: 'json'
+        });
+    });
+
+    // Проверка новой корзины через промежуток времени
+    setInterval("visualCart(0)", 1000);
+});
+

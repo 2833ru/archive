@@ -9,7 +9,25 @@ function send_to_order_pochta_hook($obj, $row, $route) {
     if($Pochta->isCourier((int) $_POST['d']) || $Pochta->isPostOffice((int) $_POST['d'])) {
 
         if ($route === 'START') {
-            $obj->delivery_mod = round($_POST['pochta_delivery_cost'], $Pochta->settings->format);
+            $obj->delivery_mod = round($_POST['pochta_cost'], $Pochta->settings->format);
+            $obj->set('deliveryInfo', $_POST['cdekInfo']);
+
+            $_POST['pochta_settings_new'] = serialize([
+                'mail-type'     => $_POST['pochta_mail_type'],
+                'delivery_info' => $_POST['pochta_delivery_info'],
+                'address'       => $_POST['pochta_address'] === 'null' ?  null : $_POST['pochta_address'] // да, иногда с виджета почты РФ возвращается строка null.
+            ]);
+
+            // Заполнение полей адреса доставки данными с виджета, если они пустые.
+            if(empty($_POST['state_new'])) {
+                $_POST['state_new'] = $_POST['pochta_region'];
+            }
+            if(empty($_POST['city_new'])) {
+                $_POST['city_new']  = $_POST['pochta_city'];
+            }
+            if(empty($_POST['index_new'])) {
+                $_POST['index_new'] = $_POST['pochta_index'];
+            }
         }
 
         if ($route === 'END' && (int) $Pochta->settings->get('status') === 0) {
@@ -22,4 +40,4 @@ function send_to_order_pochta_hook($obj, $row, $route) {
     }
 }
 
-$addHandler = array ('send_to_order' => 'send_to_order_pochta_hook');
+$addHandler = ['send_to_order' => 'send_to_order_pochta_hook'];

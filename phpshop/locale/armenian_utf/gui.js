@@ -71,8 +71,10 @@ search_advance_but: "գտնել",
         sInfoEmpty: "Entries 0 to 0 of 0 entries",
     },
     transfer: "Փոխանցում",
+    move_to_temporary_folder: "Տեղափոխել ջնջված ապրանքներ",
     delete: "Նջել",
     products_completed: "Վերամշակված ապրանքներ.",
     create_db_dump: "Վստա՞հ եք, որ ցանկանում եք կատարել գործողությունը: Համոզվեք, որ կրկնօրինակեք ձեր տվյալների բազան նախքան շարունակելը:",
+    product_operations: "Ընտրեք, թե ինչ եք ուզում անել ապրանքների հետ կատալոգում և ենթագրացուցակներում:",
     charset: "utf-8"
 };

@@ -7,16 +7,21 @@ session_start();
 
 $_classPath = "../../../";
 include($_classPath . "class/obj.class.php");
+include_once($_classPath . "class/mail.class.php");
 PHPShopObj::loadClass("base");
+PHPShopObj::loadClass("lang");
 PHPShopObj::loadClass("order");
 PHPShopObj::loadClass("file");
 PHPShopObj::loadClass("orm");
 PHPShopObj::loadClass("payment");
 PHPShopObj::loadClass("modules");
 PHPShopObj::loadClass("system");
+PHPShopObj::loadClass("security");
+PHPShopObj::loadClass("parser");
+PHPShopObj::loadClass("string");
 
 $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, true);
-
+$PHPShopSystem = new PHPShopSystem();
 $PHPShopModules = new PHPShopModules($_classPath . "modules/");
 $PHPShopModules->checkInstall('acquiropay');
 
@@ -95,6 +100,8 @@ class AcquiroPayPayment extends PHPShopPaymentResult {
         if ($this->crc != $this->my_crc) {
             return false;
         }
+
+        (new PHPShopOrderFunction((int) $data['id']))->changeStatus((int) $this->set_order_status_101(), $data['statusi']);
 
         return true;
     }

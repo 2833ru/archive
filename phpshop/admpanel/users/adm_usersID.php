@@ -134,7 +134,6 @@ function actionUpdate() {
         "discount" => rules_zero($_POST[discount_rul_1]) . "-" . rules_zero($_POST[discount_rul_2]) . "-" . rules_zero($_POST[discount_rul_3]),
         "currency" => rules_zero($_POST[currency_rul_1]) . "-" . rules_zero($_POST[currency_rul_2]) . "-" . rules_zero($_POST[currency_rul_3]),
         "delivery" => rules_zero($_POST[delivery_rul_1]) . "-" . rules_zero($_POST[delivery_rul_2]) . "-" . rules_zero($_POST[delivery_rul_3]),
-        "citylist" => rules_zero($_POST[citylist_rul_1]) . "-" . rules_zero($_POST[citylist_rul_2]) . "-" . rules_zero($_POST[citylist_rul_3]),
         "servers" => rules_zero($_POST[servers_rul_1]) . "-" . rules_zero($_POST[servers_rul_2]) . "-" . rules_zero($_POST[servers_rul_3]),
         "rsschanels" => rules_zero($_POST[rss_rul_1]) . "-" . rules_zero($_POST[rss_rul_2]) . "-" . rules_zero($_POST[rss_rul_3]),
         "update" => rules_zero($_POST[update_rul_1]),

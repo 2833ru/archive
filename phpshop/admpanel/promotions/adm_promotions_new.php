@@ -107,10 +107,14 @@ function actionStart() {
     $Tab1 .= $PHPShopGUI->setCollapse('Активность', $PHPShopGUI->setField('Статус', $PHPShopGUI->setCheckbox("active_check_new", 1, "Учитывать активность", $data['active_check'])) . $PHPShopGUI->setField('Начало', $PHPShopGUI->setInputDate("active_date_ot_new", $data['active_date_ot'])) . $PHPShopGUI->setField('Завершение', $PHPShopGUI->setInputDate("active_date_do_new", $data['active_date_do']))
     );
 
+    $action_value[] = array('Максимально возможная скидка', 1, $data['action']);
+    $action_value[] = array('Суммировать со скидками по статусу пользователя', 2, $data['action']);
+
     $Tab1.=$PHPShopGUI->setCollapse('Скидка', 
             $PHPShopGUI->setField('Тип', $PHPShopGUI->setRadio("discount_tip_new", 1, "%", $data['discount_tip']) . $PHPShopGUI->setRadio("discount_tip_new", 0, "сумма", $data['discount_tip']), 'left') .
             $PHPShopGUI->setField('Скидка', $PHPShopGUI->setInputText('', 'discount_new', $data['discount'], '160')).
-            $PHPShopGUI->setField('Действие', $PHPShopGUI->setRadio("sum_order_check_new", 0, "Понижение", $data['sum_order_check']) . $PHPShopGUI->setRadio("sum_order_check_new", 1, "Повышение", $data['sum_order_check']))
+            $PHPShopGUI->setField('Действие', $PHPShopGUI->setRadio("sum_order_check_new", 0, "Понижение", $data['sum_order_check']) . $PHPShopGUI->setRadio("sum_order_check_new", 1, "Повышение", $data['sum_order_check'])) .
+            $PHPShopGUI->setField("Формула расчета", $PHPShopGUI->setSelect('action_new', $action_value, 300))
     );
 
     $PHPShopCategoryArray = new PHPShopCategoryArray($where);

@@ -74,10 +74,14 @@ function actionStart() {
         $cur=$PHPShopSystem->getValutaIcon();
     else $cur='%';
 
+    $action_value[] = array('Максимально возможная скидка', 1, $data['action']);
+    $action_value[] = array('Суммировать со скидками по статусу пользователя', 2, $data['action']);
+
     $Tab1.=$PHPShopGUI->setCollapse($status, 
             $PHPShopGUI->setField('Тип', $PHPShopGUI->setRadio("discount_tip_new", 1, "%", $data['discount_tip']) . $PHPShopGUI->setRadio("discount_tip_new", 0, "сумма", $data['discount_tip']), 'left') .
             $PHPShopGUI->setField($status, $PHPShopGUI->setInputText($status_pre, 'discount_new', $data['discount'], '160',$cur)).
-            $PHPShopGUI->setField('Действие', $PHPShopGUI->setRadio("sum_order_check_new", 0, "Понижение", $data['sum_order_check']) . $PHPShopGUI->setRadio("sum_order_check_new", 1, "Повышение", $data['sum_order_check']))
+            $PHPShopGUI->setField('Действие', $PHPShopGUI->setRadio("sum_order_check_new", 0, "Понижение", $data['sum_order_check']) . $PHPShopGUI->setRadio("sum_order_check_new", 1, "Повышение", $data['sum_order_check'])) .
+            $PHPShopGUI->setField("Формула расчета", $PHPShopGUI->setSelect('action_new', $action_value, 300))
     );
 
     $PHPShopCategoryArray = new PHPShopCategoryArray($where);

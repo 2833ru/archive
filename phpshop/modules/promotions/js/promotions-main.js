@@ -5,10 +5,10 @@ function UpdatePromotion(promo) {
     var ssum = $("#SkiSumma").html();
     var promocode = $("#promocode").val();
     var tipoplcheck = $("#order_metod:checked").val();
-    var dostavka = $("#dostavka_metod:checked").val();
+    var dostavka = $("#DosSumma").html();
     var wsum = $("#WeightSumma").html();
 
-    if (typeof promocode == "undefined") {
+    if (typeof promocode == "undefined" || promocode.length === 0) {
         promocodei = promo;
     }
     else {
@@ -55,7 +55,7 @@ function UpdatePromotion(promo) {
                         $("#promocode").parent('.form-group').removeClass("has-error");
 
                         $(".paymOneEl").addClass("paymOneElr");
-                        $(".paymOneEl").removeClass("paymOneEl");
+                       // $(".paymOneEl").removeClass("paymOneEl");
 
                         if (json['deliverymethodcheck'] == 1) {
                             $('input[name=order_metod]').attr("disabled", true);

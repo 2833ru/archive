@@ -5,6 +5,7 @@
     <faqlink>https://docs.phpshop.ru/moduli/chaty-i-zvonki/jivosite</faqlink>
     <description>Виджет чата и обратного звонка от JivoSite.</description>
     <category>chat</category>
+    <status>Hit</status>
     <adminmenu>
         <title>JivoSite</title>
         <capability>true</capability>

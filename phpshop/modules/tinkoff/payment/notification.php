@@ -3,12 +3,18 @@
 session_start();
 $_classPath = "../../../";
 include $_classPath . "class/obj.class.php";
+include_once($_classPath . "class/mail.class.php");
 PHPShopObj::loadClass("payment");
-PHPShopObj::loadClass("mail");
 PHPShopObj::loadClass("base");
+PHPShopObj::loadClass("lang");
+PHPShopObj::loadClass("order");
+PHPShopObj::loadClass("file");
 PHPShopObj::loadClass("system");
 PHPShopObj::loadClass("orm");
 PHPShopObj::loadClass("modules");
+PHPShopObj::loadClass("security");
+PHPShopObj::loadClass("parser");
+PHPShopObj::loadClass("string");
 
 $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
 $PHPShopModules = new PHPShopModules($_classPath . "modules/");
@@ -51,6 +57,8 @@ class TinkoffPayment extends PHPShopPaymentResult
                 $this->out_summ = $requestData['Amount'];
 
                 if ($requestData['Status'] == 'CONFIRMED') {
+                    (new PHPShopOrderFunction((int) $order['id']))->changeStatus((int) $this->set_order_status_101(), $order['statusi']);
+
                     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['shopusers']);
                     $user = $PHPShopOrm->select(array('*'), array('id' => '="' . $order['user'] . '"'), false, array('limit' => 1));
 

@@ -186,7 +186,7 @@ class PHPShopOrderFunction extends PHPShopObj {
 
         $sum *= $kurs;
         $sum = $sum - ($sum * $disc / 100);
-        
+
         // Бонусы
         PHPShopObj::loadClass('bonus');
         $PHPShopBonus = new PHPShopBonus($_SESSION['UsersId']);
@@ -378,7 +378,7 @@ class PHPShopOrderFunction extends PHPShopObj {
         $order = $this->unserializeParam('orders');
 
         if (isset($order['Cart']['dostavka']))
-            return $order['Cart']['dostavka'];
+            return (float) $order['Cart']['dostavka'];
 
         if (!empty($order['Person']['discount']))
             $discount = $order['Person']['discount'];
@@ -390,7 +390,7 @@ class PHPShopOrderFunction extends PHPShopObj {
             $sum = 0;
         if (!empty($order['Person']['dostavka_metod']) and ! empty($sum)) {
             $PHPShopDelivery = new PHPShopDelivery($order['Person']['dostavka_metod']);
-            return $PHPShopDelivery->getPrice($sum, $order['Cart']['weight']);
+            return (float) $PHPShopDelivery->getPrice($sum, $order['Cart']['weight']);
         }
     }
 
@@ -488,10 +488,147 @@ class PHPShopOrderFunction extends PHPShopObj {
         $orm->update(array('paid_new' => (int) $paymentStatus), array('id' => "='" . $this->objID . "'"));
     }
 
+    public function changeStatus($statusId, $oldStatus)
+    {
+        global $PHPShopBase, $_classPath;
+
+        $order = $this->unserializeParam('orders');
+        $statusObj = new PHPShopOrderStatusArray();
+        $statuses = $statusObj->getArray();
+
+        // Нет данных или статус не изменился
+        if(!is_array($order['Cart']['cart']) || $oldStatus === $statusId) {
+            return;
+        }
+
+        // Доставка
+        $DeliveryArray = (new PHPShopDeliveryArray())->getArray();
+        $warehouseID = $DeliveryArray[$order['Person']['dostavka_metod']]['warehouse'];
+
+        $PHPShopSystem = new PHPShopSystem();
+
+        // Если новый статус Аннулирован, а был статус не Новый заказ, то мы не списываем, а добавляем обратно
+        if ((int) $oldStatus != 0 && $statusId == 1) {
+            if ((int) $PHPShopSystem->getSerilizeParam('admoption.sklad_status') > 1) {
+
+                foreach ($order['Cart']['cart'] as $val) {
+
+                    // Данные по складу
+                    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
+                    $product_row = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($val['id'])), false, array('limit' => 1));
+                    if (is_array($product_row)) {
+
+                        // Склад
+                        if (empty($warehouseID))
+                            $product_update['items_new'] = $product_row['items'] + $val['num'];
+                        else {
+                            $product_update['items' . $warehouseID . '_new'] = $product_row['items' . $warehouseID] + $val['num'];
+                            $product_update['items_new'] = $product_row['items'] + $val['num'];
+                        }
+
+                        $product_update['sklad_new'] = 0;
+                        $product_update['enabled_new'] = 1;
+
+                        // Обновляем данные
+                        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
+                        $PHPShopOrm->debug = false;
+                        $PHPShopOrm->update($product_update, array('id' => '=' . $val['id']));
+                    }
+                }
+            }
+        } else if ($statuses[$statusId]['sklad_action'] == 1 and $statuses[$oldStatus]['sklad_action'] != 1) {
+
+            foreach ($order['Cart']['cart'] as $val) {
+
+                // Данные по складу
+                $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
+                $product_row = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($val['id'])), false, array('limit' => 1));
+                if (is_array($product_row)) {
+
+                    // Склад
+                    if (empty($warehouseID))
+                        $product_update['items_new'] = $product_row['items'] - $val['num'];
+                    else {
+                        $product_update['items' . $warehouseID . '_new'] = $product_row['items' . $warehouseID] - $val['num'];
+                        $product_update['items_new'] = $product_row['items'] - $val['num'];
+                    }
+
+                    // Списывание со склада
+                    switch ($PHPShopSystem->getSerilizeParam('admoption.sklad_status')) {
+
+                        case(3):
+                            if ($product_update['items_new'] < 1) {
+                                $product_update['sklad_new'] = 1;
+                                $product_update['enabled_new'] = 1;
+                                $product_update['p_enabled_new'] = 0;
+                            } else {
+                                $product_update['sklad_new'] = 0;
+                                $product_update['enabled_new'] = 1;
+                                $product_update['p_enabled_new'] = 1;
+                            }
+                            break;
+
+                        case(2):
+                            if ($product_update['items_new'] < 1) {
+                                $product_update['enabled_new'] = 0;
+                                $product_update['sklad_new'] = 0;
+                                $product_update['p_enabled_new'] = 0;
+                            } else {
+                                $product_update['enabled_new'] = 1;
+                                $product_update['sklad_new'] = 0;
+                                $product_update['p_enabled_new'] = 1;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+
+                    // Обновляем данные
+                    $PHPShopOrm->update($product_update, array('id' => '=' . intval($val['id'])));
+                }
+            }
+        }
+
+        // SMS оповещение пользователю о смене статуса заказа
+        if (!empty($statuses[$statusId]['sms_action'])) {
+
+            $this->objRow['tel'];
+
+            $msg = strtoupper(PHPShopString::check_idna($_SERVER['SERVER_NAME'], true)) . ': ' . $PHPShopBase->getParam('lang.sms_user') . $this->objRow['uid'] . " - " . $statuses[$statusId]['name'];
+
+            $phone = trim(str_replace(array('(', ')', '-', '+', '&#43;'), '', $this->objRow['tel']));
+            // Проверка на первую 7 или 8
+            $first_d = substr($phone, 0, 1);
+            if ($first_d != 8 and $first_d != 7)
+                $phone = '7' . $phone;
+
+            $lib = str_replace('./phpshop/', $_classPath, $PHPShopBase->getParam('file.sms'));
+            include_once $lib;
+            SendSMS($msg, $phone);
+        }
+
+        // Email оповещение
+        if((int) $statusObj->getParam($statusId . '.mail_action') === 1) {
+            $this->sendStatusChangedMail();
+        }
+
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
+        $PHPShopOrm->debug = false;
+
+        $update = ['statusi_new' => $statusId];
+        // Если статус "Оплачено платежными системами" - отмечаем заказ оплаченным
+        if($statusId === 101) {
+            $update['paid_new'] = 1;
+        }
+
+        $PHPShopOrm->update($update, ['id' => '=' . $this->objID]);
+        $this->objRow['statusi'] = $statusId;
+    }
+
     /**
      * Оповещение пользователя о новом статусе
      */
-    public function sendStatusChangedMail() {
+    private function sendStatusChangedMail() {
         $PHPShopOrderStatusArray = new PHPShopOrderStatusArray();
         $PHPShopSystem = new PHPShopSystem();
 
@@ -499,63 +636,59 @@ class PHPShopOrderFunction extends PHPShopObj {
         PHPShopObj::loadClass("mail");
         PHPShopParser::set('ouid', $this->getParam('uid'));
         PHPShopParser::set('date', PHPShopDate::dataV($this->getParam('datas')));
+        PHPShopParser::set('status', $this->getStatus());
+        PHPShopParser::set('fio', $this->getParam('fio'));
+        PHPShopParser::set('sum', $this->getParam('sum'));
+        PHPShopParser::set('company', $PHPShopSystem->getParam('name'));
+        PHPShopParser::set('manager', $this->getSerilizeParam('status.maneger'));
+        PHPShopParser::set('tracking', $this->getParam('tracking'));
 
-        // Доступные статусы заказов если стоит флаг #mail_action
-        if ((int) $PHPShopOrderStatusArray->getParam($this->getParam('statusi') . '.mail_action') === 1) {
-            PHPShopParser::set('status', $this->getStatus());
-            PHPShopParser::set('fio', $this->getParam('fio'));
-            PHPShopParser::set('sum', $this->getParam('sum'));
-            PHPShopParser::set('company', $PHPShopSystem->getParam('name'));
-            PHPShopParser::set('manager', $this->getSerilizeParam('status.maneger'));
-            PHPShopParser::set('tracking', $this->getParam('tracking'));
-            $protocol = 'http://';
-            if(!empty($_SERVER['HTTPS']) && 'off' !== strtolower($_SERVER['HTTPS'])) {
-                $protocol = 'https://';
-            }
-            PHPShopParser::set('account', $protocol . $_SERVER['SERVER_NAME'] . 'phpshop/forms/account/forma.html?orderId=' . $this->objID . '&tip=2&datas=' . $this->getParam('datas'));
-            PHPShopParser::set('bonus', $this->getParam('bonus_plus'));
+        $protocol = 'http://';
+        if(!empty($_SERVER['HTTPS']) && 'off' !== strtolower($_SERVER['HTTPS'])) {
+            $protocol = 'https://';
+        }
+        PHPShopParser::set('account', $protocol . $_SERVER['SERVER_NAME'] . 'phpshop/forms/account/forma.html?orderId=' . $this->objID . '&tip=2&datas=' . $this->getParam('datas'));
+        PHPShopParser::set('bonus', $this->getParam('bonus_plus'));
 
-            $title = __('Cтатус заказа') . ' ' . $this->getParam('uid') . ' ' . __('поменялся на') . ' ' .$this->getStatus();
+        $title = __('Cтатус заказа') . ' ' . $this->getParam('uid') . ' ' . __('поменялся на') . ' ' .$this->getStatus();
 
-            $message = $PHPShopOrderStatusArray->getParam($this->getParam('statusi') . '.mail_message');
+        $message = $PHPShopOrderStatusArray->getParam($this->getParam('statusi') . '.mail_message');
 
-            if (strlen($message) < 7)
-                $message = '<h3>' . __('Статус вашего заказа') . '  &#8470;' . $this->getParam('uid') . '  ' . __('поменялся на') . ' "' . $this->getStatus() . '"</h3>';
+        if (strlen($message) < 7)
+            $message = '<h3>' . __('Статус вашего заказа') . '  &#8470;' . $this->getParam('uid') . '  ' . __('поменялся на') . ' "' . $this->getStatus() . '"</h3>';
 
-            PHPShopParser::set('message', preg_replace_callback("/@([a-zA-Z0-9_]+)@/", 'PHPShopParser::SysValueReturn', $message));
-            $PHPShopMail = new PHPShopMail($this->getMail(), $PHPShopSystem->getValue('adminmail2'), $title, '', true, true);
+        PHPShopParser::set('message', preg_replace_callback("/@([a-zA-Z0-9_]+)@/", 'PHPShopParser::SysValueReturn', $message));
+        $PHPShopMail = new PHPShopMail($this->getMail(), $PHPShopSystem->getValue('adminmail2'), $title, '', true, true);
 
-            // Если заказ с витрины
-            if((int) $this->getParam('servers') > 0) {
-                $orm = new PHPShopOrm($GLOBALS['SysValue']['base']['servers']);
-                $showcaseData = $orm->getOne(['*'], ['id' => sprintf("='%s'", (int) $this->getParam('servers'))]);
+        // Если заказ с витрины
+        if((int) $this->getParam('servers') > 0) {
+            $orm = new PHPShopOrm($GLOBALS['SysValue']['base']['servers']);
+            $showcaseData = $orm->getOne(['*'], ['id' => sprintf("='%s'", (int) $this->getParam('servers'))]);
 
-                if(is_array($showcaseData)) {
-                    PHPShopParser::set('serverPath', $showcaseData['host'] . "/" . $GLOBALS['SysValue']['dir']['dir']);
+            if(is_array($showcaseData)) {
+                PHPShopParser::set('serverPath', $showcaseData['host'] . "/" . $GLOBALS['SysValue']['dir']['dir']);
 
-                    if (!empty($showcaseData['name']))
-                        PHPShopParser::set('shopName', $showcaseData['name']);
-                    if (!empty($showcaseData['logo']))
-                        PHPShopParser::set('logo', $showcaseData['logo']);
-                    if (!empty($showcaseData['company']))
-                        PHPShopParser::set('org_name', $showcaseData['company']);
-                    if (!empty($showcaseData['adres']))
-                        PHPShopParser::set('org_adres', $showcaseData['adres']);
-                    if (!empty($showcaseData['tel']))
-                        PHPShopParser::set('telNum', $showcaseData['tel']);
-                    if (!empty($showcaseData['adminmail']))
-                        PHPShopParser::set('adminMail', $showcaseData['adminmail']);
+                if (!empty($showcaseData['name']))
+                    PHPShopParser::set('shopName', $showcaseData['name']);
+                if (!empty($showcaseData['logo']))
+                    PHPShopParser::set('logo', $showcaseData['logo']);
+                if (!empty($showcaseData['company']))
+                    PHPShopParser::set('org_name', $showcaseData['company']);
+                if (!empty($showcaseData['adres']))
+                    PHPShopParser::set('org_adres', $showcaseData['adres']);
+                if (!empty($showcaseData['tel']))
+                    PHPShopParser::set('telNum', $showcaseData['tel']);
+                if (!empty($showcaseData['adminmail']))
+                    PHPShopParser::set('adminMail', $showcaseData['adminmail']);
 
-                    $PHPShopMail->mail->setFrom($PHPShopMail->from, $showcaseData['name']);
-                }
-            }
-            $content = PHPShopParser::file('../lib/templates/order/status.tpl', true);
-            if (!empty($content)) {
-                $PHPShopMail->sendMailNow($content);
+                $PHPShopMail->mail->setFrom($PHPShopMail->from, $showcaseData['name']);
             }
         }
+        $content = PHPShopParser::file(dirname(__DIR__) . '/lib/templates/order/status.tpl', true);
+        if (!empty($content)) {
+            $PHPShopMail->sendMailNow($content);
+        }
     }
-
 }
 
 PHPShopObj::loadClass('array');

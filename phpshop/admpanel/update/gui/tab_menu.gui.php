@@ -11,7 +11,7 @@ function tab_menu() {
        <li class="' . $menu_active_restore . '"><a href="?path=update.restore">'.__('Восстановление').'</a></li>
        </ul>';
         
-        $help = '<p class="text-muted">'.__('Рекомендуется использовать Windows утилиту <a href="https://www.phpshop.ru/loads/files/setup.exe" target="_blank" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-cloud-download"></span> Updater.exe</a> для работы с обновлениями.</p><p class="text-muted">Полный список доступных инструментов для обновления в <a href="https://docs.phpshop.ru/ustanovka-i-obnovlenie/obnovlenie-phpshop" target="_blank" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-book"></span> Учебнике</a>').'</p>';
+        $help = '<p class="text-muted">'.__('Полный список доступных инструментов для обновления в <a href="https://docs.phpshop.ru/ustanovka-i-obnovlenie/obnovlenie-phpshop" target="_blank" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-book"></span> Учебнике</a>').'</p>';
     
     return $tree;
 }

@@ -20,6 +20,7 @@ PHPShopObj::loadClass("cart");
 PHPShopObj::loadClass("security");
 PHPShopObj::loadClass("user");
 PHPShopObj::loadClass("lang");
+PHPShopObj::loadClass("order");
 
 // Массив валют
 $PHPShopValutaArray = new PHPShopValutaArray();

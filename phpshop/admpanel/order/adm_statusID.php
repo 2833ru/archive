@@ -1,11 +1,11 @@
 <?php
 
-$TitlePage = __('Редактирование Статуса').' #' . $_GET['id'];
+$TitlePage = __('Редактирование Статуса') . ' #' . $_GET['id'];
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['order_status']);
 
 // Стартовый вид
 function actionStart() {
-    global $PHPShopGUI, $PHPShopOrm, $PHPShopModules,$PHPShopSystem;
+    global $PHPShopGUI, $PHPShopOrm, $PHPShopModules, $PHPShopSystem;
 
     // Выборка
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
@@ -20,28 +20,27 @@ function actionStart() {
     $PHPShopGUI->addCSSFiles('./css/bootstrap-colorpicker.min.css');
     $PHPShopGUI->addJSFiles('./js/bootstrap-colorpicker.min.js');
     $PHPShopGUI->field_col = 2;
-    $PHPShopGUI->setActionPanel(__("Редактирование Статуса").": " . $data['name'], array('Удалить'), array('Сохранить', 'Сохранить и закрыть'));
+    $PHPShopGUI->setActionPanel(__("Редактирование Статуса") . ": " . $data['name'], array('Удалить'), array('Сохранить', 'Сохранить и закрыть'));
 
     // Содержание закладки 1
     $Tab1 = $PHPShopGUI->setField("Название", $PHPShopGUI->setInput("text", "name_new", $data['name'], null, 500));
-    $Tab1.=$PHPShopGUI->setField('Цвет', $PHPShopGUI->setInputColor('color_new', $data['color']));
-    $Tab1.=$PHPShopGUI->setField("Приоритет", $PHPShopGUI->setInputText(null, "num_new", $data['num'], '100'));
+    $Tab1 .= $PHPShopGUI->setField('Цвет', $PHPShopGUI->setInputColor('color_new', $data['color']));
+    $Tab1 .= $PHPShopGUI->setField("Приоритет", $PHPShopGUI->setInputText(null, "num_new", $data['num'], '100'));
 
-    $Tab1.=$PHPShopGUI->setField("Дополнительно", 
-            $PHPShopGUI->setCheckbox('mail_action_new', 1, 'E-mail уведомление покупателю о смене статуса заказа', $data['mail_action']).'<br>'.
-            $PHPShopGUI->setCheckbox('sms_action_new', 1, 'SMS уведомление покупателю о смене статуса заказа', $data['sms_action']).'<br>'.
-            $PHPShopGUI->setCheckbox("sklad_action_new", 1, "Списание со склада товаров в заказе", $data['sklad_action']) .'<br>'.
-            $PHPShopGUI->setCheckbox("cumulative_action_new", 1, "Учет скидки покупателя", $data['cumulative_action']).$PHPShopGUI->setHelp(__('Сумма заказа пользователя будет засчитана в накопительную сумму, указанную в').' <a href="?path=shopusers.status"><span class="glyphicon glyphicon-share-alt"></span>'.__('Статусах и скидках покупателей').'</a>',false,false)
-            );
-    
+    $Tab1 .= $PHPShopGUI->setField("Дополнительно", $PHPShopGUI->setCheckbox('mail_action_new', 1, 'E-mail уведомление покупателю о смене статуса заказа', $data['mail_action']) . '<br>' .
+            $PHPShopGUI->setCheckbox('sms_action_new', 1, 'SMS уведомление покупателю о смене статуса заказа', $data['sms_action']) . '<br>' .
+            $PHPShopGUI->setCheckbox("sklad_action_new", 1, "Списание со склада товаров в заказе", $data['sklad_action']) . '<br>' .
+            $PHPShopGUI->setCheckbox("cumulative_action_new", 1, "Учет скидки покупателя", $data['cumulative_action']) . $PHPShopGUI->setHelp(__('Сумма заказа пользователя будет засчитана в накопительную сумму, указанную в') . ' <a href="?path=shopusers.status"><span class="glyphicon glyphicon-share-alt"></span>' . __('Статусах и скидках покупателей') . '</a>', false, false)
+    );
+
     // Сообщение
     $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));
     $oFCKeditor = new Editor('mail_message_new');
     $oFCKeditor->Height = '350';
     $oFCKeditor->Value = $data['mail_message'];
-    
-    $Tab1.=$PHPShopGUI->setField("Текст письма", $oFCKeditor->AddGUI() . $PHPShopGUI->setHelp('Переменные: <code>@ouid@</code> - номер заказа, <code>@date@</code> - дата заказа, <code>@status@</code> - новый статус заказа, <code>@fio@</code> - имя покупателя, <code>@sum@</code> - стоимость заказа, <code>@manager@</code> - примечание, <code>@tracking@</code> - номер для отслеживания, <code>@account@</code> - ссылка на счет, <code>@bonus@</code> - начисленные бонусы за заказ'));
-    
+
+    $Tab1 .= $PHPShopGUI->setField("Текст письма", $oFCKeditor->AddGUI() . $PHPShopGUI->setHelp('Переменные: <code>@ouid@</code> - номер заказа, <code>@date@</code> - дата заказа, <code>@status@</code> - новый статус заказа, <code>@fio@</code> - имя покупателя, <code>@sum@</code> - стоимость заказа, <code>@manager@</code> - примечание, <code>@tracking@</code> - номер для отслеживания, <code>@account@</code> - ссылка на счет, <code>@bonus@</code> - начисленные бонусы за заказ'));
+
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
@@ -50,8 +49,7 @@ function actionStart() {
 
 
     // Вывод кнопок сохранить и выход в футер
-    $ContentFooter =
-            $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .
+    $ContentFooter = $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .
             $PHPShopGUI->setInput("button", "delID", "Удалить", "right", 70, "", "but", "actionDelete.order.edit") .
             $PHPShopGUI->setInput("submit", "editID", "Сохранить", "right", 70, "", "but", "actionUpdate.order.edit") .
             $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionSave.order.edit");
@@ -80,7 +78,10 @@ function actionSave() {
     // Сохранение данных
     actionUpdate();
 
-    header('Location: ?path=' . $_GET['path']);
+    if (!empty($_GET['return']))
+        header('Location: ?path=' . $_GET['return']);
+    else
+        header('Location: ?path=' . $_GET['path']);
 }
 
 // Функция обновления
@@ -88,7 +89,7 @@ function actionUpdate() {
     global $PHPShopOrm, $PHPShopModules;
 
     // Корректировка пустых значений
-    $PHPShopOrm->updateZeroVars('sklad_action_new', 'cumulative_action_new','mail_action_new','sms_action_new');
+    $PHPShopOrm->updateZeroVars('sklad_action_new', 'cumulative_action_new', 'mail_action_new', 'sms_action_new');
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);

@@ -691,7 +691,22 @@ function fotoAdd() {
                 $file_big = $_SERVER['DOCUMENT_ROOT'] . $path . $name_big;
                 @copy($file, $file_big);
             }
-        } else {
+        } 
+        // SEO название
+        elseif ($PHPShopSystem->ifSerilizeParam('admoption.image_save_seo')) {
+
+            if(!empty($_POST['prod_seo_name'])) {
+                $seo_name=$_POST['prod_seo_name'];
+            } else {
+                PHPShopObj::loadClass("string");
+                $seo_name = str_replace(array("_", "+", '&#43;'), array("-", "", ""), PHPShopString::toLatin($_POST['name_new']));
+            }
+            $name_s = $seo_name .'-' . $_POST['rowID']  .'-' . $RName . 's.' . strtolower($thumb->getFormat());
+            $name = $seo_name .'-' . $_POST['rowID']  .'-' . $RName . '.' . strtolower($thumb->getFormat());
+            $name_big = $seo_name .'-' . $_POST['rowID']  .'-' . $RName . '_big.' . strtolower($thumb->getFormat());
+
+        } 
+        else {
             $name_s = 'img' . $_POST['rowID'] . '_' . $RName . 's.' . strtolower($thumb->getFormat());
             $name = 'img' . $_POST['rowID'] . '_' . $RName . '.' . strtolower($thumb->getFormat());
             $name_big = 'img' . $_POST['rowID'] . '_' . $RName . '_big.' . strtolower($thumb->getFormat());

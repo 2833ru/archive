@@ -264,9 +264,6 @@ function faset_filter_click(obj) {
 
         } else {
             window.location.hash = window.location.hash.split($(obj).attr('data-url') + '&').join('');
-            if (window.location.hash == '')
-                $('html, body').animate({scrollTop: $("a[name=sort]").offset().top - 100}, 500);
-
         }
 
         filter_load(window.location.hash.split(']').join('][]'), obj);
@@ -505,48 +502,6 @@ $(document).ready(function () {
     }, 600);
     setTimeout(function () {
         $("input#order_metod[disabled='disabled']").parents('.paymOneEl').addClass('disabled')
-        /*       
-         $('input[name="tel_new"]').mask("+7 (999) 999-99-99");
-         
-         $('input[name="tel_new"]').on('keyup', function (event) {
-         reserveVal = $(this).cleanVal();
-         phone = $(this).cleanVal().slice(0, 10);
-         $(this).val($(this).masked(phone));
-         if ($(this).cleanVal()[1] == '9') {
-         if ($(this).cleanVal()[0] == '8' || $(this).cleanVal()[0] == '7') {
-         phone = reserveVal.slice(1);
-         $(this).val($(this).masked(phone));
-         }
-         }
-         });*/
-        $(".delivOneEl")
-                .closest("#seldelivery")
-                .each(function () {
-                    var tallestcolumn = 0;
-
-                    $(this)
-                            .find(".delivOneEl")
-                            .each(function () {
-                                var currentWidth = $(this).width();
-
-                                if (currentWidth > tallestcolumn) {
-                                    tallestcolumn = currentWidth;
-                                }
-                            });
-
-                    if (tallestcolumn > 0) {
-                        $(this)
-                                .find(".delivOneEl")
-                                .width(tallestcolumn);
-                        $(this)
-                                .find(".delivOneEl")
-                                .css("opacity", "1");
-                        $(this)
-                                .find(".delivOneEl")
-                                .css("display", "block");
-                    }
-                });
-
     }, 2000);
     $("#seldelivery").on("click", function () {
         //  $(".delivOneEl").css("opacity", "0");
@@ -559,39 +514,6 @@ $(document).ready(function () {
                     $(this).parents('.paymOneEl').removeClass('disabled');
                 }
             });
-
-            //$('input[name="tel_new"]').mask('+7(999)-999-9999');
-
-            $(".delivOneEl")
-                    .closest("#seldelivery")
-                    .each(function () {
-                        var tallestcolumn = 0;
-
-                        $(this)
-                                .find(".delivOneEl")
-                                .each(function () {
-                                    var currentWidth = $(this).width();
-
-                                    if (currentWidth > tallestcolumn) {
-                                        tallestcolumn = currentWidth;
-                                    }
-                                });
-
-                        if (tallestcolumn > 0) {
-                            /*$(this)
-                             .find(".delivOneEl")
-                             .width(tallestcolumn);*/
-                            $(this)
-                                    .find(".delivOneEl")
-                                    .css("opacity", "1");
-                            $(this)
-                                    .find(".delivOneEl")
-                                    .css("display", "block");
-                            $(this)
-                                    .find(".delivOneEl")
-                                    .css("display", "block");
-                        }
-                    });
         }, 400);
     })
 
@@ -921,7 +843,7 @@ $(document).ready(function () {
         }
     });
     $(".odnotipList").appendTo(".odnotipListWrapper");
-    $(".odnotipList .product-block-wrapper-fix").unwrap();
+    //$(".odnotipList .product-block-wrapper-fix").unwrap();
 
     // подгрузка комментариев
     $("body").on("click", "#commentLoad", function () {
@@ -1740,17 +1662,17 @@ $(document).ready(function () {
         if ($('.heroSlide img').attr('src').indexOf('no_photo.png') + 1) {
             var src = $('.heroSlide img').attr('src');
             TouchNSwipe.remove("productSlider");
-            $('#productSlider').append('<img  src="' + src + '"/>');
+            $('#productSlider').append('<img  src="' + src + '" style="width: 100%;max-width: 480px;"/>');
+        } else {
+            $('.heroSlide img').each(function (index, element) {
+                $(element).removeClass('hide');
+            });
+
+            var tns = TouchNSwipe.get('productSlider');
+            tns.slider.on(ElemZoomSlider.INDEX_CHANGE, function (event) {
+                $(event.currentTarget.getSlideElemAt(event.currentTarget._index)).find('img').removeClass('hide');
+            });
         }
-        $('.heroSlide img').each(function (index, element) {
-            $(element).removeClass('hide');
-        });
-
-        var tns = TouchNSwipe.get('productSlider');
-        tns.slider.on(ElemZoomSlider.INDEX_CHANGE, function (event) {
-            $(event.currentTarget.getSlideElemAt(event.currentTarget._index)).find('img').removeClass('hide');
-        });
-
     }
 
     // reCAPTCHA

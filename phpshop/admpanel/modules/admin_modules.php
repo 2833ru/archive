@@ -8,7 +8,7 @@ function getFileInfo($file) {
 
     if ($f['License']['Pro'] == 'Start')
         $_SESSION['mod_limit'] = 5;
-    elseif($f['License']['Pro'] == 'Enabled')
+    elseif ($f['License']['Pro'] == 'Enabled')
         $_SESSION['mod_pro'] = true;
     else
         $_SESSION['mod_limit'] = 50;
@@ -58,7 +58,7 @@ function ChekInstallModule($path, $num = false) {
 }
 
 function actionStart() {
-    global $PHPShopInterface, $PHPShopBase,$TitlePage;
+    global $PHPShopInterface, $PHPShopBase, $TitlePage;
 
 
     $PHPShopInterface->action_select['Отключить выбранные'] = array(
@@ -82,7 +82,7 @@ function actionStart() {
             'class' => 'btn btn-default btn-sm navbar-btn load-module',
             'type' => 'button',
             'icon' => 'glyphicon glyphicon-plus',
-            'tooltip' => 'data-toggle="tooltip" data-placement="left" title="'.__('Загрузить модуль').'"'
+            'tooltip' => 'data-toggle="tooltip" data-placement="left" title="' . __('Загрузить модуль') . '"'
         );
     }
 
@@ -97,7 +97,7 @@ function actionStart() {
 
 
     $PHPShopInterface->setCaption(
-            array(null, "3%",array('class' => 'hidden-xs')), array("Описание", "60%"), array("Установлено", "15%"), array("", "10%"), array("Статус" . "", "7%", array('align' => 'right'))
+            array(null, "3%", array('class' => 'hidden-xs')), array("Описание", "60%"), array("Установлено", "15%"), array("", "10%"), array("Статус" . "", "7%", array('align' => 'right'))
     );
 
     $PHPShopInterface->addJSFiles('./js/jquery.treegrid.js', './modules/gui/modules.gui.js');
@@ -147,8 +147,7 @@ function actionStart() {
 
                 if (!empty($Info['trial']) and empty($ChekInstallModule[3])) {
                     $trial = ' (Trial 30 дней)';
-                }
-                else
+                } else
                     $trial = null;
 
 
@@ -158,9 +157,10 @@ function actionStart() {
                 } else {
                     $status = $ChekInstallModule[1];
 
-                    if(!empty($wikiPath))
-                    $drop_menu = array('option', 'manual', 'id' => $row['path']);
-                    else $drop_menu = array('option','id' => $row['path']);
+                    if (!empty($wikiPath))
+                        $drop_menu = array('option', 'manual', 'id' => $row['path']);
+                    else
+                        $drop_menu = array('option', 'id' => $row['path']);
 
 
                     // Меню модуля
@@ -202,7 +202,7 @@ function actionStart() {
                         $new = null;
 
                     // Если выбрана категория
-                    if (isset($_GET['cat']) and @strstr($Info['category'], $_GET['cat']) and empty($Info['hidden'])) {
+                    if (isset($_GET['cat']) and @ strstr($Info['category'], $_GET['cat']) and empty($Info['hidden'])) {
 
                         $ChekInstallModule = ChekInstallModule($file, $num);
 
@@ -218,9 +218,10 @@ function actionStart() {
                             $drop_menu = array('option', 'manual', '|', 'off', 'id' => $file);
                         } elseif ($num < $_SESSION['mod_limit']) {
                             $InstallDate = null;
-                            if(!empty($wikiPath))
-                            $drop_menu = array('manual', '|', 'on', 'id' => $file);
-                            else $drop_menu = array('on', 'id' => $file);
+                            if (!empty($wikiPath))
+                                $drop_menu = array('manual', '|', 'on', 'id' => $file);
+                            else
+                                $drop_menu = array('on', 'id' => $file);
                         } else {
                             $InstallDate = null;
                             $drop_menu = null;
@@ -228,16 +229,17 @@ function actionStart() {
 
                         if (!empty($Info['trial']) and empty($ChekInstallModule[3])) {
                             $trial = ' (Trial 30 дней)';
-                        }
-                        else
+                        } else
                             $trial = null;
 
-                        if (!$PHPShopBase->Rule->CheckedRules('modules', 'edit') or EXPIRES < $Info['sign'] or (!empty($Info['pro']) and empty($_SESSION['mod_pro']))) {
+                        if (!$PHPShopBase->Rule->CheckedRules('modules', 'edit') or EXPIRES < $Info['sign'] or ( !empty($Info['pro']) and empty($_SESSION['mod_pro']))) {
                             $status = '<span class="glyphicon glyphicon-lock pull-right"></span>';
-                            $new = '<span class="label label-warning">Pro</span>';
+
+                            if (!empty($Info['pro']) and empty($_SESSION['mod_pro']))
+                                $new = '<span class="label label-warning">Pro</span>';
+
                             unset($drop_menu);
-                        }
-                        else
+                        } else
                             $status = $ChekInstallModule[1];
 
                         $name = '<div class="modules-list">
@@ -259,8 +261,8 @@ function actionStart() {
                             $new = '<span class="label label-primary">' . $Info['status'] . '</span>';
                         else
                             $new = null;
-                        
-                         // Инструкция
+
+                        // Инструкция
                         if (!empty($Info['faqlink']))
                             $wikiPath = $Info['faqlink'];
                         else
@@ -272,9 +274,10 @@ function actionStart() {
                             $drop_menu = array('option', 'manual', '|', 'off', 'id' => $file);
                         } elseif ($num < $_SESSION['mod_limit']) {
                             $InstallDate = null;
-                            if(!empty($wikiPath))
-                            $drop_menu = array('manual', '|', 'on', 'id' => $file);
-                            else $drop_menu = array('on', 'id' => $file);
+                            if (!empty($wikiPath))
+                                $drop_menu = array('manual', '|', 'on', 'id' => $file);
+                            else
+                                $drop_menu = array('on', 'id' => $file);
                         } else {
                             $InstallDate = null;
                             $drop_menu = null;
@@ -282,16 +285,16 @@ function actionStart() {
 
                         if (!empty($Info['trial']) and empty($ChekInstallModule[3])) {
                             $trial = ' (Trial 30 дней)';
-                        }
-                        else
+                        } else
                             $trial = null;
 
-                        if (!$PHPShopBase->Rule->CheckedRules('modules', 'edit') or EXPIRES < $Info['sign'] or (!empty($Info['pro']) and empty($_SESSION['mod_pro']))) {
+                        if (!$PHPShopBase->Rule->CheckedRules('modules', 'edit') or EXPIRES < $Info['sign'] or ( !empty($Info['pro']) and empty($_SESSION['mod_pro']))) {
                             $status = '<span class="glyphicon glyphicon-lock pull-right"></span> ';
-                            $new = '<span class="label label-warning">Pro</span>';
+                            if (!empty($Info['pro']) and empty($_SESSION['mod_pro']))
+                                $new = '<span class="label label-warning">Pro</span>';
+
                             unset($drop_menu);
-                        }
-                        else
+                        } else
                             $status = $ChekInstallModule[1];
 
                         $name = '<div class="modules-list">
@@ -313,43 +316,43 @@ function actionStart() {
 
     $tree = '<table class="table table-hover">
         <tr class="treegrid-all">
-           <td><a href="?path=modules" class="treegrid-parent" data-parent="treegrid-all">'.__('Все модули').'</a> <span class="label label-primary pull-right">93</span></td>
+           <td><a href="?path=modules" class="treegrid-parent" data-parent="treegrid-all">' . __('Все модули') . '</a> <span class="label label-primary pull-right">95</span></td>
 	</tr>
         <tr class="treegrid-template">
-           <td><a href="?path=modules&cat=template" class="treegrid-parent" data-parent="treegrid-template">'.__('Дизайн').'</a> <span class="label label-primary pull-right">7</span></td>
+           <td><a href="?path=modules&cat=template" class="treegrid-parent" data-parent="treegrid-template">' . __('Дизайн') . '</a> <span class="label label-primary pull-right">7</span></td>
 	</tr>
         <tr class="treegrid-soc">
-           <td><a href="?path=modules&cat=soc" class="treegrid-parent" data-parent="treegrid-soc">'.__('Социальные сети').'</a> <span class="label label-primary pull-right">2</span></td>
+           <td><a href="?path=modules&cat=soc" class="treegrid-parent" data-parent="treegrid-soc">' . __('Социальные сети') . '</a> <span class="label label-primary pull-right">2</span></td>
 	</tr>
         <tr class="treegrid-seo">
            <td><a href="?path=modules&cat=seo" class="treegrid-parent" data-parent="treegrid-seo">SEO</a> <span class="label label-primary pull-right">6</span></td>
 	</tr>
         <tr class="treegrid-delivery">
-           <td><a href="?path=modules&cat=delivery" class="treegrid-parent" data-parent="treegrid-delivery">'.__('Доставка').'</a> <span  class="label label-primary pull-right">11</span></td>
+           <td><a href="?path=modules&cat=delivery" class="treegrid-parent" data-parent="treegrid-delivery">' . __('Доставка') . '</a> <span  class="label label-primary pull-right">12</span></td>
 	</tr>
         <tr class="treegrid-chat">
-           <td><a href="?path=modules&cat=chat" class="treegrid-parent" data-parent="treegrid-delivery">'.__('Чаты и звонки').'</a> <span class="label label-primary pull-right">6</span></td>
+           <td><a href="?path=modules&cat=chat" class="treegrid-parent" data-parent="treegrid-delivery">' . __('Чаты и звонки') . '</a> <span class="label label-primary pull-right">7</span></td>
 	</tr>
         <tr class="treegrid-crm">
            <td><a href="?path=modules&cat=crm" class="treegrid-parent" data-parent="treegrid-crm">CRM</a> <span class="label label-primary pull-right">4</span></td>
 	</tr>
         <tr class="treegrid-payment">
-           <td><a href="?path=modules&cat=payment" class="treegrid-parent" data-parent="treegrid-payment">'.__('Платежные системы').'</a> <span class="label label-primary pull-right">26</span></td>
+           <td><a href="?path=modules&cat=payment" class="treegrid-parent" data-parent="treegrid-payment">' . __('Платежные системы') . '</a> <span class="label label-primary pull-right">26</span></td>
 	</tr>
        <tr class="treegrid-credit">
-           <td><a href="?path=modules&cat=credit" class="treegrid-parent" data-parent="treegrid-payment">'.__('Кредитование').'</a> <span class="label label-primary pull-right">3</span></td>
+           <td><a href="?path=modules&cat=credit" class="treegrid-parent" data-parent="treegrid-payment">' . __('Кредитование') . '</a> <span class="label label-primary pull-right">3</span></td>
 	</tr>
         <tr class="treegrid-yandex">
-           <td><a href="?path=modules&cat=yandex" class="treegrid-parent" data-parent="treegrid-yandex">'.__('Яндекс').'</a> <span class="label label-primary pull-right">4</span></td>
+           <td><a href="?path=modules&cat=yandex" class="treegrid-parent" data-parent="treegrid-yandex">' . __('Яндекс') . '</a> <span class="label label-primary pull-right">5</span></td>
 	</tr>
         <tr class="treegrid-sale">
-           <td><a href="?path=modules&cat=sale" class="treegrid-parent" data-parent="treegrid-sale5">'.__('Продажи').'</a> <span class="label label-primary pull-right">12</span></td>
+           <td><a href="?path=modules&cat=sale" class="treegrid-parent" data-parent="treegrid-sale5">' . __('Продажи') . '</a> <span class="label label-primary pull-right">12</span></td>
 	</tr>
         <tr class="treegrid-develop">
-           <td><a href="?path=modules&cat=develop" class="treegrid-parent" data-parent="treegrid-develop">'.__('Разработчикам').'</a> <span class="label label-primary pull-right">15</span></td>
+           <td><a href="?path=modules&cat=develop" class="treegrid-parent" data-parent="treegrid-develop">' . __('Разработчикам') . '</a> <span class="label label-primary pull-right">15</span></td>
 	</tr>
         <tr class="treegrid-install">
-           <td><a href="?path=modules&install=check" class="treegrid-parent" data-parent="treegrid-install">'.__('Установленные').'</a> <span id="mod-install-count" class="label ' . $label_class . ' pull-right">' . $num . '</span></td>
+           <td><a href="?path=modules&install=check" class="treegrid-parent" data-parent="treegrid-install">' . __('Установленные') . '</a> <span id="mod-install-count" class="label ' . $label_class . ' pull-right">' . $num . '</span></td>
 	</tr>
     </table>
     <script>

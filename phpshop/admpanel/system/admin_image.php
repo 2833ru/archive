@@ -56,6 +56,7 @@ function actionStart() {
             // $PHPShopGUI->setField('Адаптивность', $PHPShopGUI->setCheckbox('option[image_adaptive_resize]', 1, 'Оптимизировать изображение точно под указанные размеры', $option['image_adaptive_resize'])) .
             $PHPShopGUI->setField('Исходное название', $PHPShopGUI->setCheckbox('option[image_save_name]', 1, 'Сохранять исходное название изображения', $option['image_save_name'])) .
             $PHPShopGUI->setField('Исходный путь', $PHPShopGUI->setCheckbox('option[image_save_path]', 1, 'Сохранять исходный путь изображения на сервере', $option['image_save_path'])) .
+            $PHPShopGUI->setField('SEO название', $PHPShopGUI->setCheckbox('option[image_save_seo]', 1, 'Сохранять изображения по именам товара', $option['image_save_seo'])) .
             $PHPShopGUI->setField('Добавить путь каталога', $PHPShopGUI->setCheckbox('option[image_save_catalog]', 1, 'Сохранять изображения в папках по именам каталогов', $option['image_save_catalog']), 1, 'При выключенной опции, все изображения товаров сохраняются в одну папку на сервере. Если файлов становится много, это может вызывать торможение в работе файлового менеджера и влиять на загрузку сайта, на дешевых тарифах хостинга. Активируйте опцию, чтобы фото сохранялись на сервере в автоматически созданную папку для каждого созданного каталога.') .
             $PHPShopGUI->setField('Отключить фотогалерею', $PHPShopGUI->setCheckbox('option[image_off]', 1, 'Отключить возможность добавлять изображения в фотогалерею', $option['image_off']), 1, 'Режим для товара с одной подготовленной картинкой, размещенной на сервере.') .
             $PHPShopGUI->setField("Размещение", $PHPShopGUI->setInputText($GLOBALS['SysValue']['dir']['dir'] . '/UserFiles/Image/', "option[image_result_path]", $option['image_result_path'], 400), 1, 'Путь сохранения загружаемых изображений') .
@@ -176,7 +177,7 @@ function actionUpdate() {
     $_POST['option']['watermark_image'] = $_POST['watermark_image'];
 
     // Корректировка пустых значений
-    $PHPShopOrm->updateZeroVars('option.image_save_source', 'option.image_adaptive_resize', 'option.image_save_name', 'option.watermark_big_enabled', 'option.watermark_source_enabled', 'option.watermark_center_enabled', 'option.image_save_path', 'option.image_save_catalog', 'option.watermark_small_enabled', 'option.image_off', 'option.image_cat', 'option.image_slider','option.image_slider_adaptive','option.image_cat_adaptive');
+    $PHPShopOrm->updateZeroVars('option.image_save_source', 'option.image_adaptive_resize', 'option.image_save_name', 'option.watermark_big_enabled', 'option.watermark_source_enabled', 'option.watermark_center_enabled', 'option.image_save_path', 'option.image_save_catalog', 'option.watermark_small_enabled', 'option.image_off', 'option.image_cat', 'option.image_slider','option.image_slider_adaptive','option.image_cat_adaptive', 'option.image_save_seo');
 
     if (is_array($_POST['option']))
         foreach ($_POST['option'] as $key => $val)
