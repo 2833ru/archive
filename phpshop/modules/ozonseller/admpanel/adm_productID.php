@@ -100,8 +100,9 @@ function OzonsellerUpdate($data) {
         $data['items'] = $PHPShopProduct->getParam('items');
         $data['enabled'] = $PHPShopProduct->getParam('enabled');
         $data['id'] = $PHPShopProduct->getParam('id');
+        $data['export_ozon'] = $PHPShopProduct->getParam('export_ozon');
 
-        if (!empty($data['export_ozon_id'])) {
+        if (!empty($data['export_ozon_id']) and !empty($data['export_ozon'])) {
             $OzonSeller = new OzonSeller();
 
             if (isset($_POST['items_new']))

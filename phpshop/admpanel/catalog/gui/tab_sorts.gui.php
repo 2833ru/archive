@@ -4,7 +4,6 @@ function tab_sorts($data) {
     global $SysValue,$link_db;
     
     $sort=unserialize($data['sort']);
-    
     $dis = null;
     $sql = "select * from " . $SysValue['base']['sort_categories'] . " where category=0 order by num";
     $result = mysqli_query($link_db,$sql);

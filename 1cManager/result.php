@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Автономная синхронизация номенклатуры из 1С
+ * Автономная синхронизация номенклатуры из 1С и CML
  * @package PHPShopExchange
  * @author PHPShop Software
- * @version 3.4
+ * @version 3.5
  */
 // Авторизация
 include_once("login.php");
@@ -24,7 +24,164 @@ if (function_exists('mod_option')) {
     call_user_func_array('mod_option', array(&$GLOBALS['option']));
 }
 
-// Генератор характеристик v 2.0
+// Обработка характеристик
+class sortCheck {
+
+    var $debug = false;
+
+    function __construct($name, $value, $category, $debug = false) {
+
+        $this->debug = $debug;
+
+        $this->debug('Дано характеристика "' . $name . '" = "' . $value . '" в каталоге с ID=' . $category);
+
+        // Проверка имени характеристики 
+        $check_name = (new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']))->getOne(['*'], ['name' => '="' . $name . '"']);
+        if ($check_name) {
+
+            $this->debug('Есть характеристика "' . $name . '" c ID=' . $check_name['id'] . ' и CATEGORY=' . $check_name['category']);
+
+            // Проверка значения характеристики
+            $check_value = (new PHPShopOrm($GLOBALS['SysValue']['base']['sort']))->getOne(['*'], ['name' => '="' . $value . '"','category'=>'="' . $check_name['id'] . '"']);
+            if ($check_value) {
+                $this->debug('Есть значение характеристики "' . $name . '" = "' . $value . '" c ID=' . $check_value['id']);
+
+                // Проверка категории набора характеристики
+                $check_category = (new PHPShopOrm($GLOBALS['SysValue']['base']['categories']))->getOne(['*'], ['id' => '="' . $category . '"']);
+                $sort = unserialize($check_category['sort']);
+
+                if (is_array($sort) and in_array($check_name['id'], $sort)) {
+                    $this->debug('Есть набор характеристики "' . $name . '" = "' . $value . '" c ID=' . $check_value['id'] . ' в каталоге ' . $check_category['name'] . '" с ID=' . $category);
+                } else {
+                    $sort_categories = (new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']))->getOne(['*'], ['id' => '=' . $check_name['category']]);
+                    $this->debug('Нет набор характеристики "' . $sort_categories['name'] . '" c ID=' . $check_name['category'] . ' в каталоге ' . $check_category['name'] . '" с ID=' . $category);
+
+                    // Добавление в категорию набора характеристики
+                    $sort[] = $check_name['id'];
+                    (new PHPShopOrm($GLOBALS['SysValue']['base']['categories']))->update(['sort_new' => serialize($sort)], ['id' => '=' . $category]);
+                    $this->debug('Набор характеристик "' . $sort_categories['name'] . '" c ID=' . $check_name['category'] . ' добавлен в каталог "' . $check_category['name'] . '" с ID=' . $category);
+
+                    $result[$check_name['id']][] = $check_value['id'];
+                }
+                $result[$check_name['id']][] = $check_value['id'];
+            } else {
+                $this->debug('Нет значения характеристики "' . $name . '" = "' . $value . '"');
+
+                // Создание нового значения характеристики
+                $new_value_id = (new PHPShopOrm($GLOBALS['SysValue']['base']['sort']))->insert(['name_new' => $value, 'category_new' => $check_name['id'], 'sort_seo_name_new' => str_replace("_", "-", PHPShopString::toLatin($value))]);
+
+                $this->debug('Создание нового значения характеристики "' . $name . '" = "' . $value . '" c ID=' . $new_value_id);
+                $result[$check_name['id']][] = $new_value_id;
+            }
+        } else {
+
+            $this->debug('Нет характеристики "' . $name . '"');
+
+            // Проверка категории набора характеристики
+            $check_category = (new PHPShopOrm($GLOBALS['SysValue']['base']['categories']))->getOne(['*'], ['id' => '="' . $category . '"']);
+            $sort = unserialize($check_category['sort']);
+
+            // У каталога есть характеристики
+            if (is_array($sort)) {
+
+                // Проверка значения характеристики
+                foreach ($sort as $val) {
+                    $check_value = (new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']))->getOne(['*'], ['id' => '=' . $val]);
+                    if (!empty($check_value['category'])) {
+                        $sort_categories = $check_value['category'];
+                        continue;
+                    }
+                }
+
+                $this->debug('Выбран набор характеристик c ID=' . $sort_categories);
+            }
+            // У каталога нет набора характеристик
+            else {
+
+                // Создание нового набора характеристик
+                $new_sort_categories_name = $check_category['name'];
+                $new_sort_categories = (new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']))->insert(['name_new' => $new_sort_categories_name, 'category_new' => 0]);
+                $sort_categories = $new_sort_categories;
+                $this->debug('Создание нового набор характеристик "' . $new_sort_categories_name . '" c ID=' . $sort_categories . ' ');
+            }
+
+            // Создание новой характеристики 
+            $new_name_id = (new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']))->insert(['name_new' => $name, 'category_new' => $sort_categories]);
+            $this->debug('Создание новой характеристики "' . $name . '" c ID=' . $new_name_id . ' в группе характеристик ID=' . $sort_categories);
+
+            // Создание нового значения характеристики
+            $new_value_id = (new PHPShopOrm($GLOBALS['SysValue']['base']['sort']))->insert(['name_new' => $value, 'category_new' => $new_name_id, 'sort_seo_name_new' => str_replace("_", "-", PHPShopString::toLatin($value))]);
+            $this->debug('Создание нового значения характеристики "' . $name . '" = "' . $value . '" c ID=' . $new_value_id);
+
+            // Добавление в категорию характеристики
+            $sort[] = $new_name_id;
+            (new PHPShopOrm($GLOBALS['SysValue']['base']['categories']))->update(['sort_new' => serialize($sort)], ['id' => '=' . $category]);
+            $this->debug('Характеристика "' . $name . '" c ID=' . $new_name_id . ' добавлен в каталог "' . $check_category['name'] . '" с ID=' . $category);
+
+            $result[$new_name_id][] = $new_value_id;
+        }
+
+        $this->result = $result;
+    }
+
+    // Отладка
+    function debug($str) {
+        if ($this->debug)
+            echo $str . PHP_EOL . '<br>';
+    }
+
+    // Результат
+    function result() {
+        return $this->result;
+    }
+
+}
+
+// Генератор характеристик общие значения
+function charsGeneratorGeneral($category, $CsvToArray) {
+
+    $return = [];
+
+    // Отладка
+    $debug = $_REQUEST['debug'];
+
+    // Нормализация нескольких значений
+    for ($i = $GLOBALS['option']['sort']; $i < count($CsvToArray); $i = $i + 2) {
+
+        $sort_name = trim($CsvToArray[$i]);
+        $sort_value = trim($CsvToArray[$i + 1]);
+
+        // Несколько значений
+        if (strstr($sort_value, "&&")) {
+            $sort_value_array = explode("&&", $sort_value);
+
+            foreach ($sort_value_array as $value) {
+
+                $CsvToArray[$i] = $sort_name;
+                $CsvToArray[$i + 1] = $value;
+
+                $CsvToArray[] = $sort_name;
+                $CsvToArray[] = $value;
+            }
+        }
+    }
+
+    // Обработка 
+    for ($i = $GLOBALS['option']['sort']; $i < count($CsvToArray); $i = $i + 2) {
+
+        $sort_name = trim($CsvToArray[$i]);
+        $sort_value = trim($CsvToArray[$i + 1]);
+
+        if (empty($sort_name) or empty($sort_value))
+            continue;
+
+        $return += (new sortCheck($sort_name, $sort_value, $category, $debug))->result();
+    }
+
+    return $return;
+}
+
+// Генератор характеристик уникальные значения
 function charsGenerator($category, $CsvToArray) {
     global $PHPShopBase;
 
@@ -120,7 +277,7 @@ function charsGenerator($category, $CsvToArray) {
 
                 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']);
                 $PHPShopOrm->debug = $debug;
-                if ($parent = $PHPShopOrm->insert(array('name_new' => $sort_name, 'category_new' => intval($cat_set), 'num_new'=>$i), '_new', __FUNCTION__, __LINE__)) {
+                if ($parent = $PHPShopOrm->insert(array('name_new' => $sort_name, 'category_new' => intval($cat_set), 'num_new' => $i), '_new', __FUNCTION__, __LINE__)) {
 
                     // Создаем новое значение характеристики
                     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort']);
@@ -404,6 +561,10 @@ class ReadCsv1C extends PHPShopReadCsvNative {
                 $sql .= "price='" . $CsvToArray[7] . "', "; // цена 1
 
 
+
+
+
+
                 
 // Склад
             if ($this->ObjSystem->getSerilizeParam("1c_option.update_item") == 1) {
@@ -443,7 +604,7 @@ class ReadCsv1C extends PHPShopReadCsvNative {
             }
 
             if (!empty($CsvToArray[3])) {
-                
+
                 $last_id = $this->getIdForImages($CsvToArray[0]);
                 $ready_num_img = $this->GetNumFoto($last_id);
 
@@ -471,7 +632,7 @@ class ReadCsv1C extends PHPShopReadCsvNative {
             // Подчиненные товары
             if ($this->ObjSystem->getSerilizeParam("1c_option.update_option") == 1) {
 
-                if ((PHPShopProductFunction::true_parent($CsvToArray[0]) and !PHPShopProductFunction::true_parent($CsvToArray[16])) or $CsvToArray[16] == 1) {
+                if ((PHPShopProductFunction::true_parent($CsvToArray[0]) and ! PHPShopProductFunction::true_parent($CsvToArray[16])) or $CsvToArray[16] == 1) {
                     $sql .= "parent_enabled='1', ";
                 } else {
                     $sql .= "parent_enabled='0', ";
@@ -480,7 +641,7 @@ class ReadCsv1C extends PHPShopReadCsvNative {
                 if (strstr($CsvToArray[16], "@")) {
                     $parent_array = explode("@", $CsvToArray[16]);
                     $sql .= "parent='" . $parent_array[0] . "', parent2='" . $parent_array[1] . "',";
-                } elseif($CsvToArray[16] != 1)
+                } elseif ($CsvToArray[16] != 1)
                     $sql .= "parent='" . $CsvToArray[16] . "', ";
             }
 
@@ -526,8 +687,30 @@ class ReadCsv1C extends PHPShopReadCsvNative {
             // Обновляем характеристики
             if ($this->ObjSystem->getSerilizeParam("1c_option.update_category") == 1 and $this->ObjSystem->getSerilizeParam("1c_option.update_sort") == 1 and ! empty($CsvToArray[$GLOBALS['option']['sort']])) {
 
-                // Генератор характеристик
-                $resCharsArray = charsGenerator($CsvToArray[15], $CsvToArray);
+                // Генератор характеристик общие значения
+                if ($this->ObjSystem->getSerilizeParam("1c_option.update_sort_type") == 1) {
+
+                    $resCharsArray = charsGeneratorGeneral($CsvToArray[15], $CsvToArray);
+                }
+                // Генератор характеристик уникальные значения
+                else {
+
+                    $resCharsArray = charsGenerator($CsvToArray[15], $CsvToArray);
+                }
+
+                if (is_array($resCharsArray)) {
+                    $resSerialized = serialize($resCharsArray);
+                    foreach ($resCharsArray as $k => $v) {
+                        if (is_array($v)) {
+                            foreach ($v as $o => $p) {
+                                $vendor .= "i" . $k . "-" . $p . "i";
+                            }
+                        } else {
+                            $vendor .= "i" . $k . "-" . $v . "i";
+                        }
+                    }
+                }
+
 
                 if (is_array($resCharsArray)) {
                     $vendor = null;
@@ -602,8 +785,18 @@ class ReadCsv1C extends PHPShopReadCsvNative {
 
             if ($this->ObjSystem->getSerilizeParam("1c_option.update_category") == 1 and $this->ObjSystem->getSerilizeParam("1c_option.update_sort") == 1 and ! empty($CsvToArray[$GLOBALS['option']['sort']])) {
 
-                // Генератор характеристик
-                $resCharsArray = charsGenerator($CsvToArray[15], $CsvToArray);
+
+                // Генератор характеристик общие значения
+                if ($this->ObjSystem->getSerilizeParam("1c_option.update_sort_type") == 1) {
+
+                    $resCharsArray = charsGeneratorGeneral($CsvToArray[15], $CsvToArray);
+                }
+                // Генератор характеристик уникальные значения
+                else {
+
+                    $resCharsArray = charsGenerator($CsvToArray[15], $CsvToArray);
+                }
+
                 if (is_array($resCharsArray)) {
                     $resSerialized = serialize($resCharsArray);
                     foreach ($resCharsArray as $k => $v) {
@@ -616,6 +809,7 @@ class ReadCsv1C extends PHPShopReadCsvNative {
                         }
                     }
                 }
+
                 $vendor_array = serialize($resCharsArray);
             }
 
@@ -643,7 +837,11 @@ class ReadCsv1C extends PHPShopReadCsvNative {
             if ($this->ObjSystem->getSerilizeParam("1c_option.update_price") == 1 and ! empty($CsvToArray[7]))
                 $sql .= "price='" . $CsvToArray[7] . "', "; // цена 1
 
-            // Склад
+
+
+
+                
+// Склад
             if ($this->ObjSystem->getSerilizeParam("1c_option.update_item") == 1) {
 
                 // Многоскладовость
@@ -679,7 +877,7 @@ class ReadCsv1C extends PHPShopReadCsvNative {
                 if (strstr($CsvToArray[16], "@")) {
                     $parent_array = explode("@", $CsvToArray[16]);
                     $sql .= "parent='" . $parent_array[0] . "', parent2='" . $parent_array[1] . "',";
-                } elseif( $CsvToArray[16] != 1)
+                } elseif ($CsvToArray[16] != 1)
                     $sql .= "parent='" . $CsvToArray[16] . "', ";
             }
 

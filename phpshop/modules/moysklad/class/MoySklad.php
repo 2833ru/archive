@@ -3,9 +3,10 @@
 /**
  * Библиотека связи с МойСклад
  * @author PHPShop Software
- * @version 1.1
+ * @version 1.2
  * @package PHPShopClass
  * @subpackage RestApi
+ * @todo https://dev.moysklad.ru/doc/api/remap/1.2/documents/#dokumenty-zakaz-pokupatelq-zakazy-pokupatelej
  */
 class MoySklad {
 
@@ -22,6 +23,7 @@ class MoySklad {
     const GET_CHARACTER = 'variant/metadata';
     const CREATE_CHARACTER = 'variant/metadata/characteristics';
     const GET_PRICETYPE = '../context/companysettings/pricetype';
+    const GET_REGION = 'region';
     const WEBHOOK = 'webhook';
 
     public function __construct($order = array()) {
@@ -51,8 +53,10 @@ class MoySklad {
         /*
          * Заказ
          */
-        if (isset($order['orders']) and ! empty($order['orders']))
+        if (isset($order['orders']) and ! empty($order['orders'])) {
             $order['orders'] = unserialize($order['orders']);
+            $order['status'] = unserialize($order['status']);
+        }
         $this->order = $order;
     }
 
@@ -144,11 +148,11 @@ class MoySklad {
                 $update['weight_new'] = $fields['weight'];
 
                 if ($this->PHPShopSystem->getSerilizeParam("1c_option.update_price") == 1 and ! empty($fields['salePrices'][0]['value'])) {
-                    $update['price_new'] = $fields['salePrices'][0]['value']/100;
-                    $update['price2_new'] = $fields['salePrices'][1]['value']/100;
-                    $update['price3_new'] = $fields['salePrices'][2]['value']/100;
-                    $update['price4_new'] = $fields['salePrices'][3]['value']/100;
-                    $update['price5_new'] = $fields['salePrices'][4]['value']/100;
+                    $update['price_new'] = $fields['salePrices'][0]['value'] / 100;
+                    $update['price2_new'] = $fields['salePrices'][1]['value'] / 100;
+                    $update['price3_new'] = $fields['salePrices'][2]['value'] / 100;
+                    $update['price4_new'] = $fields['salePrices'][3]['value'] / 100;
+                    $update['price5_new'] = $fields['salePrices'][4]['value'] / 100;
                 }
 
                 $this->PHPShopOrm->objBase = $GLOBALS['SysValue']['base']['products'];
@@ -640,26 +644,6 @@ class MoySklad {
             $this->PHPShopOrm->_SQL = '';
             $payment_method = $this->PHPShopOrm->select(array('name'), array('id=' => '"' . $this->order['orders']['Person']['order_metod'] . '"'));
 
-            if (!empty($this->order['city']))
-                $city = $this->order['city'] . ', ';
-            else
-                $city = ' ';
-
-            if (!empty($this->order['street']))
-                $adress = '. Адрес доставки:' . $city . $this->order['street'];
-            else
-                $adress = '.';
-            if (!empty($this->order['house']))
-                $adress .= ' ' . $this->order['house'];
-
-            if (!empty($this->order['flat']))
-                $adress .= ', кв. ' . $this->order['flat'];
-
-            if (!empty($this->order['dop_info']))
-                $comment = '. Комментарий: ' . $this->order['dop_info'];
-            else
-                $comment = '.';
-
             $fields = array(
                 'name' => $this->order['uid'],
                 'organization' => array(
@@ -675,8 +659,24 @@ class MoySklad {
                         'type' => 'counterparty',
                         "mediaType" => "application/json"
                     )
+                ),
+                'description' => PHPShopString::win_utf8($this->order['status']['maneger']),
+                'shipmentAddressFull' => array(
+                    'apartment' => PHPShopString::win_utf8($this->order['flat']),
+                    'city' => PHPShopString::win_utf8($this->order['city']),
+                    'comment' => PHPShopString::win_utf8($this->order['dop_info']),
+                    'house' => PHPShopString::win_utf8($this->order['house']),
+                    'postalCode' => PHPShopString::win_utf8($this->order['index']),
+                    'street' => PHPShopString::win_utf8($this->order['street'])
                 )
             );
+
+            // Регион
+            if (!empty($this->order['state'])) {
+                $region = $this->getRegion($this->order['state']);
+                if (is_array($region))
+                    $fields['shipmentAddressFull']['region']['meta'] = $region;
+            }
 
             // Товары
             $rows = array();
@@ -788,6 +788,15 @@ class MoySklad {
     }
 
     /**
+     * Выбор региона
+     */
+    public function getRegion($name) {
+        $regions = $this->get(self::GET_REGION . '?filter=name=~' . urlencode(PHPShopString::win_utf8($name)));
+        $result = $regions['rows'][0]['meta'];
+        return $result;
+    }
+
+    /**
      * Выбор типов цен
      */
     public function getPricetype($current) {
@@ -847,7 +856,7 @@ class MoySklad {
      * @param $method
      * @return array
      */
-    public function delete($url ) {
+    public function delete($url) {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);

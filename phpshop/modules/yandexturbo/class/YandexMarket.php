@@ -403,6 +403,8 @@ class YandexMarket
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, self::API_URL . $method);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             sprintf('Authorization: OAuth oauth_token="%s", oauth_client_id="%s"', $this->options['client_token'], $this->options['client_id']),
             'Content-Type: application/json',

@@ -60,14 +60,14 @@ function actionStart() {
     } else {
         try {
             $Tab1 .= $PHPShopGUI->setField('Îğãàíèçàöèÿ', $PHPShopGUI->setSelect('organization_new', $MoySklad->getOrganizations($data['organization']), 400, null, false, false, false, 1, false)) . $PHPShopGUI->setInput('hidden', 'account_new', $MoySklad->account);
-            $Tab1 .= $PHPShopGUI->setField('Âàëşòà â çàêàçå', $PHPShopGUI->setSelect('currency_new', $MoySklad->getCurrencys($data['currency']), 400, null, false, false, false, 1, false));
+            $Tab1 .= $PHPShopGUI->setField('Âàëşòà â çàêàçå', $PHPShopGUI->setSelect('currency_new', $MoySklad->getCurrencys($data['currency']), 100, null, false, false, false, 1, false));
             $Tab1 .= $PHPShopGUI->setField('Òèïû öåí', $PHPShopGUI->setSelect('pricetype_new', $MoySklad->getPricetype($data['pricetype']), 400, null, false, false, false, 1, false));
             $Tab1 .= $PHPShopGUI->setField('Ïåğåäà÷à ïğè ñòàòóñå:', $PHPShopGUI->setSelect('status_new', $order_status_value, 400));
 
             $e_value[] = array('Âêë', 1, $data['webhooks']);
             $e_value[] = array('Âûêë', 2, $data['webhooks']);
 
-            $Tab1 .= $PHPShopGUI->setField('Îòñëåæèâàòü èçìåíåíèÿ â ÌîåìÑêëàäå', $PHPShopGUI->setSelect('webhooks_new', $e_value, 400, true), 1, 'Èñïîëüçîâàíèå âåáõóêîâ â ÌîåìÑêëàäå');
+            $Tab1 .= $PHPShopGUI->setField('Îòñëåæèâàòü èçìåíåíèÿ â ÌîåìÑêëàäå', $PHPShopGUI->setSelect('webhooks_new', $e_value, 100, true), 1, 'Èñïîëüçîâàíèå âåáõóêîâ â ÌîåìÑêëàäå');
         } catch (\Exception $exception) {
             $Tab1 .= $exception->getMessage();
         }

@@ -512,7 +512,7 @@
                             </div>
                             <div class="form-group">
 
-                                <textarea class="form-control" name="returncall_mod_message" placeholder="Сообщение"></textarea>
+                                <textarea class="form-control" name="returncall_mod_message" placeholder="{Сообщение}"></textarea>
                             </div>
                             @returncall_captcha@
                             <div class="form-group">

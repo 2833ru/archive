@@ -4026,3 +4026,7 @@ overflow: hidden;
 .sidebar-right {
 	padding-left:15px;
 }
+
+.filter-item-hide{
+   color: #ddd;
+}

@@ -2,7 +2,7 @@
 
 /**
  * Библиотека работы с CommerceML
- * @version 1.1
+ * @version 1.2
  * @package PHPShopClass
  */
 class PHPShopCommerceML {
@@ -191,21 +191,28 @@ class PHPShopCommerceML {
                 $id = $row['id'];
                 $uid = $row['uid'];
                 $order = unserialize($row['orders']);
-                $status = unserialize($data['status']);
+                $status = unserialize($row['status']);
                 $sum = $PHPShopOrder->returnSumma($order['Cart']['sum'], $order['Person']['discount']);
 
                 $item = null;
                 if (is_array($order['Cart']['cart']))
                     foreach ($order['Cart']['cart'] as $val) {
-                        $id = $val['id'];
-                        $uid = $val['uid'];
+
                         $num = $val['num'];
                         $sum = $PHPShopOrder->returnSumma($val['price'] * $num, $order['Person']['discount']);
 
+                        if (!empty($val['uid']) and $this->exchange_key == 'external') {
+                            $id = $val['uid'];
+                            $uid = null;
+                        } else {
+                            $id = $val['id'];
+                            $uid = $val['uid'];
+                        }
+
                         $item .= '<Товар>
-				<Ид>' . $val['id'] . '</Ид>
+				<Ид>' . $id . '</Ид>
 				<Штрихкод></Штрихкод>
-				<Артикул>' . $val['uid'] . '</Артикул>
+				<Артикул>' . $uid . '</Артикул>
 				<Наименование>' . $val['name'] . '</Наименование>
 				<ЦенаЗаЕдиницу>' . $val['price'] . '</ЦенаЗаЕдиницу>
 				<Количество>' . $val['num'] . '</Количество>
@@ -243,14 +250,12 @@ class PHPShopCommerceML {
 	</Документ>';
             }
 
-        if (!empty($xml)) {
-            $xml = '<?xml version="1.0" encoding="windows-1251"?>
+        $xml = '<?xml version="1.0" encoding="windows-1251"?>
 <КоммерческаяИнформация ВерсияСхемы="2.04" ДатаФормирования="' . PHPShopDate::get(time(), false, true) . '">
 	' . $xml . '
 </КоммерческаяИнформация>';
 
-            return $xml;
-        }
+        return $xml;
     }
 
 }

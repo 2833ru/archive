@@ -36,7 +36,7 @@
     </form>
 </div>
 <div class="search-misspell row">@searchMisspell@</div>
-<div class="template-product-list row">
+<div class="template-product-list row search">
 
     @productPageDis@
 

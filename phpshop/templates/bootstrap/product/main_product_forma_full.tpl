@@ -158,7 +158,6 @@
     </div>
 </div>
 @productsgroup_list@
-
 <!-- Модальное окно фотогалереи -->
 <div class="modal bs-example-modal" id="sliderModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">

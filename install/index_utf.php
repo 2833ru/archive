@@ -169,7 +169,15 @@ elseif (!empty($_POST['password'])) {
 		$data = $PHPShopOrm->select();
         $admoption = unserialize($data['admoption']);
 		$admoption['lang_adm']=$admoption['lang']='russian_utf';
-		$action = $PHPShopOrm->update(array('admoption_new'=>serialize($admoption)), false,'_new');
+		$admoption['dadata_enabled']=0;
+
+        $bank = unserialize($data['bank']);
+		if(is_array($bank))
+			foreach($bank as $key =>$val)
+			  $bank[$key] = null;
+
+		$PHPShopOrm->update(array('admoption_new'=>serialize($admoption),'bank_new'=>serialize($bank)), false,'_new');
+		$PHPShopOrm->query('TRUNCATE `phpshop_orders`');
 
         // Отправка почты
         if (!empty($_POST['send-welcome'])) {
@@ -187,7 +195,6 @@ elseif (!empty($_POST['password'])) {
 
             $PHPShopMail = new PHPShopMail($_POST['mail'], $_POST['mail'], "Пароль администратора " . $_SERVER['SERVER_NAME'], '', true, true);
             $content_adm = PHPShopParser::file('../phpshop/admpanel/tpl/changepass.mail.tpl', true);
-			$content_adm = PHPShopString::win_utf8($content_adm,true);
 
             if (!empty($content_adm)) {
                 $PHPShopMail->sendMailNow($content_adm);
@@ -229,7 +236,7 @@ elseif (!empty($_POST['password'])) {
 <!DOCTYPE html>
 <html lang="ru">
     <head>
-        <meta charset="windows-1251">
+        <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Установка <?php echo $brand; ?></title>

@@ -323,17 +323,13 @@ function actionStart() {
     if (empty($option['user_phone_mask']))
         $option['user_phone_mask'] = '(999) 999-9999';
 
-    $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Настройка пользователей', $PHPShopGUI->setField("Регистрация пользователей", $PHPShopGUI->setCheckbox('option[user_mail_activate]', 1, 'Активация через E-mail', $option['user_mail_activate']) . '<br>' . $PHPShopGUI->setCheckbox('option[user_mail_activate_pre]', 1, 'Ручная активация администратором', $option['user_mail_activate_pre']) . '<br>' . $PHPShopGUI->setCheckbox('option[user_price_activate]', 1, 'Регистрация для просмотра цен', $option['user_price_activate']) . '<br>' . $PHPShopGUI->setCheckbox('option[user_items_activate]', 1, 'Регистрация для просмотра остатков', $option['user_items_activate']) . '<br>' . $PHPShopGUI->setCheckbox('option[user_servers_control]', 1, 'Разделение пользователей для витрин', $option['user_servers_control']))
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Настройка пользователей', $PHPShopGUI->setField("Регистрация пользователей", $PHPShopGUI->setCheckbox('option[user_mail_activate]', 1, 'Активация через E-mail', $option['user_mail_activate']) . '<br>' . $PHPShopGUI->setCheckbox('option[user_mail_activate_pre]', 1, 'Ручная активация администратором', $option['user_mail_activate_pre']) . '<br>' . $PHPShopGUI->setCheckbox('option[user_price_activate]', 1, 'Регистрация для просмотра цен', $option['user_price_activate']) . '<br>' . $PHPShopGUI->setCheckbox('option[user_items_activate]', 1, 'Регистрация для просмотра остатков', $option['user_items_activate']) . '<br>' . $PHPShopGUI->setCheckbox('option[user_servers_control]', 1, 'Разделение пользователей для витрин', $option['user_servers_control']).'<br>'.$PHPShopGUI->setCheckbox('option[user_captcha_enabled]', 1, 'Отключить проверочную картинку для защиты от ботов', $option['user_captcha_enabled']))
             . $PHPShopGUI->setField("Статус после регистрации", $PHPShopGUI->setSelect('option[user_status]', $userstatus_value, 300))
             . $PHPShopGUI->setField("Формат ввода телефона", $PHPShopGUI->setInputText(null, "option[user_phone_mask]", $option['user_phone_mask'], 300) . $PHPShopGUI->setCheckbox('option[user_phone_mask_enabled]', 1, 'Отключить маску ввода телефона', $option['user_phone_mask_enabled']), 1, 'Формат: (999) 999-9999')
             . $PHPShopGUI->setField("Бонусы за покупку:", $PHPShopGUI->setInputText(null, "option[bonus]", intval($option['bonus']), 100, '%'))
             . $PHPShopGUI->setField("Максимальная оплата бонусами:", $PHPShopGUI->setInputText(null, "option[order_bonus]", intval($option['order_bonus']), 100, '%')
     ));
 
-    if (!empty($_SESSION['is_trial']))
-        $chat_support = $PHPShopGUI->setField("Чат с консультантом", $PHPShopGUI->setCheckbox('option[chat_support]', 1, 'Отключить чат с консультантом', $option['chat_support']));
-    else
-        $chat_support = null;
 
     $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Настройка управления', $PHPShopGUI->setField('Цветовая тема', GetAdminSkinList($option['theme']), 1, 'Цветовая тема оформления панели управления (back-end)') .
             $PHPShopGUI->setField('Язык', GetLocaleList($option['lang_adm'], 'lang_adm')) .
@@ -342,7 +338,6 @@ function actionStart() {
             $PHPShopGUI->setField("Заголовок", $PHPShopGUI->setInputText(null, "option[adm_title]", $option['adm_title'], 300), 1, 'Брендовый заголовок в левом верхнем углу панели управления') .
             $PHPShopGUI->setField("Multi Manager", $PHPShopGUI->setCheckbox('option[rule_enabled]', 1, 'Учет прав управления товарами для менеджеров', $option['rule_enabled'])) .
             $PHPShopGUI->setField("Быстрый просмотр", $PHPShopGUI->setCheckbox('option[fast_view]', 1, 'Отключить быстрый просмотр товаров в окне', $option['fast_view'])) .
-            $chat_support .
             $PHPShopGUI->setField("Быстрый поиск", $PHPShopGUI->setSelect('option[search_enabled]', $search_enabled_value, null, true), 1, 'Поиск в верхнем правом углу панели управления (back-end)')
     );
 
@@ -388,7 +383,7 @@ function actionUpdate() {
     unset($option['support_notice']);
 
     // Корректировка пустых значений
-    $PHPShopOrm->updateZeroVars('option.user_calendar', 'option.cloud_enabled', 'option.digital_product_enabled', 'option.parent_price_enabled', 'option.user_skin', 'option.user_mail_activate', 'option.user_mail_activate_pre', 'option.user_price_activate', 'option.mail_smtp_enabled', 'option.mail_smtp_debug', 'option.multi_currency_search', 'option.mail_smtp_auth', 'option.sklad_enabled', 'option.rule_enabled', 'option.catlist_enabled', 'option.filter_cache_enabled', 'option.filter_products_count', 'option.chat_enabled', 'option.new_enabled', 'option.sklad_sum_enabled', 'option.user_servers_control', 'option.user_phone_mask_enabled', 'option.user_items_activate', 'option.ajax_scroll', 'option.ajax_scroll_paginator', 'option.fast_view', 'option.auto_discount_disabled', 'option.chat_support');
+    $PHPShopOrm->updateZeroVars('option.user_calendar', 'option.cloud_enabled', 'option.digital_product_enabled', 'option.parent_price_enabled', 'option.user_skin', 'option.user_mail_activate', 'option.user_mail_activate_pre', 'option.user_price_activate', 'option.mail_smtp_enabled', 'option.mail_smtp_debug', 'option.multi_currency_search', 'option.mail_smtp_auth', 'option.sklad_enabled', 'option.rule_enabled', 'option.catlist_enabled', 'option.filter_cache_enabled', 'option.filter_products_count', 'option.chat_enabled', 'option.new_enabled', 'option.sklad_sum_enabled', 'option.user_servers_control', 'option.user_phone_mask_enabled', 'option.user_items_activate', 'option.ajax_scroll', 'option.ajax_scroll_paginator', 'option.fast_view', 'option.auto_discount_disabled', 'option.chat_support','option.user_captcha_enabled');
 
     if (is_array($_POST['option']))
         foreach ($_POST['option'] as $key => $val)

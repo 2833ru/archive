@@ -32,8 +32,8 @@ $memory = $PHPShopInterface->getProductTableFields();
 if (PHPShopString::is_mobile()) {
     $PHPShopInterface->mobile = true;
     $product_class = null;
-}
-elseif($PHPShopSystem->getSerilizeParam('admoption.fast_view') != 1) $product_class = ' adminModal';
+} elseif ($PHPShopSystem->getSerilizeParam('admoption.fast_view') != 1)
+    $product_class = ' adminModal';
 
 // Характеристики
 if (!empty($memory['catalog.option']['sort'])) {
@@ -175,7 +175,12 @@ if (empty($_GET['from']))
 // Быстрый поиск
 if ($_GET['from'] == 'header') {
     $where['parent_enabled'] = "='0'";
-    $where['parent_enabled'] .= " and (name " . $where['name'] . " or uid " . $where['name'] . " or id " . $where['name'] . ")";
+    
+    // Учет модуля ProductOption
+    if (!empty($GLOBALS['SysValue']['base']['productoption']['productoption_system'])) 
+       $where['parent_enabled'] .= " and (name " . $where['name'] . " or uid " . $where['name'] . " or id " . $where['name'] . " or option1 " . $where['name'] . " or option2 " . $where['name'] . " or option3 " . $where['name'] . " or option4 " . $where['name'] . " or option5 " . $where['name'] . ")";
+    else $where['parent_enabled'] .= " and (name " . $where['name'] . " or uid " . $where['name'] . " or id " . $where['name'] . ")";
+
     unset($where['name']);
 } elseif ($_GET['from'] != 'search') {
 
@@ -232,15 +237,15 @@ if (!empty($_GET['parents'])) {
     }
 }
 
-    // Убираем меню если много полей
-    $count_view=0;
-    if(is_array($memory['catalog.option']))
-        foreach($memory['catalog.option'] as $view)
-            if(!empty($view))
-                $count_view++;
-    
-    if($count_view>8)
-        unset($memory['catalog.option']['menu']);
+// Убираем меню если много полей
+$count_view = 0;
+if (is_array($memory['catalog.option']))
+    foreach ($memory['catalog.option'] as $view)
+        if (!empty($view))
+            $count_view++;
+
+if ($count_view > 8)
+    unset($memory['catalog.option']['menu']);
 
 $PHPShopOrm->mysql_error = false;
 $sklad_enabled = $PHPShopSystem->getSerilizeParam('admoption.sklad_enabled');
@@ -322,8 +327,8 @@ if (is_array($data))
             $row['id'],
             array(
                 'name' => $icon,
-                'link' => '../../shop/UID_' . $row['id'].'.html',
-                'target' =>'_blank',
+                'link' => '../../shop/UID_' . $row['id'] . '.html',
+                'target' => '_blank',
                 'align' => 'left',
                 'view' => intval($memory['catalog.option']['icon'])
             ),
@@ -333,7 +338,7 @@ if (is_array($data))
                 'link' => '?path=product&return=catalog.' . $row['category'] . '&id=' . $row['id'],
                 'align' => 'left',
                 'addon' => $uid,
-                'class' => $enabled.$product_class,
+                'class' => $enabled . $product_class,
                 'id' => $row['id'],
                 'view' => intval($memory['catalog.option']['name'])
             ),
@@ -454,7 +459,7 @@ elseif (isset($_GET['where']))
 else
     $catname = __('Новые товары');
 
-$PHPShopInterface->_AJAX["catname"] = PHPShopString::win_utf8($catname).' ['.$total['count'].']';
+$PHPShopInterface->_AJAX["catname"] = PHPShopString::win_utf8($catname) . ' [' . $total['count'] . ']';
 
 if (!empty($total['count'])) {
     $PHPShopInterface->_AJAX["recordsFiltered"] = $total['count'];

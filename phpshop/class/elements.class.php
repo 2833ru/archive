@@ -85,7 +85,7 @@ class PHPShopElements {
 
     /**
      * Добавление в переменную вывода через парсер
-     * @param string $template имя шаблона для паисинга
+     * @param string $template имя шаблона для парсинга
      */
     function addToTemplate($template) {
         $this->Disp .= ParseTemplateReturn($template);

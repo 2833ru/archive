@@ -91,4 +91,5 @@ class MandarinHostedPayment extends PHPShopPaymentResult {
 
 }
 
+header('Content-Type: text/html; charset=utf-8');
 new MandarinHostedPayment();

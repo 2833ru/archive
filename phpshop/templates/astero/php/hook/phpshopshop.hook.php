@@ -288,9 +288,6 @@ function sorttemplatehook($value, $n, $title, $vendor) {
                 }
             }
 
-            if ($p[3] != null)
-                $text .= ' (' . $p[3] . ')';
-
             // Определение цвета
             if ($text[0] == '#')
                 $text = '<div class="filter-color" style="background:' . $text . '"></div>';
@@ -300,6 +297,7 @@ function sorttemplatehook($value, $n, $title, $vendor) {
     <input type="checkbox" value="1" name="' . $n . '-' . $p[1] . '" ' . $checked . ' data-url="v[' . $n . ']=' . $p[1] . '"  data-name="' . $n . '-' . $p[1] . '">
     <span class="filter-item"  title="' . $p[0] . '">' . $text . '</span>
   </label>
+  <small class="pull-right" data-num="' . $n . '-' . $p[1] . '">' . $p[3] . '</small>
 </div>';
             $num++;
         }
@@ -355,9 +353,11 @@ function template_image_gallery($obj, $array) {
             $name_bigstr = str_replace(".", "_big.", $name);
 
             // Поддержка Webp
-            $name = $obj->setImage($name);
-            $name_s = $obj->setImage($name_s);
-            $name_bigstr = $obj->setImage($name_bigstr);
+            if (method_exists($obj, 'setImage')) {
+                $name = $obj->setImage($name);
+                $name_s = $obj->setImage($name_s);
+                $name_bigstr = $obj->setImage($name_bigstr);
+            }
 
             // Подбор исходного изображения
             if (!$obj->PHPShopSystem->ifSerilizeParam('admoption.image_save_source') or ! file_exists($_SERVER['DOCUMENT_ROOT'] . $name_bigstr))

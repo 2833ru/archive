@@ -211,7 +211,7 @@ function actionSearch() {
  * Поиск товара расширенный
  */
 function actionAdvanceSearch() {
-    global $PHPShopInterface;
+    global $PHPShopInterface,$PHPShopModules;
 
     $PHPShopInterface->field_col = 3;
 
@@ -245,6 +245,10 @@ function actionAdvanceSearch() {
     $searchforma .= '</div>';
 
     $PHPShopInterface->_CODE .= $searchforma;
+    
+        // Перехват модуля
+    $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, null);
+    
     @header("Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0");
     exit($PHPShopInterface->getContent() . '<p class="clearfix"> </p>');
 }

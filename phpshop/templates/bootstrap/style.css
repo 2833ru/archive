@@ -732,7 +732,6 @@ img.template:hover{
 	text-align: center;
 }
 	
-}
 .catalog-img img{max-width:100%; max-height:130px;}
 .catalog-table-block.fix {
     margin-top: 10px;
@@ -1671,7 +1670,7 @@ a.highslide {display:block;}
     display: inline-block;
     margin-top: 0px;
     margin-left: 5px;
-    color: #202124;
+    /*color: #202124;*/
 }
 
 #faset-filter-reset {
@@ -2477,4 +2476,8 @@ transition: all 0.3s;
 background-size: cover;
 background-repeat: no-repeat;
 background-position: center center;
+}
+
+.filter-item-hide{
+   color: #ddd;
 }

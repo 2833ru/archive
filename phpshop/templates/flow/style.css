@@ -205,6 +205,7 @@ img.template-wishlist-list {
     font-family: ALSRubl;
     src: url("fonts/rouble.eot") format("embedded-opentype");
     src: url("fonts/rouble.eot?#iefix") format("embedded-opentype"), url("fonts/rouble.woff") format("woff"), url("fonts/rouble.ttf") format("truetype");
+    font-display: swap;
 }
 
 .rubznak {
@@ -470,19 +471,17 @@ img.logo{
 }
 
 .manufacturer-list {
-  width: 33%;
-  float: left;
+    width: 33%;
+    float: left;
 }
 
 .manufacturer-list li {
-  border: none;
+    border: none;
 }
 
-/*
 body.modal-open{
     margin-right: -17px;
 }
-*/
 
 #visualcart .avatar-img{
     max-width: 50px;
@@ -492,12 +491,9 @@ body.modal-open{
     z-index:100000;
 }
 
-
-
-
 .card-img-bottom, .card-img-top {
-max-height: 17rem;
-max-width: -webkit-min-content;
+    max-height: 17rem;
+    max-width: -webkit-min-content;
 }
 
 .form-control {
@@ -505,12 +501,12 @@ max-width: -webkit-min-content;
 }
 
 .slick-slide .img-fluid {
-max-height: 800px;
-margin: auto;
+    max-height: 800px;
+    margin: auto;
 }
 
 .banner-image p {
-	margin: 0px;
+    margin: 0px;
 }
 
 .w-lg-60 img {
@@ -520,3 +516,6 @@ margin: auto;
     max-width: 100%;
 }
 
+.filter-item-hide{
+    color: #ddd !important;
+}

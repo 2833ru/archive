@@ -267,6 +267,17 @@ class PHPShopCoreElement extends PHPShopElements {
             $js .= 'var AJAX_SCROLL = true;';
         else
             $js .= 'var AJAX_SCROLL = false;';
+        
+        // Кеширование фильтра
+        if($this->PHPShopSystem->ifSerilizeParam("admoption.filter_cache_enabled"))
+             $js .= 'var FILTER_CACHE = true;';
+        else
+            $js .= 'var FILTER_CACHE = false;';
+
+        if($this->PHPShopSystem->ifSerilizeParam("admoption.filter_products_count"))
+             $js .= 'var FILTER_COUNT = true;';
+        else
+            $js .= 'var FILTER_COUNT = false;';
 
         if (!empty($js)) {
             $this->set('editor', '
@@ -1539,18 +1550,18 @@ class PHPShopBannerElement extends PHPShopElements {
         } else
             $true_cid = $this->PHPShopNav->getId();
 
-        $this->PHPShopOrm->debug=false;
+        $this->PHPShopOrm->debug = false;
         $data = $this->PHPShopOrm->select(array('*'), $where, array('order' => 'RAND()'), array("limit" => 100));
 
         if (is_array($data))
             foreach ($data as $row) {
                 if (empty($row['dir'])) {
-                    
+
                     // Привязка к каталогам
-                    if (!empty($true_cid) and !empty($row['dop_cat']) and !strstr($row['dop_cat'],"#" . $true_cid . "#")){
+                    if (!empty($true_cid) and ! empty($row['dop_cat']) and ! strstr($row['dop_cat'], "#" . $true_cid . "#")) {
                         continue;
                     }
-                            
+
                     // Шаблон
                     $this->template($row);
                 } else {
@@ -1783,17 +1794,22 @@ class PHPShopRecaptchaElement extends PHPShopElements {
         // Проверка каптчи
         if ($option['captcha'] === true) {
 
-            // Recaptcha
-            if ($this->true()) {
-                $result = $this->check();
-                return $result;
-            }
+            // Каптча включена
+            if (!$this->PHPShopSystem->ifSerilizeParam('admoption.user_captcha_enabled')) {
 
-            // Обычная каптча
-            elseif (!empty($_SESSION['text']) and strtoupper($_POST['key']) == strtoupper($_SESSION['text'])) {
-                return true;
+                // Recaptcha
+                if ($this->true()) {
+                    $result = $this->check();
+                    return $result;
+                }
+
+                // Обычная каптча
+                elseif (!empty($_SESSION['text']) and strtoupper($_POST['key']) == strtoupper($_SESSION['text'])) {
+                    return true;
+                } else
+                    return false;
             } else
-                return false;
+                return true;
         }
 
         return true;
@@ -1842,16 +1858,21 @@ class PHPShopRecaptchaElement extends PHPShopElements {
      */
     public function captcha($name = 'default', $size = 'normal') {
 
-        if ($this->PHPShopSystem->ifSerilizeParam('admoption.recaptcha_enabled')) {
-            $dis = '<div id="recaptcha_' . $name . '" data-size="' . $size . '" data-key="' . $this->public . '"></div>';
-            $this->recaptcha = true;
-        } else if ($this->PHPShopSystem->ifSerilizeParam('admoption.hcaptcha_enabled')) {
-            $dis = '<div id="hcaptcha_' . $name . '" data-size="' . $size . '" data-key="' . $this->public . '"></div>';
-            $this->recaptcha = true;
-        } else {
-            $dis = '<img src="phpshop/lib/captcha/captcha.php" align="left" style="margin-right:10px"> <input type="text" name="key" class="form-control" placeholder="' . __('Код с картинки') . '..." style="width:100px" required="">';
-            $this->recaptcha = false;
+        // Каптча включена
+        if (!$this->PHPShopSystem->ifSerilizeParam('admoption.user_captcha_enabled')) {
+
+            if ($this->PHPShopSystem->ifSerilizeParam('admoption.recaptcha_enabled')) {
+                $dis = '<div id="recaptcha_' . $name . '" data-size="' . $size . '" data-key="' . $this->public . '"></div>';
+                $this->recaptcha = true;
+            } else if ($this->PHPShopSystem->ifSerilizeParam('admoption.hcaptcha_enabled')) {
+                $dis = '<div id="hcaptcha_' . $name . '" data-size="' . $size . '" data-key="' . $this->public . '"></div>';
+                $this->recaptcha = true;
+            } else {
+                $dis = '<img src="phpshop/lib/captcha/captcha.php" align="left" style="margin-right:10px"> <input type="text" name="key" class="form-control" placeholder="' . __('Код с картинки') . '..." style="width:100px" required="">';
+                $this->recaptcha = false;
+            }
         }
+        else $dis = null;
 
         return $dis;
     }
@@ -1862,7 +1883,6 @@ class PHPShopRecaptchaElement extends PHPShopElements {
      */
     public function true(){
     return $this->recaptcha;
-
 
 
     }

@@ -4800,7 +4800,7 @@ background-size: 0.75rem 0.75rem;height:0.75rem}
 
 .faset-filter-block-wrapper .checkbox input[type=checkbox]:checked,
 .faset-filter-block-wrapper .checkbox-inline input[type=checkbox]:checked {
-  background-color: #fff;
+  /*background-color: #fff;*/
   background-image: url(images/filter.svg);
   background-size: 0.5625rem 0.4375rem;
 }
@@ -4821,7 +4821,7 @@ background-size: 0.75rem 0.75rem;height:0.75rem}
   display: inline-block;
   margin-top: 0rem;
   margin-left: 0.3125rem;
-  color: #202124;
+  /*color: #202124;*/
 }
 
 #faset-filter-reset {
@@ -6609,4 +6609,7 @@ color: #8c98a4;
 	background-position: center center;
 	margin-bottom: 10px;
 	border-radius: 10px;
+}
+.filter-item-hide{
+   color: #ddd;
 }

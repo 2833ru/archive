@@ -96,10 +96,10 @@ function runOrder($ouid, $type) {
                 // Есть externalId
                 if (!empty($item["retail_product_id"])) {
                     $tmp["items"][] = array(
+                        "productId" => $item["retail_product_id"],
                         "initialPrice" => $item["price"],
                         "productName" => $item["name"],
-                        "quantity" => $item["num"],
-                        "offer" => array('externalId' => $item["retail_product_id"])
+                        "quantity" => $item["num"]
                     );
                 } else {
                     $tmp["items"][] = array(

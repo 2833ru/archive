@@ -32,7 +32,7 @@ function actionStart() {
     // Товары
     $products = $OzonSeller->getProductList($_GET['status'],$_GET['offer_id'],$_GET['product_id'],$_GET['limit']);
 
-    if ($OzonSeller->type == 1) {
+    if ($OzonSeller->type == 2) {
         $type_name = __('Арт');
         $type = 'uid';
     } else {

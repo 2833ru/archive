@@ -388,8 +388,10 @@ function template_image_gallery($obj, $array) {
         }
 
         // Поддержка Webp
-        $small = $obj->setImage($small);
-        $big = $obj->setImage($big);
+        if (method_exists($obj, 'setImage')) {
+            $small = $obj->setImage($small);
+            $big = $obj->setImage($big);
+        }
 
         $slides .= sprintf('<div class="%s" data-elem="slide" data-options="thumb:%s">
                          <img src="%s" data-elem="bg" alt="%s" title="%s" class="slider-img hide">

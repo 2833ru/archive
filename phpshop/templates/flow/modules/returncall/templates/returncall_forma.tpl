@@ -8,7 +8,7 @@
         <input type="text" name="returncall_mod_tel" class="form-control" placeholder="{Телефон}..." required="">
     </div>
     <div class="form-group">
-        <label>Время звонка:</label>
+        <label>{Время звонка}:</label>
         <input class="form-control" type="text" name="returncall_mod_time_start" placeholder="10.00 - 19.00">
     </div>
     <div class="form-group">

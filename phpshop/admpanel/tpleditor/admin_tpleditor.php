@@ -453,7 +453,7 @@ function actionLoad() {
 
                 if ($archive->extractTo($_classPath . "templates/")) {
 
-                    unlink($zip);
+                    @unlink($zip);
                     $archive->close();
 
                     // Выключаем таймер

@@ -25,7 +25,7 @@ $PHPShopValutaArray = new PHPShopValutaArray();
 // Системные настройки
 $PHPShopSystem = new PHPShopSystem();
 
-$PHPShopLang = new PHPShopLang(array('locale'=>$_SESSION['lang'],'path'=>'shop'));
+$PHPShopLang = new PHPShopLang(array('locale' => $_SESSION['lang'], 'path' => 'shop'));
 
 // Корзина
 $PHPShopCart = new PHPShopCart();
@@ -34,13 +34,13 @@ $Market = new YandexMarket();
 $result = ['success' => true];
 
 try {
-    $result['imported']       = (int) $_REQUEST['imported'];
+    $result['imported'] = (int) $_REQUEST['imported'];
     $result['total_products'] = (int) $_REQUEST['total_products'];
 
-    if((int) $_REQUEST['initial'] === 1) {
+    if ((int) $_REQUEST['initial'] === 1) {
         $result['total_products'] = $Market->getProductsCount();
 
-        if($result['total_products'] > 5000) {
+        if ($result['total_products'] > 5000) {
             $result['total_products'] = 5000;
         }
     }
@@ -49,16 +49,18 @@ try {
 
     $result['from'] = (int) $_REQUEST['from'] + $imported;
     $result['imported'] += $imported;
-    $result['percent'] = round($result['imported'] * 100 / $result['total_products'], 2);
 
-    if($result['imported'] >= 5000) {
+    if (!empty($result['total_products']))
+        $result['percent'] = round($result['imported'] * 100 / $result['total_products'], 2);
+
+    if ($result['imported'] >= 5000) {
         $result['finished'] = true;
         $result['percent'] = 100;
         $result['message'] = PHPShopString::win_utf8('Товары успешно экспортированы.');
     }
 
     // Завершаем выполнение
-    if($result['from'] >= $result['total_products']) {
+    if ($result['from'] >= $result['total_products']) {
         $result['finished'] = true;
         $result['percent'] = 100;
         $result['message'] = PHPShopString::win_utf8('Товары успешно экспортированы.');
@@ -69,4 +71,5 @@ try {
     $result['message'] = PHPShopString::win_utf8($exception->getMessage());
 }
 
-echo (json_encode($result)); exit;
+echo (json_encode($result));
+exit;

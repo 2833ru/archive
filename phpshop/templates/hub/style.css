@@ -3832,7 +3832,7 @@ body.modal-open.fix {
     padding-left: 11px !important;
     font-size: 16px;
     font-weight: 400;
-    color: #333;
+    /*color: #333;*/
     font-family: "RobotoRegular";
 }
 #faset-filter-body {
@@ -4737,4 +4737,8 @@ width: 20%;
 .row .template-product-list {
 	display: flex;
     flex-wrap: wrap;
+}
+
+.filter-item-hide{
+   color: #ddd;
 }

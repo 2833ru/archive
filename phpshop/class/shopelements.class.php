@@ -308,6 +308,9 @@ class PHPShopProductElements extends PHPShopElements {
 
             // Проверка дополнительных складов
             $this->getStore($row);
+            
+            // Общий склад
+            $this->set('productWarehouse', $row['items']);
 
             // Дополнительные склады
             if (is_array($this->warehouse) and count($this->warehouse) > 0) {

@@ -478,7 +478,7 @@ if (!empty($_COOKIE['fullscreen'])) {
                         ?>
                         <form class="navbar-right <?php echo $search_class; ?>"  action="<?php echo $search_action; ?>" target="<?php echo $search_target; ?>">
                             <div class="input-group">
-                                <input name="<?php echo $search_name; ?>" maxlength="50" value="<?php echo $search_value; ?>" id="<?php echo $search_id; ?>" class="form-control input-sm" placeholder="<?php echo $search_placeholder; ?>" required="" type="search"  data-container="body" data-toggle="popover" data-placement="bottom" data-html="true"  data-content="">
+                                <input name="<?php echo $search_name; ?>" maxlength="256" value="<?php echo $search_value; ?>" id="<?php echo $search_id; ?>" class="form-control input-sm" placeholder="<?php echo $search_placeholder; ?>" required="" type="search"  data-container="body" data-toggle="popover" data-placement="bottom" data-html="true"  data-content="">
                                 <input type="hidden" name="path" value="<?php echo $search_path; ?>">
                                 <input type="hidden" name="from" value="header">
                                 <span class="input-group-btn">
@@ -717,14 +717,6 @@ if (!empty($_COOKIE['fullscreen'])) {
             </a>
         </nav>
         <!--/ Fixed mobile bar -->
-
-        <?php if(!empty($_SESSION['is_trial']) and empty($_GET['frame']) and !$PHPShopSystem->ifSerilizeParam('admoption.chat_support')) echo '
-        <!-- Chat -->
-        <link href="./support/chat/jivosite.css" rel="stylesheet">
-        <script src="./support/chat/jivosite.js" type="text/javascript"></script> 
-        <script src="//code-ya.jivosite.com/widget/Ooae7FG9Ol" async></script>
-        <!--/ Chat -->';
-        ?>
 
         <!-- jQuery plugins -->
         <script src="./js/bootstrap.min.js" data-rocketoptimized="false" data-cfasync="false"></script>

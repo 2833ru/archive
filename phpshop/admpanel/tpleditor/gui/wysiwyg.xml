@@ -1042,18 +1042,11 @@
             <name>newsKratko</name>
             <description>Краткое содержание новости</description>
         </var>
-    </template>
-
-    <template>
-        <name>Форма сообщения подписки на новости</name>
-        <path>news/news_forma_mesage.tpl</path>
-        <description>Форма сообщения подписки на новости</description>
         <var>
-            <name>mesageText</name>
-            <description>Сообщение о результутате подписки</description>
+            <name>newsIcon</name>
+            <description>Иконка новости</description>
         </var>
     </template>
-
     <template>
         <name>Форма подробного описания новостей</name>
         <path>news/main_news_forma_full.tpl</path>
@@ -1069,6 +1062,10 @@
         <var>
             <name>newsPodrob</name>
             <description>Подробное содержание новости</description>
+        </var>
+         <var>
+            <name>newsIcon</name>
+            <description>Иконка новости</description>
         </var>
     </template>
 
@@ -1088,54 +1085,11 @@
             <name>newsKratko</name>
             <description>Краткое содержание новости</description>
         </var>
-    </template>
-
-    <template>
-        <name>Страница результата опроса</name>
-        <path>opros/opros_page_list.tpl</path>
-        <description>Страница результата опроса</description>
         <var>
-            <name>oprosName</name>
-            <description>Наименование опроса</description>
-        </var>
-        <var>
-            <name>oprosContent</name>
-            <description>Содержание опроса</description>
+            <name>newsIcon</name>
+            <description>Иконка новости</description>
         </var>
     </template>
-
-    <template>
-        <name>Страница результата опроса</name>
-        <path>opros/opros_page_forma.tpl</path>
-        <description>Страница результата опроса</description>
-        <var>
-            <name>valueName</name>
-            <description>Результат</description>
-        </var>
-        <var>
-            <name>valueProc</name>
-            <description>%</description>
-        </var>
-        <var>
-            <name>valueSum</name>
-            <description>Голосов</description>
-        </var>
-    </template>
-
-    <template>
-        <name>Форма содержания опроса</name>
-        <path>opros/opros_forma.tpl</path>
-        <description>Форма содержания опроса</description>
-        <var>
-            <name>valueId</name>
-            <description>ID вариата ответа</description>
-        </var>
-        <var>
-            <name>valueName</name>
-            <description>Наименование вариата ответа</description>
-        </var>
-    </template>
-
     <template>
         <name>Форма страницы</name>
         <path>page/page_page_list.tpl</path>

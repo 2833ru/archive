@@ -17,6 +17,17 @@ function order_boxberrywidget_hook($obj, $row, $rout) {
         $weight = $PHPShopCart->getWeight();
         if(empty($weight))
             $weight = $BoxberryWidget->option['weight'];
+        
+        // Определение города
+        if(empty($BoxberryWidget->option['city'])){
+            
+            if (fopen('./phpshop/modules/geoipredirect/class/SxGeoCity.dat', 'rb')) {
+                include_once("./phpshop/modules/geoipredirect/class/SxGeo.class.php");
+                $SxGeo = new SxGeo('./phpshop/modules/geoipredirect/class/SxGeoCity.dat');
+                $result = $SxGeo->get($_SERVER['REMOTE_ADDR']);
+                $BoxberryWidget->option['city'] = $result['city']['name_ru'];
+            }
+        }
 
         $obj->set('order_action_add', '
 <input type="hidden" id="boxberryApiKey" value="' . $BoxberryWidget->option['api_key'] . '">

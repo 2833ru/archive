@@ -389,7 +389,7 @@ function actionStart() {
 
     // Файлы
     $Tab_docs .= $PHPShopGUI->setCollapse('Файлы', $PHPShopGUI->loadLib('tab_files', $data));
-    
+
     // Фотогалерея
     $Tab6 = $PHPShopGUI->loadLib('tab_img', $data);
 
@@ -633,6 +633,17 @@ function actionInsert() {
         foreach ($postOdnotip as $value) {
             if ((int) $value > 0) {
                 $odnotip[] = (int) $value;
+
+                // Связи однотипов
+                $odnotip_data = $PHPShopOrm->getOne(['odnotip'], ['id' => '=' . (int) $value]);
+                $odnotip_array = explode(',',$odnotip_data['odnotip']);
+                if (is_array($odnotip_array)) {
+                    if (!in_array($_POST['rowID'], $odnotip_array))
+                        $odnotip_array[] = $_POST['rowID'];
+                } else
+                    $odnotip_array[] = $_POST['rowID'];
+
+                $PHPShopOrm->update(['odnotip_new' => implode(',', $odnotip_array)], ['id' => '=' . (int) $value]);
             }
         }
         $_POST['odnotip_new'] = implode(',', $odnotip);
@@ -766,7 +777,7 @@ function fotoAdd() {
     if (!empty($_FILES['file']['name'])) {
         $_FILES['file']['ext'] = PHPShopSecurity::getExt($_FILES['file']['name']);
         $_FILES['file']['name'] = PHPShopString::toLatin(str_replace('.' . $_FILES['file']['ext'], '', PHPShopString::utf8_win1251($_FILES['file']['name']))) . '.' . $_FILES['file']['ext'];
-        if (in_array($_FILES['file']['ext'], array('gif', 'png', 'jpg', 'jpeg','webp'))) {
+        if (in_array($_FILES['file']['ext'], array('gif', 'png', 'jpg', 'jpeg', 'webp'))) {
             if (move_uploaded_file($_FILES['file']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . $path . $_FILES['file']['name'])) {
                 $file = $_SERVER['DOCUMENT_ROOT'] . $path . $_FILES['file']['name'];
                 $file_name = $_FILES['file']['name'];
@@ -882,14 +893,14 @@ function fotoAdd() {
         // Сохранение в webp
         if ($PHPShopSystem->ifSerilizeParam('admoption.image_webp_save')) {
             $thumb->setFormat('WEBP');
-            $name = str_replace(['.jpg','.JPG','.png','.PNG','.gif','.GIF'], '.webp', $name);
+            $name = str_replace(['.jpg', '.JPG', '.png', '.PNG', '.gif', '.GIF'], '.webp', $name);
         }
 
         $thumb->save($_SERVER['DOCUMENT_ROOT'] . $path . $name);
 
         // Исходное изображение
         if (!empty($image_save_source)) {
-            
+
             // Сохранение в webp
             if ($PHPShopSystem->ifSerilizeParam('admoption.image_webp_save')) {
                 $thumb->setFormat('WEBP');

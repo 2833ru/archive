@@ -15,11 +15,11 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_boxberrywidget_system` (
   `api_url` varchar(255) default 'http://api.boxberry.ru',
   `fee` int(11) default 0,
   `fee_type` enum('1','2') DEFAULT '1',
-  `version` varchar(64) DEFAULT '1.4',
+  `version` varchar(64) DEFAULT '1.0',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-INSERT INTO `phpshop_modules_boxberrywidget_system` VALUES (1, '', '', '0', '', '', '', '500', '50', '50', '50', 'Москва', 'http://api.boxberry.ru', 0, '1', '1.5');
+INSERT INTO `phpshop_modules_boxberrywidget_system` VALUES (1, '', '', '0', '', '', '', '500', '50', '50', '50', 'Москва', 'http://api.boxberry.ru', 0, '1', '1.6');
 
 CREATE TABLE IF NOT EXISTS `phpshop_modules_boxberrywidget_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

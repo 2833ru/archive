@@ -17,6 +17,18 @@ class PHPShopSeoProCore extends PHPShopShop {
         parent::__construct();
     }
 
+    function setError404() {
+
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
+        $PHPShopOrm->debug = false;
+        $PHPShopOrm->mysql_error = false;
+        $data = $PHPShopOrm->select(array('id'), array('cat_seo_name_old' => '="' . $_SERVER['REQUEST_URI'] . '"'), false, array('limit' => 1));
+        if (is_array($data)) {
+            header('Location: /shop/CID_' . $data['id'] . '.html', true, 301);
+            return true;
+        }
+    }
+
     function index() {
 
         $this->page = $GLOBALS['PHPShopNav']->objNav['page'];
@@ -36,7 +48,7 @@ class PHPShopSeoProCore extends PHPShopShop {
         }
     }
 
-    function query_filter($where = false,$v=false) {
+    function query_filter($where = false, $v = false) {
 
         // Перехват модуля
         $hook = $this->setHook(get_parent_class(), __FUNCTION__);
@@ -49,22 +61,22 @@ class PHPShopSeoProCore extends PHPShopShop {
     function set_meta($row) {
 
         $seourl_option = $GLOBALS['PHPShopSeoPro']->getSettings();
-        
+
         // Перехват модуля
         if ($this->setHook(get_parent_class(), __FUNCTION__, $row))
             return true;
 
         parent::doLoadFunction(__CLASS__, __FUNCTION__, $row, 'shop');
-        $page=$this->PHPShopNav->getPage();
+        $page = $this->PHPShopNav->getPage();
         if ($seourl_option['paginator'] == 2) {
             if ($page > 1) {
                 $this->doLoadFunction('PHPShopShop', 'set_meta', $row);
-                $this->description.= ' Часть ' . $this->PHPShopNav->getPage();
-                $this->title.=' Страница ' . $this->PHPShopNav->getPage();
+                $this->description .= ' Часть ' . $this->PHPShopNav->getPage();
+                $this->title .= ' Страница ' . $this->PHPShopNav->getPage();
                 return true;
             } elseif (!empty($page) and $page == 'ALL') {
                 $this->doLoadFunction('PHPShopShop', 'set_meta', $row);
-                $this->title.=' Все страницы';
+                $this->title .= ' Все страницы';
                 $this->set('catalogCategory', ' - Все страницы', true);
                 return true;
             }

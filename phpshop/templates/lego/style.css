@@ -3984,7 +3984,7 @@ a#faset-filter-reset span {
     line-height: 21px;
     font-size: 13px;
     font-weight: 400;
-    color: #000;
+    /*color: #000;*/
     font-family: StemRegular, Arial, "Helvetica CY", "Nimbus Sans L", sans-serif !important;
     padding: 1px 7px;
     margin-right: 0;
@@ -7531,4 +7531,6 @@ border: 0px;
 	background-position: center center;
 }
 
-
+.filter-item-hide{
+   color: #ddd;
+}

@@ -1,9 +1,44 @@
 <?php
 
-PHPShopObj::loadClass('sort');
+PHPShopObj::loadClass(['sort','array','category']);
 
 $TitlePage = __('Редактирование характеристики') . ' #' . $_GET['id'];
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']);
+
+// Построение дерева категорий
+function treegenerator($array, $i, $curent, $dop_cat_array) {
+    global $tree_array;
+    $del = '&brvbar;&nbsp;&nbsp;&nbsp;&nbsp;';
+    $tree_select = $tree_select_dop = $check = false;
+
+    $del = str_repeat($del, $i);
+    if (is_array($array['sub'])) {
+        foreach ($array['sub'] as $k => $v) {
+
+            $check = treegenerator($tree_array[$k], $i + 1, $k, $dop_cat_array);
+
+            $selected = null;
+            $disabled = null;
+
+            if (is_array($dop_cat_array))
+                foreach ($dop_cat_array as $vs) {
+                    if ($k == $vs)
+                        $selected = "selected";
+                }
+
+            if (empty($check['select'])) {
+                $tree_select .= '<option value="' . $k . '" ' . $selected .  '>' . $del . $v . '</option>';
+
+                $i = 1;
+            } else {
+                $tree_select .= '<option value="' . $k . '" ' . $selected . ' >' . $del . $v . '</option>';
+            }
+
+            $tree_select .= $check['select'];
+        }
+    }
+    return array('select' => $tree_select);
+}
 
 // Стартовый вид
 function actionStart() {
@@ -45,7 +80,7 @@ function actionStart() {
     // Группа категорий / optionname
     if (empty($_GET['type'])) {
         $Tab3 = $PHPShopGUI->setField("Группа:", $PHPShopGUI->setSelect('category_new', $category_value, '100%', false, false, true) .
-                $PHPShopGUI->setHelp('Можно скрыть пустые значения фильтра с одной Группой хар-к. В основных настройках отметьте <a href="?path=system" target="_blank">Кешировать значения фильтра</a> или включите модуль <a href="https://docs.phpshop.ru/moduli/prodazhi/umniy-poisk-elastica" target="_blank">Умный поиск</a>.')).
+                $PHPShopGUI->setHelp('Можно скрыть пустые значения фильтра с одной Группой хар-к. В основных настройках отметьте <a href="?path=system" target="_blank">Кешировать значения фильтра</a>.')).
                 $PHPShopGUI->setField("Бренд:", $PHPShopGUI->setCheckbox('brand_new', 1, null, $data['brand']), 1, 'Характеристика становится брендом и отображается в списке брендов') .
                 $PHPShopGUI->setField("Переключение", $PHPShopGUI->setCheckbox('product_new', 1, null, $data['product']), 1, 'Вместо значений хар-ки выводить Рекомендуемые товары для совместной продажи, указанные в карточке товара') .
                 $PHPShopGUI->setField('Фильтр',$PHPShopGUI->setCheckbox('filtr_new', 1, null, $data['filtr'])).
@@ -65,6 +100,47 @@ function actionStart() {
             $PHPShopGUI->setField("Приоритет", $PHPShopGUI->setInputArg(array('type' => 'text', 'name' => 'num_new', 'value' => $data['num'], 'size' => 100))) .
             $Tab3 
     );
+    
+        $PHPShopCategoryArray = new PHPShopCategoryArray($where);
+    $CategoryArray = $PHPShopCategoryArray->getArray();
+
+    if (is_array($CategoryArray))
+        $GLOBALS['count'] = count($CategoryArray);
+
+    $tree_array = array();
+
+    foreach ($PHPShopCategoryArray->getKey('parent_to.id', true) as $k => $v) {
+        foreach ($v as $cat) {
+            $tree_array[$k]['sub'][$cat] = $CategoryArray[$cat]['name'];
+        }
+        $tree_array[$k]['name'] = $CategoryArray[$k]['name'];
+        $tree_array[$k]['id'] = $k;
+        if ($k == $data['parent_to'])
+            $tree_array[$k]['selected'] = true;
+    }
+
+    $GLOBALS['tree_array'] = &$tree_array;
+
+    // Допкаталоги
+    $dop_cat_array = preg_split('/,/', $data['categories'], -1, PREG_SPLIT_NO_EMPTY);
+
+    if (is_array($tree_array[0]['sub']))
+        foreach ($tree_array[0]['sub'] as $k => $v) {
+            $check = treegenerator($tree_array[$k], 1, $k, $dop_cat_array);
+
+            // Допкаталоги
+            $selected = null;
+
+            $tree_select .= '<option value="' . $k . '"  ' . $selected . '>' . $v . '</option>';
+
+            $tree_select .= $check['select'];
+        }
+
+
+    $tree_select = '<select class="selectpicker show-menu-arrow hidden-edit" data-live-search="true" data-container="body"  data-style="btn btn-default btn-sm" name="categories[]"  data-width="100%" multiple>' . $tree_select . '</select>';
+
+    // Выбор каталога
+    $Tab1 .= $PHPShopGUI->setCollapse('Вывод фильтров',$PHPShopGUI->setField("Каталоги", $tree_select . $PHPShopGUI->setCheckbox("categories_all", 1, "Выбрать все категории?", 0), 1, 'Пакетное редактирование. Настройка не сохраняется.'));
     
     // Варианты
     if (empty($_GET['type'])){
@@ -141,7 +217,33 @@ function actionUpdate() {
                 if ($v != 'null' and ! strstr($v, ','))
                     $_POST['servers_new'] .= "i" . $v . "i";
         }
+        
+        // Категории
+        if (is_array($_POST['categories']) and $_POST['categories'][0] != 'null') {
+
+            foreach ($_POST['categories'] as $v)
+                if (!empty($v) and ! strstr($v, ','))
+                    $cat_array[] = $v;
+
+            if (is_array($cat_array)) {
+                
+                $data_sort = $PHPShopOrm->select(['id'],['category'=>'='.$_POST['rowID'],'filtr'=>"='1'"],['order'=>'id DESC'],['limit'=>1000]);
+                
+                if(is_array($data_sort))
+                    foreach($data_sort as $val)
+                        $sort_new[]=$val['id'];
+                
+                $update['sort_new']=serialize($sort_new);
+                
+                $where = array('id' => ' IN ("' . implode('","', $cat_array) . '")');
+                $PHPShopOrmCat = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
+                $PHPShopOrmCat->debug=false;
+                $PHPShopOrmCat->update($update, $where);
+            }
+        }
     }
+    
+    
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);

@@ -718,7 +718,6 @@ function sort_table($row) {
  * @param boolean $mode формат вывода данных раздела подкаталоги и данные основного раздела\данные категории с товаром
  */
 function CID_Product($category = null, $mode = false) {
-    global $PHPShopBase;
 
     if (!empty($category))
         $this->category = intval($category);
@@ -759,54 +758,42 @@ function CID_Product($category = null, $mode = false) {
             $this->num_row = $this->num_row - $check_cell;
     }
 
-    // Простой запрос
-    if (is_array($order)) {
 
-        $this->dataArray = parent::getListInfoItem(false, false, false, __CLASS__, __FUNCTION__, $order['sql']);
+    $this->dataArray = parent::getListInfoItem(false, false, false, __CLASS__, __FUNCTION__, $order['sql']);
 
-        if (!is_array($this->dataArray)) {
-            if ($this->page > 1)
-                return $this->setError404();
+    if (!is_array($this->dataArray)) {
+        if ($this->page > 1)
+            return $this->setError404();
 
-            if (isset($_POST['ajax'])) {
-                if (isset($_POST['json'])) {
-                    header('Content-type: application/json; charset=UTF-8');
-                    exit(json_encode([
-                        'products' => PHPShopString::win_utf8(PHPShopText::h4($this->lang('empty_product_list'), 'empty_product_list')),
-                        'pagination' => PHPShopString::win_utf8($this->get('productPageNav'))
-                    ]));
-                }
-                header('Content-type: text/html; charset=' . $GLOBALS['PHPShopLang']->charset);
-                exit(PHPShopText::h4($this->lang('empty_product_list'), 'empty_product_list'));
+        if (isset($_POST['ajax'])) {
+            if (isset($_POST['json'])) {
+                header('Content-type: application/json; charset=UTF-8');
+                exit(json_encode([
+                    'products' => PHPShopString::win_utf8(PHPShopText::h4($this->lang('empty_product_list'), 'empty_product_list')),
+                    'pagination' => PHPShopString::win_utf8($this->get('productPageNav')),
+                ]));
             }
-
-            if ($this->PHPShopSystem->ifSerilizeParam('admoption.filter_cache_enabled'))
-                $this->update_cache('filter');
+            header('Content-type: text/html; charset=' . $GLOBALS['PHPShopLang']->charset);
+            exit(PHPShopText::h4($this->lang('empty_product_list'), 'empty_product_list'));
         }
 
-        // Пагинатор
-        if (is_array($this->dataArray))
-            $count = count($this->dataArray);
-        else
-            $count = 0;
-        $this->setPaginator($count, $order['sql']);
-
-        if (empty($count))
-            $this->set('empty_product_list', true);
-
-        if ($this->PHPShopSystem->getSerilizeParam('admoption.filter_cache_enabled') == 1 && $this->PHPShopSystem->getSerilizeParam('admoption.filter_products_count') == 1)
-            $this->update_cache('count_products');
-    } else {
-        // Сложный запрос
-        $this->PHPShopOrm->sql = 'select * from ' . $this->SysValue['base']['products'] . ' where ' . $order;
-        $this->PHPShopOrm->debug = $this->debug;
-        $this->PHPShopOrm->comment = __CLASS__ . '.' . __FUNCTION__;
-        $this->dataArray = $this->PHPShopOrm->select();
-        $this->PHPShopOrm->clean();
-
-        // Пагинатор
-        $this->setPaginator(count($this->dataArray), $order);
+        if ($this->PHPShopSystem->ifSerilizeParam('admoption.filter_cache_enabled'))
+            $this->update_cache('filter');
     }
+
+    // Пагинатор
+    if (is_array($this->dataArray))
+        $count = count($this->dataArray);
+    else
+        $count = 0;
+    $this->setPaginator($count, $order['sql']);
+
+    if (empty($count))
+        $this->set('empty_product_list', true);
+
+    if ($this->PHPShopSystem->getSerilizeParam('admoption.filter_cache_enabled') == 1 && $this->PHPShopSystem->getSerilizeParam('admoption.filter_products_count') == 1)
+        $this->update_cache('count_products');
+
 
     $this->set('pcatalogId', $this->category);
 
@@ -835,7 +822,8 @@ function CID_Product($category = null, $mode = false) {
             header('Content-type: application/json; charset=UTF-8');
             exit(json_encode([
                 'products' => PHPShopString::win_utf8(PHPShopParser::replacedir($this->separator . $grid)),
-                'pagination' => PHPShopString::win_utf8($this->get('productPageNav'))
+                'pagination' => PHPShopString::win_utf8($this->get('productPageNav')),
+                'filter' => $this->update_filter($order['sql'])
             ]));
         }
         header('Content-type: text/html; charset=' . $GLOBALS['PHPShopLang']->charset);
@@ -1191,6 +1179,32 @@ function index() {
     $this->setError404();
 }
 
+/**
+ * Блокировкам пустых значений и пересчет количества фильтра
+ */
+function update_filter($where) {
+
+    if ($this->PHPShopSystem->ifSerilizeParam("admoption.filter_cache_enabled")) {
+        $this->PHPShopOrm->sql = 'select vendor_array from ' . $this->SysValue['base']['products'] . ' where ' . $where;
+        $data = $this->PHPShopOrm->select();
+
+        $sort = [];
+        if (is_array($data)) {
+            foreach ($data as $row) {
+                $vendor_array = unserialize($row['vendor_array']);
+
+                if (is_array($vendor_array)) {
+                    foreach ($vendor_array as $k => $v) {
+                        $sort[$k . '-' . $v[0]] ++;
+                    }
+                }
+            }
+        }
+
+        return $sort;
+    }
+}
+
 /*
  * Обновление кеша характеристик для фильтра
  */
@@ -1222,7 +1236,7 @@ function update_cache($type) {
                                 ), array(
                             'id=' => $this->category
                         ));
-                    } elseif ($type = 'count_products') {
+                    } elseif ($type == 'count_products') {
                         if (is_array($_REQUEST['v']))
                             foreach ($_REQUEST['v'] as $k => $v)
                                 if (is_array($v))
@@ -1250,7 +1264,7 @@ function update_cache($type) {
                             'sort_cache_created_at_new' => time()), array(
                             'id=' => $this->category
                         ));
-                    }elseif ($type = 'count_products') {
+                    }elseif ($type == 'count_products') {
 
                         if (is_array($_REQUEST['v']))
                             foreach ($_REQUEST['v'] as $k => $v)

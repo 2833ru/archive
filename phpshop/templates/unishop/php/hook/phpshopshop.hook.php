@@ -290,8 +290,6 @@ function sorttemplatehook($value, $n, $title, $vendor) {
                 }
             }
 
-            if ($p[3] != null)
-                $text .= ' (' . $p[3] . ')';
 
             // Определение цвета
             if ($text[0] == '#')
@@ -302,6 +300,7 @@ function sorttemplatehook($value, $n, $title, $vendor) {
                 <input type="checkbox" value="1" name="' . $n . '-' . $p[1] . '" ' . $checked . ' data-url="v[' . $n . ']=' . $p[1] . '"  data-name="' . $n . '-' . $p[1] . '">
                 <span class="filter-item"  title="' . $p[0] . '">' . $text . '</span>
               </label>
+              <small class="pull-right" data-num="' . $n . '-' . $p[1] . '">' . $p[3] . '</small>
             </div>';
             $num++;
         }
@@ -362,9 +361,11 @@ function template_image_gallery($obj, $array) {
                 $name_s = $name;
 
             // Поддержка Webp
-            $name = $obj->setImage($name);
-            $name_s = $obj->setImage($name_s);
-            $name_bigstr = $obj->setImage($name_bigstr);
+            if (method_exists($obj, 'setImage')) {
+                $name = $obj->setImage($name);
+                $name_s = $obj->setImage($name_s);
+                $name_bigstr = $obj->setImage($name_bigstr);
+            }
 
             $bxslider .= '<div><a class href="#"><img src="' . $name_bigstr . '" title="' . $array['name'] . '" alt="' . $array['name'] . '" /></a></div>';
             $bxsliderbig .= '<li><a class href=\'#\'><img src=\'' . $name_bigstr . '\' title=\'' . $array['name'] . '\' alt=\'' . $array['name'] . '\'></a></li>';

@@ -77,7 +77,7 @@ function saferoutewidgetStart() {
       $('input[name="saferouteDop"]').val(data._meta.commonDeliveryData);
       $('#deliveryInfo').html(data._meta.commonDeliveryData);
       $('#DosSumma').html(deliveryCost);
-      $('#TotalSumma').html(total.toFixed(2)- Number($('#SkiSumma').attr('data-discount')));
+      $('#TotalSumma').html(total.toFixed(2));
       $('#saferouteSum').val(deliveryCost);
     }
 

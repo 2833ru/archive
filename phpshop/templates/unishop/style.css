@@ -1488,7 +1488,7 @@ max-width: 33%;
     border-radius: 22px;
     background-image: none;
     font-size: 21px;
-    font-style: normal;\
+    font-style: normal;
     letter-spacing: .07em;
     line-height: 42px;
     white-space: nowrap;
@@ -3722,7 +3722,7 @@ body.modal-open {
     display: inline-block;
     margin-top: 0px;
     margin-left: 5px;
-    color: #606975;
+    /*color: #606975;*/
 }
 #faset-filter-body {
     padding-bottom: 0px;
@@ -5030,3 +5030,6 @@ width: 20%;
 	}
 	}
 
+.filter-item-hide{
+   color: #ddd;
+}

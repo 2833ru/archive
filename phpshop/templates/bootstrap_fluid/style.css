@@ -2500,9 +2500,12 @@ background-repeat: no-repeat;
 background-position: center center;
 }
 
-
 .sidebar-nav {
 padding: 0;
 list-style-type: none;
 border-bottom: 1px solid #e7e7e7;
+}
+
+.filter-item-hide{
+   color: #ddd !important;
 }

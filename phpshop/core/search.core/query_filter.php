@@ -65,7 +65,7 @@ function query_filter($obj) {
         $cat = intval($_REQUEST['cat']);
     else
         $cat = null;
-    
+
     $words = trim(PHPShopSecurity::true_search($_REQUEST['words']));
     $num_row = $obj->num_row;
     $num_ot = $q = 0;
@@ -98,7 +98,7 @@ function query_filter($obj) {
     }
     // Обычный поиск
     else {
-        $wrd=null;
+        $wrd = null;
         foreach ($_WORDS as $w)
             $wrd .= '%' . $w;
 
@@ -110,7 +110,12 @@ function query_filter($obj) {
                 break;
 
             case(2):
-                $sort .= "(name LIKE '$wrd' or content LIKE '$wrd' or description LIKE '$wrd' or keywords LIKE '$wrd' or uid LIKE '$wrd') and ";
+
+                // Учет модуля ProductOption
+                if (!empty($GLOBALS['SysValue']['base']['productoption']['productoption_system']))
+                    $sort .= "(name LIKE '$wrd' or content LIKE '$wrd' or description LIKE '$wrd' or keywords LIKE '$wrd' or uid LIKE '$wrd' or option1 LIKE '$wrd' or option2 LIKE '$wrd' or option3 LIKE '$wrd' or option4 LIKE '$wrd' or option5 LIKE '$wrd') and ";
+                else $sort .= "(name LIKE '$wrd' or content LIKE '$wrd' or description LIKE '$wrd' or keywords LIKE '$wrd' or uid LIKE '$wrd') and ";
+                
                 break;
         }
     }

@@ -16,10 +16,10 @@ DROP TABLE IF EXISTS `phpshop_modules_productoption_system`;
 CREATE TABLE IF NOT EXISTS `phpshop_modules_productoption_system` (
   `id` int(11) NOT NULL auto_increment,
   `option` blob NOT NULL,
-  `version` varchar(64) NOT NULL default '1.3',
+  `version` varchar(64) NOT NULL default '1.0',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 
 
-INSERT INTO `phpshop_modules_productoption_system` VALUES (1,'','1.3');
+INSERT INTO `phpshop_modules_productoption_system` VALUES (1,'','1.4');

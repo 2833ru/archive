@@ -1084,7 +1084,7 @@ function actionStart() {
     $delim_sortvalue[] = array(__('Колонка'), '-', $export_sortdelim);
 
     $delim_sort[] = array('/', '/', $export_sortsdelim);
-    $delim_sort[] = array('\\', '\\', $export_sortsdelim);
+    $delim_sort[] = array('|', '|', $export_sortsdelim);
     $delim_sort[] = array('-', '-', $export_sortsdelim);
     $delim_sort[] = array('&', '&', $export_sortsdelim);
     $delim_sort[] = array(';', ';', $export_sortsdelim);
@@ -1240,7 +1240,7 @@ class sortCheck {
             $this->debug('Есть характеристика "' . $name . '" c ID=' . $check_name['id'] . ' и CATEGORY=' . $check_name['category']);
 
             // Проверка значения характеристики
-            $check_value = (new PHPShopOrm($GLOBALS['SysValue']['base']['sort']))->getOne(['*'], ['name' => '="' . $value . '"']);
+            $check_value = (new PHPShopOrm($GLOBALS['SysValue']['base']['sort']))->getOne(['*'], ['name' => '="' . $value . '"','category'=>'="' . $check_name['id'] . '"']);
             if ($check_value) {
                 $this->debug('Есть значение характеристики "' . $name . '" = "' . $value . '" c ID=' . $check_value['id']);
 

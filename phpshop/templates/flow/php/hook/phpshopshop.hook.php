@@ -274,9 +274,9 @@ function sorttemplatehook($value, $n, $title, $vendor) {
                 $disp .= '<div class="form-group d-flex align-items-center justify-content-between font-size-1 text-lh-lg text-body mb-1">
                 <div class="custom-control custom-checkbox">
     <input type="checkbox" class="custom-control-input" value="1" name="' . $n . '-' . $p[1] . '" ' . $checked . ' data-url="v[' . $n . ']=' . $p[1] . '"  data-name="' . $n . '-' . $p[1] . '" id="filter-' . $p[1] . '">
-    <label class="custom-control-label text-lh-lg" for="filter-' . $p[1] . '">' . $text . '</label>
+    <label class="custom-control-label text-lh-lg filter-item" for="filter-' . $p[1] . '">' . $text . '</label>
     </div>
-    <small>' . $p[3] . '</small>
+    <small data-num="' . $n . '-' . $p[1] . '">' . $p[3] . '</small>
 </div>';
             } else {
                 $disp_limit .= '<div class="form-group d-flex align-items-center justify-content-between font-size-1 text-lh-lg text-body mb-1">
@@ -374,20 +374,22 @@ function template_image_gallery($obj, $array) {
         ksort($sort_data);
 
         foreach ($sort_data as $k => $row) {
-            
-            if($i>10)
+
+            if ($i > 10)
                 continue;
-            
+
             $name = $row['name'];
             $name_s = str_replace(".", "s.", $name);
 
             if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $name_s)) {
                 $name_s = $name;
             }
-            
+
             // Поддержка Webp
-            $name = $obj->setImage($name);
-            $name_s = $obj->setImage($name_s);
+            if (method_exists($obj, 'setImage')) {
+                $name = $obj->setImage($name);
+                $name_s = $obj->setImage($name_s);
+            }
 
             $heroSlider .= '<div class="js-slide"><img class="img-fluid rounded-lg" src="' . $name . '" alt="' . $productTitle . '"></div>';
             $heroSliderNav .= '<div class="js-slide p-1" data-big-image="' . $name . '"><a class="js-slick-thumb-progress d-block avatar avatar-circle border p-1" href="javascript:;"><img class="avatar-img" src="' . $name_s . '" alt="' . $productTitle . '"></a></div>';

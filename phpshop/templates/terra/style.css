@@ -4567,3 +4567,7 @@ img {font-size:6px;}
 padding-right: 5px;
 padding-left: 5px; 	
 }
+
+.filter-item-hide{
+   color: #ddd;
+}

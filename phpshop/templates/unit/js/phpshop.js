@@ -28,7 +28,7 @@ function addToCartList(product_id, num, parent, addname) {
     });
 }
 
-// добавление товара в корзину
+// добавление товара в сравнение
 function addToCompareList(product_id) {
 
     $.ajax({
@@ -231,11 +231,28 @@ function filter_load(filter_str, obj) {
             // Выравнивание ячеек товара
             setEqualHeight(".product-description");
             setEqualHeight(".product-name-fix");
-            setTimeout(function () {
-                //setEqualHeight(".thumbnail");
-                //   setEqualHeight(".caption img");
-            }, 600);
-            // setEqualHeight(".caption img");
+
+            // Блокировкам пустых значений и пересчет количества фильтра
+            if (typeof FILTER_CACHE !== "undefined" && FILTER_CACHE){
+                $('#faset-filter-body [type="checkbox"]').each(function () {
+                    $(this).attr('disabled', 'disabled');
+                    $(this).next('.filter-item').addClass('filter-item-hide');
+
+                    if (FILTER_COUNT)
+                        $('[data-num="' + $(this).attr('name') + '"]').text(0);
+
+                    for (var key in data['filter']) {
+                        if ($(this).attr('name') == key) {
+                            $(this).removeAttr('disabled');
+                            $(this).next('.filter-item').removeClass('filter-item-hide');
+
+                            if (FILTER_COUNT)
+                                $('[data-num="' + $(this).attr('name') + '"]').text(data['filter'][key]);
+                        }
+                    }
+                });
+            }
+
             // lazyLoad
             setTimeout(function () {
                 $(window).lazyLoadXT();
@@ -1296,8 +1313,7 @@ $(document).ready(function () {
 
         var filter_str = window.location.hash.split(']').join('][]');
 
-        // Загрузка результата отборки
-        filter_load(filter_str);
+
 
         // Проставление чекбоксов
         $.ajax({
@@ -1310,6 +1326,9 @@ $(document).ready(function () {
                 if (data) {
                     $("#faset-filter-body").html(data);
                     $("#faset-filter-body").html($("#faset-filter-body").find('td').html());
+
+                    // Загрузка результата отборки
+                    filter_load(filter_str);
                 }
             }
         });
@@ -1867,7 +1886,7 @@ $(document).ready(function () {
             if (parent_img != "") {
 
                 $(".bx-pager img").each(function (index, el) {
-                    if ($(this).attr('src') == parent_img || $(this).attr('src') == parent_img.split('.jpg').join('s.jpg') ) {
+                    if ($(this).attr('src') == parent_img || $(this).attr('src') == parent_img.split('.jpg').join('s.jpg')) {
                         slider.goToSlide(index);
                     }
 
@@ -2091,7 +2110,7 @@ $(document).ready(function () {
             expires: 365
         });
     });
-    
+
 });
 
 $('form[name="ajax-form"]').on('submit', function (e) {
@@ -2210,7 +2229,7 @@ if ($("#recaptcha_default").length || $("#recaptcha_returncall").length) {
                     grecaptcha.ready(function () {
                         if ($("#recaptcha_default").length)
                             grecaptcha.render("recaptcha_default", {"sitekey": $("#recaptcha_default").attr('data-key'), "size": $("#recaptcha_default").attr('data-size')});
-                        
+
                         if ($("#recaptcha_returncall").length)
                             grecaptcha.render("recaptcha_returncall", {"sitekey": $("#recaptcha_returncall").attr('data-key'), "size": $("#recaptcha_returncall").attr('data-size')});
 

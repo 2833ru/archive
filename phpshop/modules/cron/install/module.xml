@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.7</version>
+    <version>1.8</version>
     <name>Задачи</name>
     <faqlink>https://docs.phpshop.ru/moduli/razrabotchikam/cron</faqlink>
     <description>Модуль запуска задач по времени.</description>

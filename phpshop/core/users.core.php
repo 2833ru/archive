@@ -32,7 +32,7 @@ class PHPShopUsers extends PHPShopCore {
 
         // Префикс для экшенов методов
         $this->action_prefix = 'action_';
-
+        
         // Элемент формы авторизациии пользователя
         $this->PHPShopUserElement = new PHPShopUserElement();
 
@@ -40,6 +40,10 @@ class PHPShopUsers extends PHPShopCore {
         $this->locale = array();
 
         parent::__construct();
+        
+        // Каптча выключена
+        if ($this->PHPShopSystem->ifSerilizeParam('admoption.user_captcha_enabled'))
+            $this->no_captcha = true;
 
         // Проверка на подтверждение активации
         if ($this->PHPShopSystem->ifSerilizeParam('admoption.user_mail_activate') or $this->PHPShopSystem->ifSerilizeParam('admoption.user_mail_activate_pre'))

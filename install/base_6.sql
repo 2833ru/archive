@@ -117,17 +117,19 @@ CREATE TABLE IF NOT EXISTS `phpshop_categories` (
   KEY `servers` (`servers`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-INSERT INTO `phpshop_categories` (`id`, `name`, `num`, `parent_to`, `yml`, `num_row`, `num_cow`, `sort`, `content`, `vid`, `servers`, `title`, `title_enabled`, `title_shablon`, `descrip`, `descrip_enabled`, `descrip_shablon`, `keywords`, `keywords_enabled`, `keywords_shablon`, `skin`, `skin_enabled`, `order_by`, `order_to`, `secure_groups`, `icon`, `icon_description`, `dop_cat`, `parent_title`, `sort_cache`, `sort_cache_created_at`, `menu`, `cat_seo_name`, `cat_seo_name_old`, `tile`) VALUES
-(1, 'Каталог1', 1, 0, '1', '4', 0, 0x613a313a7b693a303b733a313a2234223b7d, '<p>Описание каталога</p>', '0', '', '', '0', '', '', '0', '', '', '0', '', '', '0', '1', '1', '', '/UserFiles/Image/trial/catalog410x200-01.png', '', '', 0, NULL, NULL, '0', 'katalog1', '', '0'),
-(2, 'Подкаталог1', 1, 1, '1', '3', 0, 0x613a323a7b693a303b733a313a2234223b693a313b733a313a2236223b7d, '<p>Описание каталога</p>', '0', '', '', '0', '', '', '0', '', '', '0', '', '', '0', '1', '1', '', '/UserFiles/Image/trial/catalog410x200-02.png', '', '', 0, NULL, NULL, '1', 'katalog1-podkatalog1', '', '1'),
-(3, 'Подкаталог2', 1, 1, '1', '3', 0, 0x613a313a7b693a303b733a313a2234223b7d, '', '0', '', '', '0', '', '', '0', '', '', '0', '', '', '0', '1', '1', '', '/UserFiles/Image/trial/catalog410x200-05.png', '', '', 0, NULL, NULL, '0', 'katalog1-podkatalog2', '', '1'),
-(4, 'Подкаталог3', 1, 1, '1', '3', 0, 0x613a313a7b693a303b733a313a2234223b7d, '', '0', '', '', '0', '', '', '0', '', '', '0', '', '', '0', '1', '1', '', '/UserFiles/Image/trial/catalog410x200-06.png', '', '', 0, NULL, NULL, '0', 'katalog1-podkatalog3', '', '1'),
-(5, 'Под-подкаталог1', 1, 2, '1', '3', 0, 0x613a323a7b693a303b733a313a2234223b693a313b733a313a2236223b7d, '', '0', '', '', '0', '', '', '0', '', '', '0', '', '', '0', '1', '1', '', '/UserFiles/Image/trial/catalog410x200-03.png', '', '', 0, NULL, NULL, '0', 'podkatalog1-pod-podkatalog1', '', '0'),
-(6, 'Под-подкаталог2', 1, 2, '1', '3', 0, 0x613a313a7b693a303b733a313a2234223b7d, '', '0', '', '', '0', '', '', '0', '', '', '0', '', '', '0', '1', '1', '', '/UserFiles/Image/trial/catalog410x200-04.png', '', '', 0, NULL, NULL, '0', 'podkatalog1-pod-podkatalog2', '', '0'),
-(7, 'Каталог2', 1, 0, '1', '1', 0, 0x613a313a7b693a303b733a313a2236223b7d, '', '0', '', '', '0', '', '', '0', '', '', '0', '', '', '0', '1', '1', '', '/UserFiles/Image/trial/catalog410x200-07.png', '', '', 0, NULL, NULL, '0', 'katalog2', '', '1'),
-(8, 'Подкаталог1', 1, 7, '1', '3', 0, 0x613a323a7b693a303b733a313a2236223b693a313b733a313a2234223b7d, '', '0', '', '', '0', '', '', '0', '', '', '0', '', '', '0', '1', '1', '', '/UserFiles/Image/trial/catalog410x200-08.png', '', '', 0, NULL, NULL, '0', 'katalog2-podkatalog1', '', '0'),
-(9, 'Подкаталог2', 1, 7, '1', '3', 0, 0x613a313a7b693a303b733a313a2236223b7d, '', '0', '', '', '0', '', '', '0', '', '', '0', '', '', '0', '1', '1', '', '/UserFiles/Image/trial/catalog410x200-01.png', '', '', 0, NULL, NULL, '0', 'katalog2-podkatalog2', '', '1'),
-(10, 'Каталог3', 1, 0, '1', '3', 0, 0x613a313a7b693a303b733a313a2234223b7d, '', '0', '', '', '0', '', '', '0', '', '', '0', '', '', '0', '1', '1', '', '/UserFiles/Image/trial/catalog410x200-09.png', '', '', 0, NULL, NULL, '0', 'katalog3', '', '1');
+INSERT INTO `phpshop_categories` (`id`, `name`, `num`, `parent_to`, `yml`, `num_row`, `num_cow`, `sort`, `content`, `vid`, `servers`, `title`, `title_enabled`, `title_shablon`, `descrip`, `descrip_enabled`, `descrip_shablon`, `keywords`, `keywords_enabled`, `keywords_shablon`, `skin`, `skin_enabled`, `order_by`, `order_to`, `secure_groups`, `icon`, `icon_description`, `dop_cat`, `parent_title`, `sort_cache`, `sort_cache_created_at`, `menu`, `cat_seo_name`, `cat_seo_name_old`, `tile`, `length`, `width`, `height`, `weight`, `ed_izm`, `color`) VALUES
+(1, 'Каталог1', 1, 0, '1', '4', 0, 0x613a323a7b693a303b733a313a2237223b693a313b733a313a2234223b7d, '<p>Описание каталога</p>', '0', '', '', '0', '', '', '0', '', '', '0', '', '', '0', '1', '1', '', '/UserFiles/Image/trial/catalog410x200-01.png', '', '', 0, '', 0, '0', 'katalog1', '', '0', '', '', '', 0, '', ''),
+(2, 'Подкаталог1', 1, 1, '1', '3', 0, 0x613a323a7b693a303b733a313a2237223b693a313b733a313a2234223b7d, '<p>Описание каталога</p>', '0', '', '', '0', '', '', '0', '', '', '0', '', '', '0', '1', '1', '', '/UserFiles/Image/trial/catalog410x200-02.png', '', '', 0, '', 0, '1', 'katalog1-podkatalog1', '', '1', '', '', '', 0, '', ''),
+(3, 'Подкаталог2', 1, 1, '1', '3', 0, 0x613a323a7b693a303b733a313a2237223b693a313b733a313a2234223b7d, '', '0', '', '', '0', '', '', '0', '', '', '0', '', '', '0', '1', '1', '', '/UserFiles/Image/trial/catalog410x200-05.png', '', '', 0, '', 0, '0', 'katalog1-podkatalog2', '', '1', '', '', '', 0, '', ''),
+(4, 'Подкаталог3', 1, 1, '1', '3', 0, 0x613a323a7b693a303b733a313a2237223b693a313b733a313a2234223b7d, '', '0', '', '', '0', '', '', '0', '', '', '0', '', '', '0', '1', '1', '', '/UserFiles/Image/trial/catalog410x200-06.png', '', '', 0, '', 0, '0', 'katalog1-podkatalog3', '', '1', '', '', '', 0, '', ''),
+(5, 'Под-подкаталог1', 1, 2, '1', '3', 0, 0x613a323a7b693a303b733a313a2237223b693a313b733a313a2234223b7d, '', '0', '', '', '0', '', '', '0', '', '', '0', '', '', '0', '1', '1', '', '/UserFiles/Image/trial/catalog410x200-03.png', '', '', 0, '', 0, '0', 'podkatalog1-pod-podkatalog1', '', '0', '', '', '', 0, '', ''),
+(6, 'Под-подкаталог2', 1, 2, '1', '3', 0, 0x613a323a7b693a303b733a313a2237223b693a313b733a313a2234223b7d, '', '0', '', '', '0', '', '', '0', '', '', '0', '', '', '0', '1', '1', '', '/UserFiles/Image/trial/catalog410x200-04.png', '', '', 0, '', 0, '0', 'podkatalog1-pod-podkatalog2', '', '0', '', '', '', 0, '', ''),
+(7, 'Каталог2', 1, 0, '1', '1', 0, 0x613a323a7b693a303b733a313a2237223b693a313b733a313a2234223b7d, '', '0', '', '', '0', '', '', '0', '', '', '0', '', '', '0', '1', '1', '', '/UserFiles/Image/trial/catalog410x200-07.png', '', '', 0, '', 0, '0', 'katalog2', '', '1', '', '', '', 0, '', ''),
+(8, 'Подкаталог1', 1, 7, '1', '3', 0, 0x613a323a7b693a303b733a313a2237223b693a313b733a313a2234223b7d, '', '0', '', '', '0', '', '', '0', '', '', '0', '', '', '0', '1', '1', '', '/UserFiles/Image/trial/catalog410x200-08.png', '', '', 0, '', 0, '0', 'katalog2-podkatalog1', '', '0', '', '', '', 0, '', ''),
+(9, 'Подкаталог2', 1, 7, '1', '3', 0, 0x613a323a7b693a303b733a313a2237223b693a313b733a313a2234223b7d, '', '0', '', '', '0', '', '', '0', '', '', '0', '', '', '0', '1', '1', '', '/UserFiles/Image/trial/catalog410x200-01.png', '', '', 0, '', 0, '0', 'katalog2-podkatalog2', '', '1', '', '', '', 0, '', ''),
+(10, 'Каталог3', 1, 0, '1', '3', 0, 0x613a323a7b693a303b733a313a2237223b693a313b733a313a2234223b7d, '', '0', '', '', '0', '', '', '0', '', '', '0', '', '', '0', '1', '1', '', '/UserFiles/Image/trial/catalog410x200-09.png', '', '', 0, '', 0, '0', 'katalog3', '', '1', '', '', '', 0, '', '');
+
+--
 
 DROP TABLE IF EXISTS `phpshop_citylist_city`;
 CREATE TABLE IF NOT EXISTS `phpshop_citylist_city` (
@@ -1218,11 +1220,6 @@ INSERT INTO `phpshop_sort` (`id`, `name`, `category`, `num`, `page`, `icon`, `de
 (1, '100х100', 4, 1, '', '', NULL, '', '', ''),
 (8, '100х300', 4, 3, '', '', NULL, '', '', ''),
 (7, '100х200', 4, 2, '', '', NULL, '', '', ''),
-(9, '100 гр.', 6, 1, '', '', NULL, '', '', ''),
-(10, '200 гр.', 6, 2, '', '', NULL, '', '', ''),
-(11, '300 гр.', 6, 3, '', '', NULL, '', '', ''),
-(12, '400 гр.', 6, 4, '', '', NULL, '', '', ''),
-(13, '500 гр.', 6, 5, '', '', NULL, '', '', ''),
 (15, 'Brand1', 7, 1, '', '/UserFiles/Image/trial/logo1.svg', '', 'brand1', '', ''),
 (16, 'Brand2', 7, 2, '', '/UserFiles/Image/trial/logo2.svg', '', 'brand2', '', ''),
 (17, 'Brand3', 7, 3, '', '/UserFiles/Image/trial/logo3.svg', '', 'brand3', '', '');
@@ -1250,13 +1247,11 @@ CREATE TABLE IF NOT EXISTS `phpshop_sort_categories` (
   KEY `category` (`category`)
 ) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=cp1251;
 
+
 INSERT INTO `phpshop_sort_categories` (`id`, `name`, `num`, `category`, `filtr`, `description`, `goodoption`, `optionname`, `page`, `brand`, `product`, `virtual`, `yandex_param`, `yandex_param_unit`, `servers`, `show_preview`) VALUES
 (4, 'Размер', 0, 3, '1', '', '0', '0', '', '0', '0', '0', '1', '', '', '1'),
-(3, 'Группа для каталога 1', 0, 0, '0', '', '0', '0', '', '0', '0', '0', '1', '', '', '0'),
-(5, 'Группа для каталога 2', 0, 0, '0', '', '0', '0', '', '0', '0', '0', '1', '', '', '0'),
-(6, 'Вес', 0, 5, '1', '', '1', '0', '', '0', '0', '0', '1', '', '', '0'),
+(3, 'Общая группа', 0, 0, '0', '', '0', '0', '', '0', '0', '0', '1', '', '', '0'),
 (7, 'Бренды', 0, 3, '1', '', '0', '0', '', '1', '0', '0', '1', '', '', '0');
-COMMIT;
 
 DROP TABLE IF EXISTS `phpshop_system`;
 CREATE TABLE IF NOT EXISTS `phpshop_system` (

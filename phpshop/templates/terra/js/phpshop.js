@@ -203,6 +203,27 @@ function filter_load(filter_str, obj) {
 
                 // Выравнивание ячеек товара
                 //setEqualHeight(".description");
+                
+            // Блокировкам пустых значений и пересчет количества фильтра
+            if (typeof FILTER_CACHE !== "undefined" && FILTER_CACHE) {
+                $('#faset-filter-body [type="checkbox"]').each(function () {
+                    $(this).attr('disabled', 'disabled');
+                    $(this).next('.filter-item').addClass('filter-item-hide');
+
+                    if (FILTER_COUNT)
+                        $('[data-num="' + $(this).attr('name') + '"]').text(0);
+
+                    for (var key in data['filter']) {
+                        if ($(this).attr('name') == key) {
+                            $(this).removeAttr('disabled');
+                            $(this).next('.filter-item').removeClass('filter-item-hide');
+
+                            if (FILTER_COUNT)
+                                $('[data-num="' + $(this).attr('name') + '"]').text(data['filter'][key]);
+                        }
+                    }
+                });
+            }
 
                 // lazyLoad
                 setTimeout(function () {
@@ -555,8 +576,7 @@ $(document).ready(function () {
 
         var filter_str = window.location.hash.split(']').join('][]');
 
-        // Загрузка результата отборки
-        filter_load(filter_str);
+
 
         // Проставление чекбоксов
         $.ajax({
@@ -570,6 +590,9 @@ $(document).ready(function () {
                 if (data) {
                     $("#faset-filter-body").html(data);
                     $("#faset-filter-body").html($("#faset-filter-body").find('td').html());
+                    
+                    // Загрузка результата отборки
+                    filter_load(filter_str);
                 }
             }
         });

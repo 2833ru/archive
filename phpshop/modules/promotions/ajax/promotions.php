@@ -21,13 +21,11 @@ PHPShopObj::loadClass("cart");
 PHPShopObj::loadClass("security");
 PHPShopObj::loadClass("user");
 
-// Подключаем библиотеку поддержки JsHttpRequest
 $_REQUEST['promocode'] = PHPShopString::utf8_win1251($_REQUEST['promocode']);
 $_REQUEST['sum'] = PHPShopString::utf8_win1251($_REQUEST['sum']);
 $_REQUEST['ssum'] = PHPShopString::utf8_win1251($_REQUEST['ssum']);
 $_REQUEST['tipoplcheck'] = PHPShopString::utf8_win1251($_REQUEST['tipoplcheck']);
 $_REQUEST['wsum'] = PHPShopString::utf8_win1251($_REQUEST['wsum']);
-
 
 // Подключаем библиотеку доставки
 require_once $_classPath . "core/order.core/delivery.php";
