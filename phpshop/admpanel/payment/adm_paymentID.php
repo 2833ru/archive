@@ -43,13 +43,14 @@ function actionStart() {
     $Tab1.=$PHPShopGUI->setField('Цвет', $PHPShopGUI->setInputColor('color_new', $data['color']));
 
     $Tab1.=$PHPShopGUI->setCollapse('Сообщение после заказа', $PHPShopGUI->setField("Заголовок:", $PHPShopGUI->setInput("text", "message_header_new", $data['message_header'])) . $PHPShopGUI->setField("Сообщение", $oFCKeditor->AddGUI()));
-
+    
+    $Tab2=$PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'));
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1, 350));
+    $PHPShopGUI->setTab(array("Основное", $Tab1), array("Дополнительно", $Tab2, true));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =
@@ -125,6 +126,14 @@ function actionUpdate() {
 
     // Корректировка пустых значений
     $PHPShopOrm->updateZeroVars('yur_data_flag_new');
+    
+        // Мультибаза
+    if (is_array($_POST['servers'])) {
+        $_POST['servers_new'] = "";
+        foreach ($_POST['servers'] as $v)
+            if ($v != 'null' and !strstr($v, ','))
+                $_POST['servers_new'].="i" . $v . "i";
+    }
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);

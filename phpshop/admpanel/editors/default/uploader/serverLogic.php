@@ -44,13 +44,13 @@ function fotoAdd() {
 
         if (!empty($parent_to)) {
             $PHPShopCategory = new PHPShopCategory($parent_to);
-            $pathName .= '/' . ucfirst(PHPShopString::toLatin($PHPShopCategory->getName()));
+            $pathName = ucfirst(PHPShopString::toLatin($PHPShopCategory->getName())) . '/' . $pathName;
             $parent_to = $PHPShopCategory->getParam('parent_to');
         }
 
         if (!empty($parent_to)) {
             $PHPShopCategory = new PHPShopCategory($parent_to);
-            $pathName .= '/' . ucfirst(PHPShopString::toLatin($PHPShopCategory->getName()));
+            $pathName = '/' . ucfirst(PHPShopString::toLatin($PHPShopCategory->getName())) . '/' . $pathName;
         }
 
         $path .= $pathName . '/';
@@ -58,6 +58,9 @@ function fotoAdd() {
         if (!is_dir($_SERVER['DOCUMENT_ROOT'] . $path))
             @mkdir($_SERVER['DOCUMENT_ROOT'] . $path, 0777, true);
     }
+    
+    // Корекция
+    $path = str_replace('//','/',$path);
 
     // Соль
     $RName = rand(10000, 99999);
@@ -159,16 +162,16 @@ function fotoAdd() {
 
                 // Image
                 if (!empty($watermark) and file_exists($_SERVER['DOCUMENT_ROOT'] . $watermark))
-                    $thumb->createWatermark($_SERVER['DOCUMENT_ROOT'] . $watermark, $PHPShopSystem->getSerilizeParam('admoption.watermark_right'), $PHPShopSystem->getSerilizeParam('admoption.watermark_bottom'));
+                    $thumb->createWatermark($_SERVER['DOCUMENT_ROOT'] . $watermark, $PHPShopSystem->getSerilizeParam('admoption.watermark_right'), $PHPShopSystem->getSerilizeParam('admoption.watermark_bottom'), $PHPShopSystem->getSerilizeParam('admoption.watermark_center_enabled'));
                 // Text
                 elseif (!empty($watermark_text))
-                    $thumb->createWatermarkText($watermark_text, $PHPShopSystem->getSerilizeParam('admoption.watermark_text_size'), $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . '/phpshop/lib/font/' . $PHPShopSystem->getSerilizeParam('admoption.watermark_text_font') . '.ttf', $PHPShopSystem->getSerilizeParam('admoption.watermark_right'), $PHPShopSystem->getSerilizeParam('admoption.watermark_bottom'), $PHPShopSystem->getSerilizeParam('admoption.watermark_text_color'), $PHPShopSystem->getSerilizeParam('admoption.watermark_text_alpha'), 0);
+                    $thumb->createWatermarkText($watermark_text, $PHPShopSystem->getSerilizeParam('admoption.watermark_text_size'), $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . '/phpshop/lib/font/' . $PHPShopSystem->getSerilizeParam('admoption.watermark_text_font') . '.ttf', $PHPShopSystem->getSerilizeParam('admoption.watermark_right'), $PHPShopSystem->getSerilizeParam('admoption.watermark_bottom'), $PHPShopSystem->getSerilizeParam('admoption.watermark_text_color'), $PHPShopSystem->getSerilizeParam('admoption.watermark_text_alpha'), 0, $PHPShopSystem->getSerilizeParam('admoption.watermark_center_enabled'));
 
                 $thumb->save($file_big);
             }
         }
 
-        if (!$PHPShopSystem->ifSerilizeParam('admoption.image_save_name') and ! empty($tmp_file))
+        if (!$PHPShopSystem->ifSerilizeParam('admoption.image_save_name') and !empty($tmp_file))
             unlink($tmp_file);
 
         switch ($_REQUEST['path']) {

@@ -14,7 +14,7 @@ function actionStart() {
     $option = unserialize($data['1c_option']);
 
     $PHPShopGUI->action_button['CRM Журнал'] = array(
-        'name' => 'Журнал операций',
+        'name' => __('Журнал операций'),
         'action' => 'report.crm',
         'class' => 'btn btn-default btn-sm navbar-btn btn-action-panel',
         'type' => 'button',

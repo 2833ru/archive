@@ -25,14 +25,14 @@ function mailNotice($type, $until_day, $promo = null) {
                 new PHPShopMail($PHPShopSystem->getEmail(), $PHPShopSystem->getEmail(), __('Заканчивается техническая поддержка для сайта') . ' ' . $_SERVER['SERVER_NAME'], $userContent, "text/html");
 
                 break;
+            /*
+              case "promo":
+              PHPShopParser::set('promo', $promo);
+              PHPShopParser::set('day', $until_day);
+              $userContent = PHPShopParser::file("tpl/promo.mail.tpl", true, false);
+              new PHPShopMail($PHPShopSystem->getEmail(), $PHPShopSystem->getEmail(), __('Получите скидку 2500 руб. на покупку для сайта') . ' ' . $_SERVER['SERVER_NAME'], $userContent, "text/html");
 
-            case "promo":
-                PHPShopParser::set('promo', $promo);
-                PHPShopParser::set('day', $until_day);
-                $userContent = PHPShopParser::file("tpl/promo.mail.tpl", true, false);
-                new PHPShopMail($PHPShopSystem->getEmail(), $PHPShopSystem->getEmail(), __('Получите скидку 2500 руб. на покупку для сайта') . ' ' . $_SERVER['SERVER_NAME'], $userContent, "text/html");
-
-                break;
+              break; */
         }
 
         $option[$type . '_notice'] = true;
@@ -55,7 +55,7 @@ function actionStart() {
     if (is_array($data)) {
         foreach ($data as $row) {
             if (strlen($row['name']) > 5)
-                $search_jurnal.='<a href="?path=report.searchjurnal" class="btn btn-default btn-xs search_var">' . PHPShopSecurity::true_search(substr($row['name'], 0, 30)) . '</a> ';
+                $search_jurnal .= '<a href="?path=report.searchjurnal" class="btn btn-default btn-xs search_var">' . PHPShopSecurity::true_search(substr($row['name'], 0, 30)) . '</a> ';
         }
     }
 
@@ -76,20 +76,20 @@ function actionStart() {
     if (is_array($_GET['where'])) {
         foreach ($_GET['where'] as $k => $v) {
             if (!empty($v))
-                $where.= ' ' . $k . ' = "' . $v . '" or';
+                $where .= ' ' . $k . ' = "' . $v . '" or';
         }
 
         if ($where)
             $where = 'where' . substr($where, 0, strlen($where) - 2);
 
         // Дата
-        if (!empty($_GET['date_start']) and !empty($_GET['date_end'])) {
+        if (!empty($_GET['date_start']) and ! empty($_GET['date_end'])) {
             if ($where)
-                $where.=' and ';
+                $where .= ' and ';
             else
                 $where = ' where ';
-            $where.=' a.datas between ' . (PHPShopDate::GetUnixTime($_GET['date_start']) - 1) . ' and ' . (PHPShopDate::GetUnixTime($_GET['date_end']) + 259200 / 2) . '  ';
-            $TitlePage.=' с ' . $_GET['date_start'] . ' по ' . $_GET['date_end'];
+            $where .= ' a.datas between ' . (PHPShopDate::GetUnixTime($_GET['date_start']) - 1) . ' and ' . (PHPShopDate::GetUnixTime($_GET['date_end']) + 259200 / 2) . '  ';
+            $TitlePage .= ' с ' . $_GET['date_start'] . ' по ' . $_GET['date_end'];
         }
     }
 
@@ -107,35 +107,35 @@ function actionStart() {
     // Проверка обновлений
     if ($PHPShopBase->Rule->CheckedRules('update', 'view'))
         if (!isset($_SESSION['update_check'])) {
-            define("UPDATE_PATH", "http://www.phpshop.ru/update/update5.php?from=" . $_SERVER['SERVER_NAME'] . "&version=" . $GLOBALS['SysValue']['upload']['version'] . "&support=" . $License['License']['SupportExpires'] . '&serial=' . $License['License']['Serial'] . '&path=intro');
-
+            define("UPDATE_PATH", "http://www.phpshop.ru/update/update5.php?from=" . $License['License']['DomenLocked'] . "&version=" . $GLOBALS['SysValue']['upload']['version'] . "&support=" . $License['License']['SupportExpires'] . '&serial=' . $License['License']['Serial'] . '&path=intro');
+            
             $update_enable = @xml2array(UPDATE_PATH, "update", true);
             if (is_array($update_enable) and $update_enable['status'] != 'no_update') {
                 $_SESSION['update_check'] = intval($update_enable['name'] - $update_enable['num']);
-            }
-            else
+            } else
                 $_SESSION['update_check'] = 0;
         }
 
 
     if ($License['License']['Pro'] == 'Start') {
         $_SESSION['mod_limit'] = 5;
-    }
-    else
+    } else
         $_SESSION['mod_limit'] = 50;
 
     // Заканчивается поддержка
-    $LicenseUntilUnixTime = $License['License']['SupportExpires'];
-    $until = $LicenseUntilUnixTime - date("U");
-    $until_day = round($until / (24 * 60 * 60));
-    if (is_numeric($LicenseUntilUnixTime))
-        if ($until_day < 8 and $until_day > 0) {
-            mailNotice('support', $until_day);
-            $search_jurnal = __('В течение 1 месяца для Вас действует <b>льготный тариф на техподдержку</b>, чтобы Вы смогли своевременно получать обновления и технические консультации в течение года.');
-            $search_jurnal_title = __('Техническая поддержка заканчивается через') . ' <span class="label label-warning">' . abs(round($until_day)) . '  ' . __('дней') . '</span><a class="pull-right btn btn-xs btn-default" href="http://phpshop.ru/order/" target="_blank"><span class="glyphicon glyphicon-ruble"></span> ' . __('Купить') . '</a>';
-            $search_jurnal_class = 'panel-success';
-            $search_jairnal_icon = 'exclamation-sign';
-        }
+    if ($License['License']['RegisteredTo'] != 'Trial NoName') {
+        $LicenseUntilUnixTime = $License['License']['SupportExpires'];
+        $until = $LicenseUntilUnixTime - date("U");
+        $until_day = round($until / (24 * 60 * 60));
+        if (is_numeric($LicenseUntilUnixTime))
+            if ($until_day < 8 and $until_day > 0) {
+                mailNotice('support', $until_day);
+                $search_jurnal = __('До конца месяца для вас действует <b>скидка 50%</b> на продление техподдержки, чтобы вы смогли своевременно получать обновления и технические консультации в течение года.');
+                $search_jurnal_title = __('Техническая поддержка заканчивается через') . ' <span class="label label-warning">' . abs(round($until_day)) . '  ' . __('дн.') . '</span><a class="pull-right btn btn-xs btn-default" href="https://www.phpshop.ru/order/" target="_blank"><span class="glyphicon glyphicon-ruble"></span> ' . __('Купить') . '</a>';
+                $search_jurnal_class = 'panel-success';
+                $search_jairnal_icon = 'exclamation-sign';
+            }
+    }
 
     // Заканчивается лицензия
     $LicenseUntilUnixTime = $License['License']['Expires'];
@@ -148,27 +148,28 @@ function actionStart() {
     $min = ($until_promo / 60) % 60;
     if (is_numeric($LicenseUntilUnixTime)) {
         $until_promo_str = $LicenseUntilUnixTime - 15 * 24 * 60 * 60;
-        mailNotice('promo', PHPShopDate::get($until_promo_str, true), getCupon($LicenseUntilUnixTime));
-
+        //mailNotice('promo', PHPShopDate::get($until_promo_str, true), getCupon($LicenseUntilUnixTime));
         // Купон
-        if ($until_promo > 0) {
+        /*
+          if ($until_promo > 0) {
 
-            if ($day <= 3)
-                $css_promo = "text-danger";
-            else
-                $css_promo = null;
+          if ($day <= 3)
+          $css_promo = "text-danger";
+          else
+          $css_promo = null;
 
 
-            $search_jurnal = __('Используйте купон <b class="text-success">' . getCupon($LicenseUntilUnixTime) . '</b> при оформлении заказа и получите скидку <b>2500 руб.</b> До конца акции осталось <span class="' . $css_promo . '"><b>' . $day . '</b> дней <b>' . ($hour % 24) . '</b> часов <b>' . $min . '</b> минут</span>.');
-            $search_jurnal_title = __('Получите скидку') . '<a class="pull-right btn btn-xs btn-default" href="http://phpshop.ru/order/?code=' . getCupon($LicenseUntilUnixTime) . '" target="_blank"><span class="glyphicon glyphicon-ruble"></span> ' . __('Купить') . '</a>';
-            $search_jurnal_class = 'panel-primary';
-            $search_jairnal_icon = 'exclamation-sign';
-        }
+          $search_jurnal = __('Используйте купон <b class="text-success">' . getCupon($LicenseUntilUnixTime) . '</b> при оформлении заказа и получите скидку <b>2500 руб.</b> До конца акции осталось <span class="' . $css_promo . '"><b>' . $day . '</b> дней <b>' . ($hour % 24) . '</b> часов <b>' . $min . '</b> минут</span>.');
+          $search_jurnal_title = __('Получите скидку') . '<a class="pull-right btn btn-xs btn-default" href="http://phpshop.ru/order/?code=' . getCupon($LicenseUntilUnixTime) . '" target="_blank"><span class="glyphicon glyphicon-ruble"></span> ' . __('Купить') . '</a>';
+          $search_jurnal_class = 'panel-primary';
+          $search_jairnal_icon = 'exclamation-sign';
+          }
+         */
         // Сообщение
-        else if ($until_day < 8 and $until_day > 0) {
+        if ($until_day < 8 and $until_day > 0) {
             mailNotice('license', $until_day);
             $search_jurnal = __('Для перехода на полную версию необходимо приобрести лицензию. <b>Все изменения, произведенные на демо-версии сайта, сохранятся</b>.');
-            $search_jurnal_title = __('Лицензия заканчивается через') . ' <span class="label label-primary">' . abs(round($until_day)) . '  ' . __('дней') . '</span><a class="pull-right btn btn-xs btn-primary" href="http://phpshop.ru/order/" target="_blank"><span class="glyphicon glyphicon-ruble"></span> ' . __('Купить') . '</a>';
+            $search_jurnal_title = __('Лицензия заканчивается через') . ' <span class="label label-primary">' . abs(round($until_day)) . '  ' . __('дн.') . '</span><a class="pull-right btn btn-xs btn-primary" href="https://www.phpshop.ru/order/?from=' . $_SERVER['SERVER_NAME'] . '" target="_blank"><span class="glyphicon glyphicon-ruble"></span> ' . __('Купить') . '</a>';
             $search_jurnal_class = 'panel-danger';
             $search_jairnal_icon = 'exclamation-sign';
         }
@@ -191,6 +192,13 @@ function actionStart() {
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
     $PHPShopOrm->Option['where'] = ' or ';
     $PHPShopOrm->debug = false;
+
+    // Права
+    if (!$PHPShopBase->Rule->CheckedRules('order', 'remove')) {
+        $where .= 'where a.admin=' . $_SESSION['idPHPSHOP'];
+    }
+
+
     $PHPShopOrm->sql = 'SELECT a.*, b.mail, b.name FROM ' . $GLOBALS['SysValue']['base']['orders'] . ' AS a 
         LEFT JOIN ' . $GLOBALS['SysValue']['base']['shopusers'] . ' AS b ON a.user = b.id  ' . $where . ' 
             order by a.id desc limit 8';
@@ -204,7 +212,7 @@ function actionStart() {
             // Библиотека заказа
             $PHPShopOrder = new PHPShopOrderFunction($row['id'], $row);
 
-            if (empty($row['fio']) and !empty($row['name']))
+            if (empty($row['fio']) and ! empty($row['name']))
                 $row['fio'] = $row['name'];
             elseif (empty($row['fio']) and empty($row['name']))
                 $row['fio'] = $row['mail'];
@@ -222,18 +230,22 @@ function actionStart() {
             else
                 $uid = $row['uid'];
 
-            if (empty($row['fio']) and !empty($row['name']))
+            if (empty($row['fio']) and ! empty($row['name']))
                 $row['fio'] = $row['name'];
 
+            if (!empty($row['user']))
+                $user_link = '?path=shopusers&id=' . $row['user'];
+            else
+                $user_link = null;
 
-            $PHPShopInterface->setRow(array('name' => '<span class="hidden-xs hidden-md label label-info" title="' . $status_name . '" style="background-color:' . $PHPShopOrder->getStatusColor() . '"><span class="hidden-xs hidden-md">' . substr($status_name, 0, 25) . '</span></span>', 'link' => '?path=order&return=intro&id=' . $row['id'], 'class' => 'label-link'), array('name' => $uid, 'link' => '?path=order&return=intro&id=' . $row['id']), array('name' => $row['fio'], 'link' => '?path=shopusers&return=intro&id=' . $row['user']), array('name' => $datas, 'class' => 'text-muted hidden-xs'), array('name' => $PHPShopOrder->getTotal(false, ' ') . ' ' . $currency, 'align' => 'right', 'class' => 'strong'));
+            $PHPShopInterface->setRow(array('name' => '<span class="hidden-xs hidden-md label label-info" title="' . $status_name . '" style="background-color:' . $PHPShopOrder->getStatusColor() . '"><span class="hidden-xs hidden-md">' . mb_substr($status_name, 0, 20) . '</span></span>', 'link' => '?path=order&return=intro&id=' . $row['id'], 'class' => 'label-link'), array('name' => $uid, 'link' => '?path=order&return=intro&id=' . $row['id']), array('name' => mb_substr($row['fio'], 0, 20), 'link' => $user_link, 'title' => $row['fio']), array('name' => $datas, 'class' => 'text-muted hidden-xs'), array('name' => $PHPShopOrder->getTotal(false, ' ') . ' ' . $currency, 'align' => 'right', 'class' => 'strong'));
         }
 
     if (is_array($canvas_data)) {
         krsort($canvas_data);
         foreach ($canvas_data as $row) {
-            $canvas_value.='"' . $row['sum'] . '",';
-            $canvas_label.='"' . date("d", $row['datas']) . '.' . date("m", $row['datas']) . '",';
+            $canvas_value .= '"' . $row['sum'] . '",';
+            $canvas_label .= '"' . date("d", $row['datas']) . '.' . date("m", $row['datas']) . '",';
         }
     }
 
@@ -261,7 +273,7 @@ function actionStart() {
 
 
     // Права менеджеров
-    if ($PHPShopSystem->ifSerilizeParam('admoption.rule_enabled', 1) and !$PHPShopBase->Rule->CheckedRules('catalog', 'remove')) {
+    if ($PHPShopSystem->ifSerilizeParam('admoption.rule_enabled', 1) and ! $PHPShopBase->Rule->CheckedRules('catalog', 'remove')) {
         $where = array('user' => "=" . intval($_SESSION['idPHPSHOP']));
     }
 
@@ -284,7 +296,7 @@ function actionStart() {
     $product_list = $PHPShopInterface->getContent();
 
 
-    $PHPShopGUI->_CODE.='
+    $PHPShopGUI->_CODE .= '
      <div class="row intro-row">
        <div class="col-md-2 col-xs-6">
           <div class="panel panel-default">
@@ -420,15 +432,15 @@ function actionStart() {
                 krsort($canvas_data);
                 foreach ($canvas_data as $value) {
 
-                    $canvas_value.='"' . $value[metrics][0] . '",';
-                    $canvas_label.='"' . date('d.m', strtotime($value[dimensions][0][id])) . '",';
+                    $canvas_value .= '"' . $value[metrics][0] . '",';
+                    $canvas_label .= '"' . date('d.m', strtotime($value[dimensions][0][id])) . '",';
                 }
             }
 
             $traffic_list = $PHPShopInterface->getContent();
 
 
-            $PHPShopGUI->_CODE.=' 
+            $PHPShopGUI->_CODE .= ' 
     <div class="row intro-row">
        <div class="col-md-6 hidden-xs hidden-sm">
           <div class="panel panel-default">
@@ -471,7 +483,7 @@ function actionStart() {
     }
 
     // Количество товара
-    $PHPShopGUI->_CODE.='   
+    $PHPShopGUI->_CODE .= '   
     <div class="row intro-row">
        <div class="col-md-2 col-xs-6">
           <div class="panel panel-default">
@@ -524,7 +536,7 @@ function actionStart() {
    </div>';
 
     // Журнал авторизации
-    $PHPShopGUI->_CODE.='<div class="row intro-row">
+    $PHPShopGUI->_CODE .= '<div class="row intro-row">
        <div class="col-md-6 col-xs-12">
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-user"></span> ' . __('Журнал авторизации') . ' <a class="pull-right" href="?path=users.jurnal">' . __('Показать больше') . '</a></div>
@@ -533,7 +545,7 @@ function actionStart() {
        </div>
        <div class="col-md-6 hidden-xs hidden-sm">
           <div class="panel panel-default">
-             <div class="panel-heading"><span class="glyphicon glyphicon-refresh"></span> ' . __('Обновление товаров') . ' <a class="pull-right" href="?path=catalog&order[datas]=desc">' . __('Показать больше') . '</a></div>
+             <div class="panel-heading"><span class="glyphicon glyphicon-refresh"></span> ' . __('Обновление товаров') . ' <a class="pull-right" href="?path=catalog">' . __('Показать больше') . '</a></div>
                 <table class="table table-hover intro-list">' . $product_list . '</table>
           </div>
        </div>
@@ -550,7 +562,7 @@ function getCupon($string) {
     $result = null;
 
     foreach ($string_array as $v)
-        $result.=$chars_array[$v];
+        $result .= $chars_array[$v];
 
     return 'SALE-' . $result;
 }

@@ -56,6 +56,7 @@ foreach ($mod_podmenu as $title) {
 
 
 $PHPShopGUI->field_col = 2;
+$TitlePage=__($TitlePage);
 $PHPShopGUI->setActionPanel($TitlePage, $select_name, array('Сохранить и закрыть'));
 
 if (empty($subpath[3]))

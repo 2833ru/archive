@@ -1,7 +1,7 @@
 
-<div class="panel panel-default">
+<div class="panel panel-default hidden-xs visible-lg visible-md">
   <div class="panel-heading">
-    <h3 class="panel-title">@leftMenuName@</h3>
+    <div class="panel-title">@leftMenuName@</div>
   </div>
   <div class="panel-body">
     @leftMenuContent@

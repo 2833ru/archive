@@ -19,6 +19,9 @@ PHPShopObj::loadClass(array("base", "system", "math", "array", "valuta", "securi
 // Подключение к БД
 $PHPShopBase = new PHPShopBase($_classPath . "/inc/config.ini", true, true);
 
+// Модули
+$PHPShopModules = new PHPShopModules($_classPath . "modules/");
+
 // Подключение хука
 function loadHooks() {
 
@@ -31,7 +34,7 @@ function loadHooks() {
     if (@$dh = opendir('hook')) {
         while (($file = readdir($dh)) !== false) {
             $fstat = explode(".", $file);
-            if ($fstat[1] == "php" and !strstr($fstat[0], '#'))
+            if ($fstat[1] == "php" and ! strstr($fstat[0], '#'))
                 include_once($path . '/' . $file);
         }
         closedir($dh);
@@ -45,7 +48,7 @@ loadHooks();
  * Авторизация пользователей
  * @package PHPShopExchange
  * @author PHPShop Software
- * @version 1.1
+ * @version 1.2
  */
 class UserChek {
 
@@ -55,6 +58,13 @@ class UserChek {
     var $statusPHPSHOP;
     var $mailPHPSHOP;
     var $OkFlag = 0;
+
+    function __construct($logPHPSHOP, $pasPHPSHOP, $table_name) {
+        $this->logPHPSHOP = $logPHPSHOP;
+        $this->pasPHPSHOP = $this->myDecode($pasPHPSHOP);
+        $this->ChekBase($table_name);
+        $this->BadUser();
+    }
 
     function ChekBase($table_name) {
         global $link_db;
@@ -78,20 +88,13 @@ class UserChek {
         $decode = explode("O", $decode);
         $disp_pass = "";
         for ($i = 0; $i < (count($decode) - 1); $i++)
-            $disp_pass.=chr($decode[$i]);
+            $disp_pass .= chr($decode[$i]);
         return $disp_pass;
     }
 
     function BadUser() {
         if ($this->OkFlag == 0)
             exit("Login Error");
-    }
-
-    function UserChek($logPHPSHOP, $pasPHPSHOP, $table_name) {
-        $this->logPHPSHOP = $logPHPSHOP;
-        $this->pasPHPSHOP = $this->myDecode($pasPHPSHOP);
-        $this->ChekBase($table_name);
-        $this->BadUser();
     }
 
 }

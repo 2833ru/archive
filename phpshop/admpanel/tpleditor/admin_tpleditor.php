@@ -46,13 +46,14 @@ function _tpl($file) {
         'main_product_forma_2.tpl' => 'Форма вывода товара в 2 ячейки',
         'main_product_forma_3.tpl' => 'Форма вывода товара в 3 ячейки',
         'main_product_forma_4.tpl' => 'Форма вывода товара в 4 ячейки',
+        'main_product_forma_5.tpl' => 'Форма вывода товара в 5 ячеек',
         'main_product_forma_full.tpl' => 'Форма подробного описания товара',
         'main_product_forma_full_productArt.tpl' => 'Артикул',
         'main_product_odnotip_list.tpl' => 'Список однотипных продуктов',
         'main_spec_forma_icon.tpl' => 'Форма спецпредложений-иконок',
         'newtipIcon.tpl' => 'Стикер новинки',
         'product_odnotip_product_parent.tpl' => 'Блок починенных товаров',
-        'product_odnotip_product_parent_one.tpl' => 'Форма подчиненного товара',
+        'product_odnotip_product_parent_one.tpl' => 'Форма подчиненного товара параметр 1',
         'product_option_product.tpl' => 'Форма выбора опций товара',
         'product_page_full.tpl' => 'Страница подробного описания товара',
         'product_page_list.tpl' => 'Страница списка товаров',
@@ -60,7 +61,35 @@ function _tpl($file) {
         'product_pagetema_forma.tpl' => 'Форма статей к товару',
         'product_pagetema_list.tpl' => 'Список статей к товару',
         'specIcon.tpl' => 'Стикер спецпредложения',
-        'style.css' => 'Cтили оформления'
+        'style.css' => 'Cтили оформления',
+        'container' => 'Вид каталога',
+        'container_1.tpl' => 'Каталог слева',
+        'container_2.tpl' => 'Каталог справа',
+        'container_3.tpl' => 'Каталог сверху',
+        'filter' => 'Вид фильтров',
+        'filter_1.tpl' => 'Фильтр в виде кнопок',
+        'filter_2.tpl' => 'Фильтр в виде чекбоксов',
+        'footer' => 'Вид подвала',
+        'footer_1.tpl' => 'Подвал вариант 1',
+        'footer_2.tpl' => 'Подвал вариант 2',
+        'footer_3.tpl' => 'Подвал вариант 3',
+        'header' => 'Вид шапки',
+        'header_1.tpl' => 'Шапка вариант 1',
+        'header_2.tpl' => 'Шапка вариант 2',
+        'header_3.tpl' => 'Шапка вариант 3',
+        'page_forma.tpl' => 'Форма страницы в списке',
+        'page_mini.tpl' => 'Форма страницы в превью',
+        'page_top_menu.tpl' => 'Форма страницы в главном меню',
+        'main_product_forma_full_1.tpl'=>'Форма подробного описания товара 1',
+        'main_product_forma_full_2.tpl'=>'Форма подробного описания товара 2',
+        'main_product_forma_full_3.tpl'=>'Форма подробного описания товара 3',
+        'main_product_forma_full_ajax.tpl' =>'Форма ajax описания товара',
+        'product_catalog_content.tpl' =>'Описание каталога в списке товаров',
+        'promoIcon.tpl' =>'Стикер промоакции',
+        'product_odnotip_product_parent_one_color.tpl'=>'Форма подчиненного товара параметр 2',
+        'product_odnotip_product_parent_one_value.tpl'=>'Форма значения подчиненного товара',
+        'preview_sort_one.tpl'=>'Вид характеристики в превью',
+        'preview_sorts.tpl'=>'Форма блока характеристик в превью'
     );
 
     if ($_GET['option'] != 'pro' && !empty($TemplateHelper[$file]))
@@ -115,9 +144,9 @@ function actionStart() {
     );
 
     $PHPShopGUI->action_select['Магазин'] = array(
-        'name' => 'Магазин дизайнов',
-        'url' => 'http://template.phpshop.ru/?from=' . $_SERVER['SERVER_NAME'],
-        'icon' => 'glyphicon glyphicon-shopping-cart',
+        'name' => 'Архивные шаблоны',
+        'url' => 'http://template.phpshop.ru/?old' ,
+        'icon' => '',
         'target' => '_blank'
     );
 
@@ -126,7 +155,7 @@ function actionStart() {
         $file = PHPShopSecurity::TotalClean('../templates/' . $_GET['name'] . '/' . $_GET['file']);
         $info = PHPShopSecurity::getExt($file);
         if (file_exists($file) and in_array($info, array('tpl', 'css'))) {
-            $content = str_replace('textarea', 'area', @file_get_contents($file));
+            $content = str_replace('textarea', 'txtarea', @file_get_contents($file));
             $ace = true;
 
             $PHPShopGUI->action_button['Размер'] = array(
@@ -176,7 +205,7 @@ function actionStart() {
                     if (!empty($_GET['name']) and $_GET['option'] == 'pro')
                         $TitlePage.=': ' . $_GET['name'] . $_GET['file'];
                     else
-                        $TitlePage.=': ' . $template['description'] . '';
+                        $TitlePage.=': ' . __($template['description']);
 
                     if (is_array($template['var']))
                         if (empty($template['var'][1])) {
@@ -196,7 +225,7 @@ function actionStart() {
 
                                 $var_list.='<button class="btn btn-xs ' . $class_btn . ' editor_var" data-insert="@' . $var['name'] . '@" type="button" data-toggle="tooltip" data-placement="top" title="' . __($var['description']) . '"><span class="glyphicon ' . $class_icon . '"></span> ' . $var['name'] . '</button>';
 
-                                $selectModal.='<tr><td><kbd>@' . $var['name'] . '@</kbd></td><td>' . $var['description'] . '</td></tr>';
+                                $selectModal.='<tr><td><kbd>@' . $var['name'] . '@</kbd></td><td>' . __($var['description']) . '</td></tr>';
                             }
                         }
                 }
@@ -220,7 +249,7 @@ function actionStart() {
             $PHPShopGUI->_CODE.= $PHPShopGUI->loadLib('tab_map', $root);
     }
 
-    $PHPShopGUI->setActionPanel(PHPShopSecurity::TotalClean($TitlePage), array('Режим 1', 'Режим 2', 'Учебник', '|', 'Урок'), array('Размер', 'Учебник', 'Выполнить'));
+    $PHPShopGUI->setActionPanel(PHPShopSecurity::TotalClean($TitlePage), array('Режим 1', 'Режим 2', 'Учебник', 'Магазин', '|', 'Урок'), array('Размер', 'Учебник', 'Выполнить'));
 
     $dir = "../templates/*";
     $k = 1;
@@ -312,7 +341,7 @@ function actionStart() {
 
     $PHPShopGUI->setFooter($ContentFooter);
 
-    $sidebarleft[] = array('title' => __('Шаблоны в системе'), 'content' => $tree, 'title-icon' => $title_icon);
+    $sidebarleft[] = array('title' => 'Шаблоны в системе', 'content' => $tree, 'title-icon' => $title_icon);
 
     $PHPShopGUI->sidebarLeftCell = 3;
     $PHPShopGUI->setSidebarLeft($sidebarleft, 3);
@@ -347,7 +376,7 @@ function actionSave() {
     $info = PHPShopSecurity::getExt($file);
     if (file_exists($file) and in_array($info, array('tpl', 'css'))) {
         PHPShopFile::chmod($file);
-        if (PHPShopFile::write($file, $content = str_replace(array('area', '&#43;'), array('textarea', '+'), $_POST['editor_src'])))
+        if (PHPShopFile::write($file, $content = str_replace(array('txtarea', '&#43;'), array('textarea', '+'), $_POST['editor_src'])))
             $action = true;
         else
             $action = false;

@@ -24,8 +24,8 @@ background:#ffb400 !important;
 #main-menu .navbar-nav > li > a:hover, .dropdown-menu.mega-menu, #main-menu .navbar-nav > li.open a,.main-navbar-list-catalog-wrapper, .user-dropdown > .dropdown-menu,.nav-catalog-dropdown-link.open, .sidebar-nav ul.active, .sidebar-nav ul.active li a, #main-menu .navbar-nav > li.active a{
 background:#ff9000 !important;
 }
-.main-navbar-list-catalog-wrapper.open li a:hover, .main-navbar-list-catalog-hidden.active,.user-dropdown > .dropdown-menu li a:hover,.main-navbar-list-catalog-wrapper.open li a.active, .sidebar-nav > li > ul.active > li.active > a, .sidebar-nav ul.active li:hover a, .btn-main:hover{
-background:#ff7e00 !important;
+.main-navbar-top-catalog:hover .main-navbar-list-catalog-wrapper li a:hover, .main-navbar-list-catalog-hidden.active,.user-dropdown > .dropdown-menu li a:hover,.main-navbar-top-catalog:hover .main-navbar-list-catalog-wrapper li a.active, .sidebar-nav > li > ul.active > li.active > a, .sidebar-nav ul.active li:hover a, .btn-main:hover{
+background:#ff9000 !important;
 }
 .product-col .btn-cart,.product-info .product-details .btn-cart, #cart .btn .fa-shopping-cart{
 background:#ffb400 !important;
@@ -51,15 +51,21 @@ color:#252a2f;
 .header-valuta-disp-wrapper .btn-default{
 background:transparent !important;
 }
-.header-color, .header-color a,.header-color .btn,.header-color h4 {
-    color: #fff;
+.header-color, .header-color a,.header-color .btn,.header-color h4{
+color:#fff;
 }
-.header-color input::-moz-placeholder {
-    color: #878a8c;
+.header-color input::-moz-placeholder{
+color:#878a8c;
 }
-.header-color input:-ms-input-placeholder {
-    color: #878a8c;
+.header-color input:-ms-input-placeholder{
+color:#878a8c;
 }
-.header-color input::-webkit-input-placeholder {
-    color: #878a8c;
+.header-color input::-webkit-input-placeholder{
+color:#878a8c;
+}
+.additional-nav-menu .dropdown-menu, .submenu .dropdown-menu{
+background-color:#ff9000 !important;
+}
+.additional-nav-menu .dropdown-menu > li:hover, .submenu .dropdown-menu > li:hover{
+background:#ff7e00!important;
 }

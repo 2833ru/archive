@@ -34,8 +34,6 @@ function actionStart() {
     $data = $PHPShopOrm->select();
     @extract($data);
 
-
-
     $Tab1 = $PHPShopGUI->setField('Наименование типа оплаты', $PHPShopGUI->setInputText(false, 'title_new', $title));
     $Tab1.=$PHPShopGUI->setField('Shop ID', $PHPShopGUI->setInputText(false, 'merchant_id_new', $merchant_id, 210), 'left');
     $Tab1.=$PHPShopGUI->setField('Shop Key', $PHPShopGUI->setInputText(false, 'merchant_key_new', $merchant_key, 210), 'left');
@@ -59,7 +57,7 @@ function actionStart() {
     $Tab2 = $PHPShopGUI->setPay();
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1, 270), array("О Модуле", $Tab2, 270));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("О Модуле", $Tab2));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =

@@ -1,6 +1,6 @@
 <?php
 
-$TitlePage = "Статистика - Популярные товары";
+$TitlePage = __("Статистика - Популярные товары");
 
 function actionStart() {
     global $PHPShopInterface, $TitlePage, $select_name, $PHPShopSystem;

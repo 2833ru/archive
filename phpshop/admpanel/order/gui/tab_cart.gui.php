@@ -50,9 +50,9 @@ function tab_cart($data, $option = false) {
 
                     // Артикул
                     if (!empty($val['uid']))
-                        $code = 'Артикул: ' . $val['uid'];
+                        $code = __('Артикул').': ' . $val['uid'];
                     else
-                        $code = 'Код: ' . $val['id'];
+                        $code = __('Код').': ' . $val['id'];
                     
                     // Промокод
                     if(!empty($val['promo_code']) and !empty($val['promo_price']))
@@ -101,8 +101,18 @@ function tab_cart($data, $option = false) {
       <td class="text-right">
       ' . $PHPShopOrder->getDeliverySumma() . $currency . '
       </td>
-      </tr>
+      </tr>';
+    
+      if(!empty($CART['weight']))
+      $total.='
       <tr>
+      <td>'.__('Вес').':</td>
+      <td class="text-right">
+      ' . $CART['weight']. ' '.__('гр.').'
+      </td>
+      </tr>';
+      
+      $total.='<tr>
       <td>'.__('Скидка').':</td>
       <td class="text-right">
       ' . $PERSON['discount'] . '%

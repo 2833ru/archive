@@ -2,7 +2,7 @@
 <module>
     <version>3.2</version>
     <name>Retail CRM</name>
-    <faqlink>http://faq.phpshop.ru/page/retailcrm.html</faqlink>
+    <faqlink>https://docs.phpshop.ru/moduli/crm/retailcrm</faqlink>
     <description>Автоматизация интернет-продаж Retail CRM</description>
     <category>crm</category>
     <adminmenu>

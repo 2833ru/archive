@@ -1,6 +1,6 @@
 <?php
 
-$TitlePage = "Статистика - Посещаемость";
+$TitlePage = __("Статистика - Посещаемость");
 
 function actionStart() {
     global $PHPShopInterface, $TitlePage, $select_name, $PHPShopSystem;

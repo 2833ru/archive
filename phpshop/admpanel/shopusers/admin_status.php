@@ -12,7 +12,7 @@ function actionStart() {
         'class' => 'btn btn-default btn-sm navbar-btn',
         'type' => 'button',
         'icon' => 'glyphicon glyphicon-plus',
-        'tooltip' => 'data-toggle="tooltip" data-placement="left" title="Добавить Статус"'
+        'tooltip' => 'data-toggle="tooltip" data-placement="left" title="'.__('Добавить Статус').'"'
     );
 
     $PHPShopInterface->action_button['Скидки от заказа'] = array(
@@ -29,7 +29,7 @@ function actionStart() {
         'url' => '?path=shopusers.discount'
     );
 
-    $PHPShopInterface->setActionPanel(__("Статусы и скидки покупателей"), array('Удалить выбранные', 'Скидки от заказа'), array('Добавить Статус','Скидки от заказа'));
+    $PHPShopInterface->setActionPanel(__("Статусы и скидки покупателей"), array('Удалить выбранные', 'Скидки от заказа'), array('Добавить Статус'));
     $PHPShopInterface->setCaption(array(null, "2%"), array("Название", "50%"), array("Колонка цен", "15%"), array("Скидка %", "10%"), array("Накопительная", "15%", array('align' => 'center')), array("", "10%"), array("Статус", "10%", array('align' => 'right')));
 
     // Таблица с данными

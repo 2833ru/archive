@@ -41,7 +41,7 @@ PHPShopParser::set('name', $PHPShopSystem->getName());
 PHPShopParser::set('total',$PHPShopCart->getTotal());
 PHPShopParser::set('discount',$PHPShopOrder->ChekDiscount($PHPShopCart->getSum()));
 PHPShopParser::set('date',date("d-m-y"));
-PHPShopParser::set('logo',$PHPShopSystem->getLogo());
+PHPShopParser::set('logo',$PHPShopSystem->getLogo(true));
 PHPShopParser::set('cart',$PHPShopCart->display('printforma'));
 PHPShopParser::set('item',$PHPShopCart->getNum());
 PHPShopParser::set('totaltext',$iw->get($PHPShopCart->getTotal()));

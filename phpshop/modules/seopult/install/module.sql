@@ -15,5 +15,5 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_seopult_system` (
 
 
 INSERT INTO `phpshop_modules_seopult_system` (`id`, `url`, `login`, `email`, `hash`, `cryptkey`, `serial`, `version`) VALUES
-(1, '', '', '', '', '', '', '1.1');
+(1, '', '', '', '', '', '', '1.2');
 

@@ -34,7 +34,6 @@
 
 
         ///// Misc funcs
-
         var isTextFile = function(file) {
             return file.type == 'text/plain';
         };
@@ -150,14 +149,20 @@
                 log("All uploads completed!");
                 parent.window.$('#selectModal').modal('hide');
 
-                // —ообщение о нехраненных изменени€х 
-                if (parent.window.is_change) {
-                    if (confirm(locale.confirm_reload)) {
-                        parent.window.location.href = parent.window.location.href.split('&tab=1').join('') + '&tab=1';
+                // —ообщение о несохраненных изменени€х 
+                if (parent.window.$.getUrlVar('action') != 'new') {
+                    if (parent.window.is_change) {
+                        if (confirm(locale.confirm_reload)) {
+                            parent.window.location.href = parent.window.location.href.split('&tab=1').join('') + '&tab=1';
+                        }
                     }
+                    else
+                        parent.window.location.href = parent.window.location.href.split('&tab=1').join('') + '&tab=1';
                 }
-                else
-                    parent.window.location.href = parent.window.location.href.split('&tab=1').join('') + '&tab=1';
+                else 
+                    {
+                        showAlertMessage(locale.icon_load, 'info');
+                    }
             }
         });
 
@@ -209,6 +214,52 @@
 
 })(window.jQuery);
 
+// GET переменные из URL страницы
+$.extend({
+    getUrlVars: function() {
+        var vars = [], hash;
+        var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+        for (var i = 0; i < hashes.length; i++)
+        {
+            hash = hashes[i].split('=');
+            vars.push(hash[0]);
+            vars[hash[0]] = hash[1];
+        }
+        return vars;
+    },
+    getUrlVar: function(name) {
+        return $.getUrlVars()[name];
+    }
+});
+
+function showAlertMessage(message, danger, hide) {
+
+    if (typeof danger != 'undefined') {
+        if (danger === true)
+            danger = 'danger';
+        parent.window.$('.success-notification').find('.alert').addClass('alert-' + danger);
+    }
+    else {
+        parent.window.$('.success-notification').find('.alert').removeClass('alert-danger');
+        parent.window.$('.success-notification').find('.alert').removeClass('alert-info');
+    }
+
+    var messageBox = '.success-notification';
+
+    var innerBox = '#notification .notification-alert';
+
+    if (parent.window.$(messageBox).length > 0) {
+        parent.window. $(messageBox).removeClass('hide');
+        parent.window.$(innerBox).html(message);
+        parent.window.$(messageBox).fadeIn('slow');
+
+        if (typeof hide == 'undefined') {
+            setTimeout(function() {
+                parent.window.$(messageBox).delay(500).fadeOut(1000);
+            }, 5000);
+        }
+    }
+}
 
 // Shorthand log function
 window.log = function() {

@@ -34,9 +34,6 @@ class PHPShopNews extends PHPShopCore {
 
         // Имя Бд
         $this->objBase = $GLOBALS['SysValue']['base']['news'];
-
-        // Календарь
-        $this->calendar();
     }
 
     /**
@@ -150,6 +147,7 @@ class PHPShopNews extends PHPShopCore {
                 $this->set('newsData', $row['datas']);
                 $this->set('newsZag', $row['zag']);
                 $this->set('newsKratko', $row['kratko']);
+                $this->set('newsIcon', $row['icon']);
 
                 // Перехват модуля
                 $this->setHook(__CLASS__, __FUNCTION__, $row, 'MIDDLE');
@@ -270,6 +268,7 @@ class PHPShopNews extends PHPShopCore {
         $this->set('newsZag', $row['zag']);
         $this->set('newsKratko', $row['kratko']);
         $this->set('newsPodrob', Parser($row['podrob']));
+        $this->set('newsIcon', $row['icon']);
 
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__, $row, 'MIDDLE');
@@ -295,22 +294,6 @@ class PHPShopNews extends PHPShopCore {
         // Подключаем шаблон
         $this->parseTemplate($this->getValue('templates.news_page_full'));
     }
-
-    /**
-     * Календарь новостей
-     * Функция вынесена в отдельный файл news.core/calendar.php
-     * @return mixed
-     */
-    function calendar() {
-
-        // Перехват модуля
-        $hook = $this->setHook(__CLASS__, __FUNCTION__);
-        if ($hook)
-            return $hook;
-
-        return $this->doLoadFunction(__CLASS__, __FUNCTION__);
-    }
-
 }
 
 ?>

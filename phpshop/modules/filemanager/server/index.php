@@ -6,8 +6,11 @@ $_classPath = "../../../";
 include($_classPath . "class/obj.class.php");
 PHPShopObj::loadClass("base");
 $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
-PHPShopObj::loadClass("orm");
+PHPShopObj::loadClass(array("orm",'system'));
 
+$PHPShopSystem = new PHPShopSystem();
+$_SESSION['lang'] = $PHPShopSystem->getSerilizeParam("admoption.lang_adm");
+$PHPShopLang = new PHPShopLang(array('locale' => $_SESSION['lang'], 'path' => 'admin'));
 
 // Настройки модуля
 PHPShopObj::loadClass("modules");
@@ -33,7 +36,7 @@ $PHPShopModules->checkInstall('filemanager');
         
         <div class="container-fluid">
             <div class="page-header <?php if(empty($_GET['full'])) echo 'hide' ?>">
-                <h2>Файловый менеджер</h2>
+                <h2><?php _e('Файловый менеджер'); ?></h2>
             </div>
             <div class="filemanager"></div>
         </div>

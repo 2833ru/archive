@@ -1,11 +1,20 @@
-<ol class="breadcrumb hidden-xs">
+<ol class="breadcrumb hidden-xs" itemtype="http://schema.org/BreadcrumbList">
     @breadCrumbs@
 </ol>
-
-<div class="page-header">
-    <h1>@pageTitle@</h1>
+<div class="clearfix"></div>
+<div class="page-header ">
+    <h2>@pageTitle@</h2>
 </div>
-@catContent@
-<p>@pageContent@</p>
 
-<p>@odnotipDisp@</p>
+@catContent@
+<div class="grid main-grid page-list">
+<p>@pageContent@</p></div>
+<div class="clearfix"></div>
+<hr class="@php __hide('pageLast'); php@">
+<h3 class="@php __hide('pageLast'); php@  ">Интересно почитать</h3>
+<br>
+<div class="grid row">@pageLast@</div>
+<div class="page-header">
+    <h3>@productOdnotip@</h3>
+</div>
+@productOdnotipList@

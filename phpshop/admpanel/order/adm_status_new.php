@@ -8,7 +8,7 @@ function actionStart() {
     global $PHPShopGUI, $PHPShopModules,$PHPShopSystem,$TitlePage;
 
     // Ќачальные данные
-    $data['name'] = 'Ќовый статус';
+    $data['name'] = __('Ќовый статус');
     $data['color'] = '#000000';
     $data['mail_action']=1;
 
@@ -29,8 +29,9 @@ function actionStart() {
     <span class="input-group-addon input-sm"><i></i></span></div>');
 
     $Tab1.=$PHPShopGUI->setField("ƒополнительно", $PHPShopGUI->setCheckbox('mail_action_new', 1, 'E-mail уведомление покупателю о смене статуса заказа', $data['mail_action']) . '<br>' .
+             $PHPShopGUI->setCheckbox('sms_action_new', 1, 'SMS уведомление покупателю о смене статуса заказа', $data['sms_action']).'<br>'.
             $PHPShopGUI->setCheckbox("sklad_action_new", 1, "—писание со склада товаров в заказе", $data['sklad_action']) . '<br>' .
-            $PHPShopGUI->setCheckbox("cumulative_action_new", 1, "”чет скидки покупател€", $data['cumulative_action'])
+            $PHPShopGUI->setCheckbox("cumulative_action_new", 1, "”чет скидки покупател€", $data['cumulative_action']).$PHPShopGUI->setHelp(__('—умма заказа пользовател€ будет засчитана в накопительную сумму, указанную в').' <a href="?path=shopusers.status"><span class="glyphicon glyphicon-share-alt"></span>'.__('—татусах и скидках покупателей').'</a>',false,false)
     );
     
         // —ообщение
@@ -39,7 +40,7 @@ function actionStart() {
     $oFCKeditor->Height = '350';
     $oFCKeditor->Value = $data['mail_message'];
     
-    $Tab1.=$PHPShopGUI->setField("“екст письма:", $oFCKeditor->AddGUI() . $PHPShopGUI->setHelp('ѕеременные: <code>@ouid@</code> - номер заказа, <code>@date@</code> - дата заказа, <code>@status@</code> - новый статус заказа, <code>@fio@</code> - им€ покупател€, <code>@sum@</code> - стоимость заказа, <code>@manager@</code> - примечание'));
+    $Tab1.=$PHPShopGUI->setField("“екст письма", $oFCKeditor->AddGUI() . $PHPShopGUI->setHelp('ѕеременные: <code>@ouid@</code> - номер заказа, <code>@date@</code> - дата заказа, <code>@status@</code> - новый статус заказа, <code>@fio@</code> - им€ покупател€, <code>@sum@</code> - стоимость заказа, <code>@manager@</code> - примечание, <code>@tracking@</code> - номер дл€ отслеживани€, <code>@account@</code> - ссылка на счет, <code>@bonus@</code> - начисленные бонусы за заказ'));
 
     // «апрос модул€ на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);

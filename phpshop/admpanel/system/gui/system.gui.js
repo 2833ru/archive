@@ -2,6 +2,69 @@
 $().ready(function() {
 
     var theme_new = false;
+    
+    // Синхрнизация лицензии
+    $("body").on('click', "#loadLic", function(event) {
+        event.preventDefault();
+
+        $.MessageBox({
+            buttonDone: "OK",
+            buttonFail: locale.cancel,
+            message: locale.confirm_license
+        }).done(function() {
+
+            var data = [];
+            data.push({name: 'loadLic', value: '1'});
+            data.push({name: 'actionList[loadLic]', value: 'actionLoadLic.system.edit'});
+
+            $.ajax({
+                mimeType: 'text/html; charset='+locale.charset,
+                url: '?path=system.about',
+                data: data,
+                type: 'post',
+                dataType: "json",
+                async: false,
+                success: function(json) {
+                    if (json['success'] == 1) {
+                        window.location.reload();
+                    } else
+                        showAlertMessage(locale.license_update_false, true);
+                }
+            });
+        })
+    });
+
+    // Активировать витрины
+    $("body").on('click', ".select-action .activate", function(event) {
+        event.preventDefault();
+        var chk = $('input:checkbox:checked').length;
+        var i = 0;
+
+        if (chk > 0) {
+            $('input:checkbox:checked').each(function() {
+               
+                var data = [];
+                data.push({name: 'host_new', value: $(this).closest('.data-row').children('.host').text()});
+                data.push({name: 'enabled_new', value: '1'});
+                
+                $('.status_edit_' + $(this).attr('data-id')).ajaxSubmit({
+                    data: data,
+                    dataType: "json",
+                    success: function(json) {
+                        if (json['success'] == 1) {
+                            showAlertMessage(locale.save_done);
+                        } else
+                            showAlertMessage(locale.save_false, true);
+                    }
+                });
+
+            });
+        }
+        else
+            alert(locale.select_no);
+    });
+
+
 
     // Настройка центрирования
     $('[name="option[watermark_center_enabled]"]').prop('checked', function(_, checked) {
@@ -53,15 +116,16 @@ $().ready(function() {
     // Применение темы оформления
     $('#theme_new').on('changed.bs.select', function() {
         theme_new = true;
-        var theme = $(this).val();;
-        
+        var theme = $(this).val();
+        ;
+
         $('#body').fadeOut('slow', function() {
-            $('#bootstrap_theme').attr('href', './css/bootstrap-theme-' +  theme + '.css');
+            $('#bootstrap_theme').attr('href', './css/bootstrap-theme-' + theme + '.css');
             $('#body').fadeIn('slow');
         });
     });
-    
-    
+
+
     // Перезагрузка страницы при смене темы
     $("button[name=editID]").on('click', function(event) {
         event.preventDefault();

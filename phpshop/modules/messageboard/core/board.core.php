@@ -108,13 +108,19 @@ class PHPShopBoard extends PHPShopCore {
      * Ёкшен записи при получении $_POST[send_gb]
      */
     function send_gb() {
-        if (!empty($_SESSION['text']) and strtoupper($_POST['key']) == strtoupper($_SESSION['text'])) {
+        if ($this->security()) {
             $this->write();
             header("Location: ../board/?write=ok");
         }else {
             $this->set('Error',"ќшибка ключа, повторите попытку ввода ключа");
             $this->Disp = PHPShopParser::file($GLOBALS['SysValue']['templates']['messageboard']['messageboard_add'], true, false, true);
         }
+    }
+
+    public function security($option = array('url' => false, 'captcha' => true, 'referer' => true)) {
+        global $PHPShopRecaptchaElement;
+
+        return $PHPShopRecaptchaElement->security($option);
     }
 
     /**

@@ -28,7 +28,6 @@ function actionStart() {
     // Выборка
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_REQUEST['id'])));
 
-
     // Нет данных
     if (!is_array($data)) {
         header('Location: ?path=' . $_GET['path']);
@@ -100,7 +99,6 @@ function actionUpdate() {
 
     if (!empty($_POST['changePassword']) and !empty($_POST['password_new'])) {
 
-
         if ($_SESSION['logPHPSHOP'] == $_POST['login_new']) {
             $_SESSION['pasPHPSHOP'] = $_POST['password_new'];
             $_SESSION['logPHPSHOP'] = $_POST['login_new'];
@@ -117,7 +115,7 @@ function actionUpdate() {
     $statusUser = array(
         "gbook" => rules_zero($_POST[gbook_rul_1]) . "-" . rules_zero($_POST[gbook_rul_2]) . "-" . rules_zero($_POST[gbook_rul_3]),
         "news" => rules_zero($_POST[news_rul_1]) . "-" . rules_zero($_POST[news_rul_2]) . "-" . rules_zero($_POST[news_rul_3]),
-        "order" => rules_zero($_POST[order_rul_1]) . "-" . rules_zero($_POST[order_rul_2]) . "-" . rules_zero($_POST[order_rul_3]) . "-" . rules_zero($_POST[order_rul_4]),
+        "order" => rules_zero($_POST[order_rul_1]) . "-" . rules_zero($_POST[order_rul_2]) . "-" . rules_zero($_POST[order_rul_3]) . "-" . rules_zero($_POST[order_rul_4]). "-" . rules_zero($_POST[order_rul_5]),
         "users" => rules_zero($_POST[users_rul_1]) . "-" . rules_zero($_POST[users_rul_2]) . "-" . rules_zero($_POST[users_rul_3]) . "-" . rules_zero($_POST[users_rul_4]),
         "shopusers" => rules_zero($_POST[shopusers_rul_1]) . "-" . rules_zero($_POST[shopusers_rul_2]) . "-" . rules_zero($_POST[shopusers_rul_3]),
         "catalog" => rules_zero($_POST[catalog_rul_1]) . "-" . rules_zero($_POST[catalog_rul_2]) . "-" . rules_zero($_POST[catalog_rul_3]) . "-" . rules_zero($_POST[catalog_rul_4]) . "-" . rules_zero($_POST[catalog_rul_5]) . "-" . rules_zero($_POST[catalog_rul_6]),
@@ -152,7 +150,8 @@ function actionUpdate() {
         PHPShopParser::set('user_name', __('Администратор'));
         PHPShopParser::set('login', $_POST['login_new']);
         PHPShopParser::set('password', $_POST['password2_new']);
-
+        PHPShopParser::set('url', $_SERVER['SERVER_NAME']);
+        
         $zag_adm = "Пароль администратора " . $_SERVER['SERVER_NAME'];
         $PHPShopMail = new PHPShopMail($_POST['mail_new'], $PHPShopSystem->getEmail(), $zag_adm, '', true, true);
         $content_adm = PHPShopParser::file('tpl/changepass.mail.tpl', true);

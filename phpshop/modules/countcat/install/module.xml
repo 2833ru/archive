@@ -2,9 +2,9 @@
 <module>
     <version>1.2</version>
     <name>Count Cat</name>
-    <faqlink>http://faq.phpshop.ru/page/count-cat.html</faqlink>
+    <faqlink>https://docs.phpshop.ru/moduli/dizain/count-cat</faqlink>
     <description>ћодуль подсчета количества товаров в каталогах.</description>
-    <category>form,decorate</category>
+    <category>template</category>
     <adminmenu>
         <title>Count Cat</title>
         <capability>true</capability>

@@ -42,7 +42,7 @@
             <p><br></p>
             <table width="100%" cellpadding="2" cellspacing="0" align="center" id="table2excel">
                 <tr class="tablerow">
-                    <td class=tablerow><b>№</b></td>
+                    <td class=tablerow><b>&#8470;</b></td>
                     <td width=50% class=tablerow><b>{Наименование}</b></td>
                     <td class=tablerow><b>{Единица измерения}</b></td>
                     <td class=tablerow><b>{Количество}</b></td>

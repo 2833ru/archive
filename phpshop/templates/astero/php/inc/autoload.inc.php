@@ -1,9 +1,5 @@
 <?php
-
-$_SESSION['Memory']["rateForComment"]["oneStarWidth"] = 16; // ширина одной звЄздочки
-$_SESSION['Memory']["rateForComment"]["oneSpaceWidth"] = 0;
 define("SkinName", "astero");
-
 
 // ÷ветовые темы CSS
 if (isset($_COOKIE[SkinName . '_theme'])) {
@@ -51,7 +47,7 @@ function create_theme_menu($file) {
 }
 
 // –едактор тем оформлени€
-if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or !empty($_SESSION['logPHPSHOP']) or !empty($GLOBALS['SysValue']['other']['skinSelect'])) {
+if ($GLOBALS['SysValue']['template_theme']['user'] == 'true'  or !empty($GLOBALS['SysValue']['other']['skinSelect'])) {
 
     // CSS
     $PHPShopCssParser = new PHPShopCssParser($GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . '/css/' . $GLOBALS['SysValue']['other'][SkinName . '_theme'] . '.css');
@@ -289,7 +285,7 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or !empty($_SESSION
         <!--/ Modal admin -->';
 
 
-    if ($GLOBALS['SysValue']['template_theme']['demo'] == 'true' or !empty($_SESSION['logPHPSHOP']) or !empty($GLOBALS['SysValue']['other']['skinSelect']))
+    if (!empty($GLOBALS['SysValue']['other']['skinSelect']))
         $GLOBALS['SysValue']['other']['editor'] = $theme_menu . $edit_frame;
 }
 

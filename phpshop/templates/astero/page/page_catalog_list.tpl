@@ -1,6 +1,11 @@
-<ol class="breadcrumb visible-lg">
+<ol class="breadcrumb visible-lg" itemscope itemtype="http://schema.org/BreadcrumbList">
     @breadCrumbs@
 </ol>
-<h1 class="main-heading2">@pageTitle@</h1>
+<div class="page-header">
+    <h2>@pageTitle@</h2>
+</div>
 @catContent@
-@pageContent@
+<div class="page-list">@pageContent@</div>
+
+<h3 class="@php __hide('pageLast'); php@">Интересно почитать</h3>
+<p>@pageLast@</p>

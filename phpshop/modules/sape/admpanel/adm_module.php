@@ -5,7 +5,10 @@ $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.sape.sape_system"))
 
 // Функция обновления
 function actionUpdate() {
-    global $PHPShopOrm;
+    global $PHPShopOrm, $PHPShopModules;
+
+    // Настройки витрины
+    $PHPShopModules->updateOption($_GET['id'], $_POST['servers']);
 
     if (empty($_POST['enabled_new']))
         $_POST['enabled_new'] = 0;
@@ -23,7 +26,7 @@ function actionStart() {
     $data = $PHPShopOrm->select();
 
     $PHPShopGUI->action_button['Скачать'] = array(
-        'name' => 'Скачать файлы Sape',
+        'name' => __('Скачать файлы Sape'),
         'action' => '../modules/sape/code/',
         'class' => 'btn  btn-default btn-sm navbar-btn btn-action-panel-blank',
         'type' => 'button',
@@ -32,8 +35,8 @@ function actionStart() {
 
     $PHPShopGUI->setActionPanel($TitlePage, $select_name, array('Скачать', 'Сохранить и закрыть'));
 
-    $Select[] = array("Слева", 0, $data['flag']);
-    $Select[] = array("Справа", 1, $data['flag']);
+    $Select[] = array(__("Слева"), 0, $data['flag']);
+    $Select[] = array(__("Справа"), 1, $data['flag']);
 
 // Создаем объекты для формы
     $Tab1 = $PHPShopGUI->setField("Sape ID", $PHPShopGUI->setInput("text", "sape_user_new", $data['sape_user']));
@@ -44,8 +47,8 @@ function actionStart() {
 
 
 // Содержание закладки 2
-    $Info = 'Для работы модуля требуется загрузить в корневую директорию форума папку 4cb48833f491686a2500f80310e072da.
-Папку переименуйте в свой уникальный SAPE USER номер и проставьте для права на запись CHMOD 777.
+    $Info = 'Для работы модуля требуется загрузить в корневую директорию форума папку <kbd>4cb48833f491686a2500f80310e072da</kbd>.
+Папку переименуйте в свой уникальный <kbd>SAPE_USER</kbd> номер и проставьте для права на запись <code>CHMOD 777</code>.
 Файлы доступны по <a href="../modules/sape/code/" taget="_blank">ссылке</a>.
 <p>    
 При включении опции "Вывод блока на сайте" Sape ссылки будут автоматически добавлены в левый или правый текстовый блок  в конец списка.
@@ -77,7 +80,7 @@ php@
     $Tab3 = $PHPShopGUI->setPay();
 
 // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1, 270), array("Описание", $Tab2, 270), array("О Модуле", $Tab3, 270));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Описание", $Tab2), array("О Модуле", $Tab3));
 
 // Вывод кнопок сохранить и выход в футер
     $ContentFooter =

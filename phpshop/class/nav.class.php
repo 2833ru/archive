@@ -110,10 +110,10 @@ class PHPShopNav {
 
     /**
      * Выдача переменной навигации page
-     * @return string
+     * @return int
      */
     function getPage() {
-        if ($this->objNav['page'] > 0 or $this->objNav['page'] == 'ALL')
+        if ($this->objNav['page'] > 0 or $this->isPageAll())
             return $this->objNav['page'];
         elseif ($this->objNav['path'] == 'spec' or $this->objNav['path'] == 'newtip')
             return $this->getId();
@@ -122,8 +122,7 @@ class PHPShopNav {
     }
 
     function isPageAll() {
-        if (strtoupper($this->objNav['page']) == 'ALL')
-            return true;
+        //return strtoupper($this->objNav['page']) === 'ALL';
     }
 
     /**

@@ -62,8 +62,11 @@ function actionStart() {
 
     $Tab2.=$PHPShopGUI->setField("Начало показа", $PHPShopGUI->setInputDate("datau_new", PHPShopDate::get($data['datau'])));
 
+    // Иконка
+    $Tab2 .= $PHPShopGUI->setField("Изображение", $PHPShopGUI->setIcon($data['icon'], "icon_new", false));
+
     // Рекомендуемые товары
-    $Tab2.= $PHPShopGUI->setField('Рекомендуемые товары', $PHPShopGUI->setTextarea('odnotip_new', $data['odnotip'], false, false, 300, __('Укажите ID товаров или воспользуйтесь <a href="#" data-target="#odnotip_new"  class="btn btn-sm btn-default tag-search"><span class="glyphicon glyphicon-search"></span> поиском товаров</a>')));
+    $Tab2.= $PHPShopGUI->setField('Рекомендуемые товары', $PHPShopGUI->setTextarea('odnotip_new', $data['odnotip'], false, false, 300, __('Укажите ID товаров или воспользуйтесь') . ' <a href="#" data-target="#odnotip_new"  class="btn btn-sm btn-default tag-search"><span class="glyphicon glyphicon-search"></span> ' . __('поиском товаров') . '</a>'));
 
     $Tab2.=$PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'));
 
@@ -99,26 +102,61 @@ function actionSave() {
 // Функция обновления
 function actionUpdate() {
     global $PHPShopOrm, $PHPShopModules;
-    
+
     if (!empty($_POST['datau_new']))
         $_POST['datau_new'] = PHPShopDate::GetUnixTime($_POST['datau_new']);
     else
         $_POST['datau_new'] = PHPShopDate::GetUnixTime($_POST['datas_new']);
-    
-    // Перехват модуля
-    $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
+
+    $_POST['icon_new'] = iconAdd();
 
     // Мультибаза
-    if (is_array($_POST['servers'])){
+    if (is_array($_POST['servers'])) {
         $_POST['servers_new'] = "";
         foreach ($_POST['servers'] as $v)
             if ($v != 'null' and !strstr($v, ','))
                 $_POST['servers_new'].="i" . $v . "i";
     }
 
+    // Перехват модуля
+    $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
+
     $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['rowID']));
 
     return array("success" => $action);
+}
+
+// Добавление изображения 
+function iconAdd() {
+    global $PHPShopSystem;
+
+    // Папка сохранения
+    $path = $GLOBALS['SysValue']['dir']['dir'] . '/UserFiles/Image/' . $PHPShopSystem->getSerilizeParam('admoption.image_result_path');
+
+    // Копируем от пользователя
+    if (!empty($_FILES['file']['name'])) {
+        $_FILES['file']['ext'] = PHPShopSecurity::getExt($_FILES['file']['name']);
+        if (in_array($_FILES['file']['ext'], array('gif', 'png', 'jpg', 'jpeg', 'svg'))) {
+            if (move_uploaded_file($_FILES['file']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['dir']['dir'] . $path . $_FILES['file']['name'])) {
+                $file = $GLOBALS['dir']['dir'] . $path . $_FILES['file']['name'];
+            }
+        }
+    }
+
+    // Читаем файл из URL
+    elseif (!empty($_POST['furl'])) {
+        $file = $_POST['icon_new'];
+    }
+
+    // Читаем файл из файлового менеджера
+    elseif (!empty($_POST['icon_new'])) {
+        $file = $_POST['icon_new'];
+    }
+
+    if (empty($file))
+        $file = '';
+
+    return $file;
 }
 
 // Функция удаления

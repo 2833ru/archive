@@ -26,7 +26,7 @@ function tab_value($data) {
         }
         
      
-    $PHPShopInterface->setRow( array('name' => '<input style="width:100%" class="form-control input-sm" name="num_value" value="">'), array('name' => '<input style="width:100%" data-id="" placeholder="Добавить" name="name_value" class="form-control input-sm editable-add" value="">'), array('name' => '<input style="width:100%" data-id="" name="total_value" class="form-control input-sm" value="">'),' ',' ');
+    $PHPShopInterface->setRow( array('name' => '<input style="width:100%" class="form-control input-sm" name="num_value" value="">'), array('name' => '<input style="width:100%" data-id="" placeholder="'.__('Добавить').'" name="name_value" class="form-control input-sm editable-add" value="">'), array('name' => '<input style="width:100%" data-id="" name="total_value" class="form-control input-sm" value="">'),' ',' ');
     $disp = '<table class="table table-hover value-list">' . $PHPShopInterface->getContent() . '</table>';
     
     return $disp;

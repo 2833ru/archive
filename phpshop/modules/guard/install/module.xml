@@ -2,7 +2,7 @@
 <module>
     <version>1.7</version>
     <name>Guard</name>
-    <faqlink>http://faq.phpshop.ru/page/antivirus.html</faqlink>
+    <faqlink>https://docs.phpshop.ru/moduli/razrabotchikam/zashitnik-failov-guard</faqlink>
     <description>Модуль защитника файлов.</description>
     <category>develop</category>
     <adminmenu>

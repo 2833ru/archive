@@ -111,7 +111,6 @@ class PHPShopPrice extends PHPShopShopCore {
      */
     function category_select() {
 
-
         // Блокировка вывода всех позиций при большой базе
         if ($_SESSION['max_item'] < 1000)
             $this->value[] = array($this->lang('search_all_cat'), 'ALL', false);
@@ -126,7 +125,6 @@ class PHPShopPrice extends PHPShopShopCore {
                 }
             }
         }
-
 
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__, $this->ParentArray);

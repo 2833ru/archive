@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Библиотека выполнения задач через заданные промежутки времени. Приблеженный аналог CRON
+ * Библиотека выполнения задач через заданные промежутки времени.
  * @author PHPShop Software
  * @version 1.3
  * @package PHPShopClass
  */
 class PHPShopCron {
-    
-    var $check_host=null;
+
+    var $check_host = null;
 
     function PHPShopCron() {
         global $PHPShopSystem;
@@ -23,43 +23,51 @@ class PHPShopCron {
 
     // Настройка
     function job() {
-        
-        $where['used']="='0'";
- 
+
+        $where['used'] = "='0'";
+
         // Мультибаза
-        if (defined("HostID")){
+        if (defined("HostID")) {
             $where['servers'] = " REGEXP 'i" . HostID . "i'";
-            $this->check_host='&hostID='.HostID;
-        }
-        elseif (defined("HostMain")){
-            $where['used'].= ' and (servers ="" or servers REGEXP "i1000i")';
+            $this->check_host = '&hostID=' . HostID;
+        } elseif (defined("HostMain")) {
+            $where['used'] .= ' and (servers ="" or servers REGEXP "i1000i")';
         }
 
         $PHPShopOrm = new PHPShopOrm($this->SysValue['base']['cron']['cron_job']);
         $PHPShopOrm->debug = $this->debug;
-        $this->job = $PHPShopOrm->select(array('*'),$where, array('order' => 'id'), array('limit' => 100));
+        $this->job = $PHPShopOrm->select(array('*'), $where, array('order' => 'id'), array('limit' => 100));
     }
 
     // Выполнение задачи
     function execute($job) {
-        
-        $path = explode("?",$job['path']);
-        
+
+        $path = explode("?", $job['path']);
+
         if (is_file($path[0])) {
 
             // Безопасность
             $cron_secure = md5($this->SysValue['connect']['host'] . $this->SysValue['connect']['dbase'] . $this->SysValue['connect']['user_db'] . $this->SysValue['connect']['pass_db']);
-            
-            if(!empty($path[1]))
-                $true_path = "http://" . $_SERVER['SERVER_NAME'] . "/" . $job['path'] . '&s=' . $cron_secure. $this->check_host;
-            else $true_path = "http://" . $_SERVER['SERVER_NAME'] . "/" . $job['path'] . '?s=' . $cron_secure. $this->check_host;
 
-            if (fopen($true_path, "r"))
-                return 'Выполнено';
+            if (!empty($path[1]))
+                $true_path = "http://" . $_SERVER['SERVER_NAME'] . "/" . $job['path'] . '&s=' . $cron_secure . $this->check_host;
             else
+                $true_path = "http://" . $_SERVER['SERVER_NAME'] . "/" . $job['path'] . '?s=' . $cron_secure . $this->check_host;
+
+            $handle = @fopen($true_path, "r");
+            if ($handle) {
+                
+                $contents = fread($handle, 1000);
+                fclose($handle);
+                
+                if(empty($contents))
+                    $result = 'Выполнено';
+                else $result = $contents;
+
+                return $result;
+            } else
                 return 'Ошибка вызова файла';
-        }
-        else
+        } else
             return 'Ошибка размещения файла';
     }
 
@@ -71,8 +79,7 @@ class PHPShopCron {
                 return 'Выполнено';
             else
                 return 'Ошибка вызова файл';
-        }
-        else
+        } else
             return 'Ошибка размещения файла';
     }
 
@@ -110,7 +117,7 @@ class PHPShopCron {
                 // Пишем лог
                 $PHPShopOrm = new PHPShopOrm($this->SysValue['base']['cron']['cron_log']);
                 $PHPShopOrm->debug = $this->debug;
-                $this->log_id = $PHPShopOrm->insert(array('date_new' => $this->date, 'name_new' => $job['name'], 'path_new' => $_SERVER['SERVER_NAME'].'/'.$job['path']. $this->check_host,
+                $this->log_id = $PHPShopOrm->insert(array('date_new' => $this->date, 'name_new' => $job['name'], 'path_new' => $_SERVER['SERVER_NAME'] . '/' . $job['path'] . $this->check_host,
                     'job_id_new' => $job['id']));
                 break;
 

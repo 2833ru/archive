@@ -1,5 +1,7 @@
 <div class="page-header">
+	<a href="/" >{Главная}</a>
     <h1 class="main-heading2">@sortName@</h1>
+    
 </div>
 
 

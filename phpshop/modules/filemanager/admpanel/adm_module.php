@@ -70,7 +70,7 @@ function actionStart() {
     global $PHPShopGUI, $PHPShopOrm, $select_name;
 
     $PHPShopGUI->action_button['Создать'] = array(
-        'name' => 'Создать карту перевода',
+        'name' => __('Создать карту перевода'),
         'action' => 'saveID',
         'class' => 'btn  btn-default btn-sm navbar-btn',
         'type' => 'submit',
@@ -78,7 +78,7 @@ function actionStart() {
     );
 
     $PHPShopGUI->action_button['Открыть'] = array(
-        'name' => 'Файлы',
+        'name' => __('Файлы'),
         'action' => '../modules/filemanager/server/?full=true',
         'class' => 'btn  btn-default btn-sm navbar-btn btn-action-panel-blank',
         'type' => 'button',

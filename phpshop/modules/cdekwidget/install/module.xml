@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.2</version>
+    <version>1.6</version>
     <name>CDEK Widget</name>
-    <faqlink>http://faq.phpshop.ru/page/cdek-widget.html</faqlink>
+    <faqlink>https://docs.phpshop.ru/moduli/dostavka/cdek-widget</faqlink>
     <description>Виджет расчета доставки cdek.ru</description>
     <category>delivery</category>
-    <sign>1540293037</sign>
+    <sign>1589967437</sign>
     <adminmenu>
         <title>CDEK Widget</title>
         <capability>true</capability>

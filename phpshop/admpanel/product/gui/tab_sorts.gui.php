@@ -45,19 +45,19 @@ function sorttemplate($value, $n, $title, $vendor, $help) {
 
 /**
  * Панель характеристик товара
- * @param array $row массив данных
+ * @param array $data массив данных
  * @return string 
  */
 function tab_sorts($data) {
     global $PHPShopGUI;
     PHPShopObj::loadClass("sort");
-    $PHPShopSort = new PHPShopSort($data['category'], false, false, 'sorttemplate', unserialize($data['vendor_array']), false, true, false);
+    $PHPShopSort = new PHPShopSort($data['category'], false, false, 'sorttemplate', unserialize($data['vendor_array']), false, true, false,null,true);
 
     $sort = $PHPShopSort->disp;
 
     if (empty($sort))
         $sort =
-                '<p class="text-muted">' . __('Для отображения характеристик у товаров необходимо объединить <a href="?path=sort" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-share-alt"></span> Характеристики в группы</a> и выбрать эти группы у <a href="?path=catalog&id=' . intval($_GET['cat']) . '" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-share-alt"></span> Каталогов товаров</a>. Характеристики из выбранных груп появятся в товарах указанных каталогов') . '</p>';
+                '<p class="text-muted">' . __('Для отображения характеристик у товаров необходимо объединить <a href="?path=sort" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-share-alt"></span> Характеристики в группы</a> и выбрать эти группы у <a href="?path=catalog&id=' . intval($data['category']) . '" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-share-alt"></span> Каталогов товаров</a>. Характеристики из выбранных групп появятся в товарах указанных каталогов') . '.</p>';
 
 
     return $PHPShopGUI->setCollapse('Характеристики', $sort, $collapse = 'none', true, false);

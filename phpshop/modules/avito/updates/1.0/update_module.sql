@@ -1,0 +1,1 @@
+ALTER TABLE `phpshop_modules_avito_system` ADD `additional_description` text default '';

@@ -2,7 +2,7 @@
 <module>
     <version>1.2</version>
     <name>Debug</name>
-    <faqlink>http://faq.phpshop.ru/page/debug.html</faqlink>
+    <faqlink>https://docs.phpshop.ru/moduli/razrabotchikam/debug</faqlink>
     <description>Отладочный модуль для разработчиков.</description>
     <category>develop</category>
     <adminmenu>

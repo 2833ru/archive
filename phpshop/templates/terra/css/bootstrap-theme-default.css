@@ -35,7 +35,7 @@ background:#4a4a4a !important;
 background:#4a4a4a !important;
 }
 .product-col .btn-cart,.product-info .product-details .btn-cart, #cart-total, .sale-icon-content .label.newtip-icon{
-background:#7d7f7d!important;
+background:#7d7f7d !important;
 }
 .product-info-box .heading, .sidebar-nav > li > a:hover, .news-list a:hover, .description-link:hover, .product-filter .display label.active,.dl-horizontal.total,.product-info a, .product-col .btn-wishlist:hover, .product-col .btn-wishlist:focus, .product-col .btn-compare:hover, .product-col .btn-compare:focus, a{
 color:#0a87cf;
@@ -63,4 +63,11 @@ background-color:transparent;
 }
 #cart .btn .fa-shopping-cart{
 background-color:transparent;
+}
+.sidebar-nav > li > a:hover{
+color:#8b8b8b;
+text-decoration:none;
+}
+#body{
+--color:#0a87cf;
 }

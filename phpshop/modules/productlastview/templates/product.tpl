@@ -8,7 +8,7 @@
     <td>
         <a href="@shopDir@@productlastview_product_url@.html" title="@productlastview_product_name@">
             @productlastview_product_name@
-        </a> @productlastview_product_price@ @productlastview_product_currency@
+        </a> <span>@productlastview_product_price@ @productlastview_product_currency@</span>
     </td>
 </tr>
 

@@ -53,7 +53,7 @@ function actionStart() {
         $PHPShopGUI->setInputText('№&nbsp;&nbsp; ', 'data[document_number]', $data_person['document_number'], '30%') . 
         $PHPShopGUI->setLine(false, 10) .
         $PHPShopGUI->setInputText('Выдан&nbsp;&nbsp; ', 'data[document_day]', $data_person['document_day'], '40%' , false , 'left') . 
-        $PHPShopGUI->setInputText('20&nbsp;&nbsp; ', 'data[document_year]', $data_person['document_year'], '20%','г.') . 
+        $PHPShopGUI->setInputText('20&nbsp;&nbsp; ', 'data[document_year]', $data_person['document_year'], '20%',__('г.')) . 
         $PHPShopGUI->setLine(false, 10) .
         $PHPShopGUI->setInputText('Наименование учреждения выдающего документ&nbsp;&nbsp; ', 'data[document_issued_by]', $data_person['document_issued_by'], '60%' , false , 'left')
     , 'left', false, false, array('width' => '98%'));

@@ -1,0 +1,1 @@
+ALTER TABLE `phpshop_modules_sberbankrf_system` ADD `token` varchar(64) DEFAULT NULL;

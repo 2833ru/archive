@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+        <meta http-equiv="Content-Type" content="text/html; charset=@charset@">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
  <style type="text/css">
   p {color:#000000;}
@@ -114,8 +114,8 @@
 <tbody>    
     <tr bgcolor="#fafafa" id="header" valign="top">
         <td id="logo" align="left" valign="bottom">
-            <div align="center" style="padding-top:30px;"><a href="http://@serverPath@" target="_blank"><img src="http://@serverPath@@logo@" alt="logo @serverShop@" border="0" style="display: block;max-width: 200px;height: auto;"></a>
-            <p><h2>{Поступил заказ на сумму} @sum@ руб. - @user_name@ <br>(@mail@)</h2></p></div>
+            <div align="center" style="padding-top:30px;"><a href="http://@serverPath@" target="_blank"><img src="http://@serverPath@@logo@" alt="" border="0" style="display: block;max-width: 200px;height: auto;"></a>
+            <p><h2>{Поступил заказ на сумму} @sum@ @currency@ - @user_name@ <br>(@mail@)</h2></p></div>
         </td>     
     </tr>
     
@@ -133,7 +133,7 @@ E-mail: @mail@<br>
 {Тип оплаты}: @payment@<br>
 </p>
 
-<p>{Подробности заказа} № @ouid@ - @date@</p>
+<p>{Подробности заказа} &#8470;@ouid@ - @date@</p>
 <hr>
 <p>{Контактное лицо}: @user_name@<br> 
 {Адрес и информация для доставки}: <br>
@@ -146,33 +146,35 @@ E-mail: @mail@<br>
 <hr><p>@cart@</p>
 <hr>
 <p>{Итого} -- @sum@ @currency@<br>
-{Скидка} -- @discount@%<br>
+{Скидка} -- @discount_sum@ @currency@<br>
 {Доставка} -- @deliveryPrice@ @currency@ @deliveryInfo@</p>
 <hr>
 <p>{К оплате с учетом скидки}: @total@ @currency@</p>
 <p>
-@php
-if(!empty($_POST["org_name_new"])) 
-    echo __("Наименование организации").": ".$_POST["org_name_new"];
-if(!empty($_POST["org_inn_new"])) 
-    echo __("ИНН").": ".$_POST["org_inn_new"];
-if(!empty($_POST["org_kpp_new"])) 
-    echo __("КПП").": ".$_POST["org_kpp_new"];
-if(!empty($_POST["org_yur_adres_new"])) 
-    echo __("Юридический адрес").": ".$_POST["org_yur_adres_new"];
-if(!empty($_POST["org_fakt_adres_new"])) 
-    echo __("Фактический адрес").": ".$_POST["org_fakt_adres_new"];
-if(!empty($_POST["org_ras_new"])) 
-    echo __("Расчётный счёт").": ".$_POST["org_ras_new"];
-if(!empty($_POST["org_bank_new"])) 
-    echo __("Наименование банка").": ".$_POST["org_bank_new"];
-if(!empty($_POST["org_kor_new"])) 
-    echo __("Корреспондентский счёт").": ".$_POST["org_kor_new"];
-if(!empty($_POST["org_bik_new"])) 
-    echo __("БИК").": ".$_POST["org_bik_new"];
-if(!empty($_POST["org_city_new"])) 
-    echo __("Город").": ".$_POST["org_city_new"];
-php@
+    @php
+
+    if(!empty($_POST["org_name_new"]))
+    echo __("Наименование организации").": ".$_POST["org_name_new"]."<br>";
+    if(!empty($_POST["org_inn_new"]))
+    echo __("ИНН").": ".$_POST["org_inn_new"]."<br>";
+    if(!empty($_POST["org_kpp_new"]))
+    echo __("КПП").": ".$_POST["org_kpp_new"]."<br>";
+    if(!empty($_POST["org_yur_adres_new"]))
+    echo __("Юридический адрес").": ".$_POST["org_yur_adres_new"]."<br>";
+    if(!empty($_POST["org_fakt_adres_new"]))
+    echo __("Фактический адрес").": ".$_POST["org_fakt_adres_new"]."<br>";
+    if(!empty($_POST["org_ras_new"]))
+    echo __("Расчётный счёт").": ".$_POST["org_ras_new"]."<br>";
+    if(!empty($_POST["org_bank_new"]))
+    echo __("Наименование банка").": ".$_POST["org_bank_new"]."<br>";
+    if(!empty($_POST["org_kor_new"]))
+    echo __("Корреспондентский счёт").": ".$_POST["org_kor_new"]."<br>";
+    if(!empty($_POST["org_bik_new"]))
+    echo __("БИК").": ".$_POST["org_bik_new"]."<br>";
+    if(!empty($_POST["org_city_new"]))
+    echo __("Город").": ".$_POST["org_city_new"]."<br>";
+
+    php@
 </p>
 <p>{Для редактирования состояния заказа перейдите в панель администрирования магазина}: <a href="@shop_admin@">@shop_admin@</p>
 

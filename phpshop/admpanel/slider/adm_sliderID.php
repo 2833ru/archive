@@ -83,9 +83,10 @@ function actionUpdate() {
 
 // Добавление изображения 
 function iconAdd() {
+    global $PHPShopSystem;
 
     // Папка сохранения
-    $path = '/UserFiles/Image/';
+    $path = '/UserFiles/Image/'. $PHPShopSystem->getSerilizeParam('admoption.image_result_path');
 
     // Копируем от пользователя
     if (!empty($_FILES['file']['name'])) {

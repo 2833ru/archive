@@ -2,7 +2,7 @@
 <module>
     <version>1.2</version>
     <name>яндекс.ƒеньги</name>
-    <faqlink>http://faq.phpshop.ru/page/yandex-money.html</faqlink>
+    <faqlink>https://docs.phpshop.ru/moduli/yandeks/yandeks.dengi</faqlink>
     <description>ѕрием оплат через яндекс.ƒеньги дл€ физических лиц.</description>
     <category>yandex,payment</category>
     <adminmenu>

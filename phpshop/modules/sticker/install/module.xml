@@ -2,9 +2,9 @@
 <module>
     <version>1.2</version>
     <name>Sticker</name>
-    <faqlink>http://faq.phpshop.ru/page/sticker.html</faqlink>
+    <faqlink>https://docs.phpshop.ru/moduli/dizain/stikery</faqlink>
     <description>Модуль стикеров.</description>
-    <category>template,form,sale</category>
+    <category>template,form</category>
     <adminmenu>
         <title>Стикеры</title>
         <capability>true</capability>

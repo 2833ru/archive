@@ -15,10 +15,12 @@ function setGeneration($ssl=false) {
     $stat_pages = null;
     $stat_news = null;
     $stat_catalog = null;
+    $brands = null;
     $seourl_enabled = false;
     $seourlpro_enabled = false;
     $seo_news_enabled = false;
     $seo_page_enabled = false;
+    $seo_brands_enabled = false;
     
     if($ssl)
         $http = 'https';
@@ -34,11 +36,13 @@ function setGeneration($ssl=false) {
         $seourlpro_enabled = true;
 
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['seourlpro']['seourlpro_system']);
-        $settings = $PHPShopOrm->select(array('seo_news_enabled, seo_page_enabled'), array('id' => "='1'"));
+        $settings = $PHPShopOrm->select(array('seo_news_enabled, seo_page_enabled', 'seo_brands_enabled'), array('id' => "='1'"));
         if ($settings['seo_news_enabled'] == 2)
             $seo_news_enabled = true;
         if ($settings['seo_page_enabled'] == 2)
             $seo_page_enabled = true;
+        if($settings['seo_brands_enabled'] == 2)
+            $seo_brands_enabled = true;
     }
 
     // Библиотека
@@ -179,8 +183,31 @@ function setGeneration($ssl=false) {
             $stat_products.= '</url>' . "\n";
         }
 
+    if($seourlpro_enabled && $seo_brands_enabled) {
+        $brandsOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']);
+        $brandsIds = array();
+        $result = $brandsOrm->getList(array('id'), array('brand' => '="1"'));
+        foreach ($result as $value) {
+            $brandsIds[] = $value['id'];
+        }
 
-    $sitemap = $title . $stat_pages . $stat_news . $stat_products . '</urlset>';
+        $brandValuesOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort']);
+
+        $brandValues = $brandValuesOrm->getList(array('sort_seo_name'), array(
+            'category' => sprintf(' IN(%s)', implode(',', $brandsIds)),
+            'sort_seo_name' => '<> ""'
+        ));
+
+        foreach ($brandValues as $brandValue) {
+            $brands.= '<url>' . "\n";
+            $brands.= '<loc>'.$http.'://' . $_SERVER['SERVER_NAME'] . '/brand/' . $brandValue['sort_seo_name'] . '.html</loc>' . "\n";
+            $brands.= '<changefreq>weekly</changefreq>' . "\n";
+            $brands.= '<priority>0.5</priority>' . "\n";
+            $brands.= '</url>' . "\n";
+        }
+    }
+
+    $sitemap = $title . $stat_pages . $stat_news . $stat_products . $brands  . '</urlset>';
 
     // Запись в файл
     if (fwrite(@fopen('../../UserFiles/Files/sitemap.xml', "w+"), $sitemap))
@@ -191,7 +218,6 @@ function setGeneration($ssl=false) {
 
 // Функция обновления
 function actionUpdate() {
-
     setGeneration();
 }
 

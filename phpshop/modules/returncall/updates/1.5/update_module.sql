@@ -1,0 +1,1 @@
+ALTER TABLE `phpshop_modules_returncall_jurnal` CHANGE `status` `status` INT(11) DEFAULT '1';

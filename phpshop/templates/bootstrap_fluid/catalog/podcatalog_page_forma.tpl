@@ -1,3 +1,1 @@
-<ul>
-  <li><a href="/page/CID_@catalogUid@.html" title="@catalogName@">@catalogName@</a>
-</ul>
+<li data-cid="/page/@catalogLink@.html" data-cid-parent="@catalogId@"><a href="/page/@catalogLink@.html">@catalogName@</a></li>

@@ -3,7 +3,7 @@
     <version>1.4</version>
     <name>Mobile</name>
     <description>ћодуль определени€ и переадресации мобильных устройств на мобильную версию сайта.</description>
-    <category>template,decorate,user</category>
+    <category>template</category>
     <adminmenu>
         <title>Mobile</title>
         <capability>true</capability>

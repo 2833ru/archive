@@ -24,11 +24,14 @@ $PHPShopValutaArray = new PHPShopValutaArray();
 $PHPShopSystem = new PHPShopSystem();
 $PHPShopLang = new PHPShopLang(array('locale'=>$_SESSION['lang'],'path'=>'admin'));
 
+// Мультибаза
+$PHPShopBase->checkMultibase('../../../');
+
 class PHPShopPricePrint {
 
     var $print;
 
-    function PHPShopPricePrint() {
+    function __construct() {
         global $PHPShopSystem;
         $this->debug = false;
         $this->objBase = $GLOBALS['SysValue']['base']['products'];
@@ -77,8 +80,18 @@ class PHPShopPricePrint {
 
     function category_array() {
 
-        $PHPShopCategoryArray = new PHPShopCategoryArray(array('skin_enabled'=>"='0'"));
+        // Не выводить скрытые каталоги
+        $where['skin_enabled'] = "!='1'";
+
+        // Мультибаза
+        if (defined("HostID"))
+            $where['servers'] = " REGEXP 'i" . HostID . "i'";
+        elseif (defined("HostMain"))
+            $where['skin_enabled'] .= ' and (servers ="" or servers REGEXP "i1000i")';
+
+        $PHPShopCategoryArray = new PHPShopCategoryArray($where);
         $Catalog = $PHPShopCategoryArray->getArray();
+
         $CatalogKeys = $PHPShopCategoryArray->getKey('id.parent_to');
 
         if (is_array($CatalogKeys))

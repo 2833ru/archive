@@ -1,0 +1,249 @@
+<?php
+
+/**
+ * Библиотека работы с CommerceML
+ * @version 1.0
+ * @package PHPShopClass
+ */
+class PHPShopCommerceML {
+
+    /**
+     * Конструктор
+     */
+    function __construct() {
+        
+    }
+
+    /**
+     * Категории
+     * @param array $where условие поиска
+     * @return array
+     */
+    function category($where) {
+        $Catalog = array();
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
+
+        // Не выводить скрытые каталоги
+        $where['skin_enabled'] = "!='1'";
+
+        $data = $PHPShopOrm->select(array('id,name,parent_to'), $where, false, array('limit' => 10000));
+        if (is_array($data))
+            foreach ($data as $row) {
+                if ($row['id'] != $row['parent_to']) {
+                    $Catalog[$row['id']]['id'] = $row['id'];
+                    $Catalog[$row['id']]['name'] = $row['name'];
+                    $Catalog[$row['id']]['parent_to'] = $row['parent_to'];
+                }
+            }
+
+        return $Catalog;
+    }
+
+    /**
+     * Категории
+     * @param integer $id ИД категории
+     * @return string
+     */
+    function setCategories($id) {
+        $xml = '<Группы>';
+        $category = $this->category(array('parent_to' => '=' . $id));
+        foreach ($category as $val) {
+            $xml .= '<Группа>
+                <Ид>' . $val['id'] . '</Ид>
+		<Наименование>' . $val['name'] . '</Наименование>';
+            $parent = $this->setCategories($val['id']);
+            if (!empty($parent))
+                $xml .= $parent;
+            else
+                $xml .= '<Группы/>';
+            $xml .= '</Группа>';
+        }
+
+        $xml .= '</Группы>';
+
+        return $xml;
+    }
+
+    /**
+     * Изображения товара
+     * @param array $product_row
+     * @return string
+     */
+    function getImages($product_row) {
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['foto']);
+        $data = $PHPShopOrm->select(array('*'), array('parent' => '=' . $product_row['id']), false, array('limit' => 10000));
+        $xml = null;
+        if (is_array($data))
+            foreach ($data as $row) {
+                $xml .= '<Картинка>http://' . $_SERVER['SERVER_NAME'] . $row['name'] . '</Картинка>';
+            }
+
+        if (empty($xml))
+            $xml = '<Картинка>http://' . $_SERVER['SERVER_NAME'] . $product_row['pic_big'] . '</Картинка>';
+
+        return $xml;
+    }
+
+    /**
+     * Генерация CommerceML для товаров
+     * @param array $data
+     * @return string
+     */
+    function getProducts($data) {
+        global $PHPShopSystem;
+
+        $xml = null;
+
+        // Каталоги
+        $category = $this->setCategories(0);
+
+        // Товары
+        foreach ($data as $row)
+            if (is_array($row)) {
+                
+                // Убираем подтипы
+                if($row['parent_enabled'] == 1)
+                    continue;
+                
+                $item .= '
+                        <Товар>
+			<Ид>' . $row['id'] . '</Ид>
+			<Артикул>' . $row['uid'] . '</Артикул>
+			<Наименование>' . $row['name'] . '</Наименование>
+                        <БазоваяЕдиница Код="796 " НаименованиеПолное="Штука" МеждународноеСокращение="PCE">' . $row['ed_izm'] . '</БазоваяЕдиница>
+                        <ПолноеНаименование><![CDATA[' . $row['description'] . ']]></ПолноеНаименование>
+			<Группы>
+				<Ид>' . $row['category'] . '</Ид>
+			</Группы>
+                        <Описание><![CDATA[' . $row['content'] . ']]></Описание>
+			<СтавкиНалогов>
+				<СтавкаНалога>
+					<Наименование>НДС</Наименование>
+					<Ставка>' . $PHPShopSystem->getParam('nds') . '</Ставка>
+				</СтавкаНалога>
+			</СтавкиНалогов>
+			<ЗначенияРеквизитов>
+				<ЗначениеРеквизита>
+					<Наименование>ТипНоменклатуры</Наименование>
+					<Значение>Товар</Значение>
+				</ЗначениеРеквизита>
+				<ЗначениеРеквизита>
+					<Наименование>Вес</Наименование>
+					<Значение>' . $row['weight'] . '</Значение>
+				</ЗначениеРеквизита>
+			</ЗначенияРеквизитов>
+                        ' . $this->getImages($row['id']) . '
+		</Товар>
+                ';
+            }
+
+                $items = ' <Каталог СодержитТолькоИзменения="false">
+	<Ид>1</Ид>
+        <ИдКлассификатора>1</ИдКлассификатора>
+	<Наименование>Основной каталог товаров</Наименование>
+		<Товары>
+' . $item . '
+		</Товары>
+	</Каталог>';
+
+                $xml = '<?xml version="1.0" encoding="windows-1251"?>
+<КоммерческаяИнформация ВерсияСхемы="2.04" ДатаФормирования="' . PHPShopDate::get(time(), false, true) . '">
+    <Классификатор>
+    <Ид>1</Ид>
+    <Наименование>Классификатор (Основной каталог товаров)</Наименование>
+    <Владелец>
+       <Ид>1</Ид>
+       <Наименование>' . $PHPShopSystem->getParam('name') . '</Наименование>
+       <ОфициальноеНаименование>' . $PHPShopSystem->getParam('company') . '</ОфициальноеНаименование>
+       <ИНН>' . $PHPShopSystem->getParam('nds') . '</ИНН>
+       <КПП>' . $PHPShopSystem->getParam('kpp') . '</КПП>
+    </Владелец>
+	' . $category . '
+    </Классификатор>
+    ' . $items . '
+</КоммерческаяИнформация>';
+                return $xml;
+            
+    }
+
+    /**
+     * Генерация CommerceML для заказа
+     * @param array $data
+     * @return string
+     */
+    function getOrders($data) {
+        global $PHPShopSystem;
+
+        $xml = null;
+        foreach ($data as $row)
+            if (is_array($row)) {
+
+                $PHPShopOrder = new PHPShopOrderFunction($row['id']);
+
+                $num = 0;
+                $id = $row['id'];
+                $uid = $row['uid'];
+                $order = unserialize($row['orders']);
+                $status = unserialize($data['status']);
+                $sum = $PHPShopOrder->returnSumma($order['Cart']['sum'], $order['Person']['discount']);
+
+                $item = null;
+                if (is_array($order['Cart']['cart']))
+                    foreach ($order['Cart']['cart'] as $val) {
+                        $id = $val['id'];
+                        $uid = $val['uid'];
+                        $num = $val['num'];
+                        $sum = $PHPShopOrder->returnSumma($val['price'] * $num, $order['Person']['discount']);
+
+                        $item .= '
+                        <Товар>
+				<Ид>' . $val['id'] . '</Ид>
+				<Штрихкод></Штрихкод>
+				<Артикул>' . $val['uid'] . '</Артикул>
+				<Наименование>' . $val['name'] . '</Наименование>
+				<ЦенаЗаЕдиницу>' . $val['price'] . '</ЦенаЗаЕдиницу>
+				<Количество>' . $val['num'] . '</Количество>
+				<Сумма>' . $sum . '</Сумма>
+				<Единица>шт</Единица>
+			</Товар>
+                        ';
+                    }
+
+                if (empty($row['fio']))
+                    $row['fio'] = $row['org_name'];
+
+                $xml .= '
+	<Документ>
+		<Номер>' . $row['uid'] . '</Номер>
+		<Дата>' . PHPShopDate::get($row['datas'], false, true) . '</Дата>
+		<ХозОперация>Заказ товара</ХозОперация>
+		<Роль>Продавец</Роль>
+		<Валюта>' . $PHPShopSystem->getDefaultValutaIso() . '</Валюта>
+		<Сумма>' . $row['sum'] . '</Сумма>
+                <Комментарий>'.$status['maneger'].'</Комментарий>
+		<Контрагент>
+                    <Ид>'.$row['user'].'</Ид>
+		    <Наименование>' . $row['fio'] . '</Наименование>
+		    <ПолноеНаименование>' . $row['org_name'] . '</ПолноеНаименование>
+		    <ИНН>' . $row['org_inn'] . '</ИНН>
+		    <КПП>' . $row['org_kpp'] . '</КПП>
+		    <Роль>Покупатель</Роль>
+		</Контрагент>
+		<Товары>
+' . $item . '
+		</Товары>
+	</Документ>';
+            }
+
+        if (!empty($xml)) {
+            $xml = '<?xml version="1.0" encoding="windows-1251"?>
+<КоммерческаяИнформация ВерсияСхемы="2.04" ДатаФормирования="' . PHPShopDate::get(time(), false, true) . '">
+	' . $xml . '
+</КоммерческаяИнформация>';
+            return $xml;
+        }
+    }
+
+}
+
+?>

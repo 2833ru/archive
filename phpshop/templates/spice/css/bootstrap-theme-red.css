@@ -1,4 +1,6 @@
-
+#body{
+--color:#dd0504;
+}
 .bootstrap-theme{
 color:#fff;
 }
@@ -25,7 +27,7 @@ background:#dd0504 !important;
 background:#960303 !important;
 }
 .main-navbar-list-catalog-wrapper.open li a:hover, .main-navbar-list-catalog-hidden.active,.user-dropdown > .dropdown-menu li a:hover,.main-navbar-list-catalog-wrapper.open li a.active, .sidebar-nav > li > ul.active > li.active > a, .sidebar-nav ul.active li:hover a, .btn-main:hover{
-background:#dd0504 !important;
+background:#960303 !important;
 }
 .product-col .btn-cart,.product-info .product-details .btn-cart, #cart .btn .fa-shopping-cart{
 background:#dd0504 !important;
@@ -54,15 +56,21 @@ background:transparent !important;
 #cart .dropdown-menu table td a{
 color:#fff;
 }
-.header-color, .header-color a,.header-color .btn,.header-color h4 {
-    color: #fff;
+.header-color, .header-color a,.header-color .btn,.header-color h4{
+color:#fff;
 }
-.header-color input::-moz-placeholder {
-    color: #878a8c;
+.header-color input::-moz-placeholder{
+color:#878a8c;
 }
-.header-color input:-ms-input-placeholder {
-    color: #878a8c;
+.header-color input:-ms-input-placeholder{
+color:#878a8c;
 }
-.header-color input::-webkit-input-placeholder {
-    color: #878a8c;
+.header-color input::-webkit-input-placeholder{
+color:#878a8c;
+}
+.additional-nav-menu .dropdown-menu, .submenu .dropdown-menu{
+background-color:#960403 !important;
+}
+.additional-nav-menu .dropdown-menu > li:hover, .submenu .dropdown-menu > li:hover{
+background:#de0605 !important;
 }

@@ -15,6 +15,8 @@ function actionDelete() {
 function GetSkinList($skin) {
     global $PHPShopGUI;
     $dir = "../templates/";
+    
+    $value[] = array(__('Не выбрано'), '', '');
 
     if (is_dir($dir)) {
         if (@$dh = opendir($dir)) {
@@ -33,7 +35,7 @@ function GetSkinList($skin) {
             closedir($dh);
         }
     }
-
+    
     return $PHPShopGUI->setSelect('skin_new', $value);
 }
 

@@ -3,7 +3,7 @@
 /**
  * Обработчик гостевой книги
  * @author PHPShop Software
- * @version 1.2
+ * @version 1.3
  * @package PHPShopCore
  */
 class PHPShopGbook extends PHPShopCore {
@@ -29,8 +29,8 @@ class PHPShopGbook extends PHPShopCore {
         // кол-во отзывов на странице
         if (!$this->num_row)
             $this->num_row = 10;
-        
-                // Навигация хлебные крошки
+
+        // Навигация хлебные крошки
         $this->navigation(false, __('Отзывы'));
     }
 
@@ -42,9 +42,17 @@ class PHPShopGbook extends PHPShopCore {
         // Сообщение о записи отзыва
         if (!empty($_GET['write']))
             $this->set('Error', __("Сообщение успешно добавлено. Отзыв будет размещен только после проверки модератором"));
+        
+        $where['flag']="='1'";
+
+        // Мультибаза
+        if (defined("HostID"))
+            $where['servers'] = " REGEXP 'i" . HostID . "i'";
+        elseif (defined("HostMain"))
+            $where['flag'] .= ' and (servers ="" or servers REGEXP "i1000i")';
 
         // Выборка данных
-        $this->dataArray = parent::getListInfoItem(array('*'), array('flag' => "='1'"), array('order' => 'datas DESC'));
+        $this->dataArray = parent::getListInfoItem(array('*'), $where, array('order' => 'datas DESC'));
 
         if (is_array($this->dataArray))
             foreach ($this->dataArray as $row) {
@@ -81,8 +89,8 @@ class PHPShopGbook extends PHPShopCore {
 
         $page = $this->PHPShopNav->getId();
         if ($page > 1) {
-            $this->description.= ' Часть ' . $page;
-            $this->title.=' - Страница ' . $page;
+            $this->description .= ' Часть ' . $page;
+            $this->title .= ' - Страница ' . $page;
         }
 
         // Перехват модуля
@@ -108,9 +116,17 @@ class PHPShopGbook extends PHPShopCore {
         // Безопасность
         if (!PHPShopSecurity::true_num($this->PHPShopNav->getId()))
             return $this->setError404();
+        
+        $where['id'] = '='.$this->PHPShopNav->getId();
+
+        // Мультибаза
+        if (defined("HostID"))
+            $where['servers'] = " REGEXP 'i" . HostID . "i'";
+        elseif (defined("HostMain"))
+            $where['id'].= ' and (servers ="" or servers REGEXP "i1000i")';
 
         // Выборка данных
-        $row = parent::getFullInfoItem(array('*'), array('id' => '=' . $this->PHPShopNav->getId()));
+        $row = parent::getFullInfoItem(array('*'), $where);
 
         // 404
         if (!isset($row))
@@ -178,7 +194,7 @@ class PHPShopGbook extends PHPShopCore {
 
         $this->parseTemplate($this->getValue('templates.gbook_forma_otsiv'));
     }
-    
+
     /**
      * Проверка ботов
      * @param array $option параметры проверки [url|captcha|referer]
@@ -189,7 +205,7 @@ class PHPShopGbook extends PHPShopCore {
 
         return $PHPShopRecaptchaElement->security($option);
     }
-    
+
     /**
      * Экшен записи отзыва при получении $_POST[send_gb]
      */
@@ -198,7 +214,7 @@ class PHPShopGbook extends PHPShopCore {
         // Перехват модуля
         if ($this->setHook(__CLASS__, __FUNCTION__, $_POST, 'START'))
             return true;
-        
+
         if ($this->security()) {
             $this->write();
             header("Location: ../gbook/?write=ok");

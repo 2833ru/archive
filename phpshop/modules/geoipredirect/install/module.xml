@@ -2,7 +2,7 @@
 <module>
     <version>1.0</version>
     <name>GeoIP Redirect</name>
-    <faqlink>http://faq.phpshop.ru/page/geoip.html</faqlink>
+    <faqlink>https://docs.phpshop.ru/moduli/razrabotchikam/geoip</faqlink>
     <description>Модуль определения города по IP.</description>
     <category>develop</category>
     <adminmenu>

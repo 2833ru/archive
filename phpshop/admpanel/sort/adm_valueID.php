@@ -17,10 +17,10 @@ function actionDelete() {
 }
 
 /**
- * Экшен редакирования из модального окна 
+ * Экшен редактирования из модального окна 
  */
 function actionValueEdit() {
-    global $PHPShopGUI, $PHPShopModules, $PHPShopOrm;
+    global $PHPShopGUI, $PHPShopModules, $PHPShopOrm,$PHPShopSystem;
 
     // Выборка
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_REQUEST['id'])));
@@ -28,19 +28,29 @@ function actionValueEdit() {
 
     $PHPShopGUI->field_col = 2;
     $PHPShopGUI->_CODE.= $PHPShopGUI->setField('Название', $PHPShopGUI->setInputArg(array('name' => 'name_value', 'type' => 'text.required', 'value' => $data['name'])));
-    $PHPShopGUI->_CODE.= $PHPShopGUI->setField('Приоритет', $PHPShopGUI->setInputArg(array('name' => 'num_value', 'type' => 'text', 'value' => $data['num'], 'size' => 100)));
+    $PHPShopGUI->_CODE.= $PHPShopGUI->setField(
+            array('Title','Приоритет'), 
+            array(
+                
+                $PHPShopGUI->setInput("text", "title_value", $data['title'],'100%'),
+                $PHPShopGUI->setInputArg(array('name' => 'num_value', 'type' => 'text', 'value' => $data['num']))        
+            ),
+            array(
+                array(2, 7), 
+                array(2, 1)
+            ));
 
     $PHPShopGUI->_CODE.=$PHPShopGUI->setField("Иконка", $PHPShopGUI->setIcon($data['icon'], "icon_value", true, array('load' => false, 'server' => true, 'url' => false)));
 
     // Страницы с описанием
-    $page_value[] = array('- Нет описания - ', null, $data['page']);
+    $page_value[] = array('- '.__('Нет описания').' - ', null, $data['page']);
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['page']);
     $data_page = $PHPShopOrm->select(array('*'), false, false, array('limit' => 1000));
     if (is_array($data_page))
         foreach ($data_page as $v)
             $page_value[] = array($v['name'], $v['link'], $data['page']);
 
-    $PHPShopGUI->_CODE.=$PHPShopGUI->setField("Описание", $PHPShopGUI->setSelect('page_value', $page_value, '100%', false, false, false, false, false, false, false, 'form-control'));
+    $PHPShopGUI->_CODE.=$PHPShopGUI->setField("Страница описания", $PHPShopGUI->setSelect('page_value', $page_value, '100%', false, false, false, false, false, false, false, 'form-control'));
 
     // Категории
     $PHPShopSort = new PHPShopSortCategoryArray(array('category' => '!=0'));
@@ -51,13 +61,23 @@ function actionValueEdit() {
             $sort_value[] = array($v['name'], $v['id'], $data['category']);
 
     $PHPShopGUI->_CODE.=$PHPShopGUI->setField("Категория", $PHPShopGUI->setSelect('category_value', $sort_value, '100%', false, false, false, false, false, false, false, 'form-control'));
+    
+    // Редактор 
+    $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));
+    $oFCKeditor = new Editor('description_value');
+    $oFCKeditor->Height = '100';
+    $oFCKeditor->Value = $data['description'];
+    
+    $PHPShopGUI->_CODE.=$PHPShopGUI->setField("Описание", $oFCKeditor->AddGUI());
+    
+
 
     $PHPShopGUI->_CODE.=$PHPShopGUI->setInputArg(array('name' => 'rowID', 'type' => 'hidden', 'value' => $_REQUEST['id']));
     $PHPShopGUI->_CODE.=$PHPShopGUI->setInputArg(array('name' => 'parentID', 'type' => 'hidden', 'value' => $_REQUEST['parentID']));
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
-
+    
     exit($PHPShopGUI->_CODE . '<p class="clearfix"> </p>');
 }
 

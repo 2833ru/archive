@@ -1,21 +1,29 @@
 <?php
+
 /**
- * Библиотека аналитики Яндекс и Goggle
+ * Библиотека аналитики Яндекс и Goggle. Вывод тегов OpenGraph.
  * @author PHPShop Software
- * @version 1.2
+ * @version 1.4
  * @package PHPShopClass
  */
 class PHPShopAnalitica {
-    
+
     var $status = false;
     var $code;
 
     public function __construct() {
 
+        // OpenGraph
+        PHPShopParser::set('ogTitle', $GLOBALS['PHPShopSystem']->getName());
+        PHPShopParser::set('ogImage', $GLOBALS['PHPShopSystem']->getLogo());
+        PHPShopParser::set('ogUrl', $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']);
+        PHPShopParser::set('ogDescription', $GLOBALS['PHPShopSystem']->getParam('descrip'));
+
         // Метрика
         $this->metrica_enabled = $GLOBALS['PHPShopSystem']->getSerilizeParam('admoption.metrica_enabled');
         $this->metrica_id = intval($GLOBALS['PHPShopSystem']->getSerilizeParam('admoption.metrica_id'));
         $this->ecommerce = $GLOBALS['PHPShopSystem']->getSerilizeParam('admoption.metrica_ecommerce');
+        $this->webvizor = $GLOBALS['PHPShopSystem']->getSerilizeParam('admoption.metrica_webvizor');
 
         // Аналитика
         $this->google_enabled = $GLOBALS['PHPShopSystem']->getSerilizeParam('admoption.google_enabled');
@@ -26,11 +34,11 @@ class PHPShopAnalitica {
     /**
      * Инициализация
      * @param string $name имя функции/метода
-     * @param array $data массим данных
+     * @param array $data массив данных
      */
     public function init($name, $data) {
-        if (method_exists($this, $name)){
-            $this->status =  $this->$name($data);
+        if (method_exists($this, $name)) {
+            $this->status = $this->$name($data);
         }
     }
 
@@ -39,6 +47,11 @@ class PHPShopAnalitica {
      * @param array $row данные
      */
     public function CID_Product($row) {
+
+        // OpenGraph
+        PHPShopParser::set('ogTitle', $row['name']);
+        PHPShopParser::set('ogImage', $row['pic_small']);
+        PHPShopParser::set('ogUrl', $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']);
 
         if ($this->analitics or $this->ecommerce) {
             $this->code .= "
@@ -63,7 +76,7 @@ class PHPShopAnalitica {
                        var s_category = json['category']";
 
             if ($this->analitics)
-                $this->code.="
+                $this->code .= "
                 
                      /* Google */
                      ga('create', '" . $this->google_id . "', 'auto');  
@@ -82,7 +95,7 @@ class PHPShopAnalitica {
                      ";
 
             if ($this->ecommerce)
-                $this->code.="     
+                $this->code .= "     
                 
                      /* Yandex */  
                      window.dataLayer = window.dataLayer || [];
@@ -102,7 +115,7 @@ class PHPShopAnalitica {
                       });
                    ";
 
-            $this->code.="}
+            $this->code .= "}
                }
           });
      });
@@ -113,7 +126,7 @@ class PHPShopAnalitica {
     }
 
     /**
-     * Аналитика для удаления товрво из корзины
+     * Аналитика для удаления товаров из корзины
      * @param array $data данные
      */
     public function id_delete($data) {
@@ -126,7 +139,7 @@ class PHPShopAnalitica {
     $(window).load(function(){";
 
             if ($this->analitics)
-                $this->code.="
+                $this->code .= "
     
                      /* Google */
                      ga('create', '" . $this->google_id . "', 'auto');  
@@ -145,7 +158,7 @@ class PHPShopAnalitica {
                      ";
 
             if ($this->ecommerce)
-                $this->code.="     
+                $this->code .= "     
                   
                    /* Yandex */
                    window.dataLayer = window.dataLayer || []; 
@@ -163,15 +176,14 @@ class PHPShopAnalitica {
                     });
                 }); 
      </script>";
-         
         }
     }
 
     /**
-     * Добавлени в корзину на остальных страницах
+     * Добавление в корзину на остальных страницах
      */
-    public function click(){
-        
+    public function click() {
+
         if ($this->analitics or $this->ecommerce) {
             $this->code .= "
          <script>  
@@ -194,7 +206,7 @@ class PHPShopAnalitica {
                        var s_category = json['category']";
 
             if ($this->analitics)
-                $this->code.="
+                $this->code .= "
                 
                      /* Google */
                      ga('create', '" . $this->google_id . "', 'auto');  
@@ -213,7 +225,7 @@ class PHPShopAnalitica {
                      ";
 
             if ($this->ecommerce)
-                $this->code.="  
+                $this->code .= "  
                 
                      /* Yandex */
                      window.dataLayer = window.dataLayer || [];
@@ -232,37 +244,37 @@ class PHPShopAnalitica {
                          }
                       });";
 
-            $this->code.=" } 
+            $this->code .= " } 
                     }
                 });
             }); ";
 
-            $this->code.="   
+            $this->code .= "   
                      });
                    </script>        
                    ";
         }
     }
 
-
-
-
-
-
     /**
-     * Аналитика для подробноо описания товара
+     * Аналитика для подробное описания товара
      * @param array $row данные
      */
     public function UID($row) {
 
+        // OpenGraph
+        PHPShopParser::set('ogTitle', $row['name']);
+        PHPShopParser::set('ogImage', $row['pic_small']);
+        PHPShopParser::set('ogUrl', $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']);
+
         if ($this->analitics or $this->ecommerce) {
             $this->code .= "
          <script>  
-             $(window).load(function(){";                     
-               
-           
+             $(window).load(function(){";
+
+
             if ($this->analitics)
-                $this->code.="
+                $this->code .= "
                 
                      /* Google */
                      ga('create', '" . $this->google_id . "', 'auto');  
@@ -280,7 +292,7 @@ class PHPShopAnalitica {
                       ga('send', 'pageview'); ";
 
             if ($this->ecommerce)
-                $this->code.=" 
+                $this->code .= " 
                 
                       /* Yandex */  
                       window.dataLayer = window.dataLayer || [];                    
@@ -304,11 +316,10 @@ class PHPShopAnalitica {
                               }
                          }); ";
 
-            $this->code.="   
+            $this->code .= "   
                      });
                    </script>        
                    ";
-            
         }
     }
 
@@ -365,7 +376,7 @@ class PHPShopAnalitica {
 
             // Информация о заказе для Гугла + закрываем код
             if ($this->analitics)
-                $this->code .="ga('ec:setAction', 'purchase', {
+                $this->code .= "ga('ec:setAction', 'purchase', {
                     'id': '" . $obj->ouid . "',
                     'revenue': '" . $obj->total . "',
                     'shipping': '" . $obj->delivery . "'
@@ -385,8 +396,8 @@ class PHPShopAnalitica {
 
         if ($this->google_enabled) {
 
-            if($this->analitics)
-            echo "
+            if ($this->analitics)
+                echo "
                 <!-- Google Analytics -->
 <script>
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -395,19 +406,19 @@ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 </script>
 <!--/ Google Analytics -->";
-            else echo "
+            else
+                echo "
                 <!-- Google Analytics -->
-<script async src=\"https://www.googletagmanager.com/gtag/js?id=".$this->google_id."\"></script>
+<script async src=\"https://www.googletagmanager.com/gtag/js?id=" . $this->google_id . "\"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-  gtag('config', '".$this->google_id."');
+  gtag('config', '" . $this->google_id . "');
 </script>
 <!--/ Google Analytics -->
 ";
         }
-
 
         if ($this->metrica_enabled) {
 
@@ -416,6 +427,12 @@ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
                     ecommerce:"dataLayer"';
             else
                 $ecommerce = null;
+
+            if ($this->webvizor)
+                $webvizor = '
+                    webvisor:true,';
+            else
+                $webvizor = null;
 
             echo '
                 <!-- Yandex.Metrika counter -->
@@ -426,7 +443,7 @@ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
                 w.yaCounter' . $this->metrica_id . ' = new Ya.Metrika2({
                     id:' . $this->metrica_id . ',
                     clickmap:true,
-                    trackLinks:true,
+                    trackLinks:true,' . $webvizor . '
                     accurateTrackBounce:true' . $ecommerce . '
                 });
             } catch(e) { }
@@ -445,19 +462,20 @@ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
     })(document, window, "yandex_metrika_callbacks2");
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/' . $this->metrica_id . '" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!--/ Yandex.Metrika counter -->'; 
+<!--/ Yandex.Metrika counter -->';
         }
-        
+
 
         // Не сработала инициализация
         if ($this->analitics or $this->ecommerce) {
-            if(!$this->status){
+            if (!$this->status) {
                 $this->click();
             }
         }
-        
+
         echo $this->code;
     }
 
 }
+
 ?>

@@ -18,7 +18,7 @@ $().ready(function() {
         data.push({name: 'ajax', value: 1});
         data.push({name: 'category_value', value: $('#footer input[name=rowID]').val()});
         $.ajax({
-            mimeType: 'text/html; charset=windows-1251', // ! Need set mimeType only when run from local file
+            mimeType: 'text/html; charset='+locale.charset, 
             url: '?path=opros.value&action=new',
             type: 'post',
             data: data,
@@ -49,7 +49,7 @@ $().ready(function() {
             data.push({name: 'ajax', value: 1});
             data.push({name: 'actionList[deleteID]', value: 'actionDelete.opros.edit'});
             $.ajax({
-                mimeType: 'text/html; charset=windows-1251', // ! Need set mimeType only when run from local file
+                mimeType: 'text/html; charset='+locale.charset, 
                 url: '?path=opros.value&id=' + $(this).attr('data-id'),
                 type: 'post',
                 data: data,
@@ -76,7 +76,7 @@ $().ready(function() {
         data.push({name: 'ajax', value: 1});
         data.push({name: 'actionList[editID]', value: 'actionUpdate.opros.edit'});
         $.ajax({
-            mimeType: 'text/html; charset=windows-1251', // ! Need set mimeType only when run from local file
+            mimeType: 'text/html; charset='+locale.charset,
             url: '?path=opros.value&id=' + $(this).attr('data-id'),
             type: 'post',
             data: data,

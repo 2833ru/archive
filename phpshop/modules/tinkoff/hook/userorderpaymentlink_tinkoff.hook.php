@@ -4,17 +4,12 @@ function userorderpaymentlink_tinkoff_hook($obj, $PHPShopOrderFunction) {
     global $PHPShopSystem;
 
     // Настройки модуля
-    include_once(dirname(__FILE__) . '/mod_option.hook.php');
     include_once $GLOBALS['SysValue']['class']['tinkoff'];
-    $PHPShopTinkoffArray = new PHPShopTinkoffArray();
-    $option = $PHPShopTinkoffArray->getArray();
+    $tinkoff = new Tinkoff();
 
     // Контроль оплаты от статуса заказа
     if ($PHPShopOrderFunction->order_metod_id == 10032)
-        if ($PHPShopOrderFunction->getParam('statusi') == $option['status'] or empty($option['status'])) {
-
-            $tinkoff = new Tinkoff();
-
+        if ($PHPShopOrderFunction->getParam('statusi') == $tinkoff->settings['status'] or empty($tinkoff->settings['status'])) {
             $email['mail'] = $PHPShopOrderFunction->getMail();
 
             $obj->ouid = $PHPShopOrderFunction->objRow['uid'];

@@ -45,8 +45,10 @@ function actionStart() {
     $Tab1.=$PHPShopGUI->setField('API пароль', $PHPShopGUI->setInput('password', 'password_new', $data['password'], null, 300));
     $Tab1.=$PHPShopGUI->setField('Индекс отправителя', $PHPShopGUI->setInputText(false, 'delivery_index_new', $data['delivery_index'], 300));
     $Tab1.=$PHPShopGUI->setField('Доставка', $PHPShopGUI->setSelect('delivery_id_new', $delivery_value, 300));
-    $Tab1.=$PHPShopGUI->setField('Тип отправления', $PHPShopGUI->setSelect('type_new', $type_value, 300));
+    $Tab1.=$PHPShopGUI->setField('Тип отправления', $PHPShopGUI->setSelect('type_new', $type_value, 300,true));
     $Tab1.= $PHPShopGUI->setField('Объявленная ценность', $PHPShopGUI->setInputText('От суммы корзины', 'cennost_new', $data['cennost'], 250,'%'));
+    $Tab1.= $PHPShopGUI->setField('Добавить наценку', $PHPShopGUI->setInputText(null, 'fee_new', $data['fee'], 100));
+    $Tab1.= $PHPShopGUI->setField('Тип наценки', $PHPShopGUI->setSelect('fee_type_new', array(array('%', 1, $data['fee_type']), array('Руб.', 2, $data['fee_type'])), 100, true, false, $search = false, false, $size = 1));
 
     $info = '<h4>Получение API ключа приложения</h4>
        <ol>
@@ -67,7 +69,7 @@ function actionStart() {
     $Tab2 = $PHPShopGUI->setInfo($info);
 
     // Форма регистрации
-    $Tab3 = $PHPShopGUI->setPay();
+    $Tab3 = $PHPShopGUI->setPay($serial = false, false, $data['version'], true);
 
     // Вывод формы закладки
     $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Инструкция", $Tab2), array("О Модуле", $Tab3));

@@ -1,1 +1,1 @@
-<span class="sale-icon label">Акция</span>
+<span class="sale-icon label">{Акция}</span>

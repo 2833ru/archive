@@ -4,7 +4,7 @@
 function index_newselement_hook($obj, $dataArray, $rout) {
 
     if ($rout == 'START') {
-        $obj->limit = 1;
+        $obj->limit = 3;
         $obj->disp_only_index=false;
     }
 }

@@ -1,33 +1,27 @@
-<table class="table table-striped">
+<table class="table product-table">
     <tr>
-        <td width="5%" class="hidden-xs"></td>
-        <td width="40%"><strong>{Наименование}</strong></td>
-        <td width="10%" align="left"><strong>{Кол-во}</strong></td>
-        <td width="10%" align="center" class="hidden-xs"><strong>{Операции}</strong></td>
-        <td width="15%" align="right" class="hidden-xs"><strong>{Цена 1 шт.}</strong></td>
-        <td width="15%" align="right"><strong>{Стоимость}</strong></td>
+        <td  colspan="2">{Ваш заказ}</td>
+        <td class=""></td>
+        <td  align="center">{Количество}</td>
+        
+        
+        <td  align="center">{Сумма}</td>
+        <td  align="center" class=""></td>
     </tr>
-    <tr>
-        <td width="5%" class="hidden-xs"></td>
-        <td width="40%"></td>
-        <td width="10%" align="left"></td>
-        <td width="10%" align="center" class="hidden-xs"></td>
-        <td width="15%" align="right" class="hidden-xs"></td>
-        <td width="15%" align="right"></td>
-    </tr>
+
     @display_cart@
-    <tr>
+    <tr class="pad-10-20">
         <td>
             <b>{Итого}:</b>
         </td>
-        <td class="hidden-xs"></td>
+        <td class=""></td>
         <td width="55" >
-            <strong>@cart_num@</strong> (шт.)
+           
         </td>
 
-        <td class="hidden-xs"></td>
-        <td align="right" class="hidden-xs"></td>
-        <td align="right" class="red">@cart_sum@ <span class="rubznak">@currency@</span></td>
+        <td class=""></td>
+        <td align="right" class=""></td>
+        <td align="right" class="red">@cart_sum_discount_off@ <span class="rubznak">@currency@</span></td>
     </tr>
     <!--<tr>
         <td colspan="2">
@@ -41,31 +35,29 @@
 
     </tr>-->
    
-    <tr>
-        <td>{Скидка}:</td>
-        <td class="hidden-xs"></td>
-        <td class="hidden-xs"></td>
+    <tr class="pad-10">
+        <td>{Скидки и бонусы}:</td>
+        <td class=""></td>
+        <td class=""></td>
         <td></td>
-        <td class="hidden-xs"></td>
-        <td align="right" class="red" id="SkiSummaAll"><span id="SkiSumma">@discount@</span>&nbsp;%</td>
+        <td class=""></td>
+        <td align="right" class="red" id="SkiSummaAll"><span id="SkiSumma" class="text-danger">- @discount_sum@</span><span class="rubznak text-danger">@currency@</span></td>
     </tr> 
-    <tr>
+    <tr class="pad-20-10">
         <td>{Доставка}:</td>
-        <td class="hidden-xs"></td>
-        <td class="hidden-xs"></td>
+        <td class=""></td>
+        <td class=""></td>
         <td></td>
-        <td class="hidden-xs"></td>
+        <td class=""></td>
         <td align="right" class="red"><span id="DosSumma">@delivery_price@</span>&nbsp; <span class="rubznak">@currency@</span></td>
     </tr>
-    
-    <tr class="success">
+    <tr>
         <td colspan="2">
-            {К оплате с учетом скидки}:
+           <b> {К оплате с учетом скидки}:</b>
         </td>
-        <td class="hidden-xs"></td>
-        <td class="hidden-xs"></td>
-        <td class="hidden-xs"></td>
-        <td align="right" class="red"><span id="WeightSumma" class="hidden">@cart_weight@</span><b><span id="TotalSumma">@total@</span></b>&nbsp;<span class="rubznak">@currency@</span></td>
+        <td class=""></td>
+        <td class=""></td>
+        <td colspan="2" align="right" class="red"><span id="WeightSumma" class="hidden">@cart_weight@</span><b><span id="TotalSumma">@total@</span></b>&nbsp;<span class="rubznak">@currency@</span></td>
     </tr>
     
 </table>

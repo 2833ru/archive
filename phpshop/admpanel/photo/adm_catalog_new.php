@@ -8,7 +8,7 @@ $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['photo_categories']);
 // Построение дерева категорий
 function treegenerator($array, $i, $parent) {
     global $tree_array;
-    $del = '¦&nbsp;&nbsp;&nbsp;&nbsp;';
+    $del = '&brvbar;&nbsp;&nbsp;&nbsp;&nbsp;';
     $tree = $tree_select = $check = false;
     $del = str_repeat($del, $i);
     if (is_array($array['sub'])) {
@@ -56,7 +56,7 @@ function actionStart() {
     $data = array();
     $data['num'] = 6;
     $data['enabled'] = 1;
-    $data['name'] = __('Новый каталог');
+    //$data['name'] = __('Новый каталог');
 
     $PHPShopGUI->setActionPanel($TitlePage, false, array('Создать и редактировать', 'Сохранить и закрыть'),false);
 

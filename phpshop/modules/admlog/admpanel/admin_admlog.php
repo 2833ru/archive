@@ -1,12 +1,13 @@
 <?php
 
-$TitlePage = "Журнал событий";
+$TitlePage = __("Журнал событий");
 
 function actionStart() {
-    global $PHPShopInterface, $_classPath;
+    global $PHPShopInterface, $_classPath,$TitlePage, $select_name;
 
+    $PHPShopInterface->setActionPanel($TitlePage, $select_name, false);
     $PHPShopInterface->checkbox_action = false;
-    $PHPShopInterface->setCaption(array("Раздел", "65%"), array("Дата", "15%"), array("Имя", "10%"), array("IP", "10%"));
+    $PHPShopInterface->setCaption(array("Раздел", "65%"), array("Дата", "15%"), array("Имя", "10%"), array("IP", "10%",array('align' => 'right')));
 
     $PHPShopModules = new PHPShopModules($_classPath . "modules/");
     $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.admlog.admlog_log"));

@@ -2,9 +2,9 @@
 <module>
     <version>1.0</version>
     <name>Яндекс.Карта</name>
-    <faqlink>http://faq.phpshop.ru/page/yandex-map.html</faqlink>
+    <faqlink>https://docs.phpshop.ru/moduli/yandeks/yandex-map</faqlink>
     <description>Модуль Яндекс.Карты.</description>
-    <category>form,yandex</category>
+    <category>yandex</category>
     <adminmenu>
         <title>Яндекс.Карта</title>
         <capability>true</capability>

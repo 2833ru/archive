@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.4</version>
+    <version>1.5</version>
     <name>Яндекс.Касса</name>
-    <faqlink>http://faq.phpshop.ru/page/yandex-kassa.html</faqlink>
+    <faqlink>https://docs.phpshop.ru/moduli/yandeks/yandex-kassa</faqlink>
     <description>Прием оплат через Яндекс.Касса в соответствии с 54-ФЗ.</description>
     <category>yandex,payment</category>
-    <sign>1545904926</sign>
+    <status>Hit</status>
+    <sign>1579027171</sign>
     <adminmenu>
         <title>Яндекс.Касса</title>
         <capability>true</capability>

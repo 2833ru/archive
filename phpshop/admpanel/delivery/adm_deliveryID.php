@@ -24,19 +24,19 @@ function treegenerator($array, $i, $parent) {
                 $selected = null;
 
             if (empty($check['select'])) {
-                $tree_select.='<option value="' . $k . '" ' . $selected . '>' . $del . $v . '</option>';
+                $tree_select .= '<option value="' . $k . '" ' . $selected . '>' . $del . $v . '</option>';
                 $i = 1;
             } else {
-                $tree_select.='<option value="' . $k . '" ' . $selected . '>' . $del . $v . '</option>';
+                $tree_select .= '<option value="' . $k . '" ' . $selected . '>' . $del . $v . '</option>';
                 //$i++;
             }
 
-            $tree.='<tr class="treegrid-' . $k . ' treegrid-parent-' . $parent . ' data-tree">
+            $tree .= '<tr class="treegrid-' . $k . ' treegrid-parent-' . $parent . ' data-tree">
 		<td><a href="?path=delivery&cat=' . $k . '">' . $v . '</a></td>
                     </tr>';
 
-            $tree_select.=$check['select'];
-            $tree.=$check['tree'];
+            $tree_select .= $check['select'];
+            $tree .= $check['tree'];
         }
     }
     return array('select' => $tree_select, 'tree' => $tree);
@@ -48,8 +48,10 @@ function treegenerator($array, $i, $parent) {
 function actionStart() {
     global $PHPShopGUI, $PHPShopModules, $PHPShopOrm, $PHPShopSystem;
 
+    $PHPShopDelivery = new PHPShopDelivery();
+
     // Размер названия поля
-    $PHPShopGUI->field_col = 2;
+    $PHPShopGUI->field_col = 3;
     $PHPShopGUI->addJSFiles('./js/jquery.treegrid.js', './delivery/gui/delivery.gui.js');
 
     // Выборка
@@ -74,7 +76,7 @@ function actionStart() {
     $PHPShopCategoryArray = new PHPShopDeliveryArray(array('is_folder' => "='1'"));
     $CategoryArray = $PHPShopCategoryArray->getArray();
 
-    $CategoryArray[0]['city'] = '- Корневой уровень -';
+    $CategoryArray[0]['city'] = '- ' . __('Корневой уровень') . ' -';
     $tree_array = array();
 
     foreach ($PHPShopCategoryArray->getKey('PID.id', true) as $k => $v) {
@@ -92,7 +94,7 @@ function actionStart() {
     $GLOBALS['tree_array'] = &$tree_array;
     $_GET['parent_to'] = $data['PID'];
 
-    $tree_select = '<select class="selectpicker show-menu-arrow hidden-edit" data-container=".sidebarcontainer"  data-style="btn btn-default btn-sm" name="PID_new"><option value="0">' . $CategoryArray[0]['city'] . '</option>';
+    $tree_select = '<select class="selectpicker show-menu-arrow hidden-edit" data-container=""  data-style="btn btn-default btn-sm" name="PID_new"><option value="0">' . $CategoryArray[0]['city'] . '</option>';
     $tree = '<table class="tree table table-hover">';
     if ($k == $data['PID'])
         $selected = 'selected';
@@ -100,7 +102,7 @@ function actionStart() {
         foreach ($tree_array[0]['sub'] as $k => $v) {
             $check = treegenerator($tree_array[$k], 1, $k);
 
-            $tree.='<tr class="treegrid-' . $k . ' data-tree">
+            $tree .= '<tr class="treegrid-' . $k . ' data-tree">
 		<td><a href="?path=delivery&cat=' . $k . '">' . $v . '</a></td>
                     </tr>';
 
@@ -109,36 +111,37 @@ function actionStart() {
             else
                 $selected = null;
 
-            $tree_select.='<option value="' . $k . '"  ' . $selected . '>' . $v . '</option>';
+            $tree_select .= '<option value="' . $k . '"  ' . $selected . '>' . $v . '</option>';
 
-            $tree_select.=$check['select'];
-            $tree.=$check['tree'];
+            $tree_select .= $check['select'];
+            $tree .= $check['tree'];
         }
-    $tree_select.='</select>';
-    $tree.='</table>';
+    $tree_select .= '</select>';
+    $tree .= '</table>';
 
 
     // Выбор каталога
-    $Tab_info.= $PHPShopGUI->setField("Размещение", $tree_select);
+    $Tab_info .= $PHPShopGUI->setField("Размещение", $tree_select);
 
     // Вывод
-    $Tab_info.=$PHPShopGUI->setField("Вывод", $PHPShopGUI->setCheckbox('enabled_new', 1, "Активный статус", $data['enabled']) . $PHPShopGUI->setCheckbox('flag_new', 1, "Доставка по умолчанию", $data['flag']));
+    $Tab_info .= $PHPShopGUI->setField("Вывод", $PHPShopGUI->setCheckbox('enabled_new', 1, "Активный статус", $data['enabled']) . $PHPShopGUI->setCheckbox('flag_new', 1, "Доставка по умолчанию", $data['flag']));
 
     // Цены
     $Tab_price = $PHPShopGUI->setField("Стоимость", $PHPShopGUI->setInputText(false, 'price_new', $data['price'], '150', $PHPShopSystem->getDefaultValutaCode()));
 
-    $Tab_price.=$PHPShopGUI->setField("Бесплатная доставка свыше", $PHPShopGUI->setInputText(false, 'price_null_new', $data['price_null'], '150', $PHPShopSystem->getDefaultValutaCode()) . $PHPShopGUI->setCheckbox('price_null_enabled_new', 1, "Учитывать", $data['price_null_enabled']));
+    $Tab_price .= $PHPShopGUI->setField("Бесплатная доставка свыше", $PHPShopGUI->setInputText(false, 'price_null_new', $data['price_null'], '150', $PHPShopSystem->getDefaultValutaCode()) . $PHPShopGUI->setCheckbox('price_null_enabled_new', 1, "Учитывать", $data['price_null_enabled']));
 
     // Такса
-    $Tab_price.=$PHPShopGUI->setField("Такса за каждые 0.5 кг веса", $PHPShopGUI->setInputText(false, 'taxa_new', $data['taxa'], '150', $PHPShopSystem->getDefaultValutaCode()) . $PHPShopGUI->setHelp('Используется для задания дополнительной тарификации (например, для "Почта России").<br>Каждые дополнительные 0.5 кг свыше базовых 0.5 кг будут стоить указанную сумму.'));
+    $Tab_price .= $PHPShopGUI->setField(sprintf("Такса за каждые %s г веса", $PHPShopDelivery->fee), $PHPShopGUI->setInputText(false, 'taxa_new', $data['taxa'], '150', $PHPShopSystem->getDefaultValutaCode()) .
+            $PHPShopGUI->setHelp(sprintf('Используется для задания дополнительной тарификации (например, для "Почта России").<br>Каждые дополнительные %s грамм свыше базовых %s грамм будут стоить указанную сумму.', $PHPShopDelivery->fee, $PHPShopDelivery->fee)));
 
     if ($data['ofd_nds'] == '')
         $data['ofd_nds'] = $PHPShopSystem->getParam('nds');
 
-    $Tab_price.= $PHPShopGUI->setField("Значение НДС", $PHPShopGUI->setInputText(null, 'ofd_nds_new', $data['ofd_nds'], 100, '%'));
+    $Tab_price .= $PHPShopGUI->setField("Значение НДС", $PHPShopGUI->setInputText(null, 'ofd_nds_new', $data['ofd_nds'], 100, '%'));
 
     // Тип сортировки
-    $Tab_info.=$PHPShopGUI->setField("Приоритет", $PHPShopGUI->setInputText('№', "num_new", $data['num'], 150));
+    $Tab_info .= $PHPShopGUI->setField("Приоритет", $PHPShopGUI->setInputText('&#8470;', "num_new", $data['num'], 150));
 
     // Настройка выбора городов из БД
     $city_select_value[] = array('Не использовать', 0, $data['city_select']);
@@ -146,12 +149,12 @@ function actionStart() {
     $city_select_value[] = array('Все страны мира', 2, $data['city_select']);
 
     if (!$catalog)
-        $Tab_info.=$PHPShopGUI->setField("Помощь подбора регионов и городов", $PHPShopGUI->setSelect('city_select_new', $city_select_value, null, true));
+        $Tab_info .= $PHPShopGUI->setField("Помощь подбора регионов и городов", $PHPShopGUI->setSelect('city_select_new', $city_select_value, null, true));
 
     $Tab1 = $PHPShopGUI->setCollapse('Информация', $Tab_info);
 
     // Иконка
-    $Tab1.=$PHPShopGUI->setField("Изображение", $PHPShopGUI->setIcon($data['icon'], "icon_new", false));
+    $Tab1 .= $PHPShopGUI->setField("Изображение", $PHPShopGUI->setIcon($data['icon'], "icon_new", false));
 
     $PHPShopPaymentArray = new PHPShopPaymentArray(array('enabled' => "='1'"));
     if (strstr($data['payment'], ","))
@@ -170,24 +173,37 @@ function actionStart() {
             $payment_value[] = array($payment['name'], $payment['id'], $payment_check);
         }
 
-    // Оплаты
-    if (empty($data['is_folder']))
-        $Tab1.=$PHPShopGUI->setField("Блокировка оплат", $PHPShopGUI->setSelect('payment_new[]', $payment_value, false, true, false, $search = false, false, $size = 1, true));
+    // Оплаты и комментарий
+    if (empty($data['is_folder'])) {
+        $Tab1 .= $PHPShopGUI->setField("Блокировка оплат", $PHPShopGUI->setSelect('payment_new[]', $payment_value, false, false, false, $search = false, false, $size = 1, true));
 
-    // Для модулей
-    if (isset($data['is_mod']))
-        $Tab1.=$PHPShopGUI->setField(__('Не изменять стоимость'), $PHPShopGUI->setRadio('is_mod_new', 1, __('Выключить'), $data['is_mod'], false, 'text-warning') . $PHPShopGUI->setRadio('is_mod_new', 2, __('Включить'), $data['is_mod']));
+        $Tab1 .= $PHPShopGUI->setField("Комментарий", $PHPShopGUI->setTextarea('comment_new', $data['comment'], false));
+
+        $Tab1 .= $PHPShopGUI->setField('Не изменять стоимость', $PHPShopGUI->setRadio('is_mod_new', 1, 'Выключить', $data['is_mod'], false, 'text-warning') . $PHPShopGUI->setRadio('is_mod_new', 2, 'Включить', $data['is_mod']));
+    }
 
     // Сумма заказа
     if (empty($data['is_folder']))
-        $Tab1.=$PHPShopGUI->setField("Блокировка при стоимости более", $PHPShopGUI->setInputText(null, "sum_max_new", $data['sum_max'], 150, $PHPShopSystem->getDefaultValutaCode()));
+        $Tab1 .= $PHPShopGUI->setField("Блокировка при стоимости более", $PHPShopGUI->setInputText(null, "sum_max_new", $data['sum_max'], 150, $PHPShopSystem->getDefaultValutaCode()));
 
     // Цены
     if (!$catalog)
-        $Tab1.= $PHPShopGUI->setCollapse('Цены', $Tab_price);
+        $Tab1 .= $PHPShopGUI->setCollapse('Цены', $Tab_price);
 
     // Витрина
-    $Tab1.=$PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'));
+    $Tab1 .= $PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'));
+
+    // Склады
+    $PHPShopOrmWarehouse = new PHPShopOrm($GLOBALS['SysValue']['base']['warehouses']);
+    $dataWarehouse = $PHPShopOrmWarehouse->select(array('*'), array('enabled' => "='1'"), array('order' => 'num DESC'), array('limit' => 100));
+    $warehouse_value[] = array(__('Общий склад'), 0, $data['warehouse']);
+    if (is_array($dataWarehouse)) {
+        foreach ($dataWarehouse as $val) {
+            $warehouse_value[] = array($val['name'], $val['id'], $data['warehouse']);
+        }
+    }
+
+    $Tab1 .= $PHPShopGUI->setField("Склад для списания", $PHPShopGUI->setSelect('warehouse_new', $warehouse_value, 300));
 
     // Дополнительные поля
     if (!$catalog)
@@ -203,7 +219,7 @@ function actionStart() {
         $PHPShopGUI->setTab(array("Основное", $Tab1));
 
     // Левый сайдбар
-    $sidebarleft[] = array('title' => 'Категории', 'content' => $tree, 'title-icon' => '<span class="glyphicon glyphicon-plus newcat" data-toggle="tooltip" data-placement="top" title="Добавить каталог"></span>&nbsp;<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="Развернуть"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="Свернуть"></span>');
+    $sidebarleft[] = array('title' => 'Категории', 'content' => $tree, 'title-icon' => '<span class="glyphicon glyphicon-plus newcat" data-toggle="tooltip" data-placement="top" title="' . __('Добавить каталог') . '"></span>&nbsp;<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="' . __('Развернуть') . '"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="' . __('Свернуть') . '"></span>');
 
     $help = '<p class="text-muted">' . __('У каждого типа доставки можно настроить обязательные и дополнительные поля для заполнения заказа в закладке управления доставкой <kbd>Адреса пользователя</kbd>') . '</p>';
 
@@ -213,8 +229,7 @@ function actionStart() {
     $PHPShopGUI->sidebarLeftCell = 3;
 
     // Вывод кнопок сохранить и выход в футер
-    $ContentFooter =
-            $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .
+    $ContentFooter = $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .
             $PHPShopGUI->setInput("button", "delID", "Удалить", "right", 70, "", "but", "actionDelete.delivery.edit") .
             $PHPShopGUI->setInput("submit", "editID", "Сохранить", "right", 70, "", "but", "actionUpdate.delivery.edit") .
             $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionSave.delivery.edit");
@@ -234,8 +249,7 @@ function actionSave() {
 
     if (isset($_REQUEST['ajax'])) {
         exit(json_encode($result));
-    }
-    else
+    } else
         header('Location: ?path=' . $_GET['path'] . '&cat=' . $_POST['PID_new']);
 }
 
@@ -273,11 +287,11 @@ function actionUpdate() {
     }
 
     // Мультибаза
-    if (is_array($_POST['servers'])){
+    if (is_array($_POST['servers'])) {
         $_POST['servers_new'] = "";
         foreach ($_POST['servers'] as $v)
-            if ($v != 'null' and !strstr($v, ','))
-                $_POST['servers_new'].="i" . $v . "i";
+            if ($v != 'null' and ! strstr($v, ',') and ! empty($v))
+                $_POST['servers_new'] .= "i" . $v . "i";
     }
 
     // Перехват модуля

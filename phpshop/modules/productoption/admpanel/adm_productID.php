@@ -37,34 +37,34 @@ function addModOption($data) {
 
         if (!empty($vendor['option_1_name']))
             if($vendor['option_1_format'] == 'editor')
-                $Tab10 .= $PHPShopGUI->setCollapse($vendor['option_1_name'], setModOptionGUI("option1_new", $vendor['option_1_format'], $data['option1']), 'in', false);
+                $Tab10 .= $PHPShopGUI->setCollapse($vendor['option_1_name'], setModOptionGUI("option1_new", $vendor['option_1_format'], $data['option1']), 'in', false, true, false, false);
             else
-                $Tab10 = $PHPShopGUI->setField($vendor['option_1_name'], setModOptionGUI("option1_new", $vendor['option_1_format'], $data['option1']));
+                $Tab10 = $PHPShopGUI->setField($vendor['option_1_name'], setModOptionGUI("option1_new", $vendor['option_1_format'], $data['option1']),1, false,  false, 'control-label', false);
 
         if (!empty($vendor['option_2_name']))
             if($vendor['option_2_format'] == 'editor')
-                $Tab10 .= $PHPShopGUI->setCollapse($vendor['option_2_name'], setModOptionGUI("option2_new", $vendor['option_2_format'], $data['option2']), 'in', false);
+                $Tab10 .= $PHPShopGUI->setCollapse($vendor['option_2_name'], setModOptionGUI("option2_new", $vendor['option_2_format'], $data['option2']), 'in', false, true, false, false);
             else
-                $Tab10.= $PHPShopGUI->setField($vendor['option_2_name'], setModOptionGUI("option2_new", $vendor['option_2_format'], $data['option2']));
+                $Tab10.= $PHPShopGUI->setField($vendor['option_2_name'], setModOptionGUI("option2_new", $vendor['option_2_format'], $data['option2']),1, false,  false, 'control-label', false);
 
 
         if (!empty($vendor['option_3_name']))
             if($vendor['option_3_format'] == 'editor')
-                $Tab10 .= $PHPShopGUI->setCollapse($vendor['option_3_name'], setModOptionGUI("option3_new", $vendor['option_3_format'], $data['option3']), 'in', false);
+                $Tab10 .= $PHPShopGUI->setCollapse($vendor['option_3_name'], setModOptionGUI("option3_new", $vendor['option_3_format'], $data['option3']), 'in', false, true, false, false);
             else
-                $Tab10.= $PHPShopGUI->setField($vendor['option_3_name'], setModOptionGUI("option3_new", $vendor['option_3_format'], $data['option3']));
+                $Tab10.= $PHPShopGUI->setField($vendor['option_3_name'], setModOptionGUI("option3_new", $vendor['option_3_format'], $data['option3']),1, false,  false, 'control-label', false);
 
         if (!empty($vendor['option_4_name']))
             if($vendor['option_4_format'] == 'editor')
-                $Tab10 .= $PHPShopGUI->setCollapse($vendor['option_4_name'], setModOptionGUI("option4_new", $vendor['option_4_format'], $data['option4']), 'in', false);
+                $Tab10 .= $PHPShopGUI->setCollapse($vendor['option_4_name'], setModOptionGUI("option4_new", $vendor['option_4_format'], $data['option4']), 'in', false, true, false, false);
             else
-                $Tab10.= $PHPShopGUI->setField($vendor['option_4_name'], setModOptionGUI("option4_new", $vendor['option_4_format'], $data['option4']));
+                $Tab10.= $PHPShopGUI->setField($vendor['option_4_name'], setModOptionGUI("option4_new", $vendor['option_4_format'], $data['option4']),1, false,  false, 'control-label', false);
 
         if (!empty($vendor['option_5_name']))
             if($vendor['option_5_format'] == 'editor')
-                $Tab10 .= $PHPShopGUI->setCollapse($vendor['option_5_name'], setModOptionGUI("option5_new", $vendor['option_5_format'], $data['option5']), 'in', false);
+                $Tab10 .= $PHPShopGUI->setCollapse($vendor['option_5_name'], setModOptionGUI("option5_new", $vendor['option_5_format'], $data['option5']), 'in', false, true, false, false);
             else
-                $Tab10.= $PHPShopGUI->setField($vendor['option_5_name'], setModOptionGUI("option5_new", $vendor['option_5_format'], $data['option5']));
+                $Tab10.= $PHPShopGUI->setField($vendor['option_5_name'], setModOptionGUI("option5_new", $vendor['option_5_format'], $data['option5']),1, false,  false, 'control-label', false);
     }
 
 

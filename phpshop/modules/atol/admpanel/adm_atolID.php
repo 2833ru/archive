@@ -26,7 +26,7 @@ function actionStart() {
         $data['fiscal'] = $data['id'].' / Ошибка';
 
     // Панель заголовка
-    $PHPShopGUI->setActionPanel('Заказ №' . $data['order_id'] . '/ ' . PHPShopDate::get($row['date'], true) . ' / Чек №' . $data['fiscal'], null, array('Закрыть'));
+    $PHPShopGUI->setActionPanel(__('Заказ №') . $data['order_id'] . '/ ' . PHPShopDate::get($row['date'], true) . ' / '.__('Чек №') . $data['fiscal'], null, array('Закрыть'));
 
     // Переводим в читаемый вид
     ob_start();

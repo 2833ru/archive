@@ -37,12 +37,106 @@ var PHONE_MASK = "(999) 999-9999";
 var DADATA_TOKEN = false;
 
 // Согласие на COOKIE
-var COOKIE_AGREEMENT = false;
+var COOKIE_AGREEMENT = true;
 
 // HTML анимации загрузки при аякс запросах
 var waitText = '<span class="wait">&nbsp;</span>';
-// Сообщение о необходимости авторизации для того, чтобы оставить отзык к товару.
-var commentAuthErrMess = "Функция добавления комментария возможна только для авторизованных пользователей.\n<a href='" + ROOT_PATH + "/users/?from=true'>Авторизуйтесь или пройдите регистрацию</a>.";
+
+// Комментарии
+function commentList(xid, comand, page, cid) {
+    var message = "";
+    var rateVal = 0;
+
+    if (page === undefined)
+        page = 0;
+
+    if (cid === undefined)
+        cid = 0;
+
+
+    if (comand == "add") {
+        message = $('#message').val();
+        if (message == "")
+            return false;
+        if ($('input[name=rate][type=radio]:checked').val())
+            rateVal = $('input[name=rate][type=radio]:checked').val();
+    }
+
+    if (comand == "edit_add") {
+        message = $('#message').val();
+        cid = $('#commentEditId').val();
+        $('#commentButtonAdd').show();
+        $('#commentButtonEdit').hide();
+    }
+
+    if (comand == "dell") {
+        if (confirm(locale.commentList.dell)) {
+            cid = $('#commentEditId').val();
+            $('#commentButtonAdd').show();
+            $('commentButtonEdit').hide();
+        } else
+            cid = 0;
+    }
+
+    $.ajax({
+        url: ROOT_PATH + '/phpshop/ajax/comment.php',
+        type: 'post',
+        data: 'xid=' + xid + '&comand=' + comand + '&type=json&page=' + page + '&rateVal=' + rateVal + '&message=' + message + '&cid=' + cid,
+        dataType: 'json',
+        success: function (json) {
+            if (json['success']) {
+
+                if (comand == "edit") {
+                    $('#message').val(json['comment']);
+                    $('#commentButtonAdd').hide();
+                    $('#commentButtonEdit').show();
+                    $('#commentButtonEdit').show();
+                    $('#commentEditId').val(cid);
+                } else {
+                    document.getElementById('message').value = "";
+                    if (json['status'] == "error") {
+                        mesHtml =locale.commentList.mesHtml;
+                        mesSimple = locale.commentList.mesHtml;
+
+                        showAlertMessage(mesHtml);
+
+                        if ($('#evalForCommentAuth')) {
+                            eval($('#evalForCommentAuth').val());
+                        }
+                    }
+                    $('#commentList').html(json['comment']);
+                }
+                if (comand == "edit_add") {
+                    mes = locale.commentList.mes;
+                    showAlertMessage(mes);
+
+                }
+                if (comand == "add" && json['status'] != "error") {
+                    mes = locale.commentList.mes;
+                    showAlertMessage(mes);
+                }
+            }
+        }
+    });
+}
+
+
+// Локализация
+var locale_def = {
+    commentList: {
+        mesHtml: "Функция добавления комментария возможна только для авторизованных пользователей.\n<a href='/users/?from=true'>Авторизуйтесь или пройдите регистрацию</a>.",
+        mesSimple: "Функция добавления комментария возможна только для авторизованных пользователей.\nАвторизуйтесь или пройдите регистрацию.",
+        mes: "Ваш комментарий будет доступен другим пользователям только после прохождения модерации...",
+        dell: "Вы действительно хотите удалить комментарий?",
+    },
+    OrderChekJq: {
+        badReqEmail: "Пожалуйста, укажите корректный E-mail",
+        badReqName: "Обратите внимание,\nимя должно состоять не менее чем из 3 букв",
+        badReq: "Обратите внимание,\nесть поля, обязательные для заполнения",
+        badDelivery: "Пожалуйста,\nвыберите доставку",
+    },
+    commentAuthErrMess: "Добавить комментарий может только авторизованный пользователь.\n<a href='" + ROOT_PATH + "/users/?from=true'>Пожалуйста, авторизуйтесь или пройдите регистрацию</a>.",
+};
 
 // вывод сообщений после доабвление в корзину, сравнение, вишлист и т.д.
 function showAlertMessage(message, danger) {
@@ -103,6 +197,9 @@ function UpdateDeliveryJq(xid, param, stop_hook) {
 
     var sum = $("#OrderSumma").val();
     var wsum = $("#WeightSumma").html();
+    
+    if(param === undefined)
+        param='';
 
     $("form[name='forma_order'] input[name=dostavka_metod]").attr('disabled', true);
     $(this).html(waitText);
@@ -271,13 +368,13 @@ function OrderChekJq()
     }
     );
     if (badReqEmail == 1) {
-        showAlertMessage("Ошибка заполнения формы заказа.\nУкажите корректный E-mail адрес! ");
+        showAlertMessage(locale_def.OrderChekJq.badReqEmail);
     } else if (badReqName == 1) {
-        showAlertMessage("Ошибка заполнения формы заказа.\nИмя должно состоять не менее чем из 3 букв!");
+        showAlertMessage(locale_def.OrderChekJq.badReqName);
     } else if (badReq == 1) {
-        showAlertMessage("Ошибка заполнения формы заказа.\nДанные отмеченные * обязательны для заполнения! ");
+        showAlertMessage(locale_def.OrderChekJq.badReq);
     } else if (bad == 1) {
-        showAlertMessage("Ошибка заполнения формы заказа.\nВыберите доставку!");
+        showAlertMessage(ocale_def.OrderChekJq.badDelivery);
         var destination = $('#seldelivery').offset().top;
         jQuery("html:not(:animated),body:not(:animated)").animate({scrollTop: destination}, 800);
     } else {
@@ -330,7 +427,7 @@ $(document).ready(function() {
     $(".passGen").click(function() {
         var str = wpiGenerateRandomNumber(8);
         $(this).closest('form').find("input[name='password_new'], input[name='password_new2']").val(str);
-        showAlertMessage('Ваш сгенерированный пароль будет выслан на ваш email после завершения регистрации...');
+        showAlertMessage('Ваш сгенерированный пароль будет выслан на ваш email после регистрации');
     });
 
     // сбрасываем оплаты и юр данные при сбросе все формы
@@ -379,7 +476,8 @@ $(document).ready(function() {
         }
     });
     // выделяем первую в списке оплату.
-    $("input#order_metod:first").attr('checked', 'checked').change();
+    $("input#order_metod:first").attr('checked', 'checked').change().closest('.paymOneEl').addClass('active');
+    ;
 
     // при изменении адреса, заполняем соотв. поля
     $("#adres_id").change(function() {
@@ -480,7 +578,7 @@ $(document).ready(function() {
     $('textarea.commentTextarea').on('focus', function() {
         if ($('input#commentAuthFlag').val() == 0) {
             $(this).val("").attr('readonly', 'readonly');
-            showAlertMessage(commentAuthErrMess);
+            showAlertMessage(locale_def.commentAuthErrMess);
             if (document.getElementById('evalForCommentAuth')) {
                 eval(document.getElementById('evalForCommentAuth').value);
             }
@@ -509,6 +607,12 @@ $(document).ready(function() {
             if (cart_lang[$('#num').text()] != 'undefined')
                 $('#lang-cart').text('товар' + cart_lang[$('#num').text()]);
         }, 1000);
+    });
+
+    // Закрытие сообщения о корзине
+    $('#notification').on('close.bs.alert', function(e) {
+        e.preventDefault();
+        $('#notification').css('display', 'none');
     });
 
 });

@@ -11,9 +11,6 @@ background-color:#111111;
 .navbar-fixed-bottom .compare-block a, .navbar-fixed-bottom .wishlist-block a,.navbar-fixed-bottom .cart-block a,.navbar-fixed-bottom .compare-block a i, .navbar-fixed-bottom .wishlist-block a i, .navbar-fixed-bottom .nav-user>ul>li>a i, .navbar-fixed-bottom .cart-block a i{
 color:#333333;
 }
-.sticker-section{
-background-image:url(/UserFiles/Image/Trial/slider/footer.jpg);
-}
 body{
 color:#333333;
 }
@@ -42,9 +39,6 @@ border-color:green;
 .product-page-button .addToCartFull{
 color:#ffffff;
 }
-.header-top{
-background-color:#222;
-}
 .main-color-text{
 color:#333;
 }
@@ -60,7 +54,7 @@ color:#1c1c1c;
 .compare-list-button-wrapper .addToWishList,.header-account,.search-open-button,.product-block-button .addToWishList,.account-dropdown li a,.product-block-wrapper .product-block-button button{
 color:#777;
 }
-.compare-list-button-wrapper .addToWishList:hover,.product-block-wrapper .product-block-button button:hover, .product-block-button .btn.btn-cart:hover{
+.compare-list-button-wrapper .addToWishList:hover,.compare-list-button-wrapper .addToNotice:hover, .product-block-wrapper .product-block-button button:hover, .product-block-button .btn.btn-cart:hover{
 color:green;
 border-color:green;
 }
@@ -84,3 +78,17 @@ color:green;
 .navbar-fixed-bottom #numcompare1, .navbar-fixed-bottom #num1, .navbar-fixed-bottom .wishlistcount{
 background-color:green;
 }
+.additional-nav-menu .dropdown-menu a:hover{
+color:green !important;
+}
+.sidebar-nav > li.active > a, .sidebar-nav ul li:hover a, .sidebar-nav > li:hover > a{
+background-color:green;
+color:#fff;
+}
+.promo-icon{
+background:#36f543;
+}
+#body{
+--color:#008000;
+}
+.productsgroup_list .btn-primary {background-color: var(--color);border-color:var(--color)}

@@ -1,5 +1,7 @@
 <?php
 
+include_once dirname(__FILE__) . '/../class/YandexKassa.php';
+
 /**
  * ќбработчик оплаты €ндекс касса
  * @author PHPShop Software
@@ -20,14 +22,24 @@ class PHPShopYandexkassa extends PHPShopCore {
      * Ёкшен по умолчанию
      */
     function index() {
-        if ($_REQUEST['act'] == 'success')
-            $this->parseTemplate($GLOBALS['SysValue']['templates']['yandexkassa']['yandexmoney_success_forma'], true);
-        elseif ($_REQUEST['act'] == 'fail')
-            $this->parseTemplate($GLOBALS['SysValue']['templates']['yandexkassa']['yandexmoney_fail_forma'], true);
-        else
-            die();
-    }
+        if(!isset($_REQUEST['order']) || empty($_REQUEST['order'])) {
+            $this->setError404();
+        }
 
+        try {
+            $YandexKassa = new YandexKassa();
+            $logOrder = $YandexKassa->getLogDataByOrderId((int) base64_decode($_REQUEST['order']));
+            $order = $YandexKassa->getOrderStatus($logOrder['yandex_id']);
+
+            if(isset($order['paid']) && $order['paid']) {
+                $this->parseTemplate($GLOBALS['SysValue']['templates']['yandexkassa']['yandexmoney_success_forma'], true);
+            } else {
+                $this->parseTemplate($GLOBALS['SysValue']['templates']['yandexkassa']['yandexmoney_fail_forma'], true);
+            }
+        } catch (\Exception $exception) {
+            $this->parseTemplate($GLOBALS['SysValue']['templates']['yandexkassa']['yandexmoney_fail_forma'], true);
+        }
+    }
 }
 
 ?>

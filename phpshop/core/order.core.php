@@ -6,7 +6,7 @@ $PHPShopOrder = new PHPShopOrderFunction();
 /**
  * Обработчик оформления заказа
  * @author PHPShop Software
- * @version 1.5
+ * @version 1.6
  * @package PHPShopCore
  */
 class PHPShopOrder extends PHPShopCore {
@@ -41,6 +41,7 @@ class PHPShopOrder extends PHPShopCore {
      * Экшен по умолчанию
      */
     function index() {
+        global $PHPShopOrder;
 
         // Перехват модуля
         if ($this->setHook(__CLASS__, __FUNCTION__, false, 'START'))
@@ -55,6 +56,12 @@ class PHPShopOrder extends PHPShopCore {
         // Title
         $this->title = $this->lang('order_title') . ' - ' . $this->PHPShopSystem->getValue("title");
 
+        // Валюта
+        if ($PHPShopOrder->default_valuta_iso == 'RUR' or $PHPShopOrder->default_valuta_iso == "RUB")
+            $this->set('currency', 'p');
+        else
+            $this->set('currency', $PHPShopOrder->default_valuta_code);
+
         // Если есть корзина товаров
         if ($this->PHPShopCart->getNum() > 0)
             $this->order();
@@ -63,7 +70,7 @@ class PHPShopOrder extends PHPShopCore {
 
         $PHPShopCartElement = new PHPShopCartElement(true);
         $PHPShopCartElement->init('miniCart');
-        $this->set('productValutaName', $this->PHPShopSystem->getDefaultValutaCode(true));
+        $this->set('productValutaName', $this->get('currency'));
     }
 
     /**
@@ -122,21 +129,37 @@ class PHPShopOrder extends PHPShopCore {
         if ($hook)
             return $hook;
 
-        $this->set('currency', $PHPShopOrder->default_valuta_code);
+        // Валюта
+        $this->set('currency', $this->PHPShopSystem->getValutaIcon(true));
+
         $cart = $this->PHPShopCart->display('ordercartforma');
         $this->set('display_cart', $cart);
         $this->set('cart_num', $this->PHPShopCart->getNum());
-        $this->set('discount', $PHPShopOrder->ChekDiscount($this->PHPShopCart->getSum()));
-        $this->set('cart_sum', $PHPShopOrder->returnSumma($this->PHPShopCart->getSum(false), $this->get('discount')));
+        $this->set('discount', $PHPShopOrder->ChekDiscount($this->PHPShopCart->getSum(true)));
+        
+        $sum_cart = $this->PHPShopCart->getSum(true);
+        $sum_discount_off = $this->PHPShopCart->getSumNoDiscount(true);
+        $sum_discount_on = $PHPShopOrder->returnSumma($this->PHPShopCart->getSum(true), $this->get('discount'));
+
+        // Сумма скидки
+        if ($sum_cart > $sum_discount_on)
+            $discount_sum = $sum_discount_off - $sum_discount_on;
+        elseif ($sum_discount_off > $sum_cart)
+            $discount_sum = $sum_discount_off - $sum_cart;
+        else
+            $discount_sum = 0;
+
+        $this->set('discount_sum', number_format($discount_sum * $this->PHPShopSystem->getDefaultValutaKurs(false), $PHPShopOrder->format, '.', ' '));
+        $this->set('cart_sum', $sum_cart);
+        $this->set('cart_sum_discount_off', number_format($sum_discount_off, $PHPShopOrder->format, '.', ' '));
         $this->set('cart_weight', $this->PHPShopCart->getWeight());
 
         // Стоимость доставки
         PHPShopObj::loadClass('delivery');
         $this->set('delivery_price', PHPShopDelivery::getPriceDefault());
-        // при загрузке сначала доставка 0
-        //$this->set('delivery_price', 0);
+
         // Итоговая стоимость
-        $this->set('total', $PHPShopOrder->returnSumma($this->PHPShopCart->getSum(false), $this->get('discount')) + $this->get('delivery_price'));
+        $this->set('total', number_format($sum_cart + $this->get('delivery_price'), $PHPShopOrder->format, '.', ' '));
 
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__, false, 'END');
@@ -167,7 +190,7 @@ class PHPShopOrder extends PHPShopCore {
      */
     function error() {
         $message = $this->message($this->lang('bad_cart_1'), $this->lang('bad_order_mesage_2'));
-        $message.="<script language='JavaScript'>
+        $message .= "<script language='JavaScript'>
 document.getElementById('num').innerHTML = '0';
 document.getElementById('sum').innerHTML = '0';
 document.getElementById('order').style.display = 'none';
@@ -190,7 +213,7 @@ document.getElementById('order').style.display = 'none';
      */
     function message($title, $content) {
         $message = PHPShopText::h4($title, 'text-danger');
-        $message.=PHPShopText::message($content, false, false, false, 'text-muted');
+        $message .= PHPShopText::message($content, false, false, false, 'text-muted');
         return $message;
     }
 
@@ -199,8 +222,18 @@ document.getElementById('order').style.display = 'none';
      */
     function payment() {
         PHPShopObj::loadClass('payment');
-        $PHPShopPayment = new PHPShopPaymentArray();
+        
+        $where['name']='!=""';
+
+        // Мультибаза
+        if (defined("HostID"))
+            $where['servers'] = " REGEXP 'i" . HostID . "i'";
+        elseif (defined("HostMain"))
+            $where['name'] .= ' and (servers ="" or servers REGEXP "i1000i")';
+
+        $PHPShopPayment = new PHPShopPaymentArray($where);
         $Payment = $PHPShopPayment->getArray();
+
         if (is_array($Payment))
             foreach ($Payment as $val) {
                 if (!empty($val['enabled']) OR $val['path'] == 'modules') {
@@ -332,8 +365,11 @@ document.getElementById('order').style.display = 'none';
         $all_num = explode("-", $last);
         $ferst_num = $all_num[0];
         $order_num = $ferst_num + 1;
-        //$this->order_num = $order_num . "-" . substr(abs(crc32(uniqid(session_id()))), 0, $this->format);
-        $this->order_num = $order_num . "-" . substr(rand(1000, 99999), 0, $this->format);
+
+        if (empty($_SESSION['order_prefix']))
+            $_SESSION['order_prefix'] = substr(rand(1000, 99999), 0, $this->format);
+
+        $this->order_num = $order_num . "-" . $_SESSION['order_prefix'];
 
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__, $row);
@@ -360,7 +396,7 @@ document.getElementById('order').style.display = 'none';
 PHPShopObj::loadClass('parser');
 
 function ordercartforma($val, $option) {
-    global $PHPShopModules;
+    global $PHPShopModules, $PHPShopSystem;
 
     // Перехват модуля в начале функции
     $hook = $PHPShopModules->setHookHandler(__FUNCTION__, __FUNCTION__, array(&$val), $option, 'START');
@@ -383,8 +419,15 @@ function ordercartforma($val, $option) {
     PHPShopParser::set('cart_name', $val['name']);
     PHPShopParser::set('cart_art', $val['uid']);
     PHPShopParser::set('cart_num', $val['num']);
-    PHPShopParser::set('cart_price', $val['price']);
-    PHPShopParser::set('cart_price_all', $val['price'] * $val['num']);
+    PHPShopParser::set('cart_price', number_format($val['price'] * $PHPShopSystem->getDefaultValutaKurs(true), $option['format'], '.', ' '));
+    PHPShopParser::set('cart_price_all', number_format($val['price'] * $val['num'] * $PHPShopSystem->getDefaultValutaKurs(true), $option['format'], '.', ' '));
+
+    if ((float) $val['price_n'] > 0)
+        PHPShopParser::set('cart_price_all_old', number_format($val['price_n'] * $val['num'] * $PHPShopSystem->getDefaultValutaKurs(true), $option['format'], '.', ' ') . '<span class="rubznak">' . PHPShopParser::get('currency') . '</span>');
+    else
+        PHPShopParser::set('cart_price_all_old', null);
+
+
     PHPShopParser::set('cart_izm', $val['ed_izm']);
 
     // Перехват модуля в конце функции

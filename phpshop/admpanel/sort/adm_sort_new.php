@@ -50,7 +50,15 @@ function actionStart() {
 
     // Группа категорий
     if (empty($_GET['type'])) {
-        $Tab3 = $PHPShopGUI->setField("Группа", $PHPShopGUI->setSelect('category_new', $category_value, '100%', false, false, true), 1, 'Группа характеристик служит для исключения дубликатов характеристик в различных категориях.') . $PHPShopGUI->setField("Бренд:", $PHPShopGUI->setCheckbox('brand_new', 1, 'Вкл.', $data['brand']), 1, 'Характеристика становится брендом и отображается в списке брендов') . $PHPShopGUI->setField("Товары:", $PHPShopGUI->setCheckbox('product_new', 1, 'Вкл.', $data['product']), 1, 'Совместить значение с полем рекомендуемых товаров для совместной продажи') . $PHPShopGUI->setField("Опции:", $PHPShopGUI->setCheckbox('filtr_new', 1, 'Фильтр', $data['filtr']) . $PHPShopGUI->setCheckbox('goodoption_new', 1, 'Товарная опция', $data['goodoption']) . $PHPShopGUI->setCheckbox('optionname_new', 1, 'Не обязательна для добавления в корзину', $data['optionname'])) . $PHPShopGUI->setField("Описание:", $PHPShopGUI->setSelect('page_new', $page_value, '100%', false, false, true), 1, 'Имя характеристики (в таблице характеристик в подробном описании товара) становится ссылкой на указанную страницу с описанием.');
+        $Tab3 = $PHPShopGUI->setField("Группа", $PHPShopGUI->setSelect('category_new', $category_value, '100%', false, false, true), 1, 'Группа характеристик служит для исключения дубликатов характеристик в различных категориях.') . $PHPShopGUI->setField("Бренд:", $PHPShopGUI->setCheckbox('brand_new', 1, 'Вкл.', $data['brand']), 1, 'Характеристика становится брендом и отображается в списке брендов') . 
+                $PHPShopGUI->setField("Переключение", $PHPShopGUI->setCheckbox('product_new', 1, 'Вкл.', $data['product']), 1, 'Вместо значений хар-ки выводить Рекомендуемые товары для совместной продажи, указанные в карточке товара') .
+                $PHPShopGUI->setField("Опции:", $PHPShopGUI->setCheckbox('filtr_new', 1, 'Фильтр', $data['filtr']) .
+                    $PHPShopGUI->setCheckbox('goodoption_new', 1, 'Товарная опция', $data['goodoption']) .
+                    $PHPShopGUI->setCheckbox('optionname_new', 1, 'Не обязательна для добавления в корзину', $data['optionname']).
+                    $PHPShopGUI->setCheckbox('virtual_new', 1, 'Виртуальный каталог', $data['virtual']) .
+                    $PHPShopGUI->setCheckbox('show_preview_new', 1, 'Отображать в превью товара', $data['show_preview'])
+                ) .
+                $PHPShopGUI->setField("Описание:", $PHPShopGUI->setSelect('page_new', $page_value, '100%', false, false, true), 1, 'Имя характеристики (в таблице характеристик в подробном описании товара) становится ссылкой на указанную страницу с описанием.');
     }
 
     // Содержание закладки 1

@@ -1,15 +1,20 @@
 <?php
+
 PHPShopObj::loadClass('order');
 
 // SQL
 $PHPShopOrm = new PHPShopOrm("phpshop_modules_alfabank_system");
+
 // Функция обновления
 function actionUpdate() {
-    global $PHPShopOrm,$PHPShopModules;
-    
+    global $PHPShopOrm, $PHPShopModules;
+
     // Настройки витрины
     $PHPShopModules->updateOption($_GET['id'], $_POST['servers']);
-    
+
+    if (empty($_POST["dev_mode_new"]))
+        $_POST["dev_mode_new"] = 0;
+
     $PHPShopOrm->debug = false;
     $action = $PHPShopOrm->update($_POST);
     header('Location: ?path=modules&id=' . $_GET['id']);
@@ -29,7 +34,7 @@ function actionStart() {
 
 
     // Система налогообложения
-    $tax_system = array (
+    $tax_system = array(
         array("Общая система налогообложения", 0, $data["taxationSystem"]),
         array("Упрощенная система налогообложения (Доход)", 1, $data["taxationSystem"]),
         array("Упрощенная система налогообложения (Доход минус Расход)", 2, $data["taxationSystem"]),
@@ -37,7 +42,7 @@ function actionStart() {
         array("Единый сельскохозяйственный налог", 4, $data["taxationSystem"]),
         array("Патентная система налогообложения", 5, $data["taxationSystem"])
     );
-    $Tab2 .= $PHPShopGUI->setField('Cистема налогообложения', $PHPShopGUI->setSelect('taxationSystem_new', $tax_system, 300));
+    $Tab2 .= $PHPShopGUI->setField('Cистема налогообложения', $PHPShopGUI->setSelect('taxationSystem_new', $tax_system, 300,true));
 
     // Доступые статусы заказов
     $PHPShopOrderStatusArray = new PHPShopOrderStatusArray();
@@ -67,7 +72,7 @@ function actionStart() {
 ';
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Настройки", $Tab2, true),array("Инструкция", $PHPShopGUI->setInfo($info)),array("О Модуле", $PHPShopGUI->setPay(false, false, $data['version'], false)));
+    $PHPShopGUI->setTab(array("Настройки", $Tab2, true), array("Инструкция", $PHPShopGUI->setInfo($info)), array("О Модуле", $PHPShopGUI->setPay(false, false, $data['version'], false)));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionUpdate.modules.edit");

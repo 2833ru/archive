@@ -3,7 +3,7 @@
 /**
  * Файл выгрузки для Google Merchant
  * @author PHPShop Software
- * @version 1.0
+ * @version 1.1
  * @package PHPShopXML
  * @example ?ssl [bool] SSL
  * @example ?getall [bool] Выгрузка всех товаров без учета флага YML
@@ -21,12 +21,23 @@ PHPShopObj::loadClass("valuta");
 PHPShopObj::loadClass("string");
 PHPShopObj::loadClass("security");
 PHPShopObj::loadClass("modules");
+PHPShopObj::loadClass("promotions");
+
+// Настройки
+$PHPShopSystem = new PHPShopSystem();
+
+// Мультибаза
+$PHPShopBase->checkMultibase();
+
+// Промоакции
+$PHPShopPromotions = new PHPShopPromotions();
+
 
 // Модули
 $PHPShopModules = new PHPShopModules($_classPath . "modules/");
 
 /**
- * Создание YML для Яндекс Маркета
+ * Создание YML для Google Merchant
  * @author PHPShop Software
  * @version 1.2
  * @package PHPShopClass
@@ -76,7 +87,7 @@ class PHPShopRSS {
      * Конструктор
      */
     function __construct() {
-        global $PHPShopModules;
+        global $PHPShopModules, $PHPShopSystem, $PHPShopPromotions;
 
         $this->PHPShopSystem = new PHPShopSystem();
         $PHPShopValuta = new PHPShopValutaArray();
@@ -84,6 +95,9 @@ class PHPShopRSS {
 
         // Модули
         $this->PHPShopModules = &$PHPShopModules;
+
+        // Промоакции
+        $this->PHPShopPromotions = $PHPShopPromotions;
 
         // Процент накрутки
         $this->percent = $this->PHPShopSystem->getValue('percent');
@@ -141,15 +155,49 @@ class PHPShopRSS {
                 if (!empty($check)) {
                     if (!empty($_SESSION['Memory'][__CLASS__][$param[0]][$param[1]]))
                         return true;
-                }
-                else
+                } else
                     return $_SESSION['Memory'][__CLASS__][$param[0]][$param[1]];
             }
             elseif (!empty($check))
                 return true;
-        }
-        else
+        } else
             return true;
+    }
+
+    /**
+     * Проверка прав каталога режима Multibase
+     * @return string
+     */
+    function queryMultibase() {
+
+        // Мультибаза
+        if (defined("HostID") or defined("HostMain")) {
+
+
+            $multi_cat = array();
+
+            // Не выводить скрытые каталоги
+            $where['skin_enabled '] = "!='1'";
+
+            if (defined("HostID"))
+                $where['servers'] = " REGEXP 'i" . HostID . "i'";
+            elseif (defined("HostMain"))
+                $where['skin_enabled'] .= ' and (servers ="" or servers REGEXP "i1000i")';
+
+            $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
+            $PHPShopOrm->debug = $this->debug;
+            $data = $PHPShopOrm->select(array('id'), $where, false, array('limit' => 1000), __CLASS__, __FUNCTION__);
+            if (is_array($data)) {
+                foreach ($data as $row) {
+                    $multi_cat[] = $row['id'];
+                }
+            }
+
+            if (count($multi_cat) > 0)
+                $multi_select = ' category IN (' . @implode(',', $multi_cat) . ') and ';
+
+            return $multi_select;
+        }
     }
 
     /**
@@ -166,6 +214,11 @@ class PHPShopRSS {
         else
             $where = "yml='1' and";
 
+        // Мультибаза
+        $queryMultibase = $this->queryMultibase();
+        if (!empty($queryMultibase))
+            $where .= ' ' . $queryMultibase;
+
         $result = $PHPShopOrm->query("select * from " . $GLOBALS['SysValue']['base']['products'] . " where $where enabled='1' and parent_enabled='0' and price>0");
         while ($row = mysqli_fetch_array($result)) {
             $id = $row['id'];
@@ -174,6 +227,14 @@ class PHPShopRSS {
             $uid = $row['uid'];
             $price = $row['price'];
             $oldprice = $row['price_n'];
+
+            // Промоакции
+            $promotions = $this->PHPShopPromotions->getPrice($row);
+            if (is_array($promotions)) {
+                $price = $promotions['price'];
+                $oldprice = $promotions['price_n'];
+            }
+
 
             if ($row['p_enabled'] == 1)
                 $p_enabled = "in stock";
@@ -228,6 +289,9 @@ class PHPShopRSS {
                 "delivery" => $row['delivery'],
                 "pickup" => $row['pickup'],
                 "store" => $row['store'],
+                "vendor_code" => $row['vendor_code'],
+                "vendor_name" => $row['vendor_name'],
+                "condition" => $row['yandex_condition'],
             );
 
             // Параметр сортировки
@@ -243,7 +307,7 @@ class PHPShopRSS {
      * Заголовок 
      */
     function setHeader() {
-        $this->xml.='<?xml version="1.0"?>
+        $this->xml .= '<?xml version="1.0"?>
 <rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">
 <channel>
 <title>' . $this->PHPShopSystem->getName() . '</title>
@@ -266,7 +330,7 @@ class PHPShopRSS {
      */
     function setProducts() {
         $vendor = null;
-        $this->xml.=null;
+        $this->xml .= null;
         $product = $this->product($vendor = true);
 
         // Учет модуля SEOURLPRO
@@ -276,7 +340,7 @@ class PHPShopRSS {
 
         // Передавать параметр
         if (isset($_GET['from']))
-            $from = '?from=yml';
+            $from = '?from=xml';
         else
             $from = null;
 
@@ -305,7 +369,6 @@ class PHPShopRSS {
       <g:image_link>' . $this->ssl . $_SERVER['SERVER_NAME'] . $val['picture'] . '</g:image_link> 
       <g:price>' . $val['price'] . '</g:price> 
       <g:availability>' . $val['p_enabled'] . '</g:availability>
-      <g:condition>new</g:condition> 
       <g:id>' . $val['id'] . '</g:id>
       </item>';
 
@@ -314,14 +377,13 @@ class PHPShopRSS {
             if ($this->memory_get(__CLASS__ . '.' . __FUNCTION__, true)) {
                 $hook = $this->setHook(__CLASS__, __FUNCTION__, array('xml' => $xml, 'val' => $val));
                 if ($hook) {
-                    $this->xml.= $hook;
+                    $this->xml .= $hook;
                 } else {
-                    $this->xml.= $xml;
+                    $this->xml .= $xml;
                     $this->memory_set(__CLASS__ . '.' . __FUNCTION__, 0);
                 }
-            }
-            else
-                $this->xml.= $xml;
+            } else
+                $this->xml .= $xml;
         }
     }
 
@@ -329,7 +391,7 @@ class PHPShopRSS {
      * Подвал 
      */
     function serFooter() {
-        $this->xml.='</channel></rss>';
+        $this->xml .= '</channel></rss>';
     }
 
     /**

@@ -29,7 +29,7 @@ foreach ($PHPShopCategoryArray->getKey('parent_to.id', true) as $k => $v) {
     foreach ($v as $cat) {
         
         if($CategoryArray[$cat]['skin_enabled'] == 1)
-            $CategoryArray[$cat]['name'].=' <span class="glyphicon glyphicon-minus-sign" title="'.__('—крыт').'></span>';
+            $CategoryArray[$cat]['name'].=' <span class="glyphicon glyphicon-minus-sign" title="'.PHPShopString::win_utf8(__('—крыт')).'"></span>';
         
         $tree_array[$k]['sub'][$cat] = $CategoryArray[$cat]['name'];
     }
@@ -38,7 +38,7 @@ foreach ($PHPShopCategoryArray->getKey('parent_to.id', true) as $k => $v) {
 }
 
 // —сылки
-if (is_numeric($_GET['id']) or $_GET['action'] == 'new') {
+if (is_numeric($_GET['id']) or $_GET['action'] == 'new' or $_GET['path'] == 'catalog.list') {
     $currentId = $_GET['id'];
     $prePath = '?path=catalog&id=';
     $addNodes = false;

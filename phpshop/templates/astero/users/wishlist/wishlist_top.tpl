@@ -6,7 +6,7 @@
 		</span>
 	</a>
 	<a href="#" data-toggle="modal" data-target="#userModal" class="btn btn-main btn-sm hidden-md hidden-lg">
-		<i class="fa fa-heart" title="Wish List"></i>
+		<i class="icon-heart" title="Wish List"></i>
 		{Отложить} (<span class="wishlistcount">@wishlistCount@</span>)
 	</a>
 </li>

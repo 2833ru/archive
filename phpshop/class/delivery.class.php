@@ -17,7 +17,7 @@ class PHPShopDelivery extends PHPShopObj {
      * Тариф расчета массы покупки в граммах
      * @var int 
      */
-    var $fee = 500;
+    var $fee = 100;
     
     var $mod_price = false;
 
@@ -45,13 +45,13 @@ class PHPShopDelivery extends PHPShopObj {
             $enabled = $data_fields[enabled];
             foreach ($num as $key => $value) {
                 if ($enabled[$key]['enabled'] == 1) {
-                    $adres .= $enabled[$key][name] . ": " . $option[$key . "_new"] . $delim;
+                    $adres .= __($enabled[$key][name]) . ": " . $option[$key . "_new"] . $delim;
                 }
             }
         }
 
         if (!$adres)
-            $adres = "Не требуется";
+            $adres = __("Не требуется");
 
         return $adres;
     }
@@ -109,9 +109,21 @@ class PHPShopDelivery extends PHPShopObj {
     static function getPriceDefault() {
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['delivery']);
         $row = $PHPShopOrm->select(array('price'), array('flag' => "='1'", 'is_folder' => "='0'",'enabled' => "='1'"), false, array('limit' => 1));
+        
+        if(!is_array($row))
+            $row['price']=0;
+        
         return $row['price'];
     }
 
+    /**
+     * @param int $value
+     */
+    public function setMod($value)
+    {
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['delivery']);
+        $PHPShopOrm->update(array('is_mod_new' => (string) $value), array('id' => '="' . (int) $this->objID . '"'));
+    }
 }
 
 /**
@@ -130,7 +142,7 @@ class PHPShopDeliveryArray extends PHPShopArray {
         if(is_array($args))
             $this->args=$args;
 
-        parent::__construct('id', "city", 'price', 'enabled', 'PID', 'is_folder');
+        parent::__construct('id', "city", 'price', 'enabled', 'PID', 'is_folder','warehouse');
     }
 
 }

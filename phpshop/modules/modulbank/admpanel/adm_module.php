@@ -37,7 +37,7 @@ function actionStart() {
         array("Единый сельскохозяйственный налог", 'esn', $data["taxationSystem"]),
         array("Патентная система налогообложения", 'patent', $data["taxationSystem"])
     );
-    $Tab2 .= $PHPShopGUI->setField('Cистема налогообложения:', $PHPShopGUI->setSelect('taxationSystem_new', $tax_system, 300));
+    $Tab2 .= $PHPShopGUI->setField('Cистема налогообложения:', $PHPShopGUI->setSelect('taxationSystem_new', $tax_system, 300,true));
 
     // Доступые статусы заказов
     $PHPShopOrderStatusArray = new PHPShopOrderStatusArray();
@@ -48,7 +48,7 @@ function actionStart() {
             $order_status_value[] = array($order_status['name'], $order_status['id'], $data['status']);
 
     // Статус заказа
-    $Tab2 .= $PHPShopGUI->setField('Оплата при статусе:', $PHPShopGUI->setSelect('status_new', $order_status_value, 250));
+    $Tab2 .= $PHPShopGUI->setField('Оплата при статусе:', $PHPShopGUI->setSelect('status_new', $order_status_value, 300));
 
     $Tab2 .= $PHPShopGUI->setField('Режим разработки:', $PHPShopGUI->setCheckbox("dev_mode_new", 1, "Отправка данных на тестовую среду", $data["dev_mode"]));
 
@@ -69,7 +69,7 @@ function actionStart() {
 ';
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Настройки", $Tab2, true), array("Инструкция", $info, true), array("О Модуле", $Tab1));
+    $PHPShopGUI->setTab(array("Настройки", $Tab2, true), array("Инструкция", $PHPShopGUI->setInfo($info)), array("О Модуле", $Tab1));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionUpdate.modules.edit");

@@ -1,7 +1,7 @@
 <ul class="account-dropdown">
 	<li role="presentation" class="user-header-fix">
 		<a href="#" class="dropdown-toggle link" data-toggle="dropdown" role="button" aria-expanded="false">
-			<i class="fa fa-user" title="Войти"></i>
+			<i class="fa fa-user" title="{Войти}"></i>
 		</a>
 		<ul class="dropdown-menu dropdown-menu-right" role="menu">
 			<li>

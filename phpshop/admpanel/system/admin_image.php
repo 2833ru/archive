@@ -6,7 +6,7 @@ $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['system']);
 // Выбор шрифта ватермарка
 function GetFonts($font) {
     global $PHPShopGUI;
-    
+
     $dir = "../lib/font/";
     if (is_dir($dir)) {
         if (@$dh = opendir($dir)) {
@@ -45,19 +45,20 @@ function actionStart() {
 
     // bootstrap-colorpicker
     $PHPShopGUI->addCSSFiles('./css/bootstrap-colorpicker.min.css');
-    $PHPShopGUI->addJSFiles('./js/bootstrap-colorpicker.min.js','./js/jquery.waypoints.min.js', './system/gui/system.gui.js');
+    $PHPShopGUI->addJSFiles('./js/bootstrap-colorpicker.min.js', './js/jquery.waypoints.min.js', './system/gui/system.gui.js');
 
     $PHPShopGUI->setActionPanel($TitlePage, false, array('Сохранить'));
 
     $PHPShopGUI->_CODE = '<p></p>' . $PHPShopGUI->setField('Макс. ширина оригинала', $PHPShopGUI->setInputText(false, 'option[img_w]', $option['img_w'], 100, 'px'), 1, 'Изображение товара в подробном описании товара') .
             $PHPShopGUI->setField('Макс. высота оригинала', $PHPShopGUI->setInputText(false, 'option[img_h]', $option['img_h'], 100, 'px'), 1, 'Изображение товара в подробном описании товара') .
             $PHPShopGUI->setField('Качество оригинала', $PHPShopGUI->setInputText(false, 'option[width_podrobno]', $option['width_podrobno'], 100, '%'), 1, 'Изображение товара в подробном описании товара') .
-            $PHPShopGUI->setField('Исходное изображение', $PHPShopGUI->setCheckbox('option[image_save_source]', 1, 'Сохранять исходное изображение при ресайзинге', $option['image_save_source'])) .
-            $PHPShopGUI->setField('Адаптивность', $PHPShopGUI->setCheckbox('option[image_adaptive_resize]', 1, 'Оптимизировать изображение точно под указанные размеры', $option['image_adaptive_resize'])) .
+            $PHPShopGUI->setField('Исходное изображение', $PHPShopGUI->setCheckbox('option[image_save_source]', 1, 'Сохранять исходное изображение при ресайзинге', $option['image_save_source']),1,'Используется для увеличения фото в карточке товара') .
+           // $PHPShopGUI->setField('Адаптивность', $PHPShopGUI->setCheckbox('option[image_adaptive_resize]', 1, 'Оптимизировать изображение точно под указанные размеры', $option['image_adaptive_resize'])) .
             $PHPShopGUI->setField('Исходное название', $PHPShopGUI->setCheckbox('option[image_save_name]', 1, 'Сохранять исходное название изображения', $option['image_save_name'])) .
             $PHPShopGUI->setField('Исходный путь', $PHPShopGUI->setCheckbox('option[image_save_path]', 1, 'Сохранять исходный путь изображения на сервере', $option['image_save_path'])) .
-            $PHPShopGUI->setField('Добавить путь каталога', $PHPShopGUI->setCheckbox('option[image_save_catalog]', 1, 'Сохранять изображения в папках по именам каталогов', $option['image_save_catalog']), 1, 'Улучшает работу файлового менеджера') .
-            $PHPShopGUI->setField("Размещение", $PHPShopGUI->setInputText($GLOBALS['SysValue']['dir']['dir'].'/UserFiles/Image/', "option[image_result_path]", $option['image_result_path'], 400), 1, 'Путь сохранения загружаемых изображений') .
+            $PHPShopGUI->setField('Добавить путь каталога', $PHPShopGUI->setCheckbox('option[image_save_catalog]', 1, 'Сохранять изображения в папках по именам каталогов', $option['image_save_catalog']), 1, 'При выключенной опции, все изображения товаров сохраняются в одну папку на сервере. Если файлов становится много, это может вызывать торможение в работе файлового менеджера и влиять на загрузку сайта, на дешевых тарифах хостинга. Активируйте опцию, чтобы фото сохранялись на сервере в автоматически созданную папку для каждого созданного каталога.') .
+            $PHPShopGUI->setField('Отключить фотогалерею', $PHPShopGUI->setCheckbox('option[image_off]', 1, 'Отключить возможность добавлять изображения в фотогалерею', $option['image_off']), 1, 'Режим для товара с одной подготовленной картинкой, размещенной на сервере.') .
+            $PHPShopGUI->setField("Размещение", $PHPShopGUI->setInputText($GLOBALS['SysValue']['dir']['dir'] . '/UserFiles/Image/', "option[image_result_path]", $option['image_result_path'], 400), 1, 'Путь сохранения загружаемых изображений') .
             $PHPShopGUI->setField('Макс. ширина тумбнейла', $PHPShopGUI->setInputText(false, 'option[img_tw]', $option['img_tw'], 100, 'px'), 1, 'Изображение товара в кратком описании товара') .
             $PHPShopGUI->setField('Макс. высота тумбнейла', $PHPShopGUI->setInputText(false, 'option[img_th]', $option['img_th'], 100, 'px'), 1, 'Изображение товара в кратком описании товара') .
             $PHPShopGUI->setField('Качество тумбнейла', $PHPShopGUI->setInputText(false, 'option[width_kratko]', $option['width_kratko'], 100, '%'), 1, 'Изображение товара в кратком описании товара');
@@ -67,9 +68,9 @@ function actionStart() {
 
     if (empty($option['watermark_text_alpha']))
         $option['watermark_text_alpha'] = 80;
-    
-    if( empty( $option['watermark_text_color']))
-         $option['watermark_text_color']='#cccccc';
+
+    if (empty($option['watermark_text_color']))
+        $option['watermark_text_color'] = '#cccccc';
 
     $PHPShopGUI->_CODE.=$PHPShopGUI->setCollapse('Настройка ватермарка', $PHPShopGUI->setField('Защита оригинала', $PHPShopGUI->setCheckbox('option[watermark_big_enabled]', 1, 'Включить водяной знак', $option['watermark_big_enabled']), 1, 'Защиту от копирования изображений в подробном описании товара') .
             $PHPShopGUI->setField('Защита исходника', $PHPShopGUI->setCheckbox('option[watermark_source_enabled]', 1, 'Включить водяной знак', $option['watermark_source_enabled']), 1, 'Защиту от копирования исходного изображений в подробном описании товара') .
@@ -85,10 +86,8 @@ function actionStart() {
             $PHPShopGUI->setField('Прозрачность текста', $PHPShopGUI->setInputText(false, 'option[watermark_text_alpha]', intval($option['watermark_text_alpha']), 100, '%'), 1, 'Альфа канал [0-127], рекомендуется 80%')
     );
 
-
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
-
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =
@@ -146,7 +145,7 @@ function actionUpdate() {
     unset($option['calibrated']);
     unset($option['editor_enabled']);
     unset($option['xmlencode']);
-    
+
     // Счетчик сообщений о поддержке
     unset($option['support_notice']);
 
@@ -154,15 +153,22 @@ function actionUpdate() {
     $_POST['option']['watermark_image'] = $_POST['watermark_image'];
 
     // Корректировка пустых значений
-    $PHPShopOrm->updateZeroVars('option.image_save_source', 'option.image_adaptive_resize', 'option.image_save_name', 'option.watermark_big_enabled', 'option.watermark_source_enabled','option.watermark_center_enabled', 'option.image_save_path','option.image_save_catalog','option.watermark_small_enabled');
+    $PHPShopOrm->updateZeroVars('option.image_save_source', 'option.image_adaptive_resize', 'option.image_save_name', 'option.watermark_big_enabled', 'option.watermark_source_enabled', 'option.watermark_center_enabled', 'option.image_save_path', 'option.image_save_catalog', 'option.watermark_small_enabled', 'option.image_off');
 
     if (is_array($_POST['option']))
         foreach ($_POST['option'] as $key => $val)
             $option[$key] = $val;
 
+    // Создаем папку
+    if (!is_dir($_SERVER['DOCUMENT_ROOT'] .  $GLOBALS['SysValue']['dir']['dir'] . '/UserFiles/Image/'.$option['image_result_path']))
+        @mkdir($_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . '/UserFiles/Image/' . $option['image_result_path'], 0777, true);
+
     // Проверка пути сохранения изображений
     if (stristr($option['image_result_path'], '..') or !is_dir($_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . '/UserFiles/Image/' . $option['image_result_path']))
         $option['image_result_path'] = null;
+
+    if (substr($option['image_result_path'], -1) != '/' and !empty($option['image_result_path']))
+        $option['image_result_path'].='/';
 
     $_POST['admoption_new'] = serialize($option);
 

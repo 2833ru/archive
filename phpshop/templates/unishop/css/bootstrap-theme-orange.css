@@ -57,3 +57,6 @@ color:#fff;
 .product-page-button .addToCartFull:hover, .product-page-secondary-button .btn.btn-cart:hover {
 	background-color: #c87f0a;
 }
+#body{
+--color:#f39c12;
+}

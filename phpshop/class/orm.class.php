@@ -3,7 +3,7 @@
 /**
  * Библиотека запросов к БД на основе объектов типа доступа
  * @author PHPShop Software
- * @version 1.8
+ * @version 1.9
  * @package PHPShopClass
  */
 class PHPShopOrm {
@@ -133,7 +133,7 @@ class PHPShopOrm {
         $param = explode(".", $param);
 
         // Проверка на лимит кэша
-        if (count(@$this->Items[$param[0]]) < $this->cache_limit) {
+        if (@count($this->Items[$param[0]]) < $this->cache_limit) {
             $this->Items[$param[0]][$param[1]] = $value;
 
             // Форматирование массива
@@ -249,13 +249,13 @@ class PHPShopOrm {
         if ($this->debug) {
             if (empty($this->cache) and !empty($class_name))
                 $this->comment = $class_name . '.' . $function_name;
-            $this->setError("SQL Запрос: ", $this->_SQL);
+            $this->setError("SQL Запрос: ", $this->_SQL,false, false, "info");
         }
 
         // Возвращаем данные в виде массива
         if ($this->install) {
             if ($this->mysql_error)
-                $result = mysqli_query($this->link_db, $this->_SQL) or die($this->setError("SQL Ошибка для [" . $this->_SQL . "] ", mysqli_error($this->link_db), true));
+                $result = mysqli_query($this->link_db, $this->_SQL) or die($this->setError("SQL Ошибка для [" . $this->_SQL . "] ", mysqli_error($this->link_db), true,$this->objBase));
             else
                 $result = mysqli_query($this->link_db, $this->_SQL);
         }
@@ -287,8 +287,22 @@ class PHPShopOrm {
      * Вывод сообщения об ошибке
      * @param string $name имя функции
      * @param string $action ошибка
+     * @param bool $stylesheet загружать css
+     * @param string $table имя таблицы для подсказки
      */
-    function setError($name, $action, $stylesheet = false) {
+    function setError($name, $action, $stylesheet = false, $table=false,$class="danger") {
+     
+        $help=null;
+        if(!empty($table)){
+            foreach($GLOBALS['SysValue']['base'] as $k=>$v)
+            if(is_array($v))
+                foreach($v as $s)
+                    if($s == $table)
+                        $help='<div class="alert alert-success alert-dismissible" id="debug-message" role="alert" style="margin:10px">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <span class="glyphicon glyphicon-ok"></span> Ошибка в модуле <strong>' . ucfirst($k) . '</strong>. Выключите или переустановите модуль <strong>' . ucfirst($k) . '</strong> в <a href="/phpshop/admpanel/admin.php?path=modules&install=check" class="alert-link" target="_blank"><span class="glyphicon glyphicon-cog"></span> Панели управления</a> через меню <kbd>Модули</kbd> &rarr; <kbd>Управление модулями</kbd> &rarr; <kbd>Установленые</kbd>.
+</div>';
+        }
 
         if ($this->comment)
             $comment = ' <code>' . $this->comment . '</code>';
@@ -300,11 +314,11 @@ class PHPShopOrm {
         else
             $error = null;
 
-        $error.='<div class="alert alert-info alert-dismissible" id="debug-message" role="alert" style="margin:10px">
+        $error.='<div class="alert alert-'.$class.' alert-dismissible" id="debug-message" role="alert" style="margin:10px">
   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-  <strong><span class="glyphicon glyphicon-alert"></span> ' . $name . '</strong> ' . $action . $comment . '
+  <span class="glyphicon glyphicon-alert"></span> ' . $name . '. <strong>' . $action .'</strong>'. $comment . '.
 </div>';
-        echo $error;
+        echo $error.$help;
     }
 
     /**
@@ -527,6 +541,48 @@ class PHPShopOrm {
         }
     }
 
+    /**
+     * Выборка коллекции элементов.
+     * @param array $select
+     * @param bool $where
+     * @param bool $order
+     * @param bool $option
+     * @param bool $class_name
+     * @param bool $function_name
+     * @return array
+     */
+    public function getList($select = array('*'), $where = false, $order = false, $option = false, $class_name = false, $function_name = false)
+    {
+        if(!isset($option['limit']) || $option['limit'] == 1) {
+            $option['limit'] = 10000;
+        }
+
+        $result = $this->select($select, $where, $order, $option, $class_name, $function_name);
+
+        if(!is_array($result)) {
+            return array();
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param array $select
+     * @param bool $where
+     * @param bool $order
+     * @param bool $option
+     * @param bool $class_name
+     * @param bool $function_name
+     * @return array|null
+     */
+    public function getOne($select = array('*'), $where = false, $order = false, $option = false, $class_name = false, $function_name = false)
+    {
+        $option['limit'] = 1;
+
+        $result = $this->select($select, $where, $order, $option, $class_name, $function_name);
+
+        return $result;
+    }
 }
 
 /**

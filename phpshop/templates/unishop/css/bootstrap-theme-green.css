@@ -57,3 +57,30 @@ color:#fff;
 .product-page-button .addToCartFull:hover, .product-page-secondary-button .btn.btn-cart:hover {
 	background-color: #25a25a;
 }
+
+span.hit-icon.label {
+    background-color: #19a329 !important;
+    display: inline;border-radius: 10px;float:left;
+	margin: 2px;
+
+    }
+
+
+span.promo-icon {
+	background-color: #19a329 !important;
+    display: inline;border-radius: 10px;float:left;
+	margin: 2px;
+	opacity:0.4
+    	
+
+}
+span.promo-icon p{margin-bottom:0}
+
+span.sale-icon-content{
+    position: absolute;
+    z-index: 5;
+
+}
+#body{
+--color:#2ecc71;
+}

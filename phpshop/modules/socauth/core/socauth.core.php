@@ -246,7 +246,7 @@ class PHPShopSocauth extends PHPShopCore {
                     'uids'         => $token['user_id'],
                     'fields'       => 'uid,first_name,last_name,screen_name,sex,bdate,photo_big',
                     'access_token' => $token['access_token'],
-                    'v'            => 5.80
+                    'v'            => 5.107
                 );
                 $userInfo = json_decode(file_get_contents('https://api.vk.com/method/users.get' . '?' . urldecode(http_build_query($params))), true);
 
@@ -266,7 +266,7 @@ class PHPShopSocauth extends PHPShopCore {
             } else {
                 $regMass['login'] = $token['email'];
             }
-            $regMass['name'] = PHPShopString::utf8_win1251($userInfo['first_name'] . " " . $userInfo[';ast_name']);
+            $regMass['name'] = PHPShopString::utf8_win1251($userInfo['first_name'] . " " . $userInfo['last_name']);
             $regMass['first_name'] = PHPShopString::utf8_win1251($userInfo['first_name']);
             $regMass['last_name'] = PHPShopString::utf8_win1251($userInfo['last_name']);
 

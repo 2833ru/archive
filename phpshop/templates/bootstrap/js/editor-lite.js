@@ -1,5 +1,5 @@
 
-$(document).ready(function() {
+$(document).ready(function () {
     var path = $('#body').attr('data-path');
     var subpath = $('#body').attr('data-subpath');
     var id = $('#body').attr('data-id');
@@ -10,8 +10,7 @@ $(document).ready(function() {
             if (subpath == 'UID') {
                 var pathEdit = 'product';
                 var idEdit = id;
-            }
-            else if (subpath == 'CID') {
+            } else if (subpath == 'CID') {
                 var pathEdit = 'catalog';
                 var idEdit = id;
             }
@@ -22,8 +21,7 @@ $(document).ready(function() {
             if (subpath == 'CID') {
                 var pathEdit = 'page.catalog';
                 var idEdit = id;
-            }
-            else {
+            } else {
                 var pathEdit = 'page';
                 var idEdit = id;
             }
@@ -47,7 +45,8 @@ $(document).ready(function() {
     if (pathEdit !== undefined && idEdit !== undefined)
         $('#adminModalHelp').show();
 
-    $(".openAdminModal").on('click', function() {
+    $(".openAdminModal").on('click', function () {
+
         $('.admin-modal-content').attr('height', $(window).height() - 150);
         var frame = $('.admin-modal-content').attr('src');
 
@@ -62,7 +61,7 @@ $(document).ready(function() {
     });
 
     // Editor в отдельное окно
-    $('#editorwindow').on('click', function() {
+    $('#editorwindow').on('click', function () {
         var url = $('.admin-modal-content').attr('src');
         filemanager = window.open(url.split('&frame').join(''));
         filemanager.focus();
@@ -71,7 +70,7 @@ $(document).ready(function() {
 
 
     // Сохранение статуса меню
-    $('#collapseCSS,#collapseAdmin').on('hide.bs.collapse', function() {
+    $('#collapseCSS,#collapseAdmin').on('hide.bs.collapse', function () {
         $('[data-parent="' + $(this).attr('id') + '"]').toggleClass('glyphicon-menu-down').toggleClass('glyphicon-menu-up');
 
         $.cookie('style_collapse_' + $(this).attr('id'), 'enabled', {
@@ -80,7 +79,7 @@ $(document).ready(function() {
     });
 
     // Сохранение статуса меню
-    $('#collapseCSS,#collapseAdmin').on('show.bs.collapse', function() {
+    $('#collapseCSS,#collapseAdmin').on('show.bs.collapse', function () {
         $('[data-parent="' + $(this).attr('id') + '"]').toggleClass('glyphicon-menu-down').toggleClass('glyphicon-menu-up');
         $.removeCookie('style_collapse_' + $(this).attr('id'), {
             path: '/'
@@ -90,14 +89,14 @@ $(document).ready(function() {
 
 
     // сохранение оформления
-    $(".saveTheme").on('click', function() {
+    $(".saveTheme").on('click', function () {
 
         $.ajax({
             url: ROOT_PATH + '/phpshop/ajax/skin.php',
             type: 'post',
-            data: 'template='+$('#bootstrap_theme').attr('data-name')+'&type=json',
+            data: 'template=' + $('#bootstrap_theme').attr('data-name') + '&type=json',
             dataType: 'json',
-            success: function(json) {
+            success: function (json) {
                 if (json['success']) {
                     showAlertMessage(json['status']);
                 }
@@ -107,7 +106,7 @@ $(document).ready(function() {
 
 
     // смена оформления
-    $(".bootstrap-theme, .non-responsive-switch").on('click', function() {
+    $(".bootstrap-theme, .non-responsive-switch").on('click', function () {
         var theme = $(this).attr('data-skin');
         var skin = $('#bootstrap_theme').attr('data-name');
         var cookie = $.cookie('bootstrap_theme');
@@ -116,7 +115,7 @@ $(document).ready(function() {
             path: '/'
         });
 
-        $(".bootstrap-theme, .non-responsive-switch").each(function() {
+        $(".bootstrap-theme, .non-responsive-switch").each(function () {
             $(this).html('');
         });
 
@@ -126,17 +125,17 @@ $(document).ready(function() {
         if (theme == 'non-responsive' && cookie == 'non-responsive')
             theme = 'bootstrap';
 
-        $('#body').fadeOut('slow', function() {
-            $('#bootstrap_theme').attr('href', ROOT_PATH + '/phpshop/templates/'+skin+'/css/' + theme + '.css');
+        $('#body').fadeOut('slow', function () {
+            $('#bootstrap_theme').attr('href', ROOT_PATH + '/phpshop/templates/' + skin + '/css/' + theme + '.css');
         });
 
-        setTimeout(function() {
+        setTimeout(function () {
             $('#body').fadeIn();
         }, 1000);
     });
 
 
-    $('#style-selector .style-toggle').click(function(e) {
+    $('#style-selector .style-toggle').click(function (e) {
         e.preventDefault();
         if ($(this).hasClass('ss-close')) {
             $(this).removeClass('ss-close');
@@ -154,6 +153,29 @@ $(document).ready(function() {
             $.cookie('style_selector_status', 'enabled', {
                 path: '/'
             });
+        }
+    });
+
+    // Template Debug
+    $('.setDebug').on('click', function () {
+
+        if ($.cookie('debug_template') != 1)
+            $.cookie('debug_template', 1, {
+                path: '/'
+            });
+        else
+            $.removeCookie('debug_template', {
+                path: '/'
+            });
+
+        window.location.reload();
+
+    });
+
+    $("[data-source]").on('click', function (event) {
+        if (event.ctrlKey) {
+            event.preventDefault();
+            window.open('/phpshop/admpanel/admin.php?path=tpleditor&name=bootstrap&option=pro&file=/' + $(this).attr('data-source'));
         }
     });
 

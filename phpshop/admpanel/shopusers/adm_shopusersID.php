@@ -1,12 +1,12 @@
 <?php
 
-$TitlePage = __('Редактирование покупателя').' #' . $_GET['id'];
+$TitlePage = __('Редактирование покупателя') . ' #' . $_GET['id'];
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['shopusers']);
 PHPShopObj::loadClass('user');
 
 // Стартовый вид
 function actionStart() {
-    global $PHPShopGUI, $PHPShopOrm, $PHPShopModules;
+    global $PHPShopGUI, $PHPShopOrm, $PHPShopModules, $PHPShopSystem;
 
     // Выборка
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_REQUEST['id'])));
@@ -36,10 +36,16 @@ function actionStart() {
         'url' => 'mailto:' . $data['login']
     );
 
+
+    // Яндекс.Карты
+    $yandex_apikey = $PHPShopSystem->getSerilizeParam("admoption.yandex_apikey");
+    if (empty($yandex_apikey))
+        $yandex_apikey = 'cb432a8b-21b9-4444-a0c4-3475b674a958';
+
     // Размер названия поля
     $PHPShopGUI->field_col = 2;
     $PHPShopGUI->setActionPanel(__("Покупатели") . '<span class="hidden-xs"> / ' . $data['name'] . '</span>', array('Отправить письмо', 'Создать заказ', 'Заказы пользователя', 'Сообщения пользователя', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'));
-    $PHPShopGUI->addJSFiles('./js/validator.js','./js/jquery.suggestions.min.js','./order/gui/dadata.gui.js');
+    $PHPShopGUI->addJSFiles('./js/validator.js', './js/jquery.suggestions.min.js', './order/gui/dadata.gui.js');
     $PHPShopGUI->addCSSFiles('./css/suggestions.min.css');
 
     // Статусы пользователей
@@ -53,8 +59,8 @@ function actionStart() {
     // Содержание закладки 1
     $Tab1 = $PHPShopGUI->setCollapse('Информация', $PHPShopGUI->setField("Имя", $PHPShopGUI->setInput('text.required', "name_new", $data['name'])) .
             $PHPShopGUI->setField("E-mail", $PHPShopGUI->setInput('email.required.6', "login_new", $data['login'])) .
-            $PHPShopGUI->setField("Пароль", $PHPShopGUI->setInput("password.required.6", "password_new", base64_decode($data['password']))) .
-            $PHPShopGUI->setField("Подтверждение пароля", $PHPShopGUI->setInput("password.required.6", "password2_new", base64_decode($data['password']))) .
+            $PHPShopGUI->setField("Пароль", $PHPShopGUI->setInput("password.required.4", "password_new", base64_decode($data['password']))) .
+            $PHPShopGUI->setField("Подтверждение пароля", $PHPShopGUI->setInput("password.required.4", "password2_new", base64_decode($data['password']))) .
             $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("enabled_new", 1, "Вкл.", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выкл.", $data['enabled']) . '&nbsp;&nbsp;' . $PHPShopGUI->setCheckbox('sendActivationEmail', 1, 'Оповестить пользователя', 0)) .
             $PHPShopGUI->setField("Статус", $PHPShopGUI->setSelect('status_new', $user_status_value))
     );
@@ -62,8 +68,11 @@ function actionStart() {
     // Адреса доставок
     $Tab2 = $PHPShopGUI->loadLib('tab_addres', $data['data_adres']);
 
+    // Бонусы
+    $Tab3 = $PHPShopGUI->loadLib('tab_bonus', $data['id']);
+
     // Карта
-    $PHPShopGUI->addJSFiles('./shopusers/gui/shopusers.gui.js', '//api-maps.yandex.ru/2.0/?load=package.standard&lang=ru-RU'); 
+    $PHPShopGUI->addJSFiles('./shopusers/gui/shopusers.gui.js', '//api-maps.yandex.ru/2.0/?load=package.standard&lang=ru-RU&apikey=' . $yandex_apikey);
 
     $mass = unserialize($data['data_adres']);
     if (strlen($mass['list'][$mass['main']]['street_new']) > 5) {
@@ -78,13 +87,18 @@ function actionStart() {
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
-
+    
+    // Бонусы
+    if($PHPShopSystem->getSerilizeParam('admoption.bonus') > 0)
+        $PHPShopGUI->addTab(array("Бонусы <span class=badge>" . $data['bonus'] . "</span>", $Tab3,true));
+    
     // Вывод формы закладки
     $PHPShopGUI->setTab(array("Основное", $Tab1), array("Доставка и реквизиты", $Tab2));
+    
 
     // Вывод кнопок сохранить и выход в футер
-    $ContentFooter =
-            $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .
+    $ContentFooter = $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .
+            $PHPShopGUI->setInput("hidden", "bonus_new", $data['bonus']).
             $PHPShopGUI->setInput("button", "delID", "Удалить", "right", 70, "", "but", "actionDelete.shopusers.edit") .
             $PHPShopGUI->setInput("submit", "editID", "Сохранить", "right", 70, "", "but", "actionUpdate.shopusers.edit") .
             $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionSave.shopusers.edit");
@@ -134,11 +148,11 @@ function actionUpdate() {
                 unset($mass_decode[$k]);
         }
 
-        
-    $_POST['mail_new']=$_POST['login_new'];
+
+    $_POST['mail_new'] = $_POST['login_new'];
 
     // Оповещение пользователя
-    if (!empty($_POST['enabled_new']) and !empty($_POST['sendActivationEmail'])) {
+    if (!empty($_POST['enabled_new']) and ! empty($_POST['sendActivationEmail'])) {
 
         PHPShopObj::loadClass("parser");
         PHPShopObj::loadClass("mail");
@@ -156,14 +170,29 @@ function actionUpdate() {
         }
     }
 
-    if(!empty($mass_decode))
-    $_POST['data_adres_new']['list'] = $mass_decode;
+    if (!empty($mass_decode))
+        $_POST['data_adres_new']['list'] = $mass_decode;
+
+    if (is_array($_POST['data_adres_new']))
+        $_POST['data_adres_new'] = serialize($_POST['data_adres_new']);
+
+    if (!empty($_POST['password_new']))
+        $_POST['password_new'] = base64_encode($_POST['password_new']);
+
+    // Бонусы
+    if (!empty($_POST['comment_new'])) {
+
+        $PHPShopOrm->query("
+	INSERT INTO `" . $GLOBALS['SysValue']['base']['bonus'] . "` 
+	(`date`, `comment`, `user_id`, `bonus_operation`) VALUES 
+	('" . time() . "','" . $_POST['comment_new'] . "','" . $_POST['rowID'] . "','" . intval($_POST['bonus_operation_new']) . "')");
+        
+        if (intval($_POST['bonus_operation_new']) != 0) {
+            $_POST['bonus_new'] = $_POST['bonus_operation_new'] + $_POST['bonus_new'];
+        }
+    }
+
     
-    if(is_array($_POST['data_adres_new']))
-    $_POST['data_adres_new'] = serialize($_POST['data_adres_new']);
-    
-    if(!empty($_POST['password_new']))
-    $_POST['password_new'] = base64_encode($_POST['password_new']);
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);

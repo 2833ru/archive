@@ -1,2 +1,1 @@
-<li role="presentation"><a href="#" data-toggle="modal" data-target="#userModal"><span class="glyphicon glyphicon-user"></span> {Войти в кабинет}</a></li> 
-<li role="presentation"><a href="/users/register.html"><span class="glyphicon glyphicon-plus-sign"></span> {Регистрация}</a></li>
+<li role="presentation"><a href="#" data-toggle="modal" data-target="#userModal"><span class="glyphicon glyphicon-user"></span> {Войти}</a></li> 

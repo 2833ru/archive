@@ -378,7 +378,7 @@ class elFinderVolumeLocalFileSystem extends elFinderVolumeDriver {
 		$files = array();
 		
 		foreach (scandir($path) as $name) {
-			if ($name != '.' && $name != '..') {
+			if ($name != '.' && $name != '..' && !preg_match("/[Р-пр-џ]/i", $name)) {
 				$files[] = $path.DIRECTORY_SEPARATOR.$name;
 			}
 		}

@@ -54,6 +54,7 @@ function index_newselement_seourl_hook($obj, $dt, $rout) {
                     $obj->set('newsZag', $row['zag']);
                     $obj->set('newsData', $row['datas']);
                     $obj->set('newsKratko', $row['kratko']);
+                    $obj->set('newsIcon', $row['icon']);
 
                     // Подключаем шаблон
                     $dis.=$obj->parseTemplate($obj->getValue('templates.news_main_mini'));

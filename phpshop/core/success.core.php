@@ -161,7 +161,10 @@ class PHPShopSuccess extends PHPShopCore {
     function update_order_status() {
         $PHPShopOrm = new PHPShopOrm($this->getValue('base.orders'));
         $PHPShopOrm->debug = $this->debug;
-        $PHPShopOrm->update(array('statusi_new' => $this->set_order_status_101()), array('uid' => '="' . $this->true_num($this->inv_id) . '"'));
+        $PHPShopOrm->update(
+            array('statusi_new' => $this->set_order_status_101(), 'paid_new' => 1),
+            array('uid' => '="' . $this->true_num($this->inv_id) . '"')
+        );
     }
 
     /**

@@ -36,6 +36,9 @@ function actionUpdate() {
     if(empty($_POST['delivery_id_new']))
         $_POST['delivery_id_new'] = '';
 
+    if (empty($_POST['test_new']))
+        $_POST['test_new'] = 0;
+
     $_POST['city_from_code_new'] = getCityCode($_POST['city_from_new']);
 
     $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.cdekwidget.cdekwidget_system"));
@@ -50,7 +53,7 @@ function actionUpdate() {
 function actionStart() {
     global $PHPShopGUI, $PHPShopOrm, $PHPShopSystem;
 
-    $PHPShopGUI->addJSFiles('../modules/cdekwidget/admpanel/gui/script.gui.js');
+    $PHPShopGUI->addJSFiles('../modules/cdekwidget/admpanel/gui/script.gui.js?v=1.5');
     // Подсказки
     if ($PHPShopSystem->ifSerilizeParam('admoption.dadata_enabled')) {
         $PHPShopGUI->addJSFiles('./js/jquery.suggestions.min.js', './order/gui/dadata.gui.js');
@@ -64,7 +67,7 @@ function actionStart() {
     $PHPShopOrderStatusArray = new PHPShopOrderStatusArray();
     $OrderStatusArray = $PHPShopOrderStatusArray->getArray();
 
-    $status[] = array('Новый заказ', 0, $data['status']);
+    $status[] = array(__('Новый заказ'), 0, $data['status']);
     if (is_array($OrderStatusArray))
         foreach ($OrderStatusArray as $order_status) {
             $status[] = array($order_status['name'], $order_status['id'], $data['status']);
@@ -89,34 +92,23 @@ function actionStart() {
 
             $delivery_value[] = array($delivery['city'], $delivery['id'], $delivery_id);
         }
-        foreach ($DeliveryArray as $delivery) {
-
-            if (strpos($delivery['city'], '.')) {
-                $name = explode(".", $delivery['city']);
-                $delivery['city'] = $name[0];
-            }
-
-            if (in_array($delivery['id'], @explode(",", $data['express_delivery_id'])))
-                $express_delivery_id = $delivery['id'];
-            else
-                $express_delivery_id = null;
-
-            $express_delivery_value[] = array($delivery['city'], $delivery['id'],  $express_delivery_id);
-        }
     }
 
     $Tab1 = $PHPShopGUI->setField('Аккаунт интеграции', $PHPShopGUI->setInputText(false, 'account_new', $data['account'], 300));
     $Tab1.= $PHPShopGUI->setField('Пароль интеграции', $PHPShopGUI->setInput("password", 'password_new', $data['password'], false, 300));
+    $Tab1.= $PHPShopGUI->setField('Режим разработки', $PHPShopGUI->setCheckbox("test_new", 1, "Отправка данных на тестовую среду СДЭК", $data["test"]));
     $Tab1.= $PHPShopGUI->setField('Статус для отправки', $PHPShopGUI->setSelect('status_new', $status, 300));
     $Tab1.= $PHPShopGUI->setField('Доставка', $PHPShopGUI->setSelect('delivery_id_new[]', $delivery_value, 300, null, false, $search = false, false, $size = 1, $multiple = true));
     $Tab1.= $PHPShopGUI->setField('Город отправки отправлений', $PHPShopGUI->setInputText(false, 'city_from_new', $data['city_from'], 300));
     $Tab1.= $PHPShopGUI->setField('Почтовый индекс города отправителя', '<input class="form-control input-sm " onkeypress="cdekvalidate(event)" type="text" value="' . $data['index_from'] . '" name="index_from_new" style="width:300px; ">');
     $Tab1.= $PHPShopGUI->setField('Город на карте по умолчанию', $PHPShopGUI->setInputText(false, 'default_city_new', $data['default_city'], 300));
+    $Tab1.= $PHPShopGUI->setField('Добавить наценку', '<input class="form-control input-sm " onkeypress="cdekvalidate(event)" type="number" step="0.1" min="0" value="' . $data['fee'] . '" name="fee_new" style="width:300px;">');
+    $Tab1.= $PHPShopGUI->setField('Тип наценки', $PHPShopGUI->setSelect('fee_type_new', array(array('%', 1, $data['fee_type']), array('Руб.', 2, $data['fee_type'])), 300, null, false, $search = false, false, $size = 1));
     $Tab1.= $PHPShopGUI->setCollapse('Вес и габариты по умолчанию',
         $PHPShopGUI->setField('Вес, гр.', '<input class="form-control input-sm " onkeypress="cdekvalidate(event)" type="number" step="1" min="1" value="' . $data['weight'] . '" name="weight_new" style="width:300px; ">') .
         $PHPShopGUI->setField('Ширина, см.', '<input class="form-control input-sm " onkeypress="cdekvalidate(event)" type="number" step="1" min="1" value="' . $data['width'] . '" name="width_new" style="width:300px;">') .
-        $PHPShopGUI->setField('Высота, см.', '<input class="form-control input-sm " onkeypress="cdekvalidate(event)" type="number" step="0.1" min="1" value="' . $data['height'] . '" name="height_new" style="width:300px;">') .
-        $PHPShopGUI->setField('Длина, см.', '<input class="form-control input-sm " onkeypress="cdekvalidate(event)" type="number" step="0.1" min="1" value="' . $data['length'] . '" name="length_new" style="width:300px;">')
+        $PHPShopGUI->setField('Высота, см.', '<input class="form-control input-sm " onkeypress="cdekvalidate(event)" type="number" step="1" min="1" value="' . $data['height'] . '" name="height_new" style="width:300px;">') .
+        $PHPShopGUI->setField('Длина, см.', '<input class="form-control input-sm " onkeypress="cdekvalidate(event)" type="number" step="1" min="1" value="' . $data['length'] . '" name="length_new" style="width:300px;">')
     );
 
     $info = '<h4>Получение аккаунта интеграции</h4>

@@ -6,8 +6,8 @@
         <li><a href="/users/">{Персональные данные}</a></li>
         <li><a href="/users/order.html">{Отследить заказ}</a></li>
         <li><a href="/users/message.html">{Связь с менеджерами}</a></li>
+        <li><a href="/users/notice.html">{Уведомления}</a></li>
         <li class="divider"></li>
-          @theme_menu@
         <li class="dropdown-header">{Авторизация}</li>
         <li><a href="?logout=true">{Выход}</a></li>
     </ul>

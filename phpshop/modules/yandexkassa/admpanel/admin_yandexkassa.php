@@ -11,12 +11,17 @@ function actionStart() {
     $PHPShopOrm->debug = false;
 
 
-    $data = $PHPShopOrm->select(array('*'), $where = false, array('order' => 'id DESC'), array('limit' => 1000));
+    $data = $PHPShopOrm->getList(array('*'), false, array('order' => 'id DESC'));
 
     if (is_array($data))
         foreach ($data as $row) {
-
-            $PHPShopInterface->setRow(array('name' => $row['type'], 'link' => '?path=modules.dir.yandexkassa&id=' . $row['id']), array('name' => $row['order_id'], 'link' => '?path=order&id=' . $row['order_id']), PHPShopDate::get($row['date'], true), $row['status']);
+            $PHPShopInterface->setRow(array(
+                'name' => $row['type'],
+                'link' => '?path=modules.dir.yandexkassa&id=' . $row['id']),
+                array('name' => $row['order_id'], 'link' => '?path=order&id=' . $row['order_id']),
+                PHPShopDate::get($row['date'], true),
+                $row['status']
+            );
         }
     $PHPShopInterface->Compile();
 }

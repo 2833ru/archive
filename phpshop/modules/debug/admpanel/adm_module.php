@@ -20,7 +20,7 @@ function actionStart() {
     global $PHPShopGUI, $PHPShopOrm,$select_name;
 
     $PHPShopGUI->action_button['Панель'] = array(
-        'name' => 'Панель отладки',
+        'name' => __('Панель отладки'),
         'action' => '../../dev/',
         'class' => 'btn btn-default btn-sm navbar-btn btn-action-panel-blank',
         'type' => 'button',

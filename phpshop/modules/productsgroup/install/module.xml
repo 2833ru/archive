@@ -4,6 +4,7 @@
     <name>Группы товаров</name>
     <description>Модуль группы товаров.</description>
     <category>sale</category>
+    <faqlink>https://docs.phpshop.ru/moduli/prodazhi/gruppy-tovarov</faqlink>
     <adminmenu>
         <title>Группы товаров</title>
         <capability>true</capability>

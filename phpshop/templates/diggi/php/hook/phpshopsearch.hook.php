@@ -29,16 +29,8 @@ function template_category_select($obj, $data) {
     if (!empty($_REQUEST['pole']))
         $pole = intval($_REQUEST['pole']);
     else
-        $pole = 1;
+        $pole = $obj->PHPShopSystem->getSerilizeParam('admoption.search_pole');
 
-    switch ($set) {
-        case 1:
-            $obj->set('searchSetAactive', 'active');
-            break;
-        case 2:
-            $obj->set('searchSetBactive', 'active');
-            break;
-    }
 
     switch ($pole) {
         case 1:

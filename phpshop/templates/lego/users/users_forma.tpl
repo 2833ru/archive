@@ -1,0 +1,2 @@
+<li role="presentation" class="user"><a href="#" data-toggle="modal" data-target="#userModal"><span class="icons-avatar"></span> <span class="text">{Заказы}</span></a></li> 
+<!--<li role="presentation"><a href="/users/register.html"><span class="glyphicon glyphicon-plus-sign"></span> {Регистрация}</a></li>-->

@@ -9,7 +9,7 @@ $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
 // Построение дерева категорий
 function treegenerator($array, $i, $curent) {
     global $tree_array;
-    $del = '¦&nbsp;&nbsp;&nbsp;&nbsp;';
+    $del = '&brvbar;&nbsp;&nbsp;&nbsp;&nbsp;';
     $tree_select = $check = false;
     $del = str_repeat($del, $i);
     if (is_array($array['sub'])) {
@@ -58,7 +58,7 @@ function viewCatalog($name = "search_category", $category = 0) {
 
     $GLOBALS['tree_array'] = &$tree_array;
 
-    $tree_select = '<select class="form-control input-sm" name="' . $name . '" style="width:100%">
+    $tree_select = '<select class="form-control input-sm" name="' . $name . '" style="width:240px">
         <option value=""> - '.__('Все категории').' - </option>';
 
     if (is_array($tree_array[0]['sub']))
@@ -92,7 +92,7 @@ function actionSearch() {
 
     $PHPShopInterface->field_col = 2;
 
-    $PHPShopInterface->_CODE.= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'search_name', 'size' => '300px', 'placeholder' => 'Наименование товара, атикул или ID', 'class' => 'pull-left', 'value' => PHPShopSecurity::true_search($_REQUEST['words'])));
+    $PHPShopInterface->_CODE.= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'search_name', 'size' => '280px', 'placeholder' => 'Наименование товара, атикул или ID', 'class' => 'pull-left', 'value' => PHPShopSecurity::true_search($_REQUEST['words'])));
     $PHPShopInterface->_CODE.= $PHPShopInterface->set_(3);
     $PHPShopInterface->_CODE.= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'search_price_start', 'size' => '100px', 'placeholder' => 'Цена от', 'class' => 'pull-left', 'value' => $_REQUEST['price_start']));
     $PHPShopInterface->_CODE.= $PHPShopInterface->set_(2);
@@ -153,11 +153,14 @@ function actionSearch() {
     // Убираем подтипы для подбора по ID
     if ($_POST['selectID'] != 1)
         $where['parent_enabled'] = "='0'";
+    
+    
+    $sklad_status = $PHPShopSystem->getSerilizeParam('admoption.sklad_status');
 
     $parent_price_enabled = $PHPShopSystem->getSerilizeParam('admoption.parent_price_enabled');
 
     $PHPShopOrm->debug = false;
-    $data = $PHPShopOrm->select(array('*'), $where, array('order' => 'name'), array('limit' => 100));
+    $data = $PHPShopOrm->select(array('*'), $where, array('order' => 'name'), array('limit' => 500));
     if (is_array($data))
         foreach ($data as $row) {
 
@@ -174,7 +177,7 @@ function actionSearch() {
       <span class="input-group-btn">
         <button class="btn btn-sm btn-default item-minus hidden-xs" type="button" data-id="' . $row['id'] . '"><span class="glyphicon glyphicon-minus"></span></button>
       </span>
-      <input type="text" class="form-control input-sm" id="select_id_' . $row['id'] . '" name="select[' . $row['id'] . '][item]" data-id="' . $row['id'] . '" value="' . intval($_SESSION['selectCart'][$row['id']]['num']) . '" ' . $add . '>
+      <input type="text" class="form-control input-sm" id="select_id_' . $row['id'] . '" name="select[' . $row['id'] . '][item]" data-id="' . $row['id'] . '" value="' . intval($_SESSION['selectCart'][$row['id']]['num']) . '" ' . $add . '  data-parent="'.$row['parent_enabled'].'">
        <span class="input-group-btn">
         <button class="btn btn-sm btn-default item-plus hidden-xs" type="button" data-id="' . $row['id'] . '"><span class="glyphicon glyphicon-plus"></span></button>
       </span>
@@ -183,12 +186,17 @@ function actionSearch() {
                 if (empty($parent_price_enabled) and empty($row['parent_enabled']) and !empty($row['parent'])) {
                     continue;
                 }
+                
+                // Не показывать товары с нулевым складом
+                if($sklad_status == 2 and $row['items']<1 and !in_array($row['id'],$select)){
+                   continue; 
+                }
 
                 $PHPShopInterface->setRow(array('name' => $row['name'], 'align' => 'left'), array('name' => $row['price'], 'align' => 'right'), array('name' => $items, 'align' => 'center'));
             }
             // Подбор по ID товара
             else
-                $PHPShopInterface->setRow($row['id'], array('name' => $row['name'], 'align' => 'left'), array('name' => $row['price'], 'align' => 'right'));
+                $PHPShopInterface->setRow($row['id'], array('name' => $row['name'], 'align' => 'left','class'=>'product-name'), array('name' => $row['price'], 'align' => 'right'));
         }
         
     exit('<table class="table table-hover ' . $class . '">' . $PHPShopInterface->getContent() . '</table><p class="clearfix"> </p>');
@@ -215,17 +223,17 @@ function actionAdvanceSearch() {
             $PHPShopInterface->setCheckbox('where[newtip]', 1, 'Новинка', intval($query['where']['newtip'])) .
             $PHPShopInterface->setCheckbox('where[sklad]', 1, 'Под заказ', intval($query['where']['sklad'])) . '<br>' .
             $PHPShopInterface->setCheckbox('where[enabled]', 0, 'Не выводить', intval($query['where']['enabled'])));
-    $value_search[] = array('Вхождение фразы', 'reg', 'reg');
-    $value_search[] = array('Точное сопадение', 'eq', '');
+    $value_search[] = array(__('Вхождение фразы'), 'reg', 'reg');
+    $value_search[] = array(__('Точное сопадение'), 'eq', '');
     $searchforma.= $PHPShopInterface->setField('Логика', $PHPShopInterface->setSelect('core', $value_search, false, false, false, false, false, false, false, false, 'form-control') . $PHPShopInterface->setHelp('Вхождение фразы поддерживает REGEXP [^ - начало, $ - конец]'));
     $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'hidden', 'name' => 'path', 'value' => 'catalog'));
     $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'hidden', 'name' => 'cat', 'value' => $_REQUEST['cat']));
 
     $searchforma.='<p class="clearfix"> </p>';
 
-    if (!empty($_REQUEST['cat'])) {
+    if (!empty($_REQUEST['cat']) && (int) $_REQUEST['cat'] > 0) {
         PHPShopObj::loadClass("sort");
-        $PHPShopSort = new PHPShopSort($_REQUEST['cat'], false, false, 'sorttemplate', false, false, false);
+        $PHPShopSort = new PHPShopSort((int) $_REQUEST['cat'], false, false, 'sorttemplate', false, false, false, false, null, true);
         $searchforma.=$PHPShopSort->disp;
     }
 
@@ -252,7 +260,7 @@ function sorttemplate($value, $n, $title, $vendor) {
 
     $value = $PHPShopInterface->setSelect('where[vendor][]', $value_new, 300, null, false, $search = true, false, $size = 1, false, false, 'form-control');
 
-    $disp = $PHPShopInterface->setField($title, $value);
+    $disp = $PHPShopInterface->setField($title, $value,1, false, false, 'control-label', 12, false);
 
     return $disp;
 }

@@ -2,7 +2,7 @@
 <module>
     <version>1.1</version>
     <name>Pozvonim</name>
-    <faqlink>http://my.pozvonim.com</faqlink>
+    <faqlink>https://docs.phpshop.ru/moduli/chaty-i-zvonki/pozvonim</faqlink>
     <description>Виджет удержания клиентов от Pozvonim.com.</description>
     <category>chat</category>
     <adminmenu>

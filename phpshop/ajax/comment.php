@@ -200,7 +200,7 @@ function DispComment($id) {
 function avg_rate($id) {
     global $SysValue,$link_db;
 
-    $oneStarWidth = 16; // ширина одной звёздочки
+    $oneStarWidth = 20; // ширина одной звёздочки
     $oneSpaceWidth = 0; // пробел между звёздочками
     
     // берём параметры с конфига, если заданы

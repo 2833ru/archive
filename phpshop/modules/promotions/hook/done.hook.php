@@ -28,9 +28,9 @@ function promotions_write($obj, $data, $rout) {
     }
 }
 
-function promotions_mail($obj, $data, $rout) {
+function promotions_send_to_order($obj, $data, $rout) {
 
-    if ($rout == 'START') {
+    if ($rout == 'MIDDLE') {
 
         // Бесплатная доставка
         if ($_SESSION['freedelivery'] === 0) {
@@ -50,14 +50,11 @@ function promotions_mail($obj, $data, $rout) {
                 $_SESSION['cart'][$key]['promo_price'] = $product['price'];
 
                 if ($product['price'] > $product['promo_sum']) {
-                    $_SESSION['cart'][$key]['price'] = $product['price'] - $product['promo_sum'] / $product['num'];
+                    $_SESSION['cart'][$key]['price'] = number_format($product['price'] - $product['promo_sum'] / $product['num'], $obj->PHPShopOrder->format, '.', '');
                     $_SESSION['cart'][$key]['name'].=' ['.__('скидка').' ' . $product['promo_sum'] / $product['num'] . ' ' . $obj->currency . ']';
                     $sum_check = true;
-                    
-                    $sum_promo+=$product['num'] * $_SESSION['cart'][$key]['price'];
                 }
-                
-                
+                $sum_promo+=$product['num'] * $_SESSION['cart'][$key]['price'];
             }
             // Процент от суммы
             else if (!empty($product['promo_percent'])) {
@@ -65,7 +62,7 @@ function promotions_mail($obj, $data, $rout) {
                 // Цена без скидки
                 $_SESSION['cart'][$key]['promo_price'] = $product['price'];
 
-                $_SESSION['cart'][$key]['price'] = $product['price'] - ($product['price'] * $product['promo_percent'] / 100);
+                $_SESSION['cart'][$key]['price'] = number_format($product['price'] - ($product['price'] * $product['promo_percent'] / 100), $obj->PHPShopOrder->format, '.', '');
                 $_SESSION['cart'][$key]['name'].=' ['.__('скидка').' ' . $product['promo_percent'] . '%]';
 
                 $sum_promo+=$product['num'] * $_SESSION['cart'][$key]['price'];
@@ -78,8 +75,11 @@ function promotions_mail($obj, $data, $rout) {
         }
         
         // Пересчет итоговой стоимости
-        $obj->sum = $obj->PHPShopOrder->returnSumma($sum_promo)+$obj->PHPShopOrder->returnSumma($sum, $obj->discount);
-        $obj->total = $obj->sum + $obj->delivery;
+        if((float) $sum_promo > 0) {
+            $obj->discount_sum = number_format($obj->sum - $sum_promo, $obj->PHPShopOrder->format, '.', ' ');
+        }
+        $obj->sum = $obj->PHPShopOrder->returnSumma($sum_promo)+$obj->PHPShopOrder->returnSumma($sum);
+        $obj->total = $obj->PHPShopOrder->returnSumma($obj->sum, $obj->discount) + $obj->delivery;
         
         unset($_SESSION['totalsummainput']);
     }
@@ -88,6 +88,6 @@ function promotions_mail($obj, $data, $rout) {
 $addHandler = array
     (
     'write' => 'promotions_write',
-    'mail' => 'promotions_mail',
+    'send_to_order' => 'promotions_send_to_order',
 );
 ?>

@@ -39,7 +39,7 @@ function actionStart() {
         array("Единый сельскохозяйственный налог", 4, $data["taxationSystem"]),
         array("Патентная система налогообложения", 5, $data["taxationSystem"])
     );
-    $Tab1.= $PHPShopGUI->setField('Cистема налогообложения', $PHPShopGUI->setSelect('taxationSystem_new', $tax_system, 300));
+    $Tab1.= $PHPShopGUI->setField('Cистема налогообложения', $PHPShopGUI->setSelect('taxationSystem_new', $tax_system, 300,true));
 
     // Доступые статусы заказов
     $PHPShopOrderStatusArray = new PHPShopOrderStatusArray();
@@ -50,7 +50,7 @@ function actionStart() {
             $order_status_value[] = array($order_status['name'], $order_status['id'], $data['status']);
 
     // Статус заказа
-    $Tab1.= $PHPShopGUI->setField('Оплата при статусе', $PHPShopGUI->setSelect('status_new', $order_status_value, 3000));
+    $Tab1.= $PHPShopGUI->setField('Оплата при статусе', $PHPShopGUI->setSelect('status_new', $order_status_value, 300));
 
     $Tab1.=$PHPShopGUI->setField('Описание оплаты', $PHPShopGUI->setTextarea('title_end_new', $data['title_end']));
 

@@ -2,6 +2,9 @@
 
 @ProductCatalogContent@
 
+@vendorCatDisp@
+
+    <span class="filter-btn" >Фильтры</span>
 <div class="well hidden-xs" id="filter-well">
     <div class="row">
         <div class="col-md-6">
@@ -50,7 +53,6 @@
     <form method="post" action="/shop/CID_@productId@@nameLat@.html" name="sort" id="sorttable" class="hide">
         <table><tr>@vendorDisp@ <td>&nbsp;</td><td>@vendorSelectDisp@</td></tr></table>
     </form>
-
 </div>
 
 <div class="template-product-list">@productPageDis@</div>
@@ -87,7 +89,7 @@
                 data: {
                     ajax: true
                 },
-                success: function (data)
+                success: function(data)
                 {
                     // Анимация загрузки
                     $('#ajaxInProgress').removeClass('progress-scroll');
@@ -109,7 +111,7 @@
 
                     Waypoint.refreshAll();
                 },
-                error: function () {
+                error: function() {
                     $('#ajaxInProgress').removeClass('progress-scroll');
                 }
             });
@@ -121,11 +123,11 @@
         $(".pagination").hide();
     }
 
-    $(document).ready(function () {
+    $(document).ready(function() {
 
         var inview = new Waypoint.Inview({
             element: $('.product-scroll-init'),
-            enter: function (direction) {
+            enter: function(direction) {
                 if (AJAX_SCROLL)
                     scroll_loader();
             }
@@ -138,7 +140,7 @@
             min: new Number('@price_min@'),
             max: new Number('@price_max@'),
             values: [new Number('@price_min@'), new Number('@price_max@')],
-            slide: function (event, ui) {
+            slide: function(event, ui) {
                 $("input[name=min]").val(ui.values[ 0 ]);
                 $("input[name=max]").val(ui.values[ 1 ]);
             }

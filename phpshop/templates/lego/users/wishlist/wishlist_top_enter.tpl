@@ -1,0 +1,1 @@
+<a href="/users/wishlist.html"><span class="icons-like"></span><span class="text">{Отложенные}</span> <span class="wishlistcount">@wishlistCount@</span> {шт.}<span id="wishlist-total" ></span></a>

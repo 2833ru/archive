@@ -43,7 +43,7 @@ if (strstr($dataArray['option1'], "#")) {
     $obj->set('skladOption', $sklad_disp);
 }
  
-2. ƒобавить переменную шаблонизатора @skladOption@ в product/main_product_forma_fiil.tpl
+2. ƒобавить переменную шаблонизатора @skladOption@ в product/main_product_forma_full.tpl
 
  */
 ?>

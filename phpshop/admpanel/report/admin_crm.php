@@ -3,7 +3,7 @@
 $TitlePage = __("CRM Журнал");
 
 function actionStart() {
-    global $PHPShopInterface, $TitlePage;
+    global $PHPShopInterface, $TitlePage, $PHPShopSystem;
 
     $PHPShopInterface->addJSFiles('./js/bootstrap-datetimepicker.min.js', './js/bootstrap-datetimepicker.ru.js', 'report/gui/report.gui.js');
     $PHPShopInterface->addCSSFiles('./css/bootstrap-datetimepicker.min.css');
@@ -29,6 +29,10 @@ function actionStart() {
 
     // Пароль
     $pass_crm = PHPShopAdminRule::encodeCrm($_SESSION['pasPHPSHOP']);
+    
+    if ($PHPShopSystem->getSerilizeParam("1c_option.update_category") == 1)
+        $create_category = 'create_category=true';
+    else $create_category = 'create_category=false';
 
     // Таблица с данными
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['1c_jurnal']);
@@ -37,7 +41,7 @@ function actionStart() {
     if (is_array($data))
         foreach ($data as $row) {
 
-            $PHPShopInterface->setRow(array('name' => $row['p_name'] . '/' . $row['f_name']), array('name' => '<span class="btn btn-default btn-xs"><span class="glyphicon glyphicon-play "></span> '.__('Выполнить').'</span>', 'align' => 'left', 'link' => '../../1cManager/result.php?date=' . $row['p_name'] . '&log=' . $_SESSION['logPHPSHOP'] . '&pas=' . $pass_crm . '&files=' . trim($row['f_name']) . '&create=true&create_category=true', 'target' => '_blank'), PHPShopDate::get($row['datas'], true), array('name' => $row['time'], 'align' => 'center'));
+            $PHPShopInterface->setRow(array('name' => $row['p_name'] . '/' . $row['f_name']), array('name' => '<span class="btn btn-default btn-xs"><span class="glyphicon glyphicon-play "></span> '.__('Выполнить').'</span>', 'align' => 'left', 'link' => '../../1cManager/result.php?date=' . $row['p_name'] . '&log=' . $_SESSION['logPHPSHOP'] . '&pas=' . $pass_crm . '&files=' . trim($row['f_name']) . '&create=true&'.$create_category, 'target' => '_blank'), PHPShopDate::get($row['datas'], true), array('name' => $row['time'], 'align' => 'center'));
         }
 
     if (isset($_GET['date_start']))
@@ -55,7 +59,7 @@ function actionStart() {
     $searchforma.=$PHPShopInterface->setInputDate("date_end", $date_end, false, null, 'Дата конца отбора');
 
     $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'hidden', 'name' => 'path', 'value' => $_GET['path']));
-    $searchforma.=$PHPShopInterface->setButton(__('Найти'), 'search', 'btn-order-search pull-right');
+    $searchforma.=$PHPShopInterface->setButton('Найти', 'search', 'btn-order-search pull-right');
 
     if ($where)
         $searchforma.=$PHPShopInterface->setButton('Сброс', 'remove', 'btn-order-cancel pull-left');

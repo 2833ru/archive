@@ -31,11 +31,12 @@ $PHPShopLang = new PHPShopLang(array('locale'=>$_SESSION['lang'],'path'=>'admin'
  * Шаблон вывода таблицы корзины
  * Основной шаблон печатной формы расположен в phpshop/lib/templates/print/acount.tpl
  */
-function printforma($val) {
+function printforma($val, $options) {
+
     global $n;
     if (empty($val['ed_izm']))
         $val['ed_izm'] = 'шт.';
-    $dis = PHPShopText::tr($n, $val['name'], $val['ed_izm'], $val['num'], $val['price'], $val['total']);
+    $dis = PHPShopText::tr($n, $val['name'], $val['ed_izm'], $val['num'], $val['price'] . ' ' . $options['currency'], $val['total'] . ' ' . $options['currency']);
     @$n++;
     return $dis;
 }
@@ -44,9 +45,9 @@ function printforma($val) {
  * Шаблон вывода таблицы доставки
  * Основной шаблон печатной формы расположен в phpshop/lib/templates/print/acount.tpl
  */
-function printdelivery($val) {
+function printdelivery($val, $options) {
     global $n;
-    return PHPShopText::tr($n, 'Доставка - ' . $val['name'], 'шт.', '1', $val['price'], $val['price']);
+    return PHPShopText::tr($n, __('Доставка').' - ' . $val['name'], __('шт.'), '1', $val['price'] . ' ' . $options['currency'], $val['price'] . ' ' . $options['currency']);
 }
 
 if (PHPShopSecurity::true_param($_GET['tip'], $_GET['orderId'], $_GET['datas'])) {
@@ -102,13 +103,13 @@ if (PHPShopSecurity::true_param($_GET['tip'], $_GET['orderId'], $_GET['datas']))
     PHPShopParser::set('org_ur_adres', $PHPShopSystem->getSerilizeParam('bank.org_ur_adres'));
     PHPShopParser::set('date', date("d-m-y"));
     PHPShopParser::set('name', $PHPShopSystem->getName());
-    PHPShopParser::set('logo', $PHPShopSystem->getLogo());
+    PHPShopParser::set('logo', $PHPShopSystem->getLogo(true));
     PHPShopParser::set('telNum', $PHPShopSystem->getValue('tel'));
     PHPShopParser::set('name', $PHPShopSystem->getValue('name'));
     PHPShopParser::set('company', $PHPShopSystem->getValue('company'));
     PHPShopParser::set('descrip', $PHPShopSystem->getValue('descrip'));
     PHPShopParser::set('adminMail', $PHPShopSystem->getValue('adminmail2'));
-    PHPShopParser::set('cart', $PHPShopOrder->cart('printforma') . $PHPShopOrder->delivery('printdelivery'));
+    PHPShopParser::set('cart', $PHPShopOrder->cart('printforma', array('currency' => $PHPShopOrder->default_valuta_code)) . $PHPShopOrder->delivery('printdelivery', array('currency' => $PHPShopOrder->default_valuta_code)));
 
     // Печати и подписи
     $LoadItems = $PHPShopSystem->getArray();
@@ -127,7 +128,7 @@ if (PHPShopSecurity::true_param($_GET['tip'], $_GET['orderId'], $_GET['datas']))
     if (!empty($LoadBanc['org_stamp']))
         $org_stamp = '<img src="' . $LoadBanc['org_stamp'] . '">';
     else
-        $org_stamp = '<div style="padding:50px;border-bottom: 1px solid #000000;border-top: 1px solid #000000;border-left: 1px solid #000000;border-right: 1px solid #000000;" align="center">М.П.</div>';
+        $org_stamp = '<div style="padding:50px;border-bottom: 1px solid #000000;border-top: 1px solid #000000;border-left: 1px solid #000000;border-right: 1px solid #000000;" align="center">'.__('М.П.').'</div>';
 
   
     // Монитор

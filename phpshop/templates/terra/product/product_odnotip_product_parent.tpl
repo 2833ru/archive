@@ -19,10 +19,10 @@
 
 <div class="btn_buy_block @elementCartOptionHide@">
 	<div class="quantity">
-		<label class="control-label">Количество</label>
+		<label class="control-label">{Количество}</label>
 		<div class="quant input-group">
 			<span class="input-group-btn">
-				<button type="button" class="btn btn-default_l btn-number"  data-type="minus" data-field="quant[2]">–</button>
+				<button type="button" class="btn btn-default_l btn-number"  data-type="minus" data-field="quant[2]">-</button>
 			</span>
 			<input type="text" name="quant[2]" class="form-control form-control_gr input-number" value="1" min="1" max="100">
 			<span class="input-group-btn">
@@ -32,7 +32,7 @@
 	</div>
 
 	<div class="cart-button-wrapper">
-		<button type="button" class="btn btn-cart addToCartFull" role="button" data-num="1" data-uid="@productUid@" data-cart="@productSaleReady@">Купить</button>
+		<button type="button" class="btn btn-cart addToCartFull" role="button" data-num="1" data-uid="@productUid@" data-cart="@productSaleReady@">{Купить}</button>
 	</div>
 </div>
 

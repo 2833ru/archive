@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
     <version>1.0</version>
-    <name>KupiVKredit</name>
+    <name>Tinkoff Credit</name>
     <description>Покупка в кредит от Tinkoff Credit.</description>
-    <faqlink>http://faq.phpshop.ru/page/kupivkredit.html</faqlink>
-    <category>payment</category>
+    <faqlink>https://docs.phpshop.ru/moduli/kreditovanie/kupi-v-kredit-tinkoff</faqlink>
+    <category>credit</category>
     <sign>1542198276</sign>
     <adminmenu>
         <title>Купи к кредит</title>

@@ -11,7 +11,7 @@ function tab_option($data) {
     $data_fields = unserialize($data['data_fields']);
     
     $disp="<table class='table table-striped autofill'>
-              <tr><th>Поле</th><th>".__('Вкл / Выкл')."</th><th>".__('Название при выводе')."</th><th>".__('Обязательное')."</th><th>".__('Приоритет')."</th></tr>"
+              <tr><th>".__('Поле')."</th><th>".__('Вкл / Выкл')."</th><th>".__('Название при выводе')."</th><th>".__('Обязательное')."</th><th>".__('Приоритет')."</th></tr>"
             . "<tr><td>".__('Страна')."</td>"
             . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][country][enabled]', 1, false, $data_fields[enabled][country][enabled]) . "</td>"
             . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[enabled][country][name]', $data_fields[enabled][country][name], "200") . "</td>"

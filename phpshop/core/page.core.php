@@ -3,7 +3,7 @@
 /**
  * Обработчик страниц
  * @author PHPShop Software
- * @version 1.4
+ * @version 1.5
  * @package PHPShopCore
  */
 class PHPShopPage extends PHPShopCore {
@@ -23,6 +23,12 @@ class PHPShopPage extends PHPShopCore {
     var $odnootip_cell_block = 1;
 
     /**
+     * Кол-во последних статей
+     * @var int 
+     */
+    var $limit = 3;
+
+    /**
      * Конструктор
      */
     function __construct() {
@@ -40,25 +46,30 @@ class PHPShopPage extends PHPShopCore {
     function getAll() {
 
         // Мета
-        $title = __('Статьи');
+        $title = __('Блог');
         $this->title = $title . " - " . $this->PHPShopSystem->getValue("name");
+
+        // Учет модуля SEOURLPRO
+        if (!empty($GLOBALS['SysValue']['base']['seourlpro']['seourlpro_system'])) {
+            $seourlpro_enabled = true;
+        }
 
         $PHPShopOrm = new PHPShopOrm($this->getValue('base.page_categories'));
         $PHPShopOrm->debug = $this->debug;
-        $data = $PHPShopOrm->select(array('*'), array('parent_to' => "=0"), false, array('limit' => 300));
+        $data = $PHPShopOrm->select(array('*'), array('parent_to' => "=0"), array('order' => 'num,id desc'), array('limit' => 300));
 
         $dis = null;
         if (is_array($data)) {
             foreach ($data as $row) {
 
-                if (empty($row['page_cat_seo_name']))
+                if (empty($row['page_cat_seo_name']) or empty($seourlpro_enabled))
                     $dis.=PHPShopText::li($row['name'], '/page/CID_' . $row['id'] . '.html');
                 else
                     $dis.=PHPShopText::li($row['name'], '/page/' . $row['page_cat_seo_name'] . '.html');
             }
         }
 
-        
+
         // Навигация хлебные крошки
         $this->navigation(0, $title);
 
@@ -119,10 +130,13 @@ class PHPShopPage extends PHPShopCore {
         $this->odnotip($row);
 
         // Определяем переменные
-        $this->set('pageContent', Parser($row['content']));
+        $this->set('isPage',true);
+        $this->set('pageContent', Parser(stripslashes($row['content'])));
         $this->set('pageTitle', $row['name']);
         $this->set('catalogCategory', $this->category_name);
         $this->set('catalogId', $this->category);
+        $this->set('pageIcon', $row['icon']);
+        $this->set('pagePreview', Parser(stripslashes($row['preview'])));
         $this->PHPShopNav->objNav['id'] = $row['id'];
 
         // Выделяем меню раздела
@@ -141,6 +155,9 @@ class PHPShopPage extends PHPShopCore {
 
         // Навигация хлебные крошки
         $this->navigation($row['category'], $row['name']);
+
+        // Последние записи
+        $this->set('pageLast', $this->getLast($link));
 
         // Перехват модуля
         $hook_end = $this->setHook(__CLASS__, __FUNCTION__, $row, 'END');
@@ -205,7 +222,7 @@ class PHPShopPage extends PHPShopCore {
             $where['enabled'].= ' and (servers ="" or servers REGEXP "i1000i")';
 
         // Выборка данных
-        $dataArray = $this->PHPShopOrm->select(array('*'), $where, array('order' => 'num'), array('limit' => 100));
+        $dataArray = $this->PHPShopOrm->select(array('*'), $where, array('order' => 'num,id desc'), array('limit' => 100));
         if (is_array($dataArray)) {
 
             if (count($dataArray) > 1)
@@ -224,10 +241,11 @@ class PHPShopPage extends PHPShopCore {
 
         $disp = PHPShopText::ul($dis);
 
-        // Описание каталога
         $this->set('catContent', $this->PHPShopCategory->getContent());
         $this->set('pageContent', $disp);
         $this->set('pageTitle', $this->category_name);
+        $this->set('pageIcon', $row['icon']);
+        $this->set('pagePreview', Parser(stripslashes($row['preview'])));
 
         // Данные родительской категории
         $cat = $this->PHPShopCategory->getValue('parent_to');
@@ -388,6 +406,58 @@ class PHPShopPage extends PHPShopCore {
 
         // Перехват модуля в конце функции
         $this->setHook(__CLASS__, __FUNCTION__, $row, 'END');
+    }
+
+    /**
+     * Вывод последних записей
+     * @return string
+     */
+    function getLast($link) {
+        $dis = null;
+
+       
+        // Перехват модуля
+        $hook = $this->setHook(__CLASS__, __FUNCTION__, false, 'START');
+        if ($hook)
+            return $hook;
+
+
+        $where = array('enabled' => "='1'", 'preview' => '!=""','link'=>'!="'.$link.'"');
+
+        // Мультибаза
+        if (defined("HostID"))
+            $where['servers'] = " REGEXP 'i" . HostID . "i'";
+        elseif (defined("HostMain"))
+            $where['preview'].= ' and (servers ="" or servers REGEXP "i1000i")';
+
+        $PHPShopOrm = new PHPShopOrm($this->objBase);
+        $PHPShopOrm->debug = $this->debug;
+        $result = $PHPShopOrm->select(array('link', 'name', 'icon', 'datas', 'preview'), $where, array('order' => 'datas DESC'), array("limit" => $this->limit));
+
+        // Проверка на еденичную запись
+        if ($this->limit > 1)
+            $data = $result;
+        else
+            $data[] = $result;
+
+        if (is_array($data))
+            foreach ($data as $row) {
+
+                // Определяем переменные
+                $this->set('pageLink', $row['link']);
+                $this->set('pageName', $row['name']);
+                $this->set('pageIcon', $row['icon']);
+                $this->set('pageData', PHPShopDate::get($row['datas']));
+                $this->set('pagePreview', Parser(stripslashes($row['preview'])));
+
+                // Перехват модуля
+                $this->setHook(__CLASS__, __FUNCTION__, $row, 'END');
+
+                // Подключаем шаблон
+                $dis .= parseTemplateReturn($this->getValue('templates.page_mini'));
+            }
+
+        return $dis;
     }
 
 }

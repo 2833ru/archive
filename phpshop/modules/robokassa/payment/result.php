@@ -16,7 +16,7 @@ PHPShopObj::loadClass("payment");
 PHPShopObj::loadClass("modules");
 PHPShopObj::loadClass("system");
 
-$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, false);
+$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, true);
 
 $PHPShopModules = new PHPShopModules($_classPath . "modules/");
 $PHPShopModules->checkInstall('robokassa');
@@ -75,7 +75,7 @@ class Payment extends PHPShopPaymentResult {
                 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
                 $PHPShopOrm->debug = $this->debug;
 
-                $PHPShopOrm->update(array('statusi_new' => $this->set_order_status_101()), array('uid' => '="' . $this->true_num($this->inv_id) . '"'));
+                $PHPShopOrm->update(array('statusi_new' => $this->set_order_status_101(), 'paid_new' => 1), array('uid' => '="' . $this->true_num($this->inv_id) . '"'));
 
                 // данные в лог
                 $this->PHPShopRobokassaArray->log($_REQUEST, $this->inv_id, 'заказ найден, статус изменён, запись в лог электронных плетежей занесена', 'запрос Result c сервера робокассы');

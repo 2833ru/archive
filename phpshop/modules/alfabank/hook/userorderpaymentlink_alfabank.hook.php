@@ -16,9 +16,6 @@ function userorderpaymentlink_mod_alfabank_hook($obj, $PHPShopOrderFunction) {
     // Оплата
     if ($_REQUEST["paynow"] == "Y") {
 
-        // Сумма покупки
-        $out_summ = $PHPShopOrderFunction->getTotal() * 100;
-
         // Номер заказа
         $uid = $PHPShopOrderFunction->objRow['uid'];
 
@@ -26,7 +23,7 @@ function userorderpaymentlink_mod_alfabank_hook($obj, $PHPShopOrderFunction) {
         $order_pref = alfabank_log_check($uid);
 
         // НДС
-        if ($PHPShopSystem->getParam('nds_enabled') == 1){
+        if ($PHPShopSystem->getParam('nds_enabled') == 1) {
             if ($PHPShopSystem->getParam('nds') == 0)
                 $tax = 1;
             elseif ($PHPShopSystem->getParam('nds') == 10)
@@ -45,25 +42,44 @@ function userorderpaymentlink_mod_alfabank_hook($obj, $PHPShopOrderFunction) {
 
         // Содержимое корзины
         $i = 0;
+        $total = 0;
         foreach ($order['Cart']['cart'] as $key => $arItem) {
 
-            $amount = (floatval($arItem['price']) * intval($arItem['num'])) * 100;
-            $price = floatval($arItem['price']) * 100;
+            // Скидка
+            if ($order['Person']['discount'] > 0)
+                $price = ($arItem['price'] - ($arItem['price'] * $order['Person']['discount'] / 100)) * 100;
+            else
+                $price = $arItem['price'] * 100;
+
+            $price = round($price);
+            $amount = $price * (int) $arItem['num'];
+
+            if (empty($arItem['ed_izm']))
+                $arItem['ed_izm'] = 'шт.';
 
             $aItem[] = array(
-                "positionId"    => $i,
-                "name"          => PHPShopString::win_utf8($arItem['name']),
-                "itemPrice"     => $price,
-                "quantity"      => array ("value" => $arItem['num'], "measure" => PHPShopString::win_utf8($arItem['ed_izm'])),
-                "itemAmount"    => $amount,
-                "itemCode"      => $arItem['id'],
-                "tax"           => array("taxType" => $tax),
+                "positionId" => $i,
+                "name" => PHPShopString::win_utf8($arItem['name']),
+                "itemPrice" => $price,
+                "quantity" => array("value" => $arItem['num'], "measure" => PHPShopString::win_utf8($arItem['ed_izm'])),
+                "itemAmount" => $amount,
+                "itemCode" => $arItem['id'],
+                "tax" => array("taxType" => $tax),
                 "itemAttributes" => array(
-                    "paymentMethod" => 1,
-                    "paymentObject" => 1
-                )
+                        "attributes" => array(
+                            array(
+                                "name"  => "paymentMethod",
+                                "value" => 1
+                            ),
+                            array(
+                                "name"  => "paymentObject",
+                                "value" => 1
+                            )
+                        )
+                    )
             );
             $i++;
+            $total = $total + $amount;
         }
 
         // Доставка
@@ -88,22 +104,30 @@ function userorderpaymentlink_mod_alfabank_hook($obj, $PHPShopOrderFunction) {
                 default: $tax_delivery = $tax;
             }
 
-            $delivery_price = floatval($out_summ) - (floatval($order['Cart']['sum']) * 100);
+            $delivery_price = (int) $order['Cart']['dostavka'] * 100;
 
             $aItem[] = array(
-                "positionId"    => $i + 1,
-                "name"          => PHPShopString::win_utf8('Доставка'),
-                "itemPrice"     => floatval($delivery_price),
-                "quantity"      => array ("value" => 1, "measure" => PHPShopString::win_utf8('ед.')),
-                "itemAmount"    => floatval($delivery_price),
-                "itemCode"      => $i + 1,
-                "tax"           => array("taxType" => $tax_delivery),
+                "positionId" => $i + 1,
+                "name" => PHPShopString::win_utf8('Доставка'),
+                "itemPrice" => $delivery_price,
+                "quantity" => array("value" => 1, "measure" => PHPShopString::win_utf8('ед.')),
+                "itemAmount" => $delivery_price,
+                "itemCode" => $i + 1,
+                "tax" => array("taxType" => $tax_delivery),
                 "itemAttributes" => array(
-                    "paymentMethod" => 1,
-                    "paymentObject" => 4
-                )
+                        "attributes" => array(
+                            array(
+                                "name"  => "paymentMethod",
+                                "value" => 1
+                            ),
+                            array(
+                                "name"  => "paymentObject",
+                                "value" => 4
+                            )
+                        )
+                    )
             );
-
+            $total = $total + $delivery_price;
         }
 
         $array = array(
@@ -114,21 +138,23 @@ function userorderpaymentlink_mod_alfabank_hook($obj, $PHPShopOrderFunction) {
 
         // Регистрация заказа в платежном шлюзе
         $params = array(
-            "userName"  => $option["login"],
-            "password"  => $option["password"],
+            "userName" => $option["login"],
+            "password" => $option["password"],
             "orderNumber" => $orderNum,
-            "amount"    => $out_summ,
+            "amount" => $total,
             "returnUrl" => 'http://' . $_SERVER['HTTP_HOST'] . '/success/?uid=' . $uid,
-            "failUrl"   => 'http://' . $_SERVER['HTTP_HOST'] . '/success/?uid=' . $uid,
+            "failUrl" => 'http://' . $_SERVER['HTTP_HOST'] . '/success/?uid=' . $uid,
             "orderBundle" => $orderBundle,
             "taxSystem" => intval($option["taxationSystem"])
         );
-
+        
+        //exit($orderBundle);
+        
         // Режим разработки и боевой режим
-        if($option["dev_mode"] == 0)
-            $url ='https://pay.alfabank.ru/payment/rest/register.do';
+        if ($option["dev_mode"] == 0)
+            $url = 'https://pay.alfabank.ru/payment/rest/register.do';
         else
-            $url ='https://web.rbsuat.com/ab/rest/register.do';
+            $url = 'https://web.rbsuat.com/ab/rest/register.do';
 
         $rbsCurl = curl_init();
         curl_setopt_array($rbsCurl, array(
@@ -138,19 +164,21 @@ function userorderpaymentlink_mod_alfabank_hook($obj, $PHPShopOrderFunction) {
             CURLOPT_POSTFIELDS => http_build_query($params, '', '&')
         ));
 
-        $result =json_decode(curl_exec($rbsCurl), true);
+        $result = json_decode(curl_exec($rbsCurl), true);
 
+        $result['orderBundle'] = $array;
+        
         curl_close($rbsCurl);
 
         // Запись лога
-        if(isset($result["formUrl"]))
+        if (isset($result["formUrl"]))
             $PHPShopAlfabankArray->log($result, $uid, 'Заказ зарегистрирован', 'register');
         else {
             $result['errorMessage'] = PHPShopString::utf8_win1251($result['errorMessage']);
             $PHPShopAlfabankArray->log($result, $uid, 'Ошибка регистрации заказа', 'register');
         }
 
-        header('Location: '. $result["formUrl"]);
+        header('Location: ' . $result["formUrl"]);
     }
 
     // Контроль оплаты от статуса заказа
@@ -160,7 +188,7 @@ function userorderpaymentlink_mod_alfabank_hook($obj, $PHPShopOrderFunction) {
             $order_uid = $PHPShopOrderFunction->objRow['uid'];
 
             $return = PHPShopText::a("/users/order.html?order_info=$order_uid&paynow=Y#Order", 'Оплатить сейчас', 'Оплатить сейчас', false, false, '_blank', 'btn btn-success pull-right');
-        } elseif ($PHPShopOrderFunction->getSerilizeParam('orders.Person.order_metod') == 10010)
+        } elseif ($PHPShopOrderFunction->getSerilizeParam('orders.Person.order_metod') == 10021)
             $return = ', Заказ обрабатывается менеджером';
 
     return $return;
@@ -175,7 +203,7 @@ function alfabank_log_check($order_id) {
     $PHPShopOrm = new PHPShopOrm("phpshop_modules_alfabank_log");
     $result = $PHPShopOrm->select(array('id'), array('order_id' => '="' . $order_id . '"', 'type' => '="register"'), array('order' => 'id desc'), array('limit' => 1));
     if (is_array($result))
-        return $result['id']++;
+        return $result['id'] ++;
 }
 
 $addHandler = array('userorderpaymentlink' => 'userorderpaymentlink_mod_alfabank_hook');

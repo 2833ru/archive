@@ -71,7 +71,7 @@ function actionStart(){
     $Tab2 .= $PHPShopGUI->setInput(
         'button',
         'button_link',
-        '—генерировать ссылку на экран',
+        __('—генерировать ссылку на экран'),
         $float = null,
         $size = false,
         $onclick = 'ajax_link()',
@@ -85,7 +85,7 @@ function actionStart(){
     $Tab2 .= $PHPShopGUI->setInput(
         'button',
         'button_link',
-        'ќтправить на e-mail',
+        __('ќтправить на e-mail'),
         $float = null,
         $size = false,
         $onclick = 'ajax_link_email()',

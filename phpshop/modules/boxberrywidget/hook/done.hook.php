@@ -11,55 +11,29 @@ function send_to_order_boxberrywidget_hook($obj, $row, $rout)
     include_once 'phpshop/modules/boxberrywidget/class/BoxberryWidget.php';
     $BoxberryWidget = new BoxberryWidget();
 
-    if(in_array($_POST['d'], @explode(",", $BoxberryWidget->option['delivery_id'])) or in_array($_POST['d'], @explode(",", $BoxberryWidget->option['express_delivery_id'])))
-    {
-        if(!empty($_POST['DeliverySum']))
-        {
-            if ($rout == 'START') {
-                $obj->delivery_mod = number_format($_POST['DeliverySum'], 0, '.', '');
+    if($BoxberryWidget->isBoxberryDeliveryMethod((int) $_POST['d'])) {
+        if(!empty($_POST['DeliverySum'])) {
+            if ($rout === 'START') {
+                $obj->delivery_mod = round((float) $_POST['DeliverySum'], $BoxberryWidget->format);
                 $obj->manager_comment = $_POST['boxberryInfo'];
                 $obj->set('deliveryInfo', $_POST['boxberryInfo']);
-                $_POST['boxberry_pvz_id_new'] = $_POST['boxberry_pvz_id'];
             }
+            if ($rout === 'END' && $BoxberryWidget->option['status'] == 0) {
+                $orm = new PHPShopOrm('phpshop_orders');
+                $order = $orm->getOne(array('*'), array('uid' => "='" . $obj->ouid . "'"));
+                if(is_array($order)) {
+                    $BoxberryWidget->isPvzDelivery((int) $_POST['d']) ? $vid = 1 : $vid = 2;
+                    $BoxberryWidget->setData($order, $vid, (int) $obj->discount);
+                    $result = $BoxberryWidget->request('ParselCreate');
 
-            if ($rout == 'MIDDLE' and $BoxberryWidget->option['status'] == 0) {
-
-                $BoxberryWidget->setDataFromDoneHook($obj, $row, $_POST);
-                $BoxberryWidget->setProducts($obj->PHPShopCart->getArray(), $obj->discount);
-
-                if(in_array($_POST['d'], @explode(",", $BoxberryWidget->option['delivery_id'])))
-                    $BoxberryWidget->parameters['vid'] = 1;
-                else {
-                    if(!empty($_POST['street_new']))
-                        $street = ', ' . $_POST['street_new'];
-                    else
-                        $street = '';
-                    if(!empty($_POST['house_new']))
-                        $house = ', ' . $_POST['house_new'];
-                    else
-                        $house = '';
-                    if(!empty($_POST['flat_new']))
-                        $flat = ', ' . $_POST['flat_new'];
-                    else
-                        $flat = '';
-                    $BoxberryWidget->parameters['vid'] = 2;
-                    $BoxberryWidget->parameters['kurdost'] = array(
-                        'index'    => $_POST['index_new'],
-                        'citi'     => PHPShopString::win_utf8($_POST['city_new']),
-                        'addressp' => PHPShopString::win_utf8($_POST['index_new'] . ', ' . $_POST['city_new'] . ', ' . $street . $house . $flat)
-                );
+                    if($result) {
+                        $_POST['boxberry_pvz_id_new'] = '';
+                    }
                 }
-
-                $BoxberryWidget->request('ParselCreate');
-
-                $_POST['boxberry_pvz_id_new'] = '';
             }
         }
     }
 }
 
-$addHandler = array
-    (
-    'send_to_order' => 'send_to_order_boxberrywidget_hook'
-);
+$addHandler = array ('send_to_order' => 'send_to_order_boxberrywidget_hook');
 ?>

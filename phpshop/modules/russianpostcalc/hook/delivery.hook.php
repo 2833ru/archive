@@ -12,11 +12,12 @@ function russianpostcalc_delivery_hook($obj, $data) {
     include_once '../modules/russianpostcalc/class/russianpostcalc.class.php';
     $russianpostcalc = new russianpostcalc();
     $option = $russianpostcalc->option();
+    $PHPShopOrder = new PHPShopOrderFunction();
 
     if ($xid == $option['delivery_id'] and strlen($_POST['index']) == 6) {
 
         // Запрос
-        $ret = $russianpostcalc->russianpostcalc_api_calc($option['key'], $option['password'], $option['delivery_index'], $_POST['index'], floatval($_RESULT['wsum']), intval($_RESULT['total'] * $option['cennost']) / 100);
+        $ret = $russianpostcalc->russianpostcalc_api_calc($option['key'], $option['password'], $option['delivery_index'], $_POST['index'], floatval($_RESULT['wsum']), intval((float) str_replace(' ', '', $_RESULT['total']) * $option['cennost']) / 100);
 
         if (isset($ret['msg']['type']) and $ret['msg']['type'] == "done") {
 
@@ -26,7 +27,14 @@ function russianpostcalc_delivery_hook($obj, $data) {
             else
                 $hook['delivery'] = $ret['calc'][1]['cost'];
 
-            $hook['total'] = $_RESULT['total'] + $hook['delivery'];
+            // Наценка
+            if(!empty($option['fee'])){
+                if($option['fee_type'] == 1)
+                    $hook['delivery'] = $hook['delivery'] + ($hook['delivery']*$option['fee'] / 100);
+                else $hook['delivery'] = $hook['delivery'] + $option['fee'];
+            }
+
+            $hook['total'] = $PHPShopOrder->returnSumma($_REQUEST['sum'], $PHPShopOrder->ChekDiscount($_REQUEST['sum']),' ', $hook['delivery'] );
             $hook['dellist'] = $_RESULT['dellist'];
             $hook['hook'] = '';
             $hook['adresList'] = $_RESULT['adresList'];
@@ -58,7 +66,7 @@ function russianpostcalc_delivery_hook($obj, $data) {
 }
 
 $addHandler = array
-    (
+(
     'delivery' => 'russianpostcalc_delivery_hook'
 );
 ?>

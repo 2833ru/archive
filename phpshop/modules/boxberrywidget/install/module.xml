@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.2</version>
+    <version>1.5</version>
     <name>Boxberry Widget</name>
     <faqlink>http://faq.phpshop.ru/page/boxberry-widget.html</faqlink>
     <description>Виджет расчета доставки boxberry.ru</description>
     <category>delivery</category>
-    <sign>1537191497</sign>
+    <sign>1589967437</sign>
     <adminmenu>
         <title>Boxberry Widget</title>
         <capability>true</capability>

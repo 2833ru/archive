@@ -10,7 +10,7 @@ function actionStart() {
 
 
     $PHPShopInterface->setActionPanel($TitlePage, array('Удалить выбранные'), array('Добавить'));
-        $PHPShopInterface->setCaption(array(null, "3%"), array("Название", "30%"), array("Цвет", "15%",array('sort'=>'none')), array("Списание", "15%", array('align' => 'center','tooltip'=>'Списание со склада','sort'=>'none')),array("Оповещение", "15%", array('align' => 'center','tooltip'=>'E-mail смены статуса','sort'=>'none')), array("", "10%"), array("Учет скидки", "10%", array('align' => 'right','sort'=>'none')));
+        $PHPShopInterface->setCaption(array(null, "3%"), array("Название", "40%"), array("Цвет", "10%",array('sort'=>'none')), array("Списание", "10%", array('align' => 'center','tooltip'=>'Списание со склада','sort'=>'none')),array("Оповещение", "10%", array('align' => 'center','tooltip'=>'E-mail смены статуса','sort'=>'none')), array("", "10%"), array("Учет скидки", "15%", array('align' => 'right','sort'=>'none')));
 
     // Таблица с данными
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['order_status']);

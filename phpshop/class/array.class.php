@@ -32,7 +32,7 @@ class PHPShopArray {
      * Лимит 
      * @var int 
      */
-    var $limit = 3000;
+    var $limit = 10000;
 
     /**
      * @var bool режим отладки
@@ -47,7 +47,7 @@ class PHPShopArray {
     var $mysql_error = false;
 
     /**
-     * @var int многомерный [1] одномерный масив [2] или [3] простой массив
+     * @var int многомерный [1] одномерный массив [2] или [3] простой массив
      */
     var $objType = 1;
 
@@ -152,7 +152,7 @@ class PHPShopArray {
             }
 
         // Игнорирование полей   
-        if (count($this->ignor_select) > 0) {
+        if (@count($this->ignor_select) > 0) {
             foreach ($array as $k=>$v)
                 foreach ($v as $key => $val)
                     if (in_array($key, $this->ignor_select)) {

@@ -7,6 +7,8 @@ $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.sticker.sticker_for
 function GetSkinList($skin) {
     global $PHPShopGUI;
     $dir = "../templates/";
+    
+    $value[] = array(__('Не выбрано'), '', '');
 
     if (is_dir($dir)) {
         if (@$dh = opendir($dir)) {
@@ -55,7 +57,7 @@ function actionStart() {
     $Tab1 = $PHPShopGUI->setField('Название:', $PHPShopGUI->setInputText(false, 'name_new', $data['name'], 300));
     $Tab1.=$PHPShopGUI->setField('Маркер:', $PHPShopGUI->setInputText('@sticker_', 'path_new', $data['path'], 200, '@'));
     $Tab1.=$PHPShopGUI->setField('Опции:', $PHPShopGUI->setCheckbox('enabled_new', 1, 'Вывод на сайте', $data['enabled']));
-    $Tab1.=$PHPShopGUI->setField('Таргетинг:', $PHPShopGUI->setInputText(false, 'dir_new', $data['dir']) . $PHPShopGUI->setHelp('Пример: /page/about.html,/page/company.html'));
+    $Tab1.=$PHPShopGUI->setField('Привязка к страницам:', $PHPShopGUI->setInputText(false, 'dir_new', $data['dir']) . $PHPShopGUI->setHelp('Пример: /page/about.html,/page/company.html'));
     $Tab1.=$PHPShopGUI->setField('Дизайн', GetSkinList($data['skin']));
 
 

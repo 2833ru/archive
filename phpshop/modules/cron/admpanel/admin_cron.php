@@ -1,6 +1,6 @@
 <?php
 
-$TitlePage = "Îבחמנ חאהאק Cron";
+$TitlePage = __("Îבחמנ חאהאק Cron");
 
 function actionStart() {
     global $PHPShopInterface, $PHPShopModules;

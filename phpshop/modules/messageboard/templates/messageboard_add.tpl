@@ -57,11 +57,7 @@
                                 </p>
                                 <table>
                                     <tr>
-                                        <td><img src="phpshop/captcha.php" alt="" border="0"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>*</strong> ¬ведите текст с картинки<br>
-                                            <input type="text" name="key" size="20"></td>
+                                        <td>@captcha@</td>
                                     </tr>
                                 </table>
                                 <p><br>

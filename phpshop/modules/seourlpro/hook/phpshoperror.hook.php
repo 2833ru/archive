@@ -10,6 +10,7 @@ function index_error_hook() {
     $data = $PHPShopOrm->select(array('id'), array('cat_seo_name_old' => '="' . $_SERVER['REQUEST_URI'] . '"'), false, array('limit' => 1));
     if (is_array($data)) {
         header('Location: /shop/CID_' . $data['id'] . '.html', true, 301);
+        return true;
     }
     // Товары
     else {
@@ -17,8 +18,10 @@ function index_error_hook() {
         $PHPShopOrm->debug = false;
         $PHPShopOrm->mysql_error = false;
         $data = $PHPShopOrm->select(array('id'), array('prod_seo_name_old' => '="' . $_SERVER['REQUEST_URI'] . '"'), false, array('limit' => 1));
-        if (is_array($data))
+        if (is_array($data)){
             header('Location: /shop/UID_' . $data['id'] . '.html', true, 301);
+            return true;
+        }
     }
 }
 

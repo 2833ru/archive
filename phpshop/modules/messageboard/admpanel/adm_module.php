@@ -5,7 +5,10 @@ $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.messageboard.messag
 
 // Функция обновления
 function actionUpdate() {
-    global $PHPShopOrm;
+    global $PHPShopOrm, $PHPShopModules;
+
+    // Настройки витрины
+    $PHPShopModules->updateOption($_GET['id'], $_POST['servers']);
 
     if (empty($_POST['enabled_new']))
         $_POST['enabled_new'] = 0;
@@ -30,11 +33,10 @@ function actionStart() {
     $Select[] = array("Справа", 1, $data['flag']);
     $Select[] = array("Слева", 0, $data['flag']);
 
-    $Tab1 = $PHPShopGUI->setField("Расположение блока объявлений:", 
-            $PHPShopGUI->setSelect("flag_new", $Select, 150, 1));
-    $Tab1.= $PHPShopGUI->setField("Статус",$PHPShopGUI->setCheckbox("enabled_new", 1, "Вывод блока на сайте", $data['enabled']).
+    $Tab1 = $PHPShopGUI->setField("Расположение блока объявлений:", $PHPShopGUI->setSelect("flag_new", $Select, 150, 1));
+    $Tab1 .= $PHPShopGUI->setField("Статус", $PHPShopGUI->setCheckbox("enabled_new", 1, "Вывод блока на сайте", $data['enabled']) .
             $PHPShopGUI->setCheckbox("enabled_menu_new", 1, "Добавить в топ-меню ссылку", $data['enabled_menu']));
-    $Tab1.=$PHPShopGUI->setField("Записей на страниц:", $PHPShopGUI->setInputText(false, 'num_new', $data['num'],50));
+    $Tab1 .= $PHPShopGUI->setField("Записей на страниц:", $PHPShopGUI->setInputText(false, 'num_new', $data['num'], 50));
     $Info = 'Для произвольного размещения формы вывода последних объявлений отключите опцию вывода блока на сайте и используйте переменную <kbd>@lastboardForma@</kbd>
      для вставки в свой шаблон в произвольное место.';
     $Tab2 = $PHPShopGUI->setInfo($Info, 250, '97%');
@@ -43,11 +45,10 @@ function actionStart() {
     $Tab3 = $PHPShopGUI->setPay();
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1), array("Описание", $Tab2), array("О Модуле", $Tab3));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Описание", $Tab2), array("О Модуле", $Tab3));
 
     // Вывод кнопок сохранить и выход в футер
-    $ContentFooter =
-            $PHPShopGUI->setInput("hidden", "rowID", $data['id']) .
+    $ContentFooter = $PHPShopGUI->setInput("hidden", "rowID", $data['id']) .
             $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionUpdate.modules.edit");
 
     $PHPShopGUI->setFooter($ContentFooter);

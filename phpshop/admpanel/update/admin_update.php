@@ -7,7 +7,7 @@ $PHPShopUpdate = new PHPShopUpdate();
 
 $License = @parse_ini_file_true("../../license/" . PHPShopFile::searchFile("../../license/", 'getLicense'), 1);
 
-define("UPDATE_PATH", "http://www.phpshop.ru/update/update5.php?from=" . $_SERVER['SERVER_NAME'] . "&version=" . $GLOBALS['SysValue']['upload']['version'] . "&support=" . $License['License']['SupportExpires'] . '&serial=' . $License['License']['Serial'] . '&path=update');
+define("UPDATE_PATH", "http://www.phpshop.ru/update/update5.php?from=" . $License['License']['DomenLocked'] . "&version=" . $GLOBALS['SysValue']['upload']['version'] . "&support=" . $License['License']['SupportExpires'] . '&serial=' . $License['License']['Serial'] . '&path=update');
 
 // Функция обновления
 function actionUpdate() {
@@ -21,9 +21,6 @@ function actionUpdate() {
     // Проверка создания/удаления архивов
     if ($PHPShopUpdate->isReady()) {
 
-
-        // Бекап БД
-        //$PHPShopUpdate->checkBD();
         // Соединение с FTP
         $PHPShopUpdate->ftpConnect();
 
@@ -40,12 +37,15 @@ function actionUpdate() {
 
         // Обновление config.ini
         $PHPShopUpdate->installConfig();
-
+        
         // Очистка временных файлов /temp/
         $PHPShopUpdate->cleanTemp();
 
-        // Обновление БД
+        // Обновление БД ядра
         $PHPShopUpdate->installBD();
+        
+        // Обновление БД модулей
+        $PHPShopUpdate->updateModules();
     }
 
 
@@ -70,12 +70,12 @@ function actionStart() {
             $result_content = '<ul class="list-group">';
 
             foreach ($PHPShopUpdate->content as $text)
-                $result_content.='<li class="list-group-item">' . $text . '</li>';
+                $result_content.='<li class="list-group-item">' . __($text,true) . '</li>';
 
             $result_content.='</ul>';
 
             $PHPShopGUI->action_button['Обновление'] = array(
-                'name' => __('Установить обновление'),
+                'name' => 'Установить обновление',
                 'class' => $PHPShopUpdate->btn_class,
                 'type' => 'button',
                 'locale'=>true,
@@ -104,7 +104,7 @@ function actionStart() {
         $PHPShopGUI->action_button['Обновление'] = array(
             'name' => 'Купить обновление',
             'class' => 'btn btn-primary btn-sm navbar-btn btn-action-panel-blank',
-            'action' => 'http://phpshop.ru/order/?from=' . $_SERVER['SERVER_NAME'],
+            'action' => 'https://www.phpshop.ru/order/?from=' . $_SERVER['SERVER_NAME'],
             'type' => 'button',
             'locale'=>true,
             'icon' => 'glyphicon glyphicon-ruble'
@@ -114,7 +114,7 @@ function actionStart() {
     $PHPShopGUI->action_button['Журнал'] = array(
         'name' => 'Журнал обновлений',
         'class' => 'btn btn-default btn-sm navbar-btn btn-action-panel-blank',
-        'action' => 'http://phpshop.ru/docs/update.html?from=' . $_SERVER['SERVER_NAME'],
+        'action' => 'https://www.phpshop.ru/docs/update.html?from=' . $_SERVER['SERVER_NAME'],
         'type' => 'button',
         'locale'=>true,
         'icon' => 'glyphicon glyphicon-gift'

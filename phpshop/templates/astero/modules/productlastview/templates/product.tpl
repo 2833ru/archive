@@ -9,6 +9,6 @@
     <div class="media-body">
         <a href="@shopDir@@productlastview_product_url@.html" title="@productlastview_product_name@">
             @productlastview_product_name@
-        </a> <span class="pull-right text-muted">@productlastview_product_price@ <span class="rubznak">@productlastview_product_currency@</span></span>
+        </a> <br><span class="pull-left text-muted">@productlastview_product_price@<span class="rubznak">@productlastview_product_currency@</span></span><span class="price-old">@productlastview_product_price_old@</span>
     </div>
 </div>

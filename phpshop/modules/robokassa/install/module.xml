@@ -5,7 +5,7 @@
     <description>Прием оплат через Robokassa в соответствии с 54-ФЗ.</description>
     <category>payment</category>
     <sign>1545904926</sign>
-    <faqlink>http://faq.phpshop.ru/page/robokassa.html</faqlink>
+    <faqlink>https://docs.phpshop.ru/moduli/platezhnye-sistemy/robokassa</faqlink>
     <adminmenu>
         <title>Robokassa</title>
         <capability>true</capability>

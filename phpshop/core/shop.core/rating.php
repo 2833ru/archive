@@ -70,7 +70,7 @@ function ShowStars2($n, $id = false) {
     $result = null;
     for ($y = 0; $y < 10; $y++) {
         $di = ceil($y / 2) * 2;
-        $yy = $y + 1;
+        $y = $y + 1;
         if ($y < $n) {
             $cc = "";
         } else {

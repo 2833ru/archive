@@ -4,7 +4,7 @@
 
             <div class="row">
 
-                <div class="col-md-4"><h4 @telNum@>Тел: 8 800 105-85-89</h4></div>
+                <div class="col-md-4"><h4 @telNum@ class="pull-left">Тел: 8 800 105-85-89</h4><h4 @telNum2@ class="pull-right">, 495 105-85-90</h4></div>
                 <div class="col-md-8"> 
                     <ul class="nav nav-pills pull-right">
                         <li role="presentation"><a href="#">Сравнить</a></li>
@@ -156,5 +156,5 @@
         </div>
     </div>
 
-    <div class="well well-lg"><span @company@>© Продавец 2017</span>, <span @telNum@>Тел: (495)111-22-33</span>, <span @streetAddress@>Адрес: Москва, ул. Физическая, дом 1.</span><span @button@  class="pull-right template-image"><img src="http://via.placeholder.com/80x35/FFFFFF/?text=Yandex"> <img src="http://via.placeholder.com/80x35/FFFFFF/?text=Google" ></span></div>
+    <div class="well well-lg"><span @company@>© Продавец 2017</span>, <span @telNum@>Тел: (495)111-22-33</span>, <span @workingTime@>c 10.00 до 20.00</span>, <span @streetAddress@>Адрес: Москва, ул. Физическая, дом 1.</span><span @button@  class="pull-right template-image"><img src="http://via.placeholder.com/80x35/FFFFFF/?text=Yandex"> <img src="http://via.placeholder.com/80x35/FFFFFF/?text=Google" ></span></div>
 </div>

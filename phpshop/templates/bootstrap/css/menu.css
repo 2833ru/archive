@@ -15,18 +15,18 @@
 }
 
 .mega-menu li.mega-menu-column {
-    margin-right: 20px;
     width: 180px;
 }
 
 .mega-menu .nav-header {
     padding: 0 !important;
-    margin-bottom: 10px;
     display: inline-block;
     min-width: 150px;
     border-bottom: 1px solid #ddd;
 }
-.mega-menu img { padding-bottom: 10px;}
+.mega-menu img { padding-bottom: 10px;
+	max-width: 120px;
+}
 
 
 /* Disable Toggle style

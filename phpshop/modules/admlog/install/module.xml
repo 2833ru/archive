@@ -4,7 +4,6 @@
     <name>Adm Log</name>
     <description>Модуль записи действий администратора.</description>
     <category>develop</category>
-    <status></status>
     <adminmenu>
         <title>Журнал событий</title>
         <capability>true</capability>

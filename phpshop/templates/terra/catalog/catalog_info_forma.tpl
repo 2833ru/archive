@@ -1,4 +1,6 @@
-
+<style>.middle-content-block{width:100%}
+.left-menu{display:none!important}
+</style>
 <div class="page-header hidden-xs">
         <h1 class="main-heading2">@catalogName@</h1>
 </div>

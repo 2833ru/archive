@@ -1,4 +1,4 @@
-<ol class="breadcrumb hidden-xs">
+<ol class="breadcrumb hidden-xs" itemscope itemtype="http://schema.org/BreadcrumbList">
     @breadCrumbs@
 </ol>
 <div class="page-header hidden-xs">

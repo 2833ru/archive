@@ -10,7 +10,8 @@ $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, true);
 $PHPShopSystem = new PHPShopSystem();
 
 // Locale
-$_SESSION['lang'] = $PHPShopSystem->getSerilizeParam("admoption.lang");
+$_SESSION['lang'] = $PHPShopSystem->getSerilizeParam("admoption.lang_adm");
+
 $PHPShopLang = new PHPShopLang(array('locale' => $_SESSION['lang'], 'path' => 'admin'));
 
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['users']);
@@ -20,6 +21,9 @@ PHPShopParser::set('serverPath', $_SERVER['SERVER_NAME']);
 
 // Модули
 $PHPShopModules = new PHPShopModules($_classPath . "modules/");
+    
+// Перехват модуля
+$PHPShopModules->setHookHandler('signin','signin');
 
 // Редактор GUI
 $PHPShopGUI = new PHPShopGUI();
@@ -80,7 +84,7 @@ function GetAdminSkinList($skin) {
                     else
                         $sel = "";
 
-                    if ($file != "." and $file != ".." and !strpos($file, '.')) {
+                    if ($file != "." and $file != ".." and ! strpos($file, '.')) {
 
                         if ($file == 'default')
                             $name = 'тема';
@@ -215,6 +219,11 @@ function actionStart() {
     if ($License['License']['Expires'] != 'Never' and $License['License']['RegisteredTo'] == 'Trial NoName')
         $_SESSION['chat'] = true;
 
+    if ($License['License']['Pro'] == 'Start') {
+        $_SESSION['mod_limit'] = 5;
+    } else
+        $_SESSION['mod_limit'] = 50;
+
     // Ознакомительный режим
     if (is_array($License)) {
         if ($License['License']['Expires'] != 'Never' and $License['License']['Expires'] < time()) {
@@ -224,7 +233,7 @@ function actionStart() {
             exit(PHPShopParser::file($_SERVER['DOCUMENT_ROOT'] . '/phpshop/lib/templates/error/license.tpl'));
             exit("Ошибка проверки лицензии для SERVER_NAME=" . $_SERVER["SERVER_NAME"] . ", HardwareLocked=" . getenv('SERVER_NAME'));
         } elseif (strstr($License['License']['HardwareLocked'], '-') and getenv('SERVER_NAME') != $License['License']['DomenLocked']) {
-            header('Location: //' . $License['License']['DomenLocked'] . '/phpshop/admpanel/admin.php');
+            //header('Location: //' . $License['License']['DomenLocked'] . '/phpshop/admpanel/admin.php');
         }
     }
 

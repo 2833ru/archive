@@ -84,7 +84,7 @@ function alfabank_check($obj, $id, $merchant_order_id){
         return $r['orderStatus'];
     }else{
         $order_status = $obj->set_order_status_101();
-        $PHPShopOrm->query("UPDATE `phpshop_orders` SET `statusi`='$order_status' WHERE `uid`='$id'");
+        $PHPShopOrm->query("UPDATE `phpshop_orders` SET `statusi`='$order_status', `paid` = 1 WHERE `uid`='$id'");
 
         $PHPShopAlfabankArray->log($r, $id, 'Платеж проведен', 'Запрос состояния заказа');
 

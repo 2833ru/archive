@@ -1,7 +1,7 @@
 <?php
 
 // SQL
-$PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.sortbrand.sort_system"));
+$PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.sortbrand.sortbrand_system"));
 
 // Функция обновления
 function actionUpdate() {
@@ -9,7 +9,7 @@ function actionUpdate() {
 
     $PHPShopOrm->debug = false;
     $action = $PHPShopOrm->update($_POST);
-    header('Location: ?path=modules&install=check');
+    header('Location: ?path=modules&id='.$_GET['id']);
     return $action;
 }
 
@@ -51,8 +51,8 @@ function actionStart() {
 
     $Tab1 = $PHPShopGUI->setField('Заголовок', $PHPShopGUI->setInputText(false, 'title_new', $data['title'],300));
     $Tab1.=$PHPShopGUI->setField('Характеристика', getSortValue($data['sort']));
-    $Tab1.=$PHPShopGUI->setField('Место вывода', $PHPShopGUI->setSelect('enabled_new', $e_value, 300));
-    $Tab1.=$PHPShopGUI->setField('Шаблон вывода', $PHPShopGUI->setSelect('flag_new', $f_value, 300));
+    $Tab1.=$PHPShopGUI->setField('Место вывода', $PHPShopGUI->setSelect('enabled_new', $e_value, 300,true));
+    $Tab1.=$PHPShopGUI->setField('Шаблон вывода', $PHPShopGUI->setSelect('flag_new', $f_value, 300,true));
 
     $info = 'Для произвольной вставки элемента следует выбрать параметр вывода "Не выводить" и в ручном режиме вставить переменную
         <kbd>@brand@</kbd> в свой шаблон.
@@ -64,7 +64,7 @@ function actionStart() {
     $Tab3 = $PHPShopGUI->setPay();
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1), array("Инструкция", $Tab2), array("О Модуле", $Tab3));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Инструкция", $Tab2), array("О Модуле", $Tab3));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =

@@ -112,39 +112,37 @@ class PHPShopReturncall extends PHPShopCore {
         $insert['name_new'] = PHPShopSecurity::TotalClean($_POST['returncall_mod_name'], 2);
         $insert['tel_new'] = PHPShopSecurity::TotalClean($_POST['returncall_mod_tel'], 2);
         $insert['date_new'] = time();
-        $insert['time_start_new'] = PHPShopSecurity::TotalClean($_POST['returncall_mod_time_start'],2);
-        $insert['time_end_new'] = PHPShopSecurity::TotalClean($_POST['returncall_mod_time_end'],2);
+        $insert['time_start_new'] = PHPShopSecurity::TotalClean($_POST['returncall_mod_time_start'], 2);
+        $insert['time_end_new'] = PHPShopSecurity::TotalClean($_POST['returncall_mod_time_end'], 2);
         $insert['message_new'] = PHPShopSecurity::TotalClean($_POST['returncall_mod_message'], 2);
         $insert['ip_new'] = $_SERVER['REMOTE_ADDR'];
 
         // Запись в базу
         $this->PHPShopOrm->insert($insert);
 
-        $zag = $this->PHPShopSystem->getValue('name') . " - ".__('Обратный звонок')." - " . PHPShopDate::dataV();
+        $zag = $this->PHPShopSystem->getValue('name') . " - " . __('Обратный звонок') . " - " . PHPShopDate::dataV();
 
-        if(!empty($insert['time_end_new']))
-            $insert['time_start_new'].=' - '.$insert['time_end_new'];
-        
+        if (!empty($insert['time_end_new']))
+            $insert['time_start_new'].=' - ' . $insert['time_end_new'];
+
         $message = "{Доброго времени}!
----------------
 
-{С сайта} " . $this->PHPShopSystem->getValue('name') . " {пришла заявка об обратном звонке}
+<p>
+{С сайта} " . $this->PHPShopSystem->getValue('name') . " {пришла заявка на обратный звонок}
+</p>
+{Имя}:                " . $insert['name_new'] . "<br>
+{Телефон}:            " . $insert['tel_new'] . "<br>
+{Время звонка}:       " . $insert['time_start_new'] . "<br>
+{Сообщение}:          " . $insert['message_new'] . "<br>
+{Дата}:               " . PHPShopDate::dataV($insert['date_new']) . "<br>
+IP:                 " . $_SERVER['REMOTE_ADDR'] . "<br>
+REFERER:            " . $_SERVER['HTTP_REFERER'];
 
-{Данные о пользователе}:
-----------------------
-
-{Имя}:                " . $insert['name_new'] . "
-{Телефон}:            " . $insert['tel_new'] . "
-{Время звонка}:       " . $insert['time_start_new']."
-{Сообщение}:          " . $insert['message_new'] . "
-{Дата}:               " . PHPShopDate::dataV($insert['date_new']) . "
-IP:                 " . $_SERVER['REMOTE_ADDR'] . "
-REFERER:            " . $_SERVER['HTTP_REFERER'] . " 
----------------
-
-http://" . $_SERVER['SERVER_NAME'];
-
-        new PHPShopMail($this->PHPShopSystem->getValue('adminmail2'), $this->PHPShopSystem->getValue('adminmail2'), $zag, Parser($message));
+        // Отсылаем письмо администратору
+        $PHPShopMail = new PHPShopMail($this->PHPShopSystem->getValue('adminmail2'), $this->PHPShopSystem->getValue('adminmail2'), $zag, '', true, true);
+        $this->set('message',Parser($message));
+        $content_adm = ParseTemplateReturn('./phpshop/lib/templates/order/blank.tpl', true);
+        $PHPShopMail->sendMailNow($content_adm);
     }
 
 }

@@ -34,7 +34,7 @@ function userorderpaymentlink_mod_modulbank_hook($obj, $PHPShopOrderFunction)
                     $price = number_format($arItem['price'] - ($arItem['price'] * $order['Person']['discount'] / 100), 2, '.', '') : $price = number_format($arItem['price'], 2, '.', '');
 
                 $aItem[] = array(
-                    "name" => PHPShopString::win_utf8($arItem['name']),
+                   "name" => PHPShopString::win_utf8(str_replace(array('&#43;'),array(''), $arItem['name'])),
                     "quantity" => $arItem['num'],
                     "price" => $price,
                     "sno" => $Modulbank->option['taxationSystem'],

@@ -1,18 +1,7 @@
-(function($) {
-    $.fn.datetimepicker.dates['ru'] = {
-        days: ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"],
-        daysShort: ["Вск", "Пнд", "Втр", "Срд", "Чтв", "Птн", "Суб", "Вск"],
-        daysMin: ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"],
-        months: ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"],
-        monthsShort: ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"],
-        today: "Сегодня",
-        suffix: [],
-        meridiem: []
-    };
-}(jQuery));
 
 $().ready(function() {
-
+    
+    $.fn.datetimepicker.dates['ru'] = locale;
 
     // Автоматизация рассылки
     if ($('#bot_result').length) {
@@ -38,7 +27,7 @@ $().ready(function() {
             data.push({name: 'performance', value: performance.now() - time});
 
             $.ajax({
-                mimeType: 'text/html; charset=windows-1251',
+                mimeType: 'text/html; charset='+locale.charset,
                 url: '?path=news.sendmail&id=' + $('[name="rowID"]').val(),
                 type: 'post',
                 data: data,
@@ -114,7 +103,7 @@ $().ready(function() {
         data.push({name: 'actionList[selectID]', value: 'actionSearch'});
 
         $.ajax({
-            mimeType: 'text/html; charset=windows-1251',
+            mimeType: 'text/html; charset='+locale.charset,
             url: '?path=catalog.search&words=' + escape($('input:text[name=search_name]').val()) + '&cat=' + $('select[name=search_category]').val() + '&price_start=' + $('input:text[name=search_price_start]').val() + '&price_end=' + $('input:text[name=search_price_end]').val(),
             type: 'post',
             data: data,
@@ -168,7 +157,7 @@ $().ready(function() {
         data.push({name: 'actionList[selectID]', value: 'actionSearch'});
 
         $.ajax({
-            mimeType: 'text/html; charset=windows-1251',
+            mimeType: 'text/html; charset='+locale.charset,
             url: '?path=catalog.search',
             type: 'post',
             data: data,

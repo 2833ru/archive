@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.0</version>
+    <version>1.1</version>
     <name>CRM Битрикс24</name>
-    <faqlink>http://faq.phpshop.ru/page/bitrix24.html</faqlink>
+    <faqlink>https://docs.phpshop.ru/moduli/crm/bitrix24</faqlink>
     <description>Синхронизация с CRM системой Битрикс24</description>
-    <sign>1551185935</sign>
-    <category>sale,crm</category>
+    <sign>1597312677</sign>
+    <category>crm</category>
     <adminmenu>
         <title>CRM Битрикс24</title>
         <capability>true</capability>

@@ -38,7 +38,7 @@ function actionStart() {
     global $PHPShopInterface, $PHPShopModules, $TitlePage, $select_name;
     
         $PHPShopInterface->action_button['Âûãğóçèòü'] = array(
-        'name' => 'Âûãğóçèòü êîğçèíû',
+        'name' => __('Âûãğóçèòü êîğçèíû'),
         'action' => '../modules/visualcart/admpanel/export.php',
         'class' => 'btn  btn-default btn-sm navbar-btn btn-action-panel-blank',
         'type' => 'submit',

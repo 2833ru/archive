@@ -3,7 +3,8 @@
     <version>1.3</version>
     <name>Product List</name>
     <description>ћодуль списка товаров из текущей категории.</description>
-    <category>form</category>
+    <category>sale</category>
+    <faqlink>https://docs.phpshop.ru/moduli/prodazhi/product-list</faqlink>
     <adminmenu>
         <title>Product List</title>
         <capability>true</capability>

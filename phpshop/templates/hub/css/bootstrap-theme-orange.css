@@ -11,9 +11,6 @@ background-color:#111111;
 .navbar-fixed-bottom .compare-block a, .navbar-fixed-bottom .wishlist-block a,.navbar-fixed-bottom .cart-block a,.navbar-fixed-bottom .compare-block a i, .navbar-fixed-bottom .wishlist-block a i, .navbar-fixed-bottom .nav-user>ul>li>a i, .navbar-fixed-bottom .cart-block a i{
 color:#333333;
 }
-.sticker-section{
-background-image:url(/UserFiles/Image/Trial/slider/footer.jpg);
-}
 body{
 color:#333333;
 }
@@ -33,16 +30,16 @@ color:#555555;
 color:#1c1c1c;
 }
 .product-page-secondary-button .btn.btn-cart,.product-page-button .addToCartFull,.btn-main{
-background:#9055a2;
+background:#ffa500;
+}
+.product-page-secondary-button .btn-cart{
+border-color:orange;
 }
 .compare-list-button-wrapper .addToWishList,.header-account,.product-block-button .addToWishList{
-color:#777777;
+color:#ffffff;
 }
 .product-page-button .addToCartFull{
 color:#ffffff;
-}
-.header-top{
-background-color:#222;
 }
 .main-color-text{
 color:#333;
@@ -59,7 +56,7 @@ color:#1c1c1c;
 .compare-list-button-wrapper .addToWishList,.header-account,.search-open-button,.product-block-button .addToWishList,.account-dropdown li a,.product-block-wrapper .product-block-button button{
 color:#777;
 }
-.compare-list-button-wrapper .addToWishList:hover,.product-block-wrapper .product-block-button button:hover, .product-block-button .btn.btn-cart:hover{
+.compare-list-button-wrapper .addToWishList:hover,.product-block-wrapper .product-block-button button:hover, .product-block-button .btn.btn-cart:hover, .compare-list-button-wrapper .addToNotice:hover{
 color:orange;
 border-color:orange;
 }
@@ -83,3 +80,20 @@ color:orange;
 .navbar-fixed-bottom #numcompare1, .navbar-fixed-bottom #num1, .navbar-fixed-bottom .wishlistcount{
 background-color:orange;
 }
+.additional-nav-menu .dropdown-menu a{
+color:#555555!important;
+}
+.additional-nav-menu .dropdown-menu a:hover{
+color:orange !important;
+}
+.sidebar-nav > li.active > a, .sidebar-nav ul li:hover a, .sidebar-nav > li:hover > a{
+background-color:orange;
+color:#fff;
+}
+.promo-icon{
+background:#f44336;
+}
+#body{
+--color:#ffa500;
+}
+.productsgroup_list .btn-primary {background-color: var(--color);border-color:var(--color)}

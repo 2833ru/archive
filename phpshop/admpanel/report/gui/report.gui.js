@@ -33,7 +33,7 @@ $().ready(function() {
         data.push({name: 'ajax', value: 1});
         data.push({name: 'actionList[selectID]', value: 'actionSelect'});
         $.ajax({
-            mimeType: 'text/html; charset=windows-1251',
+            mimeType: 'text/html; charset='+locale.charset,
             url: '?path=' + $("#export").attr('data-path'),
             type: 'post',
             data: data,
@@ -195,7 +195,7 @@ $().ready(function() {
         data.push({name: 'actionList[selectID]', value: 'actionSearch'});
 
         $.ajax({
-            mimeType: 'text/html; charset=windows-1251',
+            mimeType: 'text/html; charset='+locale.charset,
             url: '?path=catalog.search&words=' + escape($('input:text[name=search_name]').val()) + '&cat=' + $('select[name=search_category]').val() + '&price_start=' + $('input:text[name=search_price_start]').val() + '&price_end=' + $('input:text[name=search_price_end]').val(),
             type: 'post',
             data: data,
@@ -249,7 +249,7 @@ $().ready(function() {
         data.push({name: 'actionList[selectID]', value: 'actionSearch'});
 
         $.ajax({
-            mimeType: 'text/html; charset=windows-1251',
+            mimeType: 'text/html; charset='+locale.charset,
             url: '?path=catalog.search',
             type: 'post',
             data: data,

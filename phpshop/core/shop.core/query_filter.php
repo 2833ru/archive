@@ -3,7 +3,7 @@
 /**
  * Cортировка товаров
  * @author PHPShop Software
- * @version 1.5
+ * @version 1.6
  * @package PHPShopCoreFunction
  * @param obj $obj объект класса
  * @return mixed
@@ -12,15 +12,17 @@ function query_filter($obj) {
 
     $sort = null;
 
-    // Категория. Если есть массив категорий, используем массив
-    if($obj->category_array){
-        $categories_str = implode("','", $obj->category_array);
-        $catt = "(category IN ('$categories_str')) ";
-    }else{
-        $n = $obj->category;
-        // Учет добавочных категорий
-        $catt = '(category=' . $n . ' OR dop_cat LIKE \'%#' . $n . '#%\') ';
+    if(count($obj->category_array) === 0) {
+        $obj->category_array = array($obj->category);
     }
+
+    $dop_cats = '';
+    foreach ($obj->category_array as $category) {
+        $dop_cats .= ' OR dop_cat LIKE \'%#' . $category . '#%\' ';
+    }
+    $categories_str = implode("','", $obj->category_array);
+
+    $catt = "(category IN ('$categories_str') " . $dop_cats . " ) ";
 
     $v = @$_REQUEST['v'];
     $s = intval($_REQUEST['s']);
@@ -91,9 +93,9 @@ function query_filter($obj) {
             case(2):
                 // Сортировка по цене среди мультивалютных товаров
                 if ($obj->multi_currency_search)
-                    $order = array('order' => 'price_search,price' . $order_direction);
+                    $order = array('order' => 'price_search,' . $obj->PHPShopSystem->getPriceColumn() . $order_direction);
                 else
-                    $order = array('order' => 'price' . $order_direction);
+                    $order = array('order' => $obj->PHPShopSystem->getPriceColumn() . $order_direction);
 
                 $obj->set('productSortB', 'sortActiv');
                 break;
@@ -122,9 +124,9 @@ function query_filter($obj) {
             case(2):
                 // Сортировка по цене среди мультивалютных товаров
                 if ($obj->multi_currency_search)
-                    $order = array('order' => 'price_search,price' . $order_direction);
+                    $order = array('order' => 'price_search,' . $obj->PHPShopSystem->getPriceColumn() . $order_direction);
                 else
-                    $order = array('order' => 'price' . $order_direction);
+                    $order = array('order' => $obj->PHPShopSystem->getPriceColumn() . $order_direction);
                 break;
             case(3): $order = array('order' => 'num' . $order_direction);
                 break;
@@ -135,12 +137,6 @@ function query_filter($obj) {
     // Преобзазуем массив уловия сортировки в строку
     foreach ($order as $key => $val)
         $string = $key . ' by ' . $val;
-
-    // Все страницы
-    if ($obj->PHPShopNav->isPageAll()) {
-        $sql = " ($catt and enabled='1' and parent_enabled='0') " . $sort . " " . $string . ' limit ' . $obj->max_item;
-    }
-
 
     // Поиск по цене
     if (PHPShopSecurity::true_param($_REQUEST['min'], $_REQUEST['max'])) {
@@ -162,11 +158,10 @@ function query_filter($obj) {
         if ($obj->multi_currency_search)
             $sort.= " and (price_search BETWEEN " . ($priceOT / (100 + $percent) * 100) . " AND " . ($priceDO / (100 + $percent) * 100) . ") ";
         else
-            $sort.= " and (price BETWEEN " . ($priceOT / (100 + $percent) * 100) . " AND " . ($priceDO / (100 + $percent) * 100) . ") ";
+            $sort.= " and (" . $obj->PHPShopSystem->getPriceColumn() ." BETWEEN " . ($priceOT / (100 + $percent) * 100) . " AND " . ($priceDO / (100 + $percent) * 100) . ") ";
     }
 
 
     return array('sql' => $catt . " and enabled='1' and parent_enabled='0' " . $sort . $string);
 }
-
 ?>

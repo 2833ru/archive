@@ -99,10 +99,10 @@ function actionStart() {
     $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[user]', 'placeholder' => 'Пользователь', 'value' => $_GET['where']['user']));
 
     $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'hidden', 'name' => 'path', 'value' => $_GET['path']));
-    $searchforma.=$PHPShopInterface->setButton(__('Найти'), 'search', 'btn-order-search pull-right');
+    $searchforma.=$PHPShopInterface->setButton('Найти', 'search', 'btn-order-search pull-right');
 
     if ($where)
-        $searchforma.=$PHPShopInterface->setButton(__('Сброс'), 'remove', 'btn-order-cancel pull-left');
+        $searchforma.=$PHPShopInterface->setButton('Сброс', 'remove', 'btn-order-cancel pull-left');
 
     // Правый сайдбар
     $sidebarright[] = array('title' => 'Расширенный поиск', 'content' => $PHPShopInterface->setForm($searchforma, false, "order_search", false, false, 'form-sidebar'));

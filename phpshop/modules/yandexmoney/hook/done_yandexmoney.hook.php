@@ -3,7 +3,7 @@
 function send_to_order_mod_yandexmoney_hook($obj, $value, $rout) {
     global $PHPShopSystem;
 
-    if ($rout == 'MIDDLE' and $value['order_metod'] == 10002) {
+    if ($rout == 'END' and $value['order_metod'] == 10002) {
         
        
         // Настройки модуля
@@ -19,7 +19,7 @@ function send_to_order_mod_yandexmoney_hook($obj, $value, $rout) {
             $inv_id = $mrh_ouid[0] . $mrh_ouid[1];
 
             // Сумма покупки
-            $out_summ = $obj->get('total');
+            $out_summ = $obj->total;
 
             // Платежная форма
             $payment_forma = PHPShopText::setInput('hidden', 'receiver', trim($option['merchant_id']), false, 10);

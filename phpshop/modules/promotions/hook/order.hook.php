@@ -46,7 +46,15 @@ function order_promotions_hook($obj, $row, $rout) {
         unset($_SESSION['promocode']);
         unset($_SESSION['codetip']);
         unset($_SESSION['discpromo']);
-
+        
+        // Чистка скидки при перезагрузке страницы
+        if(is_array($_SESSION['cart']))
+            foreach($_SESSION['cart'] as $k=>$cart){
+                  unset($_SESSION['cart'][$k]['promo_sum']);
+                  unset($_SESSION['cart'][$k]['promo_code']);
+                  unset($_SESSION['cart'][$k]['discount_tip_sum']);
+                  unset($_SESSION['cart'][$k]['promo_percent']);
+            }
         // Добавляем JS в форму заказа
         $obj->set('order_action_add', $order_action_add, true);
     }

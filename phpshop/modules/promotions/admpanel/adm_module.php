@@ -32,23 +32,13 @@ function actionStart() {
 
     $data = $PHPShopOrm->select();
 
-    $PHPShopGUI->setActionPanel(__("Настройка модуля") . ' <span id="module-name">' . ucfirst($_GET['id']) . '</span>', $select_name, array('Сохранить и закрыть'));
-
-    $Info = '
-        <h4>Дополнительные переменные в товарах</h4>
-    <ol>
-        <li><kbd>@promotionInfo@</kbd> - Описание акции. Доступно только в шаблон <code>phpshop/templates/имя шаблона/product/main_product_forma_full.tpl</code></li>
-        <li><kbd>@promotionsIcon@</kbd> - Иконка акции. Доступно в шаблонах <code>phpshop/templates/имя шаблона/product/*</code></li></li>
-    </ol>';
-
-    // Содержание закладки 1
-    $Tab2 = $PHPShopGUI->setInfo($Info);
+    $PHPShopGUI->setActionPanel(__("Настройка модуля") . ' <span id="module-name">'.__('Промокоды').'</span>', $select_name, array('Сохранить и закрыть'));
 
     // Содержание закладки 2
     $Tab3 = $PHPShopGUI->setPay(false, false, $data['version'], true);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Инструкция", $Tab2), array("О Модуле", $Tab3), array("Промоакции", null, '?path=modules.dir.promotions'));
+    $PHPShopGUI->setTab(array("О Модуле", $Tab3), array("Промокоды", null, '?path=modules.dir.promotions'));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionUpdate.modules.edit");

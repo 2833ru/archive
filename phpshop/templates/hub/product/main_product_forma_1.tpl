@@ -2,10 +2,7 @@
 <div class="col-xs-12 product-block-wrapper product-col-1">
     <div class="product-block">
         <div class="product-block-top">
-            <div class="sale-icon-content">
-                @newtipIcon@
-                @specIcon@
-            </div>
+            
             <div class="product-block-img">
                 <a class="product-block-img-link" href="/shop/UID_@productUid@.html" title="@productName@"><img data-src="@productImg@" class="image-fix owl-lazy" alt="@productName@"></a>
             </div>
@@ -15,13 +12,24 @@
                 <a href="/shop/UID_@productUid@.html" title="@productName@">@productName@</a>
             </h3>
             <h4 class="product-block-price">
-                <span class="price-old">@productPriceRub@</span>
-                <span class="price-new">@productPrice@ <span class="rubznak">@productValutaName@</span></span>
-                <span class="product-sklad-list-block">@productSklad@</span>
+                <span class="price-new">@productPrice@<span class="rubznak">@productValutaName@</span></span><span class="price-old">@productPriceOld@</span>
             </h4>
+            <div class="stock">
+@ComStartNotice@
+<div class="outStock">@productOutStock@</div>
+@ComEndNotice@
+<span class="product-sklad-list-block">@productSklad@</span>
+</div>
+            <span class="sale-icon-content">
+                @specIcon@
+                @newtipIcon@
+                @hitIcon@
+               @promotionsIcon@ </span>
+           
             <div class="prodict-block-description">
-                    @productDes@
-                </div>
+                @productDes@
+            </div>
+            @previewSorts@
             <div class="product-block-button-col-1">
             <a class="btn btn-cart @elementCartOptionHide@" href="/shop/UID_@productUid@.html"  data-title="@productSale@" >
             <i class="icons-cart"></i>

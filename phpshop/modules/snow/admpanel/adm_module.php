@@ -30,8 +30,8 @@ function actionStart() {
     $e_value[] = array('JQuery Snow 2.0', 1, $data['flag']);
     $e_value[] = array('Snow 1.0', 2, $data['flag']);
 
-    $Tab1=$PHPShopGUI->setField('Тип подключения', $PHPShopGUI->setSelect('flag_new', $e_value, 200) . $PHPShopGUI->setHelp('JQuery Snow требует подключения отдельно библиотеки <a href="http://jquery.com/" target="_blank">JQuery</a>. Подходит для новых шаблонов Bootstrap, White_brick и подобных.'));
-    $Tab1.=$PHPShopGUI->setField('Цвет снег',$PHPShopGUI->setInputColor('color_new',$data['color']));
+    $Tab1=$PHPShopGUI->setField('Тип подключения', $PHPShopGUI->setSelect('flag_new', $e_value, 200) . $PHPShopGUI->setHelp('JQuery Snow требует подключения отдельно библиотеки <a href="http://jquery.com/" target="_blank">JQuery</a>.'));
+    $Tab1.=$PHPShopGUI->setField('Цвет снега',$PHPShopGUI->setInputColor('color_new',$data['color']));
 
     // Форма регистрации
     $Tab3 = $PHPShopGUI->setPay();

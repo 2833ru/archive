@@ -49,8 +49,8 @@ function actionStart() {
 
     $Tab1 = $PHPShopGUI->setField('Заголовок', $PHPShopGUI->setInputText(false, 'title_new', $data['title']));
     $Tab1.=$PHPShopGUI->setField('Сообщение', $PHPShopGUI->setTextarea('title_end_new', $data['title_end']));
-    $Tab1.=$PHPShopGUI->setField('Место вывода', $PHPShopGUI->setSelect('enabled_new', $e_value, 200));
-    $Tab1.=$PHPShopGUI->setField('Тип вывода', $PHPShopGUI->setSelect('windows_new', $w_value, 200));
+    $Tab1.=$PHPShopGUI->setField('Место вывода', $PHPShopGUI->setSelect('enabled_new', $e_value, 200,true));
+    $Tab1.=$PHPShopGUI->setField('Тип вывода', $PHPShopGUI->setSelect('windows_new', $w_value, 200,true));
     //$Tab1.=$PHPShopGUI->setField('Captcha', $PHPShopGUI->setSelect('captcha_enabled_new', $c_value, 200));
 
     $info = 'Для произвольной вставки элемента следует выбрать парамет вывода "Кнопка звонок" и в ручном режиме вставить переменную

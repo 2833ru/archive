@@ -76,7 +76,7 @@ $deliveryPrice = $PHPShopDelivery->getPrice($sum, $weight);
 
 $dis.="<tr class=tablerow>
 		<td class=tablerow>" . $n . "</td>
-		<td class=tablerow>Доставка - " . $PHPShopDelivery->getCity() . "</td>
+		<td class=tablerow>".__('Доставка')." - " . $PHPShopDelivery->getCity() . "</td>
         <td align=right class=tablerow nowrap>" . DoZero($deliveryPrice) . "</td>
 		<td align=right class=tablerow>1</td>
 		<td class=tableright>" . DoZero($deliveryPrice) . "</td>
@@ -96,29 +96,29 @@ if ($PERSON['discount'] > 0) {
 }
 
 // номер товарного чека
-$chek_num = substr(abs(crc32(uniqid(rand(), true))), 0, 5);
+$chek_num = $ouid;
 $LoadBanc = unserialize($LoadItems['System']['bank']);
 ?>
 <!doctype html>
 <head>
-    <title><? _e("Товарный чек")." №".$chek_num ?></title>
+    <title><? _e("Товарный чек")." &#8470;".$chek_num ?></title>
     <meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
     <link href="style.css" type=text/css rel=stylesheet>
     <script src="../../../lib/templates/print/js/html2pdf.bundle.min.js"></script>
 </head>
 <body>
     <div align="right" class="nonprint">
-        <button onclick="html2pdf(document.getElementById('content'), {margin: 1, filename: '<? _e("Товарный чек")?> №<?php echo $ouid ?>.pdf', html2canvas: {dpi: 192, letterRendering: true}});"><? _e("Сохранить") ?></button> 
+        <button onclick="html2pdf(document.getElementById('content'), {margin: 1, filename: '<? _e("Товарный чек")?> &#8470;<?php echo $ouid ?>.pdf', html2canvas: {dpi: 192, letterRendering: true}});"><? _e("Сохранить") ?></button> 
         <button onclick="window.print();"><? _e("Распечатать") ?></button> 
         <hr><br><br>
     </div>
     <div id="content">
         <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0><TBODY>
                 <TR>
-                    <TH scope=row align=middle width="50%" rowSpan=3><img src="<?php echo $PHPShopSystem->getLogo(); ?>" alt="" border="0" style="max-width: 200px;height: auto;"></TH>
+                    <TH scope=row align=middle width="50%" rowSpan=3><img src="<?php echo $PHPShopSystem->getLogo(true); ?>" alt="" border="0" style="max-width: 200px;height: auto;"></TH>
                     <TD align=right>
                         <BLOCKQUOTE>
-                            <P><? _e("Товарный чек") ?> <SPAN class=style4><?php echo @$chek_num ?> от <?php echo PHPShopDate::dataV(date("U"), "update") ?></SPAN> </P></BLOCKQUOTE></TD></TR>
+                            <P><? _e("Товарный чек") ?> <SPAN class=style4><?php echo @$chek_num ?> <? _e("от")?> <?php echo PHPShopDate::dataV(date("U"), "update") ?></SPAN> </P></BLOCKQUOTE></TD></TR>
                 <TR>
                     <TD align=right>
                         <BLOCKQUOTE>
@@ -134,7 +134,7 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
                 <TR>
                     <TH scope=row align=middle width="50%">
             <P class=style4><? _e("Покупатель") ?>: <?php if(!empty($row['fio'])) echo $row['fio']; else echo @$order['Person']['name_person']; ?></P></TH>
-            <TH scope=row align=middle><b><? _e("Заказ") ?> №<?php echo $ouid ?> </b></TH></TR></TBODY></TABLE>
+            <TH scope=row align=middle><b><? _e("Заказ") ?> &#8470;<?php echo $ouid ?> </b></TH></TR></TBODY></TABLE>
 
 
 
@@ -151,7 +151,7 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
         <p><br></p>
         <table width=99% cellpadding=2 cellspacing=0 align=center>
             <tr class=tablerow>
-                <td class=tablerow>№</td>
+                <td class=tablerow>&#8470;</td>
                 <td width=50% class=tablerow><? _e("Наименование") ?></td>
                 <td class=tablerow><? _e("Цена") ?></td>
                 <td class=tablerow><? _e("Количество") ?></td>
@@ -209,7 +209,7 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
                     if (!empty($LoadBanc['org_stamp']))
                         echo '<img src="' . $LoadBanc['org_stamp'] . '">';
                     else
-                        echo '<div style="padding:50px;border-bottom: 1px solid #000000;border-top: 1px solid #000000;border-left: 1px solid #000000;border-right: 1px solid #000000;" align="center">М.П.</div>';
+                        echo '<div style="padding:50px;border-bottom: 1px solid #000000;border-top: 1px solid #000000;border-left: 1px solid #000000;border-right: 1px solid #000000;" align="center">'.__('М.П.').'</div>';
                     ?>
                 </td>
             </tr>

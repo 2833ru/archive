@@ -96,7 +96,7 @@ function actionStart() {
     else
         $date_end = PHPShopDate::get(time() - 1);
 
-    $TitlePage.=' с ' . $date_start . ' по ' . $date_end;
+    $TitlePage.=' '.__('с').' ' . $date_start . ' '.__('по').' ' . $date_end;
 
 
     // Размер названия поля

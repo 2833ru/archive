@@ -124,7 +124,7 @@ class Payment extends PHPShopPaymentResult
             if (!empty($row['uid'])) {
                 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
                 $status = $this->set_order_status_101();
-           		$PHPShopOrm->query("UPDATE `phpshop_orders` SET `statusi`='$status' WHERE `id`=$orderId");
+           		$PHPShopOrm->query("UPDATE `phpshop_orders` SET `statusi`='$status', `paid` = 1 WHERE `id`=$orderId");
 
                 include_once(dirname(__FILE__) . '/../hook/mod_option.hook.php');
                 $CPay = new PHPShopcloudpaymentArray();

@@ -47,11 +47,11 @@ function actionStart() {
     else
         $flag_crc = '<p class="text-danger">Не выполнено</p>';
 
-    $Tab1.=$PHPShopGUI->setField('Проверка файлов<br>' . $flag_chek , '<a class="btn btn-sm btn-success" style="width:200px" href="../modules/guard/admin.php?do=chek" target="_blank"><span class="glyphicon glyphicon-ok"></span> Проверить файлы</a>');
+    $Tab1.=$PHPShopGUI->setField('Проверка файлов<br>' . $flag_chek , '<a class="btn btn-sm btn-success" style="width:200px" href="../modules/guard/admin.php?do=chek" target="_blank"><span class="glyphicon glyphicon-ok"></span> '.__('Проверить файлы').'</a>');
 
-    $Tab1.=$PHPShopGUI->setField('Обновление сигнатур<br>' . $flag_update , '<a class="btn btn-sm btn-success" style="width:200px" href="../modules/guard/admin.php?do=update" target="_blank"><span class="glyphicon glyphicon-refresh"></span> Обновить сигнатуры</a>');
+    $Tab1.=$PHPShopGUI->setField('Обновление сигнатур<br>' . $flag_update , '<a class="btn btn-sm btn-success" style="width:200px" href="../modules/guard/admin.php?do=update" target="_blank"><span class="glyphicon glyphicon-refresh"></span> '.__('Обновить сигнатуры').'</a>');
 
-    $Tab1.=$PHPShopGUI->setField('Файловая база<br>' . $flag_crc, '<a class="btn btn-sm btn-success" style="width:200px" href="../modules/guard/admin.php?do=create" target="_blank"><span class="glyphicon glyphicon-signal"></span> Пересчитать базу</a>');
+    $Tab1.=$PHPShopGUI->setField('Файловая база<br>' . $flag_crc, '<a class="btn btn-sm btn-success" style="width:200px" href="../modules/guard/admin.php?do=create" target="_blank"><span class="glyphicon glyphicon-signal"></span> '.__('Пересчитать базу').'</a>');
 
     // Инструкция
     $Info = ' <h4>Режимы</h4>

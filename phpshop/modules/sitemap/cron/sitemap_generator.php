@@ -11,7 +11,7 @@ PHPShopObj::loadClass("system");
 PHPShopObj::loadClass("orm");
 PHPShopObj::loadClass("date");
 
-$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, false);
+$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, true);
 
 // Авторизация
 if ($_GET['s'] == md5($PHPShopBase->SysValue['connect']['host'] . $PHPShopBase->SysValue['connect']['dbase'] . $PHPShopBase->SysValue['connect']['user_db'] . $PHPShopBase->SysValue['connect']['pass_db']))
@@ -24,10 +24,12 @@ if (empty($enabled))
 PHPShopObj::loadClass("modules");
 $PHPShopModules = new PHPShopModules($_classPath . "modules/");
 
+$brands = null;
 $seourl_enabled = false;
 $seourlpro_enabled = false;
 $seo_news_enabled = false;
 $seo_page_enabled = false;
+$seo_brands_enabled = false;
 
 
 if (!empty($_GET['hostID']))
@@ -87,11 +89,13 @@ if (!empty($GLOBALS['SysValue']['base']['seourlpro']['seourlpro_system'])) {
     $seourlpro_enabled = true;
 
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['seourlpro']['seourlpro_system']);
-    $settings = $PHPShopOrm->select(array('seo_news_enabled, seo_page_enabled'), array('id' => "='1'"));
-    if ($settings['seo_news_enabled'] == 2)
+    $settings = $PHPShopOrm->select(array('seo_news_enabled, seo_page_enabled', 'seo_brands_enabled'), array('id' => "='1'"));
+    if($settings['seo_news_enabled'] == 2)
         $seo_news_enabled = true;
-    if ($settings['seo_page_enabled'] == 2)
+    if($settings['seo_page_enabled'] == 2)
         $seo_page_enabled = true;
+    if($settings['seo_brands_enabled'] == 2)
+        $seo_brands_enabled = true;
 }
 
 function sitemaptime($nowtime) {
@@ -118,8 +122,8 @@ if (defined("HostID"))
 elseif (defined("HostMain"))
     $where['enabled'] .= ' and (servers ="" or servers REGEXP "i1000i")';
 
-$PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['table_name11']);
-$data = $PHPShopOrm->select(array('id,datas,link'), array('enabled' => "!='0'", 'category' => '!=2000'), array('order' => 'datas DESC'), array('limit' => 10000));
+$PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['page']);
+$data = $PHPShopOrm->select(array('id,datas,link'), $where, array('order' => 'datas DESC'), array('limit' => 10000));
 
 if (is_array($data))
     foreach ($data as $row) {
@@ -282,8 +286,31 @@ if (is_array($data))
         $stat_products.= '</url>' . "\n";
     }
 
+if($seourlpro_enabled && $seo_brands_enabled) {
+    $brandsOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']);
+    $brandsIds = array();
+    $result = $brandsOrm->getList(array('id'), array('brand' => '="1"'));
+    foreach ($result as $value) {
+        $brandsIds[] = $value['id'];
+    }
 
-$sitemap = $title . $stat_pages . $stat_news . $stat_products . '</urlset>';
+    $brandValuesOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort']);
+
+    $brandValues = $brandValuesOrm->getList(array('sort_seo_name'), array(
+        'category' => sprintf(' IN(%s)', implode(',', $brandsIds)),
+        'sort_seo_name' => '<> ""'
+    ));
+
+    foreach ($brandValues as $brandValue) {
+        $brands.= '<url>' . "\n";
+        $brands.= '<loc>'. $loc . $_SERVER['SERVER_NAME'] . '/brand/' . $brandValue['sort_seo_name'] . '.html</loc>' . "\n";
+        $brands.= '<changefreq>weekly</changefreq>' . "\n";
+        $brands.= '<priority>0.5</priority>' . "\n";
+        $brands.= '</url>' . "\n";
+    }
+}
+
+$sitemap = $title . $stat_pages . $stat_news . $stat_products . $brands . '</urlset>';
 
 if (defined("HostID"))
     $file = 'sitemap_' . HostID . '.xml';

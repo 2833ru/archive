@@ -1,56 +1,5 @@
 // Обновление визуальной корзины
 function visualCart(xid) {
-    if (document.getElementById('visualcart')) {
-
-        // Проверка даты добавления товара в корзину
-        var cart_update = VisualCartGetCookie('cart_update_time');
-
-        if (cart_update > 0 || xid > 0) {
-            var req = new Subsys_JsHttpRequest_Js();
-
-            req.onreadystatechange = function() {
-                if (req.readyState == 4) {
-                    if (req.responseJS) {
-
-                        
-                         // т.к. может быть несколько елементов, заполняем через цикл
-                         var els = document.getElementsByClassName('visualcart');
-                         // тогда можно будет пробежаться по всем элементам в цикле
-                         for (var i = 0; i < els.length; ++i) {
-                         var el = els[i];
-                         el.innerHTML = (req.responseJS.visualcart || '');
-                         }
-                         
-
-
-                        if (req.responseJS.num == 0)
-                            document.getElementById('visualcart_order').style.display = 'none';
-                        else if (document.getElementById('visualcart_order') || req.responseJS.visualcart != '')
-                            document.getElementById('visualcart_order').style.display = 'block';
-
-                        // Синхронизация удаления
-                        if (xid > 0 && document.getElementById('visualcart_order')) {
-                            document.getElementById('num').innerHTML = (req.responseJS.num || '');
-                            document.getElementById('sum').innerHTML = (req.responseJS.sum || '');
-                        }
-
-                    }
-                }
-            }
-            req.caching = false;
-            // Подготваливаем объект.
-            // Реальное размещение
-            req.open('POST', ROOT_PATH + '/phpshop/modules/visualcart/ajax/visualcart.php', true);
-            req.send({
-                xid: xid
-            });
-        }
-    }
-}
-
-
-// Фотогалерея
-function visualCartJQ(xid) {
 
     // Проверка даты добавления товара в корзину
     var cart_update = VisualCartGetCookie('cart_update_time');
@@ -103,7 +52,4 @@ function VisualCartGetCookie(cookieName) {
 }
 
 // Проверка новой корзины через промежуток времени
-if (window.jQuery)
-    setInterval("visualCartJQ(0)", 1000);
-else
-    setInterval("visualCart(0)", 1000);
+setInterval("visualCart(0)", 1000);

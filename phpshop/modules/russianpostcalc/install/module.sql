@@ -9,11 +9,13 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_russianpostcalc_system` (
   `delivery_index` int(11),
   `type` enum('1','2') NOT NULL DEFAULT '1',
   `cennost` float NOT NULL,
-  `version` FLOAT(2) DEFAULT '1.0' NOT NULL,
+  `fee` int(11) default 0,
+  `fee_type` enum('1','2') DEFAULT '1',
+  `version` varchar(64) DEFAULT '1.0' NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 
-INSERT INTO `phpshop_modules_russianpostcalc_system` VALUES (1,'','','','','2','30.0','1.1');
+INSERT INTO `phpshop_modules_russianpostcalc_system` VALUES (1,'','','','','2','30.0',0, 1,'1.2');
 
 ALTER TABLE `phpshop_delivery` ADD `is_mod` enum('1','2') DEFAULT '1';

@@ -28,7 +28,7 @@ function addShoplogisticswidgetTab($data) {
 
     if(in_array($order['Person']['dostavka_metod'], explode(",", $ShopLogistics->option['delivery_id']))) {
         if(!empty($data['shoplogistics_order_data'])) {
-            $Tab1 = $PHPShopGUI->setField(__('Синхронизация заказа'), $PHPShopGUI->setCheckbox('shoplogistics_send_now', 1, 'Отправить заказ в Shop-Logistics сейчас', 0));
+            $Tab1 = $PHPShopGUI->setField('Синхронизация заказа', $PHPShopGUI->setCheckbox('shoplogistics_send_now', 1, 'Отправить заказ в Shop-Logistics сейчас', 0));
             $PHPShopGUI->addTab(array("Shop-Logistics", $Tab1, true));
         }
 

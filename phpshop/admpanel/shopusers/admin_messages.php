@@ -60,7 +60,7 @@ function actionStart() {
     );
 
     $PHPShopInterface->setActionPanel($TitlePage, array('Поиск', '|', 'Удалить выбранные'), false,false);
-    $PHPShopInterface->setCaption(array(null, "2%"), array("Имя", "20%"), array("E-mail", "15%"), array("Тема", "40%"), array("Дата", "10%"), array("", "10%"), array("Статус", "10%", array('align' => 'right')));
+    $PHPShopInterface->setCaption(array(null, "2%"), array("Имя", "20%"), array("E-mail", "15%"), array("Тема", "35%"), array("Дата", "10%"), array("", "10%"), array("Статус", "10%", array('align' => 'right')));
 
     // Поиск
     $where = null;
@@ -76,7 +76,7 @@ function actionStart() {
 
         $limit = 1000;
     }
-
+    
     // Таблица с данными
     $PHPShopOrm = new PHPShopOrm();
     $PHPShopOrm->debug = false;
@@ -93,7 +93,7 @@ function actionStart() {
                 $status = '<span class="glyphicon glyphicon-envelope"></span>';
 
             $PHPShopInterface->setRow(
-                    $row['ID'], array('name' => $row['name'], 'link' => '?path=shopusers.messages&id=' . $row['ID'], 'align' => 'left'), array('name' => $row['login'], 'link' => '?path=shopusers&id=' . $row['UID'] . '&return=' . $_GET['path']), $row['Subject'], array('order' => strtotime($row['DateTime']), 'name' => format_mysql_date($row['DateTime'], 'd-m-y h:i')), array('action' => array('edit', 'delete', 'id' => $row['ID']), 'align' => 'center'), array('order' => $row['enabled'], 'name' => $status, 'align' => 'right'));
+                    $row['ID'], array('name' => $row['name'], 'link' => '?path=shopusers.messages&id=' . $row['ID'], 'align' => 'left'), array('name' => $row['login'], 'link' => '?path=shopusers&id=' . $row['UID'] . '&return=' . $_GET['path']), $row['Subject'], array('order' => strtotime($row['DateTime']), 'name' => format_mysql_date($row['DateTime'], 'd-m-y h:i')), array('action' => array('edit','|', 'delete', 'id' => $row['ID']), 'align' => 'center'), array('order' => $row['enabled'], 'name' => $status, 'align' => 'right'));
         }
     $PHPShopInterface->Compile();
 }

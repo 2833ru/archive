@@ -34,57 +34,59 @@
     <div class="form-group">
         <div class="">
         </div>
-        <div class="col-sm-6">
+        <div class="">
             <input placeholder="{Ссылка на товар с меньшей ценой}" type="text" name="link_to_page" value="@php  echo $_POST[link_to_page]; php@" class="form-control"  required="">
         </div>
     </div>
     <div class="form-group">
         <div class="">
         </div>
-        <div class="col-sm-6">
+        <div class="">
             <input placeholder="{Имя}" type="text" name="name_person" value="@php  echo $_POST[name_person]; php@" class="form-control"  required="">
         </div>
     </div>
     <div class="form-group">
         <div class="">
         </div>
-        <div class="col-sm-6">
+        <div class="">
             <input placeholder="E-mail" type="email" name="mail" value="@php  echo $_POST[mail]; php@" class="form-control" required="">
         </div>
     </div>
     <div class="form-group">
         <div class="">
         </div>
-        <div class="col-sm-6">
+        <div class="">
             <input placeholder="{Телефон}" type="text" name="tel_name" value="@php  echo $_POST[tel_name]; php@" class="form-control">
         </div>
     </div>
     <div class="form-group">
         <div class="">
         </div>
-        <div class="col-sm-6">
+        <div class="">
             <input placeholder="{Компания}" type="text" name="org_name" value="@php  echo $_POST[org_name]; php@" class="form-control">
         </div>
     </div>
     <div class="form-group">
         <div class="">
         </div>
-        <div class="col-sm-6">
-            <textarea placeholder="Дополнительная информация" name="adr_name" class="form-control">@php  echo $_POST[adr_name]; php@</textarea>
+        <div class="">
+            <textarea placeholder="{Дополнительная информация}" name="adr_name" class="form-control">@php  echo $_POST[adr_name]; php@</textarea>
         </div>
     </div>
     <div class="form-group">
         <div class="">
         </div>
-        <div class="col-sm-6">
+        <div class="">
             @captcha@
         </div>
     </div>
+	<p class="small"><label><input name="rule" value="1" required="" checked="" type="checkbox"> @rule@</label></p>
+
     <div class="form-group">
         <div class=""></div>
-        <div class="col-sm-6">
+        <div class="">
             <input type="hidden" name="send_price_link" value="ok">
-            <button type="submit" class="btn btn-primary">{Пожаловаться на цену}</button>
+            <button type="submit" class="btn btn-main">{Пожаловаться на цену}</button>
         </div>
     </div>
 </form>    

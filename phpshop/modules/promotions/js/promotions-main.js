@@ -39,7 +39,7 @@ function UpdatePromotion(promo) {
                     var totalsum = parseFloat($("#TotalSumma").html());
                     var totalajax = parseFloat(json['total']);
 
-                    if (parseInt(totalsum) > parseInt(totalajax)) {
+                    if (parseInt(totalsum) >= parseInt(totalajax)) {
 
                         $("#TotalSumma").html(json['total']);
                         $("#SkiSumma").html(json['discount']);

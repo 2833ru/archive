@@ -16,17 +16,15 @@
         <link  href="./css/signin.css" rel="stylesheet">
         <link  href="./css/bar.css" rel="stylesheet">
 
-        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-        <!--[if lt IE 9]>
-          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-        <![endif]-->
     </head>
 
     <body id="form-signin">
 
         <!-- jQuery -->
         <script src="js/jquery-1.11.0.min.js"></script>
+        
+        <!-- Localization -->
+        <script src="../locale/@lang@/gui.js" data-rocketoptimized="false" data-cfasync="false"></script>
 
         <header class="bar bar-nav navbar-action visible-xs">
             <h1 class="title">{Авторизация}</h1>
@@ -55,7 +53,7 @@
                         <input type="checkbox" name="actionHash" value="true" id="remember-me" @disabled@> {Восстановить пароль}
                         
                     </label>
-                    <small class="pull-right text-muted text-uppercase @hide@"><img src="../locale/@lang@/icon.png" /> @code@</small>
+                    <small class="hidden-xs pull-right text-muted text-uppercase @hide@"><img src="../locale/@lang@/icon.png" /> @code@</small>
                     
                 </div>
                 <button class="btn btn-lg btn-primary btn-block" type="submit">{Вход}</button>

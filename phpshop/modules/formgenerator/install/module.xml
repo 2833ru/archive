@@ -2,9 +2,9 @@
 <module>
     <version>1.9</version>
     <name>Form Generator</name>
-    <faqlink>http://faq.phpshop.ru/page/form-generator.html</faqlink>
+    <faqlink>https://docs.phpshop.ru/moduli/razrabotchikam/form-generator</faqlink>
     <description>Модуль создания форм.</description>
-    <category>form,develop</category>
+    <category>develop</category>
     <adminmenu>
         <title>Генератор форм</title>
         <capability>true</capability>

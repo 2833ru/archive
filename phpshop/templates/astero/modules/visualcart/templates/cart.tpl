@@ -1,4 +1,4 @@
-<ul id="visualcart_content" class="dropdown-menu pull-right">
+<ul id="visualcart_content" class="dropdown-menu  fadeIn animated pull-right">
     <li>
         <table class="table hcart" id="visualcart">
             @php if(!empty($_SESSION['cart'])) echo $GLOBALS['SysValue']['other']['visualcart_list'];  php@

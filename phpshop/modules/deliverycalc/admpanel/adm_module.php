@@ -20,14 +20,14 @@ function actionStart() {
     
     if(empty($data['code']))
         $data['code']='<script src="https://alliance-catalog.ru/site/delivery-iframe/script.js"></script>
-<div><a href="https://alliance-catalog.ru/deliverycalc/" id="link" >* Рассчитывается</a> ориентировочная стоимость доставки, конечная стоимость определяется после приема груза на терминале компании.</div>';
+<div>'.__('<a href="https://alliance-catalog.ru/deliverycalc/" id="link" >* Рассчитывается</a> ориентировочная стоимость доставки, конечная стоимость определяется после приема груза на терминале компании').'</div>';
 
     // Таргетинг
     $Tab1.=$PHPShopGUI->setField("Таргетинг:", $PHPShopGUI->setInput("text", "target_new", $data['target']) .
-            $PHPShopGUI->setHelp(__('* Пример: /,/page/,/page/addres.html. Можно указать несколько адресов через запятую.')));
+            $PHPShopGUI->setHelp('* Пример: /,/page/,/page/addres.html. Можно указать несколько адресов через запятую.'));
 
     $Tab1.=$PHPShopGUI->setField('Код виджета', $PHPShopGUI->setTextarea('code_new', $data['code'], false, false, 150).
-            $PHPShopGUI->setHelp(__('* Пример кода виджета представлен на <a href="https://alliance-catalog.ru/ourdelcalc/" target="_blank">странице разработчика</a>.')));
+            $PHPShopGUI->setHelp('* Пример кода виджета представлен на <a href="https://alliance-catalog.ru/ourdelcalc/" target="_blank">странице разработчика</a>.'));
 
 
     $Tab3 = $PHPShopGUI->setPay();

@@ -2,7 +2,7 @@
 <module>
     <version>1.0</version>
     <name>Envybox</name>
-    <faqlink>http://faq.phpshop.ru/page/envybox.html</faqlink>
+    <faqlink>https://docs.phpshop.ru/moduli/chaty-i-zvonki/envybox</faqlink>
     <description>Виджет чата и обратного звонка от Envybox.</description>
     <category>chat</category>
     <adminmenu>

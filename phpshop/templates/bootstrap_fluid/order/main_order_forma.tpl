@@ -1,25 +1,27 @@
 @checkLabelForOldTemplatesNoDelete@
 @order_action_add@
 
-<div class="page-header">
-    <h2>{Заказ} №@orderNum@</h2>
+<div class="page-header cart-header">
+    <h2>{Заказ} &#8470;@orderNum@</h2>
 </div>
 
 <form role="form" method="post" name="forma_order" id="forma_order" action="/done/">
 
-    <div class="panel panel-default">
+    <div class="panel panel-default no-margin">
         <input type="hidden" name="ouid" value="@orderNum@" readonly="1">
         <input type="hidden" value="@orderDate@"  readonly="1">
         <div class="panel-heading">
             <h3 class="panel-title">{Личные данные}</h3>
         </div>
         <div class="panel-body">
-            @authData@ @noAuth@
+            @authData@ @noAuth@                  
+<label><input type="checkbox" value="on" name="rule" class="req" checked="checked">  {Я согласен} <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html" alt="Согласие на обработку персональных данных">{на обработку моих персональных данных}</a>
+                           </label>
         </div>
     </div>
 
 
-    <div class="panel panel-default">
+    <div class="panel panel-default no-margin">
 
         <div class="panel-heading">
             <h3 class="panel-title">{Доставка, адрес получателя}</h3>
@@ -41,9 +43,8 @@
                     @noAuthAdr@
                     <div id="userAdresData">
                     </div>
-                    <br>
-                    {Дополнительная информация к заказу}:
-                    <textarea class="form-control" name="dop_info" id="dop_info"></textarea>
+                   
+                   <textarea class="form-control" placeholder="{Дополнительная информация к заказу}" name="dop_info" id="dop_info"></textarea>
 
                 </div>
             </div>
@@ -52,7 +53,7 @@
     </div>
 
 
-    <div class="panel panel-default">
+    <div class="panel panel-default no-margin border">
         <div class="panel-heading">
             <h3 class="panel-title">{Способ оплаты}</h3>
         </div>
@@ -67,14 +68,16 @@
 
         </div>
     </div>
-
-    <p class="text-center">
+    <div class="btn-border">
+ 
+    <p class="text-left">
         <input type="hidden" name="send_to_order" value="ok" >
         <input type="hidden" name="d" id="d" value="@deliveryId@">
         <input type="hidden" name="nav" value="done">
-        <button type="reset" class="btn btn-default btn-lg visible-lg-inline"><span class="glyphicon glyphicon-remove"></span> {Очистить}</button> 
-        <button type="submit" class="btn btn-success btn-lg orderCheckButton"><span class="glyphicon glyphicon-ok"></span> {Оформить заказ}</button>
+        <button type="reset" class="btn btn-default btn-lg "> {Очистить}</button> 
+        <button type="submit" class="btn btn-success btn-lg orderCheckButton"> {Оформить заказ}</button>
     </p>
-    <p><br><br></p>
+    </div>
+  
 </form>
 @showYurDataForPayment@

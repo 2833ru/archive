@@ -8,7 +8,7 @@ $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['page_categories']);
 // Построение дерева категорий
 function treegenerator($array, $i, $parent) {
     global $tree_array;
-    $del = '¦&nbsp;&nbsp;&nbsp;&nbsp;';
+    $del = '&brvbar;&nbsp;&nbsp;&nbsp;&nbsp;';
     $tree = $tree_select = $check = false;
     $del = str_repeat($del, $i);
     if (is_array($array['sub'])) {
@@ -16,7 +16,7 @@ function treegenerator($array, $i, $parent) {
 
             $check = treegenerator($tree_array[$k], $i + 1, $k);
 
-            if ($k == $_GET['parent_to'])
+            if ($k == $_GET['cat'])
                 $selected = 'selected';
             else
                 $selected = null;
@@ -48,7 +48,7 @@ function actionStart() {
 
     // Размер названия поля
     $PHPShopGUI->field_col = 2;
-    $PHPShopGUI->addJSFiles('./js/jquery.treegrid.js', './page/gui/page.gui.js');
+    $PHPShopGUI->addJSFiles('./js/jquery.treegrid.js', './js/bootstrap-datetimepicker.min.js','./page/gui/page.gui.js');
 
     // Начальные данные
     $data = array();
@@ -93,11 +93,11 @@ function actionStart() {
 		<td><a href="?path=page.catalog&id=' . $k . '">' . $v . '</a></td>
                     </tr>';
 
-            if ($k == $data['parent_to'])
+            if ($k == $_GET['cat'])
                 $selected = 'selected';
             else
                 $selected = null;
-
+            
             $tree_select.='<option value="' . $k . '"  ' . $selected . '>' . $v . '</option>';
 
             $tree_select.=$check['select'];
@@ -115,6 +115,7 @@ function actionStart() {
     $Tab_info.=$PHPShopGUI->setField("Приоритет", $PHPShopGUI->setInputText(false, 'num_new', $data['num'], '100'));
     
     $Tab_info.=$PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'));
+    $Tab_info .= $PHPShopGUI->setField("Опции вывода", $PHPShopGUI->setCheckbox('menu_new', 1, 'Главное меню', $data['menu']));
 
     $Tab1 = $PHPShopGUI->setCollapse('Информация', $Tab_info);
 

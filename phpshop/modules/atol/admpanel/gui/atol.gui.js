@@ -16,7 +16,7 @@ $().ready(function() {
             data.push({name: 'ajax', value: 1});
             data.push({name: 'id', value: $(this).attr('data-id')});
             $.ajax({
-                mimeType: 'text/html; charset=windows-1251',
+                mimeType: 'text/html; charset='+locale.charset,
                 url: '../modules/atol/api.php',
                 type: 'post',
                 data: data,

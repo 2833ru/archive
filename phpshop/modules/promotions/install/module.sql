@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_promotions_system` (
   `version` varchar(64) DEFAULT '1.0',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
-INSERT INTO `phpshop_modules_promotions_system` VALUES (1,'2.6');
+INSERT INTO `phpshop_modules_promotions_system` VALUES (1,'2.8');
 
 DROP TABLE IF EXISTS `phpshop_modules_promotions_forms`;
 CREATE TABLE IF NOT EXISTS `phpshop_modules_promotions_forms` (
@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_promotions_forms` (
   `header_mail` varchar(255) NOT NULL,
   `content_mail` text NOT NULL,
   `block_old_price` enum('0','1') DEFAULT '0',
+  `hide_old_price` enum('0','1') DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 

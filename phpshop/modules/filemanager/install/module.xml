@@ -3,7 +3,8 @@
     <version>1.0</version>
     <name>Filemanager</name>
     <description>Модуль файлового менеджера.</description>
-    <category>template,decorate</category>
+    <faqlink>https://docs.phpshop.ru/moduli/dizain/filemanager</faqlink>
+    <category>template</category>
      <adminmenu>
         <title>Файловый менеджер</title>
         <capability>true</capability>

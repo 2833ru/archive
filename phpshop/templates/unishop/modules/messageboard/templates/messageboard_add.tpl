@@ -1,8 +1,16 @@
-
-
-<ol class="breadcrumb visible-lg">
-    <li><a href="/" >{Главная}</a></li>
-    <li><a href="/board/">{Доска объявлений}</a></li>
+<ol class="breadcrumb visible-lg" itemscope itemtype="http://schema.org/BreadcrumbList">
+    <li itemscope itemtype="http://schema.org/ListItem">
+        <a href="/" itemprop="item">
+            <span itemprop="name">{Главная}</span>
+        </a>
+        <meta itemprop="position" content="1" />
+    </li>
+    <li itemscope itemtype="http://schema.org/ListItem">
+        <a href="/board/" itemprop="item">
+            <span itemprop="name">{Доска объявлений}</span>
+        </a>
+        <meta itemprop="position" content="2" />
+    </li>
     <li class="active">{Форма объявления}</li>
 </ol>
 
@@ -32,12 +40,12 @@
         <textarea class="form-control" name="content_new" maxlength="200" placeholder="{Объявление}..." required=""></textarea>
     </div>
     <div class="form-group">
+        @captcha@
+    </div>
+    <div class="form-group">
         <span class="pull-right">
             <input type="hidden" name="send_gb" value="1">
             <button type="submit" class="btn btn-primary">{Отправить объявление}</button>
         </span>
-        <img src="phpshop/captcha3.php" alt="" border="0" align="left" style="margin-right:10px"> <input type="text" name="key" class="form-control" id="exampleInputEmail1" placeholder="{Код с картинки}..." style="width:150px" required="">
-
-    </div>
-    
+      </div>
 </form>

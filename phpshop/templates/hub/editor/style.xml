@@ -40,15 +40,6 @@
         </var>
     </element>
     <element>
-        <name>.sticker-section</name>
-        <description>Подвал</description>
-        <content>Изображение в подвале</content>
-        <var>
-            <name>background-image</name>
-            <type>image</type>
-        </var>
-    </element>
-    <element>
         <name>body</name>
         <description>Текст</description>
         <content>Общий цвет текста</content>

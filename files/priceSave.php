@@ -21,6 +21,9 @@ PHPShopObj::loadClass("product");
 $PHPShopValutaArray = new PHPShopValutaArray();
 $PHPShopSystem = new PHPShopSystem();
 
+// Мультибаза
+$PHPShopBase->checkMultibase();
+
 class PHPShopPriceSave {
 
     var $csv;
@@ -34,8 +37,12 @@ class PHPShopPriceSave {
         global $PHPShopSystem, $PHPShopValutaArray;
         if (is_numeric(@$_GET['catId']))
             $str = " (category=$_GET[catId] or dop_cat LIKE '%#$_GET[catId]#%') and ";
-        else
+        else {
             $str = null;
+            $queryMultibase = $this->queryMultibase();
+            if (!empty($queryMultibase))
+                $str = ' ' . $queryMultibase;
+        }
 
         // Системная валюта
         $system_currency = $PHPShopSystem->getValue('dengi');
@@ -107,6 +114,35 @@ class PHPShopPriceSave {
         }
     }
 
+    public function queryMultibase() {
+
+        // Мультибаза
+        if (defined("HostID") or defined("HostMain")) {
+
+            $multi_cat = array();
+
+            // Не выводить скрытые каталоги
+            $where['skin_enabled '] = "!='1'";
+
+            if (defined("HostID"))
+                $where['servers'] = " REGEXP 'i" . HostID . "i'";
+            elseif (defined("HostMain"))
+                $where['skin_enabled'] .= ' and (servers ="" or servers REGEXP "i1000i")';
+
+            $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
+            $PHPShopOrm->debug = $this->debug;
+            $data = $PHPShopOrm->getList(array('id'), $where);
+
+            foreach ($data as $row) {
+                $multi_cat[] = $row['id'];
+            }
+
+            if (count($multi_cat) > 0)
+                $multi_select = ' category IN (' . @implode(',', $multi_cat) . ') and ';
+
+            return $multi_select;
+        }
+    }
 }
 
 $PHPShopPriceSave = new PHPShopPriceSave();

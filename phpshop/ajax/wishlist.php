@@ -24,7 +24,7 @@ PHPShopObj::loadClass("lang");
 
 $product_id = intval($_REQUEST['product_id']);
 
-$PHPShopLang = new PHPShopLang(array('locale'=>$_SESSION['lang'],'path'=>'shop'));
+$PHPShopLang = new PHPShopLang(array('locale' => $_SESSION['lang'], 'path' => 'shop'));
 
 // Данные по товару
 $objProduct = new PHPShopProduct($product_id);
@@ -48,22 +48,16 @@ if (PHPShopSecurity::true_num($_SESSION['UsersId'])) {
     $count = count($wishlist);
     $wishlist = serialize($wishlist);
     $PHPShopOrm->update(array("wishlist" => $wishlist), array('id' => "=" . intval($UsersId)), '');
-
-    if (PHPShopParser::checkFile('../../' . $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/users/wishlist/wishlist_add_alert_done.tpl", true))
-        $message = PHPShopParser::file('../../' . $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/users/wishlist/wishlist_add_alert_done.tpl", true);
-    else
-        $message = PHPShopParser::file('../lib/templates/wishlist/wishlist_add_alert_done.tpl', true);
 } else {
 
     $_SESSION['wishlist'][$product_id] = 1;
     $count = count($_SESSION['wishlist']);
-
-    if (PHPShopParser::checkFile('../../' . $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/users/wishlist/wishlist_add_alert_auth.tpl", true))
-        $message = PHPShopParser::file('../../' . $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/users/wishlist/wishlist_add_alert_auth.tpl", true);
-    else
-        $message = PHPShopParser::file('../lib/templates/wishlist/wishlist_add_alert_auth.tpl', true);
 }
 
+if (PHPShopParser::checkFile('../../' . $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/users/wishlist/wishlist_add_alert_done.tpl", true))
+    $message = PHPShopParser::file('../../' . $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/users/wishlist/wishlist_add_alert_done.tpl", true);
+else
+    $message = PHPShopParser::file('../lib/templates/wishlist/wishlist_add_alert_done.tpl', true);
 
 $message = PHPShopString::win_utf8($message);
 

@@ -6,7 +6,7 @@ $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['system']);
 // Построение дерева категорий
 function treegenerator($array, $i, $curent) {
     global $tree_array;
-    $del = '¦&nbsp;&nbsp;&nbsp;&nbsp;';
+    $del = '&brvbar;&nbsp;&nbsp;&nbsp;&nbsp;';
     $tree_select = $check = false;
 
     $del = str_repeat($del, $i);
@@ -71,7 +71,7 @@ function actionStart() {
     else
         $date_end = PHPShopDate::get(time() - 1);
 
-    $TitlePage.=' с ' . $date_start . ' по ' . $date_end;
+    $TitlePage.=' '.__('с').' ' . $date_start . ' '.__('по').' ' . $date_end;
 
     // Каталоги
     $PHPShopCategoryArray = new PHPShopCategoryArray();
@@ -119,7 +119,7 @@ function actionStart() {
     $PHPShopInterface->addJSFiles('./js/bootstrap-datetimepicker.min.js', './js/bootstrap-datetimepicker.ru.js', 'report/gui/report.gui.js');
     $PHPShopInterface->addCSSFiles('./css/bootstrap-datetimepicker.min.css');
     $PHPShopInterface->setActionPanel($TitlePage, array('Export'), false,false);
-    $PHPShopInterface->setCaption(array('№', '5%'), array("Категория", "65%"), array("Кол-во", "15%", array('align' => 'center')), array("Прибыль", "15%", array('align' => 'center', 'view' => intval($_GET['where']['margin']))), array(__("Выручка"), "15%", array('align' => 'right')));
+    $PHPShopInterface->setCaption(array('№', '5%'), array("Категория", "65%"), array("Кол-во", "15%", array('align' => 'center')), array("Прибыль", "15%", array('align' => 'center', 'view' => intval($_GET['where']['margin']))), array("Выручка", "15%", array('align' => 'right')));
 
     // Выборка ИД товаров
     $PHPShopOrm = new PHPShopOrm();

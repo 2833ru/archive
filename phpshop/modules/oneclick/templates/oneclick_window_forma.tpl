@@ -27,7 +27,7 @@
                                 <td></td>
                                 <td>
                                     <p><input type="hidden" name="oneclick_mod_product_id" value="@productUid@">
-                                    <input type="submit" name="oneclick_mod_send" value="Заказать!"></p></td>
+                                    <input type="submit" name="oneclick_mod_send" value="{Купить}"></p></td>
                             </tr>
 
                         </tbody>

@@ -33,7 +33,7 @@ function userorderpaymentlink_mod_robokassa_hook($obj, $PHPShopOrderFunction) {
             if ($PHPShopSystem->getParam('nds_enabled') == '') {
                 $tax = $tax_delivery = 'none';
             } else {
-                $tax = 'vat' . $PHPShopSystem->getParam('nds');
+                $tax = 'vat' . $PHPShopSystem->objRow['nds'];
 
                 // НДС Доставки
                 if (!empty($order['Cart']['dostavka'])) {
@@ -44,7 +44,7 @@ function userorderpaymentlink_mod_robokassa_hook($obj, $PHPShopOrderFunction) {
                     if ($tax_delivery == '')
                         $tax_delivery = $tax;
                     else
-                        $tax_delivery = 'vat' . $PHPShopDelivery->getParam('ofd_nds');
+                        $tax_delivery = 'vat' . $PHPShopDelivery->objRow['ofd_nds'];
                 }
             }
 
@@ -55,7 +55,7 @@ function userorderpaymentlink_mod_robokassa_hook($obj, $PHPShopOrderFunction) {
                     $ym_merchant_receipt['items'][] = array(
                         'name' => $product['name'],
                         'quantity' => floatval(number_format($product['num'], 3, '.', '')),
-                        'sum' => floatval(number_format($product['price'], 2, '.', '')),
+                        'sum' => floatval(number_format($product['price'], 2, '.', '')) * floatval(number_format($product['num'], 3, '.', '')),
                         'tax' => $tax,
                         'payment_method' => 'full_prepayment',
                         'payment_object' => 'commodity'
@@ -68,7 +68,7 @@ function userorderpaymentlink_mod_robokassa_hook($obj, $PHPShopOrderFunction) {
 
                 $ym_merchant_receipt['items'][] = array(
                     'name' => 'Доставка',
-                    'quantity' => floatval(number_format(1, 3, '.', '')),
+                    'quantity' => 1,
                     'sum' => floatval(number_format($order['Cart']['dostavka'], 2, '.', '')),
                     'tax' => $tax_delivery,
                     'payment_method' => 'full_prepayment',

@@ -1,5 +1,7 @@
 <?php
 
+include_once dirname(__DIR__) . '/class/UnisenderApi.class.php';
+
 // SQL
 $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.unisender.unisender_system"));
 
@@ -38,45 +40,12 @@ function actionBase() {
         );
         for ($i = 0; $i < count($new_emails); $i++) {
             $query_array['data[' . $i . '][0]'] = $new_emails[$i];
-            $query_array['data[' . $i . '][1]'] = iconv('cp1251', 'utf-8', $new_names[$i]);
+            $query_array['data[' . $i . '][1]'] = $new_names[$i];
             $query_array['data[' . $i . '][2]'] = $new_phone[$i];
         }
 
-        // Устанавливаем соединение
-
-        $fp = fsockopen("ssl://api.unisender.com", 443, $errno, $errstr, 30);
-        $get_string = http_build_query($query_array);
-        if (!$fp) {
-            $api_uri = 'https://api.unisender.com/ru/api/importContacts';
-            $result = file_get_contents($api_uri . '?' . $get_string);
-        } else {
-
-            $out = "POST /ru/api/importContacts    HTTP/1.1\r\n";
-            $out .= "Host: api.unisender.com\r\n";
-			$out .= "Content-Type: application/x-www-form-urlencoded\r\n";
-            $out .= "Content-Length: ".strlen($get_string)."\r\n";
-            $out .= "Connection: Close\r\n\r\n";
-
-            fwrite($fp, $out);
-			fwrite($fp, $get_string);
-            $res = null;
-            while (!feof($fp)) {
-                $res.=fgets($fp, 128);
-            }
-            fclose($fp);
-
-            $response = explode("\r\n\r\n", $res);
-            $header = $response[0];
-            $responsecontent = $response[1];
-            if (!(strpos($header, "Transfer-Encoding: chunked") === false)) {
-                $aux = explode("\r\n", $responsecontent);
-                for ($i = 0; $i < count($aux); $i++)
-                    if ($i == 0 || ($i % 2 == 0))
-                        $aux[$i] = "";
-                $responsecontent = implode("", $aux);
-            }
-            $result = chop($responsecontent);
-        }
+        $Unisender = new \Unisender\ApiWrapper\UnisenderApi($apikey, $GLOBALS['PHPShopLang']->charset, 4, null, false, 'phpshop');
+        $result = $Unisender->importContacts($query_array);
 
         if ($result) {
             // Раскодируем ответ API-сервера
@@ -100,7 +69,7 @@ function actionBase() {
                     $PHPShopOrm->update(array('subscribe_new' => 2), array('id' => ' IN (' . $id_list . ')'));
 
                 // Новые подписчики успешно добавлены
-                echo '<div class="alert alert-success" id="rules-message"  role="alert">Выполнено. Добавлено ' . $jsonObj->result->new_emails . ' новых e-mail адресов</div>';
+                echo '<div class="alert alert-success" id="rules-message"  role="alert">Выполнено. Добавлено ' . $jsonObj->result->new_emails . ' новых e-mail адресов, обновлено ' . $jsonObj->result->updated . ' e-mail адресов.</div>';
             }
         } else {
             // Ошибка соединения с API-сервером
@@ -136,7 +105,7 @@ function actionStart() {
 
     if ($new_user) {
         $PHPShopGUI->action_button['Синхронизация'] = array(
-            'name' => 'Выгрузить пользователей ' . $new_user,
+            'name' => __('Выгрузить пользователей').' ' . $new_user,
             'action' => 'loadBase',
             'class' => 'btn  btn-info btn-sm navbar-btn',
             'type' => 'submit',

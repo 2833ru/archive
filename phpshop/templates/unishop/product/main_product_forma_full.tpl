@@ -4,12 +4,20 @@
     .middle-content-fix{width: 100%;}
 </style>
 <div class="product-page-main-block row" itemscope itemtype="http://schema.org/Product">
+    <meta itemprop="image" content="@productImg@">
+    <div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+        <meta itemprop="ratingValue" content="@productRatingValue@">
+        <meta itemprop="ratingCount" content="@productRatingCount@">
+    </div>
     <div class="col-xs-12 col-md-5">
         <div id="fotoload">
             <div class="sale-icon-content">
-                    @newtipIcon@
-                    @specIcon@
-                </div>
+                @specIcon@
+                @newtipIcon@
+				@giftIcon@
+                @hitIcon@
+                @promotionsIcon@
+ </div>
                 @productFotoList@
         </div>
     </div>
@@ -33,10 +41,12 @@
         <div class="col-xs-12">
             <div class="row">
                 <div class="product-page-price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-                    <del class="price-old">@productPriceRub@</del>
-                    <span class="price-new" itemprop="price" content="@productSchemaPrice@">@productPrice@</span> 
-                    <span class="price-new rubznak" itemprop="priceCurrency" content="RUB">@productValutaName@</span>
+                <span class="price-new priceService" itemprop="price" content="@productSchemaPrice@">@productPrice@</span><span class="price-new rubznak" itemprop="priceCurrency" content="RUB">@productValutaName@</span>  <del class="price-old">@productPriceOld@</del>
                 </div>
+							@ComStartNotice@
+				<div сlass="outStock">@productOutStock@</div>
+			@ComEndNotice@
+
             </div>
         </div>
         <div class="col-xs-12">
@@ -65,6 +75,11 @@
                 </div>
             </div>
         </div>
+		<div class="col-xs-12">
+            <div class="row">
+		@productservices_list@
+		   </div>
+        </div>
         <div class="col-xs-12">
             <div class="row">
                 <div class="product-page-option-wrapper">
@@ -77,7 +92,7 @@
         </div>
         <div class="col-xs-12">
             <div class="row">
-                <span class="product-sklad"> @productSklad@</span>
+                <span class="product-sklad" id="items"> @productSklad@</span>
             </div>
         </div>
         <div class="col-xs-12">
@@ -174,7 +189,7 @@
 
                     <div id='addComment' class="well well-sm" style='display:none;margin-top:30px;'>
 
-                        <h3>{Оставьте свой отзыв}</h3>
+                        <div class="comment-head">{Оставьте свой отзыв}</div>
 
                         <textarea id="message" class="commentTextarea form-control"></textarea>
                         <input type="hidden" id="commentAuthFlag" name="commentAuthFlag" value="@php if($_SESSION['UsersId']) echo 1; else echo 0; php@">
@@ -206,6 +221,7 @@
         </div>
     </div>
 </div>
+ @productsgroup_list@
 <!-- Модальное окно фотогалереи -->
 <div class="modal bs-example-modal" id="sliderModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -213,7 +229,7 @@
 
                 <div class="modal-header">
 
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">x</span><span class="sr-only">Close</span></button>
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 
                     <h4 class="modal-title" id="myModalLabel">@productName@</h4>
                 </div>

@@ -57,7 +57,7 @@ class PHPShopCoreElement extends PHPShopElements {
     }
 
     /**
-     * Определение стандратных системных переменных для шаблонов
+     * Определение системных переменных для шаблонов
      * (имя, телефон, почта администратора, дата, логотип)
      */
     function setdefault() {
@@ -70,12 +70,12 @@ class PHPShopCoreElement extends PHPShopElements {
             $showcaseData = $PHPShopOrm->select(array('*'), array('enabled' => "='1'", 'host' => "='" . str_replace('www.', '', $_SERVER['HTTP_HOST']) . "'"), array('order' => 'id'), array('limit' => 1));
             if (is_array($showcaseData)) {
 
-                if (!empty($showcaseData['currency']) and $this->PHPShopNav->notPath('order')) {
+                if (!empty($showcaseData['currency'])) {
 
                     if (empty($_SESSION['valuta']))
                         $_SESSION['valuta'] = $showcaseData['currency'];
 
-                    $_SESSION['lang'] = $showcaseData['lang'];
+                    $lang = $showcaseData['lang'];
                 }
 
                 if (!empty($showcaseData['tel']))
@@ -105,6 +105,11 @@ class PHPShopCoreElement extends PHPShopElements {
                 if (!empty($showcaseData['skin']))
                     define("HostSkin", $showcaseData['skin']);
 
+                if (!empty($showcaseData['price']))
+                    define("HostPrice", $showcaseData['price']);
+
+                define("HostAdmin", $showcaseData['admin']);
+
                 $admoption = unserialize($showcaseData['admoption']);
                 if (is_array($admoption)) {
 
@@ -115,20 +120,41 @@ class PHPShopCoreElement extends PHPShopElements {
                         $this->PHPShopSystem->setSerilizeParam('admoption.user_mail_activate', $admoption['user_mail_activate']);
 
                     if (isset($admoption['user_mail_activate_pre']))
-                        $this->PHPShopSystem->setSerilizeParam('admoption.user_mail_activate', $admoption['user_mail_activate_pre']);
+                        $this->PHPShopSystem->setSerilizeParam('admoption.user_mail_activate_pre', $admoption['user_mail_activate_pre']);
+
+                    if (isset($admoption['smtp_user']))
+                        $this->PHPShopSystem->setSerilizeParam('admoption.mail_smtp_user', $admoption['smtp_user']);
+
+                    if (isset($admoption['smtp_password']))
+                        $this->PHPShopSystem->setSerilizeParam('admoption.mail_smtp_pass', $admoption['smtp_password']);
+
+                    if(isset($admoption['user_status']))
+                        $this->PHPShopSystem->setSerilizeParam('admoption.user_status', $admoption['user_status']);
+                    
+                    if(isset($admoption['metrica_id']))
+                        $this->PHPShopSystem->setSerilizeParam('admoption.metrica_id', $admoption['metrica_id']);
+                    
+                    if(isset($admoption['google_id']))
+                        $this->PHPShopSystem->setSerilizeParam('admoption.google_id', $admoption['google_id']);
                 }
             }
         } else {
             $this->set('streetAddress', $this->PHPShopSystem->getSerilizeParam('bank.org_adres'));
-            $_SESSION['lang'] = $this->PHPShopSystem->getSerilizeParam("admoption.lang");
+            $lang = $this->PHPShopSystem->getSerilizeParam("admoption.lang");
         }
 
+        $_SESSION['lang'] = $lang;
+            
         // Язык
-        $GLOBALS['PHPShopLang'] = new PHPShopLang(array('locale' => $_SESSION['lang'], 'path' => 'shop'));
-
+        $GLOBALS['PHPShopLang'] = new PHPShopLang(array('locale' => $lang, 'path' => 'shop'));
+        $this->set('charset', $GLOBALS['PHPShopLang']->charset);
+        $this->set('lang', $GLOBALS['PHPShopLang']->code);
+  
         // Телефон
         $tel = $this->PHPShopSystem->getValue('tel');
         $this->set('telNum', $tel);
+        $this->set('telNum2', $this->PHPShopSystem->getSerilizeParam("bank.org_tel"));
+        $this->set('workingTime', $this->PHPShopSystem->getSerilizeParam("bank.org_time"));
 
         // Телефон для звонков
         if (strstr($tel, ","))
@@ -139,19 +165,19 @@ class PHPShopCoreElement extends PHPShopElements {
         $this->set('telNumMobile', $tel_xs[0]);
         $this->set('rule', $this->lang('rule'));
         $this->set('name', $this->PHPShopSystem->getValue('name'));
-        
+
         // Favicon
         $icon = $this->PHPShopSystem->getValue('icon');
-        if(empty($icon))
-            $icon='/apple-touch-icon.png';
+        if (empty($icon))
+            $icon = '/apple-touch-icon.png';
         $this->set('icon', $icon);
-        
+
         $this->set('company', $this->PHPShopSystem->getValue('company'));
         $this->set('descrip', $this->PHPShopSystem->getValue('descrip'));
         $this->set('adminMail', $this->PHPShopSystem->getValue('adminmail2'));
         $this->set('pathTemplate', $this->getValue('dir.templates') . chr(47) . $_SESSION['skin']);
-        $this->set('serverName', $_SERVER['SERVER_NAME']);
-        $this->set('serverShop', $_SERVER['SERVER_NAME']);
+        $this->set('serverName', PHPShopString::check_idna($_SERVER['SERVER_NAME']));
+        $this->set('serverShop', PHPShopString::check_idna($_SERVER['SERVER_NAME']));
         if (!empty($_SESSION['UserLogin']))
             $this->set('UserLogin', $_SESSION['UserLogin']);
         $this->set('ShopDir', $this->getValue('dir.dir'));
@@ -177,6 +203,13 @@ class PHPShopCoreElement extends PHPShopElements {
         if (!empty($theme3))
             $this->set($_SESSION['skin'] . '_theme3', $theme3);
 
+        // Настройка шаблона
+        if (!is_array($_SESSION['editor'][$_SESSION['skin']])) {
+            $editor = $this->PHPShopSystem->getSerilizeParam('admoption.' . $_SESSION['skin'] . '_editor');
+            if (is_array($editor))
+                $_SESSION['editor'][$_SESSION['skin']] = $editor;
+        }
+
         // Логотип
         $this->set('logo', $this->PHPShopSystem->getLogo());
 
@@ -186,8 +219,7 @@ class PHPShopCoreElement extends PHPShopElements {
             if (empty($dadataToken))
                 $dadataToken = 'b13e0b4fd092a269e229887e265c62aba36a92e5';
             $this->set('dadataToken', $dadataToken);
-        }
-        else
+        } else
             $this->set('dadataToken', null);
 
         // Demo режим
@@ -224,7 +256,7 @@ class PHPShopUserElement extends PHPShopElements {
         parent::__construct();
 
         // Если есть параметр from, нужно сохранить реферальную страницу и вернуть на нее пользователя после авторизации, регистрации.
-        if ($_REQUEST['from'] AND !$_REQUEST['fromSave'])
+        if ($_REQUEST['from'] AND ! $_REQUEST['fromSave'])
             $this->set('fromSave', $_SERVER['HTTP_REFERER']);
         else
             $this->set('fromSave', $_REQUEST['fromSave']);
@@ -266,7 +298,7 @@ class PHPShopUserElement extends PHPShopElements {
             $dis = $this->parseTemplate('users/wishlist/wishlist_top_enter.tpl');
         } else {
             //$this->set('wishlistCount', 0);
-            $this->set('wishlistCount', count($_SESSION['wishlist']));
+            $this->set('wishlistCount', @count($_SESSION['wishlist']));
             $dis = $this->parseTemplate('users/wishlist/wishlist_top_enter.tpl');
         }
         return $dis;
@@ -280,7 +312,14 @@ class PHPShopUserElement extends PHPShopElements {
         if (PHPShopSecurity::true_login($_POST['login']) and PHPShopSecurity::true_passw($_POST['password'])) {
             $PHPShopOrm = new PHPShopOrm($this->objBase);
             $PHPShopOrm->debug = $this->debug;
-            $data = $PHPShopOrm->select(array('*'), array('login' => '="' . trim($_POST['login']) . '"', 'password' => '="' . $this->encode($_POST['password']) . '"', 'enabled' => "='1'"), false, array('limit' => 1));
+
+            $where = array('login' => '="' . trim($_POST['login']) . '"', 'password' => '="' . $this->encode($_POST['password']) . '"', 'enabled' => "='1'");
+
+            // Мультибаза
+            if ($this->PHPShopSystem->ifSerilizeParam("admoption.user_servers_control"))
+                $where['servers'] = '=' . intval(HostID);
+
+            $data = $PHPShopOrm->select(array('*'), $where, false, array('limit' => 1));
             if (is_array($data) AND PHPShopSecurity::true_num($data['id'])) {
 
                 // сохраняем вишлист который был в сессии до авторизаци.
@@ -322,14 +361,15 @@ class PHPShopUserElement extends PHPShopElements {
 
                 // Перехват модуля
                 $this->setHook(__CLASS__, __FUNCTION__, $data);
-
+                
+                // Редирект если активация
+                if(!empty($_GET['key']))
+                    header('Location: /users/');
 
                 return true;
-            }
-            else
+            } else
                 $this->set("shortAuthError", __("Неверный логин или пароль"));
-        }
-        else
+        } else
             $this->set("shortAuthError", __("Неверный логин или пароль"));
     }
 
@@ -382,8 +422,7 @@ class PHPShopUserElement extends PHPShopElements {
 
             // header("Location: " . $url_user);
             $this->checkRedirect();
-        }
-        else
+        } else
             $this->set('usersError', $this->lang('error_login'));
     }
 
@@ -429,7 +468,7 @@ class PHPShopUserElement extends PHPShopElements {
 /**
  * Элемент каталоги страниц
  * @author PHPShop Software
- * @version 1.2
+ * @version 1.3
  * @package PHPShopElements
  */
 class PHPShopPageCatalogElement extends PHPShopElements {
@@ -439,6 +478,11 @@ class PHPShopPageCatalogElement extends PHPShopElements {
      */
     var $chek_page = true;
     var $debug = false;
+
+    /**
+     * @var int количество для вывода последних записей 
+     */
+    var $limit_last = 2;
 
     /**
      * Конструктор
@@ -463,10 +507,10 @@ class PHPShopPageCatalogElement extends PHPShopElements {
         if (defined("HostID"))
             $where['servers'] = " REGEXP 'i" . HostID . "i'";
         elseif (defined("HostMain"))
-            $where['parent_to'].= ' and (servers ="" or servers REGEXP "i1000i")';
+            $where['parent_to'] .= ' and (servers ="" or servers REGEXP "i1000i")';
 
         $this->PHPShopOrm->cache = true;
-        $data = $this->PHPShopOrm->select(array('*'), $where, array('order' => 'num'), array("limit" => 100));
+        $data = $this->PHPShopOrm->select(array('*'), $where, array('order' => 'num,id desc'), array("limit" => 100));
 
         // Перехват модуля в начале
         $hook = $this->setHook(__CLASS__, __FUNCTION__, $data, 'START');
@@ -491,7 +535,7 @@ class PHPShopPageCatalogElement extends PHPShopElements {
                     // Перехват модуля
                     $this->setHook(__CLASS__, __FUNCTION__, $row, 'MIDDLE');
 
-                    $dis.=$this->parseTemplate($this->getValue('templates.catalog_page_forma_2'));
+                    $dis .= $this->parseTemplate($this->getValue('templates.catalog_page_forma_2'));
                 } else {
                     $this->set('catalogPodcatalog', $this->subcatalog($row['id']));
                     $this->set('catalogName', $row['name']);
@@ -499,7 +543,7 @@ class PHPShopPageCatalogElement extends PHPShopElements {
                     // Перехват модуля
                     $this->setHook(__CLASS__, __FUNCTION__, $row, 'END');
 
-                    $dis.=$this->parseTemplate($this->getValue('templates.catalog_page_forma'));
+                    $dis .= $this->parseTemplate($this->getValue('templates.catalog_page_forma'));
                 }
 
                 $i++;
@@ -522,7 +566,30 @@ class PHPShopPageCatalogElement extends PHPShopElements {
         if (defined("HostID"))
             $where['servers'] = " REGEXP 'i" . HostID . "i'";
         elseif (defined("HostMain"))
-            $where['parent_to'].= ' and (servers ="" or servers REGEXP "i1000i")';
+            $where['parent_to'] .= ' and (servers ="" or servers REGEXP "i1000i")';
+
+
+        $num = $PHPShopOrm->select(array('id'), $where, false, array('limit' => 1));
+        if (empty($num['id']))
+            return true;
+    }
+
+    /**
+     * Проверка подкаталогов
+     * @param Int $id ИД каталога
+     * @return bool
+     */
+    function chekPages($id) {
+        $PHPShopOrm = new PHPShopOrm($this->getValue('base.page'));
+        $PHPShopOrm->debug = $this->debug;
+
+        $where = array('category' => "=$id");
+
+        // Мультибаза
+        if (defined("HostID"))
+            $where['servers'] = " REGEXP 'i" . HostID . "i'";
+        elseif (defined("HostMain"))
+            $where['category'] .= ' and (servers ="" or servers REGEXP "i1000i")';
 
 
         $num = $PHPShopOrm->select(array('id'), $where, false, array('limit' => 1));
@@ -546,10 +613,10 @@ class PHPShopPageCatalogElement extends PHPShopElements {
         if (defined("HostID"))
             $where['servers'] = " REGEXP 'i" . HostID . "i'";
         elseif (defined("HostMain"))
-            $where['parent_to'].= ' and (servers ="" or servers REGEXP "i1000i")';
+            $where['parent_to'] .= ' and (servers ="" or servers REGEXP "i1000i")';
 
         $PHPShopOrm = new PHPShopOrm($this->getValue('base.page_categories'));
-        $data = $PHPShopOrm->select(array('*'), $where, array('order' => 'num'), array("limit" => 100));
+        $data = $PHPShopOrm->select(array('*'), $where, array('order' => 'num,id desc'), array("limit" => 100));
 
         // Перехват модуля в начале
         $hook = $this->setHook(__CLASS__, __FUNCTION__, $data, 'START');
@@ -572,8 +639,119 @@ class PHPShopPageCatalogElement extends PHPShopElements {
                 $this->setHook(__CLASS__, __FUNCTION__, $row, 'MIDDLE');
 
                 // Подключаем шаблон
-                $dis.=$this->parseTemplate($this->getValue('templates.podcatalog_page_forma'));
+                $dis .= $this->parseTemplate($this->getValue('templates.podcatalog_page_forma'));
             }
+        return $dis;
+    }
+
+    /**
+     * Вывод меню каталогов страниц в главного навигационного меню
+     * @return string
+     */
+    function topMenu() {
+        $dis = $dis_page = null;
+
+        // Перехват модуля
+        $hook = $this->setHook(__CLASS__, __FUNCTION__, null, 'START');
+        if ($hook)
+            return $hook;
+
+        $where['menu'] = "='1'";
+
+        // Мультибаза
+        if (defined("HostID"))
+            $where['servers'] = " REGEXP 'i" . HostID . "i'";
+        elseif (defined("HostMain"))
+            $where['menu'] .= ' and (servers ="" or servers REGEXP "i1000i")';
+
+        $PHPShopOrm = new PHPShopOrm($this->objBase);
+        $PHPShopOrm->debug = false;
+        $data = $PHPShopOrm->select(array('id', 'name'), $where, array('order' => 'num,name'), array("limit" => 20));
+        if (is_array($data))
+            foreach ($data as $row) {
+
+                $dis_page = null;
+
+                // Определяем переменные
+                $this->set('topMenuName', $row['name']);
+                $this->set('topMenuLink', $row['id']);
+
+                // Если есть страницы
+                if (!$this->chekPages($row['id'])) {
+                    $PHPShopOrm = new PHPShopOrm($this->getValue('base.page'));
+                    $PHPShopOrm->debug = $this->debug;
+                    $dataPage = $PHPShopOrm->select(array('link', 'name'), array('category' => '=' . $row['id']), array('order' => 'num,name'), array("limit" => 100));
+                    if (is_array($dataPage)) {
+                        foreach ($dataPage as $rowPage) {
+                            $dis_page .= PHPShopText::li($rowPage['name'], '/page/' . $rowPage['link'] . '.html', null);
+                        }
+                        $this->set('topMenuList', $dis_page);
+
+                        // Перехват модуля
+                        $this->setHook(__CLASS__, __FUNCTION__, $row, 'MIDDLE');
+
+                        // Подключаем шаблон
+                        $dis .= $this->parseTemplate($this->getValue('templates.page_top_menu'));
+                    }
+                } else
+                    $dis .= str_replace('page/', 'page/CID_', $this->parseTemplate($this->getValue('templates.top_menu')));
+            }
+
+        // Перехват модуля
+        $hook = $this->setHook(__CLASS__, __FUNCTION__, $dis, 'END');
+        if ($hook)
+            return $hook;
+
+        return $dis;
+    }
+
+    /**
+     * Вывод последних записей из страниц
+     * @return string
+     */
+    function getLastPages() {
+        $dis = null;
+
+        // Перехват модуля
+        $hook = $this->setHook(__CLASS__, __FUNCTION__, false, 'START');
+        if ($hook)
+            return $hook;
+
+        $where = array('enabled' => "='1'", 'preview' => '!=""');
+
+        // Мультибаза
+        if (defined("HostID"))
+            $where['servers'] = " REGEXP 'i" . HostID . "i'";
+        elseif (defined("HostMain"))
+            $where['preview'] .= ' and (servers ="" or servers REGEXP "i1000i")';
+
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['page']);
+        $PHPShopOrm->debug = $this->debug;
+        $result = $PHPShopOrm->select(array('link', 'name', 'icon', 'datas', 'preview'), $where, array('order' => 'datas DESC'), array("limit" => $this->limit_last));
+
+        // Проверка на еденичную запись
+        if ($this->limit_last > 1)
+            $data = $result;
+        else
+            $data[] = $result;
+
+        if (is_array($data))
+            foreach ($data as $row) {
+
+                // Определяем переменные
+                $this->set('pageLink', $row['link']);
+                $this->set('pageName', $row['name']);
+                $this->set('pageIcon', $row['icon']);
+                $this->set('pageData', PHPShopDate::get($row['datas']));
+                $this->set('pagePreview', Parser(stripslashes($row['preview'])));
+
+                // Перехват модуля
+                $this->setHook(__CLASS__, __FUNCTION__, $row, 'END');
+
+                // Подключаем шаблон
+                $dis .= parseTemplateReturn($this->getValue('templates.page_mini'));
+            }
+
         return $dis;
     }
 
@@ -592,7 +770,7 @@ class PHPShopTextElement extends PHPShopElements {
     /**
      * Конструктор
      */
-    function PHPShopTextElement() {
+    function __construct() {
         $this->objBase = $GLOBALS['SysValue']['base']['menu'];
         $this->template_debug = true;
         parent::__construct();
@@ -627,7 +805,7 @@ class PHPShopTextElement extends PHPShopElements {
                     $this->setHook(__CLASS__, __FUNCTION__, $row);
 
                     // Подключаем шаблон
-                    $dis.=$this->parseTemplate($this->getValue('templates.left_menu'));
+                    $dis .= $this->parseTemplate($this->getValue('templates.left_menu'));
                 } else {
                     $dirs = explode(",", $row['dir']);
                     foreach ($dirs as $dir)
@@ -639,7 +817,7 @@ class PHPShopTextElement extends PHPShopElements {
                             $this->setHook(__CLASS__, __FUNCTION__, $row);
 
                             // Подключаем шаблон
-                            $dis.=$this->parseTemplate($this->getValue('templates.left_menu'));
+                            $dis .= $this->parseTemplate($this->getValue('templates.left_menu'));
                         }
                 }
             }
@@ -675,7 +853,7 @@ class PHPShopTextElement extends PHPShopElements {
                     // Перехват модуля
                     $this->setHook(__CLASS__, __FUNCTION__, $row);
 
-                    $dis.=$this->parseTemplate($this->getValue('templates.right_menu'));
+                    $dis .= $this->parseTemplate($this->getValue('templates.right_menu'));
                 } else {
                     $dirs = explode(",", $row['dir']);
                     foreach ($dirs as $dir)
@@ -687,7 +865,7 @@ class PHPShopTextElement extends PHPShopElements {
                             $this->setHook(__CLASS__, __FUNCTION__, $row);
 
                             // Подключаем шаблон
-                            $dis.=$this->parseTemplate($this->getValue('templates.right_menu'));
+                            $dis .= $this->parseTemplate($this->getValue('templates.right_menu'));
                         }
                 }
             }
@@ -736,7 +914,55 @@ class PHPShopTextElement extends PHPShopElements {
                 $this->setHook(__CLASS__, __FUNCTION__, $row, 'MIDDLE');
 
                 // Подключаем шаблон
-                $dis.=$this->parseTemplate($this->getValue('templates.top_menu'));
+                $dis .= $this->parseTemplate($this->getValue('templates.top_menu'));
+            }
+
+        return $dis;
+    }
+
+    /**
+     * Вывод нижнего навигационного меню
+     * @return string
+     */
+    function bottomMenu() {
+        $dis = null;
+
+        // Перехват модуля
+        $hook = $this->setHook(__CLASS__, __FUNCTION__, null, 'START');
+        if ($hook)
+            return $hook;
+
+        $where['enabled'] = "='1'";
+        $where['footer'] = "='1'";
+
+        // Мультибаза
+        if (defined("HostID"))
+            $where['servers'] = " REGEXP 'i" . HostID . "i'";
+        elseif (defined("HostMain"))
+            $where['enabled'] .= ' and (servers ="" or servers REGEXP "i1000i")';
+
+        $objBase = $GLOBALS['SysValue']['base']['page'];
+        $PHPShopOrm = new PHPShopOrm($objBase);
+        $PHPShopOrm->debug = $this->debug;
+        $data = $PHPShopOrm->select(array('name', 'link'), $where, array('order' => 'num'), array("limit" => 20));
+        if (is_array($data))
+            foreach ($data as $row) {
+
+                // Определяем переменные
+                $this->set('topMenuName', $row['name']);
+                $this->set('topMenuLink', $row['link']);
+
+                // Активная страница
+                if ($row['link'] == $this->PHPShopNav->getName(true))
+                    $this->set('topMenuActive', 'active');
+                else
+                    $this->set('topMenuActive', '');
+
+                // Перехват модуля
+                $this->setHook(__CLASS__, __FUNCTION__, $row, 'MIDDLE');
+
+                // Подключаем шаблон
+                $dis .= $this->parseTemplate($this->getValue('templates.top_menu'));
             }
 
         return $dis;
@@ -819,9 +1045,99 @@ class PHPShopSkinElement extends PHPShopElements {
 }
 
 /**
+ * Элемент последние отзывы
+ * @author PHPShop Software
+ * @version 1.0
+ * @package PHPShopElements
+ */
+class PHPShopGbookElement extends PHPShopElements {
+
+    /**
+     * @var bool  показывать только на главной
+     */
+    var $disp_only_index = true;
+
+    /**
+     * @var Int Кол-во отзывов
+     */
+    var $limit = 10;
+
+    /**
+     * Конструктор
+     */
+    function __construct() {
+
+        // Отладка
+        $this->debug = false;
+
+        // Имя Бд
+        $this->objBase = $GLOBALS['SysValue']['base']['gbook'];
+        parent::__construct();
+    }
+
+    /**
+     * Вывод последних отзывов
+     * @return string
+     */
+    function index() {
+        global $PHPShopModules;
+        $dis = null;
+
+        // Выполнение только на главной странице
+        if ($this->disp_only_index) {
+            if ($this->PHPShopNav->index())
+                $view = true;
+            else
+                $view = false;
+        } else
+            $view = true;
+
+        if ($view) {
+
+            $where['flag'] = "='1'";
+
+            // Мультибаза
+            if (defined("HostID"))
+                $where['servers'] = " REGEXP 'i" . HostID . "i'";
+            elseif (defined("HostMain"))
+                $where['flag'] .= ' and (servers ="" or servers REGEXP "i1000i")';
+
+            $data = $this->PHPShopOrm->select(array('*'), $where, array('order' => 'id DESC'), array("limit" => $this->limit));
+            if (is_array($data))
+                foreach ($data as $row) {
+
+                    // Ссылка на автора
+                    if (!empty($row['mail']))
+                        $d_mail = PHPShopText::a('mailto:' . $row['mail'], PHPShopText::b($row['name']), $row['name']);
+                    else
+                        $d_mail = PHPShopText::b($row['name']);
+
+                    // Определяем переменые
+                    $this->set('gbookData', PHPShopDate::dataV($row['datas'], false,true));
+                    $this->set('gbookName', $row['name']);
+                    $this->set('gbookTema', $row['tema']);
+                    $this->set('gbookMail', $d_mail);
+                    $this->set('gbookOtsiv', $row['otsiv']);
+                    $this->set('gbookOtvet', $row['otvet']);
+                    $this->set('gbookId', $row['id']);
+
+                    // Перехват модуля
+                    $PHPShopModules->setHookHandler(__CLASS__, __FUNCTION__, $this, $row);
+
+                    // Подключаем шаблон
+                    $dis .= $this->parseTemplate($this->getValue('templates.gbook_main_mini'));
+                }
+
+            return $dis;
+        }
+    }
+
+}
+
+/**
  * Элемент последние новости
  * @author PHPShop Software
- * @version 1.1
+ * @version 1.2
  * @package PHPShopElements
  */
 class PHPShopNewsElement extends PHPShopElements {
@@ -834,7 +1150,7 @@ class PHPShopNewsElement extends PHPShopElements {
     /**
      * @var int  Кол-во новостей
      */
-    var $limit = 5;
+    var $limit = 3;
 
     /**
      * Конструктор
@@ -864,8 +1180,7 @@ class PHPShopNewsElement extends PHPShopElements {
                 $view = true;
             else
                 $view = false;
-        }
-        else
+        } else
             $view = true;
 
         $where['datau'] = '<' . time();
@@ -874,13 +1189,12 @@ class PHPShopNewsElement extends PHPShopElements {
         if (defined("HostID"))
             $where['servers'] = " REGEXP 'i" . HostID . "i'";
         elseif (defined("HostMain"))
-            $where['datau'].= ' and (servers ="" or servers REGEXP "i1000i")';
+            $where['datau'] .= ' and (servers ="" or servers REGEXP "i1000i")';
 
 
         if (!empty($view)) {
 
-            $result = $this->PHPShopOrm->select(array('id', 'zag', 'datas', 'kratko'), $where, array('order' => 'id DESC'), array("limit" => $this->limit));
-
+            $result = $this->PHPShopOrm->select(array('*'), $where, array('order' => 'id DESC'), array("limit" => $this->limit));
 
             // Проверка на еденичную запись
             if ($this->limit > 1)
@@ -891,20 +1205,18 @@ class PHPShopNewsElement extends PHPShopElements {
             if (is_array($data))
                 foreach ($data as $row) {
 
-                    if (!empty($row['id'])) {
+                    // Определяем переменные
+                    $this->set('newsId', $row['id']);
+                    $this->set('newsZag', $row['zag']);
+                    $this->set('newsData', $row['datas']);
+                    $this->set('newsKratko', $row['kratko']);
+                    $this->set('newsIcon', $row['icon']);
 
-                        // Определяем переменные
-                        $this->set('newsId', $row['id']);
-                        $this->set('newsZag', $row['zag']);
-                        $this->set('newsData', $row['datas']);
-                        $this->set('newsKratko', $row['kratko']);
+                    // Перехват модуля
+                    $this->setHook(__CLASS__, __FUNCTION__, $row, 'END');
 
-                        // Перехват модуля
-                        $this->setHook(__CLASS__, __FUNCTION__, $row, 'END');
-
-                        // Подключаем шаблон
-                        $dis.=$this->parseTemplate($this->getValue('templates.news_main_mini'));
-                    }
+                    // Подключаем шаблон
+                    $dis .= $this->parseTemplate($this->getValue('templates.news_main_mini'));
                 }
             return $dis;
         }
@@ -956,8 +1268,7 @@ class PHPShopSliderElement extends PHPShopElements {
                 $view = true;
             else
                 $view = false;
-        }
-        else
+        } else
             $view = true;
 
         $where['enabled'] = '="1"';
@@ -966,12 +1277,12 @@ class PHPShopSliderElement extends PHPShopElements {
         if (defined("HostID"))
             $where['servers'] = " REGEXP 'i" . HostID . "i'";
         elseif (defined("HostMain"))
-            $where['enabled'].= ' and (servers ="" or servers REGEXP "i1000i")';
+            $where['enabled'] .= ' and (servers ="" or servers REGEXP "i1000i")';
 
         if (!empty($view)) {
             $result = $this->PHPShopOrm->select(array('image', 'alt', 'link'), $where, array('order' => 'num, id DESC'), array("limit" => $this->limit));
 
-            // Проверка на еденичню запись
+            // Проверка на еденичную запись
             if ($this->limit > 1)
                 $data = $result;
             else
@@ -989,7 +1300,7 @@ class PHPShopSliderElement extends PHPShopElements {
                     $this->setHook(__CLASS__, __FUNCTION__, $row, 'END');
 
                     // Подключаем шаблон
-                    $dis.=$this->parseTemplate("/slider/slider_oneImg.tpl");
+                    $dis .= $this->parseTemplate("/slider/slider_oneImg.tpl");
                 }
             if (@$dis) {
                 $this->set('imageSliderContent', $dis);
@@ -1037,7 +1348,7 @@ class PHPShopOprosElement extends PHPShopElements {
                     $this->set('oprosContent', $this->getOprosValue($row['id'], "FORMA"));
 
                     // Подключаем шаблон
-                    $content.= $this->parseTemplate($this->getValue('templates.opros_list'));
+                    $content .= $this->parseTemplate($this->getValue('templates.opros_list'));
                 } else {
 
                     // Если через запятую указано
@@ -1058,7 +1369,7 @@ class PHPShopOprosElement extends PHPShopElements {
                                 $this->setHook(__CLASS__, __FUNCTION__, $row);
 
                                 // Подключаем шаблон
-                                $content.= $this->parseTemplate($this->getValue('templates.opros_list'));
+                                $content .= $this->parseTemplate($this->getValue('templates.opros_list'));
                             }
                 }
             }
@@ -1092,7 +1403,7 @@ class PHPShopOprosElement extends PHPShopElements {
 
                 // Подключаем шаблон
                 if ($flag == "FORMA")
-                    $dis.=$this->parseTemplate($this->getValue('templates.opros_forma'));
+                    $dis .= $this->parseTemplate($this->getValue('templates.opros_forma'));
                 elseif ($flag == "RESULT") {
                     $sum = $this->getSumValue($row['category']);
                     $pr = @number_format(($total * 100) / $sum, "1", ".", "");
@@ -1102,7 +1413,7 @@ class PHPShopOprosElement extends PHPShopElements {
                     $this->set('valueProc', $pr);
                     $this->set('valueWidth', $pr * 3 + 1);
 
-                    $dis.=$this->parseTemplate($this->getValue('templates.opros_page_forma'));
+                    $dis .= $this->parseTemplate($this->getValue('templates.opros_page_forma'));
                 }
             }
         return $dis;
@@ -1126,7 +1437,7 @@ class PHPShopOprosElement extends PHPShopElements {
 /**
  * Элемент баннер
  * @author PHPShop Software
- * @version 1.5
+ * @version 1.7
  * @package PHPShopElements
  */
 class PHPShopBannerElement extends PHPShopElements {
@@ -1167,6 +1478,12 @@ class PHPShopBannerElement extends PHPShopElements {
             foreach ($data as $row) {
                 if (empty($row['dir'])) {
 
+                    if (!empty($row['dop_cat']) and empty($true_cid))
+                        continue;
+
+                    if (!empty($row['skin']) and $row['skin'] != $_SESSION['skin'])
+                        continue;
+
                     // Определяем переменные
                     $this->set('banerContent', $row['content']);
                     $this->set('banerTitle', $row['name']);
@@ -1179,6 +1496,10 @@ class PHPShopBannerElement extends PHPShopElements {
                     foreach ($dirs as $dir)
                         if (!empty($dir))
                             if (stristr($_SERVER['REQUEST_URI'], trim($dir)) or $_SERVER['REQUEST_URI'] == trim($dir)) {
+
+                                // Проверка индекса
+                                if ($dir == '/' and $_SERVER['REQUEST_URI'] != '/')
+                                    continue;
 
                                 // Определяем переменные
                                 $this->set('banerContent', $row['content']);
@@ -1233,7 +1554,7 @@ class PHPShopPhotoElement extends PHPShopElements {
                 $this->set('photoTitle', $row['name']);
                 $this->set('photoLink', $row['id']);
                 $this->set('photoContent', $this->ListPhoto($row['id'], $row['num']));
-                $dis.=$this->parseTemplate('./phpshop/lib/templates/photo/photo_list_forma.tpl', true);
+                $dis .= $this->parseTemplate('./phpshop/lib/templates/photo/photo_list_forma.tpl', true);
             }
         return $dis;
     }
@@ -1264,7 +1585,7 @@ class PHPShopPhotoElement extends PHPShopElements {
                 $this->set('photoInfo', $row['info']);
                 $this->set('photoImg', $row['name']);
 
-                $dis.=$this->parseTemplate('./phpshop/lib/templates/photo/photo_element_forma.tpl', true);
+                $dis .= $this->parseTemplate('./phpshop/lib/templates/photo/photo_element_forma.tpl', true);
             }
         return $dis;
     }
@@ -1351,8 +1672,7 @@ class PHPShopRecaptchaElement extends PHPShopElements {
             // Обычная каптча
             elseif (!empty($_SESSION['text']) and strtoupper($_POST['key']) == strtoupper($_SESSION['text'])) {
                 return true;
-            }
-            else
+            } else
                 return false;
         }
 
@@ -1404,7 +1724,7 @@ class PHPShopRecaptchaElement extends PHPShopElements {
     public function captcha($name = 'default', $size = 'normal') {
 
         if ($this->PHPShopSystem->ifSerilizeParam('admoption.recaptcha_enabled')) {
-            $dis.='<div id="recaptcha_' . $name . '" data-size="' . $size . '" data-key="' . $this->public . '"></div>';
+            $dis .= '<div id="recaptcha_' . $name . '" data-size="' . $size . '" data-key="' . $this->public . '"></div>';
             $this->recaptcha = true;
         } else {
             $dis = '<img src="phpshop/lib/captcha/captcha.php" align="left" style="margin-right:10px"> <input type="text" name="key" class="form-control" placeholder="' . __('Код с картинки') . '..." style="width:100px" required="">';

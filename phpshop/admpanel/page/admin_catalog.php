@@ -48,7 +48,7 @@ function actionStart() {
     $PHPShopInterface->setActionPanel($TitlePage . $catname, array('Новый каталог', 'Редактировать каталог', '|', 'Удалить выбранные'), array('Добавить страницу'));
     $PHPShopInterface->setCaption(array(null, "3%"), array("Ссылка", "15%"), array("Название", "40%"), array("", "7%"), array("Статус" . "", "7%", array('align' => 'right')));
 
-    $PHPShopInterface->addJSFiles('./js/jquery.treegrid.js','./page/gui/page.gui.js');
+    $PHPShopInterface->addJSFiles('./js/jquery.treegrid.js', './js/bootstrap-datetimepicker.min.js','./page/gui/page.gui.js');
 
 
     $where = false;
@@ -142,11 +142,11 @@ function treegenerator($array, $parent) {
 
             if (empty($check))
                 $tree.='<tr class="treegrid-' . $k . ' treegrid-parent-' . $parent . ' data-tree">
-		<td><a href="?path=' . $_GET['path'] . '&cat=' . $k . '">' . $v . '</a><span class="pull-right">' . $PHPShopInterface->setDropdownAction(array('edit', 'delete', 'id' => $k)) . '</span></td>
+		<td><a href="?path=' . $_GET['path'] . '&cat=' . $k . '">' . $v . '</a><span class="pull-right">' . $PHPShopInterface->setDropdownAction(array('edit', '|', 'delete', 'id' => $k)) . '</span></td>
 	</tr>';
             else
                 $tree.='<tr class="treegrid-' . $k . ' treegrid-parent-' . $parent . ' data-tree">
-		<td><a href="#" class="treegrid-parent" data-parent="treegrid-' . $k . '">' . $v . '</a><span class="pull-right">' . $PHPShopInterface->setDropdownAction(array('edit', 'delete', 'id' => $k)) . '</span></td>
+		<td><a href="#" class="treegrid-parent" data-parent="treegrid-' . $k . '">' . $v . '</a><span class="pull-right">' . $PHPShopInterface->setDropdownAction(array('edit', '|','delete', 'id' => $k)) . '</span></td>
 	</tr>';
 
             $tree.=$check;

@@ -65,7 +65,7 @@ function tab_headers($row) {
 
 
     $disp = '
-<script src="./catalog/gui/tab_headers.gui.js"></script>';
+<script src="./catalog/gui/headers.gui.js"></script>';
 
 
     $disp.=$PHPShopGUI->setCollapse("Title", '

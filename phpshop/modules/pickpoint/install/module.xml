@@ -3,6 +3,7 @@
     <version>1.4</version>
     <name>PickPoint</name>
     <description>Модуль пунктов выдачи товара PickPoint</description>
+    <faqlink>https://docs.phpshop.ru/moduli/dostavka/pickpoint</faqlink>
     <category>delivery</category>
     <adminmenu>
         <title>PickPoint</title>

@@ -19,9 +19,9 @@ function addProductIDProductsgroup($data) {
 
     $Tab10.= '<br><br><table class="table table-striped table-hover" style="width:550px;">
         <tr>
-            <th class="text-center" width="40%">Товар ID</th>
+            <th class="text-center" width="40%">'.__('Товар').' ID</th>
             <th class="text-center" width="20%"></th>
-            <th class="text-center">Кол-во</th>
+            <th class="text-center">'.__('Кол-во').'</th>
         </tr>
          ' . $tr . '
     </table>

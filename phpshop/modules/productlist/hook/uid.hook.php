@@ -1,6 +1,6 @@
 <?php
 
-class PHPShopProductListElement extends PHPShopElements {
+class PHPShopProductListElement extends PHPShopProductElements {
 
     function __construct() {
         $this->debug = false;
@@ -34,11 +34,27 @@ class PHPShopProductListElement extends PHPShopElements {
         if (is_array($data)) {
             foreach ($data as $row) {
 
+                // Промоакции
+                $promotions = $this->PHPShopPromotions->getPrice($row);
+                if (is_array($promotions)) {
+                    $row['price'] = $promotions['price'];
+                    $row['price_n'] = $promotions['price_n'];
+                    $row['promo_label'] = $promotions['label'];
+                }
+
                 $this->set('productlist_product_id', $row['id']);
                 $this->set('productlist_product_name', $row['name']);
                 $this->set('productlist_product_pic_small', $row['pic_small']);
                 $this->set('productlist_product_pic_big', $row['pic_big']);
-                $this->set('productlist_product_price', $row['price']);
+                $this->set('productlist_product_price', number_format($this->price($row, false, false), $this->format, '.', ' '));
+                $this->set('productlist_product_price_old', $this->price($row, true, false));
+                
+
+                if ((float) $row['price_n'] > 0)
+                    PHPShopParser::set('productlist_product_price_old', number_format($row['price_n'], $this->format, '.', ' ') . ' ' . $this->PHPShopSystem->getValutaIcon());
+                else
+                    PHPShopParser::set('productlist_product_price_old', null);
+
 
                 // Учет модуля SEOURLPRO
                 if ($seourlpro) {
@@ -56,11 +72,10 @@ class PHPShopProductListElement extends PHPShopElements {
                 }
 
 
-                $dis.= PHPShopParser::file($GLOBALS['SysValue']['templates']['productlist']['productlist_product'], true, false, true);
-  
+                $dis .= PHPShopParser::file($GLOBALS['SysValue']['templates']['productlist']['productlist_product'], true, false, true);
             }
 
-             $this->set('productlist_list', $dis, true);
+            $this->set('productlist_list', $dis, true);
 
             // Назначаем переменную шаблона
             switch ($this->data['enabled']) {

@@ -4,9 +4,13 @@ include($_classPath . "class/obj.class.php");
 PHPShopObj::loadClass("base");
 $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", false);
 
+// Редирект на UTF верссию файла
+if ($GLOBALS['PHPShopBase']->codBase == 'utf-8')
+    header('Location: ./index_utf.php');
+
 $version = null;
 foreach (str_split($GLOBALS['SysValue']['upload']['version']) as $w)
-    $version.=$w . '.';
+    $version .= $w . '.';
 $brand = 'PHPShop ' . substr($version, 0, 5);
 
 $ok = '<span class="glyphicon glyphicon-ok text-success pull-right"></span>';
@@ -93,7 +97,7 @@ if (!empty($_POST['version_update'])) {
         array_pop($sqlArray);
         while (list($key, $val) = each($sqlArray))
             if (!mysqli_query($link_db, $val))
-                $result.='<div>' . mysqli_error($link_db) . '</div>';
+                $result .= '<div>' . mysqli_error($link_db) . '</div>';
     }
 
     $result = mysqli_error($link_db);
@@ -110,8 +114,7 @@ if (!empty($_POST['version_update'])) {
                Необходимо удалить папку <kbd>/install</kbd> для безопасности вашего сервера.
                </div>
             </div>';
-    }
-    else
+    } else
         $warning = '<div class="alert alert-danger alert-dismissible" role="alert">
   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
   <strong>Ошибка!</strong> ' . $result . '
@@ -133,8 +136,6 @@ elseif (!empty($_POST['password'])) {
 
     if (!empty($fp)) {
 
-        // Префикс
-        //$content = str_replace("phpshop_", $_POST['prefix'], $fp);
         $content = $fp;
 
         // Подстановка почты администратора
@@ -151,7 +152,7 @@ elseif (!empty($_POST['password'])) {
         $result = null;
         foreach ($sqlArray as $val) {
             if (!mysqli_query($link_db, $val))
-                $result.='<div>' . mysqli_error($link_db) . '</div>';
+                $result .= '<div>' . mysqli_error($link_db) . '</div>';
         }
     }
 
@@ -334,15 +335,14 @@ elseif (!empty($_POST['password'])) {
                         <li>Загрузить распакованный архив с PHPShop на FTP
                         <li>Создайте новую базу MySQL на своем сервере или узнайте пароли доступа к уже созданной базе у хост-провайдера.
                         <li>
-
-                            Отредактируйте файл связи с базой MySQL <kbd>config.ini</kbd> в папке <code><?php echo $_SERVER['SERVER_NAME'] ?>/phpshop/inc/</code>. Изменить данные в кавычках " " на свои данные.
+                            Отредактируйте файл связи с базой MySQL <kbd>config.ini</kbd> в папке <code><?php echo $_SERVER['SERVER_NAME'] ?>/phpshop/inc/</code>. Изменить данные в кавычках " " на свои данные. Кодировка базы может иметь значения cp1251 (кириллическая по умолчанию) или utf-8 (международная). Для использования utf-8 базой данных кодировка сервера так же должна быть utf-8. Для управления кодировкой сервера можно использовать параметр <code>AddDefaultCharset utf-8</code> в корневом файле <code>.htaccess</code>. По умолчанию установка рассчитана на кодировку сервера windows-1251 и базы данных cp1251. Изменять настройки кодировки рекомендуется только для языков, не имеющих  кириллических символов (армянская, азербайджанская и т.д.). База данных в кириллической кодировке cp1251 работает быстрее и занимает меньше места.
 
                             <pre>[connect]
 host="localhost";   # имя хоста базы данных
 user_db="user";     # имя пользователя
 pass_db="mypas";    # пароль базы
-dbase="mybase";     # имя базы</pre>
-
+dbase="mybase";     # имя базы
+charset="cp1251";   # кодировка базы</pre>
                         </li>
                         <li>
                             <p>Воспользуйтесь встроенным <a href="#" class="btn btn-success btn-xs" <?php echo $mysql_break_install; ?>  data-target="#install"><span class="glyphicon glyphicon-download-alt"></span> Установщиком базы данных</a></p>
@@ -595,7 +595,7 @@ dbase="mybase";         # имя базы</pre>
                                                         <div class="col-sm-10">
                                                             <?php echo $update_select; ?>
                                                             <p></p>
-                                                            <p class="text-muted"><span class="glyphicon glyphicon-info-sign"></span> Необходимо выбрать свою текущую версию PHPShop (до обновления). Если вашей версии нет в списке, то выбрать версию выше и самую близкую к вашей в большую сторону. Например, ваша старая версия Enterprise 3.6.6.0.1, то следует выбрать в списке 3.6.7.1.3.</p><p class="text-muted">Префиксы <kbd>Start</kbd> и <kbd>CMS</kbd> обозначают одноименные сборки. Версия PHPShop 5 имеет одинаковую структуру данных у всех коммерческих версий Basic, Enterprise и Pro 1C.</p><p class="text-muted">Для обновлении версий PHPShop 3 и ниже потребуется процедура восстановления пароля администратора по email.</p>
+                                                            <p class="text-muted"><span class="glyphicon glyphicon-info-sign"></span> Необходимо выбрать свою текущую версию PHPShop (до обновления). Если вашей версии нет в списке, то выбрать версию выше и самую близкую к вашей в большую сторону. Например, ваша старая версия Enterprise 3.6.6.0.1, то следует выбрать в списке 3.6.7.1.3.</p><p class="text-muted">Префиксы <kbd>Start</kbd> и <kbd>CMS</kbd> обозначают одноименные сборки. Версии PHPShop 5 и 6 имеет одинаковую структуру данных у всех коммерческих версий Basic, Enterprise и Pro 1C.</p><p class="text-muted">Для обновлении версий PHPShop 3 и ниже потребуется процедура восстановления пароля администратора по email.</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -629,14 +629,18 @@ dbase="mybase";         # имя базы</pre>
                                                             <input type="password" name="password" required class="form-control" placeholder="Пароль">
                                                         </div>
                                                     </div>
-                                                    <!--
-                                                    <div class="form-group">
-                                                        <label class="col-sm-2 control-label">Префикс <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Префикс базы данных нужен для установки нескольких версий PHPShop в единую базу"></span></label>
+
+                                                    <!--<div class="form-group">
+                                                        <label class="col-sm-2 control-label">Кодировка</label>
                                                         <div class="col-sm-10">
-                                                            <input type="text" name="prefix" required class="form-control" value="phpshop_">
+                                                            <select name="code" class="form-control">
+                                                                <option value="cp1251" selected="selected">Кириллическая</option>
+                                                                <option value="utf8">Международная</option>
+                                                            </select>
                                                         </div>
                                                     </div>
                                                     -->
+
                                                     <div class="form-group">
                                                         <div class="col-sm-offset-2 col-sm-10">
                                                             <div class="checkbox">
@@ -673,22 +677,22 @@ dbase="mybase";         # имя базы</pre>
                             <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
                             <script>
 
-                                $().ready(function() {
+                                $().ready(function () {
 
                                     // Ошибка MySQL
-                                    $('[data-toggle="error"]').on('click', function(event) {
+                                    $('[data-toggle="error"]').on('click', function (event) {
                                         event.preventDefault();
                                         alert($('.list-group-item-danger').text());
                                     });
 
                                     // Обновление
-                                    $('.update').on('click', function() {
+                                    $('.update').on('click', function () {
                                         $('#step-2 .title').text($('#step-3 .title').text());
                                         $('#step-2').html($('#step-3').html());
                                     });
 
                                     // Согласие с лицензией
-                                    $('#licence-ok').on('click', function() {
+                                    $('#licence-ok').on('click', function () {
                                         if (!this.checked) {
                                             $('#install').modal('hide');
                                             this.checked = true;
@@ -696,7 +700,7 @@ dbase="mybase";         # имя базы</pre>
                                     });
 
                                     // Вперед
-                                    $("body").on('click', '.steps', function() {
+                                    $("body").on('click', '.steps', function () {
                                         var step = new Number($(this).attr('data-step'));
 
                                         switch ($(this).attr('data-step')) {
@@ -719,7 +723,7 @@ dbase="mybase";         # имя базы</pre>
                                     });
 
                                     // Назад
-                                    $('.back').on('click', function() {
+                                    $('.back').on('click', function () {
                                         $('.steps').attr('data-step', 1);
                                         $('.modal-title').text($('#step-1 .title').text());
                                         $('#step-1').show();
@@ -730,7 +734,7 @@ dbase="mybase";         # имя базы</pre>
                                     });
 
                                     // Генератор паролей
-                                    $('#generator').on('click', function() {
+                                    $('#generator').on('click', function () {
                                         var password = $(this).attr('data-password');
                                         $('input[type=password]').val(password);
                                         $('#password-message').html('<div class="alert alert-success" role="alert">Ваш пароль: <b>' + password + '</b></div>');

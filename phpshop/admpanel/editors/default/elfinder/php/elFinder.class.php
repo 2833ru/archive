@@ -1,5 +1,7 @@
 <?php
 
+include_once ('../../../../../class/string.class.php');
+
 /**
  * elFinder - file manager for web.
  * Core class.
@@ -785,7 +787,9 @@ class elFinder {
 		$volume = $this->volume($target);
 		$files  = isset($args['FILES']['upload']) && is_array($args['FILES']['upload']) ? $args['FILES']['upload'] : array();
 		$result = array('added' => array(), 'header' => empty($args['html']) ? false : 'Content-Type: text/html; charset=utf-8');
-		
+
+		$files = $this->fileNamesToLatin($files);
+
 		if (empty($files)) {
 			return array('error' => $this->error(self::ERROR_UPLOAD, self::ERROR_UPLOAD_NO_FILES), 'header' => $header);
 		}
@@ -1099,5 +1103,16 @@ class elFinder {
 		$time = explode(" ", microtime());
 		return (double)$time[1] + (double)$time[0];
 	}
+
+	private function fileNamesToLatin($files)
+    {
+        foreach ($files['name'] as $key => $name) {
+            $nameParts = explode('.', $name);
+            $fileExt = '.' . array_pop($nameParts);
+            $files['name'][$key] = PHPShopString::toLatin(str_replace($fileExt, '', PHPShopString::utf8_win1251($name))) . $fileExt;
+        }
+
+        return $files;
+    }
 	
 } // END class

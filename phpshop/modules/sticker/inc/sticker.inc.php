@@ -16,12 +16,15 @@ class PHPShopStickerElement {
 
         $PHPShopOrm = new PHPShopOrm($this->objBase);
         $PHPShopOrm->mysql_error = false;
-        $data = $PHPShopOrm->select(array('*'), array("enabled" => "='1'",'skin'=>'="'.$_SESSION['skin'].'"'), false, array("limit" => 100));
+        $data = $PHPShopOrm->select(array('*'), array("enabled" => "='1'"), false, array("limit" => 100));
 
         if (is_array($data)) {
             foreach ($data as $row) {
-                
-                $row['content']=str_replace('&#43;', '+',$row['content']);
+
+                if (!empty($row['skin']) and $row['skin'] != $_SESSION['skin'])
+                    continue;
+
+                $row['content'] = str_replace('&#43;', '+', $row['content']);
 
                 // Если несколько страниц
                 if (strpos($row['dir'], ',')) {
@@ -50,7 +53,7 @@ class PHPShopStickerElement {
         $data = $PHPShopOrm->select(array('*'), array('path' => "='" . $path . "'", 'enabled' => "='1'"), false, array('limit' => 1));
 
         if (is_array($data)) {
-            return Parser(str_replace('&#43;', '+',$data['content']));
+            return Parser(str_replace('&#43;', '+', $data['content']));
         }
         else
             return 'Стикер не найден в базе';

@@ -1,1 +1,1 @@
-<li><a href="@brandPageLink@" title="@brandName@"><img data-src="@brandIcon@" title="@brandName@" alt="@brandName@" class="owl-lazy"></a></li>
+<li><a href="@brandPageLink@" title="@brandName@"><img src="@brandIcon@" title="@brandName@" alt="@brandName@"></a></li>

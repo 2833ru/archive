@@ -11,21 +11,21 @@ function setProducts_yandexcart_hook($obj, $data) {
 
                 // Vendor
                 if ($obj->brand_array[$v[0]] != "") {
-                    $add.='<vendor>' . $obj->brand_array[$v[0]] . '</vendor>';
+                    $add.='<vendor>' . str_replace('&', '&amp;', $obj->brand_array[$v[0]]) . '</vendor>';
                     $vemdorSort = true;
                 }
 
                 // Param
-                if ($obj->param_array[$v['name']] != "" and $obj->param_array[$v[0]]['yandex_param_unit'] != "")
-                    $add.='<param name="' . $obj->param_array[$v[0]]['param'] . '" unit="' . $obj->param_array[$v[0]]['yandex_param_unit'] . '">' . $obj->param_array[$v[0]]['name'] . '</param>';
+                if ($obj->param_array[$v[0]]['name'] != "" and $obj->param_array[$v[0]]['yandex_param_unit'] != "")
+                    $add.='<param name="' . str_replace('&', '&amp;', $obj->param_array[$v[0]]['param']) . '" unit="' . $obj->param_array[$v[0]]['yandex_param_unit'] . '">' . str_replace('&', '&amp;', $obj->param_array[$v[0]]['name']) . '</param>';
                 elseif ($obj->param_array[$v[0]]['param'] != "")
-                    $add.='<param name="' . $obj->param_array[$v[0]]['param'] . '">' . $obj->param_array[$v[0]]['name'] . '</param>';
+                    $add.='<param name="' . str_replace('&', '&amp;', $obj->param_array[$v[0]]['param']) . '">' . str_replace('&', '&amp;', $obj->param_array[$v[0]]['name']) . '</param>';
             }
     }
 
     // Vendor из карточки товара
     if (empty($vemdorSort) and !empty($data['val']['vendor_name']))
-        $add.='<vendor>' . $data['val']['vendor_name'] . '</vendor>';
+        $add.='<vendor>' . str_replace('&', '&amp;', $data['val']['vendor_name']) . '</vendor>';
 
     // Подтип
     if (!empty($data['val']['group_id'])) {
@@ -116,7 +116,17 @@ function setProducts_yandexcart_hook($obj, $data) {
     // vendorCode
     if (!empty($data['val']['vendor_code']))
         $add.='<vendorCode>' . $data['val']['vendor_code'] . '</vendorCode>';
-
+    
+    // condition
+    if ($data['val']['condition'] > 1 and !empty($data['val']['condition_reason'])){
+        
+        if($data['val']['condition'] == 2)
+            $condition='likenew';
+        else $condition='used';
+        
+        $add.='<condition type="'.$condition.'"><reason>'.$data['val']['condition_reason'].'</reason></condition>';
+    }
+    
 
     if (!empty($add))
         $data['xml'] = str_replace('</offer>', $add . '</offer>', $data['xml']);

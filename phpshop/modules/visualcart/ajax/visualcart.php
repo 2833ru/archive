@@ -230,14 +230,14 @@ $visualcart = $AddToTemplateVisualCartAjax->visualcart();
 if (!empty($_SESSION['cart']))
     $_RESULT = array(
         "visualcart" => $visualcart,
-        "sum" => $AddToTemplateVisualCartAjax->PHPShopCart->getSum(),
+        "sum" => $AddToTemplateVisualCartAjax->PHPShopCart->getSum(true,' '),
         "num" => $AddToTemplateVisualCartAjax->PHPShopCart->getNum()
     );
 elseif (!empty($_REQUEST['xid']) and empty($_SESSION['cart'])) {
 
     $_RESULT = array(
         "visualcart" => "<tr><td>" . $GLOBALS['SysValue']['lang']['visualcart_empty'] . "</td></tr>",
-        "sum" => $AddToTemplateVisualCartAjax->PHPShopCart->getSum(),
+        "sum" => $AddToTemplateVisualCartAjax->PHPShopCart->getSum(true,' '),
         "num" => $AddToTemplateVisualCartAjax->PHPShopCart->getNum()
     );
 }

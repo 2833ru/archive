@@ -55,24 +55,24 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
 ?>
 <!doctype html>
 <head>
-    <title><?php echo __("Гарантийное обязательство")." №".$chek_num ?></title>
+    <title><?php echo __("Гарантийное обязательство")." &#8470;".$chek_num ?></title>
     <meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
     <link href="style.css" type=text/css rel=stylesheet>
     <script src="../../../lib/templates/print/js/html2pdf.bundle.min.js"></script>
 </head>
 <body>
     <div align="right" class="nonprint">
-                <button onclick="html2pdf(document.getElementById('content'), {margin: 1, filename: '<?php echo __("Гарантия")." №". $ouid ?>.pdf', html2canvas: {dpi: 192, letterRendering: true}});"><?php  _e("Сохранить") ?></button> 
+                <button onclick="html2pdf(document.getElementById('content'), {margin: 1, filename: '<?php echo __("Гарантия")." &#8470;". $ouid ?>.pdf', html2canvas: {dpi: 192, letterRendering: true}});"><?php  _e("Сохранить") ?></button> 
         <button onclick="window.print();"><?php  _e("Распечатать") ?></button> 
         <hr>
     </div>
     <div id="content">
         <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0><TBODY>
                 <TR>
-                    <TH scope=row align=middle width="50%" rowSpan=3><img src="<?php echo $PHPShopSystem->getLogo(); ?>" alt="" border="0" style="max-width: 200px;height: auto;"></TH>
+                    <TH scope=row align=middle width="50%" rowSpan=3><img src="<?php echo $PHPShopSystem->getLogo(true); ?>" alt="" border="0" style="max-width: 200px;height: auto;"></TH>
                     <TD align=right>
                         <BLOCKQUOTE>
-                            <P><b><?php _e("Гарантийное обязательство")?></b> <SPAN class=style4>№<?php echo @$chek_num ?> - <?php echo $datas ?></SPAN> </P></BLOCKQUOTE></TD></TR>
+                            <P><b><?php _e("Гарантийное обязательство")?></b> <SPAN class=style4>&#8470;<?php echo @$chek_num ?> - <?php echo $datas ?></SPAN> </P></BLOCKQUOTE></TD></TR>
                 <TR>
                     <TD align=right>
                         <BLOCKQUOTE>
@@ -85,7 +85,7 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
         <p><br></p>
         <table width=99% cellpadding=2 cellspacing=0 align=center>
             <tr class=tablerow>
-                <td class=tablerow>№</td>
+                <td class=tablerow>&#8470;</td>
                 <td width=50% class=tablerow><?php _e("Наименование")?></td>
                 <td class=tablerow><?php _e("Кол-во")?></td>
                 <td class=tablerow><?php _e("Серийный номер")?></td>
@@ -115,7 +115,7 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
                     if (!empty($LoadBanc['org_stamp']))
                         echo '<img src="' . $LoadBanc['org_stamp'] . '">';
                     else
-                        echo '<div style="padding:50px;border-bottom: 1px solid #000000;border-top: 1px solid #000000;border-left: 1px solid #000000;border-right: 1px solid #000000;" align="center">М.П.</div>';
+                        echo '<div style="padding:50px;border-bottom: 1px solid #000000;border-top: 1px solid #000000;border-left: 1px solid #000000;border-right: 1px solid #000000;" align="center">'.__('М.П.').'</div>';
                     ?>
                 </td>
             </tr>

@@ -62,8 +62,8 @@ function actionStart() {
 
     $PHPShopGUI->field_col = 2;
     $PHPShopGUI->setActionPanel(__("Страница") . ': ' . $title_name, array('Создать', 'Предпросмотр', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'), false);
-    $PHPShopGUI->addJSFiles('./js/jquery.tagsinput.min.js', './page/gui/page.gui.js');
-    $PHPShopGUI->addCSSFiles('./css/jquery.tagsinput.css');
+    $PHPShopGUI->addJSFiles('./js/jquery.tagsinput.min.js', './js/bootstrap-datetimepicker.min.js', './page/gui/page.gui.js');
+    $PHPShopGUI->addCSSFiles('./css/jquery.tagsinput.css', './css/bootstrap-datetimepicker.min.css');
 
     $PHPShopCategoryArray = new PHPShopPageCategoryArray();
     $CategoryArray = $PHPShopCategoryArray->getArray();
@@ -120,16 +120,15 @@ function actionStart() {
     $Tab1 = $PHPShopGUI->setCollapse('Информация', $PHPShopGUI->setField("Размещение", $tree_select) .
             $PHPShopGUI->setField("Заголовок", $PHPShopGUI->setInput("text", "name_new", $data['name'])) .
             $PHPShopGUI->setField("Сортировка", $PHPShopGUI->setInputText("№", "num_new", $data['num'], 150)) .
-            $PHPShopGUI->setField("URL Ссылка", $PHPShopGUI->setInputText('/page/', "link_new", $data['link'], 300, '.html')));
+            $PHPShopGUI->setField("URL Ссылка", $PHPShopGUI->setInputText('/page/', "link_new", $data['link'], '100%', '.html')));
 
     $SelectValue[] = array('Вывод в каталоге', 1, $data['enabled']);
     $SelectValue[] = array('Заблокировать', 0, $data['enabled']);
 
     $Tab1.= $PHPShopGUI->setField("Опции вывода:", $PHPShopGUI->setSelect("enabled_new", $SelectValue, 300, true));
 
-    // Рекомендуемые товары
-    if ($data['category'] != 2000)
-        $Tab1.=$PHPShopGUI->setField('Рекомендуемые товары для совместной продажи', $PHPShopGUI->setTextarea('odnotip_new', $data['odnotip'], false, false, false, __('Укажите ID товаров или воспользуйтесь <a href="#" data-target="#odnotip_new"  class="btn btn-sm btn-default tag-search"><span class="glyphicon glyphicon-search"></span> поиском товаров</a>')));
+    // Футер
+    $Tab1.= $PHPShopGUI->setField("Подвал", $PHPShopGUI->setCheckbox('footer_new', 1, 'Главное меню в подвале', $data['footer']));
 
     // Содержание закладки 3
     if ($data['category'] != 2000) {
@@ -148,11 +147,31 @@ function actionStart() {
 
     $Tab1.=$PHPShopGUI->setCollapse('Доступность', $TabSec . $PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/')));
 
+    // Иконка
+    $Tab4 = $PHPShopGUI->setField("Изображение", $PHPShopGUI->setIcon($data['icon'], "icon_new", false));
+
+    // Дата
+    $Tab4 .= $PHPShopGUI->setField("Дата", $PHPShopGUI->setInputDate("datas_new", PHPShopDate::get($data['datas'])));
+
+
+    // Рекомендуемые товары
+    if ($data['category'] != 2000) {
+        $Tab4.=$PHPShopGUI->setField('Рекомендуемые товары для совместной продажи', $PHPShopGUI->setTextarea('odnotip_new', $data['odnotip'], false, false, false,  __('Укажите ID товаров или воспользуйтесь') . ' <a href="#" data-target="#odnotip_new"  class="btn btn-sm btn-default tag-search"><span class="glyphicon glyphicon-search"></span> ' . __('поиском товаров') . '</a>'));
+
+        // Анонс
+        $oFCKeditor2 = new Editor('preview_new');
+        $oFCKeditor2->Height = '270';
+        $oFCKeditor2->Value = $data['preview'];
+        $Tab4.=$PHPShopGUI->setField("Анонс", $oFCKeditor2->AddGUI());
+    }
+
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1), array("Содержание", $oFCKeditor->AddGUI()));
+    if($data['category'] != 2000)
+    $PHPShopGUI->setTab(array("Основное", $Tab1), array("Содержание", $oFCKeditor->AddGUI()), array("Дополнительно", $Tab4, true));
+    else $PHPShopGUI->setTab(array("Основное", $Tab1), array("Содержание", $oFCKeditor->AddGUI()));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =
@@ -170,20 +189,25 @@ function actionStart() {
 function actionUpdate() {
     global $PHPShopModules, $PHPShopOrm;
 
-    $_POST['datas_new'] = date('U');
+    if (!empty($_POST['datas_new']))
+        $_POST['datas_new'] = PHPShopDate::GetUnixTime($_POST['datas_new']);
+    else
+        $_POST['datas_new'] = PHPShopDate::GetUnixTime($_POST['datas_new']);
 
     $PHPShopOrm->debug = false;
 
     // Корректировка пустых значений
-    $PHPShopOrm->updateZeroVars('enabled_new', 'secure_new');
+    $PHPShopOrm->updateZeroVars('enabled_new', 'secure_new', 'footer_new');
 
     // Мультибаза
-    if (is_array($_POST['servers'])){
+    if (is_array($_POST['servers'])) {
         $_POST['servers_new'] = "";
         foreach ($_POST['servers'] as $v)
             if ($v != 'null' and !strstr($v, ','))
                 $_POST['servers_new'].="i" . $v . "i";
     }
+
+    $_POST['icon_new'] = iconAdd();
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
@@ -212,6 +236,39 @@ function actionDelete() {
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
     $action = $PHPShopOrm->delete(array('id' => '=' . $_POST['rowID']));
     return array("success" => $action);
+}
+
+// Добавление изображения 
+function iconAdd() {
+    global $PHPShopSystem;
+
+    // Папка сохранения
+    $path = $GLOBALS['SysValue']['dir']['dir'] . '/UserFiles/Image/' . $PHPShopSystem->getSerilizeParam('admoption.image_result_path');
+
+    // Копируем от пользователя
+    if (!empty($_FILES['file']['name'])) {
+        $_FILES['file']['ext'] = PHPShopSecurity::getExt($_FILES['file']['name']);
+        if (in_array($_FILES['file']['ext'], array('gif', 'png', 'jpg', 'jpeg', 'svg'))) {
+            if (move_uploaded_file($_FILES['file']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['dir']['dir'] . $path . $_FILES['file']['name'])) {
+                $file = $GLOBALS['dir']['dir'] . $path . $_FILES['file']['name'];
+            }
+        }
+    }
+
+    // Читаем файл из URL
+    elseif (!empty($_POST['furl'])) {
+        $file = $_POST['icon_new'];
+    }
+
+    // Читаем файл из файлового менеджера
+    elseif (!empty($_POST['icon_new'])) {
+        $file = $_POST['icon_new'];
+    }
+
+    if (empty($file))
+        $file = '';
+
+    return $file;
 }
 
 // Обработка событий

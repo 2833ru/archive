@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Корзина
  * @package PHPShopAjaxElements
@@ -9,7 +8,7 @@ session_start();
 $_classPath = "../";
 include($_classPath . "class/obj.class.php");
 PHPShopObj::loadClass("base");
-$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
+$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini",true,true);
 PHPShopObj::loadClass("array");
 PHPShopObj::loadClass("orm");
 PHPShopObj::loadClass("product");
@@ -21,11 +20,10 @@ PHPShopObj::loadClass("security");
 PHPShopObj::loadClass("user");
 PHPShopObj::loadClass("lang");
 
-
 // Подключаем библиотеку поддержки JsHttpRequest
 if($_REQUEST['type'] != 'json'){
 require_once $_classPath . "/lib/Subsys/JsHttpRequest/Php.php";
-$JsHttpRequest = new Subsys_JsHttpRequest_Php("windows-1251");
+new Subsys_JsHttpRequest_Php("windows-1251");
 }
 else{
     $_REQUEST['addname']=PHPShopString::utf8_win1251($_REQUEST['addname']);
@@ -47,7 +45,7 @@ $PHPShopModules = new PHPShopModules($_classPath . "modules/");
 
 // Добавлем товар
 if (PHPShopSecurity::true_param($_REQUEST['xid'], $_REQUEST['num'])) {
-    $productData = $PHPShopCart->add($_REQUEST['xid'], $_REQUEST['num'], $_REQUEST['xxid']);
+    $add = $PHPShopCart->add($_REQUEST['xid'], $_REQUEST['num'], $_REQUEST['xxid']);
 }
 
 // Дата обновления корзины
@@ -56,9 +54,9 @@ setcookie("cart_update_time", time(), 0, "/", $_SERVER['SERVER_NAME'], 0);
 // Формируем результат
 $_RESULT = array(
     "num" => $PHPShopCart->getNum(),
-    "sum" => $PHPShopCart->getSum(),
+    "sum" => $PHPShopCart->getSum(true,' '),
     "message" => $PHPShopCart->getMessage(),
-    "success" => 1
+    "success" => $add
 );
 
 // Перехват модуля в начале функции

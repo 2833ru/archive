@@ -15,7 +15,7 @@ function actionStart() {
 
     $PHPShopInterface->setActionPanel(__("Доставка" . $catname), array('Удалить выбранные'), array('Добавить'));
     $PHPShopInterface->setCaption(
-            array(null, "2%"), array("Иконка", "5%", array('sort' => 'none')), array("Название", "35%"), array("Цена " . $PHPShopSystem->getDefaultValutaCode(), "12%"), array("Бесплатно ", "10%", array('tooltip' => 'Бесплатно свыше')), array("", "7%"), array("Статус" . "", "7%", array('align' => 'right'))
+            array(null, "2%"), array("Иконка", "5%", array('sort' => 'none')), array("Название", "35%"), array("Цена ", "12%"), array("Бесплатно ", "10%", array('tooltip' => 'Бесплатно свыше')), array("", "7%"), array("Статус" . "", "7%", array('align' => 'right'))
     );
 
     $PHPShopInterface->addJSFiles('./js/jquery.treegrid.js', './delivery/gui/delivery.gui.js');

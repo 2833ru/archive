@@ -19,7 +19,7 @@ $().ready(function() {
             $('#refund_alert').html('Не забудьте вернуть денежные средства через ваш платёжный сервис/шлюз');
             $('#operation-status').removeClass('text-success').addClass('text-danger').html('Возврат');
             $.ajax({
-                mimeType: 'text/html; charset=windows-1251',
+                mimeType: 'text/html; charset='+locale.charset,
                 url: '../modules/cloudkassir/api.php',
                 type: 'post',
                 data: data,

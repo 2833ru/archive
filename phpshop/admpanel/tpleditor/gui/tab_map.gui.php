@@ -9,11 +9,10 @@ function MapValueReturn($m) {
     if (empty($MapValue[$m[1]]['path'])) {
         $MapValue[$m[1]]['path'] = 'main/index.tpl';
         $search = '&search=' . $m[1];
-    }
-    else
+    } else
         $search = null;
 
-    $result.='<div><span class=\'glyphicon glyphicon-share-alt\'></span> <a href=\'?path=tpleditor&name='.$_GET['name'].'&file=/' . $MapValue[$m[1]]['path'] . $search . '\'><code>' . $MapValue[$m[1]]['path'] . '</code></a></div>" data-trigger="click"';
+    $result .= '<div><span class=\'glyphicon glyphicon-share-alt\'></span> <a href=\'?path=tpleditor&name=' . $_GET['name'] . '&file=/' . $MapValue[$m[1]]['path'] . $search . '\'><code>' . $MapValue[$m[1]]['path'] . '</code></a></div>" data-trigger="click"';
 
 
     return $result;
@@ -28,16 +27,15 @@ function tab_map() {
     global $PHPShopGUI, $MapValue;
 
     $map_name = array(
-        'terra'=>4,
-        'hub'=>4,
-        'unishop'=>2,
+        'lego' => 5,
+        'terra' => 4,
+        'hub' => 4,
+        'unishop' => 2,
         'bootstrap' => 2,
         'bootstrap_fluid' => 3,
         'astero' => 1,
         'spice' => 1,
         'diggi' => 2,
-        'variaty'=>2,
-        'white_brick'=>2,
     );
 
     if (!empty($map_name[$_GET['name']]))
@@ -52,11 +50,13 @@ function tab_map() {
             }
 
         $map = file_get_contents('./tpleditor/gui/map' . $name . '.gui.tpl');
+        if ($GLOBALS['PHPShopBase']->codBase == 'utf-8')
+            $map= PHPShopString::win_utf8($map,true);
 
 
         $result = @preg_replace_callback("/@([a-zA-Z0-9_]+)@/", 'MapValueReturn', $map);
 
-        $disp = $PHPShopGUI->setCollapse(__('—хема шаблона ' . ucfirst($_GET['name'])), $result);
+        $disp = $PHPShopGUI->setCollapse('—хема шаблона' . ' ' . ucfirst($_GET['name']), $result);
 
         return $disp;
     }

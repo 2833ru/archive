@@ -14,4 +14,4 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_debug_system` (
 
 
 
-INSERT INTO `phpshop_modules_debug_system` VALUES (1,'0','','');
+INSERT INTO `phpshop_modules_debug_system` VALUES (1,'1','','');

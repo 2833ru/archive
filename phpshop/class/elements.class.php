@@ -49,7 +49,7 @@ class PHPShopElements {
     /**
      * @var array массив запрещенных разделов
      */
-    var $disp_format = array('print');
+    var $disp_format = array();
 
     /**
      * @var string результат работы парсера

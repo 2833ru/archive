@@ -1,6 +1,6 @@
-<h3 class="side-heading">{Товар дня}</h3>
+<div class="side-heading">{Товар дня}</div>
 
-<div class="product-col">
+<div class="product-col product-day">
     <div class="image product-img-centr">
         <a href="/shop/UID_@productDayId@.html" title="@productDayName@"><img src="@productDayPicSmall@" alt="@productDayName@" class="img-responsive img-center-sm"></a>
     </div>
@@ -10,8 +10,8 @@
             <!-- @productDayDescription@ -->
         </div>
         <div class="price">
-            <span class="price-new">@productDayPrice@ <span class="rubznak">@productDayCurrency@</span></span> 
-            <span class="price-old"><strike>@productDayPriceN@ <span class="rubznak">@productDayCurrency@</span></strike></span>
+            <span class="price-new">@productDayPrice@<span class="rubznak">@productValutaName@</span></span> 
+            <span class="price-old">@productDayPriceN@<span class="rubznak">@productDayCurrency@</span></span>
         </div>
 
         <div class="alert alert-warning" style="margin-bottom: 0px">

@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+        <meta http-equiv="Content-Type" content="text/html; charset=@charset@">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style type="text/css">
   p {color:#000000;}
@@ -114,7 +114,7 @@
 <tbody>    
     <tr bgcolor="#fafafa" id="header" valign="top">
         <td id="logo" align="left" valign="bottom">
-            <div align="center" style="padding-top:30px;"><a href="http://@serverPath@" target="_blank"><img src="http://@serverPath@@logo@" alt="logo @serverShop@" border="0" style="display: block;max-width: 200px;height: auto;"></a>
+            <div align="center" style="padding-top:30px;"><a href="http://@serverPath@" target="_blank"><img src="http://@serverPath@@logo@" border="0" style="display: block;max-width: 200px;height: auto;" alt=""></a>
             <p><h1>@shopName@</h1></p></div>
         </td>     
     </tr>
@@ -132,7 +132,7 @@
  <h2>{Спасибо за Ваш заказ}, @user_name@!</h2> 
 <p>{Наши менеджеры свяжутся с Вами по координатам, оставленным в форме заказа}.</p>
 
-<p>{Подробности заказа}  №@ouid@ / @date@</p>
+<p>{Подробности заказа}  &#8470;@ouid@ / @date@</p>
 <p>{Способ доставки}: @deliveryCity@ <br>
 E-mail: @mail@ <br>
 {Тип оплаты}: @payment@ <br>
@@ -172,7 +172,7 @@ php@</p>
 <hr>
 <p>
 {Итого} -- @sum@ @currency@<br>
-{Скидка} -- @discount@%<br>
+{Скидка} -- @discount_sum@ @currency@<br>
 {Доставка} -- @deliveryPrice@ @currency@ @deliveryInfo@</p>
 <hr>
 <p>{Итого к оплате с учетом скидки}: @total@ @currency@</p><hr><p>

@@ -31,7 +31,7 @@ function sendMailNotice($productID, $saveID, $email) {
 ".__('Артикул').": " . $PHPShopProduct->getParam('uid') . "<br>
 ".__('Cтоимость').": " . $PHPShopProduct->getPrice() . " " . $PHPShopSystem->getDefaultValutaCode() . "<br>
 ".__('Дата изменения информации по товару').": " . PHPShopDate::get($PHPShopProduct->getParam('datas')) . "<br>
-".__('Ссылка').": http://" . $_SERVER['SERVER_NAME'] . "/" . $GLOBALS['SysValue']['dir']['dir'] . "/shop/UID_" . $productID . ".html</p>";
+".__('Ссылка').": http://" . $_SERVER['SERVER_NAME'] . $GLOBALS['SysValue']['dir']['dir'] . "/shop/UID_" . $productID . ".html</p>";
         PHPShopParser::set('content', $text);
         PHPShopParser::set('logo', $_SERVER['SERVER_NAME'] . "/" . $GLOBALS['SysValue']['dir']['dir'] . $PHPShopSystem->getParam('logo'));
         $content = PHPShopParser::file('tpl/sendmail.mail.tpl', true, false);

@@ -2,9 +2,9 @@
 <module>
     <version>1.0</version>
     <name>Калькулятор доставки</name>
-    <faqlink>http://faq.phpshop.ru/page/deliverycalc.html</faqlink>
+    <faqlink>https://docs.phpshop.ru/moduli/dostavka/kalkulyator-dostavki</faqlink>
     <description>Виджет калькулятор доставки Alliance-catalog.ru</description>
-    <category>form,delivery</category>
+    <category>delivery</category>
     <adminmenu>
         <title>Калькулятор доставки</title>
         <capability>true</capability>

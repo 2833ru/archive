@@ -24,14 +24,14 @@ class Bitrix24API {
                 $deal = $this->Bitrix24->request('crm.deal.get', array('id' => (int) $_REQUEST['data']['FIELDS']['ID']));
                 $statusSettings = unserialize($this->Bitrix24->option['statuses']);
 
-                $LogObj = $this->PHPShopOrm->query("SELECT `order_id` FROM `phpshop_modules_bitrix24_log` WHERE `bitrix24_deal_id`=" . (int) $_REQUEST['data']['FIELDS']['ID']);
-                $log = $LogObj->fetch_assoc();
-
-                if(!empty($statusSettings[$deal['result']['STAGE_ID']]) and !empty($log['order_id'])) {
-                    $this->PHPShopOrm->query("UPDATE " . $GLOBALS['SysValue']['base']['orders'] . " SET `statusi`='" . $statusSettings[$deal['result']['STAGE_ID']] . "' WHERE `id`=" . $log['order_id']);
-                    $this->Bitrix24->log(array('request' => $_REQUEST, 'deal' => $deal, 'log' => $log, 'statusSettings' => $statusSettings), $log['order_id'], 'Статус заказа успешно изменен', 'updateDeliveryStatus');
-                } else {
-                    $this->Bitrix24->log(array('request' => $_REQUEST, 'deal' => $deal, 'log' => $log, 'statusSettings' => $statusSettings), $log['order_id'], 'Ошибка обновления статуса заказа. Не настроено соответсвие статусов сделки и заказа или не найден заказ', 'updateDeliveryStatus', 'error');
+                $order = $this->getOrderByDealId((int) $_REQUEST['data']['FIELDS']['ID']);
+                if($order) {
+                    if(isset($statusSettings[$deal['result']['STAGE_ID']])) {
+                        $this->PHPShopOrm->query("UPDATE " . $GLOBALS['SysValue']['base']['orders'] . " SET `statusi`='" . $statusSettings[$deal['result']['STAGE_ID']] . "' WHERE `id`=" . $order['id']);
+                        $this->Bitrix24->log(array('request' => $_REQUEST, 'deal' => $deal, 'statusSettings' => $statusSettings), $order['id'], 'Статус заказа успешно изменен', 'updateDeliveryStatus');
+                    } else {
+                        $this->Bitrix24->log(array('request' => $_REQUEST, 'deal' => $deal, 'statusSettings' => $statusSettings), $order['id'], 'Ошибка обновления статуса заказа. Не настроено соответсвие статусов сделки', 'updateDeliveryStatus', 'error');
+                    }
                 }
             }
         } else {
@@ -58,6 +58,12 @@ class Bitrix24API {
         if($this->Bitrix24->option['delete_contact_token'] === $_REQUEST['auth']['application_token'] or $this->Bitrix24->option['delete_company_token'] === $_REQUEST['auth']['application_token']) {
             $this->PHPShopOrm->query("UPDATE " . $GLOBALS['SysValue']['base']['shopusers'] . " SET `bitrix24_client_id`='0' WHERE `bitrix24_client_id`=" . (int) $_REQUEST['data']['FIELDS']['ID']);
         }
+    }
+
+    private function getOrderByDealId($dealId) {
+        $orm = new PHPShopOrm('phpshop_orders');
+
+        return $orm->getOne(array('*'), array('bitrix24_deal_id' => "='" . $dealId . "'"));
     }
 }
 

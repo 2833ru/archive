@@ -12,7 +12,7 @@ function send_to_order_russianpostcalc_hook($obj, $row, $rout) {
         if ($_POST['d'] == $option['delivery_id'] and strlen($_POST['index_new']) == 6) {
 
             // Запрос
-            $weight = $obj->PHPShopCart->getWeight()/1000;
+            $weight = $obj->PHPShopCart->getWeight() / 1000;
             $ret = $russianpostcalc->russianpostcalc_api_calc($option['key'], $option['password'], $option['delivery_index'], $_POST['index_new'], $weight, intval($obj->PHPShopCart->getSum(false) * $option['cennost']) / 100);
 
             // Тип посылки
@@ -20,6 +20,14 @@ function send_to_order_russianpostcalc_hook($obj, $row, $rout) {
                 $obj->delivery_mod = $ret['calc'][0]['cost'];
             else
                 $obj->delivery_mod = $ret['calc'][1]['cost'];
+
+            // Наценка
+            if (!empty($option['fee'])) {
+                if ($option['fee_type'] == 1)
+                    $obj->delivery_mod = $obj->delivery_mod + ($obj->delivery_mod * $option['fee'] / 100);
+                else
+                    $obj->delivery_mod = $obj->delivery_mod + $option['fee'];
+            }
         }
     }
 }

@@ -1,3 +1,4 @@
+<style>.btn{padding:6px 10px}</style>
 <section class="registration-area">
     <div class="col-sm-12">
         <div class="row">
@@ -8,39 +9,39 @@
                 </div>
                 <div class="panel-body">
                     <!-- Registration Form Starts -->
-                    <form role="form" method="post" name="user_forma_register" class="form-horizontal">
+                    <form role="form" method="post" name="user_forma_register" >
                         <span id="user_error">@user_error@</span>
                         <div class="form-group">
-                            <div class="col-sm-6">
+                            <div class="">
                                 <input placeholder="Имя" type="text"  name="name_new" value="@php echo $_POST['name_new']; php@"  class="form-control" required="" >
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="col-sm-6">
+                            <div class="">
                                 <input placeholder="E-mail" type="email" name="login_new" value="@php echo $_POST['login_new']; php@" class="form-control" required="" >
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="col-sm-6">
+                            <div class="">
                                 <input placeholder="Пароль" type="password" name="password_new"  class="form-control"  required="" >
                             </div>
                         </div>
                         <div class="form-group" id="check_pass">
-                            <div class="col-sm-6">
+                            <div class="">
                                 <input placeholder="Повторите пароль" type="password" name="password_new2"  class="form-control" required="">
                                 <span class="glyphicon glyphicon-remove form-control-feedback hide" aria-hidden="true"></span>
-                                <p class="small"><label><input name="rule" value="1" required="" checked="" type="checkbox"> @rule@</label></p>
                             </div>
                             
                         </div>
                         
                         <div class="form-group">
-                            <div class="col-sm-6">
+                            <div class="">
                                @captcha@
                             </div>
                         </div>
+<p class="small"><label><input type="checkbox" value="on" name="rule" class="req" checked="checked">  {Я согласен} <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html" alt="Согласие на обработку персональных данных">{на обработку моих персональных данных}</a></label></p>
                         <div class="form-group">
-                            <div class="col-sm-6">
+                            <div class="">
                                 <input type="hidden" value="1" name="add_user">
                                 <button type="reset" class="btn btn-main">Очистить</button>
                                 <button type="submit" class="btn btn-main">Регистрация пользователя</button>

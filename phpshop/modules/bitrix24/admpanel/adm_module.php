@@ -24,7 +24,7 @@ function actionUpdate() {
 
     $PHPShopOrm->debug = false;
     $action = $PHPShopOrm->update($_POST);
-    header('Location: ?path=modules&id='.$_GET['id']);
+    header('Location: ?path=modules&id=' . $_GET['id']);
     return $action;
 }
 
@@ -37,15 +37,15 @@ function actionStart() {
 
     $statusesOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['order_status']);
     $statusesResult = $statusesOrm->select(array('*'));
-    $statuses = array();
-    $statuses[] = array('id' => 0, 'name' => 'Не выбрано');
-    $statuses[] = array('id' => 1000000, 'name' => 'Новый заказ');
-    if(isset($statusesResult['id']))
+    $statuses = array(
+        array('id' => 0, 'name' => 'Новый заказ')
+    );
+    if (isset($statusesResult['id']))
         $statuses[] = $statusesResult;
     else
         $statuses = array_merge($statuses, $statusesResult);
 
-    if(!empty($data['statuses']))
+    if (!empty($data['statuses']))
         $statusSettings = unserialize($data['statuses']);
     else
         $statusSettings = array();
@@ -53,30 +53,29 @@ function actionStart() {
     $dealStages = $Bitrix24->getDealStages();
 
     $fieldStatuses = '';
-    foreach ($dealStages['result'] as $dealStage)
-    {
-        $selectStatuses = array();
+    if (is_array($dealStages['result']))
+        foreach ($dealStages['result'] as $dealStage) {
+            $selectStatuses = array();
 
-        foreach ($statuses as $status) {
-            $selectStatuses[] = array($status['name'], $status['id'], $statusSettings[$dealStage['STATUS_ID']]);
+            foreach ($statuses as $status) {
+                $selectStatuses[] = array($status['name'], $status['id'], $statusSettings[$dealStage['STATUS_ID']]);
+            }
+
+            $fieldStatuses .= $PHPShopGUI->setField(PHPShopString::utf8_win1251($dealStage['NAME']), $PHPShopGUI->setSelect('statuses[' . $dealStage['STATUS_ID'] . ']', $selectStatuses));
         }
 
-        $fieldStatuses .= $PHPShopGUI->setField(PHPShopString::utf8_win1251($dealStage['NAME']),
-            $PHPShopGUI->setSelect('statuses[' . $dealStage['STATUS_ID'] . ']', $selectStatuses));
-    }
+    $Tab1 = $PHPShopGUI->setField('URL вебхука Битрикс24', $PHPShopGUI->setInputText(false, 'webhook_url_new', $data['webhook_url'], 500));
+    $Tab1 .= $PHPShopGUI->setField('Код авторизации обновления сделки', $PHPShopGUI->setInputText(false, 'update_delivery_token_new', $data['update_delivery_token'], 500));
+    $Tab1 .= $PHPShopGUI->setField('Код авторизации удаления товара', $PHPShopGUI->setInputText(false, 'delete_product_token_new', $data['delete_product_token'], 500));
+    $Tab1 .= $PHPShopGUI->setField('Код авторизации удаления контакта', $PHPShopGUI->setInputText(false, 'delete_contact_token_new', $data['delete_contact_token'], 500));
+    $Tab1 .= $PHPShopGUI->setField('Код авторизации удаления компании', $PHPShopGUI->setInputText(false, 'delete_company_token_new', $data['delete_company_token'], 500));
 
-    $Tab1 = $PHPShopGUI->setField('URL вебхука Битрикс24', $PHPShopGUI->setInputText(false, 'webhook_url_new', $data['webhook_url'],500));
-    $Tab1 .= $PHPShopGUI->setField('Код авторизации обновления сделки', $PHPShopGUI->setInputText(false,'update_delivery_token_new', $data['update_delivery_token'],  500));
-    $Tab1 .= $PHPShopGUI->setField('Код авторизации удаления товара', $PHPShopGUI->setInputText(false,'delete_product_token_new', $data['delete_product_token'],  500));
-    $Tab1 .= $PHPShopGUI->setField('Код авторизации удаления контакта', $PHPShopGUI->setInputText(false,'delete_contact_token_new', $data['delete_contact_token'],  500));
-    $Tab1 .= $PHPShopGUI->setField('Код авторизации удаления компании', $PHPShopGUI->setInputText(false,'delete_company_token_new', $data['delete_company_token'],  500));
-
-    if(empty($data['webhook_url']))
-        $Tab1 .= $PHPShopGUI->setCollapse('Статусы', $PHPShopGUI->setAlert(__('Для сопоставления статусов заказа и этапов сделки введите "URL вебхука Битрикс24" и нажмите "Сохранить"'), 'warning'));
+    if (empty($data['webhook_url']))
+        $Tab1 .= $PHPShopGUI->setCollapse('Статусы', $PHPShopGUI->setAlert('Для сопоставления статусов заказа и этапов сделки введите "URL вебхука Битрикс24" и нажмите "Сохранить"', 'warning'));
     else
         $Tab1 .= $PHPShopGUI->setCollapse('Статусы', $fieldStatuses);
 
-    $info='
+    $info = '
 <h4>Как подключиться к Битрикс24?</h4>
 <ol>
  <li>Зарегистрироваться на сайте <a href="https://www.bitrix24.ru/create.php?p=9003557" target="_blank">Битрикс24</a>
@@ -116,17 +115,16 @@ function actionStart() {
 <li>Полученный "Код авторизации" внести в поле "Код авторизации удаления компании" в настройках модуля.</li>
 </ol>';
 
-    $Tab2=$PHPShopGUI->setInfo($info);
+    $Tab2 = $PHPShopGUI->setInfo($info);
 
     // Форма регистрации
     $Tab3 = $PHPShopGUI->setPay($data['serial'], false, $data['version'], true);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1,true), array("Инструкция", $Tab2), array("О Модуле", $Tab3));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Инструкция", $Tab2), array("О Модуле", $Tab3));
 
     // Вывод кнопок сохранить и выход в футер
-    $ContentFooter =
-            $PHPShopGUI->setInput("hidden", "rowID", $data['id']) .
+    $ContentFooter = $PHPShopGUI->setInput("hidden", "rowID", $data['id']) .
             $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionUpdate.modules.edit");
 
     $PHPShopGUI->setFooter($ContentFooter);

@@ -3,7 +3,7 @@
 /**
  * Библиотека подключения к БД
  * @author PHPShop Software
- * @version 1.8
+ * @version 1.9
  * @package PHPShopClass
  * @param string $iniPath путь до конфигурационного файла config.ini
  * @param bool $connectdb подключение к MySQL
@@ -36,12 +36,6 @@ class PHPShopBase {
     var $locale = 'ru_RU.cp1251';
 
     /**
-     * Временная зона (Москва Europe/Moscow)
-     * @var string 
-     */
-    var $timezone = 'Europe/Moscow';
-
-    /**
      * режим отладки
      * @var bool 
      */
@@ -56,16 +50,10 @@ class PHPShopBase {
     /**
      * Подключения к БД
      * @param string $iniPath путь до конфигурационного файла config.ini
-     * @param bool $connectdb подючение к БД
+     * @param bool $connectdb подключение к БД
      * @param bool $error блокировка ошибок PHP
      */
     function __construct($iniPath, $connectdb = true, $error = true) {
-
-        // Временная зона
-        $this->setTimeZone();
-
-        // UTF-8 Fix
-        $this->fixUTF();
 
         // Отладка ядра
         $this->setPHPCoreReporting($error);
@@ -73,6 +61,15 @@ class PHPShopBase {
         $this->iniPath = $iniPath;
         $this->SysValue = parse_ini_file_true($this->iniPath, 1);
 
+        // Кодировка
+        if ($this->getParam("connect.charset") != "") {
+            $this->codBase = $this->getParam("connect.charset");
+            if ($this->codBase == 'utf8')
+                $this->codBase = 'utf-8';
+        }
+
+        // UTF-8 Fix
+        $this->fixUTF();
 
         define('parser_function_allowed', $this->SysValue['function']['allowed']);
         define('parser_function_deny', $this->SysValue['function']['deny']);
@@ -142,14 +139,23 @@ class PHPShopBase {
         if (function_exists('ParseTemplateReturn')) {
             $GLOBALS['SysValue']['other']['message'] = $message;
             $GLOBALS['SysValue']['other']['title'] = $e;
-            exit(ParseTemplateReturn('phpshop/lib/templates/error/error.tpl', true));
+            $error = ParseTemplateReturn('phpshop/lib/templates/error/error.tpl', true);
+
+            if ($GLOBALS['PHPShopBase']->codBase == 'utf-8')
+                $error = iconv("windows-1251", "utf-8", $error);
+
+            exit($error);
         } elseif (class_exists('PHPShopObj')) {
             PHPShopObj::loadClass('parser');
             PHPShopParser::set('message', $message);
             PHPShopParser::set('title', $e);
-            exit(PHPShopParser::file($_SERVER['DOCUMENT_ROOT'] . '/phpshop/lib/templates/error/error.tpl'));
-        }
-        else
+            $error = PHPShopParser::file($_SERVER['DOCUMENT_ROOT'] . '/phpshop/lib/templates/error/error.tpl');
+
+            if ($GLOBALS['PHPShopBase']->codBase == 'utf-8')
+                $error = iconv("windows-1251", "utf-8", $error);
+
+            exit($error);
+        } else
             exit($message);
     }
 
@@ -162,10 +168,13 @@ class PHPShopBase {
 
         $link_db = mysqli_connect($this->getParam("connect.host"), $this->getParam("connect.user_db"), $this->getParam("connect.pass_db")) or $this->mysql_error = mysqli_connect_error();
         mysqli_select_db($link_db, $this->getParam("connect.dbase")) or $this->mysql_error .= mysqli_error($link_db);
-        mysqli_query($link_db, "SET NAMES '" . $this->codBase . "'");
+
+        if ($this->codBase != "utf-8")
+            mysqli_query($link_db, "SET NAMES '" . $this->codBase . "'");
+
         mysqli_query($link_db, "SET SESSION sql_mode=''");
 
-        if ($connectdb and !empty($this->mysql_error))
+        if ($connectdb and ! empty($this->mysql_error))
             $this->errorConnect(101, "Нет соединения с базой", $this->mysql_error);
         else if (empty($this->mysql_error))
             return $link_db;
@@ -201,16 +210,8 @@ class PHPShopBase {
      * Настройка локали сервера 
      */
     function setLocale() {
-        if (function_exists('setlocale') and !empty($this->locale))
+        if (function_exists('setlocale') and ! empty($this->locale))
             setlocale(LC_ALL, $this->locale);
-    }
-
-    /**
-     * Настройка временной зоны сервера 
-     */
-    function setTimeZone() {
-        if (function_exists('date_default_timezone_set') and !empty($this->timezone))
-            date_default_timezone_set($this->timezone);
     }
 
     /**
@@ -219,8 +220,8 @@ class PHPShopBase {
     function fixUTF() {
 
         //  UTF-8 Default Charset Fix
-        if (stristr(ini_get("default_charset"), "utf") and function_exists('ini_set')) {
-            ini_set("default_charset", "cp1251");
+        if (stristr(ini_get("default_charset"), "utf") and function_exists('ini_set') and $this->codBase != "utf-8") {
+            ini_set("default_charset", $this->codBase);
         }
 
         // UTF-8 Env Fix
@@ -241,8 +242,7 @@ class PHPShopBase {
                 if ($this->phpversion() and function_exists('ini_set')) {
                     ini_set('allow_call_time_pass_reference', 1);
                 }
-            }
-            else
+            } else
                 error_reporting(0);
 
             // Short Open Tag 
@@ -269,9 +269,9 @@ class PHPShopBase {
     function checkMultibase($path = '../') {
         global $PHPShopSystem;
 
-        $this->LicenseParse = @parse_ini_file_true($path .'license/'. PHPShopFile::searchFile($path.'license/', 'getLicense', true), 1);
+        $this->LicenseParse = @parse_ini_file_true($path . 'license/' . PHPShopFile::searchFile($path . 'license/', 'getLicense', true), 1);
 
-        if (is_array( $this->LicenseParse) and strstr($this->LicenseParse['License']['HardwareLocked'], 'Showcase')) {
+        if (is_array($this->LicenseParse) and strstr($this->LicenseParse['License']['HardwareLocked'], 'Showcase')) {
 
             if (getenv('SERVER_NAME') == $this->LicenseParse['License']['DomenLocked']) {
                 define("HostMain", true);
@@ -280,16 +280,16 @@ class PHPShopBase {
                 $PHPShopOrm->debug = false;
                 $data = $PHPShopOrm->select(array('id,name,company'), array('enabled' => "='1'", 'host' => '="' . str_replace('www.', '', $_SERVER['HTTP_HOST']) . '"'), false, array('limit' => 1));
 
-                if (is_array($data)){
+                if (is_array($data)) {
                     define("HostID", intval($data['id']));
-                    
-                    if($PHPShopSystem){
-                        
-                        if(!empty($data['company']))
-                        $PHPShopSystem->setParam('company', $data['company']);
-                        
-                        if(!empty($data['name']))
-                        $PHPShopSystem->setParam('name', $data['name']);
+
+                    if ($PHPShopSystem) {
+
+                        if (!empty($data['company']))
+                            $PHPShopSystem->setParam('company', $data['company']);
+
+                        if (!empty($data['name']))
+                            $PHPShopSystem->setParam('name', $data['name']);
                     }
                 }
             }

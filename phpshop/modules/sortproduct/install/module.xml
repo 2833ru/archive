@@ -2,9 +2,9 @@
 <module>
     <version>1.0</version>
     <name>Sort Product</name>
-    <faqlink>http://faq.phpshop.ru/page/sort-product.html</faqlink>
+    <faqlink>https://docs.phpshop.ru/moduli/prodazhi/sort-product</faqlink>
     <description>Элемент вывода товаров по характеристикам.</description>
-    <category>form</category>
+    <category>sale</category>
     <adminmenu>
         <title>Sort Product</title>
         <capability>true</capability>

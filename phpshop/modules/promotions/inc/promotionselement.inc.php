@@ -101,7 +101,7 @@ function promotion_get_discount($row, $with_desc = false) {
     
     $promo_discount = $promo_discountsum = 0; 
     $description = $lab = '';
-    $labels = $descriptions = array();
+    $labels = $descriptions = $hidePrices = array();
     
     if (isset($data)) {
         foreach ($data as $key => $pro) {
@@ -164,6 +164,8 @@ function promotion_get_discount($row, $with_desc = false) {
                             $labels[$pro['discount']] = $pro['label'];
                         } 
                         if ( $with_desc ) $descriptions[$pro['id']] = '<div>' . $pro['description'] . '</div>';
+
+                        $hidePrices[$pro['discount']] = $pro['hide_old_price'];
                     }
                     if ($pro['discount_tip'] == 0) {
                         if ( $with_desc && $pro['code_check'] == 1 ) 
@@ -173,6 +175,8 @@ function promotion_get_discount($row, $with_desc = false) {
                             $labels[$pro['discount']] = $pro['label'];
                         }
                         if ( $with_desc ) $descriptions[$pro['id']] = '<div>' . $pro['description'] . '</div>';
+
+                        $hidePrices[$pro['discount']] = $pro['hide_old_price'];
                     }
                 }
             }
@@ -182,11 +186,13 @@ function promotion_get_discount($row, $with_desc = false) {
         if ( isset($discount) ) {
             $promo_discount = max($discount) / 100;
             $lab = $labels[$promo_discount*100];
+            $hidePrice = $hidePrices[$promo_discount*100];
         }
 
         if ( isset($discountsum) ) {
             $promo_discountsum = max($discountsum);
-            $lab = $labels[$promo_discountsum];            
+            $lab = $labels[$promo_discountsum];
+            $hidePrice = $hidePrices[$promo_discountsum];
         }
         
         if ( $with_desc && !empty($descriptions) )
@@ -195,7 +201,38 @@ function promotion_get_discount($row, $with_desc = false) {
             $description = null;
     }
     
-    return array('percent' => $promo_discount, 'sum' => $promo_discountsum, 'label' => $lab, 'description' => $description);
+    return array('percent' => $promo_discount, 'sum' => $promo_discountsum, 'label' => $lab, 'description' => $description, 'hidePrice' => $hidePrice);
+}
+
+/**
+ * Добавляем подтипы к товарам. В акциях должны участвовать как основные товары, так и подтипы.
+ * @param string $products
+ */
+function getProductsInPromo($products)
+{
+    global $PHPShopSystem;
+
+    $PHPShopOrm = new PHPShopOrm('phpshop_products');
+    $parents = $PHPShopOrm->select(array('parent'), array('id' => ' IN ("'. str_replace(',', '","',  $products) . '")'), array('order' => 'num,name DESC'), array('limit' => 10000));
+
+    $prnt = array();
+    // Подтипы из 1С
+    if($PHPShopSystem->ifSerilizeParam('1c_option.update_option')) {
+        foreach ($parents as $parent) {
+            $row = $PHPShopOrm->select(array('id'), array('uid' => ' IN ("'. str_replace(',', '","',  $parent['parent']) . '")'), array('order' => 'num,name DESC'), array('limit' => 100));
+            foreach ($row as $parentProduct) {
+                $prnt[] = $parentProduct['id'];
+            }
+        }
+    } else {
+        foreach ($parents as $parent) {
+            foreach (explode(',', $parent['parent']) as $value) {
+                $prnt[] = $value;
+            }
+        }
+    }
+  
+    return implode(',', array_merge(explode(',', str_replace(' ', '', $products)), $prnt));
 }
 
 class AddToTemplateRegionElement extends PHPShopElements {

@@ -16,6 +16,12 @@
         <textarea class="form-control" name="returncall_mod_message" placeholder="{—ообщение}..."></textarea>
     </div>
     @returncall_captcha@
+                        <div class="form-group">
+                            <p class="small">
+                            <input type="checkbox" value="on" name="rule" class="req" checked="checked"> 
+                            {я согласен}  <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html" alt="{—огласие на обработку персональных данных}">{на обработку моих персональных данных}</a> 
+                            </p>
+                        </div>	
     <div class="pull-right">
         <input type="hidden" name="returncall_mod_send" value="1">
         <button type="submit" class="btn btn-primary">{«аказать звонок}</button>

@@ -1,32 +1,11 @@
-#dnwr_host  vitrina.mysoft.ru www.vitrina.mysoft.ru phpshop.dev
-
-
-## Apache ##
-
-# Поддержка PHP 5.3 и выше
-#php_value allow_call_time_pass_reference on
-
-# Обход ошибки двойного добавление слешей в ORM
-#php_flag magic_quotes_gpc off
-
-# Отладочные сообщения PHP
-#php_value error_reporting 7
-
-# Выключение глобальных переменных PHP
-#php_flag register_globals off
-
-# Кодировка cp1251 для PHP 5.6
-#php_value default_charset cp1251
-
-
-
 ## PHPShop Core ##
 
 # Кодировка windows 1251
 AddDefaultCharset windows-1251
 
-# Скачивание CSV браузерами
+# Скачивание CSV,XML браузерами
 AddType text/csv csv
+AddType text/csv xml
 
 DirectoryIndex index.php
 RewriteEngine On

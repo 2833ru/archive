@@ -110,37 +110,6 @@ function CID_Product_seourlpro_hook($obj, $row, $rout) {
 
 
     if ($rout == 'END') {
-
-        $page = $obj->PHPShopNav->getPage();
-
-        // Рекомендации BDBD
-        if ($seourl_option['paginator'] == 2) {
-
-            if ($page > 1) {
-
-                // Отключение описания каталога в пагинаторе 
-                if ($seourl_option['cat_content_enabled'] == 2) {
-                    $obj->set('catalogContent', null);
-                }
-
-                // Добавление номера страниц в имя каталога
-                $obj->set('catalogCategory', ' - страница ' . $page, true);
-            }
-
-            // Создание переменной точного адреса canonical для отсеивания дублей
-            if (!empty($_SERVER["QUERY_STRING"])) {
-
-                // Учет первой страницы
-                if ($page > 1)
-                    $obj->set('seourl_canonical', '<link rel="canonical" href="http://' . $_SERVER['SERVER_NAME'] . $obj->get('ShopDir') . '/shop/CID_' . $obj->PHPShopNav->getId() . '-' . $page . '.html">');
-                else
-                    $obj->set('seourl_canonical', '<link rel="canonical" href="http://' . $_SERVER['SERVER_NAME'] . $obj->get('ShopDir') . '/shop/CID_' . $obj->PHPShopNav->getId() . '.html">');
-            }
-            /*
-              if (empty($page))
-              $obj->set('seourl_canonical', '<link rel="canonical" href="http://' . $_SERVER['SERVER_NAME'] . $obj->get('ShopDir') . '/shop/CID_' . $obj->PHPShopNav->getId() . '-1' . $seo_name . '.html">'); */
-        }
-
         // Учет модуля Mobile
         if (!empty($_GET['mobile']) and $_GET['mobile'] == 'true' and !empty($GLOBALS['SysValue']['base']['mobile']['mobile_system'])) {
             header('Location: ' . $obj->getValue('dir.dir') . '/shop/CID_' . $obj->PHPShopNav->getId() . '.html', true, 302);
@@ -208,6 +177,8 @@ function CID_Category_seourlpro_hook($obj, $dataArray, $rout) {
                     $GLOBALS['PHPShopSeoPro']->setMemory($row['id'], $row['name']);
             }
 
+        seoPaginatorFeatures($obj);
+
         // Учет модуля Mobile
         if (!empty($_GET['mobile']) and $_GET['mobile'] == 'true' and !empty($GLOBALS['SysValue']['base']['mobile']['mobile_system'])) {
             header('Location: ' . $obj->getValue('dir.dir') . '/shop/CID_' . $obj->PHPShopNav->getId() . '.html', true, 302);
@@ -250,9 +221,51 @@ function UID_seourlpro_hook($obj, $row, $rout) {
     }
 }
 
+function catalog_content_hook($obj, $data) {
+    seoPaginatorFeatures($obj);
+}
+
+function seoPaginatorFeatures($obj)
+{
+    // Настройки модуля
+    include_once(dirname(__FILE__) . '/mod_option.hook.php');
+    $PHPShopSeourlOption = new PHPShopSeourlOption();
+    $seourl_option = $PHPShopSeourlOption->getArray();
+
+    $page = $obj->PHPShopNav->getPage();
+
+    // Рекомендации BDBD
+    if ($seourl_option['paginator'] == 2) {
+
+        if ($page > 1) {
+            // Отключение описания каталога в пагинаторе
+            if ($seourl_option['cat_content_enabled'] == 2) {
+                $obj->set('catalogContent', null);
+            }
+
+            // Добавление номера страниц в имя каталога
+            $obj->set('catalogCategory', ' - страница ' . $page, true);
+        }
+
+        // Создание переменной точного адреса canonical для отсеивания дублей
+        if (!empty($_SERVER["QUERY_STRING"])) {
+
+            // Учет первой страницы
+            if ($page > 1)
+                $obj->set('seourl_canonical', '<link rel="canonical" href="http://' . $_SERVER['SERVER_NAME'] . $obj->get('ShopDir') . '/shop/CID_' . $obj->PHPShopNav->getId() . '-' . $page . '.html">');
+            else
+                $obj->set('seourl_canonical', '<link rel="canonical" href="http://' . $_SERVER['SERVER_NAME'] . $obj->get('ShopDir') . '/shop/CID_' . $obj->PHPShopNav->getId() . '.html">');
+        }
+        /*
+          if (empty($page))
+          $obj->set('seourl_canonical', '<link rel="canonical" href="http://' . $_SERVER['SERVER_NAME'] . $obj->get('ShopDir') . '/shop/CID_' . $obj->PHPShopNav->getId() . '-1' . $seo_name . '.html">'); */
+    }
+}
+
 $addHandler = array(
     'UID' => 'UID_seourlpro_hook',
     'CID_Category' => 'CID_Category_seourlpro_hook',
     'CID_Product' => 'CID_Product_seourlpro_hook',
+    'catalog_content' => 'catalog_content_hook'
 );
 ?>

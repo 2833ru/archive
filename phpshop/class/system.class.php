@@ -6,10 +6,12 @@ if (!defined("OBJENABLED"))
 /**
  * Системные настройки
  * @author PHPShop Software
- * @version 1.4
+ * @version 1.6
  * @package PHPShopObj
  */
 class PHPShopSystem extends PHPShopObj {
+
+    var $timezone = null;
 
     /**
      * Конструктор
@@ -20,6 +22,18 @@ class PHPShopSystem extends PHPShopObj {
         $this->cache = false;
         $this->objBase = $GLOBALS['SysValue']['base']['system'];
         parent::__construct();
+
+        // Временная зона
+        $this->setTimeZone();
+    }
+
+    /**
+     * Настройка временной зоны сервера 
+     */
+    function setTimeZone() {
+        $this->timezone = $this->getSerilizeParam("admoption.timezone");
+        if (function_exists('date_default_timezone_set') and ! empty($this->timezone))
+            date_default_timezone_set($this->timezone);
     }
 
     /**
@@ -85,16 +99,20 @@ class PHPShopSystem extends PHPShopObj {
     }
 
     /**
-     * Вывод курса валюты по умочанию
+     * Вывод курса валюты по умолчанию
      * @param bool $order валюта в заказе (true)
      * @return float
      */
     function getDefaultValutaKurs($order = false) {
         if (!class_exists("phpshopvaluta"))
             parent::loadClass("phpshopvaluta");
-        if ($order)
-            $valuta_id = $this->getDefaultOrderValutaId();
-        else
+        if ($order) {
+            // Проверка валюты витрины
+            if (defined("HostID"))
+                $valuta_id = $_SESSION['valuta'];
+            else
+                $valuta_id = $this->getDefaultOrderValutaId();
+        } else
             $valuta_id = $this->getDefaultValutaId();
         $PV = new PHPShopValuta($valuta_id);
 
@@ -102,16 +120,21 @@ class PHPShopSystem extends PHPShopObj {
     }
 
     /**
-     * Вывод ISO валюты по умочанию
+     * Вывод ISO валюты по умолчанию
      * @param bool $order валюта в заказе (true)
      * @return string
      */
     function getDefaultValutaIso($order = false) {
         if (!class_exists("phpshopvaluta"))
             parent::loadClass("valuta");
-        if ($order)
-            $valuta_id = $this->getDefaultOrderValutaId();
-        else
+        if ($order) {
+
+            // Проверка валюты витрины
+            if (defined("HostID"))
+                $valuta_id = $_SESSION['valuta'];
+            else
+                $valuta_id = $this->getDefaultOrderValutaId();
+        } else
             $valuta_id = $this->getDefaultValutaId();
         $PV = new PHPShopValuta($valuta_id);
 
@@ -119,7 +142,7 @@ class PHPShopSystem extends PHPShopObj {
     }
 
     /**
-     * Вывод кода валюты по умочанию
+     * Вывод кода валюты по умолчанию
      * @param bool $order валюта в заказе только с курсом для заказа (true)
      * @return string
      */
@@ -127,8 +150,13 @@ class PHPShopSystem extends PHPShopObj {
         if (!class_exists("phpshopvaluta"))
             parent::loadClass("valuta");
 
-        if ($order)
-            $valuta_id = $this->getDefaultOrderValutaId();
+        if ($order) {
+            // Проверка валюты витрины
+            if (defined("HostID"))
+                $valuta_id = $_SESSION['valuta'];
+            else
+                $valuta_id = $this->getDefaultOrderValutaId();
+        }
         elseif (isset($_SESSION['valuta']))
             $valuta_id = $_SESSION['valuta'];
         else
@@ -139,15 +167,31 @@ class PHPShopSystem extends PHPShopObj {
     }
 
     /**
-     * Вывод лого сайта для документов
+     * Вывод иконки валюты рубля
      * @return string
      */
-    function getLogo() {
-        $logo = parent::getParam("logo");
-        if (empty($logo))
-            return "../../img/phpshop_logo.gif";
+    function getValutaIcon($order = false) {
+
+        if ($this->getDefaultValutaIso($order) == 'RUR' or $this->getDefaultValutaIso($order) == "RUB")
+            return '<span class=rubznak>p</span>';
         else
-            return $logo;
+            return $this->getDefaultValutaCode($order);
+    }
+
+    /**
+     * Вывод логотипа сайта
+     * @param bool $print логотип для бланков
+     * @return string
+     */
+    function getLogo($print = false) {
+        $logo = parent::getParam("logo");
+
+        if (!empty($print)) {
+            $bank_logo = $this->getSerilizeParam("bank.org_logo");
+            if (!empty($bank_logo))
+                $logo = $bank_logo;
+        }
+        return $logo;
     }
 
     /**
@@ -194,8 +238,7 @@ class PHPShopSystem extends PHPShopObj {
                 'password' => $this->getSerilizeParam('admoption.mail_smtp_pass'),
                 'replyto' => $this->getSerilizeParam('admoption.mail_smtp_replyto')
             );
-        }
-        else
+        } else
             $option = null;
 
         // Дополнительнеы параметры
@@ -208,6 +251,25 @@ class PHPShopSystem extends PHPShopObj {
         return $option;
     }
 
+    public function getPriceColumn()
+    {
+        $column = 'price';
+        if (defined("HostPrice") && HostPrice > 1) {
+            return $column . HostPrice;
+        }
+
+        if(defined("HostID") && HostID > 0) {
+            $orm = new PHPShopOrm($GLOBALS['SysValue']['base']['servers']);
+            $showcase = $orm->getOne(array('*'), array('id' => sprintf('="%s"', HostID)));
+
+            if (!empty($showcase['price']) && (int) $showcase['price'] > 1) {
+                define("HostPrice", $showcase['price']);
+                return $column . HostPrice;
+            }
+        }
+
+        return $column;
+    }
 }
 
 ?>

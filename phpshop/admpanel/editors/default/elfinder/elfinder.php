@@ -22,7 +22,7 @@ if (ini_get("mbstring.func_overload") > 0 and function_exists('ini_set')) {
 }
 
 // Локализация
-$locale = str_replace(array('russian','ukrainian','belarusian','english'),array('ru','uk','ru','en'),$_SESSION['lang']);
+$locale = str_replace(array('russian','russian_utf','ukrainian','belarusian','english','english_utf'),array('ru','ru','uk','ru','en','en'),$_SESSION['lang']);
 ?>
 <!DOCTYPE html>
 <html>
@@ -109,7 +109,7 @@ $locale = str_replace(array('russian','ukrainian','belarusian','english'),array(
                             ['back', 'forward'],
                             // ['reload'],
                             // ['home', 'up'],
-                            ['mkdir', 'mkfile', 'upload'],
+                            ['mkdir', 'upload'],
                             ['open', 'download', 'getfile'],
                             ['info'],
                             ['quicklook'],
@@ -149,7 +149,7 @@ $locale = str_replace(array('russian','ukrainian','belarusian','english'),array(
                             'rm', '|', 'edit', 'resize', '|', 'archive', 'extract', '|', 'info'
                         ]
                     },
-                    onlyMimes: ["image/webp","image/x-webp","image/png", "application/x-shockwave-flash", "application/zip", "text/x-comma-separated-values", "image/jpeg", "image/gif", "application/rar", 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/x-sql', 'application/x-gzip', 'text/x-tpl', 'application/pdf', 'application/x-rar','video/mp4','application/mp4','image/svg+xml','application/pdf']
+                    onlyMimes: ["image/webp","image/x-webp","image/png", "application/x-shockwave-flash", "application/zip", "text/x-comma-separated-values", "image/jpeg", "image/gif", "application/rar", 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/x-sql', 'application/x-gzip', 'text/x-tpl', 'application/pdf', 'application/x-rar','video/mp4','application/mp4','image/svg+xml','application/pdf','application/svg+xml']
                 }).elfinder('instance');
 
 

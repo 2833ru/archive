@@ -2,9 +2,9 @@
 <module>
     <version>1.0</version>
     <name>UniSender</name>
-    <faqlink>http://faq.phpshop.ru/page/unisender.html</faqlink>
+    <faqlink>https://docs.phpshop.ru/moduli/crm/unisender</faqlink>
     <description>Модуль емейл рассылки и автоматизации UniSender.ru</description>
-    <category>user,sale</category>
+    <category>crm</category>
      <adminmenu>
         <title>UniSender</title>
         <capability>true</capability>

@@ -8,52 +8,31 @@
  */
 function boxberrywidget_delivery_hook($obj, $data) {
 
-    $_RESULT = $data[0];
-    $xid = $data[1];
+    $result = $data[0];
 
-    // API
     include_once '../modules/boxberrywidget/class/BoxberryWidget.php';
     $BoxberryWidget = new BoxberryWidget();
+    $PHPShopOrder = new PHPShopOrderFunction();
 
-    if(in_array($xid, @explode(",", $BoxberryWidget->option['delivery_id']))) {
-        $hook['dellist'] = $_RESULT['dellist'];
-        $hook['hook'] = 'boxberrywidgetStart();';
-        $hook['delivery'] = $_RESULT['delivery'];
-        $hook['total'] = $_RESULT['total'];
-        $hook['adresList'] = $_RESULT['adresList'];
-        $hook['success'] = 1;
+    try {
+        if($BoxberryWidget->isCourierDeliveryId((int) $data[1]) && (int) $_POST['zip'] > 0) {
+            $result['delivery'] = $BoxberryWidget->getCourierPrice((int) $_POST['zip'], $_POST['weight'], $_POST['depth'], $_POST['height'], $_POST['width']);
+            $result['total'] = $PHPShopOrder->returnSumma((float) $_REQUEST['sum'], $PHPShopOrder->ChekDiscount($_REQUEST['sum']),' ', $result['delivery']);
+            $result['message'] = PHPShopString::win_utf8('Стоимость доставки по индексу ' . (int) $_POST['index'] . ' составит ' . $result['delivery'] . ' руб.');
 
-        return $hook;
-
-    }elseif(in_array($xid, @explode(",", $BoxberryWidget->option['express_delivery_id'])) and strlen($_POST['zip']) == 6) {
-        $BoxberryPrice = $BoxberryWidget->getCourierPrice($_POST['zip'], $_POST['weight'], $_POST['depth'], $_POST['height'], $_POST['width']);
-
-        if(!empty($BoxberryPrice['error'])) {
-            $hook['success'] = 'indexError';
-            $hook['message'] = PHPShopString::win_utf8($BoxberryPrice['error']);
-
-            return $hook;
-        } else {
-            $hook['delivery'] = $BoxberryPrice;
-            $hook['total'] = $_RESULT['total'] + $hook['delivery'];
-            $hook['dellist'] = $_RESULT['dellist'];
-            $hook['hook'] = '';
-            $hook['adresList'] = $_RESULT['adresList'];
-            $hook['success'] = 'index';
-            $hook['message'] = PHPShopString::win_utf8('Стоимость курьерской доставки составит ' . $hook['delivery'] . ' руб.');
-
-            return $hook;
+            return $result;
         }
-    } elseif (in_array($xid, @explode(",", $BoxberryWidget->option['express_delivery_id'])) and !empty($_POST['zip']) and (strlen($_POST['zip']) > 6 or strlen($_POST['zip']) < 6)) {
-        $hook['success'] = 'indexError';
-        $hook['message'] = PHPShopString::win_utf8('Введите корректный индекс получателя');
+        if($BoxberryWidget->isPvzDelivery((int) $data[1])) {
+            $result['hook'] = 'boxberrywidgetStart();';
+            return $result;
+        }
+    } catch (\Exception $exception) {
+        $result['success'] = 'indexError';
+        $result['message'] = PHPShopString::win_utf8($exception->getMessage());
 
-        return $hook;
+        return $result;
     }
 }
 
-$addHandler = array
-    (
-    'delivery' => 'boxberrywidget_delivery_hook'
-);
+$addHandler = array('delivery' => 'boxberrywidget_delivery_hook');
 ?>

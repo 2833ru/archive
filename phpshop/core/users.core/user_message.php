@@ -24,7 +24,7 @@ function MessageList($UID = 0) {
             if (strlen($rowad['name'])) {
                 $name = $rowad['name'];
             } else {
-                $name = 'Менеджер';
+                $name = __('Менеджер');
             }
             $color = 'style="background:#C0D2EC;"';
         } else { //или имя пользователя
@@ -43,11 +43,11 @@ function MessageList($UID = 0) {
         }
 
         $display.="<tr >
-	<td " . $color . " id=allspecwhite>
+	<td " . $color . ">
                 $DataTime<BR>
-	От: <B>$name</B>
+	".__('От').": <B>$name</B>
 	</td>
-	<td " . $color . " id=allspecwhite>
+	<td " . $color . ">
                 $Subject
                 $Message</td></tr>";
     }

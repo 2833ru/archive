@@ -40,6 +40,7 @@ function modulesSubMenu($subpath) {
         $TitlePage.= '  ' . $db['name'];
     }
 
+    $TitlePage=__($TitlePage);
 
     $action_select['|'] = array(
         'name' => '|',

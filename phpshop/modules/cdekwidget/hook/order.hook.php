@@ -7,6 +7,7 @@
  * param string $rout
  */
 function order_cdek_hook($obj, $row, $rout) {
+    global $PHPShopSystem;
 
     if ($rout == 'MIDDLE') {
 
@@ -14,43 +15,27 @@ function order_cdek_hook($obj, $row, $rout) {
         $CDEKWidget = new CDEKWidget();
 
         $PHPShopCart = new PHPShopCart();
-        $weight = $PHPShopCart->getWeight();
-        if(empty($weight))
-            $weight = $CDEKWidget->option['weight'];
-        if(empty($CDEKWidget->option['default_city']))
+
+        $cart = $CDEKWidget->getCart($PHPShopCart->getArray());
+
+        if (empty($CDEKWidget->option['default_city']))
             $defaultCity = 'auto';
         else
             $defaultCity = $CDEKWidget->option['default_city'];
 
-        $obj->set('order_action_add', '
- <!-- Ìîäàëüíîå îêíî cdekwidget -->
-        <div class="modal fade bs-example-modal" id="cdekwidgetModal" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">x</span><span class="sr-only">Close</span></button>
-                        <h4 class="modal-title">Äîñòàâêà</h4>
-                    </div>
-                    <div class="modal-body" style="width:100%;">
-                        
-                         <div id="forpvz" style="height: 600px"></div>
-                    </div>
-                    <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal" id="ddelivery-close">Çàêðûòü</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--/ Ìîäàëüíîå îêíî cdekwidget -->
-        
-        <input type="hidden" id="cdekwidgetCityFrom" value="' . $CDEKWidget->option[city_from] . '">
-        <input type="hidden" id="cdekwidgetdefaultCity" value="' . $defaultCity . '">
-<input type="hidden" id="ñdekCartWeight" value="' . $weight . '">
-<input type="hidden" id="ñdekDefaultLength" value="' . $CDEKWidget->option[length] . '">
-<input type="hidden" id="ñdekDefaultWidth" value="' . $CDEKWidget->option[width] . '">
-<input type="hidden" id="ñdekDefaultHeight" value="' . $CDEKWidget->option[height] . '">
-<script type="text/javascript" src="phpshop/modules/cdekwidget/js/widjet.js" /></script><script type="text/javascript" src="phpshop/modules/cdekwidget/js/cdekwidget.js" /></script>
-', true);
+        // ßíäåêñ.Êàðòû
+        $yandex_apikey = $PHPShopSystem->getSerilizeParam("admoption.yandex_apikey");
+        if (empty($yandex_apikey))
+            $yandex_apikey = 'cb432a8b-21b9-4444-a0c4-3475b674a958';
+
+        PHPShopParser::set('cdek_city_from', $CDEKWidget->option['city_from']);
+        PHPShopParser::set('cdek_default_city', $defaultCity);
+        PHPShopParser::set('cdek_cart', json_encode($cart));
+        PHPShopParser::set('cdek_ymap_key', $yandex_apikey);
+        PHPShopParser::set('cdek_admin', 0);
+        PHPShopParser::set('cdek_scripts', '<script type="text/javascript" src="phpshop/modules/cdekwidget/js/widjet.js?v=1.5" /></script><script type="text/javascript" src="phpshop/modules/cdekwidget/js/cdekwidget.js?v=1.5" /></script>');
+
+        $obj->set('order_action_add', ParseTemplateReturn($GLOBALS['SysValue']['templates']['cdekwidget']['cdek_template'], true) , true);
     }
 }
 

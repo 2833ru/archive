@@ -40,7 +40,7 @@ function actionStart() {
     $Tab1.= $PHPShopGUI->setField('НДС для доставки', $PHPShopGUI->setSelect('tax_delivery_new', $tax_delivery_value,300));
 
     // Интструкция
-    $Tab2 = '
+    $info = '
         <p>Печать чека происходит заказов только со статусом "<b>Оплачено платежными системами</b>" с ID = 101. Такой статус заказ получает автоматически после успешной оплаты через любой платежный модуль (Альфабанк, Тинькофф и другие).</p>
 <h4>Шаг №1 - Настройка модуля</h4>
         <ol>
@@ -73,7 +73,7 @@ function actionStart() {
     $Tab3 = $PHPShopGUI->setPay(false, false, $data['version'], false);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Инструкция", $Tab2, true), array("О Модуле", $Tab3), array("Журнал операций", null, '?path=modules.dir.pechka54'));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Инструкция", $PHPShopGUI->setInfo($info)), array("О Модуле", $Tab3), array("Журнал операций", null, '?path=modules.dir.pechka54'));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =

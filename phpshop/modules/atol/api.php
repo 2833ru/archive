@@ -1,5 +1,9 @@
 <?php
 
+#ini_set('error_reporting', E_ALL);
+#ini_set('display_errors', 1);
+#ini_set('display_startup_errors', 1);
+
 /**
  * Отправка чека в ОФД Атол
  * @param array $data данные заказа
@@ -62,20 +66,35 @@ function OFDStart($data, $operation = 'sell', $json = false) {
 
         // Корзина
         if (is_array($order['Cart']['cart'])) {
-            foreach ($order['Cart']['cart'] as $product)
+            foreach ($order['Cart']['cart'] as $product) {
+
+                // Скидка
+                if ($order['Person']['discount'] > 0)
+                    $price = $product['price'] - ($product['price'] * $order['Person']['discount'] / 100);
+                else
+                    $price = $product['price'];
+
+                $sum+=$price * $product['num'];
+
                 $sell['receipt']['items'][] = array(
                     'name' => $product['name'],
-                    'price' => floatval(number_format($product['price'], 2, '.', '')),
+                    'price' => floatval(number_format($price, 2, '.', '')),
                     'quantity' => floatval(number_format($product['num'], 2, '.', '')),
-                    'sum' => floatval(number_format($product['price'] * $product['num'], 2, '.', '')),
+                    'sum' => floatval(number_format($price * $product['num'], 2, '.', '')),
                     'vat' => array('type' => $tax),
                     'payment_method' => 'full_prepayment',
                     'payment_object' => 'commodity'
                 );
+            }
         }
 
         // Доставка
         if (!empty($order['Cart']['dostavka'])) {
+
+            // Усреднее стоимости доставка при скидках
+            if ($order['Person']['discount'] > 0)
+                $order['Cart']['dostavka'] = $data['sum'] - $sum;
+
             $sell['receipt']['items'][] = array(
                 'name' => 'Доставка',
                 'price' => floatval(number_format($order['Cart']['dostavka'], 2, '.', '')),

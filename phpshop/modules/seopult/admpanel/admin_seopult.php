@@ -56,7 +56,7 @@ function register_seopult() {
     $request = http_build_query($params);
 
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, "http://i.seopult.pro/iframe/getCryptKeyWithUserReg?" . $request);
+    curl_setopt($ch, CURLOPT_URL, "https://app01.promopult.org/iframe/getCryptKeyWithUserReg?" . $request);
     curl_setopt($ch, CURLOPT_HEADER, 0);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_CRLF, true);
@@ -92,6 +92,7 @@ function actionStart() {
 
     $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.seopult.seopult_system"));
     $option = $PHPShopOrm->select();
+    $PHPShopInterface->setActionPanel($TitlePage, $select_name, array('Закрыть'));
 
 
 
@@ -114,10 +115,9 @@ function actionStart() {
 
         $k = json_encode($data);
         $code = SeoPultCrypt::encrypt($k, $option['cryptkey']);
-        $url = 'http://i.seopult.pro/iframe/cryptLogin?k=zaa' . $option['hash'] . urlencode($code);
+        $url = 'https://app01.promopult.org/iframe/cryptLogin?k=zaa' . $option['hash'] . urlencode($code);
 
         // Фрейм
-        $PHPShopInterface->setActionPanel($TitlePage, $select_name, array('Закрыть'));
         $PHPShopInterface->_CODE.=$PHPShopInterface->setFrame('seopult', $url, '99%', '700', $float = 'none', $border = 0);
     }
 

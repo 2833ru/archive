@@ -2,7 +2,7 @@
 <module>
     <version>1.5</version>
     <name>Message Board</name>
-    <faqlink>http://faq.phpshop.ru/page/message-board.html</faqlink>
+    <faqlink>https://docs.phpshop.ru/moduli/socialnye-seti/message-board</faqlink>
     <description>Модуль доски объявлений.</description>
     <category>soc</category>
     <adminmenu>

@@ -8,7 +8,7 @@ if (!defined("OBJENABLED")) {
 /**
  * Сортировки и фильтры товаров
  * @author PHPShop Software
- * @version 1.8
+ * @version 1.9
  * @package PHPShopClass
  */
 class PHPShopSort {
@@ -30,8 +30,10 @@ class PHPShopSort {
      * @param bool $filter опция учета выборки с учетом флага фильтра в характеристики
      * @param bool $goodoption опция учета выборки с учетом отсутствия флага опции товара в характеристики
      * @param bool $cache_enabled опция использования кеша
+     * @param string $cattemplate Имя функции шаблона вывода виртуальных каталогов
+     * @param string $getall вывод всех данных
      */
-    function __construct($category = null, $sort = null, $direct = true, $template = null, $vendor = false, $filter = true, $goodoption = true, $cache_enabled = true) {
+    function __construct($category = null, $sort = null, $direct = true, $template = null, $vendor = false, $filter = true, $goodoption = true, $cache_enabled = true, $cattemplate = null, $getall = false) {
         global $PHPShopSystem;
 
         $sql_add = null;
@@ -77,6 +79,12 @@ class PHPShopSort {
             }
             $sortList = substr($sortList, 0, strlen($sortList) - 2);
 
+            // Мультибаза
+            if (defined("HostID"))
+                $sql_add  .= " and servers REGEXP 'i" . HostID . "i'";
+            elseif (defined("HostMain"))
+                $sql_add  .= ' and (servers ="" or servers REGEXP "i1000i")';
+
             $PHPShopOrm = new PHPShopOrm();
             $PHPShopOrm->debug = $this->debug;
             $PHPShopOrm->comment = __CLASS__ . '.' . __FUNCTION__;
@@ -84,7 +92,14 @@ class PHPShopSort {
             while (@$row = mysqli_fetch_array($result)) {
                 $id = $row['id'];
                 $name = $row['name'];
-                $this->disp.=$this->value($id, $name, true, $template, $vendor, $row['description']);
+
+                // Фильтры
+                if (empty($row['virtual']) or !empty($getall))
+                    $this->disp.=$this->value($id, $name, true, $template, $vendor, $row['description']);
+
+                // Каталоги
+                if (!empty($row['virtual']))
+                    $this->catdisp.=$this->value($id, $name, true, $cattemplate);
             }
         }
     }
@@ -229,7 +244,7 @@ class PHPShopSort {
         if (empty($template) && !empty($value)) {
             $size = (strlen($title) + 7) * 6;
             $disp = PHPShopText::select('v[' . $n . ']', $value, $size, false, false, false, false, false, $n);
-        } elseif (function_exists($template) && !empty($value)) {
+        } elseif (function_exists($template)) {
             $disp = call_user_func_array($template, array($value, $n, $title, $vendor, $help));
         }
 
@@ -237,6 +252,13 @@ class PHPShopSort {
         $this->value_array = $value;
 
         return $disp;
+    }
+
+    /**
+     * Виртуальные категории
+     */
+    function categories() {
+        return $this->catdisp;
     }
 
     /**
@@ -371,7 +393,7 @@ class PHPShopParentNameArray extends PHPShopArray {
         $this->debug = $debug;
         $this->order = array('order' => 'name');
         $this->objBase = $GLOBALS['SysValue']['base']['parent_name'];
-        parent::__construct('id', 'name');
+        parent::__construct('id', 'name','color');
     }
 
 }

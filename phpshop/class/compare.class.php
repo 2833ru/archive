@@ -31,6 +31,7 @@ class PHPShopCompare {
         $objID = PHPShopSecurity::TotalClean($objID, 1);
         $objProduct = new PHPShopProduct($objID);
         $name = PHPShopSecurity::CleanStr($objProduct->getParam("name"));
+        $seo_name = $objProduct->getParam("prod_seo_name");
 
         // готовим метки дл€ шаблонов сообщений.
         PHPShopParser::set('prodId', $objID);
@@ -42,6 +43,17 @@ class PHPShopCompare {
                 "id" => $objID,
                 "name" => $name,
                 "category" => $objProduct->getParam("category"));
+
+            // ”чет модул€ SEOURLPRO
+            if (!empty($GLOBALS['SysValue']['base']['seourlpro']['seourlpro_system'])) {
+                if (!empty($seo_name))
+                    $new['url'] = '/id/' . $seo_name . '-' . $objID;
+                else
+                    $new['url'] = '/id/' . str_replace("_", "-", PHPShopString::toLatin($name)) . '-' . $objID;
+            }
+            else
+                $new['url'] = '/shop/UID_' . $objID;
+
             $this->_COMPARE[$objID] = $new;
 
             if (PHPShopParser::checkFile('../../' . $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/users/compare/compare_add_alert_done.tpl")) {

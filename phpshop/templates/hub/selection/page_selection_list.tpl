@@ -36,10 +36,10 @@
                 </div>    
 
                 <div class="btn-group" data-toggle="buttons">
-                    <label class="btn btn-sm btn-sort glyphicon glyphicon-sort-by-attributes @fSetBactive@" data-toggle="tooltip" data-placement="top" title="{По возрастанию}">
+                    <label class="btn btn-sm btn-sort glyphicon glyphicon-sort-by-attributes @fSetAactive@" data-toggle="tooltip" data-placement="top" title="{По возрастанию}">
                         <input type="radio" name="f" value="1"  autocomplete="off" data-url="?@productVendor@&f=1@php if(isset($_GET['s'])) echo  '&s='.$_GET['s']; if(isset($_GET['gridChange'])) echo '&gridChange='.$_GET['gridChange']; php@">
                     </label>
-                    <label class="btn btn-sm btn-sort glyphicon glyphicon-sort-by-attributes-alt @fSetAactive@" data-toggle="tooltip" data-placement="top" title="{По убыванию}">
+                    <label class="btn btn-sm btn-sort glyphicon glyphicon-sort-by-attributes-alt @fSetBactive@" data-toggle="tooltip" data-placement="top" title="{По убыванию}">
                         <input type="radio" name="f" value="2" autocomplete="off" data-url="?@productVendor@&f=2@php if(isset($_GET['s'])) echo  '&s='.$_GET['s']; if(isset($_GET['gridChange'])) echo '&gridChange='.$_GET['gridChange']; php@">
                     </label>
                 </div>  

@@ -35,14 +35,14 @@
 .bar-tab .tab-item.active, .bar-tab .tab-item:active {
     color: #428bca;
 }
-.bar-tab .tab-item .icon {
+.bar-tab .tab-item .glyphicon {
     top: 3px;
     width: 24px;
     height: 24px;
     padding-top: 0;
     padding-bottom: 0;
 }
-.bar-tab .tab-item .icon ~ .tab-label {
+.bar-tab .tab-item .glyphicon ~ .tab-label {
     display: block;
     font-size: 11px;
 }

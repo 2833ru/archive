@@ -1,10 +1,17 @@
 
-<div class="page-header">
-    <h1 class="main-heading2">@pageTitle@</h1>
+<div class="clearfix"></div>
+<div class="page-header ">
+    <h2>@pageTitle@</h2>
 </div>
-	<div class="content-bg-fix">
-		@catContent@
-		<p>@pageContent@</p>
 
-		<p>@odnotipDisp@</p>
-	</div>
+@catContent@
+<div class="grid main-grid page-list">
+<p>@pageContent@</p></div>
+<div class="clearfix"></div>
+
+<hr class="@php __hide('pageLast'); php@">
+
+<h3 class="@php __hide('pageLast'); php@  page-header">Интересно почитать</h3>
+<br>
+<div class="grid row">@pageLast@</div>
+<p>@odnotipDisp@</p>

@@ -244,7 +244,7 @@ if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object'
 			'moveFiles'       : 'Перемещение файлов',
 			'copyFiles'       : 'Копирование файлов',
 			'rmFromPlaces'    : 'Удалить из избранного',
-			'untitled folder' : 'новая папка',
+			'untitled folder' : 'newfolder',
 			'untitled file.txt' : 'новый файл.txt',
 			'aspectRatio'     : 'Сохранять пропорции',
 			'scale'           : 'Масштаб',

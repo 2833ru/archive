@@ -1,23 +1,19 @@
 <?php
 
-$_SESSION['Memory']["rateForComment"]["oneStarWidth"] = 16; // ширина одной звёздочки
-$_SESSION['Memory']["rateForComment"]["oneSpaceWidth"] = 0;
 define("SkinName", "bootstrap_fluid");
 
 // Цветовые темы CSS
 if (isset($_COOKIE[SkinName . '_theme'])) {
     if (PHPShopSecurity::true_skin($_COOKIE[SkinName . '_theme'])) {
         $GLOBALS['SysValue']['other'][SkinName . '_theme'] = $_COOKIE[SkinName . '_theme'];
-    }
-    else
+    } else
         $GLOBALS['SysValue']['other'][SkinName . '_theme'] = 'bootstrap';
 } /* elseif (!empty($GLOBALS['SysValue']['other']['template_theme']))
   $GLOBALS['SysValue']['other']['bootstrap_theme'] = $GLOBALS['SysValue']['other']['template_theme']; */
 elseif (empty($GLOBALS['SysValue']['other'][SkinName . '_theme'])) {
     $GLOBALS['SysValue']['other'][SkinName . '_theme'] = 'bootstrap';
     setcookie(SkinName . '_theme', 'bootstrap');
-}
-else
+} else
     setcookie(SkinName . '_theme', $GLOBALS['SysValue']['other'][SkinName . '_theme']);
 
 function create_theme_menu($file) {
@@ -54,7 +50,7 @@ function create_theme_menu($file) {
 }
 
 // Редактор тем оформления
-if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or !empty($_SESSION['logPHPSHOP']) or !empty($GLOBALS['SysValue']['other']['skinSelect'])) {
+if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or ! empty($GLOBALS['SysValue']['other']['skinSelect'])) {
 
     // CSS
     $PHPShopCssParser = new PHPShopCssParser($GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . '/css/' . $GLOBALS['SysValue']['other'][SkinName . '_theme'] . '.css');
@@ -69,7 +65,7 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or !empty($_SESSION
     $PHPShopGUI->addJSFiles($GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . '/js/editor-lite.js');
 
     $option = xml2array($GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . '/editor/style.xml', false, true);
-    $css_edit.=$PHPShopGUI->includeJava . $PHPShopGUI->includeCss;
+    $css_edit .= $PHPShopGUI->includeJava . $PHPShopGUI->includeCss;
 
     $option['element'][] = $option['element'];
     if (is_array($option))
@@ -82,7 +78,7 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or !empty($_SESSION
 
                     // Цвет
                     if ($var['type'] == 'color') {
-                        $css_edit.=$PHPShopGUI->setField($element['description'], $PHPShopGUI->setInputColor($var['name'], str_replace(array('!important'), array(''), $css_parse[$element['name']][$var['name']]), 130, 'color-' . $id, $element['name']), 5, $element['content']);
+                        $css_edit .= $PHPShopGUI->setField($element['description'], $PHPShopGUI->setInputColor($var['name'], str_replace(array('!important'), array(''), $css_parse[$element['name']][$var['name']]), 130, 'color-' . $id, $element['name']), 5, $element['content']);
                     }
 
                     // Фильтр
@@ -90,7 +86,7 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or !empty($_SESSION
                         $current_filter = $PHPShopCssParser->getParam($element['name'], '-editor-filter');
 
                         $filter = '<div id="color-slide" data-option="' . $current_filter . '"></div><input type="hidden" name="filter" class="color-filter color-value" value="' . $current_filter . '" data-option="' . $element['name'] . '" id="color-' . $id . '"> ';
-                        $css_edit.=$PHPShopGUI->setField($element['description'], $filter, 5, $element['content']);
+                        $css_edit .= $PHPShopGUI->setField($element['description'], $filter, 5, $element['content']);
                     }
 
                     // Тема
@@ -102,19 +98,26 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or !empty($_SESSION
                             $check = null;
 
                         $theme = '<div class="bootstrap-theme text-center" style="background:#CCC;" title="default" data-skin="bootstrap">' . $check . '</div>';
-                        $theme.= PHPShopFile::searchFile($GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . '/css/', 'create_theme_menu');
-                        $css_edit.=$PHPShopGUI->setField($element['description'], $theme, 5, $element['content']);
+                        $theme .= PHPShopFile::searchFile($GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . '/css/', 'create_theme_menu');
+                        $css_edit .= $PHPShopGUI->setField($element['description'], $theme, 5, $element['content']);
                     }
                 }
         }
 
     // Сохранить
     if (!empty($_SESSION['logPHPSHOP'])) {
-        $css_edit.=$PHPShopGUI->setButton('Сохранить', 'floppy-disk', 'saveTheme');
-        $admin_edit.=$PHPShopGUI->setButton('Управлять', 'cog', 'openAdminModal');
+        $css_edit .= $PHPShopGUI->setButton('Сохранить', 'floppy-disk', 'saveTheme');
+        $admin_edit .= $PHPShopGUI->setButton('Управлять', 'cog', 'openAdminModal');
+
+        if (!empty($_COOKIE['debug_template']))
+            $debug_active = ' active ';
+        else
+            $debug_active = null;
+
+        $css_edit .= $PHPShopGUI->setButton('Отладка шаблона', 'picture', 'setDebug' . $debug_active);
     }
 
- // Память вывода панели
+    // Память вывода панели
     if (!empty($_COOKIE['style_selector_status'])) {
         if ($_COOKIE['style_selector_status'] == 'enabled') {
             $editor['right'] = 0;
@@ -154,14 +157,14 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or !empty($_SESSION
     if (!empty($_SESSION['logPHPSHOP']))
         $admin_help = __('Вы можете управлять содержанием текущей страницы');
     else
-        $admin_help = __('Для управления текущей страницей требуется').' <a href="//' . $_SERVER['SERVER_NAME'] . $GLOBALS['SysValue']['dir']['dir'] . 'phpshop/admpanel/" target="_blank"><span class="glyphicon glyphicon-user"></span> '.__('авторизироваться').'</a>';
+        $admin_help = __('Для управления текущей страницей требуется') . ' <a href="//' . $_SERVER['SERVER_NAME'] . $GLOBALS['SysValue']['dir']['dir'] . 'phpshop/admpanel/" target="_blank"><span class="glyphicon glyphicon-user"></span> ' . __('авторизироваться') . '</a>';
 
     $collapse_menu = '<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
   <div class="panel panel-default">
     <div class="panel-heading" role="tab">
       <h4 class="panel-title">
         <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseCSS" aria-expanded="true" aria-controls="collapseOne">
-          '.__('Оформление').' <span class="glyphicon ' . $collapseIconCSS . ' pull-right" data-parent="collapseCSS"></span>
+          ' . __('Оформление') . ' <span class="glyphicon ' . $collapseIconCSS . ' pull-right" data-parent="collapseCSS"></span>
         </a>
       </h4>
     </div>
@@ -177,7 +180,7 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or !empty($_SESSION
     <div class="panel-heading hidde" role="tab" id="adminModalHelp">
       <h4 class="panel-title">
         <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseAdmin" aria-expanded="false" aria-controls="collapseTwo">
-          '.__('Управление').' <span class="glyphicon ' . $collapseIconAdmin . ' pull-right" data-parent="collapseAdmin"></span>
+          ' . __('Управление') . ' <span class="glyphicon ' . $collapseIconAdmin . ' pull-right" data-parent="collapseAdmin"></span>
         </a>
       </h4>
     </div>
@@ -193,7 +196,7 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or !empty($_SESSION
     // Редактор CSS
     $theme_menu = '
         <div id="style-selector" style="width: 280px; right: ' . $editor['right'] . 'px;" class="hidden-xs hidden-sm">
-        <div class="style-toggle ' . $editor['close'] . '" title="Панель оформления"></div>
+        <div class="style-toggle ' . $editor['close'] . '" title="' . __('Панель оформления') . '"></div>
            <div id="style-selector-container">
               <div class="style-selector-wrapper">
               ' . $GLOBALS['SysValue']['other']['skinSelect'] . $collapse_menu . '
@@ -209,9 +212,9 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or !empty($_SESSION
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 
-                        <span class="btn btn-default btn-sm pull-left glyphicon glyphicon-fullscreen" id="editorwindow" data-toggle="tooltip" data-placement="bottom" title="Увеличить размер" style="margin-right:10px"></span> 
+                        <span class="btn btn-default btn-sm pull-left glyphicon glyphicon-fullscreen" id="editorwindow" data-toggle="tooltip" data-placement="bottom" title="{Увеличить размер}" style="margin-right:10px"></span> 
 
-                        <h4 class="modal-title">'.__('Панель управления').'</h4>
+                        <h4 class="modal-title">{Панель управления}</h4>
                     </div>
                     <div class="modal-body">
                       
@@ -232,7 +235,7 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or !empty($_SESSION
         <!--/ Modal admin -->';
 
 
-    if ($GLOBALS['SysValue']['template_theme']['demo'] == 'true' or !empty($_SESSION['logPHPSHOP']) or !empty($GLOBALS['SysValue']['other']['skinSelect']))
+    if (!empty($GLOBALS['SysValue']['other']['skinSelect']))
         $GLOBALS['SysValue']['other']['editor'] = $theme_menu . $edit_frame;
 }
 

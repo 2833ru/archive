@@ -1,45 +1,25 @@
 <?php
 
+include_once dirname(__DIR__) . '/class/BoxberryWidget.php';
+
 function boxberrywidgetSend($data) {
-    global $_classPath;
 
-    if ($data['statusi'] != $_POST['statusi_new'] or !empty($_POST['boxberry_send_now'])) {
+    $BoxberryWidget = new BoxberryWidget();
+    $order = unserialize($data['orders']);
 
-        include_once($_classPath . 'modules/boxberrywidget/class/BoxberryWidget.php');
-        $BoxberryWidget = new BoxberryWidget();
-        $order = unserialize($data['orders']);
+    if($BoxberryWidget->isBoxberryDeliveryMethod((int) $order['Person']['dostavka_metod'])) {
+        if ((int) $_POST['statusi_new'] === (int) $BoxberryWidget->option['status'] or !empty($_POST['boxberry_send_now'])) {
 
-        if(!empty($_POST['boxberry_send_now'])) {
-            if ($_POST['statusi_new'] == $BoxberryWidget->option['status'] or !empty($_POST['boxberry_send_now'])) {
+            // Заказ уже отправлен
+            if(empty($data['boxberry_pvz_id'])) {
+                return;
+            }
 
-                $BoxberryWidget->setDataFromOrderEdit($data);
-                $BoxberryWidget->setProducts($order['Cart']['cart'], $order['Person']['discount']);
+            $BoxberryWidget->isPvzDelivery((int) $order['Person']['dostavka_metod']) ? $vid = 1 : $vid = 2;
+            $BoxberryWidget->setData($data, $vid, (int) $order['Person']['discount']);
 
-                if(in_array($order['Person']['dostavka_metod'], explode(",", $BoxberryWidget->option['delivery_id'])))
-                    $BoxberryWidget->parameters['vid'] = 1;
-                else {
-                    if(!empty($data['street']))
-                        $street = ', ' . $data['street'];
-                    else
-                        $street = '';
-                    if(!empty($data['house']))
-                        $house = ', ' . $data['house'];
-                    else
-                        $house = '';
-                    if(!empty($data['flat']))
-                        $flat = ', ' . $data['flat'];
-                    else
-                        $flat = '';
-                    $BoxberryWidget->parameters['vid'] = 2;
-                    $BoxberryWidget->parameters['kurdost'] = array(
-                        'index'    => $data['index'],
-                        'citi'     => PHPShopString::win_utf8($data['city']),
-                        'addressp' => PHPShopString::win_utf8($data['index'] . ', ' . $data['city'] . ', ' . $street . $house . $flat)
-                    );
-                }
-
-                $BoxberryWidget->request('ParselCreate');
-
+            $result = $BoxberryWidget->request('ParselCreate');
+            if($result) {
                 $_POST['boxberry_pvz_id_new'] = '';
             }
         }
@@ -47,19 +27,23 @@ function boxberrywidgetSend($data) {
 }
 
 function addBoxberryTab($data) {
-    global $PHPShopGUI, $_classPath;
+    global $PHPShopGUI;
 
-    include_once($_classPath . 'modules/boxberrywidget/class/BoxberryWidget.php');
     $BoxberryWidget = new BoxberryWidget();
     $order = unserialize($data['orders']);
 
-    if(in_array($order['Person']['dostavka_metod'], explode(",", $BoxberryWidget->option['delivery_id'])) or in_array($order['Person']['dostavka_metod'], explode(",", $BoxberryWidget->option['express_delivery_id']))) {
+    if($BoxberryWidget->isBoxberryDeliveryMethod((int) $order['Person']['dostavka_metod'])) {
         $PHPShopOrm = new PHPShopOrm("phpshop_modules_boxberrywidget_log");
 
         $log = $PHPShopOrm->select(array('*'), array('order_id=' => $data['id'], 'status=' => '"Успешная передача заказа"'));
 
         if(empty($log)) {
-            $Tab1 = $PHPShopGUI->setField(__('Синхронизация заказа'), $PHPShopGUI->setCheckbox('boxberry_send_now', 1, 'Отправить заказ в Boxberry сейчас', 0));
+            $PHPShopGUI->addJSFiles('../modules/boxberrywidget/admpanel/gui/boxberrywidget.gui.js');
+
+            $Tab1 = $PHPShopGUI->setField('Статус оплаты',
+                $PHPShopGUI->setCheckbox('boxberry_payment_status', 1, 'Заказ оплачен', $data['paid']));
+            $Tab1 .= $PHPShopGUI->setField('Синхронизация заказа', $PHPShopGUI->setCheckbox('boxberry_send_now', 1, 'Отправить заказ в Boxberry сейчас', 0));
+            $Tab1 .= $PHPShopGUI->setInput('hidden', 'boxberry_order_id', $data['id']);
             $PHPShopGUI->addTab(array("Boxberry", $Tab1, true));
         }
 

@@ -6,10 +6,10 @@ PHPShopObj::loadClass('user');
 
 // Стартовый вид
 function actionStart() {
-    global $PHPShopGUI, $PHPShopModules,$TitlePage;
+    global $PHPShopGUI, $PHPShopModules, $TitlePage;
 
     $PHPShopGUI->action_button['Создать'] = array(
-        'name' => 'Создать',
+        'name' => __('Выполнить'),
         'action' => 'saveID',
         'class' => 'btn  btn-default btn-sm navbar-btn',
         'type' => 'submit',
@@ -48,14 +48,15 @@ function actionStart() {
         <select id="pattern_table" style="height:300px;width:500px" name="pattern_table[]" multiple class="form-control" required>' . $table . '</select>
         </td>
         <td>&nbsp;</td>
-        <td class="text-center"><a class="btn btn-default btn-sm" href="#" id="select-all" data-toggle="tooltip" data-placement="top" title="'.__('Выбрать все').'"><span class="glyphicon glyphicon-chevron-left"></span></a><br><br>
-        <a class="btn btn-default btn-sm" id="select-none" href="#" data-toggle="tooltip" data-placement="top" title="'.__('Убрать выделение со всех').'"><span class="glyphicon glyphicon-chevron-right"></span></a></td>
+        <td class="text-center"><a class="btn btn-default btn-sm" href="#" id="select-all" data-toggle="tooltip" data-placement="top" title="' . __('Выбрать все') . '"><span class="glyphicon glyphicon-chevron-left"></span></a><br><br>
+        <a class="btn btn-default btn-sm" id="select-none" href="#" data-toggle="tooltip" data-placement="top" title="' . __('Убрать выделение со всех') . '"><span class="glyphicon glyphicon-chevron-right"></span></a></td>
         </tr>
    </table>
             
 ' . $PHPShopGUI->setHelp('Для выбора более одной записи нажмите левой кнопкой мыши на запись, удерживая клавишу CTRL')) .
             $PHPShopGUI->setField('GZIP сжатие', $PHPShopGUI->setCheckbox('export_gzip', 1, 'Включить', 1), 1, 'Сокращает размер создаваемого файла') .
-            $PHPShopGUI->setField('Варианты копирования', $PHPShopGUI->setSelect('export_structure', $structure_value, 300,true)),'in',false);
+            $PHPShopGUI->setField('Комментарий', $PHPShopGUI->setInputText(false, 'export_comment', '', 300)) .
+            $PHPShopGUI->setField('Варианты копирования', $PHPShopGUI->setSelect('export_structure', $structure_value, 300, true)), 'in', false);
 
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, false);
 
@@ -69,37 +70,46 @@ function actionStart() {
 
 // Функция записи
 function actionCreate() {
-    global $PHPShopModules;
+    global $PHPShopModules, $PHPShopGUI;
 
     include_once('./dumper/dumper.php');
-    
+
     $is_safe_mode = ini_get('safe_mode') == '1' ? 1 : 0;
-    if (!$is_safe_mode) set_time_limit(600);
+    if (!$is_safe_mode)
+        set_time_limit(600);
 
     ob_start();
     mysqlbackup($GLOBALS['SysValue']['connect']['dbase'], $_POST['export_structure'], $_POST['pattern_table']);
     $dump = ob_get_clean();
-   
 
     // Обновление
     if (!empty($_REQUEST['update']))
         $file = 'upload_dump.sql';
+    else if (!empty($_POST['export_comment']))
+        $file = substr(PHPShopString::toLatin($_POST['export_comment']), 0, 25) . '.sql';
     else
         $file = 'base_' . date("d_m_y_His") . '.sql';
 
+
+
     $file = "./dumper/backup/" . $file;
-    PHPShopFile::write($file, $dump);
+    $result = PHPShopFile::write($file, $dump);
 
     // Gzip
     if (!empty($_REQUEST['export_gzip'])) {
-        PHPShopFile::gzcompressfile($file);
+        $result = PHPShopFile::gzcompressfile($file);
     }
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
 
-    if (empty($_REQUEST['update']))
-        header('Location: ?path=' . $_GET['path']);
+    if (empty($_REQUEST['update'])) {
+
+        if ($result)
+            header('Location: ?path=' . $_GET['path']);
+        else
+            echo $PHPShopGUI->setAlert(__('Нет прав на запись файла') . ' ' . $file, 'danger');
+    }
     else
         return array('success' => true);
 }

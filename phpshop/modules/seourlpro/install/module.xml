@@ -2,7 +2,7 @@
 <module>
     <version>2.1</version>
     <name>SeoUrl Pro</name>
-    <faqlink>http://faq.phpshop.ru/page/seo-url.html</faqlink>
+    <faqlink>https://docs.phpshop.ru/moduli/seo/seourl-pro</faqlink>
     <description>Модуль расширенных SEO ссылок и редиректов</description>
     <category>seo</category>
     <adminmenu>

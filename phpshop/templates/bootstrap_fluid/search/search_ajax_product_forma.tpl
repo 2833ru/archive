@@ -7,7 +7,7 @@
             </div>
             <div class="media-body">
                 <h4 class="media-heading">@productName@</h4>
-                <span class="btn btn-default">@productPrice@ <span class="rubznak">@productValutaName@</span></span>
+                <span class="btn ">@productPrice@ <span class="rubznak">@productValutaName@</span></span>
             </div>
         </div>
     </a>

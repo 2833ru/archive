@@ -5,6 +5,21 @@
         <path>main/index.tpl</path>
         <description>Главная страница</description>
         <var>
+            <name>telNum</name>
+            <description>Основной телефон</description>
+            <moving>true</moving>
+        </var>
+        <var>
+            <name>telNum2</name>
+            <description>Дополнительный телефон</description>
+            <moving>true</moving>
+        </var>
+        <var>
+            <name>workingTime</name>
+            <description>Режим работы</description>
+            <moving>true</moving>
+        </var>
+        <var>
             <name>button</name>
             <description>Рейтинги и счетчики</description>
             <moving>true</moving>
@@ -192,6 +207,21 @@
         <name>shop</name>
         <path>main/shop.tpl</path>
         <description>Остальные страницы</description>
+         <var>
+            <name>telNum</name>
+            <description>Основной телефон</description>
+            <moving>true</moving>
+        </var>
+        <var>
+            <name>telNum2</name>
+            <description>Дополнительный телефон</description>
+            <moving>true</moving>
+        </var>
+        <var>
+            <name>workingTime</name>
+            <description>Режим работы</description>
+            <moving>true</moving>
+        </var>
         <var>
             <name>button</name>
             <description>Рейтинги и счетчики</description>
@@ -1545,24 +1575,26 @@
     </template>
 
     <template>
-        <name>Блок подчиненных товаров в однотипах</name>
+        <name>Блок списка подчиненных товаров </name>
         <path>product/product_odnotip_product_parent.tpl</path>
         <description>Блок подчиненных товаров в однотипах</description>
         <var>
-            <name>productId</name>
-            <description>ID товара хозяина</description>
+            <name>parentListSize</name>
+            <description>Размеры</description>
         </var>
         <var>
-            <name>pageName</name>
-            <description>Наименование статьи</description>
+            <name>parentListSizeTitle</name>
+            <description>Заголовок размеров</description>
         </var>
         <var>
-            <name>productSale</name>
-            <description>В корзину</description>
+            <name>parentListColor</name>
+            <description>Цвета</description>
+        </var>
+        <var>
+            <name>parentListSizeTitle</name>
+            <description>Заголовок цветов</description>
         </var>
     </template>
-
-
     <template>
         <name>Форма спецпредложений в виде иконок</name>
         <path>product/main_spec_forma_icon.tpl</path>
@@ -1761,7 +1793,11 @@
         </var>
         <var>
             <name>productDes</name>
-            <description>Описание товара</description>
+            <description>Описание товара подробное</description>
+        </var>
+        <var>
+            <name>productContent</name>
+            <description>Описание товара краткое</description>
         </var>
         <var>
             <name>productFiles</name>
@@ -1780,7 +1816,67 @@
             <description>Тематические статьи</description>
         </var>
     </template>
-
+    <template>
+        <name>Форма вывода товара в 5 ячеек</name>
+        <path>product/main_product_forma_5.tpl</path>
+        <description>Форма вывода товара в 5 ячеек</description>
+        <var>
+            <name>productUid</name>
+            <description>ID товара</description>
+        </var>
+        <var>
+            <name>productName</name>
+            <description>Наименование товара</description>
+        </var>
+        <var>
+            <name>productPrice</name>
+            <description>Цена товара</description>
+        </var>
+        <var>
+            <name>productImg</name>
+            <description>Изображение товара</description>
+        </var>
+        <var>
+            <name>productImgBigFoto</name>
+            <description>Большое изображение товара</description>
+        </var>
+        <var>
+            <name>productValutaName</name>
+            <description>Валюта товара</description>
+        </var>
+        <var>
+            <name>productInfo</name>
+            <description>Ссылка на подробное описание</description>
+        </var>
+        <var>
+            <name>productSale</name>
+            <description>В корзину</description>
+        </var>
+        <var>
+            <name>productSklad</name>
+            <description>Склад</description>
+        </var>
+        <var>
+            <name>productNotice</name>
+            <description>Уведомить</description>
+        </var>
+        <var>
+            <name>optionsDisp</name>
+            <description>Опции товара</description>
+        </var>
+        <var>
+            <name>productDes</name>
+            <description>Описание</description>
+        </var>
+        <var>
+            <name>vendorDisp</name>
+            <description>Характеристики</description>
+        </var>
+        <var>
+            <name>productArt</name>
+            <description>Артикул товара</description>
+        </var>
+    </template>
     <template>
         <name>Форма вывода товара в 4 ячейки</name>
         <path>product/main_product_forma_4.tpl</path>

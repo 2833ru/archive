@@ -3,6 +3,6 @@
     <version>1.0</version>
     <name>Status History</name>
     <description>История изменения статусов заказа.</description>
-    <faqlink>http://faq.phpshop.ru/page/status-history.html</faqlink>
+    <faqlink>https://docs.phpshop.ru/moduli/razrabotchikam/status-history</faqlink>
     <category>develop</category>
 </module>

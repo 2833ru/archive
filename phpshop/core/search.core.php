@@ -8,6 +8,8 @@
  */
 class PHPShopSearch extends PHPShopShopCore {
 
+    const YANDEX_SEARCH_API_URL = 'https://catalogapi.site.yandex.net/v1.0';
+
     /**
      * сетка товаров
      * @var int 
@@ -18,12 +20,21 @@ class PHPShopSearch extends PHPShopShopCore {
     var $cache = false;
     var $grid = false;
     var $empty_index_action = false;
+    var $isYandexSearch = false;
+    var $yandexSearchAPI;
+    var $yandexSearchId;
 
     function __construct() {
 
         // Список экшенов
         $this->action = array("post" => "words", "get" => "words", "nav" => "index");
         parent::__construct();
+
+        $this->yandexSearchAPI = $this->PHPShopSystem->getSerilizeParam('admoption.yandex_search_apikey');
+        $this->yandexSearchId = (int) $this->PHPShopSystem->getSerilizeParam('admoption.yandex_search_id');
+        if(!empty($this->yandexSearchAPI) && !empty($this->yandexSearchId)) {
+            $this->isYandexSearch = (bool) $this->PHPShopSystem->getSerilizeParam('admoption.yandex_search_enabled');
+        }
 
         $this->title = __('Поиск') . " - " . $this->PHPShopSystem->getValue("name");
     }
@@ -37,6 +48,10 @@ class PHPShopSearch extends PHPShopShopCore {
 
         $this->set('searchSetA', 'checked');
         $this->set('searchSetC', 'checked');
+
+        if($this->isYandexSearch) {
+            $this->set('hideSearchType', 'hidden');
+        }
 
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__);
@@ -169,7 +184,6 @@ class PHPShopSearch extends PHPShopShopCore {
         // Фильтр поиска
         $_REQUEST['words'] = PHPShopSecurity::true_search($_REQUEST['words']);
 
-
         if (!empty($_REQUEST['words'])) {
 
             // Ajax Search
@@ -185,17 +199,18 @@ class PHPShopSearch extends PHPShopShopCore {
             else
                 $template = false;
 
-
-
             $order = $this->query_filter();
 
-            // Сложный запрос
-            $this->PHPShopOrm->sql = $order;
-            $this->PHPShopOrm->debug = $this->debug;
-            $this->PHPShopOrm->mysql_error = false;
-            $this->PHPShopOrm->comment = __CLASS__ . '.' . __FUNCTION__;
-            
-            $dataArray = $this->PHPShopOrm->select();
+            if(!empty($order)) {
+                // Сложный запрос
+                $this->PHPShopOrm->sql = $order;
+                $this->PHPShopOrm->debug = $this->debug;
+                $this->PHPShopOrm->mysql_error = false;
+                $this->PHPShopOrm->comment = __CLASS__ . '.' . __FUNCTION__;
+
+                $dataArray = $this->PHPShopOrm->select();
+            }
+
             if (is_array($dataArray) and is_array($this->dataArray))
                 $this->dataArray += $dataArray;
             elseif(is_array($dataArray))
@@ -219,7 +234,7 @@ class PHPShopSearch extends PHPShopShopCore {
                     if (!empty($seourlpro))
                         $grid = $GLOBALS['PHPShopSeoPro']->AjaxCompile($grid);
 
-                    header('Content-type: text/html; charset=windows-1251');
+                    header('Content-type: text/html; charset='.$GLOBALS['PHPShopLang']->charset);
                     exit(PHPShopParser::replacedir($this->separator . $grid));
                 }
 
@@ -335,11 +350,11 @@ class PHPShopSearch extends PHPShopShopCore {
 
                 if ($i != $this->page) {
                     if ($i == 1) {
-                        $this->set("paginLink", "?words=" . $this->search_order['words'] . "&pole=" . $this->search_order['pole'] . "&set=" . $this->search_order['set'] . "&p=" . $i . "&cat=" . $this->search_order['cat']);
+                        $this->set("paginLink", "?words=" . $this->search_order['words'] . "&pole=" . $this->search_order['pole'] . "&p=" . $i . "&cat=" . $this->search_order['cat']);
                         $navigat.= parseTemplateReturn($template_location . "paginator/paginator_one_link.tpl", $template_location_bool);
                     } else {
                         if ($i > ($this->page - $this->nav_len) and $i < ($this->page + $this->nav_len)) {
-                            $this->set("paginLink", "?words=" . $this->search_order['words'] . "&pole=" . $this->search_order['pole'] . "&set=" . $this->search_order['set'] . "&p=" . $i . "&cat=" . $this->search_order['cat']);
+                            $this->set("paginLink", "?words=" . $this->search_order['words'] . "&pole=" . $this->search_order['pole'] . "&p=" . $i . "&cat=" . $this->search_order['cat']);
                             $navigat.= parseTemplateReturn($template_location . "paginator/paginator_one_link.tpl", $template_location_bool);
                         } else if ($i - ($this->page + $this->nav_len) < 3 and (($this->page - $this->nav_len) - $i) < 3) {
                             $navigat.= parseTemplateReturn($template_location . "paginator/paginator_one_more.tpl", $template_location_bool);
@@ -355,9 +370,9 @@ class PHPShopSearch extends PHPShopShopCore {
 
             $nav = $this->getValue('lang.page_now') . ': ';
 
-            $this->set("previousLink", "?words=" . $this->search_order['words'] . "&pole=" . $this->search_order['pole'] . "&set=" . $this->search_order['set'] . "&p=" . $p_do . "&cat=" . $this->search_order['cat']);
+            $this->set("previousLink", "?words=" . $this->search_order['words'] . "&pole=" . $this->search_order['pole'] . "&p=" . $p_do . "&cat=" . $this->search_order['cat']);
 
-            $this->set("nextLink", "?words=" . $this->search_order['words'] . "&pole=" . $this->search_order['pole'] . "&set=" . $this->search_order['set'] . "&p=" . $p_to . "&cat=" . $this->search_order['cat']);
+            $this->set("nextLink", "?words=" . $this->search_order['words'] . "&pole=" . $this->search_order['pole'] . "&p=" . $p_to . "&cat=" . $this->search_order['cat']);
 
             $nav.=$navigat;
 

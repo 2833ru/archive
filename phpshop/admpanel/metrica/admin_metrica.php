@@ -1,6 +1,6 @@
 <?php
 
-$TitlePage = "Статистика - Сводка";
+$TitlePage = __("Статистика - Сводка");
 
 function actionStart() {
     global $PHPShopGUI, $PHPShopInterface, $TitlePage, $select_name, $PHPShopSystem;
@@ -20,7 +20,7 @@ function actionStart() {
     ));
 
     $PHPShopGUI->action_button['Показать в Метрике'] = array(
-        'name' => 'Отчет на Яндекс.Метрика',
+        'name' => __('Отчет на Яндекс.Метрика'),
         'action' => 'https://metrika.yandex.ru/dashboard?id=' . $metrica_id,
         'class' => 'btn  btn-default btn-sm navbar-btn btn-action-panel-blank',
         'type' => 'button',
@@ -76,7 +76,7 @@ function actionStart() {
     }
 
 
-    $TitlePage.=' с ' . $date_start . ' по ' . $date_end;
+    $TitlePage.=' '.__('с').' ' . $date_start . ' '.__('по').' ' . $date_end;
 
     if (empty($_GET['group'])) {
         $_GET['group'] = 'day';
@@ -509,7 +509,7 @@ function actionStart() {
 </div>
 ';
     } else {
-        $PHPShopGUI->_CODE.= $PHPShopGUI->setAlert(__('Для получения статистики посещения требуется настроить параметры интеграции <a href="?path=system.integration"><span class="glyphicon glyphicon-share-alt"></span> Яндекс.Метрики</a>'), 'warning');
+        $PHPShopGUI->_CODE.= $PHPShopGUI->setAlert('Для получения статистики посещения требуется настроить параметры интеграции <a href="?path=system.integration"><span class="glyphicon glyphicon-share-alt"></span> Яндекс.Metrika</a>', 'warning');
     }
 
     $searchforma.=$PHPShopGUI->setInputDate("date_start", $date_start, 'margin-bottom:10px', null, 'Дата начала отбора');

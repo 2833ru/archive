@@ -1,5 +1,8 @@
+<div class="clearfix"></div>
 <div class="page-header">
-    <h1 class="main-heading2">@pageTitle@</h1>
+    <h2>@pageTitle@</h2>
 </div>
 @catContent@
-@pageContent@
+<div class="page-list">@pageContent@</div>
+<h3 class="@php __hide('pageLast'); php@">Интересно почитать</h3>
+<p>@pageLast@</p>

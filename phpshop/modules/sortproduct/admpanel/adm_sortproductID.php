@@ -71,10 +71,9 @@ function actionStart() {
     $Tab1.=$PHPShopGUI->setField('Количество ссылок:', $PHPShopGUI->setInputText(null, 'items_new', $data['items'], '100'));
     $Tab1.=$PHPShopGUI->setField('Статус:', $PHPShopGUI->setCheckbox('enabled_new', 1, 'Включить', $data['enabled']));
     $Tab1.=$PHPShopGUI->setField('Характеристика', getSortValue($data['sort']));
-    $Tab1.=$PHPShopGUI->setField('Значение', $PHPShopGUI->setInputText(false, 'value_name_new', $data['value_name'], 300) . $PHPShopGUI->setHelp('Имя или ID'));
-
+    $Tab1.=$PHPShopGUI->setField('Значение', $PHPShopGUI->setInputText(false, 'value_name_new', $data['value_name'], 300) . $PHPShopGUI->setHelp(__('Введите значение или ID выбранной').' <a href="?path=sort"><span class="glyphicon glyphicon-share-alt"></span>'.__('Характеристики').'</a>',false,false));
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1, 350));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =

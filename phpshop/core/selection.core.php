@@ -85,10 +85,8 @@ class PHPShopSelection extends PHPShopShopCore {
         $this->set('productValutaName', $this->currency());
 
         // Количество ячеек
-        if (empty($this->cell) and isset($_GET['gridChange']))
+        if (empty($this->cell))
             $this->cell = $this->calculateCell("selection", $this->PHPShopSystem->getValue('num_vitrina'));
-        elseif (empty($this->cell))
-            $this->cell = 1;
 
         // Поиск одноименных характеристик
         $this->checkName();
@@ -112,7 +110,7 @@ class PHPShopSelection extends PHPShopShopCore {
         // Добавляем в дизайн ячейки с товарами
         $grid = $this->product_grid($this->dataArray, $this->cell);
         if (empty($grid))
-            $grid = PHPShopText::h2($this->lang('empty_product_list'));
+            $grid = PHPShopText::h4($this->lang('empty_product_list'));
         $this->add($grid, true);
 
         // ID характеристики
@@ -123,25 +121,35 @@ class PHPShopSelection extends PHPShopShopCore {
                 $v = intval($val);
         }
 
-        // Описание значения характеристики
+        // Описание значения характеристики из страницы
         $PHPShopOrm = new PHPShopOrm();
         $result = $PHPShopOrm->query('SELECT a.*, b.content FROM ' . $this->getValue("base.sort") . ' AS a JOIN ' . $this->getValue("base.page") . ' AS b ON a.page = b.link where a.id = ' . $v . ' limit 1');
         $row = mysqli_fetch_array($result);
         if (is_array($row)) {
-
             // Описание
             $this->set('sortDes', stripslashes($row['content']));
+        } else {
 
-            // Название
-            $this->set('sortName', $row['name']);
+            // Описание из характеристики
+            $PHPShopOrm = new PHPShopOrm($this->getValue("base.sort"));
+            $row = $PHPShopOrm->select(array('*'), array('id' => '=' . $v), false, array('limit' => 1));
+            if (is_array($row)) {
 
-            // Заголовок
-            $this->title = __('Подбор товаров') . " - " . $row['name'] . " - " . $this->PHPShopSystem->getParam('title');
-            $this->description = __('Подбор товаров') . " - " . $row['name'];
-            $this->keywords = $row['name'];
+                $this->set('sortDes', stripslashes($row['description']));
+            }
         }
+
+        // Название
+        $this->set('sortName', $row['name']);
+
+        // Заголовок
+        if (empty($row['title']))
+            $this->title = __('Бренд') . " - " . $row['name'] . " - " . $this->PHPShopSystem->getParam('title');
         else
-            $this->title = __('Подбор товаров') . " - " . $this->PHPShopSystem->getParam('title');
+            $this->title = $row['title'];
+
+        $this->description = $row['name'].', '.$this->PHPShopSystem->getParam('descrip');
+        $this->keywords = $row['name'];
 
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__, $this->dataArray, 'END');

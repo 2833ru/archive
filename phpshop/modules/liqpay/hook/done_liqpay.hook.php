@@ -17,7 +17,7 @@ function send_to_order_mod_liqpay_hook($obj, $value, $rout) {
             $inv_id = $mrh_ouid[0] . $mrh_ouid[1];
 
             // Сумма покупки
-            $out_summ = number_format($obj->get('total'), 2, '.', '');
+            $out_summ = number_format($obj->total, 2, '.', '');
 
             $xml = '<request>      
       <version>1.2</version>
@@ -39,23 +39,12 @@ function send_to_order_mod_liqpay_hook($obj, $value, $rout) {
             $payment_forma = PHPShopText::setInput('hidden', 'operation_xml', base64_encode($xml));
             $payment_forma.=PHPShopText::setInput('hidden', 'signature', $sign);
             $payment_forma.=PHPShopText::setInput('submit', 'send', 'Оплатить через платежную систему', $float = "none", 250);
-            $obj->set('payment_forma', PHPShopText::form($payment_forma, 'pay', 'post', 'https://www.liqpay.com/?do=clickNbuy'));
+            $obj->set('payment_forma', PHPShopText::form($payment_forma, 'pay', 'post', 'https://www.liqpay.ua/?do=clickNbuy'));
             $obj->set('payment_info', $option['title_end']);
             $forma = ParseTemplateReturn($GLOBALS['SysValue']['templates']['liqpay']['liqpay_payment_forma'], true);
         } else {
-
-            $clean_cart = "
-<script language=\"JavaScript1.2\">
-if(window.document.getElementById('num')){
-window.document.getElementById('num').innerHTML='0';
-window.document.getElementById('sum').innerHTML='0';
-}
-</script>";
-            $obj->set('mesageText', $option['title_end'] . $clean_cart);
+            $obj->set('mesageText', $option['title_end']);
             $forma = ParseTemplateReturn($GLOBALS['SysValue']['templates']['order_forma_mesage']);
-
-            // Очищаем корзину
-            unset($_SESSION['cart']);
         }
 
         $obj->set('orderMesage', $forma);

@@ -5,7 +5,7 @@
     <description>Прием оплат через Альфабанк в соответствии с 54-ФЗ.</description>
     <category>payment</category>
     <sign>1545904926</sign>
-    <faqlink>http://faq.phpshop.ru/page/alfabank.html</faqlink>
+    <faqlink>https://docs.phpshop.ru/moduli/platezhnye-sistemy/alfa-bank</faqlink>
      <adminmenu>
         <title>Альфабанк</title>
         <capability>true</capability>

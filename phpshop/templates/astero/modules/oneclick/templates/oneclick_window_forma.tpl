@@ -16,7 +16,14 @@
                         <input type="text" name="oneclick_mod_tel" class="form-control" placeholder="{Телефон}" required="">
                     </div>
                     @oneclick_captcha@
+                    <div class="form-group">
 
+                        <p class="small">
+                            <input type="checkbox" value="on" name="rule" class="req" checked="checked"> 
+                            {Я согласен}  <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html" alt="{Согласие на обработку персональных данных}">{на обработку моих персональных данных}</a> 
+                        </p>
+
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <input type="hidden" name="oneclick_mod_product_id" value="@productUid@">

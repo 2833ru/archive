@@ -55,7 +55,6 @@ function getLastID() {
 function actionInsert() {
     global $PHPShopOrm, $PHPShopModules;
 
-
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
 

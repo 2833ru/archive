@@ -12,12 +12,10 @@ function template_v($obj, $data, $rout) {
         if ($productVendor)
             $obj->set('productVendor', $productVendor);
 
-
         if (empty($_GET['gridChange']))
             $obj->cell = 3;
 
         $obj->sort_template = 'sorttemplatehook';
-
 
         switch ($_GET['gridChange']) {
             case 1:
@@ -48,7 +46,7 @@ function template_v($obj, $data, $rout) {
             case 2:
                 $obj->set('fSetBactive', 'active');
                 break;
-            ///default: $obj->set('fSetBactive', 'active');
+            //default: $obj->set('fSetCactive', 'active');
         }
     }
 }

@@ -28,38 +28,39 @@ class PHPShopDev extends PHPShopCore {
     function modules_list() {
         global $_classPath,$PHPShopModules,$addHandler;
 
-        $log=PHPShopText::tr(PHPShopText::b('Установлено'),PHPShopText::b('Модуль'),PHPShopText::b('Размещение'));
+        $log=PHPShopText::tr(PHPShopText::b(__('Установлено')),PHPShopText::b(__('Модуль')),PHPShopText::b(__('Размещение')));
         $PHPShopOrm = new PHPShopOrm($this->getValue('base.modules'));
         $data=$PHPShopOrm->select(array('*'),false,array('order'=>'date desc'),array('limit'=>100));
+ 
         if(is_array($data))
             foreach($data as $row) {
                 $log.=PHPShopText::tr(PHPShopDate::dataV($row['date']),$row['name'],$_classPath.'modules/'.$row['path']);
             }
 
-        $stat=PHPShopText::h3('Установленные модули').PHPShopText::table($log,$cellpadding=3,$cellspacing=1,$align='center',$width='98%',$bgcolor=false,$border=1,null,'table table-striped table-bordered');
+        $stat=PHPShopText::h3(__('Установленные модули')).PHPShopText::table($log,$cellpadding=3,$cellspacing=1,$align='center',$width='98%',$bgcolor=false,$border=1,null,'table table-striped table-bordered');
 
-        $autoload=PHPShopText::tr(PHPShopText::b('Видимость'),PHPShopText::b('Загрузчик'));
+        $autoload=PHPShopText::tr(PHPShopText::b(__('Видимость')),PHPShopText::b(__('Загрузчик')));
         if(is_array($PHPShopModules->ModValue['autoload']))
             foreach($PHPShopModules->ModValue['autoload'] as $val) {
                 $autoload.=PHPShopText::tr('./*',$val);
 
             }
 
-        $stat.=PHPShopText::h3('Автозагрузка').
+        $stat.=PHPShopText::h3(__('Автозагрузка')).
                 PHPShopText::table($autoload,$cellpadding=3,$cellspacing=1,$align='center',$width='98%',$bgcolor=false,$border=1,null,'table table-striped table-bordered');
 
 
-        $core=PHPShopText::tr(PHPShopText::b('Путь'),PHPShopText::b('Исполнитель'));
+        $core=PHPShopText::tr(PHPShopText::b(__('Путь')),PHPShopText::b(__('Исполнитель')));
         if(is_array($PHPShopModules->ModValue['core']))
             foreach($PHPShopModules->ModValue['core'] as $key=>$val) {
                 $core.=PHPShopText::tr('/'.$key.'/',$val);
 
             }
 
-        $stat.=PHPShopText::h3('Разделы ЧПУ').
+        $stat.=PHPShopText::h3(__('Разделы ЧПУ')).
                 PHPShopText::table($core,$cellpadding=3,$cellspacing=1,$align='center',$width='98%',$bgcolor=false,$border=1,null,'table table-striped table-bordered');
 
-        $hook=PHPShopText::tr(PHPShopText::b('Класс'),PHPShopText::b('Перехватчик'));
+        $hook=PHPShopText::tr(PHPShopText::b(__('Класс')),PHPShopText::b(__('Перехватчик')));
         if(is_array($PHPShopModules->ModValue['hook']))
             foreach($PHPShopModules->ModValue['hook'] as $class=>$v) {
                 foreach($v as $key=>$val) {
@@ -76,15 +77,13 @@ class PHPShopDev extends PHPShopCore {
 
             }
 
-        $stat.=PHPShopText::h3('Хуки').
+        $stat.=PHPShopText::h3(__('Хуки')).
                 PHPShopText::table($hook,$cellpadding=3,$cellspacing=1,$align='center',$width='98%',$bgcolor=false,$border=1,null,'table table-striped table-bordered');
 
         $this->set('pageContent', $stat,true);
 
-
         // Подключаем шаблон
-        $this->parseTemplate($this->getValue('templates.page_page_list'));
-
+       $this->parseTemplate($this->getValue('templates.page_page_list'));
     }
 
     function key() {
@@ -190,12 +189,12 @@ class PHPShopDev extends PHPShopCore {
             if($this->getValue('base.errorlog.errorlog_system') != '')
                 $content.=PHPShopText::setInput('submit','error_log','Error Log');
 
-            $content.=PHPShopText::setInput('submit','modules_list','Установленные модули');
+            $content.=PHPShopText::setInput('submit','modules_list',__('Установленные модули'));
 
             $form=PHPShopText::form($content,'debug_action',$method='get');
 
             // Определяем переменые
-            $this->set('pageContent', PHPShopText::h1('Настройка').$form);
+            $this->set('pageContent', PHPShopText::h1(__('Настройка')).$form);
             $this->set('pageTitle','Debug');
 
             // Мета

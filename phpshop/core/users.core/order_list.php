@@ -42,7 +42,7 @@ function order_list($obj, $tip, $uid = null) {
             else
                 $link = "/users/register.html";
 
-            $td1 = PHPShopText::a($link, $row['uid'], $obj->lang('order_info') . $row['uid'], false, false, false, 'b');
+            $td1 = PHPShopText::a($link, $row['uid'], $obj->lang('order_info') . $row['uid'], false, false, false, 'text-primary');
             $td2 = PHPShopDate::dataV($row['datas']);
             $td3 = $PHPShopOrderFunction->getNum();
             $td4 = '' . $PHPShopOrderFunction->getDiscount();
@@ -55,7 +55,7 @@ function order_list($obj, $tip, $uid = null) {
     $caption = $obj->caption($obj->lang('order_table_title_1'), $obj->lang('order_table_title_2'), $obj->lang('order_table_title_3'), $obj->lang('order_table_title_4'), $obj->lang('order_table_title_5'), $obj->lang('order_table_title_6'));
 
     if (!empty($tr))
-        $table = PHPShopText::table($caption . $tr, 3, 1, 'center', '100%', false, 0, 'allspecwhite', 'list table table-striped table-bordered table-hover');
+        $table = PHPShopText::table($caption . $tr, 3, 1, 'center', '100%', false, 0, 'order-list', 'list table table-striped table-bordered table-hover');
     else
         $table = __("У Вас еще нет ни одного заказа.");
 

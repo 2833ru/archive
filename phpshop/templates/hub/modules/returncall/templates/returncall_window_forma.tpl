@@ -1,6 +1,6 @@
-<a href="#" data-toggle="modal" data-target="#returnCallModal" class="header-link-color"><i class="iconz-telephone"></i>{Заказать звонок}</a>
+<a href="#" data-toggle="modal" data-target="#returnCallModal" class="header-link-color "><i class="iconz-telephone"></i>{Заказать звонок}</a>
         <!-- Модальное окно returncall-->
-        <div class="modal fade bs-example-modal-sm" id="returnCallModal" tabindex="-1" role="dialog"  aria-hidden="true">
+        <div class="modal fade bs-example-modal-sm return-call" id="returnCallModal" tabindex="-1" role="dialog"  aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -11,10 +11,10 @@
                     <div class="modal-body">
                        
                             <div class="form-group">
-                                <input type="text" name="returncall_mod_name" class="form-control" placeholder="{Имя}..." required="">
+                                <input type="text" name="returncall_mod_name" class="form-control" placeholder="{Имя}" required="">
                             </div>
                             <div class="form-group">
-                                <input type="text" name="returncall_mod_tel" class="form-control" placeholder="{Телефон}..." required="">
+                                <input type="text" name="returncall_mod_tel" class="form-control" placeholder="{Телефон}" required="">
                             </div>
                             <div class="form-group">
                                 <input placeholder="{Время звонка}" class="form-control" type="text" name="returncall_mod_time_start">
@@ -23,12 +23,12 @@
                                 <textarea placeholder="{Сообщение}" class="form-control" name="returncall_mod_message"></textarea>
                             </div>
                             @returncall_captcha@
-                           
+<p class="small"><label><input type="checkbox" value="on" name="rule" class="req" checked="checked">  {Я согласен} <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html" alt="Согласие на обработку персональных данных">{на обработку моих персональных данных}</a></label></p>
                        
                     </div>
                      <div class="modal-footer">
                                 <input type="hidden" name="returncall_mod_send" value="1">
-                                <button type="submit" class="btn btn-primary">{Заказать звонок}</button>
+                                <button type="submit" class="btn btn-main">{Заказать звонок}</button>
                      </div>
                      </form>
                 </div>

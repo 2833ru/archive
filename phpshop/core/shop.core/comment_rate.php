@@ -3,10 +3,10 @@
 /**
  * Вывод средней оценки к товару из отзывов пользователей
  * @author PHPShop Software
- * @version 1.0
+ * @version 1.1
  * @package PHPShopCoreFunction
  * @param obj $obj объект класса
- * @param args $args масив данных и параметров.
+ * @param args $args массив данных и параметров.
  * @return mixed
  */
 function comment_rate($obj, $args) {
@@ -48,14 +48,17 @@ function comment_rate($obj, $args) {
  */
 class rateForComment {
 
-    function rateForComment($rate, $num) {
-        $oneStarWidth = 16; // ширина одной звёздочки
+    function __construct($rate, $num) {
+        $oneStarWidth = 20; // ширина одной звёздочки
         $oneSpaceWidth = 0; // пробел между звёздочками
+        
+        /*
         // берём параметры с конфига, если заданы
         if (@$_SESSION['Memory']["rateForComment"]["oneStarWidth"])
             $oneStarWidth = $_SESSION['Memory']["rateForComment"]["oneStarWidth"];
         if (@$_SESSION['Memory']["rateForComment"]["oneSpaceWidth"])
             $oneSpaceWidth = $_SESSION['Memory']["rateForComment"]["oneSpaceWidth"];
+        */
 
         if ($num) {
             $rate = round($rate, 1);

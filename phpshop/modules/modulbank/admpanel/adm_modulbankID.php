@@ -9,7 +9,7 @@ function actionStart() {
 
     // Выборка
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . (int) $_GET['id']));
-    $PHPShopGUI->setActionPanel('Журнал от ' . PHPShopDate::get($data['date']), false, array('Закрыть'));
+    $PHPShopGUI->setActionPanel(__('Журнал от').' ' . PHPShopDate::get($data['date']), false, array('Закрыть'));
 
     // Переводим в читаемый вид
     ob_start();

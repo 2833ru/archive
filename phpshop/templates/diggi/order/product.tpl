@@ -31,11 +31,8 @@
             </form>
         </div>
     </td>
-    <td class="order-product-one-price">
-       @cart_price@ @currency@
-    </td>
-    <td class="order-product-all-price">
-        @cart_price_all@ @currency@
+        <td class="order-product-all-price">
+        @cart_price_all@ @currency@ <br><s class="text-muted">@cart_price_all_old@</s>
     </td>
     <td class="order-product-remove-product">
         <form name="forma_cart_del" method="post" id="forma_cart_del">

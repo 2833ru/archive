@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=windows-1251"/>
+        <meta http-equiv="Content-Type" content="text/html; charset=@charset@"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <style type="text/css">
             p {color:#000000;}
@@ -117,7 +117,7 @@
 
                 <tr bgcolor="#fafafa" id="header" valign="top">
                     <td id="logo" align="left" valign="bottom">
-                        <div align="center" style="padding-top:30px;"><a href="http://@url@" target="_blank"><img src="http://@url@@logo@" border="0" style="display: block;"></a>
+                        <div align="center" style="padding-top:30px;"><a href="http://@url@" target="_blank"><img src="http://@url@@logo@" border="0" style="display: block;" alt=""></a>
                             <p><h1>@title@</h1></p></div>
                     </td>     
                 </tr>

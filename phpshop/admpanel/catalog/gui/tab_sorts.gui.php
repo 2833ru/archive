@@ -1,9 +1,5 @@
 <?php
-/**
- * Панель сортировок каталога
- * @param array $data массив данных
- * @return string 
- */
+
 function tab_sorts($data) {
     global $SysValue,$link_db;
     
@@ -27,7 +23,7 @@ function tab_sorts($data) {
 	</optgroup>
 	';
     }
-    $disp = '<select name=sort_new[] class="selectpicker show-menu-arrow" data-live-search="true" data-container=""  data-style="btn btn-default btn-sm" data-width="auto" data-size="auto"  multiple>'.$dis.'</select>';
+    $disp = '<select name=sort_new[] class="selectpicker show-menu-arrow" data-live-search="true" data-container=""  data-style="btn btn-default btn-sm" data-width="99%" data-size="auto"  multiple>'.$dis.'</select>';
     return $disp;
 }
 
@@ -40,11 +36,16 @@ function tab_sorts_val($n, $sort) {
         $id = $row['id'];
         $name = substr($row['name'], 0, 35);
         $sel = "";
+        
         if (is_array($sort))
             foreach ($sort as $v) {
                 if ($id == $v)
                     $sel = "selected";
             }
+            
+        if(!empty($row['filtr']))
+            $row['description'].= ' Фильтр';
+            
         $dis.="<option value=" . $id . " " . $sel . " data-subtext=\"".$row['description']."\">" . $name . "</option>\n";
     }
     return $dis;
@@ -61,6 +62,9 @@ function tab_parent($data) {
         if ($row['id'] == $data['parent_title'])
             $sel = "selected";
         else  $sel = null;
+        
+        if(!empty($row['color']))
+            $row['name'].=' + '.$row['color'];
         
         $dis.="<option value=" . $row['id'] . " " . $sel . ">" . $row['name']. "</option>\n";
             

@@ -1,6 +1,6 @@
 <?php
 
-$TitlePage = __('Редактирование сообщения').' #' . $_GET['id'];
+$TitlePage = __('Редактирование сообщения') . ' #' . $_GET['id'];
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['messages']);
 PHPShopObj::loadClass('user');
 
@@ -24,18 +24,18 @@ function actionStart() {
 
     // Размер названия поля
     $PHPShopGUI->field_col = 2;
-    $PHPShopGUI->setActionPanel(__("Покупатели") . ' / ' . __('Сообщение') . ' / ' . $data['name'], array('Удалить'), array('Сохранить и закрыть'));
-    
-    $user='<a class="btn btn-default btn-sm" href="?path=shopusers&id=' . $data['UID'].'&return='.$_GET['path'].'"><span class="glyphicon glyphicon-user"></span> '.$data['name'].' : '.$data['login'].'</a>';
-    
-    $message='<div class="well">'.strip_tags($data['Message'],'<b><hr><br>').'</div>';
+    $PHPShopGUI->setActionPanel(__("Покупатели") . ' / ' . __('Сообщение') . ' / ' . $data['name'], array('Удалить'), array('Сохранить', 'Сохранить и закрыть'));
+
+    $user = '<a class="btn btn-default btn-sm" href="?path=shopusers&id=' . $data['UID'] . '&return=' . $_GET['path'] . '"><span class="glyphicon glyphicon-user"></span> ' . $data['name'] . ' : ' . $data['login'] . '</a>';
+
+    $message = '<div class="well">' . strip_tags($data['Message'], '<b><hr><br>') . '</div>';
 
     // Содержание закладки 1
-    $Tab1 = $PHPShopGUI->setCollapse('Информация', 
-            $PHPShopGUI->setField("Отправитель", $user) .
+    $Tab1 = $PHPShopGUI->setCollapse('Информация', $PHPShopGUI->setField("Отправитель", $user) .
+            $PHPShopGUI->setInput("hidden", "login", $data['login']) .
             $PHPShopGUI->setField("Тема", $PHPShopGUI->setInput('text.required', "Subject_new", $data['Subject'])) .
-            $PHPShopGUI->setField("Переписка", $message).$PHPShopGUI->setInput('hidden', "Message_new", $data['Message']).
-            $PHPShopGUI->setField("Ответ", $PHPShopGUI->setTextarea('respond', null, false, '100%', 100,false,'Текст сообщения...'))
+            $PHPShopGUI->setField("Переписка", $message) . $PHPShopGUI->setInput('hidden', "Message_new", $data['Message']) .
+            $PHPShopGUI->setField("Ответ", $PHPShopGUI->setTextarea('respond', null, false, '100%', 100, false, __('Текст сообщения...')))
     );
 
     // Запрос модуля на закладку
@@ -45,8 +45,7 @@ function actionStart() {
     $PHPShopGUI->setTab(array("Основное", $Tab1));
 
     // Вывод кнопок сохранить и выход в футер
-    $ContentFooter =
-            $PHPShopGUI->setInput("hidden", "rowID", $data['ID'], "right", 70, "", "but") .
+    $ContentFooter = $PHPShopGUI->setInput("hidden", "rowID", $data['ID'], "right", 70, "", "but") .
             $PHPShopGUI->setInput("button", "delID", "Удалить", "right", 70, "", "but", "actionDelete.shopusers.edit") .
             $PHPShopGUI->setInput("submit", "editID", "Сохранить", "right", 70, "", "but", "actionUpdate.shopusers.edit") .
             $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionSave.shopusers.edit");
@@ -82,21 +81,28 @@ function actionSave() {
 
 // Функция обновления
 function actionUpdate() {
-    global $PHPShopOrm, $PHPShopModules;
+    global $PHPShopOrm, $PHPShopModules, $PHPShopSystem;
 
-    if(!empty($_POST['respond'])){
-        $_POST['Message_new']='<b>'.__('Администрация').'</b>: '.$_POST['respond'].'<HR>'.$_POST['Message_new'];
-        $_POST['enabled_new']=1;
+    if (!empty($_POST['respond'])) {
+        $_POST['Message_new'] = '<b>' . __('Администрация') . '</b>: ' . $_POST['respond'] . '<HR>' . $_POST['Message_new'];
+        $_POST['enabled_new'] = 1;
+
+
+        $title = __('Новый ответ в личном кабинете') . ' - ' . $PHPShopSystem->getName();
+        $PHPShopMail = new PHPShopMail($_POST['login'], $PHPShopSystem->getEmail(), $title, '', true, true);
+        $text = $_POST['Message_new'] . '<p>' . __('Если у Вас есть вопрос, задайте его нам в <a href="http://' . $_SERVER['SERVER_NAME'] . "/" . $GLOBALS['SysValue']['dir']['dir'] . 'users/message.html" target="_blank">Личном кабинете</a>') . '</p> ';
+        PHPShopParser::set('content', $text);
+        PHPShopParser::set('logo', $_SERVER['SERVER_NAME'] . "/" . $GLOBALS['SysValue']['dir']['dir'] . $PHPShopSystem->getParam('logo'));
+        $content = PHPShopParser::file('tpl/sendmail.mail.tpl', true, false);
+        $PHPShopMail->sendMailNow($content);
     }
-        
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
 
     $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['rowID']));
-   return array('success' => $action);
+    return array('success' => $action);
 }
-
 
 // Обработка событий
 $PHPShopGUI->getAction();

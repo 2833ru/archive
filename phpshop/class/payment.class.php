@@ -55,8 +55,7 @@ class PHPShopPaymentArray extends PHPShopArray {
         $this->objSQL = $sql;
         $this->order = array('order' => 'num');
         $this->objBase = $GLOBALS['SysValue']['base']['payment_systems'];
-        $this->ignor = true;
-        parent::__construct('message', 'message_header');
+        parent::__construct('id', "name", 'path', 'enabled', 'yur_data_flag', 'icon');
     }
 
 }
@@ -202,9 +201,7 @@ class PHPShopPaymentResult {
                     'sum_new' => $this->out_summ, 'datas_new' => time()));
 
                 // Изменение статуса платежа
-                $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
-                $PHPShopOrm->debug = $this->debug;
-                $PHPShopOrm->update(array('statusi_new' => $this->set_order_status_101()), array('uid' => '="' . $orderUid . '"'));
+                $this->setOrderPaid($orderUid);
 
                 // Сообщение ОК
                 $this->done();
@@ -271,6 +268,15 @@ class PHPShopPaymentResult {
         return $first_num . "-" . $last_num;
     }
 
+    public function setOrderPaid($orderUid)
+    {
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
+        $PHPShopOrm->debug = $this->debug;
+        $PHPShopOrm->update(
+            array('statusi_new' => $this->set_order_status_101(), 'paid_new' => 1),
+            array('uid' => '="' . $orderUid . '"')
+        );
+    }
 }
 
 ?>

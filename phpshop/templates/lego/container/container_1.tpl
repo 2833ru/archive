@@ -1,0 +1,28 @@
+<div class="container-fluid main-container">
+            <div class="row">
+                <div class="col-md-3 col-lg-3 hidden-sm hidden-xs  sidebar-left-inner">
+                    
+                    <!-- ћеню дублирующих категорий -->
+                   <ul class="list-group" id="catalog-menu">@leftCatal@</ul>
+					
+					<div class="pageCatal pages">
+					<div class="left-header"><a href="/page/">{Блог}</a></div>
+					<div class="pageCatalContent">@pageCatal@</div></div>
+					@leftMenu@
+                    <!--/ ћеню дублирующих категорий -->
+                    <div class="@hitMainHidden@ @php __hide('hit'); php@">
+                    <div class="left-header">{Хиты продаж}</div>
+                    <div class="inner-nowbuy @hitMainHidden@ @php __hide('hit'); php@">
+                       @hit@
+                    </div>
+					</div>
+                    @banersDisp@
+                </div>
+
+                <div class="col-md-9 col-xs-12 main">
+                    @DispShop@
+                    @getPhotos@
+                </div>
+            </div>
+
+        </div>

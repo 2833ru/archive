@@ -9,6 +9,8 @@ $PHPShopBase->chekAdmin();
 
 // Системные настройки
 $PHPShopSystem = new PHPShopSystem();
+$_SESSION['lang'] = $PHPShopSystem->getSerilizeParam("admoption.lang_adm");
+$PHPShopLang = new PHPShopLang(array('locale' => $_SESSION['lang'], 'path' => 'admin'));
 
 // Тема оформления
 $theme = PHPShopSecurity::TotalClean($PHPShopSystem->getSerilizeParam('admoption.theme'));
@@ -55,10 +57,10 @@ if (!file_exists('./css/bootstrap-theme-' . $theme . '.css'))
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>Иконка</th>
-                                <th>Имя файла</th>
-                                <th>Размер</th>
-                                <th>Статус</th>
+                                <th><?php _e('Иконка'); ?></th>
+                                <th><?php _e('Имя файла'); ?></th>
+                                <th><?php _e('Размер'); ?></th>
+                                <th><?php _e('Статус'); ?></th>
                                 <th></th>
                             </tr>
                         </thead>

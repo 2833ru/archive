@@ -1,5 +1,8 @@
 
 @ProductCatalogContent@
+<!-- Виртуальный каталог -->
+@vendorCatDisp@
+<!--/ Виртуальный каталог -->
 
 <!-- Product Filter Starts -->
     <div class="product-filter" id="filter-well">

@@ -3,7 +3,7 @@
 /**
  * Библиотека восстановления файлов
  * @author PHPShop Software
- * @version 1.2
+ * @version 1.3
  * @package PHPShopClass
  */
 class PHPShopRestore extends PHPShopUpdate {
@@ -39,7 +39,7 @@ class PHPShopRestore extends PHPShopUpdate {
                 return false;
             }
 
-            $this->_log.=$PHPShopGUI->setProgress(__('Восстановление базы данных...'), 'install-restore-bd');
+            $this->_log .= $PHPShopGUI->setProgress(__('Восстановление базы данных...'), 'install-restore-bd');
             $this->log("Восстановление базы данных выполнено", 'success hide install-restore-bd');
             $this->log("Не удается восстановленить базу данных", 'danger hide install-restore-bd-danger');
         }
@@ -60,7 +60,7 @@ class PHPShopRestore extends PHPShopUpdate {
     }
 
     /**
-     *  Восстановления кинфига. Понижение версии.
+     *  Восстановления конфига. Понижение версии.
      */
     function restoreConfig() {
         $config['upload']['version'] = $this->_restore_version;
@@ -72,13 +72,13 @@ class PHPShopRestore extends PHPShopUpdate {
 /**
  * Библиотека обновления файлов
  * @author PHPShop Software
- * @version 1.0
+ * @version 1.2
  * @package PHPShopClass
  */
 class PHPShopUpdate {
 
     /**
-     * Режим рабоыт с файлами через php. Требует права на редактирование.
+     * Режим работы с файлами через php. Требует права на редактирование.
      * @var bool 
      */
     var $local_update = true;
@@ -97,13 +97,11 @@ class PHPShopUpdate {
         include_once('../lib/zip/pclzip.lib.php');
 
         $this->path = $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . '/';
-
         $this->_user_ftp_host = $GLOBALS['SysValue']['user_ftp']['host'];
         $this->_user_ftp_login = $GLOBALS['SysValue']['user_ftp']['login'];
         $this->_user_ftp_password = $GLOBALS['SysValue']['user_ftp']['password'];
         $this->_user_ftp_chmod = $GLOBALS['SysValue']['user_ftp']['chmod'];
         $this->_user_ftp_re_chmod = $GLOBALS['SysValue']['user_ftp']['re_chmod'];
-
         $this->_endPoint = $_SERVER['SERVER_NAME'];
         $this->_user_ftp_chmod = $GLOBALS['SysValue']['user_ftp']['chmod'];
 
@@ -111,7 +109,6 @@ class PHPShopUpdate {
             $this->_user_ftp_dir = $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['dir']['dir'];
         else
             $this->_user_ftp_dir = $GLOBALS['SysValue']['user_ftp']['dir'];
-
 
         // Настройка уровня оповещения отладчика
         if (function_exists('error_reporting')) {
@@ -122,10 +119,41 @@ class PHPShopUpdate {
     }
 
     /**
+     * Обновление БД модулей
+     */
+    function updateModules() {
+        global $PHPShopModules;
+
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['modules']);
+        $data = $PHPShopOrm->select(array('*'), false, false, array('limit' => 100));
+
+        if (is_array($data)) {
+            foreach ($data as $row) {
+
+                // Информация по модулю из XML
+                $info = xml2array("../modules/" . $row['path'] . "/install/module.xml", false, true);
+
+                $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base'][$row['path']][$row['path'] . '_system']);
+                $PHPShopOrm->mysql_error = false;
+                $data_mod = $PHPShopOrm->select(array('*'), false, false, array('limit' => 1));
+
+                // Есть обновление
+                if (!empty($data_mod['version']) and $info['version'] > $data_mod['version']) {
+                    $PHPShopModules->path = $row['path'];
+                    $PHPShopModules->getUpdate($data_mod['version']);
+                    
+                    if($PHPShopOrm->update(array('version_new' => $info['version'])))
+                      $this->log("Обновление базы данных модуля \"" . $info['name'] . "\" до версии " . $info['version'] . " выполнено", 'success');
+                }
+            }
+        }
+    }
+
+    /**
      *  Локальный запуск.
      */
     function islocal() {
-        if ($this->local_update or ($_SERVER["SERVER_ADDR"] == "127.0.0.1" and getenv("COMSPEC")))
+        if ($this->local_update or ( $_SERVER["SERVER_ADDR"] == "127.0.0.1" and getenv("COMSPEC")))
             return true;
     }
 
@@ -159,8 +187,7 @@ class PHPShopUpdate {
 
             if (ftp_mkdir($this->user_ftp_stream, $this->_user_ftp_dir . '/' . $path)) {
                 return true;
-            }
-            else
+            } else
                 return false;
         }
     }
@@ -209,7 +236,7 @@ class PHPShopUpdate {
                 return false;
             }
 
-            if (!empty($this->_user_ftp_dir) and !ftp_chdir($this->user_ftp_stream, $this->_user_ftp_dir)) {
+            if (!empty($this->_user_ftp_dir) and ! ftp_chdir($this->user_ftp_stream, $this->_user_ftp_dir)) {
                 $this->log("Не удаётся найти указанную папку " . $this->_user_ftp_dir, 'warning', 'remove');
                 return false;
             }
@@ -228,11 +255,9 @@ class PHPShopUpdate {
             if (!$this->delete('test_update.zip')) {
                 $this->log("Не удалось удалить файл для тестирования Zip обновления. Обновление через панель управления не может быть выполнено!", 'danger', 'remove');
                 return false;
-            }
-            else
+            } else
                 return true;
-        }
-        else
+        } else
             return true;
     }
 
@@ -278,7 +303,7 @@ class PHPShopUpdate {
         global $PHPShopGUI;
 
         if (file_exists("dumper/backup/update.sql")) {
-            $this->_log.=$PHPShopGUI->setProgress(__('Обновление базы данных...'), 'install-update-bd');
+            $this->_log .= $PHPShopGUI->setProgress(__('Обновление базы данных...'), 'install-update-bd');
             $this->log("Обновление базы данных выполнено", 'success hide install-update-bd');
             $this->log("Не удается обновить базу данных", 'danger hide install-update-bd-danger');
             return false;
@@ -316,7 +341,7 @@ class PHPShopUpdate {
         if (is_array($SysValue))
             foreach ($SysValue as $k => $v) {
 
-                $s .="[$k]\n";
+                $s .= "[$k]\n";
                 foreach ($v as $key => $val) {
                     if (!is_array($val))
                         $s .= "$key = \"$val\";\n";
@@ -334,11 +359,9 @@ class PHPShopUpdate {
                 }
 
                 fclose($f);
-            }
-            else
+            } else
                 $this->log("Не удаётся обновить файл конфигурации phpshop/inc/config.ini. Нет прав на изменение файла.", 'warning', 'remove');
-        }
-        else
+        } else
             $this->log("Не удаётся обновить файл конфигурации phpshop/inc/config.ini. Ошибка парсинга файла.", 'warning', 'remove');
 
 
@@ -358,8 +381,8 @@ class PHPShopUpdate {
         $this->chmod($this->_user_ftp_dir . '/backup/backups/' . $GLOBALS['SysValue']['upload']['version'], $this->_user_ftp_chmod);
 
         if ($this->base_update_enabled) {
-            if(!copy($this->_backup_path . "temp/restore.sql", $this->_backup_path . 'backups/' . $GLOBALS['SysValue']['upload']['version'] . '/restore.sql'))
-             $this->log("Не удаётся скопировать бекап базы в backup/backups/" . $GLOBALS['SysValue']['upload']['version'], 'warning', 'remove');
+            if (!copy($this->_backup_path . "temp/restore.sql", $this->_backup_path . 'backups/' . $GLOBALS['SysValue']['upload']['version'] . '/restore.sql'))
+                $this->log("Не удаётся скопировать бекап базы в backup/backups/" . $GLOBALS['SysValue']['upload']['version'], 'warning', 'remove');
         }
 
         if ($this->base_update_enabled)
@@ -381,12 +404,12 @@ class PHPShopUpdate {
                         if (is_array($files)) {
                             foreach ($files as $file) {
                                 if (file_exists($_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . '/' . $k . '/' . $file))
-                                    $zip_files.= $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . '/' . $k . '/' . $file . ',';
+                                    $zip_files .= $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . '/' . $k . '/' . $file . ',';
                             }
                         }
                     }
                     elseif (file_exists($_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . '/' . $k . '/' . $v['files']))
-                        $zip_files.= $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . '/' . $k . '/' . $v['files'] . ',';
+                        $zip_files .= $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . '/' . $k . '/' . $v['files'] . ',';
                 }
             }
         }
@@ -412,22 +435,6 @@ class PHPShopUpdate {
 
         // Обновление БД присутствует
         if ($this->base_update_enabled) {
-
-            /*
-              if (!file_exists("dumper/backup/upload_dump.sql.gz")) {
-              $this->log("Не создана резервная копия базы данных", 'warning', 'remove');
-              return false;
-              }
-
-              if (!copy("dumper/backup/upload_dump.sql.gz", $this->_backup_path . "temp/upload_backup.sql.gz")) {
-              $this->log("Не удаётся скопировать бекап базы upload_backup.sql.gz", 'warning', 'remove');
-              return false;
-              }
-
-              if (!unlink("dumper/backup/upload_dump.sql.gz")) {
-              $this->log("Не удаётся удалить upload_backup.sql", 'warning', 'info');
-              }
-             */
 
             if (!copy($this->_backup_path . "temp/update.sql", "dumper/backup/update.sql")) {
                 $this->log("Не удаётся скопировать обновление базы данных update.sql", 'warning', 'remove');
@@ -515,29 +522,27 @@ class PHPShopUpdate {
             } elseif ($update_enable['status'] == 'no_update') {
                 $this->btn_class = 'btn btn-default btn-sm navbar-btn disabled';
             }
-        }
-        else
+        } else
             $this->btn_class = 'hide';
     }
 
     /**
-     * Проверка бакапа БД
+     * Проверка бекапа БД
      */
     function checkBD() {
 
         if (file_exists("dumper/backup/upload_dump.sql.gz")) {
             $this->log('Бекап базы данных выполнен');
-        }
-        else
+        } else
             $this->log('Бекап базы данных не выполнен', 'warning', 'remove');
     }
 
     function log($text, $class = 'success', $icon = 'ok') {
-        $this->_log.='<div class="alert alert-' . $class . '" role="alert"><span class="glyphicon glyphicon-' . $icon . '-sign"></span> ' . $text . '</div>';
+        $this->_log .= '<div class="alert alert-' . $class . '" role="alert"><span class="glyphicon glyphicon-' . $icon . '-sign"></span> ' . $text . '</div>';
     }
 
     function fulllog($text) {
-        $this->_fulllog.=$text . '<br>';
+        $this->_fulllog .= $text . '<br>';
     }
 
     function getLog() {
@@ -547,10 +552,10 @@ class PHPShopUpdate {
 }
 
 /**
- * Удаленеи файлов перед заменой.
+ * Удаление файлов перед заменой.
  */
 function preExtractCallBack($p_event, $p_header) {
-    if ($p_header['folder'] != 1 and $_SERVER["SERVER_ADDR"] != "127.0.0.1" and !getenv("COMSPEC")) {
+    if ($p_header['folder'] != 1 and $_SERVER["SERVER_ADDR"] != "127.0.0.1" and ! getenv("COMSPEC")) {
         unlink($p_header['filename']);
     }
     return 1;

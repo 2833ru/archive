@@ -12,11 +12,11 @@ function alfabank($data) {
         $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.alfabank.alfabank_log"));
 
         // Выборка логов
-        $log = $PHPShopOrm->select(array('*'), array("order_id=" => "'$data[uid]'"), array('order' => 'date DESC'));
+        $log = $PHPShopOrm->getList(array('*'), array("order_id=" => "'$data[uid]'"), array('order' => 'date DESC'));
 
         // Выводим кнопку возврата, если возврат еще не выполнялся
         $refund = false;
-        foreach ($log as $logItem){
+        foreach ($log as $logItem) {
             if($logItem['type'] == 'refundTrue')
                 $refund = true;
         }

@@ -65,7 +65,7 @@ function actionStart() {
     else
         $date_end = PHPShopDate::get(time() - 1);
 
-    $TitlePage.=' с ' . $date_start . ' по ' . $date_end;
+    $TitlePage.=' '.__('с').' ' . $date_start . ' '.__('по').' ' . $date_end;
 
 
     // Размер названия поля
@@ -104,7 +104,7 @@ function actionStart() {
                             <!-- Progress -->
                             <div class="progress">
                                 <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="5" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-                                    Загрузка...
+                                    '.__('Загрузка').'...
                                 </div>
                             </div>   
                             <!--/ Progress -->

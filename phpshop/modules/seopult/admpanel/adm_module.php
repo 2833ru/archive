@@ -19,7 +19,7 @@ function actionUpdate() {
     $request = http_build_query($params);
 
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, "http://i.seopult.pro/iframe/getCryptKeyWithUserReg?" . $request);
+    curl_setopt($ch, CURLOPT_URL, "https://app01.promopult.org/iframe/getCryptKeyWithUserReg?" . $request);
     curl_setopt($ch, CURLOPT_HEADER, 0);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_CRLF, true);
@@ -48,14 +48,15 @@ function actionUpdate() {
 
     $PHPShopOrm->debug = false;
     $action = $PHPShopOrm->update($_POST);
-    //return $action;
+    header('Location: ?path=modules.dir.seopult');
+    return true;
 }
 
 function actionStart() {
     global $PHPShopGUI, $PHPShopSystem, $PHPShopOrm,$select_name,$TitlePage;
     
         $PHPShopGUI->action_button['Пульт'] = array(
-        'name' => 'Пульт управления',
+        'name' => __('Пульт управления'),
         'action' => 'modules.dir.seopult',
         'class' => 'btn  btn-default btn-sm navbar-btn btn-action-panel',
         'type' => 'button',
@@ -63,7 +64,7 @@ function actionStart() {
     );
 
     
-     $PHPShopGUI->setActionPanel($TitlePage, $select_name, array('Пульт', 'Сохранить','Закрыть'));
+    $PHPShopGUI->setActionPanel($TitlePage, $select_name, array('Пульт', 'Сохранить и закрыть'));
 
     // Выборка
     $data = $PHPShopOrm->select();

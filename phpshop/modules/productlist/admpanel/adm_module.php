@@ -40,7 +40,7 @@ function actionStart() {
 
     $Tab1 = $PHPShopGUI->setField('Заголовок блока', $PHPShopGUI->setInputText(false, 'title_new', $data['title']));
     $Tab1.=$PHPShopGUI->setField('Количество товаров в блоке', $PHPShopGUI->setInputText(false, 'num_new', $data['num'], 100));
-    $Tab1.=$PHPShopGUI->setField('Место вывода', $PHPShopGUI->setSelect('enabled_new', $e_value, 150));
+    $Tab1.=$PHPShopGUI->setField('Место вывода', $PHPShopGUI->setSelect('enabled_new', $e_value, 150,true));
 
     $info = 'Для произвольной вставки элемента следует выбрать парамет вывода "Не выводить" и в ручном режиме вставить переменную
         <kbd>@productlist@</kbd> в свой шаблон /main/shop.tpl.

@@ -2,10 +2,10 @@
 <p><br></p>
 <div class="row">
     <div class="col-xs-12 col-md-5 text-center">
-        <a href="/shop/UID_@productId@.html"><img src="@pic_big@" alt="@name@" border="0"></a>
+        <a href="/shop/UID_@productId@.html"><img src="@pic_big@" alt="@name@" border="0" class="notice-img"></a>
     </div>
     <div class="col-xs-12 col-md-7">
-        <h4>@name@</h4>
+        <h4>@productName@</h4>
         <div>
             <a href="javascript:history.back(1)" class="btn btn-info">{Вернуться}</a>
             <a href="./notice.html" class="btn btn-info">{Архив заявок}</a>

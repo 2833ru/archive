@@ -1,6 +1,6 @@
 <?php
 
-$TitlePage = "Статистика - Товары в корзине";
+$TitlePage = __("Статистика - Товары в корзине");
 
 function actionStart() {
     global $PHPShopInterface, $TitlePage, $select_name, $PHPShopSystem;

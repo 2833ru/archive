@@ -2,7 +2,7 @@
 
 /**
  * Библиотека Отправление почты
- * @version 2.4
+ * @version 2.5
  * @package PHPShopClass
  * <code>
  * // example:
@@ -37,6 +37,9 @@ class PHPShopMail {
 
         if (empty($_classPath))
             $_classPath = './phpshop/';
+        
+        if ($GLOBALS['PHPShopBase']->codBase == 'utf-8')
+            $this->codepage = 'utf-8';
 
         // Загрузчик
         require_once $_classPath . 'lib/phpmailer/PHPMailerAutoload.php';
@@ -61,10 +64,10 @@ class PHPShopMail {
                 $this->mail->Host = $option['host'];
                 $this->mail->Port = $option['port'];
                 $this->SMTPSecure = $option['tls'];
-                $this->mail->SMTPAuth = $option['auth'];
+                $this->mail->SMTPAuth = 1;
                 $this->mail->Username = $option['user'];
                 $this->mail->Password = $option['password'];
-                $this->mail->SMTPAutoTLS = 0;
+                $this->mail->SMTPAutoTLS = $option['auth'];
 
 
                 if (!empty($option['auth']))
@@ -142,7 +145,8 @@ class PHPShopMail {
             $GLOBALS['SysValue']['other']['telNum'] = $this->PHPShopSystem->getParam('tel');
             $GLOBALS['SysValue']['other']['org_name'] = $this->PHPShopSystem->getSerilizeParam('bank.org_name');
             $GLOBALS['SysValue']['other']['org_adres'] = $this->PHPShopSystem->getSerilizeParam('bank.org_adres');
-            $GLOBALS['SysValue']['other']['logo'] = $this->PHPShopSystem->getParam('logo');
+            $GLOBALS['SysValue']['other']['logo'] = $this->PHPShopSystem->getLogo(true);
+            $GLOBALS['SysValue']['other']['charset'] = $this->codepage;
 
             $GLOBALS['SysValue']['other']['shopName'] = $this->PHPShopSystem->getName();
             $GLOBALS['SysValue']['other']['serverPath'] = $_SERVER['SERVER_NAME'] . "/" . $GLOBALS['SysValue']['dir']['dir'];

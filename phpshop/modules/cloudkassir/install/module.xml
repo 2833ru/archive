@@ -3,7 +3,7 @@
     <version>1.1</version>
     <name>Онлайн-касса CloudKassir</name>
     <description>Модуль онлайн-кассы CloudKassir.</description>
-    <faqlink>http://faq.phpshop.ru/page/cloudkassir.html</faqlink>
+    <faqlink>https://docs.phpshop.ru/moduli/platezhnye-sistemy/cloudkassir</faqlink>
     <category>payment</category>
     <sign>1545904926</sign>
     <adminmenu>

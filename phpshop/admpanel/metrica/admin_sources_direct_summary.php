@@ -1,6 +1,6 @@
 <?php
 
-$TitlePage = "Статистика - Директ сводка";
+$TitlePage = __("Статистика - Директ сводка");
 
 function actionStart() {
     global $PHPShopInterface, $TitlePage, $select_name, $PHPShopSystem;

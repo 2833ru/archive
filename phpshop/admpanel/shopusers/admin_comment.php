@@ -15,7 +15,7 @@ function actionStart() {
 
     $PHPShopInterface->addJSFiles('./shopusers/gui/shopusers.gui.js');
     $PHPShopInterface->setActionPanel($TitlePage, array('Удалить выбранные'), false,false);
-    $PHPShopInterface->setCaption(array(null, "2%"), array("Иконка", "7%", array('sort' => 'none')), array("Название", "40%"), array("Рейтинг", "7%"), array("Пользователь", "20%"), array("Дата", "10%"), array("", "10%"), array("Статус", "10%", array('align' => 'right')));
+    $PHPShopInterface->setCaption(array(null, "2%"), array("Иконка", "7%", array('sort' => 'none')), array("Название", "38%"), array("Рейтинг", "10%"), array("Пользователь", "20%"), array("Дата", "10%"), array("", "10%"), array("Статус", "10%", array('align' => 'right')));
 
     // Таблица с данными
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['comment']);

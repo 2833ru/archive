@@ -1,6 +1,6 @@
 <?php
 
-$TitlePage = __('Редактирование записи #' . intval($_GET['id']));
+$TitlePage = __('Редактирование записи').' #' . intval($_GET['id']);
 
 // SQL
 $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.admlog.admlog_log"));
@@ -59,7 +59,7 @@ function actionStart() {
 
 
     $PHPShopGUI->action_button['Восстановить данные'] = array(
-        'name' => 'Восстановить данные',
+        'name' => __('Восстановить данные'),
         'action' => 'saveID',
         'class' => 'btn btn-default btn-sm navbar-btn',
         'type' => 'submit',
@@ -75,7 +75,7 @@ function actionStart() {
         $button=array('Восстановить данные');
     else $button=null;
     
-    $PHPShopGUI->setActionPanel('Запись журнала изменений от '.PHPShopDate::dataV($data['date'], true), false, $button);
+    $PHPShopGUI->setActionPanel(__('Запись журнала изменений от').' '.PHPShopDate::dataV($data['date'], true), false, $button);
 
     // Содержание закладки 1
     //$Tab1 = $PHPShopGUI->setField("Дата:", $PHPShopGUI->setInput("text", "name_new", PHPShopDate::dataV($data['date'], true), "left", 150));

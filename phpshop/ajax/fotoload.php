@@ -22,7 +22,7 @@ function getFotoIconPodrobno($n, $f) {
     global $SysValue,$FotoArray,$link_db;
 
     $fRComSatrt = null;
-    $sql = "select * from " . $SysValue['base']['table_name35'] . " where parent='" . intval($n) . "' order by num";
+    $sql = "select * from " . $SysValue['base']['foto'] . " where parent='" . intval($n) . "' order by num";
     $result = mysqli_query($link_db,$sql);
     $num = mysqli_num_rows($result);
     while (@$row = mysqli_fetch_array(@$result)) {

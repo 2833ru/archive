@@ -265,7 +265,7 @@ function visualcartform($val, $option) {
 
 // Добавляем в шаблон элемент
 if ($PHPShopNav->notPath(array('order', 'done'))) {
-    $AddToTemplateVisualCart = new AddToTemplateVisualCart();
-    $AddToTemplateVisualCart->visualcart();
+    $GLOBALS['AddToTemplateVisualCart'] = new AddToTemplateVisualCart();
+    $GLOBALS['AddToTemplateVisualCart']->visualcart();
 }
 ?>

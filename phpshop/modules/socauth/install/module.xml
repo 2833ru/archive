@@ -2,7 +2,7 @@
 <module>
     <version>1.4</version>
     <name>SocAuth</name>
-    <faqlink>http://faq.phpshop.ru/page/socauth.html</faqlink>
+    <faqlink>https://docs.phpshop.ru/moduli/socialnye-seti/socauth</faqlink>
     <description>Модуль авторизации через Вконтакте, Facebook и Twitter.</description>
     <category>soc</category>
     <adminmenu>

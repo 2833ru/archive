@@ -11,7 +11,7 @@ class PHPShopParser {
     /**
      * Проверка шаблона на присутствие переменной
      * @param string $path путь к файлу шаблона
-     * @param string $value переменная шабонизатора
+     * @param string $value переменная шаблонизатора
      * @return boolean 
      */
     static function check($path, $value) {
@@ -52,7 +52,7 @@ class PHPShopParser {
     }
 
     /**
-     * Обработка файла шаблона, вставка переменнных
+     * Обработка файла шаблона, вставка переменных
      * @param string $path путь к файлу шаблона
      * @param bool $return режим вывода информации или возврата информации
      * @param bool $replace режим замены 
@@ -129,8 +129,8 @@ class PHPShopParser {
     }
 
     static function locale($str) {
-        if(str_replace(" ","", $str[0]) == "{}")
-            return  "{}";
+        if (str_replace(" ", "", $str[0]) == "{}")
+            return "{}";
         else
             return __($str[2]);
     }
@@ -316,7 +316,7 @@ function ParseTemplateReturn($TemplateName, $mod = false, $debug = false) {
         $file = tmpGetFile($SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'] . chr(47) . $TemplateName);
     $dis = Parser($file);
 
-    $add = ' id="data-source" data-toggle="tooltip" data-placement="auto" data-source="' . $TemplateName . '" title="Показать [Ctrl + &crarr;]" ';
+    $add = ' id="data-source" data-toggle="tooltip" data-placement="auto" data-source="' . $TemplateName . '" title="'.__('Показать').' [Ctrl + &crarr;]" ';
 
 
     if ($debug and !empty($_COOKIE['debug_template'])) {
@@ -417,7 +417,7 @@ function Parser($string, $debug = false) {
     $dis = @preg_replace_callback("/@([a-zA-Z0-9_]+)@/", 'SysValueReturn', @preg_replace_callback("/(@php)(.*)(php@)/sU", "evalstr", str_replace('&#43;', '+', $string)));
     $dis = preg_replace_callback("/({)([а-яА-ЯёЁ0-9_ ,.\"\-\/]+)(})/", "PHPShopParser::locale", $dis);
 
-    $add = ' id="data-source" data-toggle="tooltip" data-placement="auto" data-source="' . $debug . '" title="Показать [Ctrl + &crarr;]" ';
+    $add = ' id="data-source" data-toggle="tooltip" data-placement="auto" data-source="' . $debug . '" title="'.__('Показать').' [Ctrl + &crarr;]" ';
 
     if ($debug and !empty($_COOKIE['debug_template'])) {
         if (strstr($dis, '<li') or strstr($dis, 'class="product-col"'))
@@ -439,7 +439,8 @@ function Parser($string, $debug = false) {
  */
 function tmpGetFile($path) {
     if (strpos($path, '.tpl')) {
-        $file = @file_get_contents($path);
+        if (is_file($path))
+            $file = @file_get_contents($path);
         if (!$file)
             return false;
         return $file;
@@ -451,9 +452,18 @@ function tmpGetFile($path) {
 /**
  * Скрытие элементов шаблонизатора
  * @param string $name имя переменной для сравнения
+ * @param string $typ тип переменной для сравнения [ parser | cookie | session | global | requet]
  */
-function __hide($name) {
-    if (empty($GLOBALS['SysValue']['other'][$name]))
+function __hide($name, $type = 'parser') {
+    if ($type == 'parser' and empty($GLOBALS['SysValue']['other'][$name]))
+        echo 'hide';
+    else if ($type == 'cookie' and !empty($_COOKIE[$name]))
+        echo 'hide';
+    else if ($type == 'session' and !empty($_SESSION[$name]))
+        echo 'hide';
+    else if ($type == 'global' and !empty($GLOBALS[$name]))
+        echo 'hide';
+    else if ($type == 'requet' and !empty($_REQUEST[$name]))
         echo 'hide';
 }
 

@@ -149,7 +149,7 @@ IP: @user_ip@</p>
         <td align="left" valign="top" height="100%">
             <p><b>{С уважением}, @shopName@.</b></p>
       <p>@org_name@<br>
-      {Интернет-магазин} <a href="http://@serverPath@">@serverPath@</a><br>
+      {Интернет-магазин} <a href="http://@serverPath@">@serverShop@</a><br>
       {Отдел продаж}: @telNum@<br>
       E-mail: @adminMail@<br>
       @org_adres@</p></td>

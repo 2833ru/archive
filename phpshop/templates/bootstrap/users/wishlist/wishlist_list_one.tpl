@@ -5,7 +5,7 @@
     <td ><a href="/shop/UID_@prodId@.html">@prodName@</a></td>
     <td >            
         <div class="price">
-            @prodPrice@ @productValutaName@
+            @prodPrice@ <span class="rubznak">@productValutaName@</span>
         </div>
     </td>
     <td >

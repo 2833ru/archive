@@ -23,7 +23,7 @@
                     @searchPageCategory@
                 </ul>
             </div>
-            <div class="btn-group" data-toggle="buttons">
+            <div class="btn-group @hideSearchType@" data-toggle="buttons">
                 <label class="btn btn-default btn-sm @searchSetCactive@">
                     <input type="radio" name="pole" value="1" autocomplete="off" @searchSetC@> {Наименование}
                 </label>
@@ -34,7 +34,7 @@
         </span>
     </form>
 </div>
-
+<div class="search-misspell">@searchMisspell@</div>
 @productPageDis@
 
 @searchPageNav@

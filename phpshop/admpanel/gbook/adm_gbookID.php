@@ -3,6 +3,7 @@
 $TitlePage = __('Редактирование Отзыва') . ' #' . $_GET['id'];
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['gbook']);
 
+
 function actionStart() {
     global $PHPShopGUI, $PHPShopSystem, $PHPShopOrm, $PHPShopModules;
 
@@ -41,13 +42,14 @@ function actionStart() {
 
     // Содержание закладки 2
     $Tab1.= $PHPShopGUI->setField("Ответ", $oFCKeditor->AddGUI());
+    
+    $Tab2=$PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'));
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1, true));
-
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Дополнительно", $Tab2, true));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =
@@ -92,9 +94,6 @@ function actionSave() {
 function actionUpdate() {
     global $PHPShopOrm, $PHPShopModules;
 
-    // Перехват модуля
-    $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
-
     if (empty($_POST['ajax'])) {
         $_POST['datas_new'] = PHPShopDate::GetUnixTime($_POST['datas_new']);
     }
@@ -102,6 +101,17 @@ function actionUpdate() {
         $_POST['flag_new'] = 0;
     else if (!empty($_POST['mail_new']))
         sendMail($_POST['name_new'], $_POST['mail_new']);
+    
+    // Мультибаза
+    if (is_array($_POST['servers'])) {
+        $_POST['servers_new'] = "";
+        foreach ($_POST['servers'] as $v)
+            if ($v != 'null' and !strstr($v, ','))
+                $_POST['servers_new'].="i" . $v . "i";
+    }
+    
+     // Перехват модуля
+    $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
 
     $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['rowID']));
     return array("success" => $action);

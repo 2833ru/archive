@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="@lang@">
     <head>
-        <meta charset="windows-1251">
+        <meta charset="@charset@">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>@pageTitl@</title>
@@ -9,6 +9,17 @@
         <meta name="keywords" content="@pageKeyw@">
         <meta name="copyright" content="@pageReg@">
         <link rel="apple-touch-icon" href="@icon@">
+        <link rel="icon" href="@icon@" type="image/x-icon">
+        <link rel="mask-icon" href="@icon@" >
+        <link rel="icon" href="@icon@" type="image/x-icon">
+        <link rel="mask-icon" href="@icon@" >
+        
+        <!-- OpenGraph -->
+        <meta property="og:title" content="@ogTitle@">
+        <meta property="og:image" content="http://@serverName@@ogImage@">
+        <meta property="og:url" content="http://@ogUrl@">
+        <meta property="og:type" content="website">
+        <meta property="og:description" content="@ogDescription@">
 
         <!-- Preload -->
         <link rel="preload" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/bootstrap.min.css" as="style">
@@ -61,13 +72,7 @@
                         <div class="col-xs-12 col-sm-6 col-md-6 top-mobile-fix">
                             <a class="header-link-color header-top-link header-link-contact" href="mailto:@adminMail@"><i class="fa fa-envelope-o" aria-hidden="true"></i> @adminMail@</a>
                             <a class="header-link-color header-top-link header-link-contact" href="tel:@telNum@"><i class="fa fa-bell-o" aria-hidden="true"></i> @telNum@</a>
-
-                            <!-- Social Button -->
-                            <a class="social-button hidden-xs hidden-sm header-top-link" href="#" title="{Поделится в} Facebook"><i class="fa fa-facebook" aria-hidden="true"></i></a>
-                            <a class="social-button hidden-xs hidden-sm header-top-link" href="#" title="{Поделится в} Контакте"><i class="fa fa-vk" aria-hidden="true"></i></a>
-                            <a class="social-button hidden-xs hidden-sm header-top-link" href="#" title="{Поделится в} Одноклассники"><i class="fa fa-odnoklassniki" aria-hidden="true"></i></a>
-                            <!--/ Social Button -->
-
+                            <a class="header-link-color header-top-link header-link-contact" href="tel:@telNum2@">@telNum2@</a>
                         </div>
                         <div class="col-xs-12 col-sm-6 col-md-6 top-mobile-fix">
                             <div class="header-wishlist">
@@ -117,7 +122,7 @@
                                         </ul>
                                     </li>
                                     @topBrands@
-                                    @topMenu@
+                                    @topcatMenu@
                                     </li>
                                 </ul>
                             </div>
@@ -148,17 +153,30 @@
             </div>
         </header>
         <!-- Header Section Ends -->
+        <!-- jQuery -->
+        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery-1.11.0.min.js"></script>
 
         <!-- Slider Section Starts -->
-        <section class="mainSliderSection">
+        <!-- Nested Container Starts -->
+        <!-- Carousel Starts -->
+        <div class="slider hidden-xs">
             <div class="container">
                 <div class="row">
-                    <div class="slider">
-                        @imageSlider@
-                    </div>
+                    @imageSlider@
                 </div>
             </div>
-        </section>
+        </div>
+
+        <div class="slider col-xs-12 hidden-lg hidden-md hidden-sm">
+            <div class="container">
+                <div class="banner-block text-center hidden-lg hidden-md hidden-sm">
+                    @sticker_mobile_slider@
+                </div>
+            </div>
+
+            <!-- Carousel Ends -->
+            <!-- Nested Container Ends -->
+        </div>
         <!-- Slider Section Ends -->
 
         <!-- Main Container Starts -->
@@ -182,7 +200,7 @@
                     @productDay@
 
                     <div class="col-xs-12">
-                        <div class="banner-block">@banersDisp@</div>
+                        <div class="hidden-xs banner-block">@sticker_banner@</div>
                     </div>
 
                     <div class="col-xs-12 @php __hide('specMain'); php@">
@@ -193,7 +211,7 @@
                     </div>
                     <div class="col-xs-12">
                         <div class="row">
-                            <div class="col-xs-12 col-md-4 @php __hide('nowBuy'); php@">
+                            <div class="col-xs-12 col-md-4 @php __hide('nowBuy'); php@ hidden-xs">
                                 <h3 class="side-heading nowbuy-title">{Популярные товары}</h3>
                                 <div class="nowbuy-list">
                                     @nowBuy@
@@ -207,13 +225,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-12 @php __hide('now_buying'); php@">
-                        <h2 class="main-page-title">@now_buying@</h2>
-                        <div class="owl-carousel nowBuy">
-                            @nowBuy@
-                        </div>
-                    </div>
-
+                    <div class="row">@leftCatalTable@</div>
                 </div>
             </div>
         </section>
@@ -238,9 +250,11 @@
                             <li class="footer-map">@streetAddress@</li>
                             <li class="footer-email"><a href="mailto:@adminMail@"><i class="fa fa-envelope-o"></i> @adminMail@</a></li>
                             <li class="footer-map">
-                                <h4 class="lead">
-                                    <a href="tel:@telNum@">Тел: @telNum@</a>
-                                </h4>
+                                <div>
+                                    <a href="tel:@telNum@">@telNum@</a>
+                                    <br><a href="tel:@telNum2@">@telNum2@</a>
+                                    <br>@workingTime@
+                                </div>
                             </li>
                         </ul>
                         <div class="footer-social">
@@ -260,8 +274,8 @@
                         <ul>
                             <li><a href="/users/order.html">{Отследить заказ}</a></li>
                             <li><a href="/users/notice.html">{Уведомления о товарах}</a></li>
-                            <li><a href="/users/message.html">{Связь с менеджерами}</a></li>
-                            @php if($_SESSION['UsersId']) echo '<li><a href="?logout=true">{Выйти}</a></li>'; php@
+                            @php if($_SESSION['UsersId']) echo '<li><a href="/users/message.html">{Связь с менеджерами}</a></li>
+                            <li><a href="?logout=true">{Выйти}</a></li>'; php@
                         </ul>
                     </div>
                     <!-- My Account Links Ends -->
@@ -281,8 +295,8 @@
                     <div class="col-md-3 col-sm-4 col-xs-12">
                         <h5>{Информация}</h5>
                         <ul>
-                            @topMenu@
-                            <li><a href="/page/politika_konfidencialnosti.html" title="{Политика конфиденциальности}">{Политика конфиденциальности}</a></li>
+                            @bottomMenu@
+
                         </ul>
                     </div>
                     <!-- Information Links Ends -->
@@ -323,8 +337,6 @@
         </footer>
         <!-- Footer Section Ends -->
 
-        <!-- jQuery -->
-        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery-1.11.0.min.js"></script>
         @editor@
 
         <!-- Fixed mobile bar -->
@@ -360,41 +372,42 @@
 
         <!-- Модальное окно авторизации-->
         <div class="modal fade bs-example-modal-sm" id="userModal" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog modal-sm">
+            <div class="modal-dialog modal-sm auto-modal">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">x</span><span class="sr-only">Close</span></button>
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">Ч</span><span class="sr-only">Close</span></button>
                         <h4 class="modal-title">{Авторизация}</h4>
                         <span id="usersError" class="hide">@usersError@</span>
                     </div>
                     <form role="form" method="post" name="user_forma">
                         <div class="modal-body">
                             <div class="form-group">
-                                <label>Email</label>
-                                <input type="email" name="login" class="form-control" placeholder="Email..." required="">
-                                <span class="glyphicon glyphicon-remove form-control-feedback hide" aria-hidden="true"></span>
-                            </div>
 
-                            <div class="form-group">
-                                <label>{Пароль}</label>
-                                <input type="password" name="password" class="form-control" placeholder="{Пароль}..." required="">
+                                <input type="email" name="login" class="form-control" placeholder="Email" required="" value="@UserLogin@">
+                                <span class="glyphicon glyphicon-remove form-control-feedback hide" aria-hidden="true"></span>
+                                <br>
+
+                                <input type="password" name="password" class="form-control" placeholder="{Пароль}" required="" value="@UserPassword@">
                                 <span class="glyphicon glyphicon-remove form-control-feedback hide" aria-hidden="true"></span>
                             </div>
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" value="1" name="safe_users" @UserChecked@> {Запомнить}
-                                </label>
+                            <div class="flex-row">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="1" name="safe_users" @UserChecked@> {Запомнить}
+                                    </label>
+                                </div>
+                                <a href="/users/sendpassword.html" class="pass">{Забыли пароль}</a>
                             </div>
 
                             @facebookAuth@ @twitterAuth@
                         </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary pull-left">{Войти}</button>
-                            <span class="pull-right"><a href="/users/sendpassword.html" class="btn btn-default">{Забыли}?</a>
-                            </span>
+                        <div class="modal-footer flex-row">
+
                             <input type="hidden" value="1" name="user_enter">
+                            <button type="submit" class="btn btn-primary">{Войти}</button>
+                            <a href="/users/register.html" >{Зарегистрироваться}</a>
                         </div>
-                    </form>   
+                    </form>
                 </div>
             </div>
         </div>
@@ -423,9 +436,9 @@
             </div>
         </div>
         <!--/ Модальное окно мобильного поиска -->
-        
+
         <!-- Согласие на использование cookie  -->
-        <div class="cookie-message hide"><p></p><a href="#" class="btn btn-default btn-sm">Ок</a></div>
+        <div class="cookie-message hide"><p></p><a href="#" class="btn btn-default btn-sm">Ok</a></div>
 
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/font-awesome.min.css" rel="stylesheet">
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/iconfont.css" rel="stylesheet">
@@ -445,6 +458,7 @@
         <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@/js/phpshop.js"></script>
         <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery-ui.min.js"></script>
         <script src="java/jqfunc.js"></script>
+        <script src="phpshop/locale/@php echo $_SESSION['lang']; php@/template.js"></script>
         <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@/js/jquery.cookie.js"></script>
         <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.maskedinput.min.js"></script>
         <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.suggestions.min.js"></script>

@@ -29,9 +29,6 @@ function send_to_order_mod_acredit_hook($obj, $value, $rout)
         // Лог        
         $PHPShopAlfaCreditArray->log($reference, $goods);
 
-        // Очищаем корзину
-        unset($_SESSION['cart']);
-
         $obj->set('orderMesage', $form);
     }
 }

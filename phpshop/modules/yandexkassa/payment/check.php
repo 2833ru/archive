@@ -3,13 +3,13 @@
 /**
  * Обработчик оповещения о платеже Яндекс.Касса
  * @author PHPShop Software
- * @version 1.0
+ * @version 1.1
  */
 session_start();
-header('Content-Type: text/html; charset=utf-8');
 
 $_classPath = "../../../";
 include($_classPath . "class/obj.class.php");
+include_once($_classPath . "modules/yandexkassa/class/YandexKassa.php");
 PHPShopObj::loadClass("base");
 PHPShopObj::loadClass("lang");
 PHPShopObj::loadClass("order");
@@ -27,7 +27,10 @@ $PHPShopModules->checkInstall('yandexkassa');
 
 class Payment extends PHPShopPaymentResult {
 
-    function Payment() {
+    /** @var YandexKassa */
+    private $YandexKassa;
+
+    function __construct() {
         $this->option();
         parent::__construct();
     }
@@ -39,24 +42,8 @@ class Payment extends PHPShopPaymentResult {
 
         $this->payment_name = 'Yandexkassa';
         $this->log = true;
-        include_once(dirname(__FILE__) . '/../hook/mod_option.hook.php');
-        $this->PHPShopYandexkassaArray = new PHPShopYandexkassaArray();
-        $this->option = $this->PHPShopYandexkassaArray->getArray();
-    }
 
-    /**
-     * Проверка подписи
-     * @return boolean 
-     */
-    function check() {
-//        print_r($this->option);
-        $this->my_crc = strtoupper(md5($_REQUEST['action'] . ';' . $_REQUEST['orderSumAmount'] . ';' . $_REQUEST['orderSumCurrencyPaycash'] . ';' . $_REQUEST['orderSumBankPaycash'] . ';' . $_REQUEST['shopId'] . ';' . $_REQUEST['invoiceId'] . ';' . $_REQUEST['customerNumber'] . ';' . $this->option['merchant_sig']));
-
-        $this->inv_id = $_REQUEST['orderNumber'];
-        $this->crc = $_REQUEST['md5'];
-
-        if ($this->my_crc == $this->crc)
-            return true;
+        $this->YandexKassa = new YandexKassa();
     }
 
     /**
@@ -64,36 +51,40 @@ class Payment extends PHPShopPaymentResult {
      */
     function updateorder() {
 
-        if ($this->check()) {
+        // Не доверяем полученному уведомлению (в новом api нет подписи) и делаем повторный запрос в Яндекс.
+        $source = file_get_contents('php://input');
+        $requestBody = json_decode($source, true);
+        $order = $this->YandexKassa->getOrderStatus($requestBody['object']['id']);
+        $log = $this->YandexKassa->findLogDataByYandexId($order['id']);
 
-            // Приверяем сущ. заказа
+        if(isset($order['paid']) && ($order['paid'] == true || $order['paid'] == 1)) {
             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
-            $PHPShopOrm->debug = $this->debug;
-            $row = $PHPShopOrm->select(array('uid'), array('uid' => "='" . $this->true_num($this->inv_id) . "'"), false, array('limit' => 1));
-            if (!empty($row['uid'])) {
-                $this->code = 0;
-                // данные в лог
-                $this->PHPShopYandexkassaArray->log($_REQUEST, $this->inv_id, 'заказ найден', 'запрос checkOrder c сервера яндекс кассы');
+            $PHPShopOrm->debug = false;
+            $row = $PHPShopOrm->getOne(array('id', 'uid'), array('id' => "='" . $log['order_id'] . "'"));
+            if (!empty($row['id'])) {
+                // Лог оплат
+                $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['payment']);
+                $PHPShopOrm->insert(array('uid_new' => str_replace('-', '', $row['uid']), 'name_new' => $this->payment_name,
+                    'sum_new' => $order['amount']['value'], 'datas_new' => time()));
+
+                // Изменение статуса платежа
+                $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
+                $PHPShopOrm->debug = false;
+                $PHPShopOrm->update(array('statusi_new' => $this->set_order_status_101(), 'paid_new' => 1), array('id' => '="' . $row['id'] . '"'));
+
+                $this->YandexKassa->log($order, $row['id'], 'Заказ оплачен, статус заказа изменен', 'Уведомление Яндекс.Кассы');
             } else {
-                // данные в лог
-                $this->PHPShopYandexkassaArray->log($_REQUEST, $this->inv_id, 'заказ не найден', 'запрос checkOrder c сервера яндекс кассы');
-                $this->code = 100;
+                $this->YandexKassa->log($order, $log['order_id'], 'Заказ не найден', 'Уведомление Яндекс.Кассы');
             }
         } else {
-            // данные в лог
-            $this->PHPShopYandexkassaArray->log($_REQUEST, $this->inv_id, 'ошибка проверки md5', 'запрос checkOrder c сервера яндекс кассы');
-            $this->code = 1;
+            $this->YandexKassa->log($order, $log['order_id'], 'Заказ не оплачен', 'Уведомление Яндекс.Кассы');
         }
 
-//        $this->log();
-
-        echo '<?xml version="1.0" encoding="UTF-8"?> 
-<checkOrderResponse performedDatetime="' . date("c") . '" 
-code="' . $this->code . '" invoiceId="' . $_REQUEST['invoiceId'] . '" 
-shopId="' . $this->option['merchant_id'] . '"/>';
+        header("HTTP/1.0 200");
+        exit();
     }
-
 }
 
 new Payment();
+
 ?>

@@ -1,11 +1,6 @@
-<div class="page-header">
-    <h1 class="main-heading2">@sortName@</h1>
-</div>
 
-
-
+ <h1 class="main-heading2">@sortName@</h1>
 <div> @sortDes@ </div>
-
 
 <!-- Product Filter Starts -->
     <div class="product-filter hidden-xs" id="filter-selection-well">

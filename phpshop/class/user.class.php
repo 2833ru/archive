@@ -57,12 +57,12 @@ class PHPShopUser extends PHPShopObj {
         }
         if ($disp)
             $disp = '
-                <b>¬ыбрать адрес доставки</b>    
+                <b>'.__('¬ыбрать адрес доставки').'</b>    
                 <select name="adres_id" id="adres_id" class="form-control selectpicker show-menu-arrow">
-                <option value="none">—оздать новый адрес</option>
+                <option value="none">'.__('—оздать новый адрес').'</option>
                 ' . $disp . '
                 </select><br>
-                <input type="checkbox" name="adres_this_default" value="1">  сделать выбранный вариант адресом по умолчанию
+                <input type="checkbox" name="adres_this_default" value="1">  '.__('сделать выбранный вариант адресом по умолчанию').'
                 <input type="hidden" class="adresListJson" value=\'' . PHPShopString::json_safe_encode($data_adres['list']) . '\'>
                 ';
         return $disp;
@@ -119,7 +119,15 @@ class PHPShopUser extends PHPShopObj {
         $PHPShopUserStatus = new PHPShopUserStatus($this->getStatus());
         return $PHPShopUserStatus->getDiscount();
     }
-
+    
+    /**
+     * ¬ывод бонусов
+     * @return int
+     */
+    function getBonus(){
+        return intval($this->getParam("bonus"));
+    }
+    
 }
 
 /**

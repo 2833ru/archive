@@ -47,13 +47,14 @@ function actionStart() {
 
     $PHPShopGUI->field_col = 2;
     $PHPShopGUI->setActionPanel($TitlePage, false, array('Создать и редактировать', 'Сохранить и закрыть'));
-    $PHPShopGUI->addJSFiles('./js/jquery.tagsinput.min.js', './page/gui/page.gui.js');
-    $PHPShopGUI->addCSSFiles('./css/jquery.tagsinput.css');
+
+    $PHPShopGUI->addJSFiles('./js/jquery.tagsinput.min.js', './js/bootstrap-datetimepicker.min.js', './page/gui/page.gui.js');
+    $PHPShopGUI->addCSSFiles('./css/jquery.tagsinput.css', './css/bootstrap-datetimepicker.min.css');
 
     $PHPShopCategoryArray = new PHPShopPageCategoryArray();
     $CategoryArray = $PHPShopCategoryArray->getArray();
 
-    $CategoryArray[0]['name'] = '- '.__('Корневой уровень').' -';
+    $CategoryArray[0]['name'] = '- ' . __('Корневой уровень') . ' -';
     $tree_array = array();
 
     $PHPShopCategoryArrayKey = $PHPShopCategoryArray->getKey('parent_to.id', true);
@@ -74,7 +75,7 @@ function actionStart() {
     $tree_array[0]['sub'][1000] = __('Главное меню сайта');
     $tree_array[0]['sub'][2000] = __('Начальная страница');
 
-    $tree_select.='<option value="0" ' . $data['category'] . ' data-subtext="<span class=\'glyphicon glyphicon-cog\'></span> '.__('Настройка').'">'.__('Внутренняя страница').'</option>';
+    $tree_select.='<option value="0" ' . $data['category'] . ' data-subtext="<span class=\'glyphicon glyphicon-cog\'></span> ' . __('Настройка') . '">' . __('Внутренняя страница') . '</option>';
     if (is_array($tree_array[0]['sub']))
         foreach ($tree_array[0]['sub'] as $k => $v) {
             $check = treegenerator($tree_array[$k], 1, $data['category']);
@@ -85,7 +86,7 @@ function actionStart() {
                 $selected = null;
 
             if (in_array($k, array(1000, 2000)))
-                $subtext = 'data-subtext="<span class=\'glyphicon glyphicon-cog\'></span> '.__('Настройка').'"';
+                $subtext = 'data-subtext="<span class=\'glyphicon glyphicon-cog\'></span> ' . __('Настройка') . '"';
             else
                 $subtext = null;
 
@@ -106,15 +107,16 @@ function actionStart() {
     $Tab1 = $PHPShopGUI->setCollapse('Информация', $PHPShopGUI->setField("Размещение", $tree_select) .
             $PHPShopGUI->setField("Заголовок", $PHPShopGUI->setInput("text.requared", "name_new", $data['name'])) .
             $PHPShopGUI->setField("Сортировка", $PHPShopGUI->setInputText("№", "num_new", $data['num'], 150)) .
-            $PHPShopGUI->setField("URL Ссылка", $PHPShopGUI->setInputText('/page/', "link_new", $data['link'], 300, '.html')));
+            $PHPShopGUI->setField("URL Ссылка", $PHPShopGUI->setInputText('/page/', "link_new", $data['link'], '100%', '.html')));
 
     $SelectValue[] = array('Вывод в каталоге', 1, $data['enabled']);
     $SelectValue[] = array('Заблокировать', 0, $data['enabled']);
 
     $Tab1.= $PHPShopGUI->setField("Опции вывода", $PHPShopGUI->setSelect("enabled_new", $SelectValue, 300));
+    
+    // Футер
+    $Tab1 .= $PHPShopGUI->setField("Подвал", $PHPShopGUI->setCheckbox('footer_new', 1, 'Главное меню в подвале', 1));
 
-    // Рекомендуемые товары
-    $Tab1.=$PHPShopGUI->setField('Рекомендуемые товары для совместной продажи', $PHPShopGUI->setTextarea('odnotip_new', $data['odnotip'], false, false, false, __('Укажите ID товаров или воспользуйтесь <a href="#" data-target="#odnotip_new"  class="btn btn-sm btn-default tag-search"><span class="glyphicon glyphicon-search"></span> поиском товаров</a>')));
 
     // Содержание закладки 3
     $Tab3 = $PHPShopGUI->setField("Title: ", $PHPShopGUI->setTextarea("title_new", $data['title']));
@@ -129,11 +131,26 @@ function actionStart() {
     $Tab1.=$PHPShopGUI->setCollapse('Доступность', $PHPShopGUI->setField("Показывать", $PHPShopGUI->setSelect("secure_new", $SecurityValue, 300)) .
             $PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/')));
 
+    // Иконка
+    $Tab4 = $PHPShopGUI->setField("Изображение", $PHPShopGUI->setIcon($data['icon'], "icon_new", false));
+
+    // Дата
+    $Tab4 .= $PHPShopGUI->setField("Дата", $PHPShopGUI->setInputDate("datas_new", PHPShopDate::get($data['datas'])));
+
+    // Рекомендуемые товары
+    $Tab4.=$PHPShopGUI->setField('Рекомендуемые товары для совместной продажи', $PHPShopGUI->setTextarea('odnotip_new', $data['odnotip'], false, false, false, __('Укажите ID товаров или воспользуйтесь') . ' <a href="#" data-target="#odnotip_new"  class="btn btn-sm btn-default tag-search"><span class="glyphicon glyphicon-search"></span> ' . __('поиском товаров') . '</a>'));
+
+    // Анонс
+    $oFCKeditor2 = new Editor('preview_new');
+    $oFCKeditor2->Height = '270';
+    $oFCKeditor2->Value = $data['preview'];
+    $Tab4.=$PHPShopGUI->setField("Анонс", $oFCKeditor2->AddGUI());
+
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1), array("Содержание", $oFCKeditor->AddGUI()));
+    $PHPShopGUI->setTab(array("Основное", $Tab1), array("Содержание", $oFCKeditor->AddGUI()), array("Дополнительно", $Tab4, true));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("submit", "saveID", "ОК", "right", 70, "", "but", "actionInsert.page.create");
@@ -151,10 +168,15 @@ function actionInsert() {
     global $PHPShopModules, $PHPShopOrm;
 
     // Корректировка пустых значений
-    $PHPShopOrm->updateZeroVars('enabled_new', 'secure_new');
+    $PHPShopOrm->updateZeroVars('enabled_new', 'secure_new', 'footer_new');
 
     if (empty($_POST['link_new']))
         $_POST['link_new'] = PHPShopString::toLatin($_POST['name_new']);
+
+    if (!empty($_POST['datas_new']))
+        $_POST['datas_new'] = PHPShopDate::GetUnixTime($_POST['datas_new']);
+    else
+        $_POST['datas_new'] = PHPShopDate::GetUnixTime($_POST['datas_new']);
 
     // Мультибаза
     $_POST['servers_new'] = "";
@@ -162,6 +184,8 @@ function actionInsert() {
         foreach ($_POST['servers'] as $v)
             if ($v != 'null' and !strstr($v, ','))
                 $_POST['servers_new'].="i" . $v . "i";
+
+    $_POST['icon_new'] = iconAdd();
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
@@ -174,6 +198,39 @@ function actionInsert() {
         header('Location: ?path=page.catalog&cat=' . $_POST['category_new']);
 
     return $action;
+}
+
+// Добавление изображения 
+function iconAdd() {
+    global $PHPShopSystem;
+
+    // Папка сохранения
+    $path = $GLOBALS['SysValue']['dir']['dir'] . '/UserFiles/Image/' . $PHPShopSystem->getSerilizeParam('admoption.image_result_path');
+
+    // Копируем от пользователя
+    if (!empty($_FILES['file']['name'])) {
+        $_FILES['file']['ext'] = PHPShopSecurity::getExt($_FILES['file']['name']);
+        if (in_array($_FILES['file']['ext'], array('gif', 'png', 'jpg', 'jpeg', 'svg'))) {
+            if (move_uploaded_file($_FILES['file']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['dir']['dir'] . $path . $_FILES['file']['name'])) {
+                $file = $GLOBALS['dir']['dir'] . $path . $_FILES['file']['name'];
+            }
+        }
+    }
+
+    // Читаем файл из URL
+    elseif (!empty($_POST['furl'])) {
+        $file = $_POST['icon_new'];
+    }
+
+    // Читаем файл из файлового менеджера
+    elseif (!empty($_POST['icon_new'])) {
+        $file = $_POST['icon_new'];
+    }
+
+    if (empty($file))
+        $file = '';
+
+    return $file;
 }
 
 // Обработка событий

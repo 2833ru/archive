@@ -39,7 +39,7 @@ $Tab1.=$PHPShopGUI->setField('Пароль', $PHPShopGUI->setInput('password', 'mercha
     // Sandbox
     $sandbox_value[] = array('Включен', 1, $data['sandbox']);
     $sandbox_value[] = array('Выключен', 2, $data['sandbox']);
-    $Tab1.= $PHPShopGUI->setField('Тестовый режим', $PHPShopGUI->setSelect('sandbox_new', $sandbox_value,300));
+    $Tab1.= $PHPShopGUI->setField('Тестовый режим', $PHPShopGUI->setSelect('sandbox_new', $sandbox_value,300,true));
 
 
     $Tab2 = $PHPShopGUI->setPay();

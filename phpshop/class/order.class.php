@@ -97,7 +97,7 @@ class PHPShopOrderFunction extends PHPShopObj {
         if (!empty($status))
             return $PHPShopOrderStatusArray->getParam($this->getParam('statusi') . '.name');
         else
-            return 'Новый заказ';
+            return __('Новый заказ');
     }
 
     /**
@@ -164,32 +164,40 @@ class PHPShopOrderFunction extends PHPShopObj {
         $this->default_valuta_name = $PHPShopValuta->getName();
         $this->default_valuta_code = $PHPShopValuta->getCode();
         $this->default_valuta_kurs = $PHPShopValuta->getKurs();
-
-        $kurs_beznal = $this->PHPShopSystem->getParam("kurs_beznal");
-        $PHPShopValuta = new PHPShopValuta($kurs_beznal);
-        $this->default_valuta_kurs_beznal = $PHPShopValuta->getKurs();
+        $this->default_valuta_kurs_beznal = $this->default_valuta_kurs;
     }
 
     /**
      * Сумма c учетом скидки
      * @param float $sum сумма
      * @param float $disc скидка
+     * @param string $def разделитель
      * @return float
      */
-    function returnSumma($sum, $disc = 0, $def = '') {
+    function returnSumma($sum, $disc = 0, $def = '', $delivery = 0) {
         global $PHPShopSystem;
 
         if (!$PHPShopSystem) {
             $kurs = $this->default_valuta_kurs;
             $this->format = 0;
         } else {
-            $kurs = $PHPShopSystem->getDefaultValutaKurs(true);
+            $kurs = $PHPShopSystem->getDefaultValutaKurs(false);
         }
 
-        $sum*=$kurs;
+        $sum *= $kurs;
         $sum = $sum - ($sum * $disc / 100);
-        return number_format($sum, $this->format, ".", $def);
+        
+        // Бонусы
+        PHPShopObj::loadClass('bonus');
+        $PHPShopBonus = new PHPShopBonus($_SESSION['UsersId']);
+        $this->bonus_minus = $PHPShopBonus->getUserBonus($sum);
+        $this->bonus_plus = $PHPShopBonus->setUserBonus($sum);
+        
+        $sum = $sum - $this->bonus_minus;
+
+        return number_format($sum + $delivery, $this->format, ".", $def);
     }
+    
 
     /**
      * Поправки по курсу безнал
@@ -199,7 +207,7 @@ class PHPShopOrderFunction extends PHPShopObj {
      */
     function returnSummaBeznal($sum, $disc) {
         $kurs = $this->default_valuta_kurs_beznal;
-        $sum*=$kurs;
+        $sum *= $kurs;
         $sum = $sum - ($sum * $disc / 100);
         return number_format($sum, $this->format, ".", "");
     }
@@ -223,11 +231,12 @@ class PHPShopOrderFunction extends PHPShopObj {
         $maxsum = 0;
         $maxdiscount = 0;
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['discount']);
-        $row = $PHPShopOrm->select(array('sum', 'discount'), array('sum' => "<='$mysum'", 'enabled' => "='1'"), array('order' => 'sum desc'), array('limit' => 1));
+        $row = $PHPShopOrm->select(array('*'), array('sum' => "<='$mysum'", 'enabled' => "='1'"), array('order' => 'sum desc'), array('limit' => 1));
         if (is_array($row)) {
             $sum = $row['sum'];
             if ($sum > $maxsum) {
                 $maxsum = $sum;
+                $action = $row['action'];
                 $maxdiscount = $row['discount'];
             }
         }
@@ -237,8 +246,16 @@ class PHPShopOrderFunction extends PHPShopObj {
             $PHPShopUserStatus = new PHPShopUserStatus($_SESSION['UsersStatus']);
             $userdiscount = $PHPShopUserStatus->getDiscount();
 
-            if ($userdiscount > $maxdiscount)
-                $maxdiscount = $userdiscount;
+            // Максимальная скидка
+            if ($action == 1) {
+
+                if ($userdiscount > $maxdiscount)
+                    $maxdiscount = $userdiscount;
+            }
+            // Сумма скидой
+            else {
+                $maxdiscount = $maxdiscount + $userdiscount;
+            }
         }
 
         return $maxdiscount;
@@ -264,7 +281,7 @@ class PHPShopOrderFunction extends PHPShopObj {
         if (is_array($cart))
             foreach ($cart as $v)
                 if (function_exists($function)) {
-                    $list.= call_user_func_array($function, array($v, $option));
+                    $list .= call_user_func_array($function, array($v, $option));
                 }
 
         return $list;
@@ -332,8 +349,7 @@ class PHPShopOrderFunction extends PHPShopObj {
         if (function_exists($function)) {
             $list = call_user_func_array($function, array($delivery, $option));
             return $list;
-        }
-        else
+        } else
             return $delivery;
     }
 
@@ -372,7 +388,7 @@ class PHPShopOrderFunction extends PHPShopObj {
             $sum = $this->ReturnSumma($order['Cart']['sum'], $discount);
         else
             $sum = 0;
-        if (!empty($order['Person']['dostavka_metod']) and !empty($sum)) {
+        if (!empty($order['Person']['dostavka_metod']) and ! empty($sum)) {
             $PHPShopDelivery = new PHPShopDelivery($order['Person']['dostavka_metod']);
             return $PHPShopDelivery->getPrice($sum, $order['Cart']['weight']);
         }
@@ -461,9 +477,54 @@ class PHPShopOrderFunction extends PHPShopObj {
      */
     function checkPay() {
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['payment']);
-        $data = $PHPShopOrm->select(array('*'), array('uid' => "=" . intval(str_replace('-', '', $this->getParam('uid'))),'sum'=>'='.$this->getParam('sum')), array('order' => 'datas desc'), array('limit' => 1));
+        $data = $PHPShopOrm->select(array('*'), array('uid' => "=" . intval(str_replace('-', '', $this->getParam('uid'))), 'sum' => '=' . $this->getParam('sum')), array('order' => 'datas desc'), array('limit' => 1));
         if (is_array($data))
             return $data['datas'];
+    }
+
+    public function changePaymentStatus($paymentStatus) {
+        $orm = new PHPShopOrm($this->objBase);
+
+        $orm->update(array('paid_new' => (int) $paymentStatus), array('id' => "='" . $this->objID . "'"));
+    }
+
+    /**
+     * Оповещение пользователя о новом статусе
+     */
+    public function sendStatusChangedMail() {
+        $PHPShopOrderStatusArray = new PHPShopOrderStatusArray();
+        $PHPShopSystem = new PHPShopSystem();
+
+        PHPShopObj::loadClass("parser");
+        PHPShopObj::loadClass("mail");
+        PHPShopParser::set('ouid', $this->getParam('uid'));
+        PHPShopParser::set('date', PHPShopDate::dataV($this->getParam('datas')));
+
+        // Доступные статусы заказов если стоит флаг #mail_action
+        if ((int) $PHPShopOrderStatusArray->getParam($this->getParam('statusi') . '.mail_action') === 1) {
+            PHPShopParser::set('status', $this->getStatus());
+            PHPShopParser::set('fio', $this->getParam('fio'));
+            PHPShopParser::set('sum', $this->getParam('sum'));
+            PHPShopParser::set('company', $PHPShopSystem->getParam('name'));
+            PHPShopParser::set('manager', $this->getSerilizeParam('status.maneger'));
+            PHPShopParser::set('tracking', $this->getParam('tracking'));
+            PHPShopParser::set('account', '//' . $_SERVER['SERVER_NAME'] . 'phpshop/forms/account/forma.html?orderId=' . $this->objID . '&tip=2&datas=' . $this->getParam('datas'));
+            PHPShopParser::set('bonus', $this->getParam('bonus_plus'));
+
+            $title = __('Cтатус заказа') . ' ' . $this->getParam('uid') . ' ' . __('изменен');
+
+            $message = $PHPShopOrderStatusArray->getParam($this->getParam('statusi') . '.mail_message');
+
+            if (strlen($message) < 7)
+                $message = '<h3>' . __('Статус вашего заказа') . '  &#8470;' . $this->getParam('uid') . '  ' . __('поменялся на') . ' "' . $this->getStatus() . '"</h3>';
+
+            PHPShopParser::set('message', preg_replace_callback("/@([a-zA-Z0-9_]+)@/", 'PHPShopParser::SysValueReturn', $message));
+            $PHPShopMail = new PHPShopMail($this->getMail(), $PHPShopSystem->getValue('adminmail2'), $title, '', true, true);
+            $content = PHPShopParser::file('../lib/templates/order/status.tpl', true);
+            if (!empty($content)) {
+                $PHPShopMail->sendMailNow($content);
+            }
+        }
     }
 
 }
@@ -484,7 +545,7 @@ class PHPShopOrderStatusArray extends PHPShopArray {
      */
     function __construct() {
         $this->objBase = $GLOBALS['SysValue']['base']['order_status'];
-        parent::__construct('id', 'name', 'color', 'sklad_action', 'cumulative_action', 'mail_action', 'mail_message');
+        parent::__construct('id', 'name', 'color', 'sklad_action', 'cumulative_action', 'mail_action', 'mail_message', 'sms_action');
     }
 
 }

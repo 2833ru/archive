@@ -9,7 +9,43 @@ function cdekvalidate(evt) {
     }
 }
 
+function cdekAdminWidgetOnChoose(result)
+{
+    $.ajax({
+        mimeType: 'text/html; charset='+locale.charset,
+        url: '/phpshop/modules/cdekwidget/ajax/ajax.php',
+        type: 'post',
+        data: {
+            operation: 'changeAddress',
+            type: $('input[name="cdek_type"]').val(),
+            city: result['city'],
+            pvz: result['id'],
+            tariff: result['tarif'],
+            cost: result['price'],
+            info: $('input[name="cdekInfo"]').val(),
+            orderId: $('input[name="cdek_order_id"]').val()
+        },
+        dataType: "json",
+        async: false,
+        success: function(json) {
+            if(json['success']) {
+                if(Number($.getUrlVar('tab')) !== 101) {
+                    window.location.href += '&tab=101';
+                } else {
+                    location.reload();
+                }
+            } else {
+                console.log(json['error'])
+            }
+        }
+    });
+}
+
 $(document).ready(function () {
+    if(Number($.getUrlVar('tab')) === 101) {
+        $('a[href="#tabs-101"]').tab('show');
+    }
+
     if (typeof $('#body').attr('data-token') !== 'undefined' && $('#body').attr('data-token').length)
         var DADATA_TOKEN = $('#body').attr('data-token');
     if (DADATA_TOKEN !== false && DADATA_TOKEN !== undefined) {
@@ -32,4 +68,59 @@ $(document).ready(function () {
             }
         });
     }
+
+    $('.cdek-change-address').on('click', function () {
+        cdekwidgetStart();
+    });
+
+    $('.cdek-send').on('click', function () {
+        $.ajax({
+            mimeType: 'text/html; charset='+locale.charset,
+            url: '/phpshop/modules/cdekwidget/ajax/ajax.php',
+            type: 'post',
+            data: {operation: 'send', orderId: $('input[name="cdek_order_id"]').val()},
+            dataType: "json",
+            async: false,
+            success: function(json) {
+                if(json['success']) {
+                    if(Number($.getUrlVar('tab')) !== 101) {
+                        window.location.href += '&tab=101';
+                    } else {
+                        location.reload();
+                    }
+                } else {
+                    console.log(json['error'])
+                }
+            }
+
+        });
+    });
+
+    // Изменение статуса оплаты
+    $('#payment_status').on('change', function () {
+        var paymentStatus = 0;
+        if($('#payment_status').prop('checked')) {
+            paymentStatus = 1;
+        }
+        $.ajax({
+            mimeType: 'text/html; charset='+locale.charset,
+            url: '/phpshop/modules/cdekwidget/ajax/ajax.php',
+            type: 'post',
+            data: {operation: 'paymentStatus', value: paymentStatus, orderId: $('input[name="cdek_order_id"]').val()},
+            dataType: "json",
+            async: false,
+            success: function(json) {
+                if(json['success']) {
+                    if(Number($.getUrlVar('tab')) !== 101) {
+                        window.location.href += '&tab=101';
+                    } else {
+                        location.reload();
+                    }
+                } else {
+                    console.log(json['error'])
+                }
+            }
+
+        });
+    });
 });

@@ -16,7 +16,7 @@ function actionStart() {
     if (is_array($data))
         foreach ($data as $row) {
 
-            $PHPShopInterface->setRow($row['id'], array('name' => $row['image'], 'link' => '?path=slider&id=' . $row['id'], 'align' => 'left','popover'=>'<img src=\'' . $row['image'] . '\' onerror=\'imgerror(this)\' class=\'popover-img\'></img>','popover-title'=>'Превью'), $row['link'], array('name' => $row['num'], 'align' => 'center'), array('action' => array('edit', 'delete', 'id' => $row['id']), 'align' => 'center'), array('status' => array('enable' => $row['enabled'], 'align' => 'right', 'caption' => array('Выкл', 'Вкл'))));
+            $PHPShopInterface->setRow($row['id'], array('name' => $row['image'], 'link' => '?path=slider&id=' . $row['id'], 'align' => 'left','popover'=>'<img src=\'' . $row['image'] . '\' onerror=\'imgerror(this)\' class=\'popover-img\'></img>','popover-title'=>__('Превью')), $row['link'], array('name' => $row['num'], 'align' => 'center'), array('action' => array('edit','|', 'delete', 'id' => $row['id']), 'align' => 'center'), array('status' => array('enable' => $row['enabled'], 'align' => 'right', 'caption' => array('Выкл', 'Вкл'))));
         }
 
     $PHPShopInterface->Compile();

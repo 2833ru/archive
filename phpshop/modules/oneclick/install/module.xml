@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.4</version>
+    <version>1.5</version>
     <name>One Click</name>
     <faqlink>http://faq.phpshop.ru/page/one-click.html</faqlink>
     <description>Модуль заказа в один клик.</description>
-    <category>users</category>
+    <category>sale</category>
     <adminmenu>
         <title>Заказ в один клик</title>
         <capability>true</capability>

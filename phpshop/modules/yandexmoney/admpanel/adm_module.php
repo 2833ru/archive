@@ -47,7 +47,7 @@ function actionStart() {
             $order_status_value[] = array($order_status['name'], $order_status['id'], $data['status']);
 
     // Статус заказа
-    $Tab1.= $PHPShopGUI->setField('Оплата при статусе', $PHPShopGUI->setSelect('status_new', $order_status_value));
+    $Tab1.= $PHPShopGUI->setField('Оплата при статусе', $PHPShopGUI->setSelect('status_new', $order_status_value,300));
 
     $Tab1.=$PHPShopGUI->setField('Описание оплаты', $PHPShopGUI->setTextarea('title_end_new', $data['title_end']));
 

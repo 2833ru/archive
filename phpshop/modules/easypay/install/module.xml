@@ -2,7 +2,7 @@
 <module>
     <version>1.0</version>
     <name>Easypay</name>
-    <faqlink>http://faq.phpshop.ru/page/easypay.html</faqlink>
+    <faqlink>https://docs.phpshop.ru/moduli/platezhnye-sistemy/easypay</faqlink>
     <description>Прием оплат через Easypay c ЕРИП для Белоруссии.</description>
     <category>payment</category>
     <adminmenu>

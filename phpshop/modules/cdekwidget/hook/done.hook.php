@@ -12,36 +12,33 @@ function send_to_order_cdekwidget_hook($obj, $row, $rout)
     $CDEKWidget = new CDEKWidget();
 
 
-    if(in_array($_POST['d'], @explode(",", $CDEKWidget->option['delivery_id'])))
-    {
-        if(!empty($_POST['cdekInfo']))
-        {
-            if ($rout == 'START') {
+    if(in_array($_POST['d'], @explode(",", $CDEKWidget->option['delivery_id']))) {
+        if(!empty($_POST['cdekInfo'])) {
+            if ($rout === 'START') {
                 $obj->delivery_mod = number_format($_POST['cdekSum'], 0, '.', '');
-                $obj->manager_comment = $_POST['cdekInfo'];
                 $obj->set('deliveryInfo', $_POST['cdekInfo']);
                 $_POST['cdek_order_data_new'] = serialize(array(
-                    'type'         => $_POST['cdek_type'],
-                    'city_id'      => $_POST['cdek_city_id'],
-                    'cdek_pvz_id'  => $_POST['cdek_pvz_id'],
-                    'tariff'       => $_POST['cdek_tariff']
+                    'type'          => $_POST['cdek_type'],
+                    'city_id'       => $_POST['cdek_city_id'],
+                    'delivery_info' => $_POST['cdekInfo'],
+                    'cdek_pvz_id'   => $_POST['cdek_pvz_id'],
+                    'tariff'        => $_POST['cdek_tariff'],
+                    'status'        => CDEKWidget::STATUS_ORDER_PREPARED,
+                    'status_text'   => 'Ожидает отправки в СДЭК'
                 ));
             }
 
-            if ($rout == 'MIDDLE' and $CDEKWidget->option['status'] == 0) {
+            if ($rout === 'END' and $CDEKWidget->option['status'] == 0) {
+                $orm = new PHPShopOrm('phpshop_orders');
+                $order = $orm->getOne(array('*'), array('uid' => "='" . $obj->ouid . "'"));
 
-                $CDEKWidget->setDataFromDoneHook($obj, $row);
-                $CDEKWidget->setProducts($obj->PHPShopCart->getArray(), $obj->discount);
-                $request = $CDEKWidget->Request();
-                if($request)
-                    $_POST['cdek_order_data_new'] = '';
+                if(is_array($order)) {
+                    $CDEKWidget->send($order);
+                }
             }
         }
     }
 }
 
-$addHandler = array
-    (
-    'send_to_order' => 'send_to_order_cdekwidget_hook'
-);
+$addHandler = array ('send_to_order' => 'send_to_order_cdekwidget_hook');
 ?>

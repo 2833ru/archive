@@ -3,11 +3,32 @@
 /**
  * Библиотека форматирования строк
  * @author PHPShop Software
- * @version 2.0
+ * @version 2.1
  * @package PHPShopClass
  * @subpackage Helper
  */
 class PHPShopString {
+
+    /**
+     * Проверка IDNA
+     * @param string $str имя домена
+     * @param bool $path запуск в админке
+     * @return string
+     */
+    static function check_idna($str, $path = false) {
+        global $_classPath;
+        if (strstr($str, 'xn--')) {
+
+            if (empty($path))
+                include_once($GLOBALS['SysValue']['file']['idna']);
+            else
+                include_once($_classPath . '.' . $GLOBALS['SysValue']['file']['idna']);
+
+            $idna_convert = new idna_convert();
+            $str = PHPShopString::utf8_win1251($idna_convert->decode($str));
+        }
+        return $str;
+    }
 
     /**
      * проверка сериализации в строке
@@ -29,10 +50,15 @@ class PHPShopString {
 
     /**
      * Кодировка Win 1251 в UTF8
-     * @param string $in_text
+     * @param string $in_text текст
+     * @param bool $utf_check отключить проверку UTF
      * @return string
      */
-    static function win_utf8($in_text) {
+    static function win_utf8($in_text, $utf_check=false) {
+
+        if ($GLOBALS['PHPShopBase']->codBase == 'utf-8' and !$utf_check)
+            return $in_text;
+
         if (function_exists('iconv')) {
             $output = iconv("windows-1251", "utf-8", $in_text);
         } else {
@@ -49,12 +75,12 @@ class PHPShopString {
 
             for ($i = 0; $i < strlen($in_text); $i++) {
                 if (ord($in_text{$i}) > 191) {
-                    $output.="&#" . (ord($in_text{$i}) + 848) . ";";
+                    $output .= "&#" . (ord($in_text{$i}) + 848) . ";";
                 } else {
                     if (array_search($in_text{$i}, $other) === false) {
-                        $output.=$in_text{$i};
+                        $output .= $in_text{$i};
                     } else {
-                        $output.="&#" . array_search($in_text{$i}, $other) . ";";
+                        $output .= "&#" . array_search($in_text{$i}, $other) . ";";
                     }
                 }
             }
@@ -69,6 +95,10 @@ class PHPShopString {
      * @return string
      */
     static function utf8_win1251($s) {
+
+        if ($GLOBALS['PHPShopBase']->codBase == 'utf-8')
+            return $s;
+
         $s = strtr($s, array("\xD0\xB0" => "а", "\xD0\x90" => "А", "\xD0\xB1" => "б", "\xD0\x91" => "Б", "\xD0\xB2" => "в", "\xD0\x92" => "В", "\xD0\xB3" => "г", "\xD0\x93" => "Г", "\xD0\xB4" => "д", "\xD0\x94" => "Д", "\xD0\xB5" => "е", "\xD0\x95" => "Е", "\xD1\x91" => "ё", "\xD0\x81" => "Ё", "\xD0\xB6" => "ж", "\xD0\x96" => "Ж", "\xD0\xB7" => "з", "\xD0\x97" => "З", "\xD0\xB8" => "и", "\xD0\x98" => "И", "\xD0\xB9" => "й", "\xD0\x99" => "Й", "\xD0\xBA" => "к", "\xD0\x9A" => "К", "\xD0\xBB" => "л", "\xD0\x9B" => "Л", "\xD0\xBC" => "м", "\xD0\x9C" => "М", "\xD0\xBD" => "н", "\xD0\x9D" => "Н", "\xD0\xBE" => "о", "\xD0\x9E" => "О", "\xD0\xBF" => "п", "\xD0\x9F" => "П", "\xD1\x80" => "р", "\xD0\xA0" => "Р", "\xD1\x81" => "с", "\xD0\xA1" => "С", "\xD1\x82" => "т", "\xD0\xA2" => "Т", "\xD1\x83" => "у", "\xD0\xA3" => "У", "\xD1\x84" => "ф", "\xD0\xA4" => "Ф", "\xD1\x85" => "х", "\xD0\xA5" => "Х", "\xD1\x86" => "ц", "\xD0\xA6" => "Ц", "\xD1\x87" => "ч", "\xD0\xA7" => "Ч", "\xD1\x88" => "ш", "\xD0\xA8" => "Ш", "\xD1\x89" => "щ", "\xD0\xA9" => "Щ", "\xD1\x8A" => "ъ", "\xD0\xAA" => "Ъ", "\xD1\x8B" => "ы", "\xD0\xAB" => "Ы", "\xD1\x8C" => "ь", "\xD0\xAC" => "Ь", "\xD1\x8D" => "э", "\xD0\xAD" => "Э", "\xD1\x8E" => "ю", "\xD0\xAE" => "Ю", "\xD1\x8F" => "я", "\xD0\xAF" => "Я"));
         return $s;
     }
@@ -82,9 +112,11 @@ class PHPShopString {
         $str = strtolower($str);
 
         // Коррекция первого символа
+        /*
         $num = intval($str);
         if (!empty($num))
             $str = '_' . $str;
+         */
 
         $str = str_replace("&nbsp;", "", $str);
         $str = str_replace("/", "-", $str); // Добавлено для SeoPro
@@ -114,15 +146,15 @@ class PHPShopString {
         $str = str_replace(array('&#43;', '&#43'), '+', $str);
 
         $new_str = '';
-        $_Array = array(" " => "_", "а" => "a", "б" => "b", "в" => "v", "г" => "g", "д" => "d", "е" => "e", "ё" => "e",  "є" => "e", "ї" => "yi", "Є" => "e", "Ї" => "yi", "ж" => "zh", "з" => "z", "и" => "i", "й" => "y", "к" => "k", "л" => "l", "м" => "m", "н" => "n", "о" => "o", "п" => "p", "р" => "r", "с" => "s", "т" => "t", "у" => "u", "ф" => "f", "х" => "h", "ц" => "c", "ч" => "ch", "ш" => "sh", "щ" => "sch", "ъ" => "i", "ы" => "y", "ь" => "i", "э" => "e", "ю" => "u", "я" => "ya", "А" => "a", "Б" => "b", "В" => "v", "Г" => "g", "Д" => "d", "Е" => "e", "Ё" => "e", "Ж" => "zh", "З" => "z", "И" => "i", "Й" => "y", "К" => "k", "Л" => "l", "М" => "m", "Н" => "n", "О" => "o", "П" => "p", "Р" => "r", "С" => "s", "Т" => "t", "Ы" => "Y", "У" => "u", "Ф" => "f", "Х" => "h", "Ц" => "c", "Ч" => "ch", "Ш" => "sh", "Щ" => "sch", "Э" => "e", "Ю" => "u", "Я" => "ya", "." => "_", "$" => "i", "%" => "i", "&" => "_and_");
+        $_Array = array(" " => "_", "а" => "a", "б" => "b", "в" => "v", "г" => "g", "д" => "d", "е" => "e", "ё" => "e", "є" => "e", "ї" => "yi", "Є" => "e", "Ї" => "yi", "ж" => "zh", "з" => "z", "и" => "i", "й" => "y", "к" => "k", "л" => "l", "м" => "m", "н" => "n", "о" => "o", "п" => "p", "р" => "r", "с" => "s", "т" => "t", "у" => "u", "ф" => "f", "х" => "h", "ц" => "c", "ч" => "ch", "ш" => "sh", "щ" => "sch", "ъ" => "i", "ы" => "y", "ь" => "i", "э" => "e", "ю" => "u", "я" => "ya", "А" => "a", "Б" => "b", "В" => "v", "Г" => "g", "Д" => "d", "Е" => "e", "Ё" => "e", "Ж" => "zh", "З" => "z", "И" => "i", "Й" => "y", "К" => "k", "Л" => "l", "М" => "m", "Н" => "n", "О" => "o", "П" => "p", "Р" => "r", "С" => "s", "Т" => "t", "Ы" => "Y", "У" => "u", "Ф" => "f", "Х" => "h", "Ц" => "c", "Ч" => "ch", "Ш" => "sh", "Щ" => "sch", "Э" => "e", "Ю" => "u", "Я" => "ya", "." => "_", "$" => "i", "%" => "i", "&" => "_and_");
 
         $chars = preg_split('//', $str, -1, PREG_SPLIT_NO_EMPTY);
 
         foreach ($chars as $val)
             if (empty($_Array[$val]))
-                $new_str.=$val;
+                $new_str .= $val;
             else
-                $new_str.=$_Array[$val];
+                $new_str .= $_Array[$val];
 
         return preg_replace('([^a-z0-9/_\.-])', '', $new_str);
     }
@@ -190,8 +222,8 @@ class PHPShopString {
             'серебряный' => '#C0C0C0'
         );
         $code = $colorArray[trim(mb_strtolower($str, 'windows-1251'))];
-        if (empty($code) and !empty($str))
-            $code = '#C0C0C0';
+        if (empty($code) and ! empty($str))
+            $code = '';
         return $code;
     }
 
@@ -227,6 +259,20 @@ class PHPShopString {
         if (!$browser && strpos($agent, 'Gecko'))
             return 'Browser based on Gecko';
         return $browser . ' ' . $version;
+    }
+    
+    
+    /**
+     * Определение мобильного трафика
+     * @return boolean
+     */
+    function is_mobile() {
+        $iphone = strpos($_SERVER['HTTP_USER_AGENT'], "iPhone");
+        $android = strpos($_SERVER['HTTP_USER_AGENT'], "Android");
+        $mobile = strpos($_SERVER['HTTP_USER_AGENT'], "Mobile");
+ 
+        if ($android || $iphone || $mobile === true)
+            return true;
     }
 
 }

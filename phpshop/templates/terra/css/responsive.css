@@ -1,5 +1,11 @@
 /* Large Devices Styles Starts */
+@media (min-width: 991px) {#logo{margin:15px 0 0px; display:block;}}
+@media (max-width: 991px) {#logo{margin:0px 0 0px; display:block;}
+.header-contacts {
 
+    margin: 25px 0;
+
+}}
 @media (min-width: 1200px) {
 
 /* Header Top Styles Starts */
@@ -200,7 +206,7 @@
 	}
 	.header-contacts {
 		display: table;
-		margin: 30px auto 0;
+		margin: 25px auto 0;
 	}
 	#cart {
 		display: table;
@@ -212,7 +218,7 @@
 		#logo {
 			float: none;
 			text-align: center;
-			margin: 50px 0 30px;
+			
 		}
 		#logo img.img-responsive {
 			display: inline-block;
@@ -378,7 +384,7 @@
 	}	
 	#logo{
 		width: 200px;
-		margin: 27px auto;
+	margin: 0 auto; float:none
 	}
 
 /* Cart Styles Starts */

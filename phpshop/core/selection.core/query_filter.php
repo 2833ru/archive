@@ -59,7 +59,7 @@ function query_filter($obj) {
             break;
         case(2): $order_direction = " desc";
             break;
-        default: $order_direction = "";
+        default: $order_direction = " desc";
             break;
     }
     switch ($s) {

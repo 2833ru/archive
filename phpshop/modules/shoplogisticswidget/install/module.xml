@@ -2,7 +2,7 @@
 <module>
     <version>1.0</version>
     <name>Shop-Logistics Widget</name>
-    <faqlink>http://faq.phpshop.ru/page/shoplogistics-widget.html</faqlink>
+    <faqlink>https://docs.phpshop.ru/moduli/dostavka/shop-logistics-widget</faqlink>
     <description>Виджет расчета доставки shop-logistics.ru</description>
     <category>delivery</category>
     <sign>1542198276</sign>

@@ -6,13 +6,21 @@
         <meta name="robots" content="noindex, nofollow">
         <meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
         <style>
-            body { width: 210mm; margin-left: auto; margin-right: auto; border: 1px #efefef solid; font-size: 11pt;}
+		body{
+    background-color: #9e9e9e;
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1IiBoZWlnaHQ9IjUiPgo8cmVjdCB3aWR0aD0iNSIgaGVpZ2h0PSI1IiBmaWxsPSIjOWU5ZTllIj48L3JlY3Q+CjxwYXRoIGQ9Ik0wIDVMNSAwWk02IDRMNCA2Wk0tMSAxTDEgLTFaIiBzdHJva2U9IiM4ODgiIHN0cm9rZS13aWR0aD0iMSI+PC9wYXRoPgo8L3N2Zz4=");
+    -webkit-transition: left 500ms;
+    transition: left 500ms;
+}.doc-wrapper{width: 210mm; margin: 13px auto;padding:40px;background:#fff;
+box-shadow: 1px 1px 3px 1px #333;
+border-collapse: separate;}
+            body { margin-left: auto; margin-right: auto; border: 1px #efefef solid; font-size: 11pt;}
             table.invoice_bank_rekv { border-collapse: collapse; border: 1px solid; }
             table.invoice_bank_rekv > tbody > tr > td, table.invoice_bank_rekv > tr > td { border: 1px solid; }
             table.invoice_items { border: 1px solid; border-collapse: collapse;}
             table.invoice_items td, table.invoice_items th { border: 1px solid;}
             body {
-                background: #ffffff;
+                
                 margin: 0;
                 font-family: Arial;
                 font-size: 8pt;
@@ -33,7 +41,7 @@
                 font-family: Tahoma;
                 font-size: 8pt;
                 font-style: normal;
-                text-align: right;
+                
             }
             tr.R0 .R4C35 {
                 font-family: Tahoma;
@@ -362,11 +370,16 @@
     box-shadow: none;
     border-color: transparent;
     background-color: transparent;
-    width: 300px;
     font-size: 18px;
     text-transform: uppercase;
     font-weight: bold;
 }
+.info td{ height:72px;vertical-align:bottom}
+.input-text {font: normal 11px Verdana, Arial, Helvetica, sans-serif; text-align:center}
+.border-input {min-width:60px;border-bottom:1px solid #000;}
+.border {border-bottom:1px solid #000; width:100%; margin-left:35px;padding-left:20px;}
+.border-td{border-bottom:1px solid #000;}
+
 
             @media print{
 
@@ -379,7 +392,8 @@
         <script src="../../lib/templates/print/js/html2pdf.bundle.min.js"></script>
         @comment_end@
     </head>
-    <body>
+   <body>
+<div class="doc-wrapper">
 
         <div align="right" class="nonprint">
             @comment_start@<button onclick="html2pdf(document.getElementById('content'), {margin: 2, filename: 'Счет на оплату №@ouid@.pdf',html2canvas: {dpi: 192,letterRendering: true}});">{Сохранить}</button> @comment_end@
@@ -389,41 +403,44 @@
         <div id="content">
             <table  style="margin-top:15px;" width="100%" cellspacing="0">
                 <tr CLASS=R0>
+                   
+                    
+                    <td align="left" CLASS=R0C38><SPAN STYLE="white-space:nowrap">@org_name@, @company@</SPAN></td>
                     <TD width="20">&nbsp;</TD>
-                    <td rowspan="5" width="100" valign="top">@comment_start@<IMG SRC = "@logo@" STYLE = "max-width:200px; margin-top:0px;float:left;">@comment_end@</td>
-                    <td align="right" CLASS=R0C38><SPAN STYLE="white-space:nowrap">@org_name@, @company@</SPAN></td>
-                    <TD width="20">&nbsp;</TD>
+					<td rowspan="5"  valign="top">@comment_start@<IMG SRC = "@logo@" STYLE = "max-width:200px; margin-top:0px;float:right;">@comment_end@</td>
+					 <TD width="20">&nbsp;</TD>
                 </tr>
                 <tr CLASS=R0>
+				<td align="left" CLASS=R0C38><SPAN STYLE="white-space:nowrap">{Юр. адрес}:&nbsp;@org_ur_adres@<br>{Почтовый адрес}:&nbsp;@org_adres@</SPAN></td>
                     <TD>&nbsp;</TD>
-                    <td align="right" CLASS=R0C38><SPAN STYLE="white-space:nowrap">{Юр. адрес}:&nbsp;@org_ur_adres@<br>{Почтовый адрес}:&nbsp;@org_adres@</SPAN></td>
-                    <TD>&nbsp;</TD>
-                </tr>
-                <tr CLASS=R0>
-                    <TD>&nbsp;</TD>
-                    <td align="right" CLASS=R0C38><SPAN STYLE="white-space:nowrap">{Телефон}:&nbsp;@telNum@</SPAN></td>
+                    
                     <TD>&nbsp;</TD>
                 </tr>
                 <tr CLASS=R0>
+				 <td align="left" CLASS=R0C38><SPAN STYLE="white-space:nowrap">{Телефон}:&nbsp;@telNum@</SPAN></td>
                     <TD>&nbsp;</TD>
-                    <td align="right" CLASS=R0C38><SPAN STYLE="white-space:nowrap">E-mail:&nbsp;@adminMail@</SPAN></td>
+                   
+                    <TD>&nbsp;</TD>
+                </tr>
+                <tr CLASS=R0>
+				<td align="left" CLASS=R0C38><SPAN STYLE="white-space:nowrap">E-mail:&nbsp;@adminMail@</SPAN></td>
+                    <TD>&nbsp;</TD>
+                    
                     <TD>&nbsp;</TD>
                 </tr>
                 <tr>
-                    <TD>&nbsp;<br><br><br><br><br><br><br><br></TD>
+                    <TD>&nbsp;<br><br><br></TD>
                 </tr>
             </TABLE>
 
             <table width="100%">
-                <tr>
-                    <td align="center" colspan="2">
-                        <div style="width:155mm; font-size:8pt; ">{Оплата данного счета означает согласие с условиями поставки товара. Уведомление об оплате  обязательно, в противном случае не гарантируется наличие товара на складе. Товар отпускается по факту прихода денег на р.с. Поставщика, самовывозом, при наличии доверенности и паспорта}.</div>
-                    </td>
-                </tr>
+
                 <tr>
                     <td colspan="2">
-                        <div style="text-align:center;  font-weight:bold;">
-                            {Образец заполнения платежного поручения}                                                                                                                                            </div>
+                        <div style="text-align:left; ">
+                            {Образец заполнения платежного поручения}                    
+<br>
+<br>							</div>
                     </td>
                 </tr>
             </table>
@@ -455,7 +472,7 @@
                 </tr>
                 <tr>
                     <td style="width: 25mm;">
-                        <div>{Сч.}  №</div>
+                        <div>{Сч.}  &#8470;</div>
                     </td>
                 </tr>
                 <tr>
@@ -466,7 +483,7 @@
                         <div>{КПП}&nbsp;<b>@org_kpp@</b></div>
                     </td>
                     <td rowspan="2" style="min-height:19mm; height:auto; vertical-align: top; width: 25mm;">
-                        <div>{Сч.} №</div>
+                        <div>{Сч.} &#8470;</div>
                     </td>
                     <td rowspan="2" style="min-height:19mm; height:auto; vertical-align: top; width: 60mm;">
                         <div><b>@org_schet@</b></div>
@@ -493,11 +510,11 @@
             </table>
             <br/>
 
-            <div style="font-weight: bold; font-size: 16pt; padding-left:5px;">
-                {Счет} №<input title="Изменить" value="@ouid@ от @date@"></div>
+            <div style="font-weight: bold; font-size: 16pt; padding-left:5px; text-align:center">
+                {Счет на оплату} &#8470;<input title="{Изменить}" value="@ouid@ {от} @date@"></div>
             <br/>
 
-            <div style="background-color:#000000; width:100%; font-size:1px; height:2px;">&nbsp;</div>
+          
 
             <table width="100%">
                 <tr>
@@ -505,27 +522,22 @@
                         <div style=" padding-left:2px;">{Поставщик}:    </div>
                     </td>
                     <td>
-                        <div style="font-weight:bold;  padding-left:2px;">
+                        <div style="  padding-left:2px;">
                             @org_name@, &nbsp;{ИНН}&nbsp;@org_inn@, {КПП}&nbsp;@org_kpp@,  {Юр. адрес}:&nbsp;@org_ur_adres@, {Почтовый адрес}:&nbsp;@org_adres@        </div>
                     </td>
                 </tr>
-                <tr>
-                    <td style="width: 30mm;">
-                        <div style=" padding-left:2px;">{Покупатель}:    </div>
-                    </td>
-                    <td>
-                        <div style="font-weight:bold;  padding-left:2px;">
-                            @person_user@   @person_org@          </div>
-                    </td>
-                </tr>
-            </table>
 
+            </table>
+<br>
+<br>
+<br>
+<br>
 
             <table class="invoice_items" width="100%" cellpadding="2" cellspacing="2">
                 <thead>
 
                     <tr class=tablerow>
-                        <td class=tablerow>№</td>
+                        <td class=tablerow>&#8470;</td>
                         <td width=50% class=tablerow>{Наименование}</td>
                         <td class=tablerow>{Единица измерения}&nbsp;</td>
                         <td class=tablerow>{Количество}</td>
@@ -549,28 +561,47 @@
                     @nds_block_end@
                     <tr><td colspan=6 style="border: 0px; border-top: 1px solid #000000;">&nbsp;</td></tr>
             </table>
-            <p><b>{Всего наименований} @item@, {на сумму} @totaltext@
-                    <br />
-                </b></p><br>
+			<br>
+            <p>{Всего к оплате}: {@totaltext@} 
+                    
+                </p>
             <div style="background-color:#000000; width:100%; font-size:1px; height:2px;">&nbsp;</div>
             <br/><div style="width:800px;text-align:right;font-size:10pt;">{Счет действителен к оплате в течении трех дней}.&nbsp;&nbsp;</div>
             
 
-            <table style="width:300px">
-                <tr>
-                    <td>{Руководитель}:</td>
-                    <td>@org_sig@</td>
-                </tr>
-                <tr>
-                    <td>{Главный бухгалтер}:</td>
-                    <td>@org_sig_buh@</td>
-                </tr>
-                <tr>
-                    <td>@org_stamp@</td>
-                </tr>
-            </table>
+<br>
+<br>
 
 
+			
+			        <table class="info">
+                                    <tr >
+                                        <td width="75px">{Продавец}<br><br>
+                                            </td>
+											<td align="center" class="fio" width="200px">
+											<input type="text" class="input-text"/>
+											<div class="border-td"></div>
+											({должность})
+											</td>
+                                        <td align="center"  ><SPAN class="nonprint">@org_sig@</SPAN>
+											<div class="border-td"></div>
+											({подпись})
+											</td>
+											
+											<td align="center" class="fio" width="200px">
+											<input type="text" class="input-text"/>
+											<div class="border-td"></div>
+											({расшифровка подписи})
+											</td>
+                                    </tr>
+            <tr class="nonprint">
+                <td colspan="2">
+                   @org_stamp@
+                </td>
+            </tr>
+        </table>
+			
+			
             
 
             <table width="100%">
@@ -793,5 +824,6 @@
                 </TR>
             </TABLE>
         </div>
+		</div>
     </BODY>
 </HTML>

@@ -14,7 +14,7 @@ $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
 $PHPShopModules = new PHPShopModules($_classPath . "modules/");
 $PHPShopModules->checkInstall('tinkoff');
 $PHPShopSystem = new PHPShopSystem();
-include_once dirname(__FILE__) . '/../hook/mod_option.hook.php';
+include_once dirname(__FILE__) . '/../class/tinkoff.class.php';
 
 class TinkoffPayment extends PHPShopPaymentResult
 {
@@ -27,8 +27,8 @@ class TinkoffPayment extends PHPShopPaymentResult
     function option()
     {
         $this->payment_name = 'Tinkoff';
-        $PHPShopTinkoffArray = new PHPShopTinkoffArray();
-        $this->option = $PHPShopTinkoffArray->getArray();
+        $tinkoff = new Tinkoff();
+        $this->option = $tinkoff->settings;
     }
 
     function check()

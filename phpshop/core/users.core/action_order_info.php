@@ -93,7 +93,7 @@ function action_order_info($obj, $tip) {
 
             $editTime = $PHPShopOrderFunction->getStatusTime();
             if (!$editTime)
-                $editTime = "не обработан";
+                $editTime = __("не обработан");
 
             // Время обработки заказа
             $time = PHPShopText::b($PHPShopOrderFunction->getStatus($PHPShopOrderStatusArray), 'color:' . $PHPShopOrderFunction->getStatusColor($PHPShopOrderStatusArray)) .
@@ -115,7 +115,7 @@ function action_order_info($obj, $tip) {
                 $temp = PHPShopText::tr($delivery['name'], $delivery['adres']);
             }
 
-            $table .= PHPShopText::p(PHPShopText::table($caption . $temp, 3, 1, 'left', '99%', false, 0, 'allspecwhite', 'list table table-striped table-bordered'));
+            $table .= PHPShopText::p(PHPShopText::table($caption . $temp, 3, 1, 'left', '100%', false, 0, '', 'list table table-striped table-bordered'));
             
             // Трекинг
             if(!empty($row['tracking']))
@@ -210,7 +210,7 @@ function userdeleveryforma($val, $option) {
     }
 
     if (!$adres)
-        $adres = "Не требуется";
+        $adres = __("Не требуется");
 
     $dis = PHPShopText::tr(__('Доставка') . ' - ' . $val['name'], 1, $val['price'] . ' ' . $option['currency']);
     return array('tr' => $dis, 'name' => $val['name'], 'adres' => $adres);

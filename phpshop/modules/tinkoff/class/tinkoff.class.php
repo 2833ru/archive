@@ -8,6 +8,12 @@ class Tinkoff
     public $customerEmail = '';
     public $settings = array();
 
+    public function __construct()
+    {
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['tinkoff']['tinkoff_system']);
+        $this->settings = $PHPShopOrm->select();
+    }
+
     static public $tinkoffVats = array(
         'none' => 'none',
         '0' => 'vat0',
@@ -18,8 +24,6 @@ class Tinkoff
 
     public function getPaymentUrl($obj, $value)
     {
-        $PHPShopTinkoffArray = new PHPShopTinkoffArray();
-        $this->settings = $PHPShopTinkoffArray->getArray();
         $this->customerEmail = $value['mail'];
 
         $requestData = array(
@@ -35,7 +39,7 @@ class Tinkoff
             $requestData['Receipt'] = $this->getReceipt($obj);
 
             if (count($requestData['Receipt']['Items']) > 99) {
-                return array('error' => 'ÐŸÑ€ÐµÐ²Ñ‹ÑˆÐµÐ½Ð¾ Ð´Ð¾Ð¿ÑƒÑÑ‚Ð¸Ð¼Ð¾Ðµ ÐºÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ Ð¿Ð¾Ð·Ð¸Ñ†Ð¸Ð¹ Ð² Ñ‡ÐµÐºÐµ');
+                return array('error' => 'Ïðåâûøåíî äîïóñòèìîå êîëè÷åñòâî ïîçèöèé â ÷åêå');
             }
         }
 
@@ -43,7 +47,7 @@ class Tinkoff
         $request = $tinkoff->buildQuery('Init', $requestData);
         $request = json_decode($request);
 
-        return isset($request->PaymentURL) ? array('url' => $request->PaymentURL) : array('error' => 'Ð—Ð°Ð¿Ñ€Ð¾Ñ Ð² Ð¢Ð¸Ð½ÑŒÐºÐ¾Ñ„Ñ„ Ð‘Ð°Ð½Ðº ÑÐ¾Ð²ÐµÑ€ÑˆÐ¸Ð»ÑÑ Ð½ÐµÑƒÐ´Ð°Ñ‡ÐµÐ¹');
+        return isset($request->PaymentURL) ? array('url' => $request->PaymentURL) : array('error' => 'Çàïðîñ â Òèíüêîôô Áàíê ñîâåðøèëñÿ íåóäà÷åé');
     }
 
     function getReceipt($obj)
@@ -53,7 +57,7 @@ class Tinkoff
 
         foreach ($obj->tinkoff_cart as $product) {
 
-            // Ð¡ÐºÐ¸Ð´ÐºÐ°
+            // Ñêèäêà
             if($obj->discount > 0)
                 $price = $product['price']  - ($product['price']  * $obj->discount  / 100);
             else $price = $product['price'];
@@ -70,7 +74,7 @@ class Tinkoff
 
         if ($obj->delivery > 0) {
             $receiptItems[] = array(
-                'Name' => mb_convert_encoding('Ð”Ð¾ÑÑ‚Ð°Ð²ÐºÐ°', "UTF-8", "Windows-1251"),
+                'Name' => mb_convert_encoding('Äîñòàâêà', "UTF-8", "Windows-1251"),
                 "Price" => $obj->delivery * 100,
                 "Quantity" => 1,
                 "Amount" => $obj->delivery * 100,

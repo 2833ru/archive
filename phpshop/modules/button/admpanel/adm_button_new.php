@@ -25,7 +25,7 @@ function actionStart() {
 
 
     // Выборка
-    $data['name']='Новая кнопка';
+    $data['name']=__('Новая кнопка');
     $data['enabled']=1;
     $data['num']=1;
     

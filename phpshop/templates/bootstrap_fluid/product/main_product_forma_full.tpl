@@ -1,12 +1,24 @@
 
 <div itemscope itemtype="http://schema.org/Product">
+    <meta itemprop="image" content="@productImg@">
+    <div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+        <meta itemprop="ratingValue" content="@productRatingValue@">
+        <meta itemprop="ratingCount" content="@productRatingCount@">
+    </div>
     <div class="row">
-        <div class="col-md-7">
+        <div class="col-md-7 col-sm-7">
+	        <span class="sale-icon-content">
+                @specIcon@
+                @newtipIcon@
+				@giftIcon@
+                @hitIcon@
+                @promotionsIcon@
+            </span>
             <div id="fotoload">
                 @productFotoList@
             </div>
         </div>
-        <div class="col-md-5">
+        <div class="col-md-5 col-sm-5">
             <div class="text-right hidden-xs">
                 <div class="share42init"></div>
                 <script  src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@/js/share/share42.js"></script>
@@ -16,28 +28,35 @@
 
                 <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                     <h2 class="text-primary">
-                        <span itemprop="price" content="@productSchemaPrice@">@productPrice@</span> 
-                        <span itemprop="priceCurrency" class="rubznak" content="RUB">@productValutaName@</span>
-                    </h2> @productPriceRub@</div> 
-
-
+                        <span class="priceService" itemprop="price" content="@productSchemaPrice@">@productPrice@</span> 
+                        <span itemprop="priceCurrency" class="rubznak" content="RUB">@productValutaName@</span>  <span class=" price-old">@productPriceOld@</span>
+                    </h2>          
+</div> 
+					@ComStartNotice@
+<div class="outStock">@productOutStock@</div>
+@ComEndNotice@
                 <div class="pull-right">@oneclick@</div>
                 <p><br></p>
                 <div>
                     <div class="small">@productArt@</div>
-                    <div class="small">@productSklad@</div>
+                    <div class="small" id="items">@productSklad@</div>
 
                 </div>
-                <div class="rating hidden-xs"> @rateUid@ </div>
 
-
-                @promotionInfo@ 
+                <div class="hidden-xs rating" >
+                    @rateUid@
+                </div>
+<br>
+                 @promotionInfo@
+              
+                @saferouteCart@
+                @productservices_list@
             </div>
 
             @optionsDisp@
             @productParentList@
 
-            <div class="row">
+            <div class="row" style="padding-bottom:20px">
                 <div class="col-xs-5 @elementCartOptionHide@">
                     <div class="input-group" style="max-width: 150px">
                         <input class="form-control" data-uid="@productUid@"  type="text" style="min-width:50px" maxlength="3" value="1" placeholder="1" required="" name="quant[2]">
@@ -59,13 +78,22 @@
                     <a class="btn btn-primary" href="/users/notice.html?productId=@productUid@" title="@productNotice@">{Уведомить}</a>
                 </div>
                 @ComEndNotice@ 
-                <div class="col-xs-3">
-                    <button class="btn btn-info addToCompareList visible-lg" role="button" data-uid="@productUid@">{Сравнить}</button>
-                </div>
-                <div class="col-xs-3 visible-lg visible-md">
-                    <button class="btn btn-default addToWishList" role="button" data-uid="@productUid@">{Отложить}</button>
-                </div>
+                
             </div>
+			 <a class="btn btn-default" href="/pricemail/UID_@productUid@.html">@productBestPrice@</a>
+<div class="clearfix"></div>
+<div style="padding-top:10px">
+                    <button class="btn btn-info addToCompareList " role="button" data-uid="@productUid@">{Сравнить}</button>
+                    <button class="btn btn-default addToWishList" role="button" data-uid="@productUid@">{Отложить}</button>
+</div>               
+                
+                
+<br>
+<div class="option-block">
+                    @sticker_size@ @sticker_shipping@
+                    <a class="btn btn-default" href="/forma/">{Задать вопрос по продукту}</a>
+                </div>
+
 
 
         </div>
@@ -103,7 +131,7 @@
 
                     <div id='addComment' class="well well-sm" style='display:none;margin-top:30px;'>
 
-                        <h3>{Оставьте свой отзыв}</h3>
+                        <div class="comment-head">{Оставьте свой отзыв}</div>
 
                         <textarea id="message" class="commentTextarea form-control"></textarea>
                         <input type="hidden" id="commentAuthFlag" name="commentAuthFlag" value="@php if($_SESSION['UsersId']) echo 1; else echo 0; php@">
@@ -132,10 +160,11 @@
                 <div role="tabpanel" class="tab-pane hidden-xs" id="files">@productFiles@</div>
                 <div role="tabpanel" class="tab-pane hidden-xs" id="pages">@pagetemaDisp@</div>
             </div>
+			  @productsgroup_list@
+
         </div>
     </div>
 </div>
-
 
 <!-- Модальное окно фотогалереи -->
 <div class="modal bs-example-modal" id="sliderModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -159,3 +188,54 @@
     </div>
 </div>
 <!--/ Модальное окно фотогалереи -->
+
+
+<!--Модальное окно таблица размеров-->
+<div class="modal fade bs-example-modal-sm size-modal" id="sizeModal" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Таблица размеров</h4>
+            </div>
+            <form role="form" method="post" name="user_forma_size_delivery" action="@ShopDir@/returncall/">
+                <div class="modal-body">
+
+
+                    @productOption1@
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{Закрыть}</button>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--Модальное окно таблица размеров-->
+<!--Модальное окно информация о доставке-->
+<div class="modal fade bs-example-modal-sm size-modal" id="shipModal" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Информация о доставке</h4>
+            </div>
+            <form role="form" method="post" name="user_forma_size_delivery" action="@ShopDir@/returncall/">
+                <div class="modal-body">
+
+                    @productOption2@
+
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{Закрыть}</button>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--Модальное окно информация о доставке-->
+

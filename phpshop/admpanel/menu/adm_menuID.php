@@ -43,7 +43,7 @@ function actionStart() {
             $PHPShopGUI->setField("Место", $PHPShopGUI->setSelect("element_new", $Select2, 150,true)) .
             $PHPShopGUI->setLine() .
             $PHPShopGUI->setField("Таргетинг:", $PHPShopGUI->setInput("text", "dir_new", $data['dir']) .
-                    $PHPShopGUI->setHelp(__('* Пример: /page/,/news/. Можно указать несколько адресов через запятую.')));
+                    $PHPShopGUI->setHelp('* Пример: /page/,/news/. Можно указать несколько адресов через запятую.'));
 
     $Tab1.=$PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'));
 

@@ -1,12 +1,15 @@
 <?php
 
-function Compile_seourlpro_hook($obj) {
-    $GLOBALS['PHPShopSeoPro']->Compile($obj);
-    return true;
+function Compile_seourlpro_hook($obj, $data, $rout) {
+
+    if ($rout == 'END') {
+        $GLOBALS['PHPShopSeoPro']->Compile($obj);
+        return true;
+    }
 }
 
 function setError404_seourlpro_hook($obj) {
-    if (!defined("HostID") and !defined("HostMain")) {
+    if (!defined("HostID") and ! defined("HostMain")) {
         $url = $obj->PHPShopNav->getName(true);
         preg_match("/([0-9]{2,8})/", $url, $match);
         $PHPShopProduct = new PHPShopProduct($match[0]);

@@ -244,7 +244,7 @@
          
          // loop through and generate the code letter by letter
          for ($i = 0; $i < $this->iNumChars; $i++) {
-            if (count($this->aCharSet) > 0) {
+            if (@count($this->aCharSet) > 0) {
                // select random character and add to code string
                $this->sCode .= $this->aCharSet[array_rand($this->aCharSet)];
             } else {
@@ -479,7 +479,7 @@
    
    // example sub class
    class PhpCaptchaColour extends PhpCaptcha {
-      function PhpCaptchaColour($aFonts, $iWidth = CAPTCHA_WIDTH, $iHeight = CAPTCHA_HEIGHT) {
+      function __construct($aFonts, $iWidth = CAPTCHA_WIDTH, $iHeight = CAPTCHA_HEIGHT) {
          // call parent constructor
          parent::__construct($aFonts, $iWidth, $iHeight);
          

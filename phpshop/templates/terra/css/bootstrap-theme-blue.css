@@ -64,3 +64,10 @@ background-color:transparent;
 #cart .btn .fa-shopping-cart{
 background-color:transparent;
 }
+.sidebar-nav > li > a:hover{
+color:#0a87cf;
+text-decoration:none;
+}
+#body{
+--color:#0a87cf;
+}

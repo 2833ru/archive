@@ -1,5 +1,11 @@
 // Locale
 var locale = {
+    off: "Выкл",
+    on: "Вкл",
+    confirm_reload_skin: "Вы действительно хотите скачать шаблон заново?<br>Ваши правки в шаблоне не сохранятся.",
+    confirm_load_skin: "Вы действительно хотите скачать шаблон?",
+    confirm_license: "Вы действительно хотите синхронизировать лицензию?",
+    license_update_false: "Ошибка обновления, нет прав изменения лицензии",
     confirm_sell: "Вы сапраўды хочаце зрабіць чэк прыходу?",
     confirm_refund: "Вы сапраўды хочаце зрабіць чэк вяртання?",
     confirm_notice: "Узяць ды паслаць апавяшчэння аб даступнасці тавару?",
@@ -47,6 +53,7 @@ var locale = {
     suffix: [],
     meridiem: [],
     done: "Выканана",
+    cancel: "Отмена",
     dataTable: {
         paginate: {
             next: "Наперад» ",
@@ -57,7 +64,8 @@ var locale = {
         lengthMenu: "Паказаць _MENU_ запісаў",
         sProcessing: "Пачакайце ...",
         sZeroRecords: "Запісы адсутнічаюць.",
-sInfo: "Запісы з _START_ да _END_ з _TOTAL_ запісаў",
-sInfoEmpty: "Запісы з 0 да 0 з 0 запісаў",
-    }
+        sInfo: "Запісы з _START_ да _END_ з _TOTAL_ запісаў",
+        sInfoEmpty: "Запісы з 0 да 0 з 0 запісаў",
+    },
+    charset: "windows-1252"
 };

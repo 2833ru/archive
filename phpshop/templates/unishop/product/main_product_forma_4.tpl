@@ -1,10 +1,12 @@
-<div class="col-md-3 col-sm-6 product-block-wrapper">
+<div class="col-md-3 col-sm-6 col-xs-3 product-block-wrapper">
     <div class="product-block">
         <div class="product-block-top">
             <div class="product-block-image">
                 <div class="sale-icon-content">
-                    @newtipIcon@
-                    @specIcon@
+            @specIcon@
+			@newtipIcon@
+			@hitIcon@
+			@promotionsIcon@
                 </div>
                 <a class="product-block-img-link" href="/shop/UID_@productUid@.html" title="@productName@"><img data-src="@productImg@" alt="@productName@" class="owl-lazy"></a>
             </div>
@@ -13,11 +15,17 @@
             <h3 class="product-block-name product-name-fix">
                 <a href="/shop/UID_@productUid@.html" title="@productName@">@productName@</a>
             </h3>
+            @previewSorts@
             <h4 class="product-block-price">
-                <span class="price-old">@productPriceRub@</span>
+                <span class="price-old">@productPriceOld@</span>
                 <span class="price-new">@productPrice@ <span class="rubznak">@productValutaName@</span></span>
             </h4>
-            <span class="product-sklad-list-block">@productSklad@</span>
+
+            <span class="product-sklad-list-block">@productSklad@
+			            @ComStartNotice@
+<div сlass="outStock">@productOutStock@</div>
+@ComEndNotice@
+			</span>
             <div class="product-block-button">
                 <button class="btn btn-wishlist addToCompareList hidden-md" role="button" data-uid="@productUid@" data-title="{Сравнить}" data-placement="top" data-toggle="tooltip"><i class="fa fa-bar-chart-o"></i></button>
                 <button class="btn btn-wishlist addToWishList" role="button" data-uid="@productUid@" data-title="{Отложить}" data-placement="top" data-toggle="tooltip"><i class="feather iconz-heart"></i></button>

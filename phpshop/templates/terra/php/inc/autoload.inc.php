@@ -1,7 +1,4 @@
 <?php
-
-$_SESSION['Memory']["rateForComment"]["oneStarWidth"] = 16; // ширина одной звёздочки
-$_SESSION['Memory']["rateForComment"]["oneSpaceWidth"] = 0;
 define("SkinName", "terra");
 
 
@@ -53,7 +50,7 @@ function create_theme_menu($file) {
 }
 
 // Редактор тем оформления
-if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or !empty($_SESSION['logPHPSHOP']) or !empty($GLOBALS['SysValue']['other']['skinSelect'])) {
+if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or !empty($GLOBALS['SysValue']['other']['skinSelect'])) {
 
     // CSS
     $PHPShopCssParser = new PHPShopCssParser($GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . '/css/' . $GLOBALS['SysValue']['other'][SkinName . '_theme'] . '.css');
@@ -153,7 +150,7 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or !empty($_SESSION
         }
 
     $PHPShopGUI->nav_style = 'nav-tabs';
-    $css_edit.=$PHPShopGUI->setTab(array(__('Темы'), $css_edit_theme), array(__('Стили'), $css_edit_add));
+    $css_edit.=$PHPShopGUI->setTab(array('Темы', $css_edit_theme), array('Стили', $css_edit_add));
 
     // Сохранить
     if (!empty($_SESSION['logPHPSHOP'])) {
@@ -211,16 +208,16 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or !empty($_SESSION
         $collapseAdmin = null;
 
     if (!empty($_SESSION['logPHPSHOP']))
-        $admin_help = 'Вы можете управлять содержанием текущей страницы';
+        $admin_help = '{Вы можете управлять содержанием текущей страницы}';
     else
-        $admin_help = 'Для управления текущей страницей требуется <a href="//' . $_SERVER['SERVER_NAME'] . $GLOBALS['SysValue']['dir']['dir'] . 'phpshop/admpanel/" target="_blank"><span class="glyphicon glyphicon-user"></span> Авторизоваться</a>';
+        $admin_help = '{Для управления текущей страницей требуется} <a href="//' . $_SERVER['SERVER_NAME'] . $GLOBALS['SysValue']['dir']['dir'] . 'phpshop/admpanel/" target="_blank"><span class="glyphicon glyphicon-user"></span> {Авторизоваться}</a>';
 
     $collapse_menu = '<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
   <div class="panel panel-default">
     <div class="panel-heading" role="tab">
       <h4 class="panel-title">
         <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseCSS" aria-expanded="true" aria-controls="collapseOne">
-          Оформление <span class="glyphicon ' . $collapseIconCSS . ' pull-right" data-parent="collapseCSS"></span>
+          {Оформление} <span class="glyphicon ' . $collapseIconCSS . ' pull-right" data-parent="collapseCSS"></span>
         </a>
       </h4>
     </div>
@@ -236,7 +233,7 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or !empty($_SESSION
     <div class="panel-heading hidde" role="tab" id="adminModalHelp">
       <h4 class="panel-title">
         <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseAdmin" aria-expanded="false" aria-controls="collapseTwo">
-          Управление <span class="glyphicon ' . $collapseIconAdmin . ' pull-right" data-parent="collapseAdmin"></span>
+          {Управление} <span class="glyphicon ' . $collapseIconAdmin . ' pull-right" data-parent="collapseAdmin"></span>
         </a>
       </h4>
     </div>
@@ -291,7 +288,7 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or !empty($_SESSION
         <!--/ Modal admin -->';
 
 
-    if ($GLOBALS['SysValue']['template_theme']['demo'] == 'true' or !empty($_SESSION['logPHPSHOP']) or !empty($GLOBALS['SysValue']['other']['skinSelect']))
+    if (!empty($GLOBALS['SysValue']['other']['skinSelect']))
         $GLOBALS['SysValue']['other']['editor'] = $theme_menu . $edit_frame;
 }
 

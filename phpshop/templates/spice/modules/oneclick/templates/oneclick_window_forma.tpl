@@ -9,12 +9,12 @@
             <div class="modal-body">
                 
                     <div class="form-group">
-                        <input type="text" name="oneclick_mod_name" class="form-control" placeholder="{Имя}..." required="">
+                        <input type="text" name="oneclick_mod_name" class="form-control" placeholder="{Имя}" required="">
                     </div>
                     <div class="form-group">
-                        <input type="text" name="oneclick_mod_tel" class="form-control" placeholder="{Телефон}..." required="">
+                        <input type="text" name="oneclick_mod_tel" class="form-control" placeholder="{Телефон}" required="">
                     </div>
-                    @oneclick_captcha@
+<p class="small"><label><input type="checkbox" value="on" name="rule" class="req" checked="checked">  {Я согласен} <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html" alt="{Согласие на обработку персональных данных}">{на обработку моих персональных данных}</a></label></p>                    @oneclick_captcha@
             </div>
             <div class="modal-footer">
                 <input type="hidden" name="oneclick_mod_product_id" value="@productUid@">

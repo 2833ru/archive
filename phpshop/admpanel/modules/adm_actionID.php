@@ -79,6 +79,13 @@ if (!empty($PHPShopBase) and $PHPShopBase->Rule->CheckedRules('modules', 'edit')
                 $modulePath = $modPath . $_POST['moduleId'] . "/install/module.sql";
                 if (file_exists($modulePath)) {
                     $moduleSQLFile = file_get_contents($modulePath);
+
+                    // Кодировка
+                    if ($GLOBALS['PHPShopBase']->codBase == 'utf-8'){
+                        $moduleSQLFile = str_replace("CHARSET=cp1251", "CHARSET=utf8", $moduleSQLFile);
+                        $moduleSQLFile = PHPShopString::win_utf8($moduleSQLFile,true);
+                    }
+
                     $SQLArray = explode(";", $moduleSQLFile);
                     foreach ($SQLArray as $val)
                         if (!empty($val))
@@ -86,8 +93,7 @@ if (!empty($PHPShopBase) and $PHPShopBase->Rule->CheckedRules('modules', 'edit')
                 }
 
                 $date = date("d-m-Y");
-            }
-            else
+            } else
                 exit(json_encode(array("succes" => false)));
 
             break;

@@ -6,6 +6,34 @@ PHPShopObj::loadClass("category");
 $TitlePage = __('Создание баннера');
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['banner']);
 
+// Выбор шаблона дизайна
+function GetSkinList($skin) {
+    global $PHPShopGUI;
+    $dir = "../templates/";
+    
+    $value[] = array('Не выбрано', '', '');
+
+    if (is_dir($dir)) {
+        if (@$dh = opendir($dir)) {
+            while (($file = readdir($dh)) !== false) {
+                if (file_exists($dir . '/' . $file . "/main/index.tpl")) {
+
+                    if ($skin == $file)
+                        $sel = "selected";
+                    else
+                        $sel = "";
+
+                    if ($file != "." and $file != ".." and !strpos($file, '.'))
+                        $value[] = array($file, $file, $sel);
+                }
+            }
+            closedir($dh);
+        }
+    }
+    
+    return $PHPShopGUI->setSelect('skin_new', $value,300);
+}
+
 // Построение дерева категорий
 function treegenerator($array, $i, $curent, $dop_cat_array) {
     global $tree_array;
@@ -131,6 +159,7 @@ function actionStart() {
 
     // Витрина
     $Tab2.=$PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'));
+    $Tab2.=$PHPShopGUI->setField('Дизайн', GetSkinList($data['skin']));
     
      // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);

@@ -8,7 +8,7 @@ $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['page_categories']);
 // Построение дерева категорий
 function treegenerator($array, $i, $parent) {
     global $tree_array;
-    $del = '¦&nbsp;&nbsp;&nbsp;&nbsp;';
+    $del = '&brvbar;&nbsp;&nbsp;&nbsp;&nbsp;';
     $tree = $tree_select = $check = false;
     $del = str_repeat($del, $i);
     if (is_array($array['sub'])) {
@@ -22,18 +22,18 @@ function treegenerator($array, $i, $parent) {
                 $selected = null;
 
             if (empty($check['select'])) {
-                $tree_select.='<option value="' . $k . '" ' . $selected . '>' . $del . $v . '</option>';
+                $tree_select .= '<option value="' . $k . '" ' . $selected . '>' . $del . $v . '</option>';
                 $i = 1;
             } else {
-                $tree_select.='<option value="' . $k . '" ' . $selected . '>' . $del . $v . '</option>';
+                $tree_select .= '<option value="' . $k . '" ' . $selected . '>' . $del . $v . '</option>';
             }
 
-            $tree.='<tr class="treegrid-' . $k . ' treegrid-parent-' . $parent . ' data-tree">
+            $tree .= '<tr class="treegrid-' . $k . ' treegrid-parent-' . $parent . ' data-tree">
 		<td><a href="?path=page.catalog&id=' . $k . '">' . $v . '</a></td>
                     </tr>';
 
-            $tree_select.=$check['select'];
-            $tree.=$check['tree'];
+            $tree_select .= $check['select'];
+            $tree .= $check['tree'];
         }
     }
 
@@ -48,7 +48,7 @@ function actionStart() {
 
     // Размер названия поля
     $PHPShopGUI->field_col = 2;
-    $PHPShopGUI->addJSFiles('./js/jquery.treegrid.js', './page/gui/page.gui.js');
+    $PHPShopGUI->addJSFiles('./js/jquery.treegrid.js', './js/bootstrap-datetimepicker.min.js','./page/gui/page.gui.js');
 
     // Выборка
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
@@ -69,7 +69,7 @@ function actionStart() {
     $PHPShopGUI->setActionPanel(__("Каталог") . ': ' . $data['name'], array('Создать', 'Предпросмотр', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'));
 
     // Наименование
-    $Tab_info = $PHPShopGUI->setField("Название", $PHPShopGUI->setInputArg(array('name' => 'name_new', 'type' => 'text.requared', 'value' => $data['name'])));
+    $Tab_info = $PHPShopGUI->setField("Название", $PHPShopGUI->setInputText(false, 'name_new', $data['name'], '100%'));
 
     $PHPShopCategoryArray = new PHPShopPageCategoryArray();
     $CategoryArray = $PHPShopCategoryArray->getArray();
@@ -99,7 +99,7 @@ function actionStart() {
         foreach ($tree_array[0]['sub'] as $k => $v) {
             $check = treegenerator($tree_array[$k], 1, $k);
 
-            $tree.='<tr class="treegrid-' . $k . ' data-tree">
+            $tree .= '<tr class="treegrid-' . $k . ' data-tree">
 		<td><a href="?path=page.catalog&id=' . $k . '">' . $v . '</a></td>
                     </tr>';
 
@@ -108,23 +108,24 @@ function actionStart() {
             else
                 $selected = null;
 
-            $tree_select.='<option value="' . $k . '"  ' . $selected . '>' . $v . '</option>';
+            $tree_select .= '<option value="' . $k . '"  ' . $selected . '>' . $v . '</option>';
 
-            $tree_select.=$check['select'];
-            $tree.=$check['tree'];
+            $tree_select .= $check['select'];
+            $tree .= $check['tree'];
         }
-    $tree_select.='</select>';
-    $tree.='</table>
+    $tree_select .= '</select>';
+    $tree .= '</table>
         <script>
     var cat="' . intval($_GET['id']) . '";
     </script>';
 
     // Выбор каталога
-    $Tab_info.= $PHPShopGUI->setField("Размещение", $tree_select);
+    $Tab_info .= $PHPShopGUI->setField("Размещение", $tree_select);
 
-    $Tab_info.=$PHPShopGUI->setField("Приоритет", $PHPShopGUI->setInputText(false, 'num_new', $data['num'], '100'));
+    $Tab_info .= $PHPShopGUI->setField("Приоритет", $PHPShopGUI->setInputText(false, 'num_new', $data['num'], '100'));
 
-    $Tab_info.=$PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'));
+    $Tab_info .= $PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'));
+    $Tab_info .= $PHPShopGUI->setField("Опции вывода", $PHPShopGUI->setCheckbox('menu_new', 1, 'Главное меню', $data['menu']));
 
     $Tab1 = $PHPShopGUI->setCollapse('Информация', $Tab_info);
 
@@ -145,14 +146,13 @@ function actionStart() {
     if (empty($GLOBALS['isFrame'])) {
 
         // Левый сайдбар
-        $sidebarleft[] = array('title' => 'Категории', 'content' => $tree, 'title-icon' => '<span class="glyphicon glyphicon-plus new" data-toggle="tooltip" data-placement="top" title="' . __('Добавить каталог') . '"></span>&nbsp;<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="'.__('Развернуть').'"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="'.__('Свернуть').'"></span>');
+        $sidebarleft[] = array('title' => 'Категории', 'content' => $tree, 'title-icon' => '<span class="glyphicon glyphicon-plus new" data-toggle="tooltip" data-placement="top" title="' . __('Добавить каталог') . '"></span>&nbsp;<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="' . __('Развернуть') . '"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="' . __('Свернуть') . '"></span>');
         $PHPShopGUI->setSidebarLeft($sidebarleft, 3);
         $PHPShopGUI->sidebarLeftCell = 3;
     }
 
     // Вывод кнопок сохранить и выход в футер
-    $ContentFooter =
-            $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .
+    $ContentFooter = $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .
             $PHPShopGUI->setInput("button", "delID", "Удалить", "right", 70, "", "but", "actionDelete.page.edit") .
             $PHPShopGUI->setInput("submit", "editID", "Сохранить", "right", 70, "", "but", "actionUpdate.page.edit") .
             $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionSave.page.edit");
@@ -187,8 +187,11 @@ function actionUpdate() {
     $_POST['servers_new'] = "";
     if (is_array($_POST['servers']))
         foreach ($_POST['servers'] as $v)
-            if ($v != 'null' and !strstr($v, ','))
-                $_POST['servers_new'].="i" . $v . "i";
+            if ($v != 'null' and ! strstr($v, ','))
+                $_POST['servers_new'] .= "i" . $v . "i";
+
+    // Корректировка пустых значений
+    $PHPShopOrm->updateZeroVars('menu_new');
 
     $PHPShopOrm->debug = false;
     $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['rowID']));

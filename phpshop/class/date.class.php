@@ -61,9 +61,14 @@ class PHPShopDate {
      * @param string $delim разделитель даты [-] или [.]
      * @return string
      */
-    static function GetUnixTime($data, $delim = '-') {
+    static function GetUnixTime($data, $delim = '-',$revers = false) {
         $array = explode($delim, $data);
-        return @mktime(1, 0, 0, $array[1], $array[0], $array[2]);
+        
+        if(empty($revers))
+        $time = @mktime(1, 0, 0, $array[1], $array[0], $array[2]);
+        else $time = @mktime(1, 0, 0, $array[1], $array[2], $array[0]);
+
+        return $time;
     }
 
     /**
@@ -78,25 +83,27 @@ class PHPShopDate {
 
     /**
      * Расчет даты доставки с учетом выходных дней
-     * @param type $time формат даты в Unix
+     * @param int $time формат даты в Unix
+     * @param int $until час доставки на следующий день
+     * @param array $day массив дней увеличения доставки
      * @return string
      */
-    static function setDeliveryDate_hook($time) {
+    static function setDeliveryDate_hook($time,$until=17,$day=array("+2 day","+1 day")) {
 
         if (PHPShopDate::isweekend_hook($time))
             $result = strtotime("next Monday");
         else {
 
-            if (date('H', $time) > 17)
-                $result = strtotime("+2 day");
+            if (date('H', $time) > $until)
+                $result = strtotime($day[0]);
             else
-                $result = strtotime("+1 day");
+                $result = strtotime($day[0]);
         }
 
         if (PHPShopDate::isweekend_hook($result))
             $result = strtotime("next Monday");
 
-        return date("d-m-y", $result);
+        return $result;
     }
 
 }

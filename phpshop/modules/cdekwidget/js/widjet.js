@@ -378,32 +378,34 @@ function ipolWidjetController(setups) {
 	for (var i in loadingSetups) {
 		if (typeof(setups[i]) !== 'undefined') {
 			for (var j in setups[i]) {
-				if (typeof(setups[i][j]) !== loadingSetups[i]) {
-					logger.error('Illegal ' + i + ' "' + j + '": ' + setups[i][j]);
-				} else {
-					switch (i) {
-						case 'options' :
-							options.options[j] = service.cloneObj(setups.options[j]);
-							break;
-						case 'states'  :
-							states.states[j] = service.cloneObj(setups.states[j]);
-							break;
-						case 'loaders' :
-							loaders[j] = setups.loaders[j];
-							break;
-						case 'events'  :
-							bindes.events[setups.events[j]] = [];
-							break;
-						case 'stages'  :
-							if (typeof(setups.stages[j].states) !== 'object' || typeof(setups.stages[j].function) !== 'function') {
-								logger.error('Illegal stage "' + j + '": ' + setups[i][j]);
-							} else {
-								states.states[j] = service.cloneObj(setups.stages[j].states);
-								loaders[j] = setups.stages[j].function;
-							}
-							break;
-					}
-				}
+                if (({}).hasOwnProperty.call(setups[i], j)) {
+                    if (typeof(setups[i][j]) !== loadingSetups[i]) {
+                        logger.error('Illegal ' + i + ' "' + j + '": ' + setups[i][j]);
+                    } else {
+                        switch (i) {
+                            case 'options' :
+                                options.options[j] = service.cloneObj(setups.options[j]);
+                                break;
+                            case 'states'  :
+                                states.states[j] = service.cloneObj(setups.states[j]);
+                                break;
+                            case 'loaders' :
+                                loaders[j] = setups.loaders[j];
+                                break;
+                            case 'events'  :
+                                bindes.events[setups.events[j]] = [];
+                                break;
+                            case 'stages'  :
+                                if (typeof(setups.stages[j].states) !== 'object' || typeof(setups.stages[j].function) !== 'function') {
+                                    logger.error('Illegal stage "' + j + '": ' + setups[i][j]);
+                                } else {
+                                    states.states[j] = service.cloneObj(setups.stages[j].states);
+                                    loaders[j] = setups.stages[j].function;
+                                }
+                                break;
+                        }
+                    }
+                }
 			}
 		}
 	}
@@ -499,6 +501,14 @@ function ISDEKWidjet(params) {
 				setting: 'start',
 				hint: 'Value must be string (countryname)'
 			},
+            lang: {
+                value: 'rus',
+                check: function (wat) {
+                    return (typeof(wat) === 'string');
+                },
+                setting: 'start',
+                hint: 'Value must be string (laguage name)'
+            },
 			link: {
 				value: params.link,
 				check: function (wat) {
@@ -513,7 +523,7 @@ function ISDEKWidjet(params) {
 					return (this.city.check(name) !== false);
 				},
 				setting: 'dataLoaded',
-				hint: 'City wasn\'t founded'
+				hint: 'Default City wasn\'t founded'
 			},
 			choose: {
 				value: true,
@@ -555,6 +565,22 @@ function ISDEKWidjet(params) {
 				setting: 'start',
 				hint: 'Value must be bool (true / false)'
 			},
+			region: {
+				value: false,
+				check: function (wat) {
+					return (typeof(wat) === 'boolean');
+				},
+				setting: 'start',
+				hint: 'Value must be bool (true / false)'
+			},
+			apikey: {
+				value: '9720c798-730b-4af9-898a-937b264afcdd',
+				check: function (wat) {
+					return (typeof(wat) === 'string');
+				},
+				setting: 'start',
+				hint: 'Value must be string (apikey)'
+			},
 			goods: {
 				value: false,
 				check: function (wat) {
@@ -585,7 +611,7 @@ function ISDEKWidjet(params) {
 					return (this.city.check(name) !== false);
 				},
 				setting: 'dataLoaded',
-				hint: 'City wasn\'t founded'
+				hint: 'City From wasn\'t founded'
 			}
 		},
 		events: [
@@ -604,7 +630,8 @@ function ISDEKWidjet(params) {
 				},
 				function: function () {
 					this.service.loadTag(this.options.get('path') + "ipjq.js", 'script', loaders.onIPJQLoad);
-					this.service.loadTag("https://api-maps.yandex.ru/2.1.56/?lang=ru_RU", 'script', loaders.onYmapsLoad);
+					var yalang = (this.options.get('lang') == 'rus') ? 'ru_RU' : 'en_GB';
+					this.service.loadTag("https://api-maps.yandex.ru/2.1/?apikey=" + this.options.get('apikey') + "&lang="+yalang, 'script', loaders.onYmapsLoad);
 					this.service.loadTag(this.options.get('path') + 'style.css', 'link', loaders.onStylesLoad);
 
 				}
@@ -621,12 +648,12 @@ function ISDEKWidjet(params) {
 
 					ipjq.getJSON(
 						widjet.options.get('servicepath'),
-						{isdek_action: 'getPVZ', country: this.options.get('country')},
+						{isdek_action: 'getPVZ', country: this.options.get('country'), lang: this.options.get('lang')},
 						DATA.parsePVZFile
 					);
 					ipjq.getJSON(
 						widjet.options.get('servicepath'),
-						{isdek_action: 'getLang'},
+						{isdek_action: 'getLang', lang: this.options.get('lang')},
 						LANG.write
 					);
 
@@ -780,7 +807,9 @@ function ISDEKWidjet(params) {
 	var DATA = {
 
 		regions: {
-			collection: {}
+			collection: {},
+			cityes: {},
+			map: {}
 		},
 		city: {
 			indexOfSome: function (findItem, ObjItem) {
@@ -848,6 +877,8 @@ function ISDEKWidjet(params) {
 
 		PVZ: {
 			collection: {},
+            bycoord: {},
+			bycoordCur: 0,
 
 			check: function (intCityID) {
 				return (
@@ -865,10 +896,33 @@ function ISDEKWidjet(params) {
 				}
 			},
 
-			getCurrent: function () {
+			getRegionPVZ: function (intCityID) {
 
+				if (this.check(intCityID)) {
+					let by_region = {};
+					let region = DATA.regions.cityes[intCityID];
+					let city_in_region = [];
+					city_in_region.push(...DATA.regions.map[region]);
+					if (region === 81) city_in_region.push(...DATA.regions.map[9]);
+					if (region === 9) city_in_region.push(...DATA.regions.map[81]);
+					if (region === 82) city_in_region.push(...DATA.regions.map[26]);
+					if (region === 26) city_in_region.push(...DATA.regions.map[82]);
+					city_in_region.forEach((item, i, arr) => {
+						var pvzList =  DATA.PVZ.collection[item];
+						for (let code in pvzList) {
+							by_region[code] = pvzList[code];
+						}
+					});
+					return by_region;
+				} else {
+					widjet.logger.error('No PVZ in city ' + intCityID);
+				}
+			},
+
+			getCurrent: function () {
+				if (widjet.options.get('region')) return this.getRegionPVZ(DATA.city.current);
 				return this.getCityPVZ(DATA.city.current);
-                    }
+			}
 		},
 
 		parsePVZFile: function (data) {
@@ -888,6 +942,8 @@ function ISDEKWidjet(params) {
 			else {
 				if (typeof(data.pvz.REGIONS) != 'undefined') {
 					DATA.regions.collection = data.pvz.REGIONS;
+					DATA.regions.cityes = data.pvz.CITYREG;
+					DATA.regions.map = data.pvz.REGIONSMAP;
 				}
 
 				for (var pvzCity in data.pvz.PVZ) {
@@ -921,7 +977,7 @@ function ISDEKWidjet(params) {
 				tarif: false
 			}
 		},
-
+		history: [],
 		defaultGabs: {length: 20, width: 30, height: 40, weight: 1},
 
 		cityFrom: false,
@@ -930,13 +986,33 @@ function ISDEKWidjet(params) {
 
 		calculate: function () {
 			if (this.cityFrom) {
-				var mark = Date.now();
-				this.binder = {};
-				this.binder[mark] = {};
-				for (var i in this.profiles) {
-					this.profiles[i].price = null;
-					this.profiles[i].term = null;
-					this.request(i, mark);
+				let courier_idx = this.history.findIndex( (e) => (e.code === parseInt(DATA.city.current) && e.type === 'courier'));
+				let pickup_idx = this.history.findIndex( (e) => (e.code === parseInt(DATA.city.current) && e.type === 'pickup'));
+				if (courier_idx !== -1 && pickup_idx !== -1) {
+					for (var i in this.profiles) {
+						let idx = (i === 'pickup') ? pickup_idx : courier_idx;
+						if (idx !== -1) {
+							this.profiles[i].price = this.history[idx].price;
+							this.profiles[i].term = this.history[idx].term;
+							this.profiles[i].tarif = this.history[idx].tarif;
+						}
+					}
+					widjet.binders.trigger('onCalculate', {
+						profiles: widjet.service.cloneObj(CALCULATION.profiles),
+						city: DATA.city.current,
+						cityName: DATA.city.getName(DATA.city.current)
+					});
+				}
+				else {
+					var mark = Date.now();
+					// this.binder = {};
+					this.binder[parseInt(DATA.city.current)] = {};
+					for (var i in this.profiles) {
+						this.profiles[i].price = null;
+						this.profiles[i].term = null;
+						this.profiles[i].tarif = false;
+						this.request(i, mark);
+					}
 				}
 			} else {
 				widjet.logger.warn('No city from given: calculation is impossible');
@@ -999,17 +1075,23 @@ function ISDEKWidjet(params) {
 				} else
 					widjet.logger.error('Error while calculating: ' + sign.substring(0, sign.length - 2));
 			} else {
-
 				CALCULATION.bad = false;
 				CALCULATION.profiles[answer.type].price = answer.result.price;
 				CALCULATION.profiles[answer.type].term = (answer.result.deliveryPeriodMax === answer.result.deliveryPeriodMin) ? answer.result.deliveryPeriodMin : answer.result.deliveryPeriodMin + "-" + answer.result.deliveryPeriodMax;
 				CALCULATION.profiles[answer.type].tarif = typeof answer.result.tarif != 'undefined' ? answer.result.tarif : answer.result.tariffId;
+				CALCULATION.history.push({
+					code: parseInt(DATA.city.current),
+					type: answer.type,
+					price: answer.result.price,
+					term: CALCULATION.profiles[answer.type].term,
+					tarif: CALCULATION.profiles[answer.type].tarif
+				});
 			}
 
-			if (typeof(answer.type) !== 'undefined' && typeof(answer.timestamp) !== 'undefined' && typeof(CALCULATION.binder[answer.timestamp]) !== 'undefined') {
-				CALCULATION.binder[answer.timestamp][answer.type] = true;
+			if (typeof(answer.type) !== 'undefined' && typeof(CALCULATION.binder[parseInt(DATA.city.current)]) !== 'undefined') {
+				CALCULATION.binder[parseInt(DATA.city.current)][answer.type] = true;
 				for (var i in CALCULATION.profiles) {
-					if (typeof(CALCULATION.binder[answer.timestamp][i]) === 'undefined') {
+					if (typeof(CALCULATION.binder[parseInt(DATA.city.current)][i]) === 'undefined') {
 						return false;
 					}
 				}
@@ -1456,6 +1538,7 @@ function ISDEKWidjet(params) {
 
 							if (city != false) {
                                 DATA.city.set(city);
+                                city = DATA.city.getName(city);
 							}
 							else {
                                 DATA.city.set('Москва');
@@ -1466,13 +1549,13 @@ function ISDEKWidjet(params) {
                         widjet.options.set(city, 'defaultCity');
                         template.controller.calculate();
                         template.controller.updatePrices();
-                        self.loadMap(city);
+                        self.loadMap(DATA.city.current);
                         ipjq(IDS.get('cdek_widget_cnt')).find('.CDEK-widget__search input[type=text]').val(city);
 
                     });
                 }
                 else {
-                    self.loadMap(city);
+                    self.loadMap(DATA.city.current);
                 }
             },
 
@@ -1497,14 +1580,14 @@ function ISDEKWidjet(params) {
 							center: coords,
 							duration: 300
 						});
-						this.map.controls.add(new ymaps.control.ZoomControl(),
+                        self.map.controls.add(new ymaps.control.ZoomControl(),
 							{
 								position: {
 									left: 12,
 									bottom: 70
 								}
 							});
-						this.map.events.add('boundschange', widjet.hideLoader);
+                        self.map.events.add('boundschange', widjet.hideLoader);
 					} else {
 						self.map.setCenter(coords);
 						self.map.setZoom(10);
@@ -1558,11 +1641,11 @@ function ISDEKWidjet(params) {
 					for (var i in pvzList) {
 
 						if (typeof mtypes != 'undefined') {
-							if (typeof mtypes.dress != 'undefined' && pvzList[i].Dressing != LANG.get('EST')) {
+							if (typeof mtypes.dress != 'undefined' && pvzList[i].Dressing != true) {
 								continue;
 							}
 
-							if (typeof mtypes.cash != 'undefined' && pvzList[i].Cash != LANG.get('EST')) {
+							if (typeof mtypes.cash != 'undefined' && pvzList[i].Cash != true) {
 								continue;
 							}
 						}
@@ -1742,41 +1825,48 @@ function ISDEKWidjet(params) {
 
 			selectMark: function (wat) {
 				var cityPvz = DATA.PVZ.getCurrent();
-
-				this.map.setCenter(template.ymaps.makeUpCenter([cityPvz[wat].cY, cityPvz[wat].cX]));
-
-				_detailPanel = ipjq(IDS.get('panel')).find(IDS.get('detail_panel'));
-				_detailPanel.html('');
-
-				_photoHTML = '';
-				if (typeof cityPvz[wat].Picture != 'undefined') {
-					for (_imgIndex in  cityPvz[wat].Picture) {
-						_photoHTML += HTML.getBlock('image_c', {D_PHOTO: cityPvz[wat].Picture[_imgIndex]});
-					}
+				if (parseInt(DATA.city.current) !== parseInt(cityPvz[wat].CityCode)) {
+					DATA.city.set(parseInt(cityPvz[wat].CityCode));
+					city = DATA.city.getName(cityPvz[wat].CityCode);
+					ipjq(IDS.get('cdek_widget_cnt')).find('.CDEK-widget__search input[type=text]').val(city);
+					CALCULATION.calculate();
+					template.controller.updatePrices();
 				}
 
-				_block = ipjq(HTML.getBlock('panel_details', paramsD = {
-					D_NAME: cityPvz[wat].Name,
-					D_ADDR: cityPvz[wat].Address,
-					D_TIME: cityPvz[wat].WorkTime.replace(new RegExp(',', 'g'), '<br/>'),
-					D_WAY: cityPvz[wat].AddressComment.search('http') == -1 ? cityPvz[wat].AddressComment : '',
-					D_IMGS: _photoHTML,
-				}));
+                    this.map.setCenter(template.ymaps.makeUpCenter([cityPvz[wat].cY, cityPvz[wat].cX]));
 
-				if (paramsD.D_WAY == '') {
-					_block.find('.CDEK-widget__way').remove();
-				}
+                    _detailPanel = ipjq(IDS.get('panel')).find(IDS.get('detail_panel'));
+                    _detailPanel.html('');
 
-				if (paramsD.D_IMGS == '') {
-					_block.find('.sdek_image_block').remove();
-				}
+                    _photoHTML = '';
+                    if (typeof cityPvz[wat].Picture != 'undefined') {
+                        for (_imgIndex in  cityPvz[wat].Picture) {
+                            _photoHTML += HTML.getBlock('image_c', {D_PHOTO: cityPvz[wat].Picture[_imgIndex]});
+                        }
+                    }
 
-				_block.find(IDS.get('choose_button')).on('click', {id: wat}, function (event) {
-					template.controller.choosePVZ(event.data.id);
-				});
+                    _block = ipjq(HTML.getBlock('panel_details', paramsD = {
+                        D_NAME: cityPvz[wat].Name,
+                        D_ADDR: cityPvz[wat].Address,
+                        D_TIME: cityPvz[wat].WorkTime.replace(new RegExp(',', 'g'), '<br/>'),
+                        D_WAY: cityPvz[wat].AddressComment.search('http') == -1 ? cityPvz[wat].AddressComment : '',
+                        D_IMGS: _photoHTML,
+                    }));
 
-				_detailPanel.html(_block);
-				_detailPanel.find('.CDEK-widget__panel-content').mCustomScrollbar();
+                    if (paramsD.D_WAY == '') {
+                        _block.find('.CDEK-widget__way').remove();
+                    }
+
+                    if (paramsD.D_IMGS == '') {
+                        _block.find('.sdek_image_block').remove();
+                    }
+
+                    _block.find(IDS.get('choose_button')).on('click', {id: wat}, function (event) {
+                        template.controller.choosePVZ(event.data.id);
+                    });
+
+                    _detailPanel.html(_block);
+                    _detailPanel.find('.CDEK-widget__panel-content').mCustomScrollbar();
 			},
 
 			blinkPVZ: function (event) {
@@ -2027,7 +2117,7 @@ function ISDEKWidjet(params) {
 
 			if (filter != '') {
 				$matches = $li.filter(function () {
-					return filter.test(ipjq(this).find('.CDEK-widget__search-list__city-name').text().replace(/[^\wа-яё]+/gi, ""));
+					return filter.test(ipjq(this).find('.CDEK-widget__search-list__city-name').text().replace(/[^\wа-яё\s-]+/gi, ""));
 				});
 
 				$li.not($matches).addClass('no-active').removeClass('focus');

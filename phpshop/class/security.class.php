@@ -162,11 +162,12 @@ class PHPShopSecurity {
     }
 
     /**
-     * Проверка дял поиска
+     * Проверка для поиска
      * @param string $search
+     * @param bool $option учет () в подтипах
      * @return string
      */
-    static function true_search($search) {
+    static function true_search($search, $option = false) {
         $count = strlen($search);
         $search = strtolower($search);
         $i = 0;
@@ -177,8 +178,11 @@ class PHPShopSecurity {
             $search = str_replace("select", "", $search);
             $search = str_replace("insert", "", $search);
             $search = str_replace("delete", "", $search);
-            $search = str_replace(")", "", $search);
-            $search = str_replace("(", "", $search);
+
+            if (empty($option)) {
+                $search = str_replace(")", "", $search);
+                $search = str_replace("(", "", $search);
+            }
             $i++;
         }
 

@@ -1,5 +1,10 @@
-<ol class="breadcrumb hidden-xs">
-    <li><a href="/" >{Главная}</a></li>
+<ol class="breadcrumb hidden-xs" itemtype="http://schema.org/BreadcrumbList">
+    <li itemscope itemtype="http://schema.org/ListItem">
+        <a href="/" itemprop="item">
+            <span itemprop="name">{Главная}</span>
+        </a>
+        <meta itemprop="position" content="1" />
+    </li>
     <li class="active">{Прайс-лист}</li>
 </ol>
 
@@ -8,7 +13,7 @@
 </div>
 
 
-<ul class="nav nav-pills">
+<ul class="nav nav-pills page-price">
     <li role="presentation"><div class="dropdown">
             <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
                 {Выбрать каталоги}

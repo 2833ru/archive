@@ -20,7 +20,7 @@ $blank_org_inn = $PHPShopSystem->getSerilizeParam('bank.org_inn');
 $blank_org_kpp = $PHPShopSystem->getSerilizeParam('bank.org_kpp');
 $blank_org_ur_adres = $PHPShopSystem->getSerilizeParam('bank.org_ur_adres');
 $blank_org_adres = $PHPShopSystem->getSerilizeParam('bank.org_adres');
-
+$LoadBanc = unserialize($LoadItems['System']['bank']);
 
 $PHPShopOrder = new PHPShopOrderFunction($_GET['orderID']);
 
@@ -444,8 +444,11 @@ $adr_info = substr($adr_info, 2);
                                                     </tr>
                                                     <tr class="Таблица12">
                                                         <td colspan="6" style="text-align:left;width:2.148cm; " class="Таблица1_Y4"><p class="P35">ТОВАРНАЯ НАКЛАДНАЯ</p></td>
-                                                        <td colspan="5" style="text-align:left;width:0.873cm; " class="Таблица1_e3"><p class="P32"> </p></td>
-                                                        <td colspan="4" style="text-align:left;width:1.353cm; " class="Таблица1_e3"><p class="P32"> </p></td>
+                                                        <td colspan="5" style="text-align:left;width:0.873cm; " class="Таблица1_e3">
+                                                            <p class="P32"><?php echo $ouid;?> </p></td>
+                                                        <td colspan="4" style="text-align:left;width:1.353cm; " class="Таблица1_e3">
+                                                            <p class="P32"><?php echo PHPShopDate::dataV(false, false, false,'.', false); ?></p>
+                                                        </td>
                                                         <td colspan="9" style="text-align:left;width:0.423cm; " class="Таблица1_A1"><p class="P4"> </p></td>
                                                         <td colspan="1" style="text-align:left;width:1.295cm; " class="Таблица1_A1"><p class="P4"> </p></td>
                                                         <td colspan="5" style="text-align:left;width:0.459cm; " class="Таблица1_Y4"><p class="P28">Вид операции </p></td>
@@ -752,7 +755,14 @@ $adr_info = substr($adr_info, 2);
                                                         <td style="text-align:left;width:0.452cm; " class="Таблица2_A8"><p class="P60"> </p></td>
                                                         <td colspan="9" style="text-align:left;width:0.053cm; " class="Таблица2_A7"><p class="P71">Главный (страший) бухгалтер</p></td>
                                                         <td style="text-align:left;width:0.187cm; " class="Таблица2_A8"><p class="P21"> </p></td>
-                                                        <td colspan="3" style="text-align:left;width:1.088cm; " class="Таблица2_f11"><p class="P72"> </p></td>
+                                                        
+                                                        <td colspan="3" style="text-align:left;width:1.088cm; " class="Таблица2_f11">
+                                                            <?php if (!empty($LoadBanc['org_sig']))
+                                                                echo '<img src="' . $LoadBanc['org_sig_buh'] . '">'; 
+                                                            else echo '<p class="P72"> </p>';
+                                                            ?>
+                                                            
+                                                        </td>
                                                         <td style="text-align:left;width:0.185cm; " class="Таблица2_A8"><p class="P21"> </p></td>
                                                         <td colspan="10" style="text-align:left;width:0.582cm; " class="Таблица2_A7"><p class="P72"> </p></td>
                                                         <td style="text-align:left;width:0.743cm; " class="Таблица2_A8"><p class="P21"> </p></td>
@@ -780,7 +790,13 @@ $adr_info = substr($adr_info, 2);
                                                         <td colspan="9" style="text-align:left;width:0.346cm; " class="Таблица2_A7"><p class="P62">Отпуск груза произвел</p></td>
                                                         <td style="text-align:left;width:2.866cm; " class="Таблица2_f11"><p class="P64"> </p></td>
                                                         <td style="text-align:left;width:0.187cm; " class="Таблица2_A8"><p class="P7"> </p></td>
-                                                        <td colspan="3" style="text-align:left;width:1.088cm; " class="Таблица2_f11"><p class="P64"> </p></td>
+                                                        <td colspan="3" style="text-align:left;width:1.088cm; " class="Таблица2_f11">
+                                                         <?php if (!empty($LoadBanc['org_sig']))
+                                                                echo '<img src="' . $LoadBanc['org_sig'] . '">'; 
+                                                            else echo '<p class="P64"> </p>';
+                                                            ?>
+                                                        
+                                                        </td>
                                                         <td style="text-align:left;width:0.185cm; " class="Таблица2_A8"><p class="P7"> </p></td>
                                                         <td colspan="10" style="text-align:left;width:0.582cm; " class="Таблица2_A7"><p class="P64"> </p></td>
                                                         <td style="text-align:left;width:0.743cm; " class="Таблица2_A8"><p class="P7"> </p></td>
@@ -818,7 +834,13 @@ $adr_info = substr($adr_info, 2);
                                                     </tr>
                                                     <tr class="Таблица230">   <td style="text-align:left;width:0.088cm; " class="Таблица2_A8"><p class="P10"> </p></td>
                                                         <td colspan="4" style="text-align:left;width:0.346cm; " class="Таблица2_A8"><p class="P59"> </p></td>
-                                                        <td colspan="19" style="text-align:left;width:0.691cm; " class="Таблица2_A7"><p class="P61">М. П.                              "          " ______________ 20____ года</p></td>
+                                                        <td colspan="19" style="text-align:left;width:0.691cm; " class="Таблица2_A7"><p class="P61">
+                                                              <?php
+                                                               if (!empty($LoadBanc['org_stamp']))
+                        echo '<img src="' . $LoadBanc['org_stamp'] . '" align="left">';
+                    else echo " М. П.   ";
+                                                              ?>
+                                                           <p class="P61" style="padding-top:70px;padding-left:200px"> <?php echo PHPShopDate::dataV(false, false, false,' ', true); ?> года</p></p></td>
                                                         <td style="text-align:left;width:0.088cm; " class="Таблица2_A8"><p class="P59"> </p></td>
                                                         <td style="text-align:left;width:0.743cm; " class="Таблица2_A8"><p class="P10"> </p></td>
                                                         <td style="text-align:left;width:0.088cm; " class="Таблица2_a17"><p class="P10"> </p></td>

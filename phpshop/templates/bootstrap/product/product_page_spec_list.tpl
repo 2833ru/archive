@@ -1,5 +1,5 @@
 
-<ol class="breadcrumb">
+<ol class="breadcrumb" itemtype="http://schema.org/BreadcrumbList">
     @breadCrumbs@
 </ol>
 <div class="page-header">

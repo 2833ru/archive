@@ -16,8 +16,8 @@ function actionUpdate() {
     if (is_array($_POST['servers'])) {
         $_POST['servers_new'] = "";
         foreach ($_POST['servers'] as $v)
-            if ($v != 'null' and !strstr($v, ','))
-                $_POST['servers_new'].="i" . $v . "i";
+            if ($v != 'null' and ! strstr($v, ','))
+                $_POST['servers_new'] .= "i" . $v . "i";
     }
 
 
@@ -49,7 +49,7 @@ function actionStart() {
 
     // Выборка
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
-
+    $PHPShopGUI->setActionPanel(__("Задача") . ": " . $data['name'] . ' [ID ' . $data['id'] . ']', array('Удалить'), array('Сохранить и закрыть'), false);
 
     $work[] = array('Выбрать', '');
     $work[] = array('Бекап БД', 'phpshop/modules/cron/sample/dump.php');
@@ -59,23 +59,39 @@ function actionStart() {
 
     // Учет модуля SiteMap
     if (!empty($GLOBALS['SysValue']['base']['sitemap']['sitemap_system'])) {
+        $work[] = array("|");
         $work[] = array('Карта сайта', 'phpshop/modules/sitemap/cron/sitemap_generator.php');
         $work[] = array('Карта сайта SSL', 'phpshop/modules/sitemap/cron/sitemap_generator.php?ssl');
     }
 
+    // Загрузка CSV
+    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['exchanges']);
+    $exchanges_data = $PHPShopOrm->select(array('*'), false, array('order' => 'id DESC'), array("limit" => "1000"));
+    if (is_array($exchanges_data)) {
+        foreach ($exchanges_data as $row) {
+
+            if ($row['type'] == 'import')
+                $import[] = array($row['name'], 'phpshop/modules/cron/sample/import.php?id=' . $row['id']);
+            elseif ($row['type'] == 'export')
+                $export[] = array($row['name'], 'phpshop/modules/cron/sample/export.php?id=' . $row['id'].'&file=export_'.md5($row['name']));
+        }
+
+        $work[] = array('Импорт данных', $import);
+        $work[] = array('Экспорт данных', $export);
+    }
+
     $Tab1 = $PHPShopGUI->setField("Название задачи:", $PHPShopGUI->setInput("text.requared", "name_new", $data['name']));
-    $Tab1.=$PHPShopGUI->setField("Запускаемый Файл:", $PHPShopGUI->setInputArg(array('type' => "text.requared", 'name' => "path_new", 'size' => '60%', 'float' => 'left', 'placeholder' => 'phpshop/modules/cron/sample/testcron.php', 'value' => $data['path'])) . '&nbsp;' . $PHPShopGUI->setSelect('work', $work, 200, 'left', false, false, false, false, false, false, 'selectpicker', '$(\'input[name=path_new]\').val(this.value);'));
-    $Tab1.=$PHPShopGUI->setField("Статус", $PHPShopGUI->setCheckbox("enabled_new", 1, "Включить", 1));
-    $Tab1.=$PHPShopGUI->setField("Кол-во запусков в день", $PHPShopGUI->setSelect('execute_day_num_new', $PHPShopGUI->setSelectValue($data['execute_day_num']), 70));
-    $Tab1.=$PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'));
+    $Tab1 .= $PHPShopGUI->setField("Запускаемый Файл:", $PHPShopGUI->setInputArg(array('type' => "text.requared", 'name' => "path_new", 'size' => '60%', 'float' => 'left', 'placeholder' => 'phpshop/modules/cron/sample/testcron.php', 'value' => $data['path'])) . '&nbsp;' . $PHPShopGUI->setSelect('work', $work, 200, true, false, false, false, false, false, false, 'selectpicker', '$(\'input[name=path_new]\').val(this.value);'));
+    $Tab1 .= $PHPShopGUI->setField("Статус", $PHPShopGUI->setCheckbox("enabled_new", 1, "Включить", 1));
+    $Tab1 .= $PHPShopGUI->setField("Кол-во запусков в день", $PHPShopGUI->setSelect('execute_day_num_new', $PHPShopGUI->setSelectValue($data['execute_day_num']), 70));
+    $Tab1 .= $PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'));
 
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true));
 
     // Вывод кнопок сохранить и выход в футер
-    $ContentFooter =
-            $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .
+    $ContentFooter = $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .
             $PHPShopGUI->setInput("button", "delID", "Удалить", "right", 70, "", "but", "actionDelete.modules.edit") .
             $PHPShopGUI->setInput("submit", "editID", "Сохранить", "right", 70, "", "but", "actionUpdate.modules.edit") .
             $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionSave.modules.edit");

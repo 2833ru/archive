@@ -1,4 +1,8 @@
 @ProductCatalogContent@
+<!-- Виртуальный каталог -->
+@vendorCatDisp@
+<!--/ Виртуальный каталог -->
+
 <!-- Product Filter Starts -->
 <style type="text/css">.sidebar-right{display:none}.middle-content-fix{width:100%}</style>
 <div class="product-filter" id="filter-well">

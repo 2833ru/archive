@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Библиотека офорфмления текста
+ * Библиотека оформления текста
  * @version 1.5
  * @package PHPShopClass
  * @subpackage Helper
@@ -99,9 +99,10 @@ class PHPShopText {
      * @param string $size размер
      * @param string $target ссылка
      * @param string $class класс
+     * @param string $option data-option
      * @return string
      */
-    static function a($href, $text, $title = false, $color = false, $size = false, $target = false, $class = false) {
+    static function a($href, $text, $title = false, $color = false, $size = false, $target = false, $class = false, $option = false) {
 
         if ($size)
             $style.='font-size:' . $size . 'px;';
@@ -111,14 +112,17 @@ class PHPShopText {
             $title = $text;
 
         if ($title)
-            $title = ' title="' . $title . '" ';
+            $title = ' title="' . str_replace('"', "", $title) . '" ';
         if ($target)
             $target = ' target="' . $target . '" ';
         if ($class)
             $class = ' class="' . $class . '" ';
         if ($style)
             $style = ' style="' . $style . '" ';
-        return '<a href="' . $href . '"' . $title . $target . $class . $style . '>' . $text . '</a>';
+        if ($option)
+            $option = ' data-option="' . $option . '" ';
+
+        return '<a href="' . $href . '"' . $title . $target . $class . $style . $option . '>' . $text . '</a>';
     }
 
     /**
@@ -321,7 +325,7 @@ class PHPShopText {
      * @param int $format формат цены
      * @return string
      */
-    static function strike($string,$format=0) {
+    static function strike($string, $format = 0) {
 
         // Знак рубля
         if (strstr($string, " ")) {
@@ -348,12 +352,13 @@ class PHPShopText {
      * Абзац
      * @param string $string текст
      * @param string $style стиль
+     * @param string $class класс стиля
      * @return string
      */
-    static function p($string = '<br>', $style = false) {
+    static function p($string = '<br>', $style = false, $class = false) {
         if (empty($style))
             $style = __CLASS__ . '-' . __FUNCTION__;
-        return '<p style="' . $style . '">' . $string . '</p>';
+        return '<p style="' . $style . '" class="' . $class . '">' . $string . '</p>';
     }
 
     /**
@@ -443,18 +448,18 @@ class PHPShopText {
      * @param string $data пополнительеы параметры в атрибуте data-option
      * @return string
      */
-    static function setInput($type, $name, $value, $float = "none", $size = 200, $onclick = "return true", $class = false, $caption = false, $description = false, $data = false, $requared = false ) {
+    static function setInput($type, $name, $value, $float = "none", $size = 200, $onclick = "return true", $class = false, $caption = false, $description = false, $data = false, $requared = false) {
 
         if (!empty($onclick))
             $onclick = 'onclick="' . $onclick . '"';
 
         if (!empty($data))
-           $data = 'data-option="' . $data . '"';
+            $data = 'data-option="' . $data . '"';
 
-        $input = ' <input type="' . $type . '" value="' . $value . '" name="' . $name . '" id="' . $name . '" ' . $onclick . ' '.$data.' '.$requared.'> ';
+        $input = ' <input type="' . $type . '" value="' . $value . '" name="' . $name . '" id="' . $name . '" ' . $onclick . ' ' . $data . ' ' . $requared . '> ';
 
         if ($type != 'hidden')
-            $input = '<div style="float:' . $float . '" class="'.$class.'">
+            $input = '<div style="float:' . $float . '" class="' . $class . '">
              <label>' . $caption . $input . $description . '</label></div>';
 
         return $input;

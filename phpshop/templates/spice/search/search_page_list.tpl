@@ -1,6 +1,10 @@
-
-<ol class="breadcrumb hidden-xs">
-    <li><a href="/" >{Главная}</a></li>
+<ol class="breadcrumb hidden-xs" itemscope itemtype="http://schema.org/BreadcrumbList">
+    <li itemscope itemtype="http://schema.org/ListItem">
+        <a href="/" itemprop="item">
+            <span itemprop="name">{Главная}</span>
+        </a>
+        <meta itemprop="position" content="1" />
+    </li>
     <li class="active">{Расширенный поиск}</li>
 </ol>
 
@@ -29,7 +33,7 @@
                     @searchPageCategory@
                 </ul>
             </div>
-            <div class="btn-group" data-toggle="buttons">
+            <div class="btn-group @hideSearchType@" data-toggle="buttons">
                 <label class="btn btn-default btn-sm @searchSetCactive@">
                     <input type="radio" name="pole" value="1" autocomplete="off" @searchSetC@> {Наименование}
                 </label>
@@ -40,7 +44,7 @@
         </span>
     </form>
 </div>
-
+<div class="search-misspell">@searchMisspell@</div>
 <div class="template-product-list products-list">@productPageDis@</div>
 
 @searchPageNav@

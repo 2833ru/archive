@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>2.6</version>
-    <name>Promotions</name>
-    <faqlink>http://faq.phpshop.ru/page/promotion.html</faqlink>
-    <description>Модуль промо-акций.</description>
-    <category>form,sale,user</category>
+    <version>2.8</version>
+    <name>Промокоды</name>
+    <faqlink>https://docs.phpshop.ru/moduli/prodazhi/promokody</faqlink>
+    <description>Модуль промоакций с промокодами.</description>
+    <category>sale</category>
     <adminmenu>
-        <title>Промо-акции</title>
+        <title>Промокоды</title>
         <capability>true</capability>
         <podmenu>
-            <podmenu_name>Обзор Промо-акций</podmenu_name>
+            <podmenu_name>Обзор промокодов</podmenu_name>
             <podmenu_action>dir.promotions</podmenu_action>
         </podmenu>
         <podmenu>
-            <podmenu_name>Новая Промо-акция</podmenu_name>
+            <podmenu_name>Новый промокод</podmenu_name>
             <podmenu_action>dir.promotions&amp;action=new</podmenu_action>
         </podmenu>
     </adminmenu>

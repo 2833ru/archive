@@ -6,6 +6,14 @@
         <meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
         <STYLE TYPE="text/css">
             body { background: #ffffff; margin: 0; font-family: Arial; font-size: 8pt; font-style: normal; }
+			body{
+    background-color: #9e9e9e;
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1IiBoZWlnaHQ9IjUiPgo8cmVjdCB3aWR0aD0iNSIgaGVpZ2h0PSI1IiBmaWxsPSIjOWU5ZTllIj48L3JlY3Q+CjxwYXRoIGQ9Ik0wIDVMNSAwWk02IDRMNCA2Wk0tMSAxTDEgLTFaIiBzdHJva2U9IiM4ODgiIHN0cm9rZS13aWR0aD0iMSI+PC9wYXRoPgo8L3N2Zz4=");
+    -webkit-transition: left 500ms;
+    transition: left 500ms;
+}.doc-wrapper{max-width:1100px;margin: 13px auto;padding:40px;background:#fff;
+box-shadow: 1px 1px 3px 1px #333;
+border-collapse: separate;}
             tr.R0{ height: 18pt; }
             tr.R0 td.R0C0{ font-family: Arial; font-size: 10pt; font-style: normal; font-weight: bold; color: #000000; background-color: #ffffff; text-align: right; border-left: #000000 1px none; border-top: #000000 1px solid; border-bottom: #ffffff 1px none; }
             tr.R0 td.R0C1{ font-family: Times New Roman; font-size: 8pt; font-style: normal; font-weight: bold; color: #000000; background-color: #ffffff; text-align: center; border-left: #000000 2px solid; border-top: #ffffff 1px none; border-bottom: #ffffff 1px none; border-right: #ffffff 1px none; }
@@ -125,12 +133,13 @@
         <script src="../../lib/templates/print/js/html2pdf.bundle.min.js"></script>
         @comment_end@
     </HEAD>
-    <BODY>
+    <body>
+<div class="doc-wrapper">
         <p align="right" class="nonprint">
             @comment_start@
-            <button onclick="html2pdf(document.getElementById('content'), {margin: 2, filename: 'Квитанция Сбербанка №@ouid@.pdf',html2canvas: {dpi: 192,letterRendering: true},jsPDF: {orientation: 'landscape'}});">{Сохранить}</button> @comment_end@
+            <button onclick="html2pdf(document.getElementById('content'), {margin: 2, filename: '{Квитанция Сбербанка} &#8470;@ouid@.pdf',html2canvas: {dpi: 192,letterRendering: true},jsPDF: {orientation: 'landscape'}});">{Сохранить}</button> @comment_end@
             <button onclick="window.print();">{Распечатать}</button> 
-        <hr>
+       
         </p>
         <div id="content">
             <TABLE CELLSPACING=0>
@@ -148,7 +157,7 @@
                 <COL WIDTH="63">
                 <COL WIDTH="108">
                 <TR CLASS=R0>
-                    <TD CLASS=R0C0>{ИЗВЕЩЕНИЕ}</TD>
+                    <TD CLASS=R0C0>{ИЗВЕЩЕНИЕ}&nbsp;&nbsp;</TD>
                     <TD CLASS=R0C1>&nbsp;</TD>
                     <TD CLASS=R0C2 COLSPAN=11>@org_name@</TD>
                     <TD>&nbsp;</TD>
@@ -164,7 +173,7 @@
                     <TD CLASS=R2C1></TD>
                     <TD CLASS=R0C2 COLSPAN=4>@org_inn@</TD>
                     <TD CLASS=R2C6>&nbsp;</TD>
-                    <TD CLASS=R0C2>№</TD>
+                    <TD CLASS=R0C2>&#8470;</TD>
                     <TD CLASS=R0C2 COLSPAN=5>@org_schet@</TD>
                     <TD>&nbsp;</TD>
                 </TR>
@@ -182,7 +191,7 @@
                     <TD CLASS=R0C1>&nbsp;</TD>
                     <TD CLASS=R4C2 COLSPAN=4>@org_bank@</TD>
                     <TD CLASS=R4C6>&nbsp;</TD>
-                    <TD CLASS=R0C2>№</TD>
+                    <TD CLASS=R0C2>&#8470;</TD>
                     <TD CLASS=R0C2 COLSPAN=5>@org_bank_schet@</TD>
                     <TD>&nbsp;</TD>
                 </TR>
@@ -215,7 +224,7 @@
                     <TD CLASS=R7C0>&nbsp;</TD>
                     <TD CLASS=R7C1>&nbsp;</TD>
                     <TD CLASS=R7C2 COLSPAN=3>{Назначение платежа}</TD>
-                    <TD CLASS=R7C5 COLSPAN=8>{Оплата заказа} № @ouid@ от @date@.</TD>
+                    <TD CLASS=R7C5 COLSPAN=8>{Оплата заказа} &#8470; @ouid@ {от} @date@.</TD>
                     <TD>&nbsp;</TD>
                 </TR>
                 <TR CLASS=R8>
@@ -243,7 +252,7 @@
                 <TR CLASS=R1>
                     <TD CLASS=R10C0>&nbsp;</TD>
                     <TD CLASS=R10C1>&nbsp;</TD>
-                    <TD CLASS=R10C2 COLSPAN=11>{Плательщик}  __________________  ({подпись})  "______"  _________________  20____г.</TD>
+                    <TD CLASS=R10C2 COLSPAN=11>{Плательщик}  __________________  ({подпись})  "______"  _________________  20____{г}.</TD>
                     <TD>&nbsp;</TD>
                 </TR>
                 <TR CLASS=R1>
@@ -253,14 +262,14 @@
                     <TD>&nbsp;</TD>
                 </TR>
                 <TR CLASS=R1>
-                    <TD CLASS=R12C0>Кассир</TD>
+                    <TD CLASS=R12C0>{Кассир}</TD>
                     <TD CLASS=R12C1>&nbsp;</TD>
                     <TD CLASS=R12C2 COLSPAN=2>{согласен}.</TD>
                     <TD CLASS=R12C4>&nbsp;</TD>
                     <TD CLASS=R12C4>&nbsp;</TD>
                     <TD CLASS=R12C4>&nbsp;</TD>
                     <TD CLASS=R12C4>&nbsp;</TD>
-                    <TD CLASS=R12C8 COLSPAN=5>    "______"  _________________  20____г.</TD>
+                    <TD CLASS=R12C8 COLSPAN=5>    "______"  _________________  20____{г}.</TD>
                     <TD>&nbsp;</TD>
                 </TR>
                 <TR CLASS=R1>
@@ -280,7 +289,7 @@
                     <TD>&nbsp;</TD>
                 </TR>
                 <TR CLASS=R0>
-                    <TD CLASS=R15C0>{КВИТАНЦИЯ}</TD>
+                    <TD CLASS=R15C0>{КВИТАНЦИЯ}&nbsp;&nbsp;</TD>
                     <TD CLASS=R0C1>&nbsp;</TD>
                     <TD CLASS=R15C2 COLSPAN=11>({наименование получателя платежа}) </TD>
                     <TD>&nbsp;</TD>
@@ -290,7 +299,7 @@
                     <TD CLASS=R16C1>&nbsp;</TD>
                     <TD CLASS=R16C2 COLSPAN=4>@org_inn@</TD>
                     <TD CLASS=R16C6>&nbsp;</TD>
-                    <TD CLASS=R16C2>№</TD>
+                    <TD CLASS=R16C2>&#8470;</TD>
                     <TD CLASS=R16C2 COLSPAN=5>@org_schet@</TD>
                     <TD>&nbsp;</TD>
                 </TR>
@@ -308,7 +317,7 @@
                     <TD CLASS=R1C1>&nbsp;</TD>
                     <TD CLASS=R18C2 COLSPAN=4>@org_bank@</TD>
                     <TD CLASS=R18C6>&nbsp;</TD>
-                    <TD CLASS=R16C2>№</TD>
+                    <TD CLASS=R16C2>&#8470;</TD>
                     <TD CLASS=R16C2 COLSPAN=5>@org_bank_schet@</TD>
                     <TD>&nbsp;</TD>
                 </TR>
@@ -341,7 +350,7 @@
                     <TD CLASS=R7C0>&nbsp;</TD>
                     <TD CLASS=R7C1>&nbsp;</TD>
                     <TD CLASS=R7C2 COLSPAN=3>{Назначение платежа}</TD>
-                    <TD CLASS=R7C5 COLSPAN=8>{Оплата заказа} № @ouid@ от @date@</TD>
+                    <TD CLASS=R7C5 COLSPAN=8>{Оплата заказа} &#8470; @ouid@ {от} @date@</TD>
                     <TD>&nbsp;</TD>
                 </TR>
                 <TR CLASS=R0>
@@ -369,7 +378,7 @@
                 <TR CLASS=R1>
                     <TD CLASS=R16C0>&nbsp;</TD>
                     <TD CLASS=R10C1>&nbsp;</TD>
-                    <TD CLASS=R10C2 COLSPAN=11>{Плательщик}  __________________  ({подпись})  "______"  _________________  20____г.</TD>
+                    <TD CLASS=R10C2 COLSPAN=11>{Плательщик}  __________________  ({подпись})  "______"  _________________  20____{г}.</TD>
                     <TD>&nbsp;</TD>
                 </TR>
                 <TR CLASS=R0>
@@ -379,14 +388,14 @@
                     <TD>&nbsp;</TD>
                 </TR>
                 <TR CLASS=R26>
-                    <TD CLASS=R26C0>Кассир</TD>
+                    <TD CLASS=R26C0>{Кассир}</TD>
                     <TD CLASS=R26C1>&nbsp;</TD>
                     <TD CLASS=R26C2 COLSPAN=2>{согласен}.</TD>
                     <TD CLASS=R26C4>&nbsp;</TD>
                     <TD CLASS=R26C4>&nbsp;</TD>
                     <TD CLASS=R26C4>&nbsp;</TD>
                     <TD CLASS=R26C4>&nbsp;</TD>
-                    <TD CLASS=R26C8 COLSPAN=5>    "_______"  _________________  20____г.</TD>
+                    <TD CLASS=R26C8 COLSPAN=5>    "_______"  _________________  20____{г}.</TD>
                     <TD>&nbsp;</TD>
                 </TR>
                 <TR CLASS=R27>
@@ -401,5 +410,6 @@
                 </TR>
             </TABLE>
         </div>
+		</div>
     </BODY>
 </HTML>

@@ -16,10 +16,10 @@ function addOptionAcreditStatus($data) {
         $status = unserialize($row['status']);
         
         $fields = array (
-            'lastName' => 'Фамилия',
-            'firstName' => 'Имя',
-            'credTitle' => 'Наименование кредитного продукта',
-            'credTerm' => 'Срок кредита'
+            'lastName' => __('Фамилия'),
+            'firstName' => __('Имя'),
+            'credTitle' => __('Наименование кредитного продукта'),
+            'credTerm' => __('Срок кредита')
         );
         
         $dis = '';
@@ -28,7 +28,7 @@ function addOptionAcreditStatus($data) {
                 $dis .= $field . ': ' . $status[$key] . '<br>';
         }
         $dis = substr($dis, 0, -4);
-        $dis .= 'Статус заявки: ' . $PHPShopAlfaCredit->statuses[$status['currentStatus']];
+        $dis .= __('Статус заявки').': ' . $PHPShopAlfaCredit->statuses[$status['currentStatus']];
         
         $Tab3 = $PHPShopGUI->setPanel('Информация о заявке', $dis);
         $PHPShopGUI->addTab(array("Кредит", $Tab3, true));

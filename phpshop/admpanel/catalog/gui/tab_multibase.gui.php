@@ -11,7 +11,7 @@ function tab_multibase($option) {
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['servers']);
     $data = $PHPShopOrm->select(array('*'), array('enabled'=>"='1'"), array('order' => 'id'), array('limit' => 1000));
     
-    $data[1000] = array('host'=>__('Главный сайт'), 'id'=>1000);
+    $data[1000] = array('host'=>'Главный сайт', 'id'=>1000);
     $server = preg_split('/i/', $option['servers'], -1, PREG_SPLIT_NO_EMPTY);
     if (is_array($data)) {
         foreach ($data as $row) {

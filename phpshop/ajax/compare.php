@@ -17,6 +17,9 @@ PHPShopObj::loadClass("security");
 PHPShopObj::loadClass("compare");
 PHPShopObj::loadClass("lang");
 
+// Модули
+$PHPShopModules = new PHPShopModules($_classPath . "modules/");
+
 // Подключаем библиотеку поддержки JsHttpRequest
 if ($_REQUEST['type'] != 'json') {
     require_once $_classPath . "lib/Subsys/JsHttpRequest/Php.php";

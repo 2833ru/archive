@@ -1,9 +1,6 @@
 <?php
 
-$_SESSION['Memory']["rateForComment"]["oneStarWidth"] = 16; // ширина одной звёздочки
-$_SESSION['Memory']["rateForComment"]["oneSpaceWidth"] = 0;
 define("SkinName", "spice");
-
 
 // Цветовые темы CSS
 if (isset($_COOKIE[SkinName . '_theme'])) {
@@ -53,7 +50,7 @@ function create_theme_menu($file) {
 }
 
 // Редактор тем оформления
-if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or !empty($_SESSION['logPHPSHOP']) or !empty($GLOBALS['SysValue']['other']['skinSelect'])) {
+if ($GLOBALS['SysValue']['template_theme']['user'] == 'true'  or !empty($GLOBALS['SysValue']['other']['skinSelect'])) {
 
     // CSS
     $PHPShopCssParser = new PHPShopCssParser($GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . '/css/' . $GLOBALS['SysValue']['other'][SkinName . '_theme'] . '.css');
@@ -150,7 +147,7 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or !empty($_SESSION
         }
         
         $PHPShopGUI->nav_style = 'nav-tabs';
-        $css_edit.=$PHPShopGUI->setTab(array(__('Темы'), $css_edit_theme),array(__('Стили'), $css_edit_add));
+        $css_edit.=$PHPShopGUI->setTab(array('Темы', $css_edit_theme),array('Стили', $css_edit_add));
 
     // Сохранить
     if (!empty($_SESSION['logPHPSHOP'])) {
@@ -288,7 +285,7 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or !empty($_SESSION
         <!--/ Modal admin -->';
 
 
-    if ($GLOBALS['SysValue']['template_theme']['demo'] == 'true' or !empty($_SESSION['logPHPSHOP']) or !empty($GLOBALS['SysValue']['other']['skinSelect']))
+    if (!empty($GLOBALS['SysValue']['other']['skinSelect']))
         $GLOBALS['SysValue']['other']['editor'] = $theme_menu . $edit_frame;
 }
 

@@ -1,5 +1,5 @@
 <!-- Breadcrumb Starts -->
-    <ol class="breadcrumb ">
+    <ol class="breadcrumb " itemscope itemtype="http://schema.org/BreadcrumbList">
         @breadCrumbs@
     </ol>
 <!-- Breadcrumb Ends -->

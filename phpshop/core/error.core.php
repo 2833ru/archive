@@ -17,12 +17,15 @@ class PHPShopError extends PHPShopCore {
 
     function index() {
         $this->title = '404';
+
+        // Перехват модуля
+        $hook=$this->setHook(__CLASS__, __FUNCTION__);
+        if($hook)
+            return $hook;
+
         header("HTTP/1.0 404 Not Found");
         header("Status: 404 Not Found");
-        
-        // Перехват модуля
-        $this->setHook(__CLASS__, __FUNCTION__);
-       
+
         $this->parseTemplate($this->getValue('templates.error_page_forma'));
     }
 

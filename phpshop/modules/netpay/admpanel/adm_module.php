@@ -40,9 +40,9 @@ function actionStart() {
         $PHPShopGUI->setRadio('work_new', 0, 'Тестовый', $data['work'])
 		);
 	
-    $Tab1.=$PHPShopGUI->setField('Api Key', $PHPShopGUI->setInputText(false, 'apikey_new', $data['apikey'], 210));
-    $Tab1.=$PHPShopGUI->setField('Auth signature', $PHPShopGUI->setInputText(false, 'auth_new', $data['auth'], 100));
-    $Tab1.=$PHPShopGUI->setField('Актуальность оплаты заказа', $PHPShopGUI->setInputText(false, 'expiredtime_new', $data['expiredtime'], 100,'дней'));
+    $Tab1.=$PHPShopGUI->setField('Api Key', $PHPShopGUI->setInputText(false, 'apikey_new', $data['apikey'], 300));
+    $Tab1.=$PHPShopGUI->setField('Auth signature', $PHPShopGUI->setInputText(false, 'auth_new', $data['auth'], 300));
+    $Tab1.=$PHPShopGUI->setField('Актуальность оплаты заказа', $PHPShopGUI->setInputText(false, 'expiredtime_new', $data['expiredtime'], 300,__('дней')));
 	
 	// Доступые статусы заказов
     $PHPShopOrderStatusArray = new PHPShopOrderStatusArray();
@@ -53,7 +53,7 @@ function actionStart() {
             $order_status_value[] = array($order_status['name'], $order_status['id'], $data['status']);
 
     // Статус заказа
-    $Tab1.= $PHPShopGUI->setField('Разрешить оплату при статусе заказа', $PHPShopGUI->setSelect('status_new', $order_status_value, 210));
+    $Tab1.= $PHPShopGUI->setField('Разрешить оплату при статусе заказа', $PHPShopGUI->setSelect('status_new', $order_status_value, 300));
 	
 	$Tab1.= $PHPShopGUI->setField('Сообщение до разрешения оплаты', $PHPShopGUI->setTextarea('title_sub_new', $data['title_sub']));
 	
@@ -68,14 +68,14 @@ function actionStart() {
 	$Tab1.= $PHPShopGUI->setField('Статус оплаченного заказа', $PHPShopGUI->setSelect('status_paid_new', $order_status_value, 210));*/
 	
 	foreach ($order_status_value as $i => $v) $order_status_value[$i][2] = $data['status_refund'];
-	$Tab1.= $PHPShopGUI->setField('Статус заказа с возвратом оплаты', $PHPShopGUI->setSelect('status_refund_new', $order_status_value, 210));
+	$Tab1.= $PHPShopGUI->setField('Статус заказа с возвратом оплаты', $PHPShopGUI->setSelect('status_refund_new', $order_status_value, 300));
     
 	$Tab1.=$PHPShopGUI->setField('Оформлять онлайн-чек через партнёра Net Pay', 
 		$PHPShopGUI->setRadio('online_bill_new', 1, 'Вкл.', $data['online_bill']) . 
         $PHPShopGUI->setRadio('online_bill_new', 0, 'Выкл.', $data['online_bill'])
 		);
 		
-	$Tab1.=$PHPShopGUI->setField('ИНН для онлайн-чека', $PHPShopGUI->setInputText(false, 'inn_new', $data['inn'], 210));
+	$Tab1.=$PHPShopGUI->setField('ИНН для онлайн-чека', $PHPShopGUI->setInputText(false, 'inn_new', $data['inn'], 300));
 	
 	$nds_arr = array(
 		array('без НДС', 'none','none'), 
@@ -86,7 +86,7 @@ function actionStart() {
 		array('НДС чека по расчетной ставке 18/118', 'vat118','none'),
 		);
 	foreach ($nds_arr as $i => $v) $nds_arr[$i][2] = $data['tax'];
-	$Tab1.= $PHPShopGUI->setField('Ставка НДС для онлайн-чека', $PHPShopGUI->setSelect('tax_new', $nds_arr, 210));
+	$Tab1.= $PHPShopGUI->setField('Ставка НДС для онлайн-чека', $PHPShopGUI->setSelect('tax_new', $nds_arr, 300,true));
 	
 	$Tab1.=$PHPShopGUI->setField('Использовать режим "Холдирование"', 
 		$PHPShopGUI->setRadio('hold_new', 1, 'Вкл.', $data['hold']) . 
@@ -94,7 +94,7 @@ function actionStart() {
 		);
 		
 	foreach ($order_status_value as $i => $v) $order_status_value[$i][2] = $data['status_hold'];
-	$Tab1.= $PHPShopGUI->setField('Статус заказа с замороженной суммой при холдировании', $PHPShopGUI->setSelect('status_hold_new', $order_status_value, 210));
+	$Tab1.= $PHPShopGUI->setField('Статус заказа с замороженной суммой при холдировании', $PHPShopGUI->setSelect('status_hold_new', $order_status_value, 300));
     
     $info = '<h4>Настройка модуля</h4>
        <ol>

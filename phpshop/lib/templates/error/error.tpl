@@ -42,7 +42,7 @@
         <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
         <div class="container">
             <div class="page-header">
-                <h1 class="text-danger"><span class="glyphicon glyphicon-exclamation-sign"></span> @title@ ошибка</h1>
+                <h1 class="text-danger"><span class="glyphicon glyphicon-exclamation-sign"></span> {@title@ ошибка}</h1>
             </div>
             <p class="lead">@message@</p>
             

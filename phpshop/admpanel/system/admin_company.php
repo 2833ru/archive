@@ -18,7 +18,9 @@ function actionStart() {
 
     $PHPShopGUI->_CODE = '<p></p>' . $PHPShopGUI->setField("Название магазина", $PHPShopGUI->setInputText(null, "name_new", $data['name']));
     $PHPShopGUI->_CODE .= $PHPShopGUI->setField("Владелец", $PHPShopGUI->setInputText(null, "company_new", $data['company']));
-    $PHPShopGUI->_CODE .= $PHPShopGUI->setField("Телефоны", $PHPShopGUI->setInputText(null, "tel_new", $data['tel']));
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setField("Телефон основной", $PHPShopGUI->setInputText(null, "tel_new", $data['tel']));
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setField("Телефон дополнительный", $PHPShopGUI->setInputText(null, "bank[org_tel]", $bank['org_tel']));
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setField("Режим работы", $PHPShopGUI->setInputText(null, "bank[org_time]", $bank['org_time']));
     $PHPShopGUI->_CODE .= $PHPShopGUI->setField("Наименование организации", $PHPShopGUI->setInputText(null, "bank[org_name]", $bank['org_name']));
     $PHPShopGUI->_CODE .= $PHPShopGUI->setField("Юридический адрес", $PHPShopGUI->setInputText(null, "bank[org_ur_adres]", $bank['org_ur_adres']));
     $PHPShopGUI->_CODE .= $PHPShopGUI->setField("Фактический адрес", $PHPShopGUI->setInputText(null, "bank[org_adres]", $bank['org_adres']));
@@ -31,6 +33,7 @@ function actionStart() {
     $PHPShopGUI->_CODE .= $PHPShopGUI->setField("Печать", $PHPShopGUI->setIcon($bank['org_stamp'], "bank_org_stamp", false, array('load' => false, 'server' => true, 'url' => false, 'multi' => false, 'view' => false)));
     $PHPShopGUI->_CODE .= $PHPShopGUI->setField("Подпись руководителя", $PHPShopGUI->setIcon($bank['org_sig'], "bank_org_sig", false, array('load' => false, 'server' => true, 'url' => false, 'multi' => false, 'view' => false)));
     $PHPShopGUI->_CODE .= $PHPShopGUI->setField("Подпись бухгалтера", $PHPShopGUI->setIcon($bank['org_sig_buh'], "bank_org_sig_buh", false, array('load' => false, 'server' => true, 'url' => false, 'multi' => false, 'view' => false)));
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setField("Логотип для бланков", $PHPShopGUI->setIcon($bank['org_logo'], "bank_org_logo", false, array('load' => false, 'server' => true, 'url' => false, 'multi' => false, 'view' => false)));
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
@@ -77,6 +80,7 @@ function actionUpdate() {
     $bank['org_stamp'] = $_POST['bank_org_stamp'];
     $bank['org_sig'] = $_POST['bank_org_sig'];
     $bank['org_sig_buh'] = $_POST['bank_org_sig_buh'];
+    $bank['org_logo'] = $_POST['bank_org_logo'];
     $_POST['bank_new'] = serialize($bank);
 
     // Перехват модуля

@@ -2,6 +2,11 @@
 
 @ProductCatalogContent@
 
+<!-- Виртуальный каталог -->
+@vendorCatDisp@
+<!--/ Виртуальный каталог -->
+
+ <span class="filter-btn" >{Фильтры}</span>
 <div class="well hidden-xs" id="filter-well">
     <div class="row">
         <div class="col-md-6">
@@ -50,7 +55,6 @@
     <form method="post" action="/shop/CID_@productId@@nameLat@.html" name="sort" id="sorttable" class="hide">
         <table><tr>@vendorDisp@ <td>&nbsp;</td><td>@vendorSelectDisp@</td></tr></table>
     </form>
-
 </div>
 
 <div class="template-product-list">@productPageDis@</div>

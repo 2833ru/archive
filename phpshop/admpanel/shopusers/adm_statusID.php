@@ -1,6 +1,6 @@
 <?php
 
-$TitlePage = __('Редактирование статуса').' #' . $_GET['id'];
+$TitlePage = __('Редактирование статуса') . ' #' . $_GET['id'];
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['shopusers_status']);
 PHPShopObj::loadClass('user');
 
@@ -26,10 +26,9 @@ function actionStart() {
             $PHPShopGUI->setField("Скидка", $PHPShopGUI->setInputText('%', "discount_new", $data['discount'], 100)) .
             $PHPShopGUI->setField("Колонка цен", $PHPShopGUI->setSelect('price_new', $PHPShopGUI->setSelectValue($data['price'], 5), 100)) .
             $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("enabled_new", 1, "Вкл.", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выкл.", $data['enabled'])
-    ),'in',false);
+            ), 'in', false);
 
-    $Tab1.= $PHPShopGUI->setCollapse('Накопительные скидки',
-            $PHPShopGUI->setField(null,'<p class="text-muted hidden-xs">'.__('Для учета мгновенной скидки от текущей стоимости заказа без привязки к статусу пользователя и накопления перейдите в раздел').' <a href="?path=shopusers.discount"><span class="glyphicon glyphicon-share-alt"></span> '.__('Скидки от заказа').'</a>.<br>'. __('Для учета накопительной скидки требуется включить опцию учета скидки покупателя в нужный статусе заказа, например "Выполнен"').'.</p>').
+    $Tab1 .= $PHPShopGUI->setCollapse('Накопительные скидки', $PHPShopGUI->setField(null, '<p class="text-muted hidden-xs">' . __('Для учета мгновенной скидки от текущей стоимости заказа без привязки к статусу пользователя и накопления перейдите в раздел') . ' <a href="?path=shopusers.discount"><span class="glyphicon glyphicon-share-alt"></span> ' . __('Скидки от заказа') . '</a>.<br>' . __('Для учета накопительной скидки требуется включить опцию учета скидки покупателя в нужном статусе заказа, например "Выполнен"') . '.</p>') .
             $PHPShopGUI->setField("Скидки от суммы заказов", $PHPShopGUI->setCheckbox('cumulative_discount_check_new', 1, 'Использование накопительной скидки', $data['cumulative_discount_check']) .
                     $PHPShopGUI->loadLib('tab_discount', $data['cumulative_discount'], 'shopusers/'))
     );
@@ -38,11 +37,10 @@ function actionStart() {
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1,true));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true));
 
     // Вывод кнопок сохранить и выход в футер
-    $ContentFooter =
-            $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .
+    $ContentFooter = $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .
             $PHPShopGUI->setInput("button", "delID", "Удалить", "right", 70, "", "but", "actionDelete.shopusers.edit") .
             $PHPShopGUI->setInput("submit", "editID", "Сохранить", "right", 70, "", "but", "actionUpdate.shopusers.edit") .
             $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionSave.shopusers.edit");
@@ -81,16 +79,19 @@ function actionUpdate() {
 
     // Накопительные скидки
     foreach ($_POST['cumulative_sum_ot'] as $key => $value) {
-        if ($_POST['cumulative_discount'][$key] != ''){
+        if ($_POST['cumulative_discount'][$key] != '') {
             $cumulative_array[$key]['cumulative_sum_ot'] = $value;
             $cumulative_array[$key]['cumulative_sum_do'] = $_POST['cumulative_sum_do'][$key];
             $cumulative_array[$key]['cumulative_discount'] = $_POST['cumulative_discount'][$key];
             $cumulative_array[$key]['cumulative_enabled'] = intval($_POST['cumulative_enabled'][$key]);
         }
     }
-    
+
     // Сериализация
     $_POST['cumulative_discount_new'] = serialize($cumulative_array);
+
+    // Корректировка пустых значений
+    $PHPShopOrm->updateZeroVars('cumulative_discount_check_new');
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);

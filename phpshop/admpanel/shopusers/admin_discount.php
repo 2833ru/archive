@@ -36,7 +36,7 @@ function actionStart() {
     );
 
 
-    $PHPShopInterface->setActionPanel(__("Скидки покупателей от заказа"), array('Удалить выбранные','Скидки от статуса'), array('Добавить Скидку','Скидки от статуса'));
+    $PHPShopInterface->setActionPanel(__("Скидки покупателей от заказа"), array('Удалить выбранные','Скидки от статуса'), array('Добавить Скидку'));
     $PHPShopInterface->setCaption(array(null, "2%"), array("Сумма заказа", "50%"), array("Скидка %", "20%"), array("", "10%"), array("Статус", "10%", array('align' => 'right')));
 
     // Таблица с данными

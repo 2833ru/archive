@@ -55,13 +55,13 @@ function actionStart() {
     // Sandbox
     $sandbox_value[] = array('Включен', 1, $data['sandbox']);
     $sandbox_value[] = array('Выключен', 2, $data['sandbox']);
-    $Tab1.= $PHPShopGUI->setField('Тестовый режим', $PHPShopGUI->setSelect('sandbox_new', $sandbox_value,150));
+    $Tab1.= $PHPShopGUI->setField('Тестовый режим', $PHPShopGUI->setSelect('sandbox_new', $sandbox_value,300,true));
 
     // Логотип
     $logo_value[] = array('Слева', 1, $data['logo_enabled']);
     $logo_value[] = array('Справа', 2, $data['logo_enabled']);
     $logo_value[] = array('Выключен', 3, $data['logo_enabled']);
-    $Tab1.= $PHPShopGUI->setField('Логотип PayPal', $PHPShopGUI->setSelect('logo_enabled_new', $logo_value,150));
+    $Tab1.= $PHPShopGUI->setField('Логотип PayPal', $PHPShopGUI->setSelect('logo_enabled_new', $logo_value,300,true));
 
     // Валюты
     $PHPShopValutaArray = new PHPShopValutaArray();
@@ -75,7 +75,7 @@ function actionStart() {
             }
             else
                 $check = false;
-            $valuta_area.=$PHPShopGUI->setRadio('currency_id_new', $val['id'], $val['name'], $check);
+            $valuta_area.=$PHPShopGUI->setRadio('currency_id_new', $val['id'], $val['name'], $check,false, false, false, false);
         }
     $Tab1.= $PHPShopGUI->setLine().$PHPShopGUI->setField('Валюта расчета',$valuta_area);    
 
@@ -89,12 +89,12 @@ function actionStart() {
     $info = 'Для работы модуля требуется зарегистрироваться в PayPal по ссылке: <a href="https://www.paypal.com/ru/webapps/mpp/solutions" target="_blank">https://www.paypal.com/ru/webapps/mpp/solutions</a>. 
                 <p>
 В поля "Пользователь", "Пароль" и "Подпись" внести одноименные данные, полученные после регистрации Бизнес аккаунта в PayPal.</p> <p>
-Для тестирования модуля используйте опцию "Тестовый режим" в закладке "Авторизация". Для отложенного платежа следует выбрать нужный статус заказа в закладке "Авторизация". </p><p>Опция "Логотип PayPal" показывает обязательный логотип платежной системы. Шаблон логотипа находится в файле phpshop/modules/paypal/templates/paypal_logo.tpl. Дополнительные обязательные логотипы доступны по ссылке: <a href="https://www.paypal.com/ru/webapps/mpp/logos" target="_blank">https://www.paypal.com/ru/webapps/mpp/logos</a>.</p> <p> Шаблон описания платежной системы: phpshop/modules/paypal/templates/paypal_forma.tpl</p><p>IPN обработчик оплаты: http://'.$_SERVER['SERVER_NAME'].'/phpshop/modules/paypal/payment/ipn.php</p>';
+Для тестирования модуля используйте опцию "Тестовый режим" в закладке "Авторизация". Для отложенного платежа следует выбрать нужный статус заказа в закладке "Авторизация". </p><p>Опция "Логотип PayPal" показывает обязательный логотип платежной системы. Шаблон логотипа находится в файле <code>phpshop/modules/paypal/templates/paypal_logo.tpl</code>. Дополнительные обязательные логотипы доступны по ссылке: <a href="https://www.paypal.com/ru/webapps/mpp/logos" target="_blank">https://www.paypal.com/ru/webapps/mpp/logos</a>.</p> <p> Шаблон описания платежной системы: <code>phpshop/modules/paypal/templates/paypal_forma.tpl</code></p><p>IPN обработчик оплаты: <code>http://'.$_SERVER['SERVER_NAME'].'/phpshop/modules/paypal/payment/ipn.php</code></p>';
 
     $Tab2 = $PHPShopGUI->setInfo($info);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Авторизация", $Tab1, 270), array("Сообщения", $Tab4, 270), array("Инструкция", $Tab2, 270), array("О Модуле", $Tab3, 270));
+    $PHPShopGUI->setTab(array("Авторизация", $Tab1, true), array("Сообщения", $Tab4, true), array("Инструкция", $Tab2), array("О Модуле", $Tab3));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =

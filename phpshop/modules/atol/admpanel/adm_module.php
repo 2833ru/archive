@@ -26,7 +26,7 @@ function actionStart() {
     $Tab1.= $PHPShopGUI->setField('ИНН в Атол', $PHPShopGUI->setInputText(false, 'inn_new', $data['inn'], 300));
 
     // Интструкция
-    $Tab2='<h4>Регистрация в АТОЛ Онлайн</h4>
+    $info='<h4>Регистрация в АТОЛ Онлайн</h4>
         <ol>
         <li>Зарегистрироваться на сервисе <a href="https://online.atol.ru/?from=phpshop" target="_blank">АТОЛ Онлайн</a>.
         <li>Пройти процедуру регистрации кассы по официальной инструкции <a href="http://www.phpshop.ru/UserFiles/File/atol.pdf" target="_blank">Atol.pdf</a>
@@ -63,7 +63,7 @@ function actionStart() {
     $Tab3 = $PHPShopGUI->setPay(false, false, $data['version'], false);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Инструкция", $Tab2,true), array("О Модуле", $Tab3), array("Журнал операций", null, '?path=modules.dir.atol'));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Инструкция", $PHPShopGUI->setInfo($info),true), array("О Модуле", $Tab3), array("Журнал операций", null, '?path=modules.dir.atol'));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =

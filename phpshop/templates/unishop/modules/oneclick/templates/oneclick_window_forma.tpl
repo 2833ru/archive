@@ -10,22 +10,22 @@
                 <div class="modal-body">
 
                     <div class="form-group">
-                        <input type="text" name="oneclick_mod_name" class="form-control" placeholder="{Имя}..." required="">
+                        <input type="text" name="oneclick_mod_name" class="form-control" placeholder="{Имя}" required="">
                     </div>
                     <div class="form-group">
-                        <input type="text" name="oneclick_mod_tel" class="form-control" placeholder="{Телефон}..." required="">
+                        <input type="text" name="oneclick_mod_tel" class="form-control" placeholder="{Телефон}" required="">
                     </div>
+
+                    @oneclick_captcha@
                     <div class="form-group">
                         <input type="checkbox" value="on" name="rule" class="req" checked="checked"> @rule@
                     </div>
-                    @oneclick_captcha@
-
                 </div>
                 <div class="modal-footer">
                     <input type="hidden" name="oneclick_mod_product_id" value="@productUid@">
                     <input type="hidden" name="oneclick_mod_send" value="1">
                     <button type="button" class="btn btn-default" data-dismiss="modal">{Закрыть}</button>
-                    <button type="submit" class="btn btn-primary">{Заказать звонок}</button>
+                    <button type="submit" class="btn btn-main">{Заказать звонок}</button>
                 </div>
             </form>
         </div>

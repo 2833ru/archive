@@ -17,7 +17,7 @@ $(document).ready(function() {
                     data.push({name: 'actionList[saveID]', value: 'actionInsert'});
 
                     $.ajax({
-                        mimeType: 'text/html; charset=windows-1251',
+                        mimeType: 'text/html; charset='+locale.charset,
                         url: '?path=users.stoplist&action=new',
                         type: 'post',
                         data: data,
@@ -106,7 +106,7 @@ $(document).ready(function() {
     });
 
     $("#select_rules_option").on('click', function() {
-        $(".table td:nth-child(6) input:checkbox").each(function() {
+        $(".table td:nth-child(5) input:checkbox").each(function() {
             if ($("#select_rules_option").prop('checked') && this.name != 'module_rul_1')
                 this.checked = true;
             else

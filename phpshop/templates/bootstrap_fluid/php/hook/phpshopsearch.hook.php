@@ -12,7 +12,7 @@ function template_category_select($obj, $data) {
     // Задаем  сетку
     $obj->cell=3;
     
-    $obj->set('currentSearchCat', 'Выбрать каталог поиска');
+    $obj->set('currentSearchCat', __('Выбрать каталог поиска'));
     foreach ($obj->value as $val) {
         $dis.='<li><a class="cat-menu-search" data-target="' . $val[1] . '" href="javascript:void(0)">' . $val[0] . '</a></li>';
         if ($val[2] == 'selected')
@@ -29,16 +29,7 @@ function template_category_select($obj, $data) {
     if (!empty($_REQUEST['pole']))
         $pole = intval($_REQUEST['pole']);
     else
-        $pole = 1;
-
-    switch ($set) {
-        case 1:
-            $obj->set('searchSetAactive', 'active');
-            break;
-        case 2:
-            $obj->set('searchSetBactive', 'active');
-            break;
-    }
+        $pole = $obj->PHPShopSystem->getSerilizeParam('admoption.search_pole');
 
     switch ($pole) {
         case 1:

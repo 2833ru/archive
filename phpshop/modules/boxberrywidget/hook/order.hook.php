@@ -25,10 +25,13 @@ function order_boxberrywidget_hook($obj, $row, $rout) {
 <input type="hidden" id="boxberryCartDepth" value="' . $BoxberryWidget->option[depth] . '">
 <input type="hidden" id="boxberryCartHeight" value="' . $BoxberryWidget->option[height] . '">
 <input type="hidden" id="boxberryCartWidth" value="' . $BoxberryWidget->option[width] . '">
+<input type="hidden" id="boxberryFee" value="' . $BoxberryWidget->option[fee] . '">
+<input type="hidden" id="boxberryFeeType" value="' . $BoxberryWidget->option[fee_type] . '">
+<input type="hidden" id="boxberryPriceFormat" value="' . $BoxberryWidget->format . '">
 <script type="text/javascript" src="//points.boxberry.ru/js/boxberry.js" /></script><script type="text/javascript" src="phpshop/modules/boxberrywidget/js/boxberrywidget.js" /></script>', true);
 
 
-    $obj->set('UserAdresList', '<input type="hidden" name="DeliverySum" value=""><input type="hidden" name="boxberryInfo" value=""><input type="hidden" name="boxberry_pvz_id" value="">', true);
+    $obj->set('UserAdresList', '<input type="hidden" name="DeliverySum" value=""><input type="hidden" name="boxberryInfo" value=""><input type="hidden" name="boxberry_pvz_id_new" value="">', true);
     }
 }
 

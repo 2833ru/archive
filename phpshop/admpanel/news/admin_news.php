@@ -6,7 +6,7 @@ function actionStart() {
     global $PHPShopInterface, $TitlePage;
 
     $PHPShopInterface->action_button['RSS'] = array(
-        'name' => 'RSS êàíàëû',
+        'name' => __('RSS êàíàëû'),
         'action' => 'news.rss',
         'class' => 'btn btn-default btn-sm navbar-btn btn-action-panel',
         'type' => 'button',

@@ -40,7 +40,7 @@ function userorderpaymentlink_mod_liqpay_hook($obj, $PHPShopOrderFunction) {
         $payment_forma.=PHPShopText::setInput('hidden', 'signature', $sign);
         $payment_forma.=PHPShopText::setInput('submit', 'send', $option['title'], $float = "none", 250);
 
-        $return = PHPShopText::form($payment_forma, 'pay', 'post', 'https://www.liqpay.com/?do=clickNbuy');
+        $return = PHPShopText::form($payment_forma, 'pay', 'post', 'https://www.liqpay.ua/?do=clickNbuy');
     }
     elseif($PHPShopOrderFunction->getSerilizeParam('orders.Person.order_metod') == 10001)
         $return = ', Заказ обрабатывается менеджером';

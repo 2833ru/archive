@@ -71,33 +71,33 @@ function actionStart() {
     $data = $PHPShopOrm->select();
     $vendor = unserialize($data['option']);
 
-    $Tab1 = $PHPShopGUI->setField('Опция A', $PHPShopGUI->setInputText('Имя:', 'option_1_name', $vendor['option_1_name'], 180, false, 'left') . '&nbsp;' . $PHPShopGUI->setSelect('option_1_format', checkSelect($vendor['option_1_format']), 100));
+    $Tab1 = $PHPShopGUI->setField('Опция A', $PHPShopGUI->setInputText('Имя:', 'option_1_name', $vendor['option_1_name'], 180, false, 'left') . '&nbsp;' . $PHPShopGUI->setSelect('option_1_format', checkSelect($vendor['option_1_format']), 100). '&nbsp;<span class="text-muted">@productOption1@</span>');
 
-    $Tab1.= $PHPShopGUI->setField('Опция B', $PHPShopGUI->setInputText('Имя:', 'option_2_name', $vendor['option_2_name'], 180, false, 'left') . '&nbsp;' . $PHPShopGUI->setSelect('option_2_format', checkSelect($vendor['option_2_format']), 100));
+    $Tab1.= $PHPShopGUI->setField('Опция B', $PHPShopGUI->setInputText('Имя:', 'option_2_name', $vendor['option_2_name'], 180, false, 'left') . '&nbsp;' . $PHPShopGUI->setSelect('option_2_format', checkSelect($vendor['option_2_format']), 100). '&nbsp;<span class="text-muted">@productOption2@</span>');
 
-    $Tab1.= $PHPShopGUI->setField('Опция C', $PHPShopGUI->setInputText('Имя:', 'option_3_name', $vendor['option_3_name'], 180, false, 'left') . '&nbsp;' . $PHPShopGUI->setSelect('option_3_format', checkSelect($vendor['option_3_format']), 100));
+    $Tab1.= $PHPShopGUI->setField('Опция C', $PHPShopGUI->setInputText('Имя:', 'option_3_name', $vendor['option_3_name'], 180, false, 'left') . '&nbsp;' . $PHPShopGUI->setSelect('option_3_format', checkSelect($vendor['option_3_format']), 100). '&nbsp;<span class="text-muted">@productOption3@</span>');
 
-    $Tab1.= $PHPShopGUI->setField('Опция D', $PHPShopGUI->setInputText('Имя:', 'option_4_name', $vendor['option_4_name'], 180, false, 'left') . '&nbsp;' . $PHPShopGUI->setSelect('option_4_format', checkSelect($vendor['option_4_format']), 100));
+    $Tab1.= $PHPShopGUI->setField('Опция D', $PHPShopGUI->setInputText('Имя:', 'option_4_name', $vendor['option_4_name'], 180, false, 'left') . '&nbsp;' . $PHPShopGUI->setSelect('option_4_format', checkSelect($vendor['option_4_format']), 100). '&nbsp;<span class="text-muted">@productOption4@</span>');
 
-    $Tab1.= $PHPShopGUI->setField('Опция E', $PHPShopGUI->setInputText('Имя:', 'option_5_name', $vendor['option_5_name'], 180, false, 'left') . '&nbsp;' . $PHPShopGUI->setSelect('option_5_format', checkSelect($vendor['option_5_format']), 100));
+    $Tab1.= $PHPShopGUI->setField('Опция E', $PHPShopGUI->setInputText('Имя:', 'option_5_name', $vendor['option_5_name'], 180, false, 'left') . '&nbsp;' . $PHPShopGUI->setSelect('option_5_format', checkSelect($vendor['option_5_format']), 100). '&nbsp;<span class="text-muted">@productOption5@</span>');
 
 
-    $Tab2 = $PHPShopGUI->setField('Опция A', $PHPShopGUI->setInputText('Имя:', 'option_6_name', $vendor['option_6_name'], 180, false, 'left') . '&nbsp;' . $PHPShopGUI->setSelect('option_6_format', checkSelect($vendor['option_6_format']), 100));
+    $Tab2 = $PHPShopGUI->setField('Опция A', $PHPShopGUI->setInputText('Имя:', 'option_6_name', $vendor['option_6_name'], 180, false, 'left') . '&nbsp;' . $PHPShopGUI->setSelect('option_6_format', checkSelect($vendor['option_6_format']), 100). '&nbsp;<span class="text-muted">@catalogOption1@</span>');
 
-    $Tab2.= $PHPShopGUI->setField('Опция B', $PHPShopGUI->setInputText('Имя:', 'option_7_name', $vendor['option_7_name'], 180, false, 'left') . '&nbsp;' . $PHPShopGUI->setSelect('option_7_format', checkSelect($vendor['option_7_format']), 100));
+    $Tab2.= $PHPShopGUI->setField('Опция B', $PHPShopGUI->setInputText('Имя:', 'option_7_name', $vendor['option_7_name'], 180, false, 'left') . '&nbsp;' . $PHPShopGUI->setSelect('option_7_format', checkSelect($vendor['option_7_format']), 100). '&nbsp;<span class="text-muted">@catalogOption2@</span>');
 
-    $Tab2.= $PHPShopGUI->setField('Опция C', $PHPShopGUI->setInputText('Имя:', 'option_8_name', $vendor['option_8_name'], 180, false, 'left') . '&nbsp;' . $PHPShopGUI->setSelect('option_8_format', checkSelect($vendor['option_8_format']), 100));
+    $Tab2.= $PHPShopGUI->setField('Опция C', $PHPShopGUI->setInputText('Имя:', 'option_8_name', $vendor['option_8_name'], 180, false, 'left') . '&nbsp;' . $PHPShopGUI->setSelect('option_8_format', checkSelect($vendor['option_8_format']), 100). '&nbsp;<span class="text-muted">@catalogOption3@</span>');
 
-    $Tab2.= $PHPShopGUI->setField('Опция D', $PHPShopGUI->setInputText('Имя:', 'option_9_name', $vendor['option_9_name'], 180, false, 'left') . '&nbsp;' . $PHPShopGUI->setSelect('option_9_format', checkSelect($vendor['option_9_format']), 100));
+    $Tab2.= $PHPShopGUI->setField('Опция D', $PHPShopGUI->setInputText('Имя:', 'option_9_name', $vendor['option_9_name'], 180, false, 'left') . '&nbsp;' . $PHPShopGUI->setSelect('option_9_format', checkSelect($vendor['option_9_format']), 100). '&nbsp;<span class="text-muted">@catalogOption4@</span>');
 
-    $Tab2.= $PHPShopGUI->setField('Опция E', $PHPShopGUI->setInputText('Имя:', 'option_10_name', $vendor['option_10_name'], 180, false, 'left') . '&nbsp;' . $PHPShopGUI->setSelect('option_10_format', checkSelect($vendor['option_10_format']), 100));
+    $Tab2.= $PHPShopGUI->setField('Опция E', $PHPShopGUI->setInputText('Имя:', 'option_10_name', $vendor['option_10_name'], 180, false, 'left') . '&nbsp;' . $PHPShopGUI->setSelect('option_10_format', checkSelect($vendor['option_10_format']), 100). '&nbsp;<span class="text-muted">@catalogOption5@</span>');
 
-    $Tab1 = $PHPShopGUI->setCollapse(__('Товары'), $Tab1, 'in', false);
-    $Tab1.= $PHPShopGUI->setCollapse(__('Каталоги'), $Tab2);
+    $Tab1 = $PHPShopGUI->setCollapse('Товары', $Tab1, 'in', false);
+    $Tab1.= $PHPShopGUI->setCollapse('Каталоги', $Tab2);
 
     $info = 'Модуль позволяет добавить дополнительные поля для отображения в товарных позициях на сайте и при редактировании в карточке товара через закладку "Дополнительно". 
 <p>        
-Для вывода данных по товарам на сайте используются переменные <kbd>@productOption1@, @productOption2@, @productOption3@, @productOption4@, @productOption5@</kbd>, для каталогов используются переменные <kbd>@catalogOption1@, @catalogOption2@, @catalogOption3@, @catalogOption4@, @catalogOption5@</kbd>.  Сортировка наименования сотвествует сортировке вывода переменных в карточке редактирования сверху вниз. Переменные доступны в любом файле шаблонов продуктов <code>phpshop/templates/имя шаблона/product/</code> и шаблоне каталогов <code>phpshop/templates/имя шаблона/catalog/</code>.</p>  
+Для вывода данных по товарам на сайте используются переменные <kbd>@productOption1@</kbd>, <kbd>@productOption2@</kbd>, <kbd>@productOption3@</kbd>, <kbd>@productOption4@</kbd>, <kbd>@productOption5@</kbd>, для каталогов используются переменные <kbd>@catalogOption1@</kbd>, <kbd>@catalogOption2@</kbd>, <kbd>@catalogOption3@</kbd>, <kbd>@catalogOption4@</kbd>, <kbd>@catalogOption5@</kbd>.  Сортировка наименования сотвествует сортировке вывода переменных в карточке редактирования сверху вниз. Переменные доступны в любом файле шаблонов продуктов <code>phpshop/templates/имя шаблона/product/</code> и шаблоне каталогов <code>phpshop/templates/имя шаблона/catalog/</code>.</p>  
 
 Для доступа к значениям товаров через php функции используется конструкция:<br><br>
 <code>

@@ -1,5 +1,27 @@
 <?php
 
+class PHPShopCategoryCountArray extends PHPShopArray {
+
+    /**
+     * Конструктор
+     * @param string $sql SQL условие выборки
+     */
+    function __construct($sql = false) {
+
+        $this->objSQL = $sql;
+        $this->cache = false;
+        $this->debug = false;
+        $this->ignor = false;
+        $this->order = array('order' => 'num,name');
+        $this->objBase = $GLOBALS['SysValue']['base']['categories'];
+        parent::__construct("id", "count");
+    }
+
+}
+
+$PHPShopCategoryCountArray = new PHPShopCategoryCountArray();
+$GLOBALS['CategoryCountArray'] = $PHPShopCategoryCountArray->getArray();
+
 function countcat_hook_recurs_calculate($row, $obj) {
     global $countcat;
     if ($row['count'] != 0)
@@ -30,11 +52,13 @@ function countcat_hook_recurs_calculate($row, $obj) {
 
 function leftCatal_countcat_hookMiddle($obj, $row, $rout) {
     global $countcat, $countcat_hook_option;
-    
+
+    $row['count'] = $GLOBALS['CategoryCountArray'][$row['id']]['count'];
+
     if ($rout == 'MIDDLE') {
         $countcat[$row['id']] = countcat_hook_recurs_calculate($row, $obj);
     }
-    
+
     if ($rout == 'END') {
         if (empty($countcat_hook_option['enabled']))
             $obj->set('catalogCount', $row['count']);
@@ -50,18 +74,18 @@ function countcat_hook_getSubcatalogIds($n, $obj) {
     $PHPShopOrm->cache = $obj->cache;
     $PHPShopOrm->debug = false;
 
-    
+
     $where['parent_to'] = '=' . intval($n);
 
     // Не выводить скрытые каталоги
     $where['skin_enabled'] = "!='1'";
 
     // Мультибаза
-    if (defined("HostID")){
+    if (defined("HostID")) {
         $where['servers'] = " REGEXP 'i" . HostID . "i'";
     }
 
-    $data = $PHPShopOrm->select(array('id','name','count'), $where, false, array('limit' => 100), __CLASS__, __FUNCTION__);
+    $data = $PHPShopOrm->select(array('id', 'name', 'count'), $where, false, array('limit' => 100), __CLASS__, __FUNCTION__);
 
     if (is_array($data)) {
         foreach ($data as $row) {
@@ -92,13 +116,15 @@ function subcatalog_countcat_hook_set_count($cat, $count) {
     $PHPShopOrm->update(array('count_new' => $count), array('id' => '=' . intval($cat)));
 }
 
-
 function subcatalog_countcat_hook($obj, $row) {
     global $countcat, $countcat_hook_option;
-   // Настройки модуля
-    if(!$row['count'])
+
+    $row['count'] = $GLOBALS['CategoryCountArray'][$row['id']]['count'];
+
+    // Настройки модуля
+    if (!$row['count'])
         $countcat[$row['id']] = countcat_hook_recurs_calculate($row, $obj);
-    
+
     if (empty($countcat_hook_option))
         $countcat_hook_option['enabled'] = countcat_hook_option();
 

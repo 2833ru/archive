@@ -62,7 +62,7 @@ $(document).ready(function() {
         data.push({name: 'actionList[selectID]', value: 'actionAdvanceSearch'});
 
         $.ajax({
-            mimeType: 'text/html; charset=windows-1251',
+            mimeType: 'text/html; charset='+locale.charset,
             url: '?path=catalog.search',
             type: 'post',
             data: data,

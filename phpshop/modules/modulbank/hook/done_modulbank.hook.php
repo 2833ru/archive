@@ -9,13 +9,12 @@
 function send_modulbank_hook($obj, $value, $rout) {
     global $PHPShopSystem;
 
-    if ($rout === 'MIDDLE' and $value['order_metod'] == 10012) {
+    if ($rout === 'END' and $value['order_metod'] == 10012) {
 
         include_once 'phpshop/modules/modulbank/class/ModulBank.php';
 
         $Modulbank = new ModulBank();
-
-        $aCart = $obj->PHPShopCart->getArray();
+        $orders = unserialize($obj->order);
 
         // НДС
         $tax = $Modulbank->getNds();
@@ -23,19 +22,19 @@ function send_modulbank_hook($obj, $value, $rout) {
         // Контроль оплаты от статуса заказа
         if (empty($Modulbank->option['status'])) {
 
-            $Modulbank->parameters['amount']          = number_format($obj->get('total'), 2, '.', '');
+            $Modulbank->parameters['amount']          = number_format($obj->total, 2, '.', '');
             $Modulbank->parameters['order_id']        = $value['ouid'];
             $Modulbank->parameters['receipt_contact'] = $_POST['mail'];
             $Modulbank->parameters['description']     = PHPShopString::win_utf8($PHPShopSystem->getName() . ' оплата заказа ' . $Modulbank->parameters['order_id']);
 
             // Содержимое корзины
-            foreach ($aCart as $key => $arItem) {
+            foreach ($orders['Cart']['cart'] as $key => $arItem) {
 
                 // Скидка
                 $price = $obj->discount > 0 ? $price = number_format($arItem['price']  - ($arItem['price']  * $obj->discount  / 100), 2, '.', '') : $price = number_format($arItem['price'], 2, '.', '');
 
                 $aItem[] = array(
-                    "name"           => PHPShopString::win_utf8($arItem['name']),
+                    "name" => PHPShopString::win_utf8(str_replace(array('&#43;'),array(''), $arItem['name'])),
                     "quantity"       => $arItem['num'],
                     "price"          => $price,
                     "sno"            => $Modulbank->option['taxationSystem'],

@@ -44,7 +44,7 @@ function actionStart() {
         $TitlePage.=': ' . $SortCategoryArray[$_GET['cat']]['name'];
 
     $PHPShopInterface->setActionPanel($TitlePage, array('Редактировать группу', 'Добавить группу', 'Очистить кэш', '|', 'Удалить выбранные'), array('Добавить характеристику'));
-    $PHPShopInterface->setCaption(array(null, "1%"), array("Название", "50%"), array("", "10%"), array("Бренд" . "", "10%", array('align' => 'center')), array("Опция" . "", "10%", array('align' => 'center')), array("Фильтр" . "", "10%", array('align' => 'center')));
+    $PHPShopInterface->setCaption(array(null, "1%"), array("Название", "40%"), array("", "8%"), array("Каталог" . "", "10%", array('align' => 'center')), array("Бренд" . "", "10%", array('align' => 'center')), array("Опция" . "", "10%", array('align' => 'center')), array("Фильтр" . "", "10%", array('align' => 'center')));
 
     $where = array('category' => '!=0');
     if (!empty($_GET['cat'])) {
@@ -78,6 +78,12 @@ function actionStart() {
                 $brand = '<span class="glyphicon glyphicon-ok"><span class="hide">1</span></span>';
             else
                 $brand = '<span class="hide">0</span>';
+            
+            // Виртуальный каталог
+            if (!empty($row['virtual']))
+                $virtual = '<span class="glyphicon glyphicon-ok"><span class="hide">1</span></span>';
+            else
+                $virtual = '<span class="hide">0</span>';
 
             // Описание
             if (!empty($row['description']))
@@ -85,7 +91,7 @@ function actionStart() {
             else $help=null;
 
             $PHPShopInterface->path = 'sort';
-            $PHPShopInterface->setRow($row['id'], array('name' => $row['name'], 'link' => '?path=sort&id=' . $row['id'], 'align' => 'left','addon' => $help), array('action' => array('edit', 'copy', '|', 'delete', 'id' => $row['id']), 'align' => 'center'), array('name' => $brand, 'align' => 'center'), array('name' => $goodoption, 'align' => 'center'), array('name' => $filtr, 'align' => 'center')
+            $PHPShopInterface->setRow($row['id'], array('name' => $row['name'], 'link' => '?path=sort&id=' . $row['id'], 'align' => 'left','addon' => $help), array('action' => array('edit', 'copy', '|', 'delete', 'id' => $row['id']), 'align' => 'center'), array('name' => $virtual, 'align' => 'center'), array('name' => $brand, 'align' => 'center'), array('name' => $goodoption, 'align' => 'center'), array('name' => $filtr, 'align' => 'center')
             );
         }
 

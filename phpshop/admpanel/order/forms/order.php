@@ -73,7 +73,7 @@ $dis.="
   <tr class=tablerow>
 		<td class=tablerow>" . $n . "</td>
 		<td class=tablerow>".__("Доставка")." - " . $PHPShopDelivery->getCity() . "</td>
-		<td class=tablerow align=center>шт.&nbsp;</td>
+		<td class=tablerow align=center>&nbsp;".__("шт.")."&nbsp;</td>
 		<td align=right class=tablerow>1</td>
 		<td align=right class=tablerow nowrap>" . $deliveryPrice . "</td>
 		<td class=tableright>" . $deliveryPrice . "</td>
@@ -90,7 +90,7 @@ $summa_nds_dos = number_format($deliveryPrice * $nds / (100 + $nds), "2", ".", "
 
 $name_person = $order['Person']['name_person'];
 $org_name = $order['Person']['org_name'];
-$datas = PHPShopDate::dataV($datas, "false");
+$datas = PHPShopDate::dataV($row['datas'], "false");
 
 // время доставки под старый формат данных в заказе
 if (!empty($order['Person']['dos_ot']) OR !empty($order['Person']['dos_do']))
@@ -127,22 +127,22 @@ if ($PERSON['discount'] > 0) {
 ?>
 <!doctype html>
 <head>
-    <title><?php _e("Бланк Заказа") ?> №<?php echo $ouid ?></title>
+    <title><?php _e("Бланк Заказа") ?> &#8470;<?php echo $ouid ?></title>
     <meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
     <link href="style.css" type=text/css rel=stylesheet>
     <script src="../../../lib/templates/print/js/html2pdf.bundle.min.js"></script>
 </head>
 <body>
     <div align="right" class="nonprint">
-        <button onclick="html2pdf(document.getElementById('content'), {margin: 1, filename: '<?php _e("Бланк Заказа") ?> №<?php echo $ouid ?>.pdf', html2canvas: {dpi: 192,letterRendering: true}});"><?php  _e("Сохранить") ?></button> 
+        <button onclick="html2pdf(document.getElementById('content'), {margin: 1, filename: '<?php _e("Бланк Заказа") ?> &#8470;<?php echo $ouid ?>.pdf', html2canvas: {dpi: 192,letterRendering: true}});"><?php  _e("Сохранить") ?></button> 
         <button onclick="window.print();"><?php  _e("Распечатать") ?></button> 
         <hr><br><br>
     </div>
     <div id="content">
         <div align="center"><table align="center" width="100%">
                 <tr>
-                    <td align="center"><img src="<?php echo $PHPShopSystem->getLogo(); ?>" alt="" border="0" style="max-width: 200px;height: auto;"></td>
-                    <td align="right"><h2><?php  _e("Заказ") ?>&nbsp;№&nbsp;<?php echo $ouid ?>&nbsp;от&nbsp;<?php echo $datas ?></h2></td>
+                    <td align="center"><img src="<?php echo $PHPShopSystem->getLogo(true); ?>" alt="" border="0" style="max-width: 200px;height: auto;"></td>
+                    <td align="right"><h2><?php  _e("Заказ") ?>&nbsp;&#8470;&nbsp;<?php echo $ouid ?>&nbsp;<?php _e("от") ?>&nbsp;<?php echo $datas ?></h2></td>
                 </tr>
             </table>
         </div>
@@ -196,7 +196,7 @@ if ($PERSON['discount'] > 0) {
         <p><br></p>
         <table width=99% cellpadding=2 cellspacing=0 align=center>
             <tr class=tablerow>
-                <td class=tablerow>№</td>
+                <td class=tablerow>&#8470;</td>
                 <td width=50% class=tablerow><?php  _e("Наименование") ?></td>
                 <td class=tablerow><?php  _e("Единица измерения") ?>&nbsp;</td>
                 <td class=tablerow><?php  _e("Количество") ?></td>
@@ -261,7 +261,7 @@ if ($PERSON['discount'] > 0) {
                     if (!empty($LoadBanc['org_stamp']))
                         echo '<img src="' . $LoadBanc['org_stamp'] . '">';
                     else
-                        echo '<div style="padding:50px;border-bottom: 1px solid #000000;border-top: 1px solid #000000;border-left: 1px solid #000000;border-right: 1px solid #000000;" align="center">М.П.</div>';
+                        echo '<div style="padding:50px;border-bottom: 1px solid #000000;border-top: 1px solid #000000;border-left: 1px solid #000000;border-right: 1px solid #000000;" align="center">'.__('М.П.').'</div>';
                     ?>
                 </td>
             </tr>

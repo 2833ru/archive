@@ -22,7 +22,7 @@ class AddToTemplateSortElement extends PHPShopElements {
      * Настройки
      */
     function option() {
-        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sortbrand']['sort_system']);
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sortbrand']['sortbrand_system']);
         $PHPShopOrm->debug = $this->debug;
         $this->option = $PHPShopOrm->select();
     }
@@ -99,6 +99,8 @@ class AddToTemplateSortElement extends PHPShopElements {
 }
 
 // Добавляем в шаблон элемент
-$AddToTemplateSortElement = new AddToTemplateSortElement();
-$AddToTemplateSortElement->display();
+if ($PHPShopNav->notPath(array('order', 'done'))) {
+    $AddToTemplateSortElement = new AddToTemplateSortElement();
+    $AddToTemplateSortElement->display();
+}
 ?>

@@ -154,14 +154,14 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
 ?>
 <!doctype html>
 <head>
-    <title><?php _e("Счет - Фактура")?> №<?php echo @$ouid ?></title>
+    <title><?php _e("Счет - Фактура")?> &#8470;<?php echo @$ouid ?></title>
     <meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
     <link href="style.css" type=text/css rel=stylesheet>
     <script src="../../../lib/templates/print/js/html2pdf.bundle.min.js"></script>
 </head>
 <body>
     <div align="right" class="nonprint">
-        <button onclick="html2pdf(document.getElementById('content'), {margin: 1, filename: '<?php _e("Счет-фактура")?> №<?php echo $ouid ?>.pdf', html2canvas: {dpi: 192, letterRendering: true}, jsPDF: {orientation: 'landscape'}});"><?php _e("Сохранить")?></button> 
+        <button onclick="html2pdf(document.getElementById('content'), {margin: 1, filename: '<?php _e("Счет-фактура")?> &#8470;<?php echo $ouid ?>.pdf', html2canvas: {dpi: 192, letterRendering: true}, jsPDF: {orientation: 'landscape'}});"><?php _e("Сохранить")?></button> 
         <button onclick="window.print();"><?php _e("Распечатать")?></button> 
         <hr>
     </div>
@@ -181,7 +181,7 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
                 </td>
             </tr>
             <tr>
-                <td valign="top" id="d2"><?php _e("СЧЕТ-ФАКТУРА")?> №<input title="<?php _e("Изменить")?>" value="<?php echo @$ouid ?> / <?php echo PHPShopDate::get($row['datas']) ?> г."> <br>
+                <td valign="top" id="d2"><?php _e("СЧЕТ-ФАКТУРА")?> &#8470;<input title="<?php _e("Изменить")?>" value="<?php echo @$ouid ?> / <?php echo PHPShopDate::get($row['datas']) ?> "> <br>
                     <?php _e("Исправление № --  от --")?></td>
             </tr>
             <tr>
@@ -193,7 +193,7 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
                     <?php _e("К платежно-расчетному документу")?>       <br />							
                     <?php echo __("Покупатель").": ".$org_name ?>	<br />						
                     <?php echo __("Адрес").": ".@$adr_info ?> <br />							
-                    <?php echo __("Идентификационный номер покупателя (ИНН)").": ".$order['Person']['org_inn'] . $row['org_inn']."/ КПП:".@$order['Person']['org_kpp'] . $row['org_kpp'] ?> <br />							
+                    <?php echo __("Идентификационный номер покупателя (ИНН)").": ".$order['Person']['org_inn'] . $row['org_inn']."/ ".__("КПП").":".@$order['Person']['org_kpp'] . $row['org_kpp'] ?> <br />							
                 </td>
             </tr>
             <tr>
@@ -225,7 +225,7 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
                         <tr>
                             <td align="center">1</td>
                             <td align="center">2</td>
-                            <td align="center">2а</td>
+                            <td align="center">2a</td>
                             <td align="center">3</td>
                             <td align="center">4</td>
                             <td align="center">5</td>
@@ -282,7 +282,7 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
                                             if (!empty($LoadBanc['org_stamp']))
                                                 echo '<img src="' . $LoadBanc['org_stamp'] . '">';
                                             else
-                                                echo '<div style="padding:50px;border-bottom: 1px solid #000000;border-top: 1px solid #000000;border-left: 1px solid #000000;border-right: 1px solid #000000;" align="center">М.П.</div>';
+                                                echo '<div style="padding:50px;border-bottom: 1px solid #000000;border-top: 1px solid #000000;border-left: 1px solid #000000;border-right: 1px solid #000000;" align="center">'.__('М.П.').'</div>';
                                             ?>
                                         </td>
                                     </tr>

@@ -3,7 +3,7 @@
 PHPShopObj::loadClass('order');
 
 // SQL
-$PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.assist.assistmoney_system"));
+$PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.assist.assist_system"));
 
 // Обновление версии модуля
 function actionBaseUpdate() {
@@ -65,7 +65,7 @@ function actionStart() {
     $Tab2 = $PHPShopGUI->setInfo($info, 200, '96%');
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1, 270), array("Инструкция", $Tab2, 270), array("О Модуле", $Tab3, 270));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Инструкция", $Tab2), array("О Модуле", $Tab3));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =

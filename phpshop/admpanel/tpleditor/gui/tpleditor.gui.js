@@ -1,12 +1,12 @@
 
-$().ready(function() {
-    
+$().ready(function () {
+
     $('[data-toggle="popover-icon"]').popover({
         "trigger": "hover",
         "html": true
     });
 
-    $("body").on('click', ".template-map .nav a", function(event) {
+    $("body").on('click', ".template-map .nav a", function (event) {
         //event.preventDefault();
     });
 
@@ -20,20 +20,20 @@ $().ready(function() {
 
     $('[data-toggle="popover"]').css('cursor', 'pointer').attr('title', 'Подсказка');
     $('.panel[data-toggle="popover"]').hover(
-            function() {
+            function () {
                 $(this).toggleClass('panel-primary text-primary').css('box-shadow', '0 0 6px rgba(122,122,122,0.2)');
-            }, function() {
+            }, function () {
         $(this).toggleClass('panel-primary text-primary').css('box-shadow', 'none');
     });
     $('.template-image[data-toggle="popover"]').hover(
-            function() {
+            function () {
                 $(this).css('box-shadow', '0 0 6px rgba(122,122,122,0.2)');
-            }, function() {
+            }, function () {
         $(this).css('box-shadow', 'none');
     });
 
     // Модальное окно таблицы описаний переменных
-    $('#selectModal').on('show.bs.modal', function(event) {
+    $('#selectModal').on('show.bs.modal', function (event) {
         $('#selectModal .modal-title').html(locale.templater_table_title + $('[data-target="#selectModal"]').attr('data-title'));
         $('#selectModal .modal-footer .btn-primary').addClass('hidden');
         $('#selectModal .modal-footer [data-dismiss="modal"]').html(locale.close);
@@ -42,7 +42,7 @@ $().ready(function() {
     });
 
     // Ввод серийного номера
-    $('body').on('click', '.skin-serial', function() {
+    $('body').on('click', '.skin-serial', function () {
         var serial = prompt('Ключ', $(this).attr('data-key'));
         var parent = $(this).closest('.panel');
         if (serial) {
@@ -54,76 +54,93 @@ $().ready(function() {
             data.push({name: 'editID', value: 1});
             data.push({name: 'actionList[editID]', value: 'actionSerial.system.edit'});
             $.ajax({
-                mimeType: 'text/html; charset=windows-1251',
+                mimeType: 'text/html; charset='+locale.charset,
                 url: '?path=tpleditor',
                 type: 'post',
                 data: data,
                 dataType: "json",
                 async: false,
-                success: function(json) {
+                success: function (json) {
                     if (json['success'] == 1) {
                         showAlertMessage(json['result']);
                         parent.removeClass('panel-warning');
                         parent.addClass('panel-success');
                         parent.find('[data-toggle="tooltip"]').hide();
                         parent.find('.active').removeClass('hide');
-                        
+
                     } else {
                         showAlertMessage(json['result'], true, true);
-                         parent.removeClass('panel-success');
-                         parent.addClass('panel-warning');
+                        parent.removeClass('panel-success');
+                        parent.addClass('panel-warning');
                     }
                 }
             });
         }
     });
 
-    // Загрузка шаблона
-    $('.skin-load').on('click', function() {
+    // Переагрузка шаблона
+    $('.skin-load').on('click', function () {
+
         var data = [];
         var id = $(this);
         var path = $(this).attr('data-path');
         var parent = $(this).closest('.panel');
-        id.tooltip('toggle');
-        parent.find('.panel-heading').append(' - Загружается...');
-        //id.addClass('glyphicon glyphicon-save');
-        data.push({name: 'template_load', value: path});
-        data.push({name: 'template_type', value: $(this).attr('data-type')});
-        data.push({name: 'editID', value: 1});
-        data.push({name: 'ajax', value: 1});
-        data.push({name: 'actionList[editID]', value: 'actionLoad.system.edit'});
-        $.ajax({
-            mimeType: 'text/html; charset=windows-1251',
-            url: '?path=tpleditor',
-            type: 'post',
-            data: data,
-            dataType: "json",
-            async: false,
-            success: function(json) {
-                if (json['success'] == 1) {
-                    showAlertMessage(json['result']);
-                    parent.addClass('panel-success');
-                    id.remove();
-                    parent.find('.panel-heading').html(path);
-                    $('#template-tree').append('<tr class="treegrid-all"><td><a href="?path=tpleditor&name=' + path + '">' + path + '</a></td></tr>');
-                    parent.find('.panel-footer').find('.btn').removeClass('hide');
-                    
-                } else {
-                    showAlertMessage(json['result'], true);
-                    parent.addClass('panel-warning');
-                    if (confirm(locale.confirm_load_template)) {
-                        window.open('http://' + json['zip']);
+        var type = $(this).attr('data-type');
+
+        if ($(this).hasClass('skin-reload')) {
+            var message = locale.confirm_reload_skin;
+        } else
+            var message = locale.confirm_load_skin;
+
+        $.MessageBox({
+            buttonDone: "OK",
+            buttonFail: locale.cancel,
+            message: message
+        }).done(function () {
+            id.tooltip('toggle');
+            parent.find('.panel-heading').append(' - Загружается...');
+            //id.addClass('glyphicon glyphicon-save');
+            data.push({name: 'template_load', value: path});
+            data.push({name: 'template_type', value: type});
+            data.push({name: 'editID', value: 1});
+            data.push({name: 'ajax', value: 1});
+            data.push({name: 'actionList[editID]', value: 'actionLoad.system.edit'});
+            $.ajax({
+                mimeType: 'text/html; charset='+locale.charset,
+                url: '?path=tpleditor',
+                type: 'post',
+                data: data,
+                dataType: "json",
+                async: false,
+                success: function (json) {
+                    if (json['success'] == 1) {
+                        showAlertMessage(json['result']);
+                        parent.addClass('panel-success');
+                        //id.remove();
+                        parent.find('.panel-heading').html(path);
+                        $('#template-tree').append('<tr class="treegrid-all"><td><a href="?path=tpleditor&name=' + path + '">' + path + '</a></td></tr>');
+                        parent.find('.panel-footer').find('.btn').removeClass('hide');
+
+                    } else {
+                        showAlertMessage(json['result'], true);
+                        parent.addClass('panel-warning');
+                        if (confirm(locale.confirm_load_template)) {
+                            window.open('http://' + json['zip']);
+                        }
                     }
                 }
-            }
-        });
+            });
+
+        })
     });
 
+
+
     // закрепление навигации
-    if ($('#fix-check:visible').length && typeof(WAYPOINT_LOAD) != 'undefined')
+    if ($('#fix-check:visible').length && typeof (WAYPOINT_LOAD) != 'undefined')
         var waypoint = new Waypoint({
             element: document.getElementById('fix-check'),
-            handler: function(direction) {
+            handler: function (direction) {
                 $('.navbar-action').toggleClass('navbar-fixed-top');
             },
             offset: '10%'
@@ -152,7 +169,7 @@ $().ready(function() {
     }
 
     // Вставить @VAR@ в Ace
-    $("body").on('click', ".editor_var", function() {
+    $("body").on('click', ".editor_var", function () {
 
         // Вставить
         if ($(this).hasClass('btn-info')) {
@@ -169,18 +186,17 @@ $().ready(function() {
     });
 
     // Увеличить Ace
-    $(".ace-full").on('click', function() {
+    $(".ace-full").on('click', function () {
         $(this).find('span').toggleClass('glyphicon-fullscreen');
         if ($('#editor').css('position') == 'relative') {
             $('#editor').css('position', 'fixed');
-        }
-        else {
+        } else {
             $('#editor').css('position', 'relative');
         }
     });
 
     // Уменьшить Ace [escape key]
-    $(document).keyup(function(e) {
+    $(document).keyup(function (e) {
         if (e.keyCode == 27) {
             if ($('#editor').css('position') == 'fixed') {
                 $('.glyphicon-resize-small').toggleClass('glyphicon-fullscreen');
@@ -191,16 +207,16 @@ $().ready(function() {
 
 
     // Сохранить Ace
-    $(".ace-save").on('click', function() {
+    $(".ace-save").on('click', function () {
         $('#editor_src').val(editor.getValue());
     });
 
     // Управление деревом категорий
-    $('.title-icon .glyphicon-chevron-down').on('click', function() {
+    $('.title-icon .glyphicon-chevron-down').on('click', function () {
         $('.tree').treegrid('expandAll');
     });
 
-    $('.title-icon .glyphicon-chevron-up').on('click', function() {
+    $('.title-icon .glyphicon-chevron-up').on('click', function () {
         $('.tree').treegrid('collapseAll');
     });
 
@@ -212,7 +228,7 @@ $().ready(function() {
     });
 
     // Раскрытие категорий
-    $(".treegrid-parent").on('click', function(event) {
+    $(".treegrid-parent").on('click', function (event) {
         event.preventDefault();
         $('.' + $(this).attr('data-parent')).treegrid('toggle');
     });

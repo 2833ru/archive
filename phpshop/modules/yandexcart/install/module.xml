@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>2.2</version>
-    <name>Яндекс.Заказ</name>
+    <version>2.4</version>
+    <name>Яндекс.Маркет</name>
     <description>Модуль продаж через Яндекс.Маркет.</description>
-    <faqlink>http://faq.phpshop.ru/page/yandex-cart.html</faqlink>
-    <category>yandex,sale</category>
+    <faqlink>https://docs.phpshop.ru/moduli/yandeks/yandex-cart</faqlink>
+    <category>yandex</category>
+    <sign>1568200029</sign>
     <adminmenu>
-        <title>Яндекс.Заказ</title>
+        <title>Яндекс.Маркет</title>
         <capability>true</capability>
     </adminmenu>
 </module>

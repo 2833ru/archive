@@ -1,6 +1,6 @@
 <?php
 
-$TitlePage = __('Редактирование скидки').' #' . $_GET['id'];
+$TitlePage = __('Редактирование скидки') . ' #' . $_GET['id'];
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['discount']);
 PHPShopObj::loadClass('user');
 
@@ -18,23 +18,26 @@ function actionStart() {
 
     // Размер названия поля
     $PHPShopGUI->field_col = 2;
-    $PHPShopGUI->setActionPanel(__("Покупатели") . ' / ' . __('Скидки') . ' / ' . $data['sum'], array('Удалить'), array('Сохранить', 'Сохранить и закрыть'),false);
+    $PHPShopGUI->setActionPanel(__("Покупатели") . ' / ' . __('Скидки') . ' / ' . $data['sum'], array('Удалить'), array('Сохранить', 'Сохранить и закрыть'), false);
+
+    $action_value[] = array('Максимально возможная скидка', 1, $data['action']);
+    $action_value[] = array('Суммировать с пользовательской скидкой', 2, $data['action']);
 
     // Содержание закладки 1
-    $Tab1 = $PHPShopGUI->setCollapse('Информация', $PHPShopGUI->setField("Сумма", $PHPShopGUI->setInput('text.required', "sum_new", $data['sum'],null,300)) .
+    $Tab1 = $PHPShopGUI->setCollapse('Информация', $PHPShopGUI->setField("Сумма", $PHPShopGUI->setInput('text.required', "sum_new", $data['sum'], null, 300)) .
             $PHPShopGUI->setField("Скидка", $PHPShopGUI->setInputText('%', "discount_new", $data['discount'], 100)) .
-            $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("enabled_new", 1, "Вкл.", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выкл.", $data['enabled'])
-    ),'in', false);
+            $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("enabled_new", 1, "Вкл.", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выкл.", $data['enabled'])) .
+            $PHPShopGUI->setField("Формула расчета", $PHPShopGUI->setSelect('action_new', $action_value, 300))
+            , 'in', false);
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1,true));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true));
 
     // Вывод кнопок сохранить и выход в футер
-    $ContentFooter =
-            $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .
+    $ContentFooter = $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .
             $PHPShopGUI->setInput("button", "delID", "Удалить", "right", 70, "", "but", "actionDelete.shopusers.edit") .
             $PHPShopGUI->setInput("submit", "editID", "Сохранить", "right", 70, "", "but", "actionUpdate.shopusers.edit") .
             $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionSave.shopusers.edit");

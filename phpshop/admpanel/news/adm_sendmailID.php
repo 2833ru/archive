@@ -22,7 +22,7 @@ function actionStart() {
     }
 
     $PHPShopGUI->action_button['Сохранить и отправить'] = array(
-        'name' => 'Сохранить и отправить',
+        'name' => __('Сохранить и отправить'),
         'action' => 'saveID',
         'class' => 'btn  btn-default btn-sm navbar-btn hidden-xs',
         'type' => 'submit',
@@ -74,8 +74,8 @@ function actionStart() {
     if (empty($_POST['message_limit']))
         $_POST['message_limit'] = 50;
 
-    $Tab2 = $PHPShopGUI->setField('Сообщений в рассылке', $PHPShopGUI->setInputText(null, 'message_limit', $_POST['message_limit'], 150), 1, __('Задается хостингом'));
-    $Tab2 .= $PHPShopGUI->setField('Временной интервал', $PHPShopGUI->setInputText(null, 'time_limit', $_POST['time_limit'], 150, 'минут'), 1, __('Задается хостингом'));
+    $Tab2 = $PHPShopGUI->setField('Сообщений в рассылке', $PHPShopGUI->setInputText(null, 'message_limit', $_POST['message_limit'], 150), 1, 'Задается хостингом');
+    $Tab2 .= $PHPShopGUI->setField('Временной интервал', $PHPShopGUI->setInputText(null, 'time_limit', $_POST['time_limit'], 150, __('минут')), 1, 'Задается хостингом');
     $Tab2 .= $PHPShopGUI->setField("Помощник", $PHPShopGUI->setCheckbox('bot', 1, __('Умная рассылка для соблюдения правила ограничений на хостинге'), 0, false, false));
     
     // Запрос модуля на закладку

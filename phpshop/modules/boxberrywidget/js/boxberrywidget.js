@@ -12,14 +12,24 @@ function boxberrywidgetStart() {
 function boxberryWidget(result) {
 
     var info = 'Код выбранного ПВЗ: ' + result.id + ', город ' + result.name + ', адрес выбранного ПВЗ ' + result.address + ', телефон выбранного ПВЗ ' + result.phone;
-    var boxberry_sum = result.price;
+
+    var boxberry_sum = Number(result.price);
+    var boxberryFee = Number($('#boxberryFee').val());
+    if(boxberryFee > 0) {
+        if(Number($('#boxberryFeeType').val()) == 1) {
+            boxberry_sum = boxberry_sum + (boxberry_sum * boxberryFee / 100);
+        } else {
+            boxberry_sum = boxberry_sum + boxberryFee;
+        }
+    }
+    boxberry_sum = Number(boxberry_sum.toFixed(Number($('#boxberryPriceFormat').val())));
 
     $('input[name="boxberryInfo"]').val(info);
-    $('input[name="boxberry_pvz_id"]').val(result.id);
+    $('input[name="boxberry_pvz_id_new"]').val(result.id);
     $('input[name="DeliverySum"]').val(boxberry_sum);
 
     $("#DosSumma").html(boxberry_sum);
-    $("#TotalSumma").html(Number(boxberry_sum) + Number($('#OrderSumma').val()));
+    $("#TotalSumma").html(boxberry_sum + Number($('#OrderSumma').val()));
 
 
     $('input[name="city_new"]').val(result.name);

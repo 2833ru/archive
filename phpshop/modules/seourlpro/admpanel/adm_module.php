@@ -39,7 +39,7 @@ function actionStart() {
 
 
     // Содержание закладки
-    $Info = '<p>При включенном режиме "SEO пагинация" можно добавить переменную <code>@seourl_canonical@</code> в содержание тега <kbd>head</kbd> шаблона <code>phpshop/templates/имя шаблона/main/shop.tpl</code>. В результате будет добавлена ссылка <code>link rel="canonical"</code> с точным адресом страницы для отсеивания дублей страниц описания списка товаров при использовании фильтра сортировок товаров. Тег Canonical полностью дублирует функционал <kbd>robots.txt</kbd> и не обязателен при использовани заводского robots.txt. </p>';
+    $Info = '<p>Выключение модуля приведет к потере адресов страниц вида <code>/knigi.html</code> на <code>/shop/CID_1.html</code>. Повторное включение заново создаст seo-url, на основе названия каталогов, товаров, при этом, если вы вручную вводили url в поле, он не сохранится.</p>';
 
     $Tab1 = $PHPShopGUI->setField('SEO пагинация', $PHPShopGUI->setRadio('paginator_new', 2, 'Включить', $data['paginator']) . $PHPShopGUI->setRadio('paginator_new', 1, 'Выключить', $data['paginator']),false,'Добавляет в теги Title и Description нумерацию страниц для уникальности индексации');
     $Tab1.=$PHPShopGUI->setField('Описание каталога на внутренних страницах', $PHPShopGUI->setRadio('cat_content_enabled_new', 1, 'Включить', $data['cat_content_enabled']) . $PHPShopGUI->setRadio('cat_content_enabled_new', 2, 'Выключить', $data['cat_content_enabled']),false,'Убирает описание каталога для внутренних страниц для сохранения уникальности первой.');

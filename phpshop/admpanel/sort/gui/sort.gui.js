@@ -6,13 +6,17 @@ $().ready(function() {
         event.preventDefault();
         var id = $('input[name=rowID]').val();
         var parent = $('input[name=parentID]').val();
-        
-        if (confirm(locale.confirm_delete)) {
-            
+
+        $.MessageBox({
+            buttonDone: "OK",
+            buttonFail: locale.cancel,
+            message: locale.confirm_delete
+        }).done(function() {
+
             var data = [];
             data.push({name: 'delID', value: '1'});
             data.push({name: 'actionList[delID]', value: 'actionDelete.sort.edit'});
-            
+
             $('#modal-form').attr('action', '?path=sort.value&id=' + id);
             $('#modal-form').ajaxSubmit({
                 data: data,
@@ -29,7 +33,8 @@ $().ready(function() {
                 }
 
             });
-        }
+        })
+
     });
 
     // Редактировать значение характеристики - 2 шаг
@@ -43,6 +48,7 @@ $().ready(function() {
         var data = [];
         data.push({name: 'editID', value: '1'});
         data.push({name: 'actionList[rowID]', value: 'actionUpdate.sort.edit'});
+
         $('#modal-form .form-control, #modal-form .hidden-edit, #modal-form input:radio:checked, #modal-form input:checkbox:checked').each(function() {
             if ($(this).attr('name') !== undefined) {
                 data.push({name: $(this).attr('name'), value: escape($(this).val())});
@@ -82,13 +88,13 @@ $().ready(function() {
         data.push({name: 'actionList[selectID]', value: 'actionValueEdit'});
 
         $.ajax({
-            mimeType: 'text/html; charset=windows-1251',
+            mimeType: 'text/html; charset='+locale.charset,
             url: '?path=sort.value&id=' + id,
             data: data,
             dataType: "html",
             async: false,
             success: function(data) {
-                $('#selectModal .modal-dialog').removeClass('modal-lg');
+                //$('#selectModal .modal-dialog').removeClass('modal-lg');
                 $('#selectModal .modal-title').html(locale.edit_sort_value);
                 $('#selectModal .modal-footer .btn-primary').removeClass('edit-select-send');
                 $('#selectModal .modal-footer .btn-primary').addClass('value-edit-send');
@@ -105,9 +111,9 @@ $().ready(function() {
 
 
     // Добавить значение характеристики
-    $("body").on('change', '.editable-add', function() {
+   $("body").on('click', 'button[name=addValue]', function() {
         var parent = $(this).closest('.data-row');
-        var name = $(this).val();
+        var name = $(this).closest('.data-row').find('input[name=name_value]').val();
         var num = $(this).closest('.data-row').find('input[name=num_value]').val();
 
         var data = [];
@@ -117,7 +123,7 @@ $().ready(function() {
         data.push({name: 'num_value', value: num});
         data.push({name: 'category_value', value: $('#footer input[name=rowID]').val()});
         $.ajax({
-            mimeType: 'text/html; charset=windows-1251', // ! Need set mimeType only when run from local file
+            mimeType: 'text/html; charset='+locale.charset, // ! Need set mimeType only when run from local file
             url: '?path=sort.value&action=new',
             type: 'post',
             data: data,
@@ -140,13 +146,20 @@ $().ready(function() {
     $("body").on('click', '.data-row .remove', function(event) {
         event.preventDefault();
         var id = $(this).closest('.data-row');
-        if (confirm(locale.confirm_delete)) {
+        var data_id = $(this).attr('data-id');
+
+        $.MessageBox({
+            buttonDone: "OK",
+            buttonFail: locale.cancel,
+            message: locale.confirm_delete
+        }).done(function() {
+
             var data = [];
-            data.push({name: 'rowID', value: $(this).attr('data-id')});
+            data.push({name: 'rowID', value: data_id});
             data.push({name: 'deleteID', value: 1});
             data.push({name: 'actionList[deleteID]', value: 'actionDelete.sort.edit'});
             $.ajax({
-                mimeType: 'text/html; charset=windows-1251', // ! Need set mimeType only when run from local file
+                mimeType: 'text/html; charset='+locale.charset,
                 url: '?path=sort.value&id=' + $(this).attr('data-id'),
                 type: 'post',
                 data: data,
@@ -160,7 +173,7 @@ $().ready(function() {
                         showAlertMessage(locale.save_false, true);
                 }
             });
-        }
+        })
 
     });
 
@@ -172,7 +185,7 @@ $().ready(function() {
         data.push({name: 'editID', value: 1});
         data.push({name: 'actionList[editID]', value: 'actionUpdate'});
         $.ajax({
-            mimeType: 'text/html; charset=windows-1251', // ! Need set mimeType only when run from local file
+            mimeType: 'text/html; charset='+locale.charset,
             url: '?path=sort.value&id=' + $(this).attr('data-id'),
             type: 'post',
             data: data,
@@ -189,44 +202,52 @@ $().ready(function() {
 
     // Дерево категорий
     /*
-    if (typeof(TREEGRID_LOAD) != 'undefined')
-    $('.tree').treegrid({
-        saveState: true,
-        expanderExpandedClass: 'glyphicon glyphicon-triangle-bottom',
-        expanderCollapsedClass: 'glyphicon glyphicon-triangle-right'
-    });*/
+     if (typeof(TREEGRID_LOAD) != 'undefined')
+     $('.tree').treegrid({
+     saveState: true,
+     expanderExpandedClass: 'glyphicon glyphicon-triangle-bottom',
+     expanderCollapsedClass: 'glyphicon glyphicon-triangle-right'
+     });*/
 
     $('.data-tree .dropdown-toggle').addClass('btn-xs');
 
     // Раскрытие категорий
     /*
-    if (typeof(TREEGRID_LOAD) != 'undefined')
-    $(".treegrid-parent").on('click', function(event) {
-        event.preventDefault();
-        $('.' + $(this).attr('data-parent')).treegrid('toggle');
-    });*/
+     if (typeof(TREEGRID_LOAD) != 'undefined')
+     $(".treegrid-parent").on('click', function(event) {
+     event.preventDefault();
+     $('.' + $(this).attr('data-parent')).treegrid('toggle');
+     });*/
 
     // Редактировать категорию в дереве
     $(".tree .edit").on('click', function(event) {
         event.preventDefault();
-        window.location.href += '&id=' + $(this).attr('data-id')+'&type=sub';
+        window.location.href += '&id=' + $(this).attr('data-id') + '&type=sub';
     });
 
     // Удалить категорию в дереве
     $(".tree .delete").on('click', function(event) {
         event.preventDefault();
         var id = $(this).closest('.data-tree');
-        if (confirm(locale.confirm_delete)) {
-            $('.list_edit_' + $(this).attr('data-id')).ajaxSubmit({
+        var data_id = $(this).attr('data-id');
+
+        $.MessageBox({
+            buttonDone: "OK",
+            buttonFail: locale.cancel,
+            message: locale.confirm_delete
+        }).done(function() {
+
+            $('.list_edit_' + data_id).ajaxSubmit({
                 success: function() {
                     id.empty();
                     showAlertMessage(locale.save_done);
                 }
             });
-        }
+        })
+
     });
-    
-        // Создать новый из карточки
+
+    // Создать новый из карточки
     $(".newsub").on('click', function(event) {
         event.preventDefault();
         window.location.href += '&action=new&type=sub';
@@ -246,8 +267,8 @@ $().ready(function() {
     if (typeof cat != 'undefined') {
         $('.treegrid-' + cat).addClass('treegrid-active');
     }
-    
-        // Создать копию из списка dropdown
+
+    // Создать копию из списка dropdown
     $(".data-row .copy").on('click', function(event) {
         event.preventDefault();
         window.location.href = '?path=sort&action=new&id=' + $(this).attr('data-id');
@@ -277,7 +298,7 @@ $().ready(function() {
         data.push({name: 'ajax', value: 1});
 
         $.ajax({
-            mimeType: 'text/html; charset=windows-1251',
+            mimeType: 'text/html; charset='+locale.charset,
             url: '?path=catalog.select',
             type: 'post',
             data: data,

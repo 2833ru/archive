@@ -53,6 +53,7 @@ function actionStart() {
         unset($order['Person']['discount']);
         unset($order['Cart']);
         $data['orders'] = serialize($order);
+        $data['sum'] = 0;
     }
 
     //  опи€ заказа из карточки пользовател€

@@ -1979,7 +1979,9 @@ body {
 }
 /* typography */
 body {
-  font-family: 'Lato', 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif';
+  font-family: 'Open Sans', 'Helvetica', 'Arial', 'sans-serif';
+   -webkit-font-smoothing: antialiased;
+  
 }
 h1,
 h2,
@@ -1988,7 +1990,7 @@ h4,
 h5,
 h6,
 .navbar-nav > li > a {
-  font-family: 'Raleway', 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif';
+  font-family: 'Open Sans', 'Helvetica', 'Arial', 'sans-serif';
 }
 .strong {
   font-weight: bold !important;

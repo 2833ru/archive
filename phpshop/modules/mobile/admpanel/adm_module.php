@@ -44,14 +44,14 @@ function actionStart() {
     // Выборка
     $data = $PHPShopOrm->select();
 
-    $Tab1 = $PHPShopGUI->setField(__('Сообщение'), $PHPShopGUI->setTextarea('message_new', $data['message']),1,'Пустое поле не показывает окно запроса на переход');
+    $Tab1 = $PHPShopGUI->setField('Сообщение', $PHPShopGUI->setTextarea('message_new', $data['message']),1,'Пустое поле не показывает окно запроса на переход');
 
     // Иконка
-    $Tab1.= $PHPShopGUI->setField(__('Изображение в шапке'), $PHPShopGUI->setInputText(false, "logo_new", $data['logo']));
+    $Tab1.= $PHPShopGUI->setField('Изображение в шапке', $PHPShopGUI->setInputText(false, "logo_new", $data['logo']));
 
     // Заголовок
-    $returncall_value[] = array('телефон', 1, $data['returncall']);
-    $returncall_value[] = array('обратный звонок', 2, $data['returncall']);
+    $returncall_value[] = array(__('телефон'), 1, $data['returncall']);
+    $returncall_value[] = array(__('обратный звонок'), 2, $data['returncall']);
     $Tab1.=$PHPShopGUI->setField("Заголовок", $PHPShopGUI->setSelect('returncall_new', $returncall_value));
     $Tab1.=$PHPShopGUI->setField("Дизайн", GetSkinList($data['skin']));
 

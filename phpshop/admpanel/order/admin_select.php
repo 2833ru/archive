@@ -3,6 +3,7 @@
 $TitlePage = __("Обновить заказы");
 PHPShopObj::loadClass('valuta');
 PHPShopObj::loadClass('category');
+PHPShopObj::loadClass('order');
 
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
 
@@ -49,9 +50,12 @@ function actionOption() {
         $memory['order.option']['adres'] = 0;
         $memory['order.option']['org'] = 0;
         $memory['order.option']['comment'] = 0;
+        $memory['order.option']['cart'] = 0;
+        $memory['order.option']['tracking'] = 0;
+        $memory['order.option']['admin'] = 0;
     }
 
-    $message = '<p class="text-muted">Вы можете изменить перечень полей в таблице отображения заказов.</p>';
+    $message = '<p class="text-muted">'.__('Вы можете изменить перечень полей в таблице отображения заказов').'</p>';
 
     $searchforma = $message .
             $PHPShopInterface->setCheckbox('uid', 1, '№ Заказа', $memory['order.option']['uid']) .
@@ -66,7 +70,10 @@ function actionOption() {
             $PHPShopInterface->setCheckbox('city', 1, 'Город', $memory['order.option']['city']).
             $PHPShopInterface->setCheckbox('adres', 1, 'Адрес', $memory['order.option']['adres']).
             $PHPShopInterface->setCheckbox('org', 1, 'Компания', $memory['order.option']['org']) .
-            $PHPShopInterface->setCheckbox('comment', 1, 'Комментарий', $memory['order.option']['comment']) 
+            $PHPShopInterface->setCheckbox('comment', 1, 'Комментарий', $memory['order.option']['comment']).'<br>'.
+            $PHPShopInterface->setCheckbox('cart', 1, 'Корзина', $memory['order.option']['cart']). 
+            $PHPShopInterface->setCheckbox('tracking', 1, 'Tracking', $memory['order.option']['tracking']).
+            $PHPShopInterface->setCheckbox('admin', 1, 'Менеджер', $memory['order.option']['admin'])
             ;
 
     $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'hidden', 'name' => 'path', 'value' => 'order'));
@@ -234,7 +241,17 @@ function actionSave() {
             setcookie("check_memory", json_encode($memory),time()+3600000,$GLOBALS['SysValue']['dir']['dir'].'/phpshop/admpanel/');
     }
 
+    $oldStatuses = $PHPShopOrm->getList(array('statusi', 'id'), $where);
+
     if ($PHPShopOrm->update($_POST, $where)) {
+        // Оповещение пользователя о новом статусе
+        foreach ($oldStatuses as $status) {
+            if ((int) $status['statusi'] !== (int) $_POST['statusi_new']) {
+                $PHPShopOrderFunction = new PHPShopOrderFunction((int) $status['id']);
+                $PHPShopOrderFunction->sendStatusChangedMail();
+            }
+        }
+
         header('Location: ?path=order');
     }
     else

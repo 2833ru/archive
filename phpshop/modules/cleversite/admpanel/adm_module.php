@@ -6,13 +6,13 @@ $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.cleversite.cleversi
 // Функция обновления
 function actionUpdate() {
     global $PHPShopOrm,$PHPShopModules;
-    
+
     // Настройки витрины
     $PHPShopModules->updateOption($_GET['id'], $_POST['servers']);
 
     $PHPShopOrm->debug = false;
     $action = $PHPShopOrm->update($_POST);
-    header('Location: ?path=modules&install=check');
+    header('Location: ?path=modules&id=' . $_GET['id']);
     return $action;
 }
 
@@ -24,20 +24,16 @@ function actionStart() {
     // Выборка
     $data = $PHPShopOrm->select();
 
-    $Tab1 = $PHPShopGUI->setField('Логин',$PHPShopGUI->setInputText(false, 'client_new', $data['client'], '300'));
-    $Tab1.= $PHPShopGUI->setField('Пароль',$PHPShopGUI->setInput('password', 'password_new', $data['password'], "", '300'));
-
-    $Tab1.=$PHPShopGUI->setField('URL сайта:', $PHPShopGUI->setInputText('http://', 'site_new', $data['site'], '300'),1, 'Данный адрес должен совпадать с введенным Вами в личном кабинете адресом сайта, на котором требуется отобразить модуль');
+    $Tab1 = $PHPShopGUI->setField('ID',$PHPShopGUI->setInputText(false, 'client_new', $data['client'], '300'));
+    $Tab1.= $PHPShopGUI->setField('ID сайта',$PHPShopGUI->setInputText(false, 'site_new', $data['site'], '300'));
 
     $Info = '<h4>Для вставки данного модуля следуйте инструкции:</h4>
         <ol>
         <li> Зарегистрируйтесь на сайте <a href="https://cleversite.ru/?ref=qD3jt" target="_blank"> cleversite.ru</a>
 		<li> Получите на почту письмо с регистрационными данными.
 		<li> Выберете в личном кабинете какие виджеты Вы хотите отобразить на своем сайте.
-        <li> Скопируйте Ваш Логин и вставьте его в поле "Логин" на вкладке "Основное" текущего окна настройки модуля.
-		<li> Скопируйте Ваш Пароль и вставьте его в поле "Пароль" на вкладке "Основное" текущего окна настройки модуля.
-		<li> Укажите адрес сайта, который вы добавили в настройки личного кабинета на сайте <a href="https://cleversite.ru/?ref=qD3jt" target="_blank">cleversite.ru</a> 
-		и вставьте его в поле "Сайт" на вкладке "Основное" текущего окна настройки модуля.
+        <li> Скопируйте Ваш ID и вставьте его в поле "ID" на вкладке "Основное" текущего окна настройки модуля.
+		<li> Скопируйте Ваш ID сайта для вставки кода и вставьте его в поле "ID сайта" на вкладке "Основное" текущего окна настройки модуля.
 		<li> Сохраните введенные Вами данные.
 		</ol>';
     $Tab2 = $PHPShopGUI->setInfo($Info, '200px', '100%');
@@ -45,11 +41,11 @@ function actionStart() {
     // Форма регистрации
     $Tab3 = $PHPShopGUI->setPay();
 
-    $About = 'Если у Вас возникли вопросы, то можите пишисать оператору на <a href="http://cleversite.ru/" target="_blank">нашем сайту</a> в онлайн-консультант или отправить сообщение на <a href="mailto:help@cleversite.ru">help@cleversite.ru</a>, принимаем Ваши обращения 24 часа в сутки. Мы поможем установить код на Ваш сайт и начать работу в системе.';
+    $About = 'Если у Вас возникли вопросы, то можете писать оператору на <a href="http://cleversite.ru/" target="_blank">нашем сайту</a> в онлайн-консультант или отправить сообщение на <a href="mailto:help@cleversite.ru">help@cleversite.ru</a>, принимаем Ваши обращения 24 часа в сутки. Мы поможем установить код на Ваш сайт и начать работу в системе.';
     $Tab3.=$PHPShopGUI->setInfo($About);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $PHPShopGUI->setCollapse(__('Авторизация'),$Tab1)), array("Инструкция", $Tab2), array("О Модуле", $Tab3));
+    $PHPShopGUI->setTab(array("Основное", $PHPShopGUI->setCollapse('Авторизация',$Tab1)), array("Инструкция", $Tab2), array("О Модуле", $Tab3));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =

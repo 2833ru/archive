@@ -63,7 +63,7 @@
                     </div>
                     <div class="panel-body">
                         <div class="form-group">
-                            <div class="col-xs-12 col-sm-6">
+                            <div class="col-xs-12 col-sm-8">
                                 <div id="showYurDataForPaymentLoad"></div>
                             </div>
                             <div class="col-xs-12">

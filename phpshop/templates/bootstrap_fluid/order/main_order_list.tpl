@@ -1,15 +1,24 @@
-<ol class="breadcrumb hidden-xs">
-    <li><a href="/" >{Главная}</a></li>
+<style>#catalog-menu {display:none}</style>
+
+<ol class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+    <li itemscope itemtype="http://schema.org/ListItem">
+        <a href="/" itemprop="item">
+            <span itemprop="name">{Главная}</span>
+        </a>
+        <meta itemprop="position" content="1" />
+    </li>
     <li class="active">{Ваша корзина}</li>
 </ol>
+<div class="order">
+<div class="main-cart-header">
 
-<div class="page-header">
-    <div class="pull-right">
-    <a href="?cart=clean" class="btn btn-warning btn-sm"><span class="glyphicon glyphicon-remove"></span> {Очистить корзину}</a> 
-    <a href="phpshop/forms/cart/index.html" target="_blank" class="btn btn-info btn-sm hidden-xs"><span class="glyphicon glyphicon-print"></span> {Печатная форма корзины}</a>
-</div>
     <h2>{Ваша корзина}</h2>
+        
+    <a href="?cart=clean" class="btn cart-clean"> {Очистить корзину}</a> 
+   
+
 </div>
+
 <div class="img_fix">
     @orderContentCart@
 </div>
@@ -17,3 +26,4 @@
 
 
 @orderContent@ 
+</div>

@@ -98,6 +98,10 @@ if (!empty($_SESSION['logPHPSHOP']) and PHPShopSecurity::true_skin($_COOKIE[$_RE
 
         $admoption[$_REQUEST['template'] . '_theme'] = $_COOKIE[$_REQUEST['template'] . '_theme'];
         $admoption[$_REQUEST['template'] . '_fluid_theme'] = $_COOKIE[$_REQUEST['template'] . '_theme'];
+        
+        // Блоки
+        $admoption[$_REQUEST['template'] . '_editor'] = $_SESSION['editor'][$_REQUEST['template']];
+        
         $update['admoption_new'] = serialize($admoption);
         $PHPShopOrm->update($update);
 

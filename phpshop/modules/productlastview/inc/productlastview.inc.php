@@ -81,6 +81,7 @@ class ProductLastView extends PHPShopProductElements {
             "id" => $objProduct->getParam("id"),
             "name" => PHPShopSecurity::CleanStr($objProduct->getParam("name")),
             "price" => PHPShopProductFunction::GetPriceValuta($objID, $objProduct->getParam("price"), $objProduct->getParam("baseinputvaluta"), true),
+            "price_n" => PHPShopProductFunction::GetPriceValuta($objID, $objProduct->getParam("price_n"), $objProduct->getParam("baseinputvaluta"), true, false),
             "uid" => $objProduct->getParam("uid"),
             "pic_small" => $objProduct->getParam("pic_small"),
             "parent" => intval($parentID)
@@ -104,8 +105,7 @@ class ProductLastView extends PHPShopProductElements {
                 if (empty($i)) {
                     unset($this->_PRODUCT[$key]);
                     $i++;
-                }
-                else
+                } else
                     return true;
             }
         }
@@ -157,6 +157,7 @@ class ProductLastView extends PHPShopProductElements {
 
         // Расчет данных с учетом скидки для заказа
         if (is_array($this->_PRODUCT)) {
+            krsort($this->_PRODUCT);
             foreach ($this->_PRODUCT as $key => $val) {
                 $cart[$key]['price'] = $PHPShopOrder->ReturnSumma($val['price'], 0);
                 $cart[$key]['total'] = $PHPShopOrder->ReturnSumma($val['price'] * $val['num'], 0);
@@ -166,8 +167,17 @@ class ProductLastView extends PHPShopProductElements {
         if (is_array($this->_PRODUCT))
             foreach ($this->_PRODUCT as $k => $v)
                 if (function_exists($function)) {
+
+                    // Промоакции
+                    $promotions = $this->PHPShopPromotions->getPrice($v);
+                    if (is_array($promotions)) {
+                        $v['price'] = $promotions['price'];
+                        $v['price_n'] = $promotions['price_n'];
+                        $v['promo_label'] = $promotions['label'];
+                    }
+
                     $option['xid'] = $k;
-                    $list.= call_user_func_array($function, array($v, $option));
+                    $list .= call_user_func_array($function, array($v, $option));
                 }
 
         return $list;
@@ -182,16 +192,16 @@ class ProductLastView extends PHPShopProductElements {
         $GLOBALS['PHPShopOrder'] = new PHPShopOrderFunction();
 
         // Валюта
-        $this->currency = $GLOBALS['PHPShopOrder']->default_valuta_iso;
-
         if ($GLOBALS['PHPShopOrder']->default_valuta_iso == 'RUR' or $GLOBALS['PHPShopOrder']->default_valuta_iso == "RUB")
-            $this->currency = 'p';
+            $this->currency = '<span class="rubznak">p</span>';
+        else
+            $this->currency = $GLOBALS['PHPShopOrder']->default_valuta_code;
 
         $this->set('productlastview_pic_width', $this->option['pic_width']);
 
         // Если есть товары в корзине
         if (count($this->_PRODUCT) > 0) {
-            $list = $this->display('productlastviewform', array('currency' => $this->currency,'user_price_activate'=>$this->user_price_activate));
+            $list = $this->display('productlastviewform', array('currency' => $this->currency, 'user_price_activate' => $this->user_price_activate, 'format' => $this->format));
             $this->set('productlastview_list', $list, true);
             $product = PHPShopParser::file($GLOBALS['SysValue']['templates']['productlastview']['productlastview_forma'], true, false, true);
 
@@ -213,7 +223,10 @@ class ProductLastView extends PHPShopProductElements {
                     $this->set('rightMenu', $dis, true);
                     break;
 
-                default: $this->set('productlastview', $product);
+                default: {
+                        $this->set('productlastview', $product);
+                        $this->set('productlastview_title', $this->option['title']);
+                    }
             }
         }
     }
@@ -223,11 +236,9 @@ class ProductLastView extends PHPShopProductElements {
 /**
  * Шаблон вывода таблицы корзины
  */
-PHPShopObj::loadClass('parser');
-
 function productlastviewform($val, $option) {
-    global $SysValue;
-    
+    global $SysValue, $PHPShopSystem;
+
 
     // Учет модуля SEOURLPRO
     if (!empty($GLOBALS['SysValue']['base']['seourlpro']['seourlpro_system'])) {
@@ -247,10 +258,12 @@ function productlastviewform($val, $option) {
         $url = '/shop/UID_' . $val['id'];
         PHPShopParser::set('productlastview_product_url', $url);
     }
-    
+
+    $val['price'] = number_format($val['price'], $option['format'], '.', ' ');
+
     // Если цены показывать только после авторизации
-    if($option['user_price_activate'] == 1){
-        $val['price']=$val['price_n']=$option['currency']=null;
+    if ($option['user_price_activate'] == 1 && empty($_SESSION['UsersId'])) {
+        $val['price'] = $val['price_n'] = $option['currency'] = null;
     }
 
     PHPShopParser::set('productlastview_product_id', $val['id']);
@@ -260,7 +273,12 @@ function productlastviewform($val, $option) {
     PHPShopParser::set('productlastview_product_price', $val['price']);
     PHPShopParser::set('productlastview_product_currency', $option['currency']);
     PHPShopParser::set('productlastview_product_rating', $option['rate']);
-    PHPShopParser::set('productlastview_product_price_old', $val['price_n']);
+
+    if ((float) $val['price_n'] > 0)
+        PHPShopParser::set('productlastview_product_price_old', number_format($val['price_n'], $option['format'], '.', ' ') . ' ' . $PHPShopSystem->getValutaIcon());
+    else
+        PHPShopParser::set('productlastview_product_price_old', null);
+
 
     $dis = PHPShopParser::file($SysValue['templates']['productlastview']['productlastview_product'], true, false, true);
     return $dis;

@@ -1,3 +1,6 @@
+<style>.middle-content-block{width:100%}
+.left-menu{display:none!important}
+</style>
 <!-- Main Heading Starts -->
 <h2 class="main-heading2">
     @catalogCategory@

@@ -9,15 +9,13 @@ function actionStart() {
     $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.yandexkassa.yandexkassa_log"));
 
     // Выборка
-    $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
-    $PHPShopGUI->setActionPanel('Журнал от ' . PHPShopDate::get($data['date']), false, array('Закрыть'));
-
+    $data = $PHPShopOrm->getOne(array('*'), array('id' => '=' . intval($_GET['id'])));
+    $PHPShopGUI->setActionPanel(__('Журнал от').' ' . PHPShopDate::get($data['date']), false, array('Закрыть'));
 
     // Переводим в читаемый вид
     ob_start();
     print_r(unserialize($data['message']));
     $log = ob_get_clean();
-
 
     $Tab1 = $PHPShopGUI->setTextarea(null, PHPShopString::utf8_win1251($log), $float = "none", $width = '99%', $height = '550');
 

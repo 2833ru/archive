@@ -1,18 +1,25 @@
 <?php
 header('Access-Control-Allow-Origin: *');
-
+error_reporting(0);
 ISDEKservice::setTarifPriority(
 	array(233, 137, 139, 16, 18, 11, 1, 3, 61, 60, 59, 58, 57, 83),
-	array(234, 136, 138, 15, 17, 62, 63, 5, 10, 12)
+    array(234, 136, 138, 15, 17, 10, 12, 5, 62, 63)
 );
 
-include_once '../../../class/obj.class.php';
+/** PHPShop code */
+session_start();
+$_classPath = "../../../";
+include_once($_classPath . "class/obj.class.php");
+include_once($_classPath . "modules/cdekwidget/class/CDEKWidget.php");
 PHPShopObj::loadClass("base");
+PHPShopObj::loadClass("orm");
+PHPShopObj::loadClass("system");
 $PHPShopBase = new PHPShopBase("../../../../phpshop/inc/config.ini");
-$query = mysqli_query($PHPShopBase->link_db, 'SELECT * FROM `phpshop_modules_cdekwidget_system`');
-$option = $query->fetch_assoc();
+$CDEKWidget = new CDEKWidget();
+ISDEKservice::setAuth($CDEKWidget->option['account'], $CDEKWidget->option['password']);
+ISDEKservice::setFee($CDEKWidget->option['fee'], $CDEKWidget->option['fee_type']);
+/** END PHPShop code */
 
-ISDEKservice::setAuth($option['account'], $option['password']);
 
 $action = $_REQUEST['isdek_action'];
 if (method_exists('ISDEKservice', $action)) {
@@ -21,14 +28,28 @@ if (method_exists('ISDEKservice', $action)) {
 
 class ISDEKservice
 {
-    // auth
+	// auth
 	protected static $account = false;
 	protected static $key     = false;
-	
+    private static $fee;
+    private static $fee_type;
 
 	protected static $tarifPriority = false;
 
-	// Workout
+    // Данные авторизации
+    public static function setAuth($account, $key)
+    {
+        self::$account = $account;
+        self::$key = $key;
+    }
+
+    public static function setFee($fee = 0, $fee_type = 1) {
+        self::$fee = (int) $fee;
+        self::$fee_type = (int) $fee_type;
+    }
+
+
+    // Workout
 	public static function setTarifPriority($arCourier, $arPickup)
 	{
 		self::$tarifPriority = array(
@@ -36,13 +57,6 @@ class ISDEKservice
 			'pickup'  => $arPickup
 		);
 	}
-
-    // Данные авторизации
-    public static function setAuth($account, $key)
-    {
-        self::$account = $account;
-        self::$key     = $key;
-    }
 
 	public static function getPVZ()
 	{
@@ -64,6 +78,7 @@ class ISDEKservice
 		if (!$data['shipment']['tarifList']) {
 			$data['shipment']['tariffList'] = self::$tarifPriority[$data['shipment']['type']];
 		}
+        if (isset($_SERVER['HTTP_REFERER']) && !empty($_SERVER['HTTP_REFERER'])) $data['shipment']['ref'] = $_SERVER['HTTP_REFERER'];
 
 		if (!$data['shipment']['cityToId']) {
 			$cityTo = self::sendToCity($data['shipment']['cityTo']);
@@ -134,7 +149,7 @@ class ISDEKservice
 			return false;
 		}
 
-		$request = self::sendToSDEK('pvzlist', false, 'type=ALL');
+		$request = self::sendToSDEK('pvzlist', false, 'type=ALL' .(isset($_REQUEST['lang'])? '&lang='.$_REQUEST['lang'] : '') );
 		$arLL = array();
 		if ($request && $request['code'] == 200) {
 			$xml = simplexml_load_string($request['result']);
@@ -148,7 +163,7 @@ class ISDEKservice
 				}
 
 				$cityCode = (string)$val['CityCode'];
-				$type = (string)$val['Type'];
+				$type = 'PVZ';
 				$city = (string)$val["City"];
 				if (strpos($city, '(') !== false)
 					$city = trim(substr($city, 0, strpos($city, '(')));
@@ -160,18 +175,17 @@ class ISDEKservice
 					'Name'           => (string)$val['Name'],
 					'WorkTime'       => (string)$val['WorkTime'],
 					'Address'        => (string)$val['Address'],
-                    'CityCode'       => (string)$val['CityCode'],
-                    'PostalCode'     => (string)$val['PostalCode'],
 					'Phone'          => (string)$val['Phone'],
 					'Note'           => (string)$val['Note'],
 					'cX'             => (string)$val['coordX'],
 					'cY'             => (string)$val['coordY'],
-					'Dressing'       => (string)$val['IsDressingRoom'],
-					'Cash'           => (string)$val['HaveCashless'],
+					'Dressing'       => ($val['IsDressingRoom'] == 'true'),
+					'Cash'           => ($val['HaveCashless'] == 'true'),
 					'Station'        => (string)$val['NearestStation'],
 					'Site'           => (string)$val['Site'],
 					'Metro'          => (string)$val['MetroStation'],
 					'AddressComment' => (string)$val['AddressComment'],
+					'CityCode'       => (string)$val['CityCode'],
 				);
 				if ($val->WeightLimit) {
 					$arList[$type][$cityCode][$code]['WeightLim'] = array(
@@ -201,6 +215,8 @@ class ISDEKservice
 
 				if (!array_key_exists($cityCode, $arList['CITY'])) {
 					$arList['CITY'][$cityCode] = $city;
+					$arList['CITYREG'][$cityCode] = (int)$val['RegionCode'];
+					$arList['REGIONSMAP'][(int)$val['RegionCode']][] = (int)$cityCode;
 					$arList['CITYFULL'][$cityCode] = (string)$val['CountryName'] . ' ' . (string)$val['RegionName'] . ' ' . $city;
 					$arList['REGIONS'][$cityCode] = implode(', ', array_filter(array((string)$val['RegionName'], (string)$val['CountryName'])));
 				}
@@ -228,6 +244,8 @@ class ISDEKservice
 			'secure'         => $headers['secure'],
 			'senderCityId'   => $shipment['cityFromId'],
 			'receiverCityId' => $shipment['cityToId'],
+			'ref'            => $shipment['ref'],
+			'widget'         => 1,
 			'tariffId'       => ($shipment['tariffId']) ? $shipment['tariffId'] : false
 		);
 
@@ -257,7 +275,13 @@ class ISDEKservice
 
 		if ($result && $result['code'] == 200) {
 			if (!is_null(json_decode($result['result']))) {
-				return json_decode($result['result'], true);
+
+			    $result =  json_decode($result['result'], true);
+			    if(self::$fee > 0) {
+                    $result['result']['price'] = self::plusFee($result['result']['price']);
+                }
+
+			    return $result;
 			} else {
 				self::toAnswer(array('error' => 'Wrong server answer'));
 				return false;
@@ -326,6 +350,7 @@ class ISDEKservice
 		if ($data) {
 			curl_setopt($ch, CURLOPT_POST, TRUE);
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+			curl_setopt($ch, CURLOPT_REFERER, 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME']);
 		}
 		$result = curl_exec($ch);
 		$code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -339,40 +364,75 @@ class ISDEKservice
 	// LANG
 	protected static function getLangArray()
 	{
-		return array(
-			'YOURCITY'   => 'Ваш город',
-			'COURIER'    => 'Курьер',
-			'PICKUP'     => 'Самовывоз',
-			'TERM'       => 'Срок',
-			'PRICE'      => 'Стоимость',
-			'DAY'        => 'дн.',
-			'RUB'        => 'руб.',
-			'NODELIV'    => 'Нет доставки',
-			'CITYSEATCH' => 'Поиск города',
-			'CITYSEARCH' => 'Поиск города',
-			'ALL'        => 'Все',
-			'PVZ'        => 'Пункты выдачи',
-			'MOSCOW'     => 'Москва',
-			'RUSSIA'     => 'Россия',
-			'COUNTING'   => 'Идет расчет',
+		$tanslate = array(
+			'rus' => array(
+				'YOURCITY'   => 'Ваш город',
+				'COURIER'    => 'Курьер',
+				'PICKUP'     => 'Самовывоз',
+				'TERM'       => 'Срок',
+				'PRICE'      => 'Стоимость',
+				'DAY'        => 'дн.',
+				'RUB'        => 'руб.',
+				'NODELIV'    => 'Нет доставки',
+				'CITYSEARCH' => 'Поиск города',
+				'ALL'        => 'Все',
+				'PVZ'        => 'Пункты выдачи',
+				'MOSCOW'     => 'Москва',
+				'RUSSIA'     => 'Россия',
+				'COUNTING'   => 'Идет расчет',
 
-			'NO_AVAIL'          => 'Нет доступных способов доставки',
-			'CHOOSE_TYPE_AVAIL' => 'Выберите способ доставки',
-			'CHOOSE_OTHER_CITY' => 'Выберите другой населенный пункт',
+				'NO_AVAIL'          => 'Нет доступных способов доставки',
+				'CHOOSE_TYPE_AVAIL' => 'Выберите способ доставки',
+				'CHOOSE_OTHER_CITY' => 'Выберите другой населенный пункт',
 
-			'EST' => 'есть',
+				'L_ADDRESS' => 'Адрес пункта выдачи заказов',
+				'L_TIME'    => 'Время работы',
+				'L_WAY'     => 'Как к нам проехать',
+				'L_CHOOSE'  => 'Выбрать',
 
-			'L_ADDRESS' => 'Адрес пункта выдачи заказов',
-			'L_TIME'    => 'Время работы',
-			'L_WAY'     => 'Как к нам проехать',
-			'L_CHOOSE'  => 'Выбрать',
+				'H_LIST'    => 'Список пунктов выдачи заказов',
+				'H_PROFILE' => 'Способ доставки',
+				'H_CASH'    => 'Расчет картой',
+				'H_DRESS'   => 'С примеркой',
+				'H_SUPPORT' => 'Служба поддержки',
+				'H_QUESTIONS' => 'Если у вас есть вопросы, можете<br> задать их нашим специалистам',
+		),
+			'eng' => array(
+				'YOURCITY'   => 'Your city',
+				'COURIER'    => 'Courier',
+				'PICKUP'     => 'Pickup',
+				'TERM'       => 'Term',
+				'PRICE'      => 'Price',
+				'DAY'        => 'days',
+				'RUB'        => ' RUB',
+				'NODELIV'    => 'Not delivery',
+				'CITYSEARCH' => 'Search for a city',
+				'ALL'        => 'All',
+				'PVZ'        => 'Points of self-delivery',
+				'MOSCOW'     => 'Moscow',
+				'RUSSIA'     => 'Russia',
+				'COUNTING'   => 'Calculation',
 
-			'H_LIST'    => 'Список пунктов выдачи заказов',
-			'H_PROFILE' => 'Способ доставки',
-			'H_CASH'    => 'Расчет картой',
-			'H_DRESS'   => 'С примеркой',
-			'H_SUPPORT' => 'Служба поддержки',
+				'NO_AVAIL'          => 'No shipping methods available',
+				'CHOOSE_TYPE_AVAIL' => 'Choose a shipping method',
+				'CHOOSE_OTHER_CITY' => 'Choose another location',
+
+				'L_ADDRESS' => 'Adress of self-delivery',
+				'L_TIME'    => 'Working hours',
+				'L_WAY'     => 'How to get to us',
+				'L_CHOOSE'  => 'Choose',
+
+				'H_LIST'    => 'List of self-delivery',
+				'H_PROFILE' => 'Shipping method',
+				'H_CASH'    => 'Payment by card',
+				'H_DRESS'   => 'Dressing room',
+				'H_SUPPORT' => 'Support',
+				'H_QUESTIONS' => 'If you have any questions,<br> you can ask them to our specialists',
+			)
+
 		);
+		if (isset($_REQUEST['lang']) && isset($tanslate[$_REQUEST['lang']]) ) return $tanslate[$_REQUEST['lang']];
+		else return $tanslate['ru'];
 	}
 
 	// answering
@@ -403,6 +463,15 @@ class ISDEKservice
 	{
 		echo json_encode(self::$answer);
 	}
+
+	private static function plusFee($price)
+    {
+        if(self::$fee_type == 1) {
+            return number_format($price  + ($price  * self::$fee  / 100), 0, '.', '');
+        }
+
+        return number_format($price  + self::$fee, 0, '.', '');
+    }
 }
 
 ?>

@@ -4,6 +4,12 @@ var is_change = false;
 
 $().ready(function() {
 
+    $("body").on('click', ".set-image-tab", function(e) {
+        e.preventDefault();
+        $('#selectModal').modal('hide');
+        $('#myTabs a[data-id="Изображение"]').tab('show');
+    });
+
     // Смена кода валюты
     $("body").on('change', '#baseinputvaluta_new', function() {
         $('[data-type="price"] .input-group-addon').html($(this).attr('data-code'));
@@ -37,7 +43,7 @@ $().ready(function() {
             data.push({name: 'baseinputvaluta_new', value: $('input[name="baseinputvaluta_new"]:checked').val()});
 
             $.ajax({
-                mimeType: 'text/html; charset=windows-1251',
+                mimeType: 'text/html; charset='+locale.charset,
                 url: '?path=product&action=new',
                 type: 'post',
                 data: data,
@@ -45,7 +51,11 @@ $().ready(function() {
                 async: false,
                 success: function(json) {
                     if (json['success'] != '') {
-                        parent.before('<tr class="data-row" data-row="' + json['success'] + '"><td style="text-align:left"><input style="width:100%" data-id="' + json['success'] + '" data-edit="parent_new" class="editable form-control input-sm"  value="' + name + '"></td><td style="text-align:left"><input style="width:100%" data-id="' + json['success'] + '" data-edit="parent2_new" class="editable form-control input-sm"  value="' + parent2 + '"></td><td style="text-align:left"><input style="width:100%" class="editable form-control input-sm" data-edit="items_new" data-id="' + json['success'] + '" value="' + parseInt(0 + items) + '"></td><td style="text-align:left"><input style="width:100%" class="editable form-control input-sm" data-edit="price_new" data-id="' + json['success'] + '" value="' + parseInt(0 + price) + '"></td><td style="text-align:center"><div class="dropdown" id="dropdown_action"><a href="#" class="dropdown-toggle btn btn-default btn-sm" data-toggle="dropdown" role="button" aria-expanded="false"><span class="glyphicon glyphicon-cog"></span> <span class="caret"></span></a><ul class="dropdown-menu" role="menu" ><li><a href="#" data-id="' + json['success'] + '" class="value-edit">Редактировать</a></li><li class="divider"></li><li><a href="#" data-id="' + json['success'] + '" class="value-delete">Удалить <span class="glyphicon glyphicon-trash"></span></a></li></ul></div></td><td></td></tr>');
+                        parent.before('<tr class="data-row" data-row="' + json['success'] + '"><td></td><td style="text-align:left"><input style="width:100%" data-id="' + json['success'] + '" data-edit="parent_new" class="editable form-control input-sm"  value="' + name + '"></td><td style="text-align:left"><input style="width:100%" data-id="' + json['success'] + '" data-edit="parent2_new" class="editable form-control input-sm"  value="' + parent2 + '"></td><td style="text-align:left"><input style="width:100%" class="editable form-control input-sm" data-edit="items_new" data-id="' + json['success'] + '" value="' + parseInt(0 + items) + '"></td><td style="text-align:left"><input style="width:100%" class="editable form-control input-sm" data-edit="price_new" data-id="' + json['success'] + '" value="' + parseInt(0 + price) + '"></td><td style="text-align:center"><div class="dropdown" id="dropdown_action"><a href="#" class="dropdown-toggle btn btn-default btn-sm" data-toggle="dropdown" role="button" aria-expanded="false"><span class="glyphicon glyphicon-cog"></span> <span class="caret"></span></a><ul class="dropdown-menu" role="menu" ><li><a href="#" data-id="' + json['success'] + '" class="value-edit">Редактировать</a></li><li class="divider"></li><li><a href="#" data-id="' + json['success'] + '" class="value-delete">Удалить <span class="glyphicon glyphicon-trash"></span></a></li></ul></div></td><td></td></tr>');
+
+                        // Цена главного товара
+                        if ($('input[name="price_new"]').val() == 0)
+                            $('input[name="price_new"]').val(price);
 
                         showAlertMessage(locale.save_done);
 
@@ -65,7 +75,12 @@ $().ready(function() {
         event.preventDefault();
         var id = $(this).attr('data-id');
         var parent = $(this).closest('.data-row');
-        if (confirm(locale.confirm_delete)) {
+
+        $.MessageBox({
+            buttonDone: "OK",
+            buttonFail: locale.cancel,
+            message: locale.confirm_delete
+        }).done(function() {
 
             var data = [];
             data.push({name: 'delID', value: '1'});
@@ -73,9 +88,9 @@ $().ready(function() {
             data.push({name: 'actionList[delID]', value: 'actionDelete.catalog.edit'});
             data.push({name: 'parent_enabled', value: '1'});
             data.push({name: 'parent', value: $.getUrlVar('id')});
-                        
+
             $.ajax({
-                mimeType: 'text/html; charset=windows-1251',
+                mimeType: 'text/html; charset='+locale.charset,
                 url: '?path=product&id=' + id,
                 data: data,
                 type: 'post',
@@ -89,7 +104,7 @@ $().ready(function() {
                         showAlertMessage(locale.save_false, true);
                 }
             });
-        }
+        })
     });
 
     // Удаление подтипа из карточки
@@ -98,8 +113,11 @@ $().ready(function() {
         var id = $('input[name=rowID]').val();
         var parent = $('input[name=parentID]').val();
 
-        if (confirm(locale.confirm_delete)) {
-
+        $.MessageBox({
+            buttonDone: "OK",
+            buttonFail: locale.cancel,
+            message: locale.confirm_delete
+        }).done(function() {
             var data = [];
             data.push({name: 'delID', value: '1'});
             data.push({name: 'actionList[delID]', value: 'actionDelete.catalog.edit'});
@@ -122,7 +140,8 @@ $().ready(function() {
                 }
 
             });
-        }
+
+        })
     });
 
     // Редактировать значение подтипа - 2 шаг
@@ -134,6 +153,7 @@ $().ready(function() {
 
         var data = [];
         data.push({name: 'editID', value: '1'});
+        data.push({name: 'editParent', value: '1'});
         data.push({name: 'actionList[rowID]', value: 'actionUpdate.catalog.edit'});
         $('#modal-form .form-control, #modal-form .hidden-edit, #modal-form input:radio:checked, #modal-form input:checkbox:checked').each(function() {
             if ($(this).attr('name') !== undefined) {
@@ -149,20 +169,20 @@ $().ready(function() {
                 $('#selectModal').modal('hide');
                 if (json['success'] == 1) {
 
-                    $('[data-row="' + parent + '"] :nth-child(1) input:text').val($('#modal-form input[name="parent_new"]').val());
-                    $('[data-row="' + parent + '"] :nth-child(2) input:text').val($('#modal-form input[name="parent2_new"]').val());
+                    $('[data-row="' + parent + '"] :nth-child(2) input:text').val($('#modal-form input[name="parent_new"]').val());
+                    $('[data-row="' + parent + '"] :nth-child(3) input:text').val($('#modal-form input[name="parent2_new"]').val());
 
                     if ($('#modal-form input[name="color_new"]').val() != '#ffffff')
-                        $('[data-row="' + parent + '"] :nth-child(2) input:text').css('color', $('#modal-form input[name="color_new"]').val());
+                        $('[data-row="' + parent + '"] :nth-child(3) input:text').css('color', $('#modal-form input[name="color_new"]').val());
 
-                    $('[data-row="' + parent + '"] :nth-child(3) input:text').val($('#modal-form input[name="items_new"]').val());
-                    $('[data-row="' + parent + '"] :nth-child(4) input:text').val($('#modal-form input[name="price_new"]').val());
+                    $('[data-row="' + parent + '"] :nth-child(4) input:text').val($('#modal-form input[name="items_new"]').val());
+                    $('[data-row="' + parent + '"] :nth-child(5) input:text').val($('#modal-form input[name="price_new"]').val());
 
                     // Вывод
                     if (json['enabled'] == 1 && json['sklad'] == 0)
-                        $('[data-row="' + parent + '"] :nth-child(6)').html('');
+                        $('[data-row="' + parent + '"] :nth-child(7)').html('');
                     else
-                        $('[data-row="' + parent + '"] :nth-child(6)').html('<span class="pull-right text-muted glyphicon glyphicon-eye-close" data-toggle="tooltip" data-placement="top" title="Скрыто"></span>');
+                        $('[data-row="' + parent + '"] :nth-child(7)').html('<span class="pull-right text-muted glyphicon glyphicon-eye-close" data-toggle="tooltip" data-placement="top" title="Скрыто"></span>');
 
                     // Цена главного товара
                     if ($('input[name="price_new"]').val() == 0)
@@ -188,29 +208,23 @@ $().ready(function() {
         data.push({name: 'actionList[selectID]', value: 'actionOptionEdit'});
 
         $.ajax({
-            mimeType: 'text/html; charset=windows-1251',
+            mimeType: 'text/html; charset='+locale.charset,
             url: '?path=product&id=' + id + '&parent_name=' + escape($('input[name="name_new"]').val()),
             data: data,
             dataType: "html",
             async: false,
             success: function(data) {
-                $('#selectModal .modal-dialog').removeClass('modal-lg');
+
                 $('#selectModal .modal-title').html(locale.edit_option_value);
                 $('#selectModal .modal-footer .btn-primary').removeClass('edit-select-send');
                 $('#selectModal .modal-footer .btn-primary').addClass('value-edit-send');
                 $('#selectModal .modal-footer .btn-delete').removeClass('hidden');
                 $('#selectModal .modal-footer .btn-delete').addClass('value-delete');
-                $('#selectModal .modal-body').html(data);
+                $('#selectModal .modal-body').html(data).css('min-height', '620px');
 
                 $('.color').colorpicker({
                     format: 'hex',
                 });
-
-                /*
-                 $('.color').colorpicker().on('hidePicker', function() {
-                 $('input[name="parent2_new"]').val( $(this).colorpicker('getValue', '#ffffff'));
-                 });
-                 */
 
                 $('.elfinder-modal-content').attr('data-option', 'return=lfile');
                 $('#selectModal').modal('show');
@@ -241,7 +255,7 @@ $().ready(function() {
         var id = $('input[name="rowID"]').val();
         var cat = $('[name="category_new"]').selectpicker('val');
         $('#selectModal .modal-body').html($('#elfinderModal .modal-body').html());
-        $('#selectModal .elfinder-modal-content').attr('src', './product/gui/uploader.gui.php?id=' + id+'&cat='+cat);
+        $('#selectModal .elfinder-modal-content').attr('src', './product/gui/uploader.gui.php?id=' + id + '&cat=' + cat);
         $('#selectModal .elfinder-modal-content').attr('id', 'uploader');
         $('#selectModal .modal-title').html(locale.select_file + 'ы');
         $('#selectModal .modal-footer .btn-primary').addClass('btn-upload');
@@ -301,7 +315,7 @@ $().ready(function() {
         data.push({name: 'actionList[selectID]', value: 'actionSearch'});
 
         $.ajax({
-            mimeType: 'text/html; charset=windows-1251',
+            mimeType: 'text/html; charset='+locale.charset,
             url: '?path=catalog.search&words=' + escape($('input:text[name=search_name]').val()) + '&cat=' + $('select[name=search_category]').val() + '&price_start=' + $('input:text[name=search_price_start]').val() + '&price_end=' + $('input:text[name=search_price_end]').val(),
             type: 'post',
             data: data,
@@ -333,7 +347,7 @@ $().ready(function() {
     });
 
     // Выбор элемента по клику в модальном окне подбора товара
-    $('body').on('click', ".search-list  td", function() {
+    $('body').on('click', ".search-list .product-name", function() {
         $(this).parent('tr').find('input:checkbox[name=items]').each(function() {
             this.checked = !this.checked && !this.disabled;
         });
@@ -352,7 +366,7 @@ $().ready(function() {
         data.push({name: 'actionList[selectID]', value: 'actionSearch'});
 
         $.ajax({
-            mimeType: 'text/html; charset=windows-1251',
+            mimeType: 'text/html; charset='+locale.charset,
             url: '?path=catalog.search',
             type: 'post',
             data: data,
@@ -384,7 +398,7 @@ $().ready(function() {
         'defaultText': locale.enter,
         'removeWithBackspace': true,
         'minChars': 0,
-        'maxChars': 0, 
+        'maxChars': 0,
         'placeholderColor': '#666666'
     });
 
@@ -414,10 +428,14 @@ $().ready(function() {
         data.push({name: 'rowID', value: id});
         data.push({name: 'actionList[rowID]', value: 'actionImgDelete.catalog.edit'});
 
-        if (confirm(locale.confirm_delete)) {
+        $.MessageBox({
+            buttonDone: "OK",
+            buttonFail: locale.cancel,
+            message: locale.confirm_delete
+        }).done(function() {
 
             $.ajax({
-                mimeType: 'text/html; charset=windows-1251',
+                mimeType: 'text/html; charset='+locale.charset,
                 url: '?path=product&id=' + id,
                 type: 'post',
                 data: data,
@@ -431,7 +449,94 @@ $().ready(function() {
                         showAlertMessage(locale.save_false, true, true);
                 }
             });
-        }
+        })
+
+    });
+
+
+    // Установка изображения товара для подтипа
+    $('.img-parent').on('changed.bs.select', function(e) {
+
+        var data = [];
+        var id = $(this).selectpicker('val');
+
+        if (id == 0)
+            return true;
+
+        var text = $(this).find('option:selected').text();
+        var img = $(this).attr('id');
+        data.push({name: 'ajax', value: 1});
+        data.push({name: 'rowID', value: id});
+        data.push({name: 'pic_small_new', value: img.replace('.', 's.')});
+        data.push({name: 'pic_big_new', value: img});
+        data.push({name: 'actionList[rowID]', value: 'actionUpdate.catalog.edit'});
+
+        $.ajax({
+            mimeType: 'text/html; charset='+locale.charset,
+            url: '?path=product&id=' + id,
+            type: 'post',
+            data: data,
+            dataType: "json",
+            async: false,
+            success: function(json) {
+                if (json['success'] == 1) {
+                    showAlertMessage(locale.save_done);
+
+                } else
+                    showAlertMessage(locale.save_false, true, true);
+            }
+        });
+
+        // Сброс значений
+        $('.img-parent').each(function() {
+            if ($(this).find('option:selected').text() == text && $(this).attr('id') != img) {
+                $(this).selectpicker('val', 0);
+            }
+        });
+    });
+
+    // Ввод ALT иконки
+    $('body').on('click', '.setAlt', function(event) {
+        event.preventDefault();
+        var img = $(this);
+        var id = img.attr('data-id');
+
+        $.MessageBox({
+            buttonDone: locale.ok,
+            buttonFail: locale.close,
+            input: img.attr('data-alt'),
+            message: locale.alt
+        }).done(function(alt) {
+            if ($.trim(alt)) {
+
+                var data = [];
+                data.push({name: 'ajax', value: 1});
+                data.push({name: 'rowID', value: id});
+                data.push({name: 'info_new', value: escape(alt)});
+                data.push({name: 'actionList[rowID]', value: 'actionImgEdit.catalog.edit'});
+
+                $.ajax({
+                    mimeType: 'text/html; charset='+locale.charset,
+                    url: '?path=product&id=' + id,
+                    type: 'post',
+                    data: data,
+                    dataType: "json",
+                    async: false,
+                    success: function(json) {
+                        if (json['success'] == 1) {
+                            showAlertMessage(locale.save_done);
+                            $('img[data-id="' + id + '"]').attr('title', alt);
+                            img.attr('data-alt', alt);
+
+                        } else
+                            showAlertMessage(locale.save_false, true, true);
+                    }
+                });
+
+            } else {
+
+            }
+        });
     });
 
     // Сортировка изображения товара
@@ -445,7 +550,7 @@ $().ready(function() {
         data.push({name: 'actionList[rowID]', value: 'actionImgEdit.catalog.edit'});
 
         $.ajax({
-            mimeType: 'text/html; charset=windows-1251',
+            mimeType: 'text/html; charset='+locale.charset,
             url: '?path=product&id=' + id,
             type: 'post',
             data: data,
@@ -463,13 +568,14 @@ $().ready(function() {
     // Добавить файл товара - 2 шаг
     $("body").on('click', "#selectModal .modal-footer .file-add-send", function(event) {
         event.preventDefault();
-        var id = parseInt($('input[name=fileCount]').val());
+        var id = parseInt($('.file-add').attr('data-count'));
         $('.file-list').append('<tr class="data-row" data-row="' + id + '"><td class="file-edit"><a href="' + $('input[name=lfile]').val() + '" class="file-edit"></a></td><td><input class="hidden-edit " value="" name="files_new[' + id + '][path]" type="hidden"><input class="hidden-edit" value="" name="files_new[' + id + '][name]" type="hidden"></td><td style="text-align:right" class="file-edit-path"><a href="' + $('input[name=lfile]').val() + '" class="file-edit-path" target="_blank"></a></td></tr>');
         $('.file-list [data-row="' + id + '"] .file-edit > a').html($('input[name=modal_file_name]').val());
         $('.file-list [data-row="' + id + '"] input[name="files_new[' + id + '][name]"]').val($('input[name=modal_file_name]').val());
         $('.file-list [data-row="' + id + '"] .file-edit-path > a').html('<span class="glyphicon glyphicon-floppy-disk"></span>' + $('input[name=lfile]').val());
         $('.file-list [data-row="' + id + '"] input[name="files_new[' + id + '][path]"]').val($('input[name=lfile]').val());
-        $('.file-add').attr('data-count', id);
+        $('.file-add').attr('data-count', id + 1);
+
         $('#selectModal .modal-footer .btn-primary').removeClass('file-add-send');
         $('#selectModal').modal('hide');
     });
@@ -482,11 +588,10 @@ $().ready(function() {
         var id = $(this).closest('.data-row').attr('data-row');
         data.push({name: 'selectID', value: id});
         data.push({name: 'ajax', value: 1});
-        data.push({name: 'fileCount', value: $(this).attr('data-count')});
         data.push({name: 'actionList[selectID]', value: 'actionFileEdit'});
 
         $.ajax({
-            mimeType: 'text/html; charset=windows-1251',
+            mimeType: 'text/html; charset='+locale.charset,
             url: '?path=product&id=file' + '&name=' + escape('Новый Файл'),
             type: 'post',
             data: data,
@@ -511,10 +616,17 @@ $().ready(function() {
     $("body").on('click', "#selectModal .modal-footer .file-delete", function(event) {
         event.preventDefault();
         var id = $('input[name=selectID]').val();
-        if (confirm(locale.confirm_delete)) {
+
+        $.MessageBox({
+            buttonDone: "OK",
+            buttonFail: locale.cancel,
+            message: locale.confirm_delete
+        }).done(function() {
+
             $('.file-list [data-row="' + id + '"]').remove();
             $('#selectModal').modal('hide');
-        }
+        })
+
     });
 
     // Редактировать файл товара - 2 шаг
@@ -543,7 +655,7 @@ $().ready(function() {
         var name = $(this).html();
 
         $.ajax({
-            mimeType: 'text/html; charset=windows-1251',
+            mimeType: 'text/html; charset='+locale.charset,
             url: '?path=product&id=file&file=' + $(this).attr('href') + '&name=' + escape(name),
             type: 'post',
             data: data,

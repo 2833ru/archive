@@ -2,7 +2,7 @@
 
 function send_to_order_mod_kvk_hook($obj, $value, $rout)
 {
-    if ($rout == 'MIDDLE' && $value['order_metod'] == 10044) {
+    if ($rout == 'END' && $value['order_metod'] == 10044) {
         // Настройки модуля
         include_once dirname(__FILE__) . '/mod_option.hook.php';
         $PHPShopKVKArray = new PHPShopKVKArray();
@@ -19,14 +19,18 @@ function send_to_order_mod_kvk_hook($obj, $value, $rout)
         }
         
         // Форма
-        $cart = $obj->PHPShopCart->getArray();
+        $orders = unserialize($obj->order);
         $total = 0; $i = 0; $dis = '';
-        foreach ($cart as $product) {
+        foreach ($orders['Cart']['cart'] as $product) {
+            if($obj->discount > 0)
+                $price = $product['price']  - ($product['price']  * $obj->discount  / 100);
+            else
+                $price = $product['price'];
+
             $dis .= '<input name="itemVendorCode_'.$i.'" value="'.$product['id'].'" type="hidden">';
             $dis .= '<input name="itemName_'.$i.'" value="'.iconv("windows-1251", "utf-8", htmlspecialchars($product['name'], ENT_COMPAT, 'cp1251', true)).'" type="hidden">';
             $dis .= '<input name="itemQuantity_'.$i.'" value="'.$product['num'].'" type="hidden">';
-            $price = $product['price'];
-            $total += $price;
+            $total = number_format($total + (int) $product['num'] * $price, 2, '.', '');
             $dis .= '<input name="itemPrice_'.$i.'" value="'.number_format($price, 2, '.', '').'" type="hidden">';
             
             $i++;

@@ -1,5 +1,21 @@
 
+
 $().ready(function() {
+    
+    $.fn.datetimepicker.dates['ru'] = locale;
+
+    // datetimepicker
+    $(".date").datetimepicker({
+        format: 'dd-mm-yyyy',
+        language: 'ru',
+        weekStart: 1,
+        todayBtn: 1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        minView: 2,
+        forceParse: 0
+    });
 
     // Указать ID товара в виде тега - Поиск
     $("body").on('click', "#selectModal .search-action", function(event) {
@@ -11,7 +27,7 @@ $().ready(function() {
         data.push({name: 'actionList[selectID]', value: 'actionSearch'});
 
         $.ajax({
-            mimeType: 'text/html; charset=windows-1251',
+            mimeType: 'text/html; charset='+locale.charset,
             url: '?path=catalog.search&words=' + escape($('input:text[name=search_name]').val()) + '&cat=' + $('select[name=search_category]').val() + '&price_start=' + $('input:text[name=search_price_start]').val() + '&price_end=' + $('input:text[name=search_price_end]').val(),
             type: 'post',
             data: data,
@@ -65,7 +81,7 @@ $().ready(function() {
         data.push({name: 'actionList[selectID]', value: 'actionSearch'});
 
         $.ajax({
-            mimeType: 'text/html; charset=windows-1251',
+            mimeType: 'text/html; charset='+locale.charset,
             url: '?path=catalog.search',
             type: 'post',
             data: data,
@@ -148,14 +164,21 @@ $().ready(function() {
     $(".tree .delete").on('click', function(event) {
         event.preventDefault();
         var id = $(this).closest('.data-tree');
-        if (confirm(locale.confirm_delete)) {
-            $('.list_edit_' + $(this).attr('data-id')).ajaxSubmit({
+        var data_id = $(this).attr('data-id');
+
+        $.MessageBox({
+            buttonDone: "OK",
+            buttonFail: locale.cancel,
+            message: locale.confirm_delete
+        }).done(function() {
+
+            $('.list_edit_' + data_id).ajaxSubmit({
                 success: function() {
                     id.empty();
                     showAlertMessage(locale.save_done);
                 }
             });
-        }
+        })
     });
 
     // Создать новый из списка

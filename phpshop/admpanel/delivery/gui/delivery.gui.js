@@ -3,7 +3,7 @@ $(document).ready(function() {
 
     // Автозаполнение дополнительных полей
     $('.autofill tr').each(function(key, value) {
-        
+
         if (key > 0 && $(value).find(':nth-child(3) input:text').val() == "") {
             var def = $(value).find(':nth-child(1)').html();
             $(value).find(':nth-child(3) input:text').val(def);
@@ -14,14 +14,14 @@ $(document).ready(function() {
 
     // Управление деревом категорий
     if (typeof(TREEGRID_LOAD) != 'undefined')
-    $('.title-icon .glyphicon-chevron-down').on('click', function() {
-        $('.tree').treegrid('expandAll');
-    });
+        $('.title-icon .glyphicon-chevron-down').on('click', function() {
+            $('.tree').treegrid('expandAll');
+        });
 
     if (typeof(TREEGRID_LOAD) != 'undefined')
-    $('.title-icon .glyphicon-chevron-up').on('click', function() {
-        $('.tree').treegrid('collapseAll');
-    });
+        $('.title-icon .glyphicon-chevron-up').on('click', function() {
+            $('.tree').treegrid('collapseAll');
+        });
 
 
     // Изменение данных из списка (цена, склад)
@@ -33,7 +33,7 @@ $(document).ready(function() {
         data.push({name: 'actionList[saveID]', value: 'actionSave'});
         data.push({name: 'ajax', value: 1});
         $.ajax({
-            mimeType: 'text/html; charset=windows-1251', // ! Need set mimeType only when run from local file
+            mimeType: 'text/html; charset='+locale.charset,
             url: '?path=delivery&id=' + $(this).attr('data-id'),
             type: 'post',
             data: data,
@@ -50,20 +50,20 @@ $(document).ready(function() {
 
     // Дерево категорий
     if (typeof(TREEGRID_LOAD) != 'undefined')
-    $('.tree').treegrid({
-        saveState: true,
-        expanderExpandedClass: 'glyphicon glyphicon-triangle-bottom',
-        expanderCollapsedClass: 'glyphicon glyphicon-triangle-right'
-    });
+        $('.tree').treegrid({
+            saveState: true,
+            expanderExpandedClass: 'glyphicon glyphicon-triangle-bottom',
+            expanderCollapsedClass: 'glyphicon glyphicon-triangle-right'
+        });
 
     $('.data-tree .dropdown-toggle').addClass('btn-xs');
 
     // Раскрытие категорий
     if (typeof(TREEGRID_LOAD) != 'undefined')
-    $(".treegrid-parent").on('click', function(event) {
-        event.preventDefault();
-        $('.' + $(this).attr('data-parent')).treegrid('toggle');
-    });
+        $(".treegrid-parent").on('click', function(event) {
+            event.preventDefault();
+            $('.' + $(this).attr('data-parent')).treegrid('toggle');
+        });
 
     // Редактировать категорию в дереве
     $(".tree .edit").on('click', function(event) {
@@ -75,14 +75,22 @@ $(document).ready(function() {
     $(".tree .delete").on('click', function(event) {
         event.preventDefault();
         var id = $(this).closest('.data-tree');
-        if (confirm(locale.confirm_delete)) {
-            $('.list_edit_' + $(this).attr('data-id')).ajaxSubmit({
+        var data_id = $(this).attr('data-id');
+
+        $.MessageBox({
+            buttonDone: "OK",
+            buttonFail: locale.cancel,
+            message: locale.confirm_delete
+        }).done(function() {
+
+            $('.list_edit_' + data_id).ajaxSubmit({
                 success: function() {
                     id.empty();
                     showAlertMessage(locale.save_done);
                 }
             });
-        }
+        })
+
     });
 
     // Создать новый из дерева

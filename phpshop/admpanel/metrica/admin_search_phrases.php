@@ -1,6 +1,6 @@
 <?php
 
-$TitlePage = "Статистика - Поисковые фразы";
+$TitlePage = __("Статистика - Поисковые фразы");
 
 function actionStart() {
     global $PHPShopInterface, $TitlePage, $select_name, $PHPShopSystem;

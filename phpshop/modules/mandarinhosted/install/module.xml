@@ -4,7 +4,6 @@
     <name>MandarinPay</name>
     <description>Прием оплат через MandarinPay</description>
     <category>payment</category>
-    <faqlink>https://github.com/vuchastyi/mandarinbank_PHPShop_HostedFields</faqlink>
     <adminmenu>
         <title>MandarinPay</title>
         <capability>true</capability>

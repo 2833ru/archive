@@ -32,10 +32,10 @@ function actionStart() {
         array("Единый сельскохозяйственный налог", 4, $data["taxationSystem"]),
         array("Патентная система налогообложения", 5, $data["taxationSystem"])
     );
-    $Tab1.= $PHPShopGUI->setField('Cистема налогообложения', $PHPShopGUI->setSelect('taxationSystem_new', $tax_system, 300));
+    $Tab1.= $PHPShopGUI->setField('Cистема налогообложения', $PHPShopGUI->setSelect('taxationSystem_new', $tax_system, 300,true));
 
     // Инструкция
-    $Tab2='<h4>Регистрация в онлайн-кассе CloudKassir</h4>
+    $info='<h4>Регистрация в онлайн-кассе CloudKassir</h4>
         <ol>
         <li><a href="https://cloudpayments.ru/Docs/Connect" target="_blank">Подключиться</a> к платежному сервису CloudKassir, если вы еще не являетесь партнером.</li>
         <li>Получить квалифицированную электронную подпись для работы с сайтом ФНС.</li>
@@ -77,7 +77,7 @@ function actionStart() {
     $Tab3 = $PHPShopGUI->setPay(false, false, $data['version'], false);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Инструкция", $Tab2,true), array("О Модуле", $Tab3), array("Журнал операций", null, '?path=modules.dir.cloudkassir'));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Инструкция", $PHPShopGUI->setInfo($info),true), array("О Модуле", $Tab3), array("Журнал операций", null, '?path=modules.dir.cloudkassir'));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =

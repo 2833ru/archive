@@ -1,15 +1,17 @@
 
 @ProductCatalogContent@
-
+<!-- Виртуальный каталог -->
+@vendorCatDisp@
+<!--/ Виртуальный каталог -->
 <!-- Product Filter Starts -->
     <div class="product-filter" id="filter-well">
         <div class="row">
             <div class="col-md-6 hidden-xs">
                 <div class="display" data-toggle="buttons">
-                    <label class="btn btn-sm glyphicon glyphicon-th-list btn-sort @gridSetAactive@" data-toggle="tooltip" data-placement="top" title="Товары списком">
+                    <label class="btn btn-sm glyphicon glyphicon-th-list btn-sort @gridSetAactive@" data-toggle="tooltip" data-placement="top" title="{Товары списком}">
                         <input type="radio" name="gridChange" value="1">
                     </label>
-                    <label class="btn btn-sm glyphicon glyphicon-th btn-sort @gridSetBactive@" data-toggle="tooltip" data-placement="top" title="Товары сеткой">
+                    <label class="btn btn-sm glyphicon glyphicon-th btn-sort @gridSetBactive@" data-toggle="tooltip" data-placement="top" title="{Товары сеткой}">
                         <input type="radio" name="gridChange" value="2">
                     </label>
                 </div>
@@ -17,21 +19,21 @@
             <div class="col-md-6 filter-well-right-block col-xs-12">
                 <div class="display">
                     <div class="btn-group" data-toggle="buttons">
-                        <label class="btn btn-sm btn-sort glyphicon glyphicon-signal @sSetCactive@" data-toggle="tooltip" data-placement="top" title="По умолчанию">
+                        <label class="btn btn-sm btn-sort glyphicon glyphicon-signal @sSetCactive@" data-toggle="tooltip" data-placement="top" title="{По умолчанию}">
                             <input type="radio" name="s" value="3">
                         </label>
-                        <label class="btn btn-sm btn-sort glyphicon glyphicon-sort-by-alphabet @sSetAactive@" data-toggle="tooltip" data-placement="top" title="Наименование">
+                        <label class="btn btn-sm btn-sort glyphicon glyphicon-sort-by-alphabet @sSetAactive@" data-toggle="tooltip" data-placement="top" title="{Наименование}">
                             <input type="radio" name="s" value="1">
                         </label>
-                        <label class="btn btn-sm btn-sort glyphicon glyphicon-sort-by-order @sSetBactive@" data-toggle="tooltip" data-placement="top" title="Цена">
+                        <label class="btn btn-sm btn-sort glyphicon glyphicon-sort-by-order @sSetBactive@" data-toggle="tooltip" data-placement="top" title="{Цена}">
                             <input type="radio" name="s" value="2">
                         </label>
                     </div>
                     <div class="btn-group" data-toggle="buttons">
-                        <label class="btn btn-xs btn-sort glyphicon glyphicon-sort-by-attributes @fSetAactive@" data-toggle="tooltip" data-placement="top" title="По возрастанию">
+                        <label class="btn btn-xs btn-sort glyphicon glyphicon-sort-by-attributes @fSetAactive@" data-toggle="tooltip" data-placement="top" title="{По возрастанию}">
                             <input type="radio" name="f" value="1">
                         </label>
-                        <label class="btn btn-xs btn-sort glyphicon glyphicon-sort-by-attributes-alt @fSetBactive@" data-toggle="tooltip" data-placement="top" title="По убыванию">
+                        <label class="btn btn-xs btn-sort glyphicon glyphicon-sort-by-attributes-alt @fSetBactive@" data-toggle="tooltip" data-placement="top" title="{По убыванию}">
                             <input type="radio" name="f" value="2">
                         </label>
                     </div>
@@ -50,19 +52,19 @@
 <!-- Фасетный фильтр -->
     <div class="hide" id="faset-filter">
         <div class="filter-inner">
-			<div id="faset-filter-body">Загрузка...</div>
+			<div id="faset-filter-body">{Загрузка}...</div>
 			<div id="price-filter-body">
 				<div class="faset-filter-block-wrapper">
-					<h4>Цена</h4>
+					<h4>{Цена}</h4>
 					<div>
 						<form method="get" id="price-filter-form">
 							<div class="row">
 								<div class="col-xs-6" id="price-filter-val-min">
-									<span>от</span>
+									<span>{от}</span>
 									<input type="text" class="form-control-price form-control input-sm" name="min" value="@price_min@" > 
 								</div>
 								<div class="col-xs-6" id="price-filter-val-max">
-									<span>до</span>
+									<span>{до}</span>
 									<input type="text" class="form-control-price form-control input-sm" name="max" value="@price_max@"> 
 								</div>
 							</div>
@@ -71,7 +73,7 @@
 					</div>
 				</div>
 			</div>
-			<a href="?" id="faset-filter-reset" data-toggle="tooltip" data-placement="top" title="Сбросить фильтр"><span>Сбросить фильтр</span>&times;</a>
+			<a href="?" id="faset-filter-reset" data-toggle="tooltip" data-placement="top" title="{Сбросить фильтр}"><span>{Сбросить фильтр}</span>&times;</a>
         </div>
     </div>
 <!--/ Фасетный фильтр -->
@@ -84,15 +86,10 @@
 <div id="ajaxInProgress"></div>
 <div class="product-scroll-init"></div>
 
-
 @productPageNav@
 
 <ul class="brand-list brand-list-catalog">@brandsList@</ul>
-
-<div class="banner-block">
-	@banersDisp@
-</div>
-
+                   
 <script type="text/javascript">
 
     var max_page = new Number('@max_page@');

@@ -2,9 +2,9 @@
 <module>
     <version>1.4</version>
     <name>Product Last View</name>
-    <faqlink>http://faq.phpshop.ru/page/last-view.html</faqlink>
+    <faqlink>https://docs.phpshop.ru/moduli/prodazhi/product-last-view</faqlink>
     <description>Модуль просмотренные товары.</description>
-    <category>form,text</category>
+    <category>sale</category>
     <adminmenu>
         <title>Product View</title>
         <capability>true</capability>

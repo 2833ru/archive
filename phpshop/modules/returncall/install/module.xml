@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.5</version>
+    <version>1.6</version>
     <name>Return Call</name>
-    <faqlink>http://faq.phpshop.ru/page/return-call.html</faqlink>
+    <faqlink>https://docs.phpshop.ru/moduli/chaty-i-zvonki/obratnyi-zvonok-s-saita</faqlink>
     <description>Модуль обратного звонка.</description>
-    <category>users,chat</category>
+    <category>chat</category>
     <adminmenu>
         <title>Обратный звонок</title>
         <capability>true</capability>

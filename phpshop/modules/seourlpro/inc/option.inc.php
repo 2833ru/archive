@@ -218,8 +218,7 @@ class PHPShopSeoPro {
     function Compile($obj) {
         global $PHPShopModules;
 
-        if (!empty($_SESSION['PHPShopSeoProError']))
-            $this->catArrayToMemory();
+        $this->catArrayToMemory();
 
         // Обработка массива памяти категорий
         // $this->catCacheToMemory();

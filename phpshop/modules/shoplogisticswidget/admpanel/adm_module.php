@@ -56,7 +56,7 @@ function actionStart() {
     $PHPShopOrderStatusArray = new PHPShopOrderStatusArray();
     $OrderStatusArray = $PHPShopOrderStatusArray->getArray();
 
-    $status[] = array('Новый заказ', 0, $data['status']);
+    $status[] = array(__('Новый заказ'), 0, $data['status']);
     if (is_array($OrderStatusArray))
         foreach ($OrderStatusArray as $order_status) {
             $status[] = array($order_status['name'], $order_status['id'], $data['status']);

@@ -90,11 +90,42 @@ function pageCatal_seourl_hook($obj, $data, $rout) {
                 }
             return $dis;
         }
-    }
+}
 
-    $addHandler = array
-        (
-        'subcatalog' => 'subcatalog_page_seourl_hook',
-        'pageCatal' => 'pageCatal_seourl_hook'
-    );
+function topMenu_seourl_hook($obj, $data, $route)
+{
+    if($route === 'END') {
+        $where['menu'] = "='1'";
+
+        // Мультибаза
+        if (defined("HostID"))
+            $where['servers'] = " REGEXP 'i" . HostID . "i'";
+        elseif (defined("HostMain"))
+            $where['menu'] .= ' and (servers ="" or servers REGEXP "i1000i")';
+
+        $PHPShopOrm = new PHPShopOrm($obj->objBase);
+        $PHPShopOrm->debug = false;
+        $pages = $PHPShopOrm->select(array('id', 'name', 'page_cat_seo_name'), $where, array('order' => 'num,name'), array("limit" => 20));
+
+        if(is_array($pages)) {
+            foreach ($pages as $page) {
+                if(!empty($page['page_cat_seo_name'])) {
+                    $seoUrl = $page['page_cat_seo_name'];
+                } else {
+                    $seoUrl = $GLOBALS['PHPShopSeoPro']->setLatin($page['name']);
+                }
+
+                $data = str_replace("page/CID_" . $page['id'] . ".html", "page/" . $seoUrl . ".html", $data);
+            }
+        }
+
+        return $data;
+    }
+}
+
+$addHandler = array(
+    'subcatalog' => 'subcatalog_page_seourl_hook',
+    'pageCatal' => 'pageCatal_seourl_hook',
+    'topMenu' => 'topMenu_seourl_hook'
+);
 ?>
