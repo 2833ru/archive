@@ -23,9 +23,16 @@ function template_CID_Product($obj, $data, $rout) {
         }
 
 
+        if(empty($_GET['s']))
+            $_GET['s']=$obj->PHPShopCategory->getParam('order_by');
+        
+        if(empty($_GET['f']))
+            $_GET['f']=$obj->PHPShopCategory->getParam('order_to');
+
         switch ($_GET['s']) {
             case 1:
                 $obj->set('sSetAactive', 'active');
+                $obj->set('flowNameActive', 'selected');
                 break;
             case 2:
                 $obj->set('sSetBactive', 'active');
@@ -36,7 +43,6 @@ function template_CID_Product($obj, $data, $rout) {
                 }
                 break;
             default:
-                $obj->set('flowPopularActive', 'selected');
                 $obj->set('sSetCactive', 'active');
         }
 

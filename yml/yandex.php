@@ -241,7 +241,7 @@ class PHPShopYml {
         $xml = null;
         if (isset($_GET['getall']) or isset($_GET['allimage'])) {
             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['foto']);
-            $data = $PHPShopOrm->select(array('*'), array('parent' => '=' . $product_row['id']), false, array('limit' => 10000));
+            $data = $PHPShopOrm->select(array('*'), array('parent' => '=' . $product_row['id']), array('order' => 'num,id'), array('limit' => 10000));
 
             if (is_array($data))
                 foreach ($data as $row) {
@@ -501,9 +501,9 @@ class PHPShopYml {
 
     // Подтипы из 1С
     if ($this->option)
-        $result = $PHPShopOrm->query("select * from " . $GLOBALS['SysValue']['base']['products'] . " where uid IN (\"" . @implode('","', $parent) . "\") and enabled='1' and parent_enabled='1' and price>0");
+        $result = $PHPShopOrm->query("select * from " . $GLOBALS['SysValue']['base']['products'] . " where uid IN (\"" . @implode('","', $parent) . "\") and enabled='1' and parent_enabled='1' and sklad='0' and price>0");
     else
-        $result = $PHPShopOrm->query("select * from " . $GLOBALS['SysValue']['base']['products'] . " where id IN (\"" . @implode('","', $parent) . "\") and enabled='1' and parent_enabled='1' and price>0");
+        $result = $PHPShopOrm->query("select * from " . $GLOBALS['SysValue']['base']['products'] . " where id IN (\"" . @implode('","', $parent) . "\") and enabled='1' and parent_enabled='1' and sklad='0' and price>0");
 
     while ($row = mysqli_fetch_array($result)) {
         $id = $row['id'];

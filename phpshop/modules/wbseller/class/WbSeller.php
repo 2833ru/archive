@@ -1,11 +1,8 @@
 <?php
-
-PHPShopObj::loadClass("valuta");
-
 /**
  * Библиотека работы с Wildberries Seller API
  * @author PHPShop Software
- * @version 1.3
+ * @version 1.5
  * @package PHPShopModules
  * @todo https://openapi.wb.ru/
  */
@@ -20,7 +17,7 @@ class WbSeller {
     const IMPORT_PRODUCT = '/content/v1/cards/upload';
     const IMPORT_ADD_PRODUCT = '/content/v1/cards/upload/add';
     const IMPORT_MEDIA = '/content/v1/media/save';
-    const GET_WAREHOUSE_LIST = '/api/v2/warehouses';
+    const GET_WAREHOUSE_LIST = '/api/v3/warehouses';
     const UPDATE_PRODUCT_STOCKS = '/api/v3/stocks/';
     const UPDATE_PRODUCT_PRICES = '/public/api/v1/prices';
     const GET_ORDER_LIST = '/api/v3/orders';
@@ -32,6 +29,7 @@ class WbSeller {
         global $PHPShopSystem;
 
         // Системные настройки
+        PHPShopObj::loadClass("valuta");
         $this->PHPShopValuta = (new PHPShopValutaArray())->getArray();
         $this->percent = $PHPShopSystem->getValue('percent');
         $this->defvaluta = $PHPShopSystem->getValue('dengi');
@@ -304,7 +302,7 @@ class WbSeller {
         $log['params'] = [];
         $log['result'] = $result;
 
-        //$this->log($log, null, self::GET_WAREHOUSE_LIST);
+        $this->log($log, null, self::GET_WAREHOUSE_LIST);
 
         return $result;
     }

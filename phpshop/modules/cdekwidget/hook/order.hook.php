@@ -34,7 +34,7 @@ function order_cdek_hook($obj, $row, $rout) {
         PHPShopParser::set('cdek_cart', json_encode($cart));
         PHPShopParser::set('cdek_ymap_key', $yandex_apikey);
         PHPShopParser::set('cdek_admin', 0);
-        PHPShopParser::set('cdek_scripts', '<script type="text/javascript" src="phpshop/modules/cdekwidget/js/widjet.js?v=1.7" /></script><script type="text/javascript" src="phpshop/modules/cdekwidget/js/cdekwidget.js?v=1.7" /></script>');
+        PHPShopParser::set('cdek_scripts', '<script type="text/javascript" src="phpshop/modules/cdekwidget/js/widjet.min.js" /></script><script type="text/javascript" src="phpshop/modules/cdekwidget/js/cdekwidget.js?v=1.7" /></script>');
 
         $obj->set('order_action_add', ParseTemplateReturn($GLOBALS['SysValue']['templates']['cdekwidget']['cdek_template'], true) , true);
     }

@@ -227,7 +227,7 @@ function actionStart() {
     $Tab_info .= $PHPShopGUI->setField('Опции вывода', $PHPShopGUI->setCheckbox('enabled_new', 1, 'В каталоге', $data['enabled']) . '<br>' .
             $PHPShopGUI->setCheckbox('spec_new', 1, 'Спецпредложение', $data['spec']) . '<br>' .
             $PHPShopGUI->setCheckbox('newtip_new', 1, 'Новинка', $data['newtip']));
-    $Tab_info .= $PHPShopGUI->setField('Сортировка', $PHPShopGUI->setInputText('&#8470;', 'num_new', $data['num'], 150));
+    $Tab_info .= $PHPShopGUI->setField('Сортировка', $PHPShopGUI->setInputText('&#8470;', 'num_new', $data['num'], 100));
 
     if (!empty($_GET['view']) and $_GET['view'] == 'option')
         $Tab_info .= $PHPShopGUI->setField('Связи', $PHPShopGUI->setRadio('parent_enabled_new', 0, 'Обычный товар', $data['parent_enabled']) . $PHPShopGUI->setRadio('parent_enabled_new', 1, 'Подтип товара', $data['parent_enabled']));

@@ -28,6 +28,7 @@
                         <option value="3" data-url="/shop/CID_@pcatalogId@.html?s=3" @flowPopularActive@>{Популярные}</option>
                         <option value="2&f=2" data-url="/shop/CID_@pcatalogId@.html?s=2&f=2" @flowPriceHighActive@>{Дорогие}</option>
                         <option value="2&f=1" data-url="/shop/CID_@pcatalogId@.html?s=2&f=1" @flowPriceLowActive@>{Дешевые}</option>
+                        <option value="1" data-url="/shop/CID_@pcatalogId@.html?s=1" @flowNameActive@>{Наименование}</option>
                     </select>
 
                     <!-- Nav -->

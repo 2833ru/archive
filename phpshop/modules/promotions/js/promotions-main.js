@@ -10,8 +10,7 @@ function UpdatePromotion(promo) {
 
     if (typeof promocode == "undefined" || promocode.length === 0) {
         promocodei = promo;
-    }
-    else {
+    } else {
         promocodei = promocode;
     }
 
@@ -22,7 +21,7 @@ function UpdatePromotion(promo) {
         type: 'post',
         data: 'promocode=' + promocodei + '&sum=' + sum + '&type=json&ssum=' + ssum + '&tipoplcheck=' + tipoplcheck + '&dostavka=' + dostavka + '&wsum=' + wsum,
         dataType: 'json',
-        success: function(json) {
+        success: function (json) {
 
             if (json['success']) {
                 var messageBox = '.success-notification';
@@ -51,19 +50,19 @@ function UpdatePromotion(promo) {
                             $("#DosSumma").html(json['delivery']);
                         }
 
-                        $("#promocode").parent('.form-group').addClass("has-success");
-                        $("#promocode").parent('.form-group').removeClass("has-error");
+                        $("#promocode").parent('.form-group, .input-group').addClass("has-success");
+                        $("#promocode").parent('.form-group, .input-group').removeClass("has-error");
 
                         $(".paymOneEl").addClass("paymOneElr");
-                       // $(".paymOneEl").removeClass("paymOneEl");
+                        // $(".paymOneEl").removeClass("paymOneEl");
 
                         if (json['deliverymethodcheck'] != 0) {
 
-                            $("input[name=order_metod]").change(function() {
-                                if(this.value != json['deliverymethodcheck']){
+                            $("input[name=order_metod]").change(function () {
+                                if (this.value != json['deliverymethodcheck']) {
                                     $(this).closest('.paymOneEl').removeClass('active').attr("disabled", true);
-                                    $('#order_metod[value="'+json['deliverymethodcheck']+'"]').closest('.paymOneElr').addClass('active');
-                                    $('#order_metod[value="'+json['deliverymethodcheck']+'"]').prop('checked', true);
+                                    $('#order_metod[value="' + json['deliverymethodcheck'] + '"]').closest('.paymOneElr').addClass('active');
+                                    $('#order_metod[value="' + json['deliverymethodcheck'] + '"]').prop('checked', true);
                                     showAlertMessage('ƒл€ данного промо-кода невозможно выбрать другой тип оплаты!');
                                 }
 
@@ -77,14 +76,12 @@ function UpdatePromotion(promo) {
                             showAlertMessage(json['mes']);
                         }
 
-                    }
-                    else {
+                    } else {
                         showAlertMessage('ƒл€ данного промо-кода скидка €вл€етс€ меньшей чем изначальна€ скидка');
                         $("#promotion_load").hide();
                     }
 
-                }
-                else if (json['status'] == 9) {
+                } else if (json['status'] == 9) {
 
                     $("#TotalSumma").html(json['total']);
                     $("#SkiSumma").html(json['discount']);
@@ -103,7 +100,7 @@ function UpdatePromotion(promo) {
                     if (json['deliverymethodcheck'] != 0) {
                         $('input[name=order_metod]').attr("disabled", true);
                         $('input[name=order_metod]:checked').attr("disabled", false);
-                        $(".paymOneElr").click(function() {
+                        $(".paymOneElr").click(function () {
                             showAlertMessage('ƒл€ данного промо-кода невозможно выбрать другой тип оплаты!');
                         });
                     }
@@ -113,11 +110,11 @@ function UpdatePromotion(promo) {
                 }
                 //≈сли отрицательный ответ
                 else {
-                    
+
                     // ¬ыдел€ем ошибку промокода
                     $("#promocode").parent('.form-group').removeClass("has-success");
                     $("#promocode").parent('.form-group').addClass("has-error");
-                    
+
                     $("#promotion_load").hide();
 
                     //перенаправл€ем на список оплат

@@ -51,7 +51,7 @@ class CDEKWidget {
             if(empty($product['weight']))
                 $weight = $this->option['weight'];
             else
-                $weight = $product['weight'];
+                $weight = round($product['weight']);
 
             $products[] = array(
                 'name' => PHPShopString::win_utf8($product['name']),
@@ -311,7 +311,7 @@ class CDEKWidget {
         PHPShopParser::set('cdek_ymap_key', $yandex_apikey);
         PHPShopParser::set('cdek_admin', 1);
         PHPShopParser::set('russia_only', (int) $this->option['russia_only']);
-        PHPShopParser::set('cdek_scripts', '<script type="text/javascript" src="../modules/cdekwidget/js/widjet.js" /></script><script type="text/javascript" src="../modules/cdekwidget/js/cdekwidget.js" /></script>');
+        PHPShopParser::set('cdek_scripts', '<script type="text/javascript" src="../modules/cdekwidget/js/widjet.min.js" /></script><script type="text/javascript" src="../modules/cdekwidget/js/cdekwidget.js" /></script>');
 
         PHPShopParser::set('cdek_popup', ParseTemplateReturn(dirname(__DIR__) . '/templates/template.tpl', true) , true);
 

@@ -9,7 +9,7 @@
                 <h2 class="product-day-name">
                     <span class="product-day-name-top">{Новинка}</span>
                     <a href="/shop/UID_@productDayId@.html" title="@productName@">@productDayName@</a>
-                    <span class="product-day-name-bottom">коллекция по сниженной цене!</span>
+                    <span class="product-day-name-bottom"></span>
                 </h2>
                 <div class="price">
                     <span class="price-new">@productDayPrice@<span class="rubznak">@productValutaName@</span></span> 

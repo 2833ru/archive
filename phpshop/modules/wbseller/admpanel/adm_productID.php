@@ -59,54 +59,63 @@ function WbsellerUpdate() {
     if (!empty($data['export_wb'])) {
 
         $WbSeller = new WbSeller();
-        if (empty($data['export_wb_task_status'])) {
 
-            // Загрузка
-            $result = $WbSeller->sendProducts([$data]);
-            //$WbSeller->sendImages($data);
-
-            if (is_array($result) and empty($result['error'])) {
-                $PHPShopOrm->update(['export_wb_task_status_new' => time()], ['id' => '=' . (int) $_POST['rowID']]);
-            }
-        }
-
-        // Фото
-        $WbSeller->sendImages($data);
-
-        // Склад
-        $WbSeller->setProductStock([$data]);
-        
-        // Цены
-        $price = $data['price'];
-
-        if (!empty($data['price_wb'])) {
-            $price = $data['price_wb'];
-        } elseif (!empty($data['price' . (int) $data['price']])) {
-            $price = $data['price' . (int) $WbSeller->price];
-        }
-
-        if ($WbSeller->fee > 0) {
-            if ($WbSeller->fee_type == 1) {
-                $price = $price - ($price * $WbSeller->fee / 100);
-            } else {
-                $price = $price + ($price * $WbSeller->fee / 100);
-            }
-        }
-        
-        $prices[] = [
-            'nmId' => (int) $data['export_wb_id'],
-            'price' => (int) $WbSeller->price($price, $data['baseinputvaluta']),
-        ];
-        
-        $WbSeller->sendPrices($prices);
-
-        // Информация
+        // Товар еще не выгружен
         if (empty($data['export_wb_id'])) {
+            
+            
+            if (empty($data['export_wb_task_status'])) {
 
+                // Загрузка
+                $result = $WbSeller->sendProducts([$data]);
+
+                if (is_array($result) and empty($result['error'])) {
+                    $PHPShopOrm->update(['export_wb_task_status_new' => time()], ['id' => '=' . (int) $_POST['rowID']]);
+                   
+                }
+            }
+
+
+            // Информация
             $export_wb_id = $WbSeller->getProduct([$data['uid']])['data'][0]['nmID'];
 
-            if (!empty($export_wb_id))
+            if (!empty($export_wb_id)){
                 $PHPShopOrm->update(['export_wb_id_new' => $export_wb_id], ['id' => '=' . (int) $_POST['rowID']]);
+                
+                 // Фото
+                 $WbSeller->sendImages($data);
+            }
+  
+        }
+        // Товар выгружен, обновление цен и остатков
+        else {
+
+            // Склад
+            $WbSeller->setProductStock([$data]);
+
+            // Цены
+            $price = $data['price'];
+
+            if (!empty($data['price_wb'])) {
+                $price = $data['price_wb'];
+            } elseif (!empty($data['price' . (int) $data['price']])) {
+                $price = $data['price' . (int) $WbSeller->price];
+            }
+
+            if ($WbSeller->fee > 0) {
+                if ($WbSeller->fee_type == 1) {
+                    $price = $price - ($price * $WbSeller->fee / 100);
+                } else {
+                    $price = $price + ($price * $WbSeller->fee / 100);
+                }
+            }
+
+            $prices[] = [
+                'nmId' => (int) $data['export_wb_id'],
+                'price' => (int) $WbSeller->price($price, $data['baseinputvaluta']),
+            ];
+
+            $WbSeller->sendPrices($prices);
         }
     } else
         $PHPShopOrm->update(['export_wb_task_status_new' => '', 'export_wb_id_new' => 0], ['id' => '=' . (int) $_POST['rowID']]);

@@ -1721,12 +1721,12 @@ class PHPShopPhotoElement extends PHPShopElements {
         $PHPShopOrm->debug = $this->debug;
         $data = $PHPShopOrm->select(array('*'), array('category' => '=' . intval($cat), 'enabled' => "='1'"), array('order' => 'num'), array('limit' => $num));
         if ($num == 1)
-            $this->dataArray[] = $data;
+            $dataArray[] = $data;
         else
-            $this->dataArray = $data;
+            $dataArray = $data;
 
-        if (is_array($this->dataArray))
-            foreach ($this->dataArray as $row) {
+        if (is_array($dataArray))
+            foreach ($dataArray as $row) {
 
                 $name_s = str_replace(".", "s.", $row['name']);
                 $this->set('photoIcon', $name_s);

@@ -48,7 +48,7 @@ function addYandexcartCPA($data) {
     $Tab3 .= $PHPShopGUI->setField("Страна производства", $PHPShopGUI->setInputText(null, 'country_of_origin_new', $data['country_of_origin'], 300), 1, 'Тег country_of_origin');
 
     $Tab3 .= $PHPShopGUI->setField("Идентификатор товара на Яндексе", $PHPShopGUI->setInputText(null, 'market_sku_new', $data['market_sku'], 300), 1, 'Тег market-sku для модели FBS, можно получить в личном кабинете Яндекс.Маркета');
-
+    
     $Tab3 .= $PHPShopGUI->setField('Товар для взрослых', $PHPShopGUI->setRadio('adult_new', 1, 'Включить', $data['adult']) . $PHPShopGUI->setRadio('adult_new', 2, 'Выключить', $data['adult'], false, 'text-muted'), 1, 'Тег adult');
 
     $condition[] = array(__('Новый товар'), 1, $data['yandex_condition']);
@@ -84,6 +84,9 @@ function addYandexcartCPA($data) {
     $Tab3 .= $PHPShopGUI->setField("Минимальное количество", $PHPShopGUI->setInputText(null, 'yandex_min_quantity_new', $data['yandex_min_quantity'], 100), 1, ' Минимальное количество товара в одном заказе');
 
     $Tab3 .= $PHPShopGUI->setField("Минимальный шаг", $PHPShopGUI->setInputText(null, 'yandex_step_quantity_new', $data['yandex_step_quantity'], 100), 1, ' Количество товара, добавляемое к минимальному');
+    
+    $Tab3 .= $PHPShopGUI->setField("Ссылка на товар в Яндекс.Маркете", $PHPShopGUI->setInputText(null, 'yandex_link_new', $data['yandex_link'], '100%'));
+
 
     $PHPShopGUI->addTabSeparate(array("Яндекс", $PHPShopGUI->setPanel(null, $Tab3, 'panel'), true));
 }

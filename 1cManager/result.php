@@ -4,7 +4,7 @@
  * Автономная синхронизация номенклатуры из 1С и CML
  * @package PHPShopExchange
  * @author PHPShop Software
- * @version 3.5
+ * @version 3.6
  */
 // Авторизация
 include_once("login.php");
@@ -17,7 +17,6 @@ $GetCatalogCreate = 0;
 
 // Номер ячейки характеристик для учета сдвига массива
 $GLOBALS['option']['sort'] = 17;
-
 
 // Персонализация
 if (function_exists('mod_option')) {
@@ -96,7 +95,7 @@ class sortCheck {
                 $this->debug('Выбран набор характеристик c ID=' . $sort_categories);
             }
             // У каталога нет набора характеристик
-            elseif(!empty($check_category['name'])) {
+            elseif (!empty($check_category['name'])) {
 
                 // Создание нового набора характеристик
                 $new_sort_categories_name = $check_category['name'];
@@ -525,14 +524,26 @@ class ReadCsv1C extends PHPShopReadCsvNative {
         return $sql;
     }
 
+    // Проверка товара по внешнему коду
+    function CheckExternalCode($external_code) {
+        global $link_db;
+        $sql = "select id from " . $this->TableName . " where external_code='$external_code'";
+        $result = mysqli_query($link_db, $sql);
+        return intval(mysqli_num_rows($result));
+    }
+
     // Обновление данных
     function UpdateBase($CsvToArray) {
         global $link_db;
 
         // Есть ли товары в базе
-        if ($_REQUEST['create'] == "true")
-            $CheckBase = parent::CheckUid($CsvToArray[0]);
-        else
+        if ($_REQUEST['create'] == "true") {
+
+            if (!empty($_GET['cml']))
+                $CheckBase = $this->CheckExternalCode($CsvToArray[17]);
+            else
+                $CheckBase = parent::CheckUid($CsvToArray[0]);
+        } else
             $CheckBase = true;
 
         // Обновляем
@@ -560,8 +571,7 @@ class ReadCsv1C extends PHPShopReadCsvNative {
             if ($this->ObjSystem->getSerilizeParam("1c_option.update_price") == 1 and $CsvToArray[7] != "")
                 $sql .= "price='" . $CsvToArray[7] . "', "; // цена 1
 
-                
-// Склад
+
             if ($this->ObjSystem->getSerilizeParam("1c_option.update_item") == 1) {
 
                 // Многоскладовость
@@ -627,17 +637,42 @@ class ReadCsv1C extends PHPShopReadCsvNative {
             // Подчиненные товары
             if ($this->ObjSystem->getSerilizeParam("1c_option.update_option") == 1) {
 
-                if ((PHPShopProductFunction::true_parent($CsvToArray[0]) and ! PHPShopProductFunction::true_parent($CsvToArray[16])) or $CsvToArray[16] == "1") {
-                    $sql .= "parent_enabled='1', ";
-                } else {
-                    $sql .= "parent_enabled='0', ";
-                }
+                // CML
+                if (!empty($_GET['cml'])) {
 
-                if (strstr($CsvToArray[16], "@")) {
-                    $parent_array = explode("@", $CsvToArray[16]);
-                    $sql .= "parent='" . $parent_array[0] . "', parent2='" . $parent_array[1] . "',";
-                } elseif ($CsvToArray[16] != "1")
-                    $sql .= "parent='" . $CsvToArray[16] . "', ";
+                    // Подтип
+                    if ($CsvToArray[18] == "1") {
+                        $sql .= "parent_enabled='1', ";
+
+                        if (strstr($CsvToArray[16], "@")) {
+                            $parent_array = explode("@", $CsvToArray[16]);
+                            $sql .= "parent='" . $parent_array[0] . "', parent2='" . $parent_array[1] . "',";
+                        } elseif (!empty($CsvToArray[16])) {
+                            $sql .= "parent='" . $CsvToArray[16] . "', ";
+                        }
+                    }
+                    // Главный товар
+                    elseif ($CsvToArray[18] == "0") {
+                        $sql .= "parent_enabled='0', ";
+
+                        if (!empty($CsvToArray[16]))
+                            $sql .= "parent='" . $CsvToArray[16] . "', ";
+                    }
+                }
+                // 1C
+                else {
+                    if (PHPShopProductFunction::true_parent($CsvToArray[0])) {
+                        $sql .= "parent_enabled='1', ";
+                    } else {
+                        $sql .= "parent_enabled='0', ";
+                    }
+
+                    if (strstr($CsvToArray[16], "@")) {
+                        $parent_array = explode("@", $CsvToArray[16]);
+                        $sql .= "parent='" . $parent_array[0] . "', parent2='" . $parent_array[1] . "',";
+                    } else
+                        $sql .= "parent='" . $CsvToArray[16] . "', ";
+                }
             }
 
             // SEO
@@ -654,8 +689,8 @@ class ReadCsv1C extends PHPShopReadCsvNative {
                 $sql .= "baseinputvaluta='" . $this->GetIdValuta[$CsvToArray[14]] . "', ";
 
             // дата изменения
-            $sql .= "datas='" . date("U") . "' "; 
-            
+            $sql .= "datas='" . date("U") . "' ";
+
             // Ключ обновления
             if (!empty($_GET['cml']))
                 $sql .= " where external_code='" . $CsvToArray[17] . "'";
@@ -840,10 +875,9 @@ class ReadCsv1C extends PHPShopReadCsvNative {
 
 
 
-
-
                 
 // Склад
+
             if ($this->ObjSystem->getSerilizeParam("1c_option.update_item") == 1) {
 
                 // Многоскладовость
@@ -870,16 +904,27 @@ class ReadCsv1C extends PHPShopReadCsvNative {
 
             // Подчиненные товары
             if ($this->ObjSystem->getSerilizeParam("1c_option.update_option") == 1) {
-                if (PHPShopProductFunction::true_parent($CsvToArray[0]) or $CsvToArray[16] == "1") {
-                    $sql .= "parent_enabled='1', ";
+
+                if (!empty($_GET['cml'])) {
+
+                    if ($CsvToArray[18] == "1") {
+                        $sql .= "parent_enabled='1', ";
+                    } else {
+                        $sql .= "parent_enabled='0', ";
+                    }
                 } else {
-                    $sql .= "parent_enabled='0', ";
+                    if (PHPShopProductFunction::true_parent($CsvToArray[0])) {
+                        $sql .= "parent_enabled='1', ";
+                    } else {
+                        $sql .= "parent_enabled='0', ";
+                    }
                 }
+
 
                 if (strstr($CsvToArray[16], "@")) {
                     $parent_array = explode("@", $CsvToArray[16]);
                     $sql .= "parent='" . $parent_array[0] . "', parent2='" . $parent_array[1] . "',";
-                } elseif ($CsvToArray[16] != 1)
+                } elseif ($CsvToArray[16] != "1")
                     $sql .= "parent='" . $CsvToArray[16] . "', ";
             }
 
@@ -968,7 +1013,6 @@ if (isset($error)) {
     if (is_array($list_file))
         $list_file[$error] = "";
 }
-
 
 if (is_array($list_file))
     foreach ($list_file as $val) {

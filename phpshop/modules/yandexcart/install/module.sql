@@ -32,6 +32,7 @@ ALTER TABLE `phpshop_products` ADD `model` varchar(255) DEFAULT '';
 ALTER TABLE `phpshop_products` ADD `market_sku` varchar(255) DEFAULT '';
 ALTER TABLE `phpshop_products` ADD `cpa` enum('0','1','2') DEFAULT '1';
 ALTER TABLE `phpshop_products` ADD `price_yandex_dbs` float DEFAULT '0';
+ALTER TABLE `phpshop_products` ADD `yandex_link` varchar(255) DEFAULT '';
 
 CREATE TABLE `phpshop_modules_yandexcart_system` (
   `id` int(11) NOT NULL auto_increment,
@@ -45,16 +46,18 @@ CREATE TABLE `phpshop_modules_yandexcart_system` (
   `model` varchar(64),
   `import_from` int(11) default 0,
   `use_params` enum('0','1') DEFAULT '0',
-  `version` varchar(64) default '2.0',
+  `version` varchar(64) default '1.0',
   `options` BLOB,
   `stop` enum('0','1') DEFAULT '0',
+  `type` enum('1','2') NOT NULL default '1',
+  `link` enum('0','1') NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251 ;
 
 -- 
 -- Дамп данных таблицы `phpshop_modules_yandexcart_system`
 --
-INSERT INTO `phpshop_modules_yandexcart_system` VALUES (1,'', '', '', '', '', '', 0, 'ADV', 0, 0, '3.7','','0');
+INSERT INTO `phpshop_modules_yandexcart_system` VALUES (1,'', '', '', '', '', '', 0, 'ADV', 0, 0, '3.8','','0','1','0');
 
 CREATE TABLE IF NOT EXISTS `phpshop_modules_yandexcart_log` (
     `id` int(11) NOT NULL AUTO_INCREMENT,

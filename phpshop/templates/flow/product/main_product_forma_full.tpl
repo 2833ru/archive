@@ -183,6 +183,11 @@
             <div class="mb-4 @php __hide('wbseller_link'); php@">
                 <a class="btn btn-block btn-soft-success btn-pill transition-3d-hover" href="@wbseller_link@" target="_blank">Купить в Wildberries</a>
             </div>
+             
+             <!-- Модуль Yandexcart -->
+            <div class="mb-4 @php __hide('yandexmarket_link'); php@">
+                <a class="btn btn-block btn-soft-success btn-pill transition-3d-hover" href="@yandexmarket_link@" target="_blank">Купить в Яндекс.Маркете</a>
+            </div>
 
         </div>
         <!-- End Product Description -->

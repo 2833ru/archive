@@ -72,7 +72,13 @@ function cdekwidgetOnChoose(result) {
         $('input[name="city_new"]').val(result.cityName);
         $('#cdekSum').val(Number(result.price));
         $("#DosSumma").html(Number(result.price));
-        $("#TotalSumma").html(Number(result.price) + Number($('#OrderSumma').val()) - Number($('#SkiSumma').attr('data-discount')));
+        
+        // Учет промокода
+        if($("#promocode").parent('.form-group, .input-group').hasClass("has-success"))
+            $("#TotalSumma").html(Number(result.price) + Number($('#OrderSumma').val()));
+        else 
+            $("#TotalSumma").html(Number(result.price) + Number($('#OrderSumma').val()) - Number($('#SkiSumma').attr('data-discount')));
+        
         //console.log(result);
         //console.log(Number(result.price) +'-'+Number($('#OrderSumma').val())+'+'+Number($('#SkiSumma').attr('data-discount')));
     }

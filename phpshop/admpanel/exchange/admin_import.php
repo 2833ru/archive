@@ -565,6 +565,14 @@ function csv_update($data) {
             } elseif (!empty($row['pic_big']))
                 $data_img[] = $row['pic_big'];
 
+            // Проверка уникальности товаров
+            if (empty($subpath[2]) and ! empty($_POST['export_uniq']) and ! empty($row['uid'])) {
+                $uniq = $PHPShopBase->getNumRows('products', "where uid = '" . $row['uid'] . "'");
+            } else
+                $uniq = 0;
+            
+            
+
             if (!empty($data_img) and is_array($data_img)) {
 
                 // Очистка начальных данных
@@ -577,7 +585,11 @@ function csv_update($data) {
                     $data_prod = $PHPShopOrmProd->getOne(array('id'), array('uid' => '="' . $row['uid'] . '"'));
                     $row['id'] = $data_prod['id'];
                 }
-
+                
+                // Очистка изображений при проверки уникальности
+                if($_POST['export_action'] == 'insert' and !empty($uniq)){
+                    unset($data_img);
+                }
 
                 foreach ($data_img as $k => $img) {
                     if (!empty($img)) {
@@ -691,12 +703,6 @@ function csv_update($data) {
 
                 // Дата создания
                 $row['datas'] = time();
-
-                // Проверка уникальности товаров
-                if (empty($subpath[2]) and ! empty($_POST['export_uniq']) and ! empty($row['uid'])) {
-                    $uniq = $PHPShopBase->getNumRows('products', "where uid = '" . $row['uid'] . "'");
-                } else
-                    $uniq = 0;
 
                 // Проверка SEO имени каталога
                 if ($subpath[2] == 'catalog' and ! empty($row['name'])) {

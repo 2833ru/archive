@@ -70,7 +70,17 @@ switch ($_SERVER["PATH_INFO"]) {
         $sum = 0;
         if (is_array($data['cart']['items']))
             foreach ($data['cart']['items'] as $item) {
-                $PHPShopProduct = new PHPShopProduct($item["offerId"]);
+
+                // Ключ обновления
+                if ($option['type'] == 2) {
+                    $key = 'uid';
+                    $offerId = str_replace(['-','_'], [' ','-'], PHPShopString::utf8_win1251($item['offerId']));
+                } else {
+                    $key = 'id';
+                    $offerId = $item['offerId'];
+                }
+
+                $PHPShopProduct = new PHPShopProduct($offerId, $key);
 
                 // Блокировка приема заказов
                 if (!empty($option['stop']))
@@ -197,10 +207,19 @@ switch ($_SERVER["PATH_INFO"]) {
             foreach ($data['order']['items'] as $product) {
                 $sum += $product['price'] * $product['count'];
 
-                $PHPShopProduct = new PHPShopProduct($product['offerId']);
+                // Ключ обновления
+                if ($option['type'] == 2) {
+                    $key = 'uid';
+                    $offerId = str_replace(['-','_'], [' ','-'], PHPShopString::utf8_win1251($offerId));
+                } else {
+                    $key = 'id';
+                    $offerId = $product['offerId'];
+                }
 
-                $order["Cart"]["cart"][$product["offerId"]] = [
-                    'id' => $product['offerId'],
+                $PHPShopProduct = new PHPShopProduct($offerId, $key);
+
+                $order["Cart"]["cart"][$PHPShopProduct->getParam('id')] = [
+                    'id' => $PHPShopProduct->getParam('id'),
                     'name' => $PHPShopProduct->getName(),
                     'price' => $product['price'],
                     'uid' => $PHPShopProduct->getParam('uid'),
@@ -326,9 +345,41 @@ switch ($_SERVER["PATH_INFO"]) {
             $PHPShopOrderFunction = new PHPShopOrderFunction((int) $row['id']);
             $PHPShopOrderFunction->changeStatus((int) $update['statusi_new'], (int) $row['statusi']);
 
-
             // Сообщение о новом заказе администрации
             new PHPShopMail($PHPShopSystem->getEmail(), $PHPShopSystem->getEmail(), 'Поступил заказ №' . $row['uid'], 'Заказ оформлен на Яндекс.Маркет', false, false);
+            
+            // Товар
+            $orders = unserialize($row['orders']);
+            $cart = $order['Cart']['cart'];
+            
+            if (is_array($cart))
+            foreach ($cart as $key => $val) {
+                $product['name'].=$val['name'].',';
+            }
+            
+            $product['name']=substr($product['name'],0,strlen($product['name'])-1);
+
+            // Telegram
+            $chat_id_telegram = $PHPShopSystem->getSerilizeParam('admoption.telegram_admin');
+            if (!empty($chat_id_telegram) and $PHPShopSystem->ifSerilizeParam('admoption.telegram_order', 1)) {
+
+                PHPShopObj::loadClass('bot');
+
+                $bot = new PHPShopTelegramBot();
+                $msg = $PHPShopBase->SysValue['lang']['mail_title_adm'] . $row['id'] . " - " . $product['name'] . " [" . $row['sum'] . " " . $PHPShopOrderFunction->default_valuta_name . ']';
+                $bot->send($chat_id_telegram, PHPShopString::win_utf8($msg));
+            }
+
+            // VK
+            $chat_id_vk = $PHPShopSystem->getSerilizeParam('admoption.vk_admin');
+            if (!empty($chat_id_vk) and $PHPShopSystem->ifSerilizeParam('admoption.vk_order', 1)) {
+
+                PHPShopObj::loadClass('bot');
+
+                $bot = new PHPShopVKBot();
+                $msg = $PHPShopBase->SysValue['lang']['mail_title_adm'] . $row['id'] . " - " . $product['name'] . " [" . $row['sum'] . " " . $PHPShopOrderFunction->default_valuta_name . ']';
+                $bot->send($chat_id_vk, PHPShopString::win_utf8($msg));
+            }
         }
 
         // Отменен пользователем
@@ -402,21 +453,57 @@ switch ($_SERVER["PATH_INFO"]) {
         $skus = [];
 
         if (is_array($data['skus']) && count($data['skus']) > 0) {
-            $counts = (new PHPShopOrm($GLOBALS['SysValue']['base']['products']))
-                    ->getList(['items', 'id'], ['id' => sprintf(' IN(%s)', implode(',', $data['skus']))]);
 
-            foreach ($counts as $count) {
-                $skus[] = [
-                    'sku' => PHPShopString::win_utf8($count['id']),
-                    'warehouseId' => $data['warehouseId'],
-                    'items' => [
-                        [
-                            'type' => 'FIT',
-                            'count' => $count['items'],
-                            'updatedAt' => (new DateTime())->format('c')
+            // Ключ обновления Артикул
+            if ($option['type'] == 2) {
+                
+                foreach ($data['skus'] as $k => $val){
+                    $val = str_replace(['-','_'], [' ','-'], PHPShopString::utf8_win1251($val));
+                    $data['skus'][$k] = '"' . PHPShopString::utf8_win1251($val) . '"';
+                }
+
+                $where = ['uid' => sprintf(' IN(%s)', implode(',', $data['skus']))];
+
+                $counts = (new PHPShopOrm($GLOBALS['SysValue']['base']['products']))
+                        ->getList(['items', 'uid'], $where);
+
+                foreach ($counts as $count) {
+
+                    $count['uid'] = str_replace(['-',' '], ['_','-'], $count['uid']);
+
+                    $skus[] = [
+                        'sku' => PHPShopString::win_utf8($count['uid']),
+                        'warehouseId' => $data['warehouseId'],
+                        'items' => [
+                            [
+                                'type' => 'FIT',
+                                'count' => $count['items'],
+                                'updatedAt' => (new DateTime())->format('c')
+                            ]
                         ]
-                    ]
-                ];
+                    ];
+                }
+            }
+            // Ключ обновления ID
+            else {
+                $where = ['id' => sprintf(' IN(%s)', implode(',', $data['skus']))];
+
+                $counts = (new PHPShopOrm($GLOBALS['SysValue']['base']['products']))
+                        ->getList(['items', 'id'], $where);
+
+                foreach ($counts as $count) {
+                    $skus[] = [
+                        'sku' => PHPShopString::win_utf8($count['id']),
+                        'warehouseId' => $data['warehouseId'],
+                        'items' => [
+                            [
+                                'type' => 'FIT',
+                                'count' => $count['items'],
+                                'updatedAt' => (new DateTime())->format('c')
+                            ]
+                        ]
+                    ];
+                }
             }
         }
 
@@ -424,7 +511,10 @@ switch ($_SERVER["PATH_INFO"]) {
             'skus' => $skus
         ];
 
-        //setYandexcartLog($data);
+        // Запись в журнал
+        $data['response'] = $response;
+        //$data['sql'] = $where;
+        setYandexcartLog($data);
 
         header('Content-Type: application/json');
         echo json_encode($response);

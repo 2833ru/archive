@@ -17,11 +17,11 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_cdekwidget_system` (
   `fee` int(11) default 0,
   `fee_type` enum('1','2') DEFAULT '1',
   `test` enum('0','1')  DEFAULT '0',
-  `version` varchar(64) DEFAULT '1.8',
+  `version` varchar(64) DEFAULT '1.0',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-INSERT INTO `phpshop_modules_cdekwidget_system` VALUES (1, '', '', '0', '', '', '', '', '', '','', '', '', 0,  0, 1, 0, '1.8');
+INSERT INTO `phpshop_modules_cdekwidget_system` VALUES (1, '', '', '0', '', '', '', '', '', '','', '', '', 0,  0, 1, 0, '1.9');
 
 CREATE TABLE IF NOT EXISTS `phpshop_modules_cdekwidget_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

@@ -4,7 +4,7 @@
  * Обмен по CommerceML
  * @package PHPShopExchange
  * @author PHPShop Software
- * @version 1.6
+ * @version 1.8
  */
 
 class CommerceMLLoader {
@@ -342,7 +342,7 @@ class CommerceMLLoader {
             }
 
             $properties = null;
-            $this->product_array=[];
+            $this->product_array = [];
             $this->product_array[] = array("Артикул", "Наименование", "Краткое описание", "Имя картинки", "Подробное описание", "Кол-во картинок", "Остаток", "Цена1", "Цена2", "Цена3", "Цена4", "Цена5", "Вес", "Ед.измерения", "ISO", "Category ID", "Parent", "Внешний код", "Характеристика", "Значение");
 
 
@@ -424,7 +424,7 @@ class CommerceMLLoader {
                     } else
                         $content = null;
 
-                    // Свойства  -  Характеристики
+                    // Свойства
                     $properties = [];
                     if (isset($item->ЗначенияСвойств[0])) {
                         foreach ($item->ЗначенияСвойств[0] as $req) {
@@ -440,15 +440,15 @@ class CommerceMLLoader {
                     // Подтипы
                     $parent = null;
 
-                    // Картинка
-                    $image_count = 0;
-                    $image = null;
-
                     // Категория
                     if (isset($item->Группы))
                         $category = $this->crc16((string) $item->Группы[0]->Ид);
                     else
                         $category = 0;
+
+                    // Картинка
+                    $image_count = 0;
+                    $image = null;
 
                     if (isset($item->Картинка) and ! empty($this->exchange_image)) {
 
@@ -482,18 +482,28 @@ class CommerceMLLoader {
                         }
                     }
 
-
-                    if (!empty((string) $item->Код[0]) and $this->exchange_key == 'code')
-                        $uid = (string) $item->Код[0];
+                    // Поле артикул
+                    if ($this->exchange_key == 'code') {
+                        if (!empty((string) $item->Код[0]))
+                            $uid = (string) $item->Код[0];
+                        else
+                            $uid = (string) $item->Ид[0];
+                    }
+                    else if ($this->exchange_key == 'external')
+                        $uid = (string) $item->Ид[0];
                     else
                         $uid = (string) $item->Артикул[0];
 
-                    // Подтипы 18#141
-                    if (strstr((string) $item->Ид[0], '#')) {
-                        $p = explode("#", (string) $item->Ид[0]);
-                        $item->Ид[0] = $p[1];
-                    }
-                    $this->product_array[(string) $item->Ид[0]] = array($uid, (string) $item->Наименование[0], $description, $image, $content, $image_count, "", "", "", "", "", "", "", "", "", $category, $parent, (string) $item->Ид[0]);
+                    // Подтипы
+                    /*
+                      $parent_list = $parent_array[(string) $item->Ид[0]];
+                      if (!empty($parent_list['ids'])) {
+                      $parent = substr($parent_list['ids'], 0, strlen($parent_list['ids']) - 1);
+                      $price = $parent_list['price'];
+                      $warehouse = $parent_list['warehouse'];
+                      } */
+
+                    $this->product_array[(string) $item->Ид[0]] = array($uid, (string) $item->Наименование[0], $description, $image, $content, $image_count, "", "", "", "", "", "", "", "", "", $category, "", (string) $item->Ид[0], 0);
 
                     // Свойства
                     if (is_array($properties))
@@ -518,10 +528,7 @@ class CommerceMLLoader {
 
             // offers.xml
             else if (isset($xml->ПакетПредложений->Предложения) or $_GET['filename'] = 'offers.xml') {
-                
-                
 
-                $parent_check = false;
                 foreach ($xml->ПакетПредложений->Предложения->Предложение as $item) {
 
                     // Тест
@@ -545,79 +552,138 @@ class CommerceMLLoader {
                     } else
                         $warehouse = (int) $item->Количество[0];
 
+                    // Картинка
+                    $image_count = null;
+                    $image = null;
+
                     // Подтипы 18#141
                     if (strstr((string) $item->Ид[0], '#')) {
 
-                        // Имя подтипа
-                        $pattern = '/\((.+?)\)/';
-                        preg_match_all($pattern, (string) $item->Наименование[0], $matches);
+                        // Ид подтипа
+                        $p = explode("#", (string) $item->Ид[0]);
+                        (string) $item->Ид[0] = $p[1];
 
-                        $parent = $matches[1][0];
+                        // Список подтипов
+                        $parent_array[$p[0]]['ids'] .= $p[1] . ',';
 
-                        if (empty($parent))
-                            $parent = true;
-
-                        if (empty($parent_check)) {
-
-                            // Поиск подтипов
-                            foreach ($xml->ПакетПредложений->Предложения->Предложение as $item) {
-
-                                // Подтипы 18#141
-                                if (strstr((string) $item->Ид[0], '#')) {
-                                    $p = explode("#", (string) $item->Ид[0]);
-                                    $parent_array[$p[0]] .= $p[1] . ',';
-                                }
-                            }
-                            $parent_check = true;
+                        // Цена и склад главного товара
+                        if (empty($parent_array[$p[0]]['price'])) {
+                            $parent_array[$p[0]]['price'] = (string) $item->Цены->Цена[0]->ЦенаЗаЕдиницу[0];
+                            $parent_array[$p[0]]['warehouse'] = $warehouse;
+                        } else if ($parent_array[$p[0]]['price'] > (string) $item->Цены->Цена[0]->ЦенаЗаЕдиницу[0]) {
+                            $parent_array[$p[0]]['price'] = (string) $item->Цены->Цена[0]->ЦенаЗаЕдиницу[0];
+                            $parent_array[$p[0]]['warehouse'] = $warehouse;
                         }
-                    }
 
-                    // Главный товар с подтипами
-                    else {
+                        // Имя подтипа из МойСклад
+                        $Наименование = $parent_name = null;
+                        if (isset($item->ХарактеристикиТовара)) {
+                            foreach ($item->ХарактеристикиТовара->ХарактеристикаТовара as $sorts) {
+                                $Наименование .= ' ' . (string) $sorts->Значение;
+                                $parent_name .= (string) $sorts->Значение . '@';
+                            }
 
-                        $parent = $parent_array[(string) $item->Ид[0]];
-                        if (!empty($parent))
-                            $parent = substr($parent, 0, strlen($parent) - 1);
+                            if (!empty($Наименование))
+                                (string) $item->Наименование[0] .= $Наименование;
+                        }
+
+                        $parent_enabled = 1;
+
+                        // Картинка
+                        if (isset($item->Картинка) and ! empty($this->exchange_image)) {
+
+                            if (!is_array((array) $item->Картинка))
+                                (array) $item->Картинка[] = (string) $item->Картинка;
+
+                            foreach ((array) $item->Картинка as $i => $img) {
+
+                                $new_name = 'img' . $this->crc16((string) $item->Ид[0]) . '_' . ($i + 1) . '.jpg';
+                                $new_name_s = 'img' . $this->crc16((string) $item->Ид[0]) . '_' . ($i + 1) . 's.jpg';
+                                $new_name_big = 'img' . $this->crc16((string) $item->Ид[0]) . '_' . ($i + 1) . '_big.jpg';
+
+                                // Тубнейл
+                                $thumb = new PHPThumb(dirname(__FILE__) . $this->exchange_path . '/' . self::$upload1c . $img);
+                                $thumb->setOptions(array('jpegQuality' => $this->width_kratko));
+                                $thumb->resize($this->img_tw, $this->img_th);
+                                $thumb->save($_SERVER['DOCUMENT_ROOT'] . $this->exchange_image_path . $this->image_result_path . $new_name_s);
+
+                                // Основное
+                                $thumb = new PHPThumb(dirname(__FILE__) . $this->exchange_path . '/' . self::$upload1c . $img);
+                                $thumb->setOptions(array('jpegQuality' => $this->width_kratko));
+                                $thumb->resize($this->img_w, $this->img_h);
+                                $thumb->save($_SERVER['DOCUMENT_ROOT'] . $this->exchange_image_path . $this->image_result_path . $new_name);
+
+                                // Исходное
+                                if (!empty($this->image_save_source))
+                                    copy(dirname(__FILE__) . $this->exchange_path . '/' . self::$upload1c . $img, $this->exchange_image_path . $this->image_result_path . $new_name_big);
+
+                                $image = $this->image_result_path . 'img' . $this->crc16((string) $item->Ид[0]);
+                                $image_count++;
+                            }
+                        }
                     }
 
                     // Характеристики
-                    if (isset($item->ХарактеристикиТовара)) {
+                    /*
+                      if (isset($item->ХарактеристикиТовара)) {
 
-                        foreach ($item->ХарактеристикиТовара->ХарактеристикаТовара as $sorts) {
-                            $sort_array[(string) $item->Ид[0]][] = (string) $sorts->Наименование;
-                            $sort_array[(string) $item->Ид[0]][] = (string) $sorts->Значение;
-                        }
+                      foreach ($item->ХарактеристикиТовара->ХарактеристикаТовара as $sorts) {
+                      $sort_array[(string) $item->Ид[0]][] = (string) $sorts->Наименование;
+                      $sort_array[(string) $item->Ид[0]][] = (string) $sorts->Значение;
+                      }
+                      } */
+
+                    // Поле артикул
+                    /*
+                    if ($this->exchange_key == 'code') {
+                        if (!empty((string) $item->Код[0]))
+                            $uid = (string) $item->Код[0];
+                        else
+                            $uid = (string) $item->Ид[0];
                     }
+                    else if ($this->exchange_key == 'external')
+                        $uid = (string) $item->Ид[0];
+                    else
+                        $uid = (string) $item->Артикул[0];*/
 
-
-                    // Подтипы 18#141
-                    if (strstr((string) $item->Ид[0], '#')) {
-                        $p = explode("#", (string) $item->Ид[0]);
-                        $item->Ид[0] = $p[1];
-                    }
-
-                    $this->product_array[(string) $item->Ид[0]] = array("", (string) $item->Наименование[0], null, null, null, null, $warehouse, (string) $item->Цены->Цена[0]->ЦенаЗаЕдиницу[0], (string) $item->Цены->Цена[1]->ЦенаЗаЕдиницу[0], (string) $item->Цены->Цена[2]->ЦенаЗаЕдиницу[0], (string) $item->Цены->Цена[3]->ЦенаЗаЕдиницу[0], (string) $item->Цены->Цена[4]->ЦенаЗаЕдиницу[0], "", "", (string) $item->Цены->Цена[0]->Валюта[0], null, $parent, $item->Ид[0]);
+                    $this->product_array[(string) $item->Ид[0]] = array(null, (string) $item->Наименование[0], null, $image, null, $image_count, $warehouse, (string) $item->Цены->Цена[0]->ЦенаЗаЕдиницу[0], (string) $item->Цены->Цена[1]->ЦенаЗаЕдиницу[0], (string) $item->Цены->Цена[2]->ЦенаЗаЕдиницу[0], (string) $item->Цены->Цена[3]->ЦенаЗаЕдиницу[0], (string) $item->Цены->Цена[4]->ЦенаЗаЕдиницу[0], "", "", (string) $item->Цены->Цена[0]->Валюта[0], null, $parent_name, (string) $item->Ид[0], $parent_enabled);
                 }
 
                 // Запись в файл
                 if (count($this->product_array) > 1) {
+
+                    // Добавляем главные товары для подтипов
+                    if (is_array($parent_array)) {
+
+                        $parent = null;
+                        foreach ($parent_array as $id => $prod) {
+
+                            // Подтипы
+                            if (!empty($prod['ids'])) {
+                                $parent = substr($prod['ids'], 0, strlen($prod['ids']) - 1);
+                            }
+
+                            $this->product_array[$id] = array($id, null, null, null, null, null, $prod['warehouse'], $prod['price'], "", "", "", "", "", "", "", null, $parent, $id, 0);
+                        }
+                    }
+
                     array_walk_recursive($this->product_array, 'self::array2iconv');
                     $this->writeCsv('sklad/' . $date . '/upload_0.csv', $this->product_array, true);
-
 
                     // Выполнение
                     $this->load($date, false);
 
                     // Характеристики
-                    if (is_array($sort_array)) {
+                    /*
+                      if (is_array($sort_array)) {
 
-                        $_GET['mode'] = 'file';
-                        $this->exchange($_GET['type'], $_GET['mode']);
+                      $_GET['mode'] = 'file';
+                      $this->exchange($_GET['type'], $_GET['mode']);
 
-                        $_GET['mode'] = 'import';
-                        $_GET['filename'] = 'import.xml';
-                        $this->exchange($_GET['type'], $_GET['mode']);
-                    }
+                      $_GET['mode'] = 'import';
+                      $_GET['filename'] = 'import.xml';
+                      $this->exchange($_GET['type'], $_GET['mode']);
+                      } */
                 }
             }
         } else {

@@ -68,8 +68,8 @@ function actionStart()
         <ol>
 <li>Предоставить необходимые документы и заключить договор с <a href="https://www.tinkoff.ru/business/?utm_source=partner_rko_sme&utm_medium=ptr.act&utm_campaign=sme.partners&partnerId=5-IV4AJGWE#form-application" target="blank">Тинькофф</a>.</li>
 <li>На закладке настройки ввести предоставленные банком Тинькофф адрес "Шлюза", код "Терминала" и "Секрентый ключ".</li>
-<li>Выбрать режим налогооблажения товаров при включенном флаге передаче данных данных для формирования чека.</a></li>
-<li>Выбрать режим налогооблажения доставки в карточке редактирования доставки.</a></li>
+<li>Выбрать режим налогообложения товаров при включенном флаге передаче данных данных для формирования чека.</a></li>
+<li>Выбрать режим налогообложения доставки в карточке редактирования доставки.</a></li>
 <li>В личном кабинете Тинькофф в разделе "Магазины" указать адрес для уведомлений о кассовых чеках <code>http://' . $_SERVER['SERVER_NAME'] . '/phpshop/modules/tinkoff/payment/notification.php</code></li>
 <li>В личном кабинете Тинькофф в разделе "Магазины" указать URL страницы успешного платежа <code>http://' . $_SERVER['SERVER_NAME'] . '/success/?payment=tinkoff</code></li>
 <li>В личном кабинете Тинькофф в разделе "Магазины" указать URL страницы неуспешного платежа <code>http://' . $_SERVER['SERVER_NAME'] . '/fail/</code></li>
@@ -84,7 +84,7 @@ function actionStart()
         array('Патентная СН', 'patent', $data['taxation']),
     );
     $taxationSelect = $PHPShopGUI->setSelect('taxation_new', $taxation, 300);
-    $Tab1 .= $PHPShopGUI->setField('Система налогооблажения', $taxationSelect, 1, null, 'tinkoff-taxation' . ($data['enabled_taxation'] ? '' : ' hidden'));
+    $Tab1 .= $PHPShopGUI->setField('Система налогообложения', $taxationSelect, 1, null, 'tinkoff-taxation' . ($data['enabled_taxation'] ? '' : ' hidden'));
 
     // Доступые статусы заказов
     $PHPShopOrderStatusArray = new PHPShopOrderStatusArray();

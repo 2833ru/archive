@@ -114,13 +114,14 @@ function actionStart() {
     if ($data['model'] === 'ADV' || $data['model'] === 'DBS') {
         $Tab1 .= $PHPShopGUI->setField('Пароль защиты файла', $PHPShopGUI->setInputText('http://' . $_SERVER['SERVER_NAME'] . '/yml/?pas=', 'password_new', $data['password']));
         $Tab1 .= $PHPShopGUI->setField('Вывод характеристик', $PHPShopGUI->setCheckbox('use_params_new', 1, 'Включить вывод характеристик в YML', $data['use_params']));
+        
     }
-
+    
     if ($data['model'] === 'FBS' || $data['model'] === 'DBS') {
         $Tab1 .= $PHPShopGUI->setField('Идентификатор кампании', $PHPShopGUI->setInputText('xx-', 'campaign_id_new', $data['campaign_id']));
         $Tab1 .= $PHPShopGUI->setField('Авторизационный токен API', $PHPShopGUI->setInputText(null, 'auth_token_new', $data['auth_token']));
         $Tab1 .= $PHPShopGUI->setField('ID приложения Яндекс.OAuth', $PHPShopGUI->setInputText(null, 'client_id_new', $data['client_id']));
-        $Tab1 .= $PHPShopGUI->setField('OAuth-токен', $PHPShopGUI->setInputText(null, 'client_token_new', $data['client_token'],false,'<a target="_blank" href="https://oauth.yandex.ru/authorize?response_type=token&client_id=" id="client_token">' . __('Получить') . '</a>'));
+        $Tab1 .= $PHPShopGUI->setField('OAuth-токен', $PHPShopGUI->setInputText(null, 'client_token_new', $data['client_token'], false, '<a target="_blank" href="https://oauth.yandex.ru/authorize?response_type=token&client_id=" id="client_token">' . __('Получить') . '</a>'));
         $Tab1 .= $PHPShopGUI->setField('Блокировать прием заказов', $PHPShopGUI->setCheckbox('stop_new', 1, null, $data['stop']));
         $Tab1 .= $PHPShopGUI->setField('Выгружать изображения', $PHPShopGUI->setCheckbox('options[block_image]', 1, null, $options['block_image']));
         $Tab1 .= $PHPShopGUI->setField('Выгружать описание', $PHPShopGUI->setCheckbox('options[block_content]', 1, null, $options['block_content']));
@@ -135,6 +136,10 @@ function actionStart() {
             }
         }
     }
+    
+    
+    $Tab1 .= $PHPShopGUI->setField('Ссылка на товар', $PHPShopGUI->setCheckbox('link_new', 1, 'Показать ссылку на товар в маркете', $data['link']));
+
 
     $PHPShopCategoryArray = new PHPShopCategoryArray($where);
     $CategoryArray = $PHPShopCategoryArray->getArray();
@@ -188,6 +193,7 @@ function actionStart() {
     // Выбор каталога
     $catOption = $PHPShopGUI->setField("Размещение", $tree_select . $PHPShopGUI->setCheckbox("categories_all", 1, "Выбрать все категории?", 0), 1, 'Пакетное редактирование. Настройка не сохраняется.');
     $catOption .= $PHPShopGUI->setField("Вывод в Яндекс.Маркете", $PHPShopGUI->setRadio("enabled_all", 1, "Вкл.", 1) . $PHPShopGUI->setRadio("enabled_all", 0, "Выкл.", 1));
+    $catOption .= $PHPShopGUI->setField('Ключ обновления', $PHPShopGUI->setRadio("type_new", 1, "ID товара", $data['type']) . $PHPShopGUI->setRadio("type_new", 2, "Артикул товара", $data['type']));
 
     $Tab1 .= $PHPShopGUI->setField('Шаблон генерации описания', '<div id="yandexDescriptionShablon">
 <textarea class="form-control yandex-shablon" name="description_template_new" rows="3" style="width: 100%;height: 70px;">' . $data['description_template'] . '</textarea>
@@ -385,10 +391,14 @@ function actionStart() {
 function actionUpdate() {
     global $PHPShopOrm, $PHPShopModules;
 
+    // Корректировка пустых значений
+    $PHPShopOrm->updateZeroVars('link_new');
+
     // Настройки витрины
     $PHPShopModules->updateOption($_GET['id'], $_POST['servers']);
     $_POST['options']['statuses'] = $_POST['statuses'];
     $_POST['options']['payments'] = $_POST['payments'];
+
 
     $_POST['options_new'] = serialize($_POST['options']);
     $PHPShopOrm->debug = false;

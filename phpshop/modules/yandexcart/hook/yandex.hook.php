@@ -190,16 +190,21 @@ function setProducts_yandexcart_hook($obj, $data) {
 
     // condition
     if ($data['val']['condition'] > 1) {
-        
-        $condition=[null,null,'preowned','showcasesample','reduction'];
-        $quality=[null,null,'perfect','excellent','good'];
-        
-        $add .= '<condition type="' . $condition[$data['val']['condition']] . '"><quality>'.$quality[$data['val']['quality']].'</quality><reason>' . $data['val']['condition_reason'] . '</reason></condition>';
+
+        $condition = [null, null, 'preowned', 'showcasesample', 'reduction'];
+        $quality = [null, null, 'perfect', 'excellent', 'good'];
+
+        $add .= '<condition type="' . $condition[$data['val']['condition']] . '"><quality>' . $quality[$data['val']['quality']] . '</quality><reason>' . $data['val']['condition_reason'] . '</reason></condition>';
     }
-    
+
     // Срок годности
     if (!empty($data['val']['yandex_service_life_days']))
         $add .= '<period-of-validity-days>' . $data['val']['yandex_service_life_days'] . '</period-of-validity-days>';
+
+    // Ключ обновления артикул
+    if ($obj->yandex_module_options['type'] == 2) {
+        $data['xml'] = str_replace('<offer id="' . $data['val']['id'] . '"', '<offer id="' . $data['val']['uid'] . '"', $data['xml']);
+    }
 
     if (!empty($add))
         $data['xml'] = str_replace('</offer>', $add . '</offer>', $data['xml']);

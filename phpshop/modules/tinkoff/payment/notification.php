@@ -70,7 +70,7 @@ class TinkoffPayment extends PHPShopPaymentResult
 
                     return true;
                 } elseif (in_array($requestData['Status'], ['AUTHORIZED', 'CANCELED', 'REVERSED', 'PARTIAL_REFUNDED', 'REJECTED', 'REFUNDED'])) {
-                    return true;
+                    return false;
                 }
             }
         }

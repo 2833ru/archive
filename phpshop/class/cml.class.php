@@ -219,24 +219,24 @@ class PHPShopCommerceML {
                             if ($this->exchange_key == 'code') {
                                 $code = $val['uid'];
                                 $uid = null;
-                                $id = (new PHPShopOrm($GLOBALS['SysValue']['base']['products']))->getOne(['external_code'])['external_code'];
+                                $id = (new PHPShopOrm($GLOBALS['SysValue']['base']['products']))->getOne(['external_code'],['id'=>'='.$val['id']])['external_code'];
                             }
 
                             if ($this->exchange_key == 'uid') {
                                 $code = null;
                                 $uid = $val['uid'];
-                                $id = $val['external_code'];
+                                $id = (new PHPShopOrm($GLOBALS['SysValue']['base']['products']))->getOne(['external_code'],['id'=>'='.$val['id']])['external_code'];
                             }
 
                             if ($this->exchange_key == 'external') {
                                 $code = null;
                                 $uid = null;
-                                $id = $val['uid'];
+                                $id = (new PHPShopOrm($GLOBALS['SysValue']['base']['products']))->getOne(['external_code'],['id'=>'='.$val['id']])['external_code'];
                             }
                             
                             // Подтип
                             if(!empty($val['parent'])){
-                                $id=$val['parent'].'#'.$id;
+                                $id = (new PHPShopOrm($GLOBALS['SysValue']['base']['products']))->getOne(['external_code'],['id'=>'='.$val['parent']])['external_code'].'#'.$id;
                             }
                                 
                             $item .= '<Товар>

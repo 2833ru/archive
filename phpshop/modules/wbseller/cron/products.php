@@ -32,7 +32,7 @@ if (empty($enabled))
 // Настройки модуля
 PHPShopObj::loadClass("modules");
 $PHPShopModules = new PHPShopModules($_classPath . "modules/");
-$option = (new PHPShopOrm($PHPShopModules->getParam("base.wbseller.wbseller_system")))->getOne(['*']);
+$options = (new PHPShopOrm($PHPShopModules->getParam("base.wbseller.wbseller_system")))->getOne(['*']);
 
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
 $data = $PHPShopOrm->getList(['*'], ['export_wb' => '>0', 'export_wb_id' => '>0'], ['order' => 'datas desc'], ['limit' => 1000]);

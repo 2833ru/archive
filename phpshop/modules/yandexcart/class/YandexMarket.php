@@ -3,7 +3,7 @@
 /**
  * Библиотека работы с Yandex.Market API
  * @author PHPShop Software
- * @version 1.3
+ * @version 1.5
  * @package PHPShopClass
  * @subpackage RestApi
  * @todo https://yandex.ru/dev/market/partner-marketplace-cd/doc/dg/reference/post-campaigns-id-offer-mapping-entries-updates.html
@@ -30,6 +30,7 @@ class YandexMarket {
         $this->options = (new PHPShopOrm('phpshop_modules_yandexcart_system'))->select();
         $this->system = new PHPShopSystem();
         $this->image_source = $this->system->ifSerilizeParam('admoption.image_save_source');
+        $this->type = $this->options['type'];
     }
 
     public function getProductsCount() {
@@ -131,9 +132,15 @@ class YandexMarket {
             if (empty($options['block_content']))
                 $product['content'] = null;
 
+            // Ключ обновления
+            if ($this->type == 2)
+                $shopSku = str_replace(['-','_'], [' ','-'], $product['uid']);
+            else
+                $shopSku = $product['id'];
+
             $offer = [
                 'offer' => [
-                    'shopSku' => $product['id'],
+                    'shopSku' => $shopSku,
                     'name' => $product['name'],
                     'category' => $categories[$product['category']],
                     'manufacturer' => $product['manufacturer'],
@@ -275,11 +282,17 @@ class YandexMarket {
     private function getMarketSku($product, $categoryTitle) {
         $method = sprintf('campaigns/%s/offer-mapping-entries/suggestions.json', trim($this->options['campaign_id']));
 
+        // Ключ обновления
+        if ($this->type == 2)
+            $shopSku = $product['uid'];
+        else
+            $shopSku = $product['id'];
+
         $parameters = [
             'offers' => [
                 [
                     'offer' => [
-                        'shopSku' => $product['id'],
+                        'shopSku' => $shopSku,
                         'name' => $product['name'],
                         'category' => $categoryTitle,
                         'vendor' => $product['vendor_name'],

@@ -176,8 +176,9 @@ class PHPShopPage extends PHPShopCore {
         $this->lastmodified = $row['datas'];
 
         // Навигация хлебные крошки
-        if ($row['category'] != 1000)
-            $this->navigation($row['category'], $row['name'], ['url' => '/page/', 'name' => __('Блог')]);
+        if($row['category'] == 1000 or empty($row['category'])) 
+            $this->navigation($row['category'], $row['name']);
+        else $this->navigation($row['category'], $row['name'], ['url' => '/page/', 'name' => __('Блог')]);
 
         // Последние записи
         $this->set('pageLast', $this->getLast($link));

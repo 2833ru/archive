@@ -221,6 +221,14 @@ function ipolWidjetController(setups) {
 				},
 				setting: 'start',
 				hint: 'Value must be bool (true / false)'
+			},
+			mode: {
+				value: 'all',
+				check: function (wat) {
+					return (typeof(wat) === 'string');
+				},
+				setting: 'start',
+				hint: 'Value must be string (pvz / postamat)'
 			}
 		},
 
@@ -285,7 +293,6 @@ function ipolWidjetController(setups) {
 				logger.error('Unknown event ' + event);
 			} else {
 				if (this.events[event].length > 0) {
-
 					for (var i in this.events[event]) {
 						this.events[event][i](args);
 					}
@@ -429,6 +436,10 @@ function ISDEKWidjet(params) {
 		params.templatepath = params.path + 'template.php';
 	}
 
+	if (!params.currency) {
+		params.currency = 'RUB';
+	}
+
 	var loaders = {
 		onJSPCSSLoad: function () {
 			widjet.states.check('JSPCSS');
@@ -512,7 +523,7 @@ function ISDEKWidjet(params) {
 			link: {
 				value: params.link,
 				check: function (wat) {
-					return (ipjq('#' + wat).length);
+					return wat === false ? true : (ipjq('#' + wat).length > 0);
 				},
 				setting: 'afterJquery',
 				hint: 'No element whit this id to put the widjet'
@@ -582,7 +593,7 @@ function ISDEKWidjet(params) {
                 hint: 'Value must be bool (true / false)'
 			},
 			apikey: {
-				value: 'ea83aee9-5073-407d-8ebb-a9bc2770cd09',
+				value: 'f4e034c2-8c37-4168-8b97-99b6b3b268d7',
 				check: function (wat) {
 					return (typeof(wat) === 'string');
 				},
@@ -620,6 +631,17 @@ function ISDEKWidjet(params) {
 				},
 				setting: 'dataLoaded',
 				hint: 'City From wasn\'t founded'
+			},
+			currency: {
+				value: params.currency,
+				check: function (currency) {
+					return [
+						'RUB', 'KZT', 'USD', 'EUR', 'GBP', 'CNY', 'BYN', 'UAH', 'KGS', 'AMD', 'TRY', 'THB', 'KRW',
+						'AED', 'UZS', 'MNT'
+					].indexOf(currency) !== -1;
+				},
+				setting: 'start',
+				hint: 'Currency wasn\'t founded'
 			}
 		},
 		events: [
@@ -657,7 +679,7 @@ function ISDEKWidjet(params) {
 
 					ipjq.getJSON(
 						widjet.options.get('servicepath'),
-						{isdek_action: 'getPVZ', country: this.options.get('country'), lang: this.options.get('lang')},
+						{isdek_action: 'getPVZ', country: this.options.get('country'), lang: this.options.get('lang'), mode: this.options.get('mode')},
 						DATA.parsePVZFile
 					);
 					ipjq.getJSON(
@@ -816,6 +838,14 @@ function ISDEKWidjet(params) {
 			cityes: {},
 			map: {}
 		},
+
+		// Список городов новой Москвы
+		listCityCode: [162, 42932, 13369, 1690, 469, 1198, 75809, 510, 1689, 16338],
+
+		currentCityName: '',
+
+		currentCityCode: 0,
+
 		city: {
 			indexOfSome: function (findItem, ObjItem) {
 				for (keyI in ObjItem) {
@@ -892,7 +922,13 @@ function ISDEKWidjet(params) {
 			},
 
 			getCityPVZ: function (intCityID) {
-
+				if (DATA.listCityCode.includes(Number(intCityID))) {
+					if (DATA.currentCityName === 'Россия Москва Москва') {
+						return this.collection[44];
+					} else {
+						return this.collection[intCityID + '_distance'];
+					}
+				}
 				if (this.check(intCityID)) {
 					return this.collection[intCityID];
 				} else {
@@ -903,9 +939,9 @@ function ISDEKWidjet(params) {
 			getRegionPVZ: function (intCityID) {
 
 				if (this.check(intCityID)) {
-					let by_region = {};
-					let region = DATA.regions.cityes[intCityID];
-					let city_in_region = [];
+					var by_region = {};
+					var region = DATA.regions.cityes[intCityID];
+					var city_in_region = [];
 					city_in_region.push(...DATA.regions.map[region]);
 					if (region === 81) city_in_region.push(...DATA.regions.map[9]);
 					if (region === 9) city_in_region.push(...DATA.regions.map[81]);
@@ -913,7 +949,7 @@ function ISDEKWidjet(params) {
 					if (region === 26) city_in_region.push(...DATA.regions.map[82]);
 					city_in_region.forEach((item, i, arr) => {
 						var pvzList =  DATA.PVZ.collection[item];
-						for (let code in pvzList) {
+						for (var code in pvzList) {
 							by_region[code] = pvzList[code];
 						}
 					});
@@ -924,8 +960,14 @@ function ISDEKWidjet(params) {
 			},
 
 			getCurrent: function () {
-				if (widjet.options.get('region')) return this.getRegionPVZ(DATA.city.current);
-				return this.getCityPVZ(DATA.city.current);
+				var cityCode = DATA.city.current;
+				if (DATA.currentCityCode !== 0) {
+					cityCode = DATA.currentCityCode;
+				}
+
+
+				if (widjet.options.get('region')) return this.getRegionPVZ(cityCode);
+				return this.getCityPVZ(cityCode);
 			}
 		},
 
@@ -946,7 +988,6 @@ function ISDEKWidjet(params) {
 		},
 
 		parsePVZFile: function (data) {
-
 			if (typeof(data.pvz) === 'undefined') {
 				var sign = 'Unable to load list of PVZ : ';
 				if (typeof(data.pvz) === 'undefined') {
@@ -967,6 +1008,9 @@ function ISDEKWidjet(params) {
 				}
 
 				for (var pvzCity in data.pvz.PVZ) {
+					if (DATA.listCityCode.includes(Number(pvzCity))) {
+						DATA.PVZ.collection[44] = {...DATA.PVZ.collection[44], ...data.pvz.PVZ[pvzCity]}
+					}
 					DATA.PVZ.collection[pvzCity] = data.pvz.PVZ[pvzCity];
 					if (
 						typeof(data.pvz.CITY[pvzCity]) !== 'undefined' &&
@@ -988,11 +1032,13 @@ function ISDEKWidjet(params) {
 		profiles: {
 			courier: {
 				price: 0,
+				currency: 'RUB',
 				term: 0,
 				tarif: false
 			},
 			pickup: {
 				price: 0,
+				currency: 'RUB',
 				term: 0,
 				tarif: false
 			}
@@ -1006,15 +1052,15 @@ function ISDEKWidjet(params) {
 
 		calculate: function (forse=false) {
 			if (this.cityFrom) {
-				let courier_idx = this.history.findIndex( (e) => (
+				var courier_idx = this.history.findIndex( (e) => (
 					e.code === parseInt(DATA.city.current) && e.type === 'courier') && e.weight === cargo.getWeight()
 				);
-				let pickup_idx = this.history.findIndex( (e) => (
+				var pickup_idx = this.history.findIndex( (e) => (
 					e.code === parseInt(DATA.city.current) && e.type === 'pickup') && e.weight === cargo.getWeight()
 				);
 				if (courier_idx !== -1 && pickup_idx !== -1) {
 					for (var i in this.profiles) {
-						let idx = (i === 'pickup') ? pickup_idx : courier_idx;
+						var idx = (i === 'pickup') ? pickup_idx : courier_idx;
 						if (idx !== -1) {
 							this.profiles[i].price = this.history[idx].price;
 							this.profiles[i].term = this.history[idx].term;
@@ -1028,10 +1074,16 @@ function ISDEKWidjet(params) {
 					});
 				}
 				else {
-					let mark = Date.now();
+					var mark = Date.now();
+					//Замена кода города для НП "Быково село"
+					//Дополнительный комментарий в service.php getCityByName
+					if (DATA.city.current === 63015) {
+						DATA.city.current = 1195;
+					}
+
 					// this.binder = {};
 					this.binder[parseInt(DATA.city.current)] = {};
-					for (let i in this.profiles) {
+					for (var i in this.profiles) {
 						this.profiles[i].price = null;
 						this.profiles[i].term = null;
 						this.profiles[i].tarif = false;
@@ -1060,6 +1112,7 @@ function ISDEKWidjet(params) {
 
 			data.cityFromId = this.cityFrom;
 			data.cityToId = (forse) ? DATA.city.get() : DATA.city.getId(DATA.city.current);
+			data.currency = widjet.options.get('currency');
 
 			if (typeof(timestamp) !== 'undefined') {
 				data.timestamp = timestamp;
@@ -1101,6 +1154,7 @@ function ISDEKWidjet(params) {
 			} else {
 				CALCULATION.bad = false;
 				CALCULATION.profiles[answer.type].price = answer.result.price;
+				CALCULATION.profiles[answer.type].currency = answer.result.currency;
 				CALCULATION.profiles[answer.type].term = (answer.result.deliveryPeriodMax === answer.result.deliveryPeriodMin) ? answer.result.deliveryPeriodMin : answer.result.deliveryPeriodMin + "-" + answer.result.deliveryPeriodMax;
 				CALCULATION.profiles[answer.type].tarif = typeof answer.result.tarif != 'undefined' ? answer.result.tarif : answer.result.tariffId;
 				CALCULATION.history.push({
@@ -1108,6 +1162,7 @@ function ISDEKWidjet(params) {
 					weight: cargo.getWeight(),
 					type: answer.type,
 					price: answer.result.price,
+					currency: answer.result.currency,
 					term: CALCULATION.profiles[answer.type].term,
 					tarif: CALCULATION.profiles[answer.type].tarif
 				});
@@ -1257,7 +1312,6 @@ function ISDEKWidjet(params) {
 				}
 				var moduleH = ipjq(IDS.get('cdek_widget_cnt')).outerHeight();
 				if (moduleH < 476) {
-
 				} else {
 					ipjq(IDS.get('cdek_widget_cnt')).find('.CDEK-widget__search-list__box, .mCustomScrollBox').css('max-height', 'auto');
 				}
@@ -1265,7 +1319,10 @@ function ISDEKWidjet(params) {
 				if (moduleH < ipjq(IDS.get('cdek_widget_cnt')).find('.CDEK-widget__delivery-type__box').outerHeight() + 56) {
 					ipjq(IDS.get('cdek_widget_cnt')).find('.CDEK-widget__delivery-type').css('max-height', (moduleH - 56) + 'px');
 				} else {
-					ipjq(IDS.get('cdek_widget_cnt')).find('.CDEK-widget__delivery-type').css('max-height', ipjq(IDS.get('cdek_widget_cnt')).find('.CDEK-widget__delivery-type__box').outerHeight() + 'px');
+					var maxHeight = ipjq(IDS.get('cdek_widget_cnt')).find('.CDEK-widget__delivery-type__box').outerHeight();
+					if (maxHeight !== 0) {
+						ipjq(IDS.get('cdek_widget_cnt')).find('.CDEK-widget__delivery-type').css('max-height', ipjq(IDS.get('cdek_widget_cnt')).find('.CDEK-widget__delivery-type__box').outerHeight() + 'px');
+					}
 				}
 			},
 			makeFULLSCREEN: function () {
@@ -1300,15 +1357,15 @@ function ISDEKWidjet(params) {
 
                 if (widjet.options.get('hidecash')) {
                     var temp = [];
-                    temp.push(htmlka.slice(0, 132));
-                    temp.push(htmlka.slice(1349));
+                    temp.push(htmlka.slice(0, 1476));
+                    temp.push(htmlka.slice(2693));
                     htmlka = temp.join("");
                 }
 
 
                 if (widjet.options.get('hidedress')) {
                     var temp = [];
-                    temp.push(htmlka.slice(0, ( widjet.options.get('hidecash') ? 132:1349)));
+                    temp.push(htmlka.slice(0, ( widjet.options.get('hidecash') ? 1476 : 2693)));
                     temp.push(htmlka.slice(htmlka.indexOf('<hr>')));
                     htmlka = temp.join("");
                 }
@@ -1319,19 +1376,30 @@ function ISDEKWidjet(params) {
 
 				this.makeADAPT();
 			},
+			loadedCities: [],
+			setDefaultCities() {
+				const list = ipjq(IDS.get('city_list'));
+				list.empty();
+
+				const citiesToShow = this.loadedCities.slice(0, 7);
+				citiesToShow.forEach(el => {
+					const _block = HTML.getBlock('city', el);
+					list.prepend(_block)
+				})
+			},
 
 			loadCityList: function (data) {
+				this.loadedCities = []
 
-				_list = ipjq(IDS.get('city_list'));
-				for (var i in data) {
-					_block = HTML.getBlock('city', {
+				for (const i in data) {
+					this.loadedCities.push({
 						'CITYID': i,
 						'CITYNAME': data[i],
 						'CITY_DETAILS': (typeof DATA.regions.collection[i] != 'undefined') ? DATA.regions.collection[i] : '&nbsp;'
-					});
-					_list.prepend(_block);
+					})
 				}
 
+				this.setDefaultCities()
 			},
 
 			updatePrices: function (obPrices) {
@@ -1358,7 +1426,7 @@ function ISDEKWidjet(params) {
                                 if(!CALCULATION.bad || obPrices[i].price !== false) {
                                     _tmpBlock = HTML.getBlock('d_' + i, {
                                         "SUMM": obPrices[i].price === null ? LANG.get('COUNTING') : obPrices[i].price,
-                                        "RUB": obPrices[i].price === null ? '' : LANG.get('RUB'),
+                                        "CURR": obPrices[i].price === null ? '' : LANG.get(obPrices[i].currency),
                                         "TIME": obPrices[i].term === null ? '' : obPrices[i].term,
                                         "DAY": obPrices[i].term === null ? '' : LANG.get('DAY')
                                     });
@@ -1470,10 +1538,12 @@ function ISDEKWidjet(params) {
                     ipjq(IDS.get('cdek_widget_cnt')).find('.CDEK-widget__delivery-type__button').attr('class', 'CDEK-widget__delivery-type__button').addClass('CDEK-widget__delivery-type__button_pvz');
                 }
 				var PVZ = DATA.PVZ.getCurrent();
+
 				widjet.binders.trigger('onChoose', {
 					'id': id,
 					'PVZ': PVZ[id],
 					'price': CALCULATION.profiles.pickup.price,
+					'currency': CALCULATION.profiles.pickup.currency,
 					'term': CALCULATION.profiles.pickup.term,
 					'tarif': CALCULATION.profiles.pickup.tarif,
 					'city': DATA.city.current,
@@ -1489,11 +1559,12 @@ function ISDEKWidjet(params) {
 					'city': DATA.city.current,
                     'cityName': DATA.city.getName(DATA.city.current),
 					'price': CALCULATION.profiles.courier.price,
+					'currency': CALCULATION.profiles.courier.currency,
 					'term': CALCULATION.profiles.courier.term,
 					'tarif': CALCULATION.profiles.courier.tarif
 				});
 
-				if (!template.ui.addressSearch.ifOn() && !widjet.options.get('link')) {
+				if (!template.ui.active && !widjet.options.get('link')) {
 					this.close();
 				} else {
 					if(template.ui.addressSearch.ifOn()) {
@@ -1602,31 +1673,42 @@ function ISDEKWidjet(params) {
 					template.ui.addressSearch.choose();
                 },
 
+
 				choose : function () {
                     DATA.address.fill(template.ui.addressSearch.getInput().val());
-
                     ipjq.getJSON(
                         widjet.options.get('servicepath'),
                         {isdek_action: 'getCity', address: DATA.address.get()},
                         function (data) {
-                            if (typeof(data.error) === 'undefined') {
+							if (typeof(data.error) === 'undefined') {
+								if (data.city.id === 63015) {
+									data.city.id = DATA.city.get()
+									data.city.city = 'Быково';
+								}
                                 if(DATA.city.get() == data.city.id){
                                     template.ui.addressSearch.hide();
+
+									var address = DATA.address.get();
+									var addressArray = address.split(',');
+									var addressClean = (addressArray[addressArray.length - 2].trim() + ', ' + addressArray[addressArray.length - 1].trim()).trim();
 
                                     widjet.binders.trigger('onChooseAddress', {
                                         'id': 'courier',
                                         'city': DATA.city.current,
                                         'cityName': DATA.city.getName(DATA.city.current),
                                         'price': CALCULATION.profiles.courier.price,
+                                        'currency': CALCULATION.profiles.courier.currency,
                                         'term': CALCULATION.profiles.courier.term,
                                         'tarif': CALCULATION.profiles.courier.tarif,
-                                        'address' : DATA.address.get()
+                                        'address' : DATA.address.get(),
+										'cleanaddress': addressClean
                                     });
 
                                     if (!widjet.options.get('link')) {
                                         this.close();
                                     }
                                 } else {
+
                                     DATA.city.set(data.city.id,true);
                                     ipjq(IDS.get('cdek_search_input')).val(data.city.city);
                                     template.html.updatePrices({
@@ -1660,9 +1742,6 @@ function ISDEKWidjet(params) {
 					template.ymaps.map.container.fitToViewport();
 				}
 				this.active = true;
-				if (ipjq(IDS.get('cdek_widget_cnt')).find('.CDEK-widget__search-list__box li').length >= 10) {
-					ipjq(IDS.get('cdek_widget_cnt')).find(".CDEK-widget__search-list__box").mCustomScrollbar();
-				}
 			},
 
 			close: function () {
@@ -1675,6 +1754,7 @@ function ISDEKWidjet(params) {
 			map: false,
 			readyToBlink: false,
 			linker: IDS.get('MAP').replace('#', ''),
+			searchControl: null,
 
 			init: function (city) {
 				this.readyToBlink = false;
@@ -1687,13 +1767,13 @@ function ISDEKWidjet(params) {
                         for (var i = gdeUser.length-1; i >= 0; i--) {
                             if (gdeUser[i].kind == 'locality') {
                                 city = gdeUser[i].name;
-                                city = city.replace(/�����\s|�������\s����������\s����\s|�������\s|������\s|�������\s|����\s/ig, '');
+                                city = city.replace(/город\s|поселок\sгородского\sтипа\s|поселок\s|посёлок\s|деревня\s|село\s/ig, '');
                                 DATA.city.set(city);
                                 if (DATA.city.current !== false) break;
                             }
                         }
                         if (DATA.city.current == false) {
-                            //���� ����� �� ������ - ���� ��������� �� ����������� ��� � ���������� � ���� ������
+                            //если город не найден - ищем ближайший по координатам ПВЗ и отображаем в этом городе
                             gdeUser = result.geoObjects.get(0).geometry._coordinates;
 
                             var nearestPVZ = {};
@@ -1715,8 +1795,8 @@ function ISDEKWidjet(params) {
                                 city = DATA.city.getName(city);
 							}
 							else {
-                                DATA.city.set('������');
-                                city = '������';
+                                DATA.city.set('Москва');
+                                city = 'Москва';
                             }
                         }
 
@@ -1736,7 +1816,8 @@ function ISDEKWidjet(params) {
             loadMap: function (city) {
                 var self = this;
 				city = DATA.city.getFullName(city);
-				let mtypes = {};
+				DATA.currentCityName = city;
+				var mtypes = {};
 				if (ipjq(IDS.get('cdek_widget_cnt')).find('.CDEK-widget__sidebar-button-point.active').length) {
 
 					ipjq(IDS.get('cdek_widget_cnt')).find('.CDEK-widget__sidebar-button-point.active').each(function () {
@@ -1744,7 +1825,7 @@ function ISDEKWidjet(params) {
 					});
 				}
 
-
+				DATA.currentCityCode = 0;
 				if (typeof DATA.PVZ.getCurrent() === 'object') {
 					self.placeMarks(mtypes);
 					return;
@@ -1796,6 +1877,28 @@ function ISDEKWidjet(params) {
                 }
             },
 
+			addSearchBox : function () {
+				if (params.searchAddressBox) {
+					this.searchControl = new ymaps.control.SearchControl({
+						options: {
+							float: 'none',
+							position: {
+								left: 320,
+								top: 10
+							}
+						}
+					});
+
+					this.map.controls.add(this.searchControl);
+				}
+			},
+
+			removeSearchBox : function () {
+				if (params.searchAddressBox) {
+					this.map.controls.remove(this.searchControl);
+				}
+			},
+
 			centerAddr : function (coords) {
                 var self = this;
                 self.map.setCenter(coords);
@@ -1816,7 +1919,8 @@ function ISDEKWidjet(params) {
 			},
 
 			placeMarks: function (mtypes) {
-				let pvzList =  DATA.PVZ.getCurrent();
+				DATA.currentCityCode = DATA.city.get()
+				var pvzList =  DATA.PVZ.getCurrent();
 				if (typeof pvzList !== 'object') {
 					ipjq(IDS.get('sidebar')).hide();
 				} else {
@@ -1857,14 +1961,14 @@ function ISDEKWidjet(params) {
 								continue;
 							}
 						}
-						let img = widjet.options.get('path') + 'images/sdekNActive.png';
-						let imgActive = widjet.options.get('path') + 'images/sdekActive.png';
+						var img = widjet.options.get('path') + ((pvzList[i].Postamat != true) ? 'images/sdekActive.png' : 'images/postomatActive.png');
+						var imgActive = widjet.options.get('path') + ((pvzList[i].Postamat != true) ? 'images/sdekNActive.png' : 'images/postomatNActive.png');
 
 						pvzList[i].placeMark = new ymaps.Placemark([pvzList[i].cY, pvzList[i].cX], {}, {
 							iconLayout: 'default#image',
 							iconImageHref: img,
-							iconImageSize: [40, 43],
-							iconImageOffset: [-10, -31]
+							iconImageSize: [30, 40],
+							iconImageOffset: [-10, -30]
 						});
 
 						geoMarks.push(pvzList[i].placeMark);
@@ -1895,31 +1999,36 @@ function ISDEKWidjet(params) {
 						});
 
 						pvzList[i].placeMark.events.add(['mouseenter'], function (metka) {
-							ipjq(IDS.get('cdek_widget_cnt')).find(".CDEK-widget__panel-content").mCustomScrollbar("scrollTo", metka.get('target').listItem);
-							metka.get('target').listItem.addClass('CDEK-widget__panel-list__item_active');
-							metka.get('target').options.set({iconImageHref: imgActive});
+							// Перемещение к пвз в списке при наведении на маркер
+							// ipjq(IDS.get('cdek_widget_cnt')).find(".CDEK-widget__panel-content").mCustomScrollbar("scrollTo", metka.get('target').listItem);
+							// metka.get('target').listItem.addClass('CDEK-widget__panel-list__item_active');
+							// metka.get('target').options.set({iconImageHref: imgActive});
 						});
 
 						pvzList[i].placeMark.events.add(['mouseleave'], function (metka) {
-							if (template.ui.currentmark != metka.get('target')) {
-								metka.get('target').listItem.removeClass('CDEK-widget__panel-list__item_active');
-								metka.get('target').options.set({iconImageHref: img});
-							}
+							// Перемещение к пвз в списке при наведении на маркер
+							// if (template.ui.currentmark != metka.get('target')) {
+							// 	metka.get('target').listItem.removeClass('CDEK-widget__panel-list__item_active');
+							// 	metka.get('target').options.set({iconImageHref: img});
+							// }
 						});
 						pvzList[i].list_block.mark = pvzList[i].placeMark;
 						pvzList[i].list_block.on('click', {mark: i}, function (event) {
 
 							pvzList[event.data.mark].placeMark.events.fire('click');
 
-						}).on('mouseenter', {
-							id: i,
-							ifOn: true,
-							link: template.ymaps
-						}, template.ymaps.blinkPVZ).on('mouseleave', {
-							id: i,
-							ifOn: false,
-							link: template.ymaps
-						}, template.ymaps.blinkPVZ);
+						})
+
+						// Отклоючение подсвечивания маркера на карте при наведении на пвз из спика на боковой панели
+						// 	.on('mouseenter', {
+						// 		id: i,
+						// 		ifOn: true,
+						// 		link: template.ymaps
+						// 	}, template.ymaps.blinkPVZ).on('mouseleave', {
+						// 	id: i,
+						// 	ifOn: false,
+						// 	link: template.ymaps
+						// }, template.ymaps.blinkPVZ);
 
 						_panelContent.append(pvzList[i].list_block);
 					}
@@ -1945,7 +2054,6 @@ function ISDEKWidjet(params) {
 
 						} else {
 							if (_bounds[0][0] == _bounds[1][0]) {
-
 								this.map.setCenter(_bounds[0]);
 								this.map.setZoom(10);
 								template.ymaps.clearMarks();
@@ -1983,9 +2091,6 @@ function ISDEKWidjet(params) {
 				}
 				ipjq(IDS.get('cdek_widget_cnt')).find(".CDEK-widget__panel-content").mCustomScrollbar();
 				ipjq(IDS.get('cdek_widget_cnt')).find(".CDEK-widget__delivery-type").mCustomScrollbar();
-				if (ipjq(IDS.get('cdek_widget_cnt')).find('.CDEK-widget__search-list__box li').length >= 10) {
-					ipjq(IDS.get('cdek_widget_cnt')).find(".CDEK-widget__search-list__box").mCustomScrollbar();
-				}
 
 				this.readyToBlink = true;
 			},
@@ -2012,14 +2117,19 @@ function ISDEKWidjet(params) {
 
 			selectMark: function (wat) {
 				var cityPvz = DATA.PVZ.getCurrent();
+
 				if (parseInt(DATA.city.current) !== parseInt(cityPvz[wat].CityCode)) {
 					DATA.city.set(parseInt(cityPvz[wat].CityCode));
 					city = DATA.city.getName(cityPvz[wat].CityCode);
 					ipjq(IDS.get('cdek_widget_cnt')).find('.CDEK-widget__search-box input[type=text]').val(city);
 					CALCULATION.calculate();
 					template.controller.updatePrices();
+				} else if (parseInt(DATA.city.current) === 44) {
+					CALCULATION.calculate();
+					template.controller.updatePrices();
 				}
 
+				this.map.setZoom(16);
 				this.map.setCenter(template.ymaps.makeUpCenter([cityPvz[wat].cY, cityPvz[wat].cX]));
 
 				_detailPanel = ipjq(IDS.get('panel')).find(IDS.get('detail_panel'));
@@ -2088,6 +2198,11 @@ function ISDEKWidjet(params) {
             },
 
 			getSearchAddress : function (string,callback) {
+				var country = widjet.options.get('country');
+				if (country) {
+					string = country + ', ' + string;
+				}
+
                 ymaps.geocode(string, {
                     kind : 'house'
                 }).then(function (res) {
@@ -2119,7 +2234,7 @@ function ISDEKWidjet(params) {
                 template.ymaps.map.geoObjects.add(bln);
                 return bln;
             },
-			
+
 			killBaloon : function (wat) {
 				template.ymaps.map.geoObjects.remove(wat);
             }
@@ -2136,14 +2251,67 @@ function ISDEKWidjet(params) {
 		}
 		template.ymaps.placeMarks();
 	};
+	widjet.sdekSetPVZSWithAddress = function (address) {
+		if (address !== '') {
+			ipjq('.CDEK-widget__panel-list__item').each(function (index, elem) {
+				var pvzAddress = ipjq(elem).find('.CDEK-widget__panel-list__item-adress')[0].innerText;
+				if (pvzAddress.toLowerCase().indexOf(address.toLowerCase()) !== -1) {
+					ipjq(elem).show();
+				} else {
+					ipjq(elem).hide();
+				}
+			})
+		} else {
+			ipjq('.CDEK-widget__panel-list__item').each(function (index, elem) {
+				ipjq(elem).show();
+			})
+		}
+	};
 	widjet.chooseCourier = function () {
 		template.controller.chooseCOURIER();
 	};
 
 	widjet.sdekWidgetEvents = function () {
-
 		ipjq('.CDEK-widget__popup__close-btn').off('click').on('click', function () {
 			ipjq(this).closest('.CDEK-widget__popup-mask').hide();
+		});
+
+		ipjq(IDS.get('cdek_widget_cnt')).on('keyup', '.CDEK-widget__panel-address-search', 'input', function(event) {
+			widjet.sdekSetPVZSWithAddress(event.target.value)
+		});
+
+		// ipjq(IDS.get('cdek_widget_cnt')).on('click', '.CDEK-widget__panel-list__item',function(event) {
+		//
+		// });
+
+		ipjq(IDS.get('cdek_widget_cnt')).on('click', '.CDEK-widget__tag-postamat', 'p', function(event) {
+			if (ipjq(IDS.get('cdek_widget_cnt')).find('.CDEK-widget__tag-postamat').hasClass('active')){
+				widjet.sdekSetPVZS();
+				ipjq(IDS.get('cdek_widget_cnt')).find('.CDEK-widget__tag-postamat').removeClass('active');
+			} else {
+				widjet.sdekSetPVZS({postamat: true});
+				ipjq(IDS.get('cdek_widget_cnt')).find('.CDEK-widget__tag-postamat').addClass('active');
+			}
+		});
+
+		ipjq(IDS.get('cdek_widget_cnt')).on('click', '.CDEK-widget__tag-cash', 'p', function(event) {
+			if (ipjq(IDS.get('cdek_widget_cnt')).find('.CDEK-widget__tag-cash').hasClass('active')){
+				widjet.sdekSetPVZS();
+				ipjq(IDS.get('cdek_widget_cnt')).find('.CDEK-widget__tag-cash').removeClass('active');
+			} else {
+				widjet.sdekSetPVZS({cash: true});
+				ipjq(IDS.get('cdek_widget_cnt')).find('.CDEK-widget__tag-cash').addClass('active');
+			}
+		});
+
+		ipjq(IDS.get('cdek_widget_cnt')).on('click', '.CDEK-widget__tag-fitting-room', 'p',function(event) {
+			if (ipjq(IDS.get('cdek_widget_cnt')).find('.CDEK-widget__tag-fitting-room').hasClass('active')){
+				widjet.sdekSetPVZS();
+				ipjq(IDS.get('cdek_widget_cnt')).find('.CDEK-widget__tag-fitting-room').removeClass('active');
+			} else {
+				widjet.sdekSetPVZS({dress: true});
+				ipjq(IDS.get('cdek_widget_cnt')).find('.CDEK-widget__tag-fitting-room').addClass('active');
+			}
 		});
 
 		ipjq(IDS.get('cdek_widget_cnt')).on('click', '.CDEK-widget__sidebar-button', {widjet: widjet}, function () {
@@ -2268,102 +2436,120 @@ function ISDEKWidjet(params) {
 			}
 		}).on('focusin', '.CDEK-widget__search-box input[type=text]', function () {
 			ipjq(this).val('');
+			template.html.setDefaultCities()
+
 			if (ipjq(IDS.get('cdek_widget_cnt')).find('.CDEK-widget__delivery-type').hasClass('CDEK-widget__delivery-type_close')) {
 				ipjq(IDS.get('cdek_widget_cnt')).find('.CDEK-widget__search-list ul').addClass('open')
 					.find('li').removeClass('no-active');
+
 				return
 			}
+
 			ipjq(IDS.get('cdek_widget_cnt')).find('.CDEK-widget__delivery-type').addClass('CDEK-widget__delivery-type_close');
 			setTimeout(function () {
 				ipjq(IDS.get('cdek_widget_cnt')).find('.CDEK-widget__search-list ul').addClass('open')
 					.find('li').removeClass('no-active');
 			}, 1000);
 		}).on('click', '.CDEK-widget__search-list ul li', function () {
+			template.ymaps.removeSearchBox();
 			template.controller.selectCity(ipjq(this).data('cityid'));
 		}).on('keydown', '.CDEK-widget__search-box input[type=text]', function (e) {
 			var $liActive = ipjq(IDS.get('cdek_widget_cnt')).find('.CDEK-widget__search-list ul li:not(.no-active)');
 			var $liFocus = $liActive.filter('.focus');
+
 			if (e.keyCode === 40) {
 				if ($liFocus.length == 0) {
 					$liActive.first().addClass('focus');
-					ipjq(IDS.get('cdek_widget_cnt')).find(".CDEK-widget__search-list__box").mCustomScrollbar('scrollTo', $liActive.first(), {
-						scrollInertia: 300
-					});
 				} else {
 					$liFocus.removeClass('focus');
 
 					if ($liFocus.nextAll().filter(':not(.no-active)').eq(0).length != 0) {
 						$liFocus.nextAll().filter(':not(.no-active)').eq(0).addClass('focus');
-						ipjq(IDS.get('cdek_widget_cnt')).find(".CDEK-widget__search-list__box").mCustomScrollbar('scrollTo', $liFocus.next($liActive), {
-							scrollInertia: 300
-						});
 					} else {
 						$liActive.first().addClass('focus');
-						ipjq(IDS.get('cdek_widget_cnt')).find(".CDEK-widget__search-list__box").mCustomScrollbar('scrollTo', $liActive.first(), {
-							scrollInertia: 300
-						});
 					}
 				}
 			}
 			if (e.keyCode === 38) {
 				if ($liFocus.length == 0) {
 					$liActive.last().addClass('focus');
-					ipjq(IDS.get('cdek_widget_cnt')).find(".CDEK-widget__search-list__box").mCustomScrollbar('scrollTo', $liActive.last(), {
-						scrollInertia: 300
-					});
 				} else {
 					$liFocus.removeClass('focus');
+
 					if ($liFocus.prevAll().filter(':not(.no-active)').eq(0).length != 0) {
 						$liFocus.prevAll().filter(':not(.no-active)').eq(0).addClass('focus');
-						ipjq(IDS.get('cdek_widget_cnt')).find(".CDEK-widget__search-list__box").mCustomScrollbar('scrollTo', $liFocus.prev($liActive), {
-							scrollInertia: 300
-						});
 					} else {
 						$liActive.last().addClass('focus');
-						ipjq(IDS.get('cdek_widget_cnt')).find(".CDEK-widget__search-list__box").mCustomScrollbar('scrollTo', $liActive.last(), {
-							scrollInertia: 300
-						});
 					}
 				}
 			}
 		}).on('keyup', '.CDEK-widget__search-box input[type=text]', function (e) {
+			const currentValue = ipjq(this).val();
+			var filter
+
 			try {
-				var filter = new RegExp('^(' + ipjq(this).val() + ')+.*', 'i');
+				filter = new RegExp('^(' + currentValue + ')+.*', 'i');
 			} catch (e) {
-				var filter = '';
+				filter = '';
 			}
 
 			var $li = ipjq(IDS.get('cdek_widget_cnt')).find('.CDEK-widget__search-list ul li');
+			const $ul = ipjq(IDS.get('cdek_widget_cnt')).find('.CDEK-widget__search-list ul');
 
 			if (e.keyCode === 13) {
 				var $liActive = $li.not('.no-active');
 				var $liFocus = $liActive.filter('.focus');
+
 				if ($liFocus.length == 0) {
 					template.controller.selectCity();
 				} else {
 					template.controller.selectCity($liFocus.find('.CDEK-widget__search-list__city-name').text());
 					$liFocus.removeClass('focus');
 				}
+				if (DATA.city.getName(DATA.city.current) != ipjq(IDS.get('cdek_widget_cnt')).find('.CDEK-widget__search-box input[type=text]').val()) {
+					type = 'courier';
+					setTimeout(function () {
+						ipjq(IDS.get('cdek_widget_cnt')).find('.CDEK-widget__delivery-type').addClass('CDEK-widget__delivery-type_close');
+					}, 1001);
+					widjet.chooseCourier();
+				}
 				return
 			}
 
-			if (filter != '') {
-				$matches = $li.filter(function () {
-					return filter.test(ipjq(this).find('.CDEK-widget__search-list__city-name').text().replace(/[^\w�-��\s-]+/gi, ""));
-				});
+			if (filter !== '') {
+				const oldIds = []
+				// keyDown 	событие может добавить класс focus элементу
+				// но keyUp тут же удаляет старые дом элементы и создает новые
+				// Проверка на совпадение массивов для отрисовки нужна чтобы лишний раз не
+				// перерисовывать список городов
+				$ul.children().each((i, el) => {
+					oldIds.push(el.getAttribute('data-cityid'))
+				})
 
-				$li.not($matches).addClass('no-active').removeClass('focus');
-				if ($matches.length == 0) {
-					$li.parent('ul').removeClass('open');
-				} else if (!$li.parent('ul').hasClass('open')) {
-					$li.parent('ul').addClass('open');
+				const citiesToShow = template.html.loadedCities.filter((el) => filter.test(el['CITYNAME'].replace(/[^\wа-яё\s-]+/gi, ""))).slice(0, 7);
+				const currentIds = citiesToShow.map((el) => el['CITYID'])
+
+
+				if (citiesToShow.length === 0) {
+					$ul.removeClass('open');
+				} else if (!$ul.hasClass('open')) {
+					$ul.addClass('open');
 				}
 
-				$matches.each(function (index, el) {
-					if (ipjq(el).hasClass('no-active')) {
-						ipjq(el).removeClass('no-active');
+				if (oldIds.length === currentIds.length) {
+					if (oldIds.sort().toString() === currentIds.sort().toString()) {
+						return;
 					}
-				});
+				}
+
+				$ul.empty()
+
+				citiesToShow.forEach((el, idx) => {
+					const _block = HTML.getBlock('city', el);
+					const li = ipjq(_block)
+					li.removeClass('no-active');
+					$ul.prepend(li)
+				})
 			} else {
 				$li.removeClass('no-active');
 			}
@@ -2373,6 +2559,11 @@ function ISDEKWidjet(params) {
 			}
 		}).on('click', '.CDEK-widget__delivery-type__item', {widjet: widjet}, function (e) {
             var type = ipjq(this).attr('data-delivery-type');
+
+			if (type === 'pvz') {
+				template.ymaps.addSearchBox();
+			}
+
 			if (!ipjq(this).hasClass('active')) {
 				ipjq(IDS.get('cdek_widget_cnt')).find('.CDEK-widget__delivery-type__item.active').removeClass('active');
 				ipjq(this).addClass('active');
@@ -2384,7 +2575,15 @@ function ISDEKWidjet(params) {
 
 			ipjq(this).parents('.CDEK-widget__delivery-type').addClass('CDEK-widget__delivery-type_close');
 		}).on('click', '.CDEK-widget__delivery-type__button', function () {
+			template.ymaps.removeSearchBox();
 			template.controller.chooseDeliveryType();
+			if (DATA.city.getName(DATA.city.current) != ipjq(IDS.get('cdek_widget_cnt')).find('.CDEK-widget__search-box input[type=text]').val()) {
+				type = 'courier';
+				setTimeout(function () {
+					ipjq(IDS.get('cdek_widget_cnt')).find('.CDEK-widget__delivery-type').addClass('CDEK-widget__delivery-type_close');
+				}, 1001);
+				widjet.chooseCourier();
+			}
 		}).on('click','.CDEK-widget__courier-address__button',function(){
             template.ui.addressSearch.search();
 		});
@@ -2396,7 +2595,7 @@ function ISDEKWidjet(params) {
 		},
 		set: function (name) {
 
-			let newCity = DATA.city.set(name);
+			var newCity = DATA.city.set(name);
 			if (newCity !== false) {
 				ipjq(IDS.get('cdek_widget_cnt')).find('.CDEK-widget__search-box input[type=text]').val(DATA.city.getName(newCity));
 			}

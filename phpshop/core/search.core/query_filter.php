@@ -89,36 +89,28 @@ function query_filter($obj) {
     // Разделяем слова
     $_WORDS = explode(" ", $words);
 
-    // Ajax поиск        
-    if (!empty($_POST['ajax'])) {
-        foreach ($_WORDS as $w)
-            if (!empty($w)) {
-                $sort .= "(name REGEXP '\x20*$w' or uid REGEXP '^$w' or keywords REGEXP '$w') or ";
-            }
+    $wrd = null;
+    foreach ($_WORDS as $w)
+        $wrd .= '%' . $w;
+
+    $wrd .= '%';
+
+    switch ($pole) {
+        case(1):
+            $sort .= "(name LIKE '$wrd' or keywords LIKE '$wrd' or id LIKE '$wrd') and ";
+            break;
+
+        case(2):
+
+            // Учет модуля ProductOption
+            if (!empty($GLOBALS['SysValue']['base']['productoption']['productoption_system']))
+                $sort .= "(name LIKE '$wrd' or content LIKE '$wrd' or description LIKE '$wrd' or keywords LIKE '$wrd' or uid LIKE '$wrd' or option1 LIKE '$wrd' or option2 LIKE '$wrd' or option3 LIKE '$wrd' or option4 LIKE '$wrd' or option5 LIKE '$wrd') and ";
+            else
+                $sort .= "(name LIKE '$wrd' or content LIKE '$wrd' or description LIKE '$wrd' or keywords LIKE '$wrd' or uid LIKE '$wrd') and ";
+
+            break;
     }
-    // Обычный поиск
-    else {
-        $wrd = null;
-        foreach ($_WORDS as $w)
-            $wrd .= '%' . $w;
 
-        $wrd .= '%';
-
-        switch ($pole) {
-            case(1):
-                $sort .= "(name LIKE '$wrd' or keywords LIKE '$wrd' or id LIKE '$wrd') and ";
-                break;
-
-            case(2):
-
-                // Учет модуля ProductOption
-                if (!empty($GLOBALS['SysValue']['base']['productoption']['productoption_system']))
-                    $sort .= "(name LIKE '$wrd' or content LIKE '$wrd' or description LIKE '$wrd' or keywords LIKE '$wrd' or uid LIKE '$wrd' or option1 LIKE '$wrd' or option2 LIKE '$wrd' or option3 LIKE '$wrd' or option4 LIKE '$wrd' or option5 LIKE '$wrd') and ";
-                else $sort .= "(name LIKE '$wrd' or content LIKE '$wrd' or description LIKE '$wrd' or keywords LIKE '$wrd' or uid LIKE '$wrd') and ";
-                
-                break;
-        }
-    }
 
     $sort = substr($sort, 0, strlen($sort) - 4);
 
