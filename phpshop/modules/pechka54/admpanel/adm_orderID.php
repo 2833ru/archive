@@ -38,7 +38,7 @@ function addAtolDocs($data) {
                 $refundButton = '<button class="btn btn-default btn-sm" data-operation="return" id="atol" data-id="' . $data['id'] . '"><span class="glyphicon glyphicon-bookmark"></span> Выписать чек возврата</button>';
             } elseif($data['ofd_type'] == 'return' and $data['ofd_status'] == 2) {
                 $Tab.='<span class="text-danger">Возврат</span>';
-                $refundButton = null;
+                $refundButton = '<button class="btn btn-default btn-sm" data-operation="sell" id="atol" data-id="' . $data['id'] . '"><span class="glyphicon glyphicon-bookmark"></span> Выписать чек прихода</button>';
             }
             elseif($data['ofd_status'] == 3) {
                 $Tab.='<span class="text-warning">Ошибка валидации чека. Проверьте данные заказа и отправьте на повторную печать.</span>';

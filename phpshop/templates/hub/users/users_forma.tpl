@@ -18,10 +18,5 @@
 			<span class="text">{Войти}<span>
 		</a>
 	</li> 
-	<li role="presentation" class="nav-user-fix">
-		<a class="link" href="/users/register.html">
-			<i class="fa fa-sign-in" aria-hidden="true"></i>
-			<span class="text">{Регистрация}</span>
-		</a>
-	</li>
+
 </ul>

@@ -74,7 +74,7 @@ function actionStart() {
         </ol>
 ';
     
-    $Tab3 = $PHPShopGUI->setPay(false, false, $data['version'], true);
+    $Tab3 = $PHPShopGUI->setPay(false, false, $data['version'], false);
 
     // Вывод формы закладки
     $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Инструкция", $Tab2,true), array("О Модуле", $Tab3), array("Журнал операций", null, '?path=modules.dir.cloudkassir'));

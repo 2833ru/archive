@@ -2,7 +2,7 @@
  * Поддержка JQuery функций
  * @package PHPShopJavaScript
  * @author PHPShop Software
- * @version 1.4
+ * @version 1.5
  */
 
 // Иконки в основном меню категорий
@@ -35,6 +35,9 @@ var PHONE_MASK = "(999) 999-9999";
 
 // DaData.ru Token
 var DADATA_TOKEN = false;
+
+// Согласие на COOKIE
+var COOKIE_AGREEMENT = false;
 
 // HTML анимации загрузки при аякс запросах
 var waitText = '<span class="wait">&nbsp;</span>';
@@ -129,14 +132,14 @@ function UpdateDeliveryJq(xid, param, stop_hook) {
                 if (paymentStop !== undefined)
                     var payment_array = paymentStop.split(",");
 
-                $('input[name="order_metod"]').each(function() {
+                $('.paymOneEl input[name="order_metod"]').each(function() {
                     $(this).attr('disabled', false);
                 });
 
                 if ($.isArray(payment_array)) {
                     $.each(payment_array, function(index, value) {
-                        $('input[data-option="payment' + value + '"]').attr('disabled', true);
-                        $('input[data-option="payment' + value + '"]').attr('checked', false);
+                        $('.paymOneEl input[data-option="payment' + value + '"]').attr('disabled', true);
+                        $('.paymOneEl input[data-option="payment' + value + '"]').attr('checked', false);
                     });
                 }
 
@@ -164,13 +167,13 @@ function UpdateDeliveryJq(xid, param, stop_hook) {
                 // Подсказки DaData.ru
                 if (typeof $('#body').attr('data-token') !== 'undefined' && $('#body').attr('data-token').length)
                     var DADATA_TOKEN = $('#body').attr('data-token');
-                if(DADATA_TOKEN !== false && DADATA_TOKEN !== undefined){
+                if (DADATA_TOKEN !== false && DADATA_TOKEN !== undefined) {
                     var
-                        token = DADATA_TOKEN,
-                        type = "ADDRESS",
-                        $city = $("form[name='forma_order'] input[name='city_new']"),
-                        $street = $("form[name='forma_order'] input[name='street_new']"),
-                        $house = $("form[name='forma_order'] input[name='house_new']");
+                            token = DADATA_TOKEN,
+                            type = "ADDRESS",
+                            $city = $("form[name='forma_order'] input[name='city_new']"),
+                            $street = $("form[name='forma_order'] input[name='street_new']"),
+                            $house = $("form[name='forma_order'] input[name='house_new']");
 
                     $city.suggestions({
                         token: token,
@@ -207,11 +210,11 @@ function UpdateDeliveryJq(xid, param, stop_hook) {
                         $("[name='index_new']").val("");
                     }
                     /*
-                    $("form[name='forma_order'] input[name='fio_new']").suggestions({
-                        token: DADATA_TOKEN,
-                        type: "NAME",
-                        count: 5
-                    });*/
+                     $("form[name='forma_order'] input[name='fio_new']").suggestions({
+                     token: DADATA_TOKEN,
+                     type: "NAME",
+                     count: 5
+                     });*/
                     $("form[name='forma_order'] input[name='org_name_new']").suggestions({
                         token: DADATA_TOKEN,
                         type: "PARTY",
@@ -356,7 +359,7 @@ $(document).ready(function() {
         str = ".showYurDataForPaymentClass" + $("input#order_metod:checked").val();
         if (str != "" && $(str).html()) {
             $("#showYurDataForPaymentLoad").html($(str).clone().removeClass().show());
-            if(DADATA_TOKEN !== false && DADATA_TOKEN !== undefined){
+            if (DADATA_TOKEN !== false && DADATA_TOKEN !== undefined) {
                 $("#showYurDataForPaymentLoad input[name='org_name_new']").suggestions({
                     token: DADATA_TOKEN,
                     type: "PARTY",

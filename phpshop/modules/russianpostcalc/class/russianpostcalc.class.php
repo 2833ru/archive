@@ -3,7 +3,7 @@
 class russianpostcalc {
 
     public function __construct() {
-        $this->api = "http://russianpostcalc.ru/api_beta_077.php";
+        $this->api = "https://russianpostcalc.ru/api_v1.php";
     }
 
     public function option() {

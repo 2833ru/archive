@@ -44,6 +44,7 @@ if (!file_exists('./css/bootstrap-theme-' . $theme . '.css'))
                             <button id="clear-btn" class="btn btn-default"><span class="glyphicon glyphicon-stop"></span> Сброс</button>
                             <button id="send-btn" type="submit" class="btn btn-default"><span class="glyphicon glyphicon-play"></span> Отправить</button>
                             <input type="hidden" name="rowID" id ="productId" value="<?php echo intval($_GET['id']); ?>" />
+                            <input type="hidden" name="category"  value="<?php echo intval($_GET['cat']); ?>" />
                         </div>  
                     </form>
                 </div>

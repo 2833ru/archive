@@ -4,7 +4,6 @@
  * Класс создания элементов товаров
  * Примеры использования размещены в папке phpshop/inc/
  * @author PHPShop Software
- * @tutorial http://wiki.phpshop.ru/index.php/PHPShopProductElements
  * @version 1.2
  * @package PHPShopClass
  */

@@ -35,9 +35,10 @@ class DocSave {
             if (empty($_GET['check_file'])) {
                 if (!empty($_SESSION['UsersId']))
                     $where['user'] = '=' . $_SESSION['UsersId'];
-                elseif(!empty($_GET['user']))
-                    $where['user'] = '='.intval($_GET['user']);
-                else return false;
+                elseif (!empty($_GET['user']))
+                    $where['user'] = '=' . intval($_GET['user']);
+                else
+                    return false;
             }
 
             $data = $PHPShopOrm->select(array('id'), $where, false, array('limit' => 1));

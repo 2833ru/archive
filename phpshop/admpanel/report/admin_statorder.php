@@ -39,6 +39,12 @@ function actionStart() {
     $status_array = $PHPShopOrderStatusArray->getArray();
     $status[] = __('Новый заказ');
 
+    // Знак рубля
+    if ($PHPShopSystem->getDefaultValutaIso() == 'RUB' or $PHPShopSystem->getDefaultValutaIso() == 'RUR')
+        $currency = ' <span class="rubznak hidden-xs">p</span>';
+    else
+        $currency = $PHPShopSystem->getDefaultValutaCode();
+
     $order_status_value[] = array(__('Все заказы'), 0, $_GET['where']['statusi']);
     if (is_array($status_array))
         foreach ($status_array as $status_val) {
@@ -97,7 +103,7 @@ function actionStart() {
     $PHPShopGUI->field_col = 3;
     $PHPShopGUI->addJSFiles('./js/bootstrap-datetimepicker.min.js', './js/bootstrap-datetimepicker.ru.js', 'js/chart.min.js', 'report/gui/report.gui.js');
     $PHPShopGUI->addCSSFiles('./css/bootstrap-datetimepicker.min.css');
-    $PHPShopGUI->setActionPanel($TitlePage, array('Линейная диаграмма', 'Гистограмма', 'Радар диаграмма', '|', 'Export'), false,false);
+    $PHPShopGUI->setActionPanel($TitlePage, array('Линейная диаграмма', 'Гистограмма', 'Радар диаграмма', '|', 'Export'), false, false);
 
     // Таблица с данными
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
@@ -108,6 +114,8 @@ function actionStart() {
             order by a.id ';
     $canvas_value = $canvas_label = $canvas_export = $alert = null;
     $data = $PHPShopOrm->select();
+
+    $total = 0;
     if (is_array($data))
         foreach ($data as $row) {
 
@@ -116,6 +124,8 @@ function actionStart() {
                 $PHPShopOrder = new PHPShopOrderFunction($row['id'], $row);
                 $row['sum'] = $PHPShopOrder->getTotal(false);
             }
+
+            $total += $row['sum'];
 
             if (empty($row['fio'])) {
                 $row['fio'] = $row['mail'];
@@ -152,7 +162,7 @@ function actionStart() {
                             <!-- Progress -->
                             <div class="progress">
                                 <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="5" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-                                    '.__('Загрузка').'...
+                                    ' . __('Загрузка') . '...
                                 </div>
                             </div>   
                             <!--/ Progress -->
@@ -193,6 +203,12 @@ function actionStart() {
 
     if ($clean)
         $searchforma.=$PHPShopInterface->setButton('Сброс', 'remove', 'btn-order-cancel pull-left');
+
+    if ($total > 0) {
+        $stat = '<div class="order-stat-container">' . __('Сумма:') . ' <b>' . number_format($total, 2, ',', ' ') . '</b> ' . $currency . '<br>' . __('Количество:') . ' <b>' . count($data) . '</b> ' . __('шт.');
+        $sidebarright[] = array('title' => 'Статистика', 'content' => $stat);
+    }
+
 
     $sidebarright[] = array('title' => 'Отчеты', 'content' => $PHPShopGUI->loadLib('tab_menu', false, './report/'));
     $sidebarright[] = array('title' => 'Интервал', 'content' => $PHPShopInterface->setForm($searchforma, false, "order_search", false, false, 'form-sidebar'));

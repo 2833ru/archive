@@ -15,7 +15,9 @@
                 <h1 itemprop="name">@productName@</h1>
 
                 <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-                    <h2 class="text-primary"><span itemprop="price">@productPrice@</span> <span itemprop="priceCurrency" class="rubznak" content="RUB">@productValutaName@</span>
+                    <h2 class="text-primary">
+                        <span itemprop="price" content="@productSchemaPrice@">@productPrice@</span> 
+                        <span itemprop="priceCurrency" class="rubznak" content="RUB">@productValutaName@</span>
                     </h2> @productPriceRub@</div> 
 
 
@@ -54,12 +56,17 @@
                         </span>    
                     </div>
                 </div>
+               @ComStartNotice@
+               <div class="col-xs-5">
+                    <a class="btn btn-primary" href="/users/notice.html?productId=@productUid@" title="@productNotice@">{Уведомить}</a>
+                </div>
+                @ComEndNotice@ 
                 <div class="col-xs-3">
                     <button class="btn btn-info addToCompareList visible-lg" role="button" data-uid="@productUid@">{Сравнить}</button>
                 </div>
                 <div class="col-xs-3 visible-lg visible-md">
                     <button class="btn btn-default addToWishList" role="button" data-uid="@productUid@">{Отложить}</button>
-                </div>
+                </div> 
             </div>
 
 

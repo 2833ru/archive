@@ -11,7 +11,7 @@ $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']);
 
 // Стартовый вид
 function actionStart() {
-    global $PHPShopGUI, $PHPShopOrm, $PHPShopModules, $TitlePage;
+    global $PHPShopGUI, $PHPShopOrm, $PHPShopModules, $TitlePage, $PHPShopBase;
 
     // Выборка
     $newId = getLastID();
@@ -24,7 +24,8 @@ function actionStart() {
         $data['id'] = $newId;
 
         // Копирование характеристик
-        valueCopy($_GET['id'], $newId);
+        if ($PHPShopBase->Rule->CheckedRules('sort', 'create'))
+            valueCopy($_GET['id'], $newId);
     }
 
     // Размер названия поля

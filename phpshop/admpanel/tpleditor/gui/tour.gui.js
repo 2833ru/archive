@@ -24,7 +24,7 @@ $().ready(function() {
             {
                 element: '#editor',
                 title: "Редактирование",
-                content: 'Отредактируйте шаблон, используя HTML-теги и переменные шаблонизатора <kbd>@imageSlider@</kbd>.<p></p> Для справки по HTML-Тгам воспользуйтесь <a href="http://www.wisdomweb.ru/HTML5/" target="_blank">Учебником HTML</a>',
+                content: 'Отредактируйте шаблон, используя HTML-теги и переменные шаблонизатора <kbd>@imageSlider@</kbd>.<p></p> Для справки по HTML-Тегам воспользуйтесь <a href="http://www.wisdomweb.ru/HTML5/" target="_blank">Учебником HTML</a>',
                 placement: 'top'
             },
             {

@@ -92,8 +92,11 @@
 
                     // Выравнивание ячеек товара
                     setEqualHeight($(".products-list .description"));
-                    // Коррекция знака рубля
-                    setRubznak();
+               
+                    // lazyLoad
+                    setTimeout(function() {
+                        $(window).lazyLoadXT();
+                    }, 50);
 
                     count = next_page;
                     $('.pagination li').removeClass('active');

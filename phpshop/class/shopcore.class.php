@@ -3,7 +3,6 @@
 /**
  * Родительский класс ядра вывода товаров
  * @author PHPShop Software
- * @tutorial http://wiki.phpshop.ru/index.php/PHPShopShopCore
  * @version 1.5
  * @package PHPShopClass
  */
@@ -408,7 +407,7 @@ class PHPShopShopCore extends PHPShopCore {
         $navigat = $delim;
 
         // Кол-во страниц в навигации
-        $num = ceil($this->num_page / $this->num_row);
+        $num = @ceil($this->num_page / $this->num_row);
         $this->max_page = $num;
 
         // 404 ошибка при ошибочной пагинации
@@ -635,6 +634,7 @@ class PHPShopShopCore extends PHPShopCore {
             $this->price_min = $price;
 
         // Форматирование
+        $this->set('productSchemaPrice', $price);
         $price = number_format($price, $this->format, '.', ' ');
 
         // Если товар на складе

@@ -6,7 +6,6 @@ PHPShopObj::importCore('users');
 /**
  * Обработчик проверки заказа пользователем
  * @author PHPShop Software
- * @tutorial http://wiki.phpshop.ru/index.php/PHPShopUsers
  * @version 1.0
  * @package PHPShopCore
  */

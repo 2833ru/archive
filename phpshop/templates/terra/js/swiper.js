@@ -151,7 +151,7 @@
             preventClicksPropagation: true,
             slideToClickedSlide: false,
             // Lazy Loading
-            lazyLoading: false,
+            lazyLoading: true,
             lazyLoadingInPrevNext: false,
             lazyLoadingInPrevNextAmount: 1,
             lazyLoadingOnTransitionStart: false,

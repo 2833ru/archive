@@ -2,7 +2,7 @@
 /**
  * Ѕиблиотека аналитики яндекс и Goggle
  * @author PHPShop Software
- * @version 1.0
+ * @version 1.2
  * @package PHPShopClass
  */
 class PHPShopAnalitica {
@@ -41,7 +41,7 @@ class PHPShopAnalitica {
     public function CID_Product($row) {
 
         if ($this->analitics or $this->ecommerce) {
-            $this->code = "
+            $this->code .= "
         <script>
               $(window).load(function(){  
                   $('body').on('click', '.addToCartList', function(){
@@ -173,7 +173,7 @@ class PHPShopAnalitica {
     public function click(){
         
         if ($this->analitics or $this->ecommerce) {
-            $this->code = "
+            $this->code .= "
          <script>  
              $(window).load(function(){                     
                $('body').on('click', '.addToCartList,.addToCartFull', function(){ 
@@ -256,7 +256,7 @@ class PHPShopAnalitica {
     public function UID($row) {
 
         if ($this->analitics or $this->ecommerce) {
-            $this->code = "
+            $this->code .= "
          <script>  
              $(window).load(function(){";                     
                

@@ -446,7 +446,7 @@
                         </table>
                     </td>
                     <td style="min-height:7mm;height:auto; width: 25mm;">
-                        <div>{¡»K} </div>
+                        <div>{¡» } </div>
                     </td>
                     <td rowspan="2" style="vertical-align: top; width: 60mm;">
                         <div style=" height: 7mm; line-height: 7mm; vertical-align: middle;"><b>@org_bic@</b></div>

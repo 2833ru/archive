@@ -3,7 +3,7 @@
 /**
  * Библиотека работы с датами
  * @author PHPShop Software
- * @version 1.2
+ * @version 1.3
  * @package PHPShopClass
  * @subpackage Helper
  */
@@ -59,11 +59,44 @@ class PHPShopDate {
      * Преобразование даты из строкового вида в Unix
      * @param string $data дата в формате строки
      * @param string $delim разделитель даты [-] или [.]
-     * @return <type>
+     * @return string
      */
     static function GetUnixTime($data, $delim = '-') {
         $array = explode($delim, $data);
         return @mktime(1, 0, 0, $array[1], $array[0], $array[2]);
+    }
+
+    /**
+     * Проверка выходных дней
+     * @param type $time формат даты в Unix
+     * @return bool
+     */
+    static function isweekend_hook($time) {
+        $weekday = date('w', $time);
+        return ($weekday == 0 || $weekday == 6);
+    }
+
+    /**
+     * Расчет даты доставки с учетом выходных дней
+     * @param type $time формат даты в Unix
+     * @return string
+     */
+    static function setDeliveryDate_hook($time) {
+
+        if (PHPShopDate::isweekend_hook($time))
+            $result = strtotime("next Monday");
+        else {
+
+            if (date('H', $time) > 17)
+                $result = strtotime("+2 day");
+            else
+                $result = strtotime("+1 day");
+        }
+
+        if (PHPShopDate::isweekend_hook($result))
+            $result = strtotime("next Monday");
+
+        return date("d-m-y", $result);
     }
 
 }

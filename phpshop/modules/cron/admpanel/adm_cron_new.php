@@ -6,6 +6,15 @@ $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.cron.cron_job"));
 // Функция обновления
 function actionInsert() {
     global $PHPShopOrm;
+
+    // Мультибаза
+    if (is_array($_POST['servers'])) {
+        $_POST['servers_new'] = "";
+        foreach ($_POST['servers'] as $v)
+            if ($v != 'null' and !strstr($v, ','))
+                $_POST['servers_new'].="i" . $v . "i";
+    }
+
     $action = $PHPShopOrm->insert($_POST);
     header('Location: ?path=' . $_GET['path']);
     return $action;
@@ -24,13 +33,14 @@ function actionStart() {
     // Учет модуля SiteMap
     if (!empty($GLOBALS['SysValue']['base']['sitemap']['sitemap_system'])) {
         $work[] = array('Карта сайта', 'phpshop/modules/sitemap/cron/sitemap_generator.php');
-        $work[] = array('Карта сайта SSL', 'phpshop/modules/sitemap/cron/sitemap_generator.php');
+        $work[] = array('Карта сайта SSL', 'phpshop/modules/sitemap/cron/sitemap_generator.php?ssl');;
     }
 
     $Tab1 = $PHPShopGUI->setField("Название задачи:", $PHPShopGUI->setInput("text.requared", "name_new", 'Новая задача'));
-    $Tab1.=$PHPShopGUI->setField("Запускаемый Файл:", $PHPShopGUI->setInputArg(array('type' => "text.requared", 'name' => "path_new", 'size' => '60%', 'float' => 'left', 'placeholder' => 'phpshop/modules/cron/sample/testcron.php')) . $PHPShopGUI->setSelect('work', $work, 200, 'left', false, false, false, false, false, false, 'selectpicker', '$(\'input[name=path_new]\').val(this.value);'));
+    $Tab1.=$PHPShopGUI->setField("Запускаемый Файл:", $PHPShopGUI->setInputArg(array('type' => "text.requared", 'name' => "path_new", 'size' => '60%', 'float' => 'left', 'placeholder' => 'phpshop/modules/cron/sample/testcron.php')) . '&nbsp;' . $PHPShopGUI->setSelect('work', $work, 200, 'left', false, false, false, false, false, false, 'selectpicker', '$(\'input[name=path_new]\').val(this.value);'));
     $Tab1.=$PHPShopGUI->setField("Статус", $PHPShopGUI->setCheckbox("enabled_new", 1, "Включить", 1));
     $Tab1.=$PHPShopGUI->setField("Кол-во запусков в день", $PHPShopGUI->setSelect('execute_day_num_new', $PHPShopGUI->setSelectValue(false), 70));
+    $Tab1.=$PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', null, 'catalog/'));
 
 
 

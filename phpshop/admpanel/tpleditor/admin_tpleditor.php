@@ -252,7 +252,7 @@ function actionStart() {
     } else {
 
         // Левый сайдбар дерева шаблонов
-        $tree = '<table class="table table-hover" id="template-tree">';
+        $tree = '<table class="table tree table-hover" id="template-tree">';
 
         // Левый сайдбар дерева шаблонов
         $tree.= '<tr class="treegrid-all">

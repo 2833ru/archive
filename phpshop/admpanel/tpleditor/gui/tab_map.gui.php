@@ -13,7 +13,7 @@ function MapValueReturn($m) {
     else
         $search = null;
 
-    $result.='<div><span class=\'glyphicon glyphicon-share-alt\'></span> <a href=\'?path=tpleditor&name=bootstrap&file=/' . $MapValue[$m[1]]['path'] . $search . '\'><code>' . $MapValue[$m[1]]['path'] . '</code></a></div>" data-trigger="click"';
+    $result.='<div><span class=\'glyphicon glyphicon-share-alt\'></span> <a href=\'?path=tpleditor&name='.$_GET['name'].'&file=/' . $MapValue[$m[1]]['path'] . $search . '\'><code>' . $MapValue[$m[1]]['path'] . '</code></a></div>" data-trigger="click"';
 
 
     return $result;

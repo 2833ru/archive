@@ -63,7 +63,7 @@ if ($Pechka54Rest->option['password'] == $_REQUEST['key'])
             // Касса есть в списке
             if ($Pechka54Rest->option['kkm'] == $_REQUEST['kkm']) {
 
-                $data = $PHPShopOrm->select(array('*'), array('ofd_status' => "='0'"), array('order' => 'id'), array('limit' => 1));
+                $data = $PHPShopOrm->select(array('*'), array('statusi'=>'=101','ofd_status' => "='0'"), array('order' => 'id'), array('limit' => 1));
 
                 // Есть заказы
                 if (is_array($data)) {

@@ -667,7 +667,7 @@ function GetSortAll() {
         if (document.getElementById(arguments[i]))
             url = url + ReturnSortUrl(arguments[i]);
 
-   location.replace(url.substring(0,(url.length-1))+"#sort");
+    location.replace(url.substring(0, (url.length - 1)) + "#sort");
 
 }
 
@@ -686,10 +686,11 @@ function setTheme(obj) {
     var skin = obj.getAttribute('data-skin');
     var template = obj.getAttribute('data-template');
     document.getElementsByTagName('body')[0].style = 'opacity:0.1';
-    document.getElementById('template_theme').href = dir +'/phpshop/templates/'+template+'/' + skin + '.css';
+    document.getElementById('template_theme').href = dir + '/phpshop/templates/' + template + '/' + skin + '.css';
     setTimeout(function() {
-        document.getElementsByTagName('body')[0].style = 'opacity:1.0';}, 1000);
-    SetCookie(template+'_theme', skin, 1);
+        document.getElementsByTagName('body')[0].style = 'opacity:1.0';
+    }, 1000);
+    SetCookie(template + '_theme', skin, 1);
 }
 
 // Запись изменение темы
@@ -817,9 +818,9 @@ function pressbutt_load(subm, dir, copyrigh, protect, psubm) {
 
     // Убираем форму поиска
     /*
-    var path = location.pathname;
-    if (path == "/search/" && document.getElementById("search"))
-        document.getElementById("search").style.display = 'none';*/
+     var path = location.pathname;
+     if (path == "/search/" && document.getElementById("search"))
+     document.getElementById("search").style.display = 'none';*/
 
     // Убираем форму корзины
     var path = location.pathname;

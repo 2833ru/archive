@@ -1,11 +1,11 @@
 <?php
+
 /**
  * Выгрузка прайс-листов
  * @author PHPShop Software
  * @version 1.3
  * @package PHPShopForms
  */
-
 session_start();
 
 $_classPath = "../phpshop/";
@@ -63,7 +63,6 @@ class PHPShopPriceSave {
 ';
         }
     }
-
 
     // GZIP сжатие
     function gzcompressfile($source, $level = false) {

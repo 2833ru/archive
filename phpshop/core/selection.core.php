@@ -3,7 +3,6 @@
 /**
  * Обработчик подбора товаров по характеристикам
  * @author PHPShop Software
- * @tutorial http://wiki.phpshop.ru/index.php/PHPShopSelection
  * @version 1.2
  * @package PHPShopShopCore
  */

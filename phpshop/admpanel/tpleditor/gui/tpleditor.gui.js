@@ -7,7 +7,7 @@ $().ready(function() {
     });
 
     $("body").on('click', ".template-map .nav a", function(event) {
-        event.preventDefault();
+        //event.preventDefault();
     });
 
     $('[data-toggle="popover"]').popover(

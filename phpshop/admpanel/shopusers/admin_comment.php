@@ -40,7 +40,7 @@ function actionStart() {
 
 
             $PHPShopInterface->setRow(
-                    $row['id'], array('name'=>$icon,'link'=>'?path=product&id=' . $row['parent_id'].'&return='.$_GET['path']), array('name' => $row['name'], 'link' => '?path=shopusers.comment&id=' . $row['id'],'popover'=>$row['content'],'popover-title'=>'Комментарий'), $row['rate'], array('name' => $row['login'], 'link' => '?path=shopusers&id=' . $row['user_id'] . '&return=' . $_GET['path']), PHPShopDate::get($row['datas']), array('action' => array( 'edit', 'comment-url', '|','delete', 'id' => $row['id']), 'align' => 'center'), array('status' => array('enable' => $row['enabled'], 'align' => 'right', 'caption' => array('Выкл', 'Вкл'))));
+                    $row['id'], array('name'=>$icon,'link'=>'?path=product&id=' . $row['parent_id'].'&return='.$_GET['path']), array('name' => $row['name'], 'link' => '?path=shopusers.comment&id=' . $row['id']), $row['rate'], array('name' => $row['login'], 'link' => '?path=shopusers&id=' . $row['user_id'] . '&return=' . $_GET['path']), PHPShopDate::get($row['datas']), array('action' => array( 'edit', 'comment-url', '|','delete', 'id' => $row['id']), 'align' => 'center'), array('status' => array('enable' => $row['enabled'], 'align' => 'right', 'caption' => array('Выкл', 'Вкл'))));
         }
     $PHPShopInterface->Compile();
 }

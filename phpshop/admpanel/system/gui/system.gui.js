@@ -53,8 +53,15 @@ $().ready(function() {
     // Применение темы оформления
     $('#theme_new').on('changed.bs.select', function() {
         theme_new = true;
+        var theme = $(this).val();;
+        
+        $('#body').fadeOut('slow', function() {
+            $('#bootstrap_theme').attr('href', './css/bootstrap-theme-' +  theme + '.css');
+            $('#body').fadeIn('slow');
+        });
     });
-
+    
+    
     // Перезагрузка страницы при смене темы
     $("button[name=editID]").on('click', function(event) {
         event.preventDefault();

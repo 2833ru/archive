@@ -42,29 +42,29 @@
                 <h1>404 Not found</h1>
             </div>
             <p class="lead">—траница не найдена. ѕереход на главную страницу сайта произойдет через <span>10</span> секунд.</p></p>
-            <p>Ќажмите <a href="/" class="btn btn-info btn-xs"><span class="glyphicon glyphicon-refresh"></span>обновить</a> если страница не перегрузилась автоматически.</p>
+        <p>Ќажмите <a href="/" class="btn btn-info btn-xs"><span class="glyphicon glyphicon-refresh"></span>обновить</a> если страница не перегрузилась автоматически.</p>
+    </div>
+    <footer class="footer">
+        <div class="container">
+            <p class="text-muted">ѕерейти на <a href="/"><span class="glyphicon glyphicon-home"></span>главную</a> страницу или воспользоватьс€ <a href="/search/"><span class="glyphicon glyphicon-search"></span>поиском</a>.</p>
         </div>
-        <footer class="footer">
-            <div class="container">
-                <p class="text-muted">ѕерейти на <a href="/"><span class="glyphicon glyphicon-home"></span>главную</a> страницу или воспользоватьс€ <a href="/search/"><span class="glyphicon glyphicon-search"></span>поиском</a>.</p>
-            </div>
-        </footer>
-        <script>
-            var countdown = $('.lead span'),timer;
-            function startCountdown() {
-                var startFrom = $('.lead span').text();
-                timer = setInterval(function() {
-                    countdown.text(--startFrom);
-                    if (startFrom <= 0) {
-                        clearInterval(timer);
-                        window.location.replace('/');
-                    }
-                }, 1000);
-            }
-            $(document).ready(function() {
-                startCountdown();
-            });
-        </script>
-    </body>
-    </body>
+    </footer>
+    <script>
+        var countdown = $('.lead span'), timer;
+        function startCountdown() {
+            var startFrom = $('.lead span').text();
+            timer = setInterval(function() {
+                countdown.text(--startFrom);
+                if (startFrom <= 0) {
+                    clearInterval(timer);
+                    window.location.replace('/');
+                }
+            }, 1000);
+        }
+        $(document).ready(function() {
+            startCountdown();
+        });
+    </script>
+</body>
+</body>
 </html>

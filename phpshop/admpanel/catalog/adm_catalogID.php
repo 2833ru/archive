@@ -1,4 +1,5 @@
 <?php
+
 PHPShopObj::loadClass("valuta");
 PHPShopObj::loadClass("array");
 PHPShopObj::loadClass("page");
@@ -12,7 +13,7 @@ $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
 function treegenerator($array, $i, $curent, $dop_cat_array) {
     global $tree_array;
     $del = '¦&nbsp;&nbsp;&nbsp;&nbsp;';
-    $tree_select = $tree_select_dop =  $check = false;
+    $tree_select = $tree_select_dop = $check = false;
 
     $del = str_repeat($del, $i);
     if (is_array($array['sub'])) {
@@ -24,8 +25,8 @@ function treegenerator($array, $i, $curent, $dop_cat_array) {
                 $selected = 'selected';
             else
                 $selected = null;
-            
-             // Проверка зацикливания
+
+            // Проверка зацикливания
             if ($k == $_GET['id'])
                 $disabled = ' disabled ';
             else
@@ -40,16 +41,16 @@ function treegenerator($array, $i, $curent, $dop_cat_array) {
                 }
 
             if (empty($check['select'])) {
-                $tree_select.='<option value="' . $k . '" ' . $selected .$disabled. '>' . $del . $v . '</option>';
+                $tree_select.='<option value="' . $k . '" ' . $selected . $disabled . '>' . $del . $v . '</option>';
 
                 if ($k < 1000000)
-                    $tree_select_dop.='<option value="' . $k . '" ' . $selected_dop .$disabled. '>' . $del .$v . '</option>';
+                    $tree_select_dop.='<option value="' . $k . '" ' . $selected_dop . $disabled . '>' . $del . $v . '</option>';
 
                 $i = 1;
             } else {
-                $tree_select.='<option value="' . $k . '" ' . $selected . $disabled.' >' . $del . $v . '</option>';
+                $tree_select.='<option value="' . $k . '" ' . $selected . $disabled . ' >' . $del . $v . '</option>';
                 if ($k < 1000000)
-                    $tree_select_dop.='<option value="' . $k . '" ' . $selected_dop . $disabled.'>' .$del . $v . '</option>';
+                    $tree_select_dop.='<option value="' . $k . '" ' . $selected_dop . $disabled . '>' . $del . $v . '</option>';
             }
 
             $tree_select.=$check['select'];
@@ -177,9 +178,8 @@ function actionStart() {
     $num_row_area.=$PHPShopGUI->setRadio('num_row_new', 4, 4, $data['num_row'], false, false, false, false);
     $Tab_info.=$PHPShopGUI->setField("Товаров в длину", $num_row_area, 'left');
 
-    // вывод списком доступен только для корневых каталогов.
-    if ($data['parent_to'] == 0)
-        $vid = $PHPShopGUI->setCheckbox('vid_new', 1, 'Выводить подкаталоги списком в основном окне', $data['vid']);
+
+    $vid = $PHPShopGUI->setCheckbox('vid_new', 1, 'Не выводить внутренние подкаталоги в меню навигации', $data['vid']);
     $vid .= $PHPShopGUI->setCheckbox('skin_enabled_new', 1, 'Скрыть каталог', $data['skin_enabled']);
     $Tab_info.=$PHPShopGUI->setField("Опции вывода", $vid);
 
@@ -354,6 +354,14 @@ function actionUpdate() {
     $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['rowID']));
     $PHPShopOrm->clean();
 
+    // Проверка товаров родителя и перенос товаров в новый каталог
+    $PHPShopOrm->clean();
+    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
+    $check = $PHPShopOrm->select(array('id'), array("category" => "=" . $_POST['parent_to_new']), false, array('limit' => '1'));
+
+    if (is_array($check))
+        $PHPShopOrm->update(array("category" => $_POST['rowID']), array("category" => "=" . $_POST['parent_to_new']), false);
+
     return array('success' => $action);
 }
 
@@ -397,7 +405,7 @@ function actionDelete() {
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
     $action = $PHPShopOrm->delete(array('id' => '=' . intval($_POST['rowID'])));
 
-    // Переносим подкатегории с удалённого каталога во временную папку
+    // Переносим товары с удалённого каталога во временную папку
     $PHPShopOrm->clean();
 
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);

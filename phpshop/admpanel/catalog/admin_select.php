@@ -8,23 +8,26 @@ $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
 
 // Определение визульного вывода поля
 function getKeyView($val) {
-    global $key_placeholder;
+    global $key_placeholder, $key_format;
 
     if (strpos($val['Type'], "(")) {
         $a = explode("(", $val['Type']);
         $b = $a[0];
-    }
-    else
+    } else
         $b = $val['Type'];
+
     $key_view = array(
         'varchar' => array('type' => 'text', 'name' => $val['Field'] . '_new', 'placeholder' => $key_placeholder[$val['Field']]),
         'text' => array('type' => 'textarea', 'height' => 150, 'name' => $val['Field'] . '_new', 'placeholder' => $key_placeholder[$val['Field']]),
         'int' => array('type' => 'text', 'size' => 100, 'name' => $val['Field'] . '_new', 'placeholder' => $key_placeholder[$val['Field']]),
         'float' => array('type' => 'text', 'size' => 200, 'name' => $val['Field'] . '_new', 'placeholder' => $key_placeholder[$val['Field']]),
         'enum' => array('type' => 'checkbox', 'name' => $val['Field'] . '_new', 'value' => 1, 'caption' => 'Вкл.'),
+        'radio' => array('type' => 'checkbox', 'name' => $val['Field'] . '_new', 'value' => 1, 'caption' => 'Вкл.'),
     );
 
-    if (!empty($key_view[$b]))
+    if (!empty($key_format[$val['Field']])) {
+        return $key_view[$key_format[$val['Field']]];
+    } else if (!empty($key_view[$b]))
         return $key_view[$b];
     else
         return array('type' => 'text', 'name' => $val['Field'] . '_new');
@@ -95,6 +98,43 @@ $key_placeholder = array(
 // Стоп лист
 $key_stop = array('id', 'password', 'wishlist', 'datas', 'data_adres', 'sort', 'yml_bid_array', 'vendor', 'status', 'files', 'user', 'title_enabled', 'descrip_enabled', 'title_shablon', 'descrip_shablon', 'title_shablon', 'keywords_enabled', 'keywords_shablon');
 
+// Настраиваемые поля
+if (!empty($GLOBALS['SysValue']['base']['productoption']['productoption_system'])) {
+    $PHPShopOrmOptions = new PHPShopOrm($GLOBALS['SysValue']['base']['productoption']['productoption_system']);
+    $m_data = $PHPShopOrmOptions->select();
+    $vendor = unserialize($m_data['option']);
+
+    if (!empty($vendor['option_1_name'])) {
+        $key_name['option1'] = ucfirst($vendor['option_1_name']);
+        $key_format['option1'] = $vendor['option_1_format'];
+    } else
+        $key_stop[]='option1';
+
+    if (!empty($vendor['option_2_name'])) {
+        $key_name['option2'] = ucfirst($vendor['option_2_name']);
+        $key_format['option2'] = $vendor['option_2_format'];
+    } else
+         $key_stop[]='option2';
+
+    if (!empty($vendor['option_3_name'])) {
+        $key_name['option3'] = ucfirst($vendor['option_3_name']);
+        $key_format['option3'] = $vendor['option_3_format'];
+    } else
+         $key_stop[]='option3';
+
+    if (!empty($vendor['option_4_name'])) {
+        $key_name['option4'] = ucfirst($vendor['option_4_name']);
+        $key_format['option4'] = $vendor['option_4_format'];
+    } else
+         $key_stop[]='option4';
+
+    if (!empty($vendor['option_5_name'])) {
+        $key_name['option5'] = ucfirst($vendor['option_5_name']);
+        $key_format['option5'] = $vendor['option_5_format'];
+    } else
+        $key_stop[]='option5';
+}
+
 /**
  * Редактировать с выбранными Шаг 1 /
  */
@@ -116,7 +156,7 @@ function actionSelect() {
     $command[] = array('Прайс-лист', 1, false);
     $command[] = array('База Excel', 2, false);
 
-    $PHPShopGUI->_CODE.= '<p class="text-muted">Вы можете редактировать одновременно несколько записей. Выберите записи из списка выше, отметьте галочкой поля, которые нужно отредактировать, и нажмите на кнопку "Редактировать выбранные".</p><p class="text-muted"><a href="#" id="select-all">Выбрать все</a> | <a href="#" id="select-none">Снять выделение со всех</a></p>';
+    $PHPShopGUI->_CODE .= '<p class="text-muted">Вы можете редактировать одновременно несколько записей. Выберите записи из списка выше, отметьте галочкой поля, которые нужно отредактировать, и нажмите на кнопку "Редактировать выбранные".</p><p class="text-muted"><a href="#" id="select-all">Выбрать все</a> | <a href="#" id="select-none">Снять выделение со всех</a></p>';
 
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
     $data = $PHPShopOrm->select(array('*'), false, false, array('limit' => 1));
@@ -144,7 +184,7 @@ function actionSelect() {
                     }
                 }
 
-                $PHPShopGUI->_CODE.='<div class="pull-left" style="width:200px;>' . $PHPShopGUI->setCheckBox($key, 1, ucfirst($name), $select) . '</div>';
+                $PHPShopGUI->_CODE .= '<div class="pull-left" style="width:200px;>' . $PHPShopGUI->setCheckBox($key, 1, ucfirst($name), $select) . '</div>';
             }
         }
 
@@ -181,8 +221,7 @@ function actionSave() {
     if (is_array($_SESSION['select']['product'])) {
         $val = array_values($_SESSION['select']['product']);
         $where = array('id' => ' IN (' . implode(',', $val) . ')');
-    }
-    else
+    } else
         $where = null;
 
     $PHPShopOrm->debug = false;
@@ -197,8 +236,7 @@ function actionSave() {
                 $result = $PHPShopOrmSort->insert(array('name_new' => $valS, 'category_new' => $k));
                 if (!empty($result))
                     $_POST['vendor_array_new'][$k][] = $result;
-            }
-            else
+            } else
                 unset($_POST['vendor_array_add'][$k]);
         }
     }
@@ -222,13 +260,12 @@ function actionSave() {
                     foreach ($_POST['vendor_array_new'] as $k => $v) {
                         if (is_array($v)) {
                             foreach ($v as $key => $p) {
-                                $_POST['vendor_new'].="i" . $k . "-" . $p . "i";
+                                $_POST['vendor_new'] .= "i" . $k . "-" . $p . "i";
                                 if (empty($p))
                                     unset($_POST['vendor_array_new'][$k][$key]);
                             }
-                        }
-                        else
-                            $_POST['vendor_new'].="i" . $k . "-" . $v . "i";
+                        } else
+                            $_POST['vendor_new'] .= "i" . $k . "-" . $v . "i";
                     }
 
 
@@ -287,8 +324,7 @@ function actionSave() {
     if (is_array($where) and $PHPShopOrm->update($_POST, $where)) {
         header('Location: ?path=catalog&cat=' . intval($_GET['cat']));
         return true;
-    }
-    else
+    } else
         return true;
 }
 
@@ -309,19 +345,19 @@ function treegenerator($array, $i, $parent) {
                 $selected = null;
 
             if (empty($check['select'])) {
-                $tree_select.='<option value="' . $k . '" ' . $selected . '>' . $del . $v . '</option>';
+                $tree_select .= '<option value="' . $k . '" ' . $selected . '>' . $del . $v . '</option>';
                 $i = 1;
             } else {
-                $tree_select.='<option value="' . $k . '" ' . $selected . '>' . $del . $v . '</option>';
+                $tree_select .= '<option value="' . $k . '" ' . $selected . '>' . $del . $v . '</option>';
                 //$i++;
             }
 
-            $tree.='<tr class="treegrid-' . $k . ' treegrid-parent-' . $parent . ' data-tree">
+            $tree .= '<tr class="treegrid-' . $k . ' treegrid-parent-' . $parent . ' data-tree">
 		<td><a href="?path=catalog&id=' . $k . '">' . $v . '</a></td>
                     </tr>';
 
-            $tree_select.=$check['select'];
-            $tree.=$check['tree'];
+            $tree_select .= $check['select'];
+            $tree .= $check['tree'];
         }
     }
     return array('select' => $tree_select, 'tree' => $tree);
@@ -363,11 +399,11 @@ function viewCatalog() {
             else
                 $disabled = ' disabled';
 
-            $tree_select.='<option value="' . $k . '" ' . $selected . $disabled . '>' . $v . '</option>';
+            $tree_select .= '<option value="' . $k . '" ' . $selected . $disabled . '>' . $v . '</option>';
 
-            $tree_select.=$check['select'];
+            $tree_select .= $check['select'];
         }
-    $tree_select.='</select>';
+    $tree_select .= '</select>';
 
     return $tree_select;
 }
@@ -375,7 +411,6 @@ function viewCatalog() {
 /**
  * Редактировать с выбранными Шаг 2
  */
-
 function actionStart() {
     global $PHPShopGUI, $PHPShopOrm, $PHPShopModules, $key_name, $key_stop;
 
@@ -384,7 +419,7 @@ function actionStart() {
     $PHPShopGUI->field_col = 2;
     $select_error = null;
 
-    $PHPShopGUI->_CODE.= $PHPShopGUI->setHelp('Вы можете редактировать одновременно несколько записей. Выберите записи из списка товаров, отметьте галочкой товары, которые нужно отредактировать, и нажмите на кнопку "Редактировать выбранные".<hr>', false);
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setHelp('Вы можете редактировать одновременно несколько записей. Выберите записи из списка товаров, отметьте галочкой товары, которые нужно отредактировать, и нажмите на кнопку "Редактировать выбранные".<hr>', false);
 
     $PHPShopOrm->sql = 'show fields  from ' . $GLOBALS['SysValue']['base']['products'];
     $select = array_values($_SESSION['select_col']);
@@ -392,28 +427,28 @@ function actionStart() {
     if (is_array($data))
         foreach ($data as $val) {
 
-            if (in_array($val['Field'], $select) and !in_array($val['Field'], $key_stop)) {
+            if (in_array($val['Field'], $select) and ! in_array($val['Field'], $key_stop)) {
 
                 // Каталоги
                 if ($val['Field'] == 'category') {
-                    $PHPShopGUI->_CODE.=$PHPShopGUI->setField(__("Размещение:"), viewCatalog());
+                    $PHPShopGUI->_CODE .= $PHPShopGUI->setField(__("Размещение:"), viewCatalog());
                 }
                 // Характеристики
                 elseif ($val['Field'] == 'vendor_array') {
-                    if (!empty($_GET['cat'])) {
+                    if (!empty($_GET['cat']) and $_GET['cat'] != 'undefined') {
                         PHPShopObj::loadClass("sort");
-                        $PHPShopSort = new PHPShopSort($_GET['cat'], false, false, 'sorttemplate', false, false, true);
-                        $PHPShopGUI->_CODE.=$PHPShopSort->disp;
+                        $PHPShopSort = new PHPShopSort((int)$_GET['cat'], false, false, 'sorttemplate', false, false, false);
+                        $PHPShopGUI->_CODE .= $PHPShopSort->disp;
                     } else {
                         //$PHPShopGUI->_CODE.=$PHPShopGUI->setField(__('Характеристики'),'<p class="text-muted"></p>');
                         $select_error = 'Редактировать характеристики можно только у товаров из общей категории: <a href="?path=catalog"><span class="glyphicon glyphicon-share-alt"></span> Выбрать</a>';
                     }
                 } elseif (!empty($key_name[$val['Field']])) {
                     $name = $key_name[$val['Field']];
-                    $PHPShopGUI->_CODE.=$PHPShopGUI->setField(ucfirst($name), $PHPShopGUI->setInputArg(getKeyView($val)));
+                    $PHPShopGUI->_CODE .= $PHPShopGUI->setField(ucfirst($name), $PHPShopGUI->setInputArg(getKeyView($val)));
                 } else {
                     $name = $val['Field'];
-                    $PHPShopGUI->_CODE.=$PHPShopGUI->setField(ucfirst($name), $PHPShopGUI->setInputArg(getKeyView($val)));
+                    $PHPShopGUI->_CODE .= $PHPShopGUI->setField(ucfirst($name), $PHPShopGUI->setInputArg(getKeyView($val)));
                 }
             }
         }
@@ -423,8 +458,7 @@ function actionStart() {
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод кнопок сохранить и выход в футер
-    $ContentFooter =
-            $PHPShopGUI->setInput("submit", "editID", "Сохранить", "right", 70, "", "but", "actionUpdate.catalog.edit") .
+    $ContentFooter = $PHPShopGUI->setInput("submit", "editID", "Сохранить", "right", 70, "", "but", "actionUpdate.catalog.edit") .
             $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionSave.catalog.edit");
 
 
@@ -434,8 +468,7 @@ function actionStart() {
     if (is_array($_SESSION['select'][$select_action_path])) {
         foreach ($_SESSION['select'][$select_action_path] as $val)
             $select_message = '<span class="label label-default">' . count($_SESSION['select']['product']) . '</span> товаров выбрано<hr><a href="#" class="back"><span class="glyphicon glyphicon-ok"></span> Изменить интервал</a>';
-    }
-    else
+    } else
         $select_message = '<p class="text-muted">Вы можете выбрать конкретные объекты для экспорта. По умолчанию будут экспортированы все позиции.: <a href="?path=catalog"><span class="glyphicon glyphicon-share-alt"></span> Выбрать</a></p>';
 
     $sidebarleft[] = array('title' => 'Подсказка', 'content' => $select_message);
@@ -523,13 +556,13 @@ function actionOption() {
             $PHPShopInterface->setCheckbox('label', 1, __('Лейблы статусов'), $memory['catalog.option']['label']) .
             $PHPShopInterface->setCheckbox('sort', 1, __('Характеристики'), $memory['catalog.option']['sort']);
 
-    $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'hidden', 'name' => 'path', 'value' => 'catalog'));
-    $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'hidden', 'name' => 'cat', 'value' => $_REQUEST['cat']));
+    $searchforma .= $PHPShopInterface->setInputArg(array('type' => 'hidden', 'name' => 'path', 'value' => 'catalog'));
+    $searchforma .= $PHPShopInterface->setInputArg(array('type' => 'hidden', 'name' => 'cat', 'value' => $_REQUEST['cat']));
 
-    $searchforma.='<p class="clearfix"> </p>';
+    $searchforma .= '<p class="clearfix"> </p>';
 
 
-    $PHPShopInterface->_CODE.=$searchforma;
+    $PHPShopInterface->_CODE .= $searchforma;
 
     exit($PHPShopInterface->getContent() . '<p class="clearfix"> </p>');
 }
@@ -557,8 +590,8 @@ function actionOptionSave() {
 /*
  * Сброс кэша характеристик всех каталогов
  */
-function actionResetCache()
-{
+
+function actionResetCache() {
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
     $PHPShopOrm->update(array('sort_cache_new' => '', 'sort_cache_created_at_new' => 0));
 

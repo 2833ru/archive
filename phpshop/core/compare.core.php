@@ -1,22 +1,21 @@
 <?php
 
 /**
- * Полное имя товара для вывода сравнения
- * @package PHPShopCoreDepricated
- * @param int $id ИД товара
+ * Имя каталога
+ * @param int $id ИД категории
  * @return string 
  */
-function getfullname($id = 0) {
-    global $SysValue, $link_db;
+function getfullname($id) {
+    global $PHPShopShopCatalogElement;
+    
+    $parent = $PHPShopShopCatalogElement->CategoryArray[$id]['parent_to'];
 
-    $sql = 'select name,parent_to from ' . $SysValue['base']['table_name'] . ' where id=' . intval($id);
-    $result = mysqli_query($link_db, $sql);
-    @$row = mysqli_fetch_array(@$result);
-    if ($row['parent_to']) {
-        return getfullname($row['parent_to']) . ' / ' . $row['name'];
-    } else {
-        return $row['name'];
-    }
+    if(!empty($parent))
+        $name = $PHPShopShopCatalogElement->CategoryArray[$parent]['name']. ' / ' .$PHPShopShopCatalogElement->CategoryArray[$id]['name'];
+    else $name = $PHPShopShopCatalogElement->CategoryArray[$id]['name'];
+    
+    return $name;
+
 }
 
 /**
@@ -210,11 +209,11 @@ class PHPShopCompare extends PHPShopCore {
                 if (is_array($sorts))
                     $sorts = array_unique($sorts); //Оставляем только уникальные сортировки
 
-                $sorts_name = '';
+                $sorts_name = array();
 
                 if (is_array($sorts))
                     foreach ($sorts as $sort) {
-                        $sql = 'select name from ' . $SysValue['base']['sort_categories'] . ' where id=' . intval($sort) . " AND goodoption = '0'";
+                        $sql = 'select name from ' . $SysValue['base']['sort_categories'] . ' where id=' . intval($sort);
                         $result = mysqli_query($link_db, $sql);
                         @$row = mysqli_fetch_array(@$result);
                         $sorts_name[$sort] = $row['name'];
@@ -224,6 +223,7 @@ class PHPShopCompare extends PHPShopCore {
                  * Товары могут быть из разных категорий, в которых одинаковые характеристики могут иметь разное название
                  * Поэтому реверсируем массив. Получаем массив Имя_характеристики = массив идентификаторов
                  */
+
                 if (is_array($sorts_name))
                     foreach ($sorts_name as $sort => $name) {
                         $sql = 'select id from ' . $SysValue['base']['sort_categories'] . ' where name LIKE \'' . $name . '\'';
@@ -283,6 +283,9 @@ class PHPShopCompare extends PHPShopCore {
                     
                     $tdR[$igood][] = $price;
                     $chars = unserialize($row['vendor_array']);
+                    foreach ($chars as $k => $char) {
+                        $chars[$k] = array_unique($char);
+                    }
 
                     if (is_array($sorts_name2))
                         foreach ($sorts_name2 as $name => $ids) {
@@ -314,7 +317,8 @@ class PHPShopCompare extends PHPShopCore {
                         if (!$value) {
                             $value = '&nbsp;';
                         }
-                        $disp.='<td class=sort_table style="vertical-align:top;">' . $value . '</td>';
+              
+                        $disp.='<td>' . $value . '</td>';
                     }
                     $disp.='</tr>';
                 }

@@ -48,7 +48,14 @@ function actionUpdate() {
 }
 
 function actionStart() {
-    global $PHPShopGUI, $PHPShopOrm;
+    global $PHPShopGUI, $PHPShopOrm, $PHPShopSystem;
+
+    $PHPShopGUI->addJSFiles('../modules/cdekwidget/admpanel/gui/script.gui.js');
+    // Подсказки
+    if ($PHPShopSystem->ifSerilizeParam('admoption.dadata_enabled')) {
+        $PHPShopGUI->addJSFiles('./js/jquery.suggestions.min.js', './order/gui/dadata.gui.js');
+        $PHPShopGUI->addCSSFiles('./css/suggestions.min.css');
+    }
 
     // Выборка
     $data = $PHPShopOrm->select();
@@ -103,13 +110,13 @@ function actionStart() {
     $Tab1.= $PHPShopGUI->setField('Статус для отправки', $PHPShopGUI->setSelect('status_new', $status, 300));
     $Tab1.= $PHPShopGUI->setField('Доставка', $PHPShopGUI->setSelect('delivery_id_new[]', $delivery_value, 300, null, false, $search = false, false, $size = 1, $multiple = true));
     $Tab1.= $PHPShopGUI->setField('Город отправки отправлений', $PHPShopGUI->setInputText(false, 'city_from_new', $data['city_from'], 300));
-    $Tab1.= $PHPShopGUI->setField('Почтовый индекс города отправителя', $PHPShopGUI->setInputText(false, 'index_from_new', $data['index_from'], 300));
+    $Tab1.= $PHPShopGUI->setField('Почтовый индекс города отправителя', '<input class="form-control input-sm " onkeypress="cdekvalidate(event)" type="text" value="' . $data['index_from'] . '" name="index_from_new" style="width:300px; ">');
     $Tab1.= $PHPShopGUI->setField('Город на карте по умолчанию', $PHPShopGUI->setInputText(false, 'default_city_new', $data['default_city'], 300));
     $Tab1.= $PHPShopGUI->setCollapse('Вес и габариты по умолчанию',
-        $PHPShopGUI->setField('Вес, гр.', $PHPShopGUI->setInputText('', 'weight_new', $data['weight'],300)) .
-        $PHPShopGUI->setField('Ширина, см.', $PHPShopGUI->setInputText('', 'width_new', $data['width'],300)) .
-        $PHPShopGUI->setField('Высота, см.', $PHPShopGUI->setInputText('', 'height_new', $data['height'],300)) .
-        $PHPShopGUI->setField('Длина, см.', $PHPShopGUI->setInputText('', 'length_new', $data['length'],300))
+        $PHPShopGUI->setField('Вес, гр.', '<input class="form-control input-sm " onkeypress="cdekvalidate(event)" type="number" step="1" min="1" value="' . $data['weight'] . '" name="weight_new" style="width:300px; ">') .
+        $PHPShopGUI->setField('Ширина, см.', '<input class="form-control input-sm " onkeypress="cdekvalidate(event)" type="number" step="1" min="1" value="' . $data['width'] . '" name="width_new" style="width:300px;">') .
+        $PHPShopGUI->setField('Высота, см.', '<input class="form-control input-sm " onkeypress="cdekvalidate(event)" type="number" step="0.1" min="1" value="' . $data['height'] . '" name="height_new" style="width:300px;">') .
+        $PHPShopGUI->setField('Длина, см.', '<input class="form-control input-sm " onkeypress="cdekvalidate(event)" type="number" step="0.1" min="1" value="' . $data['length'] . '" name="length_new" style="width:300px;">')
     );
 
     $info = '<h4>Получение аккаунта интеграции</h4>

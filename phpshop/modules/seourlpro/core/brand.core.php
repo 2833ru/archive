@@ -79,12 +79,19 @@ class PHPShopBrand extends PHPShopShopCore {
         $PHPShopOrm->mysql_error = false;
 
         $vendor = $PHPShopOrm->select(array("*"), array('sort_seo_name' => "='" . PHPShopSecurity::TotalClean($seo_name[0]) . "'"));
-        
+
         // Нет данных, 404 ошибка
         if(!is_array($vendor))
             return $this->setError404();
-        
-        $v = array($vendor["category"] => $vendor["id"]);
+
+        if(isset($vendor['id']))
+           $vendorArray= array($vendor);
+         else
+            $vendorArray = $vendor;
+
+        $v = array();
+        foreach ($vendorArray as $value)
+            $v[$value['category']] = $value['id'];
 
         // Фильтр сортировки
         $order = $this->query_filter($this, $v);
@@ -115,6 +122,7 @@ class PHPShopBrand extends PHPShopShopCore {
         $PHPShopOrm->mysql_error = false;
         $result = $PHPShopOrm->query('SELECT a.*, b.content FROM ' . $this->getValue("base.sort") . ' AS a JOIN ' . $this->getValue("base.page") . ' AS b ON a.page = b.link where a.id = ' . intval($vendor["id"]) . ' limit 1');
         $row = mysqli_fetch_array($result);
+
         if (is_array($row)) {
 
             // Описание

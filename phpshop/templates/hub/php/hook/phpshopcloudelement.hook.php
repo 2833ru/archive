@@ -8,10 +8,10 @@ function template_index_cloud_hook($obj, $disp, $rout) {
         
         // Меню каталога для мобильных устройств
         $menucatalog = null;
-        if (is_array($GLOBALS['Cache'][$GLOBALS['SysValue']['base']['categories']]))
-            foreach ($GLOBALS['Cache'][$GLOBALS['SysValue']['base']['categories']] as $val) {
-                if (empty($val['parent_to']) and empty($val['skin_enabled']))
-                    $menucatalog.='<li><a href="/shop/CID_' . $val['id'] . '.html">' . $val['name'] . '</a></li>';
+        
+        if (is_array($PHPShopShopCatalogElement->tree_array[0]['sub']))
+            foreach ($PHPShopShopCatalogElement->tree_array[0]['sub'] as $k => $v) {
+                    $menucatalog.='<li><a href="/shop/CID_' . $k . '.html">' . $v . '</a></li>';
             }
         $GLOBALS['SysValue']['other']['menuCatal'] = $menucatalog;
 

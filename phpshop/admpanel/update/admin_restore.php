@@ -52,7 +52,7 @@ function getFileInfo($file) {
     }
 
 
-    $PHPShopInterface->setRow(array('name' => $version, 'align' => 'left'), PHPShopDate::get($stat['mtime'], true), array('name' => number_format($stat['size'], 0, ',', ' ') . ' ' . __('байт')), array('action' => $menu, 'align' => 'right'), array('name' => number_format($stat_bd['size'], 0, ',', ' ') . ' ' . __('байт'), 'align' => 'right'));
+    $PHPShopInterface->setRow(array('name' => $version, 'align' => 'left'), PHPShopDate::get($stat['mtime'], true), array('name' => number_format($stat['size'], 0, ',', ' ') . ' ' . __('байт')), array('action' => $menu, 'align' => 'right'));
 }
 
 // Стартовый вид
@@ -84,7 +84,7 @@ function actionStart() {
         $PHPShopInterface->checkbox_action = false;
 
 
-        $PHPShopInterface->setCaption(array("Имя файла", "35%"), array("Дата", "15%"), array("Размер файлов", "15%"), array("", "7%", array('align' => 'right')), array("Размер БД", "15%", array('align' => 'right')));
+        $PHPShopInterface->setCaption(array("Имя файла", "35%"), array("Дата", "15%"), array("Размер файлов", "15%"), array("", "7%", array('align' => 'right')));
         PHPShopFile::searchFile("../../backup/backups/", 'getFileInfo');
 
 

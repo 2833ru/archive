@@ -1,8 +1,3 @@
------------------------
--- PHPShop CMS Free
--- Module Install SQL
------------------------
-
 
 DROP TABLE IF EXISTS `phpshop_modules_cron_log`;
 CREATE TABLE `phpshop_modules_cron_log` (
@@ -26,6 +21,7 @@ CREATE TABLE `phpshop_modules_cron_job` (
   `execute_day_num` int(1) NOT NULL default '0',
   `enabled` enum('0','1') NOT NULL default '0',
   `num` tinyint(11) NOT NULL default '0',
+  `servers` varchar(255) default '',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251 ;
 
@@ -33,7 +29,7 @@ CREATE TABLE `phpshop_modules_cron_job` (
 DROP TABLE IF EXISTS `phpshop_modules_cron_system`;
 CREATE TABLE `phpshop_modules_cron_system` (
   `id` int(11) NOT NULL auto_increment,
-  `serial` varchar(64) NOT NULL default '',
+  `version` varchar(64) default '1.5'
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 

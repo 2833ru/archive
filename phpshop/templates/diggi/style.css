@@ -1966,7 +1966,7 @@ img.template:hover{
     font-weight: 400;
     line-height: 1.42857143;
     color: #333;
-    white-space: nowrap;
+    
     text-align: left;
     background-color: transparent;
     text-decoration: none;
@@ -2371,6 +2371,7 @@ img.template:hover{
 .main-navbar-top li {
     z-index: 1 !important;
 }
+li.main-navbar-top-catalog  {z-index: 99 !important;}
 .template-sm.form-center {
     max-width: 465px;
     margin: 0 auto;
@@ -3434,4 +3435,17 @@ thead td#allspecwhite {
 	height: 16px;
 	background-size: 16px 16px;
 	background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMSIgaGVpZ2h0PSIzMSIgdmlld0JveD0iMCAwIDMxIDMxIj4gIDxwb2x5Z29uIGZpbGw9IiNGQUI2MDAiIGZpbGwtcnVsZT0iZXZlbm9kZCIgcG9pbnRzPSIxNS41IDAgMTkgMTIgMzEgMTIgMjEuNSAxOS4wNzcgMjYgMzEgMTUuNSAyNCA1IDMxIDkuNSAxOS4wNzcgMCAxMiAxMiAxMiIvPjwvc3ZnPg==");
+}
+
+#visualcart img, .img_fix img{
+    max-width: 100%;
+    max-height: 100px;
+}
+
+.product-block-wrapper-fix{
+    min-width: 280px;
+}
+
+.product-col img {
+    max-height: 200px;
 }

@@ -4,7 +4,7 @@
     <name>Калькулятор доставки</name>
     <faqlink>http://faq.phpshop.ru/page/deliverycalc.html</faqlink>
     <description>Виджет калькулятор доставки Alliance-catalog.ru</description>
-    <category>sale,form,delivery</category>
+    <category>form,delivery</category>
     <adminmenu>
         <title>Калькулятор доставки</title>
         <capability>true</capability>

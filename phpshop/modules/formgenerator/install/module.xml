@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.8</version>
+    <version>1.9</version>
     <name>Form Generator</name>
     <faqlink>http://faq.phpshop.ru/page/form-generator.html</faqlink>
     <description>Модуль создания форм.</description>
-    <category>form</category>
+    <category>form,develop</category>
     <adminmenu>
         <title>Генератор форм</title>
         <capability>true</capability>

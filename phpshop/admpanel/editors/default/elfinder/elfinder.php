@@ -149,7 +149,7 @@ $locale = str_replace(array('russian','ukrainian','belarusian','english'),array(
                             'rm', '|', 'edit', 'resize', '|', 'archive', 'extract', '|', 'info'
                         ]
                     },
-                    onlyMimes: ["image/png", "application/x-shockwave-flash", "application/zip", "text/x-comma-separated-values", "image/jpeg", "image/gif", "application/rar", 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/x-sql', 'application/x-gzip', 'text/x-tpl', 'application/pdf', 'application/x-rar','video/mp4','application/mp4','image/svg+xml','application/pdf']
+                    onlyMimes: ["image/webp","image/x-webp","image/png", "application/x-shockwave-flash", "application/zip", "text/x-comma-separated-values", "image/jpeg", "image/gif", "application/rar", 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/x-sql', 'application/x-gzip', 'text/x-tpl', 'application/pdf', 'application/x-rar','video/mp4','application/mp4','image/svg+xml','application/pdf']
                 }).elfinder('instance');
 
 

@@ -131,13 +131,12 @@ function actionStart() {
 
     // Витрина
     $Tab2.=$PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'));
-
-    // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Дополнительно", $Tab2, true));
-
+    
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
+    // Вывод формы закладки
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Дополнительно", $Tab2, true));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =

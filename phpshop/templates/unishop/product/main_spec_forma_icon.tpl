@@ -6,7 +6,7 @@
                     @newtipIcon@
                     @specIcon@
                 </div>
-                <a class="product-block-img-link" href="/shop/UID_@productUid@.html" title="@productName@"><img src="@productImg@" alt="@productName@"></a>
+                <a class="product-block-img-link" href="/shop/UID_@productUid@.html" title="@productName@"><img data-src="@productImg@" alt="@productName@" class="owl-lazy"></a>
             </div>
         </div>
         <div class="product-block-bottom">

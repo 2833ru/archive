@@ -9,12 +9,12 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_robokassa_system` (
   `merchant_login` varchar(64) NOT NULL default '',
   `merchant_key` varchar(64) NOT NULL default '',
   `merchant_skey` varchar(64) NOT NULL default '',
-  `version` FLOAT(2) DEFAULT '1.0' NOT NULL,
+  `version` varchar(64) DEFAULT '1.2',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 
-INSERT INTO `phpshop_modules_robokassa_system` VALUES (1,0,'Оплатить заказ','Заказ находится на ручной проверке.','','','','1.0');
+INSERT INTO `phpshop_modules_robokassa_system` VALUES (1,0,'Оплатить заказ','Заказ находится на ручной проверке.','','','','1.2');
 
 INSERT INTO `phpshop_payment_systems` (`id`, `name`, `path`, `enabled`, `num`, `message`, `message_header`, `yur_data_flag`, `icon`) VALUES
 (10020, 'Visa, Mastercard, Yandex, Webmoney (Robokassa)', 'modules', '0', 0, '<p>Ваш заказ оплачен!</p>', 'Спасибо', '', '/UserFiles/Image/Payments/visa.png');

@@ -76,9 +76,9 @@ function changeOfReviewsRatingView() {
 }
 /** �?зменение вида рейтинга отзыва конец **/
 $(document).ready(function() {
-    $(window).on('scroll', function() {
+	$(window).on('scroll', function() {
 
-        if ($(window).scrollTop() >= $('.header-top').offset().top) {
+        if ($(window).scrollTop() >= $('.header-top').offset().top  + 500) {
             $('#main-menu').addClass('navbar-fixed-top');
             // toTop          
             $('#toTop').fadeIn();
@@ -88,6 +88,27 @@ $(document).ready(function() {
        
         }
     });
+	var previousScroll = 0,
+    navBarOrgOffset = $('.navbar-collapse').offset().top;
+
+	$(window).scroll(function() {
+		var currentScroll = $(this).scrollTop() ;
+		if (currentScroll > navBarOrgOffset) {
+			if (currentScroll > previousScroll) {
+				$('#main-menu').hide();
+			} else {
+				$('#main-menu').show();
+				$('#main-menu').addClass('navbar-fixed-top');
+			}
+		} else {   
+			if (currentScroll <  navBarOrgOffset) {
+				$('#main-menu').removeClass('navbar-fixed-top');
+			}
+		}
+		previousScroll = currentScroll;
+	});
+   
+   
     changeOfProductRatingView();
     setInterval(changeOfReviewsRatingView, 100)
     $(document).on('click', function() {

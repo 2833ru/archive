@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Обработчик отписки от рассылки
  * @author PHPShop Software

@@ -11,7 +11,7 @@ function actionUpdate() {
     $PHPShopModules->updateOption($_GET['id'], $_POST['servers']);
 
     $action = true;
-    header('Location: ?path=modules&install=check');
+    header('Location: ?path=modules&id='.$_GET['id']);
     return $action;
 }
 
@@ -24,11 +24,8 @@ function checkSelect($val) {
 }
 
 function actionStart() {
-    global $PHPShopGUI,$select_name;
+    global $PHPShopGUI;
     
-    $PHPShopGUI->setActionPanel(__("Настройка модуля") . ' <span id="module-name">' . ucfirst($_GET['id']).'</span>', $select_name, false);
-
-
     $info = '<p>Модуль выводит товар дня на страницы сайта. При редактирование товара возможно установить галочку в закладке <kbd>Товар дня</kbd></p>
     <p>Для вывода блока на страницу используйте метку <mark>@productDay@</mark></p>';
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Файл выгрузки для Google Merchant
  * @author PHPShop Software
@@ -8,13 +9,10 @@
  * @example ?getall [bool] Выгрузка всех товаров без учета флага YML
  * @example ?from [bool] Метка в ссылки товара from
  */
-
-
-
 $_classPath = "../phpshop/";
 include($_classPath . "class/obj.class.php");
 PHPShopObj::loadClass("base");
-$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini",true,true);
+$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, true);
 PHPShopObj::loadClass("array");
 PHPShopObj::loadClass("orm");
 PHPShopObj::loadClass("product");
@@ -77,7 +75,7 @@ class PHPShopRSS {
     /**
      * Конструктор
      */
-    function __construct(){
+    function __construct() {
         global $PHPShopModules;
 
         $this->PHPShopSystem = new PHPShopSystem();
@@ -100,7 +98,7 @@ class PHPShopRSS {
 
         // SSL 
         if (isset($_GET['ssl']))
-            $this->ssl='https://';
+            $this->ssl = 'https://';
 
         $this->setHook(__CLASS__, __FUNCTION__);
     }
@@ -153,7 +151,6 @@ class PHPShopRSS {
         else
             return true;
     }
-
 
     /**
      * Данные по товарам. Оптимизировано.
@@ -250,7 +247,7 @@ class PHPShopRSS {
 <rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">
 <channel>
 <title>' . $this->PHPShopSystem->getName() . '</title>
-<link>'.$this->ssl . $_SERVER['SERVER_NAME'] . '</link>
+<link>' . $this->ssl . $_SERVER['SERVER_NAME'] . '</link>
 <description>' . $this->PHPShopSystem->getValue('company') . '</description>
 <platform>PHPShop</platform>
 <version>' . $GLOBALS['SysValue']['upload']['version'] . '</version>';
@@ -300,17 +297,17 @@ class PHPShopRSS {
                     $url = '/id/' . $val['prod_seo_name'] . '-' . $val['id'];
             }
 
-            $xml= '
+            $xml = '
       <item> 
-      <title><![CDATA[' . $this->cleanStr($val['name'])  . ']]></title> 
-      <link>' .$this->ssl . $_SERVER['SERVER_NAME'] . $GLOBALS['SysValue']['dir']['dir'] . $url . '.html' . $from . '</link> 
+      <title><![CDATA[' . $this->cleanStr($val['name']) . ']]></title> 
+      <link>' . $this->ssl . $_SERVER['SERVER_NAME'] . $GLOBALS['SysValue']['dir']['dir'] . $url . '.html' . $from . '</link> 
       <description>' . $this->cleanStr($val['description']) . '</description>
-      <g:image_link>'.$this->ssl  . $_SERVER['SERVER_NAME'] . $val['picture'] . '</g:image_link> 
+      <g:image_link>' . $this->ssl . $_SERVER['SERVER_NAME'] . $val['picture'] . '</g:image_link> 
       <g:price>' . $val['price'] . '</g:price> 
       <g:availability>' . $val['p_enabled'] . '</g:availability>
       <g:condition>new</g:condition> 
       <g:id>' . $val['id'] . '</g:id>
-      </item>';          
+      </item>';
 
 
             // Перехват модуля, занесение в память наличия модуля для оптимизации
@@ -326,7 +323,6 @@ class PHPShopRSS {
             else
                 $this->xml.= $xml;
         }
-        
     }
 
     /**

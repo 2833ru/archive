@@ -6,7 +6,6 @@
  * @author PHPShop Software
  * @version 2.3
  */
-
 // UTF-8 Env Fix
 if (ini_get("mbstring.func_overload") > 0) {
     ini_set("mbstring.internal_encoding", null);
@@ -15,24 +14,25 @@ if (ini_get("mbstring.func_overload") > 0) {
 $_classPath = "../phpshop/";
 include($_classPath . "class/obj.class.php");
 include($_classPath . "lib/phpass/passwordhash.php");
-PHPShopObj::loadClass(array("base","system","math","array","valuta","security"));
+PHPShopObj::loadClass(array("base", "system", "math", "array", "valuta", "security"));
 
 // Подключение к БД
-$PHPShopBase = new PHPShopBase($_classPath . "/inc/config.ini",true,true);
+$PHPShopBase = new PHPShopBase($_classPath . "/inc/config.ini", true, true);
 
 // Подключение хука
 function loadHooks() {
-    
+
     // ShopBuilder Lite
-    if(empty($GLOBALS['option']['shopbuilder']))
+    if (empty($GLOBALS['option']['shopbuilder']))
         $path = "hook";
-    else  $path = "../phpshop/templates/1cManager/hook";
-    
+    else
+        $path = "../phpshop/templates/1cManager/hook";
+
     if (@$dh = opendir('hook')) {
         while (($file = readdir($dh)) !== false) {
             $fstat = explode(".", $file);
             if ($fstat[1] == "php" and !strstr($fstat[0], '#'))
-                include_once($path.'/' . $file);
+                include_once($path . '/' . $file);
         }
         closedir($dh);
     }
@@ -62,7 +62,7 @@ class UserChek {
         $hasher = new PasswordHash(8, false);
 
         $sql = "select * from " . $table_name . " where enabled='1'";
-        @$result = mysqli_query($link_db,$sql);
+        @$result = mysqli_query($link_db, $sql);
         while (@$row = mysqli_fetch_array(@$result)) {
             if ($this->logPHPSHOP == $row['login']) {
                 if ($hasher->CheckPassword($this->pasPHPSHOP, $row['password'])) {
@@ -97,5 +97,5 @@ class UserChek {
 }
 
 // Проверка авторизации
-$UserChek = new UserChek($_GET['log'], $_GET['pas'], $PHPShopBase->getParam("base.table_name19"));
+$UserChek = new UserChek($_REQUEST['log'], $_REQUEST['pas'], $PHPShopBase->getParam("base.table_name19"));
 ?>

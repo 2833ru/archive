@@ -7,11 +7,11 @@ CREATE TABLE `phpshop_modules_cloudkassir_system` (
   `inn` varchar(64) default '',
   `apisecret` varchar(64) default '',
   `taxationSystem` int(11) NOT NULL,
-  `version` varchar(64) default '1.0',
+  `version` varchar(64) default '1.1',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251 ;
 
-INSERT INTO `phpshop_modules_cloudkassir_system` VALUES (1,'','','', 0, '1.0');
+INSERT INTO `phpshop_modules_cloudkassir_system` VALUES (1,'','','', 0, '1.1');
 CREATE TABLE IF NOT EXISTS `phpshop_modules_cloudkassir_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `date` int(11) NOT NULL,

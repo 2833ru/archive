@@ -3,7 +3,6 @@
 /**
  * Обработчик формы сообщения с сайта
  * @author PHPShop Software
- * @tutorial http://wiki.phpshop.ru/index.php/PHPShopForma
  * @version 1.0
  * @package PHPShopCore
  */
@@ -27,7 +26,7 @@ class PHPShopForma extends PHPShopCore {
 
         // Мета
         $title = __('Форма связи');
-        $this->title = $title . $this->PHPShopSystem->getValue("name");
+        $this->title = $title . ' - '.$this->PHPShopSystem->getValue("name");
 
         // Определяем переменные
         $this->set('pageTitle', $title);

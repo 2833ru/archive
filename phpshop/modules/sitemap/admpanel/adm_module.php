@@ -234,13 +234,13 @@ function actionStart() {
 // Выборка
     $data = $PHPShopOrm->select();
 
-    $Info = "
+    $Info = '
         <ol>
         <li>Для автоматического создания sitemap.xml установите модуль <kbd>Cron</kbd> и добавьте в него новую задачу с адресом
-        исполняемого файла:<br>  <code>phpshop/modules/sitemap/cron/sitemap_generator.php</code> или <code>phpshop/modules/sitemap/cron/sitemap_generator_ssl.php</code> для поддердки HTTPS.
-        <li>В поисковиках укажите адрес <code>http://" . $_SERVER['SERVER_NAME'] . "/UserFiles/Files/sitemap.xml</code> для автоматической обработки поисковыми ботами.
+        исполняемого файла:<br>  <code>phpshop/modules/sitemap/cron/sitemap_generator.php</code> или <code>phpshop/modules/sitemap/cron/sitemap_generator.php?ssl</code> для поддержки HTTPS.
+        <li>В поисковиках (Яндекс.Вебмастер и т.д.) укажите адрес <code>http://' . $_SERVER['SERVER_NAME'] . '/UserFiles/Files/sitemap.xml</code> для автоматической обработки поисковыми ботами.         <li>Для генерации карты сайта у дополнительных витрин следует добавить отдельную задачу через модуль <kbd>Cron</kbd> и в настройках задачи модуля указать требуемую витрину. Адрес карты сайта витрины примет вид <code>http://адрес_витрины/UserFiles/Files/sitemap_ХХ.xml</code>, где ХХ - ID витрины. ID витрины можно увидеть в интерфейсе настройки витрины (1 - 10).
         <li>Установите опцию CHMOD 775 на папку /UserFiles/Files/ для записи в нее файла sitemap.xml
-        </ol>";
+        </ol>';
     $Tab1 = $PHPShopGUI->setInfo($Info);
 
     $Tab2 = $PHPShopGUI->setPay(false,true);

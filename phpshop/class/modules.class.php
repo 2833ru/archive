@@ -5,7 +5,6 @@
  * @author PHPShop Software
  * @version 1.15
  * @package PHPShopClass
- * @tutorial http://doc.phpshop.ru/PHPShopClass/PHPShopModules.html
  */
 class PHPShopModules {
 
@@ -107,6 +106,13 @@ class PHPShopModules {
             }
             else
                 unset($GLOBALS['SysValue']['html']);
+            
+            // Дополнительные настройки
+            if (is_array($SysValue['sys'])) {
+                foreach ($SysValue['sys'] as $k => $v)
+                    if (!strstr($k, '#'))
+                        $GLOBALS['SysValue']['sys'][$k] = $v;
+            }
         }
     }
 

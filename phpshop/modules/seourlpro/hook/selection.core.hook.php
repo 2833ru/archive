@@ -35,16 +35,13 @@ function v_hook($obj, $data, $rout){
                             } else {
                                 $seoUrl = $GLOBALS['PHPShopSeoPro']->setLatin($vendor['name']);
                                 $PHPShopOrm->update(array("sort_seo_name_new" => "$seoUrl"), array('id' => '=' . $vendor['id']));
-
-                                header('Location: ' . $obj->getValue('dir.dir') . "/brand/". $seoUrl . '.html', true, 301);
-
-                                return true;
                             }
                         }
-
                     }
                 }
+                header('Location: ' . $obj->getValue('dir.dir') . "/brand/". $seoUrl . '.html', true, 301);
 
+                return true;
             }
         }
     }

@@ -33,7 +33,7 @@ function userorderpaymentlink_mod_yandexkassa_hook($obj, $PHPShopOrderFunction) 
 
             // НДС
             if ($PHPShopSystem->getParam('nds_enabled') == '') {
-                $tax = $tax_delivery = 2;
+                $tax = $tax_delivery = 1;
             } else {
 
                 switch ($PHPShopSystem->getParam('nds')) {
@@ -44,6 +44,9 @@ function userorderpaymentlink_mod_yandexkassa_hook($obj, $PHPShopOrderFunction) 
                         $tax = 3;
                         break;
                     case 18:
+                        $tax = 4;
+                        break;
+                    case 20:
                         $tax = 4;
                         break;
                     default: $tax = 2;
@@ -64,7 +67,14 @@ function userorderpaymentlink_mod_yandexkassa_hook($obj, $PHPShopOrderFunction) 
                     else
                         $price = $product['price'];
 
-                    $ym_merchant_receipt['items'][] = array('text' => $product['name'], 'quantity' => floatval(number_format($product['num'], 3, '.', '')), 'price' => array('amount' => floatval(number_format($price, 2, '.', ''))), 'tax' => $tax);
+                    $ym_merchant_receipt['items'][] = array(
+                        'text' => $product['name'],
+                        'quantity' => floatval(number_format($product['num'], 3, '.', '')),
+                        'price' => array('amount' => floatval(number_format($price, 2, '.', ''))),
+                        'tax' => $tax,
+                        'paymentMethodType' => 'full_prepayment',
+                        'paymentSubjectType' => 'commodity'
+                    );
                 }
             }
 
@@ -84,10 +94,20 @@ function userorderpaymentlink_mod_yandexkassa_hook($obj, $PHPShopOrderFunction) 
                     case 18:
                         $tax_delivery = 4;
                         break;
+                    case 20:
+                        $tax_delivery = 4;
+                        break;
                     default: $tax_delivery = $tax;
                 }
 
-                $ym_merchant_receipt['items'][] = array('text' => 'Доставка', 'quantity' => floatval(number_format(1, 3, '.', '')), 'price' => array('amount' => floatval(number_format($order['Cart']['dostavka'], 2, '.', ''))), 'tax' => $tax_delivery);
+                $ym_merchant_receipt['items'][] = array(
+                    'text' => 'Доставка',
+                    'quantity' => floatval(number_format(1, 3, '.', '')),
+                    'price' => array('amount' => floatval(number_format($order['Cart']['dostavka'], 2, '.', ''))),
+                    'tax' => $tax_delivery,
+                    'paymentMethodType' => 'full_prepayment',
+                    'paymentSubjectType' => 'service'
+                );
             }
             
             $payment_forma.="<input type='hidden' name='ym_merchant_receipt' value='" . PHPShopString::json_safe_encode($ym_merchant_receipt) . "'>";

@@ -32,7 +32,6 @@ $PHPShopBase->checkMultibase();
 // Модули
 $PHPShopModules = new PHPShopModules($_classPath . "modules/");
 
-
 /**
  * Создание YML для Яндекс Маркета
  * @author PHPShop Software
@@ -86,7 +85,7 @@ class PHPShopYml {
      * Конструктор
      */
     function __construct() {
-        global $PHPShopModules,$PHPShopSystem;
+        global $PHPShopModules, $PHPShopSystem;
 
         $this->PHPShopSystem = $PHPShopSystem;
         $PHPShopValuta = new PHPShopValutaArray();
@@ -116,7 +115,7 @@ class PHPShopYml {
         // Исходное изображение
         $this->image_source = $this->PHPShopSystem->ifSerilizeParam('admoption.image_save_source');
 
-       $this->setHook(__CLASS__, __FUNCTION__);
+        $this->setHook(__CLASS__, __FUNCTION__);
     }
 
     /**
@@ -262,8 +261,8 @@ class PHPShopYml {
             $uid = $row['uid'];
             $price = $row['price'];
             $oldprice = $row['price_n'];
-            
-            if(empty($row['description']))
+
+            if (empty($row['description']))
                 $row['description'] = $row['content'];
 
             if ($row['p_enabled'] == 1)

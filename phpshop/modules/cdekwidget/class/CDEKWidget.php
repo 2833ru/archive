@@ -27,40 +27,42 @@ class CDEKWidget {
     }
 
     public function Request() {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, self::$registerOrderUrl);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, array(
-            'xml_request' => $this->parameters
-        ));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $data = xml2array(curl_exec($ch), false, false);
+        if(!empty($this->option['account']) and !empty($this->option['password'])) {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, self::$registerOrderUrl);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, array(
+                'xml_request' => $this->parameters
+            ));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $data = xml2array(curl_exec($ch), false, false);
 
-        if($data['Order'][0]['@attributes']['ErrorCode'])
-        {
-            $this->log(
-                array('error' => PHPShopString::utf8_win1251($data['Order'][0]['@attributes']['Msg']), 'parameters' => $this->parameters),
-                $this->orderId,
-                'Ошибка передачи заказа',
-                'Передача заказа службе доставки СДЭК',
-                'error'
-            );
-        }
-        else
-        {
-            if(isset($data['Order'][0]['@attributes']['DispatchNumber']))
-                $tracking = $data['Order'][0]['@attributes']['DispatchNumber'];
+            if($data['Order'][0]['@attributes']['ErrorCode'])
+            {
+                $this->log(
+                    array('error' => PHPShopString::utf8_win1251($data['Order'][0]['@attributes']['Msg']), 'parameters' => $this->parameters),
+                    $this->orderId,
+                    'Ошибка передачи заказа',
+                    'Передача заказа службе доставки СДЭК',
+                    'error'
+                );
+            }
+            else
+            {
+                if(isset($data['Order'][0]['@attributes']['DispatchNumber']))
+                    $tracking = $data['Order'][0]['@attributes']['DispatchNumber'];
 
-            $data['parameters'] = $this->parameters;
-            $data['Order'][1]['@attributes']['Msg'] = PHPShopString::utf8_win1251($data['Order'][1]['@attributes']['Msg']);
-            $this->log(
-                $data,
-                $this->orderId,
-                'Успешная передача заказа',
-                'Передача заказа службе доставки СДЭК',
-                'success',
-                $tracking
-            );
+                $data['parameters'] = $this->parameters;
+                $data['Order'][1]['@attributes']['Msg'] = PHPShopString::utf8_win1251($data['Order'][1]['@attributes']['Msg']);
+                $this->log(
+                    $data,
+                    $this->orderId,
+                    'Успешная передача заказа',
+                    'Передача заказа службе доставки СДЭК',
+                    'success',
+                    $tracking
+                );
+            }
         }
     }
 
@@ -86,8 +88,8 @@ class CDEKWidget {
         $data['flat'] = $data['flat_new'];
 
         $xml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
-        $xml .= '<deliveryrequest account="' . $this->option['account'] . '" date="' . date('Y-m-d H:i:s') . '" number="1" ordercount="1" secure="' .  md5(date('Y-m-d H:i:s') . '&' . $this->option['password']) . '">' . "\n";
-        $xml .= '<order  number="' .  $data['ouid'] . '" sendcitycode="' . $this->option['city_from_code'] . '" reccitycode="' . $cdek_data['city_id'] .'" sendcitypostcode="' . $this->option['index_from'] . '" reccitypostcode="' .  $data['index_new'] . '" tarifftypecode="' . $cdek_data['tariff'] .'" phone="' . $data['tel_new'] .'" recipientemail="' . $data['mail_new'] .'" recipientname="' . PHPShopString::win_utf8($name) . '">'. "\n";
+        $xml .= '<deliveryrequest developerkey="qzdU05j57s9Ckxu6h8mcKrsq9fJuxdzt" account="' . $this->option['account'] . '" date="' . date('Y-m-d H:i:s') . '" number="1" ordercount="1" secure="' .  md5(date('Y-m-d H:i:s') . '&' . $this->option['password']) . '">' . "\n";
+        $xml .= '<order  number="' .  $data['ouid'] . '" sendcitycode="' . $this->option['city_from_code'] . '" reccitycode="' . $cdek_data['city_id'] .'" sendcitypostcode="' . $this->option['index_from'] . '" reccitypostcode="' .  $data['index_new'] . '" tarifftypecode="' . $cdek_data['tariff'] .'" phone="' . str_replace(array('(', ')', ' ', '+', '-'), '', $data['tel_new']) .'" recipientemail="' . $data['mail_new'] .'" recipientname="' . PHPShopString::win_utf8($name) . '">'. "\n";
         $xml .= $this->setAddress($data) . "\n";
         $xml .= '<package number="' .  $data['ouid'] . '" barcode="' .  $data['ouid'] . '" sizea="' . $this->option['length'] . '" sizeb="' . $this->option['width'] . '" sizec="' . $this->option['height'] . '" weight="' .  $weight .'">'. "\n";
         $xml .= $this->setProducts($obj->PHPShopCart->getArray(), $obj->discount) . "\n";
@@ -113,8 +115,8 @@ class CDEKWidget {
             $name = $data['fio'];
 
         $xml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
-        $xml .= '<deliveryrequest account="' . $this->option['account'] . '" date="' . date('Y-m-d H:i:s') . '" number="1" ordercount="1" secure="' .  md5(date('Y-m-d H:i:s') . '&' . $this->option['password']) . '">' . "\n";
-        $xml .= '<order  number="' .  $data['uid'] . '" sendcitycode="' . $this->option['city_from_code'] . '" reccitycode="' . $cdek_data['city_id'] .'" sendcitypostcode="' . $this->option['index_from'] . '" reccitypostcode="' .  $data['index'] . '" tarifftypecode="' . $cdek_data['tariff'] .'" phone="' . $data['tel'] .'" recipientemail="' . $order['Person']['mail'] .'" recipientname="' . PHPShopString::win_utf8($name) . '">'. "\n";
+        $xml .= '<deliveryrequest developerkey="qzdU05j57s9Ckxu6h8mcKrsq9fJuxdzt" account="' . $this->option['account'] . '" date="' . date('Y-m-d H:i:s') . '" number="1" ordercount="1" secure="' .  md5(date('Y-m-d H:i:s') . '&' . $this->option['password']) . '">' . "\n";
+        $xml .= '<order  number="' .  $data['uid'] . '" sendcitycode="' . $this->option['city_from_code'] . '" reccitycode="' . $cdek_data['city_id'] .'" sendcitypostcode="' . $this->option['index_from'] . '" reccitypostcode="' .  $data['index'] . '" tarifftypecode="' . $cdek_data['tariff'] .'" phone="' . str_replace(array('(', ')', ' ', '+', '-'), '', $data['tel']) . '" recipientemail="' . $order['Person']['mail'] .'" recipientname="' . PHPShopString::win_utf8($name) . '">'. "\n";
         $xml .= $this->setAddress($data) . "\n";
         $xml .= '<package number="' .  $data['uid'] . '" barcode="' .  $data['uid'] . '" sizea="' . $this->option['length'] . '" sizeb="' . $this->option['width'] . '" sizec="' . $this->option['height'] . '" weight="' .  $weight .'">'. "\n";
         $xml .= $this->setProducts($order['Cart']['cart'], $order['Person']['discount']) . "\n";

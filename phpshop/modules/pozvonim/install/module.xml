@@ -4,7 +4,7 @@
     <name>Pozvonim</name>
     <faqlink>http://my.pozvonim.com</faqlink>
     <description>Виджет удержания клиентов от Pozvonim.com.</description>
-    <category>user,sale,chat</category>
+    <category>chat</category>
     <adminmenu>
         <title>Pozvonim</title>
         <capability>true</capability>

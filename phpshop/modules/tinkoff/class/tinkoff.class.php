@@ -13,6 +13,7 @@ class Tinkoff
         '0' => 'vat0',
         '10' => 'vat10',
         '18' => 'vat18',
+        '20' => 'vat20',
     );
 
     public function getPaymentUrl($obj, $value)
@@ -61,6 +62,8 @@ class Tinkoff
                 "Price" => $price * 100,
                 "Quantity" => $product['num'],
                 "Amount" => $price * $product['num'] * 100,
+                "PaymentMethod" => "full_prepayment",
+                "PaymentObject" => "commodity",
                 "Tax" => self::getTinkoffVat($PHPShopSystem->objRow['nds']),
             );
         }
@@ -71,6 +74,8 @@ class Tinkoff
                 "Price" => $obj->delivery * 100,
                 "Quantity" => 1,
                 "Amount" => $obj->delivery * 100,
+                "PaymentMethod" => "full_prepayment",
+                "PaymentObject" => "service",
                 "Tax" => self::getTinkoffVat($obj->tinkoff_delivery_nds),
             );
         }

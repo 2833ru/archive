@@ -11,23 +11,14 @@ function actionUpdate() {
     $PHPShopModules->updateOption($_GET['id'], $_POST['servers']);
     
     $action = $PHPShopOrm->update($_POST);
-    header('Location: ?path=modules&install=check');
+    header('Location: ?path=modules&id=' . $_GET['id']);
+    
     return $action;
 }
 
 // Начальная функция загрузки
 function actionStart() {
-    global $PHPShopGUI,$select_name;
-
-    $PHPShopGUI->action_button['Закрыть'] = array(
-        'name' => 'Закрыть',
-        'action' => 'saveID',
-        'class' => 'btn  btn-default btn-sm navbar-btn',
-        'type' => 'submit',
-        'icon' => 'glyphicon glyphicon-ok'
-    );
-
-    $PHPShopGUI->setActionPanel(__("Настройка модуля") . ' <span id="module-name">' . ucfirst($_GET['id'] . '</span>'), $select_name, array('Закрыть'));
+    global $PHPShopGUI;
 
 
     $Info = 'Для интеграции формы  в ручном режиме включите следующий код в содержание страницы или текстового блока:

@@ -40,6 +40,7 @@ if (isset($_GET['F'])) {
         header("Location: /error/");
         exit;
     }
-} else
+}
+else
     exit("<h3>—сылка просрочена...</h3>");
 ?>

@@ -3,7 +3,7 @@
     <version>1.4</version>
     <name>PickPoint</name>
     <description>Модуль пунктов выдачи товара PickPoint</description>
-    <category>sale,delivery</category>
+    <category>delivery</category>
     <adminmenu>
         <title>PickPoint</title>
         <capability>true</capability>

@@ -271,6 +271,8 @@ $().ready(function() {
 
     // Таблица сортировки
     var table = $('#data').dataTable({
+         //ajax: "./catalog/ajax.php", 
+         //https://www.datatables.net/examples/data_sources/server_side.html
         "paging": true,
         "ordering": true,
         "order": [[3, "desc"]],

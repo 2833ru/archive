@@ -1,10 +1,5 @@
 
 $(document).ready(function() {
-
-    if(document.designMode != 'off'){
-		$('.style-toggle').hide();
-	}
-
     var path = $('#body').attr('data-path');
     var subpath = $('#body').attr('data-subpath');
     var id = $('#body').attr('data-id');
@@ -117,6 +112,10 @@ $(document).ready(function() {
         var skin = $('#bootstrap_theme').attr('data-name');
         var cookie = $.cookie('bootstrap_theme');
 
+        $.cookie($('#bootstrap_theme').attr('data-name') + '_theme', $(this).attr('data-skin'), {
+            path: '/'
+        });
+
         $(".bootstrap-theme, .non-responsive-switch").each(function() {
             $(this).html('');
         });
@@ -134,11 +133,6 @@ $(document).ready(function() {
         setTimeout(function() {
             $('#body').fadeIn();
         }, 1000);
-
-        $.cookie(skin+'_theme', theme, {
-            path: '/'
-        });
-
     });
 
 

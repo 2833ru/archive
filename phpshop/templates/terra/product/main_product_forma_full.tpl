@@ -25,7 +25,7 @@
 				<div class="row" >
 					<div class="col-sm-6 col-xs-12">
 						<div class="price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-							<span class="price-new" itemprop="price">@productPrice@</span> 
+							<span class="price-new" itemprop="price" content="@productSchemaPrice@">@productPrice@</span> 
 							<span class="price-new rubznak" itemprop="priceCurrency" content="RUB">@productValutaName@</span>
 							<span class="price-old">@productPriceRub@</span>
 						</div>

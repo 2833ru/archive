@@ -1,10 +1,10 @@
 <?php
 
 $TitlePage = __("Заказы");
+unset($_SESSION['jsort']);
 
 function actionStart() {
     global $PHPShopInterface, $PHPShopSystem, $TitlePage;
-
 
     // Статусы заказов
     PHPShopObj::loadClass('order');
@@ -19,17 +19,17 @@ function actionStart() {
             $order_status_value[] = array($status_val['name'], $status_val['id'], $_GET['where']['statusi']);
         }
 
-    
-    if (!isset($_GET['where']['statusi']))
-        $_GET['where']['statusi'] = 'none';
-    
+    /*
+      if (!isset($_GET['where']['statusi']))
+      $_GET['where']['statusi'] = 'none'; */
+
 
     $order_status_value[] = array(__('Все заказы'), 'none', $_GET['where']['statusi']);
 
     // Поиск
     $where = null;
-    $limit = 300;
-    
+    $limit = 100;
+
     if (is_array($_GET['where'])) {
         foreach ($_GET['where'] as $k => $v) {
             if ($v != '' and $v != 'none')
@@ -52,7 +52,7 @@ function actionStart() {
             $TitlePage.=' с ' . $_GET['date_start'] . ' по ' . $_GET['date_end'];
         }
 
-        $limit = 1000;
+        $limit = 300;
     }
 
     // Знак рубля
@@ -96,45 +96,6 @@ function actionStart() {
     $PHPShopInterface->addJSFiles('./js/bootstrap-datetimepicker.min.js', './js/bootstrap-datetimepicker.ru.js', './order/gui/order.gui.js');
     $PHPShopInterface->addCSSFiles('./css/bootstrap-datetimepicker.min.css');
 
-    // Таблица с данными
-    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
-    $PHPShopOrm->Option['where'] = ' or ';
-    $PHPShopOrm->debug = false;
-    $PHPShopOrm->mysql_error = false;
-    $PHPShopOrm->sql = 'SELECT a.*, b.mail, b.name FROM ' . $GLOBALS['SysValue']['base']['orders'] . ' AS a 
-        LEFT JOIN ' . $GLOBALS['SysValue']['base']['shopusers'] . ' AS b ON a.user = b.id  ' . $where . ' order by a.id desc 
-            limit ' . $limit;
-
-    $data = $PHPShopOrm->select();
-    if (is_array($data))
-        foreach ($data as $row) {
-
-            // Библиотека заказа
-            $PHPShopOrder = new PHPShopOrderFunction($row['id'], $row);
-
-            $mail = $row['mail'];
-            if(empty($mail)) $mail=$PHPShopOrder->getSerilizeParam('orders.Person.mail');
-            $comment = $PHPShopOrder->getSerilizeParam('status.maneger');
-
-            if (empty($row['fio']) and !empty($row['name'])) 
-                $row['fio'] = $row['name'];
-            elseif(empty($row['fio']) and empty($row['name']))
-                $row['fio'] = $mail;
-
-            // Скидка
-            $datas = PHPShopDate::get($row['datas'], false);
-            $discount = $PHPShopOrder->getDiscount();
-
-            // Адрес
-            $adres = $row['street'];
-            if (!empty($row['house']))
-                $adres.= ', д. ' . $row['house'];
-            if (!empty($row['flat']))
-                $adres.= ', кв. ' . $row['flat'];
-
-
-            $PHPShopInterface->setRow($row['id'], array('name' => '<span class="hidden-xs">'.__('Заказ').'</span> ' . $row['uid'], 'link' => '?path=order&id=' . $row['id'], 'align' => 'left', 'order' => $row['id'], 'view' => intval($memory['order.option']['uid'])), array('name' => $row['id'], 'view' => intval($memory['order.option']['id']), 'link' => '?path=order&id=' . $row['id']), array('status' => array('enable' => $row['statusi'], 'caption' => $status, 'passive' => true, 'color' => $PHPShopOrder->getStatusColor()), 'view' => intval($memory['order.option']['statusi'])), array('name' => $datas, 'order' => $row['datas'], 'view' => intval($memory['order.option']['datas'])), array('name' => $row['fio'], 'link' => '?path=shopusers&id=' . $row['user'], 'view' => intval($memory['order.option']['fio'])), array('name' => '<span class="hidden" id="order-' . $row['id'] . '-email">' . $row['mail'] . '</span>' . $row['tel'], 'view' => intval($memory['order.option']['tel'])), array('action' => array('edit', 'email', 'copy', '|', 'delete', 'id' => $row['id']), 'align' => 'center', 'view' => intval($memory['order.option']['menu'])), array('name' => $discount . '%', 'order' => $discount, 'view' => intval($memory['order.option']['discount'])), array('name' => $row['city'], 'view' => intval($memory['order.option']['city'])), array('name' => $adres, 'view' => intval($memory['order.option']['adres'])), array('name' => $row['org_name'], 'view' => intval($memory['order.option']['org'])), array('name' => $comment, 'view' => intval($memory['order.option']['comment'])), array('name' => $PHPShopOrder->getTotal(false, ' ') . $currency, 'align' => 'right', 'order' => $row['sum'], 'view' => intval($memory['order.option']['sum'])));
-        }
 
     if (isset($_GET['date_start']))
         $date_start = $_GET['date_start'];
@@ -172,14 +133,30 @@ function actionStart() {
     $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'hidden', 'name' => 'path', 'value' => $_GET['path']));
     $searchforma.=$PHPShopInterface->setButton('Найти', 'search', 'btn-order-search pull-right');
 
-    if ($where)
-        $searchforma.=$PHPShopInterface->setButton('Сброс', 'remove', 'btn-order-cancel pull-left');
+    $searchforma .= $PHPShopInterface->setButton('Сброс', 'remove', 'btn-order-cancel hide pull-left');
+
+    // Статистика
+    $stat = '<div class="order-stat-container">' . __('Сумма:') . ' <b id="stat_sum">0</b> ' . $currency . '<br>' . __('Количество:') . ' <b id="stat_num">0</b> ' . __('шт.');
+    $sidebarright[] = array('title' => 'Статистика', 'content' => $stat);
+
 
     // Правый сайдбар
     $sidebarright[] = array('title' => 'Расширенный поиск', 'content' => $PHPShopInterface->setForm($searchforma, false, "order_search", false, false, 'form-sidebar'));
+
     $PHPShopInterface->setSidebarRight($sidebarright, 2);
 
     $PHPShopInterface->Compile(2);
 }
 
+/**
+ * Счетчик новых заказов
+ */
+function actionGetNew() {
+    global $PHPShopBase;
+    header("Content-Type: application/json");
+    exit(json_encode(array('success' => 1, 'num' => $PHPShopBase->getNumRows('orders', "where statusi='0'"))));
+}
+
+// Обработка событий
+$PHPShopInterface->getAction();
 ?>

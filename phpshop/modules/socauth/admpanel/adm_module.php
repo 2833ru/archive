@@ -5,12 +5,15 @@ $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.socauth.socauth_sys
 
 // Функция обновления
 function actionUpdate() {
-    global $PHPShopOrm;
+    global $PHPShopOrm,$PHPShopModules;
+    
+     // Настройки витрины
+    $PHPShopModules->updateOption($_GET['id'], $_POST['servers']);
 
     $upArr['authConfig_new'] = serialize($_POST['authConfig']);
     // запоминпаем данные по соц сетям
     $action = $PHPShopOrm->update($upArr, array('id' => '= 1'));
-    header('Location: ?path=modules&install=check');
+     header('Location: ?path=modules&id=' . $_GET['id']);
     return $action;
 }
 

@@ -6,13 +6,13 @@
  * // example:
  * class PHPShopCategoryArray extends PHPShopArray{
  * 	 function __construct(){
- * 	 $this->objBase=$GLOBALS['SysValue']['base']['table_name'];
+ * 	 $this->objBase=$GLOBALS['SysValue']['base']['name'];
  * 	 parent::__construct("id","name","PID");
  * 	 }
   }
  * </code>
  * @author PHPShop Software
- * @version 1.2
+ * @version 1.5
  * @package PHPShopClass
  */
 class PHPShopArray {
@@ -52,11 +52,6 @@ class PHPShopArray {
     var $objType = 1;
 
     /**
-     * @var bool режим проверки ключей
-     */
-    var $checkKey = false;
-
-    /**
      * Дополнительные аргументы
      * @var array 
      */
@@ -67,13 +62,24 @@ class PHPShopArray {
      * @var array
      */
     var $order = array();
+
     /**
      * Память
      * @var string имя ячейки памяти
      */
     var $memory = null;
 
+    /**
+     * Режим игнорирования полей в аргументах [NEW]
+     * @var bool 
+     */
+    var $ignor = false; 
+
     function __construct() {
+        
+        // Лимит из конфига
+        if(!empty($GLOBALS['SysValue']['my']['array_limit']))
+            $this->limit = $GLOBALS['SysValue']['my']['array_limit'];
 
         $this->objArg = func_get_args();
 
@@ -83,8 +89,8 @@ class PHPShopArray {
 
         $this->objArgNum = func_num_args();
         $this->setArray();
-        
-        if($this->memory)
+
+        if ($this->memory)
             $_SESSION['Memory'][$this->memory] = $this->objArray;
     }
 
@@ -93,14 +99,19 @@ class PHPShopArray {
      * @param mixed $param имя параметра через запятую
      */
     function setArray() {
-        if (!$this->checkKey and $this->objArgNum > 0) {
+
+        if ($this->objArgNum > 0) {
             foreach ($this->objArg as $v) {
                 $select[] = $v;
             }
         }
-        else
-            $select[] = "*";
+        else $select[] = "*";
 
+        if($this->ignor){
+           $this->ignor_select = $select;
+           unset($select);
+           $select[] = "*";
+        }
 
         $PHPShopOrm = new PHPShopOrm($this->objBase);
         $PHPShopOrm->mysql_error = $this->mysql_error;
@@ -108,8 +119,20 @@ class PHPShopArray {
         $PHPShopOrm->cache = $this->cache;
         $data = $PHPShopOrm->select($select, $this->objSQL, $this->order, array('limit' => $this->limit));
 
-        if (is_array($data))
-            foreach ($data as $objRow) {
+        if ($select[0] == "*") {
+            
+            if(is_array($data)){
+                
+                if(count($data) == 1)
+                    $data_true[] = $data;
+                else $data_true = $data;
+                
+                foreach($data_true as $val)
+                     $array[$val['id']] = $val;
+            }
+            
+        } else if (is_array($data))
+            foreach ($data as $k => $objRow) {
                 switch ($this->objType) {
                     case(1):
                         foreach ($this->objArg as $val)
@@ -127,6 +150,16 @@ class PHPShopArray {
                         break;
                 }
             }
+
+        // Игнорирование полей   
+        if (count($this->ignor_select) > 0) {
+            foreach ($array as $k=>$v)
+                foreach ($v as $key => $val)
+                    if (in_array($key, $this->ignor_select)) {
+                        unset($array[$k][$key]);
+                    }
+        }
+
         $this->objArray = $array;
     }
 

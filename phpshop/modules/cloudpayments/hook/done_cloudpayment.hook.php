@@ -41,11 +41,13 @@ function send_to_order_mod_cloudpayment_hook($obj, $value, $rout)
                 $amount = floatval($price) * floatval($arItem['num']);
 
                 $aItem[] = array(
-                    "label" => PHPShopString::win_utf8($arItem['name']),
-                    "price" => floatval($price),
+                    "label"    => PHPShopString::win_utf8($arItem['name']),
+                    "price"    => floatval($price),
                     "quantity" => $arItem['num'],
-                    "amount" => $amount,
-                    "vat" => $tax
+                    "amount"   => $amount,
+                    "vat"      => $tax,
+                    "method"   => 1,
+                    "object"   => 1
                 );
             }
 
@@ -66,7 +68,9 @@ function send_to_order_mod_cloudpayment_hook($obj, $value, $rout)
                     "price" => $delivery_price,
                     "quantity" => 1,
                     "amount" => $delivery_price,
-                    "vat" => intval($tax_delivery)
+                    "vat" => intval($tax_delivery),
+                    "method"   => 1,
+                    "object"   => 4
                 );
             }
 

@@ -3,7 +3,7 @@
     .main-sidebar-left {display: none;}
     .middle-content-fix{width: 100%;}
 </style>
-<div class="product-page-main-block row" itemtype="http://schema.org/Product">
+<div class="product-page-main-block row" itemscope itemtype="http://schema.org/Product">
     <div class="col-xs-12 col-md-5">
         <div id="fotoload">
             <div class="sale-icon-content">
@@ -32,9 +32,9 @@
         </div>
         <div class="col-xs-12">
             <div class="row">
-                <div class="product-page-price">
+                <div class="product-page-price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                     <del class="price-old">@productPriceRub@</del>
-                    <span class="price-new" itemprop="price">@productPrice@</span> 
+                    <span class="price-new" itemprop="price" content="@productSchemaPrice@">@productPrice@</span> 
                     <span class="price-new rubznak" itemprop="priceCurrency" content="RUB">@productValutaName@</span>
                 </div>
             </div>

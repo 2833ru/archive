@@ -225,7 +225,7 @@ function actionAdvanceSearch() {
 
     if (!empty($_REQUEST['cat'])) {
         PHPShopObj::loadClass("sort");
-        $PHPShopSort = new PHPShopSort($_REQUEST['cat'], false, false, 'sorttemplate', false, false, true);
+        $PHPShopSort = new PHPShopSort($_REQUEST['cat'], false, false, 'sorttemplate', false, false, false);
         $searchforma.=$PHPShopSort->disp;
     }
 
@@ -259,5 +259,4 @@ function sorttemplate($value, $n, $title, $vendor) {
 
 // Обработка событий
 $PHPShopInterface->getAction();
-
 ?>

@@ -7,7 +7,7 @@
     <div class="form-group">
         <label class="col-xs-12 col-sm-2 control-label">{Статус}</label>
         <div class="col-xs-4">
-            <span class="btn btn-default"><span class="glyphicon glyphicon-user"></span> @user_status@</span>
+           <a class="btn btn-default" href="/users/order.html"><span class="glyphicon glyphicon-user"></span> @user_status@</a>
         </div>
     </div>
 

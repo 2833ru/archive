@@ -92,7 +92,7 @@
                     countdown.text(--startFrom);
                     if (startFrom <= 0) {
                         clearInterval(timer);
-                        window.location.replace('http://www.phpshop.ru/docs/error.html?SERVER_NAME=@server@');
+                        window.location.replace('https://www.phpshop.ru/docs/error.html?SERVER_NAME=@server@');
                     }
                 }, 1000);
             }

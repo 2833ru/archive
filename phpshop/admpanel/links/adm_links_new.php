@@ -36,12 +36,12 @@ function actionStart() {
 
 
     $Tab1.=$PHPShopGUI->setField("Код кнопки", $PHPShopGUI->setTextarea("image_new", ''));
+    
+    // Запрос модуля на закладку
+    $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, null);
 
     // Вывод формы закладки
     $PHPShopGUI->setTab(array("Основное", $Tab1,true));
-
-    // Запрос модуля на закладку
-    $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, null);
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("submit", "saveID", "ОК", "right", 70, "", "but", "actionInsert.links.create");

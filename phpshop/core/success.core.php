@@ -3,7 +3,6 @@
 /**
  * Обработчик успешной оплаты
  * @author PHPShop Software
- * @tutorial http://wiki.phpshop.ru/index.php/PHPShopSuccess
  * @version 1.2
  * @package PHPShopCore
  */

@@ -1,7 +1,7 @@
-<div class="col-md-3 col-sm-6">
+<div class="col-md-3 col-sm-6 product-block-wrapper-fix">
     <div class="product-col">
         <div class="image product-img-centr">
-            <a href="/shop/UID_@productUid@.html" title="@productName@"> <img src="@productImg@" alt="@productName@" class="img-responsive img-center-sm" ></a>
+            <a href="/shop/UID_@productUid@.html" title="@productName@"> <img data-src="@productImg@" alt="@productName@" class="img-responsive img-center-sm swiper-lazy" ></a>
         </div>
         <div class="caption">
             <h4><a href="/shop/UID_@productUid@.html" title="@productName@">@productName@</a></h4>

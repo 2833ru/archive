@@ -25,7 +25,7 @@ function send_to_order_mod_robokassa_hook($obj, $value, $rout) {
             $payment_forma .= PHPShopText::setInput('hidden', 'MrchLogin', trim($option['merchant_login']), false, 10);
             $payment_forma .= PHPShopText::setInput('hidden', 'OutSum', $out_summ, false, 10);
             $payment_forma.=PHPShopText::setInput('hidden', 'InvId', $inv_id, false, 10);
-            $payment_forma.=PHPShopText::setInput('hidden', 'Desc', 'PHPShopPay', false, 10);
+            $payment_forma.=PHPShopText::setInput('hidden', 'Desc', $value['ouid'], false, 10);
 
             // НДС
             if ($PHPShopSystem->getParam('nds_enabled') == '') {
@@ -43,7 +43,9 @@ function send_to_order_mod_robokassa_hook($obj, $value, $rout) {
                         'name' => $product['name'],
                         'quantity' => floatval(number_format($product['num'], 3, '.', '')),
                         'sum' => floatval(number_format($product['price'], 2, '.', '')),
-                        'tax' => $tax
+                        'tax' => $tax,
+                        'payment_method' => 'full_prepayment',
+                        'payment_object' => 'commodity'
                     );
                 }
             }
@@ -58,7 +60,14 @@ function send_to_order_mod_robokassa_hook($obj, $value, $rout) {
                 else
                     $tax_delivery = 'vat' . $tax_delivery;
 
-                $ym_merchant_receipt['items'][] = array('name' => 'Доставка', 'quantity' => floatval(number_format(1, 3, '.', '')), 'sum' => floatval(number_format($obj->delivery, 2, '.', '')), 'tax' => $tax_delivery);
+                $ym_merchant_receipt['items'][] = array(
+                    'name' => 'Доставка',
+                    'quantity' => floatval(number_format(1, 3, '.', '')),
+                    'sum' => floatval(number_format($obj->delivery, 2, '.', '')),
+                    'tax' => $tax_delivery,
+                    'payment_method' => 'full_prepayment',
+                    'payment_object' => 'service'
+                );
             }
 
             $Receipt = urlencode(PHPShopString::json_safe_encode($ym_merchant_receipt));

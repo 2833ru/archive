@@ -2,7 +2,6 @@
 /**
  * Обработчик подбора товаров по характеристикам для категорий
  * @author PHPShop Software
- * @tutorial http://wiki.phpshop.ru/index.php/PHPShopSelectioncat
  * @version 1.1
  * @package PHPShopShopCore
  */

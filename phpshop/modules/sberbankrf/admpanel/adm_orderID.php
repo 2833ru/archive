@@ -13,10 +13,15 @@ function sberbank($data) {
 
         // Выборка логов
         $log = $PHPShopOrm->select(array('*'), array("order_id=" => "'$data[uid]'"), array('order' => 'date DESC'));
+        $logArray = array();
+        if(!empty($log['id']))
+            $logArray[] = $log;
+        else
+            $logArray = $log;
 
         // Выводим кнопку возврата, если возврат еще не выполнялся
         $refund = false;
-        foreach ($log as $logItem){
+        foreach ($logArray as $logItem){
             if($logItem['type'] == 'refundTrue')
                 $refund = true;
         }
@@ -30,8 +35,8 @@ function sberbank($data) {
 
         $PHPShopInterface->setCaption(array("Журнал операций", "50%"), array("Дата", "20%"), array("Статус", "30%"));
 
-        if (is_array($log))
-            foreach ($log as $row) {
+        if (is_array($logArray))
+            foreach ($logArray as $row) {
                 $PHPShopInterface->setRow(array('name' => $row['type'], 'link' => '?path=modules.dir.sberbankrf&id=' . $row['id']), PHPShopDate::get($row['date'], true), $row['status']);
             }
 

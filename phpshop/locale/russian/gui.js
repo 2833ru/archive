@@ -59,7 +59,7 @@ var locale = {
         search: "Поиск:",
         sSearchPlaceholder: "на странице...",
         lengthMenu: "Показать _MENU_ записей",
-        sProcessing:   "Подождите...",
+        sProcessing:   "<img src='images/ajax-loader.gif'>",
         sZeroRecords:  "Записи отсутствуют.",
 	sInfo:         "Записи с _START_ до _END_ из _TOTAL_ записей",
 	sInfoEmpty:    "Записи с 0 до 0 из 0 записей",

@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_sberbankrf_system` (
   `taxationSystem` int(11) NOT NULL,
   `status` int(11) NOT NULL,
   `title_sub` text NOT NULL,
+  `version` varchar(64) default '1.1',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
@@ -25,4 +26,4 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_sberbankrf_log` (
 INSERT INTO `phpshop_payment_systems` (`id`, `name`, `path`, `enabled`, `num`, `message`, `message_header`, `yur_data_flag`, `icon`) VALUES
 (10010, 'Оплата банковской картой', 'modules', '0', 0, '<p>Ваш заказ оплачен!</p>', 'Спасибо', '', '/UserFiles/Image/Payments/visa.png');
 
-INSERT INTO `phpshop_modules_sberbankrf_system` VALUES (1, '', '', 0, 0, 0, 'Заказ находится на ручной проверке.');
+INSERT INTO `phpshop_modules_sberbankrf_system` VALUES (1, '', '', 0, 0, 0, 'Заказ находится на ручной проверке.','1.1');

@@ -755,3 +755,25 @@ img.template:hover{
 	background-size: 16px 16px;
 	background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMSIgaGVpZ2h0PSIzMSIgdmlld0JveD0iMCAwIDMxIDMxIj4gIDxwb2x5Z29uIGZpbGw9IiNGQUI2MDAiIGZpbGwtcnVsZT0iZXZlbm9kZCIgcG9pbnRzPSIxNS41IDAgMTkgMTIgMzEgMTIgMjEuNSAxOS4wNzcgMjYgMzEgMTUuNSAyNCA1IDMxIDkuNSAxOS4wNzcgMCAxMiAxMiAxMiIvPjwvc3ZnPg==");
 }
+.thumbnail img {
+    max-height: 200px;
+}
+.cookie-message {
+    width: 100%;
+    height: auto;
+    background-color: rgba(255, 255, 255, .9);
+    position: fixed;
+    bottom: 0;
+    z-index: 100000;
+    text-align: center;
+    -webkit-transform: translateZ(0);
+    padding:16px 0;
+    font-size:16px;
+    -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+    -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+}
+.cookie-message a{
+    border:none;
+    font-size:16px;
+}

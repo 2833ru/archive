@@ -26,26 +26,30 @@ function send_sberbankrf_hook($obj, $value, $rout) {
                 $tax = 2;
             elseif ($PHPShopSystem->getParam('nds') == 18)
                 $tax = 3;
+            elseif ($PHPShopSystem->getParam('nds') == 20)
+                $tax = 6;
         } else
             $tax = 0;
 
         // Контроль оплаты от статуса заказа
         if (empty($option['status'])) {
 
-            // Сумма покупки
-            $out_summ = number_format($obj->get('total'), 2, '.', '') * 100;
-
             // Содержимое корзины
             $i = 0;
+            $total = 0;
             foreach ($aCart as $key => $arItem) {
 
                 // Скидка
-                if($obj->discount > 0)
-                    $price = ($arItem['price']  - ($arItem['price']  * $obj->discount  / 100)) * 100;
+                if ($obj->discount > 0)
+                    $price = ($arItem['price'] - ($arItem['price'] * $obj->discount > 0 / 100)) * 100;
                 else
                     $price = $arItem['price'] * 100;
 
-                $amount = (floatval($price) * intval($arItem['num']));
+                $price = round($price);
+                $amount = $price * (int) $arItem['num'];
+                
+                if(empty($arItem['ed_izm']))
+                    $arItem['ed_izm']='шт.';
 
                 $aItem[] = array(
                     "positionId"    => $i,
@@ -54,9 +58,22 @@ function send_sberbankrf_hook($obj, $value, $rout) {
                     "quantity"      => array ("value" => $arItem['num'], "measure" => PHPShopString::win_utf8($arItem['ed_izm'])),
                     "itemAmount"    => $amount,
                     "itemCode"      => $arItem['id'],
-                    "tax"           => array("taxType" => $tax)
+                    "tax"           => array("taxType" => $tax),
+                    "itemAttributes" => array(
+                        "attributes" => array(
+                            array(
+                                "name"  => "paymentMethod",
+                                "value" => 1
+                            ),
+                            array(
+                                "name"  => "paymentObject",
+                                "value" => 1
+                            )
+                        )
+                    )
                 );
                 $i++;
+                $total = $total + $amount;
             }
 
             // Доставка
@@ -72,28 +89,41 @@ function send_sberbankrf_hook($obj, $value, $rout) {
                     case 18:
                         $tax_delivery = 3;
                         break;
+                    case 20:
+                        $tax_delivery = 6;
+                        break;
                     default: $tax_delivery = $tax;
                 }
 
-                $cartSum = $obj->PHPShopCart->getSum();
-
-                $delivery_price = floatval($out_summ) - (floatval($cartSum) * 100);
+                $delivery_price = (int) $obj->delivery * 100;
 
                 $aItem[] = array(
                     "positionId"    => $i + 1,
                     "name"          => PHPShopString::win_utf8('Доставка'),
-                    "itemPrice"     => floatval($delivery_price),
+                    "itemPrice"     => $delivery_price,
                     "quantity"      => array ("value" => 1, "measure" => PHPShopString::win_utf8('ед.')),
-                    "itemAmount"    => floatval($delivery_price),
+                    "itemAmount"    => $delivery_price,
                     "itemCode"      => $i + 1,
-                    "tax"           => array("taxType" => $tax_delivery)
+                    "tax"           => array("taxType" => $tax_delivery),
+                    "itemAttributes" => array(
+                        "attributes" => array(
+                            array(
+                                "name"  => "paymentMethod",
+                                "value" => 1
+                            ),
+                            array(
+                                "name"  => "paymentObject",
+                                "value" => 4
+                            )
+                        )
+                    )
                 );
-
+                $total = $total + $delivery_price;
             }
             $array = array(
                 "customerDetails" => array("email" => $_POST["mail"]),
                 "cartItems" => array("items" => $aItem));
-
+           
             $orderBundle = json_encode($array);
 
             // Префикс
@@ -108,7 +138,7 @@ function send_sberbankrf_hook($obj, $value, $rout) {
                 "userName"  => $option["login"],
                 "password"  => $option["password"],
                 "orderNumber" => $orderNum,
-                "amount"    => $out_summ,
+                "amount"    => $total,
                 "returnUrl" => 'http://' . $_SERVER['HTTP_HOST'] . '/success/?uid=' . $value['ouid'],
                 "failUrl"   => 'http://' . $_SERVER['HTTP_HOST'] . '/success/?uid=' . $value['ouid'],
                 "orderBundle" => $orderBundle,
@@ -141,15 +171,15 @@ function send_sberbankrf_hook($obj, $value, $rout) {
                 $PHPShopSberbankRFArray->log($result, $value['ouid'], 'Ошибка регистрации заказа', 'register');
             }
 
-            header('Location: '. $result["formUrl"]);
+            if(!empty($result["formUrl"])) {
+                $obj->set('paymenturl', $result["formUrl"]);
+                $forma = ParseTemplateReturn($GLOBALS['SysValue']['templates']['sberbankrf']['sberbankrf_payment_forma'], true);
+            }
         }else{
-
             $obj->set('mesageText', $option['title_sub'] );
-
             $forma = ParseTemplateReturn($GLOBALS['SysValue']['templates']['order_forma_mesage']);
-
-            $obj->set('orderMesage', $forma);
         }
+        $obj->set('orderMesage', $forma);
     }
 }
 

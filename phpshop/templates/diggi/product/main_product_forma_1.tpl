@@ -2,7 +2,7 @@
 <div class="col-xs-12 product-block-wrapper-fix">
     <div class="product-col list clearfix">
         <div class="image">
-            <a href="/shop/UID_@productUid@.html" title="@productName@"><img src="@productImg@" alt="@productName@"></a>
+            <a href="/shop/UID_@productUid@.html" title="@productName@"><img data-src="@productImg@" alt="@productName@" class="swiper-lazy"></a>
         </div>
         <div class="caption">
             <h4><a href="/shop/UID_@productUid@.html" title="@productName@">@productName@</a></h4>

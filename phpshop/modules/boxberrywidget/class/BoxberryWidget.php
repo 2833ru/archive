@@ -192,20 +192,27 @@ class BoxberryWidget {
      */
     public function getCourierPrice($zip, $weight, $depth, $height, $width)
     {
-        $result = array();
-
         $checkZip = $this->checkZip($zip);
 
         if(empty($weight))
             $weight = $this->option['weight'];
 
         if($checkZip == false) {
-            $result['error'] = 'ƒоставка по данному индексу не возможна';
-            return $result;
-        } else {
-            $request = $this->requestGet('DeliveryCosts', array('weight' => $weight, 'depth' => $depth, 'height' => $height, 'width' => $width, 'targetstart' => $this->option['pvz_id']));
-            return $request['price'];
+            return array('error' => 'ƒоставка по данному индексу не возможна');
         }
+
+        $request = $this->requestGet('DeliveryCosts',
+            array(
+                'weight' => $weight,
+                'depth' => $depth,
+                'height' => $height,
+                'width' => $width,
+                'targetstart' => $this->option['pvz_id'],
+                'zip' => $zip
+            )
+        );
+
+        return $request['price'];
     }
 
     /**
@@ -218,10 +225,7 @@ class BoxberryWidget {
         $data['Zip'] = $zip;
         $request = $this->requestGet('ZipCheck', $data);
 
-        if($request[0]['ExpressDelivery'] == 1)
-            return true;
-        else
-            return false;
+        return $request[0]['ExpressDelivery'] == 1;
     }
 
     /**

@@ -16,7 +16,7 @@ function actionStart() {
         
             if(!empty($row['date']))
                 $date=PHPShopDate::get($row['date'],true);
-            else $date=' - ';
+            else $date=null;
         
             $PHPShopInterface->setRow($row['id'], array('name' => $row['name'], 'link' => '?path='.$_GET['path'].'&id=' . $row['id'], 'align' => 'left') , array('action' => array('edit', 'delete','id'=>$row['id']), 'align' => 'center'), array('name'=>$date, 'align' => 'right','order'=>$row['date']));
         }

@@ -8,7 +8,7 @@ if (!defined("OBJENABLED")) {
 /**
  * Корзина товаров
  * @author PHPShop Software
- * @version 1.7
+ * @version 1.8
  * @package PHPShopClass
  */
 class PHPShopCart {
@@ -66,6 +66,9 @@ class PHPShopCart {
         }
         else
             $xid = $objID;
+        
+        if($parentID == 'undefined')
+            $parentID = false;
 
         // Имя товара
         $name = PHPShopSecurity::CleanStr($objProduct->getParam("name"));

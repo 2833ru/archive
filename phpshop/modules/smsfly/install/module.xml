@@ -3,7 +3,7 @@
     <version>1.4</version>
     <name>SMS Fly</name>
     <description>SMS оповещение дл€ ”краины.</description>
-    <category>sale</category>
+    <category>develop</category>
     <adminmenu>
         <title>SMS оповещение</title>
         <capability>true</capability>

@@ -1,16 +1,17 @@
 <?php
 
-$TitlePage = __('Редактирование Рассылки').' #' . $_GET['id'];
+$TitlePage = __('Редактирование Рассылки') . ' #' . $_GET['id'];
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['newsletter']);
 
 function actionStart() {
-    global $PHPShopGUI, $PHPShopSystem, $PHPShopOrm, $PHPShopModules, $result_message;
+    global $PHPShopGUI, $PHPShopSystem, $PHPShopModules, $result_message;
 
     // Выбор даты
-    $PHPShopGUI->addJSFiles('./js/bootstrap-datetimepicker.min.js');
+    $PHPShopGUI->addJSFiles('./js/bootstrap-datetimepicker.min.js', './news/gui/news.gui.js');
     $PHPShopGUI->addCSSFiles('./css/bootstrap-datetimepicker.min.css');
 
     // Выборка
+    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['newsletter']);
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
     $PHPShopGUI->field_col = 2;
 
@@ -35,7 +36,7 @@ function actionStart() {
     else
         $title_name = $data['name'];
 
-    $PHPShopGUI->setActionPanel(__("Рассылка")." " . $title_name, array('Удалить'), array('Сохранить', 'Сохранить и отправить'));
+    $PHPShopGUI->setActionPanel(__("Рассылка") . " " . $title_name, array('Удалить'), array('Сохранить', 'Сохранить и отправить'));
 
     // Отчет
     if (!empty($result_message))
@@ -64,18 +65,24 @@ function actionStart() {
         }
 
     $Tab1.=$PHPShopGUI->setField('Содержание из новости', $PHPShopGUI->setSelect('template', $value, '100%', false, false, false, false, false, false));
+    $Tab1.=$PHPShopGUI->setField('Лимит рассылок', $PHPShopGUI->setInputText(null, 'send_limit', '0,300', 150), 1, 'Пользователям c 1 по 300');
+    $Tab1.=$PHPShopGUI->setField("Тестовое сообщение", $PHPShopGUI->setCheckbox('test', 1, __('Отправить только тестовое сообщение на') . ' ' . $PHPShopSystem->getEmail(), 1, false, false));
 
+    if (empty($_POST['time_limit']))
+        $_POST['time_limit'] = 15;
 
-    $Tab1.=$PHPShopGUI->setField('Лимит строк', $PHPShopGUI->setInputText(null, 'send_limit', '0,1000', 150), 1, 'Запись c 1 по 1000');
+    if (empty($_POST['message_limit']))
+        $_POST['message_limit'] = 50;
 
-
-    $Tab1.=$PHPShopGUI->setField("Тестовое сообщение", $PHPShopGUI->setCheckbox('test', 1, __('Отправить только тестовое сообщение на').' ' . $PHPShopSystem->getEmail(), 1,false,false));
-
-    // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1,true));
-
+    $Tab2 = $PHPShopGUI->setField('Сообщений в рассылке', $PHPShopGUI->setInputText(null, 'message_limit', $_POST['message_limit'], 150), 1, __('Задается хостингом'));
+    $Tab2 .= $PHPShopGUI->setField('Временной интервал', $PHPShopGUI->setInputText(null, 'time_limit', $_POST['time_limit'], 150, 'минут'), 1, __('Задается хостингом'));
+    $Tab2 .= $PHPShopGUI->setField("Помощник", $PHPShopGUI->setCheckbox('bot', 1, __('Умная рассылка для соблюдения правила ограничений на хостинге'), 0, false, false));
+    
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
+    
+    // Вывод формы закладки
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Автоматизация", $Tab2, true));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =
@@ -99,14 +106,41 @@ function actionSave() {
     actionUpdate();
 }
 
+// Бот
+function actionBot() {
+    global $PHPShopBase;
+
+    // Всего пользователей
+    $total = $PHPShopBase->getNumRows('shopusers', "where sendmail='1'");
+
+    // Выборка
+    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['newsletter']);
+    $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
+
+    if ($total >= $_POST['end']) {
+
+        $option = array(
+            'start' => $_POST['start'],
+            'end' => $_POST['end'],
+            'content' => $data['content'],
+            'name' => $data['name'],
+        );
+        $action = actionUpdate($option);
+        $action['bar'] = round($_POST['start'] * 100 / $total);
+
+        return $action;
+    }
+    else
+        return array("success" => 'done', "result" => PHPShopString::win_utf8('Успешно разослано по <strong>' . $total . '</strong> адресам с ограничением ' . ($_POST['end'] - $_POST['start']) . ' e-mail через каждые ' . $_POST['time'] . ' мин. за  ' . round($_POST['performance'] / 60000, 1) . ' мин.'));
+}
+
 // Функция обновления
-function actionUpdate() {
-    global $PHPShopOrm, $PHPShopModules, $PHPShopSystem, $PHPShopGUI, $result_message;
+function actionUpdate($option = false) {
+    global $PHPShopModules, $PHPShopSystem, $PHPShopGUI, $result_message, $PHPShopBase;
 
     $_POST['date_new'] = time();
 
     PHPShopObj::loadClass("parser");
-    PHPShopObj::loadClass("mail");
 
     PHPShopParser::set('url', $_SERVER['SERVER_NAME']);
     PHPShopParser::set('name', $PHPShopSystem->getValue('name'));
@@ -128,6 +162,10 @@ function actionUpdate() {
     }
 
     $n = $error = 0;
+    
+    // Добавление http
+    if(!strstr($_POST['content_new'],"http:") and !strstr($_POST['content_new'],"https:"))
+            $_POST['content_new'] = str_replace("/UserFiles/","http://".$_SERVER['SERVER_NAME']."/UserFiles/",$_POST['content_new']);
 
     // Тест
     if (!empty($_POST['test'])) {
@@ -147,24 +185,40 @@ function actionUpdate() {
         }
     } else {
 
+        // Автоматизация
+        if (is_array($option)) {
+            $limit = $option['start'] . ',' . $option['end'];
+            $title = $option['name'];
+            $content = $option['content'];
+        } elseif (!empty($_POST['bot'])) {
+            $limit = '0,' . $_POST['message_limit'];
+            $content = $_POST['content_new'];
+            $title = $_POST['name_new'];
+        } else {
+            $limit = $_POST['send_limit'];
+            $content = $_POST['content_new'];
+            $title = $_POST['name_new'];
+        }
+
         // Рассылка пользователям
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['shopusers']);
-        $data = $PHPShopOrm->select(array('id', 'mail', 'name', 'password'), array('sendmail'=>"='1'"), array('order' => 'id desc'), array('limit' => $_POST['send_limit']));
+        $PHPShopOrm->debug = false;
+        $data = $PHPShopOrm->select(array('id', 'mail', 'name', 'password'), array('sendmail' => "='1'"), array('order' => 'id desc'), array('limit' => $limit));
 
         if (is_array($data))
             foreach ($data as $row) {
 
                 PHPShopParser::set('user', $row['name']);
                 PHPShopParser::set('email', $row['mail']);
-                PHPShopParser::set('content', preg_replace_callback("/@([a-zA-Z0-9_]+)@/", 'PHPShopParser::SysValueReturn', $_POST['content_new']));
-                $unsubscribe = '<p>Что бы отказаться от новостной рассылки <a href="http://' . $_SERVER['SERVER_NAME'] . '/unsubscribe/?id=' .  $row['id'] . '&hash=' . md5($row['mail'] . $row['password']) .'" target="_blank">перейдите по ссылке.</a></p>';
+                PHPShopParser::set('content', preg_replace_callback("/@([a-zA-Z0-9_]+)@/", 'PHPShopParser::SysValueReturn', $content));
+                $unsubscribe = '<p>Что бы отказаться от новостной рассылки <a href="http://' . $_SERVER['SERVER_NAME'] . '/unsubscribe/?id=' . $row['id'] . '&hash=' . md5($row['mail'] . $row['password']) . '" target="_blank">перейдите по ссылке.</a></p>';
                 PHPShopParser::set('unsubscribe', $unsubscribe);
 
-                $PHPShopMail = new PHPShopMail($row['mail'], $from, $_POST['name_new'], '', true, true);
-                $content = PHPShopParser::file('tpl/sendmail.mail.tpl', true);
+                $PHPShopMail = new PHPShopMail($row['mail'], $from, $title, '', true, true);
+                $content_message = PHPShopParser::file('tpl/sendmail.mail.tpl', true);
 
-                if (!empty($content)) {
-                    if ($PHPShopMail->sendMailNow($content))
+                if (!empty($content_message)) {
+                    if ($PHPShopMail->sendMailNow($content_message))
                         $n++;
                     else
                         $error++;
@@ -172,14 +226,34 @@ function actionUpdate() {
             }
     }
 
-    $result_message = $PHPShopGUI->setAlert('Успешно разослано по <strong>' . $n . '</strong> адресам с ограничением ' . $_POST['send_limit'] . ' записей. Ошибок <strong>' . $error . '</strong>.');
-
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
-    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['newsletter']);
-    $action=$PHPShopOrm->update($_POST, array('id' => '=' . $_POST['rowID']));
 
-    return array("success" => $action);
+    // Автоматизация
+    if (!empty($_POST['bot']) and empty($_POST['test'])) {
+
+        // Всего пользователей
+        $total = $PHPShopBase->getNumRows('shopusers', "where sendmail='1'");
+
+        $bar = round($_POST['message_limit'] * 100 / $total);
+        $action = true;
+        $result_message = $PHPShopGUI->setAlert('<div id="bot_result">Успешно разослано по <strong>' . $n . '</strong> адресам с ограничением ' . $limit . ' записей. Ошибок <strong>' . $error . '</strong>.</div>
+<div class="progress">
+  <div class="progress-bar progress-bar-striped  progress-bar-success active" role="progressbar" aria-valuenow="" aria-valuemin="0" aria-valuemax="100" style="width: ' . $bar . '%"> ' . $bar . '% 
+  </div>
+</div>');
+    } else {
+        $result_ajax = 'Успешно разослано по <strong>' . $n . '</strong> адресам с ограничением ' . $limit . ' записей. Ошибок <strong>' . $error . '</strong>.';  
+        $result_message = $PHPShopGUI->setAlert($result_ajax);
+        $action = true;
+    }
+
+    if (empty($option)) {
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['newsletter']);
+        $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['rowID']));
+    }
+
+    return array("success" => $action, "result" => PHPShopString::win_utf8($result_ajax), 'limit' => $limit);
 }
 
 // Функция удаления

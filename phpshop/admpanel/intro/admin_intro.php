@@ -127,7 +127,7 @@ function actionStart() {
     // Заканчивается поддержка
     $LicenseUntilUnixTime = $License['License']['SupportExpires'];
     $until = $LicenseUntilUnixTime - date("U");
-    $until_day = abs(round($until / (24 * 60 * 60)));
+    $until_day = round($until / (24 * 60 * 60));
     if (is_numeric($LicenseUntilUnixTime))
         if ($until_day < 8 and $until_day > 0) {
             mailNotice('support', $until_day);
@@ -140,7 +140,7 @@ function actionStart() {
     // Заканчивается лицензия
     $LicenseUntilUnixTime = $License['License']['Expires'];
     $until = $LicenseUntilUnixTime - time();
-    $until_day = abs(round($until / (24 * 60 * 60)));
+    $until_day = round($until / (24 * 60 * 60));
 
     $until_promo = $until - 15 * 24 * 60 * 60;
     $hour = floor($until_promo / 3600);
@@ -290,7 +290,7 @@ function actionStart() {
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-flag"></span> ' . __('Новых заказов') . '</div>
                 <div class="panel-body text-right panel-intro">
-                <a href="?path=order">' . $PHPShopBase->getNumRows('orders', 'where statusi=0') . '</a>
+                <a href="?path=order&where[statusi]=0">' . $PHPShopBase->getNumRows('orders', 'where statusi=0') . '</a>
                </div>
           </div>
        </div>

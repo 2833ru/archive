@@ -103,8 +103,8 @@ function sort_encode($sort, $category) {
                 if (strstr($sort_list, $sortsdelim)) {
 
                     $sort_list_array = explode($sortsdelim, $sort_list, 2);
-                    $sort_name = $sort_list_array[0];
-                    $sort_value = $sort_list_array[1];
+                    $sort_name = PHPShopSecurity::TotalClean($sort_list_array[0]);
+                    $sort_value = PHPShopSecurity::TotalClean($sort_list_array[1]);
 
                     // Получить ИД набора характеристик в каталоге
                     $PHPShopOrm = new PHPShopOrm();
@@ -570,7 +570,7 @@ function actionStart() {
 
     $PHPShopGUI->setFooter($ContentFooter);
 
-    $help = '<p class="text-muted data-row">'.__('Для экспорта файла нужно скачать <a href="?path=exchange.export"><span class="glyphicon glyphicon-share-alt"></span>Пример файла</a>, выбрав нужные вам поля. Далее давьте/измените нужную информацию, не нарушая структуру и выберите меню <em>"Импорт данных"</em>').'.</p>';
+    $help = '<p class="text-muted data-row">'.__('Для импорта данных нужно скачать <a href="?path=exchange.export"><span class="glyphicon glyphicon-share-alt"></span>Пример файла</a>, выбрав нужные вам поля. Далее давьте/измените нужную информацию, не нарушая структуру и выберите меню <em>"Импорт данных"</em>').'.</p>';
 
     $sidebarleft[] = array('title' => 'Тип данных', 'content' => $PHPShopGUI->loadLib('tab_menu', false, './exchange/'));
     $sidebarleft[] = array('title' => 'Подсказка', 'content' => $help, 'class' => 'hidden-xs');

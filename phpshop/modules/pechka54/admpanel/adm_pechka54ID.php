@@ -11,22 +11,17 @@ function actionStart() {
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
 
     if ($data['status'] == 1) {
-        $status = '<span class=\'glyphicon glyphicon-ok\'></span>';
+        $status = '<span class=\'glyphicon glyphicon-ok\'></span> Продажа';
     } else {
-        $status = '<span class=\'glyphicon glyphicon-remove\'></span>';
+        $status = '<span class=\'glyphicon glyphicon-remove\'></span> Возврат';
     }
 
-    if ($data['operation'] == 'sell') {
-        $operation = ' Продажа';
-    } else {
-        $operation = ' Возврат';
-    }
 
     if (empty($data['fiscal']))
         $data['fiscal'] = $data['id'].' / Ошибка';
 
     // Панель заголовка
-    $PHPShopGUI->setActionPanel('Заказ №' . $data['order_id'] . '/ ' . PHPShopDate::get($row['date'], true) . ' / Чек №' . $data['fiscal'], null, array('Закрыть'));
+    $PHPShopGUI->setActionPanel('Заказ №' . $data['order_id'] . '/ ' . PHPShopDate::get($data['date'], true) . ' / Чек №' . $data['fiscal'], null, array('Закрыть'));
 
     // Переводим в читаемый вид
     ob_start();
@@ -36,7 +31,7 @@ function actionStart() {
     $Tab1 = $PHPShopGUI->setTextarea(null, PHPShopString::utf8_win1251($log), "none", false, '500');
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array($status . $operation . ' №' . $data['fiscal'], $Tab1));
+    $PHPShopGUI->setTab(array($status . ' №' . $data['fiscal'], $Tab1));
 
 
     return true;

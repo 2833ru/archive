@@ -45,7 +45,9 @@ function userorderpaymentlink_mod_cloudpayments_hook($obj, $PHPShopOrderFunction
                     "price"     => floatval($price),
                     "quantity"  => $arItem['num'],
                     "amount"    => $amount,
-                    "vat"       => $tax
+                    "vat"       => $tax,
+                    "method"   => 1,
+                    "object"   => 1
                 );
 
             }
@@ -67,7 +69,9 @@ function userorderpaymentlink_mod_cloudpayments_hook($obj, $PHPShopOrderFunction
                     "price"     => $delivery_price,
                     "quantity"  => 1,
                     "amount"    => $delivery_price,
-                    "vat"       => intval($tax_delivery)
+                    "vat"       => intval($tax_delivery),
+                    "method"   => 1,
+                    "object"   => 4
                 );
             }
             // Доставка

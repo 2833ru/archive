@@ -3,7 +3,6 @@
 /**
  * Обработчик прайс-листов
  * @author PHPShop Software
- * @tutorial http://wiki.phpshop.ru/index.php/PHPShopPrice
  * @version 1.6
  * @package PHPShopShopCore
  */

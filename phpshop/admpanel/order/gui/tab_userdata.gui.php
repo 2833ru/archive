@@ -15,6 +15,7 @@ function tab_userdata($data, $order) {
     // Данные покупателя
     $disp1 = $PHPShopGUI->setField("ФИО", $PHPShopGUI->setInputText('', 'fio_new', $data['fio'] )) .
             $PHPShopGUI->setField("Телефон", $PHPShopGUI->setInputText('', 'tel_new', $data['tel'])) .
+            $PHPShopGUI->setField("E-mail", $PHPShopGUI->setInputText('', 'person[mail]', $order['Person']['mail'])).
             $PHPShopGUI->setField("Страна", $PHPShopGUI->setInputText('', 'country_new', $data['country'])) .
             $PHPShopGUI->setField("Регион", $PHPShopGUI->setInputText('', 'state_new', $data['state'])) .
             $PHPShopGUI->setField("Город", $PHPShopGUI->setInputText('', 'city_new', $data['city'])) .
@@ -23,8 +24,7 @@ function tab_userdata($data, $order) {
             $PHPShopGUI->setField("Дом", $PHPShopGUI->setInputText('', 'house_new', $data['house'])) .
             $PHPShopGUI->setField("Подъезд", $PHPShopGUI->setInputText('', 'porch_new', $data['porch'])) .
             $PHPShopGUI->setField("Домофон", $PHPShopGUI->setInputText('', 'door_phone_new', $data['door_phone'])) .
-            $PHPShopGUI->setField("Квартира", $PHPShopGUI->setInputText('', 'flat_new', $data['flat'])).
-            $PHPShopGUI->setField("Tracking", $PHPShopGUI->setInputText('', 'tracking_new', $data['tracking']));
+            $PHPShopGUI->setField("Квартира", $PHPShopGUI->setInputText('', 'flat_new', $data['flat']));
 
     // Юр. данные покупателя
     $disp2 = $PHPShopGUI->setField("Компания", $PHPShopGUI->setInputText('', 'org_name_new', $data['org_name'] . $order['Person']['org_name'])) .
@@ -37,7 +37,8 @@ function tab_userdata($data, $order) {
             $PHPShopGUI->setField("К/С", $PHPShopGUI->setInputText('', 'org_kor_new', $data['org_kor'])) .
             $PHPShopGUI->setField("БИК", $PHPShopGUI->setInputText('', 'org_bik_new', $data['org_bik'])) .
             $PHPShopGUI->setField("Город", $PHPShopGUI->setInputText('', 'org_city_new', $data['org_city'])).
-            $PHPShopGUI->setField("Время", $PHPShopGUI->setInputText('', 'delivtime_new', $data['delivtime']));
+            $PHPShopGUI->setField("Время", $PHPShopGUI->setInputText('', 'delivtime_new', $data['delivtime'])).
+            $PHPShopGUI->setField("Tracking", $PHPShopGUI->setInputText('', 'tracking_new', $data['tracking']));
 
     return $help.$PHPShopGUI->setGrid(array($disp1, 6), array($disp2, 6));
 }

@@ -2334,7 +2334,6 @@ img.template:hover{
     padding: 12px 20px;
     font-size: 18px;
     color: #fff;
-    background: #3bc6e4;
     font-family: "Poppins";
     font-weight: 500;
     line-height: 1.1;
@@ -2353,7 +2352,7 @@ img.template:hover{
 
 .navbar-fixed-bottom .nav-user{
     float: left;
-    display: none;
+
 }
 .navbar-fixed-bottom .nav-user>ul {
     padding: 0;
@@ -3988,4 +3987,32 @@ thead td#allspecwhite {
 	height: 16px;
 	background-size: 16px 16px;
 	background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMSIgaGVpZ2h0PSIzMSIgdmlld0JveD0iMCAwIDMxIDMxIj4gIDxwb2x5Z29uIGZpbGw9IiNGQUI2MDAiIGZpbGwtcnVsZT0iZXZlbm9kZCIgcG9pbnRzPSIxNS41IDAgMTkgMTIgMzEgMTIgMjEuNSAxOS4wNzcgMjYgMzEgMTUuNSAyNCA1IDMxIDkuNSAxOS4wNzcgMCAxMiAxMiAxMiIvPjwvc3ZnPg==");
+}
+
+.img_fix img{
+    max-width: 100%;
+    max-height: 100px;
+}
+.slider-main .owl-dots{
+    margin-top:10px;
+}
+
+.cookie-message {
+    width: 100%;
+    height: auto;
+    background-color: rgba(255, 255, 255, .9);
+    position: fixed;
+    bottom: 0;
+    z-index: 100000;
+    text-align: center;
+    -webkit-transform: translateZ(0);
+    padding:16px 0;
+    font-size:16px;
+    -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+    -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+}
+.cookie-message a{
+    border:none;
+    font-size:16px;
 }

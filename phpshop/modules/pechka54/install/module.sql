@@ -5,15 +5,15 @@ ALTER TABLE `phpshop_orders` ADD `ofd_type` varchar(64) NOT NULL DEFAULT '';
 CREATE TABLE `phpshop_modules_pechka54_system` (
   `id` int(11) NOT NULL auto_increment,
   `password` varchar(64) default '',
-  `kkm` int(11) default 0,
+  `kkm` varchar(64) default '',
   `tax_product` int(11) default 0,
   `tax_delivery` int(11) default 0,
-  `version` varchar(64) default '1.0',
+  `version` varchar(64) default '1.1',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251 ;
 
 
-INSERT INTO `phpshop_modules_pechka54_system` VALUES (1,'','',0,0,'1.0');
+INSERT INTO `phpshop_modules_pechka54_system` VALUES (1,'','',0,0,'1.2');
 
 CREATE TABLE IF NOT EXISTS `phpshop_modules_pechka54_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

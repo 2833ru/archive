@@ -1,89 +1,69 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text-html; charset=windows-1251">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <style type="text/css">
-            @media (max-width: 480px) {	
-                .bodmarg { padding-top:15px!important; padding-bottom:15px!important;}
-                .bg1no { display: block;!important}
-                .bg1no td { display:block; width:100%}
-                .inopad { padding-bottom:0px!important;}
-                #ifix { height:auto!important; overflow:auto;}
-                .bg2no { display: none;!important}
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><meta http-equiv="Content-Type" content="text-html; charset=windows-1251"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="format-detection" content="telephone=no"><meta name="format-detection" content="date=no"><meta name="format-detection" content="address=no"><meta name="format-detection" content="email=no">
+	<title>Full Screen</title>
+	<style type="text/css">@import url(https://fonts.googleapis.com/css?family=Poppins:400,600,700);
+		@import url(https://fonts.googleapis.com/css?family=Roboto:400,400i,700,700i);
+		@import url(https://fonts.googleapis.com/css?family=Open+Sans:400);
 
-                .maint { margin:0px auto; width:300px!important; }
-                h1 {font-size:20px!important;}
-                h2 {font-size:16px!important;}
-                #pad1 {	font-size:12px!important;}
-                .iphone_d { display:table-cell!important}
-                .iphone_d table { margin-left:5px;}
-                #soc_t { margin-top:0px!important;}
-            }
+		.ReadMsgBody { width: 100%; background-color: #ffffff; }
+		.ExternalClass { width: 100%; background-color: #ffffff; }
+		.ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div { line-height: 100%; }
+		html { width: 100%; }
+		body { -webkit-text-size-adjust: none; -ms-text-size-adjust: none; margin: 0; padding: 0; }
+		table { border-spacing: 0; table-layout: fixed; margin: 0 auto; }
+		img {-ms-interpolation-mode:bicubic;display:block; width:auto; max-width:auto; height:auto; }
+		a[x-apple-data-detectors] {color:inherit !important;text-decoration:none !important;font-size:inherit !important;font-family:inherit !important;font-weight:inherit !important;line-height:inherit !important;}
+		u + #body a {color:inherit;font-family:inherit;text-decoration:none;font-size:inherit;font-weight:inherit;line-height:inherit;}
+		.appleLinks a {color: #c2c2c2 !important;text-decoration: none !important;}
+		span.preheader {display:none !important; }
 
-            body {
-                background:#d8eafe;
-                margin:0px;
-                padding:0px;
-                font-family:Arial, Helvetica, sans-serif;
-                font-size:12px;
-                color:#555557
-            }
-            .bg1 {
-                background:#f6f4f4
-            }
-            .bg2 {
-                background:#fff
-            }
-            h1 {
-                color:#007bcc;
-                font-size:33px;
-                font-weight:normal;
-                margin:0px 0px 0px 0px;
-                padding:32px 0px 0px 0px;
-            }
-            h2 {
-                color:#007bcc;
-                font-size:22px;
-                font-weight:normal;
-                margin:0px 0px 0px 0px;
-                padding:10px 0px 24px 0px;
-            }
-            #pad1 {
-                padding:0px 21px 20px;
-                color:#020202;
-                font-size:14px;
-            }
-            .copyright {
-                padding:32px 20px;
-            }
-            #soc_t {
-                margin-top:30px;
-            }
-            a {
-                color:#195c9c;
-            }
-            a:hover {
-                text-decoration:none
-            }
-            div, p, span, strong, b, em, i, a, li, td {
-                -webkit-text-size-adjust: none;
-            }
+		@media only screen and (max-width: 699px) {
+			table.hideMobile, tr.hideMobile, td.hideMobile, br.hideMobile {display:none!important;}
+			table.row, div.row {width: 100%!important;max-width: 100%!important;}
+			table.centerFloat, td.centerFloat, img.centerFloat {float: none!important;margin:0 auto!important;}
+			table.halfRow, div.halfRow {width: 50%!important;max-width: 50%!important;}
+			td.imgResponsive img {width:100%!important;max-width: 100%!important;height: auto!important;margin: auto;}
+			td.menuLink a {display: block;border-top: 1px solid;padding-top:20px;}
+			td.centerText{text-align: center!important;}
+			td.containerPadding {width: 100%!important;padding-left: 15px!important;padding-right: 15px!important;}
+			td.spaceControl {height:15px!important;font-size:15px!important;line-height:15px!important;}
+		}
+	</style>
+</head>
+<body leftmargin="0" marginheight="0" marginwidth="0" offset="0" topmargin="0">
+<div class="parentOfBg"></div>
 
-        </style>
-    </head>
-    <body style="background-color: #d8eafe; color: #555557; font-family: Arial, Helvetica, sans-serif; font-size: 12px; margin: 0px; padding: 0px;">
-        <div  style="background-color: #d8eafe; color: #555557; font-family: Arial, Helvetica, sans-serif; font-size: 12px; margin: 0px; padding: 0px;">
-
-            <div class="bodmarg" style="padding-top:60px; padding-bottom:60px;">
-
-                <table width="600" align="center" class="bg2 maint" border="0" cellspacing="0" cellpadding="0" style="background: #fff;">
-                    <tr>
-                        <td valign="top"><div id="pad1" style="color: #020202; font-size: 14px; padding: 0px 21px 20px;">
-                                <h1 style="color: #007bcc; font-size: 33px; font-weight: normal; margin: 0px 0px 0px 0px; padding: 32px 0px 0px 0px;">PHPShop Software</h1>
-                                <h3>Спасибо за установку PHPShop</h3>
-                                <p>
-                                    Воспользуйтесь персональным купоном <b style="color: #007bcc;">@promo@</b> и получите скидку в <b>2500</b> рублей.
+<table align="center" bgcolor="#F7F7F7" border="0" cellpadding="0" cellspacing="0" class="bodyBgColor" width="100%">
+	<tbody>
+		<tr>
+			<td align="center" valign="top">
+			<table align="center" border="0" cellpadding="0" cellspacing="0" class="row" style="width:700px;max-width:700px;" width="700">
+				<tbody>
+					<tr>
+						<td align="center" bgcolor="#FFFFFF" class="whiteBgcolor"  style="background-color: rgb(0, 98, 219);" valign="top">
+						<table align="center" border="0" cellpadding="0" cellspacing="0" class="row" style="width:100%;max-width:100%;" width="100%">
+							<tbody>
+								<tr>
+									<td align="center"  bgcolor="#FFFFFF" class="heroBg2"  style="background-image: url(&quot;https://www.phpshop.ru/images/layout2.png&quot;); background-position: center center; background-size: cover;" valign="top">
+									<table align="center" border="0" cellpadding="0" cellspacing="0" class="row" >
+										<tbody>
+											<tr>
+												<td align="center" height="80" style="font-size:80px;line-height:80px;" valign="top"></td>
+											</tr>
+											<tr>
+												<td align="center" style="padding:0;padding-bottom: 50px" valign="top"><img alt="PHPShop" src="https://www.phpshop.ru/images/logo4.png"  style="display:block;border:0;width:160px;" /></td>
+											</tr>
+											<tr>
+												<td align="center" class="heroSubTitle centerText" style="font-family: Roboto, sans-serif; font-size: 13px; line-height: 22.1px; font-weight: 700; letter-spacing: 0px; padding: 0px 0px 5px;" valign="middle"><span style="font-weight: normal;"><i>мы очень рады, что Вы с нами</i> &#128588;</span></td>
+											</tr>
+											<tr>
+												<td align="center" class="heroTitle centerText" style="font-family: Roboto, sans-serif; font-size: 30px; line-height: 30px; font-style: italic; font-weight: 600; letter-spacing: 0px; padding: 0px 0px 20px;" valign="center"><strong><span style="font-weight: normal;">Спасибо за установку PHPShop</span></strong></td>
+											</tr>
+											<tr>
+											    <td align="center" class="heroDescription centerText" style="font-family:Roboto,sans-serif;color:#000000;font-size:14px;line-height:22px;font-weight:400;letter-spacing:0px;padding:10px;padding-bottom:40px;" valign="middle">
+												    
+												    <p>
+                                    Воспользуйтесь персональным купоном <b style="color: #007bcc;">@promo@</b> и получите скидку в <b>2500</b> рублей. на платформу магазина PHPShop Enterprise и Pro 1C.
                                  </p>
                                  <p>
                                     Купон действует 15 дней со дня установки до <b>@day@</b> и распространяется только на адрес <b>@url@</b>.
@@ -97,87 +77,165 @@
                                     которая включает доступ к обновлениям, консультации наших специалистов по 
                                     пользовательским и техническим вопросам, устранение ошибок в продукте.
                                 </p>
-                                <p> <a href="http://www.phpshop.ru/order/" style="font-size: 14px;">Приобрести полную версию интернет-магазина >></a>
+                                <p> <a href="https://www.phpshop.ru/order/" style="font-size: 14px;">Приобрести полную версию интернет-магазина >></a>
                                 </p> 
                                 <p>    
                                 <h4> Желаем успехов в развитии Вашего бизнеса!<h4>
-                                        </p>
-                                        </div></td>
-                                        <td valign="top" class="bg1 bg2no" width="200" style="background: #f6f4f4;"><table width="100%" id="soc_t" border="0" cellspacing="0" cellpadding="0" style="margin-top: 30px;">
-                                                <tr>
-                                                    <td width="54" align="center"><a href="http://www.facebook.com/pages/PHPShop-Software/153123634724007" style="color: #195c9c; font-size: 12px;" target="_blank"><img src="http://phpshop.ru/phpshop/templates/phpshop.ru/images/ico_f.gif"  alt="Дружите с нами на Facebook" width="26" height="26" vspace="15" border="0" style="display: block;" title="Дружите с нами на Facebook"></a></td>
-                                                    <td><a href="https://www.facebook.com/shopsoft" style="color: #195c9c; font-size: 12px;" target="_blank">Дружите с нами на Facebook</a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td width="54" align="center"><a href="http://twitter.com/PHPShopCMS" style="color: #195c9c; font-size: 12px;" target="_blank"><img src="http://phpshop.ru/phpshop/templates/phpshop.ru/images/ico_t.gif"  alt="Следуйте за нами в Twitter" width="31" height="23" vspace="15" border="0" style="display: block;"  title="Следуйте за нами в Twitter"></a></td>
-                                                    <td><a href="http://twitter.com/PHPShopCMS" style="color: #195c9c; font-size: 12px;" target="_blank">Следуйте за нами в Twitter</a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td width="54" align="center"><a href="http://www.youtube.com/user/phpshopsoftware#p/u" style="color: #195c9c; font-size: 12px;" target="_blank"><img  src="http://phpshop.ru/phpshop/templates/phpshop.ru/images/ico_y.gif" alt="Подписывайтесь на видео" width="28" height="27" vspace="15" border="0" style="display: block;" title="Подписывайтесь на видео"></a></td>
-                                                    <td><a href="http://www.youtube.com/user/phpshopsoftware#p/u" style="color: #195c9c; font-size: 12px;" target="_blank">Подписывайтесь на видео</a></td>
-                                                </tr>
-                                            </table>
-                                            <div align="center"><a href="http://phpshop.ru/" target="_blank"><img src="http://phpshop.ru/phpshop/templates/phpshop.ru/images/ico_php.gif"  alt="PHPShop Software" width="148" height="155" border="0" style="display: block;" title="PHPShop Software"></a></div></td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2" class="bg1 copyright" style="background: #f6f4f4; padding: 32px 20px;"> С уважением,<br>
-                                                Компания PHPShop<br>
-                                                Отдел продаж: +7 (495) 989-11-15<br>
-                                                пн - пт, 10.00 - 18.00<br>
-                                                <a href="https://help.phpshop.ru">https://help.phpshop.ru</a></td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2" class="bg2"><table class="bg1no"  width="100%" border="0" cellspacing="0" cellpadding="0">
-                                                    <tr>
-                                                        <td width="50%"  valign="top">
-                                                            <div style="padding:26px 20px 17px 20px;" ><a href="http://phpshop.ru/page/bonus.html" style="font-size:12px; color:#555557 ;">10% от покупок друзей - Ваши!</a></div>
-                                                            <div style="font-size:12px; color:#555557;padding-left:20px; padding-bottom:32px; padding-right:20px;" class="inopad">
-                                                                Чтобы получать бонусы, Вам нужно порекомендовать использовать PHPShop своим друзьям, коллегам, знакомым. Предложите ввести им Ваш френдо-код при регистрации, и мы подарим 1000 руб. на их бонусный счет. Вам же будут переходить 10% от всех оплат лицензий Ваших друзей.
-                                                            </div>
-
-                                                        </td>
-                                                        <td valign="top">  <div style="padding:26px 20px 17px 20px;" ><a href="http://phpshop.ru/page/bonus.html" style="font-size:12px; color:#555557 ;">Накопительные скидки до 25%</a></div>
-                                                            <div style="font-size:12px; color:#555557;padding-left:20px; padding-bottom:32px; padding-right:20px;">Ваши бонусы суммируются с накопительными скидками на лицензии. Накопительные скидки распространяются в рамках приобретенной ранее версии PHPShop. Покупатели версии Pro 1C имеют право на скидку на все версии PHPShop.
-                                                            </div></td>
-                                                    </tr>
-                                                </table>
 
 
 
 
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div id="ifix" style=" height:1px; overflow:hidden; float:left; width:100%; display:none!important; ">
+</td>
+											</tr>
+											<tr>
+												<td align="center" height="100" style="font-size:100px;line-height:100px;" valign="top"></td>
+											</tr>
+										</tbody>
+									</table>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			</td>
+		</tr>
+	</tbody>
+</table>
 
-                                                    <table  id="soc_t" border="0" cellspacing="0" cellpadding="0" style="margin: 0px 5px;">
-                                                        <tr>
-                                                            <td width="54" align="center"><a href="http://www.facebook.com/pages/PHPShop-Software/153123634724007" style="color: #195c9c; font-size: 12px;" target="_blank"><img src="http://phpshop.ru/phpshop/templates/phpshop.ru/images/ico_f.gif"  alt="Дружите с нами на Facebook" width="26" height="26" vspace="5" border="0" style="display: block;" title="Дружите с нами на Facebook"></a></td>
-                                                            <td><a href="http://www.facebook.com/pages/PHPShop-Software/153123634724007" style="color: #195c9c; font-size: 12px;" target="_blank">Дружите с нами на Facebook</a></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td width="54" align="center"><a href="http://twitter.com/PHPShopCMS" style="color: #195c9c; font-size: 12px;" target="_blank"><img src="http://phpshop.ru/phpshop/templates/phpshop.ru/images/ico_t.gif"  alt="Следуйте за нами в Twitter" width="31" height="23" vspace="5" border="0" style="display: block;"  title="Следуйте за нами в Twitter"></a></td>
-                                                            <td><a href="http://twitter.com/PHPShopCMS" style="color: #195c9c; font-size: 12px;" target="_blank">Следуйте за нами в Twitter</a></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td width="54" align="center"><a href="http://www.youtube.com/user/phpshopsoftware#p/u" style="color: #195c9c; font-size: 12px;" target="_blank"><img  src="http://phpshop.ru/phpshop/templates/phpshop.ru/images/ico_y.gif" alt="Подписывайтесь на видео" width="28" height="27" vspace="5" border="0" style="display: block;" title="Подписывайтесь на видео"></a></td>
-                                                            <td><a href="http://www.youtube.com/user/phpshopsoftware#p/u" style="color: #195c9c; font-size: 12px;" target="_blank">Подписывайтесь на видео</a></td>
-                                                        </tr>
-                                                    </table>
-                                                    <div align="center" style="padding-bottom:20px;"><a href="http://phpshop.ru/" target="_blank"><img src="http://phpshop.ru/phpshop/templates/phpshop.ru/images/ico_php.gif"  alt="PHPShop Software" width="148" height="155" border="0" style="display: block;" title="PHPShop Software"></a></div>
-                                                </div>
+<table align="center" bgcolor="#F7F7F7" border="0" cellpadding="0" cellspacing="0" class="bodyBgColor" style="width:100%;max-width:100%;" width="100%">
+	<tbody>
+		<tr>
+			<td align="center" valign="top">
+			<table align="center" border="0" cellpadding="0" cellspacing="0" class="row" style="width:700px;max-width:700px;" width="700">
+				<tbody>
+					<tr>
+						<td align="center" bgcolor="#191919" class="blackBgcolor" style="background-color: rgb(0, 98, 219);" valign="top">
+						<table align="center" border="0" cellpadding="0" cellspacing="0" class="row" style="width:600px;max-width:600px;" width="600">
+							<tbody>
+								<tr>
+									<td align="center" height="50" style="font-size:50px;line-height:50px;" valign="top"></td>
+								</tr>
+								<tr>
+									<td align="left" style="font-size:0;padding:0" valign="top">
+									<div class="row" style="display:inline-block;max-width:220px;vertical-align:top;width:100%">
+									<table align="left" border="0" cellpadding="0" cellspacing="0" class="row">
+										<tbody>
+											<tr>
+												<td align="left" class="centerFloat" style="padding:0;padding-bottom:20px" valign="middle"><a href="https://www.phpshop.ru" target="_blank" style="text-decoration: none; border: 0px; color: rgb(255, 255, 255);"><img alt="PHPShop" class="centerFloat" src="https://www.phpshop.ru/images/logo_phpshop.png" style="display:block;border:0;width:120px;" /></a></td>
+											</tr>
+											<tr>
+												<td align="left" class="footerDescription centerText" style="font-family: &quot;Roboto&quot;, sans-serif; color: rgb(255, 255, 255); font-size: 12px; line-height: 20.4px; font-weight: 400; letter-spacing: 0px; padding: 0px 0px 20px;" valign="middle">С уважением,<br />
+												Компания PHPShop<br />
+												8 800 100-73-18<br />
+												пн - пт, 10.00 - 18.00</td>
+											</tr>
+											<tr>
+												<td align="center" valign="middle">
+												<table align="left" border="0" cellpadding="0" cellspacing="0" class="centerFloat" width="170">
+													<tbody>
+														<tr>
+															<td align="center" valign="top" width="35"><a href="http://twitter.com/PHPShopCMS" target="_blank"><img alt="" src="https://www.phpshop.ru/images/social-twitter-light.png" style="border: 0px; width: 25px; float: left;" /></a></td>
+															<td align="center" valign="top" width="35"><a href="http://www.facebook.com/shopsoft" target="_blank"><img alt=""  src="https://www.phpshop.ru/images/social-facebook-light.png" style="border: 0px; width: 25px; float: left;" /></a></td>
+															<td align="center" valign="top" width="35"><a href="https://www.instagram.com/phpshop_software/" target="_blank"><img alt=""  src="https://www.phpshop.ru/images/social-instagram-light.png" style="border: 0px; width: 25px; float: left;" /></a></td>
+															<td align="center" valign="top" width="35"><a href="https://www.youtube.com/user/phpshopsoftware#p/u" target="_blank"><img alt=""  src="https://www.phpshop.ru/images/social-youtube-light.png" style="border: 0px; width: 25px; float: left;" /></a></td>
+														</tr>
+													</tbody>
+												</table>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+									</div>
+									
 
-                                            </td>
-                                        </tr>
+									<div class="row" style="display:inline-block;max-width:220px;vertical-align:top;width:100%">
+									<table align="left" border="0" cellpadding="0" cellspacing="0" class="row">
+										<tbody>
+											<tr>
+												<td align="left" class="footerTitle centerText" style="font-family: &quot;Roboto&quot;, sans-serif; color: rgb(255, 255, 255); font-size: 13px; line-height: 22.1px; font-weight: 700; letter-spacing: 0px; padding: 0px 0px 20px;" valign="middle">Накопительные скидки до 25%</td>
+											</tr>
+											<tr>
+												<td align="left" class="footerDescription centerText" style="font-family: &quot;Roboto&quot;, sans-serif; color: rgb(255, 255, 255); font-size: 12px; line-height: 20.4px; font-weight: 400; letter-spacing: 0px; padding: 0px 0px 10px;" valign="middle">Накопительные скидки распространяются в рамках приобретенной ранее версии PHPShop.</td>
+											</tr>
+											<tr>
+												<td align="left" class="footerDescription centerText" style="font-family: &quot;Roboto&quot;, sans-serif; color: rgb(147, 147, 147); font-size: 12px; line-height: 20.4px; font-weight: 400; letter-spacing: 0px; padding: 0px;" valign="middle"></td>
+											</tr>
+											<tr>
+												<td align="left" class="footerDescription centerText" style="font-family: &quot;Roboto&quot;, sans-serif; color: rgb(147, 147, 147); font-size: 14px; line-height: 23.8px; font-weight: 400; letter-spacing: 0px; padding: 0px 0px 10px;" valign="middle"></td>
+											</tr>
+										</tbody>
+									</table>
+									</div>
+									
 
-                                        <tr>
-                                            <td colspan="2" class="bg1" style="	background:#f6f4f4"><div style="height:10px;	background:#f6f4f4"></div></td>
-                                        </tr>
+									<div class="row" style="display:inline-block;max-width:20px;vertical-align:top;width:100%">
+									<table align="left" border="0" cellpadding="0" cellspacing="0" class="row">
+										<tbody>
+											<tr>
+												<td align="center" height="60" style="font-size:60px;line-height:60px;" valign="top"></td>
+											</tr>
+										</tbody>
+									</table>
+									</div>
+									
 
-                                        </table>
-                                        </div>
-
-                                        </div>
-                                        </body>
-                                        </html>
+									<div class="row" style="display:inline-block;max-width:140px;vertical-align:top;width:100%">
+									<table align="left" border="0" cellpadding="0" cellspacing="0" class="row">
+										<tbody>
+											<tr>
+												<td align="left" class="footerTitle centerText" style="font-family: &quot;Roboto&quot;, sans-serif; color: rgb(255, 255, 255); font-size: 13px; line-height: 22.1px; font-weight: 700; letter-spacing: 0px; padding: 0px 0px 20px;" valign="middle">Меню</td>
+											</tr>
+											<tr>
+												<td align="left" class="footerDescriptionLinks centerText" style="font-family: &quot;Roboto&quot;, sans-serif; color: rgb(147, 147, 147); font-size: 12px; line-height: 20.4px; font-weight: 400; letter-spacing: 0px; padding: 0px;" valign="middle"><a href="https://www.phpshop.ru/news/" target="_blank" style="color: rgb(255, 255, 255); text-decoration: none;">Новости</a></td>
+											</tr>
+											<tr>
+												<td align="left" class="footerDescriptionLinks centerText" style="font-family: &quot;Roboto&quot;, sans-serif; color: rgb(147, 147, 147); font-size: 12px; line-height: 20.4px; font-weight: 400; letter-spacing: 0px; padding: 0px;" valign="middle"><a href="https://www.phpshop.ru/page/sozdanie-internet-magazina.html" target="_blank" style="color: rgb(255, 255, 255); text-decoration: none;">С чего начать?</a></td>
+											</tr>
+											<tr>
+												<td align="left" class="footerDescriptionLinks centerText"  style="font-family: &quot;Roboto&quot;, sans-serif; color: rgb(147, 147, 147); font-size: 12px; line-height: 20.4px; font-weight: 400; letter-spacing: 0px; padding: 0px;" valign="middle"><a href="https://www.phpshop.ru/docs/update.html" target="_blank" style="color: rgb(255, 255, 255); text-decoration: none;">Журнал обновлений</a></td>
+											</tr>
+											<tr>
+												<td align="left" class="footerDescriptionLinks centerText" style="font-family: &quot;Roboto&quot;, sans-serif; color: rgb(147, 147, 147); font-size: 12px; line-height: 20.4px; font-weight: 400; letter-spacing: 0px; padding: 0px;" valign="middle"><a href="http://faq.phpshop.ru/" target="_blank" style="color: rgb(255, 255, 255); text-decoration: none;">Учебник</a></td>
+											</tr>
+											<tr>
+												<td align="left" class="footerDescriptionLinks centerText" style="font-family: &quot;Roboto&quot;, sans-serif; color: rgb(147, 147, 147); font-size: 12px; line-height: 20.4px; font-weight: 400; letter-spacing: 0px; padding: 0px;" valign="middle"><a href="https://www.phpshop.ru/page/design.html" target="_blank" style="color: rgb(255, 255, 255); text-decoration: none;">Персональный дизайн</a></td>
+											</tr>
+										</tbody>
+									</table>
+									</div>
+									</td>
+								</tr>
+								<tr>
+									<td align="center" height="30" style="font-size:30px;line-height:30px;border-bottom:1px solid #ffffff" valign="top"></td>
+								</tr>
+								<tr>
+									<td align="center" style="font-size:0;padding:0" valign="top">
+									<div class="row" style="display:inline-block;vertical-align:middle;width:100%">
+									<table align="left" border="0" cellpadding="0" cellspacing="0" class="row">
+										<tbody>
+											<tr>
+												<td align="left" class="footerDescription centerText"  style="font-family: &quot;Roboto&quot;, sans-serif; color: rgb(255, 255, 255); font-size: 12px; line-height: 20.4px; font-weight: 400; letter-spacing: 0px;" valign="middle"><br />
+												Copyright &copy; PHPShop&trade; 2004-2019г. Все права защищены.<br />
+												&nbsp;</td>
+											</tr>
+										</tbody>
+									</table>
+									</div>
+								
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</body>
+</html>

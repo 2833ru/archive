@@ -36,7 +36,7 @@
             <!-- Price Starts -->
             <div class="price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                 <span class="price-head">{Цена}:</span>
-                <span class="price-new" itemprop="price">@productPrice@</span> 
+                <span class="price-new" itemprop="price" content="@productSchemaPrice@">@productPrice@</span> 
                 <span class="price-new rubznak" itemprop="priceCurrency" content="RUB">@productValutaName@</span>
                 <span class="price-old">@productPriceRub@</span>
             </div>

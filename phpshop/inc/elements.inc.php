@@ -3,7 +3,6 @@
 /**
  * Ёлемент стандартных системных переменных
  * @author PHPShop Software
- * @tutorial http://wiki.phpshop.ru/index.php/PHPShopCoreElement
  * @version 1.4
  * @package PHPShopElements
  */
@@ -72,7 +71,10 @@ class PHPShopCoreElement extends PHPShopElements {
             if (is_array($showcaseData)) {
 
                 if (!empty($showcaseData['currency']) and $this->PHPShopNav->notPath('order')) {
-                    $_SESSION['valuta'] = $showcaseData['currency'];
+
+                    if (empty($_SESSION['valuta']))
+                        $_SESSION['valuta'] = $showcaseData['currency'];
+
                     $_SESSION['lang'] = $showcaseData['lang'];
                 }
 
@@ -137,6 +139,13 @@ class PHPShopCoreElement extends PHPShopElements {
         $this->set('telNumMobile', $tel_xs[0]);
         $this->set('rule', $this->lang('rule'));
         $this->set('name', $this->PHPShopSystem->getValue('name'));
+        
+        // Favicon
+        $icon = $this->PHPShopSystem->getValue('icon');
+        if(empty($icon))
+            $icon='/apple-touch-icon.png';
+        $this->set('icon', $icon);
+        
         $this->set('company', $this->PHPShopSystem->getValue('company'));
         $this->set('descrip', $this->PHPShopSystem->getValue('descrip'));
         $this->set('adminMail', $this->PHPShopSystem->getValue('adminmail2'));
@@ -200,7 +209,6 @@ class PHPShopCoreElement extends PHPShopElements {
 /**
  * Ёлемент формы авторизации пользовател€
  * @author PHPShop Software
- * @tutorial http://wiki.phpshop.ru/index.php/PHPShopUserElement
  * @version 1.3
  * @package PHPShopElements
  */
@@ -421,7 +429,6 @@ class PHPShopUserElement extends PHPShopElements {
 /**
  * Ёлемент каталоги страниц
  * @author PHPShop Software
- * @tutorial http://wiki.phpshop.ru/index.php/PHPShopPageCatalogElement
  * @version 1.2
  * @package PHPShopElements
  */
@@ -575,7 +582,6 @@ class PHPShopPageCatalogElement extends PHPShopElements {
 /**
  * Ёлемент текстовые блоки
  * @author PHPShop Software
- * @tutorial http://wiki.phpshop.ru/index.php/PHPShopTextElement
  * @version 1.1
  * @package PHPShopElements
  */
@@ -741,7 +747,6 @@ class PHPShopTextElement extends PHPShopElements {
 /**
  * Ёлемент cмена шаблонов
  * @author PHPShop Software
- * @tutorial http://wiki.phpshop.ru/index.php/PHPShopSkinElement
  * @version 1.1
  * @package PHPShopElements
  */
@@ -816,7 +821,6 @@ class PHPShopSkinElement extends PHPShopElements {
 /**
  * Ёлемент последние новости
  * @author PHPShop Software
- * @tutorial http://wiki.phpshop.ru/index.php/PHPShopNewsElement
  * @version 1.1
  * @package PHPShopElements
  */
@@ -887,17 +891,20 @@ class PHPShopNewsElement extends PHPShopElements {
             if (is_array($data))
                 foreach ($data as $row) {
 
-                    // ќпредел€ем переменные
-                    $this->set('newsId', $row['id']);
-                    $this->set('newsZag', $row['zag']);
-                    $this->set('newsData', $row['datas']);
-                    $this->set('newsKratko', $row['kratko']);
+                    if (!empty($row['id'])) {
 
-                    // ѕерехват модул€
-                    $this->setHook(__CLASS__, __FUNCTION__, $row, 'END');
+                        // ќпредел€ем переменные
+                        $this->set('newsId', $row['id']);
+                        $this->set('newsZag', $row['zag']);
+                        $this->set('newsData', $row['datas']);
+                        $this->set('newsKratko', $row['kratko']);
 
-                    // ѕодключаем шаблон
-                    $dis.=$this->parseTemplate($this->getValue('templates.news_main_mini'));
+                        // ѕерехват модул€
+                        $this->setHook(__CLASS__, __FUNCTION__, $row, 'END');
+
+                        // ѕодключаем шаблон
+                        $dis.=$this->parseTemplate($this->getValue('templates.news_main_mini'));
+                    }
                 }
             return $dis;
         }
@@ -908,7 +915,6 @@ class PHPShopNewsElement extends PHPShopElements {
 /**
  * Ёлемент вывода изображений в слайдер
  * @author PHPShop Software
- * @tutorial http://wiki.phpshop.ru/index.php/PHPShopSliderElement
  * @version 1.0
  * @package PHPShopElements
  */
@@ -998,7 +1004,6 @@ class PHPShopSliderElement extends PHPShopElements {
 /**
  * Ёлемент ‘орма опросов
  * @author PHPShop Software
- * @tutorial http://wiki.phpshop.ru/index.php/PHPShopOprosElement
  * @version 1.1
  * @package PHPShopElements
  */
@@ -1121,7 +1126,6 @@ class PHPShopOprosElement extends PHPShopElements {
 /**
  * Ёлемент баннер
  * @author PHPShop Software
- * @tutorial http://wiki.phpshop.ru/index.php/PHPShopBannerElement
  * @version 1.5
  * @package PHPShopElements
  */
@@ -1416,17 +1420,6 @@ class PHPShopRecaptchaElement extends PHPShopElements {
      */
     public function true(){
     return $this->recaptcha;
-
-
-
-
-
-
-
-
-
     }
-
 }
-
 ?>

@@ -63,10 +63,9 @@ function actionStart() {
     $Info = '<h4>Инструкция сервиса pbrf.ru</h4>
     <p><b>Для получения ключа необходимо:</b>
     <ul>
-        <li>Зарегистироваться на <a target="_blank" href="http://pbrf.ru/пользователь/войти">Pbrf.ru</a></li>
-        <li>Авторизоваться на сервисе</li>
-        <li>Получить ключ доступа в личном кабинете <i>(вкладка API)</i></li>
-        <li>Ввести этот ключ в поле "Ключ API" на вкладке "Настройки" в этом окне</li>
+        <li>Зарегистироваться на <a target="_blank" href="http://pbrf.ru/пользователь/войти">Pbrf.ru</a>.</li>
+        <li>Получить ключ доступа в личном кабинете <i>(вкладка API)</i>.</li>
+        <li>Ввести этот ключ в поле <kbd>Ключ API</kbd> в настройки модуля.</li>
     </ul>
     </p>
     <p class="alert alert-info">Название домена при создание ключа необходимо указывать первого уровня, даже если магазин работает у вас на субдомене.<br>
@@ -74,10 +73,10 @@ function actionStart() {
     $Tab3=$PHPShopGUI->setInfo($Info, 250, '95%');
 
     // Содержание закладки 4
-    $Tab4=$PHPShopGUI->setPay('О модуле',false);
+    $Tab4=$PHPShopGUI->setPay(false,true);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Настройка",$Tab1,430), array("Инструкция",$Tab3,430), array("О Модуле",$Tab4,430));
+    $PHPShopGUI->setTab(array("Настройка",$Tab1,true), array("Инструкция",$Tab3), array("О Модуле",$Tab4));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter=

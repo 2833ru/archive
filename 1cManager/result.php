@@ -4,7 +4,7 @@
  * Автономная синхронизация номенклатуры из 1С
  * @package PHPShopExchange
  * @author PHPShop Software
- * @version 2.5
+ * @version 2.7
  */
 // Авторизация
 include_once("login.php");
@@ -31,7 +31,7 @@ function charsGenerator($category, $CsvToArray) {
     $return = null;
 
     // Отладка
-    $debug = $_GET['debug'];
+    $debug = $_REQUEST['debug'];
 
     // Нормализация нескольких значений
     for ($i = $GLOBALS['option']['sort']; $i < count($CsvToArray); $i = $i + 2) {
@@ -60,8 +60,8 @@ function charsGenerator($category, $CsvToArray) {
 
         $sort_name = trim($CsvToArray[$i]);
         $sort_value = trim($CsvToArray[$i + 1]);
-        
-        if(empty($sort_name) or empty($sort_value)) 
+
+        if (empty($sort_name) or empty($sort_value))
             continue;
 
         // Получить ИД набора характеристик в каталоге
@@ -92,7 +92,7 @@ function charsGenerator($category, $CsvToArray) {
             $return[$row_2['parent']][] = $row_2['id'];
         }
         // Отсутствует в базе
-        else {
+        elseif (!empty($cat_name)) {
 
             // Проверка характеристики
             if (!empty($where_in))
@@ -205,7 +205,7 @@ class ReadCsvCatalog extends PHPShopReadCsvNative {
      parent_to = '" . trim($CsvToArray[2]) . "' ";
 
             // Отладка
-            if (isset($_GET['debug'])) {
+            if (isset($_REQUEST['debug'])) {
                 echo $sql . PHP_EOL;
                 $result = mysqli_query($link_db, $sql) or die(mysqli_error($link_db)) . PHP_EOL;
             }
@@ -251,7 +251,6 @@ class ReadCsv1C extends PHPShopReadCsvNative {
 
     function __construct($CsvContentFile, $ObjCatalog, $ObjSystem) {
         $this->ImagePath = $GLOBALS['SysValue']['dir']['dir'] . "/UserFiles/Image/";
-        //$this->CsvContent = $CsvContent;
         $this->TableName = $GLOBALS['SysValue']['base']['products'];
         $this->TableNameFoto = $GLOBALS['SysValue']['base']['foto'];
         $this->Sklad_status = $ObjSystem->getSerilizeParam("admoption.sklad_status");
@@ -355,8 +354,7 @@ class ReadCsv1C extends PHPShopReadCsvNative {
 
             if ($this->ObjSystem->getSerilizeParam("1c_option.update_price") == 1 and !empty($CsvToArray[7]))
                 $sql.="price='" . @$CsvToArray[7] . "', "; // цена 1
-
-
+ 
             // Склад
             if ($this->ObjSystem->getSerilizeParam("1c_option.update_item") == 1) {
                 switch ($this->Sklad_status) {
@@ -429,7 +427,7 @@ class ReadCsv1C extends PHPShopReadCsvNative {
             $sql.=" where uid='" . $CsvToArray[0] . "'";
 
             // Отладка
-            if (isset($_GET['debug'])) {
+            if (isset($_REQUEST['debug'])) {
                 echo $sql . PHP_EOL;
                 $result = mysqli_query($link_db, $sql) or die(mysqli_error($link_db)) . PHP_EOL;
             }
@@ -472,14 +470,13 @@ class ReadCsv1C extends PHPShopReadCsvNative {
                         }
                     }
 
-
                     $sql = "UPDATE " . $this->TableName . " SET ";
                     $sql.="vendor='" . $vendor . "', ";
                     $sql.="vendor_array='" . $resSerialized . "' ";
                     $sql.=" where uid='" . $CsvToArray[0] . "'";
 
                     // Отладка
-                    if (isset($_GET['debug'])) {
+                    if (isset($_REQUEST['debug'])) {
                         echo $sql . PHP_EOL;
                         $result = mysqli_query($link_db, $sql) or die(mysqli_error($link_db)) . PHP_EOL;
                     }
@@ -562,10 +559,18 @@ class ReadCsv1C extends PHPShopReadCsvNative {
             else
                 $sql.="category='1000001',";
 
-            $sql.="name='" . addslashes(trim($CsvToArray[1])) . "',
-            description='" . addslashes($CsvToArray[2]) . "',
-            content='" . addslashes($CsvToArray[4]) . "',
-            price='" . $CsvToArray[7] . "',
+            $sql.="name='" . addslashes($CsvToArray[1]) . "', "; // название
+
+            if ($this->ObjSystem->getSerilizeParam('1c_option.update_content') == 1 and !empty($CsvToArray[4]))
+                $sql.="content='" . addslashes($CsvToArray[4]) . "', "; // краткое описание
+
+            if ($this->ObjSystem->getSerilizeParam("1c_option.update_description") == 1 and !empty($CsvToArray[2]))
+                $sql.="description='" . addslashes($CsvToArray[2]) . "', "; // подробное описание
+
+            if ($this->ObjSystem->getSerilizeParam("1c_option.update_price") == 1 and !empty($CsvToArray[7]))
+                $sql.="price='" . @$CsvToArray[7] . "', "; // цена 1
+
+            $sql.="
             sklad='" . $sklad . "',
             p_enabled='" . $p_enabled . "',
             enabled='" . $enabled . "',
@@ -578,7 +583,6 @@ class ReadCsv1C extends PHPShopReadCsvNative {
             if (!empty($CsvToArray[3]))
                 $sql.="pic_small='" . $this->ImagePlus($CsvToArray[3]) . "_1s." . $this->ImageSrc . "',
             pic_big='" . $this->ImagePlus($CsvToArray[3]) . "_1." . $this->ImageSrc . "',";
-
 
             if (PHPShopProductFunction::true_parent($CsvToArray[0])) {
                 $sql.="parent_enabled='1', ";
@@ -620,7 +624,7 @@ class ReadCsv1C extends PHPShopReadCsvNative {
             ed_izm='" . $CsvToArray[13] . "'";
 
             // Отладка
-            if (isset($_GET['debug'])) {
+            if (isset($_REQUEST['debug'])) {
                 echo $sql . PHP_EOL;
                 $result = mysqli_query($link_db, $sql) or die(mysqli_error($link_db)) . PHP_EOL;
             }
@@ -647,10 +651,10 @@ class ReadCsv1C extends PHPShopReadCsvNative {
 }
 
 // форматирование даты
-if (preg_match("/[^(0-9)|(\-)]/", $_GET['date']))
+if (preg_match("/[^(0-9)|(\-)]/", $_REQUEST['date']))
     $date = "";
 else
-    $date = $_GET['date'];
+    $date = $_REQUEST['date'];
 
 // Проверка режима Lite для ShopBuilder
 if (empty($GLOBALS['option']['shopbuilder'])) {
@@ -662,7 +666,7 @@ if (empty($GLOBALS['option']['shopbuilder'])) {
 }
 
 // Читаем категории
-if ($_GET['create_category'] == "true")
+if ($_REQUEST['create_category'] == "true")
     $ReadCsvCatalog = new ReadCsvCatalog($dir . "/tree.csv");
 else
     $ReadCsvCatalog = false;
@@ -671,7 +675,7 @@ else
 $PS = new PHPShopSystem();
 
 // Смотрим папку
-if ($_GET['files'] == "all" and is_dir($dir))
+if ($_REQUEST['files'] == "all" and is_dir($dir))
     if (@$dh = opendir($dir)) {
         while (($file = readdir($dh)) !== false) {
 
@@ -680,8 +684,8 @@ if ($_GET['files'] == "all" and is_dir($dir))
         }
         closedir($dh);
     }
-if (is_file("./" . $dir . "/" . $_GET['files'])) {
-    $list_file[] = $_GET['files'];
+if (is_file("./" . $dir . "/" . $_REQUEST['files'])) {
+    $list_file[] = $_REQUEST['files'];
 }
 
 // Тестирование
@@ -715,7 +719,7 @@ if (is_array($list_file))
             }
 
             // Результат
-            if ($_GET['files'] != "all")
+            if ($_REQUEST['files'] != "all")
                 echo $date . ";" . $F_done . "
 " . $GetItemCreate . ";" . $GetItemUpdate . ";" . $GetCatalogCreate . ";";
 
@@ -732,7 +736,7 @@ if (is_array($list_file))
 else
     exit("Не могу прочитать файл " . $dir . "/" . $val);
 
-if ($_GET['files'] == "all")
+if ($_REQUEST['files'] == "all")
     echo $date . ";" . $F_done . "
 " . $GetItemCreate . ";" . $GetItemUpdate . ";" . $GetCatalogCreate . ";";
 ?>

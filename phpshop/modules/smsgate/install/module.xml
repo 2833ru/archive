@@ -4,7 +4,7 @@
     <name>SMSGate</name>
     <description>Модуль SMS уведомления InCore Dev</description>
     <faqlink></faqlink>
-    <category>sale</category>
+    <category>develop</category>
     <adminmenu>
         <title>SMS уведомления</title>
         <capability>true</capability>

@@ -3,7 +3,7 @@
     <version>1.0</version>
     <name>AcquiroPay</name>
     <description>Прием оплат через AcquiroPay в соответствии с 54-ФЗ.</description>
-    <category>sale,payment</category>
+    <category>payment</category>
     <adminmenu>
         <title>AcquiroPay</title>
         <capability>true</capability>

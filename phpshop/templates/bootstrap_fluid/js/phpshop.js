@@ -89,7 +89,7 @@ function addToCartList(product_id, num, parent, addname) {
 
     if (addname === undefined)
         addname = '';
-    
+
     if (parent === undefined)
         parent = 0;
 
@@ -282,6 +282,11 @@ function filter_load(filter_str, obj) {
                 setEqualHeight(".product-description");
                 setEqualHeight(".product-name-fix");
 
+                // lazyLoad
+                setTimeout(function() {
+                    $(window).lazyLoadXT();
+                }, 50);
+
                 // Сброс Waypoint
                 Waypoint.refreshAll();
             }
@@ -353,7 +358,7 @@ function faset_filter_click(obj) {
             if (last != '&' && last != '')
                 href += '&';
 
-            href += $(obj).attr('data-url').split(']').join('][]')+'&';
+            href += $(obj).attr('data-url').split(']').join('][]') + '&';
 
         }
         else {
@@ -384,18 +389,7 @@ function setEqualHeight(columns) {
 
 }
 
-// Коррекция знака рубля
-function setRubznak() {
-    $('.rubznak').each(function() {
-        if ($(this).html() == 'руб.' || $(this).html() == 'руб' || $('this').html() == 'p')
-            $(this).html('p');
-    });
-}
-
 $(document).ready(function() {
-
-    // Коррекция знака рубля
-    setRubznak();
 
     // логика кнопки оформления заказа 
     $("button.orderCheckButton").on("click", function(e) {
@@ -629,7 +623,6 @@ $(document).ready(function() {
         commentList($(this).attr('data-uid'), 'list');
     });
 
-
     // убираем пустые закладки подробного описания
     if ($('#files').html() != 'Нет файлов')
         $('#filesTab').addClass('show');
@@ -640,10 +633,6 @@ $(document).ready(function() {
     if ($('#pages').html() != '')
         $('#pagesTab').addClass('show');
 
-    /*
-     if ($('#vendorActionButton').val() == 'Применить') {
-     $('#sorttable').addClass('show');
-     }*/
 
     // Иконки в основном меню категорий
     if (MEGA_MENU_ICON === false) {
@@ -756,7 +745,7 @@ $(document).ready(function() {
                     // Результат поиска
                     if (data != 'false') {
 
-                      if (data != $("#search").attr('data-content')) {
+                        if (data != $("#search").attr('data-content')) {
                             $("#search").attr('data-content', data);
 
                             $("#search").popover('show');
@@ -769,7 +758,7 @@ $(document).ready(function() {
         else {
             $("#search").attr('data-content', '');
             $("#search").popover('hide');
-            
+
         }
     });
 
@@ -821,15 +810,6 @@ $(document).ready(function() {
         }
     });
 
-    // меню каталога товаров
-    $(".dropdown").hover(
-            function() {
-                $('.dropdown-menu', this).fadeIn("fast");
-            },
-            function() {
-                $('.dropdown-menu', this).fadeOut("fast");
-            });
-
     // Фотогалерея в по карточке товара
     if ($('.bxslider').length) {
         $('.bxslider-pre').addClass('hide');
@@ -875,20 +855,20 @@ $(document).ready(function() {
         sliderbig.destroySlider();
         delete sliderbig;
     });
-    
-        // Сворачиваемый блок 
+
+    // Сворачиваемый блок 
     $('.collapse').on('show.bs.collapse', function() {
         $(this).prev('h4').find('i').removeClass('fa-chevron-down');
         $(this).prev('h4').find('i').addClass('fa-chevron-up');
-        $(this).prev('h4').attr('title','Скрыть');
+        $(this).prev('h4').attr('title', 'Скрыть');
     });
     $('.collapse').on('hidden.bs.collapse', function() {
         $(this).prev('h4').find('i').removeClass('fa-chevron-up');
         $(this).prev('h4').find('i').addClass('fa-chevron-down');
-         $(this).prev('h4').attr('title','Показать');
+        $(this).prev('h4').attr('title', 'Показать');
     });
-    
-    
+
+
     // добавление в корзину подробное описание
     $("body").on('click', ".addToCartFull", function() {
 
@@ -928,7 +908,7 @@ $(document).ready(function() {
         // Опции характеристики
         else if ($('#optionMessage').html()) {
             var optionCheck = true;
-            var optionValue=$('#allOptionsSet' + $(this).attr('data-uid')).val();
+            var optionValue = $('#allOptionsSet' + $(this).attr('data-uid')).val();
             $('.optionsDisp select').each(function() {
                 if ($(this).hasClass('req') && optionValue === '')
                     optionCheck = false;
@@ -1023,6 +1003,91 @@ $(document).ready(function() {
             input.val(0);
         }
     });
+    // Подсказки DaData.ru
+    var DADATA_TOKEN = $('#body').attr('data-token');
+    if (DADATA_TOKEN) {
+
+        $('[name="name_new"]').suggestions({
+            token: DADATA_TOKEN,
+            partner: "PHPSHOP",
+            type: "NAME",
+            params: {
+                parts: ["NAME"]
+            },
+            count: 5
+        });
+        $('[name="name"]').suggestions({
+            token: DADATA_TOKEN,
+            partner: "PHPSHOP",
+            type: "NAME",
+            params: {
+                parts: ["NAME"]
+            },
+            count: 5
+        });
+        $('[name="name_person"]').suggestions({
+            token: DADATA_TOKEN,
+            partner: "PHPSHOP",
+            type: "NAME",
+            params: {
+                parts: ["NAME"]
+            },
+            count: 5
+        });
+        $('[name="oneclick_mod_name"]').suggestions({
+            token: DADATA_TOKEN,
+            partner: "PHPSHOP",
+            type: "NAME",
+            params: {
+                parts: ["NAME"]
+            },
+            count: 5
+        });
+        $('[name="returncall_mod_name"]').suggestions({
+            token: DADATA_TOKEN,
+            partner: "PHPSHOP",
+            type: "NAME",
+            params: {
+                parts: ["NAME"]
+            },
+            count: 5
+        });
+        $('[type="email"]').suggestions({
+            token: DADATA_TOKEN,
+            partner: "PHPSHOP",
+            type: "EMAIL",
+            suggest_local: false,
+            count: 5
+        });
+        $('[name="org_name"]').suggestions({
+            token: DADATA_TOKEN,
+            partner: "PHPSHOP",
+            type: "PARTY",
+            count: 5
+        });
+        $('[name="company"]').suggestions({
+            token: DADATA_TOKEN,
+            partner: "PHPSHOP",
+            type: "PARTY",
+            count: 5
+        });
+    }
+
+    //  Согласие на использование cookie
+    $('.cookie-message a').on('click', function(e) {
+        e.preventDefault();
+        $.cookie('usecookie', 1, {
+            path: '/',
+            expires: 365
+        });
+        $(this).parent().slideToggle("slow");
+    });
+    var usecookie = $.cookie('usecookie');
+    if (usecookie == undefined && COOKIE_AGREEMENT) {
+        $('.cookie-message p').html('С целью предоставления наиболее оперативного обслуживания на данном сайте используются cookie-файлы. Используя данный сайт, вы даете свое согласие на использование нами cookie-файлов.');
+        $('.cookie-message').removeClass('hide');
+    }
+
 });
 
 // reCAPTCHA

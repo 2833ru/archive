@@ -12,8 +12,9 @@ function cdekwidgetSend($data) {
             if ($_POST['statusi_new'] == $CDEKWidget->option['status'] or !empty($_POST['cdek_send_now'])) {
 
                 $CDEKWidget->setDataFromOrderEdit($data);
-                $CDEKWidget->Request();
-                $_POST['cdek_order_data_new'] = '';
+                $request = $CDEKWidget->Request();
+                if($request)
+                    $_POST['cdek_order_data_new'] = '';
             }
         }
     }

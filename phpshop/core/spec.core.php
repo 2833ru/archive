@@ -3,7 +3,6 @@
 /**
  * Обработчик спецпредложений товаров
  * @author PHPShop Software
- * @tutorial http://wiki.phpshop.ru/index.php/PHPShopSpec
  * @version 1.3
  * @package PHPShopShopCore
  */

@@ -6,7 +6,7 @@ PHPShopObj::loadClass('user');
 
 // Стартовый вид
 function actionStart() {
-    global $PHPShopGUI, $PHPShopOrm, $PHPShopModules;
+    global $PHPShopGUI, $PHPShopOrm, $PHPShopModules,$PHPShopSystem;
 
     // Выборка
     $PHPShopOrm->sql = 'SELECT a.*, b.name as product, b.pic_small, b.description FROM ' . $GLOBALS['SysValue']['base']['comment'] . ' AS a 
@@ -36,13 +36,21 @@ function actionStart() {
     ' . $data['description'] . '
   </div>
 </div>';
+    
+    $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));
+    $oFCKeditor = new Editor('content_new');
+    $oFCKeditor->Height = '300';
+    $oFCKeditor->Value = $data['content'];
+    
 
     // Содержание закладки 1
     $Tab1 = $PHPShopGUI->setCollapse('Информация', $PHPShopGUI->setField("ФИО", $PHPShopGUI->setInput('text.required', "name_new", $data['name'])) .
             $PHPShopGUI->setField("Название", $media) .
-            $PHPShopGUI->setField("Комментарий", $PHPShopGUI->setTextarea('content_new', $data['content'], false, '100%', 200)) .
+            $PHPShopGUI->setField("Комментарий", $oFCKeditor->AddGUI()) .
             $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("enabled_new", 1, "Вкл.", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выкл.", $data['enabled'])
     ));
+    
+
 
 
     // Запрос модуля на закладку

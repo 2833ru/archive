@@ -4,7 +4,6 @@
  * Родительский класс ядра
  * Примеры использования размещены в папке phpshop/core/
  * @author PHPShop Software
- * @tutorial http://wiki.phpshop.ru/index.php/PHPShopCore
  * @version 1.9
  * @package PHPShopClass
  */

@@ -17,6 +17,10 @@ function order_cdek_hook($obj, $row, $rout) {
         $weight = $PHPShopCart->getWeight();
         if(empty($weight))
             $weight = $CDEKWidget->option['weight'];
+        if(empty($CDEKWidget->option['default_city']))
+            $defaultCity = 'auto';
+        else
+            $defaultCity = $CDEKWidget->option['default_city'];
 
         $obj->set('order_action_add', '
  <!-- Ìîäàëüíîå îêíî cdekwidget -->
@@ -40,7 +44,7 @@ function order_cdek_hook($obj, $row, $rout) {
         <!--/ Ìîäàëüíîå îêíî cdekwidget -->
         
         <input type="hidden" id="cdekwidgetCityFrom" value="' . $CDEKWidget->option[city_from] . '">
-        <input type="hidden" id="cdekwidgetdefaultCity" value="' . $CDEKWidget->option[default_city] . '">
+        <input type="hidden" id="cdekwidgetdefaultCity" value="' . $defaultCity . '">
 <input type="hidden" id="ñdekCartWeight" value="' . $weight . '">
 <input type="hidden" id="ñdekDefaultLength" value="' . $CDEKWidget->option[length] . '">
 <input type="hidden" id="ñdekDefaultWidth" value="' . $CDEKWidget->option[width] . '">

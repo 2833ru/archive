@@ -1,7 +1,7 @@
 <div class="col-md-3 col-sm-6 product-block-wrapper">
     <div class="product-col">
         <div class="image product-img-centr">
-            <a href="/shop/UID_@productUid@.html" title="@productName@"> <img src="@productImg@"></a>
+            <a href="/shop/UID_@productUid@.html" title="@productName@"> <img data-src="@productImg@"></a>
         </div>
         <div class="caption">
             <h4 class="product-name-fix"><a href="/shop/UID_@productUid@.html" title="@productName@">@productName@</a></h4>

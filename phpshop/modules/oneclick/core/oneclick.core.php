@@ -1,6 +1,5 @@
 <?php
 
-
 class PHPShopOneclick extends PHPShopCore {
 
     /**
@@ -89,13 +88,31 @@ class PHPShopOneclick extends PHPShopCore {
     function oneclick_mod_product_id() {
 
         if ($this->security()) {
-            $this->write();
+            $result = $this->write();
+            
+            // SMS администратору
+            $this->sms($result);
+            
             header('Location: ./done.html');
             exit();
         } else {
             $message = __($GLOBALS['SysValue']['lang']['oneclick_error']);
         }
         $this->index($message);
+    }
+    
+    /**
+     * SMS оповещение
+     */
+    function sms($text) {
+
+        if ($this->PHPShopSystem->ifSerilizeParam('admoption.sms_enabled')) {
+
+            $msg = substr($this->lang('mail_title_adm'),0,strlen($this->lang('mail_title_adm'))-1). ' '. $text['product_name_new'] ;
+
+            include_once($this->getValue('file.sms'));
+            SendSMS($msg);
+        }
     }
 
     /**
@@ -142,6 +159,8 @@ IP:                   " . $_SERVER['REMOTE_ADDR'] . "
 http://" . $_SERVER['SERVER_NAME'];
 
         new PHPShopMail($this->PHPShopSystem->getValue('adminmail2'), $this->PHPShopSystem->getValue('adminmail2'), $zag, Parser($message));
+        
+        return $insert;
     }
 
 }

@@ -9,12 +9,13 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_cloudpayment_system` (
   `api` varchar(64) NOT NULL default '',
   `taxationSystem` int(11) NOT NULL,
   `description` varchar(64) NOT NULL default '',
+  `version` varchar(64) default '1.1',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 
-INSERT INTO `phpshop_modules_cloudpayment_system` (`id`, `status`, `title`, `title_end`, `publicId`, `api`, `description`) VALUES
-(1, 0, 'Оплатить сейчас', 'Оплатите пожалуйста свой заказ', '', '','');
+INSERT INTO `phpshop_modules_cloudpayment_system` (`id`, `status`, `title`, `title_end`, `publicId`, `api`, `description`,`version`) VALUES
+(1, 0, 'Оплатить сейчас', 'Оплатите пожалуйста свой заказ', '', '','','1.1');
 
 INSERT INTO `phpshop_payment_systems` (`id`, `name`, `path`, `enabled`, `num`, `message`, `message_header`, `yur_data_flag`, `icon`) VALUES
 (10014, 'CloudPayments', 'modules', '0', 0, '<p>Ваш заказ оплачен!</p>', 'Спасибо', '', 'phpshop/modules/cloudpayments/templates/cloudpayments.png');

@@ -6,7 +6,6 @@
     <faqlink>http://faq.phpshop.ru/page/kupivkredit.html</faqlink>
     <category>payment</category>
     <sign>1542198276</sign>
-    <status>new</status>
     <adminmenu>
         <title>Купи к кредит</title>
         <capability>true</capability>

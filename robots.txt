@@ -16,7 +16,9 @@ Disallow: /forma/
 Disallow: /users/
 Disallow: /selection/
 Disallow: /rss/
-Disallow: *?*$
+Disallow: /*/?*$
+Disallow: /*.html?*$
+Disallow: /?*$
 
 User-agent: Googlebot
 Disallow: /newprice/
@@ -36,7 +38,9 @@ Disallow: /forma/
 Disallow: /users/
 Disallow: /selection/
 Disallow: /rss/
-Disallow: *?*$
+Disallow: /*/?*$
+Disallow: /*.html?*$
+Disallow: /?*$
 
 User-agent: *
 Disallow: /newprice/
@@ -56,4 +60,6 @@ Disallow: /forma/
 Disallow: /users/
 Disallow: /selection/
 Disallow: /rss/
-Disallow: *?*$
+Disallow: /*/?*$
+Disallow: /*.html?*$
+Disallow: /?*$

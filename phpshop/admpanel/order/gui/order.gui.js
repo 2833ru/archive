@@ -1,6 +1,9 @@
+// Переопределение функции
+var TABLE_EVENT = true;
+var ajax_path = "./order/ajax/";
 
 $().ready(function() {
-    
+
     // Добавить файл товара - 2 шаг
     $("body").on('click', "#selectModal .modal-footer .file-add-send", function(event) {
         event.preventDefault();
@@ -273,21 +276,29 @@ $().ready(function() {
 
     // Поиск заказа - очистка
     $(".btn-order-cancel").on('click', function() {
-        window.location.replace('?path=order');
+        table.api().ajax.url(ajax_path + 'order.ajax.php').load();
+        $(this).addClass('hide');
     });
 
     // Поиск заказа
     $(".btn-order-search").on('click', function() {
-        $('#order_search').submit();
+        var push = '?';
+        $('#order_search .form-control, #order_search .selectpicker').each(function() {
+            if ($(this).attr('name') !== undefined) {
+                push += $(this).attr('name') + '=' + escape($(this).val()) + '&';
+            }
+        });
+        table.api().ajax.url(ajax_path + 'order.ajax.php' + push).load();
+        $('.btn-order-cancel').removeClass('hide');
     });
 
     // Сделать копию из списка заказов
-    $(".dropdown-menu .copy").on('click', function() {
+    $("body").on('click', ".dropdown-menu .copy", function() {
         $(this).attr('href', '?path=order&action=new&id=' + $(this).attr('data-id'));
     });
 
     // Связь e-mail из списка заказов
-    $(".dropdown-menu .email").on('click', function() {
+    $("body").on('click', ".dropdown-menu .email", function() {
         $(this).attr('href', 'mailto:' + $('#order-' + $(this).attr('data-id') + '-email').html());
     });
 
@@ -620,6 +631,49 @@ $().ready(function() {
             myMap.controls.add('mapTools', {left: 5, top: 5});
             firstGeoObject.options.set('preset', 'twirl#buildingsIcon');
             myMap.geoObjects.add(firstGeoObject);
+        });
+    }
+
+    // Активация из списка dropdown
+    $("body").on('mouseenter', '.data-row', function() {
+        $(this).find('#dropdown_action').show();
+    });
+    $("body").on('mouseleave', '.data-row', function() {
+        $(this).find('#dropdown_action').hide();
+    });
+
+
+    // Таблица данных
+    if (typeof($.cookie('data_length')) == 'undefined')
+        var data_length = [10, 25, 50, 75, 100, 500];
+    else
+        var data_length = [parseInt($.cookie('data_length')), 10, 25, 50, 75, 100, 500];
+
+    if ($('#data').html()) {
+        var table = $('#data').dataTable({
+            "ajax": {
+                "type": "GET",
+                "url": ajax_path + 'order.ajax.php' + window.location.search,
+                "dataSrc": function(json) {
+                    $('#stat_sum').text(json.sum);
+                    $('#stat_num').text(json.num);
+                    return json.data;
+                }
+            },
+            "processing": true,
+            "serverSide": true,
+            "paging": true,
+            "ordering": true,
+            "order": [[3, "desc"]],
+            "info": false,
+            "searching": true,
+            "lengthMenu": data_length,
+            "language": locale.dataTable,
+            "stripeClasses": ['data-row', 'data-row'],
+            "aoColumnDefs": [{
+                    'bSortable': false,
+                    'aTargets': ['sorting-hide']
+                }]
         });
     }
 

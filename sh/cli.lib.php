@@ -1,47 +1,38 @@
 <?php
 
+if (empty($argv[0]))
+    exit('Only PHP-CLI command line!');
 
-if(empty($argv[0]))
-exit('Only PHP-CLI command line!');
 
-
-if(empty($argv[0])){
-  // Test
-  $argv[1]=$_GET['com'];
-  $argv[2]=$_GET['v'];
-}
-else {
-  $_SERVER['DOCUMENT_ROOT']= "..";
+if (empty($argv[0])) {
+    // Test
+    $argv[1] = $_GET['com'];
+    $argv[2] = $_GET['v'];
+} else {
+    $_SERVER['DOCUMENT_ROOT'] = "..";
 }
 
 
 $_classPath = "../phpshop/";
 include($_classPath . "class/obj.class.php");
-include($_classPath.'lib/zip/pclzip.lib.php');
-include($_classPath.'lib/phpass/passwordhash.php');
-PHPShopObj::loadClass(array("base", "file","orm"));
+include($_classPath . 'lib/zip/pclzip.lib.php');
+include($_classPath . 'lib/phpass/passwordhash.php');
+PHPShopObj::loadClass(array("base", "file", "orm"));
 
-$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, false);
-
-// Поиск лицензии
-function getLicense($file) {
-    $fstat = explode(".", $file);
-    if ($fstat[1] == "lic")
-        return $file;
-}
+$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, true);
 
 $License = parse_ini_file_true("../license/" . PHPShopFile::searchFile("../license/", 'getLicense'), 1);
 
 
 switch ($argv[1]) {
 
-	case "mysql":
-		exit("done");
-		break;
+    case "mysql":
+        exit("done");
+        break;
 
-	case "user":
+    case "user":
 
-		$hasher = new PasswordHash(8, false);
+        $hasher = new PasswordHash(8, false);
         $PHPShopOrm = new PHPShopOrm($PHPShopBase->getParam('base.users'));
 
         $insert = array(
@@ -53,28 +44,29 @@ switch ($argv[1]) {
             'name' => 'Администратор'
         );
 
-        if($PHPShopOrm->insert($insert, ''))
-			exit("done");
-		else exit("error");
+        if ($PHPShopOrm->insert($insert, ''))
+            exit("done");
+        else
+            exit("error");
 
 
-		break;
+        break;
 
 
     case "backup":
 
-		if(!empty($argv[2]))
-			$GLOBALS['SysValue']['upload']['version']=intval($argv[2]);
+        if (!empty($argv[2]))
+            $GLOBALS['SysValue']['upload']['version'] = intval($argv[2]);
 
 
         // Создание папки
-		$_backup_path='../backup/backups/' . $GLOBALS['SysValue']['upload']['version'];
+        $_backup_path = '../backup/backups/' . $GLOBALS['SysValue']['upload']['version'];
         //mkdir($_backup_path);
 
         @copy("../backup/temp/restore.sql", $_backup_path . '/restore.sql');
-        
 
-        $archive = new PclZip($_backup_path. '/files.zip');
+
+        $archive = new PclZip($_backup_path . '/files.zip');
         $map = parse_ini_file_true("../backup/temp/upd_conf.txt", 1);
         $zip_files = null;
 
@@ -103,14 +95,14 @@ switch ($argv[1]) {
             $v_list = $archive->create($zip_files, PCLZIP_OPT_REMOVE_PATH, $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . '/');
             if ($v_list == 0) {
                 //echo("error : " . $archive->errorInfo(true));
-				exit("error");
+                exit("error");
                 return false;
             }
 
             exit("done");
         }
 
-		break;
+        break;
 
 
     // Текущая версия
@@ -123,7 +115,7 @@ switch ($argv[1]) {
     // Cсылка на обновление
     case "link":
 
-        $link = "http://www.phpshop.ru/update/update5-test.php?from=" . $License['License']['DomenLocked']. "&version=" . $GLOBALS['SysValue']['upload']['version'] . "&support=" . $License['License']['SupportExpires'] . '&serial=' . $License['License']['Serial'] . '&sh=true';
+        $link = "http://www.phpshop.ru/update/update5.php?from=" . $License['License']['DomenLocked'] . "&version=" . $GLOBALS['SysValue']['upload']['version'] . "&support=" . $License['License']['SupportExpires'] . '&serial=' . $License['License']['Serial'] . '&sh=true';
 
         exit($link);
 
@@ -203,7 +195,4 @@ switch ($argv[1]) {
 
     default: exit('no command [link / sql / ini / mysql / version / backup / user]');
 }
-
-
-
 ?>

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Функция хук, вывод кнопки оплаты в ЛК и регистрация регистрация заказа в платежном шлюзе Сбербанка Российской Федерации
  * @param object $obj объект функции
@@ -13,10 +14,7 @@ function userorderpaymentlink_mod_sberbankrf_hook($obj, $PHPShopOrderFunction) {
     $option = $PHPShopSberbankRFArray->getArray();
 
     // Оплата
-    if($_REQUEST["paynow"] == "Y"){
-
-        // Сумма покупки
-        $out_summ = $PHPShopOrderFunction->getTotal()*100;
+    if ($_REQUEST["paynow"] == "Y") {
 
         // Номер заказа
         $uid = $PHPShopOrderFunction->objRow['uid'];
@@ -25,14 +23,17 @@ function userorderpaymentlink_mod_sberbankrf_hook($obj, $PHPShopOrderFunction) {
         $order_pref = sberbank_log_check($uid);
 
         // НДС
-        if ($PHPShopSystem->getParam('nds_enabled') == 1){
+        if ($PHPShopSystem->getParam('nds_enabled') == 1) {
             if ($PHPShopSystem->getParam('nds') == 0)
                 $tax = 1;
             elseif ($PHPShopSystem->getParam('nds') == 10)
                 $tax = 2;
             elseif ($PHPShopSystem->getParam('nds') == 18)
                 $tax = 3;
-        } else
+            elseif ($PHPShopSystem->getParam('nds') == 20)
+                $tax = 6;
+        }
+        else
             $tax = 0;
 
         $orderNum = $uid;
@@ -44,6 +45,7 @@ function userorderpaymentlink_mod_sberbankrf_hook($obj, $PHPShopOrderFunction) {
 
         // Содержимое корзины
         $i = 0;
+        $total = 0;
         foreach ($order['Cart']['cart'] as $key => $arItem) {
 
             // Скидка
@@ -52,18 +54,35 @@ function userorderpaymentlink_mod_sberbankrf_hook($obj, $PHPShopOrderFunction) {
             else
                 $price = $arItem['price'] * 100;
 
-            $amount = (floatval($price) * intval($arItem['num']));
+            $price = round($price);
+            $amount = $price * (int) $arItem['num'];
+
+            if (empty($arItem['ed_izm']))
+                $arItem['ed_izm'] = 'шт.';
 
             $aItem[] = array(
-                "positionId"    => $i,
-                "name"          => PHPShopString::win_utf8($arItem['name']),
-                "itemPrice"     => $price,
-                "quantity"      => array ("value" => $arItem['num'], "measure" => PHPShopString::win_utf8($arItem['ed_izm'])),
-                "itemAmount"    => $amount,
-                "itemCode"      => $arItem['id'],
-                "tax"           => array("taxType" => $tax)
+                "positionId" => $i,
+                "name" => PHPShopString::win_utf8($arItem['name']),
+                "itemPrice" => $price,
+                "quantity" => array("value" => $arItem['num'], "measure" => PHPShopString::win_utf8($arItem['ed_izm'])),
+                "itemAmount" => $amount,
+                "itemCode" => $arItem['id'],
+                "tax" => array("taxType" => $tax),
+                "itemAttributes" => array(
+                    "attributes" => array(
+                        array(
+                            "name" => "paymentMethod",
+                            "value" => 1
+                        ),
+                        array(
+                            "name" => "paymentObject",
+                            "value" => 1
+                        )
+                    )
+                )
             );
             $i++;
+            $total = $total + $amount;
         }
 
         // Доставка
@@ -82,21 +101,36 @@ function userorderpaymentlink_mod_sberbankrf_hook($obj, $PHPShopOrderFunction) {
                 case 18:
                     $tax_delivery = 3;
                     break;
+                case 20:
+                    $tax_delivery = 6;
+                    break;
                 default: $tax_delivery = $tax;
             }
 
-            $delivery_price = floatval($out_summ) - (floatval($order['Cart']['sum']) * 100);
+            $delivery_price = (int) $order['Cart']['dostavka'] * 100;
 
             $aItem[] = array(
-                "positionId"    => $i + 1,
-                "name"          => PHPShopString::win_utf8('Доставка'),
-                "itemPrice"     => floatval($delivery_price),
-                "quantity"      => array ("value" => 1, "measure" => PHPShopString::win_utf8('ед.')),
-                "itemAmount"    => floatval($delivery_price),
-                "itemCode"      => $i + 1,
-                "tax"           => array("taxType" => $tax_delivery)
+                "positionId" => $i + 1,
+                "name" => PHPShopString::win_utf8('Доставка'),
+                "itemPrice" => $delivery_price,
+                "quantity" => array("value" => 1, "measure" => PHPShopString::win_utf8('ед.')),
+                "itemAmount" => $delivery_price,
+                "itemCode" => $i + 1,
+                "tax" => array("taxType" => $tax_delivery),
+                "itemAttributes" => array(
+                    "attributes" => array(
+                        array(
+                            "name" => "paymentMethod",
+                            "value" => 1
+                        ),
+                        array(
+                            "name" => "paymentObject",
+                            "value" => 4
+                        )
+                    )
+                )
             );
-
+            $total = $total + $delivery_price;
         }
 
         $array = array(
@@ -110,18 +144,18 @@ function userorderpaymentlink_mod_sberbankrf_hook($obj, $PHPShopOrderFunction) {
             "userName" => $option["login"],
             "password" => $option["password"],
             "orderNumber" => $orderNum,
-            "amount" => $out_summ,
+            "amount" => $total,
             "returnUrl" => 'http://' . $_SERVER['HTTP_HOST'] . '/success/?uid=' . $uid,
-            "failUrl"   => 'http://' . $_SERVER['HTTP_HOST'] . '/success/?uid=' . $uid,
+            "failUrl" => 'http://' . $_SERVER['HTTP_HOST'] . '/success/?uid=' . $uid,
             "orderBundle" => $orderBundle,
             "taxSystem" => intval($option["taxationSystem"])
         );
 
         // Режим разработки и боевой режим
-        if($option["dev_mode"] == 1)
-            $url ='https://3dsec.sberbank.ru/payment/rest/register.do';
+        if ($option["dev_mode"] == 1)
+            $url = 'https://3dsec.sberbank.ru/payment/rest/register.do';
         else
-            $url ='https://securepayments.sberbank.ru/payment/rest/register.do';
+            $url = 'https://securepayments.sberbank.ru/payment/rest/register.do';
 
         $rbsCurl = curl_init();
         curl_setopt_array($rbsCurl, array(
@@ -131,19 +165,19 @@ function userorderpaymentlink_mod_sberbankrf_hook($obj, $PHPShopOrderFunction) {
             CURLOPT_POSTFIELDS => http_build_query($params, '', '&')
         ));
 
-        $result =json_decode(curl_exec($rbsCurl), true);
+        $result = json_decode(curl_exec($rbsCurl), true);
 
         curl_close($rbsCurl);
 
         // Запись лога
-        if(isset($result["formUrl"]))
+        if (isset($result["formUrl"]))
             $PHPShopSberbankRFArray->log($result, $uid, 'Заказ зарегистрирован', 'register');
         else {
             $result['errorMessage'] = PHPShopString::utf8_win1251($result['errorMessage']);
             $PHPShopSberbankRFArray->log($result, $uid, 'Ошибка регистрации заказа', 'register');
         }
 
-        header('Location: '. $result["formUrl"]);
+        header('Location: ' . $result["formUrl"]);
     }
 
     // Контроль оплаты от статуса заказа

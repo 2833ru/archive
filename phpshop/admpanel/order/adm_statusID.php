@@ -25,7 +25,6 @@ function actionStart() {
     // Содержание закладки 1
     $Tab1 = $PHPShopGUI->setField("Название", $PHPShopGUI->setInput("text", "name_new", $data['name'], null, 500));
 
-
     $Tab1.=$PHPShopGUI->setField('Цвет', $PHPShopGUI->setInputColor('color_new', $data['color']));
 
     $Tab1.=$PHPShopGUI->setField("Дополнительно", 

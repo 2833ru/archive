@@ -187,7 +187,7 @@ function tab_base($data) {
            <div class="text-center panel-footer">
                     
                         <div class="btn-group" role="group" aria-label="...">
-                        <a class="btn btn-sm btn-primary ' . $demo.'" data-toggle="tooltip" data-placement="top" title="' . __('Настроить') . '" href="?path=' . $_GET['path'] . '&name=' . $path_parts['basename'] .'"><span class="glyphicon glyphicon-cog"></span> ' . __('Настроить').' ' . $row['price'] . ' </a>
+                        <a class="btn btn-sm btn-primary ' . $demo.'" data-toggle="tooltip" data-placement="top" title="' . __('Настроить') . '" href="?path=' . $_GET['path'] . '&name=' . $row['name'] .'"><span class="glyphicon glyphicon-cog"></span> ' . __('Настроить').' ' . $row['price'] . ' </a>
                               
                         <a class="btn btn-sm btn-default ' . $demo.'" data-toggle="tooltip" data-placement="top" title="' . __('Посмотреть демо') . '" href="../../?skin=' . $row['name'] . '" target="_blank"><span class="glyphicon glyphicon-eye-open"></span> ' . __('Демо').'</a>
                             

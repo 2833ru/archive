@@ -17,8 +17,8 @@ function OFDStart($data, $operation = 'sell', $json = false) {
     }
     // Внешний JSON
     else {
-        $order['Person']['mail'] = $data['receipt']['attributes']['email'];
-        $data['tel'] = $data['receipt']['attributes']['phone'];
+        $order['Person']['mail'] = $data['receipt']['client']['email'];
+        $data['tel'] = $data['receipt']['client']['phone'];
         $order['Cart']['cart'] = $data['receipt']['items'];
         $data['sum'] = $data['receipt']['total'];
     }
@@ -48,18 +48,43 @@ function OFDStart($data, $operation = 'sell', $json = false) {
 
         $sell['timestamp'] = date('d.m.Y H:m:s');
         $sell['external_id'] = $OrderId;
-        $sell['service'] = array("callback_url" => '', "inn" => $AtolRest->option['inn'], "payment_address" => $AtolRest->option['payment_address']);
-        $sell['receipt']['attributes'] = array('email' => $order['Person']['mail'], 'phone' => str_replace(array('(', ')', '-', ' '), '', $data['tel']));
+        $sell['receipt'] = array(
+            'client' => array(
+                'email' => $order['Person']['mail'],
+                'phone' => str_replace(array('(', ')', '-', ' '), '', $data['tel'])
+            ),
+            'company' => array(
+                'email' => $order['Person']['mail'],
+                'inn' => $AtolRest->option['inn'],
+                'payment_address' => $AtolRest->option['payment_address']
+            )
+        );
 
         // Корзина
         if (is_array($order['Cart']['cart'])) {
             foreach ($order['Cart']['cart'] as $product)
-                $sell['receipt']['items'][] = array('name' => $product['name'], 'price' => floatval(number_format($product['price'], 2, '.', '')), 'quantity' => floatval(number_format($product['num'], 2, '.', '')), 'sum' => floatval(number_format($product['price'] * $product['num'], 2, '.', '')), 'tax' => $tax);
+                $sell['receipt']['items'][] = array(
+                    'name' => $product['name'],
+                    'price' => floatval(number_format($product['price'], 2, '.', '')),
+                    'quantity' => floatval(number_format($product['num'], 2, '.', '')),
+                    'sum' => floatval(number_format($product['price'] * $product['num'], 2, '.', '')),
+                    'vat' => array('type' => $tax),
+                    'payment_method' => 'full_prepayment',
+                    'payment_object' => 'commodity'
+                );
         }
 
         // Доставка
         if (!empty($order['Cart']['dostavka'])) {
-            $sell['receipt']['items'][] = array('name' => 'Доставка', 'price' => floatval(number_format($order['Cart']['dostavka'], 2, '.', '')), 'quantity' => floatval(number_format(1, 2, '.', '')), 'sum' => floatval(number_format($order['Cart']['dostavka'], 2, '.', '')), 'tax' => $tax_delivery);
+            $sell['receipt']['items'][] = array(
+                'name' => 'Доставка',
+                'price' => floatval(number_format($order['Cart']['dostavka'], 2, '.', '')),
+                'quantity' => floatval(number_format(1, 2, '.', '')),
+                'sum' => floatval(number_format($order['Cart']['dostavka'], 2, '.', '')),
+                'vat' => array('type' => $tax_delivery),
+                'payment_method' => 'full_prepayment',
+                'payment_object' => 'service'
+            );
         }
 
         $sell['receipt']['total'] = floatval(number_format($data['sum'], 2, '.', ''));
@@ -78,6 +103,7 @@ function OFDStart($data, $operation = 'sell', $json = false) {
                 if ($status['status'] == 'wait') {
                     $status = $AtolRest->setOparation(null, 'report/' . $status['uuid'], false);
                     $i++;
+                    sleep(1);
                 }
                 else
                     $i = 15;

@@ -2,7 +2,7 @@
 	<div class="product-col">
 
 		<div class="image product-img-centr">
-			<a href="/shop/UID_@productUid@.html" title="@productName@"> <img src="@productImg@" alt="@productName@" class="img-responsive img-center-sm" ></a>
+			<a href="/shop/UID_@productUid@.html" title="@productName@"> <img data-src="@productImg@" alt="@productName@" class="img-responsive img-center-sm" ></a>
 		</div>
 
 		<div class="rating">@rateCid@</div>

@@ -429,7 +429,7 @@ if (empty($adm_title)) {
                         ?>
 
                         <a class="navbar-btn btn btn-sm btn-warning navbar-right hidden-xs hidden-sm hide" href="?path=order&where[statusi]=0"><?php _e('Заказы'); ?> <span class="badge" id="orders-check"><?php echo $PHPShopBase->getNumRows('orders', "where statusi='0'"); ?></span>
-                        </a>
+                        </a><audio id="play" src="images/message.mp3"></audio>
 
                     </div><!-- /.navbar-collapse -->
                 </div>

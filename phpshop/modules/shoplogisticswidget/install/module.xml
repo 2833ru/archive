@@ -4,8 +4,7 @@
     <name>Shop-Logistics Widget</name>
     <faqlink>http://faq.phpshop.ru/page/shoplogistics-widget.html</faqlink>
     <description>Виджет расчета доставки shop-logistics.ru</description>
-    <category>sale,delivery</category>
-    <status>new</status>
+    <category>delivery</category>
     <sign>1542198276</sign>
     <adminmenu>
         <title>Shop-Logistics Widget</title>

@@ -13,6 +13,63 @@
 
 $().ready(function() {
 
+
+    // Автоматизация рассылки
+    if ($('#bot_result').length) {
+
+        $(window).bind("beforeunload", function() {
+            return "Are you sure you want to exit? Please complete sign up or the app will get deleted.";
+        });
+
+        var time = performance.now();
+
+        var min = $('[name="time_limit"]').val();
+        var limit = Number($('[name="message_limit"]').val());
+        var start = limit;
+        var end = limit;
+        var refreshId = setInterval(function() {
+
+            var data = [];
+            data.push({name: 'selectID', value: 1});
+            data.push({name: 'actionList[selectID]', value: 'actionBot'});
+            data.push({name: 'start', value: start});
+            data.push({name: 'end', value: end});
+            data.push({name: 'time', value: min});
+            data.push({name: 'performance', value: performance.now() - time});
+
+            $.ajax({
+                mimeType: 'text/html; charset=windows-1251',
+                url: '?path=news.sendmail&id=' + $('[name="rowID"]').val(),
+                type: 'post',
+                data: data,
+                dataType: "json",
+                async: false,
+                success: function(data) {
+                    $('#bot_result').html(data['result']);
+                    if (data['success'] == 'done') {
+                        clearInterval(refreshId);
+                        $('.progress-bar').css('width', '100%');
+                        $('.progress-bar').removeClass('active').html('100%');
+                        $('#play').trigger("play");
+                        $(window).unbind("beforeunload");
+                    }
+                    else if (data['success']) {
+                        start += limit;
+                        end += limit;
+                        $('.progress-bar').css('width', data['bar'] + '%').html(data['bar'] + '%');
+
+                    }
+
+                }
+
+            });
+
+        }, min * 60000);
+
+    }
+
+
+
     // Применение темы оформления
     $('#theme_new').on('changed.bs.select', function() {
         theme_new = true;
@@ -46,7 +103,7 @@ $().ready(function() {
         minView: 2,
         forceParse: 0
     });
-    
+
     // Указать ID товара в виде тега - Поиск
     $("body").on('click', "#selectModal .search-action", function(event) {
         event.preventDefault();
@@ -147,7 +204,7 @@ $().ready(function() {
             'defaultText': locale.enter,
             'removeWithBackspace': true,
             'minChars': 0,
-            'maxChars': 0, 
+            'maxChars': 0,
             'placeholderColor': '#666666'
         });
 

@@ -5,7 +5,6 @@
     <description>Модуль продаж через Яндекс.Маркет.</description>
     <faqlink>http://faq.phpshop.ru/page/yandex-cart.html</faqlink>
     <category>yandex,sale</category>
-    <status>update</status>
     <adminmenu>
         <title>Яндекс.Заказ</title>
         <capability>true</capability>

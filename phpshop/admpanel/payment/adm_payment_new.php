@@ -10,6 +10,11 @@ function actionStart() {
     // Начальные данные
     $data['name'] = 'Новый способ оплаты';
     $data['enabled'] = 1;
+    $data['color'] = '#000000';
+    
+    // bootstrap-colorpicker
+    $PHPShopGUI->addCSSFiles('./css/bootstrap-colorpicker.min.css');
+    $PHPShopGUI->addJSFiles('./js/bootstrap-colorpicker.min.js');
 
     // Размер названия поля
     $PHPShopGUI->field_col = 2;
@@ -31,6 +36,7 @@ function actionStart() {
     );
 
     $Tab1.=$PHPShopGUI->setField("Иконка", $PHPShopGUI->setIcon($data['icon'], "icon_new", false));
+    $Tab1.=$PHPShopGUI->setField('Цвет', $PHPShopGUI->setInputColor('color_new', $data['color']));
 
     $Tab1.=$PHPShopGUI->setCollapse('Сообщение после заказа', $PHPShopGUI->setField("Заголовок", $PHPShopGUI->setInput("text", "message_header_new", $data['message_header'])) .
             $PHPShopGUI->setField("Сообщение", $oFCKeditor->AddGUI()));

@@ -17,7 +17,7 @@ function send_to_order_cdekwidget_hook($obj, $row, $rout)
         if(!empty($_POST['cdekInfo']))
         {
             if ($rout == 'START') {
-                $obj->delivery_mod = number_format($_POST['cdekSum'], 0, '.', ' ');
+                $obj->delivery_mod = number_format($_POST['cdekSum'], 0, '.', '');
                 $obj->manager_comment = $_POST['cdekInfo'];
                 $obj->set('deliveryInfo', $_POST['cdekInfo']);
                 $_POST['cdek_order_data_new'] = serialize(array(
@@ -32,8 +32,9 @@ function send_to_order_cdekwidget_hook($obj, $row, $rout)
 
                 $CDEKWidget->setDataFromDoneHook($obj, $row);
                 $CDEKWidget->setProducts($obj->PHPShopCart->getArray(), $obj->discount);
-                $CDEKWidget->Request();
-                $_POST['cdek_order_data_new'] = '';
+                $request = $CDEKWidget->Request();
+                if($request)
+                    $_POST['cdek_order_data_new'] = '';
             }
         }
     }

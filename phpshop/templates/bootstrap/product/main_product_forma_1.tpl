@@ -6,7 +6,7 @@
                 @newtipIcon@
             </span>
 
-            <a class="media-left highslide" href="@productImgBigFoto@" title="@productName@"><img src="@productImg@" alt="@productName@"></a>
+            <a class="media-left highslide" href="@productImgBigFoto@" title="@productName@"><img data-src="@productImg@" alt="@productName@"></a>
             <div class="media-body">
                 <h3 class="media-heading"><a href="/shop/UID_@productUid@.html" title="@productName@">@productName@</a></h3>
                 <p>@productDes@</p>

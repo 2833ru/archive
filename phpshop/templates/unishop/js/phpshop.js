@@ -89,7 +89,7 @@ function addToCartList(product_id, num, parent, addname) {
 
     if (addname === undefined)
         addname = '';
-    
+
     if (parent === undefined)
         parent = 0;
 
@@ -281,6 +281,12 @@ function filter_load(filter_str, obj) {
                 // Выравнивание ячеек товара
                 setEqualHeight(".product-description");
                 setEqualHeight(".product-name-fix");
+
+                // lazyLoad
+                setTimeout(function() {
+                    $(window).lazyLoadXT();
+                }, 50);
+
 
                 // Сброс Waypoint
                 Waypoint.refreshAll();
@@ -505,6 +511,7 @@ function mainPageProductSlider() {
     $('.spec-main').owlCarousel({
         margin: 10,
         nav: true,
+        lazyLoad: true,
         responsive: {
             0: {
                 items: 1
@@ -520,6 +527,7 @@ function mainPageProductSlider() {
     $('.nowBuy').owlCarousel({
         margin: 10,
         nav: true,
+        lazyLoad: true,
         responsive: {
             0: {
                 items: 1
@@ -535,6 +543,7 @@ function mainPageProductSlider() {
     $('.spec-main-icon').owlCarousel({
         margin: 10,
         nav: true,
+        lazyLoad: true,
         responsive: {
             0: {
                 items: 1
@@ -553,10 +562,12 @@ function mainNavMenuFix() {
     if (body_width > 768) {
         var nav_weight = $('.main-navbar-top').width();
         var full_weight = 0;
-        $('.header-menu-wrapper .main-navbar-top > li').each(function(){full_weight+=$(this).innerWidth();});
+        $('.header-menu-wrapper .main-navbar-top > li').each(function() {
+            full_weight += $(this).innerWidth();
+        });
         var menu_content = ('<div id="menu-fix" class="additional-nav-menu"><a href="#" class="dropdown-toggle link" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-bars"></i></a><ul class="dropdown-menu dropdown-menu-right aditional-link" role="menu"></ul></div>');
         if ($('.header-menu-wrapper').find('.additional-nav-menu')) {
-                var nav_weight_fix = nav_weight - 74;
+            var nav_weight_fix = nav_weight - 74;
         }
 
         if (nav_weight < full_weight) {
@@ -566,15 +577,15 @@ function mainNavMenuFix() {
 
                 if ($('.main-navbar-top').hasClass('fix')) {
 
-                }else{
+                } else {
                     $('.main-navbar-top').addClass('fix');
                 }
             }
-            while(nav_weight_fix < full_weight){
+            while (nav_weight_fix < full_weight) {
                 $('.main-navbar-top > li:last-child').appendTo('.aditional-link');
                 var full_weight = 0;
-                $('.header-menu-wrapper .main-navbar-top > li').each(function(){
-                    full_weight+=$(this).width();
+                $('.header-menu-wrapper .main-navbar-top > li').each(function() {
+                    full_weight += $(this).width();
                 });
             }
         }
@@ -1134,7 +1145,7 @@ $(document).ready(function() {
         // Опции характеристики
         else if ($('#optionMessage').html()) {
             var optionCheck = true;
-            var optionValue=$('#allOptionsSet' + $(this).attr('data-uid')).val();
+            var optionValue = $('#allOptionsSet' + $(this).attr('data-uid')).val();
             $('.optionsDisp select').each(function() {
                 if ($(this).hasClass('req') && optionValue === '')
                     optionCheck = false;
@@ -1199,7 +1210,7 @@ $(document).ready(function() {
     //  Social Button
     $('.social-button').on('click', function(e) {
         e.preventDefault();
-        
+
         var u = location.href;
         var t = encodeURIComponent(document.title);
         var h = document.location.host;
@@ -1253,7 +1264,7 @@ $(document).ready(function() {
     $('#faset-filter-body > .faset-filter-block-wrapper:first-child').addClass('active');
     fasetFilterFix();
     $('.order-page-num-input-fix').removeClass('hide');
-    
+
     //Odnotip List
     $('.odnotipList').appendTo('.odnotipListWrapper');
     $('.odnotipList .product-block-wrapper').unwrap();
@@ -1269,35 +1280,35 @@ $(document).ready(function() {
     var DADATA_TOKEN = $('#body').attr('data-token');
     if (DADATA_TOKEN) {
 
-    /*
-        $('[name="name_new"]').suggestions({
-            token: DADATA_TOKEN,
-            partner: "PHPSHOP",
-            type: "NAME",
-            params: {
-                parts: ["NAME"]
-            },
-            count: 5
-        });
-        $('[name="name"]').suggestions({
-            token: DADATA_TOKEN,
-            partner: "PHPSHOP",
-            type: "NAME",
-            params: {
-                parts: ["NAME"]
-            },
-            count: 5
-        });
-        $('[name="name_person"]').suggestions({
-            token: DADATA_TOKEN,
-            partner: "PHPSHOP",
-            type: "NAME",
-            params: {
-                parts: ["NAME"]
-            },
-            count: 5
-        });
-        */
+        /*
+         $('[name="name_new"]').suggestions({
+         token: DADATA_TOKEN,
+         partner: "PHPSHOP",
+         type: "NAME",
+         params: {
+         parts: ["NAME"]
+         },
+         count: 5
+         });
+         $('[name="name"]').suggestions({
+         token: DADATA_TOKEN,
+         partner: "PHPSHOP",
+         type: "NAME",
+         params: {
+         parts: ["NAME"]
+         },
+         count: 5
+         });
+         $('[name="name_person"]').suggestions({
+         token: DADATA_TOKEN,
+         partner: "PHPSHOP",
+         type: "NAME",
+         params: {
+         parts: ["NAME"]
+         },
+         count: 5
+         });
+         */
         $('[name="oneclick_mod_name"]').suggestions({
             token: DADATA_TOKEN,
             partner: "PHPSHOP",
@@ -1335,6 +1346,21 @@ $(document).ready(function() {
             type: "PARTY",
             count: 5
         });
+    }
+    
+    // Согласие на использование cookie
+    $('.cookie-message a').on('click', function(e) {
+        e.preventDefault();
+        $.cookie('usecookie', 1, {
+            path: '/',
+            expires: 365
+        });
+        $(this).parent().slideToggle("slow");
+    });
+    var usecookie = $.cookie('usecookie');
+    if (usecookie == undefined && COOKIE_AGREEMENT) {
+        $('.cookie-message p').html('С целью предоставления наиболее оперативного обслуживания на данном сайте используются cookie-файлы. Используя данный сайт, вы даете свое согласие на использование нами cookie-файлов.');
+        $('.cookie-message').removeClass('hide');
     }
 
 });

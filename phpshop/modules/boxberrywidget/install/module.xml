@@ -4,9 +4,8 @@
     <name>Boxberry Widget</name>
     <faqlink>http://faq.phpshop.ru/page/boxberry-widget.html</faqlink>
     <description>Виджет расчета доставки boxberry.ru</description>
-    <category>sale,delivery</category>
+    <category>delivery</category>
     <sign>1537191497</sign>
-    <status>update</status>
     <adminmenu>
         <title>Boxberry Widget</title>
         <capability>true</capability>

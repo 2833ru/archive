@@ -20,6 +20,6 @@ function setError404_seourlpro_hook($obj) {
 $addHandler = array
     (
     'Compile' => 'Compile_seourlpro_hook',
-    'setError404' => 'setError404_seourlpro_hook'
+    '#setError404' => 'setError404_seourlpro_hook'
 );
 ?>

@@ -67,7 +67,9 @@ function OFDStart($data, $operation = 'sell', $json = false) {
                     "price" => floatval(number_format($orderItem['price'], 2, '.', '')),
                     "quantity" => intval($orderItem['num']),
                     "amount" => $amountItem,
-                    "vat" => $tax
+                    "vat" => $tax,
+                    "method"   => 1,
+                    "object"   => 1
                 );
             }
         }
@@ -78,7 +80,9 @@ function OFDStart($data, $operation = 'sell', $json = false) {
                 'price' => floatval(number_format($order['Cart']['dostavka'], 2, '.', '')),
                 'quantity' => floatval(number_format(1, 2, '.', '')),
                 'amount' => floatval(number_format($order['Cart']['dostavka'], 2, '.', '')),
-                'vat' => $tax_delivery
+                'vat' => $tax_delivery,
+                "method"   => 1,
+                "object"   => 4
             );
         }
 

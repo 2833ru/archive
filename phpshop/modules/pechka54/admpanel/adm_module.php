@@ -22,7 +22,7 @@ function actionStart() {
     // Выборка
     $data = $PHPShopOrm->select();
     $Tab1.= $PHPShopGUI->setField('Пароль', $PHPShopGUI->setInputText('', 'password_new', $data['password'], 300).$PHPShopGUI->setHelp('URL обмена данными: http://'.$_SERVER['SERVER_NAME'].'/phpshop/modules/pechka54/api.php?key=<span name="kkm_key">'.$data['password'].'</span>'),false,'Защита обработчика данных');
-    $Tab1.= $PHPShopGUI->setField('№ ККМ', $PHPShopGUI->setInputText(false, 'kkm_new', $data['kkm'], 300));
+    $Tab1.= $PHPShopGUI->setField('№ ККМ', $PHPShopGUI->setInputText(false, 'kkm_new', $data['kkm'], 300,false, false, false, 1234567890));
 
 
     // НДС
@@ -40,10 +40,13 @@ function actionStart() {
     $Tab1.= $PHPShopGUI->setField('НДС для доставки', $PHPShopGUI->setSelect('tax_delivery_new', $tax_delivery_value,300));
 
     // Интструкция
-    $Tab2 = '<h4>Шаг №1 - Настройка модуля</h4>
+    $Tab2 = '
+        <p>Печать чека происходит заказов только со статусом "<b>Оплачено платежными системами</b>" с ID = 101. Такой статус заказ получает автоматически после успешной оплаты через любой платежный модуль (Альфабанк, Тинькофф и другие).</p>
+<h4>Шаг №1 - Настройка модуля</h4>
         <ol>
         <li>Заполнить поле пароля обработчика обмена данными с кассой для защиты от несанкционированного доступа.</li>
         <li>Скопировать URL обмена данными <code>http://'.$_SERVER['SERVER_NAME'].'/phpshop/modules/pechka54/api.php?key=<span name="kkm_key">'.$data['password'].'</span></code>
+        <li>Заполнить поле <kbd>№ ККМ</kbd> номером кассового накопителя. При использовании виртуальной кассы и отладки, вместо реального номера ККМ указывается виртуальный <code>1234567890</code>.
         </ol>
         
        <h4>Шаг №2 - Настройка приложения "Печка54"</h4>
@@ -67,7 +70,7 @@ function actionStart() {
         </ol>
 ';
 
-    $Tab3 = $PHPShopGUI->setPay(false, false, $data['version'], true);
+    $Tab3 = $PHPShopGUI->setPay(false, false, $data['version'], false);
 
     // Вывод формы закладки
     $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Инструкция", $Tab2, true), array("О Модуле", $Tab3), array("Журнал операций", null, '?path=modules.dir.pechka54'));

@@ -1,9 +1,11 @@
-<li class="mega-menu-column">
-    <a href="/shop/CID_@catalogId@.html" class="list-group-item">@catalogName@</a>
-    <ul class="mega-menu-block">
-     <li class="nav-header"><a href="/shop/CID_@catalogId@.html">@catalogName@</a> <b class="caret"></b> <a href="/shop/CID_@catalogId@.html"><img src="@catalogIcon@" title="@catalogIconDesc@" alt="@catalogIconDesc@"></a></li>
-    
-     @catalogPodcatalog@
-     <li class="@catalogMoreClass@ mega-more-parent"><a class="mega-more" data-sub="#sub-@catalogId@" href="#"><small><em>Больше</em></small> <b class="caret"></b></a></li>
-  </ul>
-</li>    
+
+<li class="dropdown dropdown-right dropdown-parent">
+    <a class="sub-marker" href="/shop/CID_@catalogUid@.html">@catalogName@ <i class="icon-caret-right icn-right"></i></a>
+
+    <ul class="dropdown-menu dropdown-menu-indent-sm no-border-radius">
+
+       @catalogPodcatalog@
+
+    </ul>
+
+</li>

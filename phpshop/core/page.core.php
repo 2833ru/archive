@@ -3,8 +3,7 @@
 /**
  * Обработчик страниц
  * @author PHPShop Software
- * @tutorial http://wiki.phpshop.ru/index.php/PHPShopPage
- * @version 1.3
+ * @version 1.4
  * @package PHPShopCore
  */
 class PHPShopPage extends PHPShopCore {
@@ -38,84 +37,36 @@ class PHPShopPage extends PHPShopCore {
         parent::__construct();
     }
 
-    /**
-     * Однотипные товары
-     * @param array $row массив данных
-     */
-    function odnotip($row) {
-        global $PHPShopProductIconElements;
+    function getAll() {
 
-        //$this->odnotip_setka_num = 2;
-        $this->line = false;
-        $this->template_odnotip = 'main_spec_forma_icon';
+        // Мета
+        $title = __('Статьи');
+        $this->title = $title . " - " . $this->PHPShopSystem->getValue("name");
 
-        // Перехват модуля в начале функции
-        $hook = $this->setHook(__CLASS__, __FUNCTION__, $row, 'START');
-        if ($hook)
-            return true;
+        $PHPShopOrm = new PHPShopOrm($this->getValue('base.page_categories'));
+        $PHPShopOrm->debug = $this->debug;
+        $data = $PHPShopOrm->select(array('*'), array('parent_to' => "=0"), false, array('limit' => 300));
 
-        $disp = null;
-        $odnotipList = null;
-        if (!empty($row['odnotip'])) {
-            if (strpos($row['odnotip'], ','))
-                $odnotip = explode(",", $row['odnotip']);
-            elseif (is_numeric(trim($row['odnotip'])))
-                $odnotip[] = trim($row['odnotip']);
-        }
+        $dis = null;
+        if (is_array($data)) {
+            foreach ($data as $row) {
 
-        // Список для выборки
-        if (is_array($odnotip))
-            foreach ($odnotip as $value) {
-                if (!empty($value))
-                    $odnotipList.=' id=' . trim($value) . ' OR';
+                if (empty($row['page_cat_seo_name']))
+                    $dis.=PHPShopText::li($row['name'], '/page/CID_' . $row['id'] . '.html');
+                else
+                    $dis.=PHPShopText::li($row['name'], '/page/' . $row['page_cat_seo_name'] . '.html');
             }
-
-        $odnotipList = substr($odnotipList, 0, strlen($odnotipList) - 2);
-
-        // Режим проверки остатков на складе
-        if ($this->PHPShopSystem->getSerilizeParam('admoption.sklad_status') == 2)
-            $chek_items = ' and items>0';
-        else
-            $chek_items = null;
-
-        if (!empty($odnotipList)) {
-
-            $PHPShopOrm = new PHPShopOrm();
-            $PHPShopOrm->debug = $this->debug;
-            $result = $PHPShopOrm->query("select * from " . $this->getValue('base.products') . " where (" . $odnotipList . ") " . $chek_items . " and  enabled='1' and parent_enabled='0' and sklad!='1' order by num");
-            while ($product_row = mysqli_fetch_assoc($result))
-                $data[] = $product_row;
-
-            // Сетка товаров
-            if (!empty($data) and is_array($data))
-                $disp = $PHPShopProductIconElements->seamply_forma($data, $this->odnotip_setka_num, $this->template_odnotip, $this->line);
         }
 
+        
+        // Навигация хлебные крошки
+        $this->navigation(0, $title);
 
-        if (!empty($disp)) {
-            // Вставка в центральную часть
-            if (PHPShopParser::check($this->getValue('templates.main_product_odnotip_list'), 'productOdnotipList')) {
-                $this->set('productOdnotipList', $disp);
-                $this->set('productOdnotip', __('Рекомендуемые товары'));
-            } else {
-                // Вставка в правый столбец
-                $this->set('specMainTitle', __('Рекомендуемые товары'));
-                $this->set('specMainIcon', $disp);
-            }
+        $this->set('pageContent', PHPShopText::ul($dis));
+        $this->set('pageTitle', $title);
 
-            // Перехват модуля в середине функции
-            $this->setHook(__CLASS__, __FUNCTION__, $row, 'MIDDLE');
-
-            $odnotipDisp = ParseTemplateReturn($this->getValue('templates.main_product_odnotip_list'));
-            $this->set('odnotipDisp', $odnotipDisp);
-        }
-        // Выводим последние новинки
-        else {
-            $this->set('specMainIcon', $PHPShopProductIconElements->specMainIcon(true, $this->category));
-        }
-
-        // Перехват модуля в конце функции
-        $this->setHook(__CLASS__, __FUNCTION__, $row, 'END');
+        // Подключаем шаблон
+        $this->parseTemplate($this->getValue('templates.page_catalog_list'));
     }
 
     /**
@@ -131,6 +82,10 @@ class PHPShopPage extends PHPShopCore {
         // Безопасность
         if (empty($link))
             $link = PHPShopSecurity::TotalClean($this->PHPShopNav->getName(true), 2);
+
+        if (empty($link))
+            return $this->getAll();
+
 
         // Страницы только для аторизованных
         if (isset($_SESSION['UsersId'])) {
@@ -353,6 +308,86 @@ class PHPShopPage extends PHPShopCore {
 
         // Подключаем шаблон
         $this->parseTemplate($this->getValue('templates.page_catalog_list'));
+    }
+
+    /**
+     * Однотипные товары
+     * @param array $row массив данных
+     */
+    function odnotip($row) {
+        global $PHPShopProductIconElements;
+
+        //$this->odnotip_setka_num = 2;
+        $this->line = false;
+        $this->template_odnotip = 'main_spec_forma_icon';
+
+        // Перехват модуля в начале функции
+        $hook = $this->setHook(__CLASS__, __FUNCTION__, $row, 'START');
+        if ($hook)
+            return true;
+
+        $disp = null;
+        $odnotipList = null;
+        if (!empty($row['odnotip'])) {
+            if (strpos($row['odnotip'], ','))
+                $odnotip = explode(",", $row['odnotip']);
+            elseif (is_numeric(trim($row['odnotip'])))
+                $odnotip[] = trim($row['odnotip']);
+        }
+
+        // Список для выборки
+        if (is_array($odnotip))
+            foreach ($odnotip as $value) {
+                if (!empty($value))
+                    $odnotipList.=' id=' . trim($value) . ' OR';
+            }
+
+        $odnotipList = substr($odnotipList, 0, strlen($odnotipList) - 2);
+
+        // Режим проверки остатков на складе
+        if ($this->PHPShopSystem->getSerilizeParam('admoption.sklad_status') == 2)
+            $chek_items = ' and items>0';
+        else
+            $chek_items = null;
+
+        if (!empty($odnotipList)) {
+
+            $PHPShopOrm = new PHPShopOrm();
+            $PHPShopOrm->debug = $this->debug;
+            $result = $PHPShopOrm->query("select * from " . $this->getValue('base.products') . " where (" . $odnotipList . ") " . $chek_items . " and  enabled='1' and parent_enabled='0' and sklad!='1' order by num");
+            while ($product_row = mysqli_fetch_assoc($result))
+                $data[] = $product_row;
+
+            // Сетка товаров
+            if (!empty($data) and is_array($data))
+                $disp = $PHPShopProductIconElements->seamply_forma($data, $this->odnotip_setka_num, $this->template_odnotip, $this->line);
+        }
+
+
+        if (!empty($disp)) {
+            // Вставка в центральную часть
+            if (PHPShopParser::check($this->getValue('templates.main_product_odnotip_list'), 'productOdnotipList')) {
+                $this->set('productOdnotipList', $disp);
+                $this->set('productOdnotip', __('Рекомендуемые товары'));
+            } else {
+                // Вставка в правый столбец
+                $this->set('specMainTitle', __('Рекомендуемые товары'));
+                $this->set('specMainIcon', $disp);
+            }
+
+            // Перехват модуля в середине функции
+            $this->setHook(__CLASS__, __FUNCTION__, $row, 'MIDDLE');
+
+            $odnotipDisp = ParseTemplateReturn($this->getValue('templates.main_product_odnotip_list'));
+            $this->set('odnotipDisp', $odnotipDisp);
+        }
+        // Выводим последние новинки
+        else {
+            $this->set('specMainIcon', $PHPShopProductIconElements->specMainIcon(true, $this->category));
+        }
+
+        // Перехват модуля в конце функции
+        $this->setHook(__CLASS__, __FUNCTION__, $row, 'END');
     }
 
 }

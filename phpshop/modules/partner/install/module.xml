@@ -4,7 +4,7 @@
     <name>Partner</name>
     <faqlink>http://faq.phpshop.ru/page/partners.html</faqlink>
     <description>Модуль партнерской программы.</description>
-    <category>develop</category>
+    <category>develop,sale</category>
     <adminmenu>
         <title>Партнеры</title>
         <capability>true</capability>

@@ -7,7 +7,7 @@
                 @specIcon@
             </div>
             <div class="product-block-img">
-                <a class="product-block-img-link" href="/shop/UID_@productUid@.html" title="@productName@"><img src="@productImg@" class="image-fix" alt="@productName@"></a>
+                <a class="product-block-img-link" href="/shop/UID_@productUid@.html" title="@productName@"><img data-src="@productImg@" class="image-fix owl-lazy" alt="@productName@"></a>
             </div>
         </div>
         <div class="product-block-bottom">

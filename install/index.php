@@ -37,7 +37,7 @@ if ($PHPShopBase->connect(false)) {
 } else {
     $mysql = $error;
     $mysql_style = $alert;
-    $mysql_break_install = ' disabled="disabled" title="Ошибка MySQL"';
+    $mysql_break_install = ' data-toggle="error" ';
 }
 
 // GD Support
@@ -294,15 +294,15 @@ elseif (!empty($_POST['password'])) {
                 На этой странице вы найдет всю необходимую информацию для установки и настройки Интернет-магазина
             </p>
 
-<?php
-if (!empty($done)) {
-    echo $done;
-    $system = 'hide';
-} elseif (!empty($warning))
-    echo $warning;
-else
-    $system = null;
-?>   
+            <?php
+            if (!empty($done)) {
+                echo $done;
+                $system = 'hide';
+            } elseif (!empty($warning))
+                echo $warning;
+            else
+                $system = null;
+            ?>   
             <p class="<?php echo $system; ?>">   
                 Ниже приведена инструкция для ручной установки PHPShop на виртуальный хостинг. Перед установкой рекомендуем ознакомиться со
                 списком <a class="btn btn-info btn-xs" href="http://phpshop.ru/page/hosting-list.html" target="_blank" title="Хостинги"><span class="glyphicon glyphicon-share-alt"></span> рекомендуемых хостингов</a> на соответствие с системными требованиями PHPShop.</p>
@@ -345,7 +345,7 @@ dbase="mybase";     # имя базы</pre>
 
                         </li>
                         <li>
-                            <p>Воспользуйтесь встроенным <a href="#" class="btn btn-success btn-xs" <?php echo $mysql_break_install; ?> data-toggle="modal" data-target="#install"><span class="glyphicon glyphicon-download-alt"></span> Установщиком базы данных</a></p>
+                            <p>Воспользуйтесь встроенным <a href="#" class="btn btn-success btn-xs" <?php echo $mysql_break_install; ?>  data-target="#install"><span class="glyphicon glyphicon-download-alt"></span> Установщиком базы данных</a></p>
                             <div class="alert alert-warning" role="alert"><b>Внимание!</b> Установщик базы запускать необходимо, в противном случае, не будет создан образ базы. </div>
                         </li>
                         <li>Для безопасности удалите папку <kbd>/install</kbd>
@@ -411,7 +411,7 @@ host="localhost";   # имя хоста базы данных
 user_db="user";     # имя пользователя
 pass_db="mypas";    # пароль базы
 dbase="mybase";     # имя базы</pre>
-                                        <li>Запустить <a href="#" class="btn btn-success btn-xs update" <?php echo $mysql_break_install; ?> target="_blank"  data-target="#install"><span class="glyphicon glyphicon-refresh"></span> Обновление базы данных</a>, выбрать предыдущую версию (которая была перед обновлением), если ее там нет, то обновлять базу не нужно. 
+                                        <li>Запустить <a href="#" class="btn btn-success btn-xs update" <?php echo $mysql_break_install; ?> target="_blank" data-target="#install"><span class="glyphicon glyphicon-refresh"></span> Обновление базы данных</a>, выбрать предыдущую версию (которая была перед обновлением), если ее там нет, то обновлять базу не нужно. 
                                         <li>Удалить папку <code>/install</code>
                                         <li>Копировать папки <code>/old/UserFiles</code>, <code>/old/license</code> со старыми изображениями и лицензией в обновленный скрипт
                                         <li>По необходимости копировать старый шаблон <code>/old/phpshop/templates/{имя-шаблона}</code>
@@ -441,7 +441,7 @@ sh update.sh</pre>
                                 <div class="panel-body">
                                     <ol>
                                         <li>Создать копию текущей базы данных на старом сервере через меню <kbd>База</kbd> - <kbd>Резервное копирование</kbd>
-                                        <li>Загрузить файлы переносимого скрипта из корневой веб-директории с PHPShop (<em>www, httpdocs, docs, public_html</em>) в корневую веб-директорию на новом сервере.  Для мгновенного переноса файлов с сервера на сервер можно воспользоваться утилитой <a href="http://phpshop.ru/loads/files/putty.exe" target="_blank">PyTTY</a> и  протоколом SSH. Команды оболочки после подключения на старом сервере (www заменяется на имя своей папки хранения веб-файлов):
+                                        <li>Загрузить файлы переносимого скрипта из корневой веб-директории с PHPShop (<em>www, httpdocs, docs, public_html</em>) в корневую веб-директорию на новом сервере.  Для мгновенного переноса файлов с сервера на сервер можно воспользоваться утилитой <a href="https://ru.wikipedia.org/wiki/PuTTY" target="_blank">PyTTY</a> и  протоколом SSH. Команды оболочки после подключения на старом сервере (www заменяется на имя своей папки хранения веб-файлов):
                                             <pre>tar cvf file.tar ./
 gzip file.tar</pre>
                                             Команды оболочки после подключения на новом сервере:
@@ -497,7 +497,7 @@ dbase="mybase";         # имя базы</pre>
                             <footer class="footer">
                                 <div class="container">
                                     <p class="text-muted text-center">
-                                        Перейти <a href="http://www.phpshop.ru" target="_blank" title="Разработчик"><span class="glyphicon glyphicon-home"></span>домой</a> или воспользоваться <a href="https://help.phpshop.ru" target="_blank" title="Техническая поддержка"><span class="glyphicon glyphicon-user"></span>технической поддержкой</a>
+                                        Перейти <a href="https://www.phpshop.ru" target="_blank" title="Разработчик"><span class="glyphicon glyphicon-home"></span>домой</a> или воспользоваться <a href="https://help.phpshop.ru" target="_blank" title="Техническая поддержка"><span class="glyphicon glyphicon-user"></span>технической поддержкой</a>
                                     </p>
                                 </div>
                             </footer>
@@ -593,7 +593,7 @@ dbase="mybase";         # имя базы</pre>
                                                     <div class="form-group">
                                                         <label class="col-sm-2 control-label">Версия</label>
                                                         <div class="col-sm-10">
-<?php echo $update_select; ?>
+                                                            <?php echo $update_select; ?>
                                                             <p></p>
                                                             <p class="text-muted"><span class="glyphicon glyphicon-info-sign"></span> Необходимо выбрать свою текущую версию PHPShop (до обновления). Если вашей версии нет в списке, то выбрать версию выше и самую близкую к вашей в большую сторону. Например, ваша старая версия Enterprise 3.6.6.0.1, то следует выбрать в списке 3.6.7.1.3.</p><p class="text-muted">Префиксы <kbd>Start</kbd> и <kbd>CMS</kbd> обозначают одноименные сборки. Версия PHPShop 5 имеет одинаковую структуру данных у всех коммерческих версий Basic, Enterprise и Pro 1C.</p><p class="text-muted">Для обновлении версий PHPShop 3 и ниже потребуется процедура восстановления пароля администратора по email.</p>
                                                         </div>
@@ -675,6 +675,12 @@ dbase="mybase";         # имя базы</pre>
 
                                 $().ready(function() {
 
+                                    // Ошибка MySQL
+                                    $('[data-toggle="error"]').on('click', function(event) {
+                                        event.preventDefault();
+                                        alert($('.list-group-item-danger').text());
+                                    });
+
                                     // Обновление
                                     $('.update').on('click', function() {
                                         $('#step-2 .title').text($('#step-3 .title').text());
@@ -734,7 +740,6 @@ dbase="mybase";         # имя базы</pre>
                                     $('[data-toggle="tooltip"]').tooltip({container: 'body'});
 
                                     $('select').addClass('form-control');
-
                                 });
                             </script>
 

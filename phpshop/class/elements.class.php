@@ -4,7 +4,6 @@
  * Родительский класс создания элементов
  * Примеры использования размещены в папке phpshop/inc/
  * @author PHPShop Software
- * @tutorial http://wiki.phpshop.ru/index.php/PHPShopElements
  * @version 1.2
  * @package PHPShopClass
  */

@@ -86,37 +86,42 @@ class Pechka54Rest {
             // Корзина
             if (is_array($order['Cart']['cart'])) {
                 foreach ($order['Cart']['cart'] as $product) {
+                    // Скидка
+                    if ($order['Person']['discount'] > 0)
+                        $price = $product['price'] - ($product['price'] * $order['Person']['discount'] / 100);
+                    else
+                        $price = $product['price'];
+
                     $check['response']['taskTable'][] = array(
                         'data' => $product['name'],
                         'type' => $typeTable,
                         'param' => array(
-                            'price' => floatval(number_format($product['price'], 2, '.', '')),
+                            'price' => floatval(number_format($price, 2, '.', '')),
                             'quantity' => floatval(number_format($product['num'], 2, '.', '')),
                             'tax' => $tax
                         )
                     );
                     
                     // Сумма по товарам
-                    $sum+=floatval(number_format($product['price']*$product['num']), 2, '.', '');
+                    $sum+=floatval(number_format($price*$product['num'], 2, '.', ''));
                     
                 }
             }
 
             // Доставка
             if (!empty($order['Cart']['dostavka'])) {
-                
-                // Обход ошибки со скидками
-                $delivery = $data['sum'] - $sum;
 
                 $check['response']['taskTable'][] = array(
                     'data' => 'Доставка',
                     'type' => 'registration',
                     'param' => array(
-                        'price' => floatval(number_format($delivery, 2, '.', '')),
+                        'price' => floatval(number_format($order['Cart']['dostavka'], 2, '.', '')),
                         'quantity' => 1,
                         'tax' => $tax_delivery
                     )
                 );
+
+                $sum+=floatval(number_format($order['Cart']['dostavka'], 2, '.', ''));
             }
 
             // Итого
@@ -124,7 +129,7 @@ class Pechka54Rest {
                 'data' => '',
                 'type' => 'payment',
                 'param' => array(
-                    'summ' => floatval(number_format($data['sum'], 2, '.', '')),
+                    'summ' => floatval(number_format($sum, 2, '.', '')),
                     'typeclose' => 1
                 )
             );

@@ -28,10 +28,9 @@ function actionStart() {
     $PHPShopGUI->_CODE .= $PHPShopGUI->setLine() . $PHPShopGUI->setField("Наименование банк", $PHPShopGUI->setInputText(null, "bank[org_bank]", $bank['org_bank'], 300));
     $PHPShopGUI->_CODE .= $PHPShopGUI->setField("БИК", $PHPShopGUI->setInputText(null, "bank[org_bic]", $bank['org_bic'], 300));
     $PHPShopGUI->_CODE .= $PHPShopGUI->setField("№ Счета банка", $PHPShopGUI->setInputText(null, "bank[org_bank_schet]", $bank['org_bank_schet'], 300));
-//http://jsfiddle.net/5ud8jkvf/
-    $PHPShopGUI->_CODE .= $PHPShopGUI->setField("Печать", $PHPShopGUI->setIcon($bank['org_stamp'], "bank[org_stamp]", false, array('load' => false, 'server' => true, 'url' => false, 'multi' => false, 'view' => false)));
-    $PHPShopGUI->_CODE .= $PHPShopGUI->setField("Подпись руководителя", $PHPShopGUI->setIcon($bank['org_sig'], "bank[org_sig]", false, array('load' => false, 'server' => true, 'url' => false, 'multi' => false, 'view' => false)));
-    $PHPShopGUI->_CODE .= $PHPShopGUI->setField("Подпись бухгалтера", $PHPShopGUI->setIcon($bank['org_sig_buh'], "bank[org_sig_buh]", false, array('load' => false, 'server' => true, 'url' => false, 'multi' => false, 'view' => false)));
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setField("Печать", $PHPShopGUI->setIcon($bank['org_stamp'], "bank_org_stamp", false, array('load' => false, 'server' => true, 'url' => false, 'multi' => false, 'view' => false)));
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setField("Подпись руководителя", $PHPShopGUI->setIcon($bank['org_sig'], "bank_org_sig", false, array('load' => false, 'server' => true, 'url' => false, 'multi' => false, 'view' => false)));
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setField("Подпись бухгалтера", $PHPShopGUI->setIcon($bank['org_sig_buh'], "bank_org_sig_buh", false, array('load' => false, 'server' => true, 'url' => false, 'multi' => false, 'view' => false)));
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
@@ -75,6 +74,9 @@ function actionUpdate() {
         foreach ($_POST['bank'] as $key => $val)
             $bank[$key] = $val;
 
+    $bank['org_stamp'] = $_POST['bank_org_stamp'];
+    $bank['org_sig'] = $_POST['bank_org_sig'];
+    $bank['org_sig_buh'] = $_POST['bank_org_sig_buh'];
     $_POST['bank_new'] = serialize($bank);
 
     // Перехват модуля

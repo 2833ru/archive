@@ -4,7 +4,6 @@
  * Обработчик товаров
  * @author PHPShop Software
  * @version 2.1
- * @tutorial http://wiki.phpshop.ru/index.php/PHPShopShop
  * @package PHPShopShopCore
  */
 class PHPShopShop extends PHPShopShopCore {
@@ -320,7 +319,7 @@ class PHPShopShop extends PHPShopShopCore {
         $this->file($row);
 
         // Облако тегов
-        $this->cloud($row);
+        //$this->cloud($row);
 
         // Фотогалерея
         $this->image_gallery($row);
@@ -882,7 +881,7 @@ function CID_Product($category = null, $mode = false) {
     $this->set('price_min', intval($this->price_min));
 
     // Облако тегов
-    $this->cloud($this->dataArray);
+    //$this->cloud($this->dataArray);
 
     // Перехват модуля в конце функции
     $this->setHook(__CLASS__, __FUNCTION__, $this->dataArray, 'END');

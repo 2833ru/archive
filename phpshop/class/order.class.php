@@ -6,7 +6,6 @@ if (!defined("OBJENABLED"))
 /**
  * Библиотека для работы с заказами
  * @author PHPShop Software
- * @tutorial http://wiki.phpshop.ru/index.php/PHPShopOrder
  * @version 1.3
  * @package PHPShopObj
  */

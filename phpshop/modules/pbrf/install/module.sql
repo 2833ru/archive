@@ -4,8 +4,6 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_pbrf_system` (
   `data` text NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
---
--- Дамп данных таблицы `phpshop_modules_pbrf_system`
---
+
 INSERT INTO `phpshop_modules_pbrf_system` (`key`, `data`) VALUES
 (' ', '');

@@ -112,6 +112,10 @@ $(document).ready(function() {
         var skin = $('#bootstrap_theme').attr('data-name');
         var cookie = $.cookie('bootstrap_theme');
 
+        $.cookie($('#bootstrap_theme').attr('data-name') + '_theme', $(this).attr('data-skin'), {
+            path: '/'
+        });
+
         $(".bootstrap-theme, .non-responsive-switch").each(function() {
             $(this).html('');
         });

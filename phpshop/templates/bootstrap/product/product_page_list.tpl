@@ -87,7 +87,7 @@
                 data: {
                     ajax: true
                 },
-                success: function (data)
+                success: function(data)
                 {
                     // Анимация загрузки
                     $('#ajaxInProgress').removeClass('progress-scroll');
@@ -97,8 +97,11 @@
 
                     // Выравнивание ячеек товара
                     setEqualHeight(".thumbnail .description");
-                    // Коррекция знака рубля
-                    setRubznak();
+
+                    // lazyLoad
+                    setTimeout(function() {
+                        $(window).lazyLoadXT();
+                    }, 50);
 
                     count = next_page;
                     $('.pagination li').removeClass('active');
@@ -106,7 +109,7 @@
 
                     Waypoint.refreshAll();
                 },
-                error: function () {
+                error: function() {
                     $('#ajaxInProgress').removeClass('progress-scroll');
                 }
             });
@@ -118,11 +121,11 @@
         $(".pagination").hide();
     }
 
-    $(document).ready(function () {
+    $(document).ready(function() {
 
         var inview = new Waypoint.Inview({
             element: $('.product-scroll-init'),
-            enter: function (direction) {
+            enter: function(direction) {
                 if (AJAX_SCROLL)
                     scroll_loader();
             }
@@ -135,7 +138,7 @@
             min: new Number('@price_min@'),
             max: new Number('@price_max@'),
             values: [new Number('@price_min@'), new Number('@price_max@')],
-            slide: function (event, ui) {
+            slide: function(event, ui) {
                 $("input[name=min]").val(ui.values[ 0 ]);
                 $("input[name=max]").val(ui.values[ 1 ]);
             }

@@ -1,11 +1,11 @@
 <?php
+
 /**
  * Генератор RSS канала новостей
  * @author PHPShop Software
  * @version 1.1
  * @package PHPShopUtil
  */
-
 // Подключаем библиотеки
 $_classPath = "../phpshop/";
 include($_classPath . "class/obj.class.php");
@@ -27,7 +27,8 @@ $PHPShopModules = new PHPShopModules($_classPath . "modules/");
 if (!empty($GLOBALS['SysValue']['base']['seourl']['seourl_system'])) {
     $seourl_enabled = true;
 }
-else $seourl_enabled = false;
+else
+    $seourl_enabled = false;
 
 // Описание канала RSS
 $xml = '<?xml version="1.0" encoding="windows-1251" ?>

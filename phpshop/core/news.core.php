@@ -3,7 +3,6 @@
 /**
  * Обработчик новостей
  * @author PHPShop Software
- * @tutorial http://wiki.phpshop.ru/index.php/PHPShopNews
  * @version 1.6
  * @package PHPShopCore
  */

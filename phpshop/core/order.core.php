@@ -6,7 +6,6 @@ $PHPShopOrder = new PHPShopOrderFunction();
 /**
  * Обработчик оформления заказа
  * @author PHPShop Software
- * @tutorial http://wiki.phpshop.ru/index.php/PHPShopOrder
  * @version 1.5
  * @package PHPShopCore
  */

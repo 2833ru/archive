@@ -1431,13 +1431,13 @@ function ISDEKWidjet(params) {
                         for (var i = gdeUser.length-1; i >= 0; i--) {
                             if (gdeUser[i].kind == 'locality') {
                                 city = gdeUser[i].name;
-                                city = city.replace(/РіРѕСЂРѕРґ\s|РїРѕСЃРµР»РѕРє\sРіРѕСЂРѕРґСЃРєРѕРіРѕ\sС‚РёРїР°\s|РїРѕСЃРµР»РѕРє\s|РїРѕСЃС‘Р»РѕРє\s|РґРµСЂРµРІРЅСЏ\s|СЃРµР»Рѕ\s/ig, '');
+                                city = city.replace(/город\s|поселок\sгородского\sтипа\s|поселок\s|посёлок\s|деревня\s|село\s/ig, '');
                                 DATA.city.set(city);
                                 if (DATA.city.current !== false) break;
                             }
                         }
                         if (DATA.city.current == false) {
-                            //РµСЃР»Рё РіРѕСЂРѕРґ РЅРµ РЅР°Р№РґРµРЅ - РёС‰РµРј Р±Р»РёР¶Р°Р№С€РёР№ РїРѕ РєРѕРѕСЂРґРёРЅР°С‚Р°Рј РџР’Р— Рё РѕС‚РѕР±СЂР°Р¶Р°РµРј РІ СЌС‚РѕРј РіРѕСЂРѕРґРµ
+                            //если город не найден - ищем ближайший по координатам ПВЗ и отображаем в этом городе
                             gdeUser = result.geoObjects.get(0).geometry._coordinates;
 
                             var nearestPVZ = {};
@@ -1458,8 +1458,8 @@ function ISDEKWidjet(params) {
                                 DATA.city.set(city);
 							}
 							else {
-                                DATA.city.set('РњРѕСЃРєРІР°');
-                                city = 'РњРѕСЃРєРІР°';
+                                DATA.city.set('Москва');
+                                city = 'Москва';
                             }
                         }
 
@@ -2027,7 +2027,7 @@ function ISDEKWidjet(params) {
 
 			if (filter != '') {
 				$matches = $li.filter(function () {
-					return filter.test(ipjq(this).find('.CDEK-widget__search-list__city-name').text().replace(/[^\wР°-СЏС‘]+/gi, ""));
+					return filter.test(ipjq(this).find('.CDEK-widget__search-list__city-name').text().replace(/[^\wа-яё]+/gi, ""));
 				});
 
 				$li.not($matches).addClass('no-active').removeClass('focus');

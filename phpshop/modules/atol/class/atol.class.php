@@ -12,7 +12,7 @@ class AtolRest {
     public $token = null;
     public $log = null;
     public $orderId = null;
-    public $api_url = "https://online.atol.ru/possystem/v3/";
+    public $api_url = "https://online.atol.ru/possystem/v4/";
 
     /**
      * Режим отладки
@@ -51,9 +51,6 @@ class AtolRest {
 
         $ch = curl_init();
 
-        if (!empty($this->token))
-            $rout.='?tokenid=' . $this->token;
-
         curl_setopt($ch, CURLOPT_URL, $this->api_url . $rout);
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -63,8 +60,9 @@ class AtolRest {
         curl_setopt($ch, CURLOPT_HEADER, true);
 
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'Content-Type: application/json',
-            'Content-Length: ' . strlen($data_string)
+            'Content-type: application/json; charset=utf-8',
+            'Content-Length: ' . strlen($data_string),
+            'Token: ' . $this->token
         ));
 
         if (!$post)

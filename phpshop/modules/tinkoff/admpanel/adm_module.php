@@ -96,7 +96,7 @@ function actionStart()
     $Tab1.=$PHPShopGUI->setField('Описание оплаты', $PHPShopGUI->setTextarea('title_end_new', $data['title_end']));
 
     // Форма регистрации
-    $Tab3 = $PHPShopGUI->setPay(null, false, $data['version'], true);
+    $Tab3 = $PHPShopGUI->setPay(null, false, $data['version'], false);
     
     // Вывод формы закладки
     $PHPShopGUI->setTab(array("Основное", $Tab1,true),array("Инструкция", $PHPShopGUI->setInfo($info)),array("О Модуле", $Tab3));

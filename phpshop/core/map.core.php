@@ -3,7 +3,6 @@
 /**
  * Обработчик карты сайта
  * @author PHPShop Software
- * @tutorial http://wiki.phpshop.ru/index.php/PHPShopMap
  * @version 1.6
  * @package PHPShopCore
  */
@@ -83,12 +82,14 @@ class PHPShopMap extends PHPShopCore {
      * Категории товаров
      */
     function category() {
+        
+        $where['skin_enabled'] = "!='1'";
 
         // Мультибаза
         if (defined("HostID"))
             $where['servers'] = " REGEXP 'i" . HostID . "i'";
-        else
-            $where = null;
+        elseif (defined("HostMain"))
+            $where['skin_enabled'] .= ' and (servers ="" or servers REGEXP "i1000i")';
 
         $this->PHPShopCategoryArray = new PHPShopCategoryArray($where);
         $this->ParentArray = $this->PHPShopCategoryArray->getKey('parent_to.id', true);
@@ -193,9 +194,8 @@ class PHPShopMap extends PHPShopCore {
     function index() {
 
         // Перехват модуля
-        if ($this->setHook(__CLASS__, __FUNCTION__, false, 'START'))
+        if ($this->setHook(__CLASS__, __FUNCTION__, false, 'START'))        
             return true;
-
 
         // Категории товаров
         $this->category();
@@ -210,7 +210,7 @@ class PHPShopMap extends PHPShopCore {
         $this->news();
 
         // Мета
-        $this->title = "Карта сайта - " . $this->PHPShopSystem->getValue("name");
+        $this->title = __("Карта сайта") . " - " . $this->PHPShopSystem->getValue("name");
 
         $this->set('catalFound', $this->lang('found_of_catalogs'));
         $this->set('catalNum', $this->PHPShopCategoryArray->getNum());

@@ -3,7 +3,6 @@
 /**
  * Обработчик товаров новинок
  * @author PHPShop Software
- * @tutorial http://wiki.phpshop.ru/index.php/PHPShopNewtip
  * @version 1.3
  * @package PHPShopShopCore
  */

@@ -209,8 +209,16 @@ UPDATE ' . $GLOBALS['SysValue']['base']['categories'] . ' set sort=\'\';', '');
 TRUNCATE ' . $GLOBALS['SysValue']['base']['foto'].';', '');
     $query_value[] = array('Удалить товары в каталоге', 'DELETE FROM ' . $GLOBALS['SysValue']['base']['products'] . ' WHERE category=', '');
     $query_value[] = array('Удалить страницу', 'DELETE FROM ' . $GLOBALS['SysValue']['base']['page'] . ' WHERE ID=', '');
+    $query_value[] = array('Починить зацикливающиеся каталоги', 'UPDATE ' . $GLOBALS['SysValue']['base']['categories'] . ' SET parent_to=0 WHERE parent_to=id', '');
+    $query_value[] = array('Уменьшить время генерации меню каталогов',"UPDATE phpshop_categories SET phpshop_categories.vid = '0' WHERE phpshop_categories.parent_to IN (select * from ( SELECT phpshop_categories.id
+ FROM phpshop_categories WHERE phpshop_categories.parent_to='0')t );
+ UPDATE phpshop_categories SET vid='1' where parent_to !='0';");
+    
+    
+    
     $query_value[] = array('Очистить базу', $TRUNCATE, '');
     $query_value[] = array('Уничтожить базу (!)', $DROP, '');
+    
 
     // Оптимизация по ссылке
     if ($_GET['query'] == 'optimize')

@@ -2,8 +2,7 @@
 
 /**
  * Обработчик поиска товаров
- * @author PHPShop Software
- * @tutorial http://wiki.phpshop.ru/index.php/PHPShopSearch 
+ * @author PHPShop Software 
  * @version 1.6
  * @package PHPShopShopCore
  */

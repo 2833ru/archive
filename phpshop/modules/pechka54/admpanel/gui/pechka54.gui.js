@@ -27,6 +27,7 @@ $().ready(function() {
         if (confirm(text)) {
             $("input[name='ofd_status_new']").val(0);
             $("input[name='ofd_type_new']").val(ofd_type);
+            $("input[name='statusi_new']").val(101);
         }
     });
 });

@@ -26,9 +26,6 @@ function actionStart() {
     $data = $PHPShopOrm->select();
     @extract($data);
 
-    $Tab1 = $PHPShopGUI->setInfo('<p>Модуль интеграции интернет-магазина с платежным шлюзом Сбербанка России, позволяет проводить оплату заказа картой через Сбербанк России.
- Перед началом работы, необходимо произвести необходимые настройки на соответствующей вкладке. Режим разработки позволяет отправлять запросы на тестовую среду Сбербанка России https://3dsec.sberbank.ru</p>');
-
     $Tab2 = $PHPShopGUI->setField('Логин магазина', $PHPShopGUI->setInputText(false, 'login_new', $data['login'], 300));
     $Tab2 .= $PHPShopGUI->setField('Пароль магазина', $PHPShopGUI->setInput("password", 'password_new', $data['password'], false, 300));
 
@@ -70,7 +67,7 @@ function actionStart() {
 ';
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Настройки", $Tab2, true), array("Инструкция", $info, true), array("О Модуле", $Tab1));
+    $PHPShopGUI->setTab(array("Настройки", $Tab2, true), array("Инструкция", $info, true), array("О Модуле", $PHPShopGUI->setPay(false, false, $data['version'], false)));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionUpdate.modules.edit");

@@ -129,7 +129,7 @@ class ProductLastView extends PHPShopProductElements {
      * Номер записи памяти в кукус
      */
     function add_cookie() {
-        setcookie("productlastview_memory", $this->memory, time() + 60 * 60 * 24 * 90, "/", $_SERVER['SERVER_NAME'], 0);
+        @setcookie("productlastview_memory", $this->memory, time() + 60 * 60 * 24 * 90, "/", $_SERVER['SERVER_NAME'], 0);
     }
 
     /**

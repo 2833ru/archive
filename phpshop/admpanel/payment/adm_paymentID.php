@@ -1,6 +1,6 @@
 <?php
 
-$TitlePage = __('Редактирование способа оплаты').' #' . $_GET['id'];
+$TitlePage = __('Редактирование способа оплаты') . ' #' . $_GET['id'];
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['payment_systems']);
 
 // Стартовый вид
@@ -15,9 +15,13 @@ function actionStart() {
         header('Location: ?path=' . $_GET['path']);
     }
 
+    // bootstrap-colorpicker
+    $PHPShopGUI->addCSSFiles('./css/bootstrap-colorpicker.min.css');
+    $PHPShopGUI->addJSFiles('./js/bootstrap-colorpicker.min.js');
+
     // Размер названия поля
     $PHPShopGUI->field_col = 2;
-    $PHPShopGUI->setActionPanel($data['name'], array('Создать', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'),false);
+    $PHPShopGUI->setActionPanel($data['name'], array('Создать', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'), false);
 
     // Редактор 1
     $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));
@@ -35,8 +39,10 @@ function actionStart() {
     );
 
     $Tab1.=$PHPShopGUI->setField("Иконка", $PHPShopGUI->setIcon($data['icon'], "icon_new", false));
+    
+    $Tab1.=$PHPShopGUI->setField('Цвет', $PHPShopGUI->setInputColor('color_new', $data['color']));
 
-    $Tab1.=$PHPShopGUI->setCollapse('Сообщение после заказа', $PHPShopGUI->setField("Заголовок:", $PHPShopGUI->setInput("text", "message_header_new", $data['message_header'])) .$PHPShopGUI->setField("Сообщение", $oFCKeditor->AddGUI()));
+    $Tab1.=$PHPShopGUI->setCollapse('Сообщение после заказа', $PHPShopGUI->setField("Заголовок:", $PHPShopGUI->setInput("text", "message_header_new", $data['message_header'])) . $PHPShopGUI->setField("Сообщение", $oFCKeditor->AddGUI()));
 
 
     // Запрос модуля на закладку

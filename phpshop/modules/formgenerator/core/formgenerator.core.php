@@ -40,6 +40,17 @@ class PHPShopFormgenerator extends PHPShopCore {
     }
 
     /**
+     * Проверка ботов
+     * @param array $option параметры проверки [url|captcha|referer]
+     * @return boolean
+     */
+    function security($option = array('url' => false, 'captcha' => true, 'referer' => true)) {
+        global $PHPShopRecaptchaElement;
+
+        return $PHPShopRecaptchaElement->security($option);
+    }
+
+    /**
      * Экшен отправки по почте
      */
     function forma_send() {
@@ -47,13 +58,7 @@ class PHPShopFormgenerator extends PHPShopCore {
         $error = false;
         $i = 1;
 
-        // Проверка каптчи
-        if (!empty($_SESSION['mod_formgenerator_captcha'])) {
-            if ($_SESSION['mod_formgenerator_captcha'] != $_POST['key'])
-                $error = true;
-        }
-
-        if (PHPShopSecurity::true_num($_POST['forma_id'])) {
+        if (PHPShopSecurity::true_num($_POST['forma_id']) and $this->security()) {
 
             $mail = PHPShopSecurity::TotalClean($_POST['forma_mail'], 3);
 
@@ -188,26 +193,18 @@ E-mail: ' . $mail . '
 
             if (!empty($_GET['error']))
                 $error = $data['error_message'];
-            
-            // Защитная каптча
-        $GLOBALS['SysValue']['other']['formgenerator_captcha']='
-        <p id="formgenerator_captcha">
-        <table>
-          <tr>
-            <td><img src="phpshop/modules/formgenerator/inc/captcha.php" alt="" border="0"></td>
-            <td>&nbsp;&nbsp;</td>
-            <td>Введите код, указанный на картинке<br>
-              <input type="text" name="key" style="width:220px;">
-            </td>
-          </tr>
-        </table>
-        </p>';
+
 
             $forma_content = '
                 <p><b>' . $error . '</b></p>
 <form method="post" enctype="multipart/form-data" name="formgenerator" id="formgenerator" action="/formgenerator/' . $path . '/">
-            ' . Parser($this->fixtags($data['content'])) . '
-                <p id="formgenerator_buttons">
+            ' . Parser($this->fixtags($data['content']));
+
+            // Защитная каптча
+            if (!empty($data['captcha']))
+                $forma_content.='<div class="form-group">'.Parser('@captcha@').'</div>';
+
+            $forma_content.='<p id="formgenerator_buttons">
             <input type="hidden" name="forma_id" value="' . $data['id'] . '">
             <input type="hidden" name="product_id" value="' . $_REQUEST['product_id'] . '">
             <input class="btn btn-default" type="reset" value="Очистить">

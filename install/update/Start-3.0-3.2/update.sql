@@ -505,3 +505,5 @@ ALTER TABLE `phpshop_news` ADD `odnotip` text;
 ALTER TABLE `phpshop_servers` ADD `admoption` blob;
 ALTER TABLE `phpshop_news` ADD `servers` varchar(64) default '';
 ALTER TABLE `phpshop_page_categories` ADD `servers` varchar(64) default '';
+ALTER TABLE `phpshop_payment_systems` ADD `color` varchar(64) default '#000000';
+ALTER TABLE `phpshop_system` CHANGE `width_icon` `icon` varchar(255) default ''; 

@@ -4,7 +4,7 @@
             @specIcon@
             @newtipIcon@
         </span>
-        <a class="highslide" href="@productImgBigFoto@" title="@productName@"><img src="@productImg@" alt="@productName@"></a>
+        <a class="highslide" href="@productImgBigFoto@" title="@productName@"><img data-src="@productImg@" alt="@productName@"></a>
         <div class="caption description">
             <h4><a href="/shop/UID_@productUid@.html" title="@productName@">@productName@</a></h4>
             @productDes@

@@ -361,14 +361,18 @@ table#data{
     margin-top:42px;
 }
 
-table#data tr.data-row td {
+table#data tr.data-row td{
     vertical-align: middle !important;
-    -line-height: 2.5 !important;
     height: 30px  !important;
 }
 
+table#data tr.data-row td:last-child{
+    text-align: right;
+}
 
-tr.data-row .input-hidden {
+
+
+tr.data-row .input-hidden{
     box-shadow: none;
     border-color: transparent;
     background-color: transparent;
@@ -544,4 +548,8 @@ form.navbar-right{
 
 .redactor-editor{
     color: #333;
+}
+
+.suggestions-wrapper {
+   display: block !important;
 }
