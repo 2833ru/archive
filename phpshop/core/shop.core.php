@@ -127,13 +127,13 @@ class PHPShopShop extends PHPShopShopCore {
             $this->set('thisCat', $ParentTest);
             $this->set('thisPodCat', $this->PHPShopCategory->getParam('parent_to'));
         }
-        
-        if($this->PHPShopCategory->getParam('parent_to') == 0){
-            $this->set('elementCatalogBackHide','hide');
-        }
-        else  $this->set('elementCatalogBackHide','visible-xs');
 
- 
+        if ($this->PHPShopCategory->getParam('parent_to') == 0) {
+            $this->set('elementCatalogBackHide', 'hide');
+        } else
+            $this->set('elementCatalogBackHide', 'visible-xs');
+
+
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__, $data);
     }
@@ -437,7 +437,7 @@ class PHPShopShop extends PHPShopShopCore {
         $this->setActiveMenu();
 
         // Навигация хлебных крошек для новых шаблонов
-        $this->navigation($this->category,null);
+        $this->navigation($this->category, null);
 
         // Мета заголовки
         $this->set_meta(array($row, $this->PHPShopCategory->getArray(), $parent_category_row));
@@ -669,8 +669,13 @@ function CID() {
         // Ввывода товаров из подкаталогов
         if (is_array($this->category_array) and $this->PHPShopSystem->ifSerilizeParam('admoption.catlist_enabled') and PHPShopParser::check($this->getValue('templates.product_page_list'), 'ProductCatalogContent')) {
             $this->CID_Product(null, true);
-        } else // Вывод только каталогов
-            $this->CID_Category();
+        } else {
+            // Вывод только каталогов
+            if ($this->page > 1)
+                return $this->setError404();
+            else
+                $this->CID_Category();
+        }
     } // Вывод товаров
     else {
         $this->CID_Product();
@@ -731,8 +736,8 @@ function CID_Product($category = null, $mode = false) {
     // 404 если каталога не существует или мультибаза
     if (empty($this->category_name) or $this->errorMultibase($this->category) or $this->PHPShopCategory->getParam('skin_enabled') == 1)
         return $this->setError404();
-    
-    $this->set('catalogName',$this->category_name);
+
+    $this->set('catalogName', $this->category_name);
 
     // Фильтр сортировки
     $order = $this->query_filter();
@@ -767,7 +772,7 @@ function CID_Product($category = null, $mode = false) {
                 if (isset($_POST['json'])) {
                     header('Content-type: application/json; charset=UTF-8');
                     exit(json_encode([
-                        'products'   => PHPShopString::win_utf8(PHPShopText::h4($this->lang('empty_product_list'), 'empty_product_list')),
+                        'products' => PHPShopString::win_utf8(PHPShopText::h4($this->lang('empty_product_list'), 'empty_product_list')),
                         'pagination' => PHPShopString::win_utf8($this->get('productPageNav'))
                     ]));
                 }
@@ -785,9 +790,9 @@ function CID_Product($category = null, $mode = false) {
         else
             $count = 0;
         $this->setPaginator($count, $order['sql']);
-        
-        if(empty($count))
-            $this->set('empty_product_list',true);
+
+        if (empty($count))
+            $this->set('empty_product_list', true);
 
         if ($this->PHPShopSystem->getSerilizeParam('admoption.filter_cache_enabled') == 1 && $this->PHPShopSystem->getSerilizeParam('admoption.filter_products_count') == 1)
             $this->update_cache('count_products');
@@ -829,7 +834,7 @@ function CID_Product($category = null, $mode = false) {
         if (isset($_POST['json'])) {
             header('Content-type: application/json; charset=UTF-8');
             exit(json_encode([
-                'products'   => PHPShopString::win_utf8(PHPShopParser::replacedir($this->separator . $grid)),
+                'products' => PHPShopString::win_utf8(PHPShopParser::replacedir($this->separator . $grid)),
                 'pagination' => PHPShopString::win_utf8($this->get('productPageNav'))
             ]));
         }
@@ -837,11 +842,11 @@ function CID_Product($category = null, $mode = false) {
         exit(PHPShopParser::replacedir($this->separator . $grid));
     }
 
-    if ((empty($grid) and empty($mode)) or (empty($grid) and !empty($_GET['v']))) {
+    if ((empty($grid) and empty($mode)) or ( empty($grid) and ! empty($_GET['v']))) {
         if (isset($_POST['json'])) {
             header('Content-type: application/json; charset=UTF-8');
             exit(json_encode([
-                'products'   => PHPShopString::win_utf8(PHPShopText::h4($this->lang('empty_product_list'), 'empty_product_list')),
+                'products' => PHPShopString::win_utf8(PHPShopText::h4($this->lang('empty_product_list'), 'empty_product_list')),
                 'pagination' => PHPShopString::win_utf8($this->get('productPageNav'))
             ]));
         }
@@ -1097,6 +1102,7 @@ function CID_Category($mode = false) {
                 $this->set('podcatalogId', $row['id']);
                 $this->set('podcatalogName', $row['name']);
                 $this->set('podcatalogDesc', $row['content']);
+                $this->set('podcatalogColor', (int)$row['color']);
 
                 $dis .= ParseTemplateReturn($this->cid_cat_with_foto_template);
             }
@@ -1168,7 +1174,7 @@ function update_cache($type) {
                 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
                 $sort_cache = $PHPShopOrm->select(array('sort_cache', 'sort_cache_created_at'), array('id=' => $this->category));
 
-                if ((int)($sort_cache['sort_cache_created_at'] + $period) > time()) {
+                if ((int) ($sort_cache['sort_cache_created_at'] + $period) > time()) {
                     $cache = unserialize($sort_cache['sort_cache']);
                     if ($type == 'filter') {
 

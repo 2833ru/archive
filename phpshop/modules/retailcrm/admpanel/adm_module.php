@@ -1,5 +1,5 @@
 <?php
-
+PHPShopObj::loadClass('order');
 include($_classPath . "modules/retailcrm/class/Tools.php");
 $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.retailcrm.retailcrm_system"));
 
@@ -35,27 +35,28 @@ function actionStart() {
 
     $value = unserialize($data['value']);
 
-
     $help = '
     <h4>Как подключиться к RetailCRM?</h4>
         <ol>
         <li>Зарегистрироваться на сайте <a href="http://www.retailcrm.ru/?partner=RCM-6931" target="_blank">RetailCRM</a></li>
         <li>Выбрать CMS PHPShop в настройках RetailCRM</li>
         <li>В поле <kbd>Компания</kbd> введите название своей компании, указанное при регистрации аккаунта в RetailCRM</li>
-        <li>В поле <kbd>URL сайта магазина</kbd> указать <code>http://' . $_SERVER['SERVER_NAME'] . '</code></li>
-        <li>В поле <kbd>API URL</kbd> указать URL адрес вашего кабинета в RetailCRM <code>https://name.' . $_SERVER['SERVER_NAME'] . '</code></li>
+        <li>В поле <kbd>URL сайта магазина</kbd> указать <code>http://' . $_SERVER['SERVER_NAME'] . '/</code></li>
+        <li>В поле <kbd>API URL</kbd> указать URL адрес вашего кабинета в RetailCRM <code>https://name.retailcrm.ru/</code></li>
         <li>В поле <kbd>API KEY</kbd> указать ключ из личного кабинета RetailCRM, доступный в  "Администрирование / Интеграция / Ключи доступа к API"</li>
         <li>В поле <kbd>Название магазина</kbd> указать название магазина из личного кабинета RetailCRM</li>
         <li>Перейти на вкладку Справочники в кабинете RetailCRM и настроить соответствие способов доставки, способов оплаты, статусов заказа интернет-магазина и CRM.</li>
 </li>
 		</ol>';
 
-    $tab1 = $PHPShopGUI->setField('Название магазина', $PHPShopGUI->setInputText(false, 'shopname', $value["shopname"], 500));
-    $tab1 .= $PHPShopGUI->setField('Компания', $PHPShopGUI->setInputText(false, 'companyname', $value["companyname"], 500));
-    $tab1 .= $PHPShopGUI->setField('URL сайта магазина', $PHPShopGUI->setInputArg(array('type' => 'text', 'name' => 'siteurl', 'value' => $value["siteurl"], 'size' => 500, 'placeholder' => 'http://' . $_SERVER['SERVER_NAME'])));
+    $tab1 = $PHPShopGUI->setField('Название магазина', $PHPShopGUI->setInputText(false, 'shopname', $value["shopname"], 400));
+    $tab1 .= $PHPShopGUI->setField('Компания', $PHPShopGUI->setInputText(false, 'companyname', $value["companyname"], 400));
+    $tab1 .= $PHPShopGUI->setField('URL сайта магазина', $PHPShopGUI->setInputArg(array('type' => 'text', 'name' => 'siteurl', 'value' => $value["siteurl"], 'size' => 400, 'placeholder' => 'http://' . $_SERVER['SERVER_NAME'])));
 
-    $tab1 .= $PHPShopGUI->setField('API URL', $PHPShopGUI->setInputArg(array('type' => 'text', 'name' => 'url', 'value' => $value["url"], 'size' => 500, 'placeholder' => 'https://name.retailcrm.ru/')));
-    $tab1 .= $PHPShopGUI->setField('API KEY', $PHPShopGUI->setInputText(false, 'key', $value["key"], 500));
+    $tab1 .= $PHPShopGUI->setField('API URL', $PHPShopGUI->setInputArg(array('type' => 'text', 'name' => 'url', 'value' => $value["url"], 'size' => 400, 'placeholder' => 'https://name.retailcrm.ru/')));
+    $tab1 .= $PHPShopGUI->setField('API KEY', $PHPShopGUI->setInputText(false, 'key', $value["key"], 400));
+
+    $tab1 = $PHPShopGUI->setCollapse('Настройки', $tab1);
 
     if (isset($value["url"]) && isset($value["key"]) && $helper = new ApiHelper($value["url"], $value["key"])) {
         $field1 = "";
@@ -80,17 +81,17 @@ function actionStart() {
         $delivery = $deliveryOrm->select(array('*'), array('is_folder' => "=''"));
 
         foreach ($delivery as $del) {
-                $tmpDeliveryTypes = $deliveryTypes;
-                if (isset($value["delivery"][$del["id"]])) {
-                    foreach ($tmpDeliveryTypes as $key => $val) {
-                        if ($val[1] == $value["delivery"][$del["id"]]) {
-                            $tmpDeliveryTypes[$key][2] = "selected";
-                            break;
-                        }
+            $tmpDeliveryTypes = $deliveryTypes;
+            if (isset($value["delivery"][$del["id"]])) {
+                foreach ($tmpDeliveryTypes as $key => $val) {
+                    if ($val[1] == $value["delivery"][$del["id"]]) {
+                        $tmpDeliveryTypes[$key][2] = "selected";
+                        break;
                     }
                 }
+            }
 
-                $field1 .= $PHPShopGUI->setField($del["city"], $PHPShopGUI->setSelect('delivery[' . $del["id"] . ']', $tmpDeliveryTypes));
+            $field1 .= $PHPShopGUI->setField($del["city"], $PHPShopGUI->setSelect('delivery[' . $del["id"] . ']', $tmpDeliveryTypes));
         }
 
         $tab2 .= $PHPShopGUI->setCollapse('Способы доставки', $field1);

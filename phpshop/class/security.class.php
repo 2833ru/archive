@@ -111,7 +111,7 @@ class PHPShopSecurity {
      * @return bool
      */
     static function true_num($num) {
-        return preg_match("/^[0-9]{1,20}$/", $num);
+        return @preg_match("/^[0-9]{1,20}$/", $num);
     }
 
     /**

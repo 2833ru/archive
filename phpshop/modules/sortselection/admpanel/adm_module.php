@@ -42,7 +42,7 @@ function getSortValue($category, $sort) {
     if (is_array($data))
         foreach ($data as $row) {
 
-            if (in_array($row['id'], $sort))
+            if (@in_array($row['id'], $sort))
                 $sel = 'selected';
             else
                 $sel = false;
@@ -90,7 +90,10 @@ function actionStart() {
 
     $Tab1 = $PHPShopGUI->setField('Заголовок', $PHPShopGUI->setInputText(false, 'title_new', $data['title'], '100%'));
     $Tab1 .= $PHPShopGUI->setField('Группа характеристик', getSort($data['sort_categories']));
+    
+    if(!empty($data['sort_categories']))
     $Tab1 .= $PHPShopGUI->setField('Характеристики', getSortValue($data['sort_categories'], $data['sort']));
+    
     $Tab1 .= $PHPShopGUI->setField('Шаблон вывода', $PHPShopGUI->setSelect('enabled_new', $value, 300, true));
     $Tab1.=$PHPShopGUI->setField('Место вывода', $PHPShopGUI->setSelect('flag_new', $f_value, 300,true));
 

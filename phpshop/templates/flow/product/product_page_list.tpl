@@ -90,7 +90,10 @@
                 <table><tr>@vendorDisp@ <td>&nbsp;</td><td>@vendorSelectDisp@</td></tr></table>
             </form>
 
-            <div class="template-product-list">@productPageDis@</div>
+            <div class="template-product-list row">
+                @productPageDis@
+            </div>
+
             <div id="ajaxInProgress"></div>
             <div class="product-scroll-init"></div>
             <div id="pagination-block">@productPageNav@</div>

@@ -257,7 +257,7 @@ class PHPShopPageCategory extends PHPShopObj {
  * Массив категории товаров
  * Упрощенный доступ к категориями
  * @author PHPShop Software
- * @version 1.2
+ * @version 1.3
  * @package PHPShopArray
  */
 class PHPShopCategoryArray extends PHPShopArray {
@@ -266,7 +266,7 @@ class PHPShopCategoryArray extends PHPShopArray {
      * Конструктор
      * @param string $sql SQL условие выборки
      */
-    function __construct($sql = false, $select = ["id", "name", "parent_to", "skin_enabled", "parent_title", "icon", "dop_cat", "vid", "num_row", "tile"]) {
+    function __construct($sql = false, $select = ["id", "name", "parent_to", "skin_enabled", "parent_title", "icon", "dop_cat", "vid", "num_row", "tile","color"]) {
 
         // Мультибаза
         if (defined("HostID"))

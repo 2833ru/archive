@@ -3,10 +3,62 @@
 /**
  * Библиотека для работы с файлами
  * @author PHPShop Software
- * @version 1.3
+ * @version 1.4
  * @package PHPShopClass
  */
 class PHPShopFile {
+
+    /**
+     * Перевод в латиницу имени файла
+     * @param string $str
+     * @return string
+     */
+    static function toLatin($str) {
+ 
+        // UTF Fix
+        if ($GLOBALS['PHPShopBase']->codBase == 'utf-8')
+            $str = iconv("utf-8", "windows-1251//IGNORE", $str);
+
+        $str = str_replace("%20", "_", $str);
+        $str = str_replace("/", "-", $str); 
+        $str = str_replace("\\", "", $str);
+        $str = str_replace("(", "", $str);
+        $str = str_replace(")", "", $str);
+        $str = str_replace(":", "", $str);
+        $str = str_replace(" ", "_", $str);
+        $str = str_replace(",", "", $str);
+        $str = str_replace("!", "", $str);
+        $str = str_replace("|", "_", $str);
+        $str = str_replace("№", "N", $str);
+        $str = str_replace("?", "", $str);
+        $str = str_replace("&nbsp", "_", $str);
+        $str = str_replace("&amp;", '_', $str);
+        $str = str_replace("ь", "", $str);
+        $str = str_replace("Ь", "", $str);
+        $str = str_replace("ъ", "", $str);
+        $str = str_replace("«", "", $str);
+        $str = str_replace("»", "", $str);
+        $str = str_replace("“", "", $str);
+        $str = str_replace(",", "", $str);
+        $str = str_replace("™", "", $str);
+        $str = str_replace("’", "", $str);
+        $str = str_replace("®", "", $str);
+        $str = str_replace("%", "", $str);
+        $str = str_replace("*", "", $str);
+
+        $new_str = '';
+        $_Array = array(" " => "_", "а" => "a", "б" => "b", "в" => "v", "г" => "g", "д" => "d", "е" => "e", "ё" => "e", "є" => "e", "ї" => "yi", "Є" => "e", "Ї" => "yi", "ж" => "zh", "з" => "z", "и" => "i", "й" => "y", "к" => "k", "л" => "l", "м" => "m", "н" => "n", "о" => "o", "п" => "p", "р" => "r", "с" => "s", "т" => "t", "у" => "u", "ф" => "f", "х" => "h", "ц" => "c", "ч" => "ch", "ш" => "sh", "щ" => "sch", "ъ" => "i", "ы" => "y", "ь" => "i", "э" => "e", "ю" => "u", "я" => "ya", "А" => "a", "Б" => "b", "В" => "v", "Г" => "g", "Д" => "d", "Е" => "e", "Ё" => "e", "Ж" => "zh", "З" => "z", "И" => "i", "Й" => "y", "К" => "k", "Л" => "l", "М" => "m", "Н" => "n", "О" => "o", "П" => "p", "Р" => "r", "С" => "s", "Т" => "t", "Ы" => "Y", "У" => "u", "Ф" => "f", "Х" => "h", "Ц" => "c", "Ч" => "ch", "Ш" => "sh", "Щ" => "sch", "Э" => "e", "Ю" => "u", "Я" => "ya",  "$" => "i", "%" => "i", "&" => "_and_");
+
+        $chars = preg_split('//', $str, -1, PREG_SPLIT_NO_EMPTY);
+
+        foreach ($chars as $val)
+            if (empty($_Array[$val]))
+                $new_str .= $val;
+            else
+                $new_str .= $_Array[$val];
+
+        return $new_str;
+    }
 
     /**
      * Права на запись файла
@@ -50,9 +102,10 @@ class PHPShopFile {
     static function writeCsv($file, $csv, $error = false) {
         $fp = @fopen($file, "w+");
         if ($fp) {
-            foreach ($csv as $value) {
-                fputcsv($fp, $value, ';', '"');
-            }
+            if (is_array($csv))
+                foreach ($csv as $value) {
+                    fputcsv($fp, $value, ';', '"');
+                }
             fclose($fp);
         } elseif ($error)
             echo 'Нет файла ' . $file;

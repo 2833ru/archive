@@ -23,7 +23,7 @@ function actionStart() {
 
     $PHPShopInterface->addJSFiles('./report/gui/report.gui.js');
 
-    $PHPShopInterface->setActionPanel($TitlePage, array('Удалить выбранные', 'Добавить в базу'), array('Переадресация'),false);
+    $PHPShopInterface->setActionPanel($TitlePage, array('Удалить выбранные', '|', 'Добавить в базу'), array('Переадресация'),false);
     $PHPShopInterface->setCaption(array(null, "2%"), array("Запрос", "60%"), array("Дата", "10%"), array("IP-адрес", "10%"), array("", "10%"), array("Найдено", "10%"));
 
     // Таблица с данными

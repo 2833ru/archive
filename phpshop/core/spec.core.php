@@ -39,9 +39,9 @@ class PHPShopSpec extends PHPShopShopCore {
 
         $this->set('catalogCategory', $this->lang('specprod'));
 
-        // Количество ячеек
+        // Количество 
         if (empty($this->cell))
-            $this->cell = $this->calculateCell("spec", $this->PHPShopSystem->getValue('num_vitrina'));
+            $this->cell = $this->calculateCell("spec", $this->PHPShopSystem->getValue('num_row_adm'));
 
         // Фильтр сортировки
         $order = $this->query_filter("spec='1'");

@@ -118,7 +118,7 @@ class Query
     public function getOrders($customers)
     {
         error_reporting(E_ERROR);
-        ini_set('memory_limit', '-1');
+        //ini_set('memory_limit', '-1');
         $corders = array();
 
        if (isset($GLOBALS['SysValue']['base']['returncall'])) {

@@ -1,6 +1,6 @@
 <div class="col-md-4 mb-3">
     <!-- Card -->
-    <div class="card card-bordered shadow-none d-block">
+    <div class="card card-bordered shadow-none d-block h-100">
         <div class="card-body d-flex align-items-center p-0 justify-content-center">
             <div>
                 <img class="img-fluid rounded" src="@podcatalogIcon@" alt="" loading="lazy">

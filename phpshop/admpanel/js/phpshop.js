@@ -587,13 +587,17 @@ $().ready(function () {
         $('#presentation-select').click();
     }
 
-    // Перехода к элементу по хешу
+    // Переход к элементу по хешу
     if (window.location.hash != '') {
         var el = $("a[name='set" + window.location.hash.split('#').join('') + "']");
         if (typeof el.offset() != 'undefined') {
-            $('html, body').animate({scrollTop: el.offset().top - 100}, 500);
-            el.next('.collapse-block').addClass('alert alert-info');
+            $('html, body').animate({scrollTop: el.offset().top - 50}, 500);
         }
+    }
+    
+    // Переход к элементу закладки по ?tab
+    if ($.getUrlVar('tab') !== undefined) {
+         $('#myTabs a[href="#tabs-"'+$.getUrlVar('tab')+'"]').tab('show');
     }
 
     // Filemanager в отдельное окно

@@ -124,7 +124,9 @@ switch ($subpath[2]) {
 
 // Загрузка изображения по ссылке 
 function downloadFile($url, $path) {
+
     $newfname = $path;
+    $url = iconv("windows-1251", "utf-8//IGNORE", $url);
 
     $arrContextOptions = array(
         "ssl" => array(
@@ -133,7 +135,7 @@ function downloadFile($url, $path) {
         ),
     );
 
-    $file = fopen($url, 'rb', false, stream_context_create($arrContextOptions));
+    $file = @fopen($url, 'rb', false, stream_context_create($arrContextOptions));
     if ($file) {
         $newf = fopen($newfname, 'wb');
         if ($newf) {
@@ -438,7 +440,7 @@ function csv_update($data) {
                 $_POST['export_imgpath'] = false;
 
 
-            if (!empty($_POST['export_imgpath']) and ! empty($_POST['export_imgpath'])) {
+            if (!empty($_POST['export_imgpath'])) {
                 if (!empty($row['pic_small']))
                     $row['pic_small'] = '/UserFiles/Image/' . $row['pic_small'];
             }
@@ -461,8 +463,8 @@ function csv_update($data) {
 
             if (!empty($data_img) and is_array($data_img)) {
 
-                // Получение ID товара по артикулу
-                if (empty($row['id']) and ! empty($row['uid'])) {
+                // Получение ID товара по артикулу при обновлении
+                if ($_POST['export_action'] == 'update' and empty($row['id']) and ! empty($row['uid'])) {
                     $PHPShopOrmProd = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
                     $data_prod = $PHPShopOrmProd->getOne(array('id'), array('uid' => '="' . $row['uid'] . '"'));
                     $row['id'] = $data_prod['id'];
@@ -484,6 +486,7 @@ function csv_update($data) {
                         if (isset($_POST['export_imgload']) and strstr($img, 'http')) {
 
                             $path_parts = pathinfo($img);
+                            $path_parts['basename'] = PHPShopFile::toLatin($path_parts['basename']);
 
                             // Файл загружен
                             if (downloadFile($img, $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['dir']['dir'] . '/UserFiles/Image/' . $path . $path_parts['basename']))
@@ -617,7 +620,7 @@ function csv_update($data) {
                         $csv_load_totale++;
 
                         // Отчет
-                        $csv_load[] = $row;
+                        $GLOBALS['csv_load'][] = $row;
                     }
                 }
             }
@@ -631,19 +634,19 @@ function csv_update($data) {
                 } else {
 
                     // Обновление по ID
-                    if (isset($row['id'])) {
+                    if (!empty($row['id'])) {
                         $where = array('id' => '="' . intval($row['id']) . '"');
                         unset($row['id']);
                     }
 
                     // Обновление по артикулу
-                    elseif (isset($row['uid'])) {
+                    elseif (!empty($row['uid'])) {
                         $where = array('uid' => '="' . $row['uid'] . '"');
                         unset($row['uid']);
                     }
 
                     // Обновление по логину
-                    elseif (isset($row['login'])) {
+                    elseif (!empty($row['login'])) {
                         $where = array('login' => '="' . $row['login'] . '"');
                         unset($row['login']);
                     }
@@ -703,7 +706,7 @@ function csv_update($data) {
 
                         // Отчет
                         if (!empty($count))
-                            $csv_load[] = $row;
+                            $GLOBALS['csv_load'][] = $row;
                     }
                 }
             }
@@ -735,7 +738,6 @@ function actionSave() {
             }
         }
     }
-
 
     // Удалить настройки
     if (!empty($_POST['exchanges_remove']) and is_array($_POST['exchanges_remove'])) {
@@ -854,44 +856,80 @@ function actionSave() {
             if (empty($_POST['start']))
                 $_POST['start'] = 0;
 
-            $result = PHPShopFile::readCsvGenerators($csv_file, 'csv_update', $delim, array($_POST['start'], $_POST['end']));
-            if ($result) {
+            // Первая загрузка
+            if (empty($_POST['total'])) {
 
                 // Строк в файле
-                if (empty($_POST['total'])) {
-                    $total = 0;
-                    $f = fopen($csv_file, 'r');
-                    while (!feof($f)) {
-                        $total ++;
-                        fgets($f);
-                    }
-                    fclose($f);
-                } else
-                    $total = $_POST['total'];
-
-                $bar = round($_POST['line_limit'] * 100 / $total);
-
-                // Конец
-                if ($end > $total) {
-                    $end = $total;
-                    $bar = 100;
-                    $bar_class = null;
-                } else {
-                    $bar_class = "active";
+                $total = 0;
+                $handle = fopen($csv_file, "r");
+                while ($data = fgetcsv($handle, 0, $delim)) {
+                    $total++;
                 }
+                //$total--;
 
-                $total_min = round(floatval((($total - $csv_load_count) / $_POST['line_limit']) * $_POST['time_limit']), 1);
-                $action = true;
-                $result_message = $PHPShopGUI->setAlert('<div id="bot_result">' . __('Файл') . ' <strong>' . $csv_file_name . '</strong> ' . __('загружен. Обработано ') . $end . __(' из ') . $total . __(' строк. Изменено') . ' <b id="total-update">' . intval($csv_load_count + 1) . '</b> ' . __('записей. Интервал ') . $_POST['time_limit'] . __(' мин. Осталось') . ' <b id="total-min">' . $total_min . '</b> ' . __('мин') . '.</div>
+                $bar = 0;
+                $end = 0;
+                $csv_load_count = 0;
+                $bar_class = "active";
+
+                if ($_POST['export_action'] == 'insert')
+                    $do = 'Создано';
+                else
+                    $do = 'Изменено';
+
+                $total_min = round($total / $_POST['line_limit'] * $_POST['time_limit']);
+
+                $result_message = $PHPShopGUI->setAlert('<div id="bot_result">' . __('Файл') . ' <strong>' . $csv_file_name . '</strong> ' . __('загружен. Обработано ') . $end . __(' из ') . $total . __(' строк. ' . $do) . ' <b id="total-update">' . intval($csv_load_count) . '</b> ' . __('записей.') . '</div>
 <div class="progress bot-progress">
   <div class="progress-bar progress-bar-striped  progress-bar-success ' . $bar_class . '" role="progressbar" aria-valuenow="" aria-valuemin="0" aria-valuemax="100" style="width: ' . $bar . '%"> ' . $bar . '% 
   </div>
-</div>');
-                $json_message = __('Файл') . ' <strong>' . $csv_file_name . '</strong> ' . __('загружен. Обработано ') . $end . __(' из ') . $total . __(' строк. Изменено') . ' <b id="total-update">' . intval($csv_load_count) . '</b> ' . __('записей. Интервал ') . $_POST['time_limit'] . __(' мин. Осталось') . ' <b id="total-min">' . $total_min . '</b> ' . __('мин') . '.';
+</div>','success load-result',true,false,false);
+                $result_message .= $PHPShopGUI->setAlert('<b>Пожалуйста, не закрывайте окно до полной загрузки товаров</b><br>
+Вы можете продолжить работу с другими разделами сайта, открывая меню в новой вкладке (нажмите <kbd>CTRL</kbd> и кликните на раздел).', 'info load-info',true,false,false);
                 $result_message .= $PHPShopGUI->setInput("hidden", "csv_file", $csv_file);
                 $result_message .= $PHPShopGUI->setInput("hidden", "total", $total);
-            } else
-                $result_message = $PHPShopGUI->setAlert(__('Нет прав на запись файла') . ' ' . $csv_file, 'danger');
+                $result_message .= $PHPShopGUI->setInput("hidden", "stop", 0);
+            } else {
+
+                $result = PHPShopFile::readCsvGenerators($csv_file, 'csv_update', $delim, array($_POST['start'], $_POST['end']));
+                if ($result) {
+
+                    $total = $_POST['total'];
+
+                    $bar = round($_POST['line_limit'] * 100 / $total);
+
+                    // Конец
+                    if ($end > $total) {
+                        $end = $total;
+                        $bar = 100;
+                        $bar_class = null;
+                    } else {
+                        $bar_class = "active";
+                    }
+
+                    if ($_POST['export_action'] == 'insert')
+                        $lang_do = 'Создано';
+                    else
+                        $lang_do = 'Изменено';
+
+                    if ($csv_load_count < 0)
+                        $csv_load_count = 0;
+
+                    $total_min = round(($total - $csv_load_count) / $_POST['line_limit'] * $_POST['time_limit']);
+                    $action = true;
+                    $json_message = __('Файл') . ' <strong>' . $csv_file_name . '</strong> ' . __('загружен. Обработано ') . $end . __(' из ') . $total . __(' строк. ' . $lang_do) . ' <b id="total-update">' . intval($csv_load_count) . '</b> ' . __('записей.');
+
+                    // Файл результа
+                    if ($_POST['line_limit'] >= 10) {
+                        $result_csv = './csv/result_' . date("d_m_y_His") . '.csv';
+                        PHPShopFile::writeCsv($result_csv, $GLOBALS['csv_load']);
+                    }
+
+                    // Данные для журнала
+                    $csv_load_totale = $_POST['start'] . '-' . $_POST['end'];
+                } else
+                    $result_message = $PHPShopGUI->setAlert(__('Нет прав на запись файла') . ' ' . $csv_file, 'danger');
+            }
         }
         else {
 
@@ -917,8 +955,10 @@ function actionSave() {
 
                     $result_message = $PHPShopGUI->setAlert(__('Файл') . ' <strong>' . $csv_file_name . '</strong> ' . __('загружен. Обработано ' . $csv_load_totale . ' строк. ' . $lang_do) . ' <strong>' . intval($csv_load_count) . '</strong> ' . __('записей') . '. ' . __('Отчет по ' . $lang_do2 . ' позициям ') . ' <a href="' . $result_csv . '" target="_blank">CSV</a>.');
                 }
-            } else
+            } else {
+                $result = 0;
                 $result_message = $PHPShopGUI->setAlert(__('Нет прав на запись файла') . ' ' . $csv_file, 'danger');
+            }
         }
     }
 
@@ -928,12 +968,14 @@ function actionSave() {
         $PHPShopOrm->insert(array('name_new' => $_POST['exchanges_new'], 'option_new' => serialize($_POST), 'type_new' => 'import'));
     }
 
-    if (empty($csv_load_count))
-        $result = 0;
+    if (!empty($_POST['bot']) and (empty($_POST['total']) or $_POST['line_limit'] < 10))
+        $log_off = true;
 
     // Журнал загрузок
-    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['exchanges_log']);
-    $PHPShopOrm->insert(array('date_new' => time(), 'file_new' => $csv_file, 'status_new' => $result, 'info_new' => serialize(array($csv_load_totale, $lang_do, $csv_load_count, $result_csv, $img_load)), 'option_new' => serialize($_POST)));
+    if (empty($log_off)) {
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['exchanges_log']);
+        $PHPShopOrm->insert(array('date_new' => time(), 'file_new' => $csv_file, 'status_new' => $result, 'info_new' => serialize([$csv_load_totale, $lang_do, (int) $csv_load_count, $result_csv, (int) $img_load]), 'option_new' => serialize($_POST)));
+    }
 
     // Автоматизация
     if (!empty($_POST['ajax'])) {
@@ -944,7 +986,7 @@ function actionSave() {
 
             return array("success" => $action, "bar" => $bar, "count" => $csv_load_count, "result" => PHPShopString::win_utf8($json_message), 'limit' => $limit);
         } else
-            return array("success" => 'done', "count" => $csv_load_count, "result" => PHPShopString::win_utf8($json_message), 'limit' => $limit);
+            return array("success" => 'done', "count" => $csv_load_count, "result" => PHPShopString::win_utf8($json_message), 'limit' => $limit,'action'=>PHPShopString::win_utf8(mb_strtolower($lang_do,$GLOBALS['PHPShopBase']->codBase)));
     }
 }
 
@@ -987,8 +1029,13 @@ function actionStart() {
         $memory[$_GET['path']]['export_imgload'] = 1;
         $memory[$_GET['path']]['export_imgproc'] = 1;
 
+        $_POST['line_limit'] = 1;
+
         if ($_GET['path'] == 'exchange.import')
             $_POST['bot'] = 1;
+        
+        if($subpath[2] == 'catalog')
+            $memory[$_GET['path']]['export_action']='insert';
     }
 
 
@@ -1181,16 +1228,17 @@ function actionStart() {
 
     // Закладка 4
     if (empty($_POST['time_limit']))
-        $_POST['time_limit'] = 1;
+        $_POST['time_limit'] = 10;
 
     if (empty($_POST['line_limit']))
-        $_POST['line_limit'] = 100;
+        $_POST['line_limit'] = 50;
 
     if (empty($_POST['bot']))
         $_POST['bot'] = null;
 
-    $Tab4 = $PHPShopGUI->setField('Лимит строк', $PHPShopGUI->setInputText(null, 'line_limit', $_POST['line_limit'], 150), 1, 'Задается хостингом');
-    $Tab4 .= $PHPShopGUI->setField('Временной интервал', $PHPShopGUI->setInputText(null, 'time_limit', $_POST['time_limit'], 150, __('минут')), 1, 'Задается хостингом');
+    $Tab4 = $PHPShopGUI->setField('Лимит строк', $PHPShopGUI->setInputText(null, 'line_limit', $_POST['line_limit'], 150), 1, 'Зависит от скорости хостинга');
+    //$Tab4 .= $PHPShopGUI->setField('Временной интервал', $PHPShopGUI->setInputText(null, 'time_limit', $_POST['time_limit'], 150, __('секунд')), 1, 'Зависит от скорости хостинга');
+    //$Tab4 .= $PHPShopGUI->setInput("hidden", "line_limit", $_POST['line_limit']);
     $Tab4 .= $PHPShopGUI->setField("Помощник", $PHPShopGUI->setCheckbox('bot', 1, __('Умная загрузка для соблюдения правила ограничений на хостинге'), @$_POST['bot'], false, false));
 
     $Tab1 = $PHPShopGUI->setCollapse('Настройки', $Tab1);

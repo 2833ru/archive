@@ -194,7 +194,8 @@ function actionStart() {
     $num_row_area .= $PHPShopGUI->setRadio('num_row_new', 3, 3, $data['num_row'], false, false, false, false);
     $num_row_area .= $PHPShopGUI->setRadio('num_row_new', 4, 4, $data['num_row'], false, false, false, false);
     $num_row_area .= $PHPShopGUI->setRadio('num_row_new', 5, 5, $data['num_row'], false, false, false, false);
-    $Tab_info .= $PHPShopGUI->setField("Товаров в длину", $num_row_area, 'left');
+    $num_row_area .= $PHPShopGUI->setRadio('num_row_new', 6, 6, $data['num_row'], false, false, false, false);
+    $Tab_info .= $PHPShopGUI->setField("Товарная сетка в каталоге", $num_row_area, 1, 'Сетки 5 и 6 поддерживаются не всеми шаблонами');
 
 
     $vid = $PHPShopGUI->setCheckbox('vid_new', 1, 'Не выводить внутренние подкаталоги в меню', $data['vid']) . '<br>';
@@ -219,9 +220,13 @@ function actionStart() {
     $Tab_info .= $PHPShopGUI->setField('Дополнительные каталоги', $tree_select_dop, 1, 'Подкаталоги одновременно выводятся в нескольких каталогах.');
 
     $Tab1 = $PHPShopGUI->setCollapse('Информация', $Tab_info);
-
+    
+    // Цвет
+    $Tab_icon = $PHPShopGUI->setField("Инверсия цвета текста", $PHPShopGUI->setInputText(null, "color_new", (int) $data['color'], 100, '%'));
+    
     // Иконка
-    $Tab_icon = $PHPShopGUI->setField("Изображение", $PHPShopGUI->setIcon($data['icon'], "icon_new", false));
+    $Tab_icon .= $PHPShopGUI->setField("Изображение", $PHPShopGUI->setIcon($data['icon'], "icon_new", false));
+
     $Tab1 .= $PHPShopGUI->setCollapse('Иконка', $Tab_icon);
 
     // Редактор
@@ -248,9 +253,9 @@ function actionStart() {
         $cache = $PHPShopGUI->setCheckbox('reset_cache', 1, __('Очистить кэш характеристик фильтра отбора по параметрам'), false);
         $Tab8 = $PHPShopGUI->setCollapse(__('Кэширование характеристик'), $cache, 'in', false);
     }
-    
+
     $help_sort = $PHPShopGUI->setHelp('Не забудьте выбрать значение этих характеристик в товарах во вкладке Характеристики. Можно это сделать пакетно <a href="https://docs.phpshop.ru/rabota-s-bazoi/import-i-eksport#csv" target="_blank" title="Перейти">через csv файл</a>');
-    $Tab8 = $PHPShopGUI->setCollapse('Характеристики', $PHPShopGUI->loadLib('tab_sorts', $data).$help_sort, 'in', false);
+    $Tab8 = $PHPShopGUI->setCollapse('Характеристики', $PHPShopGUI->loadLib('tab_sorts', $data) . $help_sort, 'in', false);
 
     if (!is_array($subcategory_data))
         $Tab8 .= $PHPShopGUI->setCollapse('Варианты подтипов', tab_parent($data) . $PHPShopGUI->setHelp('Управление вариантами подтипов товаров находится в разделе <a href="?path=sort.parent" title="Перейти">Варианты подтипов</a>'), 'in', true);
@@ -261,11 +266,28 @@ function actionStart() {
     // Мультибаза
     $Tab9 .= $PHPShopGUI->setCollapse('Показывать на витринах', $PHPShopGUI->loadLib('tab_multibase', $data));
 
+    // Склад
+    if (empty($data['ed_izm']))
+        $ed_izm = __('шт.');
+    else
+        $ed_izm = $data['ed_izm'];
+
+    // Вес
+    $Tab_info_size = $PHPShopGUI->setField('Вес', $PHPShopGUI->setInputText(false, 'weight_new', $data['weight'], 100, __('г&nbsp;&nbsp;&nbsp;&nbsp;')), 'left');
+
+    // Габариты
+    $Tab_info_size .= $PHPShopGUI->setField('Длина', $PHPShopGUI->setInputText(false, 'length_new', $data['length'], 100, __('см&nbsp;')), 'left');
+    $Tab_info_size .= $PHPShopGUI->setField('Ширина', $PHPShopGUI->setInputText(false, 'width_new', $data['width'], 100, __('см&nbsp;')), 'left');
+    $Tab_info_size .= $PHPShopGUI->setField('Высота', $PHPShopGUI->setInputText(false, 'height_new', $data['height'], 100, __('см&nbsp;')), 'left');
+    $Tab_info_size .= $PHPShopGUI->setField('Единица измерения', $PHPShopGUI->setInputText(false, 'ed_izm_new', $ed_izm, 100));
+
+    $Tab9 .= $PHPShopGUI->setCollapse('Габариты по умолчанию', $Tab_info_size);
+
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1), array("Описание", $Tab2), array("Заголовки", $Tab7), array("Характеристики", $Tab8, true), array("Права", $Tab9, true));
+    $PHPShopGUI->setTab(array("Основное", $Tab1), array("Описание", $Tab2), array("Заголовки", $Tab7), array("Характеристики", $Tab8, true), array("Дополнительно", $Tab9, true));
 
     // Прогрессбар
     if ($GLOBALS['count'] > 500)

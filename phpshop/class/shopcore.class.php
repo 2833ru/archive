@@ -862,38 +862,6 @@ class PHPShopShopCore extends PHPShopCore {
             if ($key < $this->cell)
                 $args[] = $value;
 
-        $num = count($args);
-
-        // Расчет CSS стилей табличной сетки товара
-        switch ($num) {
-            // Сетка в 1 ячейку
-            case 1:
-                $panel = array('panel_l panel_1_1');
-                break;
-
-            // Сетка в 2 ячейки
-            case 2:
-                $panel = array('panel_l panel_2_1', 'panel_r panel_2_2');
-                break;
-
-            // Сетка в 3 ячейки
-            case 3:
-                $panel = array('panel_l panel_3_1', 'panel_r panel_3_2', 'panel_l panel_3_2');
-                break;
-
-            // Сетка в 4 ячейки
-            case 4:
-                $panel = array('panel_l panel_4_1', 'panel_r panel_4_2', 'panel_l panel_4_3', 'panel_l panel_4_4');
-                break;
-
-            // Сетка в 5 ячейки
-            case 5:
-                $panel = array('panel_l panel_5_1', 'panel_r panel_5_2', 'panel_l panel_5_3', 'panel_l panel_5_4', 'panel_l panel_5_5');
-                break;
-
-            default: $panel = array('panel_l', 'panel_r', 'panel_l', 'panel_r', 'panel_l', 'panel_r', 'panel_l');
-        }
-
         switch ($this->cell_type) {
 
             // Списки
@@ -924,28 +892,16 @@ class PHPShopShopCore extends PHPShopCore {
                     }
                 $tr .= '</div>';
                 break;
-
-            // Табличная
-            default:
-
-                $tr = '<tr>';
+                
+            // Flex
+            case 'flex':
+                $tr = null;
                 if (is_array($args))
                     foreach ($args as $key => $val) {
-                        $tr .= '<td class="' . $panel[$key] . '" valign="top">' . $val . '</td>';
-
-                        if ($item < $num and $num == $this->cell)
-                            $tr .= '<td ' . $this->grid_style . '><img src="images/spacer.gif" width="1"></td>';
-
+                        $tr .= $val;
                         $item++;
                     }
-                $tr .= '</tr>';
-
-
-                $this->separator = '<tr><td ' . $this->grid_style . ' colspan="' . ($this->cell * 2) . '" height="1"><img height="1" src="images/spacer.gif"></td></tr>';
-
-                if (!empty($this->setka_footer)) {
-                    $tr .= $this->separator;
-                }
+                break;
         }
 
 

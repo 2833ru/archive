@@ -41,7 +41,7 @@ class PHPShopNewtip extends PHPShopShopCore {
 
         // Количество ячеек
         if (empty($this->cell))
-            $this->cell = $this->calculateCell("newtip", $this->PHPShopSystem->getValue('num_vitrina'));
+            $this->cell = $this->calculateCell("newtip", $this->PHPShopSystem->getValue('num_row_adm'));
 
         // Кол-во товаров на странице
         // если 0 делаем по формуле кол-во колонок * 2 строки.
@@ -73,7 +73,7 @@ class PHPShopNewtip extends PHPShopShopCore {
         // Формула вывода
         $this->new_enabled = (int) $this->PHPShopSystem->getSerilizeParam("admoption.new_enabled");
 
-        if(!is_array($this->dataArray) && $this->new_enabled > 0) {
+        if (!is_array($this->dataArray) && $this->new_enabled > 0) {
             unset($where['newtip']);
             switch ($this->new_enabled) {
                 case 1:
@@ -83,7 +83,7 @@ class PHPShopNewtip extends PHPShopShopCore {
 
                 case 2:
                     $this->query_filter("enabled='1'");
-                    $order=array('order'=>'id DESC');
+                    $order = array('order' => 'id DESC');
                     break;
             }
 

@@ -43,8 +43,8 @@ function treegenerator($array, $i, $curent, $dop_cat_array) {
 
                 $i = 1;
             } else {
-                $tree_select .= '<option value="' . $k . '" ' . $selected . ' disabled>' . $del . $v . '</option>';
-                $tree_select_dop .= '<option value="' . $k . '" ' . $selected_dop . ' disabled >' . $del . $v . '</option>';
+                $tree_select .= '<option value="' . $k . '" disabled>' . $del . $v . '</option>';
+                $tree_select_dop .= '<option value="' . $k . '" disabled >' . $del . $v . '</option>';
             }
 
             $tree_select .= $check['select'];
@@ -109,13 +109,16 @@ function actionStart() {
     $CategoryArray[0]['name'] = '- ' . __('Выбрать каталог') . ' -';
     $tree_array = array();
 
-    foreach ($PHPShopCategoryArray->getKey('parent_to.id', true) as $k => $v) {
-        foreach ($v as $cat) {
-            $tree_array[$k]['sub'][$cat] = $CategoryArray[$cat]['name'];
+    $getKey = $PHPShopCategoryArray->getKey('parent_to.id', true);
+
+    if (is_array($getKey))
+        foreach ($getKey as $k => $v) {
+            foreach ($v as $cat) {
+                $tree_array[$k]['sub'][$cat] = $CategoryArray[$cat]['name'];
+            }
+            $tree_array[$k]['name'] = $CategoryArray[$k]['name'];
+            $tree_array[$k]['id'] = $k;
         }
-        $tree_array[$k]['name'] = $CategoryArray[$k]['name'];
-        $tree_array[$k]['id'] = $k;
-    }
 
     $tree_array[0]['sub'][1000000] = __('Неопределенные товары');
     $tree_array[1000000]['name'] = __('Неопределенные товары');
@@ -1025,9 +1028,9 @@ function actionOptionEdit() {
 
     // Цена
     $Tab1 .= $PHPShopGUI->setField(array('Цена 1', 'Цена 2'), array($PHPShopGUI->setInputText(null, 'price_new', $data['price'], 150, $valuta_def_name), $PHPShopGUI->setInputText(null, 'price2_new', $data['price2'], 150, $valuta_def_name)), array(array(2, 4), array(2, 4)));
-    
+
     // Вывод
-    $Tab1 .= $PHPShopGUI->setField(array('Вывод','Валюта'), array($PHPShopGUI->setCheckbox('enabled_new', 1, 'Вывод в товаре', $data['enabled']),$valuta_area), array(array(2, 4), array(2, 4)));
+    $Tab1 .= $PHPShopGUI->setField(array('Вывод', 'Валюта'), array($PHPShopGUI->setCheckbox('enabled_new', 1, 'Вывод в товаре', $data['enabled']), $valuta_area), array(array(2, 4), array(2, 4)));
 
 
     $Tab1 .= $PHPShopGUI->setInputArg(array('name' => 'rowID', 'type' => 'hidden', 'value' => $_REQUEST['id']));

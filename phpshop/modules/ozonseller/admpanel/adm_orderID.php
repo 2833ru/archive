@@ -1,7 +1,7 @@
 <?php
 
 include_once dirname(__FILE__) . '/../class/OzonSeller.php';
-$TitlePage = __('Заказы из Ozon');
+$TitlePage = __('Заказ из Ozon').' #'.$_GET['id'];
 PHPShopObj::loadClass("product");
 
 // Озон

@@ -1,4 +1,4 @@
-<div class="col-sm-6 col-lg-4 px-2 px-sm-3 mb-3 mb-sm-5">
+<div class="col-6 col-lg-4 px-2 px-sm-3 mb-3 mb-sm-5">
     <!-- Product -->
     <div class="card card-bordered shadow-none text-center h-100">
         <div class="position-relative">
@@ -12,7 +12,7 @@
             <div class="position-absolute bottom-0 left-0 pl-1 pb-1">
                 @promotionsIcon@
             </div>
-            <div class="position-absolute top-0 right-0 pt-3 pr-3">
+            <div class="position-absolute top-0 right-0 pt-3 pr-3 d-none d-sm-flex">
                 <button type="button" class="btn btn-xs btn-icon btn-outline-secondary rounded-circle addToWishList @elementCartHide@" data-uid="@productUid@" title="{Отложить}">
                     <i class="fas fa-heart"></i>
                 </button>
@@ -31,7 +31,7 @@
             </div>
         </div>
 
-        <div class="card-footer border-0 pt-0 pb-4 px-4">
+        <div class="card-footer border-0 pt-0 pb-4 px-1">
             <div class="mb-3">
                 <div class="d-inline-flex align-items-center small" >
                     <div class="rating text-warning mr-2">
@@ -40,6 +40,7 @@
                     <span class="@php __hide('avgRateNum'); php@ text-primary">@avgRateNum@</span>   
                 </div>
             </div>
+            <a class="btn btn-sm btn-outline-primary btn-pill transition-3d-hover @elementCartOptionHide@" href="/shop/UID_@productUid@.html">@productSale@</a>
             <button type="button" class="btn btn-sm btn-outline-primary btn-pill transition-3d-hover addToCartList @elementCartHide@" data-uid="@productUid@">@flowProductSale@</button>
         </div>
     </div>

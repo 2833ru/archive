@@ -273,6 +273,9 @@ if (is_array($data))
             $user_link = null;
 
         // Сумма
+        if(empty($row['sum']))
+            $row['sum']=0;
+        
         $sum += $row['sum'];
         $num++;
 

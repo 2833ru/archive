@@ -5,7 +5,7 @@ AddDefaultCharset windows-1251
 
 # Скачивание CSV,XML браузерами
 AddType text/csv csv
-AddType text/csv xml
+#AddType text/csv xml
 
 DirectoryIndex index.php
 RewriteEngine On

@@ -34,7 +34,7 @@ class PHPShopGUI {
     var $tab_key_mod = 0;
     var $collapse_count = 0;
     var $collapse_old_style = false;
-    var $checkbox_old_style= false;
+    var $checkbox_old_style = false;
 
     /**
      * Конструктор
@@ -150,11 +150,12 @@ class PHPShopGUI {
             $icon = str_replace('img-thumbnail-dashed', null, $icon);
         }
 
-        if(empty($option['view']))
-        $dis = '
+        if (empty($option['view']))
+            $dis = '
      <div class="row">
         <div class="col-md-2 btn-file"><a href="#" class="link-thumbnail">' . $icon . '</a>' . $drag . '</div>';
-        else $dis = '
+        else
+            $dis = '
      <div class="row">
         <div class="col-md-12 btn-file"><a href="#" class="link-thumbnail img-preview">' . $icon . '</a>' . $drag . '</div>';
 
@@ -213,21 +214,22 @@ class PHPShopGUI {
     }
 
     /**
-     *  Сообщение
+     * Сообщение
      * @param string $text текст сообщения
      * @param string $type оформление [succes | danger]
      * @param string $width размер
+     * @param string $dismiss закрытие
      */
-    function setAlert($text, $type = 'success', $locale = true, $width = false) {
+    function setAlert($text, $type = 'success', $locale = true, $width = false, $dismiss = 'data-dismiss="alert"') {
 
         if ($locale)
             $text = $this->__($text);
 
         if ($width)
             $width = 'style="width:' . $width . 'px"';
-
+        
         return '<div class="alert alert-' . $type . ' alert-dismissible" role="alert" ' . $width . '>
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <button type="button" class="close" '.$dismiss.' aria-label="Close"><span aria-hidden="true">&times;</span></button>
   ' . $text . '</div>';
     }
 
@@ -553,7 +555,7 @@ class PHPShopGUI {
         if (empty($GLOBALS['isFrame']) or empty($_GET['admin'])) {
             $modal_class = 'hide';
             $modal_class_back = null;
-        } else{
+        } else {
             $modal_class = null;
             $modal_class_back = 'hide';
         }
@@ -564,13 +566,13 @@ class PHPShopGUI {
             <div class="navbar-header">
         
                      <div class="btn-group pull-left" role="group" aria-label="...">
-                        <a class="btn btn-default btn-sm navbar-btn pull-left ' . $back['class'] . ' ' . $check_frame . ' '.$modal_class_back.'" href="?path=' . $back['url'] . '"> <span class="glyphicon glyphicon-arrow-left"></span> ' . $this->__($btnBack) . '
+                        <a class="btn btn-default btn-sm navbar-btn pull-left ' . $back['class'] . ' ' . $check_frame . ' ' . $modal_class_back . '" href="?path=' . $back['url'] . '"> <span class="glyphicon glyphicon-arrow-left"></span> ' . $this->__($btnBack) . '
                         </a>' . $btnBackProduct . '
                      </div>
                      
                     <div class="btn-group pull-left ' . $modal_class . '" role="group" aria-label="...">
-                       <a class="btn btn-default btn-sm navbar-btn modal-prev" data-id="'.$_GET['id'].'" href="#" title="'.__('Назад').'"> <span class="glyphicon glyphicon-arrow-left"></span></a>
-                       <a class="btn btn-default btn-sm navbar-btn modal-next" data-id="'.$_GET['id'].'" href="#" title="'.__('Вперед').'"> <span class="glyphicon glyphicon-arrow-right"></span></a>
+                       <a class="btn btn-default btn-sm navbar-btn modal-prev" data-id="' . $_GET['id'] . '" href="#" title="' . __('Назад') . '"> <span class="glyphicon glyphicon-arrow-left"></span></a>
+                       <a class="btn btn-default btn-sm navbar-btn modal-next" data-id="' . $_GET['id'] . '" href="#" title="' . __('Вперед') . '"> <span class="glyphicon glyphicon-arrow-right"></span></a>
                     </div>
                     
                     <span class="navbar-brand hidden-xs ">' . $title . '</span>
@@ -742,7 +744,7 @@ class PHPShopGUI {
         elseif ($checked == 0)
             $checked = null;
 
-        $CODE = '<span class="hide">'.$Arg['enable'].'</span><input type="checkbox" name="enable" data-toggle="toggle"  data-on="' . __('Вкл') . '" data-off="' . __('Выкл') . '" data-size="mini" value="'.$Arg['enable'].'" ' . $checked . ' data-id="' . $Arg['id'] . '" data-val="' . $Arg['enable'] . '" class="toggle-event">';
+        $CODE = '<span class="hide">' . $Arg['enable'] . '</span><input type="checkbox" name="enable" data-toggle="toggle"  data-on="' . __('Вкл') . '" data-off="' . __('Выкл') . '" data-size="mini" value="' . $Arg['enable'] . '" ' . $checked . ' data-id="' . $Arg['id'] . '" data-val="' . $Arg['enable'] . '" class="toggle-event">';
 
         $CODE .= '<form method="post" action="?path=' . $this->path . '&id=' . $Arg['id'] . '" class="status_edit_' . $Arg['id'] . '">            
 <input type="hidden" value="actionUpdate.' . $subpath[0] . '.edit" name="actionList[editID]">
@@ -1006,7 +1008,7 @@ class PHPShopGUI {
 
         $CODE = '<div class="input-group color" style="width:' . $this->chekSize($size) . '">
     <input type="text" id="' . $id . '" name="' . $name . '" value="' . $value . '" class="form-control input-sm color-value" ' . $add_option . ' placeholder="#ffffff">
-    <span class="input-group-addon input-sm" title="Выбрать цвет"><i></i></span></div>';
+    <span class="input-group-addon input-sm" title="' . __('Выбрать цвет') . '"><i></i></span></div>';
         return $CODE;
     }
 
@@ -1059,7 +1061,7 @@ class PHPShopGUI {
             if (!empty($type_array[2]))
                 $required .= ' data-minlength="' . intval($type_array[2]) . '" ';
         }
-        
+
 
         // Проверка пароля
         if ($type == 'password') {
@@ -1114,15 +1116,15 @@ class PHPShopGUI {
      * @param bool $required required вкл/выкл
      * @return string
      */
-    function setInputText($caption, $name, $value, $size = false, $description = false, $float = false, $class = false, $placeholder = false, $locale = true,$required=false) {
-        
-        if($required)
+    function setInputText($caption, $name, $value, $size = false, $description = false, $float = false, $class = false, $placeholder = false, $locale = true, $required = false) {
+
+        if ($required)
             $required = '.required';
 
         // + fix
         $value = str_replace('&#43;', '+', $value);
 
-        return $this->setInput('text'.$required, $name, htmlentities($value, ENT_COMPAT, $GLOBALS['PHPShopBase']->codBase), $float, $size, false, $class, false, $caption, $description, $placeholder, $locale);
+        return $this->setInput('text' . $required, $name, htmlentities($value, ENT_COMPAT, $GLOBALS['PHPShopBase']->codBase), $float, $size, false, $class, false, $caption, $description, $placeholder, $locale);
     }
 
     /**
@@ -1232,7 +1234,7 @@ class PHPShopGUI {
             if ($val[4] == true and $this->tab_key_mod > 1)
                 $grid = "masonry-grid";
             //else
-                //$grid = 'block-grid';
+            //$grid = 'block-grid';
 
             $this->addTabName .= '<li role="presentation" class="' . $active . '"><a href="#tabs-' . $this->tab_key_uid . '" aria-controls="tabs-' . $this->tab_key_uid . '" role="tab" data-toggle="tab" data-id="' . $val[0] . '">' . __($val[0]) . '</a></li>';
             $this->addTabContent .= '<div role="tabpanel" class="tab-pane fade" id="tabs-' . $this->tab_key_uid . '">' . $hr . '<div class="' . $grid . '">' . $val[1] . '</div></div>';
@@ -1301,7 +1303,7 @@ class PHPShopGUI {
             else
                 $grid = $val[4];
 
-            if (empty($this->collapse_count) and !defined('SkinName'))
+            if (empty($this->collapse_count) and ! defined('SkinName'))
                 $val[1] = $this->setCollapse('Настройки', $val[1]);
 
             $name .= '<li role="presentation" class="' . $active . '"><a href="' . $href . '" aria-controls="tabs-' . $this->tab_key . '" role="tab" ' . $toggle . ' data-id="' . $val[0] . '">' . $this->__($val[0]) . '</a></li>';
@@ -1502,10 +1504,10 @@ class PHPShopGUI {
 
             $CODE = '<a name="set' . $collapseID . '"></a><div class="collapse-block"><h4 ' . $datatoggle . ' data-target="#collapseExample' . $collapseID . '" aria-expanded="true" aria-controls="collapseExample">' . $this->__($title, $locale) . ' ' . $icons . '</h4>
             <div class="collapse ' . $collapse . '" id="collapseExample' . $collapseID . '" ' . $add_option . '>' . $content . '</div></div>';
-            $collapseID++;
         } else {
-            $CODE = '<div class="col-block"><h5 class="text-muted">' . $this->__($title, $locale) . '</h5>' . $content . '</div>';
+            $CODE = '<a name="set' . $collapseID . '"></a><div class="col-block"><h5 class="text-muted">' . $this->__($title, $locale) . '</h5>' . $content . '</div>';
         }
+        $collapseID++;
 
         $this->collapse_count++;
         return $CODE;
@@ -1552,7 +1554,7 @@ class PHPShopGUI {
      * @param string $style class [btn btn-default btn-sm]
      * @return string
      */
-    function setSelect($name, $value, $width = '', $locale = false, $caption = false, $search = false, $height = false, $size = 1, $multiple = false, $id = false, $class = 'selectpicker', $onchange = null, $style = 'btn btn-default btn-sm') {
+    function setSelect($name, $value, $width = '', $locale = false, $caption = false, $search = false, $height = false, $size = 1, $multiple = false, $id = false, $class = 'selectpicker hidden-edit', $onchange = null, $style = 'btn btn-default btn-sm') {
 
         if ($search)
             $search = 'data-live-search="true" data-placeholder="123"';
@@ -1563,7 +1565,7 @@ class PHPShopGUI {
         if (empty($id))
             $id = $name;
 
-        $CODE = $caption . '<select class="' . $class . '  hidden-edit" ' . $search . ' data-container="body" data-none-selected-text="' . $this->__('Не выбрано') . '" data-style="' . $style . '" data-width="' . $width . '"  name="' . $name . '" id="' . $id . '" size="' . $size . '" onchange="' . $onchange . '"   ' . $multiple . '>';
+        $CODE = $caption . '<select class="' . $class . '" ' . $search . ' data-container="body" data-none-selected-text="' . $this->__('Не выбрано') . '" data-style="' . $style . '" data-width="' . $width . '"  name="' . $name . '" id="' . $id . '" size="' . $size . '" onchange="' . $onchange . '"   ' . $multiple . '>';
         if (is_array($value))
             foreach ($value as $val) {
 
@@ -1641,15 +1643,16 @@ class PHPShopGUI {
             $checked = "checked";
         elseif ($checked == 0)
             $checked = null;
-        
-        if(empty($this->checkbox_old_style))
-            $toggle='data-toggle="toggle"';
-        else $toggle=null;
+
+        if (empty($this->checkbox_old_style))
+            $toggle = 'data-toggle="toggle"';
+        else
+            $toggle = null;
 
         if (!empty($caption))
-            $CODE = '<div class="checkbox-inline"><label><input '.$toggle.' type="checkbox" data-on="' . __('Вкл') . '" data-off="' . __('Выкл') . '" data-size="mini" value="' . $value . '" name="' . $name . '" id="' . $name . '" ' . $checked . ' ' . $disabled . '> ' . $this->__($caption, $locale) . '</label></div> ';
+            $CODE = '<div class="checkbox-inline"><label><input ' . $toggle . ' type="checkbox" data-on="' . __('Вкл') . '" data-off="' . __('Выкл') . '" data-size="mini" value="' . $value . '" name="' . $name . '" id="' . $name . '" ' . $checked . ' ' . $disabled . '> ' . $this->__($caption, $locale) . '</label></div> ';
         else
-            $CODE = '<input type="checkbox" '.$toggle.'  data-on="' . __('Вкл') . '" data-off="' . __('Выкл') . '" data-size="mini" value="' . $value . '" name="' . $name . '" id="' . $name . '" ' . $checked . ' ' . $disabled . '>';
+            $CODE = '<input type="checkbox" ' . $toggle . '  data-on="' . __('Вкл') . '" data-off="' . __('Выкл') . '" data-size="mini" value="' . $value . '" name="' . $name . '" id="' . $name . '" ' . $checked . ' ' . $disabled . '>';
 
         return $CODE;
     }
@@ -1894,9 +1897,9 @@ class PHPShopGUI {
      * @param string $option допоолнительнеы данные для атрибута data-option
      * @return string
      */
-    function setButton($value, $img, $class = null, $option = false) {
+    function setButton($value, $img, $class = null, $option = false, $onclick = false) {
         $CODE = '
-	 <button class="btn btn-default btn-sm ' . $class . '" data-option="' . $option . '" type="button">
+	 <button class="btn btn-default btn-sm ' . $class . '" data-option="' . $option . '" type="button" onclick="' . $onclick . '">
      <span class="glyphicon glyphicon-' . $img . '"></span> 
      ' . $this->__($value) . '
      </button>
@@ -2304,11 +2307,11 @@ class PHPShopInterface extends PHPShopGUI {
 
                         if (empty($val['class']))
                             $val['class'] = null;
-                        
+
                         if (empty($val['id']))
                             $val['id'] = null;
 
-                        $row = '<a href="' . $val['link'] . '" ' . $popover . ' ' . $modal . ' class="' . $val['class'] . '" target="' . $val['target'] . '" title="' . $val['title'] . '" data-id="'.$val['id'].'">' . $val['name'] . '</a>' . $val['addon'];
+                        $row = '<a href="' . $val['link'] . '" ' . $popover . ' ' . $modal . ' class="' . $val['class'] . '" target="' . $val['target'] . '" title="' . $val['title'] . '" data-id="' . $val['id'] . '">' . $val['name'] . '</a>' . $val['addon'];
                     } else
                         $row = $val['name'];
 

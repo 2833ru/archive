@@ -92,6 +92,10 @@ function actionStart() {
         'icon' => 'glyphicon glyphicon-plus',
         'tooltip' => 'data-toggle="tooltip" data-placement="left" title="' . __('Добавить товар') . '" data-cat="' . $_GET['cat'] . '"'
     );
+    
+    // Отключение бытсрого просмотра
+    if($PHPShopSystem->getSerilizeParam('admoption.fast_view') == 1)
+        $PHPShopInterface->action_button['Добавить товар']['action']='addNew';
 
     $PHPShopInterface->setActionPanel($TitlePage . $catname, array('Поиск', '|', 'Предпросмотр', 'Настройка', 'Редактировать каталог', 'Редактировать выбранные', 'Скопировать ID выбранных','CSV', '|', 'Удалить выбранные'), array('Добавить товар'));
 

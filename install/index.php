@@ -1,4 +1,7 @@
 <?php
+// Запускаем сессию
+session_start();
+
 $_classPath = "../phpshop/";
 include($_classPath . "class/obj.class.php");
 PHPShopObj::loadClass("base");

@@ -1,0 +1,1 @@
+ALTER TABLE `phpshop_orders` ADD `retail_status` enum('1','2') DEFAULT '1';

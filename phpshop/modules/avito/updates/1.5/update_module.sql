@@ -81,3 +81,6 @@ INSERT INTO `phpshop_modules_avito_types` (`id`, `name`, `category_id`) VALUES
 
 ALTER TABLE `phpshop_products` ADD `oem_avito` varchar(255) DEFAULT '';
 ALTER TABLE `phpshop_products` ADD `tiers_avito` text;
+ALTER TABLE `phpshop_modules_avito_system` ADD `image_url` varchar(255) default '';
+ALTER TABLE `phpshop_categories` ADD `condition_cat_avito` varchar(64) DEFAULT 'Новое';
+ALTER TABLE `phpshop_categories` ADD `export_cat_avito` enum('0','1') DEFAULT '0';

@@ -48,7 +48,11 @@ class PHPShopProductListElement extends PHPShopProductElements {
                 $this->set('productlist_product_pic_big', $row['pic_big']);
                 $this->set('productlist_product_price', number_format($this->price($row, false, false), $this->format, '.', ' '));
                 $this->set('productlist_product_price_old', $this->price($row, true, false));
-                
+
+                $oneStarWidth = 20; // ширина одной звёздочки
+                $oneSpaceWidth = 0; // пробел между звёздочками
+                $avgRateWidth = $oneStarWidth * $row['rate'] + $oneSpaceWidth * ceil($row['rate']);
+                PHPShopParser::set('productlist_product_rating', $avgRateWidth);
 
                 if ((float) $row['price_n'] > 0)
                     PHPShopParser::set('productlist_product_price_old', number_format($row['price_n'], $this->format, '.', ' ') . ' ' . $this->PHPShopSystem->getValutaIcon());

@@ -163,7 +163,8 @@ function actionStart() {
     $num_row_area .= $PHPShopGUI->setRadio('num_row_new', 3, 3, $data['num_row'], false, false, false, false);
     $num_row_area .= $PHPShopGUI->setRadio('num_row_new', 4, 4, $data['num_row'], false, false, false, false);
     $num_row_area .= $PHPShopGUI->setRadio('num_row_new', 5, 5, $data['num_row'], false, false, false, false);
-    $Tab_info .= $PHPShopGUI->setField("Товаров в длину", $num_row_area, 'left');
+    $num_row_area .= $PHPShopGUI->setRadio('num_row_new', 6, 6, $data['num_row'], false, false, false, false);
+    $Tab_info .= $PHPShopGUI->setField("Товарная сетка в каталоге", $num_row_area, 1, 'Сетки 5 и 6 поддерживаются не всеми шаблонами');
 
     // Вывод
     $vid = $PHPShopGUI->setCheckbox('vid_new', 1, 'Не выводить внутренние подкаталоги в меню', $data['vid']) . '<br>';
@@ -189,8 +190,12 @@ function actionStart() {
 
     $Tab1 = $PHPShopGUI->setCollapse('Информация', $Tab_info);
 
+    // Цвет
+    $Tab_icon = $PHPShopGUI->setField("Инверсия цвета текста", $PHPShopGUI->setInputText(null, "color_new", (int) $data['color'], 100, '%'));
+
+
     // Иконка
-    $Tab_icon = $PHPShopGUI->setField("Изображение", $PHPShopGUI->setIcon($data['icon'], "icon_new", false));
+    $Tab_icon .= $PHPShopGUI->setField("Изображение", $PHPShopGUI->setIcon($data['icon'], "icon_new", false));
 
 
     $Tab1 .= $PHPShopGUI->setCollapse('Иконка', $Tab_icon);
@@ -213,6 +218,23 @@ function actionStart() {
     //Мультибаза
     $Tab8 .= $PHPShopGUI->setCollapse('Мультибаза', $PHPShopGUI->loadLib('tab_multibase', $data));
 
+    // Склад
+    if (empty($data['ed_izm']))
+        $ed_izm = __('шт.');
+    else
+        $ed_izm = $data['ed_izm'];
+
+    // Вес
+    $Tab_info_size = $PHPShopGUI->setField('Вес', $PHPShopGUI->setInputText(false, 'weight_new', $data['weight'], 100, __('г&nbsp;&nbsp;&nbsp;&nbsp;')), 'left');
+
+    // Габариты
+    $Tab_info_size .= $PHPShopGUI->setField('Длина', $PHPShopGUI->setInputText(false, 'length_new', $data['length'], 100, __('см&nbsp;')), 'left');
+    $Tab_info_size .= $PHPShopGUI->setField('Ширина', $PHPShopGUI->setInputText(false, 'width_new', $data['width'], 100, __('см&nbsp;')), 'left');
+    $Tab_info_size .= $PHPShopGUI->setField('Высота', $PHPShopGUI->setInputText(false, 'height_new', $data['height'], 100, __('см&nbsp;')), 'left');
+    $Tab_info_size .= $PHPShopGUI->setField('Единица измерения', $PHPShopGUI->setInputText(false, 'ed_izm_new', $ed_izm, 100));
+
+    $Tab8 .= $PHPShopGUI->setCollapse('Габариты по умолчанию', $Tab_info_size);
+
     // Добавление закладки характеристики если нет подкаталогов
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
     $subcategory_data = $PHPShopOrm->select(array('id'), array('parent_to' => '=' . intval(@$data['id'])), false, array('limit' => 1));
@@ -224,7 +246,7 @@ function actionStart() {
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1), array("Описание", $Tab2), array("Заголовки", $Tab7), array("Характеристики", $Tab9), array("Права", $Tab8));
+    $PHPShopGUI->setTab(array("Основное", $Tab1), array("Описание", $Tab2), array("Заголовки", $Tab7), array("Характеристики", $Tab9), array("Дополнительно", $Tab8));
 
     // Прогрессбар
     if ($GLOBALS['count'] > 500)

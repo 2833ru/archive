@@ -84,8 +84,13 @@ function actionStart() {
     // Выборка
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . $_GET['id']));
     $PHPShopGUI->field_col = 3;
+    $PHPShopGUI->addJSFiles('./js/bootstrap-colorpicker.min.js');
+    $PHPShopGUI->addCSSFiles('./css/bootstrap-colorpicker.min.css');
 
     $PHPShopGUI->setActionPanel(__("Редактирование Баннера") . ": " . $data['name'], array('Удалить'), array('Сохранить', 'Сохранить и закрыть'));
+
+    if (empty($data['color']))
+        $data['color'] = '#000000';
 
     $Tab1 = $PHPShopGUI->setField("Название", $PHPShopGUI->setInput("text", "name_new", $data['name'])) .
             $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("flag_new", 1, "Включить", $data['flag']) .
@@ -158,10 +163,13 @@ function actionStart() {
 
     // Цель
     $Tab1 .= $PHPShopGUI->setField("Цель", $PHPShopGUI->setInput("text", "link_new", $data['link']) . $PHPShopGUI->setHelp("Пример: /pages/info.html или https://google.com"));
+    
+    // Цвет
+    $Tab1 .= $PHPShopGUI->setField("Инверсия цвета", $PHPShopGUI->setInputText(null, "color_new", (int)$data['color'], 100, '%'));
 
     // Иконка
     $Tab1 .= $PHPShopGUI->setField("Изображение для фона", $PHPShopGUI->setIcon($data['image'], "image_new", false));
-
+    
     $Tab1 = $PHPShopGUI->setCollapse('Информация', $Tab1);
 
     // Редактор 

@@ -13,7 +13,7 @@
         </div>
         <div class="caption">
             <h4><a href="/shop/UID_@productUid@.html" title="@productNameClean@">@productName@</a></h4>
-            <div class="description product-description">
+            <div class="description product-description @php __hide('productDes'); php@">
                 <div class="description-content">
                     @productDes@
                 </div>

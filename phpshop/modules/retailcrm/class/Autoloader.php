@@ -26,10 +26,12 @@ class Autoloader
     {
         foreach (self::$autoloadPaths as $path) {
             $path = dirname(__FILE__) . "/" . str_replace('*', $className, $path);
+
             if (file_exists($path . '.php')) {
                 require_once($path . '.php');
                 return class_exists($className, false) || interface_exists($className, false);
             }
+            else echo 'No '.$path;
         }
 
         return false;

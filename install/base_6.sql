@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS `phpshop_baners` (
   `description` text,
   `link` varchar(255) DEFAULT NULL,
   `mobile` enum('0','1') DEFAULT '0',
+  `color` varchar(64) DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
@@ -75,7 +76,7 @@ CREATE TABLE IF NOT EXISTS `phpshop_categories` (
   `num` int(11) DEFAULT '0',
   `parent_to` int(11) NOT NULL DEFAULT '0',
   `yml` enum('0','1') DEFAULT '1',
-  `num_row` enum('1','2','3','4','5') DEFAULT '3',
+  `num_row` enum('1','2','3','4','5','6') DEFAULT '3',
   `num_cow` tinyint(11) DEFAULT '0',
   `sort` blob,
   `content` text,
@@ -105,6 +106,12 @@ CREATE TABLE IF NOT EXISTS `phpshop_categories` (
   `cat_seo_name` varchar(255) DEFAULT '',
   `cat_seo_name_old` varchar(255) DEFAULT '',
   `tile` enum('0','1') DEFAULT '0',
+  `length` varchar(64) DEFAULT '',
+  `width` varchar(64) DEFAULT '',
+  `height` varchar(64) DEFAULT '',
+  `weight` float DEFAULT '0',
+  `ed_izm` varchar(64) DEFAULT '',
+  `color` varchar(64) DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `parent_to` (`parent_to`),
   KEY `servers` (`servers`)
@@ -339,7 +346,7 @@ CREATE TABLE IF NOT EXISTS `phpshop_jurnal` (
   `user` varchar(64) NOT NULL DEFAULT '',
   `datas` varchar(32) NOT NULL DEFAULT '',
   `flag` enum('0','1') NOT NULL DEFAULT '0',
-  `ip` varchar(32) NOT NULL DEFAULT '',
+  `ip` varchar(64) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
@@ -1181,6 +1188,7 @@ CREATE TABLE IF NOT EXISTS `phpshop_slider` (
   `mobile` enum('0','1') DEFAULT '0',
   `name` varchar(255) DEFAULT NULL,
   `link_text` varchar(255) DEFAULT NULL,
+  `color` varchar(64) DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
@@ -1268,7 +1276,7 @@ CREATE TABLE IF NOT EXISTS `phpshop_system` (
   `new_num` tinyint(11) DEFAULT '0',
   `tel` text,
   `bank` blob,
-  `num_vitrina` enum('1','2','3','4') DEFAULT '3',
+  `num_vitrina` enum('1','2','3','4','5','6') DEFAULT '3',
   `icon` varchar(255) DEFAULT '',
   `updateU` varchar(32) DEFAULT '',
   `nds` varchar(64) DEFAULT '',

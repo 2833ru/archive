@@ -208,7 +208,7 @@ function actionStart() {
     $sidebarleft[] = array('id' => 'user-data-1', 'title' => 'Информация о покупателе', 'name' => array('caption' => $data['fio'], 'link' => '?path=shopusers&return=order.' . $data['id'] . '&id=' . $data['user']), 'content' => array(array('caption' => $mail, 'link' => 'mailto:' . $order['Person']['mail']), $data['tel']));
 
     // Адрес доставки
-    $sidebarleft[] = array('id' => 'user-data-2', 'title' => 'Адрес доставки', 'name' => PHPShopSecurity::TotalClean($data['fio']), 'content' => array(PHPShopSecurity::TotalClean($data['tel'],6), PHPShopSecurity::TotalClean($data['street'] . $house . $porch . $flat)));
+    $sidebarleft[] = array('id' => 'user-data-2', 'title' => 'Адрес доставки', 'name' => PHPShopSecurity::TotalClean($data['fio']), 'content' => array(PHPShopSecurity::TotalClean($data['tel'], 6), PHPShopSecurity::TotalClean($data['street'] . $house . $porch . $flat)));
 
     // Карта
     if ($PHPShopSystem->ifSerilizeParam('admoption.yandexmap_enabled')) {
@@ -404,7 +404,7 @@ function actionSave() {
  * @return bool
  */
 function actionUpdate() {
-    global $PHPShopModules, $PHPShopOrm,$PHPShopSystem;
+    global $PHPShopModules, $PHPShopOrm, $PHPShopSystem;
 
     // Данные по заказу
     $PHPShopOrm->debug = false;
@@ -438,6 +438,32 @@ function actionUpdate() {
         $_POST['status']['time'] = PHPShopDate::dataV();
         $_POST['status_new'] = serialize($_POST['status']);
 
+        // Копируем csv от пользователя
+        if (!empty($_FILES['file']['name'])) {
+            $_FILES['file']['ext'] = PHPShopSecurity::getExt($_FILES['file']['name']);
+            if ($_FILES['file']['ext'] == "csv") {
+                if (@move_uploaded_file($_FILES['file']['tmp_name'], "csv/" . $_FILES['file']['name'])) {
+                    $csv_file = "csv/" . $_FILES['file']['name'];
+
+                    PHPShopObj::loadClass('readcsv');
+                    $PHPShopReadCsvNative = new PHPShopReadCsvNative($csv_file);
+
+                    if (is_array($PHPShopReadCsvNative->CsvToArray)) {
+                        $PHPShopCart->clean();
+                        foreach ($PHPShopReadCsvNative->CsvToArray as $product) {
+                            $PHPShopProduct = new PHPShopProduct($product[0], 'uid');
+                            $id = $PHPShopProduct->getParam('id');
+                            $PHPShopCart->add($id, $product[2]);
+                            
+                            // Цена
+                            $PHPShopCart->_CART[$id]['price']=$product[1];
+                        }
+                         $order['Cart']['cart'] = $PHPShopCart->_CART;
+                    }
+                }
+            }
+        }
+        
         // Перерасчет скидки и промоакций
         $sum = $sum_promo = 0;
         if (is_array($PHPShopCart->_CART))
@@ -454,9 +480,9 @@ function actionUpdate() {
 
         // Скидка
         if (!$PHPShopSystem->ifSerilizeParam('admoption.auto_discount_disabled')) {
-        $discount = $PHPShopOrder->ChekDiscount($sum);
-        if ($order['Person']['discount'] > $discount)
-            $discount = $order['Person']['discount'];
+            $discount = $PHPShopOrder->ChekDiscount($sum);
+            if ($order['Person']['discount'] > $discount)
+                $discount = $order['Person']['discount'];
         }
 
         $order['Person']['discount'] = $discount;
@@ -577,7 +603,7 @@ function actionValueEdit() {
  * Экшен обновления корзины из модального окна
  */
 function actionCartUpdate() {
-    global $PHPShopModules, $PHPShopOrm,$PHPShopSystem;
+    global $PHPShopModules, $PHPShopOrm, $PHPShopSystem;
 
     // ИД заказа
     $orderID = intval($_REQUEST['id']);
@@ -745,7 +771,7 @@ function actionReminder() {
     // Данные по пользователю
     $PHPShopUser = new PHPShopUser($data['user']);
 
-    // Данные по корзине 
+    // Данные по корзине
     $GLOBALS['PHPShopOrder'] = new PHPShopOrderFunction($data['id'], $data);
     $PHPShopCart = new PHPShopCart($order['Cart']['cart']);
 

@@ -53,16 +53,29 @@ class AddToTemplateSortselectionElement extends PHPShopElements {
                     if (is_array($data_sort)) {
 
                         foreach ($data_sort as $val) {
-                            if (!empty($val['name']))
-                                $list .= '<label class="checkbox-inline"><input type="checkbox" name="v[' . $cat['id'] . '][]" value="' . $val['id'] . '"> ' . $val['name'] . '</label>';
+                            if (!empty($val['name'])) {
+                                //$list .= '<label class="checkbox-inline"><input type="checkbox" name="v[' . $cat['id'] . '][]" value="' . $val['id'] . '"> ' . $val['name'] . '</label>';
+                                $this->set('sortSelectionId', $cat['id']);
+                                $this->set('sortSelectionValue', $val['id']);
+                                $this->set('sortSelectionName', $val['name']);
+
+                                // Подключаем шаблон
+                                $list .= PHPShopParser::file($GLOBALS['SysValue']['templates']['sortselection']['sortselection_select'], true, false, true);
+                            }
                         }
                     }
-                    $table .= PHPShopText::tr($cat['name'], $list);
+
+                    //$table .= PHPShopText::tr($cat['name'], $list);
+                    $this->set('sortSelectionSortName', $cat['name']);
+                    $this->set('sortSelectionSortList', $list);
+                    
+                    // Подключаем шаблон
+                    $table .= PHPShopParser::file($GLOBALS['SysValue']['templates']['sortselection']['sortselection_sortname'], true, false, true);
                 }
             }
 
 
-            $this->set('sortSelectionContent', PHPShopText::table($table, 0, 0, 'left', '100%', false, 0, false, 'table table-hover'));
+            $this->set('sortSelectionContent', $table);
             $this->set('sortSelectionName', $this->option['title']);
 
             // Подключаем шаблон

@@ -1162,8 +1162,7 @@ class PHPShopProductIndexElements extends PHPShopProductElements {
 
 
             // Количество ячеек для вывода товара
-            if (empty($this->cell))
-                $this->cell = $this->PHPShopSystem->getParam('num_vitrina');
+            $this->cell = $this->PHPShopSystem->getParam('num_vitrina');
 
             // Кол-во товаров на странице
             $this->limit = $this->PHPShopSystem->getParam('spec_num');
@@ -1365,6 +1364,7 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
                     $this->set('catalogTitle', $category['name']);
                     $this->set('catalogName', $category['name']);
                     $this->set('catalogIcon', $category['icon']);
+                    $this->set('catalogColor', (int)$category['color']);
                     $this->set('catalogContent', null);
 
                     $dis .= ParseTemplateReturn("catalog/catalog_table_forma.tpl");

@@ -37,14 +37,14 @@
 
             <form class="form-signin "  method="post" action="./">
 
-                <h3 class="form-signin-heading hidden-xs">{Авторизация}<a class="pull-right hidden-xs @hide@" href="../../" title="{Вернуться в магазин}"><span class="glyphicon glyphicon-home"></span></a> <div class="pull-right">@themeSelect@</div></h3>
+                <h3 class="form-signin-heading hidden-xs">{Авторизация}<a class="pull-right hidden-xs @hide_home@" href="../../" title="{Вернуться в магазин}"><span class="glyphicon glyphicon-home"></span></a> <div class="pull-right">@themeSelect@</div></h3>
 
                 <div class="input-group @error@">
                     <span class="input-group-addon" id="input-group-addon1"><span class="glyphicon glyphicon-user"></span></span>
                     <input autocomplete="off" type="text" name="log" class="form-control" value="@user@" placeholder="{Пользователь}" required @autofocus@ @readonly@>
                 </div>
                 <div class="input-group @error@">
-                    <span class="input-group-addon" id="input-group-addon2"><a href="#" class="password-view"  data-toggle="tooltip" data-placement="top" title="{Показать пароль}"><span class="glyphicon glyphicon-eye-close"></span></a></span>
+                    <span class="input-group-addon" id="input-group-addon2"><a href="#" class="password-view"><span class="glyphicon glyphicon-eye-close"></span></a></span>
                     <input autocomplete="off" type="password" name="pas" class="form-control" value="@password@" placeholder="{Пароль}"  required @readonly@>
                 </div>
 

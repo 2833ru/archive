@@ -100,7 +100,10 @@ function actionDelete() {
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
-
+    
+    // Удаление значений
+    $PHPShopOrmValue = new PHPShopOrm($GLOBALS['SysValue']['base']['sort']);
+    $PHPShopOrmValue->delete(['category'=>'='.$_POST['rowID']]);
 
     $action = $PHPShopOrm->delete(array('id' => '=' . $_POST['rowID']));
     return array('success' => $action);

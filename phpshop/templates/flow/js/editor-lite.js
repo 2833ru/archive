@@ -170,12 +170,11 @@ $(document).ready(function () {
 
     });
 
+    // Переход в админку для редактирования файла
     $("[data-source]").on('click', function (event) {
         if (event.ctrlKey) {
             event.preventDefault();
-            window.open('/phpshop/admpanel/admin.php?path=tpleditor&name=bootstrap&option=pro&file=/' + $(this).attr('data-source'));
+            window.open('/phpshop/admpanel/admin.php?path=tpleditor&name='+$('#bootstrap_theme').attr('data-name')+'&option=pro&file=/' + $(this).attr('data-source'));
         }
     });
-
 });
-

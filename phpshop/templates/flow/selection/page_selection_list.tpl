@@ -45,7 +45,7 @@
 
             </div>
 
-            <div class="template-product-list">@productPageDis@</div>
+            <div class="template-product-list row">@productPageDis@</div>
             <div class="clearfix"></div>
             <div id="pagination-block">@productPageNav@</div>
 

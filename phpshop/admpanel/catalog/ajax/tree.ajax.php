@@ -3,16 +3,16 @@
 session_start();
 $_classPath = "../../../";
 include($_classPath . "class/obj.class.php");
-PHPShopObj::loadClass(array("base", "category", "string", "array", "system","lang"));
+PHPShopObj::loadClass(array("base", "category", "string", "array", "system", "lang"));
 
 $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, true);
 $PHPShopBase->chekAdmin();
 $PHPShopSystem = new PHPShopSystem();
 
-$PHPShopLang = new PHPShopLang(array('locale'=>$_SESSION['lang'],'path'=>'admin'));
+$PHPShopLang = new PHPShopLang(array('locale' => $_SESSION['lang'], 'path' => 'admin'));
 
 // Права менеджеров
-if ($PHPShopSystem->ifSerilizeParam('admoption.rule_enabled', 1) and !$PHPShopBase->Rule->CheckedRules('catalog', 'remove')) {
+if ($PHPShopSystem->ifSerilizeParam('admoption.rule_enabled', 1) and ! $PHPShopBase->Rule->CheckedRules('catalog', 'remove')) {
     $where = array('secure_groups' => " REGEXP 'i" . $_SESSION['idPHPSHOP'] . "i' or secure_groups = ''");
 } else
     $where = false;
@@ -21,21 +21,23 @@ if ($PHPShopSystem->ifSerilizeParam('admoption.rule_enabled', 1) and !$PHPShopBa
 $PHPShopCategoryArray = new PHPShopCategoryArray($where);
 $CategoryArray = $PHPShopCategoryArray->getArray();
 
-$CategoryArray[0]['name'] = '- '.__('Корневой уровень').' -';
+$CategoryArray[0]['name'] = '- ' . __('Корневой уровень') . ' -';
 $tree_array = array();
 $i = 0;
 
-foreach ($PHPShopCategoryArray->getKey('parent_to.id', true) as $k => $v) {
-    foreach ($v as $cat) {
-        
-        if($CategoryArray[$cat]['skin_enabled'] == 1)
-            $CategoryArray[$cat]['name'].=' <span class="glyphicon glyphicon-minus-sign" title="'.__('Скрыт').'"></span>';
-        
-        $tree_array[$k]['sub'][$cat] = $CategoryArray[$cat]['name'];
+$getKey = $PHPShopCategoryArray->getKey('parent_to.id', true);
+if (is_array($getKey))
+    foreach ($getKey as $k => $v) {
+        foreach ($v as $cat) {
+
+            if ($CategoryArray[$cat]['skin_enabled'] == 1)
+                $CategoryArray[$cat]['name'] .= ' <span class="glyphicon glyphicon-minus-sign" title="' . __('Скрыт') . '"></span>';
+
+            $tree_array[$k]['sub'][$cat] = $CategoryArray[$cat]['name'];
+        }
+        $tree_array[$k]['name'] = $CategoryArray[$k]['name'];
+        $tree_array[$k]['id'] = $k;
     }
-    $tree_array[$k]['name'] = $CategoryArray[$k]['name'];
-    $tree_array[$k]['id'] = $k;
-}
 
 // Ссылки
 if (is_numeric($_GET['id']) or $_GET['action'] == 'new' or $_GET['path'] == 'catalog.list') {
@@ -83,8 +85,8 @@ function treegenerator($array, $m) {
 
     if (empty($i))
         $i = $m;
-    
-    $result=null;
+
+    $result = null;
 
     if (!empty($array['sub']) and is_array($array['sub'])) {
         foreach ($array['sub'] as $k => $v) {
@@ -146,8 +148,8 @@ if (!empty($addNodes)) {
     );
 }
 
-if(empty($_GET['sub']))
-    $_GET['sub']=null;
+if (empty($_GET['sub']))
+    $_GET['sub'] = null;
 
 
 if (in_array($_GET['cat'], array(1000001, 1000002, 1000004)) or $_GET['sub'] == 'csv') {

@@ -218,6 +218,8 @@ function actionStart() {
     $num_vitrina_value[] = array(2, 2, $data['num_vitrina']);
     $num_vitrina_value[] = array(3, 3, $data['num_vitrina']);
     $num_vitrina_value[] = array(4, 4, $data['num_vitrina']);
+    $num_vitrina_value[] = array(5, 5, $data['num_vitrina']);
+    $num_vitrina_value[] = array(6, 6, $data['num_vitrina']);
 
     $nowbuy_enabled_value[] = array('Выключить', 0, $option['nowbuy_enabled']);
     $nowbuy_enabled_value[] = array('Включить', 2, $option['nowbuy_enabled']);
@@ -253,6 +255,7 @@ function actionStart() {
     $num_row_adm_value[] = array('3', 3, $data['num_row_adm']);
     $num_row_adm_value[] = array('4', 4, $data['num_row_adm']);
     $num_row_adm_value[] = array('5', 5, $data['num_row_adm']);
+    $num_row_adm_value[] = array('6', 6, $data['num_row_adm']);
 
     if (empty($option['catlist_depth'])) {
         $option['catlist_depth'] = 2;
@@ -263,9 +266,9 @@ function actionStart() {
             $PHPShopGUI->setField("Количество в Спецпредложениях", $PHPShopGUI->setInputText(false, 'spec_num_new', $data['spec_num'], 50)) .
             $PHPShopGUI->setField("Количество в Новинках", $PHPShopGUI->setInputText(false, 'new_num_new', $data['new_num'], 50)) .
             $PHPShopGUI->setField("Товарная сетка витрины", $PHPShopGUI->setSelect('num_vitrina_new', $num_vitrina_value, 50), 1, 'Товаров в длину 
-	  для витрины главной страницы') .
+	  для витрины главной страницы. Сетки 5 и 6 поддерживаются не всеми шаблонами') .
             $PHPShopGUI->setField("Товарная сетка в каталоге", $PHPShopGUI->setSelect('num_row_adm_new', $num_row_adm_value, 50) . '&nbsp;' . $PHPShopGUI->setCheckbox('num_row_set', 1, 'Применить сейчас ко всем каталогам', 0), 1, 'Товаров в длину 
-	  для каталогов по умолчанию') .
+	  для каталогов по умолчанию. Сетки 5 и 6 поддерживаются не всеми шаблонами') .
             $PHPShopGUI->setField("Вывод новинок", $PHPShopGUI->setSelect('option[new_enabled]', $new_enabled_value, null, true)) .
             $PHPShopGUI->setField("Сейчас покупают", $PHPShopGUI->setSelect('option[nowbuy_enabled]', $nowbuy_enabled_value, null, true)) .
             $PHPShopGUI->setField("Цифровые товары", $PHPShopGUI->setCheckbox('option[digital_product_enabled]', 1, 'Продажа цифровых товаров', $option['digital_product_enabled']), 1, 'Прикрепленные к товару файлы доступны после оплаты заказа в личном кабинете') .

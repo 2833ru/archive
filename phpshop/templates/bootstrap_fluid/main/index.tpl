@@ -140,11 +140,11 @@
                                         </nav>
                                     </div>
                                 </li>
-                                <li class="visible-xs">                                                    <ul class="mobile-menu">
+                                <li class="visible-xs">                                                    
+                                    <ul class="mobile-menu">
                                         @leftCatal@
-
-
-                                    </ul></li>
+                                    </ul>
+                                </li>
                                 @topBrands@
                                 @topcatMenu@
                                 @topMenu@
@@ -194,15 +194,6 @@
 
                     @leftMenu@
                     <div class="visible-lg visible-md text-center banner">@banersDisp@</div>
-
-                    @oprosDisp@
-
-
-                    <div class="page-header visible-lg visible-md">
-                        <h3>@specMainTitle@</h3>
-                    </div>
-                    <div>@specMainIcon@</div>
-
 
                 </div>                
 

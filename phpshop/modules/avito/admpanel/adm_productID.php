@@ -6,9 +6,18 @@ function addAvitoProductTab($data) {
     global $PHPShopGUI;
     
     // Размер названия поля
-    $PHPShopGUI->field_col = 4;
+    $PHPShopGUI->field_col = 5;
+    
+    // Значения по умолчанию
+    if (!empty($_GET['cat'])) {
+        $PHPShopCategory = new PHPShopCategory((int) $_GET['cat']);
+        if ($PHPShopCategory) {
+            $data['export_avito'] = $PHPShopCategory->getParam('export_cat_avito');
+            $data['condition_avito'] = $PHPShopCategory->getParam('condition_cat_avito');
+        }
+    }
 
-    $tab = $PHPShopGUI->setField('Авито', $PHPShopGUI->setCheckbox('export_avito_new', 1, 'Включить экспорт в Авито', $data['export_avito']));
+    $tab = $PHPShopGUI->setField('Экспорт в Авито', $PHPShopGUI->setCheckbox('export_avito_new', 1, '', $data['export_avito']));
 
     $tab .= $PHPShopGUI->setField("Название товара:", $PHPShopGUI->setInput('text', 'name_avito_new', $data['name_avito']));
     $tab .= $PHPShopGUI->setField('Состояние товара', $PHPShopGUI->setSelect('condition_avito_new', Avito::getConditions($data['condition_avito'])), 1, 'Тег <condition>');

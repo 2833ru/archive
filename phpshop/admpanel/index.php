@@ -11,6 +11,9 @@ include($_classPath . "class/obj.class.php");
 require_once $_classPath . '/lib/phpass/passwordhash.php';
 PHPShopObj::loadClass(array("base", "system", "admgui", "orm", "security", "modules", "mail", "lang"));
 
+if(isset($_POST['base']))
+    $_GET['base'] = $_POST['base'];
+
 $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, true);
 $PHPShopSystem = new PHPShopSystem();
 
@@ -233,7 +236,7 @@ function actionEnter() {
 }
 
 function actionStart() {
-    global $PHPShopSystem, $PHPShopBase, $notification;
+    global $PHPShopSystem, $PHPShopBase, $PHPShopGUI, $notification;
 
     $License = parse_ini_file_true("../../license/" . PHPShopFile::searchFile('../../license/', 'getLicense', true), 1);
     if ($License['License']['SupportExpires'] > time() and $License['License']['RegisteredTo'] != 'Trial NoName')
@@ -293,11 +296,22 @@ function actionStart() {
         PHPShopParser::set('readonly', 'readonly');
         PHPShopParser::set('disabled', 'disabled');
         PHPShopParser::set('hide', 'hide');
+        PHPShopParser::set('hide_home', 'hide');
         PHPShopParser::set('themeSelect', GetAdminSkinList($theme));
     } else {
         PHPShopParser::set('autofocus', 'autofocus');
+        
+        // Выбор БД
+        if (is_array($GLOBALS['SysValue']['connect_select'])) {
+            foreach ($GLOBALS['SysValue']['connect_select'] as $k => $v)
+                $connect_select[] = array($v, $k, $_SESSION['base']);
+
+            PHPShopParser::set('hide_home', 'hide');
+            PHPShopParser::set('themeSelect', $PHPShopGUI->setSelect('base', $connect_select, 120));
+        }
     }
 
+    
     PHPShopParser::set('title', 'PHPShop - ' . __('Авторизация'));
     PHPShopParser::set('version', $PHPShopBase->getParam('upload.version'));
     PHPShopParser::set('theme', $theme);

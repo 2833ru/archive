@@ -12,7 +12,7 @@ function actionDelete() {
 
 
     $action = $PHPShopOrm->delete(array('id' => '=' . $_POST['rowID']));
-    return $action;
+    return array("success" => $action);
 }
 
 // Обработка событий

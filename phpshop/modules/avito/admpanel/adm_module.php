@@ -21,6 +21,8 @@ function actionStart() {
     $Tab1 = $PHPShopGUI->setField('Пароль защиты XML файла', $PHPShopGUI->setInputText(
         'http://'.$_SERVER['SERVER_NAME'].'/phpshop/modules/avito/xml/appliances.php?pas=', 'password_new', $data['password'], 600)
     );
+    $Tab1 .= $PHPShopGUI->setField('Сервер изображений', $PHPShopGUI->setInputText('http://', 'image_url_new', $data['image_url'], 600)
+    );
     $Tab1 .= $PHPShopGUI->setField('ФИО менеджера', $PHPShopGUI->setInputText( false, 'manager_new', $data['manager'], 600));
     $Tab1 .= $PHPShopGUI->setField('Телефон менеджера', $PHPShopGUI->setInputText( false, 'phone_new', $data['phone'], 600));
     $Tab1 .= $PHPShopGUI->setField('Адрес', $PHPShopGUI->setInputText( false, 'address_new', $data['address'], 600));

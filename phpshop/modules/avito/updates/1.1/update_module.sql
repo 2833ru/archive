@@ -83,3 +83,4 @@ INSERT INTO `phpshop_modules_avito_subtypes` (`id`, `name`, `type_id`) VALUES
 (12, 'Другое', 112);
 
 ALTER TABLE `phpshop_categories` ADD `subtype_avito` int(11) DEFAULT NULL;
+ALTER TABLE `phpshop_modules_avito_system` ADD `image_url` varchar(255) default '';

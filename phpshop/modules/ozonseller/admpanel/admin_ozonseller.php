@@ -10,7 +10,7 @@ function actionStart() {
     $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.ozonseller.ozonseller_log"));
     $PHPShopOrm->debug = false;
 
-    $data = $PHPShopOrm->select(array('*'), $where = false, array('order' => 'id DESC'), array('limit' => 1000));
+    $data = $PHPShopOrm->select(array('*'), $where = false, array('order' => 'id DESC'), array('limit' => 300));
 
     if (is_array($data))
         foreach ($data as $row) {

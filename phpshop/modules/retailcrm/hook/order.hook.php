@@ -21,7 +21,7 @@ function runOrder($ouid, $type)
 
     $value = Tools::iconvArray(unserialize($data['value']));
 
-    ini_set('memory_limit', '-1');
+    //ini_set('memory_limit', '-1');
     $corders = array();
 
     if ($type == 'cart' && !is_null($ouid)) {
@@ -125,6 +125,7 @@ function runOrder($ouid, $type)
     $order = array($valid->orderCheck($corders));
     $api = new ApiHelper($value["url"], $value["key"]);
     $api->processOrders($order);
+    $orderOrm->update(array('retail_status_new'=>2),array("uid" => "='" . $ouid ."'"));
 }
 
 $addHandler = array

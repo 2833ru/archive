@@ -1,10 +1,11 @@
 <!-- Вывод Товара дня productDay modules/productday/templates -->
-<div class="bg-img-hero rounded-lg min-h-450rem p-4 p-sm-8" style="background-image: url(@productDayPicBig@);">
+<a href="/shop/UID_@productDayId@.html">
+<div class="card shadow-soft p-4 transition-3d-hover h-100" >
     <span class="d-block small text-danger font-weight-bold text-cap">Товар дня</span>
-    <h2>@productDayName@</h2>
-    <h2 class="display-4 mb-3">@productDayPrice@ <span class="rubznak">@productValutaName@</span></h2>  
-    <h3><strike >@productDayPriceN@<span class="rubznak">@productDayCurrency@</span></strike></h3>
-
+    <h4>@productDayName@</h4>
+    <h3 class="display-4 mb-1">@productDayPrice@ <span class="rubznak">@productValutaName@</span></h3>  
+    <h4 class="text-danger"><strike>@productDayPriceN@<span class="rubznak">@productDayCurrency@</span></strike></h4>
+<img class="m-4 position-absolute bottom-0 right-0 w-sm-35 max-w-27rem rounded-lg" src="@productDayPicBig@" alt="Image Description">
     <!-- Countdown -->
     <div class="w-sm-60">
         <div class="row mx-n2 mb-3">
@@ -29,9 +30,8 @@
         </div>
     </div>
     <!-- End Countdown -->
-
-    <a class="btn btn-sm btn-primary btn-pill transition-3d-hover px-5" href="/shop/UID_@productDayId@.html">Купить</a>
 </div>
+</a>
 <script>
 
     setInterval(function () {

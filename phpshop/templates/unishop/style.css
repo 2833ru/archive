@@ -4195,7 +4195,7 @@ thead td#allspecwhite {
 }
  .catalog-table-block:hover{box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);}
 
-.catalog-img{width:100%;text-align:right; display:flex; align-items:flex-end; justify-content:flex-end}
+.catalog-img{width:100%;text-align:right; display:flex; align-items:flex-end; justify-content:flex-end;height:130px;}
 .catalog-img img{max-width:100%; max-height:100%;}
 .catalog-table-block.fix {
     margin-top: 10px;
@@ -4915,4 +4915,7 @@ border-radius: 7px;
     top: 13px;
     right: 170px;
     font-size: 14px
+}
+.banner-list h3{
+    color:#fff;
 }

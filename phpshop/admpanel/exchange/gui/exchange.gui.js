@@ -4,13 +4,34 @@ locale.icon_load = locale.file_load;
 
 $().ready(function () {
 
-    // Блокировка
-    /*
-     $('body').on('change', '#export_imgload', function () {
-     if ($(this).prop('checked') === true){
-     $('#export_imgpath').bootstrapToggle('on');
-     }
-     });*/
+    // Рассчет скорости 
+    $('body').on('change', '#export_imgload', function () {
+
+        var line_limit = Number($('#line_limit').val());
+
+        if ($(this).prop('checked') === true) {
+            line_limit = line_limit - 200;
+        } else {
+            line_limit = line_limit + 200;
+        }
+
+        $('#line_limit').val(line_limit);
+    });
+
+    // Рассчет скорости 
+    $('body').on('change', '#export_imgproc', function () {
+
+        var line_limit = Number($('#line_limit').val());
+
+        if ($(this).prop('checked') === true) {
+            line_limit = line_limit - 100;
+        } else {
+            line_limit = line_limit + 100;
+        }
+
+        $('#line_limit').val(line_limit);
+    });
+
 
     // Таблица заголовков полей
     $('[name="import-col-name"]').on('click', function (event) {
@@ -24,34 +45,42 @@ $().ready(function () {
             window.location.href += '&exchanges=' + this.value;
     });
 
-    // Автоматизация загрузки файла
-    if ($('.bot-progress .progress-bar').hasClass('active')) {
+    // Остановить автоматизацмю
+    $(".load-result .close, .load-info .close").on('click', function (event) {
+        event.preventDefault();
 
-        $(window).bind("beforeunload", function () {
-            return "Are you sure you want to exit? Please complete sign up or the app will get deleted.";
+        $.MessageBox({
+            buttonDone: "OK",
+            buttonFail: locale.cancel,
+            message: locale.import_stop
+        }).done(function () {
+            $('#stop').val(1);
+            $(".load-info").hide();
+            $(".load-result").hide();
+            $('[name="saveID"]').hide();
+            $(window).unbind("beforeunload");
         });
+    });
 
-        var time = performance.now();
 
-        var min = $('[name="time_limit"]').val();
-        var limit = Number($('[name="line_limit"]').val());
-        var start = limit;
-        var end = limit + limit;
-        var csv_file = $('[name="csv_file"]').val();
-        var total = $('[name="total"]').val();
+    // Автоматизация импорта
+    function auto_import(start, end) {
+
         var count = Number($('#total-update').html());
-        var refreshId = setInterval(function () {
+        var stop = $('#stop').val();
+        //var imgdelim = $('#export_imgdelim').val();
+        
+
+        if (stop != 1) {
 
             var data = [];
             data.push({name: 'selectID', value: 1});
             data.push({name: 'actionList[selectID]', value: 'actionSave'});
             data.push({name: 'start', value: start});
             data.push({name: 'end', value: end});
-            data.push({name: 'time', value: min});
-            data.push({name: 'performance', value: performance.now() - time});
             data.push({name: 'ajax', value: true});
-            data.push({name: 'csv_file', value: csv_file});
-            data.push({name: 'total', value: total});
+
+            console.log(data);
 
             $('#product_edit').ajaxSubmit({
                 data: data,
@@ -62,25 +91,46 @@ $().ready(function () {
                     $('#bot_result').html(json['result']);
                     count += json['count'];
                     $('#total-update').html(count);
+
                     if (json['success'] == 'done' || json['bar'] == 100) {
-                        clearInterval(refreshId);
                         $('.progress-bar').css('width', '100%');
                         $('.progress-bar').removeClass('active').html('100%');
                         $('#play').trigger("play");
                         $(window).unbind("beforeunload");
                         $('#total-min').html(0);
+
+                        $.MessageBox({
+                            buttonDone: "OK",
+                            message: locale.import_done + count + ' ' + json['action']
+                        }).done(function () {
+                            window.location.href = '?path=exchange.import';
+                        });
+
+
+
                     } else if (json['success']) {
                         start += limit;
                         end += limit;
                         $('.progress-bar').css('width', json['bar'] + '%').html(json['bar'] + '%');
+                        auto_import(start, end);
                     }
 
                 }
 
+
             });
+        }
+    }
 
-        }, min * 60000);
+    // Автоматизация загрузки файла
+    if ($('.bot-progress .progress-bar').hasClass('active')) {
 
+        $(window).bind("beforeunload", function () {
+            return "Are you sure you want to exit? Please complete sign up or the app will get deleted.";
+        });
+
+        var limit = Number($('[name="line_limit"]').val());
+        auto_import(0, limit);
     }
 
     // Модальное окно таблиц

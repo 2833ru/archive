@@ -150,7 +150,10 @@ function tab_cart($data, $option = false) {
     $disp = '<table class="table table-hover cart-list">' . $PHPShopInterface->getContent() . '</table>
 <div class="row">
   <div class="col-lg-9 col-md-8 col-xs-6">
+   <div class="input-group-btn">
    <button  class="btn btn-default btn-sm cart-add"><span class="glyphicon glyphicon-plus"></span> ' . __('Добавить товары') . '</button>
+   <div class="btn btn-default btn-sm btn-file"><span class="glyphicon glyphicon-save"></span><input type="file" id="uploadimage" name="file"></div>
+   </div>
   </div>
   <div class="col-lg-3 col-md-4 col-xs-6">
     <div class="input-group">

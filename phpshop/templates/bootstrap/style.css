@@ -725,8 +725,8 @@ img.template:hover{
     transition:all 0.3s
 }
 .catalog-table-block:hover{box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);}
-.catalog-img{ width:100%;text-align:right; display:flex; align-items:flex-end; justify-content:flex-end}
-.catalog-img img{max-width:100%; max-height:100%;}
+.catalog-img{ width:100%;text-align:right; display:flex; align-items:flex-end; justify-content:flex-end;height:130px;}
+.catalog-img img{max-width:100%; max-height:130px;}
 .catalog-table-block.fix {
     margin-top: 10px;
     margin-bottom: 10px;

@@ -5,12 +5,14 @@ CREATE TABLE `phpshop_modules_avito_system` (
   `manager` varchar(255),
   `address` varchar(255) default '',
   `phone` varchar(64),
-  `preview_description_template` text default null,
-  `version` varchar(64) default '1.5',
+  `preview_description_template` text default '',
+  `image_url` varchar(255) default '',
+  `version` varchar(64) default '1.6',
+
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-INSERT INTO `phpshop_modules_avito_system` VALUES (1, '', '', '', '', '@Description@', '1.5');
+INSERT INTO `phpshop_modules_avito_system` VALUES (1, '', '', '', '', '@Description@','', '1.7');
 
 DROP TABLE IF EXISTS `phpshop_modules_avito_category_types`;
 CREATE TABLE `phpshop_modules_avito_xml_prices` (
@@ -320,4 +322,5 @@ ALTER TABLE `phpshop_products` ADD `tiers_avito` text;
 ALTER TABLE `phpshop_categories` ADD `category_avito` int(11) DEFAULT NULL;
 ALTER TABLE `phpshop_categories` ADD `type_avito` int(11) DEFAULT NULL;
 ALTER TABLE `phpshop_categories` ADD `subtype_avito` int(11) DEFAULT NULL;
-  
+ALTER TABLE `phpshop_categories` ADD `condition_cat_avito` varchar(64) DEFAULT 'Новое';
+ALTER TABLE `phpshop_categories` ADD `export_cat_avito` enum('0','1') DEFAULT '0';

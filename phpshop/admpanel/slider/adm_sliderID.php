@@ -15,6 +15,10 @@ function actionStart() {
 
     // Содержание закладки 1
     $Tab1 = $PHPShopGUI->setField("Название", $PHPShopGUI->setInput("text", "name_new", $data['name'],null,500));
+    
+    // Цвет
+    $Tab1 .= $PHPShopGUI->setField("Инверсия цвета", $PHPShopGUI->setInputText(null, "color_new", (int)$data['color'], 100, '%'));
+    
     $Tab1 .= $PHPShopGUI->setField("Изображение", $PHPShopGUI->setIcon($data['image'], "image_new", false, array('load' => true, 'server' => true, 'url' => false, 'multi' => false, 'view' => false))) .
             $PHPShopGUI->setField("Ссылка", $PHPShopGUI->setInput("text", "link_new", $data['link'],null,500) . $PHPShopGUI->setHelp("Пример: /pages/info.html или http://google.com")) .
             $PHPShopGUI->setField("Текст ссылки", $PHPShopGUI->setInput("text", "link_text_new", $data['link_text'],null,500)).

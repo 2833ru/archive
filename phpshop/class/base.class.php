@@ -3,7 +3,7 @@
 /**
  * Библиотека подключения к БД
  * @author PHPShop Software
- * @version 1.10
+ * @version 2.1
  * @package PHPShopClass
  * @param string $iniPath путь до конфигурационного файла config.ini
  * @param bool $connectdb подключение к MySQL
@@ -54,7 +54,7 @@ class PHPShopBase {
      * @param bool $error блокировка ошибок PHP
      */
     function __construct($iniPath, $connectdb = true, $error = true) {
-        
+
         // Отладка ядра
         $this->setPHPCoreReporting($error);
 
@@ -75,10 +75,32 @@ class PHPShopBase {
         define('parser_function_deny', $this->SysValue['function']['deny']);
         define('parser_function_guard', $this->SysValue['function']['guard']);
 
-        $GLOBALS['SysValue'] = &$this->SysValue;
+        // Переключение БД
+        $this->selectBase();
 
+        $GLOBALS['SysValue'] = &$this->SysValue;
         if ($connectdb)
             $this->link_db = $this->connect($connectdb);
+    }
+
+    /**
+     * Переключение БД
+     */
+    function selectBase() {
+
+        if (!empty($_GET['base'])) {
+            if (is_array($this->SysValue['connect_' . $_GET['base']]))
+                $_SESSION['base'] = $_GET['base'];
+            elseif ($_GET['base'] == 'default')
+                unset($_SESSION['base']);
+        }
+
+        if (!empty($_SESSION['base'])) {
+            $this->SysValue['connect']['dbase'] = $this->SysValue['connect_' . $_SESSION['base']]['dbase'];
+            $this->SysValue['connect']['user_db'] = $this->SysValue['connect_' . $_SESSION['base']]['user_db'];
+            $this->SysValue['connect']['dbase'] = $this->SysValue['connect_' . $_SESSION['base']]['dbase'];
+            $this->SysValue['connect']['pass_db'] = $this->SysValue['connect_' . $_SESSION['base']]['pass_db'];
+        }
     }
 
     /**
@@ -103,8 +125,8 @@ class PHPShopBase {
         $param = explode(".", $param);
         if (count($param) > 2)
             return $this->SysValue[$param[0]][$param[1]][$param[2]];
-        elseif(!empty($this->SysValue[$param[0]][$param[1]]))
-        return $this->SysValue[$param[0]][$param[1]];
+        elseif (!empty($this->SysValue[$param[0]][$param[1]]))
+            return $this->SysValue[$param[0]][$param[1]];
     }
 
     /**
@@ -166,12 +188,12 @@ class PHPShopBase {
      */
     function connect($connectdb = true) {
         global $link_db;
-        
-        $port = $this->getParam("connect.port");
-        if(empty($port))
-            $port=3306;
 
-        $link_db = mysqli_connect($this->getParam("connect.host"), $this->getParam("connect.user_db"), $this->getParam("connect.pass_db"),null,$port) or $this->mysql_error = mysqli_connect_error();
+        $port = $this->getParam("connect.port");
+        if (empty($port))
+            $port = 3306;
+
+        $link_db = mysqli_connect($this->getParam("connect.host"), $this->getParam("connect.user_db"), $this->getParam("connect.pass_db"), null, $port) or $this->mysql_error = mysqli_connect_error();
         mysqli_select_db($link_db, $this->getParam("connect.dbase")) or $this->mysql_error .= mysqli_error($link_db);
 
         if ($this->codBase != "utf-8")
@@ -229,7 +251,6 @@ class PHPShopBase {
         if (stristr(ini_get("default_charset"), "utf") and function_exists('ini_set') and $this->codBase != "utf-8") {
             ini_set("default_charset", $this->codBase);
         }
-
     }
 
     /**

@@ -3133,7 +3133,7 @@ body.overflow-fix {
 }
  .catalog-table-block:hover{box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);}
 
-.catalog-img{width:100%;text-align:right; display:flex; align-items:flex-end; justify-content:flex-end}
+.catalog-img{width:100%;text-align:right; display:flex; align-items:flex-end; justify-content:flex-end;height:130px;}
 .catalog-img img{max-width:100%; max-height:100%;}
 .catalog-table-block.fix {
     margin-top: 10px;
@@ -3899,4 +3899,7 @@ transition: all 0.3s;
     background-size: cover;
     background-color: #fafafa;
 
+}
+.banner-list h3{
+    color:#fff;
 }

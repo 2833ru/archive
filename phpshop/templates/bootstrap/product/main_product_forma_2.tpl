@@ -1,4 +1,4 @@
-<div class="col-md-6">
+<div class="col-md-6 col-xs-6">
     <div class="thumbnail">
         <span class="sale-icon-content">
                 @specIcon@

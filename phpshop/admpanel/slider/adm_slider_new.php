@@ -5,26 +5,30 @@ $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['slider']);
 
 // Стартовый вид
 function actionStart() {
-    global $PHPShopGUI, $PHPShopModules,$TitlePage;
+    global $PHPShopGUI, $PHPShopModules, $TitlePage;
 
     $PHPShopGUI->setActionPanel($TitlePage, false, array('Сохранить и закрыть'));
     $PHPShopGUI->field_col = 3;
 
     $data['enabled'] = 1;
-    $data = $PHPShopGUI->valid($data,'image','link','mobile','num','alt','servers','link_text','name');
+    $data = $PHPShopGUI->valid($data, 'image', 'link', 'mobile', 'num', 'alt', 'servers', 'link_text', 'name');
 
     // Содержание закладки 1
-    $Tab1 = $PHPShopGUI->setField("Название", $PHPShopGUI->setInput("text", "name_new", $data['name'],null,500));
+    $Tab1 = $PHPShopGUI->setField("Название", $PHPShopGUI->setInput("text", "name_new", $data['name'], null, 500));
+
+    // Цвет
+    $Tab1 .= $PHPShopGUI->setField("Инверсия цвета", $PHPShopGUI->setInputText(null, "color_new", (int) $data['color'], 100, '%'));
+
     $Tab1 .= $PHPShopGUI->setField("Изображение", $PHPShopGUI->setIcon($data['image'], "image_new", false, array('load' => true, 'server' => true, 'url' => false, 'multi' => false, 'view' => false))) .
             $PHPShopGUI->setField("Цель", $PHPShopGUI->setInput("text", "link_new", $data['link'], "none", 500) . $PHPShopGUI->setHelp("Пример: /pages/info.html или http://google.com")) .
-             $PHPShopGUI->setField("Текст ссылки", $PHPShopGUI->setInput("text", "link_text_new", $data['link_text'],null,500)).
+            $PHPShopGUI->setField("Текст ссылки", $PHPShopGUI->setInput("text", "link_text_new", $data['link_text'], null, 500)) .
             $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("enabled_new", 1, "Включить", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выключить", $data['enabled'])) .
             $PHPShopGUI->setField("Мобильный", $PHPShopGUI->setCheckbox("mobile_new", 1, "Отображать только на мобильных устройствах", $data['mobile'])) .
             $PHPShopGUI->setField("Приоритет", $PHPShopGUI->setInputText(false, 'num_new', $data['num'], 100)) .
-            $PHPShopGUI->setField("Описание", $PHPShopGUI->setTextarea("alt_new", $data['alt'],true,500)) .
+            $PHPShopGUI->setField("Описание", $PHPShopGUI->setTextarea("alt_new", $data['alt'], true, 500)) .
             $PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'));
-    
-    $Tab1= $PHPShopGUI->setCollapse('Информация',$Tab1);
+
+    $Tab1 = $PHPShopGUI->setCollapse('Информация', $Tab1);
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, null);
@@ -50,8 +54,8 @@ function actionInsert() {
     $_POST['servers_new'] = "";
     if (is_array($_POST['servers']))
         foreach ($_POST['servers'] as $v)
-            if ($v != 'null' and !strstr($v, ','))
-                $_POST['servers_new'].="i" . $v . "i";
+            if ($v != 'null' and ! strstr($v, ','))
+                $_POST['servers_new'] .= "i" . $v . "i";
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);

@@ -1,4 +1,3 @@
-
 $(document).ready(function() {
 
     if ($('.editor_var').length) {
@@ -223,6 +222,14 @@ $(document).ready(function() {
     $('[data-toggle="alert"]').click(function(e) {
       e.preventDefault();
       alert('Для управления текущей страницей требуется авторизоваться');
+    });
+    
+    // Переход в админку для редактирования файла
+    $("[data-source]").on('click', function (event) {
+        if (event.ctrlKey) {
+            event.preventDefault();
+            window.open('/phpshop/admpanel/admin.php?path=tpleditor&name='+$('#bootstrap_theme').attr('data-name')+'&option=pro&file=/' + $(this).attr('data-source'));
+        }
     });
 
 });

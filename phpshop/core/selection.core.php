@@ -25,7 +25,7 @@ class PHPShopSelection extends PHPShopShopCore {
     var $max_item = 250;
 
     /**
-     * Флаг, выводить в подборке описани значения или самой характеристики. True - характеристик. False - значения.
+     * Флаг, выводить в подборке описания значения или самой характеристики. True - характеристик. False - значения.
      * @var bool
      */
     var $descrFlag = false;
@@ -167,7 +167,7 @@ class PHPShopSelection extends PHPShopShopCore {
      * Функция вынесена в отдельный файл query_filter.php
      * @return mixed
      */
-    function query_filter($where = false) {
+    function query_filter($where = false, $v = false) {
 
         // Перехват модуля
         $hook = $this->setHook(__CLASS__, __FUNCTION__);
@@ -180,7 +180,7 @@ class PHPShopSelection extends PHPShopShopCore {
     /**
      * Генерация пагинатора
      */
-    function setPaginator($count, $sql = null) {
+    function setPaginator($count=null, $sql = null) {
 
         // проверяем наличие шаблонов пагинации в папке шаблона
         // если отсутствуют, то используем шаблоны из lib

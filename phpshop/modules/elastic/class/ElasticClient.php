@@ -4,8 +4,8 @@ include_once dirname(__DIR__) . '/class/include.php';
 
 class ElasticClient
 {
-    const API_URL = 'https://elastica.host/api/';
-    const PROXY_API_URL = 'https://estrellas.dev/api/';
+    const API_URL = 'https://cloudsearch.dev/api/';
+    const PROXY_API_URL = 'https://elastica.host/api/';
 
     public function getClientInfo()
     {

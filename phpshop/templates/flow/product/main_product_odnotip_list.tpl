@@ -5,7 +5,9 @@
         <div class="h2">@productOdnotip@</div>
     </div>
 
+    <div class="row">
     @productOdnotipList@
+    </div>
 
 </div>
 <!-- End Related Products Section -->

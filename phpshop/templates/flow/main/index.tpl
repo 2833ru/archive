@@ -190,7 +190,7 @@
                                     @php
 
                                     if(PHPShopParser::get('banersDispMenu')!="")
-                                    $GLOBALS['catalogmenu_col'] = 6;
+                                    $GLOBALS['catalogmenu_col'] = 8;
                                     else $GLOBALS['catalogmenu_col'] = 12;
 
                                     php@
@@ -202,7 +202,7 @@
                                         <!-- Nav Item - Mega Menu -->
                                         <div class="hs-mega-menu w-100 dropdown-menu" aria-labelledby="basicMegaMenu">
                                             <div class="row no-gutters">
-                                                <div class="col-lg-6 @php __hide('banersDispMenu'); php@">
+                                                <div class="col-lg-4 @php __hide('banersDispMenu'); php@">
 
                                                     <!-- Banner Image -->
                                                     @banersDispMenu@
@@ -387,7 +387,9 @@
                 <!-- End Title -->
 
                 <!-- Спецпредложения -->
+                <div class="row">
                 @specMain@
+                </div>
                 <!-- End Спецпредложения -->
 
                 <div class="text-center">

@@ -580,7 +580,7 @@ if (!empty($_COOKIE['fullscreen'])) {
                     <div class="panel-heading"><span class="glyphicon glyphicon-film text-primary"></span> <b class="text-primary"><?php _e('Урок 4: Настройки'); ?></b><a class="btn btn-primary btn-xs pull-right" href="?path=system#1"><span class="glyphicon glyphicon-play"></span> <?php _e('Старт'); ?></a>
                     </div>
                     <div class="panel-body">
-                        <?php _e('Выбрать общий шаблон дизайна магазина можно в <a href="?path=system#1">Настройках дизайна</a>. Изменить цветовую тему оформления панели управления можно в  <a href="?path=system#4">Настройках управления</a>'); ?>.
+                        <?php _e('Выбрать общий шаблон дизайна магазина можно в <a href="?path=system#2">Настройках дизайна</a>. Изменить цветовую тему оформления панели управления можно в  <a href="?path=system#5">Настройках управления</a>'); ?>.
                     </div>
                 </div>
                 <div class="checkbox text-muted">

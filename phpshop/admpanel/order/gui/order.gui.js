@@ -538,7 +538,7 @@ $().ready(function () {
             dataType: "html",
             async: false,
             success: function (data) {
-                //$('#selectModal .modal-dialog').removeClass('modal-lg');
+                $('#selectModal .modal-dialog').addClass('modal-lg');
                 $('#selectModal .modal-title').html(locale.add_cart_value);
                 $('#selectModal .modal-footer .btn-primary').removeClass('edit-select-send');
                 $('#selectModal .modal-footer .btn-primary').addClass('cart-add-send');

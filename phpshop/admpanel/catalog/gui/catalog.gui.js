@@ -13,7 +13,7 @@ $().ready(function () {
 
     // Создать из списка Modal
     $("button[name=addNewModal]").on('click', function () {
-
+ 
         var href = '?path=product&return=catalog&action=new&frame=true&admin=true';
         if (cat > 0)
             href += '&cat=' + cat;
@@ -27,6 +27,8 @@ $().ready(function () {
     // Создать из модальной карточки карточки
     $("button[name=actionInsert]").on('click', function (event) {
         event.preventDefault();
+  
+        $(window).unbind("beforeunload");
 
         var data = [];
         data.push({name: 'saveID', value: 1});
@@ -578,7 +580,7 @@ $().ready(function () {
 
 
     // Создать новый каталог из списка
-    $("button[name=addNewCat]").on('click', function () {
+    $("button[name=addNewCat], .addNewCat").on('click', function () {
         var href = '?path=catalog&action=new';
         window.location.href = href;
         action = true;

@@ -109,12 +109,16 @@ class BaseAvitoXml
 
             // Изображения
             foreach ($images as $key => $image) {
-                if (!strstr('http:', $image['name'])) {
+                if (!strstr('http', $image['name'])) {
 
                     if (!empty($image_source))
                         $images[$key]['name'] = str_replace(".", "_big.", $image['name']);
 
-                    $images[$key]['name'] = $this->ssl . $_SERVER['SERVER_NAME'] . $image['name'];
+                    $image_url = Avito::getOption('image_url');
+                    if(empty($image_url))
+                       $image_url =  $_SERVER['SERVER_NAME'];
+
+                    $images[$key]['name'] = $this->ssl . $image_url . $image['name'];
                 }
             }
 

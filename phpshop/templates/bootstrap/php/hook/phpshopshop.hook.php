@@ -324,6 +324,7 @@ function template_image_gallery($obj, $array) {
     $data = $PHPShopOrm->select(array('*'), array('parent' => '=' . $array['id']), array('order' => 'num'), array('limit' => 100));
     $i = 0;
     $s = 1;
+    $productTitle = str_replace(array('"', "'"), '', $array['name']);
 
     // Нет данных в галерее
     if (!is_array($data) and ! empty($array['pic_big']))
@@ -358,7 +359,7 @@ function template_image_gallery($obj, $array) {
             }
 
             $bxslider .= '<div><a class href="#"><img src="' . $name . '" title="' . $array['name'] . '" alt="' . $array['name'] . '" /></a></div>';
-            $bxsliderbig .= '<li><a class href=\'#\'><img src=\'' . $name_bigstr . '\' title=\'' . $array['name'] . '\' alt=\'' . $array['name'] . '\'></a></li>';
+            $bxsliderbig .= '<li><a class href=\'#\'><img src=\'' . $name_bigstr . '\' title=\'' . $productTitle . '\' alt=\'' . $productTitle . '\'></a></li>';
             $bxpager .= '<a data-slide-index=\'' . $i . '\' href=\'\'><img class=\'img-thumbnail\'  src=\'' . $name_s . '\' data-big-image="' . $name . '"></a>';
             $i++;
         }

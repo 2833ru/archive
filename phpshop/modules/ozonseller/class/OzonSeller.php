@@ -21,6 +21,11 @@ class OzonSeller {
     const GET_FBO_ORDER = '/v2/posting/fbo/get';
     const GET_WAREHOUSE_LIST = '/v1/warehouse/list';
     const UPDATE_PRODUCT_STOCKS = '/v2/products/stocks';
+    const GET_PRODUCT_LIST = '/v2/product/list';
+    const GET_PRODUCT = '/v2/product/info';
+    const GET_PRODUCT_DESCRIPTION = "/v1/product/info/description";
+    const GET_PRODUCT_ATTRIBUTES = '/v3/products/info/attributes';
+    const GET_PRODUCT_PRICES = '/v4/product/info/prices';
 
     public $api_key;
     public $client_id;
@@ -62,19 +67,19 @@ class OzonSeller {
      * Изменение остатка на складе
      */
     public function setProductStock($product) {
-        
-        $info= $this->sendProductsInfo($product)['result']['items'][0];
 
-        if(empty($product['enabled']))
-            $product['items']=0;
+        $info = $this->sendProductsInfo($product)['result']['items'][0];
+
+        if (empty($product['enabled']))
+            $product['items'] = 0;
 
         $params['stocks'][] = [
             'offer_id' => $info['offer_id'],
             'product_id' => $info['product_id'],
             'stock' => $product['items'],
             'warehouse_id' => $this->warehouse_id
-            ];
-        
+        ];
+
         $result = $this->request(self::UPDATE_PRODUCT_STOCKS, $params);
 
         // Журнал
@@ -105,10 +110,14 @@ class OzonSeller {
     /**
      * Преобразование даты
      */
-    public function getTime($date) {
+    public function getTime($date, $full = true) {
         $d = explode('T', $date);
         $t = explode('Z', $d[1]);
-        return $d[0] . ' ' . $t[0];
+
+        if ($full)
+            return $d[0] . ' ' . $t[0];
+        else
+            return $d[0];
     }
 
     /**
@@ -171,7 +180,129 @@ class OzonSeller {
     }
 
     /**
-     *  Список  заказов FBS
+     * Цены товара из Ozon
+     */
+    public function getProductPrices($product_id) {
+
+        $params = [
+            'filter' => [
+                'product_id' => [$product_id],
+                'visibility' => 'ALL',
+            ],
+            'limit' => 1,
+        ];
+
+        $result = $this->request(self::GET_PRODUCT_PRICES, $params);
+
+        // Журнал
+        $log['params'] = $params;
+        $log['result'] = $result;
+
+        $this->log($log, $product_id, self::GET_PRODUCT_PRICES);
+
+        return $result;
+    }
+
+    /**
+     * Атрибуты товара из Ozon
+     */
+    public function getProductAttribures($product_id) {
+
+        $params = [
+            'filter' => [
+                'product_id' => [$product_id],
+                'visibility' => 'ALL',
+            ],
+            'limit' => 1,
+        ];
+
+        $result = $this->request(self::GET_PRODUCT_ATTRIBUTES, $params);
+
+        // Журнал
+        $log['params'] = $params;
+        $log['result'] = $result;
+
+        $this->log($log, $product_id, self::GET_PRODUCT_ATTRIBUTES);
+
+        return $result;
+    }
+
+    /**
+     * Описание товара из Ozon
+     */
+    public function getProductDescription($product_id) {
+
+        $params = [
+            'product_id' => $product_id,
+        ];
+
+        $result = $this->request(self::GET_PRODUCT_DESCRIPTION, $params);
+
+        // Журнал
+        $log['params'] = $params;
+        $log['result'] = $result;
+
+        $this->log($log, $product_id, self::GET_PRODUCT_DESCRIPTION);
+
+        return $result;
+    }
+
+    /**
+     * Данные товаров из Ozon
+     */
+    public function getProduct($product_id) {
+
+        $params = [
+            'product_id' => $product_id,
+        ];
+
+        $result = $this->request(self::GET_PRODUCT, $params);
+
+        // Журнал
+        $log['params'] = $params;
+        $log['result'] = $result;
+
+        $this->log($log, $product_id, self::GET_PRODUCT);
+
+        return $result;
+    }
+
+    /**
+     *  Список товаров из Ozon
+     */
+    public function getProductList($visibility = "ALL", $offer_id = null, $product_id = null, $limit = null) {
+
+        if (empty($limit))
+            $limit = 100;
+
+        $params = [
+            'filter' => [
+                'visibility' => $visibility,
+            ],
+            'limit' => $limit,
+        ];
+
+        if (!empty($offer_id))
+            $params['filter']['offer_id'] = [$offer_id];
+
+        if (!empty($product_id))
+            $params['filter']['product_id'] = [$product_id];
+
+
+
+        $result = $this->request(self::GET_PRODUCT_LIST, $params);
+
+        // Журнал
+        $log['params'] = $params;
+        $log['result'] = $result;
+
+        $this->log($log, 0, self::GET_PRODUCT_LIST);
+
+        return $result;
+    }
+
+    /**
+     *  Список заказов FBS
      */
     public function getOrderListFbs($date1, $date2, $status) {
 

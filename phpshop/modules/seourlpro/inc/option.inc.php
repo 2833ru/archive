@@ -176,18 +176,20 @@ class PHPShopSeoPro {
     function catArrayToMemory() {
 
         $PHPShopCategoryArray = new PHPShopCategorySeoProArray();
-        foreach ($PHPShopCategoryArray->getArray() as $key => $val) {
+        $getArray = $PHPShopCategoryArray->getArray();
+        if (is_array($getArray))
+            foreach ($getArray as $key => $val) {
 
-            if (!empty($val['cat_seo_name'])) {
-                $this->setMemory($key, $val['cat_seo_name'], 1, false);
-                $this->memory['CID_' . $key . '_1'] = $this->setLatin($val['cat_seo_name'] . '-1');
-                $this->memory['shop/CID_' . $key . '_ALL'] = $this->setLatin($val['cat_seo_name']) . '-ALL';
-            } else {
-                $this->setMemory($key, $val['name']);
-                $this->memory['CID_' . $key . '_1'] = $this->setLatin($val['name'] . '-1');
-                $this->memory['shop/CID_' . $key . '_ALL'] = $this->setLatin($val['name']) . '-ALL';
+                if (!empty($val['cat_seo_name'])) {
+                    $this->setMemory($key, $val['cat_seo_name'], 1, false);
+                    $this->memory['CID_' . $key . '_1'] = $this->setLatin($val['cat_seo_name'] . '-1');
+                    $this->memory['shop/CID_' . $key . '_ALL'] = $this->setLatin($val['cat_seo_name']) . '-ALL';
+                } else {
+                    $this->setMemory($key, $val['name']);
+                    $this->memory['CID_' . $key . '_1'] = $this->setLatin($val['name'] . '-1');
+                    $this->memory['shop/CID_' . $key . '_ALL'] = $this->setLatin($val['name']) . '-ALL';
+                }
             }
-        }
     }
 
     function catPageArrayToMemory() {

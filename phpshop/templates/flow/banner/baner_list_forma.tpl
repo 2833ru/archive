@@ -5,7 +5,7 @@
             <p class="text-white">@banerContent@</p>
         </div>
         <div class="d-block">
-            <a class="btn btn-sm btn-light btn-pill transition-3d-hover px-5" href="@banerLink@">@banerDescription@</a>
+            <a class="btn btn-sm btn-light btn-pill transition-3d-hover px-5 @php __hide('banerDescription'); php@" href="@banerLink@">@banerDescription@</a>
         </div>
     </div>
 </div>

@@ -839,13 +839,6 @@ $(document).ready(function () {
     });
 
 
-    $("[data-source]").on('click', function (event) {
-        if (event.ctrlKey) {
-            event.preventDefault();
-            window.open('/phpshop/admpanel/admin.php?path=tpleditor&name=bootstrap&option=pro&file=/' + $(this).attr('data-source'));
-        }
-    });
-
     // Подсказки 
     $('[data-toggle="tooltip"]').tooltip({container: 'body'});
 

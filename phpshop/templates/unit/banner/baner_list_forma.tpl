@@ -1,11 +1,9 @@
-<!-- Шаблон banersDisp banner/baner_list_forma.tpl  -->
 <div class="block-dark" style="background-image: url(@banerImage@);">
     <a href="@banerLink@"> 
         <div class="banner-list">
-            <div class="h4 block-title">@banerTitle@</div>
+            <div class="h4 block-title" style="-webkit-filter: invert(@banerColor@%);filter: invert(@banerColor@%);">@banerTitle@</div>
             @banerContent@
-            <button class="otz" >@banerDescription@</button> 
+            <button class="otz @php __hide('banerLink'); php@" >@banerDescription@</button> 
         </div>
     </a>
 </div>
-<!-- / Шаблон banersDisp banner/baner_list_forma.tpl  -->

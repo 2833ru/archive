@@ -245,9 +245,6 @@ function actionStart() {
         $Tab_info .= $PHPShopGUI->setFile($data['pic_small'], "pic_small_new", array('load' => false, 'server' => 'image', 'url' => false, 'view' => true));
     }
 
-    // Единица измерения
-    $ed_izm = __('шт.');
-
     // Дополнительный склад
     $PHPShopOrmWarehouse = new PHPShopOrm($GLOBALS['SysValue']['base']['warehouses']);
     $dataWarehouse = $PHPShopOrmWarehouse->select(array('*'), array('enabled' => "='1'"), array('order' => 'num DESC'), array('limit' => 100));
@@ -260,6 +257,21 @@ function actionStart() {
         }
     } else
         $Tab_info .= $PHPShopGUI->setField('Склад', $PHPShopGUI->setInputText(false, 'items_new', $data['items'], 100, $ed_izm), 'left');
+
+    // Габариты по умолчанию
+    if (!empty($_GET['cat'])) {
+        $PHPShopCategory = new PHPShopCategory((int) $_GET['cat']);
+        if ($PHPShopCategory) {
+            $data['weight'] = $PHPShopCategory->getParam('weight');
+            $data['length'] = $PHPShopCategory->getParam('length');
+            $data['width'] = $PHPShopCategory->getParam('width');
+            $data['height'] = $PHPShopCategory->getParam('height');
+            $data['ed_izm'] = $PHPShopCategory->getParam('ed_izm');
+        }
+    }
+
+    if (empty($data['ed_izm']))
+        $ed_izm = __('шт.');
 
     // Вес
     $Tab_info_size = $PHPShopGUI->setField('Вес', $PHPShopGUI->setInputText(false, 'weight_new', $data['weight'], 100, __('г&nbsp;&nbsp;&nbsp;&nbsp;')), 'left');

@@ -7497,5 +7497,8 @@ border: 0px;
     border-radius: 0px;
     background-size: cover;
     background-color: #fafafa;
+}
 
+.banner-list h3{
+    color:#fff;
 }

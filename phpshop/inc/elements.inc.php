@@ -1404,6 +1404,7 @@ class PHPShopSliderElement extends PHPShopElements {
                     $this->set('sliderID', $row['id']);
                     $this->set('sliderName', $row['name']);
                     $this->set('sliderLinkName', $row['link_text']);
+                    $this->set('sliderColor', (int)$row['color']);
 
                     // Перехват модуля
                     $this->setHook(__CLASS__, __FUNCTION__, $row, 'END');
@@ -1453,6 +1454,7 @@ class PHPShopBannerElement extends PHPShopElements {
         $this->set('banerDescription', $row['description']);
         $this->set('banerImage', $row['image']);
         $this->set('banerLink', $row['link']);
+        $this->set('banerColor', (int)$row['color']);
         $this->set('popupSize', $size_value[$row['size']]);
         $this->set('popupId', $row['id']);
 
