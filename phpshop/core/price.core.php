@@ -19,12 +19,12 @@ class PHPShopPrice extends PHPShopShopCore {
     var $category;
     var $limit = 2000;
 
-    function PHPShopPrice() {
+    function __construct() {
 
         // Список экшенов
         $this->action = array("nav" => array("CAT"));
 
-        parent::PHPShopShopCore();
+        parent::__construct();
 
         $this->title = $this->lang('price_title') . ' - ' . $this->PHPShopSystem->getValue("title");
     }

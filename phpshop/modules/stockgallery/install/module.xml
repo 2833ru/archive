@@ -4,14 +4,9 @@
     <name>Stockgallery</name>
         <faqlink>http://faq.phpshop.ru/page/stockgallery.html</faqlink>
     <description>Модуль карусели товаров.</description>
-    <icon>icon.png</icon>
     <category>decorate,template</category>
     <adminmenu>
         <title>Stockgallery</title>
-        <podmenu>
-            <podmenu_name>Настройка Stockgallery</podmenu_name>
-            <podmenu_icon>icon.png</podmenu_icon>
-            <podmenu_action>javascript:miniWin('../modules/stockgallery/admpanel/adm_module.php',510,450);</podmenu_action>
-        </podmenu>
+        <capability>true</capability>
     </adminmenu>
 </module>

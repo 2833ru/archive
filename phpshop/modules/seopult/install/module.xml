@@ -4,20 +4,14 @@
     <name>Seo Pult</name>
     <faqlink>http://faq.phpshop.ru/page/seopult.html</faqlink>
     <description>Модуль SEO-продвижения.</description>
-    <icon>icon.png</icon>
     <category>seo</category>
-    <status></status>
     <adminmenu>
         <title>Seo Pult</title>
-        <podmenu>
-            <podmenu_name>Настройка</podmenu_name>
-            <podmenu_icon>option.png</podmenu_icon>
-            <podmenu_action>javascript:miniWin('../modules/seopult/admpanel/adm_module.php',510,450);</podmenu_action>
-        </podmenu>
+        <capability>true</capability>
         <podmenu>
             <podmenu_name>Пульт управления</podmenu_name>
             <podmenu_icon>icon.png</podmenu_icon>
-            <podmenu_action>javascript:window.location.replace('?plugin=seopult')</podmenu_action>
+            <podmenu_action>dir.seopult</podmenu_action>
         </podmenu>
     </adminmenu>
 </module>

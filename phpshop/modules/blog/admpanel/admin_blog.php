@@ -1,32 +1,22 @@
 <?php
 
-if (!defined("OBJENABLED"))
-    exit(header('Location: /?error=OBJENABLED'));
-    
-    
-$TitlePage = __("Блог");
+  
+$TitlePage = "Блог";
 
 function actionStart() {
-    global $PHPShopInterface,$_classPath;
-    $PHPShopInterface->size = "630,550";
-    $PHPShopInterface->link = "../modules/blog/admpanel/adm_blogID.php";
-    $PHPShopInterface->setCaption(array("Дата", "10%"), array("Заголовок", "45%"), array("Краткая информация", "45%"));
+    global $PHPShopInterface,$PHPShopModules;
+        $PHPShopInterface->setCaption(array(null, "5%"), array("Заголовок", "70%"), array("", "10%"), array("ID", "10%", array('align' => 'left')), array("Дата", "20%", array('align' => 'center')));
 
-    // Настройки модуля
-    PHPShopObj::loadClass("modules");
-    $PHPShopModules = new PHPShopModules($_classPath."modules/");
-    
-    
+
     // SQL
     $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.blog.blog_log"));
     $data = $PHPShopOrm->select(array('*'), false, array('order' => 'id DESC'), array('limit' => 1000));
     if (is_array($data))
         foreach ($data as $row) {
-            extract($row);
-            $PHPShopInterface->setRow($id, $date, $title, substr(strip_tags($description), 0, 150) . "...");
-        }
+        
+         $PHPShopInterface->setRow($row['id'], array('name' => $row['title'], 'link' => '?path=modules.dir.blog&id=' . $row['id'], 'align' => 'left'), array('action' => array('edit', 'delete', 'id' => $row['id']), 'align' => 'center'), array('name' => $row['id'], 'align' => 'left'), $row['date']);
 
-    $PHPShopInterface->setAddItem('../modules/blog/admpanel/adm_blog_new.php');
+        }
     $PHPShopInterface->Compile();
 }
 

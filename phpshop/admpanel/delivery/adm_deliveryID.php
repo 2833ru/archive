@@ -1,185 +1,187 @@
 <?php
 
-$_classPath = "../../";
-include($_classPath . "class/obj.class.php");
-PHPShopObj::loadClass("base");
-PHPShopObj::loadClass("system");
-PHPShopObj::loadClass("valuta");
-PHPShopObj::loadClass("array");
-PHPShopObj::loadClass("page");
-PHPShopObj::loadClass("security");
-PHPShopObj::loadClass("category");
+PHPShopObj::loadClass('delivery');
 
-// Подключение к БД
-$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
-$PHPShopBase->chekAdmin();
 
-// Системные настройки
-$PHPShopSystem = new PHPShopSystem();
-
-// Редактор GUI
-PHPShopObj::loadClass("admgui");
-$PHPShopGUI = new PHPShopGUI();
-$PHPShopGUI->title = __("Редактирование Каталога");
-$PHPShopGUI->reload = "all";
-
-// SQL
-PHPShopObj::loadClass("orm");
+$TitlePage = __('Редактирование Доставки #' . $_GET['id']);
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['delivery']);
 
-// Модули
-PHPShopObj::loadClass("modules");
-$PHPShopModules = new PHPShopModules($_classPath . "modules/");
+// Построение дерева категорий
+function treegenerator($array, $i, $parent) {
+    global $tree_array;
+    $del = '¦&nbsp;&nbsp;&nbsp;&nbsp;';
+    $tree = $tree_select = $check = false;
+
+    if (is_array($array['sub'])) {
+        foreach ($array['sub'] as $k => $v) {
+            $del = str_repeat($del, $i);
+            $check = treegenerator($tree_array[$k], $i + 1, $k);
+
+
+            if ($k == $_GET['parent_to'])
+                $selected = 'selected';
+            else
+                $selected = null;
+
+            if (empty($check['select'])) {
+                $tree_select.='<option value="' . $k . '" ' . $selected . '>' . $del . $v . '</option>';
+                $i = 1;
+            } else {
+                $tree_select.='<option value="' . $k . '" ' . $selected . '>' . $del . $v . '</option>';
+                //$i++;
+            }
+
+
+            $tree.='<tr class="treegrid-' . $k . ' treegrid-parent-' . $parent . ' data-tree">
+		<td><a href="?path=delivery&cat=' . $k . '">' . $v . '</a></td>
+                    </tr>';
+
+            $tree_select.=$check['select'];
+            $tree.=$check['tree'];
+        }
+    }
+    return array('select' => $tree_select, 'tree' => $tree);
+}
 
 /**
  * Экшен загрузки форм редактирования
  */
 function actionStart() {
-    global $PHPShopGUI, $PHPShopModules, $PHPShopOrm, $PHPShopSystem, $PHPShopBase;
+    global $PHPShopGUI, $PHPShopModules, $PHPShopOrm, $PHPShopSystem;
 
-    // Тип окна
-    if ($_COOKIE['winOpenType'] == 'default')
-        $dot = ".";
-    else
-        $dot = false;
+    // Размер названия поля
+    $PHPShopGUI->field_col = 2;
+    $PHPShopGUI->addJSFiles('./js/jquery.treegrid.js','./delivery/gui/delivery.gui.js');
 
     // Выборка
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_REQUEST['id'])));
 
-    // получаем массив настроек полей адресса 
-    $data_fields = unserialize($data['data_fields']);
-
-    // ID окна для памяти закладок
-    $PHPShopGUI->setID(__FILE__, $data['id']);
-
-    $PHPShopGUI->dir = "../";
-    //$PHPShopGUI->size = "700,650";
-    // Графический заголовок окна
-    $PHPShopGUI->setHeader(__('Редактирование Доставки "' . $data['city'] . '"'), __(""), $PHPShopGUI->dir . "img/i_actionlog_med[1].gif");
-
     // Нет данных
     if (!is_array($data)) {
-        $PHPShopGUI->setFooter($PHPShopGUI->setInput("button", "", "Закрыть", "center", 100, "return onCancel();", "but"));
-        return true;
+        header('Location: ?path=' . $_GET['path']);
     }
 
-    // Каталог доставки 
-    $Tab1.= $PHPShopGUI->setField(__("Каталог:"), $PHPShopGUI->setInputText(false, "parent_name", Disp_cat($data['PID']), '400px', false, 'left') .
-            $PHPShopGUI->setInput("hidden", "PID_new", $data['PID'], "left", 400) .
-            $PHPShopGUI->setButton(__('Выбрать'), "../img/icon-move-banner.gif", "100px", '25px', "left", "miniWin('adm_cat.php?category=" . $data['PID'] . "',300,400);return false;"));
+    if (!empty($data['is_folder']))
+        $catalog = true;
+    else
+        $catalog = false;
+
+    $PHPShopGUI->setActionPanel(__("Доставка") . ' / ' . $data['city'], array('Создать','|','Удалить', ), array('Сохранить', 'Сохранить и закрыть'));
 
     // Наименование
-    $Tab1 .= $PHPShopGUI->setField(__("Название:"), $PHPShopGUI->setInputText(false, 'city_new', $data['city'], '222px') .
-            $PHPShopGUI->setCheckbox('flag_new', 1, __('Доставка по умолчанию'), $data['flag']), "left");
+    $Tab_info = $PHPShopGUI->setField(__("Название:"), $PHPShopGUI->setInputText(false, 'city_new', $data['city'], '100%'));
 
-    // цена
-    $Tab1.= $PHPShopGUI->setField(__("Стоимость:"), $PHPShopGUI->setDiv("", $PHPShopGUI->setInputText(false, 'price_new', $data['price'], '50px'), "height: 52px;"), 'left');
 
-    // Учитывать
-    $Tab1.= $PHPShopGUI->setField(__("Учитывать (вкл/выкл):"), $PHPShopGUI->setDiv("", $PHPShopGUI->setCheckbox('enabled_new', 1, __('включить'), $data['enabled']), "height: 52px;"), 'left');
+    $PHPShopCategoryArray = new PHPShopDeliveryArray(array('is_folder' => "='1'"));
+    $CategoryArray = $PHPShopCategoryArray->getArray();
 
-    // номер по порядку
-    $Tab1.= $PHPShopGUI->setField(__("Номер по порядку:"), $PHPShopGUI->setDiv("", $PHPShopGUI->setInputText(false, 'num_new', $data['num'], '50px'), "height: 52px;"), 'left');
+    $CategoryArray[0]['city'] = '- Корневой уровень -';
+    $tree_array = array();
 
-    // бесплатная доставка
-    $Tab1 .= $PHPShopGUI->setLine() . $PHPShopGUI->setField(__("Бесплатная доставка:"), $PHPShopGUI->setInputText("Свыше", 'price_null_new', $data['price_null'], '50%', "руб.", "left") .
-                    $PHPShopGUI->setCheckbox('price_null_enabled_new', 1, __('включить'), $data['price_null_enabled']));
+    foreach ($PHPShopCategoryArray->getKey('PID.id', true) as $k => $v) {
+        foreach ($v as $cat) {
+            $tree_array[$k]['sub'][$cat] = $CategoryArray[$cat]['city'];
+        }
+        $tree_array[$k]['name'] = $CategoryArray[$k]['city'];
+        $tree_array[$k]['id'] = $k;
+        if ($k == $data['PID'])
+            $tree_array[$k]['selected'] = true;
+    }
 
+
+
+    $GLOBALS['tree_array'] = &$tree_array;
+    $_GET['parent_to'] = $data['PID'];
+
+    $tree_select = '<select class="selectpicker show-menu-arrow hidden-edit" data-container=".sidebarcontainer"  data-style="btn btn-default btn-sm" name="PID_new"><option value="0">' . $CategoryArray[0]['city'] . '</option>';
+    $tree = '<table class="tree table table-hover">';
+    if ($k == $data['PID'])
+        $selected = 'selected';
+    if (is_array($tree_array[0]['sub']))
+        foreach ($tree_array[0]['sub'] as $k => $v) {
+            $check = treegenerator($tree_array[$k], 1, $k);
+
+            $tree.='<tr class="treegrid-' . $k . ' data-tree">
+		<td><a href="?path=delivery&cat=' . $k . '">' . $v . '</a></td>
+                    </tr>';
+
+            if ($k == $data['PID'])
+                $selected = 'selected';
+            else
+                $selected = null;
+
+            $tree_select.='<option value="' . $k . '"  ' . $selected . '>' . $v . '</option>';
+
+            $tree_select.=$check['select'];
+            $tree.=$check['tree'];
+        }
+    $tree_select.='</select>';
+    $tree.='</table>';
+
+
+    // Выбор каталога
+    $Tab_info.= $PHPShopGUI->setField(__("Размещение:"), $tree_select);
+
+    // Вывод
+    $Tab_info.=$PHPShopGUI->setField(__("Вывод:"), $PHPShopGUI->setCheckbox('enabled_new', 1, "Активный статус", $data['enabled']) . $PHPShopGUI->setCheckbox('flag_new', 1, "Доставка по умолчанию", $data['flag']));
+
+    // Цены
+    $Tab_price = $PHPShopGUI->setField(__("Стоимость:"), $PHPShopGUI->setInputText(false, 'price_new', $data['price'], '150', $PHPShopSystem->getDefaultValutaCode()));
+
+    $Tab_price.=$PHPShopGUI->setField(__("Бесплатная доставка свыше:"), $PHPShopGUI->setInputText(false, 'price_null_new', $data['price_null'], '150', $PHPShopSystem->getDefaultValutaCode()) . $PHPShopGUI->setCheckbox('price_null_enabled_new', 1, "Учитывать", $data['price_null_enabled']));
+
+    // Такса
+    $Tab_price.=$PHPShopGUI->setField(__("Такса за каждые 0.5 кг веса"), $PHPShopGUI->setInputText(false, 'taxa_new', $data['taxa'], '150', $PHPShopSystem->getDefaultValutaCode()) . $PHPShopGUI->setHelp('Используется для задания дополнительной тарификации (например, для "Почта России").<br>Каждые дополнительные 0.5 кг свыше базовых 0.5 кг будут стоить указанную сумму.'));
+
+
+    // Тип сортировки
+    $Tab_info.=$PHPShopGUI->setField(__("Приоритет:"), $PHPShopGUI->setInputText('№', "num_new", $data['num'], 150));
 
     // Настройка выбора городов из БД
     $city_select_value[] = array('Не использовать', 0, $data['city_select']);
     $city_select_value[] = array('Только Регионы и города РФ', 1, $data['city_select']);
     $city_select_value[] = array('Все страны мира', 2, $data['city_select']);
-    $Tab1.=$PHPShopGUI->setField(__("Помощь подбора стран, регионов и городов:"), $PHPShopGUI->setSelect('city_select_new', $city_select_value, 120), 'left');
+
+    if (!$catalog)
+        $Tab_info.=$PHPShopGUI->setField(__("Помощь подбора стран, регионов и городов:"), $PHPShopGUI->setSelect('city_select_new', $city_select_value));
+
+    $Tab1 = $PHPShopGUI->setCollapse(__('Информация'), $Tab_info);
 
     // Иконка
-    $Tab1.= $PHPShopGUI->setField(__('Иконка'), $PHPShopGUI->setInputText(false, "icon_new", $data['icon'], '190px', false, 'left') .
-            $PHPShopGUI->setButton(__('Выбрать'), "../img/icon-move-banner.gif", "100px", '25px', "right", "ReturnPic('icon_new');return false;"));
-    // Вес
-    $Tab1.= $PHPShopGUI->setField('Такса за каждые 0.5 кг веса', $PHPShopGUI->setInputText('Используется для задания дополнительной тарификации (например, для "Почта России")<BR>Каждые дополнительные 0.5 кг свыше базовых 0.5 кг будут стоить', "taxa_new", $data['taxa'], 50, $PHPShopSystem->getDefaultValutaCode())
-    );
+    $Tab1.=$PHPShopGUI->setField(__("Изображение"), $PHPShopGUI->setIcon($data['icon'], "icon_new", false));
 
-    $Tab2 .= $PHPShopGUI->setField(__("Настройка полей адреса для данного типа доставки:"), "<table >
-                <tr><td>Поле</td><td>вкл/выкл</td><td>Название при выводе</td><td>Обязательное</td><td>No</td></tr>"
-            . "<tr><td>Страна</td>"
-            . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][country][enabled]', 1, __(''), $data_fields[enabled][country][enabled]) . "</td>"
-            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[enabled][country][name]', $data_fields[enabled][country][name], "100") . "</td>"
-            . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][country][req]', 1, __(''), $data_fields[enabled][country][req]) . "</td>"
-            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[num][country]', $data_fields[num][country], "20") . "</td></tr>"
-            . "<tr><td>Регион/штат</td>"
-            . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][state][enabled]', 1, __(''), $data_fields[enabled][state][enabled]) . "</td>"
-            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[enabled][state][name]', $data_fields[enabled][state][name], "100") . "</td>"
-            . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][state][req]', 1, __(''), $data_fields[enabled][state][req]) . "</td>"
-            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[num][state]', $data_fields[num][state], "20") . "</td></tr>"
-            . "<tr><td>Город</td>"
-            . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][city][enabled]', 1, __(''), $data_fields[enabled][city][enabled]) . "</td>"
-            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[enabled][city][name]', $data_fields[enabled][city][name], "100") . "</td>"
-            . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][city][req]', 1, __(''), $data_fields[enabled][city][req]) . "</td>"
-            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[num][city]', $data_fields[num][city], "20") . "</td></tr>"
-            . "<tr><td>Индекс</td>"
-            . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][index][enabled]', 1, __(''), $data_fields[enabled][index][enabled]) . "</td>"
-            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[enabled][index][name]', $data_fields[enabled][index][name], "100") . "</td>"
-            . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][index][req]', 1, __(''), $data_fields[enabled][index][req]) . "</td>"
-            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[num][index]', $data_fields[num][index], "20") . "</td></tr>"
-            . "<tr><td>ФИО</td>"
-            . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][fio][enabled]', 1, __(''), $data_fields[enabled][fio][enabled]) . "</td>"
-            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[enabled][fio][name]', $data_fields[enabled][fio][name], "100") . "</td>"
-            . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][fio][req]', 1, __(''), $data_fields[enabled][fio][req]) . "</td>"
-            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[num][fio]', $data_fields[num][fio], "20") . "</td></tr>"
-            . "<tr><td>Телефон</td>"
-            . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][tel][enabled]', 1, __(''), $data_fields[enabled][tel][enabled]) . "</td>"
-            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[enabled][tel][name]', $data_fields[enabled][tel][name], "100") . "</td>"
-            . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][tel][req]', 1, __(''), $data_fields[enabled][tel][req]) . "</td>"
-            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[num][tel]', $data_fields[num][tel], "20") . "</td></tr>"
-            . "<tr><td>Улица</td>"
-            . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][street][enabled]', 1, __(''), $data_fields[enabled][street][enabled]) . "</td>"
-            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[enabled][street][name]', $data_fields[enabled][street][name], "100") . "</td>"
-            . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][street][req]', 1, __(''), $data_fields[enabled][street][req]) . "</td>"
-            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[num][street]', $data_fields[num][street], "20") . "</td></tr>"
-            . "<tr><td>Дом</td>"
-            . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][house][enabled]', 1, __(''), $data_fields[enabled][house][enabled]) . "</td>"
-            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[enabled][house][name]', $data_fields[enabled][house][name], "100") . "</td>"
-            . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][house][req]', 1, __(''), $data_fields[enabled][house][req]) . "</td>"
-            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[num][house]', $data_fields[num][house], "20") . "</td></tr>"
-            . "<tr><td>Подъезд</td>"
-            . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][porch][enabled]', 1, __(''), $data_fields[enabled][porch][enabled]) . "</td>"
-            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[enabled][porch][name]', $data_fields[enabled][porch][name], "100") . "</td>"
-            . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][porch][req]', 1, __(''), $data_fields[enabled][porch][req]) . "</td>"
-            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[num][porch]', $data_fields[num][porch], "20") . "</td></tr>"
-            . "<tr><td>Код домофона</td>"
-            . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][door_phone][enabled]', 1, __(''), $data_fields[enabled][door_phone][enabled]) . "</td>"
-            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[enabled][door_phone][name]', $data_fields[enabled][door_phone][name], "100") . "</td>"
-            . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][door_phone][req]', 1, __(''), $data_fields[enabled][door_phone][req]) . "</td>"
-            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[num][door_phone]', $data_fields[num][door_phone], "20") . "</td></tr>"
-            . "<tr><td>Квартира</td>"
-            . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][flat][enabled]', 1, __(''), $data_fields[enabled][flat][enabled]) . "</td>"
-            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[enabled][flat][name]', $data_fields[enabled][flat][name], "100") . "</td>"
-            . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][flat][req]', 1, __(''), $data_fields[enabled][flat][req]) . "</td>"
-            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[num][flat]', $data_fields[num][flat], "20") . "</td></tr>"
-            . "<tr><td>Время доставки</td>"
-            . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][delivtime][enabled]', 1, __(''), $data_fields[enabled][delivtime][enabled]) . "</td>"
-            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[enabled][delivtime][name]', $data_fields[enabled][delivtime][name], "100") . "</td>"
-            . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][delivtime][req]', 1, __(''), $data_fields[enabled][delivtime][req]) . "</td>"
-            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[num][delivtime]', $data_fields[num][delivtime], "20") . "</td></tr>"
-            . "</table>"
-    );
+    // Цены
+    if (!$catalog)
+        $Tab1.= $PHPShopGUI->setCollapse(__('Цены'), $Tab_price);
 
-
-    // Вывод формы закладки
-    $PHPShopGUI->setTab(array(__("Основное"), $Tab1, 450), array(__("Настройка полей данных по адресу"), $Tab2, 450));
-
+    // Дополнительные поля
+    if (!$catalog)
+        $Tab2 = $PHPShopGUI->loadLib('tab_option', $data);
 
 
     // Запрос модуля на закладку
-    $PHPShopModules->setAdmHandler($_SERVER["SCRIPT_NAME"], __FUNCTION__, $data);
+    $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
+
+    // Вывод формы закладки
+    if (!$catalog)
+        $PHPShopGUI->setTab(array(__("Основное"), $Tab1), array(__("Адреса пользователя"), $Tab2));
+    else
+        $PHPShopGUI->setTab(array(__("Основное"), $Tab1));
+
+
+    // Левый сайдбар
+    $sidebarleft[] = array('title' => 'Категории', 'content' => $tree, 'title-icon' => '<span class="glyphicon glyphicon-plus newcat" data-toggle="tooltip" data-placement="top" title="Добавить каталог"></span>&nbsp;<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="Развернуть"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="Свернуть"></span>');
+    $PHPShopGUI->setSidebarLeft($sidebarleft, 3);
+    $PHPShopGUI->sidebarLeftCell = 3;
+
+
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =
-            $PHPShopGUI->setInput("hidden", "catalogID", $data['id'], "right", 70, "", "but") .
-            $PHPShopGUI->setInput("button", "", "Отмена", "right", 70, "return onCancel();", "but") .
-            $PHPShopGUI->setInput("button", "delID", "Удалить", "right", 70, "return onDelete('" . __('Вы действительно хотите удалить?') . "')", "but", "actionDelete.delivery.edit") .
+            $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .
+            $PHPShopGUI->setInput("button", "delID", "Удалить", "right", 70, "", "but", "actionDelete.delivery.delete") .
             $PHPShopGUI->setInput("submit", "editID", "Сохранить", "right", 70, "", "but", "actionUpdate.delivery.edit") .
-            $PHPShopGUI->setLine();
+            $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionSave.delivery.edit");
 
     // Футер
     $PHPShopGUI->setFooter($ContentFooter);
@@ -190,47 +192,79 @@ function actionStart() {
  * Экшен сохранения
  */
 function actionSave() {
-    global $PHPShopGUI;
 
     // Сохранение данных
-    actionUpdate();
-
-    $PHPShopGUI->setAction($_POST['catalogID'], 'actionStart', 'none');
+    $result = actionUpdate();
+    
+      if (isset($_REQUEST['ajax'])) {
+      exit(json_encode(array("success" => $result)));
+      }
+      else header('Location: ?path=' . $_GET['path']); 
 }
 
 /**
  * Экшен обновления
- * @return bool 
+ * @return bool
  */
 function actionUpdate() {
-    global $PHPShopModules, $PHPShopBase, $PHPShopOrm;
+    global $PHPShopOrm, $PHPShopModules;
 
 
-    // Проверка прав редактирования
-//    if ($PHPShopBase->Rule->CheckedRules('delivery', 'rule')) {
-    if (is_array($_POST['data_fields']))
+    if (is_array($_POST['data_fields'])){
+        
+        if(is_array($_POST[data_fields][enabled]))
+        foreach($_POST[data_fields][enabled] as $k=>$v){
+            $_POST[data_fields][enabled][$k] = array_map("urldecode", $v);
+        }
+        
+        
         $_POST['data_fields_new'] = serialize($_POST['data_fields']);
+    }
 
-    // обрабатываем галочки
-    if (empty($_POST['flag_new']))
-        $_POST['flag_new'] = 0;
-    if (empty($_POST['enabled_new']))
-        $_POST['enabled_new'] = 0;
-    if (empty($_POST['price_null_enabled_new']))
-        $_POST['price_null_enabled_new'] = 0;
+    // Корректировка пустых значений
+    $PHPShopOrm->updateZeroVars('flag_new', 'enabled_new', 'price_null_enabled_new');
 
+    $_POST['icon_new'] = iconAdd('icon_new');
+
+    // Перехват модуля
+    $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
     $PHPShopOrm->debug = false;
 
+    $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['rowID']));
 
-    if ($_POST['flag_new'])
-        $PHPShopOrm->update(array('flag_new' => '0'), array('is_folder' => "='0'"));
+    return array("success" => $action);
+}
 
-    $PHPShopOrm->clean();
-    $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['catalogID']));
-    $PHPShopOrm->clean();
+// Добавление изображения 
+function iconAdd($name = 'icon_new') {
 
-    return $action;
-//    }
+    // Папка сохранения
+    $path = '/UserFiles/Image/';
+
+    // Копируем от пользователя
+    if (!empty($_FILES['file']['name'])) {
+        $_FILES['file']['ext'] = PHPShopSecurity::getExt($_FILES['file']['name']);
+        if (in_array($_FILES['file']['ext'], array('gif', 'png', 'jpg'))) {
+            if (move_uploaded_file($_FILES['file']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['dir']['dir'] . $path . $_FILES['file']['name'])) {
+                $file = $GLOBALS['dir']['dir'] . $path . $_FILES['file']['name'];
+            }
+        }
+    }
+
+    // Читаем файл из URL
+    elseif (!empty($_POST['furl'])) {
+        $file = $_POST[$name];
+    }
+
+    // Читаем файл из файлового менеджера
+    elseif (!empty($_POST[$name])) {
+        $file = $_POST[$name];
+    }
+
+    if (empty($file))
+        $file = '';
+
+    return $file;
 }
 
 // Функция удаления
@@ -238,42 +272,16 @@ function actionDelete() {
     global $PHPShopOrm, $PHPShopModules;
 
     // Перехват модуля
-    $PHPShopModules->setAdmHandler($_SERVER["SCRIPT_NAME"], __FUNCTION__, $_POST);
-    $action = $PHPShopOrm->delete(array('id' => '=' . intval($_POST['catalogID'])));
+    $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
 
-    return $action;
+
+    $action = $PHPShopOrm->delete(array('id' => '=' . $_POST['rowID']));
+    return array('success' => $action);
 }
-
-// Вывод формы при старте
-$PHPShopGUI->setAction($_GET['id'], 'actionStart', 'none');
 
 // Обработка событий
 $PHPShopGUI->getAction();
 
-/**
- * Путь каталога
- * @param int $category ИД категории
- * @return string 
- */
-function Disp_cat_pod($category) {// вывод каталогов в выборе подкаталогов
-    $sql = "select city from " . $GLOBALS['SysValue']['base']['table_name30'] . " where id='$category'";
-    $result = mysql_query($sql);
-    $row = mysql_fetch_array($result);
-    @$name = $row['city'];
-    return @$name . " -> ";
-}
-
-function Disp_cat($category) {// вывод каталогов в выборе
-    $sql = "select city,PID from " . $GLOBALS['SysValue']['base']['table_name30'] . " where id=$category";
-    $result = mysql_query($sql);
-    @$row = mysql_fetch_array(@$result);
-    @$num = mysql_num_rows(@$result);
-    if ($num > 0) {
-        $name = $row['city'];
-        $parent_to = $row['PID'];
-        $dis = Disp_cat_pod($parent_to) . $name;
-    }
-    return @$dis;
-}
-
+// Вывод формы при старте
+$PHPShopGUI->setAction($_GET['id'], 'actionStart', 'none');
 ?>

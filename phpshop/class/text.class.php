@@ -107,7 +107,7 @@ class PHPShopText {
 		if ($title)
 			$title = ' title="' . $title . '" ';
 		if ($target)
-			$target = ' target="' . $title . '" ';
+			$target = ' target="' . $target . '" ';
 		if ($class)
 			$class = ' class="' . $class . '" ';
 		if ($style)
@@ -220,7 +220,7 @@ class PHPShopText {
      * @param int $size размер
      * @return string
      */
-    static function select($name, $value, $width, $float = "none", $caption = false, $onchange = "return true", $height = false, $size = 1, $id = false) {
+    static function select($name, $value, $width, $float = "none", $caption = false, $onchange = "return true", $height = false, $size = 1, $id = false, $class="form-control selectpicker show-menu-arrow") {
 
         if (empty($id))
             $id = $name;
@@ -236,9 +236,12 @@ class PHPShopText {
 
 		if ($onchange)
 			$onchange = ' onchange="' . $onchange . '"';
+                
+                if($class)
+                    $class = ' class="'.$class.'"';
 			
 
-        $select = $caption . ' <select' . $name . $id . $size . ' style="float:' . $float . ';width:' . $width . 'px;height:' . $height . 'px"' . $onchange . '>';
+        $select = $caption . ' <select' . $name . $id . $size . ' style="float:' . $float . ';width:' . $width . 'px;height:' . $height . 'px"' . $onchange . $class.'>';
         if (is_array($value))
             foreach ($value as $val)
                 $select.='<option value="' . $val[1] . '" ' . @$val[2] . '>' . $val[0] . '</option>';
@@ -383,7 +386,7 @@ class PHPShopText {
 		
 		$style = ' style="' . $align . $width . $bgcolor . $border . '"';
 		
-        return '<table' . $id . $style . $class . '>' . $content . '</table>';
+        return '<table ' . $id . $style . $class . '>' . $content . '</table>';
     }
 
     /**

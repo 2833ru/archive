@@ -4,21 +4,14 @@
     <name>Adm Log</name>
     <faqlink>http://faq.phpshop.ru/page/errorlog.html</faqlink>
     <description>Модуль записи действий администратора.</description>
-    <icon>icon.png</icon>
     <category>develop</category>
-    <base>21</base>
     <status></status>
     <adminmenu>
         <title>Adm Log</title>
-        <podmenu>
-            <podmenu_name>Настройка Adm Log</podmenu_name>
-            <podmenu_icon>about.png</podmenu_icon>
-            <podmenu_action>javascript:miniWin('../modules/admlog/admpanel/adm_module.php',510,450);</podmenu_action>
-        </podmenu>
+        <capability>true</capability>
         <podmenu>
             <podmenu_name>Журнал событий</podmenu_name>
-            <podmenu_icon>icon.png</podmenu_icon>
-            <podmenu_action>javascript:DoReload('modules','admlog')</podmenu_action>
+            <podmenu_action>dir.admlog</podmenu_action>
         </podmenu>
     </adminmenu>
 </module>

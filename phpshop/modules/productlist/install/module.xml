@@ -4,14 +4,9 @@
     <name>Product List</name>
     <faqlink>http://faq.phpshop.ru/page/product-list.html</faqlink>
     <description>Модуль списка товаров из текущей категории.</description>
-    <icon>icon.png</icon>
     <category>form</category>
     <adminmenu>
         <title>Product List</title>
-        <podmenu>
-            <podmenu_name>Настройка</podmenu_name>
-            <podmenu_icon>icon.png</podmenu_icon>
-            <podmenu_action>javascript:miniWin('../modules/productlist/admpanel/adm_module.php',510,450);</podmenu_action>
-        </podmenu>
+        <capability>true</capability>
     </adminmenu>
 </module>

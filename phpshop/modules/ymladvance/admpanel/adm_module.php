@@ -1,25 +1,5 @@
 <?php
 
-$_classPath = "../../../";
-include($_classPath . "class/obj.class.php");
-PHPShopObj::loadClass("base");
-PHPShopObj::loadClass("system");
-PHPShopObj::loadClass("security");
-PHPShopObj::loadClass("orm");
-
-$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
-include($_classPath . "admpanel/enter_to_admin.php");
-
-
-// Настройки модуля
-PHPShopObj::loadClass("modules");
-$PHPShopModules = new PHPShopModules($_classPath . "modules/");
-
-
-// Редактор
-PHPShopObj::loadClass("admgui");
-$PHPShopGUI = new PHPShopGUI();
-
 // SQL
 $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.ymladvance.ymladvance_system"));
 
@@ -35,82 +15,74 @@ function actionBaseUpdate() {
 }
 
 function actionStart() {
-    global $PHPShopGUI, $PHPShopSystem, $_classPath, $PHPShopOrm;
-
-
-    $PHPShopGUI->dir = $_classPath . "admpanel/";
-    $PHPShopGUI->title = "Настройка модуля расширенной выгрузки в Яндекс.Маркет";
-    //$PHPShopGUI->size = "500,450";
+    global $PHPShopGUI,  $PHPShopOrm;
 
     // Выборка
     $data = $PHPShopOrm->select();
-    @extract($data);
+
 
     $vendor = unserialize($data['vendor']);
 
 
-    // Графический заголовок окна
-    $PHPShopGUI->setHeader("Настройка модуля 'Яндекс.Маркет'", "Настройки подключения", $PHPShopGUI->dir . "img/i_display_settings_med[1].gif");
-
-
-    $Tab1 = $PHPShopGUI->setField('Характеристика A', $PHPShopGUI->setInputText('Имя тега', 'sort1_tag', $vendor['sort1_tag'], 180, false, 'left') .
-            $PHPShopGUI->setInputText('Имя характеристики', 'sort1_name', $vendor['sort1_name'], 180, false, 'left')
+    $Tab1 = $PHPShopGUI->setField('Характеристика A', $PHPShopGUI->setInputText('Тег', 'sort1_tag', $vendor['sort1_tag'], 300, false, 'left') .
+            $PHPShopGUI->set_().
+            $PHPShopGUI->setInputText('Имя', 'sort1_name', $vendor['sort1_name'], 300, false, 'left')
     );
 
-    $Tab1.=$PHPShopGUI->setField('Характеристика B', $PHPShopGUI->setInputText('Имя тега', 'sort2_tag', $vendor['sort2_tag'], 180, false, 'left') .
-            $PHPShopGUI->setInputText('Имя характеристики', 'sort2_name', $vendor['sort2_name'], 180, false, 'left')
+    $Tab1.=$PHPShopGUI->setField('Характеристика B', $PHPShopGUI->setInputText('Тег', 'sort2_tag', $vendor['sort2_tag'], 300, false, 'left') .
+            $PHPShopGUI->set_().
+            $PHPShopGUI->setInputText('Имя', 'sort2_name', $vendor['sort2_name'], 300, false, 'left')
     );
 
-    $Tab1.=$PHPShopGUI->setField('Характеристика C', $PHPShopGUI->setInputText('Имя тега', 'sort3_tag', $vendor['sort3_tag'], 180, false, 'left') .
-            $PHPShopGUI->setInputText('Имя характеристики', 'sort3_name', $vendor['sort3_name'], 180, false, 'left')
+    $Tab1.=$PHPShopGUI->setField('Характеристика C', $PHPShopGUI->setInputText('Тег', 'sort3_tag', $vendor['sort3_tag'], 300, false, 'left') .
+            $PHPShopGUI->set_().
+            $PHPShopGUI->setInputText('Имя', 'sort3_name', $vendor['sort3_name'], 300, false, 'left')
     );
 
-    $Tab1.=$PHPShopGUI->setField('Характеристика D', $PHPShopGUI->setInputText('Имя тега', 'sort4_tag', $vendor['sort4_tag'], 180, false, 'left') .
-            $PHPShopGUI->setInputText('Имя характеристики', 'sort4_name', $vendor['sort4_name'], 180, false, 'left')
+    $Tab1.=$PHPShopGUI->setField('Характеристика D', $PHPShopGUI->setInputText('Тег', 'sort4_tag', $vendor['sort4_tag'], 300, false, 'left') .
+            $PHPShopGUI->set_().
+            $PHPShopGUI->setInputText('Имя', 'sort4_name', $vendor['sort4_name'], 300, false, 'left')
     );
 
-    $Tab1.=$PHPShopGUI->setField('Гарантия от производителя', $PHPShopGUI->setCheckbox('warranty_enabled_new', 1, __('Добавить тег гарантии manufacturer_warranty'), $warranty_enabled), 'left');
+    $Tab1.=$PHPShopGUI->setField('Гарантия от производителя', $PHPShopGUI->setCheckbox('warranty_enabled_new', 1, __('Добавить тег гарантии manufacturer_warranty'), $data['warranty_enabled']));
     
-    $Tab1.=$PHPShopGUI->setField('Подробное описание товара', $PHPShopGUI->setCheckbox('content_enabled_new', 1, __('Добавить тег подробного описания content'), $content_enabled), 'left');
+    $Tab1.=$PHPShopGUI->setField('Подробное описание товара', $PHPShopGUI->setCheckbox('content_enabled_new', 1, __('Добавить тег подробного описания content'), $data['content_enabled']). $PHPShopGUI->setHelp('Требуется для использования PriceLoader'));
     
-    $Tab1.=$PHPShopGUI->setLine().$PHPShopGUI->setField('Пароль', $PHPShopGUI->setInputText(null, 'password_new', $data['password'], '98%', false));
+    $Tab1.=$PHPShopGUI->setField('Пароль', $PHPShopGUI->setInputText(null, 'password_new', $data['password'], 300).$PHPShopGUI->setHelp('Требуется для использования <a href="http://faq.phpshop.ru/page/batch-loading.html" target="_blamck">PriceLoader</a>'));
     
 
-
-    $Info = '
-Модуль позволяет добавить специфические теги для отображения товарных позиций согласно рекомендациям по классификациям размещения товаров в Яндексе.
-Например, для категории "Одежда и обувь" существует спецификация "<a href="http://help.yandex.ru/partnermarket/?id=1124379#4" target="_blank">Яндекс Гардероб</a>".
+    $Info = 'Модуль позволяет добавить специфические теги для отображения товарных позиций согласно рекомендациям по классификациям размещения товаров в Яндексе.
+Например, для категории "Одежда и обувь" существует спецификация <a href="http://help.yandex.ru/partnermarket/?id=1124379#4" target="_blank">Яндекс Гардероб</a>.
 <p>
-Для включения тегов производителя(Бренда) следует указать в поле Имя тега <b>vendor</b>, а в поле Имя характеристики указать 
+Для включения тегов производителя(Бренда) следует указать в поле Имя тега <kbd>vendor</kbd>, а в поле Имя характеристики указать 
 имя существующей характеристики в системе (Производитель или свое название). Характеристика должна быть активной и заполненной у всех товаров.
 </p>
 <p>
-Для включения тегов размера следует указать в поле Имя тега <b>param name="Цвет"</b>, а в поле Имя характеристики указать 
+Для включения тегов размера следует указать в поле Имя тега <kbd>param name="Цвет"</kbd>, а в поле Имя характеристики указать 
 имя существующей характеристики в системе (Цвет или свое название). Характеристика должна быть активной и заполненной у всех товаров.
 </p>
 <p>
 Модуль позволяет вывести дополнительные настройки в файл выгрузки для Яндекс.Маркета. Добавляет в файл 
-http://' . $_SERVER['SERVER_NAME'] . '/yml/yandex.php тег наличия гарантии от производителя <b>manufacturer_warranty</b>.
+http://' . $_SERVER['SERVER_NAME'] . '/yml/yandex.php тег наличия гарантии от производителя <kbd>manufacturer_warranty</kbd>.
 </p>
 <p>
-Поле пароль <b>защищает</b> от несанкционированной кражи контента. При использовании пароля ссылка на файл YML примет вид: http://' . $_SERVER['SERVER_NAME'] . '/yml/yandex.php?pas=*******. При использовании пароля требуется так же заменить ссылку в Яндекс.Маркете.
+Поле пароль <b>защищает</b> от несанкционированной кражи контента. При использовании пароля ссылка на файл YML примет вид <code>http://' . $_SERVER['SERVER_NAME'] . '/yml/yandex.php?pas=*******</code>. При использовании пароля требуется так же заменить ссылку в Яндекс.Маркете.
 </p>
 ';
-    $Tab2 = $PHPShopGUI->setInfo($Info, 280, '98%');
+    $Tab2 = $PHPShopGUI->setInfo($Info);
 
-    $Tab3 = $PHPShopGUI->setPay($serial, false, $version, true);
+    $Tab3 = $PHPShopGUI->setPay($data['serial'], false, $data['version'], true);
     
     // История изменений
-    $Tab3.= $PHPShopGUI->setLine('<br>').$PHPShopGUI->setHistory();
+    $Tab3.= $PHPShopGUI->setHistory();
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1, 300), array("Инструкция", $Tab2, 300), array("О Модуле", $Tab3, 300));
+    $PHPShopGUI->setTab(array("Основное", $Tab1), array("Инструкция", $Tab2), array("О Модуле", $Tab3));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =
-            $PHPShopGUI->setInput("hidden", "newsID", $id, "right", 70, "", "but") .
-            $PHPShopGUI->setInput("button", "", "Отмена", "right", 70, "return onCancel();", "but") .
-            $PHPShopGUI->setInput("submit", "editID", "ОК", "right", 70, "", "but", "actionUpdate");
+            $PHPShopGUI->setInput("hidden", "rowID", $data['id']) .
+            $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionUpdate.modules.edit");
 
     $PHPShopGUI->setFooter($ContentFooter);
     return true;
@@ -142,17 +114,13 @@ function actionUpdate() {
 
     $PHPShopOrm->debug = false;
     $action = $PHPShopOrm->update($_POST);
+    header('Location: ?path=modules&install=check');
     return $action;
 }
 
-if ($UserChek->statusPHPSHOP < 2) {
+// Обработка событий
+$PHPShopGUI->getAction();
 
-    // Вывод формы при старте
-    $PHPShopGUI->setLoader($_POST['editID'], 'actionStart');
-
-    // Обработка событий
-    $PHPShopGUI->getAction();
-}
-else
-    $UserChek->BadUserFormaWindow();
+// Вывод формы при старте
+$PHPShopGUI->setLoader($_POST['saveID'], 'actionStart');
 ?>

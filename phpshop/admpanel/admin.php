@@ -1,665 +1,534 @@
 <?php
-$_classPath = "../";
-require("connect.php");
-include($_classPath . "class/obj.class.php");
-PHPShopObj::loadClass("base");
-PHPShopObj::loadClass("system");
-PHPShopObj::loadClass("admgui");
-PHPShopObj::loadClass("orm");
-PHPShopObj::loadClass("date");
-PHPShopObj::loadClass("xml");
-PHPShopObj::loadClass("security");
-PHPShopObj::loadClass("string");
-PHPShopObj::loadClass("parser");
-PHPShopObj::loadClass("mail");
+if (empty($_GET['path']))
+    header('Location: ?path=intro');
 
-$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
+session_start();
+$_classPath = "../";
+include($_classPath . "class/obj.class.php");
+PHPShopObj::loadClass(array("base", "system", "admgui", "orm", "date", "xml", "security", "string", "parser", "mail", "lang"));
+
+
+$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, true);
 $PHPShopBase->chekAdmin();
 
 // Системные настройки
 $PHPShopSystem = new PHPShopSystem();
+$_SESSION['imageResultPath'] = $PHPShopSystem->getSerilizeParam('admoption.image_result_path');
+$_SESSION['imageResultDir'] = $PHPShopBase->getParam('dir.dir');
 
 // Редактор GUI
+$PHPShopGUI = new PHPShopGUI();
 $PHPShopInterface = new PHPShopInterface();
-$PHPShopInterface->winOpenType = $PHPShopSystem->getSerilizeParam("admoption.wintype");
-$PHPShopIcon = new PHPShopIcon();
 
+// Модули
+$PHPShopModules = new PHPShopModules($_classPath . "modules/");
 
-// Выбор файла
-function GetFile($dir) {
-    if (@$dh = opendir($dir)) {
-        while (($file = readdir($dh)) !== false) {
-            $fstat = explode(".", $file);
-            if ($fstat[1] == "lic")
-                return 'license' . chr(47) . $file;
-        }
-        closedir($dh);
+/*
+ *  Роутер
+ */
+
+// Подраздел [cat.sub]
+if (strpos($_GET['path'], '.')) {
+    $subpath = explode(".", $_GET['path']);
+
+    // Редирект [cat.id]
+    if (is_numeric($subpath[1])) {
+        header('Location: ?path=' . $subpath[0] . '&id=' . $subpath[1]);
     }
-}
-
-// функция определения мобильных браузеров.
-function mobdetect() {
-    $ipad = strpos($_SERVER['HTTP_USER_AGENT'], "iPad");
-    $iphone = strpos($_SERVER['HTTP_USER_AGENT'], "iPhone");
-    $android = strpos($_SERVER['HTTP_USER_AGENT'], "Android");
-    $palmpre = strpos($_SERVER['HTTP_USER_AGENT'], "webOS");
-    $berry = strpos($_SERVER['HTTP_USER_AGENT'], "BlackBerry");
-    $ipod = strpos($_SERVER['HTTP_USER_AGENT'], "iPod");
-    $mobile = strpos($_SERVER['HTTP_USER_AGENT'], "Mobile");
-    $symb = strpos($_SERVER['HTTP_USER_AGENT'], "Symbian");
-    $operam = strpos($_SERVER['HTTP_USER_AGENT'], "Opera M");
-    $htc = strpos($_SERVER['HTTP_USER_AGENT'], "HTC_");
-    $fennec = strpos($_SERVER['HTTP_USER_AGENT'], "Fennec/");
-    $winphone = strpos($_SERVER['HTTP_USER_AGENT'], "Windows Phone");
-    $wp7 = strpos($_SERVER['HTTP_USER_AGENT'], "WP7");
-    $wp8 = strpos($_SERVER['HTTP_USER_AGENT'], "WP8");
-
-    if ($ipad || $iphone || $ipod === true)
-        $detect = 'ios';
-    elseif ($android)
-        $detect = 'android';
-    elseif ($winphone || $wp7 || $wp8 === true)
-        $detect = 'wp';
-    elseif ($symb)
-        $detect = 'symbian';
-    elseif ($palmpre || $berry || $mobile || $operam || $htc || $fennec === true)
-        $detect = 'other';
-
-    if ($detect)
-        return $detect;
-}
-
-$num = explode(" ", $SysValue['license']['product_name']);
-$product_num = str_replace(".", "", trim($num[1]));
-
-
-
-// Срок действия тех. поддержки
-$GetFile = GetFile("../../license/");
-@$License = parse_ini_file("../../" . $GetFile, 1);
-
-
-if ($License['License']['SupportExpires'] != "No")
-    define("EXPIRES", $License['License']['SupportExpires']);
-else
-    define("EXPIRES", 0);
-
-$GetSystems = GetSystems();
-$option = unserialize($GetSystems['admoption']);
-$Lang = 'russian';
-require("./language/russian/language.php");
-
-function detect_utf($Str) {
-    for ($i = 0; $i < strlen($Str); $i++) {
-        if (ord($Str[$i]) < 0x80)
-            $n = 0;# 0bbbbbbb
-        elseif ((ord($Str[$i]) & 0xE0) == 0xC0)
-            $n = 1;# 110bbbbb
-        elseif ((ord($Str[$i]) & 0xF0) == 0xE0)
-            $n = 2;# 1110bbbb
-        elseif ((ord($Str[$i]) & 0xF0) == 0xF0)
-            $n = 3;# 1111bbbb
-        else
-            return false;# Does not match any model
-        for ($j = 0; $j < $n; $j++) { # n octets that match 10bbbbbb follow ?
-            if ((++$i == strlen($Str)) || ((ord($Str[$i]) & 0xC0) != 0x80))
-                return false;
-        }
-    }
-    return true;
-}
-
-function utf8_win($s) {
-    $out = "";
-    $c1 = "";
-    $byte2 = false;
-    for ($c = 0; $c < strlen($s); $c++) {
-        $i = ord($s[$c]);
-        if ($i <= 127)
-            $out.=$s[$c];
-        if ($byte2) {
-            $new_c2 = ($c1 & 3) * 64 + ($i & 63);
-            $new_c1 = ($c1 >> 2) & 5;
-            $new_i = $new_c1 * 256 + $new_c2;
-            if ($new_i == 1025) {
-                $out_i = 168;
-            } else {
-                if ($new_i == 1105) {
-                    $out_i = 184;
-                } else {
-                    $out_i = $new_i - 848;
-                }
-            }
-            $out.=chr($out_i);
-            $byte2 = false;
-        }
-        if (($i >> 5) == 6) {
-            $c1 = $i;
-            $byte2 = true;
-        }
-    }
-    return $out;
-}
-
-// Проверяем update
-if ($option['update_enabled'] == 1)
-    $ChekUpdate = "ChekUpdate('false');";
-
-define("PATH", $SysValue['update']['path'] . "update3.php?from=" . $_SERVER['SERVER_NAME'] . "&version=" . $SysValue['upload']['version'] . "&support=" . $License['License']['SupportExpires']);
-
-if ($License['License']['RegisteredTo'] != "Trial NoName" and !getenv("COMSPEC") and function_exists("xml_parser_create") and !$_SESSION['chekUpdate'])
-    if (@$db = readDatabase(PATH, "update")) {
-        foreach ($db as $k => $v) {
-            if ($db[$k]['num'] == $SysValue['upload']['version'] and !empty($db[$k]['name'])) {
-                $support_status = $db[$k]['status'];
-                @$UpdateContent.="Новая версия: " . $SysValue['license']['product_name'] . " " . $db[$k]['name'];
-                $_SESSION['readyUpdate'] = true;
-                if ($db[$k]['upload_type'] == 'script') {
-                    $upload_type = "script";
-                    $new_version = $db[$k]['name'];
-                    $ftp_host = base64_encode($db[$k]['ftp_host']);
-                    $ftp_login = base64_encode($db[$k]['ftp_login']);
-                    $ftp_password = base64_encode(strtoupper(substr(md5(date("U")), 0, 6)) . $db[$k]['ftp_password']);
-                    $ftp_folder = $db[$k]['os'] . "/" . $db[$k]['num'];
-                }
-            }
-        }
-        if (empty($_SESSION['readyUpdate']))
-            $_SESSION['chekUpdate'] = true;
-    }
-
-// Подключение JS меню модулей
-function CreateModulesMenu() {
-    global $PHPShopIcon;
-    $sql = "select path from " . $GLOBALS['SysValue']['base']['modules'];
-    $result = mysql_query($sql);
-    $dis_js = null;
-
-    while ($row = mysql_fetch_array($result)) {
-        $path = $row['path'];
-        $menu = "../modules/" . $path . "/install/module.xml";
-        @$data = implode("", file($menu));
-        if (@$db = readDatabase($data, "adminmenu", false)) {
-            $DIR = "../../modules/" . $path . "/install/";
-            $dis_js.='
-	  stm_aix("p1i1","p1i0",[0,"' . $db[0]['title'] . '","","",-1,-1,0,"","_self","","","../img/arrow_r.gif","",7,7]);
-      stm_bp("p2",[1,2,-1,0,3,3,18,0,100,"",-2,"",-2,100,2,2,MenuTextColor,MenuColor,"",3,1,1,MenuColorActiveBorder]);';
-
-            // JS меню
-            $podmenu = readDatabase($data, "podmenu", false);
-            foreach ($podmenu as $val)
-                @$dis_js.='
-stm_aix("p2i0","p1i0",[0,"' . $val['podmenu_name'] . '","","",-1,-1,0,"' . $val['podmenu_action'] . '","_self","","","' . $DIR . $val['podmenu_icon'] . '","' . $DIR . $val['podmenu_icon'] . '",16,16]);
-	  ';
-            $dis_js.='stm_ep();';
-
-            // Иконки
-            $icon = readDatabase($data, "menu", false);
-
-            if (is_array($icon)) {
-                foreach ($icon as $val)
-                    $IconTab.= $PHPShopIcon->setIcon("../modules/" . $path . "/install/" . $val['menu_icon'], $val['menu_name'], $val['menu_action']);
-            }
-        }
-    }
-    $disp = '
-stm_aix("p0i1","p0i0",[1,"' . __('Модули') . '&nbsp;&nbsp;","","",-1,-1,0,"","_self","","","","",5,20]);
-stm_bp("p1",[1,4,-1,0,3,3,16,0,100,"",-2,"",-2,100,2,2,MenuTextColor,MenuColor,"",3,1,1,MenuColorActiveBorder]);
-stm_aix("p10i1","p2i0",[0,"' . __('Обзор доступных модулей') . '","","",-1,-1,0,"javascript:DoReload(\'modules\')","_self","","","plugin.gif","plugin.gif"]);
-' . @$dis_js . '
-stm_ep();
-stm_ep();
-';
-    if (is_array($icon))
-        $IconTab = $PHPShopIcon->setBorder() . $IconTab;
-    return array($disp, $IconTab);
-}
-
-if (isset($_GET['skinload'])) {
-    $_SESSION['theme'] = null;
-}
-
-// Тема панели
-if (empty($_SESSION['theme'])) {
-    $theme = PHPShopSecurity::TotalClean($PHPShopSystem->getSerilizeParam('admoption.theme'));
-    if (!empty($theme))
-        $_SESSION['theme'] = $theme;
     else
-        $_SESSION['theme'] = 'default';
+        $loader_file = $subpath[0] . '/admin_' . $subpath[1] . '.php';
 }
 else
-    $_SESSION['theme'] = substr(PHPShopSecurity::TotalClean($_SESSION['theme']), 0, 10);
+    $subpath = array($_GET['path'], $_GET['path']);
+
+if (!empty($_GET['path'])) {
+
+    if (empty($_REQUEST['id'])) {
+
+        $loader_file = $subpath[0] . '/admin_' . $subpath[1] . '.php';
+    } else {
+
+        $loader_file = $subpath[0] . '/adm_' . $subpath[1] . 'ID.php';
+    }
+    if ($_REQUEST['action'] == 'new') {
+        $loader_file = $subpath[0] . '/adm_' . $subpath[1] . '_new.php';
+    }
+    $active_path = str_replace(".", "_", $_GET['path']);
+    ${'menu_active_' . $active_path} = 'active';
+}
+
+$loader_function = 'actionStart';
+if (file_exists($loader_file)) {
+
+    if (empty($_REQUEST['id']) and empty($_REQUEST['action']))
+        require_once($loader_file);
+    else {
+        ob_start();
+        require_once($loader_file);
+        $interface = ob_get_clean();
+    }
+}
+
+// Поиск лицензии
+function getLicense($file) {
+    $fstat = explode(".", $file);
+    if ($fstat[1] == "lic")
+        return $file;
+}
+
+// Подключение меню модулей
+function modulesMenu() {
+    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['modules']);
+    if (!empty($_SESSION['mod_limit']))
+        $mod_limit = intval($_SESSION['mod_limit']);
+    else
+        $mod_limit = 50;
+    $data = $PHPShopOrm->select(array('*'), false, array('order' => 'date desc'), array('limit' => $mod_limit));
+    $dis = $db = null;
+    if (is_array($data))
+        foreach ($data as $row) {
+            $path = $row['path'];
+            $menu = "../modules/" . $path . "/install/module.xml";
+            $db = xml2array($menu, "adminmenu", true);
+            if ($db['capability']) {
+                $dis.='<li><a href="?path=modules&id=' . $path . '">' . $db['title'] . '</a></li>';
+            }
+        }
+
+    return $dis;
+}
+
+// Автостарт презентации
+if (empty($_COOKIE['presentation']) or $_COOKIE['presentation'] == 'true')
+    $presentation_checked = 'checked';
+else
+    $presentation_checked = null;
+
+// Тема оформления
+$theme = PHPShopSecurity::TotalClean($PHPShopSystem->getSerilizeParam('admoption.theme'));
+if (!file_exists('./css/bootstrap-theme-' . $theme . '.css'))
+    $theme = 'default';
+
+$version = null;
+$adm_title = $adm_brand = $PHPShopSystem->getSerilizeParam('admoption.adm_title');
+foreach (str_split($GLOBALS['SysValue']['upload']['version']) as $w)
+    $version.=$w . '.';
+$brand = 'PHPShop ' . substr($version, 0, 3);
+if (empty($adm_title)) {
+    $adm_title = 'PHPShop';
+    $adm_brand = $brand;
+}
 ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
+<!DOCTYPE html>
+<html lang="ru">
     <head>
-        <title><?= $ProductName ?></title>
-        <META http-equiv=Content-Type content="text/html; charset=windows-1251">
-        <META name="ROBOTS" content="NONE">
-        <META name="copyright" content="<?= $RegTo ?>">
-        <META name="engine-copyright" content="PHPShop LLC, <?= $ProductName; ?>">
-        <LINK href="skins/<?= $_SESSION['theme'] ?>/texts.css" type=text/css rel=stylesheet>
-        <LINK href="skins/<?= $_SESSION['theme'] ?>/dateselector.css" type=text/css rel=stylesheet>
-        <LINK rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
-        <LINK rel="icon" href="./favicon.ico" type="image/x-icon">
-        <SCRIPT language="JavaScript" src="/phpshop/lib/Subsys/JsHttpRequest/Js.js"></SCRIPT>
-        <script type="text/javascript" language="JavaScript" src="/phpshop/lib/JsHttpRequest/JsHttpRequest.js"></script>
-        <SCRIPT type="text/javascript" language="JavaScript" src="java/popup_lib.js"></SCRIPT>
-        <SCRIPT type="text/javascript" language="JavaScript" src="java/dateselector.js"></SCRIPT>
-        <script type="text/javascript" language="JavaScript" src="java/javaMG.js" type="text/javascript"></script>
-        <script type="text/javascript" language="JavaScript" src="java/stm31.js"></script>
-        <script type="text/javascript" language="JavaScript" src="java/sorttable.js"></script>
-        <script type="text/javascript" language="JavaScript" src="language/<? echo $Lang; ?>/language_interface.js"></script>
-        <script type="text/javascript" language="JavaScript" src="java/jquery-1.11.0.min.js"></script>
-        <script type="text/javascript" language="JavaScript">
+        <meta charset="windows-1251">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title><?php echo $adm_title . ' - ' . PHPShopSecurity::TotalClean($TitlePage); ?></title>
+        <meta name="author" content="PHPShop Software">
+        <meta name="description" content="<?php echo $brand; ?>">
+        <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+        <link rel="icon" href="./favicon.ico"> 
 
-            // Проверка пароля root
-<?= $rootNote; ?>
-
-            // Проверка обновлений
-            function ChekUpdate(flag) {
-                var auto_upload_flag = "<?php echo $upload_type ?>";
-                var ftp_pars = "<?php echo "?ftp_host=$ftp_host&ftp_folder=$ftp_folder&ftp_login=$ftp_login&ftp_password=$ftp_password&new_version=$new_version" ?>";
-                var update_message = "<?= $UpdateContent; ?>";
-                var version = "<?= $SysValue['upload']['version']; ?>";
-                var path = "<?= PATH ?>";
-                var soft = "<?= $ProductName . " " . $SysValue['upload']['version'] ?>";
-                var pathD = "./update/update.php";
-                var expir = "<?= EXPIRES ?>";
-                var expirUntil = "<?= dataV(EXPIRES, 'update'); ?>";
-                var cookieValue = GetCookie('update');
-                var support_status = "<?= $support_status ?>";
-
-                if (support_status == "active") {
-                    window.status = "Внимание, доступно обновление платформы!";
-                    if (!cookieValue | flag == "true")
-                        if (confirm("Доступно обновление!\n\nТекущая версия: " + soft + "\n" + update_message + "\n\nУстановить обновление?")) {
-
-                            if (support_status != 'passive') {
-
-                                if (auto_upload_flag == "script")
-                                    miniWin('upload/adm_upload.php' + ftp_pars, 600, 470);
-                                else {
-                                    if (confirm("Ошибка авторизации на сервере PHPShop. Лицензия не обнаружена в базе. Перейти на оформление покупки?"))
-                                        window.open("http://www.phpshop.ru/order/");
-
-                                }
-                            }
-                            else {
-                                if (confirm("Период технической поддержки закончился " + expirUntil + " г.\n\nКупить продление технической поддержки и получать новые обновления бесплатно в течение 1 года?"))
-                                    window.open("http://www.phpshop.ru/docs/techpod.html");
-
-                            }
-                        }
-                        else
-                            SetCookie('update', 2, 5);
-                }
-                else if (flag == "true")
-                    alert("Для " + soft + " обновление отсутствует.");
-            }
+        <!-- Bootstrap -->
+        <link id="bootstrap_theme" href="./css/bootstrap-theme-<?php echo $theme; ?>.css" rel="stylesheet">
 
 
-            // На весь экран
-            window.moveTo(0, 0);
-            window.resizeTo(screen.availWidth, screen.availHeight);
-            window.status = "<?= $SysValue['Lang']['System']['status'] . " " . $_SESSION['logPHPSHOP'] . " " . $SysValue['Lang']['System']['status2'] . " " . $_SERVER['SERVER_NAME'] ?>";
-            //document.onmousedown=mp;
-        </script>
-        <style>
-            .hoverlist {
-                background: #C0D2EC !important;
-            }
-            tr.prod_hover {
-                background: #bcd1ef !important;
-            }
-            tr.row:hover {
-                background: #bcd1ef;
-            }
-        </style>
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
     </head>
-    <body id="mybody"  topmargin="0" rightmargin="3" leftmargin="3">
-        <script>
-            // Проверка новых заказов
-<?
-// Проверка новых заказов
-if ($option['message_enabled'] == 1) {
-    if ($option['message_time'] < 30)
-        $option['message_time'] = 30;
-    echo 'CheckNewOrders(); setInterval("CheckNewOrders()",' . ($option['message_time'] * 1000) . ');';
-}
+
+    <body role="document" id="body">
+
+        <!-- jQuery plugins -->
+        <link href="./css/jquery.dataTables.css" rel="stylesheet">
+        <link href="./css/bootstrap-select.min.css" rel="stylesheet">
+        <link href="./css/jquery.treegrid.css" rel="stylesheet">
+        <link href="./css/admin.css" rel="stylesheet">
+        <link href="./css/bar.css" rel="stylesheet">
+        <link href="./css/bootstrap-tour.min.css" rel="stylesheet">
+
+        <!-- jQuery -->
+        <script src="js/jquery-1.11.0.min.js"></script>
+
+        <!-- Localization -->
+        <script src="js/locale.ru.js"></script>
+
+        <div class="container">
+
+            <nav class="navbar navbar-default" >
+                <div>
+
+                    <!-- Brand  -->
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="../../" title="Перейти в магазин" target="_blank"><span class="glyphicon glyphicon-cog"></span> <?= $adm_brand ?></a>
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar1" aria-expanded="false" aria-controls="navbar">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                    </div>
+
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div id="navbar1" class="collapse navbar-collapse">
+                        <ul class="nav navbar-nav navbar-right">
+                            <li class="dropdown <?= $menu_active_modules; ?>">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Модули <span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu" id="modules-menu">
+                                    <li><a href="?path=modules">Управление модулями</a></li>
+                                    <li class="divider"></li>
+                                    <li class="dropdown-header">Установленные модули</li>
+                                    <?= modulesMenu(); ?>
+
+                                </ul>
+                            </li>
+                            <li class="dropdown <?= $menu_active_system . $menu_active_system_company . $menu_active_system_seo . $menu_active_system_sync . $menu_active_tpleditor; ?>">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Настройки <span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="?path=system">Основные</a></li>
+                                    <li><a href="?path=system.company">Реквизиты</a></li>
+                                    <li><a href="?path=system.sync">Документооборот</a></li>
+                                    <li><a href="?path=system.seo">SEO заголовки</a></li>
+                                    <li><a href="?path=system.currency">Валюты</a></li>
+                                    <li><a href="?path=system.image">Изображения</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="?path=tpleditor"><span class="glyphicon glyphicon-picture"></span> Шаблоны дизайна</a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown <?= $menu_active_exchange_export . $menu_active_exchange_import . $menu_active_exchange_sql . $menu_active_exchange_backup; ?>">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">База <span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="?path=exchange.import"><span class="glyphicon glyphicon-import"></span> Импорт данных</a></li>
+                                    <li><a href="?path=exchange.export"><span class="glyphicon glyphicon-export"></span> Экспорт данных</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="?path=exchange.service">Обслуживание</a></li>
+                                    <li><a href="?path=exchange.sql">SQL запрос к базе</a></li>
+                                    <li><a href="?path=exchange.backup">Резервное копирование</a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown <?= $menu_active_update . $menu_active_update_restore . $menu_active_system_about ?>">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Справка <span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="http://faq.phpshop.ru" target="_blank">Учебник</a></li>
+                                    <li><a href="https://help.phpshop.ru" target="_blank">Техподдержка</a></li>
+                                    <li><a href="#" id="presentation-select">Обучение</a></li>
+                                    <li><a href="?path=system.about">О программе</a></li>
+                                    <li><a href="http://idea.phpshop.ru" target="_blank">Предложить идею</a></li>
+                                    <li><a href="http://phpshop.ru/loads/files/setup.exe" target="_blank">Утилиты EasyControl</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="?path=update"><span class="glyphicon glyphicon-cloud-download"></span> Мастер обновления</a></li>
+
+                                </ul>
+                            </li>
+                            <li class="divider"></li>
+                            <li class="dropdown <?= $menu_active_users . $menu_active_users_jurnal . $menu_active_users_stoplist; ?>">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="glyphicon glyphicon-user hidden-xs"></span> <span class="visible-xs">Администратор <span class="caret"></span></span><span class="caret  hidden-xs"></span></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li class="dropdown-header">Вошел как <?= $_SESSION['logPHPSHOP']; ?></li>
+                                    <li class="divider"></li>
+                                    <li><a href="?path=users&id=<?= $_SESSION['idPHPSHOP']; ?>">Профиль</a></li>
+                                    <li><a href="?path=users">Все администраторы</a></li>
+                                    <li><a href="?path=users.jurnal">Журнал авторизации</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="./?logout"><span class="glyphicon glyphicon-transfer"></span> Выйти</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="../../" title="Перейти в магазин" class="home go2front hidden-xs" target="_blank"><span class="glyphicon glyphicon-share-alt"></span></a></li>
+                        </ul>
+                    </div><!-- /.navbar-collapse -->
+                </div>
+            </nav>
+            <nav class="navbar navbar-inverse navbar-statick">
+                <div>
+
+                    <div class="navbar-header pull-left">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar2" aria-expanded="false" aria-controls="navbar">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                    </div>
+
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div id="navbar2" class="collapse navbar-collapse">
+
+                        <ul class="nav navbar-nav">
+                            <li><a href="../../" title="Магазин" target="_blank" class="visible-xs">Магазин</a></li>
+                            <li><a href="./admin.php" title="Стартовая панель" class="home"><span class="glyphicon glyphicon-home hidden-xs"></span><span class="visible-xs">Домой</span></a></li>
+                            <li class="dropdown <?= $menu_active_order . $menu_active_payment . $menu_active_order_paymentlog . $menu_active_order_status . $menu_active_report_statorder . $menu_active_report_statuser . $menu_active_report_statpayment; ?>">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Заказы <span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="?path=order"><span>Заказы</span><span class="dropdown-header">Просмотр и оформление заказов, распечатка счетов</span></a></li>
+                                    <li><a href="?path=order.paymentlog">Электронные платежи<span class="dropdown-header">Просмотр журнала оплаты заказов платежными системами</span></a></li>
+                                    <li><a href="?path=payment">Способы оплаты<span class="dropdown-header">Просмотр, добавление и редактирование способов оплаты заказов</span></a></li>
+                                    <li><a href="?path=order.status">Статусы заказов<span class="dropdown-header">Просмотр, добавление и редактирование статусов заказов</span></a></li>
+                                    <li><a href="?path=delivery">Доставка<span class="dropdown-header">Просмотр, добавление и редактирование доставки заказов</span></a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="?path=report.statorder">Отчеты по продажам<span class="dropdown-header">Детальная статистика продаж</span></a></li>
+                                </ul>
+                            </li>
+
+                            <li class="dropdown <?= $menu_active_catalog . $menu_active_product . $menu_active_report_searchjurnal . $menu_active_report_searchreplace . $menu_active_sort; ?>" id="tour-product">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Товары <span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="?path=catalog"><span>Товары</span><span class="dropdown-header">Просмотр, добавление и редактирование товаров</span></a></li>
+                                    <li><a href="?path=catalog&action=new"><span>Каталоги</span><span class="dropdown-header">Просмотр, добавление и редактирование категорий товаров</span></a></li>
+
+                                    <li><a href="?path=sort">Характеристики<span class="dropdown-header">Просмотр, добавление и редактирование дополнительных полей товаров</span></a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="?path=report.searchjurnal">Журнал поиска<span class="dropdown-header">Просмотр поисковых запросов пользователей, перенаправление</span></a></li>
+                                </ul>
+                            </li>
+
+                            <li class="dropdown <?= $menu_active_shopusers . $menu_active_shopusers_status . $menu_active_shopusers_notice . $menu_active_shopusers_comment . $menu_active_shopusers_messages; ?>">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Пользователи <span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="?path=shopusers">Покупатели<span class="dropdown-header">Список зарегистрированных покупателей магазина</span></a></li>
+                                    <li><a href="?path=shopusers.status">Статусы и скидки<span class="dropdown-header">Управление статусами и скидками пользователей магазина</span></a></li>
+                                    <li><a href="?path=shopusers.notice">Уведомления<span class="dropdown-header">Заявки о поступлении товара на склад от пользователей магазина</span></a></li>
+                                    <li><a href="?path=shopusers.comment">Комментарии<span class="dropdown-header">Список комментариев для товаров, оставленные пользователями</span></a></li>
+                                    <li><a href="?path=shopusers.messages">Переписка<span class="dropdown-header">Переписка с покупателями магазина из личного кабинета</span></a></li>
+                                </ul>
+                            </li>
+
+                            <li class="dropdown <?= $menu_active_menu . $menu_active_gbook . $menu_active_page_catalog . $menu_active_page . $menu_active_news . $menu_active_news_rss; ?>">
+                                <a href="#" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-expanded="false">Веб-сайт <span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="?path=page.catalog">Страницы<span class="dropdown-header">Создание и публикация страниц</span></a></li>
+                                    <li><a href="?path=menu">Текстовые блоки<span class="dropdown-header">Вывод текстовых блоков в блок-меню</span></a></li>
+                                    <li><a href="?path=gbook">Отзывы<span class="dropdown-header">Отзывы пользователей о сайте</span></a></li>
+                                    <li><a href="?path=news">Новости<span class="dropdown-header">Новостная лента сайта</span></a></li>
+                                    <li><a href="?path=news.rss">RSS каналы<span class="dropdown-header">Импорт новостей из источников</span></a></li>
+                                </ul>
+                            </li>
+
+                            <li class="dropdown <?= $menu_active_slider . $menu_active_links . $menu_active_banner . $menu_active_opros; ?>" >
+                                <a href="#" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-expanded="false">Маркетинг <span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="?path=slider"><span>Слайдер</span><span class="dropdown-header">Рекламный слайдер на главной странице</span></a></li>
+                                    <li><a href="?path=news.sendmail">Рассылки<span class="dropdown-header">Создание email рассылок пользователям</span></a></li>
+
+                                    <li><a href="?path=links"><span>Ссылки</span><span class="dropdown-header">Обмен ссылками с сайтами</span></a></li>
+                                    <li><a href="?path=banner">Баннеры<span class="dropdown-header">Вывод графических изображений</span></a></li>
+                                    <li><a href="?path=opros">Опросы<span class="dropdown-header">Опросы для пользователей на сайте</span></a></li></ul>
+                            </li>
+                        </ul>
+                        <?php
+                        
+                        // Быстрый поиск
+                        switch ($PHPShopSystem->getSerilizeParam('admoption.search_enabled')) {
+                            case 1:
+                                $search_class = 'hidden';
+                                $search_id = $search_name = $search_placeholder = $search_action = null;
+                                break;
+
+                            case 3:
+                                $search_class = 'hidden-xs search-product';
+                                $search_placeholder = __('Искать в товарах...');
+                                $search_action = '?path=catalog';
+                                $search_target = '_self';
+                                $search_name = 'where[name]';
+                                break;
+
+                            default:
+                                $search_class = 'hidden-xs';
+                                $search_placeholder = __('Искать в учебнике...');
+                                $search_action = 'http://faq.phpshop.ru/search/';
+                                $search_id = 'search';
+                                $search_target = '_blank';
+                                $search_name = 'words';
+                        }
+                        ?>
+                        <form class="navbar-right <?php echo $search_class; ?>"  action="<?php echo $search_action; ?>" target="<?php echo $search_target; ?>">
+                            <div class="input-group">
+                                <input name="<?php echo $search_name; ?>" maxlength="50" value="<?php echo PHPShopSecurity::true_search($_GET['where']['name']); ?>" id="<?php echo $search_id; ?>" class="form-control input-sm" placeholder="<?php echo $search_placeholder; ?>" required="" type="search"  data-container="body" data-toggle="popover" data-placement="bottom" data-html="true"  data-content="">
+                                <input type="hidden" name="path" value="catalog">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default btn-sm" type="submit"><span class="glyphicon glyphicon-search"></span></button>
+                                </span>
+                            </div>
+                        </form>
+                        <?php
+                        if (!empty($_SESSION['update_check']))
+                            echo '<a class="navbar-btn btn btn-sm btn-info navbar-right hidden-xs" href="?path=update">Update <span class="badge">' . intval($_SESSION['update_check']) . '</span></a>';
+                        ?>
+
+                        <a class="navbar-btn btn btn-sm btn-warning navbar-right hidden-xs hide" href="?path=order&where[statusi]=0">
+                            Заказы <span class="badge" id="orders-check"><?php echo $PHPShopBase->getNumRows('orders', "where statusi='0'"); ?></span>
+                        </a>
+
+                    </div><!-- /.navbar-collapse -->
+                </div>
+            </nav>
+            <div class="clearfix"></div>
 
 
-// Если заканчивается лицензия 7 дней
-$LicenseUntilUnixTime = $License['License']['Expires'];
-$until = $LicenseUntilUnixTime - date("U");
-$until_day = $until / (24 * 60 * 60);
-if (is_numeric($LicenseUntilUnixTime))
-    if ($until_day < 8 and $until_day > 0) {
-        $warning_mes = $SysValue['Lang']['System']['license'];
-        echo 'setInterval("initializemessage(\'licensewindow\')",' . ($option['message_time'] * 1000) . ');';
-        mailNotice('license', $until_day);
-    }
+            <?php
+            if (file_exists($loader_file)) {
+                if (empty($_REQUEST['id']) and empty($_REQUEST['action'])) {
 
-
-// Если заканчивается поддержка 7 дней
-if (empty($warning_mes)) {
-    $TechPodUntilUnixTime = $License['License']['SupportExpires'];
-    if (is_numeric($TechPodUntilUnixTime))
-        $until = $TechPodUntilUnixTime - date("U");
-    $until_day = $until / (24 * 60 * 60);
-    if (is_numeric($TechPodUntilUnixTime))
-        if ($until_day < 8 and $until_day > 0) {
-            $warning_mes = $SysValue['Lang']['System']['techpod'];
-            if ($option['message_enabled'] == 1)
-                echo 'setInterval("initializemessage(\'supportwindow\')",' . ($option['message_time'] * 1000) . ');';
-            mailNotice('support', $until_day);
-        }
-}
-
-// Оповещение пользователя по почте
-function mailNotice($type, $until_day) {
-    global $PHPShopSystem, $option;
-
-    if (!empty($option[$type . '_notice']))
-        return true;
-
-    PHPShopParser::set('url', $_SERVER['SERVER_NAME']);
-    PHPShopParser::set('day', abs(round($until_day)));
-    switch ($type) {
-        case "license":
-
-            $userContent = PHPShopParser::file("system/mail_notice/notice_license.htm", true, false);
-            new PHPShopMail($PHPShopSystem->getParam('adminmail2'), $PHPShopSystem->getParam('adminmail2'), 'Заканчивается лицензия для сайта ' . $_SERVER['SERVER_NAME'], $userContent, "text/html");
-
-            break;
-        case "support":
-            $userContent = PHPShopParser::file("system/mail_notice/notice_support.htm", true, false);
-            new PHPShopMail($PHPShopSystem->getParam('adminmail2'), $PHPShopSystem->getParam('adminmail2'), 'Заканчивается техническая поддержка для сайта ' . $_SERVER['SERVER_NAME'], $userContent, "text/html");
-
-            break;
-    }
-    $option[$type . '_notice'] = true;
-    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['system']);
-    $PHPShopOrm->update(array('admoption_new' => serialize($option)));
-}
-
-// Имя домена
-$DomenLocked = $License['License']['DomenLocked'];
-if (empty($DomenLocked))
-    $DomenLocked = $_SERVER['SERVER_NAME'];
-?>
-        </script>
-
-        <span class="message" id="supportwindow">
-            <form method="post" target="_blank" enctype="multipart/form-data" action="http://www.phpshop.ru/order.html"  id="product_support" style="display:none">
-                <input type="hidden" value="supportenterprise" name="addToCartFromPages" id="addToCartFromPages">             
-                <input type="hidden" value="<?= $DomenLocked ?>" name="addToCartFromPagesDomen" id="addToCartFromPagesDomen">
-            </form>
-            <table width="100%" height="100%">
-                <tr>
-                    <td width="35" vAlign=center>
-                        <img src="img/i_crontab_med[1].gif" alt="" width="32" height="32" border="0" align="absmiddle">
-                    </td>
-                    <td><b><?= $SysValue['Lang']['System']['cart1'] ?></b><br><?= $warning_mes . " <strong>" . round($until_day) . "</strong> дн." ?>
-                        <p><BUTTON style="width: 200px;" title="Приобрести техническую поддержку"  onclick="DoUpgrade('product_support');
-                return false;">Купить техническую поддержку</BUTTON></p>
-                    </td>
-                </tr>
-            </table>
-        </span>
-        <span class="message" id="licensewindow">
-            <form method="post" target="_blank" enctype="multipart/form-data" action="http://www.phpshop.ru/order.html"  id="product_license" style="display:none">
-                <input type="hidden" value="scriptenterprise" name="addToCartFromPages" id="addToCartFromPages">             
-                <input type="hidden" value="<?= $DomenLocked ?>" name="addToCartFromPagesDomen" id="addToCartFromPagesDomen">
-            </form>
-            <table width="100%" height="100%">
-                <tr>
-                    <td width="35" vAlign=center>
-                        <img src="img/i_crontab_med[1].gif" alt="" width="32" height="32" border="0" align="absmiddle">
-                    </td>
-                    <td><b><?= $SysValue['Lang']['System']['cart1'] ?></b><br><?= $warning_mes . " <strong>" . round($until_day) . "</strong> дн." ?>
-                        <p><BUTTON style="width: 200px;" title="Приобрести техническую поддержку"  onclick="DoUpgrade('product_license');
-                return false;">Купить пожизненную лицензию</BUTTON></p>
-                    </td>
-                </tr>
-            </table>
-        </span>
-        <div id="lock"></div>
-        <table width="100%" cellpadding="0" cellspacing="3" class="iconpane">
-            <tr>
-                <td>
-                    <script type="text/javascript" language="JavaScript1.2" src="skins/<?= $_SESSION['theme'] ?>/menu.js"></script>
-
-                    <script>
-            // Основное меню
-<?
-include('java/menu.js');
-?>
-
-            // Модули
-<?
-$CreateModulesMenu = CreateModulesMenu();
-echo $CreateModulesMenu[0];
-?>
-
-
-            // Дописываем меню
-            stm_aix("p0i7", "p0i0", [0, "Обновления"], 80, 20);
-            stm_bpx("p13", "p1", []);
-            stm_aix("p13i0", "p1i0", [0, "Проверить наличие обновления", "", "", -1, -1, 0, "javascript:ChekUpdate('true')", "_self", "", "", "wand.gif", "wand.gif"]);
-            stm_aix("p13i0", "p1i0", [0, "Выполнить откат обновления", "", "", -1, -1, 0, "javascript:miniWin('upload/adm_backup.php',600,430)", "_self", "", "", "wand.gif", "wand.gif"]);
-            stm_ep();
-            stm_aix("p0i8", "p0i1", [1, "<?= __('Дополнительно'); ?>&nbsp;&nbsp;&nbsp; "]);
-            stm_bpx("p13", "p3", []);
-            stm_aix("p13i0", "p2i0", [0, "<?= __('Раскрутка интернет-магазина'); ?>", "", "", -1, -1, 0, "http://www.phpshop.ru/page/promotion.html?from=enterprise&server=<?= $_SERVER['SERVER_NAME'] ?>", "_blank", "", "", "wand.gif", "wand.gif"]);
-            stm_aix("p13i0", "p2i0", [0, "<?= __('Аренда интернет-магазина'); ?>", "", "", -1, -1, 0, "http://www.shopbuilder.ru/?from=enterprise&server=<?= $_SERVER['SERVER_NAME'] ?>", "_blank", "", "", "key.png", "key.png"]);
-            stm_aix("p13i0", "p2i0", [0, "<?= __('Заказать персональный дизайн'); ?>", "", "", -1, -1, 0, "http://www.phpshop-design.ru/page/brif-design.html?from=enterprise&server=<?= $_SERVER['SERVER_NAME'] ?>", "_blank", "", "", "picture_add.png", "picture_add.png"]);
-            stm_aix("p13i0", "p2i0", [0, "<?= __('Заказать доработку сайта'); ?>", "", "", -1, -1, 0, "http://www.phpshop-design.ru/page/brif-develop.html?from=enterprise&server=<?= $_SERVER['SERVER_NAME'] ?>", "_blank", "", "", "table_sort.gif", "table_sort.gif"]);
-            stm_aix("p12i7", "p1i0", [0, "1С интеграция интернет-магазина", "", "", -1, -1, 0, "http://www.phpshop.ru/page/pro1c.html#6", "_blank", "", "", "1c_icon.gif", "1c_icon.gif"]);
-            stm_aix("p12i4", "p1i0", [0, "Установить Easy Control", "", "", -1, -1, 0, "http://www.phpshop.ru/loads/files/setup.exe", "_blank", "", "", "plugin.gif", "plugin.gif"]);
-            stm_ep();
-
-            stm_aix("p0i7", "p0i0", [0, "Справка"], 60, 20);
-            stm_bpx("p12", "p1", []);
-            stm_aix("p12i0", "p1i0", [0, "Техническая Поддержка", "", "", -1, -1, 0, "https://help.phpshop.ru/", "_blank", "", "", "question_frame.png", "question_frame.png"]);
-            stm_aix("p12i2", "p1i0", [0, "Учебник", "", "", -1, -1, 0, "http://faq.phpshop.ru", "_blank", "", "", "book.gif", "book.gif"]);
-            stm_aix("p12i3", "p1i0", [0, "Новости", "", "", -1, -1, 0, "http://www.phpshop.ru/news/", "_blank", "", "", "book_next.gif", "book_next.gif"]);
-            stm_aix("p12i8", "p1i0", [0, "О программе", "", "", -1, -1, 0, "javascript:miniWin('window/adm_about.php',670,500)", "_self", "", "", "image.gif", "image.gif"]);
-            stm_aix("p12i9", "p1i0", [0, "Выход", "", "", -1, -1, 0, "javascript:window.close()", "_self", "", "", "door.gif", "door.gif"]);
-            stm_aix("p12i10", "p1i0", [0, "Магазин", "", "", -1, -1, 0, "../../", "_blank", "", "", "house.gif", "house.gif"]);
-            stm_ep();
-            stm_ep();
-            stm_em();
-
-
-                    </script>
-                </td>
-                <td align="right" id="phpshop">
-                    <a href="http://www.phpshop.ru" target="_blank" class="phpshop" title="Все права защищены © ООО ПХПШОП">
-                        <?= $ProductNameVersion ?></a>
-                </td>
-
-            </tr>
-        </table>
-        <table width="100%" cellpadding="0" cellspacing="1" class="iconpane border-both">
-            <tr>
-                <td>
-                    <table cellpadding="0" cellspacing="0">
-                        <tr>
-                            <td id="but0"  class="butoff"><img name="iconLang" src="icon/folder_images.gif" alt="Каталог" title="Каталог" width="16" height="16" border="0" onmouseover="ButOn(0)" onmouseout="ButOff(0)" onclick="DoReload('cat_prod')" ></td>
-                            <td width="3"></td>
-                            <td width="1" bgcolor="#ffffff"></td>
-                            <td width="1" bgcolor="#808080" class="separator"></td>
-                            <td width="3"></td>
-                            <td id="but3"  class="butoff"><img name="iconLang" src="icon/creditcards.gif" alt="Заказы" title="Заказы" width="16" height="16" border="0" onmouseover="ButOn(3)" onmouseout="ButOff(3)" onclick="DoReload('orders')"></td>
-                            <td width="3"></td>
-                            <td id="but18"  class="butoff"><img name="iconLang" src="icon/chart_bar.gif" alt="Отчеты" title="Отчеты"  width="16" height="16" border="0" onmouseover="ButOn(18)" onmouseout="ButOff(18)" onclick="DoReload('orders_stat1')"></td>
-                            <td width="3"></td>
-                            <td width="1" bgcolor="#ffffff"></td>
-                            <td width="1" bgcolor="#808080" class="separator" ></td>
-                            <td width="3"></td>
-                            <td id="but4"  class="butoff"><img name="iconLang" src="icon/page_code.gif" alt="Загрузка прайса" title="Загрузка прайса" width="16" height="16" border="0" onmouseover="ButOn(4)" onmouseout="ButOff(4)" onclick="DoReload('csv')"></td>
-                            <td width="3"></td>
-                            <td id="but104"  class="butoff"><img name="iconLang" src="icon/1c_icon.gif" alt="Загрузка 1C:Предприятие" title="Загрузка 1C:Предприятие"  width="16" height="16" border="0" onmouseover="ButOn(104)" onmouseout="ButOff(104)" onclick="DoReload('csv1c')"></td>
-                            <td width="3"></td>
-                            <td id="but5"  class="butoff"><img name="iconLang" src="icon/page_save.gif" alt="Выгрузка прайса" title="Выгрузка прайса" width="16" height="16" border="0" onmouseover="ButOn(5)" onmouseout="ButOff(5)" onclick="miniWin('export/adm_csv.php?IDS=all', 300, 300)"></td>
-                            <td width="3"></td>
-                            <td width="1" bgcolor="#ffffff"></td>
-                            <td width="1" class="separator"></td>
-                            <td width="3"></td>
-                            <td id="but6"  class="butoff"><img name="iconLang" src="icon/joystick.gif" alt="Системные настройки" title="Системные настройки" width="16" height="16" border="0" onmouseover="ButOn(6)" onmouseout="ButOff(6)" onclick="miniWin('system/adm_system.php', 600, 450)"></td>
-                            <td width="3"></td>
-                            <td id="butxhtml"  class="butoff"><img name="iconLang" src="icon/xhtml.gif" alt="Keywords & Titles" title="Keywords & Titles"  width="16" height="16" border="0" onmouseover="ButOn('xhtml')" onmouseout="ButOff('xhtml')" onclick="miniWin('system/adm_system_promo.php', 650, 630)"></td>
-                            <td width="3"></td>
-                            <td id="but7"  class="butoff"><img name="iconLang" src="icon/telephone.gif" alt="Реквизиты" title="Реквизиты" width="16" height="16" border="0" onmouseover="ButOn(7)" onmouseout="ButOff(7)" onclick="miniWin('system/adm_system_recvizit.php', 500, 500)"></td>
-                            <td width="3"></td>
-                            <td width="1" bgcolor="#ffffff"></td>
-                            <td width="1" bgcolor="#808080" class="separator"></td>
-                            <td width="3"></td>
-                            <td id="but8"  class="butoff"><img name="iconLang" src="icon/page.gif" alt="Страницы" title="Страницы" width="16" height="16" border="0" onmouseover="ButOn(8)" onmouseout="ButOff(8)" onclick="DoReload('page')"></td>
-                            <td width="3"></td>
-                            <td id="but9"  class="butoff"><img name="iconLang" src="icon/page_lightning.gif" alt="Новости" title="Новости" width="16" height="16" border="0" onmouseover="ButOn(9)" onmouseout="ButOff(9)" onclick="DoReload('news')"></td>
-                            <td width="3"></td>
-                            <td id="but10"  class="butoff"><img name="iconLang" src="icon/page_refresh.gif" alt="Баннеры" title="Баннеры" width="16" height="16" border="0" onmouseover="ButOn(10)" onmouseout="ButOff(10)" onclick="DoReload('banner')"></td>
-                            <td width="3"></td>
-                            <td id="but11"  class="butoff"><img name="iconLang" src="icon/page_attach.gif" alt="Текстовые блоки" title="Текстовые блоки"  width="16" height="16" border="0" onmouseover="ButOn(11)" onmouseout="ButOff(11)" onclick="DoReload('menu')"></td>
-                            <td width="3"></td>
-                            <td id="but12"  class="butoff"><img name="iconLang" src="icon/page_error.gif" alt="Отзывы" width="16"  title="Отзывы" height="16" border="0" onmouseover="ButOn(12)" onmouseout="ButOff(12)" onclick="DoReload('gbook')"></td>
-                            <td width="3"></td>
-                            <td id="but14"  class="butoff"><img name="iconLang" src="icon/page_link.gif" alt="Ссылки" width="16" title="Ссылки"  height="16" border="0" onmouseover="ButOn(14)" onmouseout="ButOff(14)" onclick="DoReload('links')"></td>
-                            <td width="3"></td>
-                            <td id="but21"  class="butoff"><img name="iconLang" src="icon/page_edit.gif" alt="Опросы" title="Опросы" width="16" height="16" border="0" onmouseover="ButOn(21)" onmouseout="ButOff(21)" onclick="DoReload('opros')"></td>
-                            <td width="3"></td>
-                            <td id="but45"  class="butoff"><img name="iconLang" src="icon/page_key.gif" alt="Комментарии" title="Комментарии" width="16" height="16" border="0" onmouseover="ButOn(45)" onmouseout="ButOff(45)" onclick="DoReload('comment')"></td>
-                            <td width="3"></td>
-                            <td id="but60"  class="butoff"><img name="iconLang" src="icon/page_rating.gif" alt="Рейтинги"  title="Рейтинги" width="16" height="16" border="0" onmouseover="ButOn(60)" onmouseout="ButOff(60)" onclick="DoReload('rating')"></td>
-                            <td width="3"></td>
-                            <td id="but65"  class="butoff"><img name="iconLang" src="icon/plugin.gif" alt="Модули"  title="Модули" width="16" height="16" border="0" onmouseover="ButOn(65)" onmouseout="ButOff(65)" onclick="DoReload('modules')"></td>
-                            <td width="3"></td>
-                            <td width="1" bgcolor="#ffffff"></td>
-                            <td width="1" bgcolor="#808080" class="separator"></td>
-                            <td width="3"></td>
-                            <td id="but41"  class="butoff"><img name="iconLang" src="icon/group.gif" alt="Пользователи" title="Пользователи" width="16" height="16" border="0" onmouseover="ButOn(41)" onmouseout="ButOff(41)" onclick="DoReload('shopusers')"></td>
-                            <td width="3"></td>
-                            <td id="but42"  class="butoff"><img name="iconLang" src="icon/user.gif" alt="Администраторы"  title="Администраторы" width="16" height="16" border="0" onmouseover="ButOn(42)" onmouseout="ButOff(42)" onclick="DoReload('users')"></td>
-                            <td width="3"></td>
-                            <td id="but43"  class="butoff"><img name="iconLang" src="icon/vcard.gif" alt="Журнал авторизации" title="Журнал авторизации" width="16" height="16" border="0" onmouseover="ButOn(43)" onmouseout="ButOff(43)" onclick="DoReload('users_jurnal')"></td>
-                            <td width="3"></td>
-                            <td id="but44"  class="butoff"><img name="iconLang" src="icon/page_find.gif" alt="Журнал поиска" title="Журнал поиска"  width="16" height="16" border="0" onmouseover="ButOn(44)" onmouseout="ButOff(44)" onclick="DoReload('search_jurnal')"></td>
-                            <td width="3"></td>
-                            <td width="1" bgcolor="#ffffff"></td>
-                            <td width="1" bgcolor="#808080" class="separator"></td>
-                            <td width="3"></td>
-                            <td id="but15"  class="butoff"><img name="iconLang" src="icon/database_key.gif" alt="SQL" title="SQL" width="16" height="16" border="0" onmouseover="ButOn(15)" onmouseout="ButOff(15)" onclick="miniWin('sql/adm_sql.php', 500, 400)"></td>
-                            <td width="3"></td>
-                            <td id="but22"  class="butoff"><img name="iconLang" src="icon/database_save.gif" alt="Создание резевной копии" title="Создание резевной копии" width="16" height="16" border="0" onmouseover="ButOn(22)" onmouseout="ButOff(22)" onclick="miniWin('dumper/dumper.php', 500, 430)"></td>
-                            <td width="3"></td>
-                            <td width="1" bgcolor="#ffffff"></td>
-                            <td width="1" bgcolor="#808080" class="separator"></td>
-                            <? if ($SysValue['cnstats']['enabled'] == "true") { ?>
-                                <td width="3"></td>
-                                <td id="but40"  class="butoff"><img name="iconLang" src="icon/chart_curve.gif" alt="Статистика" title="Статистика" width="16" height="16" border="0" onmouseover="ButOn(40)" onmouseout="ButOff(40)" onclick="window.open('/cnstats/')"></td>
-                            <? } ?>
-                            <td width="3"></td>
-                            <td id="but17"  class="butoff"><img name="iconLang" src="icon/house.gif" alt="Магазин" title="Магазин" width="16" height="16" border="0" onmouseover="ButOn(17)" onmouseout="ButOff(17)" onclick="window.open('../../')"></td>
-                            <td width="3"></td>
-                            <td id="but16"  class="butoff"><img name="iconLang" src="icon/door.gif" alt="Выход" title="Выход" width="16" height="16" border="0" onmouseover="ButOn(16)" onmouseout="ButOff(16)" onclick="onExit()"></td>
-                            <td width="3"></td>
-                            <? if ($support_status == "active" and $option['update_enabled'] == 1) { ?>
-                                <td id="but100"  class="butoff"><img name="iconLang" src="icon/update.gif" alt="Доступно обновление"  title="Доступно обновление" width="16" height="16" border="0" onmouseover="ButOn(100)" onmouseout="ButOff(100)" onclick="ChekUpdate('true');"></td>
-                                <td width="3"></td>
-                            <? } ?>
-                        </tr>
-                    </table>
-                </td>
-                <td style="padding-right:5px" align="right" id="status">
-                    <span class="display" onclick="DoReload('orders')" title="Заказы">Новых заказов: <b id="new_order">0</b></span>
-                    <span class="display" onclick="DoReload('shopusers_messages')" title="Сообщения">Новых сообщений: <b id="new_message">0</b></span>
-                    <span class="display" onclick="DoReload('comment')" title="Комментарии">Новых комментариев: <b id="new_comment">0</b></span>
-                </td>
-            </tr>
-        </table>
-        <?
-        if ($_GET['pageParam'] != '') {
-            $pageParam = $_GET['pageParam'];
-        }
-
-        // Поддержка модулей CMS Free c передачей параметров  $_SERVER['QUERY_STRING'] в переменной $_GET['var2']
-        if (!empty($_GET['plugin'])) {
-            $_GET['page'] = 'modules';
-            $_GET['var1'] = $_GET['plugin'];
-
-            if (empty($_GET['var2'])) {
-                parse_str($_SERVER['QUERY_STRING'], $cms_var_array);
-
-                if (count($cms_var_array) > 4)
-                    $_GET['var2'] = base64_encode($_SERVER['QUERY_STRING']);
-            }
-            $pageParam = 1;
-        }
-        else {
-            if ($_SERVER['QUERY_STRING'] == '') {
-                $_GET['page2'] = 'orders';
-                $pageParam = 'oneload';
-                if (empty($_GET['var4']))
-                    $_GET['var4'] = '1';
-
-                //Если есть куки, то ставим дату
-                if ($_COOKIE['orders_date'] != '') {
-                    $_GET['var1'] = $_COOKIE['orders_date'];
-                } else {
-                    //по умолчанию на месяц
-                    $date_today = date("d-m-Y");
-                    $d = time() - 86400 * 7; // отчет за неделю
-                    $_GET['var1'] = PHPShopDate::dataV($d, false);
+                    if ($PHPShopBase->Rule->CheckedRules($subpath[0], 'view')) {
+                        if (function_exists($loader_function))
+                            call_user_func($loader_function);
+                        else
+                            echo 'Функция ' . $loader_function . '() не найдена в файле ' . $loader_file;
+                    }
+                    else
+                        $PHPShopBase->Rule->BadUserFormaWindow();
                 }
-            }
-        }
-
-
-        if (empty($_GET['page'])) {
-            if (mobdetect()){
-                $_GET['page'] = 'orders';
-                $_GET['page2']=null;
+                else
+                    echo $interface;
             }
             else
-                $_GET['page'] = 'orders_stat1';
+                $PHPShopBase->Rule->BadUserFormaWindow();
+            ?>
+        </div>
+        <!-- Notification -->
+        <div id="notification" class="success-notification hide">
+            <div  class="alert alert-success alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <span class="notification-alert"> </span>
+            </div>
+        </div>
+        <!--/ Notification -->
+
+        <!-- Presentation -->
+        <div id="presentation" class="hide">
+            <div class="panel panel-default">
+                <div class="panel-heading "><span class="glyphicon glyphicon-film text-primary"></span> <b class="text-primary">Урок 1: Создание товара</b>
+                    <a class="btn btn-primary btn-xs pull-right" href="?path=product&return=catalog&action=new&video"><span class="glyphicon glyphicon-play"></span> Старт</a></div>
+                <div class="panel-body ">
+                    Обучающий урок по созданию нового товара, заполнения полей и сохранения результата.
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading"><span class="glyphicon glyphicon-film text-primary"></span> <b class="text-primary">Урок 2: Создание каталога</b>
+                    <a class="btn btn-primary btn-xs pull-right" href="?path=catalog&action=new&video"><span class="glyphicon glyphicon-play"></span> Старт</a></div>
+                <div class="panel-body ">
+                    Обучающий урок по созданию нового каталога товара, заполнения полей и сохранения результата.
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading"><span class="glyphicon glyphicon-film text-primary"></span> <b class="text-primary">Урок 3: Редактор шаблонов</b>
+                    <a class="btn btn-primary btn-xs pull-right" href="?path=tpleditor&name=bootstrap&file=/main/index.tpl&mod=html&video"><span class="glyphicon glyphicon-play"></span> Старт</a></div>
+                <div class="panel-body">
+                    Обучающий урок по редактированию шаблона дизайна, описание переменных шаблонизатора, управление редактором кода.
+                </div>
+            </div>
+
+            <div class="checkbox text-muted">
+                <label>
+                    <input type="checkbox" <?php echo $presentation_checked; ?> id="presentation-check"> Показывать при входе в панель управления
+                </label>
+            </div>
+        </div>
+        <?php
+        if (isset($_GET['video'])) {
+            echo '<script>var video=true;</script>';
         }
+
+        if ($_GET['path'] == 'intro' and $presentation_checked == 'checked')
+            echo '<script>var presentation_start=true;</script>';
         ?>
 
-        <div align="center" id="interfaces" name="interfaces">
-            <script>
-            setTimeout("DoReload('<?= $_GET['page'] ?>','<?= $_GET['var1'] ?>','<?= $_GET['var2'] ?>','<?= $_GET['var3'] ?>','<?= $_GET['var4'] ?>','<?= $_GET['page2'] ?>','<?= $pageParam ?>');", 500);
-            //setTimeout("lo();", 1500);
-            //setTimeout("lor();", 2500);
-            setTimeout("SetCookie('stat_graph', 1, 10)", 0);
-            </script>
-            <script>
-                function lo() {
-                    $(document).ready(function() {
-                        var heightw = $(window).height();
-                        height = heightw - $("#interfacesWin").height() - 90;
-                        $("#graph").css({"height": height});
-                    });
-                }
-                function lor() {
-                    $(document).ready(function() {
-                        var heightw = $(window).height();
-                        heightright = heightw - 90;
-                        $("#ordersMain").css({"height": heightright});
-                    });
-                }
+        <!--/ Presentation -->
 
-                $(document).ready(function() {
-                    $(window).resize(function() {
-                        height = $(window).height() - $("#interfacesWin").height() - 90;
-                        $("#graph").css({"height": height});
-                        heightright = $(window).height() - 90;
-                        $("#ordersMain").css({"height": heightright});
-                    });
-                });
-            </script>
+
+        <!-- Modal select -->
+        <div class="modal" id="selectModal" tabindex="-1" role="dialog" aria-labelledby="selectModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <form class="form-horizontal" role="form" data-toggle="validator" id="modal-form" method="post" enctype="multipart/form-data">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                            <h4 class="modal-title" id="selectModalLabel">Заголовок</h4>
+                        </div>
+                        <div class="modal-body">
+
+                            <?php if (!empty($selectModalBody)) echo $selectModalBody; ?>
+
+                        </div>
+                        <div class="modal-footer">
+
+                            <!-- Progress -->
+                            <div class="progress hidden">
+                                <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="5" aria-valuemin="0" aria-valuemax="100" style="width: 5%">
+                                    <span class="sr-only">45% Complete</span>
+                                </div>
+                            </div>   
+                            <!--/ Progress -->
+
+                            <button type="button" class="btn btn-default btn-sm pull-left hidden btn-delete"><span class="glyphicon glyphicon-trash"></span> Удалить</button>
+                            <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Отменить</button>
+                            <button type="submit" class="btn btn-primary btn-sm">Применить</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div id="CSCHint"></div>
+        <!--/ Modal select-->
+
+        <!-- Modal filemanager -->
+        <div class="modal bs-example-modal-lg" id="elfinderModal" tabindex="-1" role="dialog"  aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+
+                        <span class="btn btn-default btn-sm pull-left glyphicon glyphicon-fullscreen" id="filemanagerwindow" data-toggle="tooltip" data-placement="bottom" title="Увеличить размер"></span>
+
+                        <h4 class="modal-title">Найти файл</h4>
+                    </div>
+                    <div class="modal-body">
+                        <iframe class="elfinder-modal-content" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" data-path="image" data-option="return=icon_new"></iframe>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/ Modal filemanager -->
+
+        <!-- Fixed mobile bar -->
+        <div class="bar-padding-fix visible-xs visible-sm"> </div>
+        <nav class="navbar navbar-statick navbar-fixed-bottom bar bar-tab visible-xs visible-sm" role="navigation">
+            <a class="tab-item <?= $menu_active_intro; ?>" href="./admin.php">
+                <span class="icon icon-home"></span>
+                <span class="tab-label">Домой</span>
+            </a>
+            <a class="tab-item <?= $menu_active_order; ?>" href="?path=order" id="bar-cart">
+                <span class="icon icon-download"></span> <span class="badge badge-positive hide" id="orders-mobile-check"><?= $PHPShopBase->getNumRows('orders', "where statusi='0'"); ?></span>
+                <span class="tab-label">Заказы</span>
+            </a>
+            <a class="tab-item <?= $menu_active_catalog; ?>" href="?path=catalog">
+                <span class="icon icon-compose"></span>
+                <span class="tab-label">Цены</span>
+            </a>
+            <a class="tab-item <?= $menu_active_shopusers; ?>"  href="?path=shopusers">
+                <span class="icon icon-person"></span>
+                <span class="tab-label">Покупатели</span>
+            </a>
+            <a class="tab-item" href="./?logout">
+                <span class="icon icon-share"></span>
+                <span class="tab-label">Выход</span>
+            </a>
+        </nav>
+        <!--/ Fixed mobile bar -->
+
+        <!-- jQuery plugins -->
+        <script src="./js/bootstrap.min.js"></script>
+        <script src="./js/jquery.dataTables.min.js"></script>
+        <script src="./js/dataTables.bootstrap.js"></script>
+        <script src="./js/phpshop.js"></script>
+        <script src="./js/jquery.cookie.js"></script>
+        <script src="./js/jquery.form.js"></script>
+        <script src="./js/bootstrap-select.min.js"></script>
+
     </body>
 </html>

@@ -1,1 +1,0 @@
-<span>@leftMenuContent@</span>

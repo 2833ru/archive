@@ -8,11 +8,11 @@
  * @return int
  */
 function GetVoteValue($id_charact, $id_good) {
-    global $SysValue;
+    global $SysValue,$link_db;
 
     $sql = 'select AVG(rate) as avg,COUNT(rate) as count from ' . $SysValue['base']['table_name52'] . ' where ((id_charact=' . $id_charact . ') AND (id_good=' . $id_good . ') AND (enabled="1"))';
-    $result = mysql_query($sql);
-    @$row = mysql_fetch_array(@$result);
+    $result = mysqli_query($link_db,$sql);
+    @$row = mysqli_fetch_array(@$result);
     $SysValue['sql']['num']++;
     $result2['avg'] = $row['avg'];
     $result2['count'] = round($row['count'], 1);
@@ -92,7 +92,7 @@ function ShowStars2($n, $id = false) {
  * @package PHPShopElementsDepricated
  */
 function rating($obj, $row) {
-    global $SysValue;
+    global $SysValue,$link_db;
 
     $id_good = $row['id'];
     $ids_dir = $row['category'];
@@ -110,10 +110,10 @@ function rating($obj, $row) {
 
     // Получаем идентификатор таблицу рейтинга
     $sql = 'SELECT id_category,revoting FROM ' . $SysValue['base']['table_name50'] . ' WHERE ((ids_dir REGEXP ",' . $ids_dir . ',") AND (enabled="1"))';
-    $result = mysql_query($sql);
+    $result = mysqli_query($link_db,$sql);
     $SysValue['sql']['num']++;
 
-    while (@$row = mysql_fetch_array($result)) {
+    while (@$row = mysqli_fetch_array($result)) {
         $id_category.=',' . $row['id_category'];
         $revoting = $row['revoting'];
     }
@@ -125,15 +125,15 @@ function rating($obj, $row) {
 
     // Получаем каждую характеристику
     $sql = 'SELECT id_charact,name FROM ' . $SysValue['base']['table_name51'] . ' WHERE ((id_category IN (' . $id_category . ')) AND (enabled="1")) ORDER BY num';
-    $result = mysql_query($sql);
+    $result = mysqli_query($link_db,$sql);
     $SysValue['sql']['num']++;
 
-    @$chars_amount = mysql_num_rows($result);
+    @$chars_amount = mysqli_num_rows($result);
     if (!$chars_amount) {
         return "Для данного товара рейтинг не предусмотрен";
     }
     $i = 0;
-    while (@$row = mysql_fetch_array(@$result)) {
+    while (@$row = mysqli_fetch_array(@$result)) {
         $id_charact = $row['id_charact'];
         $disp.='<TR><TD>' . $row['name'] . '</TD>';
 
@@ -149,13 +149,13 @@ function rating($obj, $row) {
 
         if (!empty($id_user)) {
             $sqlc = 'select rate,date from ' . $SysValue['base']['table_name52'] . ' where ((id_charact=' . $id_charact . ') AND (id_good=' . $id_good . ') AND (id_user=' . $id_user . '))';
-            $resultc = mysql_query($sqlc);
-            $yes = mysql_num_rows($resultc);
+            $resultc = mysqli_query($link_db,$sqlc);
+            $yes = mysqli_num_rows($resultc);
             $SysValue['sql']['num']++;
         }
 
         if (!empty($yes)) {
-            $rowc = mysql_fetch_array($resultc);
+            $rowc = mysqli_fetch_array($resultc);
             $rate = $rowc['rate'];
             $ratetxt = $rowc['rate'] / 2;
             $total2+=$rate;
@@ -391,15 +391,15 @@ checker(idc,idgood);
  * @return string
  */
 function getgoodname($id) {
-    global $SysValue;
+    global $SysValue,$link_db;
 
     $sql = "select name from " . $SysValue['base']['table_name2'] . " where id=$id and enabled='1'";
-    $result = mysql_query($sql);
-    @$amount = mysql_num_rows($result);
+    $result = mysqli_query($link_db,$sql);
+    @$amount = mysqli_num_rows($result);
     if (!$amount) {
         return false;
     } else {
-        @$row = mysql_fetch_array(@$result);
+        @$row = mysqli_fetch_array(@$result);
         return $row['name'];
     }
 }
@@ -410,12 +410,12 @@ function getgoodname($id) {
  * @return string
  */
 function ratingtop() {
-    global $SysValue;
+    global $SysValue,$link_db;
 
     $top = null;
     $sql = 'select AVG(rate) as avg,COUNT(DISTINCT id_user) as count, (AVG(rate)*COUNT(DISTINCT id_user)*0.5) as ttr, id_good from ' . $SysValue['base']['table_name52'] . ' where ((enabled="1"))  GROUP BY id_good ORDER BY ttr DESC LIMIT 20';
-    $result = mysql_query($sql);
-    while (@$row = mysql_fetch_array(@$result)) {
+    $result = mysqli_query($link_db,$sql);
+    while (@$row = mysqli_fetch_array(@$result)) {
         $rate = round($row['avg'], 2) / 2;
         $id = $row['id_good'];
         $name = getgoodname($id);
@@ -433,11 +433,11 @@ function ratingtop() {
  * @return string
  */
 function ratingshort($id_good) {
-    global $SysValue;
+    global $SysValue,$link_db;
 
     $sql = 'select AVG(rate) as avg,COUNT(DISTINCT id_user) as count from ' . $SysValue['base']['table_name52'] . ' where ((id_good=' . $id_good . ') AND (enabled="1"))';
-    $result = mysql_query($sql);
-    @$row = mysql_fetch_array(@$result);
+    $result = mysqli_query($link_db,$sql);
+    @$row = mysqli_fetch_array(@$result);
     @$SysValue['sql']['num']++;
     $vote = round($row['avg'], 2);
     $amount = round($row['count'], 1);

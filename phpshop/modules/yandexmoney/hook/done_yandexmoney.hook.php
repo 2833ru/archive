@@ -41,6 +41,7 @@ function send_to_order_mod_yandexmoney_hook($obj, $value, $rout) {
             $payment_forma.=PHPShopText::setInput('hidden', 'targets', $PHPShopSystem->getParam('name') . ': Заказ ' . $value['ouid'], false, 10);
             $payment_forma.=PHPShopText::setInput('hidden', 'sum', $out_summ, false, 10);
             $payment_forma.=PHPShopText::setInput('submit', 'send', $option['title'], $float = "left; margin-left:10px;", 250);
+            $payment_forma.=PHPShopText::setInput('hidden', 'cms_name', 'phpshop', false, 10);
 
             $obj->set('payment_forma', PHPShopText::form($payment_forma, 'yandexpay', 'post', 'https://money.yandex.ru/quickpay/confirm.xml','_blank'));
             $obj->set('payment_info', $option['title_end']);

@@ -98,6 +98,16 @@ a#faset-filter-reset span {
     width: 100% !important;
 }
 
+#catalog-menu .list-group-item {
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+}
+
+#catalog-menu .active{
+    border-top-left-radius: 4px !important;
+    border-top-right-radius: 4px !important;
+}
+
 .dropdown-menu-right a {
     white-space: normal !important;
 }
@@ -323,6 +333,10 @@ label{
 
 .product-tags div:hover {
     background:#E7ECF2;
+}
+
+td.tablerow{
+    padding:5px;
 }
 
 /* avg rate */

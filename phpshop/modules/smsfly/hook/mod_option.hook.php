@@ -8,7 +8,7 @@ class PHPShopSmsfly extends PHPShopArray {
     function __construct() {
         $this->objType = 3;
         $this->objBase = $GLOBALS['SysValue']['base']['smsfly']['smsfly_system'];
-        parent::PHPShopArray("merchant_user", "merchant_pwd", "phone", "sandbox", "alfaname");
+        parent::__construct("merchant_user", "merchant_pwd", "phone", "sandbox", "alfaname");
 
         $this->option = parent::getArray();
     }

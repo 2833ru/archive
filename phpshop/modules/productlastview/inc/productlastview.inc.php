@@ -15,7 +15,7 @@ class ProductLastView extends PHPShopElements {
     /**
      * Конструктор
      */
-    function ProductLastView() {
+    function __construct() {
 
         $this->option();
 
@@ -26,15 +26,15 @@ class ProductLastView extends PHPShopElements {
 
         // Ключ памяти
         if ($this->option['memory'] == 1)
-            $this->init();
+            $this->init_memory();
 
-        parent::PHPShopElements();
+        parent::__construct();
     }
 
     /**
      * Инициализация ключа памяти
      */
-    function init() {
+    function init_memory() {
         if (empty($_COOKIE['productlastview_memory']))
             $this->memory = md5(session_id());
         else
@@ -192,10 +192,7 @@ class ProductLastView extends PHPShopElements {
             $list = $this->display('productlastviewform', array('currency' => $this->currency));
             $this->set('productlastview_list', '<table>' . $list . '</table>', true);
 
-
-
             $product = parseTemplateReturn($GLOBALS['SysValue']['templates']['productlastview']['productlastview_forma'], true);
-
 
             $this->set('leftMenuContent', $product);
             $this->set('leftMenuName', $this->option['title']);

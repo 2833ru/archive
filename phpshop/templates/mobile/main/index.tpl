@@ -8,6 +8,8 @@
         <meta name="apple-mobile-web-app-status-bar-style" content="black">
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@/ratchetcss/ratchet.css" rel="stylesheet">
         <link href="@pageCss@" rel="stylesheet">
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+        <link rel="icon" href="/favicon.ico"> 
         @fix_css@
         <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@/ratchet/js/ratchet.js"></script>
         <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@/pc.js"></script>

@@ -2,16 +2,11 @@
 <module>
     <version>1.2</version>
     <name>Sort Brand</name>
-   <faqlink>http://faq.phpshop.ru/page/sort-brand.html</faqlink>
- <description>Подбор по параметрам, вывод производителей.</description>
-    <icon>icon.png</icon>
+    <faqlink>http://faq.phpshop.ru/page/sort-brand.html</faqlink>
+    <description>Подбор по параметрам, вывод производителей.</description>
     <category>form</category>
     <adminmenu>
         <title>Sort Brand</title>
-        <podmenu>
-            <podmenu_name>Настройка</podmenu_name>
-            <podmenu_icon>icon.png</podmenu_icon>
-            <podmenu_action>javascript:miniWin('../modules/sortbrand/admpanel/adm_module.php',510,450);</podmenu_action>
-        </podmenu>
+        <capability>true</capability>
     </adminmenu>
 </module>

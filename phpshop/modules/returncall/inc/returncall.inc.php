@@ -13,8 +13,8 @@ class AddToTemplateReturnCallElement extends PHPShopElements {
     /**
      * Конструктор
      */
-    function AddToTemplateReturnCallElement() {
-        parent::PHPShopElements();
+    function __construct() {
+        parent::__construct();
         $this->option();
     }
 

@@ -1,115 +1,77 @@
-<?
-$_classPath="../../../";
-include($_classPath."class/obj.class.php");
-PHPShopObj::loadClass("base");
-PHPShopObj::loadClass("date");
+<?php
 
-$PHPShopBase = new PHPShopBase($_classPath."inc/config.ini");
-include($_classPath."admpanel/enter_to_admin.php");
-
-PHPShopObj::loadClass("system");
-$PHPShopSystem = new PHPShopSystem();
-
-// Редактор GUI
-PHPShopObj::loadClass("admgui");
-$PHPShopGUI = new PHPShopGUI();
-$PHPShopGUI->debug_close_window=false;
-$PHPShopGUI->reload='top';
-$PHPShopGUI->ajax="'modules','messageboard'";
-$PHPShopGUI->title="Редактирование Объявления";
-$PHPShopGUI->includeJava='<SCRIPT language="JavaScript" src="../../../lib/Subsys/JsHttpRequest/Js.js"></SCRIPT>';
-$PHPShopGUI->dir=$_classPath."admpanel/";
-
-// Модули
-PHPShopObj::loadClass("modules");
-$PHPShopModules = new PHPShopModules($_classPath."modules/");
-
-// SQL
-PHPShopObj::loadClass("orm");
 $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.messageboard.messageboard_log"));
 
-
 function actionStart() {
-    global $PHPShopGUI,$PHPShopSystem,$SysValue,$_classPath,$PHPShopOrm,$PHPShopModules;
+    global $PHPShopGUI, $PHPShopOrm;
 
- // Выборка
-    $data = $PHPShopOrm->select(array('*'),array('id'=>'='.$_GET['id']));
-    extract($data);
+    $PHPShopGUI->addJSFiles('./js/bootstrap-datetimepicker.min.js', './news/gui/news.gui.js');
+    $PHPShopGUI->addCSSFiles('./css/bootstrap-datetimepicker.min.css');
 
-    $PHPShopGUI->dir=$_classPath."admpanel/";
-    $PHPShopGUI->size="630,530";
-    $PHPShopGUI->addJSFiles($_classPath.'admpanel/java/popup_lib.js',$_classPath.'admpanel/java/dateselector.js');
-    $PHPShopGUI->addCSSFiles($_classPath.'admpanel/skins/'.$_SESSION['theme'].'/dateselector.css');
+    // Выборка
+    $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
 
 
-// Графический заголовок окна
-    $PHPShopGUI->setHeader("Редактирование Объявления","",$PHPShopGUI->dir."img/i_account_properties_med[1].gif");
+    $Tab1 = $PHPShopGUI->setField("Дата", $PHPShopGUI->setInputDate("date_new", PHPShopDate::dataV($data['date'], false)));
+    $Tab1.=$PHPShopGUI->setField("Статус", $PHPShopGUI->setCheckbox('enabled_new', '1', 'Вывод на сайте', $data['enabled']));
 
-    
-// Содержание закладки 1
-    $Tab1=$PHPShopGUI->setField("Дата:",
-            $PHPShopGUI->setInput("text","date_new",PHPShopDate::dataV($date,false),"left",70).
-            $PHPShopGUI->setCalendar('date_new','left',$_classPath.'admpanel/icon/date.gif','left').
-            $PHPShopGUI->setLine().
-            $PHPShopGUI->setCheckbox('enabled_new','1','Вывод',$enabled)
-            ,"left");
+    $Tab1.=$PHPShopGUI->setField("Пользователь", $PHPShopGUI->setInput("text.requared", "name_new", $data['name']));
+    $Tab1.=$PHPShopGUI->setField("E-mail", $PHPShopGUI->setInput("text", "mail_new", $data['mail']));
+    $Tab1.=$PHPShopGUI->setField("Телефон", $PHPShopGUI->setInput("text", "tel_new", $data['tel']));
 
-
-    $Tab1.=$PHPShopGUI->setField("Автор:",$PHPShopGUI->setText("Имя:&nbsp;&nbsp;","left").
-            $PHPShopGUI->setInput("text","name_new",$name,"none",300).
-            $PHPShopGUI->setText("E-mail:","left").$PHPShopGUI->setInput("text","mail_new",$mail,"left",150).
-            $PHPShopGUI->setText("Тел:","left").$PHPShopGUI->setInput("text","tel_new",$tel,"none",150)
-            ,"right",5).
-            $PHPShopGUI->setLine().
-            $PHPShopGUI->setField("Тема:",$PHPShopGUI->setTextarea("title_new",$title,"left",'97%','50px'),"none").
-            $PHPShopGUI->setField("Содержание:",$PHPShopGUI->setTextarea("content_new",$content,"left",'97%','80px'),"none");
-
-
+    $Tab1.=$PHPShopGUI->setField("Тема:", $PHPShopGUI->setTextarea("title_new", $data['title']));
+    $Tab1.=$PHPShopGUI->setField("Содержание:", $PHPShopGUI->setTextarea("content_new", $data['content'], "", '100%', 200));
 
 // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное",$Tab1,350));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, 350));
 
-
-// Вывод кнопок сохранить и выход в футер
-    $ContentFooter=
-            $PHPShopGUI->setInput("hidden","newsID",$id,"right",70,"","but").
-            $PHPShopGUI->setInput("button","","Отмена","right",70,"return onCancel();","but").
-            $PHPShopGUI->setInput("submit","delID","Удалить","right",70,"","but","actionDelete").
-            $PHPShopGUI->setInput("submit","editID","ОК","right",70,"","but","actionUpdate");
+    $ContentFooter =
+            $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .
+            $PHPShopGUI->setInput("button", "delID", "Удалить", "right", 70, "", "but", "actionDelete.modules.edit") .
+            $PHPShopGUI->setInput("submit", "editID", "Сохранить", "right", 70, "", "but", "actionUpdate.modules.edit") .
+            $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionSave.modules.edit");
 
 // Футер
     $PHPShopGUI->setFooter($ContentFooter);
     return true;
 }
 
-
-
-
 // Функция обновления
 function actionUpdate() {
-    global $PHPShopOrm,$PHPShopModules;
+    global $PHPShopOrm;
 
     $_POST['date_new'] = PHPShopDate::GetUnixTime($_POST['date_new']);
-    if(empty($_POST['enabled_new'])) $_POST['enabled_new'] = 0;
+    if (empty($_POST['enabled_new']))
+        $_POST['enabled_new'] = 0;
 
-    $action = $PHPShopOrm->update($_POST,array('id'=>'='.$_POST['newsID']));
-    return $action;
+    $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['rowID']));
+    return array('success' => $action);
 }
+
+/**
+ * Экшен сохранения
+ */
+function actionSave() {
+    global $PHPShopGUI;
+
+
+    // Сохранение данных
+    actionUpdate();
+
+    header('Location: ?path=' . $_GET['path']);
+}
+
 
 // Функция удаления
 function actionDelete() {
-    global $PHPShopOrm,$PHPShopModules;
-    $action = $PHPShopOrm->delete(array('id'=>'='.$_POST['newsID']));
-    return $action;
+    global $PHPShopOrm;
+    $action = $PHPShopOrm->delete(array('id' => '=' . $_POST['rowID']));
+    return array("success" =>  $action);
 }
 
-if($UserChek->statusPHPSHOP < 2) {
+// Обработка событий
+$PHPShopGUI->getAction();
 
 // Вывод формы при старте
-    $PHPShopGUI->setAction($_GET['id'],'actionStart','none');
-
-// Обработка событий
-    $PHPShopGUI->getAction();
-
-}else $UserChek->BadUserFormaWindow();
+$PHPShopGUI->setAction($_GET['id'], 'actionStart', 'none');
 ?>

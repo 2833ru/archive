@@ -21,11 +21,12 @@ class UserChek {
     var $OkFlag = 0;
 
     function ChekBase($table_name) {
+        global $link_db;
         $sql = "select * from $table_name where enabled='1'";
-        $result = mysql_query($sql);
+        $result = mysqli_query($link_db,$sql);
 
         $hasher = new PasswordHash(8, false);
-        while (@$row = mysql_fetch_array(@$result)) {
+        while (@$row = mysqli_fetch_array(@$result)) {
             if ($this->logPHPSHOP == $row['login']) {
                 $check = $hasher->CheckPassword($this->pasPHPSHOP, $row['password']);
                 if ($check) {

@@ -8,9 +8,9 @@
 
 if(empty($GLOBALS['SysValue'])) exit(header("Location: /"));
 
-$sql="select message,message_header  from ".$SysValue['base']['table_name48']." where id=".$_POST['order_metod'];
-$result=mysql_query(@$sql);
-$row = mysql_fetch_array(@$result);
+$sql="select message,message_header  from ".$SysValue['base']['table_name48']." where id=".intval($_POST['order_metod']);
+$result=mysqli_query($link_db,$sql);
+$row = mysqli_fetch_array(@$result);
 
 $message=$row['message'];
 $message_header=$row['message_header'];

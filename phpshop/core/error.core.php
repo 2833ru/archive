@@ -11,8 +11,8 @@ class PHPShopError extends PHPShopCore {
     /**
      * Конструктор
      */
-    function PHPShopError() {
-        parent::PHPShopCore();
+    function __construct() {
+        parent::__construct();
     }
 
     function index() {

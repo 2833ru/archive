@@ -102,7 +102,7 @@ class PHPShopCore {
     /**
      * Конструктор
      */
-    function PHPShopCore() {
+    function __construct() {
         global $PHPShopSystem, $PHPShopNav, $PHPShopModules;
 
         if ($this->objBase) {
@@ -122,6 +122,12 @@ class PHPShopCore {
 
         // Определяем переменные
         $this->set('pageProduct', $this->SysValue['license']['product_name']);
+    }
+
+    function __call($name, $arguments) {
+        if ($name == __CLASS__) {
+            self::__construct();
+        }
     }
 
     /**
@@ -229,20 +235,23 @@ class PHPShopCore {
      */
     function meta() {
 
-        if (!empty($this->title))
-            $this->set('pageTitl', $this->title);
-        else
-            $this->set('pageTitl', $this->PHPShopSystem->getValue("title"));
+        if ($this->PHPShopSystem) {
 
-        if (!empty($this->description))
-            $this->set('pageDesc', $this->description);
-        else
-            $this->set('pageDesc', $this->PHPShopSystem->getValue("descrip"));
+            if (!empty($this->title))
+                $this->set('pageTitl', $this->title);
+            else
+                $this->set('pageTitl', $this->PHPShopSystem->getValue("title"));
 
-        if (!empty($this->keywords))
-            $this->set('pageKeyw', $this->keywords);
-        else
-            $this->set('pageKeyw', $this->PHPShopSystem->getValue("keywords"));
+            if (!empty($this->description))
+                $this->set('pageDesc', $this->description);
+            else
+                $this->set('pageDesc', $this->PHPShopSystem->getValue("descrip"));
+
+            if (!empty($this->keywords))
+                $this->set('pageKeyw', $this->keywords);
+            else
+                $this->set('pageKeyw', $this->PHPShopSystem->getValue("keywords"));
+        }
     }
 
     /**
@@ -337,7 +346,7 @@ class PHPShopCore {
         // Всего страниц
         $this->PHPShopOrm->comment = __CLASS__ . '.' . __FUNCTION__;
         $result = $this->PHPShopOrm->query("select COUNT('id') as count from " . $this->objBase . $SQL);
-        $row = mysql_fetch_array($result);
+        $row = mysqli_fetch_array($result);
         $this->num_page = $row['count'];
 
         $i = 1;
@@ -511,10 +520,11 @@ class PHPShopCore {
      * @param string $action сообщение
      */
     function setError($name, $action) {
-        echo '<p style="BORDER: #000000 1px dashed;padding-top:10px;padding-bottom:10px;background-color:#FFFFFF;color:000000;font-size:12px">
-<img hspace="10" style="padding-left:10px" align="left" src="../phpshop/admpanel/img/i_domainmanager_med[1].gif"
-width="32" height="32" alt="PHPShopCore Debug On"/ ><strong>Ошибка обработчика события:</strong> ' . $name . '()
-	 <br><em>' . $action . '</em></p>';
+        echo '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+            <div class="alert alert-danger alert-dismissible" id="debug-message" role="alert" style="margin:10px">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <strong><span class="glyphicon glyphicon-alert"></span> ' . $name . '()</strong> ' . $action . '
+</div>';
     }
 
     /**
@@ -683,7 +693,7 @@ width="32" height="32" alt="PHPShopCore Debug On"/ ><strong>Ошибка обработчика с
                             }
                         } else {
                             // Если один экшен
-                            if (@$this->PHPShopNav->getNav() == $v and $this->isAction($v))
+                            if (@$this->PHPShopNav and @$this->PHPShopNav->getNav() == $v and $this->isAction($v))
                                 return call_user_func(array(&$this, $this->action_prefix . $v));
                             elseif ($this->isAction('index')) {
 
@@ -693,7 +703,7 @@ width="32" height="32" alt="PHPShopCore Debug On"/ ><strong>Ошибка обработчика с
                                 else
                                     call_user_func(array(&$this, $this->action_prefix . 'index'));
                             }
-                            else
+                            elseif ($this->PHPShopNav)
                                 $this->setError($this->action_prefix . "phpshop" . $this->PHPShopNav->getPath() . "->index", "метод не существует");
                         }
 
@@ -838,7 +848,10 @@ width="32" height="32" alt="PHPShopCore Debug On"/ ><strong>Ошибка обработчика с
      * @return bool
      */
     function setHook($class_name, $function_name, $data = false, $rout = false) {
-        return $this->PHPShopModules->setHookHandler($class_name, $function_name, array(&$this), $data, $rout);
+        if ($this->PHPShopModules)
+            return $this->PHPShopModules->setHookHandler($class_name, $function_name, array(&$this), $data, $rout);
+        else
+            return false;
     }
 
     /**
@@ -872,14 +885,6 @@ width="32" height="32" alt="PHPShopCore Debug On"/ ><strong>Ошибка обработчика с
             timer('end', 'Garbage');
         }
     }
-
-    /**
-     * Сообщение об неизвестном методе
-     */
-    function __call($m, $a) {
-        echo $this->message('Ошибка', '$' . __CLASS__ . '->' . $m . '() не определен в ' . __FILE__);
-    }
-
 }
 
 ?>

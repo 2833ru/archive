@@ -10,8 +10,8 @@ class AddToTemplateOneclickElement extends PHPShopElements {
     /**
      * Конструктор
      */
-    function AddToTemplateOneclickElement() {
-        parent::PHPShopElements();
+    function __construct() {
+        parent::__construct();
         $this->option();
     }
 

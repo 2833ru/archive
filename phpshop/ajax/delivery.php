@@ -29,23 +29,23 @@ if ($_REQUEST['type'] != 'json') {
 require_once $_classPath . "core/order.core/delivery.php";
 
 function GetDeliveryPrice($deliveryID, $sum, $weight = 0) {
-    global $SysValue;
+    global $SysValue,$link_db;
 
     if (!empty($deliveryID)) {
         $sql = "select * from " . $SysValue['base']['table_name30'] . " where id='$deliveryID' and enabled='1'";
-        $result = mysql_query($sql);
-        $num = mysql_num_rows($result);
-        $row = mysql_fetch_array($result);
+        $result = mysqli_query($link_db,$sql);
+        $num = mysqli_num_rows($result);
+        $row = mysqli_fetch_array($result);
 
         if ($num == 0) {
             $sql = "select * from " . $SysValue['base']['table_name30'] . " where flag='1' and enabled='1'";
-            $result = mysql_query($sql);
-            $row = mysql_fetch_array($result);
+            $result = mysqli_query($link_db,$sql);
+            $row = mysqli_fetch_array($result);
         }
     } else {
         $sql = "select * from " . $SysValue['base']['table_name30'] . " where flag='1' and enabled='1'";
-        $result = mysql_query($sql);
-        $row = mysql_fetch_array($result);
+        $result = mysqli_query($link_db,$sql);
+        $row = mysqli_fetch_array($result);
     }
 
     if ($row['price_null_enabled'] == 1 and $sum >= $row['price_null']) {
@@ -88,7 +88,7 @@ $_RESULT = array(
 
 // Перехват модуля в начале функции
 $hook = $PHPShopModules->setHookHandler('delivery', 'delivery', false, array($_RESULT, $_REQUEST['xid']));
-if ($hook)
+if(is_array($hook))
     $_RESULT = $hook;
 
 

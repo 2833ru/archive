@@ -7,7 +7,7 @@ if (!defined("OBJENABLED")) {
 /**
  * Библиотека данных администраторов
  * @author PHPShop Software
- * @version 1.1
+ * @version 1.2
  * @package PHPShopObj
  */
 class PHPShopUser extends PHPShopObj {
@@ -16,11 +16,11 @@ class PHPShopUser extends PHPShopObj {
      * Конструктор
      * @param Int $objID ИД пользователя
      */
-    function PHPShopUser($objID) {
+    function __construct($objID) {
         $this->objID = $objID;
         $this->cache = true;
         $this->objBase = $GLOBALS['SysValue']['base']['shopusers'];
-        parent::PHPShopObj();
+        parent::__construct();
     }
 
     /**
@@ -41,26 +41,24 @@ class PHPShopUser extends PHPShopObj {
         if (!is_array($data_adres) OR !count($data_adres['list']))
             return "";
 
-        if (is_array($data_adres['list']))
-            foreach ($data_adres['list'] as $index => $data_adres_one) {
-                $dis = "";
-                if (is_array($data_adres_one))
-                    foreach ($data_adres_one as $key => $value) {
-                        if ($value)
-                            $dis .= " ," . $value;
-                    }
-                if ($dis) {
-                    if ($index == $data_adres['main'])
-                        $sel = 'selected="selected"';
-                    else
-                        $sel = "";
-                    $disp .= '<option value="' . $index . '" ' . $sel . '>' . substr($dis, 2) . '</option>';
-                }
+        foreach ($data_adres['list'] as $index => $data_adres_one) {
+            $dis = "";
+            foreach ($data_adres_one as $key => $value) {
+                if ($value)
+                    $dis .= " ," . $value;
             }
+            if ($dis) {
+                if ($index == $data_adres['main'])
+                    $sel = 'selected="selected"';
+                else
+                    $sel = "";
+                $disp .= '<option value="' . $index . '" ' . $sel . '>' . substr($dis, 2) . '</option>';
+            }
+        }
         if ($disp)
             $disp = '
                 <h2>Выбрать адрес доставки</h2>    
-                <select name="adres_id" id="adres_id" style="margin-bottom: 15px;" size="5">
+                <select name="adres_id" id="adres_id" class="form-control selectpicker show-menu-arrow">
                 <option value="none">Создать новый адрес</option>
                 ' . $disp . '
                 </select><br>
@@ -94,6 +92,7 @@ class PHPShopUser extends PHPShopObj {
     function getPersonalDiscount() {
         return $this->getParam("cumulative_discount");
     }
+
 
     /**
      * Вывод ID статуса
@@ -136,11 +135,11 @@ class PHPShopUserStatus extends PHPShopObj {
      * @param Int $objID ИД статуса пользователя
      * @param array $import_data массив импорта данных
      */
-    function PHPShopUserStatus($objID, $import_data = null) {
+    function __construct($objID, $import_data = null) {
         $this->objID = $objID;
         $this->cache = true;
         $this->objBase = $GLOBALS['SysValue']['base']['table_name28'];
-        parent::PHPShopObj('id', $import_data);
+        parent::__construct('id', $import_data);
     }
 
     /**
@@ -182,16 +181,16 @@ class PHPShopUserFunction {
      * @param float $mysum стоимость заказа
      * @return array
      */
-    function ChekDiscount($mysum) {
-        global $PHPShopSystem;
+    static function ChekDiscount($mysum) {
+        global $PHPShopSystem,$link_db;
 
         $maxsum = 0;
         $userdiscount = 0;
         $maxdiscount = 0;
 
         $sql = "select * from " . $GLOBALS['SysValue']['base']['table_name23'] . " where sum < '$mysum' and enabled='1'";
-        $result = mysql_query($sql);
-        while ($row = mysql_fetch_array($result)) {
+        $result = mysqli_query($link_db,$sql);
+        while ($row = mysqli_fetch_array($result)) {
             $sum = $row['sum'];
             if ($sum > $maxsum) {
                 $maxsum = $sum;
@@ -218,4 +217,19 @@ class PHPShopUserFunction {
 
 }
 
+
+/**
+ * Массив данных по статусам покупателей
+ * @author PHPShop Software
+ * @version 1.0
+ * @package PHPShopArray
+ */
+class PHPShopUserStatusArray extends PHPShopArray {
+
+    function __construct() {
+        $this->objBase=$GLOBALS['SysValue']['base']['shopusers_status'];
+        $this->objSQL=array('enabled'=>"='1'");
+        parent::__construct('id',"name",'discount','price');
+    }
+}
 ?>

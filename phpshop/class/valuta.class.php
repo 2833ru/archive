@@ -8,7 +8,7 @@ require_once(dirname(__FILE__) . "/array.class.php");
 /**
  * Библиотека валют
  * @author PHPShop Software
- * @version 1.0
+ * @version 1.2
  * @package PHPShopObj
  */
 class PHPShopValuta extends PHPShopObj {
@@ -17,11 +17,11 @@ class PHPShopValuta extends PHPShopObj {
      * Констуруктор
      * @param int $objID ИД валюты
      */
-    function PHPShopValuta($objID) {
+    function __construct($objID) {
         $this->objID = $objID;
         $this->cache = true;
         $this->objBase = $GLOBALS['SysValue']['base']['currency'];
-        parent::PHPShopObj();
+        parent::__construct();
     }
 
     /**
@@ -58,10 +58,11 @@ class PHPShopValuta extends PHPShopObj {
 
     /**
      * Массив всех значений по ключу ISO
+     * @param bool $key_iso генерация массива с ключами ISO
      * Пример: PHPShopValuta::getAll()
      * @return array
      */
-    function getAll() {
+    function getAll($key_iso = false) {
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['currency']);
         $PHPShopOrm->cache = true;
         $data = $PHPShopOrm->select(array('*'), false, false, array('limit' => 100));
@@ -72,18 +73,16 @@ class PHPShopValuta extends PHPShopObj {
                 $array[$iso] = $id;
             }
 
-        return $array;
+        if (empty($key_iso))
+            $result = $data;
+        else
+            $result = $array;
+
+        return $result;
     }
 
-    /**
-     * Массив всех значений по ключу ID
-     * @return array
-     */
     function getArray() {
-        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['currency']);
-        $PHPShopOrm->cache = true;
-        $data = $PHPShopOrm->select(array('*'), false, false, array('limit' => 100));
-        return $data;
+        return $this->getAll();
     }
 
 }
@@ -96,10 +95,10 @@ class PHPShopValuta extends PHPShopObj {
  */
 class PHPShopValutaArray extends PHPShopArray {
 
-    function PHPShopValutaArray() {
+    function __construct() {
         $this->objBase = $GLOBALS['SysValue']['base']['currency'];
         $this->objSQL = array('enabled' => "='1'");
-        parent::PHPShopArray('id', "name", 'code', 'iso', 'kurs');
+        parent::__construct('id', "name", 'code', 'iso', 'kurs');
     }
 
 }

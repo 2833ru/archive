@@ -1,5 +1,45 @@
 <?php
 
+// Смена кодировки для xml2array
+function array2iconv(&$value) {
+    $value = iconv("UTF-8", "CP1251", $value);
+}
+
+/**
+ * XML обработчик на основе  JSON
+ * @param string $filename адрес файла xml
+ * @param string $keyName параметр xml для парсинга
+ * @param bool $file xml читается из файла [true] или содержимого $filename при значении [false]
+ * @return array
+ */
+function xml2array($filename, $keyName = false, $file = true) {
+
+    if ($file)
+        $data = @implode("", @file($filename));
+    else
+        $data = $filename;
+
+    if (function_exists('simplexml_load_string')){
+        $json = json_decode(json_encode((array) simplexml_load_string($data)), 1);
+        array_walk_recursive($json, 'array2iconv');
+    }
+    else
+        echo ('Не найдена компонента SimpleXML<br>');
+
+    
+
+    if ($keyName) {
+        if (strpos($keyName, '.')) {
+            $keys = explode(".", $keyName);
+            return $json[$keys[0]][$keys[1]];
+        }
+        else
+            return $json[$keyName];
+    }
+    else
+        return $json;
+}
+
 /**
  * Содержание объекта
  */
@@ -7,7 +47,7 @@ class XMLparser {
 
     var $ar;
 
-    function XMLparser($aa) {
+    function __construct($aa) {
         foreach ($aa as $k => $v) {
             $this->$k = $aa[$k];
             $this->ar[$k] = $this->$k;
@@ -34,8 +74,9 @@ function readDatabase($filename, $keyName, $file = true) {
         $data = implode("", file($filename));
     else
         $data = $filename;
-    $xmlencode = $PHPShopSystem->getSerilizeParam('admoption.xmlencode');
     
+    $xmlencode = 'UTF-8';
+
     // Hook PHP 5.3, 5.4
     if ($xmlencode == 'UTF-8') {
         $data = str_replace('windows-1251', 'utf-8', $data);

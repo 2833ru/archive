@@ -25,9 +25,9 @@
 
         <?
         if(!@include("./includes/config.php")) exit('conf_global.php не обнаружен');
-        mysql_connect ($config['MasterServer']['servername'], $config['MasterServer']['username'], $config['MasterServer']['password']) or die("Невозможно подсоединиться к базе");
-        mysql_select_db($config['Database']['dbname']) or die("Невозможно подсоединиться к базе");
-        mysql_query("SET NAMES 'cp1251'");
+        $link_db=mysqli_connect ($config['MasterServer']['servername'], $config['MasterServer']['username'], $config['MasterServer']['password']) or die("Невозможно подсоединиться к базе");
+        mysqli_select_db($link_db,$config['Database']['dbname']) or die("Невозможно подсоединиться к базе");
+        mysqli_query($link_db,"SET NAMES 'cp1251'");
 
         function dataV($nowtime) {
             $Months = array("01"=>"января","02"=>"февраля","03"=>"марта",
@@ -45,8 +45,8 @@
 
 
         $sql="select * from ".$config['Database']['tableprefix']."thread order by lastpost desc limit ".$limit;
-        $result=mysql_query($sql);
-        while($row = mysql_fetch_array($result)) {
+        $result=mysqli_query($link_db,$sql);
+        while($row = mysqli_fetch_array($result)) {
             $name = $row['title'];
             $last_post = $row['lastpost'];
             $last_poster_name = $row['lastposter'];

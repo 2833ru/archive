@@ -5,58 +5,41 @@
  */
 
 // Включение
-$enabled=false;
+$enabled=true;
 
 // Авторизация
 if(empty($enabled)) exit("Ошибка авторизации!");
 
 $_classPath="../../../";
-$SysValue=parse_ini_file($_classPath."inc/config.ini",1);
+include($_classPath . "class/obj.class.php");
+PHPShopObj::loadClass("base");
+$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
 
+/**
+ * Резервная копия БД
+ * @param string $dbname имя БД
+ * @param bool $structure_only только структуру
+ */
+function mysqlbackup($dbname,$structure_only=false,$pattern_table=false) {
+	global $link_db;
 
-// MySQL hostname
-$host = $SysValue['connect']['host'];
-//MySQL basename
-$dbname = $SysValue['connect']['dbase'];
-// MySQL user
-$uname = $SysValue['connect']['user_db'];
-// MySQL password
-$upass = $SysValue['connect']['pass_db'];
-// set FALSE to get table content
-$structure_only=false;
-//set TRUE to to get file with dump
-$output = false;
-
-
-//////////////////////////////////////////////////
-//
-//  phpMyDump v 1.0
-//
-//  check for new version
-//  http://szewo.com/php/mydump/eng
-//
-// some functions are adapted from the phpMyAdmin 
-//
-//  do not change anything below this line
-//////////////////////////////////////////////////
-function mysqlbackup($host,$dbname, $uid, $pwd, $structure_only) {
-    
-    $crlf='
+    $crlf = '
 ';
 
-    $con=@mysql_connect($host,$uid, $pwd) or die("Could not connect");
-    $db=@mysql_select_db($dbname,$con) or die("Could not select db");
-    mysql_query("SET NAMES 'cp1251'");
-
+    //$con=@mysql_connect($host,$uid, $pwd) or die("Could not connect");
+    //$db=@mysql_select_db($dbname,$con) or die("Could not select db");
+    // mysql_query("SET NAMES 'cp1251'");
+    
+    
     // here we check MySQL Version
-    $result=@mysql_query("SELECT VERSION() AS version");
-    if ($result != FALSE && @mysql_num_rows($result) > 0) {
-        $row   = @mysql_fetch_array($result);
+    $result = @mysqli_query($link_db,"SELECT VERSION() AS version");
+    if ($result != FALSE && @mysqli_num_rows($result) > 0) {
+        $row = @mysqli_fetch_array($result);
         $match = explode('.', $row['version']);
     } else {
-        $result=@mysql_query("SHOW VARIABLES LIKE \'version\'");
-        if ($result != FALSE && @mysql_num_rows($result) > 0) {
-            $row   = @mysql_fetch_row($result);
+        $result = @mysqli_query($link_db,"SHOW VARIABLES LIKE \'version\'");
+        if ($result != FALSE && @mysqli_num_rows($result) > 0) {
+            $row = @mysqli_fetch_row($result);
             $match = explode('.', $row[1]);
         }
     }
@@ -70,12 +53,12 @@ function mysqlbackup($host,$dbname, $uid, $pwd, $structure_only) {
     if (!isset($match[2])) {
         $match[2] = 0;
     }
-    if(!isset($row)) {
+    if (!isset($row)) {
         $row = '3.21.0';
     }
 
 
-    define('MYSQL_INT_VERSION', (int)sprintf('%d%02d%02d', $match[0], $match[1], intval($match[2])));
+    define('MYSQL_INT_VERSION', (int) sprintf('%d%02d%02d', $match[0], $match[1], intval($match[2])));
     define('MYSQL_STR_VERSION', $row['version']);
     unset($match);
 
@@ -83,38 +66,44 @@ function mysqlbackup($host,$dbname, $uid, $pwd, $structure_only) {
     //$sql.= "# Host: $host Database: $dbname".$crlf;
     //$sql.= "#----------------------------".$crlf;
     //$sql.= "# Server version: ".MYSQL_STR_VERSION.$crlf;
-
     //$sql.= $crlf.$crlf.$crlf;
-    
-    $res=@mysql_list_tables($dbname);
-    $nt=@mysql_num_rows($res);
 
-    for ($a=0;$a<$nt;$a++) {
-        $row=mysql_fetch_row($res);
-        $tablename=$row[0];
+    
+    //$res = @mysql_list_tables($dbname);
+	$res = mysqli_query($link_db,"SHOW TABLES FROM ".$dbname);
+    $nt = mysqli_num_rows($res);
+
+    for ($a = 0; $a < $nt; $a++) {
+        $row = mysqli_fetch_row($res);
+        $tablename = $row[0];
+        
+        
+        if($pattern_table)
+            if(!in_array($tablename,$pattern_table))
+                continue;
 
         //$sql=$crlf."# ----------------------------------------".$crlf."# table structure for table '$tablename' ".$crlf;
-        $sql="DROP TABLE IF EXISTS $tablename;".$crlf;
+        $sql = "DROP TABLE IF EXISTS $tablename;" . $crlf;
         // For MySQL < 3.23.20
         if (MYSQL_INT_VERSION >= 32321) {
 
-            $result=mysql_query("SHOW CREATE TABLE $tablename");
-            if ($result != FALSE && mysql_num_rows($result) > 0) {
-                $tmpres = mysql_fetch_array($result);
-                $pos           = strpos($tmpres[1], ' (');
-                $tmpres[1]     = substr($tmpres[1], 0, 13)
+            $result = mysqli_query($link_db,"SHOW CREATE TABLE $tablename");
+            if ($result != FALSE && mysqli_num_rows($result) > 0) {
+                $tmpres = mysqli_fetch_array($result);
+                $pos = strpos($tmpres[1], ' (');
+                $tmpres[1] = substr($tmpres[1], 0, 13)
                         . $tmpres[0]
                         . substr($tmpres[1], $pos);
 
-                $sql .= $tmpres[1].";".$crlf.$crlf;
+                $sql .= $tmpres[1] . ";" . $crlf . $crlf;
             }
-            mysql_free_result($result);
+            mysqli_free_result($result);
         } else {
-            $sql.="CREATE TABLE $tablename(".$crlf;
-            $result=mysql_query("show fields  from $tablename",$con);
+            $sql.="CREATE TABLE $tablename(" . $crlf;
+            $result = mysqli_query($link_db,"show fields from $tablename", $con);
 
-            while ($row = mysql_fetch_array($result)) {
-                $sql .= "  ".$row['Field'];
+            while ($row = mysqli_fetch_array($result)) {
+                $sql .= "  " . $row['Field'];
                 $sql .= ' ' . $row['Type'];
                 if (isset($row['Default']) && $row['Default'] != '') {
                     $sql .= ' DEFAULT \'' . $row['Default'] . '\'';
@@ -125,16 +114,16 @@ function mysqlbackup($host,$dbname, $uid, $pwd, $structure_only) {
                 if ($row['Extra'] != '') {
                     $sql .= ' ' . $row['Extra'];
                 }
-                $sql .= ",".$crlf;
+                $sql .= "," . $crlf;
             }
 
-            mysql_free_result($result);
+            mysqli_free_result($result);
             //$sql = preg_replace('/,' . $crlf . '/$', '', $sql);
 
-            $result = mysql_query("SHOW KEYS FROM $tablename");
-            while ($row = mysql_fetch_array($result)) {
-                $ISkeyname    = $row['Key_name'];
-                $IScomment  = (isset($row['Comment'])) ? $row['Comment'] : '';
+            $result = mysqli_query($link_db,"SHOW KEYS FROM $tablename");
+            while ($row = mysqli_fetch_array($result)) {
+                $ISkeyname = $row['Key_name'];
+                $IScomment = (isset($row['Comment'])) ? $row['Comment'] : '';
                 $ISsub_part = (isset($row['Sub_part'])) ? $row['Sub_part'] : '';
                 if ($ISkeyname != 'PRIMARY' && $row['Non_unique'] == 0) {
                     $ISkeyname = "UNIQUE|$kname";
@@ -151,10 +140,10 @@ function mysqlbackup($host,$dbname, $uid, $pwd, $structure_only) {
                     $index[$ISkeyname][] = $row['Column_name'];
                 }
             }
-            mysql_free_result($result);
+            mysqli_free_result($result);
 
             while (list($x, $columns) = @each($index)) {
-                $sql     .= ",".$crlf;
+                $sql .= "," . $crlf;
                 if ($x == 'PRIMARY') {
                     $sql .= '  PRIMARY KEY (';
                 } else if (substr($x, 0, 6) == 'UNIQUE') {
@@ -164,23 +153,23 @@ function mysqlbackup($host,$dbname, $uid, $pwd, $structure_only) {
                 } else {
                     $sql .= '  KEY ' . $x . ' (';
                 }
-                $sql     .= implode($columns, ', ') . ')';
+                $sql .= implode($columns, ', ') . ')';
             }
-            $sql .=  $crlf.");".$crlf.$crlf;
-
+            $sql .= $crlf . ");" . $crlf . $crlf;
         }
-        out(1,$sql);
+        out(1, $sql);
         if ($structure_only == FALSE) {
             // here we get table content
-            $result = mysql_query("SELECT * FROM  $tablename");
-            $fields_cnt   = mysql_num_fields($result);
-            while ($row = mysql_fetch_row($result)) {
-                $table_list     = '(';
+            $result = mysqli_query($link_db,"SELECT * FROM  $tablename");
+            $fields_cnt = mysqli_num_fields($result);
+            while ($row = mysqli_fetch_row($result)) {
+                $table_list = '(';
                 for ($j = 0; $j < $fields_cnt; $j++) {
-                    $table_list .= mysql_field_name($result, $j) . ', ';
+					$finfo =  mysqli_fetch_field_direct($result, $j);
+                    $table_list .= $finfo->name . ', ';
                 }
                 $table_list = substr($table_list, 0, -2);
-                $table_list     .= ')';
+                $table_list .= ')';
 
                 $sql = 'INSERT INTO ' . $tablename
                         . ' VALUES (';
@@ -188,25 +177,33 @@ function mysqlbackup($host,$dbname, $uid, $pwd, $structure_only) {
                     if (!isset($row[$j])) {
                         $sql .= ' NULL, ';
                     } else if ($row[$j] == '0' || $row[$j] != '') {
-                        $type          = mysql_field_type($result, $j);
+                        $finfo =  mysqli_fetch_field_direct($result, $j);
+                        $type = $finfo->type;
                         // a number
                         if ($type == 'tinyint' || $type == 'smallint' || $type == 'mediumint' || $type == 'int' ||
-                                $type == 'bigint'  ||$type == 'timestamp') {
+                                $type == 'bigint' || $type == 'timestamp') {
                             $sql .= $row[$j] . ', ';
                         }
                         // a string
                         else {
-                            $dummy  = '';
+                            $dummy = '';
                             $srcstr = $row[$j];
                             for ($xx = 0; $xx < strlen($srcstr); $xx++) {
                                 $yy = strlen($dummy);
-                                if ($srcstr[$xx] == '\\')   $dummy .= '\\\\';
-                                if ($srcstr[$xx] == '\'')   $dummy .= '\\\'';
-                                if ($srcstr[$xx] == "\x00") $dummy .= '\0';
-                                if ($srcstr[$xx] == "\x0a") $dummy .= '\n';
-                                if ($srcstr[$xx] == "\x0d") $dummy .= '\r';
-                                if ($srcstr[$xx] == "\x1a") $dummy .= '\Z';
-                                if (strlen($dummy) == $yy)  $dummy .= $srcstr[$xx];
+                                if ($srcstr[$xx] == '\\')
+                                    $dummy .= '\\\\';
+                                if ($srcstr[$xx] == '\'')
+                                    $dummy .= '\\\'';
+                                if ($srcstr[$xx] == "\x00")
+                                    $dummy .= '\0';
+                                if ($srcstr[$xx] == "\x0a")
+                                    $dummy .= '\n';
+                                if ($srcstr[$xx] == "\x0d")
+                                    $dummy .= '\r';
+                                if ($srcstr[$xx] == "\x1a")
+                                    $dummy .= '\Z';
+                                if (strlen($dummy) == $yy)
+                                    $dummy .= $srcstr[$xx];
                             }
                             $sql .= "'" . $dummy . "', ";
                         }
@@ -215,18 +212,17 @@ function mysqlbackup($host,$dbname, $uid, $pwd, $structure_only) {
                     } // end if
                 } // end for
                 $sql = preg_replace('/, $/', '', $sql);
-                $sql .= ");".$crlf;
-                
-                out(1,$sql);
+                $sql .= ");" . $crlf;
 
+                out(1, $sql);
             }
-            mysql_free_result($result);
+            mysqli_free_result($result);
         }
     }
-    
-  
+
+
     return;
-}  
+}
 
 function define_crlf() {
     global $HTTP_USER_AGENT;
@@ -264,14 +260,13 @@ function gzcompressfile($source,$level=false) {
     else return $dest;
 }
 
-
 ob_start();
 /*
 echo '#SKD101|'.$dbname.'|62|2015.09.02 19:34:11|12647|1|1|14|10922|106|922|54|8|418|2|2|3|4|7|1|1|1|1|1|1|1|1|1|1|1|10|6|1|5|20|2|8|56|1|3|1|1|3|1|2|36|11|1|1|3
     
 ';*/
 
-mysqlbackup($host,$dbname,$uname,$upass,$structure_only);
+mysqlbackup($GLOBALS['SysValue']['connect']['dbase']);
 $content=ob_get_clean();
 
 

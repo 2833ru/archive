@@ -1,62 +1,50 @@
 <?php
 
-$_classPath="../../../";
-include($_classPath."class/obj.class.php");
-PHPShopObj::loadClass("base");
-PHPShopObj::loadClass("system");
-PHPShopObj::loadClass("security");
-PHPShopObj::loadClass("orm");
-PHPShopObj::loadClass("file");
+// SQL
+$PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.seometanews.seometanews_system"));
 
-$PHPShopBase = new PHPShopBase($_classPath."inc/config.ini");
-include($_classPath."admpanel/enter_to_admin.php");
+// Функция обновления
+function actionUpdate() {
+    global $PHPShopOrm;
 
-
-// Настройки модуля
-PHPShopObj::loadClass("modules");
-$PHPShopModules = new PHPShopModules($_classPath."modules/");
-
-
-// Редактор
-PHPShopObj::loadClass("admgui");
-$PHPShopGUI = new PHPShopGUI();
-
-
+    $PHPShopOrm->debug = false;
+    $action = $PHPShopOrm->update($_POST);
+    header('Location: ?path=modules&install=check');
+    return $action;
+}
 
 function actionStart() {
-    global $PHPShopGUI,$_classPath,$PHPShopOrm;
+    global $PHPShopGUI, $TitlePage, $select_name, $PHPShopOrm;
 
-
-    $PHPShopGUI->dir=$_classPath."admpanel/";
-    $PHPShopGUI->title="Настройка модуля Keywords Loader";
-    $PHPShopGUI->size="500,450";
-
-    // Графический заголовок окна
-    $PHPShopGUI->setHeader("Настройка модуля 'Meta новости'","Настройки подключения",$PHPShopGUI->dir."img/i_display_settings_med[1].gif");
+    $PHPShopGUI->setActionPanel($TitlePage, $select_name, array('Сохранить и закрыть'));
+    
+    // Выборка
+    $data = $PHPShopOrm->select();
+    
+    
+    $Tab1 = '<hr>'.$PHPShopGUI->setField("Title раздела:", $PHPShopGUI->setTextArea("title_new", $data['title']),1,'Для '.$_SERVER['SERVER_NAME'].'/news/');
+    $Tab1.=$PHPShopGUI->setField("Description раздела:", $PHPShopGUI->setTextArea("description_new", $data['description']),1,'Для '.$_SERVER['SERVER_NAME'].'/news/');
+    
+        $Tab1.=$PHPShopGUI->setField("Keywords раздела:", $PHPShopGUI->setTextArea("keywords_new", $data['keywords']),1,'Для '.$_SERVER['SERVER_NAME'].'/news/');
 
     // Форма регистрации
-    $Tab3 = $PHPShopGUI->setPay($serial, false, false, false);
+    $Tab2 = $PHPShopGUI->setPay();
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("О Модуле",$Tab3,270));
+    $PHPShopGUI->setTab(array("Основное", $Tab1),array("О Модуле", $Tab2));
 
     // Вывод кнопок сохранить и выход в футер
-    $ContentFooter=
-            $PHPShopGUI->setInput("button","","Отмена","right",70,"return onCancel();","but").
-            $PHPShopGUI->setInput("submit","editID","ОК","right",70,"","but","actionUpdate");
+    $ContentFooter =
+            $PHPShopGUI->setInput("hidden", "rowID", 1) .
+            $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionUpdate.modules.edit");
 
     $PHPShopGUI->setFooter($ContentFooter);
     return true;
 }
 
-if($UserChek->statusPHPSHOP < 2) {
+// Обработка событий
+$PHPShopGUI->getAction();
 
-    // Вывод формы при старте
-    $PHPShopGUI->setLoader($_POST['editID'],'actionStart');
-
-    // Обработка событий
-    $PHPShopGUI->getAction();
-
-}else $UserChek->BadUserFormaWindow();
-
+// Вывод формы при старте
+$PHPShopGUI->setLoader($_POST['editID'], 'actionStart');
 ?>

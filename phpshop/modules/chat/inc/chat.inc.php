@@ -13,8 +13,8 @@ class AddToTemplateChatElement extends PHPShopElements {
     /**
      * Конструктор
      */
-    function AddToTemplateChatElement() {
-        parent::PHPShopElements();
+    function __construct() {
+        parent::__construct();
         $this->option();
     }
 

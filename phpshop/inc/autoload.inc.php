@@ -32,13 +32,15 @@ $PHPShopModules = new PHPShopModules();
 $PHPShopModules->doLoad();
 
 // Подключаем файлы autoload
-foreach ($SysValue['autoload'] as $val)
+foreach ($GLOBALS['SysValue']['autoload'] as $val)
     if (is_file($val))
         include_once($val);
 
 // Подключаем поиск брендов
 //$PHPShopSortElement = new PHPShopSortElement();
 //$PHPShopSortElement->brand('brand',14,'Бренды');
+    
+    
 
 // Выбор валюты
 $PHPShopCurrencyElement = new PHPShopCurrencyElement();
@@ -53,10 +55,12 @@ $PHPShopUserElement->init('wishlist');
 $PHPShopProductIndexElements = new PHPShopProductIndexElements();
 $PHPShopProductIndexElements->init('specMain');
 
+
 // Последние покупки
 $PHPShopProductIndexElements->init('nowBuy');
 
 // Меню каталогов
+
 $PHPShopShopCatalogElement = new PHPShopShopCatalogElement();
 $PHPShopShopCatalogElement->init('leftCatal');
 $PHPShopShopCatalogElement->init('leftCatalTable');
@@ -79,8 +83,8 @@ $PHPShopNewsElement = new PHPShopNewsElement();
 $PHPShopNewsElement->init('miniNews');
 
 // Слайдер
-$PHPShopNewsElement = new PHPShopSliderElement();
-$PHPShopNewsElement->init('imageSlider');
+$PHPShopSliderElement = new PHPShopSliderElement();
+$PHPShopSliderElement->init('imageSlider');
 
 // Баннер
 $PHPShopBannerElement = new PHPShopBannerElement();
@@ -105,5 +109,5 @@ $PHPShopCartElement = new PHPShopCartElement();
 $PHPShopCartElement->init('miniCart');
 
 // RSS грабер новостей
-$PHPShopRssParser = new PHPShopRssParser();
+new PHPShopRssParser();
 ?>

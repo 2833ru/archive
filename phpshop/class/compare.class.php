@@ -19,7 +19,7 @@ class PHPShopCompare {
     /**
      * Конструктор
      */
-    function PHPShopCompare() {
+    function __construct() {
         $this->_COMPARE = &$_SESSION['compare'];
     }
 

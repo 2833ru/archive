@@ -3,7 +3,7 @@
 /**
  * Библиотека запросов к БД на основе объектов типа доступа
  * @author PHPShop Software
- * @version 1.10
+ * @version 1.8
  * @package PHPShopClass
  */
 class PHPShopOrm {
@@ -58,18 +58,24 @@ class PHPShopOrm {
     var $cache_limit = 100;
     var $_SQL;
     var $_DATA;
+    var $link_db;
 
     /**
      * Конструктор
      * @param string $Base имя таблицы
      */
     function PHPShopOrm($Base = false) {
+        global $PHPShopBase;
+
         $this->objBase = $Base;
         $this->Option['where'] = " and ";
         $this->nWhere = 1;
         $this->nSelect = 1;
         $this->sql = false;
         $this->Items = &$GLOBALS['Cache'];
+
+        if ($PHPShopBase)
+            $this->link_db = $PHPShopBase->link_db;
     }
 
     /**
@@ -249,17 +255,17 @@ class PHPShopOrm {
         // Возвращаем данные в виде массива
         if ($this->install) {
             if ($this->mysql_error)
-                $result = mysql_query($this->_SQL) or die($this->setError("SQL Ошибка для [" . $this->_SQL . "] ", mysql_error() . ""));
+                $result = mysqli_query($this->link_db, $this->_SQL) or die($this->setError("SQL Ошибка для [" . $this->_SQL . "] ", mysqli_error($this->link_db), true));
             else
-                $result = mysql_query($this->_SQL);
+                $result = mysqli_query($this->link_db, $this->_SQL);
         }
         else
-            $result = mysql_query($this->_SQL) or die(PHPShopBase::errorConnect(102));
+            $result = mysqli_query($this->link_db, $this->_SQL) or die(PHPShopBase::errorConnect(102));
 
         if ($result) {
-            $num = mysql_num_rows($result);
+            $num = mysqli_num_rows($result);
             $this->numrows = $num;
-            while ($row = mysql_fetch_assoc($result))
+            while ($row = mysqli_fetch_assoc($result))
                 if ($num > 1 or $option['limit'] > 1 or strlen($option['limit']) > 1)
                     $this->_DATA[] = $row;
                 else
@@ -282,17 +288,22 @@ class PHPShopOrm {
      * @param string $name имя функции
      * @param string $action ошибка
      */
-    function setError($name, $action) {
-        global $_classPath;
+    function setError($name, $action, $stylesheet = false) {
 
-        $error = '<p style="BORDER: #000000 1px dashed;padding-top:10px;padding-bottom:10px;background-color:#FFFFFF;color:000000;font-size:12px">
-<img hspace="10" style="padding-left:10px" align="left" src=".' . $_classPath . 'admpanel/img/i_display_settings_med[1].gif"
-width="32" height="32" alt="PHPShopOrm Debug On"/ ><strong>' . $name . '</strong>
-	 <br><em>' . $action . '</em>';
         if ($this->comment)
-            $error.='<em style="color:green"><br>Комментарий: ' . $this->comment . '</em></p>';
+            $comment = '<br>Комментарий: ' . $this->comment;
         else
-            $error.='</p>';
+            $comment = null;
+
+        if (!class_exists('PHPShopGUI') or !empty($stylesheet))
+            $error = '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">';
+        else
+            $error = null;
+
+        $error.='<div class="alert alert-info alert-dismissible" id="debug-message" role="alert" style="margin:10px">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <strong><span class="glyphicon glyphicon-alert"></span> ' . $name . '</strong> ' . $action . '
+</div>';
         echo $error;
     }
 
@@ -318,6 +329,7 @@ width="32" height="32" alt="PHPShopOrm Debug On"/ ><strong>' . $name . '</strong
      * @return mixed
      */
     function update($value, $where = false, $prefix = '_new') {
+
         $this->_SQL = 'update ' . $this->objBase . ' set ';
         $_KEY = $this->findKey();
 
@@ -347,32 +359,24 @@ width="32" height="32" alt="PHPShopOrm Debug On"/ ><strong>' . $name . '</strong
             $this->setError("SQL Запрос: ", $this->_SQL);
 
         // Выполнение
-        if (mysql_query($this->_SQL)) {
+        if (mysqli_query($this->link_db, $this->_SQL)) {
             $this->clean();
             return true;
         }
         else
-            return mysql_error();
+            return mysqli_error($this->link_db);
     }
 
     /**
-     * Анализатор БД на наличие ячеек с заданным именем
+     * Анализатор БД на наличие ячеек с заданным именем (PHP 7)
      * @return array
      */
     function findKey() {
-        $result = mysql_query('select * from ' . $this->objBase . ' limit 1');
-        $num = mysql_num_rows($result);
-        if ($num > 0)
-            $row = mysql_fetch_assoc($result);
-        else {
-            $fields = mysql_list_fields($GLOBALS['SysValue']['connect']['dbase'], $this->objBase);
-            $columns = mysql_num_fields($fields);
-            for ($i = 0; $i < $columns; $i++) {
-                $row_name = mysql_field_name($fields, $i);
-                $row[$row_name] = "";
-            }
+        $result = mysqli_query($this->link_db, 'show fields from ' . $this->objBase);
+        while ($row = mysqli_fetch_array($result)) {
+            $return[$row['Field']] = null;
         }
-        return $row;
+        return $return;
     }
 
     /**
@@ -408,10 +412,10 @@ width="32" height="32" alt="PHPShopOrm Debug On"/ ><strong>' . $name . '</strong
             $this->setError("SQL Запрос: ", $this->_SQL);
 
         // Выполнение
-        if (mysql_query($this->_SQL))
+        if (mysqli_query($this->link_db, $this->_SQL))
             return true;
         else
-            return mysql_error();
+            return mysqli_error($this->link_db);
     }
 
     /**
@@ -431,9 +435,9 @@ width="32" height="32" alt="PHPShopOrm Debug On"/ ><strong>' . $name . '</strong
             $this->setError("SQL Запрос: ", $this->_SQL);
 
         if ($this->mysql_error)
-            $result = mysql_query($this->_SQL) or die($this->setError("SQL Ошибка для [" . $this->_SQL . "] ", mysql_error() . ""));
+            $result = mysqli_query($this->link_db, $this->_SQL) or die($this->setError("SQL Ошибка для [" . $this->_SQL . "] ", mysqli_error($this->link_db) . ""));
         else
-            $result = mysql_query($this->_SQL);
+            $result = mysqli_query($this->link_db, $this->_SQL);
 
         // Счетчик запросов
         $GLOBALS['SysValue']['sql']['num']++;
@@ -446,7 +450,7 @@ width="32" height="32" alt="PHPShopOrm Debug On"/ ><strong>' . $name . '</strong
      * @param mixed $var данные для вывода
      */
     function trace($var) {
-        echo '<pre style="BORDER: #000000 1px dashed;padding-top:10px;padding-bottom:10px;background-color:#FFFFFF;color:000000;font-size:12px">';
+        echo '<pre>';
         print_r($var);
         echo "</pre>";
     }
@@ -459,15 +463,16 @@ width="32" height="32" alt="PHPShopOrm Debug On"/ ><strong>' . $name . '</strong
      * $PHPShopOrm->insert(array('name_new'=>'Hi Test2'));
      * </code>
      * @param array $value массив значений
-     * @param <type> $prefix префикс полей в форме [_new]
+     * @param string $prefix префикс полей в форме [_new]
      * @return mixed
      */
     function insert($value, $prefix = '_new') {
         $this->_SQL = 'insert into ' . $this->objBase . ' set ';
         $_KEY = $this->findKey();
+
         foreach ($_KEY as $key => $v)
             if (isset($value[$key . $prefix])) {
-                $this->_SQL.="`" . $key . "`='" . addslashes($value[$key . $prefix]) . "',";
+                $this->_SQL.="`" . $key . "`='" . @addslashes($value[$key . $prefix]) . "',";
             }
         $this->_SQL = substr($this->_SQL, 0, strlen($this->_SQL) - 1);
 
@@ -480,10 +485,10 @@ width="32" height="32" alt="PHPShopOrm Debug On"/ ><strong>' . $name . '</strong
             $this->setError("SQL Запрос: ", $this->_SQL);
 
         // Выполнение
-        if (mysql_query($this->_SQL))
-            return true;
+        if (mysqli_query($this->link_db, $this->_SQL))
+            return mysqli_insert_id($this->link_db);
         else
-            return mysql_error();
+            return mysqli_error($this->link_db);
     }
 
     /**
@@ -502,7 +507,13 @@ width="32" height="32" alt="PHPShopOrm Debug On"/ ><strong>' . $name . '</strong
     function updateZeroVars() {
         $Arg = func_get_args();
         foreach ($Arg as $value) {
-            if (empty($_POST[$value]))
+
+            if (strpos($value, '.')) {
+                $param = explode(".", $value);
+                if (empty($_POST[$param[0]][$param[1]]))
+                    $_POST[$param[0]][$param[1]] = 0;
+            }
+            else if (empty($_POST[$value]))
                 $_POST[$value] = 0;
         }
     }

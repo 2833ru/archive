@@ -6,7 +6,7 @@ if (!defined("OBJENABLED"))
 /**
  * Системные настройки
  * @author PHPShop Software
- * @version 1.1
+ * @version 1.2
  * @package PHPShopObj
  */
 class PHPShopSystem extends PHPShopObj {
@@ -14,12 +14,12 @@ class PHPShopSystem extends PHPShopObj {
     /**
      * Конструктор
      */
-    function PHPShopSystem() {
+    function __construct() {
         $this->objID=1;
         $this->install=false;
         $this->cache=false;
         $this->objBase=$GLOBALS['SysValue']['base']['table_name3'];
-        parent::PHPShopObj();
+        parent::__construct();
     }
 
     /**

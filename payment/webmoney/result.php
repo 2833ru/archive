@@ -64,23 +64,23 @@ if (strtoupper($MY_LMI_HASH) != strtoupper((string) $LMI_HASH)) {
 } else {
 
     // Подключаем базу MySQL
-    @mysql_connect($SysValue['connect']['host'], $SysValue['connect']['user_db'], $SysValue['connect']['pass_db']);
-    mysql_select_db($SysValue['connect']['dbase']);
+    $link_db=mysqli_connect($SysValue['connect']['host'], $SysValue['connect']['user_db'], $SysValue['connect']['pass_db']);
+    mysqli_select_db($link_db,$SysValue['connect']['dbase']);
 
     $new_uid = UpdateNumOrder($LMI_PAYMENT_NO);
 
 
     // Приверяем сущ. заказа
     $sql = "select uid from " . $SysValue['base']['table_name1'] . " where uid='$new_uid'";
-    $result = mysql_query($sql);
-    $row = mysql_fetch_array($result);
+    $result = mysqli_query($link_db,$sql);
+    $row = mysqli_fetch_array($result);
     $uid = $row['uid'];
 
     if ($uid == $new_uid) {
         // Записываем платеж в базу
         $sql = "INSERT INTO " . $SysValue['base']['table_name33'] . " VALUES 
 ('$LMI_PAYMENT_NO','WebMoney, $LMI_PAYER_PURSE, WMId$LMI_PAYER_WM','$LMI_PAYMENT_AMOUNT','" . date("U") . "')";
-        $result = mysql_query($sql);
+        $result = mysqli_query($link_db,$sql);
         WriteLog($MY_LMI_HASH);
         
         // print OK signature

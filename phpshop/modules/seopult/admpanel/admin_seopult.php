@@ -1,7 +1,5 @@
 <?php
 
-$TitlePage = "SeoPult";
-
 class SeoPultCrypt {
 
     static public function encrypt($string, $key = '%key&') {
@@ -89,12 +87,8 @@ function register_seopult() {
 }
 
 function actionStart() {
-    global $PHPShopInterface, $_classPath;
+    global $PHPShopInterface,$PHPShopModules,$TitlePage, $select_name;
 
-
-    // Настройки модуля
-    PHPShopObj::loadClass("modules");
-    $PHPShopModules = new PHPShopModules($_classPath . "modules/");
 
     $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.seopult.seopult_system"));
     $option = $PHPShopOrm->select();
@@ -108,7 +102,7 @@ function actionStart() {
             $PHPShopOrm->clean();
             $option = $PHPShopOrm->select();
         } else {
-            $PHPShopInterface->_CODE.=$PHPShopInterface->setDiv($align, $PHPShopInterface->setButton('Регистрация пользователя', '../icon/group.gif', 300, 50, $float = "none", $onclick = "javascript:miniWin('../modules/seopult/admpanel/adm_module.php',510,450);return false;"),'padding:100px;text-align:center;');
+            //$PHPShopInterface->_CODE.=$PHPShopInterface->setDiv($align, $PHPShopInterface->setButton('Регистрация пользователя', '../icon/group.gif', 300, 50, $float = "none", $onclick = "javascript:miniWin('../modules/seopult/admpanel/adm_module.php',510,450);return false;"),'padding:100px;text-align:center;');
         }
     } else {
 
@@ -123,11 +117,11 @@ function actionStart() {
         $url = 'http://i.seopult.pro/iframe/cryptLogin?k=zaa' . $option['hash'] . urlencode($code);
 
         // Фрейм
-        $PHPShopInterface->_CODE.=$PHPShopInterface->setFrame('seopult', $url, '99%', '650', $float = 'none', $border = 0, $scrolling = 'yes');
+        $PHPShopInterface->setActionPanel($TitlePage, $select_name, array('Закрыть'));
+        $PHPShopInterface->_CODE.=$PHPShopInterface->setFrame('seopult', $url, '99%', '700', $float = 'none', $border = 0);
     }
 
-
-    $PHPShopInterface->Compile();
+    echo $PHPShopInterface->actionPanel.$PHPShopInterface->_CODE;
 }
 
 ?>

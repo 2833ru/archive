@@ -1,24 +1,4 @@
-<?
-
-$_classPath = "../../../";
-include($_classPath . "class/obj.class.php");
-PHPShopObj::loadClass("base");
-PHPShopObj::loadClass("system");
-PHPShopObj::loadClass("security");
-PHPShopObj::loadClass("orm");
-
-$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
-include($_classPath . "admpanel/enter_to_admin.php");
-
-
-// Настройки модуля
-PHPShopObj::loadClass("modules");
-$PHPShopModules = new PHPShopModules($_classPath . "modules/");
-
-
-// Редактор
-PHPShopObj::loadClass("admgui");
-$PHPShopGUI = new PHPShopGUI();
+<?php
 
 // SQL
 $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.productoption.productoption_system"));
@@ -43,6 +23,7 @@ function actionUpdate() {
     $_POST['option_new'] = serialize($vendor);
 
     $action = $PHPShopOrm->update($_POST);
+    header('Location: ?path=modules&install=check');
     return $action;
 }
 
@@ -55,35 +36,27 @@ function checkSelect($val) {
 }
 
 function actionStart() {
-    global $PHPShopGUI, $_classPath, $PHPShopOrm;
-
-
-    $PHPShopGUI->dir = $_classPath . "admpanel/";
-    $PHPShopGUI->title = "Настройка модуля";
-    $PHPShopGUI->size = "500,450";
-
+    global $PHPShopGUI, $PHPShopOrm;
+    
+        $PHPShopGUI->field_col = 1;
 
     // Выборка
     $data = $PHPShopOrm->select();
-    @extract($data);
     $vendor = unserialize($data['option']);
 
-    // Графический заголовок окна
-    $PHPShopGUI->setHeader("Настройка модуля 'Product Option'", "Настройки", $PHPShopGUI->dir . "img/i_display_settings_med[1].gif");
+    $Tab1 = $PHPShopGUI->setField('Опция A', $PHPShopGUI->setInputText('Имя:', 'option_1_name', $vendor['option_1_name'], 180, false, 'left') .'&nbsp;'. $PHPShopGUI->setSelect('option_1_format', checkSelect($vendor['option_1_format']), 100));
 
-    $Tab1 = $PHPShopGUI->setField('Опция A', $PHPShopGUI->setInputText('Имя:', 'option_1_name', $vendor['option_1_name'], 180, false, 'left') . $PHPShopGUI->setSelect('option_1_format', checkSelect($vendor['option_1_format']), 100));
+    $Tab1.= $PHPShopGUI->setField('Опция B', $PHPShopGUI->setInputText('Имя:', 'option_2_name', $vendor['option_2_name'], 180, false, 'left').'&nbsp;'. $PHPShopGUI->setSelect('option_2_format', checkSelect($vendor['option_2_format']), 100));
 
-    $Tab1.= $PHPShopGUI->setField('Опция B', $PHPShopGUI->setInputText('Имя:', 'option_2_name', $vendor['option_2_name'], 180, false, 'left') . $PHPShopGUI->setSelect('option_2_format', checkSelect($vendor['option_2_format']), 100));
+    $Tab1.= $PHPShopGUI->setField('Опция C', $PHPShopGUI->setInputText('Имя:', 'option_3_name', $vendor['option_3_name'], 180, false, 'left') .'&nbsp;'. $PHPShopGUI->setSelect('option_3_format', checkSelect($vendor['option_3_format']), 100));
 
-    $Tab1.= $PHPShopGUI->setField('Опция C', $PHPShopGUI->setInputText('Имя:', 'option_3_name', $vendor['option_3_name'], 180, false, 'left') . $PHPShopGUI->setSelect('option_3_format', checkSelect($vendor['option_3_format']), 100));
+    $Tab1.= $PHPShopGUI->setField('Опция D', $PHPShopGUI->setInputText('Имя:', 'option_4_name', $vendor['option_4_name'], 180, false, 'left') .'&nbsp;'. $PHPShopGUI->setSelect('option_4_format', checkSelect($vendor['option_4_format']), 100));
 
-    $Tab1.= $PHPShopGUI->setField('Опция D', $PHPShopGUI->setInputText('Имя:', 'option_4_name', $vendor['option_4_name'], 180, false, 'left') . $PHPShopGUI->setSelect('option_4_format', checkSelect($vendor['option_4_format']), 100));
+    $Tab1.= $PHPShopGUI->setField('Опция E', $PHPShopGUI->setInputText('Имя:', 'option_5_name', $vendor['option_5_name'], 180, false, 'left') .'&nbsp;'. $PHPShopGUI->setSelect('option_5_format', checkSelect($vendor['option_5_format']), 100));
 
-    $Tab1.= $PHPShopGUI->setField('Опция E', $PHPShopGUI->setInputText('Имя:', 'option_5_name', $vendor['option_5_name'], 180, false, 'left') . $PHPShopGUI->setSelect('option_5_format', checkSelect($vendor['option_5_format']), 100));
-
-    $info='Модуль позволяет добавить дополнительные поля для отображения в товарных позициях на сайте и при редактировании в карточке товара через закладку "Дополнительно". 
+    $info = 'Модуль позволяет добавить дополнительные поля для отображения в товарных позициях на сайте и при редактировании в карточке товара через закладку "Дополнительно". 
 <p>        
-Для вывода данных на сайте используются переменные <b>@productOption1@, @productOption2@, @productOption3@, @productOption4@, @productOption5@</b>. Сортировка наименования сотвествует сортировке вывода переменных в карточке редактирования товара сверху вниз. Переменные доступны в любом файле шаблонов продуктов phpshop/templates/имя шаблона/product/.</p>  
+Для вывода данных на сайте используются переменные <kbd>@productOption1@, @productOption2@, @productOption3@, @productOption4@, @productOption5@</kbd>. Сортировка наименования сотвествует сортировке вывода переменных в карточке редактирования товара сверху вниз. Переменные доступны в любом файле шаблонов продуктов <code>phpshop/templates/имя шаблона/product/</code>.</p>  
 
 Для доступа к значениям через php функции используется конструкция:<br><br>
 <code>
@@ -95,34 +68,27 @@ echo $PHPShopProduct->getParam("option4");<br>
 echo $PHPShopProduct->getParam("option5");<br>
 </code>';
 
-    $Tab2 = $PHPShopGUI->setInfo($info, 200, '96%');
+    $Tab2 = $PHPShopGUI->setInfo($info);
 
-    $Tab3 = $PHPShopGUI->setPay($serial, false);
-    $Tab3.= $PHPShopGUI->setLine('<br>') . $PHPShopGUI->setHistory();
+    $Tab3 = $PHPShopGUI->setPay();
+    $Tab3.= $PHPShopGUI->setHistory();
+
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1, 270), array("Описание", $Tab2, 270), array("О Модуле", $Tab3, 270));
+    $PHPShopGUI->setTab(array("Основное", $Tab1), array("Описание", $Tab2), array("О Модуле", $Tab3));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =
-            $PHPShopGUI->setInput("hidden", "newsID", $id, "right", 70, "", "but") .
-            $PHPShopGUI->setInput("button", "", "Отмена", "right", 70, "return onCancel();", "but") .
-            $PHPShopGUI->setInput("submit", "editID", "ОК", "right", 70, "", "but", "actionUpdate");
+            $PHPShopGUI->setInput("hidden", "rowID", $data['id']) .
+            $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionUpdate.modules.edit");
 
     $PHPShopGUI->setFooter($ContentFooter);
     return true;
 }
 
-if ($UserChek->statusPHPSHOP < 2) {
+// Обработка событий 
+$PHPShopGUI->getAction();
 
-    // Вывод формы при старте
-    $PHPShopGUI->setLoader($_POST['editID'], 'actionStart');
-
-    // Обработка событий 
-    $PHPShopGUI->getAction();
-}
-else
-    $UserChek->BadUserFormaWindow();
+// Вывод формы при старте
+$PHPShopGUI->setLoader($_POST['saveID'], 'actionStart');
 ?>
-
-

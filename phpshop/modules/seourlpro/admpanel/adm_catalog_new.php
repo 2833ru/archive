@@ -5,19 +5,18 @@ function addSeoUrlPro($data) {
     global $PHPShopGUI;
 
     if (isset($data['cat_seo_name'])) {
-    
-    // ƒобавление /cat/ дл€ сложных ссылок
-    $true_link = str_replace('cat/', '', $data['cat_seo_name']);
-    if (stristr($true_link, '/')) {
-        $data['cat_seo_name'] = 'cat/' . $true_link;
-    }
 
+        // ƒобавление /cat/ дл€ сложных ссылок
+        $true_link = str_replace('cat/', '', $data['cat_seo_name']);
+        if (stristr($true_link, '/')) {
+            $data['cat_seo_name'] = 'cat/' . $true_link;
+        }
 
-    $Tab3 = $PHPShopGUI->setField("SEO ссылка:", $PHPShopGUI->setInput("text", "cat_seo_name_new", $data['cat_seo_name'], "left", 400,false,false,false,'http://'.$_SERVER['SERVER_NAME'].'/','.html <p>* ћожно использовать вложенные ссылки /sony/plazma/televizor</p>'), "none");
-    $PHPShopGUI->addTab(array("SEO", $Tab3, 450));
+        $Tab3 = $PHPShopGUI->setField("SEO ссылка:", $PHPShopGUI->setInput("text", "cat_seo_name_new", $data['cat_seo_name'], "left", false, false, false, false, '/', '.html'), 1, 'ћожно использовать вложенные ссылки /sony/plazma/televizor');
+
+        $PHPShopGUI->addTab(array("SEO", $Tab3, 450));
     }
 }
-
 
 $addHandler = array(
     'actionStart' => 'addSeoUrlPro',

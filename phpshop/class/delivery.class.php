@@ -23,10 +23,10 @@ class PHPShopDelivery extends PHPShopObj {
      * Конструктор
      * @param Int $objID ИД доставки
      */
-    function PHPShopDelivery($objID = false) {
+    function __construct($objID = false) {
         $this->objID = $objID;
         $this->objBase = $GLOBALS['SysValue']['base']['delivery'];
-        parent::PHPShopObj();
+        parent::__construct();
     }
 
     /**
@@ -98,15 +98,16 @@ class PHPShopDelivery extends PHPShopObj {
 /**
  * Массив доставок
  * @author PHPShop Software
- * @version 1.0
+ * @version 1.1
  * @package PHPShopArray
  */
 class PHPShopDeliveryArray extends PHPShopArray {
 
-    function PHPShopDeliveryArray() {
+    function __construct($sql = false) {
+        $this->objSQL = $sql;
         $this->order = array('order' => 'id');
         $this->objBase = $GLOBALS['SysValue']['base']['delivery'];
-        parent::PHPShopArray('id', "city", 'price', 'enabled', 'PID', 'is_folder');
+        parent::__construct('id', "city", 'price', 'enabled', 'PID', 'is_folder');
     }
 
 }

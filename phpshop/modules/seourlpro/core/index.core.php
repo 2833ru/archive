@@ -14,7 +14,7 @@ class PHPShopSeoProCore extends PHPShopShop {
         // Список экшенов
         $this->action = array("nav" => "index");
 
-        parent::PHPShopShopCore();
+        parent::__construct();
     }
 
     function index() {

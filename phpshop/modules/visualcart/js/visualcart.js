@@ -1,10 +1,11 @@
 // Обновление визуальной корзины
 function visualCart(xid) {
     if (document.getElementById('visualcart')) {
+
         // Проверка даты добавления товара в корзину
         var cart_update = VisualCartGetCookie('cart_update_time');
 
-        if (cart_update > 0 || xid != '') {
+        if (cart_update > 0 || xid > 0) {
             var req = new Subsys_JsHttpRequest_Js();
 
             req.onreadystatechange = function() {
@@ -28,7 +29,7 @@ function visualCart(xid) {
                             document.getElementById('visualcart_order').style.display = 'block';
 
                         // Синхронизация удаления
-                        if (xid != '' && document.getElementById('visualcart_order')) {
+                        if (xid > 0 && document.getElementById('visualcart_order')) {
                             document.getElementById('num').innerHTML = (req.responseJS.num || '');
                             document.getElementById('sum').innerHTML = (req.responseJS.sum || '');
                         }
@@ -68,10 +69,8 @@ function visualCartJQ(xid) {
 
                     if (json['num'] == 0) {
                         $('#visualcart_order').hide();
-                        //document.getElementById('visualcart_order').style.display = 'none';
                     }
                     else if ($('#visualcart_order') || json['visualcart'] != '') {
-                        //document.getElementById('visualcart_order').style.display = 'block';
                         $('#visualcart_order').show();
                     }
 
@@ -105,6 +104,6 @@ function VisualCartGetCookie(cookieName) {
 
 // Проверка новой корзины через промежуток времени
 if (window.jQuery)
-    setInterval("visualCartJQ(0)", 3000);
+    setInterval("visualCartJQ(0)", 1000);
 else
-    setInterval("visualCart(0)", 3000);
+    setInterval("visualCart(0)", 1000);

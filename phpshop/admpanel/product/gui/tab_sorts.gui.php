@@ -10,9 +10,10 @@
 function sorttemplate($value, $n, $title, $vendor) {
     global $PHPShopGUI;
     $i = 1;
-    $value_new[0]=array(__('Нет данных'),false, 'none');
-    sort($value);
+    //$value_new[0]=array(__('Нет данных'),false, 'none');
+    
     if (is_array($value)) {
+        sort($value);
         foreach ($value as $p) {
             $sel = null;
             if (is_array($vendor[$n])) {
@@ -29,11 +30,11 @@ function sorttemplate($value, $n, $title, $vendor) {
         }
     }
 
-    $value = $PHPShopGUI->setSelect('vendor_array_new[' . $n . '][]', $value_new, '100%', false, false, false, false, false, $n,'list'.$n);
-    
-    $disp=$PHPShopGUI->setLine().$PHPShopGUI->setField($title, $value,'left',false,false,array('width'=>'45%;')).
-            $PHPShopGUI->setField(__('Добавить и активировать новое значение характеристики'), $PHPShopGUI->setInputText(false, 'addval'.$n).$PHPShopGUI->setInput("button", "", "Добавить", "right", 70, "return enterchar($n);", "but").'<B id="sta'.$n.'"></B>','left');
-    
+    $value = $PHPShopGUI->setSelect('vendor_array_new[' . $n . '][]', $value_new, 300, null, false, $search = true, false, $size = 1, $multiple = true);
+
+    $disp = $PHPShopGUI->setField($title, $value) .
+            $PHPShopGUI->setField(null, $PHPShopGUI->setInputArg(array('type' => 'text', 'placeholder' => __('Ввести другое'), 'size' => '300', 'name' => 'vendor_array_add[' . $n . ']','class'=>'vendor_add')));
+
     return $disp;
 }
 
@@ -42,11 +43,19 @@ function sorttemplate($value, $n, $title, $vendor) {
  * @param array $row массив данных
  * @return string 
  */
-function tab_sorts($data){
+function tab_sorts($data) {
     global $PHPShopGUI;
     PHPShopObj::loadClass("sort");
-    $PHPShopGUI->addJSFiles('gui/tab_sorts.gui.js');
     $PHPShopSort = new PHPShopSort($data['category'], false, false, 'sorttemplate', unserialize($data['vendor_array']), false, true);
-    return $PHPShopGUI->setDiv('left', $PHPShopSort->disp, 'height:450px;overflow:auto;');
+
+    $sort = $PHPShopSort->disp;
+
+    if (empty($sort))
+        $sort =
+                '<p class="text-muted">Для отображения характеристик у товаров необходимо объединить <a href="?path=sort" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-share-alt"></span> Характеристики в группы</a> и выбрать эти группы у <a href="?path=catalog" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-share-alt"></span> Каталогов товаров</a>. Характеристики из выбранных груп появятся в товарах указанных каталогов.</p>';
+
+
+    return $PHPShopGUI->setCollapse('Характеристики', $sort, $collapse = 'none', $line = true, $icons = false);
 }
+
 ?>

@@ -28,7 +28,7 @@ class Editor {
             $HeightCSS = $this->Height . 'px' ;
         else
             $HeightCSS = $this->Height ;
-        return  "<textarea name=\"{$this->InstanceName}\" rows=\"4\" cols=\"40\" style=\"font-size: 14px; width: {$WidthCSS}; height: {$HeightCSS}\">{$this->Value}</textarea>" ;
+        return  "<textarea name=\"{$this->InstanceName}\" rows=\"4\" class=\"form-control\" style=\"width: {$WidthCSS}; height: {$HeightCSS}\">{$this->Value}</textarea>" ;
     }
 }
 

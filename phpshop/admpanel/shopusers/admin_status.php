@@ -1,59 +1,53 @@
-<?
+<?php
 
-function ShopUsersStatus() {// Вывод 
-    global $SysValue;
-    $sql = "select * from " . $SysValue['base']['table_name28'] . " order by id";
-    $result = mysql_query($sql);
-    while ($row = mysql_fetch_array($result)) {
-        $id = $row['id'];
-        $name = $row['name'];
-        $discount = $row['discount'];
-        if (($row['enabled']) == "1") {
-            $checked = "<img src=img/icon-activate.gif  width=\"16\" height=\"16\" alt=\"В наличии\">";
-        } else {
-            $checked = "<img src=img/icon-deactivate.gif  width=\"16\" height=\"16\" alt=\"Отсутствует\">";
-        };
-        @$display.="
-	<tr onmouseover=\"show_on('r" . $id . "')\" id=\"r" . $id . "\" onmouseout=\"show_out('r" . $id . "')\" class=row onclick=\"miniWin('shopusers/adm_statusID.php?id=$id',450,420,event)\">
-    <td align=center class=forma>$checked</td>
-    <td class=forma>
-	" . $name . "
-	</td>
-	<td class=forma>
-	" . $discount . "%
-	</td>
-    </tr>
-	";
-        @$i++;
-    }
-    if ($i > 20)
-        $razmer = "height:600;";
-    return "
-	
-<div id=interfacesWin name=interfacesWin align=\"left\" style=\"width:100%;" . @$razmer . ";overflow:auto\"> 
-<table width=\"50%\"  cellpadding=\"0\" cellspacing=\"0\">
-<tr>
-	<td valign=\"top\">
-<table cellpadding=\"0\" cellspacing=\"1\" width=\"100%\" border=\"0\"class=\"sortable\" id=\"sort\">
-<tr>
-    <td width=\"50\" id=pane align=center><span name=txtLang id=txtLang>Статус</span></td>
-	<td id=pane align=center><span name=txtLang id=txtLang>Название</span></td>
-    <td width=\"100\" id=pane align=center><span name=txtLang id=txtLang>Скидка</span></td>
-</tr>
+$TitlePage = __("Покупатели - Статусы и скидки");
+PHPShopObj::loadClass('user');
 
-	" . $display . "
+function actionStart() {
+    global $PHPShopInterface;
 
-    </table>
-	</td>
-</tr>
-    </table>
+    $PHPShopInterface->action_button['Добавить Статус'] = array(
+        'name' => '',
+        'action' => 'addNew',
+        'class' => 'btn btn-default btn-sm navbar-btn',
+        'type' => 'button',
+        'icon' => 'glyphicon glyphicon-plus',
+        'tooltip' => 'data-toggle="tooltip" data-placement="left" title="Добавить Статус"'
+    );
 
-<div align=\"right\" style=\"padding:10;width:50%\"><BUTTON style=\"width: 15em; height: 2.2em; margin-left:5\"  onclick=\"miniWin('shopusers/adm_status_new.php',450, 420)\">
-<img src=\"icon/page_add.gif\" width=\"16\" height=\"16\" border=\"0\" align=\"absmiddle\" hspace=\"5\">
-<span name=txtLang id=txtLang>Новая позиция</span>
-</BUTTON></div>
-</div>
-	";
+    $PHPShopInterface->action_button['Скидки от заказа'] = array(
+        'name' => 'Скидки от заказа',
+        'action' => 'shopusers.discount',
+        'class' => 'btn btn-default btn-sm navbar-btn btn-action-panel',
+        'type' => 'button',
+        'icon' => 'glyphicon glyphicon-shopping-cart'
+    );
+
+
+    $PHPShopInterface->action_select['Скидки от заказа'] = array(
+        'name' => 'Скидки от заказа',
+        'url' => '?path=shopusers.discount'
+    );
+
+    $PHPShopInterface->setActionPanel(__("Статусы и скидки покупателей"), array('Удалить выбранные', 'Скидки от заказа'), array('Добавить Статус','Скидки от заказа'));
+    $PHPShopInterface->setCaption(array(null, "2%"), array("Название", "50%"), array("Колонка цен", "10%"), array("Скидка %", "10%"), array("Накопительная", "10%", array('align' => 'center')), array("", "10%"), array("Статус &nbsp;&nbsp;&nbsp;", "10%", array('align' => 'right')));
+
+    // Таблица с данными
+    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['shopusers_status']);
+    $PHPShopOrm->debug = false;
+    $data = $PHPShopOrm->select(array('*'), false, array('order' => 'id DESC'), array('limit' => 1000));
+    if (is_array($data))
+        foreach ($data as $row) {
+
+            if (!empty($row['cumulative_discount_check']))
+                $cumulative_discount_check = '<span class="glyphicon glyphicon-ok"></span>';
+            else
+                $cumulative_discount_check = '<span class="glyphicon glyphicon-remove"></span>';
+
+            $PHPShopInterface->setRow(
+                    $row['id'], array('name' => $row['name'], 'link' => '?path=shopusers.status&id=' . $row['id'], 'align' => 'left'), $row['price'], $row['discount'], array('name' => $cumulative_discount_check, 'align' => 'center'), array('action' => array('edit', 'delete', 'id' => $row['id']), 'align' => 'center'), array('status' => array('enable' => $row['enabled'], 'align' => 'right', 'caption' => array('Выкл', 'Вкл'))));
+        }
+    $PHPShopInterface->Compile();
 }
 
 ?>

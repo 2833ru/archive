@@ -8,7 +8,7 @@ if (!defined("OBJENABLED")) {
 /**
  * Библиотека данных по товарам
  * @author PHPShop Software
- * @version 1.0
+ * @version 1.2
  * @package PHPShopObj
  */
 class PHPShopProduct extends PHPShopObj {
@@ -18,7 +18,7 @@ class PHPShopProduct extends PHPShopObj {
      * @param Int $objID ИД товара
      * @param string $var параметр поиска товара [id|uid]
      */
-    function PHPShopProduct($objID, $var = 'id') {
+    function __construct($objID, $var = 'id') {
         $this->objID = $objID;
         $this->objBase = $GLOBALS['SysValue']['base']['table_name2'];
         $this->cache = true;
@@ -38,7 +38,7 @@ class PHPShopProduct extends PHPShopObj {
         else
             $this->objID=PHPShopSecurity::true_search($objID);
 
-        parent::PHPShopObj($var);
+        parent::__construct($var);
     }
 
     /**
@@ -88,10 +88,10 @@ class PHPShopProductArray extends PHPShopArray {
      * Конструктор
      * @param string $sql SQL условие выборки
      */
-    function PHPShopProductArray($sql = false) {
+    function __construct($sql = false) {
         $this->objSQL = $sql;
         $this->objBase = $GLOBALS['SysValue']['base']['table_name2'];
-        parent::PHPShopArray('id', 'uid', 'name', 'category', 'price', 'price_n', 'sklad', 'odnotip', 'vendor', 'title_enabled', 'datas', 'page', 'user', 'descrip_enabled', 'keywords_enabled', 'pic_small', 'pic_big', 'parent', 'baseinputvaluta');
+        parent::__construct('id', 'uid', 'name', 'category', 'price', 'price_n', 'sklad', 'odnotip', 'vendor', 'title_enabled', 'datas', 'page', 'user', 'descrip_enabled', 'keywords_enabled', 'pic_small', 'pic_big', 'parent', 'baseinputvaluta');
     }
 
 }

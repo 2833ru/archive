@@ -6,7 +6,7 @@ if (!defined("OBJENABLED"))
 /**
  * Родительский класс Объекта
  * @author PHPShop Software
- * @version 1.6
+ * @version 1.7
  * @package PHPShopClass
  */
 class PHPShopObj {
@@ -58,7 +58,7 @@ class PHPShopObj {
      * @param string $var поле выборки, по умолчанию id
      * @param array $import_data массив импорта данных
      */
-    function PHPShopObj($var = 'id', $import_data = null) {
+    function __construct($var = 'id', $import_data = null) {
         if (is_array($import_data))
             $this->objRow = $import_data;
         else
@@ -132,14 +132,23 @@ class PHPShopObj {
 
     /**
      * Загрузка класса
-     * @param string $class_name имя класса, согласно config.ini
+     * @param mixed $class_name имя класса (массив с именами) согласно config.ini
      */
-    static function loadClass($class_name) {
-        $class_path = OBJENABLED . "/" . $class_name . ".class.php";
-        if (file_exists($class_path))
-            require_once($class_path);
+    static function loadClass($class) {
+
+        if (!is_array($class)) {
+            $class_name[] = $class;
+        }
         else
-            echo "Нет файла " . $class_path;
+            $class_name = $class;
+
+        foreach ($class_name as $name) {
+            $class_path = OBJENABLED . "/" . $name . ".class.php";
+            if (file_exists($class_path))
+                require_once($class_path);
+            else
+                echo "Нет файла " . $class_path;
+        }
     }
 
     /**
@@ -181,6 +190,4 @@ function PHPShopAutoLoadClass($class_name) {
 if (function_exists('spl_autoload_register')) {
     spl_autoload_register('PHPShopAutoLoadClass');
 }
-
-
 ?>

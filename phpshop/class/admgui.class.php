@@ -1,112 +1,575 @@
 <?php
 
-if (empty($_SESSION['theme']))
-    $_SESSION['theme'] = 'classic';
-
 /**
- * Библиотека оконных административных интерфейсов
+ * Библиотека административных интерфейсов
  * @author PHPShop Software
- * @version 1.8
+ * @version 2.1
+ * @tutorial http://wiki.phpshop.ru/index.php/PHPShopGUI
  * @package PHPShopGUI
  */
 class PHPShopGUI {
 
     var $css;
-    var $title;
-    var $size;
-    var $theme;
     var $dir = '../';
-    var $alax_lib = false;
-
-    /**
-     * @var string подключение дополнительных JavaScript файлов
-     */
     var $includeJava;
-
-    /**
-     * @var string подключение дополнительных стилей
-     */
     var $includeCss;
-
-    /**
-     * @var int общий отступ padding
-     */
     var $padding = 5;
-
-    /**
-     * @var int общий отступ margin
-     */
     var $margin = 5;
-
-    /**
-     * @var bool интерфейс окна или панели.
-     */
-    var $window = false;
-
-    /**
-     * @var string параметр перезагрузки контента при закрытии окна
-     */
-    // var $reload="top";
-    /**
-     * @var bool режим отладки, закрывает окно
-     */
-    var $debug_close_window = true;
-
-    /**
-     * @var bool режим отладки, используется вместе с debug_close_window
-     */
-    var $debug = false;
-
-    /**
-     * @var string кодировка
-     */
-    var $charset = "windows-1251";
-
-    /**
-     * @var bool испрльзовать закладки
-     */
-    var $cssTab = true;
-
-    /**
-     * @var string путь до иконок офрмления
-     */
-    var $imgPath;
-
-    /**
-     * Префикс закладки
-     * @var string 
-     */
     var $tab_pre = '_';
-    var $windowID = false;
     var $form_enabled = true;
+    var $sidebarLeftCell = 2;
+    var $sidebarLeftRight = 2;
+    var $dropdown_action_form = true;
+    var $tab_key = 0;
 
     /**
      * Конструктор
      */
-    function PHPShopGUI($reload = 'top', $ajax = false) {
-
-        // Ajax On
-        $this->ajax = $ajax;
-
-        $this->_BODY = '<body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0">';
-
-        if (empty($_SESSION['theme']))
-            $this->theme = "classic";
-        else
-            $this->theme = $_SESSION['theme'];
+    function __construct() {
 
         // Языковой файл
         PHPShopObj::loadClass("lang");
     }
 
     /**
-     * ID окна для памяти закладок
-     * @param string $file имя файла
-     * @param int $id ИД
+     * Прорисовка сетки элементов
      */
-    function setID($file, $id) {
-        $path = pathinfo($file);
-        $this->windowID = substr($path['basename'], 0, strlen($path['basename']) - strlen($path['extension']) - 1) . '_' . $id;
+    function setGrid() {
+        $Arg = func_get_args();
+        $dis = '<div class="row">';
+        foreach ($Arg as $val) {
+            if (is_array($val))
+                $dis.='<div class="col-md-' . $val[1] . '">' . $val[0] . '</div>';
+        }
+        $dis.='</div>';
+
+        return $dis;
+    }
+
+    /**
+     * Прорисовка иконки
+     * @param string $img иконка
+     * @param string $class css
+     */
+    function i($img, $class = null) {
+        return '<span class="glyphicon glyphicon-' . $img . ' ' . $class . '"></span> ';
+    }
+
+    /**
+     * Иконка с выбором исходника
+     * @param string $data путь
+     * @param string $id имя поля
+     */
+    function setIcon($data, $id = "icon_new", $alt = true, $option = array('load' => true, 'server' => true, 'url' => true, 'multi' => false), $width = false) {
+
+        if (!empty($data)) {
+            $name = '<span data-icon="' . $id . '">' . $data . '</span>';
+            if (!empty($width))
+                $width = 'style="max-width:' . $width . 'px"';
+            $icon = '<img src="' . $data . '" data-thumbnail="' . $id . '" onerror="imgerror(this)" class="img-thumbnail" ' . $width . '>';
+            $icon_hide = $drag = '';
+        } else {
+            $icon = '<img class="img-thumbnail img-thumbnail-dashed" data-thumbnail="' . $id . '" src="images/no_photo.gif">';
+            $name = '<span data-icon="' . $id . '">Выбрать файл</span>';
+            $icon_hide = 'hide';
+            $drag = '<input type="file" name="file"  data-target="' . $id . '">';
+        }
+
+        $add = $help = null;
+
+        if (!empty($option['load']))
+            $add.='<span class="btn btn-default btn-file">Загрузить<input type="file" name="file"  data-target="' . $id . '"></span>';
+        if (!empty($option['multi']))
+            $add.='<button type="button" class="btn btn-default" id="uploaderModal">Пакетно</button>';
+        if (!empty($option['server']))
+            $add.='<button type="button" class="btn btn-default" data-return="return=' . $id . '" data-toggle="modal" data-target="#elfinderModal" data-path="image">Сервер</button>';
+
+        if (!empty($option['url']))
+            $add.='<button type="button" class="btn btn-default" id="promtUrl" data-target="' . $id . '">URL</button>
+                 <input type="hidden" name="furl" id="furl" value="0">';
+
+        $dis = '
+        <div class="row">
+           <div class="col-md-2 btn-file"><a href="#" class="link-thumbnail">' . $icon . '</a>' . $drag . '</span>';
+        if ($alt)
+            $dis.='<div class="input-group" style="margin-top:10px">
+             <div class="input-group-addon input-sm" data-toggle="tooltip" data-placement="bottom" title="Описание"><span class="glyphicon glyphicon-comment" ></span></div>
+             <input class="form-control input-sm" name="info_' . $id . '" value="' . $alt . '" placeholder="Alt" type="text">
+             </div>';
+        $dis.='
+           </div>
+           <div class="col-md-10">
+             <p><span class="remove glyphicon glyphicon-remove-sign ' . $icon_hide . '" data-return="' . $id . '" data-toggle="tooltip" data-placement="top" title="Удалить эту запись"></span> ' . $name . '</p><input type="hidden" name="' . $id . '" value="' . $data . '">
+               <div class="btn-group btn-group-sm" role="group" aria-label="...">
+                 ' . $add . '
+              </div>
+          </div>
+        </div>';
+
+        return $dis;
+    }
+
+    /**
+     * Файл с выбором исходника
+     * @param string $data путь
+     * @param string $id имя поля
+     */
+    function setFile($data = null, $id = "lfile", $option = array('load' => true, 'server' => 'file', 'url' => true)) {
+
+        if (!empty($data)) {
+            $name = '<span data-icon="' . $id . '">' . $data . '</span>';
+            $icon_hide = '';
+        } else {
+            $name = '<span data-icon="' . $id . '">Выбрать файл</span>';
+            $icon_hide = 'hide';
+        }
+
+        $add = null;
+        if (!empty($option['load']))
+            $add.='<span class="file-input btn btn-default btn-file">Загрузить<input type="file" name="file" data-target="' . $id . '"></span>';
+        if (!empty($option['server']))
+            $add.='<button type="button" class="btn btn-default" id="server" data-return="return=' . $id . '" data-toggle="modal" data-target="#elfinderModal" data-path="'.$option['server'].'">Сервер</button>';
+
+        if (!empty($option['url']))
+            $add.='<button type="button" class="btn btn-default" id="promtUrl" data-target="' . $id . '">URL</button><input type="hidden" name="furl" id="furl" value="0">';
+
+
+        $dis.='
+             <p><span class="remove glyphicon glyphicon-remove-sign ' . $icon_hide . '" data-return="' . $id . '" data-toggle="tooltip" data-placement="top" title="Удалить эту запись"></span> ' . $name . '</p><input type="hidden" name="' . $id . '" id="' . $id . '" value="' . $data . '" >
+               <div class="btn-group btn-group-sm" role="group" aria-label="...">
+                 ' . $add . '
+              </div>
+        ';
+
+        return $dis;
+    }
+
+    /**
+     *  Сообщение
+     * @param string $text текст сообщения
+     * @param string $type офрмление [succes | danger]
+     */
+    function setAlert($text, $type = 'success') {
+        return '<div class="alert alert-' . $type . ' alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  ' . $text . '</div>';
+    }
+
+    /**
+     *  Анимация загрузки
+     * @param string $title тест сообщения
+     * @param string $width длина
+     * @param string $class css класс
+     */
+    function setProgress($title, $class = false, $width = '100%') {
+        return ' 
+           <div class="progress ' . $class . '"><div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="5" aria-valuemin="0" aria-valuemax="100" style="width: ' . $width . '">' . $title . '</div></div>   ';
+    }
+
+    /**
+     *  Левый сайдбар
+     */
+    function setSidebarLeft($data = array(), $cell = 2, $hide_mobile = false) {
+        $dis = null;
+        $i = 1;
+
+
+        if (is_array($data))
+            foreach ($data as $key => $val)
+                if (is_array($val)) {
+
+                    $dis.='<div class="sidebar-data ' . $hide_mobile . ' ' . $val['class'] . '" id="' . $val['id'] . '">';
+
+
+                    // Иконки управления
+                    if (!empty($val['title-icon']))
+                        $dis.='<span class="pull-right title-icon">' . $val['title-icon'] . '</span>';
+
+                    $dis.='<h6>' . $val['title'] . '</h6>';
+                    $dis.='<div class="row">';
+
+                    if (!empty($val['icon'])) {
+                        $cell_icon = 2;
+                        $cell_info = 10;
+                    } else {
+                        $cell_icon = 0;
+                        $cell_info = 12;
+                        $icon_class = 'hide';
+                    }
+
+                    $dis.='<div class="col-md-' . $cell_icon . ' ' . $icon_class . ' "><span class="glyphicon glyphicon-' . $val['icon'] . '"></span></div>';
+                    $dis.='<div class="col-md-' . $cell_info . '"><adress>';
+
+                    if (is_array($val['name'])) {
+                        $dis.='<strong><a href="' . $val['name']['link'] . '" class="sidebar-data-0">' . $val['name']['caption'] . '</a></strong><br>';
+                    } elseif (!empty($val['name']))
+                        $dis.='<strong class="sidebar-data-0">' . $val['name'] . '</strong><br>';
+
+                    if (is_array($val['content']))
+                        foreach ($val['content'] as $key => $list) {
+
+                            if (is_array($list)) {
+                                $dis.='<a href="' . $list['link'] . '" class="sidebar-data-' . ($key + 1) . '">' . $list['caption'] . '</a><br>';
+                            }
+                            else
+                                $dis.='<span class="sidebar-data-' . ($key + 1) . '">' . $list . '</span><br>';
+                        }
+                    else
+                        $dis.=$val['content'];
+
+                    $dis.='</adress>
+                           </div>
+                        </div>
+                      </div>';
+
+                    if ($i < count($data))
+                        $dis.='<hr>';
+
+                    $i++;
+                }
+
+        if ($hide_mobile)
+            $hide_mobile = 'hidden-xs';
+
+        $this->sidebarLeft = '<div class="col-md-' . $cell . ' sidebar-left ' . $hide_mobile . '">' . $dis . '</div>';
+    }
+
+    /**
+     *  Правый сайдбар
+     */
+    function setSidebarRight($data = array(), $cell = 2) {
+        $dis = null;
+        $i = 1;
+
+        if (is_array($data))
+            foreach ($data as $key => $val)
+                if (is_array($val)) {
+
+                    $dis.='<div class="sidebar-data" id="' . $val['idelement'] . '">';
+                    $dis.='<h6>' . $val['title'] . '</h6>';
+                    $dis.='<div class="row">';
+
+                    if (!empty($val['icon'])) {
+                        $cell_icon = 2;
+                        $cell_info = 10;
+                    } else {
+                        $cell_icon = 0;
+                        $cell_info = 12;
+                        $icon_class = 'hide';
+                    }
+
+                    $dis.='<div class="col-md-' . $cell_icon . ' ' . $icon_class . '"><span class="glyphicon glyphicon-' . $val['icon'] . '"></span></div>';
+                    $dis.='<div class="col-md-' . $cell_info . '"><adress>';
+
+                    if (is_array($val['name'])) {
+                        $dis.='<strong><a href="' . $val['name']['link'] . '">' . $val['name']['caption'] . '</a></strong><br>';
+                    } elseif (!empty($val['name']))
+                        $dis.='<strong>' . $val['name'] . '</strong><br>';
+
+                    if (is_array($val['content']))
+                        foreach ($val['content'] as $list) {
+
+                            if (is_array($list)) {
+                                $dis.='<a href="' . $list['link'] . '">' . $list['caption'] . '</a><br>';
+                            }
+                            else
+                                $dis.=$list;
+                        }
+                    else
+                        $dis.=$val['content'];
+
+                    $dis.='</adress>
+                           </div>
+                        </div>
+                      </div>';
+
+                    if ($i < count($data))
+                        $dis.='<hr>';
+
+                    $i++;
+                }
+
+        $this->sidebarRight = '<div class="col-md-' . $cell . ' sidebar-right">' . $dis . '</div>';
+    }
+
+    /**
+     * Выпадающая акшен панель 
+     */
+    function setActionPanel($title, $action = array(), $button = array()) {
+        global $subpath;
+
+        if ($subpath[0] != 'modules') {
+            $xs_class = ' hidden-xs';
+            $xs_btn_name = 'Сохранить и закрыть';
+        } else {
+            $xs_class = null;
+            $xs_btn_name = 'Сохранить';
+        }
+
+
+        $this->action_button['Сохранить'] = array(
+            'name' => 'Сохранить',
+            'action' => 'editID',
+            'class' => 'btn btn-default btn-sm navbar-btn',
+            'type' => 'submit',
+            'icon' => 'glyphicon glyphicon-floppy-saved'
+        );
+
+        $this->action_button['Создать и редактировать'] = array(
+            'name' => 'Создать и редактировать',
+            'action' => 'saveID',
+            'class' => 'btn btn-default btn-sm navbar-btn',
+            'type' => 'submit',
+            'icon' => 'glyphicon glyphicon-floppy-saved'
+        );
+
+        $this->action_button['Сохранить и закрыть'] = array(
+            'name' => $xs_btn_name,
+            'action' => 'saveID',
+            'class' => 'btn  btn-default btn-sm navbar-btn' . $xs_class,
+            'type' => 'submit',
+            'icon' => 'glyphicon glyphicon-ok'
+        );
+
+        $this->action_button['Закрыть'] = array(
+            'name' => 'Закрыть',
+            'action' => '',
+            'class' => 'btn btn-default btn-sm navbar-btn btn-action-back',
+            'type' => 'button',
+            'icon' => 'glyphicon glyphicon-remove'
+        );
+
+
+        $this->action_button['Добавить'] = array(
+            'name' => '',
+            'action' => 'addNew',
+            'class' => 'btn btn-default btn-sm navbar-btn',
+            'type' => 'button',
+            'icon' => 'glyphicon glyphicon-plus',
+            'tooltip' => 'data-toggle="tooltip" data-placement="left" title="Добавить ' . $title . '"'
+        );
+
+        $this->action_select['Удалить выбранные'] = array(
+            'name' => 'Удалить выбранные',
+            'action' => 'select',
+            'class' => 'disabled',
+            'url' => '#'
+        );
+
+        $this->action_select['CSV'] = array(
+            'name' => 'Экспортировать выбранные',
+            'action' => 'export-select',
+            'class' => 'disabled'
+        );
+
+        $this->action_select['Редактировать'] = array(
+            'name' => 'Редактировать',
+            'action' => 'edit',
+            'url' => '#'
+        );
+
+        $this->action_select['Удалить'] = array(
+            'name' => 'Удалить',
+            'action' => 'deleteone',
+            'url' => '#'
+        );
+
+        $this->action_select['Сбросить'] = array(
+            'name' => 'Сбросить',
+            'action' => 'reset',
+            'url' => '#'
+        );
+
+
+        $this->action_select['Создать'] = array(
+            'name' => 'Создать новый',
+            'action' => 'new',
+            'url' => '#'
+        );
+
+        $this->action_select['Export'] = array(
+            'name' => 'Экспорт данных',
+            'action' => 'export',
+            'url' => '#'
+        );
+
+        $this->action_select['|'] = array(
+            'action' => 'divider',
+        );
+
+        $this->action_select['Сделать копию'] = array(
+            'name' => 'Сделать копию',
+            'url' => '?path=' . $_GET['path'] . '&action=new&id=' . $_GET['id']
+        );
+
+
+        if (!empty($_GET['return'])) {
+            $back['url'] = $_GET['return'];
+        }
+        else
+            $back['url'] = $_GET['path'];
+
+        if (empty($_GET['id']))
+            $back['class'] = 'back';
+        else
+            $back['class'] = null;
+
+
+        $CODE = '
+            <!-- Action panell -->
+            <div class="navbar-header">
+                        <a type="button" class="btn btn-default btn-sm navbar-btn pull-left ' . $back['class'] . '" href="?path=' . $back['url'] . '">
+                            <span class="glyphicon glyphicon-arrow-left"></span> Назад</a>
+                        <span class="navbar-brand hidden-xs">' . $title . '</span>
+                    </div>
+                    <ul class="nav navbar-nav navbar-right pull-right">';
+
+        // Кнопки
+        if (is_array($button)) {
+
+            foreach ($button as $val) {
+                if (!empty($this->action_button[$val]['type']))
+                    $CODE.='<li><button ' . $this->action_button[$val]['tooltip'] . ' type="' . $this->action_button[$val]['type'] . '" name="' . $this->action_button[$val]['action'] . '" class="' . $this->action_button[$val]['class'] . '" value="' . $this->action_button[$val]['name'] . '"><span class="' . $this->action_button[$val]['icon'] . '"></span> ' . $this->action_button[$val]['name'] . '</button>&nbsp;</li>';
+            }
+        }
+
+
+        // Выпадающий список с выбранными
+        if (is_array($action)) {
+
+            $CODE.='<li class="hidden-xs"><button class="btn btn-default btn-sm navbar-btn" data-toggle="dropdown" role="button" aria-expanded="false"><span class="glyphicon glyphicon-cog"></span> <span class="caret"></span></button>
+                <ul class="dropdown-menu select-action" role="menu">';
+
+            foreach ($action as $val) {
+                if (empty($this->action_select[$val]['name']))
+                    $CODE.='<li class="' . $this->action_select[$val]['action'] . '"></li>';
+                else {
+
+                    if (empty($this->action_select[$val]['target']))
+                        $this->action_select[$val]['target'] = '_self';
+
+                    $CODE.='<li class="' . $this->action_select[$val]['class'] . '"><a href="' . $this->action_select[$val]['url'] . '" class="' . $this->action_select[$val]['action'] . '" data-option="' . $this->action_select[$val]['data'] . '" target="' . $this->action_select[$val]['target'] . '"><span class="' . $this->action_select[$val]['icon'] . '"></span> ' . $this->action_select[$val]['name'] . '</a></li>';
+                }
+            }
+
+            $CODE.=' </ul>
+                </li>';
+        }
+        $CODE.=' </ul>';
+
+
+        $this->actionPanel = '<nav class="navbar-action">
+                <div class="container">' . $CODE . '</div>
+            </nav>
+         <!-- /.Action panell -->
+         <div id="fix-check" class="visible-lg"></div>
+';
+    }
+
+    /**
+     * Выпадающее меню
+     * @param array $Arg массив аргументов
+     * @param string $expand направление открытия меню
+     * @return string
+     */
+    function setDropdown($Arg = array(), $expand = 'dropdown', $align = 'right', $passive = false) {
+        global $subpath;
+
+        $name = $Arg['caption'][$Arg['enable']];
+
+        if (empty($passive) and empty($Arg['enable']))
+            $passive = 'text-muted';
+        else
+            $passive = null;
+
+        $CODE = '<div class="' . $expand . '">
+            <a href="#" class="dropdown-toggle ' . $passive . '" data-toggle="' . $expand . '" style="color:' . $Arg['color'] . '"  role="button" aria-expanded="false"><span id="dropdown_status_' . $Arg['id'] . '">' . $name . '</span> <span class="caret hidden-xs"></span></a>
+            <ul class="dropdown-menu dropdown-menu-' . $align . '" role="menu">';
+
+        if (is_array($Arg['caption']))
+            foreach ($Arg['caption'] as $key => $val) {
+                if ($key == $Arg['enable'])
+                    $class = 'class="disabled"';
+                else
+                    $class = null;
+                $CODE.='<li ' . $class . '><a href="#"  data-id="' . $Arg['id'] . '" data-val="' . $key . '" class="status">' . $val . '</a></li>';
+            }
+
+        if (empty($this->path))
+            $this->path = $_GET['path'];
+
+        $CODE.= '</ul>
+            </div>';
+
+        if ($this->dropdown_action_form)
+            $CODE.='<form method="post" action="?path=' . $this->path . '&id=' . $Arg['id'] . '" class="status_edit_' . $Arg['id'] . '">            
+<input type="hidden" value="actionUpdate.' . $subpath[0] . '.edit" name="actionList[editID]">
+<input type="hidden" value="1" name="ajax">
+<input type="hidden" value="Обновить" name="editID">
+<input type="hidden" value="0" name="enabled_new">
+<input type="hidden" value="0" name="flag_new">
+<input type="hidden" value="0" name="statusi_new">
+<input type="hidden" value="' . $Arg['id'] . '" name="rowID">
+</form>       
+';
+        return $CODE;
+    }
+
+    /**
+     * Выпадающий список
+     * @param array $Arg массив аргументов
+     * @return string
+     */
+    function setDropdownAction($Arg = array()) {
+        global $subpath;
+
+        $this->action_title['edit'] = 'Редактировать';
+        $this->action_title['delete'] = 'Удалить';
+        $this->action_title['view'] = 'Предпросмотр';
+        $this->action_title['copy'] = 'Сделать копию';
+        $this->action_title['option'] = 'Настройки';
+        $this->action_title['on'] = 'Включить';
+        $this->action_title['off'] = 'Выключить';
+        $this->action_title['email'] = 'Связь по E-mail';
+        $this->action_title['|'] = '|';
+
+        $CODE = '
+        <div class="dropdown none hidden-sm hidden-xs" id="dropdown_action">
+            <a href="#" class="dropdown-toggle btn btn-default btn-sm" data-toggle="dropdown" role="button" aria-expanded="false"><span class="glyphicon glyphicon-cog"></span> <span class="caret"></span></a>
+            <ul class="dropdown-menu dropdown-menu-right" role="menu" >';
+
+
+        foreach ($Arg as $val) {
+            if ($val != $Arg['id']) {
+                if (is_array($val)) {
+                    $CODE.='<li><a href="' . $val['url'] . '">' . $val['name'] . '</a></li>';
+                } else {
+                    if ($this->action_title[$val] == '|')
+                        $CODE.='<li class="divider"></li>';
+                    else
+                        $CODE.='<li><a href="#" data-id="' . $Arg['id'] . '" class="' . $val . '">' . $this->action_title[$val] . '</a></li>';
+                }
+            }
+        }
+
+        if (empty($this->path))
+            $this->path = $_GET['path'];
+
+
+        $CODE.= '</ul>
+            </div>';
+
+        if ($this->dropdown_action_form)
+            $CODE.= ' 
+<form method="post" action="?path=' . $this->path . '&id=' . $Arg['id'] . '" class="list_edit_' . $Arg['id'] . '">      
+<input type="hidden" value="actionDelete.' . $subpath[0] . '.edit" name="actionList[delID]"> 
+<input type="hidden" value="Удалить" name="delID">
+<input type="hidden" value="1" name="ajax">
+<input type="hidden" value="' . $Arg['id'] . '" name="rowID">
+</form>
+        ';
+
+        return $CODE;
     }
 
     /**
@@ -116,7 +579,11 @@ class PHPShopGUI {
      * @param string $path путь до папки gui
      * @param mixed $option дополнительные параметры 
      */
-    function loadLib($file, $data, $path = './', $option = false) {
+    function loadLib($file, $data, $path = false, $option = false) {
+
+        if (empty($path))
+            $path = $_GET['path'] . '/';
+
         $class_path = $path . 'gui/' . $file . '.gui.php';
         if (file_exists($class_path)) {
             require_once($class_path);
@@ -135,8 +602,8 @@ class PHPShopGUI {
      * @param string $target параметр target
      * @return string
      */
-    function setForm($value, $action = false, $name = "product_edit", $style = false, $target = false, $onsubmit = false) {
-        $CODE.='<form method="post" target="' . $target . '" enctype="multipart/form-data" action="' . $action . '" name="' . $name . '" id="' . $name . '" style="' . $style . '" onsubmit="' . $onsubmit . '" >
+    function setForm($value, $action = false, $name = "product_edit", $style = false, $target = false, $class = 'form-horizontal') {
+        $CODE.='<form method="get" target="' . $target . '" enctype="multipart/form-data" action="' . $action . '" name="' . $name . '" id="' . $name . '" style="' . $style . '"  class="' . $class . '">
             ' . $value . '</form>';
         return $CODE;
     }
@@ -144,40 +611,36 @@ class PHPShopGUI {
     /**
      * Компиляция результата
      */
-    function Compile($id = false, $form = false, $style = false) {
-        global $_classPath;
+    function Compile($form = true) {
 
-        //  Авто загрузка JS Ajax
-        if ($this->alax_lib and !empty($this->ajax))
-            $this->includeJava.='<script language="JavaScript" src="' . $_classPath . 'lib/Subsys/JsHttpRequest/Js.js"></script>';
+        $cell = 12;
+        if (!empty($this->sidebarLeft))
+            $cell = $cell - $this->sidebarLeftCell;
 
+        if (!empty($this->sidebarRight))
+            $cell = $cell - $this->sidebarLeftRight;
 
-
-        $this->_HEAD = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-     <html>
-     <head>
-     <title>' . $this->title . '</title>
-     <meta http-equiv="Content-Type" content="text/html; charset=' . $this->charset . '">
-     <link href="' . $this->dir . 'skins/' . $this->theme . '/tab.css" type=text/css rel=stylesheet>
-	 <script type="text/javascript" src="' . $this->dir . 'java/tabpane.js"></script>
-	 <link href="' . $this->dir . 'skins/' . $this->theme . '/texts.css" type=text/css rel=stylesheet>' . $this->includeCss . '
-     <script src="' . $this->dir . 'java/phpshop.js" type="text/javascript"></script>' . $this->includeJava . '
-	 ';
-
-        $this->_HEAD.='</head>';
-
-        echo $this->_HEAD . '
-	 ' . $this->_BODY;
-        if ($this->form_enabled) {
-            echo'
-	 <form method="post" enctype="multipart/form-data" action="' . $_SERVER['PHP_SELF'] . '"  name="product_edit" id="product_edit" onsubmit="' . $this->onsubmit . '">
-	 ' . $this->_CODE . '
-	 </form>';
-        }
+        if (!empty($_GET['return']))
+            $path = $_GET['return'];
         else
-            echo $this->_CODE . '
-	 </body>
-	 </html>';
+            $path = $_GET['path'];
+
+
+        if ($form)
+            echo '<form method="post" enctype="multipart/form-data" name="product_edit" id="product_edit" class="form-horizontal" role="form" data-toggle="validator">';
+        echo $this->actionPanel . '
+                <div class="container row sidebarcontainer" >
+                    ' . $this->sidebarLeft . '
+                    <div class="col-md-' . $cell . ' main">
+                     ' . $this->_CODE . '
+                    </div>
+                    ' . $this->sidebarRight . '
+                </div>
+                <input type="hidden" value="' . $path . '" name="path" id="path">';
+
+        if ($form)
+            echo '</form> ';
+        echo $this->includeJava . $this->includeCss;
     }
 
     /**
@@ -185,7 +648,10 @@ class PHPShopGUI {
      * @param string $editor
      */
     function setEditor($editor = false, $mod_enabled = false) {
-        global $onsubmit;
+
+        // Временный запрет подключения редакторов
+        if (!in_array($editor, array('ace', 'none', 'default')))
+            $editor = 'default';
 
         // Временное перенаправление выбора редактора
         if (empty($editor))
@@ -194,14 +660,13 @@ class PHPShopGUI {
         if ($mod_enabled)
             $editor_path = $this->dir . "editors/" . $editor . "/editor.php";
         else
-            $editor_path = "../editors/" . $editor . "/editor.php";
+            $editor_path = "./editors/" . $editor . "/editor.php";
+
         if (is_file($editor_path))
             include($editor_path);
         else {
-            $this->setEditor();
+            $this->setEditor($editor);
         }
-
-        $this->onsubmit = $onsubmit;
     }
 
     /**
@@ -219,27 +684,49 @@ class PHPShopGUI {
      * Прорисовка элемента Fieldset с легендой
      * @param string $title заголовок легенды
      * @param string $content содержание
-     * @param string $float параметр float стиля
-     * @param int $margin_left отступ слева
-     * @param int $padding_top отступ свеоху
-     * @param array $option дополнительные настройки стилей
+     * @param integer $size размер сетки описаняи поля 1-12
      * @return string
      */
-    function setField($title, $content, $float = "none", $margin_left = 0, $padding_top = '0px', $option = false) {
+    function setField($title, $content, $size = 1, $help = false, $class = false, $label = 'control-label') {
 
-        // Дополнительные опции
-        $dop_option = null;
-        if (is_array($option))
-            foreach ($option as $k => $v)
-                $dop_option.=';' . $k . ':' . $v;
+        if (!strpos($title, ':') and !empty($title))
+            $title.=':';
 
+        // Поддержка старых размеров
+        $old_size = array(
+            'none' => 1,
+            'left' => 1,
+            'right' => 1
+        );
+        if (is_string($size))
+            $size = $old_size[$size];
 
+        // Общая настройка
+        if (!empty($this->field_col))
+            $size = $this->field_col;
+
+        // Подсказка
+        if (!empty($help))
+            $help = $this->setHelpIcon($help);
 
         $CODE = '
-	 <FIELDSET style="float:' . $float . ';padding:' . $this->padding . 'px;margin-left:' . $margin_left . 'px;padding-top:' . $padding_top . $dop_option . '">
-	 <LEGEND>' . $title . '</LEGEND>
-	 ' . $content . '
-	 </FIELDSET>';
+     <div class="form-group form-group-sm ' . $class . '">
+        <label class="col-sm-' . intval($size) . ' ' . $label . '">' . $title . $help . '</label><div class="col-sm-' . (12 - intval($size)) . '">' . $content . '</div>
+     </div>';
+        return $CODE;
+    }
+
+    /**
+     * Прорисовка элемента выбора цвета
+     * @param string $name имя поля
+     * @param string $value значение
+     * @param string $size размер
+     * @return string
+     */
+    function setInputColor($name, $value, $size = 200) {
+        $CODE = '<div class="input-group color" style="width:' . $this->chekSize($size) . '">
+    <input type="text" name="' . $name . '" value="' . $value . '" class="form-control input-sm">
+    <span class="input-group-addon input-sm"><i></i></span></div>';
         return $CODE;
     }
 
@@ -255,35 +742,74 @@ class PHPShopGUI {
      * @param string $action привязка к экшену, имя php функции
      * @param string $caption текст перед элементом
      * @param string $description текст после элемента
+     * @param string $placeholder placeholder
      * @return string
      */
-    function setInput($type, $name, $value, $float = "none", $size = 200, $onclick = "return true", $class = false, $action = false, $caption = false, $description = false, $title = false) {
+    function setInput($type, $name, $value, $float = null, $size = false, $onclick = false, $class = false, $action = false, $caption = false, $description = false, $title = false) {
+        static $passN;
 
-        $CODE = '
-	 <div style="float:' . $float . ';padding:' . $this->padding . 'px;">
-             ' . $caption . ' <input type="' . $type . '" value="' . $value . '" placeholder="' . $title . '" name="' . $name . '" id="' . $name . '" style="width:' . $this->chekSize($size) . ';"
-                 class="' . $class . '" onclick="' . $onclick . '" title="' . $title . '"> ' . $description . '</div>';
+        $class_array = array(
+            'text' => 'form-control input-sm',
+            'password' => 'form-control input-sm',
+            'email' => 'form-control input-sm',
+            'submit' => 'btn btn-primary',
+            'button' => 'btn btn-default',
+            'hidden' => 'hidden-edit',
+            'reset' => 'btn btn-warning',
+        );
+        $style = null;
+
+
+
+        if ($size)
+            $style.= 'width:' . $this->chekSize($size) . ';';
+
+        if ($float)
+            $style.= 'float:' . $float . ';';
+
+        if ($onclick)
+            $onclick = 'onclick="' . $onclick . '"';
+
+        if (strpos($type, '.')) {
+            $type_array = explode(".", $type);
+            $type = $type_array[0];
+            $required = ' required ';
+
+            if (!empty($type_array[2]))
+                $required.=' data-minlength="' . intval($type_array[2]) . '" ';
+        }
+
+        // Проверка пароля
+        if ($type == 'password') {
+
+            if ($passN > 0)
+                $data['match'] = ' data-match="#inputPassword" ';
+
+            $id = 'inputPassword' . $passN;
+
+            $passN++;
+        }
+
+        if (!empty($description) or !empty($caption)) {
+
+            $CODE = ' <div class="input-group" style="' . $style . '">';
+
+            if (!empty($caption))
+                $CODE.= ' <div class="input-group-addon input-sm">' . $caption . '</div>';
+
+            $CODE.= '<input class="' . $class_array[$type] . ' ' . $class . '" type="' . $type . '" value="' . $value . '"  name="' . $name . '" id="' . $name . '" placeholder="' . $title . '">';
+
+            if (!empty($description))
+                $CODE.='<div class="input-group-addon input-sm">' . $description . '</div>';
+
+            $CODE.='</div>';
+        }
+        else
+            $CODE = '<input class="' . $class_array[$type] . ' ' . $class . '" type="' . $type . '" value="' . $value . '"  name="' . $name . '" id="' . $id . '" style="' . $style . '" ' . $onclick . $data['match'] . ' placeholder="' . $title . '" ' . $required . '>';
 
         // Слушатель действия
         if ($action == true) {
             $this->action[$name] = $action;
-
-            /*
-              if(strpos($action,'.')){
-              $action_array=explode(".", $action);
-              $action_function_name=$action_array[0];
-
-              // Права на редактирование
-              $this->rule_path[$name]=$action_array[1];
-              $this->rule_do[$name]=$action_array[2];
-              }
-              else
-              $action_function_name = $action;
-              $this->action[$name] = $action_function_name;
-              $this->rule_path[$name]=false;
-              $this->rule_do[$name]=false;
-             * 
-             */
         }
 
         return $CODE;
@@ -298,82 +824,66 @@ class PHPShopGUI {
      * @param string $description текст после элемента
      * @param string $float  float
      * @param string $class имя класса стиля
+     * @param string $placeholder имя класса стиля
      * @return string
      */
-    function setInputText($caption, $name, $value, $size = 300, $description = false, $float = "none", $class = false, $title = false) {
-        return $this->setInput('text', $name, htmlentities($value, ENT_COMPAT, 'cp1251'), $float, $size, false, $class, false, $caption, $description, $title);
+    function setInputText($caption, $name, $value, $size = false, $description = false, $float = false, $class = false, $placeholder = false) {
+
+        // + fix
+        $value = str_replace('&#43;', '+', $value);
+
+        return $this->setInput('text', $name, htmlentities($value, ENT_COMPAT, 'cp1251'), $float, $size, false, $class, false, $caption, $description, $placeholder);
     }
 
     /**
-     * Прорисовка дополнительного элемента
-     * @param mixed $val код элемента
+     * Прорисовка элемента Panel
+     * @return string
      */
-    function setMyTag($val) {
-        $this->_CODE.='
-	 ' . $val;
+    function setPanel($header, $content, $class = 'panel-default', $body = true) {
+        $result = '<div class="panel ' . $class . '">
+         <div class="panel-heading">' . $header . '</div>';
+        if ($body)
+            $result.= '<div class="panel-body">';
+        $result.=$content;
+        if ($body)
+            $result.= '</div>';
+        $result.= '</div>';
+        return $result;
     }
 
     /**
-     * Прорисовка заголовка формы окна
-     * @param string $name заголовок
-     * @param string $title описание
-     * @param string $icon иконка
+     * Прорисовка элемента Input через массив 
+     * @param array $arg массив опций [type,name,value,caption,description,placeholder,size]
+     * @return string
      */
-    function setHeader($name = false, $title = false, $icon = false) {
-        $this->_CODE.='
-	 <table cellpadding="0" cellspacing="0" width="100%" height="50" id="title">
-     <tr bgcolor="#ffffff">
-     <td style="padding:10px">
-     <b>' . $name . '</b><br>
-     &nbsp;&nbsp;&nbsp;' . $title . '
-     </td>
-     <td align="right">
-     <img src="' . $icon . '" border="0" hspace="10">
-     </td>
-     </tr>
-     </table>';
-    }
-
-    /**
-     * Прорисовка закладок Tab
-     * <code>
-     * // example:
-     * $PHPShopGUI->setTab(array("Заголовок1","Содержание1","Высота"),array("Заголовок2","Содержание2","Высота"));
-     * </code>
-     */
-    function setTab() {
-
-        $this->_CODE.='
-	 <!-- begin tab pane -->
-     <div class="tab-pane" id="article' . $this->tab_pre . 'tab" style="margin-top:' . $this->margin . 'px;">
-     <script type="text/javascript">
-     ' . $this->tab_pre . 'tabPane = new WebFXTabPane( document.getElementById( "article' . $this->tab_pre . 'tab" ), true, "' . $this->windowID . '" );
-     </script>
-	 ';
-
-        $Arg = func_get_args();
-
-
-        if (!empty($this->TrialOff)) {
-            $count = count($Arg) - 1;
-            foreach ($Arg as $key => $val)
-                if ($key < $count)
-                    unset($Arg[$key]);
+    function setInputArg($arg = array()) {
+        if (is_array($arg)) {
+            if ($arg['type'] == 'textarea')
+                return $this->setTextarea($arg['name'], htmlentities($arg['value'], ENT_COMPAT, 'cp1251'), $arg['float'], $arg['width'], $arg['height'], $arg['description'], $arg['placeholder']);
+            elseif ($arg['type'] == 'checkbox')
+                return $this->setRadio($arg['name'], 1, $arg['caption'], $arg['value']) . $this->setRadio($arg['name'], 0, 'Выкл.', 1);
+            else
+                return $this->setInput($arg['type'], $arg['name'], htmlentities($arg['value'], ENT_COMPAT, 'cp1251'), $arg['float'], $arg['size'], false, $arg['class'], false, $arg['caption'], $arg['description'], $arg['placeholder']);
         }
+    }
 
-        foreach ($Arg as $key => $val) {
+    /**
+     * Прорисовка элемента выбора даты
+     * @param string $name имя
+     * @param mixed $value значение
+     * @return string
+     */
+    function setInputDate($name, $value, $style = null, $class = 'col-md-2', $tooltip = false) {
 
-            $this->_CODE.='
-     <div class="tab-page" id="tab' . $this->tab_pre . $this->tab_key . '" style="height:' . $val[2] . '">
-     <h2 class="tab">' . $val[0] . '</h2>
-     <script type="text/javascript">
-     ' . $this->tab_pre . 'tabPane.addTabPage( document.getElementById( "tab' . $this->tab_pre . $this->tab_key . '" ) );
-     </script>
-	 ' . $val[1] . '
-	 </div>';
-            $this->tab_key++;
-        }
-        //$this->_CODE.='</div>';
+        if ($tooltip)
+            $tooltip = 'data-toggle="tooltip" data-placement="top" title="' . $tooltip . '"';
+
+        return '
+        <div class="input-group date ' . $class . '" style="' . $style . '">
+        <input class="form-control input-sm" type="text" name="' . $name . '" value="' . $value . '" ' . $tooltip . '>
+        <span class="input-group-addon input-sm"><span class="glyphicon glyphicon-remove"></span></span>
+	<span class="input-group-addon input-sm"><span class="glyphicon glyphicon-calendar"></span></span>
+        </div> ';
     }
 
     /**
@@ -385,19 +895,65 @@ class PHPShopGUI {
      * </code>
      */
     function addTab() {
+
         $Arg = func_get_args();
-        foreach ($Arg as $key => $val) {
-            $this->_CODE.='
-     <div class="tab-page" id="tab' . $this->tab_pre . $this->tab_key . '" style="height:' . $val[2] . '">
-     <h2 class="tab">' . $val[0] . '</h2>
-     <script type="text/javascript">
-     ' . $this->tab_pre . 'tabPane.addTabPage( document.getElementById( "tab' . $this->tab_pre . $this->tab_key . '" ) );
-     </script>
-	 ' . $val[1] . '
-	 </div>';
+        foreach ($Arg as $val) {
+
+            $this->addTabName.='<li role="presentation"><a href="#tabs-' . $this->tab_key . '" aria-controls="tabs-' . $this->tab_key . '" role="tab" data-toggle="tab" data-id="' . $val[0] . '">' . $val[0] . '</a></li>';
+            $this->addTabContent.='<div role="tabpanel" class="tab-pane fade" id="tabs-' . $this->tab_key . '"><hr>' . $val[1] . '</div>';
+
             $this->tab_key++;
         }
-        //$this->_CODE.='</div>';
+    }
+
+    /**
+     * Прорисовка закладок Tab
+     * <code>
+     * // example:
+     * $PHPShopGUI->setTab(array("Заголовок1","Содержание1"),array("Заголовок2","Содержание2"));
+     * </code>
+     */
+    function setTab() {
+
+        $Arg = func_get_args();
+
+
+        $name = $content = null;
+        foreach ($Arg as $key => $val) {
+
+            // Номер закладки в ссылке tab
+            if ($key == intval($_GET['tab']))
+                $active = 'active in';
+            else
+                $active = null;
+
+            // Переход на страницу
+            if (!empty($val[2]) and !is_numeric($val[2])) {
+                $toggle = null;
+                $href = $val[2];
+            } else {
+                $toggle = 'data-toggle="tab"';
+                $href = '#tabs-' . $this->tab_key;
+            }
+
+            $name.='<li role="presentation" class="' . $active . '"><a href="' . $href . '" aria-controls="tabs-' . $this->tab_key . '" role="tab" ' . $toggle . ' data-id="' . $val[0] . '">' . $val[0] . '</a></li>';
+            $content.='<div role="tabpanel" class="tab-pane ' . $active . ' fade" id="tabs-' . $this->tab_key . '">' . $val[1] . '</div>';
+
+            $this->tab_key++;
+        }
+
+        if (count($Arg) == 1) {
+            $hr = '<hr>';
+            $this->hr_enabled = true;
+        } else {
+            $hr = $this->hr_enabled = null;
+        }
+
+        $this->_CODE = '
+            <div role="tabpanel">
+               <ul class="nav nav-pills" role="tablist">' . $name . $this->addTabName . '</ul>
+               <div class="tab-content">' . $hr . '<p>' . $content . $this->addTabContent . '</p></div>
+            </div>';
     }
 
     /**
@@ -417,7 +973,7 @@ class PHPShopGUI {
     function addJSFiles() {
         $Arg = func_get_args();
         foreach ($Arg as $val) {
-            $this->includeJava.='<script type="text/javascript" src="' . $val . '"></script>';
+            $this->includeJava.='<script src="' . $val . '"></script>';
         }
     }
 
@@ -427,7 +983,7 @@ class PHPShopGUI {
     function addCSSFiles() {
         $Arg = func_get_args();
         foreach ($Arg as $val) {
-            $this->includeCss.='<link href="' . $val . '" type=text/css rel=stylesheet>';
+            $this->includeCss.='<link href="' . $val . '" rel="stylesheet">';
         }
     }
 
@@ -462,43 +1018,107 @@ class PHPShopGUI {
     }
 
     /**
+     * Прорисовка справки
+     * @param string $text справка
+     * @param string $icon иконка
+     */
+    function setHelp($text, $icon = 'glyphicon-question-sign') {
+        return '<span class="help-block"><span class="glyphicon ' . $icon . '"></span> ' . $text . '</span>';
+    }
+
+    /**
+     * Прорисовка иконки справки
+     * @param type $text
+     */
+    function setHelpIcon($text) {
+        return '&nbsp;<span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="' . $text . '" style="cursor:pointer;"></span> ';
+    }
+
+    /**
      * Прорисовка элемета Textarea
      * @param string $name имя
      * @param mixed $value значение
      * @param string $float float
      * @param mixed $width длина элемента
      * @param mixed $height ширина элемента
+     * @param string $description help
+     * @param string $placeholder placeholder
      * @return string
      */
-    function setTextarea($name, $value, $float = "none", $width = '99%', $height = '50px') {
-        $CODE = '
-	 <textarea style="float:' . $float . ';margin:' . $this->margin . 'px;height:' . $this->chekSize($height) . ';width:' . $this->chekSize($width) . '" name="' . $name . '" id="' . $name . '">' . $value . '</textarea>
-	 ';
+    function setTextarea($name, $value, $float = "none", $width = false, $height = false, $description = false, $placeholder = false) {
+
+        if (strpos($name, '.')) {
+            $type_array = explode(".", $name);
+            $name = $type_array[0];
+            $required = ' required ';
+
+            if (!empty($type_array[2]))
+                $required.=' data-minlength="' . intval($type_array[2]) . '" ';
+        }
+        else
+            $required = null;
+
+        if (!empty($description))
+            $description = '<span class="help-block"><span class="glyphicon glyphicon-question-sign"></span> ' . $description . '</span>';
+        $style = null;
+        if (empty($width))
+            $style.='width:100%;';
+        else
+            $style.='width:' . $this->chekSize($width) . ';';
+        if (empty($height))
+            $style.='height:50px;';
+        else
+            $style.='height:' . $this->chekSize($height) . ';';
+
+        $CODE = '<textarea style="' . $style . '" name="' . $name . '" id="' . $name . '" class="form-control" placeholder="' . $placeholder . '" ' . $required . '>' . $value . '</textarea>' . $description;
         return $CODE;
     }
 
     /**
-     * Прорисовка календаря
-     * @param string $name имя поля для вставки даты
-     * @param string $align выравнивание
-     * @param string $icon кинока
+     * Прорисовка сворачиваемого списка
+     * @param string $title заголовок
+     * @param string $content содержание
+     * @param string $collapse свернут или развернут при загрузки
+     * @param bool $line показывать разделительную линию
+     * @param bool $icons показывать иконку
      * @return string
      */
-    function setCalendar($name, $align = 'right', $icon = '../icon/date.gif', $float = 'left', $style = "width:50px") {
-        $CODE = '<div style="float:' . $float . ';padding:' . $this->padding . 'px;' . $style . '">' . $this->setImage($icon, 16, 16, $align = 'right', 0, '', 'popUpCalendar(this, product_edit.' . $name . ', \'dd-mm-yyyy\');') . '</div>';
+    function setCollapse($title, $content, $collapse = 'in', $line = true, $icons = true) {
+        static $collapseID;
+
+        $datatoggle = 'data-toggle="collapse"';
+
+        if ($collapse == 'in')
+            $icon = 'bottom';
+        elseif ($collapse == 'none') {
+            $collapse = 'in';
+            $datatoggle = null;
+        }
+        else
+            $icon = 'right';
+
+        if ($line) {
+            $CODE = '<hr>';
+        }
+
+
+        if ($icons)
+            $icons = '<span class="glyphicon glyphicon-triangle-' . $icon . '"></span>';
+
+
+        $CODE.= '<a name="set' . $collapseID . '"></a><div class="collapse-block"><h4 ' . $datatoggle . ' data-target="#collapseExample' . $collapseID . '" aria-expanded="true" aria-controls="collapseExample">' . $title . ' ' . $icons . '</h4>
+            <div class="collapse ' . $collapse . '" id="collapseExample' . $collapseID . '">' . $content . '</div></div>';
+        $collapseID++;
         return $CODE;
     }
 
     /**
      * Прорисовка блока инструкции с прокруткой
      * @param string $value содержание text
-     * @param string $height высота
-     * @param string $width ширина
-     * @param string $align выравнивание
      * @return string
      */
-    function setInfo($value, $height = false, $width = '100%', $align = "left") {
-        return $this->setDiv($align, $value, 'width:' . $this->chekSize($width) . ';height:' . $this->chekSize($height) . ';overflow:auto;', __FUNCTION__);
+    function setInfo($value) {
+        return '<p><div class="panel panel-default"><div class="panel-body">' . $value . '</div></div></p>';
     }
 
     /**
@@ -520,12 +1140,15 @@ class PHPShopGUI {
      * @param int $width ширина
      * @param string $float float
      * @param string $caption текст перед элементом
-     * @param string $onchange имя javascript функции по экшену onchange
+     * @param string $search режим поиска
      * @param int $height высота
      * @param int $size размер
      * @return string
      */
-    function setSelect($name, $value, $width=false, $float = "none", $caption = false, $onchange = "return true", $height = false, $size = 1, $multiple = false, $id = false) {
+    function setSelect($name, $value, $width = '', $float = "none", $caption = false, $search = false, $height = false, $size = 1, $multiple = false, $id = false, $class = 'selectpicker', $onchange = null) {
+
+        if ($search)
+            $search = 'data-live-search="true" data-placeholder="123"';
 
         if ($multiple)
             $multiple = 'multiple';
@@ -533,7 +1156,7 @@ class PHPShopGUI {
         if (empty($id))
             $id = $name;
 
-        $CODE = $caption . ' <select name="' . $name . '" id="' . $id . '" size="' . $size . '" style="float:' . $float . ';margin:' . $this->margin . 'px;width:' . $this->chekSize($width) . ';height:' . $this->chekSize($height) . '" onchange="' . $onchange . '" ' . $multiple . '>';
+        $CODE = $caption . '<select class="' . $class . ' show-menu-arrow hidden-edit" ' . $search . ' data-container=""  data-style="btn btn-default btn-sm" data-width="' . $width . '"  name="' . $name . '" id="' . $id . '" size="' . $size . '" onchange="' . $onchange . '"   ' . $multiple . '>';
         if (is_array($value))
             foreach ($value as $val) {
 
@@ -557,7 +1180,7 @@ class PHPShopGUI {
                     $CODE.='</optgroup>';
                 }
                 else
-                    $CODE.='<option value="' . $val[1] . '" ' . $val[2] . '>' . $val[0] . '</option>';
+                    $CODE.='<option value="' . $val[1] . '" ' . $val[2] . ' ' . $val[3] . '>' . $val[0] . '</option>';
             }
         $CODE.='</select>
 	 ';
@@ -569,9 +1192,9 @@ class PHPShopGUI {
      * @param int $n
      * @return array
      */
-    function setSelectValue($n) {
+    function setSelectValue($n, $max = 10) {
         $i = 1;
-        while ($i <= 10) {
+        while ($i <= $max) {
             if ($n == $i)
                 $s = "selected";
             else
@@ -588,19 +1211,20 @@ class PHPShopGUI {
      * @param string $value значение
      * @param string $caption описание
      * @param string $checked checked
-     * @param string $onchange имя javascript функции по экшену onchange
      * @return string
      */
-    function setCheckbox($name, $value, $caption, $checked = 1, $onchange = "return true") {
+    function setCheckbox($name, $value, $caption, $checked = 1, $disabled = null) {
 
         if ($checked == 1)
             $checked = "checked";
         elseif ($checked == 0)
             $checked = null;
 
-        $CODE = '
-	 <label><input type="checkbox" value="' . $value . '" name="' . $name . '" id="' . $name . '" ' . $checked . ' onchange="' . $onchange . '"> ' . $caption . '</label>
-	 ';
+        if (!empty($caption))
+            $CODE = '<div class="checkbox-inline"><label><input type="checkbox" value="' . $value . '" name="' . $name . '" id="' . $name . '" ' . $checked . ' ' . $disabled . '> ' . $caption . '</label></div> ';
+        else
+            $CODE.='<input type="checkbox" value="' . $value . '" name="' . $name . '" id="' . $name . '" ' . $checked . ' ' . $disabled . '>';
+
         return $CODE;
     }
 
@@ -620,7 +1244,7 @@ class PHPShopGUI {
             $checked = "checked";
 
         $CODE = '
-	 <label><input type="radio" value="' . $value . '" name="' . $name . '" id="' . $name . '" ' . $checked . ' onchange="' . $onchange . '"> ' . $caption . '</label>
+	 <div class="radio-inline"><label><input type="radio" value="' . $value . '" name="' . $name . '" id="' . $name . '" ' . $checked . ' onchange="' . $onchange . '">' . $caption . '<i class="fa fa-circle-o small"></i></label></div>
 	 ';
         return $CODE;
     }
@@ -672,13 +1296,6 @@ class PHPShopGUI {
     }
 
     /**
-     * Закрытие окна
-     */
-    function setClose() {
-        $this->_CODE.='<script type="text/javascript">window.close();</script>';
-    }
-
-    /**
      * Сообщение об ошибке
      * @param string $name имя ошибки
      * @param string $action описание ошибки
@@ -703,69 +1320,47 @@ class PHPShopGUI {
     }
 
     /**
-     * Перезагрузка окна
-     */
-    function setReload() {
-        if (!$this->debug) {
-            $this->_CODE.='
-	 <script type="text/javascript">
-	 try{
-	 ';
-            if ($this->reload == "left")
-                $this->_CODE.=' window.opener.top.frame1.location.reload();';
-            if ($this->reload == "right")
-                $this->_CODE.=' window.opener.top.frame2.location.reload();';
-            if ($this->reload == "all")
-                $this->_CODE.='window.opener.top.frame1.location.reload(); window.opener.top.frame2.location.reload();';
-            if ($this->reload == "top") {
-
-                // Поддержка Ajax
-                if ($this->ajax)
-                    $this->_CODE.=" DoReloadMainWindowModule(" . $this->ajax . ");
-                        ";
-                else
-                    $this->_CODE.=' window.opener.location.reload();';
-            }
-            elseif ($this->ajax) {
-                $this->_CODE.=" DoReloadMainWindowModule(" . $this->ajax . ");
-                        ";
-            }
-
-
-            $this->_CODE.='
-	 }catch(e){
-         ';
-            // Отладка, не закрывем окно
-            if (empty($this->debug))
-                $this->_CODE.='self.close();';
-
-            $this->_CODE.='
-                }';
-
-            if (!empty($this->debug_close_window) and empty($this->ajax)) {
-                $this->_CODE.='window.close();
-                    ';
-            }
-            $this->_CODE.='</script>';
-        }
-    }
-
-    /**
      * Назначение экшена
      * @param string $name переменная для анализа
      * @param string $function имя функции php обработчика
-     * @param bool $reload параметр перезагрузки после выполнения
      */
-    function setAction($name, $function, $reload = false) {
+    function setAction($name, $function) {
+
+        // Раскодирование для AJAX запроса с русскими символами
+        if (!empty($_POST)) {
+
+            foreach ($_POST as $k => $v) {
+                if (is_array($v)) {
+                    foreach ($v as $kk => $vv) {
+                        if (is_array($vv)) {
+                            $v = str_replace('+', '&#43;', $vv); // + fix
+                            $_POST[$kk] = @array_map("urldecode", $vv);
+                        } else {
+                            $v = str_replace('+', '&#43;', $v); // + fix
+                            $_POST[$k] = @array_map("urldecode", $v);
+                        }
+                    }
+                } else {
+                    $v = str_replace('+', '&#43;', $v); // + fix
+                    $_POST[$k] = urldecode($v);
+                }
+            }
+        }
+
         if (!empty($name)) {
             if (function_exists($function)) {
                 $action = call_user_func($function);
-                if ($action !== true)
+                if (!$action)
                     $this->setError($function, $action);
                 else {
-                    if ($reload != "none")
-                        $this->setReload();
-                    $this->Compile();
+
+                    // Результат в виде JSON
+                    if (is_array($action)) {
+                        exit(json_encode($action));
+                        return true;
+                    }
+                    else
+                        $this->Compile();
                 }
             }
             else
@@ -793,13 +1388,28 @@ class PHPShopGUI {
     }
 
     /**
+     * Прорисовка элемента Table
+     * @return string
+     */
+    function setTable() {
+        $td = '';
+        $Arg = func_get_args();
+        foreach ($Arg as $val) {
+            $td.='<td valign="top">' . $val . '</td>';
+        }
+        $CODE = '<table id="gui-' . strtolower(__FUNCTION__) . '"><tr>' . $td . '</tr></table>';
+        return $CODE;
+    }
+
+    /**
      * Проверка на экшен
      */
     function getAction() {
         global $PHPShopBase;
-        if (!empty($_REQUEST['actionList']) and is_array($_REQUEST['actionList']))
+        if (!empty($_REQUEST['actionList']) and is_array($_REQUEST['actionList'])) {
+
             foreach ($_REQUEST['actionList'] as $action => $function)
-                if (!empty($_REQUEST[$action])) {
+                if (isset($_REQUEST[$action])) {
 
                     // Проверка прав пользователя
                     if (strpos($function, '.')) {
@@ -812,33 +1422,61 @@ class PHPShopGUI {
 
                         if ($PHPShopBase->Rule->CheckedRules($rule_path, $rule_do))
                             $this->setAction($action, $function_name);
-                        else
-                            $PHPShopBase->Rule->BadUserFormaWindow();
+                        else {
+                            // JSON
+                            if (isset($_REQUEST['ajax'])) {
+                                exit(json_encode(array("success" => false)));
+                            }
+                            else // ALERT
+                                return $PHPShopBase->Rule->BadUserFormaWindow();
+                        }
                     }
                     else
                         $this->setAction($action, $function);
                 }
+        }
     }
 
     /**
      * Прорисовка элемента Button
      * @param string $value значение
      * @param string $img иконка
-     * @param string $width ширина
-     * @param string $height высота
-     * @param string $float float
-     * @param string $onclick имя javascript функции по экшену onclick
+     * @param string $class класс
+     * @param string $option допоолнительнеы данные для атрибута data-option
      * @return string
      */
-    function setButton($value, $img, $width, $height, $float = "none", $onclick = "return false") {
+    function setButton($value, $img, $class = null, $option = false) {
         $CODE = '
-	 <div style="float:' . $float . ';padding:' . $this->padding . 'px;">
-	 <BUTTON style="width:' . $width . '; height:' . $height . '; margin-left:5px"  onclick="' . $onclick . '">
-     <img src="' . $this->imgPath . $img . '" width="16" height="16" border="0" align="absmiddle" hspace="3" hspace="3">
+	 <button class="btn btn-default btn-sm ' . $class . '" data-option="' . $option . '" type="button">
+     <span class="glyphicon glyphicon-' . $img . '"></span> 
      ' . $value . '
-     </BUTTON></div>
+     </button>
 	 ';
         return $CODE;
+    }
+
+    /**
+     * Прорисовка пробельных отступов
+     * @param Int $count количество пробелов
+     * @return type
+     */
+    function set_($count = 1) {
+        $i = 0;
+        $disp = null;
+        while ($i < $count) {
+            $disp.='&nbsp;';
+            $i++;
+        }
+        return '<span style="float:left;">' . $disp . '</span>';
+    }
+
+    /*
+     * Прорисовка заголовка
+     * Deprecated
+     */
+
+    function setHeader() {
+        return false;
     }
 
     /**
@@ -846,66 +1484,79 @@ class PHPShopGUI {
      * @return string 
      */
     function setHistory() {
-        $PHPShopInterface = new PHPShopInterface();
-        $PHPShopInterface->window = true;
-        $PHPShopInterface->imgPath = "../../../admpanel/img/";
-        $PHPShopInterface->setCaption(array('Дата', "20%"), array('Изменения в модуле', "80%"));
+        /*
+          $PHPShopInterface = new PHPShopInterface();
+          $PHPShopInterface->window = true;
+          $PHPShopInterface->imgPath = "../../../admpanel/img/";
+          $PHPShopInterface->setCaption(array('Дата', "20%"), array('Изменения в модуле', "80%"));
 
-        // История изменений
-        $db = readDatabase("../install/module.xml", "update");
-        if (is_array($db)) {
-            foreach ($db as $update) {
-                $PHPShopInterface->setRow(1, $update['date'], $update['content']);
-            }
-            return $PHPShopInterface->Compile();
-        }
+          // История изменений
+          $db = readDatabase("../install/module.xml", "update");
+          if (is_array($db)) {
+          foreach ($db as $update) {
+          $PHPShopInterface->setRow(1, $update['date'], $update['content']);
+          }
+          return $PHPShopInterface->Compile();
+          } */
     }
 
     /**
      * Прорисовка формы о модуле
      * @return string
      */
-    function setPay($serial=false, $pay = false, $version = false, $update = false) {
+    function setPay($serial = false, $pay = false, $version = false, $update = false) {
         global $PHPShopModules;
 
         $mes = null;
         $path = $PHPShopModules->path;
         PHPShopObj::loadClass("date");
 
-        if (!empty($path)) {
-            $data = $PHPShopModules->checkKeyBase();
-            if ($data) {
-                $this->TrialOff = true;
+        /*
+          if (!empty($path)) {
+          $data = $PHPShopModules->checkKeyBase();
+          if ($data) {
+          $this->TrialOff = true;
 
-                if (!$PHPShopModules->checkKey($serial, $path))
-                    $mes = '<br>Срок ознакомительного периода до <b>' . PHPShopDate::dataV($data, false) . '</b>';
-            }
-        }
+          if (!$PHPShopModules->checkKey($serial, $path))
+          $mes = '<br>Срок ознакомительного периода до <b>' . PHPShopDate::dataV($data, false) . '</b>';
+          }
+          } */
 
 
-        $PHPShopInterface = new PHPShopInterface();
-        $PHPShopInterface->size = "500,400";
-        $PHPShopInterface->window = true;
-        $PHPShopInterface->idRows = 'p';
-        $PHPShopInterface->imgPath = "../../../admpanel/img/";
-        $PHPShopInterface->setCaption(array("Название", "20%"), array("Версия", "20%"), array("Описание", "80%"));
+        $CODE = '<table class="table table-striped table-bordered">
+               <tr>
+                  <th>Название</th>
+                  <th>Версия</th>
+                  <th>Описание</th>
+               </tr>';
 
 
         // Описание модуля
-        $db = $PHPShopModules->getXml("../install/module.xml");
+        $db = $PHPShopModules->getXml("../modules/" . $path . "/install/module.xml");
         if ($db['version'] > $version and !empty($update)) {
             PHPShopObj::loadClass('text');
             $version_info = PHPShopText::notice('Версия ядра ' . $db['version'] . ' не соответствует версии БД ' . $version);
-            $version_info.=$this->setInput("submit", "modupdate", "Обновить", "center", 100, "", "but", "actionBaseUpdate");
+            $version_info.=$this->setInput("submit", "modupdate", "Обновить модуль", "center", null, "", "btn-sm pull-right", "actionBaseUpdate");
         }
         else
             $version_info = $db['version'];
-        $PHPShopInterface->setRow(1, $db['name'], $version_info, $db['description'] . $mes);
+        
+        if(!empty($db['status']))
+            $status=' <span class="label label-default">'.$db['status'].'</span>';
+        else $status=null;
 
-        $CODE = $PHPShopInterface->Compile();
+        $CODE.='<tr>
+                  <td>' . $db['name'] . '</td>
+                  <td>' . $version_info . $status.'</td>
+                  <td>' . $db['description'] . $mes . '</td>
+               </tr>
+               </table>';
+
+        if (empty($db['reformal']))
+            $db['reformal'] = $path;
 
         // Reformal
-        $CODE.=$this->setButton(__('Есть идея развития модуля ') . $db['name'] . '?', $this->dir . 'icon/idea.png', '100%', '30px', null, "window.open('http://idea.phpshop.ru/proj/?ia=" . $db['reformal'] . "');return false;");
+        $CODE.=$this->setButton(__('Есть идея развития модуля ') . $db['name'], 'question-sign', 'idea', "http://idea.phpshop.ru/proj/?ia=" . $db['reformal']);
 
         if (!$pay)
             return $CODE;
@@ -913,7 +1564,7 @@ class PHPShopGUI {
         $CODE.=$this->setLine('<br>');
 
         if ($PHPShopModules->checkKey($serial, $path)) {
-            $CODE.=$this->setField('Серийный номер', $this->setInputText('EEM-', 'serial_new', $serial, $size = 110, $this->setImage($PHPShopInterface->imgPath . 'icon-activate.gif', 16, 16, $align = 'absmiddle', 0) . ' * Активация выполнена', false, 'serial_done'));
+            $CODE.=$this->setField('Серийный номер', $this->setInputText('EEM-', 'serial_new', $serial, $size = 110, ' * Активация выполнена', false, 'serial_done'));
             $this->TrialOff = false;
             $PHPShopModules->setKeyBase($path);
             return $CODE;
@@ -924,13 +1575,13 @@ class PHPShopGUI {
 
         if (!empty($serial)) {
             $status_serial = 'serial_fail';
-            $status_serial_img = $this->setImage($PHPShopInterface->imgPath . 'error.gif', 16, 16, $align = 'absmiddle', 0);
+            $status_serial_img = $this->setImage('error.gif', 16, 16, $align = 'absmiddle', 0);
         }
 
         $CODE.=$this->setField('Серийный номер', $this->setInputText('EEM-', 'serial_new', $serial, 110, $status_serial_img . ' * Формат серийного  номера: 11111-22222-33333', false, $status_serial));
 
         if (!$PHPShopModules->checkKey($serial, $path) and !empty($db['base']))
-            $CODE.=$this->setButton("Купить лицензию " . $db['price'], '../../../admpanel/icon/key.png', 200, false, $float = "none", $onclick = "window.open('" . $db['base'] . "')");
+            $CODE.=$this->setButton("Купить лицензию " . $db['price'], '../../../admpanel/icon/key.png', 200, false, $float = "none", $onclick = "window.open('http://www.phpshop.ru/order/?bay_mod=" . $db['base'] . "')");
 
         return $CODE;
     }
@@ -945,145 +1596,96 @@ class PHPShopGUI {
  */
 class PHPShopInterface extends PHPShopGUI {
 
-    /**
-     * @var string ссылка ячейки (открытие окна для редактирование)
-     */
-    var $link;
-
-    /**
-     * @var string размер
-     */
-    var $razmer;
-
-    /**
-     * @var string путь до иконок
-     */
-    var $imgPath = "img/";
-
-    /**
-     * @var int отступ
-     */
     var $padding = 5;
-
-    /**
-     * @var int отступ
-     */
     var $margin = 5;
-
-    /**
-     * @var bool это окно?
-     */
-    var $window = false;
-
-    /**
-     * @var string id сетки для таблицы. Если рисуются 2 таблицы, то idRows должен быть уникальный для каждой сетки.
-     */
-    var $idRows = 'r';
+    var $checkbox_action = true;
+    var $sort_action = true;
 
     /**
      * Конструктор
      */
-    function PHPShopInterface($tab_pre = false) {
+    function __construct($tab_pre = false) {
         $this->n = 1;
         $this->numRows = 0;
-        $this->razmer = $this->winsize;
 
         // Учет вложенных закладок
         if ($tab_pre)
             $this->tab_pre = $tab_pre;
-
-        if (empty($_SESSION['theme']))
-            $this->theme = "classic";
-        else
-            $this->theme = $_SESSION['theme'];
-    }
-
-    function setTab() {
-        $this->_CODE.='
-	 <!-- begin tab pane -->
-     <div class="tab-pane" id="article' . $this->tab_pre . 'tab" style="margin-top:' . $this->margin . 'px;">
-     <script type="text/javascript">
-     ' . $this->tab_pre . 'tabPane = new WebFXTabPane( document.getElementById( "article' . $this->tab_pre . 'tab" ), true );
-     </script>
-	 ';
-
-        $Arg = func_get_args();
-
-
-        if (!empty($this->TrialOff)) {
-            $count = count($Arg) - 1;
-            foreach ($Arg as $key => $val)
-                if ($key < $count)
-                    unset($Arg[$key]);
-        }
-
-        foreach ($Arg as $key => $val) {
-
-            $this->_CODE.='
-     <div class="tab-page" id="tab' . $this->tab_pre . $key . '" style="height:' . $val[2] . '">
-     <h2 class="tab">' . $val[0] . '</h2>
-     <script type="text/javascript">
-     ' . $this->tab_pre . 'tabPane.addTabPage( document.getElementById( "tab' . $this->tab_pre . $key . '" ) );
-     </script>
-	 ' . $val[1] . '
-	 </div>';
-            $this->tab_key++;
-        }
-        $this->_CODE.='</div>';
     }
 
     /**
-     * Прорисовка заголовка
+     * Прорисовка элемента Fieldset с легендой
+     * @param string $title заголовок легенды
+     * @param string $content содержание
+     * @param integer $size размер сетки описаняи поля 1-12
      * @return string
      */
-    function setHeader($name = false, $title = false, $icon = false) {
-        return '<html>
-            <head>
-<meta http-equiv="Content-Type" content="text/html; charset=' . $this->charset . '">
-<link href="' . $this->dir . 'skins/' . $this->theme . '/texts.css" type=text/css rel=stylesheet>' . $this->includeCss . '
-<script src="' . $this->dir . 'java/phpshop.js" type="text/javascript"></script>
-</head>
-<body bottommargin="0" rightmargin="0" topmargin="0" leftmargin="0" bgcolor="ffffff">';
-    }
+    function setField($title, $content, $size = 1, $help = false, $class = false, $label = 'control-label') {
 
-    function addTop($content) {
-        $this->_TOP = $content;
+        if (!strpos($title, ':') and !empty($title))
+            $title.=':';
+
+        // Поддержка старых размеров
+        $old_size = array(
+            'none' => 1,
+            'left' => 1,
+            'right' => 1
+        );
+        if (is_string($size))
+            $size = $old_size[$size];
+
+        // Общая настройка
+        if (!empty($this->field_col))
+            $size = $this->field_col;
+
+        // Подсказка
+        if (!empty($help))
+            $help = $this->setHelpIcon($help);
+
+        $CODE = '
+     <div class="form-group form-group-sm">
+        <label class="col-sm-' . intval($size) . ' ' . $label . ' ' . $class . '">' . $title . $help . '</label><div class="col-sm-' . (12 - intval($size)) . '">' . $content . '</div>
+     </div>';
+        return $CODE;
     }
 
     /**
      * Компиляция результата
      * @return string
      */
-    function Compile($id = false, $form = false, $style = false) {
-        $compile = $this->_TOP;
+    function Compile($cell_left = 1, $cell_right = 2) {
+        $compile = $this->actionPanel;
 
-        if (empty($id))
-            $id = 'interfacesWin2';
 
-        if ($this->numRows > 10 and !$this->razmer)
-            $this->razmer = "height:85%;";
+        $cell = 12;
+        if (!empty($this->sidebarLeft))
+            $cell = $cell - $cell_left;
 
-        if ($this->header)
-            $compile.=$this->setHeader();
+        if (!empty($this->sidebarRight))
+            $cell = $cell - $cell_right;
 
-        $compile.='<div id="' . $id . '" name="' . $id . '" align="left" style="width:100%;' . $this->razmer . ';overflow:auto">
-     <table width="100%"  cellpadding="0" cellspacing="0" style="' . $style . '">
-     <tr>
-	    <td valign="top">';
-        if (!empty($form))
-            $compile.='<form id="' . $form . '" name="' . $form . '">';
-        $compile.='<table cellpadding="0" cellspacing="1" width="100%" border="0" class="sortable" id="sort">
-		   ' . $this->_CODE . '
-		   </table>';
-        if (!empty($form))
-            $compile.='</form>';
-        $compile.='</td>
-     </tr>
-     </table></div>' . $this->_CODE_ADD_BUTTON;
-        if (empty($this->window))
-            echo $compile;
+        if ($this->sort_action)
+            $id = 'data';
         else
-            return $compile;
+            $id = null;
+
+        $compile.='
+        <div class="container row sidebarcontainer">
+            ' . $this->sidebarLeft . '
+            <div class="col-md-' . $cell . ' main">
+            <table class="table table-hover " id="' . $id . '">
+		' . $this->_CODE . '
+                </tbody>
+            </table>
+            </div>
+            ' . $this->sidebarRight . '
+       </div>' . $this->includeJava . $this->includeCss;
+
+        $compile.='
+                      
+';
+
+        echo $compile;
     }
 
     function getContent() {
@@ -1096,12 +1698,62 @@ class PHPShopInterface extends PHPShopGUI {
     function setCaption() {
         $Arg = func_get_args();
         $CODE = null;
+        $option['align'] = 'left';
 
-        foreach ($Arg as $val)
-            $CODE.='
-     <td width="' . $val[1] . '" id="pane"><span>' . $val[0] . '</span></td>
-     ';
-        $this->_CODE.='<tr>' . $CODE . '</tr>';
+
+        foreach ($Arg as $key => $val) {
+
+            $class = null;
+
+            // Чекбокс для пакетой обработки
+            if ($key == 0 && $this->checkbox_action) {
+                $id = $val[0];
+                $CODE.='<th width="' . $val[1] . '" class="sorting-hide hidden-xs"><input type="checkbox" value="all" id="select_all"></th>';
+            } else {
+
+                // Дополнительные настройки
+                if (is_array($val[2])) {
+
+                    // align
+                    if (!empty($val[2]['align'])) {
+                        $option['align'] = $val[2]['align'];
+                    }
+
+                    // tooltip
+                    if (!empty($val[2]['tooltip'])) {
+                        $tooltip = 'data-toggle="tooltip" data-placement="top" title="' . $val[2]['tooltip'] . '"';
+                    }
+                    else
+                        $tooltip = null;
+
+                    // sort
+                    if (!empty($val[2]['sort']) && $val[2]['sort'] == 'none') {
+                        $class = 'sorting-hide';
+                    }
+
+                    // class
+                    if (!empty($val[2]['class'])) {
+                        $class.= 'sorting-hide';
+                    }
+
+                    // вывод 
+                    if (isset($val[2]['view']) and $val[2]['view'] == 0) {
+                        continue;
+                    }
+                }
+
+                if (empty($val[0]))
+                    $class = 'sorting-hide';
+
+
+                $CODE.='<th width="' . $val[1] . '" class="text-' . $option['align'] . ' ' . $class . '" ' . $tooltip . '>' . $val[0] . '</th>';
+            }
+        }
+
+        $this->_CODE.='<thead><tr>' . $CODE . '</tr>
+            </thead>
+         <tbody>
+       ';
     }
 
     /**
@@ -1109,53 +1761,99 @@ class PHPShopInterface extends PHPShopGUI {
      */
     function setRow() {
         $CODE = null;
-        $this->numRows++;
         $Arg = func_get_args();
 
 
-        if (!empty($this->link))
-            $javaAction = 'onclick="miniWin(\'' . $this->link . '?id=' . $Arg[0] . '\',' . $this->size . ')"';
-        else
-            $javaAction = "";
-
         foreach ($Arg as $key => $val) {
 
-            if (empty($this->window)) {
-                if ($key == 1)
-                    $align = "center";
-                else
-                    $align = "left";
+            // Чекбокс для пакетой обработки
+            if ($key == 0 && $this->checkbox_action) {
+                $id = $val;
+                $CODE.='<td class="hidden-xs"><input type="checkbox" value="' . $val . '" name="items" data-id="' . $val . '"><span class="data-row-order">' . $key . '</span><span class="hide">' . $val . '</span></td>';
+            } else {
+                // Дополнительные настройки
+                if (is_array($val)) {
+
+                    // вывод 
+                    if (isset($val['view']) and $val['view'] == 0) {
+                        continue;
+                    }
+
+                    // Ссылка
+                    if (isset($val['link'])) {
+
+                        if (!empty($val['popover'])) {
+                            $popover = 'data-toggle="popover" title="' . $val['popover-title'] . '" data-content="' . $val['popover'] . '"';
+                        }
+                        else
+                            $popover = null;
+
+                        if (!empty($val['modal']))
+                            $modal = 'data-toggle="modal" data-target="' . $val['modal'] . '"';
+                        else
+                            $modal = null;
+
+                        if (empty($val['name']))
+                            $val['name'] = '#' . $id;
+
+                        if (empty($val['target']))
+                            $val['target'] = '_self';
+
+                        $row = '<a href="' . $val['link'] . '" ' . $popover . ' ' . $modal . ' class="' . $val['class'] . '" target="' . $val['target'] . '">' . $val['name'] . '</a>' . $val['addon'];
+                    }
+                    else
+                        $row = $val['name'];
+
+                    // Статус
+                    if (isset($val['status'])) {
+                        $row = $this->setDropdown(array_merge(array('id' => $id), $val['status']), 'dropdown', $val['status']['align'], $val['status']['passive']);
+                        $val['align'] = $val['status']['align'];
+                    }
+
+                    // Action
+                    if (is_array($val['action'])) {
+                        $row = $this->setDropdownAction($val['action']);
+                    }
+
+                    // Class
+                    if (empty($val['class'])) {
+                        $val['class'] = null;
+                    }
+
+                    // align
+                    if (empty($val['align'])) {
+                        $val['align'] = 'left';
+                    }
+
+                    // id
+                    if (!empty($val['id']))
+                        $id = $val['id'];
+
+                    // editable
+                    if (!empty($val['editable'])) {
+                        $row = '<input style="width:100%" data-id="' . $id . '" class="editable input-hidden form-control input-sm" data-edit="' . $val['editable'] . '" value="' . $row . '"><span class="hide">' . $row . '</span>';
+                    }
+
+                    // order
+                    if (!empty($val['order']))
+                        $order = ' data-order="' . $val['order'] . '" ';
+                    else
+                        $order = null;
+
+                    // search
+                    if (!empty($val['search']))
+                        $order.= ' data-search="' . $val['search'] . '" ';
+
+                    $CODE.='<td style="text-align:' . $val['align'] . '" class="' . $val['class'] . '" ' . $order . '>' . $row . '</td>';
+                } else {
+                    $CODE.='<td>' . $val . '</td>';
+                }
             }
-            else
-                $align = "left";
-
-            if ($key > 0) {
-                if (is_array($val))
-                    $CODE.='
- <td align="' . $align . '">' . $val[0] . '</td>
-     ';
-                else
-                    $CODE.='
- <td align="' . $align . '" ' . $javaAction . '>' . $val . '</td>
-     ';
-            }
-        }
-
-        // Выделение четных строк
-        if ($this->numRows % 2 == 0) {
-            $style_r = ' line2';
-        } else {
-            $style_r = null;
-        }
-
-        if($Arg[0]==$_SESSION['editpageId']) {
-            $style_r = ' prod_hover';
         }
 
 
-
-        //$this->_CODE.='<tr class="row'.$style_r.'" onmouseover="show_on(\'' . $this->idRows . $this->n . '\',this.className)" id="' . $this->idRows . $this->n . '" onmouseout="show_out(\'' . $this->idRows . $this->n . '\',this.className)" >' . $CODE . '</tr>';
-        $this->_CODE.='<tr class="row' . $style_r . '" id="' . $this->idRows . $this->n . '" onclick="hoverList(' . $this->n . ')">' . $CODE . '</tr>';
+        $this->_CODE.='<tr class="data-row" data-row="' . $this->numRows . '">' . $CODE . '</tr>';
+        $this->numRows++;
         $this->n++;
     }
 
@@ -1165,11 +1863,9 @@ class PHPShopInterface extends PHPShopGUI {
      */
     function setAddItem($link) {
         $this->_CODE_ADD_BUTTON = '
-	 <div align="right" style="padding:10"><BUTTON style="width: 15em; height: 2.2em; margin-left:5"  onclick="miniWin(\'' . $link . '\',' . $this->size . ');return false;">
-     <img src="' . $this->imgPath . 'icon-move-banner.gif" width="16" height="16" border="0" align="absmiddle">
-     Новая позиция
-     </BUTTON>
-	 </div>
+<span class="pull-right">
+<a class="btn btn-default " href="' . $link . '"><span class="glyphicon glyphicon-plus-sign"></span> Добавить запись</a>
+</span>
 	 ';
     }
 
@@ -1180,178 +1876,10 @@ class PHPShopInterface extends PHPShopGUI {
      */
     function icon($flag) {
         if (empty($flag))
-            $imgchek = '<img src="' . $this->imgPath . 'icon-deactivate.gif" width="16" height="16" border="0">';
+            $imgchek = '<span class="fa fa-toggle-off"></span>';
         else
-            $imgchek = '<img src="' . $this->imgPath . 'icon-activate.gif" width="16" height="16" border="0">';
+            $imgchek = '<span class="fa fa-toggle-on"></span>';
         return $imgchek;
-    }
-
-}
-
-class PHPShopIframePanel extends PHPShopGUI {
-
-    var $iframe_left = array();
-    var $iframe_right = array();
-    var $button_tree_control = true;
-
-    function PHPShopIframePanel($iframe_left, $iframe_right) {
-        $this->iconNum = 0;
-        $this->imgPath = null;
-
-
-        if (is_array($iframe_left)) {
-            $this->iframe_left = $iframe_left;
-        }
-
-        if (is_array($iframe_right)) {
-            $this->iframe_right = $iframe_right;
-        }
-    }
-
-    function addTop($content) {
-        $this->_CODE = $content;
-    }
-
-    /**
-     * Компиляция результата
-     */
-    function Compile($id = false, $form = false, $style = false) {
-
-        $compile = $this->_CODE . '
-<table cellpadding="0" cellspacing="1" width="100%" height="85%">
-<tr>
-  <td width="' . $this->iframe_left[1] . '" valign="top" height="' . $this->iframe_right[1] . '">
-  <div id="pane"><img src="' . $this->imgPath . 'img/arrow_d.gif" width="7" height="7" border="0" hspace="5">' . $this->title . '</div>
-<iframe frameborder="0" id="' . $this->iframe_left[3] . '" name="' . $this->iframe_left[3] . '" src="' . $this->iframe_left[0] . '" width="' . $this->iframe_left[1] . '" height="' . $this->iframe_left[2] . '" scrolling="Auto">
-</iframe>';
-
-        if (!empty($this->button_tree_control)) {
-            $compile.= '   
-<div align="center" style="padding:5px">
-<table cellpadding="0" cellspacing="0">
-  <tr>
-  <td id="but381" class="butoff" onmouseover="PHPShopJS.button_on(this)" onmouseout="PHPShopJS.button_off(this)">
-  <img src="' . $this->imgPath . 'icon/chart_organisation_add.gif" alt="' . __('Открыть все') . '" title="' . __('Открыть все') . '"  width="16" 
-      height="16" border="0"  onclick="window.' . $this->iframe_left[3] . '.d.openAll()">
-    </td>
-    <td width="5"></td>
-  <td width="1" bgcolor="#ffffff"></td>
-  <td width="1" bgcolor="#808080" class="separator"></td>
-   <td width="5"></td>
-  <td id="but382" class="butoff" onmouseover="PHPShopJS.button_on(this)" onmouseout="PHPShopJS.button_off(this)">
-  <img src="' . $this->imgPath . 'icon/chart_organisation_delete.gif" alt="' . __('Закрыть все') . '" title="' . __('Закрыть все') . '" width="16" 
-      height="16" border="0" onclick="window.' . $this->iframe_left[3] . '.d.closeAll()"></td>
-  </tr>
-</table>
-</div>';
-        }
-        $compile.= ' </td>
-   <td valign="top">
-<iframe id="' . $this->iframe_right[3] . '" name="' . $this->iframe_right[3] . '" src="' . $this->iframe_right[0] . '" width="' . $this->iframe_right[1] . '" height="' . $this->iframe_right[2] . '"  frameborder="0" scrolling="Auto">
-</iframe>
-
-</td>
-</tr>
-</table>';
-
-        echo $compile;
-    }
-
-}
-
-/**
- * Библиотека навигационных административных интерфейсов
- * @author PHPShop Software
- * @version 1.3
- * @package PHPShopGUI
- */
-class PHPShopIcon extends PHPShopGUI {
-
-    /**
-     * Конструктор
-     */
-    function PHPShopIcon($iconNum = 1) {
-        $this->iconNum = $iconNum;
-        $this->imgPath = "icon/";
-    }
-
-    /**
-     * Прорисовка иконки навигации
-     * @param string $icon адрес икноки
-     * @param string $alt описание alt
-     * @param string $onclick имя javascript функции по экшену onclick
-     * @return string
-     */
-    function setIcon($icon, $alt, $onclick) {
-        $this->iconNum++;
-        $CODE = '<td id="but' . $this->iconNum . '" class="butoff"><img title="' . $alt . '" src="' . $icon . '" alt="' . $alt . '" width="16" height="16" border="0" onmouseover="ButOn(' . $this->iconNum . ')" onmouseout="ButOff(' . $this->iconNum . ')" onclick="' . $onclick . '"></td>
-   <td width="3"></td>';
-        $this->iconNum++;
-        return $CODE;
-    }
-
-    /**
-     * Добавление произврльного контента
-     * @param string $content контент
-     * @param int $width длина поля
-     * @param string $padding_left отступ слева
-     * @param string $padding_right отступ справа
-     * @return string 
-     */
-    function add($content, $width = 100, $padding_left = 0, $padding_right = 0) {
-
-        if (!empty($width))
-            $width = 'width=' . $width;
-        else
-            $width = null;
-
-        $CODE = '<td ' . $width . ' style="padding-left:' . $this->chekSize($padding_left) . ';padding-right:' . $this->chekSize($padding_right) . '">' . $content . '</td>
-   <td width="3"></td>';
-        return $CODE;
-    }
-
-    /**
-     * Прорисовка бордюра разделителя
-     * @return string
-     */
-    function setBorder() {
-        $CODE = '<td width="1" bgcolor="#ffffff"></td>
-     <td width="1" class="menu_line"></td>
-     <td width="3"></td>';
-        return $CODE;
-    }
-
-    /**
-     * Прорисовка формы под иконку
-     * @param string $CODE код иконки
-     */
-    function setTab($CODE = false) {
-        $this->_CODE.='
-	 <table cellpadding="0" cellspacing="0" border="0" width="100%">
-	 <tr>
-		   ' . $CODE . '<td align="right">&nbsp;</td>
-     </tr>
-	 </table>
-	 ';
-    }
-
-    /**
-     * Компиляция результата
-     */
-    function Compile($return = false, $form = false, $style = false) {
-        $compile = '
-     <table width="100%" cellpadding="0" cellpadding="0" class="iconpane border-bottom">
-     <tr>
-       <td style="padding-left:5">
-		   ' . $this->_CODE . '
-	    </td>
-     </tr>
-     </table>';
-
-        if ($return)
-            return $compile;
-        else
-            echo $compile;
     }
 
 }
@@ -1359,7 +1887,6 @@ class PHPShopIcon extends PHPShopGUI {
 /**
  * Библиотека внешних интерфейсов
  * @author PHPShop Software
- * @version 1.0
  * @package PHPShopGUI
  */
 class PHPShopFrontInterface extends PHPShopInterface {
@@ -1393,142 +1920,6 @@ class PHPShopFrontInterface extends PHPShopInterface {
      */
     function getContent() {
         return $this->_CODE;
-    }
-
-}
-
-/**
- * Библиотека дерева каталогов
- * @author PHPShop Software
- * @version 1.0
- * @package PHPShopGUI
- */
-class CatalogTree {
-
-    /**
-     * Конструктор
-     */
-    function CatalogTree($table) {
-        $this->table = $table;
-        PHPShopObj::loadClass("lang");
-        $this->dis = "<script type=\"text/javascript\">
-    <!--
-    d = new dTree('d');
-       ";
-    }
-
-    /**
-     * Добавление каталога в дерево
-     * @param int $n идентификатор
-     * @param int $id родитель
-     * @param string $name наименование
-     * @param string $icon иконка
-     */
-    function addcat($n, $id, $name, $icon = false) {
-        $name = __($name);
-        $this->dis.="d.add($n,$id,'$name','$name','','','','$icon');";
-    }
-
-    /**
-     * Запрос к БД
-     * @param string $sql SQL запрос
-     * @return mixed
-     */
-    function sql($sql) {
-        $PHPShopOrm = new PHPShopOrm($this->table);
-        return $PHPShopOrm->query($sql);
-    }
-
-    /**
-     * Проверка на наличие каталогов
-     * @param int $n ид катлога
-     * @return int
-     */
-    function chek($n) {
-        return mysql_num_rows($this->sql("select id from " . $this->table . " where parent_to='$n'"));
-    }
-
-    /**
-     * Рекурсионный проход по каталогам
-     * @param int $n идентификатор
-     * @return string
-     */
-    function add($n) {
-        $disp = '';
-        $result = $this->sql("select * from " . $this->table . " where parent_to='$n' order by num");
-        while ($row = mysql_fetch_array($result)) {
-            $i = 0;
-            $id = $row['id'];
-            $name = $row['name'];
-            $parent_to = $row['parent_to'];
-            $num = $this->chek($id);
-
-            if ($i < $num) {// если есть еще каталоги
-                $disp.="d.add($id,$n,'$name','');
-                        " . $this->add($id);
-            } else {// если нет каталогов
-                $disp.="d.add($id,$n,'$name','" . $this->name($parent_to, $name) . "');";
-            }
-        }
-        return $disp;
-    }
-
-    /**
-     * Имя каталога по идентификатору
-     * @param int $n идентификатор каталога
-     * @return string
-     */
-    function name($n) {
-        $result = $this->sql("select name from " . $this->table . " where id='$n'");
-        $row = mysql_fetch_array($result);
-        $name = $row['name'];
-        return $name . " => " . $catalog;
-    }
-
-    /**
-     * Вывод дерева каталогов
-     */
-    function disp() {
-        $this->dis.="
-         document.write(d);
-        //-->
-       </script>";
-
-        // Локализация
-        writeLangFile();
-
-        echo $this->dis;
-    }
-
-    /**
-     * Рассчет дерева каталогов
-     */
-    function create($parent_to = 0) {
-        $result = $this->sql("select * from " . $this->table . " where parent_to=" . intval($parent_to) . " order by num");
-        $i = 0;
-        $j = 0;
-        $dis = '';
-        while ($row = mysql_fetch_array($result)) {
-            $id = $row['id'];
-            $name = $row['name'];
-            $num = $this->chek($id);
-            if ($num > 0)
-                $this->dis.="
-  d.add($id," . intval($parent_to) . ",'$name','');
-                        " . $this->add($id) . "
-  ";
-            else
-                $this->dis.="
-  d.add($id," . intval($parent_to) . ",'$name','$name');
-                        " . $this->add($id) . "
-  ";
-            $i++;
-        }
-
-        // Открытие категории
-        if (!empty($_GET['category'])) {
-            $this->dis.="d.openTo(" . $_GET['category'] . ", true);";
-        }
     }
 
 }

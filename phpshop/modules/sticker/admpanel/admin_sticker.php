@@ -1,42 +1,21 @@
-<?
-
-$TitlePage="Формы";
-
+<?php
 
 function actionStart() {
-    global $PHPShopInterface,$_classPath;
+    global $PHPShopInterface, $PHPShopModules;
 
-    $PHPShopInterface->size="630,530";
-    $PHPShopInterface->link="../modules/sticker/admpanel/adm_stickerID.php";
-    $PHPShopInterface->setCaption(array("&plusmn;","5%"),array("Название","30%"),array("Маркер","10%"),array("Страницы","20%"));
-
-    // Настройки модуля
-    PHPShopObj::loadClass("modules");
-    $PHPShopModules = new PHPShopModules($_classPath."modules/");
-
+    $PHPShopInterface->setCaption(array("", "1%"), array("Название", "30%"), array("Маркер", "20%"), array("Таргетинг", "40%"), array("", "10%"), array("Статус &nbsp;&nbsp;&nbsp;", "10%", array('align' => 'right')));
 
     $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.sticker.sticker_forms"));
-    $PHPShopOrm->debug=false;
-    $data = $PHPShopOrm->select(array('*'),$where,array('order'=>'id DESC'),array('limit'=>100));
+    $PHPShopOrm->debug = false;
+    $data = $PHPShopOrm->select(array('*'), false, array('order' => 'id DESC'), array('limit' => 1000));
 
-    if(is_array($data))
-        foreach($data as $row) {
-            extract($row);
-
-            // Дополнительнеы поля
-            $content=unserialize($row['content']);
-            $dop=null;
-
-            if(is_array($content))
-                foreach($content as $k=>$v) {
-                    $name=str_replace('dop_', '', $k);
-                    $dop.=$name.': '.$v.',';
-                }
-            $dop=substr($dop,0,strlen($dop)-1);
+    if (is_array($data))
+        foreach ($data as $row) {
 
 
-            $PHPShopInterface->setRow($id,$PHPShopInterface->icon($enabled),$name,$path,$dir);
+            $PHPShopInterface->setRow($row['id'], array('name' => $row['name'], 'link' => '?path=modules.dir.sticker&id=' . $row['id'], 'align' => 'left'), $row['path'], $row['dir'], array('action' => array('edit', 'delete', 'id' => $row['id']), 'align' => 'center'), array('status' => array('enable' => $row['enabled'], 'align' => 'right', 'caption' => array('Выкл', 'Вкл'))));
         }
     $PHPShopInterface->Compile();
 }
+
 ?>

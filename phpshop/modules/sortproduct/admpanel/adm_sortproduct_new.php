@@ -1,33 +1,7 @@
-<?
-$_classPath="../../../";
-include($_classPath."class/obj.class.php");
-PHPShopObj::loadClass("base");
-PHPShopObj::loadClass("system");
-PHPShopObj::loadClass("orm");
-
-
-$PHPShopBase = new PHPShopBase($_classPath."inc/config.ini");
-include($_classPath."admpanel/enter_to_admin.php");
-
-$PHPShopSystem = new PHPShopSystem();
-
-// Настройки модуля
-PHPShopObj::loadClass("modules");
-$PHPShopModules = new PHPShopModules($_classPath."modules/");
-
-
-// Редактор
-PHPShopObj::loadClass("admgui");
-$PHPShopGUI = new PHPShopGUI();
-$PHPShopGUI->debug_close_window=false;
-$PHPShopGUI->reload='top';
-$PHPShopGUI->ajax="'modules','sortproduct'";
-$PHPShopGUI->includeJava='<SCRIPT language="JavaScript" src="../../../lib/Subsys/JsHttpRequest/Js.js"></SCRIPT>';
-$PHPShopGUI->dir=$_classPath."admpanel/";
+<?php
 
 // SQL
 $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.sortproduct.sortproduct_forms"));
-
 
 // Функция записи
 function actionInsert() {
@@ -36,6 +10,7 @@ function actionInsert() {
     if(empty($_POST['enabled_new'])) $_POST['enabled_new']=0;
 
     $action = $PHPShopOrm->insert($_POST);
+    header('Location: ?path=' . $_GET['path']);
     return $action;
 }
 
@@ -61,30 +36,23 @@ function getSortValue($n) {
 
 // Начальная функция загрузки
 function actionStart() {
-    global $PHPShopGUI,$PHPShopSystem,$SysValue,$_classPath,$PHPShopOrm;
+    global $PHPShopGUI, $PHPShopOrm;
 
-    $PHPShopGUI->dir=$_classPath."admpanel/";
-    $PHPShopGUI->title="Создание нового элемента";
-    $PHPShopGUI->size="630,530";
-
-
-    // Графический заголовок окна
-    $PHPShopGUI->setHeader("Создание нового элемента","",$PHPShopGUI->dir."img/i_display_settings_med[1].gif");
+    // Выборка
+    $data = array();
 
 
-    $Tab1=$PHPShopGUI->setField('Опции:',
-            $PHPShopGUI->setInputText('Порядок','num_new',1,'30'). $PHPShopGUI->setInputText('Количество ссылок','items_new',3,'30').
-            $PHPShopGUI->setCheckbox('enabled_new',1,'Вывод',1));
-    $Tab1.=$PHPShopGUI->setField('Характеристика',getSortValue($sort));
+    $Tab1 = $PHPShopGUI->setField('Порядок:', $PHPShopGUI->setInputText(null, 'num_new', $data['num'], '100'));
+    $Tab1.=$PHPShopGUI->setField('Количество ссылок:', $PHPShopGUI->setInputText(null, 'items_new', $data['items'], '100'));
+    $Tab1.=$PHPShopGUI->setField('Статус:', $PHPShopGUI->setCheckbox('enabled_new', 1, 'Включить', $data['enabled']));
+    $Tab1.=$PHPShopGUI->setField('Характеристика', getSortValue($data['sort']));
+    $Tab1.=$PHPShopGUI->setField('Значение', $PHPShopGUI->setInputText(false, 'value_name_new', $data['value_name'], 300) . $PHPShopGUI->setHelp('Имя или ID'));
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное",$Tab1,350));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, 350));
 
     // Вывод кнопок сохранить и выход в футер
-    $ContentFooter=
-            $PHPShopGUI->setInput("hidden","newsID",$id,"right",70,"","but").
-            $PHPShopGUI->setInput("button","","Отмена","right",70,"return onCancel();","but").
-            $PHPShopGUI->setInput("submit","editID","ОК","right",70,"","but","actionInsert");
+    $ContentFooter=$PHPShopGUI->setInput("submit","saveID","Сохранить","right",false,false,false,"actionInsert.modules.create");
 
     $PHPShopGUI->setFooter($ContentFooter);
     return true;
@@ -92,15 +60,11 @@ function actionStart() {
 
 
 
-if($UserChek->statusPHPSHOP < 2) {
+// Обработка событий 
+$PHPShopGUI->getAction();
 
-    // Вывод формы при старте
-    $PHPShopGUI->setLoader($_POST['editID'],'actionStart');
-
-    // Обработка событий
-    $PHPShopGUI->getAction();
-
-}else $UserChek->BadUserFormaWindow();
+// Вывод формы при старте
+$PHPShopGUI->setLoader($_POST['saveID'], 'actionStart');
 
 ?>
 

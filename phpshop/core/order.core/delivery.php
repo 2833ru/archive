@@ -7,7 +7,7 @@
  * @return string
  */
 function delivery($obj, $deliveryID) {
-    global $SysValue;
+    global $SysValue,$link_db;
 
     $pred = $br = $my = $alldone = $waytodo = null;
 
@@ -23,8 +23,8 @@ function delivery($obj, $deliveryID) {
 
     if ($deliveryID > 0) {
         $sql = "select * from " . $table . " where (enabled='1' and id='" . $deliveryID . "') order by num,city";
-        $result = mysql_query($sql);
-        $row = mysql_fetch_array($result);
+        $result = mysqli_query($link_db,$sql);
+        $row = mysqli_fetch_array($result);
         $isfolder = $row['is_folder'];
         $PID = $row['PID'];
         $sqlvariants = "select * from " . $table . " where (enabled='1' and PID='" . $row['PID'] . "') order by num,city";
@@ -45,8 +45,8 @@ function delivery($obj, $deliveryID) {
         $deliveryID = 0; //Присваиваем нулевой идентификатор, если ничего не прислали
         $sqlvariants = "select * from " . $table . " where (enabled='1' and PID='0') order by num,city";
     }
-    $resultvariants = mysql_query($sqlvariants); // Принимаем варианты
-    $varamount = mysql_num_rows($resultvariants);
+    $resultvariants = mysqli_query($link_db,$sqlvariants); // Принимаем варианты
+    $varamount = mysqli_num_rows($resultvariants);
 
 
     if ($PID !== false) { //Если есть предки, формируем навигацию
@@ -58,20 +58,20 @@ function delivery($obj, $deliveryID) {
 
             //Получаем первого предка
             $sqlpr = "select * from " . $SysValue['base']['table_name30'] . " where (enabled='1' and id='" . $PIDpr . "') order by num,city";
-            $resultpr = mysql_query($sqlpr);
-            $rowpr = mysql_fetch_array($resultpr);
+            $resultpr = mysqli_query($link_db,$sqlpr);
+            $rowpr = mysqli_fetch_array($resultpr);
 
             $PIDpr = $rowpr['PID']; //Меняем идентификатор предка. На уровень выше
             $city = $rowpr['city'];
             $predok = $rowpr['city'] . ' > ' . $predok; //Довесок, который будем дописывать каждому варианту
             //Получаем количество соседей у вышестоящего.
             $sqlprr = "select * from " . $SysValue['base']['table_name30'] . " where (enabled='1' and PID='" . $PIDpr . "') order by num,city";
-            $resultprr = mysql_query($sqlprr);
+            $resultprr = mysqli_query($link_db,$sqlprr);
             $ii = 0;
-            while ($rowsos = mysql_fetch_array($resultprr)) {
+            while ($rowsos = mysqli_fetch_array($resultprr)) {
                 $sqlsosed = "select * from " . $SysValue['base']['table_name30'] . " where (enabled='1' and PID='" . $rowsos['id'] . "') order by num,city";
-                $resultsosed = mysql_query($sqlsosed);
-                $sosed = mysql_num_rows($resultsosed);
+                $resultsosed = mysqli_query($link_db,$sqlsosed);
+                $sosed = mysqli_num_rows($resultsosed);
                 $sosfolder = $rowsos['is_folder'];
                 if ($sosfolder) {
                     if ($sosed) {
@@ -98,7 +98,7 @@ function delivery($obj, $deliveryID) {
 
     $varamount = 0;
     $chkdone = 0; //По дефолту умолчательная доставка не указана
-    while ($row = mysql_fetch_array($resultvariants)) {
+    while ($row = mysqli_fetch_array($resultvariants)) {
 
         if (!empty($deliveryID)) {//Если присылали идентификатор
             if ($row['id'] == $deliveryID) {
@@ -126,8 +126,8 @@ function delivery($obj, $deliveryID) {
 
         // Получаем количество соседей у вышестоящего.
         $sqlpot = "select * from " . $SysValue['base']['table_name30'] . " where (enabled='1' and PID='" . $row['id'] . "') order by num,city";
-        $resultpot = mysql_query($sqlpot);
-        $pot = mysql_num_rows($resultpot);
+        $resultpot = mysqli_query($link_db,$sqlpot);
+        $pot = mysqli_num_rows($resultpot);
 
 
         $city = $row['city'];
@@ -147,7 +147,7 @@ function delivery($obj, $deliveryID) {
 
 
     $query = "select data_fields,city_select from " . $SysValue['base']['table_name30'] . " where id=$deliveryID";
-    $row = mysql_fetch_array(mysql_query($query));
+    $row = mysqli_fetch_array(mysqli_query($link_db,$query));
     $adresDisp_save = getAdresFields(unserialize($row['data_fields']), $row['city_select']);
     $adresDisp = "Для заполнения адреса, пожалуйста, выберите удобный способ доставки.";
     //$adresDisp_save = print_r(unserialize($row['data_fields']),1);
@@ -197,7 +197,7 @@ function delivery($obj, $deliveryID) {
 }
 
 function getAdresFields($mass, $city_select = null) {
-    global $SysValue;
+    global $SysValue,$link_db;
 
 
     if (!is_array($mass))
@@ -212,8 +212,8 @@ function getAdresFields($mass, $city_select = null) {
         if ($city_select == 2) {
             $disabled = "disabled";
             $query = "SELECT country_id, name FROM " . $SysValue['base']['citylist_country'] . " Order BY name";
-            $result = mysql_query($query);
-            while ($row = mysql_fetch_array($result)) {
+            $result = mysqli_query($link_db,$query);
+            while ($row = mysqli_fetch_array($result)) {
                 $disOpt .= "<option value='" . $row['name'] . "' for='" . $row['country_id'] . "'>" . $row['name'] . "</option>";
             }
             if ($enabled['country']['req']) {
@@ -230,8 +230,8 @@ function getAdresFields($mass, $city_select = null) {
         $rfId = 3159; // ID РФ 
         $disOpt = "";
         $query = "SELECT region_id, name FROM " . $SysValue['base']['citylist_region'] . " WHERE country_id = $rfId Order BY name";
-        $result = mysql_query($query);
-        while ($row = mysql_fetch_array($result)) {
+        $result = mysqli_query($link_db,$query);
+        while ($row = mysqli_fetch_array($result)) {
             $disOpt .= "<option value='" . $row['name'] . "' for='" . $row['region_id'] . "' $ch>" . $row['name'] . "</option>";
         }
         if ($enabled['state']['req']) {

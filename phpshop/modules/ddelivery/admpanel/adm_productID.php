@@ -14,7 +14,7 @@ function setOptionGUI($name, $format, $value) {
             break;
 
         default:
-            $result = $PHPShopGUI->setInput($format, $name, $value);
+            $result = $PHPShopGUI->setInput('text', $name, $value);
             break;
     }
 

@@ -3,16 +3,10 @@
     <version>1.2</version>
     <name>Yandex Money</name>
     <faqlink>http://faq.phpshop.ru/page/yandex-money.html</faqlink>
-    <description>Прием оплат через Яндекс.Деньги.</description>
-    <icon>icon.png</icon>
+    <description>Прием оплат через Яндекс.Деньги для физических лиц.</description>
     <category>yandex,sale</category>
-    <status></status>
     <adminmenu>
-        <title>Прием оплат через Яндекс.Деньги</title>
-        <podmenu>
-            <podmenu_name>Настройка</podmenu_name>
-            <podmenu_icon>icon.png</podmenu_icon>
-            <podmenu_action>javascript:miniWin('../modules/yandexmoney/admpanel/adm_module.php',510,450);</podmenu_action>
-        </podmenu>
+        <title>Яндекс.Деньги</title>
+        <capability>true</capability>
     </adminmenu>
 </module>

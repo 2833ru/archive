@@ -28,7 +28,7 @@ class Payment extends PHPShopPaymentResult {
     function Payment() {
         $this->debug = false;
         $this->option();
-        parent::PHPShopPaymentResult();
+        parent::__construct();
     }
 
     /**

@@ -1,1 +1,1 @@
-<a href="#" data-toggle="modal" data-target="#userModal"><span class="glyphicon glyphicon-bookmark"></span> Отложенные товары (<span class="wishlistcount">@wishlistCount@</span>)</a>
+<a href="#" data-toggle="modal" data-target="#userModal"><span class="glyphicon glyphicon-bookmark"></span> Отложить (<span class="wishlistcount">@wishlistCount@</span>)</a>

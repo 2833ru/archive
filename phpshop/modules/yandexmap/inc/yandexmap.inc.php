@@ -5,10 +5,10 @@ if (!defined("OBJENABLED"))
 
 class PHPShopYandexMapElement extends PHPShopElements {
 
-    function PHPShopYandexMapElement() {
+    function __construct() {
         $this->debug=false;
         $this->objBase=$GLOBALS['SysValue']['base']['yandexmap']['yandexmap_system'];
-        parent::PHPShopElements();
+        parent::__construct();
     }
 
     // Вывод ссылок

@@ -1,25 +1,5 @@
 <?php
 
-$_classPath="../../../";
-include($_classPath."class/obj.class.php");
-PHPShopObj::loadClass("base");
-PHPShopObj::loadClass("system");
-PHPShopObj::loadClass("security");
-PHPShopObj::loadClass("orm");
-
-$PHPShopBase = new PHPShopBase($_classPath."inc/config.ini");
-include($_classPath."admpanel/enter_to_admin.php");
-
-
-// Настройки модуля
-PHPShopObj::loadClass("modules");
-$PHPShopModules = new PHPShopModules($_classPath."modules/");
-
-
-// Редактор
-PHPShopObj::loadClass("admgui");
-$PHPShopGUI = new PHPShopGUI();
-
 // SQL
 $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.returncall.returncall_system"));
 
@@ -38,80 +18,64 @@ function actionBaseUpdate() {
 function actionUpdate() {
     global $PHPShopOrm;
 
-    $PHPShopOrm->debug=false;
+    $PHPShopOrm->debug = false;
     $action = $PHPShopOrm->update($_POST);
+    header('Location: ?path=modules&install=check');
     return $action;
 }
 
-
 function actionStart() {
-    global $PHPShopGUI,$PHPShopSystem,$SysValue,$_classPath,$PHPShopOrm;
-
-
-    $PHPShopGUI->dir=$_classPath."admpanel/";
-    $PHPShopGUI->title="Настройка модуля обратного звонка";
-    $PHPShopGUI->size="500,450";
+    global $PHPShopGUI, $PHPShopOrm;
 
     // Выборка
     $data = $PHPShopOrm->select();
-    @extract($data);
 
     // Вывод
-    $e_value[]=array('не выводить',0,$enabled);
-    $e_value[]=array('слева',1,$enabled);
-    $e_value[]=array('справа',2,$enabled);
-    
+    $e_value[] = array('не выводить', 0, $data['enabled']);
+    $e_value[] = array('слева', 1, $data['enabled']);
+    $e_value[] = array('справа', 2, $data['enabled']);
+
     // Тип вывода
-    $w_value[]=array('форма',0,$windows);
-    $w_value[]=array('всплывающее окно',1,$windows);
-    
+    $w_value[] = array('форма', 0, $data['windows']);
+    $w_value[] = array('всплывающее окно', 1, $data['windows']);
+
     // Captcha
-    $c_value[]=array('да',1,$captcha_enabled);
-    $c_value[]=array('нет',2,$captcha_enabled);
+    $c_value[] = array('да', 1, $data['captcha_enabled']);
+    $c_value[] = array('нет', 2, $data['captcha_enabled']);
 
 
-    // Графический заголовок окна
-    $PHPShopGUI->setHeader("Настройка модуля 'Обратный звонок'","Настройки подключения",$PHPShopGUI->dir."img/i_display_settings_med[1].gif");
+    $Tab1 = $PHPShopGUI->setField('Заголовок', $PHPShopGUI->setInputText(false, 'title_new', $data['title']));
+    $Tab1.=$PHPShopGUI->setField('Сообщение', $PHPShopGUI->setTextarea('title_end_new', $data['title_end']));
+    $Tab1.=$PHPShopGUI->setField('Место вывода', $PHPShopGUI->setSelect('enabled_new', $e_value, 200));
+    $Tab1.=$PHPShopGUI->setField('Тип вывода', $PHPShopGUI->setSelect('windows_new', $w_value, 200));
+    $Tab1.=$PHPShopGUI->setField('Captcha', $PHPShopGUI->setSelect('captcha_enabled_new', $c_value, 200));
 
-    $Tab1=$PHPShopGUI->setField('Заголовок',$PHPShopGUI->setInputText(false,'title_new', $title));
-    $Tab1.=$PHPShopGUI->setField('Сообщение', $PHPShopGUI->setTextarea('title_end_new', $title_end));
-    $Tab1.=$PHPShopGUI->setField('Место вывода',$PHPShopGUI->setSelect('enabled_new',$e_value,150),'left');
-    $Tab1.=$PHPShopGUI->setField('Тип вывода',$PHPShopGUI->setSelect('windows_new',$w_value,150),'left');
-    $Tab1.=$PHPShopGUI->setField('Captcha',$PHPShopGUI->setSelect('captcha_enabled_new',$c_value,150),'left');
-    
-    $info='Для произвольной вставки элемента следует выбрать парамет вывода "Не выводить" и в ручном режиме вставить переменную
-        <b>@returncall@</b> в свой шаблон.
-        <p>Для персонализации формы вывода отредактируйте шаблоны phpshop/modules/returncall/templates/</p>
-        <p>Для включения защитной каптчи используйте <b>@returncall_captcha@</b> в форме обратного звонка 
-        phpshop/modules/returncall/templates/returncall_forma.tpl</p>
-';
+    $info = 'Для произвольной вставки элемента следует выбрать парамет вывода "Не выводить" и в ручном режиме вставить переменную
+        <kbd>@returncall@</kbd> в свой шаблон.
+        <p>Для персонализации формы вывода отредактируйте шаблоны <code>phpshop/modules/returncall/templates/</code></p>
+        <p>Для включения защитной каптчи используйте <kbd>@returncall_captcha@</kbd> в форме обратного звонка <code>
+        phpshop/modules/returncall/templates/returncall_forma.tpl</code></p>';
 
-    $Tab2=$PHPShopGUI->setInfo($info, 200, '96%');
+    $Tab2 = $PHPShopGUI->setInfo($info);
 
     // Форма регистрации
-    $Tab3 = $PHPShopGUI->setPay($serial, false, $version, true);
+    $Tab3 = $PHPShopGUI->setPay($data['serial'], false, $data['version'], true);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное",$Tab1,270),array("Инструкция",$Tab2,270),array("О Модуле",$Tab3,270));
+    $PHPShopGUI->setTab(array("Основное", $Tab1), array("Инструкция", $Tab2), array("О Модуле", $Tab3),array("Обзор заявок", null,'?path=modules.dir.returncall'));
 
     // Вывод кнопок сохранить и выход в футер
-    $ContentFooter=
-            $PHPShopGUI->setInput("hidden","newsID",$id,"right",70,"","but").
-            $PHPShopGUI->setInput("button","","Отмена","right",70,"return onCancel();","but").
-            $PHPShopGUI->setInput("submit","editID","ОК","right",70,"","but","actionUpdate");
+    $ContentFooter =
+            $PHPShopGUI->setInput("hidden", "rowID", $data['id']) .
+            $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionUpdate.modules.edit");
 
     $PHPShopGUI->setFooter($ContentFooter);
     return true;
 }
 
-if($UserChek->statusPHPSHOP < 2) {
+// Обработка событий
+$PHPShopGUI->getAction();
 
-    // Вывод формы при старте
-    $PHPShopGUI->setLoader($_POST['editID'],'actionStart');
-
-    // Обработка событий
-    $PHPShopGUI->getAction();
-
-}else $UserChek->BadUserFormaWindow();
-
+// Вывод формы при старте
+$PHPShopGUI->setLoader($_POST['saveID'], 'actionStart');
 ?>

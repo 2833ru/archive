@@ -15,13 +15,13 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_paypal_system` (
   `message` text NOT NULL,
   `currency_id` int(11) NOT NULL,
   `serial` varchar(64) NOT NULL DEFAULT '',
-  `version` float NOT NULL DEFAULT '1',
+  `version` float(2) NOT NULL DEFAULT '1.0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 
 INSERT INTO `phpshop_modules_paypal_system` (`id`, `status`, `title`, `title_end`, `link`, `merchant_id`, `merchant_pwd`, `merchant_sig`, `sandbox`, `logo_enabled`, `message_header`, `message`, `currency_id`, `serial`, `version`) VALUES
-(1, 0, 'Платежная система PayPal', 'Форма оплаты будет доступна после ручной обработки заказа менеджером. Просим немного подождать.', 'Оплатить через PayPal', '', '', '', '1', '1', 'Спасибо за покупку', 'Ваш заказ оплачен', 6, '', 1);
+(1, 0, 'Платежная система PayPal', 'Форма оплаты будет доступна после ручной обработки заказа менеджером. Просим немного подождать.', 'Оплатить через PayPal', '', '', '', '1', '1', 'Спасибо за покупку', 'Ваш заказ оплачен', 6, '', 1.1);
 
 
 

@@ -20,6 +20,4 @@ window.document.getElementById('num').innerHTML='0';
 window.document.getElementById('sum').innerHTML='0';
 }</script>";
 
-// Очищаем корзину
-unset($_SESSION['cart']);
 ?>

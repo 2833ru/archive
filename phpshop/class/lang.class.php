@@ -3,7 +3,7 @@
 /**
  * Библиотека локализации административных интерфейсов
  * @author PHPShop Software
- * @version 1.0
+ * @version 1.1
  * @package PHPShopGUI
  */
 class PHPShopLang {
@@ -28,7 +28,7 @@ class PHPShopLang {
     /**
      * Конструктор
      */
-    function PHPShopLang($_classPath) {
+    function __construct($_classPath) {
 
         if(!empty($_SESSION['lang'])) {
 

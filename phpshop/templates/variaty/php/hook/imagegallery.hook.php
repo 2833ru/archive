@@ -89,7 +89,7 @@ function uid_nt_hook($obj, $dataArray, $rout) {
         $PHPShopProductIconElements = new PHPShopProductIconElements();
         $cont = $PHPShopProductIconElements->specMainIcon(true, $obj->category, null, 2);
         if ($cont) {
-            $obj->set('leftMenuContent', '<ul>'.$cont.'</ul>');
+            $obj->set('leftMenuContent', '<ul>' . $cont . '</ul>');
             $obj->set('leftMenuName', $obj->get('specMainTitle'));
 
             // Подключаем шаблон
@@ -165,11 +165,11 @@ function cid_category_nt_hook($obj, $dataArray, $rout) {
 
 function template_CID_Product($obj, $data, $rout) {
     if ($rout == 'START') {
-        
+
 
         // Фасетный фильтр
         $obj->sort_template = 'sorttemplatehook';
-        
+
         switch ($_REQUEST['gridChange']) {
             case 1:
                 $obj->set('gridSetAactive', 'active');
@@ -235,7 +235,6 @@ function sorttemplatehook($value, $n, $title, $vendor) {
     return '<h5>' . $title . '</h5>' . $disp;
 }
 
-
 $addHandler = array
     (
     'image_gallery' => 'image_gallery_nt_hook',
@@ -251,8 +250,8 @@ $addHandler = array
  */
 class PHPShopProduct_nt_IconElements extends PHPShopProductIconElements {
 
-    function PHPShopProduct_nt_IconElements() {
-        parent::PHPShopProductIconElements();
+    function __construct() {
+        parent::__construct();
     }
 
     function specMainIcon_nt($force = false, $category = null, $cell = 1, $limit = null, $line = false) {

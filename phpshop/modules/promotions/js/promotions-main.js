@@ -98,7 +98,7 @@
                                 for (var i = 0; i < 5; i++) {
                                     var doscount_itog_num = sum_itog_num+i;
                                     text = $( ".img_fix table tr:nth-child( "+doscount_itog_num+" ) td:nth-child( 1 )" ).html();
-                                    text = text.replace(/\s+/g, '');
+                                    //text = text.replace('/\s+/g', '');
                                     if(text=='<b>Итого:</b>') {
                                         var sumnum_itog_old = $( ".img_fix table tr:nth-child( "+doscount_itog_num+" ) td:nth-child( 6 ) div" ).html();
                                         if(sumnum_itog_old) {
@@ -220,7 +220,7 @@
                             for (var i = 0; i < 5; i++) {
                                 var doscount_itog_num = sum_itog_num+i;
                                 text = $( ".img_fix table tr:nth-child( "+doscount_itog_num+" ) td:nth-child( 1 )" ).html();
-                                text = text.replace(/\s+/g, '');
+                                //text = text.replace('/\s+/g', '');
                                 if(text=='<b>Итого:</b>') {
                                     var sumitog_html = $( ".img_fix table tr:nth-child( "+doscount_itog_num+" ) td:nth-child( 6 )" ).html();
                                     $( ".img_fix table tr:nth-child( "+doscount_itog_num+" ) td:nth-child( 6 )" ).html(sum_itog+" "+sum_itog_num_valut+"<div style='display:none;'>"+sumitog_html+"</div>");

@@ -3,7 +3,7 @@
 /**
  * Файл выгрузки для Яндекс Маркет
  * @author PHPShop Software
- * @version 1.5
+ * @version 1.6
  * @package PHPShopXML
  */
 $_classPath = "../phpshop/";
@@ -53,7 +53,7 @@ class PHPShopSortSearch {
     }
 
     /**
-     * Поиск в массиве характеритик товара нужной характеристики
+     * Поиск в массиве характеристик товара нужной характеристики
      * @param array $row массив характеристик товара
      * @return string имя характеристики в тэге
      */
@@ -215,8 +215,13 @@ class PHPShopYml {
         $Products = array();
 
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
-        $result = $PHPShopOrm->query("select * from " . $GLOBALS['SysValue']['base']['products'] . " where yml='1' and enabled='1' and parent_enabled='0'");
-        while ($row = mysql_fetch_array($result)) {
+        
+        if(isset($_GET['getall']))
+            $where=null;
+        else $where="yml='1' and";
+        
+        $result = $PHPShopOrm->query("select * from " . $GLOBALS['SysValue']['base']['products'] . " where $where enabled='1' and parent_enabled='0'");
+        while ($row = mysqli_fetch_array($result)) {
             $id = $row['id'];
             $name = htmlspecialchars($row['name'], null, 'windows-1251');
             $category = $row['category'];
@@ -228,7 +233,7 @@ class PHPShopYml {
             else
                 $p_enabled = "false";
 
-            $description = trim(PHPShopString::mySubstr($row['description'], 300));
+            $description = htmlspecialchars(trim(PHPShopString::mySubstr($row['description'], 300)), null, 'windows-1251');
             $content = htmlspecialchars(trim(strip_tags($row['content'])), null, 'windows-1251');
             $baseinputvaluta = $row['baseinputvaluta'];
 
@@ -319,12 +324,19 @@ class PHPShopYml {
         if (is_array($data))
             $this->xml.='<local_delivery_cost>' . $data['price'] . '</local_delivery_cost>';
     }
+    
+    /**
+     * Очистка спецсимволов
+     */
+    function cleanStr($string){
+        $string = html_entity_decode($string,ENT_QUOTES,'windows-1251');
+        return str_replace('&#43;', '+', $string);
+    }
 
     /**
      * Товары 
      */
     function setProducts() {
-        global $PHPShopModules;
         $vendor = null;
         $this->xml.='<offers>';
         $product = $this->product($vendor = true);
@@ -395,15 +407,16 @@ class PHPShopYml {
                 else $url = '/id/' . $val['prod_seo_name'].'-'.$val['id'];
             }
 
-            $xml = '<offer id="' . $val['id'] . '" available="' . $val['p_enabled'] . '" ' . $bid_str . '>
+            $xml = '
+<offer id="' . $val['id'] . '" available="' . $val['p_enabled'] . '" ' . $bid_str . '>
  <url>http://' . $_SERVER['SERVER_NAME'] . $GLOBALS['SysValue']['dir']['dir'] . $url . '.html?from=yml</url>
       <price>' . $val['price'] . '</price>
       <currencyId>' . $this->defvalutaiso . '</currencyId>
       <categoryId>' . $val['category'] . '</categoryId>
       <picture>http://' . $_SERVER['SERVER_NAME'] . $val['picture'] . '</picture>
-      <name>' . $val['name'] . '</name>' .
+      <name>' . $this->cleanStr($val['name']) . '</name>' .
                     $vendor . '
-      <description>' . $val['description'] . '</description>' .
+      <description>' . $this->cleanStr($val['description']) . '</description>' .
                     $param . '
 ';
 
@@ -452,6 +465,8 @@ class PHPShopYml {
 
 }
 
+header("HTTP/1.1 200");
+header("Content-Type: application/xml");
 $PHPShopYml = new PHPShopYml();
 $PHPShopYml->compile();
 ?>

@@ -64,32 +64,39 @@ if (is_numeric($LicenseUntilUnixTime))
 else
     $LicenseUntil = " - ";
 
-if ($License['License']['Pro'] == 'Enabled')
-    $Pro = 'Pro';
-else
-    $Pro = null;
+if ($License['License']['Pro'] == 'Start') {
+    $product_name = 'Start';
+} else {
+    if ($License['License']['Pro'] == 'Enabled')
+        $product_name = 'Pro 1C';
+    else
+        $product_name = 'Enterprise';
+}
 
 if (PHPShopSecurity::true_skin($_COOKIE['bootstrap_theme']))
     $theme = ' + ' . $_COOKIE['bootstrap_theme'] . '.css';
 else
     $theme = null;
 
-$Info = "PHPShop System Info
+
+$version = null;
+foreach (str_split($GLOBALS['SysValue']['upload']['version']) as $w)
+    $version.=$w . '.';
+
+$Info = "Информация о программе
 ---------------------------------------------
 
-Версия: " . $PHPShopBase->getParam('license.product_name') . " " . $Pro . "
-Сборка: " . $PHPShopBase->getParam('upload.version') . "
-Дата изменения: " . $PHPShopBase->getParam('cache.last_modified') . "
+Версия: " . $product_name . "
+Сборка: " . substr($version, 0, strlen($version)-1). "
 Дизайн: " . $PHPShopSystem->getParam('skin') . " " . $theme . "
-GZIP: " . $PHPShopBase->getParam('my.gzip') . "; Сжатие: " . $PHPShopBase->getParam('my.gzip_level') . "
 Установлено: " . $FileDate . "
 Окончание лицензии: " . $LicenseUntil . "
 Окончание поддержки: " . $TechPodUntil . "
 
 ---------------------------------------------
 
-Все права защищены. 2004-" . date("Y") . "
-Copyright © www.phpshop.ru";
+Copyright © PHPShop™, 2004-" . date("Y") . ". 
+Все права защищены  ООО \"ПХПШОП\"";
 
 // Формируем результат прямо в виде PHP-массива!
 $_RESULT = array(

@@ -24,8 +24,8 @@ $pathTemplate = $SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'];
 
 $sql = "select * from " . $SysValue['base']['table_name1'] . " where id=" . intval($_GET['orderID']);
 $n = 1;
-@$result = mysql_query($sql) or die($sql);
-$row = mysql_fetch_array(@$result);
+@$result = mysqli_query($link_db,$sql);
+$row = mysqli_fetch_array(@$result);
 $id = $row['id'];
 $datas = $row['datas'];
 $ouid = $row['uid'];
@@ -66,8 +66,8 @@ if (is_array($order['Cart']['cart']))
         $goodid = $val['id'];
         $goodnum = $val['num'];
         $wsql = 'select weight from ' . $SysValue['base']['table_name2'] . ' where id=\'' . $goodid . '\'';
-        $wresult = mysql_query($wsql);
-        $wrow = mysql_fetch_array($wresult);
+        $wresult = mysqli_query($link_db,$wsql);
+        $wrow = mysqli_fetch_array($wresult);
         $cweight = $wrow['weight'] * $goodnum;
         if (!$cweight) {
             $zeroweight = 1;

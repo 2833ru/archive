@@ -8,8 +8,8 @@ if(empty($_GET['limit'])) $limit=100;
   else $limit=$_GET['limit'];
 
 $sql="select * from ".$GLOBALS['SysValue']['base']['table_name12']." order by id desc limit $limit ";
-$result=mysql_query($sql);
-while($row = mysql_fetch_array($result)){
+$result=mysqli_query($link_db,$sql);
+while($row = mysqli_fetch_array($result)){
 $id=$row['id'];
 $datas=$row['datas'];
 $p_name=$row['p_name'];

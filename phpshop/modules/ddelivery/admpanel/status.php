@@ -14,7 +14,7 @@ include($_classPath . "class/obj.class.php");
 PHPShopObj::loadClass("base");
 
 $PHPShopBase = new PHPShopBase($_classPath."inc/config.ini");
-include($_classPath."admpanel/enter_to_admin.php");
+$PHPShopBase->chekAdmin();
 
 PHPShopObj::loadClass("array");
 PHPShopObj::loadClass("orm");
@@ -62,9 +62,9 @@ try
         $orders = $GLOBALS['SysValue']['base']['order_status'];
 
         $query = 'SELECT id,name FROM ' . $orders ;
-        $cur = mysql_query($query);
+        $cur = mysqli_query($link_db,$query);
         $result = array();
-        while ($k = mysql_fetch_array($cur)){
+        while ($k = mysqli_fetch_array($cur)){
             $n = iconv('CP1251','UTF-8',$k[1]);
             $result[$k[0]] = $n;
         }

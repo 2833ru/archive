@@ -2,21 +2,15 @@
 <module>
     <version>1.6</version>
     <name>Guard</name>
-   <faqlink>http://faq.phpshop.ru/page/antivirus.html</faqlink>
- <description>Модуль антивируса.</description>
-    <icon>bug_delete.png</icon>
+    <faqlink>http://faq.phpshop.ru/page/antivirus.html</faqlink>
+    <description>Модуль защитника файлов.</description>
     <category>develop</category>
     <adminmenu>
-        <title>Антивирус</title>
+        <title>Защитник</title>
+        <capability>true</capability>
         <podmenu>
-            <podmenu_name>Настройка</podmenu_name>
-            <podmenu_icon>bug_edit.png</podmenu_icon>
-            <podmenu_action>javascript:miniWin('../modules/guard/admpanel/adm_guard.php',630,530);</podmenu_action>
-        </podmenu>
-		<podmenu>
             <podmenu_name>Журнал проверок</podmenu_name>
-            <podmenu_icon>bug_delete.png</podmenu_icon>
-            <podmenu_action>javascript:DoReload('modules','guard')</podmenu_action>
+            <podmenu_action>dir.guard</podmenu_action>
         </podmenu>
     </adminmenu>
 </module>

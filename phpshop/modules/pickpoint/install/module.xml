@@ -4,14 +4,9 @@
     <name>PickPoint</name>
     <faqlink>http://faq.phpshop.ru/page/pickpoint.html</faqlink>
     <description>Модуль пунктов выдачи товара PickPoint</description>
-    <icon>icon.png</icon>
     <category>sale</category>
     <adminmenu>
         <title>PickPoint</title>
-        <podmenu>
-            <podmenu_name>Настройка</podmenu_name>
-            <podmenu_icon>icon.png</podmenu_icon>
-            <podmenu_action>javascript:miniWin('../modules/pickpoint/admpanel/adm_module.php',510,450);</podmenu_action>
-        </podmenu>
+        <capability>true</capability>
     </adminmenu>
 </module>

@@ -18,7 +18,7 @@ class PHPShopCategorySeoProArray extends PHPShopArray {
         $this->cache = false;
         $this->order = array('order' => 'num');
         $this->objBase = $GLOBALS['SysValue']['base']['categories'];
-        parent::PHPShopArray("id", "name", "cat_seo_name");
+        parent::__construct("id", "name", "cat_seo_name");
     }
 
 }
@@ -34,13 +34,14 @@ class PHPShopSeoPro {
 
         $this->memory = $GLOBALS['modules']['seourlpro']['map'];
         $this->memory_prod = $GLOBALS['modules']['seourlpro']['map_prod'];
-        $url=explode("?",$_SERVER["REQUEST_URI"]);
+        $url = explode("?", $_SERVER["REQUEST_URI"]);
         $this->url = pathinfo($url[0]);
     }
 
     /*
      *  Расчет пагинации и ссылки
      */
+
     function getNav() {
         $url = $this->url;
 
@@ -51,7 +52,7 @@ class PHPShopSeoPro {
                 $url['filename'] = substr($url['dirname'], 1, strlen($url['dirname']) - 1) . '/' . $url['filename'];
             }
         }
-        
+
         $array_seo_name = explode('-', $url['filename']);
         $page = $array_seo_name[count($array_seo_name) - 1];
 
@@ -152,7 +153,6 @@ class PHPShopSeoPro {
         return strtr($subject, array_combine($search, $replace));
     }
 
-
     function AjaxCompile($result) {
 
         // Товары
@@ -168,17 +168,14 @@ class PHPShopSeoPro {
     function Compile($obj) {
         global $PHPShopModules;
 
-		if(!empty($_SESSION['PHPShopSeoProError']))
-			$this->catArrayToMemory();
+        if (!empty($_SESSION['PHPShopSeoProError']))
+            $this->catArrayToMemory();
 
         // Обработка массива памяти категорий
-       // $this->catCacheToMemory();
-	    //$this->catArrayToMemory();
+        // $this->catCacheToMemory();
+        //$this->catArrayToMemory();
         //print_r($this->memory);
         //print_r($this->memory_prod);
-
-
-
         // Каталоги
         if (is_array($this->memory)) {
             $array_str = array_values($this->memory);
@@ -193,10 +190,13 @@ class PHPShopSeoPro {
 
 
         ob_start();
-		ob_implicit_flush(0);
+
+        ob_implicit_flush(0);
         ParseTemplate($obj->getValue($obj->template));
         $result = ob_get_clean();
-		ob_end_clean();
+
+        // Закомментировать для отладки вывода данных
+        ob_end_clean();
 
         if (is_array($this->memory))
             $result = $this->stro_replace($array_id, $array_str, $result);
@@ -205,22 +205,6 @@ class PHPShopSeoPro {
             $result = $this->stro_replace($array_id_prod, $array_str_prod, $result);
 
         echo $result;
-
-        if ($GLOBALS['SysValue']['nav']['truepath'] != '/' and $GLOBALS['SysValue']['nav']['truepath'] != '//' and in_array($GLOBALS['SysValue']['nav']['path'], array('index', 'cat', 'id')) and $GLOBALS['RegTo']['CopyrightEnabled'] == 'Yes') {
-            echo '
-           <!-- Copyright PHPShop -->
-           <div style="clear: both; width:100%">
-                <div style="text-align:center;display:block;padding:5px;color:#595959;font-size:11px">
-                <a href="http://www.phpshop.ru" title="Создание интернет-магазина"  style="color:#595959;font-size:11px" target="_blank">Создание Интернет-магазина</a> ' . $_SERVER['SERVER_NAME'] . ' - PHPShop. Все права защищены © 2003-' . date("Y") . '.
-               </div>
-          </div>';
-            
-     $PHPShopModules->setHookHandler('footer', 'footer');
-            
-            echo '
-      </body>
-</html>';
-        }
     }
 
 }

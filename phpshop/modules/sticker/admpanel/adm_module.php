@@ -1,95 +1,50 @@
-<?
-$_classPath="../../../";
-include($_classPath."class/obj.class.php");
-PHPShopObj::loadClass("base");
-PHPShopObj::loadClass("system");
-PHPShopObj::loadClass("orm");
-
-$PHPShopBase = new PHPShopBase($_classPath."inc/config.ini");
-include($_classPath."admpanel/enter_to_admin.php");
-
-
-// Настройки модуля
-PHPShopObj::loadClass("modules");
-$PHPShopModules = new PHPShopModules($_classPath."modules/");
-
-
-// Редактор
-PHPShopObj::loadClass("admgui");
-$PHPShopGUI = new PHPShopGUI();
-
-// SQL
-$PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.sticker.sticker_system"));
-
+<?php
 
 // Функция обновления
 function actionUpdate() {
-    global $PHPShopOrm;
-    $action = $PHPShopOrm->update($_POST);
-    return $action;
+   header('Location: ?path=modules&install=check');
 }
 
 // Начальная функция загрузки
 function actionStart() {
-    global $PHPShopGUI,$PHPShopSystem,$SysValue,$_classPath,$PHPShopOrm;
+    global $PHPShopGUI;
 
 
-    $PHPShopGUI->dir=$_classPath."admpanel/";
-    $PHPShopGUI->title="Настройка модуля";
-    $PHPShopGUI->size="500,450";
-
-
-    // Выборка
-    $data = $PHPShopOrm->select();
-    @extract($data);
-
-
-    // Графический заголовок окна
-    $PHPShopGUI->setHeader("Настройка модуля 'Sticker'","Настройки",$PHPShopGUI->dir."img/i_display_settings_med[1].gif");
-
-    $Info=' <p>Для вывода стикера в шаблоне используйте переменную <b>@sticker_маркер@</b>. 
+    $Info = '<p>Для вывода стикера в шаблоне используйте переменную <kbd>@sticker_маркер@</kbd>. 
         Маркер указывается в одноименном поле карточки редактирования стикера. 
         Имя маркера обязательно должно быть на латинском языке.
         </p> 
- <p>
-Для интеграции стикера в ручном режиме включите следующий код в содержание страницы или текстового блока:
+         <p>
+         Для интеграции стикера в ручном режиме включите следующий код в содержание страницы или текстового блока:
         <p>
-        <b>@php
-        $PHPShopStickerElement = new PHPShopStickerElement();
-        echo $PHPShopStickerElement->forma("маркер стикера");
-        php@</b>
-         </p>
+        <pre>
+@php
+$PHPShopStickerElement = new PHPShopStickerElement();
+echo $PHPShopStickerElement->forma("маркер стикера");
+php@
+        </pre>
+         </p>';
 
-';
-    $Tab2=$PHPShopGUI->setInfo($Info,250,'97%');
+    $Tab2 = $PHPShopGUI->setInfo($Info);
 
 
     // Содержание закладки 2
-    $Tab3=$PHPShopGUI->setPay($serial,false);
+    $Tab3 = $PHPShopGUI->setPay();
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Описание",$Tab2,270),array("О Модуле",$Tab3,270));
+    $PHPShopGUI->setTab(array("Инструкция", $Tab2), array("О Модуле", $Tab3),array("Обзор стикеров", null,'?path=modules.dir.sticker'));
 
     // Вывод кнопок сохранить и выход в футер
-    $ContentFooter=
-            $PHPShopGUI->setInput("hidden","newsID",$id,"right",70,"","but").
-            $PHPShopGUI->setInput("button","","Отмена","right",70,"return onCancel();","but").
-            $PHPShopGUI->setInput("submit","editID","ОК","right",70,"","but","actionUpdate");
+    $ContentFooter =
+            $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionUpdate.modules.edit");
 
     $PHPShopGUI->setFooter($ContentFooter);
     return true;
 }
 
-if($UserChek->statusPHPSHOP < 2) {
+// Обработка событий
+$PHPShopGUI->getAction();
 
-    // Вывод формы при старте
-    $PHPShopGUI->setLoader($_POST['editID'],'actionStart');
-
-    // Обработка событий
-    $PHPShopGUI->getAction();
-
-}else $UserChek->BadUserFormaWindow();
-
+// Вывод формы при старте
+$PHPShopGUI->setLoader($_POST['saveID'], 'actionStart');
 ?>
-
-

@@ -32,9 +32,9 @@ function option_select($obj, $data) {
         $PHPShopOrm = new PHPShopOrm();
         $PHPShopOrm->debug = $obj->debug;
         $PHPShopOrm->comment = get_class($obj) . '.' . __FUNCTION__;
-        $result = $PHPShopOrm->query("select * from " . $obj->getValue('base.sort_categories') . " where (" . $sortList . ") and goodoption='1' order by num");
-        $num = mysql_num_rows($result);
-        while (@$row = mysql_fetch_array($result)) {
+        $result = $PHPShopOrm->query("select * from " . $obj->getValue('base.sort_categories') . " where (" . $sortList . ") and goodoption='1' order by num,name");
+        $num = mysqli_num_rows($result);
+        while (@$row = mysqli_fetch_array($result)) {
             $id = $row['id'];
             $name = $row['name'];
             $opt_sel = option_select_add($vendor_array, $id, $name, $numel, $xid, $row['optionname'], $obj->debug);
@@ -83,7 +83,7 @@ function option_select_add($vendor_array, $n, $title, $numel, $xid, $optionname,
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort']);
     $PHPShopOrm->debug = $debug;
     $PHPShopOrm->comment = 'phpshopshop.' . __FUNCTION__;
-    $data = $PHPShopOrm->select(array('*'), array('category' => '=' . $n), array('order' => 'num'), array('limit' => 100));
+    $data = $PHPShopOrm->select(array('*'), array('category' => '=' . $n), array('order' => 'num,name'), array('limit' => 100));
 
     if (is_array($data))
         foreach ($data as $row)
@@ -106,7 +106,7 @@ function option_select_add($vendor_array, $n, $title, $numel, $xid, $optionname,
             }
 
     if (!empty($dis)) {
-        $disp = '<select name=v[' . $n . '] size=1 id="opt' . $numel . $xid . '" onChange="alloptions' . $xid . '()">
+        $disp = '<select name=v[' . $n . '] size=1 id="opt' . $numel . $xid . '" onChange="alloptions' . $xid . '()" class="form-control">
     <option value="" selected>-- ' . $title . ' --</option>' . $dis . '</select>';
     }
 

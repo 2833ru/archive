@@ -46,30 +46,17 @@ function template_CID_Product($obj, $data, $rout) {
 function template_parent($obj, $dataArray, $rout) {
 
     if ($rout == 'END') {
-
-        // Цена основного товара
-        $price = $obj->price($dataArray);
-        if (!empty($price)) {
-            $obj->set('ComStartCart', '');
-            $obj->set('ComEndCart', '');
-            $obj->set('ComStart', '<!--');
-            $obj->set('ComEnd', '-->');
-            $obj->set('productPrice', $price);
-            $obj->set('productValutaName', $obj->currency());
-        }
-
+        
         if (count($obj->select_value > 0)) {
             $obj->set('parentList', '');
+            
             foreach ($obj->select_value as $value) {
                 $obj->set('parentName', $value[0]);
                 $obj->set('parentId', $value[1]);
-                if (!$flag) {
-                    $obj->set('checked', 'checked');
-                    $flag = 1;
-                    $obj->set('parentCheckedId', $value[1]);
-                }
-                else
-                    $obj->set('checked', '');
+
+
+                $obj->set('parentCheckedId', $value[1]);
+
 
                 $disp = ParseTemplateReturn("product/product_odnotip_product_parent_one.tpl");
                 $obj->set('parentList', $disp, true);
@@ -137,15 +124,30 @@ function template_image_gallery($obj, $array) {
     $PHPShopOrm = new PHPShopOrm($obj->getValue('base.foto'));
     $data = $PHPShopOrm->select(array('*'), array('parent' => '=' . $array['id']), array('order' => 'num'), array('limit' => 100));
     $i = 0;
-    if (is_array($data)) {
-        foreach ($data as $row) {
+    $s = 1;
 
+    if (is_array($data)) {
+
+        // Сортировка
+        foreach ($data as $k => $v) {
+
+            if ($v['name'] == $array['pic_big'])
+                $sort_data[0] = $v;
+            else
+                $sort_data[$s] = $v;
+
+            $s++;
+        }
+
+        ksort($sort_data);
+
+        foreach ($sort_data as $k => $row) {
             $name = $row['name'];
             $name_s = str_replace(".", "s.", $name);
             $name_bigstr = str_replace(".", "_big.", $name);
 
-            // Проверка на сервере
-            if (!@fopen("http://" . $_SERVER['HTTP_HOST'] . $name_bigstr, "r"))
+            // Подбор исходного изображения
+            if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $name_bigstr))
                 $name_bigstr = $name;
 
             $bxslider.= '<div><a class href="#"><img src="' . $name . '" /></a></div>';

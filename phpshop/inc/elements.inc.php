@@ -4,7 +4,7 @@
  * Элемент стандартных системных переменных
  * @author PHPShop Software
  * @tutorial http://wiki.phpshop.ru/index.php/PHPShopCoreElement
- * @version 1.1
+ * @version 1.2
  * @package PHPShopElements
  */
 class PHPShopCoreElement extends PHPShopElements {
@@ -12,8 +12,8 @@ class PHPShopCoreElement extends PHPShopElements {
     /**
      * Конструктор
      */
-    function PHPShopCoreElement() {
-        parent::PHPShopElements();
+    function __construct() {
+        parent::__construct();
     }
 
     /**
@@ -54,7 +54,19 @@ class PHPShopCoreElement extends PHPShopElements {
      * (имя, телефон, почта администратора, дата, логотип)
      */
     function setdefault() {
-        $this->set('telNum', $this->PHPShopSystem->getValue('tel'));
+        
+        // Телефон
+        $tel=$this->PHPShopSystem->getValue('tel');
+        $this->set('telNum', $tel);
+        
+        // Телефон для звонков
+        if(strstr($tel,","))
+        $tel_xs = explode(" ",$tel);
+        else $tel_xs[]=$tel;
+        
+        $this->set('telNumMobile', $tel_xs[0]);
+        
+       
         $this->set('name', $this->PHPShopSystem->getValue('name'));
         $this->set('company', $this->PHPShopSystem->getValue('company'));
         $this->set('streetAddress', $this->PHPShopSystem->getSerilizeParam('bank.org_adres'));
@@ -107,7 +119,7 @@ class PHPShopCoreElement extends PHPShopElements {
  * Элемент формы авторизации пользователя
  * @author PHPShop Software
  * @tutorial http://wiki.phpshop.ru/index.php/PHPShopUserElement
- * @version 1.2
+ * @version 1.3
  * @package PHPShopElements
  */
 class PHPShopUserElement extends PHPShopElements {
@@ -115,10 +127,10 @@ class PHPShopUserElement extends PHPShopElements {
     /**
      * Конструктор
      */
-    function PHPShopUserElement() {
+    function __construct() {
         $this->debug = false;
         $this->objBase = $GLOBALS['SysValue']['base']['shopusers'];
-        parent::PHPShopElements();
+        parent::__construct();
 
         // Если есть параметр from, нужно сохранить реферальную страницу и вернуть на нее пользователя после авторизации, регистрации.
         if ($_REQUEST['from'] AND !$_REQUEST['fromSave'])
@@ -150,6 +162,7 @@ class PHPShopUserElement extends PHPShopElements {
         unset($_SESSION['UsersName']);
         unset($_SESSION['UsersMail']);
         unset($_SESSION['UsersStatus']);
+        unset($_SESSION['UsersStatusPice']);
         $url_user = str_replace("?logout=true", "", $_SERVER['REQUEST_URI']);
         header("Location: " . $url_user);
     }
@@ -190,8 +203,7 @@ class PHPShopUserElement extends PHPShopElements {
                 $_SESSION['wishlistCount'] = count($wishlist);
                 $wishlist = serialize($wishlist);
                 $PHPShopOrm->update(array('wishlist' => "$wishlist"), array('id' => '=' . $data['id']), false);
-                unset($_SESSION['wishlist']);
-
+                //unset($_SESSION['wishlist']);
                 // ID пользователя
                 $_SESSION['UsersId'] = $data['id'];
 
@@ -236,7 +248,7 @@ class PHPShopUserElement extends PHPShopElements {
     }
 
     /**
-     * Экшен входа регисраци пользователя по страницы оформления заказа
+     * Экшен входа регистраци пользователя по страницы оформления заказа
      */
     function user_register() {
         // Импортируем роутер личного кабинета для возможности регистрации со страницы оформления заказа
@@ -337,9 +349,9 @@ class PHPShopPageCatalogElement extends PHPShopElements {
     /**
      * Конструктор
      */
-    function PHPShopPageCatalogElement() {
+    function __construct() {
         $this->objBase = $GLOBALS['SysValue']['base']['page_categories'];
-        parent::PHPShopElements();
+        parent::__construct();
     }
 
     /**
@@ -448,7 +460,7 @@ class PHPShopPageCatalogElement extends PHPShopElements {
  * Элемент текстовые блоки
  * @author PHPShop Software
  * @tutorial http://wiki.phpshop.ru/index.php/PHPShopTextElement
- * @version 1.0
+ * @version 1.1
  * @package PHPShopElements
  */
 class PHPShopTextElement extends PHPShopElements {
@@ -460,7 +472,7 @@ class PHPShopTextElement extends PHPShopElements {
      */
     function PHPShopTextElement() {
         $this->objBase = $GLOBALS['SysValue']['base']['table_name14'];
-        parent::PHPShopElements();
+        parent::__construct();
     }
 
     /**
@@ -576,13 +588,13 @@ class PHPShopTextElement extends PHPShopElements {
  * Элемент cмена шаблонов
  * @author PHPShop Software
  * @tutorial http://wiki.phpshop.ru/index.php/PHPShopSkinElement
- * @version 1.0
+ * @version 1.1
  * @package PHPShopElements
  */
 class PHPShopSkinElement extends PHPShopElements {
 
-    function PHPShopSkinElement() {
-        parent::PHPShopElements();
+    function __construct() {
+        parent::__construct();
 
         // Экшены
         $this->setAction(array('post' => 'skin', 'get' => 'skin'));
@@ -606,10 +618,8 @@ class PHPShopSkinElement extends PHPShopElements {
 
                             if ($file != "." and $file != ".." and $file != "index.html") {
 
-                                if (in_array($file, array('bootstrap', 'bootstrap_fluid', 'white_brick','variaty')))
-                                    $value_up[] = array($file, $file, $sel);
-                                else
-                                    $value_down[] = array($file, $file, $sel);
+
+                                $value[] = array($file, $file, $sel);
                             }
                         }
                     }
@@ -618,13 +628,8 @@ class PHPShopSkinElement extends PHPShopElements {
             }
 
 
-            if (is_array($value_up))
-                $value = array_merge($value_up, $value_down);
-            else
-                $value = $value_down;
-
             // Определяем переменные
-            $forma = PHPShopText::div(PHPShopText::form(PHPShopText::select('skin', $value, 150, $float = "none", $caption = false, $onchange = "ChangeSkin()"), 'SkinForm', 'get'),'left','padding:10px');
+            $forma = PHPShopText::div(PHPShopText::form(PHPShopText::select('skin', $value, 150, $float = "none", $caption = false, $onchange = "ChangeSkin()"), 'SkinForm', 'get'), 'left', 'padding:10px');
             $this->set('leftMenuContent', $forma);
             $this->set('leftMenuName', __("Сменить дизайн"));
 
@@ -658,7 +663,7 @@ class PHPShopSkinElement extends PHPShopElements {
  * Элемент последние новости
  * @author PHPShop Software
  * @tutorial http://wiki.phpshop.ru/index.php/PHPShopNewsElement
- * @version 1.0
+ * @version 1.1
  * @package PHPShopElements
  */
 class PHPShopNewsElement extends PHPShopElements {
@@ -676,10 +681,10 @@ class PHPShopNewsElement extends PHPShopElements {
     /**
      * Конструктор
      */
-    function PHPShopNewsElement() {
+    function __construct() {
         $this->debug = false;
         $this->objBase = $GLOBALS['SysValue']['base']['table_name8'];
-        parent::PHPShopElements();
+        parent::__construct();
     }
 
     /**
@@ -755,10 +760,10 @@ class PHPShopSliderElement extends PHPShopElements {
     /**
      * Конструктор
      */
-    function PHPShopSliderElement() {
+    function __construct() {
         $this->debug = false;
         $this->objBase = $GLOBALS['SysValue']['base']['slider'];
-        parent::PHPShopElements();
+        parent::__construct();
     }
 
     /**
@@ -825,9 +830,9 @@ class PHPShopOprosElement extends PHPShopElements {
     /**
      * Конструктор
      */
-    function PHPShopOprosElement() {
+    function __construct() {
         $this->debug = false;
-        parent::PHPShopElements();
+        parent::__construct();
     }
 
     /**
@@ -931,7 +936,7 @@ class PHPShopOprosElement extends PHPShopElements {
         $objBase = $this->getValue('base.opros');
         $PHPShopOrm = new PHPShopOrm($objBase);
         $result = $PHPShopOrm->query("select SUM(total) as sum from " . $objBase . " where category=" . $n);
-        $row = mysql_fetch_array($result);
+        $row = mysqli_fetch_array($result);
         return $row['sum'];
     }
 
@@ -946,10 +951,10 @@ class PHPShopOprosElement extends PHPShopElements {
  */
 class PHPShopBannerElement extends PHPShopElements {
 
-    function PHPShopBannerElement() {
+    function __construct() {
         $this->debug = false;
         $this->objBase = $GLOBALS['SysValue']['base']['table_name15'];
-        parent::PHPShopElements();
+        parent::__construct();
     }
 
     /**

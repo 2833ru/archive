@@ -2,26 +2,19 @@
 <module>
     <version>1.1</version>
     <name>Button</name>
-<faqlink>http://faq.phpshop.ru/page/button.html</faqlink>
-<description>Модуль вставки кода кнопок рейтингов и счетчиков.</description>
-    <icon>icon.png</icon>
+    <faqlink>http://faq.phpshop.ru/page/button.html</faqlink>
+    <description>Модуль вставки кода кнопок рейтингов и счетчиков.</description>
     <category>text,template</category>
     <adminmenu>
         <title>Кнопки</title>
-        <podmenu>
-            <podmenu_name>Настройка Button</podmenu_name>
-            <podmenu_icon>icon.png</podmenu_icon>
-            <podmenu_action>javascript:miniWin('../modules/button/admpanel/adm_module.php',510,450);</podmenu_action>
-        </podmenu>
+        <capability>true</capability>
         <podmenu>
             <podmenu_name>Обзор Кнопок</podmenu_name>
-            <podmenu_icon>icon.png</podmenu_icon>
-            <podmenu_action>javascript:window.location.replace('?plugin=button')</podmenu_action>
+            <podmenu_action>dir.button</podmenu_action>
         </podmenu>
-         <podmenu>
+        <podmenu>
             <podmenu_name>Новая Кнопка</podmenu_name>
-            <podmenu_icon>icon.png</podmenu_icon>
-            <podmenu_action>javascript:miniWin('../modules/button/admpanel/adm_button_new.php',630,530);</podmenu_action>
+            <podmenu_action>dir.button&amp;action=new</podmenu_action>
         </podmenu>
     </adminmenu>
 </module>

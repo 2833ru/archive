@@ -3,20 +3,22 @@
     <version>1.3</version>
     <name>Cron</name>
     <faqlink>http://faq.phpshop.ru/page/cron.html</faqlink>
-<description>Модуль запуска задач по времени.</description>
-    <icon>icon.png</icon>
+    <description>Модуль запуска задач по времени.</description>
     <category>develop</category>
     <adminmenu>
         <title>Задачи</title>
+        <capability>true</capability>
         <podmenu>
-            <podmenu_name>Настройка Cron</podmenu_name>
-            <podmenu_icon>icon.png</podmenu_icon>
-            <podmenu_action>javascript:miniWin('../modules/cron/admpanel/adm_module.php',650,450);</podmenu_action>
+            <podmenu_name>Обзор Задач</podmenu_name>
+            <podmenu_action>dir.cron</podmenu_action>
         </podmenu>
         <podmenu>
-            <podmenu_name>Лог выполнения задач</podmenu_name>
-            <podmenu_icon>log.png</podmenu_icon>
-            <podmenu_action>javascript:window.location.replace('?plugin=cron')</podmenu_action>
+            <podmenu_name>Новая Задача</podmenu_name>
+            <podmenu_action>dir.cron&amp;action=new</podmenu_action>
+        </podmenu>
+        <podmenu>
+            <podmenu_name>Журнал выполнения</podmenu_name>
+            <podmenu_action>dir.cron.log</podmenu_action>
         </podmenu>
     </adminmenu>
 </module>

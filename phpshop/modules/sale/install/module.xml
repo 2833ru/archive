@@ -2,16 +2,11 @@
 <module>
     <version>1.4</version>
     <name>Sales</name>
-          <faqlink>http://faq.phpshop.ru/page/price-increase-reduction.html</faqlink>
- <description>Модуль распродаж и наценок.</description>
-    <icon>icon.png</icon>
+    <faqlink>http://faq.phpshop.ru/page/price-increase-reduction.html</faqlink>
+    <description>Модуль распродаж и наценок.</description>
     <category>sale</category>
     <adminmenu>
         <title>Распродажа</title>
-        <podmenu>
-            <podmenu_name>Настройка</podmenu_name>
-            <podmenu_icon>icon.png</podmenu_icon>
-            <podmenu_action>javascript:miniWin('../modules/sale/admpanel/adm_module.php',510,450);</podmenu_action>
-        </podmenu>
+        <capability>true</capability>
     </adminmenu>
 </module>

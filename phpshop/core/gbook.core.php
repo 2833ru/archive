@@ -12,7 +12,7 @@ class PHPShopGbook extends PHPShopCore {
     /**
      * Конструктор
      */
-    function PHPShopGbook() {
+    function __construct() {
 
         // Имя Бд
         $this->objBase = $GLOBALS['SysValue']['base']['gbook'];
@@ -25,14 +25,11 @@ class PHPShopGbook extends PHPShopCore {
 
         // Список экшенов
         $this->action = array("post" => "send_gb", "nav" => "index", "nav" => "ID", "get" => "add_forma");
-        parent::PHPShopCore();
+        parent::__construct();
 
         // кол-во отзывов на странице
         if (!$this->num_row)
             $this->num_row = 10;
-
-        // Мета
-        $this->title = 'Отзывы - ' . $this->PHPShopSystem->getValue("name");
     }
 
     /**
@@ -57,7 +54,7 @@ class PHPShopGbook extends PHPShopCore {
                     $d_mail = PHPShopText::b($row['name']);
 
                 // Определяем переменые
-                $this->set('gbookData', PHPShopDate::dataV($row['datas']));
+                $this->set('gbookData', PHPShopDate::dataV($row['datas'], false));
                 $this->set('gbookName', $row['name']);
                 $this->set('gbookTema', $row['tema']);
                 $this->set('gbookMail', $d_mail);
@@ -74,6 +71,17 @@ class PHPShopGbook extends PHPShopCore {
 
         // Пагинатор
         $this->setPaginator();
+
+        // Мета
+        $this->title = __('Отзывы') . ' - ' . $this->PHPShopSystem->getValue("name");
+        $this->description = __('Отзывы') . '  ' . $this->PHPShopSystem->getValue("name");
+        $this->keywords = __('Отзывы') . ', ' . $this->PHPShopSystem->getValue("name");
+
+        $page = $this->PHPShopNav->getId();
+        if ($page > 1) {
+            $this->description.= ' Часть ' . $page;
+            $this->title.=' - Страница ' . $page;
+        }
 
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__, $row, 'END');
@@ -131,6 +139,10 @@ class PHPShopGbook extends PHPShopCore {
         $this->title = $row['tema'] . " - " . $this->PHPShopSystem->getValue("name");
         $this->description = strip_tags($row['otsiv']);
         $this->lastmodified = PHPShopDate::GetUnixTime($row['datas']);
+
+        // Генератор keywords
+        include('./phpshop/lib/autokeyword/class.autokeyword.php');
+        $this->keywords = callAutokeyword($row['otsiv']);
 
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__, $row, 'END');

@@ -50,7 +50,7 @@ class PHPShopPriceSave {
         $PHPShopOrm->comment = __CLASS__ . '.' . __FUNCTION__;
         $PHPShopOrm->debug = $this->debug;
         $result = $PHPShopOrm->query("select * from " . $this->objBase . " where " . $str . " enabled='1'");
-        while ($row = mysql_fetch_array($result)) {
+        while ($row = mysqli_fetch_array($result)) {
             $price_array = array($row['price'], $row['price2'], $row['price3'], $row['price4'], $row['price5']);
             $price = PHPShopProductFunction::GetPriceValuta($row['id'], $price_array, $row['baseinputvaluta']);
 

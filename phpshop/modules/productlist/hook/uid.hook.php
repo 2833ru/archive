@@ -2,11 +2,11 @@
 
 class PHPShopProductListElement extends PHPShopElements {
 
-    function PHPShopProductListElement() {
+    function __construct() {
         $this->debug = false;
         $this->objBase = $GLOBALS['SysValue']['base']['productlist']['productlist_system'];
         $this->option();
-        parent::PHPShopElements();
+        parent::__construct();
     }
 
     function option() {

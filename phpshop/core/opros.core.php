@@ -11,7 +11,7 @@ class PHPShopOpros extends PHPShopCore {
     /**
      * Конструктор
      */
-    function PHPShopOpros() {
+    function __construct() {
         global $PHPShopOprosElement;
 
         // Отладка
@@ -22,7 +22,7 @@ class PHPShopOpros extends PHPShopCore {
 
         // Список экшенов
         $this->action=array("post"=>"getopros","nav"=>"index","get"=>"add_forma");
-        parent::PHPShopCore();
+        parent::__construct();
     }
 
     /**

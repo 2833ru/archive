@@ -3,7 +3,7 @@
 /**
  * Элемент подбора по брендам
  * @author PHPShop Software
- * @version 1.0
+ * @version 1.2
  * @package PHPShopElements
  */
 class PHPShopBrandsElement extends PHPShopElements {
@@ -17,9 +17,8 @@ class PHPShopBrandsElement extends PHPShopElements {
     /**
      * Конструктор
      */
-    function PHPShopBrandsElement() {
-        $this->debug = false;
-        parent::PHPShopElements();
+    function __construct() {
+        parent::__construct();
     }
 
     /**
@@ -27,13 +26,15 @@ class PHPShopBrandsElement extends PHPShopElements {
      * @return string
      */
     function index() {
-        global $SysValue;
+
+        $arrayVendorValue = array();
+
         // Массив имен характеристик
-        $PHPShopOrm = new PHPShopOrm($SysValue['base']['table_name20']);
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']);
         $PHPShopOrm->debug = $this->debug;
         $PHPShopOrm->mysql_error = false;
-        $result = $PHPShopOrm->query("select * from " . $SysValue['base']['table_name20'] . " where (brand='1' and goodoption!='1') order by num");
-        while (@$row = mysql_fetch_assoc($result)) {
+        $result = $PHPShopOrm->query("select * from " . $GLOBALS['SysValue']['base']['sort_categories'] . " where (brand='1' and goodoption!='1') order by num");
+        while (@$row = mysqli_fetch_assoc($result)) {
             $arrayVendor[$row['id']] = $row;
         }
         if (is_array($arrayVendor))
@@ -46,9 +47,9 @@ class PHPShopBrandsElement extends PHPShopElements {
         if (!empty($sortValue)) {
             // Массив значений 
             $i = 0;
-            $result = $PHPShopOrm->query("select distinct name, id, icon, category from " . $SysValue['base']['table_name21'] . " where $sortValue group by name");
-            while (@$row = mysql_fetch_array($result)) {
-                @$arrayVendorValue[$row['category']]['name'].= ", " . $row['name'];
+            $result = $PHPShopOrm->query("select distinct name, id, icon, category from " . $GLOBALS['SysValue']['base']['sort'] . " where $sortValue group by name");
+            while (@$row = mysqli_fetch_array($result)) {
+                $arrayVendorValue[$row['category']]['name'].= ", " . $row['name'];
                 if ($arrayVendor[$row['category']]['brand']) {
                     if ($i % $this->limitOnLine == 0) {
                         $this->set('brandFirstClass', $this->firstClassName);
@@ -62,12 +63,12 @@ class PHPShopBrandsElement extends PHPShopElements {
                     $desc = '';
                     if ($row['page']) {
                         $PHPShopOrm->clean();
-                        $res = $PHPShopOrm->query("select content from " . $SysValue['base']['page'] . " where link = '$row[page]' LIMIT 1");
-                        $page = mysql_fetch_array($res);
+                        $res = $PHPShopOrm->query("select content from " . $GLOBALS['SysValue']['base']['page'] . " where link = '$row[page]' LIMIT 1");
+                        $page = mysqli_fetch_array($res);
                         $desc = $page['content'];
                     }
 
-                    $this->set('brandPageLink', $GLOBALS['SysValue']['dir']['dir'].'/selection/?v[' . $row['category'] . ']=' . $row['id']);
+                    $this->set('brandPageLink', $GLOBALS['SysValue']['dir']['dir'] . '/selection/?v[' . $row['category'] . ']=' . $row['id']);
                     $this->set('brandDescr', $desc);
 
                     $this->set('brandsList', ParseTemplateReturn('brands/top_brands_one.tpl'), true);
@@ -79,7 +80,6 @@ class PHPShopBrandsElement extends PHPShopElements {
     }
 
 }
-
 
 /**
  * Элемент характеристик товаров
@@ -93,8 +93,8 @@ class PHPShopSortElement extends PHPShopElements {
     /**
      * Конструктор
      */
-    function PHPShopSortElement() {
-        parent::PHPShopElements();
+    function __construct() {
+        parent::__construct();
     }
 
     /**
@@ -172,12 +172,18 @@ class PHPShopProductIconElements extends PHPShopProductElements {
     /**
      * Констурктор
      */
-    function PHPShopProductIconElements() {
+    function __construct() {
         $this->objBase = $GLOBALS['SysValue']['base']['products'];
-        parent::PHPShopProductElements();
+        parent::__construct();
 
         // HTML опции верстки
         $this->setHtmlOption(__CLASS__);
+    }
+
+    function __call($name, $arguments) {
+        if ($name == __CLASS__) {
+            self::__construct();
+        }
     }
 
     /**
@@ -192,7 +198,7 @@ class PHPShopProductIconElements extends PHPShopProductElements {
 
         $this->limitspec = $limit;
 
-        
+
         if (!empty($cell))
             $this->cell = $cell;
 
@@ -226,9 +232,9 @@ class PHPShopProductIconElements extends PHPShopProductElements {
                 $where['id'] = '!=' . $this->PHPShopNav->getId();
                 break;
         }
-        
+
         // Поддержка SeoUrlPro
-        if($GLOBALS['PHPShopNav']->objNav['name']=='UID') {
+        if ($GLOBALS['PHPShopNav']->objNav['name'] == 'UID') {
             $where['id'] = '!=' . $GLOBALS['PHPShopNav']->objNav['id'];
         }
 
@@ -337,7 +343,8 @@ class PHPShopProductIconElements extends PHPShopProductElements {
         // Количество ячеек для вывода товара
         if (empty($cell))
             $this->cell = $this->PHPShopSystem->getParam('num_vitrina');
-        else $this->cell=$cell;
+        else
+            $this->cell = $cell;
 
 
         $this->set('productInfo', $this->lang('productInfo'));
@@ -411,7 +418,7 @@ class PHPShopProductIndexElements extends PHPShopProductElements {
      * Память событий
      * @var bool
      */
-    var $memory = false;
+    var $memory = true;
 
     /**
      * шаблон товара
@@ -422,12 +429,18 @@ class PHPShopProductIndexElements extends PHPShopProductElements {
     /**
      * Констурктор
      */
-    function PHPShopProductIndexElements() {
+    function __construct() {
         $this->objBase = $GLOBALS['SysValue']['base']['products'];
-        parent::PHPShopProductElements();
+        parent::__construct();
 
         // HTML опции верстки
         $this->setHtmlOption(__CLASS__);
+    }
+
+    function __call($name, $arguments) {
+        if ($name == __CLASS__) {
+            self::__construct();
+        }
     }
 
     /**
@@ -485,9 +498,9 @@ class PHPShopProductIndexElements extends PHPShopProductElements {
                                 if ($i > $this->limitpos)
                                     break;
                                 // Проверка подчиненного товара
-                                if(!empty($good['parent'])) 
-                                    $good['id']=$good['parent'];
-                                
+                                if (!empty($good['parent']))
+                                    $good['id'] = $good['parent'];
+
                                 $sort.=' id=' . intval($good['id']) . ' OR';
                             }
                     }
@@ -710,12 +723,19 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
     /**
      * Конструктор
      */
-    function PHPShopShopCatalogElement() {
+    function __construct() {
+
+        parent::__construct();
         $this->objBase = $GLOBALS['SysValue']['base']['categories'];
-        parent::PHPShopElements();
 
         // HTML опции верстки
         $this->setHtmlOption(__CLASS__);
+    }
+
+    function __call($name, $arguments) {
+        if ($name == __CLASS__) {
+            self::__construct();
+        }
     }
 
     /**
@@ -737,7 +757,7 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
      * Форма ячеек для leftCatalTable
      * @return string
      */
-    function setCell($d1, $d2 = null, $d3 = null, $d4 = null, $d5 = null) {
+    function setCell($d1, $d2 = null, $d3 = null, $d4 = null, $d5 = null, $d6 = null, $d7 = null) {
 
         // Перехват модуля, занесение в память наличия модуля для оптимизации
         if ($this->memory_get(__CLASS__ . '.' . __FUNCTION__, true)) {
@@ -926,7 +946,7 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
 
         // ID родителя
         $n = $parent_data['id'];
-        $i=1;
+        $i = 1;
 
         $dis = null;
 
@@ -975,7 +995,7 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
                 // Определяем переменные
                 $this->set('catalogName', $row['name']);
                 $this->set('catalogUid', $row['id']);
-                $row['i']= $i;
+                $row['i'] = $i;
 
                 // Иконка
                 if (empty($row['icon']))
@@ -1049,13 +1069,13 @@ class PHPShopCartElement extends PHPShopElements {
      * Конструктор
      * @param bool $order режим корзины в заказе
      */
-    function PHPShopCartElement($order = false) {
+    function __construct($order = false) {
 
         PHPShopObj::loadClass('cart');
         $this->PHPShopCart = new PHPShopCart();
         $this->order = $order;
 
-        parent::PHPShopElements();
+        parent::__construct();
     }
 
     /**
@@ -1134,9 +1154,9 @@ class PHPShopCurrencyElement extends PHPShopElements {
     /**
      * Конструктор
      */
-    function PHPShopCurrencyElement() {
+    function __construct() {
         global $PHPShopValutaArray;
-        parent::PHPShopElements();
+        parent::__construct();
         $this->PHPShopValuta = $PHPShopValutaArray->getArray();
         $this->setAction(array('post' => 'valuta'));
     }
@@ -1194,7 +1214,7 @@ class PHPShopCurrencyElement extends PHPShopElements {
  * Элемент Облако тегов
  * @author PHPShop Software
  * @tutorial http://wiki.phpshop.ru/index.php/PHPShopCloudElement
- * @version 1.2
+ * @version 1.3
  * @package PHPShopElements
  */
 class PHPShopCloudElement extends PHPShopElements {
@@ -1222,9 +1242,9 @@ class PHPShopCloudElement extends PHPShopElements {
     /**
      * Конструктор
      */
-    function PHPShopCloudElement() {
+    function __construct() {
         $this->objBase = $GLOBALS['SysValue']['base']['products'];
-        parent::PHPShopElements();
+        parent::__construct();
     }
 
     /**
@@ -1359,7 +1379,7 @@ so.write("wpcumuluscontent");</script>
  * Элемент Flash-карусель товаров
  * @author PHPShop Software
  * @tutorial http://wiki.phpshop.ru/index.php/PHPShopFlashGalleryElement
- * @version 1.0
+ * @version 1.1
  * @package PHPShopElements
  */
 class PHPShopFlashGalleryElement extends PHPShopElements {
@@ -1373,7 +1393,7 @@ class PHPShopFlashGalleryElement extends PHPShopElements {
      * Конструктор
      */
     function __construct() {
-        parent::PHPShopElements();
+        parent::__construct();
     }
 
     /**

@@ -57,15 +57,13 @@ $signature = md5($_REQUEST['MNT_ID'] . $_REQUEST['MNT_TRANSACTION_ID'] . $_REQUE
 
 
 if (isset($_REQUEST['MNT_ID']) && isset($_REQUEST['MNT_TRANSACTION_ID']) && isset($_REQUEST['MNT_OPERATION_ID']) && isset($_REQUEST['MNT_AMOUNT']) && isset($_REQUEST['MNT_CURRENCY_CODE']) && isset($_REQUEST['MNT_TEST_MODE']) && isset($_REQUEST['MNT_SIGNATURE'])) {
-    @mysql_connect($SysValue['connect']['host'], $SysValue['connect']['user_db'], $SysValue['connect']['pass_db']) or
-            @die("" . PHPSHOP_error(101, $SysValue['my']['error_tracer']) . "");
-    mysql_select_db($SysValue['connect']['dbase']) or
-            @die("" . PHPSHOP_error(102, $SysValue['my']['error_tracer']) . "");
+    $link_db=mysqli_connect($SysValue['connect']['host'], $SysValue['connect']['user_db'], $SysValue['connect']['pass_db']);
+    mysqli_select_db($link_db,$SysValue['connect']['dbase']);
 
     // Проверяем сущ. заказа
     $sql = "select id from " . $SysValue['base']['table_name1'] . " where uid=\"" . UpdateNumOrderBack($_REQUEST['MNT_TRANSACTION_ID']) . "\" limit 1";
-    $result = mysql_query($sql);
-    $num = @mysql_num_rows($result);
+    $result = mysqli_query($link_db,$sql);
+    $num = @mysqli_num_rows($result);
 
     if (!empty($num)) {
         if ($_REQUEST['MNT_SIGNATURE'] == $signature) {
@@ -73,7 +71,7 @@ if (isset($_REQUEST['MNT_ID']) && isset($_REQUEST['MNT_TRANSACTION_ID']) && isse
             // Записываем платеж в базу
             $sql = "INSERT INTO " . $SysValue['base']['table_name33'] . " VALUES
             ({$_REQUEST['MNT_TRANSACTION_ID']},'PayanyWay','{$_REQUEST['MNT_AMOUNT']}','" . date("U") . "')";
-            $result = mysql_query($sql);
+            $result = mysqli_query($link_db,$sql);
             WriteLog($signature, 'Result true, add order to base');
 
 

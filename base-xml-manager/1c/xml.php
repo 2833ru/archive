@@ -60,7 +60,7 @@ $PHPShopSystem = new PHPShopSystem();
 
 class PHPShop1C extends PHPShopBaseXml {
 
-    function PHPShop1C() {
+    function __construct() {
         $this->debug = false;
         $this->true_method = array('select', 'option', 'insert', 'update', 'delete', 'image', 'order');
         $this->true_from = array('table_name', 'table_name1', 'table_name2', 'table_name3', 'table_name24',
@@ -68,7 +68,7 @@ class PHPShop1C extends PHPShopBaseXml {
             'table_name14', 'table_name15', 'table_name17', 'table_name27', 'table_name29', 'table_name32',
             'table_name9', 'table_name48', 'table_name50', 'table_name51', 'table_name35');
 
-        parent::PHPShopBaseXml();
+        parent::__construct();
     }
 
     function order() {
@@ -182,17 +182,15 @@ class PHPShop1C extends PHPShopBaseXml {
 
         // Корректировка статусов относительно имен БД
         $correct_path = array(
-            'page' => 'page_site',
-            'menu' => 'page_menu',
-            'baners' => 'baner',
-            'categories' => 'cat_prod',
-            'modules' => 'cat_prod',
-            'products' => 'cat_prod',
-            '1c' => 'visitor',
-            'orders' => 'visitor',
-            'order' => 'visitor',
-            'payment' => 'visitor',
-            'foto'=>'cat_prod',
+            'baners' => 'banner',
+            'categories' => 'catalog',
+            'modules' => 'catalog',
+            'products' => 'catalog',
+            '1c' => 'order',
+            'orders' => 'order',
+            'order' => 'order',
+            'payment' => 'order',
+            'foto'=>'catalog',
         );
 
         if ($correct_path[$path[1]])

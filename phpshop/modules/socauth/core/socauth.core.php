@@ -10,7 +10,7 @@ class PHPShopSocauth extends PHPShopCore {
     /**
      * Конструктор
      */
-    function PHPShopSocauth() {
+    function __construct() {
 
         // Имя Бд
         $this->objBase = $GLOBALS['SysValue']['base']['socauth']['socauth_system'];
@@ -27,7 +27,7 @@ class PHPShopSocauth extends PHPShopCore {
         // Список экшенов
         $this->action = array("nav" => array("facebook", "twitter", "vk", "index"));
 
-        parent::PHPShopCore();
+        parent::__construct();
     }
 
     // index экшен
@@ -76,8 +76,7 @@ class PHPShopSocauth extends PHPShopCore {
                 $this->error = ParseTemplateReturn($GLOBALS['SysValue']['templates']['socauth']['socauth_twitter_auth_fail'], true);
             } else {
                 $uid = $user_info->id;
-//                $regMass['login'] = "twitter" . $user_info->id . "@" . str_replace("www.", "", $_SERVER['SERVER_NAME']);
-                $regMass['login'] = "twitter" . $user_info->id . "@twitter.com";
+                $regMass['login'] = "twitter" . $user_info->id . "@" . str_replace("www.", "", $_SERVER['SERVER_NAME']);
                 $regMass['name'] = PHPShopString::utf8_win1251($user_info->name);
 
                 return $regMass;
@@ -259,9 +258,8 @@ class PHPShopSocauth extends PHPShopCore {
 
 
         if ($result) {  // если авторизация прошла
-//            $regMass['login'] = $user_profile['email'];
-//            $regMass['login'] = "vk" . $userInfo['uid'] . "@" . str_replace("www.", "", $_SERVER['SERVER_NAME']);
-            $regMass['login'] = "vk" . $userInfo['uid'] . "@vk.com";
+            $regMass['login'] = $user_profile['email'];
+            $regMass['login'] = "vk" . $userInfo['uid'] . "@" . str_replace("www.", "", $_SERVER['SERVER_NAME']);
             $regMass['name'] = PHPShopString::utf8_win1251($userInfo['first_name'] . " " . $userInfo[';ast_name']);
             $regMass['first_name'] = PHPShopString::utf8_win1251($userInfo['first_name']);
             $regMass['last_name'] = PHPShopString::utf8_win1251($userInfo['last_name']);
@@ -282,13 +280,13 @@ class PHPShopUserSoc extends PHPShopElements {
     /**
      * Конструктор
      */
-    function PHPShopUserSoc($mass) {
+    function __construct($mass) {
         $this->debug = false;
         $this->objBase = $GLOBALS['SysValue']['base']['shopusers'];
 
 
         $this->userData = $mass;
-        parent::PHPShopElements();
+        parent::__construct();
     }
 
     // проверяем есть такой пользователь или нет.
@@ -365,9 +363,6 @@ class PHPShopUserSoc extends PHPShopElements {
 
                 // Логин пользователя
                 $_SESSION['UsersLogin'] = $data['login'];
-
-                // Емейл пользователя
-                $_SESSION['UsersMail'] = $data['login'];
 
                 // Имя пользователя
                 $_SESSION['UsersName'] = $data['name'];

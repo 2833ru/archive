@@ -6,8 +6,8 @@
  * @return string 
  */
 function tab_cart_ddelivery($data, $option = false) {
-
-    global $PHPShopGUI;
+    global $PHPShopGUI,$link_db;
+    
     //$PHPShopGUI->addJSFiles('tab_cart.gui.js');
 
     // Обновление данных при AJAX
@@ -53,8 +53,8 @@ function tab_cart_ddelivery($data, $option = false) {
                 $goodid = $val['id'];
                 $goodnum = $val['num'];
                 $wsql = 'select weight from ' . $GLOBALS['SysValue']['base']['table_name2'] . ' where id=\'' . $goodid . '\'';
-                $wresult = mysql_query($wsql);
-                $wrow = mysql_fetch_array($wresult);
+                $wresult = mysqli_query($link_db,$wsql);
+                $wrow = mysqli_fetch_array($wresult);
                 $cweight = $wrow['weight'] * $goodnum;
                 if (!$cweight) {
                     $zeroweight = 1;

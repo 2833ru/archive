@@ -57,18 +57,16 @@ if ($MY_LMI_HASH != $_POST['hash']) {
 } else {
 // perform some action (change order state to paid)
 // Подключаем базу MySQL
-    @mysql_connect($SysValue['connect']['host'], $SysValue['connect']['user_db'], $SysValue['connect']['pass_db']) or
-            @die("" . PHPSHOP_error(101, $SysValue['my']['error_tracer']) . "");
-    mysql_select_db($SysValue['connect']['dbase']) or
-            @die("" . PHPSHOP_error(102, $SysValue['my']['error_tracer']) . "");
+    $link_db=mysqli_connect($SysValue['connect']['host'], $SysValue['connect']['user_db'], $SysValue['connect']['pass_db']);
+    mysqli_select_db($link_db,$SysValue['connect']['dbase']);
 
     $new_uid = UpdateNumOrder($_POST['LMI_PAYMENT_NO']);
 
 
     // Приверяем сущ. заказа
     $sql = "select uid from " . $SysValue['base']['table_name1'] . " where uid='$new_uid'";
-    $result = mysql_query($sql);
-    $row = mysql_fetch_array($result);
+    $result = mysqli_query($link_db,$sql);
+    $row = mysqli_fetch_array($result);
     $uid = $row['uid'];
 
     // проверяем иденчичность секретного кода и статус оплаты. Который при обработке =3, при проведённом платеже = 5
@@ -79,10 +77,10 @@ if ($MY_LMI_HASH != $_POST['hash']) {
 
                 // Записываем платеж в базу
                 $sql = "INSERT INTO " . $SysValue['base']['table_name33'] . " VALUES ('$new_uid','RBKMoney','$LMI_PAYMENT_AMOUNT','" . date("U") . "')";
-                $result = mysql_query($sql);
+                $result = mysqli_query($link_db,$sql);
 
                 $sql = "UPDATE " . $SysValue['base']['table_name1'] . " SET statusi=101 WHERE uid='$new_uid'";
-                $result = mysql_query($sql);
+                $result = mysqli_query($link_db,$sql);
 
                 WriteLog($MY_LMI_HASH);
 

@@ -26,13 +26,13 @@ $_POST['pas'] = '123456';
 
 class PHPShopHtmlCatalog extends PHPShopBaseXml {
 
-    function PHPShopHtmlCatalog() {
+    function __construct() {
         $this->debug = false;
         $this->true_method = array('select', 'option');
         $this->true_from = array('table_name', 'table_name2', 'table_name3', 'table_name24', '');
         $this->log = $_POST['log'];
         $this->pas = $_POST['pas'];
-        parent::PHPShopBaseXml();
+        parent::__construct();
     }
 
     function admin() {

@@ -26,11 +26,11 @@ function send_to_order_mod_yandexkassa_hook($obj, $value, $rout) {
             $payment_forma.=PHPShopText::setInput('hidden', 'sum', $out_summ, false, 10);
             $payment_forma.=PHPShopText::setInput('hidden', 'customerNumber', $value['mail'], false, 10);
             $payment_forma.=PHPShopText::setInput('hidden', 'orderNumber', $inv_id, false, 10);
-
+            $payment_forma.=PHPShopText::setInput('hidden', 'cms_name', 'phpshop', false, 10);
 
             // Тип оплаты
             $v = $PHPShopYandexkassaArray->get_pay_variants_array(unserialize($option['pay_variants']), true);
-            
+
             $payment_forma.=PHPShopText::select('paymentType', $v, 250, 'left') . ' ';
             $payment_forma.=PHPShopText::setInput('submit', 'send', $option['title'], $float = "left; margin-left:10px;", 250);
 

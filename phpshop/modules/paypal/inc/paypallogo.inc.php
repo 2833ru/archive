@@ -10,8 +10,8 @@ class AddToTemplatePaypalLogo extends PHPShopElements {
     /**
      * Конструктор
      */
-    function AddToTemplatePaypalLogo() {
-        parent::PHPShopElements();
+    function __construct() {
+        parent::__construct();
         $this->option();
     }
 

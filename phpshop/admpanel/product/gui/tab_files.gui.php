@@ -6,76 +6,27 @@
  * @return string 
  */
 function tab_files($row) {
+    global $PHPShopInterface;
     $files = unserialize($row['files']);
-    $disp = '
-<table width="100%">
-<tr>
-  <td>
 
-        <SCRIPT language=JavaScript>
-            var numb;
-            numb = ' . (count($files) - 1) . ';
-            function add_new_row() {
-                var currrow;
-                var d=document.getElementById("tbl");
-                currow = d.rows.length; // вычислить количество строк в таблице
-                numb++;
-                fid="filenum"+numb;
-                d.insertRow(currow); // добавляем строку в таблицу
-                d.rows[currow].insertCell(0); // добавляем ячейки
-                d.rows[currow].insertCell(1);
-                d.rows[currow].insertCell(2);
+    $PHPShopInterface->checkbox_action = false;
+    $PHPShopInterface->setCaption(array("", "50%"), array("","1%"),array('<button data-count="'.count($files).'" class="btn btn-default btn-sm file-add"><span class="glyphicon glyphicon-plus"></span> '.__('Прикрепить файл').'</button>', "50%",array('align' => 'right')));
 
-                d.rows[currow].cells[0].className="";
-                d.rows[currow].cells[1].className="";
-                d.rows[currow].cells[2].className="";
-
-                d.rows[currow].cells[0].style.padding="5px";
-                d.rows[currow].cells[0].innerHTML = \'<INPUT TYPE=TEXT style="width:80%;" name="filenum[]" id="filenum\'+numb+\'"> <BUTTON style="width: 50px;" onclick="ReturnPic(fid);return false;"><img src="../img/icon-move-banner.gif" aligh="absmiddle"  width="16" height="16" border="0"></BUTTON>\';
-                d.rows[currow].cells[1].innerHTML = \'<BUTTON onclick="remove_row();"><img src="../icon/wand.gif"  width="16" height="16" border="0" align="absmiddle"> -</BUTTON>\';
-
-            }
-
-            function remove_row() {
-                var currrow;
-                numb--;
-                currow = document.getElementById("tbl").rows.length-1;
-                document.getElementById("tbl").deleteRow(currow);
-            }
-        </SCRIPT>
-               
-
-<TABLE id="tbl" class="iconpane border-bottom" CELLPADDING="0" CELLSPACING=0>
-<TR>
-<TD id=pane style="width: 90%;">Файл</TD>
-<TD><BUTTON  onclick="add_new_row();return false;">
-<img src="../icon/wand.gif"  width="16" height="16" border="0" align="absmiddle"> +</BUTTON>
-</TD>
-</TR>
-';
-
+    $key=0;
     if (is_array($files))
-        foreach ($files as $num => $cfile) {
-            $disp.='
-<TR><TD style="padding:5px">
-<INPUT TYPE=TEXT style="width:90%;" name="filenum[]" id="filenum' . $num . '" value="' . $cfile . '">
-<BUTTON style="width: 50px;" 
-onclick="ReturnPic(\'filenum' . $num . '\',0);return false;">
-<img src="../img/icon-move-banner.gif"  width="16" height="16" border="0"></BUTTON>
-</TD><TD>
-<BUTTON 
-onclick="remove_row();return false;">
-<img src="../icon/wand.gif"  width="16" height="16" border="0" align="absmiddle"> -</BUTTON>
-</TD></TR>
-';
-        }
-    $disp.='
-</TABLE>
+        foreach ($files as $file) {
+        
+           if(empty($file['name']))
+               $file['name']='Файл #'.$key;
 
-  </td>
-</tr>
-</table>
-';
+            $PHPShopInterface->setRow(array('name' => urldecode($file['name']), 'link' => $file['path'], 'align' => 'left','class'=>'file-edit'),$PHPShopInterface->setInputArg(array('type'=>'hidden','name'=>'files_new['.$key.'][path]','value'=>$file['path'])).$PHPShopInterface->setInputArg(array('type'=>'hidden','name'=>'files_new['.$key.'][name]','value'=>$file['name'])),array('name'=>'<span class="glyphicon glyphicon-floppy-disk"></span>'.$file['path'],'link' => $file['path'],'target'=>'_blank','align'=>'right','class'=>'file-edit-path'));
+            $key++;
+        }
+        
+        
+    
+    $disp = '<table class="table table-hover file-list">' . $PHPShopInterface->getContent() . '</table>';
+
     return $disp;
 }
 

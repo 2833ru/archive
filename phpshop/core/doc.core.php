@@ -11,9 +11,9 @@ class PHPShopDoc extends PHPShopCore {
     /**
      * Конструктор
      */
-    function PHPShopDoc() {
+    function __construct() {
         $this->empty_index_action=true;
-        parent::PHPShopCore();
+        parent::__construct();
     }
 
     /**

@@ -13,8 +13,8 @@ class AddToTemplateSortElement extends PHPShopElements {
     /**
      * Конструктор
      */
-    function AddToTemplateSortElement() {
-        parent::PHPShopElements();
+    function __construct() {
+        parent::__construct();
         $this->option();
     }
 

@@ -8,10 +8,10 @@ class PHPShopSapeElement extends PHPShopElements {
     var $scrolling="no";
     var $frameborder=0;
 
-    function PHPShopSapeElement() {
+    function __construct() {
         $this->debug=false;
         $this->objBase=$GLOBALS['SysValue']['base']['sape']['sape_system'];
-        parent::PHPShopElements();
+        parent::__construct();
         $this->option();
     }
 

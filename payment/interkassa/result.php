@@ -54,25 +54,23 @@ if (strtoupper($MY_HASH) != strtoupper((string)$_POST['ik_sign_hash'])) {
 } else {
 // perform some action (change order state to paid)
 // Подключаем базу MySQL
-    @mysql_connect($SysValue['connect']['host'], $SysValue['connect']['user_db'], $SysValue['connect']['pass_db']) or
-            @die("" . PHPSHOP_error(101, $SysValue['my']['error_tracer']) . "");
-    mysql_select_db($SysValue['connect']['dbase']) or
-            @die("" . PHPSHOP_error(102, $SysValue['my']['error_tracer']) . "");
+    $link_db=mysqli_connect($SysValue['connect']['host'], $SysValue['connect']['user_db'], $SysValue['connect']['pass_db']);
+    mysqli_select_db($link_db,$SysValue['connect']['dbase']);
 
 // Номер заказа
     $new_uid = UpdateNumOrder($_POST['ik_payment_id']);
 
 // Приверяем сущ. заказа
     $sql = "select uid from " . $SysValue['base']['table_name1'] . " where uid='$new_uid'";
-    $result = mysql_query($sql);
-    $row = mysql_fetch_array($result);
+    $result = mysqli_query($link_db,$sql);
+    $row = mysqli_fetch_array($result);
     $uid = $row['uid'];
 
     if ($uid == $new_uid) {
 // Записываем платеж в базу
         $sql = "INSERT INTO " . $SysValue['base']['table_name33'] . " VALUES 
 ('$new_uid','Interkassa " . $_POST['ik_paysystem_alias'] . "','" . $_POST['ik_payment_amount'] . "','" . time() . "')";
-        $result = mysql_query($sql);
+        $result = mysqli_query($link_db,$sql);
         WriteLog($MY_HASH);
 
 // print OK signature

@@ -25,6 +25,7 @@ header('Content-type: text/html; charset=windows-1251');
 
 // Заказы
 function OrdersArray($p1, $p2, $words, $list) {
+    global $link_db;
 
     $words = MyStripSlashes(base64_decode($words));
 
@@ -55,9 +56,9 @@ function OrdersArray($p1, $p2, $words, $list) {
     else {
         $sql = "select * from " . $GLOBALS['SysValue']['base']['table_name1'] . " where datas<'$p2' and datas>'$p1' $sort order by id desc";
     }
-    $result = mysql_query($sql) or die("ERROR:" . mysql_error() . "");
-    $i = mysql_num_rows($result);
-    while ($row = mysql_fetch_array($result)) {
+    $result = mysqli_query($link_db,$sql);
+    $i = mysqli_num_rows($result);
+    while ($row = mysqli_fetch_array($result)) {
         $id = $row['id'];
         $datas = $row['datas'];
         $uid = $row['uid'];
@@ -125,19 +126,20 @@ function MyStripSlashes($s) {
 
 // Вывод доставки
 function GetDelivery($deliveryID, $name) {
+    global $link_db;
     $sql = "select * from " . $GLOBALS['SysValue']['base']['table_name30'] . " where id=" . intval($deliveryID);
-    $result = mysql_query($sql);
-    $row = mysql_fetch_array($result);
+    $result = mysqli_query($link_db,$sql);
+    $row = mysqli_fetch_array($result);
     return PHPShopSecurity::TotalClean(strip_tags($row[$name]));
 }
 
 // Расчёт цены доставки
 function GetDeliveryPrice($deliveryID, $sum, $weight = 0) {
-    global $SysValue;
+    global $SysValue,$link_db;
 
     $sql = "select * from " . $SysValue['base']['table_name30'] . " where id='$deliveryID'";
-    $result = mysql_query($sql);
-    $row = mysql_fetch_array($result);
+    $result = mysqli_query($link_db,$sql);
+    $row = mysqli_fetch_array($result);
 
     if ($row['price_null_enabled'] == 1 and $sum >= $row['price_null']) {
         return 0;
@@ -158,9 +160,10 @@ function GetDeliveryPrice($deliveryID, $sum, $weight = 0) {
 
 // Статус заказа
 function GetOrderStatusArray() {
+    global $link_db;
     $sql = "select * from " . $GLOBALS['SysValue']['base']['table_name32'];
-    $result = mysql_query($sql);
-    while (@$row = mysql_fetch_array(@$result)) {
+    $result = mysqli_query($link_db,$sql);
+    while (@$row = mysqli_fetch_array(@$result)) {
         $array = array(
             "id" => $row['id'],
             "name" => $row['name'],
@@ -174,9 +177,10 @@ function GetOrderStatusArray() {
 
 // Тип оплаты
 function GetOplataMetodArray() {
+    global $link_db;
     $sql = "select * from " . $GLOBALS['SysValue']['base']['table_name48'] . " where enabled='1' order by num";
-    $result = mysql_query($sql);
-    while ($row = mysql_fetch_array($result)) {
+    $result = mysqli_query($link_db,$sql);
+    while ($row = mysqli_fetch_array($result)) {
         $array = array(
             "id" => $row['id'],
             "name" => $row['name']
@@ -201,10 +205,11 @@ function Clean($s) {
  * Обновление данных по заказу
  */
 function OrderUpdateXml() {
-    global $GetOrderStatusArray;
+    global $GetOrderStatusArray,$link_db;
+    
     $sql = "select * from " . $GLOBALS['SysValue']['base']['table_name1'] . " where id='" . intval($_REQUEST['id']) . "'";
-    $result = mysql_query($sql);
-    $row = mysql_fetch_array($result);
+    $result = mysqli_query($link_db,$sql);
+    $row = mysqli_fetch_array($result);
     $status = unserialize($row['status']);
     $order = unserialize($row['orders']);
     $old_status = $row['statusi'];
@@ -235,8 +240,8 @@ function OrderUpdateXml() {
         if (is_array($cart))
             foreach ($cart as $val) {
                 $sql = "select items from " . $GLOBALS['SysValue']['base']['table_name2'] . " where id='" . intval($val['id']) . "'";
-                $result = mysql_query($sql);
-                $row = mysql_fetch_array($result);
+                $result = mysqli_query($link_db,$sql);
+                $row = mysqli_fetch_array($result);
                 $items = $row['items'];
                 $items_update = $items + $val['num'];
                 $sklad_update = "";
@@ -246,7 +251,7 @@ function OrderUpdateXml() {
 				SET
 				items='$items_update' " . $sklad_update . "
 				where id='" . $val['id'] . "'";
-                $result = mysql_query($sql);
+                $result = mysqli_query($link_db,$sql);
             }
     }
     // Списываем со склада
@@ -254,8 +259,8 @@ function OrderUpdateXml() {
         if (is_array($cart))
             foreach ($cart as $val) {
                 $sql = "select items from " . $GLOBALS['SysValue']['base']['table_name2'] . " where id='" . intval($val['id']) . "'";
-                $result = mysql_query($sql);
-                $row = mysql_fetch_array($result);
+                $result = mysqli_query($link_db,$sql);
+                $row = mysqli_fetch_array($result);
                 $items = $row['items'];
                 $items_update = $items - $val['num'];
                 $sklad_update = "";
@@ -265,7 +270,7 @@ function OrderUpdateXml() {
          SET
          items='$items_update' " . $sklad_update . "
          where id='" . $val['id'] . "'";
-                $result = mysql_query($sql);
+                $result = mysqli_query($link_db,$sql);
             }
     }
 
@@ -282,7 +287,7 @@ function OrderUpdateXml() {
     dop_info='" . MyStripSlashes($_REQUEST['manager']) . "',
     statusi='" . $_REQUEST['statusi'] . "'
     where id='" . $_REQUEST['id'] . "'";
-    $result = mysql_query($sql);
+    $result = mysqli_query($link_db,$sql);
 }
 
 /**
@@ -321,9 +326,11 @@ global $GetOrderStatusArray;
 
 // Данные по заказу
 function OrdersReturn($id) {
+    global $link_db;
+    
     $sql = "select * from " . $GLOBALS['SysValue']['base']['table_name1'] . " where id=" . intval($id);
-    $result = mysql_query($sql) or die("ERROR:" . mysql_error() . "");
-    $row = mysql_fetch_array($result);
+    $result = mysqli_query($link_db,$sql);
+    $row = mysqli_fetch_array($result);
     $id = $row['id'];
     $datas = $row['datas'];
     $uid = $row['uid'];
@@ -357,18 +364,20 @@ function OrdersReturn($id) {
 
 // Пролучаем тип оплаты
 function OplataMetod($id) {
+    global $link_db;
     $order_metod = Clean($id);
     $sql = "select name from " . $GLOBALS['SysValue']['base']['table_name48'] . " where id=" . intval($order_metod);
-    $result = mysql_query($sql);
-    $row = mysql_fetch_array($result);
+    $result = mysqli_query($link_db,$sql);
+    $row = mysqli_fetch_array($result);
     return $row['name'];
 }
 
 // Изображение товара
 function ReturnPic($id) {
+    global $link_db;
     $sql = "select pic_big from " . $GLOBALS['SysValue']['base']['table_name2'] . " where id=" . intval($id);
-    $result = mysql_query($sql);
-    $row = mysql_fetch_array($result);
+    $result = mysqli_query($link_db,$sql);
+    $row = mysqli_fetch_array($result);
     $pic_big = $row['pic_big'];
     if (empty($pic_big))
         $pic_big = "none";
@@ -429,8 +438,8 @@ switch ($_REQUEST['command']) {
     // Количество новых заказов
     case("loadNumNew"):
         $sql = "select id from " . $GLOBALS['SysValue']['base']['table_name1'] . " where statusi=0";
-        $result = mysql_query($sql);
-        $num = mysql_num_rows($result);
+        $result = mysqli_query($link_db,$sql);
+        $num = mysqli_num_rows($result);
         if ($num == 0)
             echo "";
         else

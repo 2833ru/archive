@@ -1,25 +1,15 @@
 <?php
 
-$TitlePage=" Быстрый Заказ -> Архив заявок";
 
 function actionStart() {
-    global $PHPShopInterface,$_classPath;
+    global $PHPShopInterface,$PHPShopModules;
 
-    $PHPShopInterface->size="630,450";
-    $PHPShopInterface->link="../modules/oneclick/admpanel/adm_oneclickID.php";
-    $PHPShopInterface->setCaption(array("Дата","5%"),array("Телефон","10%"),array("Имя","20%"),
-            array("Наименование","20%"),array("Цена","10%"),
-            array("Время","7%"),
-            array("Сообщение","10%"),
-            array("Статус","10%"));
+    $PHPShopInterface->setCaption(array("", "1%"),array("Имя","20%"),array("Дата","10%"),array("Наименование","40%"),array("Цена","10%"),array("Статус","10%"));
 
-    // Настройки модуля
-    PHPShopObj::loadClass("modules");
-    $PHPShopModules = new PHPShopModules($_classPath."modules/");
-    
+
     $status_array=array(
         1=>'Новая заявка',
-        2=>'Просили перезвонить',
+        2=>'Перезвонить',
         3=>'Недоcтупен',
         4=>'Выполнен'
     );
@@ -29,8 +19,7 @@ function actionStart() {
     $data = $PHPShopOrm->select(array('*'),false,array('order'=>'id DESC'),array("limit"=>"1000"));
     if(is_array($data))
         foreach($data as $row) {
-            extract($row);
-            $PHPShopInterface->setRow($id,PHPShopDate::dataV($date,false),$tel,$name,$product_name,$product_price,PHPShopDate::dataV($date),substr($message,0,150),$status_array[$status]);
+            $PHPShopInterface->setRow($row['id'],array('name'=>$row['name'],'link'=>'?path=modules.dir.oneclick&id=' . $row['id']),PHPShopDate::get($row['date'],false),$row['product_name'],$row['product_price'],$status_array[$row['status']]);
         }
     
     $PHPShopInterface->Compile();

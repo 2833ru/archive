@@ -1,135 +1,97 @@
-<?
+<?php
 
-function SortsGroup() {// Вывод сортировки
-    global $SysValue;
+PHPShopObj::loadClass('sort');
+
+$TitlePage = __("Характеристики");
+
+$PHPShopSortCategoryArray = new PHPShopSortCategoryArray(array('category' => '=0'));
+$SortCategoryArray = $PHPShopSortCategoryArray->getArray();
+
+/**
+ * Вывод товаров
+ */
+function actionStart() {
+    global $PHPShopInterface, $TitlePage, $SortCategoryArray, $help;
+
+    $PHPShopInterface->action_button['Добавить характеристику'] = array(
+        'name' => '',
+        'action' => 'addNew',
+        'class' => 'btn btn-default btn-sm navbar-btn',
+        'type' => 'button',
+        'icon' => 'glyphicon glyphicon-plus',
+        'tooltip' => 'data-toggle="tooltip" data-placement="left" title="Добавить характеристику" data-cat="' . $_GET['cat'] . '"'
+    );
+
+    $PHPShopInterface->action_select['Добавить группу'] = array(
+        'name' => 'Добавить группу',
+        'action' => 'enabled',
+        'url' => '?path=' . $_GET['path'] . '&action=new&type=sub'
+    );
 
 
-    $numRows = 0;
-    $display = null;
+    if (isset($_GET['cat']))
+        $PHPShopInterface->action_select['Редактировать группу'] = array(
+            'name' => 'Редактировать группу',
+            'action' => 'enabled',
+            'url' => '?path=' . $_GET['path'] . '&type=sub&id=' . intval($_GET['cat'])
+        );
 
-    $sql = "select * from " . $SysValue['base']['table_name20'] . " where category=0 order by name";
-    $result = mysql_query($sql);
-    while ($row = mysql_fetch_array($result)) {
-        $id = $row['id'];
-        $name = $row['name'];
-        $description = $row['description'];
+    if (!empty($_GET['cat']))
+        $TitlePage.=': ' . $SortCategoryArray[$_GET['cat']]['name'];
 
-        // Выделение четных строк
-        $numRows++;
-        if ($numRows % 2 == 0) {
-            $style_r = ' line2';
-        } else {
-            $style_r = null;
-        }
+    $PHPShopInterface->setActionPanel($TitlePage, array('Редактировать группу','Добавить группу', '|', 'Удалить выбранные'), array('Добавить характеристику'));
+    $PHPShopInterface->setCaption(array(null, "1%"), array("Название", "50%"), array("", "10%"), array("Бренд" . "", "10%", array('align' => 'center')), array("Опция" . "", "10%", array('align' => 'center')), array("Фильтр" . "", "10%", array('align' => 'center')));
 
-        $display.='<tr title="' . $description . '" class="row ' . $style_r . '" id="r' . $id . '" onmouseover="PHPShopJS.rowshow_on(this)" onmouseout="PHPShopJS.rowshow_out(this,\'' . $style_r . '\')"  onclick="miniWin(\'sort/adm_sortcategoryID.php?id=' . $id . '\',500,550)">';
-
-
-        $display.="
-	<td  style=\"padding-left: 10px\">
-	$name
-	</td>
-    </tr>
-	";
-        @$i++;
+    $where = array('category' => '!=0');
+    if (!empty($_GET['cat'])) {
+        $where = array('category' => '=' . intval($_GET['cat']));
     }
-    if ($i > 25)
-        $razmer = "height:600;";
-    return "
-<div id=interfacesWin name=interfacesWin align=\"left\" style=\"width:100%;" . @$razmer . ";overflow:auto\"> 
-<table width=\"50%\"  cellpadding=\"0\" cellspacing=\"0\">
-<tr>
-	<td valign=\"top\">
-<table cellpadding=\"0\" cellspacing=\"1\" width=\"100%\" border=\"0\" class=\"sortable\" id=\"sort\">
-<tr>
-	<td width=\"90%\" id=pane><span name=txtLang id=txtLang>Наименование</span></td>
-</tr>
-	" . $display . "
-    </table>
-</table>
-<div align=\"right\" style=\"width:50%;padding:10\"><BUTTON style=\"width: 15em; height: 2.2em; margin-left:5\"  onclick=\"miniWin('sort/adm_sortcategory_new.php',500,400)\">
-<img src=\"icon/page_add.gif\" width=\"16\" height=\"16\" border=\"0\" align=\"absmiddle\" hspace=\"5\">
-<span name=txtLang id=txtLang>Новая позиция</span>
-</BUTTON></div>
-</div>
 
-	";
-}
+    $PHPShopInterface->addJSFiles('./js/jquery.treegrid.js','./sort/gui/sort.gui.js');
 
-function Sorts() {// Вывод сортировки
-    global $SysValue;
+    // Таблица с данными
+    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']);
+    //$PHPShopOrm->Option['where'] = ' or ';
+    $PHPShopOrm->debug = false;
+    $data = $PHPShopOrm->select(array('*'), $where, array('order' => 'id DESC'), array('limit' => 1000));
+    if (is_array($data))
+        foreach ($data as $row) {
 
-    $numRows = 0;
-    $display = null;
+            // Фильтр
+            if (!empty($row['filtr']))
+                $filtr = '<span class="glyphicon glyphicon-ok"><span class="hide">1</span></span>';
+            else
+                $filtr = '<span class="hide">0</span>';
 
-    $sql = "select * from " . $SysValue['base']['table_name20'] . " where category!=0 order by name";
-    $result = mysql_query($sql);
-    while ($row = mysql_fetch_array($result)) {
+            // Опция
+            if (!empty($row['goodoption']))
+                $goodoption = '<span class="glyphicon glyphicon-ok"><span class="hide">1</span></span>';
+            else
+                $goodoption = '<span class="hide">0</span>';
+
+            // Бренд
+            if (!empty($row['brand']))
+                $brand = '<span class="glyphicon glyphicon-ok"><span class="hide">1</span></span>';
+            else
+                $brand = '<span class="hide">0</span>';
+
+            // Описание
+            if (!empty($row['description']))
+                $row['name'].=$PHPShopInterface->setHelpIcon($row['description']);
 
 
-        // Выделение четных строк
-        $numRows++;
-        if ($numRows % 2 == 0) {
-            $style_r = ' line2';
-        } else {
-            $style_r = null;
+            $PHPShopInterface->path = 'sort';
+            $PHPShopInterface->setRow($row['id'], array('name' => $row['name'], 'link' => '?path=sort&id=' . $row['id'], 'align' => 'left'), array('action' => array('edit', 'delete', 'copy', 'id' => $row['id']), 'align' => 'center'), array('name' => $brand, 'align' => 'center'), array('name' => $goodoption, 'align' => 'center'), array('name' => $filtr, 'align' => 'center')
+            );
         }
 
-        $id = $row['id'];
-        $name = $row['name'];
-        
-        if(!empty($row['description']))
-        $description = ' - '.$row['description'];
-        else $description=null;
-        
-        if ($row['filtr'] == 1) {
-            $fl = "<img src=\"img/icon-duplicate-acl.gif\" alt=\"Фильтр\">";
-        } else {
-            $fl = "";
-        }
-
-        if ($row['goodoption'] == 1) {
-            $gl = "<img src=\"img/icon-duplicate-banner.gif\" alt=\"Опция\">";
-        } else {
-            $gl = "";
-        }
-
-        $display.='<tr class="row ' . $style_r . '" id="r' . $id . '" onmouseover="PHPShopJS.rowshow_on(this)" onmouseout="PHPShopJS.rowshow_out(this,\'' . $style_r . '\')" onclick="miniWin(\'sort/adm_sortID.php?id=' . $id . '\',500,600)" >';
 
 
-        $display.="
-<td align=\"center\">$fl $gl</td>
-	<td>
-	$name $description
-	</td>
-    </tr>
-	";
-        @$i++;
-    }
-    if ($i > 25)
-        $razmer = "height:600;";
-    return "
-<div id=interfacesWin name=interfacesWin align=\"left\" style=\"width:100%;" . @$razmer . ";overflow:auto\"> 
-<table cellpadding=\"0\" cellspacing=\"1\"  width=\"50%\">
-<tr>
-	<td valign=\"top\" >
-<table cellpadding=\"0\" cellspacing=\"1\" width=\"100%\" border=\"0\" class=\"sortable\" id=\"sort\">
-<tr>
-    <td width=\"10%\" id=pane>+/-</td>
-	<td width=\"90%\" id=pane><span name=txtLang id=txtLang>Наименование</span></td>
-</tr>
-	" . $display . " 
-    </table>
-	</td>
-	</tr>
-</table>
-<div align=\"right\" style=\"width:50%;padding:10\"><BUTTON style=\"width: 15em; height: 2.2em; margin-left:5\"  onclick=\"miniWin('sort/adm_sort_new.php',500,450)\">
-<img src=\"icon/page_add.gif\" width=\"16\" height=\"16\" border=\"0\" align=\"absmiddle\" hspace=\"5\">
-<span name=txtLang id=txtLang>Новая позиция</span>
-</BUTTON></div>
-</div>
+    $sidebarleft[] = array('title' => 'Группы', 'content' => $PHPShopInterface->loadLib('tab_menu_sort', false, './sort/'), 'title-icon' => '<span class="glyphicon glyphicon-plus newsub" data-toggle="tooltip" data-placement="top" title="Добавить группу"></span>');
+    $sidebarleft[] = array('title' => 'Подсказка', 'content' => $help, 'class' => 'hidden-xs');
+    $PHPShopInterface->setSidebarLeft($sidebarleft, 3);
 
-	";
+    $PHPShopInterface->Compile(3);
 }
 
 ?>

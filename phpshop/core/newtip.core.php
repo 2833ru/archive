@@ -17,9 +17,9 @@ class PHPShopNewtip extends PHPShopShopCore {
     /**
      * Конструктор
      */
-    function PHPShopNewtip() {
+    function __construct() {
 
-        parent::PHPShopShopCore();
+        parent::__construct();
         $this->PHPShopOrm->cache_format = $this->cache_format;
     }
 

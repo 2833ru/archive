@@ -1,275 +1,136 @@
-<?
-require("../connect.php");
-@mysql_connect("$host", "$user_db", "$pass_db") or @die("Невозможно подсоединиться к базе");
-mysql_select_db("$dbase") or @die("Невозможно подсоединиться к базе");
-require("../enter_to_admin.php");
-require("../language/russian/language.php");
+<?php
+
+PHPShopObj::loadClass('sort');
+
+
+
+$TitlePage = __('Редактирование характеристики #' . $_GET['id']);
+$PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']);
+
+// Стартовый вид
+function actionStart() {
+    global $PHPShopGUI, $PHPShopOrm, $PHPShopModules;
+
+    // Выборка
+    $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_REQUEST['id'])));
+
+
+    // Нет данных
+    if (!is_array($data)) {
+        header('Location: ?path=' . $_GET['path']);
+    }
+    
+    if (!empty($_GET['type']))
+    $TitlePage = __("Группа характеристик");
+else
+    $TitlePage = __("Характеристика");
+
+    // Размер названия поля
+    $PHPShopGUI->field_col = 2;
+    $PHPShopGUI->addJSFiles('./sort/gui/sort.gui.js');
+    $PHPShopGUI->setActionPanel($TitlePage . ': ' . $data['name'], array('Создать', '|', 'Удалить',), array('Сохранить', 'Сохранить и закрыть'));
+
+
+    // Страницы
+    $page_value[] = array('- Нет описания - ', null, $data['page']);
+    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['page']);
+    $data_page = $PHPShopOrm->select(array('*'), false, false, array('limit' => 1000));
+    if (is_array($data_page))
+        foreach ($data_page as $v)
+            $page_value[] = array($v['name'], $v['link'], $data['page']);
+
+    // Категории
+    $PHPShopSort = new PHPShopSortCategoryArray(array('category' => '=0'));
+    $PHPShopSortArray = $PHPShopSort->getArray();
+    if (is_array($PHPShopSortArray))
+        foreach ($PHPShopSortArray as $v)
+            $category_value[] = array($v['name'], $v['id'], $data['category']);
+
+    // Группа категорий
+    if (empty($_GET['type'])) {
+        $Tab3 = $PHPShopGUI->setField("Группа:", $PHPShopGUI->setSelect('category_new', $category_value, '100%', false, false, true), 1, 'Группа характеристик служит для исключения дубликатов характеристик в различных категориях.') . 
+                $PHPShopGUI->setField("Бренд:", $PHPShopGUI->setCheckbox('brand_new', 1, 'Вкл.', $data['brand']), 1, 'Характеристика становится брендом и отображается в списке брендов') . 
+                $PHPShopGUI->setField("Товары:", $PHPShopGUI->setCheckbox('product_new', 1, 'Вкл.', $data['product']), 1, 'Совместить значение с полем рекомендуемых товаров для совместной продажи') . 
+                $PHPShopGUI->setField("Опции:", $PHPShopGUI->setCheckbox('filtr_new', 1, 'Фильтр', $data['filtr']) . $PHPShopGUI->setCheckbox('goodoption_new', 1, 'Товарная опция', $data['goodoption']) . $PHPShopGUI->setCheckbox('optionname_new', 1, 'Описание опции в корзине', $data['optionname'])) .
+                $PHPShopGUI->setField("Описание:", $PHPShopGUI->setSelect('page_new', $page_value, '100%', false, false, true), 1, 'Имя характеристики (в таблице характеристик в подробном описании товара) становится ссылкой на указанную страницу с описанием.');
+    }
+
+
+    // Содержание закладки 1
+    $Tab1 = $PHPShopGUI->setCollapse(__('Информация'), $PHPShopGUI->setField("Наименование:", $PHPShopGUI->setInputArg(array('type' => 'text', 'name' => 'name_new', 'value' => $data['name']))) .
+            $PHPShopGUI->setField("Приоритет:", $PHPShopGUI->setInputArg(array('type' => 'text', 'name' => 'num_new', 'value' => $data['num'], 'size' => 100))) .
+            $Tab3 .
+            $PHPShopGUI->setField("Подсказка:", $PHPShopGUI->setTextarea('description_new', $data['description']))
+    );
+
+    // Варианты
+    if (empty($_GET['type']))
+        $Tab1.=$PHPShopGUI->setCollapse(__('Значения'), $PHPShopGUI->setField("Варианты:", $PHPShopGUI->loadLib('tab_value', $data)));
+
+
+    // Запрос модуля на закладку
+    $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
+
+    // Вывод формы закладки
+    if (empty($_GET['type']))
+        $PHPShopGUI->setTab(array("Основное", $Tab1));
+    else
+        $PHPShopGUI->setTab(array("Основное", $Tab1));
+
+    // Вывод кнопок сохранить и выход в футер
+    $ContentFooter =
+            $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .
+            $PHPShopGUI->setInput("button", "delID", "Удалить", "right", 70, "", "but", "actionDelete.sort.edit") .
+            $PHPShopGUI->setInput("submit", "editID", "Сохранить", "right", 70, "", "but", "actionUpdate.sort.edit") .
+            $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionSave.sort.edit");
+
+    // Футер
+    $PHPShopGUI->setFooter($ContentFooter);
+    return true;
+}
+
+// Функция удаления
+function actionDelete() {
+    global $PHPShopOrm, $PHPShopModules;
+
+    // Перехват модуля
+    $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
+
+
+    $action = $PHPShopOrm->delete(array('id' => '=' . $_POST['rowID']));
+    return array('success' => $action);
+}
+
+/**
+ * Экшен сохранения
+ */
+function actionSave() {
+
+    // Сохранение данных
+    actionUpdate();
+
+   header('Location: ?path=' . $_GET['path']);
+}
+
+// Функция обновления
+function actionUpdate() {
+    global $PHPShopOrm, $PHPShopModules;
+
+    $_POST['category_new'] = intval($_POST['category_new']);
+
+    // Корректировка пустых значений
+    $PHPShopOrm->updateZeroVars('brand_new', 'filtr_new', 'goodoption_new', 'optionname_new','product_new');
+
+    // Перехват модуля
+    $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
+
+    $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['rowID']));
+    return array('success' => $action);
+}
+
+// Обработка событий
+$PHPShopGUI->getAction();
+
+// Вывод формы при старте
+$PHPShopGUI->setAction($_GET['id'], 'actionStart', 'none');
 ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-    <head>
-        <title>Редактирование Характеристики</title>
-        <META http-equiv=Content-Type content="text/html; charset=<?= $SysValue['Lang']['System']['charset'] ?>">
-        <LINK href="../skins/<?= $_SESSION['theme'] ?>/texts.css" type=text/css rel=stylesheet>
-        <LINK href="../skins/<?= $_SESSION['theme'] ?>/tab.css" type=text/css rel=stylesheet>
-        <SCRIPT language="JavaScript" src="/phpshop/lib/Subsys/JsHttpRequest/Js.js"></SCRIPT>
-        <script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
-        <script type="text/javascript" src="../java/tabpane.js"></script>
-    </head>
-    <body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0">
-        <?
-
-// Вывод ответов
-        function dispValue($n) {
-            global $SysValue;
-            $sql = "select * from " . $SysValue['base']['table_name21'] . " where category=" . intval($n) . " order by num";
-            $result = mysql_query($sql);
-            while (@$row = mysql_fetch_array($result)) {
-                $id = $row['id'];
-                $name = $row['name'];
-                $num = $row['num'];
-                @$disp.='
-	<tr onclick="miniWin(\'adm_valueID.php?id=' . $id . '\',500,450)"  onmouseover="show_on(\'r' . $id . '\')" id="r' . $id . '" onmouseout="show_out(\'r' . $id . '\')" class=row>
-	<td class="forma">' . $name . '</td>
-	<td class="forma">' . $num . '</td>
-</tr>
-	';
-            }
-            return @$disp;
-        }
-
-        function dispPage($array) { // вывод статей по теме
-            global $SysValue;
-            $array = explode(",", $array);
-            $sql = "select * from " . $SysValue['base']['table_name11'] . " where enabled='1' order by num";
-            $result = mysql_query($sql);
-            while ($row = mysql_fetch_array($result)) {
-                $link = $row['link'];
-                $name = substr($row['name'], 0, 100);
-                $sel = "";
-                if (is_array($array))
-                    foreach ($array as $v) {
-                        if ($link == $v)
-                            $sel = "selected";
-                    }
-                @$dis.="<option value=" . $link . " " . $sel . " >" . $name . "</option>\n";
-            }
-            @$disp = "
-<select name=page_new>
-<option value=''>Нет описания</option>\n
-$dis
-</select>
-";
-            return @$disp;
-        }
-
-// Редактирование записей книги
-        $sql = "select * from " . $SysValue['base']['table_name20'] . " where id=" . intval($_GET['id']);
-        $result = mysql_query($sql);
-        $row = mysql_fetch_array($result);
-        $id = $row['id'];
-        $name = $row['name'];
-        $num = $row['num'];
-        $description = $row['description'];
-        $page = $row['page'];
-        if ($row['filtr'] == 1)
-            $filtr = "checked";
-        if ($row['goodoption'] == 1) {
-            $goodoption = "checked";
-        } else {
-            $goodoption = "";
-        }
-        if ($row['optionname'] == 1) {
-            $optionname = "checked";
-        } else {
-            $optionname = "";
-        }
-        if ($row['brand'] == 1) {
-            $brand = "checked";
-        } else {
-            $brand = "";
-        }
-        ?>
-        <form name="product_edit"  method=post>
-            <table cellpadding="0" cellspacing="0" width="100%" height="50" id="title">
-                <tr bgcolor="#ffffff">
-                    <td style="padding:10">
-                        <b><span name=txtLang id=txtLang>Редактирование Характеристики</span> "<?= $name ?>"</b><br>
-
-                    </td>
-                    <td align="right">
-                        <img src="../img/i_billing_history_med[1].gif" border="0" hspace="10">
-                    </td>
-                </tr>
-            </table>
-            <!-- begin tab pane -->
-            <div class="tab-pane" id="article-tab" style="margin-top:5px;height:300px">
-
-                <script type="text/javascript">
-                    tabPane = new WebFXTabPane(document.getElementById("article-tab"), true);
-                </script>
-
-
-
-                <!-- begin intro page -->
-                <div class="tab-page" id="intro-page" style="height:400px">
-                    <h2 class="tab"><span name=txtLang id=txtLang>Основное</span></h2>
-
-                    <script type="text/javascript">
-                        tabPane.addTabPage(document.getElementById("intro-page"));
-                    </script>
-
-
-
-                    <table cellpadding="5" cellspacing="0" border="0" align="center" width="100%">
-                        <tr>
-                            <td colspan="2">
-                                <FIELDSET>
-                                    <LEGEND><span name=txtLang id=txtLang><u>Н</u>аименование</span> </LEGEND>
-                                    <div style="padding:10">
-                                        <input type="text" name="name_new" class="full" value="<?= $name ?>">
-                                    </div>
-                                </FIELDSET>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <FIELDSET style="height:70px;">
-                                    <LEGEND><span name=txtLang id=txtLang><u>О</u>пции</span> </LEGEND>
-                                    <div style="padding:10">
-                                        <input type="checkbox" value="1" name="filtr_new" <?= $filtr ?>><span name=txtLang id=txtLang>Фильтр</span>
-                                        <input type="checkbox" value="1" name="goodoption_new" <?= $goodoption ?>><span name=txtLang id=txtLang>Товарная опция</span>
-                                        <input type="checkbox" value="1" name="optionname_new" <?= $optionname ?>><span name=txtLang id=txtLang>Показывать описание опции в корзине</span>
-                                        <input type="checkbox" value="1" name="brand_new" <?= $brand ?>><span name=txtLang id=txtLang>Бренд</span>
-                                    </div>
-                                </FIELDSET>
-                            </td>
-                            <td>
-                                <FIELDSET style="height:70px;">
-                                    <LEGEND><span name=txtLang id=txtLang><u>П</u>озиция</span> </LEGEND>
-                                    <div style="padding:10">
-                                        <input type="text" name="num_new" class="full" value="<?= $num ?>">
-                                    </div>
-                                </FIELDSET>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">
-                                <table width="100%"  cellpadding="0" cellspacing="0">
-                                    <tr>
-                                        <td valign="top">
-                                            <div align="left" style="width:100%;height:150;overflow:auto"> 
-                                                <table cellpadding="0" cellspacing="1" width="100%" border="0">
-                                                    <tr>
-                                                        <td id=pane align=center><img src=../img/arrow_d.gif width=7 height=7 border=0 hspace=5><span name=txtLang id=txtLang>Характериcтика</span></td>
-                                                        <td id=pane align=center><img src=../img/arrow_d.gif width=7 height=7 border=0 hspace=5><span name=txtLang id=txtLang>Сортировка</span></td>
-                                                    </tr>
-                                                    <?= dispValue($_GET['id']); ?>
-                                                </table>
-
-
-                                        </td>
-                                    </tr>
-                                </table>
-                                <div align="right" style="padding:10">
-                                    <BUTTON style="width: 15em; height: 2.2em; margin-left:5"  onclick="miniWin('adm_value_new.php?categoryID=<?= $id ?>', 500, 450);
-                            return false;">
-                                        <img src="../icon/page_add.gif" width="16" height="16" border="0" align="absmiddle" hspace="5">
-                                        <span name=txtLang id=txtLang>Новая позиция</span>
-                                    </BUTTON>
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="tab-page" id="content-page" style="height:400px">
-                    <h2 class="tab"><span name=txtLang id=txtLang>Описание</span></h2>
-
-                    <script type="text/javascript">
-                        tabPane.addTabPage(document.getElementById("content-page"));
-                    </script>
-
-
-
-                    <table cellpadding="5" cellspacing="0" border="0" align="center" width="100%">
-                        <tr>
-                            <td>
-                                <FIELDSET>
-                                    <LEGEND><span name=txtLang id=txtLang><u>П</u>одсказка</span></LEGEND>
-                                    <div style="padding:10">
-                                        <textarea class=full name=description_new style="height:40px"><?= $description ?></textarea>
-                                    </div>
-                                </FIELDSET>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <FIELDSET>
-                                    <LEGEND><span name=txtLang id=txtLang><u>С</u>сылка на описание</span></LEGEND>
-                                    <div style="padding:10">
-                                        <? echo dispPage($page) ?>
-                                        <p>* Имя характеристики (в таблице характеристик в подробном описании товара) становится ссылкой на указанную страницу с описанием.</p>
-                                    </div>
-                                </FIELDSET>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-                <hr>
-                <table cellpadding="0" cellspacing="0" width="100%" height="50" >
-                    <tr>
-                        <td align="left" style="padding:10">
-                            <BUTTON class="help" onclick="helpWinParent('sortID')">Справка</BUTTON>
-                        </td>
-                        <td align="right" style="padding:10">
-                            <input type="hidden" name="id" value="<?= $id ?>" >
-                            <input type="submit" name="editID" value="OK" class=but>
-                            <input type="button" name="btnLang" class=but value="Удалить" onClick="PromptThis();">
-                            <input type="hidden" class=but  name="productDELETE" id="productDELETE">
-                            <input type="button" name="btnLang" value="Отмена" onClick="return onCancel();" class=but>
-                        </td>
-                    </tr>
-                </table>
-        </form>
-        <?
-        if (isset($editID) and !empty($name_new)) {// Запись редактирования
-            if (CheckedRules($UserStatus["cat_prod"], 1) == 1) {
-                $sql = "UPDATE " . $SysValue['base']['table_name20'] . "
-SET
-name='$name_new',
-num='$num_new',
-filtr='$filtr_new',
-goodoption='$goodoption_new',
-optionname='$optionname_new',
-brand='$brand_new',
-description='$description_new',
-page='$page_new' 
-where id='$id'";
-                $result = mysql_query($sql) or @die("" . mysql_error() . "");
-                echo"
-	  <script>
-DoReloadMainWindow('sort');
-</script>
-	   ";
-            }
-            else
-                $UserChek->BadUserFormaWindow();
-        }
-        if (@$productDELETE == "doIT") {// Удаление
-            if (CheckedRules($UserStatus["cat_prod"], 1) == 1) {
-                $sql = "delete from " . $SysValue['base']['table_name20'] . "
-where id='$id'";
-                $result = mysql_query($sql) or @die("Невозможно изменить запись");
-                echo"
-	  <script>
-DoReloadMainWindow('sort');
-</script>
-	   ";
-            }
-            else
-                $UserChek->BadUserFormaWindow();
-        }
-        ?>
-
-
-

@@ -54,7 +54,7 @@ function Page_comment($id) {
  * @return string
  */
 function Nav_comment($id) {
-    global $SysValue;
+    global $SysValue,$link_db;
 
     $navigat = null;
     $p = $_REQUEST['page'];
@@ -64,8 +64,8 @@ function Nav_comment($id) {
     // Ко-во позиций на странице
     $num_row = 10;
     $sql = "select id from " . $SysValue['base']['table_name36'] . " where parent_id=" . intval($id) . " and enabled='1'";
-    @$result = mysql_query($sql);
-    $num_page = mysql_num_rows(@$result);
+    @$result = mysqli_query($link_db,$sql);
+    $num_page = mysqli_num_rows(@$result);
     $i = 1;
     $num = $num_page / $num_row;
     while ($i < $num + 1) {
@@ -158,12 +158,12 @@ function returnSmile($string) {
  * @return string
  */
 function DispComment($id) {
-    global $SysValue;
+    global $SysValue,$link_db;
 
     $dis = null;
     $sql = Page_comment($id);
-    $result = mysql_query($sql);
-    while ($row = mysql_fetch_array($result)) {
+    $result = mysqli_query($link_db,$sql);
+    while ($row = mysqli_fetch_array($result)) {
         $user_id = $row['user_id'];
 
         // Редактирование
@@ -197,7 +197,8 @@ function DispComment($id) {
 }
 
 function avg_rate($id) {
-    global $SysValue;
+    global $SysValue,$link_db;
+
     $oneStarWidth = 16; // ширина одной звёздочки
     $oneSpaceWidth = 0; // пробел между звёздочками
     // берём параметры с конфига, если заданы
@@ -207,9 +208,9 @@ function avg_rate($id) {
         $oneSpaceWidth = $_SESSION['Memory']["rateForComment"]["oneSpaceWidth"];
 
     $sql = "select rate, rate_count from " . $SysValue['base']['products'] . " WHERE id=" . intval($id) . " LIMIT 1";
-    $result = mysql_query($sql);
-    if (mysql_num_rows($result)) {
-        $row = mysql_fetch_array($result);
+    $result = mysqli_query($link_db,$sql);
+    if (mysqli_num_rows($result)) {
+        $row = mysqli_fetch_array($result);
         extract($row);
         $rate = round($rate, 1);
         $SysValue['other']['avgRateWidth'] = $oneStarWidth * $rate + $oneSpaceWidth * ceil($rate);
@@ -246,12 +247,12 @@ switch ($_REQUEST['comand']) {
 	INSERT INTO " . $SysValue['base']['table_name36'] . " 
 	VALUES 
  ('','" . date("U") . "','" . $PHPShopUser->getName() . "','" . intval($_REQUEST['xid']) . "','" . $myMessage . "','" . $_SESSION['UsersId'] . "','0','$myRate')";
-            mysql_query($sql);
+            mysqli_query($link_db,$sql);
 
             // получаем имя товара
             $sql = "SELECT name FROM " . $SysValue['base']['table_name2'] . " WHERE id=" . intval($_REQUEST['xid']);
-            $result = mysql_query($sql);
-            $row = mysql_fetch_array($result);
+            $result = mysqli_query($link_db,$sql);
+            $row = mysqli_fetch_array($result);
             $name = $row['name'];
 
             // отправляем письмо администратору
@@ -282,8 +283,8 @@ switch ($_REQUEST['comand']) {
 
     case("edit"):
         $sql = "select content from " . $SysValue['base']['table_name36'] . " where id=" . intval($_REQUEST['cid']) . " and user_id=" . $_SESSION['UsersId'];
-        $result = mysql_query($sql);
-        $row = mysql_fetch_array($result);
+        $result = mysqli_query($link_db,$sql);
+        $row = mysqli_fetch_array($result);
         $interfaces = $row['content'];
         break;
 
@@ -297,22 +298,22 @@ switch ($_REQUEST['comand']) {
             enabled='0',
             content='" . $myMessage . "' 
             where id='" . intval($_REQUEST['cid']) . "'";
-            mysql_query($sql);
+            mysqli_query($link_db,$sql);
 
             // пересчитываем рейтинг для товара.
             $sql = "SELECT parent_id FROM " . $SysValue['base']['table_name36'] . " where id='" . intval($_REQUEST['cid']) . "'";
-            $result = mysql_query($sql);
-            $row = mysql_fetch_array($result);
+            $result = mysqli_query($link_db,$sql);
+            $row = mysqli_fetch_array($result);
             $parent_id = $row['parent_id'];
 
-            $result = mysql_query("select avg(rate) as rate, count(id) as num from " . $SysValue['base']['table_name36'] . " WHERE parent_id=$parent_id AND enabled='1' AND rate>0 group by parent_id LIMIT 1");
-            if (mysql_num_rows($result)) {
-                $row = mysql_fetch_array($result);
+            $result = mysqli_query($link_db,"select avg(rate) as rate, count(id) as num from " . $SysValue['base']['table_name36'] . " WHERE parent_id=$parent_id AND enabled='1' AND rate>0 group by parent_id LIMIT 1");
+            if (mysqli_num_rows($result)) {
+                $row = mysqli_fetch_array($result);
                 extract($row);
                 $rate = round($rate, 1);
-                mysql_query("UPDATE  " . $SysValue['base']['products'] . " SET rate = '$rate', rate_count='$num' WHERE id=$parent_id");
+                mysqli_query($link_db,"UPDATE  " . $SysValue['base']['products'] . " SET rate = '$rate', rate_count='$num' WHERE id=$parent_id");
             } else {
-                mysql_query("UPDATE  " . $SysValue['base']['products'] . " SET rate = '0', rate_count='0' WHERE id=$parent_id");
+                mysqli_query($link_db,"UPDATE  " . $SysValue['base']['products'] . " SET rate = '0', rate_count='0' WHERE id=$parent_id");
             }
         }
         else
@@ -323,7 +324,7 @@ switch ($_REQUEST['comand']) {
     case("dell"):
         $sql = "delete from " . $SysValue['base']['table_name36'] . "
 where id='" . intval($_REQUEST['cid']) . "'";
-        mysql_query($sql);
+        mysqli_query($link_db,$sql);
         $interfaces = DispComment($_REQUEST['xid']);
         break;
 }

@@ -59,7 +59,7 @@ function index_nt_hook($obj, $row, $rout) {
     $PHPShopOrm = new PHPShopOrm();
     $PHPShopOrm->debug = $obj->debug;
     $result = $PHPShopOrm->query("select * from " . $SysValue['base']['table_name20'] . " where (brand='1' and goodoption!='1') order by num");
-    while (@$row = mysql_fetch_assoc($result)) {
+    while (@$row = mysqli_fetch_assoc($result)) {
         $arrayVendor[$row['id']] = $row;
     }
 
@@ -77,7 +77,7 @@ function index_nt_hook($obj, $row, $rout) {
         $PHPShopOrm = new PHPShopOrm();
         $PHPShopOrm->debug = $obj->debug;
         $result = $PHPShopOrm->query("select id, name, category from " . $SysValue['base']['table_name21'] . " where $sortValue order by num");
-        while (@$row = mysql_fetch_array($result)) {
+        while (@$row = mysqli_fetch_array($result)) {
             $arrForSort[$row['name']] = $row['id'];
             $arrParentCat[$row['id']] = $row['category'];
         }

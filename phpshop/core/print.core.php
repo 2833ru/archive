@@ -18,11 +18,11 @@ class PHPShopPrint extends PHPShopShopCore {
      */
     var $cache=false;
 
-    function PHPShopPrint() {
+    function __construct() {
 
         // Список экшенов
         $this->action=array("nav"=>"UID");
-        parent::PHPShopShopCore();
+        parent::__construct();
     }
 
 

@@ -10,7 +10,7 @@ class PHPShopExcel extends PHPShopCore {
     /**
      * Конструктор
      */
-    function PHPShopExcel() {
+    function __construct() {
 
         // Имя Бд
         $this->objBase=$GLOBALS['SysValue']['base']['products'];
@@ -18,7 +18,7 @@ class PHPShopExcel extends PHPShopCore {
         // Список экшенов
         $this->action=array("get"=>"UID",'nav'=>'index');
 
-        parent::PHPShopCore();
+        parent::__construct();
     }
     
     function decode($str){

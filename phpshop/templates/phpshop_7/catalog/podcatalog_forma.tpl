@@ -1,1 +1,0 @@
-<div class="divCatContA"><a href="/shop/CID_@catalogUid@.html" title="@catalogTitle@ - @catalogName@">@catalogName@</a></div>

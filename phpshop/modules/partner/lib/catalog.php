@@ -28,7 +28,7 @@ $_POST['key_test'] = "123456789";
 
 class PHPShopHtmlCatalog extends PHPShopBaseXml {
 
-    function PHPShopHtmlCatalog() {
+    function __construct() {
         $this->debug = false;
         $this->true_method = array('select', 'option');
         $this->true_from = array('table_name', 'table_name2', 'table_name3', 'table_name24', 'table_name19', '');
@@ -37,7 +37,7 @@ class PHPShopHtmlCatalog extends PHPShopBaseXml {
         $this->key = $_POST['key'];
         $this->url = $_POST['url'];
         $this->system();
-        parent::PHPShopBaseXml();
+        parent::__construct();
     }
 
     function system() {

@@ -18,12 +18,12 @@ class PHPShopCategory extends PHPShopObj {
      * Конструктор
      * @param int $objID ИД категории
      */
-    function PHPShopCategory($objID) {
+    function __construct($objID) {
         $this->objID = $objID;
         $this->objBase = $GLOBALS['SysValue']['base']['table_name'];
         $this->cache = true;
         $this->debug = false;
-        parent::PHPShopObj('id');
+        parent::__construct('id');
     }
 
     /**
@@ -73,10 +73,10 @@ class PHPShopPages extends PHPShopObj {
      * Конструктор
      * @param int $objID ИД страницы
      */
-    function PHPShopPages($objID) {
+    function __construct($objID) {
         $this->objID = $objID;
         $this->objBase = $GLOBALS['SysValue']['base']['table_name11'];
-        parent::PHPShopObj();
+        parent::__construct();
     }
 
     /**
@@ -110,12 +110,12 @@ class PHPShopPageCategory extends PHPShopObj {
      * Конструктор
      * @param int $objID ИД категории
      */
-    function PHPShopPageCategory($objID) {
+    function __construct($objID) {
         $this->objID = $objID;
         $this->objBase = $GLOBALS['SysValue']['base']['page_categories'];
         $this->cache = true;
         $this->debug = false;
-        parent::PHPShopObj('id');
+        parent::__construct('id');
     }
 
     /**
@@ -159,12 +159,12 @@ class PHPShopCategoryArray extends PHPShopArray {
      * Конструктор
      * @param string $sql SQL условие выборки
      */
-    function PHPShopCategoryArray($sql = false) {
+    function __construct($sql = false) {
         $this->objSQL = $sql;
         $this->cache = false;
         $this->order = array('order' => 'num');
         $this->objBase = $GLOBALS['SysValue']['base']['categories'];
-        parent::PHPShopArray("id", "name", "parent_to", "skin_enabled");
+        parent::__construct("id", "name", "parent_to", "skin_enabled");
     }
 
 }

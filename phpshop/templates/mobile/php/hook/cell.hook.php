@@ -96,7 +96,7 @@ function sort_table_mob_hook($obj, $row) {
         $PHPShopOrm = new PHPShopOrm();
         $PHPShopOrm->debug = $obj->debug;
         $result = $PHPShopOrm->query("select * from " . $SysValue['base']['table_name20'] . " where ($sortCat and goodoption!='1') order by num");
-        while (@$row = mysql_fetch_assoc($result)) {
+        while (@$row = mysqli_fetch_assoc($result)) {
             $arrayVendor[$row['id']] = $row;
         }
 
@@ -114,7 +114,7 @@ function sort_table_mob_hook($obj, $row) {
             $PHPShopOrm = new PHPShopOrm();
             $PHPShopOrm->debug = $obj->debug;
             $result = $PHPShopOrm->query("select * from " . $SysValue['base']['table_name21'] . " where $sortValue order by num");
-            while (@$row = mysql_fetch_array($result)) {
+            while (@$row = mysqli_fetch_array($result)) {
                 $arrayVendorValue[$row['category']]['name'].= ", " . $row['name'];
                 $arrayVendorValue[$row['category']]['page'] = $row['page'];
             }

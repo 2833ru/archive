@@ -1,82 +1,51 @@
 <?php
 
-$_classPath = "../../";
-include($_classPath . "class/obj.class.php");
-PHPShopObj::loadClass("base");
-PHPShopObj::loadClass("date");
-
-$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
-$PHPShopBase->chekAdmin();
-
-PHPShopObj::loadClass("system");
-$PHPShopSystem = new PHPShopSystem();
-
-// Редактор GUI
-PHPShopObj::loadClass("admgui");
-$PHPShopGUI = new PHPShopGUI();
-$PHPShopGUI->title = "Редактирование Отзыва";
-$PHPShopGUI->ajax = "'gbook','','','core'";
-$PHPShopGUI->alax_lib = true;
-
-// SQL
-PHPShopObj::loadClass("orm");
+$TitlePage = __('Создание отзыва');
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['gbook']);
 
-// Модули
-PHPShopObj::loadClass("modules");
-$PHPShopModules = new PHPShopModules($_classPath . "modules/");
-
 function actionStart() {
-    global $PHPShopGUI, $PHPShopSystem, $SysValue, $_classPath, $PHPShopModules;
+    global $PHPShopGUI, $PHPShopSystem, $PHPShopModules;
 
     // Выборка
     $data['datas'] = PHPShopDate::get();
     $data['tema'] = __('Отзыв от ') . $data['datas'];
     $data['name'] = __('Администратор');
 
-    $PHPShopGUI->dir = "../";
-    $PHPShopGUI->size = "630,530";
-    $PHPShopGUI->addJSFiles('../java/popup_lib.js', '../java/dateselector.js');
-    $PHPShopGUI->addCSSFiles('../css/dateselector.css');
+    $PHPShopGUI->setActionPanel(__("Создание Отзывы"), false, array('Сохранить и закрыть'));
 
-    // Графический заголовок окна
-    $PHPShopGUI->setHeader("Редактирование Отзыва", "", $PHPShopGUI->dir . "img/i_account_properties_med[1].gif");
+    // datetimepicker
+    $PHPShopGUI->addJSFiles('./js/bootstrap-datetimepicker.min.js', './news/gui/news.gui.js');
+    $PHPShopGUI->addCSSFiles('./css/bootstrap-datetimepicker.min.css');
+
 
     // Редактор 1
     $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));
     $oFCKeditor = new Editor('otvet_new');
     $oFCKeditor->Height = '320';
-    $oFCKeditor->Config['EditorAreaCSS'] = $_classPath . "../templates" . chr(47) . $PHPShopSystem->getParam("skin") . chr(47) . $SysValue['css']['default'];
-    $oFCKeditor->ToolbarSet = 'Normal';
-    $oFCKeditor->Value = null;
+    $oFCKeditor->Value = $data['otvet'];
 
     // Содержание закладки 1
-    $Tab1 = $PHPShopGUI->setField("Дата:", $PHPShopGUI->setInput("text", "datas_new", PHPShopDate::dataV($datas, false), "left", 70) .
-            $PHPShopGUI->setCalendar('datas_new') .
-            $PHPShopGUI->setLine() .
-            $PHPShopGUI->setCheckbox('flag_new', '1', 'Вывод', true)
-            , "left");
+    $Tab1 = $PHPShopGUI->setField("Дата:", $PHPShopGUI->setInputDate("datas_new", PHPShopDate::get(time())));
 
-    $Tab1.=$PHPShopGUI->setField("Автор:", $PHPShopGUI->setText("Имя:&nbsp;&nbsp;", "left") .
-                    $PHPShopGUI->setInput("text", "name_new", $data['name'], "none", 300) . $PHPShopGUI->setText("E-mail:", "left") . $PHPShopGUI->setInput("text", "mail_new", $mail, "none", 300), "none", 5) .
-            $PHPShopGUI->setLine() .
-            $PHPShopGUI->setField("Тема:", $PHPShopGUI->setTextarea("tema_new", $data['tema'], "left", '97%', '50px'), "none") .
-            $PHPShopGUI->setField("Отзыв:", $PHPShopGUI->setTextarea("otsiv_new", 'Отзыв о магазине', "left", '97%', '80px'), "none");
+    $Tab1.=$PHPShopGUI->setField("Имя:", $PHPShopGUI->setInput("text", "name_new", $data['name']));
+
+    $Tab1.=$PHPShopGUI->setField("E-mail:", $PHPShopGUI->setInput("text", "mail_new", $data['mail']));
+
+    $Tab1.=$PHPShopGUI->setField("Тема:", $PHPShopGUI->setTextarea("tema_new", $data['tema'])) .
+            $PHPShopGUI->setField("Отзыв:", $PHPShopGUI->setTextarea("otsiv_new", $data['otsiv'], "", '100%', '200'));
+    $Tab1.=$PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("flag_new", 1, "Вкл.", $data['flag']) . $PHPShopGUI->setRadio("flag_new", 0, "Выкл.", $data['flag']));
 
     // Содержание закладки 2
-    $Tab2 = $oFCKeditor->AddGUI();
+    $Tab1.= $PHPShopGUI->setField("Ответ", $oFCKeditor->AddGUI());
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1, 350), array("Ответ", $Tab2, 350));
+    $PHPShopGUI->setTab(array("Основное", $Tab1));
 
     // Запрос модуля на закладку
-    $PHPShopModules->setAdmHandler($_SERVER["SCRIPT_NAME"], __FUNCTION__, null);
+    $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, null);
 
     // Вывод кнопок сохранить и выход в футер
-    $ContentFooter =
-            $PHPShopGUI->setInput("button", "", "Отмена", "right", 70, "return onCancel();", "but") .
-            $PHPShopGUI->setInput("reset", "", "Сбросить", "right", 70, "", "but") .
-            $PHPShopGUI->setInput("submit", "editID", "ОК", "right", 70, "", "but", "actionInsert.gbook.create");
+    $ContentFooter = $PHPShopGUI->setInput("submit", "saveID", "ОК", "right", 70, "", "but", "actionInsert.gbook.create");
 
     // Футер
     $PHPShopGUI->setFooter($ContentFooter);
@@ -90,14 +59,15 @@ function actionInsert() {
     $_POST['datas_new'] = time();
 
     // Перехват модуля
-    $PHPShopModules->setAdmHandler($_SERVER["SCRIPT_NAME"], __FUNCTION__, $_POST);
+    $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
     $action = $PHPShopOrm->insert($_POST);
+    header('Location: ?path=' . $_GET['path']);
     return $action;
 }
 
-// Вывод формы при старте
-$PHPShopGUI->setLoader($_POST['editID'], 'actionStart');
-
 // Обработка событий
 $PHPShopGUI->getAction();
+
+// Вывод формы при старте
+$PHPShopGUI->setLoader($_POST['editID'], 'actionStart');
 ?>

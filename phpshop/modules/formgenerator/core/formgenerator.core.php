@@ -8,7 +8,7 @@ class PHPShopFormgenerator extends PHPShopCore {
     /**
      * Конструктор
      */
-    function PHPShopFormgenerator() {
+    function __construct() {
 
         // Имя Бд
         $this->objBase = $GLOBALS['SysValue']['base']['formgenerator']['formgenerator_forms'];
@@ -17,7 +17,7 @@ class PHPShopFormgenerator extends PHPShopCore {
         // Список экшенов
         $this->action = array('nav' => 'index', 'post' => 'forma_send');
 
-        parent::PHPShopCore();
+        parent::__construct();
     }
 
     /**

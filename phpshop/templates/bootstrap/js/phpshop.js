@@ -199,12 +199,22 @@ function GetSortAll() {
 
 }
 
-// Инициализируем таблицу перевода
+// Инициализируем таблицу перевода на русский
 var trans = [];
 for (var i = 0x410; i <= 0x44F; i++)
     trans[i] = i - 0x350; // А-Яа-я
 trans[0x401] = 0xA8;    // Ё
 trans[0x451] = 0xB8;    // ё
+
+// Таблица перевода на украинский
+/*
+trans[0x457] = 0xBF;    // ї
+trans[0x407] = 0xAF;    // Ї
+trans[0x456] = 0xB3;    // і
+trans[0x406] = 0xB2;    // І
+trans[0x404] = 0xBA;    // є
+trans[0x454] = 0xAA;    // Є
+*/
 
 // Сохраняем стандартную функцию escape()
 var escapeOrig = window.escape;
@@ -360,8 +370,10 @@ function setEqualHeight(columns) {
 
 // Коррекция знака рубля
 function setRubznak() {
-    if ($('.rubznak').html() == 'руб.' || $('.rubznak').html() == 'руб' || $('.rubznak').html() == 'p')
-        $('.rubznak').html('p');
+    $('.rubznak').each(function() {
+        if ($(this).html() == 'руб.' || $(this).html() == 'руб' || $('this').html() == 'p')
+            $(this).html('p');
+    });
 }
 
 $(document).ready(function() {
@@ -388,7 +400,7 @@ $(document).ready(function() {
     $('.mega-more').on('click', function(event) {
         event.preventDefault();
         $(this).hide();
-        $($(this).attr('data-sub') + "  li").removeClass('hide');
+        $(this).closest('.mega-menu-block').find('.template-menu-line').removeClass('hide');
     });
 
 
@@ -684,10 +696,11 @@ $(document).ready(function() {
         addToCartList($(this).attr('data-uid'), $(this).attr('data-num'));
         $(this).attr('disabled', 'disabled');
         $(this).addClass('btn-success');
+        $('#order').addClass('active');
     });
 
     // изменение количества товара для добавления в корзину
-    $(".addToCartListNum").on('change', function() {
+    $('body').on('change', '.addToCartListNum', function() {
         var num = (Number($(this).val()) || 1);
         var id = $(this).attr('data-uid');
         /*
@@ -741,7 +754,9 @@ $(document).ready(function() {
     $('[data-toggle="tooltip"]').tooltip({container: 'body'});
 
     // Стилизация select
-    $('select').styler();
+    $('.selectpicker').selectpicker({
+        width: "auto"
+    });
 
     // Переход из прайса на форму с описанием
     $('#price-form').on('click', function(event) {
@@ -829,7 +844,7 @@ $(document).ready(function() {
 
     // формат ввода телефона
     $("form[name='forma_order'], input[name=returncall_mod_tel],input[name=tel]").on('click', function() {
-        if (PHONE_FORMAT && PHONE_MASK) {
+        if (PHONE_FORMAT && PHONE_MASK && $('.bar-padding-fix').is(":hidden")) {
             $('input[name=tel_new], input[name=returncall_mod_tel],input[name=tel]').mask(PHONE_MASK);
         }
     });

@@ -1,4 +1,4 @@
-<files *.txt>
+<files *>
 Order Deny,Allow
 Deny From All
 </files>

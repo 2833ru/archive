@@ -8,12 +8,12 @@ class PHPShopRulepartner extends PHPShopCore {
     /**
      * Конструктор
      */
-    function PHPShopRulepartner() {
+    function __construct() {
 
         // Имя Бд
         $this->objBase = $GLOBALS['SysValue']['base']['partner']['partner_system'];
         $this->debug = false;
-        parent::PHPShopCore();
+        parent::__construct();
 
         // Навигация хлебные крошки
         $this->navigation(null, 'Партнерская программа');

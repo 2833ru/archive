@@ -44,7 +44,7 @@ class PHPShopMail {
      * @param boolean $noSend true - не отсылать письмо при создании экземпляра класса. А назначить метки данных магазина и отправить позднее отдельным методом sendMailNow
      * @param boolean $f true - использовать флаг -f при отправке письма
      */
-    function PHPShopMail($to, $from, $zag, $content, $type = false, $noSend = false, $f = true) {
+    function __construct($to, $from, $zag, $content, $type = false, $noSend = false, $f = true) {
 
         $this->f = $f;
 
@@ -112,7 +112,7 @@ class PHPShopMail {
      * @param string $content содержание
      */
     function sendMailNow($content) {
-        mail($this->to, $this->zag, $content, $this->header, $this->from);
+        return mail($this->to, $this->zag, $content, $this->header, $this->from);
     }
 
     /**
@@ -132,12 +132,7 @@ class PHPShopMail {
      * @return string
      */
     function getCopyright() {
-        $s = "
-	 
-	 
-Powered & Developed by www.PHPShop.ru
-" . $GLOBALS['SysValue']['license']['product_name'];
-        return $s;
+        
     }
 
 }
@@ -146,7 +141,7 @@ class PHPShopMailFile {
 
     var $codepage = "windows-1251";
 
-    function PHPShopMailFile($to, $from, $zag, $content, $filename, $file, $f = true) {
+    function __construct($to, $from, $zag, $content, $filename, $file, $f = true) {
         $this->from = $from;
         $this->un = strtoupper(uniqid(time()));
         $this->to = $to;

@@ -26,9 +26,9 @@
         <?
         if(!@include("Settings.php")) exit('Settings.php не обнаружен');
         
-        mysql_connect ($db_server, $db_user, $db_passwd) or die("Невозможно подсоединиться к базе");
-        mysql_select_db($db_name) or die("Невозможно подсоединиться к базе");
-        mysql_query("SET NAMES 'cp1251'");
+        $link_db=mysqli_connect ($db_server, $db_user, $db_passwd) or die("Невозможно подсоединиться к базе");
+        mysqli_select_db($link_db,$db_name) or die("Невозможно подсоединиться к базе");
+        mysqli_query($link_db,"SET NAMES 'cp1251'");
 
         function dataV($nowtime) {
             $Months = array("01"=>"января","02"=>"февраля","03"=>"марта",
@@ -41,9 +41,10 @@
         }
 
         function Total($id) {
+            global $link_db;
             $sql="select pid from ibf_posts where topic_id=$id";
-            $result=mysql_query($sql);
-            $num = mysql_num_rows($result);
+            $result=mysqli_query($link_db,$sql);
+            $num = mysqli_num_rows($result);
             return $num;
         }
 
@@ -53,8 +54,8 @@
 
 
         $sql="select * from ".$db_prefix."messages  order by posterTime desc limit ".$limit;
-        $result=mysql_query($sql);
-        while($row = mysql_fetch_array($result)) {
+        $result=mysqli_query($link_db,$sql);
+        while($row = mysqli_fetch_array($result)) {
             $name = $row['subject'];
             $last_post = $row['posterTime'];
             $last_poster_name = $row['posterName'];

@@ -92,7 +92,8 @@
 
                         <h3>Оставьте свой отзыв</h3>
 
-                        <textarea id="message" class="form-control"></textarea>
+                        <textarea id="message" class="commentTextarea form-control"></textarea>
+                        <input type="hidden" id="commentAuthFlag" name="commentAuthFlag" value="@php if($_SESSION['UsersId']) echo 1; else echo 0; php@">
                         <br>
                         <div class="btn-group" data-toggle="buttons">
                             <label class="btn btn-success btn-sm">

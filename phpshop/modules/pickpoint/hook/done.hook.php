@@ -15,8 +15,8 @@ function mail_pickpoint_hook($obj,$row,$rout) {
         $content_file='<?xml version="1.0" encoding="windows-1251"?>
 <documents>
 <document>
-<fio>'.$_POST['name_person'].'</fio>
-<sms_phone>+7'.$_POST['tel_code'].$_POST['tel_name'].'</sms_phone>
+<fio>'.$_POST['fio_new'].'</fio>
+<sms_phone>'.$_POST['tel_new'].'</sms_phone>
 <email>'.$_POST['mail'].'</email>
 <additional_phones/>
 <order_id>'.$_POST['ouid'].'</order_id>
@@ -36,7 +36,7 @@ function mail_pickpoint_hook($obj,$row,$rout) {
         @fwrite(fopen($file,"w+"), $content_file);
         
         // Отсылаем письмо администратору
-        $PHPShopMailFile= new PHPShopMailFile($obj->PHPShopSystem->getParam('adminmail2'),$_POST['mail'],'PickPoint N'.$_POST['ouid'],$content,'PickPoint_'.$_POST['ouid'].'.xml',$file);
+        $PHPShopMailFile= new PHPShopMailFile($obj->PHPShopSystem->getParam('adminmail2'),$_POST['mail'],'PickPoint N'.$_POST['ouid'],null,'PickPoint_'.$_POST['ouid'].'.xml',$file);
 
         // Удаляем файл
         unlink($file);

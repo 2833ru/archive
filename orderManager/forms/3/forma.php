@@ -21,13 +21,16 @@ $LoadItems['System'] = $PHPShopSystem->getArray();
 $SysValue['bank'] = unserialize($LoadItems['System']['bank']);
 $pathTemplate = $SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'];
 
+if(!PHPShopSecurity::true_param($_GET['orderID'],$_GET['datas']))
+exit('Error _GET');
+
 $orderID = PHPShopSecurity::TotalClean($_GET['orderID'], 5);
 $datas = PHPShopSecurity::TotalClean($_GET['datas'], 1);
 
 $sql = "select * from " . $SysValue['base']['table_name1'] . " where id='$orderID' and datas='$datas'";
 $n = 1;
-@$result = mysql_query($sql) or die($sql);
-$row = mysql_fetch_array(@$result);
+@$result = mysqli_query($link_db,$sql);
+$row = mysqli_fetch_array(@$result);
 $id = $row['id'];
 $datas = $row['datas'];
 $ouid = $row['uid'];
@@ -89,8 +92,7 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
 </head>
 <body onload="window.focus()" bgcolor="#FFFFFF" text="#000000" marginwidth=5 leftmargin=5 style="padding: 2px;">
     <div align="right" class="nonprint"><a href="#" onclick="window.print();
-        return false;" ><img border=0 align=absmiddle hspace=3 vspace=3 src="http://<?= $_SERVER['SERVER_NAME'] . $SysValue['dir']['dir'] ?>/phpshop/admpanel/img/action_print.gif">Распечатать</a> | <a href="#" class="save" onclick="document.execCommand('SaveAs');
-        return false;">Сохранить на диск<img border=0 align=absmiddle hspace=3 vspace=3 src="http://<?= $_SERVER['SERVER_NAME'] . $SysValue['dir']['dir'] ?>/phpshop/admpanel/img/action_save.gif"></a><br><br></div>
+        return false;" >Распечатать</a><br><br></div>
 
     <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0><TBODY>
             <TR>

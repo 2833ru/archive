@@ -5,9 +5,9 @@
 class AddToTemplate extends PHPShopProductElements {
     var $debug=false;
 
-    function AddToTemplate() {
+    function __construct() {
         $this->objBase=$GLOBALS['SysValue']['base']['products'];
-        parent::PHPShopProductElements();
+        parent::__construct();
     }
 
     function showcase() {

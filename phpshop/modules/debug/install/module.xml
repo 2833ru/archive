@@ -3,15 +3,10 @@
     <version>1.2</version>
     <name>Debug</name>
     <faqlink>http://faq.phpshop.ru/page/debug.html</faqlink>
-<description>Отладочный модуль для разработчиков.</description>
-    <icon>icon.png</icon>
+    <description>Отладочный модуль для разработчиков.</description>
     <category>develop</category>
     <adminmenu>
         <title>Debug</title>
-        <podmenu>
-            <podmenu_name>Настройка Debug</podmenu_name>
-            <podmenu_icon>icon.png</podmenu_icon>
-            <podmenu_action>javascript:miniWin('../modules/debug/admpanel/adm_module.php',510,450);</podmenu_action>
-        </podmenu>
+        <capability>true</capability>
     </adminmenu>
 </module>

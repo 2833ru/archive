@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.4</version>
+    <version>1.3</version>
     <name>SocAuth</name>
     <faqlink>http://faq.phpshop.ru/page/socauth.html</faqlink>
     <description>Модуль авторизации через facebook, twitter.</description>
-    <icon>icon.png</icon>
     <category>soc</category>
     <adminmenu>
         <title>SocAuth</title>
-        <podmenu>
-            <podmenu_name>Настройка SocAuth</podmenu_name>
-            <podmenu_icon>icon.png</podmenu_icon>
-            <podmenu_action>javascript:miniWin('../modules/socauth/admpanel/adm_module.php',510,450);</podmenu_action>
-        </podmenu>
+        <capability>true</capability>
     </adminmenu>
     <history>
         <update>
@@ -22,10 +17,6 @@
         <update>
             <date>15.10.2013</date>
             <content>Обновлена логига работы модуля в связи с изменениями в PHPShop Framework</content>
-        </update>
-	     <update>
-            <date>1.10.2015</date>
-            <content>Добавлена поддержка кириллических доменов для API VK</content>
         </update>
     </history>
 </module>

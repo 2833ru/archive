@@ -2,15 +2,11 @@
 <module>
     <version>1.7</version>
     <name>Seo Url Pro</name>
+    <faqlink>http://faq.phpshop.ru/page/seo-url.html</faqlink>
     <description>Модуль расширенных Seo ссылок</description>
-    <icon>icon.png</icon>
     <category>seo</category>
     <adminmenu>
         <title>Seo Url Pro</title>
-        <podmenu>
-            <podmenu_name>Настройка Seo Url Pro</podmenu_name>
-            <podmenu_icon>icon.png</podmenu_icon>
-            <podmenu_action>javascript:miniWin('../modules/seourlpro/admpanel/adm_module.php',510,450);</podmenu_action>
-        </podmenu>
+        <capability>true</capability>
     </adminmenu>
 </module>

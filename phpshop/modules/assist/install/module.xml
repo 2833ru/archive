@@ -4,14 +4,9 @@
     <name>Assist</name>
     <faqlink>http://assist.ru</faqlink>
     <description>Прием оплат через Assist.</description>
-    <icon>icon.png</icon>
     <category>assist,sale</category>
     <adminmenu>
         <title>Прием оплат через Assist</title>
-        <podmenu>
-            <podmenu_name>Настройка</podmenu_name>
-            <podmenu_icon>icon.png</podmenu_icon>
-            <podmenu_action>javascript:miniWin('../modules/assist/admpanel/adm_module.php',510,450);</podmenu_action>
-        </podmenu>
+        <capability>true</capability>
     </adminmenu>
 </module>

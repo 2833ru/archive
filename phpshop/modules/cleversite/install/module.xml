@@ -1,17 +1,12 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.0</version>
+    <version>1.3</version>
     <name>Cleversite</name>
     <faqlink>http://faq.phpshop.ru/page/cleversite.html</faqlink>
     <description>Виджет чата и обратного звонка от Cleversite.</description>
-    <icon>cleversite.png</icon>
-    <category>user</category>
+     <category>user,sale</category>
      <adminmenu>
-        <title>Чат и обратный звонок от Cleversite</title>
-        <podmenu>
-            <podmenu_name>Настройка</podmenu_name>
-            <podmenu_icon>cleversite.png</podmenu_icon>
-            <podmenu_action>javascript:miniWin('../modules/cleversite/admpanel/adm_module.php',510,450);</podmenu_action>
-        </podmenu>
+        <title>Cleversite</title>
+        <capability>true</capability>
     </adminmenu>
 </module>

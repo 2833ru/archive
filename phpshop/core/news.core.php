@@ -12,10 +12,10 @@ class PHPShopNews extends PHPShopCore {
     /**
      * Конструктор
      */
-    function PHPShopNews() {
+    function __construct() {
 
         // Имя Бд
-        $this->objBase = $GLOBALS['SysValue']['base']['table_name8'];
+        $this->objBase = $GLOBALS['SysValue']['base']['news'];
 
         // Путь для навигации
         $this->objPath = "/news/news_";
@@ -25,9 +25,11 @@ class PHPShopNews extends PHPShopCore {
         $this->empty_index_action = true;
 
         // Список экшенов
-        $this->action = array('get' => 'timestamp', "nav" => array("index","ID"));
-        parent::PHPShopCore();
-        
+        $this->action = array('get' => 'timestamp', "nav" => array("index", "ID"));
+        parent::__construct();
+        // Имя Бд
+        $this->objBase = $GLOBALS['SysValue']['base']['news'];
+
         // Календарь
         $this->calendar();
     }
@@ -68,7 +70,15 @@ class PHPShopNews extends PHPShopCore {
         $this->setPaginator();
 
         // Мета
-        $this->title = "Новости - " . $this->PHPShopSystem->getValue("name");
+        $this->title = __("Новости")." - " . $this->PHPShopSystem->getValue("name");
+        $this->description = __('Новости') . '  ' . $this->PHPShopSystem->getValue("name");
+        $this->keywords = __('Новости') . ', ' . $this->PHPShopSystem->getValue("name");
+
+        $page = $this->PHPShopNav->getId();
+        if ($page > 1) {
+            $this->description.= ' Часть ' . $page;
+            $this->title.=' - Страница ' . $page;
+        }
 
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__, $this->dataArray, 'END');
@@ -165,99 +175,15 @@ class PHPShopNews extends PHPShopCore {
         $this->description = strip_tags($row['kratko']);
         $this->lastmodified = PHPShopDate::GetUnixTime($row['datas']);
 
+        // Генератор keywords
+        include('./phpshop/lib/autokeyword/class.autokeyword.php');
+        $this->keywords = callAutokeyword($row['kratko']);
+
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__, $row, 'END');
 
         // Подключаем шаблон
         $this->parseTemplate($this->getValue('templates.news_page_full'));
-    }
-
-    /**
-     * Экшен записи новости при получении $_POST[news_plus]
-     */
-    function news_plus() {
-        $mail = PHPShopSecurity::TotalClean($_POST['mail'], 3);
-
-        // Перехват модуля
-        if ($this->setHook(__CLASS__, __FUNCTION__, $_POST, 'START'))
-            return true;
-
-        switch ($_POST['status']) {
-
-            case("1"):
-                $this->write($mail);
-                break;
-
-            case("0"):
-                $this->del($mail);
-                break;
-        }
-
-        // Мета
-        $this->title = "Новости - Подписка - " . $this->PHPShopSystem->getValue("name");
-
-        // Перехват модуля
-        $this->setHook(__CLASS__, __FUNCTION__, $_POST, 'END');
-
-        $this->parseTemplate($this->getValue('templates.news_forma_mesage'));
-    }
-
-    /**
-     * Есть ли адрес в базе
-     * @param string $mail почта
-     * @return bool
-     */
-    function chek($mail) {
-        $PHPShopOrm = new PHPShopOrm($this->getValue('base.table_name9'));
-        $PHPShopOrm->debug = $this->debug;
-        $num = $PHPShopOrm->select(array('id'), array('mail' => "='$mail'"), false, array('limit' => 1));
-        if (empty($num['id']))
-            return true;
-    }
-
-    /**
-     * Добавление адреса  в БД
-     * @param string $mail
-     */
-    function write($mail) {
-
-        if (!empty($mail)) {
-
-            if ($this->chek($mail)) {
-                $PHPShopOrm = new PHPShopOrm($this->getValue('base.table_name9'));
-                $PHPShopOrm->debug = $this->debug;
-                $PHPShopOrm->insert(array('datas' => date("d.m.y"), 'mail' => $mail), $prefix = '');
-
-                // Сообщение пользователю
-                $mes = $this->message($this->lang('good_news_mesage_1'), $this->lang('good_news_mesage_2'));
-            } else {
-                // Сообщение пользователю
-                $mes = $this->message($this->lang('bad_news_mesage_1'), $this->lang('good_news_mesage_2'));
-            }
-        } else {
-            // Сообщение пользователю
-            $mes = $this->message($this->lang('bad_news_mesage_3'), $this->lang('good_news_mesage_2'));
-        }
-
-        $this->set('mesageText', $mes);
-    }
-
-    /**
-     * Удаление адреса из БД
-     * @param string $mail
-     */
-    function del($mail) {
-
-        if (!$this->chek($mail)) {
-            $PHPShopOrm = new PHPShopOrm($this->getValue('base.table_name9'));
-            $PHPShopOrm->debug = $this->debug;
-            $PHPShopOrm->delete(array('mail' => "='$mail'"));
-            $mes = $this->message($this->getValue('lang.bad_news_mesage_2'), $this->getValue('lang.good_news_mesage_2'));
-        } else {
-            $mes = $this->message($this->getValue('lang.bad_news_mesage_3'), $this->getValue('lang.good_news_mesage_2'));
-        }
-
-        $this->set('mesageText', $mes);
     }
 
     /**

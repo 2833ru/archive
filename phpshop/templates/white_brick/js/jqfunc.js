@@ -429,7 +429,7 @@ $(document).ready(function() {
 
     // формат ввода телефона
     $("form[name='forma_order'], input[name=returncall_mod_tel],input[name=tel]").on('click', function() {
-        if (PHONE_FORMAT && PHONE_MASK) {
+        if (PHONE_FORMAT && PHONE_MASK && $('.hidden-phone').is(":visible")) {
             $('input[name=tel_new], input[name=returncall_mod_tel],input[name=tel]').mask(PHONE_MASK);
         }
     });

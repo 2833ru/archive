@@ -3,20 +3,14 @@
     <version>1.1</version>
     <name>Yandex Kassa</name>
     <faqlink>http://faq.phpshop.ru/page/yandex-kassa.html</faqlink>
-    <description>Прием оплат через Яндекс.Касса.</description>
-    <icon>icon.png</icon>
+    <description>Прием оплат через Яндекс.Касса для юридических лиц.</description>
     <category>yandex,sale</category>
     <adminmenu>
-        <title>Прием оплат через Яндекс.Касса</title>
-        <podmenu>
-            <podmenu_name>Настройка</podmenu_name>
-            <podmenu_icon>icon.png</podmenu_icon>
-            <podmenu_action>javascript:miniWin('../modules/yandexkassa/admpanel/adm_module.php',510,480);</podmenu_action>
-        </podmenu>
+        <title>Яндекс.Касса</title>
+        <capability>true</capability>
         <podmenu>
             <podmenu_name>Журнал операций</podmenu_name>
-            <podmenu_icon>log.png</podmenu_icon>
-            <podmenu_action>javascript:DoReload('modules','yandexkassa');</podmenu_action>
+            <podmenu_action>dir.yandexkassa</podmenu_action>
         </podmenu>
     </adminmenu>
 </module>

@@ -53,7 +53,7 @@ if (PHPShopSecurity::true_param($_GET['tip'], $_GET['orderId'], $_GET['datas']))
 
     $PHPShopOrm = new PHPShopOrm();
     $result = $PHPShopOrm->query("select id from " . $SysValue['base']['table_name1'] . " where id='$orderId' and datas=" . $datas);
-    $n = mysql_num_rows($result);
+    $n = mysqli_num_rows($result);
 
     if (empty($n))
         exit("Неавторизованный пользователь!");

@@ -49,14 +49,14 @@ class PHPShopShop extends PHPShopShopCore {
     /**
      * Конструктор
      */
-    function PHPShopShop() {
+    function __construct() {
 
         // Размещение
         $this->path = '/' . $GLOBALS['SysValue']['nav']['path'];
 
         // Список экшенов
         $this->action = array("nav" => array("CID", "UID"));
-        parent::PHPShopShopCore();
+        parent::__construct();
 
         $this->PHPShopOrm->cache_format = $this->cache_format;
 
@@ -128,7 +128,7 @@ class PHPShopShop extends PHPShopShopCore {
                 $this->set('productFiles', '');
                 foreach ($files as $cfile) {
                     $this->set('productFiles', PHPShopText::img('images/shop/action_save.gif', 3, 'absmiddle'), true);
-                    $this->set('productFiles', PHPShopText::a($cfile, basename($cfile), basename($cfile), false, false, '_blank'), true);
+                    $this->set('productFiles', PHPShopText::a($cfile['path'], urldecode($cfile['name']), urldecode($cfile['name']), false, false, '_blank'), true);
                     $this->set('productFiles', PHPShopText::br(), true);
                 }
             } else {
@@ -171,19 +171,21 @@ class PHPShopShop extends PHPShopShopCore {
         $dis = null;
         if (strstr($row['page'], ','))
             $pages = explode(",", $row['page']);
+        else
+            $pages = array($row['page']);
 
         if (!empty($pages) and is_array($pages)) {
             foreach ($pages as $val) {
                 if ($val) {
                     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['table_name11']);
-                    $row = $PHPShopOrm->select(array('name'), array('link' => "='" . $val . "'"));
+                    $data = $PHPShopOrm->select(array('name'), array('link' => "='" . $val . "'"));
 
-                    if (is_array($row)) {
+                    if (is_array($data)) {
                         $this->set('pageLink', $val);
-                        $this->set('pageName', $row['name']);
+                        $this->set('pageName', $data['name']);
 
                         // Перехват модуля
-                        $this->setHook(__CLASS__, __FUNCTION__, $row, 'MIDDLE');
+                        $this->setHook(__CLASS__, __FUNCTION__, $data, 'MIDDLE');
 
                         // Подключаем шаблон
                         $dis.=ParseTemplateReturn($this->getValue('templates.product_pagetema_forma'));
@@ -205,7 +207,7 @@ class PHPShopShop extends PHPShopShopCore {
         }
 
         // Перехват модуля
-        $this->setHook(__CLASS__, __FUNCTION__, $row, 'END');
+        $this->setHook(__CLASS__, __FUNCTION__, $data, 'END');
     }
 
     /**
@@ -479,7 +481,7 @@ class PHPShopShop extends PHPShopShopCore {
             $PHPShopOrm = new PHPShopOrm();
             $PHPShopOrm->debug = $this->debug;
             $result = $PHPShopOrm->query("select * from " . $this->objBase . " where (" . $odnotipList . ") " . $chek_items . " and  enabled='1' and parent_enabled='0' and sklad!='1' order by num");
-            while ($row = mysql_fetch_assoc($result))
+            while ($row = mysqli_fetch_assoc($result))
                 $data[] = $row;
 
             // Сетка товаров
@@ -548,7 +550,7 @@ class PHPShopShop extends PHPShopShopCore {
         // Цена главного товара
         if (!empty($row['price']) and empty($row['priceSklad']) and (!empty($row['items']) or (empty($row['items']) and $sklad_status == 1))) {
             $this->select_value[] = array($row['name'] . " -  (" . $this->price($row) . "
-                    " . $this->get('productValutaName') . ')', $row['id'], $row['items']);
+                    " . $this->currency . ')', $row['id'], $row['items']);
         } else {
             $this->set('ComStartNotice', PHPShopText::comment('<'));
             $this->set('ComEndNotice', PHPShopText::comment('>'));
@@ -562,19 +564,26 @@ class PHPShopShop extends PHPShopShopCore {
                     // Если товар на складе
                     if (empty($p['priceSklad']) and (!empty($p['items']) or (empty($p['items']) and $sklad_status == 1))) {
                         $price = $this->price($p);
-                        $this->select_value[] = array($p['name'] . ' -  (' . $price . ' ' . $this->get('productValutaName') . ')', $p['id'], $p['items']);
+                        $this->select_value[] = array($p['name'] . ' -  (' . $price . ' ' . $this->currency . ')', $p['id'], $p['items']);
                     }
                 }
             }
+
+        // Не показывать цену главного товара
+        if (empty($this->parent_price_enabled)) {
+            array_shift($this->select_value);
+            $this->set('productPrice', '');
+            $this->set('productPriceRub', '');
+            $this->set('productValutaName', '');
+        }
+
 
         if (count($this->select_value) > 0) {
             $this->set('parentList', PHPShopText::select('parentId', $this->select_value, "; max-width:300px;"));
             $this->set('productParentList', ParseTemplateReturn("product/product_odnotip_product_parent.tpl"));
         }
 
-        $this->set('productPrice', '');
-        $this->set('productPriceRub', '');
-        $this->set('productValutaName', '');
+
 
         // Перехват модуля в конце функции
         $this->setHook(__CLASS__, __FUNCTION__, $row, 'END');
@@ -821,7 +830,7 @@ function other_cat_navigation($parent) {
             else
                 $class = null;
 
-            $dis.=PHPShopText::a($this->path . '/CID_' . $row['id'] . '.html', $row['name'], false, false, false, false, $class);
+            $dis.=PHPShopText::a('/shop/CID_' . $row['id'] . '.html', $row['name'], false, false, false, false, $class);
             $dis.=' | ';
         }
     }
@@ -839,7 +848,7 @@ function other_cat_navigation($parent) {
                 else
                     $class = null;
 
-                $dis.=PHPShopText::a($this->path . '/CID_' . $row['id'] . '.html', $row['name'], false, false, false, false, $class);
+                $dis.=PHPShopText::a('/shop/CID_' . $row['id'] . '.html', $row['name'], false, false, false, false, $class);
                 $dis.=' | ';
             }
     }
@@ -928,7 +937,7 @@ function CID_Category() {
         }
         else {
             foreach ($dataArray as $row) {
-                $dis.=PHPShopText::li($row['name'], $this->path . '/CID_' . $row['id'] . '.html');
+                $dis.=PHPShopText::li($row['name'], '/shop/CID_' . $row['id'] . '.html');
             }
             $disp = PHPShopText::ul($dis);
         }

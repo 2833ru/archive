@@ -3,7 +3,6 @@
 /**
  * Обработчик оповещения о платеже Ligpay
  */
-
 session_start();
 
 $_classPath = "../../../";
@@ -27,7 +26,7 @@ class LiqPayment extends PHPShopPaymentResult {
     function LiqPayment() {
 
         $this->option();
-        parent::PHPShopPaymentResult();
+        parent::__construct();
     }
 
     /**

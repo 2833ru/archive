@@ -3,9 +3,11 @@
 /**
  * Библиотека подключения к БД
  * @author PHPShop Software
- * @version 1.5
+ * @version 1.7
  * @package PHPShopClass
  * @param string $iniPath путь до конфигурационного файла config.ini
+ * @param bool $connectdb подключение к MySQL
+ * @param bool $error блокировка ошибок
  */
 class PHPShopBase {
 
@@ -49,12 +51,15 @@ class PHPShopBase {
      * Подключения к БД
      * @param string $iniPath путь до конфигурационного файла config.ini
      * @param bool $connectdb подюченеи к БД
-     * @param bool $error обработка ошибок PHP
+     * @param bool $error блокировка ошибок PHP
      */
-    function PHPShopBase($iniPath, $connectdb = true, $error = false) {
+    function __construct($iniPath, $connectdb = true, $error = false) {
 
         // Временная зона
         $this->setTimeZone();
+
+        // UTF-8 Fix
+        $this->fixUTF();
 
         // Отладка ядра
         $this->setPHPCoreReporting($error);
@@ -69,7 +74,7 @@ class PHPShopBase {
         $GLOBALS['SysValue'] = &$this->SysValue;
 
         if (!empty($connectdb))
-            $this->connect();
+            $this->link_db = $this->connect();
     }
 
     /**
@@ -121,47 +126,50 @@ class PHPShopBase {
      * @param string $error текст ошибки
      */
     function errorConnect($e = false, $message = "Нет соединения с базой", $error = false) {
+        global $link_db;
 
         if (is_dir($_SERVER['DOCUMENT_ROOT'] . '/install/') and $e != 105)
             header('Location: /install/');
         else {
-            echo "<strong>$message</strong> ( <a href='http://www.phpshop.ru/help/Content/install/phpshop.html#6' target='_blank'>Error $e</a> )<br><em>Ошибка: " . $error . mysql_error() . "</em>";
-            echo '<script>window.open("http://www.phpshop.ru/help/Content/install/phpshop.html#6");</script>';
+            $message = '<strong>' . $message . '</strong><br><em>Ошибка: ' . $error . @mysqli_error($link_db) . '</em>';
         }
-        exit();
+
+        if (function_exists('ParseTemplateReturn')) {
+            $GLOBALS['SysValue']['other']['message'] = $message;
+            $GLOBALS['SysValue']['other']['title'] = $e;
+            exit(ParseTemplateReturn('phpshop/lib/templates/error/error.tpl', true));
+        } elseif (class_exists('PHPShopObj')) {
+            PHPShopObj::loadClass('parser');
+            PHPShopParser::set('message', $message);
+            PHPShopParser::set('title', $e);
+            exit(PHPShopParser::file($_SERVER['DOCUMENT_ROOT'] . '/phpshop/lib/templates/error/error.tpl'));
+        }
+        else
+            exit($message);
     }
 
     /**
      * Соединение с БД MySQL
      */
     function connect() {
-        $SysValue = $this->SysValue;
-        @mysql_connect($this->getParam("connect.host"), $this->getParam("connect.user_db"), $this->getParam("connect.pass_db")) or die($this->errorConnect(101));
-        mysql_select_db($SysValue['connect']['dbase']) or die($this->errorConnect(101));
-        mysql_query("SET NAMES '" . $this->codBase . "'");
+        global $link_db;
+        $link_db = @mysqli_connect($this->getParam("connect.host"), $this->getParam("connect.user_db"), $this->getParam("connect.pass_db")) or die($this->errorConnect(101));
+        mysqli_select_db($link_db, $this->getParam("connect.dbase")) or die($this->errorConnect(101));
+        mysqli_query($link_db, "SET NAMES '" . $this->codBase . "'");
+
+        return $link_db;
     }
 
     /**
      * Проверка прав администратора
-     * @param bool $require загрузка проверочного файла
      */
-    function chekAdmin($require = true) {
-        global $UserChek, $UserStatus;
-        $adminPath = explode("../", $this->iniPath);
-        $aPath = null;
-        $i = 2;
-        while (count($adminPath) > $i) {
-            $aPath.="../";
-            $i++;
-        }
-        $loadPath = $aPath . "enter_to_admin.php";
-        if ($require) {
-            require_once($loadPath);
-            PHPShopObj::loadClass('admrule');
-            $this->Rule = new PHPShopAdminRule();
-        }
-        else
-            return $loadPath;
+    function chekAdmin() {
+
+        // Portable PHP password hashing framework.
+        require_once dirname(__FILE__) . '/../lib/phpass/passwordhash.php';
+
+        PHPShopObj::loadClass('admrule');
+        $this->Rule = new PHPShopAdminRule();
     }
 
     /**
@@ -171,12 +179,11 @@ class PHPShopBase {
      * @return int
      */
     function getNumRows($from_base, $query) {
-        $num = 0;
         $sql = "select COUNT('id') as count from " . $this->SysValue['base'][$from_base] . " " . $query;
-        $result = mysql_query($sql);
-        $row = mysql_fetch_array(@$result);
+        $result = mysqli_query($this->link_db, $sql);
+        $row = mysqli_fetch_array(@$result);
         $num = $row['count'];
-        return $num;
+        return intval($num);
     }
 
     /**
@@ -196,13 +203,38 @@ class PHPShopBase {
     }
 
     /**
+     * UTF-8 Fix
+     */
+    function fixUTF() {
+
+        //  UTF-8 Default Charset Fix
+        if (stristr(ini_get("default_charset"), "utf") and function_exists('ini_set')) {
+            ini_set("default_charset", "cp1251");
+        }
+
+        // UTF-8 Env Fix
+        if (ini_get("mbstring.func_overload") > 0 and function_exists('ini_set')) {
+            ini_set("mbstring.internal_encoding", null);
+        }
+    }
+
+    /**
      *  Настройка уровня оповещения отладчика
      */
     function setPHPCoreReporting($error) {
-        if (empty($error) and function_exists('error_reporting')) {
-            error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT);
-            if ($this->phpversion() and function_exists('ini_set')) {
-                ini_set('allow_call_time_pass_reference', 1);
+        if (function_exists('error_reporting')) {
+            if (empty($error)) {
+                error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT);
+                if ($this->phpversion() and function_exists('ini_set')) {
+                    ini_set('allow_call_time_pass_reference', 1);
+                }
+            }
+            else
+                error_reporting(0);
+
+            // Short Open Tag 
+            if (ini_get("short_open_tag") == 0) {
+                ini_set('short_open_tag', 1);
             }
         }
     }
@@ -217,7 +249,5 @@ class PHPShopBase {
             return true;
     }
 
-   
 }
-
 ?>

@@ -8,7 +8,7 @@
  * @return string
  */
 function makeCalendar($year, $month) {
-    global $SysValue;
+    global $SysValue,$link_db;
 
     // Получаем номер дня недели для 1 числа месяца. Корректируем
     // его, чтобы воскресенье соответствовало числу 7, а не числу 0.
@@ -32,9 +32,9 @@ function makeCalendar($year, $month) {
                 $timeststart=mktime(0,0,0,$month,$n,$year);
                 $timestend=mktime(23,59,59,$month,$n,$year);
                 $sql="select * from ".$SysValue['base']['table_name8']." where ((datau>=".$timeststart.") AND (datau<=".$timestend."));";
-                $result=mysql_query($sql);
+                $result=mysqli_query($link_db,$sql);
                 @$SysValue['sql']['num']++;
-                @$num_rows=mysql_num_rows($result);
+                @$num_rows=mysqli_num_rows($result);
                 if ($num_rows) {
                     $row[]='<A href="../news/?timestamp='.$timeststart.'"><B>'.$n.'</B></A>';
                 } else {
@@ -91,7 +91,7 @@ function moname($mo="1") {
  * @return string
  */
 function calendar($obj,$year=false,$month=false) {
-    global $SysValue,$PHPShopSystem;
+    global $SysValue,$PHPShopSystem,$link_db;
 
         
     $disp=null;
@@ -138,9 +138,9 @@ function calendar($obj,$year=false,$month=false) {
         // Проверяем было ли что год назад
         $timestampyear=mktime(0,0,0,1,1,$year);
         $sql="select * from ".$SysValue['base']['table_name8']." where ((datau<=".$timestampyear."));";
-        //$result=mysql_query($sql);
+        $result=mysqli_query($link_db,$sql);
         @$SysValue['sql']['num']++;
-        @$num_rows=mysql_num_rows($result);
+        @$num_rows=mysqli_num_rows($result);
         // ПРоверяем было ли что год назад
 
         if ($num_rows) {
@@ -152,9 +152,9 @@ function calendar($obj,$year=false,$month=false) {
         // Проверяем было ли что месяц назад
         $timestampyear=mktime(0,0,0,$month,1,$year);
         $sql="select * from ".$SysValue['base']['table_name8']." where ((datau<=".$timestampyear."));";
-        $result=mysql_query($sql);
+        $result=mysqli_query($link_db,$sql);
         @$SysValue['sql']['num']++;
-        @$num_rows=mysql_num_rows($result);
+        @$num_rows=mysqli_num_rows($result);
         //ПРоверяем было ли что месяц назад
 
 
@@ -168,9 +168,9 @@ function calendar($obj,$year=false,$month=false) {
                 $timestamps=mktime(0,0,0,$mm-1,1,$year);
                 $timestampe=mktime(0,0,0,$mm,1,$year);
                 $sql="select * from ".$SysValue['base']['table_name8']." where ((datau>=".$timestamps.") AND (datau<=".$timestampe."));";
-                $result=mysql_query($sql);
+                $result=mysqli_query($link_db,$sql);
                 @$SysValue['sql']['num']++;
-                @$num_rows=mysql_num_rows($result);
+                @$num_rows=mysqli_num_rows($result);
                 if ($num_rows) {
                     $go=1;
                 } else {
@@ -188,9 +188,9 @@ function calendar($obj,$year=false,$month=false) {
         // Проверяем есть ли что месяц вперед
         $timestampyear=mktime(0,0,0,$month+1,1,$year);
         $sql="select * from ".$SysValue['base']['table_name8']." where ((datau>=".$timestampyear."));";
-        $result=mysql_query($sql);
+        $result=mysqli_query($link_db,$sql);
         @$SysValue['sql']['num']++;
-        @$num_rows=mysql_num_rows($result);
+        @$num_rows=mysqli_num_rows($result);
         // Проверяем есть ли что месяц вперед
 
         if ($num_rows) {
@@ -208,9 +208,9 @@ function calendar($obj,$year=false,$month=false) {
                         $timestamps=mktime(0,0,0,$mm+1,1,$year);
                         $timestampe=mktime(0,0,0,$mm+2,1,$year);
                         $sql="select * from ".$SysValue['base']['table_name8']." where ((datau>=".$timestamps.") AND (datau<=".$timestampe."));";
-                        $result=mysql_query($sql);
+                        $result=mysqli_query($link_db,$sql);
                         @$SysValue['sql']['num']++;
-                        @$num_rows=mysql_num_rows($result);
+                        @$num_rows=mysqli_num_rows($result);
                         if ($num_rows) {
                             $go=1;
                         } else {

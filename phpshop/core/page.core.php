@@ -27,7 +27,7 @@ class PHPShopPage extends PHPShopCore {
     /**
      * Конструктор
      */
-    function PHPShopPage() {
+    function __construct() {
 
         // Имя Бд
         $this->objBase = $GLOBALS['SysValue']['base']['page'];
@@ -36,7 +36,7 @@ class PHPShopPage extends PHPShopCore {
         $this->action = array("nav" => "CID");
         $this->empty_index_action=true;
         
-        parent::PHPShopCore();
+        parent::__construct();
     }
 
     /**
@@ -46,7 +46,7 @@ class PHPShopPage extends PHPShopCore {
     function odnotip($row) {
         global $PHPShopProductIconElements;
 
-        $this->odnotip_setka_num = 1;
+        //$this->odnotip_setka_num = 2;
         $this->line = false;
         $this->template_odnotip = 'main_spec_forma_icon';
 
@@ -84,7 +84,7 @@ class PHPShopPage extends PHPShopCore {
             $PHPShopOrm = new PHPShopOrm();
             $PHPShopOrm->debug = $this->debug;
             $result = $PHPShopOrm->query("select * from " . $this->getValue('base.products') . " where (" . $odnotipList . ") " . $chek_items . " and  enabled='1' and parent_enabled='0' and sklad!='1' order by num");
-            while ($row = mysql_fetch_assoc($result))
+            while ($row = mysqli_fetch_assoc($result))
                 $data[] = $row;
 
             // Сетка товаров
@@ -146,7 +146,7 @@ class PHPShopPage extends PHPShopCore {
         $PHPShopOrm = new PHPShopOrm();
         $PHPShopOrm->debug = $this->debug;
         $result = $PHPShopOrm->query("select * from " . $this->objBase . " where link='$link' and enabled='1' $sort limit 1");
-        $row = mysql_fetch_array($result);
+        $row = mysqli_fetch_array($result);
 
         // Прикрываем страницу от дубля
         if ($row['category'] == 2000)

@@ -1,7 +1,6 @@
 <?php
 
 function checkStore_productoption_element_hook($obj,$row) {
-   
     $obj->set('productOption1',$row['option1']);
     $obj->set('productOption2',$row['option2']);
     $obj->set('productOption3',$row['option3']);

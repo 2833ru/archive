@@ -12,12 +12,24 @@
         <meta name="domen-copyright" content="@pageDomen@">
         <meta content="General" name="rating">
         <meta name="ROBOTS" content="ALL">
-        <link href="@pageCss@" type="text/css" rel="stylesheet">
-        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-        <link rel="icon" href="/favicon.ico" type="image/x-icon">
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+        <link rel="icon" href="/favicon.ico"> 
 
         <!-- Bootstrap -->
         <link id="bootstrap_theme" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/@bootstrap_theme@.css" rel="stylesheet">
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+    <body id="body">
+        
+        <!-- Template -->
+        <link href="@pageCss@" type="text/css" rel="stylesheet">
+        
+        <!-- Bar -->
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/bar.css" rel="stylesheet">
 
         <!-- Font-awesome -->
@@ -29,18 +41,8 @@
         <!-- Highslide -->
         <link href="java/highslide/highslide.css" rel="stylesheet">
 
-
-        <!-- Formstyler -->
-        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/jquery.formstyler.css" rel="stylesheet" /> 
-
-        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-        <!--[if lt IE 9]>
-          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-        <![endif]-->
-    </head>
-
-    <body role="document" id="body">
+        <!-- Bootstrap-select -->
+        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/bootstrap-select.min.css" rel="stylesheet"> 
 
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery-1.11.0.min.js"></script>
@@ -59,7 +61,7 @@
                                 @usersDisp@
                                 <li role="presentation">@wishlist@</li>
                                 <li role="presentation"><a href="/compare/"><span class="glyphicon glyphicon-eye-open"></span> Сравнить (<span id="numcompare">@numcompare@</span>)</a></li>
-                                <li role="presentation" class="@cart_active@"><a href="/order/"><span class="glyphicon glyphicon-gift"></span> Оформить заказ</a></li>
+                                <li role="presentation" class="@cart_active@" id="order"><a href="/order/"><span class="glyphicon glyphicon-gift"></span> Оформить заказ</a></li>
                             </ul>
                         </div>
                     </div>
@@ -86,8 +88,8 @@
             <div class="container">
                 <div class="navbar-header">
 
-                    <a class="navbar-brand visible-xs" href="tel:@telNum@">
-                        <span class="glyphicon glyphicon-phone"></span> @telNum@
+                    <a class="navbar-brand visible-xs" href="tel:@telNumMobile@">
+                        <span class="glyphicon glyphicon-phone"></span> @telNumMobile@
                     </a>
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
                         <span class="sr-only">Toggle navigation</span>
@@ -103,7 +105,7 @@
                         <li class="active visible-lg"><a href="/" title="Домой"><span class="glyphicon glyphicon-home"></span></a></li>
 
                         <!-- dropdown catalog menu -->
-                        <li id="catalog-dropdown" class="dropdown visible-lg visible-md visible-sm">
+                        <li id="catalog-dropdown" class="visible-lg visible-md visible-sm">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Каталог <b class="caret"></b></a>        
                             <ul class="dropdown-menu mega-menu">
                                 @leftCatal@
@@ -139,7 +141,7 @@
         <!-- Notification -->
         <div id="notification" class="success-notification" style="display:none">
             <div  class="alert alert-success alert-dismissible" role="alert">
-                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">x</span><span class="sr-only">Close</span></button>
                 <span class="notification-alert"> </span>
             </div>
         </div>
@@ -199,6 +201,7 @@
 
 
                     <div class="visible-xs visible-sm">@leftCatalTable@</div>
+         
 
                 </div>
             </div>
@@ -211,7 +214,7 @@
 
             <footer class="footer well visible-lg visible-md">
                 <div class="pull-right">@button@</div>
-                <p itemscope itemtype="http://schema.org/Organization">&copy; <span itemprop="name">@company@</span> @year@, Тел: <span itemprop="telephone">@telNum@</span>, <span itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">Адрес: <span itemprop="streetAddress">@streetAddress@</span></span><span itemprop="email" class="hide">@adminMail@</span></p>
+                <p itemscope itemtype="http://schema.org/Organization">© <span itemprop="name">@company@</span> @year@, Тел: <span itemprop="telephone">@telNum@</span>, <span itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">Адрес: <span itemprop="streetAddress">@streetAddress@</span></span><span itemprop="email" class="hide">@adminMail@</span></p>
             </footer>
         </div>
 
@@ -220,7 +223,7 @@
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">x</span><span class="sr-only">Close</span></button>
                         <h4 class="modal-title">Поиск</h4>
                     </div>
                     <div class="modal-body">
@@ -244,12 +247,12 @@
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">x</span><span class="sr-only">Close</span></button>
                         <h4 class="modal-title">Авторизация</h4>
                         <span id="usersError" class="hide">@usersError@</span>
                     </div>
                     <form role="form" method="post" name="user_forma">
-                    <div class="modal-body">
+                        <div class="modal-body">
                             <div class="form-group">
                                 <label>Email</label>
                                 <input type="email" name="login" class="form-control" placeholder="Email..." required="">
@@ -267,15 +270,15 @@
                                 </label>
                             </div>
 
-                                @facebookAuth@ @twitterAuth@
-                    </div>
-                    <div class="modal-footer">
-                        <span class="pull-left"><a href="/users/sendpassword.html" class="btn btn-default">Забыли?</a>
-                        </span>
-                        <input type="hidden" value="1" name="user_enter">
-                        <button type="submit" class="btn btn-primary">Войти</button>
-                    </div>
-                     </form>   
+                            @facebookAuth@ @twitterAuth@
+                        </div>
+                        <div class="modal-footer">
+                            <span class="pull-left"><a href="/users/sendpassword.html" class="btn btn-default">Забыли?</a>
+                            </span>
+                            <input type="hidden" value="1" name="user_enter">
+                            <button type="submit" class="btn btn-primary">Войти</button>
+                        </div>
+                    </form>   
                 </div>
             </div>
         </div>
@@ -307,8 +310,8 @@
         </nav>
         <!--/ Fixed mobile bar -->
 
-        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/bootstrap.js"></script>
-        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.formstyler.js"></script>
+        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/bootstrap.min.js"></script>
+        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/bootstrap-select.min.js"></script>
         <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@/js/phpshop.js"></script>
         <script src="java/jqfunc.js"></script>
         <script src="java/highslide/highslide-p.js"></script>

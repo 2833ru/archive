@@ -25,14 +25,14 @@ class PHPShopBlogElement extends PHPShopElements {
     /**
      * Конструктор
      */
-    function PHPShopBlogElement() {
+    function __construct() {
 
         // Отладка
         $this->debug = false;
 
         // Имя Бд
         $this->objBase = $GLOBALS['SysValue']['base']['blog']['blog_log'];
-        parent::PHPShopElements();
+        parent::__construct();
         $this->option();
     }
 

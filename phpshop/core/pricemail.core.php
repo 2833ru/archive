@@ -11,7 +11,7 @@ class PHPShopPricemail extends PHPShopCore {
     /**
      * Конструктор
      */
-    function PHPShopPricemail() {
+    function __construct() {
         // Имя Бд
         $this->objBase = $GLOBALS['SysValue']['base']['table_name17'];
 
@@ -20,7 +20,7 @@ class PHPShopPricemail extends PHPShopCore {
 
         // список экшенов
         $this->action = array("nav" => "index", "post" => "send_price_link");
-        parent::PHPShopCore();
+        parent::__construct();
     }
 
     /**

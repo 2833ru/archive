@@ -14,7 +14,7 @@ function button_footer_hook() {
 
         if(is_array($data))
             foreach($data as $row) {
-                $dis.=' '.$row['content'];
+                $dis.=' '.str_replace('&#43;', '+',$row['content']);
             }
 
         $GLOBALS['SysValue']['other']['button_forms']=$dis;

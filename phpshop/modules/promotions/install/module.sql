@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS `phpshop_modules_promotions_forms`;
 CREATE TABLE IF NOT EXISTS `phpshop_modules_promotions_forms` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
-  `enabled` enum('0','1') NOT NULL,
+  `enabled` enum('0','1') NOT NULL DEFAULT '0',
   `description` text NOT NULL,
   `active_check` enum('0','1') NOT NULL,
   `active_date_ot` varchar(255) NOT NULL,

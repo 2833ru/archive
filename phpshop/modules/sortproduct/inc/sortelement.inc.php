@@ -12,8 +12,8 @@ class AddToTemplateSortProductElement extends PHPShopElements {
     /**
      * Конструктор
      */
-    function AddToTemplateSortProductElement() {
-        parent::PHPShopElements();
+    function __construct() {
+        parent::__construct();
         $this->option();
 
         // Учет модуля SEOURL

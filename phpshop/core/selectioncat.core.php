@@ -16,11 +16,11 @@ class PHPShopSelectioncat extends PHPShopShopCore {
     /**
      * Конструктор
      */
-    function PHPShopSelectioncat() {
+    function __construct() {
         
         // Список экшенов
         $this->action=array("get"=>"v",'nav'=>'index');
-        parent::PHPShopShopCore();
+        parent::__construct();
         $this->PHPShopOrm->cache_format=$this->cache_format;
     }
 

@@ -1,5 +1,4 @@
 <?php
-
 session_start();
 $_classPath = "../../../";
 
@@ -42,7 +41,7 @@ class AddToTemplateVisualCartAjax {
     /**
      * Конструктор
      */
-    function AddToTemplateVisualCartAjax() {
+    function __construct() {
 
         $this->option();
 
@@ -78,11 +77,13 @@ class AddToTemplateVisualCartAjax {
 
     /**
      * Удаление товары
-     * @param string $xid ИД товара
+     * @param int $xid ИД товара
      */
     function del($xid) {
-        $this->PHPShopCart->del($xid);
-        $this->clean_memory();
+        if (is_numeric($xid)) {
+            $this->PHPShopCart->del($xid);
+            $this->clean_memory();
+        }
     }
 
     /**
@@ -196,12 +197,7 @@ function visualcartform($val, $option) {
         PHPShopParser::set('visualcart_product_seo', null);
     }
 
-    // Проверка опции товара
-    if (!empty($val['option']))
-        PHPShopParser::set('visualcart_product_xid', $val['option']);
-    else
-        PHPShopParser::set('visualcart_product_xid', $val['id']);
-
+    PHPShopParser::set('visualcart_product_xid', $val['id']);
     PHPShopParser::set('visualcart_product_name', $val['name']);
     PHPShopParser::set('visualcart_product_pic_small', $val['pic_small']);
     PHPShopParser::set('visualcart_product_price', $val['price'] * $val['num']);
@@ -209,8 +205,8 @@ function visualcartform($val, $option) {
     PHPShopParser::set('visualcart_product_num', $val['num']);
 
     // Проверка персонального шаблона модуля
-    $path = '../templates/product.tpl';
-    $path_template = $_classPath . 'templates/' . $_SESSION['skin'] . '/modules/visualcart/templates/product.tpl';
+    $path='../templates/product.tpl';
+   $path_template =$_classPath. 'templates/'. $_SESSION['skin'].'/modules/visualcart/templates/product.tpl';
     if (is_file($path_template))
         $path = $path_template;
 
@@ -239,7 +235,7 @@ if (!empty($_SESSION['cart']))
 elseif (!empty($_REQUEST['xid']) and empty($_SESSION['cart'])) {
 
     $_RESULT = array(
-        "visualcart" => "<tr><td>" . $SysValue['lang']['visualcart_empty'] . "</td></tr>",
+        "visualcart" => "<tr><td>" . $GLOBALS['SysValue']['lang']['visualcart_empty'] . "</td></tr>",
         "sum" => $AddToTemplateVisualCartAjax->PHPShopCart->getSum(),
         "num" => $AddToTemplateVisualCartAjax->PHPShopCart->getNum()
     );
@@ -251,6 +247,8 @@ setcookie("cart_update_time", '', 0, "/", $_SERVER['SERVER_NAME'], 0);
 if ($_REQUEST['type'] == 'json') {
     $_RESULT['success'] = 1;
     $_RESULT['visualcart'] = PHPShopString::win_utf8($_RESULT['visualcart']);
-    echo json_encode($_RESULT);
+    
+    if(!isset($_REQUEST['load']))
+      echo json_encode($_RESULT);
 }
 ?>

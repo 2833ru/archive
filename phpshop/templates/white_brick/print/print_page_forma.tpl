@@ -1,84 +1,53 @@
-<!DOCTYPE html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<HTML>
-<HEAD>
-<TITLE>@pageTitl@</TITLE>
-<META http-equiv="Content-Type" content="text-html; charset=windows-1251">
-<META name="description" content="@pageDesc@">
-<META name="keywords" content="@pageKeyw@">
-<META name="copyright" content="@pageReg@">
-<style type="text/css">
-<!--
-body {
-	font-family: Tahoma;
-}
-P {
-	font: normal 11px Verdana, Arial, Helvetica, sans-serif;
-	word-spacing: normal;
-	white-space: normal;
-	margin: 5px 5px 5px 5px;
-	letter-spacing : normal;
-}
-TABLE {
-	font: normal 11px Verdana, Arial, Helvetica, sans-serif;
-}
-.sort_name_bg {
-	background-color: #F0F1F1;
-}
-.sort_table {
-	margin-top: 10px;
-	background-color: White;
-	BORDER-RIGHT: #d3d3d3 1px dashed;
-	PADDING-RIGHT: 5px;
-	BORDER-TOP: #d3d3d3 1px dashed;
-	PADDING-LEFT: 5px;
-	PADDING-BOTTOM: 5px;
-	BORDER-LEFT: #d3d3d3 1px dashed;
-	PADDING-TOP: 5px;
-	BORDER-BOTTOM: #d3d3d3 1px dashed;
-}
--->
-</style>
-<STYLE media="print" type="text/css">
-<!--
-.nonprint {
-	display: none;
-}
--->
-</STYLE>
-</HEAD>
-<BODY>
-<table border="0" cellpadding="5" cellspacing="5" width="100%">
-  <TR>
-    <TD><a href="http://@serverShop@"><IMG src="http://@serverShop@@logoShop@" alt="@nameShop@" border="0"></a> </TD>
-    <TD><H4>@nameShop@</H4>
-      @descripShop@ </TD>
-  </TR>
-</table>
-<TABLE border="0" cellpadding="5" cellspacing="5" width="100%">
-  <TR>
-    <TD colspan="2"><HR>
-    </TD>
-  </TR>
-  <TR>
-    <TD><div align="center" class="nonprint"><a href="#" onClick="window.print();return false;" style="color: #0078BD;"><img border=0 align=absmiddle hspace=3 vspace=3 src="http://@serverShop@images/shop/action_print.gif" >Распечатать</a> | <a href="#" onClick="document.execCommand('SaveAs');return false;" style="color: #0078BD;">Сохранить на диск<img border=0 align=absmiddle hspace=3 vspace=3 src="http://@serverShop@images/shop/action_save.gif"></a><br>
-        <br>
-      </div>
-      <a href="http://@serverShop@/shop/UID_@productId@.html"><IMG src="http://@serverShop@@productImg@" alt="@productName@" title="@productName@" border="0" hspace="10"></a> </TD>
-    <TD valign="top"><a href="http://@serverShop@/shop/UID_@productId@.html" style="text-decoration:none;color:black" title="@productName@">
-      <H4>@productName@ / @productPrice@ @productValutaName@</H4>
-      </a><br>
-      <div class="nonprint"> Ссылка: <a href="http://@serverShop@/shop/UID_@productId@.html" title="Перейти по ссылке: @productName@">http://@serverShop@/shop/UID_@productId@.html</a> </div>
-      @vendorDisp@ </TD>
-  </TR>
-  <TR>
-    <TD style="TEXT-ALIGN: justify" colspan="2"><BR>
-      <BR>
-      <B>Дополнительно:</B>
-      <P>@productDes@</P>
-      <P><BR>
-      </P></TD>
-  </TR>
-</TABLE>
-<HR>
-</BODY>
-</HTML>
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="windows-1251">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>@pageTitl@</title>
+        <meta name="description" content="@pageDesc@">
+        <meta name="keywords" content="@pageKeyw@">
+        <meta name="copyright" content="@pageReg@">
+
+        <!-- Bootstrap -->
+        <link id="bootstrap_theme" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/bootstrap.css" rel="stylesheet">
+        <link rel="stylesheet" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/font-awesome.css">
+
+    </head
+    <body>
+
+        <div class="container">
+            <div class="row">
+                <div class="span12">
+                    <p>
+                    <h3>@nameShop@</h3>
+                    @descripShop@
+                    <button onclick="window.print();" class="btn btn-default pull-right">
+                        <span class="icon-print"></span> Печать
+                    </button> 
+                    </p>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="span4">
+                    <a href="http://@serverShop@/shop/UID_@productId@.html"><IMG src="http://@serverShop@@productImg@" alt="@productName@" title="@productName@" border="0" hspace="10"></a>
+                </div>
+                <div class="span8">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+
+                            <h3 class="media-heading">@productName@</h3>
+
+                            <p>@vendorDisp@</p>
+                            <p>@productDes@</p>
+                            <h4>Цена: @productPrice@ @productValutaName@</h4>
+
+                            <a href="http://@serverShop@/shop/UID_@productId@.html" title="Перейти по ссылке: @productName@" class="pull-right"><span class="icon-share-alt"></span> http://@serverShop@/shop/UID_@productId@.html</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="hide">

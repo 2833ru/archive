@@ -117,7 +117,7 @@ class MoyskladRest {
 
     /**
      * ѕроверка товара по id
-     * @param string $user_email почта покупател€
+     * @param string $product_id код товара
      * @return type
      */
     function getProduct($product_id) {

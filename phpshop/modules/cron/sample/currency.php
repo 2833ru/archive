@@ -24,8 +24,8 @@ $uname = $SysValue['connect']['user_db'];
 // MySQL password
 $upass = $SysValue['connect']['pass_db'];
 
-$con = @mysql_connect($host, $uname, $upass) or die("Could not connect");
-$db = @mysql_select_db($dbname, $con) or die("Could not select db");
+$link_db = @mysqli_connect($host, $uname, $upass);
+mysqli_select_db($link_db,$dbname);
 
 $url = "http://www.cbr.ru/scripts/XML_daily.asp";
 $curs = $iso = array();
@@ -36,8 +36,8 @@ function get_timestamp($date) {
 }
 
 $sql = 'select * from `phpshop_valuta`';
-$result = mysql_query($sql);
-while (@$row = mysql_fetch_array(@$result)) {
+$result = mysqli_query($link_db,$sql);
+while (@$row = mysqli_fetch_array(@$result)) {
     $iso[]=$row['iso'];
 }
 
@@ -54,6 +54,6 @@ foreach ($xml->Valute as $m) {
 
 foreach ($curs as $key => $value) {
     $sql = "UPDATE `phpshop_valuta` SET `kurs` = '" . $value . "' WHERE `iso` ='" . $key . "';";
-    mysql_query($sql);
+    mysqli_query($link_db,$sql);
 }
 ?>

@@ -1,167 +1,141 @@
-<?
-require("../connect.php");
-@mysql_connect("$host", "$user_db", "$pass_db") or @die("Невозможно подсоединиться к базе");
-mysql_select_db("$dbase") or @die("Невозможно подсоединиться к базе");
-require("../enter_to_admin.php");
-require("../language/russian/language.php");
+<?php
 
-function Zero($a) {
+$TitlePage = __('Создание Администратора');
+$PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['users']);
+PHPShopObj::loadClass('user');
+
+function hidePassword($pas) {
+    $num = strlen($pas);
+    $i = 0;
+    $str = null;
+    while ($i < $num) {
+        $str.="X";
+        $i++;
+    }
+    return $str;
+}
+
+function rules_zero($a) {
     if ($a != 1)
         return 0;
     else
         return 1;
 }
-?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-    <head>
-        <title>Создание Администратора</title>
-        <META http-equiv=Content-Type content="text/html; charset=<?= $SysValue['Lang']['System']['charset'] ?>">
-        <LINK href="../skins/<?= $_SESSION['theme'] ?>/texts.css" type=text/css rel=stylesheet>
-        <LINK href="../skins/<?= $_SESSION['theme'] ?>/tab.css" type=text/css rel=stylesheet>
-        <SCRIPT language="JavaScript" src="/phpshop/lib/Subsys/JsHttpRequest/Js.js"></SCRIPT>
-        <script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
-        <script type="text/javascript" src="../java/tabpane.js"></script>
-    </head>
-    <body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0">
-        <table cellpadding="0" cellspacing="0" width="100%" height="50" id="title">
-            <tr bgcolor="#ffffff">
-                <td style="padding:10">
-                    <b><span name=txtLang id=txtLang>Создание Администратора</span></b><br>
-                    &nbsp;&nbsp;&nbsp;<span name=txtLang id=txtLang>Укажите данные для записи в базу</span>.
-                </td>
-                <td align="right">
-                    <img src="../img/i_groups_med[1].gif" border="0" hspace="10">
-                </td>
-            </tr>
-        </table>
-        <!-- begin tab pane -->
-        <div class="tab-pane" id="article-tab" style="margin-top:5px;">
 
-            <script type="text/javascript">
-                tabPane = new WebFXTabPane(document.getElementById("article-tab"), true);
-            </script>
+// Стартовый вид
+function actionStart() {
+    global $PHPShopGUI, $PHPShopModules;
 
-            <!-- begin intro page -->
-            <div class="tab-page" id="intro-page" style="height:320px">
-                <h2 class="tab"><span name=txtLang id=txtLang>Основное</span></h2>
-
-                <script type="text/javascript">
-                    tabPane.addTabPage(document.getElementById("intro-page"));
-                </script>
-                <table cellpadding="" cellspacing="5" border="0" align="center" width="100%">
-                    <form name="product_edit" method="post">
-                        <tr>
-                            <td colspan="3">
-                                <FIELDSET>
-                                    <LEGEND><span name=txtLang id=txtLang><u>И</u>мя</span></LEGEND>
-                                    <div style="padding:10">
-                                        <input type="text" name="name" value="" class=full>
-                                    </div>
-                                </FIELDSET>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="3">
-                                <FIELDSET>
-                                    <LEGEND><span name=txtLang id=txtLang><u>E</u>-mail</span></LEGEND>
-                                    <div style="padding:10">
-                                        <input type="text" name="mail" value="" size="30">  <input type="checkbox" value="1" name="pas_send" id="pas_send" checked> отослать рег. данные на почту
-                                    </div>
-                                </FIELDSET>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="3">
-                                <FIELDSET>
-                                    <LEGEND id=lgdLayout><span name=txtLang id=txtLang><u>Д</u>анные</span></LEGEND>
-                                    <div style="padding:10">
-                                        <table >
-                                            <tr>
-                                                <td>Пользователь</td>
-                                                <td width="10"></td>
-                                                <td><input type="text" name="login" id="login" value="" size="20"> ( не менее 4 символов )</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Пароль</td>
-                                                <td width="10"></td>
-                                                <td><input type="Password" name="password" id="pas1" onclick="this.value = ''" size="20" value=""> ( не менее 6 символов )</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Пароль еще раз</td>
-                                                <td width="10"></td>
-                                                <td><input type="Password" name="password" id="pas2" size="20" value=""> 
-                                                    <INPUT class=but type=button value="Сгенерировать" style="width:100" onclick="GenPassword('<?= "P" . substr(md5(date("U")), 0, 6) ?>')"> </td>
-                                            </tr>
-                                        </table>
-
-                                    </div>
-                                </FIELDSET>
-                            </td>
-                        </tr>
-                </table>
-            </div>
-            <hr>
-            <table cellpadding="0" cellspacing="0" width="100%" height="50" >
-                <tr>
-                    <td align="left" style="padding:10">
-                        <BUTTON class="help" onclick="helpWinParent('usersID')">Справка</BUTTON></BUTTON>
-                    </td>
-                    <td align="right" style="padding:10">
-                        <input type="button"  value="OK" class=but onclick="TestPas()">
-                        <input type="hidden" name="editID" value="1">
-                        <input type="reset" name="btnLang" class=but value="Сбросить">
-                        <input type="button" name="btnLang" value="Отмена" onClick="return onCancel();" class=but>
-                    </td>
-                </tr>
-            </table>
-        </form>
-        <?
-        if (isset($editID) and @$login != "") {// Запись редактирования
-            if (CheckedRules($UserStatus["users"], 2) == 1) {
-
-                $hasher = new PasswordHash(8, false);
-                $hash = $hasher->HashPassword($password);
-
-                $def_prava = 'a:23:{s:5:"gbook";s:5:"1-1-1";s:4:"news";s:5:"1-1-1";s:7:"visitor";s:7:"1-1-1-1";s:5:"users";s:7:"1-1-1-1";s:9:"shopusers";s:5:"1-1-1";s:8:"cat_prod";s:11:"1-1-1-1-1-1";s:6:"stats1";s:5:"1-1-1";s:5:"rupay";s:5:"0-0-0";s:11:"news_writer";s:5:"1-1-1";s:9:"page_site";s:5:"1-1-1";s:9:"page_menu";s:5:"1-1-1";s:5:"baner";s:5:"1-1-1";s:5:"links";s:5:"1-1-1";s:3:"csv";s:5:"1-1-1";s:5:"opros";s:5:"1-1-1";s:6:"rating";s:5:"1-1-1";s:3:"sql";s:5:"0-1-1";s:6:"option";s:3:"0-1";s:8:"discount";s:5:"1-1-1";s:6:"valuta";s:5:"1-1-1";s:8:"delivery";s:5:"1-1-1";s:7:"servers";s:5:"1-1-1";s:10:"rsschanels";s:5:"1-1-1";}';
-                $sql = "INSERT INTO $table_name19
-VALUES ('','$def_prava','$login','" . $hash . "','$mail','1','','','','$name','','')";
-                $result = mysql_query($sql) or @die("Невозможно изменить запись");
+    // Начальные данные
+    $data['enabled'] = 1;
 
 
-//Отправка почты
-                if ($_POST['pas_send'] == 1) {
+    // Размер названия поля
+    $PHPShopGUI->field_col = 2;
+    $PHPShopGUI->addJSFiles('./users/gui/users.gui.js','./js/validator.js');
+    $PHPShopGUI->setActionPanel(__("Администраторы"), false, array('Сохранить и закрыть', 'Создать и редактировать'));
 
-                    $codepage = "windows-1251";
-                    $header = "MIME-Version: 1.0\n";
-                    $header .= "From:   <no_reply@phpshop.ru>\n";
-                    $header .= "Content-Type: text/plain; charset=$codepage\n";
-                    $header .= "X-Mailer: PHP/";
-                    $zag = "PHPShop: данные пользователя для сервера " . $_SERVER['SERVER_NAME'];
-                    $content = "
-Доброго времени!
----------------------------------------------------------
+    $pasgen = substr(md5(date("U")), 0, 8);
 
-Административная панель доступна по адресу:  http://" . $_SERVER['SERVER_NAME'] . $SysValue['dir']['dir'] . "/phpshop/admpanel/
-или нажатием клавиш Ctrl+F12
-Логин: " . $_POST['login'] . "
-Пароль: " . $_POST['password'] . "
+    // Содержание закладки 1
+    $Tab1 = $PHPShopGUI->setCollapse(__('Информация'), $PHPShopGUI->setField("Имя", $PHPShopGUI->setInput('text', "name_new", $data['name'])) .
+            $PHPShopGUI->setField("Логин", $PHPShopGUI->setInput('text.required.4', "login_new", $data['login'])) .
+            $PHPShopGUI->setField("E-mail", $PHPShopGUI->setInput('email.required.6', "mail_new", $data['mail'])) .
+            $PHPShopGUI->setField("Пароль", $PHPShopGUI->setInput("password.required.6", "password_new", hidePassword($data['password']))) .
+            $PHPShopGUI->setField("Подтверждение пароля", $PHPShopGUI->setInput("password.required.6", "password2_new", hidePassword($data['password'])) . '<br>' . $PHPShopGUI->setInput("button", false, "Сгенерировать пароль", false, false, "$('input[name=password_new],input[name=password2_new]').val('P" . $pasgen . "');alert('Сгенерирован пароль: " . $pasgen . "');", "btn-sm") . '&nbsp;&nbsp;&nbsp;' . $PHPShopGUI->setCheckbox('sendPasswordEmail', 1, 'Оповестить по E-mail', 1)) .
+            $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("enabled_new", 1, "Вкл.", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выкл.", $data['enabled']) . '&nbsp;&nbsp;')
+    );
 
----------------------------------------------------------
-" . $SysValue['license']['product_name'];
-                    mail($mail, $zag, $content, $header);
-                }
+    // Права
+    $Tab2 = $PHPShopGUI->loadLib('tab_rules', $data['status'], false, 'autofill');
 
-                echo"
-<script>
-DoReloadMainWindow('users');
-</script>
-	   ";
-            }
-            else
-                $UserChek->BadUserFormaWindow();
+    // Запрос модуля на закладку
+    $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
+
+    // Вывод формы закладки
+    $PHPShopGUI->setTab(array("Основное", $Tab1), array("Права", $Tab2));
+
+
+    $ContentFooter = $PHPShopGUI->setInput("submit", "saveID", "ОК", "right", 70, "", "but", "actionInsert.users.create");
+
+    // Футер
+    $PHPShopGUI->setFooter($ContentFooter);
+    return true;
+}
+
+// Функция записи
+function actionInsert() {
+    global $PHPShopOrm, $PHPShopModules,$PHPShopSystem;
+
+    // Права
+    $statusUser = array(
+        "gbook" => rules_zero($_POST[gbook_rul_1]) . "-" . rules_zero($_POST[gbook_rul_2]) . "-" . rules_zero($_POST[gbook_rul_3]),
+        "news" => rules_zero($_POST[news_rul_1]) . "-" . rules_zero($_POST[news_rul_2]) . "-" . rules_zero($_POST[news_rul_3]),
+        "order" => rules_zero($_POST[order_rul_1]) . "-" . rules_zero($_POST[order_rul_2]) . "-" . rules_zero($_POST[order_rul_3]) . "-" . rules_zero($_POST[order_rul_4]),
+        "users" => rules_zero($_POST[users_rul_1]) . "-" . rules_zero($_POST[users_rul_2]) . "-" . rules_zero($_POST[users_rul_3]) . "-" . rules_zero($_POST[users_rul_4]),
+        "shopusers" => rules_zero($_POST[shopusers_rul_1]) . "-" . rules_zero($_POST[shopusers_rul_2]) . "-" . rules_zero($_POST[shopusers_rul_3]),
+        "catalog" => rules_zero($_POST[catalog_rul_1]) . "-" . rules_zero($_POST[catalog_rul_2]) . "-" . rules_zero($_POST[catalog_rul_3]) . "-" . rules_zero($_POST[catalog_rul_4]) . "-" . rules_zero($_POST[catalog_rul_5]) . "-" . rules_zero($_POST[catalog_rul_6]),
+        "report" => rules_zero($_POST[report_rul_1]) . "-" . rules_zero($_POST[report_rul_2]) . "-" . rules_zero($_POST[report_rul_3]),
+        "page" => rules_zero($_POST[page_rul_1]) . "-" . rules_zero($_POST[page_rul_2]) . "-" . rules_zero($_POST[page_rul_3]),
+        "menu" => rules_zero($_POST[menu_rul_1]) . "-" . rules_zero($_POST[menu_rul_2]) . "-" . rules_zero($_POST[menu_rul_3]),
+        "banner" => rules_zero($_POST[banner_rul_1]) . "-" . rules_zero($_POST[banner_rul_2]) . "-" . rules_zero($_POST[banner_rul_3]),
+        "slider" => rules_zero($_POST[slider_rul_1]) . "-" . rules_zero($_POST[slider_rul_2]) . "-" . rules_zero($_POST[slider_rul_3]),
+        "links" => rules_zero($_POST[links_rul_1]) . "-" . rules_zero($_POST[links_rul_2]) . "-" . rules_zero($_POST[links_rul_3]),
+        "csv" => rules_zero($_POST[csv_rul_1]) . "-" . rules_zero($_POST[csv_rul_2]) . "-" . rules_zero($_POST[csv_rul_3]),
+        "opros" => rules_zero($_POST[opros_rul_1]) . "-" . rules_zero($_POST[opros_rul_2]) . "-" . rules_zero($_POST[opros_rul_3]),
+        "rating" => rules_zero($_POST[rating_rul_1]) . "-" . rules_zero($_POST[rating_rul_2]) . "-" . rules_zero($_POST[rating_rul_3]),
+        "exchange" => rules_zero($_POST[exchange_rul_1]) . "-" . rules_zero($_POST[exchange_rul_2]) . "-" . rules_zero($_POST[exchange_rul_3]),
+        "system" => rules_zero($_POST[system_rul_1]) . "-" . rules_zero($_POST[system_rul_2]),
+        "discount" => rules_zero($_POST[discount_rul_1]) . "-" . rules_zero($_POST[discount_rul_2]) . "-" . rules_zero($_POST[discount_rul_3]),
+        "currency" => rules_zero($_POST[currency_rul_1]) . "-" . rules_zero($_POST[currency_rul_2]) . "-" . rules_zero($_POST[currency_rul_3]),
+        "delivery" => rules_zero($_POST[delivery_rul_1]) . "-" . rules_zero($_POST[delivery_rul_2]) . "-" . rules_zero($_POST[delivery_rul_3]),
+        "servers" => rules_zero($_POST[servers_rul_1]) . "-" . rules_zero($_POST[servers_rul_2]) . "-" . rules_zero($_POST[servers_rul_3]),
+        "rsschanels" => rules_zero($_POST[rss_rul_1]) . "-" . rules_zero($_POST[rss_rul_2]) . "-" . rules_zero($_POST[rss_rul_3]),
+        "update" => rules_zero($_POST[update_rul_1]),
+        "modules" => rules_zero($_POST[modules_rul_1]) . "-" . rules_zero($_POST[modules_rul_2]). "-" . rules_zero($_POST[modules_rul_3]) . "-" . rules_zero($_POST[modules_rul_4]). "-" . rules_zero($_POST[modules_rul_5])
+    );
+
+
+    $_POST['status_new'] = serialize($statusUser);
+
+    $hasher = new PasswordHash(8, false);
+    $_POST['password_new'] = $hasher->HashPassword($_POST['password_new']);
+
+    // Оповещение пользователя
+    if (!empty($_POST['sendPasswordEmail'])) {
+
+        PHPShopObj::loadClass("parser");
+        PHPShopObj::loadClass("mail");
+
+        PHPShopParser::set('user_name', 'Администратор');
+        PHPShopParser::set('login', $_POST['login_new']);
+        PHPShopParser::set('password', $_POST['password2_new']);
+
+        $zag_adm = "Пароль администратора " . $_SERVER['SERVER_NAME'];
+        $PHPShopMail = new PHPShopMail($_POST['mail_new'], $PHPShopSystem->getEmail(), $zag_adm, '', true, true);
+        $content_adm = PHPShopParser::file('tpl/changepass.mail.tpl', true);
+
+        if (!empty($content_adm)) {
+            $PHPShopMail->sendMailNow($content_adm);
         }
-        ?>
+    }
 
+    // Перехват модуля
+    $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
 
+    $action = $PHPShopOrm->insert($_POST);
 
+    if ($_POST['saveID'] == 'Создать и редактировать')
+        header('Location: ?path=' . $_GET['path'] . '&id=' . $action);
+    else
+        header('Location: ?path=' . $_GET['path']);
+
+    return $action;
+}
+
+// Обработка событий
+$PHPShopGUI->getAction();
+
+// Вывод формы при старте
+$PHPShopGUI->setLoader($_POST['saveID'], 'actionStart');
+?>

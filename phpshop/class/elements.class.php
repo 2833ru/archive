@@ -59,7 +59,7 @@ class PHPShopElements {
     /**
      * Конструктор
      */
-    function PHPShopElements() {
+    function __construct() {
         global $PHPShopSystem, $PHPShopNav, $PHPShopModules;
 
         if ($this->objBase) {
@@ -74,6 +74,12 @@ class PHPShopElements {
         $this->PHPShopNav = &$PHPShopNav;
         $this->LoadItems = &$GLOBALS['LoadItems'];
         $this->PHPShopModules = &$PHPShopModules;
+    }
+
+    function __call($name, $arguments) {
+        if ($name == __CLASS__) {
+            self::__construct();
+        }
     }
 
     /**
@@ -357,6 +363,7 @@ class PHPShopElements {
      * @return bool
      */
     function setHook($class_name, $function_name, $data = false, $rout = false) {
+        if(!empty($this->PHPShopModules))
         return $this->PHPShopModules->setHookHandler($class_name, $function_name, array(&$this), $data, $rout);
     }
 
@@ -365,17 +372,17 @@ class PHPShopElements {
      * @param string $class_name имя класса
      */
     function setHtmlOption($class_name) {
-        $html=$GLOBALS['SysValue']['html'][strtolower($class_name)];
-        
-        if (!empty($html)){
-            
+        $html = $GLOBALS['SysValue']['html'][strtolower($class_name)];
+
+        if (!empty($html)) {
+
             // Назначение сетки
-            if(strstr($html,'-')){
-               $option=explode("-",$html);
-               $html=$option[0];
-               $this->cell=$option[1];
+            if (strstr($html, '-')) {
+                $option = explode("-", $html);
+                $html = $option[0];
+                $this->cell = $option[1];
             }
-            
+
             $this->cell_type = $html;
             //$this->cell=1;
             $this->product_grid = null;

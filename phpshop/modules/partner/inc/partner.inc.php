@@ -40,7 +40,7 @@ class PHPShopPartnerOrder {
             JOIN '.$GLOBALS['SysValue']['base']['partner']['partner_users'].' AS c ON c.id =  a.partner_id
             WHERE a.partner_id='.$this->partner.' and a.enabled="0"');
 
-        while($row = mysql_fetch_array($result)) {
+        while($row = mysqli_fetch_array($result)) {
 
             // Если заказ выполнен, заносим эти данные в лог партнера, начисляем % партнеру
             if($row['statusi'] == $this->option['order_status']) {

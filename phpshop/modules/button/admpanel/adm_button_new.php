@@ -1,29 +1,6 @@
-<?
-$_classPath="../../../";
-include($_classPath."class/obj.class.php");
-PHPShopObj::loadClass("base");
-PHPShopObj::loadClass("system");
-PHPShopObj::loadClass("orm");
+<?php
 
-
-$PHPShopBase = new PHPShopBase($_classPath."inc/config.ini");
-include($_classPath."admpanel/enter_to_admin.php");
-
-$PHPShopSystem = new PHPShopSystem();
-
-// Настройки модуля
-PHPShopObj::loadClass("modules");
-$PHPShopModules = new PHPShopModules($_classPath."modules/");
-
-
-// Редактор
-PHPShopObj::loadClass("admgui");
-$PHPShopGUI = new PHPShopGUI();
-$PHPShopGUI->debug_close_window=false;
-$PHPShopGUI->reload='top';
-$PHPShopGUI->ajax="'modules','button'";
-$PHPShopGUI->includeJava='<SCRIPT language="JavaScript" src="../../../lib/Subsys/JsHttpRequest/Js.js"></SCRIPT>';
-$PHPShopGUI->dir=$_classPath."admpanel/";
+$TitlePage = __('Создание новой кнопки');
 
 // SQL
 $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.button.button_forms"));
@@ -36,52 +13,52 @@ function actionInsert() {
     if(empty($_POST['enabled_new'])) $_POST['enabled_new']=0;
 
     $action = $PHPShopOrm->insert($_POST);
+    
+    header('Location: ?path=' . $_GET['path']);
+    
     return $action;
 }
 
 // Начальная функция загрузки
 function actionStart() {
-    global $PHPShopGUI,$PHPShopSystem,$SysValue,$_classPath,$PHPShopOrm;
-
-    $PHPShopGUI->dir=$_classPath."admpanel/";
-    $PHPShopGUI->title="Создание новой кнопки";
-    $PHPShopGUI->size="630,530";
+    global $PHPShopGUI,$PHPShopOrm;
 
 
-    // Графический заголовок окна
-    $PHPShopGUI->setHeader("Создание новой кнопки","",$PHPShopGUI->dir."img/i_display_settings_med[1].gif");
+    // Выборка
+    $data['name']='Новая кнопка';
+    $data['enabled']=1;
+    $data['num']=1;
+    
 
+    $PHPShopGUI->field_col = 1;
+    $Tab1 = $PHPShopGUI->setField('Название', $PHPShopGUI->setInputText(false, 'name_new', $data['name']));
 
-    $Tab1=$PHPShopGUI->setField('Опции:',$PHPShopGUI->setInputText('Название','name_new',$name,'300',false,'right').
-            $PHPShopGUI->setInputText('Порядок','num_new',1,'30').
-            $PHPShopGUI->setCheckbox('enabled_new',1,'Вывод',1));
-    $Tab1.=$PHPShopGUI->setTextarea('content_new', $content, 'none', '98%', '250px');
+    $Tab1.= $PHPShopGUI->setField('Приоритет', $PHPShopGUI->setInputText('№', 'num_new', $data['num'], '100') .
+            $PHPShopGUI->setCheckbox('enabled_new', 1, 'Вкл.', $data['enabled']));
+    
+    // Редактор 
+    $PHPShopGUI->setEditor('ace', true);
+    $oFCKeditor = new Editor('content_new');
+    $oFCKeditor->Height = '320';
+    $oFCKeditor->Value = $data['content'];
+
+    $Tab1.=$PHPShopGUI->setField('HTML Код', $oFCKeditor->AddGUI());
 
     // Вывод формы закладки
     $PHPShopGUI->setTab(array("Основное",$Tab1,350));
 
     // Вывод кнопок сохранить и выход в футер
-    $ContentFooter=
-            $PHPShopGUI->setInput("hidden","newsID",$id,"right",70,"","but").
-            $PHPShopGUI->setInput("button","","Отмена","right",70,"return onCancel();","but").
-            $PHPShopGUI->setInput("submit","editID","ОК","right",70,"","but","actionInsert");
+    $ContentFooter=$PHPShopGUI->setInput("submit","saveID","Сохранить","right",false,false,false,"actionInsert.modules.create");
 
     $PHPShopGUI->setFooter($ContentFooter);
+    
     return true;
 }
 
 
+// Обработка событий
+$PHPShopGUI->getAction();
 
-if($UserChek->statusPHPSHOP < 2) {
-
-    // Вывод формы при старте
-    $PHPShopGUI->setLoader($_POST['editID'],'actionStart');
-
-    // Обработка событий
-    $PHPShopGUI->getAction();
-
-}else $UserChek->BadUserFormaWindow();
-
+// Вывод формы при старте
+$PHPShopGUI->setLoader($_POST['saveID'], 'actionStart');
 ?>
-
-

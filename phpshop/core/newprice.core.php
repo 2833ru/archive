@@ -22,9 +22,9 @@ class PHPShopNewprice extends PHPShopShopCore {
     /**
      * Конструктор
      */
-    function PHPShopNewprice() {
+    function __construct() {
 
-        parent::PHPShopShopCore();
+        parent::__construct();
         $this->PHPShopOrm->cache_format = $this->cache_format;
 
         // Навигация хлебные крошки

@@ -14,8 +14,7 @@ include("../../class/pbrf.class.php");
 
 
 $PHPShopBase = new PHPShopBase($_classPath."inc/config.ini");
-include($_classPath."admpanel/enter_to_admin.php");
-
+$PHPShopBase->chekAdmin();
 
 $PHPShopSystem = new PHPShopSystem();
 $LoadItems['System'] = $PHPShopSystem->getArray();
@@ -31,8 +30,8 @@ $pathTemplate = $SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'];
 
 $sql = "select * from " . $SysValue['base']['table_name1'] . " where id=" . intval($_GET['orderID']);
 $n = 1;
-@$result = mysql_query($sql) or die($sql);
-$row = mysql_fetch_array(@$result);
+@$result = mysqli_query($link_db,$sql);
+$row = mysqli_fetch_array(@$result);
 //Закрываем
 if($_GET['datas']!=$row['datas']) {
   echo 'Запрещен доступ';
@@ -48,8 +47,8 @@ $user_id = $order['Person']['user_id'];
 
 //select phshop_shopusers
 $sql = "select * from " . $SysValue['base']['table_name27'] . " where id=" . intval($user_id);
-$result = mysql_query($sql) or die($sql);
-$row = mysql_fetch_array($result);
+@$result = mysqli_query($link_db,$sql);
+$row = mysqli_fetch_array(@$result);
 //Адреса
 $data_adres = unserialize($row['data_adres']);
 //Данные из адресов
@@ -102,7 +101,7 @@ $data_person = unserialize($pbrf_system['data']);
     </style>
     <link rel="stylesheet" type="text/css" href="../../css/foundation.css" />
     <link rel="stylesheet" type="text/css" href="../../css/default.css" />
-    <script src="/phpshop/templates/bootstrap/js/jquery-1.11.0.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
     <script src="../../js/pbrf.js"></script>
 
 </head>
@@ -123,7 +122,7 @@ $data_person = unserialize($pbrf_system['data']);
     <div class="row blank" id="blank">
         <div align="center"><table align="center" width="100%">
             <tr>
-                <td align="center"><img src="<?= $PHPShopSystem->getLogo(); ?>" alt="" border="0"></td>
+                <td align="center"></td>
                 <td align="right"><h4 align=center>Заказ&nbsp;№&nbsp;<?= $ouid ?>&nbsp;от&nbsp;<?= $datas ?></h4></td>
             </tr>
         </table>
@@ -450,8 +449,8 @@ $data_person = unserialize($pbrf_system['data']);
 
         <div class="but-send-pbrf">
             <input type="hidden" name="type_send" id="type_send">
-            <button class="blank_button" onclick="print_pbrf()"><img src="/phpshop/admpanel/img/action_print.gif"> Для печати</button> 
-            <button class="blank_button" onclick="pdf_pbrf()"><img src="/phpshop/admpanel/img/icon_download.gif"> Скачать PDF</button>
+            <button class="blank_button" onclick="print_pbrf()">Для печати</button> 
+            <button class="blank_button" onclick="pdf_pbrf()">Скачать PDF</button>
         </div> 
       </fieldset>
     </form><!--начало в шаблоне отдельного бланка-->

@@ -27,7 +27,6 @@ function addModOption($data) {
     // SQL
     $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.productoption.productoption_system"));
     $m_data = $PHPShopOrm->select();
-    @extract($m_data);
     $vendor = unserialize($m_data['option']);
 
     if (is_array($vendor)) {

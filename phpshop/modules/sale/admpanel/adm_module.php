@@ -1,25 +1,5 @@
 <?php
 
-$_classPath = "../../../";
-include($_classPath . "class/obj.class.php");
-PHPShopObj::loadClass("base");
-PHPShopObj::loadClass("system");
-PHPShopObj::loadClass("security");
-PHPShopObj::loadClass("orm");
-
-$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
-include($_classPath . "admpanel/enter_to_admin.php");
-
-
-// Настройки модуля
-PHPShopObj::loadClass("modules");
-$PHPShopModules = new PHPShopModules($_classPath . "modules/");
-
-
-// Редактор
-PHPShopObj::loadClass("admgui");
-$PHPShopGUI = new PHPShopGUI();
-
 // SQL
 $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.sale.sale_system"));
 
@@ -41,44 +21,35 @@ function actionUpdate() {
         default:
             $price_n = null;
     }
-    
-    if(!empty($_POST['mod_sale_price'])){
-        
-        if(!empty($price_n)) $price_action=',';
-        else $price_action=null;
-        
+
+    if (!empty($_POST['mod_sale_price'])) {
+
+        if (!empty($price_n))
+            $price_action = ',';
+        else
+            $price_action = null;
+
         $price_action.=' price=price' . $_POST['mod_sale_opt'] . '(price*' . $pr . ')';
     }
 
-    
+
     $PHPShopOrm->sql = 'update ' . $GLOBALS['SysValue']['base']['products'] . ' set 
-    '.$price_n.$price_action; 
+    ' . $price_n . $price_action;
 
     $action = $PHPShopOrm->update();
-
+    header('Location: ?path=modules&install=check');
     return $action;
 }
 
 function actionStart() {
-    global $PHPShopGUI, $PHPShopSystem, $_classPath, $PHPShopOrm;
-
-
-    $PHPShopGUI->dir = $_classPath . "admpanel/";
-    $PHPShopGUI->title = "Настройка модуля Распродажа";
-    $PHPShopGUI->size = "500,450";
+    global $PHPShopGUI, $PHPShopOrm;
 
     // Выборка
     $data = $PHPShopOrm->select();
-    @extract($data);
-
-
-    // Графический заголовок окна
-    $PHPShopGUI->setHeader("Настройка модуля 'Распродажа'", "Настройки подключения", $PHPShopGUI->dir . "img/i_display_settings_med[1].gif");
 
     $sel_value[] = array('+', '+', false);
     $sel_value[] = array('-', '-', 'selected');
-    $sel = $PHPShopGUI->setSelect('mod_sale_opt', $sel_value, 40);
-    $Tab1 = $PHPShopGUI->setField('Новая цена', $PHPShopGUI->setInputText('Поменять цену у всех товаров на ' . $sel, 'mod_sale_price', "", '30', '%'));
+    $Tab1 = $PHPShopGUI->setField('Новая цена изменить', $PHPShopGUI->setInputText(false, 'mod_sale_price', "", '100', '%', 'left') . $PHPShopGUI->set_() . $PHPShopGUI->setSelect('mod_sale_opt', $sel_value, 50, 'left'));
 
     $sel_value2[] = array('Выбрать', 'none');
     $sel_value2[] = array('Обнулить', 'null');
@@ -86,35 +57,27 @@ function actionStart() {
 
     $Tab1.=$PHPShopGUI->setField('Старая цена', $PHPShopGUI->setSelect('mod_sale_old', $sel_value2, 300));
 
-    $Info = '
-Для расчета скидки конкретного каталога используйте закладку "Распродажа" в карточке редактирования требуемого каталога товаров.
-<p>Для снятия скидки выберите опцию "Обнулить" старые цены.
-';
-    $Tab1.= $PHPShopGUI->setInfo($Info, 50, '95%');
+    $Info = 'Для расчета скидки конкретного каталога используйте закладку "Распродажа" в карточке редактирования требуемого каталога товаров.
+<p>Для снятия скидки выберите опцию "Обнулить" старые цены.';
+    $Tab1.= $PHPShopGUI->setField('Совет', $PHPShopGUI->setInfo($Info));
 
-    $Tab2 = $PHPShopGUI->setPay($serial, false);
+    $Tab2 = $PHPShopGUI->setPay();
 
     // Вывод формы закладки
     $PHPShopGUI->setTab(array("Основное", $Tab1, 270), array("О Модуле", $Tab2, 270));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =
-            $PHPShopGUI->setInput("hidden", "newsID", $id, "right", 70, "", "but") .
-            $PHPShopGUI->setInput("button", "", "Отмена", "right", 70, "return onCancel();", "but") .
-            $PHPShopGUI->setInput("submit", "editID", "ОК", "right", 70, "", "but", "actionUpdate");
+            $PHPShopGUI->setInput("hidden", "rowID", $data['id']) .
+            $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionUpdate.modules.edit");
 
     $PHPShopGUI->setFooter($ContentFooter);
     return true;
 }
 
-if ($UserChek->statusPHPSHOP < 2) {
+// Обработка событий
+$PHPShopGUI->getAction();
 
-    // Вывод формы при старте
-    $PHPShopGUI->setLoader($_POST['editID'], 'actionStart');
-
-    // Обработка событий
-    $PHPShopGUI->getAction();
-}
-else
-    $UserChek->BadUserFormaWindow();
+// Вывод формы при старте
+$PHPShopGUI->setLoader($_POST['editID'], 'actionStart');
 ?>

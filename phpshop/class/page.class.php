@@ -20,10 +20,10 @@ if (!defined("OBJENABLED")) {
  */
 class PHPShopPageCategoryArray extends PHPShopArray {
 
-    function PHPShopPageCategoryArray() {
+    function __construct() {
         $this->objBase=$GLOBALS['SysValue']['base']['page_categories'];
         $this->order=array('order'=>'num');
-        parent::PHPShopArray("id","name","parent_to");
+        parent::__construct("id","name","parent_to");
     }
 }
 

@@ -26,9 +26,9 @@
         <?
 
         if(!@include("../config.php")) exit('config.php не обнаружен');
-        mysql_connect ($dbhost, $dbuser, $dbpasswd ) or die("Невозможно подсоединиться к базе");
-        mysql_select_db($dbname) or die("Невозможно подсоединиться к базе");
-        mysql_query("SET NAMES 'cp1251'");
+        $link_db=mysqli_connect ($dbhost, $dbuser, $dbpasswd ) or die("Невозможно подсоединиться к базе");
+        mysqli_select_db($link_db,$dbname) or die("Невозможно подсоединиться к базе");
+        mysqli_query($link_db,"SET NAMES 'cp1251'");
 
         function dataV($nowtime) {
             $Months = array("01"=>"января","02"=>"февраля","03"=>"марта",
@@ -46,8 +46,8 @@
 
 
         $sql="select * from ".$table_prefix."topics order by topic_last_poster_id desc limit ".$limit;
-        $result=mysql_query($sql);
-        while($row = mysql_fetch_array($result)) {
+        $result=mysqli_query($link_db,$sql);
+        while($row = mysqli_fetch_array($result)) {
             $name = $row['topic_title'];
             $last_post = $row['topic_last_post_time'];
             $last_poster_name = $row['topic_last_poster_name'];

@@ -69,22 +69,20 @@ if (strtoupper($MY_LMI_HASH) != strtoupper((string)$LMI_HASH)) {
 } else {
 // perform some action (change order state to paid)
 // Подключаем базу MySQL
-    @mysql_connect($SysValue['connect']['host'], $SysValue['connect']['user_db'], $SysValue['connect']['pass_db']) or
-            @die("" . PHPSHOP_error(101, $SysValue['my']['error_tracer']) . "");
-    mysql_select_db($SysValue['connect']['dbase']) or
-            @die("" . PHPSHOP_error(102, $SysValue['my']['error_tracer']) . "");
+    $link_db=mysqli_connect($SysValue['connect']['host'], $SysValue['connect']['user_db'], $SysValue['connect']['pass_db']) ;
+    mysqli_select_db($link_db,$SysValue['connect']['dbase']);
 
 
 // Приверяем сущ. заказа
     $sql = "select id from " . $SysValue['base']['table_name1'] . " where uid=\"" . UpdateNumOrderBack($LMI_PAYMENT_NO) . "\" limit 1";
-    $result = mysql_query($sql);
-    $num = @mysql_num_rows($result);
+    $result = mysqli_query($link_db,$sql);
+    $num = @mysqli_num_rows($result);
 
     if (!empty($num)) {
 // Записываем платеж в базу
         $sql = "INSERT INTO " . $SysValue['base']['table_name33'] . " VALUES 
 ($LMI_PAYMENT_NO,'Z-Payment, $LMI_PAYER_PURSE','$LMI_PAYMENT_AMOUNT','" . date("U") . "')";
-        $result = mysql_query($sql);
+        $result = mysqli_query($link_db,$sql);
         WriteLog($MY_LMI_HASH, 'Результат true, add order to base');
 // print OK signature
         echo "OK$LMI_PAYMENT_NO\n";

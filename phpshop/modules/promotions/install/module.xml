@@ -1,29 +1,21 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>2.2</version>
+    <version>2.0</version>
     <name>Promotions</name>
     <faqlink>http://faq.phpshop.ru/page/promotion.html</faqlink>
     <description>Модуль промо-акций.</description>
-    <icon>icon.png</icon>
-    <category>form,sale</category>
-    <status>update</status>
+    <category>form,sale,user</category>
     <sign>1423218824</sign>
     <adminmenu>
         <title>Промо-акции</title>
-        <podmenu>
-            <podmenu_name>Настройка</podmenu_name>
-            <podmenu_icon>icon.png</podmenu_icon>
-            <podmenu_action>javascript:miniWin('../modules/promotions/admpanel/adm_module.php',630,530);</podmenu_action>
-        </podmenu>
+        <capability>true</capability>
         <podmenu>
             <podmenu_name>Обзор Промо-акций</podmenu_name>
-            <podmenu_icon>newspaper_go.png</podmenu_icon>
-            <podmenu_action>javascript:window.location.replace('?plugin=promotions')</podmenu_action>
+            <podmenu_action>dir.promotions</podmenu_action>
         </podmenu>
         <podmenu>
             <podmenu_name>Новая Промо-акция</podmenu_name>
-            <podmenu_icon>newspaper_add.png</podmenu_icon>
-            <podmenu_action>javascript:miniWin('../modules/promotions/admpanel/adm_promotion_new.php',630,530);</podmenu_action>
+            <podmenu_action>dir.promotions&amp;action=new</podmenu_action>
         </podmenu>
     </adminmenu>
 </module>

@@ -18,7 +18,7 @@ class AddToTemplateMDetect extends PHPShopProductElements {
 
         $skin = 'mobile';
 
-        parent::PHPShopProductElements();
+        parent::__construct();
 
         // Настройки
         $option = $this->option();

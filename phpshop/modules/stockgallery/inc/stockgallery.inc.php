@@ -7,8 +7,8 @@ PHPShopObj::loadClass('string');
 
 class AddStockGallery extends PHPShopElements {
 
-    function AddStockGallery() {
-        parent::PHPShopElements();
+    function __construct() {
+        parent::__construct();
     }
 
     function stockgallery() {

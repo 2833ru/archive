@@ -21,7 +21,7 @@
 <body onload="window.focus()" bgcolor="#FFFFFF" text="#000000" marginwidth=5 leftmargin=5 style="padding: 2px;">
     <div align="right" class="nonprint">
         <button onclick="window.print()">
-            <img border=0 align=absmiddle hspace=3 vspace=3 src="http://@php echo $_SERVER['SERVER_NAME'].$GLOBALS['SysValue']['dir']['dir']; php@/phpshop/admpanel/img/action_print.gif">Распечатать
+            Распечатать
         </button> 
         <br><br>
     </div>

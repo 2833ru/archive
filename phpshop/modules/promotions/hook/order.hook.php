@@ -9,6 +9,7 @@ function order_promotions_hook($obj, $row, $rout) {
         global $promotionslistCode;
 
 
+
         if(isset($promotionslistCode)) {
             foreach ($promotionslistCode as $key => $value) {
                 if($value['code_check']==1) {
@@ -20,7 +21,7 @@ function order_promotions_hook($obj, $row, $rout) {
                 }
             }
         }
-        
+
         if($code_check==1) {
             $html = PHPShopParser::file('./phpshop/modules/promotions/templates/order/cart_input.tpl', true, false, true);
         }

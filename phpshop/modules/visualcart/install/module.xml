@@ -1,22 +1,16 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.9</version>
+    <version>1.8</version>
     <name>Visual Cart</name>
     <faqlink>http://faq.phpshop.ru/page/visualcart.html</faqlink>
     <description>Модуль управляемой мини-корзины, сохранение корзины в базе.</description>
-    <icon>icon.png</icon>
     <category>form</category>
     <adminmenu>
         <title>Visual Cart</title>
-        <podmenu>
-            <podmenu_name>Настройка</podmenu_name>
-            <podmenu_icon>icon.png</podmenu_icon>
-            <podmenu_action>javascript:miniWin('../modules/visualcart/admpanel/adm_module.php',510,450);</podmenu_action>
-        </podmenu>
+        <capability>true</capability>
         <podmenu>
             <podmenu_name>Незавершенные заказы</podmenu_name>
-            <podmenu_icon>icon.png</podmenu_icon>
-            <podmenu_action>javascript:window.location.replace('?plugin=visualcart')</podmenu_action>
+            <podmenu_action>dir.visualcart</podmenu_action>
         </podmenu>
     </adminmenu>
 </module>

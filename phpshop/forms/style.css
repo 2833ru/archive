@@ -43,7 +43,7 @@ H4 {
 }
 
 button{
-    font-size: 8pt;
+    font-size: 11pt;
     border: solid 1px #CCC;
     -webkit-border-radius:5px;
     -moz-border-radius:5px;
@@ -53,4 +53,5 @@ button{
     background: -o-linear-gradient(#FFF, #F0F0F0);
     background: -webkit-linear-gradient(#FFF, #F0F0F0);
     cursor: pointer;
+    height: 30px;
 }

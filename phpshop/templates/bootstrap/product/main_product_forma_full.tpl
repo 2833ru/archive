@@ -75,8 +75,8 @@
                 <div role="tabpanel" class="tab-pane" id="settings">  
                     <br>
                     <div class="row">
-                        <div class="col-xs-6">@vendorDisp@</div>
-                        <div class="col-xs-6 ">@brandUidDescription@</div>
+                        <div class="col-md-8">@vendorDisp@</div>
+                        <div class="col-md-4">@brandUidDescription@</div>
                     </div>
 
                 </div>
@@ -92,7 +92,8 @@
 
                         <h3>Оставьте свой отзыв</h3>
 
-                        <textarea id="message" class="form-control"></textarea>
+                        <textarea id="message" class="commentTextarea form-control"></textarea>
+                        <input type="hidden" id="commentAuthFlag" name="commentAuthFlag" value="@php if($_SESSION['UsersId']) echo 1; else echo 0; php@">
                         <br>
                         <div class="btn-group" data-toggle="buttons">
                             <label class="btn btn-success btn-sm">

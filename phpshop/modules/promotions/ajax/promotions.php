@@ -49,23 +49,23 @@ $PHPShopModules = new PHPShopModules($_classPath . "modules/");
 $PHPShopSystem = new PHPShopSystem();
 
 function GetDeliveryPrice($deliveryID, $sum, $weight = 0) {
-    global $SysValue;
+    global $SysValue,$link_db;
 
     if (!empty($deliveryID)) {
         $sql = "select * from " . $SysValue['base']['table_name30'] . " where id='$deliveryID' and enabled='1'";
-        $result = mysql_query($sql);
-        $num = mysql_numrows($result);
-        $row = mysql_fetch_array($result);
+        $result = mysqli_query($link_db,$sql);
+        $num = mysqli_num_rows($result);
+        $row = mysqli_fetch_array($result);
 
         if ($num == 0) {
             $sql = "select * from " . $SysValue['base']['table_name30'] . " where flag='1' and enabled='1'";
-            $result = mysql_query($sql);
-            $row = mysql_fetch_array($result);
+            $result = mysqli_query($link_db,$sql);
+            $row = mysqli_fetch_array($result);
         }
     } else {
         $sql = "select * from " . $SysValue['base']['table_name30'] . " where flag='1' and enabled='1'";
-        $result = mysql_query($sql);
-        $row = mysql_fetch_array($result);
+        $result = mysqli_query($link_db,$sql);
+        $row = mysqli_fetch_array($result);
     }
 
     if ($row['price_null_enabled'] == 1 and $sum >= $row['price_null']) {
@@ -108,8 +108,8 @@ if($_REQUEST['promocode']!='*') {
 
                 //узнаем тип оплаты
                 $sq_pay = 'select name from '.$SysValue['base']['payment_systems'].' where id='.$data['delivery_method'];
-                $qu_pay = mysql_query($sq_pay);
-                $ro_pay = mysql_fetch_array($qu_pay);
+                $qu_pay = mysqli_query($link_db,$sq_pay);
+                $ro_pay = mysqli_fetch_array($qu_pay);
 
                 $messageinfo = '<b style="color:#7e7a13;">Не подходит тип оплаты!</b><br> Для данного промо-кода тип оплаты может быть только <b>'.$ro_pay['name'].'</b>. Выберите этот тип оплаты и нажмите снова кнопку ОК для применения скидки';
                 $action = '1'; //выполним перенаправление на список оплат
@@ -307,11 +307,11 @@ if($_REQUEST['promocode']!='*') {
                             //система оплаты
                             if($data['delivery_method_check']==1) {
                                 $delivery_method_check = 1;
-                                $totalsumma = $sumtot_new + $sumtot_old;
+                                $totalsumma = $sumtot_new + $sumtot_old + $dostavka;
                                 $totalsummainput = $sumtot_new + $sumtot_old + $dostavka;
                             }
                             else {
-                                $totalsumma = $sumtot_new + $sumtot_old;
+                                $totalsumma = $sumtot_new + $sumtot_old + $dostavka;
                                 if($_REQUEST['sum']>$totalsumma) {
                                     $delivery_method_check = 0;
                                     $totalsummainput = $sumtot_new + $sumtot_old;

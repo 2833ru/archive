@@ -1,181 +1,107 @@
-<?
-require("../connect.php");
-@mysql_connect ("$host", "$user_db", "$pass_db")or @die("Невозможно подсоединиться к базе");
-mysql_select_db("$dbase")or @die("Невозможно подсоединиться к базе");
-require("../enter_to_admin.php");
+<?php
 
-// Языки
-$GetSystems=GetSystems();
-$option=unserialize($GetSystems['admoption']);
-$Lang=$option['lang'];
-require("../language/".$Lang."/language.php");
-?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-	<title>Редактирование сообщения пользователя</title>
-<META http-equiv=Content-Type content="text/html; charset=<?=$SysValue['Lang']['System']['charset']?>">
-<LINK href="../skins/<?=$_SESSION['theme']?>/texts.css" type=text/css rel=stylesheet>
-<SCRIPT language="JavaScript" src="/phpshop/lib/Subsys/JsHttpRequest/Js.js"></SCRIPT>
-<script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
-<script type="text/javascript" language="JavaScript1.2" src="../language/<?=$Lang?>/language_windows.js"></script>
-<script type="text/javascript" language="JavaScript1.2" src="../language/<?=$Lang?>/language_interface.js"></script>
-<script>
-DoResize(<? echo $GetSystems['width_icon']?>,600,410);
-</script>
-</head>
-<body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0" onload="DoCheckLang(location.pathname,<?=$SysValue['lang']['lang_enabled']?>);preloader(0)">
-<?
-// Редактирование записей 
-	  $sql="select * from ".$SysValue['base']['table_name37']." where id='$id'";
-      $result=mysql_query($sql);
-	  $row = mysql_fetch_array($result);
-	  $Subject=$row['Subject'];
-	  $Message=$row['Message'];
-	  $DateTime=$row['DateTime'];
-	  $UID=$row['UID'];
-	  $ID=$row['ID'];
-?>
+$TitlePage = __('Редактирование сообщения #' . $_GET['id']);
+$PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['messages']);
+PHPShopObj::loadClass('user');
 
-<table id="loader">
-<tr>
-	<td valign="middle" align="center">
-		<div id="loadmes" onclick="preloader(0)">
-<table width="100%" height="100%">
-<tr>
-	<td id="loadimg"></td>
-	<td ><b><?=$SysValue['Lang']['System']['loading']?></b><br><?=$SysValue['Lang']['System']['loading2']?></td>
-</tr>
-</table>
-		</div>
-</td>
-</tr>
-</table>
-<SCRIPT language=JavaScript type=text/javascript>preloader(1);</SCRIPT>
-<form name="product_edit"  method=post>
-<table cellpadding="0" cellspacing="0" width="100%" height="50" id="title">
-<tr bgcolor="#ffffff">
-	<td style="padding:10">
-	<b><span name=txtLang id=txtLang>Редактирование сообщения пользователя</span></b><br>
-	
-	</td>
-	<td align="right">
-	<img src="../img/i_mail_forward_med[1].gif" border="0" hspace="10">
-	</td>
-</tr>
-</table>
-<br>
-<table class=mainpage4 cellpadding="5" cellspacing="0" border="0" align="center" width="100%">
-<tr>
-	<td>
+// Стартовый вид
+function actionStart() {
+    global $PHPShopGUI, $PHPShopOrm, $PHPShopModules;
 
-	<FIELDSET>
-<LEGEND id=lgdLayout><span name=txtLang id=txtLang><u>З</u>аголовок сообщения</span></LEGEND>
-	<div style="padding:10">
-	<input type=text name="Subject_new"  style="width: 100%" value="<?=$Subject?>">
-	</FIELDSET>
-</TD>
-<TD>
-	<FIELDSET>
-<LEGEND id=lgdLayout><span name=txtLang id=txtLang><u>Д</u>ата сообщения</span></LEGEND>
-	<div style="padding:10">
-	<input type=HIDDEN name="DateTime_new" value="<?=$DateTime?>">
-	<input readonly disabled type=text style="width: 100%" value="<?=$DateTime?>">
-	</FIELDSET>
+    // Выборка
+    $PHPShopOrm->sql = 'SELECT a.*, b.name, b.login FROM ' . $GLOBALS['SysValue']['base']['messages'] . ' AS a 
+        JOIN ' . $GLOBALS['SysValue']['base']['shopusers'] . ' AS b ON a.UID = b.id     
+            WHERE a.id=' . intval($_REQUEST['id']) . '  limit 1';
 
-</TD>
-</TR><TR>     <TD colspan=2>
+    $result = $PHPShopOrm->select();
 
-	<FIELDSET>
-<LEGEND><span name=txtLang id=txtLang><u>Т</u>екст сообщения</span></LEGEND>
-<div style="padding:10">
-<textarea cols="" rows="" name="Message_new" style="width:100%;height:100px;"><?=$Message?>
-</textarea>
-</div>
-</FIELDSET>
-	</td>
-</tr>
+    $data = $result[0];
+
+    // Нет данных
+    if (!is_array($data)) {
+        header('Location: ?path=' . $_GET['path']);
+    }
+
+    // Размер названия поля
+    $PHPShopGUI->field_col = 2;
+    $PHPShopGUI->setActionPanel(__("Покупатели") . ' / ' . __('Сообщение') . ' / ' . $data['name'], array('Удалить'), array('Сохранить и закрыть'));
+    
+    $user='<a class="btn btn-default btn-sm" href="?path=shopusers&id=' . $data['UID'].'&return='.$_GET['path'].'"><span class="glyphicon glyphicon-user"></span> '.$data['name'].' : '.$data['login'].'</a>';
+    
+    $message='<div class="well">'.strip_tags($data['Message'],'<b><hr><br>').'</div>';
+
+    // Содержание закладки 1
+    $Tab1 = $PHPShopGUI->setCollapse(__('Информация'), 
+            $PHPShopGUI->setField("Отправитель", $user) .
+            $PHPShopGUI->setField("Тема", $PHPShopGUI->setInput('text.required', "Subject_new", $data['Subject'])) .
+            $PHPShopGUI->setField("Переписка", $message).$PHPShopGUI->setInput('hidden', "Message_new", $data['Message']).
+            $PHPShopGUI->setField("Ответ", $PHPShopGUI->setTextarea('respond', null, false, '100%', 100,false,'Текст сообщения...'))
+    );
 
 
-</table>
-<hr>
-<table cellpadding="0" cellspacing="0" width="100%" height="50" >
-<tr>
-    <td align="left" style="padding:10">
-	<?
-if(isset($UID)) {//Отправка сообщения пользователю
-$UsersId=$UID;
-$sql="select * from ".$SysValue['base']['table_name27']." where id=$UsersId LIMIT 0, 1";
-$result=mysql_query($sql);
-$row = mysql_fetch_array($result);
-$id=$row['id'];
-$login=$row['login'];
-$password=$row['password'];
-$status=$row['status'];
-$mail=$row['mail'];
-$name=$row['name'];
-$company=$row['company'];
-$inn=$row['inn'];
-$tel=$row['tel'];
-$adres=$row['adres'];
-}
-echo "<BUTTON style=\"width: 11em; height: 2.2em; margin-left:5\"  onclick=\"GetMailTo('".$mail."','Re: ".$GetSystems['name']."');return false;\"> <img src=\"../img/icon_email.gif\"  border=\"0\" align=\"absmiddle\" hspace=\"5\">E-mail</BUTTON>";
-?>
-	</td>
-	<td align="right" style="padding:10">
+    // Запрос модуля на закладку
+    $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
-<input type="hidden" name="ids" value="<?=$ID?>" >
-	<input type="submit" name="editID" value="OK" class=but>
-	<input type="button" name="btnLang" class=but value="Удалить" onClick="PromptThis();">
-    <input type="hidden" class=but  name="productDELETE" id="productDELETE">
-	<input type="button" name="btnLang" value="Отмена" onClick="return onCancel();" class=but>
+    // Вывод формы закладки
+    $PHPShopGUI->setTab(array("Основное", $Tab1));
 
+    // Вывод кнопок сохранить и выход в футер
+    $ContentFooter =
+            $PHPShopGUI->setInput("hidden", "rowID", $data['ID'], "right", 70, "", "but") .
+            $PHPShopGUI->setInput("button", "delID", "Удалить", "right", 70, "", "but", "actionDelete.shopusers.edit") .
+            $PHPShopGUI->setInput("submit", "editID", "Сохранить", "right", 70, "", "but", "actionUpdate.shopusers.edit") .
+            $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionSave.shopusers.edit");
 
-	</td>
-</tr>
-</table>                                                                            
-</form>
-	  <?
-
-
-/////////////////////////
-if(isset($editID) and !empty($Message_new))// Запись редактирования
-{
-if(CheckedRules($UserStatus["delivery"],1) == 1){
-$sql="UPDATE ".$SysValue['base']['table_name37']."
-SET 
-DateTime='$DateTime_new',
-Subject='$Subject_new',
-Message='$Message_new', 
-enabled='1' where ID=$ids";
-$result=mysql_query($sql)or @die("".mysql_error()."");
-
-//echo $sql;
-
-///*
-echo'
-	  <script>
-CLREL("right");
-</script>
-	   ';
-//*/
-}else $UserChek->BadUserFormaWindow();
-}
-if(@$productDELETE=="doIT")// Удаление
-{
-if(CheckedRules($UserStatus["delivery"],1) == 1){
-$sql="delete from ".$SysValue['base']['table_name37']."
-where ID='$ids'";
-$result=mysql_query($sql)or @die("Невозможно изменить запись");
-echo'
-	  <script>
-CLREL("right");
-</script>
-	   ';
-}else $UserChek->BadUserFormaWindow();
+    // Футер
+    $PHPShopGUI->setFooter($ContentFooter);
+    return true;
 }
 
+// Функция удаления
+function actionDelete() {
+    global $PHPShopOrm, $PHPShopModules;
+
+    // Перехват модуля
+    $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
+
+
+    $action = $PHPShopOrm->delete(array('id' => '=' . $_POST['rowID']));
+    return array('success' => $action);
+}
+
+/**
+ * Экшен сохранения
+ */
+function actionSave() {
+    global $PHPShopGUI;
+
+    // Сохранение данных
+    actionUpdate();
+
+    header('Location: ?path=' . $_GET['path']);
+}
+
+// Функция обновления
+function actionUpdate() {
+    global $PHPShopOrm, $PHPShopModules;
+
+    if(!empty($_POST['respond'])){
+        $_POST['Message_new']='<b>Администрация</b>: '.$_POST['respond'].'<HR>'.$_POST['Message_new'];
+        $_POST['enabled_new']=1;
+    }
+        
+
+    // Перехват модуля
+    $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
+
+    $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['rowID']));
+   return array('success' => $action);
+}
+
+
+// Обработка событий
+$PHPShopGUI->getAction();
+
+// Вывод формы при старте
+$PHPShopGUI->setAction($_GET['id'], 'actionStart', 'none');
 ?>
-
-
-

@@ -4,14 +4,9 @@
     <name>Яндекс Быстрый Заказ</name>
     <faqlink>http://faq.phpshop.ru/page/yandex-order.html</faqlink>
     <description>Модуль быстрой вставки информации о клиенте из Яндекса. Учет рефералов.</description>
-    <icon>icon.png</icon>
     <category>form,sale</category>
     <adminmenu>
-        <title>Быстрый Заказ</title>
-        <podmenu>
-            <podmenu_name>Настройка Заказа</podmenu_name>
-            <podmenu_icon>icon.png</podmenu_icon>
-            <podmenu_action>javascript:miniWin('../modules/yandexorder/admpanel/adm_module.php',510,450);</podmenu_action>
-        </podmenu>
+        <title>Яндекс.Быстрый Заказ</title>
+        <capability>true</capability>
     </adminmenu>
 </module>

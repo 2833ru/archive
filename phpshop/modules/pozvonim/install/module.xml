@@ -1,17 +1,12 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.0</version>
+    <version>1.1</version>
     <name>Pozvonim</name>
     <faqlink>http://my.pozvonim.com</faqlink>
     <description>Виджет удержания клиентов от Pozvonim.com.</description>
-    <icon>telephone.png</icon>
-    <category>users</category>
+    <category>user,sale</category>
     <adminmenu>
-        <title>Удержание клиентов Pozvonim.com</title>
-        <podmenu>
-            <podmenu_name>Настройка</podmenu_name>
-            <podmenu_icon>telephone.png</podmenu_icon>
-            <podmenu_action>javascript:miniWin('../modules/pozvonim/admpanel/adm_module.php',510,480);</podmenu_action>
-        </podmenu>
+        <title>Pozvonim</title>
+        <capability>true</capability>
     </adminmenu>
 </module>

@@ -1,27 +1,20 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
     <version>1.1</version>
-    <name>Blog</name>
-   <faqlink>http://faq.phpshop.ru/page/blog.html</faqlink>
- <description>Модуль блога.</description>
-    <icon>blog.png</icon>
+    <name>Блог</name>
+    <faqlink>http://faq.phpshop.ru/page/blog.html</faqlink>
+    <description>Модуль блога.</description>
     <category>soc</category>
     <adminmenu>
-        <title>Blog</title>
+        <title>Блог</title>
+        <capability>true</capability>
         <podmenu>
-            <podmenu_name>Настройка</podmenu_name>
-            <podmenu_icon>option.png</podmenu_icon>
-            <podmenu_action>javascript:miniWin('../modules/blog/admpanel/adm_module.php',510,450);</podmenu_action>
+            <podmenu_name>Обзор блога</podmenu_name>
+            <podmenu_action>dir.blog</podmenu_action>
         </podmenu>
         <podmenu>
-            <podmenu_name>Blog</podmenu_name>
-            <podmenu_icon>blog.png</podmenu_icon>
-            <podmenu_action>javascript:window.location.replace('?plugin=blog')</podmenu_action>
+            <podmenu_name>Новая запись в блог</podmenu_name>
+            <podmenu_action>dir.blog&amp;action=new</podmenu_action>
         </podmenu>
-        <menu>
-            <menu_name>Blog</menu_name>
-            <menu_icon>blog.png</menu_icon>
-            <menu_action>window.location.replace('?plugin=blog')</menu_action>
-        </menu>
     </adminmenu>
 </module>

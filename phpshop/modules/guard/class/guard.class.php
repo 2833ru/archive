@@ -3,26 +3,24 @@
 /**
  * PHPShop Guard
  * @author PHPShop Software
- * @version 1.4
+ * @version 1.6
  * @package PHPShopInc
  */
 class Guard {
 
-    var $version = '1.3';
-    var $none_chek_temlates = array('aeroblue', 'blue_classic', 'grass', 'gray', 'green_classic', 'red_classic', 'pink',
-        'yellow_classic', 'phpshop_1', 'phpshop_2', 'phpshop_3', 'phpshop_4', 'phpshop_5', 'phpshop_6', 'phpshop_7',
-        'phpshop_8', 'example');
-    var $none_chek_dir = array('UserFiles', 'install', '1cManager', 'backup', 'files', 'csv', 'editor3', 'editors', 'Packs', 'doc',
+    var $version = '1.6';
+    var $none_chek_temlates = array('example');
+    var $none_chek_dir = array('UserFiles', 'install', '1cManager', 'backup', 'files', 'csv', 'editors', 'Packs', 'doc',
         '_dev_', '.hg', 'awstats');
-    var $src = array('php', 'html', 'tpl', 'js');
+    var $src = array('php', 'js');
     var $update_url = 'http://www.phpshop.ru/update/guard/update2.php';
     var $update_enabled = true;
     var $backup_path = 'UserFiles/Files/';
     var $license_path = 'license/';
-    var $none_chek_file = array('../phpshop/lib/JsHttpRequest/JsHttpRequest.js');
+    var $none_chek_file = array('example');
 
     // Конструктор
-    function Guard($dir_global) {
+    function __construct($dir_global) {
         global $PHPShopSystem, $_classPath;
         $this->classPath = $_classPath;
         $this->dir_global = $dir_global;
@@ -255,10 +253,65 @@ class Guard {
 
     // Сообщение
     function message($content, $caption = 'PHPShop Guard') {
-
-        $message = '<h2>' . $caption . '</h2><hr><p>' . $content . '</p>';
-        $message.= '<hr>';
-        $message.= date('r') . ' / -- guardian system v. ' . $this->version;
+        $message = '<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="windows-1251">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>' . $caption . '</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+        <style>
+            html {
+                position: relative;
+                min-height: 100%;
+            }
+            body {
+                margin-bottom: 60px;
+            }
+            .footer {
+                position: absolute;
+                bottom: 0;
+                width: 100%;
+                height: 60px;
+                background-color: #f5f5f5;
+            }
+            .container {
+                width: auto;
+                max-width: 680px;
+                padding: 0 15px;
+            }
+            .container .text-muted {
+                margin: 20px 0;
+            }
+            a .glyphicon{
+                padding-right: 3px;
+            }
+        </style>
+    </head>
+    <body role="document">
+        <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+        <div class="container">
+            <div class="page-header">
+                <h1>' . $caption . ' ' . $this->version . '</h1>
+            </div>
+            <p class="lead">
+            ' . $content . '
+            </p>
+        </div>
+        <footer class="footer">
+            <div class="container">
+                <p class="text-muted">' . date('r') . '</p>
+            </div>
+        </footer>
+        <script>
+        if(window.opener)
+        window.opener.location.reload();
+        </script>
+    </body>
+    </body>
+</html>';
         exit($message);
     }
 
@@ -281,8 +334,7 @@ class Guard {
 
                 // Пишем лог
                 $PHPShopOrm = new PHPShopOrm($this->SysValue['base']['guard']['guard_log']);
-                $PHPShopOrm->insert(array('date_new' => $this->date));
-                $this->log_id = mysql_insert_id();
+                $this->log_id = $PHPShopOrm->insert(array('date_new' => $this->date));
                 break;
 
             case "end":
@@ -387,14 +439,13 @@ class Guard {
 
                 // Новая запись
                 $PHPShopOrm = new PHPShopOrm($this->SysValue['base']['guard']['guard_crc']);
-                $PHPShopOrm->insert(array('log_id_new' => $this->log_id, 'date_new' => $this->date, 'crc_name_new' => md5($val),
+                $this->crc_num = $PHPShopOrm->insert(array('log_id_new' => $this->log_id, 'date_new' => $this->date, 'crc_name_new' => md5($val),
                     'crc_file_new' => $key, 'path_file_new' => $val));
                 $PHPShopOrm = new PHPShopOrm($this->SysValue['base']['guard']['guard_crc']);
             }
 
         $this->last_crc = $this->date;
-        $this->crc_num = mysql_insert_id();
-
+        //$this->crc_num = mysql_insert_id();
         // Заносим в БД дату последней проверки
         $PHPShopOrm = new PHPShopOrm($this->SysValue['base']['guard']['guard_system']);
         $PHPShopOrm->update(array('last_crc_new' => $this->date));
@@ -530,13 +581,13 @@ http://' . $_SERVER['SERVER_NAME'] . '/phpshop/modules/guard/admin.php?do=create
 ';
         // Отправить в карантин
         /*
-        $this->license();
-        if (($this->date) < ($this->support) and is_array($this->changes))
-            $content.='
-Если изменения файлов было несанкционированным и есть подозрение, что произошло заражение вирусом, то перейдите по ссылке
-для анализа измененных файлов из карантина службой поддержки PHPShop Guard:
-http://' . $_SERVER['SERVER_NAME'] . '/phpshop/modules/guard/admin.php?do=quarantine&backup=' . $last_backup . '
-';*/
+          $this->license();
+          if (($this->date) < ($this->support) and is_array($this->changes))
+          $content.='
+          Если изменения файлов было несанкционированным и есть подозрение, что произошло заражение вирусом, то перейдите по ссылке
+          для анализа измененных файлов из карантина службой поддержки PHPShop Guard:
+          http://' . $_SERVER['SERVER_NAME'] . '/phpshop/modules/guard/admin.php?do=quarantine&backup=' . $last_backup . '
+          '; */
 
         $content.='
 ---

@@ -12,9 +12,9 @@ class AddToTemplate extends PHPShopProductElements {
 
     var $debug = false;
 
-    function AddToTemplate() {
+    function __construct() {
+        parent::__construct();
         $this->objBase = $GLOBALS['SysValue']['base']['products'];
-        parent::PHPShopProductElements();
     }
 
     function showcase() {
@@ -56,11 +56,11 @@ class AddVisualCartModuleToTemplate extends PHPShopProductElements {
 
     var $debug = false;
 
-    function AddVisualCartModuleToTemplate($par = false) {
+    function __construct($par = false) {
         // если включён модуль визуальной корзины выводим ее в переменную
         if ($par instanceof AddToTemplateVisualCart)
             $GLOBALS['SysValue']['other']['visualcart'] = $par->cart;
-        parent::PHPShopProductElements();
+        parent::__construct();
     }
 
 }

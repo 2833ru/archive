@@ -1,5 +1,3 @@
-
-
 DROP TABLE IF EXISTS `phpshop_modules_yandexkassa_system`;
 CREATE TABLE IF NOT EXISTS `phpshop_modules_yandexkassa_system` (
   `id` int(11) NOT NULL auto_increment,

@@ -1,100 +1,81 @@
-<?
-$_classPath="../../../";
-include($_classPath."class/obj.class.php");
-PHPShopObj::loadClass("base");
-PHPShopObj::loadClass("system");
-PHPShopObj::loadClass("orm");
+<?php
 
-
-$PHPShopBase = new PHPShopBase($_classPath."inc/config.ini");
-include($_classPath."admpanel/enter_to_admin.php");
-
-$PHPShopSystem = new PHPShopSystem();
-
-// Настройки модуля
-PHPShopObj::loadClass("modules");
-$PHPShopModules = new PHPShopModules($_classPath."modules/");
-
-
-// Редактор
-PHPShopObj::loadClass("admgui");
-$PHPShopGUI = new PHPShopGUI();
-$PHPShopGUI->debug_close_window=false;
-$PHPShopGUI->reload='top';
-$PHPShopGUI->ajax="'modules','button'";
-$PHPShopGUI->includeJava='<SCRIPT language="JavaScript" src="../../../lib/Subsys/JsHttpRequest/Js.js"></SCRIPT>';
-$PHPShopGUI->dir=$_classPath."admpanel/";
+$TitlePage = __('Редактирование записи #' . intval($_GET['id']));
 
 // SQL
 $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.button.button_forms"));
-
 
 // Функция обновления
 function actionUpdate() {
     global $PHPShopOrm;
 
-    if(empty($_POST['enabled_new'])) $_POST['enabled_new']=0;
+    if (empty($_POST['enabled_new']))
+        $_POST['enabled_new'] = 0;
 
-    $action = $PHPShopOrm->update($_POST,array('id'=>'='.$_POST['newsID']));
-    return $action;
+    $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['rowID']));
+    return array('success'=>$action);
 }
 
 // Начальная функция загрузки
 function actionStart() {
-    global $PHPShopGUI,$PHPShopSystem,$SysValue,$_classPath,$PHPShopOrm;
-
-
-    $PHPShopGUI->dir=$_classPath."admpanel/";
-    $PHPShopGUI->title="Редактирование кнопки";
-    $PHPShopGUI->size="630,530";
-
+    global $PHPShopGUI, $PHPShopOrm;
 
     // Выборка
-    $data = $PHPShopOrm->select(array('*'),array('id'=>'='.$_GET['id']));
-    @extract($data);
+    $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
 
+    $PHPShopGUI->field_col = 1;
+    $Tab1 = $PHPShopGUI->setField('Название', $PHPShopGUI->setInputText(false, 'name_new', $data['name']));
 
-    // Графический заголовок окна
-    $PHPShopGUI->setHeader("Редактирование кнопки","",$PHPShopGUI->dir."img/i_display_settings_med[1].gif");
+    $Tab1.= $PHPShopGUI->setField('Приоритет', $PHPShopGUI->setInputText('№', 'num_new', $data['num'], '100') .
+            $PHPShopGUI->setCheckbox('enabled_new', 1, 'Вкл.', $data['enabled']));
+       
+    // Редактор 
+    $PHPShopGUI->setEditor('ace', true);
+    $oFCKeditor = new Editor('content_new');
+    $oFCKeditor->Height = '320';
+    $oFCKeditor->Value = $data['content'];
 
-
-    $Tab1=$PHPShopGUI->setField('Опции:',$PHPShopGUI->setInputText('Название','name_new',$name,'300',false,'right').
-            $PHPShopGUI->setInputText('Порядок','num_new',$num,'30').
-            $PHPShopGUI->setCheckbox('enabled_new',1,'Вывод',$enabled));
-    $Tab1.=$PHPShopGUI->setTextarea('content_new', $content, 'none', '98%', '250px');
+    $Tab1.=$PHPShopGUI->setField('HTML Код', $oFCKeditor->AddGUI());
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное",$Tab1,350));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, 350));
 
     // Вывод кнопок сохранить и выход в футер
-    $ContentFooter=
-            $PHPShopGUI->setInput("hidden","newsID",$id,"right",70,"","but").
-            $PHPShopGUI->setInput("button","","Отмена","right",70,"return onCancel();","but").
-            $PHPShopGUI->setInput("submit","delID","Удалить","right",70,"","but","actionDelete").
-            $PHPShopGUI->setInput("submit","editID","ОК","right",70,"","but","actionUpdate");
+    $ContentFooter =
+            $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .
+            $PHPShopGUI->setInput("button", "delID", "Удалить", "right", 70, "", "but", "actionDelete.modules.edit") .
+            $PHPShopGUI->setInput("submit", "editID", "Сохранить", "right", 70, "", "but", "actionUpdate.modules.edit") .
+            $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionSave.modules.edit");
 
     $PHPShopGUI->setFooter($ContentFooter);
     return true;
 }
 
+/**
+ * Экшен сохранения
+ */
+function actionSave() {
+    global $PHPShopGUI;
+
+
+    // Сохранение данных
+    actionUpdate();
+
+    header('Location: ?path=' . $_GET['path']);
+}
 
 // Функция удаления
 function actionDelete() {
     global $PHPShopOrm;
-    $action = $PHPShopOrm->delete(array('id'=>'='.$_POST['newsID']));
-    return $action;
+    $action = $PHPShopOrm->delete(array('id' => '=' . $_POST['rowID']));
+    return array("success" =>  $action);
 }
 
-if($UserChek->statusPHPSHOP < 2) {
 
-    // Вывод формы при старте
-    $PHPShopGUI->setAction($_GET['id'],'actionStart','none');
+// Обработка событий
+$PHPShopGUI->getAction();
 
-    // Обработка событий
-    $PHPShopGUI->getAction();
-
-}else $UserChek->BadUserFormaWindow();
+// Вывод формы при старте
+$PHPShopGUI->setAction($_GET['id'], 'actionStart', 'none');
 
 ?>
-
-

@@ -4,20 +4,13 @@
     <name>PayPal</name>
     <faqlink>http://faq.phpshop.ru/page/paypal.html</faqlink>
     <description>Прием оплат через PayPal.</description>
-    <icon>icon.png</icon>
     <category>sale</category>
-    <status></status>
     <adminmenu>
         <title>Прием оплат через PayPal</title>
-        <podmenu>
-            <podmenu_name>Настройка</podmenu_name>
-            <podmenu_icon>icon.png</podmenu_icon>
-            <podmenu_action>javascript:miniWin('../modules/paypal/admpanel/adm_module.php',510,450);</podmenu_action>
-        </podmenu>
+        <capability>true</capability>
         <podmenu>
             <podmenu_name>Журнал операций</podmenu_name>
-            <podmenu_icon>log.png</podmenu_icon>
-            <podmenu_action>javascript:DoReload('modules','paypal');</podmenu_action>
+            <podmenu_action>dir.paypal</podmenu_action>
         </podmenu>
     </adminmenu>
 </module>

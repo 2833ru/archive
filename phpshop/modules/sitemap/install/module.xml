@@ -4,14 +4,9 @@
     <name>Sitemap</name>
     <faqlink>http://faq.phpshop.ru/page/sitemap.html</faqlink>
     <description>Модуль генерации карты сайта. Учитываются SEO ссылки.</description>
-    <icon>icon.png</icon>
     <category>seo</category>
     <adminmenu>
         <title>Sitemap</title>
-        <podmenu>
-            <podmenu_name>Настройка Sitemap</podmenu_name>
-            <podmenu_icon>icon.png</podmenu_icon>
-            <podmenu_action>javascript:miniWin('../modules/sitemap/admpanel/adm_module.php',650,450);</podmenu_action>
-        </podmenu>
+        <capability>true</capability>
     </adminmenu>
 </module>

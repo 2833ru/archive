@@ -30,8 +30,8 @@ $uname = $SysValue['connect']['user_db'];
 // MySQL password
 $upass = $SysValue['connect']['pass_db'];
 
-$con = @mysql_connect($host, $uname, $upass) or die("Could not connect");
-mysql_select_db($dbname, $con) or die("Could not select db");
+$link_db = @mysqli_connect($host, $uname, $upass);
+mysqli_select_db($link_db,$dbname);
 
 switch($option){
     case 1:
@@ -45,7 +45,7 @@ switch($option){
     default: $sql="enabled='0'";
 }
 
-mysql_query("update phpshop_products set $sql where datas<".(time()-(86400*$day)));
+mysqli_query($link_db,"update phpshop_products set $sql where datas<".(time()-(86400*$day)));
 
 echo "Выполнено";
 ?>

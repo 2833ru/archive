@@ -8,7 +8,7 @@ class PHPShopOneclick extends PHPShopCore {
     /**
      * Конструктор
      */
-    function PHPShopOneclick() {
+    function __construct() {
 
         // Имя Бд
         $this->objBase = $GLOBALS['SysValue']['base']['oneclick']['oneclick_jurnal'];
@@ -25,7 +25,7 @@ class PHPShopOneclick extends PHPShopCore {
             'name' => 'done',
             'nav' => 'index'
         );
-        parent::PHPShopCore();
+        parent::__construct();
 
         // Хлебные крошки
         $this->navigation(null, __('Быстрый заказ'));

@@ -3,7 +3,7 @@
 /**
  * Библиотека для работы с файлами
  * @author PHPShop Software
- * @version 1.1
+ * @version 1.2
  * @package PHPShopClass
  */
 class PHPShopFile {
@@ -12,7 +12,7 @@ class PHPShopFile {
      * Права на запись файла
      * @param string $file имя файла
      */
-    function chmod($file, $error = false) {
+    static function chmod($file, $error = false) {
         if (function_exists('chmod')) {
             if (@chmod($file, 0775))
                 return true;
@@ -30,12 +30,13 @@ class PHPShopFile {
      * @param string $type параметр записи
      * @param bool $error вывод ошибки
      */
-    function write($file, $csv, $type = 'w+', $error = false) {
+    static function write($file, $csv, $type = 'w+', $error = false) {
         $fp = @fopen($file, $type);
         if ($fp) {
             //stream_set_write_buffer($fp, 0);
             fputs($fp, $csv);
             fclose($fp);
+            return true;
         } elseif ($error)
             echo 'Нет файла ' . $file;
     }
@@ -47,7 +48,7 @@ class PHPShopFile {
      * @param array $csv данные для записи
      * @param bool $error вывод ошибки
      */
-    function writeCsv($file, $csv, $error = false) {
+    static function writeCsv($file, $csv, $error = false) {
         $fp = @fopen($file, "w+");
         if ($fp) {
             foreach ($csv as $value) {
@@ -63,10 +64,11 @@ class PHPShopFile {
      * Чтение CSV файла
      * @param string $file адрес файла
      * @param string $function имя функции обработчика 
+     * @param string $delim разделитель
      */
-    function readCsv($file, $function) {
-        $fp = fopen($file, "r");
-        while (($data = fgetcsv($fp, 1000, ";")) !== FALSE) {
+    static function readCsv($file, $function, $delim=';') {
+        $fp = @fopen($file, "r");
+        while (($data = @fgetcsv($fp, 10000,  $delim)) !== FALSE) {
             call_user_func($function, $data);
         }
         fclose($fp);
@@ -78,12 +80,12 @@ class PHPShopFile {
      * @param int $level степень сжатия
      * @return bool
      */
-    function gzcompressfile($source, $level = false) {
+    static function gzcompressfile($source, $level = false) {
         $dest = $source . '.gz';
         $mode = 'wb' . $level;
         $error = false;
-        if ($fp_out = gzopen($dest, $mode)) {
-            if ($fp_in = fopen($source, 'rb')) {
+        if ($fp_out = @gzopen($dest, $mode)) {
+            if ($fp_in = @fopen($source, 'rb')) {
                 while (!feof($fp_in))
                     gzwrite($fp_out, fread($fp_in, 1024 * 512));
                 fclose($fp_in);
@@ -92,7 +94,7 @@ class PHPShopFile {
                 $error = true;
             gzclose($fp_out);
             unlink($source);
-            rename($dest, $source . '.bz2');
+            //rename($dest, $source . '.bz2');
         }
         else
             $error = true;
@@ -108,7 +110,7 @@ class PHPShopFile {
      * @param string $function функция обработки
      * @return mixed
      */
-    function searchFile($dir, $function) {
+    static function searchFile($dir, $function) {
         $user_func_result = null;
         if (is_dir($dir))
             if (@$dh = opendir($dir)) {

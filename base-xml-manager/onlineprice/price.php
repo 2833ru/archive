@@ -23,7 +23,7 @@ $_POST['sql_test']='<?xml version="1.0" encoding="windows-1251"?>
 
 class PHPShopPrice extends PHPShopBaseXml {
     
-    function PHPShopPrice() {
+    function __construct() {
         $this->debug=false;
         $this->true_method=array('select','option');
         $this->true_from=array('table_name','table_name2','table_name3','table_name24','');
@@ -45,7 +45,7 @@ class PHPShopPrice extends PHPShopBaseXml {
         $this->option['price5']="Цена 7";
         $this->option['pict']=true;
         $this->option['paginator_off']=false;
-        parent::PHPShopBaseXml();
+        parent::__construct();
     }
     
     function admin() {

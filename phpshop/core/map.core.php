@@ -12,14 +12,14 @@ class PHPShopMap extends PHPShopCore {
     /**
      * Конструктор
      */
-    function PHPShopMap() {
+    function __construct() {
 
         $this->debug = false;
         $this->memory = true;
 
         // Имя Бд
         $this->objBase = $GLOBALS['SysValue']['base']['products'];
-        parent::PHPShopCore();
+        parent::__construct();
     }
 
     /**

@@ -11,8 +11,8 @@
         <META name="domen-copyright" content="@pageDomen@">
         <META content="General" name="rating">
         <META name="ROBOTS" content="ALL">
-        <LINK rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-        <LINK rel="icon" href="favicon.ico" type="image/x-icon">
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+        <link rel="icon" href="/favicon.ico"> 
         <SCRIPT language="JavaScript" type="text/javascript" src="phpshop/lib/Subsys/JsHttpRequest/Js.js"></SCRIPT>
         <SCRIPT language="JavaScript" type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/js.js"></SCRIPT>
         <link rel="stylesheet" type="text/css" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/bootstrap.css">
@@ -157,7 +157,7 @@
                                         <li class="dropdown">
                                             <div id="homepage"><a href="/"><img src="images/homepage.png" title="На главную" alt="На главную"></a></div>
                                             <ul class="dropdown-menu">
-                                                @leftCatalTable@
+                                                @leftCatalTableNt@
                                                 <div class="menu_links"> <a href="/news/" title="Новости">Новости</a> </div>
                                                 @topMenu@
                                                 @pageCatal@

@@ -1,0 +1,3 @@
+.treegrid-indent, .treegrid-sub {width:10px; height: 10px; display: inline-block; position: relative;}
+.treegrid-expander {width:16px; height: 16px; display: inline-block; position: relative; cursor: pointer;}
+.treegrid-active {font-weight: bold; text-decoration-line: underline; text-decoration-style: dotted; text-decoration-color: #2FA4E7; }

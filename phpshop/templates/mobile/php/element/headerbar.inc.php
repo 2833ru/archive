@@ -10,7 +10,7 @@ class AddToTemplate extends PHPShopProductElements {
 
     function __construct() {
         $this->objBase = $GLOBALS['SysValue']['base']['products'];
-        parent::PHPShopProductElements();
+        parent::__construct();
     }
 
     function header_bar() {

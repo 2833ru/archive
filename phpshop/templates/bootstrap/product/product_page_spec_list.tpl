@@ -6,25 +6,51 @@
     <h2>@catalogCategory@</h2>
 </div>
 
-<div class="well">
+<div class="well hidden-xs" id="filter-selection-well">
     <div class="row">
-        <div class="col-xs-8">
-            Вывод товаров:  <a href="?@productVendor@&f=@php echo $_GET['f']; php@&s=@php echo $_GET['s']; php@&gridChange=1" class="btn btn-default btn-sm @gridSetAactive@" data-toggle="tooltip" data-placement="top" title="Товары списком"><span class="glyphicon glyphicon-th-list" ></span></a> <a href="?@productVendor@&f=@php echo $_GET['f']; php@&s=@php echo $_GET['s']; php@&gridChange=2" class="btn btn-default btn-sm @gridSetBactive@"  data-toggle="tooltip" data-placement="top" title="Товары сеткой"><span class="glyphicon glyphicon-th"></span></a>  
+        <div class="col-md-6">
+            Вывод товаров:  
+
+            <div class="btn-group" data-toggle="buttons">
+                <label class="btn btn-sm btn-default glyphicon glyphicon-th-list @gridSetAactive@" data-toggle="tooltip" data-placement="top" title="Товары списком">
+                    <input type="radio" name="gridChange" value="1"  autocomplete="off" data-url="?@productVendor@@php if(isset($_GET['f'])) echo '&f='.$_GET['f']; if(isset($_GET['s'])) echo  '&s='.$_GET['s']; php@&gridChange=1">
+                </label>
+                <label class="btn btn-sm btn-default glyphicon glyphicon-th @gridSetBactive@" data-toggle="tooltip" data-placement="top" title="Товары сеткой">
+                    <input type="radio" name="gridChange" value="2" autocomplete="off" data-url="?@productVendor@@php if(isset($_GET['f'])) echo '&f='.$_GET['f']; if(isset($_GET['s'])) echo  '&s='.$_GET['s']; php@&gridChange=2">
+                </label>
+            </div> 
 
         </div>
-        <div class="col-xs-4 text-right">
+        <div class="col-md-6 text-right">
+
+
             Сортировка: 
-            <a href="?@productVendor@&f=2&s=@php echo $_GET['s']; php@&gridChange=@php echo $_GET['gridChange']; php@" class="btn btn-default btn-sm @fSetBactive@"  data-toggle="tooltip" data-placement="top" title="Наименование по возрастанию"><span class="glyphicon glyphicon-sort-by-alphabet" ></span></a> 
-            <a href="?@productVendor@&f=1&s=@php echo $_GET['s']; php@&gridChange=@php echo $_GET['gridChange']; php@" class="btn btn-default btn-sm @fSetAactive@" data-toggle="tooltip" data-placement="top" title="Наименование по убыванию"><span class="glyphicon glyphicon-sort-by-alphabet-alt" ></span></a>
-            <a href="?@productVendor@&f=@php echo $_GET['f']; php@&s=2&gridChange=@php echo $_GET['gridChange']; php@" class="btn btn-default btn-sm @sSetBactive@"  data-toggle="tooltip" data-placement="top" title="Цена по возрастанию"><span class="glyphicon glyphicon-sort-by-attributes" ></span></a>
-            <a href="?@productVendor@&f=@php echo $_GET['f']; php@&s=1&gridChange=@php echo $_GET['gridChange']; php@" class="btn btn-default btn-sm @sSetAactive@"  data-toggle="tooltip" data-placement="top" title="Цена по убыванию"><span class="glyphicon glyphicon-sort-by-attributes-alt" ></span></a>
+            <div class="btn-group" data-toggle="buttons">
+                <label class="btn btn-sm btn-default glyphicon glyphicon-signal @sSetCactive@" data-toggle="tooltip" data-placement="top" title="Рейтинг">
+                    <input type="radio" name="s" value="3" autocomplete="off" data-url="?@productVendor@&s=3@php if(isset($_GET['f'])) echo  '&f='.$_GET['f']; if(isset($_GET['gridChange'])) echo '&gridChange='.$_GET['gridChange']; php@">
+                </label>
+                <label class="btn btn-sm btn-default glyphicon glyphicon-sort-by-alphabet @sSetBactive@" data-toggle="tooltip" data-placement="top" title="Наименование">
+                    <input type="radio" name="s" value="1"  autocomplete="off" data-url="?@productVendor@&s=1@php if(isset($_GET['f'])) echo  '&f='.$_GET['f']; if(isset($_GET['gridChange'])) echo '&gridChange='.$_GET['gridChange']; php@">
+                </label>
+                <label class="btn btn-sm btn-default glyphicon glyphicon glyphicon-sort-by-order @sSetAactive@" data-toggle="tooltip" data-placement="top" title="Цена">
+                    <input type="radio" name="s" value="2" autocomplete="off" data-url="?@productVendor@&s=2@php if(isset($_GET['f'])) echo  '&f='.$_GET['f']; if(isset($_GET['gridChange'])) echo '&gridChange='.$_GET['gridChange']; php@">
+                </label>
+
+            </div>    
+
+            <div class="btn-group" data-toggle="buttons">
+                <label class="btn btn-sm btn-default glyphicon glyphicon-sort-by-attributes @fSetBactive@" data-toggle="tooltip" data-placement="top" title="По возрастанию">
+                    <input type="radio" name="f" value="1"  autocomplete="off" data-url="?@productVendor@&f=1@php if(isset($_GET['s'])) echo  '&s='.$_GET['s']; if(isset($_GET['gridChange'])) echo '&gridChange='.$_GET['gridChange']; php@">
+                </label>
+                <label class="btn btn-sm btn-default glyphicon glyphicon-sort-by-attributes-alt @fSetAactive@" data-toggle="tooltip" data-placement="top" title="По убыванию">
+                    <input type="radio" name="f" value="2" autocomplete="off" data-url="?@productVendor@&f=2@php if(isset($_GET['s'])) echo  '&s='.$_GET['s']; if(isset($_GET['gridChange'])) echo '&gridChange='.$_GET['gridChange']; php@">
+                </label>
+            </div>  
+
+
         </div>
     </div> 
-    <p>
-        <form method="post" action="/shop/CID_@productId@@nameLat@.html" name="sort">
-            @vendorDisp@ @vendorSelectDisp@
-        </form>
-    </p>
+    <a name="sort"></a>  
 </div>
 <div class="template-product-list">@productPageDis@</div>
 

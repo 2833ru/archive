@@ -5,26 +5,6 @@ if (substr(phpversion(), 0, 3) > 5.2) {
     include_once( $_SERVER['DOCUMENT_ROOT'] . '/phpshop/modules/ddelivery/class/mrozk/IntegratorShop.php' );
 }
 
-$_classPath = "../../../";
-include($_classPath . "class/obj.class.php");
-PHPShopObj::loadClass("base");
-PHPShopObj::loadClass("system");
-PHPShopObj::loadClass("security");
-PHPShopObj::loadClass("orm");
-
-$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
-include($_classPath . "admpanel/enter_to_admin.php");
-
-
-// Настройки модуля
-PHPShopObj::loadClass("modules");
-$PHPShopModules = new PHPShopModules($_classPath . "modules/");
-
-
-// Редактор
-PHPShopObj::loadClass("admgui");
-$PHPShopGUI = new PHPShopGUI();
-
 // SQL
 $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.ddelivery.ddelivery_system"));
 
@@ -55,19 +35,8 @@ function actionUpdate() {
         $_POST['zabor_new'] = 0;
     }
     $action = $PHPShopOrm->update($_POST);
+    header('Location: ?path=modules&install=check');
     return $action;
-}
-
-/**
- * Экшен сохранения
- */
-function actionSave() {
-    global $PHPShopGUI;
-
-    // Сохранение данных
-    actionUpdate();
-
-    $PHPShopGUI->setAction(1, 'actionStart', 'none');
 }
 
 function _prepareSelect($val, $arrVals) {
@@ -83,14 +52,21 @@ function _prepareSelect($val, $arrVals) {
 }
 
 function actionStart() {
-    global $PHPShopGUI, $PHPShopSystem, $SysValue, $_classPath, $PHPShopOrm;
-    
-    if (substr(phpversion(), 0, 3) < 5.3)
-            exit("PHP ".phpversion()." is not supported");
+    global $PHPShopGUI, $PHPShopOrm, $select_name;
 
-    $PHPShopGUI->dir = $_classPath . "admpanel/";
-    $PHPShopGUI->title = "Настройки";
-    $PHPShopGUI->size = "1550,750";
+    if (substr(phpversion(), 0, 3) < 5.3)
+        exit("PHP " . phpversion() . " is not supported");
+
+    $PHPShopGUI->action_button['Синхронизация'] = array(
+        'name' => 'Синхронизация статусов',
+        'action' => '../modules/ddelivery/admpanel/status.php?action=2',
+        'class' => 'btn btn-default btn-sm navbar-btn btn-action-panel-blank',
+        'type' => 'button',
+        'icon' => 'glyphicon glyphicon-refresh'
+    );
+
+
+    $PHPShopGUI->setActionPanel(__("Настройка модуля") . ' <span id="module-name">' . ucfirst($_GET['id'] . '</span>'), $select_name, array('Сохранить и закрыть', 'Синхронизация'));
 
     // Выборка
     $data = $PHPShopOrm->select();
@@ -110,9 +86,6 @@ function actionStart() {
     $rezhim_value[] = array('Рабочий (cabinet.ddelivery.ru)', '1');
     $rezhim_value = _prepareSelect($rezhim, $rezhim_value);
 
-    // Графический заголовок окна
-    $PHPShopGUI->setHeader("Настройки модуля 'DD'", "настройки поключения", $PHPShopGUI->dir . "img/i_display_settings_med[1].gif");
-
     $Tab1 = $PHPShopGUI->setText('<b>Ключ можно получить в личном кабинете
                                   DDelivery.ru, зарегистрировавшись на сайте.</b>', 'none');
     $Tab1 .= $PHPShopGUI->setField('API ключ из личного кабинета', $PHPShopGUI->setInputText(false, 'api_new', $api, 300));
@@ -130,8 +103,8 @@ function actionStart() {
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['delivery']);
     $data = $PHPShopOrm->select(array('id', 'city'), array('PID' => " != " . "0", 'enabled' => " = '" . "1'"), false /* , array('limit' => 1) */);
 
-    $courier_way_select = '<select name="courier_way_new[]" size="8" multiple>';
-    $self_way_select = '<select name="self_way_new[]" size="8" multiple>';
+    $courier_way_select = '<select name="courier_way_new[]" multiple class="selectpicker">';
+    $self_way_select = '<select name="self_way_new[]" multiple class="selectpicker">';
 
     if (is_array($data)) {
         foreach ($data as $item) {
@@ -156,13 +129,13 @@ function actionStart() {
 
 
 
-    $Tab1 .= $PHPShopGUI->setField('Доступные способы доставки модуля', $PHPShopGUI->setSelect('type_new', $type_value, 400));
+    $Tab1 .= $PHPShopGUI->setField('Доступные способы доставки модуля', $PHPShopGUI->setSelect('type_new', $type_value));
     $Tab1 .= $PHPShopGUI->setField('Соответствие способа доставки в DDelivery для Самовывоза', $self_way_select, 'left');
     $Tab1 .= $PHPShopGUI->setField('Соответствие способа доставки в DDelivery для Курьера', $courier_way_select);
 
 
     $Tab1 .= $PHPShopGUI->setText('<b>Для отладки модуля, пожалуйста, используйте режим тестирования!</b>', 'none');
-    $Tab1.=$PHPShopGUI->setField('Режим работы', $PHPShopGUI->setSelect('rezhim_new', $rezhim_value, 400));
+    $Tab1.=$PHPShopGUI->setField('Режим работы', $PHPShopGUI->setSelect('rezhim_new', $rezhim_value));
 
     $Tab1 .= $PHPShopGUI->setText('<b>Вы можете снизить оценочную стоимость доставки, за счет снижения размеров страховки.</b>', 'none');
     $Tab1.=$PHPShopGUI->setField('Какой % от стоимости товара страхуется?', $PHPShopGUI->setInputText(false, 'declared_new', $declared, 300));
@@ -199,10 +172,10 @@ function actionStart() {
 
     $Tab5 = $PHPShopGUI->setText('<b>Выберите поле, соответствующее способу оплаты "Оплата на месте".
                                       Например "Оплата курьеру". У Вас в системе может быть только 1 такой способ.</b>', 'none');
-    $Tab5 .= $PHPShopGUI->setField('Оплата на месте', $PHPShopGUI->setSelect('payment_new', $payment_value, 400));
+    $Tab5 .= $PHPShopGUI->setField('Оплата на месте', $PHPShopGUI->setSelect('payment_new', $payment_value));
     $self_list = unserialize($self_list);
     $courier_list = unserialize($courier_list);
-    $payment_courier = '<select name="courier_list_new[]">';
+    $payment_courier = '<select name="courier_list_new[]" class="selectpicker">';
     //$payment_self = '<select name="self_list_new[]" size="8" multiple>';
     foreach ($payment_value as $item) {
         if (@in_array($item[1], $courier_list)) {
@@ -228,7 +201,7 @@ function actionStart() {
     $Tab5 .= $PHPShopGUI->setLine();
     $Tab5 .= $PHPShopGUI->setText('<b>Выберите статус, при котором заявки из Вашей системы будут уходить в DDelivery.
                                       Помните, что отправка означает готовность отгрузить заказ на следующий рабочий день!</b>', 'none');
-    $Tab5 .= $PHPShopGUI->setField('Статус для отправки', $PHPShopGUI->setSelect('status_new', $status_value, 400));
+    $Tab5 .= $PHPShopGUI->setField('Статус для отправки', $PHPShopGUI->setSelect('status_new', $status_value));
 
 
     $Tab5.= $PHPShopGUI->setText('<b>Габариты по умолчанию</b>', 'none');
@@ -280,7 +253,7 @@ function actionStart() {
 
 
     $method1_value = _prepareSelect($method1, $method1_value);
-    $Tab3 .=$PHPShopGUI->setField('Действие', $PHPShopGUI->setSelect('method1_new', $method1_value, 150), 'left');
+    $Tab3 .=$PHPShopGUI->setField('Действие', $PHPShopGUI->setSelect('method1_new', $method1_value), 'left');
 
 
     $Tab3 .= $PHPShopGUI->setField('Сумма', $PHPShopGUI->setInputText(false, 'methodval1_new', $methodval1, 100), 'left');
@@ -292,7 +265,7 @@ function actionStart() {
     $Tab3 .= $PHPShopGUI->setField('до', $PHPShopGUI->setInputText(false, 'to2_new', $to2, 100), 'left');
 
     $method2_value = _prepareSelect($method2, $method1_value);
-    $Tab3 .=$PHPShopGUI->setField('Действие', $PHPShopGUI->setSelect('method2_new', $method2_value, 150), 'left');
+    $Tab3 .=$PHPShopGUI->setField('Действие', $PHPShopGUI->setSelect('method2_new', $method2_value), 'left');
     $Tab3 .= $PHPShopGUI->setField('Сумма', $PHPShopGUI->setInputText(false, 'methodval2_new', $methodval2, 100), 'left');
 
     $Tab3 .=$PHPShopGUI->setLine();
@@ -303,7 +276,7 @@ function actionStart() {
 
     $method3_value = _prepareSelect($method3, $method1_value);
 
-    $Tab3 .=$PHPShopGUI->setField('Действие', $PHPShopGUI->setSelect('method3_new', $method3_value, 150), 'left');
+    $Tab3 .=$PHPShopGUI->setField('Действие', $PHPShopGUI->setSelect('method3_new', $method3_value), 'left');
     $Tab3 .= $PHPShopGUI->setField('Сумма', $PHPShopGUI->setInputText(false, 'methodval3_new', $methodval3, 100), 'left');
     $Tab3 .=$PHPShopGUI->setLine();
     $okrugl_value[] = array('Округлять в меньшую сторону', '0');
@@ -312,7 +285,7 @@ function actionStart() {
 
     $okrugl_value = _prepareSelect($okrugl, $okrugl_value);
 
-    $Tab3 .=$PHPShopGUI->setField('Округление цены доставки для покупателя', $PHPShopGUI->setSelect('okrugl_new', $okrugl_value, 150), 'left');
+    $Tab3 .=$PHPShopGUI->setField('Округление цены доставки для покупателя', $PHPShopGUI->setSelect('okrugl_new', $okrugl_value), 'left');
     $Tab3.= $PHPShopGUI->setText('шаг', 'left');
     $Tab3 .= $PHPShopGUI->setField('руб', $PHPShopGUI->setInputText(false, 'shag_new', $shag, 100));
 
@@ -346,13 +319,12 @@ function actionStart() {
            ';
 
     $Tab7 = $PHPShopGUI->setInfo($info, 100, '96%');
-    $Tab7.=$PHPShopGUI->setButton(__('Инструкция по настройке DDelivery'), '../install/icon.png', 250, 30, 'none', 'window.open(\'http://faq.phpshop.ru/page/ddelivery.html\');return false;');
 
     // Форма регистрации
-    $Tab8 = $PHPShopGUI->setPay($serial, false);
+    $Tab8 = $PHPShopGUI->setPay();
 
-       // История изменений
-    $Tab8.= $PHPShopGUI->setLine('<br>').$PHPShopGUI->setHistory();
+    // История изменений
+    $Tab8.= $PHPShopGUI->setLine('<br>') . $PHPShopGUI->setHistory();
 
 
     // Вывод формы закладки
@@ -360,22 +332,17 @@ function actionStart() {
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =
-            $PHPShopGUI->setInput("hidden", "newsID", $id, "right", 70, "", "but") .
-            $PHPShopGUI->setInput("button", "", "Отмена", "right", 70, "return onCancel();", "but") .
-            $PHPShopGUI->setInput("submit", "editID", "OK", "right", 70, "", "but", "actionUpdate");
-    //$PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionUpdate");
+            $PHPShopGUI->setInput("hidden", "rowID", $data['id']) .
+            $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionUpdate.modules.edit");
+
     $PHPShopGUI->setFooter($ContentFooter);
     return true;
 }
 
-if ($UserChek->statusPHPSHOP < 2) {
+// Обработка событий
+$PHPShopGUI->getAction();
 
-    // Вывод формы при старте
-    $PHPShopGUI->setLoader($_POST['editID'], 'actionStart');
 
-    // Обработка событий
-    $PHPShopGUI->getAction();
-}
-else
-    $UserChek->BadUserFormaWindow();
+// Вывод формы при старте
+$PHPShopGUI->setLoader($_POST['saveID'], 'actionStart');
 ?>

@@ -15,7 +15,7 @@ function button_menu_hook() {
 
             if (is_array($data))
                 foreach ($data as $row) {
-                    $dis.='<div>' . $row['content'] . '</div>';
+                    $dis.='<div>' . str_replace('&#43;', '+',$row['content']) . '</div>';
                 }
 
             $GLOBALS['SysValue']['other']['button_forms'] = $dis;

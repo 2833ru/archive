@@ -23,13 +23,13 @@ class PHPShopOrderFunction extends PHPShopObj {
      * @param int $objID ИД заказа
      * @param array $import_data массив импорта данных заказа
      */
-    function PHPShopOrderFunction($objID = false, $import_data = null) {
+    function __construct($objID = false, $import_data = null) {
         global $PHPShopSystem;
 
         if ($objID) {
             $this->objID = $objID;
             $this->objBase = $GLOBALS['SysValue']['base']['orders'];
-            parent::PHPShopObj('id', $import_data);
+            parent::__construct('id', $import_data);
 
             // Содержание корзины
             $paramOrder = parent::unserializeParam("orders");
@@ -45,7 +45,7 @@ class PHPShopOrderFunction extends PHPShopObj {
         else
             $this->PHPShopSystem = &$PHPShopSystem;
 
-        $this->format = $this->PHPShopSystem->getSerilizeParam("admoption.price_znak");
+        $this->format = intval($this->PHPShopSystem->getSerilizeParam("admoption.price_znak"));
 
         // Валюта
         $this->getDefaultValutaObj();
@@ -114,8 +114,6 @@ class PHPShopOrderFunction extends PHPShopObj {
         $status = $this->getParam('statusi');
         if (!empty($status))
             return $PHPShopOrderStatusArray->getParam($this->getParam('statusi') . '.color');
-        else
-            return 'Новый заказ';
     }
 
     /**
@@ -179,7 +177,7 @@ class PHPShopOrderFunction extends PHPShopObj {
      * @param float $disc скидка
      * @return float
      */
-    function returnSumma($sum, $disc) {
+    function returnSumma($sum, $disc, $def = '') {
         global $PHPShopSystem;
 
         if (!$PHPShopSystem) {
@@ -188,10 +186,10 @@ class PHPShopOrderFunction extends PHPShopObj {
         } else {
             $kurs = $PHPShopSystem->getDefaultValutaKurs(true);
         }
-        
+
         $sum*=$kurs;
         $sum = $sum - ($sum * $disc / 100);
-        return number_format($sum, intval($this->format), ".", "");
+        return number_format($sum, $this->format, ".", $def);
     }
 
     /**
@@ -291,15 +289,16 @@ class PHPShopOrderFunction extends PHPShopObj {
             "org_bik" => "БИК",
             "org_city" => "Город",
         );
-        
+
         $disp = "";
         foreach ($fielsName as $key => $value) {
-            if(!empty($row[$key]))
+            if (!empty($row[$key]))
                 $disp .= PHPShopText::b($value . ": ") . $row[$key] . "<br>";
         }
-        
+
         return $disp;
     }
+
     /**
      * Шаблонизатор вывода доставки в заказе
      * @param string $function имя функции шаблона вывода
@@ -308,6 +307,7 @@ class PHPShopOrderFunction extends PHPShopObj {
      */
     function delivery($function, $option = false) {
         $list = null;
+        $i=0;
         $order = $this->unserializeParam('orders');
 
         $PHPShopDelivery = new PHPShopDelivery($order['Person']['dostavka_metod']);
@@ -344,6 +344,7 @@ class PHPShopOrderFunction extends PHPShopObj {
             $discount = $order['Person']['discount'];
         else
             $discount = 0;
+
         if (!empty($order['Cart']['sum'])) {
             $sum = $this->ReturnSumma($order['Cart']['sum'], $discount);
             return number_format($sum, $this->format, '.', '');
@@ -355,14 +356,7 @@ class PHPShopOrderFunction extends PHPShopObj {
      * @return float 
      */
     function getDeliverySumma() {
-        
         $order = $this->unserializeParam('orders');
-        
-        // Значение редактируемой доставки
-        if(isset($order['Cart']['dostavka']))
-            return $order['Cart']['dostavka'];
-        
-        // Доставка по идентификатуру из списка доставок
         if (!empty($order['Person']['discount']))
             $discount = $order['Person']['discount'];
         else
@@ -415,15 +409,21 @@ class PHPShopOrderFunction extends PHPShopObj {
      * @param bool $nds учет НДС
      * @return float 
      */
-    function getTotal($nds = false) {
-        $cart = $this->getCartSumma();
-        $delivery = $this->getDeliverySumma();
-        $total = $cart + $delivery;
-        if (!empty($nds))
-            $total = number_format($total * $this->PHPShopSystem->getParam('nds') / (100 + $this->PHPShopSystem->getParam('nds')), $this->format, ".", "");
-        else
-            $total = number_format($total, $this->format, '.', '');
+    function getTotal($nds = false, $def = '') {
 
+        if ($this->getValue('sum') > 0)
+            $total = $this->getValue('sum');
+
+        else {
+            $cart = $this->getCartSumma();
+            $delivery = $this->getDeliverySumma();
+            $total = $cart + $delivery;
+            if (!empty($nds))
+                $total = number_format($total * $this->PHPShopSystem->getParam('nds') / (100 + $this->PHPShopSystem->getParam('nds')), $this->format, ".", "");
+            else
+                $total = number_format($total, $this->format, '.', $def);
+        }
+        
         return $total;
     }
 
@@ -464,9 +464,9 @@ class PHPShopOrderStatusArray extends PHPShopArray {
     /**
      * Конструктор
      */
-    function PHPShopOrderStatusArray() {
+    function __construct() {
         $this->objBase = $GLOBALS['SysValue']['base']['order_status'];
-        parent::PHPShopArray('id', 'name', 'color', 'sklad_action');
+        parent::__construct('id', 'name', 'color', 'sklad_action');
     }
 
 }

@@ -816,9 +816,10 @@ function pressbutt_load(subm, dir, copyrigh, protect, psubm) {
         document.getElementById("autorization").style.display = 'none';
 
     // Убираем форму поиска
+    /*
     var path = location.pathname;
     if (path == "/search/" && document.getElementById("search"))
-        document.getElementById("search").style.display = 'none';
+        document.getElementById("search").style.display = 'none';*/
 
     // Убираем форму корзины
     var path = location.pathname;

@@ -7,20 +7,20 @@
  * @return string
  */
 function MessageList($UID = 0) {
-    global $SysValue;
+    global $SysValue,$link_db;
     $display = null;
 
     // Создание запроса к БД
     $sql = Page_messages($UID);
 
-    $result = mysql_query($sql);
-    while ($row = mysql_fetch_array($result)) {
+    $result = mysqli_query($link_db,$sql);
+    while ($row = mysqli_fetch_array($result)) {
         $UID = $row['UID'];
         $AID = $row['AID'];
         if ($AID) { //Получаем имя администратора, если сообщение от админа
             $sqlad = 'select * from ' . $SysValue['base']['table_name19'] . ' WHERE id=' . $AID;
-            $resultad = mysql_query($sqlad);
-            $rowad = mysql_fetch_array($resultad);
+            $resultad = mysqli_query($link_db,$sqlad);
+            $rowad = mysqli_fetch_array($resultad);
             if (strlen($rowad['name'])) {
                 $name = $rowad['name'];
             } else {
@@ -29,8 +29,8 @@ function MessageList($UID = 0) {
             $color = 'style="background:#C0D2EC;"';
         } else { //или имя пользователя
             $sqlus = 'select * from ' . $SysValue['base']['table_name27'] . ' WHERE id=' . $UID;
-            $resultus = mysql_query($sqlus);
-            $rowus = mysql_fetch_array($resultus);
+            $resultus = mysqli_query($link_db,$sqlus);
+            $rowus = mysqli_fetch_array($resultus);
             $name = $rowus['name'];
             $color = '';
         }
@@ -79,10 +79,10 @@ function Page_messages($UID = 0) {
 
 // Вывод кол-ва
 function NumFrom($from_base, $query) {
-    global $SysValue;
+    global $SysValue,$link_db;
     $sql = "select COUNT('id') as count from " . $SysValue['base'][$from_base] . " " . $query;
-    @$result = mysql_query(@$sql);
-    @$row = mysql_fetch_array(@$result);
+    @$result = mysqli_query(@$sql);
+    @$row = mysqli_fetch_array(@$result);
     @$num = $row['count'];
     return @$num;
 }
@@ -146,12 +146,12 @@ function Nav_messages($UID = 0) {
  * @return string
  */
 function user_message($obj) {
-    global $SysValue;
+    global $SysValue,$link_db;
 
     $statusMail = null;
     $sql = "select * from " . $SysValue['base']['table_name27'] . " where id=" . intval($obj->UsersId) . " LIMIT 0, 1";
-    $result = mysql_query($sql);
-    $row = mysql_fetch_array($result);
+    $result = mysqli_query($link_db,$sql);
+    $row = mysqli_fetch_array($result);
     $id = $row['id'];
     $login = $row['login'];
     $mail = $row['mail'];
@@ -179,14 +179,14 @@ IP:" . $_SERVER['REMOTE_ADDR'];
         // Отправка e-mail администратору
         new PHPShopMail($obj->PHPShopSystem->getValue('adminmail2'), $mail, $zag_adm, $content_adm);
         $sql = 'select * from ' . $SysValue['base']['table_name37'] . ' where (UID=' . $id . ') order by DateTime DESC';
-        $result = mysql_query($sql);
-        $row = mysql_fetch_array($result);
+        $result = mysqli_query($link_db,$sql);
+        $row = mysqli_fetch_array($result);
 
         if ($row['AID'] == "0") {
             $DateTime = $row['DateTime'];
             $message = PHPShopSecurity::TotalClean($_POST['message'], 2) . "<HR>" . $row['DateTime'] . ": " . $row['Message'];
             $sql = 'UPDATE ' . $SysValue['base']['table_name37'] . ' SET Message="' . $message . '", DateTime="' . date("Y-m-d H:i:s") . '", enabled=\'0\' WHERE ID=' . $row['ID'];
-            $result = mysql_query($sql);
+            $result = mysqli_query($link_db,$sql);
             $p = $SysValue['nav']['id'];
             if (empty($p))
                 $p = 1;
@@ -198,7 +198,7 @@ IP:" . $_SERVER['REMOTE_ADDR'];
             header("Location: ./message$nav.html");
         } else {
             $sql = 'INSERT INTO ' . $SysValue['base']['table_name37'] . ' VALUES ("",0,' . $id . ',\'\',\'' . date("Y-m-d H:i:s") . '\',\'' . PHPShopSecurity::TotalClean($_POST['Subject'], 2) . '\',\'' . PHPShopSecurity::TotalClean($_POST['message'], 2) . '\',"0")';
-            $result = mysql_query($sql);
+            $result = mysqli_query($link_db,$sql);
             header("Location: ./message.html");
         }
         $statusMail = '<div id=allspecwhite><img src="images/shop/comment.gif" alt="" width="16" height="16" border="0" hspace="5" align="absmiddle"><font color="#008000"><b>Сообщение менеджеру отправлено</b></font></div>';
@@ -208,9 +208,9 @@ IP:" . $_SERVER['REMOTE_ADDR'];
 
     // Дописать сообщение
     $sql = 'select * from ' . $SysValue['base']['table_name37'] . ' where (UID=' . intval($id) . ') order by DateTime DESC';
-    $result = mysql_query($sql);
-    $i = mysql_num_rows($result);
-    $row = mysql_fetch_array($result);
+    $result = mysqli_query($link_db,$sql);
+    $i = mysqli_num_rows($result);
+    $row = mysqli_fetch_array($result);
 
     if (($row['AID'] == 0) && ($i)) {
         $Subject = $row['Subject'];

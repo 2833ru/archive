@@ -8,7 +8,7 @@ class PHPShopPartner extends PHPShopCore {
     /**
      * Конструктор
      */
-    function PHPShopPartner() {
+    function __construct() {
 
 
         // Имя Бд
@@ -22,7 +22,7 @@ class PHPShopPartner extends PHPShopCore {
 
         $this->icon = 'phpshop/modules/partner/templates/message.gif';
         $this->system();
-        parent::PHPShopCore();
+        parent::__construct();
 
         // Навигация хлебные крошки
         $this->navigation(null, 'Партнерская программа');
@@ -155,7 +155,8 @@ class PHPShopPartner extends PHPShopCore {
                 }
             $Tab1 = $PHPShopInterface->Compile();
             $PHPShopInterface->imgPath = 'phpshop/modules/partner/templates/';
-            $Tab2 = $PHPShopInterface->setInputText('Сумма', 'get_money_new', round($_SESSION['partnerTotal'] / 2), 50, $this->PHPShopSystem->getDefaultValutaCode());
+            $Tab2 = $PHPShopInterface->setInputText('Сумма', 'get_money_new', round($_SESSION['partnerTotal'] / 2), 200, $this->PHPShopSystem->getDefaultValutaCode());
+            $Tab2.=$PHPShopInterface->setLine('<br>');
             $Tab2.=$PHPShopInterface->setInput('submit', 'addmoney_user', 'Подать заявку');
             $Tab2 = $PHPShopInterface->setForm($Tab2);
 
@@ -171,7 +172,7 @@ class PHPShopPartner extends PHPShopCore {
             $PHPShopOrm->debug = false;
             $result = $PHPShopOrm->query('SELECT a.*, b.orders FROM ' . $GLOBALS['SysValue']['base']['partner']['partner_log'] . ' AS a
             JOIN ' . $GLOBALS['SysValue']['base']['orders'] . ' AS b ON a.order_id = b.uid where a.partner_id=' . $_SESSION['partnerId'] . ' order by a.id desc limit 0,100');
-            while ($row = mysql_fetch_array($result)) {
+            while ($row = mysqli_fetch_array($result)) {
                 $PHPShopTableOrders->setRow($row['id'], $PHPShopTableOrders->icon($row['enabled']), PHPShopDate::dataV($row['date']), $row['order_id'], $this->getSum($row['orders'], $row['percent'], $row['enabled']), $row['percent']);
             }
             $Tab3 = $PHPShopTableOrders->Compile();
@@ -436,7 +437,7 @@ class PHPShopPartner extends PHPShopCore {
 ';
 
             // Сообщение пользователю
-            $PHPShopMail = new PHPShopMail($row['mail'], $this->PHPShopSystem->getValue('adminmail2'), $zag, $content);
+            $PHPShopMail = new PHPShopMail($row['mail'], $this->PHPShopSystem->getValue("admin_mail"), $zag, $content);
         }
     }
 
@@ -540,7 +541,7 @@ class PHPShopPartner extends PHPShopCore {
 ';
 
                     // Сообщение пользователю
-                    $PHPShopMail = new PHPShopMail($mail, $this->PHPShopSystem->getValue('adminmail2'), $zag, $content);
+                    $PHPShopMail = new PHPShopMail($mail, $this->PHPShopSystem->getValue("admin_mail"), $zag, $content);
 
                     // Переход в личный кабинет
                     $this->enter(true);

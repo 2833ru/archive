@@ -20,7 +20,7 @@ class PHPShopUsers extends PHPShopCore {
     /**
      * Конструктор
      */
-    function PHPShopUsers() {
+    function __construct() {
 
         // Имя Бд
         $this->objBase = $GLOBALS['SysValue']['base']['shopusers'];
@@ -41,7 +41,7 @@ class PHPShopUsers extends PHPShopCore {
         // Локализация
         $this->locale = array();
 
-        parent::PHPShopCore();
+        parent::__construct();
 
         // Проверка на подтверждение активации
         if ($this->PHPShopSystem->ifSerilizeParam('admoption.user_mail_activate') or $this->PHPShopSystem->ifSerilizeParam('admoption.user_mail_activate_pre'))
@@ -598,9 +598,12 @@ class PHPShopUsers extends PHPShopCore {
      * вывод товаров вишлиста
      */
     function action_wishlist() {
+
         // Перехват модуля
         if ($this->setHook(__CLASS__, __FUNCTION__, false, 'START'))
             return true;
+
+        $dis = null;
 
         $this->set('formaTitle', 'Отложенные товары');
 
@@ -619,17 +622,22 @@ class PHPShopUsers extends PHPShopCore {
                     die();
                 }
                 foreach ($wishlist as $key => $value) {
+
                     // Данные по товару
                     $objProduct = new PHPShopProduct($key);
-                    $this->set('prodId', $key);
-                    $this->set('prodName', $objProduct->getParam("name"));
-                    $this->set('prodPic', $objProduct->getParam("pic_small"));
-                    // цена
-                    $this->set('prodPrice', PHPShopProductFunction::GetPriceValuta($objProduct->objRow['id'], array($objProduct->objRow['price'], $objProduct->objRow['price2'], $objProduct->objRow['price3'], $objProduct->objRow['price4'], $objProduct->objRow['price5']), $objProduct->objRow['baseinputvaluta']));
-                    $dis.= ParseTemplateReturn('users/wishlist/wishlist_list_one.tpl');
+
+                    if ($objProduct->getParam("enabled") == 1) {
+
+                        $this->set('prodId', $key);
+                        $this->set('prodName', $objProduct->getParam("name"));
+                        $this->set('prodPic', $objProduct->getParam("pic_small"));
+                        // цена
+                        $this->set('prodPrice', PHPShopProductFunction::GetPriceValuta($objProduct->objRow['id'], array($objProduct->objRow['price'], $objProduct->objRow['price2'], $objProduct->objRow['price3'], $objProduct->objRow['price4'], $objProduct->objRow['price5']), $objProduct->objRow['baseinputvaluta']));
+                        $dis.= ParseTemplateReturn('users/wishlist/wishlist_list_one.tpl');
+                    }
                 }
             }
-            if (@$dis) {
+            if ($dis) {
                 $this->set('wishlistList', $dis);
                 $this->set('formaContent', ParseTemplateReturn('users/wishlist/wishlist_list_main.tpl'));
             } else {
@@ -825,10 +833,10 @@ class PHPShopUsers extends PHPShopCore {
             $insert = $hook;
 
         // Запись в БД
-        $this->PHPShopOrm->insert($insert);
+        $result = $this->PHPShopOrm->insert($insert);
 
         // Возвращаем ИД нового пользователя
-        return mysql_insert_id();
+        return $result;
     }
 
     /**

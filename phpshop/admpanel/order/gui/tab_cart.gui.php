@@ -6,151 +6,139 @@
  * @return string 
  */
 function tab_cart($data, $option = false) {
-    global $PHPShopGUI;
-    $PHPShopGUI->addJSFiles('gui/tab_cart.gui.js');
+    global$PHPShopInterface;
 
-    // Обновление данных при AJAX
-    if ($option == 'ajax') {
-        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
-        $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($data['id'])));
-    }
+
+    $PHPShopInterface->action_title['cart-value-edit'] = 'Редактировать';
+    $PHPShopInterface->action_title['cart-value-remove'] = 'Удалить';
+
 
     // Библиотека заказа
     $PHPShopOrder = new PHPShopOrderFunction($data['id']);
 
     $order = unserialize($data['orders']);
-
-    // Библиотека доставки
-    $PHPShopDelivery = new PHPShopDelivery($order['Person']['dostavka_metod']);
+    $status = unserialize($data['status']);
 
     $CART = $order['Cart'];
     $PERSON = $order['Person'];
     $cart = $CART['cart'];
-    $num = null;
-    $sum = null;
+    $_SESSION['selectCart']=$cart;
+    $num = $data_id = $sum = null;
     $n = 1;
+    
+    // Знак рубля
+    if ($PHPShopOrder->default_valuta_iso == 'RUB')
+        $currency = ' <span class="rubznak">p</span>';
+    else $currency = $PHPShopOrder->default_valuta_iso;
+
+    $PHPShopInterface->checkbox_action = false;
+    $PHPShopInterface->dropdown_action_form = false;
+    $PHPShopInterface->setCaption(array("Наименование", "50%"), array("Цена", "15%"), array('Кол-во', "10%", array('align' => 'center')), array(null, "10%"), array('Сумма', '15%', array('align' => 'right')));
+
     if (sizeof($cart) != 0)
         if (is_array($cart))
             foreach ($cart as $key=>$val) {
 
-                $disCart.="
-<tr class=row3 onmouseover=\"show_on('r" . $n . "')\" id=\"r" . $n . "\" onmouseout=\"show_out('r" . $n . "')\" onclick=\"miniWin('adm_order_productID.php?orderID=" . $data['id'] . "&productID=" . $val['id'] . "&option=".$key."',400,300,event)\">
- <td style=\"padding:3\">$n</td> 
-  <td style=\"padding:3\">" . $val['uid'] . "</td>
-  <td style=\"padding:3\">" . $val['id'] . "</td>
-  <td style=\"padding:3\">" . $val['name'] . "</td>
-  <td style=\"padding:3\">" . $val['num'] . "</td>
-  <td style=\"padding:3\">" . $PHPShopOrder->ReturnSumma($val['price'] * $val['num'], 0) . "</td>
-  
-</tr>
-";
+                if (!empty($val['id'])) {
+                    
+                    if (!empty($val['uid']))
+                        $code = 'Артикул: ' . $val['uid'];
+                    else
+                        $code = 'Код: ' . $val['id'];
 
-                $n++;
-                $num+=$val['num'];
-                $sum+=$val['price'] * $val['num'];
+                    $name = '
+<div class="media">
+  <div class="media-left">
+    <a href="?path=product&id=' . $val['id'] . '" >
+      <img class="media-object" src="' . $val['pic_small'] . '" alt="' . $val['name'] . '" onerror="imgerror()">
+    </a>
+  </div>
+   <div class="media-body">
+    <div class="media-heading"><a href="?path=product&id=' . $val['id'] . '&return=order.'.$data['id'].'" >' . $val['name'] . '</a></div>
+    ' . $code . '
+  </div>
+</div>';
 
-                // Определение и суммирование веса
-                $goodid = $val['id'];
-                $goodnum = $val['num'];
-                $wsql = 'select weight from ' . $GLOBALS['SysValue']['base']['table_name2'] . ' where id=\'' . $goodid . '\'';
-                $wresult = mysql_query($wsql);
-                $wrow = mysql_fetch_array($wresult);
-                $cweight = $wrow['weight'] * $goodnum;
-                if (!$cweight) {
-                    $zeroweight = 1;
+
+                    $PHPShopInterface->setRow(array('name' => $name, 'align' => 'left'), $PHPShopOrder->ReturnSumma($val['price'], 0, ' '), array('name' => $val['num'], 'align' => 'center'), array('action' => array('cart-value-edit', '|', 'cart-value-remove', 'id' => $key), 'align' => 'center'), array('name' => $PHPShopOrder->ReturnSumma($val['price'] * $val['num'], 0, ' '). $currency, 'align' => 'right'));
+
+                    $n++;
+                    $num+=$val['num'];
+                    $sum+=$val['price'] * $val['num'];
                 }
-
-                // Один из товаров имеет нулевой вес!
-                $weight+=$cweight;
             }
 
-    // Обнуляем вес товаров, если хотя бы один товар был без веса
-    if ($zeroweight) {
-        $weight = 0;
-    }
 
-
-    $GetDeliveryPrice = $PHPShopOrder->getDeliverySumma();
-    $disCart.="
-<tr class=row3 onclick=\"miniWin('adm_order_deliveryID.php?deliveryID=" . $order['Person']['dostavka_metod'] . "&orderID=" . $data['id'] . "',400,270,event)\" onmouseover=\"show_on('r" . $n . "')\" id=\"r" . $n . "\" onmouseout=\"show_out('r" . $n . "')\">
-  <td style=\"padding:3\">$n</td>
-  <td style=\"padding:3\"></td>
-  <td style=\"padding:3\"></td>
-  <td style=\"padding:3\">Доставка - " . $PHPShopDelivery->getCity() . "</td>
-  <td style=\"padding:3\">1</td>
-  <td style=\"padding:3\">" . $GetDeliveryPrice . "</td>
   
-</tr>
-";
-    $n++;
-    while ($n < 11) {
-        $disCart.="
- <tr bgcolor=\"ffffff\">
-  <td style=\"padding:3\" height=\"20\">$n</td>
-  <td style=\"padding:3\"></td>
-  <td style=\"padding:3\"></td>
-  <td style=\"padding:3\"></td>
-  <td style=\"padding:3\"></td>
-  <td style=\"padding:3\"></td>
-</tr>
-                        ";
-        $n++;
-    }
-    $disCart.="
-<tr bgcolor=\"#C0D2EC\">
-  <td style=\"padding:3\" colspan=\"3\" align=center><span name=txtLang id=txtLang>Итого с учетом скидки</span> " . $PERSON['discount'] . "%</td>
-  <td style=\"padding:3\"><b>" . ($num + 1) . "</b> <span name=txtLang id=txtLang>шт.</span></td>
-  <td style=\"padding:3\" colspan=\"2\" align=\"center\"><b>" . ($PHPShopOrder->returnSumma($sum, $PERSON['discount']) + $GetDeliveryPrice) . "</b> " . $PHPShopOrder->default_valuta_code . "</td>
-</tr>
-";
+      $total = '<table class="pull-right totals">
+      <tbody>
+      <tr>
+      <td>&nbsp;</td>
+      <td class="text-right"><h4>Итого</h4></td>
+      </tr>
+      <tr>
+      <td width="100">Сумма:</td>
+      <td class="text-right">
+      ' . ($PHPShopOrder->returnSumma($sum, 0, ' ') ) . $currency . '
+      </td>
+      </tr>
+      <tr>
+      <td>Доставка:</td>
+      <td class="text-right">
+      ' . $PHPShopOrder->getDeliverySumma().  $currency. '
+      </td>
+      </tr>
+      <tr>
+      <td>Скидка:</td>
+      <td class="text-right">
+      ' . $PERSON['discount'] . '%
+      </td>
+      </tr>
+      <tr>
+      <td><h5>Итого:</h5></td>
+      <td class="text-right">
+      <h5 class="text-success">' . ($PHPShopOrder->getTotal(false, ' ')) . $currency . '</h5>
+      </td>
+      </tr>
+      </tbody>
+      </table>';
+    
+    // Скидка
+    if(!empty($PERSON['discount']))
+        $discount = $PERSON['discount'];
+    else $discount=null;
+        
 
-    $disp = "<table width=\"100%\"  cellpadding=\"0\" cellspacing=\"0\">
-	<tr>
-	<td valign=\"top\">
-		<div align=\"left\" style=\"width:100%;height:255;overflow:auto\"> 
-	<div id=interfaces>
-	<table cellpadding=\"0\" cellspacing=\"1\" width=\"100%\" border=\"0\" class=\"table\">
-<tr>
-	<td id=pane align=center width=\"10\"><img src=../img/arrow_d.gif width=7 height=7 border=0 hspace=5></td>
-	<td id=pane align=center><img src=../img/arrow_d.gif width=7 height=7 border=0 hspace=5><span name=txtLang id=txtLang>Артикул</span></td>
-        <td id=pane align=center><img src=../img/arrow_d.gif width=7 height=7 border=0 hspace=5><span name=txtLang id=txtLang>ID</span></td>
-	<td id=pane align=center><img src=../img/arrow_d.gif width=7 height=7 border=0 hspace=5><span name=txtLang id=txtLang>Наименование</span></td>
-	<td id=pane align=center><img src=../img/arrow_d.gif width=7 height=7 border=0 hspace=5><span name=txtLang id=txtLang>Кол-во</span></td>
-	<td id=pane align=center><img src=../img/arrow_d.gif width=7 height=7 border=0 hspace=5><span name=txtLang id=txtLang>Сумма</span> " . $PHPShopOrder->default_valuta_code . "</td>
-</tr>
-" . $disCart . "
-</table>
+
+    $disp = '<table class="table table-hover cart-list">' . $PHPShopInterface->getContent() . '</table>
+<div class="row">
+  <div class="col-lg-9 col-md-8 col-xs-6">
+   <button  class="btn btn-default btn-sm cart-add"><span class="glyphicon glyphicon-plus"></span> ' . __('Добавить товары') . '</button>
+  </div>
+  <div class="col-lg-3 col-md-4 col-xs-6">
+    <div class="input-group">
+      <span class="input-group-addon input-sm">%</span>
+      <input type="text" class="form-control input-sm discount-value" placeholder="'.__('Скидка').'" value="'.$discount.'"> 
+      <span class="input-group-btn">
+        <button class="btn btn-default btn-sm discount" type="button">'.__('Назначить').'</button>
+     </span>
+    </div>
+  </div>
 </div>
-
-	</td>
-</tr>
-</table>";
-
-// Форма добавления товара и скидок
-    if (empty($option))
-        $disp.="
-    <table width=\"100%\" cellpadding=0 cellspacing=0>
-<tr>
-	<td>
-	<FIELDSET style=\"padding-top:5px\">
-	<LEGEND><span name=txtLang id=txtLang><u>Д</u>обавить в заказ</span></LEGEND>
-	<div style=\"padding:10px\">
-
-<span name=txtLang id=txtLang>ID/ART товара</span>: <input onkeydown='if (event.keyCode == 13) {return false; }' type=\"text\" id=\"new_product_id\" name=\"new_product_id\"> <input type=\"button\" id=btnAdd class=but value=\"Добавить\" onClick=\"DoAddProductFromOrder(new_product_id.value," . $data['id'] . ")\">
+<p class="clearfix"> </p>
+'.$total.'
+<p class="clearfix"> </p>
+<div class="row">
+  <div class="col-md-6">
+  <label for="dop_info">Примечания покупателя</label>
+  <textarea class="form-control" id="dop_info" name="dop_info_new">'.$data['dop_info'].'</textarea>
+  </div>
+  <div class="col-md-6">
+    <label for="status_maneger">Примечания администратора</label>
+    <textarea class="form-control" id="status_maneger" name="status[maneger]">'.$status['maneger'].'</textarea>
+  </div>
 </div>
-</FIELDSET >
-	</td>
-	<td>
-	<FIELDSET style=\"padding-top:5px\">
-	<LEGEND><span name=txtLang id=txtLang><u>С</u>кидка</span></LEGEND>
-	<div style=\"padding:10px\">
-% <input type=\"text\" id=\"new_discount\" onkeydown='if (event.keyCode == 13) {return false; }' name=\"new_discount\" value=\"" . $order['Person']['discount'] . "\"> <input type=\"button\" id=btnChange class=but value=\"Изменить\" onClick=\"DoUpdateDiscountFromOrder(new_discount.value," . $data['id'] . ")\">
-</div>
-</FIELDSET >
-	</td>
-</tr>
-</table>
-";
+';
 
     return $disp;
 }

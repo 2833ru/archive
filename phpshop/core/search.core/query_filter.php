@@ -176,7 +176,7 @@ function search_base($obj, $words) {
     $PHPShopOrm = new PHPShopOrm();
     $PHPShopOrm->debug = $obj->debug;
     $result = $PHPShopOrm->query("select uid from " . $GLOBALS['SysValue']['base']['table_name26'] . " where name REGEXP 'i" . $words . "i'");
-    while (@$row = mysql_fetch_array(@$result)) {
+    while (@$row = mysqli_fetch_array(@$result)) {
         $uid = $row['uid'];
         $uids = explode(",", $uid);
         foreach ($uids as $v)

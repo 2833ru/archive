@@ -243,7 +243,7 @@ $addHandler = array
 class PHPShopProduct_nt_IconElements extends PHPShopProductIconElements {
 
     function PHPShopProduct_nt_IconElements() {
-        parent::PHPShopProductIconElements();
+        parent::__construct();
     }
 
     function specMainIcon_nt($force = false, $category = null, $cell = 1, $limit = null, $line = false) {

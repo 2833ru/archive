@@ -5,9 +5,9 @@
  * <code>
  * // example:
  * class PHPShopCategoryArray extends PHPShopArray{
- * 	 function PHPShopCategoryArray(){
+ * 	 function __construct(){
  * 	 $this->objBase=$GLOBALS['SysValue']['base']['table_name'];
- * 	 parent::PHPShopArray("id","name","PID");
+ * 	 parent::__construct("id","name","PID");
  * 	 }
   }
  * </code>
@@ -44,7 +44,7 @@ class PHPShopArray {
      * @var int многомерный [1] одномерный масив [2] или [3] простой массив
      */
     var $objType = 1;
-    
+
     /**
      * @var bool режим проверки ключей
      */
@@ -56,7 +56,7 @@ class PHPShopArray {
      */
     var $order = array();
 
-    function PHPShopArray() {
+    function __construct() {
         $this->objArg = func_get_args();
         $this->objArgNum = func_num_args();
         $this->setArray();
@@ -176,6 +176,12 @@ class PHPShopArray {
      */
     function getNum() {
         return count($this->objArray);
+    }
+
+    function __call($name, $arguments) {
+        if ($name == __CLASS__) {
+            self::__construct();
+        }
     }
 
 }

@@ -1,5 +1,9 @@
 <?php
 
+session_start();
+if(empty($_SESSION['idPHPSHOP']))
+    exit('Запрещено!');
+
 $_classPath = "../../../";
 include($_classPath . "class/obj.class.php");
 PHPShopObj::loadClass("base");

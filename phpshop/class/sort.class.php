@@ -30,7 +30,7 @@ class PHPShopSort {
      * @param bool $filter опция учета выборки с учетом флага фильтра в характеристики
      * @param bool $goodoption опция учета выборки с учетом отсутствия флага опции товара в характеристики
      */
-    function PHPShopSort($category = null, $sort = null, $direct = true, $template = null, $vendor = false, $filter = true, $goodoption = false) {
+    function __construct($category = null, $sort = null, $direct = true, $template = null, $vendor = false, $filter = true, $goodoption = false) {
 
         $sql_add = null;
 
@@ -54,7 +54,7 @@ class PHPShopSort {
             $sql_add.=" and goodoption!='1' ";
 
         // Список для выборки
-        $sortList = null;
+        $sortList=null;
         if (is_array($sort)) {
             foreach ($sort as $value) {
                 $sortList.=' id=' . trim($value) . ' OR';
@@ -65,7 +65,7 @@ class PHPShopSort {
             $PHPShopOrm->debug = $this->debug;
             $PHPShopOrm->comment = __CLASS__ . '.' . __FUNCTION__;
             $result = $PHPShopOrm->query("select * from " . $GLOBALS['SysValue']['base']['sort_categories'] . " where ($sortList) " . $sql_add . " order by num, name");
-            while (@$row = mysql_fetch_array($result)) {
+            while (@$row = mysqli_fetch_array($result)) {
                 $id = $row['id'];
                 $name = $row['name'];
                 $this->disp.=$this->value($id, $name, true, $template, $vendor);
@@ -159,20 +159,17 @@ class PHPShopSort {
 
         // Показать выбрать все
         if (!empty($all) and empty($template)) {
-            $value[] = array($title, '', $all_sel);
+            $value[] = array($title , '', $all_sel);
         }
 
         $all_sel = 'selected';
         $PHPShopOrm = new PHPShopOrm();
         $PHPShopOrm->debug = $this->debug;
         $PHPShopOrm->comment = __CLASS__ . '.' . __FUNCTION__;
-        $result = $PHPShopOrm->query("select * from " . $SysValue['base']['sort'] . " where category=" . intval($n) . " order by num,name");
-        while ($row = mysql_fetch_array($result)) {
+        $result = $PHPShopOrm->query("select * from " . $SysValue['base']['sort'] . " where category=".intval($n)." order by name,num");
+        while ($row = mysqli_fetch_array($result)) {
             $id = $row['id'];
-            if (empty($template))
-                $name = substr($row['name'], 0, 35);
-            else
-                $name = $row['name'];
+            $name = substr($row['name'], 0, 35);
             $sel = null;
             if (is_array($vendor))
                 foreach ($vendor as $v) {
@@ -217,8 +214,8 @@ class PHPShopSort {
             $v_ids = substr($v_ids, 0, $len - 1);
 
             // Кнопка применить и сбросить фильтра
-            $SysValue['other']['vendorSelectDisp'] = PHPShopText::button($SysValue['lang']['sort_apply'], $onclick = 'GetSortAll(' . $SysValue['nav']['id'] . ',' . $v_ids . ')', 'ok', 'vendorActionButton');
-            $SysValue['other']['vendorSelectDisp'].=' ' . PHPShopText::button($SysValue['lang']['sort_reset'], $onclick = 'window.location.replace(\'?\')');
+            $SysValue['other']['vendorSelectDisp'] = PHPShopText::button($SysValue['lang']['sort_apply'], $onclick = 'GetSortAll(' . $SysValue['nav']['id'] . ',' . $v_ids . ')','ok','vendorActionButton');
+            $SysValue['other']['vendorSelectDisp'].=' '.PHPShopText::button($SysValue['lang']['sort_reset'], $onclick = 'window.location.replace(\'?\')');
             $SysValue['other']['vendorDispTitle'] = PHPShopText::div(PHPShopText::b($SysValue['lang']['sort_title']));
         }
 
@@ -284,11 +281,11 @@ class PHPShopSortArray extends PHPShopArray {
      * @param array $sql SQL условие выборки
      * @param bull $debug отладка
      */
-    function PHPShopSortArray($sql = false, $debug = false) {
+    function __construct($sql = false, $debug = false) {
         $this->objSQL = $sql;
         $this->debug = $debug;
-        $this->objBase = $GLOBALS['SysValue']['base']['table_name21'];
-        parent::PHPShopArray('id', 'name', 'page', 'category');
+        $this->objBase = $GLOBALS['SysValue']['base']['sort'];
+        parent::__construct('id', 'name', 'page');
     }
 
 }
@@ -306,11 +303,11 @@ class PHPShopSortCategoryArray extends PHPShopArray {
      * @param array $sql SQL условие выборки
      * @param bull $debug отладка
      */
-    function PHPShopSortCategoryArray($sql = false, $debug = false) {
+    function __construct($sql = false, $debug = false) {
         $this->objSQL = $sql;
         $this->debug = $debug;
-        $this->objBase = $GLOBALS['SysValue']['base']['table_name20'];
-        parent::PHPShopArray('id', 'name', 'category', 'filtr', 'page', 'flag', 'goodoption');
+        $this->objBase = $GLOBALS['SysValue']['base']['sort_categories'];
+        parent::__construct('id', 'name', 'category', 'filtr', 'page', 'optionname', 'goodoption');
     }
 
 }
@@ -325,17 +322,18 @@ class PHPShopSortSearch {
      * Выборка характеритик по имени
      * @param string $name имя характеристики
      */
-    function PHPShopSortSearch($name) {
+    function __construct($name) {
 
-        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['table_name20']);
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']);
         $PHPShopOrm->debug = false;
         $data = $PHPShopOrm->select(array('id'), array('name' => '="' . $name . '"'), false, array('limit' => 1));
         if (is_array($data)) {
 
-            $sort_category = $data['id'];
-            $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['table_name21']);
+            $this->sort_category = $data['id'];
+            
+            $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort']);
             $PHPShopOrm->debug = false;
-            $data = $PHPShopOrm->select(array('id,name'), array('category' => '=' . $sort_category), false, array('limit' => 100));
+            $data = $PHPShopOrm->select(array('id,name'), array('category' => '=' . $this->sort_category), false, array('limit' => 100));
             if (is_array($data)) {
                 foreach ($data as $val)
                     $this->sort_array[$val['id']] = $val['name'];

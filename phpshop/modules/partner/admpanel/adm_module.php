@@ -1,23 +1,4 @@
-<?
-
-$_classPath = "../../../";
-include($_classPath . "class/obj.class.php");
-PHPShopObj::loadClass("base");
-PHPShopObj::loadClass("system");
-PHPShopObj::loadClass("orm");
-
-$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
-include($_classPath . "admpanel/enter_to_admin.php");
-
-
-// Настройки модуля
-PHPShopObj::loadClass("modules");
-$PHPShopModules = new PHPShopModules($_classPath . "modules/");
-
-
-// Редактор
-PHPShopObj::loadClass("admgui");
-$PHPShopGUI = new PHPShopGUI();
+<?php
 
 // SQL
 $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.partner.partner_system"));
@@ -41,6 +22,7 @@ function actionUpdate() {
     if (empty($_POST['key_enabled_new']))
         $_POST['key_enabled_new'] = 0;
     $action = $PHPShopOrm->update($_POST);
+    header('Location: ?path=modules&install=check');
     return $action;
 }
 
@@ -57,74 +39,55 @@ function getStatus($status_id) {
             $value[] = array($row['name'], $row['id'], $sel);
         }
 
-    return $PHPShopGUI->setSelect('order_status_new', $value, 200, false, 'Статус заказа выплаты:');
+    return $PHPShopGUI->setSelect('order_status_new', $value);
 }
 
 // Начальная функция загрузки
 function actionStart() {
-    global $PHPShopGUI, $_classPath, $PHPShopOrm;
-
-    $PHPShopGUI->dir = $_classPath . "admpanel/";
-    $PHPShopGUI->title = "Настройка модуля";
+    global $PHPShopGUI, $PHPShopOrm;
 
     // Выборка
     $data = $PHPShopOrm->select();
-    @extract($data);
 
-
-    // Графический заголовок окна
-    $PHPShopGUI->setHeader("Настройка модуля 'Partner'", "Настройки", $PHPShopGUI->dir . "img/i_display_settings_med[1].gif");
-
-
-    $Tab1 = $PHPShopGUI->setCheckbox('enabled_new', 1, 'Учет рефералов партнеров', $enabled);
-    $Tab1.=$PHPShopGUI->setCheckbox('key_enabled_new', 1, 'Учет персональных ключей API', $key_enabled);
-    $Tab1.=$PHPShopGUI->setInputText('Начисление партнерам', 'percent_new', $percent, '50', '% от заказа');
-    $Tab1.=getStatus($order_status);
-    $Info = 'Страница входа в партнерский раздел находится по адресу: http://' . $_SERVER['SERVER_NAME'] . '/partner/<br>
-        Необходимо на своем сайте добавить эту ссылку для пользователей.
+    $Tab1 = $PHPShopGUI->setField('Логика учета', $PHPShopGUI->setCheckbox('enabled_new', 1, 'Учет рефералов партнеров', $data['enabled']).$PHPShopGUI->setCheckbox('key_enabled_new', 1, 'Учет персональных ключей API', $data['key_enabled']));
+    $Tab1.=$PHPShopGUI->setField('Начисление партнерам', $PHPShopGUI->setInputText('%', 'percent_new', $data['percent'], '150', 'от заказа'));
+    $Tab1.=$PHPShopGUI->setField('Статус заказа выплаты',getStatus($data['order_status']));
+    $Info = 'Страница входа в партнерский раздел находится по адресу: <a href="../../partner/" target="_blank">http://' . $_SERVER['SERVER_NAME'] . '/partner/</a>. Необходимо на своем сайте добавить эту ссылку для пользователей.
         <p>
 Правила регистрации в партнерской программе доступны по ссылке
-        http://' . $_SERVER['SERVER_NAME'] . '/rulepartner/
+        <a href="../../rulepartner/" target="_blank">http://' . $_SERVER['SERVER_NAME'] . '/rulepartner/</a>.
      <p>
-     Шаблоны оформления находятся в папке /phpshop/modules/partner/templates/<br>
-     Языковой файл по адресу /phpshop/modules/partner/inc/config.ini в блоке [lang]
+     Шаблоны оформления находятся в папке <code>/phpshop/modules/partner/templates/</code><br>
+     Языковой файл по адресу <code>/phpshop/modules/partner/inc/config.ini</code> в блоке <kbd>[lang]</kbd>
      <p>
-     Для добавления персональных полей в форму регистрации пользователей отредактируйте файл /phpshop/modules/partner/templates/partner_forma_register.tpl,
-     добавьте необходимые поля с префиксом dop_, например dop_icq.
+     Для добавления персональных полей в форму регистрации пользователей отредактируйте файл <code>/phpshop/modules/partner/templates/partner_forma_register.tpl</code>,
+     добавьте необходимые поля с префиксом <b>dop_</b>, например dop_icq.';
 
-';
-
-    $Tab1.=$PHPShopGUI->setInfo($Info, '200', '97%');
+    $Tab4=$PHPShopGUI->setInfo($Info);
 
     // Содержание закладки 2
-    $Tab2 = $PHPShopGUI->setPay($serial, false, $version, true);
+    $Tab2 = $PHPShopGUI->setPay($data['serial'], false, $data['version'], true);
 
-    $Tab3 = $PHPShopGUI->setTextarea('rule_new', $rule, false, '99%', 320);
-    $Tab3.=$PHPShopGUI->setText('* Используйте переменную @partnerPercent@ для обозначения % вознаграждения.');
+    $Tab3 = $PHPShopGUI->setTextarea('rule_new', $data['rule'], false, '99%', 320);
 
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Описание", $Tab1, 350), array("Текст правила участия", $Tab3, 350), array("О Модуле", $Tab2, 350));
+    $PHPShopGUI->setTab(array("Описание", $Tab1), array("Текст правила участия", $Tab3), array("Инструкция", $Tab4), array("О Модуле", $Tab2));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =
-            $PHPShopGUI->setInput("hidden", "newsID", $id, "right", 70, "", "but") .
-            $PHPShopGUI->setInput("button", "", "Отмена", "right", 70, "return onCancel();", "but") .
-            $PHPShopGUI->setInput("submit", "editID", "ОК", "right", 70, "", "but", "actionUpdate");
+            $PHPShopGUI->setInput("hidden", "rowID", $data['id']) .
+            $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionUpdate.modules.edit");
 
     $PHPShopGUI->setFooter($ContentFooter);
     return true;
 }
 
-if ($UserChek->statusPHPSHOP < 2) {
+// Обработка событий
+$PHPShopGUI->getAction();
 
-    // Вывод формы при старте
-    $PHPShopGUI->setLoader($_POST['editID'], 'actionStart');
-
-    // Обработка событий
-    $PHPShopGUI->getAction();
-}else
-    $UserChek->BadUserFormaWindow();
+// Вывод формы при старте
+$PHPShopGUI->setLoader($_POST['saveID'], 'actionStart');
 ?>
 
 

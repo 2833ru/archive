@@ -15,9 +15,9 @@ class AddToTemplatepozvonimElement extends PHPShopElements
     /**
      * Конструктор
      */
-    function AddToTemplatepozvonimElement()
+    function __construct()
     {
-        parent::PHPShopElements();
+        parent::__construct();
         $this->option();
     }
 

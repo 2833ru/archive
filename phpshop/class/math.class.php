@@ -2,7 +2,7 @@
 /**
  * Библиотека форматирования цифр
  * @author PHPShop Software
- * @version 1.0
+ * @version 1.1
  * @package PHPShopClass
  * @subpackage Helper
  */
@@ -13,7 +13,7 @@ class PHPShopMath {
      * @param float $price цена
      * @return mixed 
      */
-    function DoZero($price) {
+    static function DoZero($price) {
         if(empty($price)) return 0;
         else return $price;
     }
@@ -23,7 +23,7 @@ class PHPShopMath {
      * @param float $price цена
      * @return mixed 
      */
-    function Zero($price) {
+    static function Zero($price) {
         return PHPShopMath::DoZero($price);
     }
 
@@ -33,7 +33,7 @@ class PHPShopMath {
      * @param float $disc скидка
      * @return float
      */
-    function ReturnSumma($sum,$disc) {
+    static function ReturnSumma($sum,$disc) {
         global $PHPShopSystem;
 
         if(!$PHPShopSystem) {

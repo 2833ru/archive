@@ -1,191 +1,86 @@
-<?
-require("../connect.php");
-@mysql_connect("$host", "$user_db", "$pass_db") or @die("Невозможно подсоединиться к базе");
-mysql_select_db("$dbase") or @die("Невозможно подсоединиться к базе");
-require("../enter_to_admin.php");
-require("../language/russian/language.php");
-?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-    <head>
-        <title>Создание Нового Статуса</title>
-        <META http-equiv=Content-Type content="text/html; charset=<?= $SysValue['Lang']['System']['charset'] ?>">
-        <LINK href="../skins/<?= $_SESSION['theme'] ?>/texts.css" type=text/css rel=stylesheet>
-        <SCRIPT language="JavaScript" src="/phpshop/lib/Subsys/JsHttpRequest/Js.js"></SCRIPT>
-        <script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
-    </head>
-    <body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0">
-        <form name="product_edit"  method=post>
-            <table cellpadding="0" cellspacing="0" width="100%" height="50" id="title">
-                <tr bgcolor="#ffffff">
-                    <td style="padding:10">
-                        <b><span name=txtLang id=txtLang>Создание Нового Статуса</span></b><br>
+<?php
 
-                    </td>
-                    <td align="right">
-                        <img src="../img/i_subscription_med[1].gif" border="0" hspace="10">
-                    </td>
-                </tr>
-            </table>
-            <br>
-            <table class=mainpage4 cellpadding="5" cellspacing="0" border="0" align="center" width="100%">
-                <tr>
-                    <td>
-                        <FIELDSET style="height:80px">
-                            <LEGEND><span name=txtLang id=txtLang><u>Н</u>азвание</span> </LEGEND>
-                            <div style="padding:10">
-                                <input type="text" name="name_new"  style="width:200px"><br><br>
+$TitlePage = __('Создание статуса');
+$PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['shopusers_status']);
+PHPShopObj::loadClass('user');
 
-                                <span name=txtLang id=txtLang>Использовать</span> <select name="price_new">
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option> 
-                                    <option value="5">5</option> 
-                                </select> <span name=txtLang id=txtLang>колонку цен</span>.
+// Стартовый вид
+function actionStart() {
+    global $PHPShopGUI, $PHPShopOrm, $PHPShopModules;
 
-                            </div>
-                        </FIELDSET>
-                    </td>
-                    <td>
-                        <FIELDSET style="height:80px">
-                            <LEGEND><span name=txtLang id=txtLang><u>С</u>кидка</span> </LEGEND>
-                            <div style="padding:10">
-                                <input type="text" name="discount_new"  maxlength="3" value="<?= $discount ?>" style="width:30px;" > %
-                            </div>
-                        </FIELDSET>
-                    </td>
-                    <td>
-                        <FIELDSET style="height:80px">
-                            <LEGEND><span name=txtLang id=txtLang><u>У</u>читывать</span></LEGEND>
-                            <div style="padding:10">
-                                <input type="radio" name="enabled_new" value="1" checked><span name=txtLang id=txtLang>Да</span><br>
-                                <input type="radio" name="enabled_new" value="0"><font color="#FF0000"><span name=txtLang id=txtLang>Нет</span></font>
-                            </div>
-                        </FIELDSET>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="3">
-                        <FIELDSET>
-                            <LEGEND><span name="txtLang" id="txtLang"><u>Н</u>акопительная скидка</span> </LEGEND>
-                            <div style="padding:10">
-        
-                                <label><input type="checkbox" name="cumulative_discount_check_new" <?=$cumulative_check?> > Использование накопительной скидки <i>(да/нет)</i></label><br><br>
-                                <div class="sum-cumulative" id="sum-cumulative-1">Сумма от <input type="text" style="width:50px" name="cumulative_sum_ot[]"> до <input type="text" style="width:50px" name="cumulative_sum_do[]"> Cкидка: <input type="text" style="width:30px" name="cumulative_discount[]"> % <button type="button" class="btn btn-danger" onclick="removeCumulatuve(1)">Удалить</button></div>
-                                <div class="sum-cumulative" id="sum-cumulative-2">Сумма от <input type="text" style="width:50px" name="cumulative_sum_ot[]"> до <input type="text" style="width:50px" name="cumulative_sum_do[]"> Cкидка: <input type="text" style="width:30px" name="cumulative_discount[]"> % <button type="button" class="btn btn-danger" onclick="removeCumulatuve(2)">Удалить</button></div>
-                                <div id="add-block-sum-cumulative"></div>
-                                <input type="hidden" name="cache-n" id="cache-n" value="1">
-                                <button type="button" class="btn btn-success" onclick="addCumulatuve()">+ Добавить параметр</button>
-                            </div>
-                            <script>
-                            function addCumulatuve() {
-                                var idd = document.getElementById('cache-n').value;
-                                // элемент-список
-                                var list = document.getElementById('add-block-sum-cumulative');
-                                // новый элемент
-                                var div = document.createElement('div');
-                                div.innerHTML = '<div class="sum-cumulative" id="sum-cumulative-new-'+idd+'">Сумма от <input type="text" style="width:50px" name="cumulative_sum_ot[]"> до <input type="text" style="width:50px" name="cumulative_sum_do[]"> Cкидка: <input type="text" style="width:30px" name="cumulative_discount[]"> % <button type="button" class="btn btn-danger" onclick="removeCumulatuveNew('+idd+')">Удалить</button></div>';
-                                // добавление в конец
-                                list.appendChild(div);
-                                // обновление счетчика
-                                var su = Number(idd)+1;
-                                // запись данных счетчика в hidden input
-                                document.getElementById('cache-n').value = su;
-                            }
-                            function removeCumulatuve(id) {
-                                if (confirm("Параметр скидки будет удален! Вы уверены?")) {
-                                  var element = document.getElementById("sum-cumulative-"+id);
-                                  element.parentNode.removeChild(element);
-                                }
-                            }
-                            function removeCumulatuveNew(id) {
-                                //if (confirm("Параметр скидки будет удален! Вы уверены?")) {
-                                    var element = document.getElementById("sum-cumulative-new-"+id);
-                                    element.parentNode.removeChild(element);
-                                //}
-                            }
-                            </script>
-                            <style>
-                            #add-block-sum-cumulative {
-                                margin-bottom: 10px;
-                            }
-                            .sum-cumulative {
-                                margin-bottom: 3px;
-                            }
-                            .btn {
-                                font-size: 10px;
-                                margin-left: 15px;
-                            }
-                            .btn-danger {
-                                color: #fff;
-                                background: #d9534f;
-                                border-color: #d43f3a;
-                            }
-                            .btn-success {
-                                color: #fff;
-                                background: #5cb85c;
-                                border-color: #4cae4c;
-                                margin-left: 0;
-                                width: 150px;
-                            }
-                            .btn-danger:hover {
-                                color: #fff;
-                                background: #c9302c;
-                                border-color: #ac2925;
-                            }
-                            .btn-success:hover {
-                                color: #fff;
-                                background: #449d44;
-                                border-color: #398439;
-                            }
-                            </style>
-                        </FIELDSET>
-                    </td>
-                </tr>
-            </table>
-            <hr>
-            <table cellpadding="0" cellspacing="0" width="100%" height="50" >
-                <tr>
-                    <td align="left" style="padding:10">
-                        <BUTTON class="help" onclick="helpWinParent('shopusers_statusID')">Справка</BUTTON></BUTTON>
-                    </td>
-                    <td align="right" style="padding:10">
-                        <input type="submit" name="editID" value="OK" class=but>
-                        <input type="reset" name="btnLang" name="delID" value="Сбросить" class=but>
-                        <input type="button" name="btnLang" value="Отмена" onClick="return onCancel();" class=but>
-                    </td>
-                </tr>
-            </table>
-        </form>
-        <?
-        if (isset($editID) and !empty($name_new)) {// Запись редактирования
-            //Использование массива (да/нет)
-            if($cumulative_discount_check_new=='on')
-                $cumulative_discount_check = 1;
+    // Начальные данные
+    $data['enabled'] = 1;
 
-            //Создание массива с условиями накопительной скидки
-            foreach ($_POST['cumulative_sum_ot'] as $key => $value) {
-                if($_POST['cumulative_discount'][$key]!=''):
-                    $cumulative_array[$key]['cumulative_sum_ot'] = $value;
-                    $cumulative_array[$key]['cumulative_sum_do'] = $_POST['cumulative_sum_do'][$key];
-                    $cumulative_array[$key]['cumulative_discount'] = $_POST['cumulative_discount'][$key];
-                endif;
-            }
-            //Сериализация
-            $cumulative_discount = serialize($cumulative_array);
+    // Размер названия поля
 
-            if (CheckedRules($UserStatus["discount"], 2) == 1) {
-                $sql = "INSERT INTO " . $SysValue['base']['table_name28'] . "
-VALUES ('','$name_new','$discount_new','$price_new','$enabled_new','".$cumulative_discount_check."','".$cumulative_discount."')";
-                $result = mysql_query($sql) or @die("" . mysql_error() . "");
-                echo"
-	  <script>
-DoReloadMainWindow('shopusers_status');
-</script>
-	   ";
-            }
-            else
-                $UserChek->BadUserFormaWindow();
+    $PHPShopGUI->field_col = 2;
+    $PHPShopGUI->addJSFiles('./shopusers/gui/shopusers.gui.js');
+    $PHPShopGUI->setActionPanel(__("Покупатели") . ' / ' . __('Новый статус'), false, array('Сохранить и закрыть', 'Создать и редактировать'));
+
+
+
+
+    // Содержание закладки 1
+    $Tab1 = $PHPShopGUI->setCollapse(__('Информация'), $PHPShopGUI->setField("Название", $PHPShopGUI->setInput('text.required', "name_new", $data['name'])) .
+            $PHPShopGUI->setField("Скидка", $PHPShopGUI->setInputText('%', "discount_new", $data['discount'], 100)) .
+            $PHPShopGUI->setField("Колонка цен", $PHPShopGUI->setSelect('price_new', $PHPShopGUI->setSelectValue($data['price'], 5), 100)) .
+            $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("enabled_new", 1, "Вкл.", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выкл.", $data['enabled'])
+    ));
+
+    $Tab1.= $PHPShopGUI->setCollapse(__('Накопительные скидки'), 
+              $PHPShopGUI->setField(null,'<p class="text-muted hidden-xs">Для учета мгновенной скидки от текущей стоимости заказа без привязки к статусу пользователя и накопления перейдите в раздел <a href="?path=shopusers.discount"><span class="glyphicon glyphicon-share-alt"></span> Скидки от заказа</a>.</p>').
+            $PHPShopGUI->setField("Скидки от суммы заказов", $PHPShopGUI->setCheckbox('cumulative_discount_check_new', 1, 'Использование накопительной скидки', $data['cumulative_discount_check']) .
+                    $PHPShopGUI->loadLib('tab_discount', $data['cumulative_discount'], 'shopusers/'))
+    );
+
+    // Запрос модуля на закладку
+    $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
+
+    // Вывод формы закладки
+    $PHPShopGUI->setTab(array("Основное", $Tab1));
+
+    // Вывод кнопок сохранить и выход в футер
+    $ContentFooter = $PHPShopGUI->setInput("submit", "saveID", "ОК", "right", 70, "", "but", "actionInsert.shopusers.create");
+
+    // Футер
+    $PHPShopGUI->setFooter($ContentFooter);
+    return true;
+}
+
+// Функция записи
+function actionInsert() {
+    global $PHPShopOrm, $PHPShopModules;
+
+    // Накопительные скидки
+    foreach ($_POST['cumulative_sum_ot'] as $key => $value) {
+        if ($_POST['cumulative_discount'][$key] != '') {
+            $cumulative_array[$key]['cumulative_sum_ot'] = $value;
+            $cumulative_array[$key]['cumulative_sum_do'] = $_POST['cumulative_sum_do'][$key];
+            $cumulative_array[$key]['cumulative_discount'] = $_POST['cumulative_discount'][$key];
+            $cumulative_array[$key]['cumulative_enabled'] = intval($_POST['cumulative_enabled'][$key]);
         }
-        ?>
+    }
+
+    // Сериализация
+    $_POST['cumulative_discount_new'] = serialize($cumulative_array);
+
+
+    // Перехват модуля
+    $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
+
+    $action = $PHPShopOrm->insert($_POST);
+
+    if ($_POST['saveID'] == 'Создать и редактировать')
+        header('Location: ?path=' . $_GET['path'] . '&id=' . $action);
+    else
+        header('Location: ?path=' . $_GET['path']);
+
+    return $action;
+}
+
+// Обработка событий
+$PHPShopGUI->getAction();
+
+// Вывод формы при старте
+$PHPShopGUI->setLoader($_POST['saveID'], 'actionStart');
+?>

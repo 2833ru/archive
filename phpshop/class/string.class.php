@@ -3,18 +3,27 @@
 /**
  * Ѕиблиотека форматировани€ строк
  * @author PHPShop Software
- * @version 1.8
+ * @version 1.99999
  * @package PHPShopClass
  * @subpackage Helper
  */
 class PHPShopString {
 
     /**
+     * проверка сериализации в строке
+     * @param string $data
+     * @return Bool
+     */
+    static function is_serialized($data) {
+        return (is_string($data) && preg_match("#^((N;)|((a|O|s):[0-9]+:.*[;}])|((b|i|d):[0-9.E-]+;))$#um", $data));
+    }
+
+    /**
      *  одировка Win 1251 в JSON формат
      * @param string $var
      * @return string
      */
-    function json_safe_encode($var) {
+    static function json_safe_encode($var) {
         return json_encode(json_fix_cyr($var));
     }
 
@@ -210,6 +219,7 @@ function json_fix_cyr($var) {
  * Native json_encode function
  */
 if (!function_exists('json_encode')) {
+
     function json_encode($data) {
         if (is_array($data) || is_object($data)) {
             $islist = is_array($data) && ( empty($data) || array_keys($data) === range(0, count($data) - 1) );
@@ -271,7 +281,6 @@ if (!function_exists('json_encode')) {
         }
         return $json;
     }
+
 }
-
-
 ?>

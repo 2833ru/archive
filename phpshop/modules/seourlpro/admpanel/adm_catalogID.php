@@ -19,8 +19,8 @@ function addSeoUrlPro($data) {
         }
 
 
+        $Tab3 = $PHPShopGUI->setField("SEO ссылка:", $PHPShopGUI->setInput("text", "cat_seo_name_new", $data['cat_seo_name'], "left", false, false, false, false, '/',  '.html'), 1, 'ћожно использовать вложенные ссылки /sony/plazma/televizor');
 
-        $Tab3 = $PHPShopGUI->setField("SEO ссылка:", $PHPShopGUI->setInput("text", "cat_seo_name_new", $data['cat_seo_name'], "left", 400, false, false, false, 'http://' . $_SERVER['SERVER_NAME'] . '/', '.html <p>* ћожно использовать вложенные ссылки /sony/plazma/televizor</p>'), "none");
         $PHPShopGUI->addTab(array("SEO", $Tab3, 450));
     }
 }

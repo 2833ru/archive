@@ -1,24 +1,17 @@
 <?php
 
-$TitlePage=" ReCall -> Архив заявок";
-
 function actionStart() {
-    global $PHPShopInterface,$_classPath;
-
-    $PHPShopInterface->size="630,450";
-    $PHPShopInterface->link="../modules/returncall/admpanel/adm_returncallID.php";
-    $PHPShopInterface->setCaption(array("Дата","5%"),array("Телефон","10%"),array("IP","5%"),array("Имя","20%"),array("Время","7%"),
-            array("Сообщение","20%"),array("Статус","10%"));
-
-    // Настройки модуля
-    PHPShopObj::loadClass("modules");
-    $PHPShopModules = new PHPShopModules($_classPath."modules/");
+    global $PHPShopInterface,$PHPShopModules,$subpath,$TitlePage, $select_name;
     
+    $PHPShopInterface->setActionPanel($TitlePage, $select_name, false);
+    
+    $PHPShopInterface->setCaption(array("","1%"),array("Имя","30%"),array("Дата","15%"),array("Телефон","20%"),array("Время","15%"),array("", "10%"),array("Статус","10%"));
+
     $status_array=array(
         1=>'Новая заявка',
-        2=>'Просили перезвонить',
-        3=>'Недоcтупен',
-        4=>'Выполнен'
+        2=>'<span class="text-primary">Перезвонить</span>',
+        3=>'<span class="text-warning">Недоcтупен</span>',
+        4=>'<span class="text-success">Выполнен</span>'
     );
 
     // SQL
@@ -27,10 +20,9 @@ function actionStart() {
     if(is_array($data))
         foreach($data as $row) {
         $time=null;
-            extract($row);
-            if(!empty($time_start)) $time.=' от '.$time_start;
-            if(!empty($time_end)) $time.=' до '.$time_end;
-            $PHPShopInterface->setRow($id,PHPShopDate::dataV($date,false),$tel,$ip,$name,$time,substr($message,0,150),$status_array[$status]);
+            if(!empty($row['time_start'])) $time.=' от '.$row['time_start'];
+            if(!empty($row['time_end'])) $time.=' до '.$row['time_end'];
+            $PHPShopInterface->setRow($row['id'],array('name' => $row['name'], 'link' => '?path=modules.dir.'.$subpath[2].'&id=' . $row['id'], 'align' => 'left'),PHPShopDate::get($row['date'],true),$row['tel'],$time,array('action' => array('edit', 'delete', 'id' => $row['id']), 'align' => 'center'),$status_array[$row['status']]);
         }
     
     $PHPShopInterface->Compile();

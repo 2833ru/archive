@@ -39,8 +39,10 @@ function addFieldSale($data) {
         // Добавляем значения в функцию actionStart
         $sel_value[] = array('+', '+', false);
         $sel_value[] = array('-', '-', 'selected');
-        $sel = $PHPShopGUI->setSelect('mod_sale_opt', $sel_value, 40);
-        $Tab9 = $PHPShopGUI->setField('Новая цена', $PHPShopGUI->setInputText('Поменять цену у всего товара каталога на ' . $sel, 'mod_sale_price', null, '30', '%'));
+        //$sel = $PHPShopGUI->setSelect('mod_sale_opt', $sel_value, 40);
+        //$Tab9 = $PHPShopGUI->setField('Новая цена', $PHPShopGUI->setInputText('Поменять цену на ' . $sel, 'mod_sale_price', null, '30', '%'));
+            $Tab9 = $PHPShopGUI->setField('Новая цена', $PHPShopGUI->setInputText('изменить', 'mod_sale_price', "", '150', '%', 'left') . $PHPShopGUI->set_() . $PHPShopGUI->setSelect('mod_sale_opt', $sel_value, 50, 'left'));
+        
 
         $sel_value2[] = array('Выбрать', 'none');
         $sel_value2[] = array('Обнулить', 'null');

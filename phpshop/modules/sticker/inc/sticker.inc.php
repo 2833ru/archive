@@ -5,7 +5,7 @@ if (!defined("OBJENABLED"))
 
 class PHPShopStickerElement {
 
-    function PHPShopStickerElement() {
+    function __construct() {
         $this->objBase = $GLOBALS['SysValue']['base']['sticker']['sticker_forms'];
     }
 

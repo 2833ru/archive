@@ -19,13 +19,14 @@ function ReturnSumma($sum, $disc) {
 
 // Заводим статус обработанного заказа
 function CheckStatusReady() {
+    global $link_db;
     $sql = "select id from " . $GLOBALS['SysValue']['base']['table_name32'] . " where id=100 limit 1";
-    @$result = mysql_query($sql);
-    $num = mysql_num_rows($result);
+    @$result = mysqli_query($link_db, $sql);
+    $num = mysqli_num_rows($result);
 
     // Запись нового статуса
     if (empty($num))
-        mysql_query("INSERT INTO " . $GLOBALS['SysValue']['base']['table_name32'] . " VALUES (100, 'Передано в бухгалтерию', '#ffff33','')");
+        mysqli_query($link_db, "INSERT INTO " . $GLOBALS['SysValue']['base']['table_name32'] . " VALUES (100, 'Передано в бухгалтерию', '#ffff33','')");
 
     return 100;
 }
@@ -37,7 +38,7 @@ switch ($_GET['command']) {
 
     // Оптимизация базы перед загрузкой склада
     case("optimize"):
-        mysql_query("OPTIMIZE TABLE " . $GLOBALS['SysValue']['base']['table_name'] . ", " . $GLOBALS['SysValue']['base']['table_name2']) or die("Optimize fail: " . mysql_error());
+        mysqli_query($link_db, "OPTIMIZE TABLE " . $GLOBALS['SysValue']['base']['table_name'] . ", " . $GLOBALS['SysValue']['base']['table_name2']) or die("Optimize fail: " . mysqli_error($link_db));
         break;
 
     // Выводим список всех заказов
@@ -53,8 +54,8 @@ switch ($_GET['command']) {
             $sql = "select * from " . $GLOBALS['SysValue']['base']['table_name1'] . " where seller!='1' and datas BETWEEN " . $_GET['date1'] . " AND " . $_GET['date2'] . " order by id desc  limit " . $_GET['num'];
 //            $sql = "select * from " . $PHPShopBase->getParam("base.table_name1") . " where seller!='1' and datas<'" . date("U") . "'  order by id desc  limit 1";
 
-            $result = mysql_query($sql);
-            while ($row = mysql_fetch_array($result)) {
+            $result = mysqli_query($link_db, $sql);
+            while ($row = mysqli_fetch_array($result)) {
 
 
                 $csv1 = "Начало личных данных\n";
@@ -90,8 +91,8 @@ switch ($_GET['command']) {
                     $adr_info .= ", город: " . $row['city'];
                 if ($row['index'])
                     $adr_info .= ", индекс: " . $row['index'];
-                if ($row['street'] OR $OrdersReturn['order']['adr_name'])
-                    $adr_info .= ", улица: " . $row['street'] . $OrdersReturn['order']['adr_name'];
+                if ($row['street'])
+                    $adr_info .= ", улица: " . $row['street'];
                 if ($row['house'])
                     $adr_info .= ", дом: " . $row['house'];
                 if ($row['porch'])
@@ -101,7 +102,7 @@ switch ($_GET['command']) {
                 if ($row['flat'])
                     $adr_info .= ", квартира: " . $row['flat'];
                 if ($row['delivtime'])
-                    $adr_info .= ", время доставки: " . $row['delivtime'] . $OrdersReturn['order']['dos_ot'];
+                    $adr_info .= ", время доставки: " . $row['delivtime'];
                 if ($row['dop_info'])
                     $adr_info .= ", дополнительная информация: " . $row['dop_info'];
 
@@ -123,7 +124,6 @@ switch ($_GET['command']) {
 
                 // Ver 1.7
                 //$csv1.="$id;$uid;$datas;$mail;$name;$company;$tel;$oplata;$sum;$discount;$inn;$adres;$kpp;$user;\n";
-                
                 // Ver 1.8
                 $csv1.="$id;$uid;$datas;$mail;$name;$company;$tel;$oplata;$sum;$discount;$inn;$adres;$kpp;$user;$org_yur_adres;$org_fakt_adres;$org_ras;$org_bank;$org_kor;$org_bik;$org_city\n";
 
@@ -154,23 +154,17 @@ switch ($_GET['command']) {
 
 
     // обновление статуса заказа
-    // command=update&id=63&cid=12345&accounts=true
+    // command=update&id=63[ид заказа]&cid=12345[номер счета 1с]&accounts=true
     case("update"):
         $CheckStatusReady = CheckStatusReady();
-        $sql = "UPDATE " . $GLOBALS['SysValue']['base']['table_name1'] . "
-     SET
-	 seller='1',
-     statusi=$CheckStatusReady 
-     where id=" . $_GET['id'];
-        @$result = mysql_query($sql) or die("error");
+        $sql = "UPDATE " . $GLOBALS['SysValue']['base']['table_name1'] . " SET seller='1', statusi=".intval($CheckStatusReady)." where id=" . intval($_GET['id']);
+        mysqli_query($link_db, $sql) or die("error");
 
+        $date = time();
+        mysqli_query($link_db, "INSERT INTO " . $GLOBALS['SysValue']['base']['table_name9'] . " VALUES ('', " . $_GET['id'] . ", '" . $_GET['cid'] . "',$date,'')");
 
-        $date = date("U");
-        mysql_query("INSERT INTO " . $GLOBALS['SysValue']['base']['table_name9'] . " VALUES ('', " . $_GET['id'] . ", '" . $_GET['cid'] . "',$date,'')");
-
-        // Шлем сообщение пользователю
-        SendMailUser($id);
-
+        // Сообщение пользователю
+        SendMailUser($_GET['id'], "accounts");
         break;
 
 
@@ -178,8 +172,8 @@ switch ($_GET['command']) {
     // command=new&date1=123456&date2=24255
     case("new"):
         $sql = "select id from " . $GLOBALS['SysValue']['base']['table_name1'] . " where seller!='1' and datas<'$_GET[date2]' and datas>'$_GET[date1]'";
-        @$result = mysql_query($sql);
-        $new_order = mysql_num_rows($result);
+        @$result = mysqli_query($link_db, $sql);
+        $new_order = mysqli_num_rows($result);
         echo $new_order;
         break;
 
@@ -188,8 +182,8 @@ switch ($_GET['command']) {
     case("check"):
         $csv = null;
         $sql = "select * from " . $GLOBALS['SysValue']['base']['table_name9'] . " where datas<'$_GET[date2]' and datas>'$_GET[date1]'";
-        @$result = mysql_query($sql);
-        while ($row = mysql_fetch_array($result)) {
+        @$result = mysqli_query($link_db, $sql);
+        while ($row = mysqli_fetch_array($result)) {
             $cid = $row['cid'];
             $csv.="$cid;";
         }
@@ -197,24 +191,21 @@ switch ($_GET['command']) {
         break;
 
     // Обновление даты для Счет-фактур
-    // command=update_f&cid=1234&date=123456
+    // command=update_f&cid=1234[номер счета 1с]&date=123456
     case("update_f"):
-        $sql = "UPDATE " . $GLOBALS['SysValue']['base']['table_name9'] . "
-     SET
-	 datas_f=$_GET[date] 
-     where cid='$_GET[cid]'";
-        $result = mysql_query($sql) or die("error");
+        $sql = "UPDATE " . $GLOBALS['SysValue']['base']['table_name9'] . " SET datas_f=$_GET[date] where cid='$_GET[cid]'";
+        mysqli_query($link_db, $sql) or die("error");
 
-        // Шлем сообщение пользователю
-        SendMailUser($id, "invoice");
+        // Сообщение пользователю
+        SendMailUser($_GET['cid'], "invoice");
         break;
 
     // Проверка загрузки Счет-фактур
-    // command=check_f&cid=123
+    // command=check_f&cid=123[номер счета 1с]
     case("check_f"):
         $sql = "select datas_f from " . $GLOBALS['SysValue']['base']['table_name9'] . " where cid='$_GET[cid]' limit 1";
-        @$result = mysql_query($sql);
-        $row = mysql_fetch_array($result);
+        @$result = mysqli_query($link_db, $sql);
+        $row = mysqli_fetch_array($result);
         $datas_f = $row['datas_f'];
         echo $datas_f;
         break;

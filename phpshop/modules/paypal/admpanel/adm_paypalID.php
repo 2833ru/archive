@@ -1,51 +1,16 @@
 <?php
 
-$_classPath = "../../../";
-include($_classPath . "class/obj.class.php");
-PHPShopObj::loadClass("base");
-PHPShopObj::loadClass("system");
-PHPShopObj::loadClass("orm");
-PHPShopObj::loadClass("date");
-PHPShopObj::loadClass("string");
-
-$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
-include($_classPath . "admpanel/enter_to_admin.php");
-
-$PHPShopSystem = new PHPShopSystem();
-
-// Настройки модуля
-PHPShopObj::loadClass("modules");
-$PHPShopModules = new PHPShopModules($_classPath . "modules/");
-
-
-// Редактор
-PHPShopObj::loadClass("admgui");
-$PHPShopGUI = new PHPShopGUI();
-$PHPShopGUI->debug_close_window = false;
-$PHPShopGUI->reload = 'top';
-$PHPShopGUI->ajax = "'modules','paypal'";
-$PHPShopGUI->includeJava = '<SCRIPT language="JavaScript" src="../../../lib/Subsys/JsHttpRequest/Js.js"></SCRIPT>';
-$PHPShopGUI->dir = $_classPath . "admpanel/";
-
-// SQL
-$PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.paypal.paypal_log"));
-
 // Начальная функция загрузки
 function actionStart() {
-    global $PHPShopGUI, $_classPath, $PHPShopOrm;
+    global $PHPShopGUI,$PHPShopModules;
 
-
-    $PHPShopGUI->dir = $_classPath . "admpanel/";
-    $PHPShopGUI->title = "Операция с Paypal";
-    $PHPShopGUI->size = "630,450";
-
+    // SQL
+    $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.paypal.paypal_log"));
 
     // Выборка
-    $data = $PHPShopOrm->select(array('*'), array('id' => '=' . $_GET['id']));
+    $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
+    $PHPShopGUI->setActionPanel('Журнал от ' . PHPShopDate::get($data['date']), false, array('Закрыть'));
 
-
-    // Графический заголовок окна
-    $PHPShopGUI->setHeader('Оплата заказа №"' . $data[order_id] . '" от ' . PHPShopDate::get($data[date]), "Укажите данные для записи в базу.", $PHPShopGUI->dir . "img/i_display_settings_med[1].gif");
 
     // Переводим в читаемый вид
     ob_start();
@@ -53,28 +18,19 @@ function actionStart() {
     $log = ob_get_clean();
 
 
-    $Tab1 = $PHPShopGUI->setTextarea(null, PHPShopString::utf8_win1251($log), $float = "none", $width = '99%', $height = '340');
+    $Tab1 = $PHPShopGUI->setTextarea(null, PHPShopString::utf8_win1251($log), $float = "none", $width = '99%', $height = '300');
 
     // Вывод формы закладки
     $PHPShopGUI->setTab(array("Информация о платеже", $Tab1, 370));
 
-    // Вывод кнопок сохранить и выход в футер
-    $ContentFooter = $PHPShopGUI->setInput("button", "", "Закрыть", "right", 70, "return onCancel();", "but");
 
     $PHPShopGUI->setFooter($ContentFooter);
     return true;
 }
 
-if ($UserChek->statusPHPSHOP < 2) {
+// Обработка событий
+$PHPShopGUI->getAction();
 
-    // Вывод формы при старте
-    $PHPShopGUI->setAction($_GET['id'], 'actionStart', 'none');
-
-    // Обработка событий
-    $PHPShopGUI->getAction();
-}
-else
-    $UserChek->BadUserFormaWindow();
+// Вывод формы при старте
+$PHPShopGUI->setAction($_GET['id'], 'actionStart', 'none');
 ?>
-
-

@@ -12,27 +12,12 @@
         <meta name="domen-copyright" content="@pageDomen@">
         <meta content="General" name="rating">
         <meta name="ROBOTS" content="ALL">
-        <link href="@pageCss@" type="text/css" rel="stylesheet">
-        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-        <link rel="icon" href="/favicon.ico" type="image/x-icon">
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+        <link rel="icon" href="/favicon.ico"> 
 
         <!-- Bootstrap -->
         <link id="bootstrap_theme" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/@bootstrap_fluid_theme@.css" rel="stylesheet">
-        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/bar.css" rel="stylesheet">
-
-        <!-- Font-awesome -->
-        <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
-        <!-- Menu -->
-        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/menu.css" rel="stylesheet">
-
-        <!-- Highslide -->
-        <link href="java/highslide/highslide.css" rel="stylesheet">
-
-
-        <!-- Formstyler -->
-        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/jquery.formstyler.css" rel="stylesheet" /> 
-
+       
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
           <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
@@ -40,7 +25,26 @@
         <![endif]-->
     </head>
 
-    <body role="document" id="body">
+    <body id="body">
+        
+        <!-- Template -->
+        <link href="@pageCss@" type="text/css" rel="stylesheet">
+        
+        <!-- Bar -->
+        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/bar.css" rel="stylesheet">
+
+        <!-- Font-awesome -->
+        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/font-awesome.min.css" rel="stylesheet">
+
+        <!-- Menu -->
+        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/menu.css" rel="stylesheet">
+
+        <!-- Highslide -->
+        <link href="java/highslide/highslide.css" rel="stylesheet">
+
+        <!-- Bootstrap-select -->
+        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/bootstrap-select.min.css" rel="stylesheet"> 
+
 
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery-1.11.0.min.js"></script>
@@ -59,7 +63,7 @@
                                 @usersDisp@
                                 <li role="presentation">@wishlist@</li>
                                 <li role="presentation"><a href="/compare/"><span class="glyphicon glyphicon-eye-open"></span> Сравнить (<span id="numcompare">@numcompare@</span>)</a></li>
-                                <li role="presentation" class="@cart_active@"><a href="/order/"><span class="glyphicon glyphicon-gift"></span> Оформить заказ</a></li>
+                                <li role="presentation" class="@cart_active@" id="order"><a href="/order/"><span class="glyphicon glyphicon-gift"></span> Оформить заказ</a></li>
                             </ul>
                         </div>
                     </div>
@@ -86,8 +90,8 @@
             <div class="container-fluid">
                 <div class="navbar-header">
 
-                    <a class="navbar-brand visible-xs" href="tel:@telNum@">
-                        <span class="glyphicon glyphicon-phone"></span> @telNum@
+                    <a class="navbar-brand visible-xs" href="tel:@telNumMobile@">
+                        <span class="glyphicon glyphicon-phone"></span> @telNumMobile@
                     </a>
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
                         <span class="sr-only">Toggle navigation</span>
@@ -103,7 +107,7 @@
                         <li class="active visible-lg"><a href="/" title="Домой"><span class="glyphicon glyphicon-home"></span></a></li>
 
                         <!-- dropdown catalog menu -->
-                        <li id="catalog-dropdown" class="dropdown visible-lg visible-md visible-sm">
+                        <li id="catalog-dropdown" class="visible-lg visible-md visible-sm">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Каталог <b class="caret"></b></a>        
                             <ul class="dropdown-menu mega-menu">
                                 @leftCatal@
@@ -211,7 +215,7 @@
                     @rightMenu@
 
                     <div class="page-header visible-lg visible-md">
-                        <h3>@specMainIcon@</h3>
+                        <h3>@specMainTitle@</h3>
                     </div>
                     <div>@specMainIcon@</div>
                 </div>
@@ -296,7 +300,7 @@
         <!--/ Модальное окно авторизации-->
         
         <!-- Fixed mobile bar -->
-        <div class="bar-padding-fix visible-xs visible-sm"> </div>
+        <div class="bar-padding-fix visible-xs"> </div>
         <nav class="navbar navbar-default navbar-fixed-bottom bar bar-tab visible-xs visible-sm" role="navigation">
             <a class="tab-item active" href="/">
                 <span class="icon icon-home"></span>
@@ -321,8 +325,8 @@
         </nav>
         <!--/ Fixed mobile bar -->
 
-        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/bootstrap.js"></script>
-        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.formstyler.js"></script>
+        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/bootstrap.min.js"></script>
+        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/bootstrap-select.min.js"></script>
         <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@/js/phpshop.js"></script>
         <script src="java/jqfunc.js"></script>
         <script src="java/highslide/highslide-p.js"></script>

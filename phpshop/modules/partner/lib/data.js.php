@@ -30,13 +30,13 @@ $_POST['sql_test']='<?xml version="1.0" encoding="windows-1251"?>
 
 class PHPShopHtmlCatalog extends PHPShopBaseXml {
 
-    function PHPShopHtmlCatalog() {
+    function __construct() {
         $this->debug=false;
         $this->true_method=array('select','option');
         $this->true_from=array('table_name2');
         $this->code=$_GET['code'];
         $this->postsql($_GET['cat'],$_GET['limit']);
-        parent::PHPShopBaseXml();
+        parent::__construct();
     }
     
     /**

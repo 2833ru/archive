@@ -3,14 +3,9 @@
     <version>1.3</version>
     <name>SMS Fly</name>
     <description>SMS оповещение для Украины.</description>
-    <icon>icon.png</icon>
     <category>sale</category>
     <adminmenu>
         <title>SMS оповещение</title>
-        <podmenu>
-            <podmenu_name>Настройка</podmenu_name>
-            <podmenu_icon>icon.png</podmenu_icon>
-            <podmenu_action>javascript:miniWin('../modules/smsfly/admpanel/adm_module.php',510,450);</podmenu_action>
-        </podmenu>
+        <capability>true</capability>
     </adminmenu>
 </module>

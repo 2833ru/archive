@@ -12,4 +12,4 @@ CREATE TABLE `phpshop_modules_productlist_system` (
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 
-INSERT INTO `phpshop_modules_productlist_system` VALUES (1, 10,'Похожие товары', '','1','1.2');
+INSERT INTO `phpshop_modules_productlist_system` VALUES (1, 10,'Похожие товары', '','1','1.3');

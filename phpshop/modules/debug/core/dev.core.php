@@ -6,13 +6,13 @@ if (!defined("OBJENABLED"))
 class PHPShopDev extends PHPShopCore {
 
     // Конструктор
-    function PHPShopDev() {
+    function __construct() {
         $this->objBase=$GLOBALS['SysValue']['base']['debug']['debug_system'];
         $this->debug=false;
         $this->cache=true;
         $this->action=array("nav"=>"index",'get'=>array('phpinfo','debug_start','debug_stop','error_log','modules_list',
                         'errorlog_clean','key'));
-        parent::PHPShopCore();
+        parent::__construct();
         $this->system();
     }
 
@@ -36,7 +36,7 @@ class PHPShopDev extends PHPShopCore {
                 $log.=PHPShopText::tr(PHPShopDate::dataV($row['date']),$row['name'],$_classPath.'modules/'.$row['path']);
             }
 
-        $stat=PHPShopText::h1('Установленные модули').PHPShopText::table($log,$cellpadding=3,$cellspacing=1,$align='center',$width='98%',$bgcolor=false,$border=1);
+        $stat=PHPShopText::h3('Установленные модули').PHPShopText::table($log,$cellpadding=3,$cellspacing=1,$align='center',$width='98%',$bgcolor=false,$border=1,null,'table table-striped table-bordered');
 
         $autoload=PHPShopText::tr(PHPShopText::b('Видимость'),PHPShopText::b('Загрузчик'));
         if(is_array($PHPShopModules->ModValue['autoload']))
@@ -45,8 +45,8 @@ class PHPShopDev extends PHPShopCore {
 
             }
 
-        $stat.=PHPShopText::h1('Автозагрузка').
-                PHPShopText::table($autoload,$cellpadding=3,$cellspacing=1,$align='center',$width='98%',$bgcolor=false,$border=1);
+        $stat.=PHPShopText::h3('Автозагрузка').
+                PHPShopText::table($autoload,$cellpadding=3,$cellspacing=1,$align='center',$width='98%',$bgcolor=false,$border=1,null,'table table-striped table-bordered');
 
 
         $core=PHPShopText::tr(PHPShopText::b('Путь'),PHPShopText::b('Исполнитель'));
@@ -56,8 +56,8 @@ class PHPShopDev extends PHPShopCore {
 
             }
 
-        $stat.=PHPShopText::h1('Разделы ЧПУ').
-                PHPShopText::table($core,$cellpadding=3,$cellspacing=1,$align='center',$width='98%',$bgcolor=false,$border=1);
+        $stat.=PHPShopText::h3('Разделы ЧПУ').
+                PHPShopText::table($core,$cellpadding=3,$cellspacing=1,$align='center',$width='98%',$bgcolor=false,$border=1,null,'table table-striped table-bordered');
 
         $hook=PHPShopText::tr(PHPShopText::b('Класс'),PHPShopText::b('Перехватчик'));
         if(is_array($PHPShopModules->ModValue['hook']))
@@ -76,8 +76,8 @@ class PHPShopDev extends PHPShopCore {
 
             }
 
-        $stat.=PHPShopText::h1('Хуки').
-                PHPShopText::table($hook,$cellpadding=3,$cellspacing=1,$align='center',$width='98%',$bgcolor=false,$border=1);
+        $stat.=PHPShopText::h3('Хуки').
+                PHPShopText::table($hook,$cellpadding=3,$cellspacing=1,$align='center',$width='98%',$bgcolor=false,$border=1,null,'table table-striped table-bordered');
 
         $this->set('pageContent', $stat,true);
 
@@ -169,7 +169,7 @@ class PHPShopDev extends PHPShopCore {
             $search_forma=PHPShopText::form(PHPShopText::setInputText('Найти:','words',PHPShopSecurity::true_search($_POST['words'])).PHPShopText::setInput('submit','submit','Найти','left'),'search_forma');
             $clean_button=PHPShopText::form(PHPShopText::setInput('submit','errorlog_clean','Очистить Error Log'),'log_action',$method='get');
         }
-        $this->set('pageContent', PHPShopText::h1('Отладочные сообщения').$search_forma.$clean_button.PHPShopText::table($log,$cellpadding=3,$cellspacing=1,$align='center',$width='98%',$bgcolor=false,$border=1).$clean_button,true);
+        $this->set('pageContent', PHPShopText::h1('Отладочные сообщения').$search_forma.$clean_button.PHPShopText::table($log,$cellpadding=3,$cellspacing=1,$align='center',$width='100%',$bgcolor=false,$border=0, $id = false, 'table table-striped').$clean_button,true);
 
         // Подключаем шаблон
         $this->parseTemplate($this->getValue('templates.page_page_list'));

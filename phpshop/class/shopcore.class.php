@@ -73,7 +73,7 @@ class PHPShopShopCore extends PHPShopCore {
     /**
      * Конструктор
      */
-    function PHPShopShopCore() {
+    function __construct() {
         global $PHPShopValutaArray;
 
         // Имя Бд
@@ -83,13 +83,29 @@ class PHPShopShopCore extends PHPShopCore {
         $this->Valuta = $PHPShopValutaArray->getArray();
 
         PHPShopObj::loadClass('product');
-        parent::PHPShopCore();
+        parent::__construct();
 
         // Валюта товара
         $this->dengi = $this->PHPShopSystem->getParam('dengi');
+        $this->currency = $this->currency();
+
+        // Настройки
+        $this->parent_price_enabled = $this->PHPShopSystem->getSerilizeParam('admoption.parent_price_enabled');
+        $this->user_price_activate = $this->PHPShopSystem->getSerilizeParam('admoption.user_price_activate');
+        $this->sklad_enabled = $this->PHPShopSystem->getSerilizeParam('admoption.sklad_enabled');
+        $this->sklad_status = $this->PHPShopSystem->getSerilizeParam('admoption.sklad_status');
 
         // HTML опции верстки
         $this->setHtmlOption(__CLASS__);
+    }
+
+    /**
+     * Поддержка старого конструктора
+     */
+    function __call($name, $arguments) {
+        if ($name == __CLASS__) {
+            self::__construct();
+        }
     }
 
     /**
@@ -98,7 +114,6 @@ class PHPShopShopCore extends PHPShopCore {
      * @return mixed
      */
     function query_filter($where = false) {
-        global $SysValue;
 
         if (!empty($where))
             $where.=' and ';
@@ -133,37 +148,51 @@ class PHPShopShopCore extends PHPShopCore {
         // Накрутка
         $percent = $this->PHPShopSystem->getValue('percent');
 
+        // Форма вывода
+        switch ($_GET['gridChange']) {
+            case 1:
+                $this->set('gridSetAactive', 'active');
+                break;
+            case 2:
+                $this->set('gridSetBactive', 'active');
+                break;
+            default: $this->set('gridSetBactive', 'active');
+        }
+
         // Сортировка принудительная пользователем
         switch ($f) {
             case(1): $order_direction = "";
                 $this->set('productSortNext', 2);
                 $this->set('productSortImg', 1);
                 $this->set('productSortT', 1);
+                $this->set('fSetBactive', 'active');
                 break;
             case(2): $order_direction = " desc";
                 $this->set('productSortNext', 1);
                 $this->set('productSortImg', 2);
                 $this->set('productSortT', 2);
+                $this->set('fSetAactive', 'active');
                 break;
             default: $order_direction = "";
                 $this->set('productSortNext', 2);
                 $this->set('productSortImg', 1);
                 $this->set('productSortT', 1);
+                $this->set('fSetBactive', 'active');
                 break;
         }
         switch ($s) {
             case(1): $order = array('order' => 'name' . $order_direction);
                 $this->set('productSortA', 'sortActiv');
+                $this->set('sSetBactive', 'active');
                 break;
             case(2): $order = array('order' => 'price' . $order_direction);
                 $this->set('productSortB', 'sortActiv');
-                break;
-            case(3): $order = array('order' => 'num' . $order_direction);
-                $this->set('productSortC', 'sortActiv');
+                $this->set('sSetAactive', 'active');
                 break;
             default:
                 $order = array('order' => 'num' . $order_direction);
                 $this->set('productSortC', 'sortActiv');
+                $this->set('sSetCactive', 'active');
                 break;
         }
 
@@ -173,7 +202,7 @@ class PHPShopShopCore extends PHPShopCore {
 
         // Все страницы
         if ($this->PHPShopNav->isPageAll()) {
-            $sql = "select * from " . $this->getValue('base.products') . " where (" . $where . " enabled='1' and parent_enabled='0') " . $sort . " " . $string . ' limit ' . $obj->max_item;
+            $sql = "select * from " . $this->getValue('base.products') . " where (" . $where . " enabled='1' and parent_enabled='0') " . $sort . " " . $string . ' limit ' . $this->max_item;
         }
 
         // Поиск по цене
@@ -298,7 +327,7 @@ class PHPShopShopCore extends PHPShopCore {
      * @param int $count количество товаров на странице
      * @param string $sql SQL запрос в виде строки для сложных выборок (применение AND и OR в одном условии, начмная от WHERE)
      */
-    function setPaginator($count, $sql = null) {
+    function setPaginator($count = null, $sql = null) {
 
         // Перехват модуля в начале функции
         if ($this->setHook(__CLASS__, __FUNCTION__, array('count' => $count, 'sql' => $sql), 'START'))
@@ -339,7 +368,7 @@ class PHPShopShopCore extends PHPShopCore {
         else
             $SQL = $sql;
 
-        
+
         $sort = '?';
 
         // Фильтры
@@ -366,7 +395,7 @@ class PHPShopShopCore extends PHPShopCore {
         // Всего страниц
         $this->PHPShopOrm->comment = __CLASS__ . '.' . __FUNCTION__;
         $result = $this->PHPShopOrm->query("select COUNT('id') as count from " . $this->objBase . ' where ' . $SQL);
-        $row = mysql_fetch_array($result);
+        $row = mysqli_fetch_array($result);
         $this->num_page = $row['count'];
 
         $i = 1;
@@ -466,30 +495,32 @@ class PHPShopShopCore extends PHPShopCore {
     }
 
     /**
-     * Проверка изображений режима Multibase
+     * Проверка изображений режима Multibase [отключено]
      * @param string $img адрес изображения
      * @param bool $return возврат измененной страницы
      */
     function checkMultibase($img) {
-
-        $base_host = $this->PHPShopSystem->getSerilizeParam('admoption.base_host');
-        if ($this->PHPShopSystem->getSerilizeParam('admoption.base_enabled') == 1 and !empty($base_host)) {
-            $source_img = str_replace("/UserFiles/", "http://" . $base_host . "/UserFiles/", $img);
-            return $source_img;
-        }
-        else
-            return $img;
+        /*
+          $base_host = $this->PHPShopSystem->getSerilizeParam('admoption.base_host');
+          if ($this->PHPShopSystem->getSerilizeParam('admoption.base_enabled') == 1 and !empty($base_host)) {
+          $source_img = str_replace("/UserFiles/", "http://" . $base_host . "/UserFiles/", $img);
+          return $source_img;
+          }
+          else
+          return $img; */
+        
+        return $img;
     }
 
     /**
-     * Проверка права каталога режима Multibase
+     * Проверка права каталога режима Multibase [отключено]
      * @param int $category
      * @return boolean 
      */
     function errorMultibase($category) {
 
-
         // Мультибаза
+        /*
         if ($this->PHPShopSystem->ifSerilizeParam('admoption.base_enabled')) {
 
             if (empty($this->multi_cat)) {
@@ -508,6 +539,8 @@ class PHPShopShopCore extends PHPShopCore {
             if (!in_array($category, $this->multi_cat))
                 return true;
         }
+         * 
+         */
     }
 
     /**
@@ -516,20 +549,23 @@ class PHPShopShopCore extends PHPShopCore {
      */
     function checkStore($row = array()) {
 
+        // Валюта
+        $this->set('productValutaName', $this->currency);
+
         // Единица измерения
         if (empty($row['ed_izm']))
             $row['ed_izm'] = $this->lang('product_on_sklad_i');
         $this->set('productEdIzm', $row['ed_izm']);
 
         // Показывать состояние склада
-        if ($this->PHPShopSystem->getSerilizeParam('admoption.sklad_enabled') == 1 and $row['items'] > 0)
+        if ($this->sklad_enabled == 1 and $row['items'] > 0)
             $this->set('productSklad', $this->lang('product_on_sklad') . " " . $row['items'] . " " . $row['ed_izm']);
         else
             $this->set('productSklad', '');
 
 
         $price = $this->price($row);
-        
+
 
         // Расчет минимальной и максимальной цены
         if ($price > $this->price_max)
@@ -562,7 +598,7 @@ class PHPShopShopCore extends PHPShopCore {
                 $productPrice = $price;
                 $productPriceNew = $this->price($row, true);
                 $this->set('productPrice', $productPrice);
-                $this->set('productPriceRub', PHPShopText::strike($productPriceNew . " " . $this->currency()));
+                $this->set('productPriceRub', PHPShopText::strike($productPriceNew . " " . $this->currency));
             }
         }
 
@@ -578,19 +614,19 @@ class PHPShopShopCore extends PHPShopCore {
         }
 
         // Если цены показывать только после авторизации
-        if ($this->PHPShopSystem->getSerilizeParam('admoption.user_price_activate') == 1 and empty($_SESSION['UsersId'])) {
+        if ($this->user_price_activate == 1 and empty($_SESSION['UsersId'])) {
             $this->set('ComStartCart', PHPShopText::comment('<'));
             $this->set('ComEndCart', PHPShopText::comment('>'));
             $this->set('productPrice', null);
-            $this->set('productValutaName', null);
+            $this->set('productValutaName', '');
         }
-        
+
         // Проверка на нулевую цену 
-        if(empty($row['price']) or !empty($row['parent'])){
+        if (empty($row['price']) or (!empty($row['parent']) and empty($this->parent_price_enabled))) {
             $this->set('ComStartCart', PHPShopText::comment('<'));
             $this->set('ComEndCart', PHPShopText::comment('>'));
             $this->set('productPrice', null);
-            $this->set('productValutaName', null);
+            $this->set('productValutaName', '');
         }
 
 
@@ -750,7 +786,7 @@ class PHPShopShopCore extends PHPShopCore {
             $this->set("gridChange", "btn-primary");
         return $num_row;
     }
-    
+
     /**
      * Вывод подтипов товаров
      * @param array $row массив значений
@@ -767,9 +803,6 @@ class PHPShopShopCore extends PHPShopCore {
     if (!empty($row['parent'])) {
         $parent = explode(",", $row['parent']);
 
-        // Учет склада
-        $sklad_status = $this->PHPShopSystem->getSerilizeParam('admoption.sklad_status');
-
         // Убираем добавление в корзину главного товара
         $this->set('ComStartCart', '<!--');
         $this->set('ComEndCart', '-->');
@@ -784,9 +817,9 @@ class PHPShopShopCore extends PHPShopCore {
             }
 
         // Цена главного товара
-        if (!empty($row['price']) and empty($row['priceSklad']) and (!empty($row['items']) or (empty($row['items']) and $sklad_status == 1))) {
+        if (!empty($row['price']) and empty($row['priceSklad']) and (!empty($row['items']) or (empty($row['items']) and $this->sklad_status == 1))) {
             $this->select_value[] = array($row['name'] . " -  (" . $this->price($row) . "
-                    " . $this->get('productValutaName') . ')', $row['id'], false);
+                    " . $this->currency . ')', $row['id'], false);
         } else {
             $this->set('ComStartNotice', PHPShopText::comment('<'));
             $this->set('ComEndNotice', PHPShopText::comment('>'));
@@ -798,9 +831,9 @@ class PHPShopShopCore extends PHPShopCore {
                 if (!empty($p)) {
 
                     // Если товар на складе
-                    if (empty($p['priceSklad']) and (!empty($p['items']) or (empty($p['items']) and $sklad_status == 1))) {
+                    if (empty($p['priceSklad']) and (!empty($p['items']) or (empty($p['items']) and $this->sklad_status == 1))) {
                         $price = $this->price($p);
-                        $this->select_value[] = array($p['name'] . ' -  (' . $price . ' ' . $this->get('productValutaName') . ')', $p['id'], false);
+                        $this->select_value[] = array($p['name'] . ' -  (' . $price . ' ' . $this->currency . ')', $p['id'], false);
                     }
                 }
             }
@@ -819,122 +852,114 @@ class PHPShopShopCore extends PHPShopCore {
     }
 }
 
+/**
+ * Генератор сетки товаров
+ * @param array $dataArray массив данных
+ * @param int $cell разрадя сетки [1-5]
+ * @return string
+ */
+function product_grid($dataArray, $cell = 2, $template = false) {
 
-    /**
-     * Генератор сетки товаров
-     * @param array $dataArray массив данных
-     * @param int $cell разрадя сетки [1-5]
-     * @return string
-     */
-    function product_grid($dataArray, $cell = 2, $template = false) {
+    if (empty($cell))
+        $cell = 2;
+    $this->cell = $cell;
+    $this->setka_footer = true;
 
-        if (empty($cell))
-            $cell = 2;
-        $this->cell = $cell;
-        $this->setka_footer = true;
+    $table = null;
+    $j = 1;
+    $item = 1;
+    $lastmodified = 0;
 
-        $table = null;
-        $j = 1;
-        $item = 1;
-        $lastmodified = 0;
+    // Локализация
+    $this->set('productSale', $this->lang('product_sale'));
+    $this->set('productInfo', $this->lang('product_info'));
+    $this->set('productPriceMoney', $this->dengi);
+    $this->set('catalog', $this->lang('catalog'));
+    if ($this->PHPShopNav->getPage() > 0)
+        $this->set('productPageThis', $this->PHPShopNav->getPage());
+    elseif ($this->PHPShopNav->getPage() != 'ALL')
+        $this->set('productPageThis', 1);
 
-        // Локализация
-        $this->set('productSale', $this->lang('product_sale'));
-        $this->set('productInfo', $this->lang('product_info'));
-        $this->set('productPriceMoney', $this->dengi);
-        $this->set('catalog', $this->lang('catalog'));
-        if ($this->PHPShopNav->getPage() > 0)
-            $this->set('productPageThis', $this->PHPShopNav->getPage());
-        elseif ($this->PHPShopNav->getPage() != 'ALL')
-            $this->set('productPageThis', 1);
+    $d1 = $d2 = $d3 = $d4 = $d5 = $d6 = $d7 = null;
+    if (is_array($dataArray)) {
+        $total = count($dataArray);
 
-        $d1 = $d2 = $d3 = $d4 = $d5 = $d6 = $d7 = null;
-        if (is_array($dataArray)) {
-            $total = count($dataArray);
+        // Проверка разделителя сетки
+        if ($total < $cell)
+            $this->grid = false;
 
-            // Проверка разделителя сетки
-            if ($total < $cell)
-                $this->grid = false;
+        foreach ($dataArray as $row) {
 
-            foreach ($dataArray as $row) {
+            // Название
+            $this->set('productName', $row['name']);
 
-                // Название
-                $this->set('productName', $row['name']);
+            // Артикул
+            $this->set('productArt', $row['uid']);
 
-                // Артикул
-                $this->set('productArt', $row['uid']);
+            // Краткое описание
+            $this->set('productDes', Parser($row['description']));
 
-                // Краткое описание
-                $this->set('productDes', Parser($row['description']));
+            // Вес
+            $this->set('productWeight', $row['weight']);
 
-                // Вес
-                $this->set('productWeight', $row['weight']);
+            // Максимальная дата изменения
+            if ($row['datas'] > $lastmodified)
+                $lastmodified = $row['datas'];
 
-                // Максимальная дата изменения
-                if ($row['datas'] > $lastmodified)
-                    $lastmodified = $row['datas'];
+            // Маленькая картинка
+            $this->set('productImg', $this->checkMultibase($row['pic_small']));
 
-                // Маленькая картинка
-                $this->set('productImg', $this->checkMultibase($row['pic_small']));
+            // Пустая картинка, заглушка
+            if (empty($row['pic_small']))
+                $this->set('productImg', $this->no_photo);
 
-                // Пустая картинка, заглушка
-                if (empty($row['pic_small']))
-                    $this->set('productImg', $this->no_photo);
+            // Большая картинка
+            $this->set('productImgBigFoto', $this->checkMultibase($row['pic_big']));
 
-                // Большая картинка
-                $this->set('productImgBigFoto', $this->checkMultibase($row['pic_big']));
+            // Ид товара
+            $this->set('productUid', $row['id']);
 
-                // Ид товара
-                $this->set('productUid', $row['id']);
+            // Подключение функции вывода средней оценки товара из отзывов пользователей
+            $this->doLoadFunction(__CLASS__, 'comment_rate', array("row" => $row, "type" => "CID"), 'shop');
 
-                // Подключение функции вывода средней оценки товара из отзывов пользователей
-                $this->doLoadFunction(__CLASS__, 'comment_rate', array("row" => $row, "type" => "CID"), 'shop');
+            // Опции склада
+            $this->checkStore($row);
 
-                // Опции склада
-                $this->checkStore($row);
+            // Опции товара
+            //$this->option_select($row);
+            // Перехват модуля
+            $this->setHook(__CLASS__, __FUNCTION__, $row);
 
-                // Опции товара
-                //$this->option_select($row);
-                // Перехват модуля
-                $this->setHook(__CLASS__, __FUNCTION__, $row);
+            if (empty($template))
+                $template = $this->getValue('templates.main_product_forma_' . $this->cell);
 
-                if (empty($template))
-                    $template = $this->getValue('templates.main_product_forma_' . $this->cell);
-
-                // Подключаем шаблон ячейки товара
-                $dis = ParseTemplateReturn($template);
+            // Подключаем шаблон ячейки товара
+            $dis = ParseTemplateReturn($template);
 
 
-                // Убераем последний разделитель в сетке
-                if ($item == $total)
-                    $this->setka_footer = false;
+            // Убераем последний разделитель в сетке
+            if ($item == $total)
+                $this->setka_footer = false;
 
-                $cell_name = 'd' . $j;
-                $$cell_name = $dis;
+            $cell_name = 'd' . $j;
+            $$cell_name = $dis;
 
-                if ($j == $this->cell) {
-                    $table.=$this->setCell($d1, $d2, $d3, $d4, $d5, $d6, $d7);
-                    $d1 = $d2 = $d3 = $d4 = $d5 = $d6 = $d7 = null;
-                    $j = 0;
-                } elseif ($item == $total) {
-                    $table.=$this->setCell($d1, $d2, $d3, $d4, $d5, $d6, $d7);
-                }
-
-                $j++;
-                $item++;
+            if ($j == $this->cell) {
+                $table.=$this->setCell($d1, $d2, $d3, $d4, $d5, $d6, $d7);
+                $d1 = $d2 = $d3 = $d4 = $d5 = $d6 = $d7 = null;
+                $j = 0;
+            } elseif ($item == $total) {
+                $table.=$this->setCell($d1, $d2, $d3, $d4, $d5, $d6, $d7);
             }
+
+            $j++;
+            $item++;
         }
-
-        $this->lastmodified = $lastmodified;
-        return $table;
     }
 
-    /**
-     * Сообщение об неизвестном методе
-     */
-    function __call($m, $a) {
-        echo $this->message('Ошибка', '$' . __CLASS__ . '->' . $m . '() не определен в ' . __FILE__);
-    }
+    $this->lastmodified = $lastmodified;
+    return $table;
+}
 
 }
 

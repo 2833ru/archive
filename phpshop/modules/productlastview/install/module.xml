@@ -4,14 +4,9 @@
     <name>Product Last View</name>
     <faqlink>http://faq.phpshop.ru/page/last-view.html</faqlink>
     <description>Модуль просмотренные товары.</description>
-    <icon>icon.png</icon>
     <category>form,text</category>
     <adminmenu>
         <title>Product View</title>
-        <podmenu>
-            <podmenu_name>Настройка</podmenu_name>
-            <podmenu_icon>icon.png</podmenu_icon>
-            <podmenu_action>javascript:miniWin('../modules/productlastview/admpanel/adm_module.php',510,450);</podmenu_action>
-        </podmenu>
+        <capability>true</capability>
     </adminmenu>
 </module>

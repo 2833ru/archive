@@ -11,9 +11,9 @@ class PHPShopYandexkassa extends PHPShopCore {
     /**
      * Конструктор
      */
-    function PHPShopYandexkassa() {
+    function __construct() {
         // Список экшенов
-        parent::PHPShopCore();
+        parent::__construct();
     }
 
     /**

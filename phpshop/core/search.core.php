@@ -20,11 +20,11 @@ class PHPShopSearch extends PHPShopShopCore {
     var $grid = false;
     var $empty_index_action = false;
 
-    function PHPShopSearch() {
+    function __construct() {
 
         // Список экшенов
         $this->action = array("post" => "words", "get" => "words", "nav" => "index");
-        parent::PHPShopShopCore();
+        parent::__construct();
     }
 
     /**
@@ -256,7 +256,7 @@ class PHPShopSearch extends PHPShopShopCore {
     /**
      * Генерация пагинатора
      */
-    function setPaginator($count, $sql = null) {
+    function setPaginator($count= null, $sql = null) {
 
         // проверяем наличие шаблонов пагинации в папке шаблона
         // если отсутствуют, то используем шаблоны из lib
@@ -290,7 +290,7 @@ class PHPShopSearch extends PHPShopShopCore {
         // Всего страниц
         $this->PHPShopOrm->comment = __CLASS__ . '.' . __FUNCTION__;
         $result = $this->PHPShopOrm->query("select COUNT('id') as count from " . $this->objBase . $SQL);
-        $row = mysql_fetch_array($result);
+        $row = mysqli_fetch_array($result);
         $this->num_page = $row['count'];
 
         $i = 1;

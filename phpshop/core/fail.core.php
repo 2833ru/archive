@@ -10,8 +10,8 @@ class PHPShopFail extends PHPShopCore {
     /**
      * Конструктор
      */
-    function PHPShopFail() {
-        parent::PHPShopCore();
+    function __construct() {
+        parent::__construct();
     }
     /**
      * Экшен

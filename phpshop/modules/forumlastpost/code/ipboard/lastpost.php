@@ -25,9 +25,9 @@
 
         <?
         if(!@include("conf_global.php")) exit('conf_global.php не обнаружен');
-        mysql_connect ($INFO['sql_host'], $INFO['sql_user'], $INFO['sql_pass']) or die("Невозможно подсоединиться к базе");
-        mysql_select_db($INFO['sql_database']) or die("Невозможно подсоединиться к базе");
-        mysql_query("SET NAMES 'cp1251'");
+        $link_db=mysqli_connect ($INFO['sql_host'], $INFO['sql_user'], $INFO['sql_pass']) or die("Невозможно подсоединиться к базе");
+        mysqli_select_db($link_db,$INFO['sql_database']) or die("Невозможно подсоединиться к базе");
+        mysqli_query($link_db,"SET NAMES 'cp1251'");
         function dataV($nowtime) {
             $Months = array("01"=>"января","02"=>"февраля","03"=>"марта",
                     "04"=>"апреля","05"=>"мая","06"=>"июня", "07"=>"июля",
@@ -40,8 +40,8 @@
 
         function Total($id) {
             $sql="select pid from ibf_posts where topic_id=$id";
-            $result=mysql_query($sql);
-            $num = mysql_num_rows($result);
+            $result=mysqli_query($link_db,$sql);
+            $num = mysqli_num_rows($result);
             return $num;
         }
 
@@ -51,8 +51,8 @@
 
 
         $sql="select * from ibf_forums order by last_post desc limit ".$limit;
-        $result=mysql_query($sql);
-        while($row = mysql_fetch_array($result)) {
+        $result=mysqli_query($link_db,$sql);
+        while($row = mysqli_fetch_array($result)) {
             $name = $row['last_title'];
             $last_post = $row['last_post'];
             $last_poster_name = $row['last_poster_name'];

@@ -22,9 +22,10 @@ function TipPayment($payment) {
 // Выбор файла
 function GetTipPayment($dir) {
 
-    $path = "../../../payment/";
+    $path = "../../payment/";
+    $arr=null;
 
-    if ($dh = opendir($path)) {
+    if ($dh = @opendir($path)) {
 
         while (($file = readdir($dh)) !== false) {
             if ($file != "." && $file != "..") {
@@ -33,7 +34,12 @@ function GetTipPayment($dir) {
                         $s = "selected";
                     else
                         $s = "";
-                    @$arr[] = array(TipPayment($file), $file, $s);
+                    
+                    if($file == 'modules')
+                        $comment='data-subtext="модуль оплаты"';
+                    else $comment=null;
+                    
+                    $arr[] = array(TipPayment($file), $file, $s,$comment);
                 }
             }
         }

@@ -18,12 +18,12 @@ class PHPShopSuccess extends PHPShopCore {
     /**
      * Конструктор
      */
-    function PHPShopSucces() {
+    function __construct() {
 
         // Имя Бд
         $this->objBase = $GLOBALS['SysValue']['base']['orders'];
 
-        parent::PHPShopCore();
+        parent::__construct();
     }
 
     /**

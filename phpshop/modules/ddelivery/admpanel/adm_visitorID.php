@@ -48,7 +48,7 @@ function addDDeliveryPanel($data) {
 function checkCreateDDelivery($post) {
     global $PHPShopModules, $PHPShopOrm;
 
-    $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_POST['visitorID'])));
+    $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_POST['rowID'])));
 
     try {
         //DDelivery

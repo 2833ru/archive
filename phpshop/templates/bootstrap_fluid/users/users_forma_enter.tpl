@@ -5,7 +5,6 @@
         <li class="dropdown-header">@UsersLogin@</li>
         <li><a href="/users/">Персональные данные</a></li>
         <li><a href="/users/order.html">Отследить заказ</a></li>
-        <li><a href="/users/notice.html">Уведомления о товарах</a></li>
         <li><a href="/users/message.html">Связь с менеджерами</a></li>
         <li class="divider"></li>
           @theme_menu@

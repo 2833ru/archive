@@ -19,11 +19,11 @@ class PHPShopClients extends PHPShopUsers {
     /**
      * Конструктор
      */
-    function PHPShopClients() {
+    function __construct() {
 
         // Отладка
         $this->debug=false;
-        parent::PHPShopUsers();
+        parent::__construct();
 
         // Список экшенов
         $this->action=array('get'=>array('order'),'post'=>array('order'),'nav'=>'index');

@@ -27,7 +27,7 @@ class Connect extends \DDelivery\DB\Abstr\Connect {
      */
     protected function _query($query)
     {
-        return mysql_query($query, $this->linkIdentifier);
+        return mysqli_query($this->linkIdentifier,$query);
     }
 
     /**

@@ -20,11 +20,11 @@ class PHPShopIndex extends PHPShopCore {
      */
     var $true_get_params=array('skin','logout','partner','debug','mobile','fullversion');
 
-    function PHPShopIndex() {
+    function __construct() {
         $this->objBase = $GLOBALS['SysValue']['base']['table_name11'];
         $this->debug = false;
         $this->template = 'templates.index';
-        parent::PHPShopCore();
+        parent::__construct();
     }
 
     function index() {
@@ -34,7 +34,7 @@ class PHPShopIndex extends PHPShopCore {
             return true;
 
         // Защита от SEO накруток
-        $this->seoguard();
+        //$this->seoguard();
 
         // Выборка данных
         $row = parent::getFullInfoItem(array('name,content'), array('category' => "=2000", 'enabled' => "='1'"));

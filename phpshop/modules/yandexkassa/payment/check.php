@@ -29,7 +29,7 @@ class Payment extends PHPShopPaymentResult {
 
     function Payment() {
         $this->option();
-        parent::PHPShopPaymentResult();
+        parent::__construct();
     }
 
     /**

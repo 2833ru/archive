@@ -57,7 +57,6 @@ function checkStore_seourlpro_hook($obj, $row) {
 
 $addHandler = array
     (
-    '#product_grid' => 'product_grid_seourl_hook',
     'setPaginator' => 'setPaginator_seourl_hook',
     'checkStore' => 'checkStore_seourlpro_hook'
 );

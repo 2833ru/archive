@@ -1,61 +1,44 @@
 <?php
 
 // Библиотека работы с почтой
-PHPShopObj::loadClass("mail");
+include_once('../phpshop/class/mail.class.php');
 
 // Номер заказа для счет-фактуры
 function GetNumOrders($cid) {
+    global $link_db;
+    
     $sql="select uid from ".$GLOBALS['SysValue']['base']['table_name9']." where cid='$cid'";
-    $result=mysql_query($sql);
-    @$row = mysql_fetch_array(@$result);
+    $result=mysqli_query($link_db,$sql);
+    @$row = mysqli_fetch_array(@$result);
     return $row['uid'];
 }
 
 // Сообщение пользователю
 function SendMailUser($id,$flag="accounts") {
+    global $link_db;
 
-    // Счет-фактура
-    if($cid=="invoice") $id = GetNumOrders($id);
+    // Счет-фактура, поиск номера заказа
+    if($flag == "invoice") $id = GetNumOrders($id);
 
-    $sql="select * from ".$GLOBALS['SysValue']['base']['table_name1']." where id=$id";
-    $result=mysql_query($sql);
-    @$row = mysql_fetch_array(@$result);
+    $sql="select * from ".$GLOBALS['SysValue']['base']['table_name1']." where id=".intval($id);
+    $result=mysqli_query($link_db,$sql);
+    @$row = mysqli_fetch_array(@$result);
     $order=unserialize($row['orders']);
     $mail=$order['Person']['mail'];
     $name=$order['Person']['name_person'];
     $uid=$row['uid'];
     $zag="Бухгалтерские документы по заказу №".$row['uid'];
     $from="robot@".str_replace("www.","",$_SERVER['SERVER_NAME']);
-    $content="Доброго времени!
---------------------------------------------------------
+    $content="Уважаемый(ая) пользователь ".$name.", по заказу №".$uid." стали доступны бухгалтерские документы в личном кабинете.
 
-Уважаемый(ая) пользователь ".$name.", по заказу №".$uid." стали доступны 
-бухгалтерские документы в личном кабинете.";
-
-    if($row['user']==1) {
-        $content.="
-
-Вы всегда можете проверить статус заказа, загрузить файлы, распечатать платежные 
-документы он-лайн через 'Личный кабинет' или по ссылке http://".$_SERVER['SERVER_NAME'].$GLOBALS['SysValue']['dir']['dir']."/users/";
-    }
-    else {
-        $content.="
-Вы всегда можете проверить статус заказа, загрузить файлы, распечатать платежные 
-документы он-лайн по ссылке http://".$_SERVER['SERVER_NAME'].$GLOBALS['SysValue']['dir']['dir']."/clients/?mail=".$mail."&order=".$uid."
-E-mail: ".$mail."
-№ Заказа: ".$uid;
-    }
-
-    $content.="
-
+Вы можете проверить статус заказа, загрузить файлы, распечатать платежные 
+документы он-лайн через 'Личный кабинет' или по ссылке http://".$_SERVER['SERVER_NAME'].$GLOBALS['SysValue']['dir']['dir']."/users/
+    
 Дата: ".date("d-m-y H:s a")."
----------------------------------------------------------
-
-
-Powered & Developed by www.PHPShop.ru
-".$GLOBALS['SysValue']['license']['product_name'];
+    
+";
 
     // Отправление сообщения
-    $PHPShopMail = new PHPShopMail($mail,$from,$zag,$content);
+    new PHPShopMail($mail,$from,$zag,$content);
 }
 ?>

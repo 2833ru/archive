@@ -3,7 +3,7 @@
 /**
  * Библиотека данных по методам оплаты
  * @author PHPShop Software
- * @version 1.2
+ * @version 1.3
  * @package PHPShopObj
  */
 class PHPShopPayment extends PHPShopObj {
@@ -14,11 +14,11 @@ class PHPShopPayment extends PHPShopObj {
      * Конструктор
      * @param int $objID ИД метода оплаты
      */
-    function PHPShopPayment($objID) {
+    function __construct($objID) {
         $this->objID = $objID;
         $this->order = array('order' => 'num');
         $this->objBase = $GLOBALS['SysValue']['base']['payment_systems'];
-        parent::PHPShopObj();
+        parent::__construct();
     }
 
     /**
@@ -46,15 +46,15 @@ class PHPShopPayment extends PHPShopObj {
 /**
  * Массив способов оплат
  * @author PHPShop Software
- * @version 1.0
+ * @version 1.1
  * @package PHPShopArray
  */
 class PHPShopPaymentArray extends PHPShopArray {
 
-    function PHPShopPaymentArray() {
+    function __construct() {
         $this->order = array('order' => 'num');
         $this->objBase = $GLOBALS['SysValue']['base']['payment_systems'];
-        parent::PHPShopArray('id', "name", 'path', 'enabled', 'yur_data_flag','icon');
+        parent::__construct('id', "name", 'path', 'enabled', 'yur_data_flag', 'icon');
     }
 
 }
@@ -72,13 +72,14 @@ class PHPShopPaymentResult {
      * @var bool 
      */
     var $debug = false;
+
     /**
      * Запись журнала оплаты
      * @var bool 
      */
     var $log = false;
 
-    function PHPShopPaymentResult() {
+    function __construct() {
         global $_classPath;
 
         // Адрес лог файла
@@ -88,6 +89,12 @@ class PHPShopPaymentResult {
         //$this->option();
 
         $this->updateorder();
+    }
+
+    function __call($name, $arguments) {
+        if ($name == __CLASS__) {
+            self::__construct();
+        }
     }
 
     /**
@@ -162,7 +169,7 @@ class PHPShopPaymentResult {
             // Приверяем сущ. заказа
             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
             $PHPShopOrm->debug = $this->debug;
-            $row = $PHPShopOrm->select(array('uid'), array('uid' => "='" . $this->true_num($this->inv_id). "'"), false, array('limit' => 1));
+            $row = $PHPShopOrm->select(array('uid'), array('uid' => "='" . $this->true_num($this->inv_id) . "'"), false, array('limit' => 1));
             if (!empty($row['uid'])) {
 
                 // Лог оплат

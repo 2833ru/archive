@@ -10,8 +10,8 @@ class PHPShopCoretest extends PHPShopCore {
     /**
      * Конструктор
      */
-    function PHPShopCoretest() {
-        parent::PHPShopCore();
+    function __construct() {
+        parent::__construct();
     }
 
     /**
@@ -48,7 +48,7 @@ http://'.$_SERVER['SERVER_NAME'].'/coretest/
 class PHPShopCoretest extends PHPShopCore {
 
     function PHPShopCoretest() {
-        parent::PHPShopCore();
+        parent::__construct();
     }
 
 function index() {

@@ -8,9 +8,8 @@
 function tab_img($data) {
     global $PHPShopGUI, $PHPShopSystem;
 
-    // Добавление изображения в галерею
-    $Tab6 = $PHPShopGUI->setField(__('Добавить изображение в галерею'), $PHPShopGUI->setInputText(false, "pic_resize", null, '500px', false, 'left') .
-            $PHPShopGUI->setButton(__('Выбрать'), "../img/icon-move-banner.gif", "100px", '25px', "left", "ReturnPicResize(" . $data['id'] . ");return false;"));
+    $img_width = $PHPShopSystem->getSerilizeParam('admoption.img_tw');
+
 
     // Маленькое изображение
     $Tab6_1 = $PHPShopGUI->setInput('hidden', "pic_small_new", $data['pic_small']);
@@ -18,41 +17,53 @@ function tab_img($data) {
     // Большое изображение
     $Tab6_1.= $PHPShopGUI->setInput('hidden', "pic_big_new", $data['pic_big']);
 
-    // Таблица изображений в фотогалереи
-    $PHPShopInterfacePic = new PHPShopInterface();
-    $PHPShopInterfacePic->size = "500,500";
-    $PHPShopInterfacePic->window = true;
-    $PHPShopInterfacePic->imgPath = "../img/";
-    $PHPShopInterfacePic->link = $dot . "./adm_galeryID.php";
-    $PHPShopInterfacePic->setCaption(array("№", "10%"), array(__("Размещение"), "50%"), array(__("Превью"), "20%"), array(__("Главное"), "10%"), array(__("№ п/п"), "10%"));
+
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['foto']);
-    $data_pic = $PHPShopOrm->select(array('*'), array('parent' => '=' . $data['id']), array('order' => 'id'), array('limit' => 100));
+    $data_pic = $PHPShopOrm->select(array('*'), array('parent' => '=' . intval($data['id'])), array('order' => 'id'), array('limit' => 100));
     $i = 1;
+    $count = 0;
+
     $img_list = null;
     if (is_array($data_pic))
         foreach ($data_pic as $row) {
 
+            $path_parts = pathinfo($row['name']);
+
+            if ($i == 1)
+                $img_list.='<div class="row">';
+
             if ($row['name'] == $data['pic_big'])
-                $main = "+";
+                $main = "btn-success";
             else
-                $main = "";
-            $preview = $PHPShopGUI->setImage($row['name'], '', '50');
-            $PHPShopInterfacePic->setRow($row['id'], $i, $row['name'], $preview, $main, $row['num']);
+                $main = "btn-default";
 
-            if ($i < 6)
-                $img_list.=$PHPShopGUI->setImage($row['name'], $PHPShopSystem->getSerilizeParam('admoption.img_tw'), $PHPShopSystem->getSerilizeParam('admoption.img_tw'), false, false, 'cursor:pointer;padding:3px', 'miniWin(\'./adm_galeryID.php?id=' . $row['id'] . '\',500,500)');
+            $img_list.='<div class="col-md-3 data-row"><div class="panel panel-default "><div class="panel-heading">' . $path_parts['basename'] . '<span class="glyphicon glyphicon-remove pull-right btn btn-default btn-xs img-delete" data-id="' . $row['id'] . '" data-toggle="tooltip" data-placement="top" title="' . __('Удалить') . '"></span><span class="pull-right">&nbsp;</span><span class="glyphicon glyphicon-heart pull-right btn ' . $main . ' btn-xs img-main" data-path="' . $row['name'] . '" data-path-s="' . str_replace('.', 's.', $row['name']) . '"  data-toggle="tooltip" data-placement="top" title="' . __('Главное') . '"></span></div><div class="panel-body text-center"><a href="' . $row['name'] . '" target="_blank"><img class="" src="' . str_replace('.', 's.', $row['name']) . '"></a></div></div></div>';
 
-            $i++;
+            if ($i == 4) {
+                $img_list.='</div>';
+                $i = 1;
+            }
+            else
+                $i++;
+
+            $count++;
         }
 
-    //$Tab6_1.=$img_list;
-    // Галерея
-    $PHPShopInterface = new PHPShopInterface('_foto_');
-    $PHPShopInterfacePic->razmer = "height:280px;";
-    $PHPShopInterface->setTab(array(__("Фотогалерея"), $Tab6_1 . $PHPShopInterfacePic->Compile('fotolist'), 300));
-    $Tab6.=$PHPShopInterface->getContent();
 
-    return $Tab6;
+    if (count($data_pic) % 4 != 0)
+        $img_list.='</div>';
+
+
+    $img_add = '<div class="panel panel-default"><div class="panel-body">' . $PHPShopGUI->setIcon(false, "img_new", false, array('load' => true, 'server' => true, 'url' => true,'multi'=>true), $img_width) . '</div></div>';
+
+
+
+    $disp = $PHPShopGUI->setCollapse(__('Добавить изображение'), $img_add);
+    
+    if(!empty($img_list))
+    $disp.= $PHPShopGUI->setCollapse(__('Дополнительные изображения'), $img_list);
+
+    return $disp;
 }
 
 ?>

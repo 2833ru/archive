@@ -13,6 +13,9 @@
 # Выключение глобальных переменных PHP
 #php_flag register_globals off
 
+# Кодировка cp1251 для PHP 5.6
+#php_value default_charset cp1251
+
 
 
 ## PHPShop Core ##
@@ -30,6 +33,11 @@ RewriteEngine On
 # default - off
 #RewriteCond %{HTTP_HOST} ^name\.ru
 #RewriteRule ^(.*)$ http://www.name.ru/$1 [R=301,L]
+
+# Редирект с http на https
+# default - off
+#RewriteCond %{SERVER_PORT} !^443$
+#RewriteRule ^(.*)$ https://name.ru/$1 [R=301,L]
 
 
 #Options FollowSymLinks

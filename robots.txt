@@ -6,7 +6,6 @@ Disallow: /price/
 Disallow: /search/
 Disallow: /opros/
 Disallow: /install/
-Disallow: /pda/
 Disallow: /compare/
 Disallow: /java/
 Disallow: /done/
@@ -26,6 +25,7 @@ Disallow: /*_openstat
 Disallow: /*from=adwords
 Disallow: /*gclid=
 Disallow: /*utm_source=
+Disallow: /?*$
 
 User-agent: Googlebot
 Disallow: /newprice/
@@ -35,7 +35,6 @@ Disallow: /price/
 Disallow: /search/
 Disallow: /opros/
 Disallow: /install/
-Disallow: /pda/
 Disallow: /compare/
 Disallow: /java/
 Disallow: /done/
@@ -55,6 +54,7 @@ Disallow: /*_openstat
 Disallow: /*from=adwords
 Disallow: /*gclid=
 Disallow: /*utm_source=
+Disallow: /?*$
 
 User-agent: *
 Disallow: /newprice/
@@ -64,7 +64,6 @@ Disallow: /price/
 Disallow: /search/
 Disallow: /opros/
 Disallow: /install/
-Disallow: /pda/
 Disallow: /compare/
 Disallow: /java/
 Disallow: /done/
@@ -84,3 +83,4 @@ Disallow: /*_openstat
 Disallow: /*from=adwords
 Disallow: /*gclid=
 Disallow: /*utm_source=
+Disallow: /?*$

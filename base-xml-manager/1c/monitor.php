@@ -19,12 +19,12 @@ $PHPShopModules = new PHPShopModules($_classPath . "phpshop/modules/");
 
 class PHPShopMonitor extends PHPShopBaseXml {
 
-    function PHPShopMonitor() {
+    function __construct() {
         $this->debug = false;
         $this->true_method = array('visualcart', 'stat');
         $this->true_from = array('');
 
-        parent::PHPShopBaseXml();
+        parent::__construct();
     }
 
     function visualcart() {

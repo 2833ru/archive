@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 
 $_classPath = "../../../";
@@ -22,7 +23,7 @@ class Payment extends PHPShopPaymentResult {
 
     function Payment() {
         $this->option();
-        parent::PHPShopPaymentResult();
+        parent::__construct();
     }
 
     /**
@@ -41,15 +42,16 @@ class Payment extends PHPShopPaymentResult {
      * @return boolean 
      */
     function check() {
-		$data_return = $_REQUEST;
+        $data_return = $_REQUEST;
 
-		$this->my_crc  = strtoupper(md5(strtoupper(md5($this->option['merchant_sig']).md5($data_return['merchant_id'].$data_return['ordernumber'].$data_return['orderamount'].$data_return['ordercurrency'].$data_return['orderstate']))));
-		$this->crc = $data_return['checkvalue'];
-		$this->out_summ = $data_return['orderamount'];
-		$this->inv_id = $data_return['ordernumber'];
-        if ($this->my_crc == $this->crc && $data_return['orderstate'] == "Approved") {return true;}
+        $this->my_crc = strtoupper(md5(strtoupper(md5($this->option['merchant_sig']) . md5($data_return['merchant_id'] . $data_return['ordernumber'] . $data_return['orderamount'] . $data_return['ordercurrency'] . $data_return['orderstate']))));
+        $this->crc = $data_return['checkvalue'];
+        $this->out_summ = $data_return['orderamount'];
+        $this->inv_id = $data_return['ordernumber'];
+        if ($this->my_crc == $this->crc && $data_return['orderstate'] == "Approved") {
+            return true;
+        }
     }
-
 
     function updateorder() {
 

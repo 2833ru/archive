@@ -12,7 +12,7 @@ class PHPShop404 extends PHPShopCore {
      * Конструктор
      */
     function __construct() {
-        parent::PHPShopCore();
+        parent::__construct();
     }
 
     function index() {

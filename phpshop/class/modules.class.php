@@ -34,7 +34,7 @@ class PHPShopModules {
      * Конструктор
      * @param string $ModDir  Относительное размещение модулей
      */
-    function PHPShopModules($ModDir = "phpshop/modules/", $mod_path = false) {
+    function __construct($ModDir = "phpshop/modules/", $mod_path = false) {
         $this->ModDir = $ModDir;
         $this->objBase = $GLOBALS['SysValue']['base']['modules'];
 
@@ -107,19 +107,21 @@ class PHPShopModules {
      * @param string $version предыдущая версия
      */
     function getUpdate($version = false) {
+        global $link_db;
 
         if (empty($version))
             $version = 'default';
 
-        $file = '../updates/' . $version . '/update_module.sql';
+        $file = '../modules/' . $this->path . '/updates/' . $version . '/update_module.sql';
+
         if (file_exists($file)) {
             $sql = file_get_contents($file);
             $sqlArray = explode(";", $sql);
             if (is_array($sqlArray))
                 foreach ($sqlArray as $val)
-                    mysql_query($val);
+                    mysqli_query($link_db,$val);
         }
-        $db = $this->getXml("../install/module.xml");
+        $db = $this->getXml('../modules/' . $this->path . '../install/module.xml');
         return $db['version'];
     }
 
@@ -131,7 +133,7 @@ class PHPShopModules {
     function getIni($path, $add = true) {
         $ini = $this->ModDir . $path . "/inc/config.ini";
         if (file_exists($ini)) {
-            $SysValue = parse_ini_file($ini, 1);
+            $SysValue = @parse_ini_file($ini, 1);
 
             if (!empty($SysValue['autoload']) and is_array($SysValue['autoload']))
                 foreach ($SysValue['autoload'] as $k => $v)
@@ -362,15 +364,15 @@ class PHPShopModules {
      */
     function getXml($path) {
         PHPShopObj::loadClass("xml");
-        if (function_exists("xml_parser_create")) {
-            if (@$db = readDatabase($path, "module")) {
 
-                if (count($db) > 1)
-                    return $db;
-                else
-                    return $db[0];
-            }
-        }
+
+        $db = xml2array($path, false, true);
+
+
+        if (count($db) > 1)
+            return $db;
+        else
+            return $db[0];
     }
 
     /**
@@ -392,11 +394,11 @@ class PHPShopModules {
 
     function setAdmHandler($path, $function_name, $data) {
         global $PHPShopGUI;
-        $file = pathinfo($path);
+        $file = pathinfo($path, PATHINFO_FILENAME); // Moon add
 
         if (is_array($this->ModValue['admpanel']))
             foreach ($this->ModValue['admpanel'] as $mods) {
-                $mod = $mods[substr($file['basename'], 0, -4)];
+                $mod = $mods[$file];
                 if ($mod)
                     if (is_file($this->ModDir . $mod)) {
 
@@ -471,20 +473,14 @@ class PHPShopModules {
                     }
             }
 
-        if (!empty($this->addHandler[$class_name][$function_name]) and is_array($this->addHandler[$class_name][$function_name])){
-            $user_func_result=null;
+        if (!empty($this->addHandler[$class_name][$function_name]) and is_array($this->addHandler[$class_name][$function_name])) {
+            $user_func_result = null;
             foreach ($this->addHandler[$class_name][$function_name] as $hook_function_name) {
 
                 // Включаем таймер
                 $time = microtime(true);
 
-                $result= call_user_func_array($hook_function_name, array(&$obj, &$data, $rout));
-                
-                // Обработка результата для реверсных методов
-                if($user_func_result === true)
-                   $user_func_result.=$result;
-                elseif (!empty($result))
-                    return $result;
+                $user_func_result = call_user_func_array($hook_function_name, array(&$obj, &$data, $rout));
 
                 // Выключаем таймер
                 $seconds = round(microtime(true) - $time, 6);
@@ -492,9 +488,10 @@ class PHPShopModules {
                 // Время выполнения хука
                 $this->handlerDone[$class_name][$hook_function_name][$rout] = $seconds;
             }
-            
+
+            // Результат всех хуков
             if (!empty($user_func_result))
-                   return $user_func_result;
+                return $user_func_result;
         }
     }
 

@@ -1,1 +1,0 @@
-<div class="divNavigationA"><a href="/page/CID_@catalogId@@nameLat@.html">@catalogName@</a></div>

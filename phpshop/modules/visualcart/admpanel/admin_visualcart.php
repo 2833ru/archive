@@ -1,24 +1,22 @@
 <?php
 
-$TitlePage = "Незавершенные заказы";
-
-PHPShopObj::loadClass('text');
-
 function getCartInfo($cart) {
+    global $PHPShopSystem;
     $dis = null;
     $cart = unserialize($cart);
+    $currency = ' ' . $PHPShopSystem->getDefaultValutaCode();
     if (is_array($cart))
         foreach ($cart as $val) {
-            $dis.=$val['uid'] . "  " . $val['name'] . " (" . $val['num'] . " " . $val['ed_izm'] . " * " . $val['price'] . ") -- " . ($val['price'] * $val['num']) . '<br>';
+            $dis.='<a href="?path=product&id=' . $val['id'] . '" data-toggle="tooltip" data-placement="top" title="' . $val['name'] . ' - ' . $val['price'] . $currency . '">' . $val['id'] . '</a>, ';
         }
-    return $dis;
+    return substr($dis, 0, strlen($dis) - 2);
 }
 
 function getUserName($id, $ip) {
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['shopusers']);
     $data = $PHPShopOrm->select(array('name'), array('id' => '=' . $id), false, array('limit' => 1));
     if (is_array($data))
-        return $data['name'];
+        return array('name' => $data['name'], 'link' => '?path=shopusers&id=' . $id);
     else
         return $ip;
 }
@@ -37,29 +35,27 @@ function getReferal($str) {
 }
 
 function actionStart() {
-    global $PHPShopInterface, $_classPath;
+    global $PHPShopInterface, $PHPShopModules, $TitlePage, $select_name;
+    
+        $PHPShopInterface->action_button['Выгрузить'] = array(
+        'name' => 'Выгрузить корзины',
+        'action' => '../modules/visualcart/admpanel/export.php',
+        'class' => 'btn  btn-default btn-sm navbar-btn btn-action-panel-blank',
+        'type' => 'submit',
+        'icon' => 'glyphicon glyphicon-export'
+    );
 
-    // Настройки модуля
-    PHPShopObj::loadClass("modules");
-    $PHPShopModules = new PHPShopModules($_classPath . "modules/");
-
-    $PHPShopInterface->size = "630,530";
-    $PHPShopInterface->setCaption(array("Дата", "10%"), array("Товары", "45%"), array("Пользователь", "25%"), array("Реферал", "25%"));
+    $PHPShopInterface->checkbox_action = false;
+    $PHPShopInterface->setActionPanel($TitlePage, $select_name, array('Выгрузить'));
+    $PHPShopInterface->setCaption(array("Пользователь", "25%"), array("Дата", "15%"), array("Товары", "25%"), array("Реферал", "25%"));
 
     // SQL
     $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.visualcart.visualcart_memory"));
-    $data = $PHPShopOrm->select(array('*'), false, array('order' => 'id DESC'), array("limit" => "1000"));
+    $data = $PHPShopOrm->select(array('*'), false, array('order' => 'id DESC'), array("limit" => 1000));
     if (is_array($data))
         foreach ($data as $row) {
-            extract($row);
-            $PHPShopInterface->setRow($id, PHPShopDate::dataV($date), getCartInfo($cart), getUserName($user, $ip), getReferal($referal));
+            $PHPShopInterface->setRow(getUserName($row['user'], $row['ip']), array('name'=>PHPShopDate::get($row['date'], true),'order'=>$row['date']), getCartInfo($row['cart']), getReferal($row['referal']));
         }
-
-
-    $link = "../modules/visualcart/admpanel/export.php?sortdate_start=" . $_GET['sortdate_start'] . "&sortdate_end=" . $_GET['sortdate_end'];
-    if (count($data) > 2)
-        $PHPShopInterface->_CODE_ADD_BUTTON = $PHPShopInterface->setDiv('left', $notice, 'padding:10px;float:left') .
-                $PHPShopInterface->setInput("button", "", "Выгрузить в CSV", "right", 150, "return  window.open('" . $link . "','_blank');", "but");
     $PHPShopInterface->Compile();
 }
 

@@ -1,23 +1,5 @@
 <?php
 
-$_classPath = "../../../";
-include($_classPath . "class/obj.class.php");
-PHPShopObj::loadClass("base");
-PHPShopObj::loadClass("system");
-PHPShopObj::loadClass("security");
-PHPShopObj::loadClass("orm");
-
-$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
-include($_classPath . "admpanel/enter_to_admin.php");
-
-// Настройки модуля
-PHPShopObj::loadClass("modules");
-$PHPShopModules = new PHPShopModules($_classPath . "modules/");
-
-// Редактор
-PHPShopObj::loadClass("admgui");
-$PHPShopGUI = new PHPShopGUI();
-
 // SQL
 $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.seourlpro.seourlpro_system"));
 
@@ -29,7 +11,7 @@ function actionBaseUpdate() {
     $new_version = $PHPShopModules->getUpdate($option['version']);
     $PHPShopOrm->clean();
     $action = $PHPShopOrm->update(array('version_new' => $new_version));
-    return $action;
+    //return $action;
 }
 
 // Преобразование символов в латиницу
@@ -179,58 +161,41 @@ function actionUpdate() {
         setGenerationPhoto();
 
     $action = $PHPShopOrm->update($_POST);
+    header('Location: ?path=modules&install=check');
     return $action;
 }
 
 function actionStart() {
-    global $PHPShopGUI, $PHPShopSystem, $SysValue, $_classPath, $PHPShopOrm;
-
-
-    $PHPShopGUI->dir = $_classPath . "admpanel/";
-    $PHPShopGUI->title = "Настройка модуля";
-    $PHPShopGUI->size = "500,450";
-
+    global $PHPShopGUI, $PHPShopOrm;
 
     // Выборка
     $data = $PHPShopOrm->select();
-    @extract($data);
-
-
-    // Графический заголовок окна
-    $PHPShopGUI->setHeader("Настройка модуля 'SeoUrlPro'", "Настройки", $PHPShopGUI->dir . "img/i_display_settings_med[1].gif");
 
 
     // Содержание закладки
-    $Info = '
-<p>При включеном режиме "SEO пагинация" следует добавить переменную <b>@seourl_canonical@</b> в шаблон phpshop/templates/имя шаблона/main/shop.tpl, в результате будет добавлена ссылка link rel="canonical" с точным адресом для отсеивания дублей страниц описания списка товаров.</p>
-';
-    $Tab1 = $PHPShopGUI->setField('SEO пагинация', $PHPShopGUI->setRadio('paginator_new', 2, 'Включить', $paginator) . $PHPShopGUI->setRadio('paginator_new', 1, 'Выключить', $paginator));
-    $Tab1.=$PHPShopGUI->setField('Описание каталога на внутренних страницах', $PHPShopGUI->setRadio('cat_content_enabled_new', 1, 'Включить', $cat_content_enabled) . $PHPShopGUI->setRadio('cat_content_enabled_new', 2, 'Выключить', $cat_content_enabled));
-    $Tab1.= $PHPShopGUI->setLine('<br>') . $PHPShopGUI->setInfo($Info, 190, '95%');
+    $Info = '<p>При включеном режиме "SEO пагинация" следует добавить переменную <kbd>@seourl_canonical@</kbd> в шаблон <code>phpshop/templates/имя шаблона/main/shop.tpl</code>, в результате будет добавлена ссылка link rel="canonical" с точным адресом для отсеивания дублей страниц описания списка товаров.</p>';
 
-    $Tab2 = $PHPShopGUI->setPay($serial = false, $pay = false, $version, $update = true);
+    $Tab1 = $PHPShopGUI->setField('SEO пагинация', $PHPShopGUI->setRadio('paginator_new', 2, 'Включить', $data['paginator']) . $PHPShopGUI->setRadio('paginator_new', 1, 'Выключить', $data['paginator']));
+    $Tab1.=$PHPShopGUI->setField('Описание каталога на внутренних страницах', $PHPShopGUI->setRadio('cat_content_enabled_new', 1, 'Включить', $data['cat_content_enabled']) . $PHPShopGUI->setRadio('cat_content_enabled_new', 2, 'Выключить', $data['cat_content_enabled']));
+    $Tab1.= $PHPShopGUI->setField('Совет',$PHPShopGUI->setInfo($Info));
+
+    $Tab2 = $PHPShopGUI->setPay($serial = false, $pay = false, $data['version'], $update = true);
 
     // Вывод формы закладки
     $PHPShopGUI->setTab(array("Основное", $Tab1, 270), array("О Модуле", $Tab2, 270));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =
-            $PHPShopGUI->setInput("hidden", "newsID", $id, "right", 70, "", "but") .
-            $PHPShopGUI->setInput("button", "", "Отмена", "right", 70, "return onCancel();", "but") .
-            $PHPShopGUI->setInput("submit", "editID", "ОК", "right", 70, "", "but", "actionUpdate");
+            $PHPShopGUI->setInput("hidden", "rowID", $data['id']) .
+            $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionUpdate.modules.edit");
 
     $PHPShopGUI->setFooter($ContentFooter);
     return true;
 }
 
-if ($UserChek->statusPHPSHOP < 2) {
+// Обработка событий 
+$PHPShopGUI->getAction();
 
-    // Вывод формы при старте
-    $PHPShopGUI->setLoader($_POST['editID'], 'actionStart');
-
-    // Обработка событий 
-    $PHPShopGUI->getAction();
-}
-else
-    $UserChek->BadUserFormaWindow();
+// Вывод формы при старте
+$PHPShopGUI->setLoader($_POST['editID'], 'actionStart');
 ?>

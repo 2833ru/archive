@@ -86,9 +86,8 @@ class PHPShopCron {
                 // Пишем лог
                 $PHPShopOrm = new PHPShopOrm($this->SysValue['base']['cron']['cron_log']);
                 $PHPShopOrm->debug = $this->debug;
-                $PHPShopOrm->insert(array('date_new' => $this->date, 'name_new' => $job['name'], 'path_new' => $job['path'],
+                $this->log_id = $PHPShopOrm->insert(array('date_new' => $this->date, 'name_new' => $job['name'], 'path_new' => $job['path'],
                     'job_id_new' => $job['id']));
-                $this->log_id = mysql_insert_id();
                 break;
 
             case "end":

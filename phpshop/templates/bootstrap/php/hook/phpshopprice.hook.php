@@ -32,10 +32,7 @@ function template_pricecore_product_hook($obj, $category, $rout) {
             foreach ($data as $row) {
                 $name = '<a href="' . $obj->seourl($row) . '" class="list-group-item">' . $row['name'] ;
                 if (empty($row['sklad']) and empty($user_price_activate))
-                    $cart = PHPShopText::a('javascript:AddToCart(' . $row['id'] . ')', PHPShopText::img('images/shop/basket_put.gif', false, 'absMiddle'), $obj->lang('product_sale'));
-                else
-                    $cart = PHPShopText::a('../users/notice.html?productId=' . $row['id'], PHPShopText::img('images/shop/date.gif', false, 'absMiddle'), $obj->lang('product_notice'));
-
+                    $cart = '<button class="btn btn-default btn-xs  addToCartList" data-uid="' . $row['id'] . '" role="button">'.$obj->lang('product_sale').'</button>';
                 if (empty($user_price_activate))
                     $price = $obj->price($row) . ' <span class="rubznak">' . $obj->currency().'</span>';
                 else

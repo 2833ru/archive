@@ -44,6 +44,7 @@ class PHPShopParser {
             "/images\//i" => $GLOBALS['SysValue']['dir']['dir'] . $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/images/",
             "/!images!\//i" => "images/",
             "/java\//i" => "/java/",
+            "/css\//i" => "/css/",
             "/phpshop\//i" => "/phpshop/",
         );
         return $string = preg_replace(array_keys($replaces), array_values($replaces), $string);
@@ -63,12 +64,12 @@ class PHPShopParser {
 
         // ѕоиск шаблона модул€ в основном шаблоне
         if ($check_template) {
-            
+
             $path_template = str_replace('./phpshop', $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'], $path);
             if (is_file($path_template))
                 $path = $path_template;
         }
-       
+
 
 
         if (is_file($path))
@@ -80,12 +81,12 @@ class PHPShopParser {
             "/images\//i" => $GLOBALS['SysValue']['dir']['dir'] . $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/images/",
             "/!images!\//i" => "images/",
             "/java\//i" => "/java/",
-            "/css\//i" => "/css/",
             "/phpshop\//i" => "/phpshop/",
         );
 
-        $string = @preg_replace_callback("/(@php)(.*)(php@)/sU", "phpshopparserevalstr", $string);
-        $string = @preg_replace("/@([a-zA-Z0-9_]+)@/e", '$GLOBALS["SysValue"]["other"]["\1"]', $string);
+        $string = preg_replace_callback("/(@php)(.*)(php@)/sU", "phpshopparserevalstr", $string);
+        //$string = preg_replace_callback("/@([a-zA-Z0-9_]+)@/e", '$GLOBALS["SysValue"]["other"]["\1"]', $string);
+        $string = preg_replace_callback("/@([a-zA-Z0-9_]+)@/", 'PHPShopParser::SysValueReturn', $string);
 
         if (!empty($replace))
             $string = preg_replace(array_keys($replaces), array_values($replaces), $string);
@@ -116,6 +117,11 @@ class PHPShopParser {
      */
     static function get($name) {
         return $GLOBALS['SysValue']['other'][$name];
+    }
+
+    static function SysValueReturn($m) {
+        global $SysValue;
+        return $SysValue["other"][$m[1]];
     }
 
 }

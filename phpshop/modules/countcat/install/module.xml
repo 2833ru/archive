@@ -3,15 +3,10 @@
     <version>1.1</version>
     <name>Count Cat</name>
     <faqlink>http://faq.phpshop.ru/page/count-cat.html</faqlink>
-<description>Модуль подсчета количества товаров в каталогах.</description>
-    <icon>icon.png</icon>
+    <description>Модуль подсчета количества товаров в каталогах.</description>
     <category>form,decorate</category>
     <adminmenu>
         <title>Count Cat</title>
-        <podmenu>
-            <podmenu_name>Настройка Count Cat</podmenu_name>
-            <podmenu_icon>icon.png</podmenu_icon>
-            <podmenu_action>javascript:miniWin('../modules/countcat/admpanel/adm_module.php',510,450);</podmenu_action>
-        </podmenu>
+        <capability>true</capability>
     </adminmenu>
 </module>

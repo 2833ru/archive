@@ -16,7 +16,7 @@ class PHPShopBaseXml {
     var $true_from = array('table_name', 'table_name2', 'table_name3');
     var $debug = false;
 
-    function PHPShopBaseXml() {
+    function __construct() {
         global $PHPShopBase;
 
         $this->PHPShopBase = $PHPShopBase;
@@ -32,14 +32,16 @@ class PHPShopBaseXml {
 
             if (in_array($this->xml['method'], $this->true_method)) {
                 if (method_exists($this, $this->xml['method']))
-                    call_user_method($this->xml['method'], $this);
+                    call_user_func(array($this, $this->xml['method']));
                 else
                     echo 'Non method';
-            }else
+            }
+            else
                 echo 'False method';
 
             $this->compile();
-        }else
+        }
+        else
             exit('Login error!');
     }
 
@@ -104,14 +106,15 @@ class PHPShopBaseXml {
                     $delim = ' LIKE ';
                 elseif (strstr($value, ' REGEXP '))
                     $delim = ' REGEXP ';
-                else $delim=' ';
+                else
+                    $delim = ' ';
 
                 if ($delim) {
                     $array = explode($delim, $value);
                     $where[$array[0]] = $delim . $array[1];
                 }
             }
- 
+
         return $where;
     }
 
@@ -132,7 +135,8 @@ class PHPShopBaseXml {
                 $this->xml['order'] = array('order' => $db[0]['order']);
             if (!empty($db[0]['limit']))
                 $this->xml['limit'] = array('limit' => $db[0]['limit']);
-        }else
+        }
+        else
             exit('Non xml');
     }
 
@@ -142,23 +146,24 @@ class PHPShopBaseXml {
     }
 
     function is_serialize($str) {
-        $result=null;
+        $result = null;
         $array = unserialize($str);
         if (is_array($array)) {
             foreach ($array as $key => $val) {
                 if (is_array($val)) {
                     $result.='<subrow>';
-                    foreach ($val as $k => $v){
-						if(is_array($v)){
-							$result.='<subrow>';
-							foreach($v as $ks => $vs)
+                    foreach ($val as $k => $v) {
+                        if (is_array($v)) {
+                            $result.='<subrow>';
+                            foreach ($v as $ks => $vs)
                                 $result.='
-<subrow_' . $ks . '_'.$k.'>' . $vs . '</subrow_' . $ks . '_'.$k.'>';
+<subrow_' . $ks . '_' . $k . '>' . $vs . '</subrow_' . $ks . '_' . $k . '>';
                             $result.='</subrow>';
-						}
-                        else $result.='
+                        }
+                        else
+                            $result.='
 <' . $k . '>' . $v . '</' . $k . '>';
-					}
+                    }
                     $result.='</subrow>';
                 } else {
                     $result.='
@@ -166,7 +171,8 @@ class PHPShopBaseXml {
                 }
             }
             return $result;
-        }else
+        }
+        else
             return $str;
     }
 
@@ -197,7 +203,7 @@ class PHPShopBaseXml {
         $PHPShopOrm = new PHPShopOrm($this->PHPShopBase->getParam('base.' . $this->xml['from']));
         $PHPShopOrm->debug = $this->debug;
         $PHPShopOrm->Option['where'] = $this->where_delim;
-        $this->data = $PHPShopOrm->update($this->clean($vars[0]), $this->xml['where'], $prefix = '');
+        $this->data = $PHPShopOrm->update($this->clean($vars[0]), $this->xml['where'], '');
     }
 
     function delete() {
@@ -215,6 +221,12 @@ class PHPShopBaseXml {
         $PHPShopOrm = new PHPShopOrm($this->PHPShopBase->getParam('base.' . $this->xml['from']));
         $PHPShopOrm->debug = $this->debug;
         $this->data = $PHPShopOrm->insert($vars[0], $prefix = '');
+    }
+
+    function __call($name, $arguments) {
+        if ($name == __CLASS__) {
+            self::__construct();
+        }
     }
 
 }

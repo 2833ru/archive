@@ -33,9 +33,11 @@ class IntegratorShop extends PluginFilters {
 
     public function __construct( $fields = array() )
     {
+        global $link_db;
         $this->fields = $fields;
+        $this-$link_db = $link_db;
         $query = 'SELECT * FROM ddelivery_module_system WHERE id = 1';
-        $cur = mysql_query($query);
+        $cur = mysqli_query($this->link_db,$query);
         $this->cmsSettings = mysql_fetch_assoc($cur);
 
     }
@@ -150,7 +152,7 @@ class IntegratorShop extends PluginFilters {
     public function setCmsOrderStatus($cmsOrderID, $status){
         $orders = $GLOBALS['SysValue']['base']['orders'];
         $query = 'UPDATE ' . $orders . ' SET statusi = ' . $status . ' WHERE id = ' . $cmsOrderID;
-        $cur = mysql_query($query);
+        $cur = mysqli_query($this->link_db,$query);
         $this->cmsSettings = mysql_fetch_assoc($cur);
     }
 
@@ -158,7 +160,7 @@ class IntegratorShop extends PluginFilters {
         $orders = $GLOBALS['SysValue']['base']['orders'];
 
         $query = 'SELECT uid FROM ' . $orders . ' WHERE statusi =' . $this->cmsSettings['status'];
-        $cur = mysql_query($query);
+        $cur = mysqli_query($this->link_db,$query);
         $result = array();
         while ($k = mysql_fetch_array($cur))
         {

@@ -6,35 +6,30 @@
  * @return string 
  */
 function tab_print($data) {
-    global $PHPShopGUI, $PHPShopSystem;
+    global $PHPShopGUI;
 
     $disp = null;
 
     // Бланк заказа
-    $disp.=$PHPShopGUI->setButton(__('Бланк заказа'), '../img/action_print.gif', 130, 30, $float = "left", $onclick = "DoPrint('forms/forma.php?orderID=" . $data['id'] . "'); return false;");
+    $disp.=$PHPShopGUI->setButton(__('Бланк заказа'), 'print', 'btn-print-order','./order/forms/order.php?orderID=' . $data['id']);
 
     // Товарный чек
-    $disp.=$PHPShopGUI->setButton(__('Товарный чек'), '../img/action_print.gif', 130, 30, $float = "left", $onclick = "DoPrint('forms/forma2.php?orderID=" . $data['id'] . "'); return false;");
-
-    // Гарантия
-    $disp.=$PHPShopGUI->setButton(__('Гарантия'), '../img/action_print.gif', 130, 30, $float = "left", $onclick = "DoPrint('forms/forma3.php?orderID=" . $data['id'] . "'); return false;");
+    $disp.=$PHPShopGUI->setButton(__('Товарный чек'), 'bookmark', 'btn-print-order','./order/forms/receipt.php?orderID=' . $data['id']);
 
     // Счет
-    $disp.=$PHPShopGUI->setButton(__('Счет'), '../img/action_print.gif', 130, 30, $float = "left", $onclick = "DoPrint('../../../phpshop/forms/account/forma.html?orderId=".$data['id']."&tip=2&datas=".$data['datas']."'); return false;");
+    $disp.=$PHPShopGUI->setButton(__('Счет в банк'), 'credit-card', 'btn-print-order','../../../phpshop/forms/account/forma.html?orderId='.$data['id'].'&tip=2&datas='.$data['datas']);
 
     // Счет в сбербанк
-    $disp.=$PHPShopGUI->setButton(__('Сбербанк'), '../img/action_print.gif', 130, 30, $float = "left", $onclick = "DoPrint('../../../phpshop/forms/receipt/forma.html?orderId=".$data['id']."&tip=2&datas=".$data['datas']."'); return false;");
+    $disp.=$PHPShopGUI->setButton(__('Сбербанк'), 'list-alt', 'btn-print-order','../../../phpshop/forms/receipt/forma.html?orderId='.$data['id'].'&tip=2&datas='.$data['datas']);
+    
     // Счет-Фактура
-    $disp.=$PHPShopGUI->setButton(__('Счет-Фактура'), '../img/action_print.gif', 130, 30, $float = "left", $onclick = "DoPrint('forms/forma4.php?orderID=" . $data['id'] . "'); return false;");
-    // Торг12
-    $disp.=$PHPShopGUI->setButton(__('Торг-12'), '../img/action_print.gif', 130, 30, $float = "left", $onclick = "DoPrint('forms/forma5.php?orderID=" . $data['id'] . "'); return false;");
-
-
-    // Почта
-    $order = unserialize($data['orders']);
-    $mail = $order['Person']['mail'];
-    $mail_title = "Re: " . $PHPShopSystem->getParam('name') . " - Заказ №" . $data['uid'];
-    $disp.=$PHPShopGUI->setButton(__('E-mail'), '../img/icon_email.gif', 130, 30, $float = "left", $onclick = "window.open('mailto:" . $mail . "?subject=" . $mail_title . "'); return false;");
+    $disp.=$PHPShopGUI->setButton(__('Счет-Фактура'), 'barcode', 'btn-print-order','./order/forms/invoice.php?orderID=' . $data['id'] );
+    
+        // Торг-12
+    $disp.=$PHPShopGUI->setButton(__('Торг-12'), 'qrcode', 'btn-print-order','./order/forms/torg-12.php?orderID=' . $data['id']);
+    
+     // Гарантия
+    $disp.=$PHPShopGUI->setButton(__('Гарантия'), 'briefcase', 'btn-print-order','./order/forms/warranty.php?orderID=' . $data['id']);
 
     return $disp;
 }

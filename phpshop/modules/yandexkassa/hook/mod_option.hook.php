@@ -5,10 +5,10 @@ PHPShopObj::loadClass("array");
 
 class PHPShopYandexkassaArray extends PHPShopArray {
 
-    function PHPShopYandexkassaArray() {
+    function __construct() {
         $this->objType = 3;
         $this->objBase = $GLOBALS['SysValue']['base']['yandexkassa']['yandexkassa_system'];
-        parent::PHPShopArray("status", "title", 'title_end', 'merchant_id', 'merchant_sig', 'pay_variants', 'merchant_scid', 'test');
+        parent::__construct("status", "title", 'title_end', 'merchant_id', 'merchant_sig', 'pay_variants', 'merchant_scid', 'test');
     }
 
     function get_pay_variants_array($arr = null, $forDoneCore = null) {

@@ -15,8 +15,8 @@ class PHPShopOrder extends PHPShopCore {
     /**
      * Конструктор
      */
-    function PHPShopOrder() {
-
+    function __construct() {
+        
         // Отладка
         $this->debug = false;
 
@@ -25,7 +25,7 @@ class PHPShopOrder extends PHPShopCore {
 
         // Список экшенов
         $this->action = array("post" => array('id_edit', 'id_delete'), "get" => "cart", 'nav' => 'index');
-        parent::PHPShopCore();
+        parent::__construct();
 
         // Кол-во знаков в постфиксе заказа №_XX, по умолчанию 2
         $format = $this->getValue('my.order_prefix_format');

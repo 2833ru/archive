@@ -1,61 +1,24 @@
 <?php
 
-
-$_classPath = "../../";
-include($_classPath . "class/obj.class.php");
-PHPShopObj::loadClass("base");
-PHPShopObj::loadClass("system");
-
-$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
-$PHPShopBase->chekAdmin();
-
-// Редактор GUI
-PHPShopObj::loadClass("admgui");
-$PHPShopGUI = new PHPShopGUI();
-$PHPShopGUI->title = "Редактирование Способа Оплаты";
-$PHPShopGUI->ajax = "'payment','','','core'";
-$PHPShopGUI->alax_lib = true;
-
-$PHPShopSystem = new PHPShopSystem();
-
-// SQL
-PHPShopObj::loadClass("orm");
+$TitlePage = __('Редактирование способа оплаты #' . $_GET['id']);
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['payment_systems']);
-
-// Модули
-PHPShopObj::loadClass("modules");
-$PHPShopModules = new PHPShopModules($_classPath . "modules/");
 
 // Стартовый вид
 function actionStart() {
-    global $PHPShopGUI, $PHPShopSystem, $SysValue, $_classPath, $PHPShopOrm, $PHPShopModules;
+    global $PHPShopGUI, $PHPShopSystem, $PHPShopOrm, $PHPShopModules;
 
     // Выборка
-    $data = $PHPShopOrm->select(array('*'), array('id' => '=' . $_GET['id']));
-    extract($data);
-
-    // ID окна для памяти закладок
-    $PHPShopGUI->setID(__FILE__, $data['id']);
+    $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_REQUEST['id'])));
 
 
-    $PHPShopGUI->dir = "../";
-    //$PHPShopGUI->size="630,530";
-    // Графический заголовок окна
-    $PHPShopGUI->setHeader("Редактирование Способа Оплаты", "", $PHPShopGUI->dir . "img/i_select_another_account_med[1].gif");
+    // Нет данных
+    if (!is_array($data)) {
+        header('Location: ?path=' . $_GET['path']);
+    }
 
-
-    $Field1 = $PHPShopGUI->setInput("text", "name_new", $name, "none", 280) .
-            $PHPShopGUI->setRadio("enabled_new", 1, "Показывать", $enabled) .
-            $PHPShopGUI->setRadio("enabled_new", 0, "Скрыть", $enabled);
-
-    $Field2 = $PHPShopGUI->setSelect("path_new", $PHPShopGUI->loadLib(GetTipPayment, $path), 280, "left") . $PHPShopGUI->setLine() .
-            $PHPShopGUI->setInputText('Сортировка:', "num_new", $num, '50px', false, "left") .
-            $PHPShopGUI->setCheckbox("yur_data_flag_new", 1, "Требовать юр. данные", $yur_data_flag, "left");
-
-    $Field3 = $PHPShopGUI->setInput("text", "message_header_new", $message_header, "none", 280);
-    $Field4 = $PHPShopGUI->setInputText(false, "icon_new", $icon, '165px', false, 'left') .
-            $PHPShopGUI->setButton(__('Выбрать'), "../img/icon-move-banner.gif", "100px", '25px', "right", "ReturnPic('icon_new');return false;");
-
+    // Размер названия поля
+    $PHPShopGUI->field_col = 2;
+    $PHPShopGUI->setActionPanel(__("Способы оплаты") . ' / ' . $data['name'], array('Создать', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'));
 
 
     // Редактор 1
@@ -63,35 +26,70 @@ function actionStart() {
     $oFCKeditor = new Editor('message_new');
     $oFCKeditor->Height = '300';
     $oFCKeditor->ToolbarSet = 'Normal';
-    $oFCKeditor->Value = $message;
-    $oFCKeditor->Config['EditorAreaCSS'] = $_classPath . "templates" . chr(47) . $PHPShopSystem->getParam("skin") . chr(47) . $SysValue['css']['default'];
+    $oFCKeditor->Value = $data['message'];
 
-    // Содержание закладки 2
-    $editor = $oFCKeditor->AddGUI();
 
-// Содержание закладки 1
-    $Tab1 = $PHPShopGUI->setField("Наименование:", $Field1, "left") .
-            $PHPShopGUI->setField("Тип подключения:", $Field2, "left") .
-            $PHPShopGUI->setField("Заголовок сообщения после оплаты:", $Field3, "left") .
-            $PHPShopGUI->setField("Иконка:", $Field4, "left");
+    // Содержание 
+    $Tab1 = $PHPShopGUI->setCollapse(__('Информация'), $PHPShopGUI->setField("Наименование:", $PHPShopGUI->setInput("text", "name_new", $data['name'])) .
+            $PHPShopGUI->setField("Вывод:", $PHPShopGUI->setRadio("enabled_new", 1, "Показывать", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Скрыть", $data['enabled'])) .
+            $PHPShopGUI->setField("Приоритет:", $PHPShopGUI->setInputText(null, "num_new", $data['num'], '100')) .
+            $PHPShopGUI->setField("Юридические данные:", $PHPShopGUI->setCheckbox("yur_data_flag_new", 1, "Обязательно заполнять", $data['yur_data_flag'])) .
+            $PHPShopGUI->setField("Тип подключения:", $PHPShopGUI->setSelect("path_new", $PHPShopGUI->loadLib('GetTipPayment', $data['path']), 350))
+    );
 
-    // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1, 350), array("Сообщение", $editor, 350));
+    $Tab1.=$PHPShopGUI->setField("Иконка:", $PHPShopGUI->setIcon($data['icon'], "icon_new", false));
+
+    $Tab1.=$PHPShopGUI->setCollapse(__('Сообщение после заказа'), $PHPShopGUI->setField("Заголовок:", $PHPShopGUI->setInput("text", "message_header_new", $data['message_header'])) .
+            $PHPShopGUI->setField("Сообщение", $oFCKeditor->AddGUI()));
+
 
     // Запрос модуля на закладку
-    $PHPShopModules->setAdmHandler($_SERVER["SCRIPT_NAME"], __FUNCTION__, $data);
+    $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
+
+    // Вывод формы закладки
+    $PHPShopGUI->setTab(array("Основное", $Tab1, 350));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =
-            $PHPShopGUI->setInput("hidden", "newsID", $data['id'], "right", 70, "", "but") .
-            $PHPShopGUI->setInput("button", "", "Отмена", "right", 70, "return onCancel();", "but") .
-            $PHPShopGUI->setInput("button", "delID", "Удалить", "right", 70, "return onDelete('" . __('Вы действительно хотите удалить?') . "')", "but", "actionDelete.baner.edit") .
-            $PHPShopGUI->setInput("submit", "editID", "Сохранить", "right", 70, "", "but", "actionUpdate.baner.edit") .
-            $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionSave.baner.edit");
+            $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .
+            $PHPShopGUI->setInput("button", "delID", "Удалить", "right", 70, "", "but", "actionDelete.order.edit") .
+            $PHPShopGUI->setInput("submit", "editID", "Сохранить", "right", 70, "", "but", "actionUpdate.order.edit") .
+            $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionSave.order.edit");
 
     // Футер
     $PHPShopGUI->setFooter($ContentFooter);
     return true;
+}
+
+function iconAdd() {
+
+    // Папка сохранения
+    $path = '/UserFiles/Image/';
+
+    // Копируем от пользователя
+    if (!empty($_FILES['file']['name'])) {
+        $_FILES['file']['ext'] = PHPShopSecurity::getExt($_FILES['file']['name']);
+        if (in_array($_FILES['file']['ext'], array('gif', 'png', 'jpg'))) {
+            if (move_uploaded_file($_FILES['file']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['dir']['dir'] . $path . $_FILES['file']['name'])) {
+                $file = $GLOBALS['dir']['dir'] . $path . $_FILES['file']['name'];
+            }
+        }
+    }
+
+    // Читаем файл из URL
+    elseif (!empty($_POST['furl'])) {
+        $file = $_POST['icon_new'];
+    }
+
+    // Читаем файл из файлового менеджера
+    elseif (!empty($_POST['icon_new'])) {
+        $file = $_POST['icon_new'];
+    }
+
+    if (empty($file))
+        $file = '';
+
+    return $file;
 }
 
 // Функция удаления
@@ -99,43 +97,43 @@ function actionDelete() {
     global $PHPShopOrm, $PHPShopModules;
 
     // Перехват модуля
-    $PHPShopModules->setAdmHandler($_SERVER["SCRIPT_NAME"], __FUNCTION__, $_POST);
+    $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
 
 
-    $action = $PHPShopOrm->delete(array('id' => '=' . $_POST['newsID']));
-    return $action;
+    $action = $PHPShopOrm->delete(array('id' => '=' . $_POST['rowID']));
+    return array('success' => $action);
 }
 
 /**
  * Экшен сохранения
  */
 function actionSave() {
-    global $PHPShopGUI;
 
     // Сохранение данных
     actionUpdate();
 
-    $_GET['id'] = $_POST['newsID'];
-    $PHPShopGUI->setAction($_GET['id'], 'actionStart', 'none');
+    header('Location: ?path=' . $_GET['path']);
 }
 
 // Функция обновления
 function actionUpdate() {
     global $PHPShopOrm, $PHPShopModules;
 
-    if(!isset($_POST['yur_data_flag_new']) )
-        $_POST['yur_data_flag_new']= 0;
+    $_POST['icon_new'] = iconAdd();
+
+    // Корректировка пустых значений
+    $PHPShopOrm->updateZeroVars('yur_data_flag_new');
 
     // Перехват модуля
-    $PHPShopModules->setAdmHandler($_SERVER["SCRIPT_NAME"], __FUNCTION__, $_POST);
+    $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
 
-    $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['newsID']));
-    return $action;
+    $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['rowID']));
+    return array('success' => $action);
 }
-
-// Вывод формы при старте
-$PHPShopGUI->setAction($_GET['id'], 'actionStart', 'none');
 
 // Обработка событий
 $PHPShopGUI->getAction();
+
+// Вывод формы при старте
+$PHPShopGUI->setAction($_GET['id'], 'actionStart', 'none');
 ?>

@@ -43,7 +43,7 @@ class Statement extends \DDelivery\DB\Abstr\Statement {
      */
     protected function _query($query)
     {
-        return mysql_query($query, $this->linkIdentifier);
+        return mysqli_query($this->linkIdentifier,$query);
     }
 
     /**

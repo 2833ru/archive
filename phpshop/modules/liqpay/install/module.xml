@@ -3,15 +3,10 @@
     <version>1.1</version>
     <name>Liqpay</name>
     <faqlink>http://faq.phpshop.ru/page/liqpay.html</faqlink>
-<description>Прием оплат через Liqpay.</description>
-    <icon>icon.png</icon>
+    <description>Прием оплат через Liqpay.</description>
     <category>sale</category>
     <adminmenu>
         <title>Прием оплат через Liqpay</title>
-        <podmenu>
-            <podmenu_name>Настройка</podmenu_name>
-            <podmenu_icon>icon.png</podmenu_icon>
-            <podmenu_action>javascript:miniWin('../modules/liqpay/admpanel/adm_module.php',510,450);</podmenu_action>
-        </podmenu>
+        <capability>true</capability>
     </adminmenu>
 </module>

@@ -3,7 +3,7 @@
 
 // Запись лога
 function setLog($data=false,$nameHandler=false) {
-    global $PHPShopGUI;
+    global $TitlePage;
     $PHPShopOrm= new PHPShopOrm('phpshop_modules_admlog_log');
 
     // Тип действия
@@ -14,7 +14,7 @@ function setLog($data=false,$nameHandler=false) {
         }
         elseif(!empty($_REQUEST['delID'])) $nameHandler = 'Удаление';
         else  $nameHandler = 'Сохранение';
-    } else $PHPShopGUI->title = 'Журнал событий';
+    } else $TitlePage = 'Журнал событий';
 
     // Заголовок
     $titleSearch=array('name_new','title_new','login_new','link_new','info_new','order_num');
@@ -29,8 +29,8 @@ function setLog($data=false,$nameHandler=false) {
             'date_new'=>date('U'),
             'user_new'=>$_SESSION['logPHPSHOP'],
             'ip_new'=>$_SERVER['REMOTE_ADDR'],
-            'file_new'=>$_SERVER["SCRIPT_NAME"],
-            'title_new'=>$PHPShopGUI->title.' -> '.$nameHandler.' - > '.$titleName,
+            'file_new'=>$nameHandler,
+            'title_new'=>$TitlePage.' -> '.$nameHandler.' - > '.$titleName,
             'content_new'=>serialize($_REQUEST)
     );
 

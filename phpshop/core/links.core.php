@@ -11,7 +11,7 @@ class PHPShopLinks extends PHPShopCore {
     /**
      * Конструктор
      */
-    function PHPShopLinks() {
+    function __construct() {
         // Имя Бд
         $this->objBase=$GLOBALS['SysValue']['base']['table_name17'];
 
@@ -23,7 +23,7 @@ class PHPShopLinks extends PHPShopCore {
 
         // список экшенов
         $this->action=array("nav"=>"index","get"=>"add_forma","post"=>"send_gb");
-        parent::PHPShopCore();
+        parent::__construct();
     }
 
 

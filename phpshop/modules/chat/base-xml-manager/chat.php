@@ -31,13 +31,13 @@ $_POST['sql_test'] = '<?xml version="1.0" encoding="windows-1251"?>
 
 class PHPShopChat extends PHPShopBaseXml {
 
-    function PHPShopChat() {
+    function __construct() {
         $this->debug = false;
         $this->true_method = array('select', 'update', 'insert','delete');
         $this->true_from = array('chat.chat_jurnal', 'chat.chat_users','chat.chat_system','chat.chat_operators');
         $this->log = $_POST['log'];
         $this->pas = $_POST['pas'];
-        parent::PHPShopBaseXml();
+        parent::__construct();
     }
 
     function decode($code) {

@@ -51,7 +51,7 @@ function query_filter($obj) {
         }
     }
 
-    // Направление ортировки из настроек каталога. Вторая часть логики в sort.class.php
+    // Направление сортировки из настроек каталога. Вторая часть логики в sort.class.php
     if (empty($f))
         switch ($obj->PHPShopCategory->getParam('order_to')) {
             case(1): $order_direction = "";

@@ -8,7 +8,7 @@ class PHPShopBoard extends PHPShopCore {
     /**
      * Конструктор
      */
-    function PHPShopBoard() {
+    function __construct() {
 
         // Имя Бд
         $this->objBase=$GLOBALS['SysValue']['base']['messageboard']['messageboard_log'];
@@ -24,7 +24,7 @@ class PHPShopBoard extends PHPShopCore {
 
         // Список экшенов
         $this->action=array("post"=>"send_gb","nav"=>"index","get"=>"add_forma");
-        parent::PHPShopCore();
+        parent::__construct();
 
         // Мета
         $this->title=$this->SysValue['lang']['messageboard_title']." - ".$this->PHPShopSystem->getValue("name");

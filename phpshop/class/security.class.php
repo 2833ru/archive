@@ -36,7 +36,7 @@ class PHPShopSecurity {
                 $sExt = $sTmp;
             }
         }
-        $pos = stristr($sFileName, "php");
+        $pos = stristr($sFileName, ".php");
         if ($pos === false)
             return strtolower($sExt);
     }
@@ -110,7 +110,7 @@ class PHPShopSecurity {
      * @return bool
      */
     static function true_num($num) {
-        return @preg_match("/^[0-9]{1,20}$/", $num);
+        return preg_match("/^[0-9]{1,20}$/", $num);
     }
 
     /**
@@ -159,23 +159,6 @@ class PHPShopSecurity {
                 return $str;
                 break;
         }
-    }
-
-    /**
-     * Проверка Request переменных на запрещенные команды
-     * @param string $search
-     */
-    static function RequestSearch($search) {
-        $pathinfo = pathinfo($_SERVER['PHP_SELF']);
-        $f = $pathinfo['basename'];
-        if (empty($_SESSION['theme']))
-            $_SESSION['theme'] = 'classic';
-        $com = array("union", "select", "insert", "update", "delete");
-        $mes = '<h3>Внимание</h3>Работа скрипта ' . $_SERVER['PHP_SELF'] . ' прервана из-за использования запрещенной команды';
-        $mes2 = "<br>Удалите все вхождения этой команды в водимой информации.";
-        foreach ($com as $v)
-            if (@preg_match("/" . $v . "/i", $search))
-                exit($mes . ' <b style="color:red">' . $v . '</b>' . $mes2);
     }
 
     /**

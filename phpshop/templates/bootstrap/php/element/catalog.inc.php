@@ -17,9 +17,9 @@ class PHPShopBrandsElement extends PHPShopElements {
     /**
      * Конструктор
      */
-    function PHPShopBrandsElement() {
+    function __construct() {
         $this->debug = false;
-        parent::PHPShopElements();
+        parent::__construct();
     }
 
     /**
@@ -33,7 +33,7 @@ class PHPShopBrandsElement extends PHPShopElements {
         $PHPShopOrm->debug = $this->debug;
         $PHPShopOrm->mysql_error = false;
         $result = $PHPShopOrm->query("select * from " . $SysValue['base']['table_name20'] . " where (brand='1' and goodoption!='1') order by num");
-        while (@$row = mysql_fetch_assoc($result)) {
+        while (@$row = mysqli_fetch_assoc($result)) {
             $arrayVendor[$row['id']] = $row;
         }
         if (is_array($arrayVendor))
@@ -47,7 +47,7 @@ class PHPShopBrandsElement extends PHPShopElements {
             // Массив значений 
             $i = 0;
             $result = $PHPShopOrm->query("select * from " . $SysValue['base']['table_name21'] . " where $sortValue order by num");
-            while (@$row = mysql_fetch_array($result)) {
+            while (@$row = mysqli_fetch_array($result)) {
                 @$arrayVendorValue[$row['category']]['name'].= ", " . $row['name'];
                 if ($arrayVendor[$row['category']]['brand']) {
                     if ($i % $this->limitOnLine == 0) {
@@ -63,7 +63,7 @@ class PHPShopBrandsElement extends PHPShopElements {
                     if ($row['page']) {
                         $PHPShopOrm->clean();
                         $res = $PHPShopOrm->query("select content from " . $SysValue['base']['page'] . " where link = '$row[page]' LIMIT 1");
-                        $page = mysql_fetch_array($res);
+                        $page = mysqli_fetch_array($res);
                         $desc = $page['content'];
                     }
 

@@ -12,7 +12,7 @@ PHPShopObj::loadClass("category");
 PHPShopObj::loadClass("delivery");
 
 $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
-include($_classPath . "admpanel/enter_to_admin.php");
+$PHPShopBase->chekAdmin();
 
 // Валюты
 $PHPShopValuta = new PHPShopValutaArray();
@@ -39,7 +39,8 @@ $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
 $data = $PHPShopOrm->select();
 
 $csv = null;
-$_ = ';';
+$delim = '"';
+$_ = $delim.';'.$delim;
 $empty = '';
 $next = '
 ';
@@ -48,7 +49,7 @@ $csv.='Группы;Код;Наименование;Внешний код;Артикул;Единица измерения;Цена продаж
 ';
 if (is_array($data)) {
     foreach ($data as $row) {
-        $csv.=getCat($row['category']) . $_ . $row['id'] . $_ . $row['name'] . $_ . $empty . $_ . $row['uid'] . $_ . $row['ed_izm'] . $_ . $row['price'] . $_ . $PHPShopValutaArray[$row['baseinputvaluta']]['iso'] . $_ . $empty . $_ . $empty . $_ . $empty . $_ . $empty . $_ . $empty . $_ . $empty . $_ . $empty . $_ . $empty . $_ . $empty .$_ . $empty .$_ .$empty.$_ . $row['items'] . $next;
+        $csv.=$delim.getCat($row['category']) . $_ . $row['id'] . $_ . $row['name'] . $_ . $empty . $_ . $row['uid'] . $_ . $row['ed_izm'] . $_ . $row['price'] . $_ . $PHPShopValutaArray[$row['baseinputvaluta']]['iso'] . $_ . $empty . $_ . $empty . $_ . $empty . $_ . $empty . $_ . $empty . $_ . $empty . $_ . $empty . $_ . $empty . $_ . $empty .$_ . $empty .$_ .$empty.$_ . $row['items'] . $delim.$next;
     }
 }
 
@@ -58,7 +59,7 @@ $PHPShopDeliveryArray = $PHPShopDelivery->getArray();
 if (is_array($PHPShopDeliveryArray))
     foreach ($PHPShopDeliveryArray as $row) {
         if (empty($row['is_folder']) and !empty($row['enabled'])) {
-            $csv.='Услуги/Доставка' . $_ . 'delivery_'.$row['id'] . $_ . $row['city'] . $_ . $empty . $_ . 'delivery_' . $row['id'] . $_ . $empty . $_ . $row['price'] . $_ . $empty . $_ . $empty . $_ . $empty . $_ . $empty . $_ . $empty . $_ . $empty . $_ . $empty . $_ . $empty . $_ . $empty . $_ . $empty . $_ .$empty . $next;
+            $csv.=$delim.'Услуги/Доставка' . $_ . 'delivery_'.$row['id'] . $_ . $row['city'] . $_ . $empty . $_ . 'delivery_' . $row['id'] . $_ . $empty . $_ . $row['price'] . $_ . $empty . $_ . $empty . $_ . $empty . $_ . $empty . $_ . $empty . $_ . $empty . $_ . $empty . $_ . $empty . $_ . $empty . $_ . $empty . $_ .$empty . $next;
         }
     }
 

@@ -1,3 +1,0 @@
-function License(){
-return true;
-}

@@ -54,8 +54,10 @@ switch ($_GET['do']) {
 
         if ($Guard->admin($_GET['backup']))
             $create_enabled = true;
-        else if (include_once($_classPath . '/admpanel/enter_to_admin.php'))
+        else{
+            $PHPShopBase->chekAdmin();
             $create_enabled = true;
+        }
 
         if ($create_enabled) {
             $Guard->log('start');
@@ -71,7 +73,7 @@ switch ($_GET['do']) {
 
     case "update":
                
-        include_once($_classPath . '/admpanel/enter_to_admin.php');
+        $PHPShopBase->chekAdmin();
 
         $Guard->update();
         

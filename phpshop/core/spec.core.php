@@ -17,9 +17,9 @@ class PHPShopSpec extends PHPShopShopCore {
     /**
      * Конструктор
      */
-    function PHPShopSpec() {
+    function __construct() {
 
-        parent::PHPShopShopCore();
+        parent::__construct();
         $this->PHPShopOrm->cache_format = $this->cache_format;
     }
 

@@ -8,7 +8,7 @@
     </td>
     <td class="quantity">@visualcart_product_num@ шт.</td>
     <td class="total">@visualcart_product_price@ @visualcart_product_currency@</td>
-    <td class="remove">  <a title="Удалить" href="javascript:visualCart('@visualcart_product_xid@')">
+    <td class="remove">  <a title="Удалить" href="javascript:visualCart(@visualcart_product_xid@)">
             <img src="images/shop/cart_delete.gif"  alt="Удалить"  border="0" alt="@visualcart_product_name@">
         </a></td>
 </tr>

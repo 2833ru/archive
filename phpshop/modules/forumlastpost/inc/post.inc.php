@@ -9,10 +9,10 @@ class PHPShopForumElement extends PHPShopElements {
     var $scrolling = "no";
     var $frameborder = 0;
 
-    function PHPShopForumElement() {
+    function __construct () {
         $this->debug = false;
         $this->objBase = $GLOBALS['SysValue']['base']['forumlastpost']['ipboard_system'];
-        parent::PHPShopElements();
+        parent::__construct();
         $this->option();
     }
 

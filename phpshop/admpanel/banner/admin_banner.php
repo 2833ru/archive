@@ -1,27 +1,25 @@
 <?php
 
-$TitlePage=__("Баннеры");
+$TitlePage = __("Баннеры");
 
 function actionStart() {
     global $PHPShopInterface;
-    $PHPShopInterface->size="630,530";
-    $PHPShopInterface->link="banner/adm_banerID.php";
-    $PHPShopInterface->setCaption(array("&plusmn;","5%"),array("Название","50%"));
 
+    $PHPShopInterface->setActionPanel(__("Баннеры"), array('Удалить выбранные'), array('Добавить'));
 
-// SQL
+    $PHPShopInterface->setCaption(array(null, "3%"), array("Название", "30%"), array("Таргетинг", "30%"), array("", "10%"), array("Статус", "10%", array('align' => 'right')));
+
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['banner']);
-    $data = $PHPShopOrm->select(array('*'),false,array('order'=>'id DESC'),array("limit"=>"1000"));
-    if(is_array($data))
-        foreach($data as $row) {
-            extract($row);
+    $data = $PHPShopOrm->select(array('*'), false, array('order' => 'id DESC'), array("limit" => "1000"));
+    if (is_array($data))
+        foreach ($data as $row) {
 
-            if($datas != date("d.m.y")) $count_today=0;
-
-            $PHPShopInterface->setRow($id,$PHPShopInterface->icon($flag),$name);
+            $PHPShopInterface->setRow($row['id'], array('name' => $row['name'], 'link' => '?path=banner&id=' . $row['id'], 'align' => 'left'), $row['dir'],array('action' => array('edit', 'delete', 'id' => $row['id']), 'align' => 'center'), array('status' => array('enable' => $row['flag'], 'align' => 'right', 'caption' => array('Выкл', 'Вкл'))));
         }
 
-    $PHPShopInterface->setAddItem('banner/adm_baner_new.php');
+    $PHPShopInterface->setAddItem('ajax/banner/adm_banner_new.php');
+    $PHPShopInterface->title = __("Баннеры");
     $PHPShopInterface->Compile();
 }
+
 ?>

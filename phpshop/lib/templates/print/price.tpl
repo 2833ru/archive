@@ -36,7 +36,7 @@
                 text-align: right;
             }
             button{
-                font-size: 8pt;
+                font-size: 11pt;
                 border: solid 1px #CCC;
                 -webkit-border-radius:5px;
                 -moz-border-radius:5px;
@@ -46,6 +46,7 @@
                 background: -o-linear-gradient(#FFF, #F0F0F0);
                 background: -webkit-linear-gradient(#FFF, #F0F0F0);
                 cursor: pointer;
+                height: 30px;
             }
         </style>
         <style media="print" type="text/css">
@@ -72,7 +73,7 @@
                             <td align="right" width="100%">
                                 <div align="right" class="nonprint">
                                     <button onclick="window.print()">
-                                        <img border=0 align=absmiddle hspace=3 vspace=3 src="http://@php echo $_SERVER['SERVER_NAME'].$GLOBALS['SysValue']['dir']['dir']; php@/phpshop/admpanel/img/action_print.gif">Распечатать
+                                       Распечатать
                                     </button> 
                                     <br><br>
                                 </div>
