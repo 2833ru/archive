@@ -39,6 +39,11 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_guard_signature` (
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 
+INSERT INTO `phpshop_modules_guard_signature` VALUES (1, 'PHP Trojan Loader ¹1', 'eval\\\\s{0,5}\\\\(\\\\s{0,5}base64_decode');
+INSERT INTO `phpshop_modules_guard_signature` VALUES (2, 'HTML Trojan Loader ¹1', 'iframe[^stwtag("iframe"]');
+INSERT INTO `phpshop_modules_guard_signature` VALUES (3, 'JavaScript Trojan Loader ¹1', 'unescape[^unescape\\\\(document.cookie]');
+
+
 DROP TABLE IF EXISTS `phpshop_modules_guard_system`;
 CREATE TABLE IF NOT EXISTS `phpshop_modules_guard_system` (
   `id` int(11) NOT NULL auto_increment,

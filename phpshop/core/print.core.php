@@ -2,6 +2,7 @@
 /**
  * Обработчик печатной формы товара
  * @author PHPShop Software
+ * @tutorial http://wiki.phpshop.ru/index.php/PHPShopPrint
  * @version 1.0
  * @package PHPShopShopCore
  */

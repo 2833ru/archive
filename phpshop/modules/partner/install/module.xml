@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.6</version>
+    <version>1.7</version>
     <name>Partner</name>
     <description>Модуль партнерской программы.</description>
     <icon>icon.png</icon>
-    <base></base>
+    <category>partner</category>
     <adminmenu>
         <title>Партнеры</title>
         <podmenu>
@@ -20,12 +20,12 @@
         <podmenu>
             <podmenu_name>Заявки на вывод</podmenu_name>
             <podmenu_icon>icon.png</podmenu_icon>
-            <podmenu_action>javascript:DoReload('modules','partner','','payment')</podmenu_action>
+            <podmenu_action>javascript:DoReload('modules','partner','payment')</podmenu_action>
         </podmenu>
          <podmenu>
             <podmenu_name>Журнал заказов</podmenu_name>
             <podmenu_icon>icon.png</podmenu_icon>
-            <podmenu_action>javascript:DoReload('modules','partner','','log')</podmenu_action>
+            <podmenu_action>javascript:DoReload('modules','partner','log')</podmenu_action>
         </podmenu>
     </adminmenu>
 </module>

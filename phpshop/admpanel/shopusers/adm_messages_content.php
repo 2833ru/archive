@@ -104,7 +104,7 @@ if($i>30)$razmer="height:600;";
 <? if (isset($id)) {?>
 
 </head>
-<body style="background: threedface; color: windowtext;" topmargin="0" rightmargin="3" leftmargin="3"  onload="DoCheckLang(location.pathname,<?=$SysValue['lang']['lang_enabled']?>);preloader(0)">
+<body style="background: threedface; color: windowtext;" topmargin="0" rightmargin="3" leftmargin="3" >
 <table id="loader">
 <tr>
 	<td valign="middle" align="center">
@@ -119,13 +119,11 @@ if($i>30)$razmer="height:600;";
 </td>
 </tr>
 </table>
-
-<SCRIPT language=JavaScript type=text/javascript>preloader(1);</SCRIPT>
-<table cellpadding="0" cellspacing="1" width="100%" border="0" bgcolor="#808080" class="sortable" id="sort">
+<table cellpadding="0" cellspacing="1" width="100%" border="0"  class="sortable" id="sort">
 <tr>
     <td width="10%" id=pane align=center></td>
-	<td width="10%" id=pane><span name=txtLang id=txtLang>Дата</span></td>
-	<td width="80%" id=pane><span name=txtLang id=txtLang>Сообщение</span></td>
+	<td width="10%" id=pane>Дата</td>
+	<td width="80%" id=pane>Сообщение</td>
 </tr>
 	<?=$display?>
     </table>

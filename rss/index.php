@@ -27,6 +27,7 @@ $PHPShopModules = new PHPShopModules($_classPath . "modules/");
 if (!empty($GLOBALS['SysValue']['base']['seourl']['seourl_system'])) {
     $seourl_enabled = true;
 }
+else $seourl_enabled = false;
 
 // Описание канала RSS
 $xml = '<?xml version="1.0" encoding="windows-1251" ?>

@@ -26,7 +26,7 @@ $PHPShopCart = new PHPShopCart();
 function printforma($val) {
     static $n;
     if(empty($val['ed_izm'])) $val['ed_izm']='רע.';
-    $dis=PHPShopText::tr($n+1,$val['name'],$val['ed_izm'],$val['num'],$val['price'],$val['total']);
+    $dis=PHPShopText::tr($n+1,$val['name'],$val['ed_izm'],$val['num'],$val['price'],($val['num']*$val['price']));
     @$n++;
     return $dis;
 }

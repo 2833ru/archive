@@ -3,7 +3,8 @@
 /**
  * Обработчик карты сайта
  * @author PHPShop Software
- * @version 1.4
+ * @tutorial http://wiki.phpshop.ru/index.php/PHPShopMap
+ * @version 1.6
  * @package PHPShopCore
  */
 class PHPShopMap extends PHPShopCore {
@@ -13,13 +14,12 @@ class PHPShopMap extends PHPShopCore {
      */
     function PHPShopMap() {
 
-        $this->debug=false;
-        $this->memory=true;
+        $this->debug = false;
+        $this->memory = true;
 
         // Имя Бд
-        $this->objBase=$GLOBALS['SysValue']['base']['products'];
+        $this->objBase = $GLOBALS['SysValue']['base']['products'];
         parent::PHPShopCore();
-
     }
 
     /**
@@ -28,46 +28,45 @@ class PHPShopMap extends PHPShopCore {
      * @param string $dir параметр назначения [category|category_page]
      * @return string 
      */
-    function seourl($val,$dir,$name=false){
+    function seourl($val, $dir, $name = false) {
 
         // Перехват модуля, занесение в память наличия модуля для оптимизации цикличности
-        if($this->memory_get(__CLASS__.'.'.__FUNCTION__,true)) {
-            $hook=$this->setHook(__CLASS__,__FUNCTION__,array('val'=>$val,'dir'=>$dir,'name'=>$name));
-            if($hook) {
+        if ($this->memory_get(__CLASS__ . '.' . __FUNCTION__, true)) {
+            $hook = $this->setHook(__CLASS__, __FUNCTION__, array('val' => $val, 'dir' => $dir, 'name' => $name));
+            if ($hook) {
                 return $hook;
-            } else $this->memory_set(__CLASS__.'.'.__FUNCTION__,0);
+            } else
+                $this->memory_set(__CLASS__ . '.' . __FUNCTION__, 0);
         }
-        
-        switch($dir){
-            case 'category':
-              $link='/shop/CID_'.$val.'.html';
-            break;
 
-        case 'category_page':
-            $link='/page/CID_'.$val.'.html';
-            break;
+        switch ($dir) {
+            case 'category':
+                $link = '/shop/CID_' . $val . '.html';
+                break;
+
+            case 'category_page':
+                $link = '/page/CID_' . $val . '.html';
+                break;
         }
 
         return $link;
     }
-    
-    
+
     /**
      * Подкатегории товаров
      * @param int $cat ID категории
      * @return string
      */
     function subcategory($cat) {
-        $dis=null;
-        if(is_array($this->ParentArray[$cat])) {
-            foreach($this->ParentArray[$cat] as $val) {
-                $sup=$this->subcategory($val);
-                $name=$this->PHPShopCategoryArray->getParam($val.'.name');
-                if(empty($sup)) {
+        $dis = null;
+        if (!empty($this->ParentArray[$cat]) and is_array($this->ParentArray[$cat])) {
+            foreach ($this->ParentArray[$cat] as $val) {
+                $sup = $this->subcategory($val);
+                $name = $this->PHPShopCategoryArray->getParam($val . '.name');
+                if (empty($sup)) {
 
-                    $dis.=PHPShopText::li($name,$this->seourl($val,'category',$name));
-                }
-                else {
+                    $dis.=PHPShopText::li($name, $this->seourl($val, 'category', $name));
+                } else {
                     $dis.=PHPShopText::li(PHPShopText::b($name));
                     $dis.=$sup;
                 }
@@ -77,24 +76,33 @@ class PHPShopMap extends PHPShopCore {
     }
 
     /**
-     * Котегории товаров
+     * Категории товаров
      */
     function category() {
-        $this->PHPShopCategoryArray = new PHPShopCategoryArray();
-        $this->ParentArray=$this->PHPShopCategoryArray->getKey('parent_to.id',true);
-        $dis=$sup=null;
-        if(is_array($this->ParentArray[0])) {
-            foreach($this->ParentArray[0] as $val) {
-                $name=$this->PHPShopCategoryArray->getParam($val.'.name');
-                $sup=$this->subcategory($val);
 
-                if(!empty($sup))
-                    $dis.=PHPShopText::p(PHPShopText::b($name).$sup);
-                else
-                    $dis.=PHPShopText::p(PHPShopText::a($this->seourl($val,'category',$name),PHPShopText::b($name),$name));
+        // Мультибаза
+        if ($this->PHPShopSystem->ifSerilizeParam('admoption.base_enabled')) {
+            $where['servers'] = " REGEXP 'i" . $this->PHPShopSystem->getSerilizeParam('admoption.base_id') . "i'";
+        }
+        else $where=null;
+
+        $this->PHPShopCategoryArray = new PHPShopCategoryArray($where);
+        $this->ParentArray = $this->PHPShopCategoryArray->getKey('parent_to.id', true);
+        $dis = $sup = null;
+        if (is_array($this->ParentArray[0])) {
+            foreach ($this->ParentArray[0] as $val) {
+                $vid = $this->PHPShopCategoryArray->getParam($val . '.skin_enabled');
+                if (empty($vid)) {
+                    $name = $this->PHPShopCategoryArray->getParam($val . '.name');
+                    $sup = $this->subcategory($val);
+                    if (!empty($sup))
+                        $dis.=PHPShopText::p(PHPShopText::b($name) . $sup);
+                    else
+                        $dis.=PHPShopText::p(PHPShopText::a($this->seourl($val, 'category', $name), PHPShopText::b($name), $name));
+                }
             }
         }
-        $this->add($dis,true);
+        $this->add($dis, true);
     }
 
     /**
@@ -103,17 +111,19 @@ class PHPShopMap extends PHPShopCore {
      * @return string
      */
     function subcategory_page($cat) {
-        $dis=null;
-        if(is_array($this->ParentPageArray[$cat])) {
-            foreach($this->ParentPageArray[$cat] as $val) {
-                $sup=$this->subcategory_page($val);
-                $name=$this->PHPShopPageCategoryArray->getParam($val.'.name');
-                if(empty($sup)) {
-                    $dis.=PHPShopText::li($name,$this->seourl($val,'category_page',$name));
-                }
-                else {
-                    $dis.=PHPShopText::li(PHPShopText::b($name));
-                    $dis.=$sup;
+        $dis = null;
+        if (!empty($this->ParentPageArray[$cat]) and is_array($this->ParentPageArray[$cat])) {
+            foreach ($this->ParentPageArray[$cat] as $val) {
+                $vid = $this->PHPShopCategoryArray->getParam($val . '.vid');
+                if (empty($vid)) {
+                    $sup = $this->subcategory_page($val);
+                    $name = $this->PHPShopPageCategoryArray->getParam($val . '.name');
+                    if (empty($sup)) {
+                        $dis.=PHPShopText::li($name, $this->seourl($val, 'category_page', $name));
+                    } else {
+                        $dis.=PHPShopText::li(PHPShopText::b($name));
+                        $dis.=$sup;
+                    }
                 }
             }
             return PHPShopText::ul($dis);
@@ -121,44 +131,42 @@ class PHPShopMap extends PHPShopCore {
     }
 
     /**
-     * Котегории страниц
+     * Категории страниц
      */
     function category_page() {
         PHPShopObj::loadClass('page');
         $this->PHPShopPageCategoryArray = new PHPShopPageCategoryArray();
-        $this->ParentPageArray=$this->PHPShopPageCategoryArray->getKey('parent_to.id',true);
-        $dis=null;
-        if(is_array($this->ParentPageArray[0])) {
-            foreach($this->ParentPageArray[0] as $val) {
-                $sup=$this->subcategory_page($val);
-                $name=$this->PHPShopPageCategoryArray->getParam($val.'.name');
-                if(empty($sup)) {
-                    $dis.=PHPShopText::p(PHPShopText::a($this->seourl($val,'category_page',$name),PHPShopText::b($name),$name));
-                }
-                else {
+        $this->ParentPageArray = $this->PHPShopPageCategoryArray->getKey('parent_to.id', true);
+        $dis = null;
+        if (is_array($this->ParentPageArray[0])) {
+            foreach ($this->ParentPageArray[0] as $val) {
+                $sup = $this->subcategory_page($val);
+                $name = $this->PHPShopPageCategoryArray->getParam($val . '.name');
+                if (empty($sup)) {
+                    $dis.=PHPShopText::p(PHPShopText::a($this->seourl($val, 'category_page', $name), PHPShopText::b($name), $name));
+                } else {
                     $dis.=PHPShopText::b($name);
                     $dis.=$sup;
                 }
             }
         }
-        $this->add(PHPShopText::ul($dis),true);
+        $this->add(PHPShopText::ul($dis), true);
     }
-
 
     /**
      * Акции
      */
     function special() {
-        $special=PHPShopText::ul(PHPShopText::li(__('Новинки'),'/newtip/').PHPShopText::li(__('Спецпредложение'),'/spec/').
-                PHPShopText::li(__('Распродажа'),'/newprice/'));
-        $this->add(PHPShopText::b(__('Акции')).$special,true);
+        $special = PHPShopText::ul(PHPShopText::li(__('Новинки'), '/newtip/') . PHPShopText::li(__('Спецпредложение'), '/spec/') .
+                        PHPShopText::li(__('Распродажа'), '/newprice/'));
+        $this->add(PHPShopText::b(__('Акции')) . $special, true);
     }
 
     /**
      * Новости
      */
     function news() {
-        $this->add(PHPShopText::b(PHPShopText::a('/news/',__('Новости'))),true);
+        $this->add(PHPShopText::b(PHPShopText::a('/news/', __('Новости'))), true);
     }
 
     /**
@@ -166,10 +174,11 @@ class PHPShopMap extends PHPShopCore {
      * @return int
      */
     function product() {
-        $data=$this->PHPShopOrm->select(array('COUNT(id) as total'));
-        if(is_array($data))
-            $total=$data['total'];
-        else $total=0;
+        $data = $this->PHPShopOrm->select(array('COUNT(id) as total'));
+        if (is_array($data))
+            $total = $data['total'];
+        else
+            $total = 0;
 
         return $total;
     }
@@ -180,8 +189,8 @@ class PHPShopMap extends PHPShopCore {
     function index() {
 
         // Перехват модуля
-        if($this->setHook(__CLASS__,__FUNCTION__,false,'START'))
-                return true;
+        if ($this->setHook(__CLASS__, __FUNCTION__, false, 'START'))
+            return true;
 
 
         // Категории товаров
@@ -197,18 +206,20 @@ class PHPShopMap extends PHPShopCore {
         $this->news();
 
         // Мета
-        $this->title="Карта сайта - ".$this->PHPShopSystem->getValue("name");
+        $this->title = "Карта сайта - " . $this->PHPShopSystem->getValue("name");
 
-        $this->set('catalFound',$this->lang('found_of_catalogs'));
-        $this->set('catalNum',$this->PHPShopCategoryArray->getNum());
-        $this->set('producFound',$this->lang('found_of_products'));
-        $this->set('productNum',$this->product());
+        $this->set('catalFound', $this->lang('found_of_catalogs'));
+        $this->set('catalNum', $this->PHPShopCategoryArray->getNum());
+        $this->set('producFound', $this->lang('found_of_products'));
+        $this->set('productNum', $this->product());
 
         // Перехват модуля
-        $this->setHook(__CLASS__,__FUNCTION__,false,'END');
+        $this->setHook(__CLASS__, __FUNCTION__, false, 'END');
 
         // Подключаем шаблон
         $this->parseTemplate($this->getValue('templates.map_page_list'));
     }
+
 }
+
 ?>

@@ -4,7 +4,7 @@ PHPShopObj::loadClass("modules");
 include_once('php4_compatibility.php');
 
 function actionStart() {   
-    $stat = &new PluginStat;
+    $stat = new PluginStat;
     $stat->getReport();
 
 }
@@ -129,16 +129,16 @@ class PluginStat extends PHPShopModules {
 
         //подключаем интерфейс
         include_once('plugin_stat_interface.php');
-        $this->interface = &new PluginStatInterface();
+        $this->interface = new PluginStatInterface();
         //interface vars
         $this->interface->params = $this->options;
         $this->interface->window = true;
         
         //подключаем класс для работы с БД
         include_once('plugin_stat_model.php');
-        $this->visitors = &new PluginStatModel($this->getParam("base.stat.stat_visitors"));
+        $this->visitors = new PluginStatModel($this->getParam("base.stat.stat_visitors"));
         include_once('plugin_stat_model_sebots.php');
-        $this->bots = &new PluginStatModelSebots($this->getParam("base.stat.stat_sebots"));
+        $this->bots = new PluginStatModelSebots($this->getParam("base.stat.stat_sebots"));
 
     }
 

@@ -62,6 +62,8 @@ function OrdersArray($p1,$p2,$words,$list) {
 
         $array=array(
                 "id"=>$id,
+                "uid"=>$uid,
+                "datas"=>$datas,
                 "cart"=>$order['Cart'],
                 "order"=>$order['Person'],
                 "time"=>$time,
@@ -316,8 +318,8 @@ switch ($_REQUEST['command']) {
             foreach ($OrdersArray as $val) {
                 $XML.='<order>
 	      <data>'.PHPShopDate::dataV($val['order']['data']).'</data>
-		  <datas>'.$val['order']['data'].'</datas>
-		  <uid>'.$val['order']['ouid'].'</uid>
+		  <datas>'.$val['datas'].'</datas>
+		  <uid>'.$val['uid'].'</uid>
 		  <id>'.$val['id'].'</id>
 		  <name>'.Clean($val['order']['name_person']).'</name>
 		  <mail>'.Clean($val['order']['mail']).'</mail>
@@ -328,8 +330,8 @@ switch ($_REQUEST['command']) {
 		  <status>'.$GetOrderStatusArray[$val['statusi']]['name'].'</status>
 		  <color>'.$GetOrderStatusArray[$val['statusi']]['color'].'</color>
 		  <time>'.$val['time'].'</time>
-		  <summa>'.ReturnSumma($val['cart']['sum'],$val['id'],$val['order']['discount']).'</summa>
-		  <num>'.$val['cart']['num'].'</num>
+		  <summa>'.(ReturnSumma($val['cart']['sum'],$val['id'],$val['order']['discount'])+GetDelivery($val['order']['dostavka_metod'],"price")).'</summa>
+		  <num>'.($val['cart']['num']+1).'</num>
 		  <kurs>'.$val['cart']['kurs'].'</kurs>';
                 $XML.='</order>
 ';
@@ -387,7 +389,7 @@ switch ($_REQUEST['command']) {
 		  <adres>'.Clean($OrdersReturn['order']['adr_name']).'</adres>
 		  <dos_ot>'.Clean($OrdersReturn['order']['dos_ot']).'</dos_ot>
 		  <dos_do>'.Clean($OrdersReturn['order']['dos_do']).'</dos_do>
-		  <discount>'.Clean($OrdersReturn['order']['discount']).'</discount>
+		  <discount>'.(Clean($OrdersReturn['order']['discount'])+0).'</discount>
 		  <manager>'.$OrdersReturn['manager'].'</manager>
 		  <place>'.GetDelivery($OrdersReturn['order']['dostavka_metod'],"city").'</place>
 		  <place_price>'.GetDelivery($OrdersReturn['order']['dostavka_metod'],"price").'</place_price>

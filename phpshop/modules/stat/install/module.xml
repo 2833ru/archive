@@ -3,7 +3,7 @@
     <version>1.2</version>
     <name>Visitors Counter</name>
     <description>Модуль статистики посещений.</description>
-    <base>7</base>
+    <category>stat</category>
     <icon>icon.gif</icon>
     <adminmenu>
         <title>Статистика</title>

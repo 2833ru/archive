@@ -78,7 +78,7 @@
                                 Замена стилей меню каталога
                                 -->
             @php
-            $replace=array("podCatTiTOut"=>"TiTOut","podCatTiTOver"=>"TiTOver","divCatId"=>"divCatIdBot");
+            $replace=array("podCatTiTOut"=>"TiTOut","podCatTiTOver"=>"TiTOver","divCatId"=>"divCatIdBot","onMouseOver"=>"onMouseOut");
             echo $GLOBALS['PHPShopShopCatalogElement']->leftCatal($replace);
             php@
             <script type="text/javascript">

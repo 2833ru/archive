@@ -4,6 +4,7 @@
     <name>Forum LastPost</name>
     <description>Модуль вывода последних сообщений с форумов.</description>
     <icon>icon.gif</icon>
+    <category>soc</category>
     <base>5</base>
     <adminmenu>
         <title>Форум</title>

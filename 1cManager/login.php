@@ -1,7 +1,7 @@
 <?php
 
-// Библиотеки
-include("../phpshop/class/obj.class.php");
+$_classPath = "../phpshop/";
+include($_classPath."class/obj.class.php");
 PHPShopObj::loadClass("base");
 PHPShopObj::loadClass("system");
 PHPShopObj::loadClass("math");
@@ -10,7 +10,22 @@ PHPShopObj::loadClass("valuta");
 PHPShopObj::loadClass("security");
 
 // Подключение к БД
-$PHPShopBase = new PHPShopBase("../phpshop/inc/config.ini");
+$PHPShopBase = new PHPShopBase($_classPath."/inc/config.ini");
+
+// Подключение хука
+function loadHooks() {
+    if (@$dh = opendir('hook')) {
+        while (($file = readdir($dh)) !== false) {
+            $fstat = explode(".",$file);
+            if($fstat[1] == "php" and !strstr($fstat[0],'#'))
+                include_once('hook/'.$file);
+        }
+        closedir($dh);
+    }
+}
+
+// Подключение хука
+loadHooks();
 
 /**
  * Авторизация пользователей

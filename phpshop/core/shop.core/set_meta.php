@@ -9,7 +9,7 @@
  */
 function catalog_meta($array,$flag) {
     global $PHPShopSystem;
-
+    
     // Массив текущего каталога
     $row=$array[0];
 
@@ -18,6 +18,7 @@ function catalog_meta($array,$flag) {
 
     $tip=$row[$flag.'_enabled'];
     $cat=$row['parent_to'];
+    
 
     if($cat != 0) {
         if($tip == 0) $Shablon=$PHPShopSystem->getParam($flag.'_shablon');
@@ -67,7 +68,7 @@ function product_meta($array,$flag) {
 
     // Массив текущего товара
     $row=$array[0];
-
+    
     // Массив каталога
     $category_row=$array[1];
 
@@ -121,7 +122,7 @@ function set_meta($obj,$row) {
  * @return string
  */
 function setAutokeyword($content) {
-    global $SysValue;
+    $return=null;
 
     // Библитека
     include('./phpshop/lib/autokeyword/class.autokeyword.php');

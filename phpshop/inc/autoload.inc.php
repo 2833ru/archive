@@ -12,7 +12,7 @@ if (strstr($_SERVER['REQUEST_URI'], 'index.php')) {
 
 // Шаблон дизайна по умолчанмю
 $PHPShopCoreElement = new PHPShopCoreElement();
-$PHPShopCoreElement->init('skin');
+$PHPShopCoreElement->init('skin',false,false);
 $PHPShopCoreElement->init('checkskin');
 $PHPShopCoreElement->init('setdefault');
 
@@ -21,17 +21,17 @@ $PHPShopSkinElement = new PHPShopSkinElement();
 $PHPShopSkinElement->init('skinSelect');
 
 // Стили шаблона дизайна
-$PHPShopCoreElement->init('pageCss');
+$PHPShopCoreElement->init('pageCss',false,false);
 
 // Загрузка модулей
 PHPShopObj::loadClass('modules');
 $PHPShopModules = new PHPShopModules();
 $PHPShopModules->doLoad();
 
-
 // Подключаем файлы autoload
-foreach($SysValue['autoload'] as $val)
-    if (is_file($val)) include_once($val);
+foreach ($SysValue['autoload'] as $val)
+    if (is_file($val))
+        include_once($val);
 
 // Подключаем поиск брендов
 //$PHPShopSortElement = new PHPShopSortElement();
@@ -40,7 +40,7 @@ foreach($SysValue['autoload'] as $val)
 // Авторизация пользователей
 $PHPShopUserElement = new PHPShopUserElement();
 $PHPShopUserElement->init('usersDisp');
-    
+
 // Новинки в центр
 $PHPShopProductIndexElements = new PHPShopProductIndexElements();
 $PHPShopProductIndexElements->init('specMain');
@@ -79,10 +79,9 @@ $PHPShopCloudElement->init('cloud');
 
 // Текстовый блок
 $PHPShopTextElement = new PHPShopTextElement();
-$PHPShopTextElement->init('leftMenu',true); // Вывод левого блока
-$PHPShopTextElement->init('rightMenu',true); // Вывод правого блока
-$PHPShopTextElement->init('topMenu',true); // Вывод главного меню
-
+$PHPShopTextElement->init('leftMenu', true); // Вывод левого блока
+$PHPShopTextElement->init('rightMenu', true); // Вывод правого блока
+$PHPShopTextElement->init('topMenu', true); // Вывод главного меню
 // Выбор валюты
 $PHPShopCurrencyElement = new PHPShopCurrencyElement();
 $PHPShopCurrencyElement->init('valutaDisp');
@@ -93,6 +92,4 @@ $PHPShopCartElement->init('miniCart');
 
 // RSS грабер новостей
 $PHPShopRssParser = new PHPShopRssParser();
-
-
 ?>

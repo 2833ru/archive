@@ -6,7 +6,7 @@ global $SysValue;
 $_Return='
 <!--”правл€ющий интерфейс-->
 	 <form method="post" name="search">
-	 <table width="100%" cellpadding="0" cellpadding="0" style="border: 1px;border-style: outset;">
+	 <table width="100%" cellpadding="0" cellpadding="0">
 <tr>
 <td>
 
@@ -52,7 +52,7 @@ $_Return='
 <tr valign=\"top\">
 	<td width=\"300px\">
 <!--вывод каталога пользователей-->
-<iframe id=interfacesWin2 src=\"shopusers/tree.php\" width=\"300px\" height=\"520\" scrolling=\"Auto\" name=\"frame1\"></iframe>
+<iframe id=interfacesWin2 src=\"shopusers/tree.php\" width=\"300px\" height=\"520\" scrolling=\"Auto\" frameborder=\"0\" name=\"frame1\"></iframe>
 <!--вывод каталога пользователей-->
 
    </td>

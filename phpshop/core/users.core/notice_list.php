@@ -2,12 +2,12 @@
 /**
  * Вывод списка уведомлений пользователя
  * @author PHPShop Software
- * @version 1.0
+ * @version 1.1
  * @package PHPShopCoreFunction
  * @param obj $obj объект класса
  */
 function notice_list($obj) {
-    $tr=null;
+    $tr=$table=$table_archive=null;
     $PHPShopOrm = new PHPShopOrm($obj->getValue('base.notice'));
 
     // Текущие уведомлений
@@ -18,7 +18,7 @@ function notice_list($obj) {
         foreach($data as $row) {
 
             if(PHPShopSecurity::true_num($row['product_id'])) {
-                $link='../shop/UID_'.$row['product_id'].'.html';
+                $link='/shop/UID_'.$row['product_id'].'.html';
                 $PHPShopProduct = new PHPShopProduct($row['product_id']);
                 $td1=PHPShopText::a($link,$PHPShopProduct->getName(),$PHPShopProduct->getName(),false,false,false,'b');
             }
@@ -43,7 +43,7 @@ function notice_list($obj) {
         foreach($data as $row) {
             
             if(PHPShopSecurity::true_num($row['product_id'])) {
-                $link='../shop/UID_'.$row['product_id'].'.html';
+                $link='/shop/UID_'.$row['product_id'].'.html';
                 $PHPShopProduct = new PHPShopProduct($row['product_id']);
                 $td1=PHPShopText::a($link,$PHPShopProduct->getName(),$PHPShopProduct->getName(),false,false,false,'b');
             }

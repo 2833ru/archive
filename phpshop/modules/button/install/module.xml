@@ -4,6 +4,7 @@
     <name>Button</name>
     <description>Модуль вставки кода кнопок рейтингов и счетчиков</description>
     <icon>icon.png</icon>
+    <category>text,template</category>
     <adminmenu>
         <title>Кнопки</title>
         <podmenu>

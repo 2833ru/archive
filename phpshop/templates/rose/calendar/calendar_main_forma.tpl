@@ -1,4 +1,4 @@
-<div class="lb">
+<div class="lb" id="calres">
   <div class="lb1"></div>
   <div class="lb2">
     <h2>Календарь</h2>

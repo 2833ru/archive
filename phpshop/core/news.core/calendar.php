@@ -9,9 +9,10 @@
  */
 function makeCalendar($year, $month) {
     global $SysValue;
+
     // ѕолучаем номер дн€ недели дл€ 1 числа мес€ца.  орректируем
     // его, чтобы воскресенье соответствовало числу 7, а не числу 0.
-    if (function_exists(GregorianToJD))
+    if (function_exists('GregorianToJD'))
         $wday = JDDayOfWeek(GregorianToJD($month, 1, $year), 0);
     if ($wday == 0) $wday = 7;
     // Ќачинаем с этого числа в мес€це (если меньше нул€
@@ -92,6 +93,9 @@ function moname($mo="1") {
 function calendar($obj,$year=false,$month=false) {
     global $SysValue,$PHPShopSystem;
 
+        
+    $disp=null;
+    
     if($PHPShopSystem->ifSerilizeParam('admoption.user_calendar')) {
 
         if (!$year) {

@@ -5,12 +5,12 @@
 <div style="clear:both;"></div>
 <div class="prod_cart">
   <div class="prod_cart2">
-    <table cellpadding="0" cellspacing="0" border="0" class="tovarDivImg1" align="left" width="100%">
-      <tr>
-        <td align="center" valign="middle"><a class="highslide" onclick="return hs.expand(this)" href="@productImgBigFoto@" target="_blank" getParams="null" title="@productName@"><img src="@productImg@" lowsrc="images/shop/no_photo.gif"  onerror="NoFoto(this,'@pathTemplate@')" onload="EditFoto(this,@productImgWidth@)" alt="@productName@" title="@productName@" border="0"></a>
-          <div class=highslide-caption>@productName@</div></td>
-      </tr>
-    </table>
+      <table cellpadding="0" cellspacing="0" border="0" class="tovarDivImg1" align="left" width="100%">
+        <tr>
+          <td align="center" valign="middle"><a class="highslide" onclick="return hs.expand(this)" href="@productImgBigFoto@" target="_blank" getParams="null" title="@productName@"> <img src="@productImg@" lowsrc="images/shop/no_photo.gif"  onerror="NoFoto(this,'@pathTemplate@')"  alt="@productName@" title="@productName@" border="0"> </a>
+            <div class=highslide-caption>@productName@</div></td>
+        </tr>
+      </table>
     <div style="clear:both"></div>
     <div class="tovarDivName1"><a href="/shop/UID_@productUid@.html" title="@productName@">@productName@</a></div>
     <div class="tovarDivContent1">@productDes@</div>

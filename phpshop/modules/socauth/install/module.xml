@@ -4,6 +4,7 @@
     <name>SocAuth</name>
     <description>Модуль авторизации через facebook, twitter.</description>
     <icon>icon.png</icon>
+    <category>soc</category>
     <adminmenu>
         <title>SocAuth</title>
         <podmenu>

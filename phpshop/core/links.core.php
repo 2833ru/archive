@@ -37,7 +37,7 @@ class PHPShopLinks extends PHPShopCore {
             return true;
 
         // Выборка данных
-        $this->dataArray=parent::getListInfoItem(array('*'),array('enabled'=>"='1'"),array('order'=>'id DESC'));
+        $this->dataArray=parent::getListInfoItem(array('*'),array('enabled'=>"='1'"),array('order'=>'num DESC'));
 
         // 404
         if(!isset($this->dataArray)) return $this->setError404();

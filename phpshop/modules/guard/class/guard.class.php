@@ -90,7 +90,7 @@ class Guard {
 
     // Настройка защитника
     function system() {
-        $PHPShopOrm= &new PHPShopOrm($this->SysValue['base']['guard']['guard_system']);
+        $PHPShopOrm= new PHPShopOrm($this->SysValue['base']['guard']['guard_system']);
         $this->system=$PHPShopOrm->select();
     }
 
@@ -132,17 +132,17 @@ class Guard {
 
                             if($db[0]['status'] != 'passive') {
 
-                                $PHPShopOrm = &new PHPShopOrm();
+                                $PHPShopOrm = new PHPShopOrm();
                                 $PHPShopOrm->query('TRUNCATE TABLE '.$this->SysValue['base']['guard']['guard_signature']);
 
                                 // Вставляем новые сигнатуры
                                 foreach($db as $key=>$val) {
-                                    $PHPShopOrm = &new PHPShopOrm($this->SysValue['base']['guard']['guard_signature']);
+                                    $PHPShopOrm = new PHPShopOrm($this->SysValue['base']['guard']['guard_signature']);
                                     $PHPShopOrm->insert(array('virus_name_new'=>$val['name'],'virus_signature_new'=>$val['signature']));
                                 }
 
                                 // Обновляем дату обновления сигнатур
-                                $PHPShopOrm= &new PHPShopOrm($this->SysValue['base']['guard']['guard_system']);
+                                $PHPShopOrm= new PHPShopOrm($this->SysValue['base']['guard']['guard_system']);
                                 $PHPShopOrm->update(array('last_update_new'=>$this->date),array('id'=>'=1'));
 
                                 $this->update_result=1;
@@ -163,14 +163,14 @@ class Guard {
 
     // Закрываем сайт при заражении
     function alert() {
-        $PHPShopOrm= &new PHPShopOrm($this->SysValue['base']['guard']['guard_log']);
+        $PHPShopOrm= new PHPShopOrm($this->SysValue['base']['guard']['guard_log']);
         $data=$PHPShopOrm->select(array('infected_files'),false,array('order'=>'id DESC'),array('limit'=>1));
         if($data['infected_files']>0) $this->message($this->stop_message);
     }
 
     // Проверка сигнатур вирусов
     function signature() {
-        $PHPShopOrm= &new PHPShopOrm($this->SysValue['base']['guard']['guard_signature']);
+        $PHPShopOrm= new PHPShopOrm($this->SysValue['base']['guard']['guard_signature']);
         $data=$PHPShopOrm->select(array('virus_name','virus_signature'),false,false,array('limit'=>1000));
         $pattern='/(';
         if(is_array($data)) {
@@ -248,7 +248,7 @@ class Guard {
     }
 
     function backup() {
-        $PHPShopOrm= &new PHPShopOrm($this->SysValue['base']['guard']['guard_log']);
+        $PHPShopOrm= new PHPShopOrm($this->SysValue['base']['guard']['guard_log']);
         $data=$PHPShopOrm->select(array('backup'),array('backup'=>"!=''"),array('order'=>'id DESC'),array('limit'=>1));
         return $data['backup'];
     }
@@ -261,11 +261,11 @@ class Guard {
             case "start":
 
             // Блокируем загрузки
-                $PHPShopOrm= &new PHPShopOrm($this->SysValue['base']['guard']['guard_system']);
+                $PHPShopOrm= new PHPShopOrm($this->SysValue['base']['guard']['guard_system']);
                 $PHPShopOrm->update(array('used_new'=>'1'),array('id'=>'=1'));
 
                 // Пишем лог
-                $PHPShopOrm= &new PHPShopOrm($this->SysValue['base']['guard']['guard_log']);
+                $PHPShopOrm= new PHPShopOrm($this->SysValue['base']['guard']['guard_log']);
                 $PHPShopOrm->insert(array('date_new'=>$this->date));
                 $this->log_id=mysql_insert_id();
                 break;
@@ -297,12 +297,12 @@ class Guard {
                 // Выкл таймер
                 $this->timer();
 
-                $PHPShopOrm= &new PHPShopOrm($this->SysValue['base']['guard']['guard_log']);
+                $PHPShopOrm= new PHPShopOrm($this->SysValue['base']['guard']['guard_log']);
                 $PHPShopOrm->update(array('infected_files_new'=>count($this->infected),'new_files_new'=>count($this->new),
                         'change_files_new'=>count($this->changes),'time_new'=>$this->timer,'backup_new'=>$backup),array('id'=>'='.$this->log_id));
 
                 // Снимаем блокировку загрузки
-                $PHPShopOrm= &new PHPShopOrm($this->SysValue['base']['guard']['guard_system']);
+                $PHPShopOrm= new PHPShopOrm($this->SysValue['base']['guard']['guard_system']);
                 $PHPShopOrm->update(array('used_new'=>'0','last_chek_new'=>$this->date),array('id'=>'=1'));
 
                 break;
@@ -313,12 +313,12 @@ class Guard {
 
                 // Выкл таймер
                 $this->timer();
-                $PHPShopOrm= &new PHPShopOrm($this->SysValue['base']['guard']['guard_log']);
+                $PHPShopOrm= new PHPShopOrm($this->SysValue['base']['guard']['guard_log']);
                 $PHPShopOrm->update(array('infected_files_new'=>count($this->infected),'new_files_new'=>count($this->new),
                         'change_files_new'=>count($this->changes),'time_new'=>$this->timer,'backup_new'=>$backup),array('id'=>'='.$this->log_id));
 
                 // Снимаем блокировку загрузки
-                $PHPShopOrm= &new PHPShopOrm($this->SysValue['base']['guard']['guard_system']);
+                $PHPShopOrm= new PHPShopOrm($this->SysValue['base']['guard']['guard_system']);
                 $PHPShopOrm->update(array('used_new'=>'0','last_crc_new'=>$this->last_crc,'last_chek_new'=>$this->date),array('id'=>'=1'));
                 break;
         }
@@ -334,7 +334,7 @@ class Guard {
 
     // Проверка измененных файлов
     function chek() {
-        $PHPShopOrm= &new PHPShopOrm($this->SysValue['base']['guard']['guard_crc']);
+        $PHPShopOrm= new PHPShopOrm($this->SysValue['base']['guard']['guard_crc']);
         $data=$PHPShopOrm->select(array('crc_name','crc_file'),false,false,array('limit'=>1000));
 
         if(is_array($data))
@@ -348,7 +348,7 @@ class Guard {
         // Разделение на новые и измененные
         if(is_array($this->update))
             foreach($this->update as $name=>$file) {
-                $PHPShopOrm= &new PHPShopOrm($this->SysValue['base']['guard']['guard_crc']);
+                $PHPShopOrm= new PHPShopOrm($this->SysValue['base']['guard']['guard_crc']);
                 $data=$PHPShopOrm->select(array('id'),array('crc_name'=>'="'.md5($file).'"'),false,array('limit'=>1));
                 if(is_array($data)) $this->changes[$name]=$file;
                 else $this->new[$name]=$file;
@@ -361,24 +361,24 @@ class Guard {
     function create() {
 
         // Очищаем
-        $PHPShopOrm= &new PHPShopOrm();
+        $PHPShopOrm= new PHPShopOrm();
         $PHPShopOrm->query('TRUNCATE TABLE '.$this->SysValue['base']['guard']['guard_crc']);
 
         if(is_array($this->base))
             foreach($this->base as $key=>$val) {
 
                 // Новая запись
-                $PHPShopOrm= &new PHPShopOrm($this->SysValue['base']['guard']['guard_crc']);
+                $PHPShopOrm= new PHPShopOrm($this->SysValue['base']['guard']['guard_crc']);
                 $PHPShopOrm->insert(array('log_id_new'=>$this->log_id,'date_new'=>$this->date,'crc_name_new'=>md5($val),
                         'crc_file_new'=>$key,'path_file_new'=>$val));
-                $PHPShopOrm= &new PHPShopOrm($this->SysValue['base']['guard']['guard_crc']);
+                $PHPShopOrm= new PHPShopOrm($this->SysValue['base']['guard']['guard_crc']);
             }
 
         $this->last_crc=$this->date;
         $this->crc_num=mysql_insert_id();
 
         // Заносим в БД дату последней проверки
-        $PHPShopOrm= &new PHPShopOrm($this->SysValue['base']['guard']['guard_system']);
+        $PHPShopOrm= new PHPShopOrm($this->SysValue['base']['guard']['guard_system']);
         $PHPShopOrm->update(array('last_crc_new'=>$this->date));
     }
 
@@ -387,7 +387,7 @@ class Guard {
     function zip($dir=false,$fname=false) {
 
         // Библиотека ZIP
-        include_once("./phpshop/lib/zip/pclzip.lib.php");
+        include_once($_SERVER['DOCUMENT_ROOT'].$this->SysValue['dir']['dir']."/phpshop/lib/zip/pclzip.lib.php");
 
         if(empty($dir)) $dir=$this->base;
 
@@ -420,7 +420,7 @@ class Guard {
     // Проверка прав
     function admin($password) {
         if(!preg_match("/^([\d]{2}-[\d]{2}-[\d]{4}-[\d]{2}-[\d]{2}-[a-z0-9]{32})$/i",$password)) return false;
-        $PHPShopOrm=&new PHPShopOrm($this->SysValue['base']['guard']['guard_log']);
+        $PHPShopOrm=new PHPShopOrm($this->SysValue['base']['guard']['guard_log']);
         $data=$PHPShopOrm->select(array('date'),array('backup'=>'="'.$password.'"'));
         if(is_array($data)) {
             $today=date("U");
@@ -525,7 +525,7 @@ http://'.$_SERVER['SERVER_NAME'].'/phpshop/modules/guard/admin.php?do=quarantine
 ---
 '.date('r').' / -- guardian system v. '.$this->version;
 
-        $PHPShopMail=&new PHPShopMail($this->PHPShopSystem->getParam('adminmail2'),'guard@'.$_SERVER['SERVER_NAME'],$zag,$content);
+        $PHPShopMail=new PHPShopMail($this->PHPShopSystem->getParam('adminmail2'),'guard@'.$_SERVER['SERVER_NAME'],$zag,$content);
     }
 }
 

@@ -3,7 +3,7 @@
 /**
  * Подключение модулей
  * @author PHPShop Software
- * @version 1.6
+ * @version 1.10
  * @package PHPShopClass
  */
 class PHPShopModules {
@@ -36,7 +36,7 @@ class PHPShopModules {
         $this->ModDir = $ModDir;
         $this->objBase = $GLOBALS['SysValue']['base']['modules'];
 
-        $this->PHPShopOrm = &new PHPShopOrm($this->objBase);
+        $this->PHPShopOrm = new PHPShopOrm($this->objBase);
         $this->PHPShopOrm->debug = $this->debug;
 
         $this->path = $mod_path;
@@ -59,17 +59,19 @@ class PHPShopModules {
      * Обработка паметров конфига хуков шаблона /php/hook/
      */
     function addTemplateHook() {
-        $ini = $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/php/inc/config.ini";
+        $ini = 'phpshop/templates'. chr(47) . @$_SESSION['skin'] . "/php/inc/config.ini";
         if (file_exists($ini)) {
             $SysValue = parse_ini_file($ini, 1);
 
             if (is_array($SysValue['autoload']))
                 foreach ($SysValue['autoload'] as $k => $v)
-                    $this->ModValue['autoload'][$k] = './phpshop/templates/' . $_SESSION['skin'] . chr(47) . $v;
+                    if (!strstr($k, '#'))
+                        $this->ModValue['autoload'][$k] = './phpshop/templates/' . $_SESSION['skin'] . chr(47) . $v;
 
             if (is_array($SysValue['hook']))
                 foreach ($SysValue['hook'] as $k => $v)
-                    $this->ModValue['hook'][][$k] = './phpshop/templates/' . $_SESSION['skin'] . chr(47) . $v;
+                    if (!strstr($k, '#'))
+                        $this->ModValue['hook'][$k][] = './phpshop/templates/' . $_SESSION['skin'] . chr(47) . $v;
         }
     }
 
@@ -82,7 +84,7 @@ class PHPShopModules {
         if (empty($version))
             $version = 'default';
 
-        $file = '../update/' . $version . '/update_module.sql';
+        $file = '../updates/' . $version . '/update_module.sql';
         if (file_exists($file)) {
             $sql = file_get_contents($file);
             $sqlArray = explode(";", $sql);
@@ -103,36 +105,54 @@ class PHPShopModules {
         if (file_exists($ini)) {
             $SysValue = parse_ini_file($ini, 1);
 
-            if (is_array($SysValue['autoload']))
+            if (!empty($SysValue['autoload']) and is_array($SysValue['autoload']))
                 foreach ($SysValue['autoload'] as $k => $v)
-                    $this->ModValue['autoload'][$k] = $v;
+                    if (!strstr($k, '#'))
+                        $this->ModValue['autoload'][$k] = $v;
 
-            if (is_array($SysValue['core']))
+            if (!empty($SysValue['core']) and is_array($SysValue['core'])) {
                 foreach ($SysValue['core'] as $k => $v)
-                    $this->ModValue['core'][$k] = $v;
+                    if (!strstr($k, '#'))
+                        $this->ModValue['core'][$k] = $v;
+            }else
+                $SysValue['core'] = null;
 
-            if (is_array($SysValue['class']))
+            if (!empty($SysValue['class']) and is_array($SysValue['class'])) {
                 foreach ($SysValue['class'] as $k => $v)
-                    $GLOBALS['SysValue']['class'][$k] = $v;
+                    if (!strstr($k, '#'))
+                        $GLOBALS['SysValue']['class'][$k] = $v;
+            }
+            else
+                $SysValue['class'] = null;
 
-            if (is_array($SysValue['lang']))
+            if (!empty($SysValue['lang']) and is_array($SysValue['lang'])) {
                 foreach ($SysValue['lang'] as $k => $v)
-                    $GLOBALS['SysValue']['lang'][$k] = $v;
+                    if (!strstr($k, '#'))
+                        $GLOBALS['SysValue']['lang'][$k] = $v;
+            } else
+                $SysValue['lang'] = null;
 
-            if (is_array($SysValue['admpanel']))
+            if (!empty($SysValue['admpanel']) and is_array($SysValue['admpanel']))
                 foreach ($SysValue['admpanel'] as $k => $v)
-                    $this->ModValue['admpanel'][$k] = $v;
+                    if (!strstr($k, '#'))
+                        $this->ModValue['admpanel'][][$k] = $v;
 
-            if (is_array($SysValue['hook']))
+            if (!empty($SysValue['hook']) and is_array($SysValue['hook']))
                 foreach ($SysValue['hook'] as $k => $v)
-                    $this->ModValue['hook'][][$k] = $v;
+                    if (!strstr($k, '#'))
+                        $this->ModValue['hook'][$k][] = $v;
 
-            $this->ModValue['templates'] = $SysValue['templates'];
-            $GLOBALS['SysValue']['templates'][$path] = $SysValue['templates'];
+            if (!empty($SysValue['templates']) and is_array($SysValue['templates'])) {
+                $this->ModValue['templates'] = $SysValue['templates'];
+                $GLOBALS['SysValue']['templates'][$path] = $SysValue['templates'];
+            }
+
             $this->ModValue['base'][$path] = $SysValue['base'];
             $GLOBALS['SysValue']['base'][$path] = $SysValue['base'];
             $this->ModValue['class'] = $SysValue['class'];
-            $this->ModValue['field'][$path] = $SysValue['field'];
+
+            if (!empty($SysValue['field']) and is_array($SysValue['field']))
+                $this->ModValue['field'][$path] = $SysValue['field'];
         }
     }
 
@@ -151,7 +171,7 @@ class PHPShopModules {
     }
 
     function checkKey($key, $path) {
-        $str = $path . $_SERVER['SERVER_NAME'];
+        $str = $path . str_replace('www.', '', $_SERVER['SERVER_NAME']);
         if ($this->crc16(substr($str, 0, 5)) . "-" . $this->crc16(substr($str, 5, 10)) . "-" . $this->crc16(substr($str, 10, 15)) == $key)
             return true;
     }
@@ -165,7 +185,7 @@ class PHPShopModules {
             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['modules_key']);
             $data = $PHPShopOrm->select(array('*'), array('path' => "='" . $this->path . "'",), false, array('limit' => 1));
             if (is_array($data)) {
-                if ($data['verification'] != md5($data['path'] . $data['date'] . $_SERVER['SERVER_NAME'] . $data['key']) or $data['date'] < time()) {
+                if ($data['verification'] != md5($data['path'] . $data['date'] . str_replace('www.', '', $_SERVER['SERVER_NAME']) . $data['key']) or $data['date'] < time()) {
                     return $data['date'];
                 }
             }else
@@ -177,7 +197,7 @@ class PHPShopModules {
             $data = $PHPShopOrm->select(array('*'), false, false, array('limit' => 100));
             if (is_array($data)) {
                 foreach ($data as $val) {
-                    if ($val['verification'] != md5($val['path'] . $val['date'] . $_SERVER['SERVER_NAME'] . $val['key']) or $val['date'] < time()) {
+                    if ($val['verification'] != md5($val['path'] . $val['date'] . str_replace('www.', '', $_SERVER['SERVER_NAME']) . $val['key']) or $val['date'] < time()) {
                         $_SESSION[$this->getKeyName()][crc32($val['path'])] = time();
                     }
                 }
@@ -193,7 +213,7 @@ class PHPShopModules {
         $update = array();
         $update['key_new'] = time();
         $update['date_new'] = 1537777023;
-        $update['verification_new'] = md5($this->path . $update['date_new'] . $_SERVER['SERVER_NAME'] . $update['key_new']);
+        $update['verification_new'] = md5($this->path . $update['date_new'] . str_replace('www.', '', $_SERVER['SERVER_NAME']) . $update['key_new']);
         $PHPShopOrm->update($update, array('path' => "='" . $this->path . "'"));
     }
 
@@ -306,24 +326,46 @@ class PHPShopModules {
         }
     }
 
-    /**
-     * Проверка на обработчик файла для панели управления
-     * @param string $path имя файла
-     * @param string $function_name имя функции для добавления
-     * @param array $data данные
-     * @return string
-     */
+    function log($str, $var = false) {
+        echo '<br>' . $str . '<br>';
+        if ($var)
+            print_r($var);
+    }
+
     function setAdmHandler($path, $function_name, $data) {
         global $PHPShopGUI;
         $file = pathinfo($path);
-        $mod = $this->ModValue['admpanel'][substr($file['basename'], 0, -4)];
-        if ($mod)
-            if (is_file($this->ModDir . $mod)) {
-                include_once($this->ModDir . $mod);
-                $addHandler[$function_name];
+
+        if (is_array($this->ModValue['admpanel']))
+            foreach ($this->ModValue['admpanel'] as $mods) {
+                $mod = $mods[substr($file['basename'], 0, -4)];
+                if ($mod)
+                    if (is_file($this->ModDir . $mod)) {
+
+                        include_once($this->ModDir . $mod);
+
+                        if (is_array($addHandler))
+                            $this->addHandler[$this->ModDir . $mod] = $addHandler;
+
+
+                        if ((phpversion() * 1) >= '5.0') {
+                            if (!empty($this->addHandler[$this->ModDir . $mod][$function_name]))
+                                call_user_func($this->addHandler[$this->ModDir . $mod][$function_name], $data);
+                        }
+                        else {
+                            // Обработка имен функций в нижний регистр
+                            if (is_array($this->addHandler[$this->ModDir . $mod]))
+                                foreach ($this->addHandler[$this->ModDir . $mod] as $v => $k)
+                                    $handler[strtolower($v)] = $k;
+
+                            if (!empty($handler[$function_name])) {
+                                call_user_func($handler[$function_name], $data);
+                            }
+                        }
+                    }
+                    else
+                        $this->PHPShopOrm->setError('setAdmHandler', "Ошибка размещения модуля " . $this->ModDir . $mod);
             }
-            else
-                $this->PHPShopOrm->setError('setAdmHandler', "Ошибка размещения модуля " . $this->ModDir . $mod);
     }
 
     /**
@@ -336,58 +378,57 @@ class PHPShopModules {
      */
     function setHookHandler($class_name, $function_name, $obj = false, $data = false, $rout = 'END') {
 
-        if (!empty($this->ModValue['hook'])) {
+        // Поддержка PHP 5.4
+        if(!empty($obj) and is_array($obj))
+            $obj=&$obj[0];
 
-            //if($this->memory_check($class_name,$function_name))
-            foreach ($this->ModValue['hook'] as $hooks) {
+        if ((phpversion() * 1) >= '5.0')
+            $class_name = strtolower($class_name);
 
-                if (isset($hooks[strtolower($class_name)])) {
-                    if ((phpversion() * 1) >= '5.0')
-                        $hook = $hooks[strtolower($class_name)];
-                    else
-                        $hook = $hooks[$class_name];
-                }
-                else
-                    $hook = null;
-
-                if (isset($hook)) {
+        // Собираем имена функций из хуков
+        if (!empty($this->ModValue['hook'][$class_name]))
+            foreach ($this->ModValue['hook'][$class_name] as $hook) {
+                if (isset($hook))
                     if (is_file($hook)) {
-
-                        $addHandler = null;
                         include_once($hook);
+
 
                         if ((phpversion() * 1) >= '5.0') {
 
                             if (is_array($addHandler))
                                 foreach ($addHandler as $v => $k)
                                     if (!strstr($v, '#'))
-                                        $this->addHandler[$class_name][$v][] = $k;
+                                        $this->addHandler[$class_name][$v][$hook] = $k;
                         }
                         else {
 
                             // Обработка имен функций в нижний регистр
-                            if (is_array($addHandler))
+                            if (!empty($addHandler) and is_array($addHandler))
                                 foreach ($addHandler as $v => $k)
                                     if (!strstr($v, '#'))
-                                        $this->addHandler[$class_name][strtolower($v)][] = $k;
+                                        $this->addHandler[$class_name][strtolower($v)][$hook] = $k;
                         }
-
-                        if (is_array($this->addHandler[$class_name][$function_name]))
-                            foreach ($this->addHandler[$class_name][$function_name] as $hook_function_name) {
-                                $user_func_result = call_user_func_array($hook_function_name, array(&$obj, &$data, $rout));
-
-                                if (!empty($user_func_result))
-                                    return $user_func_result;
-                            }
                     }
-                    else
-                        $this->PHPShopOrm->setError('setHookHandler', "Ошибка размещения модуля " . $hook);
-                }
             }
 
-            // Заносим в список отсутвия модуля для класса
-            //$this->memory_set($class_name.'.'.$function_name,1);
-        }
+        if (!empty($this->addHandler[$class_name][$function_name]) and is_array($this->addHandler[$class_name][$function_name]))
+            foreach ($this->addHandler[$class_name][$function_name] as $hook_function_name) {
+
+                // Включаем таймер
+                $time = microtime(true);
+
+                $user_func_result = call_user_func_array($hook_function_name, array(&$obj, &$data, $rout));
+
+                // Выключаем таймер
+                $seconds = round(microtime(true) - $time, 6);
+
+
+                // Время выполнения хука
+                $this->handlerDone[$class_name][$hook_function_name][$rout] = $seconds;
+
+                if (!empty($user_func_result))
+                    return $user_func_result;
+            }
     }
 
     /**

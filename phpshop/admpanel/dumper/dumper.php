@@ -36,7 +36,7 @@ define('LIMIT', 1);
 define('DBHOST', 'localhost:3306');
 // Базы данных, если сервер не разрешает просматривать список баз данных,
 // и ничего не показывается после авторизации. Перечислите названия через запятую
-define('DBNAMES', $dbase);
+//define('DBNAMES', $dbase);
 // Кодировка данных базы данных
 define('CHARSET', 'cp1251');
 // Включить сохранение настроек и последних действий
@@ -45,6 +45,10 @@ define('SC', 0);
 // Глобальная статистика
 // Для отключения установить значение 0
 define('GS', 0);
+
+// Временная зона
+if(function_exists('date_default_timezone_set'))
+date_default_timezone_set('Europe/Moscow');
 
 // Дальше ничего редактировать не нужно
 
@@ -462,9 +466,6 @@ class dumper {
 	function main(){
 		$this->comp_levels = array('9' => '9 (максимальная)', '8' => '8', '7' => '7', '6' => '6', '5' => '5 (средняя)', '4' => '4', '3' => '3', '2' => '2', '1' => '1 (минимальная)','0' => 'Без сжатия');
 
-		if (function_exists("bzopen")) {
-		    $this->comp_methods[2] = 'BZip2';
-		}
 		if (function_exists("gzopen")) {
 		    $this->comp_methods[1] = 'GZip';
 		}

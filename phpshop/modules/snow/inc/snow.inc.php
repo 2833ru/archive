@@ -15,7 +15,7 @@ class PHPShopSnowElement{
      }
 }
 
-     $PHPShopSnowElement = &new PHPShopSnowElement();
+     $PHPShopSnowElement = new PHPShopSnowElement();
      $GLOBALS['SysValue']['other']['skinSelect'].=$PHPShopSnowElement->element();
      
 ?>

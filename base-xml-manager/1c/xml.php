@@ -37,8 +37,8 @@ class PHPShop1C extends PHPShopBaseXml {
         $this->true_method=array('select','option','insert','update','delete','image','order');
         $this->true_from=array('table_name','table_name1','table_name2','table_name3','table_name24',
                 'table_name5', 'table_name6', 'table_name7','table_name8','table_name11',
-                'table_name14','table_name15','table_name17','table_name29',
-                'table_name50','table_name51');
+                'table_name14','table_name15','table_name17','table_name27','table_name29','table_name32',
+                'table_name9','table_name48','table_name50','table_name51');
 
         parent::PHPShopBaseXml();
     }
@@ -119,7 +119,7 @@ class PHPShop1C extends PHPShopBaseXml {
 
     function admin() {
 
-        $PHPShopOrm=&new PHPShopOrm($this->PHPShopBase->getParam('base.table_name19'));
+        $PHPShopOrm=new PHPShopOrm($this->PHPShopBase->getParam('base.table_name19'));
         $PHPShopOrm->debug = $this->debug;
         $data=$PHPShopOrm->select(array('login,password,status'),array('enabled'=>"='1'"),false,array('limit'=>10));
         if(is_array($data)) {

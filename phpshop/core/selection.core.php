@@ -3,7 +3,8 @@
 /**
  * Обработчик подбора товаров по характеристикам
  * @author PHPShop Software
- * @version 1.1
+ * @tutorial http://wiki.phpshop.ru/index.php/PHPShopSelection
+ * @version 1.2
  * @package PHPShopShopCore
  */
 class PHPShopSelection extends PHPShopShopCore {
@@ -28,6 +29,8 @@ class PHPShopSelection extends PHPShopShopCore {
      * Конструктор
      */
     function PHPShopSelection() {
+
+        PHPShopObj::loadClass("sort");
 
         // Список экшенов
         $this->action = array("get" => "v", 'nav' => 'index');
@@ -69,8 +72,30 @@ class PHPShopSelection extends PHPShopShopCore {
             $grid = PHPShopText::h2($this->lang('empty_product_list'));
         $this->add($grid, true);
 
-        // Заголовок
-        $this->title = __('Поиск по производителям') . " - " . $this->PHPShopSystem->getParam('title');
+        // ID характеристики
+        foreach($_GET['v'] as $key=>$val)
+            $v=intval($key);
+        
+        // Описание характеристики
+        $PHPShopOrm = new PHPShopOrm();
+        $result = $PHPShopOrm->query('SELECT a.*, b.content FROM ' . $this->getValue("base.sort_categories") . ' AS a JOIN ' . $this->getValue("base.page") . ' AS b ON a.page = b.link where a.id = '.$v.' limit 1');
+        $row = mysql_fetch_array($result);
+        if (is_array($row)) {
+
+            // Описание
+            $this->set('sortDes', $row['content']);
+
+            // Название
+            $this->set('sortName', $row['name']);
+
+            // Заголовок
+            $this->title = __('Производитель') . " - " . $row['name'] . " - " . $this->PHPShopSystem->getParam('title');
+            $this->description = __('Производитель') . " - " . $row['name'];
+            $this->keywords = $row['name'];
+            
+        }
+        else
+            $this->title = __('Поиск по производителям') . " - " . $this->PHPShopSystem->getParam('title');
 
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__, $this->dataArray, 'END');

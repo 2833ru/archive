@@ -37,7 +37,7 @@ function RequestSearch($search) {
         $mes2="<br>”далите все вхождени€ этой команды в водимой информации.";
         foreach($com as $v)
             if(@preg_match("/".$v."/i", $search)) {
-                $search=eregi_replace($v,"!!!$v!!!",$search);
+                $search=preg_replace("/$v\//i","/!!!$v!!!/",$search);
                 exit($mes." ".strtoupper($v).$mes2."<br><br><br><textarea style='width: 100%;height:50%'>".substr($search, 0, 11)."</textarea><p> оманда к тексте выделена знаками !!! с обеих сторон</p>
 <hr>
 <div align=right>
@@ -71,11 +71,8 @@ function CheckBlackList($n) {
     return $num;
 }
 
-// языки
-$GetSystems=GetSystems();
-$option=unserialize($GetSystems['admoption']);
-$Lang=$option['lang'];
-require("./language/".$Lang."/language.php");
+// языковой пакет
+require("./language/russian/language.php");
 
 
 if($_GET['do']=="out") {
@@ -106,7 +103,7 @@ if($FlagProxy == 1) {
 }
 
 
-if(isset($_POST['pas_to_mail'])) {
+if(isset($_POST['pas_to_mail']) and strpos($_SERVER["HTTP_REFERER"], $_SERVER['SERVER_NAME'] )) {
     $log=htmlspecialchars(addslashes($_POST['log']));
     $sql="select password,mail from $table_name19 where login='".$log."'";
     $result=mysql_query($sql);
@@ -136,7 +133,7 @@ http://www.phpshop.ru";
 
         $codepage  = "windows-1251";
         $header  = "MIME-Version: 1.0\n";
-        $header .= "From: \"robot@".eregi_replace("www.","",$_SERVER['SERVER_NAME'])."\" <\"MAIL PHPSHOP\">\n";
+        $header .= "From: \"robot@".preg_replace("/www.\//i","//",$_SERVER['SERVER_NAME'])."\" <\"MAIL PHPSHOP\">\n";
         $header .= "Content-Type: text/plain; charset=$codepage\n";
         $header .= "X-Mailer: PHP/";
         $zag="ƒоступ к панели администрировани€ PHPSHOP";
@@ -155,7 +152,7 @@ http://www.phpshop.ru";
     }
 }
 
-elseif(isset($_POST['send_avtor'])) {
+elseif(isset($_POST['send_avtor']) and strpos($_SERVER["HTTP_REFERER"], $_SERVER['SERVER_NAME'] ) ) {
     $sql="select * from $table_name19 where enabled='1'";
     $result=mysql_query($sql);
     $pas=base64_encode($_POST['pas']);
@@ -236,13 +233,12 @@ function GetLang($skin) {
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
     <head>
-        <title><?=$SysValue['Lang']['Title']['index']." -> ".$ProductName?></title>
+        <title><?=$SysValue['Lang']['Title']['index']." -> ".$ProductNameVersion?></title>
         <META http-equiv=Content-Type content="text/html; charset=windows-1251">
         <META name="ROBOTS" content="NONE">
         <META name="copyright" content="<?=$RegTo?>">
         <META name="engine-copyright" content="PHPSHOP.RU, <?=$ProductName;?>">
         <LINK href="css/texts.css" type="text/css" rel="stylesheet">
-        <script type="text/javascript" language="JavaScript" src="language/<?=$Lang?>/language_interface.js"></script>
         <script language="JavaScript">
 <?=@$_Path;?>
 
@@ -290,7 +286,7 @@ function GetLang($skin) {
 	<td valign=\"middle\">
 
 <form method=\"post\">
-<table align=\"center\" cellpadding=\"0\" cellspacing=\"1\" border=\"0\" style=\"border: 2px;border-style:outset;\" width=\"330\">
+<table align=\"center\" cellpadding=\"0\" cellspacing=\"1\" border=\"0\" style=\"border: 2px;border-style:outset; border-color:ButtonFace;\" width=\"330\">
 <tr align=\"center\" >
 <td colspan=3 >
 <table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" height=\"50\" id=\"title\">

@@ -4,7 +4,9 @@ require("../connect.php");
 mysql_select_db("$dbase")or @die("Невозможно подсоединиться к базе");
 require("../enter_to_admin.php");
 
-$sql="select * from ".$SysValue['base']['table_name35']." where id=$n";
+if(empty($_GET['id'])) $_GET['id']=$_GET['n'];
+
+$sql="select * from ".$SysValue['base']['table_name35']." where id=".intval($_GET['id']);
 $result=mysql_query($sql);
 $row = mysql_fetch_array($result);
 $id=$row['id'];
@@ -30,8 +32,8 @@ $info=$row['info'];
 
 // Стандартную форму обновляем
 function UpdateMainForma(img,img_s){
-window.opener.document.getElementById('pic_small').value=img_s;
-window.opener.document.getElementById('pic_big').value=img;
+window.opener.document.getElementById('pic_small_new').value=img_s;
+window.opener.document.getElementById('pic_big_new').value=img;
 self.close();
 }
 

@@ -37,10 +37,8 @@ return $action;
 }
 
 
-
-
 function actionStart(){
-global $PHPShopGUI,$PHPShopSystem,$SysValue,$_classPath,$PHPShopOrm;
+global $PHPShopGUI,$_classPath,$PHPShopOrm;
 
 
 $PHPShopGUI->dir=$_classPath."admpanel/";

@@ -406,7 +406,7 @@ tabPane.addTabPage( document.getElementById( "rules" ) );
 <table cellpadding="0" cellspacing="0" width="100%" height="50" >
 <tr>
 	<td align="left" style="padding:10">
-    <BUTTON class="help" onclick="helpWinParent('usersID')">Справка</BUTTON></BUTTON>
+    <BUTTON class="help" onclick="helpWinParent('usersID')">Справка</BUTTON>
 	</td>
 	<td align="right" style="padding:10">
     <input type="hidden" name="userID" value="<?=$id?>" >

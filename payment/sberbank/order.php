@@ -32,7 +32,7 @@ window.document.getElementById('sum').innerHTML='0';
 }
 </script>";
 
-// Учищаем корзину
+// Очищаем корзину
 unset($_SESSION['cart']);
 
 

@@ -3,6 +3,13 @@ InnovaStudio WYSIWYG Editor 2.2
 Copyright © 2003-2005, INNOVA STUDIO (www.InnovaStudio.com). All rights reserved.
 ************************************************************/
 
+function Save(){
+    document.forms.product_edit.elements.EditorContent1.value = oEdit1.getHTMLBody();
+    if(document.forms.product_edit.elements.EditorContent2)
+        document.forms.product_edit.elements.EditorContent2.value = oEdit2.getHTMLBody();
+    document.forms.product_edit.submit();
+}
+
 /*** UTILITY OBJECT ***/
 var oUtil=new InnovaEditorUtil();
 function InnovaEditorUtil()

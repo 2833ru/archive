@@ -17,8 +17,21 @@ class PHPShopFormgeneratorElement {
         // Сообщение обязательных полей
         if(!empty($_GET['error'])) $error=$data['error_message'];
         
+        // Защитная каптча
+        $GLOBALS['SysValue']['other']['formgenerator_captcha']='
+        <p id="formgenerator_captcha">
+        <table>
+          <tr>
+            <td><img src="phpshop/modules/formgenerator/inc/captcha.php" alt="" border="0"></td>
+            <td>Введите код, указанный на картинке<br>
+              <input type="text" name="key" style="width:220px;">
+            </td>
+          </tr>
+        </table>
+        </p>';
+        
         if(is_array($data)) {
-            $forma_content= '<p>'.$error.'</p><h2>'.$data['name'].'</h2><form method="post" enctype="multipart/form-data" name="formgenerator" id="formgenerator" action="/formgenerator/'.$path.'">
+            $forma_content= '<p>'.$error.'</p><h2>'.$data['name'].'</h2><form method="post" enctype="multipart/form-data" name="formgenerator" id="formgenerator" action="/formgenerator/'.$path.'/">
             '.Parser($data['content']).'
                 <p id="formgenerator_buttons">
             <input type="hidden" name="forma_id" value="'.$data['id'].'">

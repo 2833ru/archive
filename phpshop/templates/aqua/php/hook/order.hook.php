@@ -1,7 +1,6 @@
 <?php
 function ordercartforma_hook($val,$option,$rout) {
     if($rout == 'START') {
-        
         $PHPShopProduct = new PHPShopProduct($val['id']);
         PHPShopParser::set('cart_image',$PHPShopProduct->getParam('pic_small'));
         PHPShopParser::set('cart_id',$val['id']);
@@ -14,9 +13,33 @@ function ordercartforma_hook($val,$option,$rout) {
     }
 }
 
+function productcartforma_hook($obj,$var,$rout) {
+    global $PHPShopOrder;
+    if($rout == 'START') {
+
+        $obj->set('currency',$PHPShopOrder->default_valuta_code);
+        $cart=$obj->PHPShopCart->display('ordercartforma');
+        $obj->set('display_cart',$cart);
+        $obj->set('cart_num',$obj->PHPShopCart->getNum());
+        $obj->set('cart_sum',$obj->PHPShopCart->getSum(false));
+        $obj->set('discount',$PHPShopOrder->ChekDiscount($obj->PHPShopCart->getSum()));
+        $obj->set('cart_weight',$obj->PHPShopCart->getWeight());
+
+        // Стоимость доставки
+        PHPShopObj::loadClass('delivery');
+        $obj->set('delivery_price',PHPShopDelivery::getPriceDefault());
+
+        // Итоговая стоимость
+        $obj->set('total',$PHPShopOrder->returnSumma($obj->get('cart_sum')+$obj->get('delivery_price'),$obj->get('discount')) );
+
+        return ParseTemplateReturn('./phpshop/templates/'.$_SESSION['skin'].'/order/cart.tpl',true);
+    }
+}
+
 $addHandler=array
         (
-        'ordercartforma'=>'ordercartforma_hook'
+  
+    'product'=>'productcartforma_hook'
 
 );
 ?>

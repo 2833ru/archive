@@ -1,2 +1,10 @@
 AddDefaultCharset windows-1251
 AddType text/csv csv
+
+<IfModule mod_php4.c>
+php_flag engine 0
+</IfModule>
+
+<IfModule mod_php5.c>
+php_flag engine 0
+</IfModule>

@@ -25,12 +25,11 @@ while(@$row = mysql_fetch_array(@$result))
 if($i>30)$razmer="height:600;";
 $_Return=('
 <div align="left" style="width:100%;'.@$razmer.';overflow:auto"> 
-<table width="50%"  cellpadding="0" cellspacing="0" style="border: 1px;
-	border-style: inset;" class=row>
+<table width="50%"  cellpadding="0" cellspacing="0">
 <tr>
 	<td valign="top">
 
-<table cellpadding="0" cellspacing="1" width="100%" border="0" bgcolor="#808080" class="sortable" id="sort">
+<table cellpadding="0" cellspacing="1" width="100%" border="0" class="sortable" id="sort">
 <tr>
 	<td width="200" id="pane" align="center">
 	<img src=img/arrow_d.gif width=7 height=7 border=0 hspace=5><span name=txtLang id=txtLang>Наименование</span></td>

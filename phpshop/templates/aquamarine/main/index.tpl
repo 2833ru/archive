@@ -83,7 +83,7 @@
                      Замена стилей меню каталога
                                 -->
             @php
-            $replace=array("podCatTiTOut"=>"TiTOut","podCatTiTOver"=>"TiTOver","divCatId"=>"divCatIdBot");
+            $replace=array("podCatTiTOut"=>"TiTOut","podCatTiTOver"=>"TiTOver","divCatId"=>"divCatIdBot","onMouseOver"=>"onMouseOut");
             echo $GLOBALS['PHPShopShopCatalogElement']->leftCatal($replace);
             php@
             <script type="text/javascript">
@@ -160,7 +160,8 @@
         <div id="ph1">@telNum@</div>
         <div id="mail3"><a href="mailto:@adminMail@">@adminMail@</a></div>
       </div>
-      @oprosDisp@ @rightMenu@
+      @oprosDisp@ @rightMenu@ 
+      
       <div id="newsb">
         <div class="newsTitle">Новости <a href="/rss/">RSS</a></div>
         @miniNews@</div>

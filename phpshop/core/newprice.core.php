@@ -3,6 +3,7 @@
 /**
  * Обработчик распродаж
  * @author PHPShop Software
+ * @tutorial http://wiki.phpshop.ru/index.php/PHPShopNewprice
  * @version 1.2
  * @package PHPShopShopCore
  */

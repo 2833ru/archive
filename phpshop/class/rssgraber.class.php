@@ -48,7 +48,7 @@ class PHPShopRssParser {
   ($sec_day/(f.day_num+1)) < ($date - f.last_load)
                 ";
 
-        $result = mysql_query($sql);
+        $result = @mysql_query($sql);
         return  $result;
     }
 
@@ -100,7 +100,7 @@ class PHPShopRssParser {
      * Запись новости в БД
      */
     function add_news($news, $num) {
-        global $SysValue,$PHPShopModules;
+        global $SysValue,$PHPShopModules,$PHPShopBase;
 
         $date = date("d-m-Y");
         $dateU = date("U");
@@ -131,7 +131,7 @@ class PHPShopRssParser {
                 $data_array=array('datas_new'=>$date,'zag_new'=>$title,'kratko_new'=>$description,'podrob_new'=>$content,'datau_new'=>$dateU);
 
                 // Перехват модуля
-                $PHPShopModules->setHookHandler(__CLASS__,__FUNCTION__, $this, &$data_array);
+                $PHPShopModules->setHookHandler(__CLASS__,__FUNCTION__, $this, array(&$data_array));
 
                 // Запись
                 $PHPShopOrm->insert($data_array);

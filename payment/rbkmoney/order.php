@@ -20,7 +20,7 @@ $OrderId = $inv_id;
 $Amount = $GLOBALS['SysValue']['other']['total'];
 
 // обратный адрес
-$ReturnUrl = urlencode("http://" . $_SERVER['SERVER_NAME'] . "/success/?rbk");
+$ReturnUrl = urlencode("http://" . $_SERVER['SERVER_NAME'] . "/success/?payment=rbkmoney&inv_id=".$inv_id);
 $FailUrl = urlencode("http://" . $_SERVER['SERVER_NAME'] . $SysValue['dir']['dir'] . "/fail/");
 
 // вывод HTML страницы с кнопкой для оплаты

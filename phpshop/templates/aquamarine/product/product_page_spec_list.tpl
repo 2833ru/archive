@@ -8,16 +8,6 @@
       <td width="3" height="3"><img src="images/filt2.gif" alt="" width="3" height="3" /></td>
     </tr>
     <tr>
-      <td  colspan="3"><table cellpadding="0" cellspacing="0" border="0" class="vendorDisp" >
-          <tr>
-            <td  ><table border="0" cellspacing="0" cellpadding="0">
-                <tr> @vendorDisp@ </tr>
-              </table></td>
-            <td >@vendorSelectDisp@</td>
-          </tr>
-        </table></td>
-    </tr>
-    <tr>
       <td  height="2"  colspan="3"  class="filt5"><img src="images/spacer.gif" alt="" width="1" height="2" /></td>
     </tr>
     <tr>

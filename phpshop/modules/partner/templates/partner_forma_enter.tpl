@@ -1,4 +1,4 @@
-<form method="post" name="user_forma" action="/partner/">
+<form method="post" name="user_forma" action="@ShopDir@/partner/">
     <table cellspacing="5" cellpadding="5">
         <tr>
             <td align="right">	Логин:

@@ -447,8 +447,8 @@ var req = new Subsys_JsHttpRequest_Js();
 			if (req.readyState == 4) {
 					window.opener.document.getElementById('fotolist').innerHTML = req.responseJS.interfaces;
 // Стандартную форму обновляем
-window.opener.document.getElementById('pic_small').value='".$mycReturn."/".$img[name]."s.".$ftype."';
-window.opener.document.getElementById('pic_big').value='".$mycReturn."/".$img[name].".".$ftype."';
+window.opener.document.getElementById('pic_small_new').value='".$mycReturn."/".$img[name]."s.".$ftype."';
+window.opener.document.getElementById('pic_big_new').value='".$mycReturn."/".$img[name].".".$ftype."';
 			}
 		}
 		// Подготваливаем объект.

@@ -2,7 +2,7 @@
 /**
  * Библиотека данных по страницам
  * @author PHPShop Software
- * @version 1.0
+ * @version 1.1
  * @package PHPShopClass
  */
 
@@ -21,9 +21,10 @@ if (!defined("OBJENABLED")) {
 class PHPShopPageCategoryArray extends PHPShopArray {
 
     function PHPShopPageCategoryArray() {
-        $this->objBase=$GLOBALS['SysValue']['base']['table_name29'];
+        $this->objBase=$GLOBALS['SysValue']['base']['page_categories'];
         $this->order=array('order'=>'num');
         parent::PHPShopArray("id","name","parent_to");
     }
 }
+
 ?>

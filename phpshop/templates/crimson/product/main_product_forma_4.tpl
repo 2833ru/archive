@@ -10,7 +10,7 @@
     </tr>
     <tr>
       <td height="130" valign="top"><div class="tovarDivName1"><a href="/shop/UID_@productUid@.html" title="@productName@">@productName@</a></div>
-        <sapn class="tovarDivArt">
+        <span class="tovarDivArt">
         @productArt@</span> @ComStart@
         <div class="tovarDivPrice1">@productPrice@ @productValutaName@<br>
           <span class="tovarDivOldPrice1">@productPriceRub@</span></div>

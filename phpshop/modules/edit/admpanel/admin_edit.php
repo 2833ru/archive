@@ -1,7 +1,5 @@
 <?
-function __($str){
-    return $str;
-}
+
 $TitlePage=__("Редактор шаблонов");
 
 function actionStart() {

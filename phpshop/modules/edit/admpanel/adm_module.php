@@ -48,7 +48,9 @@ function actionStart() {
     
     // Графический заголовок окна
     $PHPShopGUI->setHeader("Настройка модуля 'Edit'","Настройки",$PHPShopGUI->dir."img/i_display_settings_med[1].gif");
-     $Info='
+     
+    $Tab1.=$PHPShopGUI->setField('CHMOD',$PHPShopGUI->setInputText(false, 'chmod_new', $chmod,100,'* Права за запись файлов в формате 0775'));
+    $Info='
      Для возможности редактирования файлов шаблонов необходимо проставить права CHMOD 775 на требуемые файлы в папке /phpshop/templates/
      При использовании программного комплекса PHPShop EasyControl "Мой сайт" или любого другого виртуального сервера для ОС Windows
      права CHMOD на файлы проставлять не нужно.
@@ -59,7 +61,8 @@ function actionStart() {
      Шаблоны можно скачать в ручном режиме из <a href="http://template.phpshop.ru/templates/" target="_blank">http://template.phpshop.ru</a>.
      Архив с шаблоном нужно распаковать в директорию /phpshop/templates/имя шаблона';
      
-    $Tab1=$PHPShopGUI->setInfo($Info,250,'97%');
+    $Tab1.=$PHPShopGUI->setLine('<br>');
+    $Tab1.=$PHPShopGUI->setInfo($Info,150,'97%');
     $Tab2=$PHPShopGUI->setPay($serial,false);
 
     $Lib='В модуле использована открытая библиотека <a href="http://codemirror.net/" target="_blank">Сodemirror</a><br>

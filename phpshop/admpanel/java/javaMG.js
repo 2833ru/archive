@@ -3,28 +3,131 @@
 // Copyright © www.phpshop.ru. Все права защищены.   //
 //***************************************************//
 
+function PHPShopJS(){
 
+    this.button_on = function(a){
+        this.classStyle(a.id,'buton');
+    }
+
+    this.button_off = function(a){
+        this.classStyle(a.id,'butoff');
+    }
+
+    this.rowshow_on = function(a){
+        this.classStyle(a.id,'row_show_on');
+    }
+
+    this.rowshow_out = function(a,line){
+        if(line != ' line2') 
+            this.classStyle(a.id,'row_show_off');
+        else this.classStyle(a.id,'row line2');
+
+    }
+
+    this.classStyle = function(a, name){
+        document.getElementById(a).className = name;
+    }
+
+    this.style = function(a, style){
+        document.getElementById(a).style = style;
+    }
+
+    this.value = function(a, value){
+        document.getElementById(a).value = value;
+    }
+    
+    this.open = function(url, w, h){
+        var Width = getClientWidth();
+        var Height = getClientHeight();
+        Width = (Width/2) - (w/2);
+        Height = (Height/2) - (h/2);
+        window.open(url,"_blank","dependent=1,left="+Width+",top="+Height+",width="+w+",height="+h+",location=0,menubar=0,resizable=1,scrollbars=0,status=0,titlebar=0,toolbar=0");
+    }
+    
+    this.loadjs = function(page){
+        var data = document.createElement('script');
+        data.type = 'text/javascript';
+        data.async = true;
+        data.id = page+'_jslib';
+        data.src = page+'/gui/'+ page+'.gui.js';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(data, s); 
+    }
+    
+    // Выделить все [1|2]
+    this.selectall = function(value){
+        
+        if(window.frame2)
+            obj=window.frame2.document.flag_form;
+        else obj=window.document.flag_form;
+        
+        if(value==1){
+            for (var i=0;i<=obj.length; i++)
+                if (obj.elements[i])
+                    (obj.elements[i]).checked=true;
+        }
+        else{
+            for (var i=0;i<=obj.length; i++)
+                if (obj.elements[i])
+                    (obj.elements[i]).checked=false;
+        }
+    }
+    
+    // Групповое действие
+    this.action = function(a){
+        var num=1000;
+        
+        if(window.frame2)
+            obj=window.frame2.document.flag_form;
+        else obj=window.document.flag_form;
+        
+        try{
+            if(a!=0){
+                var IDS=new Array();
+                var j=0;
+                for (var i=0;i<=num; i++){
+                    if (obj.elements[i]){
+                        if ((obj.elements[i]).checked){
+                            IDS[j]=(obj.elements[i]).value;
+                            j++;
+                        }
+                    }
+                }
+            
+                if(IDS.length>0) 
+                    PHPShopJS.open('window/adm_window.php?do='+a+'&ids='+IDS,300,220);
+            }
+        }catch(e){}
+    
+        try{
+            document.getElementById('action').value=0;
+        // document.getElementById('DoAll').checked=false;
+        }catch(e){}
+    }
+}
+
+var PHPShopJS = new PHPShopJS();
 
 
 // Управление модулями
-function DoUpdateModules(action,xid) {
-
+function DoUpdateModules(action,xid,pid){
     var req = new Subsys_JsHttpRequest_Js();
     req.onreadystatechange = function() {
         if (req.readyState == 4) {
             if (req.responseJS) {
-                window.location.replace('?page=modules');
+                window.top.location.replace('../admin.php?page=modules&var2='+pid);
             }
         }
     }
     req.caching = false;
     // Подготваливаем объект.
-    req.open('POST', 'modules/action.php?do='+action, true);
+    req.open('POST', 'action.php?do='+action, true);
     req.send( {
         xid: xid
     } );
+    
+    
 }
-
 
 
 // Калибровка
@@ -89,15 +192,18 @@ function ClosePanelProductDisp(){
     if(!obj.checked){
         document.getElementById('prevpanel').innerHTML = "";
 
+
         // Новое окно
         if(window.opener)
-            document.getElementById("interfacesWin1").height=(clientH-150);
-        else document.getElementById("interfacesWin1").height=(clientH-70);
+            document.getElementById("frame2").height=(clientH-150);
+        else document.getElementById("frame2").height=(clientH-70);
+        
     }else{
+        
         // Новое окно
         if(window.opener)
-            document.getElementById("interfacesWin1").height=(clientH-300);
-        else document.getElementById("interfacesWin1").height=(clientH-450);
+            document.getElementById("frame2").height=(clientH-300);
+        else document.getElementById("frame2").height=(clientH-450);
 	  
         var req = new Subsys_JsHttpRequest_Js();
         req.onreadystatechange = function() {
@@ -128,8 +234,8 @@ function DoUpdateProductDisp(xid) {
     if(obj.checked){
 
         // Новое окно
-        if(window.top.opener) window.top.document.getElementById("interfacesWin1").height=(clientH-300);
-        else window.top.document.getElementById("interfacesWin1").height=(clientH-450);
+        if(window.top.opener) window.top.document.getElementById("frame2").height=(clientH-300);
+        else if(window.top.document) window.top.document.getElementById("frame2").height=(clientH-450);
 
         var req = new Subsys_JsHttpRequest_Js();
         req.onreadystatechange = function() {
@@ -284,6 +390,7 @@ function addOption (oListbox, text, value, isDefaultSelected, isSelected)
 }
 
 function enterchar(num){
+
     var sellist=document.getElementById("list"+num);
     var aoptions=sellist.options;
     var addit=document.getElementById("addval"+num).value;
@@ -384,6 +491,7 @@ function LoadAgent(){
 
 // Резиновый экран
 function ResizeWin(page){
+/*
     var clientW=document.body.clientWidth;
     var clientH=document.body.clientHeight;
     if(document.getElementById("interfacesWin") || document.getElementById("interfacesWin1")){
@@ -399,7 +507,7 @@ function ResizeWin(page){
                 document.getElementById("interfacesWin").style.height=(clientH-150);
             else {
                 document.getElementById("interfacesWin1").height=(clientH-150);
-                document.getElementById("interfacesWin2").height=(clientH-150);
+                //document.getElementById("interfacesWin2").height=(clientH-150);
             }
         }
         // В тоже окно
@@ -408,10 +516,11 @@ function ResizeWin(page){
                 document.getElementById("interfacesWin").style.height=(clientH-150);
             else {
                 document.getElementById("interfacesWin1").height=(clientH-150);
-                document.getElementById("interfacesWin2").height=(clientH-150);
+                //document.getElementById("interfacesWin2").height=(clientH-150);
             }
         }
     }
+    */
 }
 
 
@@ -529,95 +638,95 @@ function getClientHeight()
 
 function initialize(){
     try{
-    cartwindow=document.getElementById('cartwindow');
-    combowidth=cartwindow.offsetWidth;
-    comboheight=cartwindow.offsetHeight;
-    Width = getClientWidth();
-    Height = getClientHeight();
-    if(document.all){
-        cartwindow.style.pixelLeft=Width-combowidth-10;
-        cartwindow.style.pixelTop=Height-comboheight;
+        cartwindow=document.getElementById('cartwindow');
+        combowidth=cartwindow.offsetWidth;
+        comboheight=cartwindow.offsetHeight;
+        Width = getClientWidth();
+        Height = getClientHeight();
+        if(document.all){
+            cartwindow.style.pixelLeft=Width-combowidth-10;
+            cartwindow.style.pixelTop=Height-comboheight;
 
-        if(navigator.appName == "Microsoft Internet Explorer"){
-            cartwindow.filters.revealTrans.Apply();
-            cartwindow.filters.revealTrans.Play();
+            if(navigator.appName == "Microsoft Internet Explorer"){
+                cartwindow.filters.revealTrans.Apply();
+                cartwindow.filters.revealTrans.Play();
+            }
+        }else{
+            cartwindow.style.left=(Width-combowidth-10) + "px";
+            cartwindow.style.top=(Height-comboheight) + "px";
         }
-    }else{
-        cartwindow.style.left=(Width-combowidth-10) + "px";
-        cartwindow.style.top=(Height-comboheight) + "px";
-    }
-    cartwindow.style.visibility="visible";
+        cartwindow.style.visibility="visible";
     }catch(e){}
 }
 
 function initializelicense(){
     try{
-    licensewindow=document.getElementById('licensewindow');
-    combowidth=licensewindow.offsetWidth;
-    comboheight=licensewindow.offsetHeight;
-    Width = getClientWidth();
-    Height = getClientHeight();
-    if(document.all){
-        licensewindow.style.pixelLeft=Width-combowidth-730;
-        licensewindow.style.pixelTop=Height-comboheight;
+        licensewindow=document.getElementById('licensewindow');
+        combowidth=licensewindow.offsetWidth;
+        comboheight=licensewindow.offsetHeight;
+        Width = getClientWidth();
+        Height = getClientHeight();
+        if(document.all){
+            licensewindow.style.pixelLeft=Width-combowidth-730;
+            licensewindow.style.pixelTop=Height-comboheight;
 
-        if(navigator.appName == "Microsoft Internet Explorer"){
-            licensewindow.filters.revealTrans.Apply();
-            licensewindow.filters.revealTrans.Play();
+            if(navigator.appName == "Microsoft Internet Explorer"){
+                licensewindow.filters.revealTrans.Apply();
+                licensewindow.filters.revealTrans.Play();
+            }
+        }else{
+            licensewindow.style.left=(Width-combowidth-730) + "px";
+            licensewindow.style.top=(Height-comboheight) + "px";
         }
-    }else{
-        licensewindow.style.left=(Width-combowidth-730) + "px";
-        licensewindow.style.top=(Height-comboheight) + "px";
-    }
-    licensewindow.style.visibility="visible";
+        licensewindow.style.visibility="visible";
     }catch(e){}
 }
 
 function initializecomment(){
     try{
-    commentwindow=document.getElementById('commentwindow');
-    combowidth=commentwindow.offsetWidth;
-    comboheight=commentwindow.offsetHeight;
-    Width = getClientWidth();
-    Height = getClientHeight();
-    if(document.all){
-        commentwindow.style.pixelLeft=Width-combowidth-250;
-        commentwindow.style.pixelTop=Height-comboheight;
+        commentwindow=document.getElementById('commentwindow');
+        combowidth=commentwindow.offsetWidth;
+        comboheight=commentwindow.offsetHeight;
+        Width = getClientWidth();
+        Height = getClientHeight();
+        if(document.all){
+            commentwindow.style.pixelLeft=Width-combowidth-250;
+            commentwindow.style.pixelTop=Height-comboheight;
 
-        if(navigator.appName == "Microsoft Internet Explorer"){
-            commentwindow.filters.revealTrans.Apply();
-            commentwindow.filters.revealTrans.Play();
+            if(navigator.appName == "Microsoft Internet Explorer"){
+                commentwindow.filters.revealTrans.Apply();
+                commentwindow.filters.revealTrans.Play();
+            }
+        }else{
+            commentwindow.style.left=(Width-combowidth-250) + "px";
+            commentwindow.style.top=(Height-comboheight) + "px";
         }
-    }else{
-        commentwindow.style.left=(Width-combowidth-250) + "px";
-        commentwindow.style.top=(Height-comboheight) + "px";
-    }
-    commentwindow.style.visibility="visible";
+        commentwindow.style.visibility="visible";
     }catch(e){}
 }
 
 
 function initializemessage(){
     try{
-    messagewindow=document.getElementById('messagewindow');
-    combowidth=messagewindow.offsetWidth;
-    comboheight=messagewindow.offsetHeight;
-    Width = getClientWidth();
-    Height = getClientHeight();
-    if(document.all){
-        messagewindow.style.pixelLeft=Width-combowidth-490;
-        messagewindow.style.pixelTop=Height-comboheight;
+        messagewindow=document.getElementById('messagewindow');
+        combowidth=messagewindow.offsetWidth;
+        comboheight=messagewindow.offsetHeight;
+        Width = getClientWidth();
+        Height = getClientHeight();
+        if(document.all){
+            messagewindow.style.pixelLeft=Width-combowidth-490;
+            messagewindow.style.pixelTop=Height-comboheight;
 
-        if(navigator.appName == "Microsoft Internet Explorer"){
-            messagewindow.filters.revealTrans.Apply();
-            messagewindow.filters.revealTrans.Play();
+            if(navigator.appName == "Microsoft Internet Explorer"){
+                messagewindow.filters.revealTrans.Apply();
+                messagewindow.filters.revealTrans.Play();
+            }
         }
-    }
-    else{
-        messagewindow.style.left=(Width-combowidth-490) + "px";
-        messagewindow.style.top=(Height-comboheight) + "px";
-    }
-    messagewindow.style.visibility="visible";
+        else{
+            messagewindow.style.left=(Width-combowidth-490) + "px";
+            messagewindow.style.top=(Height-comboheight) + "px";
+        }
+        messagewindow.style.visibility="visible";
     }catch(e){}
 }
 
@@ -1001,7 +1110,7 @@ function DoReloadMainWindow(page,var1,var2)
                         if(window.opener.document.getElementById('interfaces')){
                             window.opener.document.getElementById('interfaces').innerHTML = (req.responseJS.xid||'');
                             //DoCheckInterfaceLang(page,'top');
-                            ResizeWin(page);
+                            //ResizeWin(page);
                             preloadertop(0);
                             window.close();
                         //setTimeout("window.close()",500);
@@ -1032,6 +1141,7 @@ function DoReloadMainWindow(page,var1,var2)
 
 // Интерфейс
 function DoReload(page,var1,var2,var3,var4) {
+    
     if (null!=document.getElementById('helppage')) {
         document.getElementById('helppage').value = page;
         initSlide(1);
@@ -1047,9 +1157,17 @@ function DoReload(page,var1,var2,var3,var4) {
                 // Записываем в <div> результат работы.
                 document.getElementById('interfaces').innerHTML = (req.responseJS.xid||'');
                 document.title = (req.responseJS.tit||'');
-                //DoCheckInterfaceLang(page,'self');
-                ResizeWin(page);
+                
+                // Загрузка дополнительного JS по требованию
+                if(req.responseJS.js != null)
+                    PHPShopJS.loadjs(page);
+            
+                // Сортировка
+                sortables_init();
+                
                 preloader(0);
+            // ResizeWin(page);
+                
             }
         }
     }
@@ -1371,7 +1489,7 @@ function DeleteUMessages(){
 function EditCatalogPage(){
     
     if(window.frame2.document.getElementById("catal")){
-        var catal=window.frame2.document.getElementById("catal").value;
+        var catal=window.interfacesWin2.document.getElementById("catal").value;
         if(catal != 1000 && catal != 2000)
             miniWin('page/adm_catalogID.php?catalogID='+catal,600,600);
     }else alert("Выберите подкаталог для редактирования");
@@ -1391,7 +1509,7 @@ function EditCatalogDelivery(){
 function EditCatalog(){
     
     try{
-        if(window.document.getElementById("catalog_products")){
+        if(window.frame2.document.getElementById("catalog_products")){
             if(window.frame2.document.getElementById("catal_chek"))
             {
                 var catal=window.frame2.document.getElementById("catal_chek").value;
@@ -1526,7 +1644,7 @@ function DoWithSelect(tip,obj,num){
 
             if(tip==9){
                 if(j>1) alert('Внимание!\nДанная операция может быть выполнена только с одним объектом.\nУберите ненужные флажки.');
-                if(j==1) miniWin(dots+'./product/adm_product_new.php?productID='+IDS,650,630);
+                if(j==1) miniWin(dots+'./product/adm_product_new.php?productID='+IDS,700,650);
             }
             else if(tip==8) {
                 // Выгрузка в CSV
@@ -1535,7 +1653,7 @@ function DoWithSelect(tip,obj,num){
             else if(tip==24){// Характеристки
                 if(window.frame2.document.getElementById("catal")){
                     var catal=window.frame2.document.getElementById("catal").value;
-                    miniWin(dots+'./window/adm_window.php?do='+tip+'&ids='+IDS+'&catal='+catal,300,220);
+                    miniWin(dots+'./window/adm_window.php?do='+tip+'&ids='+IDS+'&catal='+catal,500,500);
                 }
             }
             else if(tip==38){// Новый заказ

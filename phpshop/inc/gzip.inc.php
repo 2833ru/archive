@@ -6,7 +6,6 @@
 ob_start();
 ob_implicit_flush(0);
 function CheckCanGzip(){
-    global $HTTP_ACCEPT_ENCODING;
     if (headers_sent() || connection_aborted()){
         return 0;
     }

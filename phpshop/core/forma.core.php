@@ -3,6 +3,7 @@
 /**
  * Обработчик формы сообщения с сайта
  * @author PHPShop Software
+ * @tutorial http://wiki.phpshop.ru/index.php/PHPShopForma
  * @version 1.0
  * @package PHPShopCore
  */

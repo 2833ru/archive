@@ -79,7 +79,7 @@ class AddToTemplateSortProductElement extends PHPShopElements {
         $this->set('leftMenuName',$this->option['title']);
 
         // Подключаем шаблон
-        $dis=$this->parseTemplate($this->getValue('templates.left_menu'),true);
+        $dis=$this->parseTemplate($this->getValue('templates.left_menu'));
 
 
         // Назначаем переменную шаблона

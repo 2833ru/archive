@@ -201,6 +201,7 @@ function visualcartform($val, $option) {
     PHPShopParser::set('visualcart_product_pic_small', $val['pic_small']);
     PHPShopParser::set('visualcart_product_price', $val['price'] * $val['num']);
     PHPShopParser::set('visualcart_product_currency', $option['currency']);
+    PHPShopParser::set('visualcart_product_num', $val['num']);
 
     $dis = PHPShopParser::file('../templates/product.tpl', true);
     return $dis;

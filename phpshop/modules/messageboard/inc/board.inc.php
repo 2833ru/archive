@@ -38,7 +38,7 @@ class PHPShopMessageboardElement extends PHPShopElements {
     function lastboardForma() {
         $disp=null;
         $num=0;
-        $PHPShopOrm = &new PHPShopOrm($GLOBALS['SysValue']['base']['messageboard']['messageboard_log']);
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['messageboard']['messageboard_log']);
         $PHPShopOrm->debug=false;
         
         $result=$PHPShopOrm->query('SELECT * FROM '.$GLOBALS['SysValue']['base']['messageboard']['messageboard_log'].' order by id desc limit '.$this->num);
@@ -70,7 +70,7 @@ class PHPShopMessageboardElement extends PHPShopElements {
         $this->set('userMail',$_SESSION['userMail']);
         
         // Парсируем шаблон с заменой 'page' на 'example'
-        $dis=$this->PHPShopModules->Parser(array('page'=>'board'),$this->getValue('templates.top_menu'));
+        $dis=$this->PHPShopModules->Parser(array('page'=>$this->getValue('dir.dir').'board'),$this->getValue('templates.top_menu'));
         return $dis;
     }
     

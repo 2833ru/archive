@@ -13,9 +13,7 @@ function MessageList ($UID=0) {
     $sql=Page_messages($UID);
 
     $result=mysql_query($sql);
-    $lvl++;
     while ($row = mysql_fetch_array($result)) {
-        $id=$row['ID'];
         $UID=$row['UID'];
         $AID=$row['AID'];
         if ($AID) { //Получаем имя администратора, если сообщение от админа
@@ -95,7 +93,7 @@ function NumFrom($from_base,$query) {
 function Nav_messages($UID=0) {
     global $SysValue;
 
-    $navigat=null;
+    $navigat=$nava=null;
     $p=$SysValue['nav']['id'];
     if(empty($p)) $p=1;
     $num_row=10;
@@ -145,32 +143,20 @@ function Nav_messages($UID=0) {
  * @return string
  */
 function user_message($obj) {
-    global $SysValue,$LoadItems;
+    global $SysValue;
 
-    $UsersId=TotalClean($UsersId,1);
     $statusMail=null;
     $sql="select * from ".$SysValue['base']['table_name27']." where id=$obj->UsersId LIMIT 0, 1";
     $result=mysql_query($sql);
     $row = mysql_fetch_array($result);
     $id=$row['id'];
     $login=$row['login'];
-    $password=$row['password'];
-    $status=$row['status'];
     $mail=$row['mail'];
     $name=$row['name'];
-    $company=$row['company'];
-    $inn=$row['inn'];
-    $tel=$row['tel'];
-    $adres=$row['adres'];
 
     // mail менеджеру
     if(!empty($_POST['message'])) {
-        $codepage  = "windows-1251";
-        $header_adm  = "MIME-Version: 1.0\n";
-        $header_adm .= "From:   <".$mail.">\n";
-        $header_adm .= "Content-Type: text/plain; charset=$codepage\n";
-        $header_adm .= "X-Mailer: PHP/";
-        $zag_adm=$LoadItems['System']['name']." - Поступило сообщение от пользователя ".$name;
+        $zag_adm=$obj->PHPShopSystem->getName()." - Поступило сообщение от пользователя ".$name;
         $content_adm="
 Доброго времени!
 --------------------------------------------------------
@@ -186,7 +172,8 @@ function user_message($obj) {
 Дата/время: ".date("d-m-y H:i a")."
 IP:".$_SERVER['REMOTE_ADDR'];
 
-        mail($LoadItems['System']['adminmail2'],$zag_adm, $content_adm, $header_adm);
+        // Отправка e-mail администратору
+        $PHPShopMail= new PHPShopMail($obj->PHPShopSystem->getValue('adminmail2'),$mail,$zag_adm,$content_adm);
 
         $sql='select * from '.$SysValue['base']['table_name37'].' where (UID='.$id.') order by DateTime DESC';
         $result=mysql_query($sql);
@@ -195,7 +182,7 @@ IP:".$_SERVER['REMOTE_ADDR'];
         if ($row['AID']=="0") {
             $DateTime=$row['DateTime'];
             $message=PHPShopSecurity::TotalClean($_POST['message'],2)."<HR>".$row['DateTime'].": ".$row['Message'];
-            $sql='UPDATE '.$SysValue['base']['table_name37'].' SET Message="'.$message.'", DateTime="'.date("Y-m-d H:i:s").'" WHERE ID='.$row['ID'];
+            $sql='UPDATE '.$SysValue['base']['table_name37'].' SET Message="'.$message.'", DateTime="'.date("Y-m-d H:i:s").'", enabled=\'0\' WHERE ID='.$row['ID'];
             $result=mysql_query($sql);
             $p=$SysValue['nav']['id'];
             if(empty($p)) $p=1;
@@ -204,11 +191,11 @@ IP:".$_SERVER['REMOTE_ADDR'];
             } else {
                 $nav='';
             }
-            header("Location: /users/message$nav.html");
+            header("Location: ./message$nav.html");
         } else {
-            $sql='INSERT INTO '.$SysValue['base']['table_name37'].' VALUES ("",0,'.$id.',\'\',\''.date("Y-m-d H:i:s").'\',\''.TotalClean($_POST['Subject'],2).'\',\''.TotalClean($_POST['message'],2).'\',"0")';
+            $sql='INSERT INTO '.$SysValue['base']['table_name37'].' VALUES ("",0,'.$id.',\'\',\''.date("Y-m-d H:i:s").'\',\''.PHPShopSecurity::TotalClean($_POST['Subject'],2).'\',\''.PHPShopSecurity::TotalClean($_POST['message'],2).'\',"0")';
             $result=mysql_query($sql);
-            header ("Location: /users/message.html");
+            header ("Location: ./message.html");
         }
         $statusMail='<div id=allspecwhite><img src="images/shop/comment.gif" alt="" width="16" height="16" border="0" hspace="5" align="absmiddle"><font color="#008000"><b>Сообщение менеджеру отправлено</b></font></div>';
     }

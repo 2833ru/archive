@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.1</version>
+    <version>1.2</version>
     <name>Example</name>
     <description>Тестовый модуль для разработчиков.</description>
     <icon>icon.png</icon>
+    <category>develop</category>
     <adminmenu>
         <title>Example</title>
         <podmenu>

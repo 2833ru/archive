@@ -37,11 +37,10 @@ while ($row = mysql_fetch_array($result))
 if($i>30)$razmer="height:600;";
 	$_Return="
 <div id=interfacesWin name=interfacesWin align=\"left\" style=\"width:100%;".@$razmer.";overflow:auto\"> 
-<table width=\"100%\"  cellpadding=\"0\" cellspacing=\"0\" style=\"border: 1px;
-	border-style: inset;\">
+<table width=\"100%\"  cellpadding=\"0\" cellspacing=\"0\">
 <tr>
 	<td valign=\"top\">
-<table cellpadding=\"0\" cellspacing=\"1\" width=\"100%\" border=\"0\" bgcolor=\"#808080\" class=\"sortable\" id=\"sort\">
+<table cellpadding=\"0\" cellspacing=\"1\" width=\"100%\" border=\"0\" class=\"sortable\" id=\"sort\">
 <tr>
 	<td width=\"10%\" id=pane align=center>+/-</td>
 	<td width=\"60%\" id=pane align=><span name=txtLang id=txtLang>Заголовок</span></td>

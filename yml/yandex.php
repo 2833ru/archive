@@ -59,50 +59,133 @@ class PHPShopSortSearch {
         if (is_array($row))
             foreach ($row as $val) {
                 if (!empty($this->sort_array[$val[0]])) {
-                    return '<' . $this->tag . '>' . $this->sort_array[$val[0]] . '</' . $this->tag . '>';
+                    
+                    // Проверка на сложный параметр
+                    if(strstr($this->tag,' ')){
+                        $tag_array=  explode(" ", $this->tag);
+                        $tag_start=$this->tag;
+                        $tag_end=$tag_array[0];
+                    }
+                    else{
+                        $tag_start=$tag_end=$this->tag;
+                    }
+                          
+                    return '
+                        <' . $tag_start . '>' . $this->sort_array[$val[0]] . '</' . $tag_end . '>';
                 }
             }
     }
 
 }
 
+/**
+ * Создание YML для Яндекс Маркета
+ * @author PHPShop Software
+ * @version 1.2
+ * @package PHPShopClass
+ */
 class PHPShopYml {
 
     var $xml = null;
 
     /**
-     * @var bool вывод сортировки
+     * вывод характеристик
+     * @var bool 
      */
     var $vendor = false;
 
     /**
-     * @var string имя тэга
+     * массив значений тег/имя характеристики
+     * @var array 
      */
-    var $vendor_tag = 'vendor';
+    var $vendor_name = array('vendor' => 'Бренд');
 
     /**
-     * @var string имя характеристики
+     * память событий модулей
+     * @var bool 
      */
-    var $vendor_name = 'Бренд';
+    var $memory = true;
 
+    /**
+     * Конструктор
+     */
     function PHPShopYml() {
+        global $PHPShopModules;
+
         $this->PHPShopSystem = new PHPShopSystem();
         $PHPShopValuta = new PHPShopValutaArray();
         $this->PHPShopValuta = $PHPShopValuta->getArray();
 
+        // Модули
+        $this->PHPShopModules = &$PHPShopModules;
+
         // Процент накрутки
         $this->percent = $this->PHPShopSystem->getValue('percent');
 
-        // Валюта по умочанию
+        // Валюта по умолчанию
         $this->defvaluta = $this->PHPShopSystem->getValue('dengi');
         $this->defvalutaiso = $this->PHPShopValuta[$this->defvaluta]['iso'];
         $this->defvalutacode = $this->PHPShopValuta[$this->defvaluta]['code'];
 
         // Кол-во знаков после запятой в цене
         $this->format = $this->PHPShopSystem->getSerilizeParam('admoption.price_znak');
+
+        $this->setHook(__CLASS__, __FUNCTION__);
     }
 
-    // Вывод каталогов
+    /**
+     * Назначение перехвата события выполнения модулем
+     * @param string $class_name имя класса
+     * @param string $function_name имя метода
+     * @param mixed $data данные для обработки
+     * @param string $rout позиция вызова к функции [END | START | MIDDLE], по умолчанию END
+     * @return bool
+     */
+    function setHook($class_name, $function_name, $data = false, $rout = false) {
+        return $this->PHPShopModules->setHookHandler($class_name, $function_name, array(&$this), $data, $rout);
+    }
+
+    /**
+     * Запись в память
+     * @param string $param имя параметра [catalog.param]
+     * @param mixed $value значение
+     */
+    function memory_set($param, $value) {
+        if (!empty($this->memory)) {
+            $param = explode(".", $param);
+            $_SESSION['Memory'][__CLASS__][$param[0]][$param[1]] = $value;
+            $_SESSION['Memory'][__CLASS__]['time'] = time();
+        }
+    }
+
+    /**
+     * Выборка из памяти
+     * @param string $param имя параметра [catalog.param]
+     * @param bool $check сравнить с нулем
+     * @return
+     */
+    function memory_get($param, $check = false) {
+        if (!empty($this->memory)) {
+            $param = explode(".", $param);
+            if (isset($_SESSION['Memory'][__CLASS__][$param[0]][$param[1]])) {
+                if (!empty($check)) {
+                    if (!empty($_SESSION['Memory'][__CLASS__][$param[0]][$param[1]]))
+                        return true;
+                }
+                else
+                    return $_SESSION['Memory'][__CLASS__][$param[0]][$param[1]];
+            }
+            elseif (!empty($check))
+                return true;
+        }
+        else
+            return true;
+    }
+
+    /**
+     * Данные по каталогам
+     * @return array массив каталогов
+     */
     function category() {
         $Catalog = array();
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['table_name']);
@@ -120,13 +203,13 @@ class PHPShopYml {
 
     /**
      * Данные по товарам
-     * @return array массис товаров
+     * @return array массив товаров
      */
     function product() {
         $Products = array();
 
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
-        $data = $PHPShopOrm->select(array('*'), array('yml' => "='1'", 'enabled' => "='1'"), false, array('limit' => 1000000));
+        $data = $PHPShopOrm->select(array('*'), array('yml' => "='1'", 'enabled' => "='1'", 'parent_enabled' => "='0'"), false, array('limit' => 1000000));
         if (is_array($data))
             foreach ($data as $row) {
                 $id = $row['id'];
@@ -176,6 +259,9 @@ class PHPShopYml {
         return $Products;
     }
 
+    /**
+     * Заголовок 
+     */
     function setHeader() {
         $this->xml.='<?xml version="1.0" encoding="windows-1251"?>
 <!DOCTYPE yml_catalog SYSTEM "shops.dtd">
@@ -187,12 +273,18 @@ class PHPShopYml {
 <url>http://' . $_SERVER['SERVER_NAME'] . '</url>';
     }
 
+    /**
+     * Валюты 
+     */
     function setCurrencies() {
         $this->xml.='<currencies>';
         $this->xml.='<currency id="' . $this->PHPShopValuta[$this->PHPShopSystem->getValue('dengi')]['iso'] . '" rate="1"/>';
         $this->xml.='</currencies>';
     }
 
+    /**
+     * Категории 
+     */
     function setCategories() {
         $this->xml.='<categories>';
         $category = $this->category();
@@ -206,6 +298,9 @@ class PHPShopYml {
         $this->xml.='</categories>';
     }
 
+    /**
+     * Доставка
+     */
     function setDelivery() {
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['table_name30']);
         $data = $PHPShopOrm->select(array('price'), array('flag' => "='1'"), false, array('limit' => 1));
@@ -213,8 +308,11 @@ class PHPShopYml {
             $this->xml.='<local_delivery_cost>' . $data['price'] . '</local_delivery_cost>';
     }
 
+    /**
+     * Товары 
+     */
     function setProducts() {
-        
+        $vendor=null;
         $this->xml.='<offers>';
         $product = $this->product($vendor = true);
 
@@ -225,7 +323,9 @@ class PHPShopYml {
 
         // Поиск характеристики по имени
         if ($this->vendor) {
-            $PHPShopSortSearch = new PHPShopSortSearch($this->vendor_name, $this->vendor_tag);
+            if (is_array($this->vendor_name))
+                foreach ($this->vendor_name as $vendor_tag => $vendor_name)
+                    $PHPShopSortSearch[] = new PHPShopSortSearch($vendor_name, $vendor_tag);
         }
 
         $seourl = null;
@@ -237,22 +337,25 @@ class PHPShopYml {
             $vendor = null;
 
             // Тэг характеристики
-            if ($this->vendor)
-                $vendor = $PHPShopSortSearch->search($val['vendor_array']);
+            if ($this->vendor){
+                if(is_array($PHPShopSortSearch))
+                    foreach($PHPShopSortSearch as $SortSearch)
+                $vendor.= $SortSearch->search($val['vendor_array']);
+            }
 
             // Если есть bid
-            if (!empty($val['yml_bid_array']['bid_enabled']))
+            if (!empty($val['yml_bid_array']['bid']))
                 $bid_str = '  bid="' . $val['yml_bid_array']['bid'] . '" ';
 
             // Если есть cbid
-            if (!empty($val['yml_bid_array']['cbid_enabled']))
+            if (!empty($val['yml_bid_array']['cbid']))
                 $bid_str.='  cbid="' . $val['yml_bid_array']['cbid'] . '" ';
 
             if (!empty($seourl_enabled))
                 $seourl = '_' . PHPShopString::toLatin($val['name']);
 
-            $this->xml.='<offer id="' . $val['id'] . '" available="' . $val['p_enabled'] . '" ' . $bid_str . '>
- <url>http://' . $_SERVER['SERVER_NAME'] . '/shop/UID_' . $val['id'] . $seourl . '.html?from=yml</url>
+            $xml = '<offer id="' . $val['id'] . '" available="' . $val['p_enabled'] . '" ' . $bid_str . '>
+ <url>http://' . $_SERVER['SERVER_NAME'] . $GLOBALS['SysValue']['dir']['dir'] . '/shop/UID_' . $val['id'] . $seourl . '.html?from=yml</url>
       <price>' . $val['price'] . '</price>
       <currencyId>' . $this->defvalutaiso . '</currencyId>
       <categoryId>' . $val['category'] . '</categoryId>
@@ -261,19 +364,41 @@ class PHPShopYml {
       <description>' . $val['description'] . '</description>' .
                     $vendor . '
 ';
+
             $cart_min = $this->PHPShopSystem->getSerilizeParam('admoption.cart_minimum');
             if (!empty($cart_min))
-                $this->xml.= '<sales_notes>минимальная сумма заказа ' . $cart_min . ' ' . $this->defvalutacode . '</sales_notes>';
+                $xml.= '<sales_notes>минимальная сумма заказа ' . $cart_min . ' ' . $this->defvalutacode . '</sales_notes>';
 
-            $this->xml.='</offer>';
+            $xml.='</offer>';
+
+            // Перехват модуля, занесение в память наличия модуля для оптимизации
+            if ($this->memory_get(__CLASS__ . '.' . __FUNCTION__, true)) {
+                $hook = $this->setHook(__CLASS__, __FUNCTION__, $xml);
+                if ($hook) {
+                    $this->xml.= $hook;
+                } else {
+                    $this->xml.= $xml;
+                    $this->memory_set(__CLASS__ . '.' . __FUNCTION__, 0);
+                }
+            }
+            else
+                $this->xml.= $xml;
         }
-        $this->xml.='</offers>';
+        $this->xml.='
+        </offers>
+        ';
     }
 
+    /**
+     * Подвал 
+     */
     function serFooter() {
         $this->xml.='</shop></yml_catalog>';
     }
 
+    /**
+     * Компиляция документа, вывод результата 
+     */
     function compile() {
         $this->setHeader();
         $this->setCurrencies();

@@ -40,6 +40,12 @@ class PHPShopFormgenerator extends PHPShopCore {
         $content=null;
         $error=false;
         $i=1;
+        
+        // Проверка каптчи
+        if(!empty($_SESSION['mod_formgenerator_captcha'])){
+            if($_SESSION['mod_formgenerator_captcha'] != $_POST['key'])
+                $error=true;
+        }
 
         if(PHPShopSecurity::true_num($_POST['forma_id'])) {
 
@@ -82,11 +88,11 @@ E-mail: '.$mail.'
 
                 // Сообщение пользователю
                 if(!empty($data['user_mail_copy']) and PHPShopSecurity::true_email($mail))
-                    $PHPShopMail = new PHPShopMail($mail,$this->PHPShopSystem->getValue("admin_mail"),$zag,$content);
+                    $PHPShopMail = new PHPShopMail($mail,$this->PHPShopSystem->getValue("adminmail2"),$zag,$content);
 
 
                 // Если пустая почта отправителя
-                if(empty($mail)) $mail = $this->PHPShopSystem->getValue("admin_mail");
+                if(empty($mail)) $mail = $this->PHPShopSystem->getValue("adminmail2");
 
                 // Подгружаем класс отправки почты
                 if(!class_exists('PHPShopMailFile')) include_once($GLOBALS['SysValue']['class']['formgeneratormail']);
@@ -151,9 +157,13 @@ E-mail: '.$mail.'
                 $this->set('formamemory'.$i,'');
                 $i++;
             }
+            
+            
+            if(!empty($_GET['error']))
+            $error=$data['error_message']; 
 
             $forma_content='
-                <p>'.$error.'</p>
+                <p><b>'.$error.'</b></p>
 <form method="post" enctype="multipart/form-data" name="formgenerator" id="formgenerator" action="/formgenerator/'.$path.'/">
             '.Parser($data['content']).'
                 <p id="formgenerator_buttons">
@@ -164,6 +174,10 @@ E-mail: '.$mail.'
 </form>';
 
             // Определяем переменные
+            
+
+                
+            
             $this->set('pageContent',$forma_content);
             $this->set('pageTitle',$data['name']);
 
@@ -173,7 +187,7 @@ E-mail: '.$mail.'
             // Подключаем шаблон
             $this->parseTemplate($this->getValue('templates.page_page_list'));
         }
-        else include("pages/error.php");
+        else $this->setError404();
     }
 
 }

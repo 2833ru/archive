@@ -67,6 +67,9 @@ function actionStart() {
          поля с номером поля в форме по порядку, начиная сверху, например:<br>
          &lt;input  type="text" name="formgenerator_Тест" <b>value="@formamemory3@</b>"&gt;
          </p>
+         <p>
+         Для включения защитной каптчи используйте <b>@formgenerator_captcha@</b>
+         </p>
 
 ';
     $Tab2=$PHPShopGUI->setInfo($Info,250,'97%');

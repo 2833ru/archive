@@ -4,7 +4,7 @@
     <name>Sape</name>
     <description>Модуль вывода платных ссылок Sape.</description>
     <icon>icon.png</icon>
-    <base>6</base>
+    <category>links</category>
     <adminmenu>
         <title>Sape</title>
         <podmenu>

@@ -192,7 +192,7 @@ $b = array();
 
 for ($i=0; $i < count($a)-1; $i++) {
   //delete phrases lesser than 5 characters
-   if( (strlen(trim($a[$i])) >= $this->word3WordPhraseLengthMin) and (strlen(trim($a[$i+1])) > $this->word3WordPhraseLengthMin) and (strlen(trim($a[$i+2])) > $this->word3WordPhraseLengthMin) and (strlen(trim($a[$i]).trim($a[$i+1]).trim($a[$i+2])) > $this->phrase3WordLengthMin) ) 
+   if( (strlen(trim($a[$i])) >= $this->word3WordPhraseLengthMin) and (strlen(trim(@$a[$i+1])) > $this->word3WordPhraseLengthMin) and (strlen(trim(@$a[$i+2])) > $this->word3WordPhraseLengthMin) and (strlen(trim(@$a[$i]).trim(@$a[$i+1]).trim(@$a[$i+2])) > $this->phrase3WordLengthMin) ) 
    {
      $b[] = trim($a[$i])." ".trim($a[$i+1])." ".trim($a[$i+2]);
    }

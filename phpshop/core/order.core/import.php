@@ -43,10 +43,10 @@ function import($obj,$from) {
         // Поддержка корзины из Excel 1C Price
         default:
 
-            $excel_cart=base64_decode($_GET['c']);
+            $excel_cart=base64_decode(@$_GET['c']);
             parse_str($excel_cart,$order_array);
 
-            if(is_array($order_array['c'])) {
+            if(!empty($order_array['c']) and is_array($order_array['c'])) {
                 foreach ($order_array['c'] as $k=>$num) {
                     $id=getExcelInfoUid($k,$obj);
                     if(PHPShopSecurity::true_num($id)) {

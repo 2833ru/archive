@@ -26,7 +26,7 @@ class AddToTemplate extends PHPShopProductElements {
             $limit=1;
 
             // Случаные товары
-            $where['id']=$this->setramdom($limit);
+            //$where['id']=$this->setramdom($limit);
             $where['spec']="='1'";
             $where['enabled']="='1'";
 

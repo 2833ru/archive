@@ -5,7 +5,7 @@
 
 Товар: @product_name@
 Артикул: @product_art@
-Ссылка: http://@serverName@/shop/UID_@product_id@.html
+Ссылка: http://@serverName@@ShopDir@/shop/UID_@product_id@.html
 Дата поступления: @date@
 Активность заявки до: @date_active@
 

@@ -93,8 +93,8 @@
                                         <td style="padding-left: 90px;"></td>
                                         <td>Итого</td>
                                         <td width=65 class=data nowrap><div width=65>@total@</div></td>
-                                        <td><?=$GetIsoValutaOrder?></td>
-                                        <td width=65 class=data><div width=65><?= $sum_kop?></div></td>
+                                        <td></td>
+                                        <td width=65 class=data><div width=65></div></td>
                                         <td>коп.</td>
                                         <td width=100%></td>
                                     </tr>

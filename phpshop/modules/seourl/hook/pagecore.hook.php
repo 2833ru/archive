@@ -28,6 +28,10 @@ function ListPage_seourl_hook($obj, $row, $rout) {
             $obj->setError404();
             return true;
         }
+        elseif($url == $url_pack){
+            header( 'Location: '.$url_true.'.html', true, 301 );
+            return true;
+        }
     }
 
     if ($rout == 'END')
@@ -52,6 +56,10 @@ function ListCategory_seourl_hook($obj, $dataArray, $rout) {
         if ($url != $url_true and $url != $url_pack) {
             $obj->ListInfoItems = parseTemplateReturn($obj->getValue('templates.error_page_forma'));
             $obj->setError404();
+            return true;
+        }
+        elseif($url == $url_pack){
+            header( 'Location: '.$url_true.'.html', true, 301 );
             return true;
         }
     }

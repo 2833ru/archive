@@ -5,6 +5,15 @@ Copyright © 2003-2005, INNOVA STUDIO (www.InnovaStudio.com). All rights reserved
 
 var editor = new Array();
 
+/*
+function Save(){
+    document.forms.product_edit.elements.EditorContent1.value = oEdit1.getHTMLBody();
+    if(document.forms.product_edit.elements.EditorContent2)
+        document.forms.product_edit.elements.EditorContent2.value = oEdit2.getHTMLBody();
+    document.forms.product_edit.submit();
+}
+*/
+
 /*** Utility Object ***/
 var oUtil=new InnovaEditorUtil();
 function InnovaEditorUtil()

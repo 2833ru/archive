@@ -13,7 +13,7 @@
       </td>
     </tr>
     <tr>
-      <td colspan="2">Выберете каталог:<br>
+      <td colspan="2">Выберите каталог:<br>
         @searchPageCategory@ </td>
     </tr>
     <tr>

@@ -421,7 +421,7 @@ function ToCart(xid,num,xxid) {
     req.caching = false;
     var truePath=dirPath();
 
-    var name="allOptionsSet"+xxid;
+    var name="allOptionsSet"+xid;
     if(document.getElementById(name)) {
         addname=document.getElementById(name).value;
     } else {

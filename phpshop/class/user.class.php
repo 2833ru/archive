@@ -7,14 +7,14 @@ if (!defined("OBJENABLED")) {
 /**
  * Библиотека данных администраторов
  * @author PHPShop Software
- * @version 1.0
+ * @version 1.1
  * @package PHPShopObj
  */
 class PHPShopUser extends PHPShopObj {
 
     /**
      * Конструктор
-     * @param Int $objID ИД администратора
+     * @param Int $objID ИД пользователя
      */
     function PHPShopUser($objID) {
         $this->objID=$objID;
@@ -23,10 +23,20 @@ class PHPShopUser extends PHPShopObj {
         parent::PHPShopObj();
     }
 
+     /**
+     * Вывод данных по ключу
+     * @param string $str ключ
+     * @return string 
+     */
     function getParam($str){
         return str_replace("\"","&quot;",parent::getParam($str));
     }
 
+    /**
+     * Вывод данных по ключу
+     * @param string $str ключ
+     * @return string 
+     */
     function getValue($str){
         return $this->getParam($str);
     }
@@ -39,13 +49,31 @@ class PHPShopUser extends PHPShopObj {
         return $this->getParam("name");
     }
 
+    /**
+     * Вывод ID статуса
+     * @return int 
+     */
     function getStatus() {
         return $this->getParam("status");
     }
 
+    /**
+     * Вывод названия статуса
+     * @return string 
+     */
     function getStatusName(){
         $PHPShopUserStatus = new PHPShopUserStatus($this->getStatus());
         return $PHPShopUserStatus->getParam("name");
+    }
+    
+    /**
+     * Вывод размера скидки
+     * @return float 
+     */
+    function getDiscount(){
+        $PHPShopUserStatus = new PHPShopUserStatus($this->getStatus());
+        return $PHPShopUserStatus->getDiscount();
+        
     }
 
 }
@@ -61,12 +89,13 @@ class PHPShopUserStatus extends PHPShopObj {
     /**
      * Конструктор
      * @param Int $objID ИД статуса пользователя
+     * @param array $import_data массив импорта данных
      */
-    function PHPShopUserStatus($objID) {
+    function PHPShopUserStatus($objID,$import_data = null) {
         $this->objID=$objID;
         $this->cache=true;
         $this->objBase=$GLOBALS['SysValue']['base']['table_name28'];
-        parent::PHPShopObj();
+        parent::PHPShopObj('id',$import_data);
     }
 
     /**

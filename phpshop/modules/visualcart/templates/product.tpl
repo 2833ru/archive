@@ -6,7 +6,7 @@
     </td>
     <td>
         <a href="@shopDir@/shop/UID_@visualcart_product_id@@visualcart_product_seo@.html" title="@visualcart_product_name@">
-            @visualcart_product_name@
+            @visualcart_product_name@ <!--[@visualcart_product_num@ רע.]-->
         </a> (<b>@visualcart_product_price@ @visualcart_product_currency@</b>)
     </td>
     <td>

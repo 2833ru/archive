@@ -2,6 +2,7 @@
 /**
  * Обработчик подключаемых html файлов
  * @author PHPShop Software
+ * @tutorial http://wiki.phpshop.ru/index.php/PHPShopCore
  * @version 1.0
  * @package PHPShopCore
  */

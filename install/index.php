@@ -201,15 +201,14 @@ else  $xml_support="............<img src=\"rewritemodtest/errormessage.gif\"  bo
         <h2>Системные требования</h2>
         <p>
         <ol>
-            <li> Apache => 1.3.*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=$API?>
-            <li> MySQL => 4.* <?=$mysql?>
-            <li> PHP => 4.* &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=$php?>
-            <li> RewriteEngine ON для Apache&nbsp;&nbsp;&nbsp;<?=$rewrite?>
+            <li> Apache <?=$API?>
+            <li> MySQL <?=$mysql?>
+            <li> PHP <?=$php?>
             <li>GD Support для PHP <?=$gd_support?>
             <li>FreeType Support для PHP <?=$gd_freetype_support?>
             <li>FreeType Linkage для PHP <?=$gd_freetype_linkage?>
             <li>XML Parser для PHP <?=$xml_support?>
-                <p>* => означет, что версия приложения больше или равно указанного параметра.<br>
+                <p>
                     Расшифровка: <img src="rewritemodtest/icon-activate.gif" border=0 align=absmiddle> <b class='ok'>Ok</b> - тест пройден,
                     <img src="rewritemodtest/errormessage.gif"  border=0 align=absmiddle> <b class='error'>Error</b> - тест не пройден (возможны проблемы при работе скрипта, обратитесь к документации сервера или свяжитесь с администратором сервера)
 
@@ -274,7 +273,7 @@ else  $xml_support="............<img src=\"rewritemodtest/errormessage.gif\"  bo
                     Внимание, использование зарегистрированных ссылок с именами shop, news, gbook, spec, users -  <strong>запрещено.</strong>
                 <li>Библиотеку /market/phpshop/lib/ копируем в корень /phpshop/lib/
                 <li>В файле конфигурации /market/phpshop/inc/config.ini указываем имя директории, куда установлен скрипт
-                    <p class=pre>[dir]
+                    <p class=pre>[dir]<br>
                         dir="/market";
                     </p>
                 <li>В файле java/java2.js указываем имя директории, куда установлен скрипт
@@ -293,8 +292,8 @@ else  $xml_support="............<img src=\"rewritemodtest/errormessage.gif\"  bo
             </ul></p>
             Тип префикса задается в файле config.ini
             <p class=pre>[base]<br>
-                table_name="<strong>phpshop_</strong>categories"; <br>
-                table_name1="phpshop_orders";   <br>
+                categories="<strong>phpshop_</strong>categories"; <br>
+                orders="phpshop_orders";   <br>
                 .....
 
             </p>

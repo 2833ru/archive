@@ -52,11 +52,11 @@
     <table cellpadding=0 cellspacing=2>
         <tr>
             <td>Заказчик:</td>
-            <td>@org_name@</td>
+            <td>@person_user@</td>
         </tr>
         <tr>
             <td>Плательщик:</td>
-            <td>@org_user@</td>
+            <td>@person_org@</td>
         </tr>
     </table>
     <table width=99% cellpadding=2 cellspacing=0 align=center>

@@ -39,15 +39,15 @@ class PHPShopIpboardElement extends PHPShopElements {
 }
 
 // Вывод 
-$PHPShopIpboardElement = &new PHPShopIpboardElement();
+$PHPShopIpboardElement = new PHPShopIpboardElement();
 if($GLOBALS['LoadItems']['modules']['forumlastpost']['enabled']==1) {
     if($GLOBALS['LoadItems']['modules']['forumlastpost']['flag']==1) {
-        $PHPShopTextElement = &new PHPShopTextElement();
+        $PHPShopTextElement = new PHPShopTextElement();
         $GLOBALS['SysValue']['other']['rightMenu']=$PHPShopTextElement->rightMenu();
         $GLOBALS['SysValue']['other']['rightMenu'].=$PHPShopIpboardElement->ipboard();
     }
     else {
-        $PHPShopTextElement = &new PHPShopTextElement();
+        $PHPShopTextElement = new PHPShopTextElement();
         $GLOBALS['SysValue']['other']['leftMenu']=$PHPShopTextElement->leftMenu();
         $GLOBALS['SysValue']['other']['leftMenu'].=$PHPShopIpboardElement->ipboard();
        

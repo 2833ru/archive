@@ -38,7 +38,7 @@ class PHPShopPartner extends PHPShopCore {
             if ($_SESSION['partnerTotal'] < $_POST['get_money_new']) {
                 $notice = PHPShopText::notice($GLOBALS['SysValue']['lang']['partner_notice'], $this->icon);
             } else {
-                $PHPShopOrm = &new PHPShopOrm($GLOBALS['SysValue']['base']['partner']['partner_payment']);
+                $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['partner']['partner_payment']);
                 $PHPShopOrm->debug = false;
                 $PHPShopOrm->insert(array('date_new' => time(), 'sum_new' => $_POST['get_money_new'], 'partner_id_new' => $_SESSION['partnerId']));
                 $notice = PHPShopText::message($GLOBALS['SysValue']['lang']['partner_money_done'], $this->icon);
@@ -134,7 +134,7 @@ class PHPShopPartner extends PHPShopCore {
              * Заявки на вывод
              */
             $PHPShopInterface->setCaption(array("&plusmn;", "10%"), array("Дата", "20%"), array("Сумма (" . $this->PHPShopSystem->getDefaultValutaCode() . ')', "30%"));
-            $PHPShopOrm = &new PHPShopOrm($GLOBALS['SysValue']['base']['partner']['partner_payment']);
+            $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['partner']['partner_payment']);
             $PHPShopOrm->debug = false;
             $data = $PHPShopOrm->select(array('*'), array('partner_id' => "='" . $_SESSION['partnerId'] . "'"), array('order' => 'id desc'), array('limit' => 300));
             if (is_array($data))
@@ -162,7 +162,7 @@ class PHPShopPartner extends PHPShopCore {
             $PHPShopTableOrders->imgPath = 'phpshop/admpanel/img/';
             $PHPShopTableOrders->setCaption(array("&plusmn;", "10%"), array("Дата", "15%"), array("№ Заказа", '15%'), array("Бонус (" . $this->PHPShopSystem->getDefaultValutaCode() . ')', "20%"), array("%", "10%"));
 
-            $PHPShopOrm = &new PHPShopOrm($GLOBALS['SysValue']['base']['partner']['partner_log']);
+            $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['partner']['partner_log']);
             $PHPShopOrm->debug = false;
             $result = $PHPShopOrm->query('SELECT a.*, b.orders FROM ' . $GLOBALS['SysValue']['base']['partner']['partner_log'] . ' AS a
             JOIN ' . $GLOBALS['SysValue']['base']['orders'] . ' AS b ON a.order_id = b.uid where a.partner_id=' . $_SESSION['partnerId'] . ' order by a.id desc limit 0,100');
@@ -175,7 +175,7 @@ class PHPShopPartner extends PHPShopCore {
             /**
              * Настройки пользователя
              */
-            $PHPShopOrm = &new PHPShopOrm($this->objBase);
+            $PHPShopOrm = new PHPShopOrm($this->objBase);
             $row = $PHPShopOrm->select(array('*'), array('id' => "='" . $_SESSION['partnerId'] . "'", 'enabled' => "='1'"));
             if (is_array($row)) {
 
@@ -283,10 +283,10 @@ class PHPShopPartner extends PHPShopCore {
 
         // Определяем переменные
         $this->set('pageContent', ParseTemplateReturn($GLOBALS['SysValue']['templates']['partner']['partner_forma'], true));
-        $this->set('pageTitle', 'Авторизация партнера');
+        $this->set('pageTitle', __('Авторизация партнера'));
 
         // Мета
-        $this->title = "Кабинет партнера - Авторизация - " . $this->PHPShopSystem->getValue("name");
+        $this->title = __("Кабинет партнера - Авторизация - "). $this->PHPShopSystem->getValue("name");
 
         // Подключаем шаблон
         $this->parseTemplate($this->getValue('templates.page_page_list'));
@@ -297,13 +297,13 @@ class PHPShopPartner extends PHPShopCore {
      */
     function activation() {
         $activation = PHPShopSecurity::TotalClean($_GET['activation'], 4);
-        $PHPShopOrm = &new PHPShopOrm($this->objBase);
+        $PHPShopOrm = new PHPShopOrm($this->objBase);
         $PHPShopOrm->debug = $this->debug;
         $row = $PHPShopOrm->select(array('id,login'), array('activation' => "='" . $activation . "'"), false, array('limit' => 1));
         if (!empty($row['login'])) {
 
             // Включение пользователя
-            $PHPShopOrm = &new PHPShopOrm($this->objBase);
+            $PHPShopOrm = new PHPShopOrm($this->objBase);
             $PHPShopOrm->debug = $this->debug;
             $PHPShopOrm->update(array('enabled_new' => '1', 'activation_new' => 'done'), array('id' => '=' . $row['id']));
 
@@ -322,7 +322,7 @@ class PHPShopPartner extends PHPShopCore {
 
         if (PHPShopSecurity::true_login($_POST['plogin']) and PHPShopSecurity::true_passw($_POST['ppassword'])) {
 
-            $PHPShopOrm = &new PHPShopOrm($this->objBase);
+            $PHPShopOrm = new PHPShopOrm($this->objBase);
             $PHPShopOrm->debug = $this->debug;
             $row = $PHPShopOrm->select(array('id,login'), array('enabled' => "='1'", 'login' => "='" . $_POST['plogin'] . "'",
                 'password' => "='" . base64_encode($_POST['ppassword']) . "'"), false, array('limit' => 1));
@@ -351,7 +351,7 @@ class PHPShopPartner extends PHPShopCore {
      * @return bool
      */
     function chek($login) {
-        $PHPShopOrm = &new PHPShopOrm($this->objBase);
+        $PHPShopOrm = new PHPShopOrm($this->objBase);
         $PHPShopOrm->debug = $this->debug;
         $num = $PHPShopOrm->select(array('id'), array('login' => "='$login'"), false, array('limit' => 1));
         if (empty($num['id']))
@@ -368,7 +368,7 @@ class PHPShopPartner extends PHPShopCore {
         $this->set('pageTitle', 'Напоминание пароля');
 
         // Мета
-        $this->title = "Кабинет партнера - Напоминание пароля - " . $this->PHPShopSystem->getValue("name");
+        $this->title = __("Кабинет партнера - Напоминание пароля - ") . $this->PHPShopSystem->getValue("name");
 
         // Подключаем шаблон
         $this->parseTemplate($this->getValue('templates.page_page_list'));
@@ -412,18 +412,18 @@ class PHPShopPartner extends PHPShopCore {
         $login = PHPShopSecurity::TotalClean($_POST['login'], 2);
 
         // Выборка данных
-        $PHPShopOrm = &new PHPShopOrm($this->objBase);
+        $PHPShopOrm = new PHPShopOrm($this->objBase);
         $PHPShopOrm->Option['where'] = ' OR ';
         $row = $PHPShopOrm->select(array('*'), array('login' => "='" . $login . "'", 'mail' => "='" . $mail . "'"), false, array('limit' => 1));
 
         if (!empty($row['login'])) {
 
             PHPShopObj::loadClass("mail");
-            $zag = "Напоминание пароля в " . $this->PHPShopSystem->getValue("name");
-            $content = 'Доброго времени, ' . $row['login'] . '
+            $zag = __("Напоминание пароля в ") . $this->PHPShopSystem->getValue("name");
+            $content = __('Доброго времени, ') . $row['login'] . '
 ----------------
 
-Для доступа к сайту http://' . $this->convert($_SERVER['SERVER_NAME']) . '/partner/ используйте данные:
+Для доступа к сайту http://' . $this->convert($_SERVER['SERVER_NAME']) .$this->getValue('dir.dir'). '/partner/ используйте данные:
 Логин: ' . $row['login'] . '
 Пароль: ' . base64_decode($row['password']) . '
 
@@ -442,10 +442,10 @@ class PHPShopPartner extends PHPShopCore {
 
         // Определяем переменные
         $this->set('pageContent', ParseTemplateReturn($GLOBALS['SysValue']['templates']['partner']['partner_forma_register'], true));
-        $this->set('pageTitle', 'Регистрация партнера');
+        $this->set('pageTitle', __('Регистрация партнера'));
 
         // Мета
-        $this->title = "Кабинет партнера - Регистрация - " . $this->PHPShopSystem->getValue("name");
+        $this->title = __("Кабинет партнера - Регистрация - ") . $this->PHPShopSystem->getValue("name");
 
         // Подключаем шаблон
         $this->parseTemplate($this->getValue('templates.page_page_list'));
@@ -461,7 +461,7 @@ class PHPShopPartner extends PHPShopCore {
 
         if (PHPShopSecurity::true_param($mail)) {
 
-            $PHPShopOrm = &new PHPShopOrm($this->objBase);
+            $PHPShopOrm = new PHPShopOrm($this->objBase);
             $PHPShopOrm->debug = $this->debug;
 
             // Дополнительные поля dop_
@@ -505,7 +505,7 @@ class PHPShopPartner extends PHPShopCore {
 
                 // проверка на уникальность имени
                 if ($this->chek($login)) {
-                    $PHPShopOrm = &new PHPShopOrm($this->objBase);
+                    $PHPShopOrm = new PHPShopOrm($this->objBase);
                     $PHPShopOrm->debug = $this->debug;
 
                     // Защитный код
@@ -521,13 +521,13 @@ class PHPShopPartner extends PHPShopCore {
 
                     // Сообщение с активацией
                     PHPShopObj::loadClass("mail");
-                    $zag = "Регистрация в " . $this->PHPShopSystem->getValue("name");
+                    $zag = __("Регистрация в ") . $this->PHPShopSystem->getValue("name");
                     $content = 'Доброго времени
 ----------------
 
-Для активации партнера ' . $login . ' перейдите по ссылке: http://' . $this->convert($_SERVER['SERVER_NAME']) . '/partner/?activation=' . $check_text . '
+Для активации партнера ' . $login . ' перейдите по ссылке: http://' . $this->convert($_SERVER['SERVER_NAME']).$this->getValue('dir.dir') . '/partner/?activation=' . $check_text . '
 
-Для доступа к сайту http://' . $this->convert($_SERVER['SERVER_NAME']) . '/partner/ после активации используйте данные:
+Для доступа к сайту http://' . $this->convert($_SERVER['SERVER_NAME']).$this->getValue('dir.dir') . '/partner/ после активации используйте данные:
 Логин: ' . $login . '
 Пароль: ' . $password . '
 

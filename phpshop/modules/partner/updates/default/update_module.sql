@@ -1,5 +1,5 @@
 
-ALTER TABLE `phpshop_modules_partner_system` ADD `version` FLOAT DEFAULT '1.6' NOT NULL;
+ALTER TABLE `phpshop_modules_partner_system` ADD `version` FLOAT(2) DEFAULT '1.6' NOT NULL;
 
 DROP TABLE IF EXISTS `phpshop_modules_partner_key`;
 CREATE TABLE `phpshop_modules_partner_key` (

@@ -8,6 +8,7 @@ function PHPShopXmlManager(){
     this.limit=10;
     this.id='shopItem';
     this.obj=1;
+    this.code='windows-1251'; // utf-8
     
     this.xmldoc = function(txt){
         if (window.DOMParser)
@@ -70,7 +71,7 @@ function PHPShopXmlManager(){
         data.type = 'text/javascript';
         data.async = true;
         data.id = this.obj+'_lib';
-        data.src = this.url+'/phpshop/modules/partner/lib/data.js.php?partner='+this.partner+'&cat='+this.category+'&limit='+this.limit+'&key='+this.key+'&id='+this.id;
+        data.src = this.url+'/phpshop/modules/partner/lib/data.js.php?partner='+this.partner+'&cat='+this.category+'&limit='+this.limit+'&key='+this.key+'&id='+this.id+'&code='+this.code;
         data.src+='&obj='+this.obj;
         var s = document.getElementsByTagName('script')[0];
         s.parentNode.insertBefore(data, s);

@@ -2,6 +2,7 @@
 /**
  * Обработчик гостевой книги
  * @author PHPShop Software
+ * @tutorial http://wiki.phpshop.ru/index.php/PHPShopGbook
  * @version 1.1
  * @package PHPShopCore
  */
@@ -45,7 +46,7 @@ class PHPShopGbook extends PHPShopCore {
             foreach($this->dataArray as $row) {
 
                 // Ссылка на автора
-                if(!empty($row['mail']))  $d_mail=PHPShopText::a('mailto:'.$row[mail],PHPShopText::b($row['name']),$row['name']);
+                if(!empty($row['mail']))  $d_mail=PHPShopText::a('mailto:'.$row['mail'],PHPShopText::b($row['name']),$row['name']);
                 else  $d_mail=PHPShopText::b($row['name']);
 
                 // Определяем переменые
@@ -100,7 +101,7 @@ class PHPShopGbook extends PHPShopCore {
         if(!empty($row['mail']))  $d_mail=PHPShopText::a('mailto:'.$row['mail'],PHPShopText::b($row['name']));
         else  $d_mail=PHPShopText::b($row['name']);
 
-        // Определяем переменые
+        // Определяем переменные
         $this->set('gbookData',PHPShopDate::dataV($row['datas']));
         $this->set('gbookName',$row['name']);
         $this->set('gbookTema',$row['tema']);

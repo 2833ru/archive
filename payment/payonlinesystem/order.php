@@ -17,7 +17,7 @@ $mrh_ouid = explode("-", $_POST['ouid']);
 $inv_id = $mrh_ouid[0]."".$mrh_ouid[1];     //номер счета
 
 $OrderId=$inv_id;
-$Amount=$GLOBALS['SysValue']['other']['total'];
+$Amount=number_format($GLOBALS['SysValue']['other']['total'], 2, '.', '');
 $Currency="RUB";
 
 $SecurityKey=md5("MerchantId=$MerchantId&OrderId=$OrderId&Amount=$Amount&Currency=$Currency&PrivateSecurityKey=$PrivateSecurityKey");

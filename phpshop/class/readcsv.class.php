@@ -20,6 +20,7 @@ class PHPShopReadCsvPro extends PHPShopReadCsv{
     function ReadCsvRow() {
         $csv_lines  = $this->CsvContent;
         array_shift($csv_lines);
+        $column=null;
         if(is_array($csv_lines)) {
             //разбор csv
             $cnt = count($csv_lines);
@@ -33,7 +34,7 @@ class PHPShopReadCsvPro extends PHPShopReadCsv{
                 $length = strlen($line);
                 for($b = 0; $b < $length; $b++) {
                     //переменная $skip_char определяет обрабатывать ли данный символ
-                    if($skip_char != true) {
+                    if(@$skip_char != true) {
                         //определяет обрабатывать/не обрабатывать строку
                         $process = true;
                         //определяем маркер окончания столбца по первому символу

@@ -51,7 +51,7 @@ function actionStart() {
 
     $Tab1=$PHPShopGUI->setTextarea('code_new', $code, null, '98%', '200px');
     $Tab3=$PHPShopGUI->setPay($serial,false);
-    $Info='<h4>Для вставки Яндекс.Карты соедуйте инструкции</h4>
+    $Info='<h4>Для вставки Яндекс.Карты следуйте инструкции</h4>
         <ol>
         <li> <a href="http://api.yandex.ru/maps/form.xml" target="_blank">Получите API ключ для своего сайта</a>
         <li> <a href="http://api.yandex.ru/maps/tools/constructor/" target="_blank">Создайте точки на карте</a>.Введите адрес улицы.

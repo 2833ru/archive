@@ -40,15 +40,15 @@ class PHPShopExampleElement extends PHPShopElements {
 
 
 // Вызываем генерацию главного горизонтального меню
-$PHPShopTextElement = &new PHPShopTextElement();
+$PHPShopTextElement = new PHPShopTextElement();
 $PHPShopTextElement->init('topMenu'); // Вывод главного меню
 $PHPShopTextElement->init('rightMenu'); // Вывод главного меню
 //
 // Добавляем ссылку Example в главного горизонтальное меню
-$PHPShopExampleElement = &new PHPShopExampleElement();
+$PHPShopExampleElement = new PHPShopExampleElement();
 $GLOBALS['SysValue']['other']['topMenu'].=$PHPShopExampleElement->addToTopMenu();
 
 // Добавляем ссылку Example в левый текстовый блок
-$PHPShopExampleElement = &new PHPShopExampleElement();
+$PHPShopExampleElement = new PHPShopExampleElement();
 $GLOBALS['SysValue']['other']['rightMenu'].=$PHPShopExampleElement->addToRightMenu();
 ?>

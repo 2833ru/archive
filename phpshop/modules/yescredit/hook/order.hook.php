@@ -4,10 +4,9 @@
 
 function payment_yescredit_hook($obj,$value) {
     global $PHPShopModules;
-
     $js='<script>
 function yescredit_check(v){
-if(v==11)
+if(v==25)
   document.getElementById(\'yescredit_option\').style.display="block";
   else
 document.getElementById(\'yescredit_option\').style.display="none";
@@ -26,8 +25,8 @@ document.getElementById(\'yescredit_option\').style.display="none";
     $region_value[]=array('Московская область','Московская область','');
     $region_value[]=array('Санкт-Петербург','Санкт-Петербург','');
     $region_value[]=array('Ленинградская область','Ленинградская область','');
-    $region_value[]=array('Казань','Казань','');
-    $region_value[]=array('Татарстан','Татарстан','');
+    //$region_value[]=array('Казань','Казань','');
+    //$region_value[]=array('Татарстан','Татарстан','');
 
     $start_summ_value=array();
     $start_summ_value[]=array('10%',10,'selected');
@@ -63,6 +62,12 @@ document.getElementById(\'yescredit_option\').style.display="none";
 $addHandler=array
         (
         'payment'=>'payment_yescredit_hook'
+);
+
+// Запрещаем функции повторное выполнение
+$setHandlerDoneMemory = array
+    (
+    'payment_yescredit_hook' => 'true'
 );
 
 ?>

@@ -8,7 +8,7 @@
     <div class="prod_cart2">
       <table cellpadding="0" cellspacing="0" border="0" class="tovarDivImg1" align="left" width="100%">
         <tr>
-          <td align="center" valign="middle"><a class="highslide" onclick="return hs.expand(this)" href="@productImgBigFoto@" target="_blank" getParams="null" title="@productName@"> <img src="@productImg@" lowsrc="images/shop/no_photo.gif"  onerror="NoFoto(this,'@pathTemplate@')"  alt="@productName@" title="@productName@" border="0"> </a>
+          <td align="center" valign="middle"><a class="highslide" onclick="return hs.expand(this)" href="@productImgBigFoto@" target="_blank" getParams="null" title="@productName@"> <img src="@productImg@  onerror="NoFoto(this,'@pathTemplate@');"  alt="@productName@" title="@productName@" border="0"> </a>
             <div class=highslide-caption>@productName@</div></td>
         </tr>
       </table>

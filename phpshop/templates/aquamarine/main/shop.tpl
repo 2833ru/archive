@@ -19,7 +19,7 @@
 <SCRIPT language="JavaScript" type="text/javascript" src="phpshop/lib/Subsys/JsHttpRequest/Js.js"></SCRIPT>
 <SCRIPT language="JavaScript" type="text/javascript" src="java/swfobject.js" ></SCRIPT>
 </HEAD>
-<BODY onLoad="pressbutt_load('@thisCat@','@pathTemplate@','false','false');NavActive('@NavActive@');LoadPath('@ShopDir@');"  class="bod">
+<BODY onLoad="NavActive('@NavActive@');LoadPath('@ShopDir@');"  class="bod">
 <div class="black_overlay" id="fade"></div>
 <div id="mainblock">
   <div id="top">
@@ -78,7 +78,7 @@
                                 Замена стилей меню каталога
                                 -->
             @php
-            $replace=array("podCatTiTOut"=>"TiTOut","podCatTiTOver"=>"TiTOver","divCatId"=>"divCatIdBot");
+            $replace=array("podCatTiTOut"=>"TiTOut","podCatTiTOver"=>"TiTOver","divCatId"=>"divCatIdBot","onMouseOver"=>"onMouseOut");
             echo $GLOBALS['PHPShopShopCatalogElement']->leftCatal($replace);
             php@
             <script type="text/javascript">

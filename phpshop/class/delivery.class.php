@@ -39,7 +39,7 @@ class PHPShopDelivery extends PHPShopObj {
                 }
                 $addweight=ceil($addweight/500)*$row['taxa'];
                 $endprice=$row['price']+$addweight;
-                return $at.$endprice;
+                return $endprice;
             } else {
                 return $row['price'];
             }
@@ -58,6 +58,22 @@ class PHPShopDelivery extends PHPShopObj {
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['delivery']);
         $row=$PHPShopOrm->select(array('price'),array('flag'=>"='1'",'enabled'=>"='1'"),false,array('limit'=>1));
         return $row['price'];
+    }
+}
+
+
+/**
+ * Массив доставок
+ * @author PHPShop Software
+ * @version 1.0
+ * @package PHPShopArray
+ */
+class PHPShopDeliveryArray extends PHPShopArray {
+
+    function PHPShopDeliveryArray() {
+        $this->order=array('order'=>'id');
+        $this->objBase=$GLOBALS['SysValue']['base']['delivery'];
+        parent::PHPShopArray('id',"city",'price','enabled','PID','is_folder');
     }
 }
 ?>

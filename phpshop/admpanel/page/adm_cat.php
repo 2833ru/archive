@@ -1,162 +1,102 @@
-<?
-require("../connect.php");
-@mysql_connect ("$host", "$user_db", "$pass_db")or @die("Невозможно подсоединиться к базе");
-mysql_select_db("$dbase")or @die("Невозможно подсоединиться к базе");
-require("../enter_to_admin.php");
-
-// Подключение языков
-$GetSystems=GetSystems();
-$Admoption=unserialize($GetSystems['admoption']);
-$Lang=$Admoption['lang'];
-
-require("../language/".$Lang."/language.php");
-
-function TestCat($n)// есть ли еще подкаталоги
-{
-global $SysValue;
-$sql="select id from ".$SysValue['base']['table_name29']." where parent_to='$n'";
-$result=mysql_query($sql);
-$num=mysql_num_rows($result);
-return $num;
-}
+<?php
+$_classPath = "../../";
+include($_classPath . "class/obj.class.php");
+PHPShopObj::loadClass("base");
+PHPShopObj::loadClass("system");
+PHPShopObj::loadClass("orm");
+PHPShopObj::loadClass("admgui");
 
 
+$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
+$PHPShopBase->chekAdmin();
 
+$PHPShopSystem = new PHPShopSystem();
 
-function Vivod_rekurs($n)// вывод подкаталогов рекурсом
-{
-global $SysValue,$sid;
-$sql="select * from ".$SysValue['base']['table_name29']." where parent_to='$n' order by num";
-$result=mysql_query($sql);
-while($row = mysql_fetch_array($result))
-{
-$i=0;
-$id=$row['id'];
-$name=$row['name'];
-$parent_to=$row['parent_to'];
-$num=TestCat($id);
-
-if($i<$num)// если есть еще каталоги
-  {
-   @$disp.="d2.add($id,$n,'$name','');
-".Vivod_rekurs($id)."
-";
-
-  }
-else// если нет каталогов
-   {
-@$disp.="d2.add($id,$n,'$name','".DispName($parent_to,$name)."');";
-   }
-}
-return @$disp;
-}
-
-function DispName($n,$catalog){
-global $SysValue;
-$sql="select name from ".$SysValue['base']['table_name29']." where id='$n'";
-$result=mysql_query($sql);
-$row = mysql_fetch_array($result);
-$name=$row['name'];
-return $name." => ".$catalog;
-}
-
-function Vivod_pot()// вывод каталогов
-{
-global $SysValue,$system,$category;
-$sql="select * from ".$SysValue['base']['table_name29']." where parent_to=0 order by num";
-$result=mysql_query($sql);
-$i=0;
-$j=0;
-while($row = mysql_fetch_array($result))
-    {
-    $id=$row['id'];
-    $name=$row['name'];
-	$num=TestCat($id);
-	if($num>0) 
-	@$dis.="
-	d2.add($id,0,'$name','');
-	".Vivod_rekurs($id)."
-	";
-	else @$dis.="
-	d2.add($id,0,'$name','$name');
-	".Vivod_rekurs($id)."
-	";
-	
-	
-
-	$i++;
-	 }
-$dis="
-<script type=\"text/javascript\">
-		<!--
-		d2 = new dTree('d2');
-		d2.add(0,-1,'<b>".$SysValue['Lang']['Category'][1]."</b>');
-		d2.add(3000,0,'".$SysValue['Lang']['Category'][8]."','','','','','../img/imgfolder.gif');
-		d2.add(1000,3000,'".$SysValue['Lang']['Category'][9]."','".$SysValue['Lang']['Category'][12]."');
-		d2.add(2000,3000,'".$SysValue['Lang']['Category'][10]."','".$SysValue['Lang']['Category'][13]."');
-        ".$dis."
-		d2.add(100000,0,'".$SysValue['Lang']['Category'][14]."','".DispName(100000,$SysValue['Lang']['Category'][14])."','','','../img/imgfolder.gif','');
-		document.write(d2);";
-if($category!=""){
-		$dis.="d2.openTo(".$category.", true);";
-		}
-		$dis.="
-		//-->
-	</script>
-";
-return $dis;
-}
-
-
-
-function Vivod_cat_all_num($n)// выбор кол-ва товаров из данного подкатолога
-{
-global $SysValue;
-$sql="select id from ".$SysValue['base']['table_name11']." where category='$n' and enabled='1'";
-$result=mysql_query($sql);
-$num=mysql_num_rows($result);
-return $num;
-}
+// Локализация
+PHPShopObj::loadClass("lang");
 ?>
 
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "xhtml11.dtd">
 <html>
-<head>
-<title>Каталог</title>
-<META http-equiv="Content-Type" content="text-html; charset=<?=$SysValue['Lang']['System']['charset']?>">
-<meta http-equiv="MSThemeCompatible" content="Yes">
-<LINK href="../css/texts.css" type=text/css rel=stylesheet>
-<LINK href="../css/dtree.css" type=text/css rel=stylesheet>
-<SCRIPT language=JavaScript1.2 src="../java/dtree4.js" type=text/javascript></SCRIPT>
-<script language="JavaScript">
-// Закрывает окно
-function CloseWindow() {
-window.close();
-}
+    <head>
+        <title><?= __('Выбор каталога'); ?></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=<?= $GLOBALS['PHPShopLangCharset'] ?>">
+            <LINK href="../css/texts.css" type="text/css" rel="stylesheet">
+                <LINK href="../css/dtree.css" type=text/css rel=stylesheet>
+                <SCRIPT language=JavaScript src="./gui/dtree.js" type="text/javascript"></SCRIPT>
+                    <script>
 
-// Дерево
-function My(name,cat){
-//alert(name+","+cat)
-window.opener.document.getElementById('myName').value=name;
-window.opener.document.getElementById('myCat').value=cat;
-window.close();
-}
+                        if(parent.window.hs)
+                            exp = parent.window.hs.getExpander();
 
-</script>
+                        function doAction(name,cat){
+                            var winOpenType = '<?= $_COOKIE['winOpenType']; ?>';
 
-</head>
+                            switch (winOpenType) {
 
-<body bottommargin="0" leftmargin="5" topmargin="0" rightmargin="5"">
-<div align="center" style="padding:5"><a href="javascript: window.d2.openAll();"><?=$SysValue['Lang']['Category'][5]?></a> | <a href="javascript: window.d2.closeAll();"><?=$SysValue['Lang']['Category'][6]?></a> | <a href="javascript: window.close()"><?=$SysValue['Lang']['Category'][7]?></a></div>
-<table cellpadding="0" cellspacing="0" bgcolor="ffffff" style="border: 2px;border-style: inset;" width="100%" height="350">
-<tr>
-	<td valign="top">
-<?echo Vivod_pot();?>
-	</td>
-</tr>
-</table>
-<div align="center" style="padding:5"><a href="javascript: window.d2.openAll();"><?=$SysValue['Lang']['Category'][5]?></a> | <a href="javascript: window.d2.closeAll();"><?=$SysValue['Lang']['Category'][6]?></a> | <a href="javascript: window.close()"><?=$SysValue['Lang']['Category'][7]?></a></div>
-</body>
-</html>
+                                case 'highslide':
+                                    exp.iDoc.getElementById('parent_name').value=name;
+                                    if(exp.iDoc.getElementById('parent_to_new'))
+                                        exp.iDoc.getElementById('parent_to_new').value=cat;
+                                    else exp.iDoc.getElementById('category_new').value=cat;
+                                    return parent.window.hs.close();
+                                    break;
+
+                                default:
+                                    window.opener.document.getElementById('parent_name').value=name;
+                                    if(window.opener.document.getElementById('parent_to_new'))
+                                        window.opener.document.getElementById('parent_to_new').value=cat;
+                                    else window.opener.document.getElementById('category_new').value=cat;
+
+                                    window.close(null);
+                                    return false;
+                                    break;
+
+                            }
+
+                        }
+
+                        // Закрывает окно
+                        function CloseWindow() {
+                            window.close();
+                        }
+
+                        // Дерево
+                        function Return(name,cat){
+                            //alert(name+","+cat)
+                            window.opener.document.getElementById('parent_name').value=name;
+                            try{
+                                window.opener.document.getElementById('category_new').value=cat;
+                            }
+                            catch(e){
+                                window.opener.document.getElementById('parent_to_new').value=cat;
+                            }
+                            
+                            window.close();
+                        }
+
+                    </script>
+                    </head>
+
+                    <body bottommargin="0" leftmargin="5" topmargin="0" rightmargin="5" bgcolor="#ffffff">
+                        <div align="center" style="padding:5px"><a href="javascript: window.d.openAll();"><?= __('Развернуть все'); ?></a> | <a href="javascript: window.d2.closeAll();"><?= __('Свернуть все'); ?></a></div>
+                        <table cellpadding="0" cellspacing="0" bgcolor="ffffff" style="border: 2px;border-style: inset;" width="100%" height="300">
+                            <tr>
+                                <td valign="top">
+                                    <?
+                                    // Дерево каталогов
+                                    $CatalogTree = new CatalogTree($GLOBALS['SysValue']['base']['page_categories']);
+                                    $CatalogTree->addcat(0, -1, 'Корень');
+                                    $CatalogTree->addcat(3000, 0, 'Меню', '../img/imgfolder.gif');
+                                    $CatalogTree->addcat(1000, 3000, 'Главное меню сайта', 'Главное меню сайта');
+                                    $CatalogTree->addcat(2000, 3000, 'Начальная страница', 'Начальная страница');
+                                    $CatalogTree->create();
+                                    $CatalogTree->disp();
+                                    ?>
+                                </td>
+                            </tr>
+                        </table>
+                        <div align="center" style="padding:5px"><a href="javascript: window.d.openAll();"><?= __('Развернуть все'); ?></a> | <a href="javascript: window.d.closeAll();"><?= __('Свернуть все'); ?></a></div>
+                    </body>
+                    </html>

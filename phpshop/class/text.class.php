@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Библиотека офорфмления текста
  * @version 1.2
@@ -12,11 +13,11 @@ class PHPShopText {
      * @param int $n количество пробелов
      * @return string
      */
-    function nbsp($n=1) {
-        $i=0;
-        $nbsp=null;
-        while($i < $n) {
-            $nbsp.='&nbsp';
+    function nbsp($n = 1) {
+        $i = 0;
+        $nbsp = null;
+        while ($i < $n) {
+            $nbsp.='&nbsp;';
             $i++;
         }
         return $nbsp;
@@ -28,8 +29,8 @@ class PHPShopText {
      * @param string $style стиль
      * @return string
      */
-    function b($string,$style=false) {
-        return '<b style="'.$style.'">'.$string.'</b>';
+    function b($string, $style = false) {
+        return '<b style="' . $style . '">' . $string . '</b>';
     }
 
     /**
@@ -39,9 +40,12 @@ class PHPShopText {
      * @param string $size размер текста
      * @return string
      */
-    function notice($string,$icon=false,$size=false) {
-        if(!empty($icon)) $img=PHPShopText::img($icon);
-        return $img.'<font color="red" style="font-size:'.$size.'">'.$string.'</font>';
+    function notice($string, $icon = false, $size = false) {
+        if (!empty($icon))
+            $img = PHPShopText::img($icon);
+        else
+            $img = null;
+        return $img . '<font color="red" style="font-size:' . $size . '">' . $string . '</font>';
     }
 
     /**
@@ -52,9 +56,12 @@ class PHPShopText {
      * @param string $color цвет текста
      * @return string
      */
-    function message($string,$icon=false,$size=false,$color='green') {
-        if(!empty($icon)) $img=PHPShopText::img($icon);
-        return $img.'<font color="'.$color.'" style="font-size:'.$size.'">'.$string.'</font>';
+    function message($string, $icon = false, $size = false, $color = 'green') {
+        if (!empty($icon))
+            $img = PHPShopText::img($icon);
+        else
+            $img = null;
+        return $img . '<font color="' . $color . '" style="font-size:' . $size . '">' . $string . '</font>';
     }
 
     /**
@@ -64,8 +71,8 @@ class PHPShopText {
      * @param string $align выравнивание
      * @return string
      */
-    function img($src,$hspace=5,$align='left') {
-        return '<img src="'.$src.'" hspace="'.$hspace.'" align="'.$align.'" border="0">';
+    function img($src, $hspace = 5, $align = 'left') {
+        return '<img src="' . $src . '" hspace="' . $hspace . '" align="' . $align . '" border="0">';
     }
 
     /**
@@ -87,12 +94,15 @@ class PHPShopText {
      * @param string $class класс
      * @return string
      */
-    function a($href,$text,$title=false,$color=false,$size=false,$target=false,$class=false) {
-        $style='text-decoration:underline;';
-        if($size) $style.='font-size:'.$size.'px;';
-        if($color) $style.='color:'.$color;
-        if(empty($title)) $title=$text;
-        return '<a href="'.$href.'" title="'.$title.'" target="'.$target.'" class="'.$class.'" style="'.$style.'">'.$text.'</a>';
+    function a($href, $text, $title = false, $color = false, $size = false, $target = false, $class = false) {
+        $style = 'text-decoration:underline;';
+        if ($size)
+            $style.='font-size:' . $size . 'px;';
+        if ($color)
+            $style.='color:' . $color;
+        if (empty($title))
+            $title = $text;
+        return '<a href="' . $href . '" title="' . $title . '" target="' . $target . '" class="' . $class . '" style="' . $style . '">' . $text . '</a>';
     }
 
     /**
@@ -101,7 +111,7 @@ class PHPShopText {
      * @return string
      */
     function slide($name) {
-        return '<a name="'.$name.'"></a>';
+        return '<a name="' . $name . '"></a>';
     }
 
     /**
@@ -110,7 +120,7 @@ class PHPShopText {
      * @return string
      */
     function h1($string) {
-        return '<h1>'.$string.'</h1>';
+        return '<h1>' . $string . '</h1>';
     }
 
     /**
@@ -119,7 +129,7 @@ class PHPShopText {
      * @return string
      */
     function h2($string) {
-        return '<h2>'.$string.'</h2>';
+        return '<h2>' . $string . '</h2>';
     }
 
     /**
@@ -128,7 +138,7 @@ class PHPShopText {
      * @return string
      */
     function h3($string) {
-        return '<h3>'.$string.'</h3>';
+        return '<h3>' . $string . '</h3>';
     }
 
     /**
@@ -137,7 +147,7 @@ class PHPShopText {
      * @return string
      */
     function ul($string) {
-        return '<ul>'.$string.'</ul>';
+        return '<ul>' . $string . '</ul>';
     }
 
     /**
@@ -146,8 +156,8 @@ class PHPShopText {
      * @param string $type тип
      * @return string
      */
-    function ol($string,$type=null) {
-        return '<ol type="'.$type.'">'.$string.'</ol>';
+    function ol($string, $type = null) {
+        return '<ol type="' . $type . '">' . $string . '</ol>';
     }
 
     /**
@@ -156,12 +166,13 @@ class PHPShopText {
      * @param string $href ссылка
      * @return string
      */
-    function li($string,$href=null) {
-        if(!empty($href)) {
-            $text=PHPShopText::a($href,$string);
-            $li='<li>'.$text.'</li>';
+    function li($string, $href = null) {
+        if (!empty($href)) {
+            $text = PHPShopText::a($href, $string);
+            $li = '<li>' . $text . '</li>';
         }
-        else $li='<li>'.$string.'</li>';
+        else
+            $li = '<li>' . $string . '</li>';
         return $li;
     }
 
@@ -170,10 +181,10 @@ class PHPShopText {
      * @return string
      */
     function tr() {
-        $Arg=func_get_args();
-        $tr='<tr class=tablerow>';
-        foreach($Arg as $val) {
-            $tr.=PHPShopText::td($val,'tablerow');
+        $Arg = func_get_args();
+        $tr = '<tr class=tablerow>';
+        foreach ($Arg as $val) {
+            $tr.=PHPShopText::td($val, 'tablerow');
         }
         $tr.='</tr>';
         return $tr;
@@ -197,14 +208,15 @@ class PHPShopText {
      * @param int $size размер
      * @return string
      */
-    function select($name,$value,$width,$float="none",$caption=false,$onchange="return true",$height=false,$size=1,$id=false) {
+    function select($name, $value, $width, $float = "none", $caption = false, $onchange = "return true", $height = false, $size = 1, $id = false) {
 
-        if(empty($id)) $id=$name;
+        if (empty($id))
+            $id = $name;
 
-        $select=$caption.' <select name="'.$name.'" id="'.$id.'" size="'.$size.'" style="float:'.$float.';width:'.$width.'px;height:'.$height.'px" onchange="'.$onchange.'">';
-        if(is_array($value))
-            foreach($value as $val)
-                $select.='<option value="'.$val[1].'" '.@$val[2].'>'.$val[0].'</option>';
+        $select = $caption . ' <select name="' . $name . '" id="' . $id . '" size="' . $size . '" style="float:' . $float . ';width:' . $width . 'px;height:' . $height . 'px" onchange="' . $onchange . '">';
+        if (is_array($value))
+            foreach ($value as $val)
+                $select.='<option value="' . $val[1] . '" ' . @$val[2] . '>' . $val[0] . '</option>';
         $select.='</select>';
         return $select;
     }
@@ -217,8 +229,8 @@ class PHPShopText {
      * @param string $id ид
      * @return string
      */
-    function td($string,$class=false,$colspan=false,$id=false) {
-        return '<td class="'.$class.'" id="'.$id.'" colspan="'.$colspan.'">'.$string.'</td>';
+    function td($string, $class = false, $colspan = false, $id = false) {
+        return '<td class="' . $class . '" id="' . $id . '" colspan="' . $colspan . '">' . $string . '</td>';
     }
 
     /**
@@ -227,7 +239,7 @@ class PHPShopText {
      * @return string
      */
     function th($string) {
-        return '<th>'.$string.'</th>';
+        return '<th>' . $string . '</th>';
     }
 
     /**
@@ -236,10 +248,11 @@ class PHPShopText {
      * @param string $align выравнивание
      * @param string $style стиль
      * @param string $id ид
+     * @param string $class класс
      * @return string
      */
-    function div($string,$align="left",$style=false,$id=false) {
-        return '<div align="'.$align.'" id="'.$id.'" style="'.$style.'">'.$string.'</div>';
+    function div($string, $align = "left", $style = false, $id = false, $class = false) {
+        return '<div align="' . $align . '" id="' . $id . '" style="' . $style . '" class="' . $class . '">' . $string . '</div>';
     }
 
     /**
@@ -248,7 +261,7 @@ class PHPShopText {
      * @return string
      */
     function strike($string) {
-        return '<strike>'.$string.'</strike>';
+        return '<strike>' . $string . '</strike>';
     }
 
     /**
@@ -256,9 +269,11 @@ class PHPShopText {
      * @param string $type [<] или [>]
      * @return string
      */
-    function comment($type='<') {
-        if($type == '<') return '<!--';
-        else return '-->';
+    function comment($type = '<') {
+        if ($type == '<')
+            return '<!--';
+        else
+            return '-->';
     }
 
     /**
@@ -267,8 +282,8 @@ class PHPShopText {
      * @param string $style стиль
      * @return string
      */
-    function p($string='<br>',$style=false) {
-        return '<p style="'.$style.'">'.$string.'</p>';
+    function p($string = '<br>', $style = false) {
+        return '<p style="' . $style . '">' . $string . '</p>';
     }
 
     /**
@@ -278,8 +293,8 @@ class PHPShopText {
      * @param string $class класс
      * @return string
      */
-    function button($value,$onclick,$class='ok') {
-        return '<input type="button" value="'.$value.'" onclick="'.$onclick.'" class="'.$class.'">';
+    function button($value, $onclick, $class = 'ok') {
+        return '<input type="button" value="' . $value . '" onclick="' . $onclick . '" class="' . $class . '">';
     }
 
     /**
@@ -294,8 +309,8 @@ class PHPShopText {
      * @param string $id ид
      * @return string
      */
-    function table($content,$cellpadding=3,$cellspacing=1,$align='center',$width='98%',$bgcolor=false,$border=0,$id=false) {
-        return '<table id="'.$id.'" cellpadding="'.$cellpadding.'" cellspacing="'.$cellspacing.'" border="'.$border.'" bgcolor="'.$bgcolor.'" width="'.$width.'" align="'.$align.'">'.$content.'</table>';
+    function table($content, $cellpadding = 3, $cellspacing = 1, $align = 'center', $width = '98%', $bgcolor = false, $border = 0, $id = false) {
+        return '<table id="' . $id . '" cellpadding="' . $cellpadding . '" cellspacing="' . $cellspacing . '" border="' . $border . '" bgcolor="' . $bgcolor . '" width="' . $width . '" align="' . $align . '">' . $content . '</table>';
     }
 
     /**
@@ -306,8 +321,8 @@ class PHPShopText {
      * @param string $action цель передачи
      * @return string
      */
-    function form($content,$name,$method='post',$action=false) {
-        return '<form action="'.$action.'" name="'.$name.'" id="'.$name.'" method="'.$method.'">'.$content.'</form>';
+    function form($content, $name, $method = 'post', $action = false) {
+        return '<form action="' . $action . '" name="' . $name . '" id="' . $name . '" method="' . $method . '">' . $content . '</form>';
     }
 
     /**
@@ -323,11 +338,11 @@ class PHPShopText {
      * @param string $description текст после элемента
      * @return string
      */
-    function setInput($type,$name,$value,$float="none",$size=200,$onclick="return true",$class=false,$caption=false,$description=false) {
-        $input='
-	 <div style="float:'.$float.';padding:5px;">
-             '.$caption.' <input type="'.$type.'" value="'.$value.'" name="'.$name.'" id="'.$name.'" style="width:'.$size.'px;"
-                 class="'.$class.'" onclick="'.$onclick.'"> '.$description.'</div>';
+    function setInput($type, $name, $value, $float = "none", $size = 200, $onclick = "return true", $class = false, $caption = false, $description = false) {
+        $input = '
+	 <div style="float:' . $float . ';padding:5px;">
+             ' . $caption . ' <input type="' . $type . '" value="' . $value . '" name="' . $name . '" id="' . $name . '" style="width:' . $size . 'px;"
+                 class="' . $class . '" onclick="' . $onclick . '"> ' . $description . '</div>';
         return $input;
     }
 
@@ -342,9 +357,10 @@ class PHPShopText {
      * @param string $class имя класса стиля
      * @return string
      */
-    function setInputText($caption,$name,$value,$size=300,$description=false,$float="none",$class=false) {
-        return PHPShopText::setInput('text',$name,$value,$float,$size,false,$class,$caption,$description) ;
+    function setInputText($caption, $name, $value, $size = 300, $description = false, $float = "none", $class = false) {
+        return PHPShopText::setInput('text', $name, $value, $float, $size, false, $class, $caption, $description);
     }
 
 }
+
 ?>

@@ -58,7 +58,7 @@ class PHPShopDev extends PHPShopCore {
 
         $hook=PHPShopText::tr(PHPShopText::b('Класс'),PHPShopText::b('Перехватчик'));
         if(is_array($PHPShopModules->ModValue['hook']))
-            foreach($PHPShopModules->ModValue['hook'] as $v) {
+            foreach($PHPShopModules->ModValue['hook'] as $class=>$v) {
                 foreach($v as $key=>$val) {
                     if($key[0] != '#') {
                         if(is_file($val)) {
@@ -66,7 +66,7 @@ class PHPShopDev extends PHPShopCore {
                             if(is_array($addHandler))
                                 foreach($addHandler as $old_f=>$new_f)
                                     if($old_f[0] != '#')
-                                        $hook.=PHPShopText::tr(str_replace('phpshop','PHPShop',$key).'::'.$old_f.'()',$val);
+                                        $hook.=PHPShopText::tr(str_replace('phpshop','PHPShop',$class).'::'.$old_f.'()',$val);
                         }
                     }
                 }

@@ -1,8 +1,9 @@
 <?php
+
 /**
  * Библиотека проверки безопасности
  * @author PHPShop Software
- * @version 1.3
+ * @version 1.4
  * @package PHPShopClass
  * @subpackage Helper
  */
@@ -13,9 +14,10 @@ class PHPShopSecurity {
      * @return bool
      */
     function true_param() {
-        $Arg=func_get_args();
-        foreach($Arg as $val) {
-            if(empty($val)) return false;
+        $Arg = func_get_args();
+        foreach ($Arg as $val) {
+            if (empty($val))
+                return false;
         }
         return true;
     }
@@ -26,27 +28,29 @@ class PHPShopSecurity {
      * @return mixed
      */
     function getExt($sFileName) {
-        $sTmp=$sFileName;
-        while($sTmp!="") {
-            $sTmp=strstr($sTmp,".");
-            if($sTmp!="") {
-                $sTmp=substr($sTmp,1);
-                $sExt=$sTmp;
+        $sTmp = $sFileName;
+        while ($sTmp != "") {
+            $sTmp = strstr($sTmp, ".");
+            if ($sTmp != "") {
+                $sTmp = substr($sTmp, 1);
+                $sExt = $sTmp;
             }
         }
-        $pos=stristr($sFileName, "php");
-        if($pos === false) return strtolower($sExt);
+        $pos = stristr($sFileName, "php");
+        if ($pos === false)
+            return strtolower($sExt);
     }
 
     /**
-     * Очистка строк от [/]["][']
+     * Очистка строк от [/]['][\]
      * @param string $str текст для проверки
      * @return string
      */
     function CleanStr($str) {
-        $str=str_replace("\/","|",$str);
-        $a= str_replace("\"", "", $str);
-        return str_replace("'", "", $a);
+        $str = str_replace("\/", "|", $str);
+        //$str = str_replace("\"", "", $str);
+        $str = str_replace("\\", "", $str);
+        return str_replace("'", "", $str);
     }
 
     /**
@@ -55,8 +59,10 @@ class PHPShopSecurity {
      * @return string
      */
     function CleanOut($str) {
+        $str = stripslashes($str);
         $str = preg_replace('([\r\n\t;])', '', $str);
         $str = @html_entity_decode($str);
+        
         return $str;
     }
 
@@ -66,8 +72,9 @@ class PHPShopSecurity {
      * @return bool
      */
     function true_email($email) {
-        if(strlen($email)>100) return FALSE;
-        return preg_match("/^([a-z0-9_\.-]+@[a-z0-9_\.\-]+\.[a-z0-9_-]{2,6})$/i",trim($email));
+        if (strlen($email) > 100)
+            return FALSE;
+        return preg_match("/^([a-z0-9_\.-]+@[a-z0-9_\.\-]+\.[a-z0-9_-]{2,6})$/i", trim($email));
     }
 
     /**
@@ -76,7 +83,17 @@ class PHPShopSecurity {
      * @return bool
      */
     function true_login($login) {
-        return preg_match("/^[a-zA-Z0-9_\.]{2,20}$/",trim($login));
+        return preg_match("/^[a-zA-Z0-9_\.]{2,20}$/", trim($login));
+    }
+    
+    
+    /**
+     * Проверка имени шаблона
+     * @param string $login логин
+     * @return bool
+     */
+    function true_skin($skin) {
+        return preg_match("/^[a-zA-Z0-9_\.]{2,30}$/", trim($skin));
     }
 
     /**
@@ -85,7 +102,7 @@ class PHPShopSecurity {
      * @return bool
      */
     function true_order($num) {
-        return preg_match("/^[0-9-]{4,20}$/",$num);
+        return preg_match("/^[0-9-]{4,20}$/", $num);
     }
 
     /**
@@ -94,7 +111,7 @@ class PHPShopSecurity {
      * @return bool
      */
     function true_num($num) {
-        return preg_match("/^[0-9]{1,20}$/",$num);
+        return preg_match("/^[0-9]{1,20}$/", $num);
     }
 
     /**
@@ -103,7 +120,7 @@ class PHPShopSecurity {
      * @return bool
      */
     function true_passw($passw) {
-        return preg_match("/^[a-zA-Z0-9_]{4,20}$/",trim($passw));
+        return preg_match("/^[a-zA-Z0-9_]{4,20}$/", trim($passw));
     }
 
     /**
@@ -112,12 +129,12 @@ class PHPShopSecurity {
      * @param int $flag параметр [1]-корзину,[2]-преобразует все в код html,[3]-почту,[4]-ввод с формы,[5]-цифры
      * @return mixed
      */
-
-    function TotalClean($str,$flag=2) {
+    function TotalClean($str, $flag = 2) {
 
         switch ($flag) {
             case 1:
-                if(!ereg ("([0-9])", $str)) $str="0";
+                if (!preg_match("/([0-9])/", $str))
+                    $str = "0";
                 return abs($str);
                 break;
 
@@ -126,21 +143,23 @@ class PHPShopSecurity {
                 break;
 
             case 3:
-                if(!preg_match("/^([a-z0-9_\.-]+@[a-z0-9_\.\-]+\.[a-z0-9_-]{2,6})$/i",$str)) $str="";
+                if (!preg_match("/^([a-z0-9_\.-]+@[a-z0-9_\.\-]+\.[a-z0-9_-]{2,6})$/i", $str))
+                    $str = "";
                 return $str;
                 break;
 
             case 4:
-                if(preg_match("/[^(\w)|(\x7F-\xFF)|(\s)]/",$str)) $str="";
-                return  htmlspecialchars(stripslashes($str));
+                if (preg_match("/[^(\w)|(\x7F-\xFF)|(\s)]/", $str))
+                    $str = "";
+                return htmlspecialchars(stripslashes($str));
                 break;
 
             case 5:
-                if(preg_match("/[^(0-9)|(\-)|(\.]/",$str))  $str=0;
+                if (preg_match("/[^(0-9)|(\-)|(\.]/", $str))
+                    $str = 0;
                 return $str;
                 break;
         }
-
     }
 
     /**
@@ -148,62 +167,43 @@ class PHPShopSecurity {
      * @param string $search
      */
     function RequestSearch($search) {
-        $pathinfo=pathinfo($_SERVER['PHP_SELF']);
-        $f=$pathinfo['basename'];
-        if(empty($_SESSION['theme'])) $_SESSION['theme']='classic';
-        $com=array("union","select","insert","update","delete");
-        $mes='<h3>Внимание</h3>Работа скрипта '.$_SERVER['PHP_SELF'].' прервана из-за использования запрещенной команды';
-        $mes2="<br>Удалите все вхождения этой команды в водимой информации.";
-        foreach($com as $v)
-            if(@preg_match("/".$v."/i", $search)) exit($mes.' <b style="color:red">'.$v.'</b>'.$mes2);
+        $pathinfo = pathinfo($_SERVER['PHP_SELF']);
+        $f = $pathinfo['basename'];
+        if (empty($_SESSION['theme']))
+            $_SESSION['theme'] = 'classic';
+        $com = array("union", "select", "insert", "update", "delete");
+        $mes = '<h3>Внимание</h3>Работа скрипта ' . $_SERVER['PHP_SELF'] . ' прервана из-за использования запрещенной команды';
+        $mes2 = "<br>Удалите все вхождения этой команды в водимой информации.";
+        foreach ($com as $v)
+            if (@preg_match("/" . $v . "/i", $search))
+                exit($mes . ' <b style="color:red">' . $v . '</b>' . $mes2);
     }
 
     /**
-     *
-     * @param <type> $search
-     * @return <type>
+     * Проверка дял поиска
+     * @param string $search
+     * @return strong
      */
     function true_search($search) {
-        $count=strlen($search);
-        $search=strtolower($search);
-        $i=0;
-        while($i<($count/7)) {
+        $count = strlen($search);
+        $search = strtolower($search);
+        $i = 0;
+        while ($i < ($count / 7)) {
             $search = str_replace("'", "", $search);
             $search = str_replace("\\", "", $search);
             $search = str_replace("union", "", $search);
             $search = str_replace("select", "", $search);
             $search = str_replace("insert", "", $search);
             $search = str_replace("delete", "", $search);
-            $search = str_replace("update", "", $search);
+            $search = str_replace(")", "", $search);
+            $search = str_replace("(", "", $search);
             $i++;
         }
-        return $search;
+
+        if (!empty($search))
+            return trim($search);
     }
 
 }
 
-// Поддержка API 2.X
-function true_parent($str) {
-    return preg_match("/^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$/",$str);
-}
-
-function true_email($email) {
-    return PHPShopSecurity::true_email($email);
-}
-
-function true_login($login) {
-    return preg_match("/^[a-zA-Z0-9_\.]{2,20}$/",$login);
-}
-
-function true_passw($passw) {
-    return preg_match("/^[a-zA-Z0-9_]{4,20}$/",$passw);
-}
-
-function true_num($num) {
-    return preg_match("/^[0-9]{1,10}$/",$num);
-}
-
-function TotalClean($str,$flag) {
-    return PHPShopSecurity::TotalClean($str,$flag);
-}
 ?>

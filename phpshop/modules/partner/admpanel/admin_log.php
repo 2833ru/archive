@@ -5,7 +5,7 @@ $TitlePage="Партнеры -> Журнал заказов";
 function actionStart() {
     global $PHPShopInterface,$_classPath;
 
-    $PHPShopInterface->size="630,530";
+    $PHPShopInterface->size="700,550";
     $PHPShopInterface->link="order/adm_visitorID.php";
     $PHPShopInterface->setCaption(array("&plusmn;","5%"),array("№","5%"),array("Дата","10%"),array("Покупатель","25%"),array("Партнер","25%"),array("PID","5%"),array("Ссылка","30%"));
 

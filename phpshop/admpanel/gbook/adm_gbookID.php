@@ -1,225 +1,157 @@
-<?
-require("../connect.php");
-@mysql_connect ("$host", "$user_db", "$pass_db")or @die("Невозможно подсоединиться к базе");
-mysql_select_db("$dbase")or @die("Невозможно подсоединиться к базе");
-require("../enter_to_admin.php");
+<?php
 
-// Языки
-$GetSystems=GetSystems();
-$option=unserialize($GetSystems['admoption']);
-$Lang=$option['lang'];
-require("../language/".$Lang."/language.php");
-?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-	<title>Редактирование Отзыва</title>
-<META http-equiv=Content-Type content="text/html; charset=<?=$SysValue['Lang']['System']['charset']?>">
-<LINK href="../css/texts.css" type=text/css rel=stylesheet>
-<LINK href="../css/dateselector.css" type=text/css rel=stylesheet>
-<?
-//Check user's Browser
-if(strpos($_SERVER["HTTP_USER_AGENT"],"MSIE"))
-	echo "<script language=JavaScript src='../editor3/scripts/editor.js'></script>";
-else
-	echo "<script language=JavaScript src='../editor3/scripts/moz/editor.js'></script>";
-?>
-<SCRIPT language="JavaScript" src="/phpshop/lib/Subsys/JsHttpRequest/Js.js"></SCRIPT>
-<SCRIPT language=JavaScript src="../java/popup_lib.js"></SCRIPT>
-<SCRIPT language=JavaScript src="../java/dateselector.js"></SCRIPT>
-<script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
-<script type="text/javascript" language="JavaScript1.2" src="../language/<?=$Lang?>/language_windows.js"></script>
-<script type="text/javascript" language="JavaScript1.2" src="../language/<?=$Lang?>/language_interface.js"></script>
-<script>
-DoResize(<? echo $GetSystems['width_icon']?>,630,580);
-</script>
-</head>
-<body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0" onload="DoCheckLang(location.pathname,<?=$SysValue['lang']['lang_enabled']?>);preloader(0)">
-<table id="loader">
-<tr>
-	<td valign="middle" align="center">
-		<div id="loadmes" onclick="preloader(0)">
-<table width="100%" height="100%">
-<tr>
-	<td id="loadimg"></td>
-	<td ><b><?=$SysValue['Lang']['System']['loading']?></b><br><?=$SysValue['Lang']['System']['loading2']?></td>
-</tr>
-</table>
-		</div>
-</td>
-</tr>
-</table>
-<SCRIPT language=JavaScript type=text/javascript>preloader(1);</SCRIPT>
-<?
-// Редактирование записей книги
-	  $sql="select * from ".$SysValue['base']['table_name7']." where id=$id";
-      $result=mysql_query($sql);
-	  $row = mysql_fetch_array($result);
-	  $id=$row['id'];
-	  $data=dataV($row['datas'],"update");
-	  $name=$row['name'];
-	  $mail=$row['mail'];
-	  $tema=$row['tema'];
-	  $otsiv=$row['otsiv'];
-	  $otvet=$row['otvet'];
-	  $flag=$row['flag'];
-	  ?>
-<form name="product_edit"  method=post onsubmit="Save()">
-<table cellpadding="0" cellspacing="0" width="100%" height="50" id="title">
-<tr bgcolor="#ffffff">
-	<td style="padding:10">
-	<b><span name=txtLang id=txtLang>Редактирование Отзыва от</span> "<?=$name?>"</b><br>
-	&nbsp;&nbsp;&nbsp;<span name=txtLang id=txtLang>Укажите данные для записи в базу</span>.
-	</td>
-	<td align="right">
-	<img src="../img/i_account_properties_med[1].gif" border="0" hspace="10">
-	</td>
-</tr>
-</table>
-<br>
-<table cellpadding="5" cellspacing="0" border="0" width="100%">
-<tr valign="top">
-	<td width="130">
-	<FIELDSET id=fldLayout style="height: 8em;">
-<LEGEND id=lgdLayout><span name=txtLang id=txtLang><u>Д</u>ата</span> </LEGEND>
-<div style="padding:10">
-<input type="text"  name="data_new" size="8" value="<?=$data?>" class=s>
-<IMG onclick="popUpCalendar(this, product_edit.data_new, 'dd-mm-yyyy');" height=16 hspace=3 src="../icon/date.gif" width=16 border=0 align="absmiddle">
-</div>
-</FIELDSET>
-	</td>
-	<td align="left" width="500">
-	<FIELDSET id=fldLayout style="height: 8em;">
-<LEGEND id=lgdLayout><span name=txtLang id=txtLang><u>О</u>тправитель</span></LEGEND>
-<div style="padding:10">
-<table>
-<tr>
-	<td width="40"><span name=txtLang id=txtLang>Имя</span>:</td>
-	<td><input type="text" name="name_new" style="width: 400; " value="<?=$name?>"></td>
-</tr>
-<tr>
-	<td>E-mail:</td>
-	<td><input type="text" name="mail_new" style="width: 400; " value="<?=$mail?>"></td>
-</tr>
-</table>
-</div>
-</FIELDSET>
-	</td>
-	
-</tr>
-<tr>
-	<td colspan="2">
-	<FIELDSET>
-<LEGEND id=lgdLayout><span name=txtLang id=txtLang><u>Т</u>ема</span> </LEGEND>
-<div style="padding:10">
-<textarea name="tema_new" class=s style="width:100%; height:30"><?=$tema?></textarea>
-</div>
-</FIELDSET>
-	</td>
-</tr>
-<tr>
-	<td colspan="2">
-	<FIELDSET>
-<LEGEND id=lgdLayout><span name=txtLang id=txtLang><u>О</u>тзыв</span> </LEGEND>
-<div style="padding:10">
-<textarea name="otsiv_new" class=s style="width:100%; height:30"><?=$otsiv?></textarea>
-</div>
-</FIELDSET>
-	</td>
-</tr>
-<tr>
-	<td colspan="2">
-	<FIELDSET>
-<LEGEND id=lgdLayout><span name=txtLang id=txtLang><u>О</u>твет</span></LEGEND>
-<div style="padding:10">
-<?
-$systems=GetSystems();
-$MyStyle=chr(47)."phpshop".chr(47)."templates".chr(47).$systems['skin'].chr(47).$SysValue['css']['default'];
-$option=unserialize($systems['admoption']);
-if($option['editor_enabled']  == 1){
-echo'
-<pre id="idTemporary" name="idTemporary" style="display:none">
-'.$otvet.'
-</pre>
-	<script>
-		var oEdit1 = new InnovaEditor("oEdit1");
-	oEdit1.cmdAssetManager="modalDialogShow(\'/phpshop/admpanel/editor3/assetmanager/assetmanager.php\',640,500)";
-		oEdit1.width="97%";
-		oEdit1.height=150;
-		oEdit1.btnStyles=true;
-	    oEdit1.css="'.$MyStyle.'";
-		oEdit1.RENDER(document.getElementById("idTemporary").innerHTML);
-	</script>
-	<input type="hidden" name="EditorContent" id="EditorContent">
-</div>
-	';}
-	else{
-echo '
-<textarea name="EditorContent" id="EditorContent" style="width:100%;height:150px">'.$otvet.'</textarea>
-';
+$_classPath = "../../";
+include($_classPath . "class/obj.class.php");
+PHPShopObj::loadClass("base");
+PHPShopObj::loadClass("date");
+
+$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
+$PHPShopBase->chekAdmin();
+
+PHPShopObj::loadClass("system");
+$PHPShopSystem = new PHPShopSystem();
+
+// Редактор GUI
+PHPShopObj::loadClass("admgui");
+$PHPShopGUI = new PHPShopGUI();
+$PHPShopGUI->title = "Редактирование Отзыва";
+$PHPShopGUI->ajax = "'gbook','','','core'";
+$PHPShopGUI->alax_lib = true;
+
+// SQL
+PHPShopObj::loadClass("orm");
+$PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['gbook']);
+
+// Модули
+PHPShopObj::loadClass("modules");
+$PHPShopModules = new PHPShopModules($_classPath . "modules/");
+
+function actionStart() {
+    global $PHPShopGUI, $PHPShopSystem, $SysValue, $_classPath, $PHPShopOrm, $PHPShopModules;
+
+    // Выборка
+    $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
+    extract($data);
+
+    // ID окна для памяти закладок
+    $PHPShopGUI->setID(__FILE__, $data['id']);
+
+    $PHPShopGUI->dir = "../";
+    $PHPShopGUI->size = "630,530";
+    $PHPShopGUI->addJSFiles('../java/popup_lib.js', '../java/dateselector.js');
+    $PHPShopGUI->addCSSFiles('../css/dateselector.css');
+
+    // Графический заголовок окна
+    $PHPShopGUI->setHeader("Редактирование Отзыва", "Укажите данные для записи в базу.", $PHPShopGUI->dir . "img/i_account_properties_med[1].gif");
+
+    // Редактор 1
+    $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));
+    $oFCKeditor = new Editor('otvet_new');
+    $oFCKeditor->Height = '320';
+    $oFCKeditor->Config['EditorAreaCSS'] = $_classPath . "../templates" . chr(47) . $PHPShopSystem->getParam("skin") . chr(47) . $SysValue['css']['default'];
+    $oFCKeditor->ToolbarSet = 'Normal';
+    $oFCKeditor->Value = $otvet;
+
+    // Содержание закладки 1
+    $Tab1 = $PHPShopGUI->setField("Дата:", $PHPShopGUI->setInput("text", "datas_new", PHPShopDate::dataV($datas, false), "left", 70) .
+            $PHPShopGUI->setCalendar('datas_new') .
+            $PHPShopGUI->setLine() .
+            $PHPShopGUI->setCheckbox('flag_new', '1', 'Вывод', $flag)
+            , "left");
+
+    $Tab1.=$PHPShopGUI->setField("Автор:", $PHPShopGUI->setText("Имя:&nbsp;&nbsp;", "left") .
+                    $PHPShopGUI->setInput("text", "name_new", $name, "none", 300) . $PHPShopGUI->setText("E-mail:", "left") . $PHPShopGUI->setInput("text", "mail_new", $mail, "none", 300), "none", 5) .
+            $PHPShopGUI->setLine() .
+            $PHPShopGUI->setField("Тема:", $PHPShopGUI->setTextarea("tema_new", $tema, "left", '97%', '50px'), "none") .
+            $PHPShopGUI->setField("Отзыв:", $PHPShopGUI->setTextarea("otsiv_new", $otsiv, "left", '97%', '80px'), "none");
+
+    // Содержание закладки 2
+    $Tab2 = $oFCKeditor->AddGUI();
+
+    // Вывод формы закладки
+    $PHPShopGUI->setTab(array("Основное", $Tab1, 350), array("Ответ", $Tab2, 350));
+
+    // Запрос модуля на закладку
+    $PHPShopModules->setAdmHandler($_SERVER["SCRIPT_NAME"], __FUNCTION__, $data);
+
+    // Вывод кнопок сохранить и выход в футер
+    $ContentFooter =
+            $PHPShopGUI->setInput("hidden", "newsID", $data['id'], "right", 70, "", "but") .
+            $PHPShopGUI->setInput("button", "", "Отмена", "right", 70, "return onCancel();", "but") .
+            $PHPShopGUI->setInput("button", "delID", "Удалить", "right", 70, "return onDelete('" . __('Вы действительно хотите удалить?') . "')", "but", "actionDelete.gbook.edit") .
+            $PHPShopGUI->setInput("submit", "editID", "Сохранить", "right", 70, "", "but", "actionUpdate.gbook.edit") .
+            $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionSave.gbook.edit");
+
+    // Футер
+    $PHPShopGUI->setFooter($ContentFooter);
+    return true;
 }
-	?>
-</div>
-</FIELDSET>
-	</td>
-</tr>
-</table>
-<hr>
-<table cellpadding="0" cellspacing="0" width="100%" height="50" >
-<tr>
-    <td align="left" style="padding:10">
-    <BUTTON class="help" onclick="helpWinParent('gbook')">Справка</BUTTON></BUTTON>
-	</td>
-	<td align="right" style="padding:10">
-    <input type="hidden" name="id" value="<?=$id?>" >
-	<input type="submit" name="editID" value="OK" class=but>
-	<input type="button" name="btnLang" class=but value="Удалить" onClick="PromptThis();">
-    <input type="hidden" class=but  name="productDELETE" id="productDELETE">
-	<input type="button" name="btnLang" value="Отмена" onClick="return onCancel();" class=but>
-	</td>
-</tr>
-</table>
-</form>
-	  <?
-if(isset($editID))// Запись редактирования
-{
-if(CheckedRules($UserStatus["gbook"],1) == 1){
-if($otsiv_new !="") $flag_new = 1;
 
-$data_new = GetUnicTime($data_new);
+// Функция отправки почты
+function sendMail($name, $mail) {
+    global $PHPShopSystem, $PHPShopBase;
 
-$sql="UPDATE ".$SysValue['base']['table_name7']." 
-SET
-datas='$data_new',
-name='$name_new',
-mail='$mail_new',
-tema='$tema_new',
-otsiv='$otsiv_new',
-otvet='$EditorContent',
-flag='$flag_new'
-where id='$id'";
-$result=mysql_query($sql)or @die("".mysql_error()."");
-echo"
-	  <script>
-DoReloadMainWindow('gbook');
-</script>
-	   ";
-}else $UserChek->BadUserFormaWindow();
+    // Подключаем библиотеку отправки почты
+    PHPShopObj::loadClass("mail");
+
+    $zag = "Ваш отзыв добавлен на сайт " . $PHPShopSystem->getValue('name');
+    $message = "Уважаемый " . $name . ",
+
+Ваш отзыв добавлен на сайт по адресу: http://" . $PHPShopBase->getSysValue('dir.dir') . $_SERVER['SERVER_NAME'] . "/gbook/
+
+Спасибо за проявленный интерес.";
+    new PHPShopMail($PHPShopSystem->getValue('admin_mail'), $mail, $zag, $message);
 }
-if(@$productDELETE=="doIT")// Удаление записи
-{
-if(CheckedRules($UserStatus["gbook"],1) == 1){
-$sql="delete from ".$SysValue['base']['table_name7']." 
-where id='$id'";
-$result=mysql_query($sql)or @die("Невозможно изменить запись");
-echo"
-	  <script>
-DoReloadMainWindow('gbook');
-</script>
-	   ";
-}else $UserChek->BadUserFormaWindow();
+
+/**
+ * Экшен сохранения
+ */
+function actionSave() {
+    global $PHPShopGUI;
+
+    // Сохранение данных
+    actionUpdate();
+
+    $_GET['id'] = $_POST['newsID'];
+    $PHPShopGUI->setAction($_GET['id'], 'actionStart', 'none');
 }
+
+// Функция обновления
+function actionUpdate() {
+    global $PHPShopOrm, $PHPShopModules;
+
+    // Перехват модуля
+    $PHPShopModules->setAdmHandler($_SERVER["SCRIPT_NAME"], __FUNCTION__, $_POST);
+
+    $_POST['datas_new'] = PHPShopDate::GetUnixTime($_POST['datas_new']);
+    if (empty($_POST['flag_new']))
+        $_POST['flag_new'] = 0;
+    else if (!empty($_POST['mail_new']))
+        sendMail($_POST['name_new'], $_POST['mail_new']);
+
+    // Описание для редактора default
+    if (isset($_POST['EditorContent1']))
+        $_POST['otvet_new'] = $_POST['EditorContent1'];
+
+    $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['newsID']));
+    $PHPShopOrm->clean();
+    return $action;
+}
+
+// Функция удаления
+function actionDelete() {
+    global $PHPShopOrm, $PHPShopModules;
+
+    // Перехват модуля
+    $PHPShopModules->setAdmHandler($_SERVER["SCRIPT_NAME"], __FUNCTION__, $_POST);
+
+    $action = $PHPShopOrm->delete(array('id' => '=' . $_POST['newsID']));
+    return $action;
+}
+
+// Вывод формы при старте
+$PHPShopGUI->setAction($_GET['id'], 'actionStart', 'none');
+
+// Обработка событий
+$PHPShopGUI->getAction();
 ?>
-
-
-

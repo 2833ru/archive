@@ -13,9 +13,9 @@ function query_filter($obj) {
     $sort=null;
     $n=$obj->category;
 
-    $v=$_REQUEST['v'];
-    $s=PHPShopSecurity::TotalClean($_REQUEST['s'],1);
-    $f=PHPShopSecurity::TotalClean($_REQUEST['f'],1);
+    $v=@$_REQUEST['v'];
+    $s=PHPShopSecurity::TotalClean(@$_REQUEST['s'],1);
+    $f=PHPShopSecurity::TotalClean(@$_REQUEST['f'],1);
 
     if($obj->PHPShopNav->isPageAll())
         $p=PHPShopSecurity::TotalClean($p,1);
@@ -103,8 +103,8 @@ function query_filter($obj) {
     // Поиск по цене
     elseif(isset($_POST['priceSearch'])) {
 
-        $priceOT=TotalClean($_POST['priceOT'],1);
-        $priceDO=TotalClean($_POST['priceDO'],1);
+        $priceOT=PHPShopSecurity::TotalClean($_POST['priceOT'],1);
+        $priceDO=PHPShopSecurity::TotalClean($_POST['priceDO'],1);
 
         $percent=$obj->PHPShopSystem->getValue('percent');
 

@@ -1,45 +1,56 @@
 <?php
+
 /**
  * Родительский класс создания элементов
  * Примеры использования размещены в папке phpshop/inc/
  * @author PHPShop Software
+ * @tutorial http://wiki.phpshop.ru/index.php/PHPShopElements
  * @version 1.2
  * @package PHPShopClass
  */
 class PHPShopElements {
+
     /**
      * @var string имя БД
      */
     var $objBase;
     var $objPath;
+
     /**
      * @var bool режим отладки
      */
-    var $debug=false;
+    var $debug = false;
+
     /**
      * @var bool кэширование
      */
-    var $cache=false;
+    var $cache = false;
+
     /**
      * @var bool форматирование полей кэша
      */
-    var $cache_format=array();
+    var $cache_format = array();
+
     /**
      * @var bool использование памяти
      */
-    var $memory=false;
+    var $memory = false;
+
     /**
      * @var array массив экшенов
      */
-    var $action=array();
+    var $action = array();
+
     /**
      * @var string префикс имен функций экшенов
      */
-    var $action_prefix=null;
+    var $action_prefix = null;
+
     /**
      * @var array массив запрещенных разделов
      */
-    var $disp_format=array('print');
+    var $disp_format = array('print');
+
     /**
      * @var string результат работы парсера
      */
@@ -49,20 +60,21 @@ class PHPShopElements {
      * Конструктор
      */
     function PHPShopElements() {
-        global $PHPShopSystem,$PHPShopNav,$PHPShopModules;
+        global $PHPShopSystem, $PHPShopNav, $PHPShopModules;
 
-        if($this->objBase)
+        if ($this->objBase)
             $this->PHPShopOrm = &new PHPShopOrm($this->objBase);
 
-        $this->PHPShopOrm->cache_format=$this->cache_format;
-        $this->PHPShopOrm->cache=$this->cache;
-        $this->PHPShopOrm->debug=$this->debug;
-        $this->SysValue=&$GLOBALS['SysValue'];
-        $this->PHPShopSystem=&$PHPShopSystem;
-        $this->PHPShopNav=&$PHPShopNav;
-        $this->LoadItems=&$GLOBALS['LoadItems'];
-        $this->PHPShopModules=&$PHPShopModules;
+        $this->PHPShopOrm->cache_format = $this->cache_format;
+        $this->PHPShopOrm->cache = $this->cache;
+        $this->PHPShopOrm->debug = $this->debug;
+        $this->SysValue = &$GLOBALS['SysValue'];
+        $this->PHPShopSystem = &$PHPShopSystem;
+        $this->PHPShopNav = &$PHPShopNav;
+        $this->LoadItems = &$GLOBALS['LoadItems'];
+        $this->PHPShopModules = &$PHPShopModules;
     }
+
     /**
      * Добавление в переменную вывода через парсер
      * @param string $template имя шаблона для паисинга
@@ -70,6 +82,7 @@ class PHPShopElements {
     function addToTemplate($template) {
         $this->Disp.=ParseTemplateReturn($template);
     }
+
     /**
      * Добавление в переменную вывода
      * @param sting $content контент
@@ -77,23 +90,28 @@ class PHPShopElements {
     function add($content) {
         $this->Disp.=$content;
     }
+
     /**
      * Парсинг шаблона
      * @param string $template имя шаблона
+     * @param bool $mod использование шаблона в модуле
      * @return string
      */
-    function parseTemplate($template) {
-        return ParseTemplateReturn($template);
+    function parseTemplate($template,$mod=false) {
+        return ParseTemplateReturn($template,$mod);
     }
+
     /**
      * Создание системной переменной для парсинга
      * @param string $name имя
      * @param mixed $value значение
      * @param bool $flag [1] - добавить, [0] - переписать
      */
-    function set($name,$value,$flag=false) {
-        if($flag) $this->SysValue['other'][$name].=$value;
-        else $this->SysValue['other'][$name]=$value;
+    function set($name, $value, $flag = false) {
+        if ($flag)
+            @$this->SysValue['other'][$name].=$value;
+        else
+            $this->SysValue['other'][$name] = $value;
     }
 
     /**
@@ -111,11 +129,10 @@ class PHPShopElements {
      * @return mixed
      */
     function getValue($param) {
-        $param=explode(".",$param);
-        if(!empty($this->SysValue[$param[0]][$param[1]]))
+        $param = explode(".", $param);
+        if (@!empty($this->SysValue[$param[0]][$param[1]]))
             return $this->SysValue[$param[0]][$param[1]];
     }
-
 
     /**
      * Выдача переменной из кэша
@@ -131,17 +148,21 @@ class PHPShopElements {
      * @param string $method_name имя функции
      * @param bool $flag добавление данных в переменную
      */
-    function init($method_name,$flag=false) {
-        
-        if (!in_array($this->SysValue['nav']['path'],$this->disp_format)) {
+    function init($method_name, $flag = false) {
+
+        if (!in_array($this->SysValue['nav']['path'], $this->disp_format)) {
 
             // Если переменная не определена модулем
-            if(!empty($flag) and $this->isAction($method_name)) $this->set($method_name,call_user_func(array(&$this, $method_name)),true);
+            if (!empty($flag) and $this->isAction($method_name))
+                $this->set($method_name, call_user_func(array(&$this, $method_name)), true);
 
-            elseif(empty($this->SysValue['other'][$method_name])) {
-                if($this->isAction($method_name)) $this->set($method_name,call_user_func(array(&$this, $method_name)));
-                elseif($this->isAction("index")) $this->set($method_name,call_user_func(array(&$this, 'index')));
-                else $this->setError("index","метод не существует");
+            elseif (empty($this->SysValue['other'][$method_name])) {
+                if ($this->isAction($method_name))
+                    $this->set($method_name, call_user_func(array(&$this, $method_name)));
+                elseif ($this->isAction("index"))
+                    $this->set($method_name, call_user_func(array(&$this, 'index')));
+                else
+                    $this->setError("index", "метод не существует");
             }
         }
     }
@@ -152,7 +173,8 @@ class PHPShopElements {
      * @return bool
      */
     function isAction($method_name) {
-        if(method_exists($this,$method_name)) return true;
+        if (method_exists($this, $method_name))
+            return true;
     }
 
     /**
@@ -160,9 +182,9 @@ class PHPShopElements {
      * @param string $name имя функции
      * @param string $action сообщение
      */
-    function setError($name,$action) {
-        echo '<p><span style="color:red">Ошибка обработчика события: </span> <strong>'.__CLASS__.'->'.$name.'()</strong>
-	 <br><em>'.$action.'</em></p>';
+    function setError($name, $action) {
+        echo '<p><span style="color:red">Ошибка обработчика события: </span> <strong>' . __CLASS__ . '->' . $name . '()</strong>
+	 <br><em>' . $action . '</em></p>';
     }
 
     /**
@@ -171,9 +193,10 @@ class PHPShopElements {
      * @return string
      */
     function lang($str) {
-        if($this->SysValue['lang'][$str])
+        if ($this->SysValue['lang'][$str])
             return $this->SysValue['lang'][$str];
-        else return 'Не определено';
+        else
+            return 'Не определено';
     }
 
     /**
@@ -181,11 +204,11 @@ class PHPShopElements {
      * @param string $param имя параметра [catalog.param]
      * @param mixed $value значение
      */
-    function memory_set($param,$value) {
-        if(!empty($this->memory)) {
-            $param=explode(".",$param);
-            $_SESSION['Memory'][__CLASS__][$param[0]][$param[1]]=$value;
-            $_SESSION['Memory'][__CLASS__]['time']=time();
+    function memory_set($param, $value) {
+        if (!empty($this->memory)) {
+            $param = explode(".", $param);
+            $_SESSION['Memory'][__CLASS__][$param[0]][$param[1]] = $value;
+            $_SESSION['Memory'][__CLASS__]['time'] = time();
         }
     }
 
@@ -195,30 +218,36 @@ class PHPShopElements {
      * @param bool $check сравнить с нулем
      * @return
      */
-    function memory_get($param,$check=false) {
+    function memory_get($param, $check = false) {
         $this->memory_clean();
-        if(!empty($this->memory)) {
-            $param=explode(".",$param);
-            if(isset($_SESSION['Memory'][__CLASS__][$param[0]][$param[1]])) {
-                if(!empty($check)) {
-                    if(!empty($_SESSION['Memory'][__CLASS__][$param[0]][$param[1]])) return true;
+        if (!empty($this->memory)) {
+            $param = explode(".", $param);
+            if (isset($_SESSION['Memory'][__CLASS__][$param[0]][$param[1]])) {
+                if (!empty($check)) {
+                    if (!empty($_SESSION['Memory'][__CLASS__][$param[0]][$param[1]]))
+                        return true;
                 }
-                else return $_SESSION['Memory'][__CLASS__][$param[0]][$param[1]];
+                else
+                    return $_SESSION['Memory'][__CLASS__][$param[0]][$param[1]];
             }
-            elseif(!empty($check)) return true;
+            elseif (!empty($check))
+                return true;
         }
-        else return true;
+        else
+            return true;
     }
 
     /**
      * Чистка памяти по времени
      * @param bool $clean_now принудительная чистка
      */
-    function memory_clean($clean_now=false) {
-        if(!empty($clean_now))
-            unset($_SESSION['Memory'][__CLASS__]);
-        elseif($_SESSION['Memory'][__CLASS__]['time']<(time()-60*10))
-            unset($_SESSION['Memory'][__CLASS__]);
+    function memory_clean($clean_now = false) {
+        if (!empty($_SESSION['Memory'])) {
+            if (!empty($clean_now))
+                unset($_SESSION['Memory'][__CLASS__]);
+            elseif (@$_SESSION['Memory'][__CLASS__]['time'] < (time() - 60 * 10))
+                unset($_SESSION['Memory'][__CLASS__]);
+        }
     }
 
     /**
@@ -226,40 +255,41 @@ class PHPShopElements {
      */
     function setAction($action) {
 
-        if(!empty($action)) $this->action=$action;
+        if (!empty($action))
+            $this->action = $action;
 
-        if(is_array($this->action)) {
-            foreach($this->action as $k=>$v) {
+        if (is_array($this->action)) {
+            foreach ($this->action as $k => $v) {
 
-                switch($k) {
+                switch ($k) {
 
                     // Экшен POST
                     case("post"):
 
-                    // Если несколько экшенов
-                        if(is_array($v)) {
-                            foreach($v as $function)
-                                if(!empty($_POST[$function]) and $this->isAction($function))
-                                    return call_user_func(array(&$this, $this->action_prefix.$function));
+                        // Если несколько экшенов
+                        if (is_array($v)) {
+                            foreach ($v as $function)
+                                if (!empty($_POST[$function]) and $this->isAction($function))
+                                    return call_user_func(array(&$this, $this->action_prefix . $function));
                         } else {
                             // Если один экшен
-                            if(!empty($_POST[$v]) and $this->isAction($v))
-                                return call_user_func(array(&$this, $this->action_prefix.$v));
+                            if (!empty($_POST[$v]) and $this->isAction($v))
+                                return call_user_func(array(&$this, $this->action_prefix . $v));
                         }
                         break;
 
                     // Экшен GET
                     case("get"):
 
-                    // Если несколько экшенов
-                        if(is_array($v)) {
-                            foreach($v as $function)
-                                if(!empty($_GET[$function]) and $this->isAction($function))
-                                    return call_user_func(array(&$this, $this->action_prefix.$function));
+                        // Если несколько экшенов
+                        if (is_array($v)) {
+                            foreach ($v as $function)
+                                if (!empty($_GET[$function]) and $this->isAction($function))
+                                    return call_user_func(array(&$this, $this->action_prefix . $function));
                         } else {
                             // Если один экшен
-                            if(!empty($_GET[$v]) and $this->isAction($v))
-                                return call_user_func(array(&$this, $this->action_prefix.$v));
+                            if (!empty($_GET[$v]) and $this->isAction($v))
+                                return call_user_func(array(&$this, $this->action_prefix . $v));
                         }
 
                         break;
@@ -267,15 +297,15 @@ class PHPShopElements {
                     // Экшен NAME
                     case("name"):
 
-                    // Если несколько экшенов
-                        if(is_array($v)) {
-                            foreach($v as $function)
-                                if($this->PHPShopNav->getName() == $function and $this->isAction($function))
-                                    return call_user_func(array(&$this, $this->action_prefix.$function));
+                        // Если несколько экшенов
+                        if (is_array($v)) {
+                            foreach ($v as $function)
+                                if ($this->PHPShopNav->getName() == $function and $this->isAction($function))
+                                    return call_user_func(array(&$this, $this->action_prefix . $function));
                         } else {
                             // Если один экшен
-                            if($this->PHPShopNav->getName() == $v and $this->isAction($v))
-                                return call_user_func(array(&$this, $this->action_prefix.$v));
+                            if ($this->PHPShopNav->getName() == $v and $this->isAction($v))
+                                return call_user_func(array(&$this, $this->action_prefix . $v));
                         }
 
                         break;
@@ -284,27 +314,25 @@ class PHPShopElements {
                     // Экшен NAV
                     case("nav"):
 
-                    // Если несколько экшенов
-                        if(is_array($v)) {
-                            foreach($v as $function) {
-                                if($this->PHPShopNav->getNav() == $function and $this->isAction($function)) {
-                                    return call_user_func(array(&$this, $this->action_prefix.$function));
+                        // Если несколько экшенов
+                        if (is_array($v)) {
+                            foreach ($v as $function) {
+                                if ($this->PHPShopNav->getNav() == $function and $this->isAction($function)) {
+                                    return call_user_func(array(&$this, $this->action_prefix . $function));
                                     $call_user_func = true;
                                 }
-
                             }
-
                         } else {
                             // Если один экшен
-                            if($this->PHPShopNav->getNav() == $v and $this->isAction($v))
-                                return call_user_func(array(&$this, $this->action_prefix.$v));
-
+                            if ($this->PHPShopNav->getNav() == $v and $this->isAction($v))
+                                return call_user_func(array(&$this, $this->action_prefix . $v));
                         }
                         break;
                 }
             }
         }
-        else $this->setError("action","экшены объявлена неверно");
+        else
+            $this->setError("action", "экшены объявлена неверно");
     }
 
     /**
@@ -315,9 +343,10 @@ class PHPShopElements {
      * @param string $rout позиция вызова к функции [END | START | MIDDLE], по умолчанию END
      * @return bool
      */
-    function setHook($class_name, $function_name, $data=false, $rout=false) {
-        return $this->PHPShopModules->setHookHandler($class_name,$function_name, &$this, $data, $rout);
+    function setHook($class_name, $function_name, $data = false, $rout = false) {
+        return $this->PHPShopModules->setHookHandler($class_name, $function_name, array(&$this), $data, $rout);
     }
 
 }
+
 ?>

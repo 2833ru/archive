@@ -1,5 +1,7 @@
 <?php
 
+PHPShopObj::loadClass('string');
+
 class AddStockGallery extends PHPShopElements {
 
     function AddStockGallery() {
@@ -23,6 +25,7 @@ class AddStockGallery extends PHPShopElements {
         $where['enabled'] = "='1'";
         $where['parent_enabled'] = "='0'";
         $where['sklad'] = "!='1'";
+        $where['spec'] = "='1'";
 
         // Выборка
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
@@ -38,8 +41,14 @@ class AddStockGallery extends PHPShopElements {
                     $height = ' height="' . $option['img_height'] . '"';
                 }
 
+                // Учет модуля SEOURL
+                if (!empty($GLOBALS['SysValue']['base']['seourl']['seourl_system'])) {
+                    $seourl='_' . PHPShopString::toLatin($row['name']);
+                }
+                else $seourl=null;
+
                 if (!empty($row['pic_small']))
-                    $li.='<li><a href="/shop/UID_' . $row['id'] . '.html"><img width="' . $option['img_width'] . '" ' . $height . ' alt="' . $row['name'] . '" title="' . $row['name'] . '" src="' . $row['pic_small'] . '" border="0"></a></li>';
+                    $li.='<li><a href="/shop/UID_' . $row['id'] .$seourl.'.html"><img width="' . $option['img_width'] . '" ' . $height . ' alt="' . $row['name'] . '" title="' . $row['name'] . '" src="' . $row['pic_small'] . '" border="0"></a></li>';
             }
 
         $this->set('stockgallery_list', $li);

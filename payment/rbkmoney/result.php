@@ -1,9 +1,9 @@
-<?
+<?php
 
 /*
   +-------------------------------------+
-  |  PHPShop 2.1 Enterprise             |
-  |  Модуль ResultUrl WebMoney          |
+  |  PHPShop Enterprise                 |
+  |  Модуль ResultUrl RBKMoney          |
   +-------------------------------------+
  */
 
@@ -66,7 +66,7 @@ if ($MY_LMI_HASH != $_POST['hash']) {
     $new_uid = UpdateNumOrder($LMI_PAYMENT_NO);
 
 
-// Приверяем сущ. заказа
+    // Приверяем сущ. заказа
     $sql = "select uid from " . $SysValue['base']['table_name1'] . " where uid='$new_uid'";
     $result = mysql_query($sql);
     $row = mysql_fetch_array($result);
@@ -74,14 +74,20 @@ if ($MY_LMI_HASH != $_POST['hash']) {
 
     // проверяем иденчичность секретного кода и статус оплаты. Который при обработке =3, при проведённом платеже = 5
     if ($_POST['secretKey'] == $LMI_SECRET_KEY) {
-        if($_POST['paymentStatus'] == 5) {
+        if ($_POST['paymentStatus'] == 5) {
             if ($uid == $new_uid) {
-// Записываем платеж в базу
-                $sql = "INSERT INTO " . $SysValue['base']['table_name33'] . " VALUES 
-('$new_uid','WebMoney, $LMI_PAYER_PURSE, WMId$LMI_PAYER_WM','$LMI_PAYMENT_AMOUNT','" . date("U") . "')";
+                
+                
+                // Записываем платеж в базу
+                $sql = "INSERT INTO " . $SysValue['base']['table_name33'] . " VALUES ('$new_uid','RBKMoney','$LMI_PAYMENT_AMOUNT','" . date("U") . "')";
                 $result = mysql_query($sql);
+
+                $sql = "UPDATE " . $SysValue['base']['table_name1'] . " SET statusi=101 WHERE uid='$new_uid'";
+                $result = mysql_query($sql);
+
                 WriteLog($MY_LMI_HASH);
-// print OK signature
+                
+                // print OK signature
                 echo "OK";
             } else {
                 WriteLog($MY_LMI_HASH);

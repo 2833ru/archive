@@ -1,5 +1,19 @@
 <?php
 
+function setcell_div_hook($obj,$arg) {
+
+    $div=null;
+    $panel=array('panel_l','panel_r','panel_l','panel_r','panel_l');
+
+    foreach($arg as $key=>$val) {
+        if(!empty($val)) {
+            $div.='<div class="'.$panel[$key].'">'.$key.'</div>';
+        }
+    }
+
+    return $div;
+}
+
 /**
  * Изменение формата решетки между товарами c <td> на <li>
  * @param array $obj объект
@@ -84,13 +98,55 @@ function cid_category_add_spec_hook($obj,$row) {
     $obj->set('catalogList',$spec,true);
 }
 
+function cid_product_sorttemplate_hook($obj,$row,$rout){
+    if($rout == 'START'){
+        $obj->sort_template = 'sorttemplatehook';
+    }
+}
+
+/**
+ * Шаблон вывода характеристик
+ * @param array $value массив значений $value[]=array('моя цифра 1',123,'selected');
+ * @param int $n integer
+ * @param string $title название характеристики
+ * @param array $vendor массив значений характеристик товара
+ * @return string 
+ */
+function sorttemplatehook($value, $n, $title, $vendor) {
+    $disp = null;
+
+    if (is_array($value)) {
+        foreach ($value as $p) {
+            if (is_array($vendor[$n])) {
+                foreach ($vendor[$n] as $value) {
+
+                    if ($value == $p[1])
+                        $text = PHPShopText::b($p[0]);
+                    else
+                        $text = $p[0];
+
+                    $disp.=PHPShopText::br() . PHPShopText::a('?v[' . $n . ']=' . $p[1], $text, $p[0], $color = false, $size = false, $target = false, $class = false);
+                }
+            }else {
+                if ($vendor[$n] == $p[1])
+                    $text = PHPShopText::b($p[0]);
+                else
+                    $text = $p[0];
+
+                $disp.=PHPShopText::br() . PHPShopText::a('?v[' . $n . ']=' . $p[1], $text, $p[0], $color = false, $size = false, $target = false, $class = false);
+            }
+        }
+    }
+    return $disp;
+}
+
 $addHandler=array
         (
         'odnotip'=>'odnotip_hook',
-        '#setCell'=>'setcell_hook',
+        '#setCell'=>'setcell_div_hook',
         '#compile'=>'compile_hook',
         'CID_Category'=>'cid_category_add_spec_hook',
-        ''
+        '#CID_Product'=>'cid_product_sorttemplate_hook'
 
 );
 

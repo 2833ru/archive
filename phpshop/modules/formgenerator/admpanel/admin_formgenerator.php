@@ -14,7 +14,6 @@ function actionStart() {
     PHPShopObj::loadClass("modules");
     $PHPShopModules = new PHPShopModules($_classPath."modules/");
 
-
     $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.formgenerator.formgenerator_forms"));
     $PHPShopOrm->debug=false;
     $data = $PHPShopOrm->select(array('*'),$where,array('order'=>'id DESC'),array('limit'=>100));

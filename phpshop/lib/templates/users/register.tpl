@@ -62,7 +62,7 @@
     </tr>
     <tr>
         <td>Телефон:</td>
-        <td><input type="text" name="tel_code_new" style="width:50px;" value='@php $_POST["tel_code_new"]; php@'> -
+        <td><input type="text" name="tel_code_new" style="width:50px;" value='@php echo $_POST["tel_code_new"]; php@'> -
             <input type="text" name="tel_new" style="width:240px;" value='@php echo $_POST["tel_new"]; php@'></td>
     </tr>
     <tr>

@@ -73,7 +73,9 @@ if(PHPShopSecurity::true_param($_GET['tip'],$_GET['orderId'],$_GET['datas'])) {
     PHPShopParser::set('nds',$PHPShopOrder->PHPShopSystem->getParam('nds'));
     PHPShopParser::set('discount',$PHPShopOrder->getDiscount());
     PHPShopParser::set('ouid',$PHPShopOrder->getValue('uid'));
-    PHPShopParser::set('org_user',$PHPShopOrder->getSerilizeParam('orders.Person.org_name'));
+    PHPShopParser::set('person_org',$PHPShopOrder->getSerilizeParam('orders.Person.org_name').' ÈÍÍ '.
+            $PHPShopOrder->getSerilizeParam('orders.Person.org_inn').' ÊÏÏ '.$PHPShopOrder->getSerilizeParam('orders.Person.org_kpp'));
+    PHPShopParser::set('person_user',$PHPShopOrder->getSerilizeParam('orders.Person.name_person'));
     PHPShopParser::set('org_bank_acount',$PHPShopSystem->getSerilizeParam('bank.org_bank_schet'));
     PHPShopParser::set('org_bank_acount',$PHPShopSystem->getSerilizeParam('bank.org_bank_schet'));
     PHPShopParser::set('org_bic',$PHPShopSystem->getSerilizeParam('bank.org_bic'));

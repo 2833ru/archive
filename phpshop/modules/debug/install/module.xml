@@ -4,6 +4,7 @@
     <name>Debug</name>
     <description>Отладочный модуль для разработчиков.</description>
     <icon>icon.png</icon>
+    <category>develop</category>
     <adminmenu>
         <title>Debug</title>
         <podmenu>

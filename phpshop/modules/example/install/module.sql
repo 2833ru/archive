@@ -1,5 +1,5 @@
 
-ALTER TABLE `phpshop_system ` ADD `example` VARCHAR(64) NOT NULL;
+ALTER TABLE `phpshop_products` ADD `example` VARCHAR(64) NOT NULL;
 
 --
 -- Структура таблицы `phpshop_modules_example_system`

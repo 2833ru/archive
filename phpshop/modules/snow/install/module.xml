@@ -4,4 +4,5 @@
     <name>Snow</name>
     <description>Модуль падающего снега</description>
     <icon>palette.png</icon>
+    <category>decorate</category>
 </module>

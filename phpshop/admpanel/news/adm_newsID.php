@@ -1,254 +1,141 @@
-<?
-require("../connect.php");
-@mysql_connect ("$host", "$user_db", "$pass_db")or @die("Невозможно подсоединиться к базе");
-mysql_select_db("$dbase")or @die("Невозможно подсоединиться к базе");
-require("../enter_to_admin.php");
+<?php
 
-// Языки
-$GetSystems=GetSystems();
-$option=unserialize($GetSystems['admoption']);
-$Lang=$option['lang'];
-require("../language/".$Lang."/language.php");
+$_classPath = "../../";
+include($_classPath . "class/obj.class.php");
+PHPShopObj::loadClass("base");
+PHPShopObj::loadClass("admgui");
 
-?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-	<title>Редактирование Новости</title>
-<META http-equiv=Content-Type content="text/html; charset=<?=$SysValue['Lang']['System']['charset']?>">
-<LINK href="../css/texts.css" type=text/css rel=stylesheet>
-<LINK href="../css/dateselector.css" type=text/css rel=stylesheet>
-<LINK href="../css/tab.winclassic.css" type=text/css rel=stylesheet>
-<?
-//Check user's Browser
-if(strpos($_SERVER["HTTP_USER_AGENT"],"MSIE"))
-	echo "<script language=JavaScript src='../editor3/scripts/editor.js'></script>";
-else
-	echo "<script language=JavaScript src='../editor3/scripts/moz/editor.js'></script>";
-?>
-<SCRIPT language="JavaScript" src="/phpshop/lib/Subsys/JsHttpRequest/Js.js"></SCRIPT>
-<SCRIPT language=JavaScript src="../java/popup_lib.js"></SCRIPT>
-<SCRIPT language=JavaScript src="../java/dateselector.js"></SCRIPT>
-<script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
-<script type="text/javascript" src="../java/tabpane.js"></script>
-<script type="text/javascript" language="JavaScript1.2" src="../language/<?=$Lang?>/language_windows.js"></script>
-<script type="text/javascript" language="JavaScript1.2" src="../language/<?=$Lang?>/language_interface.js"></script>
-<script>
-DoResize(<? echo $GetSystems['width_icon']?>,650,650);
-</script>
-</head>
-<body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0" onload="DoCheckLang(location.pathname,<?=$SysValue['lang']['lang_enabled']?>);preloader(0)">
-<table id="loader">
-<tr>
-	<td valign="middle" align="center">
-		<div id="loadmes" onclick="preloader(0)">
-<table width="100%" height="100%">
-<tr>
-	<td id="loadimg"></td>
-	<td ><b><?=$SysValue['Lang']['System']['loading']?></b><br><?=$SysValue['Lang']['System']['loading2']?></td>
-</tr>
-</table>
-		</div>
-</td>
-</tr>
-</table>
+$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
+$PHPShopBase->chekAdmin();
 
-<SCRIPT language=JavaScript type=text/javascript>preloader(1);</SCRIPT>
-<?
-// Редактирование записей книги
-	  $sql="select * from $table_name8 where id=$id";
-      $result=mysql_query($sql);
-	  $row = mysql_fetch_array($result);
-	  $id=$row['id'];
-	  $data=$row['datas'];
-	  $zag=$row['zag'];
-	  $kratko=stripslashes($row['kratko']);
-	  $podrob=stripslashes($row['podrob']);
-	  if((@$imgname=$row['imgname'])=="")
-	 {
-	 $imgname="<font color=#C64141>нет</font>";
-	 }
-	 else
-	    {
-		$imgname="<a href=\"javascript:miniWin('image_news_edit.php?img=$imgname',300,300)\">$imgname</a>";
-		}
-	  ?>
-<form method=post name="product_edit" onsubmit="Save()">
-<table cellpadding="0" cellspacing="0" width="100%" height="50" id="title">
-<tr bgcolor="#ffffff">
-	<td style="padding:10">
-	<b><span name=txtLang id=txtLang>Редактирование Новости</span>  "<?=$zag?>"</b><br>
-	&nbsp;&nbsp;&nbsp;<span name=txtLang id=txtLang>Укажите данные для записи в базу</span>.
-	</td>
-	<td align="right">
-	<img src="../img/i_balance_med[1].gif" border="0" hspace="10">
-	</td>
-</tr>
-</table>
-<!-- begin tab pane -->
-<div class="tab-pane" id="article-tab" style="margin-top:5px;height:250px">
+PHPShopObj::loadClass("system");
+$PHPShopSystem = new PHPShopSystem();
 
-<script type="text/javascript">
-tabPane = new WebFXTabPane( document.getElementById( "article-tab" ), true );
-</script>
+// Редактор GUI
+$PHPShopGUI = new PHPShopGUI();
+$PHPShopGUI->title = "Редактирование Новости";
+$PHPShopGUI->ajax = "'news','','','core'";
+$PHPShopGUI->alax_lib = true;
 
-<!-- begin intro page -->
-<div class="tab-page" id="intro-page" style="height:450px">
-<h2 class="tab"><span name=txtLang id=txtLang>Основное</span></h2>
+// SQL
+PHPShopObj::loadClass("orm");
+$PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['news']);
 
-<script type="text/javascript">
-tabPane.addTabPage( document.getElementById( "intro-page" ) );
-</script>
-<table width="100%">
-<tr valign="top">
-	<td width="140">
-	<FIELDSET id=fldLayout style="height: 70;">
-<LEGEND id=lgdLayout><span name=txtLang id=txtLang><u>Д</u>ата</span> </LEGEND>
-<div style="padding:10">
-<input type="text" name="data_new" size="8"  class=s value="<?=$data?>">
-<IMG onclick="popUpCalendar(this, product_edit.data_new, 'dd-mm-yyyy');" height=16 hspace=3 src="../icon/date.gif" width=16 border=0 align="absmiddle" style="cursor:pointer;">
-</div>
-</FIELDSET>
-	</td>
-	<td align="left">
-	<FIELDSET id=fldLayout style="height: 70;">
-<LEGEND id=lgdLayout><span name=txtLang id=txtLang><u>З</u>аголовок новости</span></LEGEND>
-<div style="padding:10">
-<textarea  name="zag_new" class=s style="width:460; height:30"><?=$zag?></textarea>
-</div>
-</FIELDSET>
-	</td>
-</tr>
-<tr>
-	<td colspan="2">
-	<FIELDSET>
-<LEGEND><span name=txtLang id=txtLang>Анонс</span></LEGEND>
-<div style="padding:10">
-<?
-$systems=GetSystems();
-$MyStyle=$SysValue['dir']['dir'].chr(47)."phpshop".chr(47)."templates".chr(47).$systems['skin'].chr(47).$SysValue['css']['default'];
-$option=unserialize($systems['admoption']);
-if($option['editor_enabled']  == 1){
-echo'
-<pre id="idTemporary" name="idTemporary" style="display:none">
-'.$kratko.'
-</pre>
-	<script>
-		var oEdit1 = new InnovaEditor("oEdit1");
-	oEdit1.cmdAssetManager="modalDialogShow(\''.$SysValue['dir']['dir'].'/phpshop/admpanel/editor3/assetmanager/assetmanager.php\',640,500)";
-		oEdit1.width=610;
-		oEdit1.height=300;
-		oEdit1.btnStyles=true;
-	    oEdit1.css="'.$MyStyle.'";
-		oEdit1.RENDER(document.getElementById("idTemporary").innerHTML);
-	</script>
-	<input type="hidden" name="EditorContent" id="EditorContent">
-</div>
-	';}
-	else{
-echo '
-<textarea name="EditorContent" id="EditorContent" style="width:100%;height:300px">'.$kratko.'</textarea>
-';
-}?>
-</div>
-</FIELDSET>
-	</td>
-</tr>
+// Модули
+PHPShopObj::loadClass("modules");
+$PHPShopModules = new PHPShopModules($_classPath . "modules/");
 
-</table>
-</div>
-<!-- begin intro page -->
-<div class="tab-page" id="podrob" style="height:450px">
-<h2 class="tab"><span name=txtLang id=txtLang>Подробно</span></h2>
+function actionStart() {
+    global $PHPShopGUI, $PHPShopSystem, $PHPShopBase, $PHPShopOrm, $PHPShopModules;
 
-<script type="text/javascript">
-tabPane.addTabPage( document.getElementById( "podrob" ) );
-</script>
-<table width="100%">
-<tr>
-	<td colspan="3">
-	<FIELDSET id=fldLayout>
-<div style="padding:10">
-<?
-if($option['editor_enabled']  == 1){
-echo'
-<pre id="idTemporary2" name="idTemporary2" style="display:none">
-'.$podrob.'
-</pre>
-	<script>
-		var oEdit2 = new InnovaEditor("oEdit2");
-	oEdit2.cmdAssetManager="modalDialogShow(\''.$SysValue['dir']['dir'].'/phpshop/admpanel/editor3/assetmanager/assetmanager.php\',640,500)";
-		oEdit2.width=610;
-		oEdit2.height=395;
-		oEdit2.btnStyles=true;
-	    oEdit2.css="'.$MyStyle.'";
-		oEdit2.RENDER(document.getElementById("idTemporary2").innerHTML);
-	</script>
-	<input type="hidden" name="EditorContent2" id="EditorContent2">
-</div>
-	';}
-	else{
-echo '
-<textarea name="EditorContent2" id="EditorContent2" style="width:100%;height:395px">'.$podrob.'</textarea>
-';
-}?>
-</div>
-</FIELDSET>
-	</td>
-</tr>
-</table>
-</div>
-<hr>
-<table cellpadding="0" cellspacing="0" width="100%" height="50" >
-<tr>
-    <td align="left" style="padding:10">
-    <BUTTON class="help" onclick="helpWinParent('news')">Справка</BUTTON></BUTTON>
-	</td>
-	<td align="right" style="padding:10">
-	<input type="hidden" name="id" value="<?=$id?>">
-	<input type="submit" name="editID" value="OK" class=but>
-	<input type="button" name="btnLang" class=but value="Удалить" onClick="PromptThis();">
-    <input type="hidden" class=but  name="productDELETE" id="productDELETE">
-	<input type="button" name="btnLang" value="Отмена" onClick="return onCancel();" class=but>
-	</td>
-</tr>
-</table>
-</form>
-	  <?
+    // Выборка
+    $data = $PHPShopOrm->select(array('*'), array('id' => '=' . $_GET['id']));
 
-if(isset($editID))// Запись редактирования
-{
-if(CheckedRules($UserStatus["news"],1) == 1){
-$sql="UPDATE $table_name8
-SET
-datas='$data_new',
-zag='$zag_new',
-kratko='".addslashes($EditorContent)."',
-podrob='".addslashes($EditorContent2)."',
-datau='".GetUnicTime($data_new)."'
-where id='$id'";
-$result=mysql_query($sql)or @die("Невозможно изменить запись");
-echo"
-<script>
-DoReloadMainWindow('news');
-</script>
-	   ";
-}else $UserChek->BadUserFormaWindow();
+    $PHPShopGUI->dir = "../";
+    $PHPShopGUI->addJSFiles('../java/popup_lib.js', '../java/dateselector.js');
+    $PHPShopGUI->addCSSFiles('../css/dateselector.css');
+
+    // ID окна для памяти закладок
+    $PHPShopGUI->setID(__FILE__, $data['id']);
+
+    // Графический заголовок окна
+    $PHPShopGUI->setHeader("Редактирование Новости", "Укажите данные для записи в базу.", $PHPShopGUI->dir . "img/i_balance_med[1].gif");
+
+    // Редактор 1
+    $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));
+    $oFCKeditor = new Editor('kratko_new');
+    $oFCKeditor->Height = '270';
+    $oFCKeditor->Config['EditorAreaCSS'] = $PHPShopBase->getParam('dir.dir') . chr(47) . "phpshop" . chr(47) . "templates" . chr(47) . $PHPShopSystem->getValue('skin') . chr(47) . $PHPShopBase->getParam('css.default');
+    $oFCKeditor->ToolbarSet = 'Normal';
+    $oFCKeditor->Value = $data['kratko'];
+    $oFCKeditor->Mod = 'textareas';
+
+    // Содержание закладки 1
+    $Tab1 = $PHPShopGUI->setField("Дата:", $PHPShopGUI->setInput("text", "datas_new", $data['datas'], "left", 70) .
+                    $PHPShopGUI->setImage("../icon/date.gif", 16, 16, 'absmiddle', "5", $style = 'float:left', $onclick = "popUpCalendar(this, product_edit.datas_new, 'dd-mm-yyyy');"), "left") .
+            $PHPShopGUI->setField("Заголовок:", $PHPShopGUI->setInput("text", "zag_new", $data['zag'], "left", 450), "none", 5);
+
+    $Tab1.=$PHPShopGUI->setField("Анонс:", $oFCKeditor->AddGUI());
+
+
+    // Редактор 2
+    $oFCKeditor = new Editor('podrob_new');
+    $oFCKeditor->Height = '350';
+    $oFCKeditor->ToolbarSet = 'Normal';
+    $oFCKeditor->Config['EditorAreaCSS'] = $PHPShopBase->getParam('dir.dir') . chr(47) . "phpshop" . chr(47) . "templates" . chr(47) . $PHPShopSystem->getValue('skin') . chr(47) . $PHPShopBase->getParam('css.default');
+    $oFCKeditor->Value = $data['podrob'];
+    $oFCKeditor->Mod = 'textareas';
+
+    // Содержание закладки 2
+    $Tab2 = $oFCKeditor->AddGUI();
+
+    // Вывод формы закладки
+    $PHPShopGUI->setTab(array("Основное", $Tab1, 370), array("Подробно", $Tab2, 370));
+
+    // Запрос модуля на закладку
+    $PHPShopModules->setAdmHandler($_SERVER["SCRIPT_NAME"], __FUNCTION__, $data);
+
+    // Вывод кнопок сохранить и выход в футер
+    $ContentFooter =
+            $PHPShopGUI->setInput("hidden", "newsID", $data['id'], "right", 70, "", "but") .
+            $PHPShopGUI->setInput("button", "", "Отмена", "right", 70, "return onCancel();", "but") .
+            $PHPShopGUI->setInput("button", "delID", "Удалить", "right", 70, "return onDelete('" . __('Вы действительно хотите удалить?') . "')", "but", "actionDelete.news.edit") .
+            $PHPShopGUI->setInput("submit", "editID", "Сохранить", "right", 70, "", "but", "actionUpdate.news.edit") .
+            $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionSave.news.edit");
+
+    // Футер
+    $PHPShopGUI->setFooter($ContentFooter);
+    return true;
 }
-if(@$productDELETE=="doIT")// Удаление записи
-{
-if(CheckedRules($UserStatus["news"],1) == 1){
-$sql="delete from $table_name8
-where id='$id'";
-$result=mysql_query($sql)or @die("Невозможно изменить запись");
-echo"
-	  <script>
-DoReloadMainWindow('news');
-</script>
-	   ";
-}else $UserChek->BadUserFormaWindow();
+
+/**
+ * Экшен сохранения
+ */
+function actionSave() {
+    global $PHPShopGUI;
+
+    // Сохранение данных
+    actionUpdate();
+
+    $_GET['id'] = $_POST['newsID'];
+    $PHPShopGUI->setAction($_GET['id'], 'actionStart', 'none');
 }
+
+// Функция обновления
+function actionUpdate() {
+    global $PHPShopOrm, $PHPShopModules;
+
+
+    // Описание для редактора default
+    if (isset($_POST['EditorContent1']))
+        $_POST['kratko_new'] = $_POST['EditorContent1'];
+    if (isset($_POST['EditorContent2']))
+        $_POST['podrob_new'] = $_POST['EditorContent2'];
+
+    $_POST['datau_new'] = time();
+
+    // Перехват модуля
+    $PHPShopModules->setAdmHandler($_SERVER["SCRIPT_NAME"], __FUNCTION__, $_POST);
+    $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['newsID']));
+    $PHPShopOrm->clean();
+    return $action;
+}
+
+// Функция удаления
+function actionDelete() {
+    global $PHPShopOrm, $PHPShopModules;
+
+    // Перехват модуля
+    $PHPShopModules->setAdmHandler($_SERVER["SCRIPT_NAME"], __FUNCTION__, $_POST);
+
+    $action = $PHPShopOrm->delete(array('id' => '=' . $_POST['newsID']));
+    return $action;
+}
+
+// Вывод формы при старте
+$PHPShopGUI->setAction($_GET['id'], 'actionStart', 'none');
+
+// Обработка событий
+$PHPShopGUI->getAction();
+
 ?>
-
-
-

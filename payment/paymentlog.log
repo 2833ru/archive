@@ -1,0 +1,104 @@
+
+	  IntellectMoney Payment Start ------------------
+	  date=June 13, 2012, 4:24 pm
+	  
+	  MY_LMI_HASH=098F6BCD4621D373CADE4E832627B4F6
+	  REQUEST_URI=/payment/intellectmoney/result.php
+	  IP=127.0.0.1
+	  IntellectMoney Payment End --------------------
+	  
+	  IntellectMoney Payment Start ------------------
+	  date=June 13, 2012, 4:24 pm
+	  
+	  MY_LMI_HASH=098F6BCD4621D373CADE4E832627B4F6
+	  REQUEST_URI=/payment/intellectmoney/result.php
+	  IP=127.0.0.1
+	  IntellectMoney Payment End --------------------
+	  
+  Interkassa Payment Start ------------------
+  date=September 27, 2012, 4:29 pm
+  
+  MY_LMI_HASH=658AEC754610D7342BEC61623830CE0D
+  REQUEST_URI=/payment/interkassa/result.php
+  IP=127.0.0.1
+  Interkassa Payment End --------------------
+  
+  Liqpay Payment Start ------------------
+  date=November 6, 2012, 10:41 am
+  out_summ=
+  inv_id=
+  crc=
+  my_crc=
+  REQUEST_URI=/phpshop/modules/liqpay/payment/result.php
+  IP=127.0.0.1
+  Liqpay Payment End --------------------
+  
+  Liqpay Payment Start ------------------
+  date=November 30, 2012, 12:06 pm
+  out_summ=
+  inv_id=
+  crc=
+  my_crc=
+  REQUEST_URI=/phpshop/modules/liqpay/payment/result.php
+  IP=127.0.0.1
+  Liqpay Payment End --------------------
+  
+  Liqpay Payment Start ------------------
+  date=November 30, 2012, 12:06 pm
+  out_summ=
+  inv_id=
+  crc=
+  my_crc=
+  REQUEST_URI=/phpshop/modules/liqpay/payment/result.php
+  IP=127.0.0.1
+  Liqpay Payment End --------------------
+  
+  Liqpay Payment Start ------------------
+  date=November 30, 2012, 12:06 pm
+  out_summ=
+  inv_id=
+  crc=
+  my_crc=
+  REQUEST_URI=/phpshop/modules/liqpay/payment/result.php
+  IP=127.0.0.1
+  Liqpay Payment End --------------------
+  
+  Liqpay Payment Start ------------------
+  date=November 30, 2012, 12:24 pm
+  out_summ=
+  inv_id=
+  crc=
+  my_crc=
+  REQUEST_URI=/phpshop/modules/liqpay/payment/result.php
+  IP=127.0.0.1
+  Liqpay Payment End --------------------
+  
+  Liqpay Payment Start ------------------
+  PHJlc3BvbnNlPgo8c2VuZGVyX3Bob25lPis3OTg1MjcyMTAxMDwvc2VuZGVyX3Bob25lPgo8c3Rh
+dHVzPnN1Y2Nlc3M8L3N0YXR1cz4KPHZlcnNpb24+MS4yPC92ZXJzaW9uPgo8b3JkZXJfaWQ+NjI4
+PC9vcmRlcl9pZD4KPG1lcmNoYW50X2lkPmk3OTE1OTQ5NjY4PC9tZXJjaGFudF9pZD4KPHBheV9k
+ZXRhaWxzPjwvcGF5X2RldGFpbHM+CjxkZXNjcmlwdGlvbj5QSFBTaG9wUGF5bWVudFNlcnZpY2U8
+L2Rlc2NyaXB0aW9uPgo8Y3VycmVuY3k+UlVSPC9jdXJyZW5jeT4KPGFtb3VudD4xLjAwPC9hbW91
+bnQ+CjxwYXlfd2F5PmNhcmQ8L3BheV93YXk+Cjx0cmFuc2FjdGlvbl9pZD4yMTc5NDU4NDwvdHJh
+bnNhY3Rpb25faWQ+CjxhY3Rpb24+c2VydmVyX3VybDwvYWN0aW9uPgo8Y29kZT48L2NvZGU+Cjwv
+cmVzcG9uc2U+ 
+  Liqpay Payment End --------------------
+  
+  Liqpay Payment Start ------------------
+  PHJlc3BvbnNlPgo8c2VuZGVyX3Bob25lPis3OTg1MjcyMTAxMDwvc2VuZGVyX3Bob25lPgo8c3Rh
+dHVzPnN1Y2Nlc3M8L3N0YXR1cz4KPHZlcnNpb24+MS4yPC92ZXJzaW9uPgo8b3JkZXJfaWQ+NjI4
+PC9vcmRlcl9pZD4KPG1lcmNoYW50X2lkPmk3OTE1OTQ5NjY4PC9tZXJjaGFudF9pZD4KPHBheV9k
+ZXRhaWxzPjwvcGF5X2RldGFpbHM+CjxkZXNjcmlwdGlvbj5QSFBTaG9wUGF5bWVudFNlcnZpY2U8
+L2Rlc2NyaXB0aW9uPgo8Y3VycmVuY3k+UlVSPC9jdXJyZW5jeT4KPGFtb3VudD4xLjAwPC9hbW91
+bnQ+CjxwYXlfd2F5PmNhcmQ8L3BheV93YXk+Cjx0cmFuc2FjdGlvbl9pZD4yMTc5NDU4NDwvdHJh
+bnNhY3Rpb25faWQ+CjxhY3Rpb24+c2VydmVyX3VybDwvYWN0aW9uPgo8Y29kZT48L2NvZGU+Cjwv
+cmVzcG9uc2U+ 
+  Liqpay Payment End --------------------
+  
+  Liqpay Payment Start ------------------
+  __atuvc=0|42,0|43,0|44,0|45,1|46
+visualcart_memory=10af8bcd2f0baa30968eeda676070d4b
+PHPSESSID=6052736764621dfa36e87a82e26e3f82
+ 
+  Liqpay Payment End --------------------
+  

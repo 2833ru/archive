@@ -1,10 +1,21 @@
 <?php
+
+// Настройка уровня оповещения отладчика
+if (function_exists('error_reporting')) {
+    if ((phpversion() * 1) >= '5.0')
+        error_reporting('E_ALL & ~E_NOTICE & ~E_DEPRECATED');
+    else
+        error_reporting('E_ALL & ~E_NOTICE');
+}
+
 // Снимаем ограничения на выполнение
 if($SysValue['my']['time_limit_enabled']=="true") {
     $is_safe_mode = @ini_get('safe_mode') == '1' ? 1 : 0;
     if (!$is_safe_mode) @set_time_limit(TIME_LIMIT);
 }
 
+
+// Тип оконного менеджера
 $_COOKIE['winOpenType']='default';
 
 // класс проверки пользователя

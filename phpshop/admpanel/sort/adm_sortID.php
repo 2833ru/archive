@@ -22,9 +22,6 @@ require("../language/".$Lang."/language.php");
 <script type="text/javascript" src="../java/tabpane.js"></script>
 <script type="text/javascript" language="JavaScript1.2" src="../language/<?=$Lang?>/language_windows.js"></script>
 <script type="text/javascript" language="JavaScript1.2" src="../language/<?=$Lang?>/language_interface.js"></script>
-<script>
-DoResize(<? echo $GetSystems['width_icon']?>,500,600);
-</script>
 </head>
 <body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0" onload="DoCheckLang(location.pathname,<?=$SysValue['lang']['lang_enabled']?>);preloader(0)">
 <table id="loader">

@@ -1,128 +1,136 @@
-<?
-require("../connect.php");
-@mysql_connect ("$host", "$user_db", "$pass_db")or @die("Невозможно подсоединиться к базе");
-mysql_select_db("$dbase")or @die("Невозможно подсоединиться к базе");
-require("../enter_to_admin.php");
+<?php
 
-function ReturnSumma($sum,$disc){
-$kurs=GetKursOrder();
-$sum*=$kurs;
-$sum=$sum-($sum*$disc/100);
-return number_format($sum,0,".","");
+$_classPath = "../../";
+include($_classPath . "class/obj.class.php");
+PHPShopObj::loadClass("base");
+PHPShopObj::loadClass("system");
+PHPShopObj::loadClass("valuta");
+PHPShopObj::loadClass("array");
+PHPShopObj::loadClass("security");
+PHPShopObj::loadClass("date");
+PHPShopObj::loadClass("order");
+PHPShopObj::loadClass("product");
+
+// Подключение к БД
+$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
+include($_classPath . "admpanel/enter_to_admin.php");
+
+// Системные настройки
+$PHPShopSystem = new PHPShopSystem();
+
+// Редактор GUI
+PHPShopObj::loadClass("admgui");
+$PHPShopGUI = new PHPShopGUI();
+$PHPShopGUI->title = __("Редактирование Заказа");
+$PHPShopGUI->reload = "top";
+$PHPShopGUI->addJSFiles('/phpshop/lib/JsHttpRequest/JsHttpRequest.js');
+$PHPShopGUI->addJSFiles('gui/tab_cart.gui.js');
+
+// SQL
+PHPShopObj::loadClass("orm");
+$PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
+
+// Модули
+PHPShopObj::loadClass("modules");
+$PHPShopModules = new PHPShopModules($_classPath . "modules/");
+
+/**
+ * Экшен загрузки форм редактирования
+ */
+function actionStart() {
+    global $PHPShopGUI, $PHPShopModules, $PHPShopOrm, $PHPShopSystem, $PHPShopBase;
+
+    // Тип окна
+    if ($_COOKIE['winOpenType'] == 'default')
+        $dot = ".";
+    else
+        $dot = false;
+    
+    // ИД заказа
+    $orderID=intval($_GET['orderID']);
+    
+    // Выборка
+    $data = $PHPShopOrm->select(array('*'), array('id' => '=' . $orderID));
+
+    $PHPShopGUI->dir = "../";
+
+    // Нет данных
+    if (!is_array($data)) {
+        $PHPShopGUI->setFooter($PHPShopGUI->setInput("button", "", "Закрыть", "center", 100, "return onCancel();", "but"));
+        return true;
+    }
+
+    // Библиотека заказа
+    $PHPShopOrder = new PHPShopOrderFunction($orderID);
+
+    $order = unserialize($data['orders']);
+
+    // ИД товара
+    $productID = intval($_GET['productID']);
+    
+    if(empty($order['Cart']['cart'][$productID]['id'])){ 
+        foreach($order['Cart']['cart'] as $key=>$val)
+            if($val['id'] == $productID){
+                $productID=$key;
+            }
+    }
+    
+    // Наименование
+    $Tab1 = $PHPShopGUI->setField(__("Наименование"), $PHPShopGUI->setInputText(false, 'name_new', $order['Cart']['cart'][$productID]['name'], '100%')) . $PHPShopGUI->setLine();
+
+    // Иконка
+    $PHPShopProduct = new PHPShopProduct($productID);
+    $productIcon=$PHPShopProduct->getParam('pic_small');
+    $productEdIzm=$PHPShopProduct->getParam('ed_izm');
+    if (!empty($productIcon)) {
+        $img_width = $PHPShopSystem->getSerilizeParam('admoption.img_tw');
+        $Tab1.=$PHPShopGUI->setDiv('left', $PHPShopGUI->setFrame('img', $productIcon, $img_width + 20, $img_width, 'none', 0, 'No'), 'width:' . ($img_width + 50) . 'px;float:left');
+    }
+    
+    // Склад
+    if (empty($productEdIzm))
+        $ed_izm = 'шт.';
+    else
+        $ed_izm = $productEdIzm;
+    
+    // Количество
+    $Tab1.=$PHPShopGUI->setField(__("Количество"), "<div style=\"padding:5px\"><input type=\"text\" style=\"width: 50px;\" value=\"" . $order['Cart']['cart'][$productID]['num']. "\" id=\"num\" onchange=\"DoUpdateOrderProductSum()\"> ".$ed_izm, 'left');
+   
+    // Сумма
+    $productSum=$PHPShopOrder->ReturnSumma($order['Cart']['cart'][$productID]['price'] * $order['Cart']['cart'][$productID]['num'],0);
+    $Tab1.=$PHPShopGUI->setField(__("Сумма ") . '(' . $PHPShopSystem->getDefaultValutaCode() . ')', $PHPShopGUI->setDiv('center', $productSum, 'font-size:25px;font-weight:bold', 'sum'), 'left');
+
+    // Цена
+    $Tab1.=$PHPShopGUI->setField(__("Цена ") . '(' . $PHPShopSystem->getDefaultValutaCode() . ')', "<div style=\"padding:5px\"><input type=\"text\" style=\"width: 70px;\" value=\"" . $PHPShopOrder->ReturnSumma($order['Cart']['cart'][$productID]['price'], 0) . "\" id=\"price\" onchange=\"DoUpdateOrderProductSum()\"> ", 'left');
+
+    // Вывод формы закладки
+    $PHPShopGUI->setTab(array(__("Основное"), $Tab1, 200));
+
+    // Запрос модуля на закладку
+    $PHPShopModules->setAdmHandler($_SERVER["SCRIPT_NAME"], __FUNCTION__, $data);
+
+    // Вывод кнопок сохранить и выход в футер
+    $ContentFooter =
+            $PHPShopGUI->setInput("button", "", "Отмена", "right", 70, "return onCancel();", "but") .
+            $PHPShopGUI->setInput("button", "delID", "Удалить", "right", 70, "DoDelFromOrder('" . $productID . "', $orderID)", "but") .
+            $PHPShopGUI->setInput("button", "editID", "Сохранить", "right", 70, "DoUpdateFromOrder('" . $productID . "',$orderID, this.form.name_new.value,this.form.num.value,this.form.price.value)", "but");
+
+    // Футер
+    $PHPShopGUI->setFooter($ContentFooter);
+    return true;
 }
 
-// Подключение языков
-$GetSystems=GetSystems();
-$Admoption=unserialize($GetSystems['admoption']);
-$Lang=$Admoption['lang'];
+
+if (CheckedRules($UserStatus["cat_prod"], 0) == 1) {
+
+    // Вывод формы при старте
+    $PHPShopGUI->setAction($_GET['orderID'], 'actionStart', 'none');
+
+    // Обработка событий
+    $PHPShopGUI->getAction();
+} else {
+
+    // Запрет редактирования
+    $UserChek->BadUserFormaWindow();
+}
 ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-	<title>Редактирование Заказа
-</title>
-<META http-equiv=Content-Type content="text/html; charset=windows-1251">
-<meta http-equiv="MSThemeCompatible" content="Yes">
-<LINK href="../css/texts.css" type=text/css rel=stylesheet>
-<script type="text/javascript" language="JavaScript" 
-  src="/phpshop/lib/JsHttpRequest/JsHttpRequest.js"></script>
-<script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
-<script type="text/javascript" language="JavaScript1.2" src="../language/<?=$Lang?>/language_windows.js"></script>
-<script>
-function DoUpadateSum(){
-var num=document.getElementById('num').value;
-var price=document.getElementById('price').value;
-document.getElementById('sum').innerHTML="<h1>"+(num*price)+"</h1>";
-}
-</script>
-</head>
-<body style="overflow:hidden;margin:0;" onload="DoCheckLang(location.pathname,<?=$SysValue['lang']['lang_enabled']?>)">
-<?
-
-function GetImg($productID){
-global $table_name2;
-$sql="select pic_small from $table_name2 where id='$productID'";
-$result=mysql_query($sql);
-$row = mysql_fetch_array($result);
-if(empty($row['pic_small'])) return "images/shop/no_photo.gif";
- else return $row['pic_small'];
-}
-
-
-
-$sql="select * from $table_name1 where id='$orderId'";
-$result=mysql_query($sql);
-$row = mysql_fetch_array($result);
-
-    $id=$row['id'];
-    $datas=$row['datas'];
-	$uid=$row['uid'];
-	$order=unserialize($row['orders']);
-	$status=unserialize($row['status']);
-
-	$xid = base64_decode(base64_decode($xid));
-
-echo "
-
-<form method=\"post\" id=\"product_edit\">
-<table width=\"100%\">
-<tr>
-	<td>
-	<FIELDSET >
-	<LEGEND><span name=txtLang id=txtLang><u>Н</u>аименование</span> #$xid</LEGEND>
-	<div style=\"padding:10\" align=\"left\">
-	
-	   <input type=\"text\" name=name_new style=\"width: 100%;\" value=\"".$order['Cart']['cart'][$xid]['name']."\">
-</div>
-	</FIELDSET>
-	</td>
-</tr>
-</table>
-<table  width=\"100%\">
-<tr>
-	<td valign=\"top\">
-	<FIELDSET >
-	<LEGEND><span name=txtLang id=txtLang><u>И</u>зображение</span></LEGEND>
-	<div style=\"padding:10\" align=\"left\">
-	<img src=\"".GetImg($xid)."\" border=\"0\">
-	</div>
-	</FIELDSET>
-	</td>
-	<td valign=top>
-	<FIELDSET >
-	<LEGEND><span name=txtLang id=txtLang><u>К</u>ол-во</span></LEGEND>
-	<div style=\"padding:10\" align=\"left\">
-	<input type=\"text\" name=num_new style=\"width: 70px;\" value=\"".$order['Cart']['cart'][$xid]['num']."\" id=\"num\" onchange=\"DoUpadateSum()\">
-	</div>
-	</FIELDSET>
-	<FIELDSET >
-	<LEGEND><span name=txtLang id=txtLang><u>Ц</u>ена (".GetIsoValutaOrder().".)</span></LEGEND>
-	<div style=\"padding:10\" align=\"left\">
-	<input type=\"text\" name=price_new style=\"width: 70px;\" value=\"".ReturnSumma($order['Cart']['cart'][$xid]['price'],0)."\" id=\"price\" onchange=\"DoUpadateSum()\"> 
-	</div>
-	</FIELDSET>
-	</td>
-	<td valign=top width=\"100%\">
-	<FIELDSET >
-	<LEGEND><span name=txtLang id=txtLang><u>С</u>умма</span> (".GetIsoValutaOrder().".)</LEGEND>
-	<div style=\"padding:10\" align=\"center\" id=\"sum\">
-	<h1>".(number_format(ReturnSumma($order['Cart']['cart'][$xid]['price']*$order['Cart']['cart'][$xid]['num'],0),0,""," "))."</h1>
-	</div>
-	</FIELDSET>
-	</td>
-</tr>
-</table>
-<hr>
-<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" height=\"50\" >
-<tr>
-	<td align=\"right\" style=\"padding:10\">
-<input type=button value=\"ОК\"  id=btnOk  style=\"width: 7em; height: 2.2em;\" onClick=\"DoUpdateFromOrder('".base64_encode(base64_encode($xid))."',$orderId,this.form.name_new.value,this.form.num_new.value,this.form.price_new.value);\">
-<input type=\"button\" class=but id=btnRemove value=\"Удалить\" onClick=\"DoDelFromOrder('".base64_encode(base64_encode($xid))."', $orderId);\">
-	<input type=submit id=btnCancel value=Отмена class=but onClick=\"return onCancel();\">
-
-	</td>
-</tr>
-</table>
-</form>
-</body>
-</html>";

@@ -182,7 +182,7 @@ function PrintResultDo($CsvToArray){
 
 
 require_once "../../lib/JsHttpRequest/JsHttpRequest.php";
-$JsHttpRequest =& new JsHttpRequest("windows-1251");
+$JsHttpRequest = new JsHttpRequest("windows-1251");
 
 // Расширение
 $_FILES['file']['ext']=PHPShopSecurity::getExt($_FILES['file']['name']);
@@ -195,10 +195,10 @@ if(move_uploaded_file(@$_FILES['file']['tmp_name'], "../csv/".@$_FILES['file']['
   $ReadCsv = new ReadCsv1C("../csv/".@$_FILES['file']['name']);
   $interface.='
 <div id=interfacesWin name=interfacesWin align="left" style="width:100%;height:580;overflow:auto"> 
-<TABLE style="border: 1px;border-style: inset;" cellSpacing=0 cellPadding=0 width="100%"><TBODY>
+<TABLE cellSpacing=0 cellPadding=0 width="100%"><TBODY>
 <TR>
 <TD vAlign=top>
-<table width="100%" cellpadding="0" cellspacing="1" class="sortable" id="sort" bgcolor="#808080">
+<table width="100%" cellpadding="0" cellspacing="1" class="sortable" id="sort">
 <tr>
     <td id="pane" width="50">№</td>
 	<td id="pane" width="100">Наименование</td>

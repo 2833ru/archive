@@ -19,9 +19,8 @@ function ReturnSumma($sum,$disc) {
 
 // «аводим статус обработанного заказа
 function CheckStatusReady() {
-    global $SysValue;
     $sql="select id from ".$GLOBALS['SysValue']['base']['table_name32']." where id=100 limit 1";
-    @$result=mysql_query(@$sql);
+    @$result=mysql_query($sql);
     $num=mysql_numrows($result);
 
     // «апись нового статуса
@@ -71,14 +70,15 @@ switch($_GET['command']) {
             else $PHPShopOrder = new PHPShopOrderFunction($id);
 
             $order=unserialize($row['orders']);
-            $status=unserialize($row['status']);
+            //$status=unserialize($row['status']);
             $mail=$order['Person']['mail'];
+            $user=$row['user'];
             $name=$order['Person']['name_person'];
-            $company=str_replace("*","\"",$order['Person']['org_name']);
+            $company=str_replace("&quot;",'"',$order['Person']['org_name']);
             $inn=$order['Person']['org_inn'];
             $kpp=$order['Person']['org_kpp'];
             $tel=$order['Person']['tel_code']." ".$order['Person']['tel_name'];
-            $adres=str_replace("*","\"",$order['Person']['adr_name']);
+            $adres=str_replace("&quot;",'"',$order['Person']['adr_name']);
             $adres=PHPShopSecurity::CleanOut($adres);
             $oplata=$PHPShopOrder->getOplataMetodName();
             $sum=@ReturnSumma($order['Cart']['sum'],$order['Person']['discount']);
@@ -87,7 +87,7 @@ switch($_GET['command']) {
             if($discount>0) $discountStr="- скидка $discount%";
             else $discountStr="";
 
-            $csv1.="$id;$uid;$datas;$mail;$name;$company;$tel;$oplata;$sum;$discount;$inn;$adres;$kpp;\n";
+            $csv1.="$id;$uid;$datas;$mail;$name;$company;$tel;$oplata;$sum;$discount;$inn;$adres;$kpp;$user;\n";
 
             if(is_array($order['Cart']['cart']))
                 foreach($order['Cart']['cart'] as $val) {
@@ -122,7 +122,7 @@ switch($_GET['command']) {
 	 seller='1',
      statusi=$CheckStatusReady 
      where id=".$_GET['id'];
-        @$result=mysql_query(@$sql) or die("error");
+        @$result=mysql_query($sql) or die("error");
 
         // добавл€ем запись с доки
         $date=date("U");
@@ -137,7 +137,7 @@ switch($_GET['command']) {
     // command=new&date1=123456&date2=24255
     case("new"):
         $sql="select id from ".$GLOBALS['SysValue']['base']['table_name1']." where seller!='1' and datas<'$_GET[date2]' and datas>'$_GET[date1]'";
-        @$result=mysql_query(@$sql);
+        @$result=mysql_query($sql);
         $new_order=mysql_numrows($result);
         echo $new_order;
         break;
@@ -147,7 +147,7 @@ switch($_GET['command']) {
     case("check"):
         $csv=null;
         $sql="select * from ".$GLOBALS['SysValue']['base']['table_name9']." where datas<'$_GET[date2]' and datas>'$_GET[date1]'";
-        @$result=mysql_query(@$sql);
+        @$result=mysql_query($sql);
         while($row = mysql_fetch_array($result)) {
             $cid=$row['cid'];
             $csv.="$cid;";
@@ -172,7 +172,7 @@ switch($_GET['command']) {
     // command=check_f&cid=123
     case("check_f"):
         $sql="select datas_f from ".$GLOBALS['SysValue']['base']['table_name9']." where cid='$_GET[cid]' limit 1";
-        @$result=mysql_query(@$sql);
+        @$result=mysql_query($sql);
         $row = mysql_fetch_array($result);
         $datas_f=$row['datas_f'];
         echo $datas_f;

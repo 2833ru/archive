@@ -10,7 +10,7 @@ class PluginStatInterface extends PHPShopInterface{
         parent::PHPShopInterface();
         //подключаем класс для работы с датами
         include_once('datelimit.class.php');
-        $this->datelimit = &new DateLimit();
+        $this->datelimit = new DateLimit();
     }
 
     function getPage($echo = false, $fullmode = false) {

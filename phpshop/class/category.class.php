@@ -1,29 +1,31 @@
 <?php
 
-if (!defined("OBJENABLED")){
-require_once(dirname(__FILE__)."/obj.class.php");
-require_once(dirname(__FILE__)."/array.class.php");
+if (!defined("OBJENABLED")) {
+    require_once(dirname(__FILE__) . "/obj.class.php");
+    require_once(dirname(__FILE__) . "/array.class.php");
 }
 
 /**
  * Категории товаров
  * Упрощенный доступ к категориями
  * @author PHPShop Software
- * @version 1.0
+ * @version 1.1
  * @package PHPShopObj
  */
 class PHPShopCategory extends PHPShopObj {
+
     /**
      * Конструктор
      * @param int $objID ИД категории
      */
     function PHPShopCategory($objID) {
-        $this->objID=$objID;
-        $this->objBase=$GLOBALS['SysValue']['base']['table_name'];
-        $this->cache=false;
-        $this->debug=false;
+        $this->objID = $objID;
+        $this->objBase = $GLOBALS['SysValue']['base']['table_name'];
+        $this->cache = true;
+        $this->debug = false;
         parent::PHPShopObj('id');
     }
+
     /**
      * Выдача имени категории
      * @return string
@@ -31,20 +33,29 @@ class PHPShopCategory extends PHPShopObj {
     function getName() {
         return parent::getParam("name");
     }
+
     /**
      * Выдача описания категории
      * @return string
      */
     function getContent() {
+        if(empty($this->cache))
         return parent::getParam("content");
+        else {
+            $PHPShopOrm = new PHPShopOrm($this->objBase);
+            $data=$PHPShopOrm->select(array('content'), array('id' => '=' . intval($this->objID)), false, array('limit' => 1));
+            return $data['content'];
+        }
     }
+
     /**
      * Проверка на существование
      * @return bool
      */
     function init() {
-        $id=parent::getParam("id");
-        if(!empty($id)) return true;
+        $id = parent::getParam("id");
+        if (!empty($id))
+            return true;
     }
 
 }
@@ -63,10 +74,11 @@ class PHPShopPages extends PHPShopObj {
      * @param int $objID ИД страницы
      */
     function PHPShopPages($objID) {
-        $this->objID=$objID;
-        $this->objBase=$GLOBALS['SysValue']['base']['table_name11'];
+        $this->objID = $objID;
+        $this->objBase = $GLOBALS['SysValue']['base']['table_name11'];
         parent::PHPShopObj();
     }
+
     /**
      * Выдача имени страницы
      * @return string
@@ -82,6 +94,7 @@ class PHPShopPages extends PHPShopObj {
     function getContent() {
         return parent::getParam("content");
     }
+
 }
 
 /**
@@ -92,17 +105,19 @@ class PHPShopPages extends PHPShopObj {
  * @package PHPShopObj
  */
 class PHPShopPageCategory extends PHPShopObj {
+
     /**
      * Конструктор
      * @param int $objID ИД категории
      */
     function PHPShopPageCategory($objID) {
-        $this->objID=$objID;
-        $this->objBase=$GLOBALS['SysValue']['base']['page_categories'];
-        $this->cache=true;
-        $this->debug=false;
+        $this->objID = $objID;
+        $this->objBase = $GLOBALS['SysValue']['base']['page_categories'];
+        $this->cache = true;
+        $this->debug = false;
         parent::PHPShopObj('id');
     }
+
     /**
      * Выдача имени категории
      * @return string
@@ -110,6 +125,7 @@ class PHPShopPageCategory extends PHPShopObj {
     function getName() {
         return parent::getParam("name");
     }
+
     /**
      * Выдача описания категории
      * @return string
@@ -117,13 +133,15 @@ class PHPShopPageCategory extends PHPShopObj {
     function getContent() {
         return parent::getParam("content");
     }
+
     /**
      * Проверка на существование
      * @return bool
      */
     function init() {
-        $id=parent::getParam("id");
-        if(!empty($id)) return true;
+        $id = parent::getParam("id");
+        if (!empty($id))
+            return true;
     }
 
 }
@@ -132,16 +150,23 @@ class PHPShopPageCategory extends PHPShopObj {
  * Массив категории товаров
  * Упрощенный доступ к категориями
  * @author PHPShop Software
- * @version 1.0
+ * @version 1.1
  * @package PHPShopArray
  */
 class PHPShopCategoryArray extends PHPShopArray {
 
-    function PHPShopCategoryArray() {
-        $this->cache=false;
-        $this->order=array('order'=>'num');
-        $this->objBase=$GLOBALS['SysValue']['base']['categories'];
-        parent::PHPShopArray("id","name","parent_to");
+    /**
+     * Конструктор
+     * @param string $sql SQL условие выборки
+     */
+    function PHPShopCategoryArray($sql = false) {
+        $this->objSQL = $sql;
+        $this->cache = false;
+        $this->order = array('order' => 'num');
+        $this->objBase = $GLOBALS['SysValue']['base']['categories'];
+        parent::PHPShopArray("id", "name", "parent_to", "skin_enabled");
     }
+
 }
+
 ?>

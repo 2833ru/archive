@@ -50,6 +50,7 @@ class PHPShopDebug {
     }
 
     function disp($name,$content) {
+        global $PHPShopModules;
 
         if($_GET['debug'] == 'timer') {
             $name['Total SQL']=$this->total_sql;
@@ -74,14 +75,14 @@ class PHPShopDebug {
             if(is_array($data))
                 foreach($data as $val) $disp.=PHPShopDate::dataV($val['date']).' '.$val['error'].'</br>';
         }
-        else $disp='Модуль Error Log не установлен';
+        else $disp=__('Модуль Error Log не установлен');
 
         echo $disp;
 
     }
 
     function compile($total_sql,$total_seconds,$total_memory) {
-        global $PHPShopNav;
+        global $PHPShopNav,$PHPShopModules;
 
         $this->total_sql=$total_sql;
         $this->total_seconds=$total_seconds;
@@ -206,7 +207,9 @@ class PHPShopDebug {
                     $this->disp($this->value,"Values");
                     break;
                 case "timer":
-                    $this->disp($this->seconds,"Timer");
+                    $timer['Repsonal']=$this->seconds;
+                    $timer['Modules']=$PHPShopModules->handlerDone;
+                    $this->disp($timer,"Timer");
                     break;
             }
 

@@ -1,250 +1,144 @@
-<?
-require("../connect.php");
-@mysql_connect ("$host", "$user_db", "$pass_db")or @die("Невозможно подсоединиться к базе");
-mysql_select_db("$dbase")or @die("Невозможно подсоединиться к базе");
-require("../enter_to_admin.php");
+<?php
 
-// Языки
-$GetSystems=GetSystems();
-$option=unserialize($GetSystems['admoption']);
-$Lang=$option['lang'];
-require("../language/".$Lang."/language.php");
+$_classPath = "../../";
+include($_classPath . "class/obj.class.php");
+PHPShopObj::loadClass("base");
 
-function Disp_num($uid)// вывод каталогов в выборе
-{
-global $table_name14;
-$sql="select * from $table_name14 where id='$uid'";
-$result=mysql_query($sql);
-$row = mysql_fetch_array($result);
-$num=$row['num'];
-for($i=1;$i<=10;$i++)
-  {
-	if ($i==$num)
-	   {
-	   $sel="selected";
-	   }
-	   else
-	      {
-		  $sel="";
-		  }
-    @$dis.="
-	<option value=\"$i\" $sel >$i</option>
-    ";
-  }
-@$disp="
-<select name=num_new size=1 class=s>
-$dis
-</select>
-";
-return @$disp;
+$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
+$PHPShopBase->chekAdmin();
+
+PHPShopObj::loadClass("system");
+$PHPShopSystem = new PHPShopSystem();
+
+// Редактор GUI
+PHPShopObj::loadClass("admgui");
+$PHPShopGUI = new PHPShopGUI();
+$PHPShopGUI->title = "Редактирование Текстового Блока";
+$PHPShopGUI->ajax = "'menu','','','core'";
+$PHPShopGUI->alax_lib = true;
+
+// SQL
+PHPShopObj::loadClass("orm");
+$PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['table_name14']);
+
+// Модули
+PHPShopObj::loadClass("modules");
+$PHPShopModules = new PHPShopModules($_classPath . "modules/");
+
+// Заполняем выбор
+function setSelectChek($n) {
+    $i = 1;
+    while ($i <= 10) {
+        if ($n == $i)
+            $s = "selected"; else
+            $s = "";
+        $select[] = array($i, $i, $s);
+        $i++;
+    }
+    return $select;
 }
+
+function actionStart() {
+    global $PHPShopGUI, $PHPShopSystem, $SysValue, $_classPath, $PHPShopOrm, $PHPShopModules;
+
+    // Выборка
+    $data = $PHPShopOrm->select(array('*'), array('id' => '=' . $_GET['id']));
+    extract($data);
+
+    // ID окна для памяти закладок
+    $PHPShopGUI->setID(__FILE__, $data['id']);
+
+    $PHPShopGUI->dir = "../";
+    //$PHPShopGUI->size = "630,530";
+    // Графический заголовок окна
+    $PHPShopGUI->setHeader("Редактирование Текстового Блока", "Укажите данные для записи в базу.", $PHPShopGUI->dir . "img/i_select_another_account_med[1].gif");
+
+    // Редактор 1
+    $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));
+    $oFCKeditor = new Editor('content_new');
+    $oFCKeditor->Height = '320';
+    $oFCKeditor->Config['EditorAreaCSS'] = $_classPath . "templates" . chr(47) . $PHPShopSystem->getParam("skin") . chr(47) . $SysValue['css']['default'];
+    $oFCKeditor->ToolbarSet = 'Normal';
+    $oFCKeditor->Value = $content;
+
+
+    $Select1 = setSelectChek($num);
+
+    $Select2[] = array("Слева", 0, $data['element']);
+    $Select2[] = array("Справа", 1, $data['element']);
+
+    // Содержание закладки 1
+    $Tab1 = $PHPShopGUI->setField("Название:", $PHPShopGUI->setInput("text", "name_new", $name, "none", 300) .
+                    $PHPShopGUI->setRadio("flag_new", 1, "Показывать", $data['flag'], "left") . $PHPShopGUI->setRadio("flag_new", 0, "Скрыть", $data['flag']), "left") .
+            $PHPShopGUI->setField("Позиция:", $PHPShopGUI->setSelect("num_new", $Select1, 50, 1), "left", 5) .
+            $PHPShopGUI->setField("Расположение:", $PHPShopGUI->setSelect("element_new", $Select2, 100, 1), "none", 5) .
+            $PHPShopGUI->setLine() .
+            $PHPShopGUI->setField("Привязка к странице:", $PHPShopGUI->setInput("text", "dir_new", $dir, "left", 500) .
+                    $PHPShopGUI->setLine(__('* Пример: /page/,/news/. Можно указать несколько адресов через запятую без пробела')), "none");
+
+    // Содержание закладки 2
+    $Tab2 = $oFCKeditor->AddGUI();
+
+    // Вывод формы закладки
+    $PHPShopGUI->setTab(array("Основное", $Tab1, 350), array("Содержание", $Tab2, 350));
+
+    // Запрос модуля на закладку
+    $PHPShopModules->setAdmHandler($_SERVER["SCRIPT_NAME"], __FUNCTION__, $data);
+
+    // Вывод кнопок сохранить и выход в футер
+    $ContentFooter =
+            $PHPShopGUI->setInput("hidden", "newsID", $data['id'], "right", 70, "", "but") .
+            $PHPShopGUI->setInput("button", "", "Отмена", "right", 70, "return onCancel();", "but") .
+            $PHPShopGUI->setInput("button", "delID", "Удалить", "right", 70, "return onDelete('" . __('Вы действительно хотите удалить?') . "')", "but", "actionDelete.page_menu.edit") .
+            $PHPShopGUI->setInput("submit", "editID", "Сохранить", "right", 70, "", "but", "actionUpdate.page_menu.edit") .
+            $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionSave.page_menu.edit");
+
+    // Футер
+    $PHPShopGUI->setFooter($ContentFooter);
+    return true;
+}
+
+/**
+ * Экшен сохранения
+ */
+function actionSave() {
+    global $PHPShopGUI;
+
+    // Сохранение данных
+    actionUpdate();
+
+    $_GET['id'] = $_POST['newsID'];
+    $PHPShopGUI->setAction($_GET['id'], 'actionStart', 'none');
+}
+
+// Функция обновления
+function actionUpdate() {
+    global $PHPShopOrm, $PHPShopModules;
+
+    // Перехват модуля
+    $PHPShopModules->setAdmHandler($_SERVER["SCRIPT_NAME"], __FUNCTION__, $_POST);
+
+    if (empty($_POST['flag_new']))
+        $_POST['flag_new'] = 0;
+
+    $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['newsID']));
+    $PHPShopOrm->clean();
+    return $action;
+}
+
+// Функция удаления
+function actionDelete() {
+    global $PHPShopOrm, $PHPShopModules;
+
+    // Перехват модуля
+    $PHPShopModules->setAdmHandler($_SERVER["SCRIPT_NAME"], __FUNCTION__, $_POST);
+    $action = $PHPShopOrm->delete(array('id' => '=' . $_POST['newsID']));
+    return $action;
+}
+
+// Вывод формы при старте
+$PHPShopGUI->setAction($_GET['id'], 'actionStart', 'none');
+
+// Обработка событий
+$PHPShopGUI->getAction();
 ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-	<title>Редактирование Меню</title>
-<META http-equiv=Content-Type content="text/html; charset=<?=$SysValue['Lang']['System']['charset']?>">
-<LINK href="../css/texts.css" type=text/css rel=stylesheet>
-<?
-//Check user's Browser
-if(strpos($_SERVER["HTTP_USER_AGENT"],"MSIE"))
-	echo "<script language=JavaScript src='../editor3/scripts/editor.js'></script>";
-else
-	echo "<script language=JavaScript src='../editor3/scripts/moz/editor.js'></script>";
-?>
-<SCRIPT language="JavaScript" src="/phpshop/lib/Subsys/JsHttpRequest/Js.js"></SCRIPT>
-<script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
-<script type="text/javascript" language="JavaScript1.2" src="../language/<?=$Lang?>/language_windows.js"></script>
-<script type="text/javascript" language="JavaScript1.2" src="../language/<?=$Lang?>/language_interface.js"></script>
-<script>
-DoResize(<? echo $GetSystems['width_icon']?>,630,610);
-</script>
-</head>
-<body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0" onload="DoCheckLang(location.pathname,<?=$SysValue['lang']['lang_enabled']?>);preloader(0)">
-<?
-	  // Редактирование записей книги
-	  $sql="select * from $table_name14 where id=$id";
-      $result=mysql_query($sql);
-	  $row = mysql_fetch_array($result);
-	  $id=$row['id'];
-	  $name=$row['name'];
-	  $content=stripslashes($row['content']);
-	  $num=$row['num'];
-	  $dir=$row['dir'];
-	  $element=$row['element'];
-	if($row['flag']==1){
-	$fl="checked";
-	}else{
-	$fl2="checked";}
-	
-	if($row['element']==0){
-	$s1="selected";
-	}else{
-	$s2="selected";}
-	  ?>
-	  <table id="loader">
-<tr>
-	<td valign="middle" align="center">
-		<div id="loadmes" onclick="preloader(0)">
-<table width="100%" height="100%">
-<tr>
-	<td id="loadimg"></td>
-	<td ><b><?=$SysValue['Lang']['System']['loading']?></b><br><?=$SysValue['Lang']['System']['loading2']?></td>
-</tr>
-</table>
-		</div>
-</td>
-</tr>
-</table>
-
-<SCRIPT language=JavaScript type=text/javascript>preloader(1);</SCRIPT>
-<form name="product_edit"  method=post onsubmit="Save()">
-<table cellpadding="0" cellspacing="0" width="100%" height="50" id="title">
-<tr bgcolor="#ffffff">
-	<td style="padding:10">
-	<b><span name=txtLang id=txtLang>Редактирование Блока</span> "<?=$name?>"</b><br>
-	&nbsp;&nbsp;&nbsp;<span name=txtLang id=txtLang>Укажите данные для записи в базу</span>.
-	</td>
-	<td align="right">
-	<img src="../img/i_select_another_account_med[1].gif" border="0" hspace="10">
-	</td>
-</tr>
-</table>
-<br>
-<table cellpadding="5" cellspacing="0" border="0" align="center" width="100%">
-
-  <td colspan="2">
- <FIELDSET >
-<LEGEND id=lgdLayout><span name=txtLang id=txtLang><u>Н</u>азвание меню</span></LEGEND>
-<div style="padding:10"> 
-<table>
-<tr>
-<td>
-
-<input type="text" name="name_new" value="<?=$name?>" size="50">
-
-	</td>
-	<td width="10"></td>
-	<td>
-	<span name=txtLang id=txtLang><u>П</u>озиция</span>: 
-<?echo Disp_num($id);?>
-	</td>
-	<td width="10"></td>
-	<td>
-		<span name=txtLang id=txtLang><u>Р</u>асположение</span>: 
-<select name=element_new size=1 class=s>
-<option value="0" <?=$sl?> id=txtLang>Слева</option>
-<option value="1" <?=$s2?> id=txtLang>Справа</option>
-</select>
-	</td>
-</tr>
-</table>
-
-<input type="radio" name="flag_new" value="1" <?=@$fl?>><span name=txtLang id=txtLang>Показывать меню</span>&nbsp;&nbsp;&nbsp;
-<input type="radio" name="flag_new" value="0" <?=@$fl2?>><span name=txtLang id=txtLang>Скрыть меню</span>
-</div>
-</FIELDSET>
-  </td>
-</tr>
-<tr>
-  <td colspan="2">
-  <FIELDSET >
-<LEGEND id=lgdLayout><span name=txtLang id=txtLang><u>П</u>ривязка к странице</span></LEGEND>
-<div style="padding:10">
-<input type="text" name="dir_new" value="<?=$dir?>" style="width:100%"><br>
-<span name=txtLang id=txtLang>* Пример: page/,news/. Можно указать несколько адресов через запятую.</span>
-</FIELDSET>
-  </td>
-</tr>
-<tr>
-<tr>
-	<td colspan="3">
-	<FIELDSET>
-<LEGEND><span name=txtLang id=txtLang><u>К</u>онтент</span></LEGEND>
-<div style="padding:10">
-<?
-$systems=GetSystems();
-$option=unserialize($systems['admoption']);
-if($option['editor_enabled']  == 1){
-$MyStyle=$SysValue['dir']['dir'].chr(47)."phpshop".chr(47)."templates".chr(47).$systems['skin'].chr(47).$SysValue['css']['default'];
-echo'
-<pre id="idTemporary" name="idTemporary" style="display:none">
-'.$content.'
-</pre>
-	<script>
-		var oEdit1 = new InnovaEditor("oEdit1");
-	oEdit1.cmdAssetManager="modalDialogShow(\''.$SysValue['dir']['dir'].'/phpshop/admpanel/editor3/assetmanager/assetmanager.php\',640,500)";
-		oEdit1.width=600;
-		oEdit1.height=200;
-		oEdit1.btnStyles=true;
-	    oEdit1.css="'.$MyStyle.'";
-		oEdit1.RENDER(document.getElementById("idTemporary").innerHTML);
-	</script>
-	<input type="hidden" name="EditorContent" id="EditorContent">
-	';
-	}
-else{
-echo '
-<textarea name="EditorContent" id="EditorContent" style="width:100%;height:200px">'.$content.'</textarea>
-';
-}
-	?>
-</div>
-</FIELDSET>
-	</td>
-</tr>
-</table>
-<hr>
-<table cellpadding="0" cellspacing="0" width="100%" height="50" >
-<tr>
-    <td align="left" style="padding:10">
-    <BUTTON class="help" onclick="helpWinParent('menu')">Справка</BUTTON></BUTTON>
-	</td>
-	<td align="right" style="padding:10">
-    <input type="hidden" name="id" value="<?=$id?>" >
-	<input type="submit" name="editID" value="OK" class=but>
-	<input type="button" name="btnLang" class=but value="Удалить" onClick="PromptThis();">
-    <input type="hidden" class=but  name="productDELETE" id="productDELETE">
-	<input type="button" name="btnLang" value="Отмена" onClick="return onCancel();" class=but>
-	</td>
-</tr>
-</table>
-</form>
-	  <?
-if(isset($editID) and @$name_new!="")// Запись редактирования
-{
-if(CheckedRules($UserStatus["page_menu"],1) == 1){
-$sql="UPDATE $table_name14
-SET
-name='$name_new',
-content='".addslashes($EditorContent)."',
-flag='$flag_new',
-num='$num_new',
-dir='$dir_new',
-element='$element_new'
-where id='$id'";
-$result=mysql_query($sql)or @die("Невозможно изменить запись");
-echo"
-	  <script>
-DoReloadMainWindow('page_menu');
-</script>
-	   ";
-}else $UserChek->BadUserFormaWindow();
-}
-if(@$productDELETE=="doIT")// Удаление записи
-{
-if(CheckedRules($UserStatus["page_menu"],1) == 1){
-$sql="delete from $table_name14
-where id='$id'";
-$result=mysql_query($sql)or @die("Невозможно изменить запись");
-echo"
-	  <script>
-DoReloadMainWindow('page_menu');
-</script>
-	   ";
-}else $UserChek->BadUserFormaWindow();
-}
-?>
-
-
-

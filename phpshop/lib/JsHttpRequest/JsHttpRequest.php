@@ -62,7 +62,7 @@ class JsHttpRequest
         }
 
         // Start OB handling early.
-        $this->_uniqHash = md5(microtime() . getmypid());
+        $this->_uniqHash = md5(microtime());
         ini_set('error_prepend_string', ini_get('error_prepend_string') . $this->_uniqHash);
         ini_set('error_append_string',  ini_get('error_append_string') . $this->_uniqHash);
         ob_start(array(&$this, "_obHandler"));

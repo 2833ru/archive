@@ -61,7 +61,8 @@ function TipPayment($payment) {
 
 $RegTo = $SysValue['license']['regto'];
 $ProductName=$SysValue['license']['product_name'];
-$ProductNameVersion=$SysValue['license']['product_name']." v.".$SysValue['upload']['version'];
+$ProductNameTM=str_replace('PHPShop','PHPShop&#8482',$SysValue['license']['product_name']);
+$ProductNameVersion=$ProductNameTM." v.".$SysValue['upload']['version'];
 
 
 // Вывод валюты в выборе для загрузки товаров
@@ -209,7 +210,7 @@ function GetSystems(){
     $array=unserialize($option['admoption']);
     $lang='russian';
     $array['lang']=$lang;
-    session_register('lang');
+    $_SESSION['lang']=$lang;
     $option['admoption']=serialize($array);
     $option['width_icon']=100;
     
@@ -319,6 +320,10 @@ function GetOrderStatusApi($n) {
     }
     $disp="<select name='list' id='list'><option value='all'>Все</option><option value='new'>Новый заказ</option>".$dis."</select>";
     return $disp;
+}
+
+function __($str){
+ return   $str; 
 }
 
 // Временная поддержка API 2.X

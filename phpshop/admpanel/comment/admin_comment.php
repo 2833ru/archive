@@ -54,11 +54,10 @@ while ($row = mysql_fetch_array($result))
 <div id=interfacesWin name=interfacesWin align=\"left\" style=\"width:100%;".@$razmer.";overflow:auto\"> 
 
 <form name=\"form_flag\">
-<table width=\"100%\"  cellpadding=\"0\" cellspacing=\"0\" style=\"border: 1px;
-	border-style: inset;\">
+<table width=\"100%\"  cellpadding=\"0\" cellspacing=\"0\">
 <tr>
 	<td valign=\"top\">
-<table cellpadding=\"0\" cellspacing=\"1\" width=\"100%\" border=\"0\" bgcolor=\"#808080\" class=\"sortable\" id=\"sort\">
+<table cellpadding=\"0\" cellspacing=\"1\" width=\"100%\" border=\"0\"  class=\"sortable\" id=\"sort\">
 <tr>
     <td width=\"5%\" id=pane align=center>+/-</td>
 	<td width=\"12%\" id=pane align=center><img  src=\"icon/blank.gif\"  width=\"1\" height=\"1\" border=\"0\" onLoad=\"starter('comment');\" align=left><span name=txtLang id=txtLang>Дата</span></td>

@@ -1,4 +1,4 @@
-<?
+<?php
 
 $_classPath="../../";
 include($_classPath."class/obj.class.php");
@@ -11,6 +11,7 @@ PHPShopObj::loadClass("math");
 PHPShopObj::loadClass("array");
 PHPShopObj::loadClass("category");
 PHPShopObj::loadClass("orm");
+PHPShopObj::loadClass("string");
 
 $PHPShopBase = new PHPShopBase($_classPath."inc/config.ini");
 $PHPShopBase->chekAdmin();
@@ -63,7 +64,6 @@ function pdsCat($id,$parent,$array) {
     else return $array[$id]['name'].";";
     return $str;
 }
-
 
 
 if(CheckedRules($UserStatus["csv"],1) == 1) {
@@ -127,21 +127,20 @@ if(CheckedRules($UserStatus["csv"],1) == 1) {
                 $category=$row['category'];
                 $content=PHPShopSecurity::CleanOut($row['content']);
                 $description=PHPShopSecurity::CleanOut($row['description']);
-                $price=$row['price'];
-                $price2=trim($row['price2']);
-                $price3=trim($row['price3']);
-                $price4=trim($row['price4']);
-                $price5=trim($row['price5']);
+                $price=PHPShopString::toFloat($row['price']);
+                $price2=PHPShopString::toFloat($row['price2']);
+                $price3=PHPShopString::toFloat($row['price3']);
+                $price4=PHPShopString::toFloat($row['price4']);
+                $price5=PHPShopString::toFloat($row['price5']);
                 $uid=trim($row['uid']);
                 $enabled=$row['enabled'];
                 $pic_small=$row['pic_small'];
                 $pic_big=$row['pic_big'];
-                $vendor_array=base64_encode($row['vendor_array']);
                 $vendorArray=unserialize($row['vendor_array']);
                 $num=$row['num'];
                 $items=trim($row['items']);
                 $weight=trim($row['weight']);
-                $dop_cat = $row['dop_cat'];
+                $dop_cat = PHPShopSecurity::CleanOut($row['dop_cat']);
                 
                 @$csv.="$id;\"$name\";\"$description\";$pic_small;\"$content\";$pic_big;$items;$price;$price2;$price3;$price4;$price5;$weight;$uid;$category;$dop_cat";
                 @$csv.=';'.getChars($vendorArray,$category);
@@ -200,11 +199,11 @@ if(CheckedRules($UserStatus["csv"],1) == 1) {
             while($row = mysql_fetch_array($result)) {
                 $id=$row['id'];
                 $name=str_replace("|",";",trim($row['name']));
-                $price=trim($row['price']);
-                $price2=trim($row['price2']);
-                $price3=trim($row['price3']);
-                $price4=trim($row['price4']);
-                $price5=trim($row['price5']);
+                $price=PHPShopString::toFloat($row['price']);
+                $price2=PHPShopString::toFloat($row['price2']);
+                $price3=PHPShopString::toFloat($row['price3']);
+                $price4=PHPShopString::toFloat($row['price4']);
+                $price5=PHPShopString::toFloat($row['price5']);
                 $uid=trim($row['uid']);
                 $spec=trim($row['spec']);
                 $items=trim($row['items']);

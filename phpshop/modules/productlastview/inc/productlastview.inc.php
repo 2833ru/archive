@@ -83,8 +83,8 @@ class ProductLastView extends PHPShopElements {
         );
 
         // Очищаем лимит
-        if (count($array) > $this->option['num'])
-            array_pop($array);
+        if (count($this->_PRODUCT) >= $this->option['num'])
+            array_shift($this->_PRODUCT);
 
         $this->_PRODUCT[$objID] = $array;
     }
@@ -178,7 +178,7 @@ class ProductLastView extends PHPShopElements {
             $this->set('leftMenuName', $this->option['title']);
 
             // Подключаем шаблон
-            $dis = $this->parseTemplate($this->getValue('templates.left_menu'), true);
+            $dis = $this->parseTemplate($this->getValue('templates.left_menu'));
 
 
             // Назначаем переменную шаблона

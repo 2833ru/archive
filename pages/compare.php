@@ -2,7 +2,9 @@
 
 $shopdir=$SysValue['other']['ShopDir'];
 $limit=4; //Максимум товаров для сравнения
-$copycompare=$_SESSION['compare']; //Копируем массив
+if(!empty($_SESSION['compare']))
+$copycompare=$_SESSION['compare']; 
+else $copycompare=array();
 
 // API 2.1
 $LoadItems['Valuta']=$PHPShopValutaArray->getArray();
@@ -29,7 +31,7 @@ function getfullname ($id=0) {
 
 
 if (!($SysValue['nav']['id']=="ALL")) {
-    $SysValue['nav']['id']=TotalClean($SysValue['nav']['id'],1);
+    $SysValue['nav']['id']=intval($SysValue['nav']['id']);
 }
 
 if ($SysValue['nav']['nav']=="COMCID") { 
@@ -155,6 +157,7 @@ if ($SysValue['nav']['nav']=="DID") {
 $catid=$COMCID;
 
 // Сравение
+if(!empty($_SESSION['compare']))
 if (($COMCID && (count($goods[$catid])>1) && (count($goods[$catid])<=$limit)) || 
         ((($COMCID=="ALL") && (count($_SESSION['compare'])>1) && (count($_SESSION['compare'])<=$limit)))) { //Если выбран каталог сравнения
    
@@ -287,7 +290,7 @@ if (($COMCID && (count($goods[$catid])>1) && (count($goods[$catid])<=$limit)) ||
             foreach ($sorts_name2 as $name=>$ids) {
                 $curchar='';
                 foreach ($ids as $id=>$true) {
-                    $ca=$chars[$id];
+                    @$ca=$chars[$id];
                     if(is_array($ca))
                         foreach($ca as $charid) {
                             $sql2='select name from '.$SysValue['base']['table_name21'].' where id='.$charid;

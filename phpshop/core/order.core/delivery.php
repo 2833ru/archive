@@ -8,6 +8,8 @@
  */
 function delivery($obj,$deliveryID) {
     global $SysValue;
+    
+    $pred=$br=$my=$alldone=$waytodo=null;
 
     if (empty($SysValue['nav'])) {
         $engineinc=0;
@@ -147,7 +149,7 @@ function delivery($obj,$deliveryID) {
         $deliveryID=0;
         $curid=$deliveryID;
 
-    }elseif ($varamount>1) {
+    }elseif ($varamount>=1) {
         $makechoise='<OPTION value="'.$deliveryID.'" id="makeyourchoise">Выберите доставку</OPTION>';
         $alldone='';
     } else {
@@ -156,7 +158,7 @@ function delivery($obj,$deliveryID) {
 
 
     if ($varamount==1) {
-        if (!(($curid==$deliveryID))) $waytodo='<IMG onload="UpdateDelivery('.$curid.');" SRC="../'.$pathTemplate.'/images/shop/flag_green.gif">';
+        if (!(($curid==$deliveryID))) $waytodo='<IMG onload="UpdateDelivery('.$curid.');" SRC="images/shop/flag_green.gif">';
     }
 
     if ($stop) {

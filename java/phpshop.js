@@ -82,7 +82,7 @@ function CheckPricemail(){
     var name = document.getElementById("name").value;
     var links = document.getElementById("links").value;
     var key = document.getElementById("key").value;
-    if(mail=="" || name=="" || links=="" || key=="") alert("Ошибка заполения формы сообщения!\nДанные, отмеченные флажками обязательны для заполнения.");
+    if(mail=="" || name=="" || links=="" || key=="") alert("Ошибка заполнения формы сообщения!\nДанные, отмеченные флажками обязательны для заполнения.");
     else forma_pricemail.submit();
 }
 
@@ -422,12 +422,13 @@ function ToCart(xid,num,xxid) {
     req.caching = false;
     var truePath=dirPath();
 
-    var name="allOptionsSet"+xxid;
+    var name="allOptionsSet"+xid;
     if(document.getElementById(name)) {
         addname=document.getElementById(name).value;
     } else {
         addname="";
     }
+    
 
     req.open('POST', truePath+'/phpshop/ajax/cartload.php', true);
     req.send({

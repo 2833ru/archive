@@ -214,28 +214,27 @@ VALUES ('','$login_new','".base64_encode($password_new)."','".date("U")."','$mai
 // Шлем мыло клиенту
                     $codepage  = "windows-1251";
                     $header_adm  = "MIME-Version: 1.0\n";
-                    $header_adm .= "From:  User Activation <donotreply@".str_replace("www.","",$SERVER_NAME).">\n";
+                    $header_adm .= "From:  User Activation <donotreply@".str_replace("www.","",$_SERVER['SERVER_NAME']).">\n";
                     $header_adm .= "Content-Type: text/plain; charset=$codepage\n";
                     $header_adm .= "X-Mailer: PHP/";
-                    $zag_adm=$LoadItems['System']['name']." - Регистрации пользователя ".$_POST['name_new'];
+                    $zag_adm=$GetSystems['name']." - Регистрации пользователя ".$_POST['name_new'];
                     $content_adm="
 Доброго времени!
 --------------------------------------------------------
 
-Администратор рассмсотрел вашу заявку и добавил 
-Вас в авторизованные пользователи $SERVER_NAME
+Администратор рассмотрел вашу заявку и добавил 
+Вас в авторизованные пользователи ".$_SERVER['SERVER_NAME']."
 
 Личный кабинет
 --------------
-Адрес: http://$SERVER_NAME/users/
+Адрес: http://".$_SERVER['SERVER_NAME']."/users/
 Логин: ".$login_new."
 Пароль: ".$password_new."
 
 
 Дата/время: ".date("d-m-y H:i a")."
 ";
-                    mail($_POST['mail_new'],$zag_adm, $content_adm, $header_adm);
-
+                    mail($_REQUEST['mail_new'],$zag_adm, $content_adm, $header_adm);
 
                     echo"
 <script>
@@ -245,6 +244,3 @@ DoReloadMainWindow('shopusers');
                 }else $UserChek->BadUserFormaWindow();
             }
             ?>
-
-
-

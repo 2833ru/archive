@@ -1,137 +1,148 @@
-<?
-require("../connect.php");
-@mysql_connect ("$host", "$user_db", "$pass_db")or @die("Невозможно подсоединиться к базе");
-mysql_select_db("$dbase")or @die("Невозможно подсоединиться к базе");
-require("../enter_to_admin.php");
+<?php
 
-// Подключение языков
-$GetSystems=GetSystems();
-$Admoption=unserialize($GetSystems['admoption']);
-$Lang=$Admoption['lang'];
+$_classPath = "../../";
+include($_classPath . "class/obj.class.php");
+PHPShopObj::loadClass("base");
+PHPShopObj::loadClass("system");
+PHPShopObj::loadClass("valuta");
+PHPShopObj::loadClass("array");
+PHPShopObj::loadClass("security");
+PHPShopObj::loadClass("date");
+PHPShopObj::loadClass("order");
+PHPShopObj::loadClass("delivery");
+
+// Подключение к БД
+$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
+include($_classPath . "admpanel/enter_to_admin.php");
+
+// Системные настройки
+$PHPShopSystem = new PHPShopSystem();
+
+// Редактор GUI
+PHPShopObj::loadClass("admgui");
+$PHPShopGUI = new PHPShopGUI();
+$PHPShopGUI->title = __("Редактирование Доставки");
+$PHPShopGUI->reload = "top";
+$PHPShopGUI->addJSFiles('/phpshop/lib/JsHttpRequest/JsHttpRequest.js');
+$PHPShopGUI->addJSFiles('gui/tab_cart.gui.js');
+
+// SQL
+PHPShopObj::loadClass("orm");
+$PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['delivery']);
+
+// Модули
+PHPShopObj::loadClass("modules");
+$PHPShopModules = new PHPShopModules($_classPath . "modules/");
+
+/**
+ * Экшен загрузки форм редактирования
+ */
+function actionStart() {
+    global $PHPShopGUI, $PHPShopModules, $PHPShopOrm, $PHPShopSystem;
+
+    // Тип окна
+    if ($_COOKIE['winOpenType'] == 'default')
+        $dot = ".";
+    else
+        $dot = false;
+
+    // ИД доставки
+    $deliveryID = intval($_GET['deliveryID']);
+
+    // ИД заказа
+    $orderID = intval($_GET['orderID']);
+
+    // Выборка
+    $data = $PHPShopOrm->select(array('*'), array('is_folder' => "='1'"), array('order' => 'city'), array('limit' => 1000));
+
+    $PHPShopGUI->dir = "../";
+
+    // Нет данных
+    if (!is_array($data)) {
+        $PHPShopGUI->setFooter($PHPShopGUI->setInput("button", "", "Закрыть", "center", 100, "return onCancel();", "but"));
+        return true;
+    }
+
+    // Общий массив доставки
+    $PHPShopDelivery = new PHPShopDeliveryArray();
+    $PHPShopDeliveryArray = $PHPShopDelivery->getArray();
+    $PHPShopDeliveryPidArray = $PHPShopDelivery->getKey('PID.id', true);
+    
+    //unset($PHPShopDeliveryPidArray[0]);
+    $delivery_price = null;
+
+    // Значения доставки
+    if (is_array($data))
+        foreach ($data as $row) {
+            $delivery_group_value = array();
+            if (is_array($PHPShopDeliveryPidArray[$row['id']])) {
+                foreach ($PHPShopDeliveryPidArray[$row['id']] as $value) {
+
+                    $delivery_group_value[] = array($PHPShopDeliveryArray[$value]['city'], $value, $deliveryID);
+                    $delivery_price.=$PHPShopGUI->setInput('hidden', $value, $PHPShopDeliveryArray[$value]['price']);
+                }
+                $delivery_value[] = array($row['city'], $delivery_group_value);
+            }
+        }
+
+
+    // Доставка без каталога
+    $data_root[0] = array(
+        'id' => 0,
+        'city' => 'Доставка',
+        'is_folder' => 1
+    );
+    
+    if (is_array($data_root))
+        foreach ($data_root as $row) {
+            $delivery_group_value = array();
+            if (is_array($PHPShopDeliveryPidArray[$row['id']])) {
+                foreach ($PHPShopDeliveryPidArray[$row['id']] as $value) {
+                    if (empty($PHPShopDeliveryArray[$value]['PID']) and empty($PHPShopDeliveryArray[$value]['is_folder'])){
+                    $delivery_group_value[] = array($PHPShopDeliveryArray[$value]['city'], $value, $deliveryID);
+                    $delivery_price.=$PHPShopGUI->setInput('hidden', $value, $PHPShopDeliveryArray[$value]['price']);
+                    }
+                }
+                $delivery_value[] = array($row['city'], $delivery_group_value);
+            }
+        }
+
+
+    // Стоимость
+    $Tab1 = $PHPShopGUI->setDiv(false, $delivery_price, 'display:none');
+
+    // Выбор доставки
+    $Tab1.= $PHPShopGUI->setField(__("Город доставки"), $PHPShopGUI->setSelect('delivery', $delivery_value, 250, false, false, 'javascript:document.getElementById(\'sum\').innerHTML=document.getElementById(this.value).value'), 'left');
+
+    // Сумма
+    $Tab1.=$PHPShopGUI->setField(__("Сумма ") . '(' . $PHPShopSystem->getDefaultValutaCode() . ')', $PHPShopGUI->setDiv('center', $PHPShopDeliveryArray[$deliveryID]['price'], 'font-size:25px;font-weight:bold', 'sum'), 'left');
+
+    // Вывод формы закладки
+    $PHPShopGUI->setTab(array(__("Основное"), $Tab1, 150));
+
+    // Запрос модуля на закладку
+    $PHPShopModules->setAdmHandler($_SERVER["SCRIPT_NAME"], __FUNCTION__, $data);
+
+    // Вывод кнопок сохранить и выход в футер
+    $ContentFooter =
+            $PHPShopGUI->setInput("button", "", "Отмена", "right", 70, "return onCancel();", "but") .
+            $PHPShopGUI->setInput("button", "editID", "Сохранить", "right", 70, "DoUpdateDeliveryFromOrder(delivery.value,$orderID)", "but");
+
+    // Футер
+    $PHPShopGUI->setFooter($ContentFooter);
+    return true;
+}
+
+if (CheckedRules($UserStatus["cat_prod"], 0) == 1) {
+
+    // Вывод формы при старте
+    $PHPShopGUI->setAction($_GET['orderID'], 'actionStart', 'none');
+
+    // Обработка событий
+    $PHPShopGUI->getAction();
+} else {
+
+    // Запрет редактирования
+    $UserChek->BadUserFormaWindow();
+}
 ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-	<title>Редактирование Доставки</title>
-<META http-equiv=Content-Type content="text/html; charset=windows-1251">
-<LINK href="../css/texts.css" type=text/css rel=stylesheet>
-<script type="text/javascript" language="JavaScript" 
-  src="/phpshop/lib/JsHttpRequest/JsHttpRequest.js"></script>
-<script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
-
-<script type="text/javascript" language="JavaScript1.2" src="../language/<?
-echo $Lang?>/language_windows.js">
-</script>
-<script> 
-DoResize(<? echo $GetSystems['width_icon']?>,400,230);
-
-function DoUpadateSum(price){
-var sum=document.getElementById(price).value;
-document.getElementById('sum').innerHTML="<h1>"+sum+"</h1>";
-}
-</script>
-</head>
-<body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0"  onload="DoCheckLang(location.pathname,<?=$SysValue['lang']['lang_enabled']?>)">
-<?
-
-
-function DelivSelList ($cid,$PID,$nPID=0,$lvl=0) {
-global $SysValue;
-
-$sql='select * from '.$SysValue['base']['table_name30'].' where PID='.$nPID.' order by city';
-//$display=$sql;
-$result=mysql_query($sql);
-$lvl++;
-while ($row = mysql_fetch_array($result))
-    {
-	$nid=$row['id'];
-//	if ($nid==$cid) {continue;}
-
-	$nPID=$row['PID'];
-	$city=$row['city'];
-	$spacer='';
-	for ($ii=1;$ii<$lvl;$ii++) {
-		$spacer.='&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-	}
-	if ($lvl>1) {$pointer='|&ndash;>&nbsp;';} else {$pointer='';}
-        if ($nid==$cid) {$sel='selected';} else {$sel='';}
-	@$display.='<option value="'.$nid.'" '.$sel.'>'.$spacer.$pointer.$city.'</option>';
-        $display.=DelivSelList ($cid,$PID,$nid,$lvl);
-	}
-
-return $display;
-
-} //Конец DelivList
-//	echo DelivSelList ($id,$PID);
-
-function GetAllDelivery($deliveryId){
-global $SysValue;
-	  $sql="select * from ".$SysValue['base']['table_name30']." where id='$deliveryId'";
-      $result=mysql_query($sql);
-	  $row = mysql_fetch_array($result);
-	  $cid=$row['id'];
-	  $cPID=$row['PID'];
-	  $city=$row['city'];
-	  $price=$row['price'];
-
-
- $sql="select * from ".$SysValue['base']['table_name30']." order by city";
- $result=mysql_query($sql);
- while($row = mysql_fetch_array($result)){
-	  $id=$row['id'];
-	  $city=$row['city'];
-	  $price=$row['price'];
-	  
-	  if($deliveryId == $id) $sel="SELECTED";
-	   else $sel="";
-	  @$dis_hidden.="<input type=\"hidden\" id=\"$id\" value=\"$price\">\n";
-      @$dis.="<option value=\"$id\" $sel>$city</option>\n";
-	  }
-return "
-".$dis_hidden."
-<select name=\"delivery\" id=\"delivery\" onchange=\"DoUpadateSum(this.value)\">
-".DelivSelList ($deliveryId,$cPID)."
-</select>";
-}
-
-
-
-// Редактирование записей 
-	  $sql="select * from ".$SysValue['base']['table_name30']." where id='$deliveryId'";
-      $result=mysql_query($sql);
-	  $row = mysql_fetch_array($result);
-	  $id=$row['id'];
-	  $city=$row['city'];
-	  $price=$row['price'];
-	  ?>
-<form name="product_edit"  method=post>
-<table class=mainpage4 cellpadding="5" cellspacing="0" border="0" align="center" width="100%">
-<tr>
-	<td valign="top">
-	<FIELDSET style="height:120px">
-<LEGEND><span name=txtLang id=txtLang><u>Г</u>ород доставки</span></LEGEND>
-<div style="padding:10">
-<?=GetAllDelivery($deliveryId);?>
-</div>
-</FIELDSET>
-	</td>
-	<td>
-	<FIELDSET style="height:120px">
-<LEGEND><span name=txtLang id=txtLang><u>С</u>тоимость</span> ( <?=GetIsoValutaOrder()?>.)</LEGEND>
-<div style="padding:10" align="center" id="sum">
-<h1><?=$price?></h1>
-</div>
-</FIELDSET>
-	</td>
-</tr>
-</table>
-<hr>
-<table cellpadding="0" cellspacing="0" width="100%" height="50" >
-<tr>
-	<td align="right" style="padding:10">
-	<input type="button" id=btnOk  name="editID" value="OK" class=but onclick="DoUpdateDeliveryFromOrder(document.getElementById('delivery').value,<?  echo $orderId; ?>)">
-		<input type=submit id=btnCancel value=Отмена class=but onClick="return onCancel();">
-	</td>
-</tr>
-</table>
-</form>

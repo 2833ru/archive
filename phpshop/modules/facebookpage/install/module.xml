@@ -4,6 +4,7 @@
     <name>Facebookpage</name>
     <description>Модуль генерации шаблона для facebook.</description>
     <icon>icon.png</icon>
+    <category>template,soc</category>
     <adminmenu>
         <title>Facebook</title>
         <podmenu>

@@ -4,6 +4,7 @@
     <name>Sitemap</name>
     <description>Модуль генерации карты сайта. Учитываются SEO ссылки.</description>
     <icon>icon.png</icon>
+    <category>seo</category>
     <adminmenu>
         <title>Sitemap</title>
         <podmenu>

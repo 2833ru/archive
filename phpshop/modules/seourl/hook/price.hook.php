@@ -4,7 +4,7 @@
  */
 function price_seo_hook($obj,$row){
     $pref='_';
-    return '../shop/UID_'.$row['id'].$pref.PHPShopString::toLatin($row['name']).'.html';
+    return '/shop/UID_'.$row['id'].$pref.PHPShopString::toLatin($row['name']).'.html';
 }
 
 $addHandler=array

@@ -6,8 +6,8 @@ class VisitorsWriter {
     var $botlist = null;
 
     function VisitorsWriter() {//constructor
-        $this->Visitors = &new PHPShopOrm($GLOBALS['SysValue']['base']['stat']['stat_visitors']);
-        $this->SeBots = &new PHPShopOrm($GLOBALS['SysValue']['base']['stat']['stat_sebots']);
+        $this->Visitors = new PHPShopOrm($GLOBALS['SysValue']['base']['stat']['stat_visitors']);
+        $this->SeBots = new PHPShopOrm($GLOBALS['SysValue']['base']['stat']['stat_sebots']);
     }
     
     function init() {
@@ -100,7 +100,7 @@ class VisitorsWriter {
 }
 require 'phpshop/modules/stat/admpanel/php4_compatibility.php';
 
-$writer = &new VisitorsWriter();
+$writer = new VisitorsWriter();
 $writer->write();
 //$writer->fillTbl();//fill test data
 

@@ -12,4 +12,4 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_pickpoint_system` (
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 
-INSERT INTO `phpshop_modules_pickpoint_system` VALUES (1,'Пункты выдачи товара PickPoint','Выбрать ближайший пункт выдачи','STD','CUR','');
+INSERT INTO `phpshop_modules_pickpoint_system` VALUES (1,'PickPoint','Выбрать ближайший пункт выдачи','STD','CUR','');

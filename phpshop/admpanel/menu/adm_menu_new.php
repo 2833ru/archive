@@ -1,186 +1,105 @@
-<?
-require("../connect.php");
-@mysql_connect ("$host", "$user_db", "$pass_db")or @die("Невозможно подсоединиться к базе");
-mysql_select_db("$dbase")or @die("Невозможно подсоединиться к базе");
-require("../enter_to_admin.php");
+<?php
 
-// Языки
-$GetSystems=GetSystems();
-$option=unserialize($GetSystems['admoption']);
-$Lang=$option['lang'];
-require("../language/".$Lang."/language.php");
-?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-	<title>Добавление Меню</title>
-<META http-equiv=Content-Type content="text/html; charset=windows-1251">
-<LINK href="../css/texts.css" type=text/css rel=stylesheet>
-<?
-//Check user's Browser
-if(strpos($_SERVER["HTTP_USER_AGENT"],"MSIE"))
-	echo "<script language=JavaScript src='../editor3/scripts/editor.js'></script>";
-else
-	echo "<script language=JavaScript src='../editor3/scripts/moz/editor.js'></script>";
-?>
-<SCRIPT language="JavaScript" src="/phpshop/lib/Subsys/JsHttpRequest/Js.js"></SCRIPT>
-<script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
-<script type="text/javascript" language="JavaScript1.2" src="../language/<?=$Lang?>/language_windows.js"></script>
-<script type="text/javascript" language="JavaScript1.2" src="../language/<?=$Lang?>/language_interface.js"></script>
-<script>
-DoResize(<? echo $GetSystems['width_icon']?>,630,610);
-</script>
-</head>
-<body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0" onload="DoCheckLang(location.pathname,<?=$SysValue['lang']['lang_enabled']?>);preloader(0)">
-	  <table id="loader">
-<tr>
-	<td valign="middle" align="center">
-		<div id="loadmes" onclick="preloader(0)">
-<table width="100%" height="100%">
-<tr>
-	<td id="loadimg"></td>
-	<td ><b><?=$SysValue['Lang']['System']['loading']?></b><br><?=$SysValue['Lang']['System']['loading2']?></td>
-</tr>
-</table>
-		</div>
-</td>
-</tr>
-</table>
+$_classPath = "../../";
+include($_classPath . "class/obj.class.php");
+PHPShopObj::loadClass("base");
 
-<SCRIPT language=JavaScript type=text/javascript>preloader(1);</SCRIPT>
-<form name="product_edit"  method=post onsubmit="Save()">
-<table cellpadding="0" cellspacing="0" width="100%" height="50" id="title">
-<tr bgcolor="#ffffff">
-	<td style="padding:10">
-	<b><span name=txtLang id=txtLang>Создание Нового Текстового Блока</span></b><br>
-	&nbsp;&nbsp;&nbsp;<span name=txtLang id=txtLang>Укажите данные для записи в базу</span>.
-	</td>
-	<td align="right">
-	<img src="../img/i_select_another_account_med[1].gif" border="0" hspace="10">
-	</td>
-</tr>
-</table>
-<br>
-<table class=mainpage4 cellpadding="5" cellspacing="0" border="0" align="center" width="100%">
-<tr>
-  <td colspan="2">
-  <FIELDSET>
-<LEGEND id=lgdLayout><span name=txtLang id=txtLang><u>Н</u>азвание Меню</span></LEGEND>
-<div style="padding:10">
-<table>
-<tr>
-<td>
+$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
+$PHPShopBase->chekAdmin();
 
-<input type="text" name="name_new" value="<?=$name?>" size="50">
+PHPShopObj::loadClass("system");
+$PHPShopSystem = new PHPShopSystem();
 
-	</td>
-	<td width="10"></td>
-	<td>
-	<span name=txtLang id=txtLang><u>П</u>озиция</span>: 
-<select name=num_new size=1 class=s>
-<option value="1" selected>1</option>
-<option value="2">2</option>
-<option value="3">3</option>
-<option value="4">4</option>
-<option value="5">5</option>
-<option value="6">6</option>
-<option value="7">7</option>
-<option value="8">8</option>
-<option value="9">9</option>
-<option value="10">10</option>
-</select>
-	</td>
-	<td width="10"></td>
-	<td>
-		<span name=txtLang id=txtLang><u>Р</u>асположение</span>: 
-<select name=element_new size=1 class=s>
-<option value="0" id=txtLang>Слева</option>
-<option value="1" id=txtLang>Справа</option>
-</select>
-	</td>
-</tr>
-</table>
-<input type="radio" name="flag_new" value="1" checked><span name=txtLang id=txtLang>Показывать меню</span>&nbsp;&nbsp;&nbsp;
-<input type="radio" name="flag_new" value="0"><span name=txtLang id=txtLang>Скрыть меню</span>
-</div>
-</FIELDSET>
-  </td>
-</tr>
-<tr>
-  <td colspan="2">
-  <FIELDSET >
-<LEGEND id=lgdLayout><span name=txtLang id=txtLang><u>П</u>ривязка к странице</span></LEGEND>
-<div style="padding:10">
-<input type="text" name="dir_new" style="width:100%"><br>
-<span name=txtLang id=txtLang>* Пример: page/,news/. Можно указать несколько адресов через запятую.</span>
-</FIELDSET>
-  </td>
-</tr>
-<tr>
-	<td colspan="3">
-	<FIELDSET>
-<LEGEND id=lgdLayout><span name=txtLang id=txtLang>Содержание</span></LEGEND>
-<div style="padding:10">
-<?
-$systems=GetSystems();
-$option=unserialize($systems['admoption']);
-if($option['editor_enabled']  == 1){
-$MyStyle=$SysValue['dir']['dir'].chr(47)."phpshop".chr(47)."templates".chr(47).$systems['skin'].chr(47).$SysValue['css']['default'];
-echo'
-<pre id="idTemporary" name="idTemporary" style="display:none">
-'.@$content.'
-</pre>
-	<script>
-		var oEdit1 = new InnovaEditor("oEdit1");
-	oEdit1.cmdAssetManager="modalDialogShow(\''.$SysValue['dir']['dir'].'/phpshop/admpanel/editor3/assetmanager/assetmanager.php\',640,500)";
-		oEdit1.width=600;
-		oEdit1.height=200;
-		oEdit1.btnStyles=true;
-	    oEdit1.css="'.$MyStyle.'";
-		oEdit1.RENDER(document.getElementById("idTemporary").innerHTML);
-	</script>
-	<input type="hidden" name="EditorContent" id="EditorContent">
-	';
-	}
-else{
-echo '
-<textarea name="EditorContent" id="EditorContent" style="width:100%;height:200px">'.$content.'</textarea>
-';
-}?>
-</div>
-</FIELDSET>
-	</td>
-</tr>
-</table>
-<hr>
-<table cellpadding="0" cellspacing="0" width="100%" height="50" >
-<tr>
-     <td align="left" style="padding:10">
-    <BUTTON class="help" onclick="helpWinParent('menu')">Справка</BUTTON></BUTTON>
-	</td>
-	<td align="right" style="padding:10">
-	<input type="submit" name="editID" value="OK" class=but>
-	<input type="reset" name="btnLang" value="Сбросить" class=but>
-	<input type="button" name="btnLang" value="Отмена" onClick="return onCancel();" class=but>
-	</td>
-</tr>
-</table>
-</form>
-	  <?
-if(isset($editID) and @$name_new!="")// Запись редактирования
-{
-if(CheckedRules($UserStatus["page_menu"],2) == 1){
-$sql="INSERT INTO $table_name14
-VALUES ('','$name_new','".addslashes($EditorContent)."','$flag_new','$num_new','$dir_new','$element_new')";
-$result=mysql_query($sql)or @die("Невозможно изменить запись");
-echo"
-	  <script>
-DoReloadMainWindow('page_menu');
-</script>
-	   ";
-}else $UserChek->BadUserFormaWindow();
+// Редактор GUI
+PHPShopObj::loadClass("admgui");
+$PHPShopGUI = new PHPShopGUI();
+$PHPShopGUI->title = "Создание Текстового Блока";
+$PHPShopGUI->ajax = "'menu','','','core'";
+$PHPShopGUI->alax_lib = true;
+
+// SQL
+PHPShopObj::loadClass("orm");
+$PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['table_name14']);
+
+// Модули
+PHPShopObj::loadClass("modules");
+$PHPShopModules = new PHPShopModules($_classPath . "modules/");
+
+// Заполняем выбор
+function setSelectChek($n) {
+    $i = 1;
+    while ($i <= 10) {
+        if ($n == $i)
+            $s = "selected"; else
+            $s = "";
+        $select[] = array($i, $i, $s);
+        $i++;
+    }
+    return $select;
 }
+
+function actionStart() {
+    global $PHPShopGUI, $PHPShopSystem, $SysValue, $_classPath, $PHPShopOrm, $PHPShopModules;
+
+    $PHPShopGUI->dir = "../";
+
+    // Графический заголовок окна
+    $PHPShopGUI->setHeader("Создание Текстового Блока", "Укажите данные для записи в базу.", $PHPShopGUI->dir . "img/i_select_another_account_med[1].gif");
+
+    // Редактор 1
+    $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));
+    $oFCKeditor = new Editor('content_new');
+    $oFCKeditor->Height = '320';
+    $oFCKeditor->Config['EditorAreaCSS'] = $_classPath . "templates" . chr(47) . $PHPShopSystem->getParam("skin") . chr(47) . $SysValue['css']['default'];
+    $oFCKeditor->ToolbarSet = 'Normal';
+    $oFCKeditor->Value = '';
+
+    $Select1 = setSelectChek(1);
+
+    $Select2[] = array("Слева", 0, "");
+    $Select2[] = array("Справа", 1, "");
+
+    // Содержание закладки 1
+    $Tab1 = $PHPShopGUI->setField("Название:", $PHPShopGUI->setInput("text", "name_new", $name, "none", 300) . $PHPShopGUI->setRadio("flag_new", 1, "Показывать", "checked", "left") . $PHPShopGUI->setRadio("flag_new", 0, "Скрыть", ""), "left") .
+            $PHPShopGUI->setField("Позиция:", $PHPShopGUI->setSelect("num_new", $Select1, 50, 1), "left", 5) .
+            $PHPShopGUI->setField("Расположение:", $PHPShopGUI->setSelect("element_new", $Select2, 100, 1), "none", 5) .
+            $PHPShopGUI->setLine() .
+            $PHPShopGUI->setField("Привязка к странице:", $PHPShopGUI->setInput("text", "dir_new", $dir, "left", 500) .
+                    $PHPShopGUI->setLine(__('* Пример: /page/,/news/. Можно указать несколько адресов через запятую без пробела')), "none");
+
+    // Содержание закладки 2
+    $Tab2 = $oFCKeditor->AddGUI();
+
+    // Вывод формы закладки
+    $PHPShopGUI->setTab(array("Основное", $Tab1, 350), array("Содержание", $Tab2, 350));
+
+    // Запрос модуля на закладку
+    $PHPShopModules->setAdmHandler($_SERVER["SCRIPT_NAME"], __FUNCTION__, null);
+
+    // Вывод кнопок сохранить и выход в футер
+    $ContentFooter =
+            $PHPShopGUI->setInput("button", "", "Отмена", "right", 70, "return onCancel();", "but") .
+            $PHPShopGUI->setInput("reset", "", "Сбросить", "right", 70, "", "but") .
+            $PHPShopGUI->setInput("submit", "editID", "ОК", "right", 70, "", "but", "actionInsert.page_menu.create");
+
+    // Футер
+    $PHPShopGUI->setFooter($ContentFooter);
+    return true;
+}
+
+// Функция записи
+function actionInsert() {
+    global $PHPShopOrm, $PHPShopModules;
+
+    // Перехват модуля
+    $PHPShopModules->setAdmHandler($_SERVER["SCRIPT_NAME"], __FUNCTION__, $_POST);
+    $action = $PHPShopOrm->insert($_POST);
+    return $action;
+}
+
+// Вывод формы при старте
+$PHPShopGUI->setLoader($_POST['editID'], 'actionStart');
+
+// Обработка событий 
+$PHPShopGUI->getAction();
 ?>
-
-
-

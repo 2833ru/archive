@@ -3,7 +3,7 @@
 /**
  * Библиотека менеджера MySQL через XML
  * @author PHPShop Software
- * @version 1.2
+ * @version 1.3
  * @package PHPShopClass
  */
 class PHPShopBaseXml {
@@ -142,9 +142,17 @@ class PHPShopBaseXml {
             foreach ($array as $key => $val) {
                 if (is_array($val)) {
                     $result.='<subrow>';
-                    foreach ($val as $k => $v)
-                        $result.='
+                    foreach ($val as $k => $v){
+						if(is_array($v)){
+							$result.='<subrow>';
+							foreach($v as $ks => $vs)
+                                $result.='
+<subrow_' . $ks . '_'.$k.'>' . $vs . '</subrow_' . $ks . '_'.$k.'>';
+                            $result.='</subrow>';
+						}
+                        else $result.='
 <' . $k . '>' . $v . '</' . $k . '>';
+					}
                     $result.='</subrow>';
                 } else {
                     $result.='

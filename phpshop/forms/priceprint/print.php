@@ -77,11 +77,11 @@ class PHPShopPricePrint {
                 if(count($podcatalog_id)==0) {
                     $parent=$Catalog[$cat]['parent_to'];
                     if ($this->category==$cat) {
-                        $this->category_name=$Catalog[$parent]['name']." / ".$Catalog[$cat]['name'];
+                        $this->category_name=@$Catalog[$parent]['name']." / ".@$Catalog[$cat]['name'];
                     }
 
                     // Массив для вывода всех товаров
-                    $this->category_array[$cat]=$Catalog[$parent]['name']." / ".$Catalog[$cat]['name'];
+                    $this->category_array[$cat]=@$Catalog[$parent]['name']." / ".@$Catalog[$cat]['name'];
                 }
             }
     }

@@ -31,11 +31,10 @@ while ($row = mysql_fetch_array($result))
 if($i>30)$razmer="height:600;";
 	$_Return="
 <div id=interfacesWin name=interfacesWin align=\"left\" style=\"width:100%;".@$razmer.";overflow:auto\"> 
-<table width=\"50%\"  cellpadding=\"0\" cellspacing=\"0\" style=\"border: 1px;
-	border-style: inset;\">
+<table width=\"50%\"  cellpadding=\"0\" cellspacing=\"0\">
 <tr>
 	<td valign=\"top\">
-<table cellpadding=\"0\" cellspacing=\"1\" width=\"100%\" border=\"0\" bgcolor=\"#808080\" class=\"sortable\" id=\"sort\">
+<table cellpadding=\"0\" cellspacing=\"1\" width=\"100%\" border=\"0\" class=\"sortable\" id=\"sort\">
 <tr>
 	<td width=\"10%\" id=pane align=center>+/-</td>
 	<td width=\"90%\" id=pane align=><span name=txtLang id=txtLang>Заголовок</span></td>
@@ -43,7 +42,7 @@ if($i>30)$razmer="height:600;";
 	".$display."
     </table>
 </table>
-<div align=\"right\" style=\"width:50%;padding:10\"><BUTTON style=\"width: 15em; height: 2.2em; margin-left:5\"  onclick=\"miniWin('rating/adm_rating_new.php',630,330)\">
+<div align=\"right\" style=\"width:50%;padding:10\"><BUTTON style=\"width: 15em; height: 2.2em; margin-left:5\"  onclick=\"miniWin('rating/adm_rating_new.php',630,450)\">
 <img src=\"icon/page_new.gif\" width=\"16\" height=\"16\" border=\"0\" align=\"absmiddle\" hspace=\"5\">
 <span name=txtLang id=txtLang>Новая позиция</span>
 </BUTTON></div>

@@ -9,7 +9,7 @@ function payonlinesystem_users_repay($obj,$PHPShopOrderFunction) {
     $Currency=$PHPShopBase->getParam('payonlinesystem.currency');
 
     // параметры магазина
-    $mrh_ouid = explode("-", $row['uid']);
+    $mrh_ouid = explode("-", $PHPShopOrderFunction->objRow['uid']);
     $OrderId = $mrh_ouid[0]."".$mrh_ouid[1];     //номер счета
     $Amount=number_format($TotalSumOrder,2,".","");
     $Amount = $PHPShopOrderFunction->getTotal(); //сумма покупки

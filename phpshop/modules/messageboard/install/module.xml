@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.4</version>
+    <version>1.5</version>
     <name>Message Board</name>
     <description>Модуль доски объявлений.</description>
     <icon>icon.png</icon>
+    <category>soc</category>
     <adminmenu>
         <title>Объявления</title>
         <podmenu>

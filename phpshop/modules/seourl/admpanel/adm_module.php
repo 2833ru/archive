@@ -37,7 +37,7 @@ function actionUpdate() {
 }
 
 function actionStart() {
-    global $PHPShopGUI, $PHPShopSystem, $SysValue, $_classPath, $PHPShopOrm;
+    global $PHPShopGUI, $_classPath, $PHPShopOrm;
 
 
     $PHPShopGUI->dir = $_classPath . "admpanel/";
@@ -45,7 +45,7 @@ function actionStart() {
     $PHPShopGUI->size = "500,450";
 
 
-// Выборка
+    // Выборка
     $data = $PHPShopOrm->select();
     @extract($data);
 
@@ -61,10 +61,10 @@ function actionStart() {
     $Select[] = array("Слева", 0, $s1);
     $Select[] = array("Справа", 1, $s2);
 
-// Графический заголовок окна
+    // Графический заголовок окна
     $PHPShopGUI->setHeader("Настройка модуля 'SEO Url'", "Настройки подключения", $PHPShopGUI->dir . "img/i_display_settings_med[1].gif");
 
-// Содержание закладки
+    // Содержание закладки
     $Info = '
 <p>Модуль создает SEO ссылки для товаров, каталогов товаров, каталогов страниц и новостей путем дописывания в имя файлы
 
@@ -104,16 +104,19 @@ function actionStart() {
    <li>news_main_mini.tpl
    </ol>
 ';
-    $Tab1 = $PHPShopGUI->setInfo($Info,250,'95%');
+    $Tab1 = $PHPShopGUI->setInfo($Info, 250, '95%');
 
-// Форма регистрации
+    // Форма регистрации
     $Tab2 = $PHPShopGUI->setPay($serial, false);
 
+    // История изменений
+    if(method_exists($PHPShopGUI,'setLine'))
+    $Tab2.= $PHPShopGUI->setLine('<br>').$PHPShopGUI->setHistory();
 
-// Вывод формы закладки
+    // Вывод формы закладки
     $PHPShopGUI->setTab(array("Описание", $Tab1, 270), array("О Модуле", $Tab2, 270));
 
-// Вывод кнопок сохранить и выход в футер
+    // Вывод кнопок сохранить и выход в футер
     $ContentFooter =
             $PHPShopGUI->setInput("hidden", "newsID", $id, "right", 70, "", "but") .
             $PHPShopGUI->setInput("button", "", "Отмена", "right", 70, "return onCancel();", "but") .
@@ -125,10 +128,10 @@ function actionStart() {
 
 if ($UserChek->statusPHPSHOP < 2) {
 
-// Вывод формы при старте
+    // Вывод формы при старте
     $PHPShopGUI->setLoader($_POST['editID'], 'actionStart');
 
-// Обработка событий 
+    // Обработка событий 
     $PHPShopGUI->getAction();
 }else
     $UserChek->BadUserFormaWindow();

@@ -4,6 +4,7 @@
     <name>Yandex Map</name>
     <description>Модуль Яндекс.Карты</description>
     <icon>icon.png</icon>
+    <category>yandex</category>
     <adminmenu>
         <title>Yandex Map</title>
         <podmenu>

@@ -61,7 +61,7 @@ class PHPShopSapeElement extends PHPShopElements {
 }
 
 // Вывод 
-$PHPShopSapeElement = &new PHPShopSapeElement();
+$PHPShopSapeElement = new PHPShopSapeElement();
 if($GLOBALS['LoadItems']['modules']['sape']['enabled']==1) {
 
     if($GLOBALS['LoadItems']['modules']['sape']['flag']==1)  $GLOBALS['SysValue']['other']['rightMenu'].=$PHPShopSapeElement->sape();

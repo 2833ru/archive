@@ -8,7 +8,7 @@ function webmoney_users_repay($obj,$PHPShopOrderFunction) {
     $wmid = $PHPShopBase->getParam('webmoney.wmid');   //аттестат
 
     //параметры магазина
-    $mrh_ouid = explode("-", $row['uid']);
+    $mrh_ouid = explode("-", $PHPShopOrderFunction->objRow['uid']);
     $inv_id = $mrh_ouid[0]."".$mrh_ouid[1];     //номер счета
 
     //описание покупки

@@ -41,7 +41,7 @@ $disp= '
 </p>
  <p><br></p>
  
-<form method="POST" name="pay" id="pay" action="https://demomoney.yandex.ru/eshop.xml">
+<form method="POST" name="pay" id="pay" action="https://money.yandex.ru/eshop.xml">
 <input class="wide" name="scid" value="'.$scid.'" type="hidden">
 <input type="hidden" name="ShopID" value="'.$ShopID.'">
 <input type=hidden name="CustomerNumber" size="20" value="Заказ N'.$inv_id.'">

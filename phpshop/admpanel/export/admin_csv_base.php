@@ -1,12 +1,22 @@
-<?
-@setlocale(LC_ALL, 'ru_RU.cp1251');
-require("../connect.php");
-@mysql_connect("$host", "$user_db", "$pass_db") or @die("Невозможно подсоединиться к базе");
-mysql_select_db("$dbase") or @die("Невозможно подсоединиться к базе");
-require("../enter_to_admin.php");
+<?php
 
-$GetSystems = GetSystems();
-$option = unserialize($GetSystems['admoption']);
+$_classPath = "../../";
+include($_classPath . "class/obj.class.php");
+PHPShopObj::loadClass("base");
+PHPShopObj::loadClass("security");
+PHPShopObj::loadClass("file");
+PHPShopObj::loadClass("date");
+PHPShopObj::loadClass("system");
+PHPShopObj::loadClass("orm");
+PHPShopObj::loadClass("string");
+
+$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
+$PHPShopBase->chekAdmin();
+$PHPShopBase->setLocale();
+
+$PHPShopSystem = new PHPShopSystem();
+
+$option['sklad_status'] = $PHPShopSystem->getSerilizeParam('admoption.sklad_status');
 
 function updateCatalog($parent_id, $charID) { //Функция привязывает текущую характеристику к каталогу
     global $SysValue; //Глобальные переменные
@@ -147,17 +157,6 @@ class ReadCsv1C {
     var $fp;
     var $CsvToArray;
 
-    function CleanStr($str) {
-        $a = str_replace("\"", "", $str);
-        return str_replace("'", "", $a);
-    }
-
-    function PrintThis($name, $string) {
-        echo"<br><u><em>" . $name . "</em></u><pre>";
-        print_r($string);
-        echo"</pre><br>";
-    }
-
     function CsvToArray() {
         $fstat = fstat($this->fp);
         while ($data = fgetcsv($this->fp, $fstat['size'], ";", '"')) {
@@ -176,8 +175,9 @@ class ReadCsv1C {
     }
 
     function DoUpdatebase1() {
+        $return = null;
         foreach ($this->CsvToArray as $v)
-            @$return.=$this->PrintResultDo($v);
+            $return.=$this->PrintResultDo($v);
         return $return;
     }
 
@@ -188,13 +188,6 @@ class ReadCsv1C {
 
     function Zero($a) {
         if ($a != 0 or !empty($a))
-            return 1;
-        else
-            return 0;
-    }
-
-    function Rip($a) {
-        if ($a == 0)
             return 1;
         else
             return 0;
@@ -213,7 +206,7 @@ class ReadCsv1C {
     }
 
     function UpdateBase($CsvToArray) {
-        global $_SESSION, $_REQUEST, $testValue;
+        global $_SESSION, $_REQUEST;
 
         $CheckBase = $this->CheckBase($CsvToArray[0]);
 
@@ -221,8 +214,7 @@ class ReadCsv1C {
         if (!empty($CheckBase) and $CsvToArray[0] != "") {// Обновляем
             $sql = "UPDATE " . $this->TableName . " SET ";
 
-// Отсеиваем поля
-
+            // Отсеиваем поля
             if ($_REQUEST['tip'][1] == 1)
                 $sql.="name='" . str_replace("|", ";", trim($CsvToArray[1])) . "', ";
             if ($_REQUEST['tip'][14] == 1) {
@@ -236,16 +228,16 @@ class ReadCsv1C {
             }
 // описание краткое
             if ($_REQUEST['tip'][2] == 1)
-                $sql.="description='" . str_replace("|", ";", $CsvToArray[2]) . "', ";
+                $sql.="description='" . addslashes($CsvToArray[2]) . "', ";
             if ($_REQUEST['tip'][3] == 1)
                 $sql.="pic_small='" . $this->ImagePlus($CsvToArray[3]) . "', "; // маленькая картинка
 // подробное описание
             if ($_REQUEST['tip'][4] == 1)
-                $sql.="content='" . str_replace("|", ";", $CsvToArray[4]) . "', ";
+                $sql.="content='" . addslashes($CsvToArray[4]) . "', ";
             if ($_REQUEST['tip'][5] == 1)
                 $sql.="pic_big='" . $this->ImagePlus($CsvToArray[5]) . "', "; // большая картинка
             if ($_REQUEST['tip'][6] == 1)
-                $sql.="price='" . $CsvToArray[7] . "', "; // цена 1
+                $sql.="price='" . PHPShopString::toFloat($CsvToArray[7], true) . "', "; // цена 1
             if ($_REQUEST['tip'][17] == 1) {
                 $sql.="dop_cat='" . $CsvToArray[15] . "', "; //  дополнительные каталоги
                 $addcats = $CsvToArray[15];
@@ -277,13 +269,13 @@ class ReadCsv1C {
             if ($_REQUEST['tip'][13] == 1)
                 $sql.="uid='" . trim($CsvToArray[13]) . "', "; // артикул
             if ($_REQUEST['tip'][7] == 1)
-                $sql.="price2='" . $CsvToArray[8] . "', "; // цена 2
+                $sql.="price2='" . PHPShopString::toFloat($CsvToArray[8], true) . "', "; // цена 2
             if ($_REQUEST['tip'][8] == 1)
-                $sql.="price3='" . $CsvToArray[9] . "', "; // цена 3
+                $sql.="price3='" . PHPShopString::toFloat($CsvToArray[9], true) . "', "; // цена 3
             if ($_REQUEST['tip'][9] == 1)
-                $sql.="price4='" . $CsvToArray[10] . "', "; // цена 4
+                $sql.="price4='" . PHPShopString::toFloat($CsvToArray[10], true) . "', "; // цена 4
             if ($_REQUEST['tip'][10] == 1)
-                $sql.="price5='" . $CsvToArray[11] . "', "; // цена 5
+                $sql.="price5='" . PHPShopString::toFloat($CsvToArray[11], true) . "', "; // цена 5
             if ($_REQUEST['tip'][11] == 1)
                 $sql.="items='" . $CsvToArray[6] . "', "; // склад
             if ($_REQUEST['tip'][12] == 1)
@@ -317,12 +309,11 @@ class ReadCsv1C {
                 $sql.="vendor='" . $vendor . "', ";
                 $sql.="vendor_array='" . $resSerialized . "' ";
                 $sql.=" where id='" . $CsvToArray[0] . "'";
-//	$testValue2.=$sql.'<HR>'; //DEBUG!!!
                 $result = mysql_query($sql); //Обработка товара!!
             }//Конец если Характеристики 2.0
-            //$testValue2.='end'; //DEBUG!!!
-        } else {// Создаем новый товар
-// Склад
+        } else {
+            //// Создаем новый товар
+            // Склад
             if ($_REQUEST['tip'][11] == 1) {
                 switch ($this->Sklad_status) {
 
@@ -330,14 +321,14 @@ class ReadCsv1C {
                         if ($CsvToArray[6] < 1)
                             $sklad = 1;
                         else
-                            $sklad=0;
+                            $sklad = 0;
                         break;
 
                     case(2):
                         if ($CsvToArray[6] < 1)
                             $enabled = 0;
                         else
-                            $enabled=1;
+                            $enabled = 1;
                         break;
 
                     default:
@@ -398,21 +389,42 @@ class ReadCsv1C {
                     foreach ($resCharsArray as $k => $v) {
                         if (is_array($v)) {
                             foreach ($v as $o => $p) {
-                                @$vendor.="i" . $k . "-" . $p . "i";
+                                $vendor.="i" . $k . "-" . $p . "i";
                             }
                         } else {
-                            @$vendor.="i" . $k . "-" . $v . "i";
+                            $vendor.="i" . $k . "-" . $v . "i";
                         }
                     }
                 }
                 $vendor_array = serialize($resCharsArray);
             }//Конец если Характеристики 2.0
 
-            $sql = "INSERT INTO " . $this->TableName . "
-VALUES ('','" . $parent_id . "','" . trim($CsvToArray[1]) . "','" . $CsvToArray[2] . "','" . $CsvToArray[4] . "','" . $CsvToArray[7] . "','','','" . $this->Zero($CsvToArray[9]) . "','" . $enabled . "','" . $CsvToArray[13] . "','','','" . $vendor . "','" . $vendor_array . "','1','','','','','" . date("U") . "','','" . $_SESSION['idPHPSHOP'] . "','','','','','','','','" . $this->ImagePlus($CsvToArray[3]) . "','" . $this->ImagePlus($CsvToArray[5]) . "','','0','','" . $CsvToArray[6] . "','" . $CsvToArray[12] . "','" . $CsvToArray[8] . "','" . $CsvToArray[9] . "','" . $CsvToArray[10] . "','" . $CsvToArray[11] . "','','" . $_REQUEST['tip'][16] . "', '','" . $CsvToArray[15] . "')";
 
-            //$testValue2.=$sql.'<HR>'; //DEBUG!!!
-            //if (strlen($testValue)==0) {$testValue=$testValue2;}//DEBUG!!!
+            $sql = "INSERT INTO " . $this->TableName . " SET 
+            category='" . $parent_id . "',
+            name='" . trim($CsvToArray[1]) . "',
+            description='" . $CsvToArray[2] . "',
+            content='" . $CsvToArray[4] . "',
+            price='" . PHPShopString::toFloat($CsvToArray[7], true) . "',
+            sklad='" . $sklad . "',
+            p_enabled='" . $this->Zero($CsvToArray[9]) . "',
+            enabled='" . $enabled . "',
+            uid='" . $CsvToArray[13] . "',
+            yml='1',
+            datas='" . date("U") . "',
+            vendor='" . $vendor . "',
+            vendor_array='" . $vendor_array . "',
+            pic_small='" . $this->ImagePlus($CsvToArray[3]) . "',
+            pic_big='" . $this->ImagePlus($CsvToArray[5]) . "',
+            items='" . $CsvToArray[6] . "',
+            weight='" . $CsvToArray[12] . "',
+            price2='" . PHPShopString::toFloat($CsvToArray[8], true) . "',
+            price3='" . PHPShopString::toFloat($CsvToArray[9], true) . "',
+            price4='" . PHPShopString::toFloat($CsvToArray[10], true) . "',
+            price5='" . PHPShopString::toFloat($CsvToArray[11], true) . "',
+            baseinputvaluta='" . $_REQUEST['tip'][16] . "',
+            dop_cat='" . $CsvToArray[15] . "'";
+
             $result = mysql_query($sql);
             $this->TotalCreate++;
         }
@@ -420,9 +432,18 @@ VALUES ('','" . $parent_id . "','" . trim($CsvToArray[1]) . "','" . $CsvToArray[
 
     function PrintResultDo($CsvToArray) {
         static $n;
-        $disp = "
-	<tr class='row' style=\"padding:3\" onmouseover=\"show_on('r" . $CsvToArray[0] . "')\" id=\"r" . $CsvToArray[0] . "\" onmouseout=\"show_out('r" . $CsvToArray[0] . "')\">
-    <td align=center>" . (@$n + 1) . "</td>
+
+        // Выделение четных строк
+        if ($n % 2 == 0) {
+            $style_r = null;
+        } else {
+            $style_r = ' line2';
+        }
+
+        $disp = '<tr class="row ' . $style_r . '" id="r' . $n . '" onmouseover="PHPShopJS.rowshow_on(this)" onmouseout="PHPShopJS.rowshow_out(this,\'' . $style_r . '\')">';
+
+        $disp.= "
+ <td align=center>" . (@$n + 1) . "</td>
 	 <td align=center>" . $CsvToArray[0] . "</td>
 	 <td >" . $CsvToArray[1] . "</td>
 	 <td align=center>" . $CsvToArray[7] . "</td>
@@ -468,7 +489,7 @@ function getExt($sFileName) {//ffilter
 }
 
 require_once "../../lib/JsHttpRequest/JsHttpRequest.php";
-$JsHttpRequest = & new JsHttpRequest("windows-1251");
+$JsHttpRequest = new JsHttpRequest("windows-1251");
 
 // Расширение
 $_FILES['file']['ext'] = getExt($_FILES['file']['name']);
@@ -480,14 +501,14 @@ if ($_REQUEST['page'] == "predload" and $_FILES['file']['ext'] == "csv") {
     if (move_uploaded_file(@$_FILES['file']['tmp_name'], $copy_file))
         if (is_file($copy_file)) {
             $CsvContent = fopen($copy_file, "r");
-            $ReadCsv = new ReadCsv1C($CsvContent, $table_name2, $option['sklad_status']);
+            $ReadCsv = new ReadCsv1C($CsvContent, $PHPShopBase->getParam('base.products'), $option['sklad_status']);
             fclose($CsvContent);
             $interface.='
 <div id=interfacesWin name=interfacesWin align="left" style="width:100%;height:580;overflow:auto"> 
-<TABLE style="border: 1px;border-style: inset;" cellSpacing=0 cellPadding=0 width="100%"><TBODY>
+<TABLE  cellSpacing=0 cellPadding=0 width="100%"><TBODY>
 <TR>
 <TD vAlign=top>
-<table width="100%" cellpadding="0" cellspacing="1" class="sortable" id="sort" bgcolor="#808080">
+<table width="100%" cellpadding="0" cellspacing="1" class="sortable" id="sort">
 <tr>
     <td id="pane" width="50">№</td>
 	<td id="pane"><span name=txtLangs id=txtLangs>ID товара</span></td>
@@ -536,7 +557,7 @@ if ($_REQUEST['page'] == "predload" and $_FILES['file']['ext'] == "csv") {
     $copy_file = "../csv/" . $_REQUEST['name'];
     if (is_file($copy_file)) {
         $CsvContent = fopen($copy_file, "r");
-        $ReadCsv = new ReadCsv1C($CsvContent, $table_name2, $option['sklad_status']);
+        $ReadCsv = new ReadCsv1C($CsvContent, $PHPShopBase->getParam('base.products'), $option['sklad_status']);
         fclose($CsvContent);
         $Done2 = $ReadCsv->DoUpdatebase2();
         $interface.='

@@ -160,7 +160,7 @@ function DispComment($id) {
         else $SysValue['other']['commentEdit']="";
 
         // Определяем переменые
-        $SysValue['other']['commentData']= PHPShopDate::dataV($row['datas'],"shot");
+        $SysValue['other']['commentData']= PHPShopDate::dataV($row['datas'],false);
         $SysValue['other']['commentName']= $row['name'];
         $SysValue['other']['commentContent']= returnSmile($row['content']);
 

@@ -1,186 +1,201 @@
 <?php
+$_classPath = "../";
 require("connect.php");
-
-// Отключаем ошибки
-if($SysValue['my']['error_reporting']=="true")
-    error_reporting(0);
-
-@mysql_connect ("$host", "$user_db", "$pass_db")or @die("Невозможно подсоединиться к базе");
-mysql_select_db("$dbase")or @die("Невозможно подсоединиться к базе");
-
-require("enter_to_admin.php");
-//require("class/xml.class.php");
-
-include("../class/obj.class.php");
+include($_classPath . "class/obj.class.php");
+PHPShopObj::loadClass("base");
 PHPShopObj::loadClass("system");
 PHPShopObj::loadClass("admgui");
 PHPShopObj::loadClass("orm");
 PHPShopObj::loadClass("date");
 PHPShopObj::loadClass("xml");
+PHPShopObj::loadClass("security");
 
+$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
+$PHPShopBase->chekAdmin();
+
+// Системные настройки
+$PHPShopSystem = new PHPShopSystem();
+
+// Редактор GUI
+$PHPShopInterface = new PHPShopInterface();
+$PHPShopInterface->winOpenType = $PHPShopSystem->getSerilizeParam("admoption.wintype");
+$PHPShopIcon = new PHPShopIcon();
 
 // Проверяем на root
-if($_SESSION['logPHPSHOP'] == "root" and $_SESSION['pasPHPSHOP'] == "cm9vdA=="  and !getenv("COMSPEC"))
-    $rootNote="rootNote()";
-else $rootNote="";
-
+if ($_SESSION['logPHPSHOP'] == "root" and $_SESSION['pasPHPSHOP'] == "cm9vdA==" and !getenv("COMSPEC"))
+    $rootNote = "rootNote()";
+else
+    $rootNote = "";
 
 // Выбор файла
 function GetFile($dir) {
-    global $SysValue;
     if (@$dh = opendir($dir)) {
         while (($file = readdir($dh)) !== false) {
-            $fstat = explode(".",$file);
-            if($fstat[1] == "lic")
-                return 'license'.chr(47).$file;
+            $fstat = explode(".", $file);
+            if ($fstat[1] == "lic")
+                return 'license' . chr(47) . $file;
         }
         closedir($dh);
     }
 }
 
-$num=explode(" ",$SysValue['license']['product_name']);
-$product_num =  str_replace(".","",trim($num[1]));
+$num = explode(" ", $SysValue['license']['product_name']);
+$product_num = str_replace(".", "", trim($num[1]));
 
 
 
 // Срок действия тех. поддержки
-$GetFile=GetFile("../../license/");
-@$License=parse_ini_file("../../".$GetFile,1);
+$GetFile = GetFile("../../license/");
+@$License = parse_ini_file("../../" . $GetFile, 1);
 
 
-if($License['License']['SupportExpires']!="No")
-    define("EXPIRES",$License['License']['SupportExpires']);
-else define("EXPIRES",0);
+if ($License['License']['SupportExpires'] != "No")
+    define("EXPIRES", $License['License']['SupportExpires']);
+else
+    define("EXPIRES", 0);
 
-$GetSystems=GetSystems();
-$option=unserialize($GetSystems['admoption']);
-$Lang=$option['lang'];
-require("./language/".$Lang."/language.php");
+$GetSystems = GetSystems();
+$option = unserialize($GetSystems['admoption']);
+$Lang = 'russian';
+require("./language/russian/language.php");
 
 function detect_utf($Str) {
-    for ($i=0; $i<strlen($Str); $i++) {
-        if (ord($Str[$i]) < 0x80) $n=0; # 0bbbbbbb
-        elseif ((ord($Str[$i]) & 0xE0) == 0xC0) $n=1; # 110bbbbb
-        elseif ((ord($Str[$i]) & 0xF0) == 0xE0) $n=2; # 1110bbbb
-        elseif ((ord($Str[$i]) & 0xF0) == 0xF0) $n=3; # 1111bbbb
-        else return false; # Does not match any model
-        for ($j=0; $j<$n; $j++) { # n octets that match 10bbbbbb follow ?
-            if ((++$i == strlen($Str)) || ((ord($Str[$i]) & 0xC0) != 0x80)) return false;
+    for ($i = 0; $i < strlen($Str); $i++) {
+        if (ord($Str[$i]) < 0x80)
+            $n = 0;# 0bbbbbbb
+        elseif ((ord($Str[$i]) & 0xE0) == 0xC0)
+            $n = 1;# 110bbbbb
+        elseif ((ord($Str[$i]) & 0xF0) == 0xE0)
+            $n = 2;# 1110bbbb
+        elseif ((ord($Str[$i]) & 0xF0) == 0xF0)
+            $n = 3;# 1111bbbb
+        else
+            return false;# Does not match any model
+        for ($j = 0; $j < $n; $j++) { # n octets that match 10bbbbbb follow ?
+            if ((++$i == strlen($Str)) || ((ord($Str[$i]) & 0xC0) != 0x80))
+                return false;
         }
     }
     return true;
 }
 
-function utf8_win ($s) {
-    $out="";
-    $c1="";
-    $byte2=false;
-    for ($c=0;$c<strlen($s);$c++) {
-        $i=ord($s[$c]);
-        if ($i<=127) $out.=$s[$c];
+function utf8_win($s) {
+    $out = "";
+    $c1 = "";
+    $byte2 = false;
+    for ($c = 0; $c < strlen($s); $c++) {
+        $i = ord($s[$c]);
+        if ($i <= 127)
+            $out.=$s[$c];
         if ($byte2) {
-            $new_c2=($c1&3)*64+($i&63);
-            $new_c1=($c1>>2)&5;
-            $new_i=$new_c1*256+$new_c2;
-            if ($new_i==1025) {
-                $out_i=168;
-            }else {
-                if ($new_i==1105) {
-                    $out_i=184;
-                }else {
-                    $out_i=$new_i-848;
+            $new_c2 = ($c1 & 3) * 64 + ($i & 63);
+            $new_c1 = ($c1 >> 2) & 5;
+            $new_i = $new_c1 * 256 + $new_c2;
+            if ($new_i == 1025) {
+                $out_i = 168;
+            } else {
+                if ($new_i == 1105) {
+                    $out_i = 184;
+                } else {
+                    $out_i = $new_i - 848;
                 }
             }
             $out.=chr($out_i);
-            $byte2=false;
+            $byte2 = false;
         }
-        if (($i>>5)==6) {
-            $c1=$i;
-            $byte2=true;
+        if (($i >> 5) == 6) {
+            $c1 = $i;
+            $byte2 = true;
         }
     }
     return $out;
 }
 
-
 // Проверяем update
-if($option['update_enabled'] == 1) $ChekUpdate="ChekUpdate('false');";
+if ($option['update_enabled'] == 1)
+    $ChekUpdate = "ChekUpdate('false');";
 
-define("PATH",$SysValue['update']['path']."update3.php?from=".$_SERVER['SERVER_NAME']."&version=".$SysValue['upload']['version']."&support=".$License['License']['SupportExpires']);
+define("PATH", $SysValue['update']['path'] . "update3.php?from=" . $_SERVER['SERVER_NAME'] . "&version=" . $SysValue['upload']['version'] . "&support=" . $License['License']['SupportExpires']);
 
-if($License['License']['RegisteredTo']!="Trial NoName"  and !getenv("COMSPEC") and function_exists("xml_parser_create") and !$_SESSION['chekUpdate'])
-    if(@$db=readDatabase(PATH,"update")) {
-        foreach ($db as $k=>$v) {
-            if($db[$k]['num'] == $SysValue['upload']['version'] and !empty($db[$k]['name'])) {
+if ($License['License']['RegisteredTo'] != "Trial NoName" and !getenv("COMSPEC") and function_exists("xml_parser_create") and !$_SESSION['chekUpdate'])
+    if (@$db = readDatabase(PATH, "update")) {
+        foreach ($db as $k => $v) {
+            if ($db[$k]['num'] == $SysValue['upload']['version'] and !empty($db[$k]['name'])) {
                 $support_status = $db[$k]['status'];
-                @$UpdateContent.="Новая версия: ".$SysValue['license']['product_name']." ".$db[$k]['name'];
-                $_SESSION['readyUpdate']=true;
+                @$UpdateContent.="Новая версия: " . $SysValue['license']['product_name'] . " " . $db[$k]['name'];
+                $_SESSION['readyUpdate'] = true;
                 if ($db[$k]['upload_type'] == 'script') {
                     $upload_type = "script";
                     $new_version = $db[$k]['name'];
                     $ftp_host = $db[$k]['ftp_host'];
                     $ftp_login = $db[$k]['ftp_login'];
                     $ftp_password = $db[$k]['ftp_password'];
-                    $ftp_folder = $db[$k]['os']."/".$db[$k]['num'];
+                    $ftp_folder = $db[$k]['os'] . "/" . $db[$k]['num'];
                 }
             }
         }
-        if(empty($_SESSION['readyUpdate']))
-        $_SESSION['chekUpdate']=true;
+        if (empty($_SESSION['readyUpdate']))
+            $_SESSION['chekUpdate'] = true;
     }
-
-
-
-// Opera 9 Fix
-if(eregi('Opera', $HTTP_USER_AGENT)) 
-    $onload="";
-else $onload="onload=\"".@$ChekUpdate."DoCheckInterfaceLang('icon',1);preloader(0)\"";
-
 
 // Подключение JS меню модулей
 function CreateModulesMenu() {
-    $sql="select path from ".$GLOBALS['SysValue']['base']['modules'];
-    $result=mysql_query($sql);
+    global $PHPShopIcon;
+    $sql = "select path from " . $GLOBALS['SysValue']['base']['modules'];
+    $result = mysql_query($sql);
+    $dis_js = null;
 
-    while($row = mysql_fetch_array($result)) {
-        $path=$row['path'];
-        $menu="../modules/".$path."/install/module.xml";
-        @$data=implode("",file($menu));
-        if(@$db=readDatabase($data,"adminmenu",false)) {
-            $DIR="../../modules/".$path."/install/";
-            @$dis_js.='
-                stm_aix("p0i7","p0i0",[0,"'.$db[0]['title'].'"],70,20);
-                stm_bpx("p13","p1",[]);';
+    while ($row = mysql_fetch_array($result)) {
+        $path = $row['path'];
+        $menu = "../modules/" . $path . "/install/module.xml";
+        @$data = implode("", file($menu));
+        if (@$db = readDatabase($data, "adminmenu", false)) {
+            $DIR = "../../modules/" . $path . "/install/";
+            $dis_js.='
+	  stm_aix("p1i1","p1i0",[0,"' . $db[0]['title'] . '","","",-1,-1,0,"","_self","","","../img/arrow_r.gif","",7,7]);
+      stm_bp("p2",[1,2,-1,0,3,3,18,0,100,"",-2,"",-2,100,2,2,"#000000",MenuColor,"",3,1,1,"#666666"]);';
 
             // JS меню
-            $podmenu=readDatabase($data,"podmenu",false);
-            foreach($podmenu as $val)
+            $podmenu = readDatabase($data, "podmenu", false);
+            foreach ($podmenu as $val)
                 @$dis_js.='
-stm_aix("p10i1","p2i0",[0,"'.$val['podmenu_name'].'","","",-1,-1,0,"'.$val['podmenu_action'].'","_self","","","'.$DIR.$val['podmenu_icon'].'","'.$DIR.$val['podmenu_icon'].'",16,16]);
+stm_aix("p2i0","p1i0",[0,"' . $val['podmenu_name'] . '","","",-1,-1,0,"' . $val['podmenu_action'] . '","_self","","","' . $DIR . $val['podmenu_icon'] . '","' . $DIR . $val['podmenu_icon'] . '",16,16]);
 	  ';
-            @$dis_js.='stm_ep();';
+            $dis_js.='stm_ep();';
+
+            // Иконки
+            $icon = readDatabase($data, "menu", false);
+
+            if (is_array($icon)) {
+                foreach ($icon as $val)
+                    $IconTab.= $PHPShopIcon->setIcon("../modules/" . $path . "/install/" . $val['menu_icon'], $val['menu_name'], $val['menu_action']);
+            }
         }
     }
-    $disp=@$dis_js.'
+    $disp = '
+stm_aix("p0i1","p0i0",[1,"' . __('Модули') . '&nbsp;&nbsp;","","",-1,-1,0,"","_self","","","","",5,20]);
+stm_bp("p1",[1,4,-1,0,3,3,16,0,100,"",-2,"",-2,100,2,2,"#000000",MenuColor,"",3,1,1,"#666666 #878480 #666666 #666666"]);
+stm_aix("p10i1","p2i0",[0,"' . __('Обзор доступных модулей') . '","","",-1,-1,0,"javascript:DoReload(\'modules\')","_self","","","plugin.gif","plugin.gif"]);
+' . @$dis_js . '
 stm_ep();
 stm_ep();
 ';
-    return $disp;
+    if (is_array($icon))
+        $IconTab = $PHPShopIcon->setBorder() . $IconTab;
+    return array($disp, $IconTab);
 }
-
-
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
     <head>
-        <title><?=$ProductName?></title>
+        <title><?= $ProductName ?></title>
         <META http-equiv=Content-Type content="text/html; charset=windows-1251">
         <META name="ROBOTS" content="NONE">
-        <META name="copyright" content="<?=$RegTo?>">
-        <META name="engine-copyright" content="PHPSHOP.RU, <?=$ProductName;?>">
+        <META name="copyright" content="<?= $RegTo ?>">
+        <META name="engine-copyright" content="PHPSHOP.RU, <?= $ProductName; ?>">
         <LINK href="css/texts.css" type=text/css rel=stylesheet>
-        <LINK href="css/dateselector.css" type=text/css rel=stylesheet>
-        <LINK href="css/help.css" type=text/css rel=stylesheet>
+              <LINK href="css/dateselector.css" type=text/css rel=stylesheet>
+              <LINK href="css/help.css" type=text/css rel=stylesheet>
         <SCRIPT language="JavaScript" src="/phpshop/lib/Subsys/JsHttpRequest/Js.js"></SCRIPT>
         <script type="text/javascript" language="JavaScript" src="/phpshop/lib/JsHttpRequest/JsHttpRequest.js"></script>
         <SCRIPT type="text/javascript" language="JavaScript" src="java/popup_lib.js"></SCRIPT>
@@ -188,30 +203,29 @@ stm_ep();
         <script type="text/javascript" language="JavaScript" src="java/javaMG.js" type="text/javascript"></script>
         <script type="text/javascript" language="JavaScript" src="java/stm31.js"></script>
         <script type="text/javascript" language="JavaScript" src="java/sorttable.js"></script>
-        <script type="text/javascript" language="JavaScript" src="java/contextmenu.js"></script>
-        <script type="text/javascript" language="JavaScript" src="language/<?echo $Lang;?>/language_interface.js"></script>
+        <script type="text/javascript" language="JavaScript" src="language/<? echo $Lang; ?>/language_interface.js"></script>
         <script type="text/javascript" language="JavaScript">
 
             // Проверка пароля root
-<?=$rootNote;?>
+<?= $rootNote; ?>
 
 
     // Проверка обновлений
     function ChekUpdate(flag){
 
         // Параметры для модуля автоматического обновления файлов
-        var auto_upload_flag = "<?php echo $upload_type?>";
-        var ftp_pars = "<?php echo "?ftp_host=$ftp_host&ftp_folder=$ftp_folder&ftp_login=$ftp_login&ftp_password=$ftp_password&new_version=$new_version"?>";
+        var auto_upload_flag = "<?php echo $upload_type ?>";
+        var ftp_pars = "<?php echo "?ftp_host=$ftp_host&ftp_folder=$ftp_folder&ftp_login=$ftp_login&ftp_password=$ftp_password&new_version=$new_version" ?>";
         // конец
-        var update_message="<?=$UpdateContent;?>";
-        var version="<?=$SysValue['upload']['version'];?>";
-        var path ="<?=PATH?>";
-        var soft = "<?=$ProductName." ".$SysValue['upload']['version']?>";
+        var update_message="<?= $UpdateContent; ?>";
+        var version="<?= $SysValue['upload']['version']; ?>";
+        var path ="<?= PATH ?>";
+        var soft = "<?= $ProductName . " " . $SysValue['upload']['version'] ?>";
         var pathD="./update/update.php";
-        var expir="<?=EXPIRES?>";
-        var expirUntil = "<?=dataV(EXPIRES,'update'); ?>";
+        var expir="<?= EXPIRES ?>";
+        var expirUntil = "<?= dataV(EXPIRES, 'update'); ?>";
         var cookieValue=GetCookie('update');
-        var support_status = "<?=$support_status?>";
+        var support_status = "<?= $support_status ?>";
 
 
         if(support_status == "active"){
@@ -243,7 +257,7 @@ stm_ep();
     // На весь экран
     window.moveTo(0,0);
     window.resizeTo(screen.availWidth,screen.availHeight);
-    window.status="<?=$SysValue['Lang']['System']['status']." ".$_SESSION['logPHPSHOP']." ".$SysValue['Lang']['System']['status2']." ".$_SERVER['SERVER_NAME']?>";
+    window.status="<?= $SysValue['Lang']['System']['status'] . " " . $_SESSION['logPHPSHOP'] . " " . $SysValue['Lang']['System']['status2'] . " " . $_SERVER['SERVER_NAME'] ?>";
     //document.onmousedown=mp;
 
     // Подсказка
@@ -261,47 +275,46 @@ stm_ep();
         if(document.getElementById("CSCHint"))document.getElementById("CSCHint").style.visibility="hidden";}
         </script>
     </head>
-    <body id="mybody" style="background: threedface; color: windowtext;" topmargin="0" rightmargin="3" leftmargin="3" <?=$onload?>  onresize="ResizeWin('prders')" onhelp="initSlide(0);loadhelp();return false;">
+    <body id="mybody" style="background: threedface; color: windowtext;" topmargin="0" rightmargin="3" leftmargin="3" <?= $onload ?>  onhelp="initSlide(0);loadhelp();return false;">
         <span id="cartwindow" style="position:absolute;left:10px;top:0;visibility:hidden; width: 250px; height: 68px;Z-INDEX: 3;BACKGROUND: #C0D2EC;padding:10px;border: solid;border-width: 1px; border-color:#4D88C8;FILTER: revealTrans  (duration=1,transition=4);" >
             <table width="100%" height="100%">
                 <tr>
                     <td width="40" vAlign=center>
                         <img src="img/i_visa_med[1].gif" alt="" width="32" height="32" border="0" align="absmiddle">
                     </td>
-                    <td><b><?=$SysValue['Lang']['System']['cart1']?></b><br><?=$SysValue['Lang']['System']['cart2']?></td>
+                    <td><b><?= $SysValue['Lang']['System']['cart1'] ?></b><br><?= $SysValue['Lang']['System']['cart2'] ?></td>
                 </tr>
             </table>
         </span>
         <script>
             // Проверка новых заказов
 <?
-if($option['message_enabled']==1)
-    echo 'setInterval("DoMessage()",'.($option['message_time']*1000).');';
+if ($option['message_enabled'] == 1)
+    echo 'setInterval("DoMessage()",' . ($option['message_time'] * 1000) . ');';
 
 
 // Если заканчивается лицензия 7 дней
 $LicenseUntilUnixTime = $License['License']['Expires'];
-$until=$LicenseUntilUnixTime - date("U");
-$until_day=$until/(24*60*60);
-if(is_numeric($LicenseUntilUnixTime))
-    if($until_day < 8 and $until_day > 0) {
+$until = $LicenseUntilUnixTime - date("U");
+$until_day = $until / (24 * 60 * 60);
+if (is_numeric($LicenseUntilUnixTime))
+    if ($until_day < 8 and $until_day > 0) {
         $warning_mes = $SysValue['Lang']['System']['license'];
-        echo 'setInterval("startmessagelicense()",'.($option['message_time']*1000).');';
+        echo 'setInterval("startmessagelicense()",' . ($option['message_time'] * 1000) . ');';
     }
 
 // Если заканчивается поддержа 7 дней
-if(empty($warning_mes)) {
+if (empty($warning_mes)) {
     $TechPodUntilUnixTime = $License['License']['SupportExpires'];
-    if(is_numeric($TechPodUntilUnixTime))
-        $until=$TechPodUntilUnixTime - date("U");
-    $until_day=$until/(24*60*60);
-    if(is_numeric($TechPodUntilUnixTime))
-        if($until_day < 8 and $until_day > 0) {
+    if (is_numeric($TechPodUntilUnixTime))
+        $until = $TechPodUntilUnixTime - date("U");
+    $until_day = $until / (24 * 60 * 60);
+    if (is_numeric($TechPodUntilUnixTime))
+        if ($until_day < 8 and $until_day > 0) {
             $warning_mes = $SysValue['Lang']['System']['techpod'];
-            echo 'setInterval("startmessagelicense()",'.($option['message_time']*1000).');';
+            echo 'setInterval("startmessagelicense()",' . ($option['message_time'] * 1000) . ');';
         }
 }
-
 ?>
         </script>
         <span id="licensewindow" style="position:absolute;left:10px;top:0;visibility:hidden; width: 250px; height: 68px;Z-INDEX: 4;BACKGROUND: F5F16F;padding:10px;border: solid;border-width: 1px; border-color:#F86918;FILTER: revealTrans  (duration=1,transition=4);" >
@@ -310,7 +323,7 @@ if(empty($warning_mes)) {
                     <td width="40" vAlign=center>
                         <img src="img/i_crontab_med[1].gif" alt="" width="32" height="32" border="0" align="absmiddle">
                     </td>
-                    <td><b><?=$SysValue['Lang']['System']['cart1']?></b><br><?=$warning_mes." <strong>".round($until_day)."</strong> дней. <a href=\"http://www.phpshop.ru/order/?from=admin\" target=\"_blank\">Форма заказа продления &raquo;</a>."?></td>
+                    <td><b><?= $SysValue['Lang']['System']['cart1'] ?></b><br><?= $warning_mes . " <strong>" . round($until_day) . "</strong> дней. <a href=\"http://www.phpshop.ru/order/?from=admin\" target=\"_blank\">Форма заказа продления &raquo;</a>." ?></td>
                 </tr>
             </table>
         </span>
@@ -320,7 +333,7 @@ if(empty($warning_mes)) {
                     <td width="40" vAlign=center>
                         <img src="img/i_account_contacts_med[1].gif" alt="" width="32" height="32" border="0" align="absmiddle">
                     </td>
-                    <td><b><?=$SysValue['Lang']['System']['cart1']?></b><br><?=$SysValue['Lang']['System']['comment']?></td>
+                    <td><b><?= $SysValue['Lang']['System']['cart1'] ?></b><br><?= $SysValue['Lang']['System']['comment'] ?></td>
                 </tr>
             </table>
         </span>
@@ -330,7 +343,7 @@ if(empty($warning_mes)) {
                     <td width="40" vAlign=center>
                         <img src="img/i_account_properties_med[1].gif" alt="" width="32" height="32" border="0" align="absmiddle">
                     </td>
-                    <td><b><?=$SysValue['Lang']['System']['cart1']?></b><br><?=$SysValue['Lang']['System']['message']?></td>
+                    <td><b><?= $SysValue['Lang']['System']['cart1'] ?></b><br><?= $SysValue['Lang']['System']['message'] ?></td>
                 </tr>
             </table>
         </span>
@@ -341,7 +354,7 @@ if(empty($warning_mes)) {
                         <table width="100%" height="100%">
                             <tr>
                                 <td id="loadimg"></td>
-                                <td ><b><?=$SysValue['Lang']['System']['loading']?></b><br><?=$SysValue['Lang']['System']['loading2']?></td>
+                                <td ><b><?= $SysValue['Lang']['System']['loading'] ?></b><br><?= $SysValue['Lang']['System']['loading2'] ?></td>
                             </tr>
                         </table>
                     </div>
@@ -355,16 +368,21 @@ if(empty($warning_mes)) {
         <SCRIPT language=JavaScript type=text/javascript>preloader(1);</SCRIPT>
 
 
-        <table width="100%" cellpadding="0" cellpadding="0" style="border: 1px;border-style: outset; Z-INDEX: 1">
+        <table width="100%" cellpadding="0" cellspacing="1" style="border: 1px;border-style: outset; Z-INDEX: 1;border-color:ButtonFace;">
 <tr>
     <td style="padding-left:7px">
-	<script type="text/javascript" language="JavaScript" src="language/russian/menu.js"></script>
+	<script type="text/javascript" language="JavaScript1.2" src="skins/classic/menu.js"></script>
 
         <script>
-            // Модули
+            // Основное меню
+<?
+include('java/menu.php');
+?>
+            
+    // Модули
 <?
 $CreateModulesMenu = CreateModulesMenu();
-echo $CreateModulesMenu;
+echo $CreateModulesMenu[0];
 ?>
 
 
@@ -374,23 +392,17 @@ echo $CreateModulesMenu;
     stm_aix("p13i0","p1i0",[0,"Проверить наличие обновления","","",-1,-1,0,"javascript:ChekUpdate('true')","_self","","","wand.gif","wand.gif"]);
     stm_aix("p13i0","p1i0",[0,"Выполнить откат обновления","","",-1,-1,0,"javascript:miniWin('upload/adm_backup.php',600,430)","_self","","","wand.gif","wand.gif"]);
     stm_ep();
-
     stm_aix("p0i7","p0i0",[0,"Справка"],60,20);
     stm_bpx("p12","p1",[]);
     stm_aix("p12i0","p1i0",[0,"Техническая Поддержка","","",-1,-1,0,"http://help.phpshop.ru/","_blank","","","icon_info.gif","icon_info.gif"]);
     stm_aix("p12i0","p1i0",[0,"Справка по разделу","","",-1,-1,0,"javascript:initSlide(0);loadhelp();","_self","","","question_frame.png","question_frame.png"]);
     stm_aix("p12i0","p1i0",[0,"Учебник","","",-1,-1,0,"http://faq.phpshop.ru","_blank","","","book.gif","book.gif"]);
-
     stm_aix("p12i1","p1i0",[0,"Новости","","",-1,-1,0,"http://www.phpshop.ru/news/","_blank","","","book_next.gif","book_next.gif"]);
-    stm_aix("p12i3","p1i1",[]);
     stm_aix("p12i4","p1i0",[0,"Установить Order Agent Windows","","",-1,-1,0,"http://www.phpshop.ru/loads/downloadexe.php","_blank","","","plugin.gif","plugin.gif"]);
     stm_aix("p12i4","p1i0",[0,"Установить Order Agent Mobil","","",-1,-1,0,"http://www.phpshop.ru/docs/mobileagent.html","_blank","","","plugin_blue.gif","plugin_blue.gif"]);
     stm_aix("p12i4","p1i0",[0,"Установить Order Gadget","","",-1,-1,0,"http://www.phpshop.ru/docs/vistagadget.html","_blank","","","plugin_red.gif","plugin_red.gif"]);
     stm_aix("p12i4","p1i0",[0,"Установить обработчик 1С:Предприятие","","",-1,-1,0,"http://www.phpshop.ru/docs/1c.html","_blank","","","1c_icon.gif","1c_icon.gif"]);
-
-    stm_aix("p12i7","p1i1",[]);
     stm_aix("p12i6","p1i0",[0,"О программе","","",-1,-1,0,"javascript:miniWin('window/adm_about.php',650,500)","_self","","","image.gif","image.gif"]);
-    stm_aix("p12i7","p1i1",[]);
     stm_aix("p12i8","p1i0",[0,"Выход","","",-1,-1,0,"javascript:window.close()","_self","","","door.gif","door.gif"]);
     stm_aix("p12i9","p1i0",[0,"Магазин","","",-1,-1,0,"../../","_blank","","","house.gif","house.gif"]);
     stm_ep();
@@ -401,12 +413,13 @@ echo $CreateModulesMenu;
         </script>
     </td>
     <td align="right" id="phpshop">
-        <a href="http://www.phpshop.ru" target="_blank" class="phpshop" title="PHPShop Software"><?= $ProductNameVersion?></a>
+        <a href="http://www.phpshop.ru" target="_blank" class="phpshop" title="Все права защищены © ООО ПХПШОП">
+<?= $ProductNameVersion ?></a>
     </td>
 
 </tr>
 </table>
-<table width="100%" cellpadding="0" cellpadding="0" style="border: 1px;border-style: outset;" >
+<table width="100%" cellpadding="0" cellspacing="1" class="iconpane">
     <tr>
         <td style="padding-left:12">
             <table cellpadding="0" cellspacing="0">
@@ -441,13 +454,13 @@ echo $CreateModulesMenu;
                     <td width="1" bgcolor="#ffffff"></td>
                     <td width="1" bgcolor="#808080" ></td>
                     <td width="3"></td>
-                    <td id="but8"  class="butoff"><img name="iconLang" src="icon/page.gif" alt="Страницы" title="Страницы" width="16" height="16" border="0" onmouseover="ButOn(8)" onmouseout="ButOff(8)" onclick="DoReload('page_site_catalog')"></td>
+                    <td id="but8"  class="butoff"><img name="iconLang" src="icon/page.gif" alt="Страницы" title="Страницы" width="16" height="16" border="0" onmouseover="ButOn(8)" onmouseout="ButOff(8)" onclick="DoReload('page')"></td>
                     <td width="3"></td>
                     <td id="but9"  class="butoff"><img name="iconLang" src="icon/page_lightning.gif" alt="Новости" title="Новости" width="16" height="16" border="0" onmouseover="ButOn(9)" onmouseout="ButOff(9)" onclick="DoReload('news')"></td>
                     <td width="3"></td>
-                    <td id="but10"  class="butoff"><img name="iconLang" src="icon/page_refresh.gif" alt="Баннеры" title="Баннеры" width="16" height="16" border="0" onmouseover="ButOn(10)" onmouseout="ButOff(10)" onclick="DoReload('baner')"></td>
+                    <td id="but10"  class="butoff"><img name="iconLang" src="icon/page_refresh.gif" alt="Баннеры" title="Баннеры" width="16" height="16" border="0" onmouseover="ButOn(10)" onmouseout="ButOff(10)" onclick="DoReload('banner')"></td>
                     <td width="3"></td>
-                    <td id="but11"  class="butoff"><img name="iconLang" src="icon/page_attach.gif" alt="Текстовые блоки" title="Текстовые блоки"  width="16" height="16" border="0" onmouseover="ButOn(11)" onmouseout="ButOff(11)" onclick="DoReload('page_menu')"></td>
+                    <td id="but11"  class="butoff"><img name="iconLang" src="icon/page_attach.gif" alt="Текстовые блоки" title="Текстовые блоки"  width="16" height="16" border="0" onmouseover="ButOn(11)" onmouseout="ButOff(11)" onclick="DoReload('menu')"></td>
                     <td width="3"></td>
                     <td id="but12"  class="butoff"><img name="iconLang" src="icon/page_error.gif" alt="Отзывы" width="16"  title="Отзывы" height="16" border="0" onmouseover="ButOn(12)" onmouseout="ButOff(12)" onclick="DoReload('gbook')"></td>
                     <td width="3"></td>
@@ -481,77 +494,83 @@ echo $CreateModulesMenu;
                     <td width="3"></td>
                     <td width="1" bgcolor="#ffffff"></td>
                     <td width="1" bgcolor="#808080" ></td>
-                    <?if($SysValue['cnstats']['enabled'] == "true") {?>
-                    <td width="3"></td>
-                    <td id="but40"  class="butoff"><img name="iconLang" src="icon/chart_curve.gif" alt="Статистика" title="Статистика" width="16" height="16" border="0" onmouseover="ButOn(40)" onmouseout="ButOff(40)" onclick="window.open('/cnstats/')"></td>
-                        <?}?>
+                    <? if ($SysValue['cnstats']['enabled'] == "true") { ?>
+                        <td width="3"></td>
+                        <td id="but40"  class="butoff"><img name="iconLang" src="icon/chart_curve.gif" alt="Статистика" title="Статистика" width="16" height="16" border="0" onmouseover="ButOn(40)" onmouseout="ButOff(40)" onclick="window.open('/cnstats/')"></td>
+<? } ?>
                     <td width="3"></td>
                     <td id="but17"  class="butoff"><img name="iconLang" src="icon/house.gif" alt="Магазин" title="Магазин" width="16" height="16" border="0" onmouseover="ButOn(17)" onmouseout="ButOff(17)" onclick="window.open('../../')"></td>
                     <td width="3"></td>
                     <td id="but16"  class="butoff"><img name="iconLang" src="icon/door.gif" alt="Выход" title="Выход" width="16" height="16" border="0" onmouseover="ButOn(16)" onmouseout="ButOff(16)" onclick="window.close()"></td>
                     <td width="3"></td>
-                    <? if ($option['helper_enabled']==1) {?>
-                    <td id="but99"  class="butoff"><img name="iconLang" src="icon/question_frame.png" alt="Быстрая справка" title="Быстрая справка" width="16" height="16" border="0" onmouseover="ButOn(99)" onmouseout="ButOff(99)" onclick="initSlide(0);loadhelp();"></td>
-                    <td width="3"></td>
-                        <?}?>
-                    <? if ($support_status=="active" and $option['update_enabled'] == 1) {?>
-                    <td id="but100"  class="butoff"><img name="iconLang" src="icon/update.gif" alt="Доступно обновление"  title="Доступно обновление" width="16" height="16" border="0" onmouseover="ButOn(100)" onmouseout="ButOff(100)" onclick="ChekUpdate('true');"></td>
-                    <td width="3"></td>
-                        <?}?>
+                    <? if ($option['helper_enabled'] == 1) { ?>
+                        <td id="but99"  class="butoff"><img name="iconLang" src="icon/question_frame.png" alt="Быстрая справка" title="Быстрая справка" width="16" height="16" border="0" onmouseover="ButOn(99)" onmouseout="ButOff(99)" onclick="initSlide(0);loadhelp();"></td>
+                        <td width="3"></td>
+                    <? } ?>
+                    <? if ($support_status == "active" and $option['update_enabled'] == 1) { ?>
+                        <td id="but100"  class="butoff"><img name="iconLang" src="icon/update.gif" alt="Доступно обновление"  title="Доступно обновление" width="16" height="16" border="0" onmouseover="ButOn(100)" onmouseout="ButOff(100)" onclick="ChekUpdate('true');"></td>
+                        <td width="3"></td>
+<? } ?>
                 </tr>
             </table>
         </td>
-        <td align="right"><img src="icon/time.gif"  border="0" align="absmiddle" ></td>
-        <td style="border: 1px;border-style: inset;padding-right:17px" align="right" width="200">
+        <td style="padding-right:5px" align="right">
             <script language="JavaScript">clockRus();</script>
         </td>
     </tr>
 </table>
-<? if ($option['helper_enabled']==1) {
+<? if ($option['helper_enabled'] == 1) {
     ?>
-<DIV id="helpdiv">
-    <DIV id="inhelpbutdiv">
-        <DIV id="slidebutt" onclick="initSlide(0);loadhelp();" title="Справка">
+    <DIV id="helpdiv">
+        <DIV id="inhelpbutdiv">
+            <DIV id="slidebutt" onclick="initSlide(0);loadhelp();" title="Справка">
 
+            </DIV>
         </DIV>
+        <DIV id="inhelpdiv">
+            <DIV id="helpcontent">&nbsp;</DIV>
+            <INPUT TYPE="HIDDEN" id="helppage"></div>
     </DIV>
-    <DIV id="inhelpdiv">
-        <DIV id="helpcontent">&nbsp;</DIV>
-        <INPUT TYPE="HIDDEN" id="helppage"></div>
-</DIV>
-</DIV>
-<SCRIPT>
-    //Блок инициализации
-    var elheight=(window.innerHeight)?window.innerHeight: ((document.all)?document.body.offsetHeight:null);
-    document.getElementById("helpdiv").style.height=elheight;
-    document.getElementById("inhelpdiv").style.height=elheight;
-    document.getElementById("inhelpbutdiv").style.height=elheight;
-    var anime;
-    centerOnElement("inhelpbutdiv", "slidebutt");
-    //Блок инициализации
+    </DIV>
+    <SCRIPT>
+        //Блок инициализации
+        var elheight=(window.innerHeight)?window.innerHeight: ((document.all)?document.body.offsetHeight:null);
+        document.getElementById("helpdiv").style.height=elheight;
+        document.getElementById("inhelpdiv").style.height=elheight;
+        document.getElementById("inhelpbutdiv").style.height=elheight;
+        var anime;
+        centerOnElement("inhelpbutdiv", "slidebutt");
+        //Блок инициализации
 
-    function ButOnHelp() {document.getElementById("slidebutt").style.background="#cccccc";}
-    function ButOffHelp() {document.getElementById("slidebutt").style.background="#dee2ea";}
+        function ButOnHelp() {document.getElementById("slidebutt").style.background="#cccccc";}
+        function ButOffHelp() {document.getElementById("slidebutt").style.background="#dee2ea";}
 
-</SCRIPT>
+    </SCRIPT>
     <?
 }
 
 // Fix bug FF
-if(empty($_GET['page'])) $_GET['page']='orders';
+if (empty($_GET['page']))
+    $_GET['page'] = 'orders';
 
 
-// Поддержка модулей CMS Free
-if(!empty($_GET['plugin'])) {
-    $_GET['page']='modules';
-    $_GET['var1']=$_GET['plugin'];
-    $_GET['var2']=base64_encode($_SERVER['QUERY_STRING']);
+// Поддержка модулей CMS Free c передачей параметров  $_SERVER['QUERY_STRING'] в переменной $_GET['var2']
+if (!empty($_GET['plugin'])) {
+    $_GET['page'] = 'modules';
+    $_GET['var1'] = $_GET['plugin'];
+
+    if (empty($_GET['var2'])) {
+        parse_str($_SERVER['QUERY_STRING'], $cms_var_array);
+
+        if (count($cms_var_array) > 4)
+            $_GET['var2'] = base64_encode($_SERVER['QUERY_STRING']);
+    }
 }
 ?>
 
 <div align="center" id="interfaces" name="interfaces">
     <script>
-        setTimeout("DoReload('<?=$_GET['page']?>','<?=$_GET['var1']?>','<?=$_GET['var2']?>')",500);
+        setTimeout("DoReload('<?= $_GET['page'] ?>','<?= $_GET['var1'] ?>','<?= $_GET['var2'] ?>')",500);
     </script>
 </div>
 <div id="CSCHint"></div>

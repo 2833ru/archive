@@ -16,6 +16,11 @@ $PHPShopSystem = new PHPShopSystem();
 PHPShopObj::loadClass("admgui");
 $PHPShopInterface = new PHPShopInterface();
 
+
+// Настройки модуля
+PHPShopObj::loadClass("modules");
+$PHPShopModules = new PHPShopModules($_classPath."modules/");
+
 // Расширения для редактирования
 $AllowedTypes = "tpl|js|css";
 
@@ -77,6 +82,11 @@ function actionUpdate() {
     if(isTypeAllowed($tpl_file)) {
 
         // Попытка изменить атрибуты
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['edit']['edit_system']);
+        $option=$PHPShopOrm->select();
+
+        if(empty($option['chmod'])) 
+            $option['chmod']=0775;
         @chmod($tpl_file, 0775);
 
 

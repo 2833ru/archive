@@ -1,4 +1,11 @@
 <?php
+/**
+ * Модуль Partner. 
+ * @author PHPShop Software
+ * @version 1.2
+ * @package PHPShopModules
+ */
+
 $_classPath="../../../../";
 include($_classPath."phpshop/class/obj.class.php");
 PHPShopObj::loadClass("base");
@@ -6,6 +13,7 @@ PHPShopObj::loadClass("orm");
 PHPShopObj::loadClass("xml");
 PHPShopObj::loadClass("system");
 PHPShopObj::loadClass("basexml");
+PHPShopObj::loadClass("string");
 
 // Подключаем БД
 $PHPShopBase=&new PHPShopBase($_classPath."phpshop/inc/config.ini");
@@ -26,8 +34,23 @@ class PHPShopHtmlCatalog extends PHPShopBaseXml {
         $this->debug=false;
         $this->true_method=array('select','option');
         $this->true_from=array('table_name2');
+        $this->code=$_GET['code'];
         $this->postsql($_GET['cat'],$_GET['limit']);
         parent::PHPShopBaseXml();
+    }
+    
+    /**
+     * Перекодировка
+     */
+    function code($str){
+        switch($this->code){
+            case('utf-8'):
+                $str=PHPShopString::win_utf8($str);
+                break;
+            default: 
+                break;
+        }
+        return trim($str);
     }
 
     function postsql($cat=false,$limit=10) {
@@ -55,7 +78,7 @@ class PHPShopHtmlCatalog extends PHPShopBaseXml {
         if(is_array($this->data)) {
             $result='
 var PHPShopXml'.$_GET['id'].'=\'<phpshop>\'; ';
-            foreach($this->data as $k=>$row) {
+            foreach($this->data as $row) {
                 $result.=$this->addvar('<row>');
                 if(is_array($row))
                     foreach($row as $key=>$val) {
@@ -66,7 +89,7 @@ var PHPShopXml'.$_GET['id'].'=\'<phpshop>\'; ';
                         }
 
                         if(preg_match("(\<(/?[^\>]+)\>)",$val) or strstr($val,'&'))
-                            $result.=$this->addvar('<'.$key.'><![CDATA['.trim($val).']]></'.$key.'>');
+                            $result.=$this->addvar('<'.$key.'><![CDATA['.$this->code($val).']]></'.$key.'>');
                         else   $result.=$this->addvar('<'.$key.'>'.trim($this->is_serialize($val)).'</'.$key.'>');
                     }
                 $result.=$this->addvar('</row>');
@@ -78,8 +101,6 @@ if(window.PHPShopXmlManager'.$_GET['obj'].'){
   PHPShopXmlManager'.$_GET['obj'].'.display("'.$_GET['id'].'");
 }
 ';
-
-
             echo $result;
         }
     }

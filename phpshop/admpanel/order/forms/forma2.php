@@ -108,6 +108,15 @@ $LoadBanc=unserialize($LoadItems['System']['bank']);
 <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
 <link href="style.css" type=text/css rel=stylesheet>
+<style media="screen" type="text/css">
+        a.save{
+            display: none;
+        }
+            
+        * HTML a.save{ /* Только для браузера IE */
+            display: inline;
+        }
+</style>
 <style media="print" type="text/css">
 <!-- 
 .nonprint {
@@ -117,8 +126,8 @@ $LoadBanc=unserialize($LoadItems['System']['bank']);
 </style>
 </head>
 <body onload="window.focus()" bgcolor="#FFFFFF" text="#000000" marginwidth=5 leftmargin=5 style="padding: 2px;">
-<div align="right" class="nonprint"><a href="#" onclick="window.print();return false;" ><img border=0 align=absmiddle hspace=3 vspace=3 src="http://<?=$_SERVER['SERVER_NAME'].$SysValue['dir']['dir']?>/phpshop/admpanel/img/action_print.gif">Распечатать</a><br><br></div>
-
+<div align="right" class="nonprint"><a href="#" onclick="window.print();return false;" ><img border=0 align=absmiddle hspace=3 vspace=3 src="http://<?= $_SERVER['SERVER_NAME'] . $SysValue['dir']['dir'] ?>/phpshop/admpanel/img/action_print.gif">Распечатать</a> | <a href="#" class="save" onclick="document.execCommand('SaveAs');return false;">Сохранить на диск<img border=0 align=absmiddle hspace=3 vspace=3 src="http://<?= $_SERVER['SERVER_NAME'] . $SysValue['dir']['dir'] ?>/phpshop/admpanel/img/action_save.gif"></a><br><br></div>
+    
 <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0><TBODY>
 <TR>
 <TH scope=row align=middle width="50%" rowSpan=3><img src="<?=$PHPShopSystem->getLogo();?>" alt="" border="0"></TH>
@@ -183,7 +192,7 @@ $LoadBanc=unserialize($LoadItems['System']['bank']);
 	
 	<tr><td colspan=6 style="border: 0px; border-top: 1px solid #000000;">&nbsp;</td></tr>
 </table>
-<p><b>Всего наименований <?=(count($order['Cart']['cart'])+1)?>, на сумму <?=($PHPShopOrder->returnSumma($sum,$order['Person']['discount'])+$deliveryPrice)." ".$PHPShopOrder->default_valuta_code;?>
+<p><b>Всего наименований <?=($num+1)?>, на сумму <?=($PHPShopOrder->returnSumma($sum,$order['Person']['discount'])+$deliveryPrice)." ".$PHPShopOrder->default_valuta_code;?>
 <br />
 <?
 $iw=new inwords;  

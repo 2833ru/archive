@@ -39,29 +39,57 @@ function PHPShopJS(){
 var PHPShopJS = new PHPShopJS();
 
 
-// Ajax перезагрузка для модулей
-function DoReloadMainWindowModule(page,var1,var3){
-    
-            var req = new Subsys_JsHttpRequest_Js();
-            req.onreadystatechange = function() {
-                if (req.readyState == 4) {
-                    if (req.responseJS) {
-                        if(window.opener.document.getElementById('interfaces')){
-                            window.opener.document.getElementById('interfaces').innerHTML = (req.responseJS.xid||'');
-                            window.close();
-                        }
 
-                    }
+function DoUpdateOrderProductSum(){
+    var num=document.getElementById('num').value;
+    var price=document.getElementById('price').value;
+    document.getElementById('sum').innerHTML=num*price;
+}
+
+function show_on(a){
+    document.getElementById(a).style.background='#C0D2EC';
+    IDS=a.replace("r","");
+}
+
+function show_out(a){
+    document.getElementById(a).style.background='white';
+    IDS=0;
+}
+
+
+// Ajax перезагрузка для модулей
+function DoReloadMainWindowModule(page,var1,var2,type){
+
+    if(type === undefined){
+        path='../../../admpanel/';
+        var3=var2;
+    }
+    else if(type == 'core'){
+    path='../';
+    var3='';
+    }
+
+    var req = new Subsys_JsHttpRequest_Js();
+    req.onreadystatechange = function(){
+        if (req.readyState == 4){
+            if (req.responseJS){
+                if(window.opener.document.getElementById('interfaces')){
+                    window.opener.document.getElementById('interfaces').innerHTML = (req.responseJS.xid||'');
+                    window.close();
                 }
+
             }
-            req.caching = false;
-            req.open('POST', '../../../admpanel/interface/api.php', true);
-            req.send({
-                xid: 1,
-                page: page,
-                var1: var1,
-                var3: var3
-            });
+        }
+    }
+    req.caching = false;
+    req.open('POST', path+'interface/api.php', true);
+    req.send({
+        xid: 1,
+        page: page,
+        var1: var1,
+        var2: var2,
+        var3: var3
+    });
 }
 
 
@@ -165,18 +193,20 @@ function GetThemeIcon(skin){
     document.getElementById("theme").src=path;
 }
 
+// Обзор картинок ресайз
+function ReturnPicResize(id){
+    var pic=document.getElementById('pic_resize');
+    var path='../editor3/assetmanager/resize.php?id='+id;
+    miniWin(path,350,200);
+}
+
 // Обзор картинок
 function ReturnPic(id){
     var pic=document.getElementById(id);
-    var path='../assetmanager/assetmanager.php?name='+pic.value+'&tip='+id;
-    try{
-        pic.value=window.showModalDialog(path,window,"dialogWidth:640px;dialogHeight:500px;edge:Raised;center:Yes;help:No;resizable:No;status:No;");
-    }
-    catch(e){
-        miniWin(path,640,500);
-    }
-}
+    var path='../editor3/assetmanager/assetmanager.php?name='+pic.value+'&tip='+id;
 
+    miniWin(path,640,500);
+}
 
 
 // Поиск страниц
@@ -329,3 +359,4 @@ function Ras(w,h)
     var url="news/news_to_mail.php?data="+s;
     miniWin(url,w,h);
 }
+

@@ -86,7 +86,7 @@ class PHPShopPartnerOrder {
      * Запись заказа в лог партнеров
      */
     function writeLog() {
-        $PHPShopOrm = &new PHPShopOrm($this->objBase);
+        $PHPShopOrm = new PHPShopOrm($this->objBase);
         $PHPShopOrm->insert(array('date_new'=>date("U"),'order_id_new'=>$_POST['ouid'],
                 'partner_id_new'=>$this->partner,'path_new'=>$this->path,'order_user_new'=>$_POST['name_person'],
                 'percent_new'=>$this->option['percent']));

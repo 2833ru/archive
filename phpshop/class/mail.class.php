@@ -10,7 +10,7 @@
  * @param string $to куда
  * @param string $from от кого
  * @param string $zag заголовок письма
- * @param string $content содежание письма
+ * @param string $content содержание письма
  */
 class PHPShopMail {
     /**

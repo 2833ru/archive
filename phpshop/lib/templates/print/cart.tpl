@@ -2,7 +2,6 @@
     <title>Форма предварительного заказа</title>
     <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1251">
     <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
-    <meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
     <script>
         function NoFoto(obj){
             obj.height=1;

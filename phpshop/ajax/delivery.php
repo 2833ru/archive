@@ -69,7 +69,7 @@ function GetDeliveryPrice($deliveryID,$sum,$weight=0) {
 }
 
 $GetDeliveryPrice=GetDeliveryPrice($_REQUEST['xid'],$_REQUEST['sum'],$_REQUEST['wsum']);
-$totalsumma=$PHPShopOrder->returnSumma($_REQUEST['sum']+$GetDeliveryPrice,$PHPShopOrder->ChekDiscount($_REQUEST['sum']));
+$totalsumma=$PHPShopOrder->returnSumma($_REQUEST['sum'],$PHPShopOrder->ChekDiscount($_REQUEST['sum']))+$GetDeliveryPrice;
 $dellist=delivery(false,$_REQUEST['xid']);
 
 // Результат
