@@ -58,7 +58,7 @@ DoResize(<? echo $GetSystems['width_icon']?>,460,270);
 <tr bgcolor="#ffffff">
 	<td style="padding:10">
 	<b><span name=txtLang id=txtLang>Редактирование Статуса</span> "<?=$name?>"</b><br>
-	&nbsp;&nbsp;&nbsp;<span name=txtLang id=txtLang>Укажите данные для записи в базу</span>.
+	
 	</td>
 	<td align="right">
 	<img src="../img/i_billing_history_med[1].gif" border="0" hspace="10">

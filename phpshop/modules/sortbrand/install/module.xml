@@ -2,7 +2,8 @@
 <module>
     <version>1.2</version>
     <name>Sort Brand</name>
-    <description>Подбор по параметрам, вывод производителей</description>
+   <faqlink>http://faq.phpshop.ru/page/sort-brand.html</faqlink>
+ <description>Подбор по параметрам, вывод производителей.</description>
     <icon>icon.png</icon>
     <category>form</category>
     <adminmenu>

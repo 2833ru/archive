@@ -27,7 +27,7 @@ class PHPShopArray {
      * @var array 
      */
     var $objSQL = false;
-    
+
     /**
      * Лимит 
      * @var int 

@@ -40,11 +40,6 @@ $disp = "
 		<input type=hidden name=LMI_FAIL_URL value='$fail_url'>
 		<table>
 			<tr>
-				<td><img src='images/shop/icon-setup.gif' width='16' height='16' border='0'></td>
-				<td align='center'>
-					<a href='javascript:history.back(1)'><u>Вернуться к оформлению<br>покупки</u></a>
-				</td>
-				<td width='20'></td>
 				<td>
 					<img src='images/shop/icon-client-new.gif' alt='' width='16' height='16' border='0' align='left'>
 					<a href='javascript:pay.submit();'>Оплатить через платежную систему</a>

@@ -3,6 +3,7 @@ session_start();
 $_classPath = "../";
 require("connect.php");
 include($_classPath . "class/obj.class.php");
+require_once $_classPath.'/lib/phpass/passwordhash.php';
 PHPShopObj::loadClass("base");
 PHPShopObj::loadClass("system");
 PHPShopObj::loadClass("orm");
@@ -23,6 +24,17 @@ if (!empty($theme))
     $_SESSION['theme'] = $theme;
 else
     $_SESSION['theme'] = 'default';
+
+// геренация пароля
+function generatePassword($length = 8) {
+    $chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    $numChars = strlen($chars);
+    $string = '';
+    for ($i = 0; $i < $length; $i++) {
+        $string .= substr($chars, rand(1, $numChars) - 1, 1);
+    }
+    return $string;
+}
 
 // Выбор дизайна административной части
 function GetTheme($return = false) {
@@ -51,70 +63,17 @@ function GetTheme($return = false) {
             closedir($dh);
         }
     }
-    
-  
-    if (empty($return)){
-    $name = "<select name=\"theme_id\">" . $name . "</select>";
+
+
+    if (empty($return)) {
+        $name = "<select name=\"theme_id\">" . $name . "</select>";
         return $name;
     }
     else
         return $theme_id;
 }
 
-// Secure Fix 6.0
-function RequestSearch($search) {
-    $pathinfo = pathinfo($_SERVER['PHP_SELF']);
-    $f = $pathinfo['basename'];
-    if ($f != "adm_sql.php" and $f != "adm_sql_file.php" and $f != "action.php") {
-        $com = array("union", "select", "insert", "update", "delete");
-        $mes = '
-<html>
-<head>
-	<title>Secure Fix 6.0</title>
-<LINK href="css/texts.css" type=text/css rel=stylesheet>
-</head>
 
-<body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0">
-<table cellpadding="0" cellspacing="0" width="100%" height="50" id="title">
-<tr bgcolor="#ffffff">
-	<td style="padding:10">
-	<b><span name=txtLang id=txtLang>Безопасноть под угрозой</span></b><br>
-	&nbsp;&nbsp;&nbsp;<span name=txtLang id=txtLang>Укажите данные для записи в базу</span>.
-	</td>
-	<td align="right">
-	<img src="img/i_domainmanager_med[1].gif" border="0" hspace="10">
-	</td>
-</tr>
-</table>
-<br>
-<table cellpadding="0"  cellspacing="7" width="100%" height="100%">
-<tr>
-	<td>
-	
-	
-
-<h4 style="color:red">Внимание!!!</h4><br>Работа скрипта ' . $_SERVER['PHP_SELF'] . ' прервана из-за использования внутренней команды';
-        $mes2 = "<br>Удалите все вхождения этой команды в водимой информации.";
-        foreach ($com as $v)
-            if (@preg_match("/" . $v . "/i", $search)) {
-                $search = preg_replace("/$v\//i", "/!!!$v!!!/", $search);
-                exit($mes . " " . strtoupper((string) $v) . $mes2 . "<br><br><br><textarea style='width: 100%;height:50%'>" . substr((string) $search, 0, 11) . "</textarea><p>Команда к тексте выделена знаками !!! с обеих сторон</p>
-<hr>
-<div align=right>
-<input type=button value=Вернуться onclick=\"history.back(1)\">
-<input type=button value=Закрыть onclick=\"self.close()\">
-</div>
-</td>
-</tr>
-</table>
-");
-            }
-    }
-}
-
-// Проверка безопасности
-foreach ($_REQUEST as $val)
-    RequestSearch($val);
 $SendMailStatus = null;
 
 function CheckBlackList($n) {
@@ -164,24 +123,30 @@ if (isset($_POST['pas_to_mail']) and strpos($_SERVER["HTTP_REFERER"], $_SERVER['
     $log = htmlspecialchars(addslashes($_POST['log']));
     if (!PHPShopSecurity::true_login($log))
         $log = null;
-    $sql = "select password,mail from $table_name19 where login='" . $log . "'";
+    $sql = "select password,mail,id from $table_name19 where login='" . $log . "'";
     $result = mysql_query($sql);
     while ($row = mysql_fetch_array($result)) {
         $OLDpassword = $row['password'];
         $OLDmail = $row['mail'];
+        $id = $row['id'];
     }
+
+    $hash = md5($id . $log . $OLDmail . $OLDpassword . time());
+
+    mysql_query("UPDATE $table_name19 SET hash = '$hash' WHERE id=$id");
+
     if (!empty($OLDmail)) {
         $content = "
 Доброго времени!
 ---------------
 
-Уважаемый $log, Вы запросили выслать на ваш адрес пароль для доступа 
+Уважаемый $log, Вы запросили обновление пароля  
 к панели администрирования PHPShop на сайте " . $_SERVER['SERVER_NAME'] . "
 
 Ваши данные
 ---------------
 Пользователь: $log
-Пароль: " . base64_decode($OLDpassword) . "
+Для восстановления пароля перейдите по ссылке: http://" . $_SERVER['SERVER_NAME'] . "/phpshop/admpanel/?newPassGen=" . $hash . "
 Дата: " . date("d-m-y H:s a") . "
 IP отправителя:" . $_SERVER['REMOTE_ADDR'] . "
 
@@ -200,14 +165,69 @@ http://www.phpshop.ru";
         // Сообщение администратору
         mail($OLDmail, $zag, $content, $header);
         $SendMailStatus = "
-<div class='display'>Ваш пароль был выслан на адрес <b>" . $OLDmail . "</b></div>";
+<div class='display' style='height:auto;'>Письмо с инструкциями выслано на <br><b>" . $OLDmail . "</b></div>";
+    }
+} elseif (isset($_GET['newPassGen'])) {
+    $hash = mysql_real_escape_string(stripslashes($_GET['newPassGen']));
+    $sql = "select password,mail,id,login from $table_name19 where hash='" . $hash . "'";
+    $result = mysql_query($sql);
+    while ($row = mysql_fetch_array($result)) {
+        $OLDpassword = $row['password'];
+        $OLDmail = $row['mail'];
+        $id = $row['id'];
+        $log = $row['login'];
+    }
+    if (!empty($OLDmail)) {
+
+        // генерируем новый пароль для администратора
+        $newPass = generatePassword();
+        // кодируем новый пароль и сохраняем в БД
+        $hasher = new PasswordHash(8, false);
+        $hash = $hasher->HashPassword($newPass);
+
+        mysql_query("UPDATE $table_name19 SET password = '$hash', hash='' WHERE id=$id");
+
+        $content = "
+Доброго времени!
+---------------
+
+Уважаемый $log, был сгенерирован новый пароль доступа 
+к панели администрирования PHPShop на сайте " . $_SERVER['SERVER_NAME'] . "
+
+Ваши данные
+---------------
+Панель администрирования: http://" . $_SERVER['SERVER_NAME'] . "/phpshop/admpanel/
+Пользователь: $log
+Пароль: " . $newPass . "
+Дата: " . date("d-m-y H:s a") . "
+IP отправителя:" . $_SERVER['REMOTE_ADDR'] . "
+
+---------------
+С уважением,
+Компания PHPShop
+http://www.phpshop.ru";
+
+        $codepage = "windows-1251";
+        $header = "MIME-Version: 1.0\n";
+        $header .= "From: \"robot@" . preg_replace("/www.\//i", "//", $_SERVER['SERVER_NAME']) . "\" <\"MAIL PHPSHOP\">\n";
+        $header .= "Content-Type: text/plain; charset=$codepage\n";
+        $header .= "X-Mailer: PHP/";
+        $zag = "Доступ к панели администрирования PHPShop";
+
+        // Сообщение администратору
+        mail($OLDmail, $zag, $content, $header);
+        $SendMailStatus = "
+<div class='display'>Пароль выслан на <b>" . $OLDmail . "</b></div>";
     }
 } elseif (isset($_POST['enter']) and strpos($_SERVER["HTTP_REFERER"], $_SERVER['SERVER_NAME'])) {
     $sql = "select * from $table_name19 where enabled='1'";
     $result = mysql_query($sql);
-    $pas = base64_encode($_POST['pas']);
+    $pas = $_POST['pas'];
+    $hasher = new PasswordHash(8, false);
     while (@$row = mysql_fetch_array($result)) {
-        if ($row['login'] == $_POST['log'] and $row['password'] == $pas) {
+        // Check that the password is correct, returns a boolean
+        $check = $hasher->CheckPassword($pas, $row['password']);
+        if ($row['login'] == $_POST['log'] and $check) {
             $logPHPSHOP = $log;
             $pasPHPSHOP = $pas;
             $idPHPSHOP = $row['id'];
@@ -217,22 +237,16 @@ http://www.phpshop.ru";
             $_SESSION['logPHPSHOP'] = $logPHPSHOP;
             $_SESSION['pasPHPSHOP'] = $pasPHPSHOP;
             $_SESSION['idPHPSHOP'] = $idPHPSHOP;
-            
+
             // Тема
-            $theme=GetTheme(true);
-            $_SESSION['theme']=$theme[$_POST['theme_id']];
+            $theme = GetTheme(true);
+            $_SESSION['theme'] = $theme[$_POST['theme_id']];
 
             // Запись в журнал авторизации
             $sql = "INSERT INTO " . $SysValue['base']['table_name10'] . "
 VALUES ('','$logPHPSHOP','" . date("U") . "','0','" . $_SERVER['REMOTE_ADDR'] . "')";
             $result = mysql_query($sql);
 
-            /*
-              if($_POST['pas_to_cookies'] == 1) {
-              setcookie("mylog", $_POST['log'], time()+60*60*24*30, "/phpshop/admpanel/", $_SERVER['SERVER_NAME'], 0);
-              setcookie("mypas", base64_encode($_POST['pas']), time()+60*60*24*30, "/phpshop/admpanel/", $_SERVER['SERVER_NAME'], 0);
-
-              } */
 
             if (isset($_POST['log']) and isset($pas))
                 $_id = session_id();
@@ -256,7 +270,7 @@ tmr = setTimeout("WO();",100);
 
         // Запись в журнал авторизации
         $sql = "INSERT INTO " . $SysValue['base']['table_name10'] . "
-VALUES ('','" . PHPShopSecurity::TotalClean($_POST['log'] . "@" . $_POST['pas']) . "','" . date("U") . "','1','" . $_SERVER['REMOTE_ADDR'] . "')";
+VALUES ('','" . PHPShopSecurity::TotalClean($_POST['log'] . "@" . $_POST['pas']) . "','" . date("U") . "','1','" . PHPShopSecurity::TotalClean($_SERVER['REMOTE_ADDR']) . "')";
         $result = mysql_query($sql);
     }
 }
@@ -270,6 +284,8 @@ VALUES ('','" . PHPShopSecurity::TotalClean($_POST['log'] . "@" . $_POST['pas'])
         <META name="copyright" content="<?= $RegTo ?>">
         <META name="engine-copyright" content="PHPShop LTD, <?= $ProductName; ?>">
         <LINK href="skins/<?= $_SESSION['theme']; ?>/texts.css" type="text/css" rel="stylesheet">
+        <LINK rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
+        <LINK rel="icon" href="./favicon.ico" type="image/x-icon">
         <script language="JavaScript">
 <?= @$_Path; ?>
         </script>
@@ -281,7 +297,7 @@ VALUES ('','" . PHPShopSecurity::TotalClean($_POST['log'] . "@" . $_POST['pas'])
 <tr>
 	<td valign=\"middle\">
 
-<form method=\"post\">
+<form method=\"post\" action=\"./\">
 <table align=\"center\" cellpadding=\"0\" cellspacing=\"1\" border=\"0\" class=\"login\">
 <tr align=\"center\" >
 <td colspan=3 >
@@ -292,7 +308,7 @@ VALUES ('','" . PHPShopSecurity::TotalClean($_POST['log'] . "@" . $_POST['pas'])
 	&nbsp;&nbsp;&nbsp;<span name=txtLang id=txtLang>Укажите пользователя и пароль</span>.
 	</td>
 	<td align=\"right\">
-	<img src=\"img/i_users_med[1].gif\" border=\"0\" hspace=\"10\">
+	<a href=\"../../\" title=\"Домой\"><img src=\"img/i_users_med[1].gif\" border=\"0\" hspace=\"10\"></a>
 	</td>
 </tr>
 </table>
@@ -304,7 +320,7 @@ VALUES ('','" . PHPShopSecurity::TotalClean($_POST['log'] . "@" . $_POST['pas'])
 <FIELDSET>
 <LEGEND><span name=txtLang id=txtLang>Пользователь</span></LEGEND>
 <div style=\"padding:10px\">
-<input type=\"text\" name=\"log\" style=\"width:180px\" maxlength=\"20\" value=\"\" id=\"log\" tabindex=1>
+<input type=\"text\" name=\"log\" style=\"width:180px\" maxlength=\"20\" value=\"$log\" id=\"log\" tabindex=1>
 </div>
 </FIELDSET>
 </td>
@@ -330,7 +346,7 @@ VALUES ('','" . PHPShopSecurity::TotalClean($_POST['log'] . "@" . $_POST['pas'])
                 echo "<input type=checkbox name=win_e value=1 ><span name=txtLang id=txtLang>Открыть в текущем окне</span><br>";
             else
                 echo "<input type=checkbox name=win_e value=1 checked><span name=txtLang id=txtLang>Открыть в текущем окне</span><br>";
-            echo"<input type=checkbox name=pas_to_mail value=1><span name=txtLang id=txtLang>Выслать пароль на e-mail пользователя</span>.";
+            echo"<input type=checkbox name=pas_to_mail value=1><span name=txtLang id=txtLang>Восстановить пароль</span>";
         }
         else
             echo $SendMailStatus;

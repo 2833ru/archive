@@ -58,7 +58,7 @@ function actionStart() {
     $Tab1=$PHPShopGUI->setField('Название:',$PHPShopGUI->setInputText(false,'name_new','Новая форма','98%'));
     $Tab1.=$PHPShopGUI->setField('Ссылка:',$PHPShopGUI->setInputText('http://'.$_SERVER['SERVER_NAME'].'/formgenerator/','path_new','example',100),'left');
     $Tab1.=$PHPShopGUI->setField('E-mail:',$PHPShopGUI->setInputText(false,'mail_new',$PHPShopSystem->getParam("admin_mail"),'97%'));
-    $Tab1.=$PHPShopGUI->setField('Опции:',$PHPShopGUI->setCheckbox('enabled_new','1','Вывод на сайте',1).
+    $Tab1.=$PHPShopGUI->setline().$PHPShopGUI->setField('Опции:',$PHPShopGUI->setCheckbox('enabled_new','1','Вывод на сайте',1).
             $PHPShopGUI->setCheckbox('user_mail_copy_new','1','Выслать копию пользователю на e-mail',1));
     $Tab1.=$PHPShopGUI->setField('Сообщение после отправки:',$PHPShopGUI->setTextarea('success_message_new','Данные приняты, наши менеджеры свяжутся с вами.',false,'97%'));
     $Tab1.=$PHPShopGUI->setField('Сообщение о заполнении обязательных полей:',$PHPShopGUI->setTextarea('error_message_new','Ошибка заполнения формы. Заполните все поля, отмеченные звездочками (*).',false,'97%'));

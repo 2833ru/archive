@@ -2,7 +2,8 @@
 <module>
     <version>1.7</version>
     <name>Visual Cart</name>
-    <description>Модуль управляемой мини-корзины, сохранение корзины в базе.</description>
+   <faqlink>http://faq.phpshop.ru/page/visualcart.html</faqlink>
+ <description>Модуль управляемой мини-корзины, сохранение корзины в базе.</description>
     <icon>icon.png</icon>
     <category>form</category>
     <adminmenu>

@@ -128,13 +128,13 @@ class Guard {
 
                             $PHPShopOrm = new PHPShopOrm();
                             $PHPShopOrm->query('TRUNCATE TABLE ' . $this->SysValue['base']['guard']['guard_signature']);
-                            $virus_name=null;
+                            $virus_name = null;
 
                             // Вставляем новые сигнатуры
                             foreach ($db as $key => $val) {
                                 $PHPShopOrm = new PHPShopOrm($this->SysValue['base']['guard']['guard_signature']);
                                 $PHPShopOrm->insert(array('virus_name_new' => $val['name'], 'virus_signature_new' => $val['signature']));
-                                $virus_name.=$val['name'].'
+                                $virus_name.=$val['name'] . '
 ';
                             }
 
@@ -142,7 +142,7 @@ class Guard {
                             $PHPShopOrm = new PHPShopOrm($this->SysValue['base']['guard']['guard_system']);
                             $PHPShopOrm->update(array('last_update_new' => $this->date), array('id' => '=1'));
 
-                            $this->update_result_virus=substr($virus_name,0,-2);
+                            $this->update_result_virus = substr($virus_name, 0, -2);
                             $this->update_result = 1;
                         }
                         else
@@ -462,9 +462,9 @@ class Guard {
 * Зараженных файлов - ' . count($this->infected) . '
     ';
 
-          // Предупреждение о вирусной базе через 30 дней
-          if(($this->date-$this->system['last_update'])>(86400*30))
-          $content.='
+        // Предупреждение о вирусной базе через 30 дней
+        if (($this->date - $this->system['last_update']) > (86400 * 30))
+            $content.='
 
           !!!!!!!!!
           ---
@@ -475,7 +475,7 @@ class Guard {
           !!!!!!!!!
 
           ';
-     
+
 
         if (is_array($this->new)) {
             $content.='
@@ -541,7 +541,11 @@ http://' . $_SERVER['SERVER_NAME'] . '/phpshop/modules/guard/admin.php?do=quaran
 ---
 ' . date('r') . ' / -- guardian system v. ' . $this->version;
 
-        new PHPShopMail($this->PHPShopSystem->getParam('adminmail2'), 'guard@' . $_SERVER['SERVER_NAME'], $zag, $content);
+        // E-mail для отправки
+        if (empty($this->system['mail']))
+            $this->system['mail'] = $this->PHPShopSystem->getParam('adminmail2');
+
+        new PHPShopMail($this->system['mail'], 'guard@' . $_SERVER['SERVER_NAME'], $zag, $content);
     }
 
 }

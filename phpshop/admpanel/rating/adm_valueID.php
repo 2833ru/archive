@@ -14,49 +14,49 @@ require("../language/russian/language.php");
         <script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
     </head>
     <body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0">
-<?
+        <?
 
-function Disp_cat($n) {// вывод каталогов в выборе
-    global $SysValue;
-    $sql = "select * from " . $SysValue['base']['table_name50'] . " order by name";
-    $result = mysql_query($sql);
-    while ($row = mysql_fetch_array($result)) {
-        $id = $row['id_category'];
-        $name = substr($row['name'], 0, 35);
-        if ($id == $n) {
-            $sel = "selected";
-        } else {
-            $sel = "";
-        }
-        @$dis.="<option value=\"$id\" $sel>$name</option>\n";
-    }
-    @$disp = "
+        function Disp_cat($n) {// вывод каталогов в выборе
+            global $SysValue;
+            $sql = "select * from " . $SysValue['base']['table_name50'] . " order by name";
+            $result = mysql_query($sql);
+            while ($row = mysql_fetch_array($result)) {
+                $id = $row['id_category'];
+                $name = substr($row['name'], 0, 35);
+                if ($id == $n) {
+                    $sel = "selected";
+                } else {
+                    $sel = "";
+                }
+                @$dis.="<option value=\"$id\" $sel>$name</option>\n";
+            }
+            @$disp = "
 <select name=category_new size=1>
 $dis
 </select>
 ";
-    return @$disp;
-}
+            return @$disp;
+        }
 
 // Редактирование записей
-$sql = "select * from " . $SysValue['base']['table_name51'] . " where id_charact=".intval($_GET['id']);
-$result = mysql_query($sql);
-$row = mysql_fetch_array($result);
-$id = $row['id_charact'];
-$name = $row['name'];
-$category = $row['id_category'];
-$num = $row['num'];
-if ($row['enabled'] == 1)
-    $sel1 = "checked";
-else
-    $sel2 = "checked";
-?>
+        $sql = "select * from " . $SysValue['base']['table_name51'] . " where id_charact=" . intval($_GET['id']);
+        $result = mysql_query($sql);
+        $row = mysql_fetch_array($result);
+        $id = $row['id_charact'];
+        $name = $row['name'];
+        $category = $row['id_category'];
+        $num = $row['num'];
+        if ($row['enabled'] == 1)
+            $sel1 = "checked";
+        else
+            $sel2 = "checked";
+        ?>
         <form name="product_edit"  method=post>
             <table cellpadding="0" cellspacing="0" width="100%" height="50" id="title">
                 <tr bgcolor="#ffffff">
                     <td style="padding:10">
                         <b><span name=txtLang id=txtLang>Редактирование Характеристики</span> "<?= $name ?>"</b><br>
-                        &nbsp;&nbsp;&nbsp;<span name=txtLang id=txtLang>Укажите данные для записи в базу</span>.
+
                     </td>
                     <td align="right">
                         <img src="../img/i_website_statistics_med[1].gif" border="0" hspace="10">
@@ -79,7 +79,7 @@ else
                         <FIELDSET>
                             <LEGEND><span name=txtLang id=txtLang><u>К</u>атегория</span></LEGEND>
                             <div style="padding:10">
-<?= Disp_cat($category); ?>
+                                <?= Disp_cat($category); ?>
                             </div>
                         </FIELDSET>
                     </td>
@@ -120,40 +120,40 @@ else
                 </tr>
             </table>
         </form>
-<?
-if (isset($editID) and !empty($name_new)) {// Запись редактирования
-    if (CheckedRules($UserStatus["opros"], 1) == 1) {
-        $sql = "UPDATE " . $SysValue['base']['table_name51'] . "
+        <?
+        if (isset($editID) and !empty($name_new)) {// Запись редактирования
+            if (CheckedRules($UserStatus["opros"], 1) == 1) {
+                $sql = "UPDATE " . $SysValue['base']['table_name51'] . "
 SET
 id_category='$category_new',
 name='$name_new',
 num='$num_new',
 enabled='$enabled_new'
 where id_charact='$id'";
-        $result = mysql_query($sql) or @die("" . mysql_error() . "");
-        echo"
+                $result = mysql_query($sql) or @die("" . mysql_error() . "");
+                echo"
 <script>
 CLREL();
 </script>
 	   ";
-    }
-    else
-        $UserChek->BadUserFormaWindow();
-}
-if (@$productDELETE == "doIT") {// Удаление
-    if (CheckedRules($UserStatus["opros"], 1) == 1) {
-        $sql = "delete from " . $SysValue['base']['table_name51'] . " where id_charact='$id'";
-        $result = mysql_query($sql) or @die("Невозможно изменить запись");
-        echo"
+            }
+            else
+                $UserChek->BadUserFormaWindow();
+        }
+        if (@$productDELETE == "doIT") {// Удаление
+            if (CheckedRules($UserStatus["opros"], 1) == 1) {
+                $sql = "delete from " . $SysValue['base']['table_name51'] . " where id_charact='$id'";
+                $result = mysql_query($sql) or @die("Невозможно изменить запись");
+                echo"
 	  <script>
 CLREL();
 </script>
 	   ";
-    }
-    else
-        $UserChek->BadUserFormaWindow();
-}
-?>
+            }
+            else
+                $UserChek->BadUserFormaWindow();
+        }
+        ?>
 
 
 

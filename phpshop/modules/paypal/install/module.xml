@@ -2,10 +2,11 @@
 <module>
     <version>1.2</version>
     <name>PayPal</name>
-    <description>Прием оплат через PayPal</description>
+    <faqlink>http://faq.phpshop.ru/page/paypal.html</faqlink>
+    <description>Прием оплат через PayPal.</description>
     <icon>icon.png</icon>
     <category>sale</category>
-    <status>update</status>
+    <status></status>
     <adminmenu>
         <title>Прием оплат через PayPal</title>
         <podmenu>

@@ -2,8 +2,10 @@
 <module>
     <version>1.1</version>
     <name>Icon Cat</name>
-    <description>Модуль иконок для категорий</description>
+    <faqlink>http://faq.phpshop.ru/page/icon-cat.html</faqlink>
+    <description>Модуль иконок для категорий.</description>
     <icon>icon.png</icon>
+    <status>update</status>
     <category>template,decorate</category>
     <adminmenu>
         <title>Icon Cat</title>
@@ -13,7 +15,7 @@
             <podmenu_action>javascript:miniWin('../modules/iconcat/admpanel/adm_module.php',510,450);</podmenu_action>
         </podmenu>
     </adminmenu>
-        <history>
+    <history>
         <update>
             <date>21.10.2013</date>
             <content>Добавлена поддержка seo урлов</content>

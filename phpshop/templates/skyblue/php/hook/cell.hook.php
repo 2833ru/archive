@@ -78,10 +78,17 @@ function cid_category_add_spec_hook($obj,$row) {
     // Используем элемент вывода спецпредложений
     $PHPShopProductIconElements->template='main_product_forma_3';
     $spec=$PHPShopProductIconElements->specMainIcon(false,$cat[$rand],3,3,true);
-    $spec=PHPShopText::div(PHPShopText::p($spec),$align="left",$style='float:none;padding:10px');
+    $spec=PHPShopText::div(PHPShopText::p($spec),$align="left",$style='float:none;padding:10px;clear:both;');
 
     // Добавляем в переменную списка категорий вывод спецпредложений
     $obj->set('catalogList',$spec,true);
+}
+
+function CID_Product_cell_hook($obj, $row, $rout) {
+    if ($rout == "START"){
+        if($obj->PHPShopCategory->getParam('num_row') == 4)
+        $obj->PHPShopCategory->setParam('num_row', 3);
+    }
 }
 
 $addHandler=array
@@ -89,8 +96,8 @@ $addHandler=array
         'odnotip'=>'odnotip_hook',
         '#setCell'=>'setcell_hook',
         '#compile'=>'compile_hook',
-        'CID_Category'=>'cid_category_add_spec_hook',
-        ''
+        '#CID_Category'=>'cid_category_add_spec_hook',
+        'CID_Product' => 'CID_Product_cell_hook'
 
 );
 

@@ -1,95 +1,114 @@
+<script>
+    var jQ = false;
+    function initJQ() {
+        if (typeof(jQuery) == 'undefined') {
+            if (!jQ) {
+                jQ = true;
+                document.write('<scr' + 'ipt type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></scr' + 'ipt>');
+            }
+            setTimeout('initJQ()', 50);
+        } else {
+            (function($) {
+                $(function() {
+                    if (jQ) {
+                        // логика генерации пароля при регистрации
+                        $(".passGen").click(function() {
+                            var str = wpiGenerateRandomNumber(8);
+                            $(this).closest('form').find("input[name='password_new'], input[name='password_new2']").val(str);
+                            alert('Ваш сгенерированный пароль будет выслан на ваш email после завершения регистрации...');
+                        });
 
+                        // функция генерации пароля
+                        function wpiGenerateRandomNumber(limit) {
 
-<table  border="0" cellspacing="0" cellpadding="0">
-  <tr>
-    <td width="150"><div id=allspec><img src="images/shop/icon_key.gif" alt="" width="16" height="16" border="0" hspace="5" align="absmiddle"><b>Авторизация</b>
-</div></td>
-    <td><div>  @facebookAuth@
-		@twitterAuth@</div></td>
-  </tr>
-</table>
+                            limit = limit || 8;
 
-<form name="users_data" method="post">
+                            var password = '';
 
-    <table>
-        <tr>
-            <td>Логин:</td>
-            <td width="10"></td>
-            <td><input type="text" name="login_new" style="width:250px;" value='@php echo $_POST["login_new"]; php@'><img src="images/shop/flag_green.gif" alt="" width="16" height="16" border="0" hspace="5" align="absmiddle"><br>(не менее 4 знаков)</td>
-            <td rowspan="2" valign="top" style="padding-left:10px">
-            </td>
-        </tr>
-        <tr>
-            <td>Пароль:</td>
-            <td width="10"></td>
-            <td><input type="Password" name="password_new" style="width:250px;" value='@php echo $_POST["password_new"]; php@'><img src="images/shop/flag_green.gif" alt="" width="16" height="16" border="0" hspace="5" align="absmiddle"><br>(не менее 6 знаков)</td>
-        </tr>
-        <tr>
-            <td>Повторите пароль:</td>
-            <td width="10"></td>
-            <td><input type="Password" name="password_new2" style="width:250px;" value=""><img src="images/shop/flag_green.gif" alt="" width="16" height="16" border="0" hspace="5" align="absmiddle"></td>
-        </tr>
-    </table>
+                            var chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
 
-<div id=allspec>
-    <img src="images/shop/icon_user.gif" alt="" width="16" height="16" border="0" hspace="5" align="absmiddle"><b>Личные данные</b>
+                            var list = chars.split('');
+                            var len = list.length, i = 0;
+
+                            do {
+
+                                i++;
+
+                                var index = Math.floor(Math.random() * len);
+
+                                password += list[index];
+
+                            } while (i < limit);
+
+                            return password;
+
+                        }
+                    }
+
+                })
+            })(jQuery)
+        }
+    }
+    initJQ();
+</script>
+<div id="checkout">
+    <div class="checkout-content" style="display: block;"><div class="left" style="float: left; width: 49%;">
+            <form method="post" name="user_formaOrder" action="#checkout">
+                <input type="hidden" name="fromSave" value="@fromSave@"/>
+                <h2>Регистрация</h2>
+                <p>Создать учетную запись:</p>
+                <b>E-Mail:</b> <span style="color:red">@user_error@</span><br>
+                <input type="text"  name="login_new" value="@php echo $_POST['login_new']; php@">
+                <br>
+                <br>
+                <b>Пароль (<a class="passGen" href="#" onclick="return false;">сгенерировать</a>):</b><br>
+                <input type="password" name="password_new"  value="@php echo $_POST['password_new']; php@">
+                <br>
+                <br>
+                <b>Повторный пароль:</b><br>
+                <input type="password" name="password_new2"  value="@php echo $_POST['password_new2']; php@">
+                <br>
+                <br>
+                <b>Ваше имя:</b><br>
+                <input type="text"  name="name_new" value="@php echo $_POST['name_new']; php@">
+                <br>
+                <br>
+                <img src="phpshop/captcha3.php" id="captcha" alt="" border="0"><br>
+                <b>Проверочный код:</b><br>
+                <input type="text"  name="key" value="@php echo $_POST['key']; php@">
+                <br>
+                <br>
+                <input type="submit" value="Регистрация" id="button-login" class="button"><br>
+                <input type="hidden" value="1" name="add_user">
+                <br>
+                <br>
+            </form>
+        </div>
+        <div id="login" class="right" style="float: right; width: 49%;">
+            <form method="post" name="user_formaOrder" action="#checkout">
+                <input type="hidden" name="fromSave" value="@fromSave@"/>
+                <h2>Авторизоваться</h2>
+                <p>Я уже зарегистрирован:</p>
+                <b>E-Mail:</b> <span style="color:red">@shortAuthError@</span><br>
+                <input type="text"  name="login" value="@php echo $_POST['login']; php@">
+                <br>
+                <br>
+                <b>Пароль:</b><br>
+                <input type="password" name="password"  value="@php echo $_POST['password']; php@">
+                <br>
+                <br>
+                <input id="zap" type="checkbox" value="1" name="safe_users"> запомнить меня!
+                <br>
+                <br>
+                <a href="/users/sendpassword.html" class="forg2">Забыли пароль?</a> 
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@facebookAuth@ @twitterAuth@
+                <br>
+                <br>
+                <input type="submit" value="Войти" id="button-login" class="button"><br>
+                <input type="hidden" value="1" name="user_enter">
+                <br>
+                <br>
+            </form>
+        </div>
+    </div>
 </div>
-<table width="99%" cellpadding="5">
-    <tr>
-        <td colspan="2"><p><br></p></td>
-    </tr>
-    <tr>
-        <td>Контактное лицо:&nbsp;&nbsp;&nbsp;
-        </td>
-        <td><input type="text" name="name_new" style="width:300px" value='@php echo $_POST["name_new"]; php@'><img src="images/shop/flag_green.gif" alt="" width="16" height="16" border="0" hspace="5" align="absmiddle"></td>
-    </tr>
-    <tr>
-        <td>E-mail:
-        </td>
-        <td><input type="text" name="mail_new" style="width:300px" value='@php echo $_POST["mail_new"]; php@'><img src="images/shop/flag_green.gif" alt="" width="16" height="16" border="0" hspace="5" align="absmiddle"></td>
-    </tr>
-    <tr>
-        <td>Компания: </td>
-        <td><input type="text" name="company_new" style="width:300px;" value='@php echo $_POST["company_new"]; php@'></td>
-    </tr>
-    <tr>
-        <td>ИНН:</td>
-        <td><input type="text" name="inn_new" style="width:300px;" value='@php echo $_POST["inn_new"]; php@'></td>
-    </tr>
-    <tr>
-        <td>КПП:</td>
-        <td><input type="text" name="kpp_new" style="width:300px;" value='@php echo $_POST["kpp_new"]; php@'></td>
-    </tr>
-    <tr>
-        <td>Телефон:</td>
-        <td><input type="text" name="tel_code_new" style="width:50px;" value='@php echo $_POST["tel_code_new"]; php@'> -
-            <input type="text" name="tel_new" style="width:240px;" value='@php echo $_POST["tel_new"]; php@'></td>
-    </tr>
-    <tr>
-        <td>Адрес:</td>
-        <td><textarea style="width:300px; height:100px;" name="adres_new">@php echo $_POST["adres_new"]; php@</textarea>
-
-        </td>
-    </tr>
-</table>
-<table>
-    <tr>
-        <td align="center"><img src="phpshop/captcha.php" id="captcha" alt="" border="0"><br>
-            <a class=b  title="Обновить картинку" href="javascript:CapReload();">Обновить картинку</a></td>
-        <td>Введите код, указанный на картинке<br><input type="text" name="key" style="width:220px;"><img src="images/shop/flag_green.gif" alt="" width="16" height="16" border="0" hspace="5" align="absmiddle"></td>
-    </tr>
-    <tr>
-        <td colspan="2">	<br>
-            <div id=allspec><img src="images/shop/comment.gif" alt="" width="16" height="16" border="0" hspace="5" align="absmiddle">Данные, отмеченные <b>флажками</b> обязательны для заполнения.<br>
-                @user_error@
-            </div>
-            <br></td>
-    </tr>
-    <tr>
-        <td></td>
-        <td>
-            <input type="hidden" value="1" name="add_user">
-            <input type="button" value="Регистрация пользователя" onclick="CheckNewUserForma()"></td>
-    </tr>
-</table>
-</form>

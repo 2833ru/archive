@@ -46,7 +46,7 @@ function actionStart() {
     $PHPShopGUI->dir = "../";
     //$PHPShopGUI->size="650,600";
     // Графический заголовок окна
-    $PHPShopGUI->setHeader("Создание Страниц", "Укажите данные для записи в базу.", $PHPShopGUI->dir . "img/i_website_tab[1].gif");
+    $PHPShopGUI->setHeader("Создание Страниц", "", $PHPShopGUI->dir . "img/i_website_tab[1].gif");
 
     // Редактор 1
     $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));
@@ -55,6 +55,15 @@ function actionStart() {
     $oFCKeditor->Config['EditorAreaCSS'] = $_classPath . "templates" . chr(47) . $PHPShopSystem->getParam("skin") . chr(47) . $SysValue['css']['default'];
     $oFCKeditor->ToolbarSet = 'Normal';
     $oFCKeditor->Value = $content;
+
+
+    // получаем ИД автоматическое название создаваемой страницы
+    $sql = "SHOW TABLE STATUS LIKE '".$GLOBALS['SysValue']['base']['page']."'";
+    $result = mysql_query($sql);
+    $array = mysql_fetch_array($result);
+    $ai = $array['Auto_increment'];
+    $link = "page$ai";
+    
 
     // Содержание закладки 1
     $Tab1 = $PHPShopGUI->setField("Каталог:", $PHPShopGUI->setInput("text", "parent_name", getCatPath($_GET['categoryID']), "left", 450) .
@@ -106,14 +115,14 @@ function actionStart() {
  */
 function getCatPath($category) {
     $PHPShopCategoryArray = new PHPShopPageCategoryArray();
-    $PHPShopCategoryArray->objArray[1000] = array('id'=>1000,'parent_to'=>3000,'name'=>'Главное меню сайта');
-    $PHPShopCategoryArray->objArray[3000] = array('id'=>3000,'parent_to'=>0,'name'=>'Меню');
-    $PHPShopCategoryArray->objArray[2000] = array('id'=>2000,'parent_to'=>3000,'name'=>'Начальная страница');
+    $PHPShopCategoryArray->objArray[1000] = array('id' => 1000, 'parent_to' => 3000, 'name' => 'Главное меню сайта');
+    $PHPShopCategoryArray->objArray[3000] = array('id' => 3000, 'parent_to' => 0, 'name' => 'Меню');
+    $PHPShopCategoryArray->objArray[2000] = array('id' => 2000, 'parent_to' => 3000, 'name' => 'Начальная страница');
 
     $i = 1;
     $str = __('Корень');
-    
-    
+
+
     while ($i < 10) {
         $parent = $PHPShopCategoryArray->getParam($category . '.parent_to');
         if (isset($parent)) {
@@ -163,7 +172,7 @@ function actionInsert() {
     // Перехват модуля
     $PHPShopModules->setAdmHandler($_SERVER["SCRIPT_NAME"], __FUNCTION__, $_POST);
 
-    $_POST['date_new'] = date('U');
+    $_POST['datas_new'] = date('U');
 
     // Корректировка пустых значений
     $PHPShopOrm->updateZeroVars('enabled_new');

@@ -47,10 +47,15 @@ class PHPShopNewprice extends PHPShopShopCore {
 
         // Количество ячеек
         if (empty($this->cell))
-            $this->cell = $this->PHPShopSystem->getValue('num_vitrina');
+            $this->cell = $this->calculateCell("newprice", $this->PHPShopSystem->getValue('num_vitrina'));
 
         // Фильтр сортировки
         $order = $this->query_filter("price_n!=''");
+
+        // Кол-во товаров на странице
+        // если 0 делаем по формуле 6 минус кол-во колонок * кол-во колонок.
+        if (!$this->num_row)
+            $this->num_row = (6 - $this->cell) * $this->cell;
 
         // Простой запрос
         if (is_array($order)) {

@@ -18,6 +18,7 @@ class PHPShopSearch extends PHPShopShopCore {
     var $debug = false;
     var $cache = false;
     var $grid = false;
+    var $empty_index_action = false;
 
     function PHPShopSearch() {
 

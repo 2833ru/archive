@@ -5,7 +5,7 @@ $TitlePage="Журнал проверок Антивируса";
 function actionStart() {
     global $PHPShopInterface,$_classPath;
 
-    $PHPShopInterface->razmer='800px';
+    $PHPShopInterface->razmer='600px';
     $PHPShopInterface->setCaption(array("Дата","10%"),array("Файлов изменено","10%"),array("Новых файлов","10%"),array("Зараженных файлов","10%"),
             array('Время (sec)','10%'));
 

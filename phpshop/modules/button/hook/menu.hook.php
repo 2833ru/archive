@@ -1,35 +1,38 @@
 <?php
 
-
 function button_menu_hook() {
 
-    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['button']['button_system']);
-    $option = $PHPShopOrm->select();
+    if (!$GLOBALS['SysValue']['other']['buttonOneStartFlag']) {
+        $GLOBALS['SysValue']['other']['buttonOneStartFlag'] = 1;
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['button']['button_system']);
+        $option = $PHPShopOrm->select();
 
-    $dis=null;
-    if($option['enabled']>1) {
+        $dis = null;
+        if ($option['enabled'] > 1 || $option['enabled'] == 0) {
 
-        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['button']['button_forms']);
-        $data = $PHPShopOrm->select(array('content'),array('enabled'=>"='1'"),array('order'=>'num'),array('limit'=>100));
+            $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['button']['button_forms']);
+            $data = $PHPShopOrm->select(array('content', 'id'), array('enabled' => "='1'"), array('order' => 'num'), array('limit' => 100));
 
-        if(is_array($data))
-            foreach($data as $row) {
-                $dis.='<div>'.$row['content'].'</div>';
-            }
+            if (is_array($data))
+                foreach ($data as $row) {
+                    $dis.='<div>' . $row['content'] . '</div>';
+                }
 
-        $GLOBALS['SysValue']['other']['button_forms']=$dis;
-        $buttons=ParseTemplateReturn($GLOBALS['SysValue']['templates']['button']['button'],true);
+            $GLOBALS['SysValue']['other']['button_forms'] = $dis;
+            $buttons = ParseTemplateReturn($GLOBALS['SysValue']['templates']['button']['button'], true);
 
-        if($option['enabled'] == 2) {
-            $GLOBALS['SysValue']['other']['leftMenu'].=$buttons;
+            if ($option['enabled'] == 2) {
+                $GLOBALS['SysValue']['other']['leftMenu'].=$buttons;
+            } elseif ($option['enabled'] == 3)
+                $GLOBALS['SysValue']['other']['rightMenu'].=$buttons;
+            elseif ($option['enabled'] == 0)
+                $GLOBALS['SysValue']['other']['button'].=$buttons;
         }
-        else $GLOBALS['SysValue']['other']['rightMenu'].=$buttons;
     }
 }
 
-
-$addHandler=array
-        (
-        'miniCart'=>'button_menu_hook'
+$addHandler = array
+    (
+    'miniCart' => 'button_menu_hook'
 );
 ?>

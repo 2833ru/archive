@@ -7,7 +7,7 @@ $PHPShopOrder = new PHPShopOrderFunction();
  * Обработчик оформления заказа
  * @author PHPShop Software
  * @tutorial http://wiki.phpshop.ru/index.php/PHPShopOrder
- * @version 1.1
+ * @version 1.2
  * @package PHPShopCore
  */
 class PHPShopOrder extends PHPShopCore {
@@ -103,7 +103,7 @@ class PHPShopOrder extends PHPShopCore {
             return true;
 
         if (PHPShopSecurity::true_num($_POST['num_new']))
-            $this->PHPShopCart->edit($_POST['id_edit'], $_POST['num_new']);
+            $this->PHPShopCart->edit($_POST['id_edit'], $_POST['num_new'], $_POST['edit_num']);
         $this->index();
     }
 
@@ -129,14 +129,16 @@ class PHPShopOrder extends PHPShopCore {
 
         // Стоимость доставки
         PHPShopObj::loadClass('delivery');
-        $this->set('delivery_price', PHPShopDelivery::getPriceDefault());
+        //$this->set('delivery_price', PHPShopDelivery::getPriceDefault());
+        // при загрузке сначала доставка 0
+        $this->set('delivery_price', 0);
 
         // Итоговая стоимость
         $this->set('total', $PHPShopOrder->returnSumma($this->get('cart_sum'), $this->get('discount')) + $this->get('delivery_price'));
 
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__, false, 'END');
-        
+
         return ParseTemplateReturn('phpshop/lib/templates/order/cart.tpl', true);
     }
 
@@ -195,28 +197,47 @@ document.getElementById('order').style.display = 'none';
         $PHPShopPayment = new PHPShopPaymentArray();
         $Payment = $PHPShopPayment->getArray();
         if (is_array($Payment))
-            foreach ($Payment as $val)
-                if (!empty($val['enabled']))
-                    $value[] = array($val['name'], $val['id'], false);
-
+            foreach ($Payment as $val) {
+                if (!empty($val['enabled']) OR $val['path'] == 'modules') {
+                    $this->value[$val['id']] = array($val['name'], $val['id'], false);
+                    if ($val['icon'])
+                        $img = "&nbsp;<img src='{$val['icon']}' title='{$val['name']}' height='30'/>&nbsp;";
+                    else
+                        $img = "";
+                    $disp .= PHPShopText::div(PHPShopText::setInput("radio", "order_metod", $val['id'], "none", false, false, "paymOneEl", false, $img . $val['name']), "left", false, false, "paymOneEl");
+                }
+                // формируем набор классов для яваскрипт функции для вывода доп. полей юр. данный в оформление
+                // если для данного типа оплаты они требуются 
+                if (!empty($val['yur_data_flag'])) {
+                    $showYurDataForPaymentClass .= " showYurDataForPaymentClass" . $val['id'];
+                }
+            }
         // Перехват модуля
-        $hook = $this->setHook(__CLASS__, __FUNCTION__, $value);
+        $hook = $this->setHook(__CLASS__, __FUNCTION__, $this->value);
         if ($hook)
             return $hook;
 
-        $this->set('orderOplata', PHPShopText::select('order_metod', $value, 250));
+        if (!empty($showYurDataForPaymentClass)) {
+            $this->set('showYurDataForPaymentClass', $showYurDataForPaymentClass);
+            if (PHPShopParser::checkFile('payment/showYurDataForPayment.tpl')) {
+                $this->set('showYurDataForPayment', ParseTemplateReturn('payment/showYurDataForPayment.tpl'));
+            } else {
+                $this->set('showYurDataForPayment', ParseTemplateReturn('phpshop/lib/templates/order/nt/showYurDataForPayment.tpl', true));
+            }
+        }
+        // $this->set('orderOplata', PHPShopText::select('order_metod', $this->value, 250, "", false, ""));
+        $this->set('orderOplata', $disp);
     }
 
     /**
      * Форма заказа
      */
     function order() {
-        
         // Шаблон формы заказа личных данных
-        $this->template_order_forma=$this->getValue('templates.main_order_forma');
-        
+        $this->template_order_forma = $this->getValue('templates.main_order_forma');
+
         // Шаблон страницы оформления заказа
-        $this->template_order_list=$this->getValue('templates.main_order_list');
+        $this->template_order_list = $this->getValue('templates.main_order_list');
 
         // Перехват модуля в начале функции
         if ($this->setHook(__CLASS__, __FUNCTION__, false, 'START'))
@@ -230,34 +251,60 @@ document.getElementById('order').style.display = 'none';
         $this->set('orderNum', $this->order_num);
         $this->set('orderDate', date("d-m-y"));
 
-        // Доставка
-        $this->delivery();
-
-        // Поддержка импортируемых данных
-        $this->payment();
-
-        // Данные пользователя из личного кабинета
-        if (!empty($_SESSION['UsersId']) and PHPShopSecurity::true_num($_SESSION['UsersId'])) {
-            $PHPShopUser = new PHPShopUser($_SESSION['UsersId']);
-            $this->set('UserMail', $PHPShopUser->getValue('mail'));
-            $this->set('UserName', $PHPShopUser->getValue('name'));
-            $this->set('UserTel', $PHPShopUser->getValue('tel'));
-            $this->set('UserTelCode', $PHPShopUser->getValue('tel_code'));
-            $this->set('UserAdres', $PHPShopUser->getValue('adres'));
-            $this->set('UserComp', $PHPShopUser->getValue('company'));
-            $this->set('UserInn', $PHPShopUser->getValue('inn'));
-            $this->set('UserKpp', $PHPShopUser->getValue('kpp'));
-            $this->set('formaLock', 'readonly=1');
-            $this->set('ComStartReg', PHPShopText::comment());
-            $this->set('ComEndReg', PHPShopText::comment('>'));
-        }
-
         // Форма личной информации по заказу
         $cart_min = $this->PHPShopSystem->getSerilizeParam('admoption.cart_minimum');
         if ($cart_min <= $this->PHPShopCart->getSum(false)) {
-            $this->set('orderContent', parseTemplateReturn($this->template_order_forma));
-        } else {
 
+            // Доставка
+            $this->delivery();
+            // Поддержка импортируемых данных
+            $this->payment();
+
+            // Данные пользователя из личного кабинета
+            if (!empty($_SESSION['UsersId']) and PHPShopSecurity::true_num($_SESSION['UsersId'])) {
+                $PHPShopUser = new PHPShopUser($_SESSION['UsersId']);
+                $this->set('UserMail', $PHPShopUser->getValue('mail'));
+
+                $this->set('UserAdresList', $PHPShopUser->getAdresList());
+
+                $this->set('UserName', $PHPShopUser->getValue('name'));
+                $this->set('UserTel', $PHPShopUser->getValue('tel'));
+                $this->set('UserTelCode', $PHPShopUser->getValue('tel_code'));
+                $this->set('UserAdres', $PHPShopUser->getValue('adres'));
+                $this->set('UserComp', $PHPShopUser->getValue('company'));
+                $this->set('UserInn', $PHPShopUser->getValue('inn'));
+                $this->set('UserKpp', $PHPShopUser->getValue('kpp'));
+                $this->set('formaLock', 'readonly=1');
+                $this->set('ComStartReg', PHPShopText::comment());
+                $this->set('ComEndReg', PHPShopText::comment('>'));
+
+                $this->set('authData', parseTemplateReturn($this->getValue('templates.main_order_forma_auth_data')));
+            } else {
+                if (PHPShopParser:: checkFile($this->getValue('templates.main_order_forma_no_auth')))
+                    $this->set('noAuth', parseTemplateReturn($this->getValue('templates.main_order_forma_no_auth')));
+                else
+                    $this->set('noAuth', parseTemplateReturn($this->getValue('templates.main_order_forma_no_auth_nt'), true));
+                if (PHPShopParser::checkFile($this->getValue('templates.main_order_forma_no_auth_adr')))
+                    $this->set('noAuthAdr', parseTemplateReturn($this->getValue('templates.main_order_forma_no_auth_adr')));
+                else
+                    $this->set('noAuthAdr', parseTemplateReturn($this->getValue('templates.main_order_forma_no_auth_adr_nt'), true));
+            }
+            
+            // Перехват модуля в конце функции
+            $this->setHook(__CLASS__, __FUNCTION__, false, 'MIDDLE');
+
+            // Форма данных, доставка, адрес, оплата
+            // Проверяем есть ли метка нового шаблона, если нет, берём шаблон из phpshop/lib/templates/order/
+            if (PHPShopParser::check($this->template_order_forma, 'checkLabelForOldTemplatesNoDelete')) {
+                $this->set('orderContent', parseTemplateReturn($this->template_order_forma));
+            } else {
+                $this->temp = true;
+                $this->set('orderContent', parseTemplateReturn($this->getValue('templates.main_order_forma_nt'), true));
+            }
+            // Перехват модуля в конце функции
+            $this->setHook(__CLASS__, __FUNCTION__, false, 'MIDDLE-END');
+        } else {
+            // форма сообщения, что сумма заказа меньше минимальной.
             $this->set('orderContent', $this->message($this->lang('cart_minimum') . ' ' . $cart_min, $this->lang('bad_order_mesage_2')));
         }
 
@@ -265,7 +312,10 @@ document.getElementById('order').style.display = 'none';
         $this->setHook(__CLASS__, __FUNCTION__, false, 'END');
 
         // Подключаем шаблон страницы заказа
-        $this->parseTemplate($this->template_order_list);
+        if (empty($this->temp))
+            $this->parseTemplate($this->template_order_list);
+        else
+            $this->parseTemplate($this->getValue('templates.main_order_list_nt'), true);
     }
 
     /**
@@ -289,7 +339,7 @@ document.getElementById('order').style.display = 'none';
      */
     function import() {
 
-        $this->doLoadFunction(__CLASS__, __FUNCTION__, @$_GET['from']);
+        $this->doLoadFunction(__CLASS__, __FUNCTION__, $_GET['from']);
 
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__, $_GET);
@@ -307,7 +357,7 @@ function ordercartforma($val, $option) {
     global $PHPShopModules;
 
     // Перехват модуля в начале функции
-    $hook = $PHPShopModules->setHookHandler(__FUNCTION__, __FUNCTION__,array(&$val), $option, 'START');
+    $hook = $PHPShopModules->setHookHandler(__FUNCTION__, __FUNCTION__, array(&$val), $option, 'START');
     if ($hook)
         return $hook;
 
@@ -319,8 +369,10 @@ function ordercartforma($val, $option) {
 
     PHPShopParser::set('cart_xid', $option['xid']);
     PHPShopParser::set('cart_name', $val['name']);
+    PHPShopParser::set('cart_pic_small', $val['pic_small']);
     PHPShopParser::set('cart_num', $val['num']);
     PHPShopParser::set('cart_price', $val['price']);
+    PHPShopParser::set('cart_price_all', $val['price'] * $val['num']);
     PHPShopParser::set('cart_izm', $val['ed_izm']);
 
     // Перехват модуля в конце функции

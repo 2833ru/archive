@@ -1,0 +1,18 @@
+.userRoomVisible{
+	background:none;
+}
+.userRoomDiv{
+	background:none;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/phpshop/templates/phpshop_8/images/furniture_13.png',sizingMethod='crop');
+}
+.userRoomForm{
+	position:relative;
+}
+td.topCat div.divCat_off table.tableCat .tdCatContent .divCatCont {
+	background: none;
+	background-color: #791014;
+}
+td.topCat div.divCat_on table.tableCat .tdCatContent .divCatCont {
+	background: none;
+	background-color: #791014;
+}

@@ -117,7 +117,7 @@ function actionStart() {
    </ol>
 <p>При включеном режиме "SEO пагинация" следует добавить переменную <b>@seourl_canonical@</b> в шаблон phpshop/templates/имя шаблона/main/shop.tpl, в результате будет добавлена ссылка link rel="canonical" с точным адресом для отсеивания дублей страниц описания списка товаров.</p>
 ';
-    $Tab1=$PHPShopGUI->setField('Настройка', $PHPShopGUI->setRadio('paginator_new', 2, 'SEO пагинация', $paginator));
+    $Tab1=$PHPShopGUI->setField('SEO пагинация', $PHPShopGUI->setRadio('paginator_new', 2, 'Включить', $paginator).$PHPShopGUI->setRadio('paginator_new', 1, 'Выключить', $paginator));
     $Tab1.= $PHPShopGUI->setLine('<br>').$PHPShopGUI->setInfo($Info, 190, '95%');
 
     // Форма регистрации

@@ -40,7 +40,7 @@ function actionStart() {
     $PHPShopGUI->size = "500,600";
 
     // Графический заголовок окна
-    $PHPShopGUI->setHeader("Настройка реквизитов", "Укажите данные для записи в базу.", $PHPShopGUI->dir . "img/i_website_statistics_med[1].gif");
+    $PHPShopGUI->setHeader("Настройка реквизитов", "", $PHPShopGUI->dir . "img/i_website_statistics_med[1].gif");
 
 
     // Содержание закладки 1

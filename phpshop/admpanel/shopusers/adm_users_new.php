@@ -5,9 +5,6 @@ mysql_select_db("$dbase") or @die("Невозможно подсоединиться к базе");
 require("../enter_to_admin.php");
 require("../language/russian/language.php");
 
-function MyStripSlashes($str) {
-    return stripslashes(CleanStr($str));
-}
 
 function GetUsersStatus($n) {
     global $SysValue;
@@ -33,7 +30,7 @@ function GetUsersStatus($n) {
 
 // Авторизуем из корзины
 if (isset($_GET['visitorID'])) {
-    $sql = "select * from $table_name1 where id=".intval($visitorID)." limit 0, 1";
+    $sql = "select * from $table_name1 where id=" . intval($visitorID) . " limit 0, 1";
     $result = mysql_query($sql);
     $row = mysql_fetch_array($result);
 
@@ -58,7 +55,7 @@ if (isset($_GET['visitorID'])) {
             <tr bgcolor="#ffffff">
                 <td style="padding:10">
                     <b><span name=txtLang id=txtLang>Создание Нового Пользователя</span></b><br>
-                    &nbsp;&nbsp;&nbsp;<span name=txtLang id=txtLang>Укажите данные для записи в базу</span>.
+
                 </td>
                 <td align="right">
                     <img src="../img/i_groups_med[1].gif" border="0" hspace="10">
@@ -74,7 +71,7 @@ if (isset($_GET['visitorID'])) {
                             <div style="padding:10">
                                 <?= GetUsersStatus(@$status) ?>
                                 &nbsp;&nbsp;&nbsp;
-                                <input type="radio" name="enabled_new" value="1" checked><span name=txtLang id=txtLang>Учитывать</span>&nbsp;&nbsp;&nbsp;
+                                <input type="radio" name="enabled_new" value="1" checked><span name=txtLang id=txtLang>Вкл. (<input type="checkbox" name="sendActivationEmail" value="1"><span name=txtLang id=txtLang>Уведомить</span>)</span>&nbsp;&nbsp;&nbsp;
                                 <input type="radio" name="enabled_new" value="0" ><font color="#FF0000"><span name=txtLang id=txtLang>Заблокировать</span></font>
                             </div>
                         </FIELDSET>
@@ -82,12 +79,12 @@ if (isset($_GET['visitorID'])) {
                 </tr>
                 <tr>
                     <td colspan="3">
-                        <FIELDSET id=fldLayout>
+                        <FIELDSET id=fldLayout style="width: 480; height: 8em;">
                             <LEGEND id=lgdLayout><span name=txtLang id=txtLang><u>Д</u>оступ</span></LEGEND>
                             <div style="padding:10px">
                                 <table>
                                     <tr>
-                                        <td>Login</td>
+                                        <td>E-mail</td>
                                         <td width="10"></td>
                                         <td><input type="text" name="login_new"  style="width:250px;" value="<?= @$user; ?>"></td>
                                         <td rowspan="2" valign="top" style="padding-left:10">
@@ -111,36 +108,10 @@ if (isset($_GET['visitorID'])) {
                             <div style="padding:10px">
                                 <table>
                                     <tr>
-                                        <td>E-mail:
-                                        </td>
-                                        <td><input type="text" name="mail_new" style="width:350px" value="<?= @MyStripSlashes($order['Person']['mail']); ?>"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span name=txtLang id=txtLang>Контактное лицо</span>:
+                                        <td><span name=txtLang id=txtLang>ФИО</span>:
                                         </td>
                                         <td><input type="text" name="name_new" style="width:350px" 
                                                    value="<?= @$order['Person']['name_person']; ?>"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span name=txtLang id=txtLang>Компания</span>: </td>
-                                        <td><input type="text" name="company_new" style="width:350px;" value="<?= @MyStripSlashes($order['Person']['org_name']); ?>"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span name=txtLang id=txtLang>ИНН</span>: </td>
-                                        <td><input type="text" name="inn_new" style="width:350px;" value="<?= $order['Person']['org_inn']; ?>"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span name=txtLang id=txtLang>КПП</span>: </td>
-                                        <td><input type="text" name="kpp_new" style="width:350px;" value="<?= @$order['Person']['org_kpp']; ?>"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span name=txtLang id=txtLang>Телефон</span>: </td>
-                                        <td><input type="text" name="tel_code_new" style="width:50px;"> -
-                                            <input type="text" name="tel_new" style="width:290px;" value="<?= @$order['Person']['tel_code'] . " " . $order['Person']['tel_name']; ?>"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span name=txtLang id=txtLang>Адрес</span>: </td>
-                                        <td><textarea style="width:350px; height:50px;" name="adres_new"><?= @MyStripSlashes($order['Person']['adr_name']); ?></textarea></td>
                                     </tr>
                                 </table>
 
@@ -168,8 +139,8 @@ if (isset($_GET['visitorID'])) {
         if (isset($editID) and !empty($login_new) and !empty($password_new)) {
             if (CheckedRules($UserStatus["shopusers"], 2) == 1) {
                 $sql = "INSERT INTO " . $SysValue['base']['table_name27'] . "
-VALUES ('','$login_new','" . base64_encode($password_new) . "','" . date("U") . "','$mail_new','$name_new','$company_new','$inn_new','$tel_new','$adres_new','$enabled_new','$status_new',
-'$kpp_new','$tel_code_new')";
+VALUES ('','$login_new','" . base64_encode($password_new) . "','" . date("U") . "','$login_new','$name_new','','','','','$enabled_new','$status_new',
+'','','','')";
                 $result = mysql_query($sql) or @die("Невозможно изменить запись");
 
 
@@ -181,31 +152,32 @@ VALUES ('','$login_new','" . base64_encode($password_new) . "','" . date("U") . 
 
                 mysql_query("UPDATE " . $SysValue['base']['table_name1'] . " SET user=$id_user where id=$orderID");
 
+                // отправляем пиьсьмо пользователю об его активации, если админ выбрал данную опцию
+                if ($enabled_new AND $sendActivationEmail) {
+                    // подключаем используемые классы
+                    $_classPath = "../../";
+                    include($_classPath . "class/obj.class.php");
+                    PHPShopObj::loadClass("system");
+                    PHPShopObj::loadClass("parser");
+                    PHPShopObj::loadClass("mail");
 
-// Шлем мыло клиенту
-                $codepage = "windows-1251";
-                $header_adm = "MIME-Version: 1.0\n";
-                $header_adm .= "From:  User Activation <donotreply@" . str_replace("www.", "", $_SERVER['SERVER_NAME']) . ">\n";
-                $header_adm .= "Content-Type: text/plain; charset=$codepage\n";
-                $header_adm .= "X-Mailer: PHP/";
-                $zag_adm = $GetSystems['name'] . " - Регистрации пользователя " . $_POST['name_new'];
-                $content_adm = "
-Доброго времени!
---------------------------------------------------------
+                    $GetSystems = GetSystems();
 
-Администратор рассмотрел вашу заявку и добавил 
-Вас в авторизованные пользователи " . $_SERVER['SERVER_NAME'] . "
-
-Личный кабинет
---------------
-Адрес: http://" . $_SERVER['SERVER_NAME'] . "/users/
-Логин: " . $login_new . "
-Пароль: " . $password_new . "
+                    PHPShopParser::set('user_name', $name_new);
+                    PHPShopParser::set('login', $login_new);
+                    PHPShopParser::set('password', $password_new);
 
 
-Дата/время: " . date("d-m-y H:i a") . "
-";
-                mail($_REQUEST['mail_new'], $zag_adm, $content_adm, $header_adm);
+//                                            $zag_adm = $GetSystems['name'] . " -  Сообщение от Администратора";
+                    $zag_adm = "Ваш аккаунт был успешно Зарегистрирован и активирован Администратором";
+                    //отсылаем письмо
+                    $PHPShopMail = new PHPShopMail($login_new, $GetSystems['adminmail2'], $zag_adm, '', true, true);
+                    $content_adm = PHPShopParser::file('../../lib/templates/users/mail_user_activation_by_admin_success.tpl', true);
+                    if (!empty($content_adm)) {
+                        $PHPShopMail->sendMailNow($content_adm);
+                    }
+                }
+
 
                 echo"
 <script>

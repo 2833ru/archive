@@ -3,6 +3,16 @@ require("../connect.php");
 @mysql_connect("$host", "$user_db", "$pass_db") or @die("Невозможно подсоединиться к базе");
 mysql_select_db("$dbase") or @die("Невозможно подсоединиться к базе");
 require("../enter_to_admin.php");
+
+// подключаем используемые классы
+$_classPath = "../../";
+include($_classPath . "class/obj.class.php");
+PHPShopObj::loadClass("system");
+PHPShopObj::loadClass("parser");
+PHPShopObj::loadClass("mail");
+
+
+
 require("../language/russian/language.php");
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -20,14 +30,15 @@ require("../language/russian/language.php");
                 <tr bgcolor="#ffffff">
                     <td style="padding:10">
                         <b><span name=txtLang id=txtLang>Создание Нового Сообщения Пользователю</span></b><br>
-                        &nbsp;&nbsp;&nbsp;<span name=txtLang id=txtLang>Укажите данные для записи в базу</span>.
+
                     </td>
                     <td align="right">
                         <img src="../img/i_mail_forward_med[1].gif" border="0" hspace="10">
                     </td>
                 </tr>
             </table>
-            <table cellpadding="5" cellspacing="0" border="0" align="center" width="100%">
+            <br>
+            <table class=mainpage4 cellpadding="5" cellspacing="0" border="0" align="center" width="100%">
                 <tr>
                     <td>
 
@@ -87,31 +98,26 @@ VALUES ("",0,' . $UID . ',' . $_SESSION['idPHPSHOP'] . ',\'' . $DateTime_new . '
                                             $result = mysql_query($sql) or @die("" . mysql_error() . "");
 
 
-                                            $codepage = "windows-1251";
-                                            $header_adm = "MIME-Version: 1.0\n";
-                                            $header_adm .= "From:   <" . $LoadItems['System']['adminmail2'] . ">\n";
-                                            $header_adm .= "Content-Type: text/plain; charset=$codepage\n";
-                                            $header_adm .= "X-Mailer: PHP/";
-                                            $zag_adm = $LoadItems['System']['name'] . " -  Сообщение от Администратора";
-                                            $content_adm = "
-Доброго времени!
---------------------------------------------------------
+                                            $sql = 'SELECT mail,name FROM ' . $SysValue['base']['table_name27'] . ' WHERE id=' . $UID . ' LIMIT 1';
+                                            $result = mysql_query($sql) or @die("" . mysql_error() . "");
+                                            $row = mysql_fetch_array($result);
+                                            $mail = $row['mail'];
+                                            $name = $row['name'];
 
-Поступило сообщение администратора в интернет-магазине '" . $LoadItems['System']['name'] . "'
----------------------------------------------------------
+                                            $GetSystems = GetSystems();
 
-" . TotalClean($Message_new, 2) . "
+                                            PHPShopParser::set('adminMessage', TotalClean($Message_new, 2));
+                                            PHPShopParser::set('user_name', $name);
 
-Дата/время: " . date("d-m-y H:i a") . "
----------------------------------------------------------
 
-Вы всегда можете просмотреть ваши сообщения
-он-лайн через 'Личный кабинет' -> 'Связь с менеджером' 
-или по ссылке http://" . $SERVER_NAME . $SysValue['dir']['dir'] . "/users/message.html
-
-Powered & Developed by www.PHPShop.ru";
-                                            mail($mail, $zag_adm, $content_adm, $header_adm);
-
+//                                            $zag_adm = $GetSystems['name'] . " -  Сообщение от Администратора";
+                                            $zag_adm = "Сообщение от Администратора";
+                                            //отсылаем письмо
+                                            $PHPShopMail = new PHPShopMail($mail, $GetSystems['adminmail2'], $zag_adm, '', true, true);
+                                            $content_adm = PHPShopParser::file('../../lib/templates/users/mail_admin_message.tpl', true);
+                                            if (!empty($content_adm)) {
+                                                $PHPShopMail->sendMailNow($content_adm);
+                                            }
 
 
                                             echo'

@@ -2,7 +2,8 @@
 <module>
     <version>1.2</version>
     <name>One Click</name>
-    <description>Модуль заказа в один клик</description>
+       <faqlink>http://faq.phpshop.ru/page/one-click.html</faqlink>
+<description>Модуль заказа в один клик.</description>
     <icon>basket.png</icon>
     <category>users</category>
     <adminmenu>

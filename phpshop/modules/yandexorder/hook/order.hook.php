@@ -18,9 +18,8 @@ function order_hook_full_adres() {
  */
 function order_hook($obj,$row,$rout) {
 
-    if($rout =='END') {
+    if($rout =='MIDDLE') {
         $callback=urlencode('http://'.$_SERVER['SERVER_NAME'].$obj->getValue('dir.dir').'/order/');
-
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['yandexorder']['yandexorder_system']);
         $data = $PHPShopOrm->select();
 
@@ -29,11 +28,24 @@ function order_hook($obj,$row,$rout) {
         else $button_img=$data['button'];
 
         $button='<a href="http://market.yandex.ru/addresses.xml?callback='.$callback.'"><img src="'.$button_img.'" border="0" /></a>';
+        
+        $order_action_add='
+<script>
+    // YandexOrder PHPShop Module
+    $(document).ready(function() {
+        $(\''.$button.'\').insertAfter("#dop_info");
+    });            
+</script>';
+        
+        
 
         // Форма личной информации по заказу
         $cart_min=$obj->PHPShopSystem->getSerilizeParam('admoption.cart_minimum');
         if($cart_min <= $obj->PHPShopCart->getSum(false)) {
-            $obj->set('yandexorder',$button);
+            
+            // Добавляем JS в форму заказа
+            $obj->set('order_action_add',$order_action_add,true);
+            
 
             // Заполнеям данными из Яндекса
             if(isset($_POST['operation_id'])) {
@@ -45,13 +57,8 @@ function order_hook($obj,$row,$rout) {
                 $obj->set('UserAdres',PHPShopString::utf8_win1251($adres));
             }
 
-            $obj->set('orderContent',parseTemplateReturn('phpshop/modules/yandexorder/templates/main_order_forma.tpl',true));
+            //$obj->set('orderContent',parseTemplateReturn('phpshop/modules/yandexorder/templates/main_order_forma.tpl',true));
         }
-        else {
-
-            $obj->set('orderContent',$obj->message($obj->lang('cart_minimum').' '.$cart_min,$obj->lang('bad_order_mesage_2')));
-        }
-
     }
 }
 

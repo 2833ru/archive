@@ -56,9 +56,10 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_guard_system` (
   `last_crc` int(11) NOT NULL default '0',
   `last_chek` int(11) NOT NULL default '0',
   `last_update` int(11) NOT NULL default '0',
+  `mail` varchar(255) NOT NULL default '',
   `mail_enabled` enum('0','1') NOT NULL default '1',
   `mode` enum('0','1') NOT NULL default '1',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-INSERT INTO `phpshop_modules_guard_system` (`id`, `enabled`, `stop`, `used`, `chek_day_num`, `last_crc`, `last_chek`, `last_update`, `mail_enabled`, `mode`) VALUES (1, '1', '0', '0', 1, 0, 0, 0, '1', '1');
+INSERT INTO `phpshop_modules_guard_system` (`id`, `enabled`, `stop`, `used`, `chek_day_num`, `last_crc`, `last_chek`, `last_update`,`mail`, `mail_enabled`, `mode`) VALUES (1, '1', '0', '0', 1, 0, 0, 0, '', '1', '1');

@@ -25,30 +25,29 @@ function actionStart() {
         $PHPShopInterface->link="page/adm_pagesID.php";
     else $PHPShopInterface->link="../page/adm_pagesID.php";
 
-    $PHPShopInterface->setCaption(array("&plusmn;","5%"),array("Ссылка","20%"),array("Название","40%"),
-            array("Реальное размещение","30%"), array(' ',"3%"));
+    $PHPShopInterface->setCaption(array(' ',"3%"),array("&plusmn;","5%"),array("Ссылка","20%"),array("Название","40%"),
+            array("Реальное размещение","30%"));
 
     if(!PHPShopSecurity::true_num($_GET['pid'])) $_GET['pid']=0;
 
 
     if(!empty($_REQUEST['words']))
         $sql="select * from ".$GLOBALS['SysValue']['base']['table_name11']." where name REGEXP'".$_REQUEST['words']."' or link REGEXP'".$_REQUEST['words']."'";
-    elseif($_GET['pid']=="all") $sql="select * from ".$GLOBALS['SysValue']['base']['table_name11']." order by name";
-    else $sql="select * from ".$GLOBALS['SysValue']['base']['table_name11']." where category=".$_GET['pid'].' order by num';
+    elseif($_GET['pid']=="all") $sql="select * from ".$GLOBALS['SysValue']['base']['table_name11']." order by datas desc";
+    else $sql="select * from ".$GLOBALS['SysValue']['base']['table_name11']." where category=".$_GET['pid'].' order by datas desc';
     $PHPShopOrm = new PHPShopOrm();
     $result=$PHPShopOrm->query($sql);
     while (@$row = mysql_fetch_array($result)) {
         $id=$row['id'];
         $name=$row['name'];
         $link=$row['link'];
-       
         switch ($row['enabled']) {
             case '0': $checked=$PHPShopInterface->setImage('../img/icon-deactivate.gif',false,false,false,false,false,false,'Блокировка');break;
             case '1': $checked=$PHPShopInterface->setImage('../img/icon-activate.gif',false,false,false,false,false,false,'Показывать');break;
             case '2': $checked=$PHPShopInterface->setImage('../img/icon-move-banner.gif',false,false,false,false,false,false,'Внутренняя');break;
         }
         
-        $PHPShopInterface->setRow($id,$checked,$link,$name,array($PHPShopInterface->setLink("http://".$_SERVER['SERVER_NAME'].$PHPShopBase->getParam('dir.dir')."/page/".$link.".html", "http://".$_SERVER['SERVER_NAME'].$PHPShopBase->getParam('dir.dir')."/page/".$link.".html"),$link=false),array($PHPShopInterface->setCheckbox($id, $id,false,false),$link=false));
+        $PHPShopInterface->setRow($id,array($PHPShopInterface->setCheckbox($id, $id,false,false),$link),$checked,$link,$name,array($PHPShopInterface->setLink("http://".$_SERVER['SERVER_NAME'].$PHPShopBase->getParam('dir.dir')."/page/".$link.".html", "http://".$_SERVER['SERVER_NAME'].$PHPShopBase->getParam('dir.dir')."/page/".$link.".html"),$link=false));
     }
     $PHPShopInterface->_CODE_ADD_BUTTON=$PHPShopInterface->setInput("hidden","catal",$_GET['pid'],"none",100);
     $PHPShopInterface->Compile('interfaces','flag_form',null);

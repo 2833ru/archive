@@ -42,10 +42,15 @@ class PHPShopSpec extends PHPShopShopCore {
 
         // Количество ячеек
         if (empty($this->cell))
-            $this->cell = $this->PHPShopSystem->getValue('num_vitrina');
+            $this->cell = $this->calculateCell("spec", $this->PHPShopSystem->getValue('num_vitrina'));
 
         // Фильтр сортировки
         $order = $this->query_filter("spec='1'");
+
+        // Кол-во товаров на странице
+        // если 0 делаем по формуле кол-во колонок * 2 строки.
+        if (!$this->num_row)
+            $this->num_row = (6 - $this->cell) * $this->cell;
 
         // Простой запрос
         if (is_array($order)) {
@@ -86,12 +91,13 @@ class PHPShopSpec extends PHPShopShopCore {
     function query_filter($where = false) {
 
         // Перехват модуля
-        $hook = $this->setHook(__CLASS__, __FUNCTION__,$where);
+        $hook = $this->setHook(__CLASS__, __FUNCTION__, $where);
         if (!empty($hook))
             return $hook;
 
         return parent::query_filter($where);
     }
+
 }
 
 ?>

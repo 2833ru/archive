@@ -182,7 +182,7 @@ switch ($_REQUEST['do']) {
 	  <table width="100%"  cellpadding="0" cellspacing="0">
 <tr>
 	<td valign="top">
-	  <a href="javascript:miniWin(\'./product/adm_productID.php?productID=' . $id . '\',650,630)"><iframe src="' . $pic_small . '" width="130" height="150" scrolling="No" frameborder="0"></iframe></a> </td>
+	  <a href="javascript:miniWin(\'./product/adm_productID.php?productID=' . $id . '\',650,630)"><iframe src="' . $pic_small . '" width="200" height="150" scrolling="Yes" frameborder="0"></iframe></a> </td>
 	   </tr>
       </table>';
 
@@ -222,63 +222,20 @@ switch ($_REQUEST['do']) {
         // ”дал€ем изображение с сервера
         $name = $_REQUEST['img'];
         $s_name = str_replace(".", "s.", $name);
+        $big_name = str_replace(".", "_big.", $name);
         unlink($_SERVER['DOCUMENT_ROOT'] . $name);
         unlink($_SERVER['DOCUMENT_ROOT'] . $s_name);
+        unlink($_SERVER['DOCUMENT_ROOT'] . $big_name);
 
-        $sql = "select * from " . $SysValue['base']['table_name35'] . " where parent=" . intval($_GET['uid']). " order by num desc";
-        $result = mysql_query($sql);
-
-        $i = 1; $dis=null;
-        while ($row = mysql_fetch_array($result)) {
-            $name = $row['name'];
-            $id = $row['id'];
-            $dis.="
-	<tr onmouseover=\"show_on('r" . $id . "')\" id=\"r" . $id . "\" onmouseout=\"show_out('r" . $id . "')\" class=row onclick=\"miniWin('adm_galeryID.php?id=$id',650,500)\">
-	  <td align=center>$i</td>
-	   <td>$name</td>
-	</tr>
-	";
-            $i++;
-        }
-
-        $interfaces = '
-<table cellpadding="0" cellspacing="1"  border="0" width="100%">
-<tr>
-    <td width="20" id=pane align=center>є</td>
-	<td id=pane align=center>–азмещение</td>
-</tr>
-    ' . $dis . '
-    </table>
-';
+        $tMass = updateFotoList();
+        $interfaces = $tMass['interfaces'];
         break;
 
 
     case("update"):
 
-        $sql = "select * from " . $SysValue['base']['table_name35'] . " where parent=" . intval($_REQUEST['xid']) . " order by num desc";
-        $result = mysql_query($sql);
-        $i = 1;
-        while ($row = mysql_fetch_array($result)) {
-            $name = $row['name'];
-            $id = $row['id'];
-            @$dis.="
-	<tr onmouseover=\"show_on('r" . $id . "')\" id=\"r" . $id . "\" onmouseout=\"show_out('r" . $id . "')\" class=row onclick=\"miniWin('adm_galeryID.php?id=$id',650,500)\">
-	  <td align=center>$i</td>
-	   <td>$name</td>
-	</tr>
-	";
-            $i++;
-        }
-
-        $interfaces = '
-<table cellpadding="0" cellspacing="1"  border="0"  width="100%">
-<tr>
-    <td width="20" id=pane align=center>є</td>
-	<td id=pane align=center>–азмещение</td>
-</tr>
-    ' . $dis . '
-    </table>
-';
+        $tMass = updateFotoList();
+        $interfaces = $tMass['interfaces'];
         break;
 
 
@@ -286,31 +243,8 @@ switch ($_REQUEST['do']) {
 
         mysql_query("update " . $SysValue['base']['table_name35'] . " set num='" . intval($_REQUEST['num']) . "', info='" . $_REQUEST['info'] . "' where id=" . $_REQUEST['xid']);
 
-        $sql = "select * from " . $SysValue['base']['table_name35'] . " where parent=" . intval($_REQUEST['uid']) . " order by num desc";
-
-        $result = mysql_query($sql);
-        $i = 1;
-        while ($row = mysql_fetch_array($result)) {
-            $name = $row['name'];
-            $id = $row['id'];
-            @$dis.="
-	<tr onmouseover=\"show_on('r" . $id . "')\" id=\"r" . $id . "\" onmouseout=\"show_out('r" . $id . "')\" class=row onclick=\"miniWin('adm_galeryID.php?id=$id',650,500)\">
-	  <td align=center>$i</td>
-	   <td>$name</td>
-	</tr>
-	";
-            $i++;
-        }
-
-        $interfaces = '
-<table cellpadding="0" cellspacing="1"  border="0"  width="100%">
-<tr>
-    <td width="20" id=pane align=center>є</td>
-	<td id=pane align=center>–азмещение</td>
-</tr>
-    ' . $dis . '
-    </table>
-';
+        $tMass = updateFotoList();
+        $interfaces = $tMass['interfaces'];
         break;
 }
 
@@ -320,4 +254,96 @@ switch ($_REQUEST['do']) {
 $_RESULT = array(
     "interfaces" => @$interfaces
 );
+
+if (is_array($tMass) AND isset($tMass['openerWindowInsImg']))
+    $_RESULT['openerWindowInsImg'] = $tMass['openerWindowInsImg'];
+
+function updateFotoList() {
+    global $SysValue;
+    if ($_REQUEST['main']) {
+        $sql = "select name from " . $SysValue['base']['table_name35'] . " where parent=" . intval($_REQUEST['uid']) . " AND id=" . $_REQUEST['xid'] . " LIMIT 1";
+        $result = mysql_query($sql);
+        $row = mysql_fetch_array($result);
+        $name = $row['name'];
+        $s_name = str_replace(".", "s.", $name);
+        mysql_query("UPDATE  " . $SysValue['base']['table_name2'] . " SET pic_big='$name', pic_small='$s_name' WHERE id = " . intval($_REQUEST['uid']));
+    }
+
+    $result = mysql_query("SELECT pic_big FROM  " . $SysValue['base']['table_name2'] . " WHERE id=" . intval($_REQUEST['uid']) . " LIMIT 1");
+    $row = mysql_fetch_array($result);
+    $pic_big = $row['pic_big'];
+
+    $sql = "select * from " . $SysValue['base']['table_name35'] . " where parent=" . intval($_REQUEST['uid']) . " order by id";
+
+    $result = mysql_query($sql);
+    $i = 1;
+
+    // перебираем предварительно, чтобы узнать, есть ли назначенное изображение из галереи.
+    while ($row = mysql_fetch_array($result)) {
+        if ($row['name'] == $pic_big)
+            $flag = 1; // если в таблице товара прописано какое либо изображение из галереи.
+    }
+
+    $result = mysql_query($sql);
+    while ($row = mysql_fetch_array($result)) {
+        $name = $row['name'];
+        $s_name = str_replace(".", "s.", $name);
+
+        $id = $row['id'];
+        $num = $row['num'];
+
+        if ((($name == $pic_big AND !$_REQUEST['main']) OR ($_REQUEST['xid'] == $row['id'] AND $_REQUEST['main']))) {
+            $main = "+";
+        }
+        else
+            $main = "";
+
+        if (!$imgSave AND !$flag AND !$_REQUEST['main']) { // сохран€ем путь к первому изображени€ из списка, чтобы назначить его главным, если не назначено или удалено назначенное как главное.
+            $imgSave = $name;
+            $s_imgSave = str_replace(".", "s.", $imgSave);
+            $main = "+";
+            // назначаем главное изображение если не было назначено или удалено назначенное.
+            mysql_query("UPDATE  " . $SysValue['base']['table_name2'] . " SET pic_big='$imgSave', pic_small='$s_imgSave' WHERE id = " . intval($_REQUEST['uid']));
+        }
+
+        if ($main == "+") {
+            $openerWindowInsImg['pic_big'] = $name;
+            $openerWindowInsImg['pic_small'] = $s_name;
+        }
+
+        @$dis.="
+	<tr onmouseover=\"show_on('r" . $id . "')\" id=\"r" . $id . "\" onmouseout=\"show_out('r" . $id . "')\" class=row onclick=\"miniWin('adm_galeryID.php?id=$id',650,500)\">
+	  <td align=center>$i</td>
+	   <td>$name</td>
+           <td><img src='$name' height='50' alt='' title='' border='0' align='absmiddle' hspace='5' style='' onclick=''></td>
+           <td>$main</td>
+           <td>$num</td>
+	</tr>
+	";
+        $i++;
+    }
+
+    // назначаем главное изображение если не было назначено или удалено назначенное.
+    if (!$flag)
+        mysql_query("UPDATE  " . $SysValue['base']['table_name2'] . " SET pic_big='$imgSave', pic_small='$s_imgSave' WHERE id = " . intval($_REQUEST['uid']));
+
+    $interfaces = '
+<table cellpadding="0" cellspacing="1"  border="0"  width="100%">
+<tr>
+     <td width="10%" id="pane"><span>є</span></td>
+     
+     <td width="50%" id="pane"><span>–азмещение</span></td>
+     
+     <td width="20%" id="pane"><span>ѕревью</span></td>
+     
+     <td width="10%" id="pane"><span>√лавное</span></td>
+     <td width="10%" id="pane"><span>є п/п</span></td>
+</tr>
+    ' . $dis . '
+    </table>
+';
+
+    return array("interfaces" => $interfaces, "openerWindowInsImg" => $openerWindowInsImg);
+}
+
 ?>

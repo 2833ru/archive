@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Сообщение регистрации пользователя
  * @author PHPShop Software
@@ -8,45 +9,54 @@
  */
 function message_activation($obj) {
 
-    $obj->set('user_key',$obj->user_status);
-    $obj->set('user_mail',PHPShopSecurity::TotalClean($_POST['mail_new'],3));
-    $obj->set('user_name',PHPShopSecurity::TotalClean($_POST['name_new'],4));
-    $obj->set('user_login',$_POST['login_new']);
-    $obj->set('user_password',$_POST['password_new']);
-    
+    $obj->set('user_key', $obj->user_status);
+    $obj->set('user_mail', PHPShopSecurity::TotalClean($_POST['mail_new'], 3));
+    $obj->set('user_name', PHPShopSecurity::TotalClean($_POST['name_new'], 4));
+    $obj->set('user_login', $_POST['login_new']);
+    $obj->set('user_password', $_POST['password_new']);
+
     // Адрес для сообщений о регистрации
-    $admin_mail=$obj->PHPShopSystem->getParam('adminmail2');
+    $admin_mail = $obj->PHPShopSystem->getParam('adminmail2');
 
-    if($obj->PHPShopSystem->ifSerilizeParam('admoption.user_mail_activate')) {
+    // Заголовок e-mail пользователю
+//        $title = $obj->PHPShopSystem->getName() . " - " . $obj->lang('activation_title') . " " . PHPShopSecurity::TotalClean($_POST['name_new']);
+    $title = $obj->lang('activation_title') . " " . PHPShopSecurity::TotalClean($_POST['name_new']);
 
-        // Заголовок e-mail пользователю
-        $title=$obj->PHPShopSystem->getName()." - ".$obj->locale['activation_title']." ".PHPShopSecurity::TotalClean($_POST['name_new']);
+    if ($obj->PHPShopSystem->ifSerilizeParam('admoption.user_mail_activate')) {
 
+
+        // Отправка e-mail пользователю
+        $PHPShopMail = new PHPShopMail($_POST['mail_new'], $admin_mail, $title, '', true, true);
         // Содержание e-mail пользователю
-        $content=ParseTemplateReturn('./phpshop/lib/templates/users/mail_user_activation.tpl',true);
+        $content = ParseTemplateReturn('./phpshop/lib/templates/users/mail_user_activation.tpl', true);
+        $PHPShopMail->sendMailNow($content);
 
-        // Отправка e-mail пользователя
-        $PHPShopMail= new PHPShopMail($_POST['mail_new'],$admin_mail,$title,$content);
-
-        $obj->set('formaContent',ParseTemplateReturn('phpshop/lib/templates/users/message_activation.tpl',true));
-    }
-
-    elseif($obj->PHPShopSystem->ifSerilizeParam('admoption.user_mail_activate_pre')) {
+        $obj->set('formaContent', ParseTemplateReturn('phpshop/lib/templates/users/message_activation.tpl', true));
+    } elseif ($obj->PHPShopSystem->ifSerilizeParam('admoption.user_mail_activate_pre')) {
         
-        // Заголовок e-mail администратору
-        $title=$obj->PHPShopSystem->getName()." - ".$obj->locale['activation_admin_title']." ".$_POST['name_new'];
+        // Отправка e-mail пользователю, что он должен ожидать ручной активации от админинистратора ресурса.
+        $PHPShopMail = new PHPShopMail($_POST['mail_new'], $admin_mail, $title, '', true, true);
+        // Содержание e-mail пользователю
+        $content = ParseTemplateReturn('./phpshop/lib/templates/users/mail_user_activation_by_admin.tpl', true);
+        $PHPShopMail->sendMailNow($content);
 
-        // Содержание e-mail  администратору
-        $content=ParseTemplateReturn('./phpshop/lib/templates/users/mail_admin_activation.tpl',true);
+        // Заголовок e-mail администратору
+//        $title = $obj->PHPShopSystem->getName() . " - " . $obj->lang('activation_admin_title') . " " . $_POST['name_new'];
+        $title = $obj->lang('activation_admin_title') . " " . $_POST['name_new'];
+
 
         // Отправка e-mail администратору
-        $PHPShopMail= new PHPShopMail($admin_mail,$_POST['mail_new'],$title,$content);
-
-        $obj->set('formaContent',ParseTemplateReturn('phpshop/lib/templates/users/message_admin_activation.tpl',true),true);
+        $PHPShopMail = new PHPShopMail($admin_mail, $_POST['mail_new'], $title, '', true, true);
+        // Содержание e-mail  администратору
+        $content = ParseTemplateReturn('./phpshop/lib/templates/users/mail_admin_activation.tpl', true);
+        $PHPShopMail->sendMailNow($content);
+        
+        $obj->set('formaContent', ParseTemplateReturn('phpshop/lib/templates/users/message_admin_activation.tpl', true), true);
     }
 
-    
-    $obj->set('formaTitle',$obj->lang('user_register_title'));
+
+    $obj->set('formaTitle', $obj->lang('user_register_title'));
     $obj->ParseTemplate($obj->getValue('templates.users_page_list'));
 }
+
 ?>

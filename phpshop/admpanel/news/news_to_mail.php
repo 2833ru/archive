@@ -31,7 +31,7 @@ function actionStart() {
 
 
     // Графический заголовок окна
-    $PHPShopGUI->setHeader("Рассылка новостей за '" . $_GET['data'] . "'", "Укажите данные для записи в базу.", $PHPShopGUI->dir . "img/i_mail_forward_med[1].gif");
+    $PHPShopGUI->setHeader("Рассылка новостей за '" . $_GET['data'] . "'", "", $PHPShopGUI->dir . "img/i_mail_forward_med[1].gif");
 
 
     // Включаем таймер

@@ -273,7 +273,34 @@ class PHPShopOrderFunction extends PHPShopObj {
         return $list;
     }
 
-     /**
+    /**
+     * Вывод юр. данных по заказу.
+     * @param atrray $row данные заказа
+     * @return string 
+     */
+    function yurData($row) {
+        $fielsName = array(
+            "org_name" => "Наименование организации ",
+            "org_inn" => "ИНН",
+            "org_kpp" => "КПП",
+            "org_yur_adres" => "Юридический адрес",
+            "org_fakt_adres" => "Фактический адрес",
+            "org_ras" => "Расчётный счёт",
+            "org_bank" => "Наименование банка",
+            "org_kor" => "Корреспондентский счет",
+            "org_bik" => "БИК",
+            "org_city" => "Город",
+        );
+        
+        $disp = "";
+        foreach ($fielsName as $key => $value) {
+            if(!empty($row[$key]))
+                $disp .= PHPShopText::b($value . ": ") . $row[$key] . "<br>";
+        }
+        
+        return $disp;
+    }
+    /**
      * Шаблонизатор вывода доставки в заказе
      * @param string $function имя функции шаблона вывода
      * @param atrray $option дополнительные опции, передающиеся в шаблон
@@ -282,15 +309,29 @@ class PHPShopOrderFunction extends PHPShopObj {
     function delivery($function, $option = false) {
         $list = null;
         $order = $this->unserializeParam('orders');
+
         $PHPShopDelivery = new PHPShopDelivery($order['Person']['dostavka_metod']);
         $delivery['id'] = $order['Person']['dostavka_metod'];
-        $delivery['name'] = $PHPShopDelivery->getCity();
+        $name = $PHPShopDelivery->getCity();
         $delivery['price'] = number_format($PHPShopDelivery->getPrice($order['Cart']['sum'], $order['Cart']['weight']), $this->format, '.', '');
+        $delivery['data_fields'] = $PHPShopDelivery->getParam('data_fields');
+
+        $PID = $PHPShopDelivery->getParam('PID');
+        while ($PID AND $i < 5) {
+            $PHPShopDeliveryTemp = new PHPShopDelivery($PID);
+            $PID = $PHPShopDeliveryTemp->getParam('PID');
+            $name = $PHPShopDeliveryTemp->getCity() . ", $name";
+            $i++;
+        }
+
+        $delivery['name'] = $name;
 
         if (function_exists($function)) {
-            $list.= call_user_func_array($function, array($delivery, $option));
+            $list = call_user_func_array($function, array($delivery, $option));
+            return $list;
         }
-        return $list;
+        else
+            return $delivery;
     }
 
     /**
@@ -337,7 +378,8 @@ class PHPShopOrderFunction extends PHPShopObj {
         $order = $this->unserializeParam('orders');
         if (!empty($order['Person']['discount']))
             return $order['Person']['discount'];
-        else return 0;
+        else
+            return 0;
     }
 
     /**
@@ -348,7 +390,8 @@ class PHPShopOrderFunction extends PHPShopObj {
         $order = $this->unserializeParam('orders');
         if (!empty($order['Cart']['num']))
             return $order['Cart']['num'];
-        else return 0;
+        else
+            return 0;
     }
 
     /**

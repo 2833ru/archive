@@ -40,7 +40,7 @@ function actionStart() {
     $PHPShopGUI->dir = "../";
     //$PHPShopGUI->size="630,530";
     // Графический заголовок окна
-    $PHPShopGUI->setHeader("Редактирование Банера", "Укажите данные для записи в базу.", $PHPShopGUI->dir . "img/i_select_another_account_med[1].gif");
+    $PHPShopGUI->setHeader("Редактирование Баннера", "", $PHPShopGUI->dir . "img/i_select_another_account_med[1].gif");
 
 
     $Field1 = $PHPShopGUI->setInput("text", "name_new", $name, "none", 300) .

@@ -39,7 +39,7 @@ function Zero($a) {
         <div class="tab-pane" id="article-tab" style="margin-top:5px;">
 
             <script type="text/javascript">
-            tabPane = new WebFXTabPane(document.getElementById("article-tab"), true);
+                tabPane = new WebFXTabPane(document.getElementById("article-tab"), true);
             </script>
 
             <!-- begin intro page -->
@@ -120,9 +120,12 @@ function Zero($a) {
         if (isset($editID) and @$login != "") {// Запись редактирования
             if (CheckedRules($UserStatus["users"], 2) == 1) {
 
+                $hasher = new PasswordHash(8, false);
+                $hash = $hasher->HashPassword($password);
+
                 $def_prava = 'a:23:{s:5:"gbook";s:5:"1-1-1";s:4:"news";s:5:"1-1-1";s:7:"visitor";s:7:"1-1-1-1";s:5:"users";s:7:"1-1-1-1";s:9:"shopusers";s:5:"1-1-1";s:8:"cat_prod";s:11:"1-1-1-1-1-1";s:6:"stats1";s:5:"1-1-1";s:5:"rupay";s:5:"0-0-0";s:11:"news_writer";s:5:"1-1-1";s:9:"page_site";s:5:"1-1-1";s:9:"page_menu";s:5:"1-1-1";s:5:"baner";s:5:"1-1-1";s:5:"links";s:5:"1-1-1";s:3:"csv";s:5:"1-1-1";s:5:"opros";s:5:"1-1-1";s:6:"rating";s:5:"1-1-1";s:3:"sql";s:5:"0-1-1";s:6:"option";s:3:"0-1";s:8:"discount";s:5:"1-1-1";s:6:"valuta";s:5:"1-1-1";s:8:"delivery";s:5:"1-1-1";s:7:"servers";s:5:"1-1-1";s:10:"rsschanels";s:5:"1-1-1";}';
                 $sql = "INSERT INTO $table_name19
-VALUES ('','$def_prava','$login','" . base64_encode($password) . "','$mail','1','','','','$name','')";
+VALUES ('','$def_prava','$login','" . $hash . "','$mail','1','','','','$name','','')";
                 $result = mysql_query($sql) or @die("Невозможно изменить запись");
 
 
@@ -139,7 +142,7 @@ VALUES ('','$def_prava','$login','" . base64_encode($password) . "','$mail','1',
 Доброго времени!
 ---------------------------------------------------------
 
-Административная панель доступна по адресу:  http://" .$_SERVER['SERVER_NAME']. $SysValue['dir']['dir'] . "/phpshop/admpanel/
+Административная панель доступна по адресу:  http://" . $_SERVER['SERVER_NAME'] . $SysValue['dir']['dir'] . "/phpshop/admpanel/
 или нажатием клавиш Ctrl+F12
 Логин: " . $_POST['login'] . "
 Пароль: " . $_POST['password'] . "

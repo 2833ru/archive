@@ -57,6 +57,9 @@ function ShopUsers($list, $words) {// Вывод
         $display.='<tr class="row ' . $style_r . '" id="r' . $id . '" onmouseover="PHPShopJS.rowshow_on(this)" onmouseout="PHPShopJS.rowshow_out(this,\'' . $style_r . '\')">';
 
         $display.="
+        <td>
+	<input type=checkbox name=\"c" . $id . "\" value=\"$id\">
+	</td>
     <td style=\"padding:3\" align=center onclick=\"miniWin('shopusers/adm_userID.php?id=$id',550,550)\">
 	" . $checked . "
 	</td>
@@ -64,7 +67,7 @@ function ShopUsers($list, $words) {// Вывод
 	" . $row['mail'] . "
 	</td>
 	<td  onclick=\"miniWin('shopusers/adm_userID.php?id=$id',550,570)\">
-	$login
+	" . $row['name'] . "
 	</td>
 	<td  onclick=\"miniWin('shopusers/adm_userID.php?id=$id',550,570)\">
 	" . GetUsersStatus2($status, "name") . "
@@ -74,9 +77,6 @@ function ShopUsers($list, $words) {// Вывод
 	</td>
 	<td onclick=\"miniWin('shopusers/adm_userID.php?id=$id',550,570)\">
 	" . dataV($row['datas']) . "
-	</td>
-	<td>
-	<input type=checkbox name=\"c" . $id . "\" value=\"$id\">
 	</td>
     </tr>
 	";
@@ -93,13 +93,13 @@ function ShopUsers($list, $words) {// Вывод
 	<td valign=\"top\">
 <table cellpadding=\"0\" cellspacing=\"1\" width=\"100%\" border=\"0\" class=\"sortable\" id=\"sort\">
 <tr>
+<td width=\"10\" id=pane align=center style=\"padding:0px\"><input type=checkbox value=1 name=DoAll onclick=\"SelectAllBox(this,form_flag)\"></td>
 <td width=\"50\" id=pane align=center><img  src=\"icon/blank.gif\"  width=\"1\" height=\"1\" border=\"0\" align=left><span name=txtLang id=txtLang>&plusmn;</span></td>
-    <td width=\"30%\" id=pane align=center>E-mail</td>
-	<td  id=pane align=center><span name=txtLang id=txtLang>Имя</span></td>
+    <td id=pane align=center>E-mail</td>
+	<td width=\"30%\"  id=pane align=center><span name=txtLang id=txtLang>Имя</span></td>
 	<td width=\"200\" id=pane align=center><span name=txtLang id=txtLang>Статус</span></td>
 	<td width=\"100\" id=pane align=center><span name=txtLang id=txtLang>Скидка</span> %</td>
 	<td width=\"30%\" id=pane align=center><span name=txtLang id=txtLang>Последний вход</span></td>
-	<td width=\"10\" id=pane align=center style=\"padding:0px\"><input type=checkbox value=1 name=DoAll onclick=\"SelectAllBox(this,form_flag)\"></td>
 </tr>
 
 	" . $display . "

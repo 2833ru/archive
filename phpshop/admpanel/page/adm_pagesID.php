@@ -28,7 +28,7 @@ PHPShopObj::loadClass("modules");
 $PHPShopModules = new PHPShopModules($_classPath . "modules/");
 
 function actionStart() {
-    global $PHPShopGUI, $PHPShopSystem, $SysValue, $_classPath, $PHPShopModules, $PHPShopOrm;
+    global $PHPShopGUI, $PHPShopSystem, $SysValue, $_classPath, $PHPShopModules, $PHPShopOrm, $PHPShopBase;
 
     // Тип окна
     if ($_COOKIE['winOpenType'] == 'default')
@@ -52,7 +52,7 @@ function actionStart() {
     $PHPShopGUI->dir = "../";
     //$PHPShopGUI->size="650,600";
     // Графический заголовок окна
-    $PHPShopGUI->setHeader("Редактирование Страниц", "Укажите данные для записи в базу.", $PHPShopGUI->dir . "img/i_website_tab[1].gif");
+    $PHPShopGUI->setHeader('Редактирование Страницы "' . $PHPShopGUI->setLink("http://" . $_SERVER['SERVER_NAME'] . $PHPShopBase->getParam('dir.dir') . "/page/" . $data['link'] . ".html", $data['name']) . '"', "Укажите данные для записи в базу.", $PHPShopGUI->dir . "img/i_website_tab[1].gif");
 
     // Нет данных
     if (!is_array($data)) {
@@ -178,7 +178,7 @@ function actionUpdate() {
     if (empty($_POST['enabled_new']))
         $_POST['enabled_new'] = 0;
 
-    $_POST['date_new'] = date('U');
+    $_POST['datas_new'] = date('U');
 
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['page']);
     $PHPShopOrm->debug = false;

@@ -52,7 +52,7 @@ function actionStart() {
 
 
     // Графический заголовок окна
-    $PHPShopGUI->setHeader('Редактирование звонка от "' . $name . '" номер ' . $tel, "Укажите данные для записи в базу.", $PHPShopGUI->dir . "img/i_display_settings_med[1].gif");
+    $PHPShopGUI->setHeader('Редактирование звонка от "' . $name . '" номер ' . $tel, "", $PHPShopGUI->dir . "img/i_display_settings_med[1].gif");
 
 
 

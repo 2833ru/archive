@@ -1,0 +1,8 @@
+/*
+* PHPShop Mobile Teamplate CSS
+* IE fix: modal z-index
+*/
+
+.modal {
+    z-index: 1!important;
+}

@@ -33,6 +33,7 @@
 	color:				WindowText;
 	text-decoration:	none;
 	cursor:				default;
+        font-size: 8pt;
 }
 
 .dynamic-tab-pane-control .tab-row .hover a {

@@ -1,10 +1,8 @@
 <?php
 
 function Catalog() {
-    global $systems;
 
     $GetSystems = GetSystems();
-    $systems = $GetSystems;
     $option = unserialize($GetSystems['admoption']);
 
     if ($option['prevpanel_enabled'] == 1)
@@ -17,9 +15,9 @@ function Catalog() {
 
 <table cellpadding=\"0\" cellspacing=\"1\" width=\"100%\" border=\"0\" height=\"85%\">
     <tr>
-        <td align=center valign=top width=\"300\" height=\"80%\">
+        <td align=center valign=top width=\"300\" height=\"85%\">
          <div id=\"pane\"><img src=\"img/arrow_d.gif\" width=\"7\" height=\"7\" border=\"0\" hspace=\"5\">Каталоги</div>
-            <iframe src=\"catalog/tree.php\" width=\"300\"  height=\"80%\" frameborder=\"0\" scrolling=\"Auto\" name=\"frame1\" id=\"frame1\"></iframe>
+            <iframe src=\"catalog/tree.php\" width=\"300\"  height=\"85%\" frameborder=\"0\" scrolling=\"Auto\" name=\"frame1\" id=\"frame1\"></iframe>
              <div align=\"center\" style=\"padding:5\">
                 <table cellpadding=\"0\" cellspacing=\"0\">
                     <tr>
@@ -186,23 +184,23 @@ function CategoryID($categoryID) {// выборка каталогов и вывод в правое поле
 
         $dis.="
 	<tr class='row $style_r' id=\"r" . $id . "\" onmouseover=\"PHPShopJS.rowshow_on(this)\" onmouseout=\"PHPShopJS.rowshow_out(this,'" . $style_r . "')\">
-	  <td align=center   align=\"left\" onclick=\"miniWin('../product/adm_productID.php?productID=$id',700,670)\">
+          <td align=center>
+	  <input type=\"checkbox\" value=\"" . $id . "\">
+	  </td>	  
+          <td align=center   align=\"left\" onclick=\"miniWin('../product/adm_productID.php?productID=$id',720,650)\">
                 $checked
 	  </td>
-	  <td width=\"55\"  align=\"center\"  onclick=\"miniWin('../product/adm_productID.php?productID=$id',700,670)\">
+	  <td width=\"55\"  align=\"center\"  onclick=\"miniWin('../product/adm_productID.php?productID=$id',720,650)\">
                 $id
 	  </td>
-	  <td width=\"500\"  onmouseover=\"DoUpdateProductDisp(" . $id . ");\"  onclick=\"miniWin('../product/adm_productID.php?productID=$id',700,650)\">
+	  <td width=\"500\"  onmouseover=\"DoUpdateProductDisp(" . $id . ");\"  onclick=\"miniWin('../product/adm_productID.php?productID=$id',720,650)\">
 	  &nbsp;$name
 	  </td>
-	  <td width=\"100\"  onclick=\"miniWin('../product/adm_productID.php?productID=$id',700,650)\">
+	  <td width=\"100\"  onclick=\"miniWin('../product/adm_productID.php?productID=$id',720,650)\">
 	  &nbsp;" . $items . " " . $ed_izm . "
 	  </td>
-	  <td width=\"100\"  onclick=\"miniWin('../product/adm_productID.php?productID=$id',700,650)\">
+	  <td width=\"100\"  onclick=\"miniWin('../product/adm_productID.php?productID=$id',720,650)\">
 	  &nbsp;" . ($price * 1) . $viso . "
-	  </td>
-	  <td align=center>
-	  <input type=\"checkbox\" value=\"" . $id . "\">
 	  </td>
 	</tr>
 	";
@@ -214,12 +212,12 @@ function CategoryID($categoryID) {// выборка каталогов и вывод в правое поле
 <form name=\"form_flag\">
 <table cellpadding=0 cellspacing=1 width=100% class=\"sortable\" id=\"sort\">
 <tr valign=\"top\">
+	<td width=\"25\" id=pane align=center>&plusmn;</td>
 	<td width=\"100\" id=pane align=center><img  src=\"../icon/blank.gif\"  width=\"1\" height=\"1\" border=\"0\" ><span name=txtLang  id=txtLang>Вывод</span></td>
     <td width=\"55\" id=pane align=center><img src=../img/arrow_d.gif width=7 height=7 border=0 hspace=5>ID</td>
 	<td width=\"540\" id=pane align=center><img src=../img/arrow_d.gif width=7 height=7 border=0 hspace=5>Наименование</td>
    <td width=\"100\" id=pane align=center><img src=../img/arrow_d.gif width=7 height=7 border=0 hspace=5>Склад</td>
     <td width=\"100\" id=pane align=center><img src=../img/arrow_d.gif width=7 height=7 border=0 hspace=5>Цена</td>
-	<td width=\"25\" id=pane align=center>&plusmn;</td>
 </tr>
 " . $dis . "
 
@@ -234,9 +232,38 @@ function CategoryID($categoryID) {// выборка каталогов и вывод в правое поле
     return $disp;
 }
 
+// Поиск по характеристикам
+function getSort($words) {
+    global $SysValue;
+    $array = explode(":", $words);
+    $sort_name = $array[0];
+    $sort_value = $array[1];
+
+    $sql = "select * from " . $SysValue['base']['sort_categories'] . " where name = '$sort_name' limit 1";
+    $result = mysql_query($sql);
+    $row = mysql_fetch_array($result);
+    $sort_name_id = $row['id'];
+
+
+    $sql = "select * from " . $SysValue['base']['sort'] . " where name = '$sort_value' and category=$sort_name_id limit 1";
+    $result = mysql_query($sql);
+    $row = mysql_fetch_array($result);
+    $sort_value_id = $row['id'];
+
+    $hash = $sort_name_id . "-" . $sort_value_id;
+    $sort = " or vendor REGEXP 'i" . $hash . "i' ";
+    return $sort;
+}
+
 function CategorySearch($words) { //поиск
     global $SysValue;
-    $sql = "select * from " . $SysValue['base']['products'] . " where name LIKE '%$words%' or id='$words' or uid='$words' order by num";
+
+    // Поиск по характеристикам
+    if (strstr($words, ':'))
+        $sort = getSort($words);
+
+    $sql = "select * from " . $SysValue['base']['products'] . " where name LIKE '%$words%' or id='$words' or uid='$words' $sort order by num";
+
     $result = mysql_query($sql);
     $num = 0;
     $numRows = 0;
@@ -301,19 +328,19 @@ function CategorySearch($words) { //поиск
 
         $dis.="
 	<tr class='row $style_r' id=\"r" . $id . "\" onmouseover=\"PHPShopJS.rowshow_on(this)\" onmouseout=\"PHPShopJS.rowshow_out(this,'" . $style_r . "')\">
-	  <td align=center   align=\"left\" onclick=\"miniWin('../product/adm_productID.php?productID=$id',700,670)\">
+	  <td align=center   align=\"left\" onclick=\"miniWin('../product/adm_productID.php?productID=$id',720,650)\">
                 $checked
 	  </td>
-	  <td width=\"55\"  align=\"center\"  onclick=\"miniWin('../product/adm_productID.php?productID=$id',700,670)\">
+	  <td width=\"55\"  align=\"center\"  onclick=\"miniWin('../product/adm_productID.php?productID=$id',720,650)\">
                 $id
 	  </td>
-	  <td width=\"500\"  onmouseover=\"DoUpdateProductDisp(" . $id . ");\"  onclick=\"miniWin('../product/adm_productID.php?productID=$id',700,650)\">
+	  <td width=\"500\"  onmouseover=\"DoUpdateProductDisp(" . $id . ");\"  onclick=\"miniWin('../product/adm_productID.php?productID=$id',720,650)\">
 	  &nbsp;$name
 	  </td>
-	  <td width=\"100\"  onclick=\"miniWin('../product/adm_productID.php?productID=$id',700,650)\">
+	  <td width=\"100\"  onclick=\"miniWin('../product/adm_productID.php?productID=$id',720,650)\">
 	  &nbsp;" . $items . " " . $ed_izm . "
 	  </td>
-	  <td width=\"100\"  onclick=\"miniWin('../product/adm_productID.php?productID=$id',700,650)\">
+	  <td width=\"100\"  onclick=\"miniWin('../product/adm_productID.php?productID=$id',720,650)\">
 	  &nbsp;" . ($price * 1) . $viso . "
 	  </td>
 	  <td align=center>

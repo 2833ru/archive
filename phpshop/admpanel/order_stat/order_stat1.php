@@ -132,11 +132,10 @@ function Visitor($pole1, $pole2, $words, $liststr) {// вывод покупателей
                         $table[$catName][3] += ($data['price'] * $data['num']);
                         $rowName = "Категория товаров";
                         $grName = "Отчёт по категориям товаров";
-                        
-                    } 
+                    }
                     // Поиск по имени или артикулу или ID
-                    elseif(stristr($data['name'],$search) or $search == $data['uid'] or $search == $data['id']){
-                        
+                    elseif (stristr($data['name'], $search) or $search == $data['uid'] or $search == $data['id']) {
+
                         // первое поле это название каталога
                         $catName = $data['name'];
                         //прибыль
@@ -173,7 +172,7 @@ function Visitor($pole1, $pole2, $words, $liststr) {// вывод покупателей
                     // выручка
                     $table[$massAdminData[$admin]][3] += ($data['price'] * $data['num']);
                     $rowName = "Сотрудник";
-                    $grName = "Отчёт по сотрудникам";
+                    $grName = "Отчет по сотрудникам";
                     break;
                 // Виды оплат
                 case 4:

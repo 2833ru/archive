@@ -1,15 +1,16 @@
 <?php
-$TitlePage=__("Отзывы");
+
+$TitlePage = __("Отзывы");
 
 // Подключить JS библиотеку
 $addJS = true;
 
 function actionStart() {
     global $PHPShopInterface;
-    $PHPShopInterface->size="630,530";
-    $PHPShopInterface->link="gbook/adm_gbookID.php";
-    $PHPShopInterface->setCaption(array("&plusmn;","5%"),array("Дата","10%"),array("Заголовок","45%"),array("Сообщение","45%"), array(' ', "3%"));
-    
+    $PHPShopInterface->size = "630,530";
+    $PHPShopInterface->link = "gbook/adm_gbookID.php";
+    $PHPShopInterface->setCaption(array(' ', "3%"), array("&plusmn;", "5%"), array("Дата", "10%"), array("Заголовок", "45%"), array("Сообщение", "45%"));
+
     // Поиск
     if ($_REQUEST['var1'] == 'search') {
 
@@ -19,14 +20,11 @@ function actionStart() {
             'id' => "='" . $_REQUEST['var2'] . "'",
             'datas' => "='" . $_REQUEST['var2'] . "'"
         );
-        
-        $search_text=$_REQUEST['var2'];
-        
-    } 
-    elseif($_REQUEST['var1'] == 'all'){
-        $where=null;
-    }
-    else {
+
+        $search_text = $_REQUEST['var2'];
+    } elseif ($_REQUEST['var1'] == 'all') {
+        $where = null;
+    } else {
         // Сортировка по дате
         if (empty($_REQUEST['var1']))
             $pole1 = date("U") - 86400;
@@ -39,7 +37,7 @@ function actionStart() {
             $pole2 = PHPShopDate::GetUnixTime($_REQUEST['var2']) + 86400;
 
         $where['datas'] = ' BETWEEN ' . $pole1 . ' AND ' . $pole2;
-        $search_text=null;
+        $search_text = null;
     }
 
 
@@ -50,7 +48,7 @@ function actionStart() {
     $data = $PHPShopOrm->select(array('*'), $where, array('order' => 'id DESC'), array('limit' => 1000));
     if (is_array($data))
         foreach ($data as $row) {
-            $PHPShopInterface->setRow($row['id'],$PHPShopInterface->icon($row['flag']),PHPShopDate::dataV($row['datas'],false),$row['tema'],substr($row['otsiv'],0,150)."...",array($PHPShopInterface->setCheckbox($row['id'], $row['id'], false, false), $link = false));
+            $PHPShopInterface->setRow($row['id'], array($PHPShopInterface->setCheckbox($row['id'], $row['id'], false, false), $link = false), $PHPShopInterface->icon($row['flag']), PHPShopDate::dataV($row['datas'], false), $row['tema'], substr($row['otsiv'], 0, 150) . "...");
         }
 
     $PHPShopIcon = new PHPShopIcon($start = 100);
@@ -59,7 +57,6 @@ function actionStart() {
 
     if (empty($_REQUEST['var1']) or $_REQUEST['var1'] == 'search' or $_REQUEST['var1'] == 'all')
         $pole1 = PHPShopDate::get(date("U") - (86400 * 10), false);
-        
     else
         $pole1 = $_REQUEST['var1'];
 
@@ -89,10 +86,10 @@ function actionStart() {
             $PHPShopIcon->setBorder();
 
     $Tab1.= $PHPShopIcon->setIcon("icon/page_new.gif", __('Новый отзыв'), "PHPShopJS.gbook.addnew();") .
-            $PHPShopIcon->setIcon("icon/layout_content.gif", __('Вывод всех отзывов'), "DoReload('gbook','all',null, 'core');").
+            $PHPShopIcon->setIcon("icon/layout_content.gif", __('Вывод всех отзывов'), "DoReload('gbook','all',null, 'core');") .
             $PHPShopIcon->setBorder();
-    
-     // Заполнение селектора
+
+    // Заполнение селектора
     $selact_value[] = array(__('С отмеченными'), 0, 'selected');
     $selact_value[] = array(__('Отключить вывод'), 48, false);
     $selact_value[] = array(__('Включить вывод'), 50, false);
@@ -107,6 +104,7 @@ function actionStart() {
 
     $PHPShopIcon->setTab($Tab1);
     $PHPShopInterface->addTop($PHPShopIcon->Compile(true));
-    $PHPShopInterface->Compile('interfaces','flag_form',null);
+    $PHPShopInterface->Compile('interfaces', 'flag_form', null);
 }
+
 ?>

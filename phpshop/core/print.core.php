@@ -87,7 +87,8 @@ class PHPShopPrint extends PHPShopShopCore {
 
         $this->set('productName',$row['name']);
         $this->set('productArt',$row['uid']);
-        $this->set('productDes',$row['description']);
+        $this->set('productDes',$row['content']);
+        $this->set('productContent',$row['description']);
         $this->set('productImg',$row['pic_big']);
         $this->set('productPriceMoney',$this->dengi);
         $this->set('productBack',$this->lang('product_back'));

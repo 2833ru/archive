@@ -246,7 +246,7 @@ class PHPShopPrice extends PHPShopShopCore {
 
             foreach ($this->category_array as $key => $val) {
                 $dis = $this->tr(false, $val);
-                $this->add(PHPShopText::table($dis, 3, 1, 'center', '98%', '#D2D2D2'), true);
+                $this->add(PHPShopText::table($dis, 3, 1, 'center', '98%', '#D2D2D2',0,__CLASS__.'_'.__FUNCTION__), true);
                 $this->product($key);
             }
         } else {

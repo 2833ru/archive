@@ -15,6 +15,8 @@ PHPShopObj::loadClass('delivery');
  */
 class PHPShopUsers extends PHPShopCore {
 
+    var $activation = false;
+
     /**
      * Конструктор
      */
@@ -28,34 +30,22 @@ class PHPShopUsers extends PHPShopCore {
 
         // Список экшенов
         $this->action = array('get' => array('productId', 'noticeId'), 'post' => array('add_notice', 'update_password', 'add_user', 'update_user', 'passw_send'),
-            'name' => array('register', 'order', 'useractivate', 'sendpassword', 'notice', 'message'), 'nav' => 'index');
+            'name' => array('register', 'order', 'wishlist', 'useractivate', 'sendpassword', 'notice', 'message'), 'nav' => 'index');
 
         // Префикс для экшенов методов
         $this->action_prefix = 'action_';
 
+        // Элемент формы авторизациии пользователя
+        $this->PHPShopUserElement = new PHPShopUserElement();
+
         // Локализация
-        $this->locale = array(
-            'error_key' => __('Некорректный ключ'),
-            'error_id' => __('Пользователь с таким логином уже существует'),
-            'error_password' => __('Пароли не совпадают'),
-            'error_login' => __('Некорректный логин'),
-            'error_password_hack' => __('Некорректный пароль'),
-            'error_mail' => __('Некорректный e-mail'),
-            'error_name' => __('Некорректное имя'),
-            'done' => __('Данные изменены'),
-            'activation_title' => __('Активация регистрации пользователя'),
-            'activation_admin_title' => __('Активация регистрации пользователя'),
-            'order_info' => __('Информация о заказе') . ' №',
-            'order_table_title_1' => '№ ' . __('Заказа'),
-            'order_table_title_2' => __('Дата'),
-            'order_table_title_3' => __('Кол-во'),
-            'order_table_title_4' => __('Скидка') . ' %',
-            'order_table_title_5' => __('Сумма'),
-            'order_table_title_6' => __('Статус'),
-            'user' => __('Авторизованный пользователь')
-        );
+        $this->locale = array();
 
         parent::PHPShopCore();
+
+        // Проверка на подтверждение активации
+        if ($this->PHPShopSystem->ifSerilizeParam('admoption.user_mail_activate') and $this->PHPShopSystem->ifSerilizeParam('admoption.user_mail_activate_pre'))
+            $this->activation = true;
     }
 
     /**
@@ -83,10 +73,10 @@ class PHPShopUsers extends PHPShopCore {
      */
     function action_add_notice() {
         if ($this->true_user()) {
-            if (PHPShopSecurity::true_num($_POST['productId'])) {
+            if (PHPShopSecurity::true_num($_POST['productId']))
                 $this->notice_add();
-            }
-            $this->action_notice();
+            else
+                $this->action_notice();
         } else {
             // Форма регистрации нового пользователя
             $this->action_register();
@@ -193,7 +183,10 @@ class PHPShopUsers extends PHPShopCore {
                 // Перехват модуля
                 $this->setHook(__CLASS__, __FUNCTION__, $PHPShopProduct, 'MIDDLE');
 
-                $this->set('formaContent', ParseTemplateReturn('phpshop/lib/templates/users/notice.tpl', true));
+                if ($this->true_user())
+                    $this->set('formaContent', ParseTemplateReturn('phpshop/lib/templates/users/notice.tpl', true));
+                else
+                    $this->set('formaContent', ParseTemplateReturn('phpshop/lib/templates/users/notice_no_auth.tpl', true));
                 $this->set('formaTitle', __('Уведомления'));
 
                 // Перехват модуля
@@ -304,13 +297,17 @@ class PHPShopUsers extends PHPShopCore {
                     $this->PHPShopOrm->update(array('status_new' => $this->PHPShopSystem->getSerilizeParam('admoption.user_status')), array('status' => "='" . $_GET['key'] . "'"));
 
                     // Заголовок e-mail администратору
-                    $title = $this->PHPShopSystem->getName() . " - " . $obj->locale['activation_admin_title'] . " " . $_POST['name_new'];
+//                    $title = $this->PHPShopSystem->getName() . " - " . $obj->lang('activation_admin_title') . " " . $_POST['name_new'];
+                    $title = $this->lang('activation_admin_title') . " " . $_POST['name_new'];
 
                     // Содержание e-mail администратору
                     $content = ParseTemplateReturn('./phpshop/lib/templates/users/mail_admin_activation.tpl', true);
 
                     // Отправка e-mail администратору
-                    $PHPShopMail = new PHPShopMail($this->PHPShopSystem->getValue('adminmail2'), $_POST['mail_new'], $title, $content);
+                    $PHPShopMail = new PHPShopMail($this->PHPShopSystem->getValue('adminmail2'), $data['login'], $title, '', true, true);
+                    // Содержание e-mail  администратору
+                    $content = ParseTemplateReturn('./phpshop/lib/templates/users/mail_admin_activation.tpl', true);
+                    $PHPShopMail->sendMailNow($content);
 
                     $this->set('formaContent', ParseTemplateReturn('phpshop/lib/templates/users/message_admin_activation.tpl', true), true);
                 }
@@ -358,29 +355,93 @@ class PHPShopUsers extends PHPShopCore {
     }
 
     /**
+     * Экшен обновления/добавления  адреса пользователя.
+     */
+    function update_user_adres() {
+        if (PHPShopSecurity::true_email($_POST['mail'])) {
+            $data = $this->PHPShopOrm->select(array('data_adres'), array('mail' => "='" . $_POST['mail'] . "'"), false, array('limit' => 1));
+            if ($data['data_adres'])
+                $data_adres = unserialize($data['data_adres']);
+
+            // формируем массив нового адреса
+            $newAdres['country_new'] = PHPShopSecurity::CleanStr(@$_POST['country_new']);
+            $newAdres['state_new'] = PHPShopSecurity::CleanStr(@$_POST['state_new']);
+            $newAdres['city_new'] = PHPShopSecurity::CleanStr(@$_POST['city_new']);
+            $newAdres['index_new'] = PHPShopSecurity::CleanStr(@$_POST['index_new']);
+            $newAdres['fio_new'] = PHPShopSecurity::CleanStr(@$_POST['fio_new']);
+            $newAdres['tel_new'] = PHPShopSecurity::CleanStr(@$_POST['tel_new']);
+            $newAdres['street_new'] = PHPShopSecurity::CleanStr(@$_POST['street_new']);
+            $newAdres['house_new'] = PHPShopSecurity::CleanStr(@$_POST['house_new']);
+            $newAdres['porch_new'] = PHPShopSecurity::CleanStr(@$_POST['porch_new']);
+            $newAdres['door_phone_new'] = PHPShopSecurity::CleanStr(@$_POST['door_phone_new']);
+            $newAdres['flat_new'] = PHPShopSecurity::CleanStr(@$_POST['flat_new']);
+            $newAdres['delivtime_new'] = PHPShopSecurity::CleanStr(@$_POST['delivtime_new']);
+            $newAdres['org_name_new'] = PHPShopSecurity::CleanStr(@$_POST['org_name_new']);
+            $newAdres['org_inn_new'] = PHPShopSecurity::CleanStr(@$_POST['org_inn_new']);
+            $newAdres['org_kpp_new'] = PHPShopSecurity::CleanStr(@$_POST['org_kpp_new']);
+            $newAdres['org_yur_adres_new'] = PHPShopSecurity::CleanStr(@$_POST['org_yur_adres_new']);
+            $newAdres['org_fakt_adres_new'] = PHPShopSecurity::CleanStr(@$_POST['org_fakt_adres_new']);
+            $newAdres['org_ras_new'] = PHPShopSecurity::CleanStr(@$_POST['org_ras_new']);
+            $newAdres['org_bank_new'] = PHPShopSecurity::CleanStr(@$_POST['org_bank_new']);
+            $newAdres['org_kor_new'] = PHPShopSecurity::CleanStr(@$_POST['org_kor_new']);
+            $newAdres['ogr_bik_new'] = PHPShopSecurity::CleanStr(@$_POST['ogr_bik_new']);
+            $newAdres['org_city_new'] = PHPShopSecurity::CleanStr(@$_POST['org_city_new']);
+
+            // если прислан ИД используемого адреса, обновляем его
+            if (isset($_POST['adres_id']) AND is_numeric($_POST['adres_id'])) {
+                $id = intval($_POST['adres_id']);
+                $data_adres['list'][$id] = $newAdres;
+            } else {
+                // Если новый адрес сохраняем его в массив
+                $data_adres['list'][] = $newAdres;
+                // получаем Ид добавленного адреса
+                end($data_adres['list']);         // move the internal pointer to the end of the array
+                $id = key($data_adres['list']);
+            }
+
+            if ((!empty($_POST['adres_this_default']) AND $_POST['adres_this_default']) OR !isset($data_adres['main']) OR !isset($data_adres['list'][$data_adres['main']])) {
+                $data_adres['main'] = $id;
+            }
+
+            $data_adres = serialize($data_adres);
+
+            $this->PHPShopOrm->clean();
+            $this->PHPShopOrm->update(array(
+                'data_adres_new' => $data_adres), array('mail' => "='" . $_POST['mail'] . "'"));
+            // Перехват модуля
+            $this->setHook(__CLASS__, __FUNCTION__, $_POST);
+
+            return $newAdres;
+        }
+    }
+
+    /**
      * Экшен обновления персональных данных
      */
     function action_update_user() {
 
         if (PHPShopSecurity::true_num($_SESSION['UsersId'])) {
 
-            if (!PHPShopSecurity::true_email($_POST['mail_new']))
-                $this->error[] = $this->locale('error_mail');
+            // запрещаем изменение e-mail
+//            if (!PHPShopSecurity::true_email($_POST['mail_new']))
+//                $this->error[] = $this->lang('error_mail');
 
             if (strlen($_POST['name_new']) < 3)
-                $this->error[] = $this->locale('error_name');
+                $this->error[] = $this->lang('error_name');
 
             if (count($this->error) == 0) {
+                // обновляем имя в сессии для вывода в топе.
+                $_SESSION['UsersName'] = PHPShopSecurity::TotalClean($_POST['name_new']);
                 $this->PHPShopOrm->update(array(
-                    'mail_new' => PHPShopSecurity::TotalClean($_POST['mail_new'],3),
+                    //'mail_new' => $_POST['mail_new'],
                     'name_new' => PHPShopSecurity::TotalClean($_POST['name_new']),
                     'company_new' => PHPShopSecurity::TotalClean($_POST['company_new']),
                     'inn_new' => PHPShopSecurity::TotalClean($_POST['inn_new']),
                     'tel_new' => PHPShopSecurity::TotalClean($_POST['tel_new']),
                     'adres_new' => PHPShopSecurity::TotalClean($_POST['adres_new']),
                     'kpp_new' => PHPShopSecurity::TotalClean($_POST['kpp_new']),
-                    'tel_code_new' => PHPShopSecurity::TotalClean($_POST['tel_code_new'])), array('id' => '=' . intval($_SESSION['UsersId'])));
-                $this->error[] = $this->locale['done'];
+                    'tel_code_new' => PHPShopSecurity::TotalClean($_POST['tel_code_new'])), array('id' => '=' . $_SESSION['UsersId']));
+                $this->error[] = $this->lang('done');
 
                 // Перехват модуля
                 $this->setHook(__CLASS__, __FUNCTION__, $_POST);
@@ -413,7 +474,7 @@ class PHPShopUsers extends PHPShopCore {
         if ($this->setHook(__CLASS__, __FUNCTION__))
             return true;
 
-        if (PHPShopSecurity::true_login($_POST['login'])) {
+        if (PHPShopSecurity::true_email($_POST['login'])) {
             $this->PHPShopOrm->clean();
             $data = $this->PHPShopOrm->select(array('*'), array('login' => '="' . $_POST['login'] . '"'), false, array('limit' => 1));
             if (is_array($data)) {
@@ -421,17 +482,19 @@ class PHPShopUsers extends PHPShopCore {
                 $this->set('date', date("d-m-y H:i a"));
                 $this->set('user_ip', $_SERVER['REMOTE_ADDR']);
                 $this->set('user_login', $data['login']);
+                $this->set('user_name', $data['name']);
                 $this->set('user_mail', $data['mail']);
                 $this->set('user_password', $this->decode($data['password']));
 
                 // Заголовок e-mail пользователю
                 $title = $this->PHPShopSystem->getName() . " - " . __('Восстановление пароля пользователя') . " " . $_POST['login'];
-
-                // Содержание e-mail пользователю
-                $content = ParseTemplateReturn('./phpshop/lib/templates/users/mail_sendpassword.tpl', true);
+                $title = __('Восстановление пароля пользователя') . " " . $_POST['login'];
 
                 // Отправка e-mail пользователю
-                $PHPShopMail = new PHPShopMail($data['mail'], 'robot@' . str_replace("www.", "", $_SERVER['SERVER_NAME']), $title, $content);
+                $PHPShopMail = new PHPShopMail($data['mail'], 'robot@' . str_replace("www.", "", $_SERVER['SERVER_NAME']), $title, $content, true, true);
+                // Содержание e-mail пользователю
+                $content = ParseTemplateReturn('./phpshop/lib/templates/users/mail_sendpassword.tpl', true);
+                $PHPShopMail->sendMailNow($content);
 
                 // Сообщение об успешном отправлении пароля
                 $this->set('formaContent', ParseTemplateReturn('phpshop/lib/templates/users/message_sendpassword.tpl', true));
@@ -458,18 +521,22 @@ class PHPShopUsers extends PHPShopCore {
         if (PHPShopSecurity::true_num($_SESSION['UsersId'])) {
 
             if ($_POST['password_new'] != $_POST['password_new2'])
-                $this->error[] = $this->locale('error_password');
+                $this->error[] = $this->lang('error_password');
 
-            if (!PHPShopSecurity::true_login($_POST['login_new']))
-                $this->error[] = $this->locale('error_login');
+            if (!PHPShopSecurity::true_email($_POST['login_new']))
+                $this->error[] = $this->lang('error_login');
+            else
+                $update['mail_new'] = PHPShopSecurity::TotalClean($_POST['login_new'], 3);
 
             if (!PHPShopSecurity::true_passw($_POST['password_new']))
-                $this->error[] = $this->locale('error_password_hack');
+                $this->error[] = $this->lang('error_password_hack');
+
+            $update['login_new'] = PHPShopSecurity::TotalClean($_POST['login_new'], 3);
+            $update['password_new'] = $this->encode($_POST['password_new']);
 
             if (count($this->error) == 0) {
-                $this->PHPShopOrm->update(array('login_new' => $_POST['login_new'],
-                    'password_new' => $this->encode($_POST['password_new'])), array('id' => '=' . $_SESSION['UsersId']));
-                $this->error[] = $this->locale['done'];
+                $this->PHPShopOrm->update($update, array('id' => '=' . $_SESSION['UsersId']));
+                $this->error[] = $this->lang('done');
             }
         }
 
@@ -490,6 +557,55 @@ class PHPShopUsers extends PHPShopCore {
                 $user_error.=PHPShopText::ul(PHPShopText::li($val));
 
         $this->set('user_error', $user_error);
+    }
+
+    /**
+     * вывод товаров вишлиста
+     */
+    function action_wishlist() {
+        // Перехват модуля
+        if ($this->setHook(__CLASS__, __FUNCTION__, false, 'START'))
+            return true;
+
+        $this->set('formaTitle', 'Отложенные товары');
+
+        if ($this->true_user()) {
+            $PHPShopUser = new PHPShopUser($_SESSION['UsersId']);
+            $wishlist = unserialize($PHPShopUser->objRow['wishlist']);
+            if (is_array($wishlist)) {
+                // удаление из вишлиста
+                if ($_REQUEST['delete']) {
+                    unset($wishlist[$_REQUEST['delete']]);
+                    // обновляем кол-во для вывода в топе
+                    $_SESSION['wishlistCount'] = count($wishlist);
+                    $this->PHPShopOrm->update(array(
+                        'wishlist' => serialize($wishlist)), array('id' => '=' . $_SESSION['UsersId']), false, false);
+                    header("Location: ./wishlist.html");
+                    die();
+                }
+                foreach ($wishlist as $key => $value) {
+                    // Данные по товару
+                    $objProduct = new PHPShopProduct($key);
+                    $this->set('prodId', $key);
+                    $this->set('prodName', $objProduct->getParam("name"));
+                    $this->set('prodPic', $objProduct->getParam("pic_small"));
+                    // цена
+                    $this->set('prodPrice', PHPShopProductFunction::GetPriceValuta($objProduct->objRow['id'], array($objProduct->objRow['price'], $objProduct->objRow['price2'], $objProduct->objRow['price3'], $objProduct->objRow['price4'], $objProduct->objRow['price5']), $objProduct->objRow['baseinputvaluta']));
+                    $dis.= ParseTemplateReturn('users/wishlist/wishlist_list_one.tpl');
+                }
+            }
+            if (@$dis) {
+                $this->set('wishlistList', $dis);
+                $this->set('formaContent', ParseTemplateReturn('users/wishlist/wishlist_list_main.tpl'));
+            } else {
+                $this->set('formaContent', ParseTemplateReturn('users/wishlist/wishlist_list_empty.tpl'));
+            }
+            $this->ParseTemplate($this->getValue('templates.users_page_list'));
+        } else {
+
+            // Форма регистрации нового пользователя
+            $this->action_register();
+        }
     }
 
     /**
@@ -585,37 +701,34 @@ class PHPShopUsers extends PHPShopCore {
     function add_user_check() {
 
         // Проверка на защитную картинку
-        if (empty($_SESSION['text']) or ($_POST['key'] != $_SESSION['text'])) {
-            $this->error[] = $this->locale['error_key'];
+        if (empty($_SESSION['text']) or (strtolower($_POST['key']) != strtolower($_SESSION['text']))) {
+            $this->error[] = $this->lang('error_key');
             return false;
         }
 
-        // Проверка уникальности логина
-        if (PHPShopSecurity::true_login($_POST['login_new'])) {
+        // логин и есть емейл
+        $_POST['mail_new'] = $_POST['login_new'];
+
+        // Проверка уникальности логина и его валидности
+        if (PHPShopSecurity::true_email($_POST['login_new'])) {
             $data = $this->PHPShopOrm->select(array('id'), array('login' => "='" . $_POST['login_new'] . "'"), false, array('limit' => 1));
             if (!empty($data['id']))
-                $this->error[] = $this->locale['error_id'];
+                $this->error[] = $this->lang('error_id');
         }
+        else
+            $this->error[] = $this->lang('error_login');
 
         // Проверка равности паролей 1 и 2
         if ($_POST['password_new'] != $_POST['password_new2'])
-            $this->error[] = $this->locale['error_password'];
-
-        // Проверка валидности логина
-        if (!PHPShopSecurity::true_login($_POST['login_new']))
-            $this->error[] = $this->locale['error_login'];
+            $this->error[] = $this->lang('error_password');
 
         // Проверка валидности пароля
         if (!PHPShopSecurity::true_passw($_POST['password_new']))
-            $this->error[] = $this->locale['error_password_hack'];
-
-        // Проверка валидности почты
-        if (!PHPShopSecurity::true_email($_POST['mail_new']))
-            $this->error[] = $this->locale['error_mail'];
+            $this->error[] = $this->lang('error_password_hack');
 
         // Проверка валидности имени
         if (strlen($_POST['name_new']) < 3)
-            $this->error[] = $this->locale['error_name'];
+            $this->error[] = $this->lang('error_name');
 
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__, $_POST);
@@ -631,8 +744,7 @@ class PHPShopUsers extends PHPShopCore {
     function add() {
 
         // Проверка на подтверждение активации
-        if (!$this->PHPShopSystem->ifSerilizeParam('admoption.user_mail_activate')
-                and !$this->PHPShopSystem->ifSerilizeParam('admoption.user_mail_activate_pre')) {
+        if (!$this->activation) {
             $user_mail_activate = 1;
             $this->user_status = $this->PHPShopSystem->getSerilizeParam('admoption.user_status');
         } else {
@@ -642,10 +754,10 @@ class PHPShopUsers extends PHPShopCore {
 
         // Массив данных нового пользователя
         $insert = array(
-            'login_new' => PHPShopSecurity::TotalClean($_POST['login_new']),
+            'login_new' => PHPShopSecurity::TotalClean($_POST['login_new'], 3),
             'password_new' => $this->encode($_POST['password_new']),
             'datas_new' => time(),
-            'mail_new' => PHPShopSecurity::TotalClean($_POST['mail_new'],3),
+            'mail_new' => PHPShopSecurity::TotalClean($_POST['mail_new'], 3),
             'name_new' => PHPShopSecurity::TotalClean($_POST['name_new']),
             'company_new' => PHPShopSecurity::TotalClean($_POST['company_new']),
             'inn_new' => PHPShopSecurity::TotalClean($_POST['inn_new']),
@@ -670,29 +782,80 @@ class PHPShopUsers extends PHPShopCore {
     }
 
     /**
+     * Экшен проверки существования пользователя по email. Если существует, возвращает ИД
+     */
+    function user_check_by_email($login) {
+        $PHPShopOrm = new PHPShopOrm($this->getValue('base.shopusers'));
+        $PHPShopOrm->debug = $this->debug;
+        $data = $PHPShopOrm->select(array('id'), array('login' => '="' . trim($login) . '"'), false, array('limit' => 1));
+        if (is_array($data) AND PHPShopSecurity::true_num($data['id'])) {
+            return $data['id'];
+        }
+    }
+
+    /**
+     * Экшен генерации пароля пользователя
+     */
+    function generatePassword($length = 8) {
+        $chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+        $numChars = strlen($chars);
+        $string = '';
+        for ($i = 0; $i < $length; $i++) {
+            $string .= substr($chars, rand(1, $numChars) - 1, 1);
+        }
+        return $string;
+    }
+
+    /**
+     * Экшен добавления нового пользователя со страницы оформления заказа
+     */
+    function add_user_from_order($login) {
+
+        // Отключение активации в заказе
+        $this->activation = false;
+
+        $_SESSION['text'] = $_POST['key'] = "fromOrder";
+        // логин и есть емейл
+        $_POST['mail_new'] = $_POST['login_new'] = $login;
+        $_POST['password_new'] = $_POST['password_new2'] = $this->generatePassword();
+
+        $this->UsersId = $this->user_check_by_email($login);
+        // если пользователь существующий, авторизуем его
+        if (!$this->UsersId)
+            $this->action_add_user();
+
+        if ($this->UsersId)
+            return $this->UsersId;
+        else
+            return false;
+    }
+
+    /**
      * Экшен добавления нового пользователя
      */
     function action_add_user() {
-
-
         // Если пройдена проверка на существующий логин
         if ($this->add_user_check()) {
 
             // Добавление запись в БД
-            $UsersId = $this->add();
+            $this->UsersId = $this->add();
 
             // Проверка на подтверждение активации
-            if (!$this->PHPShopSystem->ifSerilizeParam('admoption.user_mail_activate')
-                    and !$this->PHPShopSystem->ifSerilizeParam('admoption.user_mail_activate_pre')) {
+            if (!$this->activation) {
 
-                $this->PHPShopUser = new PHPShopUser($UsersId);
+                // авторизуем пользователя
+                $_POST['login'] = $_POST['login_new'];
+                $_POST['password'] = $_POST['password_new'];
+                $this->PHPShopUserElement->autorization();
 
-                // Включаем параметр успешной атворизации
-                $_SESSION['UsersId'] = $UsersId;
-                $_SESSION['UsersStatus'] = $this->PHPShopUser->getStatus();
 
+                // Сообщение об успешной регистрации
+                $this->message_register_success();
                 // Форма персональных данных
-                $this->user_info();
+                $this->PHPShopUserElement->checkRedirect();
+                //Показываем ЛК пользователя.
+//                $this->user_info();
+                $this->redirectToUserInfo();
             } else {
 
                 // Сообщение об активации аккаунта
@@ -709,17 +872,38 @@ class PHPShopUsers extends PHPShopCore {
     }
 
     /**
+     * Сообщение об успешной регистрации
+     * Функция вынесена в отдельный файл users.core/message_register_success.php
+     * @return mixed
+     */
+    function message_register_success() {
+        // Перехват модуля
+        if ($this->setHook(__CLASS__, __FUNCTION__))
+            return true;
+
+        $this->doLoadFunction(__CLASS__, __FUNCTION__, false, 'users');
+    }
+
+    /**
+     * Редирект в ЛК пользователя.
+     */
+    function redirectToUserInfo() {
+        if ($this->PHPShopNav->getPath() != "done")
+            header("Location: " . $GLOBALS['SysValue']['dir']['dir'] . "/users/");
+    }
+
+    /**
      * Сообщение регистрации
      * Функция вынесена в отдельный файл users.core/message_activation.php
      * @return mixed
      */
     function message_activation() {
 
-        // Перехват модуля
+// Перехват модуля
         if ($this->setHook(__CLASS__, __FUNCTION__))
             return true;
 
-        $this->doLoadFunction(__CLASS__, __FUNCTION__);
+        $this->doLoadFunction(__CLASS__, __FUNCTION__, false, 'users');
     }
 
     /**
@@ -727,6 +911,13 @@ class PHPShopUsers extends PHPShopCore {
      * Результат заполнения формы обработывается в action_add_user()
      */
     function action_register() {
+        // Проверка прохождения авторизации
+        if ($this->true_user()) {
+            // Форма редактирования персональных данных
+            $this->user_info();
+            return;
+        }
+
         $this->set('formaTitle', $this->lang('user_register_title'));
         $this->set('formaContent', ParseTemplateReturn('phpshop/lib/templates/users/register.tpl', true));
         $this->setHook(__CLASS__, __FUNCTION__);
@@ -763,11 +954,11 @@ class PHPShopUsers extends PHPShopCore {
      */
     function caption() {
         $Arg = func_get_args();
-        $tr = '<tr id="allspec">';
+        $tr = '<thead><tr id="allspec">';
         foreach ($Arg as $val) {
             $tr.=PHPShopText::td(PHPShopText::b($val), false, false, $id = 'allspecwhite');
         }
-        $tr.='</tr>';
+        $tr.='</tr></thead>';
         return $tr;
     }
 

@@ -46,44 +46,46 @@ function actionStart() {
     if (!empty($_GET['categoryID']))
         $data['category'] = $_GET['categoryID'];
     $data['name'] = __('Новый каталог');
-    $data['num_cow'] = $PHPShopSystem->getParam('num_row');
-    $data['num_row'] = 2;
+    // ко-лво товара на странице каталога.. Ставим 0 для активации алгоритма автоматического расчёта сетки.
+    $data['num_cow'] = 0;
+    //$data['num_cow'] = $PHPShopSystem->getParam('num_row');
+    $data['num_row'] = 3;
     $data['num'] = 1;
 
     $PHPShopGUI->dir = "../";
     //$PHPShopGUI->size = "700,650";
     // Графический заголовок окна
-    $PHPShopGUI->setHeader(__("Создание Каталога"), __("Укажите данные для записи в базу."), $PHPShopGUI->dir . "img/i_actionlog_med[1].gif");
+    $PHPShopGUI->setHeader(__("Создание Каталога"), __(""), $PHPShopGUI->dir . "img/i_actionlog_med[1].gif");
 
     // Наименование
     $Tab1 = $PHPShopGUI->setField(__("Наименование:"), $PHPShopGUI->setInputText(false, 'name_new', $data['name'], '100%'));
 
     // Выбор каталога
-    $Tab1.= $PHPShopGUI->setField(__("Каталог:"), $PHPShopGUI->setInputText(false, "parent_name", false, '450px', false, 'left') .
-            $PHPShopGUI->setInput("hidden", "parent_to_new", $data['category'], "left", 400) .
-            $PHPShopGUI->setButton(__('Выбрать'), "../img/icon-move-banner.gif", "100px", '25px', "right", "miniWin('" . $dot . "./catalog/adm_cat.php?category=" . $data['category'] . "',300,400);return false;"));
+    $Tab1.= $PHPShopGUI->setField(__("Каталог:"), $PHPShopGUI->setInputText(false, "parent_name", getCatPath($_GET['categoryID']), '450px', false, 'left') .
+            $PHPShopGUI->setInput("hidden", "parent_to_new", $_GET['categoryID'], "left", 400) .
+            $PHPShopGUI->setButton(__('Выбрать'), "../img/icon-move-banner.gif", "100px", '25px', "right", "miniWin('" . $dot . "./catalog/adm_cat.php?category=" . $_GET['categoryID'] . "',300,400);return false;"));
 
     // Сетка
     $num_row_area = $PHPShopGUI->setRadio('num_row_new', 1, 1, $data['num_row']);
     $num_row_area.=$PHPShopGUI->setRadio('num_row_new', 2, 2, $data['num_row']);
     $num_row_area.=$PHPShopGUI->setRadio('num_row_new', 3, 3, $data['num_row']);
     $num_row_area.=$PHPShopGUI->setRadio('num_row_new', 4, 4, $data['num_row']);
-    $Tab1.=$PHPShopGUI->setField(__("Товаров в длину:"), $num_row_area);
+    $Tab1.=$PHPShopGUI->setField(__("Товаров в длину:"), $num_row_area, 'left');
 
     // Вывод
     $Tab1.=$PHPShopGUI->setField(__("Опции вывода:"), $PHPShopGUI->setCheckbox('vid_new', 1, __('Выводить подкаталоги списком в основном окне'), $data['vid']) .
             $PHPShopGUI->setCheckbox('skin_enabled_new', 1, __('Скрыть каталог'), $data['skin_enabled']));
     // Товаров на странице
-    $Tab1.=$PHPShopGUI->setLine() . $PHPShopGUI->setField(__("Товаров на странице:"), $PHPShopGUI->setInputText(false, 'num_cow_new', $data['num_cow'], '50px', __('шт.')), 'left',0,0,array('width'=>'20%;'));
+    $Tab1.=$PHPShopGUI->setLine() . $PHPShopGUI->setField(__("Товаров на странице:"), $PHPShopGUI->setInputText(false, 'num_cow_new', $data['num_cow'], '50px', __('шт.')), 'left');
 
     // Тип сортировки
-    $order_by_value[] = array('по имени', 1, $data['order_by']);
-    $order_by_value[] = array('по цене', 2, $data['order_by']);
-    $order_by_value[] = array('по популярности', 3, $data['order_by']);
+    $order_by_value[] = array('по имени', 1, 0);
+    $order_by_value[] = array('по цене', 2, 0);
+    $order_by_value[] = array('по номеру', 3, 3);
     $order_to_value[] = array('возрастанию', 1, $data['order_to']);
     $order_to_value[] = array('убыванию', 2, $data['order_to']);
     $Tab1.=$PHPShopGUI->setField(__("Сортировка:"), $PHPShopGUI->setInputText('№', "num_new", $data['num'], '50px', false, 'left') .
-            $PHPShopGUI->setSelect('order_by_new', $order_by_value, 120) . $PHPShopGUI->setSelect('order_to_new', $order_to_value, 120), 'right',0,0,array('width'=>'75%;'));
+            $PHPShopGUI->setSelect('order_by_new', $order_by_value, 120) . $PHPShopGUI->setSelect('order_to_new', $order_to_value, 120), 'left');
 
 
     $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));
@@ -113,6 +115,13 @@ function actionStart() {
     // Вывод формы закладки
     $PHPShopGUI->setTab(array(__("Основное"), $Tab1, 450), array(__("Описание"), $Tab2, 450), array(__("Заголовки"), $Tab7, 450), array(__("Дополнительно"), $Tab8, 450), array(__("Характериcтики"), $Tab4, 450));
 
+    // Иконка
+    $Tab10 = $PHPShopGUI->setField(__('Изображение'), $PHPShopGUI->setInputText(false, "icon_new", $data['icon'], '450px', false, 'left') .
+            $PHPShopGUI->setButton(__('Выбрать'), "../img/icon-move-banner.gif", "100px", '25px', "right", "ReturnPic('icon_new');return false;"));
+
+    $Tab10.=$PHPShopGUI->setField(__('Описание изображения'), $PHPShopGUI->setTextArea('icon_description_new', $data['icon_description']));
+
+    $PHPShopGUI->addTab(array("Иконка", $Tab10, 450));
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler($_SERVER["SCRIPT_NAME"], __FUNCTION__, $data);
@@ -178,7 +187,48 @@ function actionInsert() {
 
     $action = $PHPShopOrm->insert($_POST);
 
+
+    // если каталог родитель создаваемого каталога содержал товары, то переносим его в создаваемый.
+    if ($_POST['parent_to_new'] AND $_POST[parent_to_new] != "undefined") {
+        $PHPShopOrmProd = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
+        $data = $PHPShopOrmProd->select(array('id'), array('category' => '=' . $_POST['parent_to_new']));
+        if (is_array($data) AND count($data)) {
+            $PHPShopOrmProd->clean();
+            $catNewId = mysql_insert_id();
+            $PHPShopOrmProd->update(array('category' => $catNewId), array('category' => '=' . $_POST['parent_to_new']), '');
+        }
+    }
+
     return $action;
+}
+
+/**
+ * Путь каталога
+ * @param int $category ИД категории
+ * @return string 
+ */
+function getCatPath($category) {
+
+    $PHPShopCategoryArray = new PHPShopCategoryArray();
+    $i = 1;
+    $str = __('Корень');
+    while ($i < 10) {
+        $parent = $PHPShopCategoryArray->getParam($category . '.parent_to');
+        if (isset($parent)) {
+            $path[$category] = $PHPShopCategoryArray->getParam($category . '.name');
+            $category = $parent;
+        }
+        $i++;
+    }
+
+    if (is_array($path)) {
+        $path = array_reverse($path);
+
+        foreach ($path as $val)
+            $str.=' -> ' . $val;
+
+        return $str;
+    }
 }
 
 // Вывод формы при старте

@@ -49,15 +49,9 @@ function actionStart() {
 
     $PHPShopGUI->dir = "../";
     //$PHPShopGUI->size = "650,630";
+
     // Графический заголовок окна
-    $PHPShopGUI->setHeader("Редактирование Каталога", "Укажите данные для записи в базу.", $PHPShopGUI->dir . "img/i_filemanager_med[1].gif");
-
-
-    // Нет данных
-    if (!is_array($data)) {
-        $PHPShopGUI->setFooter($PHPShopGUI->setInput("button", "", "Закрыть", "center", 100, "return onCancel();", "but"));
-        return true;
-    }
+    $PHPShopGUI->setHeader("Редактирование Каталога", "", $PHPShopGUI->dir . "img/i_filemanager_med[1].gif");
 
     // Редактор 1
     $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));
@@ -90,7 +84,7 @@ function actionStart() {
             $PHPShopGUI->setInput("hidden", "newsID", $id, "right", 70, "", "but") .
             $PHPShopGUI->setInput("button", "", "Отмена", "right", 70, "return onCancel();", "but") .
             $PHPShopGUI->setInput("button", "delID", "Удалить", "right", 70, "return onDelete('" . __('Вы действительно хотите удалить?') . "')", "but", "actionDelete.page_site.edit") .
-            $PHPShopGUI->setInput("submit", "editID", "ОК", "right", 70, "", "but", "actionUpdate.page_site.edit") .
+            $PHPShopGUI->setInput("submit", "editID", "ОК", "right", 70, "", "but", "actionUpdate.page_site.edit").
             $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionSave.page_site.edit");
 
     // Футер
@@ -114,27 +108,29 @@ function actionSave() {
 function actionDelete() {
     global $PHPShopOrm, $PHPShopModules;
 
-    // Перехват модуля
-    $PHPShopModules->setAdmHandler($_SERVER["SCRIPT_NAME"], __FUNCTION__, $_POST);
+        // Перехват модуля
+        $PHPShopModules->setAdmHandler($_SERVER["SCRIPT_NAME"], __FUNCTION__, $_POST);
 
-    $action = $PHPShopOrm->delete(array('id' => '=' . $_POST['newsID']));
-    return $action;
+        $action = $PHPShopOrm->delete(array('id' => '=' . $_POST['newsID']));
+        return $action;
 }
 
 // Функция обновления
 function actionUpdate() {
     global $PHPShopOrm, $PHPShopModules;
 
-    // Перехват модуля
-    $PHPShopModules->setAdmHandler($_SERVER["SCRIPT_NAME"], __FUNCTION__, $_POST);
-    $PHPShopOrm->debug = false;
-    $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['newsID']));
-    return $action;
+        // Перехват модуля
+        $PHPShopModules->setAdmHandler($_SERVER["SCRIPT_NAME"], __FUNCTION__, $_POST);
+        $PHPShopOrm->debug = false;
+        $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['newsID']));
+        return $action;
 }
 
-// Вывод формы при старте
-$PHPShopGUI->setAction($_GET['id'], 'actionStart', 'none');
 
-// Обработка событий
-$PHPShopGUI->getAction();
+    // Вывод формы при старте
+    $PHPShopGUI->setAction($_GET['id'], 'actionStart', 'none');
+
+    // Обработка событий
+    $PHPShopGUI->getAction();
+
 ?>

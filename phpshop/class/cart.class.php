@@ -14,6 +14,7 @@ if (!defined("OBJENABLED")) {
 class PHPShopCart {
 
     var $_CART;
+    var $message;
 
     /**
      * Режим проверки остатков на складе
@@ -91,9 +92,17 @@ class PHPShopCart {
             if (!empty($cart['num']))
                 $this->_CART[$xid] = $cart;
 
-            // Возвращаем значение успешного добавления в  корзину
-            return true;
+            // сообщение для вывода во всплывающее окно
+            $this->message = "Вы успешно добавили <a href='/shop/UID_$objID.html' title='Подробное описание'>$name</a> 
+            в вашу <a href='/order/' title='Перейти в вашу корзину'>корзину</a>";
         }
+    }
+
+    /**
+     * Получение сообщения для всплывающего окна
+     */
+    function getMessage($objID) {
+        return $this->message;
     }
 
     /**
@@ -141,14 +150,23 @@ class PHPShopCart {
      * @param int $num количество товара
      * @return int
      */
-    function edit($objID, $num) {
+    function edit($objID, $num, $action = null) {
 
         // Данные по товару
         $objProduct = new PHPShopProduct(abs($objID));
 
         // Если корзина не пуста
         if (is_array($this->_CART)) {
-            $this->_CART[$objID]['num'] = abs($num);
+            $num = abs($num);
+            // если значения совпадают, увеличиваем|уменьшаем кол-во на единицу, иначе на указанное значение.
+            if ($num == $this->_CART[$objID]['num'])
+                if ($action == "minus")
+                    $this->_CART[$objID]['num']--;
+                else
+                    $this->_CART[$objID]['num']++;
+            else
+                $this->_CART[$objID]['num'] = $num;
+
             if (empty($this->_CART[$objID]['num']))
                 unset($this->_CART[$objID]);
 

@@ -31,7 +31,7 @@ function actionStart() {
     $PHPShopGUI->dir = "../";
 
     // Графический заголовок окна
-    $PHPShopGUI->setHeader("Создание Нового Банера", "Укажите данные для записи в базу.", $PHPShopGUI->dir . "img/i_select_another_account_med[1].gif");
+    $PHPShopGUI->setHeader("Создание Нового Баннера", "", $PHPShopGUI->dir . "img/i_select_another_account_med[1].gif");
 
     $Field1 = $PHPShopGUI->setInput("text", "name_new", "Баннер", "none", 300) .
             $PHPShopGUI->setRadio("flag_new", 1, "Показывать банер") .

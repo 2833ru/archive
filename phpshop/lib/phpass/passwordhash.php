@@ -48,11 +48,12 @@ class PasswordHash {
 	function get_random_bytes($count)
 	{
 		$output = '';
+                /*
 		if (is_readable('/dev/urandom') &&
 		    ($fh = @fopen('/dev/urandom', 'rb'))) {
 			$output = fread($fh, $count);
 			fclose($fh);
-		}
+		}*/
 
 		if (strlen($output) < $count) {
 			$output = '';
@@ -208,7 +209,7 @@ class PasswordHash {
 	function HashPassword($password)
 	{
 		$random = '';
-
+/*
 		if (CRYPT_BLOWFISH == 1 && !$this->portable_hashes) {
 			$random = $this->get_random_bytes(16);
 			$hash =
@@ -225,7 +226,7 @@ class PasswordHash {
 			if (strlen($hash) == 20)
 				return $hash;
 		}
-
+*/
 		if (strlen($random) < 6)
 			$random = $this->get_random_bytes(6);
 		$hash =

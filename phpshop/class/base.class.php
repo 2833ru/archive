@@ -60,14 +60,9 @@ class PHPShopBase {
         $this->iniPath = $iniPath;
         $this->SysValue = parse_ini_file($this->iniPath, 1);
 
-        // Использование php функций в парсере. Отключена для тестирования на Windows
-        if (getenv('SERVER_ADDR') == "127.0.0.1" and getenv("COMSPEC")) {
-            define('parser_function_guard', 'false');
-        } else {
-            define('parser_function_allowed', $this->SysValue['function']['allowed']);
-            define('parser_function_deny', $this->SysValue['function']['deny']);
-            define('parser_function_guard', $this->SysValue['function']['guard']);
-        }
+        define('parser_function_allowed', $this->SysValue['function']['allowed']);
+        define('parser_function_deny', $this->SysValue['function']['deny']);
+        define('parser_function_guard', $this->SysValue['function']['guard']);
 
         $GLOBALS['SysValue'] = &$this->SysValue;
 
@@ -124,13 +119,13 @@ class PHPShopBase {
      * @param string $error текст ошибки
      */
     function errorConnect($e = false, $message = "Нет соединения с базой", $error = false) {
-        echo "<strong>$message</strong> ( <a href='http://www.phpshop.ru/help/Content/install/phpshop.html#6' target='_blank'>Error $e</a> )<br>";
-        echo "<em>Ошибка: " . $error . mysql_error() . "</em>";
 
-        if (is_dir('./install/'))
-            echo '<script>window.open("' . $this->getParam("dir.dir") . '/install/");</script>';
-        else
+        if (is_dir($_SERVER['DOCUMENT_ROOT'] . '/install/') and $e != 105)
+            header('Location: /install/');
+        else {
+            echo "<strong>$message</strong> ( <a href='http://www.phpshop.ru/help/Content/install/phpshop.html#6' target='_blank'>Error $e</a> )<br><em>Ошибка: " . $error . mysql_error() . "</em>";
             echo '<script>window.open("http://www.phpshop.ru/help/Content/install/phpshop.html#6");</script>';
+        }
         exit();
     }
 
@@ -203,7 +198,7 @@ class PHPShopBase {
      */
     function setPHPCoreReporting() {
         if (function_exists('error_reporting')) {
-            error_reporting('E_ALL & ~E_NOTICE & ~E_DEPRECATED');
+            error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT);
             if ($this->phpversion() and function_exists('ini_set')) {
                 ini_set('allow_call_time_pass_reference', 1);
             }
@@ -219,7 +214,7 @@ class PHPShopBase {
         if ((phpversion() * 1) >= $version)
             return true;
     }
-
+    
 }
 
 ?>

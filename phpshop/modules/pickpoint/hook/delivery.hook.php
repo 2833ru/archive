@@ -36,7 +36,7 @@ function delivery_hook($obj, $data) {
         if ($xid == $title_id) {
             
          
-            $button = '<a onclick="PickPoint.open(pickpoint_phpshop); return false" href="#">' . $option['name'] . '</a>';
+            $button = '<img src="'.$GLOBALS['SysValue']['dir']['dir'].chr(47).$GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47).'images/shop/icon-activate.gif" alt="" align="absmiddle" border="0"> <a onclick="PickPoint.open(pickpoint_phpshop); return false" href="#">' . $option['name'] . '</a>';
             $hook['dellist'] = '<table collspan="0" rowspan="0"><tr><td>' . $_RESULT['dellist'] . '</td><td style="padding-left:10px">' . $button . '</td></tr></table>';
             $hook['delivery']=$_RESULT['delivery'];
             $hook['total']=$_RESULT['total'];

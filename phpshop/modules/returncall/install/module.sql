@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_returncall_system` (
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 
-INSERT INTO `phpshop_modules_returncall_system` VALUES (1,'1','Обратный звонок','Заявка на обратный звонок принята, ждите','','0','1','1.4');
+INSERT INTO `phpshop_modules_returncall_system` VALUES (1,'1','Обратный звонок','Спасибо! Мы скоро свяжемся с Вами.','','0','1','1.4');
 
 DROP TABLE IF EXISTS `phpshop_modules_returncall_jurnal`;
 CREATE TABLE `phpshop_modules_returncall_jurnal` (

@@ -6,6 +6,7 @@ PHPShopObj::loadClass("base");
 PHPShopObj::loadClass("system");
 PHPShopObj::loadClass("security");
 PHPShopObj::loadClass("orm");
+PHPShopObj::loadClass("string");
 
 $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
 include($_classPath . "admpanel/enter_to_admin.php");
@@ -35,7 +36,7 @@ function actionUpdate() {
 
 
     $params = array(
-        'login' => $_POST['login_new'],
+        'login' => PHPShopString::win_utf8($_POST['login_new']),
         'url' => $_SERVER['SERVER_NAME'],
         'email' => $_POST['email_new'],
         'hash' => md5($_SERVER['SERVER_NAME'] . time()),

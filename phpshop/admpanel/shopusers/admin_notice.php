@@ -52,7 +52,10 @@ function ShopUsersNotice($pole1, $pole2, $words) {// Вывод
 
         @$display.="
 	<tr id=\"r" . $id . "\" class=row>
-    <td align=center id=Nws class=Nws onmouseover=\"show_on('r" . $id . "')\" onmouseout=\"show_out('r" . $id . "')\" onclick=\"miniWin('./product/adm_productID.php?productID=$product_id',700,630)\">$checked</td>
+        <td class=forma align=center>
+	<input type=checkbox name='c" . $id . "' value=\"$id\">
+	</td>
+        <td align=center id=Nws class=Nws onmouseover=\"show_on('r" . $id . "')\" onmouseout=\"show_out('r" . $id . "')\" onclick=\"miniWin('./product/adm_productID.php?productID=$product_id',700,630)\">$checked</td>
 	<td id=Nws class=Nws onmouseover=\"show_on('r" . $id . "')\" onmouseout=\"show_out('r" . $id . "')\" onclick=\"miniWin('./product/adm_productID.php?productID=$product_id',700,630)\">
 	" . dataV($datas_start, "update") . " - " . dataV($datas, "update") . "
 	</td>
@@ -62,11 +65,8 @@ function ShopUsersNotice($pole1, $pole2, $words) {// Вывод
 	<td id=Nws class=Nws onmouseover=\"show_on('r" . $id . "')\" onmouseout=\"show_out('r" . $id . "')\" onclick=\"miniWin('./product/adm_productID.php?productID=$product_id',700,630)\">
 	$product_id
 	</td>
-    <td id=Nws class=Nws onmouseover=\"show_on('r" . $id . "')\" onmouseout=\"show_out('r" . $id . "')\" onclick=\"miniWin('./product/adm_productID.php?productID=$product_id',700,630)\">
+        <td id=Nws class=Nws onmouseover=\"show_on('r" . $id . "')\" onmouseout=\"show_out('r" . $id . "')\" onclick=\"miniWin('./product/adm_productID.php?productID=$product_id',700,630)\">
 	" . GetproductInfo($product_id) . "
-	</td>
-	<td class=forma align=center>
-	<input type=checkbox name='c" . $id . "' value=\"$id\">
 	</td>
     </tr>
 	";
@@ -82,13 +82,13 @@ function ShopUsersNotice($pole1, $pole2, $words) {// Вывод
 	<td valign=\"top\">
 <table cellpadding=\"0\" cellspacing=\"1\" width=\"100%\" border=\"0\" class=\"sortable\" id=\"sort\">
 <tr>
+    <td width=\"25\" id=pane align=center style=\"padding:1px\">
+	<input type=checkbox value=1 name=DoAll onclick=\"SelectAllBox(this,form_flag)\"></td>
     <td width=\"50\" id=pane align=center><img  src=\"icon/blank.gif\"  width=\"1\" height=\"1\" border=\"0\" align=left><span name=txtLang id=txtLang>Статус</span></td>
 	<td id=pane align=center><span name=txtLang id=txtLang>Актуальность</span></td>
 	<td id=pane align=center><span name=txtLang id=txtLang>Пользователь</span></td>
     <td width=\"50\" id=pane align=center><span name=txtLang id=txtLang>ID</span></td>
 	<td id=pane align=center><span name=txtLang id=txtLang>Название</span></td>
-    <td width=\"25\" id=pane align=center style=\"padding:1px\">
-	<input type=checkbox value=1 name=DoAll onclick=\"SelectAllBox(this,form_flag)\"></td>
 </tr>
 
 	" . $display . "

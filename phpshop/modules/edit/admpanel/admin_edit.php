@@ -12,7 +12,7 @@ function actionStart() {
 <tr>
   <td width=\"300\" valign=\"top\" height=\"100%\">
     <button class=\"pane\"><img src=img/arrow_d.gif width=7 height=7 border=0 hspace=5>".__('Шаблоны')."</button>
-<iframe src=\"../modules/edit/admpanel/tree.php\" width=\"300\" height=\"95%\"  scrolling=\"Auto\" name=\"frame1\"></iframe>
+<iframe src=\"../modules/edit/admpanel/tree.php\" width=\"300\" height=\"95%\"  scrolling=\"Auto\" name=\"frame1\" frameborder=\"0\"></iframe>
 
 <div align=\"center\" style=\"padding:5px\">
 <table cellpadding=\"0\" cellspacing=\"0\">

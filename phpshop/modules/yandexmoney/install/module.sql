@@ -16,4 +16,5 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_yandexmoney_system` (
 
 INSERT INTO `phpshop_modules_yandexmoney_system` VALUES (1,0,'ѕлатежна€ система яндекс.ƒеньги','ќплатите пожалуйста свой заказ','','','','1.0');
 
-INSERT INTO `phpshop_payment_systems` VALUES (10002, 'яндекс.ƒеньги', 'modules', '0', 0, '', '');
+INSERT INTO `phpshop_payment_systems` (`id`, `name`, `path`, `enabled`, `num`, `message`, `message_header`, `yur_data_flag`, `icon`) VALUES
+(10002, 'яндекс.ƒеньги', 'modules', '0', 0, '', '', '', '/UserFiles/Image/Payments/yandex-money.png');

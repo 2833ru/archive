@@ -1,18 +1,18 @@
 <?php
 
 /**
- * Подключение модулей
+ * Подключение модулей и дизайн хуков
  * @author PHPShop Software
- * @version 1.10
+ * @version 1.12
  * @package PHPShopClass
  * @tutorial http://doc.phpshop.ru/PHPShopClass/PHPShopModules.html
  */
 class PHPShopModules {
 
     /**
-     * @var mixed массив системных настроек модулей
+     * @var array массив системных настроек модулей
      */
-    var $ModValue;
+    var $ModValue = array();
 
     /**
      * @var string Относительное размещение модулей
@@ -28,6 +28,7 @@ class PHPShopModules {
      * @var bool кэширования результата проверки перехвата функций
      */
     var $memory = false;
+    var $unload = array();
 
     /**
      * Конструктор
@@ -44,6 +45,9 @@ class PHPShopModules {
 
         $this->checkKeyBase();
 
+        // Добавляем хуки шаблона
+        $this->addTemplateHook();
+
         $data = $this->PHPShopOrm->select(array('*'), false, false, array('limit' => 100));
         if (is_array($data))
             foreach ($data as $row) {
@@ -52,15 +56,17 @@ class PHPShopModules {
                     $this->getIni($path);
             }
 
-        // Добавляем хуки шаблона
-        $this->addTemplateHook();
+
+        // Проверка конфликтных модулей и хуков
+        foreach ($this->unload as $v)
+            $this->getIni($v, false);
     }
 
     /**
      * Обработка параметров конфига хуков шаблона /php/hook/
      */
     function addTemplateHook() {
-        $ini = 'phpshop/templates'. chr(47) . @$_SESSION['skin'] . "/php/inc/config.ini";
+        $ini = 'phpshop/templates' . chr(47) . @$_SESSION['skin'] . "/php/inc/config.ini";
         if (file_exists($ini)) {
             $SysValue = @parse_ini_file($ini, 1);
 
@@ -69,10 +75,30 @@ class PHPShopModules {
                     if (!strstr($k, '#'))
                         $this->ModValue['autoload'][$k] = './phpshop/templates/' . $_SESSION['skin'] . chr(47) . $v;
 
+            if (is_array($SysValue['unload']))
+                foreach ($SysValue['unload'] as $k => $v)
+                    if (!strstr($k, '#')) {
+                        if (strstr($v, ','))
+                            $unload_array = explode(",", $v);
+                        else
+                            $unload_array[] = $v;
+                        foreach ($unload_array as $kill)
+                            $this->unload[] = $kill;
+                    }
+
             if (is_array($SysValue['hook']))
                 foreach ($SysValue['hook'] as $k => $v)
                     if (!strstr($k, '#'))
                         $this->ModValue['hook'][$k][] = './phpshop/templates/' . $_SESSION['skin'] . chr(47) . $v;
+
+            // Настройка HTML для учета типа верстки        
+            if (is_array($SysValue['html'])) {
+                foreach ($SysValue['html'] as $k => $v)
+                    if (!strstr($k, '#'))
+                        $GLOBALS['SysValue']['html'][$k] = $v;
+            }
+            else
+                unset($GLOBALS['SysValue']['html']);
         }
     }
 
@@ -100,22 +126,37 @@ class PHPShopModules {
     /**
      * Обработка паметров конфига модулей
      * @param string $path путь до конфигурации модуля
+     * @param bool $add добавление/удаление модуля
      */
-    function getIni($path) {
+    function getIni($path, $add = true) {
         $ini = $this->ModDir . $path . "/inc/config.ini";
         if (file_exists($ini)) {
             $SysValue = parse_ini_file($ini, 1);
 
             if (!empty($SysValue['autoload']) and is_array($SysValue['autoload']))
                 foreach ($SysValue['autoload'] as $k => $v)
+                    if (!strstr($k, '#')) {
+                        if ($add)
+                            $this->ModValue['autoload'][$k] = $v;
+                        else
+                            unset($this->ModValue['autoload'][$k]);
+                    }
+
+            if (is_array($SysValue['unload']))
+                foreach ($SysValue['unload'] as $k => $v)
                     if (!strstr($k, '#'))
-                        $this->ModValue['autoload'][$k] = $v;
+                        $this->unload[] = $v;
 
             if (!empty($SysValue['core']) and is_array($SysValue['core'])) {
                 foreach ($SysValue['core'] as $k => $v)
-                    if (!strstr($k, '#'))
-                        $this->ModValue['core'][$k] = $v;
-            }else
+                    if (!strstr($k, '#')) {
+                        if ($add)
+                            $this->ModValue['core'][$k] = $v;
+                        else
+                            unset($this->ModValue['core'][$k]);
+                    }
+            }
+            else
                 $SysValue['core'] = null;
 
             if (!empty($SysValue['class']) and is_array($SysValue['class'])) {
@@ -130,7 +171,8 @@ class PHPShopModules {
                 foreach ($SysValue['lang'] as $k => $v)
                     if (!strstr($k, '#'))
                         $GLOBALS['SysValue']['lang'][$k] = $v;
-            } else
+            }
+            else
                 $SysValue['lang'] = null;
 
             if (!empty($SysValue['admpanel']) and is_array($SysValue['admpanel']))
@@ -138,18 +180,30 @@ class PHPShopModules {
                     if (!strstr($k, '#'))
                         $this->ModValue['admpanel'][][$k] = $v;
 
-            if (!empty($SysValue['hook']) and is_array($SysValue['hook']))
+            if (!empty($SysValue['hook']) and is_array($SysValue['hook'])) {
                 foreach ($SysValue['hook'] as $k => $v)
-                    if (!strstr($k, '#'))
-                        $this->ModValue['hook'][$k][] = $v;
+                    if (!strstr($k, '#')) {
+                        if ($add)
+                            $this->ModValue['hook'][$k][$path] = $v;
+                        else
+                            unset($this->ModValue['hook'][$k][$path]);
+                    }
+            }
 
             if (!empty($SysValue['templates']) and is_array($SysValue['templates'])) {
                 $this->ModValue['templates'] = $SysValue['templates'];
                 $GLOBALS['SysValue']['templates'][$path] = $SysValue['templates'];
             }
 
-            $this->ModValue['base'][$path] = $SysValue['base'];
-            $GLOBALS['SysValue']['base'][$path] = $SysValue['base'];
+
+            if ($add) {
+                $this->ModValue['base'][$path] = $SysValue['base'];
+                $GLOBALS['SysValue']['base'][$path] = $SysValue['base'];
+            } else {
+                unset($this->ModValue['base'][$path]);
+                unset($GLOBALS['SysValue']['base'][$path]);
+            }
+
             $this->ModValue['class'] = $SysValue['class'];
 
             if (!empty($SysValue['field']) and is_array($SysValue['field']))
@@ -189,7 +243,8 @@ class PHPShopModules {
                 if ($data['verification'] != md5($data['path'] . $data['date'] . str_replace('www.', '', $_SERVER['SERVER_NAME']) . $data['key']) or $data['date'] < time()) {
                     return $data['date'];
                 }
-            }else
+            }
+            else
                 return true;
         }
 
@@ -248,12 +303,14 @@ class PHPShopModules {
                     $PHPShopCore = new $classname ();
                     $PHPShopCore->loadActions();
                     return true;
-                } else
+                }
+                else
                     echo PHPShopCore::setError($classname, "не определен класс phpshop/modules/*/core/$classname.core.php");
             }
             else
                 PHPShopCore::setError($path, "Ошибка загрузки модуля " . $path . "<br>Путь: " . $this->ModValue['core'][$path]);
-        }else
+        }
+        else
             return false;
     }
 
@@ -378,12 +435,12 @@ class PHPShopModules {
      * @param string параметр размещения хука [END|START|MIDDLE]
      */
     function setHookHandler($class_name, $function_name, $obj = false, $data = false, $rout = 'END') {
-        
-        $addHandler=null;
+
+        $addHandler = null;
 
         // Поддержка PHP 5.4
-        if(!empty($obj) and is_array($obj))
-            $obj=&$obj[0];
+        if (!empty($obj) and is_array($obj))
+            $obj = &$obj[0];
 
         if ((phpversion() * 1) >= '5.0')
             $class_name = strtolower($class_name);
@@ -490,11 +547,12 @@ class PHPShopModules {
      * Проверка установки модуля
      * @param string $path размещение модуля
      */
-    function checkInstall($path){
-        $install=$this->ModValue['base'][$path];
-        if(empty($install))
-            exit('PHPShop Report: Модуль "'.ucfirst($path).'" выключен.');
+    function checkInstall($path) {
+        $install = $this->ModValue['base'][$path];
+        if (empty($install))
+            exit('PHPShop Report: Модуль "' . ucfirst($path) . '" выключен.');
     }
+
 }
 
 ?>

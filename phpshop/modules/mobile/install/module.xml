@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<module>
+    <version>1.2</version>
+    <name>Mobile</name>
+    <description>Модуль определения и переадресации мобильных устройств на мобильную версию сайта.</description>
+    <icon>icon.png</icon>
+    <category>template,decorate,user</category>
+    <reformal>669928</reformal>
+    <status>update</status>
+    <adminmenu>
+        <title>Mobile</title>
+        <podmenu>
+            <podmenu_name>Настройка Mobile</podmenu_name>
+            <podmenu_icon>icon.png</podmenu_icon>
+            <podmenu_action>javascript:miniWin('../modules/mobile/admpanel/adm_module.php',510,450);</podmenu_action>
+        </podmenu>
+    </adminmenu>
+</module>

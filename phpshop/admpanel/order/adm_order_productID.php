@@ -38,17 +38,17 @@ $PHPShopModules = new PHPShopModules($_classPath . "modules/");
  * Экшен загрузки форм редактирования
  */
 function actionStart() {
-    global $PHPShopGUI, $PHPShopModules, $PHPShopOrm, $PHPShopSystem;
+    global $PHPShopGUI, $PHPShopModules, $PHPShopOrm, $PHPShopSystem, $PHPShopBase;
 
     // Тип окна
     if ($_COOKIE['winOpenType'] == 'default')
         $dot = ".";
     else
         $dot = false;
-    
+
     // ИД заказа
-    $orderID=intval($_GET['orderID']);
-    
+    $orderID = intval($_GET['orderID']);
+
     // Выборка
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($orderID)));
 
@@ -67,41 +67,41 @@ function actionStart() {
 
     // ИД товара
     $productID = intval($_GET['productID']);
-    
-    if(empty($order['Cart']['cart'][$productID]['id'])){ 
-        foreach($order['Cart']['cart'] as $key=>$val)
-            if($val['id'] == $productID){
-                $productID=$key;
+
+    if (empty($order['Cart']['cart'][$productID]['id'])) {
+        foreach ($order['Cart']['cart'] as $key => $val)
+            if ($val['id'] == $productID) {
+                $productID = $key;
             }
     }
-    
+
     // Наименование
     $Tab1 = $PHPShopGUI->setField(__("Наименование"), $PHPShopGUI->setInputText(false, 'name_new', $order['Cart']['cart'][$productID]['name'], '100%')) . $PHPShopGUI->setLine();
 
     // Иконка
     $PHPShopProduct = new PHPShopProduct($productID);
-    $productIcon=$PHPShopProduct->getParam('pic_small');
-    $productEdIzm=$PHPShopProduct->getParam('ed_izm');
+    $productIcon = $PHPShopProduct->getParam('pic_small');
+    $productEdIzm = $PHPShopProduct->getParam('ed_izm');
     if (!empty($productIcon)) {
         $img_width = $PHPShopSystem->getSerilizeParam('admoption.img_tw');
-        $Tab1.=$PHPShopGUI->setDiv('left', $PHPShopGUI->setFrame('img', $productIcon, $img_width + 20, $img_width, 'none', 0, 'No'), 'width:' . ($img_width + 50) . 'px;float:left');
+        $Tab1.=$PHPShopGUI->setDiv('left', $PHPShopGUI->setFrame('img', $productIcon, 120, 120, 'none', 0, 'No'), 'float:left;');
     }
-    
+
     // Склад
     if (empty($productEdIzm))
         $ed_izm = 'шт.';
     else
         $ed_izm = $productEdIzm;
-    
+
     // Количество
-    $Tab1.=$PHPShopGUI->setField(__("Количество"), "<div style=\"padding:5px\"><input type=\"text\" style=\"width: 50px;\" value=\"" . $order['Cart']['cart'][$productID]['num']. "\" id=\"num\" onchange=\"DoUpdateOrderProductSum()\"> ".$ed_izm, 'left');
-   
+    $Tab1.=$PHPShopGUI->setField(__("Количество"), "<div style=\"padding:5px; height:30px;\"><input type=\"text\" style=\"width: 50px;\" value=\"" . $order['Cart']['cart'][$productID]['num'] . "\" id=\"num\" onchange=\"DoUpdateOrderProductSum()\"> " . $ed_izm, 'left');
+
     // Сумма
-    $productSum=$PHPShopOrder->ReturnSumma($order['Cart']['cart'][$productID]['price'] * $order['Cart']['cart'][$productID]['num'],0);
-    $Tab1.=$PHPShopGUI->setField(__("Сумма ") . '(' . $PHPShopSystem->getDefaultValutaCode() . ')', $PHPShopGUI->setDiv('center', $productSum, 'font-size:25px;font-weight:bold', 'sum'), 'left');
+    $productSum = $PHPShopOrder->ReturnSumma($order['Cart']['cart'][$productID]['price'] * $order['Cart']['cart'][$productID]['num'], 0);
+    $Tab1.=$PHPShopGUI->setField(__("Сумма ") . '(' . $PHPShopSystem->getDefaultValutaCode() . ')', $PHPShopGUI->setDiv('center', $productSum, 'font-size:25px;font-weight:bold; height:40px; width: 105px;', 'sum'), 'left');
 
     // Цена
-    $Tab1.=$PHPShopGUI->setField(__("Цена ") . '(' . $PHPShopSystem->getDefaultValutaCode() . ')', "<div style=\"padding:5px\"><input type=\"text\" style=\"width: 70px;\" value=\"" . $PHPShopOrder->ReturnSumma($order['Cart']['cart'][$productID]['price'], 0) . "\" id=\"price\" onchange=\"DoUpdateOrderProductSum()\"> ", 'left');
+    $Tab1.=$PHPShopGUI->setField(__("Цена ") . '(' . $PHPShopSystem->getDefaultValutaCode() . ')', "<div style=\"padding:5px\"><input type=\"text\" style=\"width: 66px;\" value=\"" . $PHPShopOrder->ReturnSumma($order['Cart']['cart'][$productID]['price'], 0) . "\" id=\"price\" onchange=\"DoUpdateOrderProductSum()\"> ", 'left');
 
     // Вывод формы закладки
     $PHPShopGUI->setTab(array(__("Основное"), $Tab1, 180));
@@ -119,7 +119,6 @@ function actionStart() {
     $PHPShopGUI->setFooter($ContentFooter);
     return true;
 }
-
 
 if (CheckedRules($UserStatus["cat_prod"], 0) == 1) {
 

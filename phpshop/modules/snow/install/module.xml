@@ -2,7 +2,8 @@
 <module>
     <version>1.0</version>
     <name>Snow</name>
-    <description>Модуль падающего снега</description>
+    <faqlink>http://faq.phpshop.ru/page/snow.html</faqlink>
+<description>Модуль падающего снега.</description>
     <icon>palette.png</icon>
     <category>template,decorate</category>
 </module>

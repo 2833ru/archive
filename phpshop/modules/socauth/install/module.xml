@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.2</version>
+    <version>1.3</version>
     <name>SocAuth</name>
+    <faqlink>http://faq.phpshop.ru/page/socauth.html</faqlink>
     <description>Модуль авторизации через facebook, twitter.</description>
     <icon>icon.png</icon>
     <category>soc</category>
@@ -17,6 +18,10 @@
         <update>
             <date>11.09.2013</date>
             <content>Обновлена логига работы модуля в связи с изменениями в API Facebook PHP SDK</content>
+        </update>
+        <update>
+            <date>15.10.2013</date>
+            <content>Обновлена логига работы модуля в связи с изменениями в PHPShop Framework</content>
         </update>
     </history>
 </module>

@@ -1,1 +1,1 @@
-<div align="center" id="banfx">@banerContent@</div>
+<div class="plashka_center" style="margin-top:5px"><div class="plashka_zag">@banerTitle@</div></div><div id="banerContent">@banerContent@</div>

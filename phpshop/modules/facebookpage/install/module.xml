@@ -2,7 +2,8 @@
 <module>
     <version>1.1</version>
     <name>Facebookpage</name>
-    <description>Модуль генерации шаблона для facebook.</description>
+    <faqlink>http://faq.phpshop.ru/page/facebook-templates.html</faqlink>
+    <description>Модуль генерации шаблона для facebook, вконтакте.</description>
     <icon>icon.png</icon>
     <category>soc</category>
     <adminmenu>

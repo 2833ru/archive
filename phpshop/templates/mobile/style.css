@@ -1,0 +1,27 @@
+/*
+* PHPShop Mobile Teamplate CSS
+*/
+
+.copyright{
+    display:none;
+}
+
+.date {
+    padding: 2px 9px 3px;
+    font-size: 12px;
+    line-height: 1;
+    color: #333;
+    background-color: rgba(0, 0, 0, .15);
+    border-radius: 10px;
+}
+
+.productimg{
+    border: solid 1px #CCC;
+    padding: 1px;
+    border: solid 1px #CCC;
+    -webkit-border-radius:5px;
+    -moz-border-radius:5px;
+    border-radius:5px;
+    margin:1px;
+    max-width: 90px;
+}

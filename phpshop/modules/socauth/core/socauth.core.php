@@ -1,8 +1,5 @@
 <?php
 
-if (!defined("OBJENABLED"))
-    exit(header('Location: /?error=OBJENABLED'));
-
 class PHPShopSocauth extends PHPShopCore {
 
     // массив настроек для соцсетей. Формируем в конструкторе.
@@ -182,7 +179,7 @@ class PHPShopSocauth extends PHPShopCore {
         if ($user) {
             try {
                 // Proceed knowing you have a logged in user who's authenticated.
-                $user_profile = $facebook->api('/me','GET');
+                $user_profile = $facebook->api('/me', 'GET');
             } catch (FacebookApiException $e) {
                 error_log($e);
                 $user = null;
@@ -254,7 +251,6 @@ class PHPShopSocauth extends PHPShopCore {
                     $result = true;
                 }
             }
-
         } else {
             header("Location:" . $url . '?' . urldecode(http_build_query($params)));
             die();
@@ -348,8 +344,28 @@ class PHPShopUserSoc extends PHPShopElements {
         if (is_array($data))
             if (PHPShopSecurity::true_num($data['id'])) {
 
-                // Логин пользователя
+                // сохраняем вишлист который был в сессии до авторизаци.
+                $wishlist = unserialize($data['wishlist']);
+                if (!is_array($wishlist))
+                    $wishlist = array();
+                if (is_array($_SESSION['wishlist']))
+                    foreach ($_SESSION['wishlist'] as $key => $value) {
+                        $wishlist[$key] = 1;
+                    }
+
+                $_SESSION['wishlistCount'] = count($wishlist);
+                $wishlist = serialize($wishlist);
+                $this->PHPShopOrm->update(array('wishlist' => "$wishlist"), array('id' => '=' . $data['id']), false);
+                unset($_SESSION['wishlist']);
+
+                // ID пользователя
                 $_SESSION['UsersId'] = $data['id'];
+
+                // Логин пользователя
+                $_SESSION['UsersLogin'] = $data['login'];
+
+                // Имя пользователя
+                $_SESSION['UsersName'] = $data['name'];
 
                 // Статус пользователя
                 $_SESSION['UsersStatus'] = $data['status'];

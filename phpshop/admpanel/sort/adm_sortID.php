@@ -72,8 +72,6 @@ $dis
         $num = $row['num'];
         $description = $row['description'];
         $page = $row['page'];
-        if ($row['flag'] == 1)
-            $flag = "checked";
         if ($row['filtr'] == 1)
             $filtr = "checked";
         if ($row['goodoption'] == 1) {
@@ -86,13 +84,18 @@ $dis
         } else {
             $optionname = "";
         }
+        if ($row['brand'] == 1) {
+            $brand = "checked";
+        } else {
+            $brand = "";
+        }
         ?>
         <form name="product_edit"  method=post>
             <table cellpadding="0" cellspacing="0" width="100%" height="50" id="title">
                 <tr bgcolor="#ffffff">
                     <td style="padding:10">
                         <b><span name=txtLang id=txtLang>Редактирование Характеристики</span> "<?= $name ?>"</b><br>
-                        &nbsp;&nbsp;&nbsp;<span name=txtLang id=txtLang>Укажите данные для записи в базу</span>.
+
                     </td>
                     <td align="right">
                         <img src="../img/i_billing_history_med[1].gif" border="0" hspace="10">
@@ -103,7 +106,7 @@ $dis
             <div class="tab-pane" id="article-tab" style="margin-top:5px;height:300px">
 
                 <script type="text/javascript">
-        tabPane = new WebFXTabPane(document.getElementById("article-tab"), true);
+                    tabPane = new WebFXTabPane(document.getElementById("article-tab"), true);
                 </script>
 
 
@@ -133,11 +136,11 @@ $dis
                             <td>
                                 <FIELDSET style="height:70px;">
                                     <LEGEND><span name=txtLang id=txtLang><u>О</u>пции</span> </LEGEND>
-                                    <div style="padding:10px">
-                                        
+                                    <div style="padding:10">
                                         <input type="checkbox" value="1" name="filtr_new" <?= $filtr ?>><span name=txtLang id=txtLang>Фильтр</span>
-                                        <input type="checkbox" value="1" name="goodoption_new" <?= $goodoption ?>><span name=txtLang id=txtLang>Товарная опция</span><br>
+                                        <input type="checkbox" value="1" name="goodoption_new" <?= $goodoption ?>><span name=txtLang id=txtLang>Товарная опция</span>
                                         <input type="checkbox" value="1" name="optionname_new" <?= $optionname ?>><span name=txtLang id=txtLang>Показывать описание опции в корзине</span>
+                                        <input type="checkbox" value="1" name="brand_new" <?= $brand ?>><span name=txtLang id=txtLang>Бренд</span>
                                     </div>
                                 </FIELDSET>
                             </td>
@@ -202,10 +205,10 @@ $dis
                         <tr>
                             <td>
                                 <FIELDSET>
-                                    <LEGEND><span name=txtLang id=txtLang><u>С</u>ылка на описание</span></LEGEND>
+                                    <LEGEND><span name=txtLang id=txtLang><u>С</u>сылка на описание</span></LEGEND>
                                     <div style="padding:10">
                                         <? echo dispPage($page) ?>
-                                        <p>* Используется при выводе имени характеристики в подробном описании товара в виде ссылки на указанную страницу (описание характеристики "мощность" становится доступной в подробной форме товара в таблице вывода характеристик).</p>
+                                        <p>* Имя характеристики (в таблице характеристик в подробном описании товара) становится ссылкой на указанную страницу с описанием.</p>
                                     </div>
                                 </FIELDSET>
                             </td>
@@ -234,11 +237,11 @@ $dis
                 $sql = "UPDATE " . $SysValue['base']['table_name20'] . "
 SET
 name='$name_new',
-flag='$flag_new',
 num='$num_new',
 filtr='$filtr_new',
 goodoption='$goodoption_new',
 optionname='$optionname_new',
+brand='$brand_new',
 description='$description_new',
 page='$page_new' 
 where id='$id'";

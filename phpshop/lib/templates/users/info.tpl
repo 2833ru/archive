@@ -1,19 +1,13 @@
-   <div id="allspec">
+<div id="allspec">
                     @user_error@
                 </div>
 
-<div id=allspec>
-    <img src="images/shop/rosette.gif" alt="" width="16" height="16" border="0" hspace="5" align="absmiddle"><b>Статус</b>
-</div>
-<p>@user_status@
-</p>
-<div id=allspec>
-    <img src="images/shop/icon_key.gif" alt="" width="16" height="16" border="0" hspace="5" align="absmiddle"><b>Авторизация</b>
-</div>
+
+
 <form name="users_password" method="post">
     <table style="padding-top: 10px;padding-bottom: 10px">
         <tr>
-            <td width="150">Логин:</td>
+            <td width="180">Логин:</td>
             <td width="10"></td>
             <td><input type="text" name="login_new" value="@user_login@" style="width:250px;" ><img src="images/shop/flag_green.gif" alt="" width="16" height="16" border="0" hspace="5" align="absmiddle"></td>
         </tr>
@@ -27,7 +21,7 @@
         <tr>
             <td></td>
             <td width="10"></td>
-            <td><input type="checkbox" id="password_chek" value="1" name="password_chek" onclick="DispPasDiv()"> Изменить авторизацию&nbsp;&nbsp;&nbsp;
+            <td height="45"><input type="checkbox" id="password_chek" value="1" name="password_chek" onclick="DispPasDiv()"> Изменить авторизацию&nbsp;&nbsp;&nbsp;
                 <input type="hidden" value="1" name="update_password">
                 <input type="button" value="Изменить" onclick="UpdateUserPassword()">
             </td>
@@ -35,17 +29,16 @@
     </table>
 </form>
 <form name="users_data" method="post">
-    <div id=allspec>
-        <img src="images/shop/icon_user.gif" alt="" width="16" height="16" border="0" hspace="5" align="absmiddle"><b>Личные данные</b>
-    </div>
+    
+	
     <table width="99%" cellpadding="5">
         <tr>
             <td colspan="2"><p><br></p></td>
         </tr>
         <tr>
-            <td>Контактное лицо:&nbsp;&nbsp;&nbsp;
+            <td width="180">Контактное лицо:&nbsp;&nbsp;&nbsp;
             </td>
-            <td><input type="text" name="name_new" value="@user_name@" style="width:300px"><img src="images/shop/flag_green.gif" alt="" width="16" height="16" border="0" hspace="5" align="absmiddle"></td>
+            <td ><input type="text" name="name_new" value="@user_name@" style="width:300px"><img src="images/shop/flag_green.gif" alt="" width="16" height="16" border="0" hspace="5" align="absmiddle"></td>
         </tr>
         <tr>
             <td>E-mail:
@@ -67,7 +60,7 @@
         <tr>
             <td>Телефон:</td>
             <td><input type="text" name="tel_code_new" style="width:50px;" value="@user_tel_code@"> -
-                <input type="text" name="tel_new" style="width:240px;" value="@user_tel@"></td>
+                <input type="text" name="tel_new" style="width:230px;" value="@user_tel@"></td>
         </tr>
         <tr>
             <td valign="top">Адрес:</td>

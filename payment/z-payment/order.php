@@ -29,7 +29,7 @@ $disp= "
 <div align=\"center\">
 
 <!-- Аттестат Z-PAYMENT --> 
-<a href=\"http://www.z-payment.ru/info.php?zp=$LMI_ID\" target=_blank><IMG SRC=\"images/bank/attestat.gif\" alt=\"Аттестован системой Z-PAYMENT \" border=\"0\" align=\"left\" hspace=\"5\" vspace=\"5\"></a>
+<a href=\"http://www.z-payment.ru/info.php?zp=$LMI_ID\" target=_blank><IMG SRC=\"phpshop/lib/templates/icon/bank/attestat.gif\" alt=\"Аттестован системой Z-PAYMENT \" border=\"0\" align=\"left\" hspace=\"5\" vspace=\"5\"></a>
 <!-- end Аттестат Z-PAYMENT --> 
 <strong>Z-PAYMENT</strong> - это универсальная процессинговая система, интегрирующая множество видов оплаты в единый унифицированный алгоритм. Мы предлагаем нашим клиентам гибкий и надежный инструмент для <strong>on-line расчетов</strong>, приема платежей на сайтах, оплаты различных услуг и товаров. 
  <p><br></p>
@@ -41,11 +41,7 @@ $disp= "
     <input type=hidden name=CLIENT_MAIL value=\"".$_POST['mail']."\">
 	  
 	  <table>
-<tr><td><img src=\"images/shop/icon-setup.gif\" width=\"16\" height=\"16\" border=\"0\"></td>
-	<td align=\"center\"><a href=\"javascript:history.back(1)\"><u>
-	Вернуться к оформлению<br>
-	покупки</u></a></td>
-	<td width=\"20\"></td>
+<tr>
 	<td><img src=\"images/shop/icon-client-new.gif\" alt=\"\" width=\"16\" height=\"16\" border=\"0\" align=\"left\">
 	<a href=\"javascript:pay.submit();\">Оплатить через платежную систему</a></td>
 </tr>

@@ -42,7 +42,7 @@ function actionStart() {
     global $PHPShopGUI, $PHPShopOrm, $PHPShopModules;
 
     // Выборка
-    $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
+    $data = $PHPShopOrm->select(array('*'), array('id' => '=' . $_GET['id']));
     extract($data);
 
     if ($data['enabled'] == 1)
@@ -53,7 +53,7 @@ function actionStart() {
     $PHPShopGUI->size = "630,530";
 
     // Графический заголовок окна
-    $PHPShopGUI->setHeader("Редактирование Ссылки", "Укажите данные для записи в базу.", $PHPShopGUI->dir . "img/i_register_domain_med[1].gif");
+    $PHPShopGUI->setHeader("Редактирование Ссылки", "", $PHPShopGUI->dir . "img/i_register_domain_med[1].gif");
 
     $Select1 = setSelectChek($num);
 

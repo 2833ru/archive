@@ -102,7 +102,7 @@ function Stats1($pole1, $pole2, $vid, $productID) {
 <table cellpadding="10">
 <tr>
 	<td >
-	<BUTTON style="width: 20em; height: 2.2em; margin-left:5"  onclick="miniWin(\'export/adm_csv.php?DO=stats1&pole1=' . $pole1 . '&pole2=' . $pole2 . '\',300,300);"><img src="img/action_save.gif"  width="16" height="16" border="0" align="absmiddle" hspace="5"><span name=txtLangs id=txtLangs> Выгрузить в Excel</span></BUTTON>
+	<BUTTON style="width: 20em; height: 2.2em; margin-left:5"  onclick="miniWin(\'export/adm_csv.php?DO=stats1&pole1=' . $pole1 . '&pole2=' . $pole2 . '\',400,300);"><img src="img/action_save.gif"  width="16" height="16" border="0" align="absmiddle" hspace="5"><span name=txtLangs id=txtLangs> Выгрузить в Excel</span></BUTTON>
 <br><br>
 	*<span name=txtLangs id=txtLangs>Выгрузка отчета осуществляется в формат CSV</span>
 	</td>

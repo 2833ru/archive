@@ -43,7 +43,7 @@ else
 // Rewrite
 $path_parts = pathinfo($_SERVER['PHP_SELF']);
 $filename = "http://" . $_SERVER['SERVER_NAME'] . $path_parts['dirname'] . "/rewritemodtest/test.html";
-if (@fopen($filename, "r"))
+if (fopen($filename, "r"))
     $rewrite = "............<img src=\"rewritemodtest/icon-activate.gif\" border=0 align=absmiddle> <b class='ok'>Ok</b>";
 else
     $rewrite = "............<img src=\"rewritemodtest/errormessage.gif\"  border=0 align=absmiddle> <b class='error'>Error</b>";
@@ -193,7 +193,7 @@ else
             <div style="float:left;padding: 10px;padding-left: 15px" >
                 PHPShop Software -  PHPShop&#8482 Enterprise
                 <h1>Установка PHPShop&#8482 Software</h1>
-            </div><div style="float:right;padding: 10px; padding-right: 15px" >версия&nbsp;&nbsp;&nbsp;<span class="v" >3.<?php echo $version; ?></span></div>
+            </div><div style="float:right;padding: 10px; padding-right: 15px" >версия&nbsp;&nbsp;&nbsp;<span class="v" >4.<?php echo $version; ?></span></div>
         </div>
 
         <div align="right" class="menu">
@@ -244,7 +244,7 @@ else
     <h2>Установка скрипта в ручном режиме</h2>
     <ol>
         <p>Если вы не хотите или по каким-то причинам не можете воспользоваться <strong>готовой программой для установки</strong> <a href="http://wiki.phpshop.ru/index.php/PHPShop_EasyControl#PHPShop_Installer" target="_blank">Windows Installer</a> или <a href="http://install.phpshop.ru" target="_blank">Web Installer</a>, то приведенная ниже информация поможет вам выполнить установку в ручном режиме (для опытных пользователей).</p>
-        <li>Подключиться к своему серверу через FTP-клиент (CuteFTP, Total Commander и др.)
+        <li>Подключиться к своему серверу через FTP-клиент (FileZilla, CuteFTP, Total Commander и др.)
         <li>Загрузить распакованный архив на FTP
         <li>Создайте новую базу MySQL на своем сервере или узнайте пароли доступа к уже созданной базе у хост-провайдера.
         <li>
@@ -264,12 +264,12 @@ else
             Внимание, инсталлятор запускать необходимо, в противном случае не будет создан образ БД. <br><br>
         </li>
         <li>В целях безопасности удалите папку /install
-        <li>Установите опцию CMOD 777 (UNIX сервера) для папок:
+        <li>Установите опцию CMOD 775 (UNIX сервера) для папок:
             <br><br>
             <ol>
                 <li>license
                 <li>UserFiles/Image
-                <li>UserFiles/File
+                <li>UserFiles/Files
                 <li>phpshop/admpanel/csv
                 <li>files/price
                 <li>phpshop/admpanel/dumper/backup

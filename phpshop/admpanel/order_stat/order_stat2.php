@@ -240,7 +240,7 @@ function Visitor($pole1, $pole2, $words, $list) {// âûâîä ïîêóïàòåëåé
 
     // create the chart:
     $g = new graph();
-    $g->title(cp1251_to_utf8("Îò÷¸ò ïî ñîòğóäíèêàì"), '{font-size: 26px;}');
+    $g->title(cp1251_to_utf8("Îò÷åò ïî ñîòğóäíèêàì"), '{font-size: 26px;}');
 
 // add the 3 bar charts to it:
     $g->data_sets[] = $bar_2;

@@ -43,11 +43,12 @@ function register_seopult() {
 
     // Настройки модуля
     PHPShopObj::loadClass("modules");
+    PHPShopObj::loadClass("string");
     $PHPShopModules = new PHPShopModules($_classPath . "modules/");
 
 
     $params = array(
-        'login' => $_SERVER['SERVER_NAME'],
+        'login' => PHPShopString::win_utf8($_SERVER['SERVER_NAME']),
         'url' => $_SERVER['SERVER_NAME'],
         'email' => $PHPShopSystem->getParam('adminmail2'),
         'hash' => md5($_SERVER['SERVER_NAME'] . time()),

@@ -60,7 +60,7 @@ document.getElementById("allOptionsSet' . $xid . '").value=optsvalue;
 }
 
 function option_check($data, $n, $v) {
-    if (is_array($data))
+    if (is_array($data[$n]))
         foreach ($data[$n] as $val)
             if ($val == $v)
                 return true;
@@ -107,7 +107,7 @@ function option_select_add($vendor_array, $n, $title, $numel, $xid, $optionname,
 
     if (!empty($dis)) {
         $disp = '<select name=v[' . $n . '] size=1 id="opt' . $numel . $xid . '" onChange="alloptions' . $xid . '()">
-    <option value="" selected>-- любой ' . $title . ' --</option>' . $dis . '</select>';
+    <option value="" selected>-- ' . $title . ' --</option>' . $dis . '</select>';
     }
 
     return $disp;

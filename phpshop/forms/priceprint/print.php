@@ -33,7 +33,7 @@ class PHPShopPricePrint {
     }
 
     function product($category) {
-        global $PHPShopValutaArray,$PHPShopSystem;
+        global $PHPShopValutaArray, $PHPShopSystem;
 
         if (is_numeric($category))
             $str = " (category=$category or dop_cat LIKE '%#$category#%') and ";

@@ -15,9 +15,9 @@ class skin_viewer {
             $link = PHPShopSecurity::TotalClean($this->PHPShopNav->getId(), 2);
             if ($this->PHPShopNav->getNav() == 'CID') {
 
-                $sql = array('name' => 'skincat', 'base' => $GLOBALS['SysValue']['base']['categories'], 'where' => array('id' => "=$link"));
+                $sql = array('name' => 'skincat', 'base' => $GLOBALS['SysValue']['base']['categories'], 'where' => array('id' => "=".intval($link)));
             } else {
-                $sql = array('name' => 'skin', 'base' => $GLOBALS['SysValue']['base']['products'], 'where' => array('id' => "='$link'"));
+                $sql = array('name' => 'skin', 'base' => $GLOBALS['SysValue']['base']['products'], 'where' => array('id' => "='".intval($link)."'"));
             }
 
             $this->select($sql);
@@ -37,8 +37,12 @@ class skin_viewer {
         global $PHPShopSystem;
         if (!empty($skin) and file_exists("phpshop/templates/" . $skin . "/index.html"))
             $_SESSION['skin'] = $skin;
-        else
-            $_SESSION['skin'] = $PHPShopSystem->getParam('skin');
+        else{
+            if(!empty($_SESSION['skinSave']))
+                $_SESSION['skin'] = $_SESSION['skinSave'];
+            else
+                $_SESSION['skin'] = $PHPShopSystem->getParam('skin');
+        }
 
         $GLOBALS['SysValue']['other']['pageCss'] = $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . chr(47) . $GLOBALS['SysValue']['css']['default'];
     }

@@ -2,7 +2,7 @@
 /**
  * Обработчик перехода с интерактивного прайса
  * @author PHPShop Software
- * @version 1.0
+ * @version 1.1
  * @package PHPShopCore
  */
 class PHPShopExcel extends PHPShopCore {
@@ -29,8 +29,9 @@ class PHPShopExcel extends PHPShopCore {
      * Экшен перехода к товару
      */
     function UID() {
+        
         $product_uid=PHPShopSecurity::TotalClean($this->decode($_GET['UID']),2);
-        $row=$this->PHPShopOrm->select(array('id'),array('uid'=>'="'.$product_uid.'"'),false,array('limit'=>1));
+        $row=$this->PHPShopOrm->select(array('id'),array('uid'=>'="'.PHPShopString::utf8_win1251($product_uid).'"'),false,array('limit'=>1));
         if(is_array($row))
             if(!empty($row['id'])){
             header("HTTP/1.1 301 Moved Permanently");

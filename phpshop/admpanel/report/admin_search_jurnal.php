@@ -59,7 +59,9 @@ function SearchJurnal($pole1, $pole2) {// Вывод журнала
         $display.='<tr class="row ' . $style_r . '" id="r' . $id . '" onmouseover="PHPShopJS.rowshow_on(this)" onmouseout="PHPShopJS.rowshow_out(this,\'' . $style_r . '\')">';
 
         $display.="
-   <td  align=center>$fl</td>
+        <td class=forma>
+	<input type=checkbox name='c" . $id . "' value=\"$id\">
+	</td>
 	<td>
 	<a href=\"" . $SysValue['dir']['dir'] . "/search/?words=$name&cat=$cat&set=$set\" title=\"Перейти по ссылке:\n/search/?words=$name&cat=$cat&set=$set\" target=\"_blank\">$name</a>
 	</td>
@@ -74,9 +76,6 @@ function SearchJurnal($pole1, $pole2) {// Вывод журнала
 	</td>
 	<td>
 	$dir
-	</td>
-	<td class=forma>
-	<input type=checkbox name='c" . $id . "' value=\"$id\">
 	</td>
     </tr>
 	";
@@ -95,13 +94,12 @@ function SearchJurnal($pole1, $pole2) {// Вывод журнала
 	<td valign=\"top\">
 <table cellpadding=\"0\" cellspacing=\"1\" width=\"100%\" border=\"0\" class=\"sortable\" id=\"sort\">
 <tr>
-    <td width=\"5%\" id=pane align=center><img  src=\"icon/blank.gif\"  width=\"1\" height=\"1\" border=\"0\" align=left>&plusmn;</td>
+    <td width=\"25\" id=pane align=center></td>
 	<td width=\"20%\" id=pane align=center><span name=txtLang id=txtLang>Запрос</span></td>
     <td width=\"15%\" id=pane align=center><span name=txtLang id=txtLang>Дата</span></td>
 	<td width=\"10%\" id=pane align=center><span name=txtLang id=txtLang>Найдено</span></td>
 	<td width=\"20%\" id=pane align=center><span name=txtLang id=txtLang>Искали в каталоге</span></td>
 	<td width=\"30%\" id=pane align=center><span name=txtLang id=txtLang>Расположение</span></td>
-    <td width=\"25\" id=pane align=center style=\"padding:1px\"><input type=checkbox value=1 name=DoAll onclick=\"SelectAllBox(this,form_flag)\"></td>
 </tr>
 
 	" . $display . "

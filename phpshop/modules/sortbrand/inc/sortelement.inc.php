@@ -48,7 +48,8 @@ class AddToTemplateSortElement extends PHPShopElements {
                     $value[$k] = array($v[0], $v[1], $v[2]);
                 }
 
-            array_pop($value);
+            //array_pop($value);
+                array_shift($value);
             
             // Сортировка по имени
             sort($value);

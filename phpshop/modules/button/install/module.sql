@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_button_system` (
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 
-INSERT INTO `phpshop_modules_button_system` VALUES (1,'1','');
+INSERT INTO `phpshop_modules_button_system` VALUES (1,'0','');
 
 DROP TABLE IF EXISTS `phpshop_modules_button_forms`;
 CREATE TABLE IF NOT EXISTS `phpshop_modules_button_forms` (

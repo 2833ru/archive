@@ -1,143 +1,105 @@
-<?
-require("../connect.php");
-@mysql_connect("$host", "$user_db", "$pass_db") or @die("Невозможно подсоединиться к базе");
-mysql_select_db("$dbase") or @die("Невозможно подсоединиться к базе");
-require("../enter_to_admin.php");
+<?php
+
+$_classPath = "../../";
+include($_classPath . "class/obj.class.php");
+PHPShopObj::loadClass("base");
+PHPShopObj::loadClass("system");
+
+$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
+$PHPShopBase->chekAdmin();
+
+// Редактор GUI
+PHPShopObj::loadClass("admgui");
+$PHPShopGUI = new PHPShopGUI();
+$PHPShopGUI->title = "Создание Способа Оплаты";
+$PHPShopGUI->ajax = "'payment','','','core'";
+$PHPShopGUI->alax_lib = true;
+
+$PHPShopSystem = new PHPShopSystem();
+
+// SQL
+PHPShopObj::loadClass("orm");
+$PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['payment_systems']);
+
+// Модули
+PHPShopObj::loadClass("modules");
+$PHPShopModules = new PHPShopModules($_classPath . "modules/");
+
+// Стартовый вид
+function actionStart() {
+    global $PHPShopGUI, $PHPShopSystem, $SysValue, $_classPath, $PHPShopOrm, $PHPShopModules;
+
+    $PHPShopGUI->dir = "../";
+    //$PHPShopGUI->size="630,530";
+    // Графический заголовок окна
+    $PHPShopGUI->setHeader("Создание Способа Оплаты", "", $PHPShopGUI->dir . "img/i_select_another_account_med[1].gif");
+
+
+    $Field1 = $PHPShopGUI->setInput("text", "name_new", "Новый способ оплаты", "none", 280) .
+            $PHPShopGUI->setRadio("enabled_new", 1, "Показывать", 1) .
+            $PHPShopGUI->setRadio("enabled_new", 0, "Скрыть",1);
+
+    $Field2 = $PHPShopGUI->setSelect("path_new", $PHPShopGUI->loadLib(GetTipPayment, false), 280, "left") . $PHPShopGUI->setLine() .
+            $PHPShopGUI->setInputText('Сортировка:', "num_new", 0, '50px', false, "left") .
+            $PHPShopGUI->setCheckbox("yur_data_flag_new", 1, "Требовать юр. данные", 0, "left");
+
+    $Field3 = $PHPShopGUI->setInput("text", "message_header_new", false, "none", 280);
+    $Field4 = $PHPShopGUI->setInputText(false, "icon_new", false, '165px', false, 'left') .
+            $PHPShopGUI->setButton(__('Выбрать'), "../img/icon-move-banner.gif", "100px", '25px', "right", "ReturnPic('icon_new');return false;");
+
+
+
+    // Редактор 1
+    $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));
+    $oFCKeditor = new Editor('message_new');
+    $oFCKeditor->Height = '300';
+    $oFCKeditor->ToolbarSet = 'Normal';
+    $oFCKeditor->Value = null;
+    $oFCKeditor->Config['EditorAreaCSS'] = $_classPath . "templates" . chr(47) . $PHPShopSystem->getParam("skin") . chr(47) . $SysValue['css']['default'];
+
+    // Содержание закладки 2
+    $editor = $oFCKeditor->AddGUI();
+
+// Содержание закладки 1
+    $Tab1 = $PHPShopGUI->setField("Наименование:", $Field1, "left") .
+            $PHPShopGUI->setField("Тип подключения:", $Field2, "left") .
+            $PHPShopGUI->setField("Заголовок сообщения после оплаты:", $Field3, "left") .
+            $PHPShopGUI->setField("Иконка:", $Field4, "left");
+
+    // Вывод формы закладки
+    $PHPShopGUI->setTab(array("Основное", $Tab1, 350), array("Сообщение", $editor, 350));
+
+    // Запрос модуля на закладку
+    $PHPShopModules->setAdmHandler($_SERVER["SCRIPT_NAME"], __FUNCTION__, $data);
+
+    // Вывод кнопок сохранить и выход в футер
+    $ContentFooter =
+            $PHPShopGUI->setInput("button", "", "Отмена", "right", 70, "return onCancel();", "but") .
+            $PHPShopGUI->setInput("reset", "", "Сбросить", "right", 70, "", "but") .
+            $PHPShopGUI->setInput("submit", "editID", "ОК", "right", 70, "", "but", "actionInsert.baner.edit");
+
+    // Футер
+    $PHPShopGUI->setFooter($ContentFooter);
+    return true;
+}
+
+// Функция записи
+function actionInsert() {
+    global $PHPShopOrm, $PHPShopModules;
+
+    // Перехват модуля
+    $PHPShopModules->setAdmHandler($_SERVER["SCRIPT_NAME"], __FUNCTION__, $_POST);
+
+    $action = $PHPShopOrm->insert($_POST);
+    return $action;
+}
+
+// Вывод формы при старте
+$PHPShopGUI->setLoader($_POST['editID'], 'actionStart');
+
+// Обработка событий
+$PHPShopGUI->getAction();
 ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-    <head>
-        <title>Создание Нового Способа Оплаты</title>
-        <META http-equiv=Content-Type content="text/html; charset=<?= $SysValue['Lang']['System']['charset'] ?>">
-        <LINK href="../skins/<?= $_SESSION['theme'] ?>/texts.css" type=text/css rel=stylesheet>
-        <SCRIPT language="JavaScript" src="/phpshop/lib/Subsys/JsHttpRequest/Js.js"></SCRIPT>
-        <script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
-    </head>
-    <body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0">
-        <?
-
-// Выбор файла
-        function GetTipPayment($dir) {
-
-            $path = "../../../payment/";
-
-            if ($dh = opendir($path)) {
-                while (($file = readdir($dh)) !== false) {
-                    if ($file != "." && $file != "..") {
-
-                        if (is_dir($path . $file)) {
-                            if ($dir == $file)
-                                $s = "SELECTED";
-                            else
-                                $s = "";
-                            @$dis.="<option value=$file $s>" . TipPayment($file) . "</option>";
-                        }
-                    }
-                }
-                closedir($dh);
-            }
-
-            $dis = "
-<select name=\"path_new\">
-$dis
-</select>
-";
-            return $dis;
-        }
-        ?>
-        <form name="product_edit"  method=post onsubmit="Save()">
-            <table cellpadding="0" cellspacing="0" width="100%" height="50" id="title">
-                <tr bgcolor="#ffffff">
-                    <td style="padding:10">
-                        <b><span name=txtLang id=txtLang>Создание Нового Способа Оплаты</span></b><br>
-                        &nbsp;&nbsp;&nbsp;<span name=txtLang id=txtLang>Укажите данные для записи в базу</span>.
-                    </td>
-                    <td align="right">
-                        <img src="../img/i_visa_med[1].gif" border="0" hspace="10">
-                    </td>
-                </tr>
-            </table>
-            <br>
-            <table cellpadding="5" cellspacing="0" border="0" align="center" width="100%">
-                <tr>
-                    <td>
-                        <FIELDSET>
-                            <LEGEND><span name=txtLang id=txtLang>Наименование</span></LEGEND>
-                            <div style="padding:10">
-                                <input type="text" name="name_new" value="" style="width: 100%; "><br><br>
-                                <input type="radio" name="enabled_new" value="1"  checked><span name=txtLang id=txtLang>Показывать</span>&nbsp;&nbsp;&nbsp;
-                                <input type="radio" name="enabled_new" value="0"><span name=txtLang id=txtLang>Скрыть</span>
-                            </div>
-                        </FIELDSET>
-                    </td>
-                    <td valign="top">
-                        <FIELDSET>
-                            <LEGEND id=lgdLayout><span name=txtLang id=txtLang>Тип подключения</span></LEGEND>
-                            <div style="padding:10">
-                                <?= GetTipPayment("message") ?><br><br>
-                                Сортировка: <input type="text" name="num_new" value="0" style="width: 30px; ">
-                            </div>
-                        </FIELDSET>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <FIELDSET>
-                            <LEGEND id=lgdLayout><span name=txtLang id=txtLang><u>З</u>аголовок сообщения после оплаты</span></LEGEND>
-                            <div style="padding:10">
-                                <input type="text" name="message_header_new" value="" style="width:100%"><br>
-
-                                </FIELDSET>
-                                </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2">
-                                        <FIELDSET>
-                                            <LEGEND id=lgdLayout><span name=txtLang id=txtLang><u>C</u>ообщения после оплаты</span></LEGEND>
-                                            <div style="padding:10">
-                                                <textarea name="message_new" style="width:100%;height: 150px"></textarea>
-
-                                        </FIELDSET>
-                                    </td>
-                                </tr>
-                                </table>
-                                <hr>
-                                <table cellpadding="0" cellspacing="0" width="100%" height="50" >
-                                    <tr>
-                                        <td align="left" style="padding:10">
-                                            <BUTTON class="help" onclick="helpWinParent('payment')">Справка</BUTTON></BUTTON>
-                                        </td>
-                                        <td align="right" style="padding:10">
-                                            <input type="hidden" name="id" value="<?= $id ?>" >
-                                            <input type="submit" name="editID" value="OK" class=but>
-                                            <input type="button" name="btnLang" class=but value="Удалить" onClick="PromptThis();">
-                                            <input type="hidden" class=but  name="productDELETE" id="productDELETE">
-                                            <input type="button" name="btnLang" value="Отмена" onClick="return onCancel();" class=but>
-                                        </td>
-                                    </tr>
-                                </table>
-                                </form>
-                                <?
-                                if (isset($editID) and @$name_new != "") {// Запись редактирования
-                                    if (CheckedRules($UserStatus["visitor"], 2) == 1) {
-                                        $sql = "INSERT INTO " . $GLOBALS['SysValue']['base']['table_name48'] . " SET
-name='$name_new',
-path='$path_new',
-num='$num_new',
-enabled='$enabled_new',
-message='$message_new',
-message_header='$message_header_new'";
-                                        $result = mysql_query($sql) or @die("Невозможно изменить запись");
-                                        echo"
-	  <script>
-DoReloadMainWindow('payment');
-</script>
-	   ";
-                                    }
-                                    else
-                                        $UserChek->BadUserFormaWindow();
-                                }
-                                ?>
 
 
 

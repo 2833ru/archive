@@ -10,30 +10,31 @@ function userorderpaymentlink_mod_yandexmoney_hook($obj, $PHPShopOrderFunction) 
 
 
     // Контроль оплаты от статуса заказа
-    if ($PHPShopOrderFunction->getParam('statusi') == $option['status'] or  empty($option['status'])) {
+    if ($order_metod == 10002)
+        if ($PHPShopOrderFunction->getParam('statusi') == $option['status'] or empty($option['status'])) {
 
-        // Номер счета
-        $mrh_ouid = explode("-", $PHPShopOrderFunction->objRow['uid']);
-        $inv_id = $mrh_ouid[0] . "" . $mrh_ouid[1];
+            // Номер счета
+            $mrh_ouid = explode("-", $PHPShopOrderFunction->objRow['uid']);
+            $inv_id = $mrh_ouid[0] . "" . $mrh_ouid[1];
 
-        // Сумма покупки
-        $out_summ = $PHPShopOrderFunction->getTotal();
+            // Сумма покупки
+            $out_summ = $PHPShopOrderFunction->getTotal();
 
-        // Платежная форма
-        $payment_forma = PHPShopText::setInput('hidden', 'receiver', trim($option['merchant_id']),false,10);
-        $payment_forma.= PHPShopText::setInput('hidden', 'formcomment', $PHPShopSystem->getParam('name') . ': Заказ ' . $PHPShopOrderFunction->objRow['uid'],false,10);
-        $payment_forma.= PHPShopText::setInput('hidden', 'short-dest', $PHPShopSystem->getParam('name') . ': Заказ ' . $PHPShopOrderFunction->objRow['uid'],false,10);
-        $payment_forma.=PHPShopText::setInput('hidden', 'writable-targets', "false",false,10);
-        $payment_forma.=PHPShopText::setInput('hidden', 'comment-needed', "false",false,10);
-        $payment_forma.=PHPShopText::setInput('hidden', 'label', $inv_id,false,10);
-        $payment_forma.=PHPShopText::setInput('hidden', 'quickpay-form', 'shop');
-        $payment_forma.=PHPShopText::setInput('hidden', 'targets', $PHPShopSystem->getParam('name') . ': Заказ '.$PHPShopOrderFunction->objRow['uid'],false,10);
-        $payment_forma.=PHPShopText::setInput('hidden', 'sum', $out_summ,false,10);
-        $payment_forma.=PHPShopText::setInput('submit', 'send', $option['title'], $float = "none", 250);
+            // Платежная форма
+            $payment_forma = PHPShopText::setInput('hidden', 'receiver', trim($option['merchant_id']), false, 10);
+            $payment_forma.= PHPShopText::setInput('hidden', 'formcomment', $PHPShopSystem->getParam('name') . ': Заказ ' . $PHPShopOrderFunction->objRow['uid'], false, 10);
+            $payment_forma.= PHPShopText::setInput('hidden', 'short-dest', $PHPShopSystem->getParam('name') . ': Заказ ' . $PHPShopOrderFunction->objRow['uid'], false, 10);
+            $payment_forma.=PHPShopText::setInput('hidden', 'writable-targets', "false", false, 10);
+            $payment_forma.=PHPShopText::setInput('hidden', 'comment-needed', "false", false, 10);
+            $payment_forma.=PHPShopText::setInput('hidden', 'label', $inv_id, false, 10);
+            $payment_forma.=PHPShopText::setInput('hidden', 'quickpay-form', 'shop');
+            $payment_forma.=PHPShopText::setInput('hidden', 'targets', $PHPShopSystem->getParam('name') . ': Заказ ' . $PHPShopOrderFunction->objRow['uid'], false, 10);
+            $payment_forma.=PHPShopText::setInput('hidden', 'sum', $out_summ, false, 10);
+            $payment_forma.=PHPShopText::setInput('submit', 'send', $option['title'], $float = "none", 250);
 
-        $return = PHPShopText::form($payment_forma, 'yandexpay', 'post', 'https://money.yandex.ru/quickpay/confirm.xml','_blank');
-    } elseif ($PHPShopOrderFunction->getSerilizeParam('orders.Person.order_metod') == 10002)
-        $return = ', Заказ обрабатывается менеджером';
+            $return = PHPShopText::form($payment_forma, 'yandexpay', 'post', 'https://money.yandex.ru/quickpay/confirm.xml', '_blank');
+        } elseif ($PHPShopOrderFunction->getSerilizeParam('orders.Person.order_metod') == 10002)
+            $return = ', Заказ обрабатывается менеджером';
 
     return $return;
 }

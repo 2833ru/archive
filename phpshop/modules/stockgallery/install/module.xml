@@ -2,7 +2,8 @@
 <module>
     <version>1.1</version>
     <name>Stockgallery</name>
-    <description>Модуль карусели товаров</description>
+        <faqlink>http://faq.phpshop.ru/page/stockgallery.html</faqlink>
+    <description>Модуль карусели товаров.</description>
     <icon>icon.png</icon>
     <category>decorate,template</category>
     <adminmenu>

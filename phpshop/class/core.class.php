@@ -90,7 +90,7 @@ class PHPShopCore {
      * @var bool 
      */
     var $garbage_enabled = false;
-    
+
     /**
      * отключение защиты проверки пустого экшена
      * @var bool
@@ -163,7 +163,6 @@ class PHPShopCore {
      */
     function navigation($id, $name) {
         $dis = null;
-
         // Шаблоны разделителя навигации
         $spliter = ParseTemplateReturn($this->getValue('templates.breadcrumbs_splitter'));
         $home = ParseTemplateReturn($this->getValue('templates.breadcrumbs_home'));
@@ -182,9 +181,17 @@ class PHPShopCore {
 
         if (!empty($arrayPath) and is_array($arrayPath)) {
             foreach ($arrayPath as $v) {
+                // назначаем thisCat, чтобы в метках сохранить ИД дерева октрытых категорий в разделе shop.
+                if ($this->PHPShopNav->getPath() == "shop")
+                    $this->set('thisCat' . $i++, $v['id']);
+//                    echo 'thisCat' . $i++." = {$v['id']}!";
                 $dis.= $spliter . PHPShopText::a('/' . $this->PHPShopNav->getPath() . '/CID_' . $v['id'] . '.html', $v['name']);
             }
         }
+
+        // назначаем thisCat, чтобы в метках сохранить ИД дерева октрытых категорий в разделе shop.
+        if ($this->PHPShopNav->getPath() == "shop")
+            $this->set('thisCat' . $i++, $this->PHPShopNav->getId());
 
         $dis = $home . $dis . $spliter . PHPShopText::b($name);
         $this->set('breadCrumbs', $dis);
@@ -605,12 +612,12 @@ width="32" height="32" alt="PHPShopCore Debug On"/ ><strong>Ошибка обработчика с
                             }
                         } else {
                             // Если один экшен
-                            if ($this->PHPShopNav->getNav() == $v and $this->isAction($v))
+                            if (@$this->PHPShopNav->getNav() == $v and $this->isAction($v))
                                 return call_user_func(array(&$this, $this->action_prefix . $v));
                             elseif ($this->isAction('index')) {
 
                                 // Защита от битых адресов /page/page/page/****
-                                if ($this->PHPShopNav->getNav() and !$this->empty_index_action)
+                                if (@$this->PHPShopNav->getNav() and !$this->empty_index_action)
                                     $this->setError404();
                                 else
                                     call_user_func(array(&$this, $this->action_prefix . 'index'));
@@ -757,6 +764,15 @@ width="32" height="32" alt="PHPShopCore Debug On"/ ><strong>Ошибка обработчика с
      */
     function setHook($class_name, $function_name, $data = false, $rout = false) {
         return $this->PHPShopModules->setHookHandler($class_name, $function_name, array(&$this), $data, $rout);
+    }
+
+    /**
+     * Назначение HTML переменных верстки
+     * @param string $class_name имя класса
+     */
+    function setHtmlOption($class_name) {
+        if (!empty($GLOBALS['SysValue']['html'][strtolower($class_name)]))
+            $this->cell_type = $GLOBALS['SysValue']['html'][strtolower($class_name)];
     }
 
     /**

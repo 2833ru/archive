@@ -17,6 +17,20 @@ function GetValuta($id) {
     return $row;
 }
 
+function recursiveCatDelete($id) {
+    global $SysValue;
+    echo "$id ";
+    $sql = "delete from " . $SysValue['base']['table_name'] . " WHERE id = $id";
+    mysql_query($sql);
+    $sql = "delete from " . $SysValue['base']['table_name2'] . " WHERE category = $id";
+    mysql_query($sql);
+    $sql = "SELECT id FROM " . $SysValue['base']['table_name'] . "  WHERE parent_to = $id";
+    $result = mysql_query($sql);
+    while ($row = mysql_fetch_array($result)) {
+        recursiveCatDelete($row['id']);
+    }
+}
+
 function Ras_data_content($string) {// Состав рассылки
     global $table_name8, $GetSystems, $SysValue;
     $sql = "select * from $table_name8  where id='0' $string";
@@ -136,7 +150,7 @@ function Ras_data_mail($content, &$num, $id = "") {// По мылу марш...
 
         function GetInfoUsers($n) {
             global $SysValue;
-            $sql = "select * from " . $SysValue['base']['table_name27'] . " where id=".intval($n);
+            $sql = "select * from " . $SysValue['base']['table_name27'] . " where id=" . intval($n);
             $result = mysql_query($sql);
             $row = mysql_fetch_array($result);
             return $row;
@@ -144,7 +158,7 @@ function Ras_data_mail($content, &$num, $id = "") {// По мылу марш...
 
         function GetInfoProduct($n) {
             global $SysValue;
-            $sql = "select name, sklad, uid, price, datas, baseinputvaluta  from " . $SysValue['base']['table_name2'] . " where id=".intval($n);
+            $sql = "select name, sklad, uid, price, datas, baseinputvaluta  from " . $SysValue['base']['table_name2'] . " where id=" . intval($n);
             $result = mysql_query($sql);
             $row = mysql_fetch_array($result);
             return $row;
@@ -171,8 +185,8 @@ $dis
 
         function dispValue($n) { // вывод характеристик
             global $SysValue;
-            $dis=null;
-            $sql = "select * from " . $SysValue['base']['table_name21'] . " where category=".intval($n)." order by num";
+            $dis = null;
+            $sql = "select * from " . $SysValue['base']['table_name21'] . " where category=" . intval($n) . " order by num";
             $result = mysql_query($sql);
             while ($row = mysql_fetch_array($result)) {
                 $id = $row['id'];
@@ -190,8 +204,8 @@ $dis
 
         function DispCatSort($category, &$h) {
             global $SysValue;
-            $disp=null;
-            $sql = "select sort from " . $SysValue['base']['table_name'] . " where id=".intval($category);
+            $disp = null;
+            $sql = "select sort from " . $SysValue['base']['table_name'] . " where id=" . intval($category);
             $result = mysql_query($sql);
             $row = mysql_fetch_array($result);
             $sort = unserialize($row["sort"]);
@@ -227,7 +241,7 @@ $dis
 <tr bgcolor="#ffffff">
   <td style="padding:10">
   <b><span name=txtLang id=txtLang>Действие</span></b><br>
-  &nbsp;&nbsp;&nbsp;<span name=txtLang id=txtLang>Укажите данные для записи в базу</span>.
+  
   </td>
   <td align="right">
   <img src="../img/i_documentation_med[1].gif" border="0" hspace="10">
@@ -235,17 +249,16 @@ $dis
 </tr>
 </table>
 <br>
-<FIELDSET>
-<legend>Перенести в каталог</legend>
 <table cellpadding="0"  cellspacing="7">
 <tr>
   <td>
-  <input type=text id="parent_name" style="width:300px" value="">
-<input type="hidden" name="category_new" id="category_new">
-<BUTTON style="width: 3em; height: 2.2em; margin-left:5"  onclick="miniWinFull(\'../catalog/adm_cat.php\',300,400,300,200)"><img src="../img/icon-move-banner.gif"  width="16" height="16" border="0"></BUTTON>
+  <span name=txtLang id=txtLang><u>П</u>еренести в каталог</span><br>
+  <input type=text id="myName"  style="width: 230" value="">
+<input type="hidden" name="category_new" id="myCat">
+<BUTTON style="width: 3em; height: 2.2em; margin-left:5"  onclick="miniWinFull(\'../product/adm_cat.php\',300,400,300,200)"><img src="../img/icon-move-banner.gif"  width="16" height="16" border="0"></BUTTON>
   </td>
 </tr></table>
- </FIELDSET>
+
 <hr>
 <table cellpadding="0" cellspacing="0" width="100%" height="40" >
 <tr>
@@ -281,7 +294,7 @@ $dis
 <tr bgcolor="#ffffff">
   <td style="padding:10">
   <b><span name=txtLang id=txtLang>Действие</span></b><br>
-  &nbsp;&nbsp;&nbsp;<span name=txtLang id=txtLang>Укажите данные для записи в базу</span>.
+  
   </td>
   <td align="right">
   <img src="../img/i_documentation_med[1].gif" border="0" hspace="10">
@@ -324,7 +337,7 @@ DoResize(' . $GetSystems['width_icon'] . ',400,300);
 <tr bgcolor="#ffffff">
   <td style="padding:10">
   <b><span name=txtLang id=txtLang>Действие</span></b><br>
-  &nbsp;&nbsp;&nbsp;<span name=txtLang id=txtLang>Укажите данные для записи в базу</span>.
+  
   </td>
   <td align="right">
   <img src="../img/i_documentation_med[1].gif" border="0" hspace="10">
@@ -368,7 +381,7 @@ DoResize(' . $GetSystems['width_icon'] . ',400,300);
 <tr bgcolor="#ffffff">
   <td style="padding:10">
   <b><span name=txtLang id=txtLang>Действие</span></b><br>
-  &nbsp;&nbsp;&nbsp;<span name=txtLang id=txtLang>Укажите данные для записи в базу</span>.
+  
   </td>
   <td align="right">
   <img src="../img/i_documentation_med[1].gif" border="0" hspace="10">
@@ -380,8 +393,8 @@ DoResize(' . $GetSystems['width_icon'] . ',400,300);
 <tr>
   <td>
   <span name=txtLang id=txtLang><u>П</u>еренести в каталог</span><br>
-  <input type=text id="myName"  style="width: 230" value="">
-<input type="hidden" name="category_new" id="myCat">
+  <input type=text id="parent_name" style="width: 230" value="">
+<input type="hidden" name="category_new" id="category_new">
 <BUTTON style="width: 3em; height: 2.2em; margin-left:5"  onclick="miniWinFull(\'../page/adm_cat.php\',300,400,300,200)"><img src="../img/icon-move-banner.gif"  width="16" height="16" border="0"></BUTTON>
   </td>
 </tr></table>
@@ -405,7 +418,7 @@ DoResize(' . $GetSystems['width_icon'] . ',400,300);
 <tr bgcolor="#ffffff">
   <td style="padding:10">
   <b><span name=txtLang id=txtLang>Действие</span></b><br>
-  &nbsp;&nbsp;&nbsp;<span name=txtLang id=txtLang>Укажите данные для записи в базу</span>.
+  
   </td>
   <td align="right">
   <img src="../img/i_documentation_med[1].gif" border="0" hspace="10">
@@ -443,7 +456,7 @@ DoResize(' . $GetSystems['width_icon'] . ',400,300);
 <tr bgcolor="#ffffff">
   <td style="padding:10">
   <b><span name=txtLang id=txtLang>Действие</span></b><br>
-  &nbsp;&nbsp;&nbsp;<span name=txtLang id=txtLang>Укажите данные для записи в базу</span>.
+  
   </td>
   <td align="right">
   <img src="../img/i_documentation_med[1].gif" border="0" hspace="10">
@@ -539,7 +552,7 @@ if (document.getElementById(\'nid_new\').value=="0") {
 <tr bgcolor="#ffffff">
   <td style="padding:10">
   <b><span name=txtLang id=txtLang>Действие</span></b><br>
-  &nbsp;&nbsp;&nbsp;<span name=txtLang id=txtLang>Укажите данные для записи в базу</span>.
+  
   </td>
   <td align="right">
   <img src="../img/i_documentation_med[1].gif" border="0" hspace="10">
@@ -574,7 +587,7 @@ if (document.getElementById(\'nid_new\').value=="0") {
 <tr bgcolor="#ffffff">
   <td style="padding:10">
   <b><span name=txtLang id=txtLang>Действие</span></b><br>
-  &nbsp;&nbsp;&nbsp;<span name=txtLang id=txtLang>Укажите данные для записи в базу</span>.
+  
   </td>
   <td align="right">
   <img src="../img/i_documentation_med[1].gif" border="0" hspace="10">
@@ -612,7 +625,7 @@ DoResize(' . $GetSystems['width_icon'] . ',300,500);
 <tr bgcolor=\"#ffffff\">
   <td style=\"padding:10\">
   <b><span name=txtLang id=txtLang>Действие</span></b><br>
-  &nbsp;&nbsp;&nbsp;<span name=txtLang id=txtLang>Укажите данные для записи в базу</span>.
+  
   </td>
   <td align=\"right\">
   <img src=\"../img/i_documentation_med[1].gif\" border=\"0\" hspace=\"10\">
@@ -669,6 +682,14 @@ DoResize(' . $GetSystems['width_icon'] . ',300,500);
 SET
 spec='1'
 where id='0' $string";
+                    $pageReload = "cat_prod";
+                } elseif ($DO == "cleanTempFolder") {// очищаем временную папку от всех товаров и категорий
+                    $sql = "SELECT id FROM $table_name WHERE parent_to = 1000003";
+                    $result = mysql_query($sql);
+                    while ($row = mysql_fetch_array($result)) {
+                        recursiveCatDelete($row['id']);
+                    }
+                    $sql = "";
                     $pageReload = "cat_prod";
                 } elseif ($DO == 3) {// Из спецпредложения
                     foreach ($IdsArray as $v)
@@ -911,7 +932,7 @@ VALUES ("",0,' . $UID . ',' . $_SESSION['idPHPSHOP'] . ',\'' . $DateTime_new . '
 
 //Отправка сообщения пользователю
                             $UsersId = $UID;
-                            $sql = "select * from " . $SysValue['base']['table_name27'] . " where id=".intval($UsersId)." LIMIT 0, 1";
+                            $sql = "select * from " . $SysValue['base']['table_name27'] . " where id=" . intval($UsersId) . " LIMIT 0, 1";
                             $result = mysql_query($sql);
                             $row = mysql_fetch_array($result);
                             $id = $row['id'];
@@ -1065,7 +1086,7 @@ Powered & Developed by www.PHPShop.ru";
                         mail($User['mail'], $zag_adm, $content_adm, $header_adm) or die("Не могу отправить уведомление");
 
 // Обновляем уведомление
-                        mysql_query("UPDATE " . $SysValue['base']['table_name34'] . " SET enabled='1' where id=".intval($id));
+                        mysql_query("UPDATE " . $SysValue['base']['table_name34'] . " SET enabled='1' where id=" . intval($id));
 
 // Отсылаем SMS
                         if ($option['notice_enabled'] == 1) {

@@ -14,6 +14,12 @@ class PHPShopIndex extends PHPShopCore {
      */
     var $default_server_error_page = false;
 
+    /**
+     * Разрешенные _GET переменные
+     * @var array
+     */
+    var $true_get_params=array('skin','logout','partner','debug','mobile','fullversion');
+
     function PHPShopIndex() {
         $this->objBase = $GLOBALS['SysValue']['base']['table_name11'];
         $this->debug = false;
@@ -46,7 +52,8 @@ class PHPShopIndex extends PHPShopCore {
      */
     function seoguard() {
         if ($this->PHPShopNav->index()) {
-            if (!empty($_GET) and empty($_GET['skin']) and empty($_GET['logout']) and empty($_GET['partner']) and empty($_GET['debug'])) {
+            $key=array_keys($_GET);
+            if (!empty($_GET) and (count($_GET)>1 or !in_array($key[0],$this->true_get_params))) {
                 $this->setError404();
                 if ($this->default_server_error_page)
                     exit();

@@ -2,7 +2,8 @@
 <module>
     <version>1.1</version>
     <name>Sticker</name>
-    <description>Модуль стикеров</description>
+    <faqlink>http://faq.phpshop.ru/page/sticker.html</faqlink>
+<description>Модуль стикеров.</description>
     <icon>icon.png</icon>
     <category>form,text</category>
     <adminmenu>

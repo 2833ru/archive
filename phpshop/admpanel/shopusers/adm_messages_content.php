@@ -93,7 +93,7 @@ if ($i > 30)
         <script type="text/javascript" language="JavaScript1.2" src="../language/<?= $Lang ?>/language_windows.js"></script>
         <script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
         <script type="text/javascript" language="JavaScript1.2" src="../java/sorttable.js"></script>
-        <? if (isset($id)) { ?>
+<? if (isset($id)) { ?>
 
         </head>
         <body topmargin="0" rightmargin="3" leftmargin="3" >
@@ -103,12 +103,12 @@ if ($i > 30)
                     <td width="10%" id=pane>Дата</td>
                     <td width="85%" id=pane>Сообщение</td>
                 </tr>
-                <?= $display ?>
+    <?= $display ?>
             </table>
 
             <input type="hidden" value="<?= $id ?>" id="catal" name="catal">
             <input type="hidden" name="id" value="<?= $id ?>" >
-            <?
+        <?
         }
 
         if (@$productDELETE == "doIT") {// Удаление

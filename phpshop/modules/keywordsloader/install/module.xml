@@ -2,7 +2,8 @@
 <module>
     <version>1.0</version>
     <name>Keywords Loader</name>
-    <description>Модуль обработки keywords товаров</description>
+    <faqlink>http://faq.phpshop.ru/page/keywords-loader.html</faqlink>
+<description>Модуль обработки keywords товаров.</description>
     <icon>icon.png</icon>
     <category>seo</category>
     <adminmenu>

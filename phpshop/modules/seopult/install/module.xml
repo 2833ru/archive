@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.0</version>
+    <version>1.1</version>
     <name>Seo Pult</name>
-    <description>Модуль seo-продвижения</description>
+    <faqlink>http://faq.phpshop.ru/page/seopult.html</faqlink>
+    <description>Модуль SEO-продвижения.</description>
     <icon>icon.png</icon>
     <category>seo</category>
     <status></status>
@@ -13,7 +14,7 @@
             <podmenu_icon>option.png</podmenu_icon>
             <podmenu_action>javascript:miniWin('../modules/seopult/admpanel/adm_module.php',510,450);</podmenu_action>
         </podmenu>
-         <podmenu>
+        <podmenu>
             <podmenu_name>Пульт управления</podmenu_name>
             <podmenu_icon>icon.png</podmenu_icon>
             <podmenu_action>javascript:window.location.replace('?plugin=seopult')</podmenu_action>

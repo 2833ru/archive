@@ -11,7 +11,6 @@ $table_name19 = $SysValue['base']['table_name19'];
 
 @mysql_connect("$host", "$user_db", "$pass_db") or @die("Невозможно подсоединиться к базе");
 mysql_select_db("$dbase") or @die("Невозможно подсоединиться к базе");
-
 require("../../watermark/watermarkFunc.php");
 require("../../connect.php");
 require("../../enter_to_admin.php");
@@ -239,7 +238,7 @@ if (CheckedRules($UserStatus["cat_prod"], 2) == 1) {
         global $sName2;
         global $sName3;
         global $currFolder;
-
+        $currFolder = $_POST["selCurrFolder"];
         echo "<select name='selCurrFolder' id='selCurrFolder' class='inpSel'>";
         recursive($sBase0, $sBase0, $sName0);
         if ($sBase1 != "")
@@ -308,8 +307,14 @@ if (CheckedRules($UserStatus["cat_prod"], 2) == 1) {
             <SCRIPT language="JavaScript" src="/phpshop/lib/Subsys/JsHttpRequest/Js.js"></SCRIPT>
             <script>
                 function userfile_check() {
-                    if (document.getElementById('userfile').value == "")
+                    if (document.getElementById('userfile').value == ""){
+                        alert("Пожалуйста, выберите файл.");
                         return false;
+                    }
+                    else{
+                        document.getElementById('fotoLoadSubButton').disabled = true;
+                        return true;
+                    }
                 }
             </script>    
         <body style="margin:0px;">
@@ -323,14 +328,14 @@ if (CheckedRules($UserStatus["cat_prod"], 2) == 1) {
                         <tr>
                             <td>
                                 <FIELDSET><legend>Размещение</legend>
-                                   <? writeFolderSelections() ?>
-                                 </FIELDSET>   
+                                    <? writeFolderSelections() ?>
+                                </FIELDSET>   
                             </td>
                         </tr>
                         <tr>
                             <td valign=top>
                                 <FIELDSET><legend>Выберите файл с расширением *.gif, *.jpg</legend>
-                                  <INPUT type=file name="userfile" id="userfile" style="width: 300px" accept="image/gif,image/jpeg">  
+                                    <INPUT type=file name="userfile" id="userfile" style="width: 300px" accept="image/gif,image/jpeg">  
                                 </FIELDSET> 
                             </td>
                         </tr>
@@ -339,8 +344,8 @@ if (CheckedRules($UserStatus["cat_prod"], 2) == 1) {
                     <table width="100%" align=center cellpadding=0 cellspacing=0 border=0>
                         <tr>
                             <td valign=top align="right" style="padding:10px">
-                                <input type="submit" value="Загрузить" class="but">
-                                <INPUT class=but name="btnLang" onclick="self.close()" type=reset value=Отмена> 
+                                <input type="submit" value="Загрузить" class="but" id="fotoLoadSubButton">
+                                <INPUT class=but name="btnLang" onclick="self.close()" type=reset value=Закрыть> 
                                 <input type="hidden" name="load" value="<?= $_REQUEST['id'] ?>">
                             </td>
                         </tr>
@@ -348,8 +353,38 @@ if (CheckedRules($UserStatus["cat_prod"], 2) == 1) {
                 </FORM>
                 <?
             } else {
+                ?>
 
 
+                <FORM name="upload" id="upload" method="post" encType="multipart/form-data" onsubmit="return userfile_check();">
+                    <table width="100%"  align=center cellpadding=3 cellspacing=3 border=0>
+                        <tr>
+                            <td>
+                                <FIELDSET><legend>Размещение</legend>
+                                    <? writeFolderSelections() ?>
+                                </FIELDSET>   
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign=top>
+                                <FIELDSET><legend>Выберите файл с расширением *.gif, *.jpg</legend>
+                                    <INPUT type=file name="userfile" id="userfile" style="width: 300px" accept="image/gif,image/jpeg">  
+                                </FIELDSET> 
+                            </td>
+                        </tr>
+                    </table>
+                    <hr>
+                    <table width="100%" align=center cellpadding=0 cellspacing=0 border=0>
+                        <tr>
+                            <td valign=top align="right" style="padding:10px">
+                                <input type="submit" value="Загрузить" id="fotoLoadSubButton" class="but">
+                                <INPUT class=but name="btnLang" onclick="self.close()" type=reset value=Закрыть> 
+                                <input type="hidden" name="load" value="<?= $_REQUEST['id'] ?>">
+                            </td>
+                        </tr>
+                    </table>
+                </FORM>
+                <?
                 $Admoption = unserialize($GetSystems['admoption']);
 
                 $mycF = $_POST["selCurrFolder"];
@@ -391,35 +426,55 @@ if (CheckedRules($UserStatus["cat_prod"], 2) == 1) {
                 elseif (($img[ufiletyle] == "image/pjpeg") OR ($img[ufiletyle] == "image/jpeg"))
                     $ftype = "jpg";
 
-               if(!empty($ftype)){
-                mysql_query("INSERT INTO " . $SysValue['base']['table_name35'] . " VALUES ('','" . $_REQUEST['id'] . "','$mycReturn/" . $img[name] . "." . $ftype . "','','')");
+                if (!empty($ftype)) {
+                    mysql_query("INSERT INTO " . $SysValue['base']['table_name35'] . " VALUES ('','" . $_REQUEST['id'] . "','$mycReturn/" . $img[name] . "." . $ftype . "','','')");
 
-
-
-                echo "
+                    $flag = $_REQUEST['flag'];
+//                    echo $flag;
+//                    // Проверяем, назначенали товару как главное, изображение из галереи 
+//                    $flag = 1;
+//                    $row = mysql_fetch_array(mysql_query("SELECT pic_big FROM " . $SysValue['base']['table_name2'] . " WHERE id =" . $_REQUEST['id']));
+//                    if (is_array($row)) {
+//                        $pic_big = $row['pic_big'];
+//                        $row = mysql_fetch_array(mysql_query("SELECT id FROM " . $SysValue['base']['table_name35'] . " WHERE name = '$pic_big' AND parent = " . $_REQUEST['id']));
+//                        if (is_array($row))
+//                            $flag = 0;
+//                    }
+                    echo "
 <script>
 
 
-function DoUpdateFotoList(xid) {
+function DoUpdateFotoList(xid, flag) {
 var req = new Subsys_JsHttpRequest_Js();
 		req.onreadystatechange = function() {
 			if (req.readyState == 4) {
-					window.opener.document.getElementById('fotolist').innerHTML = req.responseJS.interfaces;
-// Стандартную форму обновляем
-window.opener.document.getElementById('pic_small_new').value='" . $mycReturn . "/" . $img[name] . "s." . $ftype . "';
-window.opener.document.getElementById('pic_big_new').value='" . $mycReturn . "/" . $img[name] . "." . $ftype . "';
+                            window.opener.document.getElementById('fotolist').innerHTML = req.responseJS.interfaces;
+                            // Стандартную форму обновляем
+                            if(flag == 0){
+                            window.opener.document.getElementById('pic_small_new').value='" . $mycReturn . "/" . $img[name] . "s." . $ftype . "';
+                            window.opener.document.getElementById('pic_big_new').value='" . $mycReturn . "/" . $img[name] . "." . $ftype . "';
 			}
+		}
 		}
 		// Подготваливаем объект.
 		req.open(null, '" . $SysValue['dir']['dir'] . "/phpshop/admpanel/product/action.php?do=update', true);
-		req.send( {  xid: xid } );
+		req.send( {  uid: xid } );
 }
 
-DoUpdateFotoList(" . $_REQUEST['id'] . ");
-setTimeout('self.close()',1000);
+
+
+
+
+var flag = window.opener.document.getElementById('pic_small_new').value.length;
+//DoUpdateFotoList(" . $_REQUEST['id'] . ", $flag);
+DoUpdateFotoList(" . $_REQUEST['id'] . ", flag);
+//setTimeout('self.close()',1000);
+//setTimeout('location.reload()',1000);
 </script>
 ";
-               }else echo '<script>self.close()</script>';
+                }
+                else
+                    echo '<script>self.close()</script>';
             }
         }
         else

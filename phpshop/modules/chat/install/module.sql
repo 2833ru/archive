@@ -12,12 +12,13 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_chat_system` (
   `operator` enum('1','2') NOT NULL default '1',
   `skin` varchar(32) NOT NULL default '',
   `upload_dir` varchar(64) NOT NULL default '',
+  `chmod` varchar(64) NOT NULL default '0775',
   `version` FLOAT(2) DEFAULT '1.0' NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 
-INSERT INTO `phpshop_modules_chat_system` VALUES (1,'1','Чат','Чем Вам помочь?','Оператора нет на месте...','','0','2','default','','1.5');
+INSERT INTO `phpshop_modules_chat_system` VALUES (1,'1','Чат','Чем Вам помочь?','Оператора нет на месте...','','0','2','default','','0775','1.6');
 
 DROP TABLE IF EXISTS `phpshop_modules_chat_users`;
 CREATE TABLE `phpshop_modules_chat_users` (

@@ -6,7 +6,7 @@ function OrderPayment() {// вывод платежей
     $numRows = 0;
     $disp = null;
 
-    $sql = "select * from " . $GLOBALS['SysValue']['base']['table_name48'] . " order by num desc";
+    $sql = "select * from " . $GLOBALS['SysValue']['base']['table_name48'] . " order by num";
     @$result = mysql_query($sql);
     while (@$row = mysql_fetch_array(@$result)) {
         $id = $row['id'];
@@ -28,7 +28,7 @@ function OrderPayment() {// вывод платежей
             $fl = "<img src=\"img/icon-deactivate.gif\">";
         }
 
-        $disp.='<tr class="row ' . $style_r . '" id="r' . $id . '" onmouseover="PHPShopJS.rowshow_on(this)" onmouseout="PHPShopJS.rowshow_out(this,\'' . $style_r . '\')" onclick="miniWin(\'payment/adm_paymentID.php?id=' . $id . '\',650,550)" >';
+        $disp.='<tr class="row ' . $style_r . '" id="r' . $id . '" onmouseover="PHPShopJS.rowshow_on(this)" onmouseout="PHPShopJS.rowshow_out(this,\'' . $style_r . '\')" onclick="miniWin(\'payment/adm_paymentID.php?id=' . $id . '\',640,510)" >';
 
         $disp.='
 <td align="center" class=forma>
@@ -46,7 +46,7 @@ function OrderPayment() {// вывод платежей
 <div id=interfacesWin name=interfacesWin align="left" style="width:100%;' . @$razmer . ';overflow:auto"> 
 <table width="50%"  cellpadding="0" cellspacing="0" >
 <tr>
-	<td valign="top" >
+	<td valign="top" style="padding-left:5px">
 
 <table cellpadding="0" cellspacing="1" width="100%" border="0" class="sortable" id="sort">
 <tr>
@@ -58,7 +58,7 @@ function OrderPayment() {// вывод платежей
 </table>
 
 </table>
-<div align="right" style="width:50%;padding:10"><BUTTON style="width: 15em; height: 2.2em; margin-left:5"  onclick="miniWin(\'payment/adm_payment_new.php\',630,580)">
+<div align="right" style="width:50%;padding:10"><BUTTON style="width: 15em; height: 2.2em; margin-left:5"  onclick="miniWin(\'payment/adm_payment_new.php\',640,510)">
 <img src="icon/page_new.gif" width="16" height="16" border="0" align=absmiddle hspace="5">
 <span name=txtLang id=txtLang>Новая позиция</span>
 </BUTTON></div>

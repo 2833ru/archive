@@ -10,16 +10,16 @@
         <table>
             <tr>
                 <td><b>Имя</b>:</td>
-                <td><input type="text" name="returncall_mod_name" id="returncall_mod_name" size="15"></td>
+                <td><input type="text" name="returncall_mod_name" id="returncall_mod_name" ></td>
             </tr>
             <tr>
                 <td><b>Телефон</b>:</td>
-                <td><input type="text" name="returncall_mod_tel" id="returncall_mod_tel" size="15"> </td>
+                <td><input type="text" name="returncall_mod_tel" id="returncall_mod_tel" > </td>
             </tr>
             <tr>
                 <td>Время звонка:</td>
-                <td>от <input type="text" name="returncall_mod_time_start" size="2"> до 
-                    <input type="text" name="returncall_mod_time_end" size="2"></td>
+                <td>от <input type="text" name="returncall_mod_time_start" id="returncall_mod_time_start" size="2"> до 
+                    <input type="text" name="returncall_mod_time_end" id="returncall_mod_time_end" size="2" ></td>
             </tr>
             <tr>
                 <td>Сообщение:</td>
@@ -32,7 +32,7 @@
             
             <tr>
                 <td></td>
-                <td><input type="submit" name="returncall_mod_send" value="Перезвоните мне" style="width:130px"></td>
+                <td><input type="submit" name="returncall_mod_send" class="returncall_mod_send" value="Перезвоните мне"></td>
             </tr>
         </table>
     </form>

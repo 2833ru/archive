@@ -188,8 +188,8 @@ stm_ep();
     return array($disp, $IconTab);
 }
 
-if(isset($_GET['skinload'])){
-    $_SESSION['theme']=null;
+if (isset($_GET['skinload'])) {
+    $_SESSION['theme'] = null;
 }
 
 // Тема панели
@@ -201,7 +201,7 @@ if (empty($_SESSION['theme'])) {
         $_SESSION['theme'] = 'default';
 }
 else
-    $_SESSION['theme'] = substr(PHPShopSecurity::TotalClean($_SESSION['theme']),0,10);
+    $_SESSION['theme'] = substr(PHPShopSecurity::TotalClean($_SESSION['theme']), 0, 10);
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -213,6 +213,8 @@ else
         <META name="engine-copyright" content="PHPShop LLC, <?= $ProductName; ?>">
         <LINK href="skins/<?= $_SESSION['theme'] ?>/texts.css" type=text/css rel=stylesheet>
         <LINK href="skins/<?= $_SESSION['theme'] ?>/dateselector.css" type=text/css rel=stylesheet>
+        <LINK rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
+        <LINK rel="icon" href="./favicon.ico" type="image/x-icon">
         <SCRIPT language="JavaScript" src="/phpshop/lib/Subsys/JsHttpRequest/Js.js"></SCRIPT>
         <script type="text/javascript" language="JavaScript" src="/phpshop/lib/JsHttpRequest/JsHttpRequest.js"></script>
         <SCRIPT type="text/javascript" language="JavaScript" src="java/popup_lib.js"></SCRIPT>
@@ -226,14 +228,10 @@ else
             // Проверка пароля root
 <?= $rootNote; ?>
 
-
             // Проверка обновлений
             function ChekUpdate(flag) {
-
-                // Параметры для модуля автоматического обновления файлов
                 var auto_upload_flag = "<?php echo $upload_type ?>";
                 var ftp_pars = "<?php echo "?ftp_host=$ftp_host&ftp_folder=$ftp_folder&ftp_login=$ftp_login&ftp_password=$ftp_password&new_version=$new_version" ?>";
-                // конец
                 var update_message = "<?= $UpdateContent; ?>";
                 var version = "<?= $SysValue['upload']['version']; ?>";
                 var path = "<?= PATH ?>";
@@ -243,7 +241,6 @@ else
                 var expirUntil = "<?= dataV(EXPIRES, 'update'); ?>";
                 var cookieValue = GetCookie('update');
                 var support_status = "<?= $support_status ?>";
-
 
                 if (support_status == "active") {
                     window.status = "Внимание, доступно обновление платформы!";
@@ -413,19 +410,21 @@ echo $CreateModulesMenu[0];
             stm_aix("p13i0", "p1i0", [0, "Проверить наличие обновления", "", "", -1, -1, 0, "javascript:ChekUpdate('true')", "_self", "", "", "wand.gif", "wand.gif"]);
             stm_aix("p13i0", "p1i0", [0, "Выполнить откат обновления", "", "", -1, -1, 0, "javascript:miniWin('upload/adm_backup.php',600,430)", "_self", "", "", "wand.gif", "wand.gif"]);
             stm_ep();
-            stm_aix("p0i7", "p0i0", [0, "Мобильная версия"], 110, 20);
-            stm_bpx("p13", "p1", []);
-            stm_aix("p13i0", "p1i0", [0, "Создать мобильную версию", "", "", -1, -1, 0, "javascript:miniWin('flipcat/adm_flipcat.php',500,350)", "_self", "", "", "add.png", "add.png"]);
+            stm_aix("p0i8", "p0i1", [1, "<?= __('Дополнительно'); ?>&nbsp;&nbsp;&nbsp; "]);
+            stm_bpx("p13", "p3", []);
+            stm_aix("p13i0", "p2i0", [0, "<?= __('Раскрутка интернет-магазина'); ?>", "", "", -1, -1, 0, "http://www.phpshop.ru/page/promotion.html?from=enterprise&server=<?= $_SERVER['SERVER_NAME'] ?>", "_blank", "", "", "wand.gif", "wand.gif"]);
+            stm_aix("p13i0", "p2i0", [0, "<?= __('Аренда интернет-магазина'); ?>", "", "", -1, -1, 0, "http://www.shopbuilder.ru/?from=enterprise&server=<?= $_SERVER['SERVER_NAME'] ?>", "_blank", "", "", "key.png", "key.png"]);
+            stm_aix("p13i0", "p2i0", [0, "<?= __('Заказать персональный дизайн'); ?>", "", "", -1, -1, 0, "http://www.phpshop-design.ru/page/brif-design.html?from=enterprise&server=<?= $_SERVER['SERVER_NAME'] ?>", "_blank", "", "", "picture_add.png", "picture_add.png"]);
+            stm_aix("p13i0", "p2i0", [0, "<?= __('Заказать доработку сайта'); ?>", "", "", -1, -1, 0, "http://www.phpshop-design.ru/page/brif-develop.html?from=enterprise&server=<?= $_SERVER['SERVER_NAME'] ?>", "_blank", "", "", "table_sort.gif", "table_sort.gif"]);
+            stm_aix("p12i7", "p1i0", [0, "1С интеграция интернет-магазина", "", "", -1, -1, 0, "http://www.phpshop.ru/page/pro1c.html#6", "_blank", "", "", "1c_icon.gif", "1c_icon.gif"]);
+            stm_aix("p12i4", "p1i0", [0, "Установить Easy Control", "", "", -1, -1, 0, "http://www.phpshop.ru/loads/files/setup.exe", "_blank", "", "", "plugin.gif", "plugin.gif"]);
             stm_ep();
+
             stm_aix("p0i7", "p0i0", [0, "Справка"], 60, 20);
             stm_bpx("p12", "p1", []);
-            stm_aix("p12i0", "p1i0", [0, "Техническая Поддержка", "", "", -1, -1, 0, "http://help.phpshop.ru/", "_blank", "", "", "question_frame.png", "question_frame.png"]);
+            stm_aix("p12i0", "p1i0", [0, "Техническая Поддержка", "", "", -1, -1, 0, "https://help.phpshop.ru/", "_blank", "", "", "question_frame.png", "question_frame.png"]);
             stm_aix("p12i2", "p1i0", [0, "Учебник", "", "", -1, -1, 0, "http://faq.phpshop.ru", "_blank", "", "", "book.gif", "book.gif"]);
             stm_aix("p12i3", "p1i0", [0, "Новости", "", "", -1, -1, 0, "http://www.phpshop.ru/news/", "_blank", "", "", "book_next.gif", "book_next.gif"]);
-            stm_aix("p12i4", "p1i0", [0, "Установить Easy Control", "", "", -1, -1, 0, "http://www.phpshop.ru/loads/files/setup.exe", "_blank", "", "", "plugin.gif", "plugin.gif"]);
-            stm_aix("p12i5", "p1i0", [0, "Установить Order Agent Mobil", "", "", -1, -1, 0, "http://www.phpshop.ru/page/downloads.html", "_blank", "", "", "plugin_blue.gif", "plugin_blue.gif"]);
-            stm_aix("p12i6", "p1i0", [0, "Установить Order Gadget", "", "", -1, -1, 0, "http://www.phpshop.ru/page/downloads.html", "_blank", "", "", "plugin_red.gif", "plugin_red.gif"]);
-            stm_aix("p12i7", "p1i0", [0, "Установить обработчик 1С:Предприятие", "", "", -1, -1, 0, "http://www.phpshop.ru/page/pro1c.html#6", "_blank", "", "", "1c_icon.gif", "1c_icon.gif"]);
             stm_aix("p12i8", "p1i0", [0, "О программе", "", "", -1, -1, 0, "javascript:miniWin('window/adm_about.php',670,500)", "_self", "", "", "image.gif", "image.gif"]);
             stm_aix("p12i9", "p1i0", [0, "Выход", "", "", -1, -1, 0, "javascript:window.close()", "_self", "", "", "door.gif", "door.gif"]);
             stm_aix("p12i10", "p1i0", [0, "Магазин", "", "", -1, -1, 0, "../../", "_blank", "", "", "house.gif", "house.gif"]);

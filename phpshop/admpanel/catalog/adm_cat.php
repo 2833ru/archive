@@ -14,8 +14,8 @@ function TestCat($n) {// есть ли еще подкаталоги
 }
 
 function Vivod_rekurs($n) {// вывод подкаталогов рекурсом
-    global $SysValue, $sid;
-    $sql = "select * from " . $SysValue['base']['table_name'] . " where parent_to='$n' order by num";
+    global $SysValue;
+    $sql = "select * from " . $SysValue['base']['table_name'] . " where parent_to='$n' order by num, name";
     $result = mysql_query($sql);
     while ($row = mysql_fetch_array($result)) {
         $i = 0;
@@ -45,22 +45,22 @@ function DispName($n, $catalog) {
 }
 
 function Vivod_pot() {// вывод каталогов
-    global $SysValue, $system, $category;
-    $sql = "select * from " . $SysValue['base']['table_name'] . " where parent_to=0 order by num";
+    global $SysValue, $category;
+    $sql = "select * from " . $SysValue['base']['table_name'] . " where parent_to=0 order by num, name";
     $result = mysql_query($sql);
     $i = 0;
-    $j = 0;
+    $dis=null;
     while ($row = mysql_fetch_array($result)) {
         $id = $row['id'];
         $name = str_replace(array('"', "'"), " ", $row['name']);
         $num = TestCat($id);
         if ($num > 0)
-            @$dis.="
+            $dis.="
 	d2.add($id,0,'$name','');
 	" . Vivod_rekurs($id) . "
 	";
         else
-            @$dis.="
+           @$dis.="
 	d2.add($id,0,'$name','$name');
 	" . Vivod_rekurs($id) . "
 	";
@@ -134,7 +134,7 @@ function Vivod_cat_all_num($n) {// выбор кол-ва товаров из данного подкатолога
 
     <body bottommargin="0" leftmargin="5" topmargin="0" rightmargin="5">
         <div align="center" style="padding:5px"><a href="javascript: window.d2.openAll();"><?= $SysValue['Lang']['Category'][5] ?></a> | <a href="javascript: window.d2.closeAll();"><?= $SysValue['Lang']['Category'][6] ?></a> | <a href="javascript: window.close()"><?= $SysValue['Lang']['Category'][7] ?></a></div>
-        <table cellpadding="3" cellspacing="3" bgcolor="ffffff" style="border: 1px;border-style: inset;padding:3px" width="100%" height="85%">
+        <table cellpadding="0" cellspacing="5" bgcolor="ffffff" style="border: 1px;border-style: inset;padding:3px" width="100%" height="85%">
             <tr>
                 <td valign="top">
                     <? echo Vivod_pot(); ?>

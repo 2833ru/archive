@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.0</version>
+    <version>1.1</version>
     <name>Count Cat</name>
-    <description>Модуль подсчета количества товаров в каталогах.</description>
+    <faqlink>http://faq.phpshop.ru/page/count-cat.html</faqlink>
+<description>Модуль подсчета количества товаров в каталогах.</description>
     <icon>icon.png</icon>
     <category>form,decorate</category>
     <adminmenu>
-        <title>CountCat</title>
+        <title>Count Cat</title>
         <podmenu>
-            <podmenu_name>Настройка CountCat</podmenu_name>
+            <podmenu_name>Настройка Count Cat</podmenu_name>
             <podmenu_icon>icon.png</podmenu_icon>
             <podmenu_action>javascript:miniWin('../modules/countcat/admpanel/adm_module.php',510,450);</podmenu_action>
         </podmenu>

@@ -27,13 +27,19 @@ $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.countcat.countcat_s
 function actionUpdate() {
     global $PHPShopOrm;
 
+    if(empty($_POST['enabled_new'])) $_POST['enabled_new']=0;
     $action = $PHPShopOrm->update($_POST);
+    
+    if(!empty($_POST['clean'])){
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
+        $PHPShopOrm->update(array('count' => '0'), false, false);
+    }
     return $action;
 }
 
 
 function actionStart() {
-    global $PHPShopGUI,$PHPShopSystem,$SysValue,$_classPath,$PHPShopOrm;
+    global $PHPShopGUI,$_classPath,$PHPShopOrm;
     
     
     $PHPShopGUI->dir=$_classPath."admpanel/";
@@ -57,6 +63,8 @@ function actionStart() {
 ';
     
     $Tab1=$PHPShopGUI->setInfo($info, 200, '96%');
+    $Tab1.=$PHPShopGUI->setCheckbox("enabled_new",1,'Добавить количество товара к имени каталога',$enabled);
+    $Tab1.=$PHPShopGUI->setLine().$PHPShopGUI->setCheckbox("clean",1,'Пересчитать ранее установленные значения кол-ва товара в категориях',0);
     
     $Tab2=$PHPShopGUI->setPay($serial,false);
     

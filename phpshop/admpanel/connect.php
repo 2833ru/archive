@@ -11,24 +11,7 @@ function DoResize($p, $w) {
 }
 
 // Типы оплат
-function TipPayment($payment) {
-    $TIP = array(
-        "message" => "Сообщение",
-        "bank" => "Счет в банк",
-        "sberbank" => "Сбербанк",
-        "robox" => "Обменная касса Robox",
-        "webmoney" => "Webmoney",
-        "interkassa" => "Обменная касса Interkassa",
-        "rbs" => "Visa, Mastercard (RBS)",
-        "z-payment" => "Обменная касса Z-payment",
-        "payonlinesystem" => "Visa, Mastercard (PayOnlineSystem)"
-    );
-
-    foreach ($TIP as $k => $v)
-        if ($k == $payment)
-            return $v;
-    return "Оплата " . $payment;
-}
+require_once 'payment/gui/GetTipPayment.gui.php';
 
 $RegTo = $SysValue['license']['regto'];
 $ProductName = $SysValue['license']['product_name'];

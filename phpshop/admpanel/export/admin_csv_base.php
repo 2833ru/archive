@@ -291,9 +291,7 @@ class ReadCsv1C {
                 $this->TotalUpdate++;
             else {
                 $this->error_count++;
-                $this->error.=$this->error_count.'. '.mysql_error() . '
-
-';
+                $this->error.=$this->error_count.'. '.mysql_error() . ' Write ID='.$CsvToArray[0];
             }
 
 // $testValue2='start';
@@ -606,7 +604,7 @@ if ($_REQUEST['page'] == "predload" and $_FILES['file']['ext'] == "csv") {
 	<li>Обновлено позиций: ' . $ReadCsv->TotalUpdate . '
         <li>Ошибок: ' . $ReadCsv->error_count . '
 </ol>';
- if ($ReadCsv->error)
+        if ($ReadCsv->error)
             $interface.='<h4>Ошибки:</h4><textarea style="width:100%;height:200px">' . $ReadCsv->error . '</textarea>';
 
         $interface.='
@@ -627,7 +625,7 @@ else
 	<td width="35" vAlign=center ><IMG 
             hspace=0 src="img/i_support_med[1].gif" align="absmiddle" 
             border=0 ></td>
-	<td >Внимание, выберите файл с расширением *.csv.
+	<td >Внимание, выберите файл с расширением *.csv.<br>
 	Повторите  <a href="javascript:DoReload(\'csv_base\')" style="color:red">загрузку файла</a>.</td>
 </tr>
 </table>

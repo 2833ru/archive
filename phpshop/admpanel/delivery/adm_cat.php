@@ -7,7 +7,7 @@ require("../language/russian/language.php");
 
 function TestCat($n) {// есть ли еще подкаталоги
     global $SysValue;
-    $sql = "select id from " . $SysValue['base']['table_name30'] . " where PID='$n'";
+    $sql = "select id from " . $SysValue['base']['table_name30'] . " where PID='$n'  order by num";
     $result = mysql_query($sql);
     $num = mysql_num_rows($result);
     return $num;
@@ -38,7 +38,7 @@ function Vivod_rekurs($n) {// вывод подкаталогов рекурсом
 function Delivery_Cat($PID = 0) {
     global $SysValue;
 
-    $sql = "select * from " . $SysValue['base']['table_name30'] . " where PID=" . intval($PID) . " AND is_folder='1'  order by city";
+    $sql = "select * from " . $SysValue['base']['table_name30'] . " where PID=" . $PID . " AND is_folder='1'  order by num,city";
     $result = mysql_query($sql);
     while ($row = mysql_fetch_array($result)) {
         $id = $row['id'];
@@ -55,7 +55,7 @@ function Delivery_Cat($PID = 0) {
             $checked = '[ОТКЛ!]';
         };
 
-        $sqlnums = 'select * from ' . $SysValue['base']['table_name30'] . ' where PID=' . $id . ' order by city';
+        $sqlnums = 'select * from ' . $SysValue['base']['table_name30'] . ' where PID=' . $id . ' order by num,city';
         $resultnums = mysql_query($sqlnums);
         @$nums = mysql_num_rows(@$resultnums);
 
@@ -78,7 +78,7 @@ function Delivery_Cat($PID = 0) {
 
 function DispName($n, $catalog) {
     global $SysValue;
-    $sql = "select city from " . $SysValue['base']['table_name30'] . " where id='$n'";
+    $sql = "select city from " . $SysValue['base']['table_name30'] . " where id='$n' order by num, city";
     $result = mysql_query($sql);
     $row = mysql_fetch_array($result);
     $city = $row['city'];

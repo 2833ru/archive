@@ -1069,6 +1069,13 @@ function NewProduct() {
     miniWin('product/adm_product_new.php?reload=true&categoryID=' + catal, 700, 650);
 }
 
+function NewProductCatalog() {
+    if (window.frame2.document.getElementById("catal")) {
+        var catal = window.frame2.document.getElementById("catal").value;
+    }
+    miniWin('catalog/adm_catalog_new.php?&categoryID=' + catal, 650, 630);
+}
+
 function NewUMessage() {
     if (window.frame2.document.getElementById("catal")) {
         var catal = window.frame2.document.getElementById("catal").value;
@@ -1119,7 +1126,7 @@ function EditCatalog() {
             if (window.frame2.document.getElementById("catal_chek"))
             {
                 var catal = window.frame2.document.getElementById("catal_chek").value;
-                if (catal != 1000001 && catal != 1000002)
+                if (catal != 1000001 && catal != 1000002 && catal != 1000004)
                     miniWin('catalog/adm_catalogID.php?catalogID=' + catal, 650, 630);
             } else
                 alert("Выберите каталог для редактирования");
@@ -1253,13 +1260,20 @@ function DoWithSelect(tip, obj, num) {
             }
             else if (tip == 8) {
                 // Выгрузка в CSV
-                miniWin('./export/adm_csv.php?IDS=' + IDS, 100, 100);
+                miniWin('./export/adm_csv.php?IDS=' + IDS, 400, 220);
             }
-            else if (tip == 24) {// Характеристки
+            else if (tip == 'base') {
+                // Выгрузка в CSV
+                miniWin('./export/adm_csv.php?DO=base&IDS=' + IDS, 400, 220);
+            }
+            else if (tip == 24) {// Характеристики
                 if (window.frame2.document.getElementById("catal")) {
                     var catal = window.frame2.document.getElementById("catal").value;
                     miniWin(dots + './window/adm_window.php?do=' + tip + '&ids=' + IDS + '&catal=' + catal, 500, 500);
                 }
+            }
+            else if (tip == 25) {// Рассылка уведомлений
+                miniWin(dots + './window/adm_window.php?do=' + tip + '&ids=' + IDS, 350, 270);
             }
             else if (tip == 38) {// Новый заказ
                 if (j > 1)
@@ -1306,6 +1320,13 @@ function myDialog(url, param, w, h)
 
 function AdmCat(pid, w, h)
 {
+    if (top.frames['frame2'].document.getElementById("catal")) {
+        top.frames['frame2'].document.getElementById("catal").value = pid;
+    }
+    else{
+        top.frames['frame2'].document.body.innerHTML  = '<input type="hidden" value="'+pid+'" id="catal" name="catal">';
+    }
+        
     miniWin('adm_catalogID.php?tip=main&catalogID=' + pid, '650', '630');
 }
 
@@ -1413,7 +1434,7 @@ function onExit() {
     if (window.opener)
         self.close();
     else
-       window.location.replace('./?do=out');
+        window.location.replace('./?do=out');
 }
 
 // Прелоадер

@@ -21,7 +21,7 @@ $PHPShopSystem = new PHPShopSystem();
 PHPShopObj::loadClass("admgui");
 $PHPShopGUI = new PHPShopGUI();
 $PHPShopGUI->title = __("Редактирование Товара");
-$PHPShopGUI->reload = "right";
+$PHPShopGUI->reload = "all";
 $PHPShopGUI->addJSFiles('/phpshop/lib/Subsys/JsHttpRequest/Js.js');
 
 // SQL
@@ -33,7 +33,7 @@ PHPShopObj::loadClass("modules");
 $PHPShopModules = new PHPShopModules($_classPath . "modules/");
 
 function actionStart() {
-    global $PHPShopGUI, $PHPShopModules, $PHPShopOrm, $PHPShopSystem;
+    global $PHPShopGUI, $PHPShopModules, $PHPShopOrm, $PHPShopSystem, $PHPShopBase;
 
     // Тип окна
     if ($_COOKIE['winOpenType'] == 'default')
@@ -47,7 +47,7 @@ function actionStart() {
     $PHPShopGUI->dir = "../";
     //$PHPShopGUI->size = "700,670";
     // Графический заголовок окна
-    $PHPShopGUI->setHeader(__('Редактирование Товара "' . $data['name'] . '"'), __("Укажите данные для записи в базу."), $PHPShopGUI->dir . "img/i_actionlog_med[1].gif");
+    $PHPShopGUI->setHeader(__('Редактирование Товара "' . $PHPShopGUI->setLink("http://" . $_SERVER['SERVER_NAME'] . $PHPShopBase->getParam('dir.dir') . "/shop/UID_" . $data['id'] . ".html", $data['name']) . '"'), __(""), $PHPShopGUI->dir . "img/i_actionlog_med[1].gif");
 
 
     // Нет данных
@@ -79,12 +79,12 @@ function actionStart() {
     $Tab1.=$PHPShopGUI->setField('Склад:', $PHPShopGUI->setInputText(false, 'items_new', $data['items'], 50, $ed_izm), 'left');
 
     // Вес
-    $Tab1.=$PHPShopGUI->setField('Вес:', $PHPShopGUI->setInputText(false, 'weight_new', $data['weight'], 50, 'гр.'), 'left');
+    $Tab1.=$PHPShopGUI->setField('Вес:', $PHPShopGUI->setInputText(false, 'weight_new', $data['weight'], 65, 'гр.'), 'left');
 
     // Единица измерения
     if (empty($data['ed_izm']))
         $data['ed_izm'] = 'шт.';
-    $Tab1.=$PHPShopGUI->setField('Единица изм.:', $PHPShopGUI->setInputText(false, 'ed_izm_new', $data['ed_izm'], 70), 'right',0,0,array('width'=>'120px'));
+    $Tab1.=$PHPShopGUI->setField('Единица изм.:', $PHPShopGUI->setInputText(false, 'ed_izm_new', $data['ed_izm'], 70), 'right', 0, 0, array('width' => '110px'));
 
     // Рекомендуемые товары
     $Tab1.=$PHPShopGUI->setLine() . $PHPShopGUI->setField('Рекомендуемые товары для совместной продажи:', $PHPShopGUI->setTextarea('odnotip_new', $data['odnotip'], false, '280px') .
@@ -93,10 +93,10 @@ function actionStart() {
                     __('Введите ID товаров в формате 1,2,3 без пробелов'), 'left');
 
     // Дополнительные каталоги
-    $Tab1.=$PHPShopGUI->setField('Дополнительные каталоги:', $PHPShopGUI->setTextarea('dop_cat_new', $data['dop_cat'], false, '330px') .
+    $Tab1.=$PHPShopGUI->setField('Дополнительные каталоги:', $PHPShopGUI->setTextarea('dop_cat_new', $data['dop_cat'], false) .
             $PHPShopGUI->setLine() .
             $PHPShopGUI->setImage('../icon/icon_info.gif', 16, 16) .
-            __('Введите ID каталогов в формате #1#2#3# без пробелов'), 'left',0,0,array('width'=>'355px'));
+            __('Введите ID каталогов в формате #1#2#3# без пробелов'), 'left', 0, 0, array('width' => '335px'));
 
     $Tab1.=$PHPShopGUI->setLine();
 
@@ -107,7 +107,7 @@ function actionStart() {
                     $PHPShopGUI->setLine() .
                     $PHPShopGUI->setCheckbox('newtip_new', 1, 'Новинка', $data['newtip']) .
                     $PHPShopGUI->setLine() .
-                    $PHPShopGUI->setInputText('№', 'num_new', $data['num'], 50, 'по порядку'), 'left',false,false,array('height'=>'100px;'));
+                    $PHPShopGUI->setInputText('№', 'num_new', $data['num'], 50, 'по порядку'), 'left', false, false, array('height' => '100px;'));
 
     // Валюты
     $PHPShopValutaArray = new PHPShopValutaArray();
@@ -130,32 +130,32 @@ function actionStart() {
             $PHPShopGUI->setLine() .
             $PHPShopGUI->setInputText('Цена 2', 'price2_new', $data['price2'], 50, $valuta_def_name) .
             $PHPShopGUI->setLine() .
-            $PHPShopGUI->setInputText('Цена 3', 'price3_new', $data['price3'], 50, $valuta_def_name), 'left',false,false,array('height'=>'100px;'));
+            $PHPShopGUI->setInputText('Цена 3', 'price3_new', $data['price3'], 50, $valuta_def_name), 'left', false, false, array('height' => '100px;'));
 
     // Валюта
-    $Tab1_1.=$PHPShopGUI->setField(__('Валюта:'), $valuta_area, 'left',false,false,array('height'=>'100px;'));
+    $Tab1_1.=$PHPShopGUI->setField(__('Валюта:'), $valuta_area, 'left', false, false, array('height' => '100px;'));
 
     // Цены дополнительные
     $Tab1_2.=$PHPShopGUI->setField('Цены:', $PHPShopGUI->setInputText('Цена 4', 'price4_new', $data['price4'], 50, $valuta_def_name) .
             $PHPShopGUI->setLine() .
             $PHPShopGUI->setInputText('Цена 5', 'price5_new', $data['price5'], 50, $valuta_def_name) .
             $PHPShopGUI->setLine() .
-            $PHPShopGUI->setCheckbox('sklad_new', 1, 'Под заказ', $data['sklad']), 'left',false,false,array('height'=>'100px;'));
+            $PHPShopGUI->setCheckbox('sklad_new', 1, 'Под заказ', $data['sklad']), 'left', false, false, array('height' => '100px;'));
 
     // Распродажа
-    $Tab1_2.=$PHPShopGUI->setField(__('Распродажа:'), $PHPShopGUI->setInputText(__('Старая цена'), 'price_n_new', $data['price_n'], 50, $valuta_def_name), 'left',false,false,array('height'=>'100px;'));
+    $Tab1_2.=$PHPShopGUI->setField(__('Распродажа:'), $PHPShopGUI->setInputText(__('Старая цена'), 'price_n_new', $data['price_n'], 50, $valuta_def_name), 'left', false, false, array('height' => '100px;'));
 
     // Иконка
     if (!empty($data['pic_small'])) {
         $img_width = $PHPShopSystem->getSerilizeParam('admoption.img_tw');
         $PHPShopInterface = new PHPShopInterface('_pretab1_');
-        $PHPShopInterface->setTab(array(__("Изображение"), $PHPShopGUI->setFrame('img', $data['pic_small'], $img_width + 20, $img_width, 'none', 0, 'No'), 120));
+        $PHPShopInterface->setTab(array(__("Изображение"), $PHPShopGUI->setFrame('img', $data['pic_small'], 200, 100, 'none', 0, 'Yes'), 120));
         $Tab1.=$PHPShopGUI->setDiv('left', $PHPShopInterface->getContent(), 'width:' . ($img_width + 50) . 'px;float:left');
     }
 
     // YML
     $Tab1_3 = $PHPShopGUI->setField($PHPShopGUI->setCheckbox('yml_new', 1, __('Вывод в Яндекс Маркете'), $data['yml']), $PHPShopGUI->setRadio('p_enabled_new', 1, __('В наличии'), $data['p_enabled']) .
-            $PHPShopGUI->setRadio('p_enabled_new', 0, __('Под заказ'), $data['p_enabled']));
+            $PHPShopGUI->setRadio('p_enabled_new', 0, __('Уведомить (Под заказ)'), $data['p_enabled']));
 
     // BID
     $data['yml_bid_array'] = unserialize($data['yml_bid_array']);
@@ -167,10 +167,10 @@ function actionStart() {
     // Подтипы
     $Tab1_4 = $PHPShopGUI->setField(__('Связи'), $PHPShopGUI->setRadio('parent_enabled_new', 0, __('Обычный товар'), $data['parent_enabled']) .
             $PHPShopGUI->setRadio('parent_enabled_new', 1, __('Добавочная опция для ведущего товара'), $data['parent_enabled']));
-    $Tab1_4.=$PHPShopGUI->setTextarea('parent_new', $data['parent'], "none", '99%', '50px') .
+    $Tab1_4.=$PHPShopGUI->setField(__('ID подтипов'),$PHPShopGUI->setTextarea('parent_new', $data['parent'], "none", '99%', '40px') .
             $PHPShopGUI->setLine() .
             $PHPShopGUI->setImage('../icon/icon_info.gif', 16, 16) .
-            __('Введите ID товаров-подтипов через запятую без пробела (100,101). ');
+            __('Введите ID товаров-подтипов через запятую без пробела (100,101). '));
 
     // Вывод
     $PHPShopInterface = new PHPShopInterface('_pretab2_');
@@ -189,7 +189,8 @@ function actionStart() {
 
     if (strstr($data['page'], ',')) {
         $data['page'] = explode(",", $data['page']);
-    }else
+    }
+    else
         $data['page'] = array();
 
     $value = array();
@@ -339,10 +340,12 @@ function actionUpdate() {
 
     // Статьи
     $_POST['page_new'] = null;
-    if (is_array($_POST['page'])){
+    if (is_array($_POST['page'])) {
         foreach ($_POST['page'] as $value)
             $_POST['page_new'].=$value . ",";
-    } else $_POST['page_new'] = " "; 
+    }
+    else
+        $_POST['page_new'] = " ";
 
     // Файлы
     $_POST['files_new'] = serialize($_POST['filenum']);
@@ -384,10 +387,12 @@ function fotoDelete() {
             @unlink($oldFilename);
             $oldFilename_s = str_replace(".", "s.", $oldFilename);
             @unlink($oldFilename_s);
+            $oldFilename_big = str_replace(".", "_big.", $oldFilename);
+            @unlink($oldFilename_big);
             @chdir($oldWD);
         }
         $PHPShopOrm->clean();
-        $PHPShopOrm->delete(array('id' => '=' . intval($_POST['productID'])));
+        $PHPShopOrm->delete(array('parent' => '=' . intval($_POST['productID'])));
     }
 }
 
@@ -399,11 +404,11 @@ function actionDelete() {
     $PHPShopModules->setAdmHandler($_SERVER["SCRIPT_NAME"], __FUNCTION__, $_POST);
 
     $action = $PHPShopOrm->delete(array('id' => '=' . intval($_POST['productID'])));
-    
+
     // Удаление фотогалереи
-    if($action)
+    if ($action)
         fotoDelete();
-    
+
     return $action;
 }
 

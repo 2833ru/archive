@@ -62,8 +62,8 @@ function actionStart() {
     $Tab1=$PHPShopGUI->setField('Название:',$PHPShopGUI->setInputText(false,'name_new',$name,'98%'));
     $Tab1.=$PHPShopGUI->setField('Ссылка:',$PHPShopGUI->setInputText('http://'.$_SERVER['SERVER_NAME'].'/formgenerator/','path_new',$path,100),'left');
     $Tab1.=$PHPShopGUI->setField('E-mail:',$PHPShopGUI->setInputText(false,'mail_new',$mail,'97%'));
-    $Tab1.=$PHPShopGUI->setField('Опции:',$PHPShopGUI->setCheckbox('enabled_new','1','Вывод на сайте',$enabled).
-            $PHPShopGUI->setCheckbox('user_mail_copy_new','1','Выслать копию пользователю на e-mail',$user_mail_copy));
+    $Tab1.=$PHPShopGUI->setline().$PHPShopGUI->setField('Опции:',$PHPShopGUI->setCheckbox('enabled_new','1','Вывод на сайте',$enabled).
+   $PHPShopGUI->setCheckbox('user_mail_copy_new','1','Выслать копию пользователю на e-mail',$user_mail_copy));
     $Tab1.=$PHPShopGUI->setField('Сообщение после отправки:',$PHPShopGUI->setTextarea('success_message_new',$success_message,false,'97%'));
     $Tab1.=$PHPShopGUI->setField('Сообщение о не заполнения обязательных полей:',$PHPShopGUI->setTextarea('error_message_new',$error_message,false,'97%'));
 

@@ -26,11 +26,14 @@ while ($row = mysql_fetch_array($result))
 	if($row['enabled']==1){
 	$fl="<img src=\"img/icon-activate.gif\">";
 	}else{
-	$fl="<img src=\"img/icon-deactivate.gif\">";}
+	$fl="<img src=\"img/error.gif\">";}
 	
 	@$display.="
 	<tr id=\"r".$id."\" class=row>
-    <td align=\"center\" id=Nws class=Nws onmouseover=\"show_on('r".$id."')\" onmouseout=\"show_out('r".$id."')\" onclick=\"miniWin('comment/adm_commentID.php?id=$id',650,580)\">
+        <td>
+	<input type=checkbox name=\"c".$id."\" value=\"$id\">
+	</td>
+        <td align=\"center\" id=Nws class=Nws onmouseover=\"show_on('r".$id."')\" onmouseout=\"show_out('r".$id."')\" onclick=\"miniWin('comment/adm_commentID.php?id=$id',650,580)\">
 	$fl
 	</td>
 	<td align=\"center\" id=Nws class=Nws onmouseover=\"show_on('r".$id."')\" onmouseout=\"show_out('r".$id."')\" onclick=\"miniWin('comment/adm_commentID.php?id=$id',650,580)\">
@@ -41,9 +44,6 @@ while ($row = mysql_fetch_array($result))
 	</td>
 	<td id=Nws class=Nws onmouseover=\"show_on('r".$id."')\" onmouseout=\"show_out('r".$id."')\" onclick=\"miniWin('comment/adm_commentID.php?id=$id',650,580)\">
 	".mySubstr($content,200)."...
-	</td>
-	<td>
-	<input type=checkbox name=\"c".$id."\" value=\"$id\">
 	</td>
     </tr>
 	";
@@ -59,11 +59,11 @@ while ($row = mysql_fetch_array($result))
 	<td valign=\"top\">
 <table cellpadding=\"0\" cellspacing=\"1\" width=\"100%\" border=\"0\"  class=\"sortable\" id=\"sort\">
 <tr>
+	<td width=\"20\" id=pane align=center style=\"padding:0px\"><input type=checkbox value=1 name=DoAll onclick=\"SelectAllBox(this,form_flag)\"></td>
     <td width=\"5%\" id=pane align=center>+/-</td>
 	<td width=\"12%\" id=pane align=center><img  src=\"icon/blank.gif\"  width=\"1\" height=\"1\" border=\"0\"  align=left><span name=txtLang id=txtLang>Дата</span></td>
 	<td width=\"20%\" id=pane align=center><span name=txtLang id=txtLang>Автор</span></td>
-	<td width=\"65%\" id=pane align=center><span name=txtLang id=txtLang>Комментарий</span></td>
-	<td width=\"20\" id=pane align=center style=\"padding:0px\"><input type=checkbox value=1 name=DoAll onclick=\"SelectAllBox(this,form_flag)\"></td>
+	<td width=\"65%\" id=pane align=center><span name=txtLang id=txtLang>Отзыв</span></td>
 </tr>
 	".$display."
     </table>

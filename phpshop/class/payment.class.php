@@ -54,7 +54,7 @@ class PHPShopPaymentArray extends PHPShopArray {
     function PHPShopPaymentArray() {
         $this->order = array('order' => 'num');
         $this->objBase = $GLOBALS['SysValue']['base']['payment_systems'];
-        parent::PHPShopArray('id', "name", 'path', 'enabled');
+        parent::PHPShopArray('id', "name", 'path', 'enabled', 'yur_data_flag','icon');
     }
 
 }
@@ -173,7 +173,7 @@ class PHPShopPaymentResult {
                 // Изменение статуса платежа
                 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
                 $PHPShopOrm->debug = $this->debug;
-                $PHPShopOrm->update(array('statusi_new' => $this->set_order_status_101()), array('uid' => '="' . $this->inv_id . '"'));
+                $PHPShopOrm->update(array('statusi_new' => $this->set_order_status_101()), array('uid' => '="' . $this->true_num($this->inv_id) . '"'));
 
                 // Сообщение ОК
                 $this->done();

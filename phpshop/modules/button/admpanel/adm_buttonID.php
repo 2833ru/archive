@@ -55,7 +55,7 @@ function actionStart() {
 
 
     // Графический заголовок окна
-    $PHPShopGUI->setHeader("Редактирование кнопки","Укажите данные для записи в базу.",$PHPShopGUI->dir."img/i_display_settings_med[1].gif");
+    $PHPShopGUI->setHeader("Редактирование кнопки","",$PHPShopGUI->dir."img/i_display_settings_med[1].gif");
 
 
     $Tab1=$PHPShopGUI->setField('Опции:',$PHPShopGUI->setInputText('Название','name_new',$name,'300',false,'right').

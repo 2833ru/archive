@@ -4,7 +4,7 @@
  * Автономная синхронизация заказов с 1С
  * @package PHPShopExchange
  * @author PHPShop Software
- * @version 1.7
+ * @version 1.8
  */
 // Функции авторизации
 include_once("login.php");
@@ -51,7 +51,7 @@ switch ($_GET['command']) {
         if (PHPShopSecurity::true_num($_GET['date1']) and PHPShopSecurity::true_num($_GET['date2']) and PHPShopSecurity::true_num($_GET['num'])) {
 
             $sql = "select * from " . $GLOBALS['SysValue']['base']['table_name1'] . " where seller!='1' and datas BETWEEN " . $_GET['date1'] . " AND " . $_GET['date2'] . " order by id desc  limit " . $_GET['num'];
-            //$sql="select * from ".$PHPShopBase->getParam("base.table_name1")." where seller!='1' and datas<'".date("U")."'  order by id desc  limit 1";
+//            $sql = "select * from " . $PHPShopBase->getParam("base.table_name1") . " where seller!='1' and datas<'" . date("U") . "'  order by id desc  limit 1";
 
             $result = mysql_query($sql);
             while ($row = mysql_fetch_array($result)) {
@@ -74,19 +74,57 @@ switch ($_GET['command']) {
                 //$status=unserialize($row['status']);
                 $mail = $order['Person']['mail'];
                 $user = $row['user'];
-                $name = $order['Person']['name_person'];
-                $company = str_replace("&quot;", '"', $order['Person']['org_name']);
-                $inn = $order['Person']['org_inn'];
-                $kpp = $order['Person']['org_kpp'];
-                $tel = $order['Person']['tel_code'] . " " . $order['Person']['tel_name'];
-                $adres = str_replace("&quot;", '"', $order['Person']['adr_name']);
+                $name = $order['Person']['name_person'] . $row['fio'];
+                $company = str_replace("&quot;", '"', $order['Person']['org_name'] . $row['org_name']);
+                $inn = $order['Person']['org_inn'] . $row['org_inn'];
+                $kpp = $order['Person']['org_kpp'] . $row['org_kpp'];
+                $tel = $order['Person']['tel_code'] . " " . $order['Person']['tel_name'] . $row['tel'];
+
+                // формируем адрес для новой структуры таблицы заказов
+                if ($row['country'])
+                    $adr_info .= ", страна: " . $row['country'];
+                if ($row['state'])
+                    $adr_info .= ", регион/штат: " . $row['state'];
+                if ($row['city'])
+                    $adr_info .= ", город: " . $row['city'];
+                if ($row['index'])
+                    $adr_info .= ", индекс: " . $row['index'];
+                if ($row['street'] OR $OrdersReturn['order']['adr_name'])
+                    $adr_info .= ", улица: " . $row['street'] . $OrdersReturn['order']['adr_name'];
+                if ($row['house'])
+                    $adr_info .= ", дом: " . $row['house'];
+                if ($row['porch'])
+                    $adr_info .= ", подъезд: " . $row['porch'];
+                if ($row['door_phone'])
+                    $adr_info .= ", код домофона: " . $row['door_phone'];
+                if ($row['flat'])
+                    $adr_info .= ", квартира: " . $row['flat'];
+                if ($row['delivtime'])
+                    $adr_info .= ", время доставки: " . $row['delivtime'] . $OrdersReturn['order']['dos_ot'];
+                if ($row['dop_info'])
+                    $adr_info .= ", дополнительная информация: " . $row['dop_info'];
+
+                $adres = str_replace("&quot;", '"', $adr_info . $order['Person']['adr_name']);
                 $adres = PHPShopSecurity::CleanOut($adres);
                 $oplata = $PHPShopOrder->getOplataMetodName();
                 $sum = @ReturnSumma($order['Cart']['sum'], $order['Person']['discount']);
                 $weight = $order['Cart']['weight'];
                 $discount = $order['Person']['discount'];
 
-                $csv1.="$id;$uid;$datas;$mail;$name;$company;$tel;$oplata;$sum;$discount;$inn;$adres;$kpp;$user;\n";
+                // формируем реквизитыдля новой структуры таблицы заказов
+                $org_yur_adres = $row['org_yur_adres'];
+                $org_fakt_adres = $row['org_fakt_adres'];
+                $org_ras = $row['org_ras'];
+                $org_bank = $row['org_bank'];
+                $org_kor = $row['org_kor'];
+                $org_bik = $row['org_bik'];
+                $org_city = $row['org_city'];
+
+                // Ver 1.7
+                //$csv1.="$id;$uid;$datas;$mail;$name;$company;$tel;$oplata;$sum;$discount;$inn;$adres;$kpp;$user;\n";
+                
+                // Ver 1.8
+                $csv1.="$id;$uid;$datas;$mail;$name;$company;$tel;$oplata;$sum;$discount;$inn;$adres;$kpp;$user;$org_yur_adres;$org_fakt_adres;$org_ras;$org_bank;$org_kor;$org_bik;$org_city\n";
 
                 if (is_array($order['Cart']['cart']))
                     foreach ($order['Cart']['cart'] as $val) {

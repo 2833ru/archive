@@ -18,8 +18,9 @@ class ProductLastView extends PHPShopElements {
     function ProductLastView() {
 
         $this->option();
-        
-        if($this->option['num'] == 0) $this->option['num']=1;
+
+        if ($this->option['num'] == 0)
+            $this->option['num'] = 1;
 
         $this->_PRODUCT = &$_SESSION['product'];
 
@@ -85,11 +86,29 @@ class ProductLastView extends PHPShopElements {
             "parent" => intval($parentID)
         );
 
-        // Очищаем лимит
-        if (count($this->_PRODUCT) >= $this->option['num'])
-            array_shift($this->_PRODUCT);
 
         $this->_PRODUCT[$array["id"]] = $array;
+
+        // Очищаем лимит
+        $this->first_remove();
+    }
+
+    /**
+     * Очищаем первый элемент по лимиту
+     * @return boolean
+     */
+    function first_remove() {
+        $i = 0;
+        if (count($this->_PRODUCT) > $this->option['num']) {
+            foreach ($this->_PRODUCT as $key => $v) {
+                if (empty($i)) {
+                    unset($this->_PRODUCT[$key]);
+                    $i++;
+                }
+                else
+                    return true;
+            }
+        }
     }
 
     /**
@@ -126,7 +145,7 @@ class ProductLastView extends PHPShopElements {
             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['productlastview']['productlastview_memory']);
             $data = $PHPShopOrm->select(array('product'), array('memory' => "='" . $this->memory . "'"), false, array('limit' => 1));
             if (is_array($data)) {
-                
+
                 $this->_PRODUCT = unserialize($data['product']);
             }
         }
@@ -218,6 +237,12 @@ function productlastviewform($val, $option) {
         // Учет модуля SEOURL
         if (!empty($GLOBALS['SysValue']['base']['seourl']['seourl_system'])) {
             PHPShopParser::set('productlastview_product_seo', '_' . PHPShopString::toLatin($val['name']));
+        }
+        // Учет модуля SEOURLPRO
+        elseif (!empty($GLOBALS['SysValue']['base']['seourlpro']['seourlpro_system'])) {
+            if($GLOBALS['PHPShopSeoPro'])
+            $GLOBALS['PHPShopSeoPro']->setMemory($val['id'], $val['name'], 2);
+            PHPShopParser::set('productlastview_product_seo', null);
         }
     } else {
         PHPShopParser::set('productlastview_product_id', $val['parent']);

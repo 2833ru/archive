@@ -52,7 +52,7 @@ function actionStart() {
     $PHPShopGUI->dir = "../";
     //$PHPShopGUI->size = "650,630";
     // Графический заголовок окна
-    $PHPShopGUI->setHeader("Создание Нового Каталога", "Укажите данные для записи в базу.", $PHPShopGUI->dir . "img/i_filemanager_med[1].gif");
+    $PHPShopGUI->setHeader("Создание Нового Каталога", "", $PHPShopGUI->dir . "img/i_filemanager_med[1].gif");
 
     // Редактор 1
     $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));

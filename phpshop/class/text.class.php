@@ -341,7 +341,7 @@ class PHPShopText {
      */
     static function setInput($type, $name, $value, $float = "none", $size = 200, $onclick = "return true", $class = false, $caption = false, $description = false) {
 
-            $input = ' <input type="' . $type . '" value="' . $value . '" name="' . $name . '" id="' . $name . '"> ';
+        $input = ' <input type="' . $type . '" value="' . $value . '" name="' . $name . '" id="' . $name . '"> ';
 
         if ($type != 'hidden')
             $input='<div style="float:' . $float . $padding . '">

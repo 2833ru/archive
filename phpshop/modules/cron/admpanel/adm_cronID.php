@@ -59,7 +59,7 @@ function actionStart() {
     
     
     // Графический заголовок окна
-    $PHPShopGUI->setHeader("Редактирование Задачи Cron","Укажите данные для записи в базу.",$PHPShopGUI->dir."img/i_display_settings_med[1].gif");
+    $PHPShopGUI->setHeader("Редактирование Задачи Cron","",$PHPShopGUI->dir."img/i_display_settings_med[1].gif");
     
     $Tab1=$PHPShopGUI->setField("Название задачи:",$PHPShopGUI->setInput("text","name_new",$name,"left",400));
     $Tab1.=$PHPShopGUI->setField("Запускаемый Файл:".$PHPShopGUI->setCheckbox("enabled_new",1,"Включить",$enabled),$PHPShopGUI->setInput("text","path_new",$path,"left",400).$PHPShopGUI->setLine("* phpshop/modules/cron/sample/dump.php"));

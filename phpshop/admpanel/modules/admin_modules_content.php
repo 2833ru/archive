@@ -78,9 +78,22 @@ function actionStart() {
                 // Информация по модулю
                 $Info = GetModuleInfo($row['path']);
 
+                if (!empty($Info['faqlink']))
+                    $wikiPath = $Info['faqlink'];
+                else
+                    $wikiPath = 'http://wiki.phpshop.ru/index.php/Modules#' . str_replace(' ', '_', $Info['name']);
+
                 $ModuleHomePage = '<img src="' . $path . $row['path'] . '/install/' . $Info['icon'] . '" align="absmiddle">
-<a href="http://wiki.phpshop.ru/index.php/Modules#' . str_replace(' ', '_', $Info['name']) . '" target="_blank" title="Описание модуля" class="blue">' . $Info['name'] . ' ' . $Info['version'] . '</a> ';
+<a href="' . $wikiPath . '" target="_blank" title="Описание модуля" class="blue">' . $Info['name'] . ' ' . $Info['version'] . '</a> ';
                 ;
+
+                if (CheckedRules($UserStatus["module"], 0)) {
+                    $ChekInstallModule[1] = "<BUTTON style=\"width: 10em; height: 2.2em; margin-left:5\" >
+<img src=\"../img/errormessage.gif\"  border=\"0\" align=\"absmiddle\">
+Нет прав
+</BUTTON>";
+                }
+
                 $PHPShopInterface->setRow($i, $ChekInstallModule[1], $ModuleHomePage, $Info['description'], date("d-m-y H:s", $ChekInstallModule[2]));
                 $i++;
             }
@@ -115,8 +128,13 @@ function actionStart() {
                         else
                             $trial = null;
 
+                        if (!empty($Info['faqlink']))
+                            $wikiPath = $Info['faqlink'];
+                        else
+                            $wikiPath = 'http://wiki.phpshop.ru/index.php/Modules#' . str_replace(' ', '_', $Info['name']);
+
                         $ModuleHomePage = '<img src="' . $path . $file . '/install/' . $Info['icon'] . '" align="absmiddle">
-<a href="http://wiki.phpshop.ru/index.php/Modules#' . str_replace(' ', '_', $Info['name']) . '" target="_blank" title="Описание модуля" class="blue">' . $Info['name'] . ' ' . $Info['version'] . $trial . '</a> ' . $new;
+<a href="' . $wikiPath . '" target="_blank" title="Описание модуля" class="blue">' . $Info['name'] . ' ' . $Info['version'] . $trial . '</a> ' . $new;
 
                         if (CheckedRules($UserStatus["module"], 0)) {
                             $ChekInstallModule[1] = "<BUTTON style=\"width: 10em; height: 2.2em; margin-left:5\" >
@@ -145,9 +163,13 @@ function actionStart() {
                         else
                             $trial = null;
 
+                        if (!empty($Info['faqlink']))
+                            $wikiPath = $Info['faqlink'];
+                        else
+                            $wikiPath = 'http://wiki.phpshop.ru/index.php/Modules#' . str_replace(' ', '_', $Info['name']);
 
                         $ModuleHomePage = '<img src="' . $path . $file . '/install/' . $Info['icon'] . '" align="absmiddle">
-<a href="http://wiki.phpshop.ru/index.php/Modules#' . str_replace(' ', '_', $Info['name']) . '" target="_blank" title="Описание модуля" class="blue">' . $Info['name'] . ' ' . $Info['version'] . $trial . '</a> ' . $new;
+<a href="' . $wikiPath . '" target="_blank" title="Описание модуля" class="blue">' . $Info['name'] . ' ' . $Info['version'] . $trial . '</a> ' . $new;
 
 
                         if (CheckedRules($UserStatus["module"], 0)) {

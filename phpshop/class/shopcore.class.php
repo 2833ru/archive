@@ -53,6 +53,17 @@ class PHPShopShopCore extends PHPShopCore {
     var $multi_cat = array();
 
     /**
+     * Тип верстки таблиц товаров [default | li | div]
+     * @var string  
+     */
+    var $cell_type = 'default';
+    /**
+     * Класс элемента товара
+     * @var string 
+     */
+    var $cell_type_class = 'product-block';
+
+    /**
      * Конструктор
      */
     function PHPShopShopCore() {
@@ -69,6 +80,9 @@ class PHPShopShopCore extends PHPShopCore {
 
         // Валюта товара
         $this->dengi = $this->PHPShopSystem->getParam('dengi');
+        
+        // HTML опции верстки
+        $this->setHtmlOption(__CLASS__);
     }
 
     /**
@@ -155,8 +169,8 @@ class PHPShopShopCore extends PHPShopCore {
         elseif (isset($_POST['priceSearch']) or !empty($sort)) {
 
             if (!empty($_POST['priceOT']) or !empty($_POST['priceDO'])) {
-                $priceOT = TotalClean($_POST['priceOT'], 1);
-                $priceDO = TotalClean($_POST['priceDO'], 1);
+                $priceOT = intval($_POST['priceOT']);
+                $priceDO = intval($_POST['priceDO']);
 
                 $this->set('productRriceOT', $priceOT);
                 $this->set('productRriceDO', $priceDO);
@@ -277,10 +291,27 @@ class PHPShopShopCore extends PHPShopCore {
         if ($this->setHook(__CLASS__, __FUNCTION__, array('count' => $count, 'sql' => $sql), 'START'))
             return true;
 
+        // проверяем наличие шаблонов пагинации в папке шаблона
+        // если отсутствуют, то используем шаблоны из lib
+        $type = $this->memory_get(__CLASS__ . '.' . __FUNCTION__);
+        if (!$type) {
+            if (!PHPShopParser::checkFile("paginator/paginator_one_link.tpl")) {
+                $type = "lib";
+            } else {
+                $type = "templates";
+            }
+
+            $this->memory_set(__CLASS__ . '.' . __FUNCTION__, $type);
+        }
+
+        if ($type == "lib") {
+            $template_location = "./phpshop/lib/templates/";
+            $template_location_bool = true;
+        }
+
         // Кол-во данных
         $this->count = $count;
         $SQL = null;
-        $delim = ' | ';
 
         // Выборка по параметрам WHERE
         $nWhere = 1;
@@ -339,50 +370,67 @@ class PHPShopShopCore extends PHPShopCore {
 
             while ($i <= $num) {
                 if ($i > 1) {
-                    $p_start = $this->num_row * ($i - 1);
+                    $p_start = $this->num_row * ($i - 1) + 1;
                     $p_end = $p_start + $this->num_row;
                 } else {
                     $p_start = $i;
                     $p_end = $this->num_row;
                 }
+
+                $this->set("paginPageRangeStart", $p_start);
+                $this->set("paginPageRangeEnd", $p_end);
+                $this->set("paginPageNumber", $i);
+                $this->set("paginPageCurnet", $i);
+                $this->set("paginPageCount", $i);
+
+
                 if ($i != $this->page) {
-                    if ($i == 1)
-                        $navigat.=PHPShopText::a(substr($this->objPath, 0, strlen($this->objPath) - 1) . '.html' . $sort, $p_start . '-' . $p_end) . $delim;
-                    else {
-                        if ($i > ($this->page - $this->nav_len) and $i < ($this->page + $this->nav_len))
-                            $navigat.=PHPShopText::a($this->objPath . $i . '.html' . $sort, $p_start . '-' . $p_end) . $delim;
-                        else if ($i - ($this->page + $this->nav_len) < 3 and (($this->page - $this->nav_len) - $i) < 3)
-                            $navigat.=".";
+                    if ($i == 1) {
+                        $this->set("paginLink", substr($this->objPath, 0, strlen($this->objPath) - 1) . '.html' . $sort);
+                        $navigat.= parseTemplateReturn($template_location . "paginator/paginator_one_link.tpl", $template_location_bool);
+                    } else {
+                        if ($i > ($this->page - $this->nav_len) and $i < ($this->page + $this->nav_len)) {
+                            $this->set("paginLink", $this->objPath . $i . '.html' . $sort);
+                            $navigat.= parseTemplateReturn($template_location . "paginator/paginator_one_link.tpl", $template_location_bool);
+                        } else if ($i - ($this->page + $this->nav_len) < 3 and (($this->page - $this->nav_len) - $i) < 3) {
+                            $navigat.= parseTemplateReturn($template_location . "paginator/paginator_one_more.tpl", $template_location_bool);
+                        }
                     }
                 }
                 else
-                    $navigat.=PHPShopText::b($p_start . '-' . $p_end) . $delim;
+                    $navigat.= parseTemplateReturn($template_location . "paginator/paginator_one_selected.tpl", $template_location_bool);
+
                 $i++;
             }
 
-            $nav = $this->getValue('lang.page_now') . ': ';
+            $this->set("pageNow", $this->getValue('lang.page_now'));
+            $this->set("navBack", $this->lang('nav_back'));
+            $this->set("navNext", $this->lang('nav_forw'));
+            $this->set("navigation", $navigat);
 
             // Убираем дубль первой страницы CID_X_1.html
             if ($p_do == 1)
-                $nav.=PHPShopText::a(substr($this->objPath, 0, strlen($this->objPath) - 1) . '.html' . $sort, PHPShopText::img('images/shop/3.gif', 0, 'absmiddle'), '&laquo; ' . $this->lang('nav_back'));
+                $this->set("previousLink", substr($this->objPath, 0, strlen($this->objPath) - 1) . '.html' . $sort);
             else
-                $nav.=PHPShopText::a($this->objPath . ($p_do) . '.html' . $sort, PHPShopText::img('images/shop/3.gif', 0, 'absmiddle'), '&laquo; ' . $this->lang('nav_back'));
+                $this->set("previousLink", $this->objPath . ($p_do) . '.html' . $sort);
 
-            $nav.='  ' . $navigat . '  ';
 
             // Убираем дубль первой страницы CID_X_0.html
             if ($p_to == 0)
-                $nav.=PHPShopText::a(substr($this->objPath, 0, strlen($this->objPath) - 1) . '.html' . $sort, PHPShopText::img('images/shop/4.gif', 0, 'absmiddle'), $this->lang('nav_forw') . ' &raquo;');
+                $this->set("nextLink", substr($this->objPath, 0, strlen($this->objPath) - 1) . '.html' . $sort);
             else
-                $nav.=PHPShopText::a($this->objPath . ($p_to) . '.html' . $sort, PHPShopText::img('images/shop/4.gif', 0, 'absmiddle'), $this->lang('nav_forw') . ' &raquo;');
+                $this->set("nextLink", $this->objPath . ($p_to) . '.html' . $sort);
 
             // Добавлем ссылку показать все
             if (strtoupper($this->page) == 'ALL')
-                $nav.=PHPShopText::nbsp(2) . PHPShopText::b(__('Все позиции'));
-            else
-                $nav.=PHPShopText::nbsp(2) . PHPShopText::a($this->objPath . 'ALL.html' . $sort, __('Все позиции'));
+                $this->set("allPages", parseTemplateReturn($template_location . "paginator/paginator_all_pages_link_selected.tpl", $template_location_bool));
+            else {
+                $this->set("allPagesLink", $this->objPath . 'ALL.html' . $sort);
+                $this->set("allPages", parseTemplateReturn($template_location . "paginator/paginator_all_pages_link.tpl", $template_location_bool));
+            }
 
             // Назначаем переменную шаблонизатора
+            $nav = parseTemplateReturn($template_location . "paginator/paginator_main.tpl", $template_location_bool);
             $this->set('productPageNav', $nav);
 
             // Перехват модуля в конце функции
@@ -472,7 +520,7 @@ class PHPShopShopCore extends PHPShopCore {
                 $productPrice = $this->price($row);
                 $productPriceNew = $this->price($row, true);
                 $this->set('productPrice', $productPrice);
-                $this->set('productPriceRub', PHPShopText::strike($productPriceNew));
+                $this->set('productPriceRub', PHPShopText::strike($productPriceNew . " " . $this->currency()));
             }
         }
 
@@ -521,7 +569,6 @@ class PHPShopShopCore extends PHPShopCore {
 
         $Arg = func_get_args();
         $item = 1;
-        $tr = '<tr>';
 
         foreach ($Arg as $key => $value)
             if ($key < $this->cell)
@@ -529,7 +576,7 @@ class PHPShopShopCore extends PHPShopCore {
 
         $num = count($args);
 
-        // Расчет CSS стилей сетки товара
+        // Расчет CSS стилей табличной сетки товара
         switch ($num) {
             // Сетка в 1 ячейку
             case 1:
@@ -559,21 +606,67 @@ class PHPShopShopCore extends PHPShopCore {
             default: $panel = array('panel_l', 'panel_r', 'panel_l', 'panel_r', 'panel_l', 'panel_r', 'panel_l');
         }
 
-        if (is_array($args))
-            foreach ($args as $key => $val) {
-                $tr.='<td class="' . $panel[$key] . '" valign="top">' . $val . '</td>';
+        switch ($this->cell_type) {
 
-                if ($item < $num and $num == $this->cell)
-                    $tr.='<td ' . $this->grid_style . '><img src="images/spacer.gif" width="1"></td>';
+            // Списки
+            case 'li':
+                if (is_array($args))
+                    foreach ($args as $key => $val) {
+                        $tr.='<li class="'.$this->cell_type_class.'">' . $val . '</li>';
+                        $item++;
+                    }
+                break;
 
-                $item++;
-            }
-        $tr.='</tr>';
+            // Блоки
+            case 'div':
+                if (is_array($args))
+                    foreach ($args as $key => $val) {
+                        $tr.='<div class="'.$this->cell_type_class.'">' . $val . '</div>';
+                        $item++;
+                    }
+                break;
 
-        if (!empty($this->setka_footer))
-            $tr.='<tr><td ' . $this->grid_style . ' colspan="' . ($this->cell * 2) . '" height="1"><img height="1" src="images/spacer.gif"></td></tr>';
+            // Табличная
+            default:
+
+                $tr = '<tr>';
+                if (is_array($args))
+                    foreach ($args as $key => $val) {
+                        $tr.='<td class="' . $panel[$key] . '" valign="top">' . $val . '</td>';
+
+                        if ($item < $num and $num == $this->cell)
+                            $tr.='<td ' . $this->grid_style . '><img src="images/spacer.gif" width="1"></td>';
+
+                        $item++;
+                    }
+                $tr.='</tr>';
+
+                if (!empty($this->setka_footer))
+                    $tr.='<tr><td ' . $this->grid_style . ' colspan="' . ($this->cell * 2) . '" height="1"><img height="1" src="images/spacer.gif"></td></tr>';
+        }
+
 
         return $tr;
+    }
+
+    /**
+     * Расчёт кол-ва столбцов товара с учётом возможного изменения пользователем через шаблон
+     * @param Int $category ИД текущей категории
+     * @param Int $num_row  кол-во колонок в категории по умолчанию
+     */
+    function calculateCell($category, $num_row) {
+        if (isset($_REQUEST['gridChange']) AND $_REQUEST['gridChange'] > 0) {
+            if ($_REQUEST['gridChange'] == 2 AND $num_row > 1) {
+                $_SESSION['gridChange'][$category] = $num_row;
+                return $num_row;
+            } else {
+                $_SESSION['gridChange'][$category] = 1;
+                return 1;
+            }
+        } elseif (isset($_SESSION['gridChange'][$category]))
+            return $_SESSION['gridChange'][$category];
+        else
+            return $num_row;
     }
 
     /**
@@ -599,7 +692,7 @@ class PHPShopShopCore extends PHPShopCore {
         $this->set('productInfo', $this->lang('product_info'));
         $this->set('productPriceMoney', $this->dengi);
         $this->set('catalog', $this->lang('catalog'));
-        if ($this->PHPShopNav->getPage()>0)
+        if ($this->PHPShopNav->getPage() > 0)
             $this->set('productPageThis', $this->PHPShopNav->getPage());
         else
             $this->set('productPageThis', 1);
@@ -607,6 +700,11 @@ class PHPShopShopCore extends PHPShopCore {
         $d1 = $d2 = $d3 = $d4 = $d5 = $d6 = $d7 = null;
         if (is_array($dataArray)) {
             $total = count($dataArray);
+
+            // Проверка разделителя сетки
+            if ($total < $cell)
+                $this->grid = false;
+
             foreach ($dataArray as $row) {
 
                 // Название
@@ -637,6 +735,9 @@ class PHPShopShopCore extends PHPShopCore {
 
                 // Ид товара
                 $this->set('productUid', $row['id']);
+
+                // Подключение функции вывода средней оценки товара из отзывов пользователей
+                $this->doLoadFunction(__CLASS__, 'comment_rate', array("row" => $row, "type" => "CID"), 'shop');
 
                 // Опции склада
                 $this->checkStore($row);
@@ -682,5 +783,4 @@ class PHPShopShopCore extends PHPShopCore {
     }
 
 }
-
 ?>

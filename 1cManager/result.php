@@ -4,11 +4,15 @@
  * Автономная синхронизация номенклатуры из 1С
  * @package PHPShopExchange
  * @author PHPShop Software
- * @version 1.8
+ * @version 1.9
  */
 // Авторизация
 include_once("login.php");
 PHPShopObj::loadClass("readcsv");
+
+// ShopBilder
+$GLOBALS['option']['shopbuilder'] = false;
+
 
 $F_done = null;
 $GetItemCreate = 0;
@@ -323,7 +327,6 @@ class ReadCsv1C extends PHPShopReadCsvPro {
             $sql.="price5='" . @$CsvToArray[11] . "', "; // цена 5
             $sql.="items='" . @$CsvToArray[6] . "', "; // склад
             $sql.="datas='" . date("U") . "', "; // дата изменения
-            
             // Подчиненные товары
             if (is_numeric($CsvToArray[16]) and $CsvToArray[16] == 1) {
                 $sql.="parent_enabled='1', ";
@@ -499,8 +502,15 @@ if (preg_match("/[^(0-9)|(\-)]/", $_GET['date']))
 else
     $date = $_GET['date'];
 
-$path = "sklad";
-$dir = $path . "/" . $date;
+// Проверка режима Lite для ShopBuilder
+if (empty($GLOBALS['option']['shopbuilder'])) {
+    $path = "sklad";
+    $dir = $path . "/" . $date;
+}
+else{
+    $path = "../phpshop/templates/1cManager/sklad";
+    $dir = $path . "/" . $date;
+}
 
 // Читаем категории
 if ($_GET['create_category'] == "true")

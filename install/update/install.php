@@ -223,7 +223,7 @@ $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
         $bases.=$SysValue['base'][$val] . ", ";
 
     $bases = substr($bases, 0, strlen($bases) - 2);
-    $bases2 = preg_replace("phpshop_system", "", $bases);
+
     ?>
 
     <TABLE cellSpacing=1 cellPadding=5 width="100%" height="70%" align=center border=0>

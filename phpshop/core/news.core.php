@@ -22,6 +22,7 @@ class PHPShopNews extends PHPShopCore {
 
         // Отладка
         $this->debug = false;
+        $this->empty_index_action = true;
 
         // Список экшенов
         $this->action = array('get' => 'timestamp', "nav" => array("index","ID"), "post" => "news_plus");
@@ -39,7 +40,7 @@ class PHPShopNews extends PHPShopCore {
         // Перехват модуля
         if ($this->setHook(__CLASS__, __FUNCTION__, false, 'START'))
             return true;
-        
+
         // Выборка данных
         $this->dataArray = parent::getListInfoItem(array('*'), false, array('order' => 'id DESC'));
 

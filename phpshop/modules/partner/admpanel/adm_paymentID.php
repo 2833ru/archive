@@ -78,7 +78,7 @@ function actionStart() {
     @extract($data[0]);
 
     // Графический заголовок окна
-    $PHPShopGUI->setHeader("Заявка на выплаты","Укажите данные для записи в базу.",$PHPShopGUI->dir."img/i_visa_med[1].gif");
+    $PHPShopGUI->setHeader("Заявка на выплаты","",$PHPShopGUI->dir."img/i_visa_med[1].gif");
 
     $Tab1=$PHPShopGUI->setInputText('Логин: ','login', $login);
     $Tab1.=$PHPShopGUI->setInputText('E-mail: ','mail', $mail);

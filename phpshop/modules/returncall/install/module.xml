@@ -2,7 +2,8 @@
 <module>
     <version>1.4</version>
     <name>Return Call</name>
-    <description>Модуль обратного звонка</description>
+           <faqlink>http://faq.phpshop.ru/page/return-call.html</faqlink>
+<description>Модуль обратного звонка.</description>
     <icon>telephone.png</icon>
     <category>users</category>
     <adminmenu>

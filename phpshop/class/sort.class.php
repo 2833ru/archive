@@ -80,8 +80,7 @@ class PHPShopSort {
         global $SysValue;
 
         // Направление сортировки пользователем
-        if(!empty($_GET['f']))
-        switch ($_GET['f']) {
+        switch (@$_GET['f']) {
             case(1):
                 $SysValue['other']['productSortNext'] = 2;
                 $SysValue['other']['productSortImg'] = 1;
@@ -99,8 +98,7 @@ class PHPShopSort {
         }
 
         // Сортировка пользователем
-        if(!empty($_GET['s']))
-        switch ($_GET['s']) {
+        switch (@$_GET['s']) {
             case(1):
                 $SysValue['other']['productSortA'] = "sortActiv";
                 $SysValue['other']['productSort'] = 1;
@@ -161,9 +159,9 @@ class PHPShopSort {
 
         // Показать выбрать все
         if (!empty($all) and empty($template)) {
-            $value[] = array('-- все ' . $title . ' --', '', $all_sel);
+            $value[] = array($title , '', $all_sel);
         }
-        
+
         $all_sel = 'selected';
         $PHPShopOrm = new PHPShopOrm();
         $PHPShopOrm->debug = $this->debug;
@@ -189,7 +187,7 @@ class PHPShopSort {
         $SysValue['sort'][] = $n;
 
         if (empty($template)) {
-            $size = (strlen($title) + 10) * 7;
+            $size = (strlen($title) + 7) * 6;
             $disp = PHPShopText::select('v[' . $n . ']', $value, $size, false, false, false, false, false, $n);
         } elseif (function_exists($template)) {
             $disp = call_user_func_array($template, array($value, $n, $title, $vendor));

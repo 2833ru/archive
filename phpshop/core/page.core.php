@@ -20,6 +20,8 @@ class PHPShopPage extends PHPShopCore {
      * @var bool
      */
     var $debug = false;
+    var $odnootip_cell_center  = 2;
+    var $odnootip_cell_block  = 1;
     
 
     /**
@@ -31,7 +33,7 @@ class PHPShopPage extends PHPShopCore {
         $this->objBase = $GLOBALS['SysValue']['base']['page'];
 
         // Список экшенов
-        $this->action = array('nav' => 'index',"nav" => "CID");
+        $this->action = array("nav" => "CID");
         $this->empty_index_action=true;
         
         parent::PHPShopCore();
@@ -56,7 +58,7 @@ class PHPShopPage extends PHPShopCore {
         // Список для выборки
         if (!empty($odnotip) and is_array($odnotip))
             foreach ($odnotip as $value) {
-                $odnotipList.=' id=' . trim($value) . ' OR';
+                $odnotipList.=' id=' . intval($value) . ' OR';
             }
 
         $odnotipList = substr($odnotipList, 0, strlen($odnotipList) - 2);
@@ -73,13 +75,16 @@ class PHPShopPage extends PHPShopCore {
 
             // Вставка в центральную часть
             if (PHPShopParser::check($this->getValue('templates.main_product_odnotip_list'), 'productOdnotipList')) {
-                $this->set('productOdnotipList', $PHPShopProductIconElements->seamply_forma($data, 2, 'main_spec_forma_icon'));
+                $this->set('productOdnotipList', $PHPShopProductIconElements->seamply_forma($data, $this->odnootip_cell_center, 'main_spec_forma_icon'));
                 $this->set('productOdnotip', __('Рекомендуемые товары'));
             } else {
                 // Вставка в правый столбец
                 $this->set('specMainTitle', __('Рекомендуемые товары'));
-                $this->set('specMainIcon', $PHPShopProductIconElements->seamply_forma($data, 1, 'main_spec_forma_icon'));
+                $this->set('specMainIcon', $PHPShopProductIconElements->seamply_forma($data, $this->odnootip_cell_block, 'main_spec_forma_icon'));
             }
+            
+            $odnotipDisp = ParseTemplateReturn($this->getValue('templates.main_product_odnotip_list'));
+            $this->set('odnotipDisp', $odnotipDisp);
         }
     }
 

@@ -424,7 +424,7 @@ switch ($p) {
 	<td>
         <FIELDSET>
 	<LEGEND>Выберите файл с расширением *.csv</LEGEND>
-	<INPUT type="file" name="csv_file" accept="text/plain">
+	<INPUT type="file" name="csv_file">
         </FIELDSET>
 	</td>
 	
@@ -517,7 +517,7 @@ switch ($p) {
 <tr>
 	<td>
 	<span name=txtLang id=txtLang>
-	<INPUT type=file name=csv_file accept="text/plain">
+	<INPUT type=file name=csv_file>
 	</td>
 	<td align="right">
 	<INPUT class=but onclick="DoLoad(this.form.csv_file,\'predload\',null,\'csv\')" type=button value=OK>
@@ -877,7 +877,7 @@ switch ($p) {
 <table cellpadding="0" cellspacing="0">
 <tr>
 <td><span name=txtLang id=txtLang>Поиск</span>: 
-	<input type=text name="words" size=50 class=s  title="' . $SysValue['Lang']['Help'][6] . '">
+	<input type=text name="words" placeholder="' . $SysValue['Lang']['Help']['6'] . '" size=50 class=s  title="' . $SysValue['Lang']['Help'][6] . '">
 	<input type=button value="Показать" class="but small" onclick="SearchProducts(search.words.value)">
 	</td>
 	<td width="10"></td>
@@ -885,7 +885,7 @@ switch ($p) {
 	<td width="1" bgcolor="#808080" class="separator"></td>
    <td width="5"></td>
    
-	<td id="but1"  class="butoff"><img src="icon/blank.gif" name="imgLang" title="" width="1" height="1" border="0"><img name="imgLang" src="icon/folder_add.gif" title="Новый каталог"  width="16" height="16" border="0" onmouseover="ButOn(1)" onmouseout="ButOff(1)" onclick="miniWin(\'catalog/adm_catalog_new.php\',650,630);return false;"></td>
+	<td id="but1"  class="butoff"><img src="icon/blank.gif" name="imgLang" title="" width="1" height="1" border="0"><img name="imgLang" src="icon/folder_add.gif" title="Новый каталог"  width="16" height="16" border="0" onmouseover="ButOn(1)" onmouseout="ButOff(1)" onclick="NewProductCatalog();"></td>
    <td width="3"></td>
 	<td id="but2" class="butoff"><img name="imgLang" src="icon/page_new.gif" title="Новая позиция" width="16" height="16" border="0" onmouseover="ButOn(2)" onmouseout="ButOff(2)" onclick="NewProduct()"></td>
 	<td width="5"></td>
@@ -909,7 +909,8 @@ switch ($p) {
 		<option id="txtLang" value="9" STYLE="background: #fff">Сделать копию</option>
 		<option id="txtLang" value="23" STYLE="background: #fff">Связать со статьями</option>
         <option id="txtLang" value="24" STYLE="background: #fff">Связать с характеристикой</option>
-		<option id="txtLang" value="8" STYLE="background: #fff">Экспорт в Excel (1C)</option>
+		<option id="txtLang" value="8" STYLE="background: #fff">Экспорт в прайс-лист Excel</option>
+                <option id="txtLang" value="base" STYLE="background: #fff">Экспорт в базу Excel</option>
 		</optgroup> 
 		<optgroup id="txtLang" label="Новинки" STYLE="background: #C0D2EC;">
 		<option id="txtLang" value="10" STYLE="background: #fff">Добавить в новинки</option>
@@ -983,7 +984,7 @@ switch ($p) {
 	<td>
 	<IMG onclick="popUpCalendar(this, calendar.pole1, \'dd-mm-yyyy\');" height=16 hspace=3 src="icon/date.gif" width=16 border=0 align="absmiddle" class="icon">
 	</td>
-	<td><input type="text" style="width:80" value="';
+	<td><input type="text" style="width:80px" value="';
         if (!$var2)
             $interface.= date("d-m-Y");
         else
@@ -1003,8 +1004,8 @@ switch ($p) {
 	<table cellspacing="0" cellpadding="0" >
 <tr>
     <td>
-	<input type=text name="order_serach" id="order_serach" size=50 class=s title="' . $SysValue['Lang']['Help']['forma_3'] . '" value="' . $var3 . '">
-	<input type=button value=Поиск class="but small" id=btnSearch  onclick="DoReload(\'orders\',calendar.pole1.value,calendar.pole2.value,document.getElementById(\'order_serach\').value)">
+	<input type=text name="order_serach" placeholder="' . $SysValue['Lang']['Help']['forma_3'] . '" id="order_serach" size=50 class=s title="' . $SysValue['Lang']['Help']['forma_3'] . '" value="' . $var3 . '">
+	<input type=button value="Поиск"  class="but small"   onclick="DoReload(\'orders\',calendar.pole1.value,calendar.pole2.value,document.getElementById(\'order_serach\').value)">
 	</td>
 </tr>
 </table>
@@ -1402,6 +1403,7 @@ switch ($p) {
                 $old_priv = array(
                     'page' => 'page_site',
                     'banner' => 'baner',
+                    'slider' => 'baner',
                     'modules' => 'page_site',
                     'menu' => 'page_menu',
                 );

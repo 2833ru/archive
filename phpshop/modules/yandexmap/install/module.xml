@@ -2,7 +2,8 @@
 <module>
     <version>1.0</version>
     <name>Yandex Map</name>
-    <description>Модуль Яндекс.Карты</description>
+       <faqlink>http://faq.phpshop.ru/page/yandex-map.html</faqlink>
+<description>Модуль Яндекс.Карты.</description>
     <icon>icon.png</icon>
     <category>form</category>
     <adminmenu>

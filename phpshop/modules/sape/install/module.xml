@@ -2,7 +2,8 @@
 <module>
     <version>1.1</version>
     <name>Sape</name>
-    <description>Модуль вывода платных ссылок Sape.</description>
+<faqlink>http://faq.phpshop.ru/page/sape.html</faqlink>
+<description>Модуль вывода платных ссылок Sape.</description>
     <icon>icon.png</icon>
     <category>sale,develop</category>
     <adminmenu>

@@ -1,10 +1,13 @@
 <?php
 /* 
- * Вставка биржевых ссылок, рейтингов и счетчиков
+ * Подвал
 */
 
 // Перехват модуля
+if($PHPShopNav->notPath('print')){
 $PHPShopModules->setHookHandler('footer','footer');
+}else echo '</div>';
+
 
 echo '
   </body>

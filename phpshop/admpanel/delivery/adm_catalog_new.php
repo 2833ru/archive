@@ -20,7 +20,7 @@ require("../language/russian/language.php");
                 <tr bgcolor="#ffffff">
                     <td style="padding:10">
                         <b><span name=txtLang id=txtLang>Создание Нового Каталога Доставки</span></b><br>
-                        &nbsp;&nbsp;&nbsp;<span name=txtLang id=txtLang>Укажите данные для записи в базу</span>.
+
                     </td>
                     <td align="right">
                         <img src="../img/i_mail_forward_med[1].gif" border="0" hspace="10">
@@ -29,7 +29,7 @@ require("../language/russian/language.php");
             </table>
             <table class=mainpage4 cellpadding="5" cellspacing="0" border="0" align="center" width="100%">
                 <tr>
-                    <td colspan=3>
+                    <td>
 
                         <FIELDSET>
                             <LEGEND id=lgdLayout><span name=txtLang id=txtLang><u>К</u>аталог</span>:</LEGEND>
@@ -60,22 +60,44 @@ require("../language/russian/language.php");
                                 }
 
                                 echo '
-<input type=text id="myName"  style="width: 500" value="' . Disp_cat($_GET['categoryID']) . '">
+<input type=text id="myName"  style="width: 170" value="' . Disp_cat($_GET['categoryID']) . '">
 <input type="hidden" value="' . $_GET['categoryID'] . '" name="NPID" id="myCat">
 <BUTTON style="width: 3em; height: 2.2em; margin-left:5"  onclick="miniWinFull(\'adm_cat.php?category=' . $_GET['categoryID'] . '\',300,400,300,200)"><img src="../img/icon-move-banner.gif"  width="16" height="16" border="0"></BUTTON>';
                                 ?>
                         </FIELDSET>
-                    </TD></TR><TR>     <TD>
+                    </TD>
+                    <td colspan=2>
+                        <fieldset style="float:none;padding:5px;margin-left:0px;padding-top:0px">
+                            <legend>Иконка</legend>
+
+                            <div style="float:left;padding:14px;">
+                                <input type="text" value="<?= $row['icon'] ?>" name="icon_new" id="icon_new" style="width:100px;" class="" onclick="" title=""> </div>
+                            <div style="float:right;padding:5px;">
+                                <button style="width:100px; height:25px; margin-left:5" onclick="ReturnPic('icon_new');
+                                        return false;">
+                                    <img src="../img/icon-move-banner.gif" width="16" height="16" border="0" align="absmiddle" hspace="3">
+                                    Выбрать
+                                </button></div>
+
+                        </fieldset>
+                    </td>
+                </TR><TR>     <TD>
 
                         <FIELDSET style="height:80px">
                             <LEGEND><span name=txtLang id=txtLang><u>Н</u>азвание</span></LEGEND>
-                            <div style="padding:10px">
+                            <div style="padding:10">
                                 <input name="city_new" style="width:100%"><br>
                                 <input type="checkbox" name="flag_new" value="1"><span name=txtLang id=txtLang>Доставка по умолчанию</span>
                             </div>
                         </FIELDSET>
                     </td>
-                    <td>
+                    <td style="vertical-align:top;">
+                        <FIELDSET style="height:60px">
+                            <LEGEND><span name=txtLang id=txtLang>Номер по порядку</span></LEGEND>
+                            <div style="padding:10">
+                                <input type="text" value="0" name="num_new" id="num_new" style="width:50px;" class="" onclick="" title="">
+                            </div>
+                        </FIELDSET>
                     </td>
                     <td>
                         <FIELDSET style="height:80px">
@@ -115,22 +137,28 @@ require("../language/russian/language.php");
                 </tr>
             </table>
         </form>
-<?
-if (isset($editID) and !empty($city_new)) {// Запись редактирования
-    if (CheckedRules($UserStatus["delivery"], 2) == 1) {
-        $sql = "INSERT INTO " . $SysValue['base']['table_name30'] . "
-VALUES ('','$city_new','$price_new','$enabled_new','$flag_new','$price_null_new','$price_null_enabled_new','$NPID','$taxa_new','1')";
-        $result = mysql_query($sql) or @die("" . mysql_error() . "");
-        echo'
+        <?
+        if (isset($editID) and !empty($city_new)) {// Запись редактирования
+            if (CheckedRules($UserStatus["delivery"], 2) == 1) {
+
+
+                // обнуляем статус "по умолчанию" для всех, чтобы назначить для текущего, если выбрали
+                if ($flag_new)
+                    mysql_query("UPDATE " . $SysValue['base']['table_name30'] . " SET flag='0' WHERE is_folder='1'") or die(mysql_error());
+
+                $sql = "INSERT INTO " . $SysValue['base']['table_name30'] . "
+VALUES ('','$city_new','$price_new','$enabled_new','$flag_new','$price_null_new','$price_null_enabled_new','$NPID','$taxa_new','1','','','$num_new','$icon_new')";
+                $result = mysql_query($sql) or @die("" . mysql_error() . "");
+                echo'
 	  <script>
 CLREL("left");
 </script>
 	   ';
-    }
-    else
-        $UserChek->BadUserFormaWindow();
-}
-?>
+            }
+            else
+                $UserChek->BadUserFormaWindow();
+        }
+        ?>
 
 
 

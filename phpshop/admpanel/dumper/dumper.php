@@ -605,8 +605,8 @@ class dumper {
 		else{
 			fclose($fp);
 		}
-		@chmod(PATHDAMP . $this->filename, 0666);
-		$this->fn_index();
+		//@chmod(PATHDAMP . $this->filename, 0666);
+		//$this->fn_index();
 	}
 
 	function fn_select($items, $selected){

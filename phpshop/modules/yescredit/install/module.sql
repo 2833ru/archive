@@ -11,4 +11,4 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_yescredit_system` (
 
 INSERT INTO `phpshop_modules_yescredit_system` VALUES (1,25, 777777, '');
 
-INSERT INTO `phpshop_payment_systems` VALUES (25, 'Оформить кредит (Yes Credit)', 'message', '1', 0, 'Заявка на кредит отправлена в банк, очень скоро с вами свяжутся представители банка.', 'Спасибо за заказ');
+INSERT INTO `phpshop_payment_systems` VALUES (25, 'Оформить кредит (Yes Credit)', 'message', '1', 0, 'Заявка на кредит отправлена в банк, очень скоро с вами свяжутся представители банка.', 'Спасибо за заказ', '');

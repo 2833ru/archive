@@ -2,7 +2,8 @@
 <module>
     <version>1.1</version>
     <name>Skin Page</name>
-    <description>ћодуль смены дизайна дл€ товаров и каталогов.</description>
+<faqlink>http://faq.phpshop.ru/page/skin-page.html</faqlink>
+<description>ћодуль смены дизайна дл€ товаров и каталогов.</description>
     <icon>icon.png</icon>
     <category>template,decorate</category>
     <adminmenu>

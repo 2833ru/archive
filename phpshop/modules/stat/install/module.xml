@@ -2,7 +2,8 @@
 <module>
     <version>1.2</version>
     <name>Stat</name>
-    <description>Модуль статистики посещений.</description>
+    <faqlink>http://faq.phpshop.ru/page/stat.html</faqlink>
+<description>Модуль статистики посещений.</description>
     <category>seo</category>
     <icon>icon.gif</icon>
     <adminmenu>

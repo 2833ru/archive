@@ -10,6 +10,15 @@
 class PHPShopString {
 
     /**
+     * Кодировка Win 1251 в JSON формат
+     * @param string $var
+     * @return string
+     */
+    function json_safe_encode($var) {
+        return json_encode(json_fix_cyr($var));
+    }
+
+    /**
      * Кодировка Win 1251 в UTF8
      * @param string $in_text
      * @return string
@@ -55,20 +64,26 @@ class PHPShopString {
         return $s;
     }
 
-    /**
+     /**
      * Перевод в латиницу
      * @param string $str
      * @return string
      */
     static function toLatin($str) {
         $str = strtolower($str);
+
+        // Коррекция первого символа
+        $num = intval($str);
+        if (!empty($num))
+            $str = '_' . $str;
+
         $str = str_replace("&nbsp;", "", $str);
-        $str = str_replace("/", "", $str);
+        $str = str_replace("/", "-", $str);
         $str = str_replace("\\", "", $str);
         $str = str_replace("(", "", $str);
         $str = str_replace(")", "", $str);
         $str = str_replace(":", "", $str);
-        $str = str_replace("-", "", $str);
+        //$str = str_replace("-", "", $str); // Добавлено для SeoPro
         $str = str_replace(" ", "_", $str);
         $str = str_replace("!", "", $str);
         $str = str_replace("|", "_", $str);
@@ -99,7 +114,7 @@ class PHPShopString {
             else
                 $new_str.=$_Array[$val];
 
-        return preg_replace('([^a-z0-9_\.-])', '', $new_str);
+        return preg_replace('([^a-z0-9/_\.-])', '', $new_str);
     }
 
     // Отрезаем до точки с заменой &
@@ -176,6 +191,19 @@ class PHPShopString {
         return $browser . ' ' . $version;
     }
 
+}
+
+function json_fix_cyr($var) {
+    if (is_array($var)) {
+        $new = array();
+        foreach ($var as $k => $v) {
+            $new[json_fix_cyr($k)] = json_fix_cyr($v);
+        }
+        $var = $new;
+    } elseif (is_string($var)) {
+        $var = PHPShopString::win_utf8($var);
+    }
+    return $var;
 }
 
 ?>

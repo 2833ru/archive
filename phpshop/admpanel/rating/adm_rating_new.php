@@ -75,7 +75,7 @@ return @$disp;
 <tr bgcolor="#ffffff">
 	<td style="padding:10">
 	<b><span name=txtLang id=txtLang>Создание Рейтинга</span></b><br>
-	&nbsp;&nbsp;&nbsp;<span name=txtLang id=txtLang>Укажите данные для записи в базу</span>.
+	
 	</td>
 	<td align="right">
 	<img src="../img/i_website_statistics_med[1].gif" border="0" hspace="10">

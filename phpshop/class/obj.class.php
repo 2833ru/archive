@@ -177,8 +177,10 @@ function PHPShopAutoLoadClass($class_name) {
             require_once($class_path);
     }
 }
+
 if (function_exists('spl_autoload_register')) {
     spl_autoload_register('PHPShopAutoLoadClass');
 }
+
 
 ?>

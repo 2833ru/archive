@@ -3,7 +3,7 @@
 /**
  * Вывод изображений для подробного описания
  * @author PHPShop Software
- * @version 1.2
+ * @version 1.3
  * @package PHPShopCoreFunction
  * @param obj $obj объект класса
  * @param row $row масив данных
@@ -24,11 +24,10 @@ function image_gallery($obj, $row) {
                 $name = $row['name'];
                 $name_s = str_replace(".", "s.", $name);
                 $name_bigstr = str_replace(".", "_big.", $pic_big);
-                //$name_big = "http://" . $_SERVER['HTTP_HOST'] . $name_bigstr;
-                $name_big = $name_bigstr;
+                $name_big = $_SERVER['DOCUMENT_ROOT'].$name_bigstr;
 
                 // Подбор исходного изображения
-                if (@fopen($name_big, "r"))
+                if (file_exists ($name_big))
                     $name_b = str_replace(".", "_big.", $pic_big);
                 else
                     $name_b = str_replace(".", ".", $pic_big);

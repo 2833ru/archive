@@ -21,7 +21,6 @@ $GetSystems = $PHPShopSystem->getArray();
 
 
 $option = unserialize($GetSystems['admoption']);
-
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -60,7 +59,6 @@ $option = unserialize($GetSystems['admoption']);
             return $PHPShopGUI->setSelect('editor_new', $value, 100);
         }
 
-
 // Выбор дизайна административной части
         function GetTheme($skin) {
 
@@ -97,14 +95,15 @@ $option = unserialize($GetSystems['admoption']);
             if (is_dir($dir)) {
                 if ($dh = opendir($dir)) {
                     while (($file = readdir($dh)) !== false) {
+                        if (file_exists($dir.'/'. $file . "/main/index.tpl")) {
+                            if ($skin == $file)
+                                $sel = "selected";
+                            else
+                                $sel = "";
 
-                        if ($skin == $file)
-                            $sel = "selected";
-                        else
-                            $sel = "";
-
-                        if ($file != "." and $file != ".." and $file != "index.html")
-                            @$name.= "<option value=\"$file\" $sel>$file</option>";
+                            if ($file != "." and $file != ".." and $file != "index.html")
+                                @$name.= "<option value=\"$file\" $sel>$file</option>";
+                        }
                     }
                     closedir($dh);
                 }
@@ -117,7 +116,7 @@ $option = unserialize($GetSystems['admoption']);
             return @$disp;
         }
 
-        // Выбор иконки шкурки
+        // Выбор иконки шаблона
         function GetSkinsIcon($skin) {
             $dir = "../../templates";
             $filename = $dir . '/' . $skin . '/icon/icon.gif';
@@ -154,7 +153,7 @@ $option = unserialize($GetSystems['admoption']);
             global $SysValue;
             $sql = "select * from " . $SysValue['base']['table_name24'] . " where enabled='1' order by num";
             $result = mysql_query($sql);
-            $dis=null;
+            $dis = null;
             while ($row = mysql_fetch_array($result)) {
                 $id = $row['id'];
                 $name = $row['name'];
@@ -412,7 +411,8 @@ tabPane.addTabPage( document.getElementById( \"vetrina\" ) );
 </select> шт.
 	  </td>
 	</tr>
-	<tr>
+	<!--
+        <tr>
 	  <td align=right>
 	  <span name=txtLang id=txtLang>Каталогов в длину<br>
 	  для витрины главной страницы</span>:
@@ -426,6 +426,7 @@ tabPane.addTabPage( document.getElementById( \"vetrina\" ) );
 </select> шт.
 	  </td>
 	</tr>
+        -->
         <tr>
 	<td align=right>
 	Логотип:
@@ -552,7 +553,11 @@ tabPane.addTabPage( document.getElementById( \"usage-page\" ) );
 	<span name=txtLang id=txtLang>
 	Статус товара при нулевом<br>
 	 кол-ве на складе
-	</span>:
+         
+	</span>:<br>
+         <span style='font-size:9px; width: 180px; display: block;'>Внимание! Статус обновляется сразу только при пакетном 
+обновлении склада. При ручном обновлении склада, нужно нажать 
+Сохранить в карточке товара.</span>
 	  </td>
 	  <td align=left>
 	  <select name=sklad_status_new>
@@ -701,8 +706,8 @@ tabPane.addTabPage( document.getElementById( \"regim\" ) );
 	 <input type=\"checkbox\" value=\"1\" name=\"rss_graber_enabled_new\" $rss_graber_enabled>
 	 * Копирование RSS каналов в новости
 	  </td>
-	</tr>		
-	<tr>
+	</tr>
+		<tr>
 	<td align=right>Календарь новостей:</td>
 	<td><input type=\"checkbox\" value=\"1\" name=\"user_calendar_new\" $user_calendar> * Опция сортировки новостей по датам</td>
 </tr>
@@ -883,6 +888,7 @@ tabPane.addTabPage( document.getElementById( \"img\" ) );
 
                 if ($_SESSION['skin'] != $_POST['skin_new']) {
                     $skin = $_POST['skin_new'];
+                    unset($_SESSION['Memory']);
                     $_SESSION['skin'] = $skin;
                 }
 
@@ -946,8 +952,7 @@ kurs_beznal='$kurs_beznal_new' ";
                 if ($_POST['theme'] != $_POST['theme_new'])
                     echo "
     <script>
-        window.opener.location.replace('../admin.php?skinload=true');
-        window.close();
+CLREL('top'); 
 </script>
 ";
                 else

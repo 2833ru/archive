@@ -4,7 +4,8 @@
  * SEO ссылки для таблицы категорий
  */
 function template_cat_table_seourl_hook($obj, $val) {
-    return PHPShopText::a('/shop/CID_' . $val['id'] . $GLOBALS['seourl_pref'] . PHPShopString::toLatin($val['name']) . '.html', $val['name'], $val['name']) . ' | ';
+//    return PHPShopText::a('/shop/CID_' . $val['id'] . $GLOBALS['seourl_pref'] . PHPShopString::toLatin($val['name']) . '.html', $val['name'], $val['name']) . ' | ';
+    return PHPShopText::a('/shop/CID_' . $val['id'] . $GLOBALS['seourl_pref'] . PHPShopString::toLatin($val['name']) . '.html', $val['name'], $val['name']);
 }
 
 /**

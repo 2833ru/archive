@@ -6,14 +6,20 @@
 
 function set_meta_seourl_hook($obj, $row) {
     global $seourl_option;
-    
-    if ($seourl_option['paginator'] == 2)
+
+    if ($seourl_option['paginator'] == 2) {
         if ($obj->PHPShopNav->getPage() > 1) {
             $obj->doLoadFunction('PHPShopShop', 'set_meta', $row);
             $obj->description.= ' Часть ' . $obj->PHPShopNav->getPage();
             $obj->title.=' Страница ' . $obj->PHPShopNav->getPage();
             return true;
+        } elseif ($obj->PHPShopNav->getPage() == 'ALL') {
+            $obj->doLoadFunction('PHPShopShop', 'set_meta', $row);
+            $obj->title.=' Все страницы';
+            $obj->set('catalogCategory', ' - Все страницы', true);
+            return true;
         }
+    }
 }
 
 /*
@@ -28,7 +34,7 @@ function CID_Product_seourl_hook($obj, $row, $rout) {
 
     // Настройки модуля
     include_once(dirname(__FILE__) . '/mod_option.hook.php');
-    $PHPShopSeourlOption= new PHPShopSeourlOption();
+    $PHPShopSeourlOption = new PHPShopSeourlOption();
     $seourl_option = $PHPShopSeourlOption->getArray();
 
     // Проверка уникальности SEO ссылки
@@ -39,23 +45,30 @@ function CID_Product_seourl_hook($obj, $row, $rout) {
         $url_nav = '/shop/CID_' . $obj->PHPShopNav->getId() . '_' . $obj->PHPShopNav->getPage();
         $url_true_nav = '/shop/CID_' . $obj->PHPShopNav->getId() . '_' . $obj->PHPShopNav->getPage() . $seo_name;
 
+        
+        // Query
+        if(!empty($_SERVER["QUERY_STRING"]))
+            $url_query='?'.$_SERVER["QUERY_STRING"];
+        else $url_query=null;
+        
 
         // Если ссылка не сходится
         if ($url != $url_true and $url != $url_pack and $url != $url_nav and $url != $url_true_nav) {
             $obj->ListInfoItems = parseTemplateReturn($obj->getValue('templates.error_page_forma'));
             $obj->setError404();
             return true;
-        } elseif ($url == $url_pack) {
-            header('Location: ' . $obj->getValue('dir.dir') . $url_true_nav . '.html', true, 301);
+        } elseif ($url == $url_pack or $url != $url_true_nav) {
+            header('Location: ' . $obj->getValue('dir.dir') . $url_true_nav . '.html'.$url_query, true, 301);
             return true;
         }
     }
 
     if ($rout == 'END') {
         $obj->set('nameLat', $seo_name);
+        $page = $obj->PHPShopNav->getPage();
 
         // Рекомендации BDBD
-        if ($seourl_option['paginator'] == 2)
+        if ($seourl_option['paginator'] == 2){
             if ($obj->PHPShopNav->getPage() > 1) {
 
                 // Отключение описания каталога в пагинаторе
@@ -64,9 +77,13 @@ function CID_Product_seourl_hook($obj, $row, $rout) {
                 // Добавление номера страниц в имя каталога
                 $obj->set('catalogCategory', ' - страница ' . $obj->PHPShopNav->getPage(), true);
 
-                // Создание переменной точного адреса canonical для отсеивания дублей
-                $obj->set('seourl_canonical', '<link rel="canonical" href="http://' . $_SERVER['SERVER_NAME'] . $obj->get('ShopDir') . '/shop/CID_' . $obj->PHPShopNav->getId() . '_' . $obj->PHPShopNav->getPage() . $seo_name . '.html">');
             }
+            
+                // Создание переменной точного адреса canonical для отсеивания дублей
+            if(!empty($_SERVER["QUERY_STRING"]))
+                $obj->set('seourl_canonical', '<link rel="canonical" href="http://' . $_SERVER['SERVER_NAME'] . $obj->get('ShopDir') . '/shop/CID_' . $obj->PHPShopNav->getId() . '_' . $obj->PHPShopNav->getPage() . $seo_name . '.html">');
+            
+        }
 
         // SEO сортировка по характеристикам
         $vendorSelectDisp = '
@@ -126,12 +143,16 @@ function CID_Category_seourl_hook($obj, $dataArray, $rout) {
 
     if ($rout == 'END') {
         $dis = null;
-        if (is_array($dataArray))
-            foreach ($dataArray as $row) {
-                $dis.=PHPShopText::li($row['name'], '/' . $obj->PHPShopNav->getPath() . '/CID_' . $row['id'] . $GLOBALS['seourl_pref'] . PHPShopString::toLatin($row['name']) . '.html');
-            }
-        $disp = PHPShopText::ul($dis);
-        $obj->set('catalogList', $disp);
+
+        if (empty($GLOBALS['SysValue']['base']['iconcat']['iconcat_system'])) {
+
+            if (is_array($dataArray))
+                foreach ($dataArray as $row) {
+                    $dis.=PHPShopText::li($row['name'], '/' . $obj->PHPShopNav->getPath() . '/CID_' . $row['id'] . $GLOBALS['seourl_pref'] . PHPShopString::toLatin($row['name']) . '.html');
+                }
+            $disp = PHPShopText::ul($dis);
+            $obj->set('catalogList', $disp);
+        }
 
         // SEO хлебные крошки
         navigation_seourl($obj, $obj->category_name);

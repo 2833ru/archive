@@ -30,15 +30,16 @@
           </tr>
         </table>
         <div class="tovar_content">@productDes@</div>
-        @oneclick@
+        @oneclick@<br>
+        <b>@productSklad@</b>
         @ComStart@
         <div class="tovar_optionsDisp">@optionsDisp@</div>
         <table style="margin:10px 0px" width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td><div align="center"><span class="tovarDivOldPrice1">@productPriceRub@</span></div></td>
+            
             <td> @ComStartCart@
               <div class="tovarDivPrice1"> <span>@productPrice@ @productValutaName@</span> </div>
-              @ComEndCart@</td>
+              @ComEndCart@</td><td><div style="width:100px" align="center"><span class="tovarDivOldPrice1">@productPriceRub@</span></div></td>
             <td><div class="tovarDivAdd1" style="padding-bottom:0px; margin-top:0px;">
                 <div class="tovarDivAdd3">
                   <!-- Блок купить -->

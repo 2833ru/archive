@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.0</version>
+    <version>1.1</version>
     <name>Cron</name>
-    <description>Модуль запуска задач по времени.</description>
+    <faqlink>http://faq.phpshop.ru/page/cron.html</faqlink>
+<description>Модуль запуска задач по времени.</description>
     <icon>icon.png</icon>
-    <base>18</base>
     <category>develop</category>
     <adminmenu>
         <title>Задачи</title>

@@ -43,7 +43,7 @@ $dis
                 <tr bgcolor="#ffffff">
                     <td style="padding:10">
                         <b><span name=txtLang id=txtLang>Создание Новой Характеристики Рейтинга</span></b><br>
-                        &nbsp;&nbsp;&nbsp;<span name=txtLang id=txtLang>Укажите данные для записи в базу</span>.
+
                     </td>
                     <td align="right">
                         <img src="../img/i_website_statistics_med[1].gif" border="0" hspace="10">
@@ -66,7 +66,7 @@ $dis
                         <FIELDSET>
                             <LEGEND><span name=txtLang id=txtLang><u>К</u>атегория</span></LEGEND>
                             <div style="padding:10">
-<?= Disp_cat(@$categoryID); ?>
+                                <?= Disp_cat(@$categoryID); ?>
                             </div>
                         </FIELDSET>
                     </td>
@@ -104,21 +104,21 @@ $dis
                 </tr>
             </table>
         </form>
-<?
-if (isset($editID) and !empty($name_new)) {// Запись редактирования
-    if (CheckedRules($UserStatus["rating"], 2) == 1) {
-        $sql = "INSERT INTO " . $SysValue['base']['table_name51'] . " VALUES ('','$category_new','$name_new','$num_new','$enabled_new')";
-        $result = mysql_query($sql) or @die("" . mysql_error() . "");
-        echo"
+        <?
+        if (isset($editID) and !empty($name_new)) {// Запись редактирования
+            if (CheckedRules($UserStatus["rating"], 2) == 1) {
+                $sql = "INSERT INTO " . $SysValue['base']['table_name51'] . " VALUES ('','$category_new','$name_new','$num_new','$enabled_new')";
+                $result = mysql_query($sql) or @die("" . mysql_error() . "");
+                echo"
 <script>
 CLREL();
 </script>
 	   ";
-    }
-    else
-        $UserChek->BadUserFormaWindow();
-}
-?>
+            }
+            else
+                $UserChek->BadUserFormaWindow();
+        }
+        ?>
 
 
 

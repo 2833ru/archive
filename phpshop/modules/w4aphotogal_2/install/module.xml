@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<module>
+    <version>2.0</version>
+    <name>Photo Gallery</name>
+     <faqlink>http://web4.su/dorabotka_funktsionala_phpshop.html</faqlink>
+    <description>Модуль фотогалереи для карточки товара.</description>
+    <icon>icon.png</icon>
+    <category>template,decorate</category>
+    <reformal>669986</reformal>
+    <adminmenu>
+        <title>Photo Gallery</title>
+        <podmenu>
+            <podmenu_name>Настройка Photo Gallery</podmenu_name>
+            <podmenu_icon>icon.png</podmenu_icon>
+            <podmenu_action>javascript:miniWin('../modules/w4aphotogal_2/admpanel/adm_module.php',510,450);</podmenu_action>
+        </podmenu>
+    </adminmenu>
+    <history>
+        <update>
+            <date>14.06.2014</date>
+            <content>Создан модуль Модуль фотогалереи для карочки товара.</content>
+        </update>
+    </history>
+</module>

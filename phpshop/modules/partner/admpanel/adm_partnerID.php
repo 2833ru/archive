@@ -50,7 +50,7 @@ function actionStart() {
     @extract($data);
 
     // Графический заголовок окна
-    $PHPShopGUI->setHeader("Редактирование партнера","Укажите данные для записи в базу.",$PHPShopGUI->dir."img/i_account_contacts_med[1].gif");
+    $PHPShopGUI->setHeader("Редактирование партнера","",$PHPShopGUI->dir."img/i_account_contacts_med[1].gif");
 
     $Tab1=$PHPShopGUI->setInputText('Логин: ','login', $login);
     $Tab1.=$PHPShopGUI->setInputText('E-mail: ','mail_new', $mail);

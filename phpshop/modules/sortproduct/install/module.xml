@@ -2,7 +2,8 @@
 <module>
     <version>1.0</version>
     <name>Sort Product</name>
-    <description>Элемент вывода товаров по характеристикам</description>
+    <faqlink>http://faq.phpshop.ru/page/sort-product.html</faqlink>
+    <description>Элемент вывода товаров по характеристикам.</description>
     <icon>icon.png</icon>
     <category>form</category>
     <adminmenu>

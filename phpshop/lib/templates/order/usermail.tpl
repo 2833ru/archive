@@ -1,53 +1,248 @@
-Доброго времени!
---------------------------------------------------------
-Спасибо за покупку в нашем интернет-магазине @shop_name@
-Наши менеджеры свяжутся с вами по координатам,
-оставленным в форме заказа.
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style type="text/css">
+  p {color:#000000;}
+  small {color:#999999;}
+  small a {color:#fafafa;}
 
+  .note {color:#999999;}
+  .note p {color:#999999;}
+  .note a {color:#cccccc;}
+  
+  #header p, #header a {color:#000000;}
+  #header h1 {color:#000000;}
+  #number h1 {color:#000000;}
+  
+  #page a {color:#999999;}
+  #page a:hover {color:#fafafa;}
+  
+  #topBox h1 {color:#fafafa;}
+  #topBox small {color:#999999;}
 
-Подробности заказа № @ouid@ от @date@
---------------------------------------------------------
-Контактное лицо: @name_person@
-Телефон: @tel@
-Адрес и доп. инф: @adr_name@
-Желаемое время доставки: @dos_ot@ - @dos_do@
-Грузополучатель: @deliveryCity@
-E-mail: @mail@
-Тип оплаты: @payment@
+  #bottomBox h1 {color:#fafafa;}
+  #bottomBox h4 {color:#666666;}
+  #bottomBox small {color:#999999;}
+  
+  #page h1 {color:#fafafa;}
+  #page h4 {color:#666666;}
+  #page h5 {color:#666666;}
+  #page p {color:#999999;}
+  #page small {color:#cccccc;}
+  #page small a {color:#fafafa;}
+  #page small b {color:#666666;}
+  
+  #footer h1 {color:#FFFFFF;}
+  #footer h4 {color:#FFFFFF;} 
+  #footer p, #footer a, #footer .email a, #footer .email {color:#000000;}
+  
+  /* Reset */
+  body {background-color:white; background-position:top center; background-repeat:repeat; margin:0; padding:0;}
+  table {font-family:Arial,Verdana,sans-serif;}
+  ul, li, tr, td, p, h2 {margin-left:15px; padding-right:15px; padding-top:3px;}
+  img {border:none;}
+
+  /* Misc */
+  .clear{clear:both;}
+
+  /* Basic */
+  h1, h2, h3, h4, h5 {font-weight:normal;}
+  small {font-size:10px;} 
+  small a {text-decoration:none;}
+  small a:hover {text-decoration:underline;}
+
+  /* Top and Bottom Notes */
+  .note {font-size:10px; }
+  .note a {text-decoration:none;}
+  .note a:hover {text-decoration:underline;}
+  .note img, .note p {margin-top:0; margin-bottom:0; margin-left:0; margin-right:0;}
+
+  /* Header */
+  #header{height:auto; height:100px; width:660px;}
+  #header p {font-size:17px; margin-top:0; margin-bottom:0;}
+  #header h1 {font-size:28px; margin-bottom:0;}
+  #logo {padding-left:14px; padding-bottom:12px;}
+  #logo h1 {line-height:22px;}
+  #date {padding-bottom:12px;}
+  #number {padding-bottom:12px;}
+  #number h1 {font-size:78px; line-height:64px; margin-bottom:0;}
+  
+  /* Top Author Box */
+  #topBox td {padding:15px;}
+  #topBox h1 {font-size:18px; margin-top:0; margin-bottom:5px;}
+  #topBox p {font-size:17px; line-height:30px; margin-top:0;}
+  #topBox a {text-decoration:none;}
+  #topBox a:hover {text-decoration:underline;}
+  #topBox small {font-size:10px; }
+  #topBox img {margin-right:15px;}
+  
+  /* Bottom Box */
+  #bottomBox h1 {font-size:20px; margin-top:0;}
+  #bottomBox h4 {font-size:13px; line-height:10px; margin-top:10px; margin-bottom:5px;}
+  #bottomBox p {font-size:12px; margin-top:0; line-height:1.5em}
+  #bottomBox img {margin:0; padding:0;}
+  #bottomBox small {font-size:10px;}
+  
+  /* Page */
+  #page p {font-size:12px; line-height:18px; margin-top:0; margin-bottom:0;}
+  #page h1 {font-size:18px; margin:0;}
+  #page h4 {font-size:13px; line-height:10px; margin-top:0; margin-bottom:4px;}
+  #page h5 {font-size:12px; line-height:10px; margin-top:0; margin-bottom:0px;}
+  #page small {font-size:10px;}
+  #page small a {text-decoration:none;}
+  #page small a:hover {text-decoration:underline;}
+  
+  /* Content */
+  #content p {margin-left:15px; padding-right:15px; padding-top:3px;}
+  #content .hr {padding-top:15px; margin-bottom:15px;}
+  #content .alignRight {margin-right:15px; margin-left:30px; margin-bottom:5px; display:inline; float:right;}
+  #content .alignLeft {margin-right:30px; margin-left:15px; margin-bottom:5px; display:inline; float:left;}
+  
+  /* Footer */
+  #footer {height:auto; height:125px; width:660px;}
+  #footer h4 {font-size:13px; margin-bottom:0;}
+  #footer p {font-size:12px; line-height:18px; margin-top:0; margin-bottom:0; text-decoration:none;}
+  #footer .logo {padding-left:14px; padding-top:12px;}
+  #footer .logo h1 {font-size:22px; line-height:17px; margin-bottom:0;}
+  #footer .contact {padding-right:14px; padding-top:12px;}
+  #footer .social a {line-height:0;}
+</style>
+</head>
+<body><table width="660" valign="top" align="center" cellspacing="0" cellpadding="0">
+<tbody>    
+    <tr bgcolor="#fafafa" id="header" valign="top">
+        <td id="logo" align="left" valign="bottom">
+            <div align="center" style="padding-top:30px;"><a href="http://@serverPath@" target="_blank"><img src="http://@serverPath@@logo@" alt="logo @serverPath@" border="0" style="display: block;" title="@serverPath@"></a>
+            <p><h1>@shopName@</h1></p></div>
+        </td>     
+    </tr>
+    
+    <tr height="10"><td></td></tr>
+    
+</tbody>  
+</table> 
+<table id="topBox" width="660" valign="top" align="center" cellspacing="0" cellpadding="10">
+<tbody>
+    
+    <tr bgcolor="#eaeaea">
+        <td  >
+
+ <h2>Cпасибо за Ваш заказ, @user_name@!</h2> 
+<p>Наши менеджеры свяжутся с Вами по координатам, оставленным в форме заказа.</p>
+
+<p>Подробности заказа  № @ouid@ от @date@</p>
+<p>Способ доставки: @deliveryCity@ <br>
+E-mail: @mail@ <br>
+Тип оплаты: @payment@ <br>
+Адрес и информация для доставки: <br>
+@adresList@<br>
+Дополнительная информация: @dop_info@ <br>
+</p>
+<p>
+
 @php
-if(!empty($_POST["org_name"])) {
-echo "Компания: ".$_POST["org_name"]."
-ИНН: ".$_POST["org_inn"]."
-КПП: ".$_POST["org_kpp"];
-}
-php@
+if(!empty($_POST["org_name_new"])) 
+    echo "Наименование организации: ".$_POST["org_name_new"]."<br>";
+if(!empty($_POST["org_inn_new"])) 
+    echo "ИНН: ".$_POST["org_inn_new"]."<br>";
+if(!empty($_POST["org_kpp_new"])) 
+    echo "КПП: ".$_POST["org_kpp_new"]."<br>";
+if(!empty($_POST["org_yur_adres_new"])) 
+    echo "Юридический адрес: ".$_POST["org_yur_adres_new"]."<br>";
+if(!empty($_POST["org_fakt_adres_new"])) 
+    echo "Фактический адрес: ".$_POST["org_fakt_adres_new"]."<br>";
+if(!empty($_POST["org_ras_new"])) 
+    echo "Расчётный счёт: ".$_POST["org_ras_new"]."<br>";
+if(!empty($_POST["org_bank_new"])) 
+    echo "Наименование банка: ".$_POST["org_bank_new"]."<br>";
+if(!empty($_POST["org_kor_new"])) 
+    echo "Корреспондентский счёт: ".$_POST["org_kor_new"]."<br>";
+if(!empty($_POST["org_bik_new"])) 
+    echo "БИК: ".$_POST["org_bik_new"]."<br>";
+if(!empty($_POST["org_city_new"])) 
+    echo "Город: ".$_POST["org_city_new"]."<br>";
+    
+php@</p>
 
-Заказанные товары
---------------------------------------------------------
-@cart@
--------------------------------------------------------
-Итого -- @sum@ @currency@
-Скидка -- @discount@%
-Доставка -- @deliveryPrice@ @currency@
--------------------------------------------------------
-К оплате с учетом скидки: @total@ @currency@
+<p>Заказанные товары</p>
+<hr><p>
+@cart@</p>
+<hr>
+<p>
+Итого -- @sum@ @currency@<br>
+Скидка -- @discount@%<br>
+Доставка -- @deliveryPrice@ @currency@<br></p>
+<hr>
+<p>Итого к оплате с учетом скидки: @total@ @currency@</p><hr><p>
 
 @php
-if(!$_SESSION["UsersId"]){
+//if(!$_SESSION["UsersId"]){
+if(0){ //Если нужна проверка статуса заказа без авторизации, раскомментировать предыдущую строку и закомментировать данную
 echo "
 E-mail: ".$_POST["mail"]."
 № Заказа: ".$_POST["ouid"]."
+</p>
 
-Вы всегда можете проверить статус заказа, загрузить файлы, распечатать платежные
-документы он-лайн по ссылке http://".$_SERVER["SERVER_NAME"].$GLOBALS["SysValue"]["dir"]["dir"]."/clients/?mail=".$_POST["mail"]."&order=".$_POST["ouid"]."
+<br>
+            
+<hr>
+
+<h1>Вы можете проверить статус заказа, загрузить файлы, распечатать платежные
+    документы по <a href='http://".$_SERVER["SERVER_NAME"].$GLOBALS["SysValue"]["dir"]["dir"]."/clients/?mail=".$_POST["mail"]."&order=".$_POST["ouid"]."'>ссылке</a>.
 
 ";
 }
-else { echo "Вы всегда можете проверить статус заказа, загрузить файлы, распечатать платежные
-документы он-лайн через Личный кабинет или по ссылке http://".$_SERVER["SERVER_NAME"].$GLOBALS["SysValue"]["dir"]["dir"]."/users/";
+else { echo "Вы можете проверить статус заказа, загрузить файлы, распечатать платежные
+документы, через <a href='http://".$_SERVER["SERVER_NAME"].$GLOBALS["SysValue"]["dir"]["dir"]."/users/order.html?order_info=".$_POST["ouid"]."#Order'>Личный кабинет</a>.";
 }
 php@
+</h1>
 
----------------------------------------------------------
-С уважением,
-Компания @company@
+
+<p>Если у Вас есть вопрос, задайте его нам в Личном кабинете в разделе <a href="http://@serverPath@users/message.html">Связь с менеджером</a>. </p>
+
+
+
+
+
+                
+        </td>
+    </tr>
+         
+</tbody>  
+</table> 
+
+
+<table width="660" align="center" cellspacing="0" cellpadding="10">
+<tbody>
+
+
+    <tr bgcolor="#fafafa" id="footer" height="100%">
+    
+      
+        <td align="left" valign="top" height="100%">
+            <p><b>С уважением, @shopName@.</b></p>
+      <p>@org_name@<br>
+      Интернет-магазин <a href="http://@serverPath@">@serverPath@</a><br>
+      Отдел продаж: @telNum@<br>
+      E-mail: @adminMail@<br>
+      @org_adres@</p></td>
+      
+    </tr>
+    <tr height="10">
+      <td align="center" valign="top" style="color:grey; font-family:Helvetica, Arial, sans-serif; font-size:10px; line-height:150%; padding-top:30px; padding-right:20px; padding-bottom:5px; padding-left:20px; text-align:center;">
+                                        <i>Создание интернет-магазина <a style="color:grey" href="http://www.phpshop.ru/">PHPShop Software</a></i>
+                                        
+    </tr>
+
+</tbody>  
+</table> 
+
+
+
+</body>
+</html>
+
+

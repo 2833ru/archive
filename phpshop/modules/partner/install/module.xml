@@ -2,7 +2,8 @@
 <module>
     <version>1.7</version>
     <name>Partner</name>
-    <description>Модуль партнерской программы.</description>
+      <faqlink>http://faq.phpshop.ru/page/partners.html</faqlink>
+ <description>Модуль партнерской программы.</description>
     <icon>icon.png</icon>
     <category>develop</category>
     <adminmenu>

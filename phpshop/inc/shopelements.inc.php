@@ -4,7 +4,7 @@
  * Элемент характеристик товаров
  * @author PHPShop Software
  * @tutorial http://wiki.phpshop.ru/index.php/PHPShopSortElements
- * @version 1.2
+ * @version 1.3
  * @package PHPShopElements
  */
 class PHPShopSortElement extends PHPShopElements {
@@ -53,7 +53,7 @@ class PHPShopSortElement extends PHPShopElements {
  * Элемент оформления вывода товаров в колонку
  * @author PHPShop Software
  * @tutorial http://wiki.phpshop.ru/index.php/PHPShopProductIconElements
- * @version 1.3
+ * @version 1.4
  * @package PHPShopElements
  */
 class PHPShopProductIconElements extends PHPShopProductElements {
@@ -86,7 +86,7 @@ class PHPShopProductIconElements extends PHPShopProductElements {
      * сетка товара [1-5]
      * @var int 
      */
-    var $celll;
+    var $cell;
 
     /**
      * Констурктор
@@ -94,6 +94,9 @@ class PHPShopProductIconElements extends PHPShopProductElements {
     function PHPShopProductIconElements() {
         $this->objBase = $GLOBALS['SysValue']['base']['products'];
         parent::PHPShopProductElements();
+
+        // HTML опции верстки
+        $this->setHtmlOption(__CLASS__);
     }
 
     /**
@@ -110,38 +113,40 @@ class PHPShopProductIconElements extends PHPShopProductElements {
         $this->cell = $cell;
 
 
-        // Условие вывода из текущего каталога
-        if ($GLOBALS['SysValue']['nav']['path'] == 'shop') {
+        switch ($GLOBALS['SysValue']['nav']['nav']) {
 
-            switch ($GLOBALS['SysValue']['nav']['nav']) {
+            // Раздел списка товаров
+            case "CID":
 
-                // Раздел списка товаров
-                case "CID":
+                if (!empty($category))
+                    $where['category'] = '=' . $category;
 
-                    if (!empty($category))
+                elseif (PHPShopSecurity::true_num($this->PHPShopNav->getId())) {
+
+                    $category = $this->PHPShopNav->getId();
+                    if (!$this->memory_get('product_enabled.' . $category, true))
                         $where['category'] = '=' . $category;
+                }
+                break;
 
-                    elseif (PHPShopSecurity::true_num($this->PHPShopNav->getId())) {
-                        $category = $this->PHPShopNav->getId();
-                        $where['category'] = '=' . $category;
-                    }
-                    break;
+            // Раздел подробного описания
+            case "UID":
+                if (empty($force))
+                    return false;
+                else
+                    $where['category'] = '=' . $category;
 
-                // Раздел подробного описания
-                case "UID":
-                    if (empty($force))
-                        return false;
-                    else
-                        $where['category'] = '=' . $category;
-
-                    $where['id'] = '!=' . $this->PHPShopNav->getId();
-                    break;
-            }
+                $where['id'] = '!=' . $this->PHPShopNav->getId();
+                break;
         }
+
 
         // Кол-во товаров на странице
         if (empty($this->limitspec))
             $this->limitspec = $this->PHPShopSystem->getParam('new_num');
+
+        if (!$this->limitspec)
+            $this->limitspec = $this->num_row;
 
         // Перехват модуля
         $hook = $this->setHook(__CLASS__, __FUNCTION__);
@@ -321,6 +326,9 @@ class PHPShopProductIndexElements extends PHPShopProductElements {
     function PHPShopProductIndexElements() {
         $this->objBase = $GLOBALS['SysValue']['base']['products'];
         parent::PHPShopProductElements();
+
+        // HTML опции верстки
+        $this->setHtmlOption(__CLASS__);
     }
 
     /**
@@ -460,12 +468,16 @@ class PHPShopProductIndexElements extends PHPShopProductElements {
         // Проверка запуска главной страницы
         if ($this->PHPShopNav->index()) {
 
+            //
             // Количество ячеек для вывода товара
             if (empty($this->cell))
                 $this->cell = $this->PHPShopSystem->getParam('num_vitrina');
 
             // Кол-во товаров на странице
             $this->limit = $this->PHPShopSystem->getParam('spec_num');
+
+            if (!$this->limit)
+                $this->limit = $this->num_row;
 
             // Завершение если отключен вывод
             if ($this->limit < 1)
@@ -553,7 +565,7 @@ class PHPShopProductIndexElements extends PHPShopProductElements {
  * Элемент оформления дерева категорий товаров
  * @author PHPShop Software
  * @tutorial http://wiki.phpshop.ru/index.php/PHPShopShopCatalogElement
- * @version 1.3
+ * @version 1.4
  * @package PHPShopElements
  */
 class PHPShopShopCatalogElement extends PHPShopProductElements {
@@ -571,6 +583,12 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
      */
     var $cache_format = array('content', 'yml_bid_array');
     var $memory = true;
+
+    /**
+     * Сортировка корневых каталогов [num|name]
+     * @var string 
+     */
+    var $root_order = 'num, name';
 
     /**
      * Проверять на единичные каталоги. [false] - для больших каталогов, сокращает запросы к БД
@@ -739,9 +757,12 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
         $PHPShopOrm->cache = $this->cache;
         $PHPShopOrm->debug = $this->debug;
 
-        $this->data = $PHPShopOrm->select(array('*'), $where, array('order' => 'num'), array("limit" => 100), __CLASS__, __FUNCTION__);
+        $this->data = $PHPShopOrm->select(array('*'), $where, array('order' => $this->root_order), array("limit" => 100), __CLASS__, __FUNCTION__);
         if (is_array($this->data))
             foreach ($this->data as $row) {
+
+                // Перехват модуля
+                $this->setHook(__CLASS__, __FUNCTION__, $row, 'MIDDLE');
 
                 // Определяем переменные
                 $this->set('catalogId', $row['id']);
@@ -754,11 +775,11 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
                 // Перехват модуля
                 $this->setHook(__CLASS__, __FUNCTION__, $row, 'END');
 
-                // Если есть подкаталоги
+                // Если нет подкаталогов
                 if ($this->chek($row['id'])) {
                     $dis.=$this->parseTemplate($this->getValue('templates.catalog_forma_3'));
                 }
-                // Если нет подкаталогов
+                // Если есть подкаталоги
                 else {
                     if ($row['vid'] == 1) {
                         $dis.=$this->parseTemplate($this->getValue('templates.catalog_forma_2'));
@@ -863,7 +884,6 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
             return false;
         // Если проверки в памяти нет, запрос к БД
         elseif (!empty($this->chek_catalog)) {
-
             $PHPShopOrm = new PHPShopOrm($this->objBase);
             $PHPShopOrm->cache_format = $this->cache_format;
             $PHPShopOrm->cache = $this->cache;
@@ -926,11 +946,11 @@ class PHPShopCartElement extends PHPShopElements {
             $numcompare = 0;
 
             // Если есть товары в корзине
-            if ($this->PHPShopCart->getNum() > 0){
-                $this->set('orderEnabled', 'inline');
-                
+            if ($this->PHPShopCart->getNum() > 0) {
+                $this->set('orderEnabled', 'block');
+
                 // Отключение выдачи даты изменения при активной корзине для защита от кэша
-                $this->setValue("cache.last_modified",false);
+                $this->setValue("cache.last_modified", false);
             }
             else
                 $this->set('orderEnabled', 'none');
@@ -942,7 +962,7 @@ class PHPShopCartElement extends PHPShopElements {
                         $numcompare = count($compare);
                     }
                 }
-                $this->set('compareEnabled', 'inline');
+                $this->set('compareEnabled', 'block');
             } else {
                 $numcompare = "0";
                 $this->set('compareEnabled', 'none');
@@ -961,9 +981,13 @@ class PHPShopCartElement extends PHPShopElements {
 
             // Сумма
             $this->set('sum', $this->PHPShopCart->getSum());
-        }
-        else
+        } else {
             $this->set('productValutaName', $this->PHPShopSystem->getDefaultValutaCode(true));
+            // Товаров
+            $this->set('num', 0);
+            // Сумма
+            $this->set('sum', 0);
+        }
 
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__);
@@ -1060,7 +1084,7 @@ class PHPShopCloudElement extends PHPShopElements {
      * Лимит слов для вывода
      * @var int
      */
-    var $word_limit = 30;
+    var $word_limit = 20;
 
     /**
      * Цвет ссылок облака тегов
@@ -1147,6 +1171,10 @@ class PHPShopCloudElement extends PHPShopElements {
                     $i++;
                 }
 
+
+            //!!!!!! Убрать строку, если нужен вывод в виде флэша, как было в предыдущих версиях!!!!
+            $tip = "words";
+
             if (is_array($CloudCountLimit))
                 foreach ($CloudCountLimit as $key => $val) {
 
@@ -1154,7 +1182,7 @@ class PHPShopCloudElement extends PHPShopElements {
                     $key = str_replace('"', '', $key);
                     $key = str_replace("'", '', $key);
                     if ($tip == "words")
-                        $disp.='<h1>' . $key . '</h1> ';
+                        $disp.='<div><a href="/search/?words=' . $key . '">' . $key . '</a></div>';
                     else
                         $disp.="<a href='/search/?words=" . $key . "' style='font-size:12pt;'>$key</a>";
                 }
@@ -1166,7 +1194,8 @@ class PHPShopCloudElement extends PHPShopElements {
                 $disp = '
 <div id="wpcumuluscontent">Загрузка флеш...</div><script type="text/javascript">
 var dd=new Date();
- var so = new SWFObject("/stockgallery/tagcloud.swf?rnd="+dd.getTime(), "tagcloudflash", "180", "180", "9", "' . $this->color . '");
+var spath = "' . $this->get('dir.dir') . 'phpshop/lib/templates";
+var so = new SWFObject(spath+"/tagcloud/tagcloud.swf?rnd="+dd.getTime(), "tagcloudflash", "180", "180", "9", "' . $this->color . '");
 so.addParam("wmode", "transparent");
 so.addParam("allowScriptAccess", "always");
 so.addVariable("tcolor", "' . $this->color . '");
@@ -1185,7 +1214,7 @@ so.write("wpcumuluscontent");</script>
             // Определяем переменные
             if (!empty($disp)) {
                 $this->set('leftMenuName', __("Облако тегов"));
-                $this->set('leftMenuContent', $disp);
+                $this->set('leftMenuContent', '<div class="product-tags">' . $disp . '</div>');
 
                 // Перехват модуля в конце функции
                 $this->setHook(__CLASS__, __FUNCTION__, $row, 'END');
@@ -1195,6 +1224,56 @@ so.write("wpcumuluscontent");</script>
             }
             return $dis;
         }
+    }
+
+}
+
+/**
+ * Элемент Flash-карусель товаров
+ * @author PHPShop Software
+ * @tutorial http://wiki.phpshop.ru/index.php/PHPShopFlashGalleryElement
+ * @version 1.0
+ * @package PHPShopElements
+ */
+class PHPShopFlashGalleryElement extends PHPShopElements {
+
+    var $width = 520;
+    var $height = 150;
+    var $background = true;
+    var $limit = 10;
+
+    /**
+     * Конструктор
+     */
+    function __construct() {
+        parent::PHPShopElements();
+    }
+
+    /**
+     * Flash-карусель товаров
+     * @return string
+     */
+    function index() {
+
+        // Перехват модуля в начале функции
+        $hook = $this->setHook(__CLASS__, __FUNCTION__);
+        if ($hook)
+            return $hook;
+
+        $dis = '
+        <div id="flashban" style="padding-top:10px;" align="center">загрузка флеш...</div>
+        <script type="text/javascript">
+        var dd = new Date();
+        var spath = "' . $this->get('dir.dir') . 'phpshop/lib/templates";
+        var so = new SWFObject(spath+"/stockgallery/banner.swf?rnd=" + dd.getTime(), "banner", "' . $this->width . '", "' . $this->height . '", "9", "#ffffff");
+        so.addParam("flashvars", "itempath="+spath+"/stockgallery/item.swf&xmlpath="+spath+"/stockgallery/banner.xml.php?background=' . $this->background . '&limit=' . $this->limit . '");
+        so.addParam("quality", "best");
+        so.addParam("scale", "noscale");
+        so.addParam("wmode", "transparent");
+        so.write("flashban");   
+        </script>';
+
+        return $dis;
     }
 
 }

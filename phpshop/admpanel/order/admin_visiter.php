@@ -115,30 +115,28 @@ function Visitor($pole1, $pole2, $words, $list) {// вывод покупателей
 
         $disp.='
 <tr class="row ' . $style_r . '" id="r' . $id . '">
-	 
-	
-    <td valign="middle" align="center" onmouseover="show_on(\'r' . $id . '\')" onmouseout="show_out(\'r' . $id . '\')" onclick="miniWin(\'order/adm_visitorID.php?visitorID=' . $id . '&pole1=' . $pole1 . '&pole2=' . $pole2 . '\',650,550)">' . $uid . '</td>
-	<td valign="middle" align="center"  onmouseover="show_on(\'r' . $id . '\')" onmouseout="show_out(\'r' . $id . '\')" onclick="miniWin(\'order/adm_visitorID.php?visitorID=' . $id . '&pole1=' . $pole1 . '&pole2=' . $pole2 . '\',650,550)">
-	' . dataV($datas, "shot") . ' </td>
-	<td class=forma onmouseover="show_on(\'r' . $id . '\')" onmouseout="show_out(\'r' . $id . '\')" onclick="miniWin(\'order/adm_visitorID.php?visitorID=' . $id . '&pole1=' . $pole1 . '&pole2=' . $pole2 . '\',650,550)">
-	' . $PaymentId . $UserId . $order['Person']['name_person'] . '
-	</td>
-	<td align="center" onmouseover="show_on(\'r' . $id . '\')" onmouseout="show_out(\'r' . $id . '\')" onclick="miniWin(\'order/adm_visitorID.php?visitorID=' . $id . '&pole1=' . $pole1 . '&pole2=' . $pole2 . '\',650,550)">
-	' . $order['Cart']['num'] . '
-	</td>
-	<td align="center" onmouseover="show_on(\'r' . $id . '\')" onmouseout="show_out(\'r' . $id . '\')" onclick="miniWin(\'order/adm_visitorID.php?visitorID=' . $id . '&pole1=' . $pole1 . '&pole2=' . $pole2 . '\',650,550)">
-	' . $order['Person']['discount'] . '
-	</td>
-	<td align="center" onmouseover="show_on(\'r' . $id . '\')" onmouseout="show_out(\'r' . $id . '\')" onclick="miniWin(\'order/adm_visitorID.php?visitorID=' . $id . '&pole1=' . $pole1 . '&pole2=' . $pole2 . '\',650,550)">
-	' . (ReturnSumma($order['Cart']['sum'], $order['Person']['discount']) + $DeliveryPrice) . '
-	</td>
-	<td align="center" onmouseover="show_on(\'r' . $id . '\')" onmouseout="show_out(\'r' . $id . '\')" onclick="miniWin(\'order/adm_visitorID.php?visitorID=' . $id . '&pole1=' . $pole1 . '&pole2=' . $pole2 . '\',650,550)">
-	' . $status['time'] . '
-	</td>
-	<td  align="center" bgcolor="' . $bg . '" onclick="miniWin(\'order/adm_visitorID.php?visitorID=' . $id . '&pole1=' . $pole1 . '&pole2=' . $pole2 . '\',650,550)">' . $status_name . '
-	</td>
 	<td class=forma style="padding:1px" align="center" onmouseover="show_on(\'r' . $id . '\')" onmouseout="show_out(\'r' . $id . '\')">
 	<input type=checkbox name="c' . $id . '" value="' . $id . '">
+	</td>
+        <td valign="middle" align="center" onmouseover="show_on(\'r' . $id . '\')" onmouseout="show_out(\'r' . $id . '\')" onclick="miniWin(\'order/adm_visitorID.php?visitorID=' . $id . '&pole1=' . $pole1 . '&pole2=' . $pole2 . '\',680,505)">' . $uid . '</td>
+	<td valign="middle" align="center"  onmouseover="show_on(\'r' . $id . '\')" onmouseout="show_out(\'r' . $id . '\')" onclick="miniWin(\'order/adm_visitorID.php?visitorID=' . $id . '&pole1=' . $pole1 . '&pole2=' . $pole2 . '\',680,505)">
+	' . dataV($datas, "shot") . ' </td>
+	<td class=forma onmouseover="show_on(\'r' . $id . '\')" onmouseout="show_out(\'r' . $id . '\')" onclick="miniWin(\'order/adm_visitorID.php?visitorID=' . $id . '&pole1=' . $pole1 . '&pole2=' . $pole2 . '\',680,505)">
+	' . $PaymentId . $UserId . $order['Person']['name_person'] . $row['fio'] . ' (' . $order['Person']['mail'] . ')' . '
+	</td>
+	<td align="center" onmouseover="show_on(\'r' . $id . '\')" onmouseout="show_out(\'r' . $id . '\')" onclick="miniWin(\'order/adm_visitorID.php?visitorID=' . $id . '&pole1=' . $pole1 . '&pole2=' . $pole2 . '\',680,505)">
+	' . $order['Cart']['num'] . '
+	</td>
+	<td align="center" onmouseover="show_on(\'r' . $id . '\')" onmouseout="show_out(\'r' . $id . '\')" onclick="miniWin(\'order/adm_visitorID.php?visitorID=' . $id . '&pole1=' . $pole1 . '&pole2=' . $pole2 . '\',680,505)">
+	' . $order['Person']['discount'] . '
+	</td>
+	<td align="center" onmouseover="show_on(\'r' . $id . '\')" onmouseout="show_out(\'r' . $id . '\')" onclick="miniWin(\'order/adm_visitorID.php?visitorID=' . $id . '&pole1=' . $pole1 . '&pole2=' . $pole2 . '\',680,505)">
+	' . (ReturnSumma($order['Cart']['sum'], $order['Person']['discount']) + $DeliveryPrice) . '
+	</td>
+	<td align="center" onmouseover="show_on(\'r' . $id . '\')" onmouseout="show_out(\'r' . $id . '\')" onclick="miniWin(\'order/adm_visitorID.php?visitorID=' . $id . '&pole1=' . $pole1 . '&pole2=' . $pole2 . '\',680,505)">
+	' . $status['time'] . '
+	</td>
+	<td  align="center" bgcolor="' . $bg . '" onclick="miniWin(\'order/adm_visitorID.php?visitorID=' . $id . '&pole1=' . $pole1 . '&pole2=' . $pole2 . '\',680,505)">' . $status_name . '
 	</td>
 </tr>
 	';
@@ -157,6 +155,7 @@ function Visitor($pole1, $pole2, $words, $list) {// вывод покупателей
 
 <table cellpadding="0" cellspacing="1" width="100%" border="0" class="sortable" id="sort">
 <tr>
+        <td width="25" id=pane align=center style="padding:0px"><input type=checkbox value=1 name=DoAll onclick="SelectAllBox(this,form_flag)"></td>
 	<td width="100" id="pane" align="center"><img  src="icon/blank.gif"  width="1" height="1" border="0" align="left"><img src=img/arrow_d.gif width=7 height=7 border=0 hspace=5><span name=txtLang id=txtLang>№</span></td>
 	<td id="pane" width="130" align="center"><img src=img/arrow_d.gif width=7 height=7 border=0 hspace=5><span name=txtLang id=txtLang>Поступление</span></td>
 	<td width="300" id="pane" align="center"><img src=img/arrow_d.gif width=7 height=7 border=0 hspace=5><span name=txtLang id=txtLang>Покупатель</span></td>
@@ -165,7 +164,6 @@ function Visitor($pole1, $pole2, $words, $list) {// вывод покупателей
 <td width="100" id="pane" align="center"><img src=img/arrow_d.gif width=7 height=7 border=0 hspace=5><span name=txtLang id=txtLang>Сумма</span> ' . GetIsoValutaOrder() . '</td>
 <td width="130" id="pane" align="center"><img src=img/arrow_d.gif width=7 height=7 border=0 hspace=5><span name=txtLang id=txtLang>Обработан</span></td>
 <td width="200" id="pane" align="center"><img src=img/arrow_d.gif width=7 height=7 border=0 hspace=5><span name=txtLang id=txtLang>Статус</span></td>
-<td width="25" id=pane align=center style="padding:0px"><input type=checkbox value=1 name=DoAll onclick="SelectAllBox(this,form_flag)"></td>
 </tr>
 ' . @$disp . '
 </table>

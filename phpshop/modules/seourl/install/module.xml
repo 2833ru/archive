@@ -2,7 +2,8 @@
 <module>
     <version>1.5</version>
     <name>Seo Url</name>
-    <description>Модуль Seo ссылок</description>
+<faqlink>http://faq.phpshop.ru/page/seo-url.html</faqlink>
+<description>Модуль SEO ссылок.</description>
     <icon>icon.png</icon>
     <category>seo</category>
     <status></status>

@@ -33,25 +33,31 @@ $info = $row['info'];
             function UpdateMainForma(img, img_s) {
                 window.opener.document.getElementById('pic_small_new').value = img_s;
                 window.opener.document.getElementById('pic_big_new').value = img;
-                self.close();
+//                self.close();
             }
 
 
             // Удаление из галереи
-            function DoUpdateNumFotoList(xid, num, info) {
+            function DoUpdateNumFotoList(xid, num, info, main) {
                 var uid = window.opener.document.getElementById('productID').value;
                 var req = new Subsys_JsHttpRequest_Js();
                 req.onreadystatechange = function() {
                     if (req.readyState == 4) {
                         if (req.responseJS) {
                             window.opener.document.getElementById('fotolist').innerHTML = req.responseJS.interfaces;
+                            setTimeout("self.close()", 500);
                         }
                     }
                 }
                 req.caching = false;
                 // Подготваливаем объект.
                 req.open('POST', 'action.php?do=num', true);
-                req.send({xid: xid, uid: uid, num: num, info: info});
+                req.send({xid: xid, uid: uid, num: num, info: info, main: main});
+            }
+
+            // Иконка загрузки
+            function setPreloadAnimation() {
+                window.opener.document.getElementById('fotolist').innerHTML = "<b>Обновление...</b>"
             }
 
             // Удаление из галереи
@@ -62,38 +68,39 @@ $info = $row['info'];
                     if (req.readyState == 4) {
                         if (req.responseJS) {
                             window.opener.document.getElementById('fotolist').innerHTML = req.responseJS.interfaces;
-                            //self.close(); 
+                            setTimeout("self.close()", 500);
+                            window.opener.document.getElementById('pic_small_new').value = req.responseJS.openerWindowInsImg.pic_small;
+                            window.opener.document.getElementById('pic_big_new').value = req.responseJS.openerWindowInsImg.pic_big;
                         }
                     }
                 }
                 req.caching = false;
                 // Подготваливаем объект.
-                req.open('POST', 'action.php?do=del&uid='+uid, true);
-                req.send({xid: xid, img: img});
+                req.open('POST', 'action.php?do=del', true);
+                req.send({xid: xid, uid: uid, img: img});
             }
 
 
-            function UpdateNum(xid) {
+            function UpdateNum(xid, main) {
                 var nums = document.getElementById('nums').value;
                 var info = document.getElementById('info').value;
-                DoUpdateNumFotoList(xid, nums, info);
-                setTimeout("self.close()", 500);
+                DoUpdateNumFotoList(xid, nums, info, main);
             }
 
             function PromptThisDelete(xid, img) {
-                if (confirm("Внимание!\nДанная операция может привести к потери позиции.\n Вы Вы действительно хотите выполнить данную команду?")) {
+                if (confirm("Вы действительно хотите удалить изображение?")) {
+                    setPreloadAnimation();
                     DoDeleteFotoList(xid, img);
-                    setTimeout("self.close()", 500);
                 }
             }
 
 
         </script>
     </head>
-    <body style="overflow:hidden;margin:5px;">
+    <body style="overflow:hidden;margin:0;">
         <?
         echo '
-<table width="100%">
+<table width="100%" >
 <tr>
 	<td valign="top" width="65%">
         <FIELDSET><legend>Изображение для подробного описания</legend>
@@ -120,20 +127,23 @@ $info = $row['info'];
 											<option value="9" ' . $s_9 . '>9</option>
 											<option value="10" ' . $s_10 . '>10</option>
 </select>
-<input type=button class=but value="Основной вид" style="width: 100px"  onClick="UpdateMainForma(\'' . $name . '\',\'' . $s_name . '\');">
-</FIELDSET>
-
-        <FIELDSET><legend>Описание</legend>
-	<textarea style="height:30px" id="info">' . $info . '</textarea>
-        </FIELDSET>  
+<br> 
+	</div>
+	<div>
+	Комментарий:<br>
+	<textarea style="width: 200px" id="info">' . $info . '</textarea>
+	</div>
 	</td>
 </tr>
 </table>
 <hr>
-<table cellpadding="0" cellspacing="0" width="100%" style="padding-top: 20px;">
+<table cellpadding="0" cellspacing="0" width="100%">
 <tr>
-	<td align="right" style="padding: 10px;">
-<input type=button value="ОК" class=but onClick="UpdateNum(' . $id . ');">
+    <td align="left" style="padding-left: 10px">
+	<input type=button class=but value="Назначить главным" style="width: 130px"  onClick="setPreloadAnimation(); UpdateMainForma(\'' . $name . '\',\'' . $s_name . '\'); UpdateNum(' . $id . ', 1);">
+	</td>
+	<td align="right" style="padding:10">
+<input type=button value="ОК" class=but onClick="setPreloadAnimation();UpdateNum(' . $id . ', 0);">
 <input type="button" class=but value="Удалить" onClick="PromptThisDelete(' . $id . ',\'' . $name . '\');return false;">
 <input type="button" value="Отмена" onClick="return onCancel();" class=but>
 	</td>

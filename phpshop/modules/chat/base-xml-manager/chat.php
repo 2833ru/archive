@@ -2,6 +2,7 @@
 
 $_classPath = "../../../";
 include($_classPath . "class/obj.class.php");
+include($_classPath . "lib/phpass/passwordhash.php");
 include("../class/basexml.class.php");
 //include("../class/base.class.php");
 PHPShopObj::loadClass("base");
@@ -46,17 +47,17 @@ class PHPShopChat extends PHPShopBaseXml {
         $disp_pass = "";
         for ($i = 0; $i < (count($decode) - 1); $i++)
             $disp_pass.=chr($decode[$i]);
-        return base64_encode($disp_pass);
+        return $disp_pass;
     }
 
     function admin() {
-
+        $hasher = new PasswordHash(8, false);
         $PHPShopOrm = new PHPShopOrm($this->PHPShopBase->getParam('base.table_name19'));
         $PHPShopOrm->debug = $this->debug;
         $data = $PHPShopOrm->select(array('login,password,status'), array('enabled' => "='1'"), false, array('limit' => 10));
         if (is_array($data)) {
             foreach ($data as $v)
-                if ($_POST['log'] == $v['login'] and $this->decode($_POST['pas']) == $v['password']) {
+                if ($_POST['log'] == $v['login'] and  $hasher->CheckPassword($this->decode($_POST['pas']), $v['password'])) {
                     return true;
                 }
         }

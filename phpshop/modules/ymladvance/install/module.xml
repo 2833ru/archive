@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
     <version>1.3</version>
-    <name>Яндекс.Маркет</name>
-    <description>Модуль расширенной выгрузки в Яндекс.Маркет</description>
+    <name>YML Advance</name>
+    <faqlink>http://faq.phpshop.ru/page/yandex-catalog.html</faqlink>
+    <description>Модуль расширенной выгрузки в Яндекс.Маркет.</description>
     <icon>icon.png</icon>
     <category>sale</category>
-    <status>update</status>
+    <status></status>
     <adminmenu>
         <title>Яндекс.Маркет</title>
         <podmenu>

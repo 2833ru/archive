@@ -1,7 +1,7 @@
 <div class="page_nava">
-  <div> <a href="/">Главная</a> / Поиск по производителям </div>
+  <div> <a href="/">Главная</a> / Подбор товаров </div>
 </div>
-<h2>Поиск по производителям</h2>
+<h2>Подбор товаров</h2>
 <div align="left" style="padding:5px 0px"> @sortDes@ </div>
 <div align="left" style="padding:5px 0px"> @DispCatNav@ </div>
 <div style="overflow:hidden; margin-top:20px">

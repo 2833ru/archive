@@ -61,8 +61,8 @@ class PHPShopSecurity {
     static function CleanOut($str) {
         $str = stripslashes($str);
         $str = preg_replace('([\r\n\t;])', '', $str);
-        $str = @html_entity_decode($str,null,'windows-1251');
-        
+        $str = @html_entity_decode($str, null, 'windows-1251');
+
         return $str;
     }
 
@@ -83,10 +83,9 @@ class PHPShopSecurity {
      * @return bool
      */
     static function true_login($login) {
-        return preg_match("/^[a-zA-Z0-9_\.]{2,20}$/", trim($login));
+        return preg_match("/^[@a-zA-Z0-9_\.-]{2,60}$/", trim($login));
     }
-    
-    
+
     /**
      * Проверка имени шаблона
      * @param string $login логин
@@ -139,7 +138,7 @@ class PHPShopSecurity {
                 break;
 
             case 2:
-                return htmlspecialchars(stripslashes($str),ENT_COMPAT,'windows-1251');
+                return htmlspecialchars(stripslashes($str), ENT_QUOTES, 'windows-1251');
                 break;
 
             case 3:
@@ -151,7 +150,7 @@ class PHPShopSecurity {
             case 4:
                 if (preg_match("/[^(\w)|(\x7F-\xFF)|(\s)]/", $str))
                     $str = "";
-                return htmlspecialchars(stripslashes($str),ENT_COMPAT,'windows-1251');
+                return htmlspecialchars(stripslashes($str), ENT_COMPAT, 'windows-1251');
                 break;
 
             case 5:

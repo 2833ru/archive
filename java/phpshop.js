@@ -152,10 +152,22 @@ function countSymb(lim) {
 // Комментарии
 function commentList(xid, comand, page, cid) {
     var message = "";
-
+    var rateVal = 0;
     if (comand == "add") {
         message = document.getElementById('message').value;
-        alert("Комментарий будет доступен после прохождения модерации...");
+        if (message == "")
+            return false;
+        if (document.getElementById('rate')) {
+            var radios = document.getElementsByName('rate');
+            for (var i = 0, length = radios.length; i < length; i++) {
+                if (radios[i].checked) {
+                    // do whatever you want with the checked radio
+                    rateVal = radios[i].value;
+                    // only one radio can be logically checked, don't check the rest
+                    break;
+                }
+            }
+        }
     }
 
     if (comand == "edit_add") {
@@ -190,9 +202,40 @@ function commentList(xid, comand, page, cid) {
                 else
                 {
                     document.getElementById('message').value = "";
-                    if (req.responseJS.status == "error")
-                        alert("Функция добавления комментария возможна только для авторизованных пользователей.\nАвторизуйтесь или пройдите регистрацию.");
+                    if (req.responseJS.status == "error") {
+                        mesHtml = "Функция добавления комментария возможна только для авторизованных пользователей.\n<a href='/users/?from=true'>Авторизуйтесь или пройдите регистрацию</a>.";
+                        mesSimple = "Функция добавления комментария возможна только для авторизованных пользователей.\nАвторизуйтесь или пройдите регистрацию.";
+
+                        // если старая версия системы проверяем наличие функции
+                        if (typeof showAlertMessage == 'function') {
+                            // функция существует, ее можно вызывать
+                            showAlertMessage(mesHtml);
+                        } else
+                            alert(mesSimple);
+
+                        if (document.getElementById('evalForCommentAuth')) {
+                            eval(document.getElementById('evalForCommentAuth').value);
+                        }
+                    }
                     document.getElementById('commentList').innerHTML = (req.responseJS.comment || '');
+                }
+                if (comand == "edit_add") {
+                    mes = "Ваш отредактированный комментарий будет доступен другим пользователям только после прохождения модерации...";
+                    // если старая версия системы проверяем наличие функции
+                    if (typeof showAlertMessage == 'function') {
+                        // функция существует, ее можно вызывать
+                        showAlertMessage(mes);
+                    } else
+                        alert(mes);
+                }
+                if (comand == "add" && req.responseJS.status != "error") {
+                    mes = "Комментарий добавлен и будет доступен после прохождения модерации...";
+                    // если старая версия системы проверяем наличие функции
+                    if (typeof showAlertMessage == 'function') {
+                        // функция существует, ее можно вызывать
+                        showAlertMessage(mes);
+                    } else
+                        alert(mes);
                 }
             }
         }
@@ -206,6 +249,7 @@ function commentList(xid, comand, page, cid) {
         xid: xid,
         comand: comand,
         page: page,
+        rateVal: rateVal,
         message: message,
         cid: cid
     });
@@ -347,8 +391,8 @@ function CheckNewUserForma() {
 
 // Выход пользователя
 function UserLogOut() {
-    if (confirm("Вы действительно хотите выйти из личного кабинета?"))
-        window.location.replace('?logout=true');
+//    if (confirm("Вы действительно хотите выйти из личного кабинета?"))
+    window.location.replace('?logout=true');
 }
 
 
@@ -438,6 +482,13 @@ function ToCart(xid, num, xxid) {
                 setTimeout("initialize_off()", 3000);
                 document.getElementById('num').innerHTML = (req.responseJS.num || '');
                 document.getElementById('sum').innerHTML = (req.responseJS.sum || '');
+
+                // если старая версия системы проверяем наличие функции
+                if (typeof showAlertMessage == 'function') {
+                    // функция существует, ее можно вызывать
+                    showAlertMessage((req.responseJS.message || ''));
+                }
+
                 same = (req.responseJS.same || '');
                 if (same == 1) {
                     alert("Этот товар добавлялся ранее с другой характеристикой. Количество товара в корзине увеличено и характеристика обновлена на последний вариант!");
@@ -471,18 +522,25 @@ function ToCart(xid, num, xxid) {
 function AddToCart(xid) {
     var num = 1;
     var xxid = 0;
-    if (CART_CONFIRM_WINDOW === true) {
-        if (confirm("Добавить выбранный товар (" + num + " шт.) в корзину?")) {
-            ToCart(xid, num, xxid);
-            if (document.getElementById("order"))
-                document.getElementById("order").style.display = 'inline';
+    // если старая версия системы проверяем наличие функции
+    if (typeof showAlertMessage == 'function') {
+        // функция существует, можно добавлять товар в корзину без сообщения
+        ToCart2(xid, num, xxid);
+    } else {
+        if (CART_CONFIRM_WINDOW === true) {
+            if (confirm("Добавить выбранный товар (" + num + " шт.) в корзину?")) {
+                ToCart2(xid, num, xxid);
+            }
         }
+        else
+            ToCart2(xid, num, xxid);
     }
-    else {
-        ToCart(xid, num, xxid);
-        if (document.getElementById("order"))
-            document.getElementById("order").style.display = 'inline';
-    }
+}
+
+function ToCart2(xid, num, xxid) {
+    ToCart(xid, num, xxid);
+    if (document.getElementById("order"))
+        document.getElementById("order").style.display = 'block';
 }
 
 // Добавление товара в корзину N шт.
@@ -491,16 +549,17 @@ function AddToCartNum(xid, pole) {
     var xxid = xid;
     if (num < 1)
         num = 1;
-    if (CART_CONFIRM_WINDOW === true) {
-        if (confirm("Добавить выбранный товар (" + num + " шт.) в корзину?")) {
-            ToCart(xid, num, xxid);
-            if (document.getElementById("order"))
-                document.getElementById("order").style.display = 'inline';
-        }
+    if (typeof showAlertMessage == 'function') {
+        // функция существует, можно добавлять товар в корзину без сообщения
+        ToCart2(xid, num, xxid);
     } else {
-        ToCart(xid, num, xxid);
-        if (document.getElementById("order"))
-            document.getElementById("order").style.display = 'inline';
+        if (CART_CONFIRM_WINDOW === true) {
+            if (confirm("Добавить выбранный товар (" + num + " шт.) в корзину?")) {
+                ToCart2(xid, num, xxid);
+            }
+        }
+        else
+            ToCart2(xid, num, xxid);
     }
 }
 
@@ -508,21 +567,41 @@ function AddToCartNum(xid, pole) {
 function AddToCartParent(xxid) {
     var num = 1;
     var xid = document.getElementById("parentId").value;
-    if (CART_CONFIRM_WINDOW === true) {
-        if (confirm("Добавить выбранный товар (" + num + " шт.) в корзину?")) {
+
+    if (typeof showAlertMessage == 'function') {
+        // функция существует, можно добавлять товар в корзину без сообщения
+        ToCart2(xid, num, xxid);
+    } else {
+        if (CART_CONFIRM_WINDOW === true) {
+            if (confirm("Добавить выбранный товар (" + num + " шт.) в корзину?")) {
+                ToCart(xid, num, xxid);
+                if (document.getElementById("order"))
+                    document.getElementById("order").style.display = 'block';
+            }
+        } else {
             ToCart(xid, num, xxid);
             if (document.getElementById("order"))
-                document.getElementById("order").style.display = 'inline';
+                document.getElementById("order").style.display = 'block';
         }
-    } else {
-        ToCart(xid, num, xxid);
-        if (document.getElementById("order"))
-            document.getElementById("order").style.display = 'inline';
     }
+
 }
 
-// Добавить товара в сравнение
+// Добавить товар в сравнение
 function AddToCompare(xid) {
+    if (typeof showAlertMessage == 'function') {
+        // функция существует, можно добавлять товар в сравнение без сообщения
+        ToCompare(xid);
+    } else {
+        if (confirm("Добавить выбранный товар в таблицу сравнения?")) {
+            ToCompare(xid);
+        }
+    }
+
+}
+
+// Товар в сравнение
+function ToCompare(xid) {
     var num = 1;
     var same = 0;
     var req = new Subsys_JsHttpRequest_Js();
@@ -533,10 +612,18 @@ function AddToCompare(xid) {
                 same = (req.responseJS.same || '');
 
                 if (same == 0) {
-                    initialize2();
-                    setTimeout("initialize_off2()", 3000);
+                    if (typeof showAlertMessage == 'function')
+                        showAlertMessage(req.responseJS.message);
+                    else {
+                        initialize2();
+                        setTimeout("initialize_off2()", 3000);
+                    }
                 } else {
-                    alert("Товар уже есть в таблице сравнения!");
+                    var mes = "Товар уже есть в таблице сравнения!";
+                    if (typeof showAlertMessage == 'function')
+                        showAlertMessage(req.responseJS.message);
+                    else
+                        alert(mes);
                 }
 
                 document.getElementById('numcompare').innerHTML = (req.responseJS.num || '');
@@ -554,7 +641,7 @@ function AddToCompare(xid) {
         same: same
     });
     if (document.getElementById("compare"))
-        document.getElementById("compare").style.display = 'inline';
+        document.getElementById("compare").style.display = 'block';
 
 }
 
@@ -563,7 +650,7 @@ function ReturnSortUrl(v) {
     var s, url = "";
     if (v > 0) {
         s = document.getElementById(v).value;
-        if (s !== "")
+        if (s != "")
             url = "v[" + v + "]=" + s + "&";
     }
     return url;
@@ -684,9 +771,9 @@ function pressbutt_load(subm, dir, copyrigh, protect, psubm) {
         document.getElementById("cart").style.display = 'none';
 
     // Убираем форму заказа
-    var path = location.pathname;
-    if ((path == "/done/" || path == "/done/") && document.getElementById("cart"))
-        document.getElementById("cart").style.display = 'block';
+//    var path = location.pathname;
+//    if ((path == "/done/" || path == "/done/") && document.getElementById("cart"))
+//        document.getElementById("cart").style.display = 'block';
 
     // Проверяем каталог статей
     var pattern = /page/;
@@ -827,6 +914,8 @@ var comboheight = '';
 
 function initialize() {
     var cartwindow = document.getElementById('cartwindow');
+    if (!cartwindow)
+        return;
     combowidth = cartwindow.offsetWidth;
     comboheight = cartwindow.offsetHeight;
 
@@ -884,6 +973,8 @@ function staticit_ff() {
 // Для сравнения товаров
 function initialize2() {
     var comparewindow = document.getElementById('comparewindow');
+    if (!comparewindow)
+        return;
     combowidth = comparewindow.offsetWidth;
     comboheight = comparewindow.offsetHeight;
     if (document.all) {

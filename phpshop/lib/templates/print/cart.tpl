@@ -8,31 +8,7 @@
             obj.width=1;
         }
     </script>
-    <style type="text/css">
-        body {text-decoration: none;font: normal 11px x-small/normal Verdana, Arial, Helvetica, sans-serif;text-transform: none}
-        TABLE {font: normal 11px Verdana, Arial, Helvetica, sans-serif;}
-        p {font: normal 11px Verdana, Arial, Helvetica, sans-serif;word-spacing: normal;white-space: normal;margin: 5px 5px 5px 5px;letter-spacing : normal;}
-        TD {
-            font: normal 11px Verdana, Arial, Helvetica, sans-serif;
-            background: #FFFFFF;
-        }
-        H4 {
-            font: Verdana, Arial, Helvetica, sans-serif;
-            background: #FFFFFF;
-        }
-        .tablerow {
-            border: 0px;
-            border-top: 1px solid #000000;
-            border-left: 1px solid #000000;
-        }
-        .tableright {
-            border: 0px;
-            border-top: 1px solid #000000;
-            border-left: 1px solid #000000;
-            border-right: 1px solid #000000;
-            text-align: right;
-        }
-    </style>
+   <link href="../style.css" type=text/css rel=stylesheet>
     <style media="print" type="text/css">
         <!--
         .nonprint {
@@ -43,7 +19,12 @@
     </style>
 </head>
 <body onload="window.focus()" bgcolor="#FFFFFF" text="#000000" marginwidth=5 leftmargin=5 style="padding: 2px;">
-    <div align="right" class="nonprint"><a href="#" onclick="window.print();return false;" >Распечатать</a><br><br></div>
+    <div align="right" class="nonprint">
+        <button onclick="window.print()">
+            <img border=0 align=absmiddle hspace=3 vspace=3 src="http://@php echo $_SERVER['SERVER_NAME'].$GLOBALS['SysValue']['dir']['dir']; php@/phpshop/admpanel/img/action_print.gif">Распечатать
+        </button> 
+        <br><br>
+    </div>
     <div align="center"><table align="center" width="100%">
             <tr>
                 <td align="center"><img onerror=NoFoto(this) src="@logo@" alt="" border="0"></td>
@@ -52,7 +33,7 @@
         </table>
     </div>
 
-    <table width=99% cellpadding=2 cellspacing=0 align=center>
+    <table width=80% cellpadding=2 cellspacing=0 align=center>
         <tr class=tablerow>
             <td class=tablerow>№</td>
             <td width=50% class=tablerow>Наименование</td>
@@ -70,11 +51,11 @@
             <td colspan=5 align=right style="border-top: 1px solid #000000;border-left: 1px solid #000000;">Итого:</td>
             <td class=tableright nowrap><b>@total@</b></td>
         </tr>
-        <tr><td colspan=6 style="border: 0px; border-top: 1px solid #000000;">&nbsp;</td></tr>
-    </table>
-    <p><b>Всего наименований @item@, на сумму @total@ @currency@
+        <tr><td colspan=6 style="border: 0px; border-top: 1px solid #000000;"><p><b>Всего наименований @item@, на сумму @total@ @currency@
             <br />
     @totaltext@
-        </b></p>
+        </b></p>&nbsp;</td></tr>
+    </table>
+    
 </body>
 </html>

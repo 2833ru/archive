@@ -33,13 +33,13 @@ function actionStart() {
 
     $PHPShopGUI->dir = "../";
     $PHPShopGUI->addJSFiles('../java/popup_lib.js', '../java/dateselector.js');
-    $PHPShopGUI->addCSSFiles('../css/dateselector.css');
+    $PHPShopGUI->addCSSFiles('../skins/'.$_SESSION['theme'].'/dateselector.css');
 
     // ID окна для памяти закладок
     $PHPShopGUI->setID(__FILE__, $data['id']);
 
     // Графический заголовок окна
-    $PHPShopGUI->setHeader("Редактирование Новости", "Укажите данные для записи в базу.", $PHPShopGUI->dir . "img/i_balance_med[1].gif");
+    $PHPShopGUI->setHeader("Редактирование Новости", "", $PHPShopGUI->dir . "img/i_balance_med[1].gif");
 
     // Редактор 1
     $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));

@@ -64,7 +64,8 @@ function actionStart() {
             );
     $Tab1.=$PHPShopGUI->setField('Уведомления',
             $PHPShopGUI->setCheckbox("stop_new",1,"Блокировка сайта при обнаружении вируса",$stop).$PHPShopGUI->setLine().
-            $PHPShopGUI->setCheckbox("mail_enabled_new",1,"Уведомление администратора по E-mail",$mail_enabled)
+            $PHPShopGUI->setCheckbox("mail_enabled_new",1,"Уведомление администратора по E-mail",$mail_enabled).
+            $PHPShopGUI->setInputText('E-mail для отчетов','mail_new', $mail)
             ,false,false,10);
 
 
@@ -128,7 +129,7 @@ function actionStart() {
     $Tab3=$PHPShopGUI->setPay();
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное",$Tab1,300),array("Инструкция",$Tab2,300),array("О Модуле",$Tab3,300));
+    $PHPShopGUI->setTab(array("Основное",$Tab1,320),array("Инструкция",$Tab2,320),array("О Модуле",$Tab3,320));
 
 
     // Вывод кнопок сохранить и выход в футер
@@ -146,12 +147,14 @@ function actionStart() {
 // Функция обновления
 function actionUpdate() {
     global $PHPShopOrm;
+    $PHPShopOrm->debug=true;
     if(empty($_POST['mode_new'])) $_POST['mode_new']=0;
     if(empty($_POST['enabled_new'])) $_POST['enabled_new']=0;
     if(empty($_POST['stop_new'])) $_POST['stop_new']=0;
     if(empty($_POST['mail_enabled_new'])) $_POST['mail_enabled_new']=0;
 
     $action = $PHPShopOrm->update($_POST,array('id'=>'='.$_POST['newsID']));
+    echo $action;
     return $action;
 }
 

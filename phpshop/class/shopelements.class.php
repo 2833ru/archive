@@ -26,6 +26,11 @@ class PHPShopProductElements extends PHPShopElements {
     var $grid = false;
 
     /**
+     * @var int кол-во товара на страницу, если не задано основными настройками.
+     */
+    var $num_row = 9;
+
+    /**
      * @var bool запоминание параметов выполнения функций и модулей
      * При проектировании модулей и хуков следует отключить память [false]
      */
@@ -40,6 +45,18 @@ class PHPShopProductElements extends PHPShopElements {
     var $product_grid;
 
     /**
+     * Тип верстки таблиц товаров [default | li | div]
+     * @var string  
+     */
+    var $cell_type = 'default';
+
+    /**
+     * Класс элемента товара
+     * @var string 
+     */
+    var $cell_type_class = 'product-element-block';
+
+    /**
      * Конструктор
      */
     function PHPShopProductElements() {
@@ -51,6 +68,9 @@ class PHPShopProductElements extends PHPShopElements {
 
         // Валюта товара
         $this->dengi = $this->PHPShopSystem->getParam('dengi');
+
+        // HTML опции верстки
+        $this->setHtmlOption(__CLASS__);
     }
 
     /**
@@ -201,7 +221,7 @@ class PHPShopProductElements extends PHPShopElements {
                 $productPrice = $this->price($row);
                 $productPriceNew = $this->price($row, true);
                 $this->set('productPrice', $productPrice);
-                $this->set('productPriceRub', PHPShopText::strike($productPriceNew));
+                $this->set('productPriceRub', PHPShopText::strike($productPriceNew . " " . $this->currency()));
             }
         }
 
@@ -230,7 +250,8 @@ class PHPShopProductElements extends PHPShopElements {
             $hook = $this->setHook(__CLASS__, __FUNCTION__, $row);
             if ($hook) {
                 return $hook;
-            } else
+            }
+            else
                 $this->memory_set(__CLASS__ . '.' . __FUNCTION__, 0);
         }
     }
@@ -248,7 +269,8 @@ class PHPShopProductElements extends PHPShopElements {
             $hook = $this->setHook(__CLASS__, __FUNCTION__, $row);
             if ($hook) {
                 return $hook;
-            } else
+            }
+            else
                 $this->memory_set(__CLASS__ . '.' . __FUNCTION__, 0);
         }
 
@@ -279,6 +301,7 @@ class PHPShopProductElements extends PHPShopElements {
         if (empty($cell))
             $cell = 2;
         $this->cell = $cell;
+
         $this->setka_footer = true;
 
         $table = null;
@@ -315,6 +338,9 @@ class PHPShopProductElements extends PHPShopElements {
                 $this->set('productUid', $row['id']);
                 $this->set('catalog', $this->lang('catalog'));
 
+                // Подключение функции вывода средней оценки товара из отзывов пользователей
+                $this->doLoadFunction(__CLASS__, 'comment_rate', array("row" => $row, "type" => "CID"), 'shop');
+
                 // Опции склада
                 $this->checkStore($row);
 
@@ -350,7 +376,6 @@ class PHPShopProductElements extends PHPShopElements {
             }
         }
         $this->product_grid = $table;
-
         return $table;
     }
 
@@ -368,7 +393,6 @@ class PHPShopProductElements extends PHPShopElements {
 
         $Arg = func_get_args();
         $item = 1;
-        $tr = '<tr>';
 
         foreach ($Arg as $key => $value)
             if ($key < $this->cell and $this->total >= $this->cell)
@@ -409,19 +433,47 @@ class PHPShopProductElements extends PHPShopElements {
             default: $panel = array('panel_l', 'panel_r', 'panel_l', 'panel_r', 'panel_l', 'panel_r', 'panel_l');
         }
 
-        if (is_array($args))
-            foreach ($args as $key => $val) {
-                $tr.='<td class="' . $panel[$key] . '" valign="top">' . $val . '</td>';
 
-                if ($item < $num and $num <= $this->cell)
-                    $tr.='<td ' . $this->grid_style . '><img src="images/spacer.gif" width="1"></td>';
+        switch ($this->cell_type) {
 
-                $item++;
-            }
-        $tr.='</tr>';
+            // Списки
+            case 'li':
+                if (is_array($args))
+                    foreach ($args as $key => $val) {
+                        $tr.='<li class="' . $this->cell_type_class . '">' . $val . '</li>';
+                        $item++;
+                    }
+                break;
 
-        if (!empty($this->setka_footer))
-            $tr.='<tr><td ' . $this->grid_style . ' colspan="' . ($this->cell * 2) . '" height="1"><img height="1" src="images/spacer.gif"></td></tr>';
+            // Блоки
+            case 'div':
+                if (is_array($args))
+                    foreach ($args as $key => $val) {
+                        $tr.='<div class="' . $this->cell_type_class . '">' . $val . '</div>';
+                        $item++;
+                    }
+                $this->cell = 1;
+                break;
+
+            // Табличная
+            default:
+
+                $tr = '<tr>';
+                if (is_array($args))
+                    foreach ($args as $key => $val) {
+                        $tr.='<td class="' . $panel[$key] . '" valign="top">' . $val . '</td>';
+
+                        if ($item < $num and $num == $this->cell)
+                            $tr.='<td ' . $this->grid_style . '><img src="images/spacer.gif" width="1"></td>';
+
+                        $item++;
+                    }
+                $tr.='</tr>';
+
+                if (!empty($this->setka_footer))
+                    $tr.='<tr><td ' . $this->grid_style . ' colspan="' . ($this->cell * 2) . '" height="1"><img height="1" src="images/spacer.gif"></td></tr>';
+        }
+
 
         return $tr;
     }

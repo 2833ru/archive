@@ -140,13 +140,21 @@ function sorttemplatehook($value, $n, $title, $vendor) {
     return $disp;
 }
 
+
+function CID_Product_cell_hook($obj, $row, $rout) {
+    if ($rout == "START"){
+        if($obj->PHPShopCategory->getParam('num_row') == 4)
+        $obj->PHPShopCategory->setParam('num_row', 3);
+    }
+}
+
 $addHandler=array
         (
         'odnotip'=>'odnotip_hook',
         '#setCell'=>'setcell_div_hook',
         '#compile'=>'compile_hook',
         'CID_Category'=>'cid_category_add_spec_hook',
-        '#CID_Product'=>'cid_product_sorttemplate_hook'
+        'CID_Product' => 'CID_Product_cell_hook'
 
 );
 

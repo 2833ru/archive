@@ -20,6 +20,16 @@ body
     padding-top:10px;
 }
 
+#icon{
+    cursor: pointer;
+    border: solid 1px #CCC;
+    -webkit-border-radius:5px;
+    -moz-border-radius:5px;
+    border-radius:5px;
+    cursor:pointer;
+    box-shadow: 0.2em 0.2em 3px rgba(122,122,122,0.3);
+}
+
 .display{
     padding:3px;
     font-size: 8pt;
@@ -29,6 +39,7 @@ body
     border-radius:5px;
     background: #FFF;
     cursor:pointer;
+    height:18px;
 }
 
 
@@ -91,9 +102,7 @@ legend.titlelegend{
 
 .login{
     background: #FFFBEF;
-    border: 1px;
-    border-style:outset; 
-    border-color:#B5AE84;
+    border: solid 1px #CCC;
     width: 330px;
     -moz-border-radius: 8px;
     -webkit-border-radius: 8px;
@@ -226,6 +235,7 @@ table.sortable span.sortarrow {
     -moz-border-radius-topright:8px;
     border-top-left-radius:8px;
     border-top-right-radius:8px;
+    padding: 2px; 
 
 }
 
@@ -486,6 +496,7 @@ input.but:hover {
 
 .small{
     height: 1.9em!important;
+    padding:0px!important;
 }
 
 .long{

@@ -57,7 +57,7 @@ function actionStart() {
     @extract($data);
 
         // Вывод
-    $e_value[]=array('не выводить',0,$enabled);
+    $e_value[]=array('кнопка купить',0,$enabled);
     $e_value[]=array('слева',1,$enabled);
     $e_value[]=array('справа',2,$enabled);
     
@@ -74,10 +74,10 @@ function actionStart() {
     $Tab1.=$PHPShopGUI->setField('Тип вывода',$PHPShopGUI->setSelect('windows_new',$w_value,150),'left');
     
     
-    $info='Для произвольной вставки элемента следует выбрать параметр вывода "Не выводить" и в ручном режиме вставить переменную
-        <b>@oneclick@</b> в свой шаблон.
-        <p>Для персонализации формы вывода отредактируйте шаблоны phpshop/modules/oneclick/templates/</p>
-        <p>Для включения режима быстрого заказа для товаров в списке каталога следует переключить файл хука в config.ini на 
+    $info='Для произвольной вставки элемента, следует выбрать параметр вывода "Кнопка купить" и вставить переменную
+        <b>@oneclick@</b> в свой шаблон в нужное вам место.
+        <p>Для персонализации формы вывода, отредактируйте шаблоны phpshop/modules/oneclick/templates/</p>
+        <p>Для включения режима быстрого заказа для товаров в списке каталога, следует переключить файл хука в config.ini на 
         phpshopshopcore="./phpshop/modules/oneclick/hook/oneclickall.hook.php";
 ';
 

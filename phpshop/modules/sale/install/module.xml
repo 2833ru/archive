@@ -2,7 +2,8 @@
 <module>
     <version>1.2</version>
     <name>Sales</name>
-    <description>Модуль распродажи</description>
+          <faqlink>http://faq.phpshop.ru/page/price-increase-reduction.html</faqlink>
+ <description>Модуль распродаж и наценок.</description>
     <icon>icon.png</icon>
     <category>sale</category>
     <adminmenu>

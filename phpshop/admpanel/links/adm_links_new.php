@@ -44,7 +44,7 @@ function actionStart() {
     $PHPShopGUI->dir = "../";
 
     // Графический заголовок окна
-    $PHPShopGUI->setHeader("Создание Новой Ссылки", "Укажите данные для записи в базу.", $PHPShopGUI->dir . "img/i_register_domain_med[1].gif");
+    $PHPShopGUI->setHeader("Создание Новой Ссылки", "", $PHPShopGUI->dir . "img/i_register_domain_med[1].gif");
 
     $Select1 = setSelectChek($num);
 

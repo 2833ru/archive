@@ -141,9 +141,9 @@ class AddToTemplateVisualCart extends PHPShopElements {
             $this->set('visualcart_order', 'display:none');
         }
 
-        $cart = parseTemplateReturn($GLOBALS['SysValue']['templates']['visualcart']['visualcart_cart'], true);
+        $this->cart = parseTemplateReturn($GLOBALS['SysValue']['templates']['visualcart']['visualcart_cart'], true);
 
-        $this->set('leftMenuContent', $cart);
+        $this->set('leftMenuContent', $this->cart);
         $this->set('leftMenuName', $this->option['title']);
 
         // Подключаем шаблон
@@ -160,7 +160,7 @@ class AddToTemplateVisualCart extends PHPShopElements {
                 $this->set('rightMenu', $dis, true);
                 break;
 
-            default: $this->set('visualcart', $cart);
+            default: $this->set('visualcart', $this->cart);
         }
     }
 

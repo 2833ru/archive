@@ -22,7 +22,7 @@ $JsHttpRequest = new Subsys_JsHttpRequest_Php("windows-1251");
 
 // Получаем запрос.
 $q = $_REQUEST['q'];
-$xid = $_REQUEST['xid'];
+$xid = intval($_REQUEST['xid']);
 $_num = $_REQUEST['num'];
 
 //Получаем входящее количество товаров для сравнения
@@ -32,7 +32,7 @@ $compar = count($_SESSION['compare']);
 $PHPShopCompare = new PHPShopCompare();
 
 // Добавлем товар
-$PHPShopCompare->add(intval($xid));
+$PHPShopCompare->add($xid);
 
 if ($compar == $PHPShopCompare->getNum()) {
     $same = '1';
@@ -44,6 +44,7 @@ if ($compar == $PHPShopCompare->getNum()) {
 $_RESULT = array(
     "q" => $q,
     "num" => $PHPShopCompare->getNum(),
-    "same" => $same
+    "same" => $same,
+    "message" => $PHPShopCompare->getMessage(),
 );
 ?>

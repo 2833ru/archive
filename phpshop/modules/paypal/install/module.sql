@@ -23,7 +23,11 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_paypal_system` (
 INSERT INTO `phpshop_modules_paypal_system` (`id`, `status`, `title`, `title_end`, `link`, `merchant_id`, `merchant_pwd`, `merchant_sig`, `sandbox`, `logo_enabled`, `message_header`, `message`, `currency_id`, `serial`, `version`) VALUES
 (1, 0, 'Платежная система PayPal', 'Форма оплаты будет доступна после ручной обработки заказа менеджером. Просим немного подождать.', 'Оплатить через PayPal', '', '', '', '1', '1', 'Спасибо за покупку', 'Ваш заказ оплачен', 6, '', 1);
 
-INSERT INTO `phpshop_payment_systems` VALUES (10003, 'PayPal', 'modules', '0', 0, '', '');
+
+
+INSERT INTO `phpshop_payment_systems` (`id`, `name`, `path`, `enabled`, `num`, `message`, `message_header`, `yur_data_flag`, `icon`) VALUES
+(10003, 'PayPal', 'modules', '0', 0, '', '', '', '/UserFiles/Image/Payments/paypal.png');
+
 
 CREATE TABLE IF NOT EXISTS `phpshop_modules_paypal_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

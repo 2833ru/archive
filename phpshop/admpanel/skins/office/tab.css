@@ -14,6 +14,7 @@
     background: -ms-linear-gradient(#FFF,#E8EEF4,#FFF);
     background: -o-linear-gradient(#FFF,#E8EEF4,#FFF);
     background: -webkit-linear-gradient(#FFF,#E8EEF4,#FFF);
+    background-color: #F0F0F0;
     border:			1px solid;
     border-color:	#BECCDC;
     border-bottom:	0;
@@ -41,6 +42,7 @@
     color:				WindowText;
     text-decoration:	none;
     cursor:				default;
+    font-size: 8pt;
 }
 
 .dynamic-tab-pane-control .tab-row .hover a {
@@ -56,6 +58,7 @@
     background: -ms-linear-gradient(#FBFDFF,#E8EEF4,#FBFDFF);
     background: -o-linear-gradient(#FBFDFF,#E8EEF4,#FBFDFF);
     background: -webkit-linear-gradient(#FBFDFF,#E8EEF4,#FBFDFF);
+    background-color:#F0F0F0;
     z-index:		2;
     position:		relative;
     top:			-2px;

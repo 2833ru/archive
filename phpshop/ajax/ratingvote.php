@@ -17,11 +17,16 @@ PHPShopObj::loadClass("security");
 require_once $_classPath . "lib/Subsys/JsHttpRequest/Php.php";
 $JsHttpRequest = new Subsys_JsHttpRequest_Php("windows-1251");
 
-$idc = intval($_REQUEST['idc']);
-$idgood = intval($_REQUEST['idgood']);
-$rate = intval($_REQUEST['rate']);
-$enabled = intval($_REQUEST['enabled']);
-$id_user = intval($_SESSION['UsersId']);
+$idc = $_REQUEST['idc'];
+$idgood = $_REQUEST['idgood'];
+$rate = $_REQUEST['rate'];
+$enabled = $_REQUEST['enabled'];
+
+$idc = PHPShopSecurity::CleanStr($idc);
+$idgood = PHPShopSecurity::CleanStr($idgood);
+$rate = PHPShopSecurity::CleanStr($rate);
+$enabled = PHPShopSecurity::CleanStr($enabled);
+$id_user = $_SESSION['UsersId'];
 $userip = $_SERVER['REMOTE_ADDR'];
 
 if ($id_user) {

@@ -54,7 +54,7 @@ function query_filter($obj) {
     else
         $p = 1;
 
-    $cat = intval(@$_REQUEST['cat']);
+    $cat = intval(@$_REQUEST['cat'], 1);
     $words = trim(PHPShopSecurity::true_search(@$_REQUEST['words']));
     $num_row = $obj->num_row;
     $num_ot = 0;
@@ -170,9 +170,9 @@ function query_filter($obj) {
  */
 function search_base($obj, $words) {
     $string = null;
+
     $PHPShopOrm = new PHPShopOrm();
     $PHPShopOrm->debug = $obj->debug;
-    $PHPShopOrm->mysql_error=false;
     $result = $PHPShopOrm->query("select uid from " . $GLOBALS['SysValue']['base']['table_name26'] . " where name REGEXP 'i" . $words . "i'");
     while (@$row = mysql_fetch_array(@$result)) {
         $uid = $row['uid'];

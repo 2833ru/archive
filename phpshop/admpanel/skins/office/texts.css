@@ -33,8 +33,18 @@ body
     border-radius:5px;
     background: #FFF;
     cursor:pointer;
+    height:18px;
 }
 
+#icon{
+    cursor: pointer;
+    border: solid 1px #CCC;
+    -webkit-border-radius:5px;
+    -moz-border-radius:5px;
+    border-radius:5px;
+    cursor:pointer;
+    box-shadow: 0.2em 0.2em 3px rgba(122,122,122,0.3);
+}
 
 .display:hover{
     background: -moz-linear-gradient(#F2F6F9,#BFDBFF);
@@ -94,9 +104,8 @@ legend.titlelegend{
     background: -ms-linear-gradient(#FBFDFF,#E8EEF4);
     background: -o-linear-gradient(#FBFDFF,#E8EEF4);
     background: -webkit-linear-gradient(#FBFDFF,#E8EEF4);
-    border: 1px;
-    border-style:outset; 
-    border-color:#BECCDC;
+    background-color: #E8EEF4;
+    border: solid 1px #BECCDC;
     width: 330px;
     -moz-border-radius: 8px;
     -webkit-border-radius: 8px;
@@ -122,18 +131,18 @@ legend.titlelegend{
 }
 
 .border-top{
-    border-bottom: solid 0px #CCC;
-    border-top: solid 1px #CCC;
+    border-bottom: solid 0px #BECCDC;
+    border-top: solid 1px #BECCDC;
 }
 
 .border-both{
-    border-bottom: solid 1px #CCC;
-    border-top: solid 1px #CCC;
+    border-bottom: solid 1px #BECCDC;
+    border-top: solid 1px #BECCDC;
 }
 
 .border-bottom{
-    border-bottom: solid 1px #CCC;
-    border-top: solid 0px #CCC;
+    border-bottom: solid 1px #BECCDC;
+    border-top: solid 0px #BECCDC;
 }
 
 
@@ -229,6 +238,7 @@ table.sortable span.sortarrow {
     -moz-border-radius-topright:8px;
     border-top-left-radius:8px;
     border-top-right-radius:8px;
+    padding: 2px; 
 
 }
 
@@ -371,6 +381,7 @@ table.sortable span.sortarrow {
     background: -ms-linear-gradient(#FFF, #F0F0F0);
     background: -o-linear-gradient(#FFF, #F0F0F0);
     background: -webkit-linear-gradient(#FFF, #F0F0F0);
+    background-color:#F0F0F0;
     border: solid 1px #BECCDC;
     -webkit-border-radius:5px;
     -moz-border-radius:5px;
@@ -451,7 +462,7 @@ div, input, button, select, fieldset, textarea, td, th{
 }
 .title { 
     background: #DDDDFF; 
-    color: 000; 
+    color: #000; 
     font-weight: bold; 
     font-size: 120%; 
     padding: 3px 20px; 
@@ -481,6 +492,7 @@ input.but:hover{
 
 .small{
     height: 1.9em!important;
+    padding:0px!important;
 }
 
 .long{
@@ -542,6 +554,7 @@ button{
     background: -ms-linear-gradient(#FFF, #F0F0F0);
     background: -o-linear-gradient(#FFF, #F0F0F0);
     background: -webkit-linear-gradient(#FFF, #F0F0F0);
+    background-color: #F0F0F0;
     cursor: pointer;
 }
 

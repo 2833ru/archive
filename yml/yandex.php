@@ -179,14 +179,12 @@ class PHPShopYml {
                 if (!empty($check)) {
                     if (!empty($_SESSION['Memory'][__CLASS__][$param[0]][$param[1]]))
                         return true;
-                }
-                else
+                } else
                     return $_SESSION['Memory'][__CLASS__][$param[0]][$param[1]];
             }
             elseif (!empty($check))
                 return true;
-        }
-        else
+        } else
             return true;
     }
 
@@ -208,6 +206,7 @@ class PHPShopYml {
 
         return $Catalog;
     }
+
     /**
      * Данные по товарам. Оптимизировано.
      * @return array массив товаров
@@ -216,63 +215,61 @@ class PHPShopYml {
         $Products = array();
 
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
-        $result=$PHPShopOrm->query("select * from ".$GLOBALS['SysValue']['base']['products']." where yml='1' and enabled='1' and parent_enabled='0'");
-        while($row = mysql_fetch_array($result)) {
-                $id = $row['id'];
-                $name = htmlspecialchars($row['name'],null,'windows-1251');
-                $category = $row['category'];
-                $uid = $row['uid'];
-                $price = $row['price'];
+        $result = $PHPShopOrm->query("select * from " . $GLOBALS['SysValue']['base']['products'] . " where yml='1' and enabled='1' and parent_enabled='0'");
+        while ($row = mysql_fetch_array($result)) {
+            $id = $row['id'];
+            $name = htmlspecialchars($row['name'], null, 'windows-1251');
+            $category = $row['category'];
+            $uid = $row['uid'];
+            $price = $row['price'];
 
-                if ($row['p_enabled'] == 1)
-                    $p_enabled = "true";
-                else
-                    $p_enabled = "false";
+            if ($row['p_enabled'] == 1)
+                $p_enabled = "true";
+            else
+                $p_enabled = "false";
 
-                $description = trim(PHPShopString::mySubstr($row['description'], 300));
-                $content = htmlspecialchars(trim(strip_tags($row['content'])),null,'windows-1251');
-                $baseinputvaluta = $row['baseinputvaluta'];
+            $description = trim(PHPShopString::mySubstr($row['description'], 300));
+            $content = htmlspecialchars(trim(strip_tags($row['content'])), null, 'windows-1251');
+            $baseinputvaluta = $row['baseinputvaluta'];
 
-                if ($baseinputvaluta) {
-                    //Если валюта отличается от базовой
-                    if ($baseinputvaluta !== $this->defvaluta) {
-                        $vkurs = $this->PHPShopValuta[$baseinputvaluta]['kurs'];
-                        
-                        // Если курс нулевой или валюта удалена
-                        if(empty($vkurs)) $vkurs=1;
+            if ($baseinputvaluta) {
+                //Если валюта отличается от базовой
+                if ($baseinputvaluta !== $this->defvaluta) {
+                    $vkurs = $this->PHPShopValuta[$baseinputvaluta]['kurs'];
 
-                        // Приводим цену в базовую валюту
-                        $price = $price / $vkurs;
-                    }
+                    // Если курс нулевой или валюта удалена
+                    if (empty($vkurs))
+                        $vkurs = 1;
+
+                    // Приводим цену в базовую валюту
+                    $price = $price / $vkurs;
                 }
-
-                $price = ($price + (($price * $this->percent) / 100));
-                $price = round($price, $this->format);
-
-                $array = array(
-                    "id" => $id,
-                    "category" => $category,
-                    "name" => $name,
-                    "picture" => $row['pic_small'],
-                    "price" => $price,
-                    "p_enabled" => $p_enabled,
-                    "yml_bid_array" => unserialize($row['yml_bid_array']),
-                    "uid" => $uid,
-                    "description" => $description,
-                    "content"=>$content
-                );
-
-                // Параметр сортировки
-                if (!empty($this->vendor))
-                    $array['vendor_array'] = unserialize($row['vendor_array']);
-
-                $Products[$id] = $array;
             }
+
+            $price = ($price + (($price * $this->percent) / 100));
+            $price = round($price, $this->format);
+
+            $array = array(
+                "id" => $id,
+                "category" => $category,
+                "name" => $name,
+                "picture" => $row['pic_small'],
+                "price" => $price,
+                "p_enabled" => $p_enabled,
+                "yml_bid_array" => unserialize($row['yml_bid_array']),
+                "uid" => $uid,
+                "description" => $description,
+                "content" => $content
+            );
+
+            // Параметр сортировки
+            if (!empty($this->vendor))
+                $array['vendor_array'] = unserialize($row['vendor_array']);
+
+            $Products[$id] = $array;
+        }
         return $Products;
     }
-    
-
-   
 
     /**
      * Заголовок 
@@ -317,7 +314,7 @@ class PHPShopYml {
      */
     function setDelivery() {
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['table_name30']);
-        $data = $PHPShopOrm->select(array('price'), array('flag' => "='1'"), false, array('limit' => 1));
+        $data = $PHPShopOrm->select(array('price'), array('flag' => "='1'",'is_folder'=>"='0'"), false, array('limit' => 1));
         if (is_array($data))
             $this->xml.='<local_delivery_cost>' . $data['price'] . '</local_delivery_cost>';
     }
@@ -326,6 +323,7 @@ class PHPShopYml {
      * Товары 
      */
     function setProducts() {
+        global $PHPShopModules;
         $vendor = null;
         $this->xml.='<offers>';
         $product = $this->product($vendor = true);
@@ -333,6 +331,12 @@ class PHPShopYml {
         // Учет модуля SEOURL
         if (!empty($GLOBALS['SysValue']['base']['seourl']['seourl_system'])) {
             $seourl_enabled = true;
+        }
+
+
+        // Учет модуля SEOURLPRO
+        if (!empty($GLOBALS['SysValue']['base']['seourlpro']['seourlpro_system'])) {
+            $seourlpro_enabled = true;
         }
 
         // Поиск характеристики по имени
@@ -351,16 +355,16 @@ class PHPShopYml {
             $bid_str = null;
             $vendor = $param = null;
 
-            
+
             // Тэг характеристики
             if ($this->vendor) {
-                
+
                 if (is_array($PHPShopSortSearch))
                     foreach ($PHPShopSortSearch as $SortSearch) {
-                    
+
                         // Выделение тега vendor
                         if ($SortSearch->tag == 'vendor')
-                            $vendor = $SortSearch->search($val['vendor_array']);
+                            $vendor.= $SortSearch->search($val['vendor_array']);
                         else
                             $param.= $SortSearch->search($val['vendor_array']);
                     }
@@ -369,22 +373,35 @@ class PHPShopYml {
             // Если есть bid
             if (!empty($val['yml_bid_array']['bid']))
                 $bid_str = '  bid="' . $val['yml_bid_array']['bid'] . '" ';
+            
+            
 
             // Если есть cbid
             if (!empty($val['yml_bid_array']['cbid']))
                 $bid_str.='  cbid="' . $val['yml_bid_array']['cbid'] . '" ';
+            
+            // Стандартный урл
+            $url='/shop/UID_' . $val['id'] ;
 
+            // SEOURL
             if (!empty($seourl_enabled))
-                $seourl = '_' . PHPShopString::toLatin($val['name']);
+                $url.= '_' . PHPShopString::toLatin($val['name']);
+
+            // SEOURLPRO
+            if (!empty($seourlpro_enabled)){
+                if(empty($val['prod_seo_name']))
+                $url = '/id/' . str_replace("_", "-", PHPShopString::toLatin($val['name'])).'-'.$val['id'];
+                else $url = '/id/' . $val['prod_seo_name'].'-'.$val['id'];
+            }
 
             $xml = '<offer id="' . $val['id'] . '" available="' . $val['p_enabled'] . '" ' . $bid_str . '>
- <url>http://' . $_SERVER['SERVER_NAME'] . $GLOBALS['SysValue']['dir']['dir'] . '/shop/UID_' . $val['id'] . $seourl . '.html?from=yml</url>
+ <url>http://' . $_SERVER['SERVER_NAME'] . $GLOBALS['SysValue']['dir']['dir'] . $url . '.html?from=yml</url>
       <price>' . $val['price'] . '</price>
       <currencyId>' . $this->defvalutaiso . '</currencyId>
       <categoryId>' . $val['category'] . '</categoryId>
       <picture>http://' . $_SERVER['SERVER_NAME'] . $val['picture'] . '</picture>
-      <name>' . $val['name'] . '</name>'.
-                    $vendor.'
+      <name>' . $val['name'] . '</name>' .
+                    $vendor . '
       <description>' . $val['description'] . '</description>' .
                     $param . '
 ';
@@ -397,15 +414,14 @@ class PHPShopYml {
 
             // Перехват модуля, занесение в память наличия модуля для оптимизации
             if ($this->memory_get(__CLASS__ . '.' . __FUNCTION__, true)) {
-                $hook = $this->setHook(__CLASS__, __FUNCTION__, array('xml'=>$xml,'val'=>$val));
+                $hook = $this->setHook(__CLASS__, __FUNCTION__, array('xml' => $xml, 'val' => $val));
                 if ($hook) {
                     $this->xml.= $hook;
                 } else {
                     $this->xml.= $xml;
                     $this->memory_set(__CLASS__ . '.' . __FUNCTION__, 0);
                 }
-            }
-            else
+            } else
                 $this->xml.= $xml;
         }
         $this->xml.='

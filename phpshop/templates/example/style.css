@@ -1,0 +1,264 @@
+/* 
+* PHPShop Editor 
+*/
+.editor_empty{
+   color:#6C809A;
+   text-align: center;
+   padding:5px;
+   background: #FFE785;
+   border: dashed 1px #6C809A;
+   border-radius:4px;
+   margin:3px;
+}
+.editor_empty a{
+   text-decoration:none !important;
+   color:#6C809A !important;
+}
+
+/* 
+* Поддержка шаблонов 2.1 - 3.7  для версии 4
+*/
+
+.compare_list img{
+ max-width: 70px;
+}
+
+a.product img{
+   max-width: 100px;
+   padding:5px;
+}
+
+#fotoload a.highslide img{
+   max-width: 600px !important;
+}
+
+#fotoload img.imgOn, #fotoload img.imgOff{
+   max-width: 100px;
+}
+
+#catalogContent img{
+   max-width: 704px;
+}
+
+#bannerContent img{
+   display: block;
+   max-width: 704px !important;
+   text-align: center;
+}
+
+
+body, td, th {
+	font-family: Tahoma;
+	font-size: 11px;
+	color: #999999;
+}
+
+body {
+	margin: 0px;
+	background-color: #ffffff;
+}
+
+a {
+	font-family: Tahoma;
+	font-size: 11px;
+	color: #2D7BDB;
+}
+
+a:link {
+	text-decoration: underline;
+}
+
+a:visited {
+	text-decoration: underline;
+}
+
+a:hover {
+	text-decoration: none;
+}
+
+a:active {
+	text-decoration: underline;
+}
+
+td.panel_l{ /*Раскла в 2 колонки левая колонка*/
+	width: 50%;	
+}
+
+td.panel_r{ /*Раскла в 2 колонки правая колонка*/
+	width: 50%;	
+}
+
+td.panel_t{ /*Раскла в 3 колонки*/
+	width: 34%;	
+}
+
+td.setka{ /*Стиль вывода сетки товаров*/
+	-background-color: #FF0000;     
+}
+td.panel_3_1{
+    width: 34%;
+}
+td.panel_3_2{
+    width: 34%;
+}
+td.panel_3_3{
+    width: 34%;
+}
+form{ /*Убираем отступ*/
+    margin:0px;
+}
+
+h1{ /*Общий стиль для заголовков*/
+	font-size: 18px;
+	color: #000000;
+}
+
+h2{ /*Общий стиль для заголовков*/
+	font-size: 16px;
+	color: #000000;
+}
+
+table.menu_bg a{ /*Выделение активной позиции в главном меню*/
+	font-weight: 600;
+}
+
+img.imgOff { /*Рамка*/
+	border-color: #97989C;
+	border-style: solid;
+	border-width: 1px;
+}
+
+img.imgOn { /*Рамка*/
+	border-color: #A12622;
+	border-style: solid;
+	border-width: 1px;
+}
+
+div.comment_list{ /*Отзывы*/
+	margin-top: 10px;
+	margin-bottom: 10px;
+	border: #35A0C4 1px dashed; 
+	padding: 5px; 
+}
+
+div.opros{ /*Опрос*/
+    float: left;
+    background: #ffe820;
+    height: 10px;
+}
+
+a.activ_catalog{ /*Выделение каталога*/
+	background: #005172;
+	color: #ffffff;
+	padding: 3px;
+}
+
+div.gbook_otvet{ /*Ответ на отзыв*/
+	margin-top: 10px;
+	margin-bottom: 10px;
+	border: #35A0C4 1px dashed; 
+	padding: 5px;
+}
+
+div.line{ /*Разделитель новостей*/
+	width: 100%;
+	height: 4px;
+	margin-top:5px;
+}
+
+div.news_date{ /*Новости*/
+	color: #000000;
+	font-weight: 600;
+	float: left;
+	padding-right: 10px;
+}
+
+div.news_tema,div.news_tema a{ /*Новости*/
+	color: #000000;
+	font-weight: 600;
+}
+
+div.page_nava{ /*Навигация*/
+	background-color: #CCC;
+	padding: 5px;
+	color: #000000;
+	margin-bottom: 15px;
+}
+
+div.page_nava a{ /*Навигация*/
+	color: #000000;
+}
+
+#allspec{
+	background-color: #EDF5F8;
+	border-bottom: #309b15 1px solid;
+	border-top: #309b15 1px solid;
+	padding: 5px;
+}
+
+#allspec div {
+	color: #000000;
+	margin-bottom: 5px;
+}
+
+#allspec a{
+	color: #000000;
+}
+
+#allspecwhite{
+	margin-top: 10px;
+	background-color: #F6FAFD;
+	margin-bottom: 10px;
+	border: #AED3DC 1px dashed; 
+	padding: 5px;
+}
+
+.sort_table{ /*таблица характеристик*/
+	padding: 5px;
+	margin-top: 10px;
+	background-color: White;
+	border: 1px dashed #d3d3d3;
+	font-size: 11px;
+	color: #000000;
+}
+
+.sort_name_bg{ /*таблица характеристик*/
+	background-color: #3A87A3;
+	color: #000000;
+}
+
+.sort_table b{ /*таблица характеристик*/
+	color: #000000;
+}
+
+.ico_add_to_card {
+    background:url(images/shop/basket.png) no-repeat;
+    text-align: left !important;
+    padding-left: 45px;
+}
+.ico_add_to_compare {
+    background:url(images/shop/compare.png) no-repeat;
+    text-align: left !important;
+    padding-left: 45px;
+}
+.message{
+    border: solid 1px #EFD39C;
+    -webkit-border-top-left-radius:8px;
+    -webkit-border-top-right-radius:8px;
+    -moz-border-radius-topleft:8px;
+    -moz-border-radius-topright:8px;
+    border-top-left-radius:8px;
+    border-top-right-radius:8px;
+    background: -moz-linear-gradient(rgb(255,236,157),rgb(255,231,133));
+    background: -ms-linear-gradient(rgb(255,236,157),rgb(255,231,133));
+    background: -o-linear-gradient(rgb(255,236,157),rgb(255,231,133));
+    background: -webkit-linear-gradient(rgb(255,236,157),rgb(255,231,133));
+    position: absolute;
+    max-width: 230px; 
+    height: 35px;
+    padding: 15px 10px 10px 10px;
+    visibility:hidden;
+    left:10px;
+    top:0px;
+    box-shadow: 0.4em 0.4em 5px rgba(122,122,122,0.5);
+}

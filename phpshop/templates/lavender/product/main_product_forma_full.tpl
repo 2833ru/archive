@@ -34,9 +34,9 @@
         <div class="tovar_optionsDisp">@optionsDisp@</div>
         <table style="margin:10px 0px" width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td><div align="center"><span class="tovarDivOldPrice1">@productPriceRub@</span></div></td>
+            <td><div style="width:75px"  align="left"><span class="tovarDivOldPrice1">@productPriceRub@</span></div></td>
             <td> @ComStartCart@
-              <div class="tovarDivPrice1"> <span>@productPrice@ @productValutaName@</span> </div>
+              <div class="tovarDivPrice1" align="left"> <span>@productPrice@ @productValutaName@</span> </div>
               @ComEndCart@</td>
             <td><div class="tovarDivAdd1" style="padding-bottom:0px; margin-top:0px;">
                 <div class="tovarDivAdd3">
@@ -51,8 +51,9 @@
               </div></td>
           </tr>
         </table>
+       <div>          <b>@productSklad@</b>
+		<br>@oneclick@</div>
         @ComEnd@
-        
         @productParentList@ </td>
     </tr>
   </tbody>

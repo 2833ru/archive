@@ -30,6 +30,7 @@
           </tr>
         </table>
         <div class="tovar_content">@productDes@</div>
+        @oneclick@
         @ComStart@
         <div class="tovar_optionsDisp">@optionsDisp@</div>
         <table style="margin:10px 0px" width="100%" border="0" cellspacing="0" cellpadding="0">

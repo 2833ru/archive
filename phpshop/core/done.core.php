@@ -2,22 +2,24 @@
 
 PHPShopObj::loadClass('order');
 PHPShopObj::loadClass('mail');
+PHPShopObj::importCore('users');
+
 $PHPShopOrder = new PHPShopOrderFunction();
 
 /**
  * Обработчик записи заказа
  * @author PHPShop Software
  * @tutorial http://wiki.phpshop.ru/index.php/PHPShopDone
- * @version 1.3
+ * @version 1.4
  * @package PHPShopCore
  */
 class PHPShopDone extends PHPShopCore {
-    
+
     /**
      * Очистка корзины после оплаты
      * @var bool 
      */
-    public $cart_clean_enabled=true;
+    public $cart_clean_enabled = true;
 
     /**
      * Конструктор
@@ -98,14 +100,23 @@ class PHPShopDone extends PHPShopCore {
      */
     function send_to_order() {
         global $SysValue;
-
+        
         // Перехват модуля
         if ($this->setHook(__CLASS__, __FUNCTION__, $_POST, 'START'))
             return true;
 
         if ($this->PHPShopCart->getNum() > 0) {
-            if (PHPShopSecurity::true_param($_POST['mail'], $_POST['name_person'], $_POST['tel_name'], $_POST['adr_name'])) {
 
+            // создаём нового пользователя, или авторизуем старого
+            if (!class_exists('PHPShopUsers'))
+                PHPShopObj::importCore('users');
+            $PHPShopUsers = new PHPShopUsers();
+            $this->userId = $PHPShopUsers->add_user_from_order($_POST['mail']);
+
+            if (isset($_SESSION['UsersLogin']) AND ! empty($_SESSION['UsersLogin']))
+                $_POST['mail'] = ($_SESSION['UsersMail']);
+
+            if (PHPShopSecurity::true_email($_POST['mail']) AND $this->userId) {
                 $this->ouid = $_POST['ouid'];
 
                 $order_metod = PHPShopSecurity::TotalClean($_POST['order_metod'], 1);
@@ -198,41 +209,62 @@ class PHPShopDone extends PHPShopCore {
         $this->set('shop_name', $this->PHPShopSystem->getName());
         $this->set('ouid', $this->ouid);
         $this->set('date', date("d-m-y"));
-        $this->set('name_person', $_POST['name_person']);
-        $this->set('tel', @$_POST['tel_code'] . "-" . @$_POST['tel_name']);
         $this->set('adr_name', PHPShopSecurity::CleanStr(@$_POST['adr_name']));
-        $this->set('dos_ot', @$_POST['dos_ot']);
-        $this->set('dos_do', @$_POST['dos_do']);
         $this->set('deliveryCity', $this->PHPShopDelivery->getCity());
         $this->set('mail', $_POST['mail']);
         $this->set('payment', $this->PHPShopPayment->getName());
         $this->set('company', $this->PHPShopSystem->getParam('name'));
-        $content = ParseTemplateReturn('./phpshop/lib/templates/order/usermail.tpl', true);
+
+        // формируем список данных полей доставки.
+        $this->set('adresList', $this->PHPShopDelivery->getAdresListFromOrderData($_POST, "\n"));
+
+        // метки письма о заказе для старых версий системы.
+        $this->set('dos_ot', @$_POST['dos_ot']);
+        $this->set('dos_do', @$_POST['dos_do']);
+        $this->set('tel', @$_POST['tel_code'] . "-" . @$_POST['tel_name']);
+        //если авторизован, имя берём из сессии, иначе из формы.
+        if (!empty($_SESSION['UsersId']) and PHPShopSecurity::true_num($_SESSION['UsersId']))
+            $this->set('user_name', $_SESSION['UsersName']);
+        elseif (!empty($_POST['name_new']))
+            $this->set('user_name', $_POST['name_new']);
+        else
+            $this->set('user_name', $_POST['name_person']);
+
+        // Дополнительная информация по заказу
+        if (!empty($_POST['dop_info']))
+            $this->set('dop_info', $_POST['dop_info']);
 
         // Заголовок письма покупателю
-        $title = $this->PHPShopSystem->getName() . $this->lang('mail_title_user_start') . $_POST['ouid'] . $this->lang('mail_title_user_end');
+        //$title = $this->PHPShopSystem->getName() . $this->lang('mail_title_user_start') . $_POST['ouid'] . $this->lang('mail_title_user_end');
+        $title = $this->lang('mail_title_user_start') . $_POST['ouid'] . $this->lang('mail_title_user_end');
+
+
+        // Отсылаем письмо покупателю
+        $PHPShopMail = new PHPShopMail($_POST['mail'], $this->PHPShopSystem->getParam('adminmail2'), $title, '', true, true);
+        $content = ParseTemplateReturn('./phpshop/lib/templates/order/usermail.tpl', true);
 
         // Перехват модуля в середине функции
         if ($this->setHook(__CLASS__, __FUNCTION__, $content, 'MIDDLE'))
             return true;
+        $PHPShopMail->sendMailNow($content);
 
-        // Отсылаем письмо покупателю
-        $PHPShopMail = new PHPShopMail($_POST['mail'], $this->PHPShopSystem->getParam('adminmail2'), $title, $content);
 
         $this->set('shop_admin', "http://" . $_SERVER['SERVER_NAME'] . $this->getValue('dir.dir') . "/phpshop/admpanel/");
         $this->set('time', date("d-m-y H:i a"));
         $this->set('ip', $_SERVER['REMOTE_ADDR']);
+
+        // $title_adm = $this->PHPShopSystem->getName() . ' - ' . $this->lang('mail_title_adm') . $_POST['ouid'] . "/" . date("d-m-y");
+        $title_adm = $this->lang('mail_title_adm') . $_POST['ouid'] . "/" . date("d-m-y");
+
+        // Отсылаем письмо администратору
+        $PHPShopMail = new PHPShopMail($this->PHPShopSystem->getParam('adminmail2'), $_POST['mail'], $title_adm, '', true, true);
         $content_adm = ParseTemplateReturn('./phpshop/lib/templates/order/adminmail.tpl', true);
-
-        // Заголовок письма администратору
-        $title_adm = $this->PHPShopSystem->getName() . ' - ' . $this->lang('mail_title_adm') . $_POST['ouid'] . "/" . date("d-m-y");
-
         // Перехват модуля в конце функции
         if ($this->setHook(__CLASS__, __FUNCTION__, $content_adm, 'END'))
             return true;
 
         // Отсылаем письмо администратору
-        $PHPShopMail = new PHPShopMail($this->PHPShopSystem->getParam('adminmail2'), $_POST['mail'], $title_adm, $content_adm);
+        $PHPShopMail->sendMailNow($content_adm);
     }
 
     /**
@@ -263,25 +295,25 @@ class PHPShopDone extends PHPShopCore {
         if ($this->setHook(__CLASS__, __FUNCTION__, $_POST, 'START'))
             return true;
 
-        // Данные покупателя
+        // Данные покупателя // Старая логика
         $person = array(
             "ouid" => $this->ouid,
             "data" => date("U"),
             "time" => date("H:s a"),
-            "mail" => PHPShopSecurity::TotalClean($_POST['mail'],3),
-            "name_person" => PHPShopSecurity::TotalClean(@$_POST['name_person']),
-            "org_name" => PHPShopSecurity::TotalClean(@$_POST['org_name']),
-            "org_inn" => PHPShopSecurity::TotalClean(@$_POST['org_inn']),
-            "org_kpp" => PHPShopSecurity::TotalClean(@$_POST['org_kpp']),
-            "tel_code" => PHPShopSecurity::TotalClean(@$_POST['tel_code']),
-            "tel_name" => PHPShopSecurity::TotalClean(@$_POST['tel_name']),
-            "adr_name" => PHPShopSecurity::TotalClean(@$_POST['adr_name']),
-            "dostavka_metod" => intval(@$_POST['dostavka_metod']),
+            "mail" => PHPShopSecurity::TotalClean($_POST['mail'], 3),
+            "name_person" => PHPShopSecurity::TotalClean($_POST['name_person']),
+            "org_name" => PHPShopSecurity::TotalClean($_POST['org_name']),
+            "org_inn" => PHPShopSecurity::TotalClean($_POST['org_inn']),
+            "org_kpp" => PHPShopSecurity::TotalClean($_POST['org_kpp']),
+            "tel_code" => PHPShopSecurity::TotalClean($_POST['tel_code']),
+            "tel_name" => PHPShopSecurity::TotalClean($_POST['tel_name']),
+            "adr_name" => PHPShopSecurity::TotalClean($_POST['adr_name']),
+            "dostavka_metod" => intval($_POST['dostavka_metod']),
             "discount" => $this->discount,
-            "user_id" => intval($_SESSION['UsersId']),
-            "dos_ot" => PHPShopSecurity::TotalClean(@$_POST['dos_ot']),
-            "dos_do" => PHPShopSecurity::TotalClean(@$_POST['dos_do']),
-            "order_metod" =>intval(@$_POST['order_metod']));
+            "user_id" => $this->userId,
+            "dos_ot" => PHPShopSecurity::TotalClean($_POST['dos_ot']),
+            "dos_do" => PHPShopSecurity::TotalClean($_POST['dos_do']),
+            "order_metod" => intval($_POST['order_metod']));
 
         // Данные по корзине
         $cart = array(
@@ -309,7 +341,19 @@ class PHPShopDone extends PHPShopCore {
         $insert['uid_new'] = $this->ouid;
         $insert['orders_new'] = $this->order;
         $insert['status_new'] = serialize($this->status);
-        $insert['user_new'] = intval($_SESSION['UsersId']);
+        $insert['user_new'] = $this->userId;
+        $insert['dop_info_new'] = PHPShopSecurity::CleanStr($_POST['dop_info']);
+
+
+        // формируем данные для записи адреса к пользователю в аккаунт
+        // записываем новый адрес или обновляем старый.
+        // Импортируем роутер личного кабинета для возможности регистрации со страницы оформления заказа
+        if (!class_exists('PHPShopUsers'))
+            PHPShopObj::importCore('users');
+        $PHPShopUsers = new PHPShopUsers();
+        $adresData = $PHPShopUsers->update_user_adres();
+
+        $insert = array_merge($insert, $adresData);
 
         // Запись заказа в БД
         $result = $this->PHPShopOrm->insert($insert);
@@ -319,7 +363,7 @@ class PHPShopDone extends PHPShopCore {
 
         // Принудительная очистка корзины
         if ($this->cart_clean_enabled)
-           $this->PHPShopCart->clean();
+            $this->PHPShopCart->clean();
     }
 
     /**
@@ -364,8 +408,7 @@ function mailcartforma($val, $option) {
     if ($hook)
         return $hook;
 
-    $dis =
-            $val['uid'] . "  " . $val['name'] . " (" . $val['num'] . " " . $val['ed_izm'] . " * " . $val['price'] . ") -- " . ($val['price'] * $val['num']) . " " . $option['currency'] . "
+    $dis = $val['uid'] . "  " . $val['name'] . " (" . $val['num'] . " " . $val['ed_izm'] . " * " . $val['price'] . ") -- " . ($val['price'] * $val['num']) . " " . $option['currency'] . " <br>
 ";
     return $dis;
 }

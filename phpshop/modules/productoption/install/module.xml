@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<module>
+    <version>1.0</version>
+    <name>Product Option</name>
+    <faqlink>http://faq.phpshop.ru/page/product-option.html</faqlink>
+    <description>Модуль дополнительных полей товара.</description>
+    <icon>icon.png</icon>
+    <category>form,develop</category>
+    <reformal>669990</reformal>
+    <adminmenu>
+        <title>Product Option</title>
+        <podmenu>
+            <podmenu_name>Настройка Product Option</podmenu_name>
+            <podmenu_icon>icon.png</podmenu_icon>
+            <podmenu_action>javascript:miniWin('../modules/productoption/admpanel/adm_module.php',510,450);</podmenu_action>
+        </podmenu>
+    </adminmenu>
+</module>

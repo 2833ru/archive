@@ -14,7 +14,7 @@ require("../language/".$Lang."/language.php");
 function Delivery_Cat($PID=0) {
 global $SysValue;
 
-$sql='select * from '.$SysValue['base']['table_name30'].' where (PID='.$PID.' AND is_folder="1") order by city';
+$sql='select * from '.$SysValue['base']['table_name30'].' where (PID='.$PID.' AND is_folder="1") order by num, city';
 $result=mysql_query($sql);
 while ($row = mysql_fetch_array($result))
     {
@@ -28,7 +28,7 @@ while ($row = mysql_fetch_array($result))
 	$price=$row['price'];
 	if(($enabled)=="1"){$checked="";}else{$checked='[Œ“ À!]';};
 
-	$sqlnums='select * from '.$SysValue['base']['table_name30'].' where PID='.$id.' order by city';
+	$sqlnums='select * from '.$SysValue['base']['table_name30'].' where PID='.$id.' order by num, city';
 	$resultnums=mysql_query($sqlnums);
 	@$nums=mysql_num_rows(@$resultnums);
 

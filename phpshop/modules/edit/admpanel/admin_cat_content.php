@@ -48,7 +48,7 @@ function actionStart() {
 
     if(isTypeAllowed($tpl_file)) {
         $content=file_get_contents($tpl_file);
-        $code='<textarea name="code" id="code" style="width:100%;height:600px">'.stripslashes($content).'</textarea>';
+        $code='<textarea name="code" id="code" style="width:100%;height:100%">'.stripslashes($content).'</textarea>';
         $code.='    <script>
       var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
         lineNumbers: true,

@@ -6,8 +6,8 @@
         <META http-equiv="Content-Type" content="text-html; charset=windows-1251">
         <style>
             BODY {
-                FONT-FAMILY: tahoma,verdana,arial,sans-serif
-                    color:000000;
+                FONT-FAMILY: tahoma,verdana,arial,sans-serif;
+                olor:#000000;
                 font-size: 11px;
             }
             td {
@@ -35,6 +35,18 @@
                 border-right: 1px solid #000000;
                 text-align: right;
             }
+            button{
+                font-size: 8pt;
+                border: solid 1px #CCC;
+                -webkit-border-radius:5px;
+                -moz-border-radius:5px;
+                border-radius:5px;
+                background: -moz-linear-gradient(#FFF, #F0F0F0);
+                background: -ms-linear-gradient(#FFF, #F0F0F0);
+                background: -o-linear-gradient(#FFF, #F0F0F0);
+                background: -webkit-linear-gradient(#FFF, #F0F0F0);
+                cursor: pointer;
+            }
         </style>
         <style media="print" type="text/css">
             <!--
@@ -58,7 +70,12 @@
 
                             </TD>
                             <td align="right" width="100%">
-                                <input type="submit" value="Распечатать" onclick="window.print();return false;" class="nonprint">
+                                <div align="right" class="nonprint">
+                                    <button onclick="window.print()">
+                                        <img border=0 align=absmiddle hspace=3 vspace=3 src="http://@php echo $_SERVER['SERVER_NAME'].$GLOBALS['SysValue']['dir']['dir']; php@/phpshop/admpanel/img/action_print.gif">Распечатать
+                                    </button> 
+                                    <br><br>
+                                </div>
                             </td>
                         </TR>
                     </TABLE>
@@ -79,9 +96,6 @@
 
 
                             </TD>
-                            <td align="right" width="100%">
-                                <input type="submit" value="Распечатать" onclick="window.print();return false;" class="nonprint">
-                            </td>
                         </TR>
                     </TABLE>
                 </TD>

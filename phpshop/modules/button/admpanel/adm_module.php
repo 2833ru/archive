@@ -59,18 +59,23 @@ function actionStart() {
             break;
     }
 
-    $value[]=array('не выводить',0,$s0);
+    $value[]=array('счетчики',0,$s0);
     $value[]=array('подвал',1,$s1);
     $value[]=array('слева',2,$s2);
     $value[]=array('справа',3,$s3);
 
     $Tab1=$PHPShopGUI->setSelect('enabled_new',$value,100,none,'Расположение блока:');
+    
+        
+    $info='Для произвольной вставки элемента, следует выбрать параметр вывода "Счетчики" и вставить переменную
+        <b>@button@</b> в свой шаблон в нужное вам место.';
+    $Tab2=$PHPShopGUI->setInfo($info, 200, '96%');
 
     // Содержание закладки 2
-    $Tab2=$PHPShopGUI->setPay($serial,false);
+    $Tab3=$PHPShopGUI->setPay($serial,false);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное",$Tab1,270),array("О Модуле",$Tab2,270));
+    $PHPShopGUI->setTab(array("Основное",$Tab1,270),array("Инструкция",$Tab2,270),array("О Модуле",$Tab3,270));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter=

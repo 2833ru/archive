@@ -102,19 +102,23 @@ switch ($_GET['do']) {
 
                     // Добавляем новый товар 1 шт по ID
                     if ($PHPShopCart->add($productID, 1)) {
-                        
+
+                        // Возвращаем массив измененной корзины
+                        $order['Cart']['cart'] = $PHPShopCart->getArray();
+                        $order['Cart']['num'] = $PHPShopCart->getNum();
+                        $order['Cart']['sum'] = $PHPShopCart->getSum(false);
                     } else {
                         // Добавляем новый товар 1 шт по артикулу
                         $PHPShopCart->add($productID, 1, false, 'uid');
                     }
 
-                    // Возвращаем массив измененной корзины
-                    $order['Cart']['cart'] = $PHPShopCart->getArray();
-                    $order['Cart']['num'] = $PHPShopCart->getNum();
-                    $order['Cart']['sum'] = $PHPShopCart->getSum(false);
+                        // Возвращаем массив измененной корзины
+                        $order['Cart']['cart'] = $PHPShopCart->getArray();
+                        $order['Cart']['num'] = $PHPShopCart->getNum();
+                        $order['Cart']['sum'] = $PHPShopCart->getSum(false);
                     $order['Cart']['weight'] = $PHPShopCart->getWeight();
                     $order['Cart']['dostavka'] = $PHPShopDelivery->getPrice($PHPShopCart->getSum(false), $PHPShopCart->getWeight());
-                }
+                    }
 
                 // Сериализация данных заказа
                 $update['orders_new'] = serialize($order);

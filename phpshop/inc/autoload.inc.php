@@ -40,14 +40,11 @@ foreach ($SysValue['autoload'] as $val)
 // Авторизация пользователей
 $PHPShopUserElement = new PHPShopUserElement();
 $PHPShopUserElement->init('usersDisp');
+$PHPShopUserElement->init('wishlist');
 
 // Новинки в центр
 $PHPShopProductIndexElements = new PHPShopProductIndexElements();
 $PHPShopProductIndexElements->init('specMain');
-
-// Новинки в колонку
-$PHPShopProductIconElements = new PHPShopProductIconElements();
-$PHPShopProductIconElements->init('specMainIcon');
 
 // Последние покупки
 $PHPShopProductIndexElements->init('nowBuy');
@@ -56,6 +53,10 @@ $PHPShopProductIndexElements->init('nowBuy');
 $PHPShopShopCatalogElement = new PHPShopShopCatalogElement();
 $PHPShopShopCatalogElement->init('leftCatal');
 $PHPShopShopCatalogElement->init('leftCatalTable');
+
+// Новинки в колонку
+$PHPShopProductIconElements = new PHPShopProductIconElements();
+$PHPShopProductIconElements->init('specMainIcon');
 
 // Меню каталогов страниц
 $PHPShopPageCatalogElement = new PHPShopPageCatalogElement();
@@ -69,6 +70,10 @@ $PHPShopOprosElement->init('oprosDisp');
 $PHPShopNewsElement = new PHPShopNewsElement();
 $PHPShopNewsElement->init('miniNews');
 
+// Слайдер
+$PHPShopNewsElement = new PHPShopSliderElement();
+$PHPShopNewsElement->init('imageSlider');
+
 // Баннер
 $PHPShopBannerElement = new PHPShopBannerElement();
 $PHPShopBannerElement->init('banersDisp');
@@ -76,6 +81,10 @@ $PHPShopBannerElement->init('banersDisp');
 // Облако тегов
 $PHPShopCloudElement = new PHPShopCloudElement();
 $PHPShopCloudElement->init('cloud');
+
+// Flash-карусель
+$PHPShopFlashGalleryElement = new PHPShopFlashGalleryElement();
+$PHPShopFlashGalleryElement->init('stockgallery');
 
 // Текстовый блок
 $PHPShopTextElement = new PHPShopTextElement();

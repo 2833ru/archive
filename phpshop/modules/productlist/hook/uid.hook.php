@@ -21,7 +21,7 @@ class PHPShopProductListElement extends PHPShopElements {
         $dis = null;
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['table_name2']);
         $PHPShopOrm->debug = $this->debug;
-        $data = $PHPShopOrm->select(array('*'), array('category' => '=' . intval($category), 'enabled'=>"='1'",'parent_enabled'=>"='0'"), array('order' => 'datas'), array('limit' => $this->data['num']));
+        $data = $PHPShopOrm->select(array('*'), array('category' => '=' . intval($category), 'enabled' => "='1'", 'parent_enabled' => "='0'"), array('order' => 'datas'), array('limit' => $this->data['num']));
         if (is_array($data)) {
             foreach ($data as $row) {
 
@@ -35,7 +35,13 @@ class PHPShopProductListElement extends PHPShopElements {
                 // Учет модуля SEOURL
                 if (!empty($GLOBALS['SysValue']['base']['seourl']['seourl_system'])) {
                     $this->set('productlist_product_seo', '_' . PHPShopString::toLatin($row['name']));
-                }else
+                }
+                // Учет модуля SEOURLPRO
+                elseif (!empty($GLOBALS['SysValue']['base']['seourlpro']['seourlpro_system'])) {
+                    $GLOBALS['PHPShopSeoPro']->setMemory($row['id'], $row['name'], 2);
+                    PHPShopParser::set('productlastview_product_seo', null);
+                }
+                else
                     $this->set('productlist_product_seo', null);
 
                 $dis.= parseTemplateReturn($GLOBALS['SysValue']['templates']['productlist']['productlist_product'], true);
@@ -58,9 +64,7 @@ class PHPShopProductListElement extends PHPShopElements {
                     break;
 
                 default: $this->set('productlist', $dis);
-                    
             }
-
         }
     }
 

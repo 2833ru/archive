@@ -57,14 +57,14 @@ RewriteRule ^(.*)$ /$1/ [L,R=302]
 # Запрет вызовы через браузер сторонних опасных файлов шаблона
 # default - off
 #RewriteCond %{REQUEST_URI} ^(/phpshop/templates/(.*))
-#RewriteCond %{REQUEST_URI} !((.*)\.(gif|jpg|swf|png|jpeg|js|css|GIF|JPG|PNG|JPEG))$
+#RewriteCond %{REQUEST_URI} !((.*)\.(gif|jpg|swf|png|jpeg|js|css|GIF|JPG|PNG|JPEG|eot|svg|ttf|woff))$
 #RewriteRule .* - [F]
 
 # Запрет вызовы через браузер сторонних опасных загружаемых файлов
 # Накладывает ограничение для загрузки файлов с другими расширениями
 # default - off
 #RewriteCond %{REQUEST_URI} ^(/UserFiles/(.*))
-#RewriteCond %{REQUEST_URI} !((.*)\.(gif|jpg|swf|png|jpeg|js|css|GIF|JPG|PNG|JPEG|rar|zip))$
+#RewriteCond %{REQUEST_URI} !((.*)\.(gif|jpg|swf|png|jpeg|js|css|GIF|JPG|PNG|JPEG|rar|zip|xml|pdf))$
 #RewriteRule .* - [F]
 
 # Запрет выполнения php в загружаемых папках

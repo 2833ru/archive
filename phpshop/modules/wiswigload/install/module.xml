@@ -2,7 +2,8 @@
 <module>
     <version>1.0</version>
     <name>WISWIG Load</name>
-    <description>Загрузчик визуальных редакторов</description>
+       <faqlink>http://faq.phpshop.ru/page/wiswig.html</faqlink>
+<description>Загрузчик дополнительных визуальных редакторов.</description>
     <icon>icon.png</icon>
     <category>develop</category>
     <adminmenu>

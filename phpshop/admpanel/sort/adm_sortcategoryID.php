@@ -61,7 +61,7 @@ require("../language/russian/language.php");
                 <tr bgcolor="#ffffff">
                     <td style="padding:10">
                         <b><span name=txtLang id=txtLang>Редактирование Группы</span> "<?= $name ?>"</b><br>
-                        &nbsp;&nbsp;&nbsp;<span name=txtLang id=txtLang>Укажите данные для записи в базу</span>.
+
                     </td>
                     <td align="right">
                         <img src="../img/i_billing_history_med[1].gif" border="0" hspace="10">
@@ -110,7 +110,7 @@ require("../language/russian/language.php");
                             <LEGEND><span name=txtLang id=txtLang><u>Х</u>арактеристики</span> </LEGEND>
                             <div style="padding:10">
                                 <div align="left" style="width:95%;overflow:true">
-                                    <?= dispValue($id, $category_arr); ?>
+<?= dispValue($id, $category_arr); ?>
                                 </div>
                             </div>
                         </FIELDSET>

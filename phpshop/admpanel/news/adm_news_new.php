@@ -38,11 +38,11 @@ function actionStart() {
 
     //$PHPShopGUI->size = "630,530";
     $PHPShopGUI->addJSFiles('../java/popup_lib.js', '../java/dateselector.js');
-    $PHPShopGUI->addCSSFiles('../css/dateselector.css');
+    $PHPShopGUI->addCSSFiles('../skins/'.$_SESSION['theme'].'/dateselector.css');
 
 
     // Графический заголовок окна
-    $PHPShopGUI->setHeader("Создание Новости", "Укажите данные для записи в базу.", $PHPShopGUI->dir . "img/i_balance_med[1].gif");
+    $PHPShopGUI->setHeader("Создание Новости", "", $PHPShopGUI->dir . "img/i_balance_med[1].gif");
 
     // Редактор 1
     $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));

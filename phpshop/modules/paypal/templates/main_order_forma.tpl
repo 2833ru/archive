@@ -1,168 +1,111 @@
-
-@ComStartReg@
-<div  id=allspecwhite style="margin-bottom:20px">
-<img src="images/shop/icon_key.gif" alt="" width="16" height="16" border="0" hspace="5" align="absmiddle">
-<a href="/users/register.html" class="b">Зарегистрируйтесь</a> и получите дополнительные возможности и <b>скидки</b>.
-</div>
-@ComEndReg@
-<p><br></p>
+@checkLabelForOldTemplatesNoDelete@
+@order_action_add@
 <form method="post" name="forma_order" action="/done/">
-<table  cellpadding="5" cellspacing="0" width=100% >
-<tr>
-	<td align="right">
-	<b>Заказ №</b>
-	</td>
-	<td>
-	<input type="text" name=ouid style="width:50px; height:18px; font-family:tahoma; font-size:11px ; color:#9e0b0e; background-color:#f2f2f2;" value="@orderNum@"  readonly="1"> <b>/</b>
-<input type="text" style="width:50px; height:18px; font-family:tahoma; font-size:11px ; color:#9e0b0e; background-color:#f2f2f2;" value="@orderDate@"  readonly="1">
-	</td>	
-</tr>
-<tr>
-   <td align="right">Доставка</td>
-   <td>
-@orderDelivery@
-   </td>
-</tr>
-<tr valign="top">
-    <td align="right">
-	E-mail:
-	</td>
-	<td>
-	<input type="text" name="mail" style="width:300px; height:18px; font-family:tahoma; font-size:11px ; color:#4F4F4F " maxlength="30" value="@UserMail@" @formaLock@><img src="images/shop/flag_green.gif" alt="" width="16" height="16" border="0" hspace="5" align="absmiddle">
-	</td>
-</tr>
-<tr>
-	<td align="right" class=tah12>
-    Контактное лицо:
-	</td>
-	<td>
-	<input type="text" name="name_person" style="width:300px; height:18px; font-family:tahoma; font-size:11px ; color:#4F4F4F " maxlength="30" value="@UserName@" @formaLock@><img src="images/shop/flag_green.gif" alt="" width="16" height="16" border="0" hspace="5" align="absmiddle">
-	</td>
-</tr>
-<tr>
-	<td align="right" >
-	Компания:
-	</td>
-	<td>
-	<input type="text" name="org_name" style="width:300px; height:18px; font-family:tahoma; font-size:11px ; color:#4F4F4F " maxlength="100" value="@UserComp@" @formaLock@>
-	</td>
-</tr>
-<tr>
-	<td align="right" >
-	ИНН:
-	</td>
-	<td>
-	<input type="text" name="org_inn" style="width:150px; height:18px; font-family:tahoma; font-size:11px ; color:#4F4F4F " maxlength="50" value="@UserInn@" @formaLock@>
-	</td>
-</tr> 
-<tr>
-	<td align="right" >
-	КПП:
-	</td>
-	<td>
-	<input type="text" name="org_kpp" style="width:150px; height:18px; font-family:tahoma; font-size:11px ; color:#4F4F4F " maxlength="50" value="@UserKpp@" @formaLock@>
-	</td>
-</tr> 
-<tr>
-	<td align="right">
-	Телефон:
-	</td>
-	<td>
-	<input type="text" name="tel_code" style="width:50px; height:18px; font-family:tahoma; font-size:11px ; color:#4F4F4F " maxlength="5" value="@UserTelCode@"> -
-	<input type="text" name="tel_name" style="width:150px; height:18px; font-family:tahoma; font-size:11px ; color:#4F4F4F " maxlength="30" value="@UserTel@"><img src="images/shop/flag_green.gif" alt="" width="16" height="16" border="0" hspace="5" align="absmiddle">
-	</td>
-</tr>
-<tr>
-	<td align="right">
-	Время доставки:
-	</td>
-	<td>
-	от <input type="text" name="dos_ot" style="width:50px; height:18px; font-family:tahoma; font-size:11px ; color:#4F4F4F " maxlength="5">ч.&nbsp;&nbsp;&nbsp;
-    до
-<input type="text" name="dos_do" style="width:50px; height:18px; font-family:tahoma; font-size:11px ; color:#4F4F4F " maxlength="5">ч. 
-	</td>
-</tr>
-<tr>
-	<td align="right">
-        Страна:
-	</td>
-        <td>
-            <select name="PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE" size="1" style="width:150px;">
-                <option value="RU">Россия</option>
-                <option value="BL">Беларусь</option>
-                <option value="UK">Украина</option>
-                <option value="KZ">Казахстан</option>
-                <option value="US">США</option>
-            </select>
-	</td>
-</tr>
-<tr>
-	<td align="right">
-        Город:
-	</td>
-        <td>
-	<input type="text" name="PAYMENTREQUEST_0_SHIPTOCITY" style="width:300px; height:18px; font-family:tahoma; font-size:11px ; color:#4F4F4F " maxlength="30">
-	</td>
-</tr>
-<tr>
-	<td align="right">
-        Индекс:
-	</td>
-        <td>
-	<input type="text" name="PAYMENTREQUEST_0_SHIPTOZIP" style="width:150px; height:18px; font-family:tahoma; font-size:11px ; color:#4F4F4F " maxlength="30">
-	</td>
-</tr>
-<tr>
-	<td align="right">
-        Улица:
-	</td>
-        <td>
-	<input type="text" name="adr_name" style="width:300px; height:18px; font-family:tahoma; font-size:11px ; color:#4F4F4F " maxlength="50">
-	</td>
-</tr>
-<tr>
-	<td align="right">
-	Дом:
-	</td>
-	<td>
-	<input type="text" name="PAYMENTREQUEST_0_SHIPTOSTREET2" style="width:50px; height:18px; font-family:tahoma; font-size:11px ; color:#4F4F4F " maxlength="5">&nbsp;&nbsp;&nbsp;
-    Квартира
-<input type="text" name="PAYMENTREQUEST_0_SHIPTOSTREET3" style="width:50px; height:18px; font-family:tahoma; font-size:11px ; color:#4F4F4F " maxlength="5">
-	</td>
-</tr>
-<tr>
-   <td align="right">Тип оплаты <br>покупки</td>
-   <td>
-   @orderOplata@
-   </td>
-</tr>
-<tr>
-  <td></td>
-  <td>
-  <div  id=allspecwhite><img src="images/shop/comment.gif" alt="" width="16" height="16" border="0" hspace="5" align="absmiddle">Данные, отмеченные <b>флажками</b> обязательны для заполнения.<br>
-</div>
+    <div id="checkout">
+        <div id="checkout">
+            <b>Заказ №</b>
+            <input type="text" name=ouid style="width:50px; height:18px; font-family:tahoma; font-size:11px ; color:#9e0b0e; background-color:#f2f2f2;" value="@orderNum@"  readonly="1">
+            <b>/</b>
+            <input type="text" style="width:50px; height:18px; font-family:tahoma; font-size:11px ; color:#9e0b0e; background-color:#f2f2f2;" value="@orderDate@"  readonly="1"><BR>
 
-  </td>
-</tr>
-<tr>
-    <td colspan="2" align="center">
-	<p><br></p>
-	<table align="center">
-<tr>
-<td>
-	<img src="images/shop/brick_error.gif" border="0" align="absmiddle">
-	<a href="javascript:forma_order.reset();" class=link>Очистить форму</a></td>
-	<td width="20"></td>
-	<td><img src="images/shop/brick_go.gif"  border="0" align="absmiddle">
-	<a href="javascript:OrderChek();" class=link>Оформить заявку</a></td>
-	
-	
-</tr>
-</table>
-	<input type="hidden" name="send_to_order" value="ok" >
-	<input type="hidden" name="d" id="d" value="@deliveryId@">
-	<input type="hidden" name="nav" value="done">
-    </td>
-</tr>
-</table>
+            <BR><BR>
+            <h2>Личные данные</h2>
+
+            <div class="checkout-heading">Шаг 1: Личные данные@authData@</div>
+            @noAuth@
+        </div>
+        <div id="checkout">
+            <div class="checkout-heading">Шаг 2: Доставка, адрес получателя</div>
+            <div class="checkout-content" style="display: block;">
+                <div class="left">
+                    <h2>Способ доставки</h2>
+
+                    @orderDelivery@ 
+                    <BR><BR>
+                    @UserAdresList@
+                </div>
+                <div id="login" class="right">
+                    <h2>Адрес доставки</h2>
+                    @noAuthAdr@
+                    <div id="userAdresData1">
+
+                        <div id="citylist">
+                            <span class="required">*</span>
+                            Страна
+                            <br>
+                            <select name="country_new" class="citylist req">
+                                <option value="" for="0">-----------</option>
+                                <option value="RU">Россия</option>
+                                <option value="BY">Белоруссия</option>
+                                <option value="UA">Украина</option>
+                                <option value="KZ">Казахстан</option>
+                            </select>
+                        </div>
+
+                        <span class="required">*</span>
+                        Город
+                        <br>
+                        <input type="text" value="" name="city_new" class="req">
+                        <br><br> 
+                        
+                        <span class="required">*</span>
+                        Индекс
+                        <br>
+                        <input type="text" value="" name="index_new" class="req">
+                        <br><br> 
+                        
+                        <span class="required">*</span>
+                        Улица
+                        <br>
+                        <input type="text" value="" name="street_new" class="req">
+                        <br><br> 
+                        
+                        <span class="required">*</span>
+                        Дом
+                        <br>
+                        <input type="text" value="" name="house_new" class="req">
+                        <br><br> 
+                        
+                        <span class="required">*</span>
+                        Квартира
+                        <br>
+                        <input type="text" value="" name="flat_new" class="req">
+                        <br><br>
+
+                    </div>
+                    <br>
+                    Дополнительная информация к заказу: <br>
+                    <textarea style="width:300px; height:100px; font-family:tahoma; font-size:11px ; color:#4F4F4F " name="dop_info" ></textarea>
+                </div>
+            </div>
+            <BR>
+        </div>
+        <div id="checkout">
+            <div class="checkout-heading">Шаг 3: Способ оплаты</div>
+            <BR>
+            <div class="checkout-content" style="display: block;">
+                @orderOplata@
+                <br>
+                <br>
+                <div id="showYurDataForPaymentLoad">
+                </div>
+            </div>
+        </div>
+        <div id="checkout">
+            <div class="checkout-heading">Шаг 4: Оформить заказ</div>
+            <BR>
+            <div class="checkout-content" style="display: block;">
+                <div class="left">
+                    <img src="images/shop/brick_error.gif" border="0" align="absmiddle"> <a href="javascript:forma_order.reset();" class=link>Очистить форму</a>
+                    <input type="hidden" name="send_to_order" value="ok" >
+                    <input type="hidden" name="d" id="d" value="@deliveryId@">
+                    <input type="hidden" name="nav" value="done">
+                </div>
+                <div id="login" class="right">
+                    <img src="images/shop/brick_go.gif"  border="0" align="absmiddle"> <a href="javascript:OrderChekJq();" class=link>Оформить заказ</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </form>
+@showYurDataForPayment@

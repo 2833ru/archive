@@ -15,6 +15,7 @@ PHPShopObj::loadClass("date");
 PHPShopObj::loadClass("order");
 PHPShopObj::loadClass("payment");
 PHPShopObj::loadClass("delivery");
+PHPShopObj::loadClass("text");
 
 // Подключение к БД
 $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
@@ -47,7 +48,7 @@ $PHPShopModules = new PHPShopModules($_classPath . "modules/");
  * Списывание со склада
  */
 function updateStore($data) {
-    global $PHPShopSystem,$PHPShopBase,$_classPath;
+    global $PHPShopSystem, $PHPShopBase, $_classPath;
 
     // Статусы заказов
     $PHPShopOrderStatusArray = new PHPShopOrderStatusArray();
@@ -55,16 +56,16 @@ function updateStore($data) {
 
     // SMS оповещение пользователю о смене статуса заказа
     if ($data['statusi'] != $_POST['statusi_new'] and $PHPShopSystem->ifSerilizeParam('admoption.sms_status_order_enabled')) {
-       
-        $phone=$_POST['person']['tel_code'].$_POST['person']['tel_name'];
-        $msg = strtoupper($_SERVER['SERVER_NAME']).': '.$PHPShopBase->getParam('lang.sms_user') . $data['uid'] . " - " .$GetOrderStatusArray[$_POST['statusi_new']]['name'];
-         
+
+        $phone = $_POST['person']['tel_code'] . $_POST['person']['tel_name'];
+        $msg = strtoupper($_SERVER['SERVER_NAME']) . ': ' . $PHPShopBase->getParam('lang.sms_user') . $data['uid'] . " - " . $GetOrderStatusArray[$_POST['statusi_new']]['name'];
+
         // Проверка на первую 7 или 8
-        $first_d=substr($phone,0,1);
-        if($first_d != 8)
-            $phone='7'.$phone;
-     
-        $lib=str_replace('./phpshop/',$_classPath,$PHPShopBase->getParam('file.sms'));
+        $first_d = substr($phone, 0, 1);
+        if ($first_d != 8)
+            $phone = '7' . $phone;
+
+        $lib = str_replace('./phpshop/', $_classPath, $PHPShopBase->getParam('file.sms'));
         include_once $lib;
         SendSMS($msg, $phone);
     }
@@ -169,15 +170,15 @@ function actionStart() {
         $update_date = __(' / обработан ') . $update_date;
 
     // Графический заголовок окна
-    $PHPShopGUI->setHeader(__('Заказ № ') . $data['uid'] . ' / ' . PHPShopDate::dataV($data['datas']) . $update_date, __("Укажите данные для записи в базу."), $PHPShopGUI->dir . "img/i_commercemanager_med[1].gif");
+    $PHPShopGUI->setHeader(__('Заказ № ') . $data['uid'] . ' / ' . PHPShopDate::dataV($data['datas']) . $update_date, __(""), $PHPShopGUI->dir . "img/i_commercemanager_med[1].gif");
 
     // Нет данных
     if (!is_array($data)) {
         $PHPShopGUI->setFooter($PHPShopGUI->setInput("button", "", "Закрыть", "center", 100, "return onCancel();", "but"));
         return true;
     }
-    
-        // ID окна для памяти закладок
+
+    // ID окна для памяти закладок
     $PHPShopGUI->setID(__FILE__, $data['id']);
 
     $order = unserialize($data['orders']);
@@ -196,26 +197,19 @@ function actionStart() {
         $status['time'] = PHPShopDate::dataV($data['datas'], true, false, ' ', true);
 
 
-    // Компания
-    $Tab1 = $PHPShopGUI->setField(__("Компания"), $PHPShopGUI->setTextarea('person[org_name]', PHPShopSecurity::TotalClean($order['Person']['org_name']), 'none', 200), 'left');
+    // данные пользователя - фио, email
+    if (!empty($data['user']))
+        $userLink = "<a href='' onclick=\"return miniWin('../shopusers/adm_userID.php?id=" . $data['user'] . "',550,580)\">" . $order['Person']['mail'] . "</a>";
+    else
+        $userLink = $order['Person']['mail'];
 
-    // Дополнительная информация по заказу
-    $Tab1.=$PHPShopGUI->setField(__("Дополнительная информация"), $PHPShopGUI->setTextarea('status[maneger]', PHPShopSecurity::TotalClean($status['maneger']), 'none', '370px'), 'left') . $PHPShopGUI->setLine();
+    $Tab1 .= PHPShopText::div(PHPShopText::b("Покупатель:" . "<br>") . PHPShopText::p($userLink . "<br>" . PHPShopText::b($data['fio'] . $order['Person']['name_person'])), "left", "float:left;padding:5px;margin-left:0px;height:39px; width:200px;");
 
-    // Адрес доставки
-    $Tab1.=$PHPShopGUI->setField(__("Адрес доставки"), $PHPShopGUI->setTextarea('person[adr_name]', PHPShopSecurity::TotalClean($order['Person']['adr_name']), 'none', 200, 60), 'left');
-
-    // ФИО покупателя
-    $Tab1.=$PHPShopGUI->setField(__("Покупатель"), $PHPShopGUI->setTextarea('person[name_person]', PHPShopSecurity::TotalClean($order['Person']['name_person']), 'none', '370px', '30px') . $PHPShopGUI->setLine() .
-                    $PHPShopGUI->setInputText(__("Время доставки от"), 'person[dos_ot]', PHPShopSecurity::TotalClean($order['Person']['dos_ot']), 50, false, 'left') .
-                    $PHPShopGUI->setInputText(__("до"), 'person[dos_do]', PHPShopSecurity::TotalClean($order['Person']['dos_do']), 50, false, 'left'), 'left') . $PHPShopGUI->setLine();
+    // Дополнительная информация от пользователя к заказу
+    $Tab1 .= $PHPShopGUI->setField(__("Дополнительная информация к заказу от пользователя:"), $PHPShopGUI->setTextarea('dop_info_new', $data['dop_info'], 'none', '393px'), "left", 'left');
 
     // Статус заказа
-    $Tab1.= $PHPShopGUI->setField(__("Состояние заказа"), $PHPShopGUI->setSelect('statusi_new', $order_status_value, 170), 'left');
-
-    // Телефон
-    $Tab1.= $PHPShopGUI->setField(__("Телефон"), $PHPShopGUI->setInputText(false, 'person[tel_code]', PHPShopSecurity::TotalClean($order['Person']['tel_code']), 50, false, 'left') .
-            $PHPShopGUI->setInputText('-', 'person[tel_name]', PHPShopSecurity::TotalClean($order['Person']['tel_name']), 100, false, 'left'), 'left');
+    $Tab1.= $PHPShopGUI->setField(__("Статус заказа"), $PHPShopGUI->setSelect('statusi_new', $order_status_value, 288), 'left');
 
     // Доступые типы оплат
     $PHPShopPaymentArray = new PHPShopPaymentArray();
@@ -225,7 +219,66 @@ function actionStart() {
             $payment_value[] = array($payment['name'], $payment['id'], $order['Person']['order_metod']);
 
     // Тип оплаты
-    $Tab1.= $PHPShopGUI->setField(__("Оплата"), $PHPShopGUI->setSelect('person[order_metod]', $payment_value, 200), 'left') . $PHPShopGUI->setLine();
+    $Tab1.= $PHPShopGUI->setField(__("Способ оплаты"), $PHPShopGUI->setSelect('person[order_metod]', $payment_value, 291), 'left') . $PHPShopGUI->setLine();
+
+    // время доставки под старый формат данных в заказе
+    if (!empty($order['Person']['dos_ot']) OR !empty($order['Person']['dos_do']))
+        $dost_ot = " От: " . $order['Person']['dos_ot'] . ", до: " . $order['Person']['dos_do'];
+
+    // выводим сгрупппированные данные пользователя
+    if ($data['fio'] OR $order['Person']['name_person'])
+        $adr_info .= ", ФИО: " . $data['fio'] . $order['Person']['name_person'];
+    if ($data['tel'] or $_POST['person']['tel_code'] or $_POST['person']['tel_name'])
+        $adr_info .= ", тел.: " . $data['tel'] . $_POST['person']['tel_code'] . $_POST['person']['tel_name'];
+    if ($data['country'])
+        $adr_info .= ", страна: " . $data['country'];
+    if ($data['state'])
+        $adr_info .= ", регион/штат: " . $data['state'];
+    if ($data['city'])
+        $adr_info .= ", город: " . $data['city'];
+    if ($data['index'])
+        $adr_info .= ", индекс: " . $data['index'];
+    if ($data['street'] OR $order['Person']['adr_name'])
+        $adr_info .= ", улица: " . $data['street'] . $order['Person']['adr_name'];
+    if ($data['house'])
+        $adr_info .= ", дом: " . $data['house'];
+    if ($data['porch'])
+        $adr_info .= ", подъезд: " . $data['porch'];
+    if ($data['door_phone'])
+        $adr_info .= ", код домофона: " . $data['door_phone'];
+    if ($data['flat'])
+        $adr_info .= ", квартира: " . $data['flat'];
+    if ($data['delivtime'])
+        $adr_info .= ", время доставки: " . $data['delivtime'] . $dost_ot;
+
+    $adr_info = substr($adr_info, 2);
+    $Tab1.= $PHPShopGUI->setField(__("Данные покупателя"), PHPShopText::div($adr_info, "left", "float:left;padding:5px;margin-left:0px;height:60px; width:288px; background-color:white;overflow:auto"), "left");
+
+    // Выводим сгруппированные Юр. данные пользователя.
+    if ($data['org_name'] OR $order['Person']['org_name'])
+        $yur_info .= ", Наименование организации:" . $data['org_name'] . $order['Person']['org_name'];
+    if ($data['org_inn'])
+        $yur_info .= ", ИНН:" . $data['org_inn'];
+    if ($data['org_kpp'])
+        $yur_info .= ", КПП" . $data['org_kpp'];
+    if ($data['org_yur_adres'])
+        $yur_info .= ", Юридический адрес:" . $data['org_yur_adres'];
+    if ($data['org_fakt_adres'])
+        $yur_info .= ", Фактический адрес:" . $data['org_fakt_adres'];
+    if ($data['org_ras'])
+        $yur_info .= ", Расчётный счёт:" . $data['org_ras'];
+    if ($data['org_bank'])
+        $yur_info .= ", Наименование банка:" . $data['org_bank'];
+    if ($data['org_kor'])
+        $yur_info .= ", Корреспондентский счёт:" . $data['org_kor'];
+    if ($data['org_bik'])
+        $yur_info .= ", БИК:" . $data['org_bik'];
+    if ($data['org_city'])
+        $yur_info .= ", Город:" . $data['org_city'];
+    $yur_info = substr($yur_info, 2);
+    $Tab1.= $PHPShopGUI->setField(__("Юр. данные покупателя:"), PHPShopText::div($yur_info, "left", "float:left;padding:5px;margin-left:0px;height:60px; width:291px; background-color:white;overflow:auto"), "left") . $PHPShopGUI->setLine();
+
+
 
     // Печатные бланки
     $Tab1_1 = $PHPShopGUI->loadLib('tab_print', $data);
@@ -233,16 +286,49 @@ function actionStart() {
     // Дополнительные опции
     $Tab1_2 = $PHPShopGUI->loadLib('tab_advance', $data);
 
+    // Пометка менеджера
+    $Tab1_2 .=$PHPShopGUI->setField(__("Пометка менеджера (видна заказчику в ЛК)"), $PHPShopGUI->setTextarea('status[maneger]', $status['maneger'], 'none', '290px'), 'left') . $PHPShopGUI->setLine();
+
     // Платежные документы
     $PHPShopInterface = new PHPShopInterface('_pretab2_');
-    $PHPShopInterface->setTab(array(__("Печатные бланки"), $Tab1_1, 70), array(__("Дополнительно"), $Tab1_2, 70));
-    $Tab1.=$PHPShopGUI->setDiv('left', $PHPShopInterface->getContent(), 'float:left;padding-left:0px');
+    $PHPShopInterface->setTab(array(__("Печатные бланки"), $Tab1_1, 75), array(__("Дополнительно"), $Tab1_2, 75));
+    $Tab1.=$PHPShopGUI->setDiv('left', $PHPShopInterface->getContent(), 'float:left;padding-left:0px; width:630px;');
 
     // Корзина
     $Tab2 = $PHPShopGUI->loadLib('tab_cart', $data);
 
+
+    // Данные покупателя
+    $Tab3 = $PHPShopGUI->setField(__("ФИО"), $PHPShopGUI->setInputText('', 'fio_new', $data['fio'] . $order['Person']['name_person'], '190', false, 'left'), 'left') .
+            $PHPShopGUI->setField(__("Телефон"), $PHPShopGUI->setInputText('', 'tel_new', $data['tel'], '190', false, 'left'), 'left') .
+            $PHPShopGUI->setField(__("Страна"), $PHPShopGUI->setInputText('', 'country_new', $data['country'], '190', false, 'left'), 'left') .
+            $PHPShopGUI->setField(__("Регион/штат"), $PHPShopGUI->setInputText('', 'state_new', $data['state'], '190', false, 'left'), 'left') .
+            $PHPShopGUI->setField(__("Город"), $PHPShopGUI->setInputText('', 'city_new', $data['city'], '190', false, 'left'), 'left') .
+            $PHPShopGUI->setField(__("Индекс"), $PHPShopGUI->setInputText('', 'index_new', $data['index'], '190', false, 'left'), 'left') .
+            $PHPShopGUI->setField(__("Улица"), $PHPShopGUI->setInputText('', 'street_new', $data['street'] . $order['Person']['adr_name'], '190', false, 'left'), 'left') .
+            $PHPShopGUI->setField(__("Дом"), $PHPShopGUI->setInputText('', 'house_new', $data['house'], '190', false, 'left'), 'left') .
+            $PHPShopGUI->setField(__("Подъезд"), $PHPShopGUI->setInputText('', 'porch_new', $data['porch'], '190', false, 'left'), 'left') .
+            $PHPShopGUI->setField(__("Код домофона"), $PHPShopGUI->setInputText('', 'door_phone_new', $data['door_phone'], '190', false, 'left'), 'left') .
+            $PHPShopGUI->setField(__("Квартира"), $PHPShopGUI->setInputText('', 'flat_new', $data['flat'], '190', false, 'left'), 'left') .
+            $PHPShopGUI->setField(__("Время доставки"), $PHPShopGUI->setInputText('', 'delivtime_new', $data['delivtime'] . $dost_ot, '190', false, 'left'), 'left');
+
+    // Юр. данные покупателя
+    $Tab4 = $PHPShopGUI->setField(__("Наименование организации "), $PHPShopGUI->setInputText('', 'org_name_new', $data['org_name'] . $order['Person']['org_name'], '190', false, 'left'), 'left') .
+            $PHPShopGUI->setField(__("ИНН "), $PHPShopGUI->setInputText('', 'org_inn_new', $data['org_inn'], '190', false, 'left'), 'left') .
+            $PHPShopGUI->setField(__("КПП"), $PHPShopGUI->setInputText('', 'org_kpp_new', $data['org_kpp'], '190', false, 'left'), 'left') .
+            $PHPShopGUI->setField(__("Юридический адрес"), $PHPShopGUI->setInputText('', 'org_yur_adres_new', $data['org_yur_adres'], '190', false, 'left'), 'left') .
+            $PHPShopGUI->setField(__("Фактический адрес"), $PHPShopGUI->setInputText('', 'org_fakt_adres_new', $data['org_fakt_adres'], '190', false, 'left'), 'left') .
+            $PHPShopGUI->setField(__("Расчётный счёт"), $PHPShopGUI->setInputText('', 'org_ras_new', $data['org_ras'], '190', false, 'left'), 'left') .
+            $PHPShopGUI->setField(__("Наименование банка"), $PHPShopGUI->setInputText('', 'org_bank_new', $data['org_bank'], '190', false, 'left'), 'left') .
+            $PHPShopGUI->setField(__("Корреспондентский счёт"), $PHPShopGUI->setInputText('', 'org_kor_new', $data['org_kor'], '190', false, 'left'), 'left') .
+            $PHPShopGUI->setField(__("БИК"), $PHPShopGUI->setInputText('', 'org_bik_new', $data['org_bik'], '190', false, 'left'), 'left') .
+            $PHPShopGUI->setField(__("Город"), $PHPShopGUI->setInputText('', 'org_city_new', $data['org_city'], '190', false, 'left'), 'left');
+
+//            .
+//            $PHPShopGUI->setField(__(""), 
+//            $PHPShopGUI->setInputText('', '_new', $data[''], '190', false, 'left'), 'left')
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array(__("Основное"), $Tab1, 350), array(__("Корзина"), $Tab2, 350));
+    $PHPShopGUI->setTab(array(__("Основное"), $Tab1, 350), array(__("Корзина"), $Tab2, 350), array(__("Изменить данные покупателя"), $Tab3, 350), array(__("Изменить юр. данные покупателя"), $Tab4, 350));
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler($_SERVER["SCRIPT_NAME"], __FUNCTION__, $data);
@@ -293,13 +379,18 @@ function sendUserMail($data) {
         PHPShopParser::set('status', $PHPShopOrderStatusArray->getParam($_POST['statusi_new'] . '.name'));
         PHPShopParser::set('user', $data['user']);
         PHPShopParser::set('company', $PHPShopSystem->getParam('name'));
-        $title = $PHPShopSystem->getValue('name') . ' - статус заказа ' . $data['uid'] . ' изменен';
+//        $title = $PHPShopSystem->getValue('name') . ' - статус заказа ' . $data['uid'] . ' изменен';
+        $title = 'Cтатус заказа ' . $data['uid'] . ' изменен';
         $order = unserialize($data['orders']);
 
         PHPShopParser::set('mail', $order['Person']['mail']);
+        PHPShopParser::set('user_name', $order['Person']['name_person']);
+        
+        
+        $PHPShopMail = new PHPShopMail($order['Person']['mail'], $PHPShopSystem->getValue('adminmail2'), $title, '', true, true);
         $content = PHPShopParser::file('../../lib/templates/order/status.tpl', true);
         if (!empty($content)) {
-            new PHPShopMail($order['Person']['mail'], $PHPShopSystem->getValue('adminmail2'), $title, $content);
+            $PHPShopMail->sendMailNow($content);
         }
     }
 }

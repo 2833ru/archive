@@ -63,13 +63,20 @@ $dis
 ";
             return @$disp;
         }
+
+        //
+        $sql = "select brand from " . $SysValue['base']['table_name20'] . " where id='{$_GET['categoryID']}'";
+        $result = mysql_query($sql);
+        $rowTemp = mysql_fetch_array($result);
+        $brand = $rowTemp['brand'];
+        
         ?>
         <form name="product_edit"  method=post>
             <table cellpadding="0" cellspacing="0" width="100%" height="50" id="title">
                 <tr bgcolor="#ffffff">
                     <td style="padding:10">
                         <b>—оздание Ќовой ’арактеристики</b><br>
-                        &nbsp;&nbsp;&nbsp;”кажите данные дл€ записи в базу.
+                        &nbsp;&nbsp;&nbsp;
                     </td>
                     <td align="right">
                         <img src="../img/i_billing_history_med[1].gif" border="0" hspace="10">
@@ -137,12 +144,27 @@ $dis
                         <tr>
                             <td>
                                 <FIELDSET>
-                                    <LEGEND><span name=txtLang id=txtLang><u>—</u>ылка на описание</span></LEGEND>
+                                    <LEGEND><span name=txtLang id=txtLang><u>—</u>сылка на описание</span></LEGEND>
                                     <div style="padding:10">
 <? echo dispPage($page) ?>
-                                        <p>* ќписание используетс€ при выводе сортировки товара на отдельной странице с описанием значени€ сортировки (сортировка по брендам и описание отсортированного бренда с выводом всех товаров этого бренда или вывод категорий, где встречаетс€ этот бренд).</p>
+                                        <p>* »м€ значени€ характеристики (в таблице характеристик в подробном описании товара) становитс€ ссылкой на указанную страницу с описанием.</p>
                                     </div>
                                 </FIELDSET>
+<? if (@$brand) { ?>
+                                    <FIELDSET>
+                                        <LEGEND><span name=txtLang id=txtLang>»конка значени€ характеристики</span></LEGEND>
+                                        <div style="padding:2">
+                                            <input type="text" value="" name="icon_new" id="icon_new" style="width:300px;"
+                                                   class="" onclick="" title="">
+                                            <BUTTON style="width:100px; height:20px; margin-left:5"  onclick="ReturnPic('icon_new');
+                                return false;">
+                                                <img src="../img/icon-move-banner.gif" width="16" height="16" border="0" align="absmiddle" hspace="3" hspace="3">
+                                                ¬ыбрать
+                                            </BUTTON>
+
+                                        </div>
+                                    </FIELDSET>
+<? } ?>
                             </td>
                         </tr>
                     </table>
@@ -158,21 +180,21 @@ $dis
                     </tr>
                 </table>
         </form>
-<?
-if (isset($editID) and !empty($name_new)) {// «апись редактировани€
-    if (CheckedRules($UserStatus["cat_prod"], 2) == 1) {
-        $sql = "INSERT INTO " . $SysValue['base']['table_name21'] . " VALUES ('','$name_new','$category_new','$num_new','$page_new')";
-        $result = mysql_query($sql) or @die("" . mysql_error() . "");
-        echo"
+        <?
+        if (isset($editID) and !empty($name_new)) {// «апись редактировани€
+            if (CheckedRules($UserStatus["cat_prod"], 2) == 1) {
+                $sql = "INSERT INTO " . $SysValue['base']['table_name21'] . " VALUES ('','$name_new','$category_new','$num_new','$page_new','$icon_new')";
+                $result = mysql_query($sql) or @die("" . mysql_error() . "");
+                echo"
 <script>
 CLREL();
 </script>
 	   ";
-    }
-    else
-        $UserChek->BadUserFormaWindow();
-}
-?>
+            }
+            else
+                $UserChek->BadUserFormaWindow();
+        }
+        ?>
 
 
 

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.5</version>
+    <version>1.6</version>
     <name>Guard</name>
-    <description>Модуль антивируса.</description>
+   <faqlink>http://faq.phpshop.ru/page/antivirus.html</faqlink>
+ <description>Модуль антивируса.</description>
     <icon>bug_delete.png</icon>
     <category>develop</category>
-    <status>update</status>
     <adminmenu>
         <title>Антивирус</title>
         <podmenu>

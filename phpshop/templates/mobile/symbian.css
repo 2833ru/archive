@@ -1,0 +1,41 @@
+/*
+* PHPShop Mobile Teamplate CSS
+* Symbian fix: @font-face Ratchicons
+*/
+
+
+.icon{
+    display:none;
+}
+
+.icon-close {
+    display: inline-block !important;
+    content: 'X';
+}
+
+.title{
+    top:0!important;
+}
+
+.icon-list{
+    display: block !important;
+    content: '+';
+}
+
+.icon-left{
+    display: inline-block !important;
+    content: '<';
+}
+
+.icon-left-nav:before {
+    display: inline-block !important;
+    content: '<';
+}
+
+.navigate-right:after,
+.push-right:after {
+    display: inline-block !important;
+    content: '>';
+}
+
+

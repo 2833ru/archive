@@ -35,14 +35,20 @@ function setGeneration() {
     $stat_pages = null;
     $stat_news = null;
     $stat_catalog = null;
+    $seourl_enabled = false;
+    $seourlpro_enabled = false;
+
 
     // Учет модуля SEOURL
     if (!empty($GLOBALS['SysValue']['base']['seourl']['seourl_system'])) {
-        PHPShopObj::loadClass('string');
         $seourl_enabled = true;
     }
-    else
-        $seourl_enabled = false;
+
+    // Учет модуля SEOURLPRO
+    if (!empty($GLOBALS['SysValue']['base']['seourlpro']['seourlpro_system'])) {
+        $seourlpro_enabled = true;
+    }
+
 
     // Библиотека
     $title = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
@@ -50,7 +56,7 @@ function setGeneration() {
 
     // Страницы
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['table_name11']);
-    $data = $PHPShopOrm->select(array('id,datas,link'), array('enabled' => "!='0'",'category'=>'!=2000'), array('order' => 'datas DESC'),array('limit'=>10000));
+    $data = $PHPShopOrm->select(array('id,datas,link'), array('enabled' => "!='0'", 'category' => '!=2000'), array('order' => 'datas DESC'), array('limit' => 10000));
 
     if (is_array($data))
         foreach ($data as $row) {
@@ -64,11 +70,12 @@ function setGeneration() {
 
     // Страницы каталоги
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['page_categories']);
-    $data = $PHPShopOrm->select(array('id,name'),false,false,array('limit'=>10000));
+    $data = $PHPShopOrm->select(array('id,name'), false, false, array('limit' => 10000));
 
     $seourl = null;
     if (is_array($data))
         foreach ($data as $row) {
+
 
             if ($seourl_enabled)
                 $seourl = '_' . PHPShopString::toLatin($row['name']);
@@ -82,7 +89,7 @@ function setGeneration() {
 
     // Новости
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['table_name8']);
-    $data = $PHPShopOrm->select(array('id,datas,zag'), false, array('order' => 'datas DESC'),array('limit'=>10000));
+    $data = $PHPShopOrm->select(array('id,datas,zag'), false, array('order' => 'datas DESC'), array('limit' => 10000));
 
     $seourl = null;
     if (is_array($data))
@@ -101,18 +108,31 @@ function setGeneration() {
 
     // Товары
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
-    $data = $PHPShopOrm->select(array('*'), array('enabled' => "='1'", 'parent_enabled' => "='0'"), array('order' => 'datas DESC'),array('limit'=>100000));
+    $data = $PHPShopOrm->select(array('*'), array('enabled' => "='1'", 'parent_enabled' => "='0'"), array('order' => 'datas DESC'), array('limit' => 100000));
 
 
     if (is_array($data))
         foreach ($data as $row) {
             $stat_products.= '<url>' . "\n";
 
-            if (empty($seourl_enabled))
-                $stat_products.= '<loc>http://' . $_SERVER['SERVER_NAME'] . '/shop/UID_' . $row['id'] . '.html</loc>' . "\n";
-            else
-                $stat_products.= '<loc>http://' . $_SERVER['SERVER_NAME'] . '/shop/UID_' . $row['id'] . '_' . PHPShopString::toLatin($row['name']) . '.html</loc>' . "\n";
 
+            // Стандартный урл
+            $url = '/shop/UID_' . $row['id'];
+
+            // SEOURL
+            if (!empty($seourl_enabled))
+                $url.= '_' . PHPShopString::toLatin($row['name']);
+
+            //  SEOURLPRO
+            if (!empty($seourlpro_enabled)) {
+                if (empty($row['prod_seo_name']))
+                    $url = '/id/' . str_replace("_", "-", PHPShopString::toLatin($row['name'])) . '-' . $row['id'];
+                else
+                    $url = '/id/' . $row['prod_seo_name'] . '-' . $row['id'];
+            }
+
+
+            $stat_products.= '<loc>http://' . $_SERVER['SERVER_NAME'] . $url . '.html</loc>' . "\n";
             $stat_products.= '<lastmod>' . sitemaptime($row['datas']) . '</lastmod>' . "\n";
             $stat_products.= '<changefreq>daily</changefreq>' . "\n";
             $stat_products.= '<priority>1.0</priority>' . "\n";
@@ -121,17 +141,29 @@ function setGeneration() {
 
     // Каталоги
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
-    $data = $PHPShopOrm->select(array('id,name'),false,false,array('limit'=>10000));
+    $data = $PHPShopOrm->select(array('id,name'), false, false, array('limit' => 10000));
 
     $seourl = null;
     if (is_array($data))
         foreach ($data as $row) {
 
+            // Стандартный урл
+            $url = '/shop/UID_' . $row['id'];
+
+            // SEOURL
             if ($seourl_enabled)
-                $seourl = '_' . PHPShopString::toLatin($row['name']);
+                $url.= '_' . PHPShopString::toLatin($row['name']);
+
+            //  SEOURLPRO
+            if (!empty($seourlpro_enabled)) {
+                if (empty($row['prod_seo_name']))
+                    $url = '/'.str_replace("_", "-", PHPShopString::toLatin($row['name']));
+                else
+                    $url = '/'.$row['prod_seo_name'];
+            }
 
             $stat_products.= '<url>' . "\n";
-            $stat_products.= '<loc>http://' . $_SERVER['SERVER_NAME'] . '/shop/CID_' . $row['id'] . $seourl . '.html</loc>' . "\n";
+            $stat_products.= '<loc>http://' . $_SERVER['SERVER_NAME'] . $url . '.html</loc>' . "\n";
             $stat_products.= '<changefreq>weekly</changefreq>' . "\n";
             $stat_products.= '<priority>0.5</priority>' . "\n";
             $stat_products.= '</url>' . "\n";
@@ -179,12 +211,12 @@ function actionStart() {
     $ContentField1.=$PHPShopGUI->setInput("button", "", "Открыть файл sitemap.xml", "left", 150, "return window.open('../../../../UserFiles/Files/sitemap.xml');", "but");
 
     $Info = "
-   1. Для автоматического создания sitemap.xml устоновите модуль <b>Cron</b> и добавте в него новую задачу с адресом
+   1. Для автоматического создания sitemap.xml установите модуль <b>Cron</b> и добавьте в него новую задачу с адресом
         исполняемого файла  <b>phpshop/modules/sitemap/cron/sitemap_generator.php</b>
         <p>
-   2. В поисковиках указать адрес http://" . $_SERVER['SERVER_NAME'] . "/UserFiles/Files/sitemap.xml
+   2. В поисковиках укажите адрес http://" . $_SERVER['SERVER_NAME'] . "/UserFiles/Files/sitemap.xml
        </p>
-   3. Установить опцию CHMOD 775 на папку /UserFiles/Files/ для записи в нее sitemap.xml";
+   3. Установите опцию CHMOD 775 на папку /UserFiles/Files/ для записи в нее sitemap.xml";
     $ContentField2 = $PHPShopGUI->setInfo($Info, 130, '95%');
 
 // Содержание закладки 1
@@ -213,7 +245,8 @@ if ($UserChek->statusPHPSHOP < 2) {
 
 // Обработка событий
     $PHPShopGUI->getAction();
-}else
+}
+else
     $UserChek->BadUserFormaWindow();
 ?>
 

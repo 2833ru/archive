@@ -22,7 +22,7 @@ function Vivod_rekurs($n, $low = 0) {// вывод подкаталогов рекурсом
     if ($admoption['base_enabled'] == 1)
         $sort = "and servers REGEXP 'i" . $admoption['base_id'] . "i'";
 
-    $sql = "select * from $table_name where parent_to='$n' $sort order by num";
+    $sql = "select * from $table_name where parent_to='$n' $sort order by num, name";
     $result = mysql_query($sql);
     while ($row = mysql_fetch_array($result)) {
         $i = 0;
@@ -69,7 +69,7 @@ function Vivod_pot() {// вывод каталогов
     if ($admoption['base_enabled'] == 1)
         $sort = "and servers REGEXP 'i" . $admoption['base_id'] . "i'";
 
-    $sql = "select * from $table_name where parent_to=0 $sort order by num";
+    $sql = "select * from $table_name where parent_to=0 $sort order by num, name";
     $result = mysql_query($sql);
     $i = 0;
     $j = 0;
@@ -123,7 +123,8 @@ function Vivod_pot() {// вывод каталогов
 	d.add(1000000,0,'" . $SysValue['Lang']['Category'][2] . "','','','','../img/imgfolder.gif','');
 		d.add(1000001,1000000,'" . $SysValue['Lang']['Category'][3] . " (" . Vivod_cat_all_num(1000001) . ")','admin_cat_content.php?pid=1000001');
         d.add(1000002,1000000,'" . $SysValue['Lang']['Category'][4] . " (" . Vivod_cat_all_num(1000002) . ")','admin_cat_content.php?pid=1000002');
-     d.add(1000003,0,'" . $SysValue['Lang']['Category'][14] . "','','','','../img/imgfolder.gif','');
+     d.add(1000003,0,'" . $SysValue['Lang']['Category'][14] . " (<a href=\"#\" onclick=\"miniWin(\'../window/adm_window.php?do=cleanTempFolder\',400,220)\">очистить</a>)','','','','../img/imgfolder.gif','');
+         d.add(1000004,1000003,'" . $SysValue['Lang']['Category'][17] . " (" . Vivod_cat_all_num(1000004) . ") ','admin_cat_content.php?pid=1000004');
 " . Vivod_rekurs(1000003) . "
 		document.write(d);
 		//-->

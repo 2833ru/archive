@@ -42,7 +42,7 @@ function actionStart() {
     global $PHPShopGUI, $PHPShopSystem, $SysValue, $_classPath, $PHPShopOrm, $PHPShopModules;
 
     // Выборка
-    $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
+    $data = $PHPShopOrm->select(array('*'), array('id' => '=' . $_GET['id']));
     extract($data);
 
     // ID окна для памяти закладок
@@ -51,7 +51,7 @@ function actionStart() {
     $PHPShopGUI->dir = "../";
     //$PHPShopGUI->size = "630,530";
     // Графический заголовок окна
-    $PHPShopGUI->setHeader("Редактирование Текстового Блока", "Укажите данные для записи в базу.", $PHPShopGUI->dir . "img/i_select_another_account_med[1].gif");
+    $PHPShopGUI->setHeader("Редактирование Текстового Блока", "", $PHPShopGUI->dir . "img/i_select_another_account_med[1].gif");
 
     // Редактор 1
     $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));

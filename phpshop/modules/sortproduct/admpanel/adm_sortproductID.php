@@ -97,7 +97,7 @@ function actionStart() {
 
 
     // Графический заголовок окна
-    $PHPShopGUI->setHeader("Редактирование элемента","Укажите данные для записи в базу.",$PHPShopGUI->dir."img/i_display_settings_med[1].gif");
+    $PHPShopGUI->setHeader("Редактирование элемента","",$PHPShopGUI->dir."img/i_display_settings_med[1].gif");
 
     $Tab1=$PHPShopGUI->setField('Опции:',
             $PHPShopGUI->setInputText('Порядок','num_new',$num,'30'). $PHPShopGUI->setInputText('Количество ссылок','items_new',$items,'30').

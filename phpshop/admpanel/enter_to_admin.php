@@ -1,8 +1,11 @@
 <?php
 
+// Portable PHP password hashing framework.
+require_once dirname(__FILE__) . '/../lib/phpass/passwordhash.php';
+
 // Настройка уровня оповещения отладчика
 if (function_exists('error_reporting')) {
-    error_reporting('E_ALL & ~E_NOTICE & ~E_DEPRECATED');
+    error_reporting('E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT');
 }
 
 // Снимаем ограничения на выполнение
@@ -30,9 +33,12 @@ class UserChek {
     function ChekBase($table_name) {
         $sql = "select * from " . $table_name . " where enabled='1'";
         @$result = mysql_query(@$sql);
+
+        $hasher = new PasswordHash(8, false);
         while (@$row = mysql_fetch_array(@$result)) {
             if ($this->logPHPSHOP == $row['login']) {
-                if ($this->pasPHPSHOP == $row['password']) {
+                $check = $hasher->CheckPassword($this->pasPHPSHOP, $row['password']);
+                if ($check) {
                     $this->OkFlag = 1;
                     $this->idPHPSHOP = $row['id'];
                     $this->statusPHPSHOP = unserialize($row['status']);
@@ -62,7 +68,7 @@ class UserChek {
 	  <table width="100%" height="100%" style="Z-INDEX:2;">
 <tr>
 	<td valign="middle" align="center">
-		<div style="width:400px;height:100px;BACKGROUND: #C0D2EC;padding:10px;border: solid;border-width: 1px; border-color:#4D88C8;FILTER: alpha(opacity=80);" align="left">
+		<div class="alert"  align="left">
 <table width="100%" height="100%">
 <tr>
 	<td width="35" vAlign=center ><IMG 
@@ -108,57 +114,4 @@ function CheckedRules($a, $b) {
     return $array[$b];
 }
 
-// Secure Fix 6.5
-function RequestSearch($search) {
-    $pathinfo = pathinfo($_SERVER['PHP_SELF']);
-    $f = $pathinfo['basename'];
-    if ($f != "adm_sql.php" and $f != "adm_sql_file.php" and $f != "action.php" and $f != "adm_upload.php") {
-        $com = array("union", "document.cookie");
-        $mes = '
-<html>
-<head>
-	<title>Secure Fix 6.0</title>
-<LINK href="../css/texts.css" type=text/css rel=stylesheet>
-</head>
-
-<body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0">
-<table cellpadding="0" cellspacing="0" width="100%" height="50" id="title">
-<tr bgcolor="#ffffff">
-	<td style="padding:10">
-	<b><span name=txtLang id=txtLang>Безопасноть под угрозой</span></b><br>
-	&nbsp;&nbsp;&nbsp;<span name=txtLang id=txtLang>Укажите данные для записи в базу</span>.
-	</td>
-	<td align="right">
-	<img src="../img/i_domainmanager_med[1].gif" border="0" hspace="10">
-	</td>
-</tr>
-</table>
-<br>
-<table cellpadding="0"  cellspacing="7" width="100%" height="100%">
-<tr>
-	<td>
-	
-	
-
-<h4 style="color:red">Внимание!!!</h4><br>Работа скрипта ' . $_SERVER['PHP_SELF'] . ' прервана из-за использования внутренней команды';
-        $mes2 = "<br>Удалите все вхождения этой команды в водимой информации.";
-        foreach ($com as $v)
-            if (@preg_match("/" . $v . "/i", $search)) {
-                $search = preg_replace("/$v/i", "!!!$v!!!", $search);
-                exit($mes . " " . strtoupper((string)$v) . $mes2 . "<br><br><br><textarea style='width: 100%;height:50%'>" . substr($search, 0, 11) . "</textarea><p>Команда к тексте выделена знаками !!! с обеих сторон</p>
-<hr>
-<div align=right>
-<input type=button value=Вернуться onclick=\"history.back(1)\">
-<input type=button value=Закрыть onclick=\"self.close()\">
-</div>
-</td>
-</tr>
-</table>
-");
-            }
-    }
-}
-
-foreach ($_REQUEST as $val)
-    RequestSearch($val);
 ?>

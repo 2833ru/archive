@@ -1,10 +1,7 @@
 <?php
 
-if (!defined("OBJENABLED"))
-    exit(header('Location: /?error=OBJENABLED'));
-
 /**
- * Обязательное лого PayPal
+ * Обязательнео лого PayPal
  */
 class AddToTemplatePaypalLogo extends PHPShopElements {
 

@@ -68,8 +68,10 @@ class PHPShopCoreElement extends PHPShopElements {
         $this->set('date', date("d-m-y H:i a"));
         $this->set('user_ip', $_SERVER['REMOTE_ADDR']);
         $this->set('NavActive', $this->PHPShopNav->getPath());
-        $v=$this->getValue('upload.version');
-        $this->set('version',substr($v, 0, 1).'.'.substr($v, 1, 1).'.'.substr($v, 2, 1));
+        $v = $this->getValue('upload.version');
+        $this->set('version', substr($v, 0, 1) . '.' . substr($v, 1, 1));
+        $this->set('hcs', '<!--');
+        $this->set('hce', '-->');
 
         // Логотип
         $this->set('logo', $this->PHPShopSystem->getLogo());
@@ -103,8 +105,14 @@ class PHPShopUserElement extends PHPShopElements {
         $this->objBase = $GLOBALS['SysValue']['base']['shopusers'];
         parent::PHPShopElements();
 
+        // Если есть параметр from, нужно сохранить реферальную страницу и вернуть на нее пользователя после авторизации, регистрации.
+        if ($_REQUEST['from'] AND !$_REQUEST['fromSave'])
+            $this->set('fromSave', $_SERVER['HTTP_REFERER']);
+        else
+            $this->set('fromSave', $_REQUEST['fromSave']);
+
         // Экшены
-        $this->setAction(array('post' => 'user_enter', 'get' => 'logout'));
+        $this->setAction(array('post' => array('user_enter', 'user_register'), 'get' => 'logout'));
     }
 
     /**
@@ -127,6 +135,20 @@ class PHPShopUserElement extends PHPShopElements {
     }
 
     /**
+     * ссылка на вишлист с кол-вом в нём товара
+     */
+    function wishlist() {
+        if (!empty($_SESSION['UsersId']) and PHPShopSecurity::true_num($_SESSION['UsersId'])) {
+            $this->set('wishlistCount', $_SESSION['wishlistCount']);
+            $dis = $this->parseTemplate('users/wishlist/wishlist_top_enter.tpl');
+        } else {
+            $this->set('wishlistCount', count($_SESSION['wishlist']));
+            $dis = $this->parseTemplate('users/wishlist/wishlist_top.tpl');
+        }
+        return $dis;
+    }
+
+    /**
      * Проверка авторизации
      * @return bool
      */
@@ -135,27 +157,52 @@ class PHPShopUserElement extends PHPShopElements {
             $PHPShopOrm = new PHPShopOrm($this->objBase);
             $PHPShopOrm->debug = $this->debug;
             $data = $PHPShopOrm->select(array('*'), array('login' => '="' . trim($_POST['login']) . '"', 'password' => '="' . $this->encode($_POST['password']) . '"', 'enabled' => "='1'"), false, array('limit' => 1));
-            if (is_array($data))
-                if (PHPShopSecurity::true_num($data['id'])) {
+            if (is_array($data) AND PHPShopSecurity::true_num($data['id'])) {
 
-                    // ID пользователя
-                    $_SESSION['UsersId'] = $data['id'];
+                // сохраняем вишлист который был в сессии до авторизаци.
+                $wishlist = unserialize($data['wishlist']);
+                if (!is_array($wishlist))
+                    $wishlist = array();
+                if (is_array($_SESSION['wishlist']))
+                    foreach ($_SESSION['wishlist'] as $key => $value) {
+                        $wishlist[$key] = 1;
+                    }
+                $_SESSION['wishlistCount'] = count($wishlist);
+                $wishlist = serialize($wishlist);
+                $PHPShopOrm->update(array('wishlist' => "$wishlist"), array('id' => '=' . $data['id']), false);
+                unset($_SESSION['wishlist']);
 
-                    // Логин пользователя
-                    $_SESSION['UsersLogin'] = $data['login'];
+                // ID пользователя
+                $_SESSION['UsersId'] = $data['id'];
 
-                    // Статус пользователя
-                    $_SESSION['UsersStatus'] = $data['status'];
+                // Логин пользователя
+                $_SESSION['UsersLogin'] = $data['login'];
 
-                    // Дата входа
-                    $this->log();
+                // Имя пользователя
+                $_SESSION['UsersName'] = $data['name'];
 
-                    // Перехват модуля
-                    $this->setHook(__CLASS__, __FUNCTION__,$data);
+                // Статус пользователя
+                $_SESSION['UsersStatus'] = $data['status'];
 
-                    return true;
-                }
+                // E-mail пользователя для заказа
+                if(PHPShopSecurity::true_email($data['login']))
+                $_SESSION['UsersMail'] = $data['login'];
+                else $_SESSION['UsersMail'] = $data['mail'];
+
+                // Дата входа
+                $this->log();
+
+                // Перехват модуля
+                $this->setHook(__CLASS__, __FUNCTION__, $data);
+
+
+                return true;
+            }
+            else
+                $this->set("shortAuthError", "Неверный логин или пароль");
         }
+        else
+            $this->set("shortAuthError", "Неверный логин или пароль");
     }
 
     /**
@@ -168,10 +215,22 @@ class PHPShopUserElement extends PHPShopElements {
     }
 
     /**
+     * Экшен входа регисраци пользователя по страницы оформления заказа
+     */
+    function user_register() {
+        // Импортируем роутер личного кабинета для возможности регистрации со страницы оформления заказа
+        if (!class_exists('PHPShopUsers'))
+            PHPShopObj::importCore('users');
+        if (class_exists('PHPShopUsers')) {
+            $PHPShopUsers = new PHPShopUsers();
+            $PHPShopUsers->action_add_user();
+        }
+    }
+
+    /**
      * Экшен входа пользователя
      */
     function user_enter() {
-
         if ($this->autorization()) {
 
             // Запоминаем пользователя в cookie
@@ -193,10 +252,20 @@ class PHPShopUserElement extends PHPShopElements {
             else
                 $url_user = $_SERVER['REQUEST_URI'];
 
-            header("Location: " . $url_user);
+            // header("Location: " . $url_user);
+            $this->checkRedirect();
         }
         else
             $this->set('usersError', $this->lang('error_login'));
+    }
+
+    /**
+     * если после авторизации, регистрации необходимо направить на страницу с которой пришли, перенаправляем
+     */
+    function checkRedirect() {
+        // если после авторизации, регистрации необходимо направить на страницу с которой пришли, перенаправляем
+        if ($_REQUEST['from'] AND $_REQUEST['fromSave'])
+            header("Location: " . $_REQUEST['fromSave']);
     }
 
     /**
@@ -205,6 +274,7 @@ class PHPShopUserElement extends PHPShopElements {
     function usersDisp() {
         if (!empty($_SESSION['UsersId']) and PHPShopSecurity::true_num($_SESSION['UsersId'])) {
             $this->set('UsersLogin', $_SESSION['UsersLogin']);
+            $this->set('UsersName', $_SESSION['UsersName']);
             $dis = $this->parseTemplate($this->getValue('templates.users_forma_enter'));
         } else {
 
@@ -212,7 +282,7 @@ class PHPShopUserElement extends PHPShopElements {
             if (PHPShopSecurity::true_num($_COOKIE['UserChecked']))
                 $this->set('UserChecked', 'checked');
 
-            if (PHPShopSecurity::true_login($_COOKIE['UserLogin']))
+            if (PHPShopSecurity::true_email($_COOKIE['UserLogin']))
                 $this->set('UserLogin', $_COOKIE['UserLogin']);
 
             if (PHPShopSecurity::true_passw($_COOKIE['UserPassword']))
@@ -501,21 +571,22 @@ class PHPShopSkinElement extends PHPShopElements {
             if (is_dir($dir)) {
                 if (@$dh = opendir($dir)) {
                     while (($file = readdir($dh)) !== false) {
+                        if (@file_exists($dir . '/' . $file . "/main/index.tpl")) {
+                            if ($_SESSION['skin'] == $file)
+                                $sel = "selected";
+                            else
+                                $sel = "";
 
-                        if ($_SESSION['skin'] == $file)
-                            $sel = "selected";
-                        else
-                            $sel = "";
-
-                        if ($file != "." and $file != ".." and $file != "index.html")
-                            $value[] = array($file, $file, $sel);
+                            if ($file != "." and $file != ".." and $file != "index.html")
+                                $value[] = array($file, $file, $sel);
+                        }
                     }
                     closedir($dh);
                 }
             }
 
             // Определяем переменные
-            $forma = PHPShopText::p(PHPShopText::form(PHPShopText::select('skin', $value, 150, $float = "none", $caption = false, $onchange = "ChangeSkin()"), 'SkinForm'));
+            $forma = PHPShopText::p(PHPShopText::form(PHPShopText::select('skin', $value, 150, $float = "none", $caption = false, $onchange = "ChangeSkin()"), 'SkinForm', null, ""));
             $this->set('leftMenuContent', $forma);
             $this->set('leftMenuName', __("Сменить дизайн"));
 
@@ -529,11 +600,16 @@ class PHPShopSkinElement extends PHPShopElements {
      * Экшен смены шаблона
      */
     function skin() {
-        if ($this->PHPShopSystem->getValue('spec_num')) {
+        if ($this->PHPShopSystem->getValue('num_vitrina')) {
             if (file_exists("phpshop/templates/" . $_REQUEST['skin'] . "/main/index.tpl")) {
                 $skin = $_REQUEST['skin'];
-                if (PHPShopSecurity::true_skin($_REQUEST['skin']))
-                    $_SESSION['skin'] = $_REQUEST['skin'];
+                if (PHPShopSecurity::true_skin($skin)) {
+                    unset($_SESSION['Memory']);
+                    unset($_SESSION['gridChange']);
+                    $_SESSION['skin'] = $skin;
+                    // используется в модуле skinpage
+                    $_SESSION['skinSave'] = $skin;
+                }
             }
         }
     }
@@ -614,6 +690,86 @@ class PHPShopNewsElement extends PHPShopElements {
                     $dis.=$this->parseTemplate($this->getValue('templates.news_main_mini'));
                 }
             return $dis;
+        }
+    }
+
+}
+
+/**
+ * Элемент вывода изображений в слайдер
+ * @author PHPShop Software
+ * @tutorial http://wiki.phpshop.ru/index.php/PHPShopSliderElement
+ * @version 1.0
+ * @package PHPShopElements
+ */
+class PHPShopSliderElement extends PHPShopElements {
+
+    /**
+     * @var bool Показывать слайдер только на главной
+     */
+    var $disp_only_index = true;
+
+    /**
+     * @var int  Кол-во изображений
+     */
+    var $limit = 7;
+
+    /**
+     * Конструктор
+     */
+    function PHPShopSliderElement() {
+        $this->debug = false;
+        $this->objBase = $GLOBALS['SysValue']['base']['slider'];
+        parent::PHPShopElements();
+    }
+
+    /**
+     * Вывод изображений в слайдер
+     * @return string
+     */
+    function index() {
+        $dis = null;
+
+        // Перехват модуля
+        $this->setHook(__CLASS__, __FUNCTION__, false, 'START');
+
+        // Выполнение только на главной странице
+        if ($this->disp_only_index) {
+            if ($this->PHPShopNav->index())
+                $view = true;
+            else
+                $view = false;
+        }
+        else
+            $view = true;
+        if (!empty($view)) {
+            $result = $this->PHPShopOrm->select(array('image', 'alt', 'link'), array('enabled' => '="1"'), array('order' => 'num, id DESC'), array("limit" => $this->limit));
+
+            // Проверка на еденичню запись
+            if ($this->limit > 1)
+                $data = $result;
+            else
+                $data[] = $result;
+
+            if (is_array($data))
+                foreach ($data as $row) {
+
+                    // Определяем переменные
+                    $this->set('image', $row['image']);
+                    $this->set('alt', $row['alt']);
+                    $this->set('link', $row['link']);
+
+                    // Перехват модуля
+                    $this->setHook(__CLASS__, __FUNCTION__, $row, 'END');
+
+                    // Подключаем шаблон
+                    $dis.=$this->parseTemplate("/slider/slider_oneImg.tpl");
+                }
+            if (@$dis) {
+                $this->set('imageSliderContent', $dis);
+                return$this->parseTemplate("/slider/slider_main.tpl");
+            }
+            return false;
         }
     }
 
@@ -824,7 +980,7 @@ class PHPShopBannerElement extends PHPShopElements {
 
         // Подключаем библиотеку отправки почты
         PHPShopObj::loadClass("mail");
-        $zag = __("Закончились показы у банера") . " " . $this->row['name'];
+        $zag = __("Закончились показы у баннера") . " " . $this->row['name'];
 
         $this->set('banner_name', $this->row['name']);
         $this->set('banner_limit', $this->row['limit_all']);
@@ -832,7 +988,7 @@ class PHPShopBannerElement extends PHPShopElements {
         // Текст сообщения
         $message = ParseTemplateReturn('./phpshop/lib/templates/banner/mail_notice.tpl', true);
 
-        $PHPShopMail = new PHPShopMail($this->PHPShopSystem->getParam('adminmail2'), "robot@" . str_replace("www", '', $_SERVER['SERVER_NAME']), $zag, $message);
+        new PHPShopMail($this->PHPShopSystem->getParam('adminmail2'), "robot@" . str_replace("www", '', $_SERVER['SERVER_NAME']), $zag, $message);
     }
 
 }

@@ -23,6 +23,7 @@ require("../language/russian/language.php");
         $id = $row['id'];
         $PID = $row['PID'];
         $city = $row['city'];
+        $num = $row['num'];
         $price = $row['price'];
         if (!($row['taxa'])) {
             $taxa = 0;
@@ -46,7 +47,7 @@ require("../language/russian/language.php");
                 <tr bgcolor="#ffffff">
                     <td style="padding:10">
                         <b><span name=txtLang id=txtLang>Редактирование Каталога Доставки</span> "<?= $city ?>"</b><br>
-                        &nbsp;&nbsp;&nbsp;<span name=txtLang id=txtLang>Укажите данные для записи в базу</span>.
+
                     </td>
                     <td align="right">
                         <img src="../img/i_mail_forward_med[1].gif" border="0" hspace="10">
@@ -56,7 +57,7 @@ require("../language/russian/language.php");
             <br>
             <table class=mainpage4 cellpadding="5" cellspacing="0" border="0" align="center" width="100%">
                 <tr>
-                    <td colspan=3>
+                    <td >
                         <FIELDSET>
                             <LEGEND id=lgdLayout><span name=txtLang id=txtLang><u>К</u>аталог</span>:</LEGEND>
                             <div style="padding:10">
@@ -87,12 +88,28 @@ require("../language/russian/language.php");
 
                                 $categoryID = $PID;
                                 echo '
-<input type=text id="myName"  style="width: 500" value="' . Disp_cat($categoryID) . '">
+<input type=text id="myName"  style="width: 170" value="' . Disp_cat($categoryID) . '">
 <input type="hidden" value="' . $categoryID . '" name="NPID" id="myCat">
 <BUTTON style="width: 3em; height: 2.2em; margin-left:5"  onclick="miniWinFull(\'adm_cat.php?category=' . $categoryID . '\',300,400,300,200)"><img src="../img/icon-move-banner.gif"  width="16" height="16" border="0"></BUTTON>';
                                 ?>
                         </FIELDSET>
-                    </TD></TR><TR>     <TD>
+                    </TD>
+                    <td colspan=2>
+                        <fieldset style="float:none;padding:5px;margin-left:0px;padding-top:0px">
+                            <legend>Иконка</legend>
+
+                            <div style="float:left;padding:14px;">
+                                <input type="text" value="<?=$row['icon']?>" name="icon_new" id="icon_new" style="width:100px;" class="" onclick="" title=""> </div>
+                            <div style="float:right;padding:5px;">
+                                <button style="width:100px; height:25px; margin-left:5" onclick="ReturnPic('icon_new');
+                 return false;">
+                                    <img src="../img/icon-move-banner.gif" width="16" height="16" border="0" align="absmiddle" hspace="3">
+                                    Выбрать
+                                </button></div>
+
+                        </fieldset>
+                    </td>
+                </TR><TR>     <TD>
 
 
                         <FIELDSET style="height:60px">
@@ -106,7 +123,12 @@ require("../language/russian/language.php");
 
                     </td>
                     <td style="vertical-align:top;">
-
+                        <FIELDSET style="height:60px">
+                            <LEGEND><span name=txtLang id=txtLang>Номер по порядку</span></LEGEND>
+                            <div style="padding:10">
+                                <input type="text" value="<?= @$num ?>" name="num_new" id="num_new" style="width:50px;" class="" onclick="" title="">
+                            </div>
+                        </FIELDSET>
                     </td>
                     <td style="vertical-align:top;">
                         <FIELDSET style="height:60px">
@@ -150,12 +172,19 @@ require("../language/russian/language.php");
         <?
         if (isset($editID) and !empty($city_new)) {// Запись редактирования
             if (CheckedRules($UserStatus["delivery"], 1) == 1) {
+
+                // обнуляем статус "по умолчанию" для всех, чтобы назначить для текущего, если выбрали
+                if ($flag_new)
+                    mysql_query("UPDATE " . $SysValue['base']['table_name30'] . " SET flag='0' WHERE is_folder='1'") or die(mysql_error());
+
                 $sql = "UPDATE " . $SysValue['base']['table_name30'] . "
 SET
 city='$city_new',
 price='$price_new',
 enabled='$enabled_new',
 flag='$flag_new',
+num='$num_new',
+icon='$icon_new',
 price_null='$price_null_new',
 price_null_enabled='$price_null_enabled_new',
 taxa='$taxa_new',

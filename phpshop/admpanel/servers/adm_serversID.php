@@ -3,7 +3,7 @@ require("../connect.php");
 @mysql_connect("$host", "$user_db", "$pass_db") or @die("Невозможно подсоединиться к базе");
 mysql_select_db("$dbase") or @die("Невозможно подсоединиться к базе");
 require("../enter_to_admin.php");
-require("../language/russial/language.php");
+require("../language/russian/language.php");
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>

@@ -21,9 +21,15 @@
 <BODY onLoad="default_load('false','false');NavActive('index');LoadPath('@ShopDir@');"  class="bod">
 <div class="black_overlay" id="fade"></div>
 <div id="mainblock">
+    <div id="cartwindow" class="message">
+    <div class="ico_add_to_card"><b>Внимание...</b><br>Товар добавлен в корзину</div>
+</div>
+<div id="comparewindow" class="message">
+    <div class="ico_add_to_compare"><b>Внимание...</b><br>Товар добавлен в сравнение</div>
+</div>
   <div id="top">
     <div id="top2">
-      <div id="ico_basket"><a href="/order/" class="ordabs" ></a> В Вашей корзине <span> <span id="num">@num@</span> товар на <span id="sum">@sum@</span> @productValutaName@.</span> <span id="order" style="display:@orderEnabled@; "><a href="/order/" >Оформить заказ?</a></span> </div>
+      <div id="ico_basket"><a href="/order/" class="ordabs" ></a> В Вашей корзине <span> <span id="num">@num@</span> товар на <span id="sum">@sum@</span> @productValutaName@</span> <span id="order" style="display:@orderEnabled@; "><a href="/order/" >Оформить заказ?</a></span> </div>
       <div id="ico_compare"><a href="/compare/" class="ordabs" ></a> <span><a href="/compare/" title="Сравнить товары">Сравнить товары (<span id="numcompare">@numcompare@</span> шт.)</a></span> </div>
       @usersDisp@ </div>
     <div id="top3">
@@ -182,14 +188,7 @@
               </div></td>
             @topMenu@ </tr>
         </table>
-      </div>
+      </div><div align="center">@button@</div>
     </div>
   </div>
-</div>
-<div style="clear:both"></div>
-<div id="cartwindow" class="message">
-    <div class="ico_add_to_card"><b>Внимание...</b><br>Товар добавлен в корзину</div>
-</div>
-<div id="comparewindow" class="message">
-    <div class="ico_add_to_compare"><b>Внимание...</b><br>Товар добавлен в сравнение</div>
 </div>

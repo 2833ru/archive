@@ -6,6 +6,10 @@ class PHPShopFormgeneratorElement {
         $this->objBase=$GLOBALS['SysValue']['base']['formgenerator']['formgenerator_forms'];
     }
     
+    function fixtags($str){
+        return str_replace(array('<//'), array('</'),$str);
+    }
+    
     
     function forma($path) {
         $error=null;
@@ -32,7 +36,7 @@ class PHPShopFormgeneratorElement {
         
         if(is_array($data)) {
             $forma_content= '<p>'.$error.'</p><h2>'.$data['name'].'</h2><form method="post" enctype="multipart/form-data" name="formgenerator" id="formgenerator" action="/formgenerator/'.$path.'/">
-            '.Parser($data['content']).'
+            '.Parser($this->fixtags($data['content'])).'
                 <p id="formgenerator_buttons">
             <input type="hidden" name="forma_id" value="'.$data['id'].'">
             <input class="user" type="reset" value="Очистить">

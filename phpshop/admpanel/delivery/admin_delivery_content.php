@@ -7,11 +7,10 @@ require("../language/russian/language.php");
 
 function DelivList($PID = 0, $lvl = 0) {
     global $SysValue;
-
     $numRows = 0;
     $display = null;
 
-    $sql = 'select * from ' . $SysValue['base']['table_name30'] . ' where (PID=' . intval($PID) . ' AND is_folder="0") order by city';
+    $sql = 'select * from ' . $SysValue['base']['table_name30'] . ' where (PID=' . $PID . ' AND is_folder="0") order by num,city';
     $result = mysql_query($sql);
     $lvl++;
     while (@$row = mysql_fetch_array(@$result)) {
@@ -52,7 +51,7 @@ function DelivList($PID = 0, $lvl = 0) {
             $style_r = null;
         }
 
-        $display.='<tr class="row ' . $style_r . '" id="r' . $id . '" onmouseover="PHPShopJS.rowshow_on(this)" onmouseout="PHPShopJS.rowshow_out(this,\'' . $style_r . '\')" onclick="miniWin(\'adm_deliveryID.php?id=' . $id . '\',600,500)">';
+        $display.='<tr class="row ' . $style_r . '" id="r' . $id . '" onmouseover="PHPShopJS.rowshow_on(this)" onmouseout="PHPShopJS.rowshow_out(this,\'' . $style_r . '\')" onclick="miniWin(\'adm_deliveryID.php?id=' . $id . '\',600,630)">';
 
 
         $display.="
@@ -64,7 +63,6 @@ function DelivList($PID = 0, $lvl = 0) {
 	$price " . GetIsoValutaOrder() . "
 	</td>
 	<td class=forma>$price_null</td>
-	<td class=forma>$taxa</td>
     </tr>
 	";
         $display.=DelivList($id, $lvl);
@@ -102,18 +100,17 @@ if ($i > 30)
                     <td  id=pane align=><span name=txtLang id=txtLang>Название/Город</span></td>
                     <td width="100" id=pane align=><span name=txtLang id=txtLang>Стоимость</span></td>
                     <td width="100" id=pane align=><span name=txtLang id=txtLang>Бесплатно свыше</span></td>
-                    <td id=pane width="150"><span name=txtLang id=txtLang>Такса за 0.5кг</span></td>
                 </tr>
                 <?= $display ?>
             </table>
 
-            <div align="right" style="padding:10"><BUTTON style="width: 15em; height: 2.2em; margin-left:5px"  onclick="miniWin('adm_delivery_new.php?categoryID=<?= $_GET['id'] ?>', 600, 500);
-                        return false;">
+            <div align="right" style="padding:10"><BUTTON style="width: 15em; height: 2.2em; margin-left:5"  onclick="miniWin('adm_delivery_new.php?categoryID=<?= $id ?>', 650, 630);
+                    return false;">
                     <img src="../icon/page_add.gif" width="16" height="16" border="0" align="absmiddle" hspace="5">
                     <span name=txtLang id=txtLang>Новая позиция</span>
                 </BUTTON></div>
             <input type="hidden" value="<?= $_GET['id'] ?>" id="catal" name="catal">
 
-        <? } ?>
+<? } ?>
     </body>
 </html>

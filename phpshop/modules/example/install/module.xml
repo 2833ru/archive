@@ -2,7 +2,8 @@
 <module>
     <version>1.2</version>
     <name>Example</name>
-    <description>Тестовый модуль для разработчиков.</description>
+    <faqlink>http://faq.phpshop.ru/page/example.html</faqlink>
+<description>Тестовый модуль для разработчиков.</description>
     <icon>icon.png</icon>
     <category>develop</category>
     <adminmenu>

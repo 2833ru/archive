@@ -2,10 +2,12 @@
 <module>
     <version>1.2</version>
     <name>Yes Credit</name>
+    <faqlink>http://faq.phpshop.ru/page/yes-credit.html</faqlink>
     <description>Модуль приема кредитных заявок.</description>
     <icon>icon.png</icon>
     <trial>true</trial>
     <category>sale</category>
+    <hidden>true</hidden>
     <adminmenu>
         <title>Yes Credit</title>
         <podmenu>

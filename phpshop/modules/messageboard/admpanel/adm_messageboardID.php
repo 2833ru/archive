@@ -43,7 +43,7 @@ function actionStart() {
 
 
 // Графический заголовок окна
-    $PHPShopGUI->setHeader("Редактирование Объявления","Укажите данные для записи в базу.",$PHPShopGUI->dir."img/i_account_properties_med[1].gif");
+    $PHPShopGUI->setHeader("Редактирование Объявления","",$PHPShopGUI->dir."img/i_account_properties_med[1].gif");
 
     
 // Содержание закладки 1

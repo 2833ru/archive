@@ -60,11 +60,7 @@ $disp= "
 <input type=\"hidden\" name=\"ik_sign_hash\" value=\"$ik_sign_hash\">
 
 	  <table>
-<tr><td><img src=\"images/shop/icon-setup.gif\" width=\"16\" height=\"16\" border=\"0\"></td>
-	<td align=\"center\"><a href=\"javascript:history.back(1)\"><u>
-	Вернуться к оформлению<br>
-	покупки</u></a></td>
-	<td width=\"20\"></td>
+<tr>
 	<td><img src=\"images/shop/icon-client-new.gif\" alt=\"\" width=\"16\" height=\"16\" border=\"0\" align=\"left\">
 	<a href=\"javascript:pay.submit();\"><u>Оплатить через платежную систему</u></a></td>
 </tr>

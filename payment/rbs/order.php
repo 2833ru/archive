@@ -55,19 +55,15 @@ $disp= "
 
  <p><br></p>
  
- <img src=\"images/bank/visa.gif\" border=\"0\" hspace=5>
-  <img src=\"images/bank/mastercard.gif\" border=\"0\" hspace=5>
-   <img src=\"images/bank/set.gif\" border=\"0\" hspace=5>
+ <img src=\"phpshop/lib/templates/icon/bank/visa.gif\" border=\"0\" hspace=5>
+  <img src=\"phpshop/lib/templates/icon/bank/mastercard.gif\" border=\"0\" hspace=5>
+   <img src=\"phpshop/lib/templates/icon/bank/set.gif\" border=\"0\" hspace=5>
   <p><br></p>
 
 <form name=PaymentForm action=\"https://engine.paymentgate.ru/bpcservlet/BPC/AcceptPayment.jsp\"> 
     <INPUT TYPE=Hidden NAME=MDORDER VALUE=\"$mdOrder\"> 
 	<table>
-<tr><td><img src=\"images/shop/icon-setup.gif\" width=\"16\" height=\"16\" border=\"0\"></td>
-	<td align=\"center\"><a href=\"javascript:history.back(1)\"><u>
-	Вернуться к оформлению<br>
-	покупки</u></a></td>
-	<td width=\"20\"></td>
+<tr>
 	<td><img src=\"images/shop/icon-client-new.gif\" alt=\"\" width=\"16\" height=\"16\" border=\"0\" align=\"left\">
 	<a href=\"javascript:PaymentForm.submit();\">Оплатить через платежную систему</a></td>
 </tr>

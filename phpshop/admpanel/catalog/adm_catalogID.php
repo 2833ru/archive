@@ -52,7 +52,7 @@ function actionStart() {
     $PHPShopGUI->dir = "../";
     //$PHPShopGUI->size = "700,650";
     // Графический заголовок окна
-    $PHPShopGUI->setHeader(__('Редактирование Каталога "' . $data['name'] . '"'), __("Укажите данные для записи в базу."), $PHPShopGUI->dir . "img/i_actionlog_med[1].gif");
+    $PHPShopGUI->setHeader(__('Редактирование Каталога "' . $data['name'] . '"'), __(""), $PHPShopGUI->dir . "img/i_actionlog_med[1].gif");
 
     // Нет данных
     if (!is_array($data)) {
@@ -73,23 +73,26 @@ function actionStart() {
     $num_row_area.=$PHPShopGUI->setRadio('num_row_new', 2, 2, $data['num_row']);
     $num_row_area.=$PHPShopGUI->setRadio('num_row_new', 3, 3, $data['num_row']);
     $num_row_area.=$PHPShopGUI->setRadio('num_row_new', 4, 4, $data['num_row']);
-    $Tab1.=$PHPShopGUI->setField(__("Товаров в длину:"), $num_row_area);
+    $Tab1.=$PHPShopGUI->setField(__("Товаров в длину:"), $num_row_area, 'left');
 
     // Вывод
-    $Tab1.=$PHPShopGUI->setField(__("Опции вывода:"), $PHPShopGUI->setCheckbox('vid_new', 1, __('Выводить подкаталоги списком в основном окне'), $data['vid']) .
-            $PHPShopGUI->setCheckbox('skin_enabled_new', 1, __('Скрыть каталог'), $data['skin_enabled']),'none',0,0,array('height'=>'30px;'));
+    // вывод списком доступен только для корневых каталогов.
+    if ($data['parent_to'] == 0)
+        $vid = $PHPShopGUI->setCheckbox('vid_new', 1, __('Выводить подкаталоги списком в основном окне'), $data['vid']);
+    $vid .= $PHPShopGUI->setCheckbox('skin_enabled_new', 1, __('Скрыть каталог'), $data['skin_enabled']);
+    $Tab1.=$PHPShopGUI->setField(__("Опции вывода:"), $vid);
 
     // Товаров на странице
-    $Tab1.=$PHPShopGUI->setLine() . $PHPShopGUI->setField(__("Товаров на странице:"), $PHPShopGUI->setInputText(false, 'num_cow_new', $data['num_cow'], '50px', __('шт.')), 'left',0,0,array('width'=>'20%;'));
+    $Tab1.=$PHPShopGUI->setLine() . $PHPShopGUI->setField(__("Товаров на странице:"), $PHPShopGUI->setInputText(false, 'num_cow_new', $data['num_cow'], '50px', __('шт.')), 'left');
 
     // Тип сортировки
     $order_by_value[] = array('по имени', 1, $data['order_by']);
     $order_by_value[] = array('по цене', 2, $data['order_by']);
-    $order_by_value[] = array('по популярности', 3, $data['order_by']);
+    $order_by_value[] = array('по номеру', 3, $data['order_by']);
     $order_to_value[] = array('возрастанию', 1, $data['order_to']);
     $order_to_value[] = array('убыванию', 2, $data['order_to']);
     $Tab1.=$PHPShopGUI->setField(__("Сортировка:"), $PHPShopGUI->setInputText('№', "num_new", $data['num'], '50px', false, 'left') .
-            $PHPShopGUI->setSelect('order_by_new', $order_by_value, 120) . $PHPShopGUI->setSelect('order_to_new', $order_to_value, 120), 'right',0,0,array('width'=>'75%;'));
+            $PHPShopGUI->setSelect('order_by_new', $order_by_value, 120) . $PHPShopGUI->setSelect('order_to_new', $order_to_value, 120), 'left');
 
     $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));
     $oFCKeditor = new Editor('content_new');
@@ -118,11 +121,20 @@ function actionStart() {
     // Вывод формы закладки
     $PHPShopGUI->setTab(array(__("Основное"), $Tab1, 450), array(__("Описание"), $Tab2, 450), array(__("Заголовки"), $Tab7, 450), array(__("Дополнительно"), $Tab8, 450));
 
+
     // Добавление закладки характеристики если нет подкаталогов
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
     $subcategory_data = $PHPShopOrm->select(array('id'), array('parent_to' => '=' . intval($data['id'])), false, array('limit' => 2));
     if (!is_array($subcategory_data))
         $PHPShopGUI->addTab(array(__("Характериcтики"), $Tab4, 450));
+
+    // Иконка
+    $Tab10 = $PHPShopGUI->setField(__('Изображение'), $PHPShopGUI->setInputText(false, "icon_new", $data['icon'], '450px', false, 'left') .
+            $PHPShopGUI->setButton(__('Выбрать'), "../img/icon-move-banner.gif", "100px", '25px', "right", "ReturnPic('icon_new');return false;"));
+
+    $Tab10.=$PHPShopGUI->setField(__('Описание изображения'), $PHPShopGUI->setTextArea('icon_description_new', $data['icon_description']));
+
+    $PHPShopGUI->addTab(array("Иконка", $Tab10, 450));
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler($_SERVER["SCRIPT_NAME"], __FUNCTION__, $data);
@@ -131,7 +143,7 @@ function actionStart() {
     $ContentFooter =
             $PHPShopGUI->setInput("hidden", "catalogID", $data['id'], "right", 70, "", "but") .
             $PHPShopGUI->setInput("button", "", "Отмена", "right", 70, "return onCancel();", "but") .
-            $PHPShopGUI->setInput("button", "delID", "Удалить", "right", 70, "return onDelete('" . __('Вы действительно хотите удалить?') . "')", "but", "actionDelete.cat_prod.remove") .
+            $PHPShopGUI->setInput("button", "delID", "Удалить", "right", 70, "return onDelete('" . __('Вы действительно хотите удалить? Внимание! Содержащиеся товары и подкатегории будут перенесены во временную папку.') . "')", "but", "actionDelete.cat_prod.remove") .
             $PHPShopGUI->setInput("submit", "editID", "Сохранить", "right", 70, "", "but", "actionUpdate.cat_prod.edit") .
             $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionSave.cat_prod.edit");
 
@@ -168,7 +180,6 @@ function getCatPath($category) {
         return $str;
     }
 }
-
 
 /**
  * Экшен сохранения
@@ -250,6 +261,13 @@ function actionDelete() {
     // Перехват модуля
     $PHPShopModules->setAdmHandler($_SERVER["SCRIPT_NAME"], __FUNCTION__, $_POST);
     $action = $PHPShopOrm->delete(array('id' => '=' . intval($_POST['catalogID'])));
+
+    // Переносим подкатегории с удалённого каталога во временную папку
+    $PHPShopOrm->clean();
+    $PHPShopOrm->update(array("parent_to" => "1000003", "skin_enabled" => "1"), array("parent_to" => "=" . $_POST['catalogID']), false);
+
+    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
+    $PHPShopOrm->update(array("category" => "1000004", "enabled" => '0'), array("category" => "=" . $_POST['catalogID']), false);
 
     return $action;
 }

@@ -136,9 +136,9 @@ function CleachPassword($pas) {
                                                     <td><input type="text" name="login_new" id="login" value="<?= $login ?>" size="20"> ( не менее 4 символов )</td>
                                                 </tr>
                                                 <tr>
-                                                    <td>Пароль</td>
+                                                    <td>Новый пароль</td>
                                                     <td width="10"></td>
-                                                    <td><input type="Password" name="password" id="pas1" onclick="DispPasPole(this)" size="20" value="<?= CleachPassword($password); ?>"> ( не менее 6 символов )</td>
+                                                    <td><input type="Password" name="password" id="pas1" onclick="" size="20" value=""> ( не менее 6 символов )</td>
                                                 </tr>
                                                 <tr>
                                                     <td>Пароль еще раз</td>
@@ -429,10 +429,12 @@ name='$name_new'
 where id='$userID'";
                 $result = mysql_query($sql) or @die("Невозможно изменить запись");
                 if (!empty($password2)) {
+                    $hasher = new PasswordHash(8, false);
+                    $hash = $hasher->HashPassword($password2);
                     $sql = "UPDATE $table_name19
 SET
 login='$login_new',
-password='" . base64_encode($password2) . "'
+password='" . $hash . "'
 where id='$userID'";
                     $result = mysql_query($sql) or @die("Невозможно изменить запись");
 
@@ -453,7 +455,7 @@ where id='$userID'";
 Административная панель доступна по адресу:  http://" .$_SERVER['SERVER_NAME']. $SysValue['dir']['dir'] . "/phpshop/admpanel/
 или нажатием клавиш Ctrl+F12
 Логин: " . $_POST['login_new'] . "
-Пароль: " . $_POST['password'] . "
+Пароль: " . $password2 . "
 
 ---------------------------------------------------------
 Powered & Developed by www.PHPShop.ru

@@ -1,9 +1,9 @@
 <?
 
 function Shopusers_messages() {
-global $SysValue;
+    global $SysValue;
 
-$_Return='
+    $_Return = '
 <!--”правл€ющий интерфейс-->
 	 <form method="post" name="search">
 	 <table width="100%" cellpadding="0" cellpadding="0" class="iconpane border-bottom">
@@ -37,7 +37,7 @@ $_Return='
 </td>
 </tr>
 </table>
-'."
+' . "
 
 <!--основное окно-->
 <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">
@@ -59,7 +59,7 @@ $_Return='
 </tr>
 </table>
 ";
-return $_Return;
+    return $_Return;
 }
 
 ?>

@@ -2,7 +2,8 @@
 <module>
     <version>1.0</version>
     <name>Blog</name>
-    <description>Модуль блога.</description>
+   <faqlink>http://faq.phpshop.ru/page/blog.html</faqlink>
+ <description>Модуль блога.</description>
     <icon>blog.png</icon>
     <category>soc</category>
     <adminmenu>

@@ -20,7 +20,7 @@ require("../language/russian/language.php");
                 <tr bgcolor="#ffffff">
                     <td style="padding:10">
                         <b><span name=txtLang id=txtLang>Создание Новой Группы</span></b><br>
-                        &nbsp;&nbsp;&nbsp;<span name=txtLang id=txtLang>Укажите данные для записи в базу</span>.
+
                     </td>
                     <td align="right">
                         <img src="../img/i_billing_history_med[1].gif" border="0" hspace="10">
@@ -77,7 +77,7 @@ require("../language/russian/language.php");
         if (isset($editID) and !empty($name_new)) {// Запись редактирования
             if (CheckedRules($UserStatus["cat_prod"], 2) == 1) {
 
-                $sql = "INSERT INTO " . $SysValue['base']['table_name20'] . " VALUES ('','$name_new','0','$num_new','0','0','$description_new','0','0','')";
+                $sql = "INSERT INTO " . $SysValue['base']['table_name20'] . " VALUES ('','$name_new','$num_new','0','0','$description_new','0','0','','')";
                 $result = mysql_query($sql) or @die("" . mysql_error() . "");
                 echo"
 	  <script>

@@ -360,6 +360,40 @@ class PHPShopElements {
         return $this->PHPShopModules->setHookHandler($class_name, $function_name, array(&$this), $data, $rout);
     }
 
+    /**
+     * Назначение HTML переменных верстки
+     * @param string $class_name имя класса
+     */
+    function setHtmlOption($class_name) {
+        if (!empty($GLOBALS['SysValue']['html'][strtolower($class_name)])){
+            $this->cell_type = $GLOBALS['SysValue']['html'][strtolower($class_name)];
+            $this->cell=1;
+            $this->product_grid = null;
+        }
+    }
+
+    /**
+     * Подключение функций из файлов ядра
+     * @param string $class_name имя класса
+     * @param string $function_name имя функции
+     * @param array $function_row массив дополнительны данных из функции
+     * @param string $path имя раздела
+     * @return mixed
+     */
+    function doLoadFunction($class_name, $function_name, $function_row = false, $path = false) {
+
+        if (empty($path))
+            $path = $GLOBALS['SysValue']['nav']['path'];
+
+        $function_path = './phpshop/core/' . $path . '.core/' . $function_name . '.php';
+        if (is_file($function_path)) {
+            include_once($function_path);
+            if (function_exists($function_name)) {
+                return call_user_func_array($function_name, array(&$this, $function_row));
+            }
+        }
+    }
+
 }
 
 ?>

@@ -1,6 +1,6 @@
 
-ALTER TABLE `phpshop_categories` ADD `icon` VARCHAR(255) NOT NULL;
-ALTER TABLE `phpshop_categories` ADD `icon_description` VARCHAR(255) NOT NULL;
+--ALTER TABLE `phpshop_categories` ADD `icon` VARCHAR(255) NOT NULL;
+--ALTER TABLE `phpshop_categories` ADD `icon_description` VARCHAR(255) NOT NULL;
 
 --
 -- Структура таблицы `phpshop_modules_iconcat_system`

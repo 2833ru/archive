@@ -63,8 +63,9 @@ class PHPShopPricemail extends PHPShopCore {
         if (PHPShopSecurity::true_param($_SESSION['text'], $_POST['mail'], $_POST['name_person'], $_POST['link_to_page']) and $_POST['key'] == $_SESSION['text']) {
 
             // Заголовок e-mail пользователю
-            $title = $this->PHPShopSystem->getName() . " - " . __('Сообщение о меньшей цене');
-        
+            //$title = $this->PHPShopSystem->getName() . " - " . __('Сообщение о меньшей цене');
+            $title = __('Сообщение о меньшей цене');
+
             $this->set('user_name', $_POST['name_person']);
             $this->set('user_org_name', $_POST['org_name']);
             $this->set('user_tel_code', $_POST['tel_code']);

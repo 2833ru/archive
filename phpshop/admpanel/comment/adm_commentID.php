@@ -39,8 +39,8 @@ require("../language/russian/language.php");
             <table cellpadding="0" cellspacing="0" width="100%" height="50" id="title">
                 <tr bgcolor="#ffffff">
                     <td style="padding:10">
-                        <b><span name=txtLang id=txtLang>Редактирование Комментария от</span> "<?= $name ?>"</b><br>
-                        &nbsp;&nbsp;&nbsp;<span name=txtLang id=txtLang>Укажите данные для записи в базу</span>.
+                        <b><span name=txtLang id=txtLang>Редактирование Отзыва от</span> "<?= $name ?>"</b><br>
+
                     </td>
                     <td align="right">
                         <img src="../img/i_account_properties_med[1].gif" border="0" hspace="10">
@@ -90,7 +90,7 @@ require("../language/russian/language.php");
                 <tr>
                     <td colspan="2">
                         <FIELDSET>
-                            <LEGEND id=lgdLayout><span name=txtLang id=txtLang><u>К</u>омментарий</span> <input type="checkbox" value="1" name="enabled_new" <?= $fl ?>> Цензура пройдена</LEGEND>
+                            <LEGEND id=lgdLayout><span name=txtLang id=txtLang><u>О</u>тзыв</span> <input type="checkbox" value="1" name="enabled_new" <?= $fl ?>> Цензура пройдена</LEGEND>
                             <div style="padding:10">
                                 <textarea name="otsiv_new" class=s style="width:100%; height:200"><?= $content ?></textarea>
                             </div>
@@ -127,6 +127,17 @@ content='$otsiv_new',
 enabled='$enabled_new' 
 where id='$id'";
                 $result = mysql_query($sql) or @die("" . mysql_error() . "");
+
+                // пересчитываем рейтинг для товара.
+                $result = mysql_query("select avg(rate) as rate, count(id) as num from " . $SysValue['base']['table_name36'] . " WHERE parent_id=$parent_id AND enabled='1' AND rate>0 group by parent_id LIMIT 1");
+                if (mysql_num_rows($result)) {
+                    $row = mysql_fetch_array($result);
+                    extract($row);
+                    $rate = round($rate, 1);
+                    mysql_query("UPDATE  " . $SysValue['base']['products'] . " SET rate = '$rate', rate_count='$num' WHERE id=$parent_id") or @die("" . mysql_error() . "");
+                } else {
+                    mysql_query("UPDATE  " . $SysValue['base']['products'] . " SET rate = '0', rate_count='0' WHERE id=$parent_id") or @die("" . mysql_error() . "");
+                }
                 echo"
 	  <script>
 DoReloadMainWindow('comment');
@@ -146,6 +157,16 @@ where id='$id'";
 DoReloadMainWindow('comment');
 </script>
 	   ";
+                // пересчитываем рейтинг для товара.
+                $result = mysql_query("select avg(rate) as rate, count(id) as num from " . $SysValue['base']['table_name36'] . " WHERE parent_id=$parent_id AND enabled='1' AND rate>0 group by parent_id LIMIT 1");
+                if (mysql_num_rows($result)) {
+                    $row = mysql_fetch_array($result);
+                    extract($row);
+                    $rate = round($rate, 1);
+                    mysql_query("UPDATE  " . $SysValue['base']['products'] . " SET rate = '$rate', rate_count='$num' WHERE id=$parent_id") or @die("" . mysql_error() . "");
+                } else {
+                    mysql_query("UPDATE  " . $SysValue['base']['products'] . " SET rate = '0', rate_count='0' WHERE id=$parent_id") or @die("" . mysql_error() . "");
+                }
             }
             else
                 $UserChek->BadUserFormaWindow();

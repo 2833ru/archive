@@ -84,13 +84,22 @@ function cid_category_add_spec_hook($obj,$row) {
     $obj->set('catalogList',$spec,true);
 }
 
+
+
+function CID_Product_cell_hook($obj, $row, $rout) {
+    if ($rout == "START"){
+        if($obj->PHPShopCategory->getParam('num_row') == 4)
+        $obj->PHPShopCategory->setParam('num_row', 3);
+    }
+}
+
 $addHandler=array
         (
         'odnotip'=>'odnotip_hook',
         '#setCell'=>'setcell_hook',
         '#compile'=>'compile_hook',
-        'CID_Category'=>'cid_category_add_spec_hook',
-        ''
+        '#CID_Category'=>'cid_category_add_spec_hook',
+        'CID_Product' => 'CID_Product_cell_hook'
 
 );
 

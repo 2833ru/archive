@@ -23,7 +23,7 @@ $SysValue['bank'] = unserialize($LoadItems['System']['bank']);
 $pathTemplate = $SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'];
 
 
-$sql = "select * from " . $SysValue['base']['table_name1'] . " where id='$_GET[orderID]'";
+$sql = "select * from " . $SysValue['base']['table_name1'] . " where id=".intval($_GET['orderID']);
 $n = 1;
 @$result = mysql_query($sql) or die($sql);
 $row = mysql_fetch_array(@$result);
@@ -114,8 +114,43 @@ if ($LoadItems['System']['nds_enabled']) {
 @$sum = number_format($sum, "2", ".", "");
 
 $name_person = $order['Person']['name_person'];
-$org_name = $order['Person']['org_name'];
-$datas = PHPShopDate::dataV($datas, $full = false, $revers = false, $delim = '-', $months_enabled = true);
+
+if ($row['org_name'] or $order['Person']['org_name'])
+    $org_name = $order['Person']['org_name'] . $row['org_name'];
+else
+    $org_name = $row['fio'];
+
+$datas = PHPShopDate::dataV($datas, "false");
+
+// время доставки под старый формат данных в заказе
+if (!empty($order['Person']['dos_ot']) OR !empty($order['Person']['dos_do']))
+    $dost_ot = " От: " . $order['Person']['dos_ot'] . ", до: " . $order['Person']['dos_do'];
+
+// формируем адрес доставки с учётом старого формата данных в заказах
+if ($row['org_name'])
+    $adr_info .= ", " . $row['org_name'];
+elseif ($row['fio'] OR $order['Person']['name_person'])
+    $adr_info .= ", " . $row['fio'] . $order['Person']['name_person'];
+if ($row['country'])
+    $adr_info .= ", страна: " . $row['country'];
+if ($row['state'])
+    $adr_info .= ", регион/штат: " . $row['state'];
+if ($row['city'])
+    $adr_info .= ", город: " . $row['city'];
+if ($row['index'])
+    $adr_info .= ", индекс: " . $row['index'];
+if ($row['street'] OR $order['Person']['adr_name'])
+    $adr_info .= ", улица: " . $row['street'] . $order['Person']['adr_name'];
+if ($row['house'])
+    $adr_info .= ", дом: " . $row['house'];
+if ($row['porch'])
+    $adr_info .= ", подъезд: " . $row['porch'];
+if ($row['door_phone'])
+    $adr_info .= ", код домофона: " . $row['door_phone'];
+if ($row['flat'])
+    $adr_info .= ", квартира: " . $row['flat'];
+
+$adr_info = substr($adr_info, 2);
 
 
 // Генерим номер товарного чека
@@ -149,10 +184,7 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
         <button onclick="window.print()">
             <img border=0 align=absmiddle hspace=3 vspace=3 src="http://<?= $_SERVER['SERVER_NAME'] . $SysValue['dir']['dir'] ?>/phpshop/admpanel/img/action_print.gif">Распечатать
         </button> 
-
-        <button class="save" onclick="document.execCommand('SaveAs')">
-            <img border=0 align=absmiddle hspace=3 vspace=3 src="http://<?= $_SERVER['SERVER_NAME'] . $SysValue['dir']['dir'] ?>/phpshop/admpanel/img/action_save.gif">Распечатать
-        </button> 
+        <br><br>
     </div>
     <table align="center" width="90%" border="0" cellspacing="0" cellpadding="0">
         <tr>
@@ -178,15 +210,14 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
         </tr>
         <tr>
             <td valign="top" >Продавец: <?= $LoadItems['System']['company'] ?><br />					
-                Адрес: <?= $LoadBanc['org_adres'] ?>, <?= $LoadItems['System']['tel'] ?> <br />			
-                ИНН/КПП продавца <?= $LoadBanc['org_inn'] ?> <?= $LoadBanc['org_kpp'] ?> <br />				
+                Адрес: <?= $LoadBanc['org_adres'] ?>, <?= $LoadItems['System']['tel'] ?> <br />							
+                Идентификационный номер продавца (ИНН) <?= $LoadBanc['org_inn'] ?>\<?= $LoadBanc['org_kpp'] ?> <br />							
                 Грузоотправитель и его адрес: Он же	<br />						
-                Грузополучатель и его адрес:  <?= @$order['Person']['adr_name'] ?>	<br />						
+                Грузополучатель и его адрес:  <?= @$adr_info ?>	<br />						
                 К платежно-расчетному документу       <br />							
-                Покупатель: <?= @$order['Person']['org_name'] ?>	<br />						
-                Адрес: <?= @$order['Person']['adr_name'] ?> <br />							
-                ИНН/КПП покупателя: <?= @$order['Person']['org_inn'] ?> <?= @$order['Person']['org_kpp'] ?> <br />
-                Валюта: <?= $PHPShopOrder->default_valuta_name ?>
+                Покупатель: <?= $org_name ?>	<br />						
+                Адрес: <?= @$adr_info ?> <br />							
+                Идентификационный номер покупателя (ИНН) <?= @$order['Person']['org_inn'] . $row['org_inn'] ?>/ КПП <?= @$order['Person']['org_kpp'] . $row['org_kpp'] ?> <br />							
             </td>
         </tr>
         <tr>
@@ -215,8 +246,8 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
                         <td  align="center"  colspan="2">Страна<br>
                             происхождения товара</td>
                         <td  align="center"  rowspan="2">Номер таможенной декларации</td>
-                    </tr>
-                    <tr>
+        </tr>
+        <tr>
                         <td align="center">код</td>
                         <td align="center">условное обозначение
                             (национальное)</td>
@@ -299,15 +330,15 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
                                 </tr>
                             </table>
                         </td>
-                    </tr>
+                                </tr>
                 </table>
             </td>
-        </tr>
-        <tr>
+                                </tr>
+                                <tr>
             <td valign="top" >
                 <p><br></p>
                 <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                    <tr>
+                                <tr>
                         <td width="70%">
                             <table  border="0" cellspacing="3" cellpadding="0">
                                 <tr>
@@ -317,7 +348,7 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
                                     <td>____________________</td>
                                 </tr>
                                 <tr>
-                                    <td></td>                                
+                                    <td></td>
                                     <td id="center">(подпись)</td>
                                     <td></td>
                                     <td id="center" >(ф.и.о.)</td>
@@ -327,7 +358,7 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
                         <td width="10%"></td>
                         <td width="20%" valign="top" align="right">
                             <table  border="0" cellspacing="3" cellpadding="0">
-                                <tr>                             
+                                <tr>
                                     <td>______________________________________________</td>
                                 <tr>                             
                                     <td id="center">(реквизиты свидетельства о государственной регистрации индивидуального предпринимателя)</td>

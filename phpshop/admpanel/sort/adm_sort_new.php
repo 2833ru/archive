@@ -48,7 +48,7 @@ $dis
                 <tr bgcolor="#ffffff">
                     <td style="padding:10">
                         <b><span name=txtLang id=txtLang>Создание Новой Характеристики</span></b><br>
-                        &nbsp;&nbsp;&nbsp;<span name=txtLang id=txtLang>Укажите данные для записи в базу</span>.
+
                     </td>
                     <td align="right">
                         <img src="../img/i_billing_history_med[1].gif" border="0" hspace="10">
@@ -88,8 +88,9 @@ $dis
                                     <LEGEND><span name=txtLang id=txtLang><u>О</u>пции </span></LEGEND>
                                     <div style="padding:10px">
                                         <input type="checkbox" value="1" name="filtr_new"><span name=txtLang id=txtLang>Фильтр</span>
-                                        <input type="checkbox" value="1" name="goodoption_new"><span name=txtLang id=txtLang>Товарная опция</span><br>
+                                        <input type="checkbox" value="1" name="goodoption_new"><span name=txtLang id=txtLang>Товарная опция</span>
                                         <input type="checkbox" value="1" name="optionname_new"><span name=txtLang id=txtLang>Показывать описание опции в корзине</span>
+                                        <input type="checkbox" value="1" name="brand_new"><span name=txtLang id=txtLang>Бренд</span>
                                     </div>
                                 </FIELDSET>
                             </td>
@@ -126,10 +127,10 @@ $dis
                         <tr>
                             <td>
                                 <FIELDSET>
-                                    <LEGEND><span name=txtLang id=txtLang><u>С</u>ылка на описание</span></LEGEND>
+                                    <LEGEND><span name=txtLang id=txtLang><u>С</u>сылка на описание</span></LEGEND>
                                     <div style="padding:10">
 <? echo dispPage($page) ?>
-                                        <p>* Используется при выводе имени характеристики в подробном описании товара в виде ссылки на указанную страницу (описание характеристики "мощность" становится доступной в подробной форме товара в таблице вывода характеристик).</p>
+                                        <p>* Имя характеристики (в таблице характеристик в подробном описании товара) становится ссылкой на указанную страницу с описанием.</p>
                                     </div>
                                 </FIELDSET>
                             </td>
@@ -153,7 +154,7 @@ $dis
         <?
         if (isset($editID) and !empty($name_new)) {// Запись редактирования
             if (CheckedRules($UserStatus["cat_prod"], 2) == 1) {
-                $sql = "INSERT INTO " . $SysValue['base']['table_name20'] . " VALUES ('','$name_new','$flag_new','$num_new','-1','$filtr_new','$description_new','$goodoption_new','$optionname_new','$page_new')";
+                $sql = "INSERT INTO " . $SysValue['base']['table_name20'] . " VALUES ('','$name_new','$num_new','-1','$filtr_new','$description_new','$goodoption_new','$optionname_new','$page_new','$brand_new')";
                 $result = mysql_query($sql) or @die("" . mysql_error() . "");
                 echo"
 	 <script>

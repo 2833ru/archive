@@ -3,7 +3,7 @@
 /**
  * Библиотека парсинга данных
  * @author PHPShop Software
- * @version 1.3
+ * @version 1.4
  * @package PHPShopClass
  */
 class PHPShopParser {
@@ -26,20 +26,37 @@ class PHPShopParser {
     }
 
     /**
+     * Проверка  папки шаблона на присутствие в ней файла шаблона
+     * @param string $path путь к файлу шаблона
+     * @return boolean 
+     */
+    static function checkFile($path, $mod = false) {
+        if (!$mod)
+            $path = $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . chr(47) . $path;
+        if (file_exists($path))
+            return true;
+        else
+            return false;
+    }
+
+    /**
      * Обработка файла шаблона, вставка переменнных
      * @param string $path путь к файлу шаблона
      * @param bool $return режим вывода информации или возврата информации
+     * @param bool $replace режим замены 
      * @return string
      */
-    static function file($path, $return = false) {
+    static function file($path, $return = false, $replace = true) {
 
         $string = null;
         if (is_file($path))
             $string = @file_get_contents($path);
         else
-            echo "Error Tmp File: $path";
+            echo "Error Tpl File: $path";
+
         $replaces = array(
             "/images\//i" => $GLOBALS['SysValue']['dir']['dir'] . $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/images/",
+            "/!images!\//i" => "images/",
             "/java\//i" => "/java/",
             "/css\//i" => "/css/",
             "/phpshop\//i" => "/phpshop/",
@@ -47,7 +64,10 @@ class PHPShopParser {
 
         $string = @preg_replace_callback("/(@php)(.*)(php@)/sU", "phpshopparserevalstr", $string);
         $string = @preg_replace("/@([a-zA-Z0-9_]+)@/e", '$GLOBALS["SysValue"]["other"]["\1"]', $string);
+
+        if (!empty($replace))
         $string = preg_replace(array_keys($replaces), array_values($replaces), $string);
+
         if (!empty($return))
             return $string;
         else

@@ -36,15 +36,15 @@ if(document.getElementById('agreement').checked)
 else alert('Необходимо согласиться с условиями оферты');
 }
 </script>
-<div align=\"center\">
+<div align=\"center\" width=\"400\">
 
  <p><br></p>
  
- <img src=\"images/bank/visa.gif\" border=\"0\" hspace=5>
-  <img src=\"images/bank/mastercard.gif\" border=\"0\" hspace=5>
+ <img src=\"phpshop/lib/templates/icon/bank/visa.png\" border=\"0\" hspace=\"5\">
+  <img src=\"phpshop/lib/templates/icon/bank/mastercard.png\" border=\"0\" hspace=\"5\">
   <p><br></p>
 
-<p>Вы можете оплатить свои заказы в режиме он-лайн кредитные картами (VISA, MasterCard, DCL, JCB, AmEx). Обработка платежей осуществляется процессинговым центром <b>PayOnline System</b>. </p>
+<h4>Вы можете оплатить заказ в режиме online кредитными картами VISA, MasterCard. Обработка платежей осуществляется процессинговым центром <b>PayOnline System</b>. </h4>
 
 <form name=\"PaymentForm\" action=\"https://secure.payonlinesystem.com/ru/payment/\" method=\"get\" target=\"_top\" >
 <input type=\"hidden\" name=\"OrderId\" id=\"OrderId\" value=\"$OrderId\">
@@ -53,16 +53,12 @@ else alert('Необходимо согласиться с условиями оферты');
 <input type=\"hidden\" name=\"Currency\" value=\"$Currency\">
 <input type=\"hidden\" name=\"SecurityKey\" value=\"$SecurityKey\">
 <input type=\"hidden\" name=\"FailUrl\" value=\"".urlencode($FailUrl)."\">
-<input type=\"checkbox\" id=\"agreement\" value=\"1\">Я согласен(на) с <a href=\"/page/agreement.html\" target=\"_blank\">условиями оферты</a>
+<input type=\"checkbox\" id=\"agreement\" value=\"1\"> Я принимаю <a href=\"/page/agreement.html\" target=\"_blank\">условия оферты</a>
 	<table>
-<tr><td><img src=\"images/shop/icon-setup.gif\" width=\"16\" height=\"16\" border=\"0\"></td>
-	<td align=\"center\"><a href=\"javascript:history.back(1)\"><u>
-	Вернуться к оформлению<br>
-	покупки</u></a></td>
-	<td width=\"20\"></td>
+<tr>
 	<td><img src=\"images/shop/icon-client-new.gif\" alt=\"\" width=\"16\" height=\"16\" border=\"0\" align=\"left\">
         
-	<a href=\"javascript:CheckAgreement();\">Оплатить через платежную систему</a></td>
+	<a href=\"javascript:CheckAgreement();\">Оплатить сейчас</a></td>
 </tr>
 </table>
 </form>

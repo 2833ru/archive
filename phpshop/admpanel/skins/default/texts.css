@@ -39,6 +39,7 @@ fieldset:hover{
     border-radius:5px;
     background: #FFF;
     cursor:pointer;
+    height:18px;
 }
 
 
@@ -85,13 +86,13 @@ legend.titlelegend{
 }
 
 .login{
+
     background: -moz-linear-gradient(#F0F0F0, #FFF);
     background: -ms-linear-gradient(#F0F0F0, #FFF);
     background: -o-linear-gradient(#F0F0F0, #FFF);
     background: -webkit-linear-gradient(#F0F0F0, #FFF);
-    border: 1px;
-    border-style:outset; 
-    border-color:#F0F0F0;
+    background-color: #F0F0F0;
+    border: solid 1px #CCC;
     width: 330px;
     -moz-border-radius: 8px;
     -webkit-border-radius: 8px;
@@ -224,6 +225,9 @@ table.sortable span.sortarrow {
     -moz-border-radius-topright:8px;
     border-top-left-radius:8px;
     border-top-right-radius:8px;
+    background-color: #fff;
+    padding-top: 2px; 
+
 
 }
 
@@ -352,10 +356,11 @@ table.sortable span.sortarrow {
     background: -o-linear-gradient(#F7EFD6,#FFFBEF);
     background: -webkit-linear-gradient(#F7EFD6,#FFFBEF);
     padding:10px;
-    border: solid 1px #CCC;
-    -webkit-border-radius:3px;
-    -moz-border-radius:3px;
-    border-radius:3px;
+    border: solid 1px #EFD39C;
+    -webkit-border-radius:5px;
+    -moz-border-radius:5px;
+    border-radius:5px;
+    box-shadow: 0.4em 0.4em 5px rgba(122,122,122,0.5);
 }
 
 #pane{
@@ -365,6 +370,7 @@ table.sortable span.sortarrow {
     background: -ms-linear-gradient(#FFF, #F0F0F0);
     background: -o-linear-gradient(#FFF, #F0F0F0);
     background: -webkit-linear-gradient(#FFF, #F0F0F0);
+    background-color: #F5F5F5;
     border: solid 1px #CCC;
     -webkit-border-radius:5px;
     -moz-border-radius:5px;
@@ -445,7 +451,7 @@ div, input, button, select, fieldset, textarea, td, th{
 }
 .title { 
     background: #DDDDFF; 
-    color: 000; 
+    color: #000; 
     font-weight: bold; 
     font-size: 120%; 
     padding: 3px 20px; 
@@ -463,7 +469,6 @@ input,textarea,select{
     padding:2px;
 }
 
-
 input.but{
     width: 7em; 
     height: 2.2em;
@@ -476,13 +481,15 @@ input.but{
     background: -ms-linear-gradient(#FFF, #F0F0F0,#FFF);
     background: -o-linear-gradient(#FFF, #F0F0F0,#FFF);
     background: -webkit-linear-gradient(#FFF, #F0F0F0,#FFF);
+    background-color:#F5F5F5;
     cursor: pointer;
 }
 
 
 
 .small{
-    height: 1.9em!important;
+    height: 1.8em!important;
+    padding:0px!important;
 }
 
 .long{
@@ -519,8 +526,14 @@ input:hover,select:hover,textarea:hover {
     border: solid 1px #BFDBFF;
 }
 
-img.icon{
+#icon{
     cursor: pointer;
+    border: solid 1px #CCC;
+    -webkit-border-radius:5px;
+    -moz-border-radius:5px;
+    border-radius:5px;
+    cursor:pointer;
+    box-shadow: 0.2em 0.2em 3px rgba(122,122,122,0.3);
 }
 
 button{

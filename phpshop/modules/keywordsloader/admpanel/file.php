@@ -23,7 +23,7 @@ if (is_array($data)) {
 ';
     }
 
-    $dir = "../../../../UserFiles/Files/";
+    $dir = "../../../admpanel/csv/";
     $file = PHPShopDate::dataV(false, false) . '-' . substr(md5(time()), 0, 5) . '.csv';
     PHPShopFile::write($dir . $file, $csv);
     header("Location: " . $dir . $file);

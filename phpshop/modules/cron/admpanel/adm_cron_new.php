@@ -36,7 +36,7 @@ function actionInsert() {
 
 // Начальная функция загрузки
 function actionStart() {
-    global $PHPShopGUI,$PHPShopSystem,$SysValue,$_classPath,$PHPShopOrm;
+    global $PHPShopGUI,$_classPath;
 
 
     $PHPShopGUI->dir=$_classPath."admpanel/";
@@ -47,8 +47,12 @@ function actionStart() {
     // Графический заголовок окна
     $PHPShopGUI->setHeader("Создание Новой Задачи Cron","Укажите данные для записи в базу.",$PHPShopGUI->dir."img/i_display_settings_med[1].gif");
 
+     $work[]=array('Выбрать','');
+     $work[]=array('Бекап БД','phpshop/modules/cron/sample/dump.php');
+     $work[]=array('Курсы валют','phpshop/modules/cron/sample/currency.php');
+    
     $Tab1=$PHPShopGUI->setField("Название задачи:",$PHPShopGUI->setInput("text","name_new",'Новая задача',"left",400));
-    $Tab1.=$PHPShopGUI->setField("Запускаемый Файл:".$PHPShopGUI->setCheckbox("enabled_new",1,"Включить",1),$PHPShopGUI->setInput("text","path_new",false,"left",400).$PHPShopGUI->setLine("* phpshop/modules/cron/sample/dump.php"));
+    $Tab1.=$PHPShopGUI->setField("Запускаемый Файл:".$PHPShopGUI->setCheckbox("enabled_new",1,"Включить",1),$PHPShopGUI->setInput("text","path_new",false,"left",400).$PHPShopGUI->setSelect('work', $work, 100, 'left', false, 'document.getElementById(\'path_new\').value=this.value').$PHPShopGUI->setLine("* phpshop/modules/cron/sample/testcron.php"));
     $Tab1.=$PHPShopGUI->setSelect('execute_day_num_new',$PHPShopGUI->setSelectValue(false),50,1,'Количество запусков в день:');
     
     

@@ -22,7 +22,7 @@ $SysValue['bank'] = unserialize($LoadItems['System']['bank']);
 $pathTemplate = $SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'];
 
 
-$sql = "select * from " . $SysValue['base']['table_name1'] . " where id='$_GET[orderID]'";
+$sql = "select * from " . $SysValue['base']['table_name1'] . " where id=" . intval($_GET['orderID']);
 $n = 1;
 @$result = mysql_query($sql) or die($sql);
 $row = mysql_fetch_array(@$result);
@@ -92,6 +92,32 @@ $summa_nds_dos = number_format($deliveryPrice * $nds / (100 + $nds), "2", ".", "
 $name_person = $order['Person']['name_person'];
 $org_name = $order['Person']['org_name'];
 $datas = PHPShopDate::dataV($datas, "false");
+
+// время доставки под старый формат данных в заказе
+if (!empty($order['Person']['dos_ot']) OR !empty($order['Person']['dos_do']))
+    $dost_ot = " От: " . $order['Person']['dos_ot'] . ", до: " . $order['Person']['dos_do'];
+
+// формируем адрес доставки с учётом старого формата данных в заказах
+if ($row['country'])
+    $adr_info .= ", страна: " . $row['country'];
+if ($row['state'])
+    $adr_info .= ", регион/штат: " . $row['state'];
+if ($row['city'])
+    $adr_info .= ", город: " . $row['city'];
+if ($row['index'])
+    $adr_info .= ", индекс: " . $row['index'];
+if ($row['street'] OR $order['Person']['adr_name'])
+    $adr_info .= ", улица: " . $row['street'] . $order['Person']['adr_name'];
+if ($row['house'])
+    $adr_info .= ", дом: " . $row['house'];
+if ($row['porch'])
+    $adr_info .= ", подъезд: " . $row['porch'];
+if ($row['door_phone'])
+    $adr_info .= ", код домофона: " . $row['door_phone'];
+if ($row['flat'])
+    $adr_info .= ", квартира: " . $row['flat'];
+
+$adr_info = substr($adr_info, 2);
 ?>
 <head>
     <title>Бланк Заказа №<?= $ouid ?></title>
@@ -118,9 +144,12 @@ $datas = PHPShopDate::dataV($datas, "false");
     </style>
 </head>
 <body onload="window.focus()" bgcolor="#FFFFFF" text="#000000" marginwidth=5 leftmargin=5 style="padding: 2px;">
-    <div align="right" class="nonprint"><a href="#" onclick="window.print();
-        return false;" ><img border=0 align=absmiddle hspace=3 vspace=3 src="http://<?= $_SERVER['SERVER_NAME'] . $SysValue['dir']['dir'] ?>/phpshop/admpanel/img/action_print.gif">Распечатать</a> | <a href="#" class="save" onclick="document.execCommand('SaveAs');
-        return false;">Сохранить на диск<img border=0 align=absmiddle hspace=3 vspace=3 src="http://<?= $_SERVER['SERVER_NAME'] . $SysValue['dir']['dir'] ?>/phpshop/admpanel/img/action_save.gif"></a><br><br></div>
+    <div align="right" class="nonprint">
+        <button onclick="window.print()">
+            <img border=0 align=absmiddle hspace=3 vspace=3 src="http://<?= $_SERVER['SERVER_NAME'] . $SysValue['dir']['dir'] ?>/phpshop/admpanel/img/action_print.gif">Распечатать
+        </button> 
+        <br><br>
+    </div>
     <div align="center"><table align="center" width="100%">
             <tr>
                 <td align="center"><img src="<?= $PHPShopSystem->getLogo(); ?>" alt="" border="0"></td>
@@ -134,11 +163,11 @@ $datas = PHPShopDate::dataV($datas, "false");
     <table width=99% cellpadding=2 cellspacing=0 align=center>
         <tr class=tablerow>
             <td class=tablerow width="150">Заказчик:</td>
-            <td class=tableright><?= @$order['Person']['name_person'] ?></td>
+            <td class=tableright><?= @$order['Person']['name_person'] . $row['fio'] ?></td>
         </tr>
         <tr class=tablerow>
             <td class=tablerow>Компания:</td>
-            <td class=tableright>&nbsp;<?= @$order['Person']['org_name'] ?></td>
+            <td class=tableright>&nbsp;<?= @$order['Person']['org_name'] . $row['org_name'] ?></td>
         </tr>
         <tr class=tablerow>
             <td class=tablerow>Почта:</td>
@@ -146,19 +175,19 @@ $datas = PHPShopDate::dataV($datas, "false");
         </tr>
         <tr class=tablerow>
             <td class=tablerow>ИНН:</td>
-            <td class=tableright>&nbsp;<?= @$order['Person']['org_inn'] ?></td>
+            <td class=tableright>&nbsp;<?= @$order['Person']['org_inn'] . $row['org_inn'] ?></td>
         </tr>
         <tr class=tablerow>
             <td class=tablerow>КПП:</td>
-            <td class=tableright>&nbsp;<?= @$order['Person']['org_kpp'] ?></td>
+            <td class=tableright>&nbsp;<?= @$order['Person']['org_kpp'] . $row['org_kpp'] ?></td>
         </tr>
         <tr class=tablerow>
             <td class=tablerow>Тел:</td>
-            <td class=tableright><?= @$order['Person']['tel_code'] . "-" . @$order['Person']['tel_name'] ?></td>
+            <td class=tableright><?= @$order['Person']['tel_code'] . " " . @$order['Person']['tel_name'] . $row['tel'] ?></td>
         </tr>
         <tr class=tablerow>
             <td class=tablerow>Адрес:</td>
-            <td class=tableright><?= @$order['Person']['adr_name'] ?></td>
+            <td class=tableright><?= @$adr_info ?></td>
         </tr>
         <tr class=tablerow>
             <td class=tablerow>Грузополучатель:</td>
@@ -166,7 +195,7 @@ $datas = PHPShopDate::dataV($datas, "false");
         </tr>
         <tr class=tablerow>
             <td class=tablerow>Время доставки:</td>
-            <td class=tableright><?= $order['Person']['dos_ot'] ?> - <?= $order['Person']['dos_do'] ?></td>
+            <td class=tableright><?= $dost_ot ?></td>
         </tr>
         <tr class=tablerow >
             <td class=tablerow>Тип оплаты:</td>

@@ -38,7 +38,7 @@ class PHPShopDate {
             'y' => date("Y", $nowtime),
             'm' => date("m", $nowtime),
             'd' => date("d", $nowtime),
-            'h' => date("h:i", $nowtime)
+            'h' => date("H:i", $nowtime)
         );
 
         if ($months_enabled)

@@ -42,7 +42,7 @@ function actionStart() {
     $PHPShopGUI->addCSSFiles('../css/dateselector.css');
 
     // Графический заголовок окна
-    $PHPShopGUI->setHeader("Редактирование Отзыва", "Укажите данные для записи в базу.", $PHPShopGUI->dir . "img/i_account_properties_med[1].gif");
+    $PHPShopGUI->setHeader("Редактирование Отзыва", "", $PHPShopGUI->dir . "img/i_account_properties_med[1].gif");
 
     // Редактор 1
     $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));

@@ -18,7 +18,6 @@ PHPShopObj::loadClass("security");
 
 // Подключение к БД
 $PHPShopBase = new PHPShopBase("../phpshop/inc/config.ini");
-
 // Проверка пользователя
 require("lib/user.lib.php");
 
@@ -80,6 +79,7 @@ function OrdersArray($p1, $p2, $words, $list) {
             "cart" => $order['Cart'],
             "order" => $order['Person'],
             "time" => $time,
+            "row" => $row,
             "statusi" => $statusi
         );
         $i--;
@@ -123,10 +123,35 @@ function MyStripSlashes($s) {
 
 // Вывод доставки
 function GetDelivery($deliveryID, $name) {
-    $sql = "select * from " . $GLOBALS['SysValue']['base']['table_name30'] . " where id=".intval($deliveryID);
+    $sql = "select * from " . $GLOBALS['SysValue']['base']['table_name30'] . " where id=" . intval($deliveryID);
     $result = mysql_query($sql);
     $row = mysql_fetch_array($result);
     return $row[$name];
+}
+
+// Расчёт цены доставки
+function GetDeliveryPrice($deliveryID, $sum, $weight = 0) {
+    global $SysValue;
+
+    $sql = "select * from " . $SysValue['base']['table_name30'] . " where id='$deliveryID'";
+    $result = mysql_query($sql);
+    $row = mysql_fetch_array($result);
+
+    if ($row['price_null_enabled'] == 1 and $sum >= $row['price_null']) {
+        return 0;
+    } else {
+        if ($row['taxa'] > 0) {
+            $addweight = $weight - 500;
+            if ($addweight < 0) {
+                $addweight = 0;
+            }
+            $addweight = ceil($addweight / 500) * $row['taxa'];
+            $endprice = $row['price'] + $addweight;
+            return $at . $endprice;
+        } else {
+            return $row['price'];
+        }
+    }
 }
 
 // Статус заказа
@@ -176,7 +201,6 @@ function Clean($s) {
  */
 function OrderUpdateXml() {
     global $GetOrderStatusArray;
-
     $sql = "select * from " . $GLOBALS['SysValue']['base']['table_name1'] . " where id='" . intval($_REQUEST['id']) . "'";
     $result = mysql_query($sql);
     $row = mysql_fetch_array($result);
@@ -190,14 +214,17 @@ function OrderUpdateXml() {
         "time" => date("d-m-y H:i")
     );
 
-    $order['Person']['name_person'] = MyStripSlashes($_REQUEST['name_person']);
-    $order['Person']['adr_name'] = MyStripSlashes($_REQUEST['adr_name']);
-    $order['Person']['dos_ot'] = MyStripSlashes($_REQUEST['dos_ot']);
-    $order['Person']['dos_do'] = MyStripSlashes($_REQUEST['dos_do']);
-    $order['Person']['tel_code'] = MyStripSlashes($_REQUEST['tel_code']);
-    $order['Person']['tel_name'] = MyStripSlashes($_REQUEST['tel_name']);
-    $order['Person']['org_name'] = MyStripSlashes($_REQUEST['org_name']);
+
+    // Изменения под новую структуру таблицы заказов.
+//    $order['Person']['name_person'] = MyStripSlashes($_REQUEST['name_person']);
+//    $order['Person']['adr_name'] = MyStripSlashes($_REQUEST['adr_name']);
+//    $order['Person']['dos_ot'] = MyStripSlashes($_REQUEST['dos_ot']);
+//    $order['Person']['dos_do'] = MyStripSlashes($_REQUEST['dos_do']);
+//    $order['Person']['tel_code'] = MyStripSlashes($_REQUEST['tel_code']);
+//    $order['Person']['tel_name'] = MyStripSlashes($_REQUEST['tel_name']);
+//    $order['Person']['org_name'] = MyStripSlashes($_REQUEST['org_name']);
     $order['Person']['order_metod'] = MyStripSlashes($_REQUEST['metod_id']);
+
 
     // Корзина
     $cart = $order['Cart']['cart'];
@@ -241,19 +268,59 @@ function OrderUpdateXml() {
             }
     }
 
+    sendUserMail($row);
+
     // Обновляем данные по заказу
     $sql = "UPDATE " . $GLOBALS['SysValue']['base']['table_name1'] . "
-SET
-orders='" . serialize($order) . "',
-status='" . serialize($Status) . "',
-statusi='" . $_REQUEST['statusi'] . "'
-where id='" . $_REQUEST['id'] . "'";
+    SET
+    orders='" . serialize($order) . "',
+    status='" . serialize($Status) . "',
+    fio='" . MyStripSlashes($_REQUEST['name_person']) . "',
+    tel='" . MyStripSlashes($_REQUEST['tel_name']) . "',
+    org_name='" . MyStripSlashes($_REQUEST['org_name']) . "',
+    dop_info='" . MyStripSlashes($_REQUEST['manager']) . "',
+    statusi='" . $_REQUEST['statusi'] . "'
+    where id='" . $_REQUEST['id'] . "'";
     $result = mysql_query($sql);
+}
+
+/**
+ * Оповещение пользователя о новом статусе
+ * @param array $data массив данных заказа
+ */
+function sendUserMail($data) {
+global $GetOrderStatusArray;
+    if ($data['statusi'] != $_REQUEST['statusi']) {
+        PHPShopObj::loadClass("parser");
+        PHPShopObj::loadClass("mail");
+        // Системные настройки
+        $PHPShopSystem = new PHPShopSystem();
+        
+        PHPShopParser::set('ouid', $data['uid']);
+        PHPShopParser::set('date', PHPShopDate::dataV($data['datas']));
+
+        PHPShopParser::set('status', $GetOrderStatusArray[$_REQUEST['statusi']][name]);
+        PHPShopParser::set('user', $data['user']);
+        PHPShopParser::set('company', $PHPShopSystem->getParam('name'));
+//        $title = $PHPShopSystem->getValue('name') . ' - статус заказа ' . $data['uid'] . ' изменен';
+        $title = 'Cтатус заказа ' . $data['uid'] . ' изменен';
+        $order = unserialize($data['orders']);
+
+        PHPShopParser::set('mail', $order['Person']['mail']);
+        PHPShopParser::set('user_name', $order['Person']['name_person']);
+
+
+        $PHPShopMail = new PHPShopMail($order['Person']['mail'], $PHPShopSystem->getValue('adminmail2'), $title, '', true, true);
+        $content = PHPShopParser::file('../phpshop/lib/templates/order/status.tpl', true);
+        if (!empty($content)) {
+            $PHPShopMail->sendMailNow($content);
+        }
+    }
 }
 
 // Данные по заказу
 function OrdersReturn($id) {
-    $sql = "select * from " . $GLOBALS['SysValue']['base']['table_name1'] . " where id=".intval($id);
+    $sql = "select * from " . $GLOBALS['SysValue']['base']['table_name1'] . " where id=" . intval($id);
     $result = mysql_query($sql) or die("ERROR:" . mysql_error() . "");
     $row = mysql_fetch_array($result);
     $id = $row['id'];
@@ -281,6 +348,7 @@ function OrdersReturn($id) {
         "dos_ot" => Clean($status['dos_ot']),
         "dos_do" => Clean($status['dos_do']),
         "manager" => Clean($status['maneger']),
+        "row" => $row,
         "statusi" => $statusi
     );
     return $array;
@@ -297,7 +365,7 @@ function OplataMetod($id) {
 
 // Изображение товара
 function ReturnPic($id) {
-    $sql = "select pic_big from " . $GLOBALS['SysValue']['base']['table_name2'] . " where id=".intval($id);
+    $sql = "select pic_big from " . $GLOBALS['SysValue']['base']['table_name2'] . " where id=" . intval($id);
     $result = mysql_query($sql);
     $row = mysql_fetch_array($result);
     $pic_big = $row['pic_big'];
@@ -338,7 +406,7 @@ switch ($_REQUEST['command']) {
 		  <datas>' . $val['datas'] . '</datas>
 		  <uid>' . $val['uid'] . '</uid>
 		  <id>' . $val['id'] . '</id>
-		  <name>' . Clean($val['order']['name_person']) . '</name>
+		  <name>' . Clean($val['order']['name_person'] . $val['row']['fio'] . " (" . $val['order']['mail'] . ")") . '</name>
 		  <mail>' . Clean($val['order']['mail']) . '</mail>
 		  <tel>' . Clean($val['order']['tel_code']) . ' ' . Clean($val['order']['tel_name']) . '</tel>
 		  <adres>' . Clean($val['order']['adr_name']) . '</adres>
@@ -347,7 +415,7 @@ switch ($_REQUEST['command']) {
 		  <status>' . $GetOrderStatusArray[$val['statusi']]['name'] . '</status>
 		  <color>' . $GetOrderStatusArray[$val['statusi']]['color'] . '</color>
 		  <time>' . $val['time'] . '</time>
-		  <summa>' . (ReturnSumma($val['cart']['sum'], $val['id'], $val['order']['discount']) + GetDelivery($val['order']['dostavka_metod'], "price")) . '</summa>
+		  <summa>' . (ReturnSumma($val['cart']['sum'], $val['id'], $val['order']['discount']) + GetDeliveryPrice($val['order']['dostavka_metod'], $val['cart']['sum'], $val['cart']['weight'])) . '</summa>
 		  <num>' . ($val['cart']['num'] + 1) . '</num>
 		  <kurs>' . $val['cart']['kurs'] . '</kurs>';
                 $XML.='</order>
@@ -377,44 +445,71 @@ switch ($_REQUEST['command']) {
         if (!empty($_REQUEST['id'])) {
             $OrdersReturn = OrdersReturn($_REQUEST['id']);
             $XML = '<?xml version="1.0" encoding="windows-1251"?>
-<orderdb>';
+                    <orderdb>';
 
             if (is_array($GetOrderStatusArray))
                 foreach ($GetOrderStatusArray as $status)
                     $XMLS.='
-  <status>
-    <sid>' . $status['id'] . '</sid>
-	<sname>' . $status['name'] . '</sname>
- </status>
- ';
+                    <status>
+                      <sid>' . $status['id'] . '</sid>
+                          <sname>' . $status['name'] . '</sname>
+                   </status>
+                   ';
 
             if (is_array($GetOplataMetodArray))
                 foreach ($GetOplataMetodArray as $metod)
                     $XMLM.='
-  <pay>
-    <pid>' . $metod['id'] . '</pid>
-	<pname>' . $metod['name'] . '</pname>
- </pay>
- ';
+                    <pay>
+                      <pid>' . $metod['id'] . '</pid>
+                          <pname>' . $metod['name'] . '</pname>
+                   </pay>
+                   ';
+
+            // выводим сгрупппированные данные пользователя
+            if ($OrdersReturn['row']['fio'] OR $OrdersReturn['order']['name_person'])
+                $adr_info .= Clean(", ФИО: " . $OrdersReturn['row']['fio'] . $OrdersReturn['order']['name_person']);
+            if ($OrdersReturn['row']['tel'] or $_POST['person']['tel_code'] or $_POST['person']['tel_name'])
+                $adr_info .= Clean(", тел.: " . $OrdersReturn['row']['tel'] . $_POST['person']['tel_code'] . $_POST['person']['tel_name']);
+            if ($OrdersReturn['row']['country'])
+                $adr_info .= Clean(", страна: " . $OrdersReturn['row']['country']);
+            if ($OrdersReturn['row']['state'])
+                $adr_info .= Clean(", регион/штат: " . $OrdersReturn['row']['state']);
+            if ($OrdersReturn['row']['city'])
+                $adr_info .= Clean(", город: " . $OrdersReturn['row']['city']);
+            if ($OrdersReturn['row']['index'])
+                $adr_info .= Clean(", индекс: " . $OrdersReturn['row']['index']);
+            if ($OrdersReturn['row']['street'] OR $OrdersReturn['order']['adr_name'])
+                $adr_info .= Clean(", улица: " . $OrdersReturn['row']['street'] . $OrdersReturn['order']['adr_name']);
+            if ($OrdersReturn['row']['house'])
+                $adr_info .= Clean(", дом: " . $OrdersReturn['row']['house']);
+            if ($OrdersReturn['row']['porch'])
+                $adr_info .= Clean(", подъезд: " . $OrdersReturn['row']['porch']);
+            if ($OrdersReturn['row']['door_phone'])
+                $adr_info .= Clean(", код домофона: " . $OrdersReturn['row']['door_phone']);
+            if ($OrdersReturn['row']['flat'])
+                $adr_info .= Clean(", квартира: " . $OrdersReturn['row']['flat']);
+            if ($OrdersReturn['row']['delivtime'] OR $OrdersReturn['order']['dos_ot'])
+                $adr_info .= Clean(", время доставки: " . $OrdersReturn['row']['delivtime'] . $OrdersReturn['order']['dos_ot']);
+
             // Данные по заказу
             $XML.='<order>
 	      <data>' . PHPShopDate::dataV($OrdersReturn['order']['data']) . '</data>
           <datas>' . $OrdersReturn['datas'] . '</datas>
 		  <uid>' . $OrdersReturn['order']['ouid'] . '</uid>
-		  <name>' . Clean($OrdersReturn['order']['name_person']) . '</name>
+		  <name>' . Clean($OrdersReturn['order']['name_person'] . $OrdersReturn['row']['fio']) . '</name>
 		  <mail>' . Clean($OrdersReturn['order']['mail']) . '</mail>
 		  <tel_code>' . Clean($OrdersReturn['order']['tel_code']) . '</tel_code>
-		  <tel_name>' . Clean($OrdersReturn['order']['tel_name']) . '</tel_name>
-		  <adres>' . Clean($OrdersReturn['order']['adr_name']) . '</adres>
+		  <tel_name>' . Clean($OrdersReturn['order']['tel_name'] . $OrdersReturn['row']['tel']) . '</tel_name>
+		  <adres>' . Clean($OrdersReturn['order']['adr_name'] . $adr_info) . '</adres>
 		  <dos_ot>' . Clean($OrdersReturn['order']['dos_ot']) . '</dos_ot>
 		  <dos_do>' . Clean($OrdersReturn['order']['dos_do']) . '</dos_do>
 		  <discount>' . (Clean($OrdersReturn['order']['discount']) + 0) . '</discount>
-		  <manager>' . $OrdersReturn['manager'] . '</manager>
+		  <manager>' . Clean($OrdersReturn['row']['dop_info']) . '</manager>
 		  <place>' . GetDelivery($OrdersReturn['order']['dostavka_metod'], "city") . '</place>
-		  <place_price>' . GetDelivery($OrdersReturn['order']['dostavka_metod'], "price") . '</place_price>
+		  <place_price>' . GetDeliveryPrice($OrdersReturn['order']['dostavka_metod'], $OrdersReturn['cart']['sum'], $OrdersReturn['cart']['weight']) . '</place_price>
 		  <metod>' . OplataMetod($OrdersReturn['order']['order_metod']) . '</metod>
 		  <metod_id>' . $OrdersReturn['order']['order_metod'] . '</metod_id>
-		  <org_name>' . Clean($OrdersReturn['order']['org_name']) . '</org_name>
+		  <org_name>' . Clean($OrdersReturn['order']['org_name'] . $OrdersReturn['row']['org_name']) . '</org_name>
 		  <statusi>' . $OrdersReturn['statusi'] . '</statusi>
 		  <status>' . $GetOrderStatusArray[$OrdersReturn['statusi']]['name'] . '</status>
 		  <time>' . $OrdersReturn['time'] . '</time>

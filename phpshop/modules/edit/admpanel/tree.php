@@ -98,12 +98,12 @@ class FileCatalogTree extends CatalogTree {
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=<?=$GLOBALS['PHPShopLangCharset']?>">
-        <LINK href="<?=$_classPath.'admpanel/'?>skins/classic/dtree.css" type=text/css rel=stylesheet>
+        <LINK href="<?=$_classPath.'admpanel/'?>skins/<?= $_SESSION['theme'] ?>/dtree.css" type=text/css rel=stylesheet>
         <SCRIPT language=JavaScript1.2 src="<?=$_classPath.'admpanel/'?>java/dtree.js" type=text/javascript></SCRIPT>
         <script language="JavaScript1.2" src="<?=$_classPath.'admpanel/'?>java/javaMG.js" type="text/javascript"></script>
     </head>
     <body bottommargin="0" rightmargin="0" topmargin="0" leftmargin="0" bgcolor="#ffffff">
-        <div style="padding:10px">
+        <div style="padding:5px">
             <?
             // Дерево каталогов
             $CatalogTree = new FileCatalogTree($GLOBALS['SysValue']['base']['table_name']);
