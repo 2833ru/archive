@@ -4,9 +4,7 @@ include_once dirname(__FILE__) . '/../class/OzonSeller.php';
 
 function addOzonsellerProductTab($data) {
     global $PHPShopGUI;
-
-    $OzonSeller = new OzonSeller();
-
+    
     // Размер названия поля
     $PHPShopGUI->field_col = 4;
 
@@ -17,10 +15,12 @@ function addOzonsellerProductTab($data) {
     if (!empty($data['export_ozon']) and $data['export_ozon_task_status'] != 'imported') {
 
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
-
+        
+        $OzonSeller = new OzonSeller();
         if (empty($data['export_ozon_task_id'])) {
 
             $products[] = $data;
+            
             $result = $OzonSeller->sendProducts($products);
             $task_id = $data['export_ozon_task_id'] = $result['result']['task_id'];
 
@@ -63,7 +63,7 @@ function addOzonsellerProductTab($data) {
         }
 
     if (!empty($error))
-        $tab .= $PHPShopGUI->setField('Ошибки', $PHPShopGUI->setText($error,"left", false, false));
+        $tab .= $PHPShopGUI->setField('Ошибки', $PHPShopGUI->setText($error, "left", false, false));
 
     $tab .= $PHPShopGUI->setField('Цена OZON', $PHPShopGUI->setInputText(null, 'price_ozon_new', $data['price_ozon'], 150, $valuta_def_name), 2);
     $tab .= $PHPShopGUI->setField("Штрихкод", $PHPShopGUI->setInputText(null, 'barcode_ozon_new', $data['barcode_ozon']));
@@ -79,6 +79,21 @@ function OzonsellerUpdate($data) {
         $_POST['export_ozon_new'] = 0;
         $_POST['export_ozon_task_id_new'] = 0;
         $_POST['export_ozon_task_status_new'] = '';
+    }
+
+    // Изменение склада
+    if (isset($_POST['enabled_new'])) {
+        
+        $PHPShopProduct = new PHPShopProduct($_POST['rowID']);
+        $data['export_ozon_task_id'] = $PHPShopProduct->getParam('export_ozon_task_id');
+
+        if (!empty($data['export_ozon_task_id'])) {
+            $OzonSeller = new OzonSeller();
+            $data['id'] = $PHPShopProduct->getParam('id');
+            $data['items'] = $_POST['items_new'];
+            $data['enabled'] = $_POST['enabled_new'];
+            $OzonSeller->setProductStock($data);
+        }
     }
 }
 

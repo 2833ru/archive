@@ -33,4 +33,14 @@ $().ready(function() {
         });
 
     });
+    
+    // Подсказки 
+    $('[data-toggle="tooltip"]').tooltip({container: 'body'});
+    
+    // Отображение пароля
+    $(".password-view").on('click', function (event) {
+        event.preventDefault();
+        $('input:password').attr("type", "text");
+        $('.glyphicon-eye-close').removeClass('glyphicon-eye-close').addClass('glyphicon-eye-open');
+    });
 });

@@ -84,11 +84,11 @@
             <div class="header-bottom">
                 <div class="container">
                     <div class="row">
-                        <div class="col-xs-8 col-sm-8 col-md-2 bottom-mobile-fix">
+                        <div class="col-xs-8 col-sm-8 col-md-2 bottom-mobile-fix @php __hide('logo'); php@">
                             <div class="row">
                                 <div id="logo">
                                     <a href="/">
-                                        <img src="@logo@" alt="@name@" class="img-responsive" /></a>
+                                        <img src="@logo@" alt="" class="img-responsive" /></a>
                                 </div>
                             </div>
                         </div>

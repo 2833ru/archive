@@ -7,6 +7,7 @@ PHPShopObj::loadClass("delivery");
 
 // SQL
 $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.ozonseller.ozonseller_system"));
+$OzonSeller = new OzonSeller();
 
 // Обновление версии модуля
 function actionBaseUpdate() {
@@ -20,10 +21,20 @@ function actionBaseUpdate() {
 
 // Функция обновления
 function actionUpdate() {
-    global $PHPShopModules;
+    global $PHPShopModules, $OzonSeller;
 
+    // Синхронизация категорий
     if (!empty($_POST['load']))
            actionUpdateCategory();
+    
+    // Получение ID склада
+    $getWarehouse = $OzonSeller->getWarehouse();
+    if(is_array($getWarehouse['result']))
+        foreach($getWarehouse['result'] as $warehouse){
+            if($warehouse['name'] == PHPShopString::win_utf8($OzonSeller->warehouse_name,true)){
+                $_POST['warehouse_id_new'] = $warehouse['warehouse_id'];
+            }
+        }
     
     $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.ozonseller.ozonseller_system"));
     $PHPShopOrm->debug = false;
@@ -56,9 +67,8 @@ function setChildrenCategory($tree_array,$parent_to) {
 
 // Синхронизация категорий
 function actionUpdateCategory() {
-    global $PHPShopModules;
+    global $PHPShopModules,$OzonSeller;
 
-    $OzonSeller = new OzonSeller();
     $getTree = $OzonSeller->getTree(['category_id'=>0]);
     $tree_array = $getTree['result'];
 
@@ -123,7 +133,7 @@ function actionStart() {
 
     $info = '<h4>Настройка модуля</h4>
     <ol>
-        <li>Зарегистрироваться в <a href="https://seller.ozon.ru" target="_blank">OZON Seller</a></li>
+        <li>Зарегистрироваться в <a href="https://seller.ozon.ru" target="_blank">OZON Seller</a> и указать при регистрации промокод <mark>SELLERB7X36A77</mark> для получения <b>5000 бонусов</b> в рекламный кабинет.</li>
         <li>В личном кабинете OZON Seller открыть <a href="https://seller.ozon.ru/app/settings/api-keys" target="_blank">Настройки - API ключи</a>, создать новый API ключ с правами Администратор (Обычный токен, дает доступ ко всем методам API). Необходимо скопировать значение ключа в поле <kbd>API key</kbd> и  значение Client Id в поле <kbd>Client Id</kbd> в настройках модуля.
         </li>
         <li>В настройках модуля включить опцию обновления базу категорий товаров для OZON и нажать <kbd>Сохранить</kbd>. Загрузка базы категорий может занять несколько секунд по причине большого количества категорий в OZON.</li>
@@ -163,7 +173,7 @@ function actionStart() {
         $PHPShopGUI->setField('Колонка цен OZON', $PHPShopGUI->setSelect('price_new', $PHPShopGUI->setSelectValue($data['price'], 5), 100)) .
         $PHPShopGUI->setField('Наценка', $PHPShopGUI->setInputText($status_pre, 'fee_new', $data['fee'], 100, '%')).
         $PHPShopGUI->setField('Действие', $PHPShopGUI->setRadio("fee_type_new", 1, "Понижение", $data['fee_type']) . $PHPShopGUI->setRadio("fee_type_new", 2, "Повышение", $data['fee_type'])).
-        $PHPShopGUI->setField("Название склада OZON", $PHPShopGUI->setInputText(null, 'warehouse_new', $data['warehouse'], 300))
+        $PHPShopGUI->setField("Название склада OZON", $PHPShopGUI->setInputText(null, 'warehouse_new', $data['warehouse'], 300),null,'ID '.$data['warehouse_id'])
             );
 
     $Tab2 = $PHPShopGUI->setInfo($info);

@@ -55,9 +55,9 @@
                 </div>
             </div>
             <div class="row vertical-align">
-                <div class="col-md-3 col-sm-3 col-xs-12 text-center">
+                <div class="col-md-3 col-sm-3 col-xs-12 text-center @php __hide('logo'); php@">
                     <div class="logo">
-                        <a href="/"><img src="@logo@" alt="@name@"></a>
+                        <a href="/"><img src="@logo@" alt=""></a>
                     </div>
                 </div>
                 <div class="col-md-9 col-xs-12 col-sm-9">

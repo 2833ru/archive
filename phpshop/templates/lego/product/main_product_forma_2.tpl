@@ -3,14 +3,14 @@
         <a class="product-img" href="/shop/UID_@productUid@.html" title="@productNameClean@">
             <img data-src="@productImg@" alt="@productNameClean@">
         </a>
-		  <span class="sale-icon-content ">
-					@specIcon@
-					@newtipIcon@
-					<span class="label-block"> @hitIcon@
-					 @promotionsIcon@</span>
-				</span>
+        <span class="sale-icon-content ">
+            @specIcon@
+            @newtipIcon@
+            <span class="label-block"> @hitIcon@
+                @promotionsIcon@</span>
+        </span>
         <div class="product-block-button">
-		<a class="wrap-link" href="/shop/UID_@productUid@.html" title="@productNameClean@"></a>
+            <a class="wrap-link" href="/shop/UID_@productUid@.html" title="@productNameClean@"></a>
             <a href="#" data-role="/shop/UID_@productUid@.html" class="btn btn-cart fastView btn-circle" data-toggle="modal" data-target="#modalProductView"><span class="icons-search"></span></a>
             <div class="btn-block"> <a class="btn addToCartList @elementCartOptionHide@" data-title="{Выбрать}" data-placement="top" data-toggle="tooltip" href="/shop/UID_@productUid@.html"><span class="icons-cart"></span></a>
                 <button class="btn  addToCartList @elementCartHide@" data-uid="@productUid@" data-num="1"  data-title="{Купить}" data-placement="top" data-toggle="tooltip"><span class="icons-cart"></span></button>

@@ -88,7 +88,7 @@
             </div>
             <div class="logo">
                 <a href="/">
-                    <img src="@logo@" alt="@name@">
+                    <img src="@logo@" alt="">
                 </a>
                 <!-- Каталоги в главном меню-->
 

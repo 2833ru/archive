@@ -200,12 +200,19 @@ function template_parent($obj, $dataArray, $rout) {
             $obj->set('ComEndCart', null);
             //$obj->set('productParentJson',json_safe_encode($true_color_array));
             $obj->set('productParentList', ParseTemplateReturn("product/product_odnotip_product_parent.tpl"));
+            $obj->set('productHeroThumbs', 'false');
         }
     }
 }
 
 function template_UID($obj, $dataArray, $rout) {
+
+    if ($rout == 'START') {
+        $obj->set('productHeroThumbs', 'true');
+    }
+
     if ($rout == 'MIDDLE') {
+
         if ($obj->get('optionsDisp') != '' and $obj->get('parentList') == '') {
             $obj->set('ComStartCart', '<!--');
             $obj->set('ComEndCart', '-->');
@@ -223,12 +230,12 @@ function template_UID($obj, $dataArray, $rout) {
         else
             $obj->set('newtipIcon', '');
 
+        // В корзине
         $cart = new PHPShopCart();
-
         if ($cart->isItemInCart($dataArray['id'])) {
-            $obj->set('flowProductSale', $obj->lang('productSaleReady') . '<span class="icons icons-incart"></span>');
+            $obj->set('flowProductSale', $obj->lang('productSaleReady'));
         } else {
-            $obj->set('flowProductSale', $obj->lang('product_sale') . '<span class="icons icons-cart"></span>');
+            $obj->set('flowProductSale', $obj->lang('product_sale'));
         }
     }
 }
@@ -284,26 +291,26 @@ function sorttemplatehook($value, $n, $title, $vendor) {
         }
     }
 
-    if($disp_limit){
-       $disp_limit = '<!-- View More - Collapse -->
-              <div class="collapse" id="collapsefilter'.$p[1].'">
-               '.$disp_limit.'
+    if ($disp_limit) {
+        $disp_limit = '<!-- View More - Collapse -->
+              <div class="collapse" id="collapsefilter' . $p[1] . '">
+               ' . $disp_limit . '
               </div>
               <!-- End View More - Collapse -->
 
               <!-- Link -->
-              <a class="link link-collapse small font-size-1" data-toggle="collapse" href="#collapsefilter'.$p[1].'" role="button" aria-expanded="false" aria-controls="collapseBrand">
-                <span class="link-collapse-default">'.__('Больше').'</span>
-                <span class="link-collapse-active">'.__('Меньше').'</span>
+              <a class="link link-collapse small font-size-1" data-toggle="collapse" href="#collapsefilter' . $p[1] . '" role="button" aria-expanded="false" aria-controls="collapseBrand">
+                <span class="link-collapse-default">' . __('Больше') . '</span>
+                <span class="link-collapse-active">' . __('Меньше') . '</span>
                 <span class="link-icon ml-1">+</span>
               </a>
               <!-- End Link -->';
     }
 
     if (PHPShopString::is_mobile())
-        $return = '<div class="pb-4 mb-4"><h6>' . $title . '</h6><div>' . $disp .$disp_limit. '</div></div>';
+        $return = '<div class="pb-4 mb-4"><h6>' . $title . '</h6><div>' . $disp . $disp_limit . '</div></div>';
     else
-        $return = '<div class="border-bottom pb-4 mb-4"><h4>' . $title . '</h4><div>' . $disp .$disp_limit. '</div></div>';
+        $return = '<div class="border-bottom pb-4 mb-4"><h4>' . $title . '</h4><div>' . $disp . $disp_limit . '</div></div>';
 
     return $return;
 }
@@ -367,6 +374,10 @@ function template_image_gallery($obj, $array) {
         ksort($sort_data);
 
         foreach ($sort_data as $k => $row) {
+            
+            if($i>10)
+                continue;
+            
             $name = $row['name'];
             $name_s = str_replace(".", "s.", $name);
             $name_bigstr = str_replace(".", "_big.", $name);
@@ -380,13 +391,12 @@ function template_image_gallery($obj, $array) {
             }
 
             $heroSlider .= '<div class="js-slide"><img class="img-fluid w-100 rounded-lg" src="' . $name . '" alt="' . $productTitle . '"></div>';
-            $heroSliderNav .= '<div class="js-slide p-1"><a class="js-slick-thumb-progress d-block avatar avatar-circle border p-1" href="javascript:;"><img class="avatar-img" src="' . $name_s . '" alt="' . $productTitle . '"></a></div>';
+            $heroSliderNav .= '<div class="js-slide p-1" data-big-image="' . $name . '"><a class="js-slick-thumb-progress d-block avatar avatar-circle border p-1" href="javascript:;"><img class="avatar-img" src="' . $name_s . '" alt="' . $productTitle . '"></a></div>';
 
             $i++;
         }
 
-
-        if ($i < 2)
+        if ($i < 2 or PHPShopString::is_mobile())
             $heroSliderNav = null;
 
         $obj->set('productHeroSlider', $heroSlider);

@@ -40,7 +40,7 @@
                     <span class="@php __hide('avgRateNum'); php@ text-primary">@avgRateNum@</span>   
                 </div>
             </div>
-            <button type="button" class="btn btn-sm btn-outline-primary btn-pill transition-3d-hover addToCartList @elementCartHide@" data-uid="@productUid@">@productSale@</button>
+            <button type="button" class="btn btn-sm btn-outline-primary btn-pill transition-3d-hover addToCartList @elementCartHide@" data-uid="@productUid@">@flowProductSale@</button>
         </div>
     </div>
     <!-- End Product -->

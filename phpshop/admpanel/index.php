@@ -42,6 +42,15 @@ if ($PHPShopBase->getNumRows('black_list', 'where ip="' . PHPShopSecurity::Total
     exit();
 }
 
+// Проверка 10 неправильных попыток авторизаций и блокировка IP на 1 час
+if ($PHPShopBase->getNumRows('jurnal', 'where ip="' . PHPShopSecurity::TotalClean($_SERVER['REMOTE_ADDR']) . '" and flag=\'1\' and datas > ' . (time() - 3600)) > 10) {
+    header("HTTP/1.0 404 Not Found");
+    header("Status: 404 Not Found");
+    if (file_exists('../../404.html'))
+        include_once('../../404.html');
+    exit();
+}
+
 function generatePassword($length = 8) {
     $chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
     $numChars = strlen($chars);

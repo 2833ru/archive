@@ -208,7 +208,7 @@ function actionStart() {
     $sidebarleft[] = array('id' => 'user-data-1', 'title' => 'Информация о покупателе', 'name' => array('caption' => $data['fio'], 'link' => '?path=shopusers&return=order.' . $data['id'] . '&id=' . $data['user']), 'content' => array(array('caption' => $mail, 'link' => 'mailto:' . $order['Person']['mail']), $data['tel']));
 
     // Адрес доставки
-    $sidebarleft[] = array('id' => 'user-data-2', 'title' => 'Адрес доставки', 'name' => PHPShopSecurity::TotalClean($data['fio']), 'content' => array(PHPShopSecurity::TotalClean($data['tel']), PHPShopSecurity::TotalClean($data['street'] . $house . $porch . $flat)));
+    $sidebarleft[] = array('id' => 'user-data-2', 'title' => 'Адрес доставки', 'name' => PHPShopSecurity::TotalClean($data['fio']), 'content' => array(PHPShopSecurity::TotalClean($data['tel'],6), PHPShopSecurity::TotalClean($data['street'] . $house . $porch . $flat)));
 
     // Карта
     if ($PHPShopSystem->ifSerilizeParam('admoption.yandexmap_enabled')) {

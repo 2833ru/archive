@@ -6,7 +6,7 @@
         <div class="container-fluid">
             <!-- Contact Us Starts -->
             <div class="col-md-3 col-sm-6 col-xs-12" itemscope itemtype="http://schema.org/Organization">
-                 <a href=""><img src="@logo@" alt="" width="180"></a>
+                <a href="/" class="@php __hide('logo'); php@"><img src="@logo@" alt="" width="180"></a>
                 <h5>{Контакты}</h5>
                 <ul>
                     <li class="footer-map" itemprop="address" itemscope itemtype="http://schema.org/PostalAddress"><span itemprop="streetAddress">@streetAddress@</span></li>

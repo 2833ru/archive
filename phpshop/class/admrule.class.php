@@ -3,9 +3,8 @@
 /**
  * Библиотека проверки прав администрирования
  * @author PHPShop Software
- * @version 1.0
+ * @version 1.1
  * @package PHPShopClass
- * @param string $Status права пользователя
  */
 class PHPShopAdminRule {
 
@@ -39,13 +38,13 @@ class PHPShopAdminRule {
             'upload' => 'update',
             'currency' => 'valuta',
             'tpleditor' => 'system',
-            'metrica'=>'report',
-            'support'=>'report',
-            'promotions'=>'system',
-            'citylist'=>'delivery',
-            'lead'=>'order',
-            'company'=>'system',
-            'dialog'=>'shopusers'
+            'metrica' => 'report',
+            'support' => 'report',
+            'promotions' => 'system',
+            'citylist' => 'delivery',
+            'lead' => 'order',
+            'company' => 'system',
+            'dialog' => 'shopusers'
         );
     }
 
@@ -59,10 +58,11 @@ class PHPShopAdminRule {
         $session_id = session_id();
         if (!$session_id)
             session_start();
-        
-        if(!empty($_SESSION['idPHPSHOP']))
-           $idPHPSHOP = $_SESSION['idPHPSHOP'];
-        else $idPHPSHOP=null;
+
+        if (!empty($_SESSION['idPHPSHOP']))
+            $idPHPSHOP = $_SESSION['idPHPSHOP'];
+        else
+            $idPHPSHOP = null;
 
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['users']);
         $data = $PHPShopOrm->select(array('*'), array('enabled' => "='1'", 'id' => "='" . intval($idPHPSHOP) . "'"), false, array('limit' => 1));
@@ -71,7 +71,13 @@ class PHPShopAdminRule {
             $hasher = new PasswordHash(8, false);
             if ($_SESSION['logPHPSHOP'] == $data['login']) {
                 if ($hasher->CheckPassword($_SESSION['pasPHPSHOP'], $data['password'])) {
-                    return unserialize($data['status']);
+
+                    // Проверка журнала авторизации
+                    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['jurnal']);
+                    $jurnal = $PHPShopOrm->select(array('id'), array('ip' => '="' . PHPShopSecurity::TotalClean($_SERVER['REMOTE_ADDR']) . '"', 'user' => "='" . $data['login'] . "'", 'datas' => '>' . (time() - 3600*24*2),'flag'=>"='0'"), false, array('limit' => 1));
+
+                    if (!empty($jurnal))
+                        return unserialize($data['status']);
                 }
             }
         }
@@ -79,7 +85,7 @@ class PHPShopAdminRule {
         if (!empty($_SERVER['QUERY_STRING']))
             $_SESSION['return'] = $_SERVER['QUERY_STRING'];
 
-        header("Location: ".$GLOBALS['SysValue']['dir']['dir']."/phpshop/admpanel/");
+        header("Location: " . $GLOBALS['SysValue']['dir']['dir'] . "/phpshop/admpanel/");
         exit("No access");
     }
 
@@ -100,7 +106,7 @@ class PHPShopAdminRule {
         );
 
 
-        if (empty($this->UserStatus[$path]) and !empty($this->fixRules[$path]))
+        if (empty($this->UserStatus[$path]) and ! empty($this->fixRules[$path]))
             $path = $this->fixRules[$path];
 
         $array = explode("-", $this->UserStatus[$path]);
@@ -130,7 +136,7 @@ class PHPShopAdminRule {
         $decode = explode("O", $decode);
         $disp_pass = null;
         for ($i = 0; $i < (count($decode) - 1); $i++)
-            $disp_pass.=chr($decode[$i]);
+            $disp_pass .= chr($decode[$i]);
         return $disp_pass;
     }
 
@@ -142,12 +148,11 @@ class PHPShopAdminRule {
     static function encodeCrm($pas) {
         $encode = null;
         for ($i = 0; $i < (strlen($pas)); $i++)
-            $encode.=ord($pas[$i]) . "O";
+            $encode .= ord($pas[$i]) . "O";
 
         $encode = str_replace(11, "I", $encode);
         return $encode . "I10O";
     }
 
 }
-
 ?>

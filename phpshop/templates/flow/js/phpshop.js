@@ -383,7 +383,7 @@ $().ready(function () {
             var last = href.substring((href.length - 1), href.length);
             if (last != '&' && last != '')
                 href += '&';
-            
+
             href = href.split('s=1&').join('');
             href = href.split('s=2&').join('');
             href = href.split('f=2&').join('');
@@ -540,7 +540,6 @@ $().ready(function () {
 
     if ($('#pages').html() != '')
         $('#pagesTab').addClass('show');
-
 
     // убираем меню брендов
     if (BRAND_MENU === false) {
@@ -699,11 +698,10 @@ $().ready(function () {
                     dataType: 'json',
                     success: function (json) {
                         if (json['id'] > 0) {
-                            if ($('input[name="parentSize"]:checked').val() > 0 && $('input[name="parentColor"]:checked').val() > 0){
+                            if ($('input[name="parentSize"]:checked').val() > 0 && $('input[name="parentColor"]:checked').val() > 0) {
                                 addToCartList(json['id'], $('input[name="quant[2]"]').val(), $('input[name="parentColor"]:checked').attr('data-parent'));
                                 $(this).text(locale.incart);
-                            }
-                            else
+                            } else
                                 showAlertMessage($('#parentSizeMessage').html());
                         }
                     }
@@ -720,11 +718,10 @@ $().ready(function () {
                     optionCheck = false;
             });
 
-            if (optionCheck){
+            if (optionCheck) {
                 addToCartList($(this).attr('data-uid'), $('input[name="quant[2]"]').val(), $(this).attr('data-uid'), optionValue);
                 $(this).text(locale.incart);
-            }
-            else
+            } else
                 showAlertMessage($('#optionMessage').html());
         }
         // Обычный товар
@@ -772,9 +769,9 @@ $().ready(function () {
                     var parent_img = json['image_big'];
                     if (parent_img != "") {
 
-                        $(".bx-pager img").each(function (index, el) {
+                        $(".js-slide").each(function (index, el) {
                             if ($(this).attr('data-big-image') == parent_img) {
-                                slider.goToSlide(index);
+                                $('#heroSlider').slick('slickGoTo', index);
                             }
 
                         });
@@ -817,9 +814,9 @@ $().ready(function () {
             var parent_img = $(this).attr('data-image');
             if (parent_img != "") {
 
-                $(".bx-pager img").each(function (index, el) {
-                    if ($(this).attr('src') == parent_img) {
-                        slider.goToSlide(index);
+                $(".js-slide").each(function (index, el) {
+                    if ($(this).attr('data-big-image') == parent_img) {
+                        $('#heroSlider').slick('slickGoTo', index);
                     }
 
                 });
@@ -1145,5 +1142,11 @@ $().ready(function () {
         e.preventDefault();
         $("#faset-filter-body").appendTo('#mobile-filter-wrapper');
     });
+
+    // Повторная авторизация
+    if ($('#usersError').html()) {
+        $('input[name=login],input[name=password]').addClass('is-invalid');
+        $('#signupModal').modal('show');
+    }
 
 });

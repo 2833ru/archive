@@ -7,7 +7,7 @@ if (!defined("OBJENABLED")) {
 /**
  * Библиотека данных администраторов
  * @author PHPShop Software
- * @version 1.2
+ * @version 1.3
  * @package PHPShopObj
  */
 class PHPShopUser extends PHPShopObj {
@@ -44,10 +44,16 @@ class PHPShopUser extends PHPShopObj {
         $disp = null;
 
         foreach ($data_adres['list'] as $index => $data_adres_one) {
+            
+            
+            
             $dis = "";
             foreach ($data_adres_one as $key => $value) {
                 if ($value)
                     $dis .= ", " . $value;
+                
+                $data_adres['list'][$index][$key]=htmlspecialchars_decode($value,ENT_QUOTES);
+                
             }
             if ($dis) {
                 if ($index == $data_adres['main'])

@@ -12,11 +12,7 @@
             <div class="position-absolute bottom-0 left-0 pl-1 pb-1">
                 @promotionsIcon@
             </div>
-            <div class="position-absolute top-0 right-0 pt-3 pr-3">
-                <button type="button" class="btn btn-xs btn-icon btn-outline-secondary rounded-circle addToWishList @elementCartHide@" data-uid="@productUid@" title="{Отложить}">
-                    <i class="fas fa-heart"></i>
-                </button>
-            </div>
+
         </div>
 
         <div class="card-body pt-4 px-4 pb-0 align-items-end">
@@ -40,7 +36,7 @@
                     <span class="@php __hide('avgRateNum'); php@ text-primary">@avgRateNum@</span>
                 </div>
             </div>
-            <button type="button" class="btn btn-sm btn-outline-primary btn-pill transition-3d-hover addToCartList @elementCartHide@" data-uid="@productUid@">@productSale@</button>
+            <button type="button" class="btn btn-sm btn-outline-primary btn-pill transition-3d-hover addToCartList @elementCartHide@" data-uid="@productUid@">@flowProductSale@</button>
         </div>
     </div>
     <!-- End Product -->

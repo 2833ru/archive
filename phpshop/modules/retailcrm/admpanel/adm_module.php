@@ -64,7 +64,7 @@ function actionStart() {
         try {
             $response = $helper->api->deliveryTypesList();
         } catch (CurlException $e) {
-            Tools::logger(array('error' => $e->getMessage()), "connect", 'Ошибка соединения с RetailCRM');
+            Tools::logger(array('error' => 'Ошибка соединения с RetailCRM'), "connect", 'Ошибка соединения с RetailCRM');
         }
 
         $deliveryTypes[] = array("Не выбрано", "", false);
@@ -73,7 +73,7 @@ function actionStart() {
                 $deliveryTypes[] = array(Tools::iconvArray($params["name"], "UTF-8", "WINDOWS-1251"), $params["code"], false);
             }
         } else {
-            Tools::logger(array('error' => $e->getMessage()), "connect", 'Ошибка соединения с RetailCRM');
+            Tools::logger(array('error' => 'Ошибка соединения с RetailCRM'), "connect", 'Ошибка соединения с RetailCRM');
         }
 
         $deliveryOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['delivery']);
@@ -99,7 +99,7 @@ function actionStart() {
         try {
             $response = $helper->api->paymentTypesList();
         } catch (CurlException $e) {
-            Tools::logger(array('error' => $e->getMessage()), "connect", 'Ошибка соединения с RetailCRM');
+            Tools::logger(array('error' => 'Ошибка соединения с RetailCRM'), "connect", 'Ошибка соединения с RetailCRM');
         }
 
         $paymentTypes[] = array("Не выбрано", "", false);
@@ -108,7 +108,7 @@ function actionStart() {
                 $paymentTypes[] = array(Tools::iconvArray($params["name"], "UTF-8", "WINDOWS-1251"), $params["code"], false);
             }
         } else {
-            Tools::logger(array('error' => $e->getMessage()), "connect", 'Ошибка соединения с RetailCRM');
+            Tools::logger(array('error' => 'Ошибка соединения с RetailCRM'), "connect", 'Ошибка соединения с RetailCRM');
         }
 
         $paymentOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['payment_systems']);
@@ -134,7 +134,7 @@ function actionStart() {
         try {
             $response = $helper->api->statusesList();
         } catch (CurlException $e) {
-            Tools::logger(array('error' => $e->getMessage()), "connect", 'Ошибка соединения с RetailCRM');
+            Tools::logger(array('error' => 'Ошибка соединения с RetailCRM'), "connect", 'Ошибка соединения с RetailCRM');
         }
 
         $statuses[] = array("Не выбрано", "", false);
@@ -143,7 +143,7 @@ function actionStart() {
                 $statuses[] = array(Tools::iconvArray($params["name"], "UTF-8", "WINDOWS-1251"), $params["code"], false);
             }
         } else {
-            Tools::logger(array('error' => $e->getMessage()), "connect", 'Ошибка соединения с RetailCRM');
+            Tools::logger(array('error' => 'Ошибка соединения с RetailCRM'), "connect", 'Ошибка соединения с RetailCRM');
         }
 
         $statusesOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['order_status']);

@@ -371,12 +371,18 @@ $().ready(function () {
 
                 if (json['success'] == 1) {
                     showAlertMessage(locale.save_done);
+                    is_change = false;
 
                 } else
                     showAlertMessage(locale.save_false, true);
             }
 
         });
+    });
+
+    // Сохранить и закрыть из карточки
+    $("button[name=saveID").on('click', function () {
+        $(window).unbind("beforeunload");
     });
 
     // Иконки оформления меню
@@ -686,6 +692,27 @@ $().ready(function () {
 
     // Preloader
     $('.main').removeClass('transition');
+
+    // Состояние измеений форм
+    var is_change = false;
+
+    // Форма редактировалась
+    $('#product_edit .form-control, #product_edit .hidden-edit, #product_edit input:radio, #product_edit input:checkbox').change(function () {
+        is_change = true;
+    });
+
+    // Форма редактировалась редактором
+    $('#product_edit .redactor-editor').focusout(function () {
+        is_change = true;
+    });
+
+    // Сообщение сохранить 
+    $(window).bind("beforeunload", function () {
+        if (is_change)
+            return "Are you sure you want to exit? Please complete sign up or the app will get deleted.";
+    });
+
+
 });
 
 // GET переменные из URL страницы

@@ -91,7 +91,7 @@
                     <div class="col-md-2 col-sm-12 col-xs-12 wrapper-fix">
                         <div id="logo">
                             <a href="/" title="@name@">
-                                <img src="@logo@" alt="@name@" class="img-responsive" />
+                                <img src="@logo@" alt="" class="img-responsive" />
                             </a>
                         </div>
                     </div>

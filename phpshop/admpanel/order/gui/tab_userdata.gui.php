@@ -25,7 +25,7 @@ function tab_userdata($data, $order) {
 
     // Данные покупателя
     $disp1 = $user .
-            $PHPShopGUI->setField("Телефон", $PHPShopGUI->setInputText('', 'tel_new', PHPShopSecurity::TotalClean($data['tel']))) .
+            $PHPShopGUI->setField("Телефон", $PHPShopGUI->setInputText('', 'tel_new', PHPShopSecurity::TotalClean($data['tel'],6))) .
             $PHPShopGUI->setField("E-mail", $PHPShopGUI->setInputText('', 'person[mail]', PHPShopSecurity::TotalClean($order['Person']['mail']))).
             $PHPShopGUI->setField("Страна", $PHPShopGUI->setInputText('', 'country_new', PHPShopSecurity::TotalClean($data['country']))) .
             $PHPShopGUI->setField("Регион", $PHPShopGUI->setInputText('', 'state_new', PHPShopSecurity::TotalClean($data['state']))) .
@@ -38,10 +38,10 @@ function tab_userdata($data, $order) {
             $PHPShopGUI->setField("Квартира", $PHPShopGUI->setInputText('', 'flat_new', PHPShopSecurity::TotalClean($data['flat'])));
 
     // Юр. данные покупателя
-    $disp2 = $PHPShopGUI->setField("Компания", $PHPShopGUI->setInputText('', 'org_name_new', PHPShopSecurity::TotalClean($data['org_name'] . $order['Person']['org_name']))) .
+    $disp2 = $PHPShopGUI->setField("Компания", $PHPShopGUI->setInputText('', 'org_name_new', PHPShopSecurity::TotalClean($data['org_name'] . $order['Person']['org_name'],6))) .
             $PHPShopGUI->setField("ИНН", $PHPShopGUI->setInputText('', 'org_inn_new', PHPShopSecurity::TotalClean($data['org_inn']))) .
             $PHPShopGUI->setField("КПП", $PHPShopGUI->setInputText('', 'org_kpp_new', PHPShopSecurity::TotalClean($data['org_kpp']))) .
-            $PHPShopGUI->setField("Юр. адрес", $PHPShopGUI->setInputText('', 'org_yur_adres_new', PHPShopSecurity::TotalClean($data['org_yur_adres']))) .
+            $PHPShopGUI->setField("Юр. адрес", $PHPShopGUI->setInputText('', 'org_yur_adres_new', PHPShopSecurity::TotalClean($data['org_yur_adres'],6))) .
             $PHPShopGUI->setField("Адрес", $PHPShopGUI->setInputText('', 'org_fakt_adres_new', PHPShopSecurity::TotalClean($data['org_fakt_adres']))) .
             $PHPShopGUI->setField("Р/С", $PHPShopGUI->setInputText('', 'org_ras_new', PHPShopSecurity::TotalClean($data['org_ras']))) .
             $PHPShopGUI->setField("Банк", $PHPShopGUI->setInputText('', 'org_bank_new', PHPShopSecurity::TotalClean($data['org_bank']))) .

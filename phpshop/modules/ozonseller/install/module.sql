@@ -9,12 +9,13 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_ozonseller_system` (
 `password` varchar(64),
 `fee_type` enum('1','2') NOT NULL default '1',
 `warehouse` varchar(64) default 'Основной',
+`warehouse_id`  varchar(255) NOT NULL,
 `type` enum('1','2') NOT NULL default '1',
 `version` varchar(64) DEFAULT '1.0',
 PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-INSERT INTO `phpshop_modules_ozonseller_system` VALUES (1, '', '', '',1,0,'','1','Основной','1','1.1');
+INSERT INTO `phpshop_modules_ozonseller_system` VALUES (1, '', '', '',1,0,'','1','Основной','','1','1.3');
 
 CREATE TABLE IF NOT EXISTS `phpshop_modules_ozonseller_log` (
 `id` int(11) NOT NULL AUTO_INCREMENT,

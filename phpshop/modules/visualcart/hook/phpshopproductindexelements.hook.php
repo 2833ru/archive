@@ -2,7 +2,7 @@
 
 function nowBuy_visualcart_hook($obj, $row, $rout) {
 
-    if ($GLOBALS['AddToTemplateVisualCart']->option['nowbuy'] == 1) {
+    if ($GLOBALS['AddToTemplateVisualCart']->option['nowbuy'] == 1 and !empty($_COOKIE['usecookie'])) {
 
         if ($rout == 'START') {
             $obj->limitpos = 10;

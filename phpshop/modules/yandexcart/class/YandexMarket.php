@@ -2,7 +2,7 @@
 /**
  * Библиотека работы с Yandex.Market API
  * @author PHPShop Software
- * @version 1.1
+ * @version 1.2
  * @package PHPShopClass
  * @subpackage RestApi
  * @todo https://yandex.ru/dev/market/partner-marketplace-cd/doc/dg/reference/post-campaigns-id-offer-mapping-entries-updates.html
@@ -100,7 +100,17 @@ class YandexMarket {
 
             if (empty($product['description']))
                 $product['description'] = $product['content'];
-
+            
+            $options = unserialize($this->options['options']);
+            
+            // Блокировка изображений
+            if(empty($options['block_image']))
+                $pictures=[];
+            
+            // Блокировка описаний
+            if(empty($options['block_content']))
+                $product['description']=null;
+            
             $offer = [
                 'offer' => [
                     'shopSku' => $product['id'],

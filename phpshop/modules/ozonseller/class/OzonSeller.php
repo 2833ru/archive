@@ -3,7 +3,7 @@
 /**
  * Библиотека работы с Ozon Seller API
  * @author PHPShop Software
- * @version 1.4
+ * @version 1.5
  * @package PHPShopModules
  * @todo https://docs.ozon.ru/api/seller/#tag/Environment
  */
@@ -19,6 +19,8 @@ class OzonSeller {
     const GET_FBS_ORDER = '/v3/posting/fbs/get';
     const GET_FBO_ORDER_LIST = '/v2/posting/fbo/list';
     const GET_FBO_ORDER = '/v2/posting/fbo/get';
+    const GET_WAREHOUSE_LIST = '/v1/warehouse/list';
+    const UPDATE_PRODUCT_STOCKS = '/v2/products/stocks';
 
     public $api_key;
     public $client_id;
@@ -39,6 +41,8 @@ class OzonSeller {
         $this->fee = $this->options['fee'];
         $this->price = $this->options['price'];
         $this->type = $this->options['type'];
+        $this->warehouse_name = $this->options['warehouse'];
+        $this->warehouse_id = $this->options['warehouse_id'];
 
         $this->status_list = [
             'acceptance_in_progress' => 'идёт приёмка',
@@ -52,6 +56,50 @@ class OzonSeller {
             'delivered' => 'доставлено',
             'cancelled' => 'отменено'
         ];
+    }
+
+    /**
+     * Изменение остатка на складе
+     */
+    public function setProductStock($product) {
+        
+        $info= $this->sendProductsInfo($product)['result']['items'][0];
+
+        if(empty($product['enabled']))
+            $product['items']=0;
+
+        $params['stocks'][] = [
+            'offer_id' => $info['offer_id'],
+            'product_id' => $info['product_id'],
+            'stock' => $product['items'],
+            'warehouse_id' => $this->warehouse_id
+            ];
+        
+        $result = $this->request(self::UPDATE_PRODUCT_STOCKS, $params);
+
+        // Журнал
+        $log['params'] = $params;
+        $log['result'] = $result;
+
+        $this->log($log, $product['id'], self::UPDATE_PRODUCT_STOCKS);
+
+        return $result;
+    }
+
+    /**
+     * Получение списка складов
+     */
+    public function getWarehouse() {
+
+        $result = $this->request(self::GET_WAREHOUSE_LIST, ['name' => $this->warehouse_name]);
+
+        // Журнал
+        $log['params'] = [];
+        $log['result'] = $result;
+
+        $this->log($log, null, self::GET_WAREHOUSE_LIST);
+
+        return $result;
     }
 
     /**
@@ -410,8 +458,8 @@ class OzonSeller {
                 // Ключ обновления артикул
                 if ($this->type == 2) {
                     $offer_id = $prod['uid'];
-                }
-                else $offer_id = $prod['id'];
+                } else
+                    $offer_id = $prod['id'];
 
                 $params['items'][] = [
                     "attributes" => $this->getAttributes($prod)['attributes'],

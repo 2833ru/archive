@@ -53,7 +53,7 @@ function treegenerator($array, $i, $curent, $dop_cat_array) {
 }
 
 function actionStart() {
-    global $PHPShopGUI, $PHPShopOrm, $TitlePage, $select_name,$PHPShopSystem;
+    global $PHPShopGUI, $PHPShopOrm, $TitlePage, $select_name, $PHPShopSystem;
 
     $PHPShopGUI->field_col = 5;
     PHPShopObj::loadClass("order");
@@ -109,7 +109,7 @@ function actionStart() {
             ['ADV (реклама товарных предложений)', 'ADV', $data['model']],
         ];
 
-    $Tab1 = $PHPShopGUI->setField('Модель работы', $PHPShopGUI->setSelect('model_new', $models,'100%',true));
+    $Tab1 = $PHPShopGUI->setField('Модель работы', $PHPShopGUI->setSelect('model_new', $models, '100%', true));
 
     if ($data['model'] === 'ADV' || $data['model'] === 'DBS') {
         $Tab1 .= $PHPShopGUI->setField('Пароль защиты файла', $PHPShopGUI->setInputText('http://' . $_SERVER['SERVER_NAME'] . '/yml/?pas=', 'password_new', $data['password']));
@@ -121,7 +121,9 @@ function actionStart() {
         $Tab1 .= $PHPShopGUI->setField('Авторизационный токен API', $PHPShopGUI->setInputText(null, 'auth_token_new', $data['auth_token']));
         $Tab1 .= $PHPShopGUI->setField('ID приложения Яндекс.OAuth', $PHPShopGUI->setInputText(null, 'client_id_new', $data['client_id']));
         $Tab1 .= $PHPShopGUI->setField('OAuth-токен', $PHPShopGUI->setInputText(null, 'client_token_new', $data['client_token']));
-        $Tab1 .= $PHPShopGUI->setField('Блокировать прием заказов', $PHPShopGUI->setCheckbox('stop_new', 1,null,$data['stop']));
+        $Tab1 .= $PHPShopGUI->setField('Блокировать прием заказов', $PHPShopGUI->setCheckbox('stop_new', 1, null, $data['stop']));
+        $Tab1 .= $PHPShopGUI->setField('Выгружать изображения', $PHPShopGUI->setCheckbox('options[block_image]', 1, null, $options['block_image']));
+        $Tab1 .= $PHPShopGUI->setField('Выгружать описание',$PHPShopGUI->setCheckbox('options[block_content]', 1, null, $options['block_content'] ));
 
         if ($data['model'] === 'FBS') {
             $Tab1 .= $PHPShopGUI->setField('Доставка для заказов с Маркета', $PHPShopGUI->setSelect('delivery_id_new', $delivery_value, 300, null));
@@ -131,6 +133,8 @@ function actionStart() {
             установите значение 0, иначе рекомендуется не изменять это значение.';
                 $Tab1 .= $PHPShopGUI->setField('Продолжить импорт с', $PHPShopGUI->setInputText(null, 'import_from_new', $data['import_from'], 100), 1, $fromCaption);
             }
+
+            
         }
     }
 
@@ -182,9 +186,9 @@ function actionStart() {
     $tree_select = '<select class="selectpicker show-menu-arrow hidden-edit" data-live-search="true" data-container="body"  data-style="btn btn-default btn-sm" name="categories[]"  data-width="100%" multiple>' . $tree_select . '</select>';
 
     // Выбор каталога
-    $catOption =  $PHPShopGUI->setField("Размещение", $tree_select . $PHPShopGUI->setCheckbox("categories_all", 1, "Выбрать все категории?", 0),1,'Пакетное редактирование. Настройка не сохраняется.');
-    $catOption .= $PHPShopGUI->setField("Вывод в Яндекс.Маркете",$PHPShopGUI->setRadio("enabled_all", 1, "Вкл.", 1).$PHPShopGUI->setRadio("enabled_all", 0, "Выкл.",1));
-    
+    $catOption = $PHPShopGUI->setField("Размещение", $tree_select . $PHPShopGUI->setCheckbox("categories_all", 1, "Выбрать все категории?", 0), 1, 'Пакетное редактирование. Настройка не сохраняется.');
+    $catOption .= $PHPShopGUI->setField("Вывод в Яндекс.Маркете", $PHPShopGUI->setRadio("enabled_all", 1, "Вкл.", 1) . $PHPShopGUI->setRadio("enabled_all", 0, "Выкл.", 1));
+
     $Tab1 .= $PHPShopGUI->setField('Шаблон генерации описания', '<div id="yandexDescriptionShablon">
 <textarea class="form-control yandex-shablon" name="description_template_new" rows="3" style="width: 100%;height: 70px;">' . $data['description_template'] . '</textarea>
     <div class="btn-group" role="group" aria-label="...">
@@ -200,12 +204,13 @@ function actionStart() {
     var shablon = $(".yandex-shablon").val() + " " + variable;
     $(".yandex-shablon").val(shablon);
 }</script>', 1, 'Характеристики в описании создают дополнительную нагрузку. Рекомендуется использовать только для вывода небольшого количества товаров.');
-    
+
+
     $Tab1 = $PHPShopGUI->setCollapse('Информация', $Tab1);
     $Tab1 .= $PHPShopGUI->setCollapse('Товары', $catOption);
 
     $priceOption = $PHPShopGUI->setField('Колонка цен Яндекс.Маркет', $PHPShopGUI->setSelect('options[price]', $PHPShopGUI->setSelectValue($options['price'], 5), 100)) .
-            $PHPShopGUI->setField('Наценка', $PHPShopGUI->setInputText(null, 'options[price_fee]', $options['price_fee'], 100, '%')).
+            $PHPShopGUI->setField('Наценка', $PHPShopGUI->setInputText(null, 'options[price_fee]', $options['price_fee'], 100, '%')) .
             $PHPShopGUI->setField(null, $PHPShopGUI->setInputText(null, 'options[price_markup]', $options['price_markup'], 100, $PHPShopSystem->getDefaultValutaCode()));
 
     if ($data['model'] === 'DBS')
@@ -279,8 +284,8 @@ function actionStart() {
                     $status['name'], $status['id'], isset($statuses['cancelled_unreachable']) ? $statuses['cancelled_unreachable'] : null
                 ];
             }
-            
-            // Способы оплаты
+
+        // Способы оплаты
         $paymentOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['payment_systems']);
         $paymentsArr = $paymentOrm->getList();
 
@@ -358,8 +363,6 @@ function actionStart() {
                 ) .
                 $PHPShopGUI->setField('Не удалось связаться с покупателем', $PHPShopGUI->setSelect('statuses[cancelled_unreachable]', $status_user_unreachable_value), 1, 'CANCELLED USER_UNREACHABLE'
                 ), null);
-
-        
     }
 
     // Инструкция
@@ -368,7 +371,7 @@ function actionStart() {
     $Tab3 = $PHPShopGUI->setPay(false, false, $data['version'], true);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1, true,false,true), array("Инструкция", $Tab2), array("О Модуле", $Tab3));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true, false, true), array("Инструкция", $Tab2), array("О Модуле", $Tab3));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("hidden", "rowID", $data['id']) .
@@ -405,8 +408,8 @@ function actionUpdate() {
         if (is_array($cat_array)) {
             $where = array('category' => ' IN ("' . implode('","', $cat_array) . '")');
             $PHPShopOrmProducts = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
-            $PHPShopOrmProducts->debug=false;
-            $PHPShopOrmProducts->update(array('yml_new' =>intval($_POST['enabled_all'])), $where);
+            $PHPShopOrmProducts->debug = false;
+            $PHPShopOrmProducts->update(array('yml_new' => intval($_POST['enabled_all'])), $where);
         }
     }
 

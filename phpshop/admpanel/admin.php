@@ -261,11 +261,10 @@ if (!empty($_COOKIE['fullscreen'])) {
                             <li class="dropdown <?php echo $menu_active_modules; ?>">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><?php _e('Модули'); ?> <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu" id="modules-menu">
+                                    <li><a href="?path=modules"><span class="glyphicon glyphicon-tasks"></span> <?php _e('Управление модулями'); ?></a></li>
+                                    <li class="divider"></li>
                                     <li class="dropdown-header"><?php _e('Установленные модули'); ?></li>
                                     <?php echo $modulesMenu; ?>
-                                    <li class="divider"></li>
-                                    <li><a href="?path=modules"><span class="glyphicon glyphicon-tasks"></span> <?php _e('Управление модулями'); ?></a></li>
-
                                 </ul>
                             </li>
                             <li class="dropdown <?php echo @$menu_active_system . @$menu_active_system_company . @$menu_active_system_seo . @$menu_active_system_sync . @$menu_active_tpleditor . @$menu_active_system_image . @$menu_active_system_servers . @$menu_active_system_integration . @$menu_active_system_warehouse . @$menu_active_company ?>">

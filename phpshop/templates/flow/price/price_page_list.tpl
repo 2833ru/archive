@@ -3,7 +3,7 @@
 <ul class="nav">
     <li class="nav-item dropdown">
     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{Выбрать каталоги}</a>
-    <div class="dropdown-menu">
+    <div class="dropdown-menu" style="overflow-y: auto;max-height:400px">
        @searchPageCategoryDrop@
     </div>
   </li>

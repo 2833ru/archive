@@ -36,9 +36,9 @@
                     
                     </div>
                 
-                <button type="button" class="btn btn-sm btn-outline-primary btn-pill transition-3d-hover addToCartList @elementCartHide@" data-uid="@productUid@">@productSale@</button>
+                <button type="button" class="btn btn-sm btn-outline-primary btn-pill transition-3d-hover addToCartList @elementCartHide@" data-uid="@productUid@">@flowProductSale@</button>
 
-                <button type="button" class="btn btn-sm btn-soft-secondary btn-pill transition-3d-hover addToWishList @elementCartHide@" data-uid="@productUid@">
+                <button type="button" class="btn btn-sm btn-soft-primary btn-pill transition-3d-hover addToWishList @elementCartHide@" data-uid="@productUid@">
                     <i class="far fa-heart mr-1"></i> {Отложить}
                 </button>
             </div>

@@ -5,7 +5,6 @@
     <description>Прием оплат через 2can&amp;ibox.</description>
     <category>payment</category>
     <faqlink>https://docs.phpshop.ru/moduli/platezhnye-sistemy/twocan</faqlink>
-    <status>New</status>
      <adminmenu>
         <title>2can&amp;ibox</title>
         <capability>true</capability>

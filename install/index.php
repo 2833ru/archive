@@ -269,7 +269,7 @@ elseif (!empty($_POST['password'])) {
         <div class="container">
 
             <div class="page-header">
-                <ul class="nav nav-pills pull-right hidden-sm hidden-xs">
+                <ul class="nav nav-pills pull-right hidden-sm hidden-xs <?php if(!empty($_POST['password']) or !empty($_POST['version_update'])) echo 'hidden'; ?>">
                     <li role="presentation"><a href="#sys">Требования</a></li>
                     <li role="presentation"><a href="#inst">Установка</a></li>
                     <li role="presentation"><a href="#upd">Обновление</a></li>

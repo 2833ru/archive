@@ -87,7 +87,7 @@
             </div>
             <div class="logo">
                 <a href="/">
-                    <img src="@logo@" alt="@name@"> </a>
+                    <img src="@logo@" alt=""> </a>
             </div>
             <div class="visible-xs soc-sticker">
                 @sticker_social@

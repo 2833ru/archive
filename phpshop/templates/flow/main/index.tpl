@@ -156,9 +156,10 @@
                 <div id="logoAndNav" class="container">
                     <!-- Nav -->
                     <nav class="js-mega-menu navbar navbar-expand-lg">
+
                         <!-- Logo -->
-                        <a class="navbar-brand" href="/" aria-label="Front">
-                            <img src="@logo@" alt="@name@">
+                        <a class="navbar-brand @php __hide('logo'); php@" href="/" aria-label="" title="{Домой}">
+                            <img src="@logo@" class="logo" alt="">
                         </a>
                         <!-- End Logo -->
 
@@ -348,7 +349,7 @@
             <!-- Categories Section -->
             <div class="container space-2 space-lg-2">
                 <!-- Title -->
-                <div class="w-md-80 w-lg-60 text-center mx-md-auto mb-5 mb-md-9 @php __hide('mainContent'); php@">
+                <div class="text-center mx-md-auto mb-5 mb-md-9 @php __hide('mainContent'); php@">
                     <h2>@mainContentTitle@</h2>
                     <p>@mainContent@</p>
                 </div>
@@ -423,8 +424,8 @@
                 <div class="row justify-content-lg-between space-top-2 space-bottom-lg-1">
                     <div class="col-lg-3 mb-5">
                         <div class="d-flex align-items-start flex-column">
-                            <a class="w-100 mb-3 mb-lg-auto" href="/" title="@name@">
-                                <img class="brand" src="@logo@" alt="@name@">
+                            <a class="w-100 mb-3 mb-lg-auto @php __hide('logo'); php@" href="/" title="@name@">
+                                <img class="brand" src="@logo@" alt="">
                             </a>
                             <ul class="nav nav-sm nav-x-0 flex-column" itemscope itemtype="http://schema.org/Organization">
                                 <li class="nav-item small text-muted mb-0">&copy; <span itemprop="name">@company@</span>, @year@</li>
@@ -557,6 +558,7 @@
                         <div id="signinModalForm">
                             <div class="text-center mb-5">
                                 <h2>{Авторизация}</h2>
+                                <p id="usersError" class="text-danger">@usersError@</p>
                                 <p>{У вас еще нет учетной записи}?
                                     <a href="/users/register.html">{Зарегистрироваться}</a>
                                 </p>

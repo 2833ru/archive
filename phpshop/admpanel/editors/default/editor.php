@@ -7,7 +7,7 @@ class Editor {
     var $Height;
     var $Value;
 
-    function Editor($instanceName) {
+    function __construct($instanceName) {
         $this->InstanceName = $instanceName;
         $this->Width = '100%';
         $this->Height = '300';

@@ -114,7 +114,7 @@
                         <div class="col-md-6 col-sm-5 col-xs-12">
                             <div id="logo">
                                 <a href="/">
-                                    <img src="@logo@" alt="@name@" class="img-responsive" /></a>
+                                    <img src="@logo@" alt="" class="img-responsive" /></a>
                             </div>
                             <div class="returncall-wrapper header-links hidden-md hidden-lg header-color">
                                 @returncall@

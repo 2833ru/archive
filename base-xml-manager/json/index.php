@@ -4,7 +4,7 @@
  * Синхронизация данных через JSON
  * @package PHPShopExchange
  * @author PHPShop Software
- * @version 1.0
+ * @version 1.1
  */
 $_classPath = "../../phpshop/";
 include($_classPath . "class/obj.class.php");
@@ -23,7 +23,7 @@ class PHPShopJSON extends PHPShopBaseXml {
     function __construct() {
         global $PHPShopBase;
 
-        $this->true_method = array('select', 'update', 'delete', 'insert');
+        $this->true_method = array('select', 'update', 'delete', 'insert','mail');
         $this->token = $_SERVER['HTTP_TOKEN'];
 
         if (empty($this->token))
@@ -94,7 +94,8 @@ class PHPShopJSON extends PHPShopBaseXml {
             'select' => 0,
             'update' => 1,
             'insert' => 2,
-            'delete' => 1
+            'delete' => 1,
+            'mail' => 1
         );
 
         $array = explode("-", $this->UserStatus['api']);
@@ -146,6 +147,21 @@ class PHPShopJSON extends PHPShopBaseXml {
             header("Content-Type: application/json");
             exit(json_encode(array('status' => 'error', 'error' => $text)));
         }
+    }
+    
+    public function mail(){
+
+        PHPShopObj::loadClass(["system","mail"]);
+        
+        $GLOBALS['PHPShopSystem'] = new PHPShopSystem();
+        $mail = $this->xml['vars'][0]['mail'];
+        $title= $this->xml['vars'][0]['title'];
+        $content= $this->xml['vars'][0]['content'];
+        
+        if(new PHPShopMail($mail, $GLOBALS['PHPShopSystem']->getParam('adminmail2'), $title, $content)){
+           $this->data = $this->xml['vars'];
+        }else $this->error('Mail not sent');
+        
     }
 
 }

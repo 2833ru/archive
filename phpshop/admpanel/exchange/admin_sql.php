@@ -40,8 +40,10 @@ function actionSave() {
     if (!empty($_POST['sql_text'])) {
         $sql_query = explode(";\r", trim($_POST['sql_text']));
 
-        foreach ($sql_query as $v)
+        foreach ($sql_query as $v){
             $result = mysqli_query($link_db, trim($v));
+            @mysqli_free_result($result);
+        }
 
         // Выполнено успешно
         if ($result)
@@ -101,14 +103,16 @@ function actionSave() {
 
         foreach ($sql_query as $k => $v) {
 
-            if (strlen($v) > 10)
+            if (strlen($v) > 10){
                 $result = mysqli_query($link_db, $v);
+            }
 
             if (!$result) {
                 $error_line .= '[Line ' . $k . '] ';
                 $result_error_tracert .= 'Запрос: ' . $v . '
 Ошибка: ' . mysqli_error($link_db);
             }
+            else @mysqli_free_result($result);
         }
 
         // Удаление файла после выполнения
@@ -169,7 +173,7 @@ function actionStart() {
     unset($baseArray['phpshop_modules_key']);
     unset($baseArray['phpshop_payment_systems']);
     unset($baseArray['phpshop_exchanges']);
-    unset($baseArray['phpshop_banners']);
+    unset($baseArray['phpshop_baners']);
     unset($baseArray['phpshop_parent_name']);
     unset($baseArray['phpshop_delivery']);
     unset($baseArray['phpshop_order_status']);
@@ -240,14 +244,14 @@ TRUNCATE ' . $GLOBALS['SysValue']['base']['citylist_city'].';', '');
     if (empty($theme))
         $theme = 'dawn';
 
-    $PHPShopGUI->_CODE .= '<textarea class="hide hidden-edit" id="editor_src" name="sql_text" data-mod="sql" data-theme="' . $theme . '">' . $result_error_tracert . '</textarea><pre id="editor">' . __('Загрузка') . '...</pre>';
+    $PHPShopGUI->_CODE .= '<textarea class="hide" id="editor_src" name="sql_text" data-mod="sql" data-theme="' . $theme . '">' . $result_error_tracert . '</textarea><pre id="editor">' . __('Загрузка') . '...</pre>';
 
     $PHPShopGUI->_CODE .= '<div class="text-right data-row"><a href="#" id="vartable" data-toggle="modal" data-target="#selectModal" data-title="' . __('Основные таблицы') . '"><span class="glyphicon glyphicon-question-sign"></span>' . __('Описание таблиц') . '</a></div>';
 
     // Модальное окно таблицы описаний перменных
     $selectModalBody = '<table class="table table-striped"><tr><th>' . __('Таблица') . '</th><th>' . __('Описание') . '</th></tr>' . $selectModal . '</table>';
 
-    $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Настройки', $PHPShopGUI->setField('Команда', $PHPShopGUI->setSelect('sql_query', $query_value, null, true)) .
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Настройки', $PHPShopGUI->setField('Команда', $PHPShopGUI->setSelect('sql_query', $query_value, null, true,false, false, false, 1, false, false, 'selectpicker')) .
             $PHPShopGUI->setField("Файл", $PHPShopGUI->setFile()), 'in', false, true
     );
 

@@ -126,7 +126,7 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or ! empty($GLOBALS
             $editor['right'] = -280;
             $editor['close'] = false;
         }
-    } else if ($GLOBALS['SysValue']['template_theme']['demo'] == 'true') {
+    } else if ($GLOBALS['SysValue']['template_theme']['demo'] == 'true' and !PHPShopString::is_mobile()) {
         $editor['right'] = 0;
         $editor['close'] = 'ss-close';
     } else {
@@ -158,8 +158,10 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or ! empty($GLOBALS
 
     if (!empty($_SESSION['logPHPSHOP']))
         $admin_help = __('Вы можете управлять содержанием текущей страницы');
+    else if ($GLOBALS['SysValue']['template_theme']['demo'] == 'true')
+        $admin_help = __('Для управления текущей страницей требуется') . ' <a href="https://www.phpshop.ru/mydemo/" target="_blank">' . __('авторизоваться') . '</a>';
     else
-        $admin_help = __('Для управления текущей страницей требуется') . ' <a href="//' . $_SERVER['SERVER_NAME'] . $GLOBALS['SysValue']['dir']['dir'] . 'phpshop/admpanel/" target="_blank"><span class="glyphicon glyphicon-user"></span> ' . __('авторизоваться') . '</a>';
+        $admin_help = __('Для управления текущей страницей требуется') . ' <a href="//' . $_SERVER['SERVER_NAME'] . $GLOBALS['SysValue']['dir']['dir'] . 'phpshop/admpanel/" target="_blank">' . __('авторизоваться') . '</a>';
 
     $collapse_menu = '<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
   <div class="panel panel-default card">

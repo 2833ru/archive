@@ -108,14 +108,14 @@
 
             <!-- Количество -->
             <div>    
-                <div class="text-body ml-2 space-bottom-1 small" id="items">@productSklad@</div>
+                <div class="text-body space-bottom-1 small" id="items">@productSklad@</div>
                 @ComStartNotice@
-                <div class="outStock">@productOutStock@</div>
+                <div class="text-danger space-bottom-1 small">@productOutStock@</div>
                 @ComEndNotice@
             </div>
 
 
-            <div class="border rounded-lg py-2 px-3 mb-3">
+            <div class="border rounded-lg py-2 px-3 mb-3 @elementCartHide@">
                 <div class="js-quantity-counter row align-items-center">
                     <div class="col-7">
                         <small class="d-block text-body font-weight-bold">{Выберите количество}:</small>
@@ -137,7 +137,7 @@
             <!-- Вывод стикера Аккордеон для карточки товара -->
             @sticker_accordion@
 
-            <div class="mb-4">
+            <div class="mb-4 @elementCartHide@">
                 <button type="button" class="btn btn-block btn-primary btn-pill transition-3d-hover addToCartFull" data-num="1" data-uid="@productUid@">@flowProductSale@</button>
             </div>
 

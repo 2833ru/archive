@@ -62,7 +62,7 @@ $().ready(function () {
                     $('#bot_result').html(json['result']);
                     count += json['count'];
                     $('#total-update').html(count);
-                    if (json['success'] == 'done') {
+                    if (json['success'] == 'done' || json['bar'] == 100) {
                         clearInterval(refreshId);
                         $('.progress-bar').css('width', '100%');
                         $('.progress-bar').removeClass('active').html('100%');

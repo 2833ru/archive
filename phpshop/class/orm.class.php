@@ -21,10 +21,10 @@ class PHPShopOrm {
     var $debug = false;
 
     /**
-     * вывод ошибок mysql
+     * вывод ошибок MySQL
      * @var bool 
      */
-    var $mysql_error = true;
+    var $mysql_error = false;
 
     /**
      * комментарий для отладчика

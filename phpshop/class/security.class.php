@@ -3,7 +3,7 @@
 /**
  * Библиотека проверки безопасности
  * @author PHPShop Software
- * @version 1.6
+ * @version 1.7
  * @package PHPShopClass
  * @subpackage Helper
  */
@@ -113,7 +113,7 @@ class PHPShopSecurity {
     static function true_num($num) {
         return preg_match("/^[0-9]{1,20}$/", $num);
     }
-    
+
     /**
      * Проверка телефона
      * @param int $num номер
@@ -122,7 +122,6 @@ class PHPShopSecurity {
     static function true_tel($num) {
         return preg_match("/^[0-9-() +]{10,25}$/", $num);
     }
-    
 
     /**
      * Проверка пароля
@@ -168,6 +167,10 @@ class PHPShopSecurity {
                 if (preg_match("/[^(0-9)|(\-)|(\.]/", $str))
                     $str = 0;
                 return $str;
+                break;
+
+            case 6:
+                return str_replace(["&quot;", '&#43;'], ['"', '+'], $str);
                 break;
         }
     }

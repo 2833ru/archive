@@ -11,8 +11,6 @@
         <link rel="apple-touch-icon" href="@icon@">
         <link rel="icon" href="@icon@" type="image/x-icon">
         <link rel="mask-icon" href="@icon@" >
-        <link rel="icon" href="@icon@" type="image/x-icon">
-        <link rel="mask-icon" href="@icon@" >
         
         <!-- OpenGraph -->
         <meta property="og:title" content="@ogTitle@">
@@ -84,7 +82,7 @@
                     <div class="row">
 
                         <div class="col-md-3 col-sm-3 col-xs-12">
-                            <a id="logo" href="/" title="@name@"><img src="@logo@" alt="@name@" class="img-responsive" /></a>
+                            <a id="logo" href="/" title="@name@"><img src="@logo@" alt="" class="img-responsive" /></a>
                         </div>
 
 
@@ -245,7 +243,7 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-md-3 col-sm-6 col-xs-12">
-                            <a id="logo-footer" href="/" title="@name@"><img src="@logo@" alt="@name@" class="img-responsive" /></a>
+                            <a id="logo-footer @php __hide('logo'); php@" href="/" title="@name@"><img src="@logo@" alt="" class="img-responsive" /></a>
                             <div class="footer-social">
                                 <a class="social-button" href="#"><i class="fa fa-vk" aria-hidden="true"></i></a>
                                 <a class="social-button" href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>

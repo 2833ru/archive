@@ -156,12 +156,13 @@
                 <div id="logoAndNav" class="container">
                     <!-- Nav -->
                     <nav class="js-mega-menu navbar navbar-expand-lg">
+
                         <!-- Logo -->
-                        <a class="navbar-brand" href="/" aria-label="Front">
-                            <img src="@logo@" alt="@name@">
+                        <a class="navbar-brand @php __hide('logo'); php@" href="/" aria-label="" title="{Домой}">
+                            <img src="@logo@" class="logo" alt="">
                         </a>
                         <!-- End Logo -->
-
+                        
                         <!-- Responsive Toggle Button -->
                         <button type="button" class="navbar-toggler btn btn-icon btn-sm rounded-circle"
                                 aria-label="Toggle navigation"
@@ -417,9 +418,9 @@
             <div class="container">
                 <div class="row justify-content-lg-between space-top-2 space-bottom-lg-1">
                     <div class="col-lg-3 mb-5">
-                        <div class="d-flex align-items-start flex-column">
+                        <div class="d-flex align-items-start flex-column @php __hide('logo'); php@">
                             <a class="w-100 mb-3 mb-lg-auto" href="/" title="@name@">
-                                <img class="brand" src="@logo@" alt="@name@">
+                                <img class="brand" src="@logo@" alt="">
                             </a>
                             <ul class="nav nav-sm nav-x-0 flex-column" itemscope itemtype="http://schema.org/Organization">
                                 <li class="nav-item small text-muted mb-0">&copy; <span itemprop="name">@company@</span>, @year@</li>
@@ -551,6 +552,7 @@
                         <div id="signinModalForm">
                             <div class="text-center mb-5">
                                 <h2>{Авторизация}</h2>
+                                <p id="usersError" class="text-danger">@usersError@</p>
                                 <p>{У вас еще нет учетной записи}?
                                     <a href="/users/register.html">{Зарегистрироваться}</a>
                                 </p>

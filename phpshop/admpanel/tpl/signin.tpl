@@ -13,8 +13,8 @@
         <!-- Bootstrap -->
         <link id="bootstrap_theme" href="./css/bootstrap-theme-@theme@.css" rel="stylesheet">
         <link href="./css/bootstrap-select.min.css" rel="stylesheet">
-        <link  href="./css/signin.css" rel="stylesheet">
-        <link  href="./css/bar.css" rel="stylesheet">
+        <link href="./css/signin.css" rel="stylesheet">
+        <link href="./css/bar.css" rel="stylesheet">
 
     </head>
 
@@ -44,12 +44,12 @@
                     <input autocomplete="off" type="text" name="log" class="form-control" value="@user@" placeholder="{Пользователь}" required @autofocus@ @readonly@>
                 </div>
                 <div class="input-group @error@">
-                    <span class="input-group-addon" id="input-group-addon2"><span class="glyphicon glyphicon-lock"></span></span>
+                    <span class="input-group-addon" id="input-group-addon2"><a href="#" class="password-view"  data-toggle="tooltip" data-placement="top" title="{Показать пароль}"><span class="glyphicon glyphicon-eye-close"></span></a></span>
                     <input autocomplete="off" type="password" name="pas" class="form-control" value="@password@" placeholder="{Пароль}"  required @readonly@>
                 </div>
 
                 <div class="checkbox">
-                    <label  class="hidden-xs @hide@">
+                    <label  class="@hide@">
                         <input type="checkbox" name="actionHash" value="true" id="remember-me" @disabled@> {Восстановить пароль}
                         
                     </label>

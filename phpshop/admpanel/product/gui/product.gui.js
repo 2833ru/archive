@@ -1,7 +1,3 @@
-
-// Состояние формы
-var is_change = false;
-
 $().ready(function() {
 
     $("body").on('click', ".set-image-tab", function(e) {
@@ -236,16 +232,6 @@ $().ready(function() {
             }
 
         });
-    });
-
-    // Форма редактировалась
-    $('#product_edit .form-control, #product_edit .hidden-edit, #product_edit input:radio:checked, #product_edit input:checkbox:checked').change(function() {
-        is_change = true;
-    });
-
-    // Форма редактировалась редактором
-    $('#product_edit .redactor-editor').focusout(function() {
-        is_change = true;
     });
 
     // Загрузка файлов на сервер

@@ -74,4 +74,5 @@ $(document).on('ready', function () {
     $('.js-custom-select').each(function () {
         var select2 = $.HSCore.components.HSSelect2.init($(this));
     });
+    
 });

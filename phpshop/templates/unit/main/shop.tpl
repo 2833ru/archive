@@ -57,7 +57,7 @@
             <div class="container ">
                 <div class="d-flex align-items-center justify-content-between">
                     <div class="logo">
-                        <a href="/"><img src="@logo@" alt="@name@"></a>
+                        <a href="/"><img src="@logo@" alt=""></a>
                     </div>
                     <div class="category-btn">
 
@@ -104,7 +104,7 @@
                     </ul>
                     <div class="header-cart hidden-sm"><a id="cartlink" data-trigger="hover" data-container="#cart" data-toggle="popover" data-placement="bottom" data-html="true" data-url="/order/" data-content='@visualcart@' href="/order/"><span
                                 class="icons icons-blue icons-big icons-cart"></span><span id="num" class="">@num@</span>
-                            <span class="visible-lg-inline">{товаров} {на} </span><span id="sum" class="">@sum@</span> <span
+                            <span class="visible-lg-inline">{товаров} {на} </span><span id="sum" class="">@sum@</span><span
                                 class="rubznak">@productValutaName@</span></a>
                         <div id="visualcart_tmp" class="hide">@visualcart@</div>
                     </div>
@@ -408,8 +408,8 @@
         <footer class="footer">
             <div class="container">
                 <div class="col-md-3 col-sm-4 col-xs-12" itemscope itemtype="http://schema.org/Organization">
-                    <div class="logo">
-                        <a href="/"><img src="@logo@" alt="@name@"></a>
+                    <div class="logo @php __hide('logo'); php@">
+                        <a href="/"><img src="@logo@" alt=""></a>
                     </div>
                     <ul>
                         <li>&copy; <span itemprop="name">@company@</span>, @year@</li>

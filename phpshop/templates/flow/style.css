@@ -440,3 +440,11 @@ div.swiper-button-prev {left:-5px;}
 .mega-menu-body a,.sidebarNav a{
     white-space: normal;
 }
+.badge-success{
+    background-color: var(--primary);
+}
+
+img.logo{
+    max-height: 50px;
+    width: auto;
+}

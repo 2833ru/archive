@@ -81,7 +81,7 @@
         <div class="vertical-align header-middle-wrap">
             <div class="logo">
                 <a href="/">
-                    <img src="@logo@" alt="@name@">
+                    <img src="@logo@" alt="">
                 </a>
             </div>
             <div class="header-phone">

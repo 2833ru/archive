@@ -739,7 +739,7 @@ class PHPShopShopCore extends PHPShopCore {
             $this->set('ComStartNotice', PHPShopText::comment('<'));
             $this->set('ComEndNotice', PHPShopText::comment('>'));
             $this->set('elementCartHide', null);
-            $this->set('elementNoticeHide', 'hide hidden');
+            $this->set('elementNoticeHide', 'hide hidden d-none');
             $this->set('productOutStock', null);
             $this->set('productPriceRub', null);
         }
@@ -750,12 +750,12 @@ class PHPShopShopCore extends PHPShopCore {
             $this->set('productOutStock', $this->lang('sklad_mesage'));
             $this->set('ComStartNotice', '');
             $this->set('ComEndNotice', '');
-            $this->set('elementCartHide', 'hide hidden');
+            $this->set('elementCartHide', 'hide hidden d-none');
             $this->set('ComStartCart', PHPShopText::comment('<'));
             $this->set('ComEndCart', PHPShopText::comment('>'));
             $this->set('productNotice', $this->lang('product_notice'));
             $this->set('elementNoticeHide', null);
-            $this->set('elementCartOptionHide', 'hide hidden');
+            $this->set('elementCartOptionHide', 'hide hidden d-none');
             $this->set('productSklad', '');
             $this->set('productPriceOld', '');
             $this->set('productLabelDiscount', '');
@@ -786,7 +786,7 @@ class PHPShopShopCore extends PHPShopCore {
             $this->set('ComEndCart', PHPShopText::comment('>'));
 
 
-            $this->set('elementCartHide', 'hide hidden');
+            $this->set('elementCartHide', 'hide hidden d-none');
 
             $this->set('productPrice', null);
             $this->set('productPriceRub', null);
@@ -797,7 +797,7 @@ class PHPShopShopCore extends PHPShopCore {
         // Проверка подтипа
         if (!empty($row['parent'])) {
             $this->set('parentLangFrom', __('от'));
-            $this->set('elementCartHide', 'hide hidden');
+            $this->set('elementCartHide', 'hide hidden d-none');
             $this->set('ComStartCart', PHPShopText::comment('<'));
             $this->set('ComEndCart', PHPShopText::comment('>'));
             $this->set('productSale', $this->lang('product_select'));
@@ -806,7 +806,7 @@ class PHPShopShopCore extends PHPShopCore {
                 $this->set('elementCartOptionHide', null);
         }
         else {
-            $this->set('elementCartOptionHide', 'hide hidden');
+            $this->set('elementCartOptionHide', 'hide hidden d-none');
             $this->set('parentLangFrom', null);
             $this->set('productSale', $this->lang('product_sale'));
         }
@@ -818,8 +818,8 @@ class PHPShopShopCore extends PHPShopCore {
             $this->set('productPrice', null);
             $this->set('productPriceRub', null);
             $this->set('productValutaName', null);
-            $this->set('elementCartOptionHide', 'hide hidden');
-            $this->set('elementCartHide', 'hide hidden');
+            $this->set('elementCartOptionHide', 'hide hidden d-none');
+            $this->set('elementCartHide', 'hide hidden d-none');
             $this->set('parentLangFrom', null);
             $this->set('productPriceOld', null);
         }

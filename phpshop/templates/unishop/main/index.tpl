@@ -115,7 +115,7 @@
                         <div class="col-xs-12 col-sm-12 col-md-2 bottom-mobile-fix">
                             <div id="logo">
                                 <a href="/">
-                                    <img src="@logo@" alt="@name@" title="@name@" class="img-responsive" />
+                                    <img src="@logo@" alt="" title="@name@" class="img-responsive" />
                                 </a>
                             </div>
                             <button type="button" class="hidden-md hidden-lg navbar-toggle feather iconz-menu modile-cat-open offcanvas-toggle" data-toggle="offcanvas" data-target="#js-bootstrap-offcanvas">

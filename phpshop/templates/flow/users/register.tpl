@@ -1,4 +1,4 @@
-<div id="usersError" class="hide">@usersError@</div>
+<div id="usersError" class="d-none">@usersError@</div>
 <form method="post" name="user_forma_register" class="template-sm w-50">
     <span id="user_error">@user_error@</span>
     <div class="form-group">
