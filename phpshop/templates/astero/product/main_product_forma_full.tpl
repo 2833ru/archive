@@ -36,7 +36,7 @@
             <hr>
             <!-- Price Starts -->
             <div class="price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-                <span class="price-head">Цена :</span>
+                <span class="price-head">{Цена}:</span>
                 <span class="price-new" itemprop="price">@productPrice@</span> 
                 <span class="price-new rubznak" itemprop="priceCurrency" content="RUB">@productValutaName@</span>
                 <span class="price-old">@productPriceRub@</span>
@@ -54,7 +54,7 @@
 
 
 
-                <label class="control-label text-uppercase @elementCartHide@">Количество</label>
+                <label class="control-label text-uppercase @elementCartHide@">{Количество}</label>
                 <div class="quant input-group @elementCartHide@">
                     <span class="input-group-btn">
                         <button type="button" class="btn btn-default btn-default_l btn-number"  data-type="minus" data-field="quant[2]">
@@ -82,15 +82,15 @@
                     </button>                                   
                 </div>
                 <div class="cart-button button-group compare-list-button-wrapper">
-                    <button type="button" class="btn btn-cart addToWishList" role="button" data-uid="@productUid@" data-title="Отложить" data-placement="top" data-toggle="tooltip">
+                    <button type="button" class="btn btn-cart addToWishList" role="button" data-uid="@productUid@" data-title="{Отложить}" data-placement="top" data-toggle="tooltip">
                         <i class="fa fa-heart" aria-hidden="true"></i>                            
-                        Отложить
+                        {Отложить}
                     </button>                                   
                 </div>
                 <div class="cart-button button-group compare-list-button-wrapper">
-                    <button type="button" class="btn btn-cart addToCompareList" role="button" data-uid="@productUid@" data-title="Сравнить" data-placement="top" data-toggle="tooltip">
+                    <button type="button" class="btn btn-cart addToCompareList" role="button" data-uid="@productUid@" data-title="{Сравнить}" data-placement="top" data-toggle="tooltip">
                         <i class="fa fa-refresh" aria-hidden="true"></i>                            
-                        Сравнить
+                        {Сравнить}
                     </button>                                   
                 </div>
 
@@ -99,7 +99,7 @@
                 <div class="cart-button button-group compare-list-button-wrapper">
                     <a class="btn btn-cart" href="/users/notice.html?productId=@productUid@" title="@productNotice@">
                         <i class="fa fa-envelope-o" aria-hidden="true"></i>                            
-                        Уведомить
+                        {Уведомить}
                     </a>                                   
                 </div>
                 @ComEndNotice@ 
@@ -113,7 +113,7 @@
 
     <!-- Product Description Starts -->
     <div class="product-info-box">
-        <h4 class="heading">Описание</h4>
+        <h4 class="heading">{Описание}</h4>
         <div class="content panel-smart" itemprop="description">
             @productDes@
         </div>
@@ -122,7 +122,7 @@
 
     <!-- Additional Information Starts -->
     <div class="product-info-box empty-check">
-        <h4 class="heading">Характеристики</h4>
+        <h4 class="heading">{Характеристики}</h4>
         <div class="content panel-smart">
             @vendorDisp@
         </div>
@@ -131,13 +131,13 @@
 
     <!-- Reviews Information Starts -->
     <div class="product-info-box">
-        <h4 class="heading">Отзывы</h4>
+        <h4 class="heading">{Отзывы}</h4>
         <div class="content panel-smart">
             <div id="commentList"></div>
             <button role="button" class="btn btn-info btn-show-comment-add-block" onclick="$('#addComment').slideToggle();
-                    $(this).hide();"><span class="glyphicon glyphicon-plus-sign"></span> Новый комментарий</button>
+                    $(this).hide();"><span class="glyphicon glyphicon-plus-sign"></span> {Новый комментарий}</button>
             <div id='addComment' class="well well-sm" style='display:none;margin-top:30px;'>
-                <h3>Оставьте свой отзыв</h3>
+                <h3>{Оставьте свой отзыв}</h3>
                 <textarea id="message" class="commentTexttextarea form-control"></textarea>
                 <input type="hidden" id="commentAuthFlag" name="commentAuthFlag" value="@php if($_SESSION['UsersId']) echo 1; else echo 0; php@">
                 <br>
@@ -157,7 +157,7 @@
                     <label class="btn btn-success btn-sm active">
                         <input type="radio" name="rate" value="5" checked> +5
                     </label>
-                    <button role="button" class="btn btn-info btn-sm pull-right" onclick="commentList('@productUid@', 'add', 1);">Проголосовать</button>
+                    <button role="button" class="btn btn-info btn-sm pull-right" onclick="commentList('@productUid@', 'add', 1);">{Проголосовать}</button>
                 </div>
             </div>
         </div>
@@ -171,7 +171,7 @@
 
     <!-- Files Information Starts -->
     <div class="product-info-box empty-check">
-        <h4 class="heading">Файлы</h4>
+        <h4 class="heading">{Файлы}</h4>
         <div class="content panel-smart">
             @productFiles@
         </div>
@@ -180,7 +180,7 @@
 
     <!-- Articles Information Starts -->
     <div class="product-info-box empty-check">
-        <h4 class="heading">Статьи</h4>
+        <h4 class="heading">{Статьи}</h4>
         <div class="content panel-smart">
             @pagetemaDisp@
         </div>
@@ -204,7 +204,7 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{Закрыть}</button>
                 </div>
             </div>
         </div>

@@ -427,7 +427,7 @@ h6{
     text-align: center;
 }
 .shop-description .description-text{
-    max-height: 200px;
+    max-height: 193px;
     overflow: hidden;
     text-align: left;
     transition: max-height .6s;
@@ -1589,7 +1589,7 @@ h6{
 .slider{
     -padding-top:40px;
     -padding-bottom:40px;
-    background:url(./images/slider-bg.jpg) no-repeat center;
+    -background:url(./images/slider-bg.jpg) no-repeat center;
 }
 
 
@@ -2415,11 +2415,16 @@ img.template:hover{
 
 .bx-pager img{
     max-width: 70px;
+    max-height: 73px;
     margin:0px 5px 0px 5px;
 }
-
+.bx-pager-big {
+    text-align: center;
+    margin-top: 10px;
+}
 .bx-pager-big img{
     max-width: 50px;
+    max-height: 153px;
     margin:5px;
     border-radius: 0px;
 }
@@ -2590,6 +2595,48 @@ img.template:hover{
 .cid-img-block img {
     max-width: 100%;
     max-height: 100%;
+}
+.product-sklad-list-block {
+    text-align: center;
+    font-weight: bold;
+    font-size: 14px;
+    color: #0da9ef;
+    display: block;
+}
+.nowBuy {
+    margin-bottom: 15px;
+}
+.odnotipList .product-block-wrapper .product-block-button,
+.odnotipList .product-block-wrapper .product-block-top:hover .product-block-button {
+    display: none;
+}
+.odnotipList .product-block-wrapper .product-block-img {
+    height: unset;
+}
+.odnotipList .product-block-bottom {
+    display: none;
+}
+.odnotipList .product-block-wrapper .product-block-image > a.product-block-img-link {
+    width: 60px;
+    height: 60px;
+    line-height: 59px;    
+    border: none;
+    margin-bottom: 0;
+}
+.odnotipList .product-block-wrapper .sale-icon-content {
+    display: none;
+}
+.odnotipList .product-block-wrapper {
+    width: 60px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    padding: 0;
+}
+.odnotipList .product-block-wrapper .product-block {
+    margin: 0;
+    padding: 0;
+    border: 1px solid #ddd;
+    border-radius: 0px;
 }
 @media (min-width: 992px) {
     .filter-well-right-block {
@@ -3789,6 +3836,7 @@ thead td#allspecwhite {
 }
 .bx-pager {
     margin-top: 10px;
+    text-align: center;
 }
 .has-feedback label~.form-control-feedback {
     top: 31px;
@@ -4011,6 +4059,7 @@ thead td#allspecwhite {
     width: 55px;
     border-radius: 50%;
     overflow: hidden;
+    text-align: center;
 }
 .dropdown-product-item>.dropdown-product-thumb, .dropdown-product-item>.dropdown-product-info {
     display: table-cell;
@@ -4039,9 +4088,10 @@ thead td#allspecwhite {
     font-size: 14px;
 }
 .dropdown-product-item>.dropdown-product-thumb>img {
-    display: block;
-    width: 100%;
+    display: inline-block;
+    max-width: 100%;
     height: auto;
+    max-height: 100px;
 }
 .toolbar-dropdown-group > .btn{
 	font-weight: bold;

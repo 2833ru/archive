@@ -3,11 +3,13 @@
 session_start();
 $_classPath = "../../../";
 include($_classPath . "class/obj.class.php");
-PHPShopObj::loadClass(array("base", "category", "string", "array", "system"));
+PHPShopObj::loadClass(array("base", "category", "string", "array", "system","lang"));
 
 $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, true);
 $PHPShopBase->chekAdmin();
 $PHPShopSystem = new PHPShopSystem();
+
+$PHPShopLang = new PHPShopLang(array('locale'=>$_SESSION['lang'],'path'=>'admin'));
 
 // Права менеджеров
 if ($PHPShopSystem->ifSerilizeParam('admoption.rule_enabled', 1) and !$PHPShopBase->Rule->CheckedRules('catalog', 'remove')) {
@@ -19,7 +21,7 @@ if ($PHPShopSystem->ifSerilizeParam('admoption.rule_enabled', 1) and !$PHPShopBa
 $PHPShopCategoryArray = new PHPShopCategoryArray($where);
 $CategoryArray = $PHPShopCategoryArray->getArray();
 
-$CategoryArray[0]['name'] = '- Корневой уровень -';
+$CategoryArray[0]['name'] = '- '.__('Корневой уровень').' -';
 $tree_array = array();
 $i = 0;
 
@@ -116,22 +118,22 @@ if (!empty($addNodes)) {
 
 
     $result[] = array(
-        'text' => PHPShopString::win_utf8('Неопределенные товары'),
+        'text' => PHPShopString::win_utf8(__('Неопределенные товары')),
         'selectable' => false,
         'nodes' => array(
             1000001 => array(
-                'text' => PHPShopString::win_utf8('Загруженные CRM'),
+                'text' => PHPShopString::win_utf8(__('Загруженные CRM')),
                 'icon' => 'glyphicon glyphicon-hdd',
                 'href' => '?path=catalog&cat=1000001',
             ),
             1000002 => array(
-                'text' => PHPShopString::win_utf8('Загруженные CSV'),
+                'text' => PHPShopString::win_utf8(__('Загруженные CSV')),
                 'icon' => 'glyphicon glyphicon-import',
                 'href' => '?path=catalog&cat=0&sub=csv'
             )
             ,
             1000004 => array(
-                'text' => PHPShopString::win_utf8('Удаленные'),
+                'text' => PHPShopString::win_utf8(__('Удаленные')),
                 'icon' => 'glyphicon glyphicon-trash',
                 'href' => '?path=catalog&cat=1000004'
             )

@@ -9,7 +9,6 @@ function userorderpaymentlink_mod_robokassa_hook($obj, $PHPShopOrderFunction) {
     $PHPShopRobokassaArray = new PHPShopRobokassaArray();
     $option = $PHPShopRobokassaArray->getArray();
 
-
     // Контроль оплаты от статуса заказа
     if ($PHPShopOrderFunction->order_metod_id == 10020)
         if ($PHPShopOrderFunction->getParam('statusi') == $option['status'] or empty($option['status'])) {
@@ -26,8 +25,6 @@ function userorderpaymentlink_mod_robokassa_hook($obj, $PHPShopOrderFunction) {
             $payment_forma .= PHPShopText::setInput('hidden', 'OutSum', $out_summ, false, 10);
             $payment_forma.=PHPShopText::setInput('hidden', 'InvId', $inv_id, false, 10);
             $payment_forma.=PHPShopText::setInput('hidden', 'Desc', 'PHPShopPay', false, 10);
-
-
 
             // ОФД
             $order = $PHPShopOrderFunction->unserializeParam('orders');
@@ -50,8 +47,6 @@ function userorderpaymentlink_mod_robokassa_hook($obj, $PHPShopOrderFunction) {
                         $tax_delivery = 'vat' . $PHPShopDelivery->getParam('ofd_nds');
                 }
             }
-
-
 
             // Корзина
             if (is_array($order['Cart']['cart'])) {

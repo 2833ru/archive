@@ -2,7 +2,7 @@
 
 PHPShopObj::loadClass("category");
 
-$TitlePage = __('Редактирование фото #' . $_GET['id']);
+$TitlePage = __('Редактирование фото').' #' . $_GET['id'];
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['photo']);
 
 // Построение дерева категорий
@@ -48,7 +48,7 @@ function actionStart() {
     }
 
     $PHPShopGUI->field_col = 2;
-    $PHPShopGUI->setActionPanel(__("Фото") . ': ' . $data['info'], array('Создать', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'));
+    $PHPShopGUI->setActionPanel(__("Фото") . ': ' . $data['info'], array('Создать', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'),false);
 
     $PHPShopCategoryArray = new PHPShopPhotoCategoryArray();
     $CategoryArray = $PHPShopCategoryArray->getArray();
@@ -90,15 +90,15 @@ function actionStart() {
 
 
     // Содержание закладки 1
-    $Tab1 = $PHPShopGUI->setField(__("Размещение:"), $tree_select) .
-            $PHPShopGUI->setField(__("Изображение"), $PHPShopGUI->setIcon($data['name'], "name_new", false, array('load' => false, 'server' => true, 'url' => false)), 1, 'Загрузите сюда фото. Превью фото будет создано автоматически.') .
-            $PHPShopGUI->setField("Описание:", $PHPShopGUI->setInput("text", "info_new", $data['info'])) .
-            $PHPShopGUI->setField("Сортировка:", $PHPShopGUI->setInputText("№", "num_new", $data['num'], 150));
+    $Tab1 = $PHPShopGUI->setField("Размещение", $tree_select) .
+            $PHPShopGUI->setField("Изображение", $PHPShopGUI->setIcon($data['name'], "name_new", false, array('load' => false, 'server' => true, 'url' => false)), 1, 'Загрузите сюда фото. Превью фото будет создано автоматически.') .
+            $PHPShopGUI->setField("Описание", $PHPShopGUI->setInput("text", "info_new", $data['info'])) .
+            $PHPShopGUI->setField("Сортировка", $PHPShopGUI->setInputText("№", "num_new", $data['num'], 150));
 
     $SelectValue[] = array('Вывод в каталоге', 1, $data['enabled']);
     $SelectValue[] = array('Заблокировать', 0, $data['enabled']);
 
-    $Tab1.= $PHPShopGUI->setField("Опции вывода:", $PHPShopGUI->setSelect("enabled_new", $SelectValue, 300));
+    $Tab1.= $PHPShopGUI->setField("Опции вывода:", $PHPShopGUI->setSelect("enabled_new", $SelectValue, 300,true));
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);

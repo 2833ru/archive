@@ -171,7 +171,7 @@ $(document).ready(function() {
 
         //Активация слайдеров на главной странице
 	if(!$('.editor_var').length){
-        $('.spec-main-icon-slider > .swiper-wrapper .col-md-3.col-sm-6').unwrap();
+        $('.spec-main-icon-slider > .swiper-wrapper .product-block-wrapper-fix').unwrap();
         $('.spec-main-icon-slider > .swiper-wrapper > div').addClass('swiper-slide');
             var swiper = new Swiper('.spec-main-icon-slider', {
                 slidesPerView: 3,
@@ -192,9 +192,9 @@ $(document).ready(function() {
                         slidesPerView: 3
                         }
                 }
-            });
+        });
 
-        $('.spec-main-slider > .swiper-wrapper .col-md-3.col-sm-6').unwrap();
+        $('.spec-main-slider > .swiper-wrapper .product-block-wrapper-fix').unwrap();
         $('.spec-main-slider > .swiper-wrapper > div').addClass('swiper-slide');
             var swiper = new Swiper('.spec-main-slider', {
                 slidesPerView: 3,
@@ -225,5 +225,27 @@ $(document).ready(function() {
             $('#main-menu').addClass('main-menu-fix fadeIn');
             $('body').addClass('overflow-fix');
         }
+    });
+    $('.nowBuy > .swiper-wrapper .product-block-wrapper-fix').unwrap();
+    $('.nowBuy > .swiper-wrapper > div').addClass('swiper-slide');
+        var swiper = new Swiper('.nowBuy', {
+            slidesPerView: 3,
+            speed: 800,
+            nextButton: '.btn-next3',
+            prevButton: '.btn-prev3',
+            preventClicks: false,
+            effect: 'slide',
+            preventClicksPropagation: false,
+            breakpoints: {
+                768: {
+                    slidesPerView: 1
+                    },
+                991: {
+                    slidesPerView: 2
+                    },
+                1200: {
+                    slidesPerView: 3
+                    }
+            }
     });
 });

@@ -1,4 +1,4 @@
-            <div class="col-md-3 col-sm-3">
+            <div class="col-md-3 col-sm-3 product-block-wrapper-fix">
                  <div class="product-col">
                      <div class="image product-img-centr">
                        <a href="/shop/UID_@productUid@.html" title="@productName@"> <img src="@productImg@" alt="@productName@" class="img-responsive img-center-sm" ></a>
@@ -12,6 +12,7 @@
                              <span class="price-new">@productPrice@ <span class="rubznak">@productValutaName@</span></span> 
                              <span class="price-old">@productPriceRub@</span>
                          </div>
+                         <span class="product-sklad-list-block">@productSklad@</span>
                          <div class="cart-button button-group">
                             @ComStartCart@
                              <button type="button" class="btn btn-cart addToCartList addToCartListMainPage" role="button" data-num="1" data-uid="@productUid@" data-cart="@productSaleReady@">

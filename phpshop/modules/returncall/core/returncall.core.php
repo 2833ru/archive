@@ -120,33 +120,31 @@ class PHPShopReturncall extends PHPShopCore {
         // Запись в базу
         $this->PHPShopOrm->insert($insert);
 
-        $zag = $this->PHPShopSystem->getValue('name') . " - Обратный звонок - " . PHPShopDate::dataV();
+        $zag = $this->PHPShopSystem->getValue('name') . " - ".__('Обратный звонок')." - " . PHPShopDate::dataV();
 
         if(!empty($insert['time_end_new']))
             $insert['time_start_new'].=' - '.$insert['time_end_new'];
         
-        $message = "
-Доброго времени!
+        $message = "{Доброго времени}!
 ---------------
 
-С сайта " . $this->PHPShopSystem->getValue('name') . " пришла заявка об обратном звонке
+{С сайта} " . $this->PHPShopSystem->getValue('name') . " {пришла заявка об обратном звонке}
 
-Данные о пользователе:
+{Данные о пользователе}:
 ----------------------
 
-Имя:                " . $insert['name_new'] . "
-Телефон:            " . $insert['tel_new'] . "
-Время звонка:       " . $insert['time_start_new']."
-Сообщение:          " . $insert['message_new'] . "
-Дата:               " . PHPShopDate::dataV($insert['date_new']) . "
+{Имя}:                " . $insert['name_new'] . "
+{Телефон}:            " . $insert['tel_new'] . "
+{Время звонка}:       " . $insert['time_start_new']."
+{Сообщение}:          " . $insert['message_new'] . "
+{Дата}:               " . PHPShopDate::dataV($insert['date_new']) . "
 IP:                 " . $_SERVER['REMOTE_ADDR'] . "
 REFERER:            " . $_SERVER['HTTP_REFERER'] . " 
 ---------------
 
-С уважением,
 http://" . $_SERVER['SERVER_NAME'];
 
-        new PHPShopMail($this->PHPShopSystem->getValue('adminmail2'), $this->PHPShopSystem->getValue('adminmail2'), $zag, $message);
+        new PHPShopMail($this->PHPShopSystem->getValue('adminmail2'), $this->PHPShopSystem->getValue('adminmail2'), $zag, Parser($message));
     }
 
 }

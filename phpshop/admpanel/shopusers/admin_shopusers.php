@@ -4,7 +4,7 @@ $TitlePage = __("Покупатели");
 PHPShopObj::loadClass('user');
 
 function actionStart() {
-    global $PHPShopInterface;
+    global $PHPShopInterface,$TitlePage;
 
     $PHPShopInterface->action_button['Добавить Пользователя'] = array(
         'name' => '',
@@ -12,7 +12,7 @@ function actionStart() {
         'class' => 'btn btn-default btn-sm navbar-btn',
         'type' => 'button',
         'icon' => 'glyphicon glyphicon-plus',
-        'tooltip' => 'data-toggle="tooltip" data-placement="left" title="Добавить Пользователя"'
+        'tooltip' => 'data-toggle="tooltip" data-placement="left" title="'.__('Добавить Пользователя').'"'
     );
 
     $PHPShopInterface->action_title['order'] = 'Новый заказ';
@@ -24,7 +24,7 @@ function actionStart() {
 
 
     $PHPShopInterface->addJSFiles('./shopusers/gui/shopusers.gui.js');
-    $PHPShopInterface->setActionPanel(__("Покупатели"), array('Поиск', 'CSV', 'Удалить выбранные'), array('Добавить Пользователя'));
+    $PHPShopInterface->setActionPanel($TitlePage, array('Поиск', 'CSV', 'Удалить выбранные'), array('Добавить Пользователя'));
     $PHPShopInterface->setCaption(array(null, "2%"), array("Имя", "25%"), array("E-mail", "20%"), array("Статус", "20%"), array("Скидка %", "10%"), array("Вход", "10%"), array("", "10%"), array("Статус", "10%", array('align' => 'right')));
 
     // Статусы пользователей

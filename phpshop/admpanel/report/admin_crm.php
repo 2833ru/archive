@@ -24,7 +24,7 @@ function actionStart() {
         $limit = 1000;
     }
     
-    $PHPShopInterface->setActionPanel($TitlePage, false, false);
+    $PHPShopInterface->setActionPanel($TitlePage, false, false,false);
     $PHPShopInterface->setCaption(array("Запрос", "40%"), array("Операция", "20%"), array("Дата", "20%"), array("Время", "10%"));
 
     // Пароль
@@ -37,7 +37,7 @@ function actionStart() {
     if (is_array($data))
         foreach ($data as $row) {
 
-            $PHPShopInterface->setRow(array('name' => $row['p_name'] . '/' . $row['f_name']), array('name' => '<span class="btn btn-default btn-xs"><span class="glyphicon glyphicon-play "></span> Выполнить</span>', 'align' => 'left', 'link' => '../../1cManager/result.php?date=' . $row['p_name'] . '&log=' . $_SESSION['logPHPSHOP'] . '&pas=' . $pass_crm . '&files=' . trim($row['f_name']) . '&create=true&create_category=true', 'target' => '_blank'), PHPShopDate::get($row['datas'], true), array('name' => $row['time'], 'align' => 'center'));
+            $PHPShopInterface->setRow(array('name' => $row['p_name'] . '/' . $row['f_name']), array('name' => '<span class="btn btn-default btn-xs"><span class="glyphicon glyphicon-play "></span> '.__('Выполнить').'</span>', 'align' => 'left', 'link' => '../../1cManager/result.php?date=' . $row['p_name'] . '&log=' . $_SESSION['logPHPSHOP'] . '&pas=' . $pass_crm . '&files=' . trim($row['f_name']) . '&create=true&create_category=true', 'target' => '_blank'), PHPShopDate::get($row['datas'], true), array('name' => $row['time'], 'align' => 'center'));
         }
 
     if (isset($_GET['date_start']))
@@ -50,8 +50,6 @@ function actionStart() {
     else
         $date_end = PHPShopDate::get(time() - 1);
 
-
-
     $PHPShopInterface->field_col = 1;
     $searchforma.=$PHPShopInterface->setInputDate("date_start", $date_start, 'margin-bottom:10px', null, 'Дата начала отбора');
     $searchforma.=$PHPShopInterface->setInputDate("date_end", $date_end, false, null, 'Дата конца отбора');
@@ -60,7 +58,7 @@ function actionStart() {
     $searchforma.=$PHPShopInterface->setButton(__('Найти'), 'search', 'btn-order-search pull-right');
 
     if ($where)
-        $searchforma.=$PHPShopInterface->setButton(__('Сброс'), 'remove', 'btn-order-cancel pull-left');
+        $searchforma.=$PHPShopInterface->setButton('Сброс', 'remove', 'btn-order-cancel pull-left');
 
     // Правый сайдбар
     $sidebarright[] = array('title' => 'Отчеты', 'content' => $PHPShopInterface->loadLib('tab_menu', false, './report/'));

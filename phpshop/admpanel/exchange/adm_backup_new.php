@@ -6,7 +6,7 @@ PHPShopObj::loadClass('user');
 
 // Стартовый вид
 function actionStart() {
-    global $PHPShopGUI, $PHPShopModules;
+    global $PHPShopGUI, $PHPShopModules,$TitlePage;
 
     $PHPShopGUI->action_button['Создать'] = array(
         'name' => 'Создать',
@@ -20,7 +20,7 @@ function actionStart() {
     // Размер названия поля
     $PHPShopGUI->field_col = 2;
     $PHPShopGUI->addJSFiles('./exchange/gui/exchange.gui.js');
-    $PHPShopGUI->setActionPanel(__("Создание резервной копии базы"), false, array('Создать'));
+    $PHPShopGUI->setActionPanel($TitlePage, false, array('Создать'));
 
     $structure_value[] = array('Структура и данные', '0', 'selected');
     $structure_value[] = array('Только структура', '1', '');
@@ -48,14 +48,14 @@ function actionStart() {
         <select id="pattern_table" style="height:300px;width:500px" name="pattern_table[]" multiple class="form-control" required>' . $table . '</select>
         </td>
         <td>&nbsp;</td>
-        <td class="text-center"><a class="btn btn-default btn-sm" href="#" id="select-all" data-toggle="tooltip" data-placement="top" title="Выбрать все"><span class="glyphicon glyphicon-chevron-left"></span></a><br><br>
-        <a class="btn btn-default btn-sm" id="select-none" href="#" data-toggle="tooltip" data-placement="top" title="Убрать выделение со всех"><span class="glyphicon glyphicon-chevron-right"></span></a></td>
+        <td class="text-center"><a class="btn btn-default btn-sm" href="#" id="select-all" data-toggle="tooltip" data-placement="top" title="'.__('Выбрать все').'"><span class="glyphicon glyphicon-chevron-left"></span></a><br><br>
+        <a class="btn btn-default btn-sm" id="select-none" href="#" data-toggle="tooltip" data-placement="top" title="'.__('Убрать выделение со всех').'"><span class="glyphicon glyphicon-chevron-right"></span></a></td>
         </tr>
    </table>
             
 ' . $PHPShopGUI->setHelp('Для выбора более одной записи нажмите левой кнопкой мыши на запись, удерживая клавишу CTRL')) .
             $PHPShopGUI->setField('GZIP сжатие', $PHPShopGUI->setCheckbox('export_gzip', 1, 'Включить', 1), 1, 'Сокращает размер создаваемого файла') .
-            $PHPShopGUI->setField('Варианты копирования', $PHPShopGUI->setSelect('export_structure', $structure_value, 300)));
+            $PHPShopGUI->setField('Варианты копирования', $PHPShopGUI->setSelect('export_structure', $structure_value, 300,true)));
 
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, false);
 

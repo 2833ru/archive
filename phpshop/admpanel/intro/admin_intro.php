@@ -17,12 +17,12 @@ function mailNotice($type, $until_day) {
             case "license":
 
                 $userContent = PHPShopParser::file("tpl/license.mail.tpl", true, false);
-                new PHPShopMail($PHPShopSystem->getEmail(), $PHPShopSystem->getEmail(), 'Заканчивается лицензия для сайта ' . $_SERVER['SERVER_NAME'], $userContent, "text/html");
+                new PHPShopMail($PHPShopSystem->getEmail(), $PHPShopSystem->getEmail(), __('Заканчивается лицензия для сайта') . ' ' . $_SERVER['SERVER_NAME'], $userContent, "text/html");
 
                 break;
             case "support":
                 $userContent = PHPShopParser::file("tpl/support.mail.tpl", true, false);
-                new PHPShopMail($PHPShopSystem->getEmail(), $PHPShopSystem->getEmail(), 'Заканчивается техническая поддержка для сайта ' . $_SERVER['SERVER_NAME'], $userContent, "text/html");
+                new PHPShopMail($PHPShopSystem->getEmail(), $PHPShopSystem->getEmail(), __('Заканчивается техническая поддержка для сайта') . ' ' . $_SERVER['SERVER_NAME'], $userContent, "text/html");
 
                 break;
         }
@@ -41,7 +41,7 @@ function actionStart() {
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['search_jurnal']);
     $data = $PHPShopOrm->select(array('name'), array('num' => '>0'), array('order' => 'id desc'), array('limit' => 10));
     $search_jurnal = null;
-    $search_jurnal_title = 'Новые поисковые запросы <a href="#" class="search pull-right">Расширенный поиск</a>';
+    $search_jurnal_title = __('Новые поисковые запросы') . ' <a href="#" class="search pull-right">' . __('Расширенный поиск') . '</a>';
     $search_jairnal_icon = 'search';
     $search_jurnal_class = null;
     if (is_array($data)) {
@@ -87,6 +87,7 @@ function actionStart() {
 
     $PHPShopGUI->action_button['Время'] = array(
         'name' => '<span class=clock-tmp>' . date("H:i:s", time()) . '</span>',
+        'locale' => false,
         'class' => 'btn btn-default btn-sm clock navbar-btn hidden-xs',
         'type' => 'button',
         'icon' => 'glyphicon glyphicon-time'
@@ -122,8 +123,8 @@ function actionStart() {
     if (is_numeric($LicenseUntilUnixTime))
         if ($until_day < 8 and $until_day > 0) {
             mailNotice('support', $until_day);
-            $search_jurnal = 'В течение 1 месяца для Вас действует <b>льготный тариф на техподдержку</b>, чтобы Вы смогли своевременно получать обновления и технические консультации в течение года.';
-            $search_jurnal_title = 'Техническая поддержка заканчивается через <span class="label label-warning">' . abs(round($until_day)) . '  дней</span><a class="pull-right btn btn-xs btn-default" href="http://phpshop.ru/order/" target="_blank"><span class="glyphicon glyphicon-ruble"></span> Купить</a>';
+            $search_jurnal = __('В течение 1 месяца для Вас действует <b>льготный тариф на техподдержку</b>, чтобы Вы смогли своевременно получать обновления и технические консультации в течение года.');
+            $search_jurnal_title = __('Техническая поддержка заканчивается через') . ' <span class="label label-warning">' . abs(round($until_day)) . '  ' . __('дней') . '</span><a class="pull-right btn btn-xs btn-default" href="http://phpshop.ru/order/" target="_blank"><span class="glyphicon glyphicon-ruble"></span> ' . __('Купить') . '</a>';
             $search_jurnal_class = 'panel-success';
             $search_jairnal_icon = 'exclamation-sign';
         }
@@ -135,8 +136,8 @@ function actionStart() {
     if (is_numeric($LicenseUntilUnixTime))
         if ($until_day < 8 and $until_day > 0) {
             mailNotice('license', $until_day);
-            $search_jurnal = 'Для перехода на полную версию необходимо приобрести лицензию. <b>Все изменения, произведенные на демо-версии сайта, сохранятся</b>.';
-            $search_jurnal_title = 'Лицензия заканчивается через <span class="label label-primary">' . abs(round($until_day)) . '  дней</span><a class="pull-right btn btn-xs btn-primary" href="http://phpshop.ru/order/" target="_blank"><span class="glyphicon glyphicon-ruble"></span> Купить</a>';
+            $search_jurnal = __('Для перехода на полную версию необходимо приобрести лицензию. <b>Все изменения, произведенные на демо-версии сайта, сохранятся</b>.');
+            $search_jurnal_title = __('Лицензия заканчивается через') . ' <span class="label label-primary">' . abs(round($until_day)) . '  ' . __('дней') . '</span><a class="pull-right btn btn-xs btn-primary" href="http://phpshop.ru/order/" target="_blank"><span class="glyphicon glyphicon-ruble"></span> ' . __('Купить') . '</a>';
             $search_jurnal_class = 'panel-danger';
             $search_jairnal_icon = 'exclamation-sign';
         }
@@ -159,13 +160,13 @@ function actionStart() {
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
     $PHPShopOrm->Option['where'] = ' or ';
     $PHPShopOrm->debug = false;
-    $PHPShopOrm->sql = 'SELECT a.*, b.mail FROM ' . $GLOBALS['SysValue']['base']['orders'] . ' AS a 
+    $PHPShopOrm->sql = 'SELECT a.*, b.mail, b.name FROM ' . $GLOBALS['SysValue']['base']['orders'] . ' AS a 
         LEFT JOIN ' . $GLOBALS['SysValue']['base']['shopusers'] . ' AS b ON a.user = b.id  ' . $where . ' 
             order by a.id desc limit 8';
     $canvas_value = $canvas_label = null;
     $data = $PHPShopOrm->select();
     $canvas_data = $data;
-  
+
     if (is_array($data))
         foreach ($data as $row) {
 
@@ -185,20 +186,24 @@ function actionStart() {
                 $status_name = __('Не определен');
 
             if ($row['id'] < 100)
-                $uid = '<span class="hidden-xs">' . __('Заказ ') . '</span>' . $row['uid'];
+                $uid = '<span class="hidden-xs">' . __('Заказ') . '</span> ' . $row['uid'];
             else
                 $uid = $row['uid'];
+
+            if (empty($row['fio']) and !empty($row['name']))
+                $row['fio'] = $row['name'];
+
 
             $PHPShopInterface->setRow(array('name' => '<span class="label label-info" title="' . $status_name . '" style="background-color:' . $PHPShopOrder->getStatusColor() . '"><span class="hidden-xs">' . substr($status_name, 0, 25) . '</span></span>', 'link' => '?path=order&return=intro&id=' . $row['id'], 'class' => 'label-link'), array('name' => $uid, 'link' => '?path=order&return=intro&id=' . $row['id']), array('name' => $row['fio'], 'link' => '?path=shopusers&return=intro&id=' . $row['user']), array('name' => $datas, 'class' => 'text-muted'), array('name' => $PHPShopOrder->getTotal(false, ' ') . ' ' . $currency, 'align' => 'right', 'class' => 'strong'));
         }
 
-    // График
-    krsort($canvas_data);
-    if (is_array($canvas_data))
+    if (is_array($canvas_data)) {
+        krsort($canvas_data);
         foreach ($canvas_data as $row) {
             $canvas_value.='"' . $row['sum'] . '",';
             $canvas_label.='"' . date("d", $row['datas']) . '.' . date("m", $row['datas']) . '",';
         }
+    }
 
     $order_list = $PHPShopInterface->getContent();
 
@@ -251,7 +256,7 @@ function actionStart() {
      <div class="row intro-row">
        <div class="col-md-2 col-xs-6">
           <div class="panel panel-default">
-             <div class="panel-heading"><span class="glyphicon glyphicon-flag"></span> Новых заказов</div>
+             <div class="panel-heading"><span class="glyphicon glyphicon-flag"></span> ' . __('Новых заказов') . '</div>
                 <div class="panel-body text-right panel-intro">
                 <a href="?path=order">' . $PHPShopBase->getNumRows('orders', 'where statusi=0') . '</a>
                </div>
@@ -259,7 +264,7 @@ function actionStart() {
        </div>
        <div class="col-md-2 col-xs-6">
           <div class="panel panel-default">
-             <div class="panel-heading"><span class="glyphicon glyphicon-envelope"></span> Cообщений</div>
+             <div class="panel-heading"><span class="glyphicon glyphicon-envelope"></span> ' . __('Cообщений') . '</div>
                 <div class="panel-body text-right panel-intro">
                  <a href="?path=shopusers.messages">' . $PHPShopBase->getNumRows('messages', "where enabled='0'") . '</a>
                </div>
@@ -267,7 +272,7 @@ function actionStart() {
        </div>
        <div class="col-md-2 hidden-xs hidden-sm">
           <div class="panel panel-default">
-             <div class="panel-heading"><span class="glyphicon glyphicon-list-alt"></span> Комментариев</div>
+             <div class="panel-heading"><span class="glyphicon glyphicon-list-alt"></span> ' . __('Комментариев') . '</div>
                 <div class="panel-body text-right panel-intro">
                  <a href="?path=shopusers.comment">' . $PHPShopBase->getNumRows('comment', "where enabled != '1'") . '</a>
                </div>
@@ -287,13 +292,13 @@ function actionStart() {
    <div class="row intro-row">
        <div class="col-xs-12 col-md-12 col-lg-6">
            <div class="panel panel-default">
-             <div class="panel-heading"><span class="glyphicon glyphicon-shopping-cart"></span> Последние заказы <a class="pull-right" href="?path=order">Показать больше</a></div>
+             <div class="panel-heading"><span class="glyphicon glyphicon-shopping-cart"></span> ' . __('Последние заказы') . ' <a class="pull-right" href="?path=order">' . __('Показать больше') . '</a></div>
                    <table class="table table-hover intro-list">' . $order_list . '</table>
           </div>
        </div>
        <div class="visible-lg col-lg-6">
           <div class="panel panel-default">
-             <div class="panel-heading"><span class="glyphicon glyphicon-stats"></span> Статистика заказов 
+             <div class="panel-heading"><span class="glyphicon glyphicon-stats"></span> ' . __('Статистика заказов') . ' 
              <span class="pull-right hidden-xs">
              
 <div class="dropdown">
@@ -302,11 +307,11 @@ function actionStart() {
     <span class="caret"></span>
   </button>
   <ul class="dropdown-menu dropdown-menu-right canvas-select">
-    <li class="disabled"><a href="#" class="canvas-line">Линейная диаграмма</a></li>
-    <li><a href="#" class="canvas-bar">Гистограмма</a></li>
-    <li><a href="#" class="canvas-radar">Радар диаграмма</a></li>
+    <li class="disabled"><a href="#" class="canvas-line">' . __('Линейная диаграмма') . '</a></li>
+    <li><a href="#" class="canvas-bar">' . __('Гистограмма') . '</a></li>
+    <li><a href="#" class="canvas-radar">' . __('Радар диаграмма') . '</a></li>
     <li class="divider"></li>
-    <li><a href="?path=report.statproduct">Больше отчетов</a></li>
+    <li><a href="?path=report.statproduct">' . __('Больше отчетов') . '</a></li>
   </ul>
 </div>
 
@@ -325,7 +330,7 @@ function actionStart() {
     <div class="row intro-row">
        <div class="col-md-2 col-xs-6">
           <div class="panel panel-default">
-             <div class="panel-heading"><span class="glyphicon glyphicon-eye-open"></span> На витрине</div>
+             <div class="panel-heading"><span class="glyphicon glyphicon-eye-open"></span> ' . __('На витрине') . '</div>
                 <div class="panel-body text-right panel-intro">
                 <a href="?path=catalog&where[enabled]=1">' . $PHPShopBase->getNumRows('products', "where enabled='1' and parent_enabled='0'") . '</a>
                </div>
@@ -333,7 +338,7 @@ function actionStart() {
        </div>
        <div class="col-md-2 col-xs-6">
           <div class="panel panel-default">
-             <div class="panel-heading"><span class="glyphicon glyphicon-eye-close"></span> Скрыто</div>
+             <div class="panel-heading"><span class="glyphicon glyphicon-eye-close"></span> ' . __('Скрыто') . '</div>
                 <div class="panel-body text-right panel-intro">
                  <a href="?path=catalog&where[enabled]=0&where[parent_enabled]=0">' . $PHPShopBase->getNumRows('products', "where enabled='0' and parent_enabled='0'") . '</a>
                </div>
@@ -341,7 +346,7 @@ function actionStart() {
        </div>
        <div class="col-md-2 col-xs-6">
           <div class="panel panel-default">
-             <div class="panel-heading"><span class="glyphicon glyphicon-bell"></span> Нет в наличии</div>
+             <div class="panel-heading"><span class="glyphicon glyphicon-bell"></span> ' . __('Нет в наличии') . '</div>
                 <div class="panel-body text-right panel-intro">
                  <a href="?path=catalog&where[sklad]=1">' . $PHPShopBase->getNumRows('products', "where sklad = '1'") . '</a>
                </div>
@@ -349,7 +354,7 @@ function actionStart() {
        </div>
        <div class="col-md-2 col-xs-6">
           <div class="panel panel-default">
-             <div class="panel-heading"><span class="glyphicon glyphicon-folder-open"></span> Категории</div>
+             <div class="panel-heading"><span class="glyphicon glyphicon-folder-open"></span> ' . __('Категории') . '</div>
                 <div class="panel-body text-right panel-intro">
                  <a href="?path=catalog">' . $PHPShopBase->getNumRows('categories', "") . '</a>
                </div>
@@ -357,7 +362,7 @@ function actionStart() {
        </div>
        <div class="col-md-2 hidden-xs hidden-sm">
           <div class="panel panel-default">
-             <div class="panel-heading"><span class="glyphicon glyphicon-user"></span> Покупатели</div>
+             <div class="panel-heading"><span class="glyphicon glyphicon-user"></span> ' . __('Покупатели') . '</div>
                 <div class="panel-body text-right panel-intro">
                  <a href="?path=shopusers">' . $PHPShopBase->getNumRows('shopusers', "where enabled = '1'") . '</a>
                </div>
@@ -365,7 +370,7 @@ function actionStart() {
        </div>
        <div class="col-md-2 hidden-xs hidden-sm">
           <div class="panel panel-default">
-             <div class="panel-heading"><span class="glyphicon glyphicon-shopping-cart"></span> Заказы</div>
+             <div class="panel-heading"><span class="glyphicon glyphicon-shopping-cart"></span> ' . __('Заказы') . '</div>
                 <div class="panel-body text-right panel-intro">
                  <a href="?path=order">' . $PHPShopBase->getNumRows('orders', "") . '</a>
                </div>
@@ -376,13 +381,13 @@ function actionStart() {
 <div class="row intro-row">
        <div class="col-md-6 col-xs-12">
           <div class="panel panel-default">
-             <div class="panel-heading"><span class="glyphicon glyphicon-user"></span> Журнал авторизации <a class="pull-right" href="?path=users.jurnal">Показать больше</a></div>
+             <div class="panel-heading"><span class="glyphicon glyphicon-user"></span> ' . __('Журнал авторизации') . ' <a class="pull-right" href="?path=users.jurnal">' . __('Показать больше') . '</a></div>
                 <table class="table table-hover intro-list">' . $user_list . '</table>
           </div>
        </div>
        <div class="col-md-6 hidden-xs hidden-sm">
           <div class="panel panel-default">
-             <div class="panel-heading"><span class="glyphicon glyphicon-refresh"></span> Обновление товаров <a class="pull-right" href="?path=catalog&order[datas]=desc">Показать больше</a></div>
+             <div class="panel-heading"><span class="glyphicon glyphicon-refresh"></span> ' . __('Обновление товаров') . ' <a class="pull-right" href="?path=catalog&order[datas]=desc">' . __('Показать больше') . '</a></div>
                 <table class="table table-hover intro-list">' . $product_list . '</table>
           </div>
        </div>

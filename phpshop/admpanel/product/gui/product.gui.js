@@ -71,7 +71,9 @@ $().ready(function() {
             data.push({name: 'delID', value: '1'});
             data.push({name: 'rowID', value: id});
             data.push({name: 'actionList[delID]', value: 'actionDelete.catalog.edit'});
-
+            data.push({name: 'parent_enabled', value: '1'});
+            data.push({name: 'parent', value: $.getUrlVar('id')});
+                        
             $.ajax({
                 mimeType: 'text/html; charset=windows-1251',
                 url: '?path=product&id=' + id,
@@ -101,6 +103,8 @@ $().ready(function() {
             var data = [];
             data.push({name: 'delID', value: '1'});
             data.push({name: 'actionList[delID]', value: 'actionDelete.catalog.edit'});
+            data.push({name: 'parent_enabled', value: '1'});
+            data.push({name: 'parent', value: $.getUrlVar('id')});
 
             $('#modal-form').attr('action', '?path=product&id=' + id);
             $('#modal-form').ajaxSubmit({
@@ -376,7 +380,7 @@ $().ready(function() {
         'height': '100px',
         'width': '100%',
         'interactive': true,
-        'defaultText': '¬вод...',
+        'defaultText': locale.enter,
         'removeWithBackspace': true,
         'minChars': 0,
         'maxChars': 0, // if not provided there is no limit
@@ -399,7 +403,7 @@ $().ready(function() {
         'height': '100px',
         'width': '100%',
         'interactive': true,
-        'defaultText': '¬вод...',
+        'defaultText': locale.enter,
         'removeWithBackspace': true,
         'minChars': 0,
         'delimiter': ['#'],

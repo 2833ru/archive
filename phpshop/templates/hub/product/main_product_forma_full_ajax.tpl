@@ -29,7 +29,7 @@
                     <span class="price-new rubznak" itemprop="priceCurrency" content="RUB">@productValutaName@</span>
                 </div>
                 <div class="product-page-raiting rating">
-                    <span>Рейтинг :</span>
+                    <span>{Рейтинг}:</span>
                     @rateUid@
                 </div>
             </div>
@@ -90,9 +90,9 @@
                         </button>                                   
                     </div>
                     <div class="cart-button button-group compare-list-button-wrapper">
-                        <button type="button" class="btn btn-cart addToWishList" role="button" data-uid="@productUid@" data-title="Отложить" data-placement="top" data-toggle="tooltip">
+                        <button type="button" class="btn btn-cart addToWishList" role="button" data-uid="@productUid@" data-title="{Отложить}" data-placement="top" data-toggle="tooltip">
                             <i class="fa fa-heart-o" aria-hidden="true"></i>
-                            Отложить
+                            {Отложить}
                         </button>                                   
                     </div>
                    <div class="cart-button button-group cart-list-button-wrapper  @elementCartOptionHide@">
@@ -105,7 +105,7 @@
                     <div class="cart-button button-group compare-list-button-wrapper">
                         <a class="btn btn-cart" href="/users/notice.html?productId=@productUid@" title="@productNotice@">
                             <i class="fa fa-envelope-o" aria-hidden="true"></i>                            
-                            Уведомить
+                            {Уведомить}
                         </a>                                   
                     </div>
                     @ComEndNotice@ 

@@ -39,7 +39,7 @@
     </td>
     <td class="order-product-remove-product">
         <form name="forma_cart_del" method="post" id="forma_cart_del">
-            <button type="submit" class="btn btn-default tool-tip" data-toggle="tooltip" data-placement="top" title="Удалить">
+            <button type="submit" class="btn btn-default tool-tip" data-toggle="tooltip" data-placement="top" title="{Удалить}">
                 <i class="fa fa-times" aria-hidden="true"></i>
             </button>
             <input type=hidden name="id_delete" value="@cart_xid@">

@@ -49,7 +49,6 @@ function actionStart() {
     // Поиск
     $where = $clean = null;
 
-
     if (is_array($_GET['where'])) {
         foreach ($_GET['where'] as $k => $v) {
             if (!empty($v))
@@ -98,7 +97,7 @@ function actionStart() {
     $PHPShopGUI->field_col = 3;
     $PHPShopGUI->addJSFiles('./js/bootstrap-datetimepicker.min.js', './js/bootstrap-datetimepicker.ru.js', 'js/chart.min.js', 'report/gui/report.gui.js');
     $PHPShopGUI->addCSSFiles('./css/bootstrap-datetimepicker.min.css');
-    $PHPShopGUI->setActionPanel($TitlePage, array('Линейная диаграмма', 'Гистограмма', 'Радар диаграмма', '|', 'Export'), false);
+    $PHPShopGUI->setActionPanel($TitlePage, array('Линейная диаграмма', 'Гистограмма', 'Радар диаграмма', '|', 'Export'), false,false);
 
     // Таблица с данными
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
@@ -153,7 +152,7 @@ function actionStart() {
                             <!-- Progress -->
                             <div class="progress">
                                 <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="5" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-                                    Загрузка...
+                                    '.__('Загрузка').'...
                                 </div>
                             </div>   
                             <!--/ Progress -->
@@ -190,10 +189,10 @@ function actionStart() {
     $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[a.street]', 'placeholder' => 'Улица', 'value' => $_GET['where']['a.street']));
 
     $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'hidden', 'name' => 'path', 'value' => $_GET['path']));
-    $searchforma.=$PHPShopInterface->setButton(__('Показать'), 'search', 'btn-order-search pull-right');
+    $searchforma.=$PHPShopInterface->setButton('Показать', 'search', 'btn-order-search pull-right');
 
     if ($clean)
-        $searchforma.=$PHPShopInterface->setButton(__('Сброс'), 'remove', 'btn-order-cancel pull-left');
+        $searchforma.=$PHPShopInterface->setButton('Сброс', 'remove', 'btn-order-cancel pull-left');
 
     $sidebarright[] = array('title' => 'Отчеты', 'content' => $PHPShopGUI->loadLib('tab_menu', false, './report/'));
     $sidebarright[] = array('title' => 'Интервал', 'content' => $PHPShopInterface->setForm($searchforma, false, "order_search", false, false, 'form-sidebar'));

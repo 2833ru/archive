@@ -17,9 +17,8 @@ function tab_discount($cumulative_discount) {
                     . "<tr>";
         }
 
-
     $disp = "<table class='table table-striped'>
-              <tr><th>Сумма от " . $PHPShopSystem->getDefaultValutaCode() . "</th><th>Сума до " . $PHPShopSystem->getDefaultValutaCode() . "</th><th>Скидка %</th><th class='text-center'>Вкл / Выкл</th></tr>"
+              <tr><th>".__("Сумма от")." " . $PHPShopSystem->getDefaultValutaCode() . "</th><th>".__("Сумма до")." " . $PHPShopSystem->getDefaultValutaCode() . "</th><th>".__("Скидка")." %</th><th class='text-center'>".__("Вкл / Выкл")."</th></tr>"
             . $cumulative_html
             . "<tr>"
             . "<td>" . $PHPShopGUI->setInputText(false, 'cumulative_sum_ot[]', null, "200") . "</td>"

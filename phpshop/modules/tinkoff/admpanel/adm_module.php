@@ -15,8 +15,6 @@ function actionBaseUpdate()
     $new_version = $PHPShopModules->getUpdate($option['version']);
     $PHPShopOrm->clean();
     $action = $PHPShopOrm->update(array('version_new' => $new_version));
-
-    return $action;
 }
 
 /**
@@ -61,7 +59,7 @@ function actionStart()
     $info = '
         <h4>Настройка модуля</h4>
         <ol>
-<li>Предоставить необходимые документы и заключить договор с <a href="https://www.tinkoff.ru/business/payments/" target="blank">Тинькофф</a>.</li>
+<li>Предоставить необходимые документы и заключить договор с <a href="https://www.tinkoff.ru/business/?utm_source=partner_rko_sme&utm_medium=ptr.act&utm_campaign=sme.partners&partnerId=5-IV4AJGWE#form-application" target="blank">Тинькофф</a>.</li>
 <li>На закладке настройки ввести предоставленные банком Тинькофф адрес "Шлюза", код "Терминала" и "Секрентый ключ".</li>
 <li>Выбрать режим налогооблажения товаров при включенном флаге передаче данных данных для формирования чека.</a></li>
 <li>Выбрать режим налогооблажения доставки в карточке редактирования доставки.</a></li>

@@ -131,16 +131,15 @@
 
                             <tr bgcolor="#eaeaea">
                                 <td >
-                                    <h3>Обновление пароля пользователя @login@.</h3><hr>
+                                    <h3>{Обновление пароля пользователя} @login@.</h3><hr>
 
-                                        Уважаемый <b>@login@</b>, Вы запросили обновление пароля  
-                                        к панели администрирования PHPShop на сайте @serverPath@.
+                                        {Уважаемый} <b>@login@</b>, {Вы запросили обновление пароля  к панели администрирования на сайте} @serverPath@.
 
                                         <br><br>
-                                        Для восстановления пароля перейдите по <a href="http://@serverPath@/phpshop/admpanel/?newPassGen=@hash@" target="_blank">ссылке</a>
+                                        {Для восстановления пароля перейдите по} <a href="http://@serverPath@/phpshop/admpanel/?newPassGen=@hash@" target="_blank">{ссылке}</a>
                                         <br><br>
-                                        Дата: @php echo date("d-m-y H:s a"); php@<br>
-                                        IP отправителя: @php echo $_SERVER['REMOTE_ADDR'];  php@
+                                        {Дата}: @php echo date("d-m-y H:s a"); php@<br>
+                                        IP: @php echo $_SERVER['REMOTE_ADDR'];  php@
                                         
                                 </td>
                             </tr>

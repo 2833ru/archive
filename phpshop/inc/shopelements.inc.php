@@ -275,9 +275,10 @@ class PHPShopProductIconElements extends PHPShopProductElements {
         $where['parent_enabled'] = "='0'";
 
         // Проверка на единичную выборку
-        if ($limit == 1) {
+        if ($limit == 1 || $this->limitspec == 1) {
             $array_pop = true;
             $limit++;
+            $this->limitspec++;
         }
 
         // Память режима выборки новинок из каталогов
@@ -291,7 +292,7 @@ class PHPShopProductIconElements extends PHPShopProductElements {
             // Случаные товары для больших баз
             $where['id'] = $this->setramdom($limit);
         }
-        
+
         // Выборка новинок
         if ($memory_spec != 2 and $memory_spec != 3)
             $this->dataArray = $this->select(array('*'), $where, array('order' => 'RAND()'), array('limit' => $this->limitspec), __FUNCTION__);
@@ -301,7 +302,14 @@ class PHPShopProductIconElements extends PHPShopProductElements {
             array_pop($this->dataArray);
         }
 
-        if (!empty($this->dataArray) and is_array($this->dataArray)) {
+        // Вторая попытка вывести, оптимизатор RAND выключен
+        $count = count($this->dataArray);
+        if ($count < $this->limitspec) {
+            unset($where['id']);
+            $this->dataArray = $this->select(array('*'), $where, array('order' => 'RAND()'), array('limit' => $this->limitspec), __FUNCTION__);
+        }
+
+        if (is_array($this->dataArray)) {
             $this->product_grid($this->dataArray, $this->cell, $this->template, $line);
             $this->set('specMainTitle', $this->lang('newprod'));
 
@@ -447,6 +455,7 @@ class PHPShopProductIndexElements extends PHPShopProductElements {
      * @var string 
      */
     var $template = '';
+    var $check_index = false;
 
     /**
      * Констурктор
@@ -486,8 +495,13 @@ class PHPShopProductIndexElements extends PHPShopProductElements {
      */
     function nowBuy() {
 
+        // Перехват модуля
+        $hook = $this->setHook(__CLASS__, __FUNCTION__, null, 'START');
+        if ($hook)
+            return $hook;
+
         // Проверка запуска главной страницы
-        if ($this->PHPShopNav->index()) {
+        if ($this->PHPShopNav->index($this->check_index)) {
             $i = 1;
             $this->limitpos = 10; // Количество выводимых позиций
             $this->limitorders = 10; // Количество запрашиваемых заказов
@@ -496,7 +510,7 @@ class PHPShopProductIndexElements extends PHPShopProductElements {
             $sort = null;
 
             // Перехват модуля
-            $hook = $this->setHook(__CLASS__, __FUNCTION__);
+            $hook = $this->setHook(__CLASS__, __FUNCTION__, null, 'MIDDLE');
             if ($hook)
                 return $hook;
 
@@ -561,7 +575,10 @@ class PHPShopProductIndexElements extends PHPShopProductElements {
                                 $disp = PHPShopText::ol($li);
                             }
 
-                            return $disp;
+                            if (!empty($disp)) {
+                                $this->set('now_buying', $this->lang('now_buying'));
+                                return $disp;
+                            }
                         }
                     }
                 }
@@ -575,8 +592,13 @@ class PHPShopProductIndexElements extends PHPShopProductElements {
      */
     function specMain() {
 
+        // Перехват модуля
+        $hook = $this->setHook(__CLASS__, __FUNCTION__);
+        if ($hook)
+            return $hook;
+
         // Проверка запуска главной страницы
-        if ($this->PHPShopNav->index()) {
+        if ($this->PHPShopNav->index($this->check_index)) {
 
 
             // Количество ячеек для вывода товара
@@ -592,11 +614,6 @@ class PHPShopProductIndexElements extends PHPShopProductElements {
             // Завершение если отключен вывод
             if ($this->limit < 1)
                 return false;
-
-            // Перехват модуля
-            $hook = $this->setHook(__CLASS__, __FUNCTION__);
-            if ($hook)
-                return $hook;
 
             $this->set('productInfo', $this->lang('productInfo'));
 
@@ -707,12 +724,6 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
      */
     var $chek_catalog = true;
     var $grid = true;
-
-    /**
-     * Лимит символов в описании каталога для расчета иконки каталога в элементе leftCatalTable
-     * @var int
-     */
-    var $cat_description_limit = 200;
 
     /**
      * Конструктор
@@ -881,7 +892,15 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
         $PHPShopOrm->debug = $this->debug;
 
         $this->data = $PHPShopOrm->select(array('*'), $where, array('order' => $this->root_order), array("limit" => 100), __CLASS__, __FUNCTION__);
-        if (is_array($this->data))
+
+        if (is_array($this->data)) {
+
+            // Перевод подкаталогов в родительские для витрин если один родитель
+            if (defined("HostID") and count($this->data) == 1) {
+                $where['parent_to'] = '=' . $this->data[0]['id'];
+                $this->data = $PHPShopOrm->select(array('*'), $where, array('order' => $this->root_order), array("limit" => 100), __CLASS__, __FUNCTION__);
+            }
+
             foreach ($this->data as $row) {
 
                 // Перехват модуля
@@ -918,6 +937,7 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
                 }
                 $i++;
             }
+        }
 
         // Замена стилей
         if (is_array($replace)) {
@@ -1020,6 +1040,7 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
             return false;
         // Если проверки в памяти нет, запрос к БД
         elseif (!empty($this->chek_catalog)) {
+
             $PHPShopOrm = new PHPShopOrm($this->objBase);
             $PHPShopOrm->cache_format = $this->cache_format;
             $PHPShopOrm->cache = $this->cache;

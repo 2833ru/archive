@@ -69,23 +69,23 @@ function tab_headers($row) {
 
 
     $disp.=$PHPShopGUI->setCollapse("Title", '
-<label><input type="radio" value="0" name="title_enabled_new" onclick="document.getElementById(\'titleForma\').style.display=\'none\';document.getElementById(\'titleShablon\').style.display=\'none\'" ' . $t1 . '> Автоматическая генерация</label>&nbsp;&nbsp;&nbsp;
-<label><input type="radio" value="2" name="title_enabled_new" onclick="document.getElementById(\'titleShablon\').style.display=\'block\';document.getElementById(\'titleForma\').style.display=\'none\'" ' . $t3 . '> Мой шаблон</label> &nbsp;&nbsp;&nbsp;
-<label><input type="radio" value="1" name="title_enabled_new"  onclick="document.getElementById(\'titleForma\').style.display=\'block\';document.getElementById(\'titleShablon\').style.display=\'none\'" ' . $t2 . '> Ручная настройка</label><br>
+<label><input type="radio" value="0" name="title_enabled_new" onclick="document.getElementById(\'titleForma\').style.display=\'none\';document.getElementById(\'titleShablon\').style.display=\'none\'" ' . $t1 . '> '.__('Автоматическая генерация').'</label>&nbsp;&nbsp;&nbsp;
+<label><input type="radio" value="2" name="title_enabled_new" onclick="document.getElementById(\'titleShablon\').style.display=\'block\';document.getElementById(\'titleForma\').style.display=\'none\'" ' . $t3 . '> '.__('Мой шаблон').'</label> &nbsp;&nbsp;&nbsp;
+<label><input type="radio" value="1" name="title_enabled_new"  onclick="document.getElementById(\'titleForma\').style.display=\'block\';document.getElementById(\'titleShablon\').style.display=\'none\'" ' . $t2 . '> '.__('Ручная настройка').'</label><br>
     
 <div id="titleShablon" style="display:' . $t3_enabled . '">
 <textarea class="form-control" name="title_shablon_new" id="Shablon">' . $title_shablon . '</textarea>
     <div class="btn-group" role="group" aria-label="...">
-<input  type="button" value="Каталог" onclick="ShablonAdd(\'@Catalog@\',\'Shablon\')" class="buttonSh">
-<input  type="button" value="Подкаталог" onclick="ShablonAdd(\'@Podcatalog@\',\'Shablon\')" class="buttonSh">
-<input  type="button" value="Товар" onclick="ShablonAdd(\'@Product@\',\'Shablon\')" class="buttonSh">
-<input type="button"   value="Общий" onclick="ShablonAdd(\'@System@\',\'Shablon\')" class="buttonSh">
+<input  type="button" value="'.__('Каталог').'" onclick="ShablonAdd(\'@Catalog@\',\'Shablon\')" class="buttonSh">
+<input  type="button" value="'.__('Подкаталог').'" onclick="ShablonAdd(\'@Podcatalog@\',\'Shablon\')" class="buttonSh">
+<input  type="button" value="'.__('Товар').'" onclick="ShablonAdd(\'@Product@\',\'Shablon\')" class="buttonSh">
+<input type="button"   value="'.__('Общий').'" onclick="ShablonAdd(\'@System@\',\'Shablon\')" class="buttonSh">
 <input type="button" value="," onclick="ShablonAdd(\',\',\'Shablon\')" class="buttonSh">
 <input type="button" value="-" onclick="ShablonAdd(\'-\',\'Shablon\')" class="buttonSh">
 <input type="button" value="/" onclick="ShablonAdd(\'/\',\'Shablon\')" class="buttonSh">
-<input type="button"  value="Пробел" onclick="ShablonAdd(\' \',\'Shablon\')" class="buttonSh">
-<input type="button"  value="Ввести слово" onclick="ShablonPromt(\'Shablon\')" class="buttonSh">
-<input type="button"  value="Сбросить" onclick="ShablonDell(\'Shablon\')" class="buttonSh">
+<input type="button"  value="'.__('Пробел').'" onclick="ShablonAdd(\' \',\'Shablon\')" class="buttonSh">
+<input type="button"  value="'.__('Ввести слово').'" onclick="ShablonPromt(\'Shablon\')" class="buttonSh">
+<input type="button"  value="'.__('Сбросить').'" onclick="ShablonDell(\'Shablon\')" class="buttonSh">
    </div>
 </div>
 
@@ -94,23 +94,23 @@ function tab_headers($row) {
 </div>');
 
     $disp.=$PHPShopGUI->setCollapse("Description", '<label>
-<input type="radio" value="0" name="descrip_enabled_new" onclick="document.getElementById(\'titleFormaD\').style.display=\'none\';document.getElementById(\'titleShablonD\').style.display=\'none\'" ' . $d1 . '> Автоматическая генерация</label>&nbsp;&nbsp;&nbsp;
-<label><input type="radio" value="2" name="descrip_enabled_new" onclick="document.getElementById(\'titleShablonD\').style.display=\'block\';document.getElementById(\'titleFormaD\').style.display=\'none\'" ' . $d3 . '> Мой шаблон</label>&nbsp;&nbsp;&nbsp;
-<label><input type="radio" value="1" name="descrip_enabled_new"  onclick="document.getElementById(\'titleFormaD\').style.display=\'block\';document.getElementById(\'titleShablonD\').style.display=\'none\'" ' . $d2 . '> Ручная настройка</label><br>
+<input type="radio" value="0" name="descrip_enabled_new" onclick="document.getElementById(\'titleFormaD\').style.display=\'none\';document.getElementById(\'titleShablonD\').style.display=\'none\'" ' . $d1 . '> '.__('Автоматическая генерация').'</label>&nbsp;&nbsp;&nbsp;
+<label><input type="radio" value="2" name="descrip_enabled_new" onclick="document.getElementById(\'titleShablonD\').style.display=\'block\';document.getElementById(\'titleFormaD\').style.display=\'none\'" ' . $d3 . '> '.__('Мой шаблон').'</label>&nbsp;&nbsp;&nbsp;
+<label><input type="radio" value="1" name="descrip_enabled_new"  onclick="document.getElementById(\'titleFormaD\').style.display=\'block\';document.getElementById(\'titleShablonD\').style.display=\'none\'" ' . $d2 . '> '.__('Ручная настройка').'</label><br>
     
 <div id="titleShablonD" style="display:' . $d3_enabled . '">
 <textarea class="form-control" name="descrip_shablon_new" id="ShablonD">' . $descrip_shablon . '</textarea>
     <div class="btn-group" role="group" aria-label="...">
-<input type="button"  value="Каталог" onclick="ShablonAdd(\'@Catalog@\',\'ShablonD\')" class="buttonSh">
-<input type="button"   value="Подкаталог" onclick="ShablonAdd(\'@Podcatalog@\',\'ShablonD\')" class="buttonSh">
-<input  type="button" value="Товар" onclick="ShablonAdd(\'@Product@\',\'ShablonD\')" class="buttonSh">
-<input type="button"  value="Общий" onclick="ShablonAdd(\'@System@\',\'ShablonD\')" class="buttonSh">
+<input type="button"  value="'.__('Каталог').'" onclick="ShablonAdd(\'@Catalog@\',\'ShablonD\')" class="buttonSh">
+<input type="button"  value="'.__('Подкаталог').'" onclick="ShablonAdd(\'@Podcatalog@\',\'ShablonD\')" class="buttonSh">
+<input  type="button" value="'.__('Товар').'" onclick="ShablonAdd(\'@Product@\',\'ShablonD\')" class="buttonSh">
+<input type="button"  value="'.__('Общий').'" onclick="ShablonAdd(\'@System@\',\'ShablonD\')" class="buttonSh">
 <input type="button" value="," onclick="ShablonAdd(\',\',\'ShablonD\')" class="buttonSh">
 <input type="button" value="-" onclick="ShablonAdd(\'-\',\'ShablonD\')" class="buttonSh">
 <input type="button" value="/" onclick="ShablonAdd(\'/\',\'ShablonD\')" class="buttonSh">
-<input type="button"  value="Пробел" onclick="ShablonAdd(\' \',\'ShablonD\')" class="buttonSh">
-<input type="button"  value="Ввести слово" onclick="ShablonPromt(\'ShablonD\')" class="buttonSh">
-<input type="button"  value="Сбросить" onclick="ShablonDell(\'ShablonD\')" class="buttonSh">
+<input type="button"  value="'.__('Пробел').' onclick="ShablonAdd(\' \',\'ShablonD\')" class="buttonSh">
+<input type="button"  value="'.__('Ввести слово').'" onclick="ShablonPromt(\'ShablonD\')" class="buttonSh">
+<input type="button"  value="'.__('Сбросить').'" onclick="ShablonDell(\'ShablonD\')" class="buttonSh">
  </div>
 </div>
 
@@ -121,23 +121,23 @@ function tab_headers($row) {
     $disp.=$PHPShopGUI->setCollapse("Keywords", '
 
 <label>
-<input type="radio" value="0" name="keywords_enabled_new" onclick="document.getElementById(\'titleFormaK\').style.display=\'none\';document.getElementById(\'titleShablonK\').style.display=\'none\'" ' . $k1 . '> Автоматическая генерация</label>&nbsp;&nbsp;&nbsp;
-<label><input type="radio" value="2" name="keywords_enabled_new" onclick="document.getElementById(\'titleShablonK\').style.display=\'block\';document.getElementById(\'titleFormaK\').style.display=\'none\'" ' . $k3 . '> Мой шаблон</label> &nbsp;&nbsp;&nbsp;
-<label><input type="radio" value="1" name="keywords_enabled_new"  onclick="document.getElementById(\'titleFormaK\').style.display=\'block\';document.getElementById(\'titleShablonK\').style.display=\'none\'" ' . $k2 . '> Ручная настройка</label><br>
+<input type="radio" value="0" name="keywords_enabled_new" onclick="document.getElementById(\'titleFormaK\').style.display=\'none\';document.getElementById(\'titleShablonK\').style.display=\'none\'" ' . $k1 . '> '.__('Автоматическая генерация').'</label>&nbsp;&nbsp;&nbsp;
+<label><input type="radio" value="2" name="keywords_enabled_new" onclick="document.getElementById(\'titleShablonK\').style.display=\'block\';document.getElementById(\'titleFormaK\').style.display=\'none\'" ' . $k3 . '> '.__('Мой шаблон').'</label> &nbsp;&nbsp;&nbsp;
+<label><input type="radio" value="1" name="keywords_enabled_new"  onclick="document.getElementById(\'titleFormaK\').style.display=\'block\';document.getElementById(\'titleShablonK\').style.display=\'none\'" ' . $k2 . '> '.__('Ручная настройка').'</label><br>
 <div id="titleShablonK" style="display:' . $k3_enabled . '">
 <textarea class="form-control" name="keywords_shablon_new" id="ShablonK">' . $keywords_shablon . '</textarea>
      <div class="btn-group" role="group" aria-label="...">
-<input type="button"  value="Каталог" onclick="ShablonAdd(\'@Catalog@\',\'ShablonK\')" class="buttonSh">
-<input type="button"  value="Подкаталог" onclick="ShablonAdd(\'@Podcatalog@\',\'ShablonK\')" class="buttonSh">
-<input  type="button" value="Товар" onclick="ShablonAdd(\'@Product@\',\'ShablonK\')" class="buttonSh">
-<input type="button"  value="Общий" onclick="ShablonAdd(\'@System@\',\'ShablonK\')" class="buttonSh">
-<input type="button"  value="Автопобор" onclick="ShablonAdd(\'@Generator@\',\'ShablonK\')" class="buttonSh">
+<input type="button"  value="'.__('Каталог').'" onclick="ShablonAdd(\'@Catalog@\',\'ShablonK\')" class="buttonSh">
+<input type="button"  value="'.__('Подкаталог').'" onclick="ShablonAdd(\'@Podcatalog@\',\'ShablonK\')" class="buttonSh">
+<input  type="button" value="'.__('Товар').'" onclick="ShablonAdd(\'@Product@\',\'ShablonK\')" class="buttonSh">
+<input type="button"  value="'.__('Общий').'" onclick="ShablonAdd(\'@System@\',\'ShablonK\')" class="buttonSh">
+<input type="button"  value="'.__('Автопобор').'" onclick="ShablonAdd(\'@Generator@\',\'ShablonK\')" class="buttonSh">
 <input type="button" value="," onclick="ShablonAdd(\',\',\'ShablonK\')" class="buttonSh">
 <input type="button" value="-" onclick="ShablonAdd(\'-\',\'ShablonK\')" class="buttonSh">
 <input type="button" value="/" onclick="ShablonAdd(\'/\',\'ShablonK\')" class="buttonSh">
-<input type="button"  value="Пробел" onclick="ShablonAdd(\' \',\'ShablonK\')" class="buttonSh">
-<input type="button"  value="Слово" onclick="ShablonPromt(\'ShablonK\')" class="buttonSh">
-<input type="button"  value="Сбросить" onclick="ShablonDell(\'ShablonK\')" class="buttonSh">
+<input type="button"  value="'.__('Пробел').'" onclick="ShablonAdd(\' \',\'ShablonK\')" class="buttonSh">
+<input type="button"  value="'.__('Слово').'" onclick="ShablonPromt(\'ShablonK\')" class="buttonSh">
+<input type="button"  value="'.__('Сбросить').'" onclick="ShablonDell(\'ShablonK\')" class="buttonSh">
 </div>
 </div>
 <div id="titleFormaK" style="display:' . $k2_enabled . '">

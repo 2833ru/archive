@@ -1,1 +1,1 @@
-<span class="badge sale">Распродажа</span>
+<span class="badge sale">{Распродажа}</span>

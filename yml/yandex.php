@@ -269,14 +269,12 @@ class PHPShopYml {
             $category = $row['category'];
             $uid = $row['uid'];
             $price = $row['price'];
-            $oldprice = $row['price_n'];
 
             if ($row['p_enabled'] == 1)
                 $p_enabled = "true";
             else
                 $p_enabled = "false";
 
-            // $description = htmlspecialchars(trim(PHPShopString::mySubstr($row['description'], 300)), null, 'windows-1251');
             $description = '<![CDATA[' . trim(strip_tags($row['description'], '<p><h3><ul><li><br>')) . ']]>';
             $content = '<![CDATA[' . $row['content'] . ']]>';
             $baseinputvaluta = $row['baseinputvaluta'];
@@ -298,7 +296,7 @@ class PHPShopYml {
 
             $price = ($price + (($price * $this->percent) / 100));
             $price = round($price, intval($this->format));
-            $oldprice = round($oldprice, intval($this->format));
+            $oldprice = round($row['price_n'], intval($this->format));
 
             $array = array(
                 "id" => $id,
@@ -315,8 +313,6 @@ class PHPShopYml {
                 "description" => $description,
                 "content" => $content,
                 "prod_seo_name" => $row['prod_seo_name'],
-                "fee" => $row['fee'],
-                "cpa" => $row['cpa'],
                 "manufacturer_warranty" => $row['manufacturer_warranty'],
                 "sales_notes" => $row['sales_notes'],
                 "country_of_origin" => $row['country_of_origin'],
@@ -340,8 +336,11 @@ class PHPShopYml {
                 $parent = @explode(",", $row['parent']);
 
                 $Parents = $this->parent($parent, $array);
-                if (is_array($Parents))
+                if (is_array($Parents)){
+                    $array['parent']=1;
                     $Products = array_merge($Products, $Parents);
+                }
+                
             }
 
             $Products[$id] = $array;
@@ -510,14 +509,6 @@ function setProducts() {
         $seourlpro_enabled = true;
     }
 
-    // Поиск характеристики по имени
-    /*
-      if ($this->vendor) {
-      if (is_array($this->vendor_name))
-      foreach ($this->vendor_name as $vendor_tag => $vendor_name)
-      $PHPShopSortSearch[] = new PHPShopSortSearch($vendor_name, $vendor_tag);
-      } */
-
     // Передавать параметр
     if (isset($_GET['from']))
         $from = '?from=yml';
@@ -529,22 +520,6 @@ function setProducts() {
         $bid_str = null;
         $vendor = $param = null;
         $id = $val['id'];
-
-
-        // Тэг характеристики
-        /*
-          if ($this->vendor) {
-
-          if (is_array($PHPShopSortSearch))
-          foreach ($PHPShopSortSearch as $SortSearch) {
-
-          // Выделение тега vendor
-          if ($SortSearch->tag == 'vendor')
-          $vendor.= $SortSearch->search($val['vendor_array']);
-          else
-          $param.= $SortSearch->search($val['vendor_array']);
-          }
-          } */
 
         // Если есть bid
         if (!empty($val['yml_bid_array']['bid']))
@@ -579,9 +554,13 @@ function setProducts() {
         if (!empty($val['group_id'])) {
             $val['id'] = $id;
             $group_id = ' group_id="' . $val['group_id'] . '"';
+            $group_postfix = '?option='.$id;
         }
+        // Родитель
+        elseif(!empty($val['parent']))
+            $group_postfix = '?option='.$id;
         else
-            $group_id = null;
+            $group_id = $group_postfix =null;
 
         // Изображение
         if (!empty($val['picture'])) {
@@ -601,7 +580,7 @@ function setProducts() {
 
         $xml = '
 <offer id="' . $val['id'] . '" available="' . $val['p_enabled'] . '" ' . $bid_str . $group_id . '>
- <url>' . $this->ssl . $_SERVER['SERVER_NAME'] . $GLOBALS['SysValue']['dir']['dir'] . $url . '.html' . $from . '</url>
+ <url>' . $this->ssl . $_SERVER['SERVER_NAME'] . $GLOBALS['SysValue']['dir']['dir'] . $url . '.html' . $group_postfix . '</url>
       <price>' . $val['price'] . '</price>
       <currencyId>' . $this->defvalutaiso . '</currencyId>
       <categoryId>' . $val['category'] . '</categoryId>

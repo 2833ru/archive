@@ -129,15 +129,13 @@
     <tr bgcolor="#eaeaea">
         <td>
             @message@
-            
             <hr>
                 <p>            
-Вы можете проверить статус заказа, загрузить файлы, распечатать платежные
-документы, через  <a href="http://@php echo $_SERVER[SERVER_NAME].$GLOBALS[SysValue][dir][dir]; php@/users/order.html?order_info=@ouid@#Order">Личный кабинет</a>
+{Вы можете проверить статус заказа, загрузить файлы, распечатать платежные документы, через}  <a href="http://@php echo $_SERVER[SERVER_NAME].$GLOBALS[SysValue][dir][dir]; php@/users/order.html?order_info=@ouid@#Order">{Личный кабинет}</a>
 </p>
 
 <br>
-<hr><p>Если у Вас есть вопрос, задайте его нам в Личном кабинете в разделе <a href="http://@serverPath@users/message.html">Связь с менеджером</a>. 
+<hr><p>{Если у Вас есть вопрос, задайте его нам в Личном кабинете в разделе} <a href="http://@serverPath@users/message.html">{Связь с менеджером}</a>. 
 
  </p>
                 
@@ -147,19 +145,17 @@
 </tbody>  
 </table> 
 
-
 <table width="660" align="center" cellspacing="0" cellpadding="10">
 <tbody>
-
 
     <tr bgcolor="#fafafa" id="footer" height="100%">
     
       
        <td align="left" valign="top" height="100%">
-            <p><b>С уважением, @shopName@.</b></p>
+            <p><b>{С уважением}, @shopName@.</b></p>
       <p>@org_name@<br>
-      Интернет-магазин <a href="http://@serverPath@">@serverPath@</a><br>
-      Отдел продаж: @telNum@<br>
+      {Интернет-магазин} <a href="http://@serverPath@">@serverPath@</a><br>
+      {Отдел продаж}: @telNum@<br>
       E-mail: @adminMail@<br>
       @org_adres@</p></td>
       

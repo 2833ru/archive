@@ -1,12 +1,12 @@
 <li role="presentation">	
 	<a class="hidden-xs hidden-sm  link" href="#" data-toggle="modal" data-target="#userModal">
-		<i class="fa fa-heart" title="РћС‚Р»РѕР¶РёС‚СЊ"></i>
+		<i class="fa fa-heart"></i>
 		<span class="hidden-sm hidden-xs"> 
-			РћС‚Р»РѕР¶РёС‚СЊ (<span class="wishlistcount">@wishlistCount@</span>)
+			{Отложить} (<span class="wishlistcount">@wishlistCount@</span>)
 		</span>
 	</a>
 	<a href="#" data-toggle="modal" data-target="#userModal" class="btn btn-main btn-sm hidden-md hidden-lg">
 		<i class="fa fa-heart" title="Wish List"></i>
-		РћС‚Р»РѕР¶РёС‚СЊ (<span class="wishlistcount">@wishlistCount@</span>)
+		{Отложить} (<span class="wishlistcount">@wishlistCount@</span>)
 	</a>
 </li>

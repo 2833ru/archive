@@ -89,7 +89,7 @@ function userorderpaymentlink_mod_yandexkassa_hook($obj, $PHPShopOrderFunction) 
 
                 $ym_merchant_receipt['items'][] = array('text' => 'Доставка', 'quantity' => floatval(number_format(1, 3, '.', '')), 'price' => array('amount' => floatval(number_format($order['Cart']['dostavka'], 2, '.', ''))), 'tax' => $tax_delivery);
             }
-
+            
             $payment_forma.="<input type='hidden' name='ym_merchant_receipt' value='" . PHPShopString::json_safe_encode($ym_merchant_receipt) . "'>";
 
             // Тип оплаты

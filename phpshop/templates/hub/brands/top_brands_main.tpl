@@ -1,2 +1,1 @@
-
-	@brandsList@
+@brandsList@

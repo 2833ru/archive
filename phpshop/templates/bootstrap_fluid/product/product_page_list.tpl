@@ -1,15 +1,17 @@
+
+
 @ProductCatalogContent@
 
 <div class="well hidden-xs" id="filter-well">
     <div class="row">
         <div class="col-md-6">
-            Вывод товаров:
+            {Вывод товаров}:
 
             <div class="btn-group" data-toggle="buttons">
-                <label class="btn btn-sm btn-default glyphicon glyphicon-th-list @gridSetAactive@" data-toggle="tooltip" data-placement="top" title="Товары списком">
+                <label class="btn btn-sm btn-default glyphicon glyphicon-th-list @gridSetAactive@" data-toggle="tooltip" data-placement="top" title="{Товары списком}">
                     <input type="radio" name="gridChange" value="1">
                 </label>
-                <label class="btn btn-sm btn-default glyphicon glyphicon-th @gridSetBactive@" data-toggle="tooltip" data-placement="top" title="Товары сеткой">
+                <label class="btn btn-sm btn-default glyphicon glyphicon-th @gridSetBactive@" data-toggle="tooltip" data-placement="top" title="{Товары сеткой}">
                     <input type="radio" name="gridChange" value="2">
                 </label>
             </div>
@@ -18,25 +20,25 @@
         <div class="col-md-6 text-right">
 
 
-            Сортировка:
+            {Сортировка}:
             <div class="btn-group" data-toggle="buttons">
-                <label class="btn btn-sm btn-default glyphicon glyphicon glyphicon glyphicon-signal @sSetCactive@" data-toggle="tooltip" data-placement="top" title="По умолчанию">
+                <label class="btn btn-sm btn-default glyphicon glyphicon glyphicon glyphicon-signal @sSetCactive@" data-toggle="tooltip" data-placement="top" title="{По умолчанию}">
                     <input type="radio" name="s" value="3">
                 </label>
-                <label class="btn btn-sm btn-default glyphicon glyphicon-sort-by-alphabet @sSetAactive@" data-toggle="tooltip" data-placement="top" title="Наименование">
+                <label class="btn btn-sm btn-default glyphicon glyphicon-sort-by-alphabet @sSetAactive@" data-toggle="tooltip" data-placement="top" title="{Наименование}">
                     <input type="radio" name="s" value="1">
                 </label>
-                <label class="btn btn-sm btn-default glyphicon glyphicon glyphicon-sort-by-order @sSetBactive@" data-toggle="tooltip" data-placement="top" title="Цена">
+                <label class="btn btn-sm btn-default glyphicon glyphicon glyphicon-sort-by-order @sSetBactive@" data-toggle="tooltip" data-placement="top" title="{Цена}">
                     <input type="radio" name="s" value="2">
                 </label>
 
             </div>
 
             <div class="btn-group" data-toggle="buttons">
-                <label class="btn btn-sm btn-default glyphicon glyphicon-sort-by-attributes @fSetAactive@" data-toggle="tooltip" data-placement="top" title="По возрастанию">
+                <label class="btn btn-sm btn-default glyphicon glyphicon-sort-by-attributes @fSetAactive@" data-toggle="tooltip" data-placement="top" title="{По возрастанию}">
                     <input type="radio" name="f" value="1">
                 </label>
-                <label class="btn btn-sm btn-default glyphicon glyphicon-sort-by-attributes-alt @fSetBactive@" data-toggle="tooltip" data-placement="top" title="По убыванию">
+                <label class="btn btn-sm btn-default glyphicon glyphicon-sort-by-attributes-alt @fSetBactive@" data-toggle="tooltip" data-placement="top" title="{По убыванию}">
                     <input type="radio" name="f" value="2">
                 </label>
             </div>

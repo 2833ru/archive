@@ -1,6 +1,6 @@
 <?php
 
-$TitlePage = __('Редактирование Баннера #' . $_GET['id']);
+$TitlePage = __('Редактирование Баннера').' #' . $_GET['id'];
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['banner']);
 
 // Стартовый вид
@@ -9,14 +9,15 @@ function actionStart() {
 
     // Выборка
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . $_GET['id']));
+    $PHPShopGUI->field_col = 1;
 
-    $PHPShopGUI->setActionPanel(__("Редактирование Баннера: " . $data['name']), array('Удалить'), array('Сохранить', 'Сохранить и закрыть'));
+    $PHPShopGUI->setActionPanel(__("Редактирование Баннера").": " . $data['name'], array('Удалить'), array('Сохранить', 'Сохранить и закрыть'));
 
     // Содержание закладки 1
-    $Tab1 = $PHPShopGUI->setField("Имя:", $PHPShopGUI->setInput("text", "name_new", $data['name'], false, 500)) .
-            $PHPShopGUI->setField("Статус:", $PHPShopGUI->setRadio("flag_new", 1, "Включить", $data['flag']) . $PHPShopGUI->setRadio("flag_new", 0, "Выключить", $data['flag'])) .
+    $Tab1 = $PHPShopGUI->setField("Имя", $PHPShopGUI->setInput("text", "name_new", $data['name'], false, 500)) .
+            $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("flag_new", 1, "Включить", $data['flag']) . $PHPShopGUI->setRadio("flag_new", 0, "Выключить", $data['flag'])) .
             $PHPShopGUI->setField("Таргетинг:", $PHPShopGUI->setInput("text", "dir_new", $data['dir']) .
-                    $PHPShopGUI->setHelp(__('* Пример: /,/page/,/shop/UID_1.html. Можно указать несколько адресов через запятую.'))
+                    $PHPShopGUI->setHelp('* Пример: /,/page/,/shop/UID_1.html. Можно указать несколько адресов через запятую.')
     );
 
     // Редактор 
@@ -30,7 +31,7 @@ function actionStart() {
 
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1));
+    $PHPShopGUI->setTab(array("Основное", $Tab1,true));
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);

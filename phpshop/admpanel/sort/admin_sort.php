@@ -28,6 +28,10 @@ function actionStart() {
         'url' => '?path=' . $_GET['path'] . '&action=new&type=sub'
     );
 
+    $PHPShopInterface->action_select['Очистить кэш'] = array(
+        'name' => 'Очистить кэш фильтра',
+        'action' => 'ResetCache'
+    );
 
     if (isset($_GET['cat']))
         $PHPShopInterface->action_select['Редактировать группу'] = array(
@@ -39,7 +43,7 @@ function actionStart() {
     if (!empty($_GET['cat']))
         $TitlePage.=': ' . $SortCategoryArray[$_GET['cat']]['name'];
 
-    $PHPShopInterface->setActionPanel($TitlePage, array('Редактировать группу','Добавить группу', '|', 'Удалить выбранные'), array('Добавить характеристику'));
+    $PHPShopInterface->setActionPanel($TitlePage, array('Редактировать группу', 'Добавить группу', 'Очистить кэш', '|', 'Удалить выбранные'), array('Добавить характеристику'));
     $PHPShopInterface->setCaption(array(null, "1%"), array("Название", "50%"), array("", "10%"), array("Бренд" . "", "10%", array('align' => 'center')), array("Опция" . "", "10%", array('align' => 'center')), array("Фильтр" . "", "10%", array('align' => 'center')));
 
     $where = array('category' => '!=0');
@@ -47,7 +51,7 @@ function actionStart() {
         $where = array('category' => '=' . intval($_GET['cat']));
     }
 
-    $PHPShopInterface->addJSFiles('./js/jquery.treegrid.js','./sort/gui/sort.gui.js');
+    $PHPShopInterface->addJSFiles('./js/jquery.treegrid.js', './sort/gui/sort.gui.js');
 
     // Таблица с данными
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']);
@@ -79,15 +83,12 @@ function actionStart() {
             if (!empty($row['description']))
                 $row['name'].=$PHPShopInterface->setHelpIcon($row['description']);
 
-
             $PHPShopInterface->path = 'sort';
             $PHPShopInterface->setRow($row['id'], array('name' => $row['name'], 'link' => '?path=sort&id=' . $row['id'], 'align' => 'left'), array('action' => array('edit', '|', 'delete', 'id' => $row['id']), 'align' => 'center'), array('name' => $brand, 'align' => 'center'), array('name' => $goodoption, 'align' => 'center'), array('name' => $filtr, 'align' => 'center')
             );
         }
 
-
-
-    $sidebarleft[] = array('title' => 'Группы', 'content' => $PHPShopInterface->loadLib('tab_menu_sort', false, './sort/'), 'title-icon' => '<span class="glyphicon glyphicon-plus newsub" data-toggle="tooltip" data-placement="top" title="Добавить группу"></span>');
+    $sidebarleft[] = array('title' => 'Группы', 'content' => $PHPShopInterface->loadLib('tab_menu_sort', false, './sort/'), 'title-icon' => '<span class="glyphicon glyphicon-plus newsub" data-toggle="tooltip" data-placement="top" title="' . __('Добавить группу') . '"></span>');
     $sidebarleft[] = array('title' => 'Подсказка', 'content' => $help, 'class' => 'hidden-xs');
     $PHPShopInterface->setSidebarLeft($sidebarleft, 3);
 

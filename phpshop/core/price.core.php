@@ -4,7 +4,7 @@
  * Обработчик прайс-листов
  * @author PHPShop Software
  * @tutorial http://wiki.phpshop.ru/index.php/PHPShopPrice
- * @version 1.5
+ * @version 1.6
  * @package PHPShopShopCore
  */
 class PHPShopPrice extends PHPShopShopCore {
@@ -30,6 +30,8 @@ class PHPShopPrice extends PHPShopShopCore {
 
         // Навигация хлебные крошки
         $this->navigation(false, __('Прайс-лист'));
+        
+        $this->checkXLS();
     }
 
     /**
@@ -115,7 +117,7 @@ class PHPShopPrice extends PHPShopShopCore {
         if ($_SESSION['max_item'] < 1000)
             $this->value[] = array($this->lang('search_all_cat'), 'ALL', false);
 
-        $this->PHPShopCategoryArray = new PHPShopCategoryArray(array('skin_enabled'=>"!='1'"));
+        $this->PHPShopCategoryArray = new PHPShopCategoryArray(array('skin_enabled' => "!='1'"));
         $this->ParentArray = $this->PHPShopCategoryArray->getKey('parent_to.id', true);
         if (is_array($this->ParentArray[0])) {
             foreach ($this->ParentArray[0] as $val) {
@@ -286,6 +288,13 @@ class PHPShopPrice extends PHPShopShopCore {
 
         // Подключаем шаблон
         $this->parseTemplate($this->getValue('templates.price_page_list'));
+    }
+
+    function checkXLS() {
+        if (!is_file('UserFiles/Files/price.xls')) {
+            $this->set('onlinePrice','hide');
+        }
+        else $this->set('onlinePrice','price-page-list');
     }
 
 }

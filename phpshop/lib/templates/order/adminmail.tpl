@@ -115,7 +115,7 @@
     <tr bgcolor="#fafafa" id="header" valign="top">
         <td id="logo" align="left" valign="bottom">
             <div align="center" style="padding-top:30px;"><a href="http://@serverPath@" target="_blank"><img src="http://@serverPath@@logo@" alt="logo @serverShop@" border="0" style="display: block;max-width: 200px;height: auto;"></a>
-            <p><h2>Поступил заказ на сумму @sum@ руб. от @user_name@ <br>(@mail@)</h2></p></div>
+            <p><h2>{Поступил заказ на сумму} @sum@ руб. - @user_name@ <br>(@mail@)</h2></p></div>
         </td>     
     </tr>
     
@@ -128,93 +128,76 @@
     
     <tr bgcolor="#eaeaea">
         <td >
-<p>Способ доставки: @deliveryCity@<br>
+<p>{Способ доставки}: @deliveryCity@<br>
 E-mail: @mail@<br>
-Тип оплаты: @payment@<br>
+{Тип оплаты}: @payment@<br>
 </p>
 
-<p>Подробности заказа № @ouid@ от @date@</p>
+<p>{Подробности заказа} № @ouid@ - @date@</p>
 <hr>
-<p>Контактное лицо: @user_name@<br> 
-Адрес и информация для доставки: <br>
+<p>{Контактное лицо}: @user_name@<br> 
+{Адрес и информация для доставки}: <br>
 @adresList@<br>
-Дополнительная информация: @dop_info@ <br></p>
+{Дополнительная информация}: @dop_info@ <br></p>
 
 
 
-<p>Заказанные товары</p>
+<p>{Заказанные товары}</p>
 <hr><p>@cart@</p>
 <hr>
-<p>Итого -- @sum@ @currency@<br>
-Скидка -- @discount@%<br>
-Доставка -- @deliveryPrice@ @currency@ @deliveryInfo@</p>
+<p>{Итого} -- @sum@ @currency@<br>
+{Скидка} -- @discount@%<br>
+{Доставка} -- @deliveryPrice@ @currency@ @deliveryInfo@</p>
 <hr>
-<p>К оплате с учетом скидки: @total@ @currency@</p>
-
+<p>{К оплате с учетом скидки}: @total@ @currency@</p>
 <p>
-
 @php
 if(!empty($_POST["org_name_new"])) 
-    echo "Наименование организации: ".$_POST["org_name_new"]."";
+    echo __("Наименование организации").": ".$_POST["org_name_new"];
 if(!empty($_POST["org_inn_new"])) 
-    echo "ИНН: ".$_POST["org_inn_new"]."";
+    echo __("ИНН").": ".$_POST["org_inn_new"];
 if(!empty($_POST["org_kpp_new"])) 
-    echo "КПП: ".$_POST["org_kpp_new"]."";
+    echo __("КПП").": ".$_POST["org_kpp_new"];
 if(!empty($_POST["org_yur_adres_new"])) 
-    echo "Юридический адрес: ".$_POST["org_yur_adres_new"]."";
+    echo __("Юридический адрес").": ".$_POST["org_yur_adres_new"];
 if(!empty($_POST["org_fakt_adres_new"])) 
-    echo "Фактический адрес: ".$_POST["org_fakt_adres_new"]."";
+    echo __("Фактический адрес").": ".$_POST["org_fakt_adres_new"];
 if(!empty($_POST["org_ras_new"])) 
-    echo "Расчётный счёт: ".$_POST["org_ras_new"]."";
+    echo __("Расчётный счёт").": ".$_POST["org_ras_new"];
 if(!empty($_POST["org_bank_new"])) 
-    echo "Наименование банка: ".$_POST["org_bank_new"]."";
+    echo __("Наименование банка").": ".$_POST["org_bank_new"];
 if(!empty($_POST["org_kor_new"])) 
-    echo "Корреспондентский счёт: ".$_POST["org_kor_new"]."";
+    echo __("Корреспондентский счёт").": ".$_POST["org_kor_new"];
 if(!empty($_POST["org_bik_new"])) 
-    echo "БИК: ".$_POST["org_bik_new"]."";
+    echo __("БИК").": ".$_POST["org_bik_new"];
 if(!empty($_POST["org_city_new"])) 
-    echo "Город: ".$_POST["org_city_new"]."";
-    
+    echo __("Город").": ".$_POST["org_city_new"];
 php@
 </p>
-<p>Для редактирования состояния заказа перейдите в панель
-администрирования магазина @shop_admin@</p>
+<p>{Для редактирования состояния заказа перейдите в панель администрирования магазина}: <a href="@shop_admin@">@shop_admin@</p>
 
-<p>Дата/время: @time@<br>
+<p>{Дата}: @time@<br>
 IP: @ip@</p>
 
-
-
-               
         </td>
     </tr>
          
 </tbody>  
 </table> 
 
-
 <table width="660" align="center" cellspacing="0" cellpadding="10">
-<tbody>
-
-
+ <tbody>
     <tr bgcolor="#fafafa" id="footer" height="100%">
-    
-      
         <td align="left" valign="top" height="100%">
-            <p><b>С уважением, @shopName@.</b></p>
+            <p><b>{С уважением}, @shopName@.</b></p>
       <p>@org_name@<br>
-      Интернет-магазин <a href="http://@serverPath@">@serverShop@</a><br>
-      Отдел продаж: @telNum@<br>
+      {Интернет-магазин} <a href="http://@serverPath@">@serverShop@</a><br>
+      {Отдел продаж}: @telNum@<br>
       E-mail: @adminMail@<br>
       @org_adres@</p></td>
-      
     </tr>
    
-
-</tbody>  
+  </tbody>  
 </table> 
-
-
-
 </body>
 </html>

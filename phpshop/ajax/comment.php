@@ -15,8 +15,11 @@ PHPShopObj::loadClass("user");
 PHPShopObj::loadClass("parser");
 PHPShopObj::loadClass("mail");
 PHPShopObj::loadClass("system");
+PHPShopObj::loadClass("lang");
+PHPShopObj::loadClass("product");
 
 $PHPShopSystem = new PHPShopSystem();
+$PHPShopLang = new PHPShopLang(array('locale' => $_SESSION['lang'], 'path' => 'shop'));
 
 // Подключаем библиотеку поддержки JsHttpRequest
 if ($_REQUEST['type'] != 'json') {
@@ -232,6 +235,7 @@ switch ($_REQUEST['comand']) {
         $myMessage = strip_tags($_REQUEST['message']);
         $myMessage = PHPShopSecurity::TotalClean($myMessage, 2);
         $myRate = abs(intval($_REQUEST['rateVal']));
+        $xid = intval($_REQUEST['xid']);
         if (!$myRate)
             $myRate = 0;
         elseif ($myRate > 5)
@@ -239,23 +243,15 @@ switch ($_REQUEST['comand']) {
         if (!empty($_SESSION['UsersId']) and !empty($myMessage)) {
 
             $PHPShopUser = new PHPShopUser($_SESSION['UsersId']);
+            $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['comment']);
+            $PHPShopOrm->insert(array('datas_new'=>time(),'name_new'=>$PHPShopUser->getName(),'parent_id_new'=>$xid,'content_new'=>$myMessage,'user_id_new'=>intval($_SESSION['UsersId']),'enabled_new'=>0,'rate_new'=>$myRate));
 
+            // Имя товара
+            $PHPShopProduct = new PHPShopProduct($xid);
+            $name = $PHPShopProduct->getName();
 
-            $sql = "
-	INSERT INTO " . $SysValue['base']['table_name36'] . " 
-	VALUES 
- ('','" . date("U") . "','" . $PHPShopUser->getName() . "','" . intval($_REQUEST['xid']) . "','" . $myMessage . "','" . $_SESSION['UsersId'] . "','0','$myRate')";
-            mysqli_query($link_db,$sql);
-
-            // получаем имя товара
-            $sql = "SELECT name FROM " . $SysValue['base']['table_name2'] . " WHERE id=" . intval($_REQUEST['xid']);
-            $result = mysqli_query($link_db,$sql);
-            $row = mysqli_fetch_array($result);
-            $name = $row['name'];
-
-            // отправляем письмо администратору
-            // Определяем переменые
-            $SysValue['other']['commentData'] = PHPShopDate::dataV(date("U"), false);
+            // Письмо администратору
+            $SysValue['other']['commentData'] = PHPShopDate::dataV(false, false);
             $SysValue['other']['commentUserName'] = $PHPShopUser->getName();
             $SysValue['other']['commentMessage'] = $myMessage;
             $SysValue['other']['commentProdName'] = $name;
@@ -264,11 +260,11 @@ switch ($_REQUEST['comand']) {
             $message = PHPShopParser::file("../lib/templates/comment/mail.tpl", true);
 
             $system = new PHPShopSystem();
-//            $zag = $system->getValue('name') . " - Уведомление о добалении отзыва к товару / " . $SysValue['other']['commentData'];
-            $zag = "Добавили отзыв к товару $name / " . $SysValue['other']['commentData'];
+            $zag = __("Добавили отзыв к товару")." $name / " . $SysValue['other']['commentData'];
             $adminMail = $system->getValue('adminmail2');
             new PHPShopMail($adminMail, $adminMail, $zag, $message,false,false,array('replyto'=>$PHPShopUser->getValue('mail')));
             $error = "done";
+            writeLangFile();
         }
         else
             $error = "error";

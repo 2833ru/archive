@@ -4,7 +4,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="myModalLabel">Начать чат</h4>
+                <h4 class="modal-title" id="myModalLabel">{Начать чат}</h4>
             </div>
             <div class="modal-body">
                 <form id="chatform">
@@ -12,7 +12,7 @@
                     <input type="text" name="chat_mod_user_name" id="chat_mod_user_name" class="form-control input-sm" placeholder="Имя..." value="@php echo $_SESSION[mod_chat_user_name]; php@">
                 </div>
                 <div >
-                    <button type="button" class="btn btn-default btn-sm" id="chatend">Закрыть</button> &nbsp;
+                    <button type="button" class="btn btn-default btn-sm" id="chatend">{Закрыть}</button> &nbsp;
                     <button type="submit" class="btn btn-primary btn-sm pull-right" id="chatstart">@php if(empty($_SESSION['mod_chat_user_session'])) echo "Начать"; else echo "Далее"; php@</button>
                 </div>
                 </form>
@@ -86,9 +86,9 @@
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 
 
-                <span class="btn btn-default btn-sm pull-left glyphicon glyphicon-th-large" id="chatopenwindow" data-toggle="tooltip" data-placement="bottom" title="Открыть в окне"></span>
+                <span class="btn btn-default btn-sm pull-left glyphicon glyphicon-th-large" id="chatopenwindow" data-toggle="tooltip" data-placement="bottom" title="{Открыть в окне}"></span>
 
-                <h4 class="modal-title" id="myModalLabel">Чат онлайн</h4>
+                <h4 class="modal-title" id="myModalLabel">{Чат онлайн}</h4>
             </div>
             <div class="modal-body ">
                 <iframe class="chat-modal-content"></iframe>

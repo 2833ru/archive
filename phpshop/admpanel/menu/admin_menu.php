@@ -3,11 +3,11 @@
 $TitlePage = __("Текстовые блоки");
 
 function actionStart() {
-    global $PHPShopInterface;
+    global $PHPShopInterface,$TitlePage;
 
 
-        $PHPShopInterface->setActionPanel(__("Текстовые Блоки"), array('Удалить выбранные'),array('Добавить'));
-    $PHPShopInterface->setCaption(array(null, "3%"), array("Название", "40%"), array("Приоритет", "30%"), array("Место", "10%", array('align' => 'center')), array("", "10%"), array("Статус &nbsp;&nbsp;&nbsp;", "10%", array('align' => 'right')));
+        $PHPShopInterface->setActionPanel($TitlePage, array('Удалить выбранные'),array('Добавить'));
+    $PHPShopInterface->setCaption(array(null, "3%"), array("Название", "40%"), array("Приоритет", "30%"), array("Место", "10%", array('align' => 'center')), array("", "10%"), array("Статус", "10%", array('align' => 'right')));
 
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['menu']);
     $data = $PHPShopOrm->select(array('*'), false, array('order' => 'id DESC'), array('limit' => 1000));

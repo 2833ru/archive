@@ -1,19 +1,15 @@
 <?php
+session_start();
 $_classPath = "../../../";
 include($_classPath . "class/obj.class.php");
-PHPShopObj::loadClass("base");
-PHPShopObj::loadClass("order");
-PHPShopObj::loadClass("system");
-PHPShopObj::loadClass("inwords");
-PHPShopObj::loadClass("delivery");
-PHPShopObj::loadClass("date");
-PHPShopObj::loadClass("valuta");
+PHPShopObj::loadClass(array("base","order","system","inwords","delivery","date","valuta","lang"));
 
 $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
 $PHPShopBase->chekAdmin();
 
 $PHPShopSystem = new PHPShopSystem();
 $LoadItems['System'] = $PHPShopSystem->getArray();
+$PHPShopLang = new PHPShopLang(array('locale'=>$_SESSION['lang'],'path'=>'admin'));
 
 $PHPShopOrder = new PHPShopOrderFunction($_GET['orderID']);
 
@@ -89,7 +85,7 @@ $summa_nds_dos = number_format($deliveryPrice * $nds / (100 + $nds), "2", ".", "
 
 $dis.="
   <tr>
-    <td >Доставка " . $PHPShopDelivery->getCity() . "</td>
+    <td >".__("Доставка")." " . $PHPShopDelivery->getCity() . "</td>
     <td align=\"right\">----</td>
     <td align=\"center\">----</td>
     <td align=\"right\">1</td>
@@ -130,28 +126,24 @@ else
     $user = $order['Person']['name_person'];
 
 // формируем адрес доставки с учётом старого формата данных в заказах
-if ($row['org_name'])
-    $adr_info .= ", " . $row['org_name'];
-elseif ($row['fio'] OR $order['Person']['name_person'])
-    $adr_info .= ", " . $user;
 if ($row['country'])
-    $adr_info .= ", страна: " . $row['country'];
+    $adr_info .= ", ".__("страна").": " . $row['country'];
 if ($row['state'])
-    $adr_info .= ", регион/штат: " . $row['state'];
+    $adr_info .= ", ".__("регион/штат").": " . $row['state'];
 if ($row['city'])
-    $adr_info .= ", город: " . $row['city'];
+    $adr_info .= ", ".__("город").": " . $row['city'];
 if ($row['index'])
-    $adr_info .= ", индекс: " . $row['index'];
+    $adr_info .= ", ".__("индекс").": " . $row['index'];
 if ($row['street'] OR $order['Person']['adr_name'])
-    $adr_info .= ", улица: " . $row['street'] . $order['Person']['adr_name'];
+    $adr_info .= ", ".__("улица").": " . $row['street'] . $order['Person']['adr_name'];
 if ($row['house'])
-    $adr_info .= ", дом: " . $row['house'];
+    $adr_info .= ", ".__("дом").": " . $row['house'];
 if ($row['porch'])
-    $adr_info .= ", подъезд: " . $row['porch'];
+    $adr_info .= ", ".__("подъезд").": " . $row['porch'];
 if ($row['door_phone'])
-    $adr_info .= ", код домофона: " . $row['door_phone'];
+    $adr_info .= ", ".__("код домофона").": " . $row['door_phone'];
 if ($row['flat'])
-    $adr_info .= ", квартира: " . $row['flat'];
+    $adr_info .= ", ".__("квартира").": " . $row['flat'];
 
 $adr_info = substr($adr_info, 2);
 
@@ -162,15 +154,15 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
 ?>
 <!doctype html>
 <head>
-    <title>Счет - Фактура №<?php echo @$ouid ?></title>
+    <title><?php _e("Счет - Фактура")?> №<?php echo @$ouid ?></title>
     <meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
     <link href="style.css" type=text/css rel=stylesheet>
     <script src="../../../lib/templates/print/js/html2pdf.bundle.min.js"></script>
 </head>
 <body>
     <div align="right" class="nonprint">
-        <button onclick="html2pdf(document.getElementById('content'), {margin: 1, filename: 'Счет-фактура №<?php echo $ouid ?>.pdf', html2canvas: {dpi: 192, letterRendering: true}, jsPDF: {orientation: 'landscape'}});">Сохранить</button> 
-        <button onclick="window.print();">Распечатать</button> 
+        <button onclick="html2pdf(document.getElementById('content'), {margin: 1, filename: '<?php _e("Счет-фактура")?> №<?php echo $ouid ?>.pdf', html2canvas: {dpi: 192, letterRendering: true}, jsPDF: {orientation: 'landscape'}});"><?php _e("Сохранить")?></button> 
+        <button onclick="window.print();"><?php _e("Распечатать")?></button> 
         <hr>
     </div>
     <div id="content">
@@ -181,10 +173,7 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
                     $GetIsoValutaOrder = $PHPShopOrder->default_valuta_code;
                     if (preg_match("/руб/", $GetIsoValutaOrder)) {
                         echo '
-	<div>
-Приложение № 1<br>
-к постановлению Правительства Российской Федерации<br>
-от 26 декабря 2011 г. № 1137 
+	<div>'._e("Приложение № 1<br>к постановлению Правительства Российской Федерации<br>от 26 декабря 2011 г. № 1137").' 
  </div>
 ';
                     }
@@ -192,55 +181,45 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
                 </td>
             </tr>
             <tr>
-                <td valign="top" id="d2">СЧЕТ-ФАКТУРА №<input title="Изменить" value="<?php echo @$ouid ?> от <?php echo PHPShopDate::get($row['datas']) ?> г."> <br>
-                    Исправление № --  от --</td>
+                <td valign="top" id="d2"><?php _e("СЧЕТ-ФАКТУРА")?> №<input title="<?php _e("Изменить")?>" value="<?php echo @$ouid ?> / <?php echo PHPShopDate::get($row['datas']) ?> г."> <br>
+                    <?php _e("Исправление № --  от --")?></td>
             </tr>
             <tr>
-                <td valign="top" >Продавец: <?php echo $LoadItems['System']['company'] ?><br />					
-                    Адрес: <?php echo $LoadBanc['org_adres'] ?>, <?php echo $LoadItems['System']['tel'] ?> <br />							
-                    Идентификационный номер продавца (ИНН) <?php echo $LoadBanc['org_inn'] ?>\<?php echo $LoadBanc['org_kpp'] ?> <br />							
-                    Грузоотправитель и его адрес: Он же	<br />						
-                    Грузополучатель и его адрес:  <?php echo @$adr_info ?>	<br />						
-                    К платежно-расчетному документу       <br />							
-                    Покупатель: <?php echo $org_name ?>	<br />						
-                    Адрес:<?php echo @$adr_info ?> <br />							
-                    Идентификационный номер покупателя (ИНН) <?php echo @$order['Person']['org_inn'] . $row['org_inn'] ?>/ КПП <?php echo @$order['Person']['org_kpp'] . $row['org_kpp'] ?> <br />							
+                <td valign="top"><?php _e("Продавец"); echo ": ".$LoadItems['System']['company'] ?><br />					
+                    <?php _e("Адрес"); echo ": ".$LoadBanc['org_adres'] ?>, <?php echo $LoadItems['System']['tel'] ?> <br />							
+                    <?php _e("Идентификационный номер продавца (ИНН)")?> <?php echo $LoadBanc['org_inn'] ?>\<?php echo $LoadBanc['org_kpp'] ?> <br />							
+                    <?php _e("Грузоотправитель и его адрес: Он же")?>	<br />						
+                    <?php _e("Грузополучатель и его адрес"); echo @$adr_info ?>	<br />						
+                    <?php _e("К платежно-расчетному документу")?>       <br />							
+                    <?php echo __("Покупатель").": ".$org_name ?>	<br />						
+                    <?php echo __("Адрес").": ".@$adr_info ?> <br />							
+                    <?php echo __("Идентификационный номер покупателя (ИНН)").": ".$order['Person']['org_inn'] . $row['org_inn']."/ КПП:".@$order['Person']['org_kpp'] . $row['org_kpp'] ?> <br />							
                 </td>
             </tr>
             <tr>
                 <td valign="top" >
                     <table style="margin-top:10px;" bordercolor="#000000"  border="1" cellspacing="0" cellpadding="0">
 
-
-
-
                         <tr>
-                            <td width="200" align="center" rowspan="2">Наименование товара (описание выполненных 
-                                работ, оказанных услуг), имущественного права</td>
-                            <td  align="center" colspan="2">Единица измерения</td>
-                            <td  align="center" rowspan="2">Коли-
-                                чество 
-                                (объем)</td>
-                            <td  align="center"  rowspan="2">Цена (тариф) за единицу измерения</td>
-                            <td  align="center"  rowspan="2">Стоимость товаров (работ, услуг),
-                                имущественных
-                                прав без налога
-                                всего</td>
-                            <td  align="center" rowspan="2" >В том числе сумма акциза</td>
-                            <td  align="center"  rowspan="2">Налоговая ставка</td>
-                            <td  align="center" rowspan="2" >Сумма налога, предъявляемая покупателю</td>
-                            <td  align="center"  rowspan="2">Стоимость товаров (работ, услуг), имущественных прав с налогом всего</td>
-                            <td  align="center"  colspan="2">Страна<br>
-                                происхождения товара</td>
-                            <td  align="center"  rowspan="2">Номер таможенной декларации</td>
+                            <td width="200" align="center" rowspan="2"><?php _e("Наименование товара (описание выполненных 
+                                работ, оказанных услуг), имущественного права")?></td>
+                            <td  align="center" colspan="2"><?php _e("Единица измерения")?></td>
+                            <td  align="center" rowspan="2"><?php _e("Количество (объем)")?></td>
+                            <td  align="center" rowspan="2"><?php _e("Цена (тариф) за единицу измерения")?></td>
+                            <td  align="center" rowspan="2"><?php _e("Стоимость товаров (работ, услуг),имущественных прав без налога всего")?></td>
+                            <td  align="center" rowspan="2"><?php _e("В том числе сумма акциза")?></td>
+                            <td  align="center" rowspan="2"><?php _e("Налоговая ставка")?></td>
+                            <td  align="center" rowspan="2"><?php _e("Сумма налога, предъявляемая покупателю")?></td>
+                            <td  align="center" rowspan="2"><?php _e("Стоимость товаров (работ, услуг), имущественных прав с налогом всего")?></td>
+                            <td  align="center" colspan="2"><?php _e("Страна<br> происхождения товара")?>
+                               </td>
+                            <td  align="center"  rowspan="2"><?php _e("Номер таможенной декларации")?></td>
                         </tr>
                         <tr>
-                            <td align="center">код</td>
-                            <td align="center">условное обозначение
-                                (национальное)</td>
-                            <td align="center">цифровой код</td>
-                            <td align="center">краткое наименование</td>
-
+                            <td align="center"><?php _e("код")?></td>
+                            <td align="center"><?php _e("условное обозначение (национальное)")?></td>
+                            <td align="center"><?php _e("цифровой код")?></td>
+                            <td align="center"><?php _e("краткое наименование")?></td>
                         </tr>
                         <tr>
                         <tr>
@@ -261,7 +240,7 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
                         <?php echo $dis; ?>
 
                         <tr>
-                            <td colspan="8"><b>Всего к оплате</b></td>
+                            <td colspan="8"><b><?php _e("Всего к оплате")?></b></td>
 
                             <td align="right"><?php echo $this_nds_summa + $summa_nds_dos; ?></td>
                             <td align="right"><?php echo $row['sum']; ?></td>
@@ -288,8 +267,8 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
                             <td width="50%">
                                 <table  border="0" cellspacing="3" cellpadding="0">
                                     <tr>
-                                        <td>Руководитель организации<br>
-                                            или иное уполномоченное лицо</td>
+                                        <td><?php _e("Руководитель организации<br>или иное уполномоченное лицо")?>
+                                            </td>
                                         <td><?php
                                             if (!empty($LoadBanc['org_sig']))
                                                 echo '<img src="' . $LoadBanc['org_sig'] . '">';
@@ -312,8 +291,8 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
                             <td width="50%" valign="top" align="right">
                                 <table  border="0" cellspacing="3" cellpadding="0">
                                     <tr>
-                                        <td>Главный бухгалтер<br>
-                                            или иное уполномоченное лицо</td>
+                                        <td><?php _e("Главный бухгалтер<br>или иное уполномоченное лицо")?>
+                                            </td>
                                         <td><?php
                                             if (!empty($LoadBanc['org_sig_buh']))
                                                 echo '<img src="' . $LoadBanc['org_sig_buh'] . '">';
@@ -367,3 +346,4 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
     </div>
 </body>
 </html>
+<?php writeLangFile();?>

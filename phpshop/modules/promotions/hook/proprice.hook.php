@@ -7,6 +7,8 @@
 function product_grid_hook($obj, $row) {
     global $PHPShopModules, $promotionslist;
 
+    if(!empty($row['price_n'])) {$obj->set('promotionsIcon', ''); return false; }
+    
     $category = $row['category'];
     $uid = $row['id'];
 
@@ -22,7 +24,8 @@ function product_grid_hook($obj, $row) {
     unset($category_ar);
     unset($products_ar);
 
-    if (isset($data)) {
+    if (isset($data)) { 
+        $labels = array(); 
         foreach ($data as $key => $pro) {
             //Массив категорий для промо кода
             if ($pro['categories_check'] == 1):
@@ -67,28 +70,36 @@ function product_grid_hook($obj, $row) {
             unset($products_ar);
 
             if ($sumche == 1 or $sumchep == 1):
-                //если процент
+                //если процент 
                 if ($pro['discount_tip'] == 1) {
                     $pro['discount'];
                     $discount[] = $pro['discount'];
+                    $labels[$pro['discount']] = $pro['label'];
                 }
                 if ($pro['discount_tip'] == 0) {
                     $pro['discount'];
                     $discountsum[] = $pro['discount'];
+                    $labels[$pro['discount']] = $pro['label'];
                 }
 
             endif;
         }
+        
         //Берем самую большую скидку
-        if (isset($discount))
+        if (isset($discount)) {
             $discount = max($discount) / 100;
+            $lab = $labels[$discount*100];
+        }
 
-        if (isset($discountsum))
+        if (isset($discountsum)) {
             $discountsum = max($discountsum);
+            $lab = $labels[$discountsum];           
+        }
+        
     }
 
     //Если есть скидка
-    if ($discount != '' or $discountsum != '') {
+    if (($discount != '' or $discountsum != '')) {
 
         $priceDiscount[] = $obj->price($row) - ($obj->price($row) * $discount);
         $priceDiscount[] = $obj->price($row) - $discountsum;
@@ -98,15 +109,17 @@ function product_grid_hook($obj, $row) {
         if ($priceDiscount < 0) {
             $priceDiscount = 0;
         }
-
         $productPrice = $priceDiscount;
-        $productPriceNew = $obj->price($row, true);
+        $productPriceNew = $obj->price($row);
+
         if ($productPrice < $productPriceNew) {
             $obj->set('productPrice', $productPrice);
             $obj->set('productPriceRub', PHPShopText::strike($productPriceNew . " " . $obj->currency()));
+        }
 
+        if ($productPrice < $productPriceNew||$discount==0||$discountsum==0) {
             //ставим лэйбл
-            $obj->set('promotionsIcon', '<span class="sale-icon" style="background-color: rgba(115, 41, 2, 0.29) !important;">Промо-акция</span>');
+            $obj->set('promotionsIcon', $lab);
         }
     } else {
         $obj->set('promotionsIcon', '');

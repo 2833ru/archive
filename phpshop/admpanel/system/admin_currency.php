@@ -5,11 +5,11 @@ $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['currency']);
 
 // Стартовый вид
 function actionStart() {
-    global $PHPShopInterface, $PHPShopModules, $PHPShopOrm, $TitlePage;
+    global $PHPShopInterface, $PHPShopOrm, $TitlePage;
 
 
     $PHPShopInterface->setActionPanel($TitlePage, array('Удалить выбранные'), array('Добавить'));
-    $PHPShopInterface->setCaption(array(null, "3%"), array("Название", "30%"), array("Обозначение", "15%"), array("Курс", "15%"), array("ISO", "10%"), array("Приоритет", "10%", array('align' => 'center')), array("", "10%"), array("Статус &nbsp;&nbsp;&nbsp;", "10%", array('align' => 'right')));
+    $PHPShopInterface->setCaption(array(null, "3%"), array("Название", "30%"), array("Обозначение", "15%"), array("Курс", "15%"), array("ISO", "10%"), array("Приоритет", "10%", array('align' => 'center')), array("", "10%"), array("Статус", "10%", array('align' => 'right')));
 
     $data = $PHPShopOrm->select(array('*'), false, array('order' => 'id DESC'), array('limit' => 1000));
     if (is_array($data))

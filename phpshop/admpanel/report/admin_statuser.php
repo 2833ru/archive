@@ -49,7 +49,7 @@ function actionStart() {
     $PHPShopInterface->checkbox_action = false;
     $PHPShopInterface->addJSFiles('./js/bootstrap-datetimepicker.min.js', './js/bootstrap-datetimepicker.ru.js', 'report/gui/report.gui.js');
     $PHPShopInterface->addCSSFiles('./css/bootstrap-datetimepicker.min.css');
-    $PHPShopInterface->setActionPanel($TitlePage, array('Export'), false);
+    $PHPShopInterface->setActionPanel($TitlePage, array('Export'), false,false);
     $PHPShopInterface->setCaption(array('№', '5%'), array("Покупатель", "70%"), array(__("Сумма"), "20%", array('align' => 'right')));
 
     // Таблица с данными
@@ -97,10 +97,10 @@ function actionStart() {
     $searchforma.=$PHPShopInterface->setInputDate("date_start", $date_start, 'margin-bottom:10px', null, 'Дата начала отбора');
     $searchforma.=$PHPShopInterface->setInputDate("date_end", $date_end, false, null, 'Дата конца отбора');
     $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'hidden', 'name' => 'path', 'value' => $_GET['path']));
-    $searchforma.=$PHPShopInterface->setButton(__('Показать'), 'search', 'btn-order-search pull-right');
+    $searchforma.=$PHPShopInterface->setButton('Показать', 'search', 'btn-order-search pull-right');
 
     if ($clean)
-        $searchforma.=$PHPShopInterface->setButton(__('Сброс'), 'remove', 'btn-order-cancel pull-left');
+        $searchforma.=$PHPShopInterface->setButton('Сброс', 'remove', 'btn-order-cancel pull-left');
 
     $sidebarright[] = array('title' => 'Отчеты', 'content' => $PHPShopInterface->loadLib('tab_menu', false, './report/'));
     $sidebarright[] = array('title' => 'Интервал', 'content' => $PHPShopInterface->setForm($searchforma, false, "order_search", false, false, 'form-sidebar'));

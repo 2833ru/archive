@@ -19,7 +19,6 @@ function message_activation($obj) {
     $admin_mail = $obj->PHPShopSystem->getParam('adminmail2');
 
     // Заголовок e-mail пользователю
-//        $title = $obj->PHPShopSystem->getName() . " - " . $obj->lang('activation_title') . " " . PHPShopSecurity::TotalClean($_POST['name_new']);
     $title = $obj->lang('activation_title') . " " . PHPShopSecurity::TotalClean($_POST['name_new']);
 
     if ($obj->PHPShopSystem->ifSerilizeParam('admoption.user_mail_activate')) {

@@ -4,7 +4,6 @@
     <name>Альфабанк</name>
     <description>Модуль интеграции интернет-магазина с платежным шлюзом Альфабанка</description>
     <category>payment</category>
-    <status>new</status>
     <faqlink>http://faq.phpshop.ru/page/alfabank.html</faqlink>
      <adminmenu>
         <title>Альфабанк</title>

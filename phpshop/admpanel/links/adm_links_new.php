@@ -18,25 +18,27 @@ function setSelectChek($n) {
 }
 
 function actionStart() {
-    global $PHPShopGUI, $PHPShopModules;
+    global $PHPShopGUI, $PHPShopModules,$TitlePage;
 
-    $PHPShopGUI->setActionPanel(__("Создание Ссылки"), false, array('Сохранить и закрыть'));
+    $PHPShopGUI->setActionPanel($TitlePage, false, array('Сохранить и закрыть'));
 
     $Select1 = setSelectChek(1);
+    $PHPShopGUI->field_col = 2;
+
 
     // Содержание закладки 1
     $Tab1 =
-            $PHPShopGUI->setField("Ресурс:", $PHPShopGUI->setTextarea("name_new", 'Новая ссылка')) .
-            $PHPShopGUI->setField("Приоритет:", $PHPShopGUI->setSelect("num_new", $Select1, 70, 1)) .
-            $PHPShopGUI->setField("Статус:", $PHPShopGUI->setRadio("enabled_new", 1, "Включить", 1) . $PHPShopGUI->setRadio("enabled_new", 0, "Выключить", 1)) .
-            $PHPShopGUI->setField("Ссылка:", $PHPShopGUI->setInput("text", "link_new", '')) .
-            $PHPShopGUI->setField("Описание:", $PHPShopGUI->setTextarea("opis_new", ''));
+            $PHPShopGUI->setField("Ресурс", $PHPShopGUI->setTextarea("name_new", 'Новая ссылка')) .
+            $PHPShopGUI->setField("Приоритет", $PHPShopGUI->setSelect("num_new", $Select1, 50)) .
+            $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("enabled_new", 1, "Включить", 1) . $PHPShopGUI->setRadio("enabled_new", 0, "Выключить", 1)) .
+            $PHPShopGUI->setField("Ссылка", $PHPShopGUI->setInput("text", "link_new", '')) .
+            $PHPShopGUI->setField("Описание", $PHPShopGUI->setTextarea("opis_new", ''));
 
 
-    $Tab1.=$PHPShopGUI->setField("Код кнопки:", $PHPShopGUI->setTextarea("image_new", ''));
+    $Tab1.=$PHPShopGUI->setField("Код кнопки", $PHPShopGUI->setTextarea("image_new", ''));
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1));
+    $PHPShopGUI->setTab(array("Основное", $Tab1,true));
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, null);

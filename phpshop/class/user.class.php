@@ -57,7 +57,7 @@ class PHPShopUser extends PHPShopObj {
         }
         if ($disp)
             $disp = '
-                <h2>Выбрать адрес доставки</h2>    
+                <b>Выбрать адрес доставки</b>    
                 <select name="adres_id" id="adres_id" class="form-control selectpicker show-menu-arrow">
                 <option value="none">Создать новый адрес</option>
                 ' . $disp . '

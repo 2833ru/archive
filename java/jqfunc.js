@@ -42,7 +42,19 @@ var waitText = '<span class="wait">&nbsp;</span>';
 var commentAuthErrMess = "Функция добавления комментария возможна только для авторизованных пользователей.\n<a href='" + ROOT_PATH + "/users/?from=true'>Авторизуйтесь или пройдите регистрацию</a>.";
 
 // вывод сообщений после доабвление в корзину, сравнение, вишлист и т.д.
-function showAlertMessage(message) {
+function showAlertMessage(message, danger) {
+
+    if (typeof danger != 'undefined') {
+        if (danger === true)
+            danger = 'danger';
+        $('.success-notification').find('.alert').addClass('alert-' + danger);
+    }
+    else {
+        $('.success-notification').find('.alert').removeClass('alert-danger');
+        $('.success-notification').find('.alert').removeClass('alert-info');
+    }
+
+
     var messageBox = '.success-notification';
     var innerBox = '#notification .notification-alert';
 
@@ -152,7 +164,7 @@ function UpdateDeliveryJq(xid, param, stop_hook) {
                 // Подсказки DaData.ru
                 if (typeof $('#body').attr('data-token') !== 'undefined' && $('#body').attr('data-token').length)
                     var DADATA_TOKEN = $('#body').attr('data-token');
-                if(DADATA_TOKEN != false){
+                if(DADATA_TOKEN !== false && DADATA_TOKEN !== undefined){
                     var
                         token = DADATA_TOKEN,
                         type = "ADDRESS",
@@ -344,7 +356,7 @@ $(document).ready(function() {
         str = ".showYurDataForPaymentClass" + $("input#order_metod:checked").val();
         if (str != "" && $(str).html()) {
             $("#showYurDataForPaymentLoad").html($(str).clone().removeClass().show());
-            if(DADATA_TOKEN != false){
+            if(DADATA_TOKEN !== false && DADATA_TOKEN !== undefined){
                 $("#showYurDataForPaymentLoad input[name='org_name_new']").suggestions({
                     token: DADATA_TOKEN,
                     type: "PARTY",

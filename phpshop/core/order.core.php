@@ -7,7 +7,7 @@ $PHPShopOrder = new PHPShopOrderFunction();
  * Обработчик оформления заказа
  * @author PHPShop Software
  * @tutorial http://wiki.phpshop.ru/index.php/PHPShopOrder
- * @version 1.4
+ * @version 1.5
  * @package PHPShopCore
  */
 class PHPShopOrder extends PHPShopCore {
@@ -16,7 +16,7 @@ class PHPShopOrder extends PHPShopCore {
      * Конструктор
      */
     function __construct() {
-
+       
         // Отладка
         $this->debug = false;
 
@@ -129,9 +129,9 @@ class PHPShopOrder extends PHPShopCore {
 
         // Стоимость доставки
         PHPShopObj::loadClass('delivery');
-        //$this->set('delivery_price', PHPShopDelivery::getPriceDefault());
+        $this->set('delivery_price', PHPShopDelivery::getPriceDefault());
         // при загрузке сначала доставка 0
-        $this->set('delivery_price', 0);
+        //$this->set('delivery_price', 0);
 
         // Итоговая стоимость
         $this->set('total', $PHPShopOrder->returnSumma($this->PHPShopCart->getSum(false), $this->get('discount')) + $this->get('delivery_price'));

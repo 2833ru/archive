@@ -129,8 +129,8 @@ class PHPShopNav {
      * Проверка на главную страницу
      * @return bool
      */
-    function index() {
-        if ($this->objNav['path'] == 'index')
+    function index($check=true) {
+        if ($this->objNav['path'] == 'index' or $check)
             return true;
     }
 }

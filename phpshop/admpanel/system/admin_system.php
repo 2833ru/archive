@@ -3,6 +3,44 @@
 $TitlePage = __("Основные Настройки");
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['system']);
 
+// Выбор языка
+function GetLocaleList($skin) {
+    global $PHPShopGUI;
+    $dir = "../locale/";
+    
+    if(empty($skin))
+        $skin='russian';
+    
+    $locale_array = array(
+        'russian'=>'Русский',
+        'ukrainian'=>'Український',
+        'belarusian'=>'Беларускі',
+        'english'=>'English'
+        );
+    
+    if (is_dir($dir)) {
+        if (@$dh = opendir($dir)) {
+            while (($file = readdir($dh)) !== false) {
+                
+                $name=$locale_array[$file];
+                if(empty($name))
+                $name=$file;
+
+                if ($skin == $file)
+                    $sel = "selected";
+                else
+                    $sel = "";
+
+                if ($file != "." and $file != ".." and !strpos($file, '.'))
+                $value[] = array($name, $file, $sel, 'data-content="<img src=\''.$dir.'/'.$file.'/icon.png\'/> ' . $name . '"');
+            }
+            closedir($dh);
+        }
+    }
+
+    return $PHPShopGUI->setSelect('option[lang]', $value);
+}
+
 // Выбор html редактора
 function GetEditors($editor) {
     global $PHPShopGUI;
@@ -198,11 +236,15 @@ function actionStart() {
             $PHPShopGUI->setField("Количество в Новинках", $PHPShopGUI->setInputText(false, 'new_num_new', $data['new_num'], 50)) .
             $PHPShopGUI->setField("Товарная сетка витрины", $PHPShopGUI->setSelect('num_vitrina_new', $num_vitrina_value, 50), 1, 'Товаров в длину 
 	  для витрины главной страницы') .
-            $PHPShopGUI->setField("Сейчас покупают", $PHPShopGUI->setSelect('option[nowbuy_enabled]', $nowbuy_enabled_value)) .
+            $PHPShopGUI->setField("Сейчас покупают", $PHPShopGUI->setSelect('option[nowbuy_enabled]', $nowbuy_enabled_value, null, true)) .
             //$PHPShopGUI->setField("Календарь новостей", $PHPShopGUI->setCheckbox('option[user_calendar]', 1, 'Cортировки новостей по датам', $option['user_calendar'])) .
             //$PHPShopGUI->setField("Облако тегов", $PHPShopGUI->setCheckbox('option[cloud_enabled]', 1, 'Сортировка товаров по ключевым тегам', $option['cloud_enabled'])) .
             $PHPShopGUI->setField("Цифровые товары", $PHPShopGUI->setCheckbox('option[digital_product_enabled]', 1, 'Продажа цифровых товаров', $option['digital_product_enabled']), 1, 'Прикрепленные к товару файлы доступны после оплаты заказа в личном кабинете') .
-            $PHPShopGUI->setField("Сквозная пагинация", $PHPShopGUI->setCheckbox('option[catlist_enabled]', 1, 'Выводить товары в корневом каталоге', $option['catlist_enabled']), 1);
+            $PHPShopGUI->setField("Сквозная пагинация", $PHPShopGUI->setCheckbox('option[catlist_enabled]', 1, 'Выводить товары в корневом каталоге', $option['catlist_enabled']), 1).
+            $PHPShopGUI->setField("Кэшировать значения фильтра", $PHPShopGUI->setCheckbox('option[filter_cache_enabled]', 1, 'Кэшировать отсутствующие значения фильтра отбора по параметрам', $option['filter_cache_enabled']), 1) .
+            $PHPShopGUI->setField("Период кэширования", $PHPShopGUI->setInputText(false, 'option[filter_cache_period]', $option['filter_cache_period'], 50, false, false, false, '3',false), 1, 'Сколько дней хранить кэшированные данные') .
+            $PHPShopGUI->setField("Отображать количество товара", $PHPShopGUI->setCheckbox('option[filter_products_count]', 1, 'Отображать количество товара под определенное значение характеристики', $option['filter_products_count']), 1) .
+            $PHPShopGUI->setField('Язык', GetLocaleList($option['lang']));
 
     $PHPShopGUI->_CODE.=$PHPShopGUI->setCollapse('Настройка цен', $PHPShopGUI->setField("Валюта по умолчанию", $PHPShopGUI->setSelect('dengi_new', $dengi_value)) .
             $PHPShopGUI->setField("Валюта в счете", $PHPShopGUI->setSelect('kurs_new', $kurs_value)) .
@@ -213,7 +255,7 @@ function actionStart() {
             $PHPShopGUI->setField("Склад", $PHPShopGUI->setCheckbox('option[sklad_enabled]', 1, 'Показывать значение склада у товара', $option['sklad_enabled'])) .
             $PHPShopGUI->setField("Округление цен", $PHPShopGUI->setInputText(false, 'option[price_znak]', $option['price_znak'], 50), 1, 'Количество знаков после запятой в цене') .
             $PHPShopGUI->setField("Минимальная сумма заказа", $PHPShopGUI->setInputText(false, 'option[cart_minimum]', $option['cart_minimum'], 100)) .
-            $PHPShopGUI->setField("Контроль склада", $PHPShopGUI->setSelect('option[sklad_status]', $sklad_status_value)) .
+            $PHPShopGUI->setField("Контроль склада", $PHPShopGUI->setSelect('option[sklad_status]', $sklad_status_value, null, true)) .
             $PHPShopGUI->setField("Подтипы", $PHPShopGUI->setCheckbox('option[parent_price_enabled]', 1, 'Ведущий товар в подтипах можно положить в корзину', $option['parent_price_enabled'])) .
             $PHPShopGUI->setField("Мультивалютные цены", $PHPShopGUI->setCheckbox('option[multi_currency_search]', 1, 'Сортировка по цене среди мультивалютных товаров', $option['multi_currency_search']), false, __('Автоматизируется через модуль Задачи'))
     );
@@ -225,21 +267,21 @@ function actionStart() {
                     $PHPShopGUI->setCheckbox('option[mail_smtp_debug]', 1, 'Включить отладочные сообщения (Debug)', $option['mail_smtp_debug']) . '<br>' .
                     $PHPShopGUI->setCheckbox('option[mail_smtp_auth]', 1, 'Авторизация на сервере SMTP', $option['mail_smtp_auth'])
             ) .
-            $PHPShopGUI->setField(__("Почтовый сервер SMTP"), $PHPShopGUI->setInputText(null, "option[mail_smtp_host]", $option['mail_smtp_host'], 300, false, false, false, 'smtp.yandex.ru'), 1, 'Сервер исходяшей почты SMTP') .
-            $PHPShopGUI->setField(__("Порт сервера"), $PHPShopGUI->setInputText(null, "option[mail_smtp_port]", $option['mail_smtp_port'], 100, false, false, false, '25'), 1, 'Порт почтового SMTP сервера') .
-            $PHPShopGUI->setField(__("Пользователь"), $PHPShopGUI->setInputText(null, "option[mail_smtp_user]", $option['mail_smtp_user'], 300, false, false, false, 'user@yandex.ru')) .
-            $PHPShopGUI->setField(__("Пароль"), $PHPShopGUI->setInput('password', "option[mail_smtp_pass]", $option['mail_smtp_pass'], null, 300)) .
-            $PHPShopGUI->setField(__("Обратный адрес"), $PHPShopGUI->setInputText(null, "option[mail_smtp_replyto]", $option['mail_smtp_replyto'], 300), 1, 'Ответы на почтовые сообщения будут приходить на этот адрес')
+            $PHPShopGUI->setField("Почтовый сервер SMTP", $PHPShopGUI->setInputText(null, "option[mail_smtp_host]", $option['mail_smtp_host'], 300, false, false, false, 'smtp.yandex.ru'), 1, 'Сервер исходяшей почты SMTP') .
+            $PHPShopGUI->setField("Порт сервера", $PHPShopGUI->setInputText(null, "option[mail_smtp_port]", $option['mail_smtp_port'], 100, false, false, false, '25'), 1, 'Порт почтового SMTP сервера') .
+            $PHPShopGUI->setField("Пользователь", $PHPShopGUI->setInputText(null, "option[mail_smtp_user]", $option['mail_smtp_user'], 300, false, false, false, 'user@yandex.ru')) .
+            $PHPShopGUI->setField("Пароль", $PHPShopGUI->setInput('password', "option[mail_smtp_pass]", $option['mail_smtp_pass'], null, 300)) .
+            $PHPShopGUI->setField("Обратный адрес", $PHPShopGUI->setInputText(null, "option[mail_smtp_replyto]", $option['mail_smtp_replyto'], 300), 1, 'Ответы на почтовые сообщения будут приходить на этот адрес')
     );
 
     $PHPShopGUI->_CODE.=$PHPShopGUI->setCollapse('Настройка sms уведомлений', $PHPShopGUI->setField("SMS оповещение", $PHPShopGUI->setCheckbox('option[sms_enabled]', 1, 'Уведомление о заказе администратору', $option['sms_enabled']) . '<br>' .
                     $PHPShopGUI->setCheckbox('option[sms_status_order_enabled]', 1, 'Уведомление о статусе заказа пользователю', $option['sms_status_order_enabled']) . '<br>' .
                     $PHPShopGUI->setCheckbox('option[notice_enabled]', 1, 'Уведомление о наличии товара пользователям', $option['notice_enabled']), 1, 'Используется сервис terasms.ru'
             ) .
-            $PHPShopGUI->setField(__("Мобильный телефон"), $PHPShopGUI->setInputText(null, "option[sms_phone]", $option['sms_phone'], 300), 1, 'Телефон для SMS уведомлений формата 79261234567') .
-            $PHPShopGUI->setField(__("Пользователь"), $PHPShopGUI->setInputText(null, "option[sms_user]", $option['sms_user'], 300), 1, 'Пользователь в системе terasms.ru') .
-            $PHPShopGUI->setField(__("Пароль"), $PHPShopGUI->setInput('password', "option[sms_pass]", $option['sms_pass'], null, 300), 1, 'Пароль в системе terasms.ru') .
-            $PHPShopGUI->setField(__("Имя отправителя"), $PHPShopGUI->setInputText(null, "option[sms_name]", $option['sms_name'], 300), 1, 'Зарегистрированное имя отправителя в terasms.ru')
+            $PHPShopGUI->setField("Мобильный телефон", $PHPShopGUI->setInputText(null, "option[sms_phone]", $option['sms_phone'], 300), 1, 'Телефон для SMS уведомлений формата 79261234567') .
+            $PHPShopGUI->setField("Пользователь", $PHPShopGUI->setInputText(null, "option[sms_user]", $option['sms_user'], 300), 1, 'Пользователь в системе terasms.ru') .
+            $PHPShopGUI->setField("Пароль", $PHPShopGUI->setInput('password', "option[sms_pass]", $option['sms_pass'], null, 300), 1, 'Пароль в системе terasms.ru') .
+            $PHPShopGUI->setField("Имя отправителя", $PHPShopGUI->setInputText(null, "option[sms_name]", $option['sms_name'], 300), 1, 'Зарегистрированное имя отправителя в terasms.ru')
     );
 
     $PHPShopGUI->_CODE.=$PHPShopGUI->setCollapse('Настройка Пользователей', $PHPShopGUI->setField("Регистрация пользователей", $PHPShopGUI->setCheckbox('option[user_mail_activate]', 1, 'Активация через E-mail', $option['user_mail_activate']) . '<br>' . $PHPShopGUI->setCheckbox('option[user_mail_activate_pre]', 1, 'Ручная активация администратором', $option['user_mail_activate_pre']) . '<br>' . $PHPShopGUI->setCheckbox('option[user_price_activate]', 1, 'Регистрация для просмотра цен', $option['user_price_activate'])) . $PHPShopGUI->setField("Статус после регистрации", $PHPShopGUI->setSelect('option[user_status]', $userstatus_value)));
@@ -247,25 +289,24 @@ function actionStart() {
     $PHPShopGUI->_CODE.=$PHPShopGUI->setCollapse('Настройка управления', $PHPShopGUI->setField('Дизайн', GetAdminSkinList($option['theme']), 1, 'Цветовая схема оформления панели управления (back-end)') .
             $PHPShopGUI->setField("HTML-редактор по умолчанию", GetEditors($option['editor']), 1, 'Визуальный редактор контента') .
             $PHPShopGUI->setField("Цвет редактора исходного кода", GetAceSkinList($option['ace_theme']), 1, 'Стилизованная подсветка синтаксиса исходного HTML кода') .
-            $PHPShopGUI->setField(__("Заголовок"), $PHPShopGUI->setInputText(null, "option[adm_title]", $option['adm_title'], 300), 1, 'Брендовый заголовок в левом верхнем углу панели управления') .
+            $PHPShopGUI->setField("Заголовок", $PHPShopGUI->setInputText(null, "option[adm_title]", $option['adm_title'], 300), 1, 'Брендовый заголовок в левом верхнем углу панели управления') .
             $PHPShopGUI->setField("RSS", $PHPShopGUI->setCheckbox('option[rss_graber_enabled]', 1, 'Создавать новости из RSS каналов', $option['rss_graber_enabled'])) .
             $PHPShopGUI->setField("Multi Manager", $PHPShopGUI->setCheckbox('option[rule_enabled]', 1, 'Учет прав управления товарами для менеджеров', $option['rule_enabled'])) .
-            $PHPShopGUI->setField("Быстрый поиск", $PHPShopGUI->setSelect('option[search_enabled]', $search_enabled_value), 1, 'Поиск в верхнем правом углу панели управления (back-end)').
-            $PHPShopGUI->setField("Карта доставки заказа", $PHPShopGUI->setCheckbox('option[yandexmap_enabled]', 1, 'Вывод адреса доставки заказа на Яндекс.Карте', $option['yandexmap_enabled'])) 
+            $PHPShopGUI->setField("Быстрый поиск", $PHPShopGUI->setSelect('option[search_enabled]', $search_enabled_value, null, true), 1, 'Поиск в верхнем правом углу панели управления (back-end)') .
+            $PHPShopGUI->setField("Карта доставки заказа", $PHPShopGUI->setCheckbox('option[yandexmap_enabled]', 1, 'Вывод адреса доставки заказа на Яндекс.Карте', $option['yandexmap_enabled']))
     );
 
     $PHPShopGUI->_CODE.=$PHPShopGUI->setCollapse('Настройка безопасности reCAPTCHA', $PHPShopGUI->setField("reCAPTCHA", $PHPShopGUI->setCheckbox('option[recaptcha_enabled]', 1, 'Включить режим усиленной проверки от ботов', $option['recaptcha_enabled']), 1, 'Поддерживаются только новые шаблоны') .
-            $PHPShopGUI->setField(__("Публичный ключ"), $PHPShopGUI->setInputText(null, "option[recaptcha_pkey]", $option['recaptcha_pkey'], 300)) .
-            $PHPShopGUI->setField(__("Секретный ключ"), $PHPShopGUI->setInputText(null, "option[recaptcha_skey]", $option['recaptcha_skey'], 300) . $PHPShopGUI->setHelp('Персональные ключи для домена выдаются через <a href="https://www.google.com/recaptcha" target="_blank">Google.com</a>'))
+            $PHPShopGUI->setField("Публичный ключ", $PHPShopGUI->setInputText(null, "option[recaptcha_pkey]", $option['recaptcha_pkey'], 300)) .
+            $PHPShopGUI->setField("Секретный ключ", $PHPShopGUI->setInputText(null, "option[recaptcha_skey]", $option['recaptcha_skey'], 300) . $PHPShopGUI->setHelp('Персональные ключи для домена выдаются через <a href="https://www.google.com/recaptcha" target="_blank">Google.com</a>'))
     );
 
     $PHPShopGUI->_CODE.=$PHPShopGUI->setCollapse('Настройка подсказок DaData.ru', $PHPShopGUI->setField("Подсказки", $PHPShopGUI->setCheckbox('option[dadata_enabled]', 1, 'Включить подсказки DaData.ru', $option['dadata_enabled']), 1, 'Поддерживаются только новые шаблоны') .
-            $PHPShopGUI->setField(__("Публичный ключ"), $PHPShopGUI->setInputText(null, "option[dadata_token]", $option['dadata_token'], 300) . $PHPShopGUI->setHelp('Информация о сервисе, регистрация, получение ключей <a href="https://dadata.ru" target="_blank">DaData.ru</a>'))
+            $PHPShopGUI->setField("Публичный ключ", $PHPShopGUI->setInputText(null, "option[dadata_token]", $option['dadata_token'], 300) . $PHPShopGUI->setHelp('Информация о сервисе, регистрация, получение ключей <a href="https://dadata.ru" target="_blank">DaData.ru</a>'))
     );
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
-
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =
@@ -306,7 +347,32 @@ function actionUpdate() {
     unset($option['support_notice']);
 
     // Корректировка пустых значений
-    $PHPShopOrm->updateZeroVars('option.user_calendar', 'option.cloud_enabled', 'option.digital_product_enabled', 'option.parent_price_enabled', 'option.user_skin', 'option.sms_enabled', 'option.sms_status_order_enabled', 'option.notice_enabled', 'option.user_mail_activate', 'option.user_mail_activate_pre', 'option.user_price_activate', 'option.rss_graber_enabled', 'option.mail_smtp_enabled', 'option.mail_smtp_debug', 'option.multi_currency_search', 'option.mail_smtp_auth', 'option.sklad_enabled', 'option.rule_enabled', 'option.recaptcha_enabled', 'option.catlist_enabled', 'option.dadata_enabled','option.yandexmap_enabled');
+    $PHPShopOrm->updateZeroVars(
+        'option.user_calendar',
+        'option.cloud_enabled',
+        'option.digital_product_enabled',
+        'option.parent_price_enabled',
+        'option.user_skin',
+        'option.sms_enabled',
+        'option.sms_status_order_enabled',
+        'option.notice_enabled',
+        'option.user_mail_activate',
+        'option.user_mail_activate_pre',
+        'option.user_price_activate',
+        'option.rss_graber_enabled',
+        'option.mail_smtp_enabled',
+        'option.mail_smtp_debug',
+        'option.multi_currency_search',
+        'option.mail_smtp_auth',
+        'option.sklad_enabled',
+        'option.rule_enabled',
+        'option.recaptcha_enabled',
+        'option.catlist_enabled',
+        'option.dadata_enabled',
+        'option.yandexmap_enabled',
+        'option.filter_cache_enabled',
+        'option.filter_products_count'
+    );
 
     if (is_array($_POST['option']))
         foreach ($_POST['option'] as $key => $val)

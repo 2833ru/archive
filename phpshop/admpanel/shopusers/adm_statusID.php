@@ -1,6 +1,6 @@
 <?php
 
-$TitlePage = __('Редактирование статуса #' . $_GET['id']);
+$TitlePage = __('Редактирование статуса').' #' . $_GET['id'];
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['shopusers_status']);
 PHPShopObj::loadClass('user');
 
@@ -10,7 +10,6 @@ function actionStart() {
 
     // Выборка
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_REQUEST['id'])));
-
 
     // Нет данных
     if (!is_array($data)) {
@@ -22,16 +21,15 @@ function actionStart() {
     $PHPShopGUI->addJSFiles('./shopusers/gui/shopusers.gui.js');
     $PHPShopGUI->setActionPanel(__("Покупатели") . ' / ' . __('Статусы') . ' / ' . $data['name'], array('Удалить'), array('Сохранить', 'Сохранить и закрыть'));
 
-
     // Содержание закладки 1
-    $Tab1 = $PHPShopGUI->setCollapse(__('Информация'), $PHPShopGUI->setField("Название", $PHPShopGUI->setInput('text.required', "name_new", $data['name'])) .
+    $Tab1 = $PHPShopGUI->setCollapse('Информация', $PHPShopGUI->setField("Название", $PHPShopGUI->setInput('text.required', "name_new", $data['name'])) .
             $PHPShopGUI->setField("Скидка", $PHPShopGUI->setInputText('%', "discount_new", $data['discount'], 100)) .
             $PHPShopGUI->setField("Колонка цен", $PHPShopGUI->setSelect('price_new', $PHPShopGUI->setSelectValue($data['price'], 5), 100)) .
             $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("enabled_new", 1, "Вкл.", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выкл.", $data['enabled'])
     ),'in',false);
 
-    $Tab1.= $PHPShopGUI->setCollapse(__('Накопительные скидки'),
-            $PHPShopGUI->setField(null,'<p class="text-muted hidden-xs">Для учета мгновенной скидки от текущей стоимости заказа без привязки к статусу пользователя и накопления перейдите в раздел <a href="?path=shopusers.discount"><span class="glyphicon glyphicon-share-alt"></span> Скидки от заказа</a>.</p>').
+    $Tab1.= $PHPShopGUI->setCollapse('Накопительные скидки',
+            $PHPShopGUI->setField(null,'<p class="text-muted hidden-xs">'.__('Для учета мгновенной скидки от текущей стоимости заказа без привязки к статусу пользователя и накопления перейдите в раздел').' <a href="?path=shopusers.discount"><span class="glyphicon glyphicon-share-alt"></span> '.__('Скидки от заказа').'</a>.<br>'. __('Для учета накопительной скидки требуется включить опцию учета скидки покупателя в нужный статусе заказа, например "Выполнен"').'.</p>').
             $PHPShopGUI->setField("Скидки от суммы заказов", $PHPShopGUI->setCheckbox('cumulative_discount_check_new', 1, 'Использование накопительной скидки', $data['cumulative_discount_check']) .
                     $PHPShopGUI->loadLib('tab_discount', $data['cumulative_discount'], 'shopusers/'))
     );
@@ -40,7 +38,7 @@ function actionStart() {
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1));
+    $PHPShopGUI->setTab(array("Основное", $Tab1,true));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =

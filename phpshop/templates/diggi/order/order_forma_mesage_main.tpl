@@ -8,6 +8,6 @@
 		.main-container{padding-top: 0px;background-color: #fff;margin-top: 5px;}
 </style>
 
-    <h2 class="main-heading2">ќформление заказа</h2>
+    <h2 class="main-heading2">{ќформление заказа}</h2>
 
 @orderMesage@

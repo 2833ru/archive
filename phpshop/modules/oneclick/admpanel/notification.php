@@ -7,7 +7,7 @@ function notificationOneclick() {
     $data = $PHPShopOrm->select(array('COUNT(id) as count'),false,false,array('limit'=>'1'));
 
     if(!empty($data['count']))
-    echo '<a class="navbar-btn btn btn-sm btn-info navbar-right visible-lg" href="?path=modules.dir.oneclick" data-toggle="tooltip" data-placement="bottom" title="Модуль быстрый заказ"> Заказы <span class="badge">'.$data['count'].'</span></a>';
+    echo '<a class="navbar-btn btn btn-sm btn-info navbar-right visible-lg" href="?path=modules.dir.oneclick" data-toggle="tooltip" data-placement="bottom" title="'.__('Модуль быстрый заказ').'"> '.__('Заказы').' <span class="badge">'.$data['count'].'</span></a>';
 }
 
 ?>

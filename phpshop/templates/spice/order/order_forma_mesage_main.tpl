@@ -9,9 +9,9 @@
 		.main-container{padding-top: 5px;margin-top: 0px;}
 </style>
 	<ol class="breadcrumb hidden-xs">
-	    <li><a href="/" >Главная</a></li>
-	    <li class="active">Ваша корзина</li>
+	    <li><a href="/" >{Главная}</a></li>
+	    <li class="active">{Ваша корзина}</li>
 	</ol>
-    <h2 class="main-heading2">Оформление заказа</h2>
+    <h2 class="main-heading2">{Оформление заказа}</h2>
 
 @orderMesage@

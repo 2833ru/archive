@@ -37,7 +37,7 @@ function charsGenerator($category, $CsvToArray) {
     $return = null;
     
     // Отладка
-    $debug = false;
+    $debug = $_GET['debug'];
 
     // Нормализация нескольких значений
     for ($i = $GLOBALS['option']['sort']; $i < count($CsvToArray); $i = $i + 2) {

@@ -4,7 +4,7 @@ $TitlePage = __('Создание варианта подтипа');
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['parent_name']);
 
 function actionStart() {
-    global $PHPShopGUI, $PHPShopModules;
+    global $PHPShopGUI, $PHPShopModules,$TitlePage;
 
     // Выборка
     $data['start_date'] = time();
@@ -14,14 +14,10 @@ function actionStart() {
     $data['news_num'] = 3;
 
     $PHPShopGUI->field_col = 2;
+    $PHPShopGUI->setActionPanel($TitlePage, false, array('Сохранить и закрыть'));
 
-
-
-    $PHPShopGUI->setActionPanel(__("Создание варианта подтипа"), false, array('Сохранить и закрыть'));
-
-    $Tab1 = $PHPShopGUI->setField("Название:", $PHPShopGUI->setInputArg(array('type' => 'text.required', 'name' => "name_new", 'value' => $data['name'], 'placeholder' => 'Размер'))) .
+    $Tab1 = $PHPShopGUI->setField("Название", $PHPShopGUI->setInputArg(array('type' => 'text.required', 'name' => "name_new", 'value' => $data['name'], 'placeholder' => 'Размер'))) .
             $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("enabled_new", 1, "Вкл.", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выкл.", $data['enabled']) . '&nbsp;&nbsp;');
-
 
     // Вывод формы закладки
     $PHPShopGUI->setTab(array("Основное", $Tab1,true));

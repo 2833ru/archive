@@ -1,6 +1,6 @@
 <?php
 
-$TitlePage = __('Редактирование варианта подтипа #' . $_GET['id']);
+$TitlePage = __('Редактирование варианта подтипа').' #' . $_GET['id'];
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['parent_name']);
 
 function actionStart() {
@@ -13,7 +13,7 @@ function actionStart() {
     
     $PHPShopGUI->setActionPanel(__("Варианты подтипов") . '<span class="hidden-xs"> / ' . $data['name'] . '</span>', array('Удалить'), array('Сохранить', 'Сохранить и закрыть'));
 
-    $Tab1 = $PHPShopGUI->setField("Название:", $PHPShopGUI->setInputArg(array('type' => 'text.required', 'name' => "name_new", 'value' => $data['name'], 'placeholder' => 'Размер'))) .
+    $Tab1 = $PHPShopGUI->setField("Название", $PHPShopGUI->setInputArg(array('type' => 'text.required', 'name' => "name_new", 'value' => $data['name'], 'placeholder' => 'Размер'))) .
             $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("enabled_new", 1, "Вкл.", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выкл.", $data['enabled']) . '&nbsp;&nbsp;');
 
 

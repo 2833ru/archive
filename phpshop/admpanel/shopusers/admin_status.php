@@ -30,7 +30,7 @@ function actionStart() {
     );
 
     $PHPShopInterface->setActionPanel(__("Статусы и скидки покупателей"), array('Удалить выбранные', 'Скидки от заказа'), array('Добавить Статус','Скидки от заказа'));
-    $PHPShopInterface->setCaption(array(null, "2%"), array("Название", "50%"), array("Колонка цен", "10%"), array("Скидка %", "10%"), array("Накопительная", "10%", array('align' => 'center')), array("", "10%"), array("Статус &nbsp;&nbsp;&nbsp;", "10%", array('align' => 'right')));
+    $PHPShopInterface->setCaption(array(null, "2%"), array("Название", "50%"), array("Колонка цен", "15%"), array("Скидка %", "10%"), array("Накопительная", "15%", array('align' => 'center')), array("", "10%"), array("Статус", "10%", array('align' => 'right')));
 
     // Таблица с данными
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['shopusers_status']);
@@ -45,7 +45,7 @@ function actionStart() {
                 $cumulative_discount_check = '<span class="glyphicon glyphicon-remove"></span>';
 
             $PHPShopInterface->setRow(
-                    $row['id'], array('name' => $row['name'], 'link' => '?path=shopusers.status&id=' . $row['id'], 'align' => 'left'), $row['price'], $row['discount'], array('name' => $cumulative_discount_check, 'align' => 'center'), array('action' => array('edit', 'delete', 'id' => $row['id']), 'align' => 'center'), array('status' => array('enable' => $row['enabled'], 'align' => 'right', 'caption' => array('Выкл', 'Вкл'))));
+                    $row['id'], array('name' => $row['name'], 'link' => '?path=shopusers.status&id=' . $row['id'], 'align' => 'left'), $row['price'], $row['discount'], array('name' => $cumulative_discount_check, 'align' => 'center'), array('action' => array('edit','|', 'delete', 'id' => $row['id']), 'align' => 'center'), array('status' => array('enable' => $row['enabled'], 'align' => 'right', 'caption' => array('Выкл', 'Вкл'))));
         }
     $PHPShopInterface->Compile();
 }

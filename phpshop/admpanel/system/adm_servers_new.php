@@ -29,21 +29,58 @@ function GetSkinList($skin) {
     return $PHPShopGUI->setSelect('skin_new', $value);
 }
 
+// Выбор языка
+function GetLocaleList($skin) {
+    global $PHPShopGUI;
+    $dir = "../locale/";
+    
+    $locale_array = array(
+        'russian'=>'Русский',
+        'ukrainian'=>'Український',
+        'belarusian'=>'Беларускі',
+        'english'=>'English'
+        );
+    
+    if (is_dir($dir)) {
+        if (@$dh = opendir($dir)) {
+            while (($file = readdir($dh)) !== false) {
+                
+                $name=$locale_array[$file];
+                if(empty($name))
+                $name=$file;
+
+                if ($skin == $file)
+                    $sel = "selected";
+                else
+                    $sel = "";
+
+                if ($file != "." and $file != ".." and !strpos($file, '.'))
+                $value[] = array($name, $file, $sel, 'data-content="<img src=\''.$dir.'/'.$file.'/icon.png\'/> ' . $name . '"');
+            }
+            closedir($dh);
+        }
+    }
+
+    return $PHPShopGUI->setSelect('lang_new', $value);
+}
+
 // Стартовый вид
 function actionStart() {
-    global $PHPShopGUI, $PHPShopOrm, $PHPShopModules, $PHPShopSystem;
+    global $PHPShopGUI, $TitlePage, $PHPShopModules, $PHPShopSystem;
+
+    PHPShopObj::loadClass('valuta');
 
     $PHPShopGUI->field_col = 2;
-    $PHPShopGUI->setActionPanel(__("Создание Витрины"), false, array('Сохранить и закрыть'));
+    $PHPShopGUI->setActionPanel($TitlePage, false, array('Сохранить и закрыть'));
 
     // Выборка
-    $data['name'] = 'Новая витрина';
+    $data['name'] = __('Новая витрина');
     $data['enabled'] = 1;
 
-    $Tab1 = $PHPShopGUI->setField("Название:", $PHPShopGUI->setInputText(null, "name_new", $data['name']));
-    $Tab1 .= $PHPShopGUI->setField("Адрес:", $PHPShopGUI->setInputText('http://', "host_new", $data['host']));
-    $Tab1 .= $PHPShopGUI->setField("Телефоны:", $PHPShopGUI->setInputText(null, "tel_new", $data['tel']));
-    $Tab1 .= $PHPShopGUI->setField("E-mail оповещение:", $PHPShopGUI->setInputText(null, "adminmail_new", $data['adminmail']));
+    $Tab1 = $PHPShopGUI->setField("Название", $PHPShopGUI->setInputText(null, "name_new", $data['name']));
+    $Tab1 .= $PHPShopGUI->setField("Адрес", $PHPShopGUI->setInputText('http://', "host_new", $data['host']));
+    $Tab1 .= $PHPShopGUI->setField("Телефоны", $PHPShopGUI->setInputText(null, "tel_new", $data['tel']));
+    $Tab1 .= $PHPShopGUI->setField("E-mail оповещение", $PHPShopGUI->setInputText(null, "adminmail_new", $data['adminmail']));
     $Tab1.=$PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("enabled_new", 1, "Вкл.", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выкл.", $data['enabled']));
     $Tab1.=$PHPShopGUI->setField("Логотип", $PHPShopGUI->setIcon($data['logo'], "logo_new", false));
     $Tab1.=$PHPShopGUI->setField('Заголовок (Title)', $PHPShopGUI->setTextarea('title_new', $data['title'], false, false, 100));
@@ -51,22 +88,27 @@ function actionStart() {
     $Tab1 .= $PHPShopGUI->setField("Наименование организации", $PHPShopGUI->setInputText(null, "company_new", $data['company']));
     $Tab1 .= $PHPShopGUI->setField("Фактический адрес", $PHPShopGUI->setInputText(null, "adres_new", $data['adres']));
 
-    if (empty($data['skin']))
-        $data['skin'] = $PHPShopSystem->getParam('skin');
-    $Tab1.=$PHPShopGUI->setField('Дизайн', GetSkinList($data['skin']));
+    // Валюты
+    $PHPShopValutaArray = new PHPShopValutaArray();
+    $valuta_array = $PHPShopValutaArray->getArray();
+    if (is_array($valuta_array))
+        foreach ($valuta_array as $val) {
+            $currency_value[] = array($val['name'], $val['id'], $PHPShopSystem->getDefaultValutaId());
+        }
+
+    $Tab1 .= $PHPShopGUI->setField(array('Валюта', 'Дизайн', 'Язык'), array($PHPShopGUI->setSelect('currency_new', $currency_value), GetSkinList($PHPShopSystem->getParam('skin')), GetLocaleList($PHPShopSystem->getSerilizeParam('admoption.lang'))), array(array(2, 2), array(1, 2), array(1, 2)));
 
     $sql_value[] = array('Не выбрано', 0, 0);
     $sql_value[] = array('Включить все каталоги', 1, 0);
     $sql_value[] = array('Выключить все каталоги', 2, 0);
 
-    $Tab1.=$PHPShopGUI->setField("Пакетная обработка", $PHPShopGUI->setSelect('sql', $sql_value));
+    $Tab1.=$PHPShopGUI->setField("Пакетная обработка", $PHPShopGUI->setSelect('sql', $sql_value, false, true));
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод формы закладки
     $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Инструкция", $PHPShopGUI->loadLib('tab_showcase', false, './system/')));
-
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("submit", "saveID", "ОК", "right", 70, "", "but", "actionInsert.servers.create");

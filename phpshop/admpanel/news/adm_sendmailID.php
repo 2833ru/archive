@@ -1,6 +1,6 @@
 <?php
 
-$TitlePage = __('Редактирование Рассылки #' . $_GET['id']);
+$TitlePage = __('Редактирование Рассылки').' #' . $_GET['id'];
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['newsletter']);
 
 function actionStart() {
@@ -35,7 +35,7 @@ function actionStart() {
     else
         $title_name = $data['name'];
 
-    $PHPShopGUI->setActionPanel(__("Рассылки: " . $title_name), array('Удалить'), array('Сохранить', 'Сохранить и отправить'));
+    $PHPShopGUI->setActionPanel(__("Рассылка")." " . $title_name, array('Удалить'), array('Сохранить', 'Сохранить и отправить'));
 
     // Отчет
     if (!empty($result_message))
@@ -48,9 +48,9 @@ function actionStart() {
     $oFCKeditor->Value = $data['content'];
 
     // Содержание закладки 1
-    $Tab1.= $PHPShopGUI->setField("Тема:", $PHPShopGUI->setInput("text.requared", "name_new", $data['name']));
+    $Tab1.= $PHPShopGUI->setField("Тема", $PHPShopGUI->setInput("text.requared", "name_new", $data['name']));
 
-    $Tab1.=$PHPShopGUI->setField("Текст письма:", $oFCKeditor->AddGUI() . $PHPShopGUI->setHelp('Переменные: <code>@url@</code> - адрес сайта, <code>@user@</code> - имя подписчика, <code>@email@</code> - email подписчика, <code>@name@</code> - название магазина, <code>@tel@</code> - телефон компании'));
+    $Tab1.=$PHPShopGUI->setField("Текст письма", $oFCKeditor->AddGUI() . $PHPShopGUI->setHelp('Переменные: <code>@url@</code> - адрес сайта, <code>@user@</code> - имя подписчика, <code>@email@</code> - email подписчика, <code>@name@</code> - название магазина, <code>@tel@</code> - телефон компании'));
 
     // Новости
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['news']);
@@ -69,7 +69,7 @@ function actionStart() {
     $Tab1.=$PHPShopGUI->setField('Лимит строк', $PHPShopGUI->setInputText(null, 'send_limit', '0,1000', 150), 1, 'Запись c 1 по 1000');
 
 
-    $Tab1.=$PHPShopGUI->setField("Тестовое сообщение", $PHPShopGUI->setCheckbox('test', 1, 'Отправить только тестовое сообщение на ' . $PHPShopSystem->getEmail(), 1));
+    $Tab1.=$PHPShopGUI->setField("Тестовое сообщение", $PHPShopGUI->setCheckbox('test', 1, __('Отправить только тестовое сообщение на').' ' . $PHPShopSystem->getEmail(), 1,false,false));
 
     // Вывод формы закладки
     $PHPShopGUI->setTab(array("Основное", $Tab1,true));
@@ -97,8 +97,6 @@ function actionSave() {
 
     // Сохранение данных
     actionUpdate();
-
-    //header('Location: ?path=' . $_GET['path']);
 }
 
 // Функция обновления
@@ -136,7 +134,6 @@ function actionUpdate() {
 
         PHPShopParser::set('user', $_SESSION['logPHPSHOP']);
         PHPShopParser::set('email', $from);
-        //PHPShopParser::set('content', @preg_replace("/@([a-zA-Z0-9_]+)@/e", '$GLOBALS["SysValue"]["other"]["\1"]', $_POST['content_new']));
         PHPShopParser::set('content', preg_replace_callback("/@([a-zA-Z0-9_]+)@/", 'PHPShopParser::SysValueReturn', $_POST['content_new']));
 
         $PHPShopMail = new PHPShopMail($from, $from, $_POST['name_new'], '', true, true);
@@ -159,7 +156,6 @@ function actionUpdate() {
 
                 PHPShopParser::set('user', $row['name']);
                 PHPShopParser::set('email', $row['mail']);
-                //PHPShopParser::set('content', @preg_replace("/@([a-zA-Z0-9_]+)@/e", '$GLOBALS["SysValue"]["other"]["\1"]', $_POST['content_new']));
                 PHPShopParser::set('content', preg_replace_callback("/@([a-zA-Z0-9_]+)@/", 'PHPShopParser::SysValueReturn', $_POST['content_new']));
                 $unsubscribe = '<p>Что бы отказаться от новостной рассылки <a href="http://' . $_SERVER['SERVER_NAME'] . '/unsubscribe/?id=' .  $row['id'] . '&hash=' . md5($row['mail'] . $row['password']) .'" target="_blank">перейдите по ссылке.</a></p>';
                 PHPShopParser::set('unsubscribe', $unsubscribe);

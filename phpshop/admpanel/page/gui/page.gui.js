@@ -97,7 +97,7 @@ $().ready(function() {
         'height': '100px',
         'width': '100%',
         'interactive': true,
-        'defaultText': '¬вод...',
+        'defaultText': locale.enter,
         'removeWithBackspace': true,
         'minChars': 0,
         'maxChars': 0, // if not provided there is no limit

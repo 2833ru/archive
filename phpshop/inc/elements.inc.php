@@ -70,6 +70,16 @@ class PHPShopCoreElement extends PHPShopElements {
             $showcaseData = $PHPShopOrm->select(array('*'), array('enabled' => "='1'", 'host' => "='" . str_replace('www.', '', $_SERVER['HTTP_HOST']) . "'"), array('order' => 'id'), array('limit' => 1));
             if (is_array($showcaseData)) {
 
+                if (!empty($showcaseData['currency']) and $this->PHPShopNav->notPath('order')){
+                    
+                    $_SESSION['valuta'] =  $showcaseData['currency'];
+                    $_SESSION['lang'] = $showcaseData['lang'];
+                    //$this->PHPShopSystem->setParam("dengi", $showcaseData['currency']);
+                    //$this->PHPShopSystem->setParam("kurs", $showcaseData['currency']);
+                    //$this->PHPShopSystem->setParam("kurs_beznal", $showcaseData['currency']);
+                    
+                }
+
                 if (!empty($showcaseData['tel']))
                     $this->PHPShopSystem->setParam("tel", $showcaseData['tel']);
 
@@ -99,8 +109,11 @@ class PHPShopCoreElement extends PHPShopElements {
             }
         } else {
             $this->set('streetAddress', $this->PHPShopSystem->getSerilizeParam('bank.org_adres'));
+            $_SESSION['lang'] = $this->PHPShopSystem->getSerilizeParam("admoption.lang");
         }
 
+        // Язык
+        $GLOBALS['PHPShopLang'] = new PHPShopLang(array('locale' => $_SESSION['lang'], 'path' => 'shop'));
 
         // Телефон
         $tel = $this->PHPShopSystem->getValue('tel');
@@ -293,10 +306,10 @@ class PHPShopUserElement extends PHPShopElements {
                 return true;
             }
             else
-                $this->set("shortAuthError", "Неверный логин или пароль");
+                $this->set("shortAuthError", __("Неверный логин или пароль"));
         }
         else
-            $this->set("shortAuthError", "Неверный логин или пароль");
+            $this->set("shortAuthError", __("Неверный логин или пароль"));
     }
 
     /**
@@ -1022,7 +1035,6 @@ class PHPShopOprosElement extends PHPShopElements {
                 $this->set('valueName', $row['name']);
                 $this->set('valueId', $row['id']);
 
-
                 // Подключаем шаблон
                 if ($flag == "FORMA")
                     $dis.=$this->parseTemplate($this->getValue('templates.opros_forma'));
@@ -1092,9 +1104,10 @@ class PHPShopBannerElement extends PHPShopElements {
                     return $this->parseTemplate($this->getValue('templates.baner_list_forma'));
                 } else {
                     $dirs = explode(",", $row['dir']);
+
                     foreach ($dirs as $dir)
                         if (!empty($dir))
-                            if (strpos($_SERVER['REQUEST_URI'], trim($dir)) or $_SERVER['REQUEST_URI'] == trim($dir)) {
+                            if (stristr($_SERVER['REQUEST_URI'],trim($dir)) or $_SERVER['REQUEST_URI'] == trim($dir)) {
 
                                 // Определяем переменные
                                 $this->set('banerContent', $row['content']);
@@ -1105,19 +1118,6 @@ class PHPShopBannerElement extends PHPShopElements {
                             }
                 }
             }
-    }
-
-    /**
-     * Запись показов баннера
-     */
-    function update() {
-        if ($this->row['datas'] != date("d.m.y"))
-            $count_today = 0;
-        else
-            $count_today = $this->row['count_today'] + 1;
-
-        $count_all = $this->row['count_all'] + 1;
-        $this->PHPShopOrm->update(array('count_all' => $count_all, 'count_today' => $count_today, 'datas' => date("d.m.y")), array('id' => "=" . $this->row['id']), $prefix = '');
     }
 
 }
@@ -1336,7 +1336,7 @@ class PHPShopRecaptchaElement extends PHPShopElements {
             $dis.='<div id="recaptcha_' . $name . '" data-size="' . $size . '" data-key="' . $this->public . '"></div>';
             $this->recaptcha = true;
         } else {
-            $dis = '<img src="phpshop/lib/captcha/captcha.php" align="left" style="margin-right:10px"> <input type="text" name="key" class="form-control" placeholder="Код с картинки..." style="width:100px" required="">';
+            $dis = '<img src="phpshop/lib/captcha/captcha.php" align="left" style="margin-right:10px"> <input type="text" name="key" class="form-control" placeholder="' . __('Код с картинки') . '..." style="width:100px" required="">';
             $this->recaptcha = false;
         }
 
@@ -1349,19 +1349,6 @@ class PHPShopRecaptchaElement extends PHPShopElements {
      */
     public function true(){
     return $this->recaptcha;
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     }

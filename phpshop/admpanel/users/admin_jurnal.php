@@ -9,6 +9,7 @@ function actionStart() {
     $PHPShopInterface->action_select['Заблокировать выбранные'] = array(
         'name' => 'Заблокировать выбранные IP',
         'action' => 'add-blacklist-select',
+        'locale'=>true,
         'class' => 'disabled'
     );
 
@@ -18,6 +19,7 @@ function actionStart() {
         'action' => 'users.stoplist',
         'class' => 'btn btn-default btn-sm navbar-btn btn-action-panel',
         'type' => 'button',
+        'locale'=>true,
         'icon' => 'glyphicon glyphicon-fire'
     );
 
@@ -54,7 +56,7 @@ function actionStart() {
 
 
     $PHPShopInterface->setActionPanel($TitlePage, array('Заблокировать выбранные'), array('Черный список'));
-    $PHPShopInterface->setCaption(array(null, "2%"), array("Логин", "30%"), array("IP", "20%"), array("Авторизация", "20%"), array("", "10%"), array("Статус &nbsp;&nbsp;&nbsp;", "10%", array('align' => 'right')));
+    $PHPShopInterface->setCaption(array(null, "2%"), array("Логин", "30%"), array("IP", "20%"), array("Авторизация", "20%"), array("", "10%"), array("Статус", "10%", array('align' => 'right')));
 
 
     // Таблица с данными

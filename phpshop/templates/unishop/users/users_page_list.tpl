@@ -31,10 +31,10 @@
 </style>
 <div class="mobile-user-button hidden-md hidden-lg">
 	<ul>
-		<li><a class="btn btn-main" href="/users/order.html">Отследить заказ</a></li>
-	    <li><a class="btn btn-main" href="/users/notice.html">Уведомления о товарах</a></li>
-	    <li><a class="btn btn-main" href="/users/message.html">Связь с менеджерами</a></li>
-	    @php if($_SESSION['UsersId']) echo '<li><a class="btn btn-main" href="?logout=true">Выйти</a></li>'; php@
+		<li><a class="btn btn-main" href="/users/order.html">{Отследить заказ}</a></li>
+	    <li><a class="btn btn-main" href="/users/notice.html">{Уведомления о товарах}</a></li>
+	    <li><a class="btn btn-main" href="/users/message.html">{Связь с менеджерами}</a></li>
+	    @php if($_SESSION['UsersId']) echo '<li><a class="btn btn-main" href="?logout=true">{Выйти}</a></li>'; php@
 	</ul>
 </div>
 @formaContent@ 

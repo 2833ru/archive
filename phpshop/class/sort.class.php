@@ -29,8 +29,10 @@ class PHPShopSort {
      * @param array $vendor массив данных характеристик у товара
      * @param bool $filter опция учета выборки с учетом флага фильтра в характеристики
      * @param bool $goodoption опция учета выборки с учетом отсутствия флага опции товара в характеристики
+     * @param bool $cache_enabled опция использования кеша
      */
-    function __construct($category = null, $sort = null, $direct = true, $template = null, $vendor = false, $filter = true, $goodoption = true) {
+    function __construct($category = null, $sort = null, $direct = true, $template = null, $vendor = false, $filter = true, $goodoption = true, $cache_enabled = true) {
+        global $PHPShopSystem;
 
         $sql_add = null;
 
@@ -44,6 +46,20 @@ class PHPShopSort {
             $PHPShopCategory = new PHPShopCategory($category);
             $sort = $PHPShopCategory->unserializeParam('sort');
         }
+
+        if (!empty($category)) {
+            $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
+            $cache = $PHPShopOrm->select(array('sort_cache'), array('id=' => $category));
+            $this->sort_cache = unserialize($cache['sort_cache']);
+        }
+
+        // Вывод количества товара под характеристику
+        if ($cache_enabled) {
+            $this->filter_cache_enabled = $PHPShopSystem->ifSerilizeParam('admoption.filter_cache_enabled');
+            $this->count_products = $PHPShopSystem->ifSerilizeParam('admoption.filter_products_count');
+        }
+        else
+            $this->filter_cache_enabled = $this->count_products = false;
 
         // Учет фильтров
         if ($filter)
@@ -171,8 +187,10 @@ class PHPShopSort {
         $PHPShopOrm->debug = $this->debug;
         $PHPShopOrm->comment = __CLASS__ . '.' . __FUNCTION__;
         $result = $PHPShopOrm->query("select * from " . $SysValue['base']['sort'] . " where category=" . intval($n) . " order by num,name");
+
         while ($row = mysqli_fetch_array($result)) {
             $id = $row['id'];
+
             $name = substr($row['name'], 0, 35);
             $sel = null;
             if (is_array($vendor))
@@ -183,17 +201,33 @@ class PHPShopSort {
                     }
                 }
 
-            $value[$i] = array($name, $id, $sel);
-            $i++;
+            if (is_array($this->sort_cache['filter_cache'][$n]) && $this->filter_cache_enabled) {
+                if (!in_array($id, $this->sort_cache['filter_cache'][$n])) {
+                    if (!empty($this->sort_cache['products'][$n][$id]) && $this->count_products) {
+                        $value[$i] = array($name, $id, $sel, $this->sort_cache['products'][$n][$id], $row['icon']);
+                        $i++;
+                    } else {
+                        $value[$i] = array($name, $id, $sel, null, $row['icon']);
+                        $i++;
+                    }
+                }
+            } else {
+                if (!empty($this->sort_cache['products'][$n][$id]) && $this->count_products) {
+                    $value[$i] = array($name, $id, $sel, $this->sort_cache['products'][$n][$id], $row['icon']);
+                    $i++;
+                } else {
+                    $value[$i] = array($name, $id, $sel, null, $row['icon']);
+                    $i++;
+                }
+            }
         }
-
 
         $SysValue['sort'][] = $n;
 
-        if (empty($template)) {
+        if (empty($template) && !empty($value)) {
             $size = (strlen($title) + 7) * 6;
             $disp = PHPShopText::select('v[' . $n . ']', $value, $size, false, false, false, false, false, $n);
-        } elseif (function_exists($template)) {
+        } elseif (function_exists($template) && !empty($value)) {
             $disp = call_user_func_array($template, array($value, $n, $title, $vendor));
         }
 
@@ -314,6 +348,7 @@ class PHPShopSortCategoryArray extends PHPShopArray {
         $this->objBase = $GLOBALS['SysValue']['base']['sort_categories'];
         parent::__construct('id', 'name', 'category', 'filtr', 'page', 'optionname', 'goodoption');
     }
+
 }
 
 /**
@@ -336,6 +371,7 @@ class PHPShopParentNameArray extends PHPShopArray {
         $this->objBase = $GLOBALS['SysValue']['base']['parent_name'];
         parent::__construct('id', 'name');
     }
+
 }
 
 /**

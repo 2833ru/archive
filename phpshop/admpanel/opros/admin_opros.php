@@ -7,7 +7,7 @@ function actionStart() {
 
     $PHPShopInterface->setActionPanel($TitlePage, array('Удалить выбранные'), array('Добавить'));
     
-    $PHPShopInterface->setCaption(array(null, "3%"), array("Заголовок", "40%"), array("Таргетнинг", "40%"), array("", "10%"), array("Статус &nbsp;&nbsp;&nbsp;", "10%", array('align' => 'right')));
+    $PHPShopInterface->setCaption(array(null, "3%"), array("Заголовок", "40%"), array("Таргетнинг", "40%"), array("", "10%"), array("Статус", "10%", array('align' => 'right')));
 
 
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['opros_categories']);

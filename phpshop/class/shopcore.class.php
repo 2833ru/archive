@@ -4,7 +4,7 @@
  * Родительский класс ядра вывода товаров
  * @author PHPShop Software
  * @tutorial http://wiki.phpshop.ru/index.php/PHPShopShopCore
- * @version 1.4
+ * @version 1.5
  * @package PHPShopClass
  */
 class PHPShopShopCore extends PHPShopCore {
@@ -518,7 +518,7 @@ class PHPShopShopCore extends PHPShopCore {
         return $img;
     }
 
-     /**
+    /**
      * Проверка прав каталога режима Multibase
      * @return string 
      */
@@ -526,7 +526,7 @@ class PHPShopShopCore extends PHPShopCore {
         global $queryMultibase;
 
         // Мультибаза
-        if (defined("HostID")) {
+        if (defined("HostID") or defined("HostMain")) {
 
             // Память
             if (!empty($queryMultibase))
@@ -535,7 +535,14 @@ class PHPShopShopCore extends PHPShopCore {
             $multi_cat = array();
             $multi_dop_cat = null;
 
-            $where['servers'] = " REGEXP 'i" . HostID . "i'";
+            // Не выводить скрытые каталоги
+            $where['skin_enabled '] = "!='1'";
+
+            if (defined("HostID"))
+                $where['servers'] = " REGEXP 'i" . HostID . "i'";
+            elseif (defined("HostMain"))
+                $where['skin_enabled'] .= ' and (servers ="" or servers REGEXP "i1000i")';
+
             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
             $PHPShopOrm->debug = $this->debug;
             $data = $PHPShopOrm->select(array('id'), $where, false, array('limit' => 100), __CLASS__, __FUNCTION__);
@@ -558,7 +565,7 @@ class PHPShopShopCore extends PHPShopCore {
      * @param string $dop_cat #ID# дополнительных каталогов
      * @return boolean 
      */
-    function errorMultibase($category, $dop_cat=null) {
+    function errorMultibase($category, $dop_cat = null) {
 
         if (defined("HostID")) {
 

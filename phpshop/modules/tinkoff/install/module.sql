@@ -11,8 +11,9 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_tinkoff_system` (
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-INSERT INTO `phpshop_modules_tinkoff_system` VALUES (1, 'Платежная система Тинькофф Банка', '', '', '', '2.0', '0', 'osn');
+INSERT INTO `phpshop_modules_tinkoff_system` (`id`, `title`, `terminal`, `secret_key`, `gateway`, `version`, `enabled_taxation`, `taxation`) VALUES
+(1, 'Платежная система Тинькофф Банка', 'TinkoffBankTest', 'TinkoffBankTest', 'https://securepay.tinkoff.ru/v2', 2.1, 0, 'osn');
 
 INSERT INTO `phpshop_payment_systems` (`id`, `name`, `path`, `enabled`, `num`, `message`, `message_header`, `yur_data_flag`, `icon`) VALUES
-(10032, 'Tinkoff', 'modules', '0', 0, '', '', '', '/UserFiles/Image/Payments/tinkoff.png');
+(10032, 'Visa, Mastercard (Tinkoff)', 'modules', '0', 0, '', '', '', '/UserFiles/Image/Payments/tinkoff.png');
 

@@ -5,7 +5,6 @@
     <faqlink>http://faq.phpshop.ru/page/product-option.html</faqlink>
     <description>ћодуль дополнительных полей товара и каталога.</description>
     <category>form,develop</category>
-    <status>update</status>
     <adminmenu>
         <title>Product Option</title>
         <capability>true</capability>

@@ -26,7 +26,7 @@
             <tr>
                 <td width="50%">
                     <form name="forma_cart" method="post" id="forma_cart">
-                        <input type="image" name="" src="phpshop/lib/templates/icon/cart_add.gif" value="" alt="Пересчитать" hspace="5" >
+                        <input type="image" name="" src="phpshop/lib/templates/icon/cart_add.gif" value="" alt="{Пересчитать}" hspace="5" >
                         <input type=hidden name="id_edit" value="@cart_xid@">
                         <input type=hidden name="edit_num" value="edit">
                         <input type=hidden name="num_new" value="@cart_num@">
@@ -34,7 +34,7 @@
                 </td>
                 <td>
                     <form name="forma_cart" method="post" id="forma_cart">
-                        <input type="image" name="" src="phpshop/lib/templates/icon/cart_minus.gif" value="" alt="Пересчитать" hspace="5" >
+                        <input type="image" name="" src="phpshop/lib/templates/icon/cart_minus.gif" value="" alt="{Пересчитать}" hspace="5" >
                         <input type=hidden name="id_edit" value="@cart_xid@">
                         <input type=hidden name="edit_num" value="minus">
                         <input type=hidden name="num_new" value="@cart_num@">
@@ -47,7 +47,7 @@
     <td align="right" class="red">@cart_price_all@ @currency@  </td>
     <td align="right" class="red">
         <form name="forma_cart_del" method="post" id="forma_cart_del">
-            <input type="image" name="edit_del" src="phpshop/lib/templates/icon/cart_delete.gif" value="delet" alt="Удалить">
+            <input type="image" name="edit_del" src="phpshop/lib/templates/icon/cart_delete.gif" value="delet" alt="{Удалить}">
             <input type=hidden name="id_delete" value="@cart_xid@">
         </form>
     </td>

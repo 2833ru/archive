@@ -5,13 +5,13 @@ $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['black_list']);
 
 // Стартовый вид
 function actionStart() {
-    global $PHPShopGUI, $PHPShopModules;
+    global $PHPShopGUI, $PHPShopModules,$TitlePage;
 
 
     // Передача данных
     $data = $_GET['data'];
 
-    $PHPShopGUI->setActionPanel(__("Добавление в черный список"), false, array('Сохранить и закрыть'));
+    $PHPShopGUI->setActionPanel($TitlePage, false, array('Сохранить и закрыть'));
 
     // Содержание закладки 1
     $Tab1 = $PHPShopGUI->setField("IP", $PHPShopGUI->setInput('text.required', "ip_new", $_GET['ip'], false, '200'));
@@ -20,7 +20,7 @@ function actionStart() {
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1));
+    $PHPShopGUI->setTab(array("Основное", $Tab1,true));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("submit", "saveID", "ОК", "right", 70, "", "but", "actionInsert.users.edit");

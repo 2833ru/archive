@@ -1,1 +1,1 @@
-<a href="@ShopDir@/users/wishlist.html">Отложенные товары (<span class="wishlistcount">@wishlistCount@</span>)<span id="wishlist-total" ></span></a>
+<a href="@ShopDir@/users/wishlist.html">{Отложенные товары} (<span class="wishlistcount">@wishlistCount@</span>)<span id="wishlist-total" ></span></a>

@@ -34,7 +34,7 @@ function tab_userorders($data, $option) {
                 $status_name = __('Не определен');
 
             if ($row['id'] < 100)
-                $uid = '<span class="hidden-xs">' . __('Заказ ') . '</span>' . $row['uid'];
+                $uid = '<span class="hidden-xs">' . __('Заказ') . '</span> ' . $row['uid'];
             else
                 $uid = $row['uid'];
             
@@ -50,7 +50,7 @@ function tab_userorders($data, $option) {
             $PHPShopInterface->setRow(array('name' => $uid, 'link' => '?path=order&return=intro&id=' . $row['id']),array('name' => '<span class="hidden-xs" style="color:' . $color[$row['statusi']]['color'] . '">' . $status_name . '</span>', 'link' => '?path=order&return=intro&id=' . $row['id'], 'class' => 'label-link'),  array('name' => $datas),array('name' => $PHPShopOrder->getDiscount().' %'),  array('name' => $row['sum'] . ' ' . $currency, 'align' => 'right', 'class' => ''));
         }
         
-        $PHPShopInterface->setRow(false,array('name' => 'Количество заказов: '.$i,'class'=>'text-muted'), false, array('name' => 'Итого:','class'=>'text-muted'), array('name' => $total . ' ' . $currency, 'align' => 'right', 'class' => 'text-success '));
+        $PHPShopInterface->setRow(false,array('name' => __('Количество заказов').': '.$i,'class'=>'text-muted'), false, array('name' => __('Итого').':','class'=>'text-muted'), array('name' => $total . ' ' . $currency, 'align' => 'right', 'class' => 'text-success '));
 
 
     return '<table class="table table-hover">'.$PHPShopInterface->_CODE.'</table>';

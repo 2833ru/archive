@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>3.1</version>
+    <version>3.2</version>
     <name>Retail CRM</name>
-    <faqlink>http://www.retailcrm.ru/</faqlink>
+    <faqlink>http://faq.phpshop.ru/page/retailcrm.html</faqlink>
     <description>Автоматизация интернет-продаж Retail CRM</description>
     <category>sale,crm</category>
+    <status>update</status>
     <adminmenu>
         <title>Retail CRM</title>
         <capability>true</capability>
+        <podmenu>
+            <podmenu_name>Журнал операций</podmenu_name>
+            <podmenu_action>dir.retailcrm</podmenu_action>
+        </podmenu>
     </adminmenu>
 </module>

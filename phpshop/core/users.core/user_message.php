@@ -159,25 +159,22 @@ function user_message($obj) {
 
     // mail менеджеру
     if (!empty($_POST['message'])) {
-//        $zag_adm = $obj->PHPShopSystem->getName() . " - Поступило сообщение от пользователя " . $name;
-        $zag_adm = "Поступило сообщение от пользователя " . $name;
-        $content_adm = "
-Доброго времени!
---------------------------------------------------------
+        $zag_adm = __("Поступило сообщение от пользователя")." " . $name;
+        $content_adm = "{Доброго времени}!
 
-Поступил вопрос с интернет-магазина '" . $obj->PHPShopSystem->getName() . "'
-от пользователя " . $name . "
+{Поступил вопрос с сайта} '" . $obj->PHPShopSystem->getName() . "'
+{от пользователя} " . $name . "
 
-Логин: " . $login . "
+{Пользователь}: " . $login . "
 ---------------------------------------------------------
 
 " . PHPShopSecurity::TotalClean($_POST['message'], 2) . "
 
-Дата/время: " . date("d-m-y H:i a") . "
+{Дата}: " . date("d-m-y H:i a") . "
 IP:" . $_SERVER['REMOTE_ADDR'];
 
         // Отправка e-mail администратору
-        new PHPShopMail($obj->PHPShopSystem->getValue('adminmail2'), $obj->PHPShopSystem->getValue('adminmail2'), $zag_adm, $content_adm, false,false,array('replyto'=>$mail));
+        new PHPShopMail($obj->PHPShopSystem->getValue('adminmail2'), $obj->PHPShopSystem->getValue('adminmail2'), $zag_adm, Parser($content_adm), false,false,array('replyto'=>$mail));
         $sql = 'select * from ' . $SysValue['base']['table_name37'] . ' where (UID=' . $id . ') order by DateTime DESC';
         $result = mysqli_query($link_db,$sql);
         $row = mysqli_fetch_array($result);
@@ -216,20 +213,20 @@ IP:" . $_SERVER['REMOTE_ADDR'];
         $Subject = $row['Subject'];
         $Subjectreadonly = ' readonly disabled';
         $message = $row['Message'];
-        $oldmessage = '<B>Вы можете дополнить ваше сообщение. Введите дополнительный текст:</B><BR>';
+        $oldmessage = '<B>{Вы можете дополнить ваше сообщение. Введите дополнительный текст}:</B><BR>';
     } else {
         $Subject = '';
         $Subjectreadonly = '';
         $message = '';
-        $oldmessage = '  <B>Текст сообщения</B><br>';
+        $oldmessage = '<B>{Текст сообщения}</B><br>';
     }
 
     if ($i) {
-        $display = '<H4>История сообщений</H4>
+        $display = '<H4>{История сообщений}</H4>
 <table id="allspecwhite" cellpadding="1" cellspacing="1" width="100%" class="table table-striped">
 <tr>
-	<td width="20%" id=allspec><span name=txtLang id=txtLang>Дата</span></td>
-	<td width="80%" id=allspec><span name=txtLang id=txtLang>Сообщение</span></td>
+	<td width="20%" id=allspec><span name=txtLang id=txtLang>{Дата}</span></td>
+	<td width="80%" id=allspec><span name=txtLang id=txtLang>{Сообщение}</span></td>
 </tr>
 	' . $display . '</table>' . Nav_messages($id);
     } else {
@@ -237,17 +234,17 @@ IP:" . $_SERVER['REMOTE_ADDR'];
     }
 
     $disp = '
-<table class="table">
+<table class="user-table-fix" style="width:80%;">
 <tr>
   <td>
   <form method="post" name="forma_message" id="forma_message">
-  <B>Заголовок сообщения</B><BR>
+  <B>{Заголовок сообщения}</B><BR>
   <input type="TEXT" style="width:80%;" value="' . $Subject . '" ' . $Subjectreadonly . ' name="Subject"><BR>
   ' . $oldmessage . '
   <textarea style="height:100px;" name="message" id="message"></textarea>
   <div>
   <br>
-  <input type="button" class="btn btn-primary" value="Задать вопрос менеджеру" id="CheckMessage" onclick="if(typeof checkMessageText == \'function\') checkMessageText();">
+  <input type="button" class="btn btn-primary" value="{Задать вопрос менеджеру}" id="CheckMessage" onclick="if(typeof checkMessageText == \'function\') checkMessageText();">
   </div>
   </form>
   </td>

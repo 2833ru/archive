@@ -4,30 +4,23 @@ session_start();
 $_classPath = "../";
 include($_classPath . "class/obj.class.php");
 require_once $_classPath . '/lib/phpass/passwordhash.php';
-PHPShopObj::loadClass("base");
-PHPShopObj::loadClass("system");
-PHPShopObj::loadClass("mail");
-PHPShopObj::loadClass("security");
-PHPShopObj::loadClass("orm");
-PHPShopObj::loadClass("admgui");
-PHPShopObj::loadClass("update");
+PHPShopObj::loadClass(array("base", "system", "admgui", "orm", "security", "modules", "mail", "lang"));
 
 $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, true);
 $PHPShopSystem = new PHPShopSystem();
+
+// Locale
+$_SESSION['lang'] = $PHPShopSystem->getSerilizeParam("admoption.lang");
+$PHPShopLang = new PHPShopLang(array('locale'=>$_SESSION['lang'],'path'=>'admin'));
 
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['users']);
 $PHPShopOrm->debug = false;
 PHPShopParser::set('logo', $PHPShopSystem->getLogo());
 PHPShopParser::set('serverPath', $_SERVER['SERVER_NAME']);
 
-
 // Модули
-PHPShopObj::loadClass("modules");
 $PHPShopModules = new PHPShopModules($_classPath . "modules/");
 
-// Регистрируем язык
-$_SESSION['lang'] = $PHPShopSystem->getSerilizeParam("admoption.lang");
-PHPShopObj::loadClass("lang");
 
 // Редактор GUI
 $PHPShopGUI = new PHPShopGUI();
@@ -54,7 +47,7 @@ function generatePassword($length = 8) {
 // Экшен выхода
 function actionLogout() {
     global $notification;
-    $notification = 'Пользователь ' . $_SESSION['logPHPSHOP'] . ' выполнил выход';
+    $notification = __('Пользователь').' ' . $_SESSION['logPHPSHOP'] . ' '.__('выполнил выход');
     session_destroy();
 }
 
@@ -75,9 +68,9 @@ function actionHash() {
 
             PHPShopParser::set('hash', $hash);
             PHPShopParser::set('login', $data['login']);
-            new PHPShopMail($data['mail'], $PHPShopSystem->getEmail(), 'Доступ к PHPShop', PHPShopParser::file('tpl/hash.mail.tpl', true), true);
+            new PHPShopMail($data['mail'], $PHPShopSystem->getEmail(), __('Доступ к PHPShop'), PHPShopParser::file('tpl/hash.mail.tpl', true), true);
 
-            $notification = 'Письмо с инструкциями выслано на ' . $data['mail'];
+            $notification = __('Письмо с инструкциями выслано на').' ' . $data['mail'];
         }
     }
 }
@@ -107,9 +100,9 @@ function actionUpdate() {
 
             PHPShopParser::set('login', $data['login']);
             PHPShopParser::set('password', $newPass);
-            new PHPShopMail($data['mail'], $PHPShopSystem->getEmail(), 'Доступ к PHPShop', PHPShopParser::file('tpl/pass.mail.tpl', true), true);
+            new PHPShopMail($data['mail'], $PHPShopSystem->getEmail(), __('Доступ к PHPShop'), PHPShopParser::file('tpl/pass.mail.tpl', true), true);
 
-            $notification = 'Письмо с новым паролем выслано на ' . $data['mail'];
+            $notification = __('Письмо с новым паролем выслано на').' ' . $data['mail'];
         }
     }
 }
@@ -168,7 +161,7 @@ function actionStart() {
     // Ознакомительный режим
     if (is_array($License)) {
         if ($License['License']['Expires'] != 'Never' and $License['License']['Expires'] < time()) {
-            PHPShopParser::set('title', 'Окончание работы PHPShop');
+            PHPShopParser::set('title', __('Окончание работы PHPShop'));
             PHPShopParser::set('server', getenv('SERVER_NAME'));
             PHPShopParser::set('serverLocked', getenv('SERVER_NAME'));
             exit(PHPShopParser::file($_SERVER['DOCUMENT_ROOT'] . '/phpshop/lib/templates/error/license.tpl'));
@@ -195,7 +188,10 @@ function actionStart() {
         $theme = 'default';
     PHPShopParser::set('theme', $theme);
     PHPShopParser::set('notification', $notification);
-    PHPShopParser::file('tpl/signin.tpl');
+    PHPShopParser::set('code', $GLOBALS['PHPShopLang']->code);
+    PHPShopParser::set('charset', $GLOBALS['PHPShopLang']->charset);
+    PHPShopParser::set('lang',$_SESSION['lang']);
+    PHPShopParser::file('tpl/signin.tpl');      
 }
 
 // Смена пароля

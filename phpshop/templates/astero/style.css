@@ -608,9 +608,9 @@ hr{
 /* Slider Section Styles Starts */
 
 .slider{
-    -padding-top:40px;
+    padding-top:10px;
     -padding-bottom:40px;
-    background:url(./images/slider-bg.jpg) no-repeat center;
+    -background:url(./images/slider-bg.jpg) no-repeat center;
 }
 .top-col-banners ul > li{
     margin-top:40px;
@@ -1700,6 +1700,9 @@ img.template:hover{
     border-bottom: 1px solid #ddd;
     border-left: 1px solid #ddd;
     border-right: 1px solid #ddd;
+}
+.bx-pager {
+    margin-top: 15px;
 }
 @media (min-width: 992px) {
     .filter-well-right-block {

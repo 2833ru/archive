@@ -6,6 +6,17 @@ PHPShopObj::loadClass("delivery");
 // SQL
 $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.ddeliverywidget.ddeliverywidget_system"));
 
+// Обновление версии модуля
+function actionBaseUpdate() {
+    global $PHPShopModules, $PHPShopOrm;
+    $PHPShopOrm->clean();
+    $option = $PHPShopOrm->select();
+    $new_version = $PHPShopModules->getUpdate($option['version']);
+    $PHPShopOrm->clean();
+    $action = $PHPShopOrm->update(array('version_new' => $new_version));
+
+}
+
 // Функция обновления
 function actionUpdate() {
     global $PHPShopModules;
@@ -32,12 +43,13 @@ function actionUpdate() {
 }
 
 function getLinkOption($key) {
-    global $_classPath;
-    include($_classPath . 'modules/ddeliverywidget/class/ddeliverywidget.class.php');
-    $DDeliveryHelper = new DDeliveryHelper();
-    $result = $DDeliveryHelper->request($key . '/pam.json', false);
+    //global $_classPath;
+    //include($_classPath . 'modules/ddeliverywidget/class/ddeliverywidget.class.php');
+    //$DDeliveryHelper = new DDeliveryHelper();
+    //$result = $DDeliveryHelper->request($key . '/pam.json', false);
     
-    return str_replace('http://','https://',$result['data']['url']);
+    return 'https://ddelivery.ru/cabinet/widgets/cart?shopId='.$key;
+    //return str_replace('http://','https://',$result['data']['url']);
 }
 
 function actionStart() {
@@ -48,7 +60,7 @@ function actionStart() {
 
     $PHPShopGUI->addJSFiles('../modules/ddeliverywidget/admpanel/gui/ddeliverywidget.gui.js');
 
-    $link = getLinkOption($data['key']);
+    $link = getLinkOption($data['shop_id']);
 
     // Доставка
     $PHPShopDeliveryArray = new PHPShopDeliveryArray(array('is_folder' => "!='1'", 'enabled' => "='1'"));
@@ -88,28 +100,37 @@ function actionStart() {
 
     // Статус заказа
     $Tab1.= $PHPShopGUI->setField('Статус для отправки', $PHPShopGUI->setSelect('status_new', $status, 300));
+    
+    // Карточный виджет
+    $Tab1.=$PHPShopGUI->setField('Карточный виджет:', $PHPShopGUI->setRadio('prod_enabled_new', 1, 'Включить', $data['prod_enabled']) . $PHPShopGUI->setRadio('prod_enabled_new', 2, 'Выключить', $data['prod_enabled']),false,'Вывод карточного виджета на страницах товаров.');
 
     $Tab2 = $PHPShopGUI->setFrame('seopult', $link, '99%', '700', 'none', 0);
 
 
     $info = '<h4>Получение API ключа</h4>
        <ol>
-        <li>Зарегистрироваться в <a href="https://ddelivery.ru/" target="_blank">Ddelivery.ru</a>.
-        <li>Перейти по ссылке  <a target="_blank" href="https://cabinet.ddelivery.ru/user2/#/shops">Склады и магазины</a>.
-        <li>"API ключ" скопировать в одноименное поле настроек модуля.
-        <li>"ID магазина" скопировать из интерфейса редактирования магазина (вызывается на предыдущем шаге) в виде 5-значной цифры.
+        <li>Зарегистрироваться в <a href="https://ddelivery.ru/" target="_blank">Ddelivery.ru</a>.</li>
+        <li>Перейти по ссылке  <a target="_blank" href="https://cabinet.ddelivery.ru/user2/#/shops">Склады и магазины</a>.</li>
+        <li>"API ключ" скопировать в одноименное поле настроек модуля.</li>
+        <li>"ID магазина" скопировать из интерфейса редактирования магазина (вызывается на предыдущем шаге) в виде 5-значной цифры.</li>
         </ol>
         
        <h4>Настройка модуля</h4>
         <ol>
-        <li>Включить виджет доставки кликом по ссылке "Активировать".
-        <li>Выбрать имя доставки для активации модуля.
-        <li>Выбрать статус заказа для автоматической отправки заказа на сервер Ddelivery.ru.
+        <li>Включить виджет доставки кликом по ссылке "Активировать".</li>
+        <li>Выбрать имя доставки для активации модуля.</li>
+        <li>Выбрать статус заказа для автоматической отправки заказа на сервер Ddelivery.ru.</li>
+        </ol>
+
+       <h4>Настройка карточного виджета</h4>
+        <ol>
+        <li>При включенном режиме "Карточный виджет" нужно добавить переменную <code>@ddeliveryCart@</code> в свой шаблон.</li>
+        <li>Для персонализации формы вывода отредактируйте шаблон <code>phpshop/modules/ddeliverywidget/templates/product_widget.tpl</code></li>
         </ol>
         
        <h4>Настройка доставки</h4>
         <ol>
-        <li>В карточке редактирования доставки в закладке <kbd>DDelivery</kbd> настроить дополнительный параметр сохранения стоимости доставки для модуля. Опция "Не изменять стоимость" должна быть активна.
+        <li>В карточке редактирования доставки в закладке <kbd>DDelivery</kbd> настроить дополнительный параметр сохранения стоимости доставки для модуля. Опция "Не изменять стоимость" должна быть активна.</li>
         </ol>
 
 ';
@@ -117,7 +138,7 @@ function actionStart() {
     $Tab3 = $PHPShopGUI->setInfo($info);
 
     // Форма регистрации
-    $Tab4 = $PHPShopGUI->setPay();
+    $Tab4 = $PHPShopGUI->setPay($serial = false, false, $data['version'], true);
 
     // Вывод формы закладки
     $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Службы доставки", $Tab2), array("Инструкция", $Tab3), array("О Модуле", $Tab4));

@@ -152,16 +152,16 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or !empty($_SESSION
         $collapseAdmin = null;
 
     if (!empty($_SESSION['logPHPSHOP']))
-        $admin_help = 'Вы можете управлять содержанием текущей страницы';
+        $admin_help = __('Вы можете управлять содержанием текущей страницы');
     else
-        $admin_help = 'Для управления текущей страницей требуется <a href="//' . $_SERVER['SERVER_NAME'] . $GLOBALS['SysValue']['dir']['dir'] . 'phpshop/admpanel/" target="_blank"><span class="glyphicon glyphicon-user"></span> авторизироваться</a>';
+        $admin_help = __('Для управления текущей страницей требуется').' <a href="//' . $_SERVER['SERVER_NAME'] . $GLOBALS['SysValue']['dir']['dir'] . 'phpshop/admpanel/" target="_blank"><span class="glyphicon glyphicon-user"></span> '.__('авторизироваться').'</a>';
 
     $collapse_menu = '<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
   <div class="panel panel-default">
     <div class="panel-heading" role="tab">
       <h4 class="panel-title">
         <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseCSS" aria-expanded="true" aria-controls="collapseOne">
-          Оформление <span class="glyphicon ' . $collapseIconCSS . ' pull-right" data-parent="collapseCSS"></span>
+          '.__('Оформление').' <span class="glyphicon ' . $collapseIconCSS . ' pull-right" data-parent="collapseCSS"></span>
         </a>
       </h4>
     </div>
@@ -177,7 +177,7 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or !empty($_SESSION
     <div class="panel-heading hidde" role="tab" id="adminModalHelp">
       <h4 class="panel-title">
         <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseAdmin" aria-expanded="false" aria-controls="collapseTwo">
-          Управление <span class="glyphicon ' . $collapseIconAdmin . ' pull-right" data-parent="collapseAdmin"></span>
+          '.__('Управление').' <span class="glyphicon ' . $collapseIconAdmin . ' pull-right" data-parent="collapseAdmin"></span>
         </a>
       </h4>
     </div>
@@ -193,7 +193,7 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or !empty($_SESSION
     // Редактор CSS
     $theme_menu = '
         <div id="style-selector" style="width: 280px; right: ' . $editor['right'] . 'px;" class="hidden-xs hidden-sm">
-        <div class="style-toggle ' . $editor['close'] . '" title="Панель оформления"></div>
+        <div class="style-toggle ' . $editor['close'] . '" title="'.__('Панель оформления').'"></div>
            <div id="style-selector-container">
               <div class="style-selector-wrapper">
               ' . $GLOBALS['SysValue']['other']['skinSelect'] . $collapse_menu . '
@@ -211,7 +211,7 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or !empty($_SESSION
 
                         <span class="btn btn-default btn-sm pull-left glyphicon glyphicon-fullscreen" id="editorwindow" data-toggle="tooltip" data-placement="bottom" title="Увеличить размер" style="margin-right:10px"></span> 
 
-                        <h4 class="modal-title">Панель управления</h4>
+                        <h4 class="modal-title">'>__('Панель управления').'</h4>
                     </div>
                     <div class="modal-body">
                       

@@ -36,7 +36,8 @@ function actionStart() {
             if(empty($row['category'])) $row['category']=null;
             else $row['category']=array('name' =>  $row['category'], 'align' => 'left', 'link' => '?path=catalog&cat=' . $row['category']);
 
-            $PHPShopInterface->setRow($row['id'], array('name' => str_replace(array('i', 'ii'), array('', ','), $row['name']), 'align' => 'left', 'link' => '?path=' . $_GET['path'] . '&id=' . $row['id']), $row['uid'],$row['category'], array('action' => array('edit', '|','delete', 'id' => $row['id']), 'align' => 'center'), array('status' => array('enable' => $row['enabled'], 'align' => 'right', 'caption' => array('Выкл', 'Вкл'))));
+            $row['name'] = str_replace('ii', ',', $row['name']);
+            $PHPShopInterface->setRow($row['id'], array('name' => str_replace('i', '', $row['name']), 'align' => 'left', 'link' => '?path=' . $_GET['path'] . '&id=' . $row['id']), $row['uid'],$row['category'], array('action' => array('edit', '|','delete', 'id' => $row['id']), 'align' => 'center'), array('status' => array('enable' => $row['enabled'], 'align' => 'right', 'caption' => array('Выкл', 'Вкл'))));
         }
     $PHPShopInterface->Compile();
 }

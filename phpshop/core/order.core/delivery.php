@@ -86,7 +86,7 @@ function delivery($obj, $deliveryID) {
             //Если ((есть соседи, т.е. на верхнем уровне можно выбрать что-то другое)
             // И (уровень доставки больше первого)), то показываем приглашение перейти на уровень выше
             if (($ii > 1) && ($num > 0)) { //Показывать кнопку "снять" если больше 1 вариант выбора у верхнего И (либо есть потомки либо уровень доставки больше первого)
-                $pred = 'Выбрано: ' . $city . ' <A href="javascript:UpdateDeliveryJq(\'' . $PIDpr . '\',this)" title="Выбрать другой способ доставки"><img src="' . $pathTemplate . '/images/shop/icon-activate.gif" alt=""  border="0" align="absmiddle">Выбрать другой способ доставки</A> <BR> ' . $pred;
+                $pred = __('Выбрано').': ' . $city . ' <A href="javascript:UpdateDeliveryJq(\'' . $PIDpr . '\',this)"><img src="' . $pathTemplate . '/images/shop/icon-activate.gif" alt="" border="0" align="absmiddle">'.__('Выбрать другой способ доставки').'</A> <BR> ' . $pred;
             }
         }
         if (strlen($pred)) {

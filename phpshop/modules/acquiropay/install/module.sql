@@ -20,15 +20,5 @@ SET
     `title` = 'Пожалуйста, оплатите свой заказ',
     `title_sub` = 'Заказ находится на ручной проверке';
 
-INSERT INTO `phpshop_payment_systems`
-VALUES (
-  10018,
-  'Visa, Mastercard (AcquiroPay)',
-  'modules',
-  '0',
-  0,
-  'Оплата прошла успешно',
-  '',
-  '',
-  '/UserFiles/Image/Payments/visa.png'
-);
+INSERT INTO `phpshop_payment_systems` (`id`, `name`, `path`, `enabled`, `num`, `message`, `message_header`, `yur_data_flag`, `icon`) VALUES
+(10018, 'Visa, Mastercard (AcquiroPay)', 'modules', '0', 0, '<p>Ваш заказ оплачен!</p>', 'Спасибо', '', '/UserFiles/Image/Payments/visa.png');

@@ -93,7 +93,7 @@ class PHPShopOneclick extends PHPShopCore {
             header('Location: ./done.html');
             exit();
         } else {
-            $message = $GLOBALS['SysValue']['lang']['oneclick_error'];
+            $message = __($GLOBALS['SysValue']['lang']['oneclick_error']);
         }
         $this->index($message);
     }
@@ -120,26 +120,24 @@ class PHPShopOneclick extends PHPShopCore {
         // Запись в базу
         $this->PHPShopOrm->insert($insert);
 
-        $zag = $this->PHPShopSystem->getValue('name') . " - Быстрый заказ - " . PHPShopDate::dataV();
-        $message = "
-Доброго времени!
+        $zag = $this->PHPShopSystem->getValue('name') . " - ".__('Быстрый заказ')." - " . PHPShopDate::dataV();
+        $message = "{Доброго времени}!
 ---------------
 
-С сайта " . $this->PHPShopSystem->getValue('name') . " пришел быстрый заказ
+{С сайта} " . $this->PHPShopSystem->getValue('name') . " {пришел быстрый заказ}
 
-Данные о пользователе:
+{Данные о пользователе}:
 ----------------------
 
-Имя:                " . $insert['name_new'] . "
-Телефон:            " . $insert['tel_new'] . "
-Товар:              " . $insert['product_name_new'] . " / ID " . $insert['product_id_new'] . " / " . $insert['product_price_new'] . "
-Сообщение:          " . $insert['message_new'] . "
-Дата:               " . PHPShopDate::dataV($insert['date_new']) . "
+{Имя}:                " . $insert['name_new'] . "
+{Телефон}:            " . $insert['tel_new'] . "
+{Товар}:              " . $insert['product_name_new'] . " / ID " . $insert['product_id_new'] . " / " . $insert['product_price_new'] . "
+{Сообщение}:          " . $insert['message_new'] . "
+{Дата}:               " . PHPShopDate::dataV($insert['date_new']) . "
 IP:                 " . $_SERVER['REMOTE_ADDR'] . "
 
 ---------------
 
-С уважением,
 http://" . $_SERVER['SERVER_NAME'];
 
         new PHPShopMail($this->PHPShopSystem->getValue('adminmail2'), $this->PHPShopSystem->getValue('adminmail2'), $zag, $message);

@@ -115,8 +115,8 @@ class PHPShopCart {
                 $this->_CART[$xid] = $cart;
 
             // сообщение для вывода во всплывающее окно
-            $this->message = "Вы успешно добавили <a href='/shop/UID_$objID.html' title='Подробное описание'>$name</a> 
-            в вашу <a href='/order/' title='Перейти в вашу корзину'>корзину</a>";
+            $this->message = __("Вы успешно добавили")." <a href='".$GLOBALS['SysValue']['dir']['dir']."/shop/UID_$objID.html'>$name</a> 
+            ".__("в вашу")." <a href='".$GLOBALS['SysValue']['dir']['dir']."/order/'>".__("корзину")."</a>";
 
             return true;
         }

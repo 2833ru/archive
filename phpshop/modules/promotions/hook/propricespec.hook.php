@@ -6,6 +6,8 @@
 function product_grid_spec_hook($obj,$row) {
 		global $PHPShopModules,$promotionslist;
 
+        if(!empty($row['price_n'])) {$obj->set('promotionsIcon', ''); return false; }
+
 		$category = $row['category'];
 		$uid = $row['id'];
 
@@ -22,7 +24,9 @@ function product_grid_spec_hook($obj,$row) {
 	  unset($products_ar);
 
 		if(isset($data)) {
-				foreach ($data as $key => $pro) {
+            $labels = array();
+            
+			foreach ($data as $key => $pro) {
 					//Массив категорий для промо кода
 	        if($pro['categories_check']==1):
 	            //категории массив
@@ -67,26 +71,31 @@ function product_grid_spec_hook($obj,$row) {
 				  unset($category_ar);
 				  unset($products_ar);
 
-
 	        if($sumche==1 or $sumchep==1):
 	        	//если процент
 	          if($pro['discount_tip']==1) {
 	          	$pro['discount'];
 	          	$discount[] = $pro['discount'];
+                $labels[$pro['discount']] = $pro['label'];
 	          }
 	          if($pro['discount_tip']==0) {
 	          	$pro['discount'];
 	          	$discountsum[] = $pro['discount'];
+                $labels[$pro['discount']] = $pro['label'];
 	          }
 
 	        endif;
 				}
 				//Берем самую большую скидку
-				if(isset($discount))
-					$discount = max($discount)/100;
-
-				if(isset($discountsum))
-					$discountsum = max($discountsum);
+            if (isset($discount)) {
+                $discount = max($discount) / 100;
+                $lab = $labels[$discount*100];
+            }
+    
+            if (isset($discountsum)) {
+                $discountsum = max($discountsum);
+                $lab = $labels[$discountsum];           
+            }
 		}
 
 		//Если есть скидка
@@ -102,14 +111,14 @@ function product_grid_spec_hook($obj,$row) {
 	    }
 
 	    $productPrice = $priceDiscount;
-	    $productPriceNew = $obj->price($row, true);
+	    $productPriceNew = $obj->price($row);
 	    $obj->set('productPrice', $productPrice);
 	    $obj->set('productPriceRub', PHPShopText::strike($obj->price($row) . " " . $obj->currency()));
 
 
 
 	    //ставим лэйбл
-      $obj->set('promotionsIcon', '<span class="sale-icon" style="background-color: rgba(115, 41, 2, 0.29) !important;">Промо-акция</span>');
+      $obj->set('promotionsIcon', $lab);
   	}
   	else {
       $obj->set('promotionsIcon', '');

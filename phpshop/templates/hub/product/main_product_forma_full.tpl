@@ -28,7 +28,7 @@
                     <span class="price-new rubznak" itemprop="priceCurrency" content="RUB">@productValutaName@</span>
                 </div>
                 <div class="product-page-raiting rating">
-                    <span>Рейтинг :</span>
+                    <span>{Рейтинг}:</span>
                     @rateUid@
                 </div>
             </div>
@@ -53,12 +53,22 @@
             </div>
         </div>
         <div class="col-xs-12">
+            <div class="row">
+                <div class="odnotipListWrapper">
+                    
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12">
             <div class="row product-page-btn-sort-fix">
                 <div class="product-page-option-wrapper">
                     @optionsDisp@
                 </div>
                 <div class="parrent-wrapper">
                     @productParentList@
+                </div>
+                <div class="product-sklad">
+                    @productSklad@
                 </div>
                 <div class="product-page-input-number">
                     <div class="quant-main">
@@ -89,9 +99,9 @@
                         </button>                                   
                     </div>
                     <div class="cart-button button-group compare-list-button-wrapper">
-                        <button type="button" class="btn btn-cart addToWishList" role="button" data-uid="@productUid@" data-title="Отложить" data-placement="top" data-toggle="tooltip">
+                        <button type="button" class="btn btn-cart addToWishList" role="button" data-uid="@productUid@" data-title="{Отложить}" data-placement="top" data-toggle="tooltip">
                             <i class="icons-wishlist" aria-hidden="true"></i>
-                            Отложить
+                           {Отложить}
                         </button>                                   
                     </div>
                     <div class="cart-button button-group cart-list-button-wrapper  @elementCartOptionHide@">
@@ -128,11 +138,11 @@
         <div role="tabpanel" class="tabpanel-wrapper">
             <!-- Nav tabs -->
             <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active hidden-xs"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Описание</a></li>
-                <li role="presentation" class="hide hidden-xs" id="settingsTab"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Характеристики</a></li>
-                <li role="presentation" class="hidden-xs"><a href="#messages" id="commentLoad" data-uid="@productUid@" aria-controls="messages" role="tab" data-toggle="tab">Отзывы</a></li>
-                <li role="presentation" id="filesTab" class="hide hidden-xs"><a href="#files" aria-controls="files" role="tab" data-toggle="tab">Файлы</a></li>
-                <li role="presentation" id="pagesTab" class="hide hidden-xs"><a href="#pages" aria-controls="pages" role="tab" data-toggle="tab">Статьи</a></li>
+                <li role="presentation" class="active hidden-xs"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">{Описание}</a></li>
+                <li role="presentation" class="hide hidden-xs" id="settingsTab"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">{Характеристики}</a></li>
+                <li role="presentation" class="hidden-xs"><a href="#messages" id="commentLoad" data-uid="@productUid@" aria-controls="messages" role="tab" data-toggle="tab">{Отзывы}</a></li>
+                <li role="presentation" id="filesTab" class="hide hidden-xs"><a href="#files" aria-controls="files" role="tab" data-toggle="tab">{Файлы}</a></li>
+                <li role="presentation" id="pagesTab" class="hide hidden-xs"><a href="#pages" aria-controls="pages" role="tab" data-toggle="tab">{Статьи}</a></li>
             </ul>
             <!-- Tab panes -->
             <div class="tab-content">
@@ -151,11 +161,11 @@
 
 
                     <button role="button" class="btn btn-main pull-right" onclick="$('#addComment').slideToggle();
-                            $(this).hide();"><span class="glyphicon glyphicon-plus-sign"></span> Новый комментарий</button>
+                            $(this).hide();"><span class="glyphicon glyphicon-plus-sign"></span> {Новый комментарий}</button>
 
                     <div id='addComment' class="well well-sm" style='display:none;margin-top:30px;'>
 
-                        <h3>Оставьте свой отзыв</h3>
+                        <h3>{Оставьте свой отзыв}</h3>
 
                         <textarea id="message" class="commentTextarea form-control"></textarea>
                         <input type="hidden" id="commentAuthFlag" name="commentAuthFlag" value="@php if($_SESSION['UsersId']) echo 1; else echo 0; php@">
@@ -176,7 +186,7 @@
                             <label class="btn btn-success btn-sm active" style="border: none;outline: none;">
                                 <input type="radio" name="rate" value="5" checked> +5
                             </label>
-                            <button role="button" class="btn btn-main btn-sm pull-right" onclick="commentList('@productUid@', 'add', 1);">Проголосовать</button>
+                            <button role="button" class="btn btn-main btn-sm pull-right" onclick="commentList('@productUid@', 'add', 1);">{Проголосовать}</button>
                         </div>
 
                     </div>
@@ -188,9 +198,9 @@
     </div>
     <div class="col-xs-12">
         <div class="product-page-social">
-            <a class="social-button" href="#" title="Поделится в Facebook"><i class="fa fa-facebook" aria-hidden="true"></i></a>
-            <a class="social-button" href="#" title="Поделится в Контакте"><i class="fa fa-vk" aria-hidden="true"></i></a>
-            <a class="social-button" href="#" title="Поделится в Одноклассники"><i class="fa fa-odnoklassniki" aria-hidden="true"></i></a>
+            <a class="social-button" href="#" title="{Поделится в} Facebook"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+            <a class="social-button" href="#" title="{Поделится в} Контакте"><i class="fa fa-vk" aria-hidden="true"></i></a>
+            <a class="social-button" href="#" title="{Поделится в} Одноклассники"><i class="fa fa-odnoklassniki" aria-hidden="true"></i></a>
         </div>
     </div>
 </div>
@@ -210,7 +220,7 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">{Закрыть}</button>
             </div>
         </div>
     </div>

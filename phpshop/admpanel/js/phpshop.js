@@ -50,15 +50,13 @@ for (var i = 0x410; i <= 0x44F; i++)
 trans[0x401] = 0xA8;    // Ё
 trans[0x451] = 0xB8;    // ё
 
-// Таблица перевода на украинский
-/*
+// Таблица перевода на украинский/белоруский
  trans[0x457] = 0xBF;    // ї
  trans[0x407] = 0xAF;    // Ї
  trans[0x456] = 0xB3;    // і
  trans[0x406] = 0xB2;    // І
  trans[0x404] = 0xBA;    // є
  trans[0x454] = 0xAA;    // Є
- */
 
 // Сохраняем стандартную функцию escape()
 var escapeOrig = window.escape;

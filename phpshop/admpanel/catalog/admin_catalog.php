@@ -81,7 +81,7 @@ function actionStart() {
         'class' => 'btn btn-default btn-sm navbar-btn',
         'type' => 'button',
         'icon' => 'glyphicon glyphicon-plus',
-        'tooltip' => 'data-toggle="tooltip" data-placement="left" title="Добавить товар" data-cat="' . $_GET['cat'] . '"'
+        'tooltip' => 'data-toggle="tooltip" data-placement="left" title="'.__('Добавить товар').'" data-cat="' . $_GET['cat'] . '"'
     );
 
 
@@ -281,27 +281,27 @@ function actionStart() {
 
                 // Новинка
                 if (!empty($row['newtip']))
-                    $uid.= '<a class="label label-info" title="Новинка" href="?path=catalog' . $postfix . '&where[newtip]=1">Н</a> ';
+                    $uid.= '<a class="label label-info" title="'.__('Новинка').'" href="?path=catalog' . $postfix . '&where[newtip]=1">Н</a> ';
 
                 // Спецпредложение
                 if (!empty($row['spec']))
-                    $uid.= '<a class="label label-warning" title="Спецпредложение" href="?path=catalog' . $postfix . '&where[spec]=1">С</a> ';
+                    $uid.= '<a class="label label-warning" title="'.__('Спецпредложение').'" href="?path=catalog' . $postfix . '&where[spec]=1">С</a> ';
 
                 // Под заказ
                 if (!empty($row['sklad']))
-                    $uid.= '<a class="label label-danger" title="Под заказ" href="?path=catalog' . $postfix . '&where[sklad]=1">О</a> ';
+                    $uid.= '<a class="label label-danger" title="'.__('Под заказ').'" href="?path=catalog' . $postfix . '&where[sklad]=1">О</a> ';
 
                 // Яндекс Маркет
                 if (empty($row['yml']))
-                    $uid.= '<a class="label label-danger" title="Нет в Яндекс.Маркете" href="?path=catalog' . $postfix . '&where[yml]=0">Я</a> ';
+                    $uid.= '<a class="label label-danger" title="'.__('Нет в Яндекс.Маркете').'" href="?path=catalog' . $postfix . '&where[yml]=0">Я</a> ';
 
                 // Яндекс Маркет
                 if ($row['cpa'] == 1 and !empty($row['yml']))
-                    $uid.= '<a class="label label-info" title="Яндекс.Маркете CPA" href="?path=catalog' . $postfix . '&where[cpa]=1">CPA</a> ';
+                    $uid.= '<a class="label label-info" title="'.__('Яндекс.Маркете CPA').'" href="?path=catalog' . $postfix . '&where[cpa]=1">CPA</a> ';
 
                 // Подтип
                 if (strstr($row['parent'], ','))
-                    $uid.= '<a class="label label-default" title="Подтипы" href="?path=catalog' . $postfix . '&where[parent]=,">П</a> ';
+                    $uid.= '<a class="label label-default" title="'.__('Подтипы').'" href="?path=catalog' . $postfix . '&where[parent]=,">П</a> ';
 
                 $uid.='</div>';
             }
@@ -333,7 +333,7 @@ function actionStart() {
         }
 
     // Левый сайдбар дерева категорий
-    $CategoryArray[0]['name'] = 'Корень';
+    $CategoryArray[0]['name'] = __('Корень');
     $tree_array = array();
     $CategoryArrayKey = $PHPShopCategoryArray->getKey('parent_to.id', true);
 
@@ -354,7 +354,7 @@ function actionStart() {
     if ($GLOBALS['count'] > 50)
         $treebar = '<div class="progress">
   <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%">
-    <span class="sr-only">Загрузка..</span>
+    <span class="sr-only">'.__('Загрузка').'..</span>
   </div>
 </div>';
 
@@ -366,7 +366,7 @@ function actionStart() {
                  </span>
             </div></div>';
 
-    $sidebarleft[] = array('title' => __('Категории'), 'content' => $search . '<div id="tree">' . $treebar . '</div>', 'title-icon' => '<span class="glyphicon glyphicon-plus new" data-toggle="tooltip" data-placement="top" title="Добавить каталог"></span>&nbsp;<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="Развернуть все"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="Свернуть"></span>&nbsp;<span class="glyphicon glyphicon-search" id="show-category-search" data-toggle="tooltip" data-placement="top" title="Поиск"></span>');
+    $sidebarleft[] = array('title' => __('Категории'), 'content' => $search . '<div id="tree">' . $treebar . '</div>', 'title-icon' => '<span class="glyphicon glyphicon-plus new" data-toggle="tooltip" data-placement="top" title="'.__('Добавить каталог').'"></span>&nbsp;<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="'.__('Развернуть все').'"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="'.__('Свернуть').'"></span>&nbsp;<span class="glyphicon glyphicon-search" id="show-category-search" data-toggle="tooltip" data-placement="top" title="'.__('Поиск').'"></span>');
 
     $PHPShopInterface->setSidebarLeft($sidebarleft, 3);
 

@@ -1,6 +1,6 @@
 <?php
 
-$TitlePage = __('Редактирование Текстового Блока #' . $_GET['id']);
+$TitlePage = __('Редактирование Текстового Блока').' #' . $_GET['id'];
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['menu']);
 
 // Заполняем выбор
@@ -23,7 +23,7 @@ function actionStart() {
     // Выборка
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
 
-    $PHPShopGUI->setActionPanel(__("Редактирование Блока: ") . $data['name'], array('Удалить'), array('Сохранить', 'Сохранить и закрыть'));
+    $PHPShopGUI->setActionPanel(__("Редактирование Блока") .": ". $data['name'], array('Удалить'), array('Сохранить', 'Сохранить и закрыть'));
 
     // Редактор 1
     $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));
@@ -37,10 +37,10 @@ function actionStart() {
     $Select2[] = array("Справа", 1, $data['element']);
 
     // Содержание закладки 1
-    $Tab1 = $PHPShopGUI->setField("Название:", $PHPShopGUI->setInput("text", "name_new", $data['name'], "none", 500)) .
-            $PHPShopGUI->setField("Статус:", $PHPShopGUI->setRadio("flag_new", 1, "Включить", $data['flag']) . $PHPShopGUI->setRadio("flag_new", 0, "Выключить", $data['flag'])) .
-            $PHPShopGUI->setField("Позиция:", $PHPShopGUI->setSelect("num_new", $Select1, 150)) .
-            $PHPShopGUI->setField("Место:", $PHPShopGUI->setSelect("element_new", $Select2, 150)) .
+    $Tab1 = $PHPShopGUI->setField("Название", $PHPShopGUI->setInput("text", "name_new", $data['name'], "none", 500)) .
+            $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("flag_new", 1, "Включить", $data['flag']) . $PHPShopGUI->setRadio("flag_new", 0, "Выключить", $data['flag'])) .
+            $PHPShopGUI->setField("Позиция", $PHPShopGUI->setSelect("num_new", $Select1, 150)) .
+            $PHPShopGUI->setField("Место", $PHPShopGUI->setSelect("element_new", $Select2, 150,true)) .
             $PHPShopGUI->setLine() .
             $PHPShopGUI->setField("Таргетинг:", $PHPShopGUI->setInput("text", "dir_new", $data['dir']) .
                     $PHPShopGUI->setHelp(__('* Пример: /page/,/news/. Можно указать несколько адресов через запятую.')));

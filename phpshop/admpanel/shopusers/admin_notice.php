@@ -5,7 +5,7 @@ PHPShopObj::loadClass('user');
 PHPShopObj::loadClass('date');
 
 function actionStart() {
-    global $PHPShopInterface;
+    global $PHPShopInterface,$TitlePage;
 
 
     $PHPShopInterface->action_select['Разослать выбранные'] = array(

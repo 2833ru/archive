@@ -224,9 +224,10 @@ class PHPShopSocauth extends PHPShopCore {
         $url = 'https://oauth.vk.com/authorize';
 
         $params = array(
-            'client_id' => $client_id,
-            'redirect_uri' => $redirect_uri,
-            'response_type' => 'code'
+            'client_id'     => $client_id,
+            'redirect_uri'  => $redirect_uri,
+            'response_type' => 'code',
+            'scope'         => 'email'
         );
 
 
@@ -239,14 +240,17 @@ class PHPShopSocauth extends PHPShopCore {
                 'redirect_uri' => $redirect_uri
             );
             $token = json_decode(file_get_contents('https://oauth.vk.com/access_token' . '?' . urldecode(http_build_query($params))), true);
+
             if (isset($token['access_token'])) {
                 $params = array(
-                    'uids' => $token['user_id'],
-                    'fields' => 'uid,first_name,last_name,screen_name,sex,bdate,photo_big',
-                    'access_token' => $token['access_token']
+                    'uids'         => $token['user_id'],
+                    'fields'       => 'uid,first_name,last_name,screen_name,sex,bdate,photo_big',
+                    'access_token' => $token['access_token'],
+                    'v'            => 5.80
                 );
                 $userInfo = json_decode(file_get_contents('https://api.vk.com/method/users.get' . '?' . urldecode(http_build_query($params))), true);
-                if (isset($userInfo['response'][0]['uid'])) {
+
+                if (isset($userInfo['response'][0]['id'])) {
                     $userInfo = $userInfo['response'][0];
                     $result = true;
                 }
@@ -256,10 +260,9 @@ class PHPShopSocauth extends PHPShopCore {
             die();
         }
 
-
         if ($result) {  // если авторизация прошла
-            $regMass['login'] = $user_profile['email'];
-            $regMass['login'] = "vk" . $userInfo['uid'] . "@" . str_replace("www.", "", $_SERVER['SERVER_NAME']);
+            $regMass['login'] = $token['email'];
+            //$regMass['login'] = "vk" . $userInfo['uid'] . "@" . str_replace("www.", "", $_SERVER['SERVER_NAME']);
             $regMass['name'] = PHPShopString::utf8_win1251($userInfo['first_name'] . " " . $userInfo[';ast_name']);
             $regMass['first_name'] = PHPShopString::utf8_win1251($userInfo['first_name']);
             $regMass['last_name'] = PHPShopString::utf8_win1251($userInfo['last_name']);

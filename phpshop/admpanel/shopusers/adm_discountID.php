@@ -1,6 +1,6 @@
 <?php
 
-$TitlePage = __('Редактирование скидки #' . $_GET['id']);
+$TitlePage = __('Редактирование скидки').' #' . $_GET['id'];
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['discount']);
 PHPShopObj::loadClass('user');
 
@@ -11,7 +11,6 @@ function actionStart() {
     // Выборка
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_REQUEST['id'])));
 
-
     // Нет данных
     if (!is_array($data)) {
         header('Location: ?path=' . $_GET['path']);
@@ -19,11 +18,10 @@ function actionStart() {
 
     // Размер названия поля
     $PHPShopGUI->field_col = 2;
-    $PHPShopGUI->setActionPanel(__("Покупатели") . ' / ' . __('Скидки') . ' / ' . $data['sum'], array('Удалить'), array('Сохранить', 'Сохранить и закрыть'));
-
+    $PHPShopGUI->setActionPanel(__("Покупатели") . ' / ' . __('Скидки') . ' / ' . $data['sum'], array('Удалить'), array('Сохранить', 'Сохранить и закрыть'),false);
 
     // Содержание закладки 1
-    $Tab1 = $PHPShopGUI->setCollapse(__('Информация'), $PHPShopGUI->setField("Сумма", $PHPShopGUI->setInput('text.required', "sum_new", $data['sum'],null,300)) .
+    $Tab1 = $PHPShopGUI->setCollapse('Информация', $PHPShopGUI->setField("Сумма", $PHPShopGUI->setInput('text.required', "sum_new", $data['sum'],null,300)) .
             $PHPShopGUI->setField("Скидка", $PHPShopGUI->setInputText('%', "discount_new", $data['discount'], 100)) .
             $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("enabled_new", 1, "Вкл.", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выкл.", $data['enabled'])
     ),'in', false);

@@ -46,19 +46,19 @@ $(document).ready(function() {
     $("#rules td:nth-child(2)").each(function() {
         $(this).attr('data-toggle', 'tooltip');
         $(this).attr('data-placement', 'top');
-        $(this).attr('title', 'Обзор');
+        $(this).attr('title', locale.overview);
     });
 
     $("#rules td:nth-child(3)").each(function() {
         $(this).attr('data-toggle', 'tooltip');
         $(this).attr('data-placement', 'top');
-        $(this).attr('title', 'Редактирование');
+        $(this).attr('title', locale.editing);
     });
 
     $("#rules td:nth-child(4)").each(function() {
         $(this).attr('data-toggle', 'tooltip');
         $(this).attr('data-placement', 'top');
-        $(this).attr('title', 'Создание');
+        $(this).attr('title', locale.creature);
     });
 
     // whois
@@ -124,6 +124,7 @@ $(document).ready(function() {
             todayBtn: 1,
             autoclose: 1,
             todayHighlight: 1,
+            pickerPosition:'bottom-left',
             startView: 2,
             minView: 2,
             forceParse: 0

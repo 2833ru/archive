@@ -1,3 +1,3 @@
 <div >
-<a href="/page/@pageLink@.html" title="@pageName@" class=b>@pageName@</a>
+<a href="/page/@pageLink@.html" title="@pageName@">@pageName@</a>
 </div>

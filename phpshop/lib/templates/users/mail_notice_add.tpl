@@ -128,19 +128,17 @@
     
     <tr bgcolor="#eaeaea">
         <td >
-            <h2>Поступила заявка на уведомление о товаре с интернет-магазина '@name@'</h2>
-              <p>Доброго времени!</p>
+            <h2>{Поступила заявка на уведомление о товаре с интернет-магазина} '@name@'</h2>
+              <p>{Доброго времени}!</p>
 
-<p>Товар: @product_name@<br>
-Артикул: @product_art@<br>
-Ссылка: http://@serverName@@ShopDir@/shop/UID_@product_id@.html<br>
-Дата поступления: @date@<br>
-Активность заявки до: @date_active@<br></p><p>
-
-Пользователь: @user_name@<br>
-Компания: @user_company@<br>
+<p>{Товар}: @product_art@ <a href="http://@serverName@@ShopDir@/shop/UID_@product_id@.html">@product_name@</a><br>
+{Дата}: @date@<br>
+{Активность заявки до}: @date_active@<br></p>
+              <p>
+{Пользователь}: @user_name@<br>
+{Компания}: @user_company@<br>
 E-mail: @user_mail@<br>
-Тел.: @user_tel@<br>
+{Телефон}: @user_tel@<br>
 IP: @user_ip@<br>
 <hr>
 <p>@user_message@</p>
@@ -154,22 +152,18 @@ IP: @user_ip@<br>
 
 <table width="660" align="center" cellspacing="0" cellpadding="10">
 <tbody>
-
-
     <tr bgcolor="#fafafa" id="footer" height="100%">
-    
-      
+
         <td align="left" valign="top" height="100%">
-            <p><b>С уважением, @shopName@.</b></p>
+            <p><b>{С уважением}, @shopName@.</b></p>
       <p>@org_name@<br>
-      Интернет-магазин <a href="http://@serverPath@">@serverPath@</a><br>
-      Отдел продаж: @telNum@<br>
+      {Интернет-магазин} <a href="http://@serverPath@">@serverPath@</a><br>
+      {Отдел продаж}: @telNum@<br>
       E-mail: @adminMail@<br>
       @org_adres@</p></td>
       
     </tr>
-   
-
+  
 </tbody>  
 </table> 
 

@@ -1,1 +1,1 @@
-<a href="@allPagesLink@" title="Вывести все позиции на одной странице">Все позиции</a>
+<a href="@allPagesLink@">{Все позиции}</a>

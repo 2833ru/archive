@@ -22,10 +22,10 @@ function tab_value($data) {
     if (is_array($data))
         foreach ($data as $row) {
 
-            $PHPShopInterface->setRow(array('name' => $row['num'], 'editable' => 'num_value', 'id' => $row['id']), array('name' => $row['name'], 'editable' => 'name_value', 'id' => $row['id']), array('action' => array('value-edit', '|', 'remove', 'id' => $row['id']), 'align' => 'center'), '<span class="glyphicon glyphicon-remove remove hide" data-toggle="tooltip" data-id="' . $row['id'] . '" data-placement="top" title="Удалить"></span>');
+            $PHPShopInterface->setRow(array('name' => $row['num'], 'editable' => 'num_value', 'id' => $row['id']), array('name' => $row['name'], 'editable' => 'name_value', 'id' => $row['id']), array('action' => array('value-edit', '|', 'remove', 'id' => $row['id']), 'align' => 'center'), '<span class="glyphicon glyphicon-remove remove hide" data-toggle="tooltip" data-id="' . $row['id'] . '" data-placement="top" title="'.__('Удалить').'"></span>');
         }
 
-    $PHPShopInterface->setRow(array('name' => '<input style="width:100%" class="form-control input-sm" name="num_value" value="">'), array('name' => '<input style="width:100%" data-id="" placeholder="Добавить" name="name_value" class="form-control input-sm editable-add" value="">'), ' ', ' ');
+    $PHPShopInterface->setRow(array('name' => '<input style="width:100%" class="form-control input-sm" name="num_value" value="">'), array('name' => '<input style="width:100%" data-id="" placeholder="'.__('Добавить').'" name="name_value" class="form-control input-sm editable-add" value="">'), ' ', ' ');
     $disp = '<table class="table table-hover value-list">' . $PHPShopInterface->getContent() . '</table>';
 
     return $disp;

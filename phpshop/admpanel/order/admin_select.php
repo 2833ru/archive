@@ -54,19 +54,19 @@ function actionOption() {
     $message = '<p class="text-muted">Вы можете изменить перечень полей в таблице отображения заказов.</p>';
 
     $searchforma = $message .
-            $PHPShopInterface->setCheckbox('uid', 1, __('№ Заказа'), $memory['order.option']['uid']) .
-            $PHPShopInterface->setCheckbox('statusi', 1, __('Статус'), $memory['order.option']['statusi']) .
-            $PHPShopInterface->setCheckbox('datas', 1, __('Дата'), $memory['order.option']['datas']) .
-            $PHPShopInterface->setCheckbox('id', 1, __('ID'), $memory['order.option']['id']) .
-            $PHPShopInterface->setCheckbox('fio', 1, __('Покупатель'), $memory['order.option']['fio']) .
-            $PHPShopInterface->setCheckbox('sum', 1, __('Сумма'), $memory['order.option']['sum']) .
-            $PHPShopInterface->setCheckbox('tel', 1, __('Телефон'), $memory['order.option']['tel']) . '<br>' .
-            $PHPShopInterface->setCheckbox('menu', 1, __('Экшен меню'), $memory['order.option']['menu']) .  
-            $PHPShopInterface->setCheckbox('discount', 1, __('Скидка'), $memory['order.option']['discount']).
-            $PHPShopInterface->setCheckbox('city', 1, __('Город'), $memory['order.option']['city']).
-            $PHPShopInterface->setCheckbox('adres', 1, __('Адрес'), $memory['order.option']['adres']).
-            $PHPShopInterface->setCheckbox('org', 1, __('Компания'), $memory['order.option']['org']) .
-            $PHPShopInterface->setCheckbox('comment', 1, __('Комментарий'), $memory['order.option']['comment']) 
+            $PHPShopInterface->setCheckbox('uid', 1, '№ Заказа', $memory['order.option']['uid']) .
+            $PHPShopInterface->setCheckbox('statusi', 1, 'Статус', $memory['order.option']['statusi']) .
+            $PHPShopInterface->setCheckbox('datas', 1, 'Дата', $memory['order.option']['datas']) .
+            $PHPShopInterface->setCheckbox('id', 1, 'ID', $memory['order.option']['id']) .
+            $PHPShopInterface->setCheckbox('fio', 1, 'Покупатель', $memory['order.option']['fio']) .
+            $PHPShopInterface->setCheckbox('sum', 1, 'Сумма', $memory['order.option']['sum']) .
+            $PHPShopInterface->setCheckbox('tel', 1, 'Телефон', $memory['order.option']['tel']) . '<br>' .
+            $PHPShopInterface->setCheckbox('menu', 1, 'Экшен меню', $memory['order.option']['menu']) .  
+            $PHPShopInterface->setCheckbox('discount', 1, 'Скидка', $memory['order.option']['discount']).
+            $PHPShopInterface->setCheckbox('city', 1, 'Город', $memory['order.option']['city']).
+            $PHPShopInterface->setCheckbox('adres', 1, 'Адрес', $memory['order.option']['adres']).
+            $PHPShopInterface->setCheckbox('org', 1, 'Компания', $memory['order.option']['org']) .
+            $PHPShopInterface->setCheckbox('comment', 1, 'Комментарий', $memory['order.option']['comment']) 
             ;
 
     $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'hidden', 'name' => 'path', 'value' => 'order'));
@@ -165,7 +165,7 @@ function actionSelect() {
 
             if ((!in_array($key, $key_stop))) {
                 if (!empty($key_name[$key])) {
-                    $name = $key_name[$key];
+                    $name = __($key_name[$key]);
                     $select = 0;
                 } else {
                     $name = $key;
@@ -301,10 +301,10 @@ function actionStart() {
     $select_action_path = 'order';
     if (is_array($_SESSION['select'][$select_action_path])) {
         foreach ($_SESSION['select'][$select_action_path] as $val)
-            $select_message = '<span class="label label-default">' . count($_SESSION['select']['order']) . '</span> заказов выбрано<hr><a href="#" class="back"><span class="glyphicon glyphicon-ok"></span> Изменить интервал</a>';
+            $select_message = '<span class="label label-default">' . count($_SESSION['select']['order']) . '</span> '.__('заказов выбрано').'<hr><a href="#" class="back"><span class="glyphicon glyphicon-ok"></span> '.__('Изменить интервал').'</a>';
     }
     else
-        $select_message = '<p class="text-muted">Вы можете выбрать конкретные объекты для экспорта. По умолчанию будут экспортированы все позиции.: <a href="?path=catalog"><span class="glyphicon glyphicon-share-alt"></span> Выбрать</a></p>';
+        $select_message = '<p class="text-muted">'.__('Вы можете выбрать конкретные объекты для экспорта. По умолчанию будут экспортированы все позиции').'.: <a href="?path=catalog"><span class="glyphicon glyphicon-share-alt"></span> '.__('Выбрать').'</a></p>';
 
     $sidebarleft[] = array('title' => 'Подсказка', 'content' => $select_message);
 

@@ -11,7 +11,7 @@ class ApiHelper
             try {
                 $response = $this->api->statusesList();
             } catch (CurlException $e) {
-                Tools::logger("Сетевые проблемы. Ошибка подключения к retailCRM: " . $e->getMessage(), "connect");
+                Tools::logger(array('error' => $e->getMessage()), "connect", iconv('UTF-8', 'Windows-1251', 'Ошибка соединения с RetailCRM'));
             }
             if (!$response->isSuccessful()) {
                 return false;
@@ -26,7 +26,7 @@ class ApiHelper
         try {
             $this->api->customersUpload($customers);
         } catch (CurlException $e) {
-            Tools::logger('RestApi::customersUpload::Curl: ' . $e->getMessage() . "\n", 'connect');
+            Tools::logger(array('error' => $e->getMessage()), "connect", iconv('UTF-8', 'Windows-1251', 'Ошибка соединения с RetailCRM'));
             return false;
         }
     }
@@ -41,11 +41,12 @@ public function processOrders($orders, $nocheck = false)
                 $customer['firstName'] = $order['firstName'];
                 $customer['lastName'] = $order['lastName'];
                 $customer['patronymic'] = $order['patronymic'];
-                $customer['address'] = $order['delivery']['address'];
 
-                if (isset($order['email'])) {
+                if(isset($order['delivery']['address']))
+                    $customer['address'] = $order['delivery']['address'];
+
+                if (isset($order['email']))
                     $customer['email'] = $order['email'];
-                }
 
                 $checkResult = $this->checkCustomers($customer);
 
@@ -57,22 +58,22 @@ public function processOrders($orders, $nocheck = false)
             }
         }
 
-        $splitOrders = array_chunk($orders, 50);
+        $order_id = $orders[0]['externalId'];
 
+        $splitOrders = array_chunk($orders, 50);
         foreach($splitOrders as $orders) {
             try {
                 $response = $this->api->ordersUpload($orders);
                 time_nanosleep(0, 250000000);
                 if (!$response->isSuccessful()) {
-                    Tools::logger('RestApi::ordersUpload::API: ' . $response->getErrorMsg() . "\n", 'orders');
                     if (isset($response['errors'])) {
-                        foreach ($response['errors'] as $error) {
-                            Tools::logger('RestApi::ordersUpload::API: ' . $error . "\n", 'orders');
-                        }
+                        Tools::logger($response['errors'], 'send_order', iconv('UTF-8', 'Windows-1251', 'Ошибка передачи заказа в RetailCRM'), $order_id);
                     }
+                } else {
+                    Tools::logger($response->response, 'send_order', iconv('UTF-8', 'Windows-1251', 'Заказ передан в RetailCRM'), $order_id);
                 }
             } catch (CurlException $e) {
-                Tools::logger('RestApi::ordersUpload::Curl: ' . $e->getMessage() . "\n", 'connect');
+                Tools::logger(array('error' => $e->getMessage()), 'connect', iconv('UTF-8', 'Windows-1251', 'Ошибка соединения с RetailCRM'), $order_id);
                 return false;
             }
         }
@@ -87,7 +88,7 @@ public function processOrders($orders, $nocheck = false)
                 $this->api->customersUpload($chunk);
                 time_nanosleep(0, 250000000);
             } catch (CurlException $e) {
-                Tools::logger('RestApi::orderCreate::Curl: ' . $e->getMessage() . "\n", 'connect');
+                Tools::logger(array('error' => $e->getMessage()), "connect", iconv('UTF-8', 'Windows-1251', 'Ошибка соединения с RetailCRM'));
             }
         }
 
@@ -98,7 +99,7 @@ public function processOrders($orders, $nocheck = false)
                 $this->api->ordersUpload($chunk);
                 time_nanosleep(0, 250000000);
             } catch (CurlException $e) {
-                Tools::logger('RestApi::customerCreate::Curl: ' . $e->getMessage() . "\n", 'connect');
+                Tools::logger(array('error' => $e->getMessage()), "connect", iconv('UTF-8', 'Windows-1251', 'Ошибка соединения с RetailCRM'));
             }
         }
     }
@@ -107,10 +108,9 @@ public function orderHistory()
     {
         try {
             $orders = $this->api->ordersHistory(new DateTime(Tools::getDate('../logs/history.log')));
-            //Tools::logger($orders['generatedAt'], 'history-log');
             return $orders['orders'];
         } catch (CurlException $e) {
-            Tools::logger('RestApi::orderHistory::Curl: ' . $e->getMessage() . "\n", 'connect');
+            Tools::logger(array('error' => $e->getMessage()), "connect", iconv('UTF-8', 'Windows-1251', 'Ошибка соединения с RetailCRM'));
             return false;
         }
     }
@@ -120,7 +120,7 @@ public function orderHistory()
         try {
             return $this->api->ordersFixExternalIds($data);
         } catch (CurlException $e) {
-            Tools::logger('RestApi::orderFixExternalIds::Curl: ' . $e->getMessage() . "\n", 'connect');
+            Tools::logger(array('error' => $e->getMessage()), "connect", iconv('UTF-8', 'Windows-1251', 'Ошибка соединения с RetailCRM'));
             return false;
         }
     }
@@ -136,7 +136,7 @@ private function checkCustomers($customer)
             );
             $result = $this->api->customersList($search);
         } catch (CurlException $e) {
-            Tools::logger('RestApi::customerList::Curl: ' . $e->getMessage() . "\n", 'connect');
+            Tools::logger(array('error' => $e->getMessage()), "connect", iconv('UTF-8', 'Windows-1251', 'Ошибка соединения с RetailCRM'));
             return false;
         }
 
@@ -147,14 +147,14 @@ private function checkCustomers($customer)
                     $this->api->customersEdit($customer);
                     return $customer["externalId"];
                 } catch (CurlException $e) {
-                    Tools::logger('RestApi::customerEdit::Curl: ' . $e->getMessage() . "\n", 'connect');
+                    Tools::logger(array('error' => $e->getMessage()), "connect", iconv('UTF-8', 'Windows-1251', 'Ошибка соединения с RetailCRM'));
                     return false;
                 }
             } else {
                 return (isset($result['customers'][0]['externalId']) && !empty($result['customers'][0]['externalId'])) ? $result['customers'][0]['externalId'] : $customer["externalId"];
             }
         } else {
-            Tools::logger('RestApi::customerList::Curl: ' . $e->getMessage() . "\n", 'customers');
+            Tools::logger($result->response, 'customers', iconv('UTF-8', 'Windows-1251', 'Ошибка проверки пользователя'));
             return false;
         }
 

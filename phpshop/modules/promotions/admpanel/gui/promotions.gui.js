@@ -1,5 +1,80 @@
-// A $( document ).ready() block.
+
 $(document).ready(function() {
+
+    //Запуск генерации кодов
+    $("input[name='qty_gen']").on("click", function() {
+
+        $(this).addClass("disabled").parents('.form-group').next().addClass("hide").next().next('.progress').removeClass('hide');
+
+        var qty = $("input[name='qty_new']").val();
+        var promo_id = $("input[name='rowID']").val();
+
+        var button = $(this);
+
+        $.ajax({
+            url: '/phpshop/modules/promotions/admpanel/ajax/generator.php',
+            type: 'post',
+            data: 'qty=' + qty + '&promo_id=' + promo_id + '&operation=create',
+            dataType: 'json',
+            success: function(json) {
+                if (json['success']) {
+                    button.removeClass("disabled").parents('.form-group').next().removeClass("hide").next().next('.progress').addClass('hide');
+                    $("#qty-all").html(json.count_all);
+                    $("#qty-active").html(json.count_active);
+
+                }
+            }
+        });
+    });
+
+    //Удаление промо-кодов
+    $("button[name='qty_del']").on("click", function(e) {
+        e.preventDefault();
+
+        var promo_id = $("input[name='rowID']").val();
+        var button = $(this);
+        var qty_off_count = $("#qty_off_count").attr("data-count");
+
+        $.ajax({
+            url: '/phpshop/modules/promotions/admpanel/ajax/generator.php',
+            type: 'post',
+            data: 'operation=delete&promo_id=' + promo_id + '&qty_off_count=' + qty_off_count,
+            dataType: 'json',
+            success: function(json) {
+
+                if (json['success']) {
+
+                    button.addClass("disabled").hide().parents('.form-group').next().next().next().next().removeClass("hide");
+                    $("#qty-all").html(json.count_all);
+                    $("#qty-active").html(json.count_active);
+
+                }
+            }
+        });
+    });
+
+
+    //Выгрузка промо-кодов
+    $("button[name='download_codes']").on("click", function(e) {
+        e.preventDefault();
+
+        var promo_id = $("input[name='rowID']").val();
+        $.ajax({
+            url: '/phpshop/modules/promotions/admpanel/ajax/generator.php',
+            type: 'post',
+            data: 'operation=download&promo_id=' + promo_id,
+            dataType: 'json',
+            success: function(json) {
+                if (json['success']) {
+                    window.location.href = './csv/' + json.file;
+                }
+            }
+        });
+    });
+});
+
+$(document).ready(function() {
+
     code_check = $('#code_check_new').prop('checked');
     if (code_check == false) {
         $("#delivery_method_check_new").addClass("readonly");
@@ -48,10 +123,6 @@ $(document).ready(function() {
         }
     });
 
-    //$("#code_check_new").click(function() {
-
-    //});
-
     //Сообщение при заблокрированном чекбоксе
     $(':checkbox').click(function() {
         if ($(this).attr("class") == 'readonly') {
@@ -59,8 +130,6 @@ $(document).ready(function() {
             return false;
         }
     });
-
-
 
     $('#selectalloption').click(function() {
         option_check = $('#selectalloption').prop('checked');
@@ -73,70 +142,10 @@ $(document).ready(function() {
     });
 });
 
-function randAa(n) {  // [ 5 ] random big/small letters
+// random big/small letters
+function randAa(n) {  
     var s = '';
     while (s.length < n)
         s += String.fromCharCode(Math.random() * 127).replace(/\W|\d|_/g, '');
     $('input[name=code_new]').val(s);
 }
-
-function init() {
-    if (arguments.callee.done)
-        return;
-    arguments.callee.done = true;
-    if (khtmltimer)
-        clearInterval(khtmltimer);
-    var s = document.getElementsByTagName('select');
-    for (var i = 0; i < s.length; i++) {
-        if (s[i].hasAttribute('multiple')) {
-            s[i].onclick = updateSelect;
-        }
-    }
-}
-function updateSelect(e) {
-    var opts = this.getElementsByTagName('option'), t, o;
-    if (e) {
-        e.preventDefault();
-        t = e.target;
-    }
-    else if (window.event) {
-        window.event.returnValue = false;
-        t = window.event.srcElement;
-    }
-    else
-        return;
-    t = e.target || window.event.srcElement;
-    if (t.getAttribute('class') == 'selected')
-        t.removeAttribute('class');
-    else
-        t.setAttribute('class', 'selected');
-    for (var i = 0, j = opts.length; i < j; i++) {
-        if (opts[i].hasAttribute('class'))
-            opts[i].selected = true;
-        else
-            opts[i].selected = false;
-    }
-}
-
-if (document.addEventListener)
-    document.addEventListener("DOMContentLoaded", init, false);
-/*@cc_on @*/
-/*@if (@_win32)
- document.write("<script id=__ie_onload defer src=javascript:void(0)><\\/script>");
- var script = document.getElementById('__ie_onload');
- script.onreadystatechange = function() {
- if (this.readyState == 'complete') {
- init();
- }
- };
- /*@end @*/
-if (/KHTML/i.test(navigator.userAgent)) {
-    var khtmltimer = setInterval(function() {
-        if (/loaded|complete/.test(document.readyState)) {
-            init();
-        }
-    }, 10);
-}
-window.onload = init;
-
-

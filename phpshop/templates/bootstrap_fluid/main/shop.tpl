@@ -72,16 +72,16 @@
                             <ul class="nav nav-pills pull-right">
                                 @usersDisp@
                                 <li role="presentation">@wishlist@</li>
-                                <li role="presentation"><a href="/compare/"><span class="glyphicon glyphicon-eye-open"></span> Сравнить (<span id="numcompare">@numcompare@</span>)</a></li>
-                                <li role="presentation" class="@cart_active@" id="order"><a href="/order/"><span class="glyphicon glyphicon-gift"></span> Оформить заказ</a></li>
+                                <li role="presentation"><a href="/compare/"><span class="glyphicon glyphicon-eye-open"></span> {Сравнить} (<span id="numcompare">@numcompare@</span>)</a></li>
+                                <li role="presentation" class="@cart_active@" id="order"><a href="/order/"><span class="glyphicon glyphicon-gift"></span> {Оформить заказ}</a></li>
                             </ul>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-7"><h4>Тел: @telNumMobile@</h4></div>
+                        <div class="col-md-7"><h4>{Тел}: @telNumMobile@</h4></div>
                         <div class="col-md-5"><form action="/search/" role="search" method="post">
                                 <div class="input-group">
-                                    <input name="words" maxlength="50" id="search" class="form-control" placeholder="Искать.." required="" type="search" data-trigger="manual" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true"  data-content=""><span class="input-group-btn">
+                                    <input name="words" maxlength="50" id="search" class="form-control" placeholder="{Искать}.." required="" type="search" data-trigger="manual" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true"  data-content=""><span class="input-group-btn">
                                         <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>
                                     </span>
                                 </div>
@@ -104,7 +104,7 @@
                     </a>
 
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                        <span class="sr-only">Навигация</span>
+                        <span class="sr-only">{Навигация</span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
@@ -117,20 +117,20 @@
 
                         <!-- dropdown catalog menu mobile-->
                         <li class="dropdown visible-xs">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Каталог <span class="caret"></span></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{Каталог} <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
                                 @menuCatal@
                             </ul>
                         </li>
                         @topMenu@
-                        <li class="visible-xs"><a href="/users/wishlist.html">Отложенные товары</a></li>
-                        <li class="visible-xs"><a href="/news/">Новости</a></li>
-                        <li class="visible-xs"><a href="/gbook/">Отзывы</a></li>
-                        <li class="visible-xs"><a href="/price/">Прайс-лист</a></li>
-                        <li class="visible-xs"><a href="/map/">Карта сайта</a></li>
+                        <li class="visible-xs"><a href="/users/wishlist.html">{Отложенные товары}</a></li>
+                        <li class="visible-xs"><a href="/news/">{Новости}</a></li>
+                        <li class="visible-xs"><a href="/gbook/">{Отзывы}</a></li>
+                        <li class="visible-xs"><a href="/price/">{Прайс-лист}</a></li>
+                        <li class="visible-xs"><a href="/map/">{Карта сайта}</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right visible-lg visible-md" class="list-group-item" >
-                        <li><a id="cartlink" data-trigger="click" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-url="/order/" data-content='@visualcart@'><span class="glyphicon glyphicon-shopping-cart"></span> <span class="visible-lg-inline">товаров <span id="num" class="label label-info">@num@</span> на </span><span id="sum" class="label label-info">@sum@</span> <span class="rubznak">@productValutaName@</span></a></li>
+                        <li><a id="cartlink" data-trigger="click" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-url="/order/" data-content='@visualcart@'><span class="glyphicon glyphicon-shopping-cart"></span> <span class="visible-lg-inline">{товаров} <span id="num" class="label label-info">@num@</span> {на} </span><span id="sum" class="label label-info">@sum@</span> <span class="rubznak">@productValutaName@</span></a></li>
                     </ul>
                 </div><!--/.nav-collapse -->
             </div>
@@ -152,7 +152,7 @@
 
                     <!-- Меню дублирующих категорий -->
                     <ul class="list-group" id="catalog-menu">
-                        <li class="list-group-item active">Каталог</li>
+                        <li class="list-group-item active">{Каталог}</li>
                         @catalogMenu@
                     </ul>
                     <!--/ Меню дублирующих категорий -->
@@ -163,14 +163,14 @@
                     <!--/ ProductDay Mod -->
 
                     <div class="list-group ">
-                        <span class="list-group-item active">Навигация</span>
+                        <span class="list-group-item active">{Навигация}</span>
                         @pageCatal@
-                        <a href="/price/" class="list-group-item" title="Прайс-лист">Прайс-лист</a>
-                        <a href="/news/" class="list-group-item" title="Новости">Новости</a>
-                        <a href="/gbook/" class="list-group-item" title="Отзывы">Отзывы</a>
-                        <a href="/links/" class="list-group-item" title="Полезные ссылки">Полезные ссылки</a>
-                        <a href="/map/" class="list-group-item" title="Карта сайта">Карта сайта</a>
-                        <a href="/forma/" class="list-group-item" title="Форма связи">Форма связи</a>
+                        <a href="/price/" class="list-group-item" title="{Прайс-лист}">{Прайс-лист}</a>
+                        <a href="/news/" class="list-group-item" title="{Новости}">{Новости}</a>
+                        <a href="/gbook/" class="list-group-item" title="{Отзывы}">{Отзывы}</a>
+                        <a href="/links/" class="list-group-item" title="{Полезные ссылки}">{Полезные ссылки}</a>
+                        <a href="/map/" class="list-group-item" title="{Карта сайта}">{Карта сайта}</a>
+                        <a href="/forma/" class="list-group-item" title="{Форма связи}">{Форма связи}</a>
 
                     </div>
 
@@ -191,22 +191,22 @@
                     <!-- Фасетный фильтр -->
                     <div class="panel panel-info hide" id="faset-filter">
                         <div class="panel-heading">
-                            <span class="pull-right"><a href="?" id="faset-filter-reset"><span class="glyphicon glyphicon-remove"></span> сброс</a></span>
-                            <h3 class="panel-title">Фильтр</h3>
+                            <span class="pull-right"><a href="?" id="faset-filter-reset"><span class="glyphicon glyphicon-remove"></span> {сброс}</a></span>
+                            <h3 class="panel-title">{Фильтр товаров}</h3>
                         </div>
                         <div class="panel-body">
 
-                            <div id="faset-filter-body">Загрузка...</div>
+                            <div id="faset-filter-body">{Загрузка}...</div>
 
                             <div id="price-filter-body">
-                                <h4>Цена</h4>
+                                <h4>{Цена}</h4>
                                 <form method="get" id="price-filter-form">
                                     <div class="row">
                                         <div class="col-md-6" id="price-filter-val-min">
-                                            от <input type="text" class="form-control input-sm" name="min" value="@price_min@" > 
+                                            {от} <input type="text" class="form-control input-sm" name="min" value="@price_min@" > 
                                         </div>
                                         <div class="col-md-6" id="price-filter-val-max">
-                                            до <input type="text" class="form-control input-sm" name="max" value="@price_max@"> 
+                                            {до} <input type="text" class="form-control input-sm" name="max" value="@price_max@"> 
                                         </div>
                                     </div>
                                 </form>
@@ -231,13 +231,13 @@
 
             <!-- toTop -->
             <div class="visible-lg visible-md">
-                <a href="#" id="toTop"><span id="toTopHover"></span>Наверх</a>
+                <a href="#" id="toTop"><span id="toTopHover"></span>{Наверх}</a>
             </div>
             <!--/ toTop -->
 
             <footer class="footer well visible-lg visible-md">
                 <div class="pull-right">@button@</div>
-                <p itemscope itemtype="http://schema.org/Organization">&copy; <span itemprop="name">@company@</span> @year@, Тел: <span itemprop="telephone">@telNum@</span>, <span itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">Адрес: <span itemprop="streetAddress">@streetAddress@</span></span><span itemprop="email" class="hide">@adminMail@</span></p>
+                <p itemscope itemtype="http://schema.org/Organization">&copy; <span itemprop="name">@company@</span> @year@, {Тел}: <span itemprop="telephone">@telNum@</span>, <span itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">Адрес: <span itemprop="streetAddress">@streetAddress@</span></span><span itemprop="email" class="hide">@adminMail@</span></p>
             </footer>
         </div>
 
@@ -247,12 +247,12 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                        <h4 class="modal-title">Поиск</h4>
+                        <h4 class="modal-title">{Поиск}</h4>
                     </div>
                     <div class="modal-body">
                         <form  action="/search/" role="search" method="post">
                             <div class="input-group">
-                                <input name="words" maxlength="50" class="form-control" placeholder="Искать.." required="" type="search">
+                                <input name="words" maxlength="50" class="form-control" placeholder="{Искать}.." required="" type="search">
                                 <span class="input-group-btn">
                                     <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>
                                 </span>
@@ -271,7 +271,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                        <h4 class="modal-title">Авторизация</h4>
+                        <h4 class="modal-title">{Авторизация}</h4>
                         <span id="usersError" class="hide">@usersError@</span>
                     </div>
                     <form role="form" method="post" name="user_forma">
@@ -283,23 +283,23 @@
                             </div>
 
                             <div class="form-group">
-                                <label>Пароль</label>
-                                <input type="password" name="password" class="form-control" placeholder="Пароль..." required="">
+                                <label>{Пароль}</label>
+                                <input type="password" name="password" class="form-control" placeholder="{Пароль}..." required="">
                                 <span class="glyphicon glyphicon-remove form-control-feedback hide" aria-hidden="true"></span>
                             </div>
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" value="1" name="safe_users" @UserChecked@> Запомнить
+                                    <input type="checkbox" value="1" name="safe_users" @UserChecked@> {Запомнить}
                                 </label>
                             </div>
 
                             @facebookAuth@ @twitterAuth@
                         </div>
                         <div class="modal-footer">
-                            <span class="pull-left"><a href="/users/sendpassword.html" class="btn btn-default">Забыли?</a>
+                            <span class="pull-left"><a href="/users/sendpassword.html" class="btn btn-default">{Забыли}?</a>
                             </span>
                             <input type="hidden" value="1" name="user_enter">
-                            <button type="submit" class="btn btn-primary">Войти</button>
+                            <button type="submit" class="btn btn-primary">{Войти}</button>
                         </div>
                     </form>   
                 </div>
@@ -314,23 +314,23 @@
         <nav class="navbar navbar-default navbar-fixed-bottom bar bar-tab visible-xs" role="navigation">
             <a class="tab-item" href="/">
                 <span class="icon icon-home"></span>
-                <span class="tab-label">Домой</span>
+                <span class="tab-label">{Домой}</span>
             </a>
             <a class="tab-item @user_active@" @user_link@ data-target="#userModal">
                 <span class="icon icon-person"></span>
-                <span class="tab-label">Кабинет</span>
+                <span class="tab-label">{Кабинет}</span>
             </a>
             <a class="tab-item @cart_active@" href="/order/" id="bar-cart">
                 <span class="icon icon-download"></span> <span class="badge badge-positive" id="mobilnum">@cart_active_num@</span>
-                <span class="tab-label">Корзина</span>
+                <span class="tab-label">{Корзина}</span>
             </a>
             <a class="tab-item" href="#" data-toggle="modal" data-target="#searchModal">
                 <span class="icon icon-search"></span>
-                <span class="tab-label">Поиск</span>
+                <span class="tab-label">{Поиск}</span>
             </a>
             <a class="tab-item non-responsive-switch" href="#" data-skin="non-responsive">
                 <span class="icon icon-pages"></span>
-                <span class="tab-label">Вид</span>
+                <span class="tab-label">{Вид}</span>
             </a>
         </nav>
         <!--/ Fixed mobile bar -->
@@ -345,6 +345,7 @@
         <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/inview.min.js"></script>
         <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery-ui.min.js"></script>
         <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.bxslider.min.js"></script>
+        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.ui.touch-punch.min.js"></script>
 
         @visualcart_lib@
         <div class="visible-lg visible-md">

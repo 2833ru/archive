@@ -5,6 +5,7 @@ $().ready(function() {
 
     $("[name='fio_new'],[name='mass[0][fio_new]']").suggestions({
         token: DADATA_TOKEN,
+        partner: "PHPSHOP",
         type: "NAME",
         params: {
             parts: ["NAME"]
@@ -22,6 +23,7 @@ $().ready(function() {
 
     $city.suggestions({
         token: token,
+        partner: "PHPSHOP",
         type: type,
         hint: false,
         bounds: "city-settlement",
@@ -31,6 +33,7 @@ $().ready(function() {
 
     $street.suggestions({
         token: token,
+        partner: "PHPSHOP",
         type: type,
         hint: false,
         bounds: "street",
@@ -41,6 +44,7 @@ $().ready(function() {
 
     $house.suggestions({
         token: token,
+        partner: "PHPSHOP",
         type: type,
         hint: false,
         bounds: "house",
@@ -56,23 +60,27 @@ $().ready(function() {
     }
     $("[name='fio_new'],[name='mass[0][fio_new]']").suggestions({
         token: DADATA_TOKEN,
+        partner: "PHPSHOP",
         type: "NAME",
         count: 5
     });
     $("[name='org_name_new'],[name='mass[0][org_name_new]']").suggestions({
         token: DADATA_TOKEN,
+        partner: "PHPSHOP",
         type: "PARTY",
         count: 5
     });
 
     $("[name='org_name_new'],[name='mass[0][org_name_new]']").suggestions({
         token: DADATA_TOKEN,
+        partner: "PHPSHOP",
         type: "PARTY",
         count: 5,
         onSelect: showSuggestion
     });
     $("[name='org_bank_new'],[name='mass[0][org_bank_new]']").suggestions({
         token: DADATA_TOKEN,
+        partner: "PHPSHOP",
         type: "BANK",
         count: 5,
         onSelect: showSuggestionBank

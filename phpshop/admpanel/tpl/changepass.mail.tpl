@@ -128,10 +128,10 @@
 
                             <tr bgcolor="#eaeaea">
                                 <td >
-                                    <h2>Здравствуйте, @user_name@!</h2>
+                                    <h2>{Здравствуйте}, @user_name@!</h2>
 
                                     <p>
-                                        Ваш логин @login@, пароль @password@.
+                                        {Ваш логин} @login@, {пароль} @password@.
                                     </p>
 
                                 </td>

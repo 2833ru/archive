@@ -5,7 +5,7 @@ $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['order_status']);
 
 // Стартовый вид
 function actionStart() {
-    global $PHPShopGUI, $PHPShopModules,$PHPShopSystem;
+    global $PHPShopGUI, $PHPShopModules,$PHPShopSystem,$TitlePage;
 
     // Начальные данные
     $data['name'] = 'Новый статус';
@@ -17,11 +17,11 @@ function actionStart() {
     $PHPShopGUI->addCSSFiles('./css/bootstrap-colorpicker.min.css');
     $PHPShopGUI->addJSFiles('./js/bootstrap-colorpicker.min.js');
     $PHPShopGUI->field_col = 2;
-    $PHPShopGUI->setActionPanel(__("Создание Статуса"), false, array('Создать и редактировать', 'Сохранить и закрыть'));
+    $PHPShopGUI->setActionPanel($TitlePage, false, array('Создать и редактировать', 'Сохранить и закрыть'));
 
 
     // Содержание закладки 1
-    $Tab1 = $PHPShopGUI->setField("Название:", $PHPShopGUI->setInput("text", "name_new", $data['name'], null, 500));
+    $Tab1 = $PHPShopGUI->setField("Название", $PHPShopGUI->setInput("text", "name_new", $data['name'], null, 500));
 
 
     $Tab1.=$PHPShopGUI->setField('Цвет', '<div class="input-group color" style="width:200px">
@@ -39,7 +39,7 @@ function actionStart() {
     $oFCKeditor->Height = '350';
     $oFCKeditor->Value = $data['mail_message'];
     
-    $Tab1.=$PHPShopGUI->setField("Текст письма:", $oFCKeditor->AddGUI() . $PHPShopGUI->setHelp('Переменные: <code>@ouid@</code> - номер заказа, <code>@date@</code> - дата заказа, <code>@status@</code> - новый статус заказа, <code>@fio@</code> - имя покупателя, <code>@sum@</code> - стоимость заказа'));
+    $Tab1.=$PHPShopGUI->setField("Текст письма:", $oFCKeditor->AddGUI() . $PHPShopGUI->setHelp('Переменные: <code>@ouid@</code> - номер заказа, <code>@date@</code> - дата заказа, <code>@status@</code> - новый статус заказа, <code>@fio@</code> - имя покупателя, <code>@sum@</code> - стоимость заказа, <code>@manager@</code> - примечание'));
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);

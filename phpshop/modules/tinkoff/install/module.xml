@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.0</version>
+    <version>2.1</version>
     <name>Tinkoff</name>
     <description>Прием оплат через Tinkoff.</description>
     <category>payment</category>
     <faqlink>http://faq.phpshop.ru/page/tinkoff.html</faqlink>
-    <status>new</status>
+    <status>update</status>
     <adminmenu>
         <title>Прием оплат через Tinkoff</title>
         <capability>true</capability>

@@ -1,7 +1,7 @@
 <!doctype html>
 <HTML>
     <HEAD>
-        <title>Квитанция Сбербанка</title>
+        <title>{Квитанция Сбербанка}</title>
         <meta name="robots" content="noindex, nofollow">
         <meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
         <STYLE TYPE="text/css">
@@ -128,8 +128,8 @@
     <BODY>
         <p align="right" class="nonprint">
             @comment_start@
-            <button onclick="html2pdf(document.getElementById('content'), {margin: 2, filename: 'Квитанция Сбербанка №@ouid@.pdf',html2canvas: {dpi: 192,letterRendering: true},jsPDF: {orientation: 'landscape'}});">Сохранить</button> @comment_end@
-            <button onclick="window.print();">Распечатать</button> 
+            <button onclick="html2pdf(document.getElementById('content'), {margin: 2, filename: 'Квитанция Сбербанка №@ouid@.pdf',html2canvas: {dpi: 192,letterRendering: true},jsPDF: {orientation: 'landscape'}});">{Сохранить}</button> @comment_end@
+            <button onclick="window.print();">{Распечатать}</button> 
         <hr>
         </p>
         <div id="content">
@@ -148,7 +148,7 @@
                 <COL WIDTH="63">
                 <COL WIDTH="108">
                 <TR CLASS=R0>
-                    <TD CLASS=R0C0>ИЗВЕЩЕНИЕ</TD>
+                    <TD CLASS=R0C0>{ИЗВЕЩЕНИЕ}</TD>
                     <TD CLASS=R0C1>&nbsp;</TD>
                     <TD CLASS=R0C2 COLSPAN=11>@org_name@</TD>
                     <TD>&nbsp;</TD>
@@ -156,7 +156,7 @@
                 <TR CLASS=R1>
                     <TD CLASS=R1C0>&nbsp;</TD>
                     <TD CLASS=R1C1>&nbsp;</TD>
-                    <TD CLASS=R1C2 COLSPAN=11>(наименование получателя платежа) </TD>
+                    <TD CLASS=R1C2 COLSPAN=11>({наименование получателя платежа}) </TD>
                     <TD>&nbsp;</TD>
                 </TR>
                 <TR CLASS=R0>
@@ -171,10 +171,10 @@
                 <TR CLASS=R1>
                     <TD CLASS=R1C0>&nbsp;</TD>
                     <TD CLASS=R1C1>&nbsp;</TD>
-                    <TD CLASS=R3C2 COLSPAN=4>            (ИНН получателя платежа)</TD>
+                    <TD CLASS=R3C2 COLSPAN=4>            ({ИНН получателя платежа})</TD>
                     <TD CLASS=R3C6>&nbsp;</TD>
                     <TD CLASS=R3C6>&nbsp;</TD>
-                    <TD CLASS=R3C8 COLSPAN=5>(номер счета получателя платежа)</TD>
+                    <TD CLASS=R3C8 COLSPAN=5>({номер счета получателя платежа})</TD>
                     <TD>&nbsp;</TD>
                 </TR>
                 <TR CLASS=R0>
@@ -189,17 +189,17 @@
                 <TR CLASS=R1>
                     <TD CLASS=R1C0>&nbsp;</TD>
                     <TD CLASS=R1C1>&nbsp;</TD>
-                    <TD CLASS=R5C2>БИК</TD>
+                    <TD CLASS=R5C2>{БИК}</TD>
                     <TD CLASS=R5C3 COLSPAN=3>@org_bic@</TD>
                     <TD CLASS=R5C6>&nbsp;</TD>
                     <TD CLASS=R3C6>&nbsp;</TD>
-                    <TD CLASS=R3C8 COLSPAN=5>(номер кор./с банка получателя платежа)</TD>
+                    <TD CLASS=R3C8 COLSPAN=5>({номер кор./с банка получателя платежа})</TD>
                     <TD>&nbsp;</TD>
                 </TR>
                 <TR CLASS=R6>
                     <TD CLASS=R6C0>&nbsp;</TD>
                     <TD CLASS=R6C1>&nbsp;</TD>
-                    <TD CLASS=R6C2 COLSPAN=2>Плательщик</TD>
+                    <TD CLASS=R6C2 COLSPAN=2>{Плательщик}</TD>
                     <TD CLASS=R6C4>&nbsp;</TD>
                     <TD CLASS=R6C4>&nbsp;</TD>
                     <TD CLASS=R6C4>&nbsp;</TD>
@@ -214,17 +214,17 @@
                 <TR>
                     <TD CLASS=R7C0>&nbsp;</TD>
                     <TD CLASS=R7C1>&nbsp;</TD>
-                    <TD CLASS=R7C2 COLSPAN=3>Назначение платежа</TD>
-                    <TD CLASS=R7C5 COLSPAN=8>Оплата заказа № @ouid@ от @date@.</TD>
+                    <TD CLASS=R7C2 COLSPAN=3>{Назначение платежа}</TD>
+                    <TD CLASS=R7C5 COLSPAN=8>{Оплата заказа} № @ouid@ от @date@.</TD>
                     <TD>&nbsp;</TD>
                 </TR>
                 <TR CLASS=R8>
                     <TD CLASS=R8C0>&nbsp;</TD>
                     <TD CLASS=R8C1>&nbsp;</TD>
                     <TD CLASS=R8C2 COLSPAN=2>&nbsp;</TD>
-                    <TD CLASS=R8C4 COLSPAN=4>   Сумма платежа</TD>
+                    <TD CLASS=R8C4 COLSPAN=4>   {Сумма платежа}</TD>
                     <TD CLASS=R8C8>@total@</TD>
-                    <TD CLASS=R8C9 COLSPAN=2>руб.коп.</TD>
+                    <TD CLASS=R8C9 COLSPAN=2>{руб.коп.}</TD>
                     <TD CLASS=R8C11>&nbsp;</TD>
                     <TD CLASS=R8C12>&nbsp;</TD>
                     <TD>&nbsp;</TD>
@@ -233,9 +233,9 @@
                     <TD CLASS=R6C2>&nbsp;</TD>
                     <TD CLASS=R6C1>&nbsp;</TD>
                     <TD CLASS=R9C2 COLSPAN=2>&nbsp;</TD>
-                    <TD CLASS=R9C4 COLSPAN=4>   Итого</TD>
+                    <TD CLASS=R9C4 COLSPAN=4>   {Итого}</TD>
                     <TD CLASS=R9C8>@total@</TD>
-                    <TD CLASS=R9C4 COLSPAN=2>руб.коп.</TD>
+                    <TD CLASS=R9C4 COLSPAN=2>{руб.коп.}</TD>
                     <TD CLASS=R9C11>&nbsp;</TD>
                     <TD CLASS=R9C12>&nbsp;</TD>
                     <TD>&nbsp;</TD>
@@ -243,19 +243,19 @@
                 <TR CLASS=R1>
                     <TD CLASS=R10C0>&nbsp;</TD>
                     <TD CLASS=R10C1>&nbsp;</TD>
-                    <TD CLASS=R10C2 COLSPAN=11>Плательщик  __________________  (подпись)  "______"  _________________  20____г.</TD>
+                    <TD CLASS=R10C2 COLSPAN=11>{Плательщик}  __________________  ({подпись})  "______"  _________________  20____г.</TD>
                     <TD>&nbsp;</TD>
                 </TR>
                 <TR CLASS=R1>
                     <TD CLASS=R11C0>&nbsp;</TD>
                     <TD CLASS=R1C1>&nbsp;</TD>
-                    <TD CLASS=R11C2 COLSPAN=11>С условием приема банком суммы, указанной в платежном документе, ознакомлен и</TD>
+                    <TD CLASS=R11C2 COLSPAN=11>{С условием приема банком суммы, указанной в платежном документе, ознакомлен и}</TD>
                     <TD>&nbsp;</TD>
                 </TR>
                 <TR CLASS=R1>
                     <TD CLASS=R12C0>Кассир</TD>
                     <TD CLASS=R12C1>&nbsp;</TD>
-                    <TD CLASS=R12C2 COLSPAN=2>согласен.</TD>
+                    <TD CLASS=R12C2 COLSPAN=2>{согласен}.</TD>
                     <TD CLASS=R12C4>&nbsp;</TD>
                     <TD CLASS=R12C4>&nbsp;</TD>
                     <TD CLASS=R12C4>&nbsp;</TD>
@@ -267,8 +267,8 @@
                     <TD CLASS=R13C0>&nbsp;</TD>
                     <TD CLASS=R13C1>&nbsp;</TD>
                     <TD CLASS=R13C2 COLSPAN=2>&nbsp;</TD>
-                    <TD CLASS=R13C4 COLSPAN=4>(подпись плательщика)</TD>
-                    <TD CLASS=R13C8 COLSPAN=3>                                     (Дата)</TD>
+                    <TD CLASS=R13C4 COLSPAN=4>({подпись плательщика})</TD>
+                    <TD CLASS=R13C8 COLSPAN=3>                                     ({Дата})</TD>
                     <TD CLASS=R13C11>&nbsp;</TD>
                     <TD CLASS=R13C11>&nbsp;</TD>
                     <TD>&nbsp;</TD>
@@ -280,9 +280,9 @@
                     <TD>&nbsp;</TD>
                 </TR>
                 <TR CLASS=R0>
-                    <TD CLASS=R15C0>КВИТАНЦИЯ</TD>
+                    <TD CLASS=R15C0>{КВИТАНЦИЯ}</TD>
                     <TD CLASS=R0C1>&nbsp;</TD>
-                    <TD CLASS=R15C2 COLSPAN=11>(наименование получателя платежа) </TD>
+                    <TD CLASS=R15C2 COLSPAN=11>({наименование получателя платежа}) </TD>
                     <TD>&nbsp;</TD>
                 </TR>
                 <TR CLASS=R1>
@@ -297,10 +297,10 @@
                 <TR CLASS=R0>
                     <TD CLASS=R4C0>&nbsp;</TD>
                     <TD CLASS=R0C1>&nbsp;</TD>
-                    <TD CLASS=R17C2 COLSPAN=4>            (ИНН получателя платежа)</TD>
+                    <TD CLASS=R17C2 COLSPAN=4>            ({ИНН получателя платежа})</TD>
                     <TD CLASS=R17C6>&nbsp;</TD>
                     <TD CLASS=R17C6>&nbsp;</TD>
-                    <TD CLASS=R17C8 COLSPAN=5>(номер счета получателя платежа)</TD>
+                    <TD CLASS=R17C8 COLSPAN=5>({номер счета получателя платежа})</TD>
                     <TD>&nbsp;</TD>
                 </TR>
                 <TR CLASS=R1>
@@ -315,17 +315,17 @@
                 <TR CLASS=R0>
                     <TD CLASS=R4C0>&nbsp;</TD>
                     <TD CLASS=R0C1>&nbsp;</TD>
-                    <TD CLASS=R19C2>БИК</TD>
+                    <TD CLASS=R19C2>{БИК}</TD>
                     <TD CLASS=R19C3 COLSPAN=3>@org_bic@</TD>
                     <TD CLASS=R19C6>&nbsp;</TD>
                     <TD CLASS=R19C7>&nbsp;</TD>
-                    <TD CLASS=R17C8 COLSPAN=5>(номер кор./с банка получателя платежа)</TD>
+                    <TD CLASS=R17C8 COLSPAN=5>({номер кор./с банка получателя платежа})</TD>
                     <TD>&nbsp;</TD>
                 </TR>
                 <TR CLASS=R1>
                     <TD CLASS=R1C0>&nbsp;</TD>
                     <TD CLASS=R1C1>&nbsp;</TD>
-                    <TD CLASS=R12C0 COLSPAN=2>Плательщик</TD>
+                    <TD CLASS=R12C0 COLSPAN=2>{Плательщик}</TD>
                     <TD CLASS=R20C4>&nbsp;</TD>
                     <TD CLASS=R20C4>&nbsp;</TD>
                     <TD CLASS=R20C4>&nbsp;</TD>
@@ -340,17 +340,17 @@
                 <TR>
                     <TD CLASS=R7C0>&nbsp;</TD>
                     <TD CLASS=R7C1>&nbsp;</TD>
-                    <TD CLASS=R7C2 COLSPAN=3>Назначение платежа</TD>
-                    <TD CLASS=R7C5 COLSPAN=8>Оплата заказа № @ouid@ от @date@</TD>
+                    <TD CLASS=R7C2 COLSPAN=3>{Назначение платежа}</TD>
+                    <TD CLASS=R7C5 COLSPAN=8>{Оплата заказа} № @ouid@ от @date@</TD>
                     <TD>&nbsp;</TD>
                 </TR>
                 <TR CLASS=R0>
                     <TD CLASS=R4C0>&nbsp;</TD>
                     <TD CLASS=R0C1>&nbsp;</TD>
                     <TD CLASS=R22C2 COLSPAN=2>&nbsp;</TD>
-                    <TD CLASS=R22C4 COLSPAN=4>   Сумма платежа</TD>
+                    <TD CLASS=R22C4 COLSPAN=4>   {Сумма платежа}</TD>
                     <TD CLASS=R22C8>@total@</TD>
-                    <TD CLASS=R22C9 COLSPAN=2>руб.коп.</TD>
+                    <TD CLASS=R22C9 COLSPAN=2>{руб.коп.}</TD>
                     <TD CLASS=R22C11>&nbsp;</TD>
                     <TD CLASS=R22C12>&nbsp;</TD>
                     <TD>&nbsp;</TD>
@@ -359,9 +359,9 @@
                     <TD CLASS=R4C0>&nbsp;</TD>
                     <TD CLASS=R0C1>&nbsp;</TD>
                     <TD CLASS=R22C2 COLSPAN=2>&nbsp;</TD>
-                    <TD CLASS=R22C4 COLSPAN=4>   Итого</TD>
+                    <TD CLASS=R22C4 COLSPAN=4>   {Итого}</TD>
                     <TD CLASS=R23C8>@total@</TD>
-                    <TD CLASS=R22C4 COLSPAN=2>руб.коп.</TD>
+                    <TD CLASS=R22C4 COLSPAN=2>{руб.коп.}</TD>
                     <TD CLASS=R23C11>&nbsp;</TD>
                     <TD CLASS=R22C12>&nbsp;</TD>
                     <TD>&nbsp;</TD>
@@ -369,19 +369,19 @@
                 <TR CLASS=R1>
                     <TD CLASS=R16C0>&nbsp;</TD>
                     <TD CLASS=R10C1>&nbsp;</TD>
-                    <TD CLASS=R10C2 COLSPAN=11>Плательщик  __________________  (подпись)  "______"  _________________  20____г.</TD>
+                    <TD CLASS=R10C2 COLSPAN=11>{Плательщик}  __________________  ({подпись})  "______"  _________________  20____г.</TD>
                     <TD>&nbsp;</TD>
                 </TR>
                 <TR CLASS=R0>
                     <TD CLASS=R4C0>&nbsp;</TD>
                     <TD CLASS=R0C1>&nbsp;</TD>
-                    <TD CLASS=R25C2 COLSPAN=11>С условием приема банком суммы, указанной в платежном документе, ознакомлен и</TD>
+                    <TD CLASS=R25C2 COLSPAN=11>{С условием приема банком суммы, указанной в платежном документе, ознакомлен и}</TD>
                     <TD>&nbsp;</TD>
                 </TR>
                 <TR CLASS=R26>
                     <TD CLASS=R26C0>Кассир</TD>
                     <TD CLASS=R26C1>&nbsp;</TD>
-                    <TD CLASS=R26C2 COLSPAN=2>согласен.</TD>
+                    <TD CLASS=R26C2 COLSPAN=2>{согласен}.</TD>
                     <TD CLASS=R26C4>&nbsp;</TD>
                     <TD CLASS=R26C4>&nbsp;</TD>
                     <TD CLASS=R26C4>&nbsp;</TD>
@@ -393,8 +393,8 @@
                     <TD CLASS=R27C0>&nbsp;</TD>
                     <TD CLASS=R27C1>&nbsp;</TD>
                     <TD CLASS=R27C2 COLSPAN=2>&nbsp;</TD>
-                    <TD CLASS=R27C4 COLSPAN=4>(подпись плательщика)</TD>
-                    <TD CLASS=R27C8 COLSPAN=3>                                     (Дата)</TD>
+                    <TD CLASS=R27C4 COLSPAN=4>({подпись плательщика})</TD>
+                    <TD CLASS=R27C8 COLSPAN=3>                                     ({Дата})</TD>
                     <TD CLASS=R27C11>&nbsp;</TD>
                     <TD CLASS=R27C11>&nbsp;</TD>
                     <TD>&nbsp;</TD>

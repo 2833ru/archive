@@ -62,7 +62,7 @@
                                     <a class="hidden-xs hidden-sm hidden-md link" href="/">
                                         <i class="fa fa-home" title="Домой"></i>
                                         <span class="hidden-sm hidden-xs">
-                                            Домой
+                                            {Домой}
                                         </span>
                                     </a>                                       
                                 </li>
@@ -70,11 +70,11 @@
                                 <li>
                                     <a class="hidden-xs hidden-sm link" href="/compare/">
                                         <i class="fa fa-plus" title="Сравнить"></i>
-                                        <span class="hidden-sm hidden-xs">Сравнить (<span id="numcompare">@numcompare@</span>)</span>
+                                        <span class="hidden-sm hidden-xs">{Сравнить} (<span id="numcompare">@numcompare@</span>)</span>
                                     </a>
                                     <a href="/compare/" class="btn btn-main btn-sm hidden-md hidden-lg">
-                                        <i class="fa fa-plus" title="Сравнить"></i>
-                                        Сравнить (<span id="numcompare">@numcompare@</span>)
+                                        <i class="fa fa-plus" title="{Сравнить}"></i>
+                                        {Сравнить} (<span id="numcompare">@numcompare@</span>)
                                     </a>
                                 </li>
                                 @usersDisp@
@@ -93,7 +93,7 @@
                     <!-- Header Links Starts -->
                     <div class="col-sm-12 col-xs-12 col-md-7 text-center header-color">
                         <div class="btn-group header-valuta-disp-wrapper">
-                            <h4><i class="fa fa-phone-square" aria-hidden="true"></i> Тел: @telNumMobile@</h4>
+                            <h4><i class="fa fa-phone-square" aria-hidden="true"></i> {Тел}: @telNumMobile@</h4>
                         </div>
                         <div class="returncall-wrapper header-links header-color">
                             @returncall@
@@ -104,9 +104,9 @@
                     <div class="col-md-3 col-lg-3  visible-md hidden-sm hidden-xs visible-lg">
                         <div id="cart" class="btn-group pull-right header-color">
                             <button id="cartlink" type="button" data-toggle="dropdown" class="btn btn-block btn-lg dropdown-toggle" data-trigger="click" data-container="body"  data-placement="bottom" data-html="true" data-url="/order/" data-content='@visualcart@'>
-                                <span class="cart-title">Корзина</span>
+                                <span class="cart-title">{Корзина}</span>
                                 <i class="fa fa-shopping-cart"></i>
-                                <span id="cart-total"><span><span id="num">@num@</span>шт.</span></span>
+                                <span id="cart-total"><span><span id="num">@num@</span>{шт.}</span></span>
                                 <i class="fa fa-caret-down"></i>
                             </button>
                             @visualcart@
@@ -136,7 +136,7 @@
                     <div class="collapse navbar-collapse navbar-cat-collapse">
                         <ul class="nav navbar-nav main-navbar-top">
                             <li class="main-navbar-top-catalog">
-                                <a href="#" id="nav-catalog-dropdown-link" class="nav-catalog-dropdown-link" aria-expanded="false">Каталог
+                                <a href="#" id="nav-catalog-dropdown-link" class="nav-catalog-dropdown-link" aria-expanded="false">{Каталог}
                                 </a>
                                 <ul class="main-navbar-list-catalog-wrapper fadeIn animated">
                                     @leftCatal@
@@ -147,7 +147,7 @@
                         </ul>
                         <form id="search_form" class="navbar-form navbar-right hidden-sm hidden-xs" action="/search/" role="search" method="post">
                             <div class="input-group">
-                                <input class="form-control input-lg" name="words" maxlength="50" id="search"  placeholder="Искать..." required="" type="search" data-trigger="manual" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true"  data-content="">
+                                <input class="form-control input-lg" name="words" maxlength="50" id="search"  placeholder="{Искать}..." required="" type="search" data-trigger="manual" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true"  data-content="">
                                 <span class="input-group-btn">
                                     <button class="btn btn-lg" type="submit">
                                         <i class="fa fa-search"></i>
@@ -169,18 +169,18 @@
             <div class="row">
                 <div class="col-md-3 visible-lg visible-md" id="sidebar-right">
                     <!-- Categories Links Starts -->
-                    <h2 class="side-heading">Категории</h2>
+                    <h2 class="side-heading">{Категории}</h2>
                     <ul class="list-group sidebar-nav">
                         @leftCatal@
                     </ul>
                     <!-- Categories Links Ends -->
-                    <h2 class="side-heading">Полезная информация</h2>
+                    <h2 class="side-heading">{Полезная информация}</h2>
                     <div class="list-group sidebar-nav">
                         @pageCatal@
                     </div>
                     @rightMenu@
                     <!-- News Starts -->
-                    <h2 class="product-head page-header news-title">Новости</h2>
+                    <h2 class="product-head page-header news-title">{Новости}</h2>
                     <div class="news-list">
                         <div class="row">
                             @miniNews@
@@ -206,7 +206,7 @@
                     <section class="products-list">
                         <div class="swiper-slider-wrapper">
                             <!-- Heading Starts -->
-                            <h2 class="product-head page-header swiper-title">Новинки</h2>
+                            <h2 class="product-head page-header swiper-title">{Новинки}</h2>
                             <!-- Heading Ends -->
                             <!-- Products Row Starts -->
                             <!-- Product Starts -->
@@ -237,7 +237,7 @@
                     <section class="products-list">
                         <div class="swiper-slider-wrapper">
                             <!-- Heading Starts -->
-                            <h2 class="product-head page-header swiper-title">Спецпредложения</h2>
+                            <h2 class="product-head page-header swiper-title">{Спецпредложения}</h2>
                             <!-- Heading Ends -->
                             <!-- Products Row Starts -->
                             <div class="swiper-container spec-main-slider">
@@ -258,15 +258,35 @@
                             <!-- Products Row Ends -->
                         </div>     
                     </section>
+                    <section class="products-list @php __hide('now_buying'); php@">
+                        <div class="swiper-slider-wrapper">
+                            <!-- Heading Starts -->
+                            <h2 class="product-head page-header swiper-title">@now_buying@</h2>
+                            <!-- Heading Ends -->
+                            <!-- Products Row Starts -->
+                            <div class="swiper-container nowBuy">
+                                <div class="swiper-wrapper">
+                                    @nowBuy@
+                                </div>
+                            </div>
+                            <div class="swiper-button-prev-block">
+                                <div class="swiper-button-prev btn-prev3">
+                                    <span class="glyphicon glyphicon-chevron-left"></span>
+                                </div>
+                            </div>
+                            <div class="swiper-button-next-block">
+                                <div class="swiper-button-next btn-next3">
+                                    <span class="glyphicon glyphicon-chevron-right"></span>
+                                </div>
+                            </div>
+                            <!-- Products Row Ends -->
+                        </div>     
+                    </section>
                     <!-- Latest Products Ends -->                    
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12">
-
-
-
-
                 </div>
             </div>
         </div>
@@ -275,7 +295,7 @@
 
         <!-- toTop -->
         <div class="visible-lg visible-md">
-            <a href="#" id="toTop"><span id="toTopHover"></span>Наверх</a>
+            <a href="#" id="toTop"><span id="toTopHover"></span>{Наверх}</a>
         </div>
         <!--/ toTop -->
 
@@ -287,7 +307,7 @@
                 <div class="container">
                     <!-- Information Links Starts -->
                     <div class="col-md-3 col-sm-4 col-xs-12">
-                        <h5>Информация</h5>
+                        <h5>{Информация}</h5>
                         <ul>
                             @topMenu@
                         </ul>
@@ -295,31 +315,31 @@
                     <!-- Information Links Ends -->
                     <!-- My Account Links Starts -->
                     <div class="col-md-3 col-sm-4 col-xs-12">
-                        <h5>Личный кабинет</h5>
+                        <h5>{Личный кабинет}</h5>
                         <ul>
                             <li><a href="/users/">@UsersLogin@</a></li>
-                            <li><a href="/users/order.html">Отследить заказ</a></li>
-                            <li><a href="/users/notice.html">Уведомления о товарах</a></li>
-                            <li><a href="/users/message.html">Связь с менеджерами</a></li>
-                            @php if($_SESSION['UsersId']) echo '<li><a href="?logout=true">Выйти</a></li>'; php@
+                            <li><a href="/users/order.html">{Отследить заказ}</a></li>
+                            <li><a href="/users/notice.html">{Уведомления о товарах}</a></li>
+                            <li><a href="/users/message.html">{Связь с менеджерами}</a></li>
+                            @php if($_SESSION['UsersId']) echo '<li><a href="?logout=true">{Выйти}</a></li>'; php@
                         </ul>
                     </div>
                     <!-- My Account Links Ends -->
                     <!-- Customer Service Links Starts -->
                     <div class="col-md-3 col-sm-4 col-xs-12">
-                        <h5>Навигация</h5>
+                        <h5>{Навигация}</h5>
                         <ul>
-                            <li><a href="/price/" title="Прайс-лист">Прайс-лист</a></li>
-                            <li><a href="/news/" title="Новости">Новости</a></li>
-                            <li><a href="/gbook/" title="Отзывы">Отзывы</a></li>
-                            <li><a href="/map/" title="Карта сайта">Карта сайта</a></li>
-                            <li><a href="/forma/" title="Форма связи">Форма связи</a></li>
+                            <li><a href="/price/" title="Прайс-лист">{Прайс-лист}</a></li>
+                            <li><a href="/news/" title="Новости">{Новости}</a></li>
+                            <li><a href="/gbook/" title="Отзывы">{Отзывы}</a></li>
+                            <li><a href="/map/" title="Карта сайта">{Карта сайта}</a></li>
+                            <li><a href="/forma/" title="Форма связи">{Форма связи}</a></li>
                         </ul>
                     </div>
                     <!-- Customer Service Links Ends -->
                     <!-- Contact Us Starts -->
                     <div class="col-md-3 col-sm-8 col-xs-12">
-                        <h5>Контакты</h5>
+                        <h5>{Контакты}</h5>
                         <ul>
                             <li class="footer-map">@streetAddress@</li>
                             <li class="footer-email">@adminMail@</li>                              
@@ -330,9 +350,9 @@
                         <div class="footer-social">
 
                             <!-- Social Button -->
-                            <a class="social-button hidden-xs hidden-sm" href="#" title="Поделится в Facebook"><i class="fa fa-facebook" aria-hidden="true"></i></a>
-                            <a class="social-button hidden-xs hidden-sm" href="#" title="Поделится в Контакте"><i class="fa fa-vk" aria-hidden="true"></i></a>
-                            <a class="social-button hidden-xs hidden-sm" href="#" title="Поделится в Одноклассники"><i class="fa fa-odnoklassniki" aria-hidden="true"></i></a>
+                            <a class="social-button hidden-xs hidden-sm" href="#" title="{Поделится в} Facebook"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                            <a class="social-button hidden-xs hidden-sm" href="#" title="{Поделится в} Контакте"><i class="fa fa-vk" aria-hidden="true"></i></a>
+                            <a class="social-button hidden-xs hidden-sm" href="#" title="{Поделится в} Одноклассники"><i class="fa fa-odnoklassniki" aria-hidden="true"></i></a>
                             <!--/ Social Button -->
                             
                         </div>
@@ -347,7 +367,7 @@
                 <!-- Container Starts -->
                 <div class="container">
                     <div class="pull-right">@button@</div>
-                    <p itemscope itemtype="http://schema.org/Organization">© <span itemprop="name">@company@</span> @year@, Тел: <span itemprop="telephone">@telNum@</span>, <span itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">Адрес: <span itemprop="streetAddress">@streetAddress@</span></span><span itemprop="email" class="hide">@adminMail@</span></p>
+                    <p itemscope itemtype="http://schema.org/Organization">© <span itemprop="name">@company@</span> @year@, {Тел}: <span itemprop="telephone">@telNum@</span>, <span itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">{Адрес}: <span itemprop="streetAddress">@streetAddress@</span></span><span itemprop="email" class="hide">@adminMail@</span></p>
                 </div>
                 <!-- Container Ends -->
             </div>
@@ -362,19 +382,19 @@
         <nav class="navbar navbar-default navbar-fixed-bottom bar bar-tab visible-xs visible-sm" role="navigation">
             <a class="tab-item active" href="/">
                 <span class="icon icon-home"></span>
-                <span class="tab-label">Домой</span>
+                <span class="tab-label">{Домой}</span>
             </a>
             <a class="tab-item @user_active@" @user_link@ data-target="#userModal">
                 <span class="icon icon-person"></span>
-                <span class="tab-label">Кабинет</span>
+                <span class="tab-label">{Кабинет}</span>
             </a>
             <a class="tab-item @cart_active@" href="/order/" id="bar-cart">
                 <span class="icon icon-download"></span> <span class="badge badge-positive" id="mobilnum">@cart_active_num@</span>
-                <span class="tab-label">Корзина</span>
+                <span class="tab-label">{Корзина}</span>
             </a>
             <a class="tab-item" href="#" data-toggle="modal" data-target="#searchModal">
                 <span class="icon icon-search"></span>
-                <span class="tab-label">Поиск</span>
+                <span class="tab-label">{Поиск}</span>
             </a>
         </nav>
         <!--/ Fixed mobile bar -->
@@ -393,7 +413,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">x</span><span class="sr-only">Close</span></button>
-                        <h4 class="modal-title">Авторизация</h4>
+                        <h4 class="modal-title">{Авторизация}</h4>
                         <span id="usersError" class="hide">@usersError@</span>
                     </div>
                     <form role="form" method="post" name="user_forma">
@@ -405,20 +425,20 @@
                             </div>
 
                             <div class="form-group">
-                                <label>Пароль</label>
-                                <input type="password" name="password" class="form-control" placeholder="Пароль..." required="">
+                                <label>{Пароль}</label>
+                                <input type="password" name="password" class="form-control" placeholder="{Пароль}..." required="">
                                 <span class="glyphicon glyphicon-remove form-control-feedback hide" aria-hidden="true"></span>
                             </div>
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" value="1" name="safe_users" @UserChecked@> Запомнить
+                                    <input type="checkbox" value="1" name="safe_users" @UserChecked@> {Запомнить}
                                 </label>
                             </div>
 
                             @facebookAuth@ @twitterAuth@
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary pull-left">Войти</button>
+                            <button type="submit" class="btn btn-primary pull-left">{Войти}</button>
                             <span class="pull-right"><a href="/users/sendpassword.html" class="btn btn-default">Забыли?</a>
                             </span>
                             <input type="hidden" value="1" name="user_enter">
@@ -435,12 +455,12 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">x</span><span class="sr-only">Close</span></button>
-                        <h4 class="modal-title">Поиск</h4>
+                        <h4 class="modal-title">{Поиск}</h4>
                     </div>
                     <div class="modal-body">
                         <form  action="/search/" role="search" method="post">
                             <div class="input-group">
-                                <input name="words" maxlength="50" class="form-control" placeholder="Искать.." required="" type="search">
+                                <input name="words" maxlength="50" class="form-control" placeholder="{Искать}.." required="" type="search">
                                 <span class="input-group-btn">
                                     <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>
                                 </span>
@@ -452,8 +472,6 @@
             </div>
         </div>
         <!--/ Модальное окно мобильного поиска -->
-
-
 
         <!-- JQuery Plugins  -->
         <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/bootstrap.min.js"></script>

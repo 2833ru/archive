@@ -26,13 +26,14 @@ class PHPShopForma extends PHPShopCore {
     function index() {
 
         // Мета
-        $this->title = "Форма связи - " . $this->PHPShopSystem->getValue("name");
+        $title = __('Форма связи');
+        $this->title = $title . $this->PHPShopSystem->getValue("name");
 
         // Определяем переменные
-        $this->set('pageTitle', 'Форма связи');
+        $this->set('pageTitle', $title);
 
         // Навигация хлебные крошки
-        $this->navigation(null, 'Форма связи');
+        $this->navigation(null, $title);
 
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__);
@@ -74,7 +75,7 @@ class PHPShopForma extends PHPShopCore {
             $this->send();
         }
         else
-            $this->set('Error', "Ошибка ключа, повторите попытку ввода ключа");
+            $this->set('Error', __("Ошибка ключа, повторите попытку ввода ключа"));
         
         $this->index();
     }
@@ -93,9 +94,9 @@ class PHPShopForma extends PHPShopCore {
 
         if (!empty($_POST['tema']) and !empty($_POST['name']) and !empty($_POST['content'])) {
             $subject = $_POST['tema'] . " - " . $this->PHPShopSystem->getValue('name');
-            $message = "Вам пришло сообщение с сайта " . $this->PHPShopSystem->getValue('name') . "
+            $message = "{Вам пришло сообщение с сайта} " . $this->PHPShopSystem->getValue('name') . "
 
-Данные о пользователе:
+{Данные о пользователе}:
 ----------------------
 ";
             unset($_POST['g-recaptcha-response']);
@@ -108,15 +109,15 @@ class PHPShopForma extends PHPShopCore {
             }
 
             $message.="
-Дата: " . date("d-m-y H:s a") . "
+{Дата}: " . date("d-m-y H:s a") . "
 IP: " . $_SERVER['REMOTE_ADDR'];
 
-            new PHPShopMail($this->PHPShopSystem->getEmail(), $this->PHPShopSystem->getEmail(), $subject, $message, false, false, array('replyto' => $_POST['mail']));
+            new PHPShopMail($this->PHPShopSystem->getEmail(), $this->PHPShopSystem->getEmail(), $subject, Parser($message), false, false, array('replyto' => $_POST['mail']));
 
-            $this->set('Error', "Сообщение успешно отправлено");
+            $this->set('Error', __("Сообщение успешно отправлено"));
         }
         else
-            $this->set('Error', "Не заполнены обязательные поля");
+            $this->set('Error', __("Не заполнены обязательные поля"));
     }
 }
 ?>

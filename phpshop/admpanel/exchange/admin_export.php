@@ -94,7 +94,7 @@ $key_name = array(
     'num_row' => 'Товаров в длину',
     'num_cow' => 'Товаров на странице',
     'count' => 'Содержит товаров',
-    'cat_seo_name'=>'SEO ссылка',
+    'cat_seo_name'=>'SEO ссылка каталога',
     'sum'=>'Сумма',
     'servers'=>'Витрины'
     
@@ -379,7 +379,7 @@ function actionStart() {
         $select_action = ' товаров';
         $TitlePage.=$select_action;
         $select_path = 'catalog';
-        $PHPShopGUI->_CODE = '<p></p><p class="text-muted">Ниже приведен список полей, которые могут быть экспортированы. Выделенные поля являются обязательными для последующей загрузки файла, остальные поля можно добавить или убрать из блока доступных полей по желанию.</p><p><kbd>Id</kbd> или <kbd>Артикул</kbd></p>';
+        $PHPShopGUI->_CODE = '<p></p><p class="text-muted">'.__('Ниже приведен список полей, которые могут быть экспортированы. Выделенные поля являются обязательными для последующей загрузки файла, остальные поля можно добавить или убрать из блока доступных полей по желанию.</p><p><kbd>Id</kbd> или <kbd>Артикул</kbd>').'</p>';
     }
 
     // Каталоги
@@ -388,7 +388,7 @@ function actionStart() {
         $class = 'hide';
         $select_action = ' каталогов';
         $TitlePage.=$select_action;
-        $PHPShopGUI->_CODE = '<p></p><p class="text-muted">Ниже приведен список полей, которые могут быть экспортированы. Выделенные поля являются обязательными для последующей загрузки файла, остальные поля можно добавить или убрать из блока доступных полей по желанию.</p><p><kbd>Id</kbd></p>';
+        $PHPShopGUI->_CODE = '<p></p><p class="text-muted">'.__('Ниже приведен список полей, которые могут быть экспортированы. Выделенные поля являются обязательными для последующей загрузки файла, остальные поля можно добавить или убрать из блока доступных полей по желанию').'.</p><p><kbd>Id</kbd></p>';
     }
 
     // Пользователи
@@ -397,23 +397,23 @@ function actionStart() {
         $select_path = 'shopusers';
         $select_action = ' пользователей';
         $TitlePage.=$select_action;
-        $PHPShopGUI->_CODE = '<p></p><p class="text-muted">Ниже приведен список полей, которые могут быть экспортированы. Выделенные поля являются обязательными для последующей загрузки файла, остальные поля можно добавить или убрать из блока доступных полей по желанию.</p><p><kbd>Id</kbd> или <kbd>Логин</kbd></p>';
+        $PHPShopGUI->_CODE = '<p></p><p class="text-muted">'.__('Ниже приведен список полей, которые могут быть экспортированы. Выделенные поля являются обязательными для последующей загрузки файла, остальные поля можно добавить или убрать из блока доступных полей по желанию').'.</p><p><kbd>Id</kbd> или <kbd>Логин</kbd></p>';
     }
 
     // Заказы
     elseif ($subpath[2] == 'order') {
         $class = 'hide';
         $select_path = $subpath[2];
-        $PHPShopGUI->_CODE = '<p></p><p class="text-muted">Ниже приведен список полей, которые могут быть экспортированы. Выделенные поля являются обязательными для последующей загрузки файла, остальные поля можно добавить или убрать из блока доступных полей по желанию.</p><p><kbd>Id</kbd></p>';
+        $PHPShopGUI->_CODE = '<p></p><p class="text-muted">'.__('Ниже приведен список полей, которые могут быть экспортированы. Выделенные поля являются обязательными для последующей загрузки файла, остальные поля можно добавить или убрать из блока доступных полей по желанию').'.</p><p><kbd>Id</kbd></p>';
     }
 
 
     $PHPShopGUI->_CODE.= '
     <table width="100%">
         <tr>
-        <td class="text-center" width="48%"><label for="pattern_default">Экспортируемые поля</label></td>
+        <td class="text-center" width="48%"><label for="pattern_default">'.__('Экспортируемые поля').'</label></td>
         <td> </td>
-        <td class="text-center"><label for="pattern_more">Доступные поля</label></td>
+        <td class="text-center"><label for="pattern_more">'.__('Доступные поля').'</label></td>
         </tr>
         <tr>
         <td>
@@ -421,10 +421,10 @@ function actionStart() {
              ' . $sel_left . '                                 
         </select>
         </td>
-        <td class="text-center"><a class="btn btn-default btn-sm" href="#" id="send-default" data-toggle="tooltip" data-placement="top" title="Добавить поле"><span class="glyphicon glyphicon-chevron-left"></span></a><br><br>
-        <a class="btn btn-default btn-sm" id="send-more" href="#" data-toggle="tooltip" data-placement="top" title="Убрать поле"><span class="glyphicon glyphicon-chevron-right"></span></a><br><br>
-<a class="btn btn-default btn-sm" id="send-all" href="#" data-toggle="tooltip" data-placement="top" title="Выбрать все поля"><span class="glyphicon glyphicon-backward"></span></a><br><br>
-<a class="btn btn-default btn-sm" id="remove-all" href="#" data-toggle="tooltip" data-placement="top" title="Удалить все поля"><span class="glyphicon glyphicon-forward"></span></a></td>
+        <td class="text-center"><a class="btn btn-default btn-sm" href="#" id="send-default" data-toggle="tooltip" data-placement="top" title="'.__('Добавить поле').'"><span class="glyphicon glyphicon-chevron-left"></span></a><br><br>
+        <a class="btn btn-default btn-sm" id="send-more" href="#" data-toggle="tooltip" data-placement="top" title="'.__('Убрать поле').'"><span class="glyphicon glyphicon-chevron-right"></span></a><br><br>
+<a class="btn btn-default btn-sm" id="send-all" href="#" data-toggle="tooltip" data-placement="top" title="'.__('Выбрать все поля').'"><span class="glyphicon glyphicon-backward"></span></a><br><br>
+<a class="btn btn-default btn-sm" id="remove-all" href="#" data-toggle="tooltip" data-placement="top" title="'.__('Удалить все поля').'"><span class="glyphicon glyphicon-forward"></span></a></td>
         <td width="48%">
         <select id="pattern_more" style="height:200px" multiple class="form-control">
              ' . $sel_right . '                                    
@@ -443,7 +443,7 @@ function actionStart() {
     $delim_sortvalue[] = array('$', '$', '');
     $delim_sortvalue[] = array('|', '|', '');
 
-    $PHPShopGUI->_CODE.=$PHPShopGUI->setCollapse('Настройки', $PHPShopGUI->setField('CSV-разделитель', $PHPShopGUI->setSelect('export_delim', $delim_value, 150)) .
+    $PHPShopGUI->_CODE.=$PHPShopGUI->setCollapse('Настройки', $PHPShopGUI->setField('CSV-разделитель', $PHPShopGUI->setSelect('export_delim', $delim_value, 150,true)) .
             $PHPShopGUI->setField('Разделитель для характеристик', $PHPShopGUI->setSelect('export_sortdelim', $delim_sortvalue, 150), false, false, $class) .
             $PHPShopGUI->setField('GZIP сжатие', $PHPShopGUI->setCheckbox('export_gzip', 1, 'Включить', 0), 1, 'Сокращает размер создаваемого файла') .
             $PHPShopGUI->setField('Лимит строк', $PHPShopGUI->setInputText(null, 'export_limit', '0,10000', 150), 1, 'Запись c 1 по 10000')
@@ -471,10 +471,10 @@ function actionStart() {
             $select_path = $_GET['return'];
 
         foreach ($_SESSION['select'][$select_action_path] as $val)
-            $select_message = '<span class="label label-default">' . count($_SESSION['select'][$select_action_path]) . '</span> ' . $select_action . ' выбрано<hr><a href="?path=' . $select_path . '""><span class="glyphicon glyphicon-ok"></span> Изменить интервал</a><br><a href="#" class="text-danger select-remove"><span class="glyphicon glyphicon-remove"></span> Удалить диапазон</a>';
+            $select_message = '<span class="label label-default">' . count($_SESSION['select'][$select_action_path]) . '</span> ' . $select_action . ' '.__('выбрано').'<hr><a href="?path=' . $select_path . '""><span class="glyphicon glyphicon-ok"></span> '.__('Изменить интервал').'</a><br><a href="#" class="text-danger select-remove"><span class="glyphicon glyphicon-remove"></span> '.__('Удалить диапазон').'</a>';
     }
     else
-        $select_message = '<p class="text-muted">Вы можете выбрать конкретные объекты для экспорта, отметив их галочками и выбрав в меню <span class="glyphicon glyphicon-cog"></span><span class="caret"></span> <em>"Экспортировать выбранные"</em>. По умолчанию будут экспортированы все позиции. <a href="?path=' . $select_path . '"><span class="glyphicon glyphicon-share-alt"></span> Выбрать</a></p>';
+        $select_message = '<p class="text-muted">'.__('Вы можете выбрать конкретные объекты для экспорта, отметив их галочками и выбрав в меню <span class="glyphicon glyphicon-cog"></span><span class="caret"></span> <em>"Экспортировать выбранные"</em>. По умолчанию будут экспортированы все позиции').'. <a href="?path=' . $select_path . '"><span class="glyphicon glyphicon-share-alt"></span> '.__('Выбрать').'</a></p>';
 
     $sidebarleft[] = array('title' => 'Тип данных', 'content' => $PHPShopGUI->loadLib('tab_menu', false, './exchange/'));
 

@@ -20,7 +20,7 @@ function tab_base($data) {
     $i = 1;
     $count = 0;
     $data_pic = xml2array($skin_base_path . '/commerce.php', "template", true);
-    $title = '<p class="text-muted hidden-xs data-row">Вы можете приобрести любой платный шаблон из представленных здесь. Все платные шаблоны сверстаны в современном стандарте HTML5 и полностью адаптивны для мобильных устройств. Вы можете установить ознакомительную версию платного шаблона и использовать ее 30 дней. По истечению ознакомительного режима, шаблон перейдет в режим ограниченного функционала. После покупки шаблона выдается персональный ключ для использования дизайна на вашем сайте. Для каждого нового домена требуется приобретать отдельный ключ шаблона.</p>';
+    $title = '<p class="text-muted hidden-xs data-row">'.__('Вы можете приобрести любой платный шаблон из представленных здесь. Все платные шаблоны сверстаны в современном стандарте HTML5 и полностью адаптивны для мобильных устройств. Вы можете установить ознакомительную версию платного шаблона и использовать ее 30 дней. По истечению ознакомительного режима, шаблон перейдет в режим ограниченного функционала. После покупки шаблона выдается персональный ключ для использования дизайна на вашем сайте. Для каждого нового домена требуется приобретать отдельный ключ шаблона').'.</p>';
 
     // Платные шаблоны
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['templates_key']);
@@ -81,12 +81,12 @@ function tab_base($data) {
                         
 </div>
                      <div class="text-center panel-footer">
-                     <a class="btn btn-sm btn-default active ' . $active . '" data-toggle="tooltip" data-placement="top" title="' . __('Ключ: ') . $template_com[$row['name']]['key'] . '"><span class="glyphicon glyphicon-ok"></span> Активирован</a>
+                     <a class="btn btn-sm btn-default active ' . $active . '" data-toggle="tooltip" data-placement="top" title="' . __('Ключ: ') . $template_com[$row['name']]['key'] . '"><span class="glyphicon glyphicon-ok"></span> ' . __('Активирован').'</a>
                         <div class="btn-group" role="group" aria-label="...">
-                        <a class="btn btn-sm btn-primary ' . $buy . '" data-toggle="tooltip" data-placement="top" title="' . __('Купить лицензию') . '" href="http://www.phpshop.ru/market/?F=' . getPayLink($row['price'], $row['name']) . '" target="_blank">Купить ' . $row['price'] . ' <span class="rubznak hidden-xs">p</span></a>
+                        <a class="btn btn-sm btn-primary ' . $buy . '" data-toggle="tooltip" data-placement="top" title="' . __('Купить лицензию') . '" href="http://www.phpshop.ru/market/?F=' . getPayLink($row['price'], $row['name']) . '" target="_blank">' . __('Купить').' ' . $row['price'] . ' <span class="rubznak hidden-xs">p</span></a>
                               <a class="btn btn-sm btn-default ' . $trial . '" data-toggle="tooltip" data-placement="top" title="' . __('Осталось до конца дней') . '"><span class="glyphicon glyphicon-time"></span> ' . $day . ' дн.</a>
                         
-                        <a class="btn btn-sm btn-default ' . $buy . '" data-toggle="tooltip" data-placement="top" title="' . __('Посмотреть демо') . '" href="http://market.phpshop.ru/?skin=' . $row['name'] . '" target="_blank"><span class="glyphicon glyphicon-eye-open"></span> Демо</a>
+                        <a class="btn btn-sm btn-default ' . $buy . '" data-toggle="tooltip" data-placement="top" title="' . __('Посмотреть демо') . '" href="http://market.phpshop.ru/?skin=' . $row['name'] . '" target="_blank"><span class="glyphicon glyphicon-eye-open"></span> ' . __('Демо').'</a>
                         </div>
                      </div>
                         
@@ -114,7 +114,7 @@ function tab_base($data) {
     $data_pic = xml2array($skin_base_path . '/template5.php', "template", true);
     arsort($data_pic);
 
-    $title_free = '<p class="text-muted hidden-xs data-row">Ниже представлены классические бесплатные шаблоны от предыдущих версий PHPShop. Функциональность классических шаблонов может отличаться от современных шаблонов. Для 100% работоспособности продукта рекомендуется использовать предустановленные шаблоны.</p>';
+    $title_free = '<p class="text-muted hidden-xs data-row">' . __('Ниже представлены классические бесплатные шаблоны от предыдущих версий PHPShop. Функциональность классических шаблонов может отличаться от современных шаблонов. Для 100% работоспособности продукта рекомендуется использовать предустановленные шаблоны').'.</p>';
     $img_list_free = null;
     if (is_array($data_pic))
         foreach ($data_pic as $row) {
@@ -160,9 +160,9 @@ function tab_base($data) {
         <li>Мы соблюдаем сроки, и предоставляем гарантии - если  после завершения проекта Вы заметите недочет с нашей стороны  мы  устраним его. </li>
     </ol>
     </p>
-    <p>Для заказа персонального дизайна нужно заполнить бриф, в котором вы  формулируете будущий проект, все возникающие вопросы уточнить у наших  консультантов. Cрок создания макета дизайна - 15 рабочих дней.</p>
+    <p>Для заказа персонального дизайна нужно заполнить бриф, в котором вы  формулируете будущий проект, все возникающие вопросы уточнить у наших  консультантов. Cрок создания макета дизайна - 15 рабочих дней.</p>'.'
     <p>
-    <a href="http://www.phpshop.ru/calculation/brifdesign/" target="_blank" class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-share-alt"></span> Бриф на Персональный дизайн сайта</a></p>';
+    <a href="http://www.phpshop.ru/calculation/brifdesign/" target="_blank" class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-share-alt"></span> '.__('Бриф на Персональный дизайн сайта').'</a></p>';
 
 
     if (!empty($img_list)) {

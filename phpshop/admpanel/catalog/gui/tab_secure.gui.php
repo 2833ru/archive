@@ -36,7 +36,7 @@ function tab_secure($data) {
             } 
 
             
-            $disp.=$PHPShopGUI->setLine($PHPShopGUI->setCheckbox('secure_groups_new['.$row['id'].']', 1, $row['name'].' (login: ' . $row['login'] . ', e-mail: ' . $row['mail'] . ')', $che));
+            $disp.=$PHPShopGUI->setLine($PHPShopGUI->setCheckbox('secure_groups_new['.$row['id'].']', 1, $row['name'].' (login: ' . $row['login'] . ', e-mail: ' . $row['mail'] . ')', $che, null, false));
         }
 
     }

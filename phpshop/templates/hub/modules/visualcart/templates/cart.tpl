@@ -7,7 +7,7 @@
     <li>
         <p class="text-center-button btn-block1">
             <a href="/order/">
-                ќформить заказ
+                {ќформить заказ}
             </a>
         </p>
     </li>

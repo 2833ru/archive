@@ -97,7 +97,7 @@ class PHPShopCompare extends PHPShopCore {
             foreach ($cats as $catid => $name) {
                 if ((count($goods[$catid]) > 1) && (count($goods[$catid]) <= $limit)) {
                     if ($catid != $COMCID) {
-                        $as = '<b>Сравнить в категории</b>: <a href="../compare/COMCID_' . $catid . '.html#list" title="Сравнить в ' . $name . '">';
+                        $as = '<b>'.__('Сравнить в категории').'</b>: <a href="../compare/COMCID_' . $catid . '.html#list" title="'.__('Сравнить в').' ' . $name . '">';
                         $ae = '</a>';
                     } else {
                         $as = '<b>';
@@ -109,7 +109,7 @@ class PHPShopCompare extends PHPShopCore {
                     $green[] = $catid; //Добавить каталог в разрешенные
                 } elseif (count($goods[$catid]) > $limit) {
                     $dis.='
-		<tr><td><br><b>' . $name . '</b> <p class="text-danger">Cлишком много товаров в сравнение, максимум <b>' . $limit . '</b>. Удалите лишние.</p></td>
+		<tr><td><br><b>' . $name . '</b> <p class="text-danger">'.__('Cлишком много товаров в сравнение, максимум <b>' . $limit . '</b>. Удалите лишние').'.</p></td>
 		<td width="50"></td></tr>';
                 } else {
                     $dis.='
@@ -117,7 +117,7 @@ class PHPShopCompare extends PHPShopCore {
   </tr>';
                 }
                 foreach ($goods[$catid] as $id => $val) {
-                    $dis.='<tr><td>' . $val['name'] . ' </td><td width="50" class="text-center"><a href="../compare/DID_' . $val['id'] . '.html" class="btn btn-danger btn-xs" title="Убрать товар из сравнения"><span >X</span></a></td></tr>';
+                    $dis.='<tr><td>' . $val['name'] . ' </td><td width="50" class="text-center"><a href="../compare/DID_' . $val['id'] . '.html" class="btn btn-danger btn-xs" title="{Удалить}"><span>X</span></a></td></tr>';
                 }
             }
 
@@ -126,10 +126,10 @@ class PHPShopCompare extends PHPShopCore {
             $name = 'по всем категориям';
             if ((count($compare) > 1) && (count($compare) <= $limit)) {
                 if ($COMCID != "ALL") {
-                    $as = '<a href="../compare/COMCID_ALL.html#list" title="Сравнить по ВСЕМ категориям"><span class="glyphicon glyphicon-ok"></span> Сравнить ';
+                    $as = '<a href="../compare/COMCID_ALL.html#list" title="'.__('Сравнить по ВСЕМ категориям').'"><span class="glyphicon glyphicon-ok"></span> '.__('Сравнить').' ';
                     $ae = '</a>';
                 } else {
-                    $as = '<b>Сравнивается: ';
+                    $as = '<b>'.__('Сравнивается').': ';
                     $ae = '</b>';
                 }
                 $dis.='
@@ -138,17 +138,17 @@ class PHPShopCompare extends PHPShopCore {
                 $green[] = "ALL"; //Добавить каталог в разрешенные
             } elseif (count($compare) > $limit) {
                 $dis.='
-		<tr><td colspan="2"><b>' . $name . '</b> <p class="text-danger">Cлишком много товаров в сравнение, максимум <b>' . $limit . '</b>. Удалите лишние.</p></td>
+		<tr><td colspan="2"><b>' . $name . '</b> <p class="text-danger">'.__('Cлишком много товаров в сравнение, максимум <b>' . $limit . '</b>. Удалите лишние').'.</p></td>
 		</tr>';
             } else {
                 $dis.='
-		<tr><td colspan="2"><b>' . $name . '</b> <p class="text-danger">Недостаточно товаров для сравнения. Добавьте еще товары из этой категории</p></td>
+		<tr><td colspan="2"><b>' . $name . '</b> <p class="text-danger">'.__('Недостаточно товаров для сравнения. Добавьте еще товары из этой категории').'</p></td>
 		</tr>';
             }
         }
 
         // Вывод управляющего интерфейса
-        $disp = '<table class="table table-bordered">' . $dis . '</table>';
+        $disp = '<table class="table table-bordered table-responsive">' . $dis . '</table>';
 
         // Выбор каталога для показа
         if (!$COMCID) { //Если не указан каталог
@@ -159,7 +159,7 @@ class PHPShopCompare extends PHPShopCore {
                     break;
                 }
             } else {
-                $disp.='<h4>Сравнение выбранных вами товаров сейчас невозможно.</h4>';
+                $disp.='<p class="text-danger">'.__('Выберите товары для сравнения').'.</p>';
             }
         }
 
@@ -183,7 +183,7 @@ class PHPShopCompare extends PHPShopCore {
             if (($COMCID && (count($goods[$catid]) > 1) && (count($goods[$catid]) <= $limit)) ||
                     ((($COMCID == "ALL") && (count($_SESSION['compare']) > 1) && (count($_SESSION['compare']) <= $limit)))) { //Если выбран каталог сравнения
                 if ($COMCID == "ALL") {
-                    $comparing = 'все категории';
+                    $comparing = __('все категории');
                 } else {
                     $comparing = getfullname($COMCID);
                 }
@@ -214,7 +214,7 @@ class PHPShopCompare extends PHPShopCore {
 
                 if (is_array($sorts))
                     foreach ($sorts as $sort) {
-                        $sql = 'select name from ' . $SysValue['base']['table_name20'] . ' where id=' . intval($sort) . " AND goodoption = '0'";
+                        $sql = 'select name from ' . $SysValue['base']['sort_categories'] . ' where id=' . intval($sort) . " AND goodoption = '0'";
                         $result = mysqli_query($link_db, $sql);
                         @$row = mysqli_fetch_array(@$result);
                         $sorts_name[$sort] = $row['name'];
@@ -226,7 +226,7 @@ class PHPShopCompare extends PHPShopCore {
                  */
                 if (is_array($sorts_name))
                     foreach ($sorts_name as $sort => $name) {
-                        $sql = 'select id from ' . $SysValue['base']['table_name20'] . ' where name LIKE \'' . $name . '\'';
+                        $sql = 'select id from ' . $SysValue['base']['sort_categories'] . ' where name LIKE \'' . $name . '\'';
                         $result = mysqli_query($link_db, $sql);
                         while ($row = mysqli_fetch_array(@$result)) {
                             $sorts_name2[$name][$row['id']] = 1;
@@ -237,14 +237,14 @@ class PHPShopCompare extends PHPShopCore {
                     $sorts_name2 = 0;
 
                 // Подготовка Матрицы для будущей таблицы
-                $tdR[0][] = 'Товар';
-                $tdR[0][] = 'Фото';
-                $tdR[0][] = 'Цена';
+                $tdR[0][] = __('Товар');
+                $tdR[0][] = __('Фото');
+                $tdR[0][] = __('Цена');
                 if (is_array($sorts_name2))
                     foreach ($sorts_name2 as $name => $id) {
                         $tdR[0][] = $name;
                     }
-                $tdR[0][] = 'Описание';
+                $tdR[0][] = __('Описание');
                 $igood = 0;
 
                 if ($COMCID != "ALL") {
@@ -257,19 +257,12 @@ class PHPShopCompare extends PHPShopCore {
                     }
                 }
 
-                // Получаем умолчательню валюту
-                $sql = "select dengi from " . $SysValue['base']['table_name3'];
-                $result = mysqli_query($link_db, $sql);
-                $row = mysqli_fetch_array($result);
-                $defvaluta = $row['dengi'];
-                // Получаем умолчательню валюту
-
                 foreach ($goodstowork as $id => $val) {
                     $igood++;
                     $tdR[$igood][] = '<A href="/shop/UID_' . $val['id'] . '.html" title="' . $val['name'] . '">' . $val['name'] . '</A>';
 
                     //Выбираем товар из базы
-                    $sql = 'select id,price,pic_small,vendor_array,content,baseinputvaluta from ' . $SysValue['base']['table_name2'] . ' where id=' . intval($val['id']);
+                    $sql = 'select id,price,pic_small,vendor_array,content,baseinputvaluta from ' . $SysValue['base']['products'] . ' where id=' . intval($val['id']);
                     $result = mysqli_query($link_db, $sql);
                     @$row = mysqli_fetch_array(@$result);
                     if (trim($row['pic_small'])) {
@@ -315,7 +308,7 @@ class PHPShopCompare extends PHPShopCore {
                                 @$ca = $chars[$id];
                                 if (is_array($ca))
                                     foreach ($ca as $charid) {
-                                        $sql2 = 'select name from ' . $SysValue['base']['table_name21'] . ' where id=' . intval($charid);
+                                        $sql2 = 'select name from ' . $SysValue['base']['sort'] . ' where id=' . intval($charid);
                                         $result2 = mysqli_query($link_db, $sql2);
                                         @$row2 = mysqli_fetch_array(@$result2);
                                         $curchar.=' ' . $row2['name'] . '<br>';
@@ -329,7 +322,7 @@ class PHPShopCompare extends PHPShopCore {
                 //троим таблицу по матрице
                 $rows = count($tdR[0]);
                 $cols = count($goodstowork) + 1;
-                $disp.='<TABLE class="table table-striped">';
+                $disp.='<TABLE class="table table-striped table-responsive">';
 
                 for ($row = 0; $row < $rows; $row++) {
                     $disp.='<tr>';
@@ -347,22 +340,22 @@ class PHPShopCompare extends PHPShopCore {
 
         //Если нет товаров, показать пусто. ДОЛЖНО БЫТЬ ПОСЛЕДНЕЙ СТРОКОЙ
         if (count($cats) == 0) {
-            $disp = '<P><h5>Вы не выбрали товары для сравнения!</h5></P>';
+            $disp = '<P><h5>'.__('Вы не выбрали товары для сравнения').'!</h5></P>';
         }
 
         // Определяем переменые
-        $SysValue['other']['pageTitle'] = $SysValue['other']['pageTitl'] = "Сравнение товаров";
+        $SysValue['other']['pageTitle'] = $SysValue['other']['pageTitl'] = $SysValue['other']['catalogCat'] = __("Сравнение товаров");
         $SysValue['other']['pageContent'] = '<div class="compare_list">' . $disp . '</div>';
-        $SysValue['other']['catalogCat'] = "Сравнение товаров";
-        $SysValue['other']['catalogCategory'] = "Выбраны товары для сравнения";
+        $SysValue['other']['catalogCategory'] = __("Выбраны товары для сравнения");
 
         // Мета
-        $this->title = 'Сравнение товаров - ' . $this->PHPShopSystem->getValue("name");
-        $this->description = 'Сравнение товаров';
+        $this->description = $SysValue['other']['pageTitle'];
+        $this->title = $SysValue['other']['pageTitle'].' - ' . $this->PHPShopSystem->getValue("name");
+        
 
         // Определяем переменые
         $this->set('pageContent', $disp);
-        $this->set('pageTitle', 'Сравнение товаров');
+        $this->set('pageTitle', $SysValue['other']['pageTitle']);
 
 
         // Подключаем шаблон

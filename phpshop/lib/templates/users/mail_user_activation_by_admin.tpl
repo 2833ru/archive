@@ -128,10 +128,10 @@
     
     <tr bgcolor="#eaeaea">
         <td >
-        <h2>Здравствуйте, @user_name@!</h2>
+        <h2>{Здравствуйте}, @user_name@!</h2>
               
-<p>Спасибо за регистрацию на сайте '@name@'!</p><p>
-Пожалуйста, подождите уведомления об успешной активации администратором сайта.</p>
+<p>{Спасибо за регистрацию на сайте} "@name@"!</p><p>
+{Пожалуйста, подождите уведомления об успешной активации администратором сайта}.</p>
 
 
 <hr>
@@ -144,27 +144,21 @@
 
 <table width="660" align="center" cellspacing="0" cellpadding="10">
 <tbody>
-
-
     <tr bgcolor="#fafafa" id="footer" height="100%">
-    
-      
+
         <td align="left" valign="top" height="100%">
-            <p><b>С уважением, @shopName@.</b></p>
+            <p><b>{С уважением}, @shopName@.</b></p>
       <p>@org_name@<br>
-      Интернет-магазин <a href="http://@serverPath@">@serverPath@</a><br>
-      Отдел продаж: @telNum@<br>
+      {Интернет-магазин} <a href="http://@serverPath@">@serverPath@</a><br>
+      {Отдел продаж}: @telNum@<br>
       E-mail: @adminMail@<br>
       @org_adres@</p></td>
       
     </tr>
-
+  
 </tbody>  
 </table> 
 
 
-
 </body>
 </html>
-
-

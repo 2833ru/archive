@@ -9,7 +9,7 @@
             <div>
                 <a class="btn btn-primary btn-sm btn-block addToCartList @elementCartOptionHide@" href="/shop/UID_@productUid@.html">@productSale@</a>
                 <button class="btn btn-primary btn-sm btn-block addToCartList @elementCartHide@" data-uid="@productUid@" data-num="1" role="button">@productSale@</button>
-                <button class="btn btn-default btn-sm addToWishList btn-block" role="button" onclick="addToWishList('@productUid@');">Отложить</button></div>
+                <button class="btn btn-default btn-sm addToWishList btn-block" role="button" onclick="addToWishList('@productUid@');">{Отложить}</button></div>
         </div>
     </div>
 

@@ -47,7 +47,7 @@ class Payment extends PHPShopPaymentResult {
         $data_return = $_REQUEST;
 
         $this->my_crc = strtoupper(md5($data_return['out_summ'] . ':' . $data_return['inv_id'] . ':' . $this->option['merchant_skey']));
-        $this->crc = strtoupper((string) $data_return['inv_id']);
+        $this->crc = strtoupper($data_return['crc']);
         $this->out_summ = $data_return['out_summ'];
         $this->inv_id = $data_return['inv_id'];
 

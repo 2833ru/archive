@@ -51,7 +51,7 @@ function tab_option($data) {
 
             // Вывод
             if (empty($row['enabled']) or !empty($row['sklad']))
-                $icon = '<span class="pull-right text-muted glyphicon glyphicon-eye-close" data-toggle="tooltip" data-placement="top" title="Скрыто"></span>';
+                $icon = '<span class="pull-right text-muted glyphicon glyphicon-eye-close" data-toggle="tooltip" data-placement="top" title="'.__('Скрыто').'"></span>';
             else
                 $icon = null;
             
@@ -62,7 +62,7 @@ function tab_option($data) {
                 array('value-edit', '|', 'value-delete', 'id' => $row['id']), 'align' => 'center'), array('name' => $icon));
         }
 
-    $PHPShopInterface->setRow(array('name' => '<input style="width:100%" data-id="" placeholder="Добавить" name="name_option_new" class="form-control input-sm" value="">'),array('name' => '<input style="width:100%" data-id="" placeholder="Добавить" name="name2_option_new" class="form-control input-sm " value="">'), array('name' => '<input style="width:100%" class="form-control input-sm" name="items_option_new" value="1">'), array('name' => '<input style="width:100%" class="form-control input-sm" name="price_option_new" value="' . $data['price'] . '">'), array('name'=>'<button data-toggle="tooltip" data-placement="top" type="button" name="addOption" class="btn btn-default btn-sm" value="" data-original-title="Добавить подтип"><span class="glyphicon glyphicon-plus"></span> Добавить</button>', 'align' => 'left'), '');
+    $PHPShopInterface->setRow(array('name' => '<input style="width:100%" data-id="" placeholder="'.__('Добавить').'" name="name_option_new" class="form-control input-sm" value="">'),array('name' => '<input style="width:100%" data-id="" placeholder="'.__('Добавить').'" name="name2_option_new" class="form-control input-sm " value="">'), array('name' => '<input style="width:100%" class="form-control input-sm" name="items_option_new" value="1">'), array('name' => '<input style="width:100%" class="form-control input-sm" name="price_option_new" value="' . $data['price'] . '">'), array('name'=>'<button data-toggle="tooltip" data-placement="top" type="button" name="addOption" class="btn btn-default btn-sm" value="" data-original-title="'.__('Добавить подтип').'"><span class="glyphicon glyphicon-plus"></span> '.__('Добавить').'</button>', 'align' => 'left'), '');
     $disp = '<table class="table table-hover value-list">' . $PHPShopInterface->getContent() . '</table>';
 
     return $disp;

@@ -628,7 +628,7 @@ class PHPShopUsers extends PHPShopCore {
 
         $dis = null;
 
-        $this->set('formaTitle', 'Отложенные товары');
+        $this->set('formaTitle', __('Отложенные товары'));
 
         if ($this->true_user()) {
             $PHPShopUser = new PHPShopUser($_SESSION['UsersId']);

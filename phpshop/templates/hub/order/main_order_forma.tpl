@@ -11,7 +11,7 @@
                 <div class="panel panel-smart">
                     <div class="panel-heading">
                         <h3 class="panel-title">
-                            Личные данные
+                            {Личные данные}
                         </h3>
                     </div>
                     <div class="panel-body">
@@ -25,7 +25,7 @@
                 <div class="panel panel-smart">
                     <div class="panel-heading">
                         <h3 class="panel-title">
-                            Доставка, адрес получателя
+                            {Доставка, адрес получателя}
                         </h3>
                     </div>
                     <div class="panel-body">
@@ -42,7 +42,7 @@
                             <div id="userAdresData">
                             </div>
                             <div class="form-group">
-                                <label for="dop_info" class="col-sm-12 control-label fix">Дополнительная информация к заказу:</label>
+                                <label for="dop_info" class="col-sm-12 control-label fix">{Дополнительная информация к заказу}</label>
                                 <div class="col-sm-12">
                                     <textarea class="form-control" name="dop_info" id="dop_info"></textarea>
                                 </div>
@@ -57,7 +57,7 @@
                 <div class="panel panel-smart">
                     <div class="panel-heading">
                         <h3 class="panel-title">
-                            Выберите способ оплаты
+                            {Способ оплаты}
                         </h3>
                     </div>
                     <div class="panel-body">
@@ -78,7 +78,7 @@
                                             <input type="hidden" name="send_to_order" value="ok" >
                                             <input type="hidden" name="d" id="d" value="@deliveryId@">
                                             <input type="hidden" name="nav" value="done">
-                                            <button type="submit" class="btn btn-main orderCheckButton">Оформить заказ</button>
+                                            <button type="submit" class="btn btn-main orderCheckButton">{Оформить заказ}</button>
                                         </div>
                             </div>
                         </div>

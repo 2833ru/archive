@@ -1,7 +1,7 @@
 <?php
 PHPShopObj::loadClass('category');
 
-$TitlePage = __('Редактирование переадресации поиска #' . $_GET['id']);
+$TitlePage = __('Редактирование переадресации поиска').' #' . $_GET['id'];
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['search_base']);
 
 // Построение дерева категорий
@@ -47,7 +47,7 @@ function viewCatalog($category) {
     $PHPShopCategoryArray = new PHPShopCategoryArray();
     $CategoryArray = $PHPShopCategoryArray->getArray();
 
-    $CategoryArray[0]['name'] = '- Выбрать каталог -';
+    $CategoryArray[0]['name'] = '- '.__('Выбрать каталог').' -';
     $tree_array = array();
 
     foreach ($PHPShopCategoryArray->getKey('parent_to.id', true) as $k => $v) {
@@ -95,7 +95,6 @@ function actionStart() {
         $PHPShopGUI->addJSFiles('./js/jquery.tagsinput.min.js', './report/gui/report.gui.js');
     $PHPShopGUI->addCSSFiles('./css/jquery.tagsinput.css');
 
-
     // Нет данных
     if (!is_array($data)) {
         header('Location: ?path=' . $_GET['path']);
@@ -103,18 +102,17 @@ function actionStart() {
 
     // Размер названия поля
     $PHPShopGUI->field_col = 2;
-    $PHPShopGUI->setActionPanel(__("Переадресация поиска") . ' / ' . str_replace(array('i', 'ii'), array('', ','), $data['name']),false, array('Сохранить', 'Сохранить и закрыть'));
-
+    $data['name'] = str_replace('ii', ',', $data['name']);
+    $PHPShopGUI->setActionPanel(__("Переадресация поиска") . ' / ' . str_replace('i', '', $data['name']),false, array('Сохранить', 'Сохранить и закрыть'),false);
 
     // Содержание закладки 1
-    $Tab1 = $PHPShopGUI->setField("Запрос:", $PHPShopGUI->setInputText(false, "name_new", str_replace(array('i', 'ii'), array('', ','), $data['name'])) . $PHPShopGUI->setRadio("enabled_new", 1, "Показывать", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Скрыть", $data['enabled']));
+    $Tab1 = $PHPShopGUI->setField("Запрос", $PHPShopGUI->setInputText(false, "name_new", str_replace(array('i', 'ii'), array('', ','), $data['name'])) . $PHPShopGUI->setRadio("enabled_new", 1, "Показывать", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Скрыть", $data['enabled']));
     
     // Товары
     $Tab1.=$PHPShopGUI->setField('Товары', $PHPShopGUI->setTextarea('uid_new', $data['uid'], false, false, false, __('Укажите ID товаров или воспользуйтесь <a href="#" data-target="#uid_new"  class="btn btn-sm btn-default tag-search"><span class="glyphicon glyphicon-search"></span> поиском товаров</a>')));
 
     // Каталог
     $Tab1.=$PHPShopGUI->setField('Каталог', viewCatalog($data['category']),false,'Переадресация на страницу списка товаров в выбранном каталоге');
-
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);

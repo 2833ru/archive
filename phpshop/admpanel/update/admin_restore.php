@@ -66,6 +66,7 @@ function actionStart() {
         'class' => 'btn btn-default btn-sm navbar-btn btn-action-panel-blank',
         'action' => 'http://phpshop.ru/docs/update.html',
         'type' => 'button',
+        'locale'=>true,
         'icon' => 'glyphicon glyphicon-gift'
     );
     

@@ -5,7 +5,7 @@
     </div>
     <div class="form-group">
         <input type="hidden" value="1" name="passw_send">
-        <button type="submit" class="btn btn-primary">Выслать пароль</button>
+        <button type="submit" class="btn btn-primary">{Выслать пароль}</button>
    </div>
 </form>
 <p><br></p>

@@ -55,7 +55,7 @@ class Editor {
         relative_urls : false,
         remove_script_host : true,
         browser_spellcheck: true,
-        language: 'ru',
+        language: '".$GLOBALS['PHPShopLang']->code."',
         content_css : ['/phpshop/templates/".$PHPShopSystem->getParam('skin')."/style.css','css/bootstrap-theme-default.css'], 
         content_style: 'div,p {padding: 5px;}',
         insert_toolbar: 'quickimage quicktable',

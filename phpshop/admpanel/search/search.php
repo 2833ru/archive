@@ -9,12 +9,10 @@ if (!empty($_SESSION['idPHPSHOP']) and !empty($_REQUEST['words'])) {
     $path = 'http://faq.phpshop.ru/base-xml-manager/search/xml.php?json=true&words=' . $_REQUEST['words'];
     $db = @xml2array($path, "row", true);
     
-
     if(!empty($db['name']))
         $array[0] = $db;
     else $array= $db;
     
-
     $result = null;
     if (is_array($array))
         foreach ($array as $row) {

@@ -5,7 +5,6 @@
  * @package PHPShopAjaxElements
  */
 session_start();
-
 $_classPath = "../../../";
 include($_classPath . "class/obj.class.php");
 PHPShopObj::loadClass("base");
@@ -89,11 +88,44 @@ function GetDeliveryPrice($deliveryID, $sum, $weight = 0) {
     }
 }
 
-$PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.promotions.promotions_forms"));
-$PHPShopOrm->debug = false;
-$where['code'] = '="' . PHPShopSecurity::TotalClean(trim($_REQUEST['promocode'])) . '"';
-$where['enabled'] = '="1"';
-$data = $PHPShopOrm->select(array('*'), $where, array('order' => 'id'));
+// Генератор кодов 10 знаков
+if (trim(mb_strlen($_REQUEST['promocode']) == 10)) {
+    $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.promotions.promotions_codes"));
+    $PHPShopOrm->debug = false;
+    $where['code'] = '="' . PHPShopSecurity::TotalClean(trim($_REQUEST['promocode'])) . '"';
+    $where['enabled'] = '="1"';
+    $data_code = $PHPShopOrm->select(array('*'), $where, array('order' => 'id'));
+    $PHPShopOrm->clean();
+    unset($where);
+}
+if (!empty($data_code['promo_id'])) {
+
+    $_SESSION['multicodes'] = 1; // Если используем таблицу кодов
+
+    $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.promotions.promotions_forms"));
+    $PHPShopOrm->debug = false;
+    $where['id'] = '="' . $data_code['promo_id'] . '"';
+    $where['enabled'] = '="1"';
+    $data = $PHPShopOrm->select(array('*'), $where, array('order' => 'id'));
+
+    $PHPShopOrm->clean();
+    unset($where);
+}
+// Обычный промокод
+else {
+    $_SESSION['multicodes'] = 0;
+    $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.promotions.promotions_forms"));
+    $PHPShopOrm->debug = false;
+    $where['code'] = '="' . PHPShopSecurity::TotalClean(trim($_REQUEST['promocode'])) . '"';
+    $where['enabled'] = '="1"';
+    $data = $PHPShopOrm->select(array('*'), $where, array('order' => 'id'));
+    $PHPShopOrm->clean();
+    $data['block_old_price'] = 1;
+    unset($where);
+}
+
+if (!empty($data_code['code']))
+    $data['code'] = $data_code['code'];
 
 //Если промо код уникальный
 if ($_REQUEST['promocode'] != '*') {
@@ -114,6 +146,7 @@ if ($_REQUEST['promocode'] != '*') {
                 $action = '1'; //выполним перенаправление на список оплат
                 $status = '0'; //не применена скидка
             } else {
+
                 //Массив категорий для промо кода
                 if ($data['categories_check'] == 1):
                     //категории массив
@@ -130,33 +163,38 @@ if ($_REQUEST['promocode'] != '*') {
                     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
                     $row = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($valuecart['id'])), array('order' => 'id desc'), array('limit' => 1));
 
-                    //узнаем по каким категориям брать товары из корзины
-                    if (isset($category_ar)) {
-                        foreach ($category_ar as $val_c) {
-                            if ($val_c == $row['category']) {
-                                $sumche = 1;
-                                $info_prod_d_f .= $row['name'] . ', ';
-                                break;
-                            } else {
-                                $sumche = 0;
+
+                    // Не нулевая цена или выключен режим проверки нулевой цены
+                    if (empty($row['price_n']) or empty($data['block_old_price'])) {
+
+                        //узнаем по каким категориям брать товары из корзины
+                        if (isset($category_ar)) {
+                            foreach ($category_ar as $val_c) {
+                                if ($val_c == $row['category']) {
+                                    $sumche = 1;
+                                    $info_prod_d_f .= $row['name'] . ', ';
+                                    break;
+                                } else {
+                                    $sumche = 0;
+                                }
+                            }
+                        }
+
+                        //узнаем по каким товарам брать товары из корзины
+                        if (isset($products_ar)) {
+                            foreach ($products_ar as $val_p) {
+                                if ($val_p == $row['id']) {
+                                    $sumchep = 1;
+                                    $info_prod_d_f .= $row['name'] . ', ';
+                                    break;
+                                } else {
+                                    $sumchep = 0;
+                                }
                             }
                         }
                     }
 
-                    //узнаем по каким товарам брать товары из корзины
-                    if (isset($products_ar)) {
-                        foreach ($products_ar as $val_p) {
-                            if ($val_p == $row['id']) {
-                                $sumchep = 1;
-                                $info_prod_d_f .= $row['name'] . ', ';
-                                break;
-                            } else {
-                                $sumchep = 0;
-                            }
-                        }
-                    }
-
-                    if ($sumche == 1 or $sumchep == 1):
+                    if (($sumche == 1 or $sumchep == 1)):
                         $sumnew += $valuecart['price'] * $valuecart['num'];
 
                         //если процент
@@ -169,6 +207,7 @@ if ($_REQUEST['promocode'] != '*') {
                                 // скидку в сессию (кол-во | тип)
                                 $_SESSION['cart'][$rs]['discount'] = $discount;
                                 $_SESSION['cart'][$rs]['discount_tip'] = $tip_disc;
+                                $_SESSION['cart'][$rs]['test'] = 1;
                             }
                         } else { //если сумма
                             //скидка и тип
@@ -176,9 +215,12 @@ if ($_REQUEST['promocode'] != '*') {
                             $tip_disc = $currency;
                             $idgg = intval($valuecart['id']);
                             if ($idgg >= 1) {
+
                                 // скидку в сессию (кол-во | тип)
-                                $_SESSION['cart'][$rs]['discount_sum'] = $discount;
+                                $_SESSION['cart'][$rs]['promo_sum'] = $discount_sum;
                                 $_SESSION['cart'][$rs]['discount_tip_sum'] = $tip_disc;
+                                $_SESSION['cart'][$rs]['promo_code'] = $_REQUEST['promocode'];
+                                $_SESSION['cart'][$rs]['test'] = 2;
                             }
                         }
                     else:
@@ -187,7 +229,7 @@ if ($_REQUEST['promocode'] != '*') {
                 }
                 //информация о товарах к которым применена скидка
                 if ($info_prod_d_f != '') {
-                    $info_prod_d = '<hr><b>Скидка применена для товаров:</b> ' . $info_prod_d_f;
+                    $info_prod_d = '<hr><b>Скидка применена для товаров:</b> ' . substr($info_prod_d_f,0,strlen($info_prod_d_f)-2);
                 }
 
                 //если процент
@@ -286,11 +328,12 @@ if ($_REQUEST['promocode'] != '*') {
                         if ($data['free_delivery'] == 1):
                             $freedelivery = 0;
                             $_SESSION['freedelivery'] = 0;
+                            $delivery=0;
                         else:
                             //галочка убрана для бесплатной доставки
                             $_SESSION['freedelivery'] = 1;
                             if ($_REQUEST['dostavka'] > 0)
-                                $dostavka = GetDeliveryPrice(intval($_REQUEST['dostavka']), $totalsumma_t, $_REQUEST['wsum']);
+                                $delivery = GetDeliveryPrice(intval($_REQUEST['dostavka']), $totalsumma_t, $_REQUEST['wsum']);
                         endif;
 
                         if ($sumordercheck == 1):
@@ -311,8 +354,15 @@ if ($_REQUEST['promocode'] != '*') {
                                 $_SESSION['totalsumma'] = $totalsumma;
                                 $_SESSION['promocode'] = $data['code'];
                                 $_SESSION['codetip'] = $data['code_tip'];
+
+
                                 //обнулим если код верный
                                 foreach ($_SESSION['cart'] as $is => $valcar) {
+
+                                    // запомним для учета в done.hook.php
+                                    $_SESSION['cart'][$is]['promo_percent'] = $valcar['discount'];
+                                    $_SESSION['cart'][$rs]['promo_code'] = $_REQUEST['promocode'];
+
                                     //сбросим инфу о скидка
                                     unset($_SESSION['cart'][$is]['discount']);
                                     unset($_SESSION['cart'][$is]['discount_tip']);
@@ -402,31 +452,34 @@ if ($_REQUEST['promocode'] != '*') {
                     $products_ar = explode(',', $pro['products']);
                 endif;
 
-                $sumche = 0;
-                $sumchep = 0;
+                $sumche = $sumchep = 0;
 
-                //узнаем по каким категориям брать товары из корзины
-                if (isset($category_ar)) {
-                    foreach ($category_ar as $val_c) {
-                        if ($val_c == $row['category']) {
-                            $sumche = 1;
-                            $info_prod_d_f .= $row['name'] . ', ';
-                            break;
-                        } else {
-                            $sumche = 0;
+                // Не нулевая цена или выключен режим проверки нулевой цены
+                if (empty($row['price_n']) or empty($data['block_old_price'])) {
+
+                    //узнаем по каким категориям брать товары из корзины
+                    if (isset($category_ar)) {
+                        foreach ($category_ar as $val_c) {
+                            if ($val_c == $row['category']) {
+                                $sumche = 1;
+                                $info_prod_d_f .= $row['name'] . ', ';
+                                break;
+                            } else {
+                                $sumche = 0;
+                            }
                         }
                     }
-                }
 
-                //узнаем по каким товарам брать товары из корзины
-                if (isset($products_ar)) {
-                    foreach ($products_ar as $val_p) {
-                        if ($val_p == $row['id']) {
-                            $sumchep = 1;
-                            $info_prod_d_f .= $row['name'] . ', ';
-                            break;
-                        } else {
-                            $sumchep = 0;
+                    //узнаем по каким товарам брать товары из корзины
+                    if (isset($products_ar)) {
+                        foreach ($products_ar as $val_p) {
+                            if ($val_p == $row['id']) {
+                                $sumchep = 1;
+                                $info_prod_d_f .= $row['name'] . ', ';
+                                break;
+                            } else {
+                                $sumchep = 0;
+                            }
                         }
                     }
                 }
@@ -434,7 +487,7 @@ if ($_REQUEST['promocode'] != '*') {
                 unset($category_ar);
                 unset($products_ar);
 
-                if ($sumche == 1 or $sumchep == 1) {
+                if (($sumche == 1 or $sumchep == 1)) {
                     $sumnew += $valuecart['price'] * $valuecart['num'];
 
                     //если процент
@@ -503,11 +556,19 @@ if ($_REQUEST['promocode'] != '*') {
                     if ($sumitogn == $sumpo_p) {
                         $_SESSION['cart'][$valuecart['id']]['discount'] = $discount_v_p;
                         $_SESSION['cart'][$valuecart['id']]['discount_tip'] = $tip_disc_v_p;
+                        $_SESSION['cart'][$valuecart['id']]['test'] = 5;
+
+                        // Запоминаем для done.hook.php
+                        $_SESSION['cart'][$valuecart['id']]['promo_percent'] = $discount_v_p;
                     }
                     if ($sumitogn == $sumpo_s) {
                         $_SESSION['cart'][$valuecart['id']]['discount'] = $discount_v_s;
                         $_SESSION['cart'][$valuecart['id']]['discount_tip'] = $tip_disc_v_s;
                         $_SESSION['cart'][$valuecart['id']]['id_sys'] = $pro['id'];
+                        $_SESSION['cart'][$valuecart['id']]['test'] = 6;
+
+                        // Запоминаем для done.hook.php
+                        $_SESSION['cart'][$valuecart['id']]['promo_sum'] = $discount_v_s;
                     }
                 } else {
                     $sumoldi += $valuecart['price'] * $valuecart['num'];
@@ -515,7 +576,7 @@ if ($_REQUEST['promocode'] != '*') {
             }
             //информация о товарах к которым применена скидка
             if ($info_prod_d_f != '') {
-                $info_prod_d = '<hr><b>Скидка применена для товаров:</b> ' . $info_prod_d_f;
+                $info_prod_d = '<hr><b>Скидка применена для товаров:</b> ' . substr($info_prod_d_f,0,strlen($info_prod_d_f)-2);
             }
 
             //если процент
@@ -647,6 +708,7 @@ if ($_REQUEST['promocode'] != '*') {
             if ($count_d >= 2) {
                 $sum_sd = $_SESSION['cart'][$caupd['id']]['discount'];
                 $_SESSION['cart'][$caupd['id']]['discount'] = round($sum_sd, 2);
+                $_SESSION['cart'][$rs]['test'] = 3;
             }
         }
     }
@@ -699,7 +761,8 @@ if ($_REQUEST['promocode'] != '*') {
     if ($_SESSION['promocode'] == '*') {
         $status = 9; //применяем скидку
     } else {
-        $status = 0; //не применяем
+        $status = 0; //не применяем и оставляем сумму как была
+        $totalsummainput = $totalsumma = $_REQUEST['sum'];
     }
 
     //проверяем бесплатную доставку
@@ -715,10 +778,8 @@ if ($_REQUEST['promocode'] != '*') {
 
 // Результат
 $_RESULT = array(
-    'delivery' => $GetDeliveryPrice,
-    'dellist' => $dellist,
-    'adresList' => $adresList,
-    'total' => $totalsumma,
+    'delivery' => $delivery,
+    'total' => $totalsumma + $delivery,
     'discount' => $data['discount'],
     'discountall' => $discountAll,
     'mes' => $messageinfo,
@@ -727,17 +788,17 @@ $_RESULT = array(
     'freedelivery' => $freedelivery,
     'totalsummainput' => $totalsummainput,
     'deliverymethodcheck' => $delivery_method_check,
-    'discountcart' => $discountcart,
     'success' => 1
 );
 
+// Сумма корзины для смены доставки
+$_SESSION['totalsummainput']=$totalsummainput;
 
 // JSON 
 if ($_REQUEST['type'] == 'json') {
     $_RESULT['mes'] = PHPShopString::win_utf8($_RESULT['mes']);
     $_RESULT['discountall'] = PHPShopString::win_utf8($_RESULT['discountall']);
     $_RESULT['mesclean'] = strip_tags($_RESULT['mes']);
-    //$_RESULT['discountcart']=PHPShopString::win_utf8($_RESULT['discountcart']);
 }
 echo json_encode($_RESULT);
 ?>

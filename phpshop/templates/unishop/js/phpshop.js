@@ -271,7 +271,9 @@ function filter_load(filter_str, obj) {
         },
         success: function(data)
         {
-            if (data) {
+            if (data === 'empty_sort') {
+                showAlertMessage('Товары не найдены', true);
+            } else {
                 $(".template-product-list").html(data);
                 $('#price-filter-val-max').removeClass('has-error');
                 $('#price-filter-val-min').removeClass('has-error');
@@ -501,6 +503,21 @@ function breadcrumbsFix() {
 function mainPageProductSlider() {
     $('.owl-carousel .product-block-wrapper').unwrap();
     $('.spec-main').owlCarousel({
+        margin: 10,
+        nav: true,
+        responsive: {
+            0: {
+                items: 1
+            },
+            600: {
+                items: 2
+            },
+            1000: {
+                items: 4
+            }
+        }
+    });
+    $('.nowBuy').owlCarousel({
         margin: 10,
         nav: true,
         responsive: {
@@ -1190,9 +1207,9 @@ $(document).ready(function() {
         e.preventDefault();
         
         var u = location.href;
-        var t = document.title;
+        var t = encodeURIComponent(document.title);
         var h = document.location.host;
-        var d = $('meta[name="description"]').attr('content');
+        var d = encodeURIComponent($('meta[name="description"]').attr('content'));
 
         if ($(this).find("i").hasClass('fa-facebook'))
             path = '//www.facebook.com/sharer/sharer.php?u=' + u;
@@ -1242,6 +1259,10 @@ $(document).ready(function() {
     $('#faset-filter-body > .faset-filter-block-wrapper:first-child').addClass('active');
     fasetFilterFix();
     $('.order-page-num-input-fix').removeClass('hide');
+    
+    //Odnotip List
+    $('.odnotipList').appendTo('.odnotipListWrapper');
+    $('.odnotipList .product-block-wrapper').unwrap();
 
     $(window).resize(function() {
         setEqualHeight('.product-description');
@@ -1257,6 +1278,7 @@ $(document).ready(function() {
     /*
         $('[name="name_new"]').suggestions({
             token: DADATA_TOKEN,
+            partner: "PHPSHOP",
             type: "NAME",
             params: {
                 parts: ["NAME"]
@@ -1265,6 +1287,7 @@ $(document).ready(function() {
         });
         $('[name="name"]').suggestions({
             token: DADATA_TOKEN,
+            partner: "PHPSHOP",
             type: "NAME",
             params: {
                 parts: ["NAME"]
@@ -1273,6 +1296,7 @@ $(document).ready(function() {
         });
         $('[name="name_person"]').suggestions({
             token: DADATA_TOKEN,
+            partner: "PHPSHOP",
             type: "NAME",
             params: {
                 parts: ["NAME"]
@@ -1282,6 +1306,7 @@ $(document).ready(function() {
         */
         $('[name="oneclick_mod_name"]').suggestions({
             token: DADATA_TOKEN,
+            partner: "PHPSHOP",
             type: "NAME",
             params: {
                 parts: ["NAME"]
@@ -1289,7 +1314,8 @@ $(document).ready(function() {
             count: 5
         });
         $('[name="returncall_mod_name"]').suggestions({
-            token: "",
+            token: DADATA_TOKEN,
+            partner: "PHPSHOP",
             type: "NAME",
             params: {
                 parts: ["NAME"]
@@ -1298,17 +1324,20 @@ $(document).ready(function() {
         });
         $('[type="email"]').suggestions({
             token: DADATA_TOKEN,
+            partner: "PHPSHOP",
             type: "EMAIL",
             suggest_local: false,
             count: 5
         });
         $('[name="org_name"]').suggestions({
             token: DADATA_TOKEN,
+            partner: "PHPSHOP",
             type: "PARTY",
             count: 5
         });
         $('[name="company"]').suggestions({
             token: DADATA_TOKEN,
+            partner: "PHPSHOP",
             type: "PARTY",
             count: 5
         });

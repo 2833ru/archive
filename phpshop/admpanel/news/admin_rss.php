@@ -3,10 +3,10 @@
 $TitlePage = __("RSS каналы");
 
 function actionStart() {
-    global $PHPShopInterface;
+    global $PHPShopInterface,$TitlePage;
     
-    $PHPShopInterface->setActionPanel(__("RSS каналы"), array('Удалить выбранные'),array('Добавить'));
-    $PHPShopInterface->setCaption(array(null, "3%"), array("URL загрузки", "50%"), array("Начало", "10%"), array("Завершение", "10%"), array("Последняя", "10%"), array("", "10%"), array("Статус &nbsp;&nbsp;&nbsp;", "10%", array('align' => 'right')));
+    $PHPShopInterface->setActionPanel($TitlePage, array('Удалить выбранные'),array('Добавить'));
+    $PHPShopInterface->setCaption(array(null, "3%"), array("URL загрузки", "50%"), array("Начало", "10%"), array("Завершение", "10%"), array("Последняя", "10%"), array("", "10%"), array("Статус", "10%", array('align' => 'right')));
 
     // SQL
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['rssgraber']);

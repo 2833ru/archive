@@ -57,6 +57,13 @@
                     @promotionInfo@
                 </div>
             </div>
+        </div>        
+        <div class="col-xs-12">
+            <div class="row">
+                <div class="odnotipListWrapper">
+                    
+                </div>
+            </div>
         </div>
         <div class="col-xs-12">
             <div class="row">
@@ -77,7 +84,7 @@
             <div class="row">
                 <div class="product-page-input-number">
                     <div class="quant-main">
-                        <label class="control-label text-uppercase @elementCartHide@">Количество</label>
+                        <label class="control-label text-uppercase @elementCartHide@">{Количество}</label>
                         <div class="quant input-group @elementCartHide@">
                             <span class="input-group-btn">
                                 <button type="button" class="btn btn-default btn-default_l btn-number"  data-type="minus" data-field="quant[2]">
@@ -95,8 +102,8 @@
                 </div>
                 <div class="product-page-button">
                     <div class="cart-button button-group compare-list-button-wrapper">
-                        <button class="btn btn-wishlist addToCompareList hidden-md" role="button" data-uid="@productUid@" data-title="Сравнить" data-placement="top" data-toggle="tooltip"><i class="fa fa-bar-chart-o"></i></button>
-                        <button type="button" class="btn btn-cart addToWishList" role="button" data-uid="@productUid@" data-title="Отложить" data-placement="top" data-toggle="tooltip">
+                        <button class="btn btn-wishlist addToCompareList hidden-md" role="button" data-uid="@productUid@" data-title="{Сравнить}" data-placement="top" data-toggle="tooltip"><i class="fa fa-bar-chart-o"></i></button>
+                        <button type="button" class="btn btn-cart addToWishList" role="button" data-uid="@productUid@" data-title="{Отложить}" data-placement="top" data-toggle="tooltip">
                             <i class="feather iconz-heart"></i>
                         </button>                                   
                     </div>
@@ -116,7 +123,7 @@
                     <div class="cart-button button-group compare-list-button-wrapper">
                         <a class="btn btn-cart" href="/users/notice.html?productId=@productUid@" title="@productNotice@">
                             <i class="fa fa-envelope-o" aria-hidden="true"></i>                            
-                            Уведомить
+                            {Уведомить}
                         </a>                                   
                     </div>
                     @ComEndNotice@ 
@@ -140,11 +147,11 @@
         <div role="tabpanel" class="tabpanel-wrapper">
             <!-- Nav tabs -->
             <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active hidden-xs"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Описание</a></li>
-                <li role="presentation" class="hide hidden-xs" id="settingsTab"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Характеристики</a></li>
-                <li role="presentation" class="hidden-xs"><a href="#messages" id="commentLoad" data-uid="@productUid@" aria-controls="messages" role="tab" data-toggle="tab">Отзывы</a></li>
-                <li role="presentation" id="filesTab" class="hide hidden-xs"><a href="#files" aria-controls="files" role="tab" data-toggle="tab">Файлы</a></li>
-                <li role="presentation" id="pagesTab" class="hide hidden-xs"><a href="#pages" aria-controls="pages" role="tab" data-toggle="tab">Статьи</a></li>
+                <li role="presentation" class="active hidden-xs"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">{Описание}</a></li>
+                <li role="presentation" class="hide hidden-xs" id="settingsTab"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">{Характеристики}</a></li>
+                <li role="presentation" class="hidden-xs"><a href="#messages" id="commentLoad" data-uid="@productUid@" aria-controls="messages" role="tab" data-toggle="tab">{Отзывы}</a></li>
+                <li role="presentation" id="filesTab" class="hide hidden-xs"><a href="#files" aria-controls="files" role="tab" data-toggle="tab">{Файлы}</a></li>
+                <li role="presentation" id="pagesTab" class="hide hidden-xs"><a href="#pages" aria-controls="pages" role="tab" data-toggle="tab">{Статьи}</a></li>
             </ul>
             <!-- Tab panes -->
             <div class="tab-content">
@@ -163,11 +170,11 @@
 
 
                     <button role="button" class="btn btn-info pull-right" onclick="$('#addComment').slideToggle();
-                            $(this).hide();"><span class="glyphicon glyphicon-plus-sign"></span> Новый комментарий</button>
+                            $(this).hide();"><span class="glyphicon glyphicon-plus-sign"></span> {Новый комментарий}</button>
 
                     <div id='addComment' class="well well-sm" style='display:none;margin-top:30px;'>
 
-                        <h3>Оставьте свой отзыв</h3>
+                        <h3>{Оставьте свой отзыв}</h3>
 
                         <textarea id="message" class="commentTextarea form-control"></textarea>
                         <input type="hidden" id="commentAuthFlag" name="commentAuthFlag" value="@php if($_SESSION['UsersId']) echo 1; else echo 0; php@">
@@ -188,7 +195,7 @@
                             <label class="btn btn-success btn-sm active">
                                 <input type="radio" name="rate" value="5" checked> +5
                             </label>
-                            <button role="button" class="btn btn-info btn-sm pull-right" onclick="commentList('@productUid@', 'add', 1);">Проголосовать</button>
+                            <button role="button" class="btn btn-info btn-sm pull-right" onclick="commentList('@productUid@', 'add', 1);">{Проголосовать}</button>
                         </div>
 
                     </div>
@@ -215,7 +222,7 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{Закрыть}</button>
                 </div>
             </div>
         </div>

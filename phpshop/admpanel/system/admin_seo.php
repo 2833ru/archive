@@ -10,7 +10,6 @@ function actionStart() {
     // Выборка
     $data = $PHPShopOrm->select();
     $option = unserialize($data['admoption']);
-    ;
 
     // Размер названия поля
     $PHPShopGUI->field_col = 3;

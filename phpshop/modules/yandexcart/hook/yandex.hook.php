@@ -39,12 +39,6 @@ function setProducts_yandexcart_hook($obj, $data) {
             $add.='<param name="Цвет">' . $data['val']['color'] . '</param>';
     }
 
-
-    // fee
-    if ($data['val']['cpa'] == 1 and !empty($data['val']['fee'])) {
-        $data['xml'] = str_replace('<offer', '<offer fee="' . $data['val']['fee'] . '"', $data['xml']);
-    }
-
     // Oldprice
     if (!empty($data['val']['oldprice']))
         $data['xml'] = str_replace('<price>' . $data['val']['price'] . '</price>', '<price>' . $data['val']['price'] . '</price><oldprice>' . $data['val']['oldprice'] . '</oldprice>', $data['xml']);
@@ -110,13 +104,6 @@ function setProducts_yandexcart_hook($obj, $data) {
     // step-quantity
     if (!empty($data['val']['yandex_step_quantity']))
         $add.='<step-quantity>' . $data['val']['yandex_step_quantity'] . '</step-quantity>';
-
-    // cpa
-    if ($data['val']['cpa'] == 1) {
-        $add.='<cpa>1</cpa>';
-    }
-    else
-        $add.='<cpa>0</cpa>';
 
     // weight
     if (!empty($data['val']['weight']))

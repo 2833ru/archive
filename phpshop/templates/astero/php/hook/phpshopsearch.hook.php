@@ -12,7 +12,7 @@ function template_category_select($obj, $data) {
     // Задаем  сетку
     $obj->cell=3;
     
-    $obj->set('currentSearchCat', 'Выбрать каталог поиска');
+    $obj->set('currentSearchCat', __('Выбрать каталог поиска'));
     foreach ($obj->value as $val) {
         $dis.='<li><a class="cat-menu-search" data-target="' . $val[1] . '" href="javascript:void(0)">' . $val[0] . '</a></li>';
         if ($val[2] == 'selected')

@@ -333,7 +333,7 @@ class PHPShopRSS {
      * Подвал 
      */
     function serFooter() {
-        $this->xml.='</channel>';
+        $this->xml.='</channel></rss>';
     }
 
     /**

@@ -17,9 +17,9 @@ function actionSave() {
 
         // Выполнено успешно
         if ($result)
-            $result_message = $PHPShopGUI->setAlert('SQL запрос успешно выполнен');
+            $result_message = $PHPShopGUI->setAlert(__('SQL запрос успешно выполнен'));
         else {
-            $result_message = $PHPShopGUI->setAlert('SQL ошибка: ' . mysqli_error($link_db), 'danger');
+            $result_message = $PHPShopGUI->setAlert(__('SQL ошибка').': ' . mysqli_error($link_db), 'danger');
             $result_error_tracert = $_POST['sql_text'];
         }
     }
@@ -33,7 +33,7 @@ function actionSave() {
                 $csv_file_name = $_FILES['file']['name'];
             }
             else
-                $result_message = $PHPShopGUI->setAlert('Ошибка сохранения файла <strong>' . $csv_file_name . '</strong> в папке phpshop/admpanel/csv', 'danger');
+                $result_message = $PHPShopGUI->setAlert(__('Ошибка сохранения файла').' <strong>' . $csv_file_name . '</strong> в phpshop/admpanel/csv', 'danger');
         }
     }
 
@@ -72,9 +72,9 @@ function actionSave() {
 
         // Выполнено успешно
         if (empty($result_error_tracert))
-            $result_message = $PHPShopGUI->setAlert('SQL запрос успешно выполнен');
+            $result_message = $PHPShopGUI->setAlert(__('SQL запрос успешно выполнен'));
         else {
-            $result_message = $PHPShopGUI->setAlert('SQL ошибка: ' . mysqli_error($link_db), 'danger');
+            $result_message = $PHPShopGUI->setAlert(__('SQL ошибка').': ' . mysqli_error($link_db), 'danger');
         }
     }
 }
@@ -110,7 +110,7 @@ function actionStart() {
         'class' => 'btn btn-default btn-sm navbar-btn',
         'type' => 'button',
         'icon' => 'glyphicon glyphicon-plus',
-        'tooltip' => 'data-toggle="tooltip" data-placement="left" title="Создать резервную копию"'
+        'tooltip' => 'data-toggle="tooltip" data-placement="left" title="'.__('Создать резервную копию').'"'
     );
 
     $PHPShopInterface->action_title['load'] = 'Скачать';
@@ -123,7 +123,7 @@ function actionStart() {
     $PHPShopInterface->setCaption(array(null, "4%"), array("Имя файла", "40%"), array("Дата", "15%"), array('', '1%', array('sort' => 'none')), array("", "7%"), array("Размер файла", "15%", array('align' => 'right')));
     PHPShopFile::searchFile("./dumper/backup/", 'getFileInfo');
 
-    $help = '<p class="text-muted">Если размер файла резервной копии БД более 100 MB, то рекомендуется произвести очистку сервисных таблиц и выполнить оптимизацию базы данных через раздел <kbd>Обслуживание</kbd>.</p>';
+    $help = '<p class="text-muted">'.__('Если размер файла резервной копии БД более 100 MB, то рекомендуется произвести очистку сервисных таблиц и выполнить оптимизацию базы данных через раздел <kbd>Обслуживание</kbd>').'.</p>';
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, false);

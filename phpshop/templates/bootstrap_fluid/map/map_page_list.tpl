@@ -1,6 +1,6 @@
 <ol class="breadcrumb hidden-xs">
-    <li><a href="/" >Главная</a></li>
-    <li class="active">Карта сайта</li>
+    <li><a href="/" >{Главная}</a></li>
+    <li class="active">{Карта сайта}</li>
 </ol>
 
 <div class="page-header">
@@ -8,7 +8,7 @@
         @catalFound@: <b>@catalNum@</b><br>
         @producFound@: <b>@productNum@</b>
     </div>
-    <h2>Карта сайта</h2>
+    <h2>{Карта сайта}</h2>
 </div>
 
 

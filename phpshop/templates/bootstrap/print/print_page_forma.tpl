@@ -21,7 +21,7 @@
                     <h3>@nameShop@</h3>
                     @descripShop@
                     <button onclick="window.print();" class="btn btn-default pull-right">
-                        <span class="glyphicon glyphicon-print"></span> Печать
+                        <span class="glyphicon glyphicon-print"></span> {Печать}
                     </button> 
                 </div>
             </div>

@@ -19,9 +19,11 @@ PHPShopObj::loadClass("orm");
 PHPShopObj::loadClass("cart");
 PHPShopObj::loadClass("parser");
 PHPShopObj::loadClass("text");
+PHPShopObj::loadClass("lang");
 
 $PHPShopBase = new PHPShopBase($_classPath."inc/config.ini");
 $PHPShopSystem = new PHPShopSystem();
+$PHPShopLang = new PHPShopLang(array('locale'=>$_SESSION['lang'],'path'=>'admin'));
 
 if(PHPShopSecurity::true_param($_GET['tip'],$_GET['orderId'],$_GET['datas'])) {
 
@@ -69,6 +71,7 @@ if(PHPShopSecurity::true_param($_GET['tip'],$_GET['orderId'],$_GET['datas'])) {
     }
     
     PHPShopParser::file('../../lib/templates/print/receipt.tpl');
+    writeLangFile();
 }
 else header('Location: /');
 ?>

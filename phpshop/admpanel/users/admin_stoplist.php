@@ -3,11 +3,12 @@
 $TitlePage = __("Черный список IP");
 
 function actionStart() {
-    global $PHPShopInterface;
+    global $PHPShopInterface,$TitlePage;
 
     $PHPShopInterface->action_select['Заблокировать выбранные'] = array(
         'name' => 'Заблокировать выбранные IP',
         'action' => 'add-blacklist-select',
+        'locale'=>true,
         'class' => 'disabled'
     );
     
@@ -16,6 +17,7 @@ function actionStart() {
         'action' => 'addNew',
         'class' => 'btn btn-default btn-sm navbar-btn',
         'type' => 'button',
+        'locale'=>true,
         'icon' => 'glyphicon glyphicon-plus',
         'tooltip' => 'data-toggle="tooltip" data-placement="left" title="Добавить IP"'
     );
@@ -26,12 +28,13 @@ function actionStart() {
         'action' => 'users.jurnal',
         'class' => 'btn btn-default btn-sm navbar-btn btn-action-panel',
         'type' => 'button',
+        'locale'=>true,
         'icon' => 'glyphicon glyphicon-eye-open'
     );
 
     $PHPShopInterface->action_title['add-blacklist'] = 'Заблокировать IP';
 
-    $PHPShopInterface->setActionPanel(__("Черный список IP"), array('Удалить выбранные'), array('Добавить IP','Журнал авторизации'));
+    $PHPShopInterface->setActionPanel($TitlePage, array('Удалить выбранные'), array('Добавить IP','Журнал авторизации'));
     $PHPShopInterface->setCaption(array(null, "2%"), array("IP", "40%"),array("Дата добавления", "20%"), array("", "20%"), array('Whois',"10%",array('align'=>'right','sort'=>'none')));
 
     // Таблица с данными

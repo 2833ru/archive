@@ -23,8 +23,8 @@
 						<h1 class="page-title hide">Заказ №@orderNum@</h1>
 				</div>
 				<div class="pull-right">
-					<a href="?cart=clean" class="btn btn-main"><span class="glyphicon glyphicon-remove"></span> Очистить корзину</a> 
-				    <a href="phpshop/forms/cart/index.html" target="_blank" class="btn btn-main hidden-xs"><span class="glyphicon glyphicon-print"></span> Печатная форма корзины</a>
+					<a href="?cart=clean" class="btn btn-main"><span class="glyphicon glyphicon-remove"></span> {Очистить корзину}</a> 
+				    <a href="phpshop/forms/cart/index.html" target="_blank" class="btn btn-main hidden-xs"><span class="glyphicon glyphicon-print"></span> {Печатная форма корзины}</a>
 				</div>
 			</div>
 			<div class="row order-row-fix">

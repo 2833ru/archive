@@ -17,6 +17,7 @@
             <h4 class="product-block-price">
                 <span class="price-old">@productPriceRub@</span>
                 <span class="price-new">@productPrice@ <span class="rubznak">@productValutaName@</span></span>
+                <span class="product-sklad-list-block">@productSklad@</span>
             </h4>
             <div class="prodict-block-description">
                     @productDes@
@@ -29,8 +30,8 @@
                 <i class="icons-cart"></i>
             </button>
             <a href="#" data-role="/shop/UID_@productUid@.html" class="btn btn-cart fastView" data-toggle="modal" data-target="#modalProductView" ><i class="icons-view"></i></a>
-            <button class="btn btn-wishlist addToWishList" role="button" data-uid="@productUid@" data-title="Отложить" data-placement="top" data-toggle="tooltip"><i class="icons-wishlist"></i></button>
-            <button class="btn btn-wishlist addToCompareList" role="button" data-uid="@productUid@" data-title="Сравнить" data-placement="top" data-toggle="tooltip"><i class="icons-compare"></i></button>
+            <button class="btn btn-wishlist addToWishList" role="button" data-uid="@productUid@" data-title="{Отложить}" data-placement="top" data-toggle="tooltip"><i class="icons-wishlist"></i></button>
+            <button class="btn btn-wishlist addToCompareList" role="button" data-uid="@productUid@" data-title="{Сравнить}" data-placement="top" data-toggle="tooltip"><i class="icons-compare"></i></button>
 
             <a class="btn btn-cart @elementNoticeHide@" href="/users/notice.html?productId=@productUid@" title="@productNotice@"  data-title="@productNotice@" data-placement="top" data-toggle="tooltip">
                 <i class="fa fa-envelope-o" aria-hidden="true"></i>                            

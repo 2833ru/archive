@@ -112,6 +112,8 @@ class PHPShopCore {
             $this->PHPShopOrm->cache = $this->cache;
         }
         $this->SysValue = &$GLOBALS['SysValue'];
+
+        
         $this->PHPShopSystem = $PHPShopSystem;
         $this->num_row = $this->PHPShopSystem->getParam('num_row');
         $this->PHPShopNav = $PHPShopNav;
@@ -802,7 +804,7 @@ class PHPShopCore {
         if ($this->SysValue['lang'][$str])
             return $this->SysValue['lang'][$str];
         else
-            return 'Не определено';
+            return $str;
     }
 
     /**

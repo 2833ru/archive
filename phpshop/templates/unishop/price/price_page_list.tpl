@@ -1,4 +1,4 @@
-<h2 class="page-title hide">Прайс-лист @priceCatName@</h2>
+<h2 class="page-title hide">{Прайс-лист} @priceCatName@</h2>
 
 
 <ul class="nav nav-pills page-price">
@@ -11,10 +11,10 @@
                 @searchPageCategoryDrop@
             </ul>
         </div></li>
-    <li class="price-page-list" role="presentation"><a href="/shop/CID_@PageCategory@.html" id="price-form" data-uid="@PageCategory@">Форма с описанием</a></li>
-    <li class="price-page-list" role="presentation"><a href="phpshop/forms/priceprint/print.html?catId=@PageCategory@">Печатная форма</a></li>
-    <li class="price-page-list" role="presentation"><a href="/files/priceSave.php?catId=@PageCategory@">Excel Форма</a></li>
-    <li class="price-page-list" role="presentation"><a href="/files/onlineprice/">Интерактивная форма</a></li>
+    <li class="price-page-list" role="presentation"><a href="/shop/CID_@PageCategory@.html" id="price-form" data-uid="@PageCategory@">{Форма с описанием}</a></li>
+    <li class="price-page-list" role="presentation"><a href="phpshop/forms/priceprint/print.html?catId=@PageCategory@">{Печатная форма}</a></li>
+    <li class="price-page-list" role="presentation"><a href="/files/priceSave.php?catId=@PageCategory@">Excel {Форма}</a></li>
+    <li role="presentation" class="@onlinePrice@"><a href="/files/onlineprice/">{Интерактивная форма}</a></li>
 </ul>
 
 <div><br></div>

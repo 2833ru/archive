@@ -1,6 +1,6 @@
 <?php
 
-$TitlePage=__('Редактирование Ссылки #'.$_GET['id']);
+$TitlePage=__('Редактирование Ссылки').' #'.$_GET['id'];
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['links']);
 
 // Заполняем выбор
@@ -22,24 +22,26 @@ function actionStart() {
     // Выборка
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
 
-    $PHPShopGUI->setActionPanel(__("Редактирование Ссылки: ".$data['name']), array('Удалить'),array('Сохранить','Сохранить и закрыть'));
+    $PHPShopGUI->setActionPanel(__("Редактирование Ссылки").": ".$data['name'], array('Удалить'),array('Сохранить','Сохранить и закрыть'));
     
     $Select1 = setSelectChek(1);
+    $PHPShopGUI->field_col = 2;
+
 
     // Содержание закладки 1
     $Tab1 =
-            $PHPShopGUI->setField("Ресурс:", $PHPShopGUI->setInputText(null,"name_new", $data['name'])) .
-            $PHPShopGUI->setField("Приоритет:", $PHPShopGUI->setSelect("num_new", $Select1, 70, 1)) .
-            $PHPShopGUI->setField("Статус:", $PHPShopGUI->setRadio("enabled_new", 1, "Включить", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выключить", $data['enabled'])) .
-            $PHPShopGUI->setField("Ссылка:", $PHPShopGUI->setInput("text", "link_new", $data['link'])) .
+            $PHPShopGUI->setField("Ресурс", $PHPShopGUI->setInputText(null,"name_new", $data['name'])) .
+            $PHPShopGUI->setField("Приоритет", $PHPShopGUI->setSelect("num_new", $Select1, 50)) .
+            $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("enabled_new", 1, "Включить", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выключить", $data['enabled'])) .
+            $PHPShopGUI->setField("Ссылка", $PHPShopGUI->setInput("text", "link_new", $data['link'])) .
             $PHPShopGUI->setLine() .
-            $PHPShopGUI->setField("Описание:", $PHPShopGUI->setTextarea("opis_new", $data['opis']));
+            $PHPShopGUI->setField("Описание", $PHPShopGUI->setTextarea("opis_new", $data['opis']));
 
 
-    $Tab1.=$PHPShopGUI->setField("Код кнопки:", $PHPShopGUI->setTextarea("image_new", $data['image']));
+    $Tab1.=$PHPShopGUI->setField("Код кнопки", $PHPShopGUI->setTextarea("image_new", $data['image']));
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1));
+    $PHPShopGUI->setTab(array("Основное", $Tab1,true));
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);

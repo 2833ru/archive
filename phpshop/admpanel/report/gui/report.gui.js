@@ -66,6 +66,7 @@ $().ready(function() {
     if ($(".date").length) {
         $(".date").datetimepicker({
             format: 'dd-mm-yyyy',
+            pickerPosition:'bottom-left',
             language: 'ru',
             weekStart: 1,
             todayBtn: 1,
@@ -280,7 +281,7 @@ $().ready(function() {
         'height': '100px',
         'width': '100%',
         'interactive': true,
-        'defaultText': '¬вод...',
+        'defaultText': locale.enter,
         'removeWithBackspace': true,
         'minChars': 0,
         'maxChars': 0, // if not provided there is no limit

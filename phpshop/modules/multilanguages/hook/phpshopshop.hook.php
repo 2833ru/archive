@@ -138,6 +138,7 @@ function CID_Category_multilanguages($obj,$row,$rout){
                     $multilanguages = unserialize($row['multilanguages']);
                     if($multilanguages['multilanguages_name'][ $_SESSION['lang_id'] ]!='')
                         $obj->set('podcatalogName', $multilanguages['multilanguages_name'][ $_SESSION['lang_id'] ]);
+                    else $obj->set('podcatalogName', $row['name']);
 
 
                     $dis.=ParseTemplateReturn($obj->cid_cat_with_foto_template);

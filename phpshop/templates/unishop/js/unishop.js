@@ -76,18 +76,17 @@ function changeOfReviewsRatingView() {
 }
 
 $(document).ready(function() {
-    /*$(window).on('scroll', function() {
+    $(window).on('scroll', function() {
 
-        if ($(window).scrollTop() >= $('.main-container, .slider').offset().top) {
-            $('#main-menu').addClass('navbar-fixed-top')
+        if ($(window).scrollTop() >= $('.header-bottom').offset().top) {
             // toTop          
-            $('#toTop'). deIn();
+            $('#toTop').fadeIn();
         } else {
             $('#main-menu').removeClass('navbar-fixed-top');
-            $('#toTop'). deOut();
+            $('#toTop').fadeOut();
        
         }
-    });*/
+    });
     changeOfProductRatingView();
     setInterval(changeOfReviewsRatingView, 100)
     $(document).on('click', function() {

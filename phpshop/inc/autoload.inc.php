@@ -10,7 +10,6 @@ if (strstr($_SERVER['REQUEST_URI'], 'index.php')) {
     exit();
 }
 
-
 // Шаблон дизайна по умолчанмю
 $PHPShopCoreElement = new PHPShopCoreElement();
 $PHPShopCoreElement->init('skin', false, false);

@@ -5,24 +5,21 @@ $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['currency']);
 
 // Стартовый вид
 function actionStart() {
-    global $PHPShopGUI, $PHPShopOrm, $PHPShopModules;
+    global $PHPShopGUI, $TitlePage, $PHPShopModules;
 
     $PHPShopGUI->field_col = 2;
+    $PHPShopGUI->setActionPanel($TitlePage, false, array('Сохранить и закрыть'));
     
-    
-    $PHPShopGUI->setActionPanel(__("Создание Валюты"), false, array('Сохранить и закрыть'));
-    
-
     // Выборка
-    $data['name']='Новая валюта';
+    $data['name']=__('Новая валюта');
     $data['kurs']=1;
     $data['enabled']=1;
 
-    $Tab1 = $PHPShopGUI->setField("Название:", $PHPShopGUI->setInputText(null, "name_new", $data['name'], 300));
-    $Tab1 .= $PHPShopGUI->setField("Обозначение:", $PHPShopGUI->setInputText(null, "code_new", $data['code'], 300));
-    $Tab1 .= $PHPShopGUI->setField("ISO:", $PHPShopGUI->setInputText(null, "iso_new", $data['iso'], 300),1,'Код валюты по стандарту ISO (USD,RUB,UAH)');
-    $Tab1 .= $PHPShopGUI->setField("Курс:", $PHPShopGUI->setInputText(null, "kurs_new", $data['kurs'], 300),1,'Обратный курс относительно рубля ($ = 0.015)');
-    $Tab1 .= $PHPShopGUI->setField("Приоритет:", $PHPShopGUI->setInputText(null, "num_new", $data['num'], 50));
+    $Tab1 = $PHPShopGUI->setField("Название", $PHPShopGUI->setInputText(null, "name_new", $data['name'], 300));
+    $Tab1 .= $PHPShopGUI->setField("Обозначение", $PHPShopGUI->setInputText(null, "code_new", $data['code'], 300));
+    $Tab1 .= $PHPShopGUI->setField("ISO", $PHPShopGUI->setInputText(null, "iso_new", $data['iso'], 300),1,'Код валюты по стандарту ISO (USD,RUB,UAH)');
+    $Tab1 .= $PHPShopGUI->setField("Курс", $PHPShopGUI->setInputText(null, "kurs_new", $data['kurs'], 300),1,'Обратный курс относительно рубля ($ = 0.015)');
+    $Tab1 .= $PHPShopGUI->setField("Приоритет", $PHPShopGUI->setInputText(null, "num_new", $data['num'], 50));
     $Tab1.=$PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("enabled_new", 1, "Вкл.", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выкл.", $data['enabled']));
     
     // Запрос модуля на закладку
@@ -30,7 +27,6 @@ function actionStart() {
 
     // Вывод формы закладки
     $PHPShopGUI->setTab(array("Основное", $Tab1, true));
-
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("submit", "saveID", "ОК", "right", 70, "", "but", "actionInsert.currency.create");

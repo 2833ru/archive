@@ -49,7 +49,7 @@ function format_mysql_date($datetime, $style = "y.m.d h:i:s") {
 }
 
 function actionStart() {
-    global $PHPShopInterface;
+    global $PHPShopInterface,$TitlePage;
 
     $PHPShopInterface->addJSFiles('./shopusers/gui/shopusers.gui.js');
 
@@ -59,9 +59,8 @@ function actionStart() {
         'action' => 'search enabled'
     );
 
-
-    $PHPShopInterface->setActionPanel(__('Пользователи') . ' / ' . __("Сообщения"), array('Поиск', '|', 'Удалить выбранные'), false);
-    $PHPShopInterface->setCaption(array(null, "2%"), array("Имя", "20%"), array("E-mail", "15%"), array("Тема", "40%"), array("Дата", "10%"), array("", "10%"), array("Статус &nbsp;&nbsp;&nbsp;", "10%", array('align' => 'right')));
+    $PHPShopInterface->setActionPanel($TitlePage, array('Поиск', '|', 'Удалить выбранные'), false,false);
+    $PHPShopInterface->setCaption(array(null, "2%"), array("Имя", "20%"), array("E-mail", "15%"), array("Тема", "40%"), array("Дата", "10%"), array("", "10%"), array("Статус", "10%", array('align' => 'right')));
 
     // Поиск
     $where = null;
@@ -107,13 +106,13 @@ function actionAdvanceSearch() {
 
     $PHPShopInterface->field_col = 2;
 
-    $searchforma = $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[b.name]', 'placeholder' => __('Имя'), 'class' => 'pull-left', 'value' => $_REQUEST['words']));
+    $searchforma = $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[b.name]', 'placeholder' => 'Имя', 'class' => 'pull-left', 'value' => $_REQUEST['words']));
     $searchforma.='<br><br>';
-    $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[b.login]', 'size' => 300, 'placeholder' => __('E-mail'), 'class' => 'pull-left', 'value' => $_REQUEST['words']));
+    $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[b.login]', 'size' => 300, 'placeholder' => 'E-mail', 'class' => 'pull-left', 'value' => $_REQUEST['words']));
     $searchforma.='<br><br>';
-    $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[a.Subject]',  'placeholder' => __('Заголовок'), 'class' => 'pull-left', 'value' => $_REQUEST['words']));
+    $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[a.Subject]',  'placeholder' => 'Заголовок', 'class' => 'pull-left', 'value' => $_REQUEST['words']));
     $searchforma.='<br><br>';
-        $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[a.Message]',  'placeholder' => __('Сообщение'), 'class' => 'pull-left', 'value' => $_REQUEST['words']));
+        $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[a.Message]',  'placeholder' => 'Сообщение', 'class' => 'pull-left', 'value' => $_REQUEST['words']));
     $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'hidden', 'name' => 'path', 'value' => 'shopusers.messages'));
 
     $PHPShopInterface->_CODE.=$searchforma;

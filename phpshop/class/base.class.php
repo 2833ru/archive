@@ -60,7 +60,7 @@ class PHPShopBase {
      * @param bool $error блокировка ошибок PHP
      */
     function __construct($iniPath, $connectdb = true, $error = true) {
-
+        
         // Временная зона
         $this->setTimeZone();
 

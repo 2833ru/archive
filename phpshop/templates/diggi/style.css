@@ -2009,6 +2009,13 @@ img.template:hover{
     border-bottom: 1px solid #ddd;
     display: none;
 }
+.product-sklad-list-block {
+    text-align: center;
+    font-weight: bold;
+    font-size: 14px;
+    color: #0a87cf;
+    display: block;
+}
 @media (min-width: 768px) {
     .navbar.navbar-fixed-top > .collapse.navbar-collapse.navbar-cat-collapse {
         width: 750px;

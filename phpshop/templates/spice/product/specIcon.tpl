@@ -1,1 +1,1 @@
-<span class="sale-icon label">Распродажа</span>
+<span class="sale-icon label">{Распродажа}</span>

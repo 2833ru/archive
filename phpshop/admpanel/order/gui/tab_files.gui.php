@@ -6,12 +6,12 @@
  * @return string 
  */
 function tab_files($row) {
-    global $PHPShopInterface;
+
     $files = unserialize($row['files']);
 
     $PHPShopInterface = new PHPShopInterface();
     $PHPShopInterface->checkbox_action = false;
-    $PHPShopInterface->setCaption(array("", "50%"), array("", "1%"), array('<button data-count="' . count($files) . '" class="btn btn-default btn-sm file-add"><span class="glyphicon glyphicon-plus"></span> ' . __('Прикрепить файл') . '</button>', "50%", array('align' => 'right')));
+    $PHPShopInterface->setCaption(array("", "50%"), array("", "1%"), array('<button data-count="' . count($files) . '" class="btn btn-default btn-sm file-add"><span class="glyphicon glyphicon-plus"></span> ' . __('Прикрепить файл') . '</button>', "50%", array('align' => 'right','locale'=>false)));
 
     $key = 0;
     if (is_array($files))

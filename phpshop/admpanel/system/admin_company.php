@@ -16,19 +16,18 @@ function actionStart() {
     $PHPShopGUI->addJSFiles('./system/gui/system.gui.js');
     $PHPShopGUI->setActionPanel($TitlePage, false, array('Сохранить'));
 
-
-    $PHPShopGUI->_CODE = '<p></p>' . $PHPShopGUI->setField(__("Название магазина"), $PHPShopGUI->setInputText(null, "name_new", $data['name']));
-    $PHPShopGUI->_CODE .= $PHPShopGUI->setField(__("Владелец"), $PHPShopGUI->setInputText(null, "company_new", $data['company']));
-    $PHPShopGUI->_CODE .= $PHPShopGUI->setField(__("Телефоны"), $PHPShopGUI->setInputText(null, "tel_new", $data['tel']));
-    $PHPShopGUI->_CODE .= $PHPShopGUI->setField(__("Наименование организации"), $PHPShopGUI->setInputText(null, "bank[org_name]", $bank['org_name']));
-    $PHPShopGUI->_CODE .= $PHPShopGUI->setField(__("Юридический адрес"), $PHPShopGUI->setInputText(null, "bank[org_ur_adres]", $bank['org_ur_adres']));
-    $PHPShopGUI->_CODE .= $PHPShopGUI->setField(__("Фактический адрес"), $PHPShopGUI->setInputText(null, "bank[org_adres]", $bank['org_adres']));
-    $PHPShopGUI->_CODE .= $PHPShopGUI->setField(__("ИНН"), $PHPShopGUI->setInputText(null, "bank[org_inn]", $bank['org_inn'], 300));
-    $PHPShopGUI->_CODE .= $PHPShopGUI->setField(__("КПП"), $PHPShopGUI->setInputText(null, "bank[org_kpp]", $bank['org_kpp'], 300));
-    $PHPShopGUI->_CODE .= $PHPShopGUI->setField(__("№ Счета организации"), $PHPShopGUI->setInputText(null, "bank[org_schet]", $bank['org_schet'], 300));
-    $PHPShopGUI->_CODE .= $PHPShopGUI->setLine() . $PHPShopGUI->setField(__("Наименование банк"), $PHPShopGUI->setInputText(null, "bank[org_bank]", $bank['org_bank'], 300));
-    $PHPShopGUI->_CODE .= $PHPShopGUI->setField(__("БИК"), $PHPShopGUI->setInputText(null, "bank[org_bic]", $bank['org_bic'], 300));
-    $PHPShopGUI->_CODE .= $PHPShopGUI->setField(__("№ Счета банка"), $PHPShopGUI->setInputText(null, "bank[org_bank_schet]", $bank['org_bank_schet'], 300));
+    $PHPShopGUI->_CODE = '<p></p>' . $PHPShopGUI->setField("Название магазина", $PHPShopGUI->setInputText(null, "name_new", $data['name']));
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setField("Владелец", $PHPShopGUI->setInputText(null, "company_new", $data['company']));
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setField("Телефоны", $PHPShopGUI->setInputText(null, "tel_new", $data['tel']));
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setField("Наименование организации", $PHPShopGUI->setInputText(null, "bank[org_name]", $bank['org_name']));
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setField("Юридический адрес", $PHPShopGUI->setInputText(null, "bank[org_ur_adres]", $bank['org_ur_adres']));
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setField("Фактический адрес", $PHPShopGUI->setInputText(null, "bank[org_adres]", $bank['org_adres']));
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setField("ИНН", $PHPShopGUI->setInputText(null, "bank[org_inn]", $bank['org_inn'], 300));
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setField("КПП", $PHPShopGUI->setInputText(null, "bank[org_kpp]", $bank['org_kpp'], 300));
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setField("№ Счета организации", $PHPShopGUI->setInputText(null, "bank[org_schet]", $bank['org_schet'], 300));
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setLine() . $PHPShopGUI->setField("Наименование банк", $PHPShopGUI->setInputText(null, "bank[org_bank]", $bank['org_bank'], 300));
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setField("БИК", $PHPShopGUI->setInputText(null, "bank[org_bic]", $bank['org_bic'], 300));
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setField("№ Счета банка", $PHPShopGUI->setInputText(null, "bank[org_bank_schet]", $bank['org_bank_schet'], 300));
 //http://jsfiddle.net/5ud8jkvf/
     $PHPShopGUI->_CODE .= $PHPShopGUI->setField("Печать", $PHPShopGUI->setIcon($bank['org_stamp'], "bank[org_stamp]", false, array('load' => false, 'server' => true, 'url' => false, 'multi' => false, 'view' => false)));
     $PHPShopGUI->_CODE .= $PHPShopGUI->setField("Подпись руководителя", $PHPShopGUI->setIcon($bank['org_sig'], "bank[org_sig]", false, array('load' => false, 'server' => true, 'url' => false, 'multi' => false, 'view' => false)));
@@ -36,7 +35,6 @@ function actionStart() {
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
-
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =
@@ -73,13 +71,11 @@ function actionUpdate() {
     $data = $PHPShopOrm->select();
     $bank = unserialize($data['bank']);
 
-
     if (is_array($_POST['bank']))
         foreach ($_POST['bank'] as $key => $val)
             $bank[$key] = $val;
 
     $_POST['bank_new'] = serialize($bank);
-
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);

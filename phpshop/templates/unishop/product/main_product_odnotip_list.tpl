@@ -1,3 +1,5 @@
-<h4 class="heading">@productOdnotip@</h4>
+<div class="odnotipList">
+	<h4 class="heading odnotiptitle">{Аналогичные товары}</h4>
 
-@productOdnotipList@
+	@productOdnotipList@
+</div>

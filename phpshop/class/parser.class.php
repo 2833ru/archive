@@ -86,8 +86,11 @@ class PHPShopParser {
         );
 
         $string = preg_replace_callback("/(@php)(.*)(php@)/sU", "phpshopparserevalstr", $string);
-        //$string = preg_replace_callback("/@([a-zA-Z0-9_]+)@/e", '$GLOBALS["SysValue"]["other"]["\1"]', $string);
         $string = preg_replace_callback("/@([a-zA-Z0-9_]+)@/", 'PHPShopParser::SysValueReturn', $string);
+        $string = preg_replace_callback("/({)([а-яА-ЯёЁ0-9_ ,.\"\-\/]+)(})/", "PHPShopParser::locale", $string);
+
+        // Запись файла локализации
+        //writeLangFile();
 
         if (!empty($replace))
             $string = preg_replace(array_keys($replaces), array_values($replaces), $string);
@@ -123,6 +126,13 @@ class PHPShopParser {
     static function SysValueReturn($m) {
         global $SysValue;
         return $SysValue["other"][$m[1]];
+    }
+
+    static function locale($str) {
+        if(str_replace(" ","", $str[0]) == "{}")
+            return  "{}";
+        else
+            return __($str[2]);
     }
 
 }
@@ -354,7 +364,9 @@ function allowedFunctions($str) {
         'isset',
         'empty',
         'chr',
+        '__',
         'str_replace',
+        '__hide',
         'empty'
     );
 
@@ -400,10 +412,11 @@ function SysValueReturn($m) {
  * @param string $debug имя файла шаблона для отладки
  * @return string
  */
-function Parser($string,$debug=false) {
-    
+function Parser($string, $debug = false) {
+
     $dis = @preg_replace_callback("/@([a-zA-Z0-9_]+)@/", 'SysValueReturn', @preg_replace_callback("/(@php)(.*)(php@)/sU", "evalstr", str_replace('&#43;', '+', $string)));
-    
+    $dis = preg_replace_callback("/({)([а-яА-ЯёЁ0-9_ ,.\"\-\/]+)(})/", "PHPShopParser::locale", $dis);
+
     $add = ' id="data-source" data-toggle="tooltip" data-placement="auto" data-source="' . $debug . '" title="Показать [Ctrl + &crarr;]" ';
 
     if ($debug and !empty($_COOKIE['debug_template'])) {
@@ -433,6 +446,15 @@ function tmpGetFile($path) {
     }
     else
         return false;
+}
+
+/**
+ * Скрытие элементов шаблонизатора
+ * @param string $name имя переменной для сравнения
+ */
+function __hide($name) {
+    if (empty($GLOBALS['SysValue']['other'][$name]))
+        echo 'hide';
 }
 
 ?>

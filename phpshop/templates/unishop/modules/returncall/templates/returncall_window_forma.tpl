@@ -1,4 +1,4 @@
-<a href="#" data-toggle="modal" data-target="#returnCallModal" class="header-link-color returncall-link header-top-link"><i class="feather iconz-phone"></i> заказать звонок</a>
+<a href="#" data-toggle="modal" data-target="#returnCallModal" class="header-link-color returncall-link header-top-link"><i class="feather iconz-phone"></i>{ заказать звонок}</a>
 
 <!-- Модальное окно returncall-->
 <div class="modal fade bs-example-modal-sm" id="returnCallModal" tabindex="-1" role="dialog"  aria-hidden="true">
@@ -12,10 +12,10 @@
                 <div class="modal-body">
 
                     <div class="form-group">
-                        <input type="text" name="returncall_mod_name" class="form-control" placeholder="Имя..." required="">
+                        <input type="text" name="returncall_mod_name" class="form-control" placeholder="{Имя}..." required="">
                     </div>
                     <div class="form-group">
-                        <input type="text" name="returncall_mod_tel" class="form-control" placeholder="Телефон..." required="">
+                        <input type="text" name="returncall_mod_tel" class="form-control" placeholder="{Телефон}..." required="">
                     </div>
                     <div class="form-group">
                         <input placeholder="Время звонка:" class="form-control" type="text" name="returncall_mod_time_start">
@@ -26,8 +26,8 @@
 
                     <div class="form-group">
                         <div class="col-xs-12">
-                            <input type="checkbox" value="on" name="rule" class="req" checked="checked"> 
-                            Я согласен(а)  <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html" alt="Согласие на обработку персональных данных">на обработку моих персональных данных</a> 
+                            <input type="checkbox" value="on" name="rule" class="req" checked="checked"> @rule@
+                           
                         </div>
                     </div>
                     @returncall_captcha@
@@ -36,7 +36,7 @@
                 </div>
                 <div class="modal-footer">
                     <input type="hidden" name="returncall_mod_send" value="1">
-                    <button type="submit" class="btn btn-primary">Заказать звонок</button>
+                    <button type="submit" class="btn btn-primary">{Заказать звонок}</button>
                 </div>
             </form>
         </div>

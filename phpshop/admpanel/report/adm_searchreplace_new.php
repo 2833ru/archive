@@ -46,7 +46,7 @@ function viewCatalog() {
     $PHPShopCategoryArray = new PHPShopCategoryArray();
     $CategoryArray = $PHPShopCategoryArray->getArray();
 
-       $CategoryArray[0]['name'] = '- Выбрать каталог -';
+       $CategoryArray[0]['name'] = '- '.__('Выбрать каталог').' -';
        $tree_array = array();
 
     foreach ($PHPShopCategoryArray->getKey('parent_to.id', true) as $k => $v) {
@@ -87,12 +87,12 @@ function viewCatalog() {
 
 // Стартовый вид
 function actionStart() {
-    global $PHPShopGUI, $PHPShopModules;
+    global $PHPShopGUI, $PHPShopModules,$TitlePage;
 
 
     // Размер названия поля
     $PHPShopGUI->field_col = 2;
-    $PHPShopGUI->setActionPanel(__("Переадресация поиска"), false, array('Сохранить и закрыть'));
+    $PHPShopGUI->setActionPanel($TitlePage, false, array('Сохранить и закрыть'));
     $PHPShopGUI->addJSFiles('./js/jquery.tagsinput.min.js', './report/gui/report.gui.js');
     $PHPShopGUI->addCSSFiles('./css/jquery.tagsinput.css');
 
@@ -100,12 +100,11 @@ function actionStart() {
     $data = $_GET['data'];
     $data['enabled'] = 1;
 
-
     // Содержание закладки 1
     $Tab1 = $PHPShopGUI->setField("Запрос", $PHPShopGUI->setInputText(false, "name_new", str_replace(array('i', 'ii'), array('', ','), $data['name'])) . $PHPShopGUI->setRadio("enabled_new", 1, "Показывать", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Скрыть", $data['enabled']));
 
     // Товары
-    $Tab1.=$PHPShopGUI->setField('Товары', $PHPShopGUI->setTextarea('uid_new', $data['uid'], false, false, false, __('Укажите ID товаров или воспользуйтесь <a href="#" data-target="#uid_new"  class="btn btn-sm btn-default tag-search"><span class="glyphicon glyphicon-search"></span> поиском товаров</a>')));
+    $Tab1.=$PHPShopGUI->setField('Товары', $PHPShopGUI->setTextarea('uid_new', $data['uid'], false, false, false, __('Укажите ID товаров или воспользуйтесь').' <a href="#" data-target="#uid_new"  class="btn btn-sm btn-default tag-search"><span class="glyphicon glyphicon-search"></span> '.__('поиском товаров').'</a>'));
 
     // Каталог
     $Tab1.=$PHPShopGUI->setField('Каталог', viewCatalog($data['category']),false,'Переадресация на страницу списка товаров в выбранном каталоге');

@@ -6,14 +6,14 @@ PHPShopObj::loadClass('user');
 
 // Стартовый вид
 function actionStart() {
-    global $PHPShopGUI, $PHPShopOrm, $PHPShopModules;
+    global $PHPShopGUI, $PHPShopModules,$TitlePage;
 
     // Начальные данные
     $data['enabled'] = 1;
 
     // Размер названия поля
     $PHPShopGUI->field_col = 2;
-    $PHPShopGUI->setActionPanel(__("Покупатели") . ' / ' . __('Новая скидка'), false, array('Сохранить и закрыть', 'Создать и редактировать'));
+    $PHPShopGUI->setActionPanel(__("Покупатели") . ' / ' . $TitlePage, false, array('Сохранить и закрыть', 'Создать и редактировать'));
 
     // Содержание закладки 1
     $Tab1 = $PHPShopGUI->setCollapse(__('Информация'), $PHPShopGUI->setField("Сумма", $PHPShopGUI->setInput('text.required', "sum_new", $data['sum'],null,300)) .

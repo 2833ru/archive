@@ -128,44 +128,35 @@
     
     <tr bgcolor="#eaeaea">
         <td >
-        <h2>Здравствуйте, @user_name@!</h2>
+        <h2>{Здравствуйте}, @user_name@!</h2>
               
-<p>Спасибо за регистрацию на сайте @shopName@!</p><p>
-Вы успешно активированы администратором, Ваш логин @login@, пароль @password@.</p>
+<p>{Спасибо за регистрацию на сайте} "@shopName@"!</p><p>
+{Вы успешно активированы администратором, Ваш логин} <b>@login@</b>, {пароль} <b>@password@</b>.</p>
 
- 
 <hr>
-<p>Вы всегда можете задать нам вопрос в Личном кабинете на сайте в разделе <a href="http://@serverPath@users/message.html">Связь с менеджером</a>.</p>        
+<p>{Вы всегда можете задать нам вопрос в Личном кабинете на сайте в разделе} <a href="http://@serverPath@users/message.html">{Связь с менеджером}</a>.</p>        
         </td>
     </tr>
          
 </tbody>  
 </table> 
 
-
 <table width="660" align="center" cellspacing="0" cellpadding="10">
 <tbody>
-
-
     <tr bgcolor="#fafafa" id="footer" height="100%">
-    
-      
+
         <td align="left" valign="top" height="100%">
-            <p><b>С уважением, @shopName@.</b></p>
+            <p><b>{С уважением}, @shopName@.</b></p>
       <p>@org_name@<br>
-      Интернет-магазин <a href="http://@serverPath@">@serverPath@</a><br>
-      Отдел продаж: @telNum@<br>
+      {Интернет-магазин} <a href="http://@serverPath@">@serverPath@</a><br>
+      {Отдел продаж}: @telNum@<br>
       E-mail: @adminMail@<br>
       @org_adres@</p></td>
       
     </tr>
-
+  
 </tbody>  
 </table> 
 
-
-
 </body>
 </html>
-
-

@@ -279,6 +279,7 @@ class PHPShopDone extends PHPShopCore {
         // Ïåğåõâàò ìîäóëÿ â êîíöå ôóíêöèè
         if ($this->setHook(__CLASS__, __FUNCTION__, $content_adm, 'END'))
             return true;
+        
 
         // Îòñûëàåì ïèñüìî àäìèíèñòğàòîğó
         $PHPShopMail->sendMailNow($content_adm);
@@ -349,6 +350,10 @@ class PHPShopDone extends PHPShopCore {
             "sum" => $this->sum,
             "weight" => $this->weight,
             "dostavka" => $this->delivery);
+        
+        // Áåñïëàòíàÿ äîñòàâêà
+        if($this->delivery == 0)
+            $cart['delivery_free']=true;
 
         // Ñòàòóñ çàêàçà
         $this->status = array(

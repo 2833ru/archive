@@ -1,20 +1,15 @@
 <?php
+session_start();
 $_classPath = "../../../";
 include($_classPath . "class/obj.class.php");
-PHPShopObj::loadClass("base");
-PHPShopObj::loadClass("order");
-PHPShopObj::loadClass("system");
-PHPShopObj::loadClass("inwords");
-PHPShopObj::loadClass("delivery");
-PHPShopObj::loadClass("date");
-PHPShopObj::loadClass("valuta");
+PHPShopObj::loadClass(array("base","order","system","inwords","delivery","date","valuta","lang"));
 
 $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
 $PHPShopBase->chekAdmin();
 
-
 $PHPShopSystem = new PHPShopSystem();
 $LoadItems['System'] = $PHPShopSystem->getArray();
+$PHPShopLang = new PHPShopLang(array('locale'=>$_SESSION['lang'],'path'=>'admin'));
 
 $PHPShopOrder = new PHPShopOrderFunction($_GET['orderID']);
 
@@ -44,17 +39,15 @@ if (is_array($order['Cart']['cart']))
         if (!empty($val['uid']))
             $val['name'].= ' (' . $val['uid'] . ')';
 
-        $dis.="
-  <tr class=tablerow>
+        $dis.="<tr class=tablerow>
 		<td class=tablerow>" . $n . "</td>
 		<td class=tablerow>" . $val['name'] . "</td>
 		<td align=right class=tablerow nowrap>" . $PHPShopOrder->returnSumma($val['price'], 0) . "</td>
 		<td align=right class=tablerow>" . $val['num'] . "</td>
 		<td class=tableright>" . $PHPShopOrder->returnSumma($val['price'] * $val['num'], 0) . "</td>
-	</tr>
-  ";
+	      </tr>";
 
-//Определение и суммирование веса
+        // Определение и суммирование веса
         $goodid = $val['id'];
         $goodnum = $val['num'];
         $wsql = 'select weight from ' . $SysValue['base']['table_name2'] . ' where id=\'' . $goodid . '\'';
@@ -81,15 +74,14 @@ $PHPShopDelivery = new PHPShopDelivery($order['Person']['dostavka_metod']);
 $PHPShopDelivery->checkMod($order['Cart']['dostavka']);
 $deliveryPrice = $PHPShopDelivery->getPrice($sum, $weight);
 
-$dis.="
-  <tr class=tablerow>
+$dis.="<tr class=tablerow>
 		<td class=tablerow>" . $n . "</td>
 		<td class=tablerow>Доставка - " . $PHPShopDelivery->getCity() . "</td>
         <td align=right class=tablerow nowrap>" . DoZero($deliveryPrice) . "</td>
 		<td align=right class=tablerow>1</td>
 		<td class=tableright>" . DoZero($deliveryPrice) . "</td>
-	</tr>
-  ";
+	</tr>";
+
 if ($LoadItems['System']['nds_enabled']) {
     $nds = $LoadItems['System']['nds'];
     $nds = number_format($sum * $nds / (100 + $nds), "2", ".", "");
@@ -109,15 +101,15 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
 ?>
 <!doctype html>
 <head>
-    <title>Товарный чек № <?php echo @$chek_num ?></title>
+    <title><? _e("Товарный чек")." №".$chek_num ?></title>
     <meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
     <link href="style.css" type=text/css rel=stylesheet>
     <script src="../../../lib/templates/print/js/html2pdf.bundle.min.js"></script>
 </head>
 <body>
     <div align="right" class="nonprint">
-        <button onclick="html2pdf(document.getElementById('content'), {margin: 1, filename: 'Товарный чек №<?php echo $ouid ?>.pdf', html2canvas: {dpi: 192, letterRendering: true}});">Сохранить</button> 
-        <button onclick="window.print();">Распечатать</button> 
+        <button onclick="html2pdf(document.getElementById('content'), {margin: 1, filename: '<? _e("Товарный чек")?> №<?php echo $ouid ?>.pdf', html2canvas: {dpi: 192, letterRendering: true}});"><? _e("Сохранить") ?></button> 
+        <button onclick="window.print();"><? _e("Распечатать") ?></button> 
         <hr><br><br>
     </div>
     <div id="content">
@@ -126,23 +118,23 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
                     <TH scope=row align=middle width="50%" rowSpan=3><img src="<?php echo $PHPShopSystem->getLogo(); ?>" alt="" border="0" style="max-width: 200px;height: auto;"></TH>
                     <TD align=right>
                         <BLOCKQUOTE>
-                            <P>Товарный чек <SPAN class=style4><?php echo @$chek_num ?> от <?php echo PHPShopDate::dataV(date("U"), "update") ?></SPAN> </P></BLOCKQUOTE></TD></TR>
+                            <P><? _e("Товарный чек") ?> <SPAN class=style4><?php echo @$chek_num ?> от <?php echo PHPShopDate::dataV(date("U"), "update") ?></SPAN> </P></BLOCKQUOTE></TD></TR>
                 <TR>
                     <TD align=right>
                         <BLOCKQUOTE>
-                            <P><SPAN class=style4><?php echo $LoadBanc['org_adres'] ?>, телефон <?php echo $LoadItems['System']['tel'] ?> </SPAN></P></BLOCKQUOTE></TD></TR>
+                            <P><SPAN class=style4><?php echo $LoadBanc['org_adres'] ?>, <? _e("телефон") ?> <?php echo $LoadItems['System']['tel'] ?> </SPAN></P></BLOCKQUOTE></TD></TR>
                 <TR>
                     <TD align=right>
                         <BLOCKQUOTE>
-                            <P class=style4>Поставщик: <?php echo $LoadItems['System']['company'] ?></P></BLOCKQUOTE></TD></TR></TBODY></TABLE>
+                            <P class=style4><? _e("Поставщик") ?>: <?php echo $LoadItems['System']['company'] ?></P></BLOCKQUOTE></TD></TR></TBODY></TABLE>
 
 
 
         <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0><TBODY>
                 <TR>
                     <TH scope=row align=middle width="50%">
-            <P class=style4>Покупатель: <?php if(!empty($row['fio'])) echo $row['fio']; else echo @$order['Person']['name_person']; ?></P></TH>
-            <TH scope=row align=middle><b>Заказ №<?php echo $ouid ?> </b></TH></TR></TBODY></TABLE>
+            <P class=style4><? _e("Покупатель") ?>: <?php if(!empty($row['fio'])) echo $row['fio']; else echo @$order['Person']['name_person']; ?></P></TH>
+            <TH scope=row align=middle><b><? _e("Заказ") ?> №<?php echo $ouid ?> </b></TH></TR></TBODY></TABLE>
 
 
 
@@ -150,20 +142,20 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
                 <TR>
                     <TH class=style2 scope=row align=left>
             <BLOCKQUOTE>
-                <P class=style4>Проверяйте комплектацию и внешний вид товара во время его получения!</P></BLOCKQUOTE></TH></TR>
+                <P class=style4><? _e("Проверяйте комплектацию и внешний вид товара во время его получения") ?></P></BLOCKQUOTE></TH></TR>
             <TR>
                 <TH class=style4 scope=row align=left>
             <BLOCKQUOTE>
-                <P>Покупатель самостоятельно несет ответственность за внешний вид и комплектацию товара после приема его от продавца.</P></BLOCKQUOTE></TH></TR></TBODY></TABLE>
+                <P><? _e("Покупатель самостоятельно несет ответственность за внешний вид и комплектацию товара после приема его от продавца") ?>.</P></BLOCKQUOTE></TH></TR></TBODY></TABLE>
 
         <p><br></p>
         <table width=99% cellpadding=2 cellspacing=0 align=center>
             <tr class=tablerow>
                 <td class=tablerow>№</td>
-                <td width=50% class=tablerow>Наименование</td>
-                <td class=tablerow>Цена</td>
-                <td class=tablerow>Количество</td>
-                <td class=tableright>Стоимость (<?php echo $PHPShopOrder->default_valuta_code; ?>)</td>
+                <td width=50% class=tablerow><? _e("Наименование") ?></td>
+                <td class=tablerow><? _e("Цена") ?></td>
+                <td class=tablerow><? _e("Количество") ?></td>
+                <td class=tableright><? _e("Стоимость") ?> (<?php echo $PHPShopOrder->default_valuta_code; ?>)</td>
             </tr>
             <?php
             echo @$dis;
@@ -171,14 +163,14 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
             $my_nds = number_format($my_total * $LoadItems['System']['nds'] / (100 + $LoadItems['System']['nds']), "2", ".", "");
             ?>
             <tr>
-                <td colspan=5 align=right style="border-top: 1px solid #000000;border-left: 1px solid #000000;border-right: 1px solid #000000;">Скидка: <?php echo $discount ?></td>
+                <td colspan=5 align=right style="border-top: 1px solid #000000;border-left: 1px solid #000000;border-right: 1px solid #000000;"><? _e("Скидка") ?>: <?php echo $discount ?></td>
             </tr>
             <tr>
-                <td colspan=5 align=right style="border-top: 1px solid #000000;border-left: 1px solid #000000;border-right: 1px solid #000000;">Итого:
+                <td colspan=5 align=right style="border-top: 1px solid #000000;border-left: 1px solid #000000;border-right: 1px solid #000000;"><? _e("Итого") ?>:
                     <?php
-                    echo $my_total;
+                    echo $my_total." ";
                     if ($LoadItems['System']['nds_enabled']) {
-                        echo "в т.ч. НДС: " . $my_nds;
+                        _e("в т.ч. НДС").": " . $my_nds;
                     }
                     ?>
 
@@ -187,11 +179,11 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
 
             <tr><td colspan=6 style="border: 0px; border-top: 1px solid #000000;">&nbsp;</td></tr>
         </table>
-        <p><b>Всего наименований <?php echo ($num + 1) ?>, на сумму <?php echo ($PHPShopOrder->returnSumma($sum, $order['Person']['discount']) + $deliveryPrice) . " " . $PHPShopOrder->default_valuta_code; ?>
+        <p><b><?php echo __("Всего наименований")." ".($num + 1)." ".__("на сумму")." ". $row['sum']. " " . $PHPShopOrder->default_valuta_code; ?>
                 <br />
                 <?php
                 $iw = new inwords;
-                $s = $iw->get($PHPShopOrder->returnSumma($sum, $order['Person']['discount']) + $deliveryPrice);
+                $s = $iw->get($row['sum']);
                 $v = $PHPShopOrder->default_valuta_code;
                 if (preg_match("/руб/i", $v))
                     echo $s;
@@ -199,7 +191,7 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
             </b></p><br>
         <table>
             <tr>
-                <td><b>Продавец:</b></td>
+                <td><b><?php _e("Продавец") ?>:</b></td>
                 <td><?php
                     if (!empty($LoadBanc['org_sig']))
                         echo '<img src="' . $LoadBanc['org_sig'] . '">';
@@ -208,7 +200,7 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
                     ?></td>
                 <td width="150"></td>
                 <td >
-                    Гарантийное обслуживание товаров осуществляется в авторизованном сервисном центре изготовителя. При отсутствии соответствующего сервисного центра гарантийное обслуживание осуществляется у продавца. 
+                    <?php _e("Гарантийное обслуживание товаров осуществляется в авторизованном сервисном центре изготовителя. При отсутствии соответствующего сервисного центра гарантийное обслуживание осуществляется у продавца") ?>. 
                 </td>
             </tr>
             <tr>
@@ -225,3 +217,4 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
     </div>
 </body>
 </html>
+<?php writeLangFile();?>

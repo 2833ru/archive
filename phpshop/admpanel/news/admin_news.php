@@ -3,16 +3,16 @@
 $TitlePage = __("Новости");
 
 function actionStart() {
-    global $PHPShopInterface;
+    global $PHPShopInterface,$TitlePage;
 
-    $PHPShopInterface->setActionPanel(__("Новости"), array('Удалить выбранные'), array('Добавить'));
+    $PHPShopInterface->setActionPanel($TitlePage, array('Удалить выбранные'), array('Добавить'));
     $PHPShopInterface->setCaption(array(null, "3%"), array("Заголовок", "70%"), array("", "10%"), array("ID", "10%", array('align' => 'left')), array("Дата", "20%", array('align' => 'center')));
 
     // Таблица с данными
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['news']);
     $PHPShopOrm->Option['where'] = ' or ';
     $PHPShopOrm->debug = false;
-    $data = $PHPShopOrm->select(array('*'), $where, array('order' => 'id DESC'), array('limit' => 1000));
+    $data = $PHPShopOrm->select(array('*'), array(), array('order' => 'id DESC'), array('limit' => 1000));
     if (is_array($data))
         foreach ($data as $row) {
 

@@ -2,7 +2,7 @@
 <!doctype html>
 <html>
     <head>
-        <title>Счет на оплату</title>
+        <title>{Счет на оплату}</title>
         <meta name="robots" content="noindex, nofollow">
         <meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
         <style>
@@ -382,8 +382,8 @@
     <body>
 
         <div align="right" class="nonprint">
-            @comment_start@<button onclick="html2pdf(document.getElementById('content'), {margin: 2, filename: 'Счет на оплату №@ouid@.pdf',html2canvas: {dpi: 192,letterRendering: true}});">Сохранить</button> @comment_end@
-            <button onclick="window.print();">Распечатать</button> 
+            @comment_start@<button onclick="html2pdf(document.getElementById('content'), {margin: 2, filename: 'Счет на оплату №@ouid@.pdf',html2canvas: {dpi: 192,letterRendering: true}});">{Сохранить}</button> @comment_end@
+            <button onclick="window.print();">{Распечатать}</button> 
             <hr>
         </div>
         <div id="content">
@@ -396,12 +396,12 @@
                 </tr>
                 <tr CLASS=R0>
                     <TD>&nbsp;</TD>
-                    <td align="right" CLASS=R0C38><SPAN STYLE="white-space:nowrap">Юр. адрес:&nbsp;@org_ur_adres@<br>Почтовый адрес:&nbsp;@org_adres@</SPAN></td>
+                    <td align="right" CLASS=R0C38><SPAN STYLE="white-space:nowrap">{Юр. адрес}:&nbsp;@org_ur_adres@<br>{Почтовый адрес}:&nbsp;@org_adres@</SPAN></td>
                     <TD>&nbsp;</TD>
                 </tr>
                 <tr CLASS=R0>
                     <TD>&nbsp;</TD>
-                    <td align="right" CLASS=R0C38><SPAN STYLE="white-space:nowrap">Телефон:&nbsp;@telNum@</SPAN></td>
+                    <td align="right" CLASS=R0C38><SPAN STYLE="white-space:nowrap">{Телефон}:&nbsp;@telNum@</SPAN></td>
                     <TD>&nbsp;</TD>
                 </tr>
                 <tr CLASS=R0>
@@ -417,13 +417,13 @@
             <table width="100%">
                 <tr>
                     <td align="center" colspan="2">
-                        <div style="width:155mm; font-size:8pt; ">Внимание! Оплата данного счета означает согласие с условиями поставки товара. Уведомление об оплате  обязательно, в противном случае не гарантируется наличие товара на складе. Товар отпускается по факту прихода денег на р/с Поставщика, самовывозом, при наличии доверенности и паспорта.</div>
+                        <div style="width:155mm; font-size:8pt; ">{Оплата данного счета означает согласие с условиями поставки товара. Уведомление об оплате  обязательно, в противном случае не гарантируется наличие товара на складе. Товар отпускается по факту прихода денег на р.с. Поставщика, самовывозом, при наличии доверенности и паспорта}.</div>
                     </td>
                 </tr>
                 <tr>
                     <td colspan="2">
                         <div style="text-align:center;  font-weight:bold;">
-                            Образец заполнения платежного поручения                                                                                                                                            </div>
+                            {Образец заполнения платежного поручения}                                                                                                                                            </div>
                     </td>
                 </tr>
             </table>
@@ -440,13 +440,13 @@
                             </tr>
                             <tr>
                                 <td valign="bottom" style="height: 3mm;">
-                                    <div style="font-size:10pt;">Банк получателя        </div>
+                                    <div style="font-size:10pt;">{Банк получателя}           </div>
                                 </td>
                             </tr>
                         </table>
                     </td>
                     <td style="min-height:7mm;height:auto; width: 25mm;">
-                        <div>БИK</div>
+                        <div>{БИK} </div>
                     </td>
                     <td rowspan="2" style="vertical-align: top; width: 60mm;">
                         <div style=" height: 7mm; line-height: 7mm; vertical-align: middle;"><b>@org_bic@</b></div>
@@ -455,18 +455,18 @@
                 </tr>
                 <tr>
                     <td style="width: 25mm;">
-                        <div>Сч. №</div>
+                        <div>{Сч.}  №</div>
                     </td>
                 </tr>
                 <tr>
                     <td style="min-height:6mm; height:auto; width: 50mm;">
-                        <div>&nbsp;ИНН&nbsp;<b>@org_inn@</b></div>
+                        <div>&nbsp;{ИНН}&nbsp;<b>@org_inn@</b></div>
                     </td>
                     <td style="min-height:6mm; height:auto; width: 55mm;">
-                        <div>КПП&nbsp;<b>@org_kpp@</b></div>
+                        <div>{КПП}&nbsp;<b>@org_kpp@</b></div>
                     </td>
                     <td rowspan="2" style="min-height:19mm; height:auto; vertical-align: top; width: 25mm;">
-                        <div>Сч. №</div>
+                        <div>{Сч.} №</div>
                     </td>
                     <td rowspan="2" style="min-height:19mm; height:auto; vertical-align: top; width: 60mm;">
                         <div><b>@org_schet@</b></div>
@@ -483,7 +483,7 @@
                             </tr>
                             <tr>
                                 <td valign="bottom" style="height: 3mm;">
-                                    <div style="font-size: 10pt;">Получатель</div>
+                                    <div style="font-size: 10pt;">{Получатель}</div>
                                 </td>
                             </tr>
                         </table>
@@ -494,7 +494,7 @@
             <br/>
 
             <div style="font-weight: bold; font-size: 16pt; padding-left:5px;">
-                Счет №<input title="Изменить" value="@ouid@ от @date@"></div>
+                {Счет} №<input title="Изменить" value="@ouid@ от @date@"></div>
             <br/>
 
             <div style="background-color:#000000; width:100%; font-size:1px; height:2px;">&nbsp;</div>
@@ -502,16 +502,16 @@
             <table width="100%">
                 <tr>
                     <td style="width: 30mm;">
-                        <div style=" padding-left:2px;">Поставщик:    </div>
+                        <div style=" padding-left:2px;">{Поставщик}:    </div>
                     </td>
                     <td>
                         <div style="font-weight:bold;  padding-left:2px;">
-                            @org_name@, &nbsp;ИНН&nbsp;@org_inn@, КПП&nbsp;@org_kpp@, Юр. адрес:&nbsp;@org_ur_adres@, Почтовый адрес:&nbsp;@org_adres@        </div>
+                            @org_name@, &nbsp;{ИНН}&nbsp;@org_inn@, {КПП}&nbsp;@org_kpp@,  {Юр. адрес}:&nbsp;@org_ur_adres@, {Почтовый адрес}:&nbsp;@org_adres@        </div>
                     </td>
                 </tr>
                 <tr>
                     <td style="width: 30mm;">
-                        <div style=" padding-left:2px;">Покупатель:    </div>
+                        <div style=" padding-left:2px;">{Покупатель}:    </div>
                     </td>
                     <td>
                         <div style="font-weight:bold;  padding-left:2px;">
@@ -526,43 +526,43 @@
 
                     <tr class=tablerow>
                         <td class=tablerow>№</td>
-                        <td width=50% class=tablerow>Наименование</td>
-                        <td class=tablerow>Единица измерения&nbsp;</td>
-                        <td class=tablerow>Количество</td>
-                        <td class=tablerow>Цена</td>
-                        <td class=tableright>Сумма</td>
+                        <td width=50% class=tablerow>{Наименование}</td>
+                        <td class=tablerow>{Единица измерения}&nbsp;</td>
+                        <td class=tablerow>{Количество}</td>
+                        <td class=tablerow>{Цена}</td>
+                        <td class=tableright>{Сумма}</td>
                     </tr>
                     @cart@
                     <tr>
-                        <td colspan=5 align=right style="border-top: 1px solid #000000;border-left: 1px solid #000000;">Скидка:</td>
+                        <td colspan=5 align=right style="border-top: 1px solid #000000;border-left: 1px solid #000000;">{Скидка}:</td>
                         <td class=tableright nowrap><b>@discount@%</b></td>
                     </tr>
                     <tr>
-                        <td colspan=5 align=right style="border-top: 1px solid #000000;border-left: 1px solid #000000;">Итого:</td>
+                        <td colspan=5 align=right style="border-top: 1px solid #000000;border-left: 1px solid #000000;">{Итого}:</td>
                         <td class=tableright nowrap><b>@total@ @currency@</b></td>
                     </tr>
                     @nds_block_start@
                     <tr>
-                        <td colspan=5 align=right style="border-top: 1px solid #000000;border-left: 1px solid #000000;">В т.ч. НДС: @nds@%</td>
+                        <td colspan=5 align=right style="border-top: 1px solid #000000;border-left: 1px solid #000000;">{В т.ч. НДС}: @nds@%</td>
                         <td class=tableright nowrap><b>@totalnds@ @currency@</b></td>
                     </tr>
                     @nds_block_end@
                     <tr><td colspan=6 style="border: 0px; border-top: 1px solid #000000;">&nbsp;</td></tr>
             </table>
-            <p><b>Всего наименований @item@, на сумму @totaltext@
+            <p><b>{Всего наименований} @item@, {на сумму} @totaltext@
                     <br />
                 </b></p><br>
             <div style="background-color:#000000; width:100%; font-size:1px; height:2px;">&nbsp;</div>
-            <br/><div style="width:800px;text-align:right;font-size:10pt;">Счет действителен к оплате в течении трех дней.&nbsp;&nbsp;</div>
+            <br/><div style="width:800px;text-align:right;font-size:10pt;">{Счет действителен к оплате в течении трех дней}.&nbsp;&nbsp;</div>
             
 
             <table style="width:300px">
                 <tr>
-                    <td>Руководитель:</td>
+                    <td>{Руководитель}:</td>
                     <td>@org_sig@</td>
                 </tr>
                 <tr>
-                    <td>Главный бухгалтер:</td>
+                    <td>{Главный бухгалтер}:</td>
                     <td>@org_sig_buh@</td>
                 </tr>
                 <tr>

@@ -46,9 +46,7 @@ function actionStart() {
 
 
     $PHPShopInterface->setActionPanel($TitlePage . $catname, array('Новый каталог', 'Редактировать каталог', '|', 'Удалить выбранные'), array('Добавить страницу'));
-    $PHPShopInterface->setCaption(
-            array(null, "3%"), array("Ссылка", "15%"), array("Название", "40%"), array("", "7%"), array("Статус" . "", "7%", array('align' => 'right'))
-    );
+    $PHPShopInterface->setCaption(array(null, "3%"), array("Ссылка", "15%"), array("Название", "40%"), array("", "7%"), array("Статус" . "", "7%", array('align' => 'right')));
 
     $PHPShopInterface->addJSFiles('./js/jquery.treegrid.js','./page/gui/page.gui.js');
 
@@ -97,7 +95,7 @@ function actionStart() {
 
     $tree = '<table class="tree table table-hover">
          <tr class="treegrid-0">
-           <td><a href="?path=' . $_GET['path'] . '">Все страницы</a></td>
+           <td><a href="?path=' . $_GET['path'] . '">'.__('Все страницы').'</a></td>
 	</tr>';
     if (is_array($tree_array[0]['sub']))
         foreach ($tree_array[0]['sub'] as $k => $v) {
@@ -114,23 +112,20 @@ function actionStart() {
         }
     $tree.='
         <tr class="treegrid-100000">
-           <td><a href="#" class="treegrid-parent" data-parent="treegrid-100000">Меню</a></td>
+           <td><a href="#" class="treegrid-parent" data-parent="treegrid-100000">'.__('Меню').'</a></td>
 	</tr>
          <tr class="treegrid-1000 treegrid-parent-100000 data-row">
-           <td><a href="?path=' . $_GET['path'] . '&cat=1000"><span class="glyphicon glyphicon-th-list"></span>Главное меню сайта</a></td>
+           <td><a href="?path=' . $_GET['path'] . '&cat=1000"><span class="glyphicon glyphicon-th-list"></span>'.__('Главное меню сайта').'</a></td>
 	</tr>
         <tr class="treegrid-2000 treegrid-parent-100000 data-row">
-           <td><a href="?path=' . $_GET['path'] . '&cat=2000"><span class="glyphicon glyphicon-bookmark"></span>Начальная страница</a></td>
+           <td><a href="?path=' . $_GET['path'] . '&cat=2000"><span class="glyphicon glyphicon-bookmark"></span>'.__('Начальная страница').'</a></td>
 	</tr>
 </table>
   <script>
     var cat="' . intval($_GET['cat']) . '";
     </script>';
 
-
-
-
-    $sidebarleft[] = array('title' => 'Категории', 'content' => $tree, 'title-icon' => '<span class="glyphicon glyphicon-plus new" data-toggle="tooltip" data-placement="top" title="Добавить каталог"></span>&nbsp;<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="Развернуть все"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="Свернуть"></span>');
+    $sidebarleft[] = array('title' => 'Категории', 'content' => $tree, 'title-icon' => '<span class="glyphicon glyphicon-plus new" data-toggle="tooltip" data-placement="top" title="'.__('Добавить каталог').'"></span>&nbsp;<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="'.__('Развернуть все').'"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="'.__('Свернуть').'"></span>');
     $PHPShopInterface->setSidebarLeft($sidebarleft, 3);
 
     $PHPShopInterface->Compile(3);

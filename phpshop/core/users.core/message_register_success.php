@@ -19,7 +19,6 @@ function message_register_success($obj) {
 
 
     // Заголовок e-mail пользователю
-//    $title = $obj->PHPShopSystem->getName() . " - " . $obj->lang('activation_title') . " " . $_POST['name_new'];
     $title = $obj->lang('activation_title') . " " . $_POST['name_new'];
 
     // Отправка e-mail пользователя

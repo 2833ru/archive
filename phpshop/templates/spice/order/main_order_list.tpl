@@ -1,7 +1,7 @@
 
 <ol class="breadcrumb hidden-xs">
-    <li><a href="/" >Главная</a></li>
-    <li class="active"><b>Ваша корзина</b></li>
+    <li><a href="/" >{Главная}</a></li>
+    <li class="active"><b>{Ваша корзина}</b></li>
 </ol>
 
 <style type="text/css">
@@ -23,8 +23,8 @@
 						<h1 class="main-heading2">Заказ №@orderNum@</h1>
 				</div>
 				<div class="pull-right">
-					<a href="?cart=clean" class="btn btn-main"><span class="glyphicon glyphicon-remove"></span> Очистить корзину</a> 
-				    <a href="phpshop/forms/cart/index.html" target="_blank" class="btn btn-main hidden-xs"><span class="glyphicon glyphicon-print"></span> Печатная форма корзины</a>
+					<a href="?cart=clean" class="btn btn-main"><span class="glyphicon glyphicon-remove"></span> {Очистить корзину}</a> 
+				    <a href="phpshop/forms/cart/index.html" target="_blank" class="btn btn-main hidden-xs"><span class="glyphicon glyphicon-print"></span> {Печатная форма корзины}</a>
 				</div>
 			</div>
 			<div class="row order-row-fix">

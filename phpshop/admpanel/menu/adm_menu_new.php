@@ -18,13 +18,13 @@ function setSelectChek($n) {
 }
 
 function actionStart() {
-    global $PHPShopGUI, $PHPShopSystem, $PHPShopOrm, $PHPShopModules;
+    global $PHPShopGUI, $PHPShopSystem, $TitlePage, $PHPShopModules;
 
     // Выборка
     $data['flag'] = 1;
     $data['name'] = __('Новый блок');
 
-    $PHPShopGUI->setActionPanel(__("Создание нового текстового блока"), false, array('Сохранить и закрыть'));
+    $PHPShopGUI->setActionPanel($TitlePage, false, array('Сохранить и закрыть'));
 
     // Редактор 1
     $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));
@@ -38,12 +38,12 @@ function actionStart() {
     $Select2[] = array("Справа", 1, $data['element']);
 
     // Содержание закладки 1
-    $Tab1 = $PHPShopGUI->setField("Название:", $PHPShopGUI->setInput("text", "name_new", $data['name'], "none", 500)) .
-            $PHPShopGUI->setField("Статус:", $PHPShopGUI->setRadio("flag_new", 1, "Включить", $data['flag']) . $PHPShopGUI->setRadio("flag_new", 0, "Выключить", $data['flag'])) .
-            $PHPShopGUI->setField("Позиция:", $PHPShopGUI->setSelect("num_new", $Select1, 150)) .
-            $PHPShopGUI->setField("Место:", $PHPShopGUI->setSelect("element_new", $Select2, 150)) .
+    $Tab1 = $PHPShopGUI->setField("Название", $PHPShopGUI->setInput("text", "name_new", $data['name'], "none", 500)) .
+            $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("flag_new", 1, "Включить", $data['flag']) . $PHPShopGUI->setRadio("flag_new", 0, "Выключить", $data['flag'])) .
+            $PHPShopGUI->setField("Позиция", $PHPShopGUI->setSelect("num_new", $Select1, 150)) .
+            $PHPShopGUI->setField("Место", $PHPShopGUI->setSelect("element_new", $Select2, 150,true)) .
             $PHPShopGUI->setLine() .
-            $PHPShopGUI->setField("Таргетинг:", $PHPShopGUI->setInput("text", "dir_new", $data['dir']) .
+            $PHPShopGUI->setField("Таргетинг", $PHPShopGUI->setInput("text", "dir_new", $data['dir']) .
                     $PHPShopGUI->setHelp(__('* Пример: /page/,/news/. Можно указать несколько адресов через запятую.')));
 
     $Tab1.=$PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'));

@@ -65,10 +65,10 @@ function tab_img($data) {
 
 
 
-    $disp = $PHPShopGUI->setCollapse(__('Добавить изображение'), $img_add);
+    $disp = $PHPShopGUI->setCollapse('Добавить изображение', $img_add);
 
     if (!empty($img_list))
-        $disp.= $PHPShopGUI->setCollapse(__('Дополнительные изображения'), $img_list);
+        $disp.= $PHPShopGUI->setCollapse('Дополнительные изображения', $img_list);
 
     return $disp;
 }

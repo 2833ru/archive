@@ -20,6 +20,9 @@ if (stristr(ini_get("default_charset"), "utf") and function_exists('ini_set')) {
 if (ini_get("mbstring.func_overload") > 0 and function_exists('ini_set')) {
     ini_set("mbstring.internal_encoding", null);
 }
+
+// Локализация
+$locale = str_replace(array('russian','ukrainian','belarusian','english'),array('ru','uk','ru','en'),$_SESSION['lang']);
 ?>
 <!DOCTYPE html>
 <html>
@@ -40,7 +43,7 @@ if (ini_get("mbstring.func_overload") > 0 and function_exists('ini_set')) {
         <script type="text/javascript" src="js/elfinder.min.js"></script>
 
         <!-- elFinder translation (OPTIONAL) -->
-        <script type="text/javascript" src="js/i18n/elfinder.ru.js"></script>
+        <script type="text/javascript" src="js/i18n/elfinder.<?php echo $locale ?>.js"></script>
 
         <!-- elFinder initialization (REQUIRED) -->
         <script>
@@ -99,7 +102,7 @@ if (ini_get("mbstring.func_overload") > 0 and function_exists('ini_set')) {
                     resizable: <?php echo $resizable; ?>,
                     height: 500,
                     url: 'php/connector.php?path=<?php echo $_GET['path']; ?>',
-                    lang: 'ru',
+                    lang: '<?php echo $locale ?>',
                     uiOptions: {
                         // toolbar configuration
                         toolbar: [

@@ -1,5 +1,5 @@
 <ol class="breadcrumb">
-    <li><a href="/">Главная</a></li><li><b style="">@productName@</b>
+    <li><a href="/">{Главная}</a></li><li><b style="">@productName@</b>
     </li>
 </ol>
 
@@ -26,7 +26,7 @@
 
 <div class="col-xs-12">
     <div class="page-header">
-        <h1 class="main-heading2">Личные данные</h1>
+        <h1 class="main-heading2">{Личные данные}</h1>
     </div>
 </div>
 
@@ -63,14 +63,14 @@
         <div class="">
         </div>
         <div class="col-sm-6">
-            <input placeholder="Компания" type="text" name="org_name" value="@php  echo $_POST[org_name]; php@" class="form-control">
+            <input placeholder="{Компания}" type="text" name="org_name" value="@php  echo $_POST[org_name]; php@" class="form-control">
         </div>
     </div>
     <div class="form-group">
         <div class="">
         </div>
         <div class="col-sm-6">
-            <textarea placeholder="Дополнительная информация" name="adr_name" class="form-control">@php  echo $_POST[adr_name]; php@</textarea>
+            <textarea placeholder="{Дополнительная информация}" name="adr_name" class="form-control">@php  echo $_POST[adr_name]; php@</textarea>
         </div>
     </div>
     <div class="form-group">
@@ -84,7 +84,7 @@
         <div class=""></div>
         <div class="col-sm-6">
             <input type="hidden" name="send_price_link" value="ok">
-            <button type="submit" class="btn btn-primary">Пожаловаться на цену</button>
+            <button type="submit" class="btn btn-primary">{Пожаловаться на цену}</button>
         </div>
     </div>
 </form>    

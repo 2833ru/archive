@@ -3,9 +3,9 @@
 $TitlePage = __("Баннеры");
 
 function actionStart() {
-    global $PHPShopInterface;
+    global $PHPShopInterface,$TitlePage;
 
-    $PHPShopInterface->setActionPanel(__("Баннеры"), array('Удалить выбранные'), array('Добавить'));
+    $PHPShopInterface->setActionPanel($TitlePage, array('Удалить выбранные'), array('Добавить'));
 
     $PHPShopInterface->setCaption(array(null, "3%"), array("Название", "30%"), array("Таргетинг", "30%"), array("", "10%"), array("Статус", "10%", array('align' => 'right')));
 
@@ -18,7 +18,7 @@ function actionStart() {
         }
 
     $PHPShopInterface->setAddItem('ajax/banner/adm_banner_new.php');
-    $PHPShopInterface->title = __("Баннеры");
+    $PHPShopInterface->title = $TitlePage;
     $PHPShopInterface->Compile();
 }
 

@@ -23,8 +23,8 @@ function actionStart() {
 
 
     $e_value[] = array('не выводить', 0, $data['enabled']);
-    $e_value[] = array('слева', 1, $data['enabled']);
-    $e_value[] = array('справа', 2, $data['enabled']);
+    $e_value[] = array('слева', 2, $data['enabled']);
+    $e_value[] = array('справа', 1, $data['enabled']);
 
 
     $Tab1 = $PHPShopGUI->setField('Заголовок блока', $PHPShopGUI->setInputText(false, 'title_new', $data['title']));

@@ -1,41 +1,56 @@
 function ddeliverywidgetStart() {
 
     var products = $.parseJSON($("input:hidden.cartListJson").val());
-    $('<input type="hidden" name="ddeliverySum">').insertAfter('#d');
+    $('<input type="hidden" name="ddeliverySum" id="ddeliverySum">').insertAfter('#d');
     $('<input type="hidden" name="ddeliveryReq" class="req form-control">').insertAfter('#dop_info');
-    DDeliveryWidget.init('widget', {
+
+    var widget = new DDeliveryWidgetCart("dd-widget", {
+        apiScript: "/phpshop/modules/ddeliverywidget/api/dd-widget-api.php",
         products: products,
-        id: $("#ddeliveryId").val(),
-        width: 500,
-        height: 550,
-        env: DDeliveryWidget.ENV_PROD
-    }, {
-        change: function(data) {
-
-            $('<input type="hidden" name="ddeliveryToken" value="' + data['client_token'] + '">').insertAfter('#d');
-            $('input[name="ddeliveryReq"]').val(data['info']);
-            
-            $("#DosSumma").html(data['client_price']);
-            $("#TotalSumma").html(Number(data['client_price']) + Number($('#OrderSumma').val()));
-            $('input[name="ddeliverySum"').val(data['client_price']);
-
-            $('input[name="city_new"]').val(data['city_name']);
-            $('input[name="flat_new"]').val(data['to_flat']);
-            $('input[name="house_new"]').val(data['to_house']);
-            $('input[name="street_new"]').val(data['to_street']);
-            
-            $('#deliveryInfo').html(data['info']);
-            $('#ddelivery-close').text('Продолжить').addClass('btn-success');
-
-            // Hook
-            if ($.isFunction(window.ddeliverywidgetHook))
-                ddeliverywidgetHook(data);
-            /*
-             setTimeout(function() {
-             $("#ddeliverywidgetModal").modal("hide");
-             }, 3000);*/
-        }
+        weight: $("#ddweight").val(), 
+        //stopSubmit: true
     });
+    
+    //widget.on("error", function (errors) {
+        // Вызовется при возникновении ошибок при обработке запроса,
+        // при передаче в виджет некорректных или неполных данных
+        //console.error(errors);
+    //}); 
+    
+    widget.on("afterSubmit", function (response) {
+    // Вызовется при получении ответа от сервера DDelivery
+        
+        $('<input type="hidden" name="ddeliveryToken" value="' + response.id + '">').insertAfter('#d');
+        $('#ddelivery-close').text('Продолжить').addClass('btn-success');
+    });       
+    
+    widget.on("change", function (data) {
+    // Вызовется при изменении выбранного способа доставки
+    // или любого другого значения в виджете
+        if(typeof data.delivery.point!=="undefined") {
+            var info = 'ПВЗ: ' + data.delivery.point.delivery_company_name;
+            info = info + ', срок: ' + data.delivery.point.delivery_date;
+            info = info +', адрес ПВЗ: '+data.delivery.point.address;
+            var del_sum = data.delivery.point.price_delivery;
+        } else {
+            var info = 'Доставка: ' + data.delivery.delivery_company_name;
+            info = info + ', срок: ' + data.delivery.delivery_date;
+            var del_sum = data.delivery.total_price;
+        }
+        $('input[name="ddeliveryReq"]').val(info);
+
+        $("#DosSumma").html(del_sum);
+        $("#TotalSumma").html(Number(del_sum) + Number($('#OrderSumma').val()));
+        $('#ddeliverySum').val(del_sum);
+
+        //$('input[name="name_new"]').val(data.contacts.address.index);
+        $('input[name="city_new"]').val(data.city.name);
+        $('input[name="flat_new"]').val(data.contacts.address.flat);
+        $('input[name="house_new"]').val(data.contacts.address.house);
+        $('input[name="street_new"]').val(data.contacts.address.street);
+        $('input[name="index_new"]').val(data.contacts.address.index);
+        
+    });      
 
     $("#ddeliverywidgetModal").modal("toggle");
 }

@@ -43,9 +43,9 @@ function actionSave() {
 
         // Выполнено успешно
         if ($result)
-            $result_message = $PHPShopGUI->setAlert('SQL запрос успешно выполнен');
+            $result_message = $PHPShopGUI->setAlert(__('SQL запрос успешно выполнен'));
         else {
-            $result_message = $PHPShopGUI->setAlert('SQL ошибка: ' . mysqli_error($link_db), 'danger');
+            $result_message = $PHPShopGUI->setAlert(__('SQL ошибка').': ' . mysqli_error($link_db), 'danger');
             $result_error_tracert = $_POST['sql_text'];
         }
     }
@@ -59,7 +59,7 @@ function actionSave() {
                 $csv_file_name = $_FILES['file']['name'];
             }
             else
-                $result_message = $PHPShopGUI->setAlert('Ошибка сохранения файла <strong>' . $csv_file_name . '</strong> в папке phpshop/admpanel/csv', 'danger');
+                $result_message = $PHPShopGUI->setAlert(__('Ошибка сохранения файла').' <strong>' . $csv_file_name . '</strong> в phpshop/admpanel/csv', 'danger');
         }
     }
 
@@ -118,13 +118,13 @@ function actionSave() {
             if (!empty($_POST['ajax']))
                 return array("success" => true);
             else
-                $result_message = $PHPShopGUI->setAlert('SQL запрос успешно выполнен');
+                $result_message = $PHPShopGUI->setAlert(__('SQL запрос успешно выполнен'));
         }
         else {
             if (!empty($_POST['ajax']))
                 return array("success" => false, "error" => mysqli_error($link_db) . ' -> ' . $error_line);
             else
-                $result_message = $PHPShopGUI->setAlert('SQL ошибка: ' . mysqli_error($link_db), 'danger');
+                $result_message = $PHPShopGUI->setAlert(__('SQL ошибка').' ' . mysqli_error($link_db), 'danger');
         }
         
     }
@@ -186,7 +186,7 @@ function actionStart() {
     $PHPShopGUI->addJSFiles('./exchange/gui/exchange.gui.js', './tpleditor/gui/ace/ace.js');
 
     $PHPShopGUI->_CODE = $result_message;
-    $help = '<p class="text-muted">Для очистки демо-базы и демо-товаров следует выбрать SQL команду <kbd>Очистить базу</kbd></p> <p class="text-muted">Для увелечения производительности сайта вызвать SQL команду <kbd>Оптимизировать базу</kbd></p> <p class="text-muted">Справочник полезных SQL команд для пакетной обработки товаров доступен в <a href="https://help.phpshop.ru/knowledgebase/article/398" target="_blank" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-book"></span> Базе знаний</a></p>';
+    $help = '<p class="text-muted">'.__('Для очистки демо-базы и демо-товаров следует выбрать SQL команду <kbd>Очистить базу</kbd></p> <p class="text-muted">Для увелечения производительности сайта вызвать SQL команду <kbd>Оптимизировать базу</kbd></p> <p class="text-muted">Справочник полезных SQL команд для пакетной обработки товаров доступен в <a href="https://help.phpshop.ru/knowledgebase/article/398" target="_blank" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-book"></span> Базе знаний</a>').'</p>';
 
 
     $PHPShopGUI->setActionPanel($TitlePage, false, array('Выполнить'));
@@ -205,9 +205,9 @@ UPDATE ' . $GLOBALS['SysValue']['base']['products'] . ' set vendor=\'\', vendor_
 UPDATE ' . $GLOBALS['SysValue']['base']['categories'] . ' set sort=\'\';', '');
     $query_value[] = array('Удалить каталог товаров', 'DELETE FROM ' . $GLOBALS['SysValue']['base']['categories'] . ' WHERE ID=', '');
     $query_value[] = array('Удалить все каталоги', 'TRUNCATE ' . $GLOBALS['SysValue']['base']['categories'], '');
-    $query_value[] = array('Удалить все товары', 'TRUNCATE ' . $GLOBALS['SysValue']['base']['products'], '');
+    $query_value[] = array('Удалить все товары', 'TRUNCATE ' . $GLOBALS['SysValue']['base']['products'].';
+TRUNCATE ' . $GLOBALS['SysValue']['base']['foto'].';', '');
     $query_value[] = array('Удалить товары в каталоге', 'DELETE FROM ' . $GLOBALS['SysValue']['base']['products'] . ' WHERE category=', '');
-    $query_value[] = array('Удалить фотогалерею у товаров', 'TRUNCATE ' . $GLOBALS['SysValue']['base']['foto'].';', '');
     $query_value[] = array('Удалить страницу', 'DELETE FROM ' . $GLOBALS['SysValue']['base']['page'] . ' WHERE ID=', '');
     $query_value[] = array('Очистить базу', $TRUNCATE, '');
     $query_value[] = array('Уничтожить базу (!)', $DROP, '');
@@ -221,14 +221,14 @@ UPDATE ' . $GLOBALS['SysValue']['base']['categories'] . ' set sort=\'\';', '');
     if (empty($theme))
         $theme = 'dawn';
 
-    $PHPShopGUI->_CODE.= '<textarea class="hide hidden-edit" id="editor_src" name="sql_text" data-mod="sql" data-theme="' . $theme . '">' . $result_error_tracert . '</textarea><pre id="editor">Загрузка...</pre>';
+    $PHPShopGUI->_CODE.= '<textarea class="hide hidden-edit" id="editor_src" name="sql_text" data-mod="sql" data-theme="' . $theme . '">' . $result_error_tracert . '</textarea><pre id="editor">'.__('Загрузка').'...</pre>';
 
-    $PHPShopGUI->_CODE.= '<div class="text-right data-row"><a href="#" id="vartable" data-toggle="modal" data-target="#selectModal" data-title="Основные таблицы"><span class="glyphicon glyphicon-question-sign"></span>Описание таблиц</a></div>';
+    $PHPShopGUI->_CODE.= '<div class="text-right data-row"><a href="#" id="vartable" data-toggle="modal" data-target="#selectModal" data-title="Основные таблицы"><span class="glyphicon glyphicon-question-sign"></span>'.__('Описание таблиц').'</a></div>';
 
     // Модальное окно таблицы описаний перменных
-    $selectModalBody = '<table class="table table-striped"><tr><th>Таблица</th><th>Описание</th></tr>' . $selectModal . '</table>';
+    $selectModalBody = '<table class="table table-striped"><tr><th>'.__('Таблица').'</th><th>'.__('Описание').'</th></tr>' . $selectModal . '</table>';
 
-    $PHPShopGUI->_CODE.=$PHPShopGUI->setCollapse('Настройки', $PHPShopGUI->setField('Команда', $PHPShopGUI->setSelect('sql_query', $query_value)) .
+    $PHPShopGUI->_CODE.=$PHPShopGUI->setCollapse('Настройки', $PHPShopGUI->setField('Команда', $PHPShopGUI->setSelect('sql_query', $query_value,null,true)) .
             $PHPShopGUI->setField(__("Файл"), $PHPShopGUI->setFile()), 'in', false, true
     );
 

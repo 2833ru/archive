@@ -41,7 +41,7 @@
                 </td>
                 <td style="padding-left:5px">
                     <form name="forma_cart_del" method="post" id="forma_cart_del">
-                        <button type="submit" class="btn label label-warning" data-toggle="tooltip" data-placement="top" title="Удалить">x</button>
+                        <button type="submit" class="btn label label-warning" data-toggle="tooltip" data-placement="top" title="{Удалить}">x</button>
                         <input type=hidden name="id_delete" value="@cart_xid@">
                     </form>
                 </td>
@@ -49,5 +49,5 @@
         </table>
     </td>
     <td align="right" class="hidden-xs">@cart_price@ <span class="rubznak">@currency@</span></td>
-    <td align="right">@cart_price_all@ <span class="rubznak">@currency@</span>  </td>
+    <td align="right">@cart_price_all@ <span class="rubznak">@currency@</span></td>
 </tr>

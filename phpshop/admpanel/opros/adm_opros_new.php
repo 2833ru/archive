@@ -5,7 +5,7 @@ $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['opros_categories']);
 
 // Стартовый вид
 function actionStart() {
-    global $PHPShopGUI, $PHPShopOrm, $PHPShopModules, $TitlePage;
+    global $PHPShopGUI, $PHPShopModules, $TitlePage;
 
     // Выборка
     $data['id'] = getLastID();
@@ -16,12 +16,12 @@ function actionStart() {
     $PHPShopGUI->setActionPanel($TitlePage, false, array('Создать и редактировать', 'Сохранить и закрыть'));
 
     // Содержание закладки 
-    $Tab1 = $PHPShopGUI->setCollapse(__('Информация'), $PHPShopGUI->setField(__("Заголовок"), $PHPShopGUI->setInput("text.requared", "name_new", $data['name'])) .
-            $PHPShopGUI->setField(__("Таргетинг"), $PHPShopGUI->setTextarea("dir_new", $data['dir']) . $PHPShopGUI->setHelp("Пример: page/,news/. Можно указать несколько адресов через запятую.")) .
-            $PHPShopGUI->setField(__("Статус"), $PHPShopGUI->setRadio("flag_new", 1, "Включить", $data['flag']) . $PHPShopGUI->setRadio("flag_new", 0, "Выключить", $data['flag'])));
+    $Tab1 = $PHPShopGUI->setCollapse('Информация', $PHPShopGUI->setField("Заголовок", $PHPShopGUI->setInput("text.requared", "name_new", $data['name'])) .
+            $PHPShopGUI->setField("Таргетинг", $PHPShopGUI->setTextarea("dir_new", $data['dir']) . $PHPShopGUI->setHelp("Пример: page/,news/. Можно указать несколько адресов через запятую.")) .
+            $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("flag_new", 1, "Включить", $data['flag']) . $PHPShopGUI->setRadio("flag_new", 0, "Выключить", $data['flag'])));
 
     // Варианты
-    $Tab1.=$PHPShopGUI->setCollapse(__('Значения'), $PHPShopGUI->setField(null, $PHPShopGUI->loadLib('tab_value', $data)));
+    $Tab1.=$PHPShopGUI->setCollapse('Значения', $PHPShopGUI->setField(null, $PHPShopGUI->loadLib('tab_value', $data)));
 
 
     // Вывод формы закладки

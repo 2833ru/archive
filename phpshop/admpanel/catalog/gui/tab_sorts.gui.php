@@ -53,7 +53,7 @@ function tab_sorts_val($n, $sort) {
 function tab_parent($data) {
     global $SysValue,$link_db;
     
-    $dis = '<option value="0">Не выбрано</option>';
+    $dis = '<option value="0">'.__('Не выбрано').'</option>';
     $sql = "select * from " . $SysValue['base']['parent_name'] . " where enabled='1' order by name ";
     $result = mysqli_query($link_db,$sql);
     while ($row = mysqli_fetch_array($result)) {

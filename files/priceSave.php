@@ -64,38 +64,6 @@ class PHPShopPriceSave {
         }
     }
 
-    function _select() {
-        global $PHPShopSystem, $PHPShopValutaArray;
-        if (is_numeric(@$_GET['catId']))
-            $str = " (category=$_GET[catId] or dop_cat LIKE '%#$_GET[catId]#%') and ";
-        else
-            $str = null;
-
-        // Системная валюта
-        $system_currency = $PHPShopSystem->getValue('dengi');
-        $ValutaArray = $PHPShopValutaArray->getArray();
-        $valuta = $ValutaArray[$system_currency]['code'];
-
-        $PHPShopOrm = new PHPShopOrm();
-        $PHPShopOrm->sql = "select * from " . $this->objBase . " where " . $str . " enabled='1'";
-        $PHPShopOrm->comment = __CLASS__ . '.' . __FUNCTION__;
-        $PHPShopOrm->debug = $this->debug;
-        $dataArray = $PHPShopOrm->select();
-
-        if (is_array($dataArray))
-            foreach ($dataArray as $row) {
-                $price_array = array($row['price'], $row['price2'], $row['price3'], $row['price4'], $row['price5']);
-                $price = PHPShopProductFunction::GetPriceValuta($row['id'], $price_array, $row['baseinputvaluta']);
-
-                // Если цены показывать только после аторизации
-                if (!empty($user_price_activate) and !$_SESSION['UsersId']) {
-                    $price = "~";
-                }
-
-                $this->csv.=$row['uid'] . ';' . $row['name'] . ';' . $price . ' ' . $valuta . '
-';
-            }
-    }
 
     // GZIP сжатие
     function gzcompressfile($source, $level = false) {
@@ -112,7 +80,7 @@ class PHPShopPriceSave {
                 $error = true;
             @gzclose($fp_out);
             unlink($source);
-            rename($dest, $source . '.bz2');
+            rename($dest, $source . '.gz');
         }
         else
             $error = true;
@@ -134,7 +102,7 @@ class PHPShopPriceSave {
         // Пишес  GZIP
         if (!empty($_GET['gzip'])) {
             $this->gzcompressfile($sorce);
-            header("Location: price/" . $file . ".bz2");
+            header("Location: price/" . $file . ".gz");
         } else {
             header("Location: " . $sorce);
         }

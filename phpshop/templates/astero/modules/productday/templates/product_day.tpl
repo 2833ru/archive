@@ -1,4 +1,4 @@
-<h3 class="side-heading">Товар дня</h3>
+<h3 class="side-heading">{Товар дня}</h3>
 
 <div class="product-col">
     <div class="image product-img-centr">
@@ -18,19 +18,19 @@
             <div class="row">
                 <div class="col-md-3 text-center">
                     <h4 id="timer-number-days">0</h4>
-                    <small id="timer-text-days">дней</small>
+                    <small id="timer-text-days">{дней}</small>
                 </div>
                 <div class="col-md-3 text-center">
                     <h4 id="timer-number-hours">@productDayHourGood@</h4>
-                    <small id="timer-text-hours">часов</small>
+                    <small id="timer-text-hours">{часов}</small>
                 </div>
                 <div class="col-md-3 text-center">
                     <h4 id="timer-number-minutes">@productDayMinuteGood@</h4>
-                    <small id="timer-text-minutes">минут</small>
+                    <small id="timer-text-minutes">{минут}</small>
                 </div>
                 <div class="col-md-3 text-center">
                     <h4 id="timer-number-seconds">@productDaySecondGood@</h4>
-                    <small id="timer-text-seconds">секунд</small>
+                    <small id="timer-text-seconds">{секунд}</small>
                 </div>
             </div>
         </div>

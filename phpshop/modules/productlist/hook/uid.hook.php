@@ -44,7 +44,7 @@ class PHPShopProductListElement extends PHPShopElements {
                 else
                     $this->set('productlist_product_seo', null);
 
-                $dis.= parseTemplateReturn($GLOBALS['SysValue']['templates']['productlist']['productlist_product'], true);
+                $dis.= PHPShopParser::file($GLOBALS['SysValue']['templates']['productlist']['productlist_product'], true, false, true);
             }
 
 

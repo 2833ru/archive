@@ -19,6 +19,7 @@ PHPShopObj::loadClass("string");
 PHPShopObj::loadClass("cart");
 PHPShopObj::loadClass("security");
 PHPShopObj::loadClass("user");
+PHPShopObj::loadClass("lang");
 
 
 // Подключаем библиотеку поддержки JsHttpRequest
@@ -35,6 +36,8 @@ $PHPShopValutaArray = new PHPShopValutaArray();
 
 // Системные настройки
 $PHPShopSystem = new PHPShopSystem();
+
+$PHPShopLang = new PHPShopLang(array('locale'=>$_SESSION['lang'],'path'=>'shop'));
 
 // Корзина
 $PHPShopCart = new PHPShopCart();

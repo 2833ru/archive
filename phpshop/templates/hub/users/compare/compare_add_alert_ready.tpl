@@ -1,2 +1,2 @@
-Товар <a href='@ShopDir@/shop/UID_@prodId@.html' title='Подробное описание'>@prodName@</a>
-уже добавлен в <a href='@ShopDir@/compare/' title='Перейти в сравнение'>сравнение</a>
+{Товар} <a href='@ShopDir@/shop/UID_@prodId@.html'>@prodName@</a>
+{уже добавлен в} <a href='@ShopDir@/compare/'>{сравнение}</a>

@@ -3,10 +3,10 @@
 $TitlePage = __("Рассылки");
 
 function actionStart() {
-    global $PHPShopInterface;
+    global $PHPShopInterface,$TitlePage;
     
-    $PHPShopInterface->setActionPanel(__("Рассылки"), array('Удалить выбранные'),array('Добавить'));
-    $PHPShopInterface->setCaption(array(null, "3%"), array("Тема", "70%"), array("", "10%"), array("Дата рассылки &nbsp;&nbsp;&nbsp;", "20%", array('align' => 'right')));
+    $PHPShopInterface->setActionPanel($TitlePage, array('Удалить выбранные'),array('Добавить'));
+    $PHPShopInterface->setCaption(array(null, "3%"), array("Тема", "70%"), array("", "10%"), array("Дата рассылки", "20%", array('align' => 'right')));
 
     // SQL
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['newsletter']);

@@ -1,6 +1,6 @@
 
 
-    <h1 class="page-title hide">Форма отзыва</h1>
+    <h1 class="page-title hide">{Форма отзыва}</h1>
     
 
 
@@ -10,7 +10,7 @@
     <div class="form-group">
         <label for="exampleInputEmail1"></label>
         <div class="col-xs-12 col-sm-6">
-            <input type="text" name="name_new" class="form-control" id="exampleInputEmail1" placeholder="Имя..." required="">
+            <input type="text" name="name_new" class="form-control" id="exampleInputEmail1" placeholder="{Имя}..." required="">
         </div>
     </div>
     <div class="form-group">
@@ -22,13 +22,13 @@
     <div class="form-group">
         <label for="exampleInputEmail1"></label>
         <div class="col-xs-12 col-sm-6">
-            <input type="text"  name="tema_new"  class="form-control" id="exampleInputEmail1" placeholder="Заголовок..." required="">
+            <input type="text"  name="tema_new"  class="form-control" id="exampleInputEmail1" placeholder="{Заголовок}..." required="">
         </div>
     </div>
     <div class="form-group">
         <label for="exampleInputEmail1"></label>
         <div class="col-xs-12 col-sm-6">
-            <textarea name="otsiv_new" class="form-control" maxlength="500" placeholder="Сообщение..." required=""></textarea>
+            <textarea name="otsiv_new" class="form-control" maxlength="500" placeholder="{Сообщение}..." required=""></textarea>
         </div>
     </div>
     <div class="form-group">
@@ -45,7 +45,7 @@
         <div class="col-xs-12 col-sm-6">
             <span class="pull-right">
                 <input type="hidden" name="send_gb" value="1">
-                <button type="submit" class="btn btn-primary">Отправить отзыв</button>
+                <button type="submit" class="btn btn-primary">{Отправить отзыв}</button>
             </span>
         </div>
     </div>

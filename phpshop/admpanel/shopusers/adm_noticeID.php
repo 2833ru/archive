@@ -1,6 +1,6 @@
 <?php
 
-$TitlePage = __('Редактирование уведомления #' . $_GET['id']);
+$TitlePage = __('Редактирование уведомления').' #' . $_GET['id'];
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['notice']);
 
 function actionSave() {
@@ -18,7 +18,7 @@ function sendMailNotice($productID, $saveID, $email) {
 
     if (PHPShopSecurity::true_email($email)) {
 
-        $title = $PHPShopSystem->getName() . " - уведомление о товаре, заявка №" . $saveID;
+        $title = $PHPShopSystem->getName() . " - "._('уведомление о товаре, заявка')." №" . $saveID;
         PHPShopParser::set('title', $title);
 
         PHPShopObj::loadClass(array('array', 'valuta', 'product'));
@@ -26,13 +26,12 @@ function sendMailNotice($productID, $saveID, $email) {
 
         $PHPShopMail = new PHPShopMail($email, $PHPShopSystem->getEmail(), $title, '', true, true);
 
-        $text = "<p>Поступило уведомление №" . $saveID . " с Интернет-магазина '" . $PHPShopSystem->getName() . "' для пользователя " . $email . "</p>
+        $text = "<p>".__('Поступило уведомление')." №" . $saveID . " ".__('с Интернет-магазина')." '" . $PHPShopSystem->getName() . "' ".__('для пользователя')." " . $email . "</p>
 <p>
-Товар: " . $PHPShopProduct->getParam('name') . "<br>
-Артикул: " . $PHPShopProduct->getParam('uid') . "<br>
-Cтоимость: " . $PHPShopProduct->getPrice() . " " . $PHPShopSystem->getDefaultValutaCode() . "<br>
-Дата изменения информации по товару: " . PHPShopDate::get($PHPShopProduct->getParam('datas')) . "<br>
-Ссылка: http://" . $_SERVER['SERVER_NAME'] . "/" . $GLOBALS['SysValue']['dir']['dir'] . "/shop/UID_" . $productID . ".html</p>";
+".__('Артикул').": " . $PHPShopProduct->getParam('uid') . "<br>
+".__('Cтоимость').": " . $PHPShopProduct->getPrice() . " " . $PHPShopSystem->getDefaultValutaCode() . "<br>
+".__('Дата изменения информации по товару').": " . PHPShopDate::get($PHPShopProduct->getParam('datas')) . "<br>
+".__('Ссылка').": http://" . $_SERVER['SERVER_NAME'] . "/" . $GLOBALS['SysValue']['dir']['dir'] . "/shop/UID_" . $productID . ".html</p>";
         PHPShopParser::set('content', $text);
         PHPShopParser::set('logo', $_SERVER['SERVER_NAME'] . "/" . $GLOBALS['SysValue']['dir']['dir'] . $PHPShopSystem->getParam('logo'));
         $content = PHPShopParser::file('tpl/sendmail.mail.tpl', true, false);

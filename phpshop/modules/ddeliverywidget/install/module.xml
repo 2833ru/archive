@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.1</version>
+    <version>1.2</version>
     <name>DDelivery Widget</name>
     <faqlink>http://faq.phpshop.ru/page/ddelivery-widget.html</faqlink>
-    <description>Виджет расчета доставки DDelivery.ru</description>
+    <description>Виджет расчета доставки DDelivery.ru API 2.0</description>
     <category>sale,delivery</category>
+    <status>update</status>
     <adminmenu>
         <title>DDelivery Widget</title>
         <capability>true</capability>

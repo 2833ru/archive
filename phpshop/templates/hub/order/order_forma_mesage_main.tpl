@@ -16,6 +16,6 @@
 			background-color: #fff;margin-top: 0px;
 		}
 </style>
-    <h2 class="page-title hide">ќформление заказа</h2>
+    <h2 class="page-title hide">{ќформление заказа}</h2>
 
 @orderMesage@

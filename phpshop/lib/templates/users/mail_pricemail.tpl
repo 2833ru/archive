@@ -128,29 +128,22 @@
     
     <tr bgcolor="#eaeaea">
         <td >
-            <h2>Поступила ссылка на меньшую цену с интернет-магазина '@name@'</h2><hr>
-              <p>Доброго времени!</p>
+            <h2>{Поступила ссылка на меньшую цену с интернет-магазина} '@name@'</h2><hr>
+              <p>{Доброго времени}!</p>
  
 
-<p>Подробности сообщения:<hr></p><p>
-Контактное лицо: @user_name@<br>
-Компания: @user_org_name@<br>
-Телефон: @user_tel_code@-@user_tel@<br>
-Доп. инф: @user_info@<br>
+<p{Подробности сообщения}:<hr></p><p>
+{Контактное лицо}: @user_name@<br>
+{Компания}: @user_org_name@<br>
+{Телефон}: @user_tel_code@-@user_tel@<br>
+{Дополнительно}: @user_info@<br>
 E-mail: @user_mail@<br>
-Ссылка на меньшую цену: @link_to_page@<br></p>
+{Ссылка на меньшую цену}: @link_to_page@<br></p>
 
-<p>Данные товара:<hr></p><p>
-Наименование: @product_name@<br>
-Артикул: @product_art@<br>
-ID: @product_id@<br>
-Прямая ссылка: @product_link@<br>
-Дата/время: @date@<br>
+<p>{Товар}: @product_art@ <a href="http://@serverName@@ShopDir@/shop/UID_@product_id@.html">@product_name@</a><br>
+{Дата}: @date@<br>
 IP: @user_ip@<br></p>
 
-
-
-               
         </td>
     </tr>
          
@@ -160,22 +153,18 @@ IP: @user_ip@<br></p>
 
 <table width="660" align="center" cellspacing="0" cellpadding="10">
 <tbody>
-
-
     <tr bgcolor="#fafafa" id="footer" height="100%">
-    
-      
+
         <td align="left" valign="top" height="100%">
-            <p><b>С уважением, @shopName@.</b></p>
+            <p><b>{С уважением}, @shopName@.</b></p>
       <p>@org_name@<br>
-      Интернет-магазин <a href="http://@serverPath@">@serverPath@</a><br>
-      Отдел продаж: @telNum@<br>
+      {Интернет-магазин} <a href="http://@serverPath@">@serverPath@</a><br>
+      {Отдел продаж}: @telNum@<br>
       E-mail: @adminMail@<br>
       @org_adres@</p></td>
       
     </tr>
-   
-
+  
 </tbody>  
 </table> 
 

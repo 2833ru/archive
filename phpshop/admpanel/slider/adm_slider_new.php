@@ -5,18 +5,18 @@ $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['slider']);
 
 // Стартовый вид
 function actionStart() {
-    global $PHPShopGUI, $PHPShopModules;
+    global $PHPShopGUI, $PHPShopModules,$TitlePage;
 
-    $PHPShopGUI->setActionPanel(__("Создание Слайдера"), false, array('Сохранить и закрыть'));
+    $PHPShopGUI->setActionPanel($TitlePage, false, array('Сохранить и закрыть'));
 
     $data['enabled'] = 1;
 
     // Содержание закладки 1
-    $Tab1 = $PHPShopGUI->setField(__("Изображение"), $PHPShopGUI->setIcon($data['image'], "image_new", false)) .
-            $PHPShopGUI->setField(__("Цель"), $PHPShopGUI->setInput("text", "link_new", $data['link'], "none", 300) . $PHPShopGUI->setHelp("Пример: /pages/info.html или http://google.com")) .
-            $PHPShopGUI->setField(__("Статус"), $PHPShopGUI->setRadio("enabled_new", 1, "Включить", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выключить", $data['enabled'])) .
-            $PHPShopGUI->setField(__("Приоритет"), $PHPShopGUI->setInputText(false, 'num_new', $data['num'], 100)) .
-            $PHPShopGUI->setField(__("Описание"), $PHPShopGUI->setTextarea("alt_new", $data['alt'])) .
+    $Tab1 = $PHPShopGUI->setField("Изображение", $PHPShopGUI->setIcon($data['image'], "image_new", false)) .
+            $PHPShopGUI->setField("Цель", $PHPShopGUI->setInput("text", "link_new", $data['link'], "none", 300) . $PHPShopGUI->setHelp("Пример: /pages/info.html или http://google.com")) .
+            $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("enabled_new", 1, "Включить", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выключить", $data['enabled'])) .
+            $PHPShopGUI->setField("Приоритет", $PHPShopGUI->setInputText(false, 'num_new', $data['num'], 100)) .
+            $PHPShopGUI->setField("Описание", $PHPShopGUI->setTextarea("alt_new", $data['alt'])) .
             $PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'));
 
     // Запрос модуля на закладку

@@ -1,6 +1,6 @@
 <?php
 
-$TitlePage = __('Редактирование администатора #' . $_GET['id']);
+$TitlePage = __('Редактирование администатора').' #' . $_GET['id'];
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['users']);
 
 function hidePassword($pas) {
@@ -34,7 +34,6 @@ function actionStart() {
         header('Location: ?path=' . $_GET['path']);
     }
 
-
     // Размер названия поля
     $PHPShopGUI->field_col = 2;
     $PHPShopGUI->addJSFiles('./users/gui/users.gui.js','./js/validator.js');
@@ -47,7 +46,7 @@ function actionStart() {
             $PHPShopGUI->setField("Логин", $PHPShopGUI->setInput('text.required.4', "login_new", $data['login'])) .
             $PHPShopGUI->setField("E-mail", $PHPShopGUI->setInput('email.required.6', "mail_new", $data['mail'])) .
             $PHPShopGUI->setField("Пароль", $PHPShopGUI->setInput("password.required.6", "password_new", hidePassword($data['password']))) .
-            $PHPShopGUI->setField("Подтверждение пароля", $PHPShopGUI->setInput("password.required.6", "password2_new", hidePassword($data['password'])) . '<br>' . $PHPShopGUI->setInput("button", false, "Сгенерировать пароль", false, false, "$('input[name=password_new],input[name=password2_new]').val('P" . $pasgen . "');alert('Сгенерирован пароль: " . $pasgen . "');", "btn-sm") . '&nbsp;&nbsp;&nbsp;' . $PHPShopGUI->setCheckbox('changePassword', 1, '<span class="text-success">Сменить логин и пароль</span>', 0) . $PHPShopGUI->setCheckbox('sendPasswordEmail', 1, 'Оповестить по E-mail', 0)) .
+            $PHPShopGUI->setField("Подтверждение пароля", $PHPShopGUI->setInput("password.required.6", "password2_new", hidePassword($data['password'])) . '<br>' . $PHPShopGUI->setInput("button", false, __("Сгенерировать пароль"), false, false, "$('input[name=password_new],input[name=password2_new]').val('P" . $pasgen . "');alert('Сгенерирован пароль: " . $pasgen . "');", "btn-sm") . '&nbsp;&nbsp;&nbsp;' . $PHPShopGUI->setCheckbox('changePassword', 1, '<span class="text-success">Сменить логин и пароль</span>', 0) . $PHPShopGUI->setCheckbox('sendPasswordEmail', 1, 'Оповестить по E-mail', 0)) .
             $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("enabled_new", 1, "Вкл.", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выкл.", $data['enabled']) . '&nbsp;&nbsp;')
     );
 
@@ -150,7 +149,7 @@ function actionUpdate() {
         PHPShopObj::loadClass("parser");
         PHPShopObj::loadClass("mail");
 
-        PHPShopParser::set('user_name', 'Администратор');
+        PHPShopParser::set('user_name', __('Администратор'));
         PHPShopParser::set('login', $_POST['login_new']);
         PHPShopParser::set('password', $_POST['password2_new']);
 

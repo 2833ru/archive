@@ -1,9 +1,7 @@
 <?php
 
-$TitlePage = __('Редактирование журнала поиска #' . $_GET['id']);
+$TitlePage = __('Редактирование журнала поиска').' #' . $_GET['id'];
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['search_jurnal']);
-
-
 
 // Функция удаления
 function actionDelete() {

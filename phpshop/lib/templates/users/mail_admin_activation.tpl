@@ -115,7 +115,7 @@
     <tr bgcolor="#fafafa" id="header" valign="top">
         <td id="logo" align="left" valign="bottom">
             <div align="center" style="padding-top:30px;"><a href="http://@serverPath@" target="_blank"><img src="http://@serverPath@@logo@" alt="logo @serverPath@" border="0" style="display: block;" title="@serverPath@"></a>
-            <p><h3>Требуется ручная активация пользователя @user_name@.</h3></p></div>
+            <p><h3>{Требуется ручная активация пользователя} @user_name@.</h3></p></div>
         </td>     
     </tr>
     
@@ -128,45 +128,36 @@
     
     <tr bgcolor="#eaeaea">
         <td >
-            <p>Для активации, зайдите в меню Пользователи - Обзор пользователей, и в карточке пользователя переключите Статус на "Вкл.", и "Уведомить", если хотите отправить пользователю письмо-уведомление об активации. <a target="_blank" href="http://@serverPath@phpshop/admpanel/">Активировать</a>.</p>
+            <p>{Для активации, зайдите в меню Пользователи - Обзор пользователей, и в карточке пользователя переключите Статус на "Вкл.", и "Уведомить", если хотите отправить пользователю письмо-уведомление об активации}. 
+                <a target="_blank" href="http://@serverPath@phpshop/admpanel/">{Активировать}</a>.</p>
              
 <p>
-Логин: @user_login@</p>
-
-<p>Дата/время: @date@<br>
+{Логин}: @user_login@</p>
+<p>{Дата}: @date@<br>
 IP: @user_ip@</p>
 
                
         </td>
     </tr>
-         
 </tbody>  
 </table> 
 
-
 <table width="660" align="center" cellspacing="0" cellpadding="10">
 <tbody>
-
-
     <tr bgcolor="#fafafa" id="footer" height="100%">
-    
-      
+
         <td align="left" valign="top" height="100%">
-            <p><b>С уважением, @shopName@.</b></p>
+            <p><b>{С уважением}, @shopName@.</b></p>
       <p>@org_name@<br>
-      Интернет-магазин <a href="http://@serverPath@">@serverPath@</a><br>
-      Отдел продаж: @telNum@<br>
+      {Интернет-магазин} <a href="http://@serverPath@">@serverPath@</a><br>
+      {Отдел продаж}: @telNum@<br>
       E-mail: @adminMail@<br>
       @org_adres@</p></td>
       
     </tr>
-   
-
+  
 </tbody>  
 </table> 
-
-
-
 </body>
 </html>
 

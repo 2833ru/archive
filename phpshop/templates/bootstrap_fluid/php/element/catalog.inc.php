@@ -29,10 +29,10 @@ class PHPShopBrandsElement extends PHPShopElements {
     function index() {
         global $SysValue;
         // Массив имен характеристик
-        $PHPShopOrm = new PHPShopOrm($SysValue['base']['sort_categories']);
+        $PHPShopOrm = new PHPShopOrm($SysValue['base']['table_name20']);
         $PHPShopOrm->debug = $this->debug;
         $PHPShopOrm->mysql_error = false;
-        $result = $PHPShopOrm->query("select * from " . $SysValue['base']['sort_categories'] . " where (brand='1' and goodoption!='1') order by num");
+        $result = $PHPShopOrm->query("select * from " . $SysValue['base']['table_name20'] . " where (brand='1' and goodoption!='1') order by num");
         while (@$row = mysqli_fetch_assoc($result)) {
             $arrayVendor[$row['id']] = $row;
         }
@@ -46,7 +46,7 @@ class PHPShopBrandsElement extends PHPShopElements {
         if (!empty($sortValue)) {
             // Массив значений 
             $i = 0;
-            $result = $PHPShopOrm->query("select * from " . $SysValue['base']['sort'] . " where $sortValue order by num");
+            $result = $PHPShopOrm->query("select * from " . $SysValue['base']['table_name21'] . " where $sortValue order by num");
             while (@$row = mysqli_fetch_array($result)) {
                 @$arrayVendorValue[$row['category']]['name'].= ", " . $row['name'];
                 if ($arrayVendor[$row['category']]['brand']) {

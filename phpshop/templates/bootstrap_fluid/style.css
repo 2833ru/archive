@@ -1,6 +1,8 @@
+
 #faset-filter h4 {
+    cursor: pointer;
     font-size: 15px;
-    font-weight: bold;
+    font-weight: bolder;
 }
 
 #visualcart > a{
@@ -50,8 +52,18 @@
 
 .rubznak {
     font-family: ALSRubl;
+} 
+
+.chat{ 
+    position: fixed; bottom: 50%; left: -36px;
+    border-top-left-radius: 0  !important;;
+    border-bottom-left-radius: 0  !important;;
+    padding:7px;
 }
 
+.chat .glyphicon{
+    padding-left:10px;
+}
 .chat-modal-content{
     height:500px;
     width:100%;
@@ -61,13 +73,6 @@
 }
 #chatopenwindow{
     margin-right:7px;
-}
-.chat{ 
-    position: fixed; bottom: 20px; left: 20px;
-    border-radius: 0 !important;
-    border: 0px;
-    height: 42px;
-    background: #D9D9D9 !important;
 }
 
 .page-header h1{
@@ -99,10 +104,6 @@ a#faset-filter-reset span {
     padding-right:3px;
 }
 
-.dropdown-right{
-    width: 100% !important;
-}
-
 #catalog-menu .list-group-item {
     border-top-left-radius: 0px;
     border-top-right-radius: 0px;
@@ -117,8 +118,12 @@ a#faset-filter-reset span {
     white-space: normal !important;
 }
 
+.dropdown-right{
+    width: 100% !important;
+}
+
 .dropdown-menu-right{
-    right: -200px !important;
+    right: -250px !important;
     top: 0px !important;
     width: inherit !important;
 }
@@ -136,6 +141,11 @@ a#faset-filter-reset span {
     margin: 0px !important;
     border: 0px !important;
 }
+
+.none {
+    display: none;
+}
+
 
 /*
 * UItoTop
@@ -332,16 +342,16 @@ img.template-wishlist-list{
     margin:1px;
 }
 
+td.tablerow{
+    padding:5px;
+}
+
 label{
     cursor: pointer;
 }
 
 .product-tags div:hover {
     background:#E7ECF2;
-}
-
-td.tablerow{
-    padding:5px;
 }
 
 /* avg rate */
@@ -352,7 +362,7 @@ td.tablerow{
 #raiting_blank { background:url(images/stars/stars1-0.png); width:80px; } /* "Чистые" звездочки */
 #raiting_votes {background:url(images/stars/stars1-5.png); cursor: default;} /*  Закрашенные звездочки */
 #raiting_info { text-align:center}
-.review {margin-top:15px;}
+.review {margin:15px;}
 
 /*Поддержка стилей для шаблона оформления заказа под новую логику*/
 span.wait{
@@ -391,15 +401,12 @@ input.reqActiv, select.reqActiv {
     margin-bottom: -10px;
 }
 
+
+
 #fotoload{
     margin-bottom:10px;
 }
 
-#fotoload table{
-    display: table; 
-    margin: 0 auto; 
-    text-align: center;
-}
 
 #fotoload a.highslide img{
     max-width: 700px !important;
@@ -463,8 +470,9 @@ img.template:hover{
     border: solid 1px #CCC;
 }
 
+
 .bootstrap-theme{
-    color: #fff;
+    color:#fff;
     width:30px;
     height:30px;
     background:#CCC;
@@ -487,10 +495,10 @@ img.template:hover{
     max-width: 300px;
 }
 
-
 .carousel-control.left, .carousel-control.right{
     background-image: none !important;
 }
+
 
 @media (max-width:719px){
 
@@ -503,6 +511,7 @@ img.template:hover{
     .bar, #navigation {
         position: static !important;
     }
+
 }
 
 @media (min-width: 992px) and (max-width: 1199px) {
@@ -524,7 +533,6 @@ img.template:hover{
         max-width: 100%;
     }
 }
-
 
 /*
 @media only screen and (max-height: 768px) and (orientation : landscape)  {
@@ -655,7 +663,6 @@ img.template:hover{
 #catalog-menu .dropdown-menu-right a {
     padding: 10px 15px;
 }
-
 #brand-menu .mega-menu .nav-header{
     border-bottom: none;
     text-align: center;
@@ -694,7 +701,7 @@ img.template:hover{
     font-size: 20px;
     font-weight: 800px;
 }
-.banner img {
+.banner img{
     max-width: 100%;
 }
 .logo img {

@@ -10,7 +10,7 @@ function actionDelete() {
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
-
+    
     $action = $PHPShopOrm->delete(array('id' => '=' . $_POST['rowID']));
 
     return array('success' => $action);
@@ -30,7 +30,7 @@ function actionValueEdit() {
     $PHPShopGUI->_CODE.= $PHPShopGUI->setField('Название', $PHPShopGUI->setInputArg(array('name' => 'name_value', 'type' => 'text.required', 'value' => $data['name'])));
     $PHPShopGUI->_CODE.= $PHPShopGUI->setField('Приоритет', $PHPShopGUI->setInputArg(array('name' => 'num_value', 'type' => 'text', 'value' => $data['num'], 'size' => 100)));
 
-    $PHPShopGUI->_CODE.=$PHPShopGUI->setField(__("Иконка"), $PHPShopGUI->setIcon($data['icon'], "icon_value", true, array('load' => false, 'server' => true, 'url' => false)));
+    $PHPShopGUI->_CODE.=$PHPShopGUI->setField("Иконка", $PHPShopGUI->setIcon($data['icon'], "icon_value", true, array('load' => false, 'server' => true, 'url' => false)));
 
     // Страницы с описанием
     $page_value[] = array('- Нет описания - ', null, $data['page']);
@@ -40,8 +40,7 @@ function actionValueEdit() {
         foreach ($data_page as $v)
             $page_value[] = array($v['name'], $v['link'], $data['page']);
 
-    $PHPShopGUI->_CODE.=$PHPShopGUI->setField("Описание:", $PHPShopGUI->setSelect('page_value', $page_value, '100%', false, false, false, false, false, false, false, 'form-control'));
-
+    $PHPShopGUI->_CODE.=$PHPShopGUI->setField("Описание", $PHPShopGUI->setSelect('page_value', $page_value, '100%', false, false, false, false, false, false, false, 'form-control'));
 
     // Категории
     $PHPShopSort = new PHPShopSortCategoryArray(array('category' => '!=0'));
@@ -51,11 +50,10 @@ function actionValueEdit() {
         foreach ($PHPShopSortArray as $v)
             $sort_value[] = array($v['name'], $v['id'], $data['category']);
 
-    $PHPShopGUI->_CODE.=$PHPShopGUI->setField("Категория:", $PHPShopGUI->setSelect('category_value', $sort_value, '100%', false, false, false, false, false, false, false, 'form-control'));
+    $PHPShopGUI->_CODE.=$PHPShopGUI->setField("Категория", $PHPShopGUI->setSelect('category_value', $sort_value, '100%', false, false, false, false, false, false, false, 'form-control'));
 
     $PHPShopGUI->_CODE.=$PHPShopGUI->setInputArg(array('name' => 'rowID', 'type' => 'hidden', 'value' => $_REQUEST['id']));
     $PHPShopGUI->_CODE.=$PHPShopGUI->setInputArg(array('name' => 'parentID', 'type' => 'hidden', 'value' => $_REQUEST['parentID']));
-
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);

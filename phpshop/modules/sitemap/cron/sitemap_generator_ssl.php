@@ -70,6 +70,9 @@ $data = $PHPShopOrm->select(array('*'), false, false, array('limit' => 10000));
 if (is_array($data))
     foreach ($data as $row) {
 
+        // Стандартный url
+        $url = '/page/CID_' . $row['id'];
+
         if ($seourl_enabled)
             $url = '/page/CID_' . $row['id'] . '_' . PHPShopString::toLatin($row['name']);
 

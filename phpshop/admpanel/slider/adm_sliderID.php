@@ -1,6 +1,6 @@
 <?php
 
-$TitlePage = __('Редактирование Слайдера #' . $_GET['id']);
+$TitlePage = __('Редактирование Слайдера').' #' . $_GET['id'];
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['slider']);
 
 // Стартовый вид
@@ -10,16 +10,15 @@ function actionStart() {
     // Выборка
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
 
-    $PHPShopGUI->setActionPanel(__("Редактирование Слайдера: #" . $data['id']), array('Удалить'), array('Сохранить', 'Сохранить и закрыть'));
+    $PHPShopGUI->setActionPanel(__("Редактирование Слайдера")." №" . $data['id'], array('Удалить'), array('Сохранить', 'Сохранить и закрыть'));
 
     // Содержание закладки 1
-    $Tab1 = $PHPShopGUI->setField(__("Изображение"), $PHPShopGUI->setIcon($data['image'], "image_new", false)) .
-            $PHPShopGUI->setField(__("Цель"), $PHPShopGUI->setInput("text", "link_new", $data['link'], "none", 300) . $PHPShopGUI->setHelp("Пример: /pages/info.html или http://google.com")) .
-            $PHPShopGUI->setField(__("Статус"), $PHPShopGUI->setRadio("enabled_new", 1, "Включить", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выключить", $data['enabled'])) .
-            $PHPShopGUI->setField(__("Приоритет"), $PHPShopGUI->setInputText(false, 'num_new', $data['num'], 100)) .
-            $PHPShopGUI->setField(__("Описание"), $PHPShopGUI->setTextarea("alt_new", $data['alt'])) .
+    $Tab1 = $PHPShopGUI->setField("Изображение", $PHPShopGUI->setIcon($data['image'], "image_new", false)) .
+            $PHPShopGUI->setField("Цель", $PHPShopGUI->setInput("text", "link_new", $data['link'], "none", 300) . $PHPShopGUI->setHelp("Пример: /pages/info.html или http://google.com")) .
+            $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("enabled_new", 1, "Включить", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выключить", $data['enabled'])) .
+            $PHPShopGUI->setField("Приоритет", $PHPShopGUI->setInputText(false, 'num_new', $data['num'], 100)) .
+            $PHPShopGUI->setField("Описание", $PHPShopGUI->setTextarea("alt_new", $data['alt'])) .
             $PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'));
-
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);

@@ -98,8 +98,8 @@ function addToCartList(product_id, num, parent, addname) {
         success: function(json) {
             if (json['success']) {
                 showAlertMessage(json['message']);
-                $("#num, #num1, #mobilnum").html(json['num']);
-                $("#sum").html(json['sum']);
+                $("#num, #num1, #num2, #num3, #mobilnum").html(json['num']);
+                $("#sum, #sum1, #sum2").html(json['sum']);
                 $("#bar-cart, #order").addClass('active');
             }
         }
@@ -117,7 +117,7 @@ function addToCompareList(product_id) {
         success: function(json) {
             if (json['success']) {
                 showAlertMessage(json['message']);
-                $("#numcompare").html(json['num']);
+                $("#numcompare, #numcompare1").html(json['num']);
             }
         }
     });
@@ -256,7 +256,6 @@ function auto_layout_keyboard(str) {
     });
 }
 
-
 // Ajax фильтр обновление данных
 function filter_load(filter_str, obj) {
 
@@ -268,7 +267,9 @@ function filter_load(filter_str, obj) {
         },
         success: function(data)
         {
-            if (data) {
+            if (data === 'empty_sort') {
+                showAlertMessage('Товары не найдены', true);
+            } else {
                 $(".template-product-list").html(data);
                 $('#price-filter-val-max').removeClass('has-error');
                 $('#price-filter-val-min').removeClass('has-error');
@@ -296,6 +297,7 @@ function filter_load(filter_str, obj) {
 
     });
 }
+
 
 // Ценовой слайдер
 function price_slider_load(min, max, obj) {
@@ -457,6 +459,21 @@ function searchOpen() {
 function mainPageProductSlider() {
     $('.owl-carousel .product-block-wrapper').unwrap();
     $('.spec-main').owlCarousel({
+        margin:20,
+        nav:true,
+        responsive:{
+            0:{
+                items:1
+            },
+            600:{
+                items:2
+            },
+            1000:{
+                items:4
+            }
+        }
+    });
+    $('.nowBuy').owlCarousel({
         margin:20,
         nav:true,
         responsive:{
@@ -981,7 +998,7 @@ $(document).ready(function() {
 
     // формат ввода телефона
     $("body").on('click', "form[name=forma_order], input[name=returncall_mod_tel],input[name=tel],input[name=oneclick_mod_tel]", function() {
-        if (PHONE_FORMAT && PHONE_MASK && $('.bar-padding-fix').is(":hidden")) {
+        if (PHONE_FORMAT && PHONE_MASK) {
             $('input[name=tel_new],input[name=returncall_mod_tel],input[name=tel],input[name=oneclick_mod_tel]').mask(PHONE_MASK);
         }
     });
@@ -1189,9 +1206,9 @@ $(document).ready(function() {
         e.preventDefault();
         
         var u = location.href;
-        var t = document.title;
+        var t = encodeURIComponent(document.title);
         var h = document.location.host;
-        var d = $('meta[name="description"]').attr('content');
+        var d = encodeURIComponent($('meta[name="description"]').attr('content'));
 
         if ($(this).find("i").hasClass('fa-facebook'))
             path = '//www.facebook.com/sharer/sharer.php?u=' + u;
@@ -1270,7 +1287,10 @@ $(document).ready(function() {
     });
 
     productPageSliderImgFix();
-    
+
+    //Odnotip List
+    $('.odnotipList').appendTo('.odnotipListWrapper');
+    $('.odnotipList .product-block-wrapper').unwrap();
 
 
 
@@ -1280,6 +1300,7 @@ $(document).ready(function() {
 
         $('[name="name_new"]').suggestions({
             token: DADATA_TOKEN,
+            partner: "PHPSHOP",
             type: "NAME",
             params: {
                 parts: ["NAME"]
@@ -1288,6 +1309,7 @@ $(document).ready(function() {
         });
         $('[name="name"]').suggestions({
             token: DADATA_TOKEN,
+            partner: "PHPSHOP",
             type: "NAME",
             params: {
                 parts: ["NAME"]
@@ -1296,6 +1318,7 @@ $(document).ready(function() {
         });
         $('[name="name_person"]').suggestions({
             token: DADATA_TOKEN,
+            partner: "PHPSHOP",
             type: "NAME",
             params: {
                 parts: ["NAME"]
@@ -1304,6 +1327,7 @@ $(document).ready(function() {
         });
         $('[name="oneclick_mod_name"]').suggestions({
             token: DADATA_TOKEN,
+            partner: "PHPSHOP",
             type: "NAME",
             params: {
                 parts: ["NAME"]
@@ -1311,7 +1335,8 @@ $(document).ready(function() {
             count: 5
         });
         $('[name="returncall_mod_name"]').suggestions({
-            token: "",
+            token: DADATA_TOKEN,
+            partner: "PHPSHOP",
             type: "NAME",
             params: {
                 parts: ["NAME"]
@@ -1320,17 +1345,20 @@ $(document).ready(function() {
         });
         $('[type="email"]').suggestions({
             token: DADATA_TOKEN,
+            partner: "PHPSHOP",
             type: "EMAIL",
             suggest_local: false,
             count: 5
         });
         $('[name="org_name"]').suggestions({
             token: DADATA_TOKEN,
+            partner: "PHPSHOP",
             type: "PARTY",
             count: 5
         });
         $('[name="company"]').suggestions({
             token: DADATA_TOKEN,
+            partner: "PHPSHOP",
             type: "PARTY",
             count: 5
         });

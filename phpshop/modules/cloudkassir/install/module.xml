@@ -4,7 +4,6 @@
     <name>Онлайн-касса CloudKassir</name>
     <description>Модуль онлайн-кассы CloudKassir.</description>
     <faqlink>http://faq.phpshop.ru/page/cloudkassir.html</faqlink>
-    <status>new</status>
     <category>sale,payment</category>
     <adminmenu>
         <title>Онлайн-касса CloudKassir</title>

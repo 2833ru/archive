@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="@code@">
     <head>
-        <meta charset="windows-1251">
+        <meta charset="@charset@">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="@title@ - @version@">
@@ -17,10 +17,10 @@
         <link  href="./css/bar.css" rel="stylesheet">
 
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-        <!--[if lt IE 9]>
+        <!--#if lt IE 9#>
           <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
           <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-        <![endif]-->
+        <!#endif#-->
     </head>
 
     <body id="form-signin">
@@ -28,9 +28,8 @@
         <!-- jQuery -->
         <script src="js/jquery-1.11.0.min.js"></script>
 
-
         <header class="bar bar-nav navbar-action visible-xs">
-            <h1 class="title">Авторизация</h1>
+            <h1 class="title">{Авторизация}</h1>
         </header>
 
         <!-- container -->
@@ -38,48 +37,48 @@
 
             <form class="form-signin"  method="post" action="./">
 
-                <h3 class="form-signin-heading hidden-xs">Авторизация<a class="pull-right hidden-xs" href="../../" title="Вернуться в магазин"><span class="glyphicon glyphicon-home"></span></a></h3>
+                <h3 class="form-signin-heading hidden-xs">{Авторизация}<a class="pull-right hidden-xs" href="../../" title="{Вернуться в магазин}"><span class="glyphicon glyphicon-home"></span></a></h3>
 
                 <div class="input-group @error@">
                     <span class="input-group-addon" id="input-group-addon1"><span class="glyphicon glyphicon-user"></span></span>
-                    <input type="text" name="log" class="form-control" value="@user@" placeholder="Пользователь" required autofocus>
+                    <input type="text" name="log" class="form-control" value="@user@" placeholder="{Пользователь}" required autofocus>
                 </div>
                 <div class="input-group @error@">
                     <span class="input-group-addon" id="input-group-addon2"><span class="glyphicon glyphicon-lock"></span></span>
-                    <input type="password" name="pas" class="form-control" value="@password@" placeholder="Пароль"  required>
+                    <input type="password" name="pas" class="form-control" value="@password@" placeholder="{Пароль}"  required>
                 </div>
-
 
                 <div class="checkbox ">
                     <label  class="hidden-xs">
-                        <input type="checkbox" name="actionHash" value="true" id="remember-me"> Восстановить пароль
+                        <input type="checkbox" name="actionHash" value="true" id="remember-me"> {Восстановить пароль}
+                        
                     </label>
+                    <small class="pull-right text-muted text-uppercase"><img src="../locale/@lang@/icon.png" /> @code@</small>
                 </div>
-                <button class="btn btn-lg btn-primary btn-block" type="submit">Вход</button>
+                <button class="btn btn-lg btn-primary btn-block" type="submit">{Вход}</button>
                 <input type="hidden" name="actionID" value="true">
                 <input type="hidden" name="actionList[actionHash]" value="actionHash">
                 <input type="hidden" name="actionList[actionID]" value="actionEnter">
             </form>
         </div> <!-- /container -->
-
         <!-- Fixed mobile bar -->
         <div class="bar-padding-fix visible-xs"> </div>
         <nav class="navbar navbar-statick navbar-fixed-bottom bar bar-tab visible-xs" role="navigation">
             <a class="tab-item active" href="../../">
                 <span class="icon icon-home"></span>
-                <span class="tab-label">Домой</span>
+                <span class="tab-label">{Домой}</span>
             </a>
             <a class="tab-item" href="?path=order">
                 <span class="icon icon-download"></span>
-                <span class="tab-label">Заказы</span>
+                <span class="tab-label">{Заказы}</span>
             </a>
             <a class="tab-item" href="?path=catalog">
                 <span class="icon icon-compose"></span>
-                <span class="tab-label">Цены</span>
+                <span class="tab-label">{Цены}</span>
             </a>
             <a class="tab-item"  href="?path=shopusers">
                 <span class="icon icon-person"></span>
-                <span class="tab-label">Покупатели</span>
+                <span class="tab-label">{Покупатели}</span>
             </a>
         </nav>
         <!--/ Fixed mobile bar -->

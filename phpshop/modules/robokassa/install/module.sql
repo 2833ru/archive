@@ -16,7 +16,8 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_robokassa_system` (
 
 INSERT INTO `phpshop_modules_robokassa_system` VALUES (1,0,'Оплатить заказ','Заказ находится на ручной проверке.','','','','1.0');
 
-INSERT INTO `phpshop_payment_systems` VALUES (10020, 'Visa, Mastercard, Yandex, Webmoney (Robokassa)', 'modules', '0', 0, '<p>Ваш заказ оплачен!</p>', 'Спасибо', '', '/UserFiles/Image/Payments/visa.png');
+INSERT INTO `phpshop_payment_systems` (`id`, `name`, `path`, `enabled`, `num`, `message`, `message_header`, `yur_data_flag`, `icon`) VALUES
+(10020, 'Visa, Mastercard, Yandex, Webmoney (Robokassa)', 'modules', '0', 0, '<p>Ваш заказ оплачен!</p>', 'Спасибо', '', '/UserFiles/Image/Payments/visa.png');
 
 CREATE TABLE IF NOT EXISTS `phpshop_modules_robokassa_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

@@ -1,7 +1,7 @@
 
 	<ol class="breadcrumb">
-	    <li><a href="/" >Главная</a></li>
-	    <li><a href="/users/" >Личный кабинет</a></li>
+	    <li><a href="/" >{Главная}</a></li>
+	    <li><a href="/users/" >{Личный кабинет}</a></li>
 	    <li class="active"><b>@formaTitle@</b></li>
 	</ol>
 <div class="page-header">

@@ -1,4 +1,4 @@
-<div class="col-md-6 col-sm-6">
+<div class="col-md-6 col-sm-6 product-block-wrapper-fix">
     <div class="product-col">
         <div class="image product-img-centr">
             <a href="/shop/UID_@productUid@.html" title="@productName@"> <img src="@productImg@" alt="@productName@" class="img-responsive img-center-sm" ></a>
@@ -12,12 +12,13 @@
                 <div class="description-product-height-fix"></div>
             </div>
             <div class="description-link-wrapper">
-                <a class="description-link" href="/shop/UID_@productUid@.html" title="@productName@">Подробнее</a>
+                <a class="description-link" href="/shop/UID_@productUid@.html" title="@productName@">{Подробнее}</a>
             </div>
             <div class="price">
                 <span class="price-new">@productPrice@ <span class="rubznak">@productValutaName@</span></span> 
                 <span class="price-old">@productPriceRub@</span>
             </div>
+            <span class="product-sklad-list-block">@productSklad@</span>
             <div class="cart-button button-group">
                 <a class="btn btn-cart @elementCartOptionHide@" href="/shop/UID_@productUid@.html">
                     <i class="fa fa-shopping-cart"></i>
@@ -29,12 +30,12 @@
                     <span>@productSale@</span>
                 </button>
 
-                <button class="btn btn-wishlist addToWishList" role="button" data-uid="@productUid@" data-title="Отложить" data-placement="top" data-toggle="tooltip"><i class="fa fa-heart"></i></button>
-                <button class="btn btn-wishlist addToCompareList" role="button" data-uid="@productUid@" data-title="Сравнить" data-placement="top" data-toggle="tooltip"><i class="fa fa-bar-chart-o"></i></button>
+                <button class="btn btn-wishlist addToWishList" role="button" data-uid="@productUid@" data-title="{Отложить}" data-placement="top" data-toggle="tooltip"><i class="fa fa-heart"></i></button>
+                <button class="btn btn-wishlist addToCompareList" role="button" data-uid="@productUid@" data-title="{Сравнить}" data-placement="top" data-toggle="tooltip"><i class="fa fa-bar-chart-o"></i></button>
 
                 <a class="btn btn-cart @elementNoticeHide@" href="/users/notice.html?productId=@productUid@" title="@productNotice@">
                     <i class="fa fa-envelope-o" aria-hidden="true"></i>                            
-                    Уведомить
+                    {Уведомить}
                 </a>                                   
 
 

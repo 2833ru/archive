@@ -1,6 +1,6 @@
 <?php
 
-$TitlePage = __('Редактирование способа оплаты #' . $_GET['id']);
+$TitlePage = __('Редактирование способа оплаты').' #' . $_GET['id'];
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['payment_systems']);
 
 // Стартовый вид
@@ -10,7 +10,6 @@ function actionStart() {
     // Выборка
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_REQUEST['id'])));
 
-
     // Нет данных
     if (!is_array($data)) {
         header('Location: ?path=' . $_GET['path']);
@@ -18,8 +17,7 @@ function actionStart() {
 
     // Размер названия поля
     $PHPShopGUI->field_col = 2;
-    $PHPShopGUI->setActionPanel(__("Способы оплаты") . ' / ' . $data['name'], array('Создать', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'));
-
+    $PHPShopGUI->setActionPanel($data['name'], array('Создать', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'),false);
 
     // Редактор 1
     $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));
@@ -28,19 +26,17 @@ function actionStart() {
     $oFCKeditor->ToolbarSet = 'Normal';
     $oFCKeditor->Value = $data['message'];
 
-
     // Содержание 
-    $Tab1 = $PHPShopGUI->setCollapse(__('Информация'), $PHPShopGUI->setField("Наименование:", $PHPShopGUI->setInput("text", "name_new", $data['name'])) .
-            $PHPShopGUI->setField("Вывод:", $PHPShopGUI->setRadio("enabled_new", 1, "Показывать", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Скрыть", $data['enabled'])) .
-            $PHPShopGUI->setField("Приоритет:", $PHPShopGUI->setInputText(null, "num_new", $data['num'], '100')) .
-            $PHPShopGUI->setField("Юридические данные:", $PHPShopGUI->setCheckbox("yur_data_flag_new", 1, "Обязательно заполнять", $data['yur_data_flag'])) .
-            $PHPShopGUI->setField("Тип подключения:", $PHPShopGUI->setSelect("path_new", $PHPShopGUI->loadLib('GetTipPayment', $data['path']), 350))
+    $Tab1 = $PHPShopGUI->setCollapse('Информация', $PHPShopGUI->setField("Наименование", $PHPShopGUI->setInput("text", "name_new", $data['name'])) .
+            $PHPShopGUI->setField("Вывод", $PHPShopGUI->setRadio("enabled_new", 1, "Показывать", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Скрыть", $data['enabled'])) .
+            $PHPShopGUI->setField("Приоритет", $PHPShopGUI->setInputText(null, "num_new", $data['num'], '100')) .
+            $PHPShopGUI->setField("Юридические данные", $PHPShopGUI->setCheckbox("yur_data_flag_new", 1, "Обязательно заполнять", $data['yur_data_flag'])) .
+            $PHPShopGUI->setField("Тип подключения", $PHPShopGUI->setSelect("path_new", $PHPShopGUI->loadLib('GetTipPayment', $data['path']), 350))
     );
 
-    $Tab1.=$PHPShopGUI->setField("Иконка:", $PHPShopGUI->setIcon($data['icon'], "icon_new", false));
+    $Tab1.=$PHPShopGUI->setField("Иконка", $PHPShopGUI->setIcon($data['icon'], "icon_new", false));
 
-    $Tab1.=$PHPShopGUI->setCollapse(__('Сообщение после заказа'), $PHPShopGUI->setField("Заголовок:", $PHPShopGUI->setInput("text", "message_header_new", $data['message_header'])) .
-            $PHPShopGUI->setField("Сообщение", $oFCKeditor->AddGUI()));
+    $Tab1.=$PHPShopGUI->setCollapse('Сообщение после заказа', $PHPShopGUI->setField("Заголовок:", $PHPShopGUI->setInput("text", "message_header_new", $data['message_header'])) .$PHPShopGUI->setField("Сообщение", $oFCKeditor->AddGUI()));
 
 
     // Запрос модуля на закладку

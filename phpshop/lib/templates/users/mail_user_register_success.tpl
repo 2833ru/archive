@@ -127,17 +127,17 @@
     
     <tr bgcolor="#eaeaea">
         <td >
-            <h2>Вы зарегистрировались на сайте <a href="http://@serverPath@">@serverPath@</a></h2>
-              <p>Доброго времени, @user_name@!</p>
+            <h2>{Вы зарегистрировались на сайте} <a href="http://@serverPath@">@serverPath@</a></h2>
+              <p>{Доброго времени}, @user_name@!</p>
 
-<p>Доступ в личный кабинет:<br>
-Логин: @user_login@<br>
-Пароль: @user_password@</p>
+<p>{Доступ в личный кабинет}:<br>
+{Логин}: <b>@user_login@</b><br>
+{Пароль}: <b>@user_password@</b></p>
 
 </p>
 
 <hr>
-<p>Вы всегда можете задать нам вопрос в Личном кабинете на сайте в разделе <a href="http://@serverPath@users/message.html">Связь с менеджером</a>. 
+<p>{Вы всегда можете задать нам вопрос в Личном кабинете на сайте в разделе} <a href="http://@serverPath@users/message.html">{Связь с менеджером}</a>. 
 
                  </p>
                 
@@ -147,29 +147,22 @@
 </tbody>  
 </table> 
 
-
 <table width="660" align="center" cellspacing="0" cellpadding="10">
 <tbody>
-
-
     <tr bgcolor="#fafafa" id="footer" height="100%">
-    
-      
-       <td align="left" valign="top" height="100%">
-            <p><b>С уважением, @shopName@.</b></p>
+
+        <td align="left" valign="top" height="100%">
+            <p><b>{С уважением}, @shopName@.</b></p>
       <p>@org_name@<br>
-      Интернет-магазин <a href="http://@serverPath@">@serverPath@</a><br>
-      Отдел продаж: @telNum@<br>
+      {Интернет-магазин} <a href="http://@serverPath@">@serverPath@</a><br>
+      {Отдел продаж}: @telNum@<br>
       E-mail: @adminMail@<br>
       @org_adres@</p></td>
       
     </tr>
+  
 </tbody>  
 </table> 
 
-
-
 </body>
 </html>
-
-

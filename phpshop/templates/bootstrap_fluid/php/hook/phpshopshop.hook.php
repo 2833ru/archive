@@ -194,6 +194,9 @@ function sorttemplatehook($value, $n, $title, $vendor) {
                 }
             }
 
+            if($p[3] != null)
+                $text .= ' (' . $p[3] . ')';
+
             // Определение цвета
             if ($text[0] == '#')
                 $text = '<div class="filter-color" style="background:' . $text . '"></div>';

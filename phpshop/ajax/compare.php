@@ -15,6 +15,7 @@ PHPShopObj::loadClass("product");
 PHPShopObj::loadClass("system");
 PHPShopObj::loadClass("security");
 PHPShopObj::loadClass("compare");
+PHPShopObj::loadClass("lang");
 
 // Подключаем библиотеку поддержки JsHttpRequest
 if ($_REQUEST['type'] != 'json') {
@@ -27,6 +28,8 @@ $xid = intval($_REQUEST['xid']);
 
 //Получаем входящее количество товаров для сравнения
 $compar = count($_SESSION['compare']);
+
+$PHPShopLang = new PHPShopLang(array('locale' => $_SESSION['lang'], 'path' => 'shop'));
 
 // Класс сравнения
 $PHPShopCompare = new PHPShopCompare();

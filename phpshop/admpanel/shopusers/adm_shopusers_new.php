@@ -6,7 +6,7 @@ PHPShopObj::loadClass('user');
 
 // Стартовый вид
 function actionStart() {
-    global $PHPShopGUI, $PHPShopOrm, $PHPShopModules;
+    global $PHPShopGUI, $TitlePage, $PHPShopModules;
 
 
     // Начальные данные
@@ -35,12 +35,10 @@ function actionStart() {
         'url' => 'mailto:' . $data['login']
     );
 
-
     // Размер названия поля
     $PHPShopGUI->field_col = 2;
-    $PHPShopGUI->setActionPanel(__("Покупатели"), false, array('Сохранить и закрыть', 'Создать и редактировать'));
+    $PHPShopGUI->setActionPanel(__("Покупатели"). ' / '.$TitlePage, false, array('Сохранить и закрыть', 'Создать и редактировать'));
     $PHPShopGUI->addJSFiles('./js/validator.js');
-
 
     // Стытусы пользователей
     $PHPShopUserStatus = new PHPShopUserStatusArray();
@@ -51,7 +49,7 @@ function actionStart() {
             $user_status_value[] = array($user_status['name'], $user_status['id'], $data['status']);
 
     // Содержание закладки 1
-    $Tab1 = $PHPShopGUI->setCollapse(__('Информация'), $PHPShopGUI->setField("Имя", $PHPShopGUI->setInput('text.required', "name_new", $data['name'])) .
+    $Tab1 = $PHPShopGUI->setCollapse('Информация', $PHPShopGUI->setField("Имя", $PHPShopGUI->setInput('text.required', "name_new", $data['name'])) .
             $PHPShopGUI->setField("E-mail", $PHPShopGUI->setInput('email.required.6', "login_new", $data['login'])) .
             $PHPShopGUI->setField("Пароль", $PHPShopGUI->setInput("password.required.6", "password_new", $data['password'])) .
             $PHPShopGUI->setField("Подтверждение пароля", $PHPShopGUI->setInput("password.required", "password2_new", $data['password'])) .
@@ -92,7 +90,7 @@ function actionInsert() {
         PHPShopParser::set('login', $_POST['login_new']);
         PHPShopParser::set('password', $_POST['password_new']);
 
-        $zag_adm = "Ваш аккаунт был успешно активирован Администратором";
+        $zag_adm = __("Ваш аккаунт был успешно активирован Администратором");
         $PHPShopMail = new PHPShopMail($_POST['login_new'], $PHPShopSystem->getEmail(), $zag_adm, '', true, true);
         $content_adm = PHPShopParser::file('../lib/templates/users/mail_user_activation_by_admin_success.tpl', true);
 

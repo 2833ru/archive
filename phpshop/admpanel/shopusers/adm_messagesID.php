@@ -1,6 +1,6 @@
 <?php
 
-$TitlePage = __('Редактирование сообщения #' . $_GET['id']);
+$TitlePage = __('Редактирование сообщения').' #' . $_GET['id'];
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['messages']);
 PHPShopObj::loadClass('user');
 
@@ -31,13 +31,12 @@ function actionStart() {
     $message='<div class="well">'.strip_tags($data['Message'],'<b><hr><br>').'</div>';
 
     // Содержание закладки 1
-    $Tab1 = $PHPShopGUI->setCollapse(__('Информация'), 
+    $Tab1 = $PHPShopGUI->setCollapse('Информация', 
             $PHPShopGUI->setField("Отправитель", $user) .
             $PHPShopGUI->setField("Тема", $PHPShopGUI->setInput('text.required', "Subject_new", $data['Subject'])) .
             $PHPShopGUI->setField("Переписка", $message).$PHPShopGUI->setInput('hidden', "Message_new", $data['Message']).
             $PHPShopGUI->setField("Ответ", $PHPShopGUI->setTextarea('respond', null, false, '100%', 100,false,'Текст сообщения...'))
     );
-
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
@@ -86,7 +85,7 @@ function actionUpdate() {
     global $PHPShopOrm, $PHPShopModules;
 
     if(!empty($_POST['respond'])){
-        $_POST['Message_new']='<b>Администрация</b>: '.$_POST['respond'].'<HR>'.$_POST['Message_new'];
+        $_POST['Message_new']='<b>'.__('Администрация').'</b>: '.$_POST['respond'].'<HR>'.$_POST['Message_new'];
         $_POST['enabled_new']=1;
     }
         

@@ -3,5 +3,5 @@
         <div id="raiting_blank"></div> <!--блок пустых звезд-->
         <div id="raiting_votes" style="width:@avgRateWidth@px"></div> <!--блок с итогами голосов -->
     </div>
-    <div id="raiting_info"> @avgRate@ | по оценкам @avgRateNum@ пользователей </div>
+    <div id="raiting_info"> @avgRate@ | {по оценкам} @avgRateNum@ {пользователей} </div>
 </div>

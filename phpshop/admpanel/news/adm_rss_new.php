@@ -4,7 +4,7 @@ $TitlePage = __('Создание RSS канала');
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['rssgraber']);
 
 function actionStart() {
-    global $PHPShopGUI, $PHPShopModules;
+    global $PHPShopGUI, $PHPShopModules,$TitlePage;
 
     // Выборка
     $data['start_date'] = time();
@@ -19,18 +19,18 @@ function actionStart() {
     $PHPShopGUI->addJSFiles('./js/bootstrap-datetimepicker.min.js', './news/gui/news.gui.js');
     $PHPShopGUI->addCSSFiles('./css/bootstrap-datetimepicker.min.css');
 
-    $PHPShopGUI->setActionPanel(__("Создание RSS"), false, array('Сохранить и закрыть'));
+    $PHPShopGUI->setActionPanel($TitlePage, false, array('Сохранить и закрыть'));
 
-    $Tab1 = $PHPShopGUI->setField("URL:", $PHPShopGUI->setInputArg(array('type' => 'text.required', 'name' => "link_new", 'value' => $data['link'], 'placeholder' => 'http://www.phpshop.ru/rss/'))) .
-            $PHPShopGUI->setField("Дата начала:", $PHPShopGUI->setInputDate("start_date_new", PHPShopDate::get($data['start_date']))) .
-            $PHPShopGUI->setField("Дата завершения:", $PHPShopGUI->setInputDate("end_date_new", PHPShopDate::get($data['end_date']))) .
-            $PHPShopGUI->setField("Забирать новости:", $PHPShopGUI->setInputText(null, "day_num_new", $data['day_num'], 100, 'в день')) .
-            $PHPShopGUI->setField("Новостей в заборе:", $PHPShopGUI->setInputText(null, "news_num_new", $data['news_num'], 100, 'за раз')) .
+    $Tab1 = $PHPShopGUI->setField("URL", $PHPShopGUI->setInputArg(array('type' => 'text.required', 'name' => "link_new", 'value' => $data['link'], 'placeholder' => 'http://www.phpshop.ru/rss/'))) .
+            $PHPShopGUI->setField("Дата начала", $PHPShopGUI->setInputDate("start_date_new", PHPShopDate::get($data['start_date']))) .
+            $PHPShopGUI->setField("Дата завершения", $PHPShopGUI->setInputDate("end_date_new", PHPShopDate::get($data['end_date']))) .
+            $PHPShopGUI->setField("Забирать новости", $PHPShopGUI->setInputText(null, "day_num_new", $data['day_num'], 100, 'в день')) .
+            $PHPShopGUI->setField("Новостей в заборе", $PHPShopGUI->setInputText(null, "news_num_new", $data['news_num'], 100, 'за раз')) .
             $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("enabled_new", 1, "Вкл.", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выкл.", $data['enabled']) . '&nbsp;&nbsp;');
 
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1));
+    $PHPShopGUI->setTab(array("Основное", $Tab1,true));
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);

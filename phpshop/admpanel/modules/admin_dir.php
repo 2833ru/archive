@@ -73,7 +73,7 @@ $PHPShopInterface->action_button['Добавить +'] = array(
     'class' => 'btn btn-default btn-sm navbar-btn',
     'type' => 'button',
     'icon' => 'glyphicon glyphicon-plus',
-    'tooltip' => 'data-toggle="tooltip" data-placement="left" title="Добавить"'
+    'tooltip' => 'data-toggle="tooltip" data-placement="left" title="'.__('Добавить').'"'
 );
 
 $PHPShopInterface->field_col = 2;

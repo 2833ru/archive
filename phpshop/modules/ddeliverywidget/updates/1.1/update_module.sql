@@ -1,0 +1,1 @@
+ALTER TABLE `phpshop_modules_ddeliverywidget_system` ADD `prod_enabled` enum('1','2') NOT NULL default '2';

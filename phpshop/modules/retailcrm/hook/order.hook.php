@@ -19,8 +19,7 @@ function runOrder($ouid, $type)
     $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.retailcrm.retailcrm_system"));
     $data = $PHPShopOrm->select();
 
-    @extract($data);
-    $value = Tools::iconvArray(unserialize($value));
+    $value = Tools::iconvArray(unserialize($data['value']));
 
     ini_set('memory_limit', '-1');
     $corders = array();
@@ -34,7 +33,7 @@ function runOrder($ouid, $type)
 
         $order = Tools::iconvArray($order);
 
-        $persone = isset($order["orders"]["Person"]["var"]) ? $order["orders"]["Person"]["var"] : array();
+        $persone = isset($order["orders"]["Person"]) ? $order["orders"]["Person"] : array();
 
         $phone = "";
         if (isset($order["orders"]["Person"])) {
@@ -44,15 +43,18 @@ function runOrder($ouid, $type)
         }
         $tmp = array(
             "number"          => $order["uid"],
-            "externalId"      => $order["id"] . time(),
+            "externalId"      => $order["id"],
             "createdAt"       => date("Y-m-d H:i:s", $order["datas"]),
             "discount"        => isset($order["orders"]["Person"]["discount"]) ? $order["orders"]["Person"]["discount"] : 0,
             "phone"           => $phone,
             "email"           => isset($order["orders"]["Person"]["mail"]) ? $order["orders"]["Person"]["mail"] : "",
             "customerComment" => $order["status"]["maneger"],
 
-            "contragentType"  => "individual",
-            "orderType"       => "eshop-individual",
+            "contragentType"  => !empty($persone["org_name"]) || !empty($persone["org_inn"]) || !empty($persone["org_kpp"]) ? "legal-entity" : "individual",
+            "orderType"       => !empty($persone["org_name"]) || !empty($persone["org_inn"]) || !empty($persone["org_kpp"]) ? "eshop-legal" : "eshop-individual",
+            "legalName"       => isset($persone["org_name"]) ? $persone["org_name"] : "",
+            "INN"             => isset($persone["org_inn"]) ? $persone["org_inn"] : "",
+            "KPP"             => isset($persone["org_kpp"]) ? $persone["org_kpp"] : "",
 
             "orderMethod"     => "shopping-cart",
             "delivery"        => array(
@@ -113,10 +115,9 @@ function runOrder($ouid, $type)
         $corders = Tools::clearArray($tmp);
     }
     $valid = new Validation();
-    $order = $valid->orderCheck($corders);
-
+    $order = array($valid->orderCheck($corders));
     $api = new ApiHelper($value["url"], $value["key"]);
-    $api->processOrders(array($order));
+    $api->processOrders($order);
 }
 
 $addHandler = array

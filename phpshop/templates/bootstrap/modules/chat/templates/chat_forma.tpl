@@ -2,17 +2,17 @@
 <div id="chatModalPre">
     <form id="chatform">
         <div class="form-group" >
-            <label>Имя</label>
+            <label>{Имя}</label>
             <input type="text" name="chat_mod_user_name" id="chat_mod_user_name" class="form-control input-sm" placeholder="Имя..." required="" value="@php echo $_SESSION[mod_chat_user_name]; php@">
         </div>
         <div class="text-center">
-            <button type="button" class="btn btn-default btn-sm hide"  id="chatend">Закрыть</button> &nbsp;
+            <button type="button" class="btn btn-default btn-sm hide"  id="chatend">{Закрыть}</button> &nbsp;
             <button type="submit" class="btn btn-primary btn-sm pull-right" id="chatstart">@php if(empty($_SESSION['mod_chat_user_session'])) echo "Начать"; else echo "Далее"; php@</button>
         </div>
     </form>   
 </div>
 <input type="hidden" name="chat_mod_user_name_true" id="chat_mod_user_name_true" value="@php echo $_SESSION[mod_chat_user_name]; php@">
-<button  class="btn btn-info chat"  id="chatbutton" data-placement="right"  data-html="true" data-content="123">Чат<span class="glyphicon glyphicon-user"></span></button>
+<button  class="btn btn-info chat"  id="chatbutton" data-placement="right"  data-html="true" data-content="123">{Чат}<span class="glyphicon glyphicon-user"></span></button>
 <script>
     $().ready(function() {
 
@@ -81,7 +81,7 @@
 
                 <span class="btn btn-default btn-sm pull-left glyphicon glyphicon-th-large" id="chatopenwindow" data-toggle="tooltip" data-placement="bottom" title="Открыть в окне"></span>
 
-                <h4 class="modal-title" id="myModalLabel">Чат онлайн</h4>
+                <h4 class="modal-title" id="myModalLabel">{Чат онлайн}</h4>
             </div>
             <div class="modal-body">
                 <iframe class="chat-modal-content"></iframe>

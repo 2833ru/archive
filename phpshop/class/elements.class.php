@@ -216,7 +216,7 @@ class PHPShopElements {
         if ($this->SysValue['lang'][$str])
             return $this->SysValue['lang'][$str];
         else
-            return 'Не определено';
+            return $str;
     }
 
     /**

@@ -14,11 +14,10 @@ $error = '<span class="glyphicon glyphicon-remove text-danger pull-right"></span
 $alert = 'list-group-item-danger';
 
 // Apache
-if (strstr($_SERVER['SERVER_SOFTWARE'], 'Apache')){
+if (strstr($_SERVER['SERVER_SOFTWARE'], 'Apache')) {
     $API = $ok;
     $api_style = null;
-}
-else{
+} else {
     $API = $error;
     $api_style = $alert;
 }
@@ -35,8 +34,7 @@ if ($PHPShopBase->connect(false)) {
     $mysql = $ok;
     $mysql_style = null;
     $mysql_break_install = ' data-toggle="modal" ';
-}
-else{
+} else {
     $mysql = $error;
     $mysql_style = $alert;
     $mysql_break_install = ' disabled="disabled" title="ќшибка MySQL"';
@@ -122,9 +120,13 @@ if (!empty($_POST['version_update'])) {
 // ”становка базы
 elseif (!empty($_POST['password'])) {
 
-    $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
+    $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true);
     PHPShopObj::loadClass('orm');
+    PHPShopObj::loadClass('lang');
     include($_classPath . "lib/phpass/passwordhash.php");
+
+    // язык
+    $GLOBALS['PHPShopLang'] = new PHPShopLang();
 
     if ($sql_file = PHPShopFile::searchFile('./', 'getDump'))
         $fp = file_get_contents($sql_file);
@@ -314,7 +316,7 @@ else
                 </div>
                 <ul class="list-group">
                     <li class="list-group-item <?php echo $api_style ?>">Apache <?php echo $API ?>
-                    <li class="list-group-item <?php echo $mysql_style ?>">MySQL <?php echo $PHPShopBase->mysql_error.$mysql ?>
+                    <li class="list-group-item <?php echo $mysql_style ?>">MySQL <?php echo $PHPShopBase->mysql_error . $mysql ?>
                     <li class="list-group-item">PHP<?php echo $php ?>
                     <li class="list-group-item">GD Support дл€ PHP <?php echo $gd_support ?>
                     <li class="list-group-item">XML Parser дл€ PHP <?php echo $xml_support ?>

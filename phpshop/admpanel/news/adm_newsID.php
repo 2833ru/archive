@@ -1,6 +1,6 @@
 <?php
 
-$TitlePage = __('Редактирование Новости #' . $_GET['id']);
+$TitlePage = __('Редактирование Новости').' #' . $_GET['id'];
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['news']);
 
 function actionStart() {
@@ -33,7 +33,7 @@ function actionStart() {
         'class'=>$GLOBALS['isFrame']
     );
 
-    $PHPShopGUI->setActionPanel(__("Редактирование Новости от " . $data['datas']), array('Предпросмотр', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'));
+    $PHPShopGUI->setActionPanel(__("Редактирование Новости от")." " . $data['datas'], array('Предпросмотр', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'));
 
     // Редактор 1
     $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));
@@ -42,10 +42,10 @@ function actionStart() {
     $oFCKeditor->Value = $data['kratko'];
 
     // Содержание закладки 1
-    $Tab1 = $PHPShopGUI->setField("Дата:", $PHPShopGUI->setInputDate("datas_new", $data['datas'])) .
-            $PHPShopGUI->setField("Заголовок:", $PHPShopGUI->setInput("text", "zag_new", $data['zag']));
+    $Tab1 = $PHPShopGUI->setField("Дата", $PHPShopGUI->setInputDate("datas_new", $data['datas'])) .
+            $PHPShopGUI->setField("Заголовок", $PHPShopGUI->setInput("text", "zag_new", $data['zag']));
 
-    $Tab1.=$PHPShopGUI->setField("Анонс:", $oFCKeditor->AddGUI());
+    $Tab1.=$PHPShopGUI->setField("Анонс", $oFCKeditor->AddGUI());
 
 
     // Редактор 2
@@ -53,7 +53,7 @@ function actionStart() {
     $oFCKeditor2->Height = '550';
     $oFCKeditor2->Value = $data['podrob'];
 
-    $Tab1.=$PHPShopGUI->setField("Подробно:", $oFCKeditor2->AddGUI());
+    $Tab1.=$PHPShopGUI->setField("Подробно", $oFCKeditor2->AddGUI());
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);

@@ -1,6 +1,6 @@
 <?php
 
-$TitlePage = __('Редактирование IP #' . $_GET['id']);
+$TitlePage = __('Редактирование IP').' #' . $_GET['id'];
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['black_list']);
 
 
@@ -11,14 +11,12 @@ function actionStart() {
     // Выборка
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_REQUEST['id'])));
 
-
     // Нет данных
     if (!is_array($data)) {
         header('Location: ?path=' . $_GET['path']);
     }
 
     $PHPShopGUI->setActionPanel(__("Черный список") . ' / ' . $data['ip'], array('Удалить'), array('Сохранить', 'Сохранить и закрыть'));
-
 
     // Содержание закладки 1
     $Tab1 = $PHPShopGUI->setField("IP", $PHPShopGUI->setInput('text.required', "ip_new", $data['ip'],false,'200'));
@@ -27,7 +25,7 @@ function actionStart() {
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1));
+    $PHPShopGUI->setTab(array("Основное", $Tab1,true));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =

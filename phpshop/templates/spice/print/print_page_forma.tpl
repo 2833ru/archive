@@ -21,7 +21,7 @@
                     <h3>@nameShop@</h3>
                     @descripShop@
                     <button onclick="window.print();" class="btn btn-default pull-right">
-                        <span class="glyphicon glyphicon-print"></span> Печать
+                        <span class="glyphicon glyphicon-print"></span> {Печать}
                     </button> 
                 </div>
             </div>
@@ -40,7 +40,7 @@
                             <p>@productDes@</p>
                             <h4>Цена: @productPrice@ @productValutaName@</h4>
 
-                            <a href="http://@serverShop@/shop/UID_@productId@.html" title="Перейти по ссылке: @productName@" class="pull-right"><span class="glyphicon glyphicon-share-alt"></span> http://@serverShop@/shop/UID_@productId@.html</a>
+                            <a href="http://@serverShop@/shop/UID_@productId@.html"  class="pull-right"><span class="glyphicon glyphicon-share-alt"></span> http://@serverShop@/shop/UID_@productId@.html</a>
                         </div>
                     </div>
 

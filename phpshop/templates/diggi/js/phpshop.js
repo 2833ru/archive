@@ -1068,9 +1068,9 @@ $(document).ready(function() {
         e.preventDefault();
 
         var u = location.href;
-        var t = document.title;
+        var t = encodeURIComponent(document.title);
         var h = document.location.host;
-        var d = $('meta[name="description"]').attr('content');
+        var d = encodeURIComponent($('meta[name="description"]').attr('content'));
 
         if ($(this).find("i").hasClass('fa-facebook'))
             path = '//www.facebook.com/sharer/sharer.php?u=' + u;
@@ -1133,6 +1133,7 @@ $(document).ready(function() {
         /*
          $('[name="name_new"]').suggestions({
          token: DADATA_TOKEN,
+         partner: "PHPSHOP",
          type: "NAME",
          params: {
          parts: ["NAME"]
@@ -1141,6 +1142,7 @@ $(document).ready(function() {
          });
          $('[name="name"]').suggestions({
          token: DADATA_TOKEN,
+         partner: "PHPSHOP",
          type: "NAME",
          params: {
          parts: ["NAME"]
@@ -1149,6 +1151,7 @@ $(document).ready(function() {
          });
          $('[name="name_person"]').suggestions({
          token: DADATA_TOKEN,
+         partner: "PHPSHOP",
          type: "NAME",
          params: {
          parts: ["NAME"]
@@ -1158,6 +1161,7 @@ $(document).ready(function() {
          */
         $('[name="oneclick_mod_name"]').suggestions({
             token: DADATA_TOKEN,
+            partner: "PHPSHOP",
             type: "NAME",
             params: {
                 parts: ["NAME"]
@@ -1166,6 +1170,7 @@ $(document).ready(function() {
         });
         $('[name="returncall_mod_name"]').suggestions({
             token: "",
+            partner: "PHPSHOP",
             type: "NAME",
             params: {
                 parts: ["NAME"]
@@ -1175,17 +1180,20 @@ $(document).ready(function() {
         /*
          $('[type="email"]').suggestions({
          token: DADATA_TOKEN,
+         partner: "PHPSHOP",
          type: "EMAIL",
          suggest_local: false,
          count: 5
          });*/
         $('[name="org_name"]').suggestions({
             token: DADATA_TOKEN,
+            partner: "PHPSHOP",
             type: "PARTY",
             count: 5
         });
         $('[name="company"]').suggestions({
             token: DADATA_TOKEN,
+            partner: "PHPSHOP",
             type: "PARTY",
             count: 5
         });

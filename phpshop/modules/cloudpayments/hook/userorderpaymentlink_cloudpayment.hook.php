@@ -58,9 +58,9 @@ function userorderpaymentlink_mod_cloudpayments_hook($obj, $PHPShopOrderFunction
                 if(empty($tax_delivery))
                     $tax_delivery = $tax;
 
-                $cartSum = $obj->PHPShopCart->getSum();
+                $cartSum = $PHPShopOrderFunction->getCartSumma();
 
-                $delivery_price = floatval($out_summ) - floatval($cartSum);
+                $delivery_price = floatval($out_summ - $cartSum);
 
                 $aItem[] = array(
                     "label"     => PHPShopString::win_utf8('Доставка'),

@@ -4,7 +4,7 @@
     <name>Chat</name>
     <faqlink>http://faq.phpshop.ru/page/chat.html</faqlink>
     <description>Модуль чата с менеджером.</description>
-    <category>user</category>
+    <category>user,chat</category>
     <adminmenu>
         <title>Чат</title>
         <capability>true</capability>

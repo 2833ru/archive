@@ -8,12 +8,12 @@ class Tinkoff
     public $customerEmail = '';
     public $settings = array();
 
-    static public $tinkoffVats = [
+    static public $tinkoffVats = array(
         'none' => 'none',
         '0' => 'vat0',
         '10' => 'vat10',
         '18' => 'vat18',
-    ];
+    );
 
     public function getPaymentUrl($obj, $value, $rout)
     {
@@ -79,25 +79,6 @@ class Tinkoff
         );
 
         return $receipt;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getCurrencyId()
-    {
-        $PHPShopValutaArray = new PHPShopValutaArray();
-        $currencies = $PHPShopValutaArray->getArray();
-
-        if (is_array($currencies)) {
-            foreach ($currencies as $currency) {
-                if ($currency['iso'] == $this->currency) {
-                    return $currency['id'];
-                }
-            }
-        }
-
-        return false;
     }
 
     /**

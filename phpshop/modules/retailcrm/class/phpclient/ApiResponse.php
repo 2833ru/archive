@@ -9,7 +9,7 @@ class ApiResponse implements ArrayAccess
     protected $statusCode;
 
     // response assoc array
-    protected $response;
+    public $response;
 
     public function __construct($statusCode, $responseBody = null)
     {

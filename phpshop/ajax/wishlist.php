@@ -20,8 +20,11 @@ PHPShopObj::loadClass("cart");
 PHPShopObj::loadClass("security");
 PHPShopObj::loadClass("user");
 PHPShopObj::loadClass("parser");
+PHPShopObj::loadClass("lang");
 
 $product_id = intval($_REQUEST['product_id']);
+
+$PHPShopLang = new PHPShopLang(array('locale'=>$_SESSION['lang'],'path'=>'shop'));
 
 // Данные по товару
 $objProduct = new PHPShopProduct($product_id);

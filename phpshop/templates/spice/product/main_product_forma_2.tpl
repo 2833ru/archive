@@ -12,7 +12,7 @@
                 <div class="description-product-height-fix"></div>
             </div>
             <div class="description-link-wrapper">
-                <a class="description-link" href="/shop/UID_@productUid@.html" title="@productName@">Подробнее</a>
+                <a class="description-link" href="/shop/UID_@productUid@.html" title="@productName@">{Подробнее}</a>
             </div>
             <div class="price">
                 <span class="price-new">@productPrice@ <span class="rubznak">@productValutaName@</span></span> 
@@ -29,12 +29,12 @@
                     <span>@productSale@</span>
                 </button>
 
-                <button class="btn btn-wishlist addToWishList" role="button" data-uid="@productUid@" data-title="Отложить" data-placement="top" data-toggle="tooltip"><i class="fa fa-heart"></i></button>
-                <button class="btn btn-wishlist addToCompareList" role="button" data-uid="@productUid@" data-title="Сравнить" data-placement="top" data-toggle="tooltip"><i class="fa fa-bar-chart-o"></i></button>
+                <button class="btn btn-wishlist addToWishList" role="button" data-uid="@productUid@" data-title="{Отложить}" data-placement="top" data-toggle="tooltip"><i class="fa fa-heart"></i></button>
+                <button class="btn btn-wishlist addToCompareList" role="button" data-uid="@productUid@" data-title="{Сравнить}" data-placement="top" data-toggle="tooltip"><i class="fa fa-bar-chart-o"></i></button>
 
                 <a class="btn btn-cart @elementNoticeHide@" href="/users/notice.html?productId=@productUid@" title="@productNotice@">
                     <i class="fa fa-envelope-o" aria-hidden="true"></i>                            
-                    Уведомить
+                    {Уведомить}
                 </a>                                   
 
 

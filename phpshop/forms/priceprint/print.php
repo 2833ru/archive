@@ -3,7 +3,8 @@
 session_start();
 
 // Библиотеки
-include("../../class/obj.class.php");
+$_classPath = "../../";
+include($_classPath . "class/obj.class.php");
 PHPShopObj::loadClass("base");
 PHPShopObj::loadClass("system");
 PHPShopObj::loadClass("array");
@@ -14,12 +15,14 @@ PHPShopObj::loadClass("text");
 PHPShopObj::loadClass("parser");
 PHPShopObj::loadClass("orm");
 PHPShopObj::loadClass("core");
+PHPShopObj::loadClass("lang");
 
 // Подключение к БД
 $PHPShopBase = new PHPShopBase("../../inc/config.ini");
 
 $PHPShopValutaArray = new PHPShopValutaArray();
 $PHPShopSystem = new PHPShopSystem();
+$PHPShopLang = new PHPShopLang(array('locale'=>$_SESSION['lang'],'path'=>'admin'));
 
 class PHPShopPricePrint {
 

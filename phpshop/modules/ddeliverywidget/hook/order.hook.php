@@ -15,19 +15,21 @@ function order_ddeliverywidget_hook($obj, $row, $rout) {
         // Список товаров
         $PHPShopCart = new PHPShopCart();
         $cart = $PHPShopCart->getArray();
+        $weight = $PHPShopCart->getWeight();
 
         if (is_array($cart))
             foreach ($cart as $val) {
-                $list[] = array('id' => $val['id'], 'name' => PHPShopString::win_utf8($val['name']), 'price' => $val['price'], 'weight' => floatval($val['weight']/1000), 'quantity' => $val['num'], 'sku' => $val['uid']);
+                $list[] = array('id' => $val['id'], 'name' => PHPShopString::win_utf8($val['name']), 'price' => $val['price'], 'count' => $val['num'], 'vendorCode' => $val['uid']);
             }
 
 
         $obj->set('order_action_add', '
-            <script src="//sdk.ddelivery.ru/assets/ddelivery.js"></script>
-            <script src="phpshop/modules/ddeliverywidget/js/ddeliverywidget.js"></script>
+            <script src="https://ddelivery.ru/front/widget-cart/public/api.js"></script>
+            <script src="phpshop/modules/ddeliverywidget/js/ddeliverywidget.js?5"></script>
             
         <input class="cartListJson" type="hidden" value=\'' . json_encode($list) . '\'/>
         <input id="ddeliveryId" type="hidden" value="' . $option['shop_id'] . '">
+        <input id="ddweight" type="hidden" value="' . floatval($weight/1000) .'">
             
         <!-- Модальное окно ddeliverywidget -->
         <div class="modal fade bs-example-modal" id="ddeliverywidgetModal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -37,9 +39,9 @@ function order_ddeliverywidget_hook($obj, $row, $rout) {
                         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">x</span><span class="sr-only">Close</span></button>
                         <h4 class="modal-title">Доставка</h4>
                     </div>
-                    <div class="modal-body" style="height:600px;width:500px">
+                    <div class="modal-body" style="width:100%">
                         
-                         <div id="widget"></div>
+                         <div id="dd-widget"></div>
                     </div>
                     <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal" id="ddelivery-close">Закрыть</button>

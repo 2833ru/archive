@@ -265,9 +265,9 @@ class PHPShopPaymentResult {
      * @return string 
      */
     function true_num($uid) {
-        $last_num = substr($uid, -2);
+        $last_num = substr($uid, -$GLOBALS['SysValue']['my']['order_prefix_format']);
         $total = strlen($uid);
-        $first_num = substr($uid, 0, ($total - 2));
+        $first_num = substr($uid, 0, ($total - $GLOBALS['SysValue']['my']['order_prefix_format']));
         return $first_num . "-" . $last_num;
     }
 

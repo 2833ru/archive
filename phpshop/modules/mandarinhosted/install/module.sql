@@ -9,4 +9,5 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_mandarinhosted_system` (
 
 INSERT INTO `phpshop_modules_mandarinhosted_system` VALUES (1,'','');
 
-INSERT INTO `phpshop_payment_systems` VALUES (10027, 'MandarinPay', 'modules', '0', 0, '', '', '', '/UserFiles/Image/Payments/mandarin_logo.png');
+INSERT INTO `phpshop_payment_systems` (`id`, `name`, `path`, `enabled`, `num`, `message`, `message_header`, `yur_data_flag`, `icon`) VALUES
+(10027, 'MandarinPay', 'modules', '0', 0, '<p>Ваш заказ оплачен!</p>', 'Спасибо', '', '/UserFiles/Image/Payments/mandarin_logo.png');

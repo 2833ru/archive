@@ -1,6 +1,6 @@
 
 <div class="panel panel-default">
-    <div class="panel-heading">Товар дня</div>
+    <div class="panel-heading">{Товар дня}</div>
     <div class="panel-body">
 
         <a href="/shop/UID_@productDayId@.html">
@@ -9,25 +9,25 @@
 
         <h4 class="media-heading"><a href="/shop/UID_@productDayId@.html">@productDayName@</a></h4>
         @productDayDescription@
-        <h3>@productDayPrice@ <span class="rubznak">@productDayCurrency@</span> <sup class="text-muted small"><s>@productDayPriceN@</s></sup></h3>
+        <h3>@productDayPrice@ <span class="rubznak">@productDayCurrency@</span>{ }<sup class="text-muted small"><s>@productDayPriceN@</s></sup></h3>
 
         <div class="alert alert-warning" style="margin-bottom: 0px">
             <div class="row">
                 <div class="col-md-3 text-center">
                     <h4 id="timer-number-days">0</h4>
-                    <small id="timer-text-days">дней</small>
+                    <small id="timer-text-days">{дней}</small>
                 </div>
                 <div class="col-md-3 text-center">
                     <h4 id="timer-number-hours">@productDayHourGood@</h4>
-                    <small id="timer-text-hours">часов</small>
+                    <small id="timer-text-hours">{часов}</small>
                 </div>
                 <div class="col-md-3 text-center">
                     <h4 id="timer-number-minutes">@productDayMinuteGood@</h4>
-                    <small id="timer-text-minutes">минут</small>
+                    <small id="timer-text-minutes">{минут}</small>
                 </div>
                 <div class="col-md-3 text-center">
                     <h4 id="timer-number-seconds">@productDaySecondGood@</h4>
-                    <small id="timer-text-seconds">секунд</small>
+                    <small id="timer-text-seconds">{секунд}</small>
                 </div>
             </div>
         </div>

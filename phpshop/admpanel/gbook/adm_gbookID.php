@@ -1,6 +1,6 @@
 <?php
 
-$TitlePage = __('Редактирование Отзыва #' . $_GET['id']);
+$TitlePage = __('Редактирование Отзыва').' #' . $_GET['id'];
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['gbook']);
 
 function actionStart() {
@@ -20,7 +20,7 @@ function actionStart() {
         'target' => '_blank'
     );
 
-    $PHPShopGUI->setActionPanel(__("Редактирование Отзыва от " . $data['name']), array('Предпросмотр', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'));
+    $PHPShopGUI->setActionPanel(__("Редактирование Отзыва от") . " ".$data['name'], array('Предпросмотр', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'));
 
     // Редактор 1
     $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));
@@ -29,14 +29,14 @@ function actionStart() {
     $oFCKeditor->Value = $data['otvet'];
 
     // Содержание закладки 1
-    $Tab1 = $PHPShopGUI->setField("Дата:", $PHPShopGUI->setInputDate("datas_new", PHPShopDate::get($data['datas'])));
+    $Tab1 = $PHPShopGUI->setField("Дата", $PHPShopGUI->setInputDate("datas_new", PHPShopDate::get($data['datas'])));
 
-    $Tab1.=$PHPShopGUI->setField("Имя:", $PHPShopGUI->setInput("text", "name_new", $data['name']));
+    $Tab1.=$PHPShopGUI->setField("Имя", $PHPShopGUI->setInput("text", "name_new", $data['name']));
 
-    $Tab1.=$PHPShopGUI->setField("E-mail:", $PHPShopGUI->setInput("text", "mail_new", $data['mail']));
+    $Tab1.=$PHPShopGUI->setField("E-mail", $PHPShopGUI->setInput("text", "mail_new", $data['mail']));
 
-    $Tab1.=$PHPShopGUI->setField("Тема:", $PHPShopGUI->setTextarea("tema_new", $data['tema'])) .
-            $PHPShopGUI->setField("Отзыв:", $PHPShopGUI->setTextarea("otsiv_new", $data['otsiv'], "", '100%', '200'));
+    $Tab1.=$PHPShopGUI->setField("Тема", $PHPShopGUI->setTextarea("tema_new", $data['tema'])) .
+            $PHPShopGUI->setField("Отзыв", $PHPShopGUI->setTextarea("otsiv_new", $data['otsiv'], "", '100%', '200'));
     $Tab1.=$PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("flag_new", 1, "Вкл.", $data['flag']) . $PHPShopGUI->setRadio("flag_new", 0, "Выкл.", $data['flag']));
 
     // Содержание закладки 2
@@ -46,7 +46,7 @@ function actionStart() {
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1));
+    $PHPShopGUI->setTab(array("Основное", $Tab1,true));
 
 
     // Вывод кнопок сохранить и выход в футер
@@ -68,12 +68,12 @@ function sendMail($name, $mail) {
     // Подключаем библиотеку отправки почты
     PHPShopObj::loadClass("mail");
 
-    $zag = "Ваш отзыв добавлен на сайт " . $PHPShopSystem->getValue('name');
-    $message = "Уважаемый " . $name . ",
+    $zag = __("Ваш отзыв добавлен на сайт")." " . $PHPShopSystem->getValue('name');
+    $message = __("Уважаемый")." " . $name . ",
 
-Ваш отзыв добавлен на сайт по адресу: http://" . $_SERVER['SERVER_NAME'] . $PHPShopBase->getParam('dir.dir') . "/gbook/
+".__("Ваш отзыв добавлен на сайт по адресу").": http://" . $_SERVER['SERVER_NAME'] . $PHPShopBase->getParam('dir.dir') . "/gbook/
 
-Спасибо за проявленный интерес.";
+".__("Спасибо за проявленный интерес.");
     new PHPShopMail($mail, $PHPShopSystem->getEmail(), $zag, $message);
 }
 

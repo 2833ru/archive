@@ -1,1 +1,1 @@
-<span class="badge new">Новинка</span>
+<span class="badge new">{Новинка}</span>

@@ -18,10 +18,10 @@ function tab_cart($data, $option = false) {
 
     $order = unserialize($data['orders']);
     $status = unserialize($data['status']);
-
     $CART = $order['Cart'];
     $PERSON = $order['Person'];
     $cart = $CART['cart'];
+    
     $_SESSION['selectCart'] = $cart;
     $num = $data_id = $sum = null;
     $n = 1;
@@ -41,6 +41,7 @@ function tab_cart($data, $option = false) {
             foreach ($cart as $key => $val) {
 
                 if (!empty($val['id'])) {
+                    
 
                     // Проверка подтипа товара
                     if (!empty($val['parent']))
@@ -48,10 +49,16 @@ function tab_cart($data, $option = false) {
                     if (!empty($val['parent_uid']))
                         $val['uid'] = $val['parent_uid'];
 
+                    // Артикул
                     if (!empty($val['uid']))
                         $code = 'Артикул: ' . $val['uid'];
                     else
                         $code = 'Код: ' . $val['id'];
+                    
+                    // Промокод
+                    if(!empty($val['promo_code']) and !empty($val['promo_price']))
+                        $code= 'Купон: <span class="text-success">'.$val['promo_code'].'</span>';
+                    
 
 
                     if (!empty($val['pic_small']))
@@ -88,28 +95,28 @@ function tab_cart($data, $option = false) {
       <tbody>
       <tr>
       <td>&nbsp;</td>
-      <td class="text-right"><h4>Итого</h4></td>
+      <td class="text-right"><h4>'.__('Итого').'</h4></td>
       </tr>
       <tr>
-      <td width="100">Сумма:</td>
+      <td width="100">'.__('Сумма').':</td>
       <td class="text-right">
       ' . ($PHPShopOrder->returnSumma($sum, 0, ' ') ) . $currency . '
       </td>
       </tr>
       <tr>
-      <td>Доставка:</td>
+      <td>'.__('Доставка').':</td>
       <td class="text-right">
       ' . $PHPShopOrder->getDeliverySumma() . $currency . '
       </td>
       </tr>
       <tr>
-      <td>Скидка:</td>
+      <td>'.__('Скидка').':</td>
       <td class="text-right">
       ' . $PERSON['discount'] . '%
       </td>
       </tr>
       <tr>
-      <td><h5>Итого:</h5></td>
+      <td><h5>'.__('Итого').':</h5></td>
       <td class="text-right">
       <h5 class="text-success">' . ($PHPShopOrder->getTotal(false, ' ')) . $currency . '</h5>
       </td>
@@ -145,16 +152,15 @@ function tab_cart($data, $option = false) {
 <p class="clearfix"> </p>
 <div class="row">
   <div class="col-md-6">
-  <label for="dop_info">Примечания покупателя</label>
+  <label for="dop_info">'.__('Примечания покупателя').'</label>
   <textarea class="form-control" id="dop_info" name="dop_info_new">' . $data['dop_info'] . '</textarea>
   </div>
   <div class="col-md-6">
-    <label for="status_maneger">Примечания администратора</label>
+    <label for="status_maneger">'.__('Примечания администратора').'</label>
     <textarea class="form-control" id="status_maneger" name="status[maneger]">' . $status['maneger'] . '</textarea>
   </div>
 </div>
 ';
-
     return $disp;
 }
 

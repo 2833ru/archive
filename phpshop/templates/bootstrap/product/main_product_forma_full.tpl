@@ -52,10 +52,10 @@
                     </div>
                 </div>
                 <div class="col-xs-3">
-                    <button class="btn btn-info addToCompareList visible-lg" role="button" data-uid="@productUid@">Сравнить</button>
+                    <button class="btn btn-info addToCompareList visible-lg" role="button" data-uid="@productUid@">{Сравнить}</button>
                 </div>
                 <div class="col-xs-3 visible-lg visible-md">
-                    <button class="btn btn-default addToWishList" role="button" data-uid="@productUid@">Отложить</button>
+                    <button class="btn btn-default addToWishList" role="button" data-uid="@productUid@">{Отложить}</button>
                 </div>
             </div>
 
@@ -66,12 +66,12 @@
         <div role="tabpanel" class="col-xs-12">
             <!-- Nav tabs -->
             <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active hidden-xs"><a href="#home" aria-controls="home" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-info-sign"></span> Описание</a></li>
-                <li role="presentation" class="hide hidden-xs" id="settingsTab"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-list"></span> Характеристики</a></li>
-                <li role="presentation" class="hidden-xs"><a href="#messages" id="commentLoad" data-uid="@productUid@" aria-controls="messages" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-comment"></span> Отзывы</a></li>
-                <li role="presentation" id="filesTab" class="hide hidden-xs"><a href="#files" aria-controls="files" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-cloud-download"></span> Файлы</a></li>
-                <li role="presentation" id="pagesTab" class="hide hidden-xs"><a href="#pages" aria-controls="pages" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-bookmark"></span> Статьи</a></li>
-                <li role="presentation" class="visible-lg"><a href="/print/UID_@productId@.html"  target="_blank"><span class="glyphicon glyphicon-print"></span> Печатная форма</a></li>
+                <li role="presentation" class="active hidden-xs"><a href="#home" aria-controls="home" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-info-sign"></span> {Описание}</a></li>
+                <li role="presentation" class="hide hidden-xs" id="settingsTab"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-list"></span> {Характеристики}</a></li>
+                <li role="presentation" class="hidden-xs"><a href="#messages" id="commentLoad" data-uid="@productUid@" aria-controls="messages" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-comment"></span> {Отзывы}</a></li>
+                <li role="presentation" id="filesTab" class="hide hidden-xs"><a href="#files" aria-controls="files" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-cloud-download"></span> {Файлы}</a></li>
+                <li role="presentation" id="pagesTab" class="hide hidden-xs"><a href="#pages" aria-controls="pages" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-bookmark"></span> {Статьи}</a></li>
+                <li role="presentation" class="visible-lg"><a href="/print/UID_@productId@.html"  target="_blank"><span class="glyphicon glyphicon-print"></span> {Печатная форма}</a></li>
             </ul>
             <p></p>
             <!-- Tab panes -->
@@ -91,11 +91,11 @@
 
 
                     <button role="button" class="btn btn-info pull-right" onclick="$('#addComment').slideToggle();
-                            $(this).hide();"><span class="glyphicon glyphicon-plus-sign"></span> Новый комментарий</button>
+                            $(this).hide();"><span class="glyphicon glyphicon-plus-sign"></span> {Новый комментарий}</button>
 
                     <div id='addComment' class="well well-sm" style='display:none;margin-top:30px;'>
 
-                        <h3>Оставьте свой отзыв</h3>
+                        <h3>{Оставьте свой отзыв}</h3>
 
                         <textarea id="message" class="commentTextarea form-control"></textarea>
                         <input type="hidden" id="commentAuthFlag" name="commentAuthFlag" value="@php if($_SESSION['UsersId']) echo 1; else echo 0; php@">
@@ -116,7 +116,7 @@
                             <label class="btn btn-success btn-sm active">
                                 <input type="radio" name="rate" value="5" checked> +5
                             </label>
-                            <button role="button" class="btn btn-info btn-sm pull-right" onclick="commentList('@productUid@', 'add', 1);">Проголосовать</button>
+                            <button role="button" class="btn btn-info btn-sm pull-right" onclick="commentList('@productUid@', 'add', 1);">{Проголосовать}</button>
                         </div>
 
                     </div>
@@ -145,7 +145,7 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">{Закрыть}</button>
             </div>
         </div>
     </div>

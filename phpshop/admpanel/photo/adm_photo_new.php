@@ -52,10 +52,8 @@ function getLastID() {
 function actionStart() {
     global $PHPShopGUI, $PHPShopModules, $TitlePage, $PHPShopOrm;
 
-
     // получаем ИД будущего создаваемого изображения
     $newId = getLastID();
-
 
     // Начальные данные
     $data['num'] = 1;
@@ -68,11 +66,9 @@ function actionStart() {
         'icon' => 'glyphicon glyphicon-education'
     );
 
-
     $PHPShopGUI->field_col = 2;
-    $PHPShopGUI->setActionPanel($TitlePage, array('Урок'), array('Сохранить и закрыть'));
+    $PHPShopGUI->setActionPanel($TitlePage, array('Урок'), array('Сохранить и закрыть'),false);
     $PHPShopGUI->addJSFiles('./js/bootstrap-tour.min.js', './photo/gui/tour.gui.js', './photo/gui/photo.gui.js');
-
 
     $PHPShopCategoryArray = new PHPShopPhotoCategoryArray();
     $CategoryArray = $PHPShopCategoryArray->getArray();
@@ -114,15 +110,15 @@ function actionStart() {
 
 
     // Содержание закладки 1
-    $Tab1 = $PHPShopGUI->setField(__("Размещение:"), $tree_select) .
-            $PHPShopGUI->setField(__("Изображение"), $PHPShopGUI->setIcon($data['name'], "name_new", false, array('load' => true, 'server' => true, 'url' => true, 'multi' => true)), 1, 'Загрузите сюда фото. Превью фото будет создано автоматически.') .
-            $PHPShopGUI->setField("Описание:", $PHPShopGUI->setInput("text", "info_new", $data['info'])) .
-            $PHPShopGUI->setField("Сортировка:", $PHPShopGUI->setInputText("№", "num_new", $data['num'], 150));
+    $Tab1 = $PHPShopGUI->setField("Размещение", $tree_select) .
+            $PHPShopGUI->setField("Изображение", $PHPShopGUI->setIcon($data['name'], "name_new", false, array('load' => true, 'server' => true, 'url' => true, 'multi' => true)), 1, 'Загрузите сюда фото. Превью фото будет создано автоматически.') .
+            $PHPShopGUI->setField("Описание", $PHPShopGUI->setInput("text", "info_new", $data['info'])) .
+            $PHPShopGUI->setField("Сортировка", $PHPShopGUI->setInputText("№", "num_new", $data['num'], 150));
 
     $SelectValue[] = array('Вывод в каталоге', 1, $data['enabled']);
     $SelectValue[] = array('Заблокировать', 0, $data['enabled']);
 
-    $Tab1.= $PHPShopGUI->setField("Опции вывода:", $PHPShopGUI->setSelect("enabled_new", $SelectValue, 300));
+    $Tab1.= $PHPShopGUI->setField("Опции вывода:", $PHPShopGUI->setSelect("enabled_new", $SelectValue, 300,true));
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);

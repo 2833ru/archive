@@ -1,11 +1,11 @@
 <table border=0 width=99% cellpadding=0 cellspacing=3>
     <tr>
         <td width=50 class="mobHideCol"></td>
-        <td width="40%"><strong>Наименование</strong></td>
-        <td width="10%" align="left"><strong>Кол-во</strong></td>
-        <td width="10%" align="center"  class="mobHideCol"><strong>Операции</strong></td>
-        <td width="15%" align="right"><strong>Цена 1 шт.</strong></td>
-        <td width="15%" align="right"><strong>Стоимость</strong></td>
+        <td width="40%"><strong>{Наименование}</strong></td>
+        <td width="10%" align="left"><strong>{Кол-во}</strong></td>
+        <td width="10%" align="center"  class="mobHideCol"><strong>{Операции}</strong></td>
+        <td width="15%" align="right"><strong>{Цена 1 шт.}</strong></td>
+        <td width="15%" align="right"><strong>{Стоимость}</strong></td>
         <td align="right">&nbsp;</td>
     </tr>
     <tr>
@@ -33,11 +33,11 @@
     </tr>
     <tr>
         <td>
-            <b>Итого:</b>
+            <b>{Итого}:</b>
         </td>
         <td class="mobHideCol"></td>
         <td width="55" >
-            <strong>@cart_num@</strong> (шт.)
+            <strong>@cart_num@</strong> ({шт.})
         </td>
 
         <td class="mobHideCol" width="30"></td>
@@ -60,18 +60,18 @@
 
     <tr style="visibility:hidden;display:none;">
         <td colspan="2">
-            Вес товаров:
+            {Вес товаров}:
         </td>
         <td width="55" ></td>
         <td class="mobHideCol" width="30"></td>
         <td align="right" class="red" class="mobHideCol"></td>
-        <td align="right" class="red"><span id="WeightSumma">@cart_weight@</span> гр.</td>
+        <td align="right" class="red"><span id="WeightSumma">@cart_weight@</span> {гр.}</td>
         <td align="right" class="red"></td>
 
     </tr>
     <tr>
         <td colspan="2">
-            Скидка:
+            {Скидка}:
         </td>
         <td width="55" ></td>
         <td class="mobHideCol" width="30"></td>
@@ -82,7 +82,7 @@
     </tr>
     <tr>
         <td colspan="2">
-            Доставка:
+            {Доставка}:
         </td>
         <td width="55" ></td>
         <td class="mobHideCol" width="30"></td>
@@ -93,7 +93,7 @@
     </tr>
     <tr>
         <td colspan="2">
-            К оплате с учетом скидки:
+            {К оплате с учетом скидки}:
         </td>
         <td width="55" ></td>
         <td class="mobHideCol" width="30"></td>

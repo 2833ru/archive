@@ -55,9 +55,9 @@ function actionStart() {
     $oFCKeditor->Value = $data['content'];
 
     // Содержание закладки 1
-    $Tab1.=$PHPShopGUI->setField("Тема:", $PHPShopGUI->setInput("text.requared", "name_new", $data['name']));
+    $Tab1.=$PHPShopGUI->setField("Тема", $PHPShopGUI->setInput("text.requared", "name_new", $data['name']));
 
-    $Tab1.=$PHPShopGUI->setField("Текст письма:", $oFCKeditor->AddGUI() . $PHPShopGUI->setHelp('Переменные: <code>@url@</code> - адрес сайта, <code>@user@</code> - имя подписчика, <code>@email@</code> - email подписчика, <code>@name@</code> - название магазина, <code>@tel@</code> - телефон компании'));
+    $Tab1.=$PHPShopGUI->setField("Текст письма", $oFCKeditor->AddGUI() . $PHPShopGUI->setHelp('Переменные: <code>@url@</code> - адрес сайта, <code>@user@</code> - имя подписчика, <code>@email@</code> - email подписчика, <code>@name@</code> - название магазина, <code>@tel@</code> - телефон компании'));
 
     // Новости
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['news']);

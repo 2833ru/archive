@@ -118,7 +118,7 @@ function actionStart() {
     $PHPShopInterface->checkbox_action = false;
     $PHPShopInterface->addJSFiles('./js/bootstrap-datetimepicker.min.js', './js/bootstrap-datetimepicker.ru.js', 'report/gui/report.gui.js');
     $PHPShopInterface->addCSSFiles('./css/bootstrap-datetimepicker.min.css');
-    $PHPShopInterface->setActionPanel($TitlePage, array('Export'), false);
+    $PHPShopInterface->setActionPanel($TitlePage, array('Export'), false,false);
     $PHPShopInterface->setCaption(array('№', '5%'), array("Категория", "65%"), array("Кол-во", "15%", array('align' => 'center')), array("Прибыль", "15%", array('align' => 'center', 'view' => intval($_GET['where']['margin']))), array(__("Выручка"), "15%", array('align' => 'right')));
 
     // Выборка ИД товаров
@@ -223,10 +223,10 @@ function actionStart() {
     $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[name]', 'placeholder' => 'Товар', 'value' => $_GET['where']['name']));
     $searchforma.= '<p>' . $PHPShopInterface->setInputArg(array('type' => 'text', 'caption' => '%', 'name' => 'where[margin]', 'placeholder' => 'Наценка', 'value' => $_GET['where']['margin'])) . '</p>';
     $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'hidden', 'name' => 'path', 'value' => $_GET['path']));
-    $searchforma.=$PHPShopInterface->setButton(__('Показать'), 'search', 'btn-order-search pull-right');
+    $searchforma.=$PHPShopInterface->setButton('Показать', 'search', 'btn-order-search pull-right');
 
     if ($clean)
-        $searchforma.=$PHPShopInterface->setButton(__('Сброс'), 'remove', 'btn-product-cancel pull-left');
+        $searchforma.=$PHPShopInterface->setButton('Сброс', 'remove', 'btn-product-cancel pull-left');
 
     $sidebarright[] = array('title' => 'Отчеты', 'content' => $PHPShopInterface->loadLib('tab_menu', false, './report/'));
     $sidebarright[] = array('title' => 'Поиск', 'content' => $PHPShopInterface->setForm($searchforma, false, "order_search", false, false, 'form-sidebar'));

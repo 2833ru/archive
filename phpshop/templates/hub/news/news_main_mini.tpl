@@ -8,7 +8,7 @@
                 <br>
                 @newsKratko@
             </div>
-            <a href="/news/ID_@newsId@.html" class="read-more">Подробнее<i class="fa fa-long-arrow-right"></i></a>
+            <a href="/news/ID_@newsId@.html" class="read-more">{Подробнее}<i class="fa fa-long-arrow-right"></i></a>
         </div>
     </div>
 </div>

@@ -10,11 +10,14 @@ include($_classPath . "class/obj.class.php");
 PHPShopObj::loadClass("base");
 PHPShopObj::loadClass("order");
 PHPShopObj::loadClass("modules");
+PHPShopObj::loadClass("lang");
 
 $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
 
 // Функции для заказа
 $PHPShopOrder = new PHPShopOrderFunction();
+
+$PHPShopLang = new PHPShopLang(array('locale'=>$_SESSION['lang'],'path'=>'shop'));
 
 // Модули
 $PHPShopModules = new PHPShopModules($_classPath . "modules/");
@@ -69,8 +72,8 @@ function GetDeliveryPrice($deliveryID, $sum, $weight = 0) {
     }
 }
 
-$GetDeliveryPrice = GetDeliveryPrice(intval($_REQUEST['xid']), $_REQUEST['sum'], $_REQUEST['wsum']);
-$totalsumma = $PHPShopOrder->returnSumma($_REQUEST['sum'], $PHPShopOrder->ChekDiscount($_REQUEST['sum'])) + $GetDeliveryPrice;
+$GetDeliveryPrice = GetDeliveryPrice(intval($_REQUEST['xid']), $_REQUEST['sum'], floatval($_REQUEST['wsum']));
+$totalsumma = $_REQUEST['sum'] + $GetDeliveryPrice;
 $deliveryArr = delivery(false, intval($_REQUEST['xid']));
 $dellist = $deliveryArr['dellist'];
 $adresList = $deliveryArr['adresList'];
@@ -79,9 +82,10 @@ $adresList = $deliveryArr['adresList'];
 $_RESULT = array(
     'delivery' => $GetDeliveryPrice,
     'dellist' => $dellist,
+    'discount'=>$PHPShopOrder->ChekDiscount($_REQUEST['sum']),
     'adresList' => $adresList,
-    'total' => $totalsumma,
-    'wsum' => $_REQUEST['wsum'],
+    'total' => $PHPShopOrder->returnSumma($totalsumma),
+    'wsum' => floatval($_REQUEST['wsum']),
     'success' => 1
 );
 

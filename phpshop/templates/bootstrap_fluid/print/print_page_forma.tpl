@@ -10,7 +10,7 @@
         <meta name="copyright" content="@pageReg@">
 
         <!-- Bootstrap -->
-        <link id="bootstrap_theme" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/@bootstrap_fluid_theme@.css" rel="stylesheet">
+        <link id="bootstrap_theme" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/@bootstrap_theme@.css" rel="stylesheet">
 
     </head
     <body>
@@ -21,7 +21,7 @@
                     <h3>@nameShop@</h3>
                     @descripShop@
                     <button onclick="window.print();" class="btn btn-default pull-right">
-                        <span class="glyphicon glyphicon-print"></span> Печать
+                        <span class="glyphicon glyphicon-print"></span> {Печать}
                     </button> 
                 </div>
             </div>

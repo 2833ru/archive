@@ -89,6 +89,9 @@ function addToCartList(product_id, num, parent, addname) {
 
     if (addname === undefined)
         addname = '';
+    
+    if (parent === undefined)
+        parent = 0;
 
     $.ajax({
         url: ROOT_PATH + '/phpshop/ajax/cartload.php',
@@ -268,13 +271,16 @@ function filter_load(filter_str, obj) {
         },
         success: function(data)
         {
-            if (data) {
+            if (data === 'empty_sort') {
+                showAlertMessage('Товары не найдены', true);
+            } else {
                 $(".template-product-list").html(data);
                 $('#price-filter-val-max').removeClass('has-error');
                 $('#price-filter-val-min').removeClass('has-error');
 
                 // Выравнивание ячеек товара
-                setEqualHeight(".description");
+                setEqualHeight(".product-description");
+                setEqualHeight(".product-name-fix");
 
                 // Сброс Waypoint
                 Waypoint.refreshAll();

@@ -12,10 +12,20 @@ function actionUpdate() {
     if ('/' != substr($post["url"], strlen($post["url"]) - 1, 1)) {
         $post["url"] .= '/';
     }
-    $PHPShopOrm->sql = "update phpshop_modules_retailcrm_system set value='" . serialize($post) . "' where code='options'";
-    $action = $PHPShopOrm->update();
+    $sql = "update phpshop_modules_retailcrm_system set value='" . serialize($post) . "' where code='options'";
+    $action = $PHPShopOrm->query($sql);
     header('Location: ?path=modules&install=check');
     return $action;
+}
+
+// Обновление версии модуля
+function actionBaseUpdate() {
+    global $PHPShopModules, $PHPShopOrm;
+    $PHPShopOrm->clean();
+    $option = $PHPShopOrm->select();
+    $new_version = $PHPShopModules->getUpdate($option['version']);
+    $PHPShopOrm->clean();
+    $PHPShopOrm->update(array('version_new' => $new_version));
 }
 
 function actionStart() {
@@ -26,11 +36,19 @@ function actionStart() {
     $value = unserialize($data['value']);
 
 
-    $help = '<p>Для автоматической синхронизации изменений с retailCRM требуется настроить планировщика команд <a href="https://ru.wikipedia.org/wiki/Cron" target="_blank">Cron</a> на своем хостинге.</p>
-            <ol>
-<li>Получение изменений по заказам из CRM: <code>*/7 * * * * /usr/bin/php /path/to/site/phpshop/modules/retailcrm/cli/cli.php -e history</code></li>
-<li>Выгрузка каталога номеклатуры: <code>* */3 * * * /usr/bin/php /path/to/site/phpshop/modules/retailcrm/cli/cli.php -e icml</code></li>
-</ol>';
+    $help = '
+    <h4>Как подключиться к RetailCRM?</h4>
+        <ol>
+        <li>Зарегистрироваться на сайте <a href="http://www.retailcrm.ru/?partner=RCM-6931" target="_blank">RetailCRM</a></li>
+        <li>Выбрать CMS PHPShop в настройках RetailCRM</li>
+        <li>В поле <kbd>Компания</kbd> введите название своей компании, указанное при регистрации аккаунта в RetailCRM</li>
+        <li>В поле <kbd>URL сайта магазина</kbd> указать <code>http://' . $_SERVER['SERVER_NAME'] . '</code></li>
+        <li>В поле <kbd>API URL</kbd> указать URL адрес вашего кабинета в RetailCRM <code>https://name.' . $_SERVER['SERVER_NAME'] . '</code></li>
+        <li>В поле <kbd>API KEY</kbd> указать ключ из личного кабинета RetailCRM, доступный в  "Администрирование / Интеграция / Ключи доступа к API"</li>
+        <li>В поле <kbd>Название магазина</kbd> указать название магазина из личного кабинета RetailCRM</li>
+        <li>Перейти на вкладку Справочники в кабинете RetailCRM и настроить соответствие способов доставки, способов оплаты, статусов заказа интернет-магазина и CRM.</li>
+</li>
+		</ol>';
 
     $tab1 = $PHPShopGUI->setField('Название магазина', $PHPShopGUI->setInputText(false, 'shopname', $value["shopname"], 500));
     $tab1.= $PHPShopGUI->setField('Компания', $PHPShopGUI->setInputText(false, 'companyname', $value["companyname"], 500));
@@ -46,7 +64,7 @@ function actionStart() {
         try {
             $response = $helper->api->deliveryTypesList();
         } catch (CurlException $e) {
-            Tools::logger("Сетевые проблемы. Ошибка подключения к retailCRM: " . $e->getMessage(), "connect");
+            Tools::logger(array('error' => $e->getMessage()), "connect", 'Ошибка соединения с RetailCRM');
         }
 
         $deliveryTypes[] = array("", "", false);
@@ -55,7 +73,7 @@ function actionStart() {
                 $deliveryTypes[] = array(Tools::iconvArray($params["name"], "UTF-8", "WINDOWS-1251"), $params["code"], false);
             }
         } else {
-            Tools::logger("Сетевые проблемы. Ошибка подключения к retailCRM: " . $e->getMessage(), "connect");
+            Tools::logger(array('error' => $e->getMessage()), "connect", 'Ошибка соединения с RetailCRM');
         }
 
         $deliveryOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['delivery']);
@@ -100,7 +118,7 @@ function actionStart() {
         try {
             $response = $helper->api->paymentTypesList();
         } catch (CurlException $e) {
-            Tools::logger("Сетевые проблемы. Ошибка подключения к retailCRM: " . $e->getMessage(), "connect");
+            Tools::logger(array('error' => $e->getMessage()), "connect", 'Ошибка соединения с RetailCRM');
         }
 
         $paymentTypes[] = array("", "", false);
@@ -109,7 +127,7 @@ function actionStart() {
                 $paymentTypes[] = array(Tools::iconvArray($params["name"], "UTF-8", "WINDOWS-1251"), $params["code"], false);
             }
         } else {
-            Tools::logger("Сетевые проблемы. Ошибка подключения к retailCRM: " . $e->getMessage(), "connect");
+            Tools::logger(array('error' => $e->getMessage()), "connect", 'Ошибка соединения с RetailCRM');
         }
 
         $paymentOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['payment_systems']);
@@ -135,7 +153,7 @@ function actionStart() {
         try {
             $response = $helper->api->statusesList();
         } catch (CurlException $e) {
-            Tools::logger("Сетевые проблемы. Ошибка подключения к retailCRM: " . $e->getMessage(), "connect");
+            Tools::logger(array('error' => $e->getMessage()), "connect", 'Ошибка соединения с RetailCRM');
         }
 
         $statuses[] = array("", "", false);
@@ -144,7 +162,7 @@ function actionStart() {
                 $statuses[] = array(Tools::iconvArray($params["name"], "UTF-8", "WINDOWS-1251"), $params["code"], false);
             }
         } else {
-            Tools::logger("Сетевые проблемы. Ошибка подключения к retailCRM: " . $e->getMessage(), "connect");
+            Tools::logger(array('error' => $e->getMessage()), "connect", 'Ошибка соединения с RetailCRM');
         }
 
         $statusesOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['order_status']);
@@ -221,9 +239,9 @@ function actionStart() {
 
 
         $PHPShopGUI->setTab(
-                array("Настройки", $tab1, true), array("Справочники", $tab2), array("Инструкция", $PHPShopGUI->setInfo($help)), array("О Модуле", $PHPShopGUI->setPay()));
+                array("Настройки", $tab1, true), array("Справочники", $tab2), array("Инструкция", $PHPShopGUI->setInfo($help)), array("О Модуле", $PHPShopGUI->setPay(false, false, $data['version'], true)));
     } else {
-        $PHPShopGUI->setTab(array("Настройки", $tab1, true), array("Инструкция", $PHPShopGUI->setInfo($help)), array("О Модуле", $PHPShopGUI->setPay()));
+        $PHPShopGUI->setTab(array("Настройки", $tab1, true), array("Инструкция", $PHPShopGUI->setInfo($help)), array("О Модуле", $PHPShopGUI->setPay(false, false, $data['version'], true)));
     }
 
     // Вывод кнопок сохранить и выход в футер

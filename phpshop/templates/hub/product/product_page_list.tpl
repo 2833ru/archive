@@ -5,10 +5,10 @@
         <div class="row">
             <div class="col-md-6  col-xs-12">
                 <div class="display" data-toggle="buttons">
-                    <label class="btn btn-sm glyphicon glyphicon-th-list btn-sort @gridSetAactive@" data-toggle="tooltip" data-placement="top" title="Товары списком">
+                    <label class="btn btn-sm glyphicon glyphicon-th-list btn-sort @gridSetAactive@" data-toggle="tooltip" data-placement="top" title="{Товары списком}">
                         <input type="radio" name="gridChange" value="1">
                     </label>
-                    <label class="btn btn-sm glyphicon glyphicon-th btn-sort @gridSetBactive@" data-toggle="tooltip" data-placement="top" title="Товары сеткой">
+                    <label class="btn btn-sm glyphicon glyphicon-th btn-sort @gridSetBactive@" data-toggle="tooltip" data-placement="top" title="{Товары сеткой}">
                         <input type="radio" name="gridChange" value="2">
                     </label>
                     <label class="control-label"></label>
@@ -18,21 +18,21 @@
                 <div class="display filter-well-right-block">
                     <label class="control-label"></label>
                     <div class="btn-group" data-toggle="buttons">
-                        <label class="btn btn-sm btn-sort glyphicon glyphicon-signal @sSetCactive@" data-toggle="tooltip" data-placement="top" title="По умолчанию">
+                        <label class="btn btn-sm btn-sort glyphicon glyphicon-signal @sSetCactive@" data-toggle="tooltip" data-placement="top" title="{По умолчанию}">
                             <input type="radio" name="s" value="3">
                         </label>
-                        <label class="btn btn-sm btn-sort glyphicon glyphicon-sort-by-alphabet @sSetAactive@" data-toggle="tooltip" data-placement="top" title="Наименование">
+                        <label class="btn btn-sm btn-sort glyphicon glyphicon-sort-by-alphabet @sSetAactive@" data-toggle="tooltip" data-placement="top" title="{Наименование}">
                             <input type="radio" name="s" value="1">
                         </label>
-                        <label class="btn btn-sm btn-sort glyphicon glyphicon-sort-by-order @sSetBactive@" data-toggle="tooltip" data-placement="top" title="Цена">
+                        <label class="btn btn-sm btn-sort glyphicon glyphicon-sort-by-order @sSetBactive@" data-toggle="tooltip" data-placement="top" title="{Цена}">
                             <input type="radio" name="s" value="2">
                         </label>
                     </div>
                     <div class="btn-group" data-toggle="buttons">
-                        <label class="btn btn-xs btn-sort glyphicon glyphicon-sort-by-attributes @fSetAactive@" data-toggle="tooltip" data-placement="top" title="По возрастанию">
+                        <label class="btn btn-xs btn-sort glyphicon glyphicon-sort-by-attributes @fSetAactive@" data-toggle="tooltip" data-placement="top" title="{По возрастанию}">
                             <input type="radio" name="f" value="1">
                         </label>
-                        <label class="btn btn-xs btn-sort glyphicon glyphicon-sort-by-attributes-alt @fSetBactive@" data-toggle="tooltip" data-placement="top" title="По убыванию">
+                        <label class="btn btn-xs btn-sort glyphicon glyphicon-sort-by-attributes-alt @fSetBactive@" data-toggle="tooltip" data-placement="top" title="{По убыванию}">
                             <input type="radio" name="f" value="2">
                         </label>
                     </div>
@@ -48,19 +48,19 @@
 <div class="big-filter-wrapper">
 <!-- Фасетный фильтр -->
     <div class="hide" id="faset-filter">
-        <div id="faset-filter-body">Загрузка...</div>
+        <div id="faset-filter-body">{Загрузка}...</div>
         <div id="price-filter-body">
             <div class="faset-filter-block-wrapper">
-                <h4>Цена</h4>
+                <h4>{Цена}</h4>
                 <div>
                     <form method="get" id="price-filter-form">
                         <div class="row">
                             <div class="col-md-6" id="price-filter-val-min">
-                                <span>от</span>
+                                <span>{от}</span>
                                 <input type="text" class="form-control-price form-control input-sm" name="min" value="@price_min@" > 
                             </div>
                             <div class="col-md-6" id="price-filter-val-max">
-                                <span>до</span>
+                                <span>{до}</span>
                                 <input type="text" class="form-control-price form-control input-sm" name="max" value="@price_max@"> 
                             </div>
                         </div>
@@ -69,7 +69,7 @@
                 </div>
             </div>
         </div>
-        <a href="?" id="faset-filter-reset" data-toggle="tooltip" data-placement="top" title="Сбросить фильтр">Сбросить фильтр</a>
+        <a href="?" id="faset-filter-reset" data-toggle="tooltip" data-placement="top" title="{Сбросить фильтр}">{Сбросить фильтр}</a>
     </div>
 <!--/ Фасетный фильтр -->
 </div>

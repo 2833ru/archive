@@ -177,7 +177,7 @@ class PHPShopOrderFunction extends PHPShopObj {
      * @param float $disc скидка
      * @return float
      */
-    function returnSumma($sum, $disc, $def = '') {
+    function returnSumma($sum, $disc = 0, $def = '') {
         global $PHPShopSystem;
 
         if (!$PHPShopSystem) {
@@ -362,7 +362,7 @@ class PHPShopOrderFunction extends PHPShopObj {
     function getDeliverySumma() {
         $order = $this->unserializeParam('orders');
 
-        if (!empty($order['Cart']['dostavka']))
+        if (isset($order['Cart']['dostavka']))
             return $order['Cart']['dostavka'];
 
         if (!empty($order['Person']['discount']))
@@ -456,6 +456,17 @@ class PHPShopOrderFunction extends PHPShopObj {
         return $val[$param[1]];
     }
 
+    /**
+     * Проверка статуса электронной оплаты
+     * @return string дата оплаты
+     */
+    function checkPay() {
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['payment']);
+        $data = $PHPShopOrm->select(array('*'), array('uid' => "=" . intval(str_replace('-', '', $this->getParam('uid'))),'sum'=>'='.$this->getParam('sum')), array('order' => 'datas desc'), array('limit' => 1));
+        if (is_array($data))
+            return $data['datas'];
+    }
+
 }
 
 PHPShopObj::loadClass('array');
@@ -474,7 +485,7 @@ class PHPShopOrderStatusArray extends PHPShopArray {
      */
     function __construct() {
         $this->objBase = $GLOBALS['SysValue']['base']['order_status'];
-        parent::__construct('id', 'name', 'color', 'sklad_action', 'cumulative_action','mail_action','mail_message');
+        parent::__construct('id', 'name', 'color', 'sklad_action', 'cumulative_action', 'mail_action', 'mail_message');
     }
 
 }

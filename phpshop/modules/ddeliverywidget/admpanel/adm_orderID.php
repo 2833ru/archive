@@ -1,7 +1,7 @@
 <?php
 
 function ddeliverywidgetSend($data) {
-    global $_classPath;
+    global $_classPath, $link_db;
 
     if ($data['statusi'] != $_POST['statusi_new'] or !empty($_POST['ddelivery_send_now'])) {
 
@@ -10,30 +10,24 @@ function ddeliverywidgetSend($data) {
         $ddeliverywidget = new ddeliverywidget();
         $option = $ddeliverywidget->option();
 
-
         if ($_POST['statusi_new'] == $option['status'] or !empty($_POST['ddelivery_send_now'])) {
             $apiKey = $option['key'];
-            $sessionId = $data['ddelivery_token'];
-            $helper = new DDeliveryHelper($apiKey, false);
+            $sessionId = $data['ddelivery_token']; 
+            $helper = new DDeliveryHelper($apiKey);
 
             $order = unserialize($data['orders']);
+            $del_id = $order['Person']['order_metod'];
+            $PHPShopPayment = new PHPShopPayment($del_id);
 
             $params = array(
-                'session' => $sessionId,
-                'to_name' => PHPShopString::win_utf8($_POST['fio_new']),
-                'to_phone' => '+7' . str_replace(array('(', ')', ' ', '+', '-'), '', $_POST['tel_new']),
-                'shop_refnum' => $data['uid'],
-                'to_email' => $order['Person']['mail'],
-                //'payment_price' =>$obj->total,
-                'comment' => PHPShopString::win_utf8($_POST['dop_info']),
-                'to_flat' => PHPShopString::win_utf8($_POST['flat_new']),
-                'to_street' => PHPShopString::win_utf8($_POST['street_new']),
-                'to_house' => PHPShopString::win_utf8($_POST['house_new']),
-                    //'payment_variant' => PHPShopString::win_utf8($obj->get('payment'))
+                'id' => $sessionId,
+                'cms_id' => $data['uid'],
+                'payment_method' => PHPShopString::win_utf8($PHPShopPayment->getName())
             );
 
-            $result=$helper->sendOrder($sessionId, $params);
-            if($result['success'] == 1)
+            $result=$helper->sendOrder($params);
+
+            if($result['status'] == 'ok')
                 $_POST['ddelivery_token_new']=0;
         }
     }

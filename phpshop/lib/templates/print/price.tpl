@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
     <head>
-        <title>Прайс-лист - @name@</title>
+        <title>{Прайс-лист} - @name@</title>
         <META http-equiv="Content-Type" content="text-html; charset=windows-1251">
         <style>
             BODY {
@@ -48,13 +48,13 @@
     </head>
     <body>
         <div align="right" class="nonprint">
-            <button id="saveCsv">Сохранить CSV</button>
-            <button id="savePdf">Сохранить PDF</button>
-            <button onclick="window.print();">Распечатать</button>
+            <button id="saveCsv">{Сохранить} CSV</button>
+            <button id="savePdf">{Сохранить} PDF</button>
+            <button onclick="window.print();">{Распечатать}</button>
             <hr>
         </div>
         <div id="content">
-            <h2>Прайс-лист "@name@" от @date@</h2>
+            <h2>{Прайс-лист} "@name@" / @date@</h2>
 
             <table cellpadding="2" cellspacing="1" width="100%" align="center" border="1" id="table2excel">
                 @price@
@@ -66,7 +66,7 @@
                     $("#savePdf").click(function() {
                         html2pdf(document.getElementById('content'), {
                             margin: 2,
-                            filename: 'Прайс-лист.pdf',
+                            filename: '{Прайс-лист}.pdf',
                             html2canvas: {
                                 dpi: 192,
                                 letterRendering: true
@@ -77,8 +77,8 @@
                     $("#saveCsv").click(function() {
                         $("#table2excel").table2excel({
                             exclude: ".noExl",
-                            name: "Прайс-лист",
-                            filename: "Прайс-лист"
+                            name: "{Прайс-лист}",
+                            filename: "{Прайс-лист}"
                         });
                     });
 

@@ -4,14 +4,14 @@ $TitlePage = __('Создание отзыва');
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['gbook']);
 
 function actionStart() {
-    global $PHPShopGUI, $PHPShopSystem, $PHPShopModules;
+    global $PHPShopGUI, $PHPShopSystem, $PHPShopModules, $TitlePage;
 
     // Выборка
     $data['datas'] = PHPShopDate::get();
     $data['tema'] = __('Отзыв от ') . $data['datas'];
     $data['name'] = __('Администратор');
 
-    $PHPShopGUI->setActionPanel(__("Создание Отзывы"), false, array('Сохранить и закрыть'));
+    $PHPShopGUI->setActionPanel($TitlePage, false, array('Сохранить и закрыть'));
 
     // datetimepicker
     $PHPShopGUI->addJSFiles('./js/bootstrap-datetimepicker.min.js', './news/gui/news.gui.js');
@@ -25,14 +25,14 @@ function actionStart() {
     $oFCKeditor->Value = $data['otvet'];
 
     // Содержание закладки 1
-    $Tab1 = $PHPShopGUI->setField("Дата:", $PHPShopGUI->setInputDate("datas_new", PHPShopDate::get(time())));
+    $Tab1 = $PHPShopGUI->setField("Дата", $PHPShopGUI->setInputDate("datas_new", PHPShopDate::get(time())));
 
-    $Tab1.=$PHPShopGUI->setField("Имя:", $PHPShopGUI->setInput("text", "name_new", $data['name']));
+    $Tab1.=$PHPShopGUI->setField("Имя", $PHPShopGUI->setInput("text", "name_new", $data['name']));
 
-    $Tab1.=$PHPShopGUI->setField("E-mail:", $PHPShopGUI->setInput("text", "mail_new", $data['mail']));
+    $Tab1.=$PHPShopGUI->setField("E-mail", $PHPShopGUI->setInput("text", "mail_new", $data['mail']));
 
-    $Tab1.=$PHPShopGUI->setField("Тема:", $PHPShopGUI->setTextarea("tema_new", $data['tema'])) .
-            $PHPShopGUI->setField("Отзыв:", $PHPShopGUI->setTextarea("otsiv_new", $data['otsiv'], "", '100%', '200'));
+    $Tab1.=$PHPShopGUI->setField("Тема", $PHPShopGUI->setTextarea("tema_new", $data['tema'])) .
+            $PHPShopGUI->setField("Отзыв", $PHPShopGUI->setTextarea("otsiv_new", $data['otsiv'], "", '100%', '200'));
     $Tab1.=$PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("flag_new", 1, "Вкл.", $data['flag']) . $PHPShopGUI->setRadio("flag_new", 0, "Выкл.", $data['flag']));
 
     // Содержание закладки 2
@@ -42,7 +42,7 @@ function actionStart() {
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, null);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1));
+    $PHPShopGUI->setTab(array("Основное", $Tab1,true));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("submit", "saveID", "ОК", "right", 70, "", "but", "actionInsert.gbook.create");

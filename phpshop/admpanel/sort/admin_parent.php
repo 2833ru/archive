@@ -6,7 +6,7 @@ function actionStart() {
     global $PHPShopInterface,$TitlePage ;
     
     $PHPShopInterface->setActionPanel($TitlePage , array('Удалить выбранные'),array('Добавить'));
-    $PHPShopInterface->setCaption(array(null, "3%"), array("Название", "80%"),array("", "10%"), array("Статус &nbsp;&nbsp;&nbsp;", "10%", array('align' => 'right')));
+    $PHPShopInterface->setCaption(array(null, "3%"), array("Название", "80%"),array("", "10%"), array("Статус", "10%", array('align' => 'right')));
 
     // SQL
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['parent_name']);

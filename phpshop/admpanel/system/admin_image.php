@@ -6,8 +6,7 @@ $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['system']);
 // Выбор шрифта ватермарка
 function GetFonts($font) {
     global $PHPShopGUI;
-
-
+    
     $dir = "../lib/font/";
     if (is_dir($dir)) {
         if (@$dh = opendir($dir)) {
@@ -50,18 +49,16 @@ function actionStart() {
 
     $PHPShopGUI->setActionPanel($TitlePage, false, array('Сохранить'));
 
-
     $PHPShopGUI->_CODE = '<p></p>' . $PHPShopGUI->setField('Макс. ширина оригинала', $PHPShopGUI->setInputText(false, 'option[img_w]', $option['img_w'], 100, 'px'), 1, 'Изображение товара в подробном описании товара') .
             $PHPShopGUI->setField('Макс. высота оригинала', $PHPShopGUI->setInputText(false, 'option[img_h]', $option['img_h'], 100, 'px'), 1, 'Изображение товара в подробном описании товара') .
             $PHPShopGUI->setField('Качество оригинала', $PHPShopGUI->setInputText(false, 'option[width_podrobno]', $option['width_podrobno'], 100, '%'), 1, 'Изображение товара в подробном описании товара') .
             $PHPShopGUI->setField('Исходное изображение', $PHPShopGUI->setCheckbox('option[image_save_source]', 1, 'Сохранять исходное изображение при ресайзинге', $option['image_save_source'])) .
             $PHPShopGUI->setField('Адаптивность', $PHPShopGUI->setCheckbox('option[image_adaptive_resize]', 1, 'Оптимизировать изображение точно под указанные размеры', $option['image_adaptive_resize'])) .
             $PHPShopGUI->setField('Исходное название', $PHPShopGUI->setCheckbox('option[image_save_name]', 1, 'Сохранять исходное название изображения', $option['image_save_name'])) .
-            $PHPShopGUI->setField(__("Размещение"), $PHPShopGUI->setInputText($GLOBALS['SysValue']['dir']['dir'].'/UserFiles/Image/', "option[image_result_path]", $option['image_result_path'], 400), 1, 'Путь сохранения загружаемых изображений') .
+            $PHPShopGUI->setField("Размещение", $PHPShopGUI->setInputText($GLOBALS['SysValue']['dir']['dir'].'/UserFiles/Image/', "option[image_result_path]", $option['image_result_path'], 400), 1, 'Путь сохранения загружаемых изображений') .
             $PHPShopGUI->setField('Макс. ширина тумбнейла', $PHPShopGUI->setInputText(false, 'option[img_tw]', $option['img_tw'], 100, 'px'), 1, 'Изображение товара в кратком описании товара') .
             $PHPShopGUI->setField('Макс. высота тумбнейла', $PHPShopGUI->setInputText(false, 'option[img_th]', $option['img_th'], 100, 'px'), 1, 'Изображение товара в кратком описании товара') .
             $PHPShopGUI->setField('Качество тумбнейла', $PHPShopGUI->setInputText(false, 'option[width_kratko]', $option['width_kratko'], 100, '%'), 1, 'Изображение товара в кратком описании товара');
-
 
     if (empty($option['watermark_text_size']))
         $option['watermark_text_size'] = 20;
@@ -86,11 +83,11 @@ function actionStart() {
     );
 
 
-// Запрос модуля на закладку
+    // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
 
-// Вывод кнопок сохранить и выход в футер
+    // Вывод кнопок сохранить и выход в футер
     $ContentFooter =
             $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .
             $PHPShopGUI->setInput("submit", "editID", "Сохранить", "right", 70, "", "but", "actionUpdate.system.edit") .
@@ -101,7 +98,7 @@ function actionStart() {
     $sidebarleft[] = array('title' => 'Категории', 'content' => $PHPShopGUI->loadLib('tab_menu', false, './system/'));
     $PHPShopGUI->setSidebarLeft($sidebarleft, 2);
 
-// Футер
+    // Футер
     $PHPShopGUI->Compile(2);
     return true;
 }

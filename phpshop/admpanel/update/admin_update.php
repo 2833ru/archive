@@ -75,9 +75,10 @@ function actionStart() {
             $result_content.='</ul>';
 
             $PHPShopGUI->action_button['Обновление'] = array(
-                'name' => 'Установить обновление',
+                'name' => __('Установить обновление'),
                 'class' => $PHPShopUpdate->btn_class,
                 'type' => 'button',
+                'locale'=>true,
                 'icon' => 'glyphicon glyphicon-cloud-download'
             );
         }
@@ -98,13 +99,14 @@ function actionStart() {
             $result_content.='</ul>';
         }
 
-        $result_message = $PHPShopGUI->setPanel($PHPShopGUI->i('cloud-download') . __('Для установки обновления PHPShop ' . $version . ' необходимо продлить техническую поддержку'), $result_content, 'panel-danger', false);
+        $result_message = $PHPShopGUI->setPanel($PHPShopGUI->i('cloud-download') . __('Для установки обновления').' PHPShop ' . $version . ' '.__('необходимо продлить техническую поддержку'), $result_content, 'panel-danger', false);
 
         $PHPShopGUI->action_button['Обновление'] = array(
             'name' => 'Купить обновление',
             'class' => 'btn btn-primary btn-sm navbar-btn btn-action-panel-blank',
             'action' => 'http://phpshop.ru/order/?from=' . $_SERVER['SERVER_NAME'],
             'type' => 'button',
+            'locale'=>true,
             'icon' => 'glyphicon glyphicon-ruble'
         );
     }
@@ -114,6 +116,7 @@ function actionStart() {
         'class' => 'btn btn-default btn-sm navbar-btn btn-action-panel-blank',
         'action' => 'http://phpshop.ru/docs/update.html?from=' . $_SERVER['SERVER_NAME'],
         'type' => 'button',
+        'locale'=>true,
         'icon' => 'glyphicon glyphicon-gift'
     );
 

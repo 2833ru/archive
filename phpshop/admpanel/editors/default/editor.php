@@ -33,7 +33,7 @@ class Editor {
         $html ='
         <link  href="./editors/default/redactor.css" rel="stylesheet">
         <script src="./editors/default/redactor.min.js"></script>
-        <script src="./editors/default/lang/ru.js"></script>
+        <script src="./editors/default/lang/'.$GLOBALS['PHPShopLang']->code.'.js"></script>
         <script src="./editors/default/plugins/video/video.js"></script>
         <script src="./editors/default/plugins/table/table.js"></script>
         <script src="./editors/default/plugins/insertimage/insertimage.js"></script>
@@ -43,12 +43,11 @@ class Editor {
         <script src="./editors/default/plugins/fontfamily/fontfamily.js"></script>
         <script src="./editors/default/plugins/underline/underline.js"></script>';
         
-            
         $html.= "
         <script>
         $(function(){
         $('textarea[name=".$this->InstanceName."]').redactor({
-        lang: 'ru',
+        lang: '".$GLOBALS['PHPShopLang']->code."',
         minHeight: '".$HeightCSS."',
         buttonSource: true,
         paragraphize: false,

@@ -121,9 +121,9 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or !empty($_SESSION
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 
-                        <span class="btn btn-default btn-sm pull-left glyphicon glyphicon-fullscreen" id="filemanagerwindow" data-toggle="tooltip" data-placement="bottom" title="Увеличить размер" style="margin-right:10px"></span>
+                        <span class="btn btn-default btn-sm pull-left glyphicon glyphicon-fullscreen" id="filemanagerwindow" data-toggle="tooltip" data-placement="bottom" title="'.__('Увеличить размер').'" style="margin-right:10px"></span>
 
-                        <h4 class="modal-title">Найти файл</h4>
+                        <h4 class="modal-title">'.__('Найти файл').'</h4>
                     </div>
                     <div class="modal-body">
                         <iframe class="elfinder-modal-content" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" data-path="image" data-option="return=icon_new" width="100%" height="510"></iframe>
@@ -143,7 +143,7 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or !empty($_SESSION
                         // Путь к изображению
                         @preg_match("/url\((.*)\) no-repeat center/i", $css_parse[$element['name']][$var['name']], $match);
 
-                        $image_select = '<div class="input-group" style=""><input class="form-control input-sm image-value" value="' . $match[1] . '" name="background" placeholder="" data-option="' . $element['name'] . '" type="text" id="color-' . $id . '"><div class="input-group-addon input-sm"><a href="#" title="Выбрать файл" data-return="return=color-' . $id . '" data-toggle="'.$start_filemanager.'" data-target="#elfinderModal" data-path="image" style="font-size: 14px"><span class="glyphicon glyphicon-picture"></span></a></div></div>';
+                        $image_select = '<div class="input-group" style=""><input class="form-control input-sm image-value" value="' . $match[1] . '" name="background" placeholder="" data-option="' . $element['name'] . '" type="text" id="color-' . $id . '"><div class="input-group-addon input-sm"><a href="#" title="'.__('Выбрать файл').'" data-return="return=color-' . $id . '" data-toggle="'.$start_filemanager.'" data-target="#elfinderModal" data-path="image" style="font-size: 14px"><span class="glyphicon glyphicon-picture"></span></a></div></div>';
 
                         $css_edit_theme.=$PHPShopGUI->setField($element['description'], $image_select, 5, $element['content']);
                     }
@@ -151,7 +151,7 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or !empty($_SESSION
         }
         
         $PHPShopGUI->nav_style = 'nav-tabs';
-        $css_edit.=$PHPShopGUI->setTab(array(__('Темы'), $css_edit_theme),array(__('Стили'), $css_edit_add));
+        $css_edit.=$PHPShopGUI->setTab(array('Темы', $css_edit_theme),array('Стили', $css_edit_add));
 
     // Сохранить
     if (!empty($_SESSION['logPHPSHOP'])) {
@@ -209,16 +209,16 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or !empty($_SESSION
         $collapseAdmin = null;
 
     if (!empty($_SESSION['logPHPSHOP']))
-        $admin_help = 'Вы можете управлять содержанием текущей страницы';
+        $admin_help = '{Вы можете управлять содержанием текущей страницы}';
     else
-        $admin_help = 'Для управления текущей страницей требуется <a href="//' . $_SERVER['SERVER_NAME'] . $GLOBALS['SysValue']['dir']['dir'] . 'phpshop/admpanel/" target="_blank"><span class="glyphicon glyphicon-user"></span> Авторизоваться</a>';
+        $admin_help = '{Для управления текущей страницей требуется} <a href="//' . $_SERVER['SERVER_NAME'] . $GLOBALS['SysValue']['dir']['dir'] . 'phpshop/admpanel/" target="_blank"><span class="glyphicon glyphicon-user"></span> {Авторизоваться}</a>';
 
     $collapse_menu = '<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
   <div class="panel panel-default">
     <div class="panel-heading" role="tab">
       <h4 class="panel-title">
         <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseCSS" aria-expanded="true" aria-controls="collapseOne">
-          Оформление <span class="glyphicon ' . $collapseIconCSS . ' pull-right" data-parent="collapseCSS"></span>
+          {Оформление} <span class="glyphicon ' . $collapseIconCSS . ' pull-right" data-parent="collapseCSS"></span>
         </a>
       </h4>
     </div>
@@ -234,7 +234,7 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or !empty($_SESSION
     <div class="panel-heading hidde" role="tab" id="adminModalHelp">
       <h4 class="panel-title">
         <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseAdmin" aria-expanded="false" aria-controls="collapseTwo">
-          Управление <span class="glyphicon ' . $collapseIconAdmin . ' pull-right" data-parent="collapseAdmin"></span>
+          {Управление} <span class="glyphicon ' . $collapseIconAdmin . ' pull-right" data-parent="collapseAdmin"></span>
         </a>
       </h4>
     </div>
@@ -250,7 +250,7 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or !empty($_SESSION
     // Редактор CSS
     $theme_menu = '
         <div id="style-selector" style="width: 280px; right: ' . $editor['right'] . 'px;" class="hidden-xs hidden-sm">
-        <div class="style-toggle ' . $editor['close'] . '" title="Панель оформления"></div>
+        <div class="style-toggle ' . $editor['close'] . '" title="{Панель оформления}"></div>
            <div id="style-selector-container">
               <div class="style-selector-wrapper">
               ' . $GLOBALS['SysValue']['other']['skinSelect'] . $collapse_menu . '
@@ -266,9 +266,9 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or !empty($_SESSION
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 
-                        <span class="btn btn-default btn-sm pull-left glyphicon glyphicon-fullscreen" id="editorwindow" data-toggle="tooltip" data-placement="bottom" title="Увеличить размер" style="margin-right:10px"></span> 
+                        <span class="btn btn-default btn-sm pull-left glyphicon glyphicon-fullscreen" id="editorwindow" data-toggle="tooltip" data-placement="bottom" title="{Увеличить размер}" style="margin-right:10px"></span> 
 
-                        <h4 class="modal-title">Панель управления</h4>
+                        <h4 class="modal-title">{Панель управления}</h4>
                     </div>
                     <div class="modal-body">
                       

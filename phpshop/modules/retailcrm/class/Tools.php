@@ -11,40 +11,24 @@ class Tools
         }
     }
 
-    public static function logger($message, $type, $errors = null){
-        $format = "[" . date('Y-m-d H:i:s') . "]";
-        if (!is_null($errors) && is_array($errors)) {
-            $message .= ":\n";
-            foreach ($errors as $error) {
-                $message .= "\t" . $error . "\n";
-            }
-        } else {
-            $message .= "\n";
-        }
+    /**
+     * Запись лога
+     * @param array $message содержание запроса в ту или иную сторону
+     * @param string $order_id номер заказа
+     * @param string $status статус операции
+     * @param string $type request
+     */
+    public static function logger($message, $type, $status = null, $order_id = null){
 
-        switch ($type) {
-            case 'connect':
-                $path = "../logs/connect-error.log";
-                error_log($format . " " . $message, 3, $path);
-                break;
-            case 'customers':
-                $path = "../logs/customers-error.log";
-                error_log($format . " " . $message, 3, $path);
-                break;
-            case 'orders':
-                $path = "../logs/orders-error.log";
-                error_log($format . " " . $message, 3, $path);
-                break;
-            case 'history':
-                $path = "../logs/history-error.log";
-                error_log($format . " " . $message, 3, $path);
-                break;
-            case 'history-log':
-                $path = "../logs/history.log";
-                file_put_contents($path, $message);
-                break;
-        }
-
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['retailcrm']['retailcrm_log']);
+        $log = array(
+            'message_new' => serialize($message),
+            'order_id_new' => $order_id,
+            'status_new' => $status,
+            'type_new' => $type,
+            'date_new' => time()
+        );
+        $PHPShopOrm->insert($log);
     }
 
     public static function iconvArray($arg, $in = "WINDOWS-1251", $out = "UTF-8") {

@@ -144,7 +144,7 @@ class PHPShopProductFunction {
 
         $LoadItems['Valuta'] = $PHPShopValutaArray->getArray();
         $LoadItems['System'] = $PHPShopSystem->getArray();
-
+        $LoadItems['System']['dengi'] = $PHPShopSystem->getParam("dengi");
 
         // Форматирование цены
         $format = intval($PHPShopSystem->getSerilizeParam("admoption.price_znak"));

@@ -10,7 +10,7 @@
     @breadCrumbs@
 </ol>
 <div class="page-header hidden-xs">
-    <a href="/price/CAT_SORT_@productId@.html" class="pull-right" title="Прайс-лист @catalogCategory@"><span class="glyphicon glyphicon-list-alt"></span>Прайс-лист каталога</a>
+    <a href="/price/CAT_SORT_@productId@.html" class="pull-right" title="Прайс-лист @catalogCategory@"><span class="glyphicon glyphicon-list-alt"></span>{Прайс-лист каталога}</a>
     <h1>@catalogCategory@</h1>
 </div>
 

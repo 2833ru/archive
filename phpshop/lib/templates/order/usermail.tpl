@@ -127,116 +127,83 @@
 <tbody>
     
     <tr bgcolor="#eaeaea">
-        <td  >
+        <td >
 
- <h2>Cпасибо за Ваш заказ, @user_name@!</h2> 
-<p>Наши менеджеры свяжутся с Вами по координатам, оставленным в форме заказа.</p>
+ <h2>{Спасибо за Ваш заказ}, @user_name@!</h2> 
+<p>{Наши менеджеры свяжутся с Вами по координатам, оставленным в форме заказа}.</p>
 
-<p>Подробности заказа  № @ouid@ от @date@</p>
-<p>Способ доставки: @deliveryCity@ <br>
+<p>{Подробности заказа}  №@ouid@ / @date@</p>
+<p>{Способ доставки}: @deliveryCity@ <br>
 E-mail: @mail@ <br>
-Тип оплаты: @payment@ <br>
-Адрес и информация для доставки: <br>
+{Тип оплаты}: @payment@ <br>
+{Адрес и информация для доставки}: <br>
 @adresList@<br>
-Дополнительная информация: @dop_info@ <br>
+{Дополнительная информация}: @dop_info@ <br>
 </p>
 <p>
-
 @php
+
 if(!empty($_POST["org_name_new"])) 
-    echo "Наименование организации: ".$_POST["org_name_new"]."<br>";
+    echo __("Наименование организации").": ".$_POST["org_name_new"]."<br>";
 if(!empty($_POST["org_inn_new"])) 
-    echo "ИНН: ".$_POST["org_inn_new"]."<br>";
+    echo __("ИНН").": ".$_POST["org_inn_new"]."<br>";
 if(!empty($_POST["org_kpp_new"])) 
-    echo "КПП: ".$_POST["org_kpp_new"]."<br>";
+    echo __("КПП").": ".$_POST["org_kpp_new"]."<br>";
 if(!empty($_POST["org_yur_adres_new"])) 
-    echo "Юридический адрес: ".$_POST["org_yur_adres_new"]."<br>";
+    echo __("Юридический адрес").": ".$_POST["org_yur_adres_new"]."<br>";
 if(!empty($_POST["org_fakt_adres_new"])) 
-    echo "Фактический адрес: ".$_POST["org_fakt_adres_new"]."<br>";
+    echo __("Фактический адрес").": ".$_POST["org_fakt_adres_new"]."<br>";
 if(!empty($_POST["org_ras_new"])) 
-    echo "Расчётный счёт: ".$_POST["org_ras_new"]."<br>";
+    echo __("Расчётный счёт").": ".$_POST["org_ras_new"]."<br>";
 if(!empty($_POST["org_bank_new"])) 
-    echo "Наименование банка: ".$_POST["org_bank_new"]."<br>";
+    echo __("Наименование банка").": ".$_POST["org_bank_new"]."<br>";
 if(!empty($_POST["org_kor_new"])) 
-    echo "Корреспондентский счёт: ".$_POST["org_kor_new"]."<br>";
+    echo __("Корреспондентский счёт").": ".$_POST["org_kor_new"]."<br>";
 if(!empty($_POST["org_bik_new"])) 
-    echo "БИК: ".$_POST["org_bik_new"]."<br>";
+    echo __("БИК").": ".$_POST["org_bik_new"]."<br>";
 if(!empty($_POST["org_city_new"])) 
-    echo "Город: ".$_POST["org_city_new"]."<br>";
+    echo __("Город").": ".$_POST["org_city_new"]."<br>";
     
 php@</p>
 
-<p>Заказанные товары</p>
+<p>{Заказанные товары}</p>
 <hr><p>
 @cart@</p>
 <hr>
 <p>
-Итого -- @sum@ @currency@<br>
-Скидка -- @discount@%<br>
-Доставка -- @deliveryPrice@ @currency@ @deliveryInfo@</p>
+{Итого} -- @sum@ @currency@<br>
+{Скидка} -- @discount@%<br>
+{Доставка} -- @deliveryPrice@ @currency@ @deliveryInfo@</p>
 <hr>
-<p>Итого к оплате с учетом скидки: @total@ @currency@</p><hr><p>
-
-@php
-//if(!$_SESSION["UsersId"]){
-if(0){ //Если нужна проверка статуса заказа без авторизации, раскомментировать предыдущую строку и закомментировать данную
-echo "
-E-mail: ".$_POST["mail"]."
-№ Заказа: ".$_POST["ouid"]."
+<p>{Итого к оплате с учетом скидки}: @total@ @currency@</p><hr><p>
 </p>
-
-<br>
-            
+<br>         
 <hr>
-
-<h1>Вы можете проверить статус заказа, загрузить файлы, распечатать платежные
-    документы по <a href='http://".$_SERVER["SERVER_NAME"].$GLOBALS["SysValue"]["dir"]["dir"]."/clients/?mail=".$_POST["mail"]."&order=".$_POST["ouid"]."'>ссылке</a>.
-
-";
-}
-else { echo "Вы можете проверить статус заказа, загрузить файлы, распечатать платежные
-документы, через <a href='http://".$_SERVER["SERVER_NAME"].$GLOBALS["SysValue"]["dir"]["dir"]."/users/order.html?order_info=".$_POST["ouid"]."#Order'>Личный кабинет</a>.";
-}
-php@
-</h1>
-
-
-<p>Если у Вас есть вопрос, задайте его нам в Личном кабинете в разделе <a href="http://@serverPath@users/message.html">Связь с менеджером</a>. </p>
-
-
-
-
-
-                
+<p>{Вы можете проверить статус заказа, загрузить файлы, распечатать платежные документы, через} <a href='http://".$_SERVER["SERVER_NAME"].$GLOBALS["SysValue"]["dir"]["dir"]."/users/order.html?order_info=".$_POST["ouid"]."#Order'>{Личный кабинет}</a>.
+</p>
+<p>{Если у Вас есть вопрос, задайте его нам в Личном кабинете в разделе} <a href="http://@serverPath@users/message.html">{Связь с менеджером}</a>. </p>   
         </td>
     </tr>
          
 </tbody>  
 </table> 
 
-
 <table width="660" align="center" cellspacing="0" cellpadding="10">
 <tbody>
 
-
     <tr bgcolor="#fafafa" id="footer" height="100%">
     
-      
+     
         <td align="left" valign="top" height="100%">
-            <p><b>С уважением, @shopName@.</b></p>
+            <p><b>{С уважением}, @shopName@.</b></p>
       <p>@org_name@<br>
-      Интернет-магазин <a href="http://@serverPath@">@serverShop@</a><br>
-      Отдел продаж: @telNum@<br>
+      {Интернет-магазин} <a href="http://@serverPath@">@serverShop@</a><br>
+      {Отдел продаж}: @telNum@<br>
       E-mail: @adminMail@<br>
       @org_adres@</p></td>
       
     </tr>
 </tbody>  
 </table> 
-
-
-
 </body>
 </html>
-
-

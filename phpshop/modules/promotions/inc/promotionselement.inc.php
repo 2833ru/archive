@@ -17,7 +17,6 @@ class AddToTemplateRegionElement extends PHPShopElements {
             $where['enabled'] = '="1"';
             $GLOBALS['promotionslist'] = $promotionslist = $PHPShopOrm->select(array('*'),$where,array('order'=>'id'));
 
-            //где код не пустой
             $whereCode['code'] = '!="*"';
             $whereCode['enabled'] = '="1"';
             $GLOBALS['promotionslistCode'] = $promotionslistCode = $PHPShopOrm->select(array('*'),$whereCode,array('order'=>'id'),array('limit'=>'300'));

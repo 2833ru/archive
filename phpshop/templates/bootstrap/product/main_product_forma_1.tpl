@@ -15,7 +15,7 @@
                 <div class="pull-right">
                     <a class="btn btn-primary addToCartList @elementCartOptionHide@" href="/shop/UID_@productUid@.html">@productSale@</a>
                     <button class="btn btn-primary addToCartList @elementCartHide@" data-uid="@productUid@" role="button">@productSale@</button>
-                    <button class="btn btn-default addToWishList" role="button" data-uid="@productUid@">Отложить</button>
+                    <button class="btn btn-default addToWishList" role="button" data-uid="@productUid@">{Отложить}</button>
                 </div>
             </div>
         </div>

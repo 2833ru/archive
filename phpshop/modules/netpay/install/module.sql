@@ -25,4 +25,5 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_netpay_system` (
 
 INSERT INTO `phpshop_modules_netpay_system` VALUES (1,0, 0, '', '', 'Для оплаты банковской картой Вы будете перенаправлены на защищенную платежную страницу процессинговой компании <a href="http://net2pay.ru" target=_blank>ООО ”Нэт Пэй”</a>. Страница оплаты отвечает последним международным требованиям безопасности платежных систем Visa и MasterCard.','Заказ проверяется. После уточнения деталей заказа будет доступна кнопка для онлайн-оплаты','1','15','2','1','0','','none','0', 0, '1.1');
 
-INSERT INTO `phpshop_payment_systems` VALUES (10017, 'Оплата картой без комиссии (VISA, Visa Electron, Maestro, MasterCard, МИР)', 'modules', '0', 0, '', '', '', 'phpshop/modules/netpay/payment/logo.png');
+INSERT INTO `phpshop_payment_systems` (`id`, `name`, `path`, `enabled`, `num`, `message`, `message_header`, `yur_data_flag`, `icon`) VALUES
+(10017, 'Оплата картой без комиссии (VISA, Visa Electron, Maestro, MasterCard, МИР)', 'modules', '0', 0, '<p>Ваш заказ оплачен!</p>', 'Спасибо', '', 'phpshop/modules/netpay/payment/logo.png');

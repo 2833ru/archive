@@ -20,9 +20,12 @@ PHPShopObj::loadClass("orm");
 PHPShopObj::loadClass("cart");
 PHPShopObj::loadClass("parser");
 PHPShopObj::loadClass("text");
+PHPShopObj::loadClass("lang");
 
 $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
 $PHPShopSystem = new PHPShopSystem();
+
+$PHPShopLang = new PHPShopLang(array('locale'=>$_SESSION['lang'],'path'=>'admin'));
 
 /**
  * Шаблон вывода таблицы корзины
@@ -143,6 +146,7 @@ if (PHPShopSecurity::true_param($_GET['tip'], $_GET['orderId'], $_GET['datas']))
     PHPShopParser::set('title', '№'.$PHPShopOrder->getValue('uid'));
 
     PHPShopParser::file('../../lib/templates/print/account.tpl');
+    writeLangFile();
 }
 else
     header('Location: /');
