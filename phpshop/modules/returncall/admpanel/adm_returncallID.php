@@ -15,7 +15,7 @@ function actionUpdate() {
 function actionStart() {
     global $PHPShopGUI, $PHPShopOrm;
 
-    $PHPShopGUI->field_col = 1;
+    $PHPShopGUI->field_col = 2;
     $PHPShopGUI->addJSFiles('./js/bootstrap-datetimepicker.min.js', './news/gui/news.gui.js');
     $PHPShopGUI->addCSSFiles('./css/bootstrap-datetimepicker.min.css');
 
@@ -23,12 +23,10 @@ function actionStart() {
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
 
     $Tab1 = $PHPShopGUI->setField("Дата", $PHPShopGUI->setInputDate("date_new", PHPShopDate::dataV($data['date'], false)));
-    $Tab1.= $PHPShopGUI->setField('Имя: ', $PHPShopGUI->setInputText(false, 'name_new', $data['name']));
+    $Tab1.= $PHPShopGUI->setField('Имя: ', $PHPShopGUI->setInputText(false, 'name_new', $data['name'],600),false,'IP: '.$data['ip']);
     $Tab1.= $PHPShopGUI->setField('Телефон:', $PHPShopGUI->setInputText(false, 'tel_new', $data['tel'], 300));
-    $Tab1.= $PHPShopGUI->setField('Время:', $PHPShopGUI->setInputText('от', 'time_start_new', $data['time_start'], '150', false, 'left') . '<span style="float:left">&nbsp;</span>' . $PHPShopGUI->setInputText('до', 'time_end__new', $data['time_end'], '150', false, 'left'));
-    $Tab1.= $PHPShopGUI->setField('IP:', $PHPShopGUI->setInputText(false, 'tel_new', $data['ip'], 300));
-
-    $Tab1.=$PHPShopGUI->setField('Сообщение', $PHPShopGUI->setTextarea('message_new', $data['message']));
+    $Tab1.= $PHPShopGUI->setField('Время звонка:', $PHPShopGUI->setInputText(null, 'time_start_new', $data['time_start']. ' '.$data['time_end'], 300));
+    $Tab1.=$PHPShopGUI->setField('Сообщение', $PHPShopGUI->setTextarea('message_new', $data['message'],false,600));
 
     $status_atrray[] = array('Новая', 1, $data['status']);
     $status_atrray[] = array('Перезвонить', 2, $data['status']);

@@ -1,9 +1,9 @@
 <?php
+
 /**
  * Автозагрузка элементов
  * @package PHPShopInc
  */
-
 // Защищаем от дублей /index.php/index.php
 if (strstr($_SERVER['REQUEST_URI'], 'index.php')) {
     header('Location: /error/');
@@ -11,10 +11,9 @@ if (strstr($_SERVER['REQUEST_URI'], 'index.php')) {
 }
 
 
-
 // Шаблон дизайна по умолчанмю
 $PHPShopCoreElement = new PHPShopCoreElement();
-$PHPShopCoreElement->init('skin',false,false);
+$PHPShopCoreElement->init('skin', false, false);
 $PHPShopCoreElement->init('checkskin');
 $PHPShopCoreElement->init('setdefault');
 
@@ -23,7 +22,7 @@ $PHPShopSkinElement = new PHPShopSkinElement();
 $PHPShopSkinElement->init('skinSelect');
 
 // Стили шаблона дизайна
-$PHPShopCoreElement->init('pageCss',false,false);
+$PHPShopCoreElement->init('pageCss', false, false);
 
 
 // Загрузка модулей
@@ -38,8 +37,8 @@ foreach ($GLOBALS['SysValue']['autoload'] as $val)
 
 // Выбор валюты
 $PHPShopCurrencyElement = new PHPShopCurrencyElement();
-$PHPShopCurrencyElement->init('valutaDisp');    
-    
+$PHPShopCurrencyElement->init('valutaDisp');
+
 // Авторизация пользователей
 $PHPShopUserElement = new PHPShopUserElement();
 $PHPShopUserElement->init('usersDisp');
@@ -93,7 +92,6 @@ $PHPShopTextElement = new PHPShopTextElement();
 $PHPShopTextElement->init('leftMenu', true); // Вывод левого блока
 $PHPShopTextElement->init('rightMenu', true); // Вывод правого блока
 $PHPShopTextElement->init('topMenu', true); // Вывод главного меню
-
 // Корзина
 $PHPShopCartElement = new PHPShopCartElement();
 $PHPShopCartElement->init('miniCart');

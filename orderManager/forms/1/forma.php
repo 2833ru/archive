@@ -160,6 +160,7 @@ $adr_info = substr($adr_info, 2);
         <button onclick="window.print()">
             Распечатать
         </button> 
+    <hr>
     </div>
     <div align="center"><table align="center" width="100%">
             <tr>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<module>
+    <version>1.0</version>
+    <name>Альфабанк</name>
+    <description>Модуль интеграции интернет-магазина с платежным шлюзом Альфабанка</description>
+    <category>payment</category>
+    <status>new</status>
+    <faqlink>http://faq.phpshop.ru/page/alfabank.html</faqlink>
+     <adminmenu>
+        <title>Альфабанк</title>
+        <capability>true</capability>
+         <podmenu>
+             <podmenu_name>Журнал операций</podmenu_name>
+             <podmenu_action>dir.alfabank</podmenu_action>
+         </podmenu>
+    </adminmenu>
+</module>

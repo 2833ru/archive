@@ -90,6 +90,9 @@ function addToCartList(product_id, num, parent, addname) {
     if (addname === undefined)
         addname = '';
 
+    if (parent === undefined)
+        parent = 0;
+
     $.ajax({
         url: ROOT_PATH + '/phpshop/ajax/cartload.php',
         type: 'post',
@@ -998,7 +1001,7 @@ $(document).ready(function() {
         // Опции характеристики
         else if ($('#optionMessage').html()) {
             var optionCheck = true;
-            var optionValue=$('#allOptionsSet' + $(this).attr('data-uid')).val();
+            var optionValue = $('#allOptionsSet' + $(this).attr('data-uid')).val();
             $('.optionsDisp select').each(function() {
                 if ($(this).hasClass('req') && optionValue === '')
                     optionCheck = false;
@@ -1063,7 +1066,7 @@ $(document).ready(function() {
     //  Social Button
     $('.social-button').on('click', function(e) {
         e.preventDefault();
-        
+
         var u = location.href;
         var t = document.title;
         var h = document.location.host;
@@ -1128,31 +1131,31 @@ $(document).ready(function() {
     if (DADATA_TOKEN) {
 
         /*
-        $('[name="name_new"]').suggestions({
-            token: DADATA_TOKEN,
-            type: "NAME",
-            params: {
-                parts: ["NAME"]
-            },
-            count: 5
-        });
-        $('[name="name"]').suggestions({
-            token: DADATA_TOKEN,
-            type: "NAME",
-            params: {
-                parts: ["NAME"]
-            },
-            count: 5
-        });
-        $('[name="name_person"]').suggestions({
-            token: DADATA_TOKEN,
-            type: "NAME",
-            params: {
-                parts: ["NAME"]
-            },
-            count: 5
-        });
-        */
+         $('[name="name_new"]').suggestions({
+         token: DADATA_TOKEN,
+         type: "NAME",
+         params: {
+         parts: ["NAME"]
+         },
+         count: 5
+         });
+         $('[name="name"]').suggestions({
+         token: DADATA_TOKEN,
+         type: "NAME",
+         params: {
+         parts: ["NAME"]
+         },
+         count: 5
+         });
+         $('[name="name_person"]').suggestions({
+         token: DADATA_TOKEN,
+         type: "NAME",
+         params: {
+         parts: ["NAME"]
+         },
+         count: 5
+         });
+         */
         $('[name="oneclick_mod_name"]').suggestions({
             token: DADATA_TOKEN,
             type: "NAME",
@@ -1170,12 +1173,12 @@ $(document).ready(function() {
             count: 5
         });
         /*
-        $('[type="email"]').suggestions({
-            token: DADATA_TOKEN,
-            type: "EMAIL",
-            suggest_local: false,
-            count: 5
-        });*/
+         $('[type="email"]').suggestions({
+         token: DADATA_TOKEN,
+         type: "EMAIL",
+         suggest_local: false,
+         count: 5
+         });*/
         $('[name="org_name"]').suggestions({
             token: DADATA_TOKEN,
             type: "PARTY",

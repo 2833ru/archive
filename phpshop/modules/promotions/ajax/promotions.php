@@ -52,18 +52,18 @@ function GetDeliveryPrice($deliveryID, $sum, $weight = 0) {
     global $SysValue, $link_db;
 
     if (!empty($deliveryID)) {
-        $sql = "select * from " . $SysValue['base']['table_name30'] . " where id='$deliveryID' and enabled='1'";
+        $sql = "select * from " . $SysValue['base']['delivery'] . " where id='$deliveryID' and enabled='1'";
         $result = mysqli_query($link_db, $sql);
         $num = mysqli_num_rows($result);
         $row = mysqli_fetch_array($result);
 
         if ($num == 0) {
-            $sql = "select * from " . $SysValue['base']['table_name30'] . " where flag='1' and enabled='1'";
+            $sql = "select * from " . $SysValue['base']['delivery'] . " where flag='1' and enabled='1'";
             $result = mysqli_query($link_db, $sql);
             $row = mysqli_fetch_array($result);
         }
     } else {
-        $sql = "select * from " . $SysValue['base']['table_name30'] . " where flag='1' and enabled='1'";
+        $sql = "select * from " . $SysValue['base']['delivery'] . " where flag='1' and enabled='1'";
         $result = mysqli_query($link_db, $sql);
         $row = mysqli_fetch_array($result);
     }
@@ -127,7 +127,7 @@ if ($_REQUEST['promocode'] != '*') {
 
                 foreach ($_SESSION['cart'] as $rs => $valuecart) {
 
-                    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['table_name2']);
+                    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
                     $row = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($valuecart['id'])), array('order' => 'id desc'), array('limit' => 1));
 
                     //узнаем по каким категори€м брать товары из корзины
@@ -388,7 +388,7 @@ if ($_REQUEST['promocode'] != '*') {
 
             foreach ($_SESSION['cart'] as $valuecart) {
 
-                $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['table_name2']);
+                $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
                 $row = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($valuecart['id'])), array('order' => 'id desc'), array('limit' => 1));
 
                 //ћассив категорий дл€ промо кода

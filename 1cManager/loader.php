@@ -4,7 +4,7 @@
  * Автономная синхронизация заказов с 1С
  * @package PHPShopExchange
  * @author PHPShop Software
- * @version 1.9
+ * @version 2.0
  */
 // Функции авторизации
 include_once("login.php");
@@ -12,21 +12,16 @@ include_once("login.php");
 // Функции работы с почтой
 include_once("mailer.php");
 
-function ReturnSumma($sum, $disc) {
-    $sum = $sum - ($sum * $disc / 100);
-    return $sum;
-}
 
 // Заводим статус обработанного заказа
 function CheckStatusReady() {
     global $link_db;
-    $sql = "select id from " . $GLOBALS['SysValue']['base']['table_name32'] . " where id=100 limit 1";
-    @$result = mysqli_query($link_db, $sql);
+    $result = mysqli_query($link_db, "select id from " . $GLOBALS['SysValue']['base']['order_status'] . " where id=100 limit 1");
     $num = mysqli_num_rows($result);
 
     // Запись нового статуса
     if (empty($num))
-        mysqli_query($link_db, "INSERT INTO " . $GLOBALS['SysValue']['base']['table_name32'] . " VALUES (100, 'Передано в бухгалтерию', '#ffff33','')");
+        mysqli_query($link_db, "INSERT INTO " . $GLOBALS['SysValue']['base']['order_status'] . " VALUES (100, 'Передано в бухгалтерию', '#ffff33','')");
 
     return 100;
 }
@@ -38,7 +33,7 @@ switch ($_GET['command']) {
 
     // Оптимизация базы перед загрузкой склада
     case("optimize"):
-        mysqli_query($link_db, "OPTIMIZE TABLE " . $GLOBALS['SysValue']['base']['table_name'] . ", " . $GLOBALS['SysValue']['base']['table_name2']) or die("Optimize fail: " . mysqli_error($link_db));
+        mysqli_query($link_db, "OPTIMIZE TABLE " . $GLOBALS['SysValue']['base']['categories'] . ", " . $GLOBALS['SysValue']['base']['products']) or die("Optimize fail: " . mysqli_error($link_db));
         break;
 
     // Выводим список всех заказов
@@ -51,8 +46,7 @@ switch ($_GET['command']) {
         // Безопасность
         if (PHPShopSecurity::true_num($_GET['date1']) and PHPShopSecurity::true_num($_GET['date2']) and PHPShopSecurity::true_num($_GET['num'])) {
 
-            $sql = "select * from " . $GLOBALS['SysValue']['base']['table_name1'] . " where seller!='1' and datas BETWEEN " . $_GET['date1'] . " AND " . $_GET['date2'] . " order by id desc  limit " . $_GET['num'];
-//            $sql = "select * from " . $PHPShopBase->getParam("base.table_name1") . " where seller!='1' and datas<'" . date("U") . "'  order by id desc  limit 1";
+            $sql = "select * from " . $GLOBALS['SysValue']['base']['orders'] . " where seller!='1' and datas BETWEEN " . $_GET['date1'] . " AND " . $_GET['date2'] . " order by id desc  limit " . $_GET['num'];
 
             $result = mysqli_query($link_db, $sql);
             while ($row = mysqli_fetch_array($result)) {
@@ -125,10 +119,9 @@ switch ($_GET['command']) {
                 if ($row['dop_info'])
                     $adr_info .= ", дополнительная информация: " . $row['dop_info'];
 
-                $adres = str_replace("&quot;", '"', $adr_info . $order['Person']['adr_name']);
-                $adres = PHPShopSecurity::CleanOut($adres);
+                $adres = PHPShopSecurity::CleanOut(str_replace("&quot;", '"', $adr_info . $order['Person']['adr_name']));
                 $oplata = $PHPShopOrder->getOplataMetodName();
-                $sum = @ReturnSumma($order['Cart']['sum'], $order['Person']['discount']);
+                $sum = $row['sum'];
                 //$weight = $order['Cart']['weight'];
                 $discount = $order['Person']['discount'];
 
@@ -141,8 +134,6 @@ switch ($_GET['command']) {
                 $org_bik = $row['org_bik'];
                 $org_city = $row['org_city'];
 
-                // Ver 1.7
-                //$csv1.="$id;$uid;$datas;$mail;$name;$company;$tel;$oplata;$sum;$discount;$inn;$adres;$kpp;$user;\n";
                 // Ver 1.8
                 $csv1.="$id;$uid;$datas;$mail;$name;$company;$tel;$oplata;$sum;$discount;$inn;$adres;$kpp;$user;$org_yur_adres;$org_fakt_adres;$org_ras;$org_bank;$org_kor;$org_bik;$org_city\n";
 
@@ -151,7 +142,7 @@ switch ($_GET['command']) {
                         $id = $val['id'];
                         $uid = $val['uid'];
                         $num = $val['num'];
-                        $sum = ReturnSumma($val['price'] * $num, $order['Person']['discount']);
+                        $sum = $val['price'] * $num - ($val['price'] * $num * $order['Person']['discount'] / 100);
 
                         // Валюта
                         $valuta = $PHPShopOrder->getValutaIso($id);
@@ -160,7 +151,6 @@ switch ($_GET['command']) {
 
                 // Доставка
                 $PHPShopDelivery = new PHPShopDelivery($order['Person']['dostavka_metod']);
-                //$csv3.=$PHPShopDelivery->getCity() . ";" . $PHPShopDelivery->getPrice($sum, $weight) . ";" . $valuta . "\n";
                 $csv3.=$PHPShopDelivery->getCity() . ";" . $order['Cart']['dostavka'] . ";" . $valuta . "\n";
 
                 $csv.=$csv1 . $csv2 . $csv3;
@@ -177,11 +167,9 @@ switch ($_GET['command']) {
     // command=update&id=63[ид заказа]&cid=12345[номер счета 1с]&accounts=true
     case("update"):
         $CheckStatusReady = CheckStatusReady();
-        $sql = "UPDATE " . $GLOBALS['SysValue']['base']['table_name1'] . " SET seller='1', statusi=" . intval($CheckStatusReady) . " where id=" . intval($_GET['id']);
-        mysqli_query($link_db, $sql) or die("error");
+        mysqli_query($link_db, "UPDATE " . $GLOBALS['SysValue']['base']['orders'] . " SET seller='1', statusi=" . intval($CheckStatusReady) . " where id=" . intval($_GET['id']));
 
-        $date = time();
-        mysqli_query($link_db, "INSERT INTO " . $GLOBALS['SysValue']['base']['table_name9'] . " VALUES ('', " . $_GET['id'] . ", '" . $_GET['cid'] . "',$date,'')");
+        mysqli_query($link_db, "INSERT INTO " . $GLOBALS['SysValue']['base']['1c_docs'] . " (`uid`, `cid`, `datas`, `year`) VALUES (" . $_GET['id'] . ", '" . $_GET['cid'] . "'," . time() . "," . date('Y') . ")");
 
         // Сообщение пользователю
         SendMailUser($_GET['id'], "accounts");
@@ -191,8 +179,7 @@ switch ($_GET['command']) {
     // кол-во новых заказов
     // command=new&date1=123456&date2=24255
     case("new"):
-        $sql = "select id from " . $GLOBALS['SysValue']['base']['table_name1'] . " where seller!='1' and datas<'$_GET[date2]' and datas>'$_GET[date1]'";
-        @$result = mysqli_query($link_db, $sql);
+        @$result = mysqli_query($link_db, "select id from " . $GLOBALS['SysValue']['base']['orders'] . " where seller!='1' and datas<'$_GET[date2]' and datas>'$_GET[date1]'");
         $new_order = mysqli_num_rows($result);
         echo $new_order;
         break;
@@ -201,8 +188,7 @@ switch ($_GET['command']) {
     // command=check&date1=123456&date2=24255
     case("check"):
         $csv = null;
-        $sql = "select * from " . $GLOBALS['SysValue']['base']['table_name9'] . " where datas<'$_GET[date2]' and datas>'$_GET[date1]'";
-        @$result = mysqli_query($link_db, $sql);
+        @$result = mysqli_query($link_db, "select * from " . $GLOBALS['SysValue']['base']['1c_docs'] . " where datas<'" . $_GET[date2] . "' and datas>'" . $_GET[date1] . "'");
         while ($row = mysqli_fetch_array($result)) {
             $cid = $row['cid'];
             $csv.="$cid;";
@@ -213,8 +199,8 @@ switch ($_GET['command']) {
     // Обновление даты для Счет-фактур
     // command=update_f&cid=1234[номер счета 1с]&date=123456
     case("update_f"):
-        $sql = "UPDATE " . $GLOBALS['SysValue']['base']['table_name9'] . " SET datas_f=$_GET[date] where cid='$_GET[cid]'";
-        mysqli_query($link_db, $sql) or die("error");
+        
+        mysqli_query($link_db, "UPDATE " . $GLOBALS['SysValue']['base']['1c_docs'] . " SET datas_f='" . $_GET[date] . "' where cid='" . $_GET[cid] . "' and year='" . date('Y', $_GET[date]) . "'");
 
         // Сообщение пользователю
         SendMailUser($_GET['cid'], "invoice");
@@ -223,8 +209,8 @@ switch ($_GET['command']) {
     // Проверка загрузки Счет-фактур
     // command=check_f&cid=123[номер счета 1с]
     case("check_f"):
-        $sql = "select datas_f from " . $GLOBALS['SysValue']['base']['table_name9'] . " where cid='$_GET[cid]' limit 1";
-        @$result = mysqli_query($link_db, $sql);
+
+        @$result = mysqli_query($link_db, "select datas_f from " . $GLOBALS['SysValue']['base']['1c_docs'] . " where cid='" . $_GET[cid] . "' and year='" . date('Y') . "' limit 1");
         $row = mysqli_fetch_array($result);
         $datas_f = $row['datas_f'];
         echo $datas_f;

@@ -34,6 +34,7 @@ function printforma($val) {
 // Перевод цифр в слова
 $iw = new inwords;
 
+PHPShopParser::set('name', $PHPShopSystem->getName());
 PHPShopParser::set('total',$PHPShopCart->getTotal());
 PHPShopParser::set('discount',$PHPShopOrder->ChekDiscount($PHPShopCart->getSum()));
 PHPShopParser::set('date',date("d-m-y"));

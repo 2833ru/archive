@@ -51,7 +51,7 @@ class PHPShopChat extends PHPShopBaseXml {
 
     function admin() {
         $hasher = new PasswordHash(8, false);
-        $PHPShopOrm = new PHPShopOrm($this->PHPShopBase->getParam('base.table_name19'));
+        $PHPShopOrm = new PHPShopOrm($this->PHPShopBase->getParam('base.users'));
         $PHPShopOrm->debug = $this->debug;
         $data = $PHPShopOrm->select(array('login,password,status'), array('enabled' => "='1'"), false, array('limit' => 10));
         if (is_array($data)) {

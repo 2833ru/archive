@@ -3,6 +3,19 @@ $().ready(function() {
 
     var theme_new = false;
 
+    // Настройка центрирования
+    $('[name="option[watermark_center_enabled]"]').prop('checked', function(_, checked) {
+        if (checked) {
+            $('[name="option[watermark_right]"]').attr('disabled', true);
+            $('[name="option[watermark_bottom]"]').attr('disabled', true);
+        }
+    });
+
+    $('[name="option[watermark_center_enabled]"]').click(function() {
+        $('[name="option[watermark_right]"]').attr('disabled', this.checked);
+        $('[name="option[watermark_bottom]"]').attr('disabled', this.checked);
+    });
+
 
     // Настройка почты
     $('[name="option[mail_smtp_enabled]"]').prop('checked', function(_, checked) {

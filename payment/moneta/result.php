@@ -1,9 +1,8 @@
 <?
-
 /*
   +-------------------------------------+
   |  PHPShop 2.1                        |
-  |  Модуль ResultUrl PayAnyWay         |
+  |  Модуль ResultUrl Moneta            |
   +-------------------------------------+
  */
 
@@ -45,7 +44,7 @@ function UpdateNumOrderBack($uid) {
 }
 
 // Парсируем установочный файл
-$SysValue = parse_ini_file_true("../../phpshop/inc/config.ini", 1);
+$SysValue = parse_ini_file("../../phpshop/inc/config.ini", 1);
 while (list($section, $array) = each($SysValue))
     while (list($key, $value) = each($array))
         $SysValue['other'][chr(73) . chr(110) . chr(105) . ucfirst(strtolower($section)) . ucfirst(strtolower($key))] = $value;

@@ -40,13 +40,13 @@ class PHPShopSortSearch {
 
         if (!empty($name)) {
             $this->tag = $tag;
-            $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['table_name20']);
+            $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']);
             $PHPShopOrm->debug = false;
             $data = $PHPShopOrm->select(array('id'), array('name' => '="' . $name . '"', 'category' => "!=0"), false, array('limit' => 1));
             if (is_array($data)) {
 
                 $sort_category = $data['id'];
-                $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['table_name21']);
+                $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort']);
                 $PHPShopOrm->debug = false;
                 $data = $PHPShopOrm->select(array('id,name'), array('category' => '=' . $sort_category), false, array('limit' => 100));
                 if (is_array($data)) {
@@ -233,7 +233,7 @@ class PHPShopYml {
      */
     function category() {
         $Catalog = array();
-        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['table_name']);
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
         $data = $PHPShopOrm->select(array('id,name,parent_to'), false, false, array('limit' => 1000));
 
         if (is_array($data))

@@ -30,7 +30,7 @@ $SysValue['bank'] = unserialize($LoadItems['System']['bank']);
 $pathTemplate = $SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'];
 
 
-$sql = "select * from " . $SysValue['base']['table_name1'] . " where id=".intval($_GET['orderID']);
+$sql = "select * from " . $SysValue['base']['orders'] . " where id=".intval($_GET['orderID']);
 $n = 1;
 @$result = mysqli_query($link_db,$sql) or die($sql);
 $row = mysqli_fetch_array(@$result);
@@ -73,7 +73,7 @@ if (is_array($order['Cart']['cart']))
 //Определение и суммирование веса
         $goodid = $val['id'];
         $goodnum = $val['num'];
-        $wsql = 'select weight from ' . $SysValue['base']['table_name2'] . ' where id=\'' . $goodid . '\'';
+        $wsql = 'select weight from ' . $SysValue['base']['products'] . ' where id=\'' . $goodid . '\'';
         $wresult = mysqli_query($link_db,$wsql);
         $wrow = mysqli_fetch_array($wresult);
         $cweight = $wrow['weight'] * $goodnum;

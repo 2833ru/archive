@@ -166,9 +166,13 @@ class PHPShopPaymentResult {
      * @param array $data данные по заказу
      */
     function ofd($data) {
-        global $_classPath, $PHPShopModules;
+        global $_classPath, $PHPShopModules, $PHPShopSystem;
 
-        $ofd = 'atol';
+        // Проверка модулей с OFD
+        $ofd = $PHPShopSystem->getParam('ofd');
+        if (empty($ofd))
+            $ofd = 'atol';
+
         if (!empty($PHPShopModules->ModValue['base'][$ofd])) {
             include_once($_classPath . 'modules/' . substr($ofd, 0, 15) . '/api.php');
 

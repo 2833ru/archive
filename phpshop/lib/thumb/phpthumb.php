@@ -1426,9 +1426,10 @@ class PHPThumb extends PHPThumbLibrary {
      * @param string $image_path
      * @param int $right_margin
      * @param int $bottom_margin
+     * @param bool $centering
      */
 
-    function createWatermark($image_path, $right_margin, $bottom_margin) {
+    function createWatermark($image_path, $right_margin, $bottom_margin, $centering = 0) {
 
         // load image used as watermark
         $stamp = imagecreatefrompng($image_path);
@@ -1436,7 +1437,15 @@ class PHPThumb extends PHPThumbLibrary {
         $sx = imagesx($stamp);
         $sy = imagesy($stamp);
 
-        imagecopy($this->workingImage, $stamp, imagesx($this->workingImage) - $sx - $right_margin, imagesy($this->workingImage) - $sy - $bottom_margin, 0, 0, imagesx($stamp), imagesy($stamp));
+        if (!empty($centering)) {
+            $dst_x = round((imagesx($this->workingImage) - $sx) / 2);
+            $dst_y = round((imagesy($this->workingImage) - $sy) / 2);
+        } else {
+            $dst_x = imagesx($this->workingImage) - $sx - $right_margin;
+            $dst_y = imagesy($this->workingImage) - $sy - $bottom_margin;
+        }
+
+        imagecopy($this->workingImage, $stamp, $dst_x, $dst_y, 0, 0, imagesx($stamp), imagesy($stamp));
 
         $this->setOldImage($this->workingImage);
     }
@@ -1450,18 +1459,28 @@ class PHPThumb extends PHPThumbLibrary {
      * @param string $hex
      * @param int $alpha_level [0-127]
      * @param int $angle
+     * @param bool $centering
      */
 
-    function createWatermarkText($text, $size, $font, $right_margin, $bottom_margin, $hex = "#CCCCCC", $alpha_level = 100, $angle = 0) {
+    function createWatermarkText($text, $size, $font, $right_margin, $bottom_margin, $hex = "#CCCCCC", $alpha_level = 100, $angle = 0, $centering = 0) {
 
         list($r, $g, $b) = sscanf($hex, "#%02x%02x%02x");
         $color = imagecolorallocatealpha($this->workingImage, $r, $g, $b, $alpha_level);
 
         $box = imagettfbbox($size, $angle, $font, $text);
         $sx = abs($box[4] - $box[0]);
-        //$sy = abs($box[5] - $box[1]);
-        // Add some shadow to the text
-        imagettftext($this->workingImage, $size, $angle, imagesx($this->workingImage) - $sx - $right_margin, imagesy($this->workingImage) - $bottom_margin, $color, $font, $text);
+
+        $sy = abs($box[5] - $box[1]);
+        if (!empty($centering)) {
+            $dst_x = round((imagesx($this->workingImage) - $sx) / 2);
+            $dst_y = round((imagesy($this->workingImage) + $sy) / 2);
+        } else {
+            $dst_x = imagesx($this->workingImage) - $sx - $right_margin;
+            $dst_y = imagesy($this->workingImage) - $bottom_margin;
+        }
+
+
+        imagettftext($this->workingImage, $size, $angle, $dst_x, $dst_y, $color, $font, $text);
 
         $this->setOldImage($this->workingImage);
     }

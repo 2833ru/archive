@@ -1,6 +1,6 @@
 
 
-$(document).ready(function() {
+$().ready(function() {
 
     // Ошибка
     $(".form-control").on('input', function() {

@@ -44,6 +44,9 @@ $PHPShopModules = new PHPShopModules($_classPath . "modules/");
  *  Роутер
  */
 
+// Меню модулей
+$modulesMenu = modulesMenu();
+
 // Подраздел [cat.sub]
 if (strpos($_GET['path'], '.')) {
     $subpath = explode(".", $_GET['path']);
@@ -119,6 +122,13 @@ function modulesMenu() {
             // Notification
             if (!empty($db['notification'])) {
                 $notificationList[] = $path;
+            }
+
+            // Redirect module.xml redirect.from -> redirect.to
+            if (is_array($db['redirect'])) {
+                if ($_GET['path'] == $db['redirect']['from'] and empty($_GET['id'])){
+                   return header('Location: ?path=modules.' . $db['redirect']['to']);
+                }
             }
         }
 
@@ -210,7 +220,7 @@ if (empty($adm_title)) {
                                     <li><a href="?path=modules">Управление модулями</a></li>
                                     <li class="divider"></li>
                                     <li class="dropdown-header">Установленные модули</li>
-<?php echo modulesMenu(); ?>
+                                    <?php echo $modulesMenu; ?>
 
                                 </ul>
                             </li>
@@ -441,7 +451,7 @@ if (empty($adm_title)) {
             ?>
             <br>
         </div>
-        
+
         <!-- Notification -->
         <div id="notification" class="success-notification hide">
             <div  class="alert alert-success alert-dismissible" role="alert">
@@ -503,7 +513,7 @@ if (empty($adm_title)) {
                         </div>
                         <div class="modal-body">
 
-<?php if (!empty($selectModalBody)) echo $selectModalBody; ?>
+                            <?php if (!empty($selectModalBody)) echo $selectModalBody; ?>
 
                         </div>
                         <div class="modal-footer">

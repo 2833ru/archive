@@ -8,7 +8,7 @@ class PHPShopcloudpaymentArray extends PHPShopArray {
     function __construct() {
         $this->objType = 3;
         $this->objBase = "phpshop_modules_cloudpayment_system";
-        parent::__construct("status", "title", 'title_end', 'publicId', 'description', 'api');
+        parent::__construct("status", "title", 'title_end', 'publicId', 'description', 'api', 'taxationSystem');
     }
 
     /**

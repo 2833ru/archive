@@ -60,8 +60,12 @@ function setProducts_yandexcart_hook($obj, $data) {
     $delivery = $GLOBALS['delivery'];
     if (is_array($delivery)) {
         foreach ($delivery as $row) {
-            if ($i < 5)
-                $list.='<option cost="' . $row['price'] . '" days="' . $row['yandex_day_min'] . '-' . $row['yandex_day'] . '" order-before="' . $row['yandex_order_before'] . '"/>';
+            if ($i < 5) {
+                if ($data['val']['p_enabled'] == 'true')
+                    $list.='<option cost="' . $row['price'] . '" days="' . $row['yandex_day_min'] . '-' . $row['yandex_day'] . '" order-before="' . $row['yandex_order_before'] . '"/>';
+                else
+                    $list.='<option cost="' . $row['price'] . '" days=""/>';
+            }
             else
                 continue;
             $i++;

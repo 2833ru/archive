@@ -211,11 +211,11 @@ h6{
     display: block;
 }
 .header-bottom #logo img {
-    max-width: 100%;
+    max-width: 165px;
     max-height: 100%;
 }
 .header-menu-wrapper {
-    position: unset;
+    position: relative;
 }
 .main-navbar-top > li {
     -position: unset;
@@ -1532,7 +1532,9 @@ h6{
 .news-subscription-form {
     margin-top: 15px;
 }
-
+.nav-catalog-dropdown-link {
+    cursor: pointer;
+}
 
 
 
@@ -4095,4 +4097,91 @@ thead td#allspecwhite {
 .btn.btn-info,
 .btn.btn-success {
     border-color: transparent;
+}
+.catalog-table-block {
+    height: 200px;
+    background-color: #f5f5f5;
+    padding: 20px;
+    background-position: top right !important;
+    background-size: auto 100%;
+    background-repeat: no-repeat;
+    overflow: hidden;
+}
+.catalog-table-block.fix {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.catalog-table-block img {
+    max-width: 100%;
+    max-height: 100%;
+}
+.catalog-table-link {
+    display: block;
+    color: #333;
+    text-decoration: none;
+    margin-bottom: 15px;
+}
+.catalog-table-block-name {
+    width: calc(100% - 20px);
+    bottom: 30px;
+    left: 20px;
+    margin: 0;
+    padding-left: 15px;
+    position: absolute;
+    text-align: left;
+    font-size: 20px;
+    font-weight: 800px;
+    color: #000;
+}
+
+.additional-nav-menu {
+    top: 0;
+    right: 0;
+    position: absolute;
+}
+.additional-nav-menu > a {
+    padding: 0 15px;
+    transition: color .3s;
+    color: #606975;
+    font-size: 17px;
+    font-weight: normal;
+    text-decoration: none;
+    line-height: 100px;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    display: block;
+    cursor: pointer;
+    transition: color .3s;
+}
+.additional-nav-menu .dropdown-menu {
+    margin-top: -1px !important;
+    border: 1px solid #e1e7ec;
+    background-color: #fff;
+    box-shadow: 0 7px 22px -5px rgba(47,56,68,0.2);
+    list-style-type: none;
+    min-width: unset;
+}
+.additional-nav-menu .dropdown-menu a{
+    padding: 5px 10px;
+    transition: color .3s;
+    color: #606975;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+    display: block;
+}
+.additional-nav-menu .dropdown-menu a:hover {
+    color: #0da9ef;
+    background-color: #fff;
+}
+
+.main-navbar-top {
+    margin-left: 15px;
+    height: 0;
+    overflow: hidden;
+    width: calc(100% - 15px);
+    padding-right: 46px;
+}
+.main-navbar-top.active {
+    overflow: visible;
 }

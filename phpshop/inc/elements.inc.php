@@ -67,7 +67,7 @@ class PHPShopCoreElement extends PHPShopElements {
         if (defined("HostID")) {
             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['servers']);
             $PHPShopOrm->debug = false;
-            $showcaseData = $PHPShopOrm->select(array('*'), array('enabled' => "='1'", 'host' => "='" . str_replace('www.', '', getenv('SERVER_NAME')) . "'"), array('order' => 'id'), array('limit' => 1));
+            $showcaseData = $PHPShopOrm->select(array('*'), array('enabled' => "='1'", 'host' => "='" . str_replace('www.', '', $_SERVER['HTTP_HOST']) . "'"), array('order' => 'id'), array('limit' => 1));
             if (is_array($showcaseData)) {
 
                 if (!empty($showcaseData['tel']))
@@ -93,6 +93,9 @@ class PHPShopCoreElement extends PHPShopElements {
 
                 if (!empty($showcaseData['adres']))
                     $this->set('streetAddress', $showcaseData['adres']);
+
+                if (!empty($showcaseData['skin']))
+                    define("HostSkin", $showcaseData['skin']);
             }
         } else {
             $this->set('streetAddress', $this->PHPShopSystem->getSerilizeParam('bank.org_adres'));
@@ -531,7 +534,7 @@ class PHPShopTextElement extends PHPShopElements {
      * Конструктор
      */
     function PHPShopTextElement() {
-        $this->objBase = $GLOBALS['SysValue']['base']['table_name14'];
+        $this->objBase = $GLOBALS['SysValue']['base']['menu'];
         $this->template_debug = true;
         parent::__construct();
     }
@@ -549,7 +552,7 @@ class PHPShopTextElement extends PHPShopElements {
         // Мультибаза
         if (defined("HostID"))
             $where['servers'] = " REGEXP 'i" . HostID . "i'";
-        elseif(defined("HostMain"))
+        elseif (defined("HostMain"))
             $where['element'] .= ' and (servers ="" or servers REGEXP "i1000i")';
 
         $data = $this->PHPShopOrm->select(array('*'), $where, array('order' => 'num'), array("limit" => 20));
@@ -597,7 +600,7 @@ class PHPShopTextElement extends PHPShopElements {
         // Мультибаза
         if (defined("HostID"))
             $where['servers'] = " REGEXP 'i" . HostID . "i'";
-        elseif(defined("HostMain"))
+        elseif (defined("HostMain"))
             $where['element'] .= ' and (servers ="" or servers REGEXP "i1000i")';
 
         $PHPShopOrm = new PHPShopOrm($this->objBase);
@@ -650,7 +653,7 @@ class PHPShopTextElement extends PHPShopElements {
         // Мультибаза
         if (defined("HostID"))
             $where['servers'] = " REGEXP 'i" . HostID . "i'";
-        elseif(defined("HostMain"))
+        elseif (defined("HostMain"))
             $where['enabled'] .= ' and (servers ="" or servers REGEXP "i1000i")';
 
         $objBase = $GLOBALS['SysValue']['base']['page'];
@@ -782,7 +785,7 @@ class PHPShopNewsElement extends PHPShopElements {
     function __construct() {
         $this->debug = false;
         $this->template_debug = true;
-        $this->objBase = $GLOBALS['SysValue']['base']['table_name8'];
+        $this->objBase = $GLOBALS['SysValue']['base']['news'];
         parent::__construct();
     }
 
@@ -893,7 +896,7 @@ class PHPShopSliderElement extends PHPShopElements {
         // Мультибаза
         if (defined("HostID"))
             $where['servers'] = " REGEXP 'i" . HostID . "i'";
-        elseif(defined("HostMain"))
+        elseif (defined("HostMain"))
             $where['enabled'].= ' and (servers ="" or servers REGEXP "i1000i")';
 
         if (!empty($view)) {
@@ -1065,7 +1068,7 @@ class PHPShopBannerElement extends PHPShopElements {
     function __construct() {
         $this->debug = false;
         $this->template_debug = true;
-        $this->objBase = $GLOBALS['SysValue']['base']['table_name15'];
+        $this->objBase = $GLOBALS['SysValue']['base']['banner'];
         parent::__construct();
     }
 
@@ -1346,6 +1349,8 @@ class PHPShopRecaptchaElement extends PHPShopElements {
      */
     public function true(){
     return $this->recaptcha;
+
+
 
 
 

@@ -15,13 +15,14 @@
                 <a href="/shop/UID_@productUid@.html" title="@productName@">@productName@</a>
             </h3>
             <h4 class="product-block-price">
-                <span class="price-old">@productPriceRub@</span>
+                <del class="price-old">@productPriceRub@</del>
                 <span class="price-new">@productPrice@ <span class="rubznak">@productValutaName@</span></span>
             </h4>
             <div class="product-block-description">
                 @productDes@
             </div>
             <div class="product-block-button">
+                <button class="btn btn-wishlist addToCompareList hidden-md" role="button" data-uid="@productUid@" data-title="Сравнить" data-placement="top" data-toggle="tooltip"><i class="fa fa-bar-chart-o"></i></button>
                 <button class="btn btn-wishlist addToWishList" role="button" data-uid="@productUid@" data-title="Отложить" data-placement="top" data-toggle="tooltip"><i class="feather iconz-heart"></i></button>
                 <a class="btn btn-cart @elementCartOptionHide@" href="/shop/UID_@productUid@.html">
                     <span>@productSale@</span>
@@ -30,7 +31,6 @@
                     <span>@productSale@</span>
                 </button>
                 <a class="btn btn-cart @elementNoticeHide@" href="/users/notice.html?productId=@productUid@" title="@productNotice@">
-                    <i class="fa fa-envelope-o" aria-hidden="true"></i>                            
                     Уведомить
                 </a>
             </div>

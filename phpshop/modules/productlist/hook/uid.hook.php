@@ -19,7 +19,7 @@ class PHPShopProductListElement extends PHPShopElements {
     // Вывод
     function element($category) {
         $dis = null;
-        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['table_name2']);
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
         $PHPShopOrm->debug = $this->debug;
         $data = $PHPShopOrm->select(array('*'), array('category' => '=' . intval($category), 'enabled' => "='1'", 'parent_enabled' => "='0'"), array('order' => 'datas'), array('limit' => $this->data['num']));
         if (is_array($data)) {

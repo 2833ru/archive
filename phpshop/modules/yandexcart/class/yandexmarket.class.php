@@ -66,7 +66,7 @@ class YandexMarketRest {
         curl_close($ch);
 
 
-        $response = split("\r\n\r\n", $output);
+        $response = explode("\r\n\r\n", $output);
         $responsecontent = $response[1];
 
         return $responsecontent;

@@ -3,7 +3,7 @@
 /**
  * Библиотека подключения к БД
  * @author PHPShop Software
- * @version 1.7
+ * @version 1.8
  * @package PHPShopClass
  * @param string $iniPath путь до конфигурационного файла config.ini
  * @param bool $connectdb подключение к MySQL
@@ -46,6 +46,12 @@ class PHPShopBase {
      * @var bool 
      */
     var $debug = true;
+    
+    /**
+     * текст ошибки подключения
+     * @var string
+     */
+    var $mysql_error = null;
 
     /**
      * Подключения к БД
@@ -67,14 +73,15 @@ class PHPShopBase {
         $this->iniPath = $iniPath;
         $this->SysValue = parse_ini_file_true($this->iniPath, 1);
 
+
         define('parser_function_allowed', $this->SysValue['function']['allowed']);
         define('parser_function_deny', $this->SysValue['function']['deny']);
         define('parser_function_guard', $this->SysValue['function']['guard']);
 
         $GLOBALS['SysValue'] = &$this->SysValue;
 
-        if (!empty($connectdb))
-            $this->link_db = $this->connect();
+        if ($connectdb)
+            $this->link_db = $this->connect($connectdb);
     }
 
     /**
@@ -126,14 +133,12 @@ class PHPShopBase {
      * @param string $error текст ошибки
      */
     function errorConnect($e = false, $message = "Нет соединения с базой", $error = false) {
-        global $link_db;
 
-        if (is_dir($_SERVER['DOCUMENT_ROOT'] . '/install/') and $e != 105)
+        $message = '<strong>' . $message . '</strong><br><em>Ошибка: ' . $error  . '</em>';
+
+        if (is_dir($_SERVER['DOCUMENT_ROOT'] . '/install/') and $e != 105) {
             header('Location: /install/');
-        else {
-            $message = '<strong>' . $message . '</strong><br><em>Ошибка: ' . $error . @mysqli_error($link_db) . '</em>';
         }
-
         if (function_exists('ParseTemplateReturn')) {
             $GLOBALS['SysValue']['other']['message'] = $message;
             $GLOBALS['SysValue']['other']['title'] = $e;
@@ -150,15 +155,20 @@ class PHPShopBase {
 
     /**
      * Соединение с БД MySQL
+     * @param bool $connectdb подключение / проверка подключения
      */
-    function connect() {
+    function connect($connectdb=true) {
         global $link_db;
-        $link_db = mysqli_connect($this->getParam("connect.host"), $this->getParam("connect.user_db"), $this->getParam("connect.pass_db")) or die($this->errorConnect(101));
-        mysqli_select_db($link_db, $this->getParam("connect.dbase")) or die($this->errorConnect(101));
+        
+        $link_db = mysqli_connect($this->getParam("connect.host"), $this->getParam("connect.user_db"), $this->getParam("connect.pass_db")) or $this->mysql_error = mysqli_connect_error();
+        mysqli_select_db($link_db, $this->getParam("connect.dbase")) or $this->mysql_error .= mysqli_error($link_db);
         mysqli_query($link_db, "SET NAMES '" . $this->codBase . "'");
         mysqli_query($link_db, "SET SESSION sql_mode=''");
-
-        return $link_db;
+        
+        if($connectdb and !empty($this->mysql_error))
+            $this->errorConnect(101,"Нет соединения с базой",$this->mysql_error);
+        else if(empty($this->mysql_error)) 
+            return $link_db;
     }
 
     /**

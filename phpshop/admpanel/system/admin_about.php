@@ -92,7 +92,8 @@ function actionStart() {
             $PHPShopGUI->setField("Версия PHP", phpversion(), false, false, false, 'text-right') .
             $PHPShopGUI->setField("Версия MySQL", @mysqli_get_server_info($PHPShopBase->link_db), false, false, false, 'text-right').
             $PHPShopGUI->setField("Max execution time", @ini_get('max_execution_time').' сек.', false, __('Максимальное время работы'), false, 'text-right').
-            $PHPShopGUI->setField("Memory limit", @ini_get('memory_limit'), false, __('Выделяемая память'), false, 'text-right')
+            $PHPShopGUI->setField("Memory limit", @ini_get('memory_limit'), false, __('Выделяемая память'), false, 'text-right').
+            $PHPShopGUI->setField("Имя базы данных", $PHPShopBase->getParam('connect.dbase'), false,false, false, 'text-right')
             );
 
     if (!empty($TechPodUntilUnixTime) and time() > $TechPodUntilUnixTime)

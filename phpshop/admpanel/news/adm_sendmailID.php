@@ -152,7 +152,7 @@ function actionUpdate() {
 
         // –ассылка пользовател€м
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['shopusers']);
-        $data = $PHPShopOrm->select(array('mail', 'name'), array('sendmail'=>"='1'"), array('order' => 'id desc'), array('limit' => $_POST['send_limit']));
+        $data = $PHPShopOrm->select(array('id', 'mail', 'name', 'password'), array('sendmail'=>"='1'"), array('order' => 'id desc'), array('limit' => $_POST['send_limit']));
 
         if (is_array($data))
             foreach ($data as $row) {
@@ -161,6 +161,8 @@ function actionUpdate() {
                 PHPShopParser::set('email', $row['mail']);
                 //PHPShopParser::set('content', @preg_replace("/@([a-zA-Z0-9_]+)@/e", '$GLOBALS["SysValue"]["other"]["\1"]', $_POST['content_new']));
                 PHPShopParser::set('content', preg_replace_callback("/@([a-zA-Z0-9_]+)@/", 'PHPShopParser::SysValueReturn', $_POST['content_new']));
+                $unsubscribe = '<p>„то бы отказатьс€ от новостной рассылки <a href="http://' . $_SERVER['SERVER_NAME'] . '/unsubscribe/?id=' .  $row['id'] . '&hash=' . md5($row['mail'] . $row['password']) .'" target="_blank">перейдите по ссылке.</a></p>';
+                PHPShopParser::set('unsubscribe', $unsubscribe);
 
                 $PHPShopMail = new PHPShopMail($row['mail'], $from, $_POST['name_new'], '', true, true);
                 $content = PHPShopParser::file('tpl/sendmail.mail.tpl', true);

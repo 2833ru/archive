@@ -72,12 +72,11 @@ function actionStart() {
 
     $Tab1.=$PHPShopGUI->setField('Содержание из новости', $PHPShopGUI->setSelect('template', $value, '100%', false, false, false, false, false, false));
 
-
-    // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1,true));
-
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
+    
+    // Вывод формы закладки
+    $PHPShopGUI->setTab(array("Основное", $Tab1,true));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("submit", "saveID", "ОК", "right", 70, "", "but", "actionInsert.news.create");

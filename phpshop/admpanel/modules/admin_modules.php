@@ -313,7 +313,7 @@ function actionStart() {
 
     $tree = '<table class="table table-hover">
         <tr class="treegrid-all">
-           <td><a href="?path=modules" class="treegrid-parent" data-parent="treegrid-all">Все модули</a> <span id="mod-install-count" class="label label-primary pull-right">68</span></td>
+           <td><a href="?path=modules" class="treegrid-parent" data-parent="treegrid-all">Все модули</a> <span id="mod-install-count" class="label label-primary pull-right">72</span></td>
 	</tr>
         <tr class="treegrid-template">
            <td><a href="?path=modules&cat=template" class="treegrid-parent" data-parent="treegrid-template">Дизайн</a> <span id="mod-install-count" class="label label-primary pull-right">5</span></td>
@@ -334,7 +334,7 @@ function actionStart() {
            <td><a href="?path=modules&cat=crm" class="treegrid-parent" data-parent="treegrid-crm">CRM</a> <span id="mod-install-count" class="label label-primary pull-right">2</span></td>
 	</tr>
         <tr class="treegrid-payment">
-           <td><a href="?path=modules&cat=payment" class="treegrid-parent" data-parent="treegrid-payment">Платежные системы</a> <span id="mod-install-count" class="label label-primary pull-right">14</span></td>
+           <td><a href="?path=modules&cat=payment" class="treegrid-parent" data-parent="treegrid-payment">Платежные системы</a> <span id="mod-install-count" class="label label-primary pull-right">18</span></td>
 	</tr>
         <tr class="treegrid-yandex">
            <td><a href="?path=modules&cat=yandex" class="treegrid-parent" data-parent="treegrid-yandex">Яндекс</a> <span id="mod-install-count" class="label label-primary pull-right">5</span></td>

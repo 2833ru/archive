@@ -61,7 +61,9 @@
 
             <div class="row vertical-align">
                 <div class="col-md-3 text-center">
+                    <div class="logo">
                     <a href="/" title="@name@"><img src="@logo@" alt="@name@"></a>
+                    </div>
                 </div>
                 <div class="col-md-9">
                     <div class="row">
@@ -110,14 +112,6 @@
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
                         <li class="visible-lg visible-lg"><a href="/" title="Домой"><span class="glyphicon glyphicon-home"></span></a></li>
-
-                        <!-- dropdown catalog menu -->
-                        <li id="catalog-dropdown" class="visible-lg visible-md visible-sm">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Каталог <b class="caret"></b></a>
-                            <ul class="dropdown-menu mega-menu">
-                                @leftCatal@
-                            </ul>
-                        </li>
 
                         @topBrands@
 
@@ -226,7 +220,7 @@
                 </div>
 
                 
-                <div class="visible-lg visible-md text-center">@banersDisp@<br></div>
+                <div class="visible-lg visible-md text-center banner">@banersDisp@<br></div>
             </div>
 
             <!-- toTop -->

@@ -1,8 +1,7 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-
+<!doctype html>
 <html>
     <head>
-        <title>@name@ / Прайс / Печатная форма</title>
+        <title>Прайс-лист - @name@</title>
         <META http-equiv="Content-Type" content="text-html; charset=windows-1251">
         <style>
             BODY {
@@ -35,72 +34,56 @@
                 border-right: 1px solid #000000;
                 text-align: right;
             }
-            button{
-                font-size: 11pt;
-                border: solid 1px #CCC;
-                -webkit-border-radius:5px;
-                -moz-border-radius:5px;
-                border-radius:5px;
-                background: -moz-linear-gradient(#FFF, #F0F0F0);
-                background: -ms-linear-gradient(#FFF, #F0F0F0);
-                background: -o-linear-gradient(#FFF, #F0F0F0);
-                background: -webkit-linear-gradient(#FFF, #F0F0F0);
-                cursor: pointer;
-                height: 30px;
-            }
         </style>
         <style media="print" type="text/css">
             <!--
             .nonprint {
                 display: none;
             }
-
             -->
         </style>
+        <script src="../../lib/templates/print/js/jquery-1.11.0.min.js"></script>
+        <script src="../../lib/templates/print/js/html2pdf.bundle.min.js"></script>
+        <script src="../../lib/templates/print/js/jquery.table2excel.min.js"></script>
     </head>
     <body>
-        <div style="padding-left:10"><h3>Прайс-лист Интернет магазина "@name@"</h3></div>
-        <TABLE cellpadding="0" cellspacing="0" width="100%" class="style5">
-            <TR>
-                <TD>
-                    <TABLE width="100%">
-                        <TR>
-                            <TD class="black" style="padding:10" width="50%">
-												 Дата: <b>@date@</b>
+        <div align="right" class="nonprint">
+            <button id="saveCsv">Сохранить CSV</button>
+            <button id="savePdf">Сохранить PDF</button>
+            <button onclick="window.print();">Распечатать</button>
+            <hr>
+        </div>
+        <div id="content">
+            <h2>Прайс-лист "@name@" от @date@</h2>
 
+            <table cellpadding="2" cellspacing="1" width="100%" align="center" border="1" id="table2excel">
+                @price@
+            </table>
+        </div>
+        <script>
+                $().ready(function() {
 
-                            </TD>
-                            <td align="right" width="100%">
-                                <div align="right" class="nonprint">
-                                    <button onclick="window.print()">
-                                       Распечатать
-                                    </button> 
-                                    <br><br>
-                                </div>
-                            </td>
-                        </TR>
-                    </TABLE>
-                </TD>
-            </TR>
-        </TABLE>
-        <table cellpadding=2 cellspacing=1 width="98%" align="center" border="1">
-            @price@
-        </table>
+                    $("#savePdf").click(function() {
+                        html2pdf(document.getElementById('content'), {
+                            margin: 2,
+                            filename: 'Прайс-лист.pdf',
+                            html2canvas: {
+                                dpi: 192,
+                                letterRendering: true
+                            }
+                        });
+                    });
 
-        <TABLE cellpadding="0" cellspacing="0" width="100%" class="style5">
-            <TR>
-                <TD>
-                    <TABLE width="100%">
-                        <TR>
-                            <TD class="black" style="padding:10" width="50%">
-												Дата: <b>@date@</b>
+                    $("#saveCsv").click(function() {
+                        $("#table2excel").table2excel({
+                            exclude: ".noExl",
+                            name: "Прайс-лист",
+                            filename: "Прайс-лист"
+                        });
+                    });
 
+                });
+        </script>
 
-                            </TD>
-                        </TR>
-                    </TABLE>
-                </TD>
-            </TR>
-        </TABLE>
     </body>
-</html>	
+</html>

@@ -27,6 +27,17 @@ function actionStart() {
     $Tab1.=$PHPShopGUI->setField('Пароль для API', $PHPShopGUI->setInputText(false, 'api_new', $data['api'], 300));
     $Tab1.=$PHPShopGUI->setField('Описание назначения оплаты в произвольном формате', $PHPShopGUI->setInputText(false, 'description_new', $data['description'], 300));
 
+    // Система налогообложения
+    $tax_system = array (
+        array("Общая система налогообложения", 0, $data["taxationSystem"]),
+        array("Упрощенная система налогообложения (Доход)", 1, $data["taxationSystem"]),
+        array("Упрощенная система налогообложения (Доход минус Расход)", 2, $data["taxationSystem"]),
+        array("Единый налог на вмененный доход", 3, $data["taxationSystem"]),
+        array("Единый сельскохозяйственный налог", 4, $data["taxationSystem"]),
+        array("Патентная система налогообложения", 5, $data["taxationSystem"])
+    );
+    $Tab1.= $PHPShopGUI->setField('Cистема налогообложения', $PHPShopGUI->setSelect('taxationSystem_new', $tax_system, 300));
+
     // Доступые статусы заказов
     $PHPShopOrderStatusArray = new PHPShopOrderStatusArray();
     $OrderStatusArray = $PHPShopOrderStatusArray->getArray();

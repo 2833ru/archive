@@ -10,6 +10,7 @@
 include_once("login.php");
 PHPShopObj::loadClass("readcsv");
 PHPShopObj::loadClass("product");
+PHPShopObj::loadClass("orm");
 
 // ShopBilder
 $GLOBALS['option']['shopbuilder'] = false;
@@ -29,110 +30,137 @@ if (function_exists('mod_option')) {
     call_user_func_array('mod_option', array(&$GLOBALS['option']));
 }
 
-// Привязывает текущую характеристику к каталогу
-function updateCatalog($parent_id, $charID) {
-    global $SysValue, $link_db;
+// Генератор характеристик v 2.0
+function charsGenerator($category, $CsvToArray) {
+    global $PHPShopBase;
 
-    $sql2_3 = 'select sort from ' . $SysValue['base']['table_name'] . ' WHERE id="' . $parent_id . '"';
-    $result2_3 = mysqli_query($link_db, $sql2_3);
-    $num2_3 = mysqli_num_rows(@$result2_3);
-    if (!$num2_3)
-        return false;
-    $row2_3 = mysqli_fetch_array($result2_3);
-    $sorts = unserialize($row2_3['sort']);
-    $sel = "";
+    $return = null;
+    
+    // Отладка
+    $debug = false;
 
-    if (is_array($sorts)) {
-        foreach ($sorts as $k => $v) {
-            if ($charID == $v)
-                $sel = "selected";
-        }
-    }
+    // Нормализация нескольких значений
+    for ($i = $GLOBALS['option']['sort']; $i < count($CsvToArray); $i = $i + 2) {
 
-    // Проверяем не привязан ли к каталогу такой ID
-    if ($sel != "selected") {
-        $sorts[] = trim($charID);
-        $ss = addslashes(serialize($sorts));
-        $sql2_4 = 'UPDATE ' . $SysValue['base']['table_name'] . ' SET sort="' . $ss . '" WHERE id="' . $parent_id . '"';
-        mysqli_query($link_db, $sql2_4);
-    }
-    return true;
-}
+        $sort_name = trim($CsvToArray[$i]);
+        $sort_value = trim($CsvToArray[$i + 1]);
 
-// Функция генерирует новые характеристики
-function charsGenerator($parent_id, $CsvToArray) {
-    global $SysValue, $link_db;
+        // Несколько значений
+        if (strstr($sort_value, "&&")) {
+            $sort_value_array = explode("&&", $sort_value);
 
-    for ($i = $GLOBALS['option']['sort']; $i < count($CsvToArray); $i = $i + 2) { //Начинаем обрабатывать все ячейки после дополнительного каталога
-        $charName = trim($CsvToArray[$i]);
-        $charValues = trim($CsvToArray[$i + 1]);
-        $charValues = explode("&&", $charValues);
+            foreach ($sort_value_array as $value) {
 
-        //получаем идентификатор характеристики
-        $sql2 = 'select id,name from ' . $SysValue['base']['table_name20'] . ' WHERE name like "' . $charName . '"';
-        $result2 = mysqli_query($link_db, $sql2);
-        $row2 = mysqli_fetch_array($result2);
-        $charID = $row2['id'];
+                $CsvToArray[$i] = $sort_name;
+                $CsvToArray[$i + 1] = $value;
 
-        if (strlen($charName)) {
-            $go = false;
-            foreach ($charValues as $charValue) {
-                $charValue = trim($charValue);
-                if (strlen($charValue)) {
-                    $go = true;
-                }
-            }
-            unset($charValue);
-            if ($go) {//Если есть хотя бы одно не пустое значение
-                if (!$charID) { //Если характеристика не найдена, надо создать группу и характеристику
-                    //Создаем группу
-                    $sql2_1 = 'INSERT INTO ' . $SysValue['base']['table_name20'] . ' (name,category) VALUES("Группа ' . $charName . '","0")'; //Создаем группу
-                    $result2_1 = mysqli_query($link_db, $sql2_1);
-                    $group_id = mysqli_insert_id($link_db); //Получаем последний добавленный id - id группы
-                    //Создаем характеристику, привязанную к группе
-                    $sql2_2 = 'INSERT INTO ' . $SysValue['base']['table_name20'] . ' (name,category) VALUES("' . $charName . '","' . $group_id . '")'; //Создаем ХАР.
-                    $result2_2 = mysqli_query($link_db, $sql2_2);
-                    $charID = mysqli_insert_id($link_db); //Получаем последний добавленный id - id созданной характеристики
-
-                    if (!(updateCatalog($parent_id, $charID))) { //Если при попытке привязки к основному каталогу тот не был найден, прекратить присвоение характеристик и удалить созданные
-                        $sql2_3 = 'DELETE FROM ' . $SysValue['base']['table_name20'] . ' WHERE id=' . $group_id;
-                        $result2_3 = mysqli_query($link_db, $sql2_3);
-                        $sql2_4 = 'DELETE FROM ' . $SysValue['base']['table_name20'] . ' WHERE id=' . $charID;
-                        $result2_4 = mysqli_query($link_db, $sql2_4);
-                        $charID = false;
-                    }
-                } else {//Если характеристика найдена, просто пробуем привязать ее к каталогу товаров
-                    if (!(updateCatalog($parent_id, $charID))) {
-                        $charID = false;
-                    }
-                }
-            }
-        } else {
-            $charID = false;
-        }
-
-
-        if ($charID) { //Если удалось получить  id характеристики (или создать) - работаем дальше над значениями
-            foreach ($charValues as $charValue) {
-                $charValue = trim($charValue);
-                if (strlen($charValue)) {
-                    $sql3 = 'select id,name from ' . $SysValue['base']['table_name21'] . ' WHERE (name like "' . $charValue . '") AND (category="' . $charID . '")'; //Получаем названия хар-к
-                    $result3 = mysqli_query($link_db, $sql3);
-                    $row3 = mysqli_fetch_array($result3);
-                    $id = $row3['id'];
-                    if (!$id) { //Если НЕ удалось получить id искомого значения, значит надо добавить новое
-                        $sql4 = 'INSERT INTO ' . $SysValue['base']['table_name21'] . ' (name,category) VALUES("' . $charValue . '","' . $charID . '")'; //Получаем назв. хар-к
-                        $result4 = mysqli_query($link_db, $sql4);
-                        $id = mysqli_insert_id($link_db); //Получаем последний добавленный id и он будет id привязанный к товару
-                    }
-                    if ($id) {
-                        $resCharsArray[$charID][] = $id;
-                    }
-                }
+                $CsvToArray[] = $sort_name;
+                $CsvToArray[] = $value;
             }
         }
     }
-    return $resCharsArray;
+
+
+    // Обработка 
+    for ($i = $GLOBALS['option']['sort']; $i < count($CsvToArray); $i = $i + 2) {
+
+        $sort_name = trim($CsvToArray[$i]);
+        $sort_value = trim($CsvToArray[$i + 1]);
+
+        // Получить ИД набора характеристик в каталоге
+        $PHPShopOrm = new PHPShopOrm();
+        $PHPShopOrm->debug = $debug;
+        $result_1 = $PHPShopOrm->query('select sort,name from ' . $GLOBALS['SysValue']['base']['categories'] . ' where id="' . $category . '"  limit 1', __FUNCTION__, __LINE__);
+        $row_1 = mysqli_fetch_array($result_1);
+
+        $cat_sort = unserialize($row_1['sort']);
+
+        $cat_name = $row_1['name'];
+
+        // Отсутствует в базе
+        if (is_array($cat_sort))
+            $where_in = ' and a.id IN (' . @implode(",", $cat_sort) . ') ';
+        else
+            $where_in = null;
+
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']);
+        $PHPShopOrm->debug = $debug;
+
+        $result_2 = $PHPShopOrm->query('select a.id as parent, b.id from ' . $GLOBALS['SysValue']['base']['sort_categories'] . ' AS a 
+        JOIN ' . $GLOBALS['SysValue']['base']['sort'] . ' AS b ON a.id = b.category where a.name="' . $sort_name . '" and b.name="' . $sort_value . '" ' . $where_in . ' limit 1', __FUNCTION__, __LINE__);
+        $row_2 = mysqli_fetch_array($result_2);
+
+        // Присутствует в  базе
+        if (!empty($where_in) and isset($row_2['id'])) {
+            $return[$row_2['parent']][] = $row_2['id'];
+        }
+        // Отсутствует в базе
+        else {
+
+            // Проверка характеристики
+            if (!empty($where_in))
+                $sort_name_present = $PHPShopBase->getNumRows('sort_categories', 'as a where a.name="' . $sort_name . '" ' . $where_in . ' limit 1');
+
+            // Создаем новую характеристику
+            if (empty($sort_name_present) and !empty($category)) {
+
+                // Есть
+                if (!empty($cat_sort[0])) {
+                    $PHPShopOrm = new PHPShopOrm();
+                    $PHPShopOrm->debug = $debug;
+
+                    $result_3 = $PHPShopOrm->query('select category from ' . $GLOBALS['SysValue']['base']['sort_categories'] . ' where id="' . intval($cat_sort[0]) . '"  limit 1', __FUNCTION__, __LINE__);
+                    $row_3 = mysqli_fetch_array($result_3);
+                    $cat_set = $row_3['category'];
+                }
+                // Нет, создать новый набор
+                else {
+
+                    // Создание набора характеристик
+                    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']);
+                    $PHPShopOrm->debug = $debug;
+                    $cat_set = $PHPShopOrm->insert(array('name_new' => 'Для каталога ' . $cat_name, 'category_new' => 0), '_new', __FUNCTION__, __LINE__);
+                }
+
+
+                $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']);
+                $PHPShopOrm->debug = $debug;
+                if ($parent = $PHPShopOrm->insert(array('name_new' => $sort_name, 'category_new' => $cat_set), '_new', __FUNCTION__, __LINE__)) {
+
+                    // Создаем новое значение характеристики
+                    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort']);
+                    $PHPShopOrm->debug = $debug;
+                    $slave = $PHPShopOrm->insert(array('name_new' => $sort_value, 'category_new' => $parent), '_new', __FUNCTION__, __LINE__);
+
+                    $return[$parent][] = $slave;
+                    $cat_sort[] = $parent;
+
+                    // Обновляем набор каталога товаров
+                    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
+                    $PHPShopOrm->debug = $debug;
+                    $PHPShopOrm->update(array('sort_new' => serialize($cat_sort)), array('id' => '=' . $category), '_new', __FUNCTION__, __LINE__);
+                }
+            }
+            // Дописываем значение 
+            else {
+
+                // Получаем ИД существующей характеристики
+                $PHPShopOrm = new PHPShopOrm();
+                $PHPShopOrm->debug = $debug;
+                $result = $PHPShopOrm->query('select a.id  from ' . $GLOBALS['SysValue']['base']['sort_categories'] . ' AS a where a.name="' . $sort_name . '" ' . $where_in . ' limit 1', __FUNCTION__, __LINE__);
+                if ($row = mysqli_fetch_array($result)) {
+                    $parent = $row['id'];
+                    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort']);
+                    $PHPShopOrm->debug = $debug;
+                    $slave = $PHPShopOrm->insert(array('name_new' => $sort_value, 'category_new' => $parent), '_new', __FUNCTION__, __LINE__);
+
+                    $return[$parent][] = $slave;
+                }
+            }
+        }
+    }
+
+    return $return;
 }
 
 // Обработка каталогов
@@ -187,8 +215,8 @@ class ReadCsvCatalog extends PHPShopReadCsvNative {
             else
                 $result = mysqli_query($link_db, $sql);
 
-            if($result)
-            $this->ItemCreate++;
+            if ($result)
+                $this->ItemCreate++;
         }
     }
 
@@ -227,8 +255,8 @@ class ReadCsv1C extends PHPShopReadCsvNative {
     function __construct($CsvContentFile, $ObjCatalog, $ObjSystem) {
         $this->ImagePath = $GLOBALS['SysValue']['dir']['dir'] . "/UserFiles/Image/";
         //$this->CsvContent = $CsvContent;
-        $this->TableName = $GLOBALS['SysValue']['base']['table_name2'];
-        $this->TableNameFoto = $GLOBALS['SysValue']['base']['table_name35'];
+        $this->TableName = $GLOBALS['SysValue']['base']['products'];
+        $this->TableNameFoto = $GLOBALS['SysValue']['base']['foto'];
         $this->Sklad_status = $ObjSystem->getSerilizeParam("admoption.sklad_status");
         $this->ObjCatalog = $ObjCatalog;
         $this->ObjSystem = $ObjSystem;
@@ -267,8 +295,8 @@ class ReadCsv1C extends PHPShopReadCsvNative {
         $CsvToArray = $this->CsvToArray;
         if (is_array($CsvToArray)) {
             foreach ($CsvToArray as $v) {
-                $this->UpdateBase($v);
                 $this->UpdateBaseCatalog($v[15]);
+                $this->UpdateBase($v);
             }
         }
     }
@@ -330,8 +358,11 @@ class ReadCsv1C extends PHPShopReadCsvNative {
 
             if ($this->ObjSystem->getSerilizeParam("1c_option.update_price") == 1 and !empty($CsvToArray[7]))
                 $sql.="price='" . @$CsvToArray[7] . "', "; // цена 1
-    
-            // Склад
+
+
+
+                
+// Склад
             if ($this->ObjSystem->getSerilizeParam("1c_option.update_item") == 1) {
                 switch ($this->Sklad_status) {
 
@@ -351,6 +382,10 @@ class ReadCsv1C extends PHPShopReadCsvNative {
 
                     default: $sql.="";
                 }
+            }
+            else {
+                $sklad = 0;
+                $enabled = 1;
             }
 
             if (!empty($CsvToArray[3])) {
@@ -378,7 +413,7 @@ class ReadCsv1C extends PHPShopReadCsvNative {
             // Подчиненные товары v 2.1
             if (strstr($CsvToArray[16], "@")) {
                 $parent_array = explode("@", $CsvToArray[16]);
-                $sql.="parent='" . $parent_array[0] . "', parent2='" . $parent_array[1] . "'";
+                $sql.="parent='" . $parent_array[0] . "', parent2='" . $parent_array[1] . "',";
             }
             else
                 $sql.="parent='" . $CsvToArray[16] . "', ";
@@ -414,8 +449,8 @@ class ReadCsv1C extends PHPShopReadCsvNative {
             else
                 $result = mysqli_query($link_db, $sql);
 
-            if($result)
-            $this->ItemUpdate++;
+            if ($result)
+                $this->ItemUpdate++;
 
             // Добавляем картинки в галерею
             if (!empty($CsvToArray[3])) {
@@ -433,13 +468,13 @@ class ReadCsv1C extends PHPShopReadCsvNative {
 
             // Обновляем характеристики
             if ($this->ObjSystem->getSerilizeParam("1c_option.update_category") == 1 and $this->ObjSystem->getSerilizeParam("1c_option.update_sort") == 1 and !empty($CsvToArray[$GLOBALS['option']['sort']])) {
-                $resCharsArray = '';
 
                 // Генератор характеристик
                 $resCharsArray = charsGenerator($CsvToArray[15], $CsvToArray);
-                $resSerialized = serialize($resCharsArray);
-                $vendor = null;
+
                 if (is_array($resCharsArray)) {
+                    $vendor = null;
+                    $resSerialized = serialize($resCharsArray);
                     foreach ($resCharsArray as $k => $v) {
                         if (is_array($v)) {
                             foreach ($v as $o => $p) {
@@ -449,16 +484,19 @@ class ReadCsv1C extends PHPShopReadCsvNative {
                             $vendor.="i" . $k . "-" . $v . "i";
                         }
                     }
-                }
 
-                $sql = "UPDATE " . $this->TableName . " SET ";
-                $sql.="vendor='" . $vendor . "', ";
-                $sql.="vendor_array='" . $resSerialized . "' ";
-                $sql.=" where uid='" . $CsvToArray[0] . "'";
-                $result = mysqli_query($link_db, $sql);
+
+                    $sql = "UPDATE " . $this->TableName . " SET ";
+                    $sql.="vendor='" . $vendor . "', ";
+                    $sql.="vendor_array='" . $resSerialized . "' ";
+                    $sql.=" where uid='" . $CsvToArray[0] . "'";
+                    $result = mysqli_query($link_db, $sql);
+                }
             }
-        } else {
-            // Создаем новый товар
+        }
+        // Создаем новый товар
+        else {
+
             // Склад
             if ($this->ObjSystem->getSerilizeParam("1c_option.update_item") == 1) {
                 switch ($this->Sklad_status) {
@@ -486,17 +524,20 @@ class ReadCsv1C extends PHPShopReadCsvNative {
                         break;
                 }
             }
+            else {
+                $sklad = 0;
+                $enabled = 1;
+            }
 
             // Добавляем характеристики
-            $vendor = null;
-            $vendor_array = null;
-            if ($this->ObjSystem->getSerilizeParam("1c_option.update_category") == 1 and !empty($CsvToArray[$GLOBALS['option']['sort']])) {
-                $resCharsArray = null;
+            $vendor = $vendor_array = null;
+
+            if ($this->ObjSystem->getSerilizeParam("1c_option.update_category") == 1 and $this->ObjSystem->getSerilizeParam("1c_option.update_sort") == 1 and !empty($CsvToArray[$GLOBALS['option']['sort']])) {
 
                 // Генератор характеристик
                 $resCharsArray = charsGenerator($CsvToArray[15], $CsvToArray);
-                $resSerialized = serialize($resCharsArray);
                 if (is_array($resCharsArray)) {
+                    $resSerialized = serialize($resCharsArray);
                     foreach ($resCharsArray as $k => $v) {
                         if (is_array($v)) {
                             foreach ($v as $o => $p) {
@@ -652,14 +693,12 @@ if (isset($error)) {
 }
 
 
-
 if (is_array($list_file))
     foreach ($list_file as $val) {
 
         // Включаем таймер
         $time = explode(' ', microtime());
         $start_time = $time[1] + $time[0];
-        //$fp = file($dir . "/" . $val);
 
         $fp = $dir . "/" . $val;
         if (file_exists($fp) and $val != 'tree.csv') {
@@ -667,10 +706,11 @@ if (is_array($list_file))
             // Читаем файл
             $ReadCsv = new ReadCsv1C($fp, $ReadCsvCatalog, $PS);
             $F_done.=$val . ";";
+            
+            $GetCatalogCreate+=$ReadCsv->GetCatalogCreate();
             $GetItemCreate+=$ReadCsv->GetItemCreate();
             $GetItemUpdate+=$ReadCsv->GetItemUpdate();
-            $GetCatalogCreate+=$ReadCsv->GetCatalogCreate();
-
+            
             // Персонализация
             if (function_exists('mod_end_load')) {
                 call_user_func_array('mod_end_load', array($ReadCsv, __CLASS__, __FUNCTION__));
@@ -686,8 +726,9 @@ if (is_array($list_file))
             $seconds = ($time[1] + $time[0] - $start_time);
             $seconds = substr($seconds, 0, 6);
 
-            // Пишем лог
-            mysqli_query($PHPShopBase->link_db, "INSERT INTO " . $PHPShopBase->getParam('base.table_name12') . " VALUES ('','" . date("U") . "','$date','$val ','$seconds')");
+            // Журнал
+            $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['table_name12']);
+            $PHPShopOrm->insert(array('datas_new'=>time(),'p_name_new'=>$date,'f_name_new'=>$val,'time_new'=>$seconds));
         }
     }
 else

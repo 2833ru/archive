@@ -37,16 +37,12 @@ function order_list($obj, $tip, $uid = null) {
             // Импортируем данные
             $PHPShopOrderFunction->import($row);
 
-
-
             if ($tip == 1)
                 $link = "?order_info=" . $row['uid'] . "#Order";
             else
                 $link = "/users/register.html";
 
-//            $icon=PHPShopText::img('phpshop/lib/templates/icon/accept.png',$hspace=5,$align='absmiddle');
-
-            $td1 = PHPShopText::a($link, $icon . $row['uid'], $obj->lang('order_info') . $row['uid'], false, false, false, 'b');
+            $td1 = PHPShopText::a($link, $row['uid'], $obj->lang('order_info') . $row['uid'], false, false, false, 'b');
             $td2 = PHPShopDate::dataV($row['datas']);
             $td3 = $PHPShopOrderFunction->getNum();
             $td4 = '' . $PHPShopOrderFunction->getDiscount();
@@ -56,13 +52,10 @@ function order_list($obj, $tip, $uid = null) {
             $tr.=$obj->tr($td1, $td2, $td3, $td4, $td5, $td6);
         }
 
-
-//    $title=PHPShopText::div(PHPShopText::img('images/shop/date.gif',5,'absmiddle').PHPShopText::b(__('Архив заказов')),$align="left",$style=false,$id='allspec');
     $caption = $obj->caption($obj->lang('order_table_title_1'), $obj->lang('order_table_title_2'), $obj->lang('order_table_title_3'), $obj->lang('order_table_title_4'), $obj->lang('order_table_title_5'), $obj->lang('order_table_title_6'));
 
-//    $table=$title.PHPShopText::p(PHPShopText::table($caption.$tr,3,1,'center','99%',false,0,'allspecwhite'));
     if (!empty($tr))
-        $table = PHPShopText::p(PHPShopText::table($caption . $tr, 3, 1, 'center', '99%', false, 0, 'allspecwhite', 'list table table-striped table-bordered table-hover'));
+        $table = PHPShopText::table($caption . $tr, 3, 1, 'center', '100%', false, 0, 'allspecwhite', 'list table table-striped table-bordered table-hover');
     else
         $table = __("У Вас еще нет ни одного заказа.");
 

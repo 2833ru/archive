@@ -15,6 +15,9 @@ $PHPShopModules = new PHPShopModules($_classPath . "modules/");
 
 $seourl_enabled = false;
 $seourlpro_enabled = false;
+$seo_news_enabled = false;
+$seo_page_enabled = false;
+
 
 // Учет модуля SEOURL
 if (!empty($GLOBALS['SysValue']['base']['seourl']['seourl_system'])) {
@@ -24,6 +27,13 @@ if (!empty($GLOBALS['SysValue']['base']['seourl']['seourl_system'])) {
 // Учет модуля SEOURLPRO
 if (!empty($GLOBALS['SysValue']['base']['seourlpro']['seourlpro_system'])) {
     $seourlpro_enabled = true;
+
+    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['seourlpro']['seourlpro_system']);
+    $settings = $PHPShopOrm->select(array('seo_news_enabled, seo_page_enabled'), array('id' => "='1'"));
+    if($settings['seo_news_enabled'] == 2)
+        $seo_news_enabled = true;
+    if($settings['seo_page_enabled'] == 2)
+        $seo_page_enabled = true;
 }
 
 function sitemaptime($nowtime) {
@@ -64,7 +74,7 @@ if (is_array($data))
             $url = '/page/CID_' . $row['id'] . '_' . PHPShopString::toLatin($row['name']);
 
         //  SEOURLPRO
-        if (!empty($seourlpro_enabled)) {
+        if (!empty($seourlpro_enabled) && !empty($seo_page_enabled)) {
             if (empty($row['page_cat_seo_name']))
                 $url = '/page/' . PHPShopString::toLatin($row['name']);
             else
@@ -92,7 +102,7 @@ if (is_array($data))
             $url = '/news/ID_' . $row['id'] . '_' . PHPShopString::toLatin($row['zag']);
 
         //  SEOURLPRO
-        if (!empty($seourlpro_enabled)) {
+        if (!empty($seourlpro_enabled) && !empty($seo_news_enabled)) {
             if (empty($row['news_seo_name']))
                 $url = '/news/' . PHPShopString::toLatin($row['zag']);
             else

@@ -13,7 +13,7 @@ class PHPShopBaseXml {
     var $xml_header = '<?xml version="1.0" encoding="windows-1251"?><phpshop>';
     var $xml_footer = '</phpshop>';
     var $true_method = array('select');
-    var $true_from = array('table_name', 'table_name2', 'table_name3');
+    var $true_from = array('table_name', 'table_name2', 'table_name3','categories','orders','products');
     var $debug = false;
 
     function __construct() {

@@ -179,7 +179,7 @@ function updateStore($data) {
  * Экшен загрузки форм редактирования
  */
 function actionStart() {
-    global $PHPShopGUI, $PHPShopModules, $PHPShopOrm;
+    global $PHPShopGUI, $PHPShopModules, $PHPShopOrm, $PHPShopSystem;
 
     // Выборка
     $PHPShopOrm->debug = false;
@@ -259,9 +259,11 @@ function actionStart() {
     $sidebarleft[] = array('id' => 'user-data-2', 'title' => 'Адрес доставки', 'name' => $data['fio'], 'content' => array($data['tel'], $data['street'] . $house . $porch . $flat));
 
     // Карта
-    if (strlen($data['street']) > 5) {
-        $map = '<div id="map" class="visible-lg" data-geocode="' . $data['city'] . ', ' . $data['street'] . ' ' . $data['house'] . '" data-title="Заказ №' . $data['uid'] . '"></div><div class="data-row"><a href="http://maps.yandex.ru/?&source=wizgeo&text=' . urlencode(PHPShopString::win_utf8($data['city'] . ', ' . $data['street'] . ' ' . $data['house'])) . '" target="_blank" class="text-muted"><span class="glyphicon glyphicon-map-marker"></span>Увеличить карту</a></div>';
-        $sidebarleft[] = array('title' => 'Адрес доставки на карте', 'content' => array($map));
+    if ($PHPShopSystem->ifSerilizeParam('admoption.yandexmap_enabled')) {
+        if (strlen($data['street']) > 5) {
+            $map = '<div id="map" class="visible-lg" data-geocode="' . $data['city'] . ', ' . $data['street'] . ' ' . $data['house'] . '" data-title="Заказ №' . $data['uid'] . '"></div><div class="data-row"><a href="http://maps.yandex.ru/?&source=wizgeo&text=' . urlencode(PHPShopString::win_utf8($data['city'] . ', ' . $data['street'] . ' ' . $data['house'])) . '" target="_blank" class="text-muted"><span class="glyphicon glyphicon-map-marker"></span>Увеличить карту</a></div>';
+            $sidebarleft[] = array('title' => 'Адрес доставки на карте', 'content' => array($map));
+        }
     }
 
     // Левый сайдбар
@@ -341,6 +343,9 @@ function actionStart() {
     // Все заказы пользователя
     $Tab4 = $PHPShopGUI->loadLib('tab_userorders', $data, false, array('status' => $OrderStatusArray, 'currency' => $currency, 'color' => $OrderStatusArray));
 
+    // Файлы
+    $Tab5 = $PHPShopGUI->loadLib('tab_files', $data, false, $order);
+
     // Правый сайдбар
     $PHPShopGUI->setSidebarRight($sidebarright);
 
@@ -348,7 +353,7 @@ function actionStart() {
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array(__("Корзина"), $Tab2), array(__("Данные покупателя"), $Tab3), array(__("Заказы пользователя"), $Tab4));
+    $PHPShopGUI->setTab(array(__("Корзина"), $Tab2), array(__("Данные покупателя"), $Tab3), array(__("Заказы пользователя"), $Tab4), array(__("Документы"), $Tab5));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =
@@ -390,8 +395,8 @@ function sendUserMail($data) {
         $PHPShopOrderStatusArray = new PHPShopOrderStatusArray();
         if ($PHPShopOrderStatusArray->getParam($_POST['statusi_new'] . '.mail_action') == 1) {
             PHPShopParser::set('status', $PHPShopOrderStatusArray->getParam($_POST['statusi_new'] . '.name'));
-            PHPShopParser::set('fio', $data['user']);
-            PHPShopParser::set('sum', $data['sym']);
+            PHPShopParser::set('fio', $data['fio']);
+            PHPShopParser::set('sum', $data['sum']);
             PHPShopParser::set('company', $PHPShopSystem->getParam('name'));
             $title = 'Cтатус заказа ' . $data['uid'] . ' изменен';
             $order = unserialize($data['orders']);
@@ -399,7 +404,7 @@ function sendUserMail($data) {
             $message = $PHPShopOrderStatusArray->getParam($_POST['statusi_new'] . '.mail_message');
 
             if (strlen($message) < 7)
-                $message = '<h3>Статус вашего заказа №' . $data['uid'] . ' от ' . PHPShopDate::dataV($data['datas'],false) . ' поменялся на "' . $PHPShopOrderStatusArray->getParam($_POST['statusi_new'] . '.name') . '"</h3>';
+                $message = '<h3>Статус вашего заказа №' . $data['uid'] . ' от ' . PHPShopDate::dataV($data['datas'], false) . ' поменялся на "' . $PHPShopOrderStatusArray->getParam($_POST['statusi_new'] . '.name') . '"</h3>';
 
 
             PHPShopParser::set('message', preg_replace_callback("/@([a-zA-Z0-9_]+)@/", 'PHPShopParser::SysValueReturn', $message));
@@ -459,6 +464,18 @@ function actionUpdate() {
 
         // Сериализация данных заказа
         $_POST['orders_new'] = serialize($order);
+
+        // Файлы
+        if (isset($_POST['editID'])) {
+            if (is_array($_POST['files_new'])) {
+                foreach ($_POST['files_new'] as $k => $files)
+                    $files_new[$k] = @array_map("urldecode", $files);
+
+                $_POST['files_new'] = serialize($files_new);
+            }
+        }
+        else
+            $_POST['files_new'] = serialize($_POST['files_new']);
 
         // Итого
         $_POST['sum_new'] = $PHPShopOrder->returnSumma($PHPShopCart->getSum(false), $order['Person']['discount']) + $order['Cart']['dostavka'];

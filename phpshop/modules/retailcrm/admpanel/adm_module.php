@@ -36,7 +36,7 @@ function actionStart() {
     $tab1.= $PHPShopGUI->setField('Компания', $PHPShopGUI->setInputText(false, 'companyname', $value["companyname"], 500));
     $tab1.= $PHPShopGUI->setField('URL сайта магазина', $PHPShopGUI->setInputArg(array('type' => 'text', 'name' => 'siteurl', 'value' => $value["siteurl"], 'size' => 500, 'placeholder' => 'http://' . $_SERVER['SERVER_NAME'])));
 
-    $tab1 .= $PHPShopGUI->setField('API URL', $PHPShopGUI->setInputArg(array('type' => 'text', 'name' => 'url', 'value' => $value["url"], 'size' => 500, 'placeholder' => 'https://phpshop.retailcrm.ru/')));
+    $tab1 .= $PHPShopGUI->setField('API URL', $PHPShopGUI->setInputArg(array('type' => 'text', 'name' => 'url', 'value' => $value["url"], 'size' => 500, 'placeholder' => 'https://name.retailcrm.ru/')));
     $tab1 .= $PHPShopGUI->setField('API KEY', $PHPShopGUI->setInputText(false, 'key', $value["key"], 500));
 
     if (isset($value["url"]) && isset($value["key"]) && $helper = new ApiHelper($value["url"], $value["key"])) {

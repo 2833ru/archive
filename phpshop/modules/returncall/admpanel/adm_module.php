@@ -11,7 +11,6 @@ function actionBaseUpdate() {
     $new_version = $PHPShopModules->getUpdate($option['version']);
     $PHPShopOrm->clean();
     $action = $PHPShopOrm->update(array('version_new' => $new_version));
-    return $action;
 }
 
 // Функция обновления

@@ -102,6 +102,8 @@ class PHPShopUsers extends PHPShopCore {
      * Функция вынесена в отдельный файл users.core/user_message.php
      */
     function user_message() {
+        
+         $this->title.=' - '.__('Связь с менеджерами');
 
         // Перехват модуля
         if ($this->setHook(__CLASS__, __FUNCTION__))
@@ -126,6 +128,8 @@ class PHPShopUsers extends PHPShopCore {
      * Вывод списка уведомлений
      */
     function notice_list() {
+        
+        $this->title.=' - '.__('Уведомления');
 
         // Перехват модуля
         if ($this->setHook(__CLASS__, __FUNCTION__))
@@ -170,6 +174,8 @@ class PHPShopUsers extends PHPShopCore {
      * Экшен форма уведомления
      */
     function action_productId() {
+        
+        $this->title.=' - '.__('Уведомить');
 
         // Перехват модуля
         if ($this->setHook(__CLASS__, __FUNCTION__))
@@ -180,6 +186,7 @@ class PHPShopUsers extends PHPShopCore {
             if (PHPShopSecurity::true_num($PHPShopProduct->getParam('id'))) {
                 $this->set('productId', $_GET['productId']);
                 $this->set('pic_small', $PHPShopProduct->getParam('pic_small'));
+                $this->set('pic_big', $PHPShopProduct->getParam('pic_big'));
                 $this->set('name', $PHPShopProduct->getParam('name'));
 
                 // Перехват модуля
@@ -189,7 +196,7 @@ class PHPShopUsers extends PHPShopCore {
                     $this->set('formaContent', ParseTemplateReturn('phpshop/lib/templates/users/notice.tpl', true));
                 else
                     $this->set('formaContent', ParseTemplateReturn('phpshop/lib/templates/users/notice_no_auth.tpl', true));
-                $this->set('formaTitle', __('Уведомления'));
+                $this->set('formaTitle', __('Уведомить при появлении товара в продаже'));
 
                 // Перехват модуля
                 $this->setHook(__CLASS__, __FUNCTION__, $PHPShopProduct, 'END');
@@ -199,6 +206,8 @@ class PHPShopUsers extends PHPShopCore {
             else
                 $this->setError404();
         }
+        else
+            $this->setError404();
     }
 
     /**
@@ -221,6 +230,8 @@ class PHPShopUsers extends PHPShopCore {
      * @return mixed
      */
     function order_list() {
+        
+        $this->title.=' - '.__('Заказы');
 
         // Перехват модуля
         if ($this->setHook(__CLASS__, __FUNCTION__))
@@ -653,12 +664,13 @@ class PHPShopUsers extends PHPShopCore {
                     $this->set('prodId', $key);
                     $this->set('prodName', $objProduct->getParam("name"));
                     $this->set('prodPic', $objProduct->getParam("pic_small"));
-                    
+
                     // Проверка подтипа
-                    if($objProduct->getParam("parent") == "")
-                        $this->set('wishlistCartHide',null);
-                    else $this->set('wishlistCartHide','hide');
-                    
+                    if ($objProduct->getParam("parent") == "")
+                        $this->set('wishlistCartHide', null);
+                    else
+                        $this->set('wishlistCartHide', 'hide');
+
                     // цена
                     $this->set('prodPrice', PHPShopProductFunction::GetPriceValuta($objProduct->objRow['id'], array($objProduct->objRow['price'], $objProduct->objRow['price2'], $objProduct->objRow['price3'], $objProduct->objRow['price4'], $objProduct->objRow['price5']), $objProduct->objRow['baseinputvaluta']));
                     $dis.= ParseTemplateReturn('users/wishlist/wishlist_list_one.tpl');
@@ -1150,7 +1162,7 @@ class PHPShopUsers extends PHPShopCore {
         $Arg = func_get_args();
         $tr = '<thead><tr id="allspec">';
         foreach ($Arg as $val) {
-            $tr.=PHPShopText::td(PHPShopText::b($val), false, false, $id = 'allspecwhite');
+            $tr.=PHPShopText::td(PHPShopText::b($val), false, false);
         }
         $tr.='</tr></thead>';
         return $tr;

@@ -163,7 +163,7 @@ class PHPShopText {
     /**
      * Заголовок H4
      * @param string $string текст
-     * @param string $class css
+     * @param string $class class
      * @return string
      */
     static function h4($string, $class = false) {
@@ -213,7 +213,7 @@ class PHPShopText {
      */
     static function tr() {
         $Arg = func_get_args();
-        $tr = '<tr class=tablerow>';
+        $tr = '<tr class="tablerow">';
         foreach ($Arg as $val) {
             $tr.=PHPShopText::td($val, 'tablerow');
         }
@@ -389,10 +389,11 @@ class PHPShopText {
      * @param string $width длина
      * @param string $bgcolor фон
      * @param string $border бордюр
-     * @param string $id ид
+     * @param string $id id
+     * @param string $class class
      * @return string
      */
-    static function table($content, $cellpadding = 3, $cellspacing = 1, $align = 'center', $width = '98%', $bgcolor = false, $border = 0, $id = false, $class = false) {
+    static function table($content, $cellpadding = 3, $cellspacing = 1, $align = 'center', $width = '100%', $bgcolor = false, $border = 0, $id = false, $class = false) {
         if ($cellpadding)
             $cellpadding = ' cellpadding="' . $cellpadding . '"';
         if ($cellspacing)

@@ -25,15 +25,14 @@ function notice_list($obj) {
             }
 
             $td2 = PHPShopDate::dataV($row['datas_start']) . ' - ' . PHPShopDate::dataV($row['datas']);
-            $icon_del = PHPShopText::img('phpshop/lib/templates/icon/cancel.png', $hspace = 5, $align = 'absmiddle');
-            $td3 = $icon_del . PHPShopText::a('javascript:NoticeDel(' . $row['id'] . ')', __('Удалить'));
+            $td3 = PHPShopText::a('./notice.html?noticeId=' . $row['id'], __('Удалить'));
             $tr.=$obj->tr($td1, $td2, $td3);
         }
 
-        $title = PHPShopText::div(PHPShopText::img('images/shop/date.gif', 5, 'absmiddle') . PHPShopText::b(__('Текущие заявки')), $align = "left", $style = false, $id = 'allspec');
+        $title = PHPShopText::h4(__('Текущие заявки'));
         $caption = $obj->caption(__('Наименование'), __('Период'), __('Статус'));
 
-        $table = $title . PHPShopText::p(PHPShopText::table($caption . $tr, 3, 1, 'center', '99%', false, 0, 'allspecwhite'));
+        $table = PHPShopText::table($caption . $tr, 3, 1, 'center', '100%', false, 0, 'allspecwhite', 'list table table-striped table-bordered table-hover');
     }
 
     // Архив уведомлений
@@ -50,15 +49,14 @@ function notice_list($obj) {
             }
 
             $td2 = PHPShopDate::dataV($row['datas_start']) . ' - ' . PHPShopDate::dataV($row['datas']);
-            $icon_del = PHPShopText::img('phpshop/lib/templates/icon/accept.png', $hspace = 5, $align = 'absmiddle');
-            $td3 = $icon_del . __('Выполнено');
+            $td3 = __('Выполнено');
             $tr.=$obj->tr($td1, $td2, $td3);
         }
 
-        $title = PHPShopText::div(PHPShopText::img('images/shop/date.gif', 5, 'absmiddle') . PHPShopText::b(__('Архив')), $align = "left", $style = false, $id = 'allspec');
+        $title = PHPShopText::h4(__('Архив'));
         $caption = $obj->caption(__('Наименование'), __('Период'), __('Статус'));
 
-        $table_archive = $title . PHPShopText::p(PHPShopText::table($caption . $tr, 3, 1, 'center', '99%', false, 0, 'allspecwhite'));
+        $table_archive = $title . PHPShopText::table($caption . $tr, 3, 1, 'center', '100%', false, 0, 'allspecwhite', 'list table table-striped table-bordered table-hover');
     }
 
     if ($table . $table_archive)

@@ -81,6 +81,7 @@ function actionStart() {
             $PHPShopGUI->setField('Шрифт текста', GetFonts($option['watermark_text_font'])) .
             $PHPShopGUI->setField('Отступ ватермарка справа', $PHPShopGUI->setInputText(false, 'option[watermark_right]', intval($option['watermark_right']), 100, 'px')) .
             $PHPShopGUI->setField('Отступ ватермарка снизу', $PHPShopGUI->setInputText(false, 'option[watermark_bottom]', intval($option['watermark_bottom']), 100, 'px')) .
+            $PHPShopGUI->setField('Центрировать', $PHPShopGUI->setCheckbox('option[watermark_center_enabled]', 1, 'Расположить ватермарк по центру', $option['watermark_center_enabled'])) .
             $PHPShopGUI->setField('Прозрачность текста', $PHPShopGUI->setInputText(false, 'option[watermark_text_alpha]', intval($option['watermark_text_alpha']), 100, '%'), 1, 'Альфа канал [0-127], рекомендуется 80%')
     );
 
@@ -153,7 +154,7 @@ function actionUpdate() {
     $_POST['option']['watermark_image'] = $_POST['watermark_image'];
 
     // Корректировка пустых значений
-    $PHPShopOrm->updateZeroVars('option.image_save_source', 'option.image_adaptive_resize', 'option.image_save_name', 'option.watermark_big_enabled', 'option.watermark_source_enabled');
+    $PHPShopOrm->updateZeroVars('option.image_save_source', 'option.image_adaptive_resize', 'option.image_save_name', 'option.watermark_big_enabled', 'option.watermark_source_enabled','option.watermark_center_enabled');
 
     if (is_array($_POST['option']))
         foreach ($_POST['option'] as $key => $val)

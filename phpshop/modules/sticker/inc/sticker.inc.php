@@ -15,7 +15,8 @@ class PHPShopStickerElement {
         $url = $url['path'];
 
         $PHPShopOrm = new PHPShopOrm($this->objBase);
-        $data = $PHPShopOrm->select(array('*'), array("enabled" => "='1'"), false, array("limit" => 100));
+        $PHPShopOrm->mysql_error = false;
+        $data = $PHPShopOrm->select(array('*'), array("enabled" => "='1'",'skin'=>'="'.$_SESSION['skin'].'"'), false, array("limit" => 100));
 
         if (is_array($data)) {
             foreach ($data as $row) {

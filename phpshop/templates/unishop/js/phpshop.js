@@ -89,6 +89,9 @@ function addToCartList(product_id, num, parent, addname) {
 
     if (addname === undefined)
         addname = '';
+    
+    if (parent === undefined)
+        parent = 0;
 
     $.ajax({
         url: ROOT_PATH + '/phpshop/ajax/cartload.php',
@@ -528,7 +531,41 @@ function mainPageProductSlider() {
         }
     });
 }
+function mainNavMenuFix() {
+    var body_width = $('body').width();
+    if (body_width > 768) {
+        var nav_weight = $('.main-navbar-top').width();
+        var full_weight = 0;
+        $('.header-menu-wrapper .main-navbar-top > li').each(function(){full_weight+=$(this).innerWidth();});
+        var menu_content = ('<div id="menu-fix" class="additional-nav-menu"><a href="#" class="dropdown-toggle link" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-bars"></i></a><ul class="dropdown-menu dropdown-menu-right aditional-link" role="menu"></ul></div>');
+        if ($('.header-menu-wrapper').find('.additional-nav-menu')) {
+                var nav_weight_fix = nav_weight - 74;
+        }
+
+        if (nav_weight < full_weight) {
+            var nav_weight_fix = nav_weight - 74;
+            if ($('.header-menu-wrapper').find('#menu-fix')) {
+                $('.header-menu-wrapper > .row').append(menu_content);
+
+                if ($('.main-navbar-top').hasClass('fix')) {
+
+                }else{
+                    $('.main-navbar-top').addClass('fix');
+                }
+            }
+            while(nav_weight_fix < full_weight){
+                $('.main-navbar-top > li:last-child').appendTo('.aditional-link');
+                var full_weight = 0;
+                $('.header-menu-wrapper .main-navbar-top > li').each(function(){
+                    full_weight+=$(this).width();
+                });
+            }
+        }
+        $('.main-navbar-top').addClass('active');
+    }
+}
 $(document).ready(function() {
+    mainNavMenuFix();
     mainPageProductSlider();
     searchOpen();
     setEqualHeight('.product-name-fix');
@@ -1210,6 +1247,7 @@ $(document).ready(function() {
         setEqualHeight('.product-description');
         setEqualHeight('.product-name-fix');
         breadcrumbsFix();
+        mainNavMenuFix();
     });
 
     // Подсказки DaData.ru

@@ -181,7 +181,7 @@ class PHPShopShop extends PHPShopShopCore {
         if (!empty($pages) and is_array($pages)) {
             foreach ($pages as $val) {
                 if ($val) {
-                    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['table_name11']);
+                    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['page']);
                     $data = $PHPShopOrm->select(array('name'), array('link' => "='" . $val . "'"));
 
                     if (is_array($data)) {

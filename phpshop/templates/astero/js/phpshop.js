@@ -89,6 +89,9 @@ function addToCartList(product_id, num, parent, addname) {
 
     if (addname === undefined)
         addname = '';
+    
+    if (parent === undefined)
+        parent = 0;
 
     $.ajax({
         url: ROOT_PATH + '/phpshop/ajax/cartload.php',

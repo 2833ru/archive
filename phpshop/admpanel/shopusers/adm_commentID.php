@@ -126,13 +126,14 @@ function ratingUpdate() {
 function actionUpdate() {
     global $PHPShopOrm, $PHPShopModules;
 
-    // Пересчет рейтинга товара
-    ratingUpdate();
-
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
 
     $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['rowID']));
+    
+    // Пересчет рейтинга товара
+    ratingUpdate();
+    
     return array('success' => $action);
 }
 

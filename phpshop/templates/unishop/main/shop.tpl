@@ -128,11 +128,11 @@
                             <button type="button" class="hidden-md hidden-lg navbar-toggle feather iconz-menu modile-cat-open offcanvas-toggle" data-toggle="offcanvas" data-target="#js-bootstrap-offcanvas">
                             </button>
                         </div>
-                        <div class="col-md-6 hidden-xs hidden-sm header-menu-wrapper">
+                        <div class="col-md-6 col-lg-7 hidden-xs hidden-sm header-menu-wrapper">
                             <div class="row">
                                 <ul class="nav navbar-nav main-navbar-top">
                                     <li class="catalog-menu">
-                                        <a href="#" id="nav-catalog-dropdown-link" class="nav-catalog-dropdown-link" aria-expanded="false">Каталог
+                                        <a id="nav-catalog-dropdown-link" class="nav-catalog-dropdown-link" aria-expanded="false">Каталог
                                         </a>
                                         <ul class="main-navbar-list-catalog-wrapper">
                                             @leftCatal@
@@ -144,7 +144,7 @@
                                 </ul>
                             </div>
                         </div>
-                        <div class="col-sm-7 col-xs-12 col-md-4 hidden-xs hidden-sm bottom-mobile-fix">
+                        <div class="col-sm-7 col-xs-12 col-md-4 col-lg-3 hidden-xs hidden-sm bottom-mobile-fix">
                             <div id="cart" class="btn-group header-color">
                                 <a id="cartlink"  class="btn btn-block btn-lg dropdown-toggle" href="/order/">
                                     <span id="cart-total">

@@ -291,7 +291,7 @@ class PHPShopProductIconElements extends PHPShopProductElements {
             // Случаные товары для больших баз
             $where['id'] = $this->setramdom($limit);
         }
-
+        
         // Выборка новинок
         if ($memory_spec != 2 and $memory_spec != 3)
             $this->dataArray = $this->select(array('*'), $where, array('order' => 'RAND()'), array('limit' => $this->limitspec), __FUNCTION__);
@@ -616,14 +616,13 @@ class PHPShopProductIndexElements extends PHPShopProductElements {
 
             // Выборка
             if ($this->limit > 1)
-                $this->dataArray = $this->select(array('*'), $where, array('order' => 'datas desc'), array('limit' => $this->limit), __FUNCTION__);
+                $this->dataArray = $this->select(array('*'), $where, array('order' => 'RAND()'), array('limit' => $this->limit), __FUNCTION__);
             else
-                $this->dataArray[] = $this->select(array('*'), $where, array('order' => 'datas desc'), array('limit' => $this->limit), __FUNCTION__);
+                $this->dataArray[] = $this->select(array('*'), $where, array('order' => 'RAND()'), array('limit' => $this->limit), __FUNCTION__);
 
-            // Вторая попытка вывести спецпредложения, RAND включен
+            // Вторая попытка вывести спецпредложения, оптимизатор RAND выключен
             $count = count($this->dataArray);
             if ($count < $this->limit) {
-                unset($where['spec']);
                 unset($where['id']);
                 $this->dataArray = $this->select(array('*'), $where, array('order' => 'RAND()'), array('limit' => $this->limit), __FUNCTION__);
             }

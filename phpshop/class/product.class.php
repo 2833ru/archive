@@ -20,7 +20,7 @@ class PHPShopProduct extends PHPShopObj {
      */
     function __construct($objID, $var = 'id') {
         $this->objID = $objID;
-        $this->objBase = $GLOBALS['SysValue']['base']['table_name2'];
+        $this->objBase = $GLOBALS['SysValue']['base']['products'];
         $this->cache = true;
         $this->debug = false;
         $this->cache_format = array('content');
@@ -90,7 +90,7 @@ class PHPShopProductArray extends PHPShopArray {
      */
     function __construct($sql = false) {
         $this->objSQL = $sql;
-        $this->objBase = $GLOBALS['SysValue']['base']['table_name2'];
+        $this->objBase = $GLOBALS['SysValue']['base']['products'];
         parent::__construct('id', 'uid', 'name', 'category', 'price', 'price_n', 'sklad', 'odnotip', 'vendor', 'title_enabled', 'datas', 'page', 'user', 'descrip_enabled', 'keywords_enabled', 'pic_small', 'pic_big', 'parent', 'baseinputvaluta');
     }
 

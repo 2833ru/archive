@@ -252,7 +252,7 @@ class PHPShopSearch extends PHPShopShopCore {
      * Запись в журнал поиска
      */
     function write($name, $num, $cat, $set) {
-        $PHPShopOrm = new PHPShopOrm($this->getValue('base.table_name18'));
+        $PHPShopOrm = new PHPShopOrm($this->getValue('base.search_jurnal'));
         $PHPShopOrm->debug = $this->debug;
 
         // Перехват модуля

@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_cloudpayment_system` (
   `title_end` text NOT NULL,
   `publicId` varchar(64) NOT NULL default '',
   `api` varchar(64) NOT NULL default '',
+  `taxationSystem` int(11) NOT NULL,
   `description` varchar(64) NOT NULL default '',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
@@ -16,7 +17,7 @@ INSERT INTO `phpshop_modules_cloudpayment_system` (`id`, `status`, `title`, `tit
 (1, 0, 'Оплатить сейчас', 'Оплатите пожалуйста свой заказ', '', '','');
 
 INSERT INTO `phpshop_payment_systems` (`id`, `name`, `path`, `enabled`, `num`, `message`, `message_header`, `yur_data_flag`, `icon`) VALUES
-(10014, 'CloudPayments', 'modules', '0', 0, '', '', '', 'phpshop/modules/cloudpayments/templates/cloudpayments.png');
+(10014, 'CloudPayments', 'modules', '0', 0, '<p>Ваш заказ оплачен!</p>', 'Спасибо', '', 'phpshop/modules/cloudpayments/templates/cloudpayments.png');
 
 CREATE TABLE IF NOT EXISTS `phpshop_modules_cloudpayment_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

@@ -52,7 +52,7 @@ if (PHPShopSecurity::true_param($_GET['tip'], $_GET['orderId'], $_GET['datas']))
     $datas = PHPShopSecurity::TotalClean($_GET['datas'], 5);
 
     $PHPShopOrm = new PHPShopOrm();
-    $result = $PHPShopOrm->query("select id from " . $SysValue['base']['table_name1'] . " where id='$orderId' and datas=" . $datas);
+    $result = $PHPShopOrm->query("select id from " . $SysValue['base']['orders'] . " where id='$orderId' and datas=" . $datas);
     $n = mysqli_num_rows($result);
 
     if (empty($n))

@@ -1,5 +1,109 @@
 
 $().ready(function() {
+    
+    // Добавить файл товара - 2 шаг
+    $("body").on('click', "#selectModal .modal-footer .file-add-send", function(event) {
+        event.preventDefault();
+        var id = parseInt($('input[name=fileCount]').val());
+        $('.file-list').append('<tr class="data-row" data-row="' + id + '"><td class="file-edit"><a href="' + $('input[name=lfile]').val() + '" class="file-edit"></a></td><td><input class="hidden-edit " value="" name="files_new[' + id + '][path]" type="hidden"><input class="hidden-edit" value="" name="files_new[' + id + '][name]" type="hidden"></td><td style="text-align:right" class="file-edit-path"><a href="' + $('input[name=lfile]').val() + '" class="file-edit-path" target="_blank"></a></td></tr>');
+        $('.file-list [data-row="' + id + '"] .file-edit > a').html($('input[name=modal_file_name]').val());
+        $('.file-list [data-row="' + id + '"] input[name="files_new[' + id + '][name]"]').val($('input[name=modal_file_name]').val());
+        $('.file-list [data-row="' + id + '"] .file-edit-path > a').html('<span class="glyphicon glyphicon-floppy-disk"></span>' + $('input[name=lfile]').val());
+        $('.file-list [data-row="' + id + '"] input[name="files_new[' + id + '][path]"]').val($('input[name=lfile]').val());
+        $('.file-add').attr('data-count', id);
+        $('#selectModal .modal-footer .btn-primary').removeClass('file-add-send');
+        $('#selectModal').modal('hide');
+    });
+
+    // Добавить файл товара - 1 шаг
+    $(".file-add").on('click', function(event) {
+        event.preventDefault();
+
+        var data = [];
+        var id = $(this).closest('.data-row').attr('data-row');
+        data.push({name: 'selectID', value: id});
+        data.push({name: 'ajax', value: 1});
+        data.push({name: 'fileCount', value: $(this).attr('data-count')});
+        data.push({name: 'actionList[selectID]', value: 'actionFileEdit'});
+
+        $.ajax({
+            mimeType: 'text/html; charset=windows-1251',
+            url: '?path=product&id=file' + '&name=' + escape('Счет'),
+            type: 'post',
+            data: data,
+            dataType: "html",
+            async: false,
+            success: function(data) {
+                $('#selectModal .modal-dialog').removeClass('modal-lg');
+                $('#selectModal .modal-title').html(locale.file_add);
+                $('#selectModal .modal-footer .btn-primary').removeClass('edit-select-send');
+                $('#selectModal .modal-footer .btn-primary').addClass('file-add-send');
+                $('#selectModal .modal-footer .btn-delete').addClass('hidden');
+                $('#selectModal .modal-footer .btn-delete').addClass('file-delete');
+                $('#selectModal .modal-body').html(data);
+
+                $('.elfinder-modal-content').attr('data-option', 'return=lfile');
+                $('#selectModal').modal('show');
+            }
+        });
+    });
+
+    // Удаление файла товара
+    $("body").on('click', "#selectModal .modal-footer .file-delete", function(event) {
+        event.preventDefault();
+        var id = $('input[name=selectID]').val();
+        if (confirm(locale.confirm_delete)) {
+            $('.file-list [data-row="' + id + '"]').remove();
+            $('#selectModal').modal('hide');
+        }
+    });
+
+    // Редактировать файл товара - 2 шаг
+    $("body").on('click', "#selectModal .modal-footer .file-edit-send", function(event) {
+        event.preventDefault();
+        var id = $('input[name=selectID]').val();
+
+        var name = $('input[name=modal_file_name]').val();
+        $('.file-list [data-row="' + id + '"] .file-edit > a').html(name);
+        $('.file-list [data-row="' + id + '"] input[name="files_new[' + id + '][name]"]').val(name);
+        $('.file-list [data-row="' + id + '"] .file-edit-path > a').html('<span class="glyphicon glyphicon-floppy-disk"></span>' + $('input[name=lfile]').val());
+        $('.file-list [data-row="' + id + '"] input[name="files_new[' + id + '][path]"]').val($('input[name=lfile]').val());
+        $('#selectModal').modal('hide');
+
+    });
+
+    // Редактировать файл товара
+    $("body").on('click', ".data-row .file-edit > a", function(event) {
+        event.preventDefault();
+
+        var data = [];
+        var id = $(this).closest('.data-row').attr('data-row');
+        data.push({name: 'selectID', value: id});
+        data.push({name: 'ajax', value: 1});
+        data.push({name: 'actionList[selectID]', value: 'actionFileEdit'});
+        var name = $(this).html();
+
+        $.ajax({
+            mimeType: 'text/html; charset=windows-1251',
+            url: '?path=product&id=file&file=' + $(this).attr('href') + '&name=' + escape(name),
+            type: 'post',
+            data: data,
+            dataType: "html",
+            async: false,
+            success: function(data) {
+                $('#selectModal .modal-dialog').removeClass('modal-lg');
+                $('#selectModal .modal-title').html(locale.file_edit + ': ' + name);
+                $('#selectModal .modal-footer .btn-primary').removeClass('edit-select-send');
+                $('#selectModal .modal-footer .btn-primary').addClass('file-edit-send');
+                $('#selectModal .modal-footer .btn-delete').removeClass('hidden');
+                $('#selectModal .modal-footer .btn-delete').addClass('file-delete');
+                $('#selectModal .modal-body').html(data);
+
+                $('.elfinder-modal-content').attr('data-option', 'return=lfile');
+                $('#selectModal').modal('show');
+            }
+        });
+    });
 
     // Настройка полей - 2 шаг
     $("body").on('click', "#selectModal .modal-footer .option-send", function(event) {

@@ -6,7 +6,7 @@
 function index_seourl_hook($obj, $row, $rout) {
 
     // Настройки модуля из кеша
-    if ($_SESSION['Memory']['PHPShopSeourlOption']['seo_page_enabled'] != 2)
+    if ($_SESSION['Memory']['PHPShopSeourlOption']['seo_news_enabled'] != 2)
         return false;
 
     if ($rout == "START") {
@@ -31,7 +31,7 @@ function index_seourl_hook($obj, $row, $rout) {
                 $obj->PHPShopNav->objNav['id'] = $news["id"];
                 $obj->ID();
                 return true;
-            } elseif (!is_array($news) && $obj->PHPShopNav->objNav['truepath'] != "/news/") {
+            } elseif (!is_array($news) && ($obj->PHPShopNav->objNav['truepath'] != "/news/" && substr($obj->PHPShopNav->objNav['truepath'], 0, 10) != "/news/news")) {
                 // 404 если сео ссылки нет
                 $obj->ListInfoItems = parseTemplateReturn($obj->getValue('templates.error_page_forma'));
                 $obj->set('newsZag', __('Ошибка 404'));
@@ -78,7 +78,7 @@ function ID_seourl_hook($obj, $row, $rout) {
         $seourl_option = $PHPShopSeourlOption->getArray();
 
         // Настройки модуля из кеша
-        if ($_SESSION['Memory']['PHPShopSeourlOption']['seo_page_enabled'] != 2)
+        if ($_SESSION['Memory']['PHPShopSeourlOption']['seo_news_enabled'] != 2)
             return false;
 
         $url = $obj->PHPShopNav->getName(true);

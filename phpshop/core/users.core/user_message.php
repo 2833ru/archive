@@ -130,10 +130,10 @@ function Nav_messages($UID = 0) {
         } else {
             $p_to = $p + 1;
         }
-        $nava = "<table cellpadding=\"0\" cellpadding=\"0\" border=\"0\"><tr ><td class=style5>
+        $nava = "<table cellpadding=\"0\" cellpadding=\"0\" border=\"0\"><tr><td>
 	" . $SysValue['lang']['page_now'] . ":
-	<a href=\"./message_" . ($p - 1) . ".html\"><img src=\"images/shop/3.gif\" width=\"16\" height=\"15\" border=\"0\" align=\"absmiddle\"></a>
-                $navigat&nbsp<a href=\"./message_" . $p_to . ".html\"><img src=\"images/shop/4.gif\" width=\"16\" height=\"15\" border=\"0\" align=\"absmiddle\" title=\"Вперед\"></a>
+	<a href=\"./message_" . ($p - 1) . ".html\">" . ($p - 1) . "</a>
+                $navigat&nbsp<a href=\"./message_" . $p_to . ".html\">$p_to</a>
 		</td></tr></table>";
     }
     return $nava;
@@ -201,7 +201,7 @@ IP:" . $_SERVER['REMOTE_ADDR'];
             $result = mysqli_query($link_db,$sql);
             header("Location: ./message.html");
         }
-        $statusMail = '<div id=allspecwhite><img src="images/shop/comment.gif" alt="" width="16" height="16" border="0" hspace="5" align="absmiddle"><font color="#008000"><b>Сообщение менеджеру отправлено</b></font></div>';
+
     }
     // Вывод списка сообещний
     $display = MessageList($id);
@@ -225,37 +225,35 @@ IP:" . $_SERVER['REMOTE_ADDR'];
     }
 
     if ($i) {
-        $display = '<H3>История сообщений</H3>
+        $display = '<H4>История сообщений</H4>
 <table id="allspecwhite" cellpadding="1" cellspacing="1" width="100%" class="table table-striped">
 <tr>
-	<td width="20%"  id=allspec><span name=txtLang id=txtLang>Дата</span></td>
-	<td width="80%"  id=allspec><span name=txtLang id=txtLang>Сообщение</span></td>
+	<td width="20%" id=allspec><span name=txtLang id=txtLang>Дата</span></td>
+	<td width="80%" id=allspec><span name=txtLang id=txtLang>Сообщение</span></td>
 </tr>
 	' . $display . '</table>' . Nav_messages($id);
     } else {
         $display = '';
     }
 
-    $disp = '<div id=allspec>
-</div>
-<table style="width:80%;">
+    $disp = '
+<table class="table">
 <tr>
-  <td style="width:80%;height:100px;">
+  <td>
   <form method="post" name="forma_message" id="forma_message">
   <B>Заголовок сообщения</B><BR>
   <input type="TEXT" style="width:80%;" value="' . $Subject . '" ' . $Subjectreadonly . ' name="Subject"><BR>
   ' . $oldmessage . '
-  <textarea style="width:80%;height:100px;" name="message" id="message"></textarea>
+  <textarea style="height:100px;" name="message" id="message"></textarea>
   <div>
   <br>
-  <input type="button" value="Задать вопрос менеджеру" id="CheckMessage" onclick="if(typeof checkMessageText == \'function\') checkMessageText();">
+  <input type="button" class="btn btn-primary" value="Задать вопрос менеджеру" id="CheckMessage" onclick="if(typeof checkMessageText == \'function\') checkMessageText();">
   </div>
   </form>
   </td>
 </tr>
 </table>
-   ' . $display . '
-  ' . $statusMail . '<br><BR><p><br></p>';
+   ' . $display;
 
     $obj->set('formaTitle', __('Связь с менеджерами'));
     $obj->set('formaContent', $disp);

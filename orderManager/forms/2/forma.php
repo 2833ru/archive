@@ -141,6 +141,7 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
         <button onclick="window.print()">
             Распечатать
         </button> 
+            <hr>
     </div>
 
     <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0><TBODY>

@@ -122,12 +122,12 @@ function query_filter($obj) {
 
     // Все страницы
     if ($p == "all") {
-        $sql = "select * from " . $SysValue['base']['table_name2'] . " where $sort $prewords $multibase and enabled='1' and parent_enabled='0' order by num, name";
+        $sql = "select * from " . $SysValue['base']['products'] . " where $sort $prewords $multibase and enabled='1' and parent_enabled='0' order by num, name";
     }
     else
         while ($q < $p) {
 
-            $sql = "select * from " . $SysValue['base']['table_name2'] . " where  $string ($sort) $prewords $sortV $multibase and enabled='1' and parent_enabled='0' order by num, name LIMIT $num_ot, $num_row";
+            $sql = "select * from " . $SysValue['base']['products'] . " where  $string ($sort) $prewords $sortV $multibase and enabled='1' and parent_enabled='0' order by num, name LIMIT $num_ot, $num_row";
             $q++;
             $num_ot = $num_ot + $num_row;
         }

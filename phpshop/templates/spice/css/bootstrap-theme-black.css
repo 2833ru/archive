@@ -52,7 +52,7 @@ color:#ffffff;
 background:transparent !important;
 }
 .header-color, .header-color a,.header-color .btn,.header-color h4 {
-    color: #000;
+    color: #fff;
 }
 .header-color input::-moz-placeholder {
     color: #878a8c;

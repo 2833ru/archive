@@ -36,7 +36,7 @@ function actionStart() {
     if (is_array($data))
         foreach ($data as $row) {
 
-            $PHPShopInterface->setRow($row['id'], array('name' => $row['name'], 'align' => 'left', 'link' => $GLOBALS['SysValue']['dir']['dir'] . '/search/?words=' . $row['name'] . '&cat=' . $row['cat'] . '&set=' . $row['set'], 'target' => '_blank'), PHPShopDate::get($row['datas'], true), array('action' => array('delete', 'add-search-base', 'id' => $row['id']), 'align' => 'center'), array('name' => $row['num'], 'align' => 'center'));
+            $PHPShopInterface->setRow($row['id'], array('name' => $row['name'], 'align' => 'left', 'link' => $GLOBALS['SysValue']['dir']['dir'] . '/search/?words=' . $row['name'] . '&cat=' . $row['cat'] . '&set=' . $row['set'], 'target' => '_blank'), PHPShopDate::get($row['datas'], true), array('action' => array('delete','|', 'add-search-base', 'id' => $row['id']), 'align' => 'center'), array('name' => $row['num'], 'align' => 'center'));
         }
     $PHPShopInterface->Compile();
 }

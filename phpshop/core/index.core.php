@@ -10,7 +10,7 @@ class PHPShopIndex extends PHPShopCore {
 
 
     function __construct() {
-        $this->objBase = $GLOBALS['SysValue']['base']['table_name11'];
+        $this->objBase = $GLOBALS['SysValue']['base']['page'];
         $this->debug = false;
         $this->template = 'templates.index';
         parent::__construct();

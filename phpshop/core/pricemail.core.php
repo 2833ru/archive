@@ -12,8 +12,6 @@ class PHPShopPricemail extends PHPShopCore {
      * Конструктор
      */
     function __construct() {
-        // Имя Бд
-        $this->objBase = $GLOBALS['SysValue']['base']['table_name17'];
 
         // Отладка
         $this->debug = false;

@@ -60,8 +60,9 @@ class Editor {
         content_style: 'div,p {padding: 5px;}',
         insert_toolbar: 'quickimage quicktable',
         selection_toolbar: 'bold italic | quicklink h2 h3 blockquote',
+        fontsize_formats: '10px 11px 12px 14px 16px 18px 20px 24px 28px 30px',
         toolbar: [
-        'undo redo | styleselect | bold italic underline strikethrough forecolor backcolor removeformat formats | link image media | alignleft aligncenter alignright textcolor table | fullscreen ace'
+        'undo redo | styleselect | bold italic underline strikethrough forecolor backcolor removeformat formats | link image media | alignleft aligncenter alignright textcolor table | fullscreen ace | fontsizeselect'
          ],
         plugins: [
         'advlist autolink lists link image charmap print preview anchor table imagetools textpattern media searchreplace visualblocks code fullscreen insertdatetime media table contextmenu paste textcolor textpattern lists colorpicker ace'

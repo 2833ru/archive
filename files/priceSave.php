@@ -25,7 +25,7 @@ class PHPShopPriceSave {
 
     var $csv;
 
-    function PHPShopPriceSave() {
+    function __construct() {
         $this->debug = false;
         $this->objBase = $GLOBALS['SysValue']['base']['products'];
     }

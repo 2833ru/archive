@@ -52,7 +52,7 @@ if (PHPShopSecurity::true_param($_GET['tip'], $_GET['orderId'], $_GET['datas']))
     $datas = PHPShopSecurity::TotalClean($_GET['datas'], 5);
 
     $PHPShopOrm = new PHPShopOrm();
-    $result = $PHPShopOrm->query("select id from " . $SysValue['base']['table_name1'] . " where id='$orderId' and datas=" . $datas);
+    $result = $PHPShopOrm->query("select id from " . $GLOBALS['SysValue']['base']['orders'] . " where id='" . intval($orderId) . "' and datas=" . intval($datas));
     $n = mysqli_num_rows($result);
 
     if (empty($n))
@@ -81,7 +81,13 @@ if (PHPShopSecurity::true_param($_GET['tip'], $_GET['orderId'], $_GET['datas']))
     PHPShopParser::set('person_org', $PHPShopOrder->getSerilizeParam('orders.Person.org_name') . $PHPShopOrder->getParam('org_name') . ' ИНН ' .
             $PHPShopOrder->getSerilizeParam('orders.Person.org_inn') . $PHPShopOrder->getParam('org_inn') . ' КПП ' . $PHPShopOrder->getSerilizeParam('orders.Person.org_kpp') . $PHPShopOrder->getParam('org_kpp') . ' Юр. адрес ' . $PHPShopOrder->getParam('org_yur_adres'));
 
-    PHPShopParser::set('person_user', $PHPShopOrder->getSerilizeParam('orders.Person.name_person') . $PHPShopOrder->getParam('fio'));
+    $fio = $PHPShopOrder->getParam('fio');
+    if(!empty($fio))
+        $user = $PHPShopOrder->getParam('fio');
+    else
+        $user = $PHPShopOrder->getSerilizeParam('orders.Person.name_person');
+
+    PHPShopParser::set('person_user', $user);
     PHPShopParser::set('org_bank_acount', $PHPShopSystem->getSerilizeParam('bank.org_bank_schet'));
     PHPShopParser::set('org_bic', $PHPShopSystem->getSerilizeParam('bank.org_bic'));
     PHPShopParser::set('org_bank', $PHPShopSystem->getSerilizeParam('bank.org_bank'));
@@ -100,6 +106,42 @@ if (PHPShopSecurity::true_param($_GET['tip'], $_GET['orderId'], $_GET['datas']))
     PHPShopParser::set('descrip', $PHPShopSystem->getValue('descrip'));
     PHPShopParser::set('adminMail', $PHPShopSystem->getValue('adminmail2'));
     PHPShopParser::set('cart', $PHPShopOrder->cart('printforma') . $PHPShopOrder->delivery('printdelivery'));
+
+    // Печати и подписи
+    $LoadItems = $PHPShopSystem->getArray();
+    $LoadBanc = unserialize($LoadItems['bank']);
+
+    if (!empty($LoadBanc['org_sig']))
+        $org_sig = '<img src="' . $LoadBanc['org_sig'] . '">';
+    else
+        $org_sig = '<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>';
+
+    if (!empty($LoadBanc['org_sig_buh']))
+        $org_sig_buh = '<img src="' . $LoadBanc['org_sig_buh'] . '">';
+    else
+        $org_sig_buh = '<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>';
+
+    if (!empty($LoadBanc['org_stamp']))
+        $org_stamp = '<img src="' . $LoadBanc['org_stamp'] . '">';
+    else
+        $org_stamp = '<div style="padding:50px;border-bottom: 1px solid #000000;border-top: 1px solid #000000;border-left: 1px solid #000000;border-right: 1px solid #000000;" align="center">М.П.</div>';
+
+  
+    // Монитор
+    if ($_GET['tip'] == 2 and empty($_SESSION['logPHPSHOP'])) {
+        PHPShopParser::set('comment_start', '<!--');
+        PHPShopParser::set('comment_end', '-->');
+        $org_stamp = '<div style="padding:50px;border-bottom: 1px solid #000000;border-top: 1px solid #000000;border-left: 1px solid #000000;border-right: 1px solid #000000;" align="center">М.П.</div>';
+        $org_sig_buh =  $org_sig =  '<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>';
+    }
+    
+    PHPShopParser::set('org_sig', $org_sig);
+    PHPShopParser::set('org_sig_buh', $org_sig_buh);
+    PHPShopParser::set('org_stamp', $org_stamp);
+    
+    if($_GET['tip'] == 2)
+    PHPShopParser::set('title', '№'.$PHPShopOrder->getValue('uid'));
+
     PHPShopParser::file('../../lib/templates/print/account.tpl');
 }
 else

@@ -78,12 +78,12 @@ function query_filter($obj) {
 
     // Все страницы
     if ($p == "all") {
-        $sql = "select * from " . $SysValue['base']['table_name2'] . " where enabled='1' and parent_enabled='0' $sort  $string";
+        $sql = "select * from " . $SysValue['base']['products'] . " where enabled='1' and parent_enabled='0' $sort  $string";
     }
     else
         while ($q < $p) {
 
-            $sql = "select * from " . $SysValue['base']['table_name2'] . " where enabled='1' and parent_enabled='0' $sort  $string LIMIT $num_ot, $num_row";
+            $sql = "select * from " . $SysValue['base']['products'] . " where enabled='1' and parent_enabled='0' $sort  $string LIMIT $num_ot, $num_row";
             $q++;
             $num_ot = $num_ot + $num_row;
         }

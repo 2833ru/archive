@@ -107,102 +107,121 @@ if ($PERSON['discount'] > 0) {
 $chek_num = substr(abs(crc32(uniqid(rand(), true))), 0, 5);
 $LoadBanc = unserialize($LoadItems['System']['bank']);
 ?>
+<!doctype html>
 <head>
     <title>Товарный чек № <?php echo @$chek_num ?></title>
-    <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1251">
-    <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
+    <meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
     <link href="style.css" type=text/css rel=stylesheet>
+    <script src="../../../lib/templates/print/js/html2pdf.bundle.min.js"></script>
 </head>
 <body>
     <div align="right" class="nonprint">
+        <button onclick="html2pdf(document.getElementById('content'), {margin: 1, filename: 'Товарный чек №<?php echo $ouid ?>.pdf', html2canvas: {dpi: 192, letterRendering: true}});">Сохранить</button> 
         <button onclick="window.print();">Распечатать</button> 
-        <br><br>
+        <hr><br><br>
     </div>
+    <div id="content">
+        <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0><TBODY>
+                <TR>
+                    <TH scope=row align=middle width="50%" rowSpan=3><img src="<?php echo $PHPShopSystem->getLogo(); ?>" alt="" border="0" style="max-width: 200px;height: auto;"></TH>
+                    <TD align=right>
+                        <BLOCKQUOTE>
+                            <P>Товарный чек <SPAN class=style4><?php echo @$chek_num ?> от <?php echo PHPShopDate::dataV(date("U"), "update") ?></SPAN> </P></BLOCKQUOTE></TD></TR>
+                <TR>
+                    <TD align=right>
+                        <BLOCKQUOTE>
+                            <P><SPAN class=style4><?php echo $LoadBanc['org_adres'] ?>, телефон <?php echo $LoadItems['System']['tel'] ?> </SPAN></P></BLOCKQUOTE></TD></TR>
+                <TR>
+                    <TD align=right>
+                        <BLOCKQUOTE>
+                            <P class=style4>Поставщик: <?php echo $LoadItems['System']['company'] ?></P></BLOCKQUOTE></TD></TR></TBODY></TABLE>
 
-    <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0><TBODY>
+
+
+        <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0><TBODY>
+                <TR>
+                    <TH scope=row align=middle width="50%">
+            <P class=style4>Покупатель: <?php if(!empty($row['fio'])) echo $row['fio']; else echo @$order['Person']['name_person']; ?></P></TH>
+            <TH scope=row align=middle><b>Заказ №<?php echo $ouid ?> </b></TH></TR></TBODY></TABLE>
+
+
+
+        <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0><TBODY>
+                <TR>
+                    <TH class=style2 scope=row align=left>
+            <BLOCKQUOTE>
+                <P class=style4>Проверяйте комплектацию и внешний вид товара во время его получения!</P></BLOCKQUOTE></TH></TR>
             <TR>
-                <TH scope=row align=middle width="50%" rowSpan=3><img src="<?php echo $PHPShopSystem->getLogo(); ?>" alt="" border="0" style="max-width: 200px;height: auto;"></TH>
-                <TD align=right>
-                    <BLOCKQUOTE>
-                        <P>Товарный чек <SPAN class=style4><?php echo @$chek_num ?> от <?php echo PHPShopDate::dataV(date("U"), "update") ?></SPAN> </P></BLOCKQUOTE></TD></TR>
-            <TR>
-                <TD align=right>
-                    <BLOCKQUOTE>
-                        <P><SPAN class=style4><?php echo $LoadBanc['org_adres'] ?>, телефон <?php echo $LoadItems['System']['tel'] ?> </SPAN></P></BLOCKQUOTE></TD></TR>
-            <TR>
-                <TD align=right>
-                    <BLOCKQUOTE>
-                        <P class=style4>Поставщик: <?php echo $LoadItems['System']['company'] ?></P></BLOCKQUOTE></TD></TR></TBODY></TABLE>
+                <TH class=style4 scope=row align=left>
+            <BLOCKQUOTE>
+                <P>Покупатель самостоятельно несет ответственность за внешний вид и комплектацию товара после приема его от продавца.</P></BLOCKQUOTE></TH></TR></TBODY></TABLE>
 
-
-
-    <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0><TBODY>
-            <TR>
-                <TH scope=row align=middle width="50%">
-        <P class=style4>Покупатель: <?php echo @$order['Person']['name_person'] . $row['fio'] ?></P></TH>
-    <TH scope=row align=middle><b>Заказ №<?php echo $ouid ?> </b></TH></TR></TBODY></TABLE>
-
-
-
-<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0><TBODY>
-        <TR>
-            <TH class=style2 scope=row align=left>
-    <BLOCKQUOTE>
-        <P class=style4>Проверяйте комплектацию и внешний вид товара во время его получения!</P></BLOCKQUOTE></TH></TR>
-<TR>
-    <TH class=style4 scope=row align=left>
-<BLOCKQUOTE>
-    <P>Покупатель самостоятельно несет ответственность за внешний вид и комплектацию товара после приема его от продавца.</P></BLOCKQUOTE></TH></TR></TBODY></TABLE>
-
-<p><br></p>
-<table width=99% cellpadding=2 cellspacing=0 align=center>
-    <tr class=tablerow>
-        <td class=tablerow>№</td>
-        <td width=50% class=tablerow>Наименование</td>
-        <td class=tablerow>Цена</td>
-        <td class=tablerow>Количество</td>
-        <td class=tableright>Стоимость (<?php echo $PHPShopOrder->default_valuta_code; ?>)</td>
-    </tr>
-    <?php
-    echo @$dis;
-    $my_total = $row['sum'];
-    $my_nds = number_format($my_total * $LoadItems['System']['nds'] / (100 + $LoadItems['System']['nds']), "2", ".", "");
-    ?>
-    <tr>
-        <td colspan=5 align=right style="border-top: 1px solid #000000;border-left: 1px solid #000000;border-right: 1px solid #000000;">Скидка: <?php echo $discount ?></td>
-    </tr>
-    <tr>
-        <td colspan=5 align=right style="border-top: 1px solid #000000;border-left: 1px solid #000000;border-right: 1px solid #000000;">Итого:
+        <p><br></p>
+        <table width=99% cellpadding=2 cellspacing=0 align=center>
+            <tr class=tablerow>
+                <td class=tablerow>№</td>
+                <td width=50% class=tablerow>Наименование</td>
+                <td class=tablerow>Цена</td>
+                <td class=tablerow>Количество</td>
+                <td class=tableright>Стоимость (<?php echo $PHPShopOrder->default_valuta_code; ?>)</td>
+            </tr>
             <?php
-            echo $my_total;
-            if ($LoadItems['System']['nds_enabled']) {
-                echo "в т.ч. НДС: " . $my_nds;
-            }
+            echo @$dis;
+            $my_total = $row['sum'];
+            $my_nds = number_format($my_total * $LoadItems['System']['nds'] / (100 + $LoadItems['System']['nds']), "2", ".", "");
             ?>
+            <tr>
+                <td colspan=5 align=right style="border-top: 1px solid #000000;border-left: 1px solid #000000;border-right: 1px solid #000000;">Скидка: <?php echo $discount ?></td>
+            </tr>
+            <tr>
+                <td colspan=5 align=right style="border-top: 1px solid #000000;border-left: 1px solid #000000;border-right: 1px solid #000000;">Итого:
+                    <?php
+                    echo $my_total;
+                    if ($LoadItems['System']['nds_enabled']) {
+                        echo "в т.ч. НДС: " . $my_nds;
+                    }
+                    ?>
 
-        </td>
-    </tr>
+                </td>
+            </tr>
 
-    <tr><td colspan=6 style="border: 0px; border-top: 1px solid #000000;">&nbsp;</td></tr>
-</table>
-<p><b>Всего наименований <?php echo ($num + 1) ?>, на сумму <?php echo ($PHPShopOrder->returnSumma($sum, $order['Person']['discount']) + $deliveryPrice) . " " . $PHPShopOrder->default_valuta_code; ?>
-        <br />
-        <?php
-        $iw = new inwords;
-        $s = $iw->get($PHPShopOrder->returnSumma($sum, $order['Person']['discount']) + $deliveryPrice);
-        $v = $PHPShopOrder->default_valuta_code;
-        if (preg_match("/руб/i", $v))
-            echo $s;
-        ?>
-    </b></p><br>
-
-
-<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0><TBODY>
-        <TR>
-            <TH scope=row align=middle width="50%">
-    <P>&nbsp;</P>
-    <P class=style4>Продавец: ________________ М.П. </P>
-    <P>&nbsp;</P></TH>
-<TD vAlign=center align=left><SPAN class=style5>Гарантийное обслуживание товаров осуществляется в авторизованном сервисном центре изготовителя. При отсутствии соответствующего сервисного центра гарантийное обслуживание осуществляется у продавца. </SPAN></TD></TR></TBODY></TABLE>
+            <tr><td colspan=6 style="border: 0px; border-top: 1px solid #000000;">&nbsp;</td></tr>
+        </table>
+        <p><b>Всего наименований <?php echo ($num + 1) ?>, на сумму <?php echo ($PHPShopOrder->returnSumma($sum, $order['Person']['discount']) + $deliveryPrice) . " " . $PHPShopOrder->default_valuta_code; ?>
+                <br />
+                <?php
+                $iw = new inwords;
+                $s = $iw->get($PHPShopOrder->returnSumma($sum, $order['Person']['discount']) + $deliveryPrice);
+                $v = $PHPShopOrder->default_valuta_code;
+                if (preg_match("/руб/i", $v))
+                    echo $s;
+                ?>
+            </b></p><br>
+        <table>
+            <tr>
+                <td><b>Продавец:</b></td>
+                <td><?php
+                    if (!empty($LoadBanc['org_sig']))
+                        echo '<img src="' . $LoadBanc['org_sig'] . '">';
+                    else
+                        echo '<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>';
+                    ?></td>
+                <td width="150"></td>
+                <td >
+                    Гарантийное обслуживание товаров осуществляется в авторизованном сервисном центре изготовителя. При отсутствии соответствующего сервисного центра гарантийное обслуживание осуществляется у продавца. 
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <?php
+                    if (!empty($LoadBanc['org_stamp']))
+                        echo '<img src="' . $LoadBanc['org_stamp'] . '">';
+                    else
+                        echo '<div style="padding:50px;border-bottom: 1px solid #000000;border-top: 1px solid #000000;border-left: 1px solid #000000;border-right: 1px solid #000000;" align="center">М.П.</div>';
+                    ?>
+                </td>
+            </tr>
+        </table>
+    </div>
 </body>
 </html>

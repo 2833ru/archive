@@ -1,0 +1,1 @@
+Вы должны <a href="#" data-toggle="modal" data-target="#userModal">авторизоваться</a> или <a href='@ShopDir@/users/register.html' title='зарегистрироваться'>зарегистрироваться</a> чтобы сохранить отложенный товар <a href='@ShopDir@/shop/UID_@prodId@.html' title='Подробное описание'>@prodName@</a>

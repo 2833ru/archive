@@ -5,36 +5,40 @@
  * @param array $value данные о заказе
  */
 function success_mod_sberbankrf_hook($obj, $value) {
+    if (isset($_REQUEST['uid'])) {
 
-    if (isset($_REQUEST["sberbankrf"]) && $_REQUEST["sberbankrf"] == "true") {
-
-        $obj->order_metod = 'modules" and id="10010';
-
-        $obj->message();
-
-        // Проверям статус оплаты и пишем лог модуля
-        sm_check_status($obj, $_REQUEST["orderId"]);
-
-        return true;
-    }
-
-    if (isset($_REQUEST["sberbankrf"]) && $_REQUEST["sberbankrf"] == "false") {
-
-        $obj->error();
+        // Номер заказа
+        if(strstr($_REQUEST['uid'], "#")){
+            $orderArray = explode ("#", $_REQUEST['uid']);
+            $orderNum = $orderArray[0];
+        }
+        else  $orderNum = $_REQUEST['uid'];
 
         // Проверям статус оплаты и пишем лог модуля
-        sm_check_status($obj, $_REQUEST["orderId"]);
+        $status = sberbankrf_check($obj, $orderNum, $_REQUEST['orderId']);
 
-        return true;
+        if($status == 2){
+            $obj->order_metod = 'modules" and id="10010';
+
+            $mrh_ouid = explode("-", $orderNum);
+            $obj->inv_id = $mrh_ouid[0] . $mrh_ouid[1];
+
+            $obj->ofd();
+
+            $obj->message();
+
+            return true;
+        } else
+            $obj->error();
     }
 }
 
 /**
- * Функция проверки статуса платежа в системе Сбербанка России
+ * Функция проверки статуса платежа в системе Сбербанк России
  * @param object $obj объект функции
  * @param string $id номер заказа
  */
-function sm_check_status($obj, $id){
+function sberbankrf_check($obj, $id, $merchant_order_id){
 
     $PHPShopOrm = new PHPShopOrm();
 
@@ -45,7 +49,7 @@ function sm_check_status($obj, $id){
 
     // Проверка статуса
     $params = array(
-        "orderId" => $id,
+        "orderId" => $merchant_order_id,
         "userName" => $conf["login"],
         "password" => $conf["password"],
     );
@@ -63,19 +67,28 @@ function sm_check_status($obj, $id){
     $r = json_decode(curl_exec($ch), true); // run the whole process
     curl_close($ch);
 
-    $time = time();
+    // Ошибка запроса
+    if($r['ErrorCode'] != 0) {
+        $r['errorMessage'] = PHPShopString::utf8_win1251($r['errorMessage']);
+        $PHPShopSberbankRFArray->log($r, $id, 'Ошибка проведения платежа', 'Запрос состояния заказа');
 
-    if($r["OrderStatus"] == 2) {
-        $status = "Платеж успешно проведен";
-        $orderNum = $r["OrderNumber"];
-        $order_status = $obj->set_order_status_101();
-        $PHPShopOrm->query("UPDATE `phpshop_orders` SET `statusi`='$order_status' WHERE `uid`='$orderNum'");
+        return $r['OrderStatus'];
+
+        // Ошибка проведения платежа
+    }elseif($r['OrderStatus'] != 2){
+
+        $code_description = PHPShopString::utf8_win1251($r['actionCodeDescription']);
+        $PHPShopSberbankRFArray->log($r, $id, $code_description, 'Запрос состояния заказа');
+
+        return $r['OrderStatus'];
     }else{
-        $status = "Ошибка проведения платежа";
-    }
+        $order_status = $obj->set_order_status_101();
+        $PHPShopOrm->query("UPDATE `phpshop_orders` SET `statusi`='$order_status' WHERE `uid`='$id'");
 
-    // Лог
-    $PHPShopOrm->query("UPDATE `phpshop_modules_sberbankrf_log` SET `date`='$time', `status`='$status' WHERE `order_id_sber`='$id'");
+        $PHPShopSberbankRFArray->log($r, $id, 'Платеж проведен', 'Запрос состояния заказа');
+
+        return $r['OrderStatus'];
+    }
 
 }
 $addHandler = array('index' => 'success_mod_sberbankrf_hook');

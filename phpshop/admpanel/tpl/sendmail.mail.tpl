@@ -108,6 +108,7 @@
             #footer .logo h1 {font-size:22px; line-height:17px; margin-bottom:0;}
             #footer .contact {padding-right:14px; padding-top:12px;}
             #footer .social a {line-height:0;}
+            #unsubscrib {font-size:10px;}
         </style>
     </head>
     <body>
@@ -130,10 +131,15 @@
             <tbody>
                 <tr bgcolor="#eaeaea">
                     <td>
-                        @content@
+                        @content@ 
+                    </td>
+                </tr>
+                <tr>
+                    <td id="unsubscrib">
+                        @unsubscribe@
                     </td>
                 </tr>
             </tbody>  
-        </table> 
+        </table>
     </body>
 </html>

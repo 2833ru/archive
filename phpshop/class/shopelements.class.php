@@ -152,7 +152,8 @@ class PHPShopProductElements extends PHPShopElements {
                 }
             }
             
-            $queryMultibase = $multi_select = ' and ( category IN (' . @implode(',', $multi_cat) . ')'.$multi_dop_cat.')';
+            if(count($multi_cat)>0)
+            $queryMultibase = $multi_select = ' and ( category IN (' . @implode(',', $multi_cat) . ') '.$multi_dop_cat.')';
 
             return $multi_select;
         }
@@ -183,6 +184,7 @@ class PHPShopProductElements extends PHPShopElements {
         }
         else
             $this->max_item = $_SESSION['max_item'];
+  
 
         $limit_start = rand(1, $this->max_item / rand(1, 7));
         return ' BETWEEN ' . $limit_start . ' and ' . round($limit_start + $limit + $this->max_item / 3);

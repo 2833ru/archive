@@ -5,7 +5,7 @@ $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.promotions.promotio
 
 function TestCat($n) {// есть ли еще подкаталоги
     global $SysValue,$link_db;
-    $sql = "select id from " . $SysValue['base']['table_name'] . " where parent_to='$n'";
+    $sql = "select id from " . $SysValue['base']['categories'] . " where parent_to='$n'";
     $result = mysqli_query($link_db,$sql);
     $num = mysqli_num_rows($result);
     return $num;
@@ -13,7 +13,7 @@ function TestCat($n) {// есть ли еще подкаталоги
 
 function Vivod_rekurs($n, $prefix, $categories) {// вывод подкаталогов рекурсом
     global $SysValue,$link_db;
-    $sql = "select * from " . $SysValue['base']['table_name'] . " where parent_to='$n' order by num, name";
+    $sql = "select * from " . $SysValue['base']['categories'] . " where parent_to='$n' order by num, name";
     $result = mysqli_query($link_db,$sql);
     while ($row = mysqli_fetch_array($result)) {
         $i = 0;
@@ -49,7 +49,7 @@ function Vivod_rekurs($n, $prefix, $categories) {// вывод подкаталогов рекурсом
 
 function DispName($n, $catalog) {
     global $SysValue,$link_db;
-    $sql = "select name from " . $SysValue['base']['table_name'] . " where id='$n'";
+    $sql = "select name from " . $SysValue['base']['categories'] . " where id='$n'";
     $result = mysqli_query($link_db,$sql);
     $row = mysqli_fetch_array($result);
     $name = str_replace(array('"', "'"), " ", $row['name']);
@@ -59,7 +59,7 @@ function DispName($n, $catalog) {
 
 function Vivod_pot($categories) {// вывод каталогов
     global $PHPShopGUI, $PHPShopSystem, $SysValue, $_classPath, $PHPShopOrm, $category,$link_db;
-    $sql = "select * from " . $SysValue['base']['table_name'] . " where parent_to=0 order by num, name";
+    $sql = "select * from " . $SysValue['base']['categories'] . " where parent_to=0 order by num, name";
     $result = mysqli_query($link_db,$sql);
     $i = 0;
     $dis = null;
@@ -91,7 +91,7 @@ function Vivod_pot($categories) {// вывод каталогов
 
 function Vivod_cat_all_num($n) {// выбор кол-ва товаров из данного подкатолога
     global $SysValue,$link_db;
-    $sql = "select id from " . $SysValue['base']['table_name'] . " where category='$n' and enabled='1'";
+    $sql = "select id from " . $SysValue['base']['categories'] . " where category='$n' and enabled='1'";
     $result = mysqli_query($link_db,$sql);
     $num = mysqli_num_rows($result);
     return $num;

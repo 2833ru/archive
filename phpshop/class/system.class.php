@@ -18,7 +18,7 @@ class PHPShopSystem extends PHPShopObj {
         $this->objID = 1;
         $this->install = false;
         $this->cache = false;
-        $this->objBase = $GLOBALS['SysValue']['base']['table_name3'];
+        $this->objBase = $GLOBALS['SysValue']['base']['system'];
         parent::__construct();
     }
 

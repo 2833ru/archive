@@ -214,7 +214,9 @@ class PHPShopMultilanguagesElement extends PHPShopElements {
         // Мультибаза
         if (defined("HostID"))
             $where['servers'] = " REGEXP 'i" . HostID . "i'";
-
+        elseif(defined("HostMain"))
+            $where['skin_enabled'] .= ' and (servers ="" or servers REGEXP "i1000i")';
+        
         // Сортировка каталога
         switch ($parent_data['order_to']) {
             case(1): $order_direction = "";
@@ -286,12 +288,16 @@ class PHPShopMultilanguagesElement extends PHPShopElements {
         $where['category'] = "=1000";
         $where['enabled'] = "='1'";
 
+        
         // Мультибаза
         if (defined("HostID"))
             $where['servers'] = " REGEXP 'i" . HostID . "i'";
+        elseif(defined("HostMain"))
+            $where['enabled'] .= ' and (servers ="" or servers REGEXP "i1000i")';
 
         $objBase = $GLOBALS['SysValue']['base']['page'];
         $PHPShopOrm = new PHPShopOrm($objBase);
+        $PHPShopOrm->debug=false;
 
         $data = $PHPShopOrm->select(array('name', 'link', 'multilanguages'), $where, array('order' => 'num'), array("limit" => 20));
         if (is_array($data))
@@ -404,7 +410,7 @@ class PHPShopMultilanguagesElement extends PHPShopElements {
 
         if (!empty($view)) {
 
-            $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['table_name8']);
+            $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['news']);
             $result = $PHPShopOrm->select(array('id', 'zag', 'datas', 'kratko', 'multilanguages'), false, array('order' => 'id DESC'), array("limit" => 5));
 
             // Проверка на еденичню запись
@@ -451,7 +457,7 @@ class PHPShopMultilanguagesElement extends PHPShopElements {
 $PHPShopMultilanguagesElement = new PHPShopMultilanguagesElement();
 
 // Ссылка в навигацию
-//$PHPShopMultilanguagesElement->lastForma();
+$PHPShopMultilanguagesElement->lastForma();
 $PHPShopMultilanguagesElement->leftCatalMulti();
 $PHPShopMultilanguagesElement->topMenuMulti();
 $PHPShopMultilanguagesElement->pageCatalMulti();

@@ -34,7 +34,7 @@ class Subsys_JsHttpRequest_Php
      * to script output buffer. As a result - script will always return
      * correct JavaScript code, even in case of fatal errors.
      */
-    function Subsys_JsHttpRequest_Php($enc)
+    function __construct($enc)
     {
         // QUERY_STRING is in form: PHPSESSID=<sid>&a=aaa&b=bbb&<id>
         // where <id> is request ID, <sid> - session ID (if present), 
@@ -137,10 +137,10 @@ class Subsys_JsHttpRequest_Php
             if (key($a) !== $i) { $isList = false; break; }
         $result = array();
         if ($isList) {
-            foreach ($a as $v) $result[] = Subsys_JsHttpRequest_Php::_php2js($v);
+            foreach ($a as $v) $result[] = $this->_php2js($v);
             return '[ ' . join(',', $result) . ' ]';
         } else {
-            foreach ($a as $k=>$v) $result[] = Subsys_JsHttpRequest_Php::_php2js($k) . ': ' . Subsys_JsHttpRequest_Php::_php2js($v);
+            foreach ($a as $k=>$v) $result[] = $this->_php2js($k) . ': ' . $this->_php2js($v);
             return '{ ' . join(',', $result) . ' }';
         }
     }

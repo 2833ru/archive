@@ -58,7 +58,7 @@ function delivery($obj, $deliveryID) {
             $num++;
 
             //Получаем первого предка
-            $sqlpr = "select * from " . $SysValue['base']['table_name30'] . " where (enabled='1' and id='" . $PIDpr . "') order by num,city";
+            $sqlpr = "select * from " . $SysValue['base']['delivery'] . " where (enabled='1' and id='" . $PIDpr . "') order by num,city";
             $resultpr = mysqli_query($link_db, $sqlpr);
             $rowpr = mysqli_fetch_array($resultpr);
 
@@ -147,7 +147,7 @@ function delivery($obj, $deliveryID) {
     }
 
 
-    $query = "select data_fields,city_select from " . $SysValue['base']['table_name30'] . " where id=$deliveryID";
+    $query = "select data_fields,city_select from " . $SysValue['base']['delivery'] . " where id=$deliveryID";
     $row = mysqli_fetch_array(mysqli_query($link_db, $query));
     $adresDisp_save = getAdresFields(unserialize($row['data_fields']), $row['city_select']);
     $adresDisp = "Для заполнения адреса, пожалуйста, выберите удобный способ доставки.";
@@ -221,7 +221,7 @@ function getAdresFields($mass, $city_select = null) {
                 $req = "";
                 $star = "";
             }
-            $disp .= "$star " . $enabled['country']['name'] . "<p> <select name='country_new' class='citylist $req'><option value='' for='0'>-----------</option>$disOpt</select></p>";
+            $disp .= "$star " . $enabled['country']['name'] . "<p> <select name='country_new' class='citylist form-control $req '><option value='' for='0'>-----------</option>$disOpt</select></p>";
         }
 
         // регион
@@ -239,10 +239,10 @@ function getAdresFields($mass, $city_select = null) {
             $req = "";
             $star = "";
         }
-        $disp .= "$star " . $enabled['state']['name'] . "<p><select name='state_new' class='citylist $req' $disabled><option value='' for='0'>-----------</option>$disOpt</select></p>";
+        $disp .= "$star " . $enabled['state']['name'] . "<p><select name='state_new' class='citylist form-control $req' $disabled><option value='' for='0'>-----------</option>$disOpt</select></p>";
 
         //Город
-        $disp .= "$star " . $enabled['city']['name'] . "<p> <select name='city_new' class='citylist $req' $disabled><option value='' for='0'>-----------</option></select></p></div>";
+        $disp .= "$star " . $enabled['city']['name'] . "<p> <select name='city_new' class='citylist form-control $req' $disabled><option value='' for='0'>-----------</option></select></p></div>";
     }
 
     foreach ($num as $key => $value) {

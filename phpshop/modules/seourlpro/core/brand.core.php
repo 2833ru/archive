@@ -70,7 +70,7 @@ class PHPShopBrand extends PHPShopShopCore {
             case 2:
                 $this->set('fSetBactive', 'active');
                 break;
-            //default: $obj->set('fSetCactive', 'active');
+            default: $this->set('fSetAactive', 'active');
         }
 
         $PHPShopNav = new PHPShopNav();
@@ -79,6 +79,11 @@ class PHPShopBrand extends PHPShopShopCore {
         $PHPShopOrm->mysql_error = false;
 
         $vendor = $PHPShopOrm->select(array("*"), array('sort_seo_name' => "='" . PHPShopSecurity::TotalClean($seo_name[0]) . "'"));
+        
+        // Нет данных, 404 ошибка
+        if(!is_array($vendor))
+            return $this->setError404();
+        
         $v = array($vendor["category"] => $vendor["id"]);
 
         // Фильтр сортировки
@@ -107,7 +112,8 @@ class PHPShopBrand extends PHPShopShopCore {
 
         // Описание значения характеристики
         $PHPShopOrm = new PHPShopOrm();
-        $result = $PHPShopOrm->query('SELECT a.*, b.content FROM ' . $this->getValue("base.sort") . ' AS a JOIN ' . $this->getValue("base.page") . ' AS b ON a.page = b.link where a.id = ' . $vendor["id"] . ' limit 1');
+        $PHPShopOrm->mysql_error = false;
+        $result = $PHPShopOrm->query('SELECT a.*, b.content FROM ' . $this->getValue("base.sort") . ' AS a JOIN ' . $this->getValue("base.page") . ' AS b ON a.page = b.link where a.id = ' . intval($vendor["id"]) . ' limit 1');
         $row = mysqli_fetch_array($result);
         if (is_array($row)) {
 
@@ -189,12 +195,12 @@ class PHPShopBrand extends PHPShopShopCore {
 
         // Все страницы
         if ($p == "all") {
-            $sql = "select * from " . $SysValue['base']['table_name2'] . " where enabled='1' and parent_enabled='0' $sort  $string";
+            $sql = "select * from " . $SysValue['base']['products'] . " where enabled='1' and parent_enabled='0' $sort  $string";
         }
         else
             while ($q < $p) {
 
-                $sql = "select * from " . $SysValue['base']['table_name2'] . " where enabled='1' and parent_enabled='0' $sort  $string LIMIT $num_ot, $num_row";
+                $sql = "select * from " . $SysValue['base']['products'] . " where enabled='1' and parent_enabled='0' $sort  $string LIMIT $num_ot, $num_row";
                 $q++;
                 $num_ot = $num_ot + $num_row;
             }

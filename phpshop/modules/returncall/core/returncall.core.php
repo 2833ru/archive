@@ -112,17 +112,19 @@ class PHPShopReturncall extends PHPShopCore {
         $insert['name_new'] = PHPShopSecurity::TotalClean($_POST['returncall_mod_name'], 2);
         $insert['tel_new'] = PHPShopSecurity::TotalClean($_POST['returncall_mod_tel'], 2);
         $insert['date_new'] = time();
-        $insert['time_start_new'] = floatval($_POST['returncall_mod_time_start']);
-        $insert['time_end_new'] = floatval($_POST['returncall_mod_time_end']);
+        $insert['time_start_new'] = PHPShopSecurity::TotalClean($_POST['returncall_mod_time_start'],2);
+        $insert['time_end_new'] = PHPShopSecurity::TotalClean($_POST['returncall_mod_time_end'],2);
         $insert['message_new'] = PHPShopSecurity::TotalClean($_POST['returncall_mod_message'], 2);
         $insert['ip_new'] = $_SERVER['REMOTE_ADDR'];
 
         // Запись в базу
         $this->PHPShopOrm->insert($insert);
 
-        $zag = $this->PHPShopSystem->getValue('name') . " - Обратный звонок - " . PHPShopDate::dataV($date);
+        $zag = $this->PHPShopSystem->getValue('name') . " - Обратный звонок - " . PHPShopDate::dataV();
 
-
+        if(!empty($insert['time_end_new']))
+            $insert['time_start_new'].=' - '.$insert['time_end_new'];
+        
         $message = "
 Доброго времени!
 ---------------
@@ -133,8 +135,8 @@ class PHPShopReturncall extends PHPShopCore {
 ----------------------
 
 Имя:                " . $insert['name_new'] . "
-Телефон:             " . $insert['tel_new'] . "
-Время звонка:       от " . $insert['time_start_new'] . " до " . $insert['time_end_new'] . "
+Телефон:            " . $insert['tel_new'] . "
+Время звонка:       " . $insert['time_start_new']."
 Сообщение:          " . $insert['message_new'] . "
 Дата:               " . PHPShopDate::dataV($insert['date_new']) . "
 IP:                 " . $_SERVER['REMOTE_ADDR'] . "

@@ -26,7 +26,7 @@ function runOrder($ouid, $type)
     $corders = array();
 
     if ($type == 'cart' && !is_null($ouid)) {
-        $orderOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['table_name1']);
+        $orderOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
         $order = $orderOrm->select(array('*'), array("uid" => "='" . $ouid ."'"), false);
 
         $order["status"] = unserialize($order["status"]);

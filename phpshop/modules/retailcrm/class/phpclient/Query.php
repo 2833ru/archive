@@ -201,7 +201,7 @@ class Query
             }
         }
 
-        $orderOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['table_name1']);
+        $orderOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
         $startId = 0;
         $stopId = 4000;
 
@@ -468,7 +468,7 @@ class Query
                 $insertOrm = new PHPShopOrm();
                 $insertOrm->query("insert phpshop_orders set " . implode(", ", $arr));
                 
-                $orderOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['table_name1']);
+                $orderOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
                 $id = $orderOrm->select(array('*'), array("uid" => "='" . (isset($order["number"]) ? $order["number"] : $order["id"]) . "'" ), false);
                 
                 $fixId[] = array(

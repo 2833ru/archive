@@ -12,7 +12,7 @@ class AtolRest {
     public $token = null;
     public $log = null;
     public $orderId = null;
-    public $api_url = "http://online.atol.ru/possystem/v3/";
+    public $api_url = "https://online.atol.ru/possystem/v3/";
 
     /**
      * Режим отладки

@@ -13,7 +13,7 @@ class PHPShopLinks extends PHPShopCore {
      */
     function __construct() {
         // Имя Бд
-        $this->objBase=$GLOBALS['SysValue']['base']['table_name17'];
+        $this->objBase=$GLOBALS['SysValue']['base']['links'];
 
         // Путь для навигации
         $this->objPath="/links/links_";

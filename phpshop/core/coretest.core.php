@@ -47,15 +47,14 @@ http://'.$_SERVER['SERVER_NAME'].'/coretest/
 <pre>
 class PHPShopCoretest extends PHPShopCore {
 
-    function PHPShopCoretest() {
+    function __construct() {
         parent::__construct();
     }
 
 function index() {
 
  // Мета
- $this->title="Подключение PHP логики через API - "
- .$this->PHPShopSystem->getValue("name");
+ $this->title="Подключение PHP логики через API - ".$this->PHPShopSystem->getValue("name");
  $this->description=\'Подключение PHP логики\';
  $this->keywords=\'php\';
 

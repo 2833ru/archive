@@ -29,6 +29,10 @@ function actionStart() {
     $PHPShopGUI->_CODE .= $PHPShopGUI->setLine() . $PHPShopGUI->setField(__("Наименование банк"), $PHPShopGUI->setInputText(null, "bank[org_bank]", $bank['org_bank'], 300));
     $PHPShopGUI->_CODE .= $PHPShopGUI->setField(__("БИК"), $PHPShopGUI->setInputText(null, "bank[org_bic]", $bank['org_bic'], 300));
     $PHPShopGUI->_CODE .= $PHPShopGUI->setField(__("№ Счета банка"), $PHPShopGUI->setInputText(null, "bank[org_bank_schet]", $bank['org_bank_schet'], 300));
+//http://jsfiddle.net/5ud8jkvf/
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setField("Печать", $PHPShopGUI->setIcon($bank['org_stamp'], "bank[org_stamp]", false, array('load' => false, 'server' => true, 'url' => false, 'multi' => false, 'view' => false)));
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setField("Подпись руководителя", $PHPShopGUI->setIcon($bank['org_sig'], "bank[org_sig]", false, array('load' => false, 'server' => true, 'url' => false, 'multi' => false, 'view' => false)));
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setField("Подпись бухгалтера", $PHPShopGUI->setIcon($bank['org_sig_buh'], "bank[org_sig_buh]", false, array('load' => false, 'server' => true, 'url' => false, 'multi' => false, 'view' => false)));
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);

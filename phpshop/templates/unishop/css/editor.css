@@ -117,3 +117,11 @@
 .style-selector-wrapper .nav > li > a {
     padding: 5px 10px;
 }
+
+.style-selector-wrapper label {
+    font-weight: normal;
+}
+
+.style-selector-wrapper .col-sm-7 {
+  padding-left: 3px;
+}

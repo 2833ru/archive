@@ -1644,7 +1644,7 @@ class PHPShopGUI {
         $db = $PHPShopModules->getXml("../modules/" . $path . "/install/module.xml");
         if ($db['version'] > $version and !empty($update)) {
             PHPShopObj::loadClass('text');
-            $version_info = $this->setAlert('Версия ядра ' . $db['version'] . ' не соответствует версии БД ' . $version, 'warning');
+            $version_info = $this->setAlert('Версия ядра ' . $db['version'] . ' не соответствует версии БД ' . floatval($version), 'warning');
             $version_info.=$this->setInput("submit", "modupdate", "Обновить модуль", "center", null, "", "btn-sm pull-right", "actionBaseUpdate");
         }
         else

@@ -199,8 +199,8 @@ function actionStart() {
             $PHPShopGUI->setField("Товарная сетка витрины", $PHPShopGUI->setSelect('num_vitrina_new', $num_vitrina_value, 50), 1, 'Товаров в длину 
 	  для витрины главной страницы') .
             $PHPShopGUI->setField("Сейчас покупают", $PHPShopGUI->setSelect('option[nowbuy_enabled]', $nowbuy_enabled_value)) .
-            $PHPShopGUI->setField("Календарь новостей", $PHPShopGUI->setCheckbox('option[user_calendar]', 1, 'Cортировки новостей по датам', $option['user_calendar'])) .
-            $PHPShopGUI->setField("Облако тегов", $PHPShopGUI->setCheckbox('option[cloud_enabled]', 1, 'Сортировка товаров по ключевым тегам', $option['cloud_enabled'])) .
+            //$PHPShopGUI->setField("Календарь новостей", $PHPShopGUI->setCheckbox('option[user_calendar]', 1, 'Cортировки новостей по датам', $option['user_calendar'])) .
+            //$PHPShopGUI->setField("Облако тегов", $PHPShopGUI->setCheckbox('option[cloud_enabled]', 1, 'Сортировка товаров по ключевым тегам', $option['cloud_enabled'])) .
             $PHPShopGUI->setField("Цифровые товары", $PHPShopGUI->setCheckbox('option[digital_product_enabled]', 1, 'Продажа цифровых товаров', $option['digital_product_enabled']), 1, 'Прикрепленные к товару файлы доступны после оплаты заказа в личном кабинете') .
             $PHPShopGUI->setField("Сквозная пагинация", $PHPShopGUI->setCheckbox('option[catlist_enabled]', 1, 'Выводить товары в корневом каталоге', $option['catlist_enabled']), 1);
 
@@ -250,7 +250,8 @@ function actionStart() {
             $PHPShopGUI->setField(__("Заголовок"), $PHPShopGUI->setInputText(null, "option[adm_title]", $option['adm_title'], 300), 1, 'Брендовый заголовок в левом верхнем углу панели управления') .
             $PHPShopGUI->setField("RSS", $PHPShopGUI->setCheckbox('option[rss_graber_enabled]', 1, 'Создавать новости из RSS каналов', $option['rss_graber_enabled'])) .
             $PHPShopGUI->setField("Multi Manager", $PHPShopGUI->setCheckbox('option[rule_enabled]', 1, 'Учет прав управления товарами для менеджеров', $option['rule_enabled'])) .
-            $PHPShopGUI->setField("Быстрый поиск", $PHPShopGUI->setSelect('option[search_enabled]', $search_enabled_value), 1, 'Поиск в верхнем правом углу панели управления (back-end)')
+            $PHPShopGUI->setField("Быстрый поиск", $PHPShopGUI->setSelect('option[search_enabled]', $search_enabled_value), 1, 'Поиск в верхнем правом углу панели управления (back-end)').
+            $PHPShopGUI->setField("Карта доставки заказа", $PHPShopGUI->setCheckbox('option[yandexmap_enabled]', 1, 'Вывод адреса доставки заказа на Яндекс.Карте', $option['yandexmap_enabled'])) 
     );
 
     $PHPShopGUI->_CODE.=$PHPShopGUI->setCollapse('Настройка безопасности reCAPTCHA', $PHPShopGUI->setField("reCAPTCHA", $PHPShopGUI->setCheckbox('option[recaptcha_enabled]', 1, 'Включить режим усиленной проверки от ботов', $option['recaptcha_enabled']), 1, 'Поддерживаются только новые шаблоны') .
@@ -305,7 +306,7 @@ function actionUpdate() {
     unset($option['support_notice']);
 
     // Корректировка пустых значений
-    $PHPShopOrm->updateZeroVars('option.user_calendar', 'option.cloud_enabled', 'option.digital_product_enabled', 'option.parent_price_enabled', 'option.user_skin', 'option.sms_enabled', 'option.sms_status_order_enabled', 'option.notice_enabled', 'option.user_mail_activate', 'option.user_mail_activate_pre', 'option.user_price_activate', 'option.rss_graber_enabled', 'option.mail_smtp_enabled', 'option.mail_smtp_debug', 'option.multi_currency_search', 'option.mail_smtp_auth', 'option.sklad_enabled', 'option.rule_enabled', 'option.recaptcha_enabled', 'option.catlist_enabled', 'option.dadata_enabled');
+    $PHPShopOrm->updateZeroVars('option.user_calendar', 'option.cloud_enabled', 'option.digital_product_enabled', 'option.parent_price_enabled', 'option.user_skin', 'option.sms_enabled', 'option.sms_status_order_enabled', 'option.notice_enabled', 'option.user_mail_activate', 'option.user_mail_activate_pre', 'option.user_price_activate', 'option.rss_graber_enabled', 'option.mail_smtp_enabled', 'option.mail_smtp_debug', 'option.multi_currency_search', 'option.mail_smtp_auth', 'option.sklad_enabled', 'option.rule_enabled', 'option.recaptcha_enabled', 'option.catlist_enabled', 'option.dadata_enabled','option.yandexmap_enabled');
 
     if (is_array($_POST['option']))
         foreach ($_POST['option'] as $key => $val)

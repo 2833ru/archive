@@ -2,9 +2,10 @@
 <module>
     <version>1.0</version>
     <name>CloudPayments</name>
-    <faqlink></faqlink>
+    <faqlink>http://faq.phpshop.ru/page/cloudpayments.html</faqlink>
     <description>Прием оплат через CloudPayments</description>
     <category>payment</category>
+	<status>new</status>
     <adminmenu>
         <title>CloudPayments</title>
         <capability>true</capability>

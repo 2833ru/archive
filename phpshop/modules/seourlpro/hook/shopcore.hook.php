@@ -158,35 +158,41 @@ function CID_Category_seourlpro_hook($obj, $dataArray, $rout) {
     $seo_name = $obj->PHPShopCategory->getParam('cat_seo_name');
 
     if ($rout == 'START') {
-
-        $getNav = $GLOBALS['PHPShopSeoPro']->getNav();
-        $file = $getNav['file'];
-        $page = $getNav['page'];
-
-        if (!empty($page)) {
-            $obj->setError404();
-            return true;
-        }
-
+        
         if (!empty($seo_name))
             $url_true = '/' . $seo_name;
         else
             $url_true = '/' . $GLOBALS['PHPShopSeoPro']->setLatin($catalog_name);
 
+        // Учет первой страницы
+        if ($obj->PHPShopNav->getPage() == 1)
+            $url_true_nav = $url_true;
+        else
+            $url_true_nav = $url_true . '-' . $obj->PHPShopNav->getPage();
+
         $url = $obj->PHPShopNav->getName(true);
         $url_pack = '/shop/CID_' . $obj->PHPShopNav->getId();
         $url_old_seo = '/shop/CID_' . $obj->PHPShopNav->getId() . '_' . str_replace("-", "_", toLatin_hook($catalog_name));
+        $url_nav = '/shop/CID_' . $obj->PHPShopNav->getId() . '_' . $obj->PHPShopNav->getPage();
 
+        if ($obj->PHPShopNav->getId())
+            $url_old_seo_nav = '/shop/CID_' . $obj->PHPShopNav->getId() . '_' . $obj->PHPShopNav->getPage() . '_' . str_replace("-", "_", toLatin_hook($catalog_name));
+
+        // Query
+        if (!empty($_SERVER["QUERY_STRING"]))
+            $url_query = '?' . $_SERVER["QUERY_STRING"];
+        else
+            $url_query = null;
 
         // Если ссылка не сходится
-        if ($url != $url_true and $url != $url_pack and $url != $url_old_seo) {
+        if ($url != $url_true and $url != $url_pack and $url != $url_true_nav and $url != $url_nav and $url != $url_old_seo and $url != $url_old_seo_nav) {
             $obj->ListInfoItems = parseTemplateReturn($obj->getValue('templates.error_page_forma'));
             $obj->set('breadCrumbs', null);
             $obj->set('odnotipDisp', null);
             $obj->setError404();
             return true;
         } elseif ($url == $url_pack or $url == $url_old_seo) {
-            header('Location: ' . $obj->getValue('dir.dir') . $url_true . '.html', true, 301);
+            header('Location: ' . $obj->getValue('dir.dir') . $url_true . '.html' .  $url_query, true, 301);
             return true;
         }
     }

@@ -103,18 +103,24 @@ class PHPShopSuccess extends PHPShopCore {
      * Отправка данных в ОФД
      */
     function ofd() {
-        global $_classPath;
+        global $_classPath,$PHPShopModules,$PHPShopSystem;
+        
+        // Проверка модулей с OFD
+        $ofd = $PHPShopSystem->getParam('ofd');
+        if (empty($ofd))
+            $ofd = 'atol';
 
-        $ofd = 'atol';
-        include_once($_classPath . 'modules/' . substr($ofd, 0, 15) . '/api.php');
+        if (!empty($PHPShopModules->ModValue['base'][$ofd])) {
+            include_once($_classPath . 'modules/' . substr($ofd, 0, 15) . '/api.php');
 
-        if (function_exists('OFDStart')) {
+            if (function_exists('OFDStart')) {
 
-            $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
-            $PHPShopOrm->debug = $this->debug;
-            $data = $PHPShopOrm->select(array('*'), array('uid' => '="' . $this->true_num($this->inv_id) . '"'), false, array('limit' => 1));
-            if (is_array($data))
-                OFDStart($data);
+                $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
+                $PHPShopOrm->debug = $this->debug;
+                $data = $PHPShopOrm->select(array('*'), array('uid' => '="' . $this->true_num($this->inv_id) . '"'), false, array('limit' => 1));
+                if (is_array($data))
+                    OFDStart($data);
+            }
         }
     }
 

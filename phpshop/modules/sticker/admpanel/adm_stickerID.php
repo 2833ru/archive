@@ -10,6 +10,33 @@ function actionDelete() {
     return array('success'=>$action);
 }
 
+
+// Выбор шаблона дизайна
+function GetSkinList($skin) {
+    global $PHPShopGUI;
+    $dir = "../templates/";
+
+    if (is_dir($dir)) {
+        if (@$dh = opendir($dir)) {
+            while (($file = readdir($dh)) !== false) {
+                if (file_exists($dir . '/' . $file . "/main/index.tpl")) {
+
+                    if ($skin == $file)
+                        $sel = "selected";
+                    else
+                        $sel = "";
+
+                    if ($file != "." and $file != ".." and !strpos($file, '.'))
+                        $value[] = array($file, $file, $sel);
+                }
+            }
+            closedir($dh);
+        }
+    }
+
+    return $PHPShopGUI->setSelect('skin_new', $value);
+}
+
 /**
  * Экшен сохранения
  */
@@ -45,6 +72,7 @@ function actionStart() {
     $Tab1.=$PHPShopGUI->setField('Маркер:', $PHPShopGUI->setInputText('@sticker_', 'path_new', $data['path'], 200, '@'));
     $Tab1.=$PHPShopGUI->setField('Опции:', $PHPShopGUI->setCheckbox('enabled_new', 1, 'Вывод на сайте', $data['enabled']));
     $Tab1.=$PHPShopGUI->setField('Привязка к страницам:', $PHPShopGUI->setInputText(false, 'dir_new', $data['dir']) . $PHPShopGUI->setHelp('Пример: /page/about.html,/page/company.html'));
+    $Tab1.=$PHPShopGUI->setField('Дизайн', GetSkinList($data['skin']));
 
 
     $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"), true);

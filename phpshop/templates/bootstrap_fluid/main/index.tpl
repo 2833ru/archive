@@ -53,7 +53,9 @@
 
             <div class="row vertical-align">
                 <div class="col-md-3 text-center">
+                <div class="logo">
                     <img src="@logo@" alt="@name@" >
+                    </div>
                 </div>
                 <div class="col-md-9">
                     <div class="row">
@@ -104,15 +106,6 @@
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
                         <li class="active visible-lg"><a href="/" title="Домой"><span class="glyphicon glyphicon-home"></span></a></li>
-
-                        <!-- dropdown catalog menu -->
-                        <li id="catalog-dropdown" class="visible-lg visible-md visible-sm">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Каталог <b class="caret"></b></a>        
-                            <ul class="dropdown-menu mega-menu">
-                                @leftCatal@
-                            </ul>
-                        </li>
-
                         @topBrands@
 
                         <!-- dropdown catalog menu mobile-->

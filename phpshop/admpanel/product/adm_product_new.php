@@ -83,6 +83,7 @@ function actionStart() {
         // Создание копии товара
         $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
         $data['id'] = $newId;
+        $data['prod_seo_name'] = null;
 
         // Копирование галереи
         if (!empty($data['pic_small']))

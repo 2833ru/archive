@@ -2,7 +2,7 @@
 /**
  * Обработчик блога
  * @author PHPShop Software
- * @version 1.2
+ * @version 1.3
  * @package PHPShopCore
  */
 class PHPShopBlog extends PHPShopCore {
@@ -21,7 +21,7 @@ class PHPShopBlog extends PHPShopCore {
         $this->debug=false;
 
         // Список экшенов
-        $this->action=array("nav"=>"ID","post"=>"blog_plus","get"=>"blog_del");
+        $this->action=array("nav"=>"ID");
         parent::__construct();
         
     }
@@ -152,114 +152,6 @@ class PHPShopBlog extends PHPShopCore {
 
         // Подключаем шаблон
         $this->parseTemplate($GLOBALS['SysValue']['templates']['blog']['blog_page_full'],true);
-    }
-
-    /**
-     * Экшен записи новости при получении $_POST[blog_plus]
-     */
-    function blog_plus() {
-        $mail=PHPShopSecurity::TotalClean($_POST['mail'],3);
-
-        switch($_POST['status']) {
-
-            case 1:
-                $this->write($mail);
-                break;
-
-            case 0:
-                $this->del($mail);
-                break;
-        }
-
-        // Мета
-        $this->title="Блог - Подписка - ".$this->PHPShopSystem->getValue("name");
-
-        // Подключаем шаблон
-        $this->parseTemplate($GLOBALS['SysValue']['templates']['blog']['blog_forma_message'],true);
-    }
-
-
-    /**
-     * Есть ли адрес в базе
-     * @param string $mail почта
-     * @return bool
-     */
-    function chek($mail) {
-        $PHPShopOrm = new PHPShopOrm($this->getValue('base.table_name9'));
-        $PHPShopOrm->debug=$this->debug;
-        $num=$PHPShopOrm->select(array('id'),array('mail'=>"='$mail'"),false,array('limit'=>1));
-        if(empty($num['id'])) return true;
-    }
-
-    /**
-     * Добавление адреса  в БД
-     * @param string $mail
-     */
-    function write($mail) {
-
-        if(!empty($mail)) {
-
-            if($this->chek($mail)) {
-                $PHPShopOrm = new PHPShopOrm($this->getValue('base.table_name9'));
-                $PHPShopOrm->debug=$this->debug;
-                $PHPShopOrm->insert(array('date'=>date("d-m-y"),'mail'=>$mail),$prefix='');
-
-
-                $mes="<FONT style=\"font-size:14px;color:red\">
-                    <B>".$this->getValue('lang.good_news_message_1')."</B></FONT><BR>".$this->getValue('lang.good_news_message_2');
-            }else {
-                $mes="<FONT style=\"font-size:14px;color:red\">
-                    <B>".$this->getValue('lang.bad_news_message_1')."</B></FONT><BR>".$this->getValue('lang.good_news_message_2');
-            }
-
-        }
-
-        else {
-            $mes="<FONT style=\"font-size:14px;color:red\">
-                    <B>".$this->getValue('lang.bad_news_message_3')."</B></FONT><BR>".$this->getValue('lang.good_news_message_2');
-        }
-
-        $this->set('mesageText',$mes);
-    }
-
-    /**
-     * Удаление адреса из БД
-     * @param string $mail
-     */
-    function del($mail) {
-
-        if(!$this->chek($mail)) {
-            $PHPShopOrm = new PHPShopOrm($this->getValue('base.table_name9'));
-            $PHPShopOrm->debug=$this->debug;
-            $PHPShopOrm->delete(array('mail'=>"='$mail'"));
-            $mes="<FONT style=\"font-size:14px;color:red\">
-                    <B>".$this->getValue('lang.bad_news_message_2')."</B></FONT><BR>".$this->getValue('lang.good_news_message_2');
-
-        }else {
-            $mes="<FONT style=\"font-size:14px;color:red\">
-                    <B>".$this->getValue('lang.bad_news_message_3')."</B></FONT><BR>".$this->getValue('lang.good_news_message_2');
-        }
-
-        $this->set('mesageText',$mes);
-    }
-
-
-    /**
-     * Экшен удаления подписчика при получении $_GET[blog_del]
-     */
-    function blog_del() {
-
-        // Проверка на безопсность
-        $mail=PHPShopSecurity::TotalClean($_GET['mail'],3);
-
-        // Удаление записи
-        $this->del($mail);
-
-        // Мета
-        $this->title="Блог - Отписка - ".$this->PHPShopSystem->getValue("name");
-
-        // Подключаем шаблон
-        $this->parseTemplate($GLOBALS['SysValue']['templates']['blog']['blog_forma_message'],true);
     }
 
 

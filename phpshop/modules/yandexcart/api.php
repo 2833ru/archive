@@ -60,6 +60,9 @@ $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['yandexcart']['yandexc
 $option = $PHPShopOrm->select();
 
 // Входящие данные
+if (empty($HTTP_RAW_POST_DATA))
+    $HTTP_RAW_POST_DATA = file_get_contents('php://input');
+
 $data = json_decode($HTTP_RAW_POST_DATA, true);
 
 // Авторизация

@@ -27,7 +27,7 @@ if (stristr(ini_get("default_charset"), "utf") and function_exists('ini_set')) {
 }
 
 // PHP Version Warning
-if(floatval(phpversion()) < 5.3 and getenv("SERVER_ADDR") != "127.0.0.1" and !getenv("COMSPEC")){
+if(floatval(phpversion()) < 5.3 and !getenv("COMSPEC")){
    exit("PHP ".phpversion()." не поддерживается. Требуется PHP 5.3 или выше.");
 } 
 

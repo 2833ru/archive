@@ -195,7 +195,9 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
         <button onclick="window.print()">
             Распечатать
         </button> 
+        <hr> 
     </div>
+   
     <table align="center" width="90%" border="0" cellspacing="0" cellpadding="0">
         <tr>
             <td valign="top" align="right">
@@ -215,7 +217,7 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
             </td>
         </tr>
         <tr>
-            <td valign="top" id="d2">СЧЕТ-ФАКТУРА №<?php echo @$ouid ?> от <?php echo $datas ?> г.<br>
+            <td valign="top" id="d2">СЧЕТ-ФАКТУРА №<input title="Изменить" value="<?php echo @$ouid ?> от <?php echo PHPShopDate::get($row['datas']) ?> г."><br>
                 Исправление № --  от --</td>
         </tr>
         <tr>

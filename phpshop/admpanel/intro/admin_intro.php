@@ -96,16 +96,17 @@ function actionStart() {
 
 
     // Проверка обновлений
-    if (!isset($_SESSION['update_check'])) {
-        define("UPDATE_PATH", "http://phpshop.ru/update/update5.php?from=" . $_SERVER['SERVER_NAME'] . "&version=" . $GLOBALS['SysValue']['upload']['version'] . "&support=" . $License['License']['SupportExpires'] . '&serial=' . $License['License']['Serial'] . '&path=intro');
+    if ($PHPShopBase->Rule->CheckedRules('update', 'view'))
+        if (!isset($_SESSION['update_check'])) {
+            define("UPDATE_PATH", "http://phpshop.ru/update/update5.php?from=" . $_SERVER['SERVER_NAME'] . "&version=" . $GLOBALS['SysValue']['upload']['version'] . "&support=" . $License['License']['SupportExpires'] . '&serial=' . $License['License']['Serial'] . '&path=intro');
 
-        $update_enable = @xml2array(UPDATE_PATH, "update", true);
-        if (is_array($update_enable) and $update_enable['status'] != 'no_update') {
-            $_SESSION['update_check'] = intval($update_enable['name'] - $update_enable['num']);
+            $update_enable = @xml2array(UPDATE_PATH, "update", true);
+            if (is_array($update_enable) and $update_enable['status'] != 'no_update') {
+                $_SESSION['update_check'] = intval($update_enable['name'] - $update_enable['num']);
+            }
+            else
+                $_SESSION['update_check'] = 0;
         }
-        else
-            $_SESSION['update_check'] = 0;
-    }
 
 
     if ($License['License']['Pro'] == 'Start') {
@@ -163,6 +164,8 @@ function actionStart() {
             order by a.id desc limit 8';
     $canvas_value = $canvas_label = null;
     $data = $PHPShopOrm->select();
+    $canvas_data = $data;
+  
     if (is_array($data))
         foreach ($data as $row) {
 
@@ -172,17 +175,6 @@ function actionStart() {
             if (empty($row['fio'])) {
                 $row['fio'] = $row['mail'];
             }
-
-            $total = $PHPShopOrder->getTotal(false);
-            $canvas_value.='"' . $total . '",';
-
-
-            $d_array = array(
-                'm' => date("m", $row['datas']),
-                'd' => date("d", $row['datas'])
-            );
-
-            $canvas_label.='"' . $d_array['d'] . '.' . $d_array['m'] . '",';
 
             $datas = PHPShopDate::get($row['datas']);
 
@@ -197,7 +189,15 @@ function actionStart() {
             else
                 $uid = $row['uid'];
 
-            $PHPShopInterface->setRow(array('name' => '<span class="label label-info" title="'.$status_name.'" style="background-color:' . $PHPShopOrder->getStatusColor() . '"><span class="hidden-xs">' . substr($status_name,0,25) . '</span></span>', 'link' => '?path=order&return=intro&id=' . $row['id'], 'class' => 'label-link'), array('name' => $uid, 'link' => '?path=order&return=intro&id=' . $row['id']), array('name' => $row['fio'], 'link' => '?path=shopusers&return=intro&id=' . $row['user']), array('name' => $datas, 'class' => 'text-muted'), array('name' => $PHPShopOrder->getTotal(false, ' ') . ' ' . $currency, 'align' => 'right', 'class' => 'strong'));
+            $PHPShopInterface->setRow(array('name' => '<span class="label label-info" title="' . $status_name . '" style="background-color:' . $PHPShopOrder->getStatusColor() . '"><span class="hidden-xs">' . substr($status_name, 0, 25) . '</span></span>', 'link' => '?path=order&return=intro&id=' . $row['id'], 'class' => 'label-link'), array('name' => $uid, 'link' => '?path=order&return=intro&id=' . $row['id']), array('name' => $row['fio'], 'link' => '?path=shopusers&return=intro&id=' . $row['user']), array('name' => $datas, 'class' => 'text-muted'), array('name' => $PHPShopOrder->getTotal(false, ' ') . ' ' . $currency, 'align' => 'right', 'class' => 'strong'));
+        }
+
+    // График
+    krsort($canvas_data);
+    if (is_array($canvas_data))
+        foreach ($canvas_data as $row) {
+            $canvas_value.='"' . $row['sum'] . '",';
+            $canvas_label.='"' . date("d", $row['datas']) . '.' . date("m", $row['datas']) . '",';
         }
 
     $order_list = $PHPShopInterface->getContent();
@@ -228,7 +228,7 @@ function actionStart() {
         $where = array('user' => "=" . intval($_SESSION['idPHPSHOP']));
     }
 
-    
+
     // Убираем подтипы
     $where['parent_enabled'] = "='0'";
 

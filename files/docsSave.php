@@ -18,7 +18,7 @@ $PHPShopSystem = new PHPShopSystem();
 
 class DocSave {
 
-    function DocSave() {
+    function __construct() {
         $this->debug = false;
         $this->tip = $_GET['tip'];
         $this->list = $_GET['list'];
@@ -27,6 +27,7 @@ class DocSave {
 
     function autorization() {
         if (PHPShopSecurity::true_num($_GET['orderId']) and PHPShopSecurity::true_num($_GET['datas'])) {
+
             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
             $PHPShopOrm->debug = false;
             $where['id'] = '=' . intval($_GET['orderId']);
@@ -49,8 +50,8 @@ class DocSave {
     function select() {
         if ($this->autorization()) {
             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['1c_docs']);
-            $where = array('uid' => '=' . $_GET['orderId'], 'datas' => '=' . $_GET['datas']);
-            $row = $PHPShopOrm->select(array('*'), $where, false, array('limit' => 1));
+
+            $row = $PHPShopOrm->select(array('*'), array('uid' => '=' . $_GET['orderId'], 'datas' => '=' . $_GET['datas']), array('order' => 'id desc'), array('limit' => 1));
 
             if (!empty($row['datas']))
                 $order_t = date("m", $row['datas']) . "-" . date("Y", $row['datas']);

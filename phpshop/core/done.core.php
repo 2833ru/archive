@@ -149,6 +149,7 @@ class PHPShopDone extends PHPShopCore {
                 if ($this->PHPShopDelivery) {
                     $this->PHPShopDelivery->checkMod($this->delivery_mod);
                     $this->delivery = $this->PHPShopDelivery->getPrice($this->PHPShopCart->getSum(false), $this->PHPShopCart->getWeight());
+                    $this->delivery = intval(str_replace(" ", "", $this->delivery));
                 }
                 else
                     $this->delivery = 0;

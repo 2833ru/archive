@@ -29,6 +29,17 @@ function actionStart() {
     $Tab2 = $PHPShopGUI->setField('Логин магазина', $PHPShopGUI->setInputText(false, 'login_new', $data['login'], 300));
     $Tab2 .= $PHPShopGUI->setField('Пароль магазина', $PHPShopGUI->setInput("password", 'password_new', $data['password'], false, 300));
 
+    // Система налогообложения
+    $tax_system = array (
+        array("Общая система налогообложения", 0, $data["taxationSystem"]),
+        array("Упрощенная система налогообложения (Доход)", 1, $data["taxationSystem"]),
+        array("Упрощенная система налогообложения (Доход минус Расход)", 2, $data["taxationSystem"]),
+        array("Единый налог на вмененный доход", 3, $data["taxationSystem"]),
+        array("Единый сельскохозяйственный налог", 4, $data["taxationSystem"]),
+        array("Патентная система налогообложения", 5, $data["taxationSystem"])
+    );
+    $Tab2 .= $PHPShopGUI->setField('Cистема налогообложения', $PHPShopGUI->setSelect('taxationSystem_new', $tax_system, 300));
+
     // Доступые статусы заказов
     $PHPShopOrderStatusArray = new PHPShopOrderStatusArray();
     $OrderStatusArray = $PHPShopOrderStatusArray->getArray();
@@ -49,14 +60,14 @@ function actionStart() {
         <h4>Настройка модуля</h4>
         <ol>
 <li>Предоставить необходимые документы и заключить договор со Сбербанком РФ</li>
-<li>На закладке настройки ввести предоставленные Сбербанком РФ Логин магазина и Пароль магазина</li>
+<li>На закладке настройки ввести предоставленные Сбербанком РФ Логин API магазина (*********-api) и Пароль магазина.</li>
 <li>Во время тестирования включить "Режим разработки", данные будут отправляться на тестовую среду Сбербанка РФ</li>
 <li>Для перевода модуля в рабочий режим, выключить "Режим разработки"</a></li>
 </ol>
 ';
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("О Модуле", $Tab1), array("Инструкция", $info, true), array("Настройки", $Tab2, true));
+    $PHPShopGUI->setTab(array("Настройки", $Tab2, true), array("Инструкция", $info, true), array("О Модуле", $Tab1));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionUpdate.modules.edit");

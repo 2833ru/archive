@@ -49,7 +49,7 @@ function image_gallery($obj, $row) {
                 else
                     $alt = $name_foto;
                 $dBig = '<div id="IMGloader" style="text-align:center;padding-bottom: 10px">
-<a class=highslide onclick="return hs.expand(this)" href="' . $obj->checkMultibase($name_b, true) . '" target=_blank><img id="currentBigPic" src="' . $obj->checkMultibase($pic_big, true) . '"  class="imgOn" alt="' . $alt . '"
+<a class=highslide onclick="return hs.expand(this)" href="' . $obj->checkMultibase($name_b, true) . '" target=_blank><img id="currentBigPic" src="' . $obj->checkMultibase($pic_big, true) . '"  class="imgOn" alt="' . $name_foto . '" title="'.$name_foto.'"
     onerror="NoFoto2(this)" itemprop="image"></a><div class="highslide-caption">' . $name_foto . '</div><br>' . $FotoArray[0]["info"] . '
 </div>';
             }
@@ -86,7 +86,7 @@ function image_gallery($obj, $row) {
                 $name_b = $pic_big;
 
             $d = '<div id="IMGloader" style="text-align:center;padding-bottom: 10px">
-<a class=highslide onclick="return hs.expand(this)" href="' . $obj->checkMultibase($name_b, true) . '" target=_blank><img id="currentBigPic" src="' . $obj->checkMultibase($pic_big, true) . '" class="imgOn" alt="' . $alt . '"
+<a class=highslide onclick="return hs.expand(this)" href="' . $obj->checkMultibase($name_b, true) . '" target=_blank><img id="currentBigPic" src="' . $obj->checkMultibase($pic_big, true) . '" class="imgOn" class="imgOn" alt="' . $name_foto . '" title="'.$name_foto.'" 
     itemprop="image"></a><div class="highslide-caption">' . $name_foto . '</div>
 </div>';
 }

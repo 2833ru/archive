@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Настройка шаблона из внешней части
+ * Настройка шаблона
  * @package PHPShopAjaxElements
  */
 session_start();
@@ -26,7 +26,7 @@ PHPShopObj::loadClass("string");
 PHPShopObj::loadClass("security");
 PHPShopObj::loadClass("xml");
 
-$_REQUEST['template']=$_SESSION['skin'];
+$_REQUEST['template'] = $_SESSION['skin'];
 
 // Проверка прав админа
 if (!empty($_SESSION['logPHPSHOP']) and PHPShopSecurity::true_skin($_COOKIE[$_REQUEST['template'] . '_theme'])) {
@@ -40,7 +40,7 @@ if (!empty($_SESSION['logPHPSHOP']) and PHPShopSecurity::true_skin($_COOKIE[$_RE
             PHPShopObj::loadClass(array("parser", "file"));
 
 
-            $option = xml2array('../templates/'. $_SESSION['skin'] . '/editor/style.xml', false, true);
+            $option = xml2array('../templates/' . $_SESSION['skin'] . '/editor/style.xml', false, true);
             $optionIndex = array_values($option['element']);
             $css_file = '../templates/' . $_SESSION['skin'] . '/css/' . $_COOKIE[$_REQUEST['template'] . '_theme'] . '.css';
             $PHPShopCssParser = new PHPShopCssParser($css_file);
@@ -53,17 +53,23 @@ if (!empty($_SESSION['logPHPSHOP']) and PHPShopSecurity::true_skin($_COOKIE[$_RE
                     // Есть изменение CSS
                     if (is_array($_POST['color'][$i])) {
                         foreach ($_POST['color'][$i] as $color => $value)
-                            if (isset($value)){
-                                
+                            if (isset($value)) {
+
                                 // Изображение
-                                if($optionIndex[$i]['var']['type'] == 'image')
-                                    $value='url('.$value.') no-repeat center';
-                                
-                                if($optionIndex[$i]['var']['important'] == 'true')
-                                    $add=' !important';
-                                else $add=null;
-                                
-                                $PHPShopCssParser->setParam($key, $color, $value,$add);
+                                if ($optionIndex[$i]['var']['type'] == 'image') {
+
+                                    if ($optionIndex[$i]['var']['name'] == 'background')
+                                        $value = 'url(' . $value . ') no-repeat center';
+                                    elseif ($optionIndex[$i]['var']['name'] == 'background-image')
+                                        $value = 'url(' . $value . ')';
+                                }
+
+                                if ($optionIndex[$i]['var']['important'] == 'true')
+                                    $add = ' !important';
+                                else
+                                    $add = null;
+
+                                $PHPShopCssParser->setParam($key, $color, $value, $add);
                             }
                     }
 
@@ -77,7 +83,7 @@ if (!empty($_SESSION['logPHPSHOP']) and PHPShopSecurity::true_skin($_COOKIE[$_RE
 
 
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['system']);
-        $PHPShopOrm->debug=false;
+        $PHPShopOrm->debug = false;
         $admoption = unserialize($PHPShopSystem->getParam('admoption'));
 
         if (PHPShopSecurity::true_skin($_COOKIE[$_REQUEST['template'] . '_theme2'])) {

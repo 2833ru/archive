@@ -31,7 +31,7 @@ class PHPShopProductListElement {
     }
 
     function getCategoryId() {
-        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['table_name2']);
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
         $PHPShopOrm->debug = $this->debug;
         $data = $PHPShopOrm->select(array('category'), array('id' => '=' . $this->PHPShopNav->getId()));
         return $data['category'];
@@ -40,7 +40,7 @@ class PHPShopProductListElement {
     // Âûâîä êîğçèíû
     function element() {
         $dis = null;
-        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['table_name2']);
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
         $PHPShopOrm->debug = $this->debug;
         $data = $PHPShopOrm->select(array('*'), array('category' => '=' . $this->getCategoryId()), array('order' => 'datas'), array('limit' => $this->data['num']));
         if (is_array($data)) {

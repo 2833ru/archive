@@ -29,14 +29,12 @@ if(PHPShopSecurity::true_param($_GET['tip'],$_GET['orderId'],$_GET['datas'])) {
     $datas=PHPShopSecurity::TotalClean($_GET['datas'],5);
 
     $PHPShopOrm = new PHPShopOrm();
-    $result=$PHPShopOrm->query("select id from ".$SysValue['base']['table_name1']." where id='$orderId' and datas=".$datas);
+    $result=$PHPShopOrm->query("select id from ".$SysValue['base']['orders']." where id='$orderId' and datas=".$datas);
     $n=mysqli_num_rows($result);
 
     if(empty($n)) exit("Неавторизованный пользователь!");
     else $PHPShopOrder = new PHPShopOrderFunction($orderId);
 
-
-    //$PHPShopOrder->format=0;
 
     // Перевод цифр в слова
     $iw = new inwords;
@@ -63,6 +61,13 @@ if(PHPShopSecurity::true_param($_GET['tip'],$_GET['orderId'],$_GET['datas'])) {
     PHPShopParser::set('org_name',$PHPShopSystem->getSerilizeParam('bank.org_name'));
     PHPShopParser::set('date',date("d-m-y"));
     PHPShopParser::set('name',$PHPShopSystem->getName());
+    
+    // Монитор
+    if($_GET['tip'] == 2 and empty($_SESSION['logPHPSHOP'])){
+         PHPShopParser::set('comment_start','<!--');
+         PHPShopParser::set('comment_end','-->');
+    }
+    
     PHPShopParser::file('../../lib/templates/print/receipt.tpl');
 }
 else header('Location: /');

@@ -33,7 +33,7 @@
         <div class="col-xs-12">
             <div class="row">
                 <div class="product-page-price">
-                    <span class="price-old">@productPriceRub@</span>
+                    <del class="price-old">@productPriceRub@</del>
                     <span class="price-new" itemprop="price">@productPrice@</span> 
                     <span class="price-new rubznak" itemprop="priceCurrency" content="RUB">@productValutaName@</span>
                 </div>
@@ -95,6 +95,7 @@
                 </div>
                 <div class="product-page-button">
                     <div class="cart-button button-group compare-list-button-wrapper">
+                        <button class="btn btn-wishlist addToCompareList hidden-md" role="button" data-uid="@productUid@" data-title="Сравнить" data-placement="top" data-toggle="tooltip"><i class="fa fa-bar-chart-o"></i></button>
                         <button type="button" class="btn btn-cart addToWishList" role="button" data-uid="@productUid@" data-title="Отложить" data-placement="top" data-toggle="tooltip">
                             <i class="feather iconz-heart"></i>
                         </button>                                   
