@@ -211,24 +211,35 @@ function filter_load(filter_str, obj) {
                 // Блокировкам пустых значений и пересчет количества фильтра
                 if (typeof FILTER_CACHE !== "undefined" && FILTER_CACHE) {
                     $('#faset-filter-body [type="checkbox"]').each(function () {
-                        $(this).attr('disabled', 'disabled');
-                        $(this).next('.filter-item').addClass('filter-item-hide');
 
-                        if (FILTER_COUNT)
+                        if (data['logic'] == 0) {
+                            $(this).attr('disabled', 'disabled');
+                            $(this).next('.filter-item').addClass('filter-item-hide');
+                        } else if (data['logic'] == 1 && $(this).attr('data-count') != 1) {
+                            $(this).attr('disabled', 'disabled');
+                            $(this).next('.filter-item').addClass('filter-item-hide');
+                        }
+
+                        if (FILTER_COUNT && data['logic'] == 0) {
                             $('[data-num="' + $(this).attr('name') + '"]').text(0);
+                        }
 
                         for (var key in data['filter']) {
                             if ($(this).attr('name') == key) {
+
                                 $(this).removeAttr('disabled');
                                 $(this).next('.filter-item').removeClass('filter-item-hide');
 
-                                if (FILTER_COUNT)
+                                if (FILTER_COUNT && data['logic'] == 0) {
                                     $('[data-num="' + $(this).attr('name') + '"]').text(data['filter'][key]);
+                                } else if (data['logic'] == 1 && $(this).attr('data-count') != 1) {
+                                    $('[data-num="' + $(this).attr('name') + '"]').text(data['filter'][key]);
+                                }
                             }
                         }
                     });
                 }
-                
+
                 // lazyLoad
                 setTimeout(function () {
                     $(window).lazyLoadXT();
@@ -292,10 +303,11 @@ function faset_filter_click(obj) {
             window.location.hash += $(obj).attr('data-url') + '&';
 
         } else {
-            window.location.hash = window.location.hash.split($(obj).attr('data-url') + '&').join('');
-            if (window.location.hash == '')
-                $('html, body').animate({scrollTop: $("a[name=sort]").offset().top - 100}, 500);
-
+            hashes = window.location.hash.split($(obj).attr('data-url') + '&').join('');
+            if (hashes == '#')
+                history.pushState('', document.title, window.location.pathname);
+            else
+                window.location.hash = hashes;
         }
 
         filter_load(window.location.hash.split(']').join('][]'), obj);
@@ -695,10 +707,14 @@ $(document).ready(function () {
         if (AJAX_SCROLL) {
 
             count = current;
-
-            window.location.hash = window.location.hash.split($(this).attr('name') + '=1&').join('');
-            window.location.hash = window.location.hash.split($(this).attr('name') + '=2&').join('');
-            window.location.hash += $(this).attr('name') + '=' + $(this).attr('value') + '&';
+            var hashes = window.location.hash;
+            hashes = hashes.split('s=1&').join('');
+            hashes = hashes.split('s=2&').join('');
+            hashes = hashes.split('s=3&').join('');
+            hashes = hashes.split('f=2&').join('');
+            hashes = hashes.split('f=1&').join('');
+            hashes += $(this).attr('name') + '=' + $(this).attr('value') + '&';
+            window.location.hash = hashes;
 
             filter_load(window.location.hash);
         } else {
@@ -725,7 +741,7 @@ $(document).ready(function () {
 
         var filter_str = window.location.hash.split(']').join('][]');
 
-        
+
 
         // Проставление чекбоксов
         $.ajax({
@@ -739,7 +755,7 @@ $(document).ready(function () {
                 if (data) {
                     $("#faset-filter-body").html(data);
                     $("#faset-filter-body").html($("#faset-filter-body").find('td').html());
-                    
+
                     // Загрузка результата отборки
                     filter_load(filter_str);
                 }
@@ -763,8 +779,7 @@ $(document).ready(function () {
             event.preventDefault();
             $("#faset-filter-body").html($("#sorttable table td").html());
             filter_load('');
-            $('html, body').animate({scrollTop: $("a[name=sort]").offset().top - 100}, 500);
-            window.location.hash = '';
+            history.pushState('', document.title, window.location.pathname);
             $.removeCookie('slider-range-min');
             $.removeCookie('slider-range-max');
             $(".pagination").show();
@@ -832,23 +847,6 @@ $(document).ready(function () {
         $('#cat').val($(this).attr('data-target'));
         $('#catSearchSelect').html($(this).html());
     });
-
-    hs.registerOverlay({html: '<div class="closebutton" onclick="return hs.close(this)" title="Закрыть"></div>', position: 'top right', fade: 2});
-    hs.graphicsDir = ROOT_PATH + '/java/highslide/graphics/';
-    hs.wrapperClassName = 'borderless';
-
-
-    // увеличение изображения товара
-    $("body").on('click', '.highslide', function () {
-        return hs.expand(this);
-    });
-
-    // ошибка загрузки изображения
-    $('.highslide img').on('error', function () {
-        $(this).attr('src', '/phpshop/templates/bootstrap/images/shop/no_photo.gif');
-        return true;
-    });
-
 
     // подгрузка комментариев
     $("body").on('click', '#commentLoad', function () {

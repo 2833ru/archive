@@ -885,7 +885,7 @@ class PHPThumb extends PHPThumbLibrary {
      * @param  bool         $rawData Whether or not the raw image stream should be output
      * @return \PHPThumb\GD
      */
-    public function show($rawData = false,$ext=false) {
+    public function show($rawData = false, $ext = false) {
         //Execute any plugins
         if ($this->plugins) {
             foreach ($this->plugins as $plugin) {
@@ -926,15 +926,25 @@ class PHPThumb extends PHPThumbLibrary {
                 imagepng($this->oldImage);
                 break;
             case 'WEBP':
-                if ($rawData === false) {
-                    header('Content-type: image/webp');
-                }  
-                
-                if($ext == 'png')
-                    imagepalettetotruecolor($this->oldImage);
-                
-                imagewebp($this->oldImage);
-                //imagedestroy($this->oldImage); 
+
+                if (function_exists('imagewebp')) {
+                    if ($rawData === false) {
+                        header('Content-type: image/webp');
+                    }
+
+                    if ($ext == 'png' or $ext == 'gif')
+                        imagepalettetotruecolor($this->oldImage);
+
+                    imagewebp($this->oldImage);
+                }
+                else {
+                    if ($rawData === false) {
+                        header('Content-type: image/jpeg');
+                    }
+                    
+                    imagejpeg($this->oldImage, null, $this->options['jpegQuality']);
+                }
+
                 break;
         }
 
@@ -952,7 +962,7 @@ class PHPThumb extends PHPThumbLibrary {
     public function getImageAsString($ext) {
         $data = null;
         ob_start();
-        $this->show(true,$ext);
+        $this->show(true, $ext);
         $data = ob_get_contents();
         ob_end_clean();
 
@@ -973,7 +983,7 @@ class PHPThumb extends PHPThumbLibrary {
      * @return \PHPThumb\GD
      */
     public function save($fileName, $format = null) {
-        $validFormats = array('GIF', 'JPG', 'PNG','WEBP','STRING');
+        $validFormats = array('GIF', 'JPG', 'PNG', 'WEBP', 'STRING');
         $format = ($format !== null) ? strtoupper($format) : $this->format;
 
         if (!in_array($format, $validFormats)) {
@@ -1013,6 +1023,12 @@ class PHPThumb extends PHPThumbLibrary {
                 imagepng($this->oldImage, $fileName);
                 break;
             case 'WEBP':
+                
+                $pathinfo = pathinfo($this->fileName);
+                
+                if($pathinfo['extension'] == 'png' or $pathinfo['extension'] == 'gif')
+                    imagepalettetotruecolor($this->oldImage);
+                
                 imagewebp($this->oldImage, $fileName);
                 break;
         }
@@ -1350,13 +1366,13 @@ class PHPThumb extends PHPThumbLibrary {
 
         // non-image files will return false
         /*
-        if ($formatInfo === false) {
-            if ($this->remoteImage) {
-                throw new Exception("Could not determine format of remote image: {$this->fileName}");
-            } else {
-                throw new Exception("File is not a valid image: {$this->fileName}");
-            }
-        }*/
+          if ($formatInfo === false) {
+          if ($this->remoteImage) {
+          throw new Exception("Could not determine format of remote image: {$this->fileName}");
+          } else {
+          throw new Exception("File is not a valid image: {$this->fileName}");
+          }
+          } */
 
         $mimeType = isset($formatInfo['mime']) ? $formatInfo['mime'] : null;
 
@@ -1374,7 +1390,7 @@ class PHPThumb extends PHPThumbLibrary {
                 $this->format = 'WEBP';
                 break;
             default:
-                //throw new Exception("Image format not supported: {$mimeType}");
+            //throw new Exception("Image format not supported: {$mimeType}");
         }
     }
 
@@ -1399,7 +1415,7 @@ class PHPThumb extends PHPThumbLibrary {
             case 'WEBP':
                 $isCompatible = $gdInfo['WebP Support'];
                 break;
-            
+
             default:
                 $isCompatible = false;
         }

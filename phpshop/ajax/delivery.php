@@ -7,12 +7,7 @@
 session_start();
 $_classPath = "../";
 include($_classPath . "class/obj.class.php");
-PHPShopObj::loadClass("base");
-PHPShopObj::loadClass("order");
-PHPShopObj::loadClass("modules");
-PHPShopObj::loadClass("lang");
-PHPShopObj::loadClass("delivery");
-PHPShopObj::loadClass("cart");
+PHPShopObj::loadClass(["base", "order", "modules", "lang", "delivery", "cart"]);
 
 $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, true);
 
@@ -26,7 +21,7 @@ $PHPShopOrder = new PHPShopOrderFunction();
 $PHPShopLang = new PHPShopLang(array('locale' => $_SESSION['lang'], 'path' => 'shop'));
 
 // Модули
-$PHPShopModules = new PHPShopModules($_classPath . "modules/");
+$PHPShopModules = new PHPShopModules($_classPath . "modules/",false,"../../");
 
 // Подключаем библиотеку доставки
 require_once $_classPath . "core/order.core/delivery.php";
@@ -42,7 +37,10 @@ $PHPShopCart = new PHPShopCart();
 $totalsumma = (float) $PHPShopOrder->returnSumma($PHPShopCart->getSumPromo(true));
 
 // Итого товары без акции
-$totalsumma += (float) $PHPShopOrder->returnSumma($PHPShopCart->getSumWithoutPromo(true), $PHPShopOrder->ChekDiscount((int)$_REQUEST['sum']), '', (float) $GetDeliveryPrice);
+$totalsumma += (float) $PHPShopOrder->returnSumma($PHPShopCart->getSumWithoutPromo(true), $PHPShopOrder->ChekDiscount((int) $_REQUEST['sum']), '', (float) $GetDeliveryPrice);
+
+// Итого с учетом бонусов
+$totalsumma -= (float) (new PHPShopBonus((int) $_SESSION['UsersId']))->getUserBonus($totalsumma);
 
 $deliveryArr = delivery(false, intval($_REQUEST['xid']), $_REQUEST['sum']);
 $dellist = $deliveryArr['dellist'];

@@ -363,7 +363,7 @@ class CommerceMLLoader {
 
 				// Загрузка дополнительных полей справочника из МойСклад
                 /*
-                $file = 'http://priceexport.sklad24.online/***/price.csv';
+                $file = 'http://priceexport.sklad24.online';
                 $handle = fopen($file, "r");
                 $i = 0;
                 while ($data = fgetcsv($handle, 0, ';')) {
@@ -373,7 +373,6 @@ class CommerceMLLoader {
                         $csv_data[$data[0]] = $data;
                     $i++;
                 }*/
-
 
                 // Запись в файл
                 if (count($this->category_array) > 1) {

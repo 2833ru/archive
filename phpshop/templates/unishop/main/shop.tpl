@@ -279,12 +279,13 @@
                             </li>
                         </ul>
                         <div class="footer-social">
-
-                            <!-- Social Button -->
-                            <a class="social-button hidden-xs hidden-sm header-top-link" href="#" title="{Поделится в} Facebook"><i class="fa fa-facebook" aria-hidden="true"></i></a>
-                            <a class="social-button hidden-xs hidden-sm header-top-link" href="#" title="{Поделится в} Контакте"><i class="fa fa-vk" aria-hidden="true"></i></a>
-                            <a class="social-button hidden-xs hidden-sm header-top-link" href="#" title="{Поделится в} Одноклассники"><i class="fa fa-odnoklassniki" aria-hidden="true"></i></a>
-                            <!--/ Social Button -->
+                            <!-- Социальные сети -->
+                            <a class="social-button header-top-link @php __hide('vk'); php@" title="ВКонтакте" href="@vk@" target="_blank"><em class="fa fa-vk" aria-hidden="true"></em></a>
+                            <a class="social-button header-top-link @php __hide('telegram'); php@" title="Telegram" href="@telegram@" target="_blank"> <em class="fa fa-telegram" aria-hidden="true"></em></a>
+                            <a class="social-button header-top-link @php __hide('odnoklassniki'); php@" title="Одноклассники" href="@odnoklassniki@" target="_blank"> <em class="fa fa-odnoklassniki" aria-hidden="true"></em></a>
+                            <a class="social-button header-top-link @php __hide('youtube'); php@" title="Youtube" href="@youtube@" target="_blank"><em class="fa fa-youtube" aria-hidden="true"></em></a>
+                            <a class="social-button header-top-link @php __hide('whatsapp'); php@" title="WhatsApp" href="@whatsapp@" target="_blank"><em class="fa fa-whatsapp" aria-hidden="true"></em></a>
+                            <!-- / Социальные сети -->
                         </div>
                     </div>
                     <!-- Contact Us Ends -->
@@ -395,7 +396,7 @@
             <div class="modal-dialog modal-sm auto-modal">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">x</span><span class="sr-only">Close</span></button>
                         <h4 class="modal-title">{Авторизация}</h4>
                         <span id="usersError" class="hide">@usersError@</span>
                     </div>

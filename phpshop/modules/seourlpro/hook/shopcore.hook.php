@@ -235,7 +235,7 @@ function seoPaginatorFeatures($obj)
             }
 
             // ƒобавление номера страниц в им€ каталога
-            $obj->set('catalogCategory', ' - страница ' . $page, true);
+            $obj->set('catalogCategory', ' - '.__('страница').' ' . $page, true);
         }
 
         // —оздание переменной точного адреса canonical дл€ отсеивани€ дублей

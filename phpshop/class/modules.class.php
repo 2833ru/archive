@@ -3,7 +3,7 @@
 /**
  * Подключение модулей и дизайн хуков
  * @author PHPShop Software
- * @version 1.15
+ * @version 2.2
  * @package PHPShopClass
  */
 class PHPShopModules {
@@ -11,7 +11,7 @@ class PHPShopModules {
     /**
      * @var array массив системных настроек модулей
      */
-    var $ModValue = array();
+    var $ModValue = [];
 
     /**
      * @var string Относительное размещение модулей
@@ -27,13 +27,15 @@ class PHPShopModules {
      * @var bool кэширования результата проверки перехвата функций
      */
     var $memory = false;
-    var $unload = array();
+    var $unload = [];
 
     /**
      * Конструктор
      * @param string $ModDir  Относительное размещение модулей
+     * @param string $mod_path  Путь до модуля
+     * @param string $template_path  Относительное размещение дизайн-хуков
      */
-    function __construct($ModDir = "phpshop/modules/", $mod_path = false) {
+    function __construct($ModDir = "phpshop/modules/", $mod_path = false, $template_path = false) {
         $this->ModDir = $ModDir;
         $this->objBase = $GLOBALS['SysValue']['base']['modules'];
 
@@ -62,7 +64,7 @@ class PHPShopModules {
             }
 
         // Добавляем хуки шаблона
-        $this->addTemplateHook();
+        $this->addTemplateHook($template_path);
 
         // Проверка конфликтных модулей и хуков
         foreach ($this->unload as $v)
@@ -72,8 +74,8 @@ class PHPShopModules {
     /**
      * Обработка параметров конфига хуков шаблона /php/hook/
      */
-    function addTemplateHook() {
-        $ini = 'phpshop/templates' . chr(47) . @$_SESSION['skin'] . "/php/inc/config.ini";
+    function addTemplateHook($template_path=false) {
+        $ini = $template_path.'phpshop/templates' . chr(47) . @$_SESSION['skin'] . "/php/inc/config.ini";
         if (file_exists($ini)) {
             $SysValue = @parse_ini_file_true($ini, 1);
 
@@ -96,7 +98,7 @@ class PHPShopModules {
             if (is_array($SysValue['hook']))
                 foreach ($SysValue['hook'] as $k => $v)
                     if (!strstr($k, '#'))
-                        $this->ModValue['hook'][$k][] = './phpshop/templates/' . $_SESSION['skin'] . chr(47) . $v;
+                        $this->ModValue['hook'][$k][] = $template_path.'./phpshop/templates/' . $_SESSION['skin'] . chr(47) . $v;
 
             // Настройка HTML для учета типа верстки        
             if (!empty($SysValue['html']) and is_array($SysValue['html'])) {

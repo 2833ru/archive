@@ -43,10 +43,6 @@ function actionStart() {
             $PHPShopGUI->setField("¬ключить яндекс.ѕоиск", $PHPShopGUI->setCheckbox('option[yandex_search_enabled]', 1, '»спользовать яндекс.ѕоиск на сайте, вместо стандартного поиска', $option['yandex_search_enabled'])), 'in', true
     );
     
-    // яндекс.—пеллер
-    $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('яндекс.—пеллер', 
-            $PHPShopGUI->setField("¬ключить яндекс.—пеллер", $PHPShopGUI->setCheckbox('option[yandex_speller_enabled]', 1, '»спользовать яндекс.—пеллер дл€  проверки орфографии в поиске на сайте', $option['yandex_speller_enabled'])), 'in', true
-    );
 
     // Google Analitiks
     $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('—татистика посещений Google', $PHPShopGUI->setField('»дентификатор отслеживани€', $PHPShopGUI->setInputText('UA-', 'option[google_id]', $option['google_id'], 300, false, false, false, 'XXXXX-Y') .

@@ -186,10 +186,18 @@ class PHPShopCoreElement extends PHPShopElements {
             $icon = '/apple-touch-icon.png';
         $this->set('icon', $icon);
 
+        // Социальные сети
+        $this->set('vk', $this->PHPShopSystem->getSerilizeParam('bank.vk'));
+        $this->set('telegram', $this->PHPShopSystem->getSerilizeParam('bank.telegram'));
+        $this->set('odnoklassniki', $this->PHPShopSystem->getSerilizeParam('bank.odnoklassniki'));
+        $this->set('whatsapp', $this->PHPShopSystem->getSerilizeParam('bank.whatsapp'));
+        $this->set('youtube', $this->PHPShopSystem->getSerilizeParam('bank.youtube'));
+
         $this->set('company', $this->PHPShopSystem->getValue('company'));
         $this->set('descrip', $this->PHPShopSystem->getValue('descrip'));
         $this->set('adminMail', $this->PHPShopSystem->getValue('adminmail2'));
         $this->set('pathTemplate', $this->getValue('dir.templates') . chr(47) . $_SESSION['skin']);
+
         $this->set('serverName', PHPShopString::check_idna($_SERVER['SERVER_NAME']));
         $this->set('serverShop', PHPShopString::check_idna($_SERVER['SERVER_NAME']));
         if (!empty($_SESSION['UserLogin']))
@@ -239,6 +247,15 @@ class PHPShopCoreElement extends PHPShopElements {
         // Demo режим
         if (isset($_GET['demo']))
             $PHPShopBase->setParam('template_theme.demo', 'false');
+
+        // Сжатие статики
+        if ($this->PHPShopSystem->ifSerilizeParam('admoption.min')) {
+            $this->set('pathTemplateMin', '/files/min.php?f=' . $this->getValue('dir.templates') . chr(47) . $_SESSION['skin']);
+            $this->set('pathMin', '/files/min.php?f=');
+        } else {
+            $this->set('pathTemplateMin', $this->getValue('dir.templates') . chr(47) . $_SESSION['skin']);
+            $this->set('pathMin', null);
+        }
     }
 
     /**
@@ -267,15 +284,15 @@ class PHPShopCoreElement extends PHPShopElements {
             $js .= 'var AJAX_SCROLL = true;';
         else
             $js .= 'var AJAX_SCROLL = false;';
-        
+
         // Кеширование фильтра
-        if($this->PHPShopSystem->ifSerilizeParam("admoption.filter_cache_enabled"))
-             $js .= 'var FILTER_CACHE = true;';
+        if ($this->PHPShopSystem->ifSerilizeParam("admoption.filter_cache_enabled"))
+            $js .= 'var FILTER_CACHE = true;';
         else
             $js .= 'var FILTER_CACHE = false;';
 
-        if($this->PHPShopSystem->ifSerilizeParam("admoption.filter_products_count"))
-             $js .= 'var FILTER_COUNT = true;';
+        if ($this->PHPShopSystem->ifSerilizeParam("admoption.filter_products_count"))
+            $js .= 'var FILTER_COUNT = true;';
         else
             $js .= 'var FILTER_COUNT = false;';
 
@@ -1144,8 +1161,15 @@ class PHPShopSkinElement extends PHPShopElements {
                     unset($_SESSION['Memory']);
                     unset($_SESSION['gridChange']);
                     $_SESSION['skin'] = $skin;
-                    // используется в модуле skinpage
-                    $_SESSION['skinSave'] = $skin;
+
+                    // Сжатие статики
+                    if ($this->PHPShopSystem->ifSerilizeParam('admoption.min')) {
+                        $this->set('pathTemplateMin', '/files/min.php?f=' . $this->getValue('dir.templates') . chr(47) . $_SESSION['skin']);
+                        $this->set('pathMin', '/files/min.php?f=');
+                    } else {
+                        $this->set('pathTemplateMin', $this->getValue('dir.templates') . chr(47) . $_SESSION['skin']);
+                        $this->set('pathMin', null);
+                    }
                 }
             }
         }
@@ -1871,8 +1895,8 @@ class PHPShopRecaptchaElement extends PHPShopElements {
                 $dis = '<img src="phpshop/lib/captcha/captcha.php" align="left" style="margin-right:10px"> <input type="text" name="key" class="form-control" placeholder="' . __('Код с картинки') . '..." style="width:100px" required="">';
                 $this->recaptcha = false;
             }
-        }
-        else $dis = null;
+        } else
+            $dis = null;
 
         return $dis;
     }
@@ -1883,6 +1907,9 @@ class PHPShopRecaptchaElement extends PHPShopElements {
      */
     public function true(){
     return $this->recaptcha;
+
+
+
 
 
     }

@@ -20,6 +20,7 @@ PHPShopObj::loadClass("string");
 PHPShopObj::loadClass("cart");
 PHPShopObj::loadClass("security");
 PHPShopObj::loadClass("user");
+PHPShopObj::loadClass("bonus");
 
 $_REQUEST['promocode'] = PHPShopString::utf8_win1251($_REQUEST['promocode']);
 $_REQUEST['sum'] = PHPShopString::utf8_win1251($_REQUEST['sum']);
@@ -371,15 +372,18 @@ $total = $promoSum;
 // Итого товары без акции, применяем скидку статуса пользователя\суммы заказа
 $total += (float) $PHPShopOrder->returnSumma($PHPShopCart->getSumWithoutPromo(true), $PHPShopOrder->ChekDiscount($totalsumma), '', (float) $delivery);
 
+// Итого с учетом бонусов
+$total -= (float) (new PHPShopBonus((int) $_SESSION['UsersId']))->getUserBonus($total);
+
 // Округление
 $totalsummainput = number_format($totalsummainput, $PHPShopSystem->format, '.', '');
 
 // Процент
 if (strstr($discountAll, '%')) {
     $discount = ($data['discount'] * $_REQUEST['sum'] / 100);
-    $discount = "-" . number_format($discount, $PHPShopSystem->format, '.', '');
+    $discount = "- " . number_format($_REQUEST['ssum']+$discount, $PHPShopSystem->format, '.', '');
 } else
-    $discount = $data['discount'];
+    $discount = "- " .$_REQUEST['ssum']+$data['discount'];
 
 // Результат
 $_RESULT = array(

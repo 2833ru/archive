@@ -36,8 +36,8 @@
                     <span class="@php __hide('avgRateNum'); php@ text-primary">@avgRateNum@</span>
                 </div>
             </div>
-            <a class="btn btn-sm btn-outline-primary btn-pill transition-3d-hover @elementCartOptionHide@" href="/shop/UID_@productUid@.html">@productSale@</a>
-            <button type="button" class="btn btn-sm btn-outline-primary btn-pill transition-3d-hover addToCartList @elementCartHide@">@flowProductSale@</button>
+           <a class="btn btn-sm btn-outline-primary btn-pill transition-3d-hover @elementCartOptionHide@" href="/shop/UID_@productUid@.html">@productSale@</a>
+            <button type="button" class="btn btn-sm btn-outline-primary btn-pill transition-3d-hover addToCartList @elementCartHide@" data-uid="@productUid@">@flowProductSale@</button>
         </div>
     </div>
     <!-- End Product -->

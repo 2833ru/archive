@@ -6,7 +6,7 @@
         <div class="container-fluid">
             <!-- Contact Us Starts -->
             <div class="col-md-3 col-sm-6 col-xs-12" itemscope itemtype="http://schema.org/Organization">
-                 <a href="/" class="@php __hide('logo'); php@"><img src="@logo@" alt="" width="180"></a>
+                <a href="/" class="@php __hide('logo'); php@"><img src="@logo@" alt="" width="180"></a>
                 <ul>
                     <li class="footer-map" itemprop="address" itemscope itemtype="http://schema.org/PostalAddress"><span itemprop="streetAddress">@streetAddress@</span></li>
                     <li class="footer-email"><a href="mailto:@adminMail@" itemprop="email">@adminMail@</a></li>
@@ -15,7 +15,7 @@
                     <li class="footer-map">@workingTime@</li>
                 </ul>
             </div>
-            
+
 
             <!-- Contact Us Ends -->
             <!-- My Account Links Starts -->
@@ -45,7 +45,16 @@
 
                 @sticker_pay@
 
-                @sticker_socfooter@
+                <!-- Социальные сети -->
+                <ul class="social-menu list-inline">
+                    <li class="list-inline-item @php __hide('vk'); php@"><a class="social-button header-top-link" title="ВКонтакте" href="@vk@" target="_blank"><em class="fa fa-vk" aria-hidden="true">.</em></a></li>
+                    <li class="list-inline-item @php __hide('telegram'); php@"><a class="social-button header-top-link" title="Telegram" href="@telegram@" target="_blank"> <em class="fa fa-telegram" aria-hidden="true">.</em></a></li>
+                    <li class="list-inline-item @php __hide('odnoklassniki'); php@"><a class="social-button header-top-link" title="Одноклассники" href="@odnoklassniki@" target="_blank"> <em class="fa fa-odnoklassniki" aria-hidden="true">.</em></a></li>
+                    <li class="list-inline-item @php __hide('youtube'); php@"><a class="social-button header-top-link" title="Youtube" href="@youtube@" target="_blank"><em class="fa fa-youtube" aria-hidden="true">.</em></a></li>
+                    <li class="list-inline-item  @php __hide('whatsapp'); php@"><a class="social-button header-top-link" title="WhatsApp" href="@whatsapp@" target="_blank"><em class="fa fa-whatsapp" aria-hidden="true">.</em></a></li>
+                </ul>
+                <!-- / Социальные сети -->
+
                 @button@
             </div>
             <!-- Information Links Ends -->

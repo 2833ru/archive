@@ -24,7 +24,7 @@
         <!-- Preload -->
         <link rel="preload" href="@pathTemplate@/fonts/rouble.woff" as="font" type="font/woff2" crossorigin>
         <link rel="preload" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" as="style">
-        <link rel="preload" href="@pageCss@" as="style">
+        <link rel="preload" href="@pathTemplateMin@/style.css" as="style">
         <link rel="preload" href="@pathTemplate@/assets/vendor/fontawesome/css/all.min.css" as="style">
         <link rel="preload" href="@pathTemplate@/assets/vendor/hs-mega-menu/dist/hs-mega-menu.min.css" as="style">
         <link rel="preload" href="@pathTemplate@/assets/vendor/slick-carousel/slick/slick.css" as="style">
@@ -45,10 +45,10 @@
         <link rel="stylesheet" href="@pathTemplate@/assets/vendor/slick-carousel/slick/slick.css">
         <link rel="stylesheet" href="@pathTemplate@/assets/vendor/select2/dist/css/select2.min.css">
         <link rel="stylesheet" href="@pathTemplate@css/suggestions.min.css">
-        <link href="@pathTemplate@/css/jquery-ui.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="@pathTemplate@/css/jquery-ui.min.css">
 
         <!-- Core CSS -->
-        <link href="@pageCss@" type="text/css" rel="stylesheet">
+        <link href="@pathTemplateMin@/style.css" type="text/css" rel="stylesheet">
 
         <!-- Search Content -->
         <div id="searchSlideDown" class="hs-unfold-content dropdown-unfold search-slide-down">
@@ -341,7 +341,7 @@
             <!-- Конец Навигации -->
 
             <script src="@pathTemplate@/assets/vendor/jquery/dist/jquery.min.js"></script>
-            <script src="java/jqfunc.js"></script>
+            <script src="@pathMin@java/jqfunc.js"></script>
 
             @php
             if($GLOBALS['PHPShopNav']->objNav['name'] == 'UID' or  $GLOBALS['PHPShopNav']->objNav['path'] == 'order' or  $GLOBALS['PHPShopNav']->objNav['path'] == 'done' or $GLOBALS['PHPShopNav']->objNav['path'] == 'news' or $GLOBALS['PHPShopNav']->objNav['path'] == 'users' or $GLOBALS['PHPShopNav']->objNav['path'] == 'page'){
@@ -441,7 +441,17 @@
                                 <a href="tel:@telNum2@"><li class="nav-item small text-muted mb-0"><span itemprop="telephone">@telNum2@</span></li></a>
                                 <li class="nav-item small text-muted mb-0">@workingTime@</li>
                                 <li class="nav-item small text-muted mb-0" itemprop="address" itemscope itemtype="http://schema.org/PostalAddress"><span itemprop="streetAddress">@streetAddress@</span></li>
-                                <li class="nav-item">@sticker_footer_icon@</li>
+                                <li class="nav-item">
+                                    <!-- Социальные сети -->
+                                    <ul class="list-inline">
+                                        <li class="list-inline-item @php __hide('vk'); php@"><a class="btn btn-xs btn-icon btn-soft-primary" title="ВКонтакте" href="@vk@" target="_blank"><em class="fab fa-vk" aria-hidden="true"></em></a></li>
+                                        <li class="list-inline-item @php __hide('telegram'); php@"><a class="btn btn-xs btn-icon btn-soft-primary" title="Telegram" href="@telegram@" target="_blank"> <em class="fab fa-telegram" aria-hidden="true"></em></a></li>
+                                        <li class="list-inline-item @php __hide('odnoklassniki'); php@"><a class="btn btn-xs btn-icon btn-soft-primary" title="Одноклассники" href="@odnoklassniki@" target="_blank"> <em class="fab fa-odnoklassniki" aria-hidden="true"></em></a></li>
+                                        <li class="list-inline-item @php __hide('youtube'); php@"><a class="btn btn-xs btn-icon btn-soft-primary" title="Youtube" href="@youtube@" target="_blank"><em class="fab fa-youtube" aria-hidden="true"></em></a></li>
+                                        <li class="list-inline-item  @php __hide('whatsapp'); php@"><a class="btn btn-xs btn-icon btn-soft-primary" title="WhatsApp" href="@whatsapp@" target="_blank"><em class="fab fa-whatsapp" aria-hidden="true"></em></a></li>
+                                    </ul>
+                                    <!-- / Социальные сети -->
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -740,9 +750,9 @@
         <script src="@pathTemplate@/assets/js/theme.min.js"></script>
 
         <!-- Core JS -->
-        <script src="@pathTemplate@/js/phpshop.js"></script>
+        <script src="@pathTemplateMin@/js/phpshop.js"></script>
         <script src="phpshop/locale/@php echo $_SESSION['lang']; php@/template.js"></script>
-        <script src="@pathTemplate@/js/jquery.cookie.js"></script>
+        <script src="@pathTemplate@/js/jquery.cookie.min.js"></script>
         <script src="@pathTemplate@/js/jquery-ui.min.js"></script>
         <script src="@pathTemplate@/js/jquery.suggestions.min.js"></script>
         <script src="@pathTemplate@/js/jquery.maskedinput.min.js"></script>
@@ -751,7 +761,7 @@
 
 
         <!-- JS Plugins Init. -->
-        <script src="@pathTemplate@/js/flow.js"></script>
+        <script src="@pathTemplateMin@/js/flow.js"></script>
 
         @visualcart_lib@
         <div class="d-none d-sm-block">

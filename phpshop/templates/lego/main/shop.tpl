@@ -21,31 +21,31 @@
         <link rel="mask-icon" href="@icon@" >
 
         <!-- Preload -->
-        <link rel="preload" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/bootstrap.min.css" as="style">
-        <link rel="preload" href="@pageCss@" as="style">
-        <link rel="preload" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/icomoon.css" as="style">
-        <link rel="preload" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@/fonts/rouble.woff"  as="font" type="font/woff2" crossorigin>
-        <link rel="preload" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@/fonts/StemMedium/StemMedium.woff2"  as="font" type="font/woff2" crossorigin>
-        <link rel="preload" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@/fonts/StemLight/StemLight.woff2"  as="font" type="font/woff2" crossorigin>
-        <link rel="preload" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@/fonts/fa-light-300.woff2"  as="font" type="font/woff2" crossorigin>
-        <link rel="preload" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@/fonts/fontawesome-webfont.woff?v=4.2.0"  as="font" type="font/woff2" crossorigin>
-        <link rel="preload" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@/fonts/icomoon/icomoon.ttf?c5w26q"  as="font" type="font/woff2" crossorigin>
+        <link rel="preload" href="@pathTemplate@css/bootstrap.min.css" as="style">
+        <link rel="preload" href="@pathTemplateMin@/style.css" as="style">
+        <link rel="preload" href="@pathTemplate@css/icomoon.css" as="style">
+        <link rel="preload" href="@pathTemplate@/fonts/rouble.woff"  as="font" type="font/woff2" crossorigin>
+        <link rel="preload" href="@pathTemplate@/fonts/StemMedium/StemMedium.woff2"  as="font" type="font/woff2" crossorigin>
+        <link rel="preload" href="@pathTemplate@/fonts/StemLight/StemLight.woff2"  as="font" type="font/woff2" crossorigin>
+        <link rel="preload" href="@pathTemplate@/fonts/fa-light-300.woff2"  as="font" type="font/woff2" crossorigin>
+        <link rel="preload" href="@pathTemplate@/fonts/fontawesome-webfont.woff?v=4.2.0"  as="font" type="font/woff2" crossorigin>
+        <link rel="preload" href="@pathTemplate@/fonts/icomoon/icomoon.ttf?c5w26q"  as="font" type="font/woff2" crossorigin>
 
         <!-- Bootstrap -->
-        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/bootstrap.min.css" rel="stylesheet">
+        <link href="@pathTemplate@css/bootstrap.min.css" rel="stylesheet">
     </head>
     <body id="body" data-dir="@ShopDir@" data-path="@php echo $GLOBALS['PHPShopNav']->objNav['path']; php@" data-id="@php echo $GLOBALS['PHPShopNav']->objNav['id']; php@" data-subpath="@php echo $GLOBALS['PHPShopNav']->objNav['name']; php@" data-token="@dadataToken@">
 
-        <link id="bootstrap_theme" data-name="@php echo $_SESSION['skin']; php@" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/@lego_theme@.css" rel="stylesheet">
-        <link href="@pageCss@" type="text/css" rel="stylesheet">
-                
+        <link id="bootstrap_theme" data-name="@php echo $_SESSION['skin']; php@" href="@pathTemplateMin@css/@lego_theme@.css" rel="stylesheet">
+        <link href="@pathTemplateMin@/style.css" type="text/css" rel="stylesheet">
+
         <!-- Header -->
         @header@
         <!--/ Header -->
 
         <!-- jQuery -->
-        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery-1.11.0.min.js"></script>
-        <script src="java/jqfunc.js"></script>
+        <script src="@pathTemplate@/js/jquery-1.11.0.min.js"></script>
+        <script src="@pathMin@java/jqfunc.js"></script>
 
         <!-- Container -->
         @container@
@@ -215,7 +215,7 @@
             <div class="modal-dialog modal-sm auto-modal">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">x</span><span class="sr-only">Close</span></button>
                         <h4 class="modal-title">{Авторизация}</h4>
                         <span id="usersError" class="hide">@usersError@</span>
                     </div>
@@ -246,7 +246,7 @@
 
                             <input type="hidden" value="1" name="user_enter">
                             <button type="submit" class="btn btn-primary">{Войти}</button>
-                            
+
                             <a href="/users/register.html">{Зарегистрироваться}</a>
                         </div>
                     </form>
@@ -254,7 +254,7 @@
             </div>
         </div>
         <!--/ Модальное окно авторизации-->
-        
+
         @editor@
 
         <div class="search-big-block">
@@ -270,40 +270,40 @@
         <!-- Согласие на использование cookie  -->
         <div class="cookie-message hide"><p></p><a href="#" class="btn btn-default btn-sm">Ok</a></div>
 
-        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/swiper.min.css" rel="stylesheet">
-        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/suggestions.min.css" rel="stylesheet">
-        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/bootstrap-select.min.css" rel="stylesheet"> 
-        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/jquery-ui.min.css" rel="stylesheet">
-        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/jquery.bxslider.css" rel="stylesheet">
-        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/bar.css" rel="stylesheet">
-        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/fontawesome-light.css" rel="stylesheet">
-        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/touchnswipe.min.css" rel="stylesheet" type="text/css">
-        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/tns_prod.min.css" type="text/css" rel="stylesheet">
-        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@/js/tooltipster.bundle.min.js" type="text/javascript"></script>
-    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/popper.min.js" type="text/javascript"></script>
-    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/hammer.min.js" type="text/javascript"></script>
-    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/TweenMax.min.js" type="text/javascript"></script>
-    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.touchnswipe.min.js" type="text/javascript"></script>
-    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/bootstrap.min.js"></script>
-    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/swiper.min.js"></script>
-    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.elevatezoom.js"></script>
-    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/sticky-sidebar.js"></script>
-    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.lazyloadxt.min.js"></script>
-    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/imagesloaded.pkgd.js"></script>
-    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/masonry.pkgd.min.js"></script>
-    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/bootstrap-select.min.js"></script>
-    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.maskedinput.min.js"></script>
-    <script src="phpshop/locale/@php echo $_SESSION['lang']; php@/template.js"></script>
-    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/flipclock.min.js"></script>
-    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/lego.js"></script>
-    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@/js/phpshop.js"></script>
-    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@/js/jquery.cookie.js"></script>
-    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.waypoints.min.js"></script>
-    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/inview.min.js"></script>
-    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery-ui.min.js"></script>
-    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.bxslider.min.js"></script>
-    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.suggestions.min.js"></script>
-    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.ui.touch-punch.min.js"></script>
-    
-    @visualcart_lib@
-    <div class="visible-lg visible-md">
+        <link href="@pathTemplate@css/swiper.min.css" rel="stylesheet">
+        <link href="@pathTemplate@css/suggestions.min.css" rel="stylesheet">
+        <link href="@pathTemplate@css/bootstrap-select.min.css" rel="stylesheet"> 
+        <link href="@pathTemplate@css/jquery-ui.min.css" rel="stylesheet">
+        <link href="@pathTemplate@css/jquery.bxslider.css" rel="stylesheet">
+        <link href="@pathTemplateMin@css/bar.css" rel="stylesheet">
+        <link href="@pathTemplate@css/fontawesome-light.css" rel="stylesheet">
+        <link href="@pathTemplate@css/touchnswipe.min.css" rel="stylesheet">
+        <link href="@pathTemplate@css/tns_prod.min.css" rel="stylesheet">
+        <script src="@pathTemplate@/js/tooltipster.bundle.min.js"></script>
+        <script src="@pathTemplate@/js/popper.min.js"></script>
+        <script src="@pathTemplate@/js/hammer.min.js"></script>
+        <script src="@pathTemplate@/js/TweenMax.min.js"></script>
+        <script src="@pathTemplate@/js/jquery.touchnswipe.min.js"></script>
+        <script src="@pathTemplate@/js/bootstrap.min.js"></script>
+        <script src="@pathTemplate@/js/swiper.min.js"></script>
+        <script src="@pathTemplate@/js/jquery.elevatezoom.js"></script>
+        <script src="@pathTemplate@/js/sticky-sidebar.js"></script>
+        <script src="@pathTemplate@/js/jquery.lazyloadxt.min.js"></script>
+        <script src="@pathTemplate@/js/imagesloaded.pkgd.js"></script>
+        <script src="@pathTemplate@/js/masonry.pkgd.min.js"></script>
+        <script src="@pathTemplate@/js/bootstrap-select.min.js"></script>
+        <script src="@pathTemplate@/js/jquery.maskedinput.min.js"></script>
+        <script src="phpshop/locale/@php echo $_SESSION['lang']; php@/template.js"></script>
+        <script src="@pathTemplate@/js/flipclock.min.js"></script>
+        <script src="@pathTemplate@/js/lego.js"></script>
+        <script src="@pathTemplate@/js/phpshop.js"></script>
+        <script src="@pathTemplate@/js/jquery.cookie.js"></script>
+        <script src="@pathTemplate@/js/jquery.waypoints.min.js"></script>
+        <script src="@pathTemplate@/js/inview.min.js"></script>
+        <script src="@pathTemplate@/js/jquery-ui.min.js"></script>
+        <script src="@pathTemplate@/js/jquery.bxslider.min.js"></script>
+        <script src="@pathTemplate@/js/jquery.suggestions.min.js"></script>
+        <script src="@pathTemplate@/js/jquery.ui.touch-punch.min.js"></script>
+
+        @visualcart_lib@
+        <div class="visible-lg visible-md">

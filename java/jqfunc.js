@@ -2,13 +2,13 @@
  * Поддержка JQuery функций
  * @package PHPShopJavaScript
  * @author PHPShop Software
- * @version 1.5
+ * @version 1.6
  */
 
 // Иконки в основном меню категорий
 var MEGA_MENU_ICON = false;
 
-// Меню дублирующих категорий вертикально. Оптимимально для больших каталогов в шаблоне bootstrap
+// Меню дублирующих категорий вертикально
 var CATALOG_MENU = true;
 
 // Фасетный фильтр
@@ -40,19 +40,23 @@ function commentList(xid, comand, page, cid) {
     var message = "";
     var rateVal = 0;
 
-    if (page === undefined)
+    if (page === undefined) {
         page = 0;
+    }
 
-    if (cid === undefined)
+    if (cid === undefined) {
         cid = 0;
+    }
 
 
     if (comand == "add") {
         message = $('#message').val();
-        if (message == "")
+        if (message == "") {
             return false;
-        if ($('input[name=rate][type=radio]:checked').val())
+        }
+        if ($('input[name=rate][type=radio]:checked').val()) {
             rateVal = $('input[name=rate][type=radio]:checked').val();
+        }
     }
 
     if (comand == "edit_add") {
@@ -67,8 +71,9 @@ function commentList(xid, comand, page, cid) {
             cid = $('#commentEditId').val();
             $('#commentButtonAdd').show();
             $('commentButtonEdit').hide();
-        } else
+        } else {
             cid = 0;
+        }
     }
 
     $.ajax({
@@ -135,14 +140,14 @@ var locale_def = {
 function showAlertMessage(message, danger) {
 
     if (typeof danger != 'undefined') {
-        if (danger === true)
+        if (danger === true) {
             danger = 'danger';
+        }
         $('.success-notification').find('.alert').addClass('alert-' + danger);
     } else {
         $('.success-notification').find('.alert').removeClass('alert-danger');
         $('.success-notification').find('.alert').removeClass('alert-info');
     }
-
 
     var messageBox = '.success-notification';
     var innerBox = '#notification .notification-alert';
@@ -167,8 +172,9 @@ function IsEmail(email) {
 // добавление товара в вишлист
 function addToWishList(product_id, parent_id = 0) {
 
-    if (parent_id === undefined)
+    if (parent_id === undefined) {
         parent_id = '';
+    }
 
     $.ajax({
         url: ROOT_PATH + '/phpshop/ajax/wishlist.php',
@@ -190,8 +196,9 @@ function UpdateDeliveryJq(xid, param, stop_hook) {
     var sum = $("#OrderSumma").val();
     var wsum = $("#WeightSumma").html();
 
-    if (param === undefined)
+    if (param === undefined) {
         param = '';
+    }
 
     $("form[name='forma_order'] input[name=dostavka_metod]").attr('disabled', true);
     $(this).html(waitText);
@@ -208,14 +215,14 @@ function UpdateDeliveryJq(xid, param, stop_hook) {
                 $("#d").data('free', json['free_delivery']);
                 $("#TotalSumma").html(json['total']);
                 $("#seldelivery").html(json['dellist']);
-                if($('input[name="dostavka_metod"]:disabled').length > 0) {
+                if ($('input[name="dostavka_metod"]:disabled').length > 0) {
                     $('input[name="dostavka_metod"]:disabled').each(function (index, element) {
-                       if($(element).attr('title')) {
-                           $(element).closest('label').tooltip({
-                               title: $(element).attr('title'),
-                               placement: 'top'
-                           });
-                       }
+                        if ($(element).attr('title')) {
+                            $(element).closest('label').tooltip({
+                                title: $(element).attr('title'),
+                                placement: 'top'
+                            });
+                        }
                     });
                 }
 
@@ -228,8 +235,9 @@ function UpdateDeliveryJq(xid, param, stop_hook) {
 
                 // блокировка способов оплат
                 var paymentStop = $('input[name="dostavka_metod"]:checked').attr('data-option');
-                if (paymentStop !== undefined)
+                if (paymentStop !== undefined) {
                     var payment_array = paymentStop.split(",");
+                }
 
                 $('.paymOneEl input[name="order_metod"]').each(function () {
                     $(this).attr('disabled', false);
@@ -257,22 +265,23 @@ function UpdateDeliveryJq(xid, param, stop_hook) {
                 }
 
                 // заполняем фио значением из личных данных
-                if ($("form[name='forma_order'] input[name='fio_new']").val() == "")
+                if ($("form[name='forma_order'] input[name='fio_new']").val() == "") {
                     $("form[name='forma_order'] input[name='fio_new']").val($("form[name='forma_order'] input[name='name_new']").val());
+                }
 
-                //заполняем данными адрес, если выбран
+                // заполняем данными адрес, если выбран
                 $("#adres_id").change();
 
                 // Подсказки DaData.ru
-                if (typeof $('#body').attr('data-token') !== 'undefined' && $('#body').attr('data-token').length)
+                if (typeof $('#body').attr('data-token') !== 'undefined' && $('#body').attr('data-token').length) {
                     var DADATA_TOKEN = $('#body').attr('data-token');
+                }
                 if (DADATA_TOKEN !== false && DADATA_TOKEN !== undefined) {
-                    var
-                            token = DADATA_TOKEN,
-                            type = "ADDRESS",
-                            $city = $("form[name='forma_order'] input[name='city_new']"),
-                            $street = $("form[name='forma_order'] input[name='street_new']"),
-                            $house = $("form[name='forma_order'] input[name='house_new']");
+                    var token = DADATA_TOKEN;
+                    var type = "ADDRESS";
+                    var $city = $("form[name='forma_order'] input[name='city_new']");
+                    var $street = $("form[name='forma_order'] input[name='street_new']");
+                    var $house = $("form[name='forma_order'] input[name='house_new']");
 
                     $city.suggestions({
                         token: token,
@@ -303,17 +312,24 @@ function UpdateDeliveryJq(xid, param, stop_hook) {
                         onSelectNothing: clearPostalCode
                     });
                     function showPostalCode(suggestion) {
-                        $("[name='index_new']").val(suggestion.data.postal_code);
+
+                        // Хук на выбор индекса
+                        if (typeof showPostalCodeHook !== 'undefined' && typeof showPostalCodeHook === 'function') {
+                            showPostalCodeHook(suggestion.data.postal_code);
+                        } else {
+                            $("[name='index_new']").val(suggestion.data.postal_code);
+                        }
                     }
                     function clearPostalCode() {
-                        $("[name='index_new']").val("");
+
+                        // Хук на выбор индекса
+                        if (typeof clearPostalCodeHook !== 'undefined' && typeof clearPostalCodeHook === 'function') {
+                            showPostalCodeHook(suggestion.data.postal_code);
+                        } else {
+                            $("[name='index_new']").val("");
+                        }
+
                     }
-                    /*
-                     $("form[name='forma_order'] input[name='fio_new']").suggestions({
-                     token: DADATA_TOKEN,
-                     type: "NAME",
-                     count: 5
-                     });*/
                     $("form[name='forma_order'] input[name='org_name_new']").suggestions({
                         token: DADATA_TOKEN,
                         type: "PARTY",
@@ -325,11 +341,8 @@ function UpdateDeliveryJq(xid, param, stop_hook) {
     });
 }
 
-
-// Проверка данных заказа
 // Проверка формы заказа
-function OrderChekJq()
-{
+function OrderChekJq() {
 
     if ($("#makeyourchoise").val() != "DONE") {
         bad = 1;
@@ -340,35 +353,41 @@ function OrderChekJq()
     var badReq = 0;
     var badReqName = 0;
     var badReqEmail = 0;
-//    $('form[name="forma_order"] input.req, form[name="forma_order"] select.req').each(function() {
+    var badReqTel = 0;
     $('form[name="forma_order"] .req').each(function () {
 
-
         // проверяем валидность e-mail и имя пользователя
-        if ($(this).attr('name') == 'mail' && !IsEmail($(this).val()))
+        if ($(this).attr('name') == 'mail' && !IsEmail($(this).val())) {
             badReqEmail = 1;
+        }
 
-        if ($(this).attr('name') == 'name_new')
-            if ($(this).val().length < 3)
+        if ($(this).attr('name') == 'name_new') {
+
+            if ($(this).val().length < 3) {
                 badReqName = 1;
+            }
+        }
 
         if ($(this).val() == "" || ($(this).attr('name') == 'rule' && $(this).prop('checked') == false) || (badReqEmail && $(this).attr('name') == 'mail') || (badReqName && $(this).attr('name') == 'name_new')) {
+
             // переходим по якорю на самое верхнее незаполненое поле
             if (badReq == 0) {
                 var destination = $(this).parent().offset().top;
                 var par = $(this);
-                jQuery("html:not(:animated),body:not(:animated)").animate({scrollTop: destination}, 800, function () {
+                $("html:not(:animated),body:not(:animated)").animate({scrollTop: destination}, 800, function () {
                     par.focus();
                 });
             }
 
-            if (badReq == 0)
+            if (badReq == 0) {
                 badReq = 1;
+            }
+
             $(this).addClass('reqActiv');
         }
 
-    }
-    );
+    });
+
     if (badReqEmail == 1) {
         showAlertMessage(locale_def.OrderChekJq.badReqEmail);
     } else if (badReqName == 1) {
@@ -378,7 +397,7 @@ function OrderChekJq()
     } else if (bad == 1) {
         showAlertMessage(locale_def.OrderChekJq.badDelivery);
         var destination = $('#seldelivery').offset().top;
-        jQuery("html:not(:animated),body:not(:animated)").animate({scrollTop: destination}, 800);
+        $("html:not(:animated),body:not(:animated)").animate({scrollTop: destination}, 800);
     } else {
         $('form[name="forma_order"]').submit();
     }
@@ -386,35 +405,26 @@ function OrderChekJq()
 
 // функция генерации пароля
 function wpiGenerateRandomNumber(limit) {
-
     limit = limit || 8;
-
     var password = '';
-
     var chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
-
     var list = chars.split('');
     var len = list.length, i = 0;
-
     do {
-
         i++;
-
         var index = Math.floor(Math.random() * len);
-
         password += list[index];
 
     } while (i < limit);
-
     return password;
-
 }
 
 $(document).ready(function () {
 
     // DaData.ru токен
-    if (typeof $('#body').attr('data-token') !== 'undefined' && $('#body').attr('data-token').length)
+    if (typeof $('#body').attr('data-token') !== 'undefined' && $('#body').attr('data-token').length) {
         var DADATA_TOKEN = $('#body').attr('data-token');
+    }
 
     // закрытие сообщения по клику на иконку крестика
     $('#notification').on('click', 'img', function () {
@@ -423,8 +433,6 @@ $(document).ready(function () {
         });
     });
 
-
-    //*******************Авторизация, оформление заказа***************** 
     // логика генерации пароля при регистрации
     $(".passGen").click(function () {
         var str = wpiGenerateRandomNumber(8);
@@ -439,20 +447,7 @@ $(document).ready(function () {
         });
     });
 
-    // при смене способа оплаты, если оплата требует юр. поля, выводим их
-    // вариант когда способы выводились выпадающим списком
-//    $("#order_metod").change(function() {
-//        var str = "";
-//        $("#order_metod option:selected").each(function() {
-//            str = ".showYurDataForPaymentClass" + $(this).val();
-//        });
-//        if (str != "" && $(str))
-//            $("#showYurDataForPaymentLoad").html($(str).html());
-//        else
-//            $("#showYurDataForPaymentLoad").html($(str).html());
-//    }).change();
-
-    // Варианты оплат выводятся радиобоксами.
+    // Варианты оплат выводятся радиобоксами
     $("input#order_metod").change(function () {
         var str = "";
         str = ".showYurDataForPaymentClass" + $("input#order_metod:checked").val();
@@ -476,29 +471,27 @@ $(document).ready(function () {
             $("#showYurDataForPaymentLoad").html('');
         }
     });
-    // выделяем первую в списке оплату.
+
+    // выделяем первую в списке оплату
     $("input#order_metod:first").attr('checked', 'checked').change().closest('.paymOneEl').addClass('active');
-    
+
     // при изменении адреса, заполняем соотв. поля
     $("#adres_id").change(function () {
         var str = "";
         $(this).find("option:selected").each(function () {
             str = $(this).val();
         });
-        if (!str)
+        if (!str) {
             return;
+        }
 
-
-        // получаем данные адресов 
+        // получаем данные адресов
         var obj = jQuery.parseJSON($("input:hidden.adresListJson").val());
-        // обнуляем предыдущие данные
-        //$(this).closest('form').find("input:text").val("");
         $.each(obj, function (index, value) {
             $.each(value, function (index2, value2) {
                 $("input[name='" + index2 + "']").val("");
             });
         });
-
 
         $.each(obj[str], function (index, value) {
             if (value != "") {
@@ -512,8 +505,9 @@ $(document).ready(function () {
     // подбор городов из списка
     $("form[name='forma_order']").on('change', 'select.citylist', function () {
         var par = $(this).attr("name");
-        if (par == "city_new")
+        if (par == "city_new") {
             return false;
+        }
         if (par == "country_new") {
             $("form[name='forma_order'] select.citylist[name=city_new] option[value!='']").remove();
             $("form[name='forma_order'] select.citylist[name=state_new] option[value!='']").remove();
@@ -532,7 +526,7 @@ $(document).ready(function () {
                 region: $("form[name='forma_order'] select.citylist[name=state_new] option:selected").attr('for'),
                 par: par
             },
-            //dataType: 'xml',
+
             success: function (data) {
                 $("#citylist .wait").remove();
                 $("form[name='forma_order'] select.citylist[name=country_new]").attr("disabled", false);
@@ -557,24 +551,23 @@ $(document).ready(function () {
         UpdateDeliveryJq($(this).val());
     });
 
-
-
     // при вводе Имени пользователя, автоматом прописываем его в адрес если он пуст
     $("form[name='forma_order']").on('change', 'input[name=name_new]', function () {
-        if ($("form[name='forma_order'] input[name='fio_new']").val() == "")
+        if ($("form[name='forma_order'] input[name='fio_new']").val() == "") {
             $("form[name='forma_order'] input[name='fio_new']").val($(this).val());
+        }
     });
 
     // отключаем класс особого выделения для обязательных полей при переходе на них
     $('form[name="forma_order"]').on('keyup blur change', '.req', function () {
-        if ($(this).val() != '')
+        if ($(this).val() != '') {
             $(this).removeClass('reqActiv');
-        else
+        } else {
             $(this).addClass('reqActiv');
+        }
     });
 
-    //*******************Отзывы к товарам***************** 
-    // Если не авторизован, при попытке ввести отзыв, выводим сообщение, что необходима авторизация.
+    // Отзывы к товарам
     $('textarea.commentTextarea').on('focus', function () {
         if ($('input#commentAuthFlag').val() == 0) {
             $(this).val("").attr('readonly', 'readonly');
@@ -584,7 +577,6 @@ $(document).ready(function () {
             }
         }
     });
-
 
     // Склонение товара в корзине
     var cart_lang = [];
@@ -599,13 +591,15 @@ $(document).ready(function () {
     cart_lang[22] = 'а';
     cart_lang[23] = 'а';
     cart_lang[24] = 'а';
-    if (cart_lang[$('#num').text()] != 'undefined')
+    if (cart_lang[$('#num').text()] != 'undefined') {
         $('#lang-cart').text('товар' + cart_lang[$('#num').text()]);
+    }
 
     $(".button").click(function () {
         setTimeout(function () {
-            if (cart_lang[$('#num').text()] != 'undefined')
+            if (cart_lang[$('#num').text()] != 'undefined') {
                 $('#lang-cart').text('товар' + cart_lang[$('#num').text()]);
+            }
         }, 1000);
     });
 
@@ -616,20 +610,24 @@ $(document).ready(function () {
     });
 
 });
+
 // Вывод подсказок DaData.ru в форме юридических данных
 function showSuggestion(suggestion) {
     var data = suggestion.data;
-    if (!data)
+    if (!data) {
         return;
+    }
     $("input[name='org_inn_new']").val(data.inn);
     $("input[name='org_kpp_new']").val(data.kpp);
     $("input[name='org_yur_adres_new']").val(data.address.value);
     $("input[name='org_fakt_adres_new']").val(data.address.value);
 }
+
 function showSuggestionBank(suggestion) {
     var data = suggestion.data;
-    if (!data)
+    if (!data) {
         return;
+    }
     $("input[name='org_bik_new']").val(data.bic);
     $("input[name='org_city_new']").val(data.address.data.city);
     $("input[name='org_kor_new']").val(data.correspondent_account);

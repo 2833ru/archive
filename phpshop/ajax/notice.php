@@ -50,6 +50,7 @@ class AjaxNotice {
             $_POST['name_new'] = PHPShopString::utf8_win1251(strip_tags($_POST['name_new']));
             $_POST['name_new'] = PHPShopSecurity::TotalClean($_POST['name_new'], 4);
             $_POST['message'] = PHPShopString::utf8_win1251(strip_tags($_POST['message']));
+            $_POST['tel_new'] = PHPShopString::utf8_win1251(strip_tags($_POST['tel_new']));
             $PHPShopUsers = new PHPShopUsers();
             $PHPShopUsers->add_user_from_order($email);
 

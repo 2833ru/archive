@@ -34,9 +34,16 @@ class PHPShopSeoProCore extends PHPShopShop {
         $this->page = $GLOBALS['PHPShopNav']->objNav['page'];
         $this->PHPShopNav->objNav['nav'] = 'CID';
         $GLOBALS['SysValue']['nav']['nav'] = 'CID';
+        
 
-        if (!empty($GLOBALS['PHPShopNav']->objNav['id']))
+
+        if (!empty($GLOBALS['PHPShopNav']->objNav['id'])) {
             parent::CID();
+ 
+            // 404 если каталога не существует или мультибаза
+            if (empty($this->category_name) or $this->errorMultibase($this->category) or $this->PHPShopCategory->getParam('skin_enabled') == 1 or $GLOBALS['PHPShopNav']->objNav['page'] == 1)
+                parent::setError404();
+        }
         else {
             // Обработка массива памяти категорий при большой вложенности
             $GLOBALS['PHPShopSeoPro']->catArrayToMemory();
@@ -71,13 +78,13 @@ class PHPShopSeoProCore extends PHPShopShop {
         if ($seourl_option['paginator'] == 2) {
             if ($page > 1) {
                 $this->doLoadFunction('PHPShopShop', 'set_meta', $row);
-                $this->description .= ' Часть ' . $this->PHPShopNav->getPage();
-                $this->title .= ' Страница ' . $this->PHPShopNav->getPage();
+                $this->description .= ' ' . __('Часть') . ' ' . $this->PHPShopNav->getPage();
+                $this->title .= ' ' . __('Страница') . ' ' . $this->PHPShopNav->getPage();
                 return true;
             } elseif (!empty($page) and $page == 'ALL') {
                 $this->doLoadFunction('PHPShopShop', 'set_meta', $row);
-                $this->title .= ' Все страницы';
-                $this->set('catalogCategory', ' - Все страницы', true);
+                $this->title .= ' ' . __('Все страницы');
+                $this->set('catalogCategory', ' - ' . __('Все страницы'), true);
                 return true;
             }
         }

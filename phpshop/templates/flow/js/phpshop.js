@@ -187,21 +187,26 @@ function filter_load(filter_str, obj) {
                         if (data['logic'] == 0) {
                             $(this).attr('disabled', 'disabled');
                             $(this).next('.filter-item').addClass('filter-item-hide');
+                        } else if (data['logic'] == 1 && $(this).attr('data-count') != 1) {
+                            $(this).attr('disabled', 'disabled');
+                            $(this).next('.filter-item').addClass('filter-item-hide');
                         }
 
-                        if (FILTER_COUNT && data['logic'] == 0)
+                        if (FILTER_COUNT && data['logic'] == 0) {
                             $('[data-num="' + $(this).attr('name') + '"]').text(0);
+                        }
 
                         for (var key in data['filter']) {
                             if ($(this).attr('name') == key) {
 
-                                if (data['logic'] == 0) {
-                                    $(this).removeAttr('disabled');
-                                    $(this).next('.filter-item').removeClass('filter-item-hide');
-                                }
+                                $(this).removeAttr('disabled');
+                                $(this).next('.filter-item').removeClass('filter-item-hide');
 
-                                if (FILTER_COUNT && data['logic'] == 0)
+                                if (FILTER_COUNT && data['logic'] == 0) {
                                     $('[data-num="' + $(this).attr('name') + '"]').text(data['filter'][key]);
+                                } else if (data['logic'] == 1 && $(this).attr('data-count') != 1) {
+                                    $('[data-num="' + $(this).attr('name') + '"]').text(data['filter'][key]);
+                                }
                             }
                         }
                     });
@@ -581,7 +586,8 @@ $().ready(function () {
     }
 
     // добавление в корзину
-    $('body').on('click', 'button.addToCartList', function () {
+    $('body').on('click', '.addToCartList', function (e) {
+        e.preventDefault();
         addToCartList($(this).attr('data-uid'), $(this).attr('data-num'));
         $(this).attr('disabled', 'disabled');
         $(this).addClass('btn-soft-primary');

@@ -4,7 +4,7 @@
     <name>Генерация превью картинок</name>
     <faqlink>https://docs.phpshop.ru/moduli/dizain/thumbnail</faqlink>
     <description>Генерация новых превью картинок товаров с учетом формата сжатия Webp. </description>
-    <category>template,pro</category>
+    <category>template</category>
     <sign>1669014524</sign>
     <adminmenu>
         <title>Генерация превью картинок</title>

@@ -496,7 +496,7 @@ class PHPShopShop extends PHPShopShopCore {
             $chek_items = null;
 
 
-        if (!empty($row['odnotip'])) {
+        if (!empty($odnotipList)) {
 
             // Вставка в центральную часть
             if (PHPShopParser::check($this->getValue('templates.main_product_odnotip_list'), 'productOdnotipList')) {
@@ -515,8 +515,10 @@ class PHPShopShop extends PHPShopShopCore {
             $PHPShopOrm->mysql_error = false;
             $PHPShopOrm->debug = $this->debug;
             $result = $PHPShopOrm->query("select * from " . $this->objBase . " where " . $odnotipList . " " . $chek_items . " and  enabled='1' and parent_enabled='0' and sklad!='1' order BY FIELD (id, " . $row['odnotip'] . ")");
-            while ($row = mysqli_fetch_assoc($result))
-                $data[] = $row;
+
+            if ($result)
+                while ($row = mysqli_fetch_assoc($result))
+                    $data[] = $row;
 
             // Сетка товаров
             if (!empty($data) and is_array($data))
@@ -762,8 +764,11 @@ function CID_Product($category = null, $mode = false) {
     $this->dataArray = parent::getListInfoItem(false, false, false, __CLASS__, __FUNCTION__, $order['sql']);
 
     if (!is_array($this->dataArray)) {
-        if ($this->page > 1)
+        
+        if ($this->page > 1){
+            $this->category_name = null;
             return $this->setError404();
+        }
 
         if (isset($_POST['ajax'])) {
             if (isset($_POST['json'])) {
@@ -823,7 +828,9 @@ function CID_Product($category = null, $mode = false) {
             exit(json_encode([
                 'products' => PHPShopString::win_utf8(PHPShopParser::replacedir($this->separator . $grid)),
                 'pagination' => PHPShopString::win_utf8($this->get('productPageNav')),
-                'filter' => $this->update_filter($order['sql'])
+                'filter' => $this->update_filter($order['sql']),
+                'logic' => (int) $this->PHPShopSystem->getSerilizeParam('admoption.filter_logic'),
+                            /* 'sql' => $order['sql'] */
             ]));
         }
         header('Content-type: text/html; charset=' . $GLOBALS['PHPShopLang']->charset);

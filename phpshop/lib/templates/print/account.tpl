@@ -557,7 +557,7 @@ border-collapse: separate;}
                     @cart@
                     <tr>
                         <td colspan=5 align=right style="border-top: 1px solid #000000;border-left: 1px solid #000000;">{Скидка}:</td>
-                        <td class=tableright nowrap><b>@discount@%</b></td>
+                        <td class=tableright nowrap><b>@discount@</b></td>
                     </tr>
                     <tr>
                         <td colspan=5 align=right style="border-top: 1px solid #000000;border-left: 1px solid #000000;">{Итого}:</td>

@@ -18,6 +18,7 @@ PHPShopObj::loadClass("file");
 PHPShopObj::loadClass("promotions");
 PHPShopObj::loadClass("parser");
 PHPShopObj::loadClass("lang");
+PHPShopObj::loadClass("date");
 
 // Массив валют
 $PHPShopValutaArray = new PHPShopValutaArray();

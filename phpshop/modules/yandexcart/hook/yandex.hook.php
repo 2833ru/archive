@@ -189,14 +189,12 @@ function setProducts_yandexcart_hook($obj, $data) {
         $add .= '<vendorCode>' . $data['val']['vendor_code'] . '</vendorCode>';
 
     // condition
-    if ($data['val']['condition'] > 1 and ! empty($data['val']['condition_reason'])) {
-
-        if ($data['val']['condition'] == 2)
-            $condition = 'likenew';
-        else
-            $condition = 'used';
-
-        $add .= '<condition type="' . $condition . '"><reason>' . $data['val']['condition_reason'] . '</reason></condition>';
+    if ($data['val']['condition'] > 1) {
+        
+        $condition=[null,null,'preowned','showcasesample','reduction'];
+        $quality=[null,null,'perfect','excellent','good'];
+        
+        $add .= '<condition type="' . $condition[$data['val']['condition']] . '"><quality>'.$quality[$data['val']['quality']].'</quality><reason>' . $data['val']['condition_reason'] . '</reason></condition>';
     }
     
     // Срок годности

@@ -79,8 +79,8 @@ $().ready(function () {
     });
 
     // Отправление сообщения
-    $("body").on('click', ".send-message", function (event) {
-
+    $("body").on('click', ".send-message", function (e) {
+        e.preventDefault();
         var data = [];
 
         // Регистрация

@@ -97,7 +97,7 @@
                     <span itemprop="price" class="priceService" content="@productSchemaPrice@">@productPrice@</span> 
                     <span itemprop="priceCurrency" class="rubznak" content="RUB">@productValutaName@</span>  
                 </span>
-                <span class="text-body ml-4 @php __hide('productPriceOld'); php@"><del>@productPriceOld@</del> @specIcon@</span>
+                <span class="text-body ml-4 @php __hide('productPriceOld'); php@"><del class="price-old">@productPriceOld@</del> @specIcon@</span>
             </div>
 
             <div class="option-block">

@@ -381,7 +381,7 @@ class PHPShopRSS {
       <link>' . $this->ssl . $_SERVER['SERVER_NAME'] . $GLOBALS['SysValue']['dir']['dir'] . $url . '.html' . $from . '</link> 
       <description>' . $this->cleanStr($val['description']) . '</description>
       <g:image_link>' . $this->ssl . $_SERVER['SERVER_NAME'] . $val['picture'] . '</g:image_link> 
-      <g:price>' . $val['price'] . '</g:price> 
+      <g:price>' . $val['price'] . ' '.$this->defvalutaiso.'</g:price> 
       <g:availability>' . $val['p_enabled'] . '</g:availability>
       <g:id>' . $val['id'] . '</g:id>
       </item>';

@@ -95,7 +95,7 @@ function actionStart() {
             $result_content = '<ul class="list-group">';
 
             foreach ($PHPShopUpdate->content as $text)
-                $result_content.='<li class="list-group-item">' . $text . '</li>';
+                $result_content.='<li class="list-group-item">' . __($text,true) . '</li>';
 
             $result_content.='</ul>';
         }

@@ -1,5 +1,5 @@
 <?php
-
+include_once ('../../../../../class/string.class.php');
 /**
  * elFinder - file manager for web.
  * Core class.
@@ -3268,6 +3268,8 @@ class elFinder
         $cid = $args['cid'] ? (int)$args['cid'] : '';
         $mtimes = $args['mtime'] ? $args['mtime'] : array();
         $tmpfname = '';
+        
+        $files = $this->fileNamesToLatin($files);
 
         if (!$volume) {
             return array_merge(array('error' => $this->error(self::ERROR_UPLOAD, self::ERROR_TRGDIR_NOT_FOUND, '#' . $target)), $header);
@@ -5385,6 +5387,17 @@ var go = function() {
         foreach (glob($pattern) as $file) {
             (filemtime($file) < ($now - $time)) && unlink($file);
         }
+    }
+    
+    private function fileNamesToLatin($files)
+    {
+        foreach ($files['name'] as $key => $name) {
+            $nameParts = explode('.', $name);
+            $fileExt = '.' . array_pop($nameParts);
+            $files['name'][$key] = PHPShopString::toLatin(str_replace($fileExt, '', PHPShopString::utf8_win1251($name))) . $fileExt;
+        }
+
+        return $files;
     }
 
 } // END class

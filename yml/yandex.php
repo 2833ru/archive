@@ -3,7 +3,7 @@
 /**
  * Файл выгрузки для Яндекс Маркет
  * @author PHPShop Software
- * @version 3.7
+ * @version 3.8
  * @package PHPShopXML
  * @example ?retailcrm [bool] Выгрузка для RetailCRM
  * @example ?marketplace=cdek [bool] Выгрузка для СДЭК (упрощенный тип YML с использованием count)
@@ -437,6 +437,7 @@ class PHPShopYml {
                 "manufacturer" => $row['manufacturer'],
                 "condition" => $row['yandex_condition'],
                 "condition_reason" => $row['yandex_condition_reason'],
+                "quality" => $row['yandex_quality'],
                 "items" => $row['items'],
                 "gift" => $row['gift'],
                 "gift_check" => $row['gift_check'],
@@ -819,8 +820,9 @@ function serFooter() {
  * Компиляция документа, вывод результата
  */
 function compile() {
+    global $PHPShopBase;
 
-    if (isset($_GET['utf'])) {
+    if (isset($_GET['utf'])  or $PHPShopBase->codBase == 'utf-8') {
         $this->encoding = 'utf-8';
         $this->charset = 'utf-8';
     } else {
@@ -838,7 +840,7 @@ function compile() {
     $this->setProducts();
     $this->serFooter();
 
-    if (isset($_GET['utf'])) {
+    if (isset($_GET['utf']) or $PHPShopBase->codBase == 'utf-8') {
         $this->xml = PHPShopString::win_utf8($this->xml);
         $this->charset = 'utf-8';
     } else

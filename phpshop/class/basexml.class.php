@@ -58,7 +58,7 @@ class PHPShopBaseXml {
                     foreach ($row as $key => $val) {
 
                         // Корректируем теги на наличие первой цифры
-                        if (is_numeric($key{0})) {
+                        if (is_numeric($key[0])) {
                             $key = substr($key, 1);
                         }
 

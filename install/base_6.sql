@@ -388,7 +388,6 @@ INSERT INTO `phpshop_modules` (`path`, `name`, `date`, `servers`) VALUES
 ('oneclick', 'One Click', 1652271542, ''),
 ('seourlpro', 'SeoUrl', 1652271542, ''),
 ('yandexkassa', 'ЮKassa', 1652271542, ''),
-('mandarinhosted', 'MandarinPay', 1652271542, ''),
 ('robokassa', 'Robokassa', 1652271542, '');
 
 DROP TABLE IF EXISTS `phpshop_modules_hit_system`;
@@ -524,14 +523,11 @@ INSERT INTO `phpshop_modules_sticker_forms` (`id`, `name`, `path`, `content`, `m
 (2, 'Гарантия возврата денег', 'two', '<p class=\"icon\">&nbsp;</p>\r\n<h6 class=\"no-margin text-uppercase\">Гарантия возврата денег</h6>\r\n<p>правка слоганов в Модули - Стикеры</p>', '', '1', '', 'hub'),
 (3, 'Бесплатная доставка', 'one', '<p class=\"icon\">&nbsp;</p>\r\n<h6 class=\"no-margin text-uppercase\">Бесплатная доставка</h6>\r\n<p>при заказе от 5000 руб.</p>', '', '1', '', 'hub'),
 (19, 'Полоска над шапкой', 'top', 'Бесплатная доставка при заказе от 3000 рублей. <a href=\"/page/address.html\">Подробности</a>', '', '1', '', ''),
-(9, 'Соцсети для мобильной версии сайта', 'social', '<ul class=\"social\">\r\n<li class=\"skype\"><a href=\"https://msng.link/sk/login\">&nbsp;</a></li>\r\n<li class=\"whatsapp\"><a href=\"https://msng.link/wa/7926000000\">&nbsp;</a></li>\r\n<li class=\"viber\"><a href=\"https://msng.link/vi/7926000000\">&nbsp;</a></li>\r\n</ul>', '', '1', '', ''),
 (10, 'Мы принимаем к оплате', 'pay', '<p><img src=\"/UserFiles/Image/trial/pay.png\" alt=\"Payment methods\" width=\"250\" height=\"25\" /></p>', '', '1', '', ''),
-(11, 'Иконки социальных сетей в подвале сайта', 'socfooter', '<ul class=\"social-menu list-inline\">\r\n<li class=\"list-inline-item\"><a class=\"social-button header-top-link btn btn-xs btn-icon btn-soft-secondary\" title=\"Telegram\" href=\"#\"> <em class=\"fa fa-telegram\" aria-hidden=\"true\">.</em></a></li>\r\n<li class=\"list-inline-item\"><a class=\"social-button  header-top-link\" title=\"ВКонтакте\" href=\"#\"><em class=\"fa fa-vk\" aria-hidden=\"true\">.</em></a></li>\r\n<li class=\"list-inline-item\"><a class=\"social-button  header-top-link\" title=\"Одноклассники\" href=\"#\"><em class=\"fa fa-odnoklassniki\" aria-hidden=\"true\">.</em></a></li>\r\n</ul>', '', '1', '', ''),
 (15, 'Надежно', 'slogan1', '<div class=\"media\">\r\n<figure class=\"w-100 max-w-8rem mr-4\"><img class=\"img-fluid\" src=\"images/lock.png\" alt=\"\" /></figure>\r\n<div class=\"media-body\">\r\n<h4 class=\"mb-1\">Надежно</h4>\r\n<p class=\"font-size-1 mb-0\">Это слоган в меню Модули - Стикеры - Надежно.</p>\r\n</div>\r\n</div>', '', '1', '/', 'flow'),
 (16, '30 дней на возврат', 'slogan2', '<div class=\"media\">\r\n<figure class=\"w-100 max-w-8rem mr-4\"><img class=\"img-fluid\" src=\"images/refund.png\" alt=\"\" /></figure>\r\n<div class=\"media-body\">\r\n<h4 class=\"mb-1\">30 дней на возврат</h4>\r\n<p class=\"font-size-1 mb-0\">Это слоган в меню Модули - Стикеры - 30 дней на возврат.</p>\r\n</div>\r\n</div>', '', '1', '/', 'flow'),
 (17, 'Удобная доставка', 'slogan3', '<div class=\"media\">\r\n<figure class=\"w-100 max-w-8rem mr-4\"><img class=\"img-fluid\" src=\"images/delivery-man.png\" alt=\"\" /></figure>\r\n<div class=\"media-body\">\r\n<h4 class=\"mb-1\">Удобная доставка</h4>\r\n<p class=\"font-size-1 mb-0\">Это слоган в меню Модули - стикеры - Удобная доставка.</p>\r\n</div>\r\n</div>', '', '1', '/', 'flow'),
 (20, 'Баннер в меню', 'menu', '<div class=\"navbar-banner\">\r\n    <div class=\"navbar-banner-content\">\r\n        <div class=\"mb-4\">\r\n            <span class=\"d-block h2 text-white\">Брендинг Работает</span>\r\n            <p class=\"text-white\">Оцените уровень нашего качества как в области проектирования, так и в области кастомизации.</p>\r\n        </div>\r\n        <a class=\"btn btn-primary btn-sm transition-3d-hover\" href=\"#\">Узнать больше <i class=\"fas fa-angle-right fa-sm ml-1\"></i></a>\r\n    </div>\r\n</div>', '', '0', '', 'flow'),
-(21, 'Иконки социальных сетей в подвале сайта', 'footer_icon', '<ul class=\"list-inline\">\r\n<li class=\"list-inline-item\"><a class=\"btn btn-xs btn-icon btn-soft-primary\" title=\"Telegram\" href=\"#\"> <em class=\"fab fa-telegram\" aria-hidden=\"true\"></em></a></li>\r\n<li class=\"list-inline-item\"><a class=\"btn btn-xs btn-icon btn-soft-primary\" title=\"ВКонтакте\" href=\"#\"><em class=\"fab fa-vk\" aria-hidden=\"true\"></em></a></li>\r\n<li class=\"list-inline-item\"><a class=\"btn btn-xs btn-icon btn-soft-primary\" title=\"Одноклассники\" href=\"#\"><em class=\"fab fa-odnoklassniki\" aria-hidden=\"true\"></em></a></li>\r\n</ul>', '', '1', '', 'flow'),
 (22, 'Доставка в карточке товара', 'accordion', ' <!-- Accordion -->\r\n      <div id=\"shopCartAccordionExample2\" class=\"accordion mb-5\">\r\n        <!-- Card -->\r\n        <div class=\"card card-bordered shadow-none\">\r\n          <div class=\"card-body card-collapse\" id=\"shopCardHeadingOne\">\r\n            <a class=\"btn btn-link btn-block card-btn collapsed\" href=\"javascript:;\" role=\"button\"\r\n                    data-toggle=\"collapse\"\r\n                    data-target=\"#shopCardOne\"\r\n                    aria-expanded=\"false\"\r\n                    aria-controls=\"shopCardOne\">\r\n              <span class=\"row align-items-center\">\r\n                <span class=\"col-9\">\r\n                  <span class=\"media align-items-center\">\r\n                    <span class=\"w-100 max-w-6rem mr-3\">\r\n                      <img class=\"img-fluid\" src=\"images/icon-65.svg\" alt=\"\">\r\n                    </span>\r\n                    <span class=\"media-body\">\r\n                      <span class=\"d-block font-size-1 font-weight-bold\">Доставка</span>\r\n                    </span>\r\n                  </span>\r\n                </span>\r\n                <span class=\"col-3 text-right\">\r\n                  <span class=\"card-btn-toggle\">\r\n                    <span class=\"card-btn-toggle-default\">&#43;</span>\r\n                    <span class=\"card-btn-toggle-active\">&#8722;</span>\r\n                  </span>\r\n                </span>\r\n              </span>\r\n            </a>\r\n          </div>\r\n          <div id=\"shopCardOne\" class=\"collapse\" aria-labelledby=\"shopCardHeadingOne\" data-parent=\"#shopCartAccordionExample2\">\r\n            <div class=\"card-body\">\r\n              <p class=\"small mb-0\">Это слоган в меню Модули - Стикеры - Доставка в карточке товара.</p>\r\n            </div>\r\n          </div>\r\n        </div>\r\n        <!-- End Card -->\r\n\r\n        <!-- Card -->\r\n        <div class=\"card card-bordered shadow-none\">\r\n          <div class=\"card-body card-collapse\" id=\"shopCardHeadingTwo\">\r\n            <a class=\"btn btn-link btn-block card-btn collapsed\" href=\"javascript:;\" role=\"button\"\r\n                    data-toggle=\"collapse\"\r\n                    data-target=\"#shopCardTwo\"\r\n                    aria-expanded=\"false\"\r\n                    aria-controls=\"shopCardTwo\">\r\n              <span class=\"row align-items-center\">\r\n                <span class=\"col-9\">\r\n                  <span class=\"media align-items-center\">\r\n                    <span class=\"w-100 max-w-6rem mr-3\">\r\n                      <img class=\"img-fluid\" src=\"images/icon-64.svg\" alt=\"\">\r\n                    </span>\r\n                    <span class=\"media-body\">\r\n                      <span class=\"d-block font-size-1 font-weight-bold\">Оплата</span>\r\n                    </span>\r\n                  </span>\r\n                </span>\r\n                <span class=\"col-3 text-right\">\r\n                  <span class=\"card-btn-toggle\">\r\n                    <span class=\"card-btn-toggle-default\">&#43;</span>\r\n                    <span class=\"card-btn-toggle-active\">&#8722;</span>\r\n                  </span>\r\n                </span>\r\n              </span>\r\n            </a>\r\n          </div>\r\n          <div id=\"shopCardTwo\" class=\"collapse\" aria-labelledby=\"shopCardHeadingTwo\" data-parent=\"#shopCartAccordionExample2\">\r\n            <div class=\"card-body\">\r\n              <p class=\"small mb-0\">Это слоган в меню Модули - Стикеры - Доставка в карточке товара.</p>\r\n            </div>\r\n          </div>\r\n        </div>\r\n        <!-- End Card -->\r\n      </div>\r\n      <!-- End Accordion -->', '', '1', '', 'flow');
 
 
@@ -647,25 +643,6 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_robokassa_log` (
   `type` varchar(64) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
-
-DROP TABLE IF EXISTS `phpshop_modules_mandarinhosted_system`;
-CREATE TABLE IF NOT EXISTS `phpshop_modules_mandarinhosted_system` (
-  `id` int(11) NOT NULL auto_increment,
-  `merchant_key` varchar(64) NOT NULL default '',
-  `merchant_skey` varchar(64) NOT NULL default '',
-  `status` int(11) NOT NULL,
-  `title` text NOT NULL,
-  `title_sub` text NOT NULL,
-  `version` FLOAT(2) DEFAULT '1.1' NOT NULL,
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
-
-
-INSERT INTO `phpshop_modules_mandarinhosted_system` VALUES (1,'777','phpshop-test',0,'','','1.1');
-
-INSERT INTO `phpshop_payment_systems` (`id`, `name`, `path`, `enabled`, `num`, `message`, `message_header`, `yur_data_flag`, `icon`) VALUES
-(10027, 'Visa, Mastercard, МИР (MandarinPay)', 'modules', '0', 0, '<p>Ваш заказ оплачен!</p>', 'Спасибо', '', '/UserFiles/Image/trial/credit.png');
-
 
 DROP TABLE IF EXISTS `phpshop_news`;
 CREATE TABLE IF NOT EXISTS `phpshop_news` (
@@ -1203,7 +1180,7 @@ INSERT INTO `phpshop_slider` (`id`, `image`, `enabled`, `num`, `link`, `alt`, `s
 DROP TABLE IF EXISTS `phpshop_sort`;
 CREATE TABLE IF NOT EXISTS `phpshop_sort` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `name` varchar(64) DEFAULT '',
+  `name` varchar(255) DEFAULT '',
   `category` int(11) UNSIGNED DEFAULT '0',
   `num` int(11) DEFAULT '0',
   `page` varchar(255) DEFAULT '',

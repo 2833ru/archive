@@ -148,8 +148,8 @@ function userorderpaymentlink_mod_alfabank_hook($obj, $PHPShopOrderFunction) {
             "password" => $option["password"],
             "orderNumber" => $orderNum,
             "amount" => $total,
-            "returnUrl" => 'http://' . $_SERVER['HTTP_HOST'] . '/success/?uid=' . $uid,
-            "failUrl" => 'http://' . $_SERVER['HTTP_HOST'] . '/success/?uid=' . $uid,
+            "returnUrl" => 'http://' . $_SERVER['HTTP_HOST'] . '/success/?uid=' . $uid.'&payment=alfabank',
+            "failUrl" => 'http://' . $_SERVER['HTTP_HOST'] . '/fail/?uid=' . $uid.'&payment=alfabank',
             "orderBundle" => $orderBundle,
             "taxSystem" => intval($option["taxationSystem"])
         );

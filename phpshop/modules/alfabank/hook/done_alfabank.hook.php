@@ -145,8 +145,8 @@ function send_alfabank_hook($obj, $value, $rout) {
                 "password" => $option["password"],
                 "orderNumber" => $orderNum,
                 "amount" => $total,
-                "returnUrl" => 'http://' . $_SERVER['HTTP_HOST'] . '/success/?uid=' . $value['ouid'],
-                "failUrl" => 'http://' . $_SERVER['HTTP_HOST'] . '/success/?uid=' . $value['ouid'],
+                "returnUrl" => 'http://' . $_SERVER['HTTP_HOST'] . '/success/?uid=' . $value['ouid'].'&payment=alfabank',
+                "failUrl" => 'http://' . $_SERVER['HTTP_HOST'] . '/fail/?uid=' . $value['ouid'].'&payment=alfabank',
                 "orderBundle" => $orderBundle,
                 "taxSystem" => intval($option["taxationSystem"])
             );

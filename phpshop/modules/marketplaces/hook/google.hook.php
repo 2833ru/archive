@@ -84,7 +84,7 @@ function setProducts_google_hook($obj, $data)
         $price = $price + ($price * $fee / 100);
     }
 
-    $data['xml'] = str_replace('<g:price>' . $data['val']['price'] . '</g:price>', '<g:price>' . $price . '</g:price>', $data['xml']);
+    $data['xml'] = str_replace('<g:price>' . $data['val']['price'] . ' '.$obj->defvalutaiso.'</g:price>', '<g:price>' . $price . ' '.$obj->defvalutaiso.'</g:price>', $data['xml']);
 
     return $data['xml'];
 }

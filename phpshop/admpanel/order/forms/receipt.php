@@ -98,6 +98,9 @@ if ($PERSON['discount'] > 0) {
     $discount = (@$PERSON['tip_disc'] == 1 ? @$PERSON['discount_promo'] . '%' : @$PERSON['discount_promo']);
 }
 
+if(!empty($row['bonus_minus']))
+$discount = $row['bonus_minus'];
+
 // номер товарного чека
 $chek_num = $ouid;
 $LoadBanc = unserialize($LoadItems['System']['bank']);

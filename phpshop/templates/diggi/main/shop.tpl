@@ -22,41 +22,38 @@
         <meta property="og:url" content="http://@ogUrl@">
         <meta property="og:type" content="website">
         <meta property="og:description" content="@ogDescription@">
-        
+
         <!-- Preload -->
-        <link rel="preload" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/bootstrap.min.css" as="style">
-        <link rel="preload" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/swiper.min.css" as="style">
+        <link rel="preload" href="@pathTemplate@css/bootstrap.min.css" as="style">
+        <link rel="preload" href="@pathTemplate@css/swiper.min.css" as="style">
         <link rel="preload" href="@pageCss@" as="style">
-        <link rel="preload" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/@diggi_theme@.css" as="style">
-        <link rel="preload" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/responsive.css" as="style">
-        <link rel="preload" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/font-awesome.min.css"  as="font" type="font/woff2" crossorigin>
+        <link rel="preload" href="@pathTemplateMin@css/@diggi_theme@.css" as="style">
+        <link rel="preload" href="@pathTemplateMin@css/responsive.css" as="style">
+        <link rel="preload" href="@pathTemplate@css/font-awesome.min.css"  as="font" type="font/woff2" crossorigin>
         <link rel="preload" href="//fonts.googleapis.com/css?family=Roboto+Condensed&display=swap&subset=cyrillic"  as="font" type="font/woff2" crossorigin>
 
         <!-- Bootstrap -->
-        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/bootstrap.min.css" rel="stylesheet">
-
-
+        <link href="@pathTemplate@css/bootstrap.min.css" rel="stylesheet">
     </head>
     <body id="body" data-dir="@ShopDir@" data-path="@php echo $GLOBALS['PHPShopNav']->objNav['path']; php@" data-id="@php echo $GLOBALS['PHPShopNav']->objNav['id']; php@" data-subpath="@php echo $GLOBALS['PHPShopNav']->objNav['name']; php@" data-token="@dadataToken@">
 
-
         <!-- Template -->
-        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/swiper.min.css" rel="stylesheet">
+
         <link href="//fonts.googleapis.com/css?family=Roboto+Condensed&display=swap&subset=cyrillic" rel="stylesheet">
         <link href="@pageCss@" rel="stylesheet">
-        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/responsive.css" rel="stylesheet">
+        <link href="@pathTemplateMin@css/responsive.css" rel="stylesheet">
 
         <!-- Theme -->
-        <link id="bootstrap_theme" data-name="@php echo $_SESSION['skin']; php@" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/@diggi_theme@.css" rel="stylesheet">
-	
-            <!-- Стикер-полоска -->
-            <div class="@php __hide('sticker_top'); php@">
-                <div class="top-banner @php __hide('sticker_close','cookie'); php@">
-                    <div class="sticker-text">@sticker_top@</div>
-                    <span class="close sticker-close">x</span>
-                </div>
+        <link id="bootstrap_theme" data-name="@php echo $_SESSION['skin']; php@" href="@pathTemplateMin@css/@diggi_theme@.css" rel="stylesheet">
+
+        <!-- Стикер-полоска -->
+        <div class="@php __hide('sticker_top'); php@">
+            <div class="top-banner @php __hide('sticker_close','cookie'); php@">
+                <div class="sticker-text">@sticker_top@</div>
+                <span class="close sticker-close">x</span>
             </div>
-            <!-- /Стикер-полоска -->
+        </div>
+        <!-- /Стикер-полоска -->
 
         <!-- Header Section Starts -->
         <header id="header-area" class="header-wrap inner">
@@ -154,7 +151,7 @@
                                             @leftCatal@
                                         </ul>
                                     </li>
-                                     @topBrands@
+                                    @topBrands@
                                     @topcatMenu@
                                     @topMenu@
                                 </ul>
@@ -240,8 +237,8 @@
 
                 <!--/ Фасетный фильтр -->
                 <!-- jQuery -->
-                <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery-1.11.0.min.js"></script>
-                <script src="java/jqfunc.js"></script>
+                <script src="@pathTemplate@/js/jquery-1.11.0.min.js"></script>
+                <script src="@pathMin@java/jqfunc.js"></script>
 
                 <div class="sidebar-fix-block  hidden-xs hidden-sm">
                     <div class="side-heading"><a href="/page/">{Блог}</a></div>
@@ -252,15 +249,14 @@
 
                     @rightMenu@
                     @leftMenu@
-					<div class="panel panel-default  hidden-xs  hidden-sm @php __hide('productlist_list'); php@">
+                    <div class="panel panel-default  hidden-xs  hidden-sm @php __hide('productlist_list'); php@">
                         <div class="panel-heading">
                             <div class="panel-title">{Похожие товары}</div>
                         </div>
                         <div class="panel-body">
-                          <div id="productlist">
-    <table>@productlist_list@</table>
-</div>
-
+                            <div id="productlist">
+                                <table>@productlist_list@</table>
+                            </div>
 
                         </div>
                     </div>
@@ -285,35 +281,35 @@
             <!-- Primary Content Starts -->
             <div class="col-md-9 col-xs-12 middle-content-block">
                 @DispShop@ 
-                    <section class="products-list @php __hide('now_buying'); php@">
-                        <div class="swiper-slider-wrapper">
-                            <!-- Heading Starts -->
-                            <div class="swiper-button-prev-block">
-                                <div class="swiper-button-prev btn-prev3">
-                                    <span class="glyphicon glyphicon-chevron-left"></span>
-                                </div>
+                <section class="products-list @php __hide('now_buying'); php@">
+                    <div class="swiper-slider-wrapper">
+                        <!-- Heading Starts -->
+                        <div class="swiper-button-prev-block">
+                            <div class="swiper-button-prev btn-prev3">
+                                <span class="glyphicon glyphicon-chevron-left"></span>
                             </div>
-                            <div class="swiper-button-next-block">
-                                <div class="swiper-button-next btn-next3">
-                                    <span class="glyphicon glyphicon-chevron-right"></span>
-                                </div>
+                        </div>
+                        <div class="swiper-button-next-block">
+                            <div class="swiper-button-next btn-next3">
+                                <span class="glyphicon glyphicon-chevron-right"></span>
                             </div>
-                            <h2 class="product-head page-header swiper-title">@now_buying@</h2>
-                            <!-- Heading Ends -->
-                            <!-- Products Row Starts -->
-                            <div class="swiper-container nowBuy">
-                                <div class="swiper-wrapper">
-                                    @nowBuy@
-                                </div>
+                        </div>
+                        <h2 class="product-head page-header swiper-title">@now_buying@</h2>
+                        <!-- Heading Ends -->
+                        <!-- Products Row Starts -->
+                        <div class="swiper-container nowBuy">
+                            <div class="swiper-wrapper">
+                                @nowBuy@
                             </div>
-                            <!-- Products Row Ends -->
-                        </div>     
-                    </section>
-            <div class="col-xs-12">
-                <div class="banner-block">
-                    @banersDispHorizontal@
+                        </div>
+                        <!-- Products Row Ends -->
+                    </div>     
+                </section>
+                <div class="col-xs-12">
+                    <div class="banner-block">
+                        @banersDispHorizontal@
+                    </div>
                 </div>
-            </div>
             </div>
 
             <!-- Primary Content Ends -->
@@ -321,7 +317,7 @@
         <!-- Nested Row Ends -->
 
     </div>
-    
+
     <!-- Main Container Ends -->
 
     <!-- toTop -->
@@ -329,8 +325,8 @@
         <a href="#" id="toTop"><span id="toTopHover"></span></a>
     </div>
     <!--/ toTop -->
-    
-    
+
+
     @editor@
 
     <!-- Footer Section Starts -->
@@ -379,12 +375,22 @@
                         <li class="footer-email">@adminMail@</li>                              
                     </ul>
                     <h4 class="lead">
-                     <span>@telNum@<br>
-                     @telNum2@<br>
-                     @workingTime@
-                     </span>
+                        <span>@telNum@<br>
+                            @telNum2@<br>
+                            @workingTime@
+                        </span>
                     </h4>
-                    @sticker_socfooter@
+
+                    <!-- Социальные сети -->
+                    <ul class="social-menu list-inline">
+                        <li class="list-inline-item @php __hide('vk'); php@"><a class="social-button header-top-link" title="ВКонтакте" href="@vk@" target="_blank"><em class="fa fa-vk" aria-hidden="true">.</em></a></li>
+                        <li class="list-inline-item @php __hide('telegram'); php@"><a class="social-button header-top-link" title="Telegram" href="@telegram@" target="_blank"> <em class="fa fa-telegram" aria-hidden="true">.</em></a></li>
+                        <li class="list-inline-item @php __hide('odnoklassniki'); php@"><a class="social-button header-top-link" title="Одноклассники" href="@odnoklassniki@" target="_blank"> <em class="fa fa-odnoklassniki" aria-hidden="true">.</em></a></li>
+                        <li class="list-inline-item @php __hide('youtube'); php@"><a class="social-button header-top-link" title="Youtube" href="@youtube@" target="_blank"><em class="fa fa-youtube" aria-hidden="true">.</em></a></li>
+                        <li class="list-inline-item  @php __hide('whatsapp'); php@"><a class="social-button header-top-link" title="WhatsApp" href="@whatsapp@" target="_blank"><em class="fa fa-whatsapp" aria-hidden="true">.</em></a></li>
+                    </ul>
+                    <!-- / Социальные сети -->
+
                 </div>
                 <!-- Contact Us Ends -->
             </div>
@@ -409,18 +415,18 @@
     <div class="bar-padding-fix visible-xs"> </div>
     <nav class="navbar navbar-default navbar-fixed-bottom bar bar-tab visible-xs visible-sm">
         <a class="tab-item active" href="/">
-           
+
             <span class="tab-label">{Домой}</span>
         </a>
         <a class="tab-item @user_active@" @user_link@ data-target="#userModal">
             <span class="tab-label">{Кабинет}</span>
         </a>
         <a class="tab-item @cart_active@" href="/order/" id="bar-cart">
-          <span class="badge badge-positive" id="mobilnum">@cart_active_num@</span>
+            <span class="badge badge-positive" id="mobilnum">@cart_active_num@</span>
             <span class="tab-label">{Корзина}</span>
         </a>
         <a class="tab-item" href="#" data-toggle="modal" data-target="#searchModal">
-            
+
             <span class="tab-label">{Поиск}</span>
         </a>
     </nav>
@@ -478,47 +484,47 @@
         </div>
     </div>
     <!--/ Модальное окно авторизации-->
-    
-    
-<!-- Модальное окно returncall-->
-<div class="modal fade bs-example-modal-sm return-call" id="returnCallModal" tabindex="-1" role="dialog"  aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">{Обратный звонок}</h4>
-            </div>
-            <form method="post" name="user_forma" action="@ShopDir@/returncall/">
-                <div class="modal-body">
 
-                    <div class="form-group">
-                       
-                        <input type="text" name="returncall_mod_name" class="form-control" placeholder="{Имя}" required="">
-                    </div>
-                    <div class="form-group">
-                        
-                        <input type="text" name="returncall_mod_tel" class="form-control phone" placeholder="{Телефон}" required="">
-                    </div>
-                    <div class="form-group">
-                      
-                        <input class="form-control" type="text" placeholder="{Время звонка}" name="returncall_mod_time_start">
-                    </div>
-                    <div class="form-group">
-                        
-                        <textarea class="form-control" name="returncall_mod_message" placeholder="{Сообщение}"></textarea>
-                    </div>
-                    @returncall_captcha@
-<p class="small"><label><input type="checkbox" value="on" name="rule" class="req" checked="checked">  {Я согласен} <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html">{на обработку моих персональных данных}</a></label></p>
+
+    <!-- Модальное окно returncall-->
+    <div class="modal fade bs-example-modal-sm return-call" id="returnCallModal" tabindex="-1" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">{Обратный звонок}</h4>
                 </div>
-                <div class="modal-footer">
-                    <input type="hidden" name="returncall_mod_send" value="1">
-                   
-                    <button type="submit" class="btn btn-main">{Заказать звонок}</button>
-                </div>
-            </form>
+                <form method="post" name="user_forma" action="@ShopDir@/returncall/">
+                    <div class="modal-body">
+
+                        <div class="form-group">
+
+                            <input type="text" name="returncall_mod_name" class="form-control" placeholder="{Имя}" required="">
+                        </div>
+                        <div class="form-group">
+
+                            <input type="text" name="returncall_mod_tel" class="form-control phone" placeholder="{Телефон}" required="">
+                        </div>
+                        <div class="form-group">
+
+                            <input class="form-control" type="text" placeholder="{Время звонка}" name="returncall_mod_time_start">
+                        </div>
+                        <div class="form-group">
+
+                            <textarea class="form-control" name="returncall_mod_message" placeholder="{Сообщение}"></textarea>
+                        </div>
+                        @returncall_captcha@
+                        <p class="small"><label><input type="checkbox" value="on" name="rule" class="req" checked="checked">  {Я согласен} <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html">{на обработку моих персональных данных}</a></label></p>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="hidden" name="returncall_mod_send" value="1">
+
+                        <button type="submit" class="btn btn-main">{Заказать звонок}</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
 
     <!-- Модальное окно мобильного поиска -->
@@ -549,27 +555,28 @@
     <div class="cookie-message hide"><p></p><a href="#" class="btn btn-default btn-sm">Ok</a></div>
 
     <!-- JQuery Plugins  -->
-    <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/jquery.bxslider.css" rel="stylesheet">
-    <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/jquery-ui.min.css" rel="stylesheet">
-    <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/bootstrap-select.min.css" rel="stylesheet">
-    <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/bar.css" rel="stylesheet">
-    <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/suggestions.min.css" rel="stylesheet">
-    <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/font-awesome.min.css" rel="stylesheet">
-    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/bootstrap.min.js"></script>
-    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/swiper.js"></script>
-    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/diggi.js"></script>
-    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/bootstrap-select.min.js"></script>
-    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.lazyloadxt.min.js"></script>
-    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@/js/phpshop.js"></script>
+    <link href="@pathTemplate@css/swiper.min.css" rel="stylesheet">
+    <link href="@pathTemplate@css/jquery.bxslider.css" rel="stylesheet">
+    <link href="@pathTemplate@css/jquery-ui.min.css" rel="stylesheet">
+    <link href="@pathTemplate@css/bootstrap-select.min.css" rel="stylesheet">
+    <link href="@pathTemplateMin@css/bar.css" rel="stylesheet">
+    <link href="@pathTemplate@css/suggestions.min.css" rel="stylesheet">
+    <link href="@pathTemplate@css/font-awesome.min.css" rel="stylesheet">
+    <script src="@pathTemplate@/js/bootstrap.min.js"></script>
+    <script src="@pathTemplate@/js/swiper.js"></script>
+    <script src="@pathTemplate@/js/diggi.js"></script>
+    <script src="@pathTemplate@/js/bootstrap-select.min.js"></script>
+    <script src="@pathTemplate@/js/jquery.lazyloadxt.min.js"></script>
+    <script src="@pathTemplate@/js/phpshop.js"></script>
     <script src="phpshop/locale/@php echo $_SESSION['lang']; php@/template.js"></script>
-    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/flipclock.min.js"></script>
-    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery-ui.min.js"></script>
-    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.ui.touch-punch.min.js"></script>
-    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.bxslider.min.js"></script>
-    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@/js/jquery.cookie.js"></script>
-    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.waypoints.min.js"></script>
-    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/inview.min.js"></script>
-    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.maskedinput.min.js"></script>
-    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.suggestions.min.js"></script>
-    <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.ui.touch-punch.min.js"></script>
+    <script src="@pathTemplate@/js/flipclock.min.js"></script>
+    <script src="@pathTemplate@/js/jquery-ui.min.js"></script>
+    <script src="@pathTemplate@/js/jquery.ui.touch-punch.min.js"></script>
+    <script src="@pathTemplate@/js/jquery.bxslider.min.js"></script>
+    <script src="@pathTemplate@/js/jquery.cookie.js"></script>
+    <script src="@pathTemplate@/js/jquery.waypoints.min.js"></script>
+    <script src="@pathTemplate@/js/inview.min.js"></script>
+    <script src="@pathTemplate@/js/jquery.maskedinput.min.js"></script>
+    <script src="@pathTemplate@/js/jquery.suggestions.min.js"></script>
+    <script src="@pathTemplate@/js/jquery.ui.touch-punch.min.js"></script>
     @visualcart_lib@

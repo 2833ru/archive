@@ -354,7 +354,7 @@ function actionStart() {
 
     // Бонусы
     if (!empty($data['bonus_minus']) or ! empty($data['bonus_plus']))
-        $PHPShopGUI->addTab(array("Бонусы <span class=badge>" . $data['bonus_minus'] . "</span>", $Tab6, true));
+        $PHPShopGUI->addTabSeparate(array("Бонусы <span class=badge>+" . $data['bonus_plus'] . "</span>", $Tab6, true));
 
     // Диалог
     $dialog = $PHPShopBase->getNumRows('dialog', "where isview='0' and staffid='1' and user_id='" . $data['user'] . "' group by chat_id");
@@ -454,16 +454,16 @@ function actionUpdate() {
                             $PHPShopProduct = new PHPShopProduct($product[0], 'uid');
                             $id = $PHPShopProduct->getParam('id');
                             $PHPShopCart->add($id, $product[2]);
-                            
+
                             // Цена
-                            $PHPShopCart->_CART[$id]['price']=$product[1];
+                            $PHPShopCart->_CART[$id]['price'] = $product[1];
                         }
-                         $order['Cart']['cart'] = $PHPShopCart->_CART;
+                        $order['Cart']['cart'] = $PHPShopCart->_CART;
                     }
                 }
             }
         }
-        
+
         // Перерасчет скидки и промоакций
         $sum = $sum_promo = 0;
         if (is_array($PHPShopCart->_CART))
@@ -480,7 +480,7 @@ function actionUpdate() {
 
         // Скидка
         if (!$PHPShopSystem->ifSerilizeParam('admoption.auto_discount_disabled')) {
-            $discount = $PHPShopOrder->ChekDiscount($sum);
+            $discount = $PHPShopOrder->ChekDiscount($sum, null, true);
             if ($order['Person']['discount'] > $discount)
                 $discount = $order['Person']['discount'];
         }
@@ -490,11 +490,11 @@ function actionUpdate() {
         // Итого товары по акции
         $order['Cart']['sum'] = $PHPShopOrder->returnSumma($sum_promo);
 
-        // Итого товары по акции
-        $order['Cart']['sum'] = $PHPShopOrder->returnSumma($sum_promo);
-
         // Итого товары без акции
         $order['Cart']['sum'] += $PHPShopOrder->returnSumma($sum, $order['Person']['discount']);
+
+        // Итого с учетом бонусов
+        $order['Cart']['sum'] -= $data['bonus_minus'];
 
         // Сериализация данных заказа
         $_POST['orders_new'] = serialize($order);
@@ -506,7 +506,8 @@ function actionUpdate() {
                     $files_new[$k] = @array_map("urldecode", $files);
 
                 $_POST['files_new'] = serialize($files_new);
-            }
+            } else
+                $_POST['files_new'] = [];
         } else
             $_POST['files_new'] = serialize($_POST['files_new']);
 
@@ -714,7 +715,7 @@ function actionCartUpdate() {
 
         // Скидка
         if (!$PHPShopSystem->ifSerilizeParam('admoption.auto_discount_disabled')) {
-            $discount = $PHPShopOrder->ChekDiscount($sum);
+            $discount = $PHPShopOrder->ChekDiscount($sum, null, true);
             if ($order['Person']['discount'] > $discount)
                 $discount = $order['Person']['discount'];
 
@@ -726,6 +727,9 @@ function actionCartUpdate() {
 
         // Итого товары без акции
         $order['Cart']['sum'] += $PHPShopOrder->returnSumma($sum, $order['Person']['discount']);
+
+        // Итого с учетом бонусов
+        $order['Cart']['sum'] -= $data['bonus_minus'];
 
         $order['Cart']['num'] = $PHPShopCart->getNum();
         $order['Cart']['weight'] = $PHPShopCart->getWeight();
@@ -779,6 +783,8 @@ function actionReminder() {
     $rate = 1;
 
     PHPShopParser::set('sum', $order['Cart']['sum']);
+    PHPShopParser::set('serverShop', PHPShopString::check_idna($_SERVER['SERVER_NAME'],true));
+    PHPShopParser::set('serverPath', PHPShopString::check_idna($_SERVER['SERVER_NAME'],true));
     PHPShopParser::set('cart', $PHPShopCart->display('mailcartforma', array('currency' => $currency, 'rate' => $rate)));
     PHPShopParser::set('currency', $currency);
     PHPShopParser::set('deliveryPrice', $order['Cart']['dostavka']);
@@ -789,8 +795,7 @@ function actionReminder() {
     PHPShopParser::set('mail', $PHPShopUser->getParam("mail"));
     PHPShopParser::set('company', $PHPShopSystem->getParam('name'));
     PHPShopParser::set('user_name', $PHPShopUser->getParam("name"));
-    PHPShopParser::set('serverShop', PHPShopString::check_idna($_SERVER['SERVER_NAME']));
-    PHPShopParser::set('serverPath', PHPShopString::check_idna($_SERVER['SERVER_NAME']));
+   
     PHPShopParser::set('shopName', $PHPShopSystem->getValue('company'));
     PHPShopParser::set('adminMail', $PHPShopSystem->getEmail());
     PHPShopParser::set('telNum', $PHPShopSystem->getValue('tel'));
@@ -812,17 +817,39 @@ function mailcartforma($val, $option) {
     if (empty($val['name']))
         return true;
 
+    // Перехват модуля
+    $hook = $PHPShopModules->setHookHandler(__FUNCTION__, __FUNCTION__, array(&$val), $option);
+    if ($hook)
+        return $hook;
+
     // Артикул
     if (!empty($val['parent_uid']))
         $val['uid'] = $val['parent_uid'];
+        
+    if (empty($val['ed_izm']))
+        $val['ed_izm'] = __('шт.');
 
     $val['price'] *= $option['rate'];
-    $val['price'] = number_format($val['price'], $PHPShopOrder->format, '.', '');
 
-    $dis = '<img width="50" src="http://' . $_SERVER['SERVER_NAME'] . $val['pic_small'] . '" align="left" alt=""> ' . $val['uid'] . "  " . $val['name'] . " (" . $val['num'] . " " . $val['ed_izm'] . " * " . $val['price'] . ") -- " . ($val['price'] * $val['num']) . " " . $option['currency'] . " <br>
-";
-    return $dis;
+    $price = number_format($val['price'], $PHPShopOrder->format, '.', ' ');
+	$price_n = number_format($val['price_n'], $PHPShopOrder->format, '.', ' ');
+	$sum = number_format($val['price'] * $val['num'], $PHPShopOrder->format, '.', ' ');
+
+ 
+    PHPShopParser::set('product_mail_price',$price);
+    PHPShopParser::set('product_mail_price_n',$price_n);
+    PHPShopParser::set('product_mail_pic',$val['pic_small']);
+    PHPShopParser::set('product_mail_uid',$val['uid']);
+    PHPShopParser::set('product_mail_name',$val['name']);
+    PHPShopParser::set('product_mail_num',$val['num']);
+    PHPShopParser::set('product_mail_sum',$sum);
+    PHPShopParser::set('product_mail_ed_izm',$val['ed_izm']);
+    PHPShopParser::set('product_mail_currency',$option['currency']);
+    PHPShopParser::set('product_mail_id',$val['id']);
+    
+    return PHPShopParser::file('../lib/templates/order/product_mail.tpl', true,true,true);
 }
+
 
 // Обработка событий
 $PHPShopGUI->getAction();

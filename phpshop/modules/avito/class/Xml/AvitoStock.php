@@ -24,7 +24,7 @@ class AvitoStock extends BaseAvitoXml implements AvitoPriceInterface
     public function setAds()
     {
         $this->xml = '<?xml version="1.0" encoding="UTF-8"?>';
-        $this->xml .= '<items date="' . date(DATE_RFC3339) . '" formatVersion="1">';
+        $this->xml .= '<items date="' . date('Y-m-d\TH:i:s') . '" formatVersion="1">';
 
         $products = $this->getProducts($_GET['getall']);
 

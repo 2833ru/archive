@@ -51,10 +51,18 @@ function addYandexcartCPA($data) {
     $Tab3 .= $PHPShopGUI->setField('Товар для взрослых', $PHPShopGUI->setRadio('adult_new', 1, 'Включить', $data['adult']) . $PHPShopGUI->setRadio('adult_new', 2, 'Выключить', $data['adult'], false, 'text-muted'), 1, 'Тег adult');
 
     $condition[] = array(__('Новый товар'), 1, $data['yandex_condition']);
-    $condition[] = array(__('Как новый'), 2, $data['yandex_condition']);
-    $condition[] = array(__('Подержанный'), 3, $data['yandex_condition']);
+    $condition[] = array(__('Бывший в употреблении'), 2, $data['yandex_condition']);
+    $condition[] = array(__('Витринный образец'), 3, $data['yandex_condition']);
+    $condition[] = array(__('Уцененный товар'), 4, $data['yandex_condition']);
+    
+    $quality[] = array(__('Новый товар'), 1, $data['yandex_quality']);
+    $quality[] = array(__('Как новый, товар в идеальном состоянии'), 2, $data['yandex_quality']);
+    $quality[] = array(__('Отличный, следы использования или дефекты едва заметные'), 3, $data['yandex_quality']);
+    $quality[] = array(__('Хороший, есть заметные следы использования или дефекты'), 4, $data['yandex_quality']);
 
     $Tab3 .= $PHPShopGUI->setField('Состояние товара', $PHPShopGUI->setSelect('yandex_condition_new', $condition,300), 1, 'Тег condition');
+    $Tab3 .= $PHPShopGUI->setField('Внешний вид товара', $PHPShopGUI->setSelect('yandex_quality_new', $quality,300), 1, 'Тег quality');
+    $Tab3 .= $PHPShopGUI->setField('Причина уценки', $PHPShopGUI->setTextarea('yandex_condition_reason_new', $data['yandex_condition_reason'],true,300), 1, 'Тег reason');
     
     $service_life_days[] = array(__('Ничего не выбрано'), '', $data['yandex_service_life_days']);
     $service_life_days[] = array(__('6 месяцев'), 'P6M', $data['yandex_service_life_days']);
@@ -64,7 +72,7 @@ function addYandexcartCPA($data) {
  
     $Tab3 .= $PHPShopGUI->setField('Срок годности', $PHPShopGUI->setSelect('yandex_service_life_days_new', $service_life_days,300), 1, 'Тег period-of-validity-days');
     
-    $Tab3 .= $PHPShopGUI->setField('Причина уценки', $PHPShopGUI->setTextarea('yandex_condition_reason_new', $data['yandex_condition_reason'],true,300), 1, 'Тег reason');
+   
 
     $Tab3 .= $PHPShopGUI->setField('Курьерская доставка', $PHPShopGUI->setRadio('delivery_new', 1, 'Включить', $data['delivery']) . $PHPShopGUI->setRadio('delivery_new', 2, 'Выключить', $data['delivery'], false, 'text-muted'), 1, 'Тег delivery');
 

@@ -17,6 +17,7 @@ function send_to_order_cdekwidget_hook($obj, $row, $rout)
             if ($rout === 'START') {
                 $obj->delivery_mod = number_format($_POST['cdekSum'], 0, '.', '');
                 $obj->set('deliveryInfo', $_POST['cdekInfo']);
+                $obj->manager_comment = $_POST['cdekInfo'];
                 $_POST['cdek_order_data_new'] = serialize(array(
                     'type'          => $_POST['cdek_type'],
                     'city_id'       => $_POST['cdek_city_id'],

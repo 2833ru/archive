@@ -272,6 +272,9 @@ function sorttemplatehook($value, $n, $title, $vendor) {
     $disp = null;
     $num = 0;
 
+    if (empty($GLOBALS['filter_count']))
+        $GLOBALS['filter_count'] = 1;
+
     if (is_array($value)) {
         foreach ($value as $p) {
 
@@ -297,13 +300,14 @@ function sorttemplatehook($value, $n, $title, $vendor) {
 
             $disp .= '<div class="checkbox">
               <label>
-                <input type="checkbox" value="1" name="' . $n . '-' . $p[1] . '" ' . $checked . ' data-url="v[' . $n . ']=' . $p[1] . '"  data-name="' . $n . '-' . $p[1] . '">
+                <input type="checkbox" value="1" name="' . $n . '-' . $p[1] . '" ' . $checked . ' data-count="' . $GLOBALS['filter_count'] . '" data-url="v[' . $n . ']=' . $p[1] . '"  data-name="' . $n . '-' . $p[1] . '">
                 <span class="filter-item"  title="' . $p[0] . '">' . $text . '</span>
               </label>
               <small class="pull-right" data-num="' . $n . '-' . $p[1] . '">' . $p[3] . '</small>
             </div>';
             $num++;
         }
+        $GLOBALS['filter_count'] ++;
     }
 
     if ($num > $limit) {
@@ -354,6 +358,11 @@ function template_image_gallery($obj, $array) {
             $name_s = str_replace(".", "s.", $name);
             $name_bigstr = str_replace(".", "_big.", $name);
 
+            if (empty($row['info']))
+                $row['info'] = $array['name'];
+
+            $alt = str_replace('"', '', $row['info']);
+
             // Подбор исходного изображения
             if (!$obj->PHPShopSystem->ifSerilizeParam('admoption.image_save_source') or ! file_exists($_SERVER['DOCUMENT_ROOT'] . $name_bigstr))
                 $name_bigstr = $name;
@@ -367,9 +376,9 @@ function template_image_gallery($obj, $array) {
                 $name_bigstr = $obj->setImage($name_bigstr);
             }
 
-            $bxslider .= '<div><a class href="#"><img src="' . $name_bigstr . '" title="' . $array['name'] . '" alt="' . $array['name'] . '" /></a></div>';
-            $bxsliderbig .= '<li><a class href=\'#\'><img src=\'' . $name_bigstr . '\' title=\'' . $array['name'] . '\' alt=\'' . $array['name'] . '\'></a></li>';
-            $bxpager .= '<a data-slide-index=\'' . $i . '\' href=\'\'><img class=\'img-thumbnail\'  src=\'' . $name_s . '\' data-big-image="' . $name . '"></a>';
+            $bxslider .= '<div><a class href="#"><img src="' . $name_bigstr . '" title="' . $alt . '" alt="' . $alt . '" /></a></div>';
+            $bxsliderbig .= '<li><a class href=\'#\'><img src=\'' . $name_bigstr . '\' title=\'' . $alt . '\' alt=\'' . $alt . '\'></a></li>';
+            $bxpager .= '<a data-slide-index=\'' . $i . '\' href=\'\'><img class=\'img-thumbnail\' title=\'' . $alt . '\' alt=\'' . $alt . '\' src=\'' . $name_s . '\' data-big-image="' . $name . '"></a>';
             $i++;
         }
 

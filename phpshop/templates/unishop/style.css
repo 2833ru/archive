@@ -11,19 +11,19 @@ outline: none!important;
 
 @font-face {
     font-family: "PlayRegular";
-    src: url("./fonts/PlayRegular/PlayRegular.eot");
-    src: url("./fonts/PlayRegular/PlayRegular.eot?#iefix")format("embedded-opentype"),
-    url("./fonts/PlayRegular/PlayRegular.woff") format("woff"),
-    url("./fonts/PlayRegular/PlayRegular.ttf") format("truetype");
+    src: url("fonts/PlayRegular/PlayRegular.eot");
+    src: url("fonts/PlayRegular/PlayRegular.eot?#iefix")format("embedded-opentype"),
+    url("fonts/PlayRegular/PlayRegular.woff") format("woff"),
+    url("fonts/PlayRegular/PlayRegular.ttf") format("truetype");
     font-style: normal;
     font-weight: normal;
 }
 @font-face {
     font-family: "PlayBold";
-    src: url("./fonts/PlayBold/PlayBold.eot");
-    src: url("./fonts/PlayBold/PlayBold.eot?#iefix")format("embedded-opentype"),
-    url("./fonts/PlayBold/PlayBold.woff") format("woff"),
-    url("./fonts/PlayBold/PlayBold.ttf") format("truetype");
+    src: url("fonts/PlayBold/PlayBold.eot");
+    src: url("fonts/PlayBold/PlayBold.eot?#iefix")format("embedded-opentype"),
+    url("fonts/PlayBold/PlayBold.woff") format("woff"),
+    url("fonts/PlayBold/PlayBold.ttf") format("truetype");
     font-style: normal;
     font-weight: normal;
 }

@@ -2,7 +2,7 @@
 
 /**
  * Отправка SMS через targetsms.ru
- * @version 1.0
+ * @version 1.1
  * @package PHPShopLib
  */
 function SendSMS($msg, $phone = false) {
@@ -24,10 +24,13 @@ function SendSMS($msg, $phone = false) {
         'type' => 'sms',
         'message' => array( 
             array(
-                'type' => 'sms', 'sender' => $query_array['sender'], 'text' => $query_array['message'],
+                'type' => 'sms',
+                'sender' => $query_array['sender'],
+                'text' => $query_array['message'],
                 'abonent' => array(
                     array('phone' => $query_array['target'])
-                )
+                ),
+                'name_delivery'=>'phpshop',
             ),
     ));
 

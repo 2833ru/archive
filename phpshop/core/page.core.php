@@ -69,7 +69,7 @@ class PHPShopPage extends PHPShopCore {
                 else
                     $url = $row['page_cat_seo_name'];
 
-                  // Определяем переменные
+                // Определяем переменные
                 $this->set('pageLink', $url);
                 $this->set('pageName', $row['name']);
                 $this->set('pageIcon', $row['icon']);
@@ -81,9 +81,10 @@ class PHPShopPage extends PHPShopCore {
 
                 // Подключаем шаблон
                 $dis .= parseTemplateReturn($this->getValue('templates.page_mini'));
-                
             }
         }
+        else 
+            return $this->setError404();
 
         // Навигация хлебные крошки
         $this->navigation(0, $title);
@@ -175,7 +176,8 @@ class PHPShopPage extends PHPShopCore {
         $this->lastmodified = $row['datas'];
 
         // Навигация хлебные крошки
-        $this->navigation($row['category'], $row['name'],['url'=>'/page/','name'=>__('Блог')]);
+        if ($row['category'] != 1000)
+            $this->navigation($row['category'], $row['name'], ['url' => '/page/', 'name' => __('Блог')]);
 
         // Последние записи
         $this->set('pageLast', $this->getLast($link));
@@ -269,7 +271,7 @@ class PHPShopPage extends PHPShopCore {
 
         $this->set('catContent', $this->PHPShopCategory->getContent());
         $this->set('catIcon', $this->PHPShopCategory->getParam('icon'));
-        
+
         $this->set('pageContent', $dis);
         $this->set('pageTitle', $this->category_name);
         $this->set('pageIcon', $row['icon']);
@@ -303,7 +305,7 @@ class PHPShopPage extends PHPShopCore {
         $this->lastmodified = $lastmodified;
 
         // Навигация хлебные крошки
-        $this->navigation($cat, $this->category_name,['url'=>'/page/','name'=>__('Блог')]);
+        $this->navigation($cat, $this->category_name, ['url' => '/page/', 'name' => __('Блог')]);
 
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__, $dataArray, 'END');
@@ -346,7 +348,7 @@ class PHPShopPage extends PHPShopCore {
                 else
                     $url = '/page/' . $row['page_cat_seo_name'] . '.html';
 
-                 // Определяем переменные
+                // Определяем переменные
                 $this->set('pageLink', $row['link']);
                 $this->set('pageName', $row['name']);
                 $this->set('pageIcon', $row['icon']);
@@ -366,8 +368,8 @@ class PHPShopPage extends PHPShopCore {
         $this->set('catIcon', $this->PHPShopCategory->getParam('icon'));
         $this->set('catName', $this->category_name);
         $this->set('catName', $this->category_name);
-        
-        
+
+
         $this->set('pageContent', $dis);
         $this->set('pageTitle', $this->category_name);
 
@@ -375,7 +377,7 @@ class PHPShopPage extends PHPShopCore {
         $this->title = $this->category_name . " - " . $this->PHPShopSystem->getValue("name");
 
         // Навигация хлебные крошки
-        $this->navigation($this->PHPShopCategory->getParam('parent_to'), $this->category_name,['url'=>'/page/','name'=>__('Блог')]);
+        $this->navigation($this->PHPShopCategory->getParam('parent_to'), $this->category_name, ['url' => '/page/', 'name' => __('Блог')]);
 
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__, $dataArray, 'END');

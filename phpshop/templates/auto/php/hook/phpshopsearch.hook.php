@@ -7,10 +7,10 @@ function template_category_select($obj, $data) {
     $dis = null;
     
     // Корректировка количества товара на странице поиска
-    $obj->num_row=8;
+    //$obj->num_row=8;
     
     // Задаем  сетку
-    $obj->cell=4;
+    //$obj->cell=4;
     
     $obj->set('currentSearchCat', __('Выбрать каталог поиска'));
     foreach ($obj->value as $val) {

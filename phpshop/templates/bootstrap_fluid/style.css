@@ -1,4 +1,8 @@
 
+#body{
+    overflow-y: scroll;
+}
+
 @media (min-width:1750px) {
 .container-fluid{max-width:80%}}
 
@@ -2485,7 +2489,9 @@ transition: all 0.3s;
 	padding-top: 10px;
 }
 
-
+body.modal-open{
+    margin-right: -17px;
+}
 
 .banner-align {
 	display: flex;

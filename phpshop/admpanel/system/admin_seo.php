@@ -20,9 +20,8 @@ function actionStart() {
     $PHPShopGUI->_CODE .= $PHPShopGUI->setField('Основное описание (Description)', $PHPShopGUI->setTextarea('descrip_new', $data['descrip'], false, false, 100));
     $PHPShopGUI->_CODE .= $PHPShopGUI->setField('Основные ключевые слова (Keywords)', $PHPShopGUI->setTextarea('keywords_new', $data['keywords'], false, false, 100));
     $PHPShopGUI->_CODE .= $PHPShopGUI->setField("Ссылочная масса", $PHPShopGUI->setCheckbox('option[safe_links]', 1, 'Показывать отключенные товары по прямым ссылкам для поисковиков вместо 404 ошибки', $option['safe_links']));
-
     $PHPShopGUI->_CODE .= $PHPShopGUI->setField("Заголовок HSTS", $PHPShopGUI->setCheckbox('option[hsts]', 1, 'Открытие сайта только по протоколу HTTPS', $option['hsts']));
-
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setField("Сжатие файлов", $PHPShopGUI->setCheckbox('option[min]', 1, 'Сжатие JS и CSS файлов для уменьшения веса страниц', $option['min']));
     $PHPShopGUI->_CODE = $PHPShopGUI->setCollapse('Основные', $PHPShopGUI->_CODE);
 
     $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Шаблон каталога', $PHPShopGUI->loadLib('tab_headers', $data, './system/', 'catalog'));
@@ -69,7 +68,7 @@ function actionUpdate() {
     $option = unserialize($data['admoption']);
 
     // Корректировка пустых значений
-    $PHPShopOrm->updateZeroVars('option.safe_links', 'option.hsts');
+    $PHPShopOrm->updateZeroVars('option.safe_links', 'option.hsts', 'option.min');
 
     if (is_array($_POST['option']))
         foreach ($_POST['option'] as $key => $val)

@@ -1,5 +1,6 @@
 User-agent: Yandex
 Allow: /*.html?v[*]=*$
+Allow: /yml/?*$
 Disallow: /newprice/
 Disallow: /newtip/
 Disallow: /spec/

@@ -6,7 +6,7 @@ $().ready(function () {
 
     // Поиск пользователя
     $(".search_user").on('input', function () {
-        
+
         var words = $(this).val();
         var s = $(this);
         var set = s.attr('data-set');
@@ -28,16 +28,16 @@ $().ready(function () {
                     if (data != '') {
                         s.attr('data-content', data);
                         s.popover('show');
-                        
+
                         // Отключение DADATA
-                        if ($('#body').attr('data-token') != "") 
-                        $("[name='fio_new']").suggestions().disable();
-                    } else{
+                        if ($('#body').attr('data-token') != "")
+                            $("[name='fio_new']").suggestions().disable();
+                    } else {
                         s.popover('hide');
-                        
+
                         // Включение DADATA
-                        if ($('#body').attr('data-token') != "") 
-                        $("[name='fio_new']").suggestions().enable();
+                        if ($('#body').attr('data-token') != "")
+                            $("[name='fio_new']").suggestions().enable();
                     }
                 }
             });
@@ -47,7 +47,7 @@ $().ready(function () {
             s.popover('hide');
         }
     });
-    
+
     // Закрыть поиск пользователя
     $('body').on('click', '.close', function (event) {
         event.preventDefault();
@@ -123,10 +123,10 @@ $().ready(function () {
 
         var data = [];
         var id = $(this).closest('.data-row').attr('data-row');
-        data.push({name: 'selectID', value: id});
+        data.push({name: 'fileID', value: id});
         data.push({name: 'ajax', value: 1});
         data.push({name: 'fileCount', value: $(this).attr('data-count')});
-        data.push({name: 'actionList[selectID]', value: 'actionFileEdit'});
+        data.push({name: 'actionList[fileID]', value: 'actionFileEdit'});
 
         $.ajax({
             mimeType: 'text/html; charset=' + locale.charset,
@@ -153,17 +153,24 @@ $().ready(function () {
     // Удаление файла товара
     $("body").on('click', "#selectModal .modal-footer .file-delete", function (event) {
         event.preventDefault();
-        var id = $('input[name=selectID]').val();
-        if (confirm(locale.confirm_delete)) {
+        var id = $('input[name=fileID]').val();
+
+        $.MessageBox({
+            buttonDone: "OK",
+            buttonFail: locale.cancel,
+            message: locale.confirm_delete
+        }).done(function () {
             $('.file-list [data-row="' + id + '"]').remove();
             $('#selectModal').modal('hide');
-        }
+        });
+
     });
 
     // Редактировать файл товара - 2 шаг
     $("body").on('click', "#selectModal .modal-footer .file-edit-send", function (event) {
         event.preventDefault();
-        var id = $('input[name=selectID]').val();
+        var id = $('input[name=fileID]').val();
+
 
         var name = $('input[name=modal_file_name]').val();
         $('.file-list [data-row="' + id + '"] .file-edit > a').html(name);
@@ -180,9 +187,9 @@ $().ready(function () {
 
         var data = [];
         var id = $(this).closest('.data-row').attr('data-row');
-        data.push({name: 'selectID', value: id});
+        data.push({name: 'fileID', value: id});
         data.push({name: 'ajax', value: 1});
-        data.push({name: 'actionList[selectID]', value: 'actionFileEdit'});
+        data.push({name: 'actionList[fileID]', value: 'actionFileEdit'});
         var name = $(this).html();
 
         $.ajax({
@@ -406,6 +413,8 @@ $().ready(function () {
 
     // Изменить скидку заказа
     $(".discount").on('click', function () {
+        
+        $(window).unbind("beforeunload");
 
         var order_id = $('#footer input[name=rowID]').val();
         var data = [];
@@ -745,9 +754,9 @@ $().ready(function () {
     });
 
     // Мобильная навигация
-    if (typeof is_mobile !== 'undefined'){
-        locale.dataTable.paginate.next="»";
-        locale.dataTable.paginate.previous="«";
+    if (typeof is_mobile !== 'undefined') {
+        locale.dataTable.paginate.next = "»";
+        locale.dataTable.paginate.previous = "«";
     }
 
     // Таблица данных
@@ -786,6 +795,7 @@ $().ready(function () {
     }
 
 
+    // Изменить стоимость доставки
     $('select[name="person[dostavka_metod]"]').on('change', function () {
 
         if ($(this).val() == 0) {
@@ -812,13 +822,11 @@ $().ready(function () {
                         dataType: "html",
                         async: false,
                         success: function () {
+                            $(window).unbind("beforeunload");
                             window.location.reload();
                         }
-
                     });
-
                 } else {
-
                 }
             });
 

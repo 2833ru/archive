@@ -117,6 +117,10 @@ if (@$PERSON['discount'] > 0) {
 } else {
     $discount = (@$PERSON['tip_disc'] == 1 ? @$PERSON['discount_promo'] . '%' : @$PERSON['discount_promo']);
 }
+
+if(!empty($row['bonus_minus']))
+$discount = $row['bonus_minus'];
+
 ?>
 <!doctype html>
 <head>

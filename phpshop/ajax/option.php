@@ -9,7 +9,7 @@ session_start();
 $_classPath = "../";
 include($_classPath . "class/obj.class.php");
 PHPShopObj::loadClass("base");
-$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini",true,false);
+$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, false);
 PHPShopObj::loadClass("array");
 PHPShopObj::loadClass("orm");
 PHPShopObj::loadClass("product");
@@ -58,7 +58,8 @@ if (!empty($parent)) {
 }
 
 $ParentProductArray = $PHPShopParentProductArray->getArray();
-$data = array_keys($ParentProductArray);
+if (is_array($ParentProductArray))
+    $data = array_keys($ParentProductArray);
 $id = $data[0];
 $format = intval($PHPShopSystem->getSerilizeParam("admoption.price_znak"));
 
@@ -95,7 +96,7 @@ if ($PHPShopSystem->isDisplayWarehouse()) {
 
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['warehouses']);
 
-    $where=[];
+    $where = [];
     $where['enabled'] = "='1'";
 
     if (defined("HostID") or defined("HostMain")) {
@@ -117,12 +118,12 @@ if ($PHPShopSystem->isDisplayWarehouse()) {
 
 
     if (is_array($warehouse) and count($warehouse) > 0) {
-        $items=null;
-        
-        $itemsData = (new PHPShopOrm($GLOBALS['SysValue']['base']['products']))->getOne(['*'],['id'=>'='.(int) $id]);
-        
-        if(empty($itemsData['ed_izm']))
-            $itemsData['ed_izm']=__('шт.');
+        $items = null;
+
+        $itemsData = (new PHPShopOrm($GLOBALS['SysValue']['base']['products']))->getOne(['*'], ['id' => '=' . (int) $id]);
+
+        if (empty($itemsData['ed_izm']))
+            $itemsData['ed_izm'] = __('шт.');
 
         // Общий склад
         if ($PHPShopSystem->getSerilizeParam('admoption.sklad_sum_enabled') == 1)
@@ -135,8 +136,8 @@ if ($PHPShopSystem->isDisplayWarehouse()) {
         }
     } else
         $items = $PHPShopBase->SysValue['lang']['product_on_sklad'] . " " . $ParentProductArray[$id]['items'] . " " . $ParentProductArray[$id]['ed_izm'];
-}
-else $items=null;
+} else
+    $items = null;
 
 
 

@@ -25,7 +25,7 @@ PHPShopObj::loadClass("lang");
 $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
 $PHPShopSystem = new PHPShopSystem();
 $PHPShopBase->checkMultibase("../../../");
-$PHPShopLang = new PHPShopLang(array('locale'=>$_SESSION['lang'],'path'=>'admin'));
+$PHPShopLang = new PHPShopLang(array('locale' => $_SESSION['lang'], 'path' => 'admin'));
 
 /**
  * Шаблон вывода таблицы корзины
@@ -46,7 +46,7 @@ function printforma($val, $options) {
  */
 function printdelivery($val, $options) {
     global $n;
-    return PHPShopText::tr($n, __('Доставка').' - ' . $val['name'], __('шт.'), '1', $val['price'] . ' ' . $options['currency'], $val['price'] . ' ' . $options['currency']);
+    return PHPShopText::tr($n, __('Доставка') . ' - ' . $val['name'], __('шт.'), '1', $val['price'] . ' ' . $options['currency'], $val['price'] . ' ' . $options['currency']);
 }
 
 if (PHPShopSecurity::true_param($_GET['tip'], $_GET['orderId'], $_GET['datas'])) {
@@ -62,7 +62,7 @@ if (PHPShopSecurity::true_param($_GET['tip'], $_GET['orderId'], $_GET['datas']))
         exit("Неавторизованный пользователь!");
     else
         $PHPShopOrder = new PHPShopOrderFunction($orderId);
-    
+
     // Юридические лица
     $company = $PHPShopOrder->getParam('company');
     $PHPShopSystem->setCompany($company);
@@ -82,40 +82,47 @@ if (PHPShopSecurity::true_param($_GET['tip'], $_GET['orderId'], $_GET['datas']))
 
     PHPShopParser::set('totalnds', $PHPShopOrder->getTotal(true));
     PHPShopParser::set('nds', $PHPShopOrder->PHPShopSystem->getParam('nds'));
-    PHPShopParser::set('discount', $PHPShopOrder->getDiscount());
+
+    $discount = $PHPShopOrder->getDiscount() . '%';
+    $bonus = $PHPShopOrder->getParam('bonus_minus');
+
+    if (!empty($bonus))
+        $discount = $bonus.' '.$PHPShopOrder->default_valuta_code;
+
+    PHPShopParser::set('discount', $discount);
     PHPShopParser::set('ouid', $PHPShopOrder->getValue('uid'));
 
     $orgData = @$PHPShopOrder->getSerilizeParam('orders.Person.org_name');
-    if(empty($orgData)) {
+    if (empty($orgData)) {
         $orgData = $PHPShopOrder->getParam('org_name');
     }
-    if(!empty(@$PHPShopOrder->getSerilizeParam('orders.Person.org_inn')) || !empty($PHPShopOrder->getParam('org_inn'))) {
+    if (!empty(@$PHPShopOrder->getSerilizeParam('orders.Person.org_inn')) || !empty($PHPShopOrder->getParam('org_inn'))) {
         $orgData .= ' ИНН ';
         $inn = $PHPShopOrder->getSerilizeParam('orders.Person.org_inn');
-        if(empty($inn)) {
+        if (empty($inn)) {
             $inn = $PHPShopOrder->getParam('org_inn');
         }
         $orgData .= $inn;
     }
-    if(!empty(@$PHPShopOrder->getSerilizeParam('orders.Person.org_kpp')) || !empty($PHPShopOrder->getParam('org_kpp'))) {
+    if (!empty(@$PHPShopOrder->getSerilizeParam('orders.Person.org_kpp')) || !empty($PHPShopOrder->getParam('org_kpp'))) {
         $orgData .= ' КПП ';
         $kpp = $PHPShopOrder->getSerilizeParam('orders.Person.org_kpp');
-        if(empty($kpp)) {
+        if (empty($kpp)) {
             $kpp = $PHPShopOrder->getParam('org_kpp');
         }
         $orgData .= $kpp;
     }
-    if(!empty($PHPShopOrder->getParam('org_yur_adres'))) {
+    if (!empty($PHPShopOrder->getParam('org_yur_adres'))) {
         $orgData .= ' Юр. адрес ' . $PHPShopOrder->getParam('org_yur_adres');
     }
 
     $fio = $PHPShopOrder->getParam('fio');
-    if(!empty($fio))
+    if (!empty($fio))
         $user = $PHPShopOrder->getParam('fio');
     else
         $user = $PHPShopOrder->getSerilizeParam('orders.Person.name_person');
 
-    if(!empty($orgData)) {
+    if (!empty($orgData)) {
         PHPShopParser::set('buyer_data', $orgData);
     } else {
         PHPShopParser::set('buyer_data', $user);
@@ -140,7 +147,7 @@ if (PHPShopSecurity::true_param($_GET['tip'], $_GET['orderId'], $_GET['datas']))
     PHPShopParser::set('cart', $PHPShopOrder->cart('printforma', array('currency' => $PHPShopOrder->default_valuta_code)) . $PHPShopOrder->delivery('printdelivery', array('currency' => $PHPShopOrder->default_valuta_code)));
 
     // Печати и подписи
-    $LoadBanc['org_sig']=$PHPShopSystem->getSerilizeParam('bank.org_sig');
+    $LoadBanc['org_sig'] = $PHPShopSystem->getSerilizeParam('bank.org_sig');
     $LoadBanc['org_sig_buh'] = $PHPShopSystem->getSerilizeParam('bank.org_sig_buh');
     $LoadBanc['org_stamp'] = $PHPShopSystem->getSerilizeParam('bank.org_stamp');
 
@@ -157,27 +164,26 @@ if (PHPShopSecurity::true_param($_GET['tip'], $_GET['orderId'], $_GET['datas']))
     if (!empty($LoadBanc['org_stamp']))
         $org_stamp = '<img src="' . $LoadBanc['org_stamp'] . '">';
     else
-        $org_stamp = '<div style="padding:50px;border-bottom: 1px solid #000000;border-top: 1px solid #000000;border-left: 1px solid #000000;border-right: 1px solid #000000;" align="center">'.__('М.П.').'</div>';
+        $org_stamp = '<div style="padding:50px;border-bottom: 1px solid #000000;border-top: 1px solid #000000;border-left: 1px solid #000000;border-right: 1px solid #000000;" align="center">' . __('М.П.') . '</div>';
 
-  
+
     // Монитор
     if ($_GET['tip'] == 2 and empty($_SESSION['logPHPSHOP'])) {
         PHPShopParser::set('comment_start', '<!--');
         PHPShopParser::set('comment_end', '-->');
         $org_stamp = '<div style="padding:50px;border-bottom: 1px solid #000000;border-top: 1px solid #000000;border-left: 1px solid #000000;border-right: 1px solid #000000;" align="center">М.П.</div>';
-        $org_sig_buh =  $org_sig =  '<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>';
+        $org_sig_buh = $org_sig = '<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>';
     }
-    
+
     PHPShopParser::set('org_sig', $org_sig);
     PHPShopParser::set('org_sig_buh', $org_sig_buh);
     PHPShopParser::set('org_stamp', $org_stamp);
-    
-    if($_GET['tip'] == 2)
-    PHPShopParser::set('title', '№'.$PHPShopOrder->getValue('uid'));
+
+    if ($_GET['tip'] == 2)
+        PHPShopParser::set('title', '№' . $PHPShopOrder->getValue('uid'));
 
     PHPShopParser::file('../../lib/templates/print/account.tpl');
     writeLangFile();
-}
-else
+} else
     header('Location: /');
 ?>

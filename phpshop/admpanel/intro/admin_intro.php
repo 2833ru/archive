@@ -268,7 +268,7 @@ function actionStart() {
 
 
             $PHPShopInterface->setRow(
-                    array('name' => $row['name'], 'link' => '?path=product&return=catalog&id=' . $row['id'], 'align' => 'left'), array('name' => PHPShopDate::get($row['datas'], false), 'align' => 'right'));
+                    array('name' => $row['name'], 'link' => '?path=product&return=catalog&id=' . $row['id'], 'align' => 'left'), array('name' => PHPShopDate::get($row['datas'], false), 'align' => 'right','class'=>'text-nowrap'));
         }
     $product_list = $PHPShopInterface->getContent();
 

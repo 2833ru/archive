@@ -203,27 +203,38 @@ function filter_load(filter_str, obj) {
 
                 // Выравнивание ячеек товара
                 //setEqualHeight(".description");
-                
-            // Блокировкам пустых значений и пересчет количества фильтра
-            if (typeof FILTER_CACHE !== "undefined" && FILTER_CACHE) {
-                $('#faset-filter-body [type="checkbox"]').each(function () {
-                    $(this).attr('disabled', 'disabled');
-                    $(this).next('.filter-item').addClass('filter-item-hide');
 
-                    if (FILTER_COUNT)
-                        $('[data-num="' + $(this).attr('name') + '"]').text(0);
+                // Блокировкам пустых значений и пересчет количества фильтра
+                if (typeof FILTER_CACHE !== "undefined" && FILTER_CACHE) {
+                    $('#faset-filter-body [type="checkbox"]').each(function () {
 
-                    for (var key in data['filter']) {
-                        if ($(this).attr('name') == key) {
-                            $(this).removeAttr('disabled');
-                            $(this).next('.filter-item').removeClass('filter-item-hide');
-
-                            if (FILTER_COUNT)
-                                $('[data-num="' + $(this).attr('name') + '"]').text(data['filter'][key]);
+                        if (data['logic'] == 0) {
+                            $(this).attr('disabled', 'disabled');
+                            $(this).next('.filter-item').addClass('filter-item-hide');
+                        } else if (data['logic'] == 1 && $(this).attr('data-count') != 1) {
+                            $(this).attr('disabled', 'disabled');
+                            $(this).next('.filter-item').addClass('filter-item-hide');
                         }
-                    }
-                });
-            }
+
+                        if (FILTER_COUNT && data['logic'] == 0) {
+                            $('[data-num="' + $(this).attr('name') + '"]').text(0);
+                        }
+
+                        for (var key in data['filter']) {
+                            if ($(this).attr('name') == key) {
+
+                                $(this).removeAttr('disabled');
+                                $(this).next('.filter-item').removeClass('filter-item-hide');
+
+                                if (FILTER_COUNT && data['logic'] == 0) {
+                                    $('[data-num="' + $(this).attr('name') + '"]').text(data['filter'][key]);
+                                } else if (data['logic'] == 1 && $(this).attr('data-count') != 1) {
+                                    $('[data-num="' + $(this).attr('name') + '"]').text(data['filter'][key]);
+                                }
+                            }
+                        }
+                    });
+                }
 
                 // lazyLoad
                 setTimeout(function () {
@@ -280,9 +291,9 @@ function faset_filter_click(obj) {
 
         var hash;
         var hashes = window.location.href.split('#')[0].slice(window.location.href.indexOf('?') + 1).split('&');
-        for(var i = 0; i < hashes.length; i++) {
+        for (var i = 0; i < hashes.length; i++) {
             hash = hashes[i].split('=');
-            if(hash[0].match(/v\[(.*)\]/) && window.location.hash.indexOf(hash[0] + '=' + hash[1]) === -1) {
+            if (hash[0].match(/v\[(.*)\]/) && window.location.hash.indexOf(hash[0] + '=' + hash[1]) === -1) {
                 window.location.hash += hash[0] + '=' + hash[1] + '&';
             }
         }
@@ -291,10 +302,11 @@ function faset_filter_click(obj) {
             window.location.hash += $(obj).attr('data-url') + '&';
 
         } else {
-            window.location.hash = window.location.hash.split($(obj).attr('data-url') + '&').join('');
-            if (window.location.hash == '')
-                $('html, body').animate({scrollTop: $("a[name=sort]").offset().top - 100}, 500);
-
+            hashes = window.location.hash.split($(obj).attr('data-url') + '&').join('');
+            if (hashes == '#')
+                history.pushState('', document.title, window.location.pathname);
+            else
+                window.location.hash = hashes;
         }
 
         filter_load(window.location.hash.split(']').join('][]'), obj);
@@ -317,7 +329,6 @@ function faset_filter_click(obj) {
 
         window.location.href = catalogFirstPage + '?' + href;
     }
-
 }
 
 // Выравнивание ячеек товара
@@ -548,9 +559,14 @@ $(document).ready(function () {
 
             count = current;
 
-            window.location.hash = window.location.hash.split($(this).attr('name') + '=1&').join('');
-            window.location.hash = window.location.hash.split($(this).attr('name') + '=2&').join('');
-            window.location.hash += $(this).attr('name') + '=' + $(this).attr('value') + '&';
+            var hashes = window.location.hash;
+            hashes = hashes.split('s=1&').join('');
+            hashes = hashes.split('s=2&').join('');
+            hashes = hashes.split('s=3&').join('');
+            hashes = hashes.split('f=2&').join('');
+            hashes = hashes.split('f=1&').join('');
+            hashes += $(this).attr('name') + '=' + $(this).attr('value') + '&';
+            window.location.hash = hashes;
 
             filter_load(window.location.hash);
         } else {
@@ -590,7 +606,7 @@ $(document).ready(function () {
                 if (data) {
                     $("#faset-filter-body").html(data);
                     $("#faset-filter-body").html($("#faset-filter-body").find('td').html());
-                    
+
                     // Загрузка результата отборки
                     filter_load(filter_str);
                 }
@@ -613,8 +629,7 @@ $(document).ready(function () {
             event.preventDefault();
             $("#faset-filter-body").html($("#sorttable table td").html());
             filter_load('');
-            $('html, body').animate({scrollTop: $("a[name=sort]").offset().top - 100}, 500);
-            window.location.hash = '';
+            history.pushState('', document.title, window.location.pathname);
             $.removeCookie('slider-range-min');
             $.removeCookie('slider-range-max');
             $(".pagination").show();
@@ -682,10 +697,6 @@ $(document).ready(function () {
         $('#catSearchSelect').html($(this).html());
     });
 
-    // увеличение изображения товара
-    $("body").on('click', '.highslide', function () {
-        return hs.expand(this);
-    });
 
     // ошибка загрузки изображения
     $('.image').on('error', function () {
@@ -883,41 +894,41 @@ $(document).ready(function () {
     }
 
     // формат ввода телефона
-    $( "form[name='forma_order'], input[name=returncall_mod_tel],input[name=tel],input[name=tel_new],input[name=oneclick_mod_tel]").on("click", function () {
+    $("form[name='forma_order'], input[name=returncall_mod_tel],input[name=tel],input[name=tel_new],input[name=oneclick_mod_tel]").on("click", function () {
         if (PHONE_FORMAT && PHONE_MASK) {
             $("input[name=tel_new], input[name=returncall_mod_tel],input[name=tel],input[name=oneclick_mod_tel]").mask(PHONE_MASK);
         }
     });
-    
+
     /*
-    setTimeout(function () {
-        $('input[name=tel_new]').mask("+7 (999) 999-99-99");
-
-        $('input[name=tel_new]').on('keyup', function (event) {
-            reserveVal = $(this).cleanVal();
-            phone = $(this).cleanVal().slice(0, 10);
-            $(this).val($(this).masked(phone));
-            if ($(this).cleanVal()[1] == '9') {
-                if ($(this).cleanVal()[0] == '8' || $(this).cleanVal()[0] == '7') {
-                    phone = reserveVal.slice(1);
-                    $(this).val($(this).masked(phone));
-                }
-            }
-        });
-    }, 2500);
-    $('input[name=returncall_mod_tel],input[name=tel],input[name=oneclick_mod_tel]').mask("+7 (999) 999-99-99");
-
-    $('input[name=returncall_mod_tel],input[name=tel],input[name=oneclick_mod_tel]').on('keyup', function (event) {
-        reserveVal = $(this).cleanVal();
-        phone = $(this).cleanVal().slice(0, 10);
-        $(this).val($(this).masked(phone));
-        if ($(this).cleanVal()[1] == '9') {
-            if ($(this).cleanVal()[0] == '8' || $(this).cleanVal()[0] == '7') {
-                phone = reserveVal.slice(1);
-                $(this).val($(this).masked(phone));
-            }
-        }
-    })*/
+     setTimeout(function () {
+     $('input[name=tel_new]').mask("+7 (999) 999-99-99");
+     
+     $('input[name=tel_new]').on('keyup', function (event) {
+     reserveVal = $(this).cleanVal();
+     phone = $(this).cleanVal().slice(0, 10);
+     $(this).val($(this).masked(phone));
+     if ($(this).cleanVal()[1] == '9') {
+     if ($(this).cleanVal()[0] == '8' || $(this).cleanVal()[0] == '7') {
+     phone = reserveVal.slice(1);
+     $(this).val($(this).masked(phone));
+     }
+     }
+     });
+     }, 2500);
+     $('input[name=returncall_mod_tel],input[name=tel],input[name=oneclick_mod_tel]').mask("+7 (999) 999-99-99");
+     
+     $('input[name=returncall_mod_tel],input[name=tel],input[name=oneclick_mod_tel]').on('keyup', function (event) {
+     reserveVal = $(this).cleanVal();
+     phone = $(this).cleanVal().slice(0, 10);
+     $(this).val($(this).masked(phone));
+     if ($(this).cleanVal()[1] == '9') {
+     if ($(this).cleanVal()[0] == '8' || $(this).cleanVal()[0] == '7') {
+     phone = reserveVal.slice(1);
+     $(this).val($(this).masked(phone));
+     }
+     }
+     })*/
 
     // Фотогалерея в по карточке товара
     if ($('.bxslider').length) {
@@ -1291,86 +1302,85 @@ $(document).ready(function () {
     }
     $('div:contains("- PHPShop")').parents('.visible-lg').css('position', 'absolute');
     $('div:contains("- PHPShop")').parents('.visible-lg').css('bottom', '0');
-    
+
     $(window).resize(function () {
         mainNavMenuFix();
     });
 
 // CAPTCHA
-$('body').on('click', '[data-toggle="modal"]', function () {
+    $('body').on('click', '[data-toggle="modal"]', function () {
 
-    // reCAPTCHA
-    var oneclick = $($(this).attr('data-target')).find('#recaptcha_oneclick').get(0);
-    var returncall = $($(this).attr('data-target')).find('#recaptcha_returncall').get(0);
-    var notice = $($(this).attr('data-target')).find('#recaptcha_notice').get(0);
-    var pricemail = $($(this).attr('data-target')).find('#recaptcha_pricemail').get(0);
-    var review = $($(this).attr('data-target')).find('#recaptcha_review').get(0);
-    var forma = $($(this).attr('data-target')).find('#recaptcha_forma').get(0);
-
-    if (typeof oneclick !== "undefined" || typeof returncall !== "undefined" || typeof notice !== "undefined" || typeof pricemail !== "undefined" || typeof review !== "undefined" || typeof forma !== "undefined"){
-        $.getScript("https://www.google.com/recaptcha/api.js?render=explicit")
-                .done(function () {
-                    if (typeof grecaptcha !== "undefined") {
-
-                        grecaptcha.ready(function () {
-                            try {
-                                if (returncall)
-                                    grecaptcha.render(returncall, {"sitekey": $(returncall).attr('data-key'), "size": $(returncall).attr('data-size')});
-                                if (oneclick)
-                                    grecaptcha.render(oneclick, {"sitekey": $(oneclick).attr('data-key'), "size": $(oneclick).attr('data-size')});
-                                if (notice)
-                                    grecaptcha.render(notice, {"sitekey": $(notice).attr('data-key'), "size": $(notice).attr('data-size')});
-                                if (pricemail)
-                                    grecaptcha.render(pricemail, {"sitekey": $(pricemail).attr('data-key'), "size": $(pricemail).attr('data-size')});
-                                if (review)
-                                    grecaptcha.render(review, {"sitekey": $(review).attr('data-key'), "size": $(review).attr('data-size')});
-                                if (forma)
-                                    grecaptcha.render(forma, {"sitekey": $(forma).attr('data-key'), "size": $(forma).attr('data-size')});
-                            } catch (e) {
-                            }
-                        });
-                    }
-                });
-            }
-    else {
-
-        // hCAPTCHA
-        var oneclick = $($(this).attr('data-target')).find('#hcaptcha_oneclick').get(0);
-        var returncall = $($(this).attr('data-target')).find('#hcaptcha_returncall').get(0);
-        var notice = $($(this).attr('data-target')).find('#hcaptcha_notice').get(0);
-        var pricemail = $($(this).attr('data-target')).find('#hcaptcha_pricemail').get(0);
-        var review = $($(this).attr('data-target')).find('#hcaptcha_review').get(0);
-        var forma = $($(this).attr('data-target')).find('#hcaptcha_forma').get(0);
+        // reCAPTCHA
+        var oneclick = $($(this).attr('data-target')).find('#recaptcha_oneclick').get(0);
+        var returncall = $($(this).attr('data-target')).find('#recaptcha_returncall').get(0);
+        var notice = $($(this).attr('data-target')).find('#recaptcha_notice').get(0);
+        var pricemail = $($(this).attr('data-target')).find('#recaptcha_pricemail').get(0);
+        var review = $($(this).attr('data-target')).find('#recaptcha_review').get(0);
+        var forma = $($(this).attr('data-target')).find('#recaptcha_forma').get(0);
 
         if (typeof oneclick !== "undefined" || typeof returncall !== "undefined" || typeof notice !== "undefined" || typeof pricemail !== "undefined" || typeof review !== "undefined" || typeof forma !== "undefined") {
-
-            $.getScript("https://js.hcaptcha.com/1/api.js?render=explicit")
+            $.getScript("https://www.google.com/recaptcha/api.js?render=explicit")
                     .done(function () {
-                        if (typeof hcaptcha !== "undefined") {
-                            try {
-                                if (returncall)
-                                    hcaptcha.render(returncall, {"sitekey": $(returncall).attr('data-key'), "size": $(returncall).attr('data-size')});
-                                if (oneclick)
-                                    hcaptcha.render(oneclick, {"sitekey": $(oneclick).attr('data-key'), "size": $(oneclick).attr('data-size')});
-                                if (notice)
-                                    hcaptcha.render(notice, {"sitekey": $(notice).attr('data-key'), "size": $(notice).attr('data-size')});
-                                if (pricemail)
-                                    hcaptcha.render(pricemail, {"sitekey": $(pricemail).attr('data-key'), "size": $(pricemail).attr('data-size')});
-                                if (review)
-                                    hcaptcha.render(review, {"sitekey": $(review).attr('data-key'), "size": $(review).attr('data-size')});
-                                if (forma)
-                                    hcaptcha.render(forma, {"sitekey": $(forma).attr('data-key'), "size": $(forma).attr('data-size')});
-                            } catch (e) {
-                            }
+                        if (typeof grecaptcha !== "undefined") {
 
+                            grecaptcha.ready(function () {
+                                try {
+                                    if (returncall)
+                                        grecaptcha.render(returncall, {"sitekey": $(returncall).attr('data-key'), "size": $(returncall).attr('data-size')});
+                                    if (oneclick)
+                                        grecaptcha.render(oneclick, {"sitekey": $(oneclick).attr('data-key'), "size": $(oneclick).attr('data-size')});
+                                    if (notice)
+                                        grecaptcha.render(notice, {"sitekey": $(notice).attr('data-key'), "size": $(notice).attr('data-size')});
+                                    if (pricemail)
+                                        grecaptcha.render(pricemail, {"sitekey": $(pricemail).attr('data-key'), "size": $(pricemail).attr('data-size')});
+                                    if (review)
+                                        grecaptcha.render(review, {"sitekey": $(review).attr('data-key'), "size": $(review).attr('data-size')});
+                                    if (forma)
+                                        grecaptcha.render(forma, {"sitekey": $(forma).attr('data-key'), "size": $(forma).attr('data-size')});
+                                } catch (e) {
+                                }
+                            });
                         }
                     });
-        }
-    }
-});
+        } else {
 
-    
-     // Закрыть стикер в шапке
+            // hCAPTCHA
+            var oneclick = $($(this).attr('data-target')).find('#hcaptcha_oneclick').get(0);
+            var returncall = $($(this).attr('data-target')).find('#hcaptcha_returncall').get(0);
+            var notice = $($(this).attr('data-target')).find('#hcaptcha_notice').get(0);
+            var pricemail = $($(this).attr('data-target')).find('#hcaptcha_pricemail').get(0);
+            var review = $($(this).attr('data-target')).find('#hcaptcha_review').get(0);
+            var forma = $($(this).attr('data-target')).find('#hcaptcha_forma').get(0);
+
+            if (typeof oneclick !== "undefined" || typeof returncall !== "undefined" || typeof notice !== "undefined" || typeof pricemail !== "undefined" || typeof review !== "undefined" || typeof forma !== "undefined") {
+
+                $.getScript("https://js.hcaptcha.com/1/api.js?render=explicit")
+                        .done(function () {
+                            if (typeof hcaptcha !== "undefined") {
+                                try {
+                                    if (returncall)
+                                        hcaptcha.render(returncall, {"sitekey": $(returncall).attr('data-key'), "size": $(returncall).attr('data-size')});
+                                    if (oneclick)
+                                        hcaptcha.render(oneclick, {"sitekey": $(oneclick).attr('data-key'), "size": $(oneclick).attr('data-size')});
+                                    if (notice)
+                                        hcaptcha.render(notice, {"sitekey": $(notice).attr('data-key'), "size": $(notice).attr('data-size')});
+                                    if (pricemail)
+                                        hcaptcha.render(pricemail, {"sitekey": $(pricemail).attr('data-key'), "size": $(pricemail).attr('data-size')});
+                                    if (review)
+                                        hcaptcha.render(review, {"sitekey": $(review).attr('data-key'), "size": $(review).attr('data-size')});
+                                    if (forma)
+                                        hcaptcha.render(forma, {"sitekey": $(forma).attr('data-key'), "size": $(forma).attr('data-size')});
+                                } catch (e) {
+                                }
+
+                            }
+                        });
+            }
+        }
+    });
+
+
+    // Закрыть стикер в шапке
     $('.sticker-close').on('click', function (e) {
         e.preventDefault();
         $(".top-banner").remove();
@@ -1390,7 +1400,7 @@ if ($("#recaptcha_default").length || $("#recaptcha_returncall").length) {
                     grecaptcha.ready(function () {
                         if ($("#recaptcha_default").length)
                             grecaptcha.render("recaptcha_default", {"sitekey": $("#recaptcha_default").attr('data-key'), "size": $("#recaptcha_default").attr('data-size')});
-                        
+
                         if ($("#recaptcha_returncall").length)
                             grecaptcha.render("recaptcha_returncall", {"sitekey": $("#recaptcha_returncall").attr('data-key'), "size": $("#recaptcha_returncall").attr('data-size')});
 

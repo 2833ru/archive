@@ -1,164 +1,321 @@
- <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
- <style type="text/css">
-  p {color:#000000;}
-  small {color:#999999;}
-  small a {color:#fafafa;}
+<html lang="ru">
 
-  .note {color:#999999;}
-  .note p {color:#999999;}
-  .note a {color:#cccccc;}
-  
-  #header p, #header a {color:#000000;}
-  #header h1 {color:#000000;}
-  #number h1 {color:#000000;}
-  
-  #page a {color:#999999;}
-  #page a:hover {color:#fafafa;}
-  
-  #topBox h1 {color:#fafafa;}
-  #topBox small {color:#999999;}
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+    <meta name="viewport" content="initial-scale=1.0">
+    <!-- So that mobile webkit will display zoomed in -->
+    <meta name="format-detection" content="telephone=no">
+    <!-- disable auto telephone linking in iOS -->
+    <title>
+        @shopName@ - {регистрация на сайте}
+    </title>
+    <style type="text/css">
+        * {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
 
-  #bottomBox h1 {color:#fafafa;}
-  #bottomBox h4 {color:#666666;}
-  #bottomBox small {color:#999999;}
-  
-  #page h1 {color:#fafafa;}
-  #page h4 {color:#666666;}
-  #page h5 {color:#666666;}
-  #page p {color:#999999;}
-  #page small {color:#cccccc;}
-  #page small a {color:#fafafa;}
-  #page small b {color:#666666;}
-  
-  #footer h1 {color:#FFFFFF;}
-  #footer h4 {color:#FFFFFF;} 
-  #footer p, #footer a, #footer .email a, #footer .email {color:#000000;}
+        table.red-table tbody tr:nth-child(2n) {
+            background-color: #f6f6f6;
+        }
 
-  /* Reset */
-  body {background-color:white; background-position:top center; background-repeat:repeat; margin:0; padding:0;}
-  table {font-family:Arial,Verdana,sans-serif;}
-  ul, li, tr, td, p, h2 {margin-left:15px; padding-right:15px; padding-top:3px;}
-  img {border:none;}
+        table.footer {
+            padding: 20px 15px;
+        }
 
-  /* Misc */
-  .clear{clear:both;}
+        body {
+            font-family:  Helvetica, sans-serif;
+            margin: 0px;
+            font-size: 16px;
+            font-weight: 300;
+        }
 
-  /* Basic */
-  h1, h2, h3, h4, h5 {font-weight:normal;}
-  small {font-size:10px;} 
-  small a {text-decoration:none;}
-  small a:hover {text-decoration:underline;}
+        table[class=gray] {
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #eaeaea;
+            color: #2b2b2b
+        }
 
-  /* Top and Bottom Notes */
-  .note {font-size:10px; }
-  .note a {text-decoration:none;}
-  .note a:hover {text-decoration:underline;}
-  .note img, .note p {margin-top:0; margin-bottom:0; margin-left:0; margin-right:0;}
+        img {
+            border: none;
+            max-width: 100%;
+        }
 
-  /* Header */
-  #header{height:auto; height:100px; width:660px;}
-  #header p {font-size:17px; margin-top:0; margin-bottom:0;}
-  #header h1 {font-size:28px; margin-bottom:0;}
-  #logo {padding-left:14px; padding-bottom:12px;}
-  #logo h1 {line-height:22px;}
-  #date {padding-bottom:12px;}
-  #number {padding-bottom:12px;}
-  #number h1 {font-size:78px; line-height:64px; margin-bottom:0;}
-  
-  /* Top Author Box */
-  #topBox td {padding:15px;}
-  #topBox h1 {font-size:18px; margin-top:0; margin-bottom:5px;}
-  #topBox p {font-size:17px; line-height:30px; margin-top:0;}
-  #topBox a {text-decoration:none;}
-  #topBox a:hover {text-decoration:underline;}
-  #topBox small {font-size:10px; }
-  #topBox img {margin-right:15px;}
-  
-  /* Bottom Box */
-  #bottomBox h1 {font-size:20px; margin-top:0;}
-  #bottomBox h4 {font-size:13px; line-height:10px; margin-top:10px; margin-bottom:5px;}
-  #bottomBox p {font-size:12px; margin-top:0; line-height:1.5em}
-  #bottomBox img {margin:0; padding:0;}
-  #bottomBox small {font-size:10px;}
-  
-  /* Page */
-  #page p {font-size:12px; line-height:18px; margin-top:0; margin-bottom:0;}
-  #page h1 {font-size:18px; margin:0;}
-  #page h4 {font-size:13px; line-height:10px; margin-top:0; margin-bottom:4px;}
-  #page h5 {font-size:12px; line-height:10px; margin-top:0; margin-bottom:0px;}
-  #page small {font-size:10px;}
-  #page small a {text-decoration:none;}
-  #page small a:hover {text-decoration:underline;}
-  
-  /* Content */
-  #content p {margin-left:15px; padding-right:15px; padding-top:3px;}
-  #content .hr {padding-top:15px; margin-bottom:15px;}
-  #content .alignRight {margin-right:15px; margin-left:30px; margin-bottom:5px; display:inline; float:right;}
-  #content .alignLeft {margin-right:30px; margin-left:15px; margin-bottom:5px; display:inline; float:left;}
-  
-  /* Footer */
-  #footer {height:auto; height:125px; width:660px;}
-  #footer h4 {font-size:13px; margin-bottom:0;}
-  #footer p {font-size:12px; line-height:18px; margin-top:0; margin-bottom:0; text-decoration:none;}
-  #footer .logo {padding-left:14px; padding-top:12px;}
-  #footer .logo h1 {font-size:22px; line-height:17px; margin-bottom:0;}
-  #footer .contact {padding-right:14px; padding-top:12px;}
-  #footer .social a {line-height:0;}
-</style>
+        td,
+        table {
+            max-width: 100%;
+        }
+        
+        .hide {
+	        display: none;
+        }
+        
+        a {
+	        text-decoration: none;
+	        color:  #337ab7 !important;
+        }
+    </style>
+    <style type="text/css">
+        @media (min-width: 605px) {
+            .appear {
+                display: none;
+            }
+
+            .hid-on-dt {
+                display: none;
+            }
+        }
+
+        @media (max-width: 604px) {
+            table[class=full] {
+                width: 100% !important;
+                clear: both;
+            }
+
+            .mobile-margin {
+                padding-top: 15px;
+            }
+
+            .text-left {
+                text-align: left !important;
+            }
+
+            .erase {
+                display: none;
+            }
+
+            img.full {
+                width: 100%;
+            }
+
+            td.full {
+                width: 100% !important;
+                display: block;
+                padding-right: 0px !important;
+                clear: both;
+            }
+
+            .mb25 {
+                margin-bottom: 25px;
+            }
+
+            .liquid {
+                display: block !important;
+            }
+
+            .liquid-center {
+                text-align: center !important;
+            }
+
+            .liquid-auto {
+                width: auto !important;
+            }
+
+            table[class=full-width] {
+                padding: 0px 15px;
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .footer a {
+                float: none !important;
+                display: block;
+                margin-top: 5px;
+            }
+
+            .footer p {
+                text-align: center;
+            }
+        }
+    </style>
 </head>
-<body><table width="660" valign="top" align="center" cellspacing="0" cellpadding="0">
-<tbody>    
-    <tr bgcolor="#fafafa" id="header" valign="top">
-        <td id="logo" align="left" valign="bottom">
-            <div align="center" style="padding-top:30px;"><a href="http://@serverPath@" target="_blank"><img src="http://@serverPath@@logo@" alt="logo @serverPath@" border="0" style="display: block;" title="@serverPath@"></a>
-            <p><h1>@shopName@</h1></p></div>
-        </td>     
+
+<body>
+    <table class="full-width" bgcolor="#f3f3f3" style="background: #f3f3f3; width: 100%; " width="100%" cellspacing="0"
+        cellpadding="0" border="0">
+        <tbody width="100%" style="width: 100%; " align="center">
+            <!-- Padding Top -->
+            <tr class="erase">
+                <td height="30"></td>
+            </tr>
+            <tr>
+                <td align="center">
+                    <table class="full" align="center"
+                        style="margin: 0px auto; padding: 0px; background: #ffffff; border-left:1px solid #ededed;border-top:1px solid #ededed; border-right: 1px solid #ededed;border-radius: 5px 5px 0px 0px;"
+                        bgcolor="#ffffff" width="600" cellspacing="0" cellpadding="0" border="0">
+                        <tbody>
+                            <tr>
+                                <td colspan="1" width="600"></td>
+                            </tr>
+                            <tr>
+                                <td align="center" height="90" width="100%">
+                                    <a href="http://@serverPath@" target="_blank"><img src="http://@serverPath@@logo@"
+                                            border="0" style="display: block;max-width: 200px;height: auto;" alt="@shopName@"></a>
+                                </td>
+                            </tr>
+                            <!-- Gray Line -->
+                            <tr>
+                                <td height="1" bgcolor="#f3f3f3" style="background: #f3f3f3; ">
+                                    <p style="margin:0;line-height: 1px; font-size: 1px">&nbsp;</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- Header text -->
+                    <table class="full" align="center"
+                        style="margin: 0px auto; padding: 0px; font-family:  Helvetica, sans-serif; background: #ffffff;border-left:1px solid #ededed; border-right: 1px solid #ededed;"
+                        bgcolor="#ffffff" width="600" cellspacing="0" cellpadding="0" border="0">
+                        <tbody>
+                            <tr>
+                                <td height="25" colspan="5" bgcolor="#ffffff" style="background: #ffffff;"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="5" width="600"></td>
+                            </tr>
+                            <tr>
+                                <td width="15" rowspan="5"></td>
+                                <td>
+                                </td>
+                                <td width="15" rowspan="5"></td>
+                            </tr>
+                            <tr>
+                                <td height="25"></td>
+                            </tr>
+                            <tr>
+                                <td bgcolor="#f3f3f3" align="center" height="60"
+                                    style="font-size: 20px; color: #464646; font-weight: 700; background: #f3f3f3; border-radius:4px;font-family:    Helvetica, sans-serif; letter-spacing: 4px; ">{Спасибо за регистрацию}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td
+                                    style="color: #646464;font-family: Helvetica, sans-serif; font-size: 15px;line-height: 24px; ">
+
+             <p>{Пожалуйста, подождите уведомления об успешной активации администратором сайта. Активация пользователя выполняется администратором в ручном режиме, это может занять некоторое время. После активации, Вам будут доступны дополнительные возможности работы с интернет-магазином}.</p>                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="full" align="center"
+                        style="margin: 0px auto; padding: 0px; font-family:    Helvetica, sans-serif; background: #ffffff; border-left:1px solid #ededed; border-right: 1px solid #ededed;border-bottom:1px solid #ededed; border-radius: 0px 0px 5px 5px;"
+                        bgcolor="#ffffff" width="600" cellspacing="0" cellpadding="0" border="0">
+                        <tbody>
+                            <tr>
+                                <td colspan="5" width="600"></td>
+                            </tr>
+                            <tr>
+                                <td width="35" rowspan="4" class="erase"></td>
+                                <td width="15" rowspan="4"></td>
+                                <td></td>
+                                <td width="35" rowspan="4" class="erase"></td>
+                                <td width="15" rowspan="4"></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <table align="center" style="margin: 0px auto; padding: 0px;width: 100%; "
+                                        cellspacing="0" cellpadding="0" border="0">
+                                        <tbody>
+                                            <tr>
+                             <td align="center" colspan="3">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td height="50"></td>
+            </tr>
+            <tr>
+                <td height="0"></td>
+            </tr>
+        </tbody>
+    </table>
+    <!-- Footer -->
+    <table class="full" align="center"
+        style="margin: 0px auto; padding: 0px; font-family: Helvetica, sans-serif;background: #f3f3f3; "
+        bgcolor="#f3f3f3" width="600" cellspacing="0" cellpadding="0" border="0">
+        <tbody>
+            <tr>
+                <td height="35"></td>
+            </tr>
+            <tr>
+                <td colspan="3" width="600"></td>
+            </tr>
+            <tr>
+                <td class="full liquid-center" width="60%" style="width: 60%; ">
+                    <table width="100%" align="left" cellspacing="0" cellpadding="0" border="0">
+                        <tbody>
+                            <tr>
+                                <td width="10" rowspan="10"></td>
+                                <td align="left" class="liquid-center">
+                                    <a href="http://@serverPath@" target="_blank"><img src="http://@serverPath@@logo@"
+                                            border="0" style="display: block;max-width: 100px;height: auto;"
+                                            alt="@shopName@"></a>
+                                </td>
+                                <td width="10" rowspan="10"></td>
+                            </tr>
+                            <tr>
+                                <td height="20"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+                <td class="full mobile-margin" width="40%" style="width: 40%; ">
+                    <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                        <tbody>
+                            <tr>
+                                <td align="right" class="liquid-center">
+
+                                    <span class="@php __hide('whatsapp'); php@"><a href="@whatsapp@" target="_blank" title="WhatsApp"><img
+                                            src="http://@serverPath@/UserFiles/Image/Payments/whatsapp.png"
+                                            width="25" height="25" alt=""></a></span>
+                                            
+                                    <span class="@php __hide('telegram'); php@"><a href="@telegram@" target="_blank" title="Telegram"><img
+                                            src="http://@serverPath@/UserFiles/Image/Payments/telegram.png"
+                                            width="25" height="25" alt=""></a></span>
+                                            
+                                    <span class="@php __hide('vk'); php@"><a href="@vk@" target="_blank" title="Vkontakte"><img
+                                            src="http://@serverPath@/UserFiles/Image/Payments/vk.png" width="25"
+                                            height="25" alt=""></a></span>
+                                            
+                                    <span class="@php __hide('youtube'); php@"><a href="@youtube@" target="_blank" title="Youtube"><img
+                                            src="http://@serverPath@/UserFiles/Image/Payments/youtube.png"
+                                            width="25" height="25" alt=""></a></span>
+                                </td>
+                            <tr>
+                                <td align="right" style="color: #adadad;line-height: 21px; " class="liquid-center">
+                                    <p style="margin: 0px;">
+                                        <a style="text-decoration: none; color: #adadad; font-family: Helvetica,sans-serif; font-size: 12px;"
+                                            href="tel:@telNum@">@telNum@</a>
+                                    </p>
+                                    <p style="margin: 0px;">
+                                        <a style="text-decoration: none; color: #adadad; font-family: Helvetica,sans-serif; font-size: 12px;"
+                                            href="mailto:@adminMail@">@adminMail@</a>
+                                    </p>
+                                    <p style="margin: 0px; text-decoration: none; color: #adadad; font-family: Helvetica,sans-serif; font-size: 12px;">
+                                        @org_adres@
+                                    </p>
+
+                                </td>
+                            </tr>
+            </tr>
+            <tr>
+                <td height="10"></td>
+            </tr>
+        </tbody>
+    </table>
+    </td>
     </tr>
-    
-    <tr height="10"><td></td></tr>
-    
-</tbody>  
-</table> 
-<table id="topBox" width="660" valign="top" align="center" cellspacing="0" cellpadding="10">
-<tbody>
-    
-    <tr bgcolor="#eaeaea">
-        <td >
-        <h2>{Здравствуйте}, @user_name@!</h2>
-              
-<p>{Спасибо за регистрацию на сайте} "@name@"!</p><p>
-{Пожалуйста, подождите уведомления об успешной активации администратором сайта}.</p>
-
-
-<hr>
-        </td>
+    <tr>
+        <td height="50"></td>
     </tr>
-         
-</tbody>  
-</table> 
-
-
-<table width="660" align="center" cellspacing="0" cellpadding="10">
-<tbody>
-    <tr bgcolor="#fafafa" id="footer" height="100%">
-
-        <td align="left" valign="top" height="100%">
-            <p><b>{С уважением}, @shopName@.</b></p>
-      <p>@org_name@<br>
-      {Интернет-магазин} <a href="http://@serverPath@">@serverShop@</a><br>
-      {Отдел продаж}: @telNum@<br>
-      E-mail: @adminMail@<br>
-      @org_adres@</p></td>
-      
+    </tbody>
+    </table>
+    </td>
     </tr>
-  
-</tbody>  
-</table> 
-
-
+    </tbody>
+    </table>
 </body>
+
 </html>

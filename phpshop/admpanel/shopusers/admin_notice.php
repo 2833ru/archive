@@ -59,7 +59,7 @@ function actionStart() {
 
 
             $PHPShopInterface->setRow(
-                    $row['id'], $icon, array('class'=>$class,'name' => $row['name'], 'link' => '?path=product&id=' . $row['product_id'] . '&return=' . $_GET['path']), $row['product_id'], array('class'=>$class,'name' => $row['login'], 'link' => '?path=shopusers.notice&id=' . $row['user_id'] . '&return=' . $_GET['path']), $date . PHPShopDate::get($row['datas']), array('action' => array('delete', 'send-user', 'id' => $row['id']), 'align' => 'center'), array('status' => array('enable' => $row['enabled'], 'align' => 'right', 'caption' => array('Нет', 'Да'))));
+                    $row['id'], $icon, array('class'=>$class,'name' => $row['name'], 'link' => '?path=product&id=' . $row['product_id'] . '&return=' . $_GET['path']), $row['product_id'], array('class'=>$class,'name' => $row['login'], 'link' => '?path=shopusers&id=' . $row['user_id'] . '&return=' . $_GET['path']), $date . PHPShopDate::get($row['datas']), array('action' => array('delete','|', 'send-user', 'id' => $row['id']), 'align' => 'center'), array('status' => array('enable' => $row['enabled'], 'align' => 'right', 'caption' => array('Нет', 'Да'))));
         }
     $PHPShopInterface->Compile();
 }

@@ -1,4 +1,8 @@
 /* Standard Styles Starts */
+#body{
+    overflow-y: scroll;
+}
+
 body.modal-open {
     overflow: visible;
     padding-right: 0px !important;

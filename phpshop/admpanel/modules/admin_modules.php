@@ -325,16 +325,13 @@ function actionStart() {
 
     $tree = '<table class="table table-hover">
         <tr class="treegrid-all">
-           <td><a href="?path=modules" class="treegrid-parent" data-parent="treegrid-all">' . __('Все модули') . '</a> <span class="label label-primary pull-right">105</span></td>
+           <td><a href="?path=modules" class="treegrid-parent" data-parent="treegrid-all">' . __('Все модули') . '</a> <span class="label label-primary pull-right">104</span></td>
 	</tr>
         <tr class="treegrid-pro">
            <td><a href="?path=modules&cat=pro" class="treegrid-parent" data-parent="treegrid-pro">' . __('Pro') . '</a> <span class="label label-primary pull-right">13</span></td>
 	</tr>
         <tr class="treegrid-template">
            <td><a href="?path=modules&cat=template" class="treegrid-parent" data-parent="treegrid-template">' . __('Дизайн') . '</a> <span class="label label-primary pull-right">8</span></td>
-	</tr>
-        <tr class="treegrid-soc">
-           <td><a href="?path=modules&cat=soc" class="treegrid-parent" data-parent="treegrid-soc">' . __('Социальные сети') . '</a> <span class="label label-primary pull-right">2</span></td>
 	</tr>
         <tr class="treegrid-seo">
            <td><a href="?path=modules&cat=seo" class="treegrid-parent" data-parent="treegrid-seo">SEO</a> <span class="label label-primary pull-right">6</span></td>
@@ -358,7 +355,7 @@ function actionStart() {
            <td><a href="?path=modules&cat=yandex" class="treegrid-parent" data-parent="treegrid-yandex">' . __('Яндекс') . '</a> <span class="label label-primary pull-right">3</span></td>
 	</tr>
         <tr class="treegrid-sale">
-           <td><a href="?path=modules&cat=sale" class="treegrid-parent" data-parent="treegrid-sale">' . __('Продажи') . '</a> <span class="label label-primary pull-right">19</span></td>
+           <td><a href="?path=modules&cat=sale" class="treegrid-parent" data-parent="treegrid-sale">' . __('Продажи') . '</a> <span class="label label-primary pull-right">20</span></td>
 	</tr>
         <tr class="treegrid-develop">
            <td><a href="?path=modules&cat=develop" class="treegrid-parent" data-parent="treegrid-develop">' . __('Разработчикам') . '</a> <span class="label label-primary pull-right">15</span></td>

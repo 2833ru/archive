@@ -4,7 +4,7 @@
  * Кеширование значений фильтра, под которые нет товаров.
  */
 // Включение для SSH Cron
-$enabled = false;
+$enabled = true;
 
 if (function_exists('set_time_limit'))
     set_time_limit(0);

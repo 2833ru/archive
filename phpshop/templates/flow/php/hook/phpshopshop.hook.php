@@ -248,6 +248,9 @@ function sorttemplatehook($value, $n, $title, $vendor) {
     $disp = $disp_limit = null;
     $num = 0;
 
+    if (empty($GLOBALS['filter_count']))
+        $GLOBALS['filter_count'] = 1;
+
     if (is_array($value)) {
         foreach ($value as $p) {
 
@@ -273,7 +276,7 @@ function sorttemplatehook($value, $n, $title, $vendor) {
             if ($num < $limit) {
                 $disp .= '<div class="form-group d-flex align-items-center justify-content-between font-size-1 text-lh-lg text-body mb-1">
                 <div class="custom-control custom-checkbox">
-    <input type="checkbox" class="custom-control-input" value="1" name="' . $n . '-' . $p[1] . '" ' . $checked . ' data-url="v[' . $n . ']=' . $p[1] . '"  data-name="' . $n . '-' . $p[1] . '" id="filter-' . $p[1] . '">
+    <input type="checkbox" class="custom-control-input" value="1" name="' . $n . '-' . $p[1] . '" ' . $checked . ' data-url="v[' . $n . ']=' . $p[1] . '"  data-name="' . $n . '-' . $p[1] . '" data-count="' . $GLOBALS['filter_count'] . '" id="filter-' . $p[1] . '">
     <label class="custom-control-label text-lh-lg filter-item" for="filter-' . $p[1] . '">' . $text . '</label>
     </div>
     <small data-num="' . $n . '-' . $p[1] . '">' . $p[3] . '</small>
@@ -281,7 +284,7 @@ function sorttemplatehook($value, $n, $title, $vendor) {
             } else {
                 $disp_limit .= '<div class="form-group d-flex align-items-center justify-content-between font-size-1 text-lh-lg text-body mb-1">
                 <div class="custom-control custom-checkbox">
-    <input type="checkbox" class="custom-control-input" value="1" name="' . $n . '-' . $p[1] . '" ' . $checked . ' data-url="v[' . $n . ']=' . $p[1] . '"  data-name="' . $n . '-' . $p[1] . '" id="filter-' . $p[1] . '">
+    <input type="checkbox" class="custom-control-input" value="1" name="' . $n . '-' . $p[1] . '" ' . $checked . ' data-url="v[' . $n . ']=' . $p[1] . '"  data-name="' . $n . '-' . $p[1] . '" data-count="' . $GLOBALS['filter_count'] . '" id="filter-' . $p[1] . '">
     <label class="custom-control-label text-lh-lg" for="filter-' . $p[1] . '">' . $text . '</label>
     </div>
     <small>' . $p[3] . '</small>
@@ -289,6 +292,7 @@ function sorttemplatehook($value, $n, $title, $vendor) {
             }
             $num++;
         }
+        $GLOBALS['filter_count'] ++;
     }
 
     if ($disp_limit) {
@@ -352,7 +356,8 @@ function template_image_gallery($obj, $array) {
     $i = 0;
     $s = 1;
     $heroSlider = $heroSliderNav = null;
-    $productTitle = str_replace('"', '', $array['name']);
+
+    
 
     // Нет данных в галерее
     if (!is_array($data) and ! empty($array['pic_big']))
@@ -374,6 +379,11 @@ function template_image_gallery($obj, $array) {
         ksort($sort_data);
 
         foreach ($sort_data as $k => $row) {
+            
+            if (empty($row['info']))
+                $row['info'] = $array['name'];
+
+            $alt = str_replace('"', '', $row['info']);
 
             if ($i > 10)
                 continue;
@@ -391,8 +401,8 @@ function template_image_gallery($obj, $array) {
                 $name_s = $obj->setImage($name_s);
             }
 
-            $heroSlider .= '<div class="js-slide"><img class="img-fluid rounded-lg" src="' . $name . '" alt="' . $productTitle . '"></div>';
-            $heroSliderNav .= '<div class="js-slide p-1" data-big-image="' . $name . '"><a class="js-slick-thumb-progress d-block avatar avatar-circle border p-1" href="javascript:;"><img class="avatar-img" src="' . $name_s . '" alt="' . $productTitle . '"></a></div>';
+            $heroSlider .= '<div class="js-slide"><img class="img-fluid rounded-lg" src="' . $name . '" alt="' . $alt . '" title="'.$alt.'"></div>';
+            $heroSliderNav .= '<div class="js-slide p-1" data-big-image="' . $name . '"><a class="js-slick-thumb-progress d-block avatar avatar-circle border p-1" href="javascript:;"><img class="avatar-img" src="' . $name_s . '" alt="' . $alt . '" title="'.$alt.'"></a></div>';
 
             $i++;
         }

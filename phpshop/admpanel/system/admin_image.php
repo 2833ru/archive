@@ -175,6 +175,12 @@ function actionUpdate() {
 
     if (substr($option['image_result_path'], -1) != '/' and ! empty($option['image_result_path']))
         $option['image_result_path'] .= '/';
+    
+    if (!function_exists('imagewebp')){
+        $option['image_webp']=0;
+        $option['image_webp_save']=0;
+
+    }
 
 
     $_POST['admoption_new'] = serialize($option);

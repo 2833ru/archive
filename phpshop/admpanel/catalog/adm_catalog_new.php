@@ -179,11 +179,11 @@ function actionStart() {
     $Tab_info .= $PHPShopGUI->setLine() . $PHPShopGUI->setField("Товаров на странице", $PHPShopGUI->setInputText(false, 'num_cow_new', $data['num_cow'], '100', __('шт.')), 'left');
 
     // Тип сортировки
-    $order_by_value[] = array('по имени', 1, $data['order_by']);
-    $order_by_value[] = array('по цене', 2, $data['order_by']);
-    $order_by_value[] = array('по складу', 3, $data['order_by']);
-    $order_to_value[] = array('возрастанию', 1, $data['order_to']);
-    $order_to_value[] = array('убыванию', 2, $data['order_to']);
+    $order_by_value[] = array(__('по имени'), 1, $data['order_by']);
+    $order_by_value[] = array(__('по цене'), 2, $data['order_by']);
+    $order_by_value[] = array(__('по складу'), 3, $data['order_by']);
+    $order_to_value[] = array(__('возрастанию'), 1, $data['order_to']);
+    $order_to_value[] = array(__('убыванию'), 2, $data['order_to']);
     $Tab_info .= $PHPShopGUI->setField("Сортировка", $PHPShopGUI->setInputText(null, "num_new", $data['num'], 100, false, 'left') . '&nbsp' .
             $PHPShopGUI->setSelect('order_by_new', $order_by_value, 120) . $PHPShopGUI->setSelect('order_to_new', $order_to_value, 120), 'left');
 
@@ -269,7 +269,7 @@ function actionStart() {
             </div></div>';
 
     // Левый сайдбар
-    $sidebarleft[] = array('title' => __('Категории'), 'content' => $search . '<div id="tree">' . $treebar . '</div>', 'title-icon' => '<span class="glyphicon glyphicon-plus addNewElement" data-toggle="tooltip" data-placement="top" title="' . __('Добавить каталог') . '"></span>&nbsp;<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="' . __('Развернуть') . '"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="' . __('Свернуть') . '"></span>&nbsp;<span class="glyphicon glyphicon-search" id="show-category-search" data-toggle="tooltip" data-placement="top" title="' . __('Поиск') . '"></span>');
+    $sidebarleft[] = array('title' => 'Категории', 'content' => $search . '<div id="tree">' . $treebar . '</div>', 'title-icon' => '<span class="glyphicon glyphicon-plus addNewElement" data-toggle="tooltip" data-placement="top" title="' . __('Добавить каталог') . '"></span>&nbsp;<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="' . __('Развернуть') . '"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="' . __('Свернуть') . '"></span>&nbsp;<span class="glyphicon glyphicon-search" id="show-category-search" data-toggle="tooltip" data-placement="top" title="' . __('Поиск') . '"></span>');
 
     $PHPShopGUI->setSidebarLeft($sidebarleft, 3);
     $PHPShopGUI->sidebarLeftCell = 3;

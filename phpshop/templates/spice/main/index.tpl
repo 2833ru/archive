@@ -13,7 +13,7 @@
         <link rel="mask-icon" href="@icon@" >
         <link rel="icon" href="@icon@" type="image/x-icon">
         <link rel="mask-icon" href="@icon@" >
-        
+
         <!-- OpenGraph -->
         <meta property="og:title" content="@ogTitle@">
         <meta property="og:image" content="http://@serverName@@ogImage@">
@@ -22,39 +22,37 @@
         <meta property="og:description" content="@ogDescription@">
 
         <!-- Preload -->
-        <link rel="preload" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/bootstrap.min.css" as="style">
-        <link rel="preload" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/swiper.min.css" as="style">
+        <link rel="preload" href="@pathTemplate@css/bootstrap.min.css" as="style">
+        <link rel="preload" href="@pathTemplate@css/swiper.min.css" as="style">
         <link rel="preload" href="@pageCss@" as="style">
-        <link rel="preload" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/@spice_theme@.css" as="style">
-        <link rel="preload" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/responsive.css" as="style">
-        <link rel="preload" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/font-awesome.min.css"  as="font" type="font/woff2" crossorigin>
+        <link rel="preload" href="@pathTemplateMin@css/@spice_theme@.css" as="style">
+        <link rel="preload" href="@pathTemplateMin@css/responsive.css" as="style">
+        <link rel="preload" href="@pathTemplate@css/font-awesome.min.css"  as="font" type="font/woff2" crossorigin>
 
         <!-- Bootstrap -->
-        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/bootstrap.min.css" rel="stylesheet">
+        <link href="@pathTemplate@css/bootstrap.min.css" rel="stylesheet">
     </head>
     <body id="body" data-dir="@ShopDir@" data-path="@php echo $GLOBALS['PHPShopNav']->objNav['path']; php@" data-id="@php echo $GLOBALS['PHPShopNav']->objNav['id']; php@" data-token="@dadataToken@">
 
         <!-- Template -->
-        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/swiper.min.css" rel="stylesheet">
         <link href="@pageCss@" rel="stylesheet">
-        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/responsive.css" rel="stylesheet">
 
         <!-- Theme -->
-        <link id="bootstrap_theme" data-name="@php echo $_SESSION['skin']; php@" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/@spice_theme@.css" rel="stylesheet">
-        
+        <link id="bootstrap_theme" data-name="@php echo $_SESSION['skin']; php@" href="@pathTemplateMin@css/@spice_theme@.css" rel="stylesheet">
+
 
         <!-- Header Section Starts -->
         <header id="header-area">
             <!-- Header Top Starts -->
             <div class="header-top">
-        <!-- Стикер-полоска -->
-        <div class="@php __hide('sticker_top'); php@">
-            <div class="top-banner @php __hide('sticker_close','cookie'); php@">
-                <div class="sticker-text">@sticker_top@</div>
-                <span class="close sticker-close">x</span>
-            </div>
-        </div>
-        <!-- /Стикер-полоска -->
+                <!-- Стикер-полоска -->
+                <div class="@php __hide('sticker_top'); php@">
+                    <div class="top-banner @php __hide('sticker_close','cookie'); php@">
+                        <div class="sticker-text">@sticker_top@</div>
+                        <span class="close sticker-close">x</span>
+                    </div>
+                </div>
+                <!-- /Стикер-полоска -->
 
 
                 <!-- Nested Container Starts -->
@@ -212,7 +210,7 @@
                 </div>
             </div>
         </div>
-					<div class="clearfix"></div>
+        <div class="clearfix"></div>
 
         <!-- Slider Section Ends -->
         <div class="container">
@@ -223,17 +221,17 @@
         <!-- Main Container Starts -->
         <div class="main-container container main-page">
             <!-- Featured Products Starts -->
-             <div class="page-header visible-lg visible-md product-head">
-                    <h2>@mainContentTitle@</h2>
-                </div>
-                <div>@mainContent@</div>
+            <div class="page-header visible-lg visible-md product-head">
+                <h2>@mainContentTitle@</h2>
+            </div>
+            <div>@mainContent@</div>
             <!-- Banners Starts -->
             <div class="top-col-banners">@banersDispHorizontal@</div>
 
             <!-- Banners Ends -->    
 
-        <!-- Latest Products Starts -->
-        <section class="products-list @php __hide('specMain'); php@">         
+            <!-- Latest Products Starts -->
+            <section class="products-list @php __hide('specMain'); php@">         
                 <!-- Heading Starts -->
                 <h2 class="product-head page-header"><a href="/spec/" title="{Все спецпредложения}">{Спецпредложения}</a></h2>
                 <!-- Heading Ends -->
@@ -242,8 +240,8 @@
                     @specMain@
                 </div>
                 <!-- Products Row Ends -->
-        </section>
-        <!-- Latest Products Ends -->
+            </section>
+            <!-- Latest Products Ends -->
 
 
         </div>
@@ -255,9 +253,9 @@
             <a href="#" id="toTop"><span id="toTopHover"></span>{Наверх}</a>
         </div>
         <!--/ toTop -->
-        
+
         <!-- jQuery -->
-        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery-1.11.0.min.js"></script>
+        <script src="@pathTemplate@/js/jquery-1.11.0.min.js"></script>
         @editor@
 
         <!-- Footer Section Starts -->
@@ -310,7 +308,15 @@
                             <br>@telNum2@
                             <br>@workingTime@
                         </h4>
-                        @sticker_socfooter@
+                        <!-- Социальные сети -->
+                        <ul class="social-menu list-inline">
+                            <li class="list-inline-item @php __hide('vk'); php@"><a class="social-button header-top-link" title="ВКонтакте" href="@vk@" target="_blank"><em class="fa fa-vk" aria-hidden="true">.</em></a></li>
+                            <li class="list-inline-item @php __hide('telegram'); php@"><a class="social-button header-top-link" title="Telegram" href="@telegram@" target="_blank"> <em class="fa fa-telegram" aria-hidden="true">.</em></a></li>
+                            <li class="list-inline-item @php __hide('odnoklassniki'); php@"><a class="social-button header-top-link" title="Одноклассники" href="@odnoklassniki@" target="_blank"> <em class="fa fa-odnoklassniki" aria-hidden="true">.</em></a></li>
+                            <li class="list-inline-item @php __hide('youtube'); php@"><a class="social-button header-top-link" title="Youtube" href="@youtube@" target="_blank"><em class="fa fa-youtube" aria-hidden="true">.</em></a></li>
+                            <li class="list-inline-item  @php __hide('whatsapp'); php@"><a class="social-button header-top-link" title="WhatsApp" href="@whatsapp@" target="_blank"><em class="fa fa-whatsapp" aria-hidden="true">.</em></a></li>
+                        </ul>
+                        <!-- / Социальные сети -->
                     </div>
                     <!-- Contact Us Ends -->
                 </div>
@@ -427,7 +433,7 @@
             </div>
         </div>
         <!--/ Модальное окно мобильного поиска -->
-        
+
         <!-- Модальное окно returncall-->
         <div class="modal fade bs-example-modal-sm return-call" id="returnCallModal" tabindex="-1" role="dialog"  aria-hidden="true">
             <div class="modal-dialog">
@@ -473,28 +479,29 @@
 
         <!-- JQuery Plugins  -->
 
-        <script src="java/jqfunc.js"></script>
-
-        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/jquery.bxslider.css" rel="stylesheet">
-        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/jquery-ui.min.css" rel="stylesheet">
-        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/bootstrap-select.min.css" rel="stylesheet">
-        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/bar.css" rel="stylesheet">
-        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/suggestions.min.css" rel="stylesheet">
-        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/font-awesome.min.css" rel="stylesheet">
-        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/bootstrap.min.js"></script>
-        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/swiper.js"></script>
-        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/spice.js"></script>
-        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/bootstrap-select.min.js"></script>
-        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.lazyloadxt.min.js"></script>
-        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@/js/phpshop.js"></script>
+        <script src="@pathMin@java/jqfunc.js"></script>
+        <link href="@pathTemplate@css/swiper.min.css" rel="stylesheet">
+        <link href="@pathTemplateMin@css/responsive.css" rel="stylesheet">
+        <link href="@pathTemplate@css/jquery.bxslider.css" rel="stylesheet">
+        <link href="@pathTemplate@css/jquery-ui.min.css" rel="stylesheet">
+        <link href="@pathTemplate@css/bootstrap-select.min.css" rel="stylesheet">
+        <link href="@pathTemplateMin@css/bar.css" rel="stylesheet">
+        <link href="@pathTemplate@css/suggestions.min.css" rel="stylesheet">
+        <link href="@pathTemplate@css/font-awesome.min.css" rel="stylesheet">
+        <script src="@pathTemplate@/js/bootstrap.min.js"></script>
+        <script src="@pathTemplate@/js/swiper.js"></script>
+        <script src="@pathTemplate@/js/spice.js"></script>
+        <script src="@pathTemplate@/js/bootstrap-select.min.js"></script>
+        <script src="@pathTemplate@/js/jquery.lazyloadxt.min.js"></script>
+        <script src="@pathTemplate@/js/phpshop.js"></script>
         <script src="phpshop/locale/@php echo $_SESSION['lang']; php@/template.js"></script>
-        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery-ui.min.js"></script>
-        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.ui.touch-punch.min.js"></script>
-        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.bxslider.min.js"></script>
-        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@/js/jquery.cookie.js"></script>
-        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.waypoints.min.js"></script>
-        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/inview.min.js"></script>
-        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.maskedinput.min.js"></script>
-        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.suggestions.min.js"></script>
-        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.ui.touch-punch.min.js"></script>
+        <script src="@pathTemplate@/js/jquery-ui.min.js"></script>
+        <script src="@pathTemplate@/js/jquery.ui.touch-punch.min.js"></script>
+        <script src="@pathTemplate@/js/jquery.bxslider.min.js"></script>
+        <script src="@pathTemplate@/js/jquery.cookie.js"></script>
+        <script src="@pathTemplate@/js/jquery.waypoints.min.js"></script>
+        <script src="@pathTemplate@/js/inview.min.js"></script>
+        <script src="@pathTemplate@/js/jquery.maskedinput.min.js"></script>
+        <script src="@pathTemplate@/js/jquery.suggestions.min.js"></script>
+        <script src="@pathTemplate@/js/jquery.ui.touch-punch.min.js"></script>
         @visualcart_lib@

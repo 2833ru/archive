@@ -20,9 +20,22 @@ function cdekwidgetWidget() {
         templatepath: path + 'modules/cdekwidget/templates/scripts/template.php',
         goods: PHPShopCDEKOptions.products,
         onChoose: cdekWidgetOnChoosePvz,
-        onChooseProfile: cdekwidgetOnChooseProfile,
+        /*onChooseProfile: cdekwidgetOnChooseProfile,*/
+        onChooseAddress: cdekwidgetonChooseAddress,
+        detailAddress: true,
         apikey: PHPShopCDEKOptions.ymapApiKey
     });
+}
+
+// Курьерская доставка выбор точного адреса доставки. Корзина
+function cdekwidgetonChooseAddress(result) {
+    var info = 'Курьерская доставка: ' + result.address;
+
+    $('input[name="cdek_type"]').val('courier');
+    $('input[name="cdekInfo"]').val(info);
+    $('#deliveryInfo').html('Курьерская доставка: ' + result.address);
+
+    cdekwidgetOnChoose(result);
 }
 
 // Доставка до ПВЗ. Корзина
@@ -37,7 +50,7 @@ function cdekWidgetOnChoosePvz(result) {
     cdekwidgetOnChoose(result);
 }
 
-// Курьерская доставка. Корзина
+// Курьерская доставка выбор города. Корзина
 function cdekwidgetOnChooseProfile(result) {
     var info = 'Курьерская доставка: город ' + result.cityName;
 

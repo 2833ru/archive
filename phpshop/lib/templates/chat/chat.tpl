@@ -18,7 +18,7 @@
         <div id="chat_converse" class="chat_conversion chat_converse message-list">
         </div>
         <div class="fab_field">
-            <a id="fab_send" class="fab send-message"><i class="zmdi zmdi-mail-send"></i></a>
+            <a id="fab_send" class="fab send-message" href="#"><i class="zmdi zmdi-mail-send"></i></a>
             <textarea id="message" name="message" placeholder="{Ваше сообщение}" class="chat_field chat_message" required @dialogContent@></textarea>
         </div>
     </div>

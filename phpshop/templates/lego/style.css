@@ -589,7 +589,11 @@ html {
     .catalog-menu-list {
         max-width: 640px
     }
-    .additional-main-menu {margin-left:20px; margin-right;10px;}
+    
+    .additional-main-menu {
+        margin-left:20px; 
+        margin-right:10px;
+    }
 
 }
 .menu-3 .catalog-menu-list {

@@ -11,38 +11,36 @@
         <link rel="apple-touch-icon" href="@icon@">
         <link rel="icon" href="@icon@" type="image/x-icon">
         <link rel="mask-icon" href="@icon@" >
-        
+
         <!-- OpenGraph -->
         <meta property="og:title" content="@ogTitle@">
         <meta property="og:image" content="http://@serverName@@ogImage@">
         <meta property="og:url" content="http://@ogUrl@">
         <meta property="og:type" content="website">
         <meta property="og:description" content="@ogDescription@">
-        
+
         <!-- Preload -->
-        <link rel="preload" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/bootstrap.min.css" as="style">
-        <link rel="preload" href="@pageCss@" as="style">
-        <link rel="preload" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/@terra_theme@.css" as="style">     
-        <link rel="preload" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/font-awesome.min.css"  as="font" type="font/woff2" crossorigin>
+        <link rel="preload" href="@pathTemplate@css/bootstrap.min.css" as="style">
+        <link rel="preload" href="@pathTemplateMin@/style.css" as="style">
+        <link rel="preload" href="@pathTemplateMin@css/@terra_theme@.css" as="style">     
+        <link rel="preload" href="@pathTemplate@css/swiper.min.css" as="style">
+        <link rel="preload" href="@pathTemplate@css/font-awesome.min.css"  as="font" type="font/woff2" crossorigin>
         <link rel="preload" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&amp;subset=cyrillic"  as="font" type="font/woff2" crossorigin>
-        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/swiper.min.css" rel="stylesheet">
 
         <!-- Bootstrap -->
-        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/bootstrap.min.css" rel="stylesheet">
+        <link href="@pathTemplate@css/bootstrap.min.css" rel="stylesheet">
     </head>
     <body id="body" data-dir="@ShopDir@" data-path="@php echo $GLOBALS['PHPShopNav']->objNav['path']; php@" data-id="@php echo $GLOBALS['PHPShopNav']->objNav['id']; php@" data-subpath="@php echo $GLOBALS['PHPShopNav']->objNav['name']; php@" data-token="@dadataToken@">
 
         <!-- Theme -->
-        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/@terra_theme@.css" rel="stylesheet">
+        <link id="bootstrap_theme" data-name="@php echo $_SESSION['skin']; php@" href="@pathTemplateMin@css/@terra_theme@.css" rel="stylesheet">
 
         <!-- Template -->
-        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/animate.css" rel="stylesheet">
-        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/jquery.bxslider.css" rel="stylesheet">
-        <link href="@pageCss@" rel="stylesheet">
-        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/responsive.css" rel="stylesheet">
+        <link href="@pathTemplate@css/animate.css" rel="stylesheet">
+        <link href="@pathTemplate@css/jquery.bxslider.css" rel="stylesheet">
+        <link href="@pathTemplateMin@/style.css" rel="stylesheet">
+        <link href="@pathTemplateMin@css/responsive.css" rel="stylesheet">
 
-        <div id="bootstrap_theme" data-name="@php echo $_SESSION['skin']; php@"></div>
-        
         <!-- Стикер-полоска -->
         <div class="@php __hide('sticker_top'); php@">
             <div class="top-banner @php __hide('sticker_close','cookie'); php@">
@@ -160,8 +158,8 @@
         </div>
 
         <!-- jQuery -->
-        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery-1.11.0.min.js"></script>
-        <script src="java/jqfunc.js"></script>
+        <script src="@pathTemplate@/js/jquery-1.11.0.min.js"></script>
+        <script src="@pathMin@java/jqfunc.js"></script>
 
         <!-- Main Container Starts -->
         <div class="main-container container shop-page">
@@ -180,11 +178,11 @@
                     @DispShop@
                 </div>
             </div>
-        <div class="top-col-banners text-center">@banersDispHorizontal@</div>
+            <div class="top-col-banners text-center">@banersDispHorizontal@</div>
         </div>
         <!-- Main Container Ends -->
 
-        
+
         @editor@
 
         <div class="copyright">
@@ -195,8 +193,8 @@
             </div>
             <!-- Container Ends -->
         </div>
-        
-        
+
+
 
         <!-- Footer Section Starts -->
         <footer id="footer-area">
@@ -213,7 +211,17 @@
                             <ul>
                                 @bottomMenu@
                             </ul>
-                            @sticker_socfooter@
+
+                            <!-- Социальные сети -->
+                            <ul class="social-menu list-inline">
+                                <li class="list-inline-item @php __hide('vk'); php@"><a class="social-button header-top-link" title="ВКонтакте" href="@vk@" target="_blank"><em class="fa fa-vk" aria-hidden="true"></em></a></li>
+                                <li class="list-inline-item @php __hide('telegram'); php@"><a class="social-button header-top-link" title="Telegram" href="@telegram@" target="_blank"> <em class="fa fa-telegram" aria-hidden="true"></em></a></li>
+                                <li class="list-inline-item @php __hide('odnoklassniki'); php@"><a class="social-button header-top-link" title="Одноклассники" href="@odnoklassniki@" target="_blank"> <em class="fa fa-odnoklassniki" aria-hidden="true"></em></a></li>
+                                <li class="list-inline-item @php __hide('youtube'); php@"><a class="social-button header-top-link" title="Youtube" href="@youtube@" target="_blank"><em class="fa fa-youtube" aria-hidden="true"></em></a></li>
+                                <li class="list-inline-item  @php __hide('whatsapp'); php@"><a class="social-button header-top-link" title="WhatsApp" href="@whatsapp@" target="_blank"><em class="fa fa-whatsapp" aria-hidden="true"></em></a></li>
+                            </ul>
+                            <!-- / Социальные сети -->
+
                         </div>
 
 
@@ -360,30 +368,31 @@
         <div class="cookie-message hide"><p></p><a href="#" class="btn btn-default btn-sm">Ok</a></div>
 
         <!-- JQuery Plugins  -->
-        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/bar.css" rel="stylesheet">
-        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/lightbox.js"></script>
-        <link rel="stylesheet" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@css/lightbox.css"  media="all" />
-        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/jquery-ui.min.css" rel="stylesheet">
-        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/bootstrap-select.min.css" rel="stylesheet">
-        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/suggestions.min.css" rel="stylesheet">
-        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/slick.css" rel="stylesheet"/>
-        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/slick-theme.css" rel="stylesheet"/>
-        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/font-awesome.min.css" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&amp;subset=cyrillic" rel="stylesheet">
-        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/bootstrap.min.js"></script>
-        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.lazyloadxt.min.js"></script>
-        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.matchHeight.js"></script>
-        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/swiper.js"></script>
-        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/slick.min.js"></script>
-        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/terra.js"></script>
-        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/bootstrap-select.min.js"></script>
-        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@/js/phpshop.js"></script>
+        <link href="@pathTemplateMin@css/bar.css" rel="stylesheet">
+        <script src="@pathTemplate@/js/lightbox.js"></script>
+        <link rel="stylesheet" href="@pathTemplate@css/lightbox.css"  media="all" />
+        <link href="@pathTemplate@css/swiper.min.css" rel="stylesheet">
+        <link href="@pathTemplate@css/jquery-ui.min.css" rel="stylesheet">
+        <link href="@pathTemplate@css/bootstrap-select.min.css" rel="stylesheet">
+        <link href="@pathTemplate@css/suggestions.min.css" rel="stylesheet">
+        <link href="@pathTemplate@css/slick.css" rel="stylesheet"/>
+        <link href="@pathTemplate@css/slick-theme.css" rel="stylesheet"/>
+        <link href="@pathTemplate@css/font-awesome.min.css" rel="stylesheet">
+        <link href="//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&amp;subset=cyrillic" rel="stylesheet">
+        <script src="@pathTemplate@/js/bootstrap.min.js"></script>
+        <script src="@pathTemplate@/js/jquery.lazyloadxt.min.js"></script>
+        <script src="@pathTemplate@/js/jquery.matchHeight.js"></script>
+        <script src="@pathTemplate@/js/swiper.js"></script>
+        <script src="@pathTemplate@/js/slick.min.js"></script>
+        <script src="@pathTemplate@/js/terra.js"></script>
+        <script src="@pathTemplate@/js/bootstrap-select.min.js"></script>
+        <script src="@pathTemplate@/js/phpshop.js"></script>
         <script src="phpshop/locale/@php echo $_SESSION['lang']; php@/template.js"></script>
-        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery-ui.min.js"></script>
-        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.bxslider.min.js"></script>
-        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@/js/jquery.cookie.js"></script>
-        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.waypoints.min.js"></script>
-        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/inview.min.js"></script>
-        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.maskedinput.min.js"></script>
-        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.suggestions.min.js"></script>
+        <script src="@pathTemplate@/js/jquery-ui.min.js"></script>
+        <script src="@pathTemplate@/js/jquery.bxslider.min.js"></script>
+        <script src="@pathTemplate@/js/jquery.cookie.js"></script>
+        <script src="@pathTemplate@/js/jquery.waypoints.min.js"></script>
+        <script src="@pathTemplate@/js/inview.min.js"></script>
+        <script src="@pathTemplate@/js/jquery.maskedinput.min.js"></script>
+        <script src="@pathTemplate@/js/jquery.suggestions.min.js"></script>
         @visualcart_lib@

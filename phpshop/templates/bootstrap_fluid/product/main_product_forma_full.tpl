@@ -87,7 +87,6 @@
             <br>
             <div class="option-block">
                 @sticker_size@ @sticker_shipping@
-                <a class="btn btn-default" href="/forma/">{Задать вопрос по продукту}</a>
             </div>
 
 

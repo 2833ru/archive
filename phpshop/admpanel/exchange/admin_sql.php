@@ -207,6 +207,7 @@ function actionStart() {
     $query_value[] = array('Выбрать SQL команду', 0, '');
     $query_value[] = array('Оптимизировать базу', 'OPTIMIZE TABLE ' . $bases, $optimize_sel);
     $query_value[] = array('Починить базу', 'REPAIR TABLE ' . $bases, '');
+    $query_value[] = array('Выключить отсутствующие товары', 'UPDATE ' . $GLOBALS['SysValue']['base']['products'] . ' SET enabled=\'0\' WHERE items<1', '');
     $query_value[] = array('Удалить все фото товаров', 'TRUNCATE ' . $GLOBALS['SysValue']['base']['foto'] . ';
 UPDATE ' . $GLOBALS['SysValue']['base']['products'] . ' set pic_small=\'\', pic_big=\'\';', '');
     $query_value[] = array('Удалить характеристики', 'TRUNCATE ' . $GLOBALS['SysValue']['base']['sort'] . ';
@@ -242,12 +243,12 @@ TRUNCATE ' . $GLOBALS['SysValue']['base']['citylist_city'] . ';', '');
 
     $PHPShopGUI->_CODE .= '<textarea class="hide" id="editor_src" name="sql_text" data-mod="sql" data-theme="' . $theme . '">' . $result_error_tracert . '</textarea><pre id="editor">' . __('Загрузка') . '...</pre>';
 
-    $PHPShopGUI->_CODE .= '<div class="text-right data-row"><a href="#" id="vartable" data-toggle="modal" data-target="#selectModal" data-title="' . __('Основные таблицы') . '"><span class="glyphicon glyphicon-question-sign"></span>' . __('Описание таблиц') . '</a></div>';
+    $PHPShopGUI->_CODE .= '<p class="text-right data-row"><a href="#" id="vartable" data-toggle="modal" data-target="#selectModal" data-title="' . __('Основные таблицы') . '"><span class="glyphicon glyphicon-question-sign"></span>' . __('Описание таблиц') . '</a></p>';
 
     // Модальное окно таблицы описаний перменных
     $selectModalBody = '<table class="table table-striped"><tr><th>' . __('Таблица') . '</th><th>' . __('Описание') . '</th></tr>' . $selectModal . '</table>';
 
-    $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Настройки', $PHPShopGUI->setField('Команда', $PHPShopGUI->setSelect('sql_query', $query_value, null, true, false, false, false, 1, false, false, 'selectpicker')) .
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Настройки', $PHPShopGUI->setField('Команда', $PHPShopGUI->setSelect('sql_query', $query_value, 400, true, false, false, false, 1, false, false, 'selectpicker')) .
             $PHPShopGUI->setField("Файл", $PHPShopGUI->setFile()), 'in', false, true
     );
 

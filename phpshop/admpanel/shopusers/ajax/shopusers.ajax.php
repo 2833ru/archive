@@ -12,7 +12,6 @@ $PHPShopBase->chekAdmin();
 
 // Системные настройки
 $PHPShopSystem = new PHPShopSystem();
-$_SESSION['lang'] = $PHPShopSystem->getSerilizeParam("admoption.lang");
 $PHPShopLang = new PHPShopLang(array('locale' => $_SESSION['lang'], 'path' => 'admin'));
 
 // Редактор GUI

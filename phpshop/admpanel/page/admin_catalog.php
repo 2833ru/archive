@@ -51,7 +51,7 @@ function actionStart() {
         'class' => 'btn btn-default btn-sm navbar-btn',
         'type' => 'button',
         'icon' => 'glyphicon glyphicon-plus',
-        'tooltip' => 'data-toggle="tooltip" data-placement="left" title="Добавить страницу" data-cat="' . $_GET['cat'] . '"'
+        'tooltip' => 'data-toggle="tooltip" data-placement="left" title="'.__('Добавить страницу').'" data-cat="' . $_GET['cat'] . '"'
     );
 
     // Настройка полей

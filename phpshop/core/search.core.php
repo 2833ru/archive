@@ -3,7 +3,7 @@
 /**
  * Обработчик поиска товаров
  * @author PHPShop Software 
- * @version 1.6
+ * @version 1.7
  * @package PHPShopShopCore
  */
 class PHPShopSearch extends PHPShopShopCore {
@@ -15,7 +15,7 @@ class PHPShopSearch extends PHPShopShopCore {
      * сетка товаров
      * @var int 
      */
-    var $cell = 1;
+    var $cell = 3;
     var $line = false;
     var $debug = false;
     var $cache = false;
@@ -27,6 +27,7 @@ class PHPShopSearch extends PHPShopShopCore {
     var $yandexSearchId;
     var $dataArray;
     var $num_page;
+    var $num_row = 9;
 
     function __construct() {
 
@@ -34,6 +35,11 @@ class PHPShopSearch extends PHPShopShopCore {
         $this->action = array("post" => "words", "get" => "words", "nav" => "index");
         parent::__construct();
 
+        if ($this->PHPShopSystem->getSerilizeParam('admoption.search_row')) {
+            $this->cell = $this->PHPShopSystem->getSerilizeParam('admoption.search_row');
+            $this->num_row = $this->PHPShopSystem->getSerilizeParam('admoption.search_num');
+        }
+        
         $this->yandexSearchAPI = $this->PHPShopSystem->getSerilizeParam('admoption.yandex_search_apikey');
         $this->yandexSearchId = (int) $this->PHPShopSystem->getSerilizeParam('admoption.yandex_search_id');
         if (!empty($this->yandexSearchAPI) && !empty($this->yandexSearchId)) {

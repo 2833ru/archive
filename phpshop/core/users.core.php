@@ -9,7 +9,7 @@ PHPShopObj::loadClass('delivery');
 /**
  * Обработчик кабинета пользователя
  * @author PHPShop Software
- * @version 2.0
+ * @version 2.1
  * @package PHPShopCore
  */
 class PHPShopUsers extends PHPShopCore {
@@ -1067,10 +1067,7 @@ class PHPShopUsers extends PHPShopCore {
         if (PHPShopSecurity::true_email($login)) {
             $data = $PHPShopOrm->select(array('id', 'password'), array('mail' => '="' . trim($login) . '"', 'login' => '="' . trim($login) . '"'), array('order' => 'id desc'), array('limit' => 1));
             if (is_array($data) AND PHPShopSecurity::true_num($data['id'])) {
-                setcookie("UserLogin", trim(trim($login)), time() + 60 * 60 * 24 * 30, "/", $_SERVER['SERVER_NAME'], 0);
-                setcookie("UserPassword", base64_decode($data['password']), time() + 60 * 60 * 24 * 30, "/", $_SERVER['SERVER_NAME'], 0);
-                setcookie("UserChecked", 1, time() + 60 * 60 * 24 * 30, "/", $_SERVER['SERVER_NAME'], 0);
-
+                
                 return $data['id'];
             }
         }

@@ -131,7 +131,7 @@ PHPShopObj::loadClass("string");
  */
 
 // Подключаем БД
-$PHPShopBase = new PHPShopBase($_classPath . 'inc/config.ini', true, false);
+$PHPShopBase = new PHPShopBase($_classPath . 'inc/config.ini', true, true);
 
 // Настройки модулей
 $PHPShopModules = new PHPShopModules($_classPath . "modules/");

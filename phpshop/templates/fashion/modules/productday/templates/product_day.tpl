@@ -84,10 +84,12 @@
                 if (m < 10)
                     m = "0" + m;
                 s = 59;
-            } else
+            } else{
                 s--;
-            if (s < 10)
+            }
+            if (s < 10){
                 s = "0" + s;
+            }
 
             $(".js-cd-hours").html(h);
             $(".js-cd-minutes").html(m);

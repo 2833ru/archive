@@ -46,18 +46,39 @@ function query_filter($obj) {
 
     // Логика поиска
     $filter_logic = (int) $obj->PHPShopSystem->getSerilizeParam('admoption.filter_logic');
-    if (empty($filter_logic))
-        $filter_sort = 'and';
-    else
-        $filter_sort = 'or';
+    
+    switch($filter_logic){
+        
+        case 0:
+             $filter_sort = 'and';
+             $filter_sort_search = 'and';
+            break;
+        
+        case 1: 
+            $filter_sort = 'or';
+            $filter_sort_search = 'and';
+            break;
+        
+        case 2: 
+            $filter_sort = $filter_sort_search ='or';
+            break;
+    }
+    
 
     // Сортировка по характеристикам
+    $sort_count=0;
     if (is_array($v)) {
         foreach ($v as $key => $value) {
 
             // Множественный отбор [][]
             if (is_array($value)) {
+                
+                if(empty($sort_count))
                 $sort .= " and (";
+                else $sort .= " ".$filter_sort_search." (";
+                
+                $sort_count++;
+                
                 foreach ($value as $v) {
                     if (PHPShopSecurity::true_num($key) and PHPShopSecurity::true_num($v)) {
                         $obj->selected_filter[$key][] = $v;
@@ -72,7 +93,7 @@ function query_filter($obj) {
             elseif (PHPShopSecurity::true_num($key) and PHPShopSecurity::true_num($value)) {
                 $obj->selected_filter[$key][] = $value;
                 $hash = $key . "-" . $value;
-                $sort .= " and vendor REGEXP 'i" . $hash . "i' ";
+                $sort .= " ".$filter_sort_search." vendor REGEXP 'i" . $hash . "i' ";
             }
         }
     }
@@ -124,7 +145,6 @@ function query_filter($obj) {
     if ($s or $f) {
         switch ($f) {
             case(1): $order_direction = "";
-
                 break;
             case(2): $order_direction = " desc";
                 break;
@@ -210,8 +230,8 @@ function query_filter($obj) {
         else
             $sort .= " and (" . $obj->PHPShopSystem->getPriceColumn() . " BETWEEN " . ($priceOT / (100 + $percent) * 100) . " AND " . ($priceDO / (100 + $percent) * 100) . ") ";
     }
-    //echo  $sort . $string;
-    return array('sql' => $catt . " and enabled='1' and parent_enabled='0' " . $sort . $string);
+
+    return array('sql' => $catt . " and enabled='1' and parent_enabled='0' " . $sort . " ".$string);
 }
 
 ?>

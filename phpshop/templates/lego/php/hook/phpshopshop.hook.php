@@ -298,6 +298,9 @@ function sorttemplatehook($value, $n, $title, $vendor) {
     $disp = null;
     $num = 0;
 
+    if (empty($GLOBALS['filter_count']))
+        $GLOBALS['filter_count'] = 1;
+
     if (is_array($value)) {
         foreach ($value as $p) {
 
@@ -324,12 +327,13 @@ function sorttemplatehook($value, $n, $title, $vendor) {
 
             $disp .= '<div class="checkbox">
   <label>
-    <input type="checkbox" value="1" name="' . $n . '-' . $p[1] . '" ' . $checked . ' data-url="v[' . $n . ']=' . $p[1] . '"  data-name="' . $n . '-' . $p[1] . '">
+    <input type="checkbox" value="1" name="' . $n . '-' . $p[1] . '" ' . $checked . ' data-count="' . $GLOBALS['filter_count'] . '" data-url="v[' . $n . ']=' . $p[1] . '"  data-name="' . $n . '-' . $p[1] . '">
     <span class="filter-item"  title="' . $p[0] . '">' . $text . '</span>
   </label>
 </div>';
             $num++;
         }
+        $GLOBALS['filter_count'] ++;
     }
 
     if ($num > $limit) {
@@ -356,7 +360,7 @@ function template_image_gallery($obj, $array) {
     $s = 1;
     $index = 0;
     $slides = $thumbs = $controls = '';
-    $productTitle = str_replace(array('"', "'"), '', $array['name']);
+
 
     // Нет данных в галерее
     if (count($data) === 0 and ! empty($array['pic_big']))
@@ -381,6 +385,11 @@ function template_image_gallery($obj, $array) {
         $small = str_replace(".", "s.", $original);
         $big = str_replace(".", "_big.", $original);
 
+        if (empty($row['info']))
+            $row['info'] = $array['name'];
+
+        $alt = str_replace('"', '', $row['info']);
+
         if (!$obj->PHPShopSystem->ifSerilizeParam('admoption.image_save_source') or ! file_exists($_SERVER['DOCUMENT_ROOT'] . $big))
             $big = $original;
         if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $small)) {
@@ -395,7 +404,7 @@ function template_image_gallery($obj, $array) {
 
         $slides .= sprintf('<div class="%s" data-elem="slide" data-options="thumb:%s">
                          <img src="%s" data-elem="bg" alt="%s" title="%s" class="slider-img hide">
-                     </div>', $index === 0 ? 'heroSlide' : '', $small, $big, $productTitle, $productTitle);
+                     </div>', $index === 0 ? 'heroSlide' : '', $small, $big, $alt, $alt);
         $thumbs .= sprintf('<div class="bigThumb" style="background-image:url(\'%s\')" data-elem="thumb" data-big-image="%s" 
                   data-options="sliderId:productSlider; index:%s; offCss:{className:bigThumb off}; onCss:{className:bigThumb on}"> </div>', $small, $big, $index);
 
@@ -409,7 +418,7 @@ function template_image_gallery($obj, $array) {
     $obj->set('productSliderSlides', $slides);
     $obj->set('productSliderThumbs', $thumbs);
     $obj->set('productSliderControls', $controls);
-    $obj->set('productSliderOneImage', sprintf('<img class="one-image-slider" src="%s" alt="%s" title="%s"/>', !empty($array['pic_big']) ? $array['pic_big'] : $data[0]['name'], $productTitle, $productTitle));
+    $obj->set('productSliderOneImage', sprintf('<img class="one-image-slider" src="%s" alt="%s" title="%s"/>', !empty($array['pic_big']) ? $array['pic_big'] : $data[0]['name'],$alt, $alt));
 
     return true;
 }

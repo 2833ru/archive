@@ -77,11 +77,12 @@ class PHPShopParser {
             $string = @file_get_contents($path);
         else
             echo "Error Tpl File: $path";
-        
-        if(!empty($_SESSION['skin']))
+
+        if (!empty($_SESSION['skin']))
             $skin = $_SESSION['skin'];
-        else $skin = null;
-            
+        else
+            $skin = null;
+
         $replaces = array(
             "/(\"|\'|=)images\//i" => "\\1" . $GLOBALS['SysValue']['dir']['dir'] . $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $skin . "/images/",
             "/!images!\//i" => "images/",
@@ -183,9 +184,9 @@ class PHPShopCssParser {
                 foreach ($rules as $strRule) {
                     if (!empty($strRule)) {
                         $rule = explode(":", $strRule);
-                        
-                        if(!empty($rule[1]))
-                        $rules_arr[trim($rule[0])] = trim($rule[1]);
+
+                        if (!empty($rule[1]))
+                            $rules_arr[trim($rule[0])] = trim($rule[1]);
                     }
                 }
 
@@ -198,8 +199,8 @@ class PHPShopCssParser {
     }
 
     function getParam($element, $param) {
-        if(!empty($this->css_array[$element][$param]))
-        return $this->css_array[$element][$param];
+        if (!empty($this->css_array[$element][$param]))
+            return $this->css_array[$element][$param];
     }
 
     function setParam($element, $param, $value, $add = ' !important') {
@@ -476,7 +477,7 @@ function __hide($name, $type = 'parser', $class = 'hide d-none') {
         echo $class;
     else if ($type == 'isset' and isset($GLOBALS['SysValue']['other'][$name]))
         echo $class;
-    else if ($type == 'empty' and !empty($GLOBALS['SysValue']['other'][$name]))
+    else if ($type == 'empty' and ! empty($GLOBALS['SysValue']['other'][$name]))
         echo $class;
     else if ($type == 'class' and isset($GLOBALS['SysValue']['other'][$name]))
         echo $class;

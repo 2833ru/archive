@@ -6,7 +6,7 @@ if (!defined("OBJENABLED"))
 /**
  * Библиотека для работы с заказами
  * @author PHPShop Software
- * @version 1.3
+ * @version 1.4
  * @package PHPShopObj
  */
 class PHPShopOrderFunction extends PHPShopObj {
@@ -16,6 +16,7 @@ class PHPShopOrderFunction extends PHPShopObj {
     var $default_valuta_iso;
     var $default_valuta_name;
     var $default_valuta_code;
+    var $PHPShopModules;
 
     /**
      * Конструктор
@@ -23,7 +24,7 @@ class PHPShopOrderFunction extends PHPShopObj {
      * @param array $import_data массив импорта данных заказа
      */
     function __construct($objID = false, $import_data = null) {
-        global $PHPShopSystem;
+        global $PHPShopSystem, $PHPShopModules;
 
         if ($objID) {
             $this->objID = $objID;
@@ -32,9 +33,9 @@ class PHPShopOrderFunction extends PHPShopObj {
 
             // Содержание корзины
             $paramOrder = parent::unserializeParam("orders");
-            
-            if(!empty($paramOrder['Person']['order_metod']))
-            $this->order_metod_id = $paramOrder['Person']['order_metod'];
+
+            if (!empty($paramOrder['Person']['order_metod']))
+                $this->order_metod_id = $paramOrder['Person']['order_metod'];
         }
 
         parent::loadClass("system");
@@ -50,6 +51,8 @@ class PHPShopOrderFunction extends PHPShopObj {
 
         // Валюта
         $this->getDefaultValutaObj();
+        
+        $this->PHPShopModules = &$PHPShopModules;
     }
 
     /**
@@ -174,6 +177,7 @@ class PHPShopOrderFunction extends PHPShopObj {
      * @param float $sum сумма
      * @param float $disc скидка
      * @param string $def разделитель
+     * @param float $delivery доставка
      * @return float
      */
     function returnSumma($sum, $disc = 0, $def = '', $delivery = 0) {
@@ -188,20 +192,6 @@ class PHPShopOrderFunction extends PHPShopObj {
 
         $sum *= $kurs;
         $sum = $sum - ($sum * $disc / 100);
-
-        // Бонусы
-        PHPShopObj::loadClass('bonus');
-
-        if (!empty($_SESSION['UsersId']))
-            $UsersId = $_SESSION['UsersId'];
-        else
-            $UsersId = null;
-
-        $PHPShopBonus = new PHPShopBonus($UsersId);
-        $this->bonus_minus = $PHPShopBonus->getUserBonus($sum);
-        $this->bonus_plus = $PHPShopBonus->setUserBonus($sum);
-
-        $sum = $sum - $this->bonus_minus;
 
         return number_format($sum + $delivery, $this->format, ".", $def);
     }
@@ -222,10 +212,11 @@ class PHPShopOrderFunction extends PHPShopObj {
     /**
      * Выдача максимальной скидки пользователя
      * @param float $mysum сумма заказа
-     * @param ?array $cart корзина товаров
+     * @param array $cart корзина товаров
+     * @param bool $admin проверка запуска из панели управления
      * @return float
      */
-    function ChekDiscount($mysum, $cart = null) {
+    function ChekDiscount($mysum, $cart = null, $admin = false) {
 
         if (!class_exists('PHPShopUserStatus'))
             PHPShopObj::loadClass("user");
@@ -273,7 +264,7 @@ class PHPShopOrderFunction extends PHPShopObj {
         }
 
         // Проверка статуса пользователя
-        if (!empty($_SESSION['UsersStatus']) and PHPShopSecurity::true_num($_SESSION['UsersStatus'])) {
+        if (!empty($_SESSION['UsersStatus']) and PHPShopSecurity::true_num($_SESSION['UsersStatus']) and ! $admin) {
             $PHPShopUserStatus = new PHPShopUserStatus($_SESSION['UsersStatus']);
             $userdiscount = $PHPShopUserStatus->getDiscount();
 
@@ -288,6 +279,11 @@ class PHPShopOrderFunction extends PHPShopObj {
                 $maxdiscount = $maxdiscount + $userdiscount;
             }
         }
+
+        // Перехват модуля
+        $hook = $this->setHook(__CLASS__, __FUNCTION__,$mysum);
+        if ($hook)
+            $maxdiscount = $hook;
 
         return $maxdiscount;
     }
@@ -497,11 +493,11 @@ class PHPShopOrderFunction extends PHPShopObj {
     function getSerilizeParam($param) {
         $param = explode(".", $param);
         $val = parent::unserializeParam($param[0]);
-        if (!empty($param) and is_array($param) and count($param) > 2){
-            if(!empty($val[$param[1]][$param[2]]))
-              return $val[$param[1]][$param[2]];
-        }
-        else return $val[$param[1]];
+        if (!empty($param) and is_array($param) and count($param) > 2) {
+            if (!empty($val[$param[1]][$param[2]]))
+                return $val[$param[1]][$param[2]];
+        } else
+            return $val[$param[1]];
     }
 
     /**
@@ -608,9 +604,9 @@ class PHPShopOrderFunction extends PHPShopObj {
             }
 
             // Чат
-            if(!$bot){
-               $bot = new PHPShopBot(); 
-               $chat_id = $user_id;
+            if (!$bot) {
+                $bot = new PHPShopBot();
+                $chat_id = $user_id;
             }
 
             // Диалоги
@@ -670,6 +666,13 @@ class PHPShopOrderFunction extends PHPShopObj {
         PHPShopParser::set('manager', $this->getSerilizeParam('status.maneger'));
         PHPShopParser::set('tracking', $this->getParam('tracking'));
 
+        // Социальные сети
+        PHPShopParser::set('vk', $PHPShopSystem->getSerilizeParam('bank.vk'));
+        PHPShopParser::set('telegram', $PHPShopSystem->getSerilizeParam('bank.telegram'));
+        PHPShopParser::set('odnoklassniki', $PHPShopSystem->getSerilizeParam('bank.odnoklassniki'));
+        PHPShopParser::set('whatsapp', $PHPShopSystem->getSerilizeParam('bank.whatsapp'));
+        PHPShopParser::set('youtube', $PHPShopSystem->getSerilizeParam('bank.youtube'));
+
         $protocol = 'http://';
         if (!empty($_SERVER['HTTPS']) && 'off' !== strtolower($_SERVER['HTTPS'])) {
             $protocol = 'https://';
@@ -714,6 +717,12 @@ class PHPShopOrderFunction extends PHPShopObj {
         $content = PHPShopParser::file(dirname(__DIR__) . '/lib/templates/order/status.tpl', true);
         if (!empty($content)) {
             $PHPShopMail->sendMailNow($content);
+        }
+    }
+    
+     public function setHook($class_name, $function_name, $data = false, $rout = false) {
+        if (!empty($this->PHPShopModules)){
+            return $this->PHPShopModules->setHookHandler($class_name, $function_name, array(&$this), $data, $rout);
         }
     }
 

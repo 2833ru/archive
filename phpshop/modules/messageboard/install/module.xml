@@ -2,9 +2,8 @@
 <module>
     <version>1.5</version>
     <name>Message Board</name>
-    <faqlink>https://docs.phpshop.ru/moduli/socialnye-seti/message-board</faqlink>
     <description>Модуль доски объявлений.</description>
-    <category>soc</category>
+    <category>sale</category>
     <adminmenu>
         <title>Объявления</title>
         <capability>true</capability>

@@ -90,7 +90,7 @@ class PHPShopDialogElement extends PHPShopElements {
             $day_work_array[3] = array();
 
             if (($time_from <= $time and $time < $time_until) and ! in_array($day, $day_work_array[$day_work])) {
-                $this->set('status_dialog', __('Оператор online'));
+                $this->set('status_dialog', __('Оператор').' online');
                 $this->set('status_dialog_style', 'online');
                 $time_off = false;
             } else {
@@ -314,7 +314,7 @@ class PHPShopDialogElement extends PHPShopElements {
                     'user_id' => 0,
                     'date' => time(),
                     'name' => __('Администрация'),
-                    'message' => __('Для начала диалога заполните пожалуйста все поля:') . '<form class="message_form"><span class="dialog-reg-name"><input type="text" autocomplete="off" name="name" class="form-control" placeholder="' . __('Имя') . '" required=""></span><span class="dialog-reg-mail"><input type="email" autocomplete="off" name="mail" class="form-control" placeholder="Email" required=""></span>' . $tel . '<div class="dialog-reg-rule"><input type="checkbox" value="on" name="rule" checked="checked"> ' . __('Я согласен <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html" target="_blank" title="' . __('Согласие на обработку персональных данных') . '">на обработку моих персональных данных') . '</a></div><button class="send-message" type="button">' . __('Отправить') . '</button></form>',
+                    'message' => __('Для начала диалога заполните пожалуйста все поля') . ':<form class="message_form"><span class="dialog-reg-name"><input type="text" autocomplete="off" name="name" class="form-control" placeholder="' . __('Имя') . '" required=""></span><span class="dialog-reg-mail"><input type="email" autocomplete="off" name="mail" class="form-control" placeholder="Email" required=""></span>' . $tel . '<div class="dialog-reg-rule"><input type="checkbox" value="on" name="rule" checked="checked"> ' .__('Я согласен').' <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html" target="_blank" title="' . __('Согласие на обработку персональных данных') . '">'.__('на обработку моих персональных данных') . '</a></div><button class="send-message" type="button">' . __('Отправить') . '</button></form>',
                     'staffid' => 0,
                     'isview' => 1,
                     'isview_user' => 1,

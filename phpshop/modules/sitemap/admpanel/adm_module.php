@@ -214,9 +214,9 @@ function setGeneration($ssl=false) {
 
     // Запись в файл
     if (fwrite(@fopen('../../UserFiles/Files/sitemap.xml', "w+"), $sitemap))
-        echo '<div class="alert alert-success" id="rules-message"  role="alert">Файл <strong>sitemap.xml</strong> успешно создан.</div>';
+        echo '<div class="alert alert-success" id="rules-message"  role="alert">'.__('Файл').' <strong>sitemap.xml</strong> '.__('успешно создан').'</div>';
     else
-        echo '<div class="alert alert-danger" id="rules-message"  role="alert">Ошибка сохранения файла в папке UserFiles/File !</div>';
+        echo '<div class="alert alert-danger" id="rules-message"  role="alert">'.__('Ошибка сохранения файла в папке').' UserFiles/File/ !</div>';
 }
 
 // Функция обновления
@@ -235,7 +235,7 @@ function actionStart() {
     global $PHPShopGUI, $PHPShopOrm, $TitlePage, $select_name;
 
     $PHPShopGUI->action_button['Создать'] = array(
-        'name' => 'Создать Sitemap',
+        'name' => __('Создать').' '.'Sitemap',
         'action' => 'saveID',
         'class' => 'btn  btn-default btn-sm navbar-btn',
         'type' => 'submit',
@@ -243,7 +243,7 @@ function actionStart() {
     );
 
     $PHPShopGUI->action_button['Создать SSL'] = array(
-        'name' => 'Создать Sitemap SSL',
+        'name' => __('Создать').' '.'Sitemap SSL',
         'action' => 'saveIDssl',
         'class' => 'btn  btn-default btn-sm navbar-btn',
         'type' => 'submit',
@@ -251,7 +251,7 @@ function actionStart() {
     );
 
     $PHPShopGUI->action_button['Открыть'] = array(
-        'name' => 'Открыть Sitemap',
+        'name' => __('Открыть').' '.'Sitemap',
         'action' => '../../UserFiles/Files/sitemap.xml',
         'class' => 'btn  btn-default btn-sm navbar-btn btn-action-panel-blank',
         'type' => 'button',

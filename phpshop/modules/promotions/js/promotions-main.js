@@ -2,7 +2,7 @@
 function UpdatePromotion(promo) {
 
     var sum = $("#OrderSumma").val();
-    var ssum = $("#SkiSumma").html();
+    var ssum = $("#SkiSumma").attr('data-discount');
     var promocode = $("#promocode").val();
     var tipoplcheck = $("#order_metod:checked").val();
     var dostavka = $("#DosSumma").html();

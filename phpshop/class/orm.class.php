@@ -451,7 +451,7 @@ class PHPShopOrm {
      * $PHPShopOrm = new PHPShopOrm();
      * $PHPShopOrm->query('select id,name from phpshop_categories where id=1 order by id DESC limit 1');
      * </code>
-     * @param string $sql запро к БД в формате SQL
+     * @param string $sql запрос к БД в формате SQL
      * @return mixed
      */
     function query($sql, $class_name = false, $function_name = false) {

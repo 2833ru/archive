@@ -1,3 +1,6 @@
+#body{
+    overflow-y: scroll;
+}
 
 .left-block-list > li > a:hover, .left-block-list > li > a:focus {
     text-decoration: none;
@@ -2476,6 +2479,10 @@ transition: all 0.3s;
 background-size: cover;
 background-repeat: no-repeat;
 background-position: center center;
+}
+
+body.modal-open{
+    margin-right: -17px;
 }
 
 .filter-item-hide{

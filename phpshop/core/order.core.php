@@ -1,6 +1,6 @@
 <?php
 
-PHPShopObj::loadClass('order');
+PHPShopObj::loadClass(['order','bonus']);
 $PHPShopOrder = new PHPShopOrderFunction();
 
 /**
@@ -142,10 +142,13 @@ class PHPShopOrder extends PHPShopCore {
         $sum_discount_off = $this->PHPShopCart->getSumNoDiscount(true);
 
         // Итого товары по акции
-        $sum_discount_on = $PHPShopOrder->returnSumma($this->PHPShopCart->getSumPromo(true));
+        $sum_discount_on = (float) $PHPShopOrder->returnSumma($this->PHPShopCart->getSumPromo(true));
 
         // Итого товары без акции
-        $sum_discount_on += $PHPShopOrder->returnSumma($this->PHPShopCart->getSumWithoutPromo(true), $this->get('discount'));
+        $sum_discount_on += (float) $PHPShopOrder->returnSumma($this->PHPShopCart->getSumWithoutPromo(true), $this->get('discount'));
+
+        // Итого с учетом бонусов
+        $sum_discount_on -= (float) (new PHPShopBonus((int) $_SESSION['UsersId']))->getUserBonus($sum_discount_on);
 
         // Сумма скидки
         if ($sum_cart > $sum_discount_on)

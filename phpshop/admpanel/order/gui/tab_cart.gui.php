@@ -31,7 +31,8 @@ function tab_cart($data, $option = false) {
 
     $_SESSION['selectCart'] = $cartForSession;
     $num = $data_id = $sum = null;
-    $n = 1;
+    $n = $promo = 1;
+
 
     // Знак рубля
     if ($PHPShopOrder->default_valuta_iso == 'RUB')
@@ -63,14 +64,14 @@ function tab_cart($data, $option = false) {
 
                     // Промокод
                     if (!empty($val['promo_code']) and ! empty($val['promo_price']))
-                        $code = 'Купон: <span class="text-success">' . $val['promo_code'] . '</span>';
+                        $code = __('Купон') . ': <span class="text-success">' . $val['promo_code'] . '</span>';
 
                     // Скидка не применилась
                     if (!empty($val['promotion_discount']))
-                        $code = '<span class="text-success">Применена скидка промоакции.</span>';
+                        $code = '<span class="text-success">' . __('Применена скидка промоакции') . '</span>';
 
                     if (!empty($val['order_discount_disabled']))
-                        $code = '<span class="text-success">Скидка от суммы заказа не применена.</span>';
+                        $code = '<span class="text-success">' . __('Скидка от суммы заказа не применена') . '</span>';
 
                     if (!empty($val['pic_small']))
                         $icon = '<img src="' . $val['pic_small'] . '" onerror="this.onerror = null;this.src = \'./images/no_photo.gif\'" class="media-object">';
@@ -89,15 +90,21 @@ function tab_cart($data, $option = false) {
     ' . $code . '
   </div>
 </div>';
+                    // Цена
+                    $price = $PHPShopOrder->ReturnSumma($val['price']).$currency;
+                    if (!empty($val['price_n'])){
+                        $price .= '<br><s class="text-muted">' . $PHPShopOrder->ReturnSumma($val['price_n']) . '</s>'.$currency;
+                        $promo++;
+                    }
 
-                    $PHPShopInterface->setRow(array('name' => $name, 'align' => 'left'), $PHPShopOrder->ReturnSumma($val['price'], 0, ' '), array('name' => $val['num'], 'align' => 'center'), array('action' => array('cart-value-edit', '|', 'cart-value-remove', 'id' => $key), 'align' => 'center'), array('name' => $PHPShopOrder->ReturnSumma($val['price'] * $val['num'], 0, ' ') . $currency, 'align' => 'right'));
+                    $PHPShopInterface->setRow(array('name' => $name, 'align' => 'left'), $price, array('name' => $val['num'], 'align' => 'center'), array('action' => array('cart-value-edit', '|', 'cart-value-remove', 'id' => $key), 'align' => 'center'), array('name' => $PHPShopOrder->ReturnSumma($val['price'] * $val['num']) . $currency, 'align' => 'right'));
 
                     $n++;
                     $num += $val['num'];
                     $sum += $val['price'] * $val['num'];
                 }
             }
-
+            
     $total = '<table class="pull-right totals">
       <tbody>
       <tr>
@@ -105,9 +112,9 @@ function tab_cart($data, $option = false) {
       <td class="text-right"><h4>' . __('Итого') . '</h4></td>
       </tr>
       <tr>
-      <td width="100">' . __('Сумма') . ':</td>
+      <td width="130">' . __('Сумма') . ':</td>
       <td class="text-right">
-      ' . ($PHPShopOrder->returnSumma($sum, 0, ' ') ) . $currency . '
+      ' . ($PHPShopOrder->returnSumma($sum) ) . $currency . '
       </td>
       </tr>
       <tr>
@@ -125,14 +132,27 @@ function tab_cart($data, $option = false) {
       ' . $CART['weight'] . ' ' . __('гр.') . '
       </td>
       </tr>';
+    
+    // Очистка скидки если все товары промо
+    if($n == $promo)
+        $PERSON['discount'] = 0;
 
     $total .= '<tr>
       <td>' . __('Скидка') . ':</td>
       <td class="text-right">
-      ' . (int)$PERSON['discount'] . ' %
+      ' . (int) $PERSON['discount'] . ' %
       </td>
-      </tr>
-      <tr>
+      </tr>';
+    
+    if(!empty($data['bonus_minus']))
+        $total .= '<tr>
+      <td>' . __('Списано бонусов') . ':</td>
+      <td class="text-right">
+      ' . (int) $data['bonus_minus']. $currency . '
+      </td>
+      </tr>';
+    
+    $total .= '<tr>
       <td><h5>' . __('Итого') . ':</h5></td>
       <td class="text-right">
       <h5 class="text-success">' . ($PHPShopOrder->getTotal(false, ' ')) . $currency . '</h5>

@@ -1102,6 +1102,7 @@ function actionFileEdit() {
     $PHPShopGUI->_CODE .= $PHPShopGUI->setField('Название', $PHPShopGUI->setInputArg(array('name' => 'modal_file_name', 'type' => 'text.required', 'value' => urldecode($_GET['name']))));
     $PHPShopGUI->_CODE .= $PHPShopGUI->setField('Файл', $PHPShopGUI->setFile($_GET['file'], 'lfile', array('server' => true)));
     $PHPShopGUI->_CODE .= $PHPShopGUI->setInput('hidden', 'selectID', $_POST['selectID']);
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setInput('hidden', 'fileID', $_POST['fileID']);
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);

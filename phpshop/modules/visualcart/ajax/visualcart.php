@@ -28,6 +28,8 @@ $PHPShopValutaArray = new PHPShopValutaArray();
 // Системные настройки
 $PHPShopSystem = new PHPShopSystem();
 
+$PHPShopLang = new PHPShopLang(array('locale' => $_SESSION['lang'], 'path' => 'shop'));
+
 $PHPShopModules = new PHPShopModules('../../');
 
 class AddToTemplateVisualCartAjax {
