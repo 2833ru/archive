@@ -21,7 +21,7 @@ function ReturnSumma($sum, $disc) {
 function CheckStatusReady() {
     $sql = "select id from " . $GLOBALS['SysValue']['base']['table_name32'] . " where id=100 limit 1";
     @$result = mysql_query($sql);
-    $num = mysql_numrows($result);
+    $num = mysql_num_rows($result);
 
     // Запись нового статуса
     if (empty($num))
@@ -45,7 +45,7 @@ switch ($_GET['command']) {
     case("list"):
         PHPShopObj::loadClass("order");
         PHPShopObj::loadClass("delivery");
-        $csv = null;
+        $csv = $adr_info = null;
 
         // Безопасность
         if (PHPShopSecurity::true_num($_GET['date1']) and PHPShopSecurity::true_num($_GET['date2']) and PHPShopSecurity::true_num($_GET['num'])) {
@@ -63,6 +63,7 @@ switch ($_GET['command']) {
                 $id = $row['id'];
                 $datas = $row['datas'];
                 $uid = $row['uid'];
+                $adr_info = null;
 
                 // Подключаем класс заказа
                 if (class_exists('PHPShopOrder'))
@@ -178,7 +179,7 @@ switch ($_GET['command']) {
     case("new"):
         $sql = "select id from " . $GLOBALS['SysValue']['base']['table_name1'] . " where seller!='1' and datas<'$_GET[date2]' and datas>'$_GET[date1]'";
         @$result = mysql_query($sql);
-        $new_order = mysql_numrows($result);
+        $new_order = mysql_num_rows($result);
         echo $new_order;
         break;
 

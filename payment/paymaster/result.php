@@ -103,7 +103,12 @@ $LMI_PAYER_WM = $_REQUEST['LMI_PAYER_WM'];
 
 // build own CRC
 $HASH = $LMI_PAYEE_PURSE . $LMI_PAYMENT_AMOUNT . $LMI_PAYMENT_NO . $LMI_MODE . $LMI_SYS_INVS_NO . $LMI_SYS_TRANS_NO . $LMI_SYS_TRANS_DATE . $LMI_SECRET_KEY . $LMI_PAYER_PURSE . $LMI_PAYER_WM;
-$MY_LMI_HASH = strtoupper(md5($HASH));
+//$MY_LMI_HASH = strtoupper(md5($HASH));
+
+if (function_exists('hash'))
+    $MY_LMI_HASH = strtoupper(hash('sha256', $HASH)); // sha256
+else
+    exit('hash() not support');
 
 if (strtoupper($MY_LMI_HASH) == strtoupper((string)$LMI_HASH)) {
 

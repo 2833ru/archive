@@ -69,7 +69,7 @@ function Cat_prod_disp_new() {// выборка каталогов
     }
     $leng = strlen($dis_cat);
     $dis_cat = substr($dis_cat, 0, $leng - 1);
-    $dis_cat = eregi_replace("t", "т", $dis_cat);
+    $dis_cat = str_replace("t", "т", $dis_cat);
     return @$dis_cat;
 }
 
@@ -191,7 +191,7 @@ function CategoryID($categoryID) {// выборка каталогов и вывод в правое поле
           <td align=center>
 	  <input type=\"checkbox\" value=\"" . $id . "\">
 	  </td>	  
-          <td align=center   align=\"left\" onclick=\"miniWin('../product/adm_productID.php?productID=$id',720,650)\">
+          <td width=\"100\" align=center   align=\"left\" onclick=\"miniWin('../product/adm_productID.php?productID=$id',720,650)\">
                 $checked
 	  </td>
 	  <td width=\"55\"  align=\"center\"  onclick=\"miniWin('../product/adm_productID.php?productID=$id',720,650)\">
@@ -332,7 +332,7 @@ function CategorySearch($words) { //поиск
 
         $dis.="
 	<tr class='row $style_r' id=\"r" . $id . "\" onmouseover=\"PHPShopJS.rowshow_on(this)\" onmouseout=\"PHPShopJS.rowshow_out(this,'" . $style_r . "')\">
-	  <td align=center   align=\"left\" onclick=\"miniWin('../product/adm_productID.php?productID=$id',720,650)\">
+	  <td width=\"100\" align=center onclick=\"miniWin('../product/adm_productID.php?productID=$id',720,650)\">
                 $checked
 	  </td>
 	  <td width=\"55\"  align=\"center\"  onclick=\"miniWin('../product/adm_productID.php?productID=$id',720,650)\">

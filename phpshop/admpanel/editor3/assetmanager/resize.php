@@ -426,7 +426,7 @@ if (CheckedRules($UserStatus["cat_prod"], 2) == 1) {
                 elseif (($img[ufiletyle] == "image/pjpeg") OR ($img[ufiletyle] == "image/jpeg"))
                     $ftype = "jpg";
 
-                if (!empty($ftype)) {
+                if (!empty($ftype) and !empty($SaveImg[fsize])) {
                     mysql_query("INSERT INTO " . $SysValue['base']['table_name35'] . " VALUES ('','" . $_REQUEST['id'] . "','$mycReturn/" . $img[name] . "." . $ftype . "','','')");
 
                     $flag = $_REQUEST['flag'];
@@ -474,7 +474,7 @@ DoUpdateFotoList(" . $_REQUEST['id'] . ", flag);
 ";
                 }
                 else
-                    echo '<script>self.close()</script>';
+                    echo '<script>alert("Ошибка сохранения файла!");self.close()</script>';
             }
         }
         else

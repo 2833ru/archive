@@ -3,7 +3,7 @@
 /**
  * Вывод полной информации по заказу пользователя
  * @author PHPShop Software
- * @version 1.2
+ * @version 1.3
  * @package PHPShopCoreFunction
  * @param obj $obj объект класса
  * @param Int $tip флаг вызова [1 - личный кабинет], [2 - онлайн проверка заказа]
@@ -186,7 +186,7 @@ function userdeleveryforma($val, $option) {
     global $PHPShopModules;
 
     // Перехват модуля в начале функции
-    $hook = $PHPShopModules->setHookHandler(__FUNCTION__, __FUNCTION__, $val, $option, 'START');
+    $hook = $PHPShopModules->setHookHandler(__FUNCTION__, __FUNCTION__, $option, $val,  'START');
     if ($hook)
         return $hook;
 
@@ -206,9 +206,8 @@ function userdeleveryforma($val, $option) {
         $adres = "Не требуется";
 
     $icon = PHPShopText::img('phpshop/lib/templates/icon/lorry.gif', $hspace = 5, 'absmiddle');
-    $dis = $option['obj']->tr($icon . __('Доставка') . ' - ' . $val['name'], 1, $val['price'] . ' ' . $option['currency']);
+    $dis = PHPShopText::tr($icon . __('Доставка') . ' - ' . $val['name'], 1, $val['price'] . ' ' . $option['currency']);
     return array('tr' => $dis, 'name' => $val['name'], 'adres' => $adres);
-    ;
 }
 
 /**
@@ -273,19 +272,23 @@ function userorderpaymentlink($obj, $PHPShopOrderFunction, $tip, $row) {
     $name = $PHPShopPayment->getName();
     $id = $row['id'];
     $datas = $row['datas'];
+    $icon = $PHPShopPayment->getParam('icon');
+
+    if (!empty($icon))
+        $icon = PHPShopText::img($icon, 5, 'absmiddle','max-height:50px');
 
     // Ссылки на оплаты
     switch ($path) {
 
         // Сообщение
         case("message"):
-            $disp.=PHPShopText::b($name);
+            $disp.=$icon.PHPShopText::b($name);
             break;
 
         // Счет в банк
         case("bank"):
             if (!$PHPShopSystem->ifValue('1c_load_accounts')) {
-                $icon = PHPShopText::img('images/shop/interface_browser.gif', $hspace = 5, $align = 'absmiddle');
+
                 $disp = PHPShopText::a("phpshop/forms/account/forma.html?orderId=$id&tip=$tip&datas=$datas", $icon . $name, $name, false, false, '_blank', 'b');
             } else {
                 $disp.=PHPShopText::b($name) . '.<br>' . __('Ожидайте счета, после проведения документа<br> он автоматически появится в данном разделе<br> личного кабинета.');
@@ -294,7 +297,6 @@ function userorderpaymentlink($obj, $PHPShopOrderFunction, $tip, $row) {
 
         // Квитанция Сбербанка
         case("sberbank"):
-            $icon = PHPShopText::img('images/shop/interface_dialog.gif', $hspace = 5, $align = 'absmiddle');
             $disp.=PHPShopText::a("phpshop/forms/receipt/forma.html?orderId=$id&tip=$tip&datas=$datas", $icon . $name, $name, false, false, '_blank', 'b');
             break;
 
@@ -308,11 +310,11 @@ function userorderpaymentlink($obj, $PHPShopOrderFunction, $tip, $row) {
             if (is_file($users_file)) {
                 include_once($users_file);
                 if (function_exists($users_function)) {
-                    $disp = call_user_func_array($users_function, array(&$obj, $PHPShopOrderFunction));
+                    $disp = $icon.call_user_func_array($users_function, array(&$obj, $PHPShopOrderFunction));
                 }
             }
             else
-                $disp.=PHPShopText::b($name);
+                $disp.=$icon.PHPShopText::b($name);
             break;
     }
 

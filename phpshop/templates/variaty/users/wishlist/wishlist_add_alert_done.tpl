@@ -1,0 +1,1 @@
+Вы успешно добавили <a href='/shop/UID_@prodId@.html' title='Подробное описание'>@prodName@</a> в раздел <a href='/users/wishlist.html' title='Посмотреть отложенные товары'>отложенные</a>

@@ -930,7 +930,7 @@ class PHPShopGUI {
         $CODE.=$this->setField('Серийный номер', $this->setInputText('EEM-', 'serial_new', $serial, 110, $status_serial_img . ' * Формат серийного  номера: 11111-22222-33333', false, $status_serial));
 
         if (!$PHPShopModules->checkKey($serial, $path) and !empty($db['base']))
-            $CODE.=$this->setButton("Купить лицензию " . $db['price'], '../../../admpanel/icon/key.png', 200, false, $float = "none", $onclick = "window.open('http://www.phpshop.ru/order/?bay_mod=" . $db['base'] . "')");
+            $CODE.=$this->setButton("Купить лицензию " . $db['price'], '../../../admpanel/icon/key.png', 200, false, $float = "none", $onclick = "window.open('" . $db['base'] . "')");
 
         return $CODE;
     }

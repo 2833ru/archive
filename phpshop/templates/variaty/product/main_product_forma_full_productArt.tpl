@@ -1,0 +1,1 @@
+<span>Артикул:</span> @productArt@ 

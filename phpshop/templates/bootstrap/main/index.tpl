@@ -282,7 +282,7 @@
         <!--/ Модальное окно авторизации-->
 
         <!-- Fixed mobile bar -->
-        <div class="bar-padding-fix visible-xs visible-sm"> </div>
+        <div class="bar-padding-fix visible-xs"> </div>
         <nav class="navbar navbar-default navbar-fixed-bottom bar bar-tab visible-xs visible-sm" role="navigation">
             <a class="tab-item active" href="/">
                 <span class="icon icon-home"></span>

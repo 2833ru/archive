@@ -1,5 +1,5 @@
 
-<SCRIPT language="JavaScript" type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></SCRIPT>
+<SCRIPT language="JavaScript" type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></SCRIPT>
 <SCRIPT language="JavaScript" type="text/javascript" src="java/jqfunc.js"></SCRIPT>
 @order_action_add@
 <link href="phpshop/lib/templates/orde&#114/style.css" type="text/css" rel="stylesheet">

@@ -2,7 +2,7 @@
 
 /**
  * Библиотека офорфмления текста
- * @version 1.2
+ * @version 1.4
  * @package PHPShopClass
  * @subpackage Helper
  */
@@ -69,10 +69,11 @@ class PHPShopText {
      * @param string $src изобржение
      * @param int $hspace горизонтальный отсутп
      * @param string $align выравнивание
+     * @param string $css стили
      * @return string
      */
-    static function img($src, $hspace = 5, $align = 'left') {
-        return '<img src="' . $src . '" hspace="' . $hspace . '" align="' . $align . '" border="0">';
+    static function img($src, $hspace = 5, $align = 'left', $css=null ) {
+        return '<img src="' . $src . '" hspace="' . $hspace . '" align="' . $align . '" border="0" style="'. $css.'">';
     }
 
     /**
@@ -294,7 +295,13 @@ class PHPShopText {
      * @return string
      */
     static function strike($string) {
-        return '<span style="text-decoration: line-through">' . $string . '</span>';
+        
+        // Знак рубля
+        if(strstr($string," ")){
+            $string_array=explode(" ",$string);
+            return '<span style="text-decoration: line-through">' . $string_array[0] . '</span><span class="rubznak">'.$string_array[1].'</span>';
+        }
+        else return '<span style="text-decoration: line-through">' . $string . '</span>';
     }
 
     /**
@@ -388,7 +395,7 @@ class PHPShopText {
      * @param string $target тип перехода [null|_blank]
      * @return string
      */
-    static function form($content, $name, $method = 'post', $action = '#', $target = '_self') {
+    static function form($content, $name, $method = 'post', $action = '', $target = '_self') {
         return '<form action="' . $action . '" target="' . $target . '" name="' . $name . '" id="' . $name . '" method="' . $method . '">' . $content . '</form>';
     }
 

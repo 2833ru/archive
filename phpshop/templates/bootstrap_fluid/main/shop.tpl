@@ -36,6 +36,10 @@
         <!-- UI -->
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/jquery-ui.min.css" rel="stylesheet" />
 
+        <!-- Slider -->
+        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/jquery.bxslider.css" rel="stylesheet" />
+
+
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
           <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
@@ -266,7 +270,7 @@
         </div>
         <!--/ Модальное окно мобильного поиска -->
 
-                <!-- Модальное окно авторизации-->
+        <!-- Модальное окно авторизации-->
         <div class="modal fade bs-example-modal-sm" id="userModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
@@ -276,7 +280,7 @@
                         <span id="usersError" class="hide">@usersError@</span>
                     </div>
                     <form role="form" method="post" name="user_forma">
-                    <div class="modal-body">
+                        <div class="modal-body">
                             <div class="form-group">
                                 <label>Email</label>
                                 <input type="email" name="login" class="form-control" placeholder="Email..." required="">
@@ -294,15 +298,15 @@
                                 </label>
                             </div>
 
-                                @facebookAuth@ @twitterAuth@
-                    </div>
-                    <div class="modal-footer">
-                        <span class="pull-left"><a href="/users/sendpassword.html" class="btn btn-default">Забыли?</a>
-                        </span>
-                        <input type="hidden" value="1" name="user_enter">
-                        <button type="submit" class="btn btn-primary">Войти</button>
-                    </div>
-                     </form>   
+                            @facebookAuth@ @twitterAuth@
+                        </div>
+                        <div class="modal-footer">
+                            <span class="pull-left"><a href="/users/sendpassword.html" class="btn btn-default">Забыли?</a>
+                            </span>
+                            <input type="hidden" value="1" name="user_enter">
+                            <button type="submit" class="btn btn-primary">Войти</button>
+                        </div>
+                    </form>   
                 </div>
             </div>
         </div>
@@ -343,6 +347,7 @@
         <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.waypoints.min.js"></script>
         <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/inview.min.js"></script>
         <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery-ui.min.js"></script>
+        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.bxslider.min.js"></script>
 
 
         @visualcart_lib@

@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 $_classPath = "../../../";
 
@@ -77,13 +78,11 @@ class AddToTemplateVisualCartAjax {
 
     /**
      * Удаление товары
-     * @param int $xid ИД товара
+     * @param string $xid ИД товара
      */
     function del($xid) {
-        if (is_numeric($xid)) {
-            $this->PHPShopCart->del($xid);
-            $this->clean_memory();
-        }
+        $this->PHPShopCart->del($xid);
+        $this->clean_memory();
     }
 
     /**
@@ -197,7 +196,12 @@ function visualcartform($val, $option) {
         PHPShopParser::set('visualcart_product_seo', null);
     }
 
-    PHPShopParser::set('visualcart_product_xid', $val['id']);
+    // Проверка опции товара
+    if (!empty($val['option']))
+        PHPShopParser::set('visualcart_product_xid', $val['option']);
+    else
+        PHPShopParser::set('visualcart_product_xid', $val['id']);
+
     PHPShopParser::set('visualcart_product_name', $val['name']);
     PHPShopParser::set('visualcart_product_pic_small', $val['pic_small']);
     PHPShopParser::set('visualcart_product_price', $val['price'] * $val['num']);
@@ -205,8 +209,8 @@ function visualcartform($val, $option) {
     PHPShopParser::set('visualcart_product_num', $val['num']);
 
     // Проверка персонального шаблона модуля
-    $path='../templates/product.tpl';
-   $path_template =$_classPath. 'templates/'. $_SESSION['skin'].'/modules/visualcart/templates/product.tpl';
+    $path = '../templates/product.tpl';
+    $path_template = $_classPath . 'templates/' . $_SESSION['skin'] . '/modules/visualcart/templates/product.tpl';
     if (is_file($path_template))
         $path = $path_template;
 

@@ -60,6 +60,17 @@ function actionStart() {
         <link href="../skins/<?=$_SESSION['theme']?>/texts.css" type=text/css rel=stylesheet>
         <script type="text/javascript" language="JavaScript1.2" src="../java/sorttable.js"></script>
         <script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
+               <style>
+            .hoverlist {
+                background: #C0D2EC !important;
+            }
+            tr.prod_hover {
+                background: #bcd1ef !important;
+            }
+            tr.row:hover {
+                background: #bcd1ef;
+            }
+        </style>
     </head>
     <body bottommargin="0" rightmargin="0" topmargin="0" leftmargin="0" bgcolor="ffffff">
 

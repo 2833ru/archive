@@ -1,4 +1,12 @@
 
+.chat-modal-content{
+    height:100%;
+    width:100%;
+    overflow:hidden;
+    border: 0px;
+    margin:0px;
+}
+
 /* 
 * PHPShop Editor 
 */

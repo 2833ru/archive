@@ -4,7 +4,7 @@
  * Обработчик поиска товаров
  * @author PHPShop Software
  * @tutorial http://wiki.phpshop.ru/index.php/PHPShopSearch 
- * @version 1.5
+ * @version 1.6
  * @package PHPShopShopCore
  */
 class PHPShopSearch extends PHPShopShopCore {
@@ -189,7 +189,7 @@ class PHPShopSearch extends PHPShopShopCore {
 
             // Сложный запрос
             $this->PHPShopOrm->sql = $order;
-            $this->PHPShopOrm->debug = false;
+            $this->PHPShopOrm->debug = $this->debug;
             $this->PHPShopOrm->mysql_error = false;
             $this->PHPShopOrm->comment = __CLASS__ . '.' . __FUNCTION__;
             $this->dataArray = $this->PHPShopOrm->select();
@@ -280,8 +280,8 @@ class PHPShopSearch extends PHPShopShopCore {
         $this->count = $count;
 
         if (is_array($this->search_order)) {
-            $SQL = " where enabled='1' and parent_enabled='0' and " . $this->search_order['string'] . " " . $this->search_order['sort'] . "
-                 " . $this->search_order['prewords'] . " " . $this->search_order['sortV'];
+            $SQL = " where (" . $this->search_order['string'] . " " . $this->search_order['sort'] . "
+                 " . $this->search_order['prewords'] . " " . $this->search_order['sortV'].") and enabled='1' and parent_enabled='0' ";
         }
         else
             $SQL = null;

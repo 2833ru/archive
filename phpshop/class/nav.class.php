@@ -18,7 +18,7 @@ class PHPShopNav {
      */
     function PHPShopNav() {
         $url = parse_url("http://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']);
-
+        
         // Вырезаем, если в папке
         $path_parts = pathinfo($_SERVER['PHP_SELF']);
         $root = $path_parts['dirname'] . "/";

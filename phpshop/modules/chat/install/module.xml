@@ -3,11 +3,10 @@
     <version>1.8</version>
     <name>Chat</name>
     <faqlink>http://faq.phpshop.ru/page/chat.html</faqlink>
-    <description>Модуль чата с менеджером.</description>
+    <description>Модуль чата от PHPShop.</description>
     <icon>icon.png</icon>
     <category>user</category>
     <capability>enterprise,start,cms</capability>
-    <status>update</status>
     <adminmenu>
         <title>Чат</title>
         <podmenu>

@@ -54,7 +54,7 @@ class PHPShopSpec extends PHPShopShopCore {
 
         // Простой запрос
         if (is_array($order)) {
-            $this->dataArray = parent::getListInfoItem(array('*'), array('spec' => "='1'", 'enabled' => "='1'"), $order, __CLASS__, __FUNCTION__);
+            $this->dataArray = parent::getListInfoItem(array('*'), array('spec' => "='1'", 'enabled' => "='1'", 'parent_enabled'=>"='0'"), $order, __CLASS__, __FUNCTION__);
         } else {
             // Сложный запрос
             $this->PHPShopOrm->sql = $order;

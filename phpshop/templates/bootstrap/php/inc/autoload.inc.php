@@ -44,7 +44,7 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or !empty($_SESSION
                             </div>
                             
 <div class="clearfix"><br></div>
-    <a href="?skin=bootstrap_fluid" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="Резиновый размер"><span class="glyphicon glyphicon-fullscreen"></span> Fluid</a> <a href="?skin=bootstrap" class="btn btn-default active" data-toggle="tooltip" data-placement="bottom" title="Фиксированный размер"><span class="glyphicon glyphicon-retweet"></span> Fixed</a>
+    <a href="?skin=bootstrap_fluid" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="Резиновый размер"><span class="glyphicon glyphicon-fullscreen"></span> Fluid</a> <a href="?skin=bootstrap" class="btn btn-default btn-sm active" data-toggle="tooltip" data-placement="bottom" title="Фиксированный размер"><span class="glyphicon glyphicon-retweet"></span> Fixed</a>
 
                     <div class="clearfix"></div>';
     if (!empty($_SESSION['logPHPSHOP']))
@@ -86,11 +86,7 @@ elseif (empty($GLOBALS['SysValue']['other']['bootstrap_theme']))
     $GLOBALS['SysValue']['other']['bootstrap_theme'] = 'bootstrap';
 
 
-$sign = 1423218824;
-if (!empty($GLOBALS['RegTo']['SupportExpires']) and $GLOBALS['RegTo']['SupportExpires'] < $sign)
-    echo ('<div class="alert alert-danger alert-dismissible text-center" role="alert">
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-  <span class="glyphicon glyphicon-exclamation-sign"></span> <strong>Внимание!</strong> Для использования этого шаблона требуется продлить <a href="http://phpshop.ru/order/?from=' . $_SERVER['SERVER_NAME'] . '&action=pay_new_template" target="_blank" class="alert-link">техническую поддержку</a>.</div>');
+
 
 // Меню брендов
 $PHPShopBrandsElement = new PHPShopBrandsElement();

@@ -448,7 +448,7 @@ $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", false);
         }
     }
     else
-        $mysql = "...............?";
+        $mysql = "............<img src=\"rewritemodtest/icon-activate.gif\" border=0 align=absmiddle> <b class='ok'>Ok</b>";
 
 // Rewrite
     $path_parts = pathinfo($_SERVER['PHP_SELF']);

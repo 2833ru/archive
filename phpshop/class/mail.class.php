@@ -32,6 +32,7 @@ class PHPShopMail {
      * @var string Тип содержания
      */
     var $type = "text/plain";
+    var $f = false;
 
     /**
      * Конструктор
@@ -41,8 +42,11 @@ class PHPShopMail {
      * @param string $content содежание письма
      * @param boolean $type тип письма, текст или html, true ='text/html', false = text/plain
      * @param boolean $noSend true - не отсылать письмо при создании экземпляра класса. А назначить метки данных магазина и отправить позднее отдельным методом sendMailNow
+     * @param boolean $f true - использовать флаг -f при отправке письма
      */
-    function PHPShopMail($to, $from, $zag, $content, $type = false, $noSend = false) {
+    function PHPShopMail($to, $from, $zag, $content, $type = false, $noSend = false, $f = true) {
+
+        $this->f = $f;
 
         if (!empty($type))
             $this->type = 'text/html';
@@ -74,13 +78,13 @@ class PHPShopMail {
      */
     function getHeader() {
         $header = "MIME-Version: " . $this->mime . "\n";
-        
-        if ($this->PHPShopSystem and $this->PHPShopSystem->getParam('adminmail2') == $this->from){
+
+        if ($this->PHPShopSystem and $this->PHPShopSystem->getParam('adminmail2') == $this->from) {
             $header.= "From:  " . $this->PHPShopSystem->getParam('name') . " <" . $this->from . ">\n";
         }
         else
             $header.= "From: <" . $this->from . ">\n";
-        
+
         $header.= "Reply-To: $this->from\n";
         $header.= "Content-Type: " . $this->type . "; charset=" . $this->codepage . "\n";
         $header.= "Content-Transfer-Encoding: 8bit\n";
@@ -108,7 +112,7 @@ class PHPShopMail {
      * @param string $content содержание
      */
     function sendMailNow($content) {
-        mail($this->to, $this->zag, $content, $this->header, '-f' . $this->from);
+        mail($this->to, $this->zag, $content, $this->header, $this->from);
     }
 
     /**
@@ -117,7 +121,10 @@ class PHPShopMail {
      * @param strong $header заголовок
      */
     function sendMail($content, $header) {
-        mail($this->to, $this->zag, $content, $header, '-f' . $this->from);
+        if (!empty($this->f))
+            mail($this->to, $this->zag, $content, $header, '-f' . $this->from);
+        else
+            mail($this->to, $this->zag, $content, $header);
     }
 
     /**
@@ -139,7 +146,7 @@ class PHPShopMailFile {
 
     var $codepage = "windows-1251";
 
-    function PHPShopMailFile($to, $from, $zag, $content, $filename, $file) {
+    function PHPShopMailFile($to, $from, $zag, $content, $filename, $file, $f = true) {
         $this->from = $from;
         $this->un = strtoupper(uniqid(time()));
         $this->to = $to;
@@ -149,7 +156,10 @@ class PHPShopMailFile {
         $header = $this->getHeader();
         //mail($this->to,$this->from,$this->zag,$header);
         $this->subj = $zag;
-        mail($this->to, $this->subj, $this->zag, $header, '-f' . $this->from);
+        if (empty($f))
+            mail($this->to, $this->subj, $this->zag, $header);
+        else
+            mail($this->to, $this->subj, $this->zag, $header, '-f' . $this->from);
     }
 
     function getZag($text) {

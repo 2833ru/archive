@@ -5,7 +5,7 @@ if(empty($_SESSION['idPHPSHOP']))
 
 
 $sMsg = "";
-
+/*
 if(isset($_POST["inpNewFolderName"]))
 	{	
 	$sFolder = $_POST["inpCurrFolder"]."/".$_POST["inpNewFolderName"];
@@ -22,6 +22,7 @@ if(isset($_POST["inpNewFolderName"]))
 			$sMsg = "<script>document.write(getText('Invalid input.'))</script>";
 		}
 	}
+ */
 ?>
 <base target="_self">
 <html>

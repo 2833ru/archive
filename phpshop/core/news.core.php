@@ -4,7 +4,7 @@
  * Обработчик новостей
  * @author PHPShop Software
  * @tutorial http://wiki.phpshop.ru/index.php/PHPShopNews
- * @version 1.4
+ * @version 1.5
  * @package PHPShopCore
  */
 class PHPShopNews extends PHPShopCore {
@@ -25,7 +25,7 @@ class PHPShopNews extends PHPShopCore {
         $this->empty_index_action = true;
 
         // Список экшенов
-        $this->action = array('get' => 'timestamp', "nav" => array("index","ID"), "post" => "news_plus");
+        $this->action = array('get' => 'timestamp', "nav" => array("index","ID"));
         parent::PHPShopCore();
         
         // Календарь

@@ -19,7 +19,7 @@ function checkModChatForma(){
             </tr>
             <tr>
                 <td></td>
-                <td><input type="button" name="chat_mod_start" value="Начать чат" style="width:130px" onclick="checkModChatForma()"></td>
+                <td><input type="button" name="chat_mod_start" class="btn btn-primary btn-sm" value="Начать чат" style="width:130px" onclick="checkModChatForma()"></td>
             </tr>
         </table>
 </div>

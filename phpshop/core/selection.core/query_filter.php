@@ -65,7 +65,7 @@ function query_filter($obj) {
             break;
         case(3): $order = array('order' => 'num' . $order_direction);
             break;
-        default: $order = array('order' => 'num' . $order_direction);
+        default: $order = array('order' => 'num, name' . $order_direction);
     }
 
     // Преобзазуем массив уловия сортировки в строку

@@ -153,7 +153,7 @@ if (!function_exists("ftp_pasv")) {
 if (!$ftp_stream = ftp_connect($SysValue['user_ftp']['host'])) {
     echo"
 	<script>
-	confirm('Не возможно подключиться к фтп пользователя. Автоматическое обновление не возможно. Проверьте паравильность доступов к вашему фтп в cofig.ini');
+	confirm('Не возможно подключиться к фтп пользователя. Автоматическое обновление не возможно. Проверьте правильность доступов к вашему фтп в config.ini');
 	window.close();
 	</script>
 	";
@@ -163,7 +163,7 @@ if (!$ftp_stream = ftp_connect($SysValue['user_ftp']['host'])) {
 if (!ftp_login($ftp_stream, $SysValue['user_ftp']['login'], $SysValue['user_ftp']['password'])) {
     echo"
 	<script>
-	confirm('Не возможно авторизоваться на фтп пользователя. Автоматическое обновление не возможно. Проверьте паравильность доступов к вашему фтп в cofig.ini');
+	confirm('Не возможно авторизоваться на фтп пользователя. Автоматическое обновление не возможно. Проверьте правильность доступов к вашему фтп в config.ini');
 	window.close();
 	</script>
 	";

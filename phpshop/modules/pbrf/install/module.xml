@@ -5,7 +5,6 @@
     <description>Модуль печатных бланков Почты России</description>
     <icon>icon.png</icon>
     <category>form,sale</category>
-    <status>new</status>
     <sign>1437996377</sign>
     <adminmenu>
         <title>Бланки Почты России</title>

@@ -31,10 +31,10 @@ function tab_cart($data, $option = false) {
     $n = 1;
     if (sizeof($cart) != 0)
         if (is_array($cart))
-            foreach ($cart as $val) {
+            foreach ($cart as $key=>$val) {
 
                 $disCart.="
-<tr class=row3 onmouseover=\"show_on('r" . $val['id'] . "')\" id=\"r" . $val['id'] . "\" onmouseout=\"show_out('r" . $val['id'] . "')\" onclick=\"miniWin('adm_order_productID.php?orderID=" . $data['id'] . "&productID=" . $val['id'] . "&option=".base64_encode($val['name'])."',400,300,event)\">
+<tr class=row3 onmouseover=\"show_on('r" . $n . "')\" id=\"r" . $n . "\" onmouseout=\"show_out('r" . $n . "')\" onclick=\"miniWin('adm_order_productID.php?orderID=" . $data['id'] . "&productID=" . $val['id'] . "&option=".$key."',400,300,event)\">
  <td style=\"padding:3\">$n</td> 
   <td style=\"padding:3\">" . $val['uid'] . "</td>
   <td style=\"padding:3\">" . $val['id'] . "</td>

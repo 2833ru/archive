@@ -1,0 +1,35 @@
+.operationPoints {
+    width: 100%;
+    text-align: center;
+}
+.operationPoints tr td {
+    padding: 10px;
+}
+.operationPoints tr th {
+    padding: 10px;
+    background: #eeeeee;
+    color: #808080;
+}
+.operationPoints tr:nth-child(odd) {
+    background: #f8fffa;
+}
+.operationPoints .plus {
+    color:green;
+}
+.operationPoints .minus {
+    color:red;
+}
+
+.content-points {
+    overflow: auto;
+    height: 300px;
+}
+.pu {
+    font-size:12px;
+    padding-left:5px;
+}
+#load_proc {
+    display: none;
+    float:left; 
+    padding-top:7px;
+}

@@ -22,7 +22,7 @@ function checkMultibase($img) {
     global $PHPShopSystem;
     $base_host = $PHPShopSystem->getSerilizeParam('admoption.base_host');
     if ($PHPShopSystem->getSerilizeParam('admoption.base_enabled') == 1 and !empty($base_host)) {
-        $source_img = eregi_replace("/UserFiles/", "http://" . $base_host . "/UserFiles/", $img);
+        $source_img = str_replace("/UserFiles/", "http://" . $base_host . "/UserFiles/", $img);
         return $source_img;
     }
     else

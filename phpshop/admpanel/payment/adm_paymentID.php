@@ -123,6 +123,9 @@ function actionSave() {
 function actionUpdate() {
     global $PHPShopOrm, $PHPShopModules;
 
+    if(!isset($_POST['yur_data_flag_new']) )
+        $_POST['yur_data_flag_new']= 0;
+
     // Перехват модуля
     $PHPShopModules->setAdmHandler($_SERVER["SCRIPT_NAME"], __FUNCTION__, $_POST);
 

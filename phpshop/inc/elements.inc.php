@@ -145,6 +145,11 @@ class PHPShopUserElement extends PHPShopElements {
     function logout() {
         unset($_SESSION['UsersId']);
         unset($_SESSION['UsersStatus']);
+        unset($_SESSION['UsersId']);
+        unset($_SESSION['UsersLogin']);
+        unset($_SESSION['UsersName']);
+        unset($_SESSION['UsersMail']);
+        unset($_SESSION['UsersStatus']);
         $url_user = str_replace("?logout=true", "", $_SERVER['REQUEST_URI']);
         header("Location: " . $url_user);
     }
@@ -601,7 +606,7 @@ class PHPShopSkinElement extends PHPShopElements {
 
                             if ($file != "." and $file != ".." and $file != "index.html") {
 
-                                if (in_array($file, array('bootstrap', 'bootstrap_fluid', 'white_brick')))
+                                if (in_array($file, array('bootstrap', 'bootstrap_fluid', 'white_brick','variaty')))
                                     $value_up[] = array($file, $file, $sel);
                                 else
                                     $value_down[] = array($file, $file, $sel);

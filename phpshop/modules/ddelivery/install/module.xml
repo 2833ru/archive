@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.5</version>
+    <version>1.6</version>
     <name>DDelivery</name>
     <description>Модуль расчета доставки DDelivery.ru</description>
     <faqlink>http://faq.phpshop.ru/page/ddelivery.html</faqlink>
@@ -21,6 +21,10 @@
         </podmenu>
     </adminmenu>
         <history>
+        <update>
+            <date>18.11.2015</date>
+            <content>Исправлена ошибка вывода стоимости доставки в личном кабинете пользователя и в заказе.</content>
+        </update>
         <update>
             <date>27.05.2015</date>
             <content>Исправлена ошибка вывода стоимости доставки в почтовом уведомлении.</content>

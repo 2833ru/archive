@@ -123,8 +123,8 @@ function Vivod_pot() {// вывод каталогов
         // Дерево
             function My(name, cat) {
         //alert(name+","+cat)
-                window.opener.document.getElementById('myName').value = name;
-                window.opener.document.getElementById('myCat').value = cat;
+                window.opener.document.getElementById('parent_name').value = name;
+                window.opener.document.getElementById('PID_new').value = cat;
                 window.close();
             }
 

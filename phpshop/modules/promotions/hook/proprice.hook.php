@@ -11,11 +11,14 @@ function product_grid_hook($obj, $row) {
     $uid = $row['id'];
 
     //список промо
-    $data = $promotionslist;
+    $dataf = $promotionslist;
 
     //двумерный массив если запись одна
-    if ($data[0]['code'] == '') {
-        $data[0] = $data;
+    if ($dataf[0]['id'] == '') {
+        $data[0] = $dataf;
+    }
+    else {
+        $data = $dataf;
     }
 
     //обнуляем категории и товары
@@ -24,60 +27,113 @@ function product_grid_hook($obj, $row) {
 
     if (isset($data)) {
         foreach ($data as $key => $pro) {
-            //Массив категорий для промо кода
-            if ($pro['categories_check'] == 1):
-                //категории массив
-                $category_ar = explode(',', $pro['categories']);
-            endif;
 
-            if ($pro['products_check'] == 1):
-                //категории массив
-                $products_ar = explode(',', $pro['products']);
-            endif;
 
-            $sumche = 0;
-            $sumchep = 0;
+            $versphp = phpversion(); //5.3.0
+            //$versphp = "4.1.1";
+            $version_status = version_compare($versphp,"5.3.0");
 
-            //узнаем по каким категориям
-            if (isset($category_ar)) {
-                foreach ($category_ar as $val_c) {
-                    if ($val_c == $category) {
-                        $sumche = 1;
-                        break;
-                    } else {
-                        $sumche = 0;
+            if($version_status!='-1') {
+                //Проверим активность по дате
+                if($pro['active_check']==1) {
+                    //дата сегодня
+                    $date_today = date("d-m-Y");
+                    //даты от и до
+                    $date_ot = $pro['active_date_ot'];
+                    $date_do = $pro['active_date_do'];
+                    //меням формат от и до
+                    $d_ot_ar = explode('-', $pro['active_date_ot']);
+                    $d_do_ar = explode('-', $pro['active_date_do']);
+                    $date_f_ot = $d_ot_ar[2].'-'.$d_ot_ar[1].'-'.$d_ot_ar[0];
+                    $date_f_do = $d_do_ar[2].'-'.$d_do_ar[1].'-'.$d_do_ar[0];
+                    //массив дат
+                    $begin = new DateTime( $date_f_ot );
+                    $end = new DateTime( $date_f_do );
+                    $end = $end->modify( '+1 day' ); 
+                    $interval = new DateInterval('P1D');
+                    $daterange = new DatePeriod($begin, $interval ,$end);
+
+                    if(isset($daterange)) {
+                        foreach($daterange as $date){
+                            $data_interval = $date->format("d-m-Y");
+                            if($date_today==$data_interval) {
+                                $date_act = 1;
+                                break;
+                            }
+                        }
                     }
                 }
+                else {
+                    $date_act=1; //ставим принудительно активность если вдруг дата отключена в настройках
+                }
+            }
+            else {
+                    $date_act=1; //ставим принудительно активность если вдруг дата отключена в настройках
             }
 
-            //узнаем по каким товарам
-            if (isset($products_ar)) {
-                foreach ($products_ar as $val_p) {
-                    if ($val_p == $uid) {
-                        $sumchep = 1;
-                        break;
-                    } else {
-                        $sumchep = 0;
+            if($date_act==1) {
+                if($pro['code_check']!=1) {
+
+                    //Массив категорий для промо кода
+                    if ($pro['categories_check'] == 1):
+                        //категории массив
+                        $category_ar = explode(',', $pro['categories']);
+                    endif;
+
+                    if ($pro['products_check'] == 1):
+                        //категории массив
+                        $products_ar = explode(',', $pro['products']);
+                    endif;
+
+                    $sumche = 0;
+                    $sumchep = 0;
+
+                    //узнаем по каким категориям
+                    if (isset($category_ar)) {
+                        foreach ($category_ar as $val_c) {
+                            if ($val_c == $category) {
+                                $sumche = 1;
+                                break;
+                            } else {
+                                $sumche = 0;
+                            }
+                        }
                     }
+
+                    //узнаем по каким товарам
+                    if (isset($products_ar)) {
+                        foreach ($products_ar as $val_p) {
+                            if ($val_p == $uid) {
+                                $sumchep = 1;
+                                break;
+                            } else {
+                                $sumchep = 0;
+                            }
+                        }
+                    }
+
+                    //обнуляем категории и товары
+                    unset($category_ar);
+                    unset($products_ar);
+
+                    if ($sumche == 1 or $sumchep == 1):
+                        //если процент
+                        if ($pro['discount_tip'] == 1) {
+                            $pro['discount'];
+                            $discount[] = $pro['discount'];
+                        }
+                        if ($pro['discount_tip'] == 0) {
+                            $pro['discount'];
+                            $discountsum[] = $pro['discount'];
+                        }
+
+                    endif;
+                }
+                else {
+                    unset($discount);
+                    unset($discountsum);
                 }
             }
-
-            //обнуляем категории и товары
-            unset($category_ar);
-            unset($products_ar);
-
-            if ($sumche == 1 or $sumchep == 1):
-                //если процент
-                if ($pro['discount_tip'] == 1) {
-                    $pro['discount'];
-                    $discount[] = $pro['discount'];
-                }
-                if ($pro['discount_tip'] == 0) {
-                    $pro['discount'];
-                    $discountsum[] = $pro['discount'];
-                }
-
-            endif;
         }
         //Берем самую большую скидку
         if (isset($discount))

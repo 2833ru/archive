@@ -39,10 +39,14 @@ $output = false;
 //
 //  do not change anything below this line
 //////////////////////////////////////////////////
-function mysqlbackup($host,$dbname, $uid, $pwd, $structure_only, $crlf) {
+function mysqlbackup($host,$dbname, $uid, $pwd, $structure_only) {
+    
+    $crlf='
+';
 
     $con=@mysql_connect($host,$uid, $pwd) or die("Could not connect");
     $db=@mysql_select_db($dbname,$con) or die("Could not select db");
+    mysql_query("SET NAMES 'cp1251'");
 
     // here we check MySQL Version
     $result=@mysql_query("SELECT VERSION() AS version");
@@ -70,17 +74,18 @@ function mysqlbackup($host,$dbname, $uid, $pwd, $structure_only, $crlf) {
         $row = '3.21.0';
     }
 
+
     define('MYSQL_INT_VERSION', (int)sprintf('%d%02d%02d', $match[0], $match[1], intval($match[2])));
     define('MYSQL_STR_VERSION', $row['version']);
     unset($match);
 
-    $sql = "# MySQL dump by phpMyDump".$crlf;
-    $sql.= "# Host: $host Database: $dbname".$crlf;
-    $sql.= "----------------------------".$crlf;
-    $sql.= "# Server version: ".MYSQL_STR_VERSION.$crlf;
+    //$sql = "# MySQL dump by phpMyDump".$crlf;
+    //$sql.= "# Host: $host Database: $dbname".$crlf;
+    //$sql.= "#----------------------------".$crlf;
+    //$sql.= "# Server version: ".MYSQL_STR_VERSION.$crlf;
 
-    $sql.= $crlf.$crlf.$crlf;
-    out(1,$sql);
+    //$sql.= $crlf.$crlf.$crlf;
+    
     $res=@mysql_list_tables($dbname);
     $nt=@mysql_num_rows($res);
 
@@ -88,9 +93,11 @@ function mysqlbackup($host,$dbname, $uid, $pwd, $structure_only, $crlf) {
         $row=mysql_fetch_row($res);
         $tablename=$row[0];
 
-        $sql=$crlf."# ----------------------------------------".$crlf."# table structure for table '$tablename' ".$crlf;
+        //$sql=$crlf."# ----------------------------------------".$crlf."# table structure for table '$tablename' ".$crlf;
+        $sql="DROP TABLE IF EXISTS $tablename;".$crlf;
         // For MySQL < 3.23.20
         if (MYSQL_INT_VERSION >= 32321) {
+
             $result=mysql_query("SHOW CREATE TABLE $tablename");
             if ($result != FALSE && mysql_num_rows($result) > 0) {
                 $tmpres = mysql_fetch_array($result);
@@ -122,7 +129,7 @@ function mysqlbackup($host,$dbname, $uid, $pwd, $structure_only, $crlf) {
             }
 
             mysql_free_result($result);
-            $sql = preg_replace(',' . $crlf . '$', '', $sql);
+            //$sql = preg_replace('/,' . $crlf . '/$', '', $sql);
 
             $result = mysql_query("SHOW KEYS FROM $tablename");
             while ($row = mysql_fetch_array($result)) {
@@ -207,14 +214,17 @@ function mysqlbackup($host,$dbname, $uid, $pwd, $structure_only, $crlf) {
                         $sql .= "'', ";
                     } // end if
                 } // end for
-                $sql = preg_replace(', $', '', $sql);
+                $sql = preg_replace('/, $/', '', $sql);
                 $sql .= ");".$crlf;
+                
                 out(1,$sql);
 
             }
             mysql_free_result($result);
         }
     }
+    
+  
     return;
 }  
 
@@ -256,7 +266,12 @@ function gzcompressfile($source,$level=false) {
 
 
 ob_start();
-mysqlbackup($host,$dbname,$uname,$upass,$structure_only,$crlf);
+/*
+echo '#SKD101|'.$dbname.'|62|2015.09.02 19:34:11|12647|1|1|14|10922|106|922|54|8|418|2|2|3|4|7|1|1|1|1|1|1|1|1|1|1|1|10|6|1|5|20|2|8|56|1|3|1|1|3|1|2|36|11|1|1|3
+    
+';*/
+
+mysqlbackup($host,$dbname,$uname,$upass,$structure_only);
 $content=ob_get_clean();
 
 

@@ -436,7 +436,7 @@ class PHPShopPartner extends PHPShopCore {
 ';
 
             // Сообщение пользователю
-            $PHPShopMail = new PHPShopMail($row['mail'], $this->PHPShopSystem->getValue("admin_mail"), $zag, $content);
+            $PHPShopMail = new PHPShopMail($row['mail'], $this->PHPShopSystem->getValue('adminmail2'), $zag, $content);
         }
     }
 
@@ -540,7 +540,7 @@ class PHPShopPartner extends PHPShopCore {
 ';
 
                     // Сообщение пользователю
-                    $PHPShopMail = new PHPShopMail($mail, $this->PHPShopSystem->getValue("admin_mail"), $zag, $content);
+                    $PHPShopMail = new PHPShopMail($mail, $this->PHPShopSystem->getValue('adminmail2'), $zag, $content);
 
                     // Переход в личный кабинет
                     $this->enter(true);

@@ -46,7 +46,7 @@ function smile($string) {
     );
 
     foreach ($Smile as $key => $val)
-        $string = eregi_replace($key, $val, $string);
+        $string = str_replace($key, $val, $string);
 
     return $string;
 }
@@ -73,6 +73,11 @@ function check_content($content) {
 
 if (!empty($_SESSION['mod_chat_user_session'])) {
 
+    // Проверка присутствия оператора
+    $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.chat.chat_system"));
+    $PHPShopOrm->debug = false;
+    $data_system = $PHPShopOrm->select(array('*'), false, false, array('limit' => 1));
+
 
     // Зыкрытие сессии чата
     if (!empty($_REQUEST['close'])) {
@@ -80,7 +85,7 @@ if (!empty($_SESSION['mod_chat_user_session'])) {
         // Новое сообщение System
         $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.chat.chat_jurnal"));
         $insert['user_session_new'] = $_SESSION['mod_chat_user_session'];
-        $insert['content_new'] = htmlspecialchars('Пользователь ' . $_SESSION['mod_chat_user_name'] . ' покинул чат');
+        $insert['content_new'] = htmlspecialchars('Пользователь ' . $_SESSION['mod_chat_user_name'] . ' покинул чат', ENT_COMPAT, 'windows-1251');
         $insert['status_new'] = 1;
         $insert['name_new'] = 'System';
         $insert['date_new'] = time();
@@ -100,10 +105,10 @@ if (!empty($_SESSION['mod_chat_user_session'])) {
 
 
     // Запись вопроса
-    if (!empty($_REQUEST['addtext'])) {
+    if (!empty($_REQUEST['addtext']) and $data_system['operator'] == 1) {
         $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.chat.chat_jurnal"));
         $insert['user_session_new'] = $_SESSION['mod_chat_user_session'];
-        $insert['content_new'] = htmlspecialchars($_REQUEST['addtext']);
+        $insert['content_new'] = htmlspecialchars($_REQUEST['addtext'], ENT_COMPAT, 'windows-1251');
         $insert['name_new'] = $_SESSION['mod_chat_user_name'];
         $insert['status_new'] = 1;
         $insert['date_new'] = time();
@@ -115,7 +120,7 @@ if (!empty($_SESSION['mod_chat_user_session'])) {
     $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.chat.chat_jurnal"));
     $PHPShopOrm->debug = false;
     $data = $PHPShopOrm->select(array('*'), array('user_session' => "='" . $_SESSION['mod_chat_user_session'] . "'",
-        'date' => '>' . $_REQUEST['time']), array('order' => 'id'), array('limit' => 100));
+        'date' => '> "' . $_REQUEST['time'].'"'), array('order' => 'id'), array('limit' => 100));
     $content = null;
     $time = $_REQUEST['time'];
     if (is_array($data)) {
@@ -129,7 +134,7 @@ if (!empty($_SESSION['mod_chat_user_session'])) {
             } else {
                 //$icon = 'admin.png';
                 if (!empty($row['avatar']))
-                    $icon = '<img src="'.$row['avatar'].'" alt="" onerror="imgerror(this)" class="img-thumbnail avatar">';
+                    $icon = '<img src="' . $row['avatar'] . '" alt="" onerror="imgerror(this)" class="img-thumbnail avatar">';
                 $name = '<h4 class="pull-right">' . $row['name'] . $icon . '</h4>';
                 $div_class = 'text_admin panel panel-body';
             }

@@ -4,7 +4,7 @@
  * Автономная синхронизация номенклатуры из 1С
  * @package PHPShopExchange
  * @author PHPShop Software
- * @version 1.9
+ * @version 2.0
  */
 // Авторизация
 include_once("login.php");
@@ -442,7 +442,8 @@ class ReadCsv1C extends PHPShopReadCsvPro {
             // Родительская категория
             if ($this->ObjSystem->getSerilizeParam("1c_option.update_category") == 1 and !empty($CsvToArray[15]))
                 $sql.="category='" . trim($CsvToArray[15]) . "',";
-            else $sql.="category='1000001',";
+            else
+                $sql.="category='1000001',";
 
             $sql.="name='" . addslashes(trim($CsvToArray[1])) . "',
             description='" . addslashes($CsvToArray[2]) . "',
@@ -507,8 +508,7 @@ else
 if (empty($GLOBALS['option']['shopbuilder'])) {
     $path = "sklad";
     $dir = $path . "/" . $date;
-}
-else{
+} else {
     $path = "../phpshop/templates/1cManager/sklad";
     $dir = $path . "/" . $date;
 }
@@ -558,6 +558,11 @@ if (is_array($list_file))
             $GetItemCreate+=$ReadCsv->GetItemCreate();
             $GetItemUpdate+=$ReadCsv->GetItemUpdate();
             $GetCatalogCreate+=$ReadCsv->GetCatalogCreate();
+
+            // Персонализация
+            if (function_exists('mod_end_load')) {
+                call_user_func_array('mod_end_load', array($ReadCsv,__CLASS__, __FUNCTION__));
+            }
 
             // Результат
             if ($_GET['files'] != "all")

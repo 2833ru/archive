@@ -10,7 +10,7 @@ function TestNewMessage($UID) {
     global $SysValue;
     $sql = "select id from " . $SysValue['base']['table_name37'] . " where UID=$UID and enabled='0'";
     $result = mysql_query($sql);
-    $num = mysql_numrows($result);
+    $num = mysql_num_rows($result);
     return $num;
 }
 

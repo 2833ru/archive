@@ -196,12 +196,12 @@ $dis
                 $name = substr($row['name'], 0, 35);
                 $dis.="<option value=" . $id . ">" . $name . "</option>\n";
             }
-            $disp = "
-<select name=vendor_new[" . $n . "][] size=1 style=\"width: 250;\">
-<option value=''>Нет данных</option>
-$dis
+            $disp = '
+<select multiple name=vendor_new['. $n . '][] size=3 style="width: 250;">
+<option value="">Нет данных</option>
+'.$dis.'
 </select>
-";
+';
             return @$disp;
         }
 

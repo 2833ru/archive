@@ -34,7 +34,7 @@ function GetDeliveryPrice($deliveryID, $sum, $weight = 0) {
     if (!empty($deliveryID)) {
         $sql = "select * from " . $SysValue['base']['table_name30'] . " where id='$deliveryID' and enabled='1'";
         $result = mysql_query($sql);
-        $num = mysql_numrows($result);
+        $num = mysql_num_rows($result);
         $row = mysql_fetch_array($result);
 
         if ($num == 0) {

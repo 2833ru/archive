@@ -244,7 +244,7 @@ class PHPShopPrice extends PHPShopShopCore {
         if ($hook)
             $dis = $hook;
 
-        $this->add(PHPShopText::table($dis, 3, 1, 'center', '98%', '#D2D2D2'), true);
+        $this->add(PHPShopText::table($dis, 3, 1, 'left', '98%', '#D2D2D2'), true);
     }
 
     /**

@@ -95,7 +95,7 @@ class PHPShopReturncall extends PHPShopCore {
                 $error = true;
         }
 
-        if (PHPShopSecurity::true_param($_POST['returncall_mod_name'], $_POST['returncall_mod_tel'], empty($error))) {
+        if (PHPShopSecurity::true_param($_POST['returncall_mod_name'], $_POST['returncall_mod_tel'], empty($error)) and strpos($_SERVER["HTTP_REFERER"], $_SERVER['SERVER_NAME'])) {
             $this->write();
             header('Location: ./done.html');
             exit();

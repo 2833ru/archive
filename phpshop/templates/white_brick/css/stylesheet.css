@@ -1712,7 +1712,7 @@ a#button-filter {
 .product-filter {
     padding: 10px 0;
     margin-bottom: 15px;
-    overflow: auto;
+    -overflow: auto;
 }
 .product-filter .display {
     margin-right: 15px;
@@ -2448,9 +2448,8 @@ div#right-sm { float:right; width: 165px;
 #content .content .reviews-left {
     float: left;
     width: 170px;
-    padding: 70px 10px 10px;
+    padding: 10px 10px 10px;
     text-align: center;
-    background: url(images/mw_1.png) no-repeat scroll 0 0 #FFFFFF;
     background-position: center top;
 }
 #content .content .reviews-left span {
@@ -2471,14 +2470,7 @@ div#right-sm { float:right; width: 165px;
     border-radius: 5px;
     font-size: 13px;
 }
-#content .content .review-arrow {
-    position: absolute;
-    margin-top: -18px;
-    margin-left: -66px;
-    width: 26px;
-    height: 55px;
-    background: url(images/review-arrow.png) no-repeat;
-}
+
 .tags {
     margin-top: 30px;
 }

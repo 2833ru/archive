@@ -34,7 +34,7 @@ $disp= "
 
 
 
-<form action='https://www.roboxchange.com/ssl/calc.asp' method=POST name=\"pay\">
+<form action='https://merchant.roboxchange.com/Index.aspx' method=POST name=\"pay\">
        <input type=hidden name=MrchLogin  value=$mrh_login>
        <input type=hidden name=OutSum  value=$out_summ>
        <input type=hidden name=InvId  value=$inv_id>

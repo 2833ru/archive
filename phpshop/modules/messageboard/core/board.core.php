@@ -67,7 +67,8 @@ class PHPShopBoard extends PHPShopCore {
                 $this->set('boardMail',$row['mail']);
 
                 // Подключаем шаблон
-                $this->addToTemplate($GLOBALS['SysValue']['templates']['messageboard']['messageboard_forma'],true);
+          
+                $this->ListInfoItems.= PHPShopParser::file($GLOBALS['SysValue']['templates']['messageboard']['messageboard_forma'], true, false, true);
             }
 
 
@@ -79,7 +80,8 @@ class PHPShopBoard extends PHPShopCore {
             $this->set('ErrorBoard',PHPShopText::message($this->lang('messageboard_write')));
 
         // Подключаем шаблон
-        $this->parseTemplate($GLOBALS['SysValue']['templates']['messageboard']['messageboard_page_list'],true);
+        $this->set('productPageDis', $this->ListInfoItems);
+        $this->Disp= PHPShopParser::file($GLOBALS['SysValue']['templates']['messageboard']['messageboard_page_list'], true, false, true);
 
         // Ссылка на новый отзыв
         $this->add($this->attachLink());
@@ -99,19 +101,19 @@ class PHPShopBoard extends PHPShopCore {
      * Новый отзыв
      */
     function add_forma() {
-        $this->parseTemplate($GLOBALS['SysValue']['templates']['messageboard']['messageboard_add'],true);
+        $this->Disp = PHPShopParser::file($GLOBALS['SysValue']['templates']['messageboard']['messageboard_add'], true, false, true);
     }
 
     /**
      * Экшен записи при получении $_POST[send_gb]
      */
     function send_gb() {
-        if(!empty($_SESSION['text']) and $_POST['key']==$_SESSION['text']) {
+        if (!empty($_SESSION['text']) and strtoupper($_POST['key']) == strtoupper($_SESSION['text'])) {
             $this->write();
             header("Location: ../board/?write=ok");
         }else {
             $this->set('Error',"Ошибка ключа, повторите попытку ввода ключа");
-            $this->parseTemplate($GLOBALS['SysValue']['templates']['messageboard']['messageboard_add'],true);
+            $this->Disp = PHPShopParser::file($GLOBALS['SysValue']['templates']['messageboard']['messageboard_add'], true, false, true);
         }
     }
 
@@ -128,7 +130,7 @@ class PHPShopBoard extends PHPShopCore {
             {
                 $_POST['mail_new']="";
             }
-            if(PHPShopSecurity::true_param($_POST['tel_new'],$_POST['name_new'],$_POST['content_new'],$_POST['tema_new'])) {
+            if(PHPShopSecurity::true_param($_POST['name_new'],$_POST['content_new'],$_POST['tema_new'])) {
                 $name_new=PHPShopSecurity::TotalClean($_POST['name_new'],2);
                 $content_new=PHPShopSecurity::TotalClean($_POST['content_new'],2);
                 $title_new=PHPShopSecurity::TotalClean($_POST['tema_new'],2);

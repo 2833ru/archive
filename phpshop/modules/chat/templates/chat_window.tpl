@@ -9,7 +9,7 @@
 
         <SCRIPT src="./lib/Subsys/JsHttpRequest/Js.js"></SCRIPT>
         <SCRIPT src="./ajax/phpshopchat.js"></SCRIPT>
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
         <style>
 
             #chat_mod_content{
@@ -79,10 +79,10 @@
 
                         if (parent.window.$('#chatModal').length) {
                             parent.window.$('#chatModal').modal('hide');
-                            parent.window.location.replace('@serverName@/forma/');
+                            parent.window.location.replace('//@serverName@/forma/');
                         }
                         else {
-                            window.opener.location.replace('/forma/');
+                            window.opener.location.replace('//@serverName@/forma/');
                             self.close();
                         }
                     }
@@ -96,13 +96,12 @@
                 });
 
                 $("#yes").on('click', function() {
-
                     if (parent.window.$('#chatModal').length) {
                         parent.window.$('#chatModal').modal('hide');
-                        parent.window.location.replace('@serverName@/forma/');
+                        parent.window.location.replace('//@serverName@/forma/');
                     }
                     else {
-                        window.opener.location.replace('@serverName@/forma/');
+                        window.opener.location.replace('//@serverName@/forma/');
                         self.close();
                     }
                 });

@@ -70,6 +70,8 @@ function promotions_write($obj, $data, $rout) {
             "tip_disc" => $tip_disc,
         );
 
+        //Перепишем сумму
+        $obj->sum = $sumn;
 
         // Данные по корзине
         $cart = array(
@@ -147,7 +149,7 @@ function promotions_mail($obj,$data,$rout) {
             $tip_disc = 'руб.';
 
         //бесплатная доставка
-        if($_SESSION['freedelivery']==1)
+        if($_SESSION['freedelivery']==0)
             $deliveryp = '0 руб.';
         else
             $deliveryp = $obj->delivery.' '.$obj->currency;
@@ -226,10 +228,19 @@ function promotions_mail($obj,$data,$rout) {
     
 }
 
+function promotions_send_to_order( $obj,$data,$rout ) {
+    //if($rout=="START") {
+        if($_SESSION['totalsumma']>0) {
+            $GLOBALS['SysValue']['other']['total'] = $_SESSION['totalsumma'];
+        }
+    //}
+}
+
 $addHandler=array
         (
             'write' => 'promotions_write',
-            'mail' => 'promotions_mail'
+            'mail' => 'promotions_mail',
+            'send_to_order'=> 'promotions_send_to_order'
  
 );
 ?>

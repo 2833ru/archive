@@ -6,7 +6,6 @@
     <description>Прием оплат через Assist.</description>
     <icon>icon.png</icon>
     <category>assist,sale</category>
-    <status>new</status>
     <adminmenu>
         <title>Прием оплат через Assist</title>
         <podmenu>

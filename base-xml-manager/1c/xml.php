@@ -104,7 +104,8 @@ class PHPShop1C extends PHPShopBaseXml {
 
                 // Если цена товара пришла из 1С
                 if (PHPShopSecurity::true_param($vars[0]['price'], $vars[0]['currency'])) {
-                    $data['price'] = PHPShopProductFunction::GetPriceValuta($data['id'], $vars[0]['price'], $vars[0]['currency']);
+                    //$data['price'] = PHPShopProductFunction::GetPriceValuta($data['id'], $vars[0]['price'], $vars[0]['currency']);
+                    $data['price']=$vars[0]['price'];
                 }
                 $orders['Cart']['cart'][$data['id']] = array(
                     'id' => $data['id'],
@@ -119,6 +120,11 @@ class PHPShop1C extends PHPShopBaseXml {
                 exit("Error Art");
         }
 
+        
+        // Скидка
+        if(PHPShopSecurity::true_param($vars[0]['discount'])){
+            $orders['Person']['discount']=$vars[0]['discount'];
+        }
 
         // Пересчет общих данных корзины
         $num = $sum = $weight = 0;

@@ -67,8 +67,7 @@ class PHPShopSelection extends PHPShopShopCore {
 
         if (is_array($PHPShopSortArray->getArray()))
             foreach ($PHPShopSortArray->getArray() as $key => $val)
-                ;
-        $_GET['v'][$val['category']] = $val['id'];
+                $_GET['v'][$val['category']] = $val['id'];
     }
 
     /**
@@ -97,7 +96,7 @@ class PHPShopSelection extends PHPShopShopCore {
 
         // Сложный запрос
         $this->PHPShopOrm->sql = $order;
-        $this->PHPShopOrm->debug = false;
+        $this->PHPShopOrm->debug = $this->debug;
         $this->PHPShopOrm->mysql_error = false;
         $this->PHPShopOrm->comment = __CLASS__ . '.' . __FUNCTION__;
         $this->dataArray = $this->PHPShopOrm->select();

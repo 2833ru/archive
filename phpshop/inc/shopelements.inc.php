@@ -226,7 +226,11 @@ class PHPShopProductIconElements extends PHPShopProductElements {
                 $where['id'] = '!=' . $this->PHPShopNav->getId();
                 break;
         }
-
+        
+        // Поддержка SeoUrlPro
+        if($GLOBALS['PHPShopNav']->objNav['name']=='UID') {
+            $where['id'] = '!=' . $GLOBALS['PHPShopNav']->objNav['id'];
+        }
 
         // Кол-во товаров на странице
         if (empty($this->limitspec))
@@ -595,6 +599,7 @@ class PHPShopProductIndexElements extends PHPShopProductElements {
             // Параметры выборки учета товара в спецпредложении и наличия
             $where['spec'] = "='1'";
             $where['enabled'] = "='1'";
+            $where['parent_enabled'] = "='0'";
 
             $randMultibase = $this->randMultibase();
             if (!empty($randMultibase))

@@ -474,7 +474,7 @@ class PHPShopShopCore extends PHPShopCore {
 
         $base_host = $this->PHPShopSystem->getSerilizeParam('admoption.base_host');
         if ($this->PHPShopSystem->getSerilizeParam('admoption.base_enabled') == 1 and !empty($base_host)) {
-            $source_img = eregi_replace("/UserFiles/", "http://" . $base_host . "/UserFiles/", $img);
+            $source_img = str_replace("/UserFiles/", "http://" . $base_host . "/UserFiles/", $img);
             return $source_img;
         }
         else
@@ -529,6 +529,7 @@ class PHPShopShopCore extends PHPShopCore {
 
 
         $price = $this->price($row);
+        
 
         // Расчет минимальной и максимальной цены
         if ($price > $this->price_max)
@@ -539,9 +540,6 @@ class PHPShopShopCore extends PHPShopCore {
 
         if ($price < $this->price_min)
             $this->price_min = $price;
-
-        if ($this->price_min == $this->price_max)
-            $this->price_min = intval($this->price_max / 2);
 
         // Если товар на складе
         if (empty($row['sklad'])) {
@@ -581,6 +579,14 @@ class PHPShopShopCore extends PHPShopCore {
 
         // Если цены показывать только после авторизации
         if ($this->PHPShopSystem->getSerilizeParam('admoption.user_price_activate') == 1 and empty($_SESSION['UsersId'])) {
+            $this->set('ComStartCart', PHPShopText::comment('<'));
+            $this->set('ComEndCart', PHPShopText::comment('>'));
+            $this->set('productPrice', null);
+            $this->set('productValutaName', null);
+        }
+        
+        // Проверка на нулевую цену 
+        if(empty($row['price']) or !empty($row['parent'])){
             $this->set('ComStartCart', PHPShopText::comment('<'));
             $this->set('ComEndCart', PHPShopText::comment('>'));
             $this->set('productPrice', null);

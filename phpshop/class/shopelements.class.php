@@ -191,7 +191,7 @@ class PHPShopProductElements extends PHPShopElements {
 
         $base_host = $this->PHPShopSystem->getSerilizeParam('admoption.base_host');
         if ($this->PHPShopSystem->getSerilizeParam('admoption.base_enabled') == 1 and !empty($base_host))
-            $this->set('productImg', eregi_replace("/UserFiles/", "http://" . $base_host . "/UserFiles/", $pic_small));
+            $this->set('productImg', str_replace("/UserFiles/", "http://" . $base_host . "/UserFiles/", $pic_small));
     }
 
     /**
@@ -249,6 +249,14 @@ class PHPShopProductElements extends PHPShopElements {
             $this->set('productValutaName', PHPShopText::comment('>'));
         }
 
+
+        // Проверка на нулевую цену 
+        if (empty($row['price'])) {
+            $this->set('ComStartCart', PHPShopText::comment('<'));
+            $this->set('ComEndCart', PHPShopText::comment('>'));
+            $this->set('productPrice', null);
+            $this->set('productValutaName', null);
+        }
 
         // Перехват модуля, занесение в память наличия модуля для оптимизации
         if ($this->memory_get(__CLASS__ . '.' . __FUNCTION__, true)) {

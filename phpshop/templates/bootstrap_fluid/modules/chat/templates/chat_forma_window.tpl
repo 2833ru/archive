@@ -14,7 +14,7 @@
                 </div>
                 <div >
                     <button type="button" class="btn btn-default btn-sm" id="chatend">Закрыть</button> &nbsp;
-                    <button type="button" class="btn btn-primary btn-sm pull-right" id="chatstart">@php if(empty($_SESSION['mod_chat_user_session'])) echo "Начать"; else echo "Далее"; php@</button>
+                    <button type="submit" class="btn btn-primary btn-sm pull-right" id="chatstart">@php if(empty($_SESSION['mod_chat_user_session'])) echo "Начать"; else echo "Далее"; php@</button>
                 </div>
                 </form>
             </div>
@@ -28,12 +28,15 @@
 
     $().ready(function() {
         
-
         $("body").on("click", "#chatend", function() {
             $('#chatbutton').popover('hide');
             $('#chatModalPre').modal('hide');
         });
 
+
+        $('.breadcrumb, .template-slider').waypoint(function() {
+            $('#chatbutton').popover('hide');
+        });
 
         $("body").on("input", "#chat_mod_user_name", function() {
               $('#chat_mod_user_name_true').val(($(this).val()));

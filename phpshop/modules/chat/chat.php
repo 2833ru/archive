@@ -45,7 +45,7 @@ function smile($string) {
     );
 
     foreach ($Smile as $key => $val)
-        $string = eregi_replace($key, $val, $string);
+        $string = str_replace($key, $val, $string);
 
     return $string;
 }
@@ -70,16 +70,18 @@ function check_content($content) {
     return $str;
 }
 
+// Проверка присутствия оператора
+$PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.chat.chat_system"));
+$PHPShopOrm->debug = false;
+$data_system = $PHPShopOrm->select(array('*'), false, false, array('limit' => 1));
+
 // Начало чата
 if (empty($_SESSION['mod_chat_user_session'])) {
 
     if (empty($_REQUEST['name']))
         $_REQUEST['name'] = 'Посетитель';
 
-    // Проверка присутствия оператора
-    $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.chat.chat_system"));
-    $PHPShopOrm->debug = false;
-    $data_system = $PHPShopOrm->select(array('*'), false, false, array('limit' => 1));
+
 
 
     // Дизайн чата
@@ -118,7 +120,7 @@ if (empty($_SESSION['mod_chat_user_session'])) {
         unset($insert);
         $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.chat.chat_jurnal"));
         $insert['user_session_new'] = $_SESSION['mod_chat_user_session'];
-        $insert['content_new'] = htmlspecialchars('Пользователь ' . $_SESSION['mod_chat_user_name'] . ' хочет начать чат');
+        $insert['content_new'] = htmlspecialchars('Пользователь ' . $_SESSION['mod_chat_user_name'] . ' хочет начать чат', ENT_COMPAT, 'windows-1251');
         $insert['status_new'] = 1;
         $insert['name_new'] = $_SESSION['mod_chat_user_name'];
         $insert['date_new'] = time();
@@ -128,7 +130,7 @@ if (empty($_SESSION['mod_chat_user_session'])) {
         unset($insert);
         $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.chat.chat_jurnal"));
         $insert['user_session_new'] = $_SESSION['mod_chat_user_session'];
-        $insert['content_new'] = htmlspecialchars($data_system['title_start']);
+        $insert['content_new'] = htmlspecialchars($data_system['title_start'], ENT_COMPAT, 'windows-1251');
         $insert['status_new'] = 1;
         $insert['name_new'] = 'Консультант';
         $insert['date_new'] = time();
@@ -138,9 +140,22 @@ if (empty($_SESSION['mod_chat_user_session'])) {
 
 // Список сообщений
 if (!empty($_SESSION['mod_chat_user_session'])) {
-    $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.chat.chat_jurnal"));
-    $PHPShopOrm->debug = false;
-    $data = $PHPShopOrm->select(array('*'), array('user_session' => "='" . $_SESSION['mod_chat_user_session'] . "'"), array('order' => 'id'), array('limit' => 100));
+
+
+    if ($data_system['operator'] == 2) {
+        $block = 'disabled';
+        $block_display = true;
+        $name = '<h4 class="pull-right">Консультант</h4>';
+        $div_class = 'text_admin panel panel-body';
+        $name.='<div class="text-muted"><br>Хотите оставить сообщение? <button class="btn btn-danger btn-xs" id="no">Нет</button> / <button class="btn btn-success btn-xs" id="yes">Да</button></div>';
+        $content = PHPShopText::div($data_system['title_end'] . $name, "left", false, false, $div_class);
+    } else {
+
+
+        $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.chat.chat_jurnal"));
+        $PHPShopOrm->debug = false;
+        $data = $PHPShopOrm->select(array('*'), array('user_session' => "='" . $_SESSION['mod_chat_user_session'] . "'"), array('order' => 'id'), array('limit' => 100));
+    }
 }
 $time = time();
 if (is_array($data)) {
@@ -185,7 +200,7 @@ PHPShopParser::set('chat_mod_time', $time);
 PHPShopParser::set('chat_mod_dir', $_SESSION['chat_dir']);
 PHPShopParser::set('chat_mod_content', $content);
 PHPShopParser::set('chat_mod_sound', $PHPShopModules->getParam("templates.chat_sound"));
-PHPShopParser::set('serverName',$_SERVER['SERVER_NAME'].$GLOBALS['dir']['dir']);
+PHPShopParser::set('serverName', $_SERVER['SERVER_NAME'] . $GLOBALS['dir']['dir']);
 
 
 // bootstrap

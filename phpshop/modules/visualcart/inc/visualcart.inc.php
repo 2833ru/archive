@@ -1,5 +1,7 @@
 <?php
 
+
+
 if (!defined("OBJENABLED"))
     exit(header('Location: /?error=OBJENABLED'));
 
@@ -203,7 +205,7 @@ class AddToTemplateVisualCart extends PHPShopElements {
 PHPShopObj::loadClass('parser');
 
 function visualcartform($val, $option) {
-    global $SysValue;
+
 
     // Проверка подтипа товара, выдача ссылки главного товара
     if (empty($val['parent'])) {
@@ -218,7 +220,13 @@ function visualcartform($val, $option) {
         PHPShopParser::set('visualcart_product_seo', null);
     }
 
+    // Проверка опции товара
+    if(!empty($val['option']))
+    PHPShopParser::set('visualcart_product_xid', $val['option']);
+    else 
     PHPShopParser::set('visualcart_product_xid', $val['id']);
+    
+    
     PHPShopParser::set('visualcart_product_name', $val['name']);
     PHPShopParser::set('visualcart_product_pic_small', $val['pic_small']);
     PHPShopParser::set('visualcart_product_price', $val['price'] * $val['num']);

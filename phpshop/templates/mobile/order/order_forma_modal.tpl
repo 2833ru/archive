@@ -7,7 +7,7 @@
         <p class="content-padded">
         <form method="post" name="forma_order" action="/done/">
             <input type="email" placeholder="E-mail" name="mail" required value="@UserMail@">
-            <input type="text" placeholder="ФИО" name="fio_new" required value="@UserName@">
+            <input type="text" placeholder="ФИО" name="name_new" required value="@UserName@">
             <input type="text" placeholder="Телефон" name="tel_new" required value="@UserTel@">
             <textarea rows="5" name="street_new" placeholder="Адрес доставки">@UserAdres@</textarea>
             <input type="hidden" name="d" id="d" value="@delivery_id@">

@@ -35,7 +35,7 @@
         <!-- UI -->
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/jquery-ui.min.css" rel="stylesheet" />
         
-        <!-- Slide -->
+        <!-- Slider -->
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/jquery.bxslider.css" rel="stylesheet" />
 
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -300,7 +300,7 @@
         <!--/ Модальное окно авторизации-->
 
         <!-- Fixed mobile bar -->
-        <div class="bar-padding-fix visible-xs visible-sm"> </div>
+        <div class="bar-padding-fix visible-xs"> </div>
         <nav class="navbar navbar-default navbar-fixed-bottom bar bar-tab visible-xs visible-sm" role="navigation">
             <a class="tab-item" href="/">
                 <span class="icon icon-home"></span>

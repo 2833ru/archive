@@ -16,7 +16,7 @@ class AddToTemplate extends PHPShopProductElements {
     function header_bar() {
         global $PHPShopSystem;
 
-        $this->set('version', ', Mobile Template 1.7', true);
+        $this->set('version', ', Mobile Template 1.9', true);
 
         // Иконка
         $logo=$this->memory_get('mobile.logo');
@@ -24,7 +24,7 @@ class AddToTemplate extends PHPShopProductElements {
            $this->set('descrip',  '<img class="header-logo" src="'.$logo.'" />');
         
         // Телефон
-        $returncall=$this->memory_get('mobile.returncall');
+        $returncall=$this->memory_get('mobile.returncall',true);
         
         if($returncall == 1)
            $this->set('tel',  '<a href="tel:'. $this->get('telNum').'">'. $this->get('telNum').'</a>');

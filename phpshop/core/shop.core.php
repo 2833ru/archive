@@ -39,7 +39,7 @@ class PHPShopShop extends PHPShopShopCore {
      */
     var $sort_template = null;
     var $ed_izm = null;
-    
+
     /**
      * Сортировка по цене среди мультивалютных товаров
      * @var bool 
@@ -364,7 +364,7 @@ class PHPShopShop extends PHPShopShopCore {
             exit(PHPShopParser::replacedir($disp));
         }
         else
-        $this->add(ParseTemplateReturn($this->getValue('templates.main_product_forma_full')), true);
+            $this->add(ParseTemplateReturn($this->getValue('templates.main_product_forma_full')), true);
 
         // Однотипные товары
         $this->odnotip($row);
@@ -548,7 +548,7 @@ class PHPShopShop extends PHPShopShopCore {
         // Цена главного товара
         if (!empty($row['price']) and empty($row['priceSklad']) and (!empty($row['items']) or (empty($row['items']) and $sklad_status == 1))) {
             $this->select_value[] = array($row['name'] . " -  (" . $this->price($row) . "
-                    " . $this->get('productValutaName') . ')', $row['id'], false);
+                    " . $this->get('productValutaName') . ')', $row['id'], $row['items']);
         } else {
             $this->set('ComStartNotice', PHPShopText::comment('<'));
             $this->set('ComEndNotice', PHPShopText::comment('>'));
@@ -562,7 +562,7 @@ class PHPShopShop extends PHPShopShopCore {
                     // Если товар на складе
                     if (empty($p['priceSklad']) and (!empty($p['items']) or (empty($p['items']) and $sklad_status == 1))) {
                         $price = $this->price($p);
-                        $this->select_value[] = array($p['name'] . ' -  (' . $price . ' ' . $this->get('productValutaName') . ')', $p['id'], false);
+                        $this->select_value[] = array($p['name'] . ' -  (' . $price . ' ' . $this->get('productValutaName') . ')', $p['id'], $p['items']);
                     }
                 }
             }
@@ -661,7 +661,6 @@ function CID_Product($category = null) {
     // 404 если каталога не существует
     if (empty($this->category_name))
         return $this->setError404();
-
 
     // Валюта
     $this->set('productValutaName', $this->currency());
@@ -777,6 +776,8 @@ function CID_Product($category = null) {
     $this->set('catalogContent', Parser($this->PHPShopCategory->getContent()));
 
     // Максимальная цена
+    if ($this->price_min == $this->price_max)
+        $this->price_min = intval($this->price_max / 2);
     $this->set('price_max', $this->price_max);
     $this->set('price_min', $this->price_min);
 

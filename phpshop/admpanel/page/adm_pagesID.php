@@ -85,9 +85,9 @@ function actionStart() {
 
     // Рекомендуемые товары
     $Tab1.=$PHPShopGUI->setField('Рекомендуемые товары для совместной продажи:', $PHPShopGUI->setTextarea('odnotip_new', $data['odnotip'], false, '99%') .
-                    $PHPShopGUI->setLine() .
-                    $PHPShopGUI->setImage('../icon/icon_info.gif', 16, 16) .
-                    __('Введите ID товаров в формате 1,2,3 без пробелов'), 'none');
+            $PHPShopGUI->setLine() .
+            $PHPShopGUI->setImage('../icon/icon_info.gif', 16, 16) .
+            __('Введите ID товаров в формате 1,2,3 без пробелов'), 'none');
 
     // Содержание закладки 2
     $Tab2 = $oFCKeditor->AddGUI();
@@ -183,6 +183,10 @@ function actionUpdate() {
 
     if (empty($_POST['enabled_new']))
         $_POST['enabled_new'] = 0;
+
+    if (empty($_POST['secure_new']))
+        $_POST['secure_new'] = 0;
+
 
     $_POST['datas_new'] = date('U');
 

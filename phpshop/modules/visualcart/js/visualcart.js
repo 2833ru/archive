@@ -1,11 +1,10 @@
 // Обновление визуальной корзины
 function visualCart(xid) {
     if (document.getElementById('visualcart')) {
-
         // Проверка даты добавления товара в корзину
         var cart_update = VisualCartGetCookie('cart_update_time');
 
-        if (cart_update > 0 || xid > 0) {
+        if (cart_update > 0 || xid != '') {
             var req = new Subsys_JsHttpRequest_Js();
 
             req.onreadystatechange = function() {
@@ -29,7 +28,7 @@ function visualCart(xid) {
                             document.getElementById('visualcart_order').style.display = 'block';
 
                         // Синхронизация удаления
-                        if (xid > 0 && document.getElementById('visualcart_order')) {
+                        if (xid != '' && document.getElementById('visualcart_order')) {
                             document.getElementById('num').innerHTML = (req.responseJS.num || '');
                             document.getElementById('sum').innerHTML = (req.responseJS.sum || '');
                         }

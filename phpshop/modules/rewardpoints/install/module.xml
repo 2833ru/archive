@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<module>
+    <version>1.0</version>
+    <name>Бонусные баллы</name>
+    <description>Модуль бонусные баллы.</description>
+    <icon>icon.png</icon>
+    <category>form,sale</category>
+    <trial>true</trial>
+    <base>http://m-dynamics.ru/contacts/</base>
+    <price>3000 руб.</price>
+    <adminmenu>
+        <title>Бонусные баллы</title>
+        <podmenu>
+            <podmenu_name>Настройка</podmenu_name>
+            <podmenu_icon>icon.png</podmenu_icon>
+            <podmenu_action>javascript:miniWin('../modules/rewardpoints/admpanel/adm_module.php',630,530);</podmenu_action>
+        </podmenu>
+        <podmenu>
+            <podmenu_name>Управление транзакциями</podmenu_name>
+            <podmenu_icon>icon.png</podmenu_icon>
+            <podmenu_action>javascript:window.location.replace('?plugin=rewardpoints')</podmenu_action>
+        </podmenu>
+    </adminmenu>
+</module>

@@ -28,46 +28,49 @@ $PHPShopModules = new PHPShopModules($_classPath."modules/");
 PHPShopObj::loadClass("orm");
 $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.blog.blog_log"));
 
-
-// Стартовый вид
 function actionStart() {
-    global $PHPShopGUI,$PHPShopSystem,$_classPath,$PHPShopModules;
-    $PHPShopGUI->dir=$_classPath."admpanel/";
-    $PHPShopGUI->size="630,530";
+    global $PHPShopGUI, $PHPShopSystem, $SysValue, $_classPath, $PHPShopOrm;
 
+
+    $MyStyle = $_classPath . "../templates" . chr(47) . $PHPShopSystem->getParam("skin") . chr(47) . $SysValue['css']['default'];
+    $PHPShopGUI->dir = $_classPath . "admpanel/";
+    $PHPShopGUI->size = "630,530";
+    $PHPShopGUI->addJSFiles($PHPShopGUI->dir.'/java/popup_lib.js', $PHPShopGUI->dir.'/java/dateselector.js');
+    $PHPShopGUI->addCSSFiles($PHPShopGUI->dir.'/skins/' . $_SESSION['theme'] . '/dateselector.css');
 
     // Графический заголовок окна
-    $PHPShopGUI->setHeader("Создание записи в блог","Укажите данные для записи в базу.",$PHPShopGUI->dir."img/i_balance_med[1].gif");
+    $PHPShopGUI->setHeader("Редактирование записи", "Укажите данные для записи в базу.", $PHPShopGUI->dir . "img/i_balance_med[1].gif");
 
     // Редактор 1
-    $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"),true);
-    $oFCKeditor = new Editor('description_new',true) ;
+    $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"), true);
+    $oFCKeditor = new Editor('description_new',true);
     $oFCKeditor->Height = '230';
-    $oFCKeditor->Config['EditorAreaCSS'] = $_classPath."../templates".chr(47).$PHPShopSystem->getParam("skin").chr(47).$SysValue['css']['default'];
+    $oFCKeditor->Config['EditorAreaCSS'] = $MyStyle;
     $oFCKeditor->ToolbarSet = 'Normal';
-    $oFCKeditor->Value		= '' ;
-    $oFCKeditor->Mod='textareas';
+    $oFCKeditor->Value = $description;
+    $oFCKeditor->Mod = 'textareas';
 
     // Содержание закладки 1
-    $Tab1=$PHPShopGUI->setField("Дата:",$PHPShopGUI->setInput("text","date_new",date("d-m-Y"),"left",70),"left").
-            $PHPShopGUI->setField("Заголовок:",$PHPShopGUI->setInput("text","title_new",'',"left",450),"none",5);
+    $Tab1 = $PHPShopGUI->setField("Дата:", $PHPShopGUI->setInput("text", "date_new", date("d-m-Y"), "left", 70) .
+                    $PHPShopGUI->setCalendar('date_new',false,$PHPShopGUI->dir.'/icon/date.gif'), "left") .
+            $PHPShopGUI->setField("Заголовок:", $PHPShopGUI->setInput("text", "title_new", $title, "left", 400), "none", 5);
 
-    $Tab1.=$PHPShopGUI->setField("Анонс:",$oFCKeditor->AddGUI());
+    $Tab1.=$PHPShopGUI->setField("Анонс:", $oFCKeditor->AddGUI());
 
     // Редактор 2
-    $oFCKeditor = new Editor('content_new') ;
+    $oFCKeditor = new Editor('content_new',true );
     $oFCKeditor->Height = '320';
     $oFCKeditor->ToolbarSet = 'Normal';
-    $oFCKeditor->Config['EditorAreaCSS'] = $_classPath."../templates".chr(47).$PHPShopSystem->getParam("skin").chr(47).$SysValue['css']['default'];
-    $oFCKeditor->Value		= '' ;
-    $oFCKeditor->Mod='textareas';
+    $oFCKeditor->Config['EditorAreaCSS'] = $MyStyle;
+    $oFCKeditor->Value = $content;
+    $oFCKeditor->Mod = 'textareas';
 
     // Содержание закладки 2
-    $Tab2=$oFCKeditor->AddGUI();
-   
+    $Tab2 = $oFCKeditor->AddGUI();
+
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное",$Tab1,350),array("Подробно",$Tab2,350));
-    
+    $PHPShopGUI->setTab(array("Основное", $Tab1, 350), array("Подробно", $Tab2, 350));
+
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter=
             $PHPShopGUI->setInput("button","","Отмена","right",70,"return onCancel();","but").
@@ -80,12 +83,11 @@ function actionStart() {
 }
 
 
+
+
 // Функция записи
 function actionInsert() {
-    global $PHPShopOrm,$PHPShopModules;
-
-    // Перехват модуля
-    if($PHPShopModules->setAdmHandler($_SERVER["SCRIPT_NAME"],__FUNCTION__,$_POST));
+    global $PHPShopOrm;
 
     $action = $PHPShopOrm->insert($_POST);
     return $action;

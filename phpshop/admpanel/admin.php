@@ -24,11 +24,6 @@ $PHPShopInterface = new PHPShopInterface();
 $PHPShopInterface->winOpenType = $PHPShopSystem->getSerilizeParam("admoption.wintype");
 $PHPShopIcon = new PHPShopIcon();
 
-// Проверяем на root
-if ($_SESSION['logPHPSHOP'] == "root" and $_SESSION['pasPHPSHOP'] == "cm9vdA==" and !getenv("COMSPEC"))
-    $rootNote = "rootNote()";
-else
-    $rootNote = "";
 
 // Выбор файла
 function GetFile($dir) {

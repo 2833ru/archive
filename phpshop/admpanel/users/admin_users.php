@@ -164,7 +164,7 @@ function GetLastEnter($n) {
     $sql = "select datas from " . $SysValue['base']['table_name10'] . " where user='$n' order by id desc LIMIT 1";
     $result = mysql_query($sql);
     $row = mysql_fetch_array($result);
-    $num = mysql_numrows($result);
+    $num = mysql_num_rows($result);
     if ($num == 0)
         return "-";
     $datas = $row['datas'];

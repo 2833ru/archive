@@ -10,15 +10,8 @@ function commentList(xid, comand, page, cid) {
         message = $('#message').val();
         if (message == "")
             return false;
-        if (document.getElementById('rate')) {
-            var radios = document.getElementsByName('rate');
-            for (var i = 0, length = radios.length; i < length; i++) {
-                if (radios[i].checked) {
-                    rateVal = radios[i].value;
-                    break;
-                }
-            }
-        }
+        if ($('input[name=rate][type=radio]:checked').val())
+            rateVal = $('input[name=rate][type=radio]:checked').val();
     }
 
     if (comand == "edit_add") {
@@ -367,8 +360,8 @@ function setEqualHeight(columns) {
 
 // Коррекция знака рубля
 function setRubznak() {
-    if ($('.rubznak').html() == 'руб.' || $('.rubznak').html() == 'руб')
-        $('.rubznak').html('p').append('&nbsp;&nbsp;');
+    if ($('.rubznak').html() == 'руб.' || $('.rubznak').html() == 'руб' || $('.rubznak').html() == 'p')
+        $('.rubznak').html('p');
 }
 
 $(document).ready(function() {
@@ -851,6 +844,52 @@ $(document).ready(function() {
             });
 
 
+// Фотогалерея в по карточке товара
+    if ($('.bxslider').length) {
+        $('.bxslider-pre').addClass('hide');
+        $('.bxslider').removeClass('hide');
+        slider = $('.bxslider').bxSlider({
+            mode: 'fade',
+            pagerCustom: '.bx-pager'
+        });
+    }
+
+
+
+    // Фотогалерея в по карточке товара с большими изображениями
+    $(document).on('click', '.bxslider a', function(event) {
+        event.preventDefault();
+        $('#sliderModal').modal('show');
+        $('.bxsliderbig').html($('.bxsliderbig').attr('data-content'));
+
+        sliderbig = $('.bxsliderbig').bxSlider({
+            mode: 'fade',
+            pagerCustom: '.bx-pager-big'
+        });
+
+
+        if ($('.bx-pager-big').length == 0) {
+            $('.modal-body').append('<div class="bx-pager-big">' + $('.bxsliderbig').attr('data-page') + '</div>');
+            sliderbig.reloadSlider();
+        }
+
+        sliderbig.goToSlide(slider.getCurrentSlide());
+
+    });
+
+    // Закрытие модального окна фотогарелерии, клик по изображению
+    $(document).on('click', '.bxsliderbig a', function(event) {
+        event.preventDefault();
+        slider.goToSlide(sliderbig.getCurrentSlide());
+        $('#sliderModal').modal('hide');
+    });
+
+    // Закрытие модального окна фотогарелерии
+    $('#sliderModal').on('hide.bs.modal', function() {
+        slider.goToSlide(sliderbig.getCurrentSlide());
+        sliderbig.destroySlider();
+        delete sliderbig;
+    });
 
 
 

@@ -3,7 +3,7 @@
 /**
  * Библиотека запросов к БД на основе объектов типа доступа
  * @author PHPShop Software
- * @version 1.9
+ * @version 1.10
  * @package PHPShopClass
  */
 class PHPShopOrm {
@@ -257,7 +257,7 @@ class PHPShopOrm {
             $result = mysql_query($this->_SQL) or die(PHPShopBase::errorConnect(102));
 
         if ($result) {
-            $num = mysql_numrows($result);
+            $num = mysql_num_rows($result);
             $this->numrows = $num;
             while ($row = mysql_fetch_assoc($result))
                 if ($num > 1 or $option['limit'] > 1 or strlen($option['limit']) > 1)
@@ -361,7 +361,7 @@ width="32" height="32" alt="PHPShopOrm Debug On"/ ><strong>' . $name . '</strong
      */
     function findKey() {
         $result = mysql_query('select * from ' . $this->objBase . ' limit 1');
-        $num = mysql_numrows($result);
+        $num = mysql_num_rows($result);
         if ($num > 0)
             $row = mysql_fetch_assoc($result);
         else {

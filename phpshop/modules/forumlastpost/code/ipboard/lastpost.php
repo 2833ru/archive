@@ -41,7 +41,7 @@
         function Total($id) {
             $sql="select pid from ibf_posts where topic_id=$id";
             $result=mysql_query($sql);
-            $num = mysql_numrows($result);
+            $num = mysql_num_rows($result);
             return $num;
         }
 

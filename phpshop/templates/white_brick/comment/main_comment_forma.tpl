@@ -1,7 +1,8 @@
 <div class="content" style="background:none">
 
     <div class="reviews-left">
-        <b>@commentName@</b><span><img src="#imagesSavePathLabel#/stars/stars1-@commentStarCount@.png" alt="2 reviews"></span>
+        <img src="images/mw_1.png" class="template">
+        <b>@commentName@</b><span><img src="images/stars/stars1-@commentStarCount@.png" alt="@commentStarCount@ reviews"></span>
         <span>@commentData@</span>
     </div>
 

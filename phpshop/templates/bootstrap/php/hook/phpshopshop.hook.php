@@ -114,8 +114,8 @@ function sorttemplatehook($value, $n, $title, $vendor) {
             }
 
             // Определение цвета
-            if($text[0]=='#')
-                $text='<div class="filter-color" style="background:'.$text.'"></div>';
+            if ($text[0] == '#')
+                $text = '<div class="filter-color" style="background:' . $text . '"></div>';
 
             $disp.= '<div class="checkbox">
   <label>
@@ -128,7 +128,11 @@ function sorttemplatehook($value, $n, $title, $vendor) {
     return '<h4>' . $title . '</h4>' . $disp;
 }
 
+/**
+ *  Фотогалерея
+ */
 function template_image_gallery($obj, $array) {
+
     $bxslider = $bxsliderbig = $bxpager = null;
     $PHPShopOrm = new PHPShopOrm($obj->getValue('base.foto'));
     $data = $PHPShopOrm->select(array('*'), array('parent' => '=' . $array['id']), array('order' => 'num'), array('limit' => 100));
@@ -149,15 +153,16 @@ function template_image_gallery($obj, $array) {
             $bxpager.='<a data-slide-index=\'' . $i . '\' href=\'\'><img class=\'img-thumbnail\'  src=\'' . $name_s . '\'></a>';
             $i++;
         }
+
+
+        if ($i < 2)
+            $bxpager = null;
+
+
+        $obj->set('productFotoList', '<img class="bxslider-pre" alt="' . $array['name'] . '" src="' . $array['pic_big'] . '" /><div class="bxslider hide">' . $bxslider . '</div><div class="bx-pager">' . $bxpager . '</div>');
+        $obj->set('productFotoListBig', '<ul class="bxsliderbig" data-content="' . $bxsliderbig . '" data-page="' . $bxpager . '"></ul><div class="bx-pager-big">' . $bxpager . '</div>');
+        return true;
     }
-
-    if ($i < 2)
-        $bxpager = null;
-
-
-    $obj->set('productFotoList', '<img class="bxslider-pre" alt="' . $array['name'] . '" src="' . $array['pic_big'] . '" /><div class="bxslider hide">' . $bxslider . '</div><div class="bx-pager">' . $bxpager . '</div>');
-    $obj->set('productFotoListBig', '<ul class="bxsliderbig" data-content="' . $bxsliderbig . '" data-page="' . $bxpager . '"></ul><div class="bx-pager-big">' . $bxpager . '</div>');
-    return true;
 }
 
 $addHandler = array

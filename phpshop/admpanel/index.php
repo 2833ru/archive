@@ -343,10 +343,10 @@ VALUES ('','" . PHPShopSecurity::TotalClean($_POST['log'] . "@" . $_POST['pas'])
  <td style=\"padding:5px\">";
         if (empty($SendMailStatus)) {
             if (!$_COOKIE['win_e'])
-                echo "<input type=checkbox name=win_e value=1 ><span name=txtLang id=txtLang>Открыть в текущем окне</span><br>";
+                echo "<label><input type=checkbox name=win_e value=1 ><span name=txtLang id=txtLang>Открыть в текущем окне</span></label><br>";
             else
-                echo "<input type=checkbox name=win_e value=1 checked><span name=txtLang id=txtLang>Открыть в текущем окне</span><br>";
-            echo"<input type=checkbox name=pas_to_mail value=1><span name=txtLang id=txtLang>Восстановить пароль</span>";
+                echo "<label><input type=checkbox name=win_e value=1 checked><span name=txtLang id=txtLang>Открыть в текущем окне</span></label><br>";
+            echo"<label><input type=checkbox name=pas_to_mail value=1><span name=txtLang id=txtLang>Восстановить пароль</span></label>";
         }
         else
             echo $SendMailStatus;

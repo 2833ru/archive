@@ -34,9 +34,9 @@ fieldset:hover{
     padding:3px;
     font-size: 8pt;
     border: solid 1px #CCC;
-    -webkit-border-radius:5px;
-    -moz-border-radius:5px;
-    border-radius:5px;
+    -webkit-border-radius:3px;
+    -moz-border-radius:3px;
+    border-radius:3px;
     background: #FFF;
     cursor:pointer;
     height:18px;
@@ -57,9 +57,9 @@ fieldset:hover{
 
 fieldset{
     border: solid 1px #CCC;
-    -webkit-border-radius:5px;
-    -moz-border-radius:5px;
-    border-radius:5px;
+    -webkit-border-radius:3px;
+    -moz-border-radius:3px;
+    border-radius:3px;
     background: -moz-linear-gradient(#F0F0F0, #FFF);
     background: -ms-linear-gradient(#F0F0F0, #FFF);
     background: -o-linear-gradient(#F0F0F0, #FFF);
@@ -372,9 +372,9 @@ table.sortable span.sortarrow {
     background: -webkit-linear-gradient(#FFF, #F0F0F0);
     background-color: #F5F5F5;
     border: solid 1px #CCC;
-    -webkit-border-radius:5px;
-    -moz-border-radius:5px;
-    border-radius:5px;
+    -webkit-border-radius:3px;
+    -moz-border-radius:3px;
+    border-radius:3px;
 }
 
 #pane:hover{
@@ -463,9 +463,9 @@ div, input, button, select, fieldset, textarea, td, th{
 
 input,textarea,select{
     border: solid 1px #CCC;
-    -webkit-border-radius:4px;
-    -moz-border-radius:4px;
-    border-radius:4px;
+    -webkit-border-radius:3px;
+    -moz-border-radius:3px;
+    border-radius:3px;
     padding:2px;
 }
 

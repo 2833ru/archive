@@ -50,12 +50,12 @@ class PHPShopMessageboardElement extends PHPShopElements {
             $this->set('boardTitle',$row['title']);
             $this->set('boardContent',$row['name'].': '.$row['content']);
             $this->set('boardId',$row['id']);
-            $disp.=ParseTemplateReturn($GLOBALS['SysValue']['templates']['messageboard']['messageboard_last_content'],true);
+            $disp.=PHPShopParser::file($GLOBALS['SysValue']['templates']['messageboard']['messageboard_last_content'], true, false, true);
             
         }
         
         $this->set('leftMenuName',$GLOBALS['SysValue']['lang']['messageboard_last_title']);
-        $this->set('leftMenuContent',$disp.PHPShopText::a($this->getValue('dir.dir').'/board/?add_forma=true',$this->SysValue['lang']['messageboard_add'],$this->SysValue['lang']['messageboard_add']));
+        $this->set('leftMenuContent',$disp);
         return $this->parseTemplate($this->getValue('templates.left_menu'));
     }
     

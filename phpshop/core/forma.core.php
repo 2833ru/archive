@@ -104,7 +104,7 @@ IP:
 С уважением,
 http://" . $_SERVER['SERVER_NAME'];
 
-            $PHPShopMail = new PHPShopMail($this->PHPShopSystem->getValue('adminmail2'), $_POST['mail'], $zag, $message);
+            new PHPShopMail($this->PHPShopSystem->getValue('adminmail2'), $_POST['mail'], $zag, $message, $f=false);
             $this->set('Error', "Сообщение успешно отправлено");
         }
         else

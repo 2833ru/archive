@@ -67,6 +67,7 @@ function actionStart() {
 
     // ИД товара
     $productID = intval($_GET['productID']);
+    $optionID = $_GET['option'];
 
     if (empty($order['Cart']['cart'][$productID]['id'])) {
         foreach ($order['Cart']['cart'] as $key => $val)
@@ -76,7 +77,7 @@ function actionStart() {
     }
 
     // Наименование
-    $Tab1 = $PHPShopGUI->setField(__("Наименование"), $PHPShopGUI->setInputText(false, 'name_new', $order['Cart']['cart'][$productID]['name'], '100%')) . $PHPShopGUI->setLine();
+    $Tab1 = $PHPShopGUI->setField(__("Наименование"), $PHPShopGUI->setInputText(false, 'name_new', $order['Cart']['cart'][$optionID]['name'], '100%')) . $PHPShopGUI->setLine();
 
     // Иконка
     $PHPShopProduct = new PHPShopProduct($productID);
@@ -112,8 +113,8 @@ function actionStart() {
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =
             $PHPShopGUI->setInput("button", "", "Отмена", "right", 70, "return onCancel();", "but") .
-            $PHPShopGUI->setInput("button", "delID", "Удалить", "right", 70, "DoDelFromOrder('" . $productID . "', $orderID)", "but") .
-            $PHPShopGUI->setInput("button", "editID", "Сохранить", "right", 70, "DoUpdateFromOrder('" . $productID . "',$orderID, this.form.name_new.value,this.form.num.value,this.form.price.value)", "but");
+            $PHPShopGUI->setInput("button", "delID", "Удалить", "right", 70, "DoDelFromOrder('" . $optionID . "', $orderID)", "but") .
+            $PHPShopGUI->setInput("button", "editID", "Сохранить", "right", 70, "DoUpdateFromOrder('" . $optionID . "',$orderID, this.form.name_new.value,this.form.num.value,this.form.price.value)", "but");
 
     // Футер
     $PHPShopGUI->setFooter($ContentFooter);

@@ -27,7 +27,7 @@ function robox_users_repay($obj, $PHPShopOrderFunction) {
 
     // Если заказ не оплачен
     if ($PHPShopOrderFunction->getParam('statusi') != 101)
-        $disp = "<form action='https://www.roboxchange.com/ssl/calc.asp' method=POST name=\"payrobots\">
+        $disp = "<form action='https://merchant.roboxchange.com/Index.aspx' method=POST name=\"payrobots\">
       <input type=hidden name=MrchLogin  value=$mrh_login>
        <input type=hidden name=OutSum  value=$out_summ>
        <input type=hidden name=InvId  value=$inv_id>

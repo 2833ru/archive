@@ -1,3 +1,42 @@
+#visualcart > a{
+    height: 75px;
+}
+
+.bxslider a{
+    cursor: url(images/zoomin.cur), pointer; 
+}
+
+.modal-body .bx-wrapper img {
+    max-width: 500px;
+    display: table; 
+    text-align: center;
+}
+
+.bxsliderbig a{
+    cursor: url(images/zoomout.cur), pointer; 
+}
+
+#fotoload > .bxslider-pre{
+    display: table; 
+    margin: 0 auto; 
+    text-align: center;
+    padding: 10px 10% 20px 10%;
+}
+
+.bx-pager img{
+    max-width: 70px;
+    margin:0px 5px 0px 5px;
+}
+
+.bx-pager-big img{
+    max-width: 50px;
+    margin:0px 5px 0px 5px;
+}
+.bxslider{
+    display: table; 
+    text-align: center;
+}
+
 @font-face {
     font-family: ALSRubl;
     src: url('fonts/rouble.eot') format('embedded-opentype');

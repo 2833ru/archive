@@ -97,6 +97,7 @@ if (isset($_FILES["File1"])) {
         $ffilter = $_REQUEST["ffilter"];
 }
 
+/*
 if (isset($_POST["inpFileToDelete"])) {
     $filename = pathinfo($_POST["inpFileToDelete"]);
     $filename = $filename['basename'];
@@ -104,7 +105,7 @@ if (isset($_POST["inpFileToDelete"])) {
         unlink($currFolder . "/" . $filename);
     $sMsg = "";
 }
-
+*/
 
 /* * * Permission ** */
 $bWriteFolderAdmin = false;
@@ -347,7 +348,7 @@ function writeFileSelections() {
                         echo "<td valign=top style='cursor:pointer;' onclick=\"selectFile(" . $nIndex . ")\" width=100% ><u id=\"idFile" . $nIndex . "\">" . $sItem . "</u></td>";
                         echo "<input type=hidden name=inpFile" . $nIndex . " id=inpFile" . $nIndex . " value=\"" . $sCurrent_virtual . "\">";
                         echo "<td valign=top align=right nowrap>" . round(filesize($sCurrent) / 1024, 1) . " kb&nbsp;</td>";
-                        echo "<td valign=top nowrap onclick=\"deleteFile(" . $nIndex . ")\"><u style='font-size:10px;cursor:pointer;color:crimson' " . $sFolderAdmin . "><script>document.write(getText('del'))</script></u></td>";
+                      //  echo "<td valign=top nowrap onclick=\"deleteFile(" . $nIndex . ")\"><u style='font-size:10px;cursor:pointer;color:crimson' " . $sFolderAdmin . "><script>document.write(getText('del'))</script></u></td>";
                         echo "</tr>";
                     }
                 }
@@ -373,11 +374,6 @@ function writeFileSelections() {
         <link href="style.css" rel="stylesheet" type="text/css">
         <?
         $sLang = "russian";
-        if (isset($_REQUEST["lang"])) {
-            $sLang = $_REQUEST["lang"];
-            if ($sLang == "")
-                $sLang = "english";
-        }
         ?>
         <script>
             var sLang = "<? echo $sLang ?>";
@@ -661,7 +657,7 @@ function writeFileSelections() {
                                     <tr>
                                         <td valign=center nowrap><? writeFolderSelections(); ?>&nbsp;</td>
                                         <td nowrap>
-                                            <span onclick="newFolder()" style="cursor:pointer;" <? echo $sFolderAdmin; ?>><u><span name="txtLang" id="txtLang">New&nbsp;Folder</span></u></span>&nbsp;
+                                            <span onclick="newFolder()" style="cursor:pointer;;display:none" <? echo $sFolderAdmin; ?>><u><span name="txtLang" id="txtLang">New&nbsp;Folder</span></u></span>&nbsp;
                                             <span onclick="deleteFolder()" style="cursor:pointer;display:none" <? echo $sFolderAdmin; ?>><u><span name="txtLang" id="txtLang">Del&nbsp;Folder</span></u></span>
                                         </td>
                                         <td  width=100% align="right">

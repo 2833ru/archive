@@ -32,7 +32,7 @@ function PHPShopJS() {
 
     this.rowshow_out = function(a, line) {
         if (line == ' line2' || line == ' prod_hover')
-            this.classStyle(a.id, 'row '+line);
+            this.classStyle(a.id, 'row ' + line);
         else
             this.classStyle(a.id, 'row_show_off');
 
@@ -644,25 +644,21 @@ function CheckNewOrders() {
 // Панель настроек загрузки 1с
 function Option1c(tip) {
     d = document;
-    switch (tip) {
-        case 0:
+    if (tip == 0) {
             d.getElementById('pole_1c_option').style.display = "none";
             d.getElementById('pole_user_option').style.display = "none";
-            d.getElementById('1c_tree_check').value = 1;
-            break;
-
-        case 1:
+        d.getElementById('1c_target_check').value = 1;
+    }
+    if (tip == 1) {
             d.getElementById('pole_1c_option').style.display = "block";
             d.getElementById('pole_user_option').style.display = "none";
-            d.getElementById('1c_tree_check').value = 0;
-            break;
+        d.getElementById('1c_target_check').value = 0;
+    }
 
-        case 2:
+    if (tip == 2) {
             d.getElementById('pole_1c_option').style.display = "none";
             d.getElementById('pole_user_option').style.display = "block";
-            d.getElementById('1c_tree_check').value = 2;
-            break;
-
+        d.getElementById('1c_target_check').value = 2;
     }
 }
 
@@ -862,15 +858,15 @@ function DoReloadMainWindow(page, var1, var2, var3, var4)
 // Интерфейс
 function DoReload(page, var1, var2, var3, var4, page2, pageParam) {
     domenu = 0;
-    
+
     //применяем дату
-    if(page=='orders' || page=='order_payment' || page=='orders_stat1' || page=='orders_stat2' || page=='orders_stat3') {
+    if (page == 'orders' || page == 'order_payment' || page == 'orders_stat1' || page == 'orders_stat2' || page == 'orders_stat3') {
         //Записываем дату в куки
-        if(var1) {
+        if (var1) {
             SetCookie('orders_date', var1, 10);
         }
         var orders_date = GetCookie('orders_date');
-        if(orders_date) {
+        if (orders_date) {
             var1 = orders_date;
         }
     }
@@ -881,7 +877,7 @@ function DoReload(page, var1, var2, var3, var4, page2, pageParam) {
 
 
                 // Записываем в <div> результат работы.
-                if(pageParam=='yes') {
+                if (pageParam == 'yes') {
                     document.getElementById('interfaces').innerHTML += (req.responseJS.xid || '');
                     document.title = (req.responseJS.tit || '');
                 }
@@ -891,8 +887,8 @@ function DoReload(page, var1, var2, var3, var4, page2, pageParam) {
                 }
 
                 //Вторая страница
-                if(page2) {
-                    DoReload(page2, var1, var2, var3, '','','yes');
+                if (page2) {
+                    DoReload(page2, var1, var2, var3, '', '', 'yes');
                 }
 
                 lo();
@@ -905,7 +901,7 @@ function DoReload(page, var1, var2, var3, var4, page2, pageParam) {
                 // Сортировка
                 sortables_init();
 
-                if(pageParam=='') {
+                if (pageParam == '') {
                     //window.close();
                 }
 
@@ -965,7 +961,7 @@ function DoReloadWinSelect(page, var1, var2, var3, var4) {
                 }
 
 
-                
+
 
             }
         }
@@ -1410,10 +1406,10 @@ function AdmCat(pid, w, h)
     if (top.frames['frame2'].document.getElementById("catal")) {
         top.frames['frame2'].document.getElementById("catal").value = pid;
     }
-    else{
-        top.frames['frame2'].document.body.innerHTML  = '<input type="hidden" value="'+pid+'" id="catal" name="catal">';
+    else {
+        top.frames['frame2'].document.body.innerHTML = '<input type="hidden" value="' + pid + '" id="catal" name="catal">';
     }
-        
+
     miniWin('adm_catalogID.php?tip=main&catalogID=' + pid, '650', '630');
 }
 
@@ -1488,10 +1484,11 @@ function miniWinFull(url, w, h)
     window.open(url, "_blank", "left=300,top=100,width=" + w + ",height=" + h + ",location=0,menubar=0,resizable=1,scrollbars=1,status=0,titlebar=0,toolbar=0");
 }
 function hoverList(id) {
-        $('.row').removeClass("hoverlist");
-        $('.row').removeClass("prod_hover");
-        $("#r"+id).addClass("hoverlist");
-    
+    /*
+    $('.row').removeClass("hoverlist");
+    $('.row').removeClass("prod_hover");
+    $("#r" + id).addClass("hoverlist");
+*/
 }
 
 

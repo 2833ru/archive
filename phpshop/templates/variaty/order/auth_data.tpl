@@ -1,0 +1,1 @@
+. Добро пожаловать, @UserName@! <a href="javascript:UserLogOut();">выйти</a>

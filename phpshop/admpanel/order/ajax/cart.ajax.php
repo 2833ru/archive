@@ -41,7 +41,10 @@ $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
 $PHPShopOrm->debug = false;
 
 // ИД товара
-$productID = $_POST['xid'];
+if (in_array($_GET['do'], array('delete', 'update')))
+    $productID = $_POST['xid'];
+else
+    $productID = intval($_POST['xid']);
 
 // ИД заказа
 $orderID = intval($_POST['uid']);
@@ -60,6 +63,14 @@ switch ($_GET['do']) {
                 $order = unserialize($data['orders']);
 
                 $order['Person']['dostavka_metod'] = $productID;
+
+                $PHPShopDelivery = new PHPShopDelivery($productID);
+                $PHPShopCart = new PHPShopCart($order['Cart']['cart']);
+                $weight = $PHPShopCart->getWeight();
+                $sum = $PHPShopCart->getSum(false);
+
+//                $order['Cart']['dostavka'] = $PHPShopDelivery->getParam('price');
+                $order['Cart']['dostavka'] = $PHPShopDelivery->getPrice($sum, $weight);
 
                 // Сериализация данных заказа
                 $update['orders_new'] = serialize($order);
@@ -98,7 +109,7 @@ switch ($_GET['do']) {
                 if (!empty($productID)) {
 
                     // Библиотека корзины
-                    $_SESSION['cart']=null;
+                    $_SESSION['cart'] = null;
                     $PHPShopCart = new PHPShopCart($order['Cart']['cart']);
 
                     // Добавляем новый товар 1 шт по ID
@@ -109,7 +120,7 @@ switch ($_GET['do']) {
                         $order['Cart']['num'] = $PHPShopCart->getNum();
                         $order['Cart']['sum'] = $PHPShopCart->getSum(false);
                         $add = true;
-                    } elseif($PHPShopCart->add($productID, 1, false, 'uid')) {
+                    } elseif ($PHPShopCart->add($productID, 1, false, 'uid')) {
                         // Добавляем новый товар 1 шт по артикулу
                         $add = true;
                     }

@@ -111,6 +111,7 @@ function parent_nt_hook($obj, $dataArray, $rout) {
             foreach ($obj->select_value as $value) {
                 $obj->set('parentName', $value[0]);
                 $obj->set('parentId', $value[1]);
+                $obj->set('parentItems', $value[2]);
                 if (!$flag) {
                     $obj->set('checked', 'checked');
                     $flag = 1;

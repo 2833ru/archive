@@ -109,7 +109,7 @@ switch ($_REQUEST['do']) {
     case("info"):
         $sql = "select * from  " . $SysValue['base']['table_name2'] . " where id=" . intval($_REQUEST['xid']);
         $result = mysql_query(@$sql);
-        $num = mysql_numrows($result);
+        $num = mysql_num_rows($result);
         @$row = @mysql_fetch_array(@$result);
         $id = $row['id'];
         $parent_enabled = $row['parent_enabled'];
@@ -162,7 +162,7 @@ switch ($_REQUEST['do']) {
         $pic_small = "img/icon_non.gif";
         $sql = "select * from  " . $SysValue['base']['table_name2'] . " where id=" . intval($_REQUEST['xid']);
         $result = mysql_query(@$sql);
-        $num = mysql_numrows($result);
+        $num = mysql_num_rows($result);
         @$row = @mysql_fetch_array(@$result);
         $id = $row['id'];
         if (!empty($row['pic_small']))

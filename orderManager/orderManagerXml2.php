@@ -18,8 +18,10 @@ PHPShopObj::loadClass("security");
 
 // Подключение к БД
 $PHPShopBase = new PHPShopBase("../phpshop/inc/config.ini");
+
 // Проверка пользователя
 require("lib/user.lib.php");
+header('Content-type: text/html; charset=windows-1251');
 
 // Заказы
 function OrdersArray($p1, $p2, $words, $list) {
@@ -126,7 +128,7 @@ function GetDelivery($deliveryID, $name) {
     $sql = "select * from " . $GLOBALS['SysValue']['base']['table_name30'] . " where id=" . intval($deliveryID);
     $result = mysql_query($sql);
     $row = mysql_fetch_array($result);
-    return $row[$name];
+    return PHPShopSecurity::TotalClean(strip_tags($row[$name]));
 }
 
 // Расчёт цены доставки
@@ -428,7 +430,7 @@ switch ($_REQUEST['command']) {
     case("loadNumNew"):
         $sql = "select id from " . $GLOBALS['SysValue']['base']['table_name1'] . " where statusi=0";
         $result = mysql_query($sql);
-        $num = mysql_numrows($result);
+        $num = mysql_num_rows($result);
         if ($num == 0)
             echo "";
         else
@@ -526,8 +528,8 @@ switch ($_REQUEST['command']) {
                     $XML.='
   <product>
     <id>' . $vals['id'] . '</id>
-	<art>#' . $vals['uid'] . '</art>
-	<p_name>' . $vals['name'] . '</p_name>
+	<art>#' .PHPShopSecurity::TotalClean($vals['uid']) . '</art>
+	<p_name>' . PHPShopSecurity::TotalClean($vals['name']) . '</p_name>
 	<pic>' . ReturnPic($vals['id']) . '</pic>
 	<price>' . ReturnSumma($vals['price'], $vals['id'], $OrdersReturn['order']['discount']) . '</price>
 	<num>' . $vals['num'] . '</num>

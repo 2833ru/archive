@@ -198,8 +198,6 @@ function actionInsert() {
             $PHPShopOrmProd->update(array('category' => $catNewId), array('category' => '=' . $_POST['parent_to_new']), '');
         }
     }
-
-    header('Location: ?path=' . $_GET['path']);
     return $action;
 }
 

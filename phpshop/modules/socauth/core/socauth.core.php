@@ -76,7 +76,8 @@ class PHPShopSocauth extends PHPShopCore {
                 $this->error = ParseTemplateReturn($GLOBALS['SysValue']['templates']['socauth']['socauth_twitter_auth_fail'], true);
             } else {
                 $uid = $user_info->id;
-                $regMass['login'] = "twitter" . $user_info->id . "@" . str_replace("www.", "", $_SERVER['SERVER_NAME']);
+//                $regMass['login'] = "twitter" . $user_info->id . "@" . str_replace("www.", "", $_SERVER['SERVER_NAME']);
+                $regMass['login'] = "twitter" . $user_info->id . "@twitter.com";
                 $regMass['name'] = PHPShopString::utf8_win1251($user_info->name);
 
                 return $regMass;
@@ -258,8 +259,9 @@ class PHPShopSocauth extends PHPShopCore {
 
 
         if ($result) {  // если авторизация прошла
-            $regMass['login'] = $user_profile['email'];
-            $regMass['login'] = "vk" . $userInfo['uid'] . "@" . str_replace("www.", "", $_SERVER['SERVER_NAME']);
+//            $regMass['login'] = $user_profile['email'];
+//            $regMass['login'] = "vk" . $userInfo['uid'] . "@" . str_replace("www.", "", $_SERVER['SERVER_NAME']);
+            $regMass['login'] = "vk" . $userInfo['uid'] . "@vk.com";
             $regMass['name'] = PHPShopString::utf8_win1251($userInfo['first_name'] . " " . $userInfo[';ast_name']);
             $regMass['first_name'] = PHPShopString::utf8_win1251($userInfo['first_name']);
             $regMass['last_name'] = PHPShopString::utf8_win1251($userInfo['last_name']);
@@ -363,6 +365,9 @@ class PHPShopUserSoc extends PHPShopElements {
 
                 // Логин пользователя
                 $_SESSION['UsersLogin'] = $data['login'];
+
+                // Емейл пользователя
+                $_SESSION['UsersMail'] = $data['login'];
 
                 // Имя пользователя
                 $_SESSION['UsersName'] = $data['name'];

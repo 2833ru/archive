@@ -355,7 +355,14 @@ class PHPShopOrderFunction extends PHPShopObj {
      * @return float 
      */
     function getDeliverySumma() {
+        
         $order = $this->unserializeParam('orders');
+        
+        // Значение редактируемой доставки
+        if(isset($order['Cart']['dostavka']))
+            return $order['Cart']['dostavka'];
+        
+        // Доставка по идентификатуру из списка доставок
         if (!empty($order['Person']['discount']))
             $discount = $order['Person']['discount'];
         else

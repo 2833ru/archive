@@ -10,8 +10,8 @@ if(empty($GLOBALS['SysValue'])) exit(header("Location: /"));
 
 
 // регистрационная информация
-$LMI_PAYEE_PURSE = $SysValue['webmoney']['LMI_PAYEE_PURSE'];    //кошелек
-$wmid = $SysValue['webmoney']['wmid'];    //аттестат
+$LMI_PAYEE_PURSE = $GLOBALS['SysValue']['webmoney']['LMI_PAYEE_PURSE'];    //кошелек
+$wmid = $GLOBALS['SysValue']['webmoney']['wmid'];    //аттестат
 
 
 //параметры магазина
@@ -20,7 +20,7 @@ $inv_id = $mrh_ouid[0]."".$mrh_ouid[1];     //номер счета
 
 //описание покупки
 $inv_desc  = "Оплата заказа №$inv_id";
-$out_summ  = $GLOBALS['SysValue']['other']['total']*$SysValue['webmoney']['kurs']; //сумма покупки
+$out_summ  = $GLOBALS['SysValue']['other']['total']*$GLOBALS['SysValue']['webmoney']['kurs']; //сумма покупки
 
 
 // вывод HTML страницы с кнопкой для оплаты

@@ -34,7 +34,7 @@ function CheckPayment($id) {
     $id = UpdateNumOrder($id);
     $sql = "select * from " . $SysValue['base']['table_name33'] . " where uid=" . $id;
     @$result = mysql_query($sql);
-    $num = mysql_numrows(@$result);
+    $num = mysql_num_rows(@$result);
     return $num;
 }
 

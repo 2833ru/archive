@@ -473,7 +473,7 @@ switch ($p) {
         <FIELDSET>
 	<LEGEND>Инструкция</LEGEND>
 <ol>
-    <li><BUTTON style="width: 20em; height: 2.2em; "  onclick="miniWin(\'./export/seamply_base.csv\',500,370)">
+    <li><BUTTON style="width: 20em; height: 2.2em; "  onclick="miniWin(\'./export/adm_csv.php?DO=base\',500,370)">
 <img src="./img/action_save.gif" width="16" height="16" border="0" align="absmiddle" hspace="3">
 Скачать пример файла
 </BUTTON>
@@ -941,11 +941,11 @@ switch ($p) {
 	</td>
 	<td width="5"></td>
 	<td>
-  <input type="radio" name="DoAll" value="1" onclick="SelectAll(this,window.frame2.document.form_flag)" id="DoAll"><span name=txtLang id=txtLang>Отметить все</span></input>
+  <label><input type="radio" name="DoAll" value="1" onclick="SelectAll(this,window.frame2.document.form_flag)" id="DoAll">Отметить все</input></label>
 	</td>
 	<td width="5"></td>
 	<td>
-<input type="radio" name="DoAll" value="2" onclick="SelectAll(this,window.frame2.document.form_flag)"><span name=txtLang id=txtLang>Снять отметку</span>  
+  <label><input type="radio" name="DoAll" value="2" onclick="SelectAll(this,window.frame2.document.form_flag)">Снять отметку</label>
 	</td>
 </tr>
 
@@ -970,7 +970,7 @@ switch ($p) {
         $a_button = 3;
         //${"list_".$var4.""}="SELECTED";
         $interface = '
-<table width="100%" cellspacing="0" cellpadding="0" class="iconpane">
+<table width="100%" cellspacing="0" cellpadding="0" class="iconpane border-bottom">
 <tr>
 <td>
 <table cellpadding="0" cellspacing="0">
@@ -1027,56 +1027,11 @@ switch ($p) {
 	<td width="1" class="separator"></td>
          <td width="10"></td>
 	    <td id="but30"  class="butoff"><img name="imgLang" src="icon/coins.gif" title="Электронные платежи" width="16" height="16" border="0" onmouseover="ButOn(30)" onmouseout="ButOff(30)" onclick="DoReload(\'order_payment\')"></td>
-    <td width="3"></td>
-	
-</tr>
-</table>
-
-</td>
-</td>
-</tr>
-</table>
-</form>
-<table width="100%" cellpadding="0" cellpadding="0" class="iconpane border-both">
-<tr>
-	
-   <td>
-   <table cellpadding="0" cellspacing="0" width="100%">
-<tr>
-	<td >
-   <table cellpadding="0" cellspacing="0">
-<tr>
-    
-	<td>
-	<img name="iconLang" src="icon/plugin.gif" width="16" height="16" border="0"  align="absmiddle" hspace="1">
-<a href="javascript:LoadAgent()" class="blue" title="Контроль и редактирование заказов в  Windows" id="txtLoadExe">Установить Order Agent Windows</a>
-	</td>
-	<td width="10"></td>
+    <td width="10"></td>
 	<td width="1" bgcolor="#ffffff"></td>
 	<td width="1" class="separator"></td>
-   <td width="10"></td>
-	<td>
-		<img name="iconLang" src="icon/plugin_blue.gif" width="16" height="16" border="0"  align="absmiddle" hspace="1">
-<a href="http://www.phpshop.ru/docs/mobileagent.html" target="_blank" class="blue" title="Контроль заказов в мобильном телефоне">Установить Order Agent Mobile</a>
-	
-	</td>
-	<td width="10"></td>
-	<td width="1" bgcolor="#ffffff"></td>
-	<td width="1" class="separator"></td>
-   <td width="10"></td>
-	<td>
-		<img name="iconLang" src="icon/plugin.gif" width="16" height="16" border="0"  align="absmiddle" hspace="1">
-<a href="http://www.phpshop.ru/docs/vistagadget.html" target="_blank" class="blue" title="Контроль заказов в боковой панели Windows">Установить Order Gadget</a>
-	
-	</td>
-	
-</tr>
-</table>
-
-   	
-
-   </td>
-	<td align="right">
+         <td width="10"></td>
+    <td align="right">
 	<select name="actionSelect" size="1" id="actionSelect" onchange="DoWithSelect(this.value,window.document.form_flag,1000)">
 			<option SELECTED id=txtLang value=0>С отмеченными</option>
 			<option value="36" id=txtLang>Удалить из базы</option>
@@ -1086,10 +1041,15 @@ switch ($p) {
    </select>
 
 	</td>
-	  
+	
+</tr>
+</table>
+
+</td>
 </td>
 </tr>
 </table>
+</form>
    </td>
 </tr>
 </table>
@@ -1188,7 +1148,7 @@ switch ($p) {
 
         if($pageParam=='oneload'):
             $interface = '
-                <table width="100%" cellspacing="0" cellpadding="0" class="iconpane">
+                <table width="100%" cellspacing="0" cellpadding="0" class="iconpane border-bottom">
 <tr>
 <td>
 <table cellpadding="0" cellspacing="0">

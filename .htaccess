@@ -58,7 +58,7 @@ RewriteRule ^(.*)$ /$1/ [L,R=302]
 # Запрет вызовы через браузер сторонних опасных файлов шаблона
 # default - off
 #RewriteCond %{REQUEST_URI} ^(/phpshop/templates/(.*))
-#RewriteCond %{REQUEST_URI} !((.*)\.(gif|jpg|swf|png|jpeg|js|css|GIF|JPG|PNG|JPEG|eot|svg|ttf|woff))$
+#RewriteCond %{REQUEST_URI} !((.*)\.(gif|jpg|swf|png|jpeg|js|css|GIF|JPG|PNG|JPEG|eot|svg|ttf|woff|woff2))$
 #RewriteRule .* - [F]
 
 # Запрет вызовы через браузер сторонних опасных загружаемых файлов

@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_messageboard_system` (
   `serial` varchar(64) NOT NULL default '',
   `flag` enum('0','1') NOT NULL default '1',
   `num` int(11) NOT NULL default '0',
- `enabled_menu` enum('0','1') NOT NULL default '1',
+ `enabled_menu` enum('0','1') NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 

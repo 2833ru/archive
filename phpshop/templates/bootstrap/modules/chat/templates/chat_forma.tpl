@@ -48,7 +48,7 @@
         $(document).on('submit', '#chatform', function() {
 
             if ($('#chat_mod_user_name_true').val().length > 0) {
-                var url = '//@serverName@/phpshop/modules/chat/chat.php?name=' + $('#chat_mod_user_name_true').val();
+                var url = ('https:' == document.location.protocol ? 'https://' : 'http://')+'@serverName@/phpshop/modules/chat/chat.php?name=' + $('#chat_mod_user_name_true').val();
                 $('.chat-modal-content').attr('src', url);
                 $('#chatModal').modal('show');
                 $('#chatstart').html('Далее');

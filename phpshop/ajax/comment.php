@@ -65,7 +65,7 @@ function Nav_comment($id) {
     $num_row = 10;
     $sql = "select id from " . $SysValue['base']['table_name36'] . " where parent_id=" . intval($id) . " and enabled='1'";
     @$result = mysql_query($sql);
-    $num_page = mysql_numrows(@$result);
+    $num_page = mysql_num_rows(@$result);
     $i = 1;
     $num = $num_page / $num_row;
     while ($i < $num + 1) {

@@ -10,15 +10,8 @@ function commentList(xid, comand, page, cid) {
         message = $('#message').val();
         if (message == "")
             return false;
-        if (document.getElementById('rate')) {
-            var radios = document.getElementsByName('rate');
-            for (var i = 0, length = radios.length; i < length; i++) {
-                if (radios[i].checked) {
-                    rateVal = radios[i].value;
-                    break;
-                }
-            }
-        }
+        if ($('input[name=rate][type=radio]:checked').val())
+            rateVal = $('input[name=rate][type=radio]:checked').val();
     }
 
     if (comand == "edit_add") {
@@ -367,10 +360,9 @@ function setEqualHeight(columns) {
 
 // Коррекция знака рубля
 function setRubznak() {
-    if ($('.rubznak').html() == 'руб.' || $('.rubznak').html() == 'руб')
-        $('.rubznak').html('p').append('&nbsp;&nbsp;');
+    if ($('.rubznak').html() == 'руб.' || $('.rubznak').html() == 'руб' || $('.rubznak').html() == 'p')
+        $('.rubznak').html('p');
 }
-
 
 $(document).ready(function() {
 
@@ -647,8 +639,9 @@ $(document).ready(function() {
         });
     });
 
+
     // Validator Fix brands url
-    $('.brand-url a').on('click', function(event) {
+    $('#brand-menu .mega-menu a').on('click', function(event) {
         event.preventDefault();
         window.location.replace($(this).attr('data-url'));
     });
@@ -673,6 +666,7 @@ $(document).ready(function() {
         $('.mega-menu-block img').hide();
     }
 
+
     // убираем меню брендов
     if (BRAND_MENU === false) {
         $('#brand-menu').hide();
@@ -684,7 +678,6 @@ $(document).ready(function() {
     else {
         $('#catalog-menu').removeClass('hide');
     }
-
 
     // добавление в корзину
     $('body').on('click', '.addToCartList', function() {
@@ -832,6 +825,8 @@ $(document).ready(function() {
     }
 
 
+
+
     // формат ввода телефона
     $("form[name='forma_order'], input[name=returncall_mod_tel],input[name=tel]").on('click', function() {
         if (PHONE_FORMAT && PHONE_MASK) {
@@ -849,7 +844,7 @@ $(document).ready(function() {
             });
 
 
-    // Фотогалерея в по карточке товара
+// Фотогалерея в по карточке товара
     if ($('.bxslider').length) {
         $('.bxslider-pre').addClass('hide');
         $('.bxslider').removeClass('hide');
@@ -895,5 +890,7 @@ $(document).ready(function() {
         sliderbig.destroySlider();
         delete sliderbig;
     });
+
+
 
 });

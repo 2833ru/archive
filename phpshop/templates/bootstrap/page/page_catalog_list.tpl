@@ -2,7 +2,7 @@
     @breadCrumbs@
 </ol>
 <div class="page-header">
-    <h2>@catalogName@</h2>
+    <h2>@pageTitle@</h2>
 </div>
 @catContent@
 @pageContent@

@@ -1,3 +1,4 @@
+
 <div id="chatModalPre">
     <form id="chatform">
         <div class="form-group" >
@@ -6,15 +7,19 @@
         </div>
         <div class="text-center">
             <button type="button" class="btn btn-default btn-sm hide"  id="chatend">Закрыть</button> &nbsp;
-            <button type="button" class="btn btn-primary btn-sm pull-right" id="chatstart">@php if(empty($_SESSION['mod_chat_user_session'])) echo "Начать"; else echo "Далее"; php@</button>
+            <button type="submit" class="btn btn-primary btn-sm pull-right" id="chatstart">@php if(empty($_SESSION['mod_chat_user_session'])) echo "Начать"; else echo "Далее"; php@</button>
         </div>
     </form>   
 </div>
 <input type="hidden" name="chat_mod_user_name_true" id="chat_mod_user_name_true" value="@php echo $_SESSION[mod_chat_user_name]; php@">
 <button class="btn btn-default chat"  id="chatbutton" data-placement="top" data-toggle="popover2" data-html="true" data-content="123"><span class="glyphicon glyphicon-user"></span> Чат</button>
-
 <script>
     $().ready(function() {
+
+
+        $('.breadcrumb, .template-slider').waypoint(function() {
+            $('#chatbutton').popover('hide');
+        });
 
         $("body").on("click", "#chatend", function() {
             $('#chatbutton').popover('hide');
@@ -36,7 +41,7 @@
         $(document).on('submit', '#chatform', function() {
 
             if ($('#chat_mod_user_name_true').val().length > 0) {
-                var url = '//@serverName@/phpshop/modules/chat/chat.php?name=' + $('#chat_mod_user_name_true').val();
+                var url = ('https:' == document.location.protocol ? 'https://' : 'http://')+'@serverName@/phpshop/modules/chat/chat.php?name=' + $('#chat_mod_user_name_true').val();
                 $('.chat-modal-content').attr('src', url);
                 $('#chatModal').modal('show');
                 $('#chatstart').html('Далее');
@@ -53,11 +58,11 @@
             chat = window.open(url, "chat", "dependent=1,left=100,top=20,width=" + w + ",height=" + h + ",location=0,menubar=0,resizable=1,scrollbars=0,status=0,titlebar=0,toolbar=0");
             chat.focus();
             $('#chatModal').modal('hide');
+            $('.chat-modal-content').attr('src', null);
         });
 
     });
 </script>
-
 <!-- Модальное окно чата -->
 <div class="modal bs-example-modal" id="chatModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -71,7 +76,7 @@
 
                 <h4 class="modal-title" id="myModalLabel">Чат онлайн</h4>
             </div>
-            <div class="modal-body ">
+            <div class="modal-body">
                 <iframe class="chat-modal-content"></iframe>
 
             </div>

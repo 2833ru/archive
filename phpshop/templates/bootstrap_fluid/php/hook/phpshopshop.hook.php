@@ -3,6 +3,9 @@
 function template_CID_Product($obj, $data, $rout) {
     if ($rout == 'START') {
 
+        // Сортировка мультивалютных товаров по цене
+        $obj->multi_currency_search = false;
+
         // Фасетный фильтр
         $obj->sort_template = 'sorttemplatehook';
 
@@ -129,10 +132,47 @@ function sorttemplatehook($value, $n, $title, $vendor) {
     return '<h4>' . $title . '</h4>' . $disp;
 }
 
+/**
+ *  Фотогалерея
+ */
+function template_image_gallery($obj, $array) {
+    $bxslider = $bxsliderbig = $bxpager = null;
+    $PHPShopOrm = new PHPShopOrm($obj->getValue('base.foto'));
+    $data = $PHPShopOrm->select(array('*'), array('parent' => '=' . $array['id']), array('order' => 'num'), array('limit' => 100));
+    $i = 0;
+    if (is_array($data)) {
+        foreach ($data as $row) {
+
+            $name = $row['name'];
+            $name_s = str_replace(".", "s.", $name);
+            $name_bigstr = str_replace(".", "_big.", $name);
+
+            // Проверка на сервере
+            if (!@fopen("http://" . $_SERVER['HTTP_HOST'] . $name_bigstr, "r"))
+                $name_bigstr = $name;
+
+            $bxslider.= '<div><a class href="#"><img src="' . $name . '" /></a></div>';
+            $bxsliderbig.= '<li><a class href=\'#\'><img src=\'' . $name_bigstr . '\'></a></li>';
+            $bxpager.='<a data-slide-index=\'' . $i . '\' href=\'\'><img class=\'img-thumbnail\'  src=\'' . $name_s . '\'></a>';
+            $i++;
+        }
+
+
+        if ($i < 2)
+            $bxpager = null;
+
+
+        $obj->set('productFotoList', '<img class="bxslider-pre" alt="' . $array['name'] . '" src="' . $array['pic_big'] . '" /><div class="bxslider hide">' . $bxslider . '</div><div class="bx-pager">' . $bxpager . '</div>');
+        $obj->set('productFotoListBig', '<ul class="bxsliderbig" data-content="' . $bxsliderbig . '" data-page="' . $bxpager . '"></ul><div class="bx-pager-big">' . $bxpager . '</div>');
+        return true;
+    }
+}
+
 $addHandler = array
     (
     'CID_Product' => 'template_CID_Product',
     'parent' => 'template_parent',
-    'UID' => 'template_UID'
+    'UID' => 'template_UID',
+    'image_gallery' => 'template_image_gallery'
 );
 ?>

@@ -1,3 +1,7 @@
+#visualcart > a{
+    height: 75px;
+}
+
 .bxslider a{
     cursor: url(images/zoomin.cur), pointer; 
 }

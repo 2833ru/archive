@@ -10,7 +10,7 @@ PHPShopObj::loadClass('delivery');
  * Обработчик кабинета пользователя
  * @author PHPShop Software
  * @tutorial http://wiki.phpshop.ru/index.php/PHPShopUsers
- * @version 1.3
+ * @version 1.4
  * @package PHPShopCore
  */
 class PHPShopUsers extends PHPShopCore {
@@ -44,7 +44,7 @@ class PHPShopUsers extends PHPShopCore {
         parent::PHPShopCore();
 
         // Проверка на подтверждение активации
-        if ($this->PHPShopSystem->ifSerilizeParam('admoption.user_mail_activate') and $this->PHPShopSystem->ifSerilizeParam('admoption.user_mail_activate_pre'))
+        if ($this->PHPShopSystem->ifSerilizeParam('admoption.user_mail_activate') or $this->PHPShopSystem->ifSerilizeParam('admoption.user_mail_activate_pre'))
             $this->activation = true;
     }
 
@@ -785,7 +785,7 @@ class PHPShopUsers extends PHPShopCore {
      * Запись нового пользователя в БД
      * @return Int ИД нового пользователя в БД
      */
-    function add() {
+    function add($content = false, $list = false) {
 
         // Проверка на подтверждение активации
         if (!$this->activation) {
@@ -837,10 +837,13 @@ class PHPShopUsers extends PHPShopCore {
     function user_check_by_email($login) {
         $PHPShopOrm = new PHPShopOrm($this->getValue('base.shopusers'));
         $PHPShopOrm->debug = $this->debug;
-        $data = $PHPShopOrm->select(array('id'), array('mail' => '="' . trim($login) . '"'), false, array('limit' => 1));
-        if (is_array($data) AND PHPShopSecurity::true_num($data['id'])) {
-            return $data['id'];
+        if (PHPShopSecurity::true_email($login)) {
+            $data = $PHPShopOrm->select(array('id'), array('mail' => '="' . trim($login) . '"'), false, array('limit' => 1));
+            if (is_array($data) AND PHPShopSecurity::true_num($data['id'])) {
+                return $data['id'];
+            }
         }
+        return false;
     }
 
     /**
