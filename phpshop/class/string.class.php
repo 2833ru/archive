@@ -26,8 +26,10 @@ class PHPShopString {
             else
                 include_once($_classPath . '.' . $GLOBALS['SysValue']['file']['idna']);
 
-            $idna_convert = new idna_convert();
-            $str = PHPShopString::utf8_win1251($idna_convert->decode($str));
+            if (class_exists('idna_convert')) {
+                $idna_convert = new idna_convert();
+                $str = PHPShopString::utf8_win1251($idna_convert->decode($str));
+            }
         }
         return $str;
     }

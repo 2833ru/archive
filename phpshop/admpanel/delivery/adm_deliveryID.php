@@ -278,9 +278,9 @@ function actionUpdate() {
 
     if (is_array($_POST['data_fields'])) {
 
-        if (is_array($_POST[data_fields][enabled]))
-            foreach ($_POST[data_fields][enabled] as $k => $v) {
-                $_POST[data_fields][enabled][$k] = array_map("urldecode", $v);
+        if (is_array($_POST['data_fields']['enabled']))
+            foreach ($_POST['data_fields']['enabled'] as $k => $v) {
+                $_POST['data_fields']['enabled'][$k] = array_map("urldecode", $v);
             }
 
 

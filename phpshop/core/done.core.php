@@ -123,6 +123,35 @@ class PHPShopDone extends PHPShopCore {
     }
 
     /**
+     *  Проверка смены статуса в способе оплаты
+     */
+    function check_user_status() {
+        $status = $this->PHPShopPayment->getParam('status');
+
+        if (!empty($status)) {
+
+            // Смена статуса
+            if (!empty($_SESSION['UsersId'])) {
+                
+                $_SESSION['UsersStatus'] = $status;
+                
+                (new PHPShopUser($_SESSION['UsersId']))->updateParam(['status_new' => (int) $status]);
+                $_SESSION['UsersStatusPice'] = (new PHPShopUserStatus($_SESSION['UsersStatus']))->getPrice();
+
+            }
+
+            foreach ($this->PHPShopCart->_CART as $id => $product) {
+
+                // Удаляем товар
+                $this->PHPShopCart->del($id);
+
+                // Добавляем товар с учетом новой цены
+                $this->PHPShopCart->add($id, $product['num'], $product['parent']);
+            }
+        }
+    }
+
+    /**
      * Экшен записи заказа
      */
     function send_to_order() {
@@ -135,7 +164,7 @@ class PHPShopDone extends PHPShopCore {
         if ($this->PHPShopCart->getNum() > 0) {
 
             if (isset($_SESSION['UsersLogin']) AND ! empty($_SESSION['UsersLogin']))
-                $_POST['mail'] = ($_SESSION['UsersMail']);
+                $_POST['mail'] = $_SESSION['UsersMail'];
 
             // Создаём нового пользователя, или авторизуем старого
             if (!class_exists('PHPShopUsers'))
@@ -148,8 +177,10 @@ class PHPShopDone extends PHPShopCore {
             $PHPShopUsers = new PHPShopUsers();
             $this->userId = $PHPShopUsers->add_user_from_order($_POST['mail']);
 
+            // Проверка смены статуса в способе оплаты
+            $this->check_user_status();
+
             if (PHPShopSecurity::true_email($_POST['mail']) AND $this->userId) {
-                //$this->ouid = $_POST['ouid'];
                 $_POST['ouid'] = $this->ouid;
 
                 $order_metod = intval($_POST['order_metod']);
@@ -383,6 +414,8 @@ class PHPShopDone extends PHPShopCore {
         }
 
         // Телефон
+        if (!empty($_SESSION['UsersTel']))
+            $_POST['tel_new'] = $_SESSION['UsersTel'];
         if (!empty($_POST['tel_new']))
             $this->set('tel', $_POST['tel_new']);
 
@@ -518,10 +551,10 @@ class PHPShopDone extends PHPShopCore {
             "time" => date("H:s a"),
             "mail" => PHPShopSecurity::TotalClean($_POST['mail'], 3),
             "name_person" => PHPShopSecurity::TotalClean($this->get('user_name')),
-            "dostavka_metod" => intval($_POST['dostavka_metod']),
+            "dostavka_metod" => (int) $_POST['dostavka_metod'],
             "discount" => $this->discount,
             "user_id" => $this->userId,
-            "order_metod" => intval($_POST['order_metod']));
+            "order_metod" => (int) $_POST['order_metod']);
 
         // Данные по корзине
         $cart = array(

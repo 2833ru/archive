@@ -23,8 +23,8 @@ function addWbsellerProductTab($data) {
         }
 
     $tab .= $PHPShopGUI->setField('Цена WB', $PHPShopGUI->setInputText(null, 'price_wb_new', $data['price_wb'], 150, $valuta_def_name), 2);
-    $tab .= $PHPShopGUI->setField('Артикул WB', $PHPShopGUI->setInputText(null, 'export_wb_id_new', $data['export_wb_id'],150,$PHPShopGUI->setLink('https://www.wildberries.ru/catalog/' . $data['export_wb_id'] . '/detail.aspx', '<span class=\'glyphicon glyphicon-eye-open\'></span>','_blank', false, __('Перейте на сайт WB'))));
-    $tab .= $PHPShopGUI->setField("Баркод WB", $PHPShopGUI->setInputText(null, 'barcode_wb_new', $data['barcode_wb'],150));
+    $tab .= $PHPShopGUI->setField('Артикул WB', $PHPShopGUI->setInputText(null, 'export_wb_id_new', $data['export_wb_id'], 150, $PHPShopGUI->setLink('https://www.wildberries.ru/catalog/' . $data['export_wb_id'] . '/detail.aspx', '<span class=\'glyphicon glyphicon-eye-open\'></span>', '_blank', false, __('Перейте на сайт WB'))));
+    $tab .= $PHPShopGUI->setField("Баркод WB", $PHPShopGUI->setInputText(null, 'barcode_wb_new', $data['barcode_wb'], 150));
 
     $PHPShopGUI->addTab(array("WB", $tab, true));
 }
@@ -46,6 +46,9 @@ function WbsellerUpdate() {
 
     if (isset($_POST['items_new']))
         $data['items'] = (int) $_POST['items_new'];
+
+    if (isset($_POST['price_new']))
+        $data['price'] = $_POST['price_new'];
 
     if (isset($_POST['export_wb_new']))
         $data['export_wb'] = (int) $_POST['export_wb_new'];
@@ -82,7 +85,7 @@ function WbsellerUpdate() {
                 $PHPShopOrm->update(['export_wb_id_new' => $export_wb_id], ['id' => '=' . (int) $_POST['rowID']]);
         }
     } else
-        $PHPShopOrm->update(['export_wb_task_status_new' => '','export_wb_id_new' => 0], ['id' => '=' . (int) $_POST['rowID']]);
+        $PHPShopOrm->update(['export_wb_task_status_new' => '', 'export_wb_id_new' => 0], ['id' => '=' . (int) $_POST['rowID']]);
 }
 
 $addHandler = array(

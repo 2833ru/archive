@@ -33,11 +33,19 @@ function setProducts_ozonseller_hook($obj, $data) {
         }
 
         $data['xml'] = str_replace('<price>' . $data['val']['price'] . '</price>', '<price>' . $price . '</price>', $data['xml']);
-        $add .= '<outlets><outlet instock="' . $data['val']['items'] . '" warehouse_name="' . $obj->ozon_options['warehouse'] . '"></outlet></outlets>';
+
+        $outlets = null;
+        if (is_array($obj->warehouse)){
+            foreach ($obj->warehouse as $warehouse) {
+                $outlets .= '<outlet instock="' . $data['val']['items'] . '" warehouse_name="' . $warehouse['name'] . '"></outlet>';
+            }
+        }
         
+        $add .= '<outlets>'.$outlets.'</outlets>';
+
         // Ключ обновления артикул
-        if($obj->ozon_options['type'] == 2){
-            $data['xml'] = str_replace('<offer id="'.$data['val']['id'].'"', '<offer id="'.$data['val']['uid'].'"' , $data['xml']);
+        if ($obj->ozon_options['type'] == 2) {
+            $data['xml'] = str_replace('<offer id="' . $data['val']['id'] . '"', '<offer id="' . $data['val']['uid'] . '"', $data['xml']);
         }
 
         if (!empty($add))
@@ -55,6 +63,7 @@ function PHPShopYml_ozonseller_hook($obj) {
         // Настройки модуля
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['ozonseller']['ozonseller_system']);
         $obj->ozon_options = $PHPShopOrm->select();
+        $obj->warehouse = unserialize($obj->ozon_options['warehouse']);
 
         // Пароль
         if (!empty($obj->ozon_options['password']))

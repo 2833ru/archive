@@ -17,7 +17,8 @@
  * @example ?price [int] Колонка цен (2/3/4/5)
  * @example ?available [bool] Выводить только в наличии
  * @example ?image_source [bool]  Показывать исходные изображения _big
- * @example ?allimage [bool] Выгрузка всех изображений.
+ * @example ?allimage [bool] Выгрузка всех изображений
+ * @example ?striptag [bool] Очистка html тегов  в описании
  */
 $_classPath = "../phpshop/";
 include($_classPath . "class/obj.class.php");
@@ -314,6 +315,8 @@ class PHPShopYml {
                 $where = "sbermarket='1' and";
             } elseif (isset($_GET['marketplace']) && $_GET['marketplace'] === 'ozon' && isset($GLOBALS['SysValue']['base']['ozonseller']['ozonseller_system'])) {
                 $where = "export_ozon='1' and";
+            } elseif (isset($_GET['marketplace']) && $_GET['marketplace'] === 'vk' && isset($GLOBALS['SysValue']['base']['vkseller']['vkseller_system'])) {
+                $where = "export_vk='1' and";
             } else {
                 $where = "yml='1' and";
             }
@@ -332,7 +335,7 @@ class PHPShopYml {
         if ($_GET['search']) {
             $wherePrice = '';
         }
- 
+
         $result = $PHPShopOrm->query("select * from " . $GLOBALS['SysValue']['base']['products'] . " where $where enabled='1' and parent_enabled='0' $wherePrice");
         while ($row = mysqli_fetch_array($result)) {
 
@@ -377,8 +380,17 @@ class PHPShopYml {
             else
                 $p_enabled = "false";
 
-            $description = '<![CDATA[' . trim(strip_tags($row['description'], '<p><h3><ul><li><br>')) . ']]>';
-            $content = '<![CDATA[' . $row['content'] . ']]>';
+            // Чистка тегов
+            if (empty($_GET['striptag'])) {
+                $description = '<![CDATA[' . trim(strip_tags($row['description'], '<p><h3><ul><li><br>')) . ']]>';
+                $content = '<![CDATA[' . $row['content'] . ']]>';
+            }
+            else {
+                $description = strip_tags($row['description']);
+                $content = strip_tags($row['content']);
+            }
+            
+            
             $baseinputvaluta = $row['baseinputvaluta'];
 
             //Если валюта отличается от базовой
@@ -452,6 +464,7 @@ class PHPShopYml {
                 "price_aliexpress" => round($row['price_aliexpress'], (int) $this->format),
                 "price_ozon" => round($row['price_ozon'], (int) $this->format),
                 "yandex_service_life_days" => $row['yandex_service_life_days'],
+                "price_vk" => round($row['price_vk'], (int) $this->format)
             );
 
             // Параметр сортировки
@@ -573,6 +586,7 @@ class PHPShopYml {
             "price_sbermarket" => round($row['price_sbermarket'], (int) $this->format),
             "price_cdek" => round($row['price_cdek'], (int) $this->format),
             "price_aliexpress" => round($row['price_aliexpress'], (int) $this->format),
+            "price_vk" => round($row['price_vk'], (int) $this->format),
         );
 
         $Products[$id] = $array;
@@ -822,7 +836,7 @@ function serFooter() {
 function compile() {
     global $PHPShopBase;
 
-    if (isset($_GET['utf'])  or $PHPShopBase->codBase == 'utf-8') {
+    if (isset($_GET['utf']) or $PHPShopBase->codBase == 'utf-8') {
         $this->encoding = 'utf-8';
         $this->charset = 'utf-8';
     } else {

@@ -153,6 +153,51 @@ function downloadFile($url, $path) {
     }
 }
 
+// Проверка изображения
+function checkImage($img, $id) {
+    global $PHPShopSystem;
+
+    // Перевод в латиницу
+    $path_parts = pathinfo($img);
+    $path_parts['basename'] = PHPShopFile::toLatin($path_parts['basename']);
+
+    // Папка картинок
+    $path = $PHPShopSystem->getSerilizeParam('admoption.image_result_path');
+    
+    // Имя для проверки в фотогалерее
+    $img_check = $GLOBALS['dir']['dir'] . '/UserFiles/Image/' . $path . $path_parts['basename'];
+
+    // Сохранение в webp
+    if ($PHPShopSystem->ifSerilizeParam('admoption.image_webp_save') and $path_parts['extension'] != 'webp') {
+        $img_check = str_replace([".png", ".jpg", ".jpeg", ".gif", ".PNG", ".JPG", ".JPEG", ".GIF", ".WEBP"], '.webp', $img_check);
+    }
+
+    // Новое имя
+    $img = $GLOBALS['dir']['dir'] . '/UserFiles/Image/' . $path . $path_parts['basename'];
+
+    // Проверка существования изображения в фотогалерее
+    $PHPShopOrmImg = new PHPShopOrm($GLOBALS['SysValue']['base']['foto']);
+    $PHPShopOrmImg->debug = false;
+    $check = $PHPShopOrmImg->select(array('id'), array('name' => '="' . $img_check . '"', 'parent' => '=' . intval($id)), false, array('limit' => 1))['id'];
+
+    // Картинки нет
+    if (!is_array($check)) {
+
+        // Проверка имени файла
+        if (file_exists($_SERVER['DOCUMENT_ROOT'] . $img_check)) {
+
+            // Соль
+            $rand = '_' . substr(abs(crc32($img)), 0, 5);
+            $path_parts['basename'] = str_replace([".png", ".jpg", ".jpeg", ".gif", ".PNG", ".JPG", ".JPEG", ".GIF", ".WEBP"], [$rand . ".png", $rand . ".jpg", $rand . ".jpeg", $rand . ".gif", $rand . ".PNG", $rand . ".JPG", $rand . ".JPEG", $rand . ".GIF", $rand . ".WEBP"], $path_parts['basename']);
+        }
+    }
+
+    // Новое имя
+    $img = $GLOBALS['dir']['dir'] . '/UserFiles/Image/' . $path . $path_parts['basename'];
+
+    return ['img' => $img, 'check' => $check];
+}
+
 // Временная категория
 function setCategory() {
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
@@ -375,6 +420,10 @@ function csv_update($data) {
 
             if (!empty($data_img) and is_array($data_img)) {
 
+                // Очистка начальных данных
+                unset($row['pic_big']);
+                unset($row['pic_small']);
+
                 // Получение ID товара по артикулу при обновлении
                 if ($_POST['export_action'] == 'update' and empty($row['id']) and ! empty($row['uid'])) {
                     $PHPShopOrmProd = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
@@ -382,10 +431,6 @@ function csv_update($data) {
                     $row['id'] = $data_prod['id'];
                 }
 
-                // Папка картинок
-                $path = $PHPShopSystem->getSerilizeParam('admoption.image_result_path');
-                if (!empty($path))
-                    $path = $path . '/';
 
                 foreach ($data_img as $k => $img) {
                     if (!empty($img)) {
@@ -394,52 +439,43 @@ function csv_update($data) {
                         if (!empty($_POST['export_imgpath']))
                             $img = '/UserFiles/Image/' . $img;
 
-                        // Загрузка изображений по ссылке
-                        if (isset($_POST['export_imgload']) and strstr($img, 'http')) {
-
-                            $path_parts = pathinfo($img);
-                            $path_parts['basename'] = PHPShopFile::toLatin($path_parts['basename']);
-
-                            // Проверка имени файла
-                            if (file_exists($_SERVER['DOCUMENT_ROOT'] . $GLOBALS['dir']['dir'] . '/UserFiles/Image/' . $path . $path_parts['basename'])){
-                                // Соль
-                                $rand = '_'.substr(abs(crc32($img)), 0, 5);
-                                $path_parts['basename'] = str_replace([".png", ".jpg", ".jpeg", ".gif", ".PNG", ".JPG", ".JPEG", ".GIF", ".WEBP"], [$rand.".png", $rand.".jpg", $rand.".jpeg", $rand.".gif", $rand.".PNG", $rand.".JPG", $rand.".JPEG", $rand.".GIF", $rand.".WEBP"], $path_parts['basename']);
-                            }
-
-                            // Файл загружен
-                            if (downloadFile($img, $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['dir']['dir'] . '/UserFiles/Image/' . $path . $path_parts['basename']))
-                                $img_load++;
-                            else
-                                continue;
-
-                            // Новое имя
-                            $img = $GLOBALS['dir']['dir'] . '/UserFiles/Image/' . $path . $path_parts['basename'];
-
-                            // Сохранение в webp
-                            if ($PHPShopSystem->ifSerilizeParam('admoption.image_webp_save') and $path_parts['extension'] != 'webp') {
-
-                                $thumb = new PHPThumb($_SERVER['DOCUMENT_ROOT'] . $img);
-                                $thumb->setFormat('WEBP');
-                                $name_webp = str_replace([".png", ".jpg", ".jpeg", ".gif", ".PNG", ".JPG", ".JPEG", ".GIF", ".WEBP"], '.webp', $img);
-
-                                $thumb->save($_SERVER['DOCUMENT_ROOT'] . $name_webp);
-                                //@unlink($_SERVER['DOCUMENT_ROOT'].$img);
-                                $img = $name_webp;
-                            }
-                        }
-
-
-
-                        // Проверка существования изображения
-                        $PHPShopOrmImg = new PHPShopOrm($GLOBALS['SysValue']['base']['foto']);
-                        $PHPShopOrmImg->debug = false;
-                        $check = $PHPShopOrmImg->select(array('name'), array('name' => '="' . $img . '"', 'parent' => '=' . intval($row['id'])), false, array('limit' => 1));
+                        // Проверка изображния
+                        $checkImage = checkImage($img, $row['id']);
+                        $img_save = $checkImage['img'];
 
                         // Создаем новую
-                        if (!is_array($check)) {
+                        if (empty($checkImage['check'])) {
+
+                            // Загрузка изображений по ссылке
+                            if (isset($_POST['export_imgload']) and strstr($img, 'http')) {
+
+                                // Файл загружен
+                                if (downloadFile($img, $_SERVER['DOCUMENT_ROOT'] . $img_save))
+                                    $img_load++;
+                                else
+                                    continue;
+
+                                // Новое имя
+                                $img = $img_save;
+                                $path_parts = pathinfo($img);
+
+                                // Сохранение в webp
+                                if ($PHPShopSystem->ifSerilizeParam('admoption.image_webp_save') and $path_parts['extension'] != 'webp') {
+
+                                    $thumb = new PHPThumb($_SERVER['DOCUMENT_ROOT'] . $img);
+                                    $thumb->setFormat('WEBP');
+                                    $name_webp = str_replace([".png", ".jpg", ".jpeg", ".gif", ".PNG", ".JPG", ".JPEG", ".GIF", ".WEBP"], '.webp', $img);
+
+                                    $thumb->save($_SERVER['DOCUMENT_ROOT'] . $name_webp);
+                                    @unlink($_SERVER['DOCUMENT_ROOT'] . $img);
+                                    $img = $name_webp;
+                                }
+                                
+                            }
+
 
                             // Запись в фотогалерее
+                            $PHPShopOrmImg = new PHPShopOrm($GLOBALS['SysValue']['base']['foto']);
                             $PHPShopOrmImg->insert(array('parent_new' => intval($row['id']), 'name_new' => $img, 'num_new' => $k));
 
                             $file = $_SERVER['DOCUMENT_ROOT'] . $img;
@@ -467,7 +503,8 @@ function csv_update($data) {
                                     $row['pic_small'] = str_replace(array(".png", ".jpg", ".jpeg", ".gif", ".PNG", ".JPG", ".JPEG", ".GIF", ".webp", ".WEBP"), array("s.png", "s.jpg", "s.jpeg", "s.gif", "s.png", "s.jpg", "s.jpeg", "s.gif", "s.webp", "s.webp"), $img);
                                 }
                             }
-                        }
+                        } else
+                            continue;
                     }
                 }
             }

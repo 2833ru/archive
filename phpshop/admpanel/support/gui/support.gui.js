@@ -5,6 +5,7 @@ $().ready(function () {
 
     $("textarea[name=message],input[name=file]").on('click', function (event) {
         $(".send-message").removeClass('disabled');
+        $(window).unbind("beforeunload");
     });
 
     $("#attachment-disp").on('click', function (event) {

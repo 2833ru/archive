@@ -148,18 +148,17 @@ function userorderpaymentlink_mod_alfabank_hook($obj, $PHPShopOrderFunction) {
             "password" => $option["password"],
             "orderNumber" => $orderNum,
             "amount" => $total,
-            "returnUrl" => 'http://' . $_SERVER['HTTP_HOST'] . '/success/?uid=' . $uid.'&payment=alfabank',
-            "failUrl" => 'http://' . $_SERVER['HTTP_HOST'] . '/fail/?uid=' . $uid.'&payment=alfabank',
+            "returnUrl" => 'http://' . $_SERVER['HTTP_HOST'] . '/success/?uid=' . $uid . '&payment=alfabank',
+            "failUrl" => 'http://' . $_SERVER['HTTP_HOST'] . '/fail/?uid=' . $uid . '&payment=alfabank',
             "orderBundle" => $orderBundle,
             "taxSystem" => intval($option["taxationSystem"])
         );
 
-        //exit($orderBundle);
         // Режим разработки и боевой режим
         if ($option["dev_mode"] == 0)
             $url = $option["api_url"];
         else
-            $url = 'https://web.rbsuat.com/ab/rest/register.do';
+            $url = $option["dev_mode"];
 
         $rbsCurl = curl_init();
         curl_setopt_array($rbsCurl, array(

@@ -1,5 +1,65 @@
 $().ready(function () {
 
+// Поиск пользователя
+    $(".search_ozoncategory").on('input', function () {
+
+        var words = $(this).val();
+        var s = $(this);
+        var set = s.attr('data-set');
+        if (words.length > 3) {
+            $.ajax({
+                type: "POST",
+                url: "?path=modules&id=ozonseller",
+                data: {
+                    words: escape(words),
+                    set: set,
+                    ajax: 1,
+                    selectID: 1,
+                    'actionList[selectID]': 'actionCategorySearch'
+                },
+                success: function (data)
+
+                {
+                    // Результат поиска
+                    if (data != '') {
+                        s.attr('data-content', data);
+                        s.popover('show');
+
+                    } else {
+                        s.popover('hide');
+
+                    }
+                }
+            });
+
+        } else {
+            s.attr('data-content', '');
+            s.popover('hide');
+        }
+    });
+
+    // Закрыть поиск пользователя
+    $('body').on('click', '.close', function (event) {
+        event.preventDefault();
+        $('[data-toggle="popover"]').popover('hide');
+    });
+
+    // Выбор в поиске пользователя
+    $('body').on('click', '.select-search', function (event) {
+        event.preventDefault();
+
+        $('[name="category_ozonseller"]').val($(this).attr('data-name'));
+        $('[name="category_ozonseller_new"]').val($(this).attr('data-id'));
+        $('[data-toggle="popover"]').popover('hide');
+    });
+
+    $('[data-toggle="popover"]').popover({
+        "html": true,
+        "placement": "bottom",
+        "template": '<div class="popover" role="tooltip" style="max-width:600px"><div class="arrow"></div><div class="popover-content"></div></div>'
+
+    });
+
     // datetimepicker
     if ($(".date").length) {
         $.fn.datetimepicker.dates['ru'] = locale;

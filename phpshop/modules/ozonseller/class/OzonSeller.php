@@ -1,9 +1,10 @@
 <?php
+PHPShopObj::loadClass("valuta");
 
 /**
  * Библиотека работы с Ozon Seller API
  * @author PHPShop Software
- * @version 1.6
+ * @version 1.7
  * @package PHPShopModules
  * @todo https://docs.ozon.ru/api/seller/#tag/Environment
  */
@@ -33,21 +34,27 @@ class OzonSeller {
     public function __construct() {
         global $PHPShopSystem;
 
-        $PHPShopOrm = new PHPShopOrm('phpshop_modules_ozonseller_system');
+        // Системные настройки
+        $this->PHPShopValuta = (new PHPShopValutaArray())->getArray();
+        $this->percent = $PHPShopSystem->getValue('percent');
+        $this->defvaluta = $PHPShopSystem->getValue('dengi');
+        $this->format = $PHPShopSystem->getSerilizeParam('admoption.price_znak');
+        $this->vat = $PHPShopSystem->getParam('nds') / 100;
+        $this->image_save_source = $PHPShopSystem->ifSerilizeParam('admoption.image_save_source');
 
+        // Настройки модуля
+        $PHPShopOrm = new PHPShopOrm('phpshop_modules_ozonseller_system');
         $this->options = $PHPShopOrm->select();
         $this->client_id = $this->options['client_id'];
         $this->api_key = $this->options['token'];
-
-        $this->vat = $PHPShopSystem->getParam('nds') / 100;
-        $this->image_save_source = $PHPShopSystem->ifSerilizeParam('admoption.image_save_source');
         $this->status = $this->options['status'];
         $this->fee_type = $this->options['fee_type'];
         $this->fee = $this->options['fee'];
         $this->price = $this->options['price'];
         $this->type = $this->options['type'];
-        $this->warehouse_name = $this->options['warehouse'];
-        $this->warehouse_id = $this->options['warehouse_id'];
+        $this->warehouse = unserialize($this->options['warehouse']);
+        //$this->warehouse_name = $this->options['warehouse'];
+        //$this->warehouse_id = $this->options['warehouse_id'];
 
         $this->status_list = [
             'acceptance_in_progress' => 'идёт приёмка',
@@ -62,19 +69,41 @@ class OzonSeller {
             'cancelled' => 'отменено'
         ];
     }
+    
+    /**
+     *  Цена товара
+     */
+    protected function price($price, $baseinputvaluta) {
+
+        // Если валюта отличается от базовой
+        if ($baseinputvaluta !== $this->defvaluta) {
+            $vkurs = $this->PHPShopValuta[$baseinputvaluta]['kurs'];
+
+            // Если курс нулевой или валюта удалена
+            if (empty($vkurs))
+                $vkurs = 1;
+
+            // Приводим цену в базовую валюту
+            $price = $price / $vkurs;
+        }
+
+        $price = ($price + (($price * $this->percent) / 100));
+        $price = round($price, intval($this->format));
+
+        return $price;
+    }
 
     /**
      * Изменение остатка на складе
      */
-    public function setProductStock($product) {
+    public function setProductStock($product,$warehouse) {
 
         // Если нет OZON ID
         if (empty($product['export_ozon_id'])) {
             $info = $this->sendProductsInfo($product)['result']['items'][0];
-        }
-        else {
-            $info['offer_id']=$product['uid'];
-            $info['product_id']=$product['export_ozon_id'];
+        } else {
+            $info['offer_id'] = $product['uid'];
+            $info['product_id'] = $product['export_ozon_id'];
         }
 
         if (empty($product['enabled']))
@@ -84,7 +113,7 @@ class OzonSeller {
             'offer_id' => $info['offer_id'],
             'product_id' => $info['product_id'],
             'stock' => (int) $product['items'],
-            'warehouse_id' => $this->warehouse_id
+            'warehouse_id' => $warehouse
         ];
 
         $result = $this->request(self::UPDATE_PRODUCT_STOCKS, $params);
@@ -612,10 +641,10 @@ class OzonSeller {
                     "images360" => [],
                     "name" => PHPShopString::win_utf8($prod['name']),
                     "offer_id" => $offer_id,
-                    "old_price" => $prod['price_n'],
+                    "old_price" => (string) $this->price($prod['price_n'], $prod['baseinputvaluta']),
                     "pdf_list" => [],
                     "premium_price" => "",
-                    "price" => (string) $price,
+                    "price" => (string) $this->price($price, $prod['baseinputvaluta']),
                     "primary_image" => "",
                     "vat" => (string) $this->vat,
                     "weight" => $prod['weight'],

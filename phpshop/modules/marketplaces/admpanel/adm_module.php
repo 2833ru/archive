@@ -146,7 +146,7 @@ function actionStart() {
     $catOption =  $PHPShopGUI->setField("Размещение", $tree_select_cm . $PHPShopGUI->setCheckbox("categories_cm_all", 1, "Выбрать все категории?", 0),1,'Пакетное редактирование. Настройка не сохраняется.');
     $catOption .= $PHPShopGUI->setField("Вывод в СДЭК.МАРКЕТ",$PHPShopGUI->setRadio("enabled_cm_all", 1, "Вкл.", 1).$PHPShopGUI->setRadio("enabled_cm_all", 0, "Выкл.",1));
     
-    $Tab1 .= $PHPShopGUI->setCollapse('Товары для СДЭК.МАРКЕТ', $catOption);
+    //$Tab1 .= $PHPShopGUI->setCollapse('Товары для СДЭК.МАРКЕТ', $catOption);
     
     // Выбор каталога AliExpress
     $catOption =  $PHPShopGUI->setField("Размещение", $tree_select_ae . $PHPShopGUI->setCheckbox("categories_ae_all", 1, "Выбрать все категории?", 0),1,'Пакетное редактирование. Настройка не сохраняется.');

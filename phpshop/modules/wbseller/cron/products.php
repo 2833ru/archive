@@ -38,6 +38,10 @@ $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
 $data = $PHPShopOrm->getList(['*'], ['export_wb' => '>0', 'export_wb_id' => '>0'], ['order' => 'datas desc'], ['limit' => 1000]);
 
 if (is_array($data)) {
+
+    include_once dirname(__FILE__) . '/../class/WbSeller.php';
+    $WbSeller = new WbSeller();
+
     foreach ($data as $prod) {
 
         // price columns
@@ -59,29 +63,25 @@ if (is_array($data)) {
 
         $prices[] = [
             'nmId' => (int) $prod['export_wb_id'],
-            'price' => (int) $price,
+            'price' => (int) $WbSeller->price($price, $prod['baseinputvaluta']),
         ];
-        
-        if(empty($prod['barcode_wb']))
-            $prod['barcode_wb']=$prod['uid'];
+
+        if (empty($prod['barcode_wb']))
+            $prod['barcode_wb'] = $prod['uid'];
 
         $stocks[] = [
             'barcode_wb' => (string) $prod['barcode_wb'],
             'uid' => (string) $prod['uid'],
             'enabled' => (int) $prod['enabled'],
             'items' => (int) $prod['items'],
-            'price' => (int) $price,
+            'price' => (int) $WbSeller->price($price, $prod['baseinputvaluta']),
         ];
     }
 
 
-    include_once dirname(__FILE__) . '/../class/WbSeller.php';
-
-    $WbSeller = new WbSeller();
-    
     // Цены
     $result = $WbSeller->sendPrices($prices);
-    
+
     // Остатки
     $WbSeller->setProductStock($stocks);
 

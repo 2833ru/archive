@@ -23,7 +23,7 @@
             </div>
             </div>
             <div class="product-image position-relative">
-                <a href="@shopDir@@productlist_product_url@.html" title="@productName@"><img data-src="@productlist_product_pic_small@" alt="@productName@" class="swiper-lazy" src="@productImg@"></a>
+                <a href="@shopDir@@productlist_product_url@.html" title="@productlist_product_name@"><img alt="@productlist_product_name@" class="swiper-lazy" src="@productlist_product_pic_small@"></a>
             </div>
             </div>
 

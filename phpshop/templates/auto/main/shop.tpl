@@ -345,7 +345,7 @@
                         <div class="col-sm-6">
                             <!-- Breadcrumb -->
                             <nav aria-label="breadcrumb">
-                                <ol class="breadcrumb breadcrumb-no-gutter justify-content-sm-end mb-0">
+                                <ol class="breadcrumb breadcrumb-no-gutter justify-content-sm-end mb-0" itemscope itemtype="http://schema.org/BreadcrumbList">
                                     @breadCrumbs@
                                 </ol>
                             </nav>

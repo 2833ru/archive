@@ -3,7 +3,7 @@
 /**
  * Родительский класс ядра вывода товаров
  * @author PHPShop Software
- * @version 1.6
+ * @version 1.7
  * @package PHPShopClass
  */
 class PHPShopShopCore extends PHPShopCore {
@@ -438,7 +438,7 @@ class PHPShopShopCore extends PHPShopCore {
         $this->max_page = $num;
 
         // 404 ошибка при ошибочной пагинации
-        if (((int) $this->page > 1) && $this->page > $this->num_page and $this->page != 'ALL') {
+        if (((int) $this->page > 1) && $this->page > $this->num_page) {
             return $this->setError404();
         }
 
@@ -451,11 +451,6 @@ class PHPShopShopCore extends PHPShopCore {
                 $p_do = 1;
             }
 
-
-            if ($this->page != 'ALL')
-                $this->set("paginPageCurnet", $this->page);
-            else
-                $this->set("paginPageCurnet", '-');
             $this->set("paginPageCount", $num);
 
             while ($i <= $num) {
@@ -503,18 +498,10 @@ class PHPShopShopCore extends PHPShopCore {
 
 
             // Убираем дубль первой страницы CID_X_0.html
-            if ($p_to == 0 or strtoupper($this->page) == 'ALL')
+            if ($p_to == 0)
                 $this->set("nextLink", $dir . substr($this->objPath, 0, strlen($this->objPath) - 1) . '.html' . $sort);
             else
                 $this->set("nextLink", $dir . $this->objPath . ($p_to) . '.html' . $sort);
-
-            // Добавлем ссылку показать все
-            if (strtoupper($this->page) == 'ALL')
-                $this->set("allPages", parseTemplateReturn($template_location . "paginator/paginator_all_pages_link_selected.tpl", $template_location_bool));
-            else {
-                $this->set("allPagesLink", $this->objPath . 'ALL.html' . $sort);
-                $this->set("allPages", parseTemplateReturn($template_location . "paginator/paginator_all_pages_link.tpl", $template_location_bool));
-            }
 
             // Назначаем переменную шаблонизатора
             $nav = parseTemplateReturn($template_location . "paginator/paginator_main.tpl", $template_location_bool);
@@ -1017,7 +1004,7 @@ class PHPShopShopCore extends PHPShopCore {
 /**
  * Генератор сетки товаров
  * @param array $dataArray массив данных
- * @param int $cell разрадя сетки [1-5]
+ * @param int $cell ячейки [1-5]
  * @return string
  */
 function product_grid($dataArray, $cell = 2, $template = false) {
@@ -1041,7 +1028,7 @@ function product_grid($dataArray, $cell = 2, $template = false) {
     $this->set('catalog', $this->lang('catalog'));
     if ($this->PHPShopNav->getPage() > 0)
         $this->set('productPageThis', $this->PHPShopNav->getPage());
-    elseif ($this->PHPShopNav->getPage() != 'ALL')
+    else
         $this->set('productPageThis', 1);
 
     $d1 = $d2 = $d3 = $d4 = $d5 = $d6 = $d7 = null;

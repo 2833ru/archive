@@ -281,36 +281,15 @@
             <!-- Primary Content Starts -->
             <div class="col-md-9 col-xs-12 middle-content-block">
                 @DispShop@ 
-                <section class="products-list @php __hide('now_buying'); php@">
-                    <div class="swiper-slider-wrapper">
-                        <!-- Heading Starts -->
-                        <div class="swiper-button-prev-block">
-                            <div class="swiper-button-prev btn-prev3">
-                                <span class="glyphicon glyphicon-chevron-left"></span>
-                            </div>
-                        </div>
-                        <div class="swiper-button-next-block">
-                            <div class="swiper-button-next btn-next3">
-                                <span class="glyphicon glyphicon-chevron-right"></span>
-                            </div>
-                        </div>
-                        <h2 class="product-head page-header swiper-title">@now_buying@</h2>
-                        <!-- Heading Ends -->
-                        <!-- Products Row Starts -->
-                        <div class="swiper-container nowBuy">
-                            <div class="swiper-wrapper">
-                                @nowBuy@
-                            </div>
-                        </div>
-                        <!-- Products Row Ends -->
-                    </div>     
-                </section>
+
                 <div class="col-xs-12">
                     <div class="banner-block">
                         @banersDispHorizontal@
                     </div>
                 </div>
             </div>
+            
+            
 
             <!-- Primary Content Ends -->
         </div>

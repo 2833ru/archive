@@ -4,7 +4,7 @@
  * Родительский класс ядра
  * Примеры использования размещены в папке phpshop/core/
  * @author PHPShop Software
- * @version 1.10
+ * @version 1.11
  * @package PHPShopClass
  */
 class PHPShopCore {
@@ -325,7 +325,7 @@ class PHPShopCore {
         $this->where = $where;
 
         // Обработка номера страницы
-        if (!PHPShopSecurity::true_num($this->page) and strtoupper($this->page) != 'ALL')
+        if (!PHPShopSecurity::true_num($this->page))
             return $this->setError404();
 
         if (empty($this->page)) {
@@ -335,13 +335,6 @@ class PHPShopCore {
             $num_ot = $this->num_row * ($this->page - 1);
             $num_do = $this->num_row;
         }
-
-        // Вывод всех страниц
-        if (strtoupper($this->page) == 'ALL') {
-            $num_ot = 0;
-            $num_do = $this->max_item;
-        }
-
 
         $option = array('limit' => intval($num_ot) . ',' . intval($num_do));
 
@@ -407,7 +400,7 @@ class PHPShopCore {
         $this->max_page = $num;
 
         // 404 ошибка при ошибочной пагинации
-        if ($this->page > $this->num_page and $this->page != 'ALL') {
+        if ($this->page > $this->num_page) {
             return $this->setError404();
         }
 
@@ -420,11 +413,6 @@ class PHPShopCore {
                 $p_do = 1;
             }
 
-
-            if ($this->page != 'ALL')
-                $this->set("paginPageCurnet", $this->page);
-            else
-                $this->set("paginPageCurnet", '-');
             $this->set("paginPageCount", $num);
 
             while ($i <= $num) {
@@ -475,14 +463,6 @@ class PHPShopCore {
                 $this->set("nextLink", substr($this->objPath, 0, strlen($this->objPath) - 1) . '.html' . $sort);
             else
                 $this->set("nextLink", $this->objPath . ($p_to) . '.html' . $sort);
-
-            // Добавлем ссылку показать все
-            if (strtoupper($this->page) == 'ALL')
-                $this->set("allPages", parseTemplateReturn($template_location . "paginator/paginator_all_pages_link_selected.tpl", $template_location_bool));
-            else {
-                $this->set("allPagesLink", $this->objPath . 'ALL.html' . $sort);
-                $this->set("allPages", parseTemplateReturn($template_location . "paginator/paginator_all_pages_link.tpl", $template_location_bool));
-            }
 
             // Назначаем переменную шаблонизатора
             $nav = parseTemplateReturn($template_location . "paginator/paginator_main.tpl", $template_location_bool);

@@ -155,8 +155,6 @@ function actionStart() {
     $PHPShopGUI->setActionPanel($TitlePage, false, array('Время'));
     $PHPShopGUI->addJSFiles('js/chart.min.js', 'intro/gui/intro.gui.js');
     $PHPShopInterface->checkbox_action = false;
-    $PHPShopInterface->setCaption(array("", "10%"), array("", "20%"), array("", "20%"), array("", "15%"), array("", "15%", array('align' => 'right')));
-
 
     // Знак рубля
     if ($PHPShopSystem->getDefaultValutaIso() == 'RUB')

@@ -41,6 +41,21 @@
                 </li>
                 <li>@promotionInfo@</li>
                 <li>@oneclick@</li>
+
+                <!-- Модуль Vkseller -->
+                <li class="@php __hide('vkseller_link'); php@">
+                    <a class="btn btn-cart" href="@vkseller_link@" target="_blank"><i class="fa fa-vk" aria-hidden="true"></i> Купить в ВКонтакте</a>
+                </li>
+
+                <!-- Модуль Ozonseller -->
+                <li class="@php __hide('ozonseller_link'); php@">
+                    <a class="btn btn-cart" href="@ozonseller_link@" target="_blank"><i class="fa fa-opera" aria-hidden="true"></i> Купить в OZON</a>
+                </li>
+
+                <!-- Модуль Wbseller -->
+                <li class="@php __hide('wbseller_link'); php@">
+                    <a class="btn btn-cart" href="@wbseller_link@" target="_blank"><i class="fa fa-wordpress" aria-hidden="true"></i> Купить в Wildberries</a>
+                </li>
                 <li><a href="/pricemail/UID_@productUid@.html">@productBestPrice@</a></li>
             </ul>
             <!-- Manufacturer Ends -->

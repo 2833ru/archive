@@ -140,14 +140,30 @@
                 </div>
 
                 @oneclick@
+
+                <!-- Модуль Vkseller -->
+                <div class="@php __hide('vkseller_link'); php@">
+                    <a class="oneclick-btn" href="@vkseller_link@" target="_blank">Купить в ВКонтакте</a>
+                </div>
+
+                <!-- Модуль Ozonseller -->
+                <div class="@php __hide('ozonseller_link'); php@">
+                    <a class="oneclick-btn" href="@ozonseller_link@" target="_blank">Купить в OZON</a>
+                </div>
+
+                <!-- Модуль Wbseller -->
+                <div class="@php __hide('wbseller_link'); php@">
+                    <a class="oneclick-btn" href="@wbseller_link@" target="_blank">Купить в Wildberries</a>
+                </div>
+
                 <div class="clearfix"></div>
 
                 <div class="flex-block option-block">
                     @sticker_size@ @sticker_shipping@
                     <a class="question" href="/forma/">{Задать вопрос по продукту}</a>
                 </div>
-                
-                
+
+
                 <div class="flex-block">
                     <div class="product-sklad" id="items">@productSklad@</div>
                     <a class="best-price" href="/pricemail/UID_@productUid@.html">@productBestPrice@</a>

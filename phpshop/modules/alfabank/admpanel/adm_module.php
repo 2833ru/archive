@@ -44,11 +44,18 @@ function actionStart() {
     
     $api = array(
         array('pay.alfabank.ru', 'https://pay.alfabank.ru/payment/rest/register.do', $data['api_url']),
-        array('payment.alfabank.ru', 'https://payment.alfabank.ru/payment/rest/register.do', $data['api_url'])
+        array('payment.alfabank.ru', 'https://payment.alfabank.ru/payment/rest/register.do', $data['api_url']),
+        array('ecom.alfabank.ru', 'https://ecom.alfabank.ru/api/rest/register.do', $data['dev_mode']),
+    );
+    
+    $dev = array(
+        array(__('Ничего не выбрано'), 0, $data['dev_mode']),
+        array('alfa.rbsuat.com', 'https://alfa.rbsuat.com/ab/rest/register.do', $data['dev_mode']),
+        array('tws.egopay.ru', 'https://tws.egopay.ru/api/ab/rest/register.do', $data['dev_mode']),
     );
     
     $Tab2.= $PHPShopGUI->setField('URL адрес API', $PHPShopGUI->setSelect('api_url_new', $api, 300));
-
+    $Tab2 .= $PHPShopGUI->setField('Тестовый URL адрес API', $PHPShopGUI->setSelect('dev_mode_new', $dev, 300),1,"Отправка данных на тестовую среду Альфабанка");
 
     // Система налогообложения
     $tax_system = array(
@@ -71,9 +78,6 @@ function actionStart() {
 
     // Статус заказа
     $Tab2 .= $PHPShopGUI->setField('Оплата при статусе', $PHPShopGUI->setSelect('status_new', $order_status_value, 300));
-
-    $Tab2 .= $PHPShopGUI->setField('Режим разработки', $PHPShopGUI->setCheckbox("dev_mode_new", 1, "Отправка данных на тестовую среду Альфабанка", $data["dev_mode"]));
-
     $Tab2 .= $PHPShopGUI->setField('Сообщение предварительной проверки', $PHPShopGUI->setTextarea('title_sub_new', $data['title_sub']));
 
     // Инструкция

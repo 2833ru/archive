@@ -12,10 +12,10 @@
             <div id="fotoload">
                 @productFotoList@
             </div>
-				        <span class="sale-icon-content">
+            <span class="sale-icon-content">
                 @specIcon@
                 @newtipIcon@
-				@giftIcon@
+                @giftIcon@
                 @hitIcon@
                 @promotionsIcon@
             </span>
@@ -28,7 +28,7 @@
             <!-- Product Name Ends -->
             <hr>
             <!-- Manufacturer Starts -->
-                        <ul class="list-unstyled manufacturer product-page-list">
+            <ul class="list-unstyled manufacturer product-page-list">
                 <li>
                     @productArt@
                 </li>
@@ -42,6 +42,22 @@
                 </li>
                 <li>@promotionInfo@</li>
                 <li>@oneclick@</li>
+                
+                <!-- Модуль Vkseller -->
+                <li class="@php __hide('vkseller_link'); php@">
+                    <a class="btn btn-cart" href="@vkseller_link@" target="_blank"><i class="fa fa-vk" aria-hidden="true"></i> Купить в ВКонтакте</a>
+                </li>
+                
+                <!-- Модуль Ozonseller -->
+                <li class="@php __hide('ozonseller_link'); php@">
+                    <a class="btn btn-cart" href="@ozonseller_link@" target="_blank"><i class="fa fa-opera" aria-hidden="true"></i> Купить в OZON</a>
+                </li>
+
+                <!-- Модуль Wbseller -->
+                <li class="@php __hide('wbseller_link'); php@">
+                    <a class="btn btn-cart" href="@wbseller_link@" target="_blank"><i class="fa fa-wordpress" aria-hidden="true"></i> Купить в Wildberries</a>
+                </li>
+
                 <li><a href="/pricemail/UID_@productUid@.html">@productBestPrice@</a></li>
             </ul>
             <!-- Manufacturer Ends -->
@@ -50,9 +66,9 @@
             <div class="price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                 <span class="price-new  priceService" itemprop="price" content="@productSchemaPrice@">@productPrice@</span><span class="price-new rubznak" itemprop="priceCurrency" content="RUB">@productValutaName@</span> &nbsp;&nbsp;<span class="price-old">@productPriceOld@</span>
             </div>
-			 @ComStartNotice@
-				<div class="outStock">@productOutStock@</div>
-			@ComEndNotice@
+            @ComStartNotice@
+            <div class="outStock">@productOutStock@</div>
+            @ComEndNotice@
             <!-- Price Ends -->
             <hr>
             <!-- Available Options Starts -->
@@ -65,7 +81,7 @@
                 @productParentList@
 
 
- @productservices_list@
+                @productservices_list@
                 <label class="control-label text-uppercase @elementCartHide@">{Количество}</label>
                 <div class="quant input-group @elementCartHide@">
                     <span class="input-group-btn">
@@ -87,7 +103,7 @@
                         <span>@productSale@</span>
                     </button>                                   
                 </div>
-               <div class="cart-button button-group cart-list-button-wrapper  @elementCartOptionHide@">
+                <div class="cart-button button-group cart-list-button-wrapper  @elementCartOptionHide@">
                     <button type="button" class="btn btn-cart addToCartFull" data-num="1" data-uid="@productUid@" data-cart="@productSaleReady@">
                         <i class="icon-basket"></i>                                 
                         <span>@productSale@</span>
@@ -149,7 +165,7 @@
             <button class="btn btn-show-comment-add-block" onclick="$('#addComment').slideToggle();
                     $(this).hide();"><span class="glyphicon glyphicon-plus-sign"></span> {Новый комментарий}</button>
             <div id='addComment' class="well well-sm" style='display:none;margin-top:30px;'>
-<div class="comment-head">{Оставьте свой отзыв}</div>
+                <div class="comment-head">{Оставьте свой отзыв}</div>
                 <textarea id="message" class="commentTexttextarea form-control"></textarea>
                 <input type="hidden" id="commentAuthFlag" name="commentAuthFlag" value="@php if($_SESSION['UsersId']) echo 1; else echo 0; php@">
                 <br>
@@ -173,11 +189,11 @@
                 </div>
             </div>
         </div>
-		
+
         <script type="text/javascript">
-                $(document).ready(function() {
-                    commentList('@productUid@', 'list');
-                });
+            $(document).ready(function () {
+                commentList('@productUid@', 'list');
+            });
         </script>
     </div>
     <!-- Reviews Information Ends -->
@@ -199,7 +215,7 @@
         </div>
     </div>
     <!-- Articles Information Ends -->
- @productsgroup_list@
+    @productsgroup_list@
 
     <!-- Модальное окно фотогалереи -->
     <div class="modal bs-example-modal" id="sliderModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

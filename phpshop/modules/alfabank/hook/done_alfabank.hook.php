@@ -155,7 +155,7 @@ function send_alfabank_hook($obj, $value, $rout) {
             if ($option["dev_mode"] == 0)
                 $url = $option["api_url"];
             else
-                $url = 'https://web.rbsuat.com/ab/rest/register.do';
+                $url = $option["dev_mode"];
 
             $rbsCurl = curl_init();
             curl_setopt_array($rbsCurl, array(

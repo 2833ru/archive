@@ -21,8 +21,10 @@ function actionBaseUpdate() {
 
 // Функция обновления
 function actionUpdate() {
-    global $PHPShopModules;
+    global $PHPShopModules,$PHPShopOrm;
 
+    // Корректировка пустых значений
+    $PHPShopOrm->updateZeroVars('link_new');
 
     $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.wbseller.wbseller_system"));
     $PHPShopOrm->debug = false;
@@ -32,7 +34,6 @@ function actionUpdate() {
 
     return $action;
 }
-
 
 function actionStart() {
     global $PHPShopGUI, $PHPShopOrm, $WbSeller, $PHPShopModules;
@@ -58,49 +59,20 @@ function actionStart() {
             $order_status_value[] = array($order_status['name'], $order_status['id'], $data['status']);
 
 
-    $Tab1 = $PHPShopGUI->setField('API key', $PHPShopGUI->setTextarea('token_new', $data['token'],false, '100%','100'));
+    $Tab1 = $PHPShopGUI->setField('API key', $PHPShopGUI->setTextarea('token_new', $data['token'], false, '100%', '100'));
     $Tab1 .= $PHPShopGUI->setField('Статус нового заказа', $PHPShopGUI->setSelect('status_new', $order_status_value, '100%'));
     $Tab1 .= $PHPShopGUI->setField('Ключ обновления', $PHPShopGUI->setRadio("type_new", 1, "ID товара", $data['type']) . $PHPShopGUI->setRadio("type_new", 2, "Артикул товара", $data['type']));
+    $Tab1 .= $PHPShopGUI->setField('Ссылка на товар', $PHPShopGUI->setCheckbox('link_new', 1, 'Показать ссылку на товар в Wildberries', $data['link']));
 
     $Tab1 = $PHPShopGUI->setCollapse('Настройки', $Tab1);
 
-    $info = '<h4>Настройка модуля</h4>
-    <ol>
-        <li>Зарегистрироваться в <a href="https://seller.wildberries.ru" target="_blank">WB Partners</a>.</li>
-        <li>В личном кабинете WB Seller открыть <a href="https://seller.wildberries.ru/supplier-settings/access-to-api" target="_blank">Настройки - Доступ к  API</a>, создать новый токен (тип токена <kbd>Стандартный</kbd>, имя токена любое). Необходимо скопировать значение токена в поле <kbd>API key</kbd> в настройках модуля.
-        </li>
-        <li>В настройках модуля выбрать статус заказов, поступающих с WB.</li>
-        <li>В настройках модуля выбрать склад WB. Если склад не создан, то его нужно предварительно создать в <a href="https://seller.wildberries.ru/marketplace-pass/warehouses" target="_blank">Мои склады и пропуска</a>.</li>
-    </ol>
-
-   <h4>Выгрузка товаров в WB</h4>
-   WB принимает данные по товарам с четко указанными данными по категориям и характеристикам из базы WB.
-   <ol>
-    <li>В карточке редактирования категории в магазине сопоставить выбранную свою категорию с категорией WB в закладке <kbd>WB</kbd>, поле <kbd>Размещение в WB</kbd>. При наборе имени категории будет показано всплывающее окно категорий WB, доступных по поиску вводимых данных. Сохранить выбор и перегрузить страницу, после чего появится блок "Сопоставление характеристик с WB".</li>
-    <li>Сопоставить или создать необходимые характеристики с указанными значениями.</li>
-    <li>В карточке редактирования товара в магазине через закладку "Модули - WB" включить опцию <kbd>Включить экспорт в WB</kbd> и сохранить данные. Список товаров для выгрузки в WB доступен в разделе "Модули - WB Partners - Товары для WB".</li>
-    <li>После успешной выгрузки товары появятся в разделе <a href="https://seller.wildberries.ru/new-goods" target="_blank">Товары - Карточки товаров - Созданные</a> в WB.</li>
-    <li>Для выгрузки цен и остатков товаров в WB следует добавить новую задачу в модуль <a href="https://docs.phpshop.ru/moduli/razrabotchikam/cron" target="_blank">Задачи</a> с адресом запускаемого файла <code>phpshop/modules/wbseller/cron/products.php</code>. Остатки и цены выгружаются так же при редактировании карточки товара в магазине.</li>
-  </ol>
-  
-  <h4>Загрузка заказов с WB</h4>
-   <ol>
-    <li>Список заказов для загрузки из WB доступен в разделе "Модули - WB Partners - Заказы из WB". По клику на номер заказа откроется карточка с описанием данных по заказу с WB. Для загрузки заказа используется кнопка <kbd>Загрузить заказ</kbd>. Загруженный заказ будет иметь статус, выбранный в настройках модуля. В поле "Примечания администратора" загруженного заказа будет информация о загрузке с WB и его номер. Для повторной загрузки заказа следует удалить его из базы заказов в магазине.</li>
-    <li>В закладке "Дополнительно" предпросмотра заказа с WB выводится полная информация по заказу в виде массива данных.</li>
-  </ol>
-  
- <h4>Загрузка товаров с WB</h4>
-   <ol>
-    <li>Список товаров для загрузки из WB доступен в разделе "Модули - WB Partners- Товары из WB". По клику на название товара откроется карточка с описанием данных по товару с WB. Для загрузки товара используется кнопка <kbd>Загрузить товар</kbd>. Для повторной загрузки товара следует удалить его из базы товаров в магазине. Из WB загрузятся данные по товару, в том числе изображения и характеристики.</li>
-  </ol>
-';
 
     if ($data['fee_type'] == 1) {
         $status_pre = '-';
     } else {
         $status_pre = '+';
     }
-    
+
     $getWarehouse = $WbSeller->getWarehouse();
     if (is_array($getWarehouse))
         foreach ($getWarehouse as $warehouse)
@@ -112,7 +84,8 @@ function actionStart() {
             $PHPShopGUI->setField("Склад WB", $PHPShopGUI->setSelect('warehouse_new', $warehouse_value, '100%'))
     );
 
-    $Tab2 = $PHPShopGUI->setInfo($info);
+    // Инструкция
+    $Tab2 = $PHPShopGUI->loadLib('tab_info', $data, '../modules/' . $_GET['id'] . '/admpanel/');
 
     // Форма регистрации
     $Tab4 = $PHPShopGUI->setPay(false, false, $data['version'], true);
@@ -129,17 +102,17 @@ function actionStart() {
 }
 
 /**
- * Подбор пользователей
+ * Подбор категорий
  */
 function actionCategorySearch() {
     global $WbSeller;
-    
+
     $data = $WbSeller->getTree(PHPShopString::win_utf8($_POST['words']))['data'];
 
     if (is_array($data)) {
         foreach ($data as $row) {
 
-            $result .= '<a href=\'#\' class=\'select-search\' data-name=\'' . PHPShopString::utf8_win1251($row['objectName'],true) . '\'>' . PHPShopString::utf8_win1251($row['parentName'],true) . ' &rarr; ' . PHPShopString::utf8_win1251($row['objectName'],true) . '</a><br>';
+            $result .= '<a href=\'#\' class=\'select-search\' data-name=\'' . PHPShopString::utf8_win1251($row['objectName'], true) . '\'>' . PHPShopString::utf8_win1251($row['parentName'], true) . ' &rarr; ' . PHPShopString::utf8_win1251($row['objectName'], true) . '</a><br>';
         }
         $result .= '<button type="button" class="close pull-right" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
 

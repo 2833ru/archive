@@ -167,10 +167,22 @@
             </div>
 
             <!-- Модуль Купить в 1 клик -->
-            @oneclick@          
-
-            <!-- Help Link -->
-            @sticker_chat@
+            @oneclick@    
+            
+            <!-- Модуль Vkseller -->
+            <div class="mb-4 @php __hide('vkseller_link'); php@">
+                <a class="btn btn-block btn-soft-success btn-pill transition-3d-hover" href="@vkseller_link@" target="_blank">Купить в ВКонтакте</a>
+            </div>
+            
+            <!-- Модуль Ozonseller -->
+            <div class="mb-4 @php __hide('ozonseller_link'); php@">
+                <a class="btn btn-block btn-soft-success btn-pill transition-3d-hover" href="@ozonseller_link@" target="_blank">Купить в OZON</a>
+            </div>
+            
+             <!-- Модуль Wbseller -->
+            <div class="mb-4 @php __hide('wbseller_link'); php@">
+                <a class="btn btn-block btn-soft-success btn-pill transition-3d-hover" href="@wbseller_link@" target="_blank">Купить в Wildberries</a>
+            </div>
 
         </div>
         <!-- End Product Description -->

@@ -1,7 +1,7 @@
 <?php
 
 include_once dirname(__FILE__) . '/../class/OzonSeller.php';
-$TitlePage = __('Заказ из Ozon').' #'.$_GET['id'];
+$TitlePage = __('Заказ из Ozon') . ' #' . $_GET['id'];
 PHPShopObj::loadClass("product");
 
 // Озон
@@ -134,7 +134,7 @@ function actionSave() {
     if (is_array($data))
         foreach ($data as $row) {
 
-            $product = new PHPShopProduct($row['offer_id'],$ozon_type);
+            $product = new PHPShopProduct($row['offer_id'], $ozon_type);
             $order['Cart']['cart'][$row['offer_id']]['id'] = $product->getParam('id');
             $order['Cart']['cart'][$row['offer_id']]['uid'] = $product->getParam("uid");
             $order['Cart']['cart'][$row['offer_id']]['name'] = $product->getName();
@@ -187,6 +187,13 @@ function actionSave() {
 
     // Запись в базу
     $orderId = $PHPShopOrm->insert($insert);
+
+    // Оповещение пользователя о новом статусе и списание со склада
+    if (!empty($insert['statusi_new'])) {
+        PHPShopObj::loadClass("order");
+        $PHPShopOrderFunction = new PHPShopOrderFunction($orderId);
+        $PHPShopOrderFunction->changeStatus($insert['statusi_new'], 0);
+    }
 
     header('Location: ?path=order&id=' . $orderId . '&return=' . $_GET['path']);
 }

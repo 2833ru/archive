@@ -233,6 +233,22 @@
                 </div>
 
                 @oneclick@
+
+                <!-- Модуль Vkseller -->
+                <div class="@php __hide('vkseller_link'); php@">
+                    <a class="oneclick-btn" href="@vkseller_link@" target="_blank">Купить в ВКонтакте</a>
+                </div>
+
+                <!-- Модуль Ozonseller -->
+                <div class="@php __hide('ozonseller_link'); php@">
+                    <a class="oneclick-btn" href="@ozonseller_link@" target="_blank">Купить в OZON</a>
+                </div>
+
+                <!-- Модуль Wbseller -->
+                <div class="@php __hide('wbseller_link'); php@">
+                    <a class="oneclick-btn" href="@wbseller_link@" target="_blank">Купить в Wildberries</a>
+                </div>
+
                 <div class="odnotipListWrapper">
 
                 </div>

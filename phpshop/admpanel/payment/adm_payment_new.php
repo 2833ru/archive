@@ -2,6 +2,7 @@
 
 $TitlePage = __('Создание способа оплаты');
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['payment_systems']);
+PHPShopObj::loadClass('user');
 
 // Стартовый вид
 function actionStart() {
@@ -11,14 +12,14 @@ function actionStart() {
     $data['name'] = __('Новый способ оплаты');
     $data['enabled'] = 1;
     $data['color'] = '#000000';
-    
+
     // bootstrap-colorpicker
     $PHPShopGUI->addCSSFiles('./css/bootstrap-colorpicker.min.css');
     $PHPShopGUI->addJSFiles('./js/bootstrap-colorpicker.min.js');
 
     // Размер названия поля
-    $PHPShopGUI->field_col = 3;
-    $PHPShopGUI->setActionPanel($TitlePage, null, array('Создать и редактировать', 'Сохранить и закрыть'),false);
+    $PHPShopGUI->field_col = 4;
+    $PHPShopGUI->setActionPanel($TitlePage, null, array('Создать и редактировать', 'Сохранить и закрыть'), false);
 
     // Редактор 1
     $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));
@@ -26,8 +27,8 @@ function actionStart() {
     $oFCKeditor->Height = '300';
     $oFCKeditor->ToolbarSet = 'Normal';
     $oFCKeditor->Value = $data['message'];
-    
-        // Юридические лица
+
+    // Юридические лица
     $PHPShopCompany = new PHPShopCompanyArray();
     $PHPShopCompanyArray = $PHPShopCompany->getArray();
     $company_value[] = array($PHPShopSystem->getSerilizeParam("bank.org_name"), 0, $data['company']);
@@ -35,20 +36,29 @@ function actionStart() {
         foreach ($PHPShopCompanyArray as $company)
             $company_value[] = array($company['name'], $company['id'], $data['company']);
 
+    // Статусы пользователей
+    $PHPShopUserStatus = new PHPShopUserStatusArray();
+    $PHPShopUserStatusArray = $PHPShopUserStatus->getArray();
+    $user_status_value[] = array('Не выбрано', '', '');
+    if (is_array($PHPShopUserStatusArray))
+        foreach ($PHPShopUserStatusArray as $user_status)
+            $user_status_value[] = array($user_status['name'], $user_status['id'], $data['status']);
+
     // Содержание 
     $Tab1 = $PHPShopGUI->setCollapse('Информация', $PHPShopGUI->setField("Наименование", $PHPShopGUI->setInput("text", "name_new", $data['name'])) .
             $PHPShopGUI->setField("Статус", $PHPShopGUI->setCheckbox("enabled_new", 1, null, $data['enabled'])) .
             $PHPShopGUI->setField("Приоритет", $PHPShopGUI->setInputText(null, "num_new", $data['num'], '100')) .
             $PHPShopGUI->setField("Юридические данные", $PHPShopGUI->setCheckbox("yur_data_flag_new", 1, "Обязательно заполнять", $data['yur_data_flag'])) .
-            $PHPShopGUI->setField("Тип подключения", $PHPShopGUI->setSelect("path_new", $PHPShopGUI->loadLib('GetTipPayment', $data['path']), 350)).
-            $PHPShopGUI->setField("Юридическое лицо", $PHPShopGUI->setSelect('company_new', $company_value,350)).
-            $PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'))
+            $PHPShopGUI->setField("Тип подключения", $PHPShopGUI->setSelect("path_new", $PHPShopGUI->loadLib('GetTipPayment', $data['path']), '100%')) .
+            $PHPShopGUI->setField("Юридическое лицо", $PHPShopGUI->setSelect('company_new', $company_value, '100%')) .
+            $PHPShopGUI->setField("Смена статуса", $PHPShopGUI->setSelect('status_new', $user_status_value, '100%')) .
+            $PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/', '100%'))
     );
 
-    $Tab1.=$PHPShopGUI->setCollapse('Внешний вид',$PHPShopGUI->setField("Иконка", $PHPShopGUI->setIcon($data['icon'], "icon_new", false)).
-    $PHPShopGUI->setField('Цвет', $PHPShopGUI->setInputColor('color_new', $data['color'])));
+    $Tab1 .= $PHPShopGUI->setCollapse('Внешний вид', $PHPShopGUI->setField("Иконка", $PHPShopGUI->setIcon($data['icon'], "icon_new", false)) .
+            $PHPShopGUI->setField('Цвет', $PHPShopGUI->setInputColor('color_new', $data['color'])));
 
-    $Tab1.=$PHPShopGUI->setCollapse('Сообщение после заказа', $PHPShopGUI->setField("Заголовок:", $PHPShopGUI->setInput("text", "message_header_new", $data['message_header'])) . '<div>'.$oFCKeditor->AddGUI().'</div>');
+    $Tab1 .= $PHPShopGUI->setCollapse('Сообщение после заказа', $PHPShopGUI->setField("Заголовок:", $PHPShopGUI->setInput("text", "message_header_new", $data['message_header'])) . '<div>' . $oFCKeditor->AddGUI() . '</div>');
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, null);
@@ -71,14 +81,14 @@ function actionInsert() {
     $_POST['icon_new'] = iconAdd();
 
     // Корректировка пустых значений
-    $PHPShopOrm->updateZeroVars('yur_data_flag_new',"enabled_new");
-    
-        // Мультибаза
+    $PHPShopOrm->updateZeroVars('yur_data_flag_new', "enabled_new");
+
+    // Мультибаза
     if (is_array($_POST['servers'])) {
         $_POST['servers_new'] = "";
         foreach ($_POST['servers'] as $v)
-            if ($v != 'null' and !strstr($v, ','))
-                $_POST['servers_new'].="i" . $v . "i";
+            if ($v != 'null' and ! strstr($v, ','))
+                $_POST['servers_new'] .= "i" . $v . "i";
     }
 
     // Перехват модуля

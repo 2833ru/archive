@@ -12,10 +12,10 @@
             <div id="fotoload">
                 @productFotoList@
             </div>
-	        <span class="sale-icon-content">
+            <span class="sale-icon-content">
                 @specIcon@
                 @newtipIcon@
-				@giftIcon@
+                @giftIcon@
                 @hitIcon@
                 @promotionsIcon@
             </span>			
@@ -42,6 +42,21 @@
                 </li>
                 <li>@promotionInfo@</li>
                 <li>@oneclick@</li>
+                
+                <!-- Модуль Vkseller -->
+                <li class="@php __hide('vkseller_link'); php@">
+                    <a class="btn btn-cart" href="@vkseller_link@" target="_blank"><i class="fa fa-vk" aria-hidden="true"></i> Купить в ВКонтакте</a>
+                </li>
+
+                <!-- Модуль Ozonseller -->
+                <li class="@php __hide('ozonseller_link'); php@">
+                    <a class="btn btn-cart" href="@ozonseller_link@" target="_blank"><i class="fa fa-opera" aria-hidden="true"></i> Купить в OZON</a>
+                </li>
+
+                <!-- Модуль Wbseller -->
+                <li class="@php __hide('wbseller_link'); php@">
+                    <a class="btn btn-cart" href="@wbseller_link@" target="_blank"><i class="fa fa-wordpress" aria-hidden="true"></i> Купить в Wildberries</a>
+                </li>
                 <li><a href="/pricemail/UID_@productUid@.html">@productBestPrice@</a></li>
             </ul>
             <!-- Manufacturer Ends -->
@@ -53,9 +68,9 @@
                 <span class="price-new rubznak" itemprop="priceCurrency" content="RUB">@productValutaName@</span>
                 <span class="price-old">@productPriceOld@</span>
             </div>
-			@ComStartNotice@
-				<div сlass="outStock">@productOutStock@</div>
-			@ComEndNotice@
+            @ComStartNotice@
+            <div сlass="outStock">@productOutStock@</div>
+            @ComEndNotice@
             <!-- Price Ends -->
             <hr>
             <!-- Available Options Starts -->
@@ -67,7 +82,7 @@
                 </div>
                 @productParentList@
 
-@productservices_list@
+                @productservices_list@
 
                 <label class="control-label text-uppercase @elementCartHide@">{Количество}</label>
                 <div class="quant input-group @elementCartHide@">
@@ -90,7 +105,7 @@
                         <span>@productSale@</span>
                     </button>                                   
                 </div>
-               <div class="cart-button button-group cart-list-button-wrapper  @elementCartOptionHide@">
+                <div class="cart-button button-group cart-list-button-wrapper  @elementCartOptionHide@">
                     <button type="button" class="btn btn-cart addToCartFull" data-num="1" data-uid="@productUid@" data-cart="@productSaleReady@">
                         <i class="fa fa-shopping-cart"></i>                                 
                         <span>@productSale@</span>
@@ -175,9 +190,9 @@
             </div>
         </div>
         <script type="text/javascript">
-                $(document).ready(function() {
-                    commentList('@productUid@', 'list');
-                });
+            $(document).ready(function () {
+                commentList('@productUid@', 'list');
+            });
         </script>
     </div>
     <!-- Reviews Information Ends -->
@@ -200,7 +215,7 @@
     </div>
     <!-- Articles Information Ends -->
 
- @productsgroup_list@
+    @productsgroup_list@
     <!-- Модальное окно фотогалереи -->
     <div class="modal bs-example-modal" id="sliderModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">

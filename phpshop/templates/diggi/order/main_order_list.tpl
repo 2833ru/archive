@@ -15,7 +15,7 @@
 
 
 
-		<div class="col-xs-12 col-lg-10">
+		<div class="col-xs-12 col-lg-12">
 			<div class="row top-button-order-row">
 				<div class="pull-left">
 						<h1 class="main-heading2">{Заказ} &#8470;@orderNum@</h1>

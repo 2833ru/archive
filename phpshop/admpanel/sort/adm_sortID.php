@@ -80,7 +80,7 @@ function actionStart() {
     // Группа категорий / optionname
     if (empty($_GET['type'])) {
         $Tab3 = $PHPShopGUI->setField("Группа:", $PHPShopGUI->setSelect('category_new', $category_value, '100%', false, false, true) .
-                $PHPShopGUI->setHelp('Можно скрыть пустые значения фильтра с одной Группой хар-к. В основных настройках отметьте <a href="?path=system" target="_blank">Кешировать значения фильтра</a>.')).
+                $PHPShopGUI->setHelp('Можно скрыть пустые значения фильтра с одной Группой хар-к. В основных настройках отметьте <a href="?path=system#2" target="_blank">Кешировать значения фильтра</a>.')).
                 $PHPShopGUI->setField("Бренд:", $PHPShopGUI->setCheckbox('brand_new', 1, null, $data['brand']), 1, 'Характеристика становится брендом и отображается в списке брендов') .
                 $PHPShopGUI->setField("Переключение", $PHPShopGUI->setCheckbox('product_new', 1, null, $data['product']), 1, 'Вместо значений хар-ки выводить Рекомендуемые товары для совместной продажи, указанные в карточке товара') .
                 $PHPShopGUI->setField('Фильтр',$PHPShopGUI->setCheckbox('filtr_new', 1, null, $data['filtr'])).

@@ -16,45 +16,12 @@ function addOzonsellerTab($data) {
 
         $OzonSeller = new OzonSeller();
 
+        $PHPShopGUI->addJSFiles('../modules/ozonseller/admpanel/gui/order.gui.js');
+        $category_ozonseller = (new PHPShopOrm('phpshop_modules_ozonseller_categories'))->getOne(['name'],['id'=>'='.$data['category_ozonseller']])['name'];
 
-        $PHPShopCategoryArray = new PHPShopCategoryOzonArray();
-        $CategoryArray = $PHPShopCategoryArray->getArray();
+        $tree_select = '
+        <input data-set="3" name="category_ozonseller" class="search_ozoncategory form-control input-sm" type="search" data-trigger="manual" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true"  data-content="" placeholder="' . __('Найти...') . '" value="' . $category_ozonseller . '"><input name="category_ozonseller_new" type="hidden" value="' . $data['category_ozonseller'] . '">';
 
-        $tree_array = array();
-
-        foreach ($PHPShopCategoryArray->getKey('parent_to.id', true) as $k => $v) {
-            foreach ($v as $cat) {
-                $tree_array[$k]['sub'][$cat] = $CategoryArray[$cat]['name'];
-            }
-            $tree_array[$k]['name'] = $CategoryArray[$k]['name'];
-            $tree_array[$k]['id'] = $k;
-            if ($k == $data['parent_to'])
-                $tree_array[$k]['selected'] = true;
-        }
-
-        $GLOBALS['tree_array'] = &$tree_array;
-
-        if (empty($data['category_ozonseller']))
-            $selected = 'selected';
-        else
-            $tree_select = null;
-
-        $tree_select = '<option value="0" ' . $selected . '>' . __('Ничего не выбрано') . '</option>';
-
-        if ($k == $data['parent_to'])
-            $selected = 'selected';
-
-        $category_ozonseller = $data['category_ozonseller'];
-
-        if (!empty($tree_array) and is_array($tree_array[0]['sub']))
-            foreach ($tree_array[0]['sub'] as $k => $v) {
-                $check = treegenerator_ozonseller(@$tree_array[$k], 1, $data['category_ozonseller']);
-                $tree_select .= '<option value="' . $k . '"  disabled>' . $v . '</option>';
-                $tree_select .= $check;
-            }
-
-
-        $tree_select = '<select class="selectpicker show-menu-arrow hidden-edit" data-live-search="true" data-container="body"  data-style="btn btn-default btn-sm" name="category_ozonseller_new" data-width="100%">' . $tree_select . '</select>';
 
         // Размещение
         $Tab1 = $PHPShopGUI->setCollapse('Размещение в OZON', $tree_select);

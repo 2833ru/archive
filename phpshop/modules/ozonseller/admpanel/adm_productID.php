@@ -10,9 +10,9 @@ function addOzonsellerProductTab($data) {
 
     $tab = $PHPShopGUI->setField(null, $PHPShopGUI->setCheckbox('export_ozon_new', 1, 'Включить экспорт в OZON', $data['export_ozon']));
     $tab .= $PHPShopGUI->setInput("hidden", "export_ozon_task_id", $data['export_ozon_task_id']);
-    $status = ['imported' => '<span class="text-success">Загружен</span>', 'error' => '<span class="text-warning">Ошибка</span>'];
+    $status = ['imported' => '<span class="text-success">Загружен '.  PHPShopDate::get($data['export_ozon_task_status'], true) . '</span>', 'error' => '<span class="text-warning">Ошибка</span>'];
     $error = null;
-    
+
     // Товар еще не выгружен
     if (!empty($data['export_ozon']) and empty($data['export_ozon_id'])) {
 
@@ -76,17 +76,19 @@ function addOzonsellerProductTab($data) {
         $tab .= $PHPShopGUI->setField('Ошибки', $PHPShopGUI->setText($error, "left", false, false));
 
     $tab .= $PHPShopGUI->setField('Цена OZON', $PHPShopGUI->setInputText(null, 'price_ozon_new', $data['price_ozon'], 150, $valuta_def_name), 2);
-    $tab .= $PHPShopGUI->setField("Штрихкод", $PHPShopGUI->setInputText(null, 'barcode_ozon_new', $data['barcode_ozon']));
-    $tab .= $PHPShopGUI->setField('OZON ID', $PHPShopGUI->setInputText(null, 'export_ozon_id_new', $data['export_ozon_id']));
-
-
+    $tab .= $PHPShopGUI->setField("Штрихкод", $PHPShopGUI->setInputText(null, 'barcode_ozon_new', $data['barcode_ozon'],150));
+    
+    
+    if (!empty($data['export_ozon_id']))
+        $tab .= $PHPShopGUI->setField('OZON ID', $PHPShopGUI->setInputText(null, 'export_ozon_id_new', $data['export_ozon_id'], 150, $PHPShopGUI->setLink('https://www.ozon.ru/product/' . $data['export_ozon_id'], '<span class=\'glyphicon glyphicon-eye-open\'></span>', '_blank', false, __('Перейте на сайт OZON'))));
+    
     $PHPShopGUI->addTab(array("OZON", $tab, true));
 }
 
 function OzonsellerUpdate($data) {
 
     // Отключение Ozon
-    if (!isset($_POST['export_ozon_new']) and !isset($_POST['ajax'])) {
+    if (!isset($_POST['export_ozon_new']) and ! isset($_POST['ajax'])) {
         $_POST['export_ozon_new'] = 0;
         $_POST['export_ozon_task_id_new'] = 0;
         $_POST['export_ozon_task_status_new'] = '';
@@ -102,16 +104,25 @@ function OzonsellerUpdate($data) {
         $data['id'] = $PHPShopProduct->getParam('id');
         $data['export_ozon'] = $PHPShopProduct->getParam('export_ozon');
 
-        if (!empty($data['export_ozon_id']) and !empty($data['export_ozon'])) {
+        if (!empty($data['export_ozon_id']) and ! empty($data['export_ozon'])) {
             $OzonSeller = new OzonSeller();
 
             if (isset($_POST['items_new']))
                 $data['items'] = $_POST['items_new'];
 
+            if (isset($_POST['price_new']))
+                $data['price'] = $_POST['price_new'];
+
+
             if (isset($_POST['enabled_new']))
                 $data['enabled'] = $_POST['enabled_new'];
 
-            $product_id = $OzonSeller->setProductStock($data)['result']['items'][0]['product_id'];
+            if (is_array($OzonSeller->warehouse))
+                foreach ($OzonSeller->warehouse as $warehouse) {
+                    $result = $OzonSeller->setProductStock($data, $warehouse['id'])['result']['items'][0]['product_id'];
+                    if (!empty($result))
+                        $product_id = $result;
+                }
 
             // Ошибка обновления, не найден OZON ID, сбрасываем статусы
             if (empty($product_id)) {

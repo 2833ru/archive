@@ -17,7 +17,7 @@
                 @newtipIcon@
                 @hitIcon@
                 @promotionsIcon@
-                </div>
+            </div>
             @productFotoList@
         </div>
     </div>
@@ -30,13 +30,13 @@
         <div class="col-xs-12">
             <div class="row">
                 <div class="product-page-price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-                   
+
                     <span class="price-new" itemprop="price" content="@productSchemaPrice@">@productPrice@</span> 
                     <span class="price-new rubznak" itemprop="priceCurrency" content="RUB">@productValutaName@</span> <del class="price-old">@productPriceOld@</del>
                 </div>
-				@ComStartNotice@
-<div class="outStock">@productOutStock@</div>
-@ComEndNotice@
+                @ComStartNotice@
+                <div class="outStock">@productOutStock@</div>
+                @ComEndNotice@
                 <div class="product-page-raiting rating">
                     @rateUid@
                 </div>
@@ -64,7 +64,7 @@
         <div class="col-xs-12">
             <div class="row">
                 <div class="odnotipListWrapper">
-                    
+
                 </div>
             </div>
         </div>
@@ -110,7 +110,7 @@
                     <div class="cart-button button-group compare-list-button-wrapper">
                         <button type="button" class="btn btn-cart addToWishList" data-uid="@productUid@" data-title="{Отложить}" data-placement="top" data-toggle="tooltip">
                             <i class="icons-wishlist" aria-hidden="true"></i>
-                           {Отложить}
+                            {Отложить}
                         </button>                                   
                     </div>
                     <div class="cart-button button-group cart-list-button-wrapper  @elementCartOptionHide@">
@@ -136,6 +136,21 @@
                     <div class="oneclick-wrapper">
                         @oneclick@
                     </div>
+                    <!-- Модуль Vkseller -->
+                    <div class="mb-4 @php __hide('vkseller_link'); php@">
+                        <a class="btn btn-cart" href="@vkseller_link@" target="_blank"><i class="fa fa-vk" aria-hidden="true"></i> Купить в ВКонтакте</a>
+                    </div>
+
+                    <!-- Модуль Ozonseller -->
+                    <div class="mb-4 @php __hide('ozonseller_link'); php@">
+                        <a class="btn btn-cart" href="@ozonseller_link@" target="_blank"><i class="fa fa-opera" aria-hidden="true"></i> Купить в OZON</a>
+                    </div>
+
+                    <!-- Модуль Wbseller -->
+                    <div class="mb-4 @php __hide('wbseller_link'); php@">
+                        <a class="btn btn-cart" href="@wbseller_link@" target="_blank"><i class="fa fa-wordpress" aria-hidden="true"></i> Купить в Wildberries</a>
+                    </div>
+
                     <div class="pricemail-wrapper">
                         <a class="btn btn-cart" href="/pricemail/UID_@productUid@.html">@productBestPrice@</a>
                     </div>

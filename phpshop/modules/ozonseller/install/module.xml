@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.5</version>
+    <version>1.6</version>
     <name>OZON Seller</name>
     <description>Модуль продаж через OZON.</description>
     <category>pro,marketplaces</category>
-    <sign>1663226062</sign>
+    <sign>1683022079</sign>
     <faqlink>https://docs.phpshop.ru/moduli/prodazhi/ozon-seller</faqlink>
     <pro>true</pro>
     <adminmenu>

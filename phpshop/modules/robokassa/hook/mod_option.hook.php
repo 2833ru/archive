@@ -8,7 +8,7 @@ class PHPShopRobokassaArray extends PHPShopArray {
     function __construct() {
         $this->objType = 3;
         $this->objBase = $GLOBALS['SysValue']['base']['robokassa']['robokassa_system'];
-        parent::__construct("status", "title", 'title_sub', 'merchant_login', 'merchant_key', 'merchant_skey','dev_mode');
+        parent::__construct("status", "title", 'title_sub', 'merchant_login', 'merchant_key', 'merchant_skey','dev_mode','merchant_country');
     }
 
     /**

@@ -49,7 +49,7 @@
     </tr>
 
 </table>
-<input type="hidden" id="OrderSumma" name="OrderSumma"  value="@cart_sum@">
+<input type="hidden" id="OrderSumma" name="OrderSumma"  value="@cart_sum_discount_off@">
 <script>
     $(function() {
         $('#num').html('@cart_num@');

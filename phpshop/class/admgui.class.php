@@ -3,7 +3,7 @@
 /**
  * Библиотека административных интерфейсов
  * @author PHPShop Software
- * @version 3.0
+ * @version 3.1
  * @package PHPShopGUI
  */
 class PHPShopGUI {
@@ -196,13 +196,14 @@ class PHPShopGUI {
         if (!empty($option['server']))
             $add .= '<button type="button" class="btn btn-default" id="server" data-return="return=' . $id . '" data-toggle="modal" data-target="#elfinderModal" data-path="' . $option['server'] . '">' . $this->__('Сервер') . '</button>';
 
-        if (!empty($option['url'])){
-            
-            if(stristr($data,'http'))
-                    $value = $data;
-            else $value="";
-                    
-            $add .= '<button type="button" class="btn btn-default" id="promtUrl" data-target="' . $id . '">URL</button><input type="hidden" name="furl" id="furl" value="'.$value.'">';
+        if (!empty($option['url'])) {
+
+            if (stristr($data, 'http'))
+                $value = $data;
+            else
+                $value = "";
+
+            $add .= '<button type="button" class="btn btn-default" id="promtUrl" data-target="' . $id . '">URL</button><input type="hidden" name="furl" id="furl" value="' . $value . '">';
         }
 
 
@@ -233,9 +234,9 @@ class PHPShopGUI {
 
         if ($width)
             $width = 'style="width:' . $width . 'px"';
-        
+
         return '<div class="alert alert-' . $type . ' alert-dismissible" role="alert" ' . $width . '>
-  <button type="button" class="close" '.$dismiss.' aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <button type="button" class="close" ' . $dismiss . ' aria-label="Close"><span aria-hidden="true">&times;</span></button>
   ' . $text . '</div>';
     }
 
@@ -1680,7 +1681,8 @@ class PHPShopGUI {
         // Автовыделение 
         if ($value == $checked)
             $checked = "checked";
-        else $checked=null;
+        else
+            $checked = null;
 
         // Параметры
         $add_option = null;
@@ -1791,10 +1793,10 @@ class PHPShopGUI {
                     foreach ($v as $kk => $vv) {
                         if (is_array($vv)) {
                             $v = str_replace('+', '&#43;', $vv); // + fix
-                            $_POST[$kk] = @array_map("urldecode", $vv);
+                            $_POST[$kk] = array_map("urldecodearray", $vv);
                         } else {
                             $v = str_replace('+', '&#43;', $v); // + fix
-                            $_POST[$k] = @array_map("urldecode", $v);
+                            $_POST[$k] = array_map("urldecodearray", $v);
                         }
                     }
                 } else {
@@ -2448,7 +2450,7 @@ class PHPShopInterface extends PHPShopGUI {
             $options = json_decode($_COOKIE['check_memory'], true);
         }
 
-        if (empty($options) or !is_array($options['catalog.option']) or count($options['catalog.option']) < 3) {
+        if (empty($options) or ! is_array($options['catalog.option']) or count($options['catalog.option']) < 3) {
             $options = [
                 'catalog.option' => [
                     'icon' => 1,
@@ -2529,6 +2531,14 @@ class PHPShopFrontInterface extends PHPShopInterface {
         return $CODE;
     }
 
+}
+
+/*
+ *  Функция перекодирования urldecode для массивов
+ */
+function urldecodearray($string) {
+    if (!is_array($string))
+        return urldecode($string);
 }
 
 ?>

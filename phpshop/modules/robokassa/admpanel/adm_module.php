@@ -45,6 +45,10 @@ function actionStart() {
     $Tab1 .= $PHPShopGUI->setField('Пароль #2', $PHPShopGUI->setInputText(false, 'merchant_skey_new', $data['merchant_skey'], 300));
     $Tab1 .= $PHPShopGUI->setField('Режим разработки', $PHPShopGUI->setCheckbox("dev_mode_new", 1, "Отправка данных на тестовую среду", $data["dev_mode"]));
 
+    $merchant_country_value[] = array('Россия', 'Россия', $data['merchant_country']);
+    $merchant_country_value[] = array('Казахстан', 'Казахстан', $data['merchant_country']);
+    $Tab1 .= $PHPShopGUI->setField('Страна', $PHPShopGUI->setSelect('merchant_country_new', $merchant_country_value, 300));
+
     // Доступые статусы заказов
     $PHPShopOrderStatusArray = new PHPShopOrderStatusArray();
     $OrderStatusArray = $PHPShopOrderStatusArray->getArray();

@@ -54,7 +54,7 @@ class PHPShopUsers extends PHPShopCore {
     }
 
     /**
-     * Ёкшен по умочанию
+     * Ёкшен по умолчанию
      */
     function action_index() {
 

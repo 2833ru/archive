@@ -366,8 +366,15 @@ foreach ($PHPShopCart->getArray() as $product) {
         $promoSum += $product['num'] * number_format($product['price'] - ($product['price'] * $product['promo_percent'] / 100), $PHPShopOrder->format, '.', '');
     }
 }
+
+// Округление
+$totalsummainput = number_format($totalsummainput, $PHPShopSystem->format, '.', '');
+
 // Итого товары по акции
-$total = $promoSum;
+if ($promoSum > 0)
+    $total = $promoSum;
+else
+    $total = $totalsummainput;
 
 // Итого товары без акции, применяем скидку статуса пользователя\суммы заказа
 $total += (float) $PHPShopOrder->returnSumma($PHPShopCart->getSumWithoutPromo(true), $PHPShopOrder->ChekDiscount($totalsumma), '', (float) $delivery);
@@ -375,15 +382,14 @@ $total += (float) $PHPShopOrder->returnSumma($PHPShopCart->getSumWithoutPromo(tr
 // Итого с учетом бонусов
 $total -= (float) (new PHPShopBonus((int) $_SESSION['UsersId']))->getUserBonus($total);
 
-// Округление
-$totalsummainput = number_format($totalsummainput, $PHPShopSystem->format, '.', '');
+
 
 // Процент
 if (strstr($discountAll, '%')) {
     $discount = ($data['discount'] * $_REQUEST['sum'] / 100);
-    $discount = "- " . number_format($_REQUEST['ssum']+$discount, $PHPShopSystem->format, '.', '');
+    $discount = "- " . number_format($_REQUEST['ssum'] + $discount, $PHPShopSystem->format, '.', '');
 } else
-    $discount = "- " .$_REQUEST['ssum']+$data['discount'];
+    $discount = "- " . $_REQUEST['ssum'] + $data['discount'];
 
 // Результат
 $_RESULT = array(

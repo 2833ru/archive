@@ -120,7 +120,7 @@ function actionStart() {
         $Tab1 .= $PHPShopGUI->setField('Идентификатор кампании', $PHPShopGUI->setInputText('xx-', 'campaign_id_new', $data['campaign_id']));
         $Tab1 .= $PHPShopGUI->setField('Авторизационный токен API', $PHPShopGUI->setInputText(null, 'auth_token_new', $data['auth_token']));
         $Tab1 .= $PHPShopGUI->setField('ID приложения Яндекс.OAuth', $PHPShopGUI->setInputText(null, 'client_id_new', $data['client_id']));
-        $Tab1 .= $PHPShopGUI->setField('OAuth-токен', $PHPShopGUI->setInputText(null, 'client_token_new', $data['client_token']));
+        $Tab1 .= $PHPShopGUI->setField('OAuth-токен', $PHPShopGUI->setInputText(null, 'client_token_new', $data['client_token'],false,'<a target="_blank" href="https://oauth.yandex.ru/authorize?response_type=token&client_id=" id="client_token">' . __('Получить') . '</a>'));
         $Tab1 .= $PHPShopGUI->setField('Блокировать прием заказов', $PHPShopGUI->setCheckbox('stop_new', 1, null, $data['stop']));
         $Tab1 .= $PHPShopGUI->setField('Выгружать изображения', $PHPShopGUI->setCheckbox('options[block_image]', 1, null, $options['block_image']));
         $Tab1 .= $PHPShopGUI->setField('Выгружать описание', $PHPShopGUI->setCheckbox('options[block_content]', 1, null, $options['block_content']));

@@ -4,7 +4,7 @@
         <div class="position-relative">
             <img class="card-img-top" src="@productImg@" alt="@productName@" loading="lazy">
 
-            <div class="position-absolute top-0 left-0 pt-3 pl-3">
+            <div class="position-absolute top-0 left-0 pt-1 pl-1">
                 @hitIcon@
                 @specIcon@
                 @newtipIcon@

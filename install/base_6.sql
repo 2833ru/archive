@@ -610,6 +610,7 @@ CREATE TABLE IF NOT EXISTS `phpshop_payment_systems` (
   `color` varchar(64) DEFAULT '#000000',
   `servers` varchar(64) DEFAULT '',
   `company` int(11) DEFAULT '0',
+  `status` INT(11) DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 

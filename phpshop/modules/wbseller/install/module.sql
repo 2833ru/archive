@@ -8,11 +8,12 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_wbseller_system` (
 `fee_type` enum('1','2') NOT NULL default '1',
 `warehouse_id`  varchar(255) NOT NULL,
 `type` enum('1','2') NOT NULL default '1',
+`link` enum('0','1') NOT NULL default '0',
 `version` varchar(64) DEFAULT '1.0',
 PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-INSERT INTO `phpshop_modules_wbseller_system` VALUES (1, '', '',1,0,'1','','1','1.0');
+INSERT INTO `phpshop_modules_wbseller_system` VALUES (1, '', '',1,0,'1','','1','0','1.0');
 
 CREATE TABLE IF NOT EXISTS `phpshop_modules_wbseller_log` (
 `id` int(11) NOT NULL AUTO_INCREMENT,

@@ -53,6 +53,9 @@ class PHPShopSeoProCore extends PHPShopShop {
             else
                 parent::setError404();
         }
+        
+        if(empty($this->category_name))
+            parent::setError404();
     }
 
     function query_filter($where = false, $v = false) {
@@ -81,12 +84,7 @@ class PHPShopSeoProCore extends PHPShopShop {
                 $this->description .= ' ' . __('Часть') . ' ' . $this->PHPShopNav->getPage();
                 $this->title .= ' ' . __('Страница') . ' ' . $this->PHPShopNav->getPage();
                 return true;
-            } elseif (!empty($page) and $page == 'ALL') {
-                $this->doLoadFunction('PHPShopShop', 'set_meta', $row);
-                $this->title .= ' ' . __('Все страницы');
-                $this->set('catalogCategory', ' - ' . __('Все страницы'), true);
-                return true;
-            }
+            } 
         }
     }
 

@@ -9,10 +9,8 @@ function tab_info($data) {
             <h4>Доступные прайс-листы</h4>
         <ol>
         <li>Google Merchant: <code>' . Marketplaces::getProtocol() . $_SERVER['SERVER_NAME'] .$GLOBALS['SysValue']['dir']['dir']. '/rss/google.xml</code>
-        <li>СДЭК.Маркет: <code>' . Marketplaces::getProtocol() . $_SERVER['SERVER_NAME'] .$GLOBALS['SysValue']['dir']['dir']. '/yml/?marketplace=' . Marketplaces::CDEK . '</code>
         <li>AliExpress: <code>' . Marketplaces::getProtocol() . $_SERVER['SERVER_NAME'] .$GLOBALS['SysValue']['dir']['dir']. '/yml/?marketplace=' . Marketplaces::ALIEXPRESS . '</code>
         <li>СберМаркет: <code>' . Marketplaces::getProtocol() . $_SERVER['SERVER_NAME'] .$GLOBALS['SysValue']['dir']['dir']. '/yml/?marketplace=' . Marketplaces::SBERMARKET . '</code>
-        <li>Для выгрузки в RetailCRM YML файла указать адрес: <code>' . Marketplaces::getProtocol() . $_SERVER['SERVER_NAME'] .$GLOBALS['SysValue']['dir']['dir']. '/yml/?marketplace=' . Marketplaces::RETAIL_CRM . '</code>
         </ol>                      
       <h4>SQL запросы для пакетной обработки</h4>
       <p>
@@ -36,16 +34,6 @@ function tab_info($data) {
           <th scope="row">2</th>
           <td>update phpshop_products set google_merchant=\'1\' where price>0 and items>0;</td>
           <td>Замена статуса участие в Google Merchant (добавить в выгрузку) при положительном складе и не нулевой цене</td>
-        </tr>
-        <tr>
-          <th scope="row">3</th>
-          <td>update phpshop_products set cdek=\'0\' where price<1 or items<1;</td>
-          <td>Замена статуса участие в СДЭК.Маркет (убрать из выгрузки) при пустом складе или нулевой цене</td>
-        </tr>
-         <tr>
-          <th scope="row">4</th>
-          <td>update phpshop_products set cdek=\'1\' where price>0 and items>0;</td>
-          <td>Замена статуса участие в СДЭК.Маркет (добавить в выгрузку) при положительном складе и не нулевой цене</td>
         </tr>
         <tr>
           <th scope="row">5</th>

@@ -3,7 +3,7 @@
 /**
  * Элемент стандартных системных переменных
  * @author PHPShop Software
- * @version 1.6
+ * @version 1.7
  * @package PHPShopElements
  */
 class PHPShopCoreElement extends PHPShopElements {
@@ -613,7 +613,7 @@ class PHPShopPageCatalogElement extends PHPShopElements {
     /**
      * @var bool проверять на единичные каталоги
      */
-    var $chek_page = true;
+    var $check_page = true;
     var $debug = false;
 
     /**
@@ -663,7 +663,7 @@ class PHPShopPageCatalogElement extends PHPShopElements {
                 $this->set('catalogTemplates', $this->getValue('dir.templates') . chr(47) . $this->PHPShopSystem->getValue('skin') . chr(47));
 
                 // Если есть страницы
-                if ($this->chek($row['id'])) {
+                if ($this->check($row['id'])) {
 
                     $this->set('catalogName', $row['name']);
                     $this->set('catalogId', $row['id']);
@@ -693,7 +693,7 @@ class PHPShopPageCatalogElement extends PHPShopElements {
      * @param Int $id ИД каталога
      * @return bool
      */
-    function chek($id) {
+    function check($id) {
         $PHPShopOrm = new PHPShopOrm($this->getValue('base.page_categories'));
         $PHPShopOrm->debug = $this->debug;
 
@@ -716,7 +716,7 @@ class PHPShopPageCatalogElement extends PHPShopElements {
      * @param Int $id ИД каталога
      * @return bool
      */
-    function chekPages($id) {
+    function checkPages($id) {
         $PHPShopOrm = new PHPShopOrm($this->getValue('base.page'));
         $PHPShopOrm->debug = $this->debug;
 
@@ -814,7 +814,7 @@ class PHPShopPageCatalogElement extends PHPShopElements {
                 $this->set('topMenuLink', $row['id']);
 
                 // Если есть страницы
-                if (!$this->chekPages($row['id'])) {
+                if (!$this->checkPages($row['id'])) {
                     $PHPShopOrm = new PHPShopOrm($this->getValue('base.page'));
                     $PHPShopOrm->debug = $this->debug;
                     $dataPage = $PHPShopOrm->select(array('link', 'name'), array('category' => '=' . $row['id'], 'enabled' => '="1"'), array('order' => 'num,name'), array("limit" => 100));

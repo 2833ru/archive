@@ -64,7 +64,7 @@ function order_saferoutewidget_hook($obj, $row, $rout) {
 
 
         $obj->set('order_action_add', '
-            <script src="https://widgets.saferoute.ru/cart/api.js?new"></script>
+            <script src="https://widgets.saferoute.ru/cart/api.js?new" charset="UTF-8"></script>
             <script src="phpshop/modules/saferoutewidget/js/saferoutewidget.js"></script>
             
         <input class="cartListJson" type="hidden" value=\'' . json_encode($list) . '\'/>

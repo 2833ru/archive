@@ -83,7 +83,7 @@ class PHPShopSeoPro {
         $array_seo_name = explode('-', $url['filename']);
         $page = $array_seo_name[count($array_seo_name) - 1];
 
-        if (!is_numeric($page) and $page != 'ALL')
+        if (!is_numeric($page))
             $page = null;
 
         if ($page >= 1)
@@ -122,10 +122,7 @@ class PHPShopSeoPro {
         $page = $getNav['page'];
         $true_id = null;
 
-        if ($page == 'ALL')
-            $GLOBALS['PHPShopNav']->objNav['page'] = $page;
-        else
-            $GLOBALS['PHPShopNav']->objNav['page'] = intval($page);
+        $GLOBALS['PHPShopNav']->objNav['page'] = intval($page);
         $GLOBALS['PHPShopNav']->objNav['path'] = 'shop';
 
         if ($mode == 1) {
@@ -137,9 +134,7 @@ class PHPShopSeoPro {
                 $true_id = str_replace($this->cat_pre, '', $array_true[$file]);
         } elseif ($mode == 2) {
 
-            //$array_true = array_flip($this->memory_prod);
             $GLOBALS['PHPShopNav']->objNav['name'] = 'UID';
-            // $true_id = str_replace($this->prod_pre, '', $array_true[$name]);
             $true_id = $page;
         }
 
@@ -156,7 +151,6 @@ class PHPShopSeoPro {
             } else
                 $this->memory['CID_' . $id . '_1'] = $this->setLatin($name . '-1', $latin);
 
-            //$this->memory['CID_' . $key . '_1'] = $this->setLatin($val['name'] . '-1');
         } elseif ($mode == 2)
             $this->memory_prod[$this->prod_pre . $id] = $this->prod_pre_target . $this->setLatin($name, $latin) . '-' . $id;
         elseif ($mode == 3)
@@ -183,11 +177,9 @@ class PHPShopSeoPro {
                 if (!empty($val['cat_seo_name'])) {
                     $this->setMemory($key, $val['cat_seo_name'], 1, false);
                     $this->memory['CID_' . $key . '_1'] = $this->setLatin($val['cat_seo_name'] . '-1');
-                    $this->memory['shop/CID_' . $key . '_ALL'] = $this->setLatin($val['cat_seo_name']) . '-ALL';
                 } else {
                     $this->setMemory($key, $val['name']);
                     $this->memory['CID_' . $key . '_1'] = $this->setLatin($val['name'] . '-1');
-                    $this->memory['shop/CID_' . $key . '_ALL'] = $this->setLatin($val['name']) . '-ALL';
                 }
             }
     }
@@ -212,7 +204,6 @@ class PHPShopSeoPro {
             foreach ($GLOBALS['Cache'][$GLOBALS['SysValue']['base']['categories']] as $key => $val) {
                 $this->setMemory($key, $val['name']);
                 $this->memory['CID_' . $key . '_1'] = $this->setLatin($val['name'] . '-1');
-                $this->memory['shop/CID_' . $key . '_ALL'] = $this->setLatin($val['name']) . '-ALL';
             }
     }
 

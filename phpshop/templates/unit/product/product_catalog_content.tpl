@@ -2,7 +2,7 @@
 
 </nav>
 <div class="head-catalog container">
-<ol class="breadcrumb hidden-xs" itemtype="http://schema.org/BreadcrumbList">
+<ol class="breadcrumb hidden-xs" itemscope itemtype="http://schema.org/BreadcrumbList">
     @breadCrumbs@
 </ol>
 <div class="page-header  not-center">

@@ -1,13 +1,16 @@
 <?php
+
+PHPShopObj::loadClass("valuta");
+
 /**
  * Библиотека работы с Wildberries Seller API
  * @author PHPShop Software
- * @version 1.0
+ * @version 1.1
  * @package PHPShopModules
  * @todo https://openapi.wb.ru/
  */
 class WbSeller {
-    
+
     const API_URL = 'https://suppliers-api.wildberries.ru';
     const GET_PRODUCT_LIST = '/content/v1/cards/cursor/list';
     const GET_PRODUCT = '/content/v1/cards/filter';
@@ -21,30 +24,59 @@ class WbSeller {
     const UPDATE_PRODUCT_STOCKS = '/api/v3/stocks/';
     const UPDATE_PRODUCT_PRICES = '/public/api/v1/prices';
     const GET_ORDER_LIST = '/api/v3/orders';
-    const GET_ORDER_NEW ='/api/v3/orders/new';
+    const GET_ORDER_NEW = '/api/v3/orders/new';
 
     public $api_key;
 
     public function __construct() {
         global $PHPShopSystem;
 
-        $PHPShopOrm = new PHPShopOrm('phpshop_modules_wbseller_system');
-
-        $this->options = $PHPShopOrm->select();
-        $this->api_key = $this->options['token'];
-
+        // Системные настройки
+        $this->PHPShopValuta = (new PHPShopValutaArray())->getArray();
+        $this->percent = $PHPShopSystem->getValue('percent');
+        $this->defvaluta = $PHPShopSystem->getValue('dengi');
+        $this->format = $PHPShopSystem->getSerilizeParam('admoption.price_znak');
         $this->vat = $PHPShopSystem->getParam('nds') / 100;
         $this->image_save_source = $PHPShopSystem->ifSerilizeParam('admoption.image_save_source');
+
+        // Настройки модуля
+        $PHPShopOrm = new PHPShopOrm('phpshop_modules_wbseller_system');
+        $this->options = $PHPShopOrm->select();
+        $this->api_key = $this->options['token'];
         $this->status = $this->options['status'];
         $this->fee_type = $this->options['fee_type'];
         $this->fee = $this->options['fee'];
         $this->price = $this->options['price'];
         $this->type = $this->options['type'];
         $this->warehouse = $this->options['warehouse'];
-        
+
         if (!empty($_SERVER['HTTPS']) && 'off' !== strtolower($_SERVER['HTTPS']))
             $this->ssl = 'https://';
-        else $this->ssl = 'http://';
+        else
+            $this->ssl = 'http://';
+    }
+
+    /**
+     *  Цена товара
+     */
+    public function price($price, $baseinputvaluta) {
+
+        // Если валюта отличается от базовой
+        if ($baseinputvaluta !== $this->defvaluta) {
+            $vkurs = $this->PHPShopValuta[$baseinputvaluta]['kurs'];
+
+            // Если курс нулевой или валюта удалена
+            if (empty($vkurs))
+                $vkurs = 1;
+
+            // Приводим цену в базовую валюту
+            $price = $price / $vkurs;
+        }
+
+        $price = ($price + (($price * $this->percent) / 100));
+        $price = round($price, intval($this->format));
+
+        return $price;
     }
 
     /**
@@ -107,8 +139,6 @@ class WbSeller {
         else
             return $d[0];
     }
-
-
 
     /**
      *  Заказ уже загружен?
@@ -178,20 +208,20 @@ class WbSeller {
         return $result;
     }
 
-
     /**
      *  Список заказов
      */
-    public function getOrderList($date1,$date2,$status='all') {
-        
-       if($status == 'new')
-           $method = self::GET_ORDER_NEW;
-       else $method = self::GET_ORDER_LIST.'?dateFrom='.PHPShopDate::GetUnixTime($date1,'-',true).'&dateTo='.PHPShopDate::GetUnixTime($date2,'-',true).'&limit=100&next=0';
-        
+    public function getOrderList($date1, $date2, $status = 'all') {
+
+        if ($status == 'new')
+            $method = self::GET_ORDER_NEW;
+        else
+            $method = self::GET_ORDER_LIST . '?dateFrom=' . PHPShopDate::GetUnixTime($date1, '-', true) . '&dateTo=' . PHPShopDate::GetUnixTime($date2, '-', true) . '&limit=100&next=0';
+
         $result = $this->request($method);
 
         // Журнал
-        $log['params'] = ['dateFrom'=>PHPShopDate::GetUnixTime($date1,'-',true),'dateTo'=>PHPShopDate::GetUnixTime($date2,'-',true)];
+        $log['params'] = ['dateFrom' => PHPShopDate::GetUnixTime($date1, '-', true), 'dateTo' => PHPShopDate::GetUnixTime($date2, '-', true)];
         $log['result'] = $result;
 
         $this->log($log, 0, $method);
@@ -304,13 +334,13 @@ class WbSeller {
                                 }
                             }
                         }
-                        
-                        if(!empty($value['attribute_wbseller']) and !empty($values))
-                        $list[] = [PHPShopString::win_utf8($value['attribute_wbseller']) => [$values]];
+
+                        if (!empty($value['attribute_wbseller']) and ! empty($values))
+                            $list[] = [PHPShopString::win_utf8($value['attribute_wbseller']) => [$values]];
                     }
             }
         }
-        
+
         return $list;
     }
 
@@ -419,7 +449,7 @@ class WbSeller {
                 "characteristics" => $this->getAttributes($prod),
                 "vendorCode" => (string) $prod['uid'],
                 "sizes" => [[
-                'price' => (int) $price,
+                'price' => (int) $this->price($price, $prod['baseinputvaluta']),
                 'skus' => [$prod['barcode_wb']]
                     ]],
                 ]];
@@ -537,4 +567,5 @@ class WbSeller {
     }
 
 }
+
 ?>

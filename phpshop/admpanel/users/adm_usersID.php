@@ -1,6 +1,6 @@
 <?php
 
-$TitlePage = __('Редактирование администатора').' #' . $_GET['id'];
+$TitlePage = __('Редактирование администатора') . ' #' . $_GET['id'];
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['users']);
 
 function hidePassword($pas) {
@@ -8,7 +8,7 @@ function hidePassword($pas) {
     $i = 0;
     $str = null;
     while ($i < $num) {
-        $str.="X";
+        $str .= "X";
         $i++;
     }
     return $str;
@@ -35,7 +35,7 @@ function actionStart() {
 
     // Размер названия поля
     $PHPShopGUI->field_col = 4;
-    $PHPShopGUI->addJSFiles('./users/gui/users.gui.js','./js/validator.js');
+    $PHPShopGUI->addJSFiles('./users/gui/users.gui.js', './js/validator.js');
     $PHPShopGUI->setActionPanel(__("Администраторы") . ': ' . $data['login'], array('Удалить'), array('Сохранить', 'Сохранить и закрыть'));
 
     $pasgen = substr(md5(date("U")), 0, 8);
@@ -44,8 +44,8 @@ function actionStart() {
     $Tab1 = $PHPShopGUI->setCollapse('Информация', $PHPShopGUI->setField("Имя", $PHPShopGUI->setInput('text', "name_new", $data['name'])) .
             $PHPShopGUI->setField("Логин", $PHPShopGUI->setInput('text.required.4', "login_new", $data['login'])) .
             $PHPShopGUI->setField("E-mail", $PHPShopGUI->setInput('email.required.6', "mail_new", $data['mail'])) .
-            $PHPShopGUI->setField("Пароль", $PHPShopGUI->setInput("password.required.6", "password_new", hidePassword($data['password']), null, false, false, false, false, false, '<a href="#" class="password-gen" data-password="P' . $pasgen . '" data-text="'.__('Сгенерирован пароль: ').'"  data-toggle="tooltip" data-placement="top" title="' . __('Сгенерировать пароль') . '"><span class="glyphicon glyphicon-cog"></span></a>')) .
-            $PHPShopGUI->setField("Подтверждение пароля", $PHPShopGUI->setInput("password.required.6", "password2_new", hidePassword($data['password'])) .'<br>'. $PHPShopGUI->setCheckbox('changePassword', 1, '<span class="text-success">Сменить логин и пароль</span>', 0).'<br>' . $PHPShopGUI->setCheckbox('sendPasswordEmail', 1, 'Оповестить по E-mail', 0)) .
+            $PHPShopGUI->setField("Пароль", $PHPShopGUI->setInput("password.required.6", "password_new", hidePassword($data['password']), null, false, false, false, false, false, '<a href="#" class="password-gen" data-password="P' . $pasgen . '" data-text="' . __('Сгенерирован пароль: ') . '"  data-toggle="tooltip" data-placement="top" title="' . __('Сгенерировать пароль') . '"><span class="glyphicon glyphicon-cog"></span></a>')) .
+            $PHPShopGUI->setField("Подтверждение пароля", $PHPShopGUI->setInput("password.required.6", "password2_new", hidePassword($data['password'])) . '<br>' . $PHPShopGUI->setCheckbox('changePassword', 1, '<span class="text-success">Сменить логин и пароль</span>', 0) . '<br>' . $PHPShopGUI->setCheckbox('sendPasswordEmail', 1, 'Оповестить по E-mail', 0)) .
             $PHPShopGUI->setField("Статус", $PHPShopGUI->setCheckbox("enabled_new", 1, null, $data['enabled']))
     );
 
@@ -56,11 +56,10 @@ function actionStart() {
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1,true,false,true), array("Права", $Tab2));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true, false, true), array("Права", $Tab2));
 
     // Вывод кнопок сохранить и выход в футер
-    $ContentFooter =
-            $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .
+    $ContentFooter = $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .
             $PHPShopGUI->setInput("button", "delID", "Удалить", "right", 70, "", "but", "actionDelete.users.edit") .
             $PHPShopGUI->setInput("submit", "editID", "Сохранить", "right", 70, "", "but", "actionUpdate.users.edit") .
             $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionSave.users.edit");
@@ -95,9 +94,9 @@ function actionSave() {
 
 // Функция обновления
 function actionUpdate() {
-    global $PHPShopOrm, $PHPShopModules,$PHPShopSystem;
+    global $PHPShopOrm, $PHPShopModules, $PHPShopSystem;
 
-    if (!empty($_POST['changePassword']) and !empty($_POST['password_new'])) {
+    if (!empty($_POST['changePassword']) and ! empty($_POST['password_new'])) {
 
         if ($_SESSION['logPHPSHOP'] == $_POST['login_new']) {
             $_SESSION['pasPHPSHOP'] = $_POST['password_new'];
@@ -106,7 +105,7 @@ function actionUpdate() {
 
         $hasher = new PasswordHash(8, false);
         $_POST['password_new'] = $hasher->HashPassword($_POST['password_new']);
-        $_POST['token_new']=$hasher->HashPassword($_POST['password_new']);
+        $_POST['token_new'] = $hasher->HashPassword($_POST['password_new']);
     } else {
         unset($_POST['password_new']);
         unset($_POST['login_new']);
@@ -116,7 +115,7 @@ function actionUpdate() {
     $statusUser = array(
         "gbook" => rules_zero($_POST['gbook_rul_1']) . "-" . rules_zero($_POST['gbook_rul_2']) . "-" . rules_zero($_POST['gbook_rul_3']),
         "news" => rules_zero($_POST['news_rul_1']) . "-" . rules_zero($_POST['news_rul_2']) . "-" . rules_zero($_POST['news_rul_3']),
-        "order" => rules_zero($_POST['order_rul_1']) . "-" . rules_zero($_POST['order_rul_2']) . "-" . rules_zero($_POST['order_rul_3']) . "-" . rules_zero($_POST['order_rul_4']). "-" . rules_zero($_POST['order_rul_5']),
+        "order" => rules_zero($_POST['order_rul_1']) . "-" . rules_zero($_POST['order_rul_2']) . "-" . rules_zero($_POST['order_rul_3']) . "-" . rules_zero($_POST['order_rul_4']) . "-" . rules_zero($_POST['order_rul_5']),
         "users" => rules_zero($_POST['users_rul_1']) . "-" . rules_zero($_POST['users_rul_2']) . "-" . rules_zero($_POST['users_rul_3']) . "-" . rules_zero($_POST['users_rul_4']),
         "shopusers" => rules_zero($_POST['shopusers_rul_1']) . "-" . rules_zero($_POST['shopusers_rul_2']) . "-" . rules_zero($_POST['shopusers_rul_3']),
         "catalog" => rules_zero($_POST['catalog_rul_1']) . "-" . rules_zero($_POST['catalog_rul_2']) . "-" . rules_zero($_POST['catalog_rul_3']) . "-" . rules_zero($_POST['catalog_rul_4']) . "-" . rules_zero($_POST['catalog_rul_5']) . "-" . rules_zero($_POST['catalog_rul_6']),
@@ -140,11 +139,13 @@ function actionUpdate() {
         "modules" => rules_zero($_POST['modules_rul_1']) . "-" . rules_zero($_POST['modules_rul_2']) . "-" . rules_zero($_POST['modules_rul_3']) . "-" . rules_zero($_POST['modules_rul_4']) . "-" . rules_zero($_POST['modules_rul_5']),
         "api" => rules_zero($_POST['api_rul_1']) . "-" . rules_zero($_POST['api_rul_2']) . "-" . rules_zero($_POST['api_rul_3']),
     );
-    
-    $_POST['status_new'] = serialize($statusUser);
+
+    if (empty($_POST['ajax'])) {
+        $_POST['status_new'] = serialize($statusUser);
+    }
 
     // Оповещение пользователя
-    if (!empty($_POST['changePassword']) and !empty($_POST['sendPasswordEmail'])) {
+    if (!empty($_POST['changePassword']) and ! empty($_POST['sendPasswordEmail'])) {
 
         PHPShopObj::loadClass("parser");
         PHPShopObj::loadClass("mail");
@@ -153,7 +154,7 @@ function actionUpdate() {
         PHPShopParser::set('login', $_POST['login_new']);
         PHPShopParser::set('password', $_POST['password2_new']);
         PHPShopParser::set('url', $_SERVER['SERVER_NAME']);
-        
+
         $zag_adm = "Пароль администратора " . $_SERVER['SERVER_NAME'];
         $PHPShopMail = new PHPShopMail($_POST['mail_new'], $PHPShopSystem->getEmail(), $zag_adm, '', true, true);
         $content_adm = PHPShopParser::file('tpl/changepass.mail.tpl', true);

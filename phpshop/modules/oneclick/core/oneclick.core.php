@@ -163,7 +163,7 @@ class PHPShopOneclick extends PHPShopCore {
         $insert = array();
         $insert['name_new'] = PHPShopSecurity::TotalClean($_POST['oneclick_mod_name'], 2);
         $insert['tel_new'] = PHPShopSecurity::TotalClean($_POST['oneclick_mod_tel'], 2);
-        $insert['date_new'] = time();
+        $insert['datas_new'] = $insert['date_new'] = time();
         $insert['message_new'] = PHPShopSecurity::TotalClean($_POST['oneclick_mod_message'], 2);
         $insert['ip_new'] = $_SERVER['REMOTE_ADDR'];
         $insert['product_name_new'] = $product->getName();

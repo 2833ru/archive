@@ -201,6 +201,13 @@ function actionSave() {
     // «апись в базу
     $orderId = $PHPShopOrm->insert($insert);
 
+    // ќповещение пользовател€ о новом статусе и списание со склада
+    if (!empty($insert['statusi_new'])) {
+        PHPShopObj::loadClass("order");
+        $PHPShopOrderFunction = new PHPShopOrderFunction($orderId);
+        $PHPShopOrderFunction->changeStatus($insert['statusi_new'], 0);
+    }
+
     header('Location: ?path=order&id=' . $orderId . '&return=' . $_GET['path']);
 }
 

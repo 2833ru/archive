@@ -228,7 +228,7 @@ class PHPShopSearch extends PHPShopShopCore {
         // Русские буквы в Ajax запросе
         if (isset($_REQUEST['ajax']))
             $_REQUEST['words'] = urldecode($_REQUEST['words']);
-
+        
         // Фильтр поиска
         $_REQUEST['words'] = PHPShopSecurity::true_search($_REQUEST['words']);
 

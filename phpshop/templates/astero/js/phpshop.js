@@ -169,21 +169,6 @@ window.escape = function (str)
     }
 };
 
-// ѕеревод раскладки в русскую
-function auto_layout_keyboard(str) {
-    replacer = {
-        "q": "й", "w": "ц", "e": "у", "r": "к", "t": "е", "y": "н", "u": "г",
-        "i": "ш", "o": "щ", "p": "з", "[": "х", "]": "ъ", "a": "ф", "s": "ы",
-        "d": "в", "f": "а", "g": "п", "h": "р", "j": "о", "k": "л", "l": "д",
-        ";": "ж", "'": "э", "z": "€", "x": "ч", "c": "с", "v": "м", "b": "и",
-        "n": "т", "m": "ь", ",": "б", ".": "ю", "/": "."
-    };
-
-    return str.replace(/[A-z/,.;\'\]\[]/g, function (x) {
-        return x == x.toLowerCase() ? replacer[ x ] : replacer[ x.toLowerCase() ].toUpperCase();
-    });
-}
-
 
 // Ajax фильтр обновление данных
 function filter_load(filter_str, obj) {
@@ -893,7 +878,7 @@ $(document).ready(function () {
                 type: "POST",
                 url: ROOT_PATH + "/search/",
                 data: {
-                    words: escape(words + ' ' + auto_layout_keyboard(words)),
+                    words: escape(words),
                     set: 2,
                     ajax: true
                 },

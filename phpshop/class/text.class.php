@@ -449,7 +449,7 @@ class PHPShopText {
      * @param string $data пополнительеы параметры в атрибуте data-option
      * @return string
      */
-    static function setInput($type, $name, $value, $float = "none", $size = 200, $onclick = "return true", $class = false, $caption = false, $description = false, $data = false, $requared = false) {
+    static function setInput($type, $name, $value, $float = "none", $size = 200, $onclick = "return true", $class = 'btn btn-success', $caption = false, $description = false, $data = false, $requared = false) {
 
         if (!empty($onclick))
             $onclick = 'onclick="' . $onclick . '"';
@@ -457,10 +457,10 @@ class PHPShopText {
         if (!empty($data))
             $data = 'data-option="' . $data . '"';
 
-        $input = ' <input type="' . $type . '" value="' . $value . '" name="' . $name . '" id="' . $name . '" ' . $onclick . ' ' . $data . ' ' . $requared . '> ';
+        $input = ' <input type="' . $type . '" value="' . $value . '" name="' . $name . '" id="' . $name . '" ' . $onclick . ' ' . $data . ' ' . $requared . ' class="' . $class . '"> ';
 
         if ($type != 'hidden')
-            $input = '<div style="float:' . $float . '" class="' . $class . '">
+            $input = '<div style="float:' . $float . '">
              <label>' . $caption . $input . $description . '</label></div>';
 
         return $input;

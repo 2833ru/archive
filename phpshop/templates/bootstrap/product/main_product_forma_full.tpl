@@ -1,4 +1,3 @@
-
 <div itemscope itemtype="http://schema.org/Product">
     <meta itemprop="image" content="@productImg@">
     <div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">

@@ -8,14 +8,14 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_ozonseller_system` (
 `fee` int(11) NOT NULL,
 `password` varchar(64),
 `fee_type` enum('1','2') NOT NULL default '1',
-`warehouse` varchar(64) default 'Основной',
-`warehouse_id`  varchar(255) NOT NULL,
+`warehouse` TEXT NOT NULL,
 `type` enum('1','2') NOT NULL default '1',
+`link` enum('0','1') NOT NULL default '0',
 `version` varchar(64) DEFAULT '1.0',
 PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-INSERT INTO `phpshop_modules_ozonseller_system` VALUES (1, '', '', '',1,0,'','1','Основной','','1','1.5');
+INSERT INTO `phpshop_modules_ozonseller_system` VALUES (1, '', '', '',1,0,'','1','','1','0','1.6');
 
 CREATE TABLE IF NOT EXISTS `phpshop_modules_ozonseller_log` (
 `id` int(11) NOT NULL AUTO_INCREMENT,

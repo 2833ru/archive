@@ -309,6 +309,7 @@ function actionStart() {
     // Валюты
     $PHPShopValutaArray = new PHPShopValutaArray();
     $valuta_array = $PHPShopValutaArray->getArray();
+    $defvaluta = $PHPShopSystem->getValue('dengi');
     $valuta_area = null;
     if (is_array($valuta_array))
         foreach ($valuta_array as $val) {
@@ -317,7 +318,7 @@ function actionStart() {
                 $valuta_def_name = $val['code'];
             } else
                 $check = false;
-            $valuta_area .= $PHPShopGUI->setRadio('baseinputvaluta_new', $val['id'], $val['name'], $val['id']);
+            $valuta_area .= $PHPShopGUI->setRadio('baseinputvaluta_new', $val['id'], $val['name'], $defvaluta);
         }
 
     // Цены
