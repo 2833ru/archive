@@ -75,6 +75,15 @@ function actionAdvanceSearch() {
     global $PHPShopInterface;
 
     $PHPShopInterface->field_col = 2;
+    
+        // Статусы пользователей
+    PHPShopObj::loadClass('user');
+    $PHPShopUserStatus = new PHPShopUserStatusArray();
+    $PHPShopUserStatusArray = $PHPShopUserStatus->getArray();
+    $user_status_value[] = array(__('Все пользователи'), '', $data['status']);
+    if (is_array($PHPShopUserStatusArray))
+        foreach ($PHPShopUserStatusArray as $user_status)
+            $user_status_value[] = array($user_status['name'], $user_status['id'], $data['status']);
 
     $searchforma = $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[name]', 'placeholder' => __('Имя'), 'class' => 'pull-left', 'value' => $_REQUEST['words']));
     $searchforma.='<br><br>';

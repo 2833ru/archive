@@ -129,7 +129,7 @@ class PHPShopRssParser {
                 $description = $this->utf8_win($news[$i]['description']);
 
                 // Подробное описание
-                $content = '<p><a href="' . $news[$i]['link'] . '" target="_blank">Источник...</a><p>';
+                $content = $description.'<p><a href="' . $news[$i]['link'] . '" target="_blank">Источник...</a><p>';
 
                 // Массив данных
                 $data_array = array('datas_new' => $date, 'zag_new' => $title, 'kratko_new' => $description, 'podrob_new' => $content, 'datau_new' => $dateU);

@@ -172,10 +172,13 @@ elseif (!empty($_POST['password'])) {
 
             PHPShopObj::loadClass("parser");
             PHPShopObj::loadClass("mail");
+            PHPShopObj::loadClass("system");
 
             PHPShopParser::set('user_name', $_POST['user']);
             PHPShopParser::set('login', $_POST['login']);
             PHPShopParser::set('password', $_POST['password']);
+            
+            $PHPShopSystem = new PHPShopSystem();
 
             $PHPShopMail = new PHPShopMail($_POST['mail'], $_POST['mail'], "Пароль администратора " . $_SERVER['SERVER_NAME'], '', true, true);
             $content_adm = PHPShopParser::file('../phpshop/admpanel/tpl/changepass.mail.tpl', true);

@@ -146,3 +146,72 @@ CREATE TABLE `phpshop_photo` (
   PRIMARY KEY  (`id`),
   KEY `parent` (`category`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
+ALTER TABLE  `phpshop_categories` CHANGE  `num`  `num` INT( 11 ) NOT NULL DEFAULT  '0',
+CHANGE  `num_row`  `num_row` ENUM(  '1',  '2',  '3',  '4' ) CHARACTER SET cp1251 COLLATE cp1251_general_ci NOT NULL DEFAULT  '2';
+
+
+ALTER TABLE  `phpshop_categories` ADD  `count` INT( 11 ) NOT NULL ,
+ADD  `cat_seo_name` VARCHAR( 255 ) NOT NULL ;
+
+
+ALTER TABLE  `phpshop_comment` CHANGE  `rate`  `rate` SMALLINT( 1 ) NOT NULL DEFAULT  '0';
+
+ALTER TABLE  `phpshop_delivery` CHANGE  `price_null_enabled`  `price_null_enabled` ENUM(  '0',  '1' ) CHARACTER SET cp1251 COLLATE cp1251_general_ci NULL DEFAULT  '0';
+
+ALTER TABLE  `phpshop_products` CHANGE  `uid`  `uid` VARCHAR( 64 ) CHARACTER SET cp1251 COLLATE cp1251_general_ci NOT NULL DEFAULT  '',
+CHANGE  `title_enabled`  `title_enabled` ENUM(  '0',  '1',  '2' ) CHARACTER SET cp1251 COLLATE cp1251_general_ci NOT NULL DEFAULT '0';
+
+ALTER TABLE  `phpshop_products` CHANGE  `parent`  `parent` TEXT CHARACTER SET cp1251 COLLATE cp1251_general_ci NOT NULL DEFAULT  '';
+
+
+ALTER TABLE  `phpshop_products` ADD  `prod_seo_name` VARCHAR( 255 ) NOT NULL ,
+ADD  `price_search` FLOAT NOT NULL DEFAULT  '0';
+
+ALTER TABLE  `phpshop_shopusers_status` CHANGE  `cumulative_discount_check`  `cumulative_discount_check` ENUM(  '0',  '1' ) NOT NULL DEFAULT  '0';
+
+ALTER TABLE  `phpshop_sort` CHANGE  `num`  `num` INT( 11 ) NOT NULL DEFAULT  '0';
+
+
+ALTER TABLE  `phpshop_sort_categories` CHANGE  `num`  `num` INT( 11 ) NOT NULL DEFAULT  '0',
+CHANGE  `category`  `category` INT( 11 ) NOT NULL DEFAULT  '0';
+
+
+ALTER TABLE  `phpshop_system` CHANGE  `kurs`  `kurs` FLOAT NOT NULL DEFAULT  '0';
+
+ALTER TABLE `phpshop_users`
+  DROP `content`,
+  DROP `skin`,
+  DROP `skin_enabled`,
+  DROP `name_enabled`;
+  
+ALTER TABLE  `phpshop_system` ADD  `1c_option` BLOB NOT NULL ;
+
+
+CREATE TABLE IF NOT EXISTS `phpshop_payment_systems` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL DEFAULT '',
+  `path` varchar(255) NOT NULL DEFAULT '',
+  `enabled` enum('0','1') NOT NULL DEFAULT '1',
+  `num` tinyint(11) NOT NULL DEFAULT '0',
+  `message` text NOT NULL,
+  `message_header` text NOT NULL,
+  `yur_data_flag` enum('0','1') NOT NULL DEFAULT '0',
+  `icon` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+
+--
+-- Дамп данных таблицы `phpshop_payment_systems`
+--
+
+INSERT INTO `phpshop_payment_systems` (`id`, `name`, `path`, `enabled`, `num`, `message`, `message_header`, `yur_data_flag`, `icon`) VALUES
+(1, 'Банковский перевод', 'bank', '1', 4, '<img src="/UserFiles/Image/Trial/rabbit.png" alt="" align="" border="0"><h3>Благодарим Вас за заказ!</h3><p>Счет уже доступен в Вашем&nbsp;<a href="/users/order.html">личном кабинете</a>.&nbsp;</p><p>Пароли доступа от личного кабинета находятся в Вашей почте.</p>', '', '1', '/UserFiles/Image/Payments/beznal.png'),
+(2, 'Квитанция Сбербанка', 'sberbank', '1', 3, '<img src="/UserFiles/Image/Trial/rabbit.png" alt="" align="" border="0"><h3>Благодарим Вас за заказ!</h3><p>Квитанция Сбербанка уже доступна в Вашем&nbsp;<a href="/users/order.html">личном кабинете</a>.&nbsp;</p><p>Пароли доступа от личного кабинета находятся в Вашей почте.</p>', '', '', '/UserFiles/Image/Payments/sberbank.png'),
+(3, 'Наличная оплата', 'message', '1', 0, '<img src="/UserFiles/Image/Trial/rabbit.png" alt="" align="" border="0"><h3>Благодарим Вас за заказ!</h3>В ближайшее время с Вами свяжется наш менеджер для уточнения деталей.', '', '', '/UserFiles/Image/Payments/nal.png'),
+(4, 'Visa, Mastercard (PayOnlineSystem)', 'payonlinesystem', '1', 2, '<img src="/UserFiles/Image/Trial/rabbit.png" alt="" align="" border="0"><h3>Благодарим Вас за заказ!</h3><p>Ваш заказ оплачен, в ближайшее время наш менеджер свяжется с Вами.</p>\r\n', '', '', '/UserFiles/Image/Payments/payonline.png'),
+(5, 'Visa, Mastercard, Webmoney, Yandex (Robokassa)', 'robox', '1', 1, '<img src="/UserFiles/Image/Trial/rabbit.png" alt="" align="" border="0"><h3>Благодарим Вас за заказ!</h3><p>Ваш заказ оплачен, в ближайшее время наш менеджер свяжется с Вами.</p>', '', '', '/UserFiles/Image/Payments/robox.png'),
+(6, 'WebMoney', 'webmoney', '1', 8, '<img src="/UserFiles/Image/Trial/rabbit.png" alt="" align="" border="0"><h3>Благодарим Вас за заказ!</h3><p>Ваш заказ оплачен, в ближайшее время наш менеджер свяжется с Вами.</p>', '', '', '/UserFiles/Image/Payments/webmoney.png'),
+(8, 'Visa, Mastercard, Webmoney, Yandex (Platron)', 'payonlinesystem', '1', 5, '<img src="/UserFiles/Image/Trial/rabbit.png" alt="" align="" border="0"><h3>Благодарим Вас за заказ!</h3><p>Ваш заказ оплачен, в ближайшее время наш менеджер свяжется с Вами.</p>', '', '', '/UserFiles/Image/Payments/platron.png');
+
+-- 

@@ -8,7 +8,7 @@ include($_classPath . "class/obj.class.php");
 PHPShopObj::loadClass(array("base", "system", "admgui", "orm", "date", "xml", "security", "string", "parser", "mail", "lang"));
 
 
-$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, true);
+$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, false);
 $PHPShopBase->chekAdmin();
 
 // Системные настройки
@@ -268,7 +268,7 @@ if (empty($adm_title)) {
                         <ul class="nav navbar-nav">
                             <li><a href="../../" title="Магазин" target="_blank" class="visible-xs">Магазин</a></li>
                             <li><a href="./admin.php" title="Стартовая панель" class="home"><span class="glyphicon glyphicon-home hidden-xs"></span><span class="visible-xs">Домой</span></a></li>
-                            <li class="dropdown <?= $menu_active_order . $menu_active_payment . $menu_active_order_paymentlog . $menu_active_order_status . $menu_active_report_statorder . $menu_active_report_statuser . $menu_active_report_statpayment; ?>">
+                            <li class="dropdown <?= $menu_active_order . $menu_active_payment . $menu_active_order_paymentlog . $menu_active_order_status . $menu_active_report_statorder . $menu_active_report_statuser . $menu_active_report_statpayment. $menu_active_report_statproduct; ?>">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Заказы <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="?path=order"><span>Заказы</span><span class="dropdown-header">Просмотр и оформление заказов, распечатка счетов</span></a></li>
@@ -277,7 +277,7 @@ if (empty($adm_title)) {
                                     <li><a href="?path=order.status">Статусы заказов<span class="dropdown-header">Просмотр, добавление и редактирование статусов заказов</span></a></li>
                                     <li><a href="?path=delivery">Доставка<span class="dropdown-header">Просмотр и редактирование доставки. Настройка полей для заполнения заказа</span></a></li>
                                     <li class="divider"></li>
-                                    <li><a href="?path=report.statorder">Отчеты по продажам<span class="dropdown-header">Детальная статистика продаж</span></a></li>
+                                    <li><a href="?path=report.statorder"><span class="glyphicon glyphicon-stats"></span> Отчеты по продажам</a></li>
                                 </ul>
                             </li>
 
@@ -289,7 +289,7 @@ if (empty($adm_title)) {
 
                                     <li><a href="?path=sort">Характеристики<span class="dropdown-header">Просмотр, добавление и редактирование дополнительных полей товаров</span></a></li>
                                     <li class="divider"></li>
-                                    <li><a href="?path=report.searchjurnal">Журнал поиска<span class="dropdown-header">Просмотр поисковых запросов пользователей, перенаправление</span></a></li>
+                                    <li><a href="?path=report.searchjurnal"><span class="glyphicon glyphicon-sunglasses"></span> Журнал поиска товаров</a></li>
                                 </ul>
                             </li>
 
@@ -376,6 +376,7 @@ if (empty($adm_title)) {
                 </div>
             </nav>
             <div class="clearfix"></div>
+            <a id="temp" class="hide"></a>
 
 
             <?php
@@ -430,14 +431,6 @@ if (empty($adm_title)) {
                     Обучающий урок по редактированию шаблона дизайна, описание переменных шаблонизатора, управление редактором кода.
                 </div>
             </div>
-            <div class="panel panel-default">
-                <div class="panel-heading"><span class="glyphicon glyphicon-film text-primary"></span> <b class="text-primary">Урок 4: Создание фотогалереи</b>
-                    <a class="btn btn-primary btn-xs pull-right" href="?path=photo&action=new&video"><span class="glyphicon glyphicon-play"></span> Старт</a></div>
-                <div class="panel-body ">
-                    Обучающий урок по созданию новой фотогалереи, заполнения полей и сохранения результата.
-                </div>
-            </div>
-
             <div class="checkbox text-muted">
                 <label>
                     <input type="checkbox" <?php echo $presentation_checked; ?> id="presentation-check"> Показывать при входе в панель управления
@@ -535,7 +528,7 @@ if (empty($adm_title)) {
             </a>
         </nav>
         <!--/ Fixed mobile bar -->
-
+   
         <!-- jQuery plugins -->
         <script src="./js/bootstrap.min.js"></script>
         <script src="./js/jquery.dataTables.min.js"></script>

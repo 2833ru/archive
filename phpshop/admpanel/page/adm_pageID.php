@@ -188,7 +188,7 @@ function actionSave() {
     // Сохранение данных
     actionUpdate();
 
-    header('Location: ?path=page.catalog');
+    header('Location: ?path=page.catalog&cat='.$_POST['category_new']);
 }
 
 // Функция удаления

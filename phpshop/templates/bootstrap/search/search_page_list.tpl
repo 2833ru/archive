@@ -28,15 +28,7 @@
                 <ul class="dropdown-menu" role="menu" class="cat-menu-search">
                     @searchPageCategory@
                 </ul>
-            </div>
-            <div class="btn-group" data-toggle="buttons">
-                <label class="btn btn-default btn-sm @searchSetAactive@">
-                    <input type="radio" name="set" value="1"  autocomplete="off" @searchSetA@>И
-                </label>
-                <label class="btn btn-default btn-sm @searchSetBactive@">
-                    <input type="radio" name="set" value="2" autocomplete="off" @searchSetB@> Или
-                </label>
-            </div>    
+            </div>  
             <div class="btn-group" data-toggle="buttons">
                 <label class="btn btn-default btn-sm @searchSetCactive@">
                     <input type="radio" name="pole" value="1" autocomplete="off" @searchSetC@> Наименование

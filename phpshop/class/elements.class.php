@@ -387,6 +387,7 @@ class PHPShopElements {
             //$this->cell=1;
             $this->product_grid = null;
         }
+        
     }
 
     /**

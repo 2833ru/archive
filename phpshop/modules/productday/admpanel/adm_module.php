@@ -21,8 +21,10 @@ function checkSelect($val) {
 }
 
 function actionStart() {
-    global $PHPShopGUI, $PHPShopOrm;
+    global $PHPShopGUI,$select_name;
     
+    $PHPShopGUI->setActionPanel(__("Настройка модуля") . ' <span id="module-name">' . ucfirst($_GET['id']).'</span>', $select_name, false);
+
 
     $info = '<p>Модуль выводит товар дня на страницы сайта. При редактирование товара возможно установить галочку в закладке <kbd>Товар дня</kbd></p>
     <p>Для вывода блока на страницу используйте метку <mark>@productDay@</mark></p>';
@@ -32,7 +34,7 @@ function actionStart() {
 
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1), array("О Модуле", $Tab3));
+    $PHPShopGUI->setTab(array("Основное", $Tab1), array("О Модуле", $PHPShopGUI->setPay()));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =

@@ -338,7 +338,6 @@ class PHPShopShop extends PHPShopShopCore {
         $this->set('productBack', $this->lang('product_back'));
         $this->set('productSale', $this->lang('product_sale'));
         $this->set('productSelect', $this->lang('product_select'));
-
         $this->set('productValutaName', $this->currency());
         $this->set('productUid', $row['id']);
         $this->set('productId', $row['id']);
@@ -438,21 +437,9 @@ class PHPShopShop extends PHPShopShopCore {
 
         $disp = null;
         $odnotipList = null;
-        if (!empty($row['odnotip'])) {
-            if (strpos($row['odnotip'], ','))
-                $odnotip = explode(",", $row['odnotip']);
-            elseif (is_numeric(trim($row['odnotip'])))
-                $odnotip[] = trim($row['odnotip']);
-        }
 
-        // Список для выборки
-        if (is_array($odnotip))
-            foreach ($odnotip as $value) {
-                if (!empty($value))
-                    $odnotipList.=' id=' . trim($value) . ' OR';
-            }
-
-        $odnotipList = substr($odnotipList, 0, strlen($odnotipList) - 2);
+        if (!empty($row['odnotip']))
+            $odnotipList = ' id IN (' . $row['odnotip'] . ') ';
 
         // Режим проверки остатков на складе
         if ($this->PHPShopSystem->getSerilizeParam('admoption.sklad_status') == 2)
@@ -462,7 +449,7 @@ class PHPShopShop extends PHPShopShopCore {
 
 
 
-        if (!empty($odnotipList)) {
+        if (!empty($row['odnotip'])) {
 
             // Вставка в центральную часть
             if (PHPShopParser::check($this->getValue('templates.main_product_odnotip_list'), 'productOdnotipList')) {
@@ -479,8 +466,9 @@ class PHPShopShop extends PHPShopShopCore {
             }
 
             $PHPShopOrm = new PHPShopOrm();
+            $PHPShopOrm->mysql_error = false;
             $PHPShopOrm->debug = $this->debug;
-            $result = $PHPShopOrm->query("select * from " . $this->objBase . " where (" . $odnotipList . ") " . $chek_items . " and  enabled='1' and parent_enabled='0' and sklad!='1' order by num");
+            $result = $PHPShopOrm->query("select * from " . $this->objBase . " where " . $odnotipList . " " . $chek_items . " and  enabled='1' and parent_enabled='0' and sklad!='1' order BY FIELD (id, " . $row['odnotip'] . ")");
             while ($row = mysqli_fetch_assoc($result))
                 $data[] = $row;
 
@@ -581,8 +569,9 @@ class PHPShopShop extends PHPShopShopCore {
         if (count($this->select_value) > 0) {
             $this->set('parentList', PHPShopText::select('parentId', $this->select_value, "; max-width:300px;"));
             $this->set('productParentList', ParseTemplateReturn("product/product_odnotip_product_parent.tpl"));
-            
-        }else $this->set('elementCartHide', 'hide hidden');
+        }
+        else
+            $this->set('elementCartHide', 'hide hidden');
 
 
 

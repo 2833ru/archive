@@ -45,7 +45,6 @@
         <!-- Bootstrap-select -->
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/bootstrap-select.min.css" rel="stylesheet"> 
 
-
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery-1.11.0.min.js"></script>
 
@@ -306,7 +305,7 @@
         
         <!-- Fixed mobile bar -->
         <div class="bar-padding-fix visible-xs"> </div>
-        <nav class="navbar navbar-default navbar-fixed-bottom bar bar-tab visible-xs visible-sm" role="navigation">
+        <nav class="navbar navbar-default navbar-fixed-bottom bar bar-tab visible-xs" role="navigation">
             <a class="tab-item active" href="/">
                 <span class="icon icon-home"></span>
                 <span class="tab-label">Домой</span>

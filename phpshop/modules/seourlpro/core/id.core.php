@@ -82,7 +82,7 @@ class PHPShopId extends PHPShopCore {
         $GLOBALS['PHPShopSeoPro']->setRout(2);
 
         $PHPShopSeoProCore = new PHPShopSeoProCore();
-        $PHPShopSeoProCore->loadActions();
+        $PHPShopSeoProCore->loadAction();
     }
 
 }

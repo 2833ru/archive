@@ -873,6 +873,7 @@ function product_grid($dataArray, $cell = 2, $template = false) {
 
     // Локализация
     $this->set('productSale', $this->lang('product_sale'));
+    $this->set('productSaleReady', $this->lang('productSaleReady'));
     $this->set('productInfo', $this->lang('product_info'));
     $this->set('productPriceMoney', $this->dengi);
     $this->set('catalog', $this->lang('catalog'));

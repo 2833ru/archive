@@ -268,7 +268,7 @@ function filter_load(filter_str, obj) {
                 $('#price-filter-val-min').removeClass('has-error');
 
                 // Выравнивание ячеек товара
-                setEqualHeight($(".description"));
+                setEqualHeight(".description");
 
                 // Сброс Waypoint
                 Waypoint.refreshAll();
@@ -354,17 +354,21 @@ function faset_filter_click(obj) {
 
 // Выравнивание ячеек товара
 function setEqualHeight(columns) {
-    var tallestcolumn = 0;
-    columns.each(function() {
-        currentHeight = $(this).height();
-        if (currentHeight > tallestcolumn) {
-            tallestcolumn = currentHeight;
+
+    $(columns).closest('.row ').each(function() {
+        var tallestcolumn = 0;
+
+        $(this).find(columns).each(function() {
+            var currentHeight = $(this).height();
+            if (currentHeight > tallestcolumn) {
+                tallestcolumn = currentHeight;
+            }
+        });
+
+        if (tallestcolumn > 0) {
+            $(this).find(columns).height(tallestcolumn);
         }
     });
-
-    if (tallestcolumn > 0) {
-        columns.height(tallestcolumn);
-    }
 
 }
 
@@ -388,7 +392,7 @@ $(document).ready(function() {
     });
 
     // Выравнивание ячеек товара
-    setEqualHeight($(".thumbnail .description"));
+    setEqualHeight(".thumbnail .description");
 
     // Корректировка стилей меню
     $('.mega-more-parent').each(function() {
@@ -618,6 +622,12 @@ $(document).ready(function() {
         skin = $(this).attr('data-skin');
         var cookie = $.cookie('bootstrap_theme');
 
+        $(".bootstrap-theme, .non-responsive-switch").each(function() {
+            $(this).html('');
+        });
+
+        $(this).html('<span class="glyphicon glyphicon-ok"></span>');
+
         // переход на responsive
         if (skin == 'non-responsive' && cookie == 'non-responsive')
             skin = 'bootstrap';
@@ -637,7 +647,6 @@ $(document).ready(function() {
 
     // сохранение оформления
     $(".saveTheme").on('click', function() {
-
         $.ajax({
             url: ROOT_PATH + '/phpshop/ajax/skin.php',
             type: 'post',
@@ -650,7 +659,6 @@ $(document).ready(function() {
             }
         });
     });
-
 
     // Validator Fix brands url
     $('#brand-menu .mega-menu a').on('click', function(event) {
@@ -839,9 +847,6 @@ $(document).ready(function() {
         $("#user_error").find('.list-group-item').addClass('list-group-item-warning');
     }
 
-
-
-
     // формат ввода телефона
     $("form[name='forma_order'], input[name=returncall_mod_tel],input[name=tel]").on('click', function() {
         if (PHONE_FORMAT && PHONE_MASK && $('.bar-padding-fix').is(":hidden")) {
@@ -858,8 +863,7 @@ $(document).ready(function() {
                 $('.dropdown-menu', this).fadeOut("fast");
             });
 
-
-// Фотогалерея в по карточке товара
+    // Фотогалерея в по карточке товара
     if ($('.bxslider').length) {
         $('.bxslider-pre').addClass('hide');
         $('.bxslider').removeClass('hide');
@@ -907,5 +911,15 @@ $(document).ready(function() {
     });
 
 
+    // Скрыть панель bar при скроле
+    $(window).on('mousewheel DOMMouseScroll', function(e) {
+        var delta = e.originalEvent.wheelDelta ? e.originalEvent.wheelDelta : -e.originalEvent.detail;
+
+        if (delta >= 0) {
+            $('.navbar-fixed-bottom').fadeIn('slow').removeClass('hidden-xs').removeClass('hidden-sm');
+        } else {
+            $('.navbar-fixed-bottom').addClass('hidden-xs').addClass('hidden-sm').fadeOut('slow');
+        }
+    });
 
 });

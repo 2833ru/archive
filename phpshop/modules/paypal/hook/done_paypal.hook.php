@@ -140,7 +140,7 @@ function send_to_order_mod_paypal_hook($obj, $value, $rout) {
                 $content.='Заказ: ' . $value['ouid'] . '. Сумма: ' . $out_summ . ' ' . $currency_iso;
 
                 // Сообщение администратору
-                new PHPShopMail($obj->PHPShopSystem->getParam('adminmail2'), $_POST['mail'], 'PayPal Error ' . PHPShopDate::get(), $content);
+                new PHPShopMail($obj->PHPShopSystem->getParam('adminmail2'), $obj->PHPShopSystem->getParam('adminmail2'), 'PayPal Error ' . PHPShopDate::get(), $content);
             }
 
 

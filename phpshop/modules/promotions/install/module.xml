@@ -6,7 +6,6 @@
     <description>Модуль промо-акций.</description>
     <category>form,sale,user</category>
     <sign>1423218824</sign>
-    <status>Update</status>
     <adminmenu>
         <title>Промо-акции</title>
         <capability>true</capability>

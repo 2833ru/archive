@@ -108,7 +108,7 @@
                     $(".template-product-list").append(data);
 
                     // Выравнивание ячеек товара
-                    setEqualHeight($(".thumbnail .description"));
+                    setEqualHeight(".thumbnail .description");
                     // Коррекция знака рубля
                     setRubznak();
 

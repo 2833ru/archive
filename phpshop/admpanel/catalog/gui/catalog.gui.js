@@ -264,10 +264,10 @@ $().ready(function() {
                     data: json,
                     enableLinks: false,
                     showIcon: true,
-                    color: "#2fa4e7",
+                    color: $('#temp').css('color'),
                     showBorder: false,
-                    selectedBackColor: "#2EA4E7",
-                    onhoverColor: "#FFF",
+                    selectedBackColor: $('#temp').css('color'),
+                    onhoverColor: "#fff",
                     backColor: "transparent",
                     expandIcon: 'glyphicon glyphicon-triangle-right',
                     collapseIcon: 'glyphicon glyphicon-triangle-bottom'
@@ -288,7 +288,7 @@ $().ready(function() {
             window.location.href = './admin.php' + data['href'];
     });
 
-    // Поиск категоий
+    // Поиск категорий
     var search = function(e) {
         var pattern = $('#input-category-search').val();
         var options = {
@@ -322,10 +322,6 @@ $().ready(function() {
         action = true;
     });
 
-    // Выделение текущей категории
-    if (typeof cat != 'undefined') {
-        $('.treegrid-' + cat).addClass('treegrid-active');
-    }
 
     // Создать копию из списка
     $(".select-action .copy").on('click', function(event) {

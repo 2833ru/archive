@@ -77,7 +77,7 @@ function imgerror(obj) {
 }
 
 $().ready(function() {
-
+    
     // Ïîèñê â FAQ
     $("#search").on('input', function() {
         var words = $(this).val();
@@ -468,7 +468,7 @@ $().ready(function() {
 
     // Ñolorpicker
     if ($('.color').length)
-        $('.color').colorpicker({format: 'hex',color: '#cccccc'});
+        $('.color').colorpicker({format: 'hex'});
 
     // Íîâûå çàêàçû
     if ($('#orders-check').html() > 0) {

@@ -51,7 +51,7 @@ class PHPShopPartner extends PHPShopCore {
                 PHPShopObj::loadClass("mail");
 
                 // —ообщение администратору о за€вке на вывод
-                new PHPShopMail($this->PHPShopSystem->getValue('adminmail2'), $_SESSION['partnerMail'], $this->PHPShopSystem->getValue('name') . ' - за€вка на вывод средств от ' . $_SESSION['partnerName'], $GLOBALS['SysValue']['lang']['partner_money_mail'] . ' ' . $_POST['get_money_new'] . ' ' . $this->PHPShopSystem->getDefaultValutaCode());
+                new PHPShopMail($this->PHPShopSystem->getValue('adminmail2'), $this->PHPShopSystem->getValue('adminmail2'), $this->PHPShopSystem->getValue('name') . ' - за€вка на вывод средств от ' . $_SESSION['partnerName'], $GLOBALS['SysValue']['lang']['partner_money_mail'] . ' ' . $_POST['get_money_new'] . ' ' . $this->PHPShopSystem->getDefaultValutaCode(),false,false,array('replyto'=>$_SESSION['partnerMail']));
             }
             unset($_POST['get_money_new']);
             $this->index($notice);

@@ -76,8 +76,15 @@ function actionStart() {
     // Наименование
     $Tab_info = $PHPShopGUI->setField(__("Название:"), $PHPShopGUI->setInputArg(array('name' => 'name_new', 'type' => 'text.requared', 'value' => $data['name'])));
 
+    // Права менеджеров
+    if ($PHPShopSystem->ifSerilizeParam('admoption.rule_enabled', 1) and !$PHPShopBase->Rule->CheckedRules('catalog', 'remove')) {
+        $where = array('secure_groups' => " REGEXP 'i" . $_SESSION['idPHPSHOP'] . "i' or secure_groups = ''");
+        $secure_groups = true;
+    }
+    else
+        $where = $secure_groups = false;
 
-    $PHPShopCategoryArray = new PHPShopCategoryArray();
+    $PHPShopCategoryArray = new PHPShopCategoryArray($where);
     $CategoryArray = $PHPShopCategoryArray->getArray();
     $GLOBALS['count'] = count($CategoryArray);
 

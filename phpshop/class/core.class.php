@@ -228,6 +228,8 @@ class PHPShopCore {
 
             @header("Last-Modified: " . $updateDate . " GMT");
         }
+        
+        @header("X-Powered-By: PHPShop");
     }
 
     /**
@@ -257,7 +259,7 @@ class PHPShopCore {
     /**
      * Загрузка экшенов
      */
-    function loadActions() {
+    function loadAction() {
         $this->setAction();
         $this->Compile();
     }

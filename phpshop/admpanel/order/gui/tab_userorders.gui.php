@@ -11,7 +11,7 @@ function tab_userorders($data, $option) {
     
     $PHPShopInterface = new PHPShopInterface();
     $PHPShopInterface->checkbox_action = false;
-    $PHPShopInterface->setCaption(array("№", "20%"),array("Статус", "40%"),  array("Дата", "15%"), array("Сумма", "15%", array('align' => 'right')));
+    $PHPShopInterface->setCaption(array("№", "20%"),array("Статус", "40%"),  array("Дата", "15%"), array("Скидка", "15%"), array("Сумма", "15%", array('align' => 'right')));
 
 
     // Таблица с данными заказов
@@ -38,8 +38,8 @@ function tab_userorders($data, $option) {
             else
                 $uid = $row['uid'];
             
+            $PHPShopOrder = new PHPShopOrderFunction($row['id'], $row);
             if(empty($row['sum'])){
-                $PHPShopOrder = new PHPShopOrderFunction($row['id'], $row);
                 $row['sum']=$PHPShopOrder->getTotal(false, '');
             }
                 
@@ -47,10 +47,10 @@ function tab_userorders($data, $option) {
             $total+=$row['sum'];
             $i++;
 
-            $PHPShopInterface->setRow(array('name' => $uid, 'link' => '?path=order&return=intro&id=' . $row['id']),array('name' => '<span class="hidden-xs" style="color:' . $color[$row['statusi']]['color'] . '">' . $status_name . '</span>', 'link' => '?path=order&return=intro&id=' . $row['id'], 'class' => 'label-link'),  array('name' => $datas), array('name' => $row['sum'] . ' ' . $currency, 'align' => 'right', 'class' => ''));
+            $PHPShopInterface->setRow(array('name' => $uid, 'link' => '?path=order&return=intro&id=' . $row['id']),array('name' => '<span class="hidden-xs" style="color:' . $color[$row['statusi']]['color'] . '">' . $status_name . '</span>', 'link' => '?path=order&return=intro&id=' . $row['id'], 'class' => 'label-link'),  array('name' => $datas),array('name' => $PHPShopOrder->getDiscount().' %'),  array('name' => $row['sum'] . ' ' . $currency, 'align' => 'right', 'class' => ''));
         }
         
-        $PHPShopInterface->setRow(false,array('name' => 'Количество заказов: '.$i,'class'=>'text-muted'),  array('name' => 'Итого:','class'=>'text-muted'), array('name' => $total . ' ' . $currency, 'align' => 'right', 'class' => 'text-success '));
+        $PHPShopInterface->setRow(false,array('name' => 'Количество заказов: '.$i,'class'=>'text-muted'), false, array('name' => 'Итого:','class'=>'text-muted'), array('name' => $total . ' ' . $currency, 'align' => 'right', 'class' => 'text-success '));
 
 
     return '<table class="table table-hover">'.$PHPShopInterface->_CODE.'</table>';

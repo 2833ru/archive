@@ -11,11 +11,15 @@ class PHPShopRestore extends PHPShopUpdate {
     var $_restore_path = '../../';
     var $_restore_version;
 
+    function __construct() {
+        parent::__construct();
+    }
+
     /*
      *  Проверка существования бекапа
      */
 
-    function __construct($version) {
+    function checkRestore($version) {
         if (file_exists($this->_backup_path . 'backups/' . intval($version) . '/files.zip')) {
             $this->_restore_version = $version;
             return true;
@@ -277,6 +281,7 @@ class PHPShopUpdate {
             $this->_log.=$PHPShopGUI->setProgress(__('Обновление базы данных...'), 'install-update-bd');
             $this->log("Обновление базы данных выполнено", 'success hide install-update-bd');
             $this->log("Не удается обновить базу данных", 'danger hide install-update-bd-danger');
+            @unlink("dumper/backup/update.sql");
             return false;
         }
     }
@@ -405,22 +410,22 @@ class PHPShopUpdate {
 
         // Обновление БД присутствует
         if ($this->base_update_enabled) {
-            
+
             /*
-            if (!file_exists("dumper/backup/upload_dump.sql.gz")) {
-                $this->log("Не создана резервная копия базы данных", 'warning', 'remove');
-                return false;
-            }
+              if (!file_exists("dumper/backup/upload_dump.sql.gz")) {
+              $this->log("Не создана резервная копия базы данных", 'warning', 'remove');
+              return false;
+              }
 
-            if (!copy("dumper/backup/upload_dump.sql.gz", $this->_backup_path . "temp/upload_backup.sql.gz")) {
-                $this->log("Не удаётся скопировать бекап базы upload_backup.sql.gz", 'warning', 'remove');
-                return false;
-            }
+              if (!copy("dumper/backup/upload_dump.sql.gz", $this->_backup_path . "temp/upload_backup.sql.gz")) {
+              $this->log("Не удаётся скопировать бекап базы upload_backup.sql.gz", 'warning', 'remove');
+              return false;
+              }
 
-            if (!unlink("dumper/backup/upload_dump.sql.gz")) {
-                $this->log("Не удаётся удалить upload_backup.sql", 'warning', 'info');
-            }
-            */
+              if (!unlink("dumper/backup/upload_dump.sql.gz")) {
+              $this->log("Не удаётся удалить upload_backup.sql", 'warning', 'info');
+              }
+             */
 
             if (!copy($this->_backup_path . "temp/update.sql", "dumper/backup/update.sql")) {
                 $this->log("Не удаётся скопировать обновление базы данных update.sql", 'warning', 'remove');
@@ -493,7 +498,7 @@ class PHPShopUpdate {
         if ($update_enable) {
             $this->update_status = $update_enable['status'];
             $this->version = $update_enable['name'];
-            if ($this->update_status == 'active') {
+            if ($this->update_status != 'no_update') {
 
                 $this->ftp_host = $update_enable['ftp_host'];
                 $this->ftp_login = $update_enable['ftp_login'];

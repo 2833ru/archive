@@ -295,14 +295,14 @@ class PHPShopUsers extends PHPShopCore {
                     $this->PHPShopOrm->update(array('status_new' => $this->PHPShopSystem->getSerilizeParam('admoption.user_status')), array('status' => "='" . $_GET['key'] . "'"));
 
                     // Заголовок e-mail администратору
-//                    $title = $this->PHPShopSystem->getName() . " - " . $obj->lang('activation_admin_title') . " " . $_POST['name_new'];
                     $title = $this->lang('activation_admin_title') . " " . $_POST['name_new'];
 
                     // Содержание e-mail администратору
                     $content = ParseTemplateReturn('./phpshop/lib/templates/users/mail_admin_activation.tpl', true);
 
                     // Отправка e-mail администратору
-                    $PHPShopMail = new PHPShopMail($this->PHPShopSystem->getValue('adminmail2'), $data['login'], $title, '', true, true);
+                    $PHPShopMail = new PHPShopMail($this->PHPShopSystem->getValue('adminmail2'), $this->PHPShopSystem->getValue('adminmail2'), $title, '', true, true,array('replyto'=>$data['login']));
+                    
                     // Содержание e-mail  администратору
                     $content = ParseTemplateReturn('./phpshop/lib/templates/users/mail_admin_activation.tpl', true);
                     $PHPShopMail->sendMailNow($content);
@@ -523,7 +523,8 @@ class PHPShopUsers extends PHPShopCore {
                 $title = __('Восстановление пароля пользователя') . " " . $_POST['login'];
 
                 // Отправка e-mail пользователю
-                $PHPShopMail = new PHPShopMail($data['mail'], 'robot@' . str_replace("www.", "", $_SERVER['SERVER_NAME']), $title, $content, true, true);
+                $PHPShopMail = new PHPShopMail($data['mail'], $this->PHPShopSystem->getParam('adminmail2'), $title, '', true, true);
+                
                 // Содержание e-mail пользователю
                 $content = ParseTemplateReturn('./phpshop/lib/templates/users/mail_sendpassword.tpl', true);
                 $PHPShopMail->sendMailNow($content);

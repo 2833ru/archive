@@ -10,6 +10,7 @@ function order_promotions_hook($obj, $row, $rout) {
 
 
         if(isset($promotionslistCode)) {
+            if(is_array($promotionslistCode))
             foreach ($promotionslistCode as $key => $value) {
                 if($value['code_check']==1) {
                     $code_check = 1;

@@ -36,6 +36,12 @@ class PHPShopCart {
             PHPShopObj::loadClass('product');
         }
 
+        if (!class_exists('PHPShopValutaArray')) {
+            PHPShopObj::loadClass('array');
+            PHPShopObj::loadClass('valuta');
+            $PHPShopValutaArray = new PHPShopValutaArray();
+        }
+
 
         $this->Valuta = $PHPShopValutaArray->getArray();
 
@@ -80,7 +86,7 @@ class PHPShopCart {
 
             $weight = $objProduct->getParam("weight");
             if (!empty($weight))
-                $cart['weight'] =$weight;
+                $cart['weight'] = $weight;
 
             if (!empty($parentID))
                 $cart['parent'] = intval($parentID);

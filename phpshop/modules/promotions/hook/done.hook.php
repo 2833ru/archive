@@ -179,7 +179,8 @@ function promotions_mail($obj, $data, $rout) {
 
 
         // Отсылаем письмо покупателю
-        $PHPShopMail = new PHPShopMail($_POST['mail'], $obj->PHPShopSystem->getParam('adminmail2'), $title, '', true, true);
+        $PHPShopMail = new PHPShopMail($_POST['mail'], $obj->PHPShopSystem->getEmail(), $title, '', true, true);
+        
         if ($_SESSION['promocode'] == '*'):
             //если промо-код есть
             $content = ParseTemplateReturn('phpshop/modules/promotions/templates/order/np_usermail.tpl', true);
@@ -201,7 +202,7 @@ function promotions_mail($obj, $data, $rout) {
         $title_adm = $obj->lang('mail_title_adm') . $_POST['ouid'] . "/" . date("d-m-y");
 
         // Отсылаем письмо администратору
-        $PHPShopMail = new PHPShopMail($obj->PHPShopSystem->getParam('adminmail2'), $_POST['mail'], $title_adm, '', true, true);
+        $PHPShopMail = new PHPShopMail($obj->PHPShopSystem->getEmail(), $obj->PHPShopSystem->getEmail(), $title_adm, '', true, true,array('replyto'=>$_POST['mail']));
         if ($_SESSION['promocode'] == '*'):
             //если промо-код есть
             $content_adm = ParseTemplateReturn('phpshop/modules/promotions/templates/order/np_adminmail.tpl', true);

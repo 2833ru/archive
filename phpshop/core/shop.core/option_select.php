@@ -27,18 +27,18 @@ function option_select($obj, $data) {
 
     $disp = null;
     $adder = null;
-    $numel = 0;
+    $numel = $num = 0;
     if (is_array($sort)) {
         $PHPShopOrm = new PHPShopOrm();
         $PHPShopOrm->debug = $obj->debug;
         $PHPShopOrm->comment = get_class($obj) . '.' . __FUNCTION__;
         $result = $PHPShopOrm->query("select * from " . $obj->getValue('base.sort_categories') . " where (" . $sortList . ") and goodoption='1' order by num,name");
-        $num = mysqli_num_rows($result);
         while (@$row = mysqli_fetch_array($result)) {
             $id = $row['id'];
             $name = $row['name'];
             $opt_sel = option_select_add($vendor_array, $id, $name, $numel, $xid, $row['optionname'], $obj->debug);
             if (!empty($opt_sel)) {
+                $num++;
                 $disp.= '<tr><td>' . $opt_sel . '</td></tr>';
                 $adder.='+document.getElementById("opt' . $numel . $xid . '").value';
                 $numel++;

@@ -41,12 +41,11 @@ function message_activation($obj) {
         $PHPShopMail->sendMailNow($content);
 
         // Заголовок e-mail администратору
-//        $title = $obj->PHPShopSystem->getName() . " - " . $obj->lang('activation_admin_title') . " " . $_POST['name_new'];
         $title = $obj->lang('activation_admin_title') . " " . $_POST['name_new'];
 
-
         // Отправка e-mail администратору
-        $PHPShopMail = new PHPShopMail($admin_mail, $_POST['mail_new'], $title, '', true, true);
+        $PHPShopMail = new PHPShopMail($admin_mail, $admin_mail, $title, '', true, true);
+        
         // Содержание e-mail  администратору
         $content = ParseTemplateReturn('./phpshop/lib/templates/users/mail_admin_activation.tpl', true);
         $PHPShopMail->sendMailNow($content);

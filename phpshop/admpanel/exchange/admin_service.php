@@ -52,6 +52,7 @@ round(((data_length + index_length) / 1024), 2) `size`
 FROM information_schema.TABLES
 WHERE table_schema = "' . $GLOBALS['SysValue']['connect']['dbase'] . '" order by table_rows desc';
     $PHPShopOrm->debug = false;
+    $PHPShopOrm->mysql_error = false;
     $data = $PHPShopOrm->select();
     if (is_array($data))
         foreach ($data as $row) {

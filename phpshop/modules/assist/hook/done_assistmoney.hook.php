@@ -41,14 +41,14 @@ function send_to_order_mod_Assistmoney_hook($obj, $value, $rout) {
             $payment_forma.= PHPShopText::setInput('hidden', 'OrderNumber', $inv_id, false, 10);
 			$payment_forma.=PHPShopText::setInput('hidden', 'OrderAmount', $out_summ, false, 10);
 			$payment_forma.=PHPShopText::setInput('hidden', 'CheckValue', $hashcode, false, 10);
-            $payment_forma.= PHPShopText::setInput('hidden', 'OrderComment', $PHPShopSystem->getParam('name') . ': Заказ ' . $value['ouid'], false, 10);
-			$payment_forma.=PHPShopText::setInput('hidden', 'OrderCurrency', 'RUB', false, 10);
+            $payment_forma.= PHPShopText::setInput('hidden', 'OrderComment', PHPShopString::win_utf8($PHPShopSystem->getParam('name') . ': Заказ ' . $value['ouid']), false, 10);
+			$payment_forma.=PHPShopText::setInput('hidden', 'OrderCurrency', $PHPShopSystem->getDefaultValutaIso(), false, 10);
 			$payment_forma.=PHPShopText::setInput('hidden', 'URL_RETURN_OK', "http://$_SERVER[HTTP_HOST]/success/?payment_name=assist", false, 10);
 			$payment_forma.=PHPShopText::setInput('hidden', 'URL_RETURN_NO', "http://$_SERVER[HTTP_HOST]/fail/?payment_name=assist", false, 10);		
 			$payment_forma.=PHPShopText::setInput('hidden', 'Language', 'RU', false, 10);
-			$payment_forma.=PHPShopText::setInput('hidden', 'LastName', $lastname, false, 10);
-			$payment_forma.=PHPShopText::setInput('hidden', 'FirstName', $firstname, false, 10);
-			$payment_forma.=PHPShopText::setInput('hidden', 'Email', $_POST['mail'], false, 10);
+			$payment_forma.=PHPShopText::setInput('hidden', 'LastName', PHPShopString::win_utf8($lastname), false, 10);
+			$payment_forma.=PHPShopText::setInput('hidden', 'FirstName', PHPShopString::win_utf8($firstname), false, 10);
+			$payment_forma.=PHPShopText::setInput('hidden', 'Email', PHPShopString::win_utf8($_POST['mail']), false, 10);
 			$payment_forma.=PHPShopText::setInput('hidden', 'MobilePhone', $_POST[tel_new], false, 10);
             
             $payment_forma.=PHPShopText::setInput('submit', 'send', $option['title'], $float = "left; margin-left:10px;", 250);

@@ -21,9 +21,9 @@
         ///// Uploader init
         $fileInput.damnUploader({
             // URL of server-side upload handler
-            url: '../../editors/default/uploader/serverLogic.php?id='+$productId,
+            url: '../../editors/default/uploader/serverLogic.php?id=' + $productId,
             // File POST field name (for ex., it will be used as key in $_FILES array, if you using PHP)
-            fieldName:  'file',
+            fieldName: 'file',
             // Container for handling drag&drops (not required)
             dropBox: $dropBox,
             // Limiting queued files count (if not defined [or false] - queue will be unlimited)
@@ -52,9 +52,9 @@
 
             // Defining cancel button & its handler
             var $cancelBtn = $('<a/>').attr('href', 'javascript:').append(
-                $('<span/>').addClass('glyphicon glyphicon-remove')
-            ).on('click', function() {
-                var $statusCell =  $pbWrapper.parent();
+                    $('<span/>').addClass('glyphicon glyphicon-remove')
+                    ).on('click', function() {
+                var $statusCell = $pbWrapper.parent();
                 $statusCell.empty().html('<i>отменен</i>');
                 ui.cancel();
                 log((ui.file.name || "[custom-data]") + " canceled");
@@ -101,7 +101,7 @@
             if (!isTextFile(ui.file) && !isImgFile(ui.file)) {
                 log(filename + ": is not image. Only images & plain text files accepted!");
                 e.preventDefault();
-                return ;
+                return;
             }
 
             // We can replace original filename if needed
@@ -141,17 +141,22 @@
 
         // Uploader events
         $fileInput.on({
-            'du.add' : fileAddHandler,
-
-            'du.limit' : function() {
+            'du.add': fileAddHandler,
+            'du.limit': function() {
                 log("File upload limit exceeded!");
             },
-
-            'du.completed' : function() {
+            'du.completed': function() {
                 log('******');
                 log("All uploads completed!");
                 parent.window.$('#selectModal').modal('hide');
-                parent.window.location.href = parent.window.location.href.split('&tab=1').join('') + '&tab=1';
+
+                // Сообщение о нехраненных изменениях 
+                if (parent.window.is_change) {
+                    if (confirm(locale.confirm_reload)) {
+                        parent.window.location.href = parent.window.location.href.split('&tab=1').join('') + '&tab=1';
+                    }
+                }
+                else parent.window.location.href = parent.window.location.href.split('&tab=1').join('') + '&tab=1';
             }
         });
 

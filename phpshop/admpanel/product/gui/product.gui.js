@@ -1,5 +1,13 @@
 
+// Состояние формы
+var is_change = false;
+
 $().ready(function() {
+
+    // Форма редактировалась
+    $('#product_edit .form-control, #product_edit .hidden-edit, #product_edit input:radio:checked, #product_edit input:checkbox:checked').change(function() {
+        is_change = true;
+    });
 
     // Загрузка файлов на сервер
     $("body").on('click', '.btn-upload', function(event) {
@@ -14,10 +22,10 @@ $().ready(function() {
         $('#selectModal .modal-body').html($('#elfinderModal .modal-body').html());
         $('#selectModal .elfinder-modal-content').attr('src', './product/gui/uploader.gui.php?id=' + id);
         $('#selectModal .elfinder-modal-content').attr('id', 'uploader');
-        $('#selectModal .modal-title').html(locale.select_file+'ы');
+        $('#selectModal .modal-title').html(locale.select_file + 'ы');
         $('#selectModal .modal-footer .btn-primary').addClass('btn-upload');
         $('#selectModal .modal-footer .btn-primary').prop("type", "button");
-        
+
         $('#selectModal').modal('show');
     });
 
@@ -57,8 +65,7 @@ $().ready(function() {
             element: document.getElementById('fix-check'),
             handler: function(direction) {
                 $('.navbar-action').toggleClass('navbar-fixed-top');
-            },
-     
+            }
         });
 
     // Указать ID товара в виде тега - Поиск

@@ -82,7 +82,7 @@ class PHPShopForma extends PHPShopCore {
 
         if (!empty($_POST['tema']) and !empty($_POST['name']) and !empty($_POST['content'])) {
 
-            $zag = $_POST['tema'] . " - " . $this->PHPShopSystem->getValue('name');
+            $subject = $_POST['tema'] . " - " . $this->PHPShopSystem->getValue('name');
 
             $message = "Вам пришло сообщение с сайта " . $this->PHPShopSystem->getValue('name') . "
 
@@ -91,7 +91,7 @@ class PHPShopForma extends PHPShopCore {
 ";
 
             // Информация по сообщению
-            foreach ($_POST as $key => $val)
+            foreach ($_POST as $val)
                 $message.=$val . "
 ";
 
@@ -103,8 +103,9 @@ IP:
 
 С уважением,
 http://" . $_SERVER['SERVER_NAME'];
-
-            new PHPShopMail($this->PHPShopSystem->getValue('adminmail2'), $_POST['mail'], $zag, $message, $f=false);
+            
+            new PHPShopMail($this->PHPShopSystem->getEmail(), $this->PHPShopSystem->getEmail(), $subject, $message, false, false, array('replyto'=>$_POST['mail']));
+            
             $this->set('Error', "Сообщение успешно отправлено");
         }
         else

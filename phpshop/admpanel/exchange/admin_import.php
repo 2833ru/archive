@@ -299,6 +299,9 @@ function csv_update($data) {
                     unset($row);
                     return false;
                 }
+                
+                // Дата обновления
+                $row['datas']=time();
 
                 if (!empty($where)) {
                     $PHPShopOrm->debug = false;
@@ -326,7 +329,7 @@ function actionSave() {
     $memory[$_GET['path']]['export_sortsdelim'] = $_POST['export_sortsdelim'];
 
     if (is_array($memory))
-        setcookie("check_memory", json_encode($memory), time() + 3600000, '/phpshop/admpanel/');
+        setcookie("check_memory", json_encode($memory), time() + 3600000, $GLOBALS['SysValue']['dir']['dir'].'/phpshop/admpanel/');
 
 
     // Копируем csv от пользователя

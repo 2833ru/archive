@@ -43,7 +43,7 @@ function treegenerator($array, $i, $curent) {
 }
 
 function actionStart() {
-    global $PHPShopGUI, $PHPShopModules, $PHPShopOrm;
+    global $PHPShopGUI, $PHPShopModules, $PHPShopOrm,$PHPShopBase,$PHPShopSystem;
 
     // Выборка
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
@@ -72,12 +72,19 @@ function actionStart() {
     $PHPShopGUI->field_col = 2;
     $PHPShopGUI->addJSFiles('./js/jquery.tagsinput.min.js', './catalog/gui/catalog.gui.js', './js/jquery.waypoints.min.js', './product/gui/product.gui.js');
     $PHPShopGUI->addCSSFiles('./css/jquery.tagsinput.css');
+    
+        // Права менеджеров
+    if ($PHPShopSystem->ifSerilizeParam('admoption.rule_enabled', 1) and !$PHPShopBase->Rule->CheckedRules('catalog', 'remove')) {
+        $where = array('secure_groups' => " REGEXP 'i" . $_SESSION['idPHPSHOP'] . "i' or secure_groups = ''");
+        $secure_groups = true;
+    }
+    else
+        $where = $secure_groups = false;
 
-    $PHPShopCategoryArray = new PHPShopCategoryArray();
+    $PHPShopCategoryArray = new PHPShopCategoryArray($where);
     $CategoryArray = $PHPShopCategoryArray->getArray();
 
-    $CategoryArray[0]['name'] = '- Корневой уровень -';
-
+    $CategoryArray[0]['name'] = '- Выбрать каталог -';
     $tree_array = array();
 
 
@@ -100,7 +107,7 @@ function actionStart() {
 
     $GLOBALS['tree_array'] = &$tree_array;
 
-    $tree_select = '<select class="selectpicker show-menu-arrow hidden-edit" data-live-search="true" data-container=""  data-style="btn btn-default btn-sm" name="category_new"  data-width="100%">';
+    $tree_select = '<select class="selectpicker show-menu-arrow hidden-edit" data-live-search="true" data-container=""  data-style="btn btn-default btn-sm" name="category_new"  data-width="100%"><option value="0">' . $CategoryArray[0]['name'] . '</option>';
 
     if (is_array($tree_array[0]['sub']))
         foreach ($tree_array[0]['sub'] as $k => $v) {
@@ -197,7 +204,7 @@ function actionStart() {
 
     // YML
     $data['yml_bid_array'] = unserialize($data['yml_bid_array']);
-    $Tab_yml = $PHPShopGUI->setField(__('YML'), $PHPShopGUI->setCheckbox('yml_new', 1, __('Вывод в Яндекс Маркете'), $data['yml']) .
+    $Tab_yml = $PHPShopGUI->setField(__('YML'), $PHPShopGUI->setCheckbox('yml_new', 1, __('Вывод в Яндекс Маркете'), $data['yml']) .'<br>'.
             $PHPShopGUI->setRadio('p_enabled_new', 1, __('В наличии'), $data['p_enabled']) .
             $PHPShopGUI->setRadio('p_enabled_new', 0, __('Уведомить (Под заказ)'), $data['p_enabled'])
     );
@@ -371,8 +378,8 @@ function actionUpdate() {
         // Статьи
         if (isset($_POST['editID']))
             $_POST['page_new'] = array_pop($_POST['page_new']);
-        elseif (@strpos($_POST['page_new'], ''))
-            $_POST['page_new'] = implode(',', $_POST['page_new']);
+        else
+            $_POST['page_new'] = @implode(',', $_POST['page_new']);
 
         // Файлы
         if (isset($_POST['editID'])) {
@@ -404,6 +411,9 @@ function actionUpdate() {
         $_POST['pic_small_new'] = $insert['pic_small_new'];
     if (empty($_POST['pic_big_new']) and !empty($insert['name_new']))
         $_POST['pic_big_new'] = $insert['name_new'];
+    
+    // Права пользователя
+    $_POST['user_new'] = $_SESSION['idPHPSHOP'];
 
 
     $PHPShopOrm->debug = false;

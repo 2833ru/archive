@@ -2,6 +2,7 @@
 
 $TitlePage = __("Экспорт данных");
 PHPShopObj::loadClass('sort');
+PHPShopObj::loadClass('array');
 
 // Описания полей
 $key_name = array(
@@ -40,7 +41,6 @@ $key_name = array(
     'fio' => 'Ф.И.О',
     'city' => 'Город',
     'street' => 'Улица',
-    'orders' => 'Сумма',
     'odnotip' => 'Сопутствующие товары',
     'page' => 'Страницы',
     'parent' => 'Подчиненные товары',
@@ -50,7 +50,6 @@ $key_name = array(
     'vendor_array' => 'Характеристики',
     'p_enabled' => 'Наличие в Яндекс.Маркет',
     'parent_enabled' => 'Подтип',
-    'p_enabled' => 'Яндекс.Маркет под заказ',
     'rate' => 'Рейтинг',
     'rate_count' => 'Голоса в рейтинге',
     'descrip' => 'Meta description',
@@ -84,14 +83,17 @@ $key_name = array(
     'status' => 'Примечание менеджера',
     'seller' => 'Загружено в CRM',
     'country' => 'Страна',
-    'statusi' => 'Статус',
+    'statusi' => 'Статус заказа',
+    'status' => 'Статус пользователя',
     'state' => 'Регион/штат',
     'city' => 'Город',
-    'sum' => 'Сумма'
+    'sum' => 'Сумма',
+    'user' => 'ID Пользователя',
+    'orders' => 'Корзина'
 );
 
 // Стоп лист
-$key_stop = array('password', 'wishlist', 'sort', 'yml_bid_array', 'vendor', 'status', 'files');
+$key_stop = array('password', 'wishlist', 'sort', 'yml_bid_array', 'vendor', 'files');
 
 
 switch ($subpath[2]) {
@@ -100,14 +102,17 @@ switch ($subpath[2]) {
         $key_base = array('id', 'name', 'icon', 'parent_to');
         break;
     case 'user':
+        PHPShopObj::loadClass('user');
+        $PHPShopUserStatusArray = new PHPShopUserStatusArray();
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['shopusers']);
         $key_base = array('id', 'login', 'name', 'tel');
         array_push($key_stop, 'tel_code', 'adres', 'inn', 'kpp', 'company', 'data_adres');
         break;
     case 'order':
         PHPShopObj::loadClass('order');
+        $PHPShopOrderStatusArray = new PHPShopOrderStatusArray();
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
-        $key_base = array('id', 'uid', 'fio', 'tel', 'datas', 'orders');
+        $key_base = array('id', 'uid', 'fio', 'tel', 'datas');
         $key_name['uid'] = '№ Заказа';
         $TitlePage.=' заказов';
         break;
@@ -166,10 +171,15 @@ function serializeSelect($str, $cols_name = false) {
         // Заголовки
         $key = array_keys($cols_array);
         array_walk_recursive($key, 'implodeCheck');
-        $where = array('id' => ' IN (' . implode(',', $key) . ')');
+        $idcat_list = implode(',', $key);
 
-        $PHPShopSortCategoryArray = new PHPShopSortCategoryArray($where);
-        $data = $PHPShopSortCategoryArray->getArray();
+
+        if (!empty($idcat_list)) {
+            $where = array('id' => ' IN (' . $idcat_list . ')');
+
+            $PHPShopSortCategoryArray = new PHPShopSortCategoryArray($where);
+            $data = $PHPShopSortCategoryArray->getArray();
+        }
 
         if (is_array($data)) {
 
@@ -179,9 +189,12 @@ function serializeSelect($str, $cols_name = false) {
                     // Значения
                     $val = array_values($v);
                     array_walk_recursive($val, 'implodeCheck');
-                    $where = array('id' => ' IN (' . implode(',', $val) . ')');
-                    $PHPShopSortArray = new PHPShopSortArray($where);
-                    $data_v = $PHPShopSortArray->getArray();
+                    $id_list = implode(',', $val);
+                    if (!empty($id_list)) {
+                        $where = array('id' => ' IN (' . $id_list . ')');
+                        $PHPShopSortArray = new PHPShopSortArray($where);
+                        $data_v = $PHPShopSortArray->getArray();
+                    }
 
                     foreach ($v as $a_v)
                         $array_line.=$data[$k]['name'] . '/' . $data_v[$a_v]['name'] . $sortdelim;
@@ -191,14 +204,14 @@ function serializeSelect($str, $cols_name = false) {
         }
     }
     else
-        $csv_line = '""'. $delim;
+        $csv_line = '""' . $delim;
 
     return $csv_line;
 }
 
 // Функция обновления
 function actionSave() {
-    global $PHPShopOrm, $key_name, $subpath;
+    global $PHPShopOrm, $key_name, $subpath, $PHPShopOrderStatusArray,$PHPShopUserStatusArray;
 
     $PHPShopOrm->debug = false;
     $PHPShopOrm->mysql_error = false;
@@ -207,7 +220,7 @@ function actionSave() {
     $gz = $_POST['export_gzip'];
     $pattern_cols = $_POST['pattern_cols'];
     if (!is_array($pattern_cols))
-       $pattern_cols = array('id', 'name', 'price');
+        $pattern_cols = array('id', 'name', 'price');
     else {
         array_walk($pattern_cols, 'patternCheck');
     }
@@ -232,7 +245,7 @@ function actionSave() {
             $memory[$_GET['path']][$v] = 1;
         }
         if (is_array($memory))
-            setcookie("check_memory", json_encode($memory), time() + 3600000, '/phpshop/admpanel/');
+            setcookie("check_memory", json_encode($memory), time() + 3600000, $GLOBALS['SysValue']['dir']['dir'] . '/phpshop/admpanel/');
     }
 
     $data = $PHPShopOrm->select($pattern_cols, $where, array('order' => 'id desc'), array('limit' => $_POST['export_limit']));
@@ -244,7 +257,7 @@ function actionSave() {
         else
             $name = $cols_name;
 
-        $csv.='"'.$name .'"'. $delim;
+        $csv.='"' . $name . '"' . $delim;
     }
 
     $csv = substr($csv, 0, (strlen($csv) - 1)) . "\n";
@@ -256,30 +269,47 @@ function actionSave() {
                 if ($cols_name == 'datas')
                     $csv_line.=PHPShopDate::get($row[$cols_name]) . $delim;
 
-                // Сумма заказа
+                // Корзина
                 elseif ($cols_name == 'orders') {
-                    $PHPShopOrderFunction = new PHPShopOrderFunction($row['id'], $row);
-                    $csv_line.=$PHPShopOrderFunction->getTotal() . $delim;
+                    $order = unserialize($row['orders']);
+                    $csv_line.='"';
+                    foreach ($order['Cart']['cart'] as $k => $v) {
+                        $csv_line.= '[' . $v['name'] . '(' . $v['num'] . '*' . $v['price'] . ')]';
+                    }
+                    $csv_line.='"' . $delim;
                 }
+
+                // Статус заказа
+                elseif ($cols_name == 'statusi') {
+                    $csv_line.='"' . $PHPShopOrderStatusArray->getParam($row['statusi'] . '.name') . '"' . $delim;
+                }
+
+                // Статус пользователя
+                elseif ($cols_name == 'status') {
+                    $csv_line.='"' . $PHPShopUserStatusArray->getParam($row['status'] . '.name') . '"' . $delim;
+                }
+
+
+
                 // Сериализованное значение
                 elseif (PHPShopString::is_serialized($row[$cols_name])) {
                     $csv_line.=serializeSelect($row[$cols_name], $cols_name);
-                }
-                else{
-                    
+                } else {
+
                     // Проверка старых заказов < 4.0
-                    if($cols_name == 'fio' and (empty($row['fio'])) and empty($row['tel'])){
-                       $orders = unserialize($row['orders']);
-                       if(is_array($orders["Person"])){
-                       $row['fio']=$orders["Person"]['name_person'];
-                       $row['tel']=$orders["Person"]['tel_code'].' '.$orders["Person"]['tel_name'];
-                       $row['street']=$orders["Person"]['adr_name'];
-                       $row['org_name']=$orders["Person"]['org_name'];
-                       $row['org_inn']=$orders["Person"]['org_inn'];
-                       $row['org_kpp']=$orders["Person"]['org_kpp'];
-                       }
+                    if ($cols_name == 'fio' and (empty($row['fio'])) and empty($row['tel'])) {
+                        $orders = unserialize($row['orders']);
+                        if (is_array($orders["Person"])) {
+                            $row['fio'] = $orders["Person"]['name_person'] . ' ' . $orders["Person"]['mail'];
+                            $row['tel'] = $orders["Person"]['tel_code'] . ' ' . $orders["Person"]['tel_name'];
+                            $row['street'] = $orders["Person"]['adr_name'];
+                            $row['org_name'] = $orders["Person"]['org_name'];
+                            $row['org_inn'] = $orders["Person"]['org_inn'];
+                            $row['org_kpp'] = $orders["Person"]['org_kpp'];
+                            $row['user'] = $orders["Person"]['mail'];
+                        }
                     }
-                    
+
                     $csv_line.='"' . PHPShopSecurity::CleanOut($row[$cols_name]) . '"' . $delim;
                 }
             }
@@ -298,9 +328,6 @@ function actionSave() {
     }
     else
         header("Location: " . $sorce);
-
-    //echo $csv;
-    //return true;
 }
 
 // Стартовый вид

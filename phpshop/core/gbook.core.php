@@ -226,8 +226,7 @@ class PHPShopGbook extends PHPShopCore {
                 // Запись в базу
                 $this->PHPShopOrm->insert(array('datas' => $date, 'name' => $name_new, 'mail' => $mail_new, 'tema' => $tema_new, 'otsiv' => $otsiv_new), $prefix = '');
 
-//                $zag=$this->PHPShopSystem->getValue('name')." - Уведомление о добалении отзыва / ".$date;
-                $zag = "Уведомление о добалении отзыва / " . $date;
+                $subject = "Уведомление о добалении отзыва / " . $date;
 
                 // Пересенные для шаблона сообщения
                 $this->set('gbook_name', $name_new);
@@ -239,7 +238,7 @@ class PHPShopGbook extends PHPShopCore {
                 // Шаблон сообщения администратору
                 $message = ParseTemplateReturn('phpshop/lib/templates/gbook/mail.tpl', true);
 
-                new PHPShopMail($this->PHPShopSystem->getValue('adminmail2'), $mail_new, $zag, $message);
+                new PHPShopMail($this->PHPShopSystem->getEmail(), $this->PHPShopSystem->getEmail(), $subject, $message, false, false);
             }
         }
     }

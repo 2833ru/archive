@@ -13,4 +13,4 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_smsfly_system` (
 
 
 INSERT INTO `phpshop_modules_smsfly_system` (`id`, `merchant_user`, `merchant_pwd`, `phone`, `sandbox`,`alfaname`,`version`) VALUES
-(1, '', '', '','2','ShopName','1.3');
+(1, '', '', '','2','ShopName','1.4');

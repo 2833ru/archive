@@ -56,6 +56,11 @@ $().ready(function() {
     $(".btn-order-cancel").on('click', function() {
         window.location.replace('?path=report.statorder');
     });
+    
+    // Поиск товаров - очистка
+    $(".btn-product-cancel").on('click', function() {
+        window.location.replace('?path=report.statproduct');
+    });
 
     // datetimepicker
     if ($(".date").length) {

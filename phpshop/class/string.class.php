@@ -128,7 +128,7 @@ class PHPShopString {
 
     // Отрезаем до точки с заменой 
     static function mySubstr($str, $a, $add = "...") {
-        $str = htmlspecialchars(strip_tags(trim($str)));
+        $str = htmlspecialchars(strip_tags(trim($str)),ENT_QUOTES, 'windows-1251');
         $len = strlen($str);
 
         if ($len < $a)

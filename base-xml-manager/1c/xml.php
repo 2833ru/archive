@@ -200,6 +200,7 @@ class PHPShop1C extends PHPShopBaseXml {
             'orders' => 'order',
             'order' => 'order',
             'payment' => 'order',
+            'valuta' => 'order',
             'foto'=>'catalog',
         );
 

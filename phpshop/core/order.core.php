@@ -187,8 +187,8 @@ document.getElementById('order').style.display = 'none';
      * @return string
      */
     function message($title, $content) {
-        $message = PHPShopText::b(PHPShopText::notice($title, false, '14px')) . PHPShopText::br();
-        $message.=PHPShopText::message($content, false, '12px', 'black');
+        $message = PHPShopText::h4($title,'text-danger');
+        $message.=PHPShopText::message($content, false, false,false, 'text-muted');
         return $message;
     }
 

@@ -23,21 +23,18 @@ class ProductDay extends PHPShopProductElements {
             $hour_good = 0;
         }
 
-
         if (is_array($productday)) {
             PHPShopParser::set('productDayId', $productday['id']);
             PHPShopParser::set('productDayName', $productday['name']);
             PHPShopParser::set('productDayDescription', $productday['description']);
-            PHPShopParser::set('productDayPrice', $productday['price']);
-            PHPShopParser::set('productDayPriceN', $productday['price_n']);
+            PHPShopParser::set('productDayPrice', PHPShopProductFunction::GetPriceValuta($productday['id'],$productday['price']));
+            PHPShopParser::set('productDayPriceN', PHPShopProductFunction::GetPriceValuta($productday['id'],$productday['price_n']));
             PHPShopParser::set('productDayPicBig', $productday['pic_big']);
             PHPShopParser::set('productDayPicSmall', $productday['pic_small']);
             PHPShopParser::set('productDayHourGood', $hour_good);
             PHPShopParser::set('productDayMinuteGood', $minute_good);
             PHPShopParser::set('productDaySecondGood', $second_good);
             PHPShopParser::set('productDayCurrency', $this->currency);
-            
-
             PHPShopParser::set('productDay', PHPShopParser::file($GLOBALS['SysValue']['templates']['productday']['product_day'], true, false, true));
         }
     }

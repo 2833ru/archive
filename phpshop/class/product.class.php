@@ -138,6 +138,9 @@ class PHPShopProductFunction {
             $price = $price_array;
         else
             $price = $price_array[0];
+        
+        if(!$PHPShopValutaArray)
+            $PHPShopValutaArray = new PHPShopValutaArray();
 
         $LoadItems['Valuta'] = $PHPShopValutaArray->getArray();
         $LoadItems['System'] = $PHPShopSystem->getArray();

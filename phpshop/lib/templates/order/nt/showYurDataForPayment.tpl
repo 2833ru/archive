@@ -34,7 +34,7 @@
         <br><br>
         <span class="required">*</span>
         Корреспондентский счет
-        <br><input type="text" value="" name="org_kor_new">
+        <br><input type="text" value="" class="req" name="org_kor_new">
         <br><br>
         <span class="required">*</span>
         БИК

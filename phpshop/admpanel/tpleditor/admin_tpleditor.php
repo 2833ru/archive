@@ -354,6 +354,7 @@ function actionLoad() {
         $Content = file_get_contents($load);
         if (!empty($Content)) {
             $zip = $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . "/UserFiles/Files/" . $_POST['template_load'] . '.zip';
+            $zip_load=$_SERVER['SERVER_NAME'].$GLOBALS['SysValue']['dir']['dir'] . "/UserFiles/Files/" . $_POST['template_load'] . '.zip';
             $handle = fopen($zip, "w+");
             fwrite($handle, $Content);
             fclose($handle);
@@ -388,7 +389,7 @@ function actionLoad() {
         }
     }
 
-    return array('success' => $success, 'result' => PHPShopSTring::win_utf8($result));
+    return array('success' => $success, 'result' => PHPShopSTring::win_utf8($result),'zip'=>$zip_load);
 }
 
 // Обработка событий

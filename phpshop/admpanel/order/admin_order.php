@@ -19,15 +19,21 @@ function actionStart() {
             $order_status_value[] = array($status_val['name'], $status_val['id'], $_GET['where']['statusi']);
         }
 
-    $order_status_value[] = array(__('Все заказы'), 'none', 'none');
+    if (empty($_GET['where']['statusi']))
+        $_GET['where']['statusi'] = 'none';
+
+    $order_status_value[] = array(__('Все заказы'), 'none', $_GET['where']['statusi']);
 
     // Поиск
     $where = null;
     $limit = 300;
     if (is_array($_GET['where'])) {
         foreach ($_GET['where'] as $k => $v) {
-            if ($v!='' and $v != 'none')
-                $where.= ' ' . PHPShopSecurity::TotalClean($k) . ' = "' . PHPShopSecurity::TotalClean($v) . '" or';
+            if ($v != '' and $v != 'none')
+                if ($k == 'a.user' || $k == 'statusi')
+                    $where.= ' ' . PHPShopSecurity::TotalClean($k) . ' = "' . PHPShopSecurity::TotalClean($v) . '" or';
+                else
+                    $where.= ' ' . PHPShopSecurity::TotalClean($k) . ' like "%' . PHPShopSecurity::TotalClean($v) . '%" or';
         }
 
         if ($where)
@@ -58,7 +64,7 @@ function actionStart() {
         'class' => 'disabled'
     );
 
-    $PHPShopInterface->setActionPanel($TitlePage, array('Редактировать выбранные','CSV', '|', 'Удалить выбранные'), false);
+    $PHPShopInterface->setActionPanel($TitlePage, array('Редактировать выбранные', 'CSV', '|', 'Удалить выбранные'), false);
     $PHPShopInterface->setCaption(array(null, "3%"), array("№", "12%"), array("Статус", "20%"), array("Дата", "10%"), array("Покупатель", "20%"), array("Телефон", "15%"), array("", "7%"), array(__("Итого"), "17%", array('align' => 'right')));
     $PHPShopInterface->addJSFiles('./js/bootstrap-datetimepicker.min.js', './js/bootstrap-datetimepicker.ru.js', './order/gui/order.gui.js');
     $PHPShopInterface->addCSSFiles('./css/bootstrap-datetimepicker.min.css');
@@ -87,7 +93,7 @@ function actionStart() {
 
             $datas = PHPShopDate::get($row['datas'], false);
 
-            $PHPShopInterface->setRow($row['id'], array('name' =>  '<span class="hidden-xs">' . __('Заказ ') . '</span>' .$row['uid'], 'link' => '?path=order&id=' . $row['id'], 'align' => 'left','order'=>$row['id']), array('status' => array('enable' => $row['statusi'], 'caption' => $status,'passive'=>true, 'color' => $PHPShopOrder->getStatusColor())), array('name' =>$datas,'order'=>$row['datas']), array('name' => $row['fio'], 'link' => '?path=shopusers&id=' . $row['user']), array('name' => '<span class="hidden" id="order-' . $row['id'] . '-email">' . $row['mail'] . '</span>' . $row['tel']), array('action' => array('edit', 'email', 'copy', '|', 'delete', 'id' => $row['id']), 'align' => 'center'), array('name' => $PHPShopOrder->getTotal(false, ' ') . $currency, 'align' => 'right','order'=>$row['sum']));
+            $PHPShopInterface->setRow($row['id'], array('name' => '<span class="hidden-xs">' . __('Заказ ') . '</span>' . $row['uid'], 'link' => '?path=order&id=' . $row['id'], 'align' => 'left', 'order' => $row['id']), array('status' => array('enable' => $row['statusi'], 'caption' => $status, 'passive' => true, 'color' => $PHPShopOrder->getStatusColor())), array('name' => $datas, 'order' => $row['datas']), array('name' => $row['fio'], 'link' => '?path=shopusers&id=' . $row['user']), array('name' => '<span class="hidden" id="order-' . $row['id'] . '-email">' . $row['mail'] . '</span>' . $row['tel']), array('action' => array('edit', 'email', 'copy', '|', 'delete', 'id' => $row['id']), 'align' => 'center'), array('name' => $PHPShopOrder->getTotal(false, ' ') . $currency, 'align' => 'right', 'order' => $row['sum']));
         }
 
     if (isset($_GET['date_start']))
@@ -100,15 +106,28 @@ function actionStart() {
     else
         $date_end = PHPShopDate::get(time() - 1);
 
+    // Статусы пользователей
+    PHPShopObj::loadClass('user');
+    $PHPShopUserStatus = new PHPShopUserStatusArray();
+    $PHPShopUserStatusArray = $PHPShopUserStatus->getArray();
+    $user_status_value[] = array(__('Все пользователи'), '', $_GET['where']['b.status']);
+    if (is_array($PHPShopUserStatusArray))
+        foreach ($PHPShopUserStatusArray as $user_status)
+            $user_status_value[] = array($user_status['name'], $user_status['id'], $_GET['where']['b.status']);
+
     // Статус заказа
     $PHPShopInterface->field_col = 1;
     $searchforma.=$PHPShopInterface->setInputDate("date_start", $date_start, 'margin-bottom:10px', null, 'Дата начала отбора');
     $searchforma.=$PHPShopInterface->setInputDate("date_end", $date_end, false, null, 'Дата конца отбора');
     $searchforma.= $PHPShopInterface->setSelect('where[statusi]', $order_status_value, 180);
     $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[a.uid]', 'placeholder' => '№ Заказа', 'value' => $_GET['where']['a.uid']));
-    $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[a.fio]', 'placeholder' => 'ФИО Покупателя', 'value' => $_GET['where']['a.io']));
+    $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[a.fio]', 'placeholder' => 'ФИО Покупателя', 'value' => $_GET['where']['a.fio']));
+
+    $searchforma.=$PHPShopInterface->setSelect('where[b.status]', $user_status_value, 180);
+
     $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[b.mail]', 'placeholder' => 'E-mail', 'value' => $_GET['where']['b.mail']));
     $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[a.tel]', 'placeholder' => 'Телефон', 'value' => $_GET['where']['a.tel']));
+    $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[a.city]', 'placeholder' => 'Город', 'value' => $_GET['where']['a.city']));
     $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[a.street]', 'placeholder' => 'Улица', 'value' => $_GET['where']['a.street']));
     $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'hidden', 'name' => 'path', 'value' => $_GET['path']));
     $searchforma.=$PHPShopInterface->setButton(__('Найти'), 'search', 'btn-order-search pull-right');

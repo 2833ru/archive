@@ -51,13 +51,25 @@ class PHPShopArray {
     var $checkKey = false;
 
     /**
+     * Дополнительные аргументы
+     * @var array 
+     */
+    var $args = array();
+
+    /**
      * Сортировка выборки
      * @var array
      */
     var $order = array();
 
     function __construct() {
+
         $this->objArg = func_get_args();
+
+       // Дополнительные аргументы
+       if (is_array($this->args) and count($this->args)>0)
+           $this->objArg= array_merge($this->objArg,$this->args);
+       
         $this->objArgNum = func_num_args();
         $this->setArray();
     }

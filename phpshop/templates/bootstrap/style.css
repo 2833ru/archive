@@ -464,7 +464,9 @@ img.template:hover{
     border: solid 1px #CCC;
 }
 
+
 .bootstrap-theme{
+    color:#fff;
     width:30px;
     height:30px;
     background:#CCC;
@@ -515,6 +517,17 @@ img.template:hover{
     }
 
 }
+
+
+@media (max-width: 768px) {
+    .bx-viewport ul {
+        padding: 0;
+    }
+    .modal-body .bx-wrapper img{
+        max-width: 100%;
+    }
+}
+
 /*
 @media only screen and (max-height: 768px) and (orientation : landscape)  {
     #catalog-dropdown {

@@ -974,11 +974,6 @@ class PHPShopBannerElement extends PHPShopElements {
                     $this->set('banerContent', $row['content']);
                     $this->set('banerTitle', $row['name']);
 
-                    // Сообщение администратору о конце показов
-                    //if ($row['count_all'] > $row['limit_all'])
-                    // $this->mail();
-                    // Обновляем данные показа
-                    //$this->update();
                     // Подключаем шаблон
                     return $this->parseTemplate($this->getValue('templates.baner_list_forma'));
                 } else {
@@ -991,11 +986,6 @@ class PHPShopBannerElement extends PHPShopElements {
                                 $this->set('banerContent', $row['content']);
                                 $this->set('banerTitle', $row['name']);
 
-                                // Сообщение администратору о конце показов
-                                //if ($this->row['count_all'] > $row['limit_all'])
-                                // $this->mail();
-                                // Обновляем данные показа
-                                //$this->update();
                                 // Подключаем шаблон
                                 return $this->parseTemplate($this->getValue('templates.baner_list_forma'));
                             }
@@ -1015,26 +1005,6 @@ class PHPShopBannerElement extends PHPShopElements {
         $count_all = $this->row['count_all'] + 1;
         $this->PHPShopOrm->update(array('count_all' => $count_all, 'count_today' => $count_today, 'datas' => date("d.m.y")), array('id' => "=" . $this->row['id']), $prefix = '');
     }
-
-    /**
-     * Сообщение об окончании показов баннера
-     */
-    function mail() {
-        $this->PHPShopOrm->update(array('flag' => '0'), array('id' => "=" . $this->row['id']), $prefix = '');
-
-        // Подключаем библиотеку отправки почты
-        PHPShopObj::loadClass("mail");
-        $zag = __("Закончились показы у баннера") . " " . $this->row['name'];
-
-        $this->set('banner_name', $this->row['name']);
-        $this->set('banner_limit', $this->row['limit_all']);
-
-        // Текст сообщения
-        $message = ParseTemplateReturn('./phpshop/lib/templates/banner/mail_notice.tpl', true);
-
-        new PHPShopMail($this->PHPShopSystem->getParam('adminmail2'), "robot@" . str_replace("www", '', $_SERVER['SERVER_NAME']), $zag, $message);
-    }
-
 }
 
 /**

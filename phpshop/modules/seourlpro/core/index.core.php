@@ -78,7 +78,7 @@ class PHPShopIndex extends PHPShopCore {
         $GLOBALS['PHPShopSeoPro']->setRout();
 
         $PHPShopSeoProCore = new PHPShopSeoProCore();
-        $PHPShopSeoProCore->loadActions();
+        $PHPShopSeoProCore->loadAction();
     }
 
 }

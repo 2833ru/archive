@@ -419,11 +419,11 @@ class PHPShopOrderFunction extends PHPShopObj {
             $delivery = $this->getDeliverySumma();
             $total = $cart + $delivery;
             if (!empty($nds))
-                $total = number_format($total * $this->PHPShopSystem->getParam('nds') / (100 + $this->PHPShopSystem->getParam('nds')), $this->format, ".", "");
+                $total = $total * $this->PHPShopSystem->getParam('nds') / (100 + $this->PHPShopSystem->getParam('nds'));
             else
-                $total = number_format($total, $this->format, '.', $def);
+                $total = $total;
         }
-        
+        $total = number_format($total, $this->format, '.', $def);
         return $total;
     }
 

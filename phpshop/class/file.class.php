@@ -105,18 +105,21 @@ class PHPShopFile {
     }
 
     /**
-     * Поиск файлы в папке
+     * Поиск файлов 
      * @param string $dir папка
      * @param string $function функция обработки
+     * @param bool $return функция возвратить первый найденный файл
      * @return mixed
      */
-    static function searchFile($dir, $function) {
+    static function searchFile($dir, $function,$return = false) {
         $user_func_result = null;
         if (is_dir($dir))
             if (@$dh = opendir($dir)) {
                 while (($file = readdir($dh)) !== false) {
-                    if($file != '.' and $file != '..')
+                    if($file != '.' and $file != '..'){
                     $user_func_result.=call_user_func_array($function, array($file));
+					if($return)  return $user_func_result;
+					}
                 }
 
                 return $user_func_result;

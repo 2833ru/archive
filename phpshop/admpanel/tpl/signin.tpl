@@ -30,10 +30,6 @@
 
 
         <header class="bar bar-nav navbar-action visible-xs">
-            <button class="btn btn-link btn-nav pull-left">
-                <span class="icon icon-left-nav"></span>Назад
-            </button>
-
             <h1 class="title">Авторизация</h1>
         </header>
 

@@ -25,12 +25,43 @@ PHPShopObj::loadClass("valuta");
 PHPShopObj::loadClass("string");
 PHPShopObj::loadClass("security");
 
+
 // Проверка прав админа
 if (!empty($_SESSION['logPHPSHOP']) and PHPShopSecurity::true_skin($_COOKIE[$_REQUEST['template'] . '_theme'])) {
 
     $PHPShopSystem = new PHPShopSystem();
 
     if ($GLOBALS['SysValue']['template_theme']['demo'] != 'true') {
+
+        // Parse CSS
+        if ($_POST['parser'] == 'css') {
+            PHPShopObj::loadClass(array("parser","file"));
+            
+
+            $css_file='../templates/' . $_SESSION['skin'] . '/css/' . $_COOKIE[$_REQUEST['template'].'_theme'] . '.css';
+            $PHPShopCssParser = new PHPShopCssParser($css_file);
+            $css_parse = $PHPShopCssParser->parse();
+            
+            //print_r($css_parse);
+
+            $i=0;
+            if (is_array($css_parse))
+                foreach ($css_parse as $key => $val) {
+
+                    // Есть изменение CSS
+                    if (is_array($_POST['color'][$i])){
+                        foreach ($_POST['color'][$i] as $color => $value)
+                            if (!empty($value))
+                                $PHPShopCssParser->setParam($key, $color, $value);
+                    }
+                    
+                $i++;
+                }
+
+            // Запись изменений
+            PHPShopFile::write($css_file, $PHPShopCssParser->compile());
+        }
+
 
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['system']);
         $admoption = unserialize($PHPShopSystem->getParam('admoption'));

@@ -56,7 +56,7 @@ function actionStart() {
                 $where.= ' ' . $k . ' = "' . $v . '" or';
         }
 
-        if ($where){
+        if ($where) {
             $where = 'where' . substr($where, 0, strlen($where) - 2);
             $clean = true;
         }
@@ -67,9 +67,9 @@ function actionStart() {
 
     // Дата
     if (!empty($_GET['date_start']) and !empty($_GET['date_end'])) {
-        
+
         $clean = true;
-        
+
         if ($where)
             $where.=' and ';
         else
@@ -77,7 +77,7 @@ function actionStart() {
         $where.=' a.datas between ' . (PHPShopDate::GetUnixTime($_GET['date_start']) - 1) . ' and ' . (PHPShopDate::GetUnixTime($_GET['date_end']) + 259200 / 2) . '  ';
     }
     else {
-        
+
         $where.=' and a.datas between ' . ($time - 2592000) . ' and ' . ($time + 259200 / 2) . '  ';
     }
 
@@ -90,8 +90,8 @@ function actionStart() {
         $date_end = $_GET['date_end'];
     else
         $date_end = PHPShopDate::get(time() - 1);
-    
-     $TitlePage.=' с ' . $date_start . ' по ' . $date_end ;
+
+    $TitlePage.=' с ' . $date_start . ' по ' . $date_end;
 
 
     // Размер названия поля
@@ -107,41 +107,49 @@ function actionStart() {
     $PHPShopOrm->sql = 'SELECT a.*, b.mail FROM ' . $GLOBALS['SysValue']['base']['orders'] . ' AS a 
         JOIN ' . $GLOBALS['SysValue']['base']['shopusers'] . ' AS b ON a.user = b.id  ' . $where . ' 
             order by a.id ';
-    $canvas_value = $canvas_label = $canvas_export = $alert =  null;
+    $canvas_value = $canvas_label = $canvas_export = $alert = null;
     $data = $PHPShopOrm->select();
     if (is_array($data))
         foreach ($data as $row) {
 
             // Библиотека заказа
-            if(empty($row['sum'])){
-            $PHPShopOrder = new PHPShopOrderFunction($row['id'], $row);
-            $row['sum'] = $PHPShopOrder->getTotal(false);
+            if (empty($row['sum'])) {
+                $PHPShopOrder = new PHPShopOrderFunction($row['id'], $row);
+                $row['sum'] = $PHPShopOrder->getTotal(false);
             }
 
             if (empty($row['fio'])) {
                 $row['fio'] = $row['mail'];
             }
 
-            
-            $canvas_value.='"' . $row['sum'] . '",';
             $canvas_export.='"' . $row['id'] . '",';
-
 
             $d_array = array(
                 'm' => date("m", $row['datas']),
-                'd' => date("d", $row['datas'])
+                'd' => date("d", $row['datas']),
+                'h' => date("H", $row['datas']),
             );
 
-            $canvas_label.='"' . $d_array['d'] . ' ' . $Months[$d_array['m']] . '",';
+            if (empty($array_order_date[$d_array['d'] . '.' . $d_array['m']])) {
+                $array_order_date[$d_array['d'] . ' ' . $Months[$d_array['m']]] = $row['sum'];
+            }
+            else
+                $array_order_date[$d_array['d'] . ' ' . $Months[$d_array['m']]]+=$row['sum'];
         }
 
-    if(empty($canvas_value))
-        $alert ='<p class="text-warning">'.__('Нет данных...').'</p>';
-        
+    if (is_array($array_order_date))
+        foreach ($array_order_date as $date => $sum) {
+            $canvas_value.='"' . $sum . '",';
+            $canvas_label.='"' . $date . '",';
+        }
+
+    if (empty($canvas_value))
+        $alert = '<p class="text-warning">' . __('Нет данных...') . '</p>';
+
 
     $PHPShopGUI->_CODE.=' 
          <div class="panel panel-default">
-                <div class="panel-body">'.$alert.'
+                <div class="panel-body">' . $alert . '
                             <!-- Progress -->
                             <div class="progress">
                                 <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="5" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
@@ -154,8 +162,16 @@ function actionStart() {
                  </div>
           </div>
        </div>
-       <span id="export" data-export=\'[' . substr($canvas_export, 0, strlen($canvas_export) - 1) . ']\' data-path="exchange.export.order&return='.$_GET['path'].'"></spam>';
-    
+       <span id="export" data-export=\'[' . substr($canvas_export, 0, strlen($canvas_export) - 1) . ']\' data-path="exchange.export.order&return=' . $_GET['path'] . '"></spam>';
+
+    // Статусы пользователей
+    PHPShopObj::loadClass('user');
+    $PHPShopUserStatus = new PHPShopUserStatusArray();
+    $PHPShopUserStatusArray = $PHPShopUserStatus->getArray();
+    $user_status_value[] = array(__('Все пользователи'), '', $data['status']);
+    if (is_array($PHPShopUserStatusArray))
+        foreach ($PHPShopUserStatusArray as $user_status)
+            $user_status_value[] = array($user_status['name'], $user_status['id'], $_GET['where']['b.status']);
 
 
     // Статус заказа
@@ -165,8 +181,12 @@ function actionStart() {
 
     $searchforma.= $PHPShopInterface->setSelect('where[statusi]', $order_status_value, 180);
     $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[a.fio]', 'placeholder' => 'ФИО Покупателя', 'value' => $_GET['where']['a.fio']));
+
+    $searchforma.=$PHPShopInterface->setSelect('where[b.status]', $user_status_value, 180);
+
     $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[b.mail]', 'placeholder' => 'E-mail', 'value' => $_GET['where']['b.mail']));
     $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[a.tel]', 'placeholder' => 'Телефон', 'value' => $_GET['where']['a.tel']));
+    $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[a.city]', 'placeholder' => 'Город', 'value' => $_GET['where']['a.city']));
     $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[a.street]', 'placeholder' => 'Улица', 'value' => $_GET['where']['a.street']));
 
     $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'hidden', 'name' => 'path', 'value' => $_GET['path']));
@@ -179,9 +199,9 @@ function actionStart() {
     $sidebarright[] = array('title' => 'Интервал', 'content' => $PHPShopInterface->setForm($searchforma, false, "order_search", false, false, 'form-sidebar'));
     $PHPShopGUI->setSidebarRight($sidebarright, 2);
 
-        // Запрос модуля на закладку
+    // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
-    
+
     // Футер
     $PHPShopGUI->Compile($form = false);
     return true;

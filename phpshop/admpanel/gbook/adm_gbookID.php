@@ -70,10 +70,10 @@ function sendMail($name, $mail) {
     $zag = "Ваш отзыв добавлен на сайт " . $PHPShopSystem->getValue('name');
     $message = "Уважаемый " . $name . ",
 
-Ваш отзыв добавлен на сайт по адресу: http://" . $PHPShopBase->getSysValue('dir.dir') . $_SERVER['SERVER_NAME'] . "/gbook/
+Ваш отзыв добавлен на сайт по адресу: http://" .$_SERVER['SERVER_NAME'] . $PHPShopBase->getParam('dir.dir') .  "/gbook/
 
 Спасибо за проявленный интерес.";
-    new PHPShopMail($PHPShopSystem->getEmail(), $mail, $zag, $message);
+    new PHPShopMail($mail,$PHPShopSystem->getEmail(),$zag, $message);
 }
 
 /**

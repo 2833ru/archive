@@ -268,7 +268,7 @@ function filter_load(filter_str, obj) {
                 $('#price-filter-val-min').removeClass('has-error');
 
                 // Выравнивание ячеек товара
-                setEqualHeight($(".description"));
+                setEqualHeight(".description");
 
                 // Сброс Waypoint
                 Waypoint.refreshAll();
@@ -354,17 +354,21 @@ function faset_filter_click(obj) {
 
 // Выравнивание ячеек товара
 function setEqualHeight(columns) {
-    var tallestcolumn = 0;
-    columns.each(function() {
-        currentHeight = $(this).height();
-        if (currentHeight > tallestcolumn) {
-            tallestcolumn = currentHeight;
+
+    $(columns).closest('.row ').each(function() {
+        var tallestcolumn = 0;
+
+        $(this).find(columns).each(function() {
+            var currentHeight = $(this).height();
+            if (currentHeight > tallestcolumn) {
+                tallestcolumn = currentHeight;
+            }
+        });
+
+        if (tallestcolumn > 0) {
+            $(this).find(columns).height(tallestcolumn);
         }
     });
-
-    if (tallestcolumn > 0) {
-        columns.height(tallestcolumn);
-    }
 
 }
 
@@ -388,7 +392,7 @@ $(document).ready(function() {
     });
 
     // Выравнивание ячеек товара
-    setEqualHeight($(".thumbnail .description"));
+    setEqualHeight(".thumbnail .description");
 
     // Корректировка стилей меню
     $('.mega-more-parent').each(function() {
@@ -617,6 +621,12 @@ $(document).ready(function() {
     $(".bootstrap-theme, .non-responsive-switch").on('click', function() {
         skin = $(this).attr('data-skin');
         var cookie = $.cookie('bootstrap_theme');
+
+        $(".bootstrap-theme, .non-responsive-switch").each(function() {
+            $(this).html('');
+        });
+
+        $(this).html('<span class="glyphicon glyphicon-ok"></span>');
 
         // переход на responsive
         if (skin == 'non-responsive' && cookie == 'non-responsive')
@@ -906,6 +916,16 @@ $(document).ready(function() {
         delete sliderbig;
     });
 
+    // Скрыть панель bar при скроле
+    $(window).on('mousewheel DOMMouseScroll', function(e) {
+        var delta = e.originalEvent.wheelDelta ? e.originalEvent.wheelDelta : -e.originalEvent.detail;
+
+        if (delta >= 0) {
+            $('.navbar-fixed-bottom').fadeIn('slow').removeClass('hidden-xs').removeClass('hidden-sm');
+        } else {
+            $('.navbar-fixed-bottom').addClass('hidden-xs').addClass('hidden-sm').fadeOut('slow');
+        }
+    });
 
 
 });

@@ -231,7 +231,7 @@ class PHPShopGUI {
         if ($hide_mobile)
             $hide_mobile = 'hidden-xs';
 
-        $this->sidebarLeft = '<div class="col-md-' . $cell . ' sidebar-left ' . $hide_mobile . '">' . $dis . '</div>';
+        $this->sidebarLeft = '<div class="col-md-' . $cell . '  sidebar-left ' . $hide_mobile . '">' . $dis . '</div>';
     }
 
     /**
@@ -723,9 +723,9 @@ class PHPShopGUI {
      * @param string $size размер
      * @return string
      */
-    function setInputColor($name, $value, $size = 200) {
+    function setInputColor($name, $value, $size = 200,$id=false,$option=false) {
         $CODE = '<div class="input-group color" style="width:' . $this->chekSize($size) . '">
-    <input type="text" name="' . $name . '" value="' . $value . '" class="form-control input-sm">
+    <input type="text" id="'.$id.'" name="' . $name . '" value="' . $value . '" class="form-control input-sm color-value" data-option="'.$option.'">
     <span class="input-group-addon input-sm"><i></i></span></div>';
         return $CODE;
     }
@@ -1239,14 +1239,14 @@ class PHPShopGUI {
      * @param string $onchange имя javascript функции по экшену onchange
      * @return string
      */
-    function setRadio($name, $value, $caption, $checked = "checked", $onchange = "return true") {
+    function setRadio($name, $value, $caption, $checked = "checked", $onchange = "return true",$class=false) {
 
         // Автовыделение 
         if ($value == $checked)
             $checked = "checked";
 
         $CODE = '
-	 <div class="radio-inline"><label><input type="radio" value="' . $value . '" name="' . $name . '" id="' . $name . '" ' . $checked . ' onchange="' . $onchange . '">' . $caption . '<i class="fa fa-circle-o small"></i></label></div>
+	 <div class="radio-inline '.$class.'"><label><input type="radio" value="' . $value . '" name="' . $name . '" id="' . $name . '" ' . $checked . ' onchange="' . $onchange . '">' . $caption . '<i class="fa fa-circle-o small"></i></label></div>
 	 ';
         return $CODE;
     }

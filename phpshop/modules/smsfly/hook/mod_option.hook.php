@@ -23,8 +23,8 @@ class PHPShopSmsfly extends PHPShopArray {
     function send($msg, $recipient = false) {
 
         // Настройки модуля
-        $text = iconv('windows-1251', 'utf-8', htmlspecialchars($msg));
-        $description = iconv('windows-1251', 'utf-8', htmlspecialchars($msg));
+        $text = iconv('windows-1251', 'utf-8', htmlspecialchars($msg,ENT_QUOTES, 'windows-1251'));
+        $description = iconv('windows-1251', 'utf-8', htmlspecialchars($msg,ENT_QUOTES, 'windows-1251'));
         $rate = 120;
         $livetime = 4;
         

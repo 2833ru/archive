@@ -19,12 +19,7 @@
                 </table></td>
         </tr>
         <tr>
-            <td colspan="2"><b>Логика поиска:</b>
-                <input type="Radio" value="1" name="set" @searchSetA@>
-                и &nbsp;
-                <input type="Radio" value="2" name="set" @searchSetB@ >
-                или
-                &nbsp;&nbsp;&nbsp;/ &nbsp;&nbsp;<b>Область:</b>
+            <td colspan="2"><b>Область поиска:</b>
                 <input type="Radio" value="1" name="pole" @searchSetC@>
                 Наименование &nbsp;
                 <input type="Radio" value="2" name="pole" @searchSetD@ >

@@ -1,17 +1,29 @@
 <?php
 
+session_start();
 $_classPath = "../../../";
 include($_classPath . "class/obj.class.php");
-PHPShopObj::loadClass(array("base", "category", "string", "array"));
+PHPShopObj::loadClass(array("base", "category", "string", "array", "system"));
 
 $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, true);
+$PHPShopBase->chekAdmin();
+$PHPShopSystem = new PHPShopSystem();
 
-$PHPShopCategoryArray = new PHPShopCategoryArray();
+// Права менеджеров
+if ($PHPShopSystem->ifSerilizeParam('admoption.rule_enabled', 1) and !$PHPShopBase->Rule->CheckedRules('catalog', 'remove')) {
+    $where = array('secure_groups' => " REGEXP 'i" . $_SESSION['idPHPSHOP'] . "i' or secure_groups = ''");
+} else
+    $where = false;
+
+
+$PHPShopCategoryArray = new PHPShopCategoryArray($where);
 $CategoryArray = $PHPShopCategoryArray->getArray();
 
 $CategoryArray[0]['name'] = '- Корневой уровень -';
 $tree_array = array();
 $i = 0;
+
+
 
 foreach ($PHPShopCategoryArray->getKey('parent_to.id', true) as $k => $v) {
     foreach ($v as $cat) {
@@ -62,7 +74,7 @@ if (is_array($tree_array[0]['sub']))
 
 // Построение дерева категорий
 function treegenerator($array, $m) {
-    global $tree_array, $currentId, $prePath,$addNodes;
+    global $tree_array, $currentId, $prePath, $addNodes;
     static $i;
 
     if (empty($i))
@@ -74,7 +86,7 @@ function treegenerator($array, $m) {
             $nodes = treegenerator($tree_array[$k], $i);
 
             $result[$i] = array(
-                'text' => PHPShopString::win_utf8($v).'<span class="hide">'.$k.'</span>'
+                'text' => PHPShopString::win_utf8($v) . '<span class="hide">' . $k . '</span>'
             );
 
             if (is_array($nodes)) {

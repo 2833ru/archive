@@ -36,12 +36,6 @@ foreach ($GLOBALS['SysValue']['autoload'] as $val)
     if (is_file($val))
         include_once($val);
 
-// Подключаем поиск брендов
-//$PHPShopSortElement = new PHPShopSortElement();
-//$PHPShopSortElement->brand('brand',14,'Бренды');
-    
-    
-
 // Выбор валюты
 $PHPShopCurrencyElement = new PHPShopCurrencyElement();
 $PHPShopCurrencyElement->init('valutaDisp');    

@@ -5,22 +5,6 @@ $TitlePage = __("CRM Журнал");
 function actionStart() {
     global $PHPShopInterface, $TitlePage;
 
-    $PHPShopInterface->action_select['Добавить в базу'] = array(
-        'name' => 'Добавить в переадресацию',
-        'action' => 'add-search-base',
-        'class' => 'disabled'
-    );
-
-    $PHPShopInterface->action_button['Переадресация'] = array(
-        'name' => 'Переадресация',
-        'action' => 'report.searchreplace',
-        'class' => 'btn btn-default btn-sm navbar-btn btn-action-panel',
-        'type' => 'button',
-        'icon' => 'glyphicon glyphicon-screenshot'
-    );
-
-    $PHPShopInterface->action_title['add-search-base'] = 'Переадресация';
-
     $PHPShopInterface->addJSFiles('./js/bootstrap-datetimepicker.min.js', './js/bootstrap-datetimepicker.ru.js', 'report/gui/report.gui.js');
     $PHPShopInterface->addCSSFiles('./css/bootstrap-datetimepicker.min.css');
     $PHPShopInterface->checkbox_action = false;
@@ -40,7 +24,7 @@ function actionStart() {
         $limit = 1000;
     }
     
-    $PHPShopInterface->setActionPanel($TitlePage, array('Удалить выбранные', 'Добавить в базу'), false);
+    $PHPShopInterface->setActionPanel($TitlePage, false, false);
     $PHPShopInterface->setCaption(array("Запрос", "40%"), array("Операция", "20%"), array("Дата", "20%"), array("Время", "10%"));
 
     // Пароль

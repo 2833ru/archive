@@ -597,7 +597,7 @@ http://' . $_SERVER['SERVER_NAME'] . '/phpshop/modules/guard/admin.php?do=create
         if (empty($this->system['mail']))
             $this->system['mail'] = $this->PHPShopSystem->getParam('adminmail2');
 
-        new PHPShopMail($this->system['mail'], 'guard@' . $_SERVER['SERVER_NAME'], $zag, $content);
+        new PHPShopMail($this->system['mail'], $this->system['mail'], $zag, $content);
     }
 
 }

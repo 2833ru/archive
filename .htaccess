@@ -49,8 +49,9 @@ RewriteCond %{REQUEST_URI} (((.*)\.html$)|((.*)/))$
 RewriteCond %{REQUEST_URI} !((.*)\.(.*)/)$
 RewriteRule ^(.*)$ index.php
 
-# Страница 404 ошибки
+# Страница ошибок
 ErrorDocument 404 /404.html
+ErrorDocument 403 /404.html
 
 # Проверка обязательного / в конце
 RewriteCond %{REQUEST_URI} (map|search|compare|order|done|clients|users|gbook|links|price|news|spec|newtip)$
@@ -66,7 +67,7 @@ RewriteRule ^(.*)$ /$1/ [L,R=302]
 # Запрет вызовы через браузер сторонних опасных файлов шаблона
 # default - off
 #RewriteCond %{REQUEST_URI} ^(/phpshop/templates/(.*))
-#RewriteCond %{REQUEST_URI} !((.*)\.(gif|jpg|swf|png|jpeg|js|css|GIF|JPG|PNG|JPEG|eot|svg|ttf|woff|woff2))$
+#RewriteCond %{REQUEST_URI} !((.*)\.(gif|jpg|swf|png|jpeg|js|css|GIF|JPG|PNG|JPEG|eot|svg|ttf|woff|woff2|cur))$
 #RewriteRule .* - [F]
 
 # Запрет вызовы через браузер сторонних опасных загружаемых файлов
@@ -83,8 +84,7 @@ RewriteRule ^(.*)$ /$1/ [L,R=302]
 
 
 # Запрет доступа к файлам лицензии, шаблонов, конфигурации
-<files ~ "\.(lic|ini|tpl)$"> 
+<files ~ "\.(lic|ini|tpl|core\.php|inc\.php|hook\.php|class\.php|sql)$"> 
 Order Deny,Allow
 Deny From All
 </files>
-

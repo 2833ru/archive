@@ -98,15 +98,19 @@ class PHPShopDelivery extends PHPShopObj {
 /**
  * Массив доставок
  * @author PHPShop Software
- * @version 1.1
+ * @version 1.2
  * @package PHPShopArray
  */
 class PHPShopDeliveryArray extends PHPShopArray {
 
-    function __construct($sql = false) {
+    function __construct($sql = false,$args=array()) {
         $this->objSQL = $sql;
         $this->order = array('order' => 'id');
         $this->objBase = $GLOBALS['SysValue']['base']['delivery'];
+        
+        if(is_array($args))
+            $this->args=$args;
+
         parent::__construct('id', "city", 'price', 'enabled', 'PID', 'is_folder');
     }
 

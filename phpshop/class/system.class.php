@@ -1,12 +1,12 @@
 <?php
 
 if (!defined("OBJENABLED"))
-    require_once(dirname(__FILE__)."/obj.class.php");
+    require_once(dirname(__FILE__) . "/obj.class.php");
 
 /**
  * Системные настройки
  * @author PHPShop Software
- * @version 1.2
+ * @version 1.3
  * @package PHPShopObj
  */
 class PHPShopSystem extends PHPShopObj {
@@ -15,10 +15,10 @@ class PHPShopSystem extends PHPShopObj {
      * Конструктор
      */
     function __construct() {
-        $this->objID=1;
-        $this->install=false;
-        $this->cache=false;
-        $this->objBase=$GLOBALS['SysValue']['base']['table_name3'];
+        $this->objID = 1;
+        $this->install = false;
+        $this->cache = false;
+        $this->objBase = $GLOBALS['SysValue']['base']['table_name3'];
         parent::__construct();
     }
 
@@ -36,8 +36,8 @@ class PHPShopSystem extends PHPShopObj {
      * @return string
      */
     function getSerilizeParam($param) {
-        $param=explode(".",$param);
-        $val=parent::unserializeParam($param[0]);
+        $param = explode(".", $param);
+        $val = parent::unserializeParam($param[0]);
         return $val[$param[1]];
     }
 
@@ -47,9 +47,11 @@ class PHPShopSystem extends PHPShopObj {
      * @param string $value значение переменной
      * @return bool
      */
-    function ifSerilizeParam($param,$value=false) {
-        if(empty($value)) $value=1;
-        if($this->getSerilizeParam($param) == $value) return true;
+    function ifSerilizeParam($param, $value = false) {
+        if (empty($value))
+            $value = 1;
+        if ($this->getSerilizeParam($param) == $value)
+            return true;
     }
 
     /**
@@ -73,10 +75,13 @@ class PHPShopSystem extends PHPShopObj {
      * @param bool $order валюта в заказе (true)
      * @return float
      */
-    function getDefaultValutaKurs($order=false) {
-        if(!class_exists("phpshopvaluta")) parent::loadClass("phpshopvaluta");
-        if($order) $valuta_id = $this->getDefaultOrderValutaId();
-        else $valuta_id = $this->getDefaultValutaId();
+    function getDefaultValutaKurs($order = false) {
+        if (!class_exists("phpshopvaluta"))
+            parent::loadClass("phpshopvaluta");
+        if ($order)
+            $valuta_id = $this->getDefaultOrderValutaId();
+        else
+            $valuta_id = $this->getDefaultValutaId();
         $PV = new PHPShopValuta($valuta_id);
 
         return $PV->getKurs();
@@ -87,10 +92,13 @@ class PHPShopSystem extends PHPShopObj {
      * @param bool $order валюта в заказе (true)
      * @return string
      */
-    function getDefaultValutaIso($order=false) {
-        if(!class_exists("phpshopvaluta")) parent::loadClass("valuta");
-        if($order) $valuta_id = $this->getDefaultOrderValutaId();
-        else $valuta_id = $this->getDefaultValutaId();
+    function getDefaultValutaIso($order = false) {
+        if (!class_exists("phpshopvaluta"))
+            parent::loadClass("valuta");
+        if ($order)
+            $valuta_id = $this->getDefaultOrderValutaId();
+        else
+            $valuta_id = $this->getDefaultValutaId();
         $PV = new PHPShopValuta($valuta_id);
 
         return $PV->getIso();
@@ -101,12 +109,16 @@ class PHPShopSystem extends PHPShopObj {
      * @param bool $order валюта в заказе только с курсом для заказа (true)
      * @return string
      */
-    function getDefaultValutaCode($order=false) {
-        if(!class_exists("phpshopvaluta")) parent::loadClass("valuta");
+    function getDefaultValutaCode($order = false) {
+        if (!class_exists("phpshopvaluta"))
+            parent::loadClass("valuta");
 
-        if($order) $valuta_id = $this->getDefaultOrderValutaId();
-        elseif(isset($_SESSION['valuta'])) $valuta_id=$_SESSION['valuta'];
-        else $valuta_id = $this->getDefaultValutaId();
+        if ($order)
+            $valuta_id = $this->getDefaultOrderValutaId();
+        elseif (isset($_SESSION['valuta']))
+            $valuta_id = $_SESSION['valuta'];
+        else
+            $valuta_id = $this->getDefaultValutaId();
 
         $PV = new PHPShopValuta($valuta_id);
         return $PV->getCode();
@@ -118,8 +130,10 @@ class PHPShopSystem extends PHPShopObj {
      */
     function getLogo() {
         $logo = parent::getParam("logo");
-        if(empty($logo)) return "../../img/phpshop_logo.gif";
-        else return $logo;
+        if (empty($logo))
+            return "../../img/phpshop_logo.gif";
+        else
+            return $logo;
     }
 
     /**
@@ -128,8 +142,9 @@ class PHPShopSystem extends PHPShopObj {
      */
     function getArray() {
         $array = $this->objRow;
-        foreach($array as $key=>$v)
-            if(is_string($key)) $newArray[$key]=$v;
+        foreach ($array as $key => $v)
+            if (is_string($key))
+                $newArray[$key] = $v;
         return $newArray;
     }
 
@@ -137,8 +152,48 @@ class PHPShopSystem extends PHPShopObj {
      * Вывод e-mail администратора
      * @return string
      */
-    function getEmail(){
+    function getEmail() {
         return parent::getParam('adminmail2');
     }
+
+    /**
+     * Настройка почты SMTP
+     * @param array $add дополнительнеы параметры
+     * @return array
+     */
+    function getMailOption($add = false) {
+
+        if ($this->ifSerilizeParam('admoption.mail_smtp_enabled', 1)) {
+
+            if ($this->ifSerilizeParam('admoption.mail_smtp_debug', 1))
+                $mail_debug = 2;
+            else
+                $mail_debug = 0;
+
+            $option = array(
+                'smtp' => true,
+                'host' => $this->getSerilizeParam('admoption.mail_smtp_host'),
+                'port' => $this->getSerilizeParam('admoption.mail_smtp_port'),
+                'debug' => $mail_debug,
+                'auth' => $this->getSerilizeParam('admoption.mail_smtp_auth'),
+                'user' => $this->getSerilizeParam('admoption.mail_smtp_user'),
+                'password' => $this->getSerilizeParam('admoption.mail_smtp_pass'),
+                'replyto' => $this->getSerilizeParam('admoption.mail_smtp_replyto')
+            );
+        }
+        else
+            $option = null;
+
+        // Дополнительнеы параметры
+        if (is_array($add)) {
+            foreach ($add as $k => $v)
+                $option[$k] = $v;
+        }
+
+
+        return $option;
+    }
+
 }
+
 ?>

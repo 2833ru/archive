@@ -311,7 +311,7 @@
 
         <!-- Fixed mobile bar -->
         <div class="bar-padding-fix visible-xs"> </div>
-        <nav class="navbar navbar-default navbar-fixed-bottom bar bar-tab visible-xs visible-sm" role="navigation">
+        <nav class="navbar navbar-default navbar-fixed-bottom bar bar-tab visible-xs" role="navigation">
             <a class="tab-item" href="/">
                 <span class="icon icon-home"></span>
                 <span class="tab-label">Домой</span>

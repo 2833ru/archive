@@ -162,7 +162,7 @@ class PHPShopCategoryArray extends PHPShopArray {
     function __construct($sql = false) {
         $this->objSQL = $sql;
         $this->cache = false;
-        $this->order = array('order' => 'num');
+        $this->order = array('order' => 'num,name');
         $this->objBase = $GLOBALS['SysValue']['base']['categories'];
         parent::__construct("id", "name", "parent_to", "skin_enabled");
     }

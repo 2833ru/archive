@@ -3,9 +3,24 @@
 $_SESSION['Memory']["rateForComment"]["oneStarWidth"] = 16; // ширина одной звЄздочки
 $_SESSION['Memory']["rateForComment"]["oneSpaceWidth"] = 0;
 
+// ÷ветовые темы CSS
+if (isset($_COOKIE['bootstrap_theme'])) {
+    if (PHPShopSecurity::true_skin($_COOKIE['bootstrap_theme'])) {
+        $GLOBALS['SysValue']['other']['bootstrap_fluid_theme'] = $_COOKIE['bootstrap_theme'];
+    }
+    else
+        $GLOBALS['SysValue']['other']['bootstrap_fluid_theme'] = 'bootstrap';
+} /* elseif (!empty($GLOBALS['SysValue']['other']['template_theme']))
+  $GLOBALS['SysValue']['other']['bootstrap_theme'] = $GLOBALS['SysValue']['other']['template_theme']; */
+elseif(empty($GLOBALS['SysValue']['other']['bootstrap_fluid_theme']))
+    $GLOBALS['SysValue']['other']['bootstrap_fluid_theme'] = 'bootstrap';
+
 function create_theme_menu($file) {
-    static $i;
-    $return = null;
+
+        $current = $_COOKIE['bootstrap_theme'];
+    if (empty($current))
+        $current = 'bootstrap';
+    
     $color = array(
         'cerulean' => '#178ACC',
         'cyborg' => '#000',
@@ -24,12 +39,20 @@ function create_theme_menu($file) {
         if (empty($icon))
             $icon = $match[1];
 
-        return '<div class="bootstrap-theme" style="background:' . $icon . '" title="' . $match[1] . '" data-skin="bootstrap-theme-' . $match[1] . '"></div>';
+        return '<div class="bootstrap-theme text-center" style="background:' . $icon . '" title="' . $match[1] . '" data-skin="bootstrap-theme-' . $match[1] . '"></div>';
     }
 }
 
 // –едактор тем оформлени€
 if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or !empty($_SESSION['logPHPSHOP'])) {
+    
+    
+        
+    if($_COOKIE['bootstrap_theme'] == 'bootstrap' or empty($_COOKIE['bootstrap_theme']))
+         $check = '<span class="glyphicon glyphicon-ok"></span>';
+    else $check=null;
+    
+    
     $theme_menu = ' 
   
 <div class="panel panel-success">
@@ -39,7 +62,7 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or !empty($_SESSION
   </div>
   <div class="panel-body">
                     <div class="center-block">
-                        <div class="bootstrap-theme" style="background:#CCC;" title="default" data-skin="bootstrap"></div>
+                        <div class="bootstrap-theme text-center" style="background:#CCC;" title="default" data-skin="bootstrap">'.$check.'</div>
                         ' . PHPShopFile::searchFile($GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . '/css/', 'create_theme_menu') . '
                             </div>
                             
@@ -75,17 +98,7 @@ if (!empty($_SESSION['UsersId'])) {
     $GLOBALS['SysValue']['other']['user_link'] = 'href="#"  data-toggle="modal"';
 }
 
-// ÷ветовые темы CSS
-if (isset($_COOKIE['bootstrap_theme'])) {
-    if (PHPShopSecurity::true_skin($_COOKIE['bootstrap_theme'])) {
-        $GLOBALS['SysValue']['other']['bootstrap_fluid_theme'] = $_COOKIE['bootstrap_theme'];
-    }
-    else
-        $GLOBALS['SysValue']['other']['bootstrap_fluid_theme'] = 'bootstrap';
-} /* elseif (!empty($GLOBALS['SysValue']['other']['template_theme']))
-  $GLOBALS['SysValue']['other']['bootstrap_theme'] = $GLOBALS['SysValue']['other']['template_theme']; */
-elseif(empty($GLOBALS['SysValue']['other']['bootstrap_fluid_theme']))
-    $GLOBALS['SysValue']['other']['bootstrap_fluid_theme'] = 'bootstrap';
+
 
 
 // ћеню брендов

@@ -204,7 +204,7 @@ function actionSave() {
       if (isset($_REQUEST['ajax'])) {
       exit(json_encode(array("success" => $result)));
       }
-      else header('Location: ?path=' . $_GET['path']); 
+      else header('Location: ?path=' . $_GET['path'].'&cat='.$_POST['PID_new']); 
 }
 
 /**

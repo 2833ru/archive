@@ -21,8 +21,9 @@ function actionStart() {
 
     $PHPShopInterface->action_title['send-user'] = 'Уведомить';
 
-    $PHPShopInterface->setActionPanel(__("Уведомления"), array('Удалить выбранные', 'Разослать выбранные', '|', 'Автоматическое уведомление'), false);
-    $PHPShopInterface->setCaption(array(null, "2%"), array("Иконка", "7%", array('sort' => 'none')), array("Название", "40%"), array("ID", "7%"), array("Пользователь", "20%"), array("Актуальность", "10%"), array("", "10%"), array("Обработано", "10%", array('align' => 'right')));
+    $PHPShopInterface->addJSFiles('./shopusers/gui/shopusers.gui.js');
+    $PHPShopInterface->setActionPanel(__("Уведомления"), array('Удалить выбранные','|','Разослать выбранные','Автоматическое уведомление'), false);
+    $PHPShopInterface->setCaption(array(null, "2%"), array("Иконка", "7%", array('sort' => 'none')), array("Название", "40%"), array("ID", "7%"), array("Пользователь", "20%"), array("Актуальность", "12%"), array("", "10%"), array("Обработано", "10%", array('align' => 'right')));
 
     // Таблица с данными
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['notice']);
@@ -40,6 +41,11 @@ function actionStart() {
                 $icon = '<img src="' . $row['pic_small'] . '" onerror="imgerror(this)" class="media-object" lowsrc="./images/no_photo.gif">';
             else
                 $icon = '<img class="media-object" src="./images/no_photo.gif">';
+            
+            if(empty($row['enabled']))
+                $class=null;
+            else $class="text-muted";
+                
 
             if (!empty($row['cumulative_discount_check']))
                 $cumulative_discount_check = '<span class="glyphicon glyphicon-ok"></span>';
@@ -53,7 +59,7 @@ function actionStart() {
 
 
             $PHPShopInterface->setRow(
-                    $row['id'], $icon, array('name' => $row['name'], 'link' => '?path=product&id=' . $row['product_id'] . '&return=' . $_GET['path']), $row['product_id'], array('name' => $row['login'], 'link' => '?path=shopusers&id=' . $row['user_id'] . '&return=' . $_GET['path']), $date . PHPShopDate::get($row['datas']), array('action' => array('delete', 'send-user', 'id' => $row['id']), 'align' => 'center'), array('status' => array('enable' => $row['enabled'], 'align' => 'right', 'caption' => array('Нет', 'Да'))));
+                    $row['id'], $icon, array('class'=>$class,'name' => $row['name'], 'link' => '?path=product&id=' . $row['product_id'] . '&return=' . $_GET['path']), $row['product_id'], array('class'=>$class,'name' => $row['login'], 'link' => '?path=shopusers.notice&id=' . $row['user_id'] . '&return=' . $_GET['path']), $date . PHPShopDate::get($row['datas']), array('action' => array('delete', 'send-user', 'id' => $row['id']), 'align' => 'center'), array('status' => array('enable' => $row['enabled'], 'align' => 'right', 'caption' => array('Нет', 'Да'))));
         }
     $PHPShopInterface->Compile();
 }

@@ -9,9 +9,17 @@ PHPShopObj::loadClass('sort');
  * Вывод товаров
  */
 function actionStart() {
-    global $PHPShopInterface, $TitlePage;
+    global $PHPShopInterface, $TitlePage, $PHPShopSystem, $PHPShopBase;
 
-    $PHPShopCategoryArray = new PHPShopCategoryArray();
+    // Права менеджеров
+    if ($PHPShopSystem->ifSerilizeParam('admoption.rule_enabled', 1) and !$PHPShopBase->Rule->CheckedRules('catalog', 'remove')) {
+        $where = array('secure_groups' => " REGEXP 'i" . $_SESSION['idPHPSHOP'] . "i' or secure_groups = ''");
+        $secure_groups = true;
+    }
+    else
+        $where = $secure_groups = false;
+
+    $PHPShopCategoryArray = new PHPShopCategoryArray($where);
     $PHPShopCategoryArray->order = array('order' => 'num, name');
     $PHPShopCategoryArray->setArray();
     $CategoryArray = $PHPShopCategoryArray->getArray();
@@ -23,6 +31,13 @@ function actionStart() {
         $catname = " / " . $CategoryArray[$_GET['sub']]['name'];
     else
         $catname = " / " . __('Новые товары');
+
+    // Права менеджеров
+    if ($secure_groups and isset($_GET['cat']) and empty($CategoryArray[$_GET['cat']]['name'])) {
+        $catname = " /  <span class='text-danger'><span class='glyphicon glyphicon-lock'></span> " . __('Доступ закрыт') . '</span>';
+        $_GET['where']['disabled'] = true;
+    }
+
 
     $PHPShopInterface->action_select['Предпросмотр'] = array(
         'name' => 'Предпросмотр',
@@ -135,12 +150,18 @@ function actionStart() {
             case(2):
                 $order = array('order' => 'price' . $order_direction);
                 break;
-            case(3): $order = array('order' => 'num' . $order_direction . ", items desc");
+            case(3): $order = array('order' => 'num' . $order_direction . ", datas desc");
                 break;
-            default: $order = array('order' => 'num' . $order_direction . ", items desc");
+            default: $order = array('order' => 'num' . $order_direction . ", datas desc");
                 break;
         }
     } else {
+
+        // Права менеджеров
+        if ($secure_groups) {
+            $where = array('user' => '=' . intval($_SESSION['idPHPSHOP']));
+        }
+
         $limit = array('limit' => 300);
         $order = array('order' => 'id DESC');
     }
@@ -236,6 +257,10 @@ function actionStart() {
                 if (empty($row['yml']))
                     $uid.= '<a class="label label-danger" title="Нет в Яндекс.Маркете" href="?path=catalog' . $postfix . '&where[yml]=0">Я</a> ';
 
+                // Яндекс Маркет
+                if ($row['cpa'] == 1 and !empty($row['yml']))
+                    $uid.= '<a class="label label-info" title="Яндекс.Маркете CPA" href="?path=catalog' . $postfix . '&where[cpa]=1">CPA</a> ';
+
                 $uid.='</div>';
             }
 
@@ -269,7 +294,7 @@ function actionStart() {
     $PHPShopInterface->path = 'catalog';
 
     // Прогрессбар
-    if ($GLOBALS['count'] > 500)
+    if ($GLOBALS['count'] > 50)
         $treebar = '<div class="progress">
   <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%">
     <span class="sr-only">Загрузка..</span>
@@ -284,7 +309,7 @@ function actionStart() {
                  </span>
             </div></div>';
 
-    $sidebarleft[] = array('title' => __('Категории'), 'content' => $search.'<div id="tree">' . $treebar . '</div>', 'title-icon' => '<span class="glyphicon glyphicon-plus new" data-toggle="tooltip" data-placement="top" title="Добавить каталог"></span>&nbsp;<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="Развернуть все"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="Свернуть"></span>&nbsp;<span class="glyphicon glyphicon-search" id="show-category-search" data-toggle="tooltip" data-placement="top" title="Поиск"></span>');
+    $sidebarleft[] = array('title' => __('Категории'), 'content' => $search . '<div id="tree">' . $treebar . '</div>', 'title-icon' => '<span class="glyphicon glyphicon-plus new" data-toggle="tooltip" data-placement="top" title="Добавить каталог"></span>&nbsp;<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="Развернуть все"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="Свернуть"></span>&nbsp;<span class="glyphicon glyphicon-search" id="show-category-search" data-toggle="tooltip" data-placement="top" title="Поиск"></span>');
 
     $PHPShopInterface->setSidebarLeft($sidebarleft, 3);
 

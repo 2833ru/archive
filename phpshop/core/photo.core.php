@@ -98,19 +98,6 @@ class PHPShopPhoto extends PHPShopCore {
             foreach ($this->dataArray as $row) {
 
                 $name_s = str_replace(".", "s.", $row['name']);
-
-                // Размер изображения
-                $realsize = @getimagesize('http://' . $_SERVER['SERVER_NAME'] . $name_s);
-
-                if (!empty($realsize[0]))
-                    $width = 'width="' . $realsize[0] . '"';
-                else
-                    $width = null;
-                if (!empty($realsize[1]))
-                    $height = 'height="' . $realsize[1] . '"';
-                else
-                    $height = null;
-
                 $this->set('photoIcon', $name_s);
                 $this->set('photoInfo', $row['info']);
                 $this->set('photoImg', $row['name']);

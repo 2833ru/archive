@@ -159,7 +159,7 @@ function actionSave() {
                 $memory[$_GET['path']][str_replace('_new','',$k)] = 1;
         }
         if (is_array($memory))
-            setcookie("check_memory", json_encode($memory),time()+3600000,'/phpshop/admpanel/');
+            setcookie("check_memory", json_encode($memory),time()+3600000,$GLOBALS['SysValue']['dir']['dir'].'/phpshop/admpanel/');
     }
 
     if ($PHPShopOrm->update($_POST, $where)) {

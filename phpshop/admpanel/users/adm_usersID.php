@@ -47,7 +47,7 @@ function actionStart() {
             $PHPShopGUI->setField("Логин", $PHPShopGUI->setInput('text.required.4', "login_new", $data['login'])) .
             $PHPShopGUI->setField("E-mail", $PHPShopGUI->setInput('email.required.6', "mail_new", $data['mail'])) .
             $PHPShopGUI->setField("Пароль", $PHPShopGUI->setInput("password.required.6", "password_new", hidePassword($data['password']))) .
-            $PHPShopGUI->setField("Подтверждение пароля", $PHPShopGUI->setInput("password.required.6", "password2_new", hidePassword($data['password'])) . '<br>' . $PHPShopGUI->setInput("button", false, "Сгенерировать пароль", false, false, "$('input[name=password_new],input[name=password2_new]').val('P" . $pasgen . "');alert('Сгенерирован пароль: " . $pasgen . "');", "btn-sm") . '&nbsp;&nbsp;&nbsp;' . $PHPShopGUI->setCheckbox('changePassword', 1, 'Сменить логин и пароль', 0) . $PHPShopGUI->setCheckbox('sendPasswordEmail', 1, 'Оповестить по E-mail', 0)) .
+            $PHPShopGUI->setField("Подтверждение пароля", $PHPShopGUI->setInput("password.required.6", "password2_new", hidePassword($data['password'])) . '<br>' . $PHPShopGUI->setInput("button", false, "Сгенерировать пароль", false, false, "$('input[name=password_new],input[name=password2_new]').val('P" . $pasgen . "');alert('Сгенерирован пароль: " . $pasgen . "');", "btn-sm") . '&nbsp;&nbsp;&nbsp;' . $PHPShopGUI->setCheckbox('changePassword', 1, '<span class="text-success">Сменить логин и пароль</span>', 0) . $PHPShopGUI->setCheckbox('sendPasswordEmail', 1, 'Оповестить по E-mail', 0)) .
             $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("enabled_new", 1, "Вкл.", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выкл.", $data['enabled']) . '&nbsp;&nbsp;')
     );
 

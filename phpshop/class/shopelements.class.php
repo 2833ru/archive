@@ -401,6 +401,7 @@ function product_grid($dataArray, $cell, $template = false, $line = true) {
 
     $this->set('productInfo', $this->lang('productInfo'));
     $this->set('productSale', $this->lang('productSale'));
+    $this->set('productSaleReady', $this->lang('productSaleReady'));
 
     $d1 = $d2 = $d3 = $d4 = $d5 = $d6 = $d7 = null;
     if (is_array($dataArray)) {
@@ -437,7 +438,6 @@ function product_grid($dataArray, $cell, $template = false, $line = true) {
             // Шаблон ячейки товара
             if (empty($template))
                 $template = 'main_product_forma_' . $this->cell;
-
 
             // Перехват модуля
             $this->setHook(__CLASS__, __FUNCTION__, $row);

@@ -36,7 +36,7 @@
 }
 
 .navbar-statick .nav > li.active > a{
-    border-right: 1px solid #E5E5E5;
+    border-right: 0px solid #E5E5E5;
     border-left: 0px solid #F5F5F5;
 }
 

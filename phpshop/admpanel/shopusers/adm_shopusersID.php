@@ -28,6 +28,11 @@ function actionStart() {
         'url' => '?path=order&where[a.user]=' . $data['id']
     );
 
+    $PHPShopGUI->action_select['Сообщения пользователя'] = array(
+        'name' => 'Сообщения пользователя',
+        'url' => '?path=shopusers.messages&where[a.UID]=' . $data['id']
+    );
+
     $PHPShopGUI->action_select['Отправить письмо'] = array(
         'name' => 'Отправить письмо',
         'url' => 'mailto:' . $data['login']
@@ -36,11 +41,11 @@ function actionStart() {
 
     // Размер названия поля
     $PHPShopGUI->field_col = 2;
-    $PHPShopGUI->setActionPanel(__("Покупатели") . '<span class="hidden-xs"> / ' . $data['name'].'</span>', array('Отправить письмо', 'Создать заказ', 'Заказы пользователя', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'));
+    $PHPShopGUI->setActionPanel(__("Покупатели") . '<span class="hidden-xs"> / ' . $data['name'] . '</span>', array('Отправить письмо', 'Создать заказ', 'Заказы пользователя', 'Сообщения пользователя', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'));
     $PHPShopGUI->addJSFiles('./js/validator.js');
 
 
-    // Стытусы пользователей
+    // Статусы пользователей
     $PHPShopUserStatus = new PHPShopUserStatusArray();
     $PHPShopUserStatusArray = $PHPShopUserStatus->getArray();
     $user_status_value[] = array(__('Пользователь'), 0, $data['status']);
@@ -68,7 +73,7 @@ function actionStart() {
         $map = '<div id="map" data-geocode="' . $mass['list'][$mass['main']]['city_new'] . ', ' . $mass['list'][$mass['main']]['street_new'] . ' ' . $mass['list'][$mass['main']]['house_new'] . '"></div>';
 
         $sidebarright[] = array('title' => 'Адрес доставки на карте', 'content' => array($map));
-        
+
         // Правый сайдбар
         $PHPShopGUI->setSidebarRight($sidebarright, 2);
         $PHPShopGUI->sidebarLeftRight = 2;

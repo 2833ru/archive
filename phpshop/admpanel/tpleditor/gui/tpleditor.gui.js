@@ -40,6 +40,9 @@ $().ready(function() {
                 } else {
                     showAlertMessage(json['result'], true);
                     parent.addClass('panel-warning');
+                     if (confirm(locale.confirm_load_template)) {
+                         window.open('http://'+json['zip']);
+                     }
                 }
             }
         });

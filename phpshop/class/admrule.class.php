@@ -85,8 +85,7 @@ class PHPShopAdminRule {
             'edit' => 1,
             'create' => 2,
             'remove' => 3,
-            'all' => 4,
-            'rule' => 5
+            'rule' => 4
         );
 
 

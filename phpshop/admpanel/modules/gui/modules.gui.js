@@ -1,6 +1,6 @@
 // Переопределение функции
 var STATUS_EVENT = true;
-var TABLE_EVENT = true;
+
 
 $().ready(function() {
 
@@ -346,24 +346,6 @@ $().ready(function() {
         });
 
 
-    if (typeof($.cookie('data_length')) == 'undefined')
-        var data_length = [10, 25, 50, 75, 100];
-    else
-        var data_length = [parseInt($.cookie('data_length')), 10, 25, 50, 75, 100];
-
-    // Таблица сортировки
-    var table = $('#data').dataTable({
-        "lengthMenu": data_length,
-        "paging": true,
-        "ordering": true,
-        "order": [[1, "asc"]],
-        "info": false,
-        "language": locale.dataTable,
-        "columnDefs": [
-            {"orderable": false, "targets": 0}
-        ]
-
-    });
 
 
 });

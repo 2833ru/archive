@@ -231,5 +231,9 @@ class PHPShopUserStatusArray extends PHPShopArray {
         $this->objSQL=array('enabled'=>"='1'");
         parent::__construct('id',"name",'discount','price');
     }
+    
+    
+    
+    
 }
 ?>

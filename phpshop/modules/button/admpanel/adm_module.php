@@ -49,7 +49,7 @@ function actionStart() {
     $Tab3 = $PHPShopGUI->setPay();
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1), array("О Модуле", $Tab3),array("Кнопоки", null,'?path=modules.dir.button'));
+    $PHPShopGUI->setTab(array("Основное", $Tab1), array("О Модуле", $Tab3),array("Кнопки", null,'?path=modules.dir.button'));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =

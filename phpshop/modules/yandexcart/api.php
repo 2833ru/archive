@@ -82,54 +82,119 @@ switch ($_SERVER["PATH_INFO"]) {
 
         // Корзина
         $items = $data['cart']['items'];
-        $priceTotal = 0;
+        $priceTotal = $weightTotal = 0;
         if (is_array($items))
             foreach ($items as $item) {
                 $mi["feedId"] = $item["feedId"];
                 $mi["offerId"] = $item["offerId"];
+
 
                 $PHPShopProduct = new PHPShopProduct($item["offerId"]);
                 $PHPShopProduct->debug = false;
                 $mi["price"] = intval(PHPShopProductFunction::GetPriceValuta($item["offerId"], $PHPShopProduct->getPrice()));
                 $mi["count"] = $PHPShopProduct->getValue('items');
 
+
                 if ($PHPShopSystem->getSerilizeParam('admoption.sklad_status') != 1 and $mi["count"] < 0)
                     $mi["count"] = 0;
                 else
                     $mi["count"] = 10;
 
+                // Итоговая стоимость
                 $priceTotal += $mi["price"] * $item['count'];
+
+                // Итоговый вес
+                $weightTotal+=$PHPShopProduct->getParam('weight') * $item['count'];
+
                 $mi["delivery"] = true;
                 $result["cart"]["items"][] = $mi;
             }
 
+        $option['region_data'] = unserialize($option['region_data']);
+
+        // Rest Yandex
+        if (!is_array($option['region_data'])) {
+            include_once($_classPath . 'modules/yandexcart/class/yandexmarket.class.php');
+
+            $YandexMarketRest = new YandexMarketRest();
+            $resultRegion = $YandexMarketRest->request(null, array(), 'region');
+
+            $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['yandexcart']['yandexcart_system']);
+            $PHPShopOrm->update(array('region_data_new' => serialize(json_decode($resultRegion, true))));
+
+            $option['region_data'] = $resultRegion;
+        }
 
         // Доставка
         $result["cart"]["deliveryOptions"] = array();
-        $PHPShopDeliveryArray = new PHPShopDeliveryArray(array('enabled' => "='1'", 'is_folder' => "!='1'", 'PID' => '=1'));
+        $PHPShopDeliveryArray = new PHPShopDeliveryArray(array('enabled' => "='1'", 'is_folder' => "!='1'", 'yandex_enabled' => "='2'"), array('yandex_day', 'yandex_type', 'yandex_payment', 'yandex_outlet', 'yandex_check'));
         $deliveryPrice = $PHPShopDeliveryArray->getArray();
 
-        // Проверка на бесплатную доставку
-        //if (!empty($deliveryPrice['price_null_enabled']) and $deliveryPrice['price_null_enabled'] and $priceTotal > $deliveryPrice['price_null'])
-        //$deliveryPrice = 0;
-        
+        // Обход ошибки чеклиста. Выбор всех доставок.
+        if (!is_array($deliveryPrice)) {
+            $PHPShopDeliveryArray = new PHPShopDeliveryArray(array('enabled' => "='1'", 'is_folder' => "!='1'"), array('yandex_day', 'yandex_type', 'yandex_payment', 'yandex_outlet', 'yandex_check'));
+            $deliveryPrice = $PHPShopDeliveryArray->getArray();
+        }
+
+
+        // Тип доставки
+        $delivery_type = array('DELIVERY', 'DELIVERY', 'PICKUP', 'POST');
+        $i = 0;
+
+        $paymentMethods[0] = array('CASH_ON_DELIVERY', 'CARD_ON_DELIVERY', 'YANDEX');
+        $paymentMethods[1] = array('CASH_ON_DELIVERY', 'CARD_ON_DELIVERY', 'YANDEX');
+        $paymentMethods[2] = array('CASH_ON_DELIVERY', 'YANDEX');
+        $paymentMethods[3] = array('YANDEX');
+
         if (is_array($deliveryPrice))
             foreach ($deliveryPrice as $delivery) {
-                if ($delivery['id'])
-                    $result["cart"]["deliveryOptions"][] = array(
+                if ($delivery['id']) {
+
+                    $PHPShopDelivery = new PHPShopDelivery($delivery['id']);
+
+                    // Проверка локального региона
+                    if ($delivery['id'] == 2 and $data["cart"]['delivery']['region']['id'] != $option['region_data']['region']['id'])
+                        continue;
+
+                    // Доставка кол-во дней
+                    if (empty($delivery['yandex_day']))
+                        $delivery['yandex_day'] = 2;
+                    $toDate = strtotime("+" . intval($option['delivery_day']) . " day");
+
+
+                    // Точки
+                    if (!empty($delivery['yandex_outlet'])) {
+                        if (strstr($delivery['yandex_outlet'], ',')) {
+                            $outlet = explode(",", $delivery['yandex_outlet']);
+                        }
+                        else
+                            $outlet[] = $delivery['yandex_outlet'];
+                    }
+
+                    $result["cart"]["deliveryOptions"][$i] = array(
                         "id" => $delivery['id'],
-                        "type" => "DELIVERY",
+                        "type" => $delivery_type[intval($delivery['yandex_type'])],
                         "serviceName" => iconv("cp1251", "utf-8", substr($delivery['city'], 0, 50)),
-                        "price" => intval($delivery['price']),
-                        "dates" => array("fromDate" => date("d-m-Y"),'toDate'=>date("d-m-Y", strtotime("+2 day")))
+                        "price" => intval($PHPShopDelivery->getPrice($delivery['price'], $weightTotal)),
+                        "dates" => array("fromDate" => date("d-m-Y"), 'toDate' => date("d-m-Y", $toDate))
                     );
+
+                    if (is_array($outlet)) {
+                        foreach ($outlet as $point)
+                            $outlets[] = array('id' => intval($point));
+
+                        $result["cart"]["deliveryOptions"][$i]["outlets"] = $outlets;
+                    }
+
+                    // Тип оплаты
+                    $result["cart"]["deliveryOptions"][$i]["paymentMethods"] = $paymentMethods[intval($delivery['yandex_payment'])];
+
+                    $i++;
+                }
             }
 
-        $paymentMethods[0] = array('CASH_ON_DELIVERY', 'CARD_ON_DELIVERY');
-        $paymentMethods[1] = array('CASH_ON_DELIVERY', 'CARD_ON_DELIVERY');
-        $paymentMethods[2] = array('CASH_ON_DELIVERY');
-
-        $result["cart"]["paymentMethods"] = $paymentMethods[intval($option['payment_delivery'])];
+        // Тип оплаты
+        $result["cart"]["paymentMethods"] = $paymentMethods[3];
 
         setYandexcartLog($data);
 
@@ -155,7 +220,7 @@ switch ($_SERVER["PATH_INFO"]) {
                     'id' => $product_id,
                     'name' => iconv("utf-8", "cp1251", $product_name),
                     'price' => $product_price,
-                    'uid' => $product_id,
+                    'uid' => $PHPShopProduct->getParam("uid"),
                     'num' => $product_num,
                     'pic_small' => $PHPShopProduct->getParam("pic_small")
                 );
@@ -214,7 +279,7 @@ switch ($_SERVER["PATH_INFO"]) {
         $insert['datas_new'] = time();
         $insert['uid_new'] = $order_num;
         $insert['orders_new'] = serialize($result);
-        $insert['status_new'] = serialize(array('maneger' => iconv("utf-8", "cp1251", $data['order']['notes'])));
+        //$insert['status_new'] = serialize(array('maneger' => iconv("utf-8", "cp1251", $data['order']['notes'])));
         $insert['dop_info_new'] = 'yandex' . $data['order']['id'];
 
 
@@ -263,11 +328,14 @@ switch ($_SERVER["PATH_INFO"]) {
                 $full_adress.= ' k' . $data['order']['delivery']['address']['block'];
 
             $update['house_new'] = iconv("utf-8", "cp1251", $full_adress);
-
+            $update['status_new'] = serialize(array('maneger' => iconv("utf-8", "cp1251", $data['order']['notes'])));
             $update['tel_new'] = iconv("utf-8", "cp1251", $data['order']['delivery']['address']['phone']);
             $update['porch_new'] = iconv("utf-8", "cp1251", $data['order']['delivery']['address']['entrance']);
             $update['flat_new'] = iconv("utf-8", "cp1251", $data['order']['delivery']['address']['entryphone']);
             $update['user_new'] = checkUser($data);
+
+            // Статус заказа подтвержден клиентом 
+            $update['statusi_new'] = $option['status_processing'];
 
 
             //$update['status_new'] = serialize('maneger' => 'YANDEX '.$data['order']['status']));
@@ -276,15 +344,45 @@ switch ($_SERVER["PATH_INFO"]) {
             if (!empty($data['order']['id'])) {
                 $PHPShopOrm->update($update, array('dop_info' => "='yandex" . $data['order']['id'] . "' limit 1"));
 
+
                 // Сообщение о новом заказе администрации
-                new PHPShopMail($PHPShopSystem->getEmail(), $data['order']['buyer']['email'], 'Поступил заказ №' . $order_uid, 'Заказ оформлен на Яндекс.Маркет');
+                new PHPShopMail($PHPShopSystem->getEmail(), $PHPShopSystem->getEmail(), 'Поступил заказ №' . $order_uid, 'Заказ оформлен на Яндекс.Маркет', false, false, array('replyto' => $data['order']['buyer']['email']));
             }
         }
 
         // Отменен пользователем
         if ($data['order']['status'] == 'CANCELLED') {
 
-            $update['statusi_new'] = $option['status_cancelled'];
+
+            switch ($data['order']['substatus']) {
+
+                //  Отменен  USER_CHANGED_MIND
+                case 'USER_CHANGED_MIND':
+                    $update['statusi_new'] = $option['status_cancelled_ucm'];
+                    break;
+
+                //  Отменен  USER_REFUSED_DELIVERY
+                case 'USER_REFUSED_DELIVERY':
+                    $update['statusi_new'] = $option['status_cancelled_urd'];
+                    break;
+
+                //  Отменен  USER_REFUSED_PRODUCT
+                case 'USER_REFUSED_PRODUCT':
+                    $update['statusi_new'] = $option['status_cancelled_urp'];
+                    break;
+
+                //  Отменен  USER_REFUSED_QUALITY
+                case 'USER_REFUSED_QUALITY':
+                    $update['statusi_new'] = $option['status_cancelled_urq'];
+                    break;
+
+                //  Отменен  USER_UNREACHABLE
+                case 'USER_UNREACHABLE':
+                    $update['statusi_new'] = $option['status_cancelled_uu'];
+                    break;
+
+                default: $update['statusi_new'] = $option['status_cancelled'];
+            }
 
             if (!empty($data['order']['id'])) {
 

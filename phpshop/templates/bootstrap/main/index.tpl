@@ -138,6 +138,7 @@
         </nav>
         <!-- VisualCart Mod -->
         <div id="visualcart_tmp" class="hide">@visualcart@</div>
+        
         <!-- Notification -->
         <div id="notification" class="success-notification" style="display:none">
             <div  class="alert alert-success alert-dismissible" role="alert">
@@ -290,7 +291,7 @@
 
         <!-- Fixed mobile bar -->
         <div class="bar-padding-fix visible-xs"> </div>
-        <nav class="navbar navbar-default navbar-fixed-bottom bar bar-tab visible-xs visible-sm" role="navigation">
+        <nav class="navbar navbar-default navbar-fixed-bottom bar bar-tab visible-xs" role="navigation">
             <a class="tab-item active" href="/">
                 <span class="icon icon-home"></span>
                 <span class="tab-label">Домой</span>

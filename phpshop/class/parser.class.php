@@ -140,3 +140,84 @@ function phpshopparserevalstr($str) {
     }
     return ob_get_clean();
 }
+
+/**
+ * Библиотека парсинга CSS
+ * @author PHPShop Software
+ * @version 1.0
+ * @package PHPShopClass
+ */
+class PHPShopCssParser {
+
+    var $file;
+    var $css_array;
+
+    function __construct($file) {
+        $this->file = $file;
+    }
+
+    function parse() {
+        if (file_exists($this->file)) {
+            $css = file_get_contents($this->file);
+            preg_match_all('/(?ims)([a-z0-9\s\.\:#_\-@,>]+)\{([^\}]*)\}/', $css, $arr);
+            $result = array();
+            foreach ($arr[0] as $i => $x) {
+                $selector = trim($arr[1][$i]);
+                $rules = explode(';', trim($arr[2][$i]));
+                $rules_arr = array();
+                foreach ($rules as $strRule) {
+                    if (!empty($strRule)) {
+                        $rule = explode(":", $strRule);
+                        $rules_arr[trim($rule[0])] = trim($rule[1]);
+                    }
+                }
+
+                $result[$selector] = $rules_arr;
+            }
+
+            $this->css_array = $result;
+        }
+        return $this->css_array;
+    }
+
+    function getParam($element, $param) {
+        return $this->css_array[$element][$param];
+    }
+
+    function setParam($element, $param, $value, $add = ' !important') {
+        
+        switch ($param) {
+
+            // Фильтр
+            case "filter":
+                $filters = array('filter', '-webkit-filter', '-ms-filter', '-o-filter', '-moz-filter');
+                foreach ($filters as $set) {
+                    $this->css_array[$element][$set] = 'hue-rotate(' . $value . 'deg)'.$add;
+                }
+                $this->css_array[$element]['-editor-filter'] = $value;
+
+                break;
+
+            // Остальное
+            default: $this->css_array[$element][$param] = $value.$add;
+        }
+    }
+
+    function compile() {
+        $css = null;
+        if (is_array($this->css_array))
+            foreach ($this->css_array as $k => $v) {
+                $css.='
+' . $k . '{
+';
+                if (is_array($v))
+                    foreach ($v as $name => $rule)
+                        $css.=$name . ':' . $rule . ';
+';
+
+                $css.='}';
+            }
+        return $css;
+    }
+
+}

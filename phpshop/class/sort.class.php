@@ -166,7 +166,7 @@ class PHPShopSort {
         $PHPShopOrm = new PHPShopOrm();
         $PHPShopOrm->debug = $this->debug;
         $PHPShopOrm->comment = __CLASS__ . '.' . __FUNCTION__;
-        $result = $PHPShopOrm->query("select * from " . $SysValue['base']['sort'] . " where category=".intval($n)." order by name,num");
+        $result = $PHPShopOrm->query("select * from " . $SysValue['base']['sort'] . " where category=".intval($n)." order by num,name");
         while ($row = mysqli_fetch_array($result)) {
             $id = $row['id'];
             $name = substr($row['name'], 0, 35);

@@ -245,7 +245,7 @@ function actionStart() {
 
     // Карта
     if (strlen($data['street']) > 5) {
-        $map = '<div id="map" class="visible-lg" data-geocode="' . $data['city'] . ', ' . $data['street'] . ' ' . $data['house'] . '" data-title="Заказ №' . $data['uid'] . '"></div><div class="data-row"><a href="http://maps.yandex.ru/?&source=wizgeo&text=' . PHPShopString::win_utf8($data['city'] . ', ' . $data['street'] . ' ' . $data['house']) . '" target="_blank" class="text-muted"><span class="glyphicon glyphicon-map-marker"></span>Увеличить карту</a></div>';
+        $map = '<div id="map" class="visible-lg" data-geocode="' . $data['city'] . ', ' . $data['street'] . ' ' . $data['house'] . '" data-title="Заказ №' . $data['uid'] . '"></div><div class="data-row"><a href="http://maps.yandex.ru/?&source=wizgeo&text=' . urlencode(PHPShopString::win_utf8($data['city'] . ', ' . $data['street'] . ' ' . $data['house'])) . '" target="_blank" class="text-muted"><span class="glyphicon glyphicon-map-marker"></span>Увеличить карту</a></div>';
         $sidebarleft[] = array('title' => 'Адрес доставки на карте', 'content' => array($map));
     }
 
@@ -609,6 +609,7 @@ function actionCartUpdate() {
         $update['orders_new'] = serialize($order);
         $update['sum_new'] = $order['Cart']['sum'] + $order['Cart']['dostavka'];
         $PHPShopOrm->clean();
+        $PHPShopCart->clean();
 
         // Перехват модуля
         $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);

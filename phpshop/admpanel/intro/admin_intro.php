@@ -97,14 +97,15 @@ function actionStart() {
 
     // Проверка обновлений
     if (!isset($_SESSION['update_check'])) {
-        define("UPDATE_PATH", "http://phpshop.ru/update/update5.php?from=" . $_SERVER['SERVER_NAME'] . "&version=" . $GLOBALS['SysValue']['upload']['version'] . "&support=" . $License['License']['SupportExpires'].'&serial='. $License['License']['Serial'].'&path=intro');
-        
+        define("UPDATE_PATH", "http://phpshop.ru/update/update5.php?from=" . $_SERVER['SERVER_NAME'] . "&version=" . $GLOBALS['SysValue']['upload']['version'] . "&support=" . $License['License']['SupportExpires'] . '&serial=' . $License['License']['Serial'] . '&path=intro');
+
         $update_enable = @xml2array(UPDATE_PATH, "update", true);
-        if(is_array($update_enable) and  $update_enable['status'] == 'active'){
-            $_SESSION['update_check']=intval($update_enable['name']-$update_enable['num']);
+        if (is_array($update_enable) and $update_enable['status'] != 'no_update') {
+            $_SESSION['update_check'] = intval($update_enable['name'] - $update_enable['num']);
         }
-        else $_SESSION['update_check']=0;
-   }
+        else
+            $_SESSION['update_check'] = 0;
+    }
 
 
     if ($License['License']['Pro'] == 'Start') {
@@ -190,10 +191,11 @@ function actionStart() {
                 $status_name = $status[$row['statusi']];
             else
                 $status_name = __('Не определен');
-            
-            if($row['id']<100)
-               $uid='<span class="hidden-xs">' . __('Заказ ') . '</span>' . $row['uid'];
-            else $uid=$row['uid'];
+
+            if ($row['id'] < 100)
+                $uid = '<span class="hidden-xs">' . __('Заказ ') . '</span>' . $row['uid'];
+            else
+                $uid = $row['uid'];
 
             $PHPShopInterface->setRow(array('name' => '<span class="label label-info" style="background-color:' . $PHPShopOrder->getStatusColor() . '"><span class="hidden-xs">' . $status_name . '</span></span>', 'link' => '?path=order&return=intro&id=' . $row['id'], 'class' => 'label-link'), array('name' => $uid, 'link' => '?path=order&return=intro&id=' . $row['id']), array('name' => $row['fio'], 'link' => '?path=shopusers&return=intro&id=' . $row['user']), array('name' => $datas, 'class' => 'text-muted'), array('name' => $PHPShopOrder->getTotal(false, ' ') . ' ' . $currency, 'align' => 'right', 'class' => 'strong'));
         }
@@ -221,11 +223,18 @@ function actionStart() {
     $user_list = $PHPShopInterface->getContent();
 
 
+    // Права менеджеров
+    if ($PHPShopSystem->ifSerilizeParam('admoption.rule_enabled', 1) and !$PHPShopBase->Rule->CheckedRules('catalog', 'remove')) {
+        $where = array('user' => "=" . intval($_SESSION['idPHPSHOP']));
+    }
+    else
+        $where = false;
+
     // Новые товары
     $PHPShopInterface = new PHPShopInterface();
     $PHPShopInterface->checkbox_action = false;
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
-    $data = $PHPShopOrm->select(array('id,name,items,datas'), false, array('order' => 'datas desc'), array('limit' => 5));
+    $data = $PHPShopOrm->select(array('id,name,items,datas'), $where, array('order' => 'datas desc'), array('limit' => 5));
     if (is_array($data))
         foreach ($data as $row) {
 
@@ -282,7 +291,7 @@ function actionStart() {
        </div>
        <div class="visible-lg col-lg-6">
           <div class="panel panel-default">
-             <div class="panel-heading"><span class="glyphicon glyphicon-signal"></span> Статистика заказов 
+             <div class="panel-heading"><span class="glyphicon glyphicon-stats"></span> Статистика заказов 
              <span class="pull-right hidden-xs">
              
 <div class="dropdown">
@@ -295,7 +304,7 @@ function actionStart() {
     <li><a href="#" class="canvas-bar">Гистограмма</a></li>
     <li><a href="#" class="canvas-radar">Радар диаграмма</a></li>
     <li class="divider"></li>
-    <li><a href="?path=report.statorder">Отчеты по продажам</a></li>
+    <li><a href="?path=report.statproduct">Больше отчетов</a></li>
   </ul>
 </div>
 

@@ -178,6 +178,7 @@ function actionStart() {
     $num_vitrina_value[] = array(1, 1, $data['num_vitrina']);
     $num_vitrina_value[] = array(2, 2, $data['num_vitrina']);
     $num_vitrina_value[] = array(3, 3, $data['num_vitrina']);
+    $num_vitrina_value[] = array(4, 4, $data['num_vitrina']);
 
     $nowbuy_enabled_value[] = array('Выключить', 0, $data['nowbuy_enabled']);
     $nowbuy_enabled_value[] = array('Компактный список', 1, $data['nowbuy_enabled']);
@@ -186,7 +187,7 @@ function actionStart() {
     $sklad_status_value[] = array('Не используется', 1, $option['sklad_status']);
     $sklad_status_value[] = array('Товар убирается с продаж', 2, $option['sklad_status']);
     $sklad_status_value[] = array('Товар ставится под заказ', 3, $option['sklad_status']);
-    
+
     $search_enabled_value[] = array('Искать в учебнике', 2, $option['search_enabled']);
     $search_enabled_value[] = array('Искать в товарах', 3, $option['search_enabled']);
     $search_enabled_value[] = array('Не используется', 1, $option['search_enabled']);
@@ -214,17 +215,27 @@ function actionStart() {
             $PHPShopGUI->setField("Контроль склада", $PHPShopGUI->setSelect('option[sklad_status]', $sklad_status_value)) .
             $PHPShopGUI->setField("Подтипы", $PHPShopGUI->setCheckbox('option[parent_price_enabled]', 1, 'Показывать цену и корзину у ведущего товара в подтипах', $option['parent_price_enabled']))
     );
-    
-    if(empty($option['adm_cat_limit'])) $option['adm_cat_limit']=100;
 
     $PHPShopGUI->_CODE.=$PHPShopGUI->setCollapse('Настройка дизайна', $PHPShopGUI->setField('Дизайн', GetSkinList($data['skin']) . '<br>' . $PHPShopGUI->setCheckbox('option[user_skin]', 1, 'Смены дизайна пользователями', $option["user_skin"]), 1, 'Дизайн шаблон сайта (front-end)') . $PHPShopGUI->setField("Логотип", $PHPShopGUI->setIcon($data['logo'], "logo_new", false), 1, 'Используется в шапке дизайна и печатных документах'));
 
-    $PHPShopGUI->_CODE.=$PHPShopGUI->setCollapse('Настройка уведомлений', $PHPShopGUI->setField("SMS оповещение", $PHPShopGUI->setCheckbox('option[sms_enabled]', 1, 'Уведомление о заказе администратору', $option['sms_enabled']) . '<br>' .
+    $PHPShopGUI->_CODE.=$PHPShopGUI->setCollapse('Настройка e-mail уведомлений', $PHPShopGUI->setField(__("E-mail оповещение"), $PHPShopGUI->setInputText(null, "adminmail2_new", $data['adminmail2'], 300), 1, 'Для использования сторонних SMTP сервисов адрес должен совпадать с пользователем SMTP') .
+            $PHPShopGUI->setField("SMTP", $PHPShopGUI->setCheckbox('option[mail_smtp_enabled]', 1, 'Отправка почты через SMTP протокол', $option['mail_smtp_enabled']) . '<br>' .
+                    $PHPShopGUI->setCheckbox('option[mail_smtp_debug]', 1, 'Включить отладочные сообщения (Debug)', $option['mail_smtp_debug']) . '<br>' .
+                    $PHPShopGUI->setCheckbox('option[mail_smtp_auth]', 1, 'Авторизация на сервере SMTP', $option['mail_smtp_auth'])
+            ) .
+            $PHPShopGUI->setField(__("Почтовый сервер SMTP"), $PHPShopGUI->setInputText(null, "option[mail_smtp_host]", $option['mail_smtp_host'], 300, false, false, false, 'smtp.yandex.ru'), 1, 'Сервер исходяшей почты SMTP') .
+            $PHPShopGUI->setField(__("Порт сервера"), $PHPShopGUI->setInputText(null, "option[mail_smtp_port]", $option['mail_smtp_port'], 100, false, false, false, '25'), 1, 'Порт почтового SMTP сервера') .
+            $PHPShopGUI->setField(__("Пользователь"), $PHPShopGUI->setInputText(null, "option[mail_smtp_user]", $option['mail_smtp_user'], 300, false, false, false, 'user@yandex.ru')) .
+            $PHPShopGUI->setField(__("Пароль"), $PHPShopGUI->setInput('password', "option[mail_smtp_pass]", $option['mail_smtp_pass'], null, 300)) .
+            $PHPShopGUI->setField(__("Обратный адрес"), $PHPShopGUI->setInputText(null, "option[mail_smtp_replyto]", $option['mail_smtp_replyto'], 300), 1, 'Ответы на почтовые сообщения будут приходить на этот адрес')
+    );
+
+    $PHPShopGUI->_CODE.=$PHPShopGUI->setCollapse('Настройка sms уведомлений', $PHPShopGUI->setField("SMS оповещение", $PHPShopGUI->setCheckbox('option[sms_enabled]', 1, 'Уведомление о заказе администратору', $option['sms_enabled']) . '<br>' .
                     $PHPShopGUI->setCheckbox('option[sms_status_order_enabled]', 1, 'Уведомление о статусе заказа пользователю', $option['sms_status_order_enabled']) . '<br>' .
-                    $PHPShopGUI->setCheckbox('option[notice_enabled]', 1, 'Уведомление о наличии товара пользователям', $option['notice_enabled'])
+                    $PHPShopGUI->setCheckbox('option[notice_enabled]', 1, 'Уведомление о наличии товара пользователям', $option['notice_enabled']), 1, 'Используется сервис terasms.ru'
             ) .
             $PHPShopGUI->setField(__("Мобильный телефон"), $PHPShopGUI->setInputText(null, "option[sms_phone]", $option['sms_phone'], 300), 1, 'Телефон для SMS уведомлений формата 792612345678') .
-            $PHPShopGUI->setField(__("Пользователь"), $PHPShopGUI->setInputText(null, "option[sms_login]", $option['sms_login'], 300), 1, 'Пользователь в системе terasms.ru') .
+            $PHPShopGUI->setField(__("Пользователь"), $PHPShopGUI->setInputText(null, "option[sms_user]", $option['sms_user'], 300), 1, 'Пользователь в системе terasms.ru') .
             $PHPShopGUI->setField(__("Пароль"), $PHPShopGUI->setInput('password', "option[sms_pass]", $option['sms_pass'], null, 300), 1, 'Пароль в системе terasms.ru') .
             $PHPShopGUI->setField(__("Имя отправителя"), $PHPShopGUI->setInputText(null, "option[sms_name]", $option['sms_name'], 300), 1, 'Зарегистрированное имя отправителя в terasms.ru')
     );
@@ -235,9 +246,9 @@ function actionStart() {
             $PHPShopGUI->setField("HTML-редактор по умолчанию", GetEditors($option['editor']), 1, 'Визуальный редактор контента') .
             $PHPShopGUI->setField("Цвет редактора шаблонов", GetAceSkinList($option['ace_theme']), 1, 'Стилизованная подсветка синтаксиса кода шаблонов') .
             $PHPShopGUI->setField(__("Заголовок"), $PHPShopGUI->setInputText(null, "option[adm_title]", $option['adm_title'], 300), 1, 'Брендовый заголовок в левом верхнем углу панели управления') .
-            $PHPShopGUI->setField("RSS", $PHPShopGUI->setCheckbox('option[rss_graber_enabled]', 1, 'Создавать новости из RSS каналов', $option['rss_graber_enabled'])).
-            $PHPShopGUI->setField("Быстрый поиск", $PHPShopGUI->setSelect('option[search_enabled]', $search_enabled_value),1,'Поиск в верхнем правом углу панели управления (back-end)').
-            $PHPShopGUI->setField(__("Лимит дерева каталогов"), $PHPShopGUI->setInputText(null, 'option[adm_cat_limit]', $option['adm_cat_limit'], 100),1,'Оптимизирует вывод большого числа вложенных каталогов')
+            $PHPShopGUI->setField("RSS", $PHPShopGUI->setCheckbox('option[rss_graber_enabled]', 1, 'Создавать новости из RSS каналов', $option['rss_graber_enabled'])) .
+            $PHPShopGUI->setField("Multi Manager", $PHPShopGUI->setCheckbox('option[rule_enabled]', 1, 'Учет прав управления товарами для менеджеров', $option['rule_enabled'])) .
+            $PHPShopGUI->setField("Быстрый поиск", $PHPShopGUI->setSelect('option[search_enabled]', $search_enabled_value), 1, 'Поиск в верхнем правом углу панели управления (back-end)')
     );
 
     // Запрос модуля на закладку
@@ -278,12 +289,12 @@ function actionUpdate() {
     // Выборка
     $data = $PHPShopOrm->select();
     $option = unserialize($data['admoption']);
-    
+
     // Счетчик сообщений о поддержке
     unset($option['support_notice']);
 
     // Корректировка пустых значений
-    $PHPShopOrm->updateZeroVars('option.user_calendar','option.cloud_enabled','option.digital_product_enabled','option.parent_price_enabled','option.user_skin','option.sms_enabled','option.sms_status_order_enabled','option.notice_enabled','option.user_mail_activate','option.user_mail_activate_pre','option.user_price_activate','option.rss_graber_enabled');
+    $PHPShopOrm->updateZeroVars('option.user_calendar', 'option.cloud_enabled', 'option.digital_product_enabled', 'option.parent_price_enabled', 'option.user_skin', 'option.sms_enabled', 'option.sms_status_order_enabled', 'option.notice_enabled', 'option.user_mail_activate', 'option.user_mail_activate_pre', 'option.user_price_activate', 'option.rss_graber_enabled', 'option.mail_smtp_enabled', 'option.mail_smtp_debug', 'option.mail_smtp_auth', 'option.sklad_enabled','option.rule_enabled');
 
     if (is_array($_POST['option']))
         foreach ($_POST['option'] as $key => $val)
@@ -306,7 +317,7 @@ function actionUpdate() {
     //$PHPShopOrm->debug=true;
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
-   
+
     $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['rowID']));
 
 

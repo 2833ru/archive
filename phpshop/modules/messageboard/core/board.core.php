@@ -166,9 +166,7 @@ IP:                 ".$ip."
 С уважением,
 http://".$_SERVER['SERVER_NAME'];
 
-                $PHPShopMail = new PHPShopMail($this->PHPShopSystem->getValue('admin_mail'),$mail_new,$zag,$message);
-
-
+               new PHPShopMail($this->PHPShopSystem->getValue('admin_mail'),$this->PHPShopSystem->getValue('admin_mail'),$zag,$message,false,false,array('replyto'=>$mail_new));
             }
         }
     }

@@ -47,6 +47,7 @@ function actionStart() {
     // Левый сайдбар дерева категорий
     $CategoryArray[0]['name'] = 'Корень';
     $tree_array = array();
+    if(is_array($PHPShopCategoryArray->getKey('PID.id', true)))
     foreach ($PHPShopCategoryArray->getKey('PID.id', true) as $k => $v) {
         foreach ($v as $cat) {
             $tree_array[$k]['sub'][$cat] = $CategoryArray[$cat]['city'];

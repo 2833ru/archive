@@ -85,7 +85,7 @@ $key_name = array(
 );
 
 // Стоп лист
-$key_stop = array('id', 'password', 'wishlist',  'datas', 'data_adres', 'sort', 'yml_bid_array', 'vendor', 'status', 'files', 'user', 'title_enabled', 'descrip_enabled', 'title_shablon', 'descrip_shablon', 'title_shablon', 'keywords_enabled', 'keywords_shablon');
+$key_stop = array('id', 'password', 'wishlist', 'datas', 'data_adres', 'sort', 'yml_bid_array', 'vendor', 'status', 'files', 'user', 'title_enabled', 'descrip_enabled', 'title_shablon', 'descrip_shablon', 'title_shablon', 'keywords_enabled', 'keywords_shablon');
 
 /**
  * Редактировать с выбранными Шаг 1
@@ -153,6 +153,17 @@ function actionSelectEdit() {
     return array("success" => true);
 }
 
+// Персональное изменение характеристики у товара
+function sortParse($current_sort) {
+    $current_sort = unserialize($current_sort);
+
+    if (is_array($current_sort))
+        foreach ($current_sort as $k => $v) {
+            if (empty($_POST['vendor_array_new'][$k]))
+                $_POST['vendor_array_new'][$k] = $v;
+        }
+}
+
 /**
  * Экшен сохранения
  */
@@ -171,11 +182,11 @@ function actionSave() {
 
     // Добавление характеристик
     if (is_array($_POST['vendor_array_add'])) {
-        foreach ($_POST['vendor_array_add'] as $k => $val) {
+        foreach ($_POST['vendor_array_add'] as $k => $valS) {
 
-            if (!empty($val)) {
+            if (!empty($valS)) {
                 $PHPShopOrmSort = new PHPShopOrm($GLOBALS['SysValue']['base']['sort']);
-                $result = $PHPShopOrmSort->insert(array('name_new' => $val, 'category_new' => $k));
+                $result = $PHPShopOrmSort->insert(array('name_new' => $valS, 'category_new' => $k));
                 if (!empty($result))
                     $_POST['vendor_array_new'][$k][] = $result;
             }
@@ -184,27 +195,42 @@ function actionSave() {
         }
     }
 
+
+    $PHPShopOrm->debug = false;
+
+
     // Изменение характеристик
     if (!empty($_POST['vendor_array_new'])) {
-        $_POST['vendor_new'] = null;
-        if (is_array($_POST['vendor_array_new']))
-            foreach ($_POST['vendor_array_new'] as $k => $v) {
-                if (is_array($v)) {
-                    foreach ($v as $key => $p) {
-                        $_POST['vendor_new'].="i" . $k . "-" . $p . "i";
-                        if (empty($p))
-                            unset($_POST['vendor_array_new'][$k][$key]);
+
+        // Сохранение старых значений характеристик
+        $data = $PHPShopOrm->select(array('id,vendor_array'), $where, array('order' => ' FIELD (id, ' . implode(',', $val) . ') '), array('limit' => 1000));
+        $vendor_array_new_memory = $_POST['vendor_array_new'];
+        if (is_array($data))
+            foreach ($data as $val) {
+                sortParse($val['vendor_array']);
+
+                $_POST['vendor_new'] = null;
+                if (is_array($_POST['vendor_array_new']))
+                    foreach ($_POST['vendor_array_new'] as $k => $v) {
+                        if (is_array($v)) {
+                            foreach ($v as $key => $p) {
+                                $_POST['vendor_new'].="i" . $k . "-" . $p . "i";
+                                if (empty($p))
+                                    unset($_POST['vendor_array_new'][$k][$key]);
+                            }
+                        }
+                        else
+                            $_POST['vendor_new'].="i" . $k . "-" . $v . "i";
                     }
-                }
-                else
-                    $_POST['vendor_new'].="i" . $k . "-" . $v . "i";
+
+
+                $_POST['vendor_array_new'] = serialize($_POST['vendor_array_new']);
+                $PHPShopOrm->update($_POST, array('id' => '=' . $val['id']));
+
+                // Возвращаем значение из памяти
+                $_POST['vendor_array_new'] = $vendor_array_new_memory;
             }
-
-
-
-        $_POST['vendor_array_new'] = serialize($_POST['vendor_array_new']);
     }
-
 
     // Память выбранных полей
     if (is_array($_POST)) {
@@ -218,8 +244,13 @@ function actionSave() {
             setcookie("check_memory", json_encode($memory), time() + 3600000, '/phpshop/admpanel/');
     }
 
+    $PHPShopOrm->clean();
+    unset($_POST['vendor_array_new']);
+    unset($_POST['vendor_new']);
+
     if ($PHPShopOrm->update($_POST, $where)) {
         header('Location: ?path=catalog&cat=' . $_GET['cat']);
+        return true;
     }
     else
         return true;
@@ -438,10 +469,10 @@ function actionOption() {
         $memory['catalog.option']['status'] = 1;
         $memory['catalog.option']['label'] = 1;
     }
-    
-            $message = '<p class="text-muted">Вы можете изменить перечень полей в таблице отображения товаров в категориях.</p>';
 
-    $searchforma =$message.
+    $message = '<p class="text-muted">Вы можете изменить перечень полей в таблице отображения товаров в категориях.</p>';
+
+    $searchforma = $message .
             $PHPShopInterface->setCheckbox('icon', 1, __('Иконка'), $memory['catalog.option']['icon']) .
             $PHPShopInterface->setCheckbox('name', 1, __('Название'), $memory['catalog.option']['name']) .
             $PHPShopInterface->setCheckbox('uid', 1, __('Артикул'), $memory['catalog.option']['uid']) .
@@ -451,7 +482,7 @@ function actionOption() {
             $PHPShopInterface->setCheckbox('menu', 1, __('Экшен меню'), $memory['catalog.option']['menu']) .
             $PHPShopInterface->setCheckbox('status', 1, __('Статус'), $memory['catalog.option']['status']) .
             $PHPShopInterface->setCheckbox('num', 1, __('Сортировка'), $memory['catalog.option']['num']) .
-            $PHPShopInterface->setCheckbox('label', 1, __('Лейблы спецпредложений'), $memory['catalog.option']['label']);
+            $PHPShopInterface->setCheckbox('label', 1, __('Лейблы статусов'), $memory['catalog.option']['label']);
 
     $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'hidden', 'name' => 'path', 'value' => 'catalog'));
     $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'hidden', 'name' => 'cat', 'value' => $_REQUEST['cat']));
@@ -478,7 +509,7 @@ function actionOptionSave() {
             $memory['catalog.option'][$k] = $v;
         }
         if (is_array($memory))
-            setcookie("check_memory", json_encode($memory), time() + 3600000*6, '/phpshop/admpanel/');
+            setcookie("check_memory", json_encode($memory), time() + 3600000 * 6, $GLOBALS['SysValue']['dir']['dir'] . '/phpshop/admpanel/');
     }
 
     return array('success' => true);

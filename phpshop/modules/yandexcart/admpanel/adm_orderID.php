@@ -1,87 +1,5 @@
 <?php
 
-class YandexMarketRest {
-
-    // ID Приложения
-    protected $oauth_client_id = '5b5057ed29784d83a5ba85c7c2cae9b9';
-
-    function __construct() {
-        $this->option();
-        $this->oauth_token = $this->option['token'];
-        $this->campaignId = $this->option['campaign'];
-    }
-
-    /**
-     * Настройки модуля
-     */
-    function option() {
-        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['yandexcart']['yandexcart_system']);
-        $this->option = $PHPShopOrm->select();
-    }
-
-    function request($orderId, $data) {
-
-        $data_string = json_encode($data);
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "https://api.partner.market.yandex.ru/v2/campaigns/" . $this->campaignId . "/orders/" . $orderId . "/status.json?oauth_token=" . $this->oauth_token . "&oauth_client_id=" . $this->oauth_client_id);
-
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
-
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-        curl_setopt($ch, CURLOPT_HEADER, true);
-
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'Content-Type: application/json',
-            'Content-Length: ' . strlen($data_string)
-        ));
-
-        $output = curl_exec($ch);
-
-        curl_close($ch);
-
-
-        $response = split("\r\n\r\n", $output);
-        $responsecontent = $response[1];
-
-        return $responsecontent;
-    }
-
-    function setOrderStatus($orderId, $request) {
-        $data['order'] = $request;
-        return $this->request($orderId, $data);
-    }
-
-    // Лог
-    function log($OrderId, $data) {
-        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['yandexcart']['yandexcart_log']);
-
-
-
-        $log = array(
-            'message_new' => serialize(json_decode($data, true)),
-            'order_id_new' => $OrderId,
-            'date_new' => time(),
-            'path_new' => '/order/status/update'
-        );
-
-        $PHPShopOrm->insert($log);
-    }
-
-    // Заказ Яндекса?
-    function isYandex($order) {
-        if (strstr($order, 'yandex')) {
-            $this->yandexOrderId = intval(str_replace('yandex', '', $order));
-            return true;
-        }
-        else
-            return false;
-    }
-
-}
-
 /**
  * Шаблон вывода таблицы корзины
  */
@@ -148,14 +66,16 @@ function yandexcart_sendmail($data) {
 }
 
 function yandexcartCheckOrder($data) {
-
-
+    global $_classPath;
+    
     if ($data['statusi'] != $_POST['statusi_new']) {
+        
+        // Rest Yandex
+        include_once($_classPath.'modules/yandexcart/class/yandexmarket.class.php');
 
         $YandexMarketRest = new YandexMarketRest();
 
-
-        if ($YandexMarketRest->isYandex($_POST['dop_info_new'])) {
+        if ($YandexMarketRest->isYandex($data['dop_info'])) {
 
             $OrderId = $YandexMarketRest->yandexOrderId;
 
@@ -183,19 +103,64 @@ function yandexcartCheckOrder($data) {
 
                 //  Доставлен
                 case $YandexMarketRest->option['status_delivered']:
+                    
+                    // Если не менялся статус на PROCESSING -> DELIVERY
+                    $result = $YandexMarketRest->setOrderStatus($OrderId, array("status" => "DELIVERY"));
+                    $YandexMarketRest->log($OrderId, $result);
+                    
 
                     $result = $YandexMarketRest->setOrderStatus($OrderId, array("status" => "DELIVERED"));
                     $YandexMarketRest->log($OrderId, $result);
 
                     // Сообщение покупателю о заказе
-                    yandexcart_sendmail($data);
+                    //yandexcart_sendmail($data);
 
                     break;
 
-                //  Анулирован
+                //  Отменен  SHOP_FAILED
                 case $YandexMarketRest->option['status_cancelled']:
 
                     $result = $YandexMarketRest->setOrderStatus($OrderId, array("status" => "CANCELLED", "substatus" => "SHOP_FAILED"));
+                    $YandexMarketRest->log($OrderId, $result);
+
+                    break;
+
+                //  Отменен  USER_CHANGED_MIND
+                case $YandexMarketRest->option['status_cancelled_ucm']:
+
+                    $result = $YandexMarketRest->setOrderStatus($OrderId, array("status" => "CANCELLED", "substatus" => "USER_CHANGED_MIND"));
+                    $YandexMarketRest->log($OrderId, $result);
+
+                    break;
+
+                //  Отменен  USER_REFUSED_DELIVERY
+                case $YandexMarketRest->option['status_cancelled_urd']:
+
+                    $result = $YandexMarketRest->setOrderStatus($OrderId, array("status" => "CANCELLED", "substatus" => "USER_REFUSED_DELIVERY"));
+                    $YandexMarketRest->log($OrderId, $result);
+
+                    break;
+
+                //  Отменен  USER_REFUSED_PRODUCT
+                case $YandexMarketRest->option['status_cancelled_urp']:
+
+                    $result = $YandexMarketRest->setOrderStatus($OrderId, array("status" => "CANCELLED", "substatus" => "USER_REFUSED_PRODUCT"));
+                    $YandexMarketRest->log($OrderId, $result);
+
+                    break;
+
+                //  Отменен  USER_REFUSED_QUALITY
+                case $YandexMarketRest->option['status_cancelled_urq']:
+
+                    $result = $YandexMarketRest->setOrderStatus($OrderId, array("status" => "CANCELLED", "substatus" => "USER_REFUSED_QUALITY"));
+                    $YandexMarketRest->log($OrderId, $result);
+
+                    break;
+
+                //  Отменен  USER_UNREACHABLE
+                case $YandexMarketRest->option['status_cancelled_uu']:
+
+                    $result = $YandexMarketRest->setOrderStatus($OrderId, array("status" => "CANCELLED", "substatus" => "USER_UNREACHABLE"));
                     $YandexMarketRest->log($OrderId, $result);
 
                     break;

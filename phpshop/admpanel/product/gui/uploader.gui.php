@@ -27,6 +27,7 @@ if (!file_exists('./css/bootstrap-theme-' . $theme . '.css'))
         <script src="../../js/jquery-1.11.0.min.js"></script>
         <script src="../../js/jquery.damnUploader.min.js"></script>
         <script src="./uploader.gui.js"></script>
+        <script src="../../js/locale.ru.js"></script>
 
     </head>
     <body>

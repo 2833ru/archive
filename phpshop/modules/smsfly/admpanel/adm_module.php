@@ -33,7 +33,7 @@ function actionStart() {
 
     $Tab1 = $PHPShopGUI->setField('№ Телефона для SMS', $PHPShopGUI->setInputArg(array('type' => 'text.required', 'value' => $data['phone'], 'name' => 'phone_new', 'placeholder' => '380631234567','size'=>300)));
     $Tab1.=$PHPShopGUI->setField('Пользователь', $PHPShopGUI->setInputText(false, 'merchant_user_new', $data['merchant_user'], 300));
-$Tab1.=$PHPShopGUI->setField('Пароль', $PHPShopGUI->setInputText(false, 'merchant_pwd_new', $data['merchant_pwd'], 300));
+$Tab1.=$PHPShopGUI->setField('Пароль', $PHPShopGUI->setInput('password', 'merchant_pwd_new', $data['merchant_pwd'], false,300));
     $Tab1.=$PHPShopGUI->setField('Отправитель (Alfaname)', $PHPShopGUI->setInputText(false, 'alfaname_new', $data['alfaname'], 300));
 
     // Sandbox
@@ -46,7 +46,7 @@ $Tab1.=$PHPShopGUI->setField('Пароль', $PHPShopGUI->setInputText(false, 'merchan
 
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Авторизация", $Tab1), array("О Модуле", $Tab2));
+    $PHPShopGUI->setTab(array("Авторизация", $Tab1,true), array("О Модуле", $Tab2));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =

@@ -7,7 +7,7 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or !empty($_SESSION
 <div style="clear:both"></div>
 <div class="box">
     <div class="box-heading">
-    <h2>Оформление <a href="http://faq.phpshop.ru/page/template-theme.html" target="_blank" title="Помощь" class="pull-right"><span class="icon icon-info-sign"></span></a></h2></div>
+    <h2>Оформление</h2></div>
     <div class="box-content">
         <div class="box-category">
             <div style="clear:both"></div>

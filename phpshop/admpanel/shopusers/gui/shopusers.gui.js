@@ -1,6 +1,73 @@
-
-
 $().ready(function() {
+
+    // Разослать уведомления автоматически
+    $("body").on('click', ".select-action .send-user-all", function(event) {
+        event.preventDefault();
+
+        if (confirm(locale.confirm_notice)) {
+
+                var data = [];
+                data.push({name: 'saveID', value: 1});
+                data.push({name: 'actionList[saveID]', value: 'actionUpdateAuto'});
+
+                $.ajax({
+                    mimeType: 'text/html; charset=windows-1251',
+                    url: '?path=shopusers.notice&id=1',
+                    type: 'post',
+                    data: data,
+                    dataType: "json",
+                    async: false,
+                    success: function(json) {
+                        if (json['success'] == 1) {
+                            showAlertMessage(locale.save_done);
+                        }
+                        else showAlertMessage(locale.save_false,true);
+                    }
+                });  
+        }
+    });
+
+    // Разослать уведомления с выбранными
+    $("body").on('click', ".select-action .send-user-select", function(event) {
+        event.preventDefault();
+        var result = 1;
+        if ($('#data input:checkbox:checked').length) {
+            if (confirm(locale.confirm_notice)) {
+                $('#data input[name="items"]:checkbox:checked').each(function() {
+
+                    var data = [];
+                    var id = $(this).val();
+                    data.push({name: 'saveID', value: 1});
+                    data.push({name: 'rowID', value: id});
+                    data.push({name: 'email', value: $(this).closest('.data-row').find('td:nth-child(5)>a').html()});
+                    data.push({name: 'productID', value: $(this).closest('.data-row').find('td:nth-child(4)').html()});
+
+                    data.push({name: 'actionList[saveID]', value: 'actionUpdate'});
+
+                    $.ajax({
+                        mimeType: 'text/html; charset=windows-1251',
+                        url: '?path=shopusers.notice&id=' + id,
+                        type: 'post',
+                        data: data,
+                        dataType: "json",
+                        async: false,
+                        success: function(json) {
+                            if (json['success'] != 1) {
+                                result = 0;
+                                showAlertMessage(locale.save_false, true);
+                            }
+                        }
+                    });
+                });
+
+                if (result == 1)
+                    showAlertMessage(locale.save_done);
+            }
+        }
+        else
+            alert(locale.select_no);
+
+    });
 
     // Расширенный поиск пользователей
     $(".search").on('click', function(event) {
@@ -13,7 +80,7 @@ $().ready(function() {
 
         $.ajax({
             mimeType: 'text/html; charset=windows-1251',
-            url: '?path=shopusers',
+            url: '?path=' + $.getUrlVar('path'),
             type: 'post',
             data: data,
             dataType: "html",

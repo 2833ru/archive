@@ -177,7 +177,7 @@ function user_message($obj) {
 IP:" . $_SERVER['REMOTE_ADDR'];
 
         // Отправка e-mail администратору
-        new PHPShopMail($obj->PHPShopSystem->getValue('adminmail2'), $mail, $zag_adm, $content_adm);
+        new PHPShopMail($obj->PHPShopSystem->getValue('adminmail2'), $obj->PHPShopSystem->getValue('adminmail2'), $zag_adm, $content_adm, false,false,array('replyto'=>$mail));
         $sql = 'select * from ' . $SysValue['base']['table_name37'] . ' where (UID=' . $id . ') order by DateTime DESC';
         $result = mysqli_query($link_db,$sql);
         $row = mysqli_fetch_array($result);

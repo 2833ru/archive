@@ -14,18 +14,7 @@ Disallow: /print/
 Disallow: /pricemail/
 Disallow: /forma/
 Disallow: /users/
-Disallow: /shop/*.html?*$
-Disallow: /shop/?$
-Disallow: /*_ALL.html
-Disallow: /*-ALL.html
-Disallow: /*_0.html
-Disallow: /*_.html
-Disallow: /*_.htm$
-Disallow: /*_openstat
-Disallow: /*from=adwords
-Disallow: /*gclid=
-Disallow: /*utm_source=
-Disallow: /?*$
+Disallow: /*?*$
 
 User-agent: Googlebot
 Disallow: /newprice/
@@ -43,18 +32,7 @@ Disallow: /print/
 Disallow: /pricemail/
 Disallow: /forma/
 Disallow: /users/
-Disallow: /shop/*.html?*$
-Disallow: /shop/?$
-Disallow: /*_ALL.html
-Disallow: /*-ALL.html
-Disallow: /*_0.html
-Disallow: /*_.html
-Disallow: /*_.htm$
-Disallow: /*_openstat
-Disallow: /*from=adwords
-Disallow: /*gclid=
-Disallow: /*utm_source=
-Disallow: /?*$
+Disallow: /*?*$
 
 User-agent: *
 Disallow: /newprice/
@@ -72,15 +50,4 @@ Disallow: /print/
 Disallow: /pricemail/
 Disallow: /forma/
 Disallow: /users/
-Disallow: /shop/*.html?*$
-Disallow: /shop/?$
-Disallow: /*_ALL.html
-Disallow: /*-ALL.html
-Disallow: /*_0.html
-Disallow: /*_.html
-Disallow: /*_.htm$
-Disallow: /*_openstat
-Disallow: /*from=adwords
-Disallow: /*gclid=
-Disallow: /*utm_source=
-Disallow: /?*$
+Disallow: /*?*$

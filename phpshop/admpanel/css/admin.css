@@ -488,13 +488,13 @@ form.navbar-right{
         padding-bottom: 0px;
         padding-top:10px;
 
-        background-color: transparent;
+        -background-color: transparent;
     }
 
     .sidebar-right{
         margin-bottom: 0px;
         padding-bottom: 0px;
-        background-color: transparent;
+        -background-color: transparent;
     }
 
     .sidebar-right h6{

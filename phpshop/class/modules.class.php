@@ -303,7 +303,7 @@ class PHPShopModules {
 
                 if (class_exists($classname)) {
                     $PHPShopCore = new $classname ();
-                    $PHPShopCore->loadActions();
+                    $PHPShopCore->loadAction();
                     return true;
                 }
                 else

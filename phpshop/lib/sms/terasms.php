@@ -10,7 +10,7 @@ function SendSMS($msg, $phone = false) {
     global $PHPShopSystem;
 
     $query_array = array(
-        'login' => $PHPShopSystem->getSerilizeParam('admoption.sms_login'),
+        'login' => $PHPShopSystem->getSerilizeParam('admoption.sms_user'),
         'password' => $PHPShopSystem->getSerilizeParam('admoption.sms_pass'),
         'target' => $PHPShopSystem->getSerilizeParam('admoption.sms_phone'),
         'message' => PHPShopString::win_utf8($msg),

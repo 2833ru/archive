@@ -16,6 +16,8 @@ PHPShopObj::loadClass("parser");
 PHPShopObj::loadClass("mail");
 PHPShopObj::loadClass("system");
 
+$PHPShopSystem = new PHPShopSystem();
+
 // Подключаем библиотеку поддержки JsHttpRequest
 if ($_REQUEST['type'] != 'json') {
     require_once $_classPath . "/lib/Subsys/JsHttpRequest/Php.php";
@@ -209,7 +211,7 @@ function avg_rate($id) {
 
     $sql = "select rate, rate_count from " . $SysValue['base']['products'] . " WHERE id=" . intval($id) . " LIMIT 1";
     $result = mysqli_query($link_db,$sql);
-    if (mysqli_num_rows($result)) {
+    if (@mysqli_num_rows($result)) {
         $row = mysqli_fetch_array($result);
         extract($row);
         $rate = round($rate, 1);
@@ -269,7 +271,7 @@ switch ($_REQUEST['comand']) {
 //            $zag = $system->getValue('name') . " - Уведомление о добалении отзыва к товару / " . $SysValue['other']['commentData'];
             $zag = "Добавили отзыв к товару $name / " . $SysValue['other']['commentData'];
             $adminMail = $system->getValue('adminmail2');
-            new PHPShopMail($adminMail, $PHPShopUser->getValue('mail'), $zag, $message);
+            new PHPShopMail($adminMail, $adminMail, $zag, $message,false,false,array('replyto'=>$PHPShopUser->getValue('mail')));
             $error = "done";
         }
         else

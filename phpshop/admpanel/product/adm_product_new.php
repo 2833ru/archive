@@ -43,7 +43,7 @@ function treegenerator($array, $i, $curent) {
 }
 
 function actionStart() {
-    global $PHPShopGUI, $PHPShopModules, $PHPShopOrm, $PHPShopSystem;
+    global $PHPShopGUI, $PHPShopModules, $PHPShopOrm, $PHPShopSystem, $PHPShopBase;
 
     // получаем ИД будущего создаваемого товара
     $newId = getLastID();
@@ -86,10 +86,18 @@ function actionStart() {
     $PHPShopGUI->addJSFiles('./js/jquery.tagsinput.min.js', './catalog/gui/catalog.gui.js', './js/jquery.waypoints.min.js', './product/gui/product.gui.js', './js/bootstrap-tour.min.js', './product/gui/tour.gui.js');
     $PHPShopGUI->addCSSFiles('./css/jquery.tagsinput.css');
 
-    $PHPShopCategoryArray = new PHPShopCategoryArray();
+    // Права менеджеров
+    if ($PHPShopSystem->ifSerilizeParam('admoption.rule_enabled', 1) and !$PHPShopBase->Rule->CheckedRules('catalog', 'remove')) {
+        $where = array('secure_groups' => " REGEXP 'i" . $_SESSION['idPHPSHOP'] . "i' or secure_groups = ''");
+        $secure_groups = true;
+    }
+    else
+        $where = $secure_groups = false;
+
+    $PHPShopCategoryArray = new PHPShopCategoryArray($where);
     $CategoryArray = $PHPShopCategoryArray->getArray();
 
-    $CategoryArray[0]['name'] = '- Корневой уровень -';
+    $CategoryArray[0]['name'] = '- Выбрать каталог -';
     $tree_array = array();
 
     foreach ($PHPShopCategoryArray->getKey('parent_to.id', true) as $k => $v) {
@@ -103,7 +111,7 @@ function actionStart() {
 
     $GLOBALS['tree_array'] = &$tree_array;
 
-    $tree_select = '<select class="selectpicker show-menu-arrow hidden-edit" data-live-search="true" data-container=""  data-style="btn btn-default btn-sm" name="category_new" data-width="100%">';
+    $tree_select = '<select class="selectpicker show-menu-arrow hidden-edit" data-live-search="true" data-container=""  data-style="btn btn-default btn-sm" name="category_new" data-width="100%" requared><option value="0">' . $CategoryArray[0]['name'] . '</option>';
 
     if (is_array($tree_array[0]['sub']))
         foreach ($tree_array[0]['sub'] as $k => $v) {
@@ -113,6 +121,7 @@ function actionStart() {
                 $selected = 'selected';
             else
                 $selected = null;
+
 
             if (empty($tree_array[$k]))
                 $disabled = null;
@@ -133,7 +142,7 @@ function actionStart() {
 
     // Артикул
     $Tab_info.=$PHPShopGUI->setField('Артикул:', $PHPShopGUI->setInputText(null, 'uid_new', $data['uid'], 250));
-    
+
     // Иконка
     $Tab_info.=$PHPShopGUI->setField(__("Изображение"), $PHPShopGUI->setIcon($data['pic_big'], "pic_big_new", false, array('load' => false, 'server' => true, 'url' => false)), 1, 'Главное изображение товара создается автоматически при загрузке через закладку Изображение. Но вы можете загрузить главное фото отдельно здесь.');
     $Tab_info.=$PHPShopGUI->setField(__("Превью"), $PHPShopGUI->setFile($data['pic_small'], "pic_small_new", array('load' => false, 'server' => 'image', 'url' => false)), 1, 'Превью изображения товара создается автоматически при загрузке через закладку Изображение. Но вы можете загрузить превью отдельно здесь.');
@@ -200,7 +209,7 @@ function actionStart() {
 
     // YML
     $data['yml_bid_array'] = unserialize($data['yml_bid_array']);
-    $Tab_yml = $PHPShopGUI->setField(__('YML'), $PHPShopGUI->setCheckbox('yml_new', 1, __('Вывод в Яндекс Маркете'), $data['yml']) .
+    $Tab_yml = $PHPShopGUI->setField(__('YML'), $PHPShopGUI->setCheckbox('yml_new', 1, __('Вывод в Яндекс Маркете'), $data['yml']) . '<br>' .
             $PHPShopGUI->setRadio('p_enabled_new', 1, __('В наличии'), $data['p_enabled']) .
             $PHPShopGUI->setRadio('p_enabled_new', 0, __('Уведомить (Под заказ)'), $data['p_enabled'])
     );
@@ -410,6 +419,9 @@ function actionInsert() {
         $_POST['dop_cat_new'] = '#' . $_POST['dop_cat_new'] . '#';
     }
 
+    // Права пользователя
+    $_POST['user_new'] = $_SESSION['idPHPSHOP'];
+
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
 
@@ -455,7 +467,7 @@ function fotoAdd() {
     $width_podrobno = $PHPShopSystem->getSerilizeParam('admoption.width_podrobno');
 
     // Папка сохранения
-    $path = $GLOBALS['SysValue']['dir']['dir'].'/UserFiles/Image/' . $PHPShopSystem->getSerilizeParam('admoption.image_result_path');
+    $path = $GLOBALS['SysValue']['dir']['dir'] . '/UserFiles/Image/' . $PHPShopSystem->getSerilizeParam('admoption.image_result_path');
 
     // Соль
     $RName = substr(abs(crc32(time())), 0, 5);
@@ -507,7 +519,7 @@ function fotoAdd() {
             $name_big = $path_parts['filename'] . '_big.' . strtolower($thumb->getFormat());
 
             if (!empty($image_save_source)) {
-                $file_big = $_SERVER['DOCUMENT_ROOT'] .  $path . $name_big;
+                $file_big = $_SERVER['DOCUMENT_ROOT'] . $path . $name_big;
                 @copy($file, $file_big);
             }
         } else {
@@ -517,7 +529,7 @@ function fotoAdd() {
         }
 
 
-        $thumb->save($_SERVER['DOCUMENT_ROOT'] .  $path . $name_s);
+        $thumb->save($_SERVER['DOCUMENT_ROOT'] . $path . $name_s);
 
         // Большое изображение
         $thumb = new PHPThumb($file);
@@ -584,7 +596,6 @@ function fotoAdd() {
         return $insert;
     }
 }
-
 
 // Обработка событий
 $PHPShopGUI->getAction();

@@ -2,7 +2,7 @@
 
 /**
  * Библиотека офорфмления текста
- * @version 1.4
+ * @version 1.5
  * @package PHPShopClass
  * @subpackage Helper
  */
@@ -56,12 +56,12 @@ class PHPShopText {
      * @param string $color цвет текста
      * @return string
      */
-    static function message($string, $icon = false, $size = false, $color = 'green') {
+    static function message($string, $icon = false, $size = false, $color = 'green',$class=false) {
         if (!empty($icon))
             $img = PHPShopText::img($icon);
         else
             $img = null;
-        return $img . '<span style="color:' . $color . ';font-size:' . $size . '">' . $string . '</span>';
+        return $img . '<span style="color:' . $color . ';font-size:' . $size . '" class="'.$class.'">' . $string . '</span>';
     }
 
     /**
@@ -72,8 +72,8 @@ class PHPShopText {
      * @param string $css стили
      * @return string
      */
-    static function img($src, $hspace = 5, $align = 'left', $css=null ) {
-        return '<img src="' . $src . '" hspace="' . $hspace . '" align="' . $align . '" border="0" style="'. $css.'">';
+    static function img($src, $hspace = 5, $align = 'left', $css = null) {
+        return '<img src="' . $src . '" hspace="' . $hspace . '" align="' . $align . '" border="0" style="' . $css . '">';
     }
 
     /**
@@ -104,14 +104,14 @@ class PHPShopText {
         if (empty($title))
             $title = $text;
 
-		if ($title)
-			$title = ' title="' . $title . '" ';
-		if ($target)
-			$target = ' target="' . $target . '" ';
-		if ($class)
-			$class = ' class="' . $class . '" ';
-		if ($style)
-			$style = ' style="' . $style . '" ';
+        if ($title)
+            $title = ' title="' . $title . '" ';
+        if ($target)
+            $target = ' target="' . $target . '" ';
+        if ($class)
+            $class = ' class="' . $class . '" ';
+        if ($style)
+            $style = ' style="' . $style . '" ';
         return '<a href="' . $href . '"' . $title . $target . $class . $style . '>' . $text . '</a>';
     }
 
@@ -129,8 +129,8 @@ class PHPShopText {
      * @param string $string текст
      * @return string
      */
-    static function h1($string) {
-        return '<h1>' . $string . '</h1>';
+    static function h1($string,$class=false) {
+        return '<h1 class="'.$class.'">' . $string . '</h1>';
     }
 
     /**
@@ -138,8 +138,8 @@ class PHPShopText {
      * @param string $string текст
      * @return string
      */
-    static function h2($string) {
-        return '<h2>' . $string . '</h2>';
+    static function h2($string,$class=false) {
+        return '<h2 class="'.$class.'">' . $string . '</h2>';
     }
 
     /**
@@ -147,8 +147,17 @@ class PHPShopText {
      * @param string $string текст
      * @return string
      */
-    static function h3($string) {
-        return '<h3>' . $string . '</h3>';
+    static function h3($string,$class=false) {
+        return '<h3 class="'.$class.'">' . $string . '</h3>';
+    }
+
+    /**
+     * Заголовок H4
+     * @param string $string текст
+     * @return string
+     */
+    static function h4($string,$class=false) {
+        return '<h4 class="'.$class.'">' . $string . '</h4>';
     }
 
     /**
@@ -157,8 +166,8 @@ class PHPShopText {
      * @param string $class css
      * @return string
      */
-    static function ul($string,$class='list-group') {
-        return '<ul class="'.$class.'">' . $string . '</ul>';
+    static function ul($string, $class = 'list-group') {
+        return '<ul class="' . $class . '">' . $string . '</ul>';
     }
 
     /**
@@ -178,13 +187,13 @@ class PHPShopText {
      * @param string $class css
      * @return string
      */
-    static function li($string, $href = null, $class="list-group-item") {
+    static function li($string, $href = null, $class = "list-group-item") {
         if (!empty($href)) {
             $text = PHPShopText::a($href, $string);
-            $li = '<li class="'.$class.'">' . $text . '</li>';
+            $li = '<li class="' . $class . '">' . $text . '</li>';
         }
         else
-            $li = '<li class="'.$class.'">' . $string . '</li>';
+            $li = '<li class="' . $class . '">' . $string . '</li>';
         return $li;
     }
 
@@ -220,28 +229,28 @@ class PHPShopText {
      * @param int $size размер
      * @return string
      */
-    static function select($name, $value, $width, $float = "none", $caption = false, $onchange = "return true", $height = false, $size = 1, $id = false, $class="form-control selectpicker show-menu-arrow") {
+    static function select($name, $value, $width, $float = "none", $caption = false, $onchange = "return true", $height = false, $size = 1, $id = false, $class = "form-control selectpicker show-menu-arrow") {
 
         if (empty($id))
             $id = $name;
 
-		if ($name)
-			$name = ' name="' . $name . '"';
+        if ($name)
+            $name = ' name="' . $name . '"';
 
-		if ($id)
-			$id = ' id="' . $id . '"';
+        if ($id)
+            $id = ' id="' . $id . '"';
 
-		if ($size)
-			$size = ' size="' . $size . '"';
+        if ($size)
+            $size = ' size="' . $size . '"';
 
-		if ($onchange)
-			$onchange = ' onchange="' . $onchange . '"';
-                
-                if($class)
-                    $class = ' class="'.$class.'"';
-			
+        if ($onchange)
+            $onchange = ' onchange="' . $onchange . '"';
 
-        $select = $caption . ' <select' . $name . $id . $size . ' style="float:' . $float . ';width:' . $width . 'px;height:' . $height . 'px"' . $onchange . $class.'>';
+        if ($class)
+            $class = ' class="' . $class . '"';
+
+
+        $select = $caption . ' <select' . $name . $id . $size . ' style="float:' . $float . ';width:' . $width . 'px;height:' . $height . 'px"' . $onchange . $class . '>';
         if (is_array($value))
             foreach ($value as $val)
                 $select.='<option value="' . $val[1] . '" ' . @$val[2] . '>' . $val[0] . '</option>';
@@ -258,13 +267,13 @@ class PHPShopText {
      * @return string
      */
     static function td($string, $class = false, $colspan = false, $id = false) {
-		if($class)
-			$class = ' class="' . $class . '"';
-		if($id)
-			$id = ' id="' . $id . '"';
-		if($colspan)
-			$colspan = ' colspan="' . $colspan . '"';
-		
+        if ($class)
+            $class = ' class="' . $class . '"';
+        if ($id)
+            $id = ' id="' . $id . '"';
+        if ($colspan)
+            $colspan = ' colspan="' . $colspan . '"';
+
         return '<td' . $class . $id . $colspan . '>' . $string . '</td>';
     }
 
@@ -287,9 +296,11 @@ class PHPShopText {
      * @return string
      */
     static function div($string, $align = "left", $style = false, $id = false, $class = false) {
-        if(empty($id)) $id=time();
-        if(empty($class)) $class=__CLASS__.'-'.__FUNCTION__;
-        return '<div  id="' . $id . '" style="text-align:'.$align.';' . $style . '" class="' . $class . '">' . $string . '</div>';
+        if (empty($id))
+            $id = time();
+        if (empty($class))
+            $class = __CLASS__ . '-' . __FUNCTION__;
+        return '<div  id="' . $id . '" style="text-align:' . $align . ';' . $style . '" class="' . $class . '">' . $string . '</div>';
     }
 
     /**
@@ -298,13 +309,14 @@ class PHPShopText {
      * @return string
      */
     static function strike($string) {
-        
+
         // Знак рубля
-        if(strstr($string," ")){
-            $string_array=explode(" ",$string);
-            return '<span style="text-decoration: line-through">' . $string_array[0] . '</span><span class="rubznak">'.$string_array[1].'</span>';
+        if (strstr($string, " ")) {
+            $string_array = explode(" ", $string);
+            return '<span style="text-decoration: line-through">' . $string_array[0] . '</span><span class="rubznak">' . $string_array[1] . '</span>';
         }
-        else return '<span style="text-decoration: line-through">' . $string . '</span>';
+        else
+            return '<span style="text-decoration: line-through">' . $string . '</span>';
     }
 
     /**
@@ -326,7 +338,8 @@ class PHPShopText {
      * @return string
      */
     static function p($string = '<br>', $style = false) {
-        if(empty($style)) $style=__CLASS__.'-'.__FUNCTION__;
+        if (empty($style))
+            $style = __CLASS__ . '-' . __FUNCTION__;
         return '<p style="' . $style . '">' . $string . '</p>';
     }
 
@@ -337,21 +350,21 @@ class PHPShopText {
      * @param string $class класс
      * @return string
      */
-    static function button($value, $onclick, $class = 'ok', $id=false) {
+    static function button($value, $onclick, $class = 'ok', $id = false) {
 
-		if ($value)
-			$value = ' value="' . $value . '"';
+        if ($value)
+            $value = ' value="' . $value . '"';
 
-		if ($id)
-			$id = ' id="' . $id . '"';
+        if ($id)
+            $id = ' id="' . $id . '"';
 
-		if ($class)
-			$class = ' class="' . $class . '"';
+        if ($class)
+            $class = ' class="' . $class . '"';
 
-		if ($onclick)
-			$onclick = ' onclick="' . $onclick . '"';
-			
-        return '<input type="button"' . $value . $onclick . $class . $id.'>';
+        if ($onclick)
+            $onclick = ' onclick="' . $onclick . '"';
+
+        return '<input type="button"' . $value . $onclick . $class . $id . '>';
     }
 
     /**
@@ -366,26 +379,26 @@ class PHPShopText {
      * @param string $id ид
      * @return string
      */
-    static function table($content, $cellpadding = 3, $cellspacing = 1, $align = 'center', $width = '98%', $bgcolor = false, $border = 0, $id = false, $class=false) {
-		if($cellpadding)
-			$cellpadding = ' cellpadding="' . $cellpadding . '"';
-		if($cellspacing)
-			$cellspacing = ' cellspacing="' . $cellspacing . '"';
-		if($align)
-			$align = 'text-align:' . $align . ';';
-		if($width)
-			$width = 'width:' . $width . ';';
-		if($bgcolor)
-			$bgcolor = 'background:' . $bgcolor . ';';
-		if($border)
-			$border = 'border:' . $border . 'px;';
-		if($id)
-			$id = ' id="' . $id . '"';
-		if($class)
-			$class = ' class="' . $class . '"';
-		
-		$style = ' style="' . $align . $width . $bgcolor . $border . '"';
-		
+    static function table($content, $cellpadding = 3, $cellspacing = 1, $align = 'center', $width = '98%', $bgcolor = false, $border = 0, $id = false, $class = false) {
+        if ($cellpadding)
+            $cellpadding = ' cellpadding="' . $cellpadding . '"';
+        if ($cellspacing)
+            $cellspacing = ' cellspacing="' . $cellspacing . '"';
+        if ($align)
+            $align = 'text-align:' . $align . ';';
+        if ($width)
+            $width = 'width:' . $width . ';';
+        if ($bgcolor)
+            $bgcolor = 'background:' . $bgcolor . ';';
+        if ($border)
+            $border = 'border:' . $border . 'px;';
+        if ($id)
+            $id = ' id="' . $id . '"';
+        if ($class)
+            $class = ' class="' . $class . '"';
+
+        $style = ' style="' . $align . $width . $bgcolor . $border . '"';
+
         return '<table ' . $id . $style . $class . '>' . $content . '</table>';
     }
 
@@ -416,14 +429,14 @@ class PHPShopText {
      * @return string
      */
     static function setInput($type, $name, $value, $float = "none", $size = 200, $onclick = "return true", $class = false, $caption = false, $description = false) {
-        
-        if(!empty($onclick))
-            $onclick='onclick="'.$onclick.'"';
 
-        $input = ' <input type="' . $type . '" value="' . $value . '" name="' . $name . '" id="' . $name . '" '.$onclick.'> ';
+        if (!empty($onclick))
+            $onclick = 'onclick="' . $onclick . '"';
+
+        $input = ' <input type="' . $type . '" value="' . $value . '" name="' . $name . '" id="' . $name . '" ' . $onclick . '> ';
 
         if ($type != 'hidden')
-            $input='<div style="float:' . $float . $padding . '">
+            $input = '<div style="float:' . $float . $padding . '">
              <label>' . $caption . $input . $description . '</label></div>';
 
         return $input;

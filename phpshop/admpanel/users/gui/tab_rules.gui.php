@@ -33,7 +33,7 @@ function tab_rules($row, $autofill = false) {
                                 <td>' . $PHPShopGUI->setCheckbox('catalog_rul_2', 1, false, rules_checked($status[catalog], 1)) . '</td>
                                 <td>' . $PHPShopGUI->setCheckbox('catalog_rul_3', 1, false, rules_checked($status[catalog], 2)) . '</td>
                                 <td>-</td>
-                                <td>-</td>
+                                 <td>' . $PHPShopGUI->setCheckbox('catalog_rul_5', 1, 'Управление правами', rules_checked($status[catalog], 4)) . ' ' . $PHPShopGUI->setCheckbox('catalog_rul_4', 1, 'Все товары', rules_checked($status[catalog], 3)) . '</td>
                             </tr>
                             <tr>
                                 <td>Заказы</td>
@@ -49,7 +49,7 @@ function tab_rules($row, $autofill = false) {
                                 <td>' . $PHPShopGUI->setCheckbox('users_rul_2', 1, false, rules_checked($status[users], 1)) . '</td>
                                 <td>' . $PHPShopGUI->setCheckbox('users_rul_3', 1, false, rules_checked($status[users], 2)) . '</td>
                                 <td>-</td>
-                                <td>' . $PHPShopGUI->setCheckbox('users_rul_4', 1, 'Управление правами', rules_checked($status[users], 3)) . '</td>
+                                <td>-</td>
                             </tr>
                            <tr>
                                 <td>Пользователи</td>

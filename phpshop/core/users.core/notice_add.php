@@ -31,7 +31,7 @@ function notice_add($obj) {
 }
 
 /**
- * ОТправление по почте нового уведомления от пользователя
+ * Отправление по почте нового уведомления от пользователя
  * @author PHPShop Software
  * @version 1.0
  * @package PHPShopCoreFunction
@@ -61,14 +61,14 @@ function notice_mail($obj) {
         $admin_mail = $obj->PHPShopSystem->getParam('adminmail2');
 
         // Заголовок e-mail
-//        $title=$obj->PHPShopSystem->getName()." - ".__('Поступила заявка на уведомление о товаре')." ".$PHPShopProduct->getName();
         $title = __('Поступила заявка на уведомление о товаре') . " " . $PHPShopProduct->getName();
 
-
         // Отправка e-mail пользователя
-        $PHPShopMail = new PHPShopMail($admin_mail, $PHPShopUser->getValue('mail'), $title, '', true, true);
+        $PHPShopMail = new PHPShopMail($admin_mail, $admin_mail, $title, '', true, true,array('replyto'=>$PHPShopUser->getValue('mail')));
+        
         // Содержание e-mail
         $content = ParseTemplateReturn('./phpshop/lib/templates/users/mail_notice_add.tpl', true);
+        
         // отправляем письмо
         $PHPShopMail->sendMailNow($content);
     }
