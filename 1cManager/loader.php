@@ -4,7 +4,7 @@
  * Автономная синхронизация заказов с 1С
  * @package PHPShopExchange
  * @author PHPShop Software
- * @version 2.0
+ * @version 2.1
  */
 // Функции авторизации
 include_once("login.php");
@@ -21,8 +21,7 @@ function CheckStatusReady() {
 
     // Запись нового статуса
     if (empty($num))
-        mysqli_query($link_db, "INSERT INTO " . $GLOBALS['SysValue']['base']['order_status'] . " VALUES (100, 'Передано в бухгалтерию', '#ffff33','')");
-
+        mysqli_query($link_db, "INSERT INTO " . $GLOBALS['SysValue']['base']['order_status'] . " (`id`, `name`, `color`) VALUES (100, 'Передано в бухгалтерию', '#EC971F')");       
     return 100;
 }
 
@@ -39,18 +38,23 @@ switch ($_GET['command']) {
     // Выводим список всех заказов
     // command=list&date1=123456&date2=24255
     case("list"):
-        PHPShopObj::loadClass("order");
-        PHPShopObj::loadClass("delivery");
+        PHPShopObj::loadClass(array("order","delivery"));
         $csv = $adr_info = null;
 
         // Безопасность
         if (PHPShopSecurity::true_num($_GET['date1']) and PHPShopSecurity::true_num($_GET['date2']) and PHPShopSecurity::true_num($_GET['num'])) {
+            
+            $PHPShopSystem = new PHPShopSystem();
+            $load_status = $PHPShopSystem->getSerilizeParam('1c_option.1c_load_status');
+            $where="where seller!='1'";
+            
+            if(!empty($load_status))
+                  $where.=" and statusi=".intval($load_status);
 
-            $sql = "select * from " . $GLOBALS['SysValue']['base']['orders'] . " where seller!='1' and datas BETWEEN " . $_GET['date1'] . " AND " . $_GET['date2'] . " order by id desc  limit " . $_GET['num'];
+            $sql = "select * from " . $GLOBALS['SysValue']['base']['orders'] . " ".$where." and datas BETWEEN " . $_GET['date1'] . " AND " . $_GET['date2'] . " order by id desc  limit " . $_GET['num'];
 
             $result = mysqli_query($link_db, $sql);
             while ($row = mysqli_fetch_array($result)) {
-
 
                 $csv1 = "Начало личных данных\n";
                 $csv2 = "Начало заказанных товаров\n";

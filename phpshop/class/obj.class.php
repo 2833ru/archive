@@ -94,7 +94,7 @@ class PHPShopObj {
     }
 
     /**
-     * ƒобавить параметр
+     * ƒобавить или изменить параметр
      * @param string $param им€ параметра
      * @param mixed $value значение параметра
      */

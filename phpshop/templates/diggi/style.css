@@ -3387,3 +3387,51 @@ thead td#allspecwhite {
     font-size: 20px;
     font-weight: 800px;
 }
+.rating_star {
+	padding: 0;
+	text-align: center;
+}
+.rating_star:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+.rating_info {
+	display: none;
+    margin-left: 5px;
+    color: #9da9b9 !important;
+}
+.rating i {
+	margin: 0 5px;
+}
+.rating .fa-star {
+	color: #F5A623;
+}
+.rating .fa-star-o {
+	color: #dadada;
+}
+
+.rating {
+	position: relative;
+	width: 80px;
+	height: 16px;
+	font-size: 10px;
+	text-align: center;
+}
+.rating_blank {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 16px;
+	background-size: 16px 16px;
+	background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMSIgaGVpZ2h0PSIzMSIgdmlld0JveD0iMCAwIDMxIDMxIj4gIDxwb2x5Z29uIGZpbGw9IiNDRkNGQ0YiIGZpbGwtcnVsZT0iZXZlbm9kZCIgcG9pbnRzPSI0OC41IDAgNTIgMTIgNjQgMTIgNTQuNSAxOS4wNzcgNTkgMzEgNDguNSAyNCAzOCAzMSA0Mi41IDE5LjA3NyAzMyAxMiA0NSAxMiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTMzKSIvPjwvc3ZnPg==");
+}
+.rating_votes {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 16px;
+	background-size: 16px 16px;
+	background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMSIgaGVpZ2h0PSIzMSIgdmlld0JveD0iMCAwIDMxIDMxIj4gIDxwb2x5Z29uIGZpbGw9IiNGQUI2MDAiIGZpbGwtcnVsZT0iZXZlbm9kZCIgcG9pbnRzPSIxNS41IDAgMTkgMTIgMzEgMTIgMjEuNSAxOS4wNzcgMjYgMzEgMTUuNSAyNCA1IDMxIDkuNSAxOS4wNzcgMCAxMiAxMiAxMiIvPjwvc3ZnPg==");
+}

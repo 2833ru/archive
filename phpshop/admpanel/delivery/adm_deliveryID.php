@@ -147,7 +147,7 @@ function actionStart() {
     $city_select_value[] = array('Все страны мира', 2, $data['city_select']);
 
     if (!$catalog)
-        $Tab_info.=$PHPShopGUI->setField("Помощь подбора стран, регионов и городов", $PHPShopGUI->setSelect('city_select_new', $city_select_value,null,true));
+        $Tab_info.=$PHPShopGUI->setField("Помощь подбора регионов и городов", $PHPShopGUI->setSelect('city_select_new', $city_select_value,null,true));
 
     $Tab1 = $PHPShopGUI->setCollapse('Информация', $Tab_info);
 
@@ -174,6 +174,10 @@ function actionStart() {
     // Оплаты
     if(empty($data['is_folder']))
     $Tab1.=$PHPShopGUI->setField("Блокировка оплат", $PHPShopGUI->setSelect('payment_new[]', $payment_value, false, true, false, $search = false, false, $size = 1, $multiple = true));
+    
+    // Сумма заказа
+    if(empty($data['is_folder']))
+    $Tab1.=$PHPShopGUI->setField("Блокировка при стоимости более", $PHPShopGUI->setInputText(null, "sum_max_new", $data['sum_max'], 150,$PHPShopSystem->getDefaultValutaCode()));
 
     // Цены
     if (!$catalog)

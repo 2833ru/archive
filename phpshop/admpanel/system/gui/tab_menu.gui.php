@@ -14,6 +14,7 @@ function tab_menu() {
        <li class="' . $menu_active_currency . '"><a href="?path=system.currency">'.__('Валюты').'</a></li>
        <li class="' . $menu_active_image . '"><a href="?path=system.image">'.__('Изображения').'</a></li>
        <li class="' . $menu_active_servers . '"><a href="?path=system.servers">'.__('Витрины').'</a></li>   
+       <li class="' . $menu_active_integration . '"><a href="?path=system.integration">'.__('Интеграция с сервисами').'</a></li>         
        <li><a href="?path=tpleditor">'.__('Шаблоны дизайна').'</a></li>
        </ul>';
     

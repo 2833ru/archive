@@ -3,30 +3,31 @@
 DROP TABLE IF EXISTS `phpshop_modules_oneclick_system`;
 CREATE TABLE IF NOT EXISTS `phpshop_modules_oneclick_system` (
   `id` int(11) NOT NULL auto_increment,
-  `enabled` enum('0','1','2') NOT NULL default '1',
-  `title` text NOT NULL,
-  `title_end` text NOT NULL,
-  `serial` varchar(64) NOT NULL default '',
-  `windows` enum('0','1') NOT NULL default '0',
-  `display` enum('0','1') NOT NULL default '0',
-  `version` varchar(64) DEFAULT '1.1' NOT NULL,
+  `enabled` enum('0','1','2') default '1',
+  `title` text,
+  `title_end` text,
+  `serial` varchar(64) default '',
+  `windows` enum('0','1') default '0',
+  `display` enum('0','1') default '0',
+  `version` varchar(64) DEFAULT '1.1',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 
-INSERT INTO `phpshop_modules_oneclick_system` VALUES (1,'0','Спасибо, Ваш заказ принят!','Наши менеджеры свяжутся с Вами для уточнения деталей.','','1','0','1.3');
+INSERT INTO `phpshop_modules_oneclick_system` VALUES (1,'0','Спасибо, Ваш заказ принят!','Наши менеджеры свяжутся с Вами для уточнения деталей.','','1','0','1.4');
 
 DROP TABLE IF EXISTS `phpshop_modules_oneclick_jurnal`;
 CREATE TABLE `phpshop_modules_oneclick_jurnal` (
   `id` int(11) NOT NULL auto_increment,
-  `date` int(11) NOT NULL default '0',
-  `name` varchar(64) NOT NULL default '',
-  `tel` varchar(64) NOT NULL default '',
-  `message` text NOT NULL,
-  `product_name` varchar(64) NOT NULL default '',
-  `product_id` int(11) NOT NULL,
-  `product_price` varchar(64) NOT NULL default '',
-  `status` enum('1','2','3','4') NOT NULL default '1',
-  `ip` varchar(64) NOT NULL default '',
+  `date` int(11) default '0',
+  `name` varchar(64) default '',
+  `tel` varchar(64) default '',
+  `message` text,
+  `product_name` varchar(64) default '',
+  `product_id` int(11),
+  `product_price` varchar(64) default '',
+  `product_image` varchar(64) default '',
+  `status` enum('1','2','3','4') default '1',
+  `ip` varchar(64) default '',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;

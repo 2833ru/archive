@@ -70,15 +70,16 @@ class PHPShopCoreElement extends PHPShopElements {
             $showcaseData = $PHPShopOrm->select(array('*'), array('enabled' => "='1'", 'host' => "='" . str_replace('www.', '', $_SERVER['HTTP_HOST']) . "'"), array('order' => 'id'), array('limit' => 1));
             if (is_array($showcaseData)) {
 
-                if (!empty($showcaseData['currency']) and $this->PHPShopNav->notPath('order')){
-                    
-                    $_SESSION['valuta'] =  $showcaseData['currency'];
+                if (!empty($showcaseData['currency']) and $this->PHPShopNav->notPath('order')) {
+
+                    $_SESSION['valuta'] = $showcaseData['currency'];
                     $_SESSION['lang'] = $showcaseData['lang'];
                     //$this->PHPShopSystem->setParam("dengi", $showcaseData['currency']);
                     //$this->PHPShopSystem->setParam("kurs", $showcaseData['currency']);
                     //$this->PHPShopSystem->setParam("kurs_beznal", $showcaseData['currency']);
-                    
                 }
+
+
 
                 if (!empty($showcaseData['tel']))
                     $this->PHPShopSystem->setParam("tel", $showcaseData['tel']);
@@ -106,6 +107,19 @@ class PHPShopCoreElement extends PHPShopElements {
 
                 if (!empty($showcaseData['skin']))
                     define("HostSkin", $showcaseData['skin']);
+
+                $admoption = unserialize($showcaseData['admoption']);
+                if (is_array($admoption)) {
+
+                    if (isset($admoption['user_price_activate']))
+                        $this->PHPShopSystem->setSerilizeParam('admoption.user_price_activate', $admoption['user_price_activate']);
+
+                    if (isset($admoption['user_mail_activate']))
+                        $this->PHPShopSystem->setSerilizeParam('admoption.user_mail_activate', $admoption['user_mail_activate']);
+
+                    if (isset($admoption['user_mail_activate_pre']))
+                        $this->PHPShopSystem->setSerilizeParam('admoption.user_mail_activate', $admoption['user_mail_activate_pre']);
+                }
             }
         } else {
             $this->set('streetAddress', $this->PHPShopSystem->getSerilizeParam('bank.org_adres'));
@@ -437,8 +451,16 @@ class PHPShopPageCatalogElement extends PHPShopElements {
         $dis = null;
         $i = 0;
 
+        $where = array('parent_to' => '=0');
+
+        // Мультибаза
+        if (defined("HostID"))
+            $where['servers'] = " REGEXP 'i" . HostID . "i'";
+        elseif (defined("HostMain"))
+            $where['parent_to'].= ' and (servers ="" or servers REGEXP "i1000i")';
+
         $this->PHPShopOrm->cache = true;
-        $data = $this->PHPShopOrm->select(array('*'), array('parent_to' => '=0'), array('order' => 'num'), array("limit" => 100));
+        $data = $this->PHPShopOrm->select(array('*'), $where, array('order' => 'num'), array("limit" => 100));
 
         // Перехват модуля в начале
         $hook = $this->setHook(__CLASS__, __FUNCTION__, $data, 'START');
@@ -487,7 +509,17 @@ class PHPShopPageCatalogElement extends PHPShopElements {
     function chek($id) {
         $PHPShopOrm = new PHPShopOrm($this->getValue('base.page_categories'));
         $PHPShopOrm->debug = $this->debug;
-        $num = $PHPShopOrm->select(array('id'), array('parent_to' => "=$id"), false, array('limit' => 1));
+
+        $where = array('parent_to' => "=$id");
+
+        // Мультибаза
+        if (defined("HostID"))
+            $where['servers'] = " REGEXP 'i" . HostID . "i'";
+        elseif (defined("HostMain"))
+            $where['parent_to'].= ' and (servers ="" or servers REGEXP "i1000i")';
+
+
+        $num = $PHPShopOrm->select(array('id'), $where, false, array('limit' => 1));
         if (empty($num['id']))
             return true;
     }
@@ -501,8 +533,17 @@ class PHPShopPageCatalogElement extends PHPShopElements {
         $dis = null;
         $i = 0;
         $n = PHPShopSecurity::TotalClean($n, 1);
+
+        $where = array('parent_to' => '=' . $n);
+        
+        // Мультибаза
+        if (defined("HostID"))
+            $where['servers'] = " REGEXP 'i" . HostID . "i'";
+        elseif (defined("HostMain"))
+            $where['parent_to'].= ' and (servers ="" or servers REGEXP "i1000i")';
+
         $PHPShopOrm = new PHPShopOrm($this->getValue('base.page_categories'));
-        $data = $PHPShopOrm->select(array('*'), array('parent_to' => '=' . $n), array('order' => 'num'), array("limit" => 100));
+        $data = $PHPShopOrm->select(array('*'), $where, array('order' => 'num'), array("limit" => 100));
 
         // Перехват модуля в начале
         $hook = $this->setHook(__CLASS__, __FUNCTION__, $data, 'START');
@@ -824,9 +865,19 @@ class PHPShopNewsElement extends PHPShopElements {
         else
             $view = true;
 
+        $where['datau'] = '<' . time();
+
+        // Мультибаза
+        if (defined("HostID"))
+            $where['servers'] = " REGEXP 'i" . HostID . "i'";
+        elseif (defined("HostMain"))
+            $where['datau'].= ' and (servers ="" or servers REGEXP "i1000i")';
+
+
         if (!empty($view)) {
 
-            $result = $this->PHPShopOrm->select(array('id', 'zag', 'datas', 'kratko'), false, array('order' => 'id DESC'), array("limit" => $this->limit));
+            $result = $this->PHPShopOrm->select(array('id', 'zag', 'datas', 'kratko'), $where, array('order' => 'id DESC'), array("limit" => $this->limit));
+
 
             // Проверка на еденичную запись
             if ($this->limit > 1)
@@ -1107,7 +1158,7 @@ class PHPShopBannerElement extends PHPShopElements {
 
                     foreach ($dirs as $dir)
                         if (!empty($dir))
-                            if (stristr($_SERVER['REQUEST_URI'],trim($dir)) or $_SERVER['REQUEST_URI'] == trim($dir)) {
+                            if (stristr($_SERVER['REQUEST_URI'], trim($dir)) or $_SERVER['REQUEST_URI'] == trim($dir)) {
 
                                 // Определяем переменные
                                 $this->set('banerContent', $row['content']);
@@ -1349,6 +1400,10 @@ class PHPShopRecaptchaElement extends PHPShopElements {
      */
     public function true(){
     return $this->recaptcha;
+
+
+
+
 
 
     }

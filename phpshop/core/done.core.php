@@ -22,6 +22,7 @@ class PHPShopDone extends PHPShopCore {
     public $cart_clean_enabled = true;
     public $delivery_mod = false;
     public $manager_comment = null;
+    public $delivery_free = false;
 
     /**
      * Конструктор
@@ -352,7 +353,7 @@ class PHPShopDone extends PHPShopCore {
             "dostavka" => $this->delivery);
         
         // Бесплатная доставка
-        if($this->delivery == 0)
+        if($this->delivery_free)
             $cart['delivery_free']=true;
 
         // Статус заказа

@@ -11,7 +11,6 @@ function actionBaseUpdate() {
     $new_version = $PHPShopModules->getUpdate($option['version']);
     $PHPShopOrm->clean();
     $action = $PHPShopOrm->update(array('version_new' => $new_version));
-    return $action;
 }
 
 // Функция обновления
@@ -20,7 +19,7 @@ function actionUpdate() {
 
     $PHPShopOrm->debug = false;
     $action = $PHPShopOrm->update($_POST);
-    header('Location: ?path=modules&install=check');
+    header('Location: ?path=modules&id='.$_GET['id']);
     return $action;
 }
 
@@ -60,7 +59,7 @@ function actionStart() {
     $Tab2=$PHPShopGUI->setInfo($info);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1), array("Инструкция", $Tab2), array("О Модуле", $Tab3));
+    $PHPShopGUI->setTab(array("Основное", $Tab1,true), array("Инструкция", $Tab2), array("О Модуле", $Tab3));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =

@@ -270,34 +270,17 @@ class PHPShopCompare extends PHPShopCore {
                     } else {
                         $tdR[$igood][] = '»зображение отсутствует';
                     }
-                    $baseinputvaluta = $row['baseinputvaluta'];
-                    $price = $row['price'];
+
                     $id = $row['id'];
-
-                    //получаем исходную цену
-                    if ($baseinputvaluta) { //≈сли прислали баз. валюту
-                        if ($baseinputvaluta !== $LoadItems['System']['dengi']) {//≈сли присланна€ валюта отличаетс€ от базовой
-                            $price = $price / $LoadItems['Valuta'][$baseinputvaluta]['kurs']; //ѕриводим цену в базовую валюту
-                        }
-                    }
-
-                    if (isset($_SESSION['valuta'])) {
-                        $valuta = $_SESSION['valuta'];
-                    } else {
-                        $valuta = $LoadItems['System']['dengi'];
-                    }
-                    $kurs = $LoadItems['Valuta'][$valuta]['kurs'];
+                    
                     $admoption = unserialize($LoadItems['System']['admoption']);
-                    $format = $admoption['price_znak'];
-                    $price = $price * $kurs;
 
                     // ≈сли цены показывать только после аторизации
                     if ($admoption['user_price_activate'] == 1 and ! $_SESSION['UsersId']) {
                         $price = "-";
                     }
-
-                    $price = ($price + (($price * $LoadItems['System']['percent']) / 100));
-                    $price = number_format($price, $format, '.', ' ');
+                    else $price=PHPShopProductFunction::GetPriceValuta($row['id'], array($row['price'], $row['price2'], $row['price3'], $row['price4'], $row['price5']), $row['baseinputvaluta']);
+                    
                     $tdR[$igood][] = $price;
                     $chars = unserialize($row['vendor_array']);
 

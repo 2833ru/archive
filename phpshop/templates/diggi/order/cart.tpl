@@ -23,7 +23,7 @@
     <div class="order-page-top-totals-body">
         <div class="order-page-top-totals-discount">
             <span class="order-page-top-label-left">{Скидка} :</span>
-            <span class="order-page-top-label-right" id="SkiSummaAll"><span id="SkiSumma">@discount@</span> $</span>
+            <span class="order-page-top-label-right" id="SkiSummaAll"><span id="SkiSumma">@discount@</span> %</span>
         </div>
         <div class="order-page-top-totals-delivery">
             <span class="order-page-top-label-left">{Доставка} :</span>

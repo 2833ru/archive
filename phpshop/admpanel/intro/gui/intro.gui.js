@@ -13,6 +13,20 @@ var lineChartData = {
     ]
 };
 
+var lineChartData2 = {
+    datasets: [
+        {
+            label: "־עקועû",
+            fillColor: "rgba(255, 217, 99,0.2)",
+            strokeColor: "rgba(255, 217, 99,1)",
+            pointColor: "rgba(255, 217, 99,1)",
+            pointStrokeColor: "#fff",
+            pointHighlightFill: "#fff",
+            pointHighlightStroke: "rgba(255, 217, 99,1)"
+        }
+    ]
+};
+
 
 function startClock() {
 
@@ -90,27 +104,52 @@ $(document).ready(function() {
         $('.clock').html(clock + hour + ":" + minute + ":" + second);
     }, 1000);
 
-    lineChartData.datasets[0].data = JSON.parse($("#canvas").attr('data-value'));
-    lineChartData.labels = JSON.parse($("#canvas").attr('data-label'));
-    var currency = $("#canvas").attr('data-currency');
+    if ($('#canvas').length) {
+        lineChartData.datasets[0].data = JSON.parse($("#canvas").attr('data-value'));
+        lineChartData.labels = JSON.parse($("#canvas").attr('data-label'));
+        var currency = $("#canvas").attr('data-currency');
 
-    var ctx = $("#canvas").get(0).getContext("2d");
-    lineChart = new Chart(ctx).Line(lineChartData, {
-        animation: false,
-        responsive: true,
-        tooltipTemplate: "<%if (label){%><%=label%>: <%}%><%= value %> " + currency
-    });
-
-
-    $('.canvas-bar').on('click', function(event) {
-        event.preventDefault();
-        lineChart.destroy();
-
-        lineChart = new Chart(ctx).Bar(lineChartData, {
+        var ctx = $("#canvas").get(0).getContext("2d");
+        lineChart = new Chart(ctx).Line(lineChartData, {
             animation: false,
             responsive: true,
             tooltipTemplate: "<%if (label){%><%=label%>: <%}%><%= value %> " + currency
         });
+    }
+
+    if ($('#canvas2').length) {
+        lineChartData2.datasets[0].data = JSON.parse($("#canvas2").attr('data-value'));
+        lineChartData2.labels = JSON.parse($("#canvas2").attr('data-label'));
+        var title = $("#canvas2").attr('data-title');
+        var ctx2 = $("#canvas2").get(0).getContext("2d");
+        lineChart2 = new Chart(ctx2).Line(lineChartData2, {
+            animation: false,
+            responsive: true,
+            tooltipTemplate: "<%if (label){%><%=label%>: <%}%><%= value %> " + title
+        });
+    }
+
+    $('.canvas-bar').on('click', function(event) {
+        event.preventDefault();
+
+        if ($(this).attr("data-canvas")) {
+            lineChart2.destroy();
+
+            lineChart2 = new Chart(ctx2).Bar(lineChartData2, {
+                animation: false,
+                responsive: true,
+                tooltipTemplate: "<%if (label){%><%=label%>: <%}%><%= value %> " + title
+            });
+        }
+        else {
+            lineChart.destroy();
+
+            lineChart = new Chart(ctx).Bar(lineChartData, {
+                animation: false,
+                responsive: true,
+                tooltipTemplate: "<%if (label){%><%=label%>: <%}%><%= value %> " + currency
+            });
+        }
 
         $('ul.canvas-select > li').removeClass('disabled');
         $(this).parent('li').addClass('disabled');
@@ -119,13 +158,25 @@ $(document).ready(function() {
 
     $('.canvas-line').on('click', function(event) {
         event.preventDefault();
-        lineChart.destroy();
 
-        lineChart = new Chart(ctx).Line(lineChartData, {
-            animation: false,
-            responsive: true,
-            tooltipTemplate: "<%if (label){%><%=label%>: <%}%><%= value %> " + currency
-        });
+        if ($(this).attr("data-canvas")) {
+            lineChart2.destroy();
+
+            lineChart2 = new Chart(ctx2).Line(lineChartData2, {
+                animation: false,
+                responsive: true,
+                tooltipTemplate: "<%if (label){%><%=label%>: <%}%><%= value %> " + title
+            });
+        }
+        else {
+            lineChart.destroy();
+
+            lineChart = new Chart(ctx).Line(lineChartData, {
+                animation: false,
+                responsive: true,
+                tooltipTemplate: "<%if (label){%><%=label%>: <%}%><%= value %> " + currency
+            });
+        }
 
         $('ul.canvas-select > li').removeClass('disabled');
         $(this).parent('li').addClass('disabled');
@@ -133,13 +184,23 @@ $(document).ready(function() {
 
     $('.canvas-radar').on('click', function(event) {
         event.preventDefault();
-        lineChart.destroy();
 
-        lineChart = new Chart(ctx).Radar(lineChartData, {
-            animation: false,
-            responsive: true,
-            tooltipTemplate: "<%if (label){%><%=label%>: <%}%><%= value %> " + currency
-        });
+        if ($(this).attr("data-canvas")) {
+            lineChart2.destroy();
+            lineChart2 = new Chart(ctx2).Radar(lineChartData2, {
+                animation: false,
+                responsive: true,
+                tooltipTemplate: "<%if (label){%><%=label%>: <%}%><%= value %> " + title
+            });
+        }
+        else {
+            lineChart.destroy();
+            lineChart = new Chart(ctx).Radar(lineChartData, {
+                animation: false,
+                responsive: true,
+                tooltipTemplate: "<%if (label){%><%=label%>: <%}%><%= value %> " + currency
+            });
+        }
 
         $('ul.canvas-select > li').removeClass('disabled');
         $(this).parent('li').addClass('disabled');

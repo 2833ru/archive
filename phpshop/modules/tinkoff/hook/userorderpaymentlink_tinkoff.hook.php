@@ -20,14 +20,15 @@ function userorderpaymentlink_tinkoff_hook($obj, $PHPShopOrderFunction) {
             $obj->ouid = $PHPShopOrderFunction->objRow['uid'];
 
             $obj->tinkoff_total = floatval(number_format($PHPShopOrderFunction->getTotal(), 2, '.', '')) * 100;
-
-            $obj->tinkoff_cart = $PHPShopOrderFunction->unserializeParam('orders');
+            $order = $PHPShopOrderFunction->unserializeParam('orders');
+            $obj->tinkoff_cart = $order['Cart']['cart'];
+            $obj->discount = $order['Person']['discount'];
 
             // Доставка
-            if (!empty($obj->tinkoff_cart['Cart']['dostavka'])) {
+            if (!empty($order['Cart']['dostavka'])) {
 
                 PHPShopObj::loadClass('delivery');
-                $PHPShopDelivery = new PHPShopDelivery($obj->tinkoff_cart['Person']['dostavka_metod']);
+                $PHPShopDelivery = new PHPShopDelivery($order['Person']['dostavka_metod']);
 
                 if($ofd_nds = $PHPShopDelivery->getParam('ofd_nds'))
                     $tax = $PHPShopDelivery->getParam('ofd_nds');
@@ -36,10 +37,10 @@ function userorderpaymentlink_tinkoff_hook($obj, $PHPShopOrderFunction) {
 
                 $obj->tinkoff_delivery_nds = $tax;
 
-                $obj->delivery = floatval(number_format($obj->tinkoff_cart['Cart']['dostavka'], 2, '.', ''));
+                $obj->delivery = floatval(number_format($order['Cart']['dostavka'], 2, '.', ''));
             }
 
-            $request = $tinkoff->getPaymentUrl($obj, $email, false, 'userpaymentlink');
+            $request = $tinkoff->getPaymentUrl($obj, $email);
 
             $return = PHPShopText::setInput('button', 'send', "Оплатить заказ", $float = "none", 250, "window.location.replace('" . $request['url'] . "')");
 

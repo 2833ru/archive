@@ -15,7 +15,7 @@ class Tinkoff
         '18' => 'vat18',
     );
 
-    public function getPaymentUrl($obj, $value, $rout)
+    public function getPaymentUrl($obj, $value)
     {
         $PHPShopTinkoffArray = new PHPShopTinkoffArray();
         $this->settings = $PHPShopTinkoffArray->getArray();
@@ -23,7 +23,7 @@ class Tinkoff
 
         $requestData = array(
             'OrderId' => $obj->ouid,
-            'Amount' => $obj->get('total') * 100,
+            'Amount' => $obj->tinkoff_total,
             'DATA' => array(
                 'Email' => $this->customerEmail,
                 'Connection_type' => 'phpshop'
@@ -31,7 +31,7 @@ class Tinkoff
         );
 
         if ($this->settings['enabled_taxation']) {
-            $requestData['Receipt'] = $this->getReceipt($obj, $value);
+            $requestData['Receipt'] = $this->getReceipt($obj);
 
             if (count($requestData['Receipt']['Items']) > 99) {
                 return array('error' => 'Превышено допустимое количество позиций в чеке');
@@ -45,30 +45,33 @@ class Tinkoff
         return isset($request->PaymentURL) ? array('url' => $request->PaymentURL) : array('error' => 'Запрос в Тинькофф Банк совершился неудачей');
     }
 
-    function getReceipt($obj, $value)
+    function getReceipt($obj)
     {
         global $PHPShopSystem;
         $receiptItems = array();
-        $cart = $obj->PHPShopCart->getArray();
 
-        foreach ($cart as $product) {
-            /*������������ �� Windows-1251 � UTF-8*/
+        foreach ($obj->tinkoff_cart as $product) {
+
+            // Скидка
+            if($obj->discount > 0)
+                $price = $product['price']  - ($product['price']  * $obj->discount  / 100);
+            else $price = $product['price'];
             $receiptItems[] = array(
                 'Name' => mb_convert_encoding($product['name'], "UTF-8", "Windows-1251"),
-                "Price" => $product['price'] * 100,
+                "Price" => $price * 100,
                 "Quantity" => $product['num'],
-                "Amount" => $product['price'] * $product['num'] * 100,
+                "Amount" => $price * $product['num'] * 100,
                 "Tax" => self::getTinkoffVat($PHPShopSystem->objRow['nds']),
             );
         }
 
         if ($obj->delivery > 0) {
             $receiptItems[] = array(
-                'Name' => mb_convert_encoding($obj->PHPShopDelivery->objRow['city'], "UTF-8", "Windows-1251"),
+                'Name' => mb_convert_encoding('Доставка', "UTF-8", "Windows-1251"),
                 "Price" => $obj->delivery * 100,
                 "Quantity" => 1,
                 "Amount" => $obj->delivery * 100,
-                "Tax" => self::getTinkoffVat($obj->PHPShopDelivery->objRow['ofd_nds']),
+                "Tax" => self::getTinkoffVat($obj->tinkoff_delivery_nds),
             );
         }
 

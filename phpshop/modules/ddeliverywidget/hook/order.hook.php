@@ -25,10 +25,11 @@ function order_ddeliverywidget_hook($obj, $row, $rout) {
 
         $obj->set('order_action_add', '
             <script src="https://ddelivery.ru/front/widget-cart/public/api.js"></script>
-            <script src="phpshop/modules/ddeliverywidget/js/ddeliverywidget.js?5"></script>
+            <script src="phpshop/modules/ddeliverywidget/js/ddeliverywidget.js?2"></script>
             
         <input class="cartListJson" type="hidden" value=\'' . json_encode($list) . '\'/>
         <input id="ddeliveryId" type="hidden" value="' . $option['shop_id'] . '">
+        <input id="ddeliveryMail" type="hidden" value="' . $obj->get('mail') . '">
         <input id="ddweight" type="hidden" value="' . floatval($weight/1000) .'">
             
         <!-- Модальное окно ddeliverywidget -->

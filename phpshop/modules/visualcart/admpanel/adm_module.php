@@ -11,7 +11,7 @@ function actionUpdate() {
         $_POST['memory_new'] = 0;
     $PHPShopOrm->debug = false;
     $action = $PHPShopOrm->update($_POST);
-    header('Location: ?path=modules&install=check');
+     header('Location: ?path=modules&id=' . $_GET['id']);
     return $action;
 }
 
@@ -21,7 +21,7 @@ function actionStart() {
     // Выборка
     $data = $PHPShopOrm->select();
 
-    $e_value[] = array('не выводить', 0, $data['enabled']);
+    $e_value[] = array('корзина', 0, $data['enabled']);
     $e_value[] = array('слева', 1, $data['enabled']);
     $e_value[] = array('справа', 2, $data['enabled']);
 
@@ -31,7 +31,7 @@ function actionStart() {
     $Tab1.=$PHPShopGUI->setField('Место вывода', $PHPShopGUI->setSelect('enabled_new', $e_value, 100));
     $Tab1.=$PHPShopGUI->setField('Ширина иконки товара', $PHPShopGUI->setInputText(false, 'pic_width_new', $data['pic_width'], 100, 'px'));
 
-    $info = 'Для произвольной вставки элемента следует выбрать парамет вывода "Не выводить" и в ручном режиме вставить переменную
+    $info = 'Для произвольной вставки элемента следует выбрать парамет вывода "Корзина" и в ручном режиме вставить переменную
         <kbd>@visualcart@</kbd> в свой шаблон. Или через панель управления создайте текстовый блок, переключитесь в режим исходного кода (Система - Настройка - Режимы - Визуальный редактор),
         внесите метку <kbd>@visualcart@</kbd> - теперь блок будет выводить корзину в нужном вам месте.
         <p>Для персонализации формы вывода отредактируйте шаблоны <code>phpshop/templates/имя_шаблона/modules/visualcart/templates/</code></p>

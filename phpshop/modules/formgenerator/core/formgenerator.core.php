@@ -186,10 +186,6 @@ E-mail: ' . $mail . '
 </form>';
 
             // Определяем переменные
-
-
-
-
             $this->set('pageContent', $forma_content);
             $this->set('pageTitle', $data['name']);
 

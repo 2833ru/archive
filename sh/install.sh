@@ -10,29 +10,29 @@ CYAN='\033[01;36m'
 WHITE='\033[01;37m'
 NC='\033[00m'
 TMP='../backup/temp/'
-V='1.0'
+V='1.1'
 
 # help
 
 case $1 in
      help|-h|/h)
-           echo  "${CYAN}PHPShop Install ${V}${NC}"
-		   echo  "${NC}Use the following command options: $0 host user_db dbase pass_db admin admin_pass admin_mail${NC}"
+           /bin/echo -e "${CYAN}PHPShop Install ${V}${NC}"
+		   /bin/echo -e "${NC}Use the following command options: $0 host user_db dbase pass_db admin admin_pass admin_mail${NC}"
 		   exit 0
           ;;
 esac
 
 if [ $# = 0 ] ; then 
-    echo  "${CYAN}PHPShop Install ${V} ${NC}"
+    /bin/echo -e "${CYAN}PHPShop Install ${V} ${NC}"
 fi
 
 # check path install
 dump=../install/base_5.sql
 if [ ! -s $dump ] ; then
-   "Folder /install not found!"
+   /bin/echo -e "${RED}Folder /install not found!"
    exit 0
    elif [ $# = 0 ] ; then 
-   echo  "${NC}It is required to enter connection parametres to base MySQL"
+   /bin/echo -e "${NC}It is required to enter connection parametres to base MySQL"
 fi
 
 # MySQ authorization
@@ -73,16 +73,16 @@ echo "host=\"$host\";" | cat >> "../phpshop/inc/config.ini"
 echo "user_db=\"$user_db\";" | cat >> "../phpshop/inc/config.ini"
 echo "pass_db=\"$pass_db\";" | cat >> "../phpshop/inc/config.ini"
 echo "dbase=\"$dbase\";" | cat >> "../phpshop/inc/config.ini"
-echo "${GREEN}Connection parametres is finished..."
+/bin/echo "${GREEN}Connection parametres is finished..."
 
 # check connect
 result=`php cli.lib.php mysql`
 case $result in
      done)
-           echo  "${GREEN}Password for MySQL is correct...${NC}"
+          /bin/echo -e "${GREEN}Password for MySQL is correct...${NC}"
           ;;
      *)
-          echo  -n "${NC}Mysql password failed validation, repeat? (y / n)${NC}"
+          echo -n "Mysql password failed validation, repeat? (y / n)"
 		  read ready
 
 		  if [ $ready = "y" ] ; then 
@@ -94,7 +94,7 @@ case $result in
 esac
 
 if [ $# = 0 ] ; then 
-    echo  "${NC}It is required to specify personal data for admin"
+    /bin/echo -e  "${NC}It is required to specify personal data for admin"
 fi
 
 if [ $5 ] ; then 
@@ -123,8 +123,8 @@ mysql --host=$host --user=$user_db  --default-character-set=cp1251 --password=$p
 # add admin
 result=`php cli.lib.php user  $login $pas $mail`
 if [ $result = "done" ] ; then 
-   echo  "${GREEN}Create new admin is finished...${NC}"
-   echo  "${CYAN}PHPShop installation is finished${NC}"
+   /bin/echo -e "${GREEN}Create new admin is finished...${NC}"
+   /bin/echo -e "${CYAN}PHPShop installation is finished${NC}"
    rm -rf ../install
 
    #chmod
@@ -135,5 +135,5 @@ if [ $result = "done" ] ; then
    chmod 775 ../phpshop/admpanel/dumper/backup
 
 else 
-   echo  "${RED}Admin can not be created!${NC}"
+   /bin/echo -e "${RED}Admin can not be created!${NC}"
 fi

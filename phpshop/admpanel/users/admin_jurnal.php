@@ -31,7 +31,7 @@ function actionStart() {
 
     // Поиск
     $where = null;
-    $limit = 300;
+    $limit = 100;
     if (is_array($_GET['where'])) {
         foreach ($_GET['where'] as $k => $v) {
             if ($v != '' and $v != 'none')

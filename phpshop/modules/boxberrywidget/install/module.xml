@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<module>
+    <version>1.0</version>
+    <name>Boxberry Widget</name>
+    <faqlink>http://faq.phpshop.ru/page/boxberry-widget.html</faqlink>
+    <description>Виджет расчета доставки boxberry.ru</description>
+    <category>sale,delivery</category>
+    <sign>1537191497</sign>
+    <status>new</status>
+    <adminmenu>
+        <title>Boxberry Widget</title>
+        <capability>true</capability>
+        <podmenu>
+            <podmenu_name>Журнал операций</podmenu_name>
+            <podmenu_action>dir.boxberrywidget</podmenu_action>
+        </podmenu>
+    </adminmenu>
+</module>

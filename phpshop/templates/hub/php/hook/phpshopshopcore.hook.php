@@ -16,6 +16,7 @@ function phpshopshopcore_product_grid_nt_hook($obj, $dataArray) {
         $obj->set('newtipIcon', ParseTemplateReturn('product/newtipIcon.tpl'));
     else
         $obj->set('newtipIcon', '');
+    
 }
 
 function checkStore_add_sorttable_hook($obj, $row) {

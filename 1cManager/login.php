@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Авторизация для 1С
+ * @package PHPShopExchange
+ * @author PHPShop Software
+ * @version 2.3
+ */
+
 // UTF-8 Env Fix
 if (ini_get("mbstring.func_overload") > 0) {
     ini_set("mbstring.internal_encoding", null);
@@ -8,12 +15,7 @@ if (ini_get("mbstring.func_overload") > 0) {
 $_classPath = "../phpshop/";
 include($_classPath . "class/obj.class.php");
 include($_classPath . "lib/phpass/passwordhash.php");
-PHPShopObj::loadClass("base");
-PHPShopObj::loadClass("system");
-PHPShopObj::loadClass("math");
-PHPShopObj::loadClass("array");
-PHPShopObj::loadClass("valuta");
-PHPShopObj::loadClass("security");
+PHPShopObj::loadClass(array("base","system","math","array","valuta","security"));
 
 // Подключение к БД
 $PHPShopBase = new PHPShopBase($_classPath . "/inc/config.ini",true,true);

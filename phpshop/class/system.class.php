@@ -6,7 +6,7 @@ if (!defined("OBJENABLED"))
 /**
  * —истемные настройки
  * @author PHPShop Software
- * @version 1.3
+ * @version 1.4
  * @package PHPShopObj
  */
 class PHPShopSystem extends PHPShopObj {
@@ -39,6 +39,20 @@ class PHPShopSystem extends PHPShopObj {
         $param = explode(".", $param);
         $val = parent::unserializeParam($param[0]);
         return $val[$param[1]];
+    }
+
+    /**
+     * ƒобавить или изменить сериализованный параметр [param.val]
+     * @param string $param им€ параметра 
+     * @param mixed $value значение параметра
+     */
+    function setSerilizeParam($param, $value) {
+        $param = explode(".", $param);
+        if (is_array($param)) {
+            $val = parent::unserializeParam($param[0]);
+            $val[$param[1]] = $value;
+            $this->objRow[$param[0]] = serialize($val);
+        }
     }
 
     /**

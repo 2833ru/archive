@@ -1,20 +1,14 @@
 <?php
-
 /**
  * Автономная синхронизация номенклатуры из 1С
  * @package PHPShopExchange
  * @author PHPShop Software
  * @version 2.3
  */
+
 // Авторизация
 include_once("login.php");
-PHPShopObj::loadClass("readcsv");
-PHPShopObj::loadClass("product");
-PHPShopObj::loadClass("orm");
-
-// ShopBilder
-$GLOBALS['option']['shopbuilder'] = false;
-
+PHPShopObj::loadClass(array("readcsv","product","orm"));
 
 $F_done = null;
 $GetItemCreate = 0;

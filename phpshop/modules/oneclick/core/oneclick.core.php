@@ -114,8 +114,9 @@ class PHPShopOneclick extends PHPShopCore {
         $insert['message_new'] = PHPShopSecurity::TotalClean($_POST['oneclick_mod_message'], 2);
         $insert['ip_new'] = $_SERVER['REMOTE_ADDR'];
         $insert['product_name_new'] = $PHPShopProduct->getName();
+        $insert['product_image_new'] = $PHPShopProduct->getImage();
         $insert['product_id_new'] = intval($_POST['oneclick_mod_product_id']);
-        $insert['product_price_new'] = $PHPShopProduct->getPrice() . ' ' . $this->PHPShopSystem->getDefaultValutaCode();
+        $insert['product_price_new'] = $PHPShopProduct->getPrice();
 
         // Запись в базу
         $this->PHPShopOrm->insert($insert);
@@ -131,16 +132,16 @@ class PHPShopOneclick extends PHPShopCore {
 
 {Имя}:                " . $insert['name_new'] . "
 {Телефон}:            " . $insert['tel_new'] . "
-{Товар}:              " . $insert['product_name_new'] . " / ID " . $insert['product_id_new'] . " / " . $insert['product_price_new'] . "
+{Товар}:              " . $insert['product_name_new'] . " / ID " . $insert['product_id_new'] . " / " . $insert['product_price_new'] . " " . $this->PHPShopSystem->getDefaultValutaCode()."
 {Сообщение}:          " . $insert['message_new'] . "
 {Дата}:               " . PHPShopDate::dataV($insert['date_new']) . "
-IP:                 " . $_SERVER['REMOTE_ADDR'] . "
+IP:                   " . $_SERVER['REMOTE_ADDR'] . "
 
 ---------------
 
 http://" . $_SERVER['SERVER_NAME'];
 
-        new PHPShopMail($this->PHPShopSystem->getValue('adminmail2'), $this->PHPShopSystem->getValue('adminmail2'), $zag, $message);
+        new PHPShopMail($this->PHPShopSystem->getValue('adminmail2'), $this->PHPShopSystem->getValue('adminmail2'), $zag, Parser($message));
     }
 
 }

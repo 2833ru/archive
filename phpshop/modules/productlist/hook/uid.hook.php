@@ -19,9 +19,18 @@ class PHPShopProductListElement extends PHPShopElements {
     // Вывод
     function element($category) {
         $dis = null;
+
+        // Учет модуля SEOURLPRO
+        if (!empty($GLOBALS['SysValue']['base']['seourlpro']['seourlpro_system']))
+            $seourlpro = true;
+        else
+            $seourlpro = false;
+
+
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
         $PHPShopOrm->debug = $this->debug;
-        $data = $PHPShopOrm->select(array('*'), array('category' => '=' . intval($category), 'enabled' => "='1'", 'parent_enabled' => "='0'"), array('order' => 'datas'), array('limit' => $this->data['num']));
+
+        $data = $PHPShopOrm->select(array('*'), array('category' => '=' . intval($category), 'enabled' => "='1'", 'parent_enabled' => "='0'", 'id' => '!=' . $this->PHPShopNav->getId()), array('order' => 'datas desc'), array('limit' => $this->data['num']));
         if (is_array($data)) {
             foreach ($data as $row) {
 
@@ -30,36 +39,43 @@ class PHPShopProductListElement extends PHPShopElements {
                 $this->set('productlist_product_pic_small', $row['pic_small']);
                 $this->set('productlist_product_pic_big', $row['pic_big']);
                 $this->set('productlist_product_price', $row['price']);
-                $this->set('productlist_product_description', $row['description']);
 
-                // Учет модуля SEOURL
-                if (!empty($GLOBALS['SysValue']['base']['seourl']['seourl_system'])) {
-                    $this->set('productlist_product_seo', '_' . PHPShopString::toLatin($row['name']));
-                }
                 // Учет модуля SEOURLPRO
-                elseif (!empty($GLOBALS['SysValue']['base']['seourlpro']['seourlpro_system'])) {
-                    $GLOBALS['PHPShopSeoPro']->setMemory($row['id'], $row['name'], 2);
-                    PHPShopParser::set('productlastview_product_seo', null);
+                if ($seourlpro) {
+
+                    if (empty($row['prod_seo_name']))
+                        $url = '/id/' . str_replace("_", "-", PHPShopString::toLatin($row['name'])) . '-' . $row['id'];
+                    else
+                        $url = '/id/' . $row['prod_seo_name'] . '-' . $row['id'];
+
+                    PHPShopParser::set('productlist_product_url', $url);
                 }
-                else
-                    $this->set('productlist_product_seo', null);
+                else {
+                    $url = '/shop/UID_' . $row['id'];
+                    PHPShopParser::set('productlist_product_url', $url);
+                }
+
 
                 $dis.= PHPShopParser::file($GLOBALS['SysValue']['templates']['productlist']['productlist_product'], true, false, true);
+  
             }
 
+             $this->set('productlist_list', $dis, true);
 
             // Назначаем переменную шаблона
             switch ($this->data['enabled']) {
 
                 case 1:
                     $this->set('leftMenuName', $this->data['title']);
-                    $this->set('leftMenuContent', $dis);
+                    $product = PHPShopParser::file($GLOBALS['SysValue']['templates']['productlist']['productlist_forma'], true, false, true);
+                    $this->set('leftMenuContent', $product);
                     $this->set('leftMenu', parseTemplateReturn("main/left_menu.tpl"), true);
                     break;
 
                 case 2:
                     $this->set('rightMenuName', $this->data['title']);
-                    $this->set('rightMenuContent', $dis);
+                    $product = PHPShopParser::file($GLOBALS['SysValue']['templates']['productlist']['productlist_forma'], true, false, true);
+                    $this->set('rightMenuContent', $product);
                     $this->set('rightMenu', parseTemplateReturn("main/left_menu.tpl"), true);
                     break;
 

@@ -51,7 +51,7 @@ class PHPShopForma extends PHPShopCore {
         $this->content();
     }
 
-        /**
+     /**
      * Проверка ботов
      * @param array $option параметры проверки [url|captcha|referer]
      * @return boolean

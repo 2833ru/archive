@@ -1,17 +1,17 @@
 <?php
 
 function ddeliverywidgetSend($data) {
-    global $_classPath, $link_db;
+    global $_classPath;
 
     if ($data['statusi'] != $_POST['statusi_new'] or !empty($_POST['ddelivery_send_now'])) {
-
         // Rest 
         include_once($_classPath . 'modules/ddeliverywidget/class/ddeliverywidget.class.php');
         $ddeliverywidget = new ddeliverywidget();
         $option = $ddeliverywidget->option();
 
         if ($_POST['statusi_new'] == $option['status'] or !empty($_POST['ddelivery_send_now'])) {
-            $apiKey = $option['key'];
+
+			$apiKey = $option['key'];
             $sessionId = $data['ddelivery_token']; 
             $helper = new DDeliveryHelper($apiKey);
 
@@ -25,12 +25,13 @@ function ddeliverywidgetSend($data) {
                 'payment_method' => PHPShopString::win_utf8($PHPShopPayment->getName())
             );
 
-            $result=$helper->sendOrder($params);
+            $result=$helper->sendOrder($params); //print_r($result);
 
             if($result['status'] == 'ok')
                 $_POST['ddelivery_token_new']=0;
         }
     }
+	//die(0);
 }
 
 function addDdeliveryTab($data) {

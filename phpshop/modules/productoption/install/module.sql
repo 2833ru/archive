@@ -1,13 +1,13 @@
-ALTER TABLE `phpshop_categories` ADD `option6` VARCHAR(255) NOT NULL;
-ALTER TABLE `phpshop_categories` ADD `option7` VARCHAR(255) NOT NULL;
-ALTER TABLE `phpshop_categories` ADD `option8` VARCHAR(255) NOT NULL;
-ALTER TABLE `phpshop_categories` ADD `option9` VARCHAR(255) NOT NULL;
-ALTER TABLE `phpshop_categories` ADD `option10` VARCHAR(255) NOT NULL;
-ALTER TABLE `phpshop_products` ADD `option1` VARCHAR(255) NOT NULL;
-ALTER TABLE `phpshop_products` ADD `option2` VARCHAR(255) NOT NULL;
-ALTER TABLE `phpshop_products` ADD `option3` VARCHAR(255) NOT NULL;
-ALTER TABLE `phpshop_products` ADD `option4` VARCHAR(255) NOT NULL;
-ALTER TABLE `phpshop_products` ADD `option5` VARCHAR(255) NOT NULL;
+ALTER TABLE `phpshop_categories` ADD `option6` text;
+ALTER TABLE `phpshop_categories` ADD `option7` text;
+ALTER TABLE `phpshop_categories` ADD `option8` text;
+ALTER TABLE `phpshop_categories` ADD `option9` text;
+ALTER TABLE `phpshop_categories` ADD `option10` text;
+ALTER TABLE `phpshop_products` ADD `option1` text;
+ALTER TABLE `phpshop_products` ADD `option2` text;
+ALTER TABLE `phpshop_products` ADD `option3` text;
+ALTER TABLE `phpshop_products` ADD `option4` text;
+ALTER TABLE `phpshop_products` ADD `option5` text;
 --
 -- Структура таблицы `phpshop_modules_iconcat_system`
 --

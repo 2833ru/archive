@@ -4,10 +4,19 @@
  * Обработчик новостей
  * @author PHPShop Software
  * @tutorial http://wiki.phpshop.ru/index.php/PHPShopNews
- * @version 1.5
+ * @version 1.6
  * @package PHPShopCore
  */
 class PHPShopNews extends PHPShopCore {
+
+    /**
+     * Режим отладки
+     * @var bool
+     */
+    var $debug = false;
+    var $empty_index_action = true;
+    var $odnootip_cell_center = 2;
+    var $odnootip_cell_block = 1;
 
     /**
      * Конструктор
@@ -20,19 +29,94 @@ class PHPShopNews extends PHPShopCore {
         // Путь для навигации
         $this->objPath = "/news/news_";
 
-        // Отладка
-        $this->debug = false;
-        $this->empty_index_action = true;
-
         // Список экшенов
-        $this->action = array('get' => 'timestamp', "nav" => array("index", "ID"));
+        $this->action = array("nav" => array("index", "ID"));
         parent::__construct();
-        
+
         // Имя Бд
         $this->objBase = $GLOBALS['SysValue']['base']['news'];
 
         // Календарь
         $this->calendar();
+    }
+
+    /**
+     * Однотипные товары
+     * @param array $row массив данных
+     */
+    function odnotip($row) {
+        global $PHPShopProductIconElements;
+
+        $this->line = false;
+        $this->template_odnotip = 'main_spec_forma_icon';
+
+        // Перехват модуля в начале функции
+        $hook = $this->setHook(__CLASS__, __FUNCTION__, $row, 'START');
+        if ($hook)
+            return true;
+
+        $disp = null;
+        $odnotipList = null;
+        if (!empty($row['odnotip'])) {
+            if (strpos($row['odnotip'], ','))
+                $odnotip = explode(",", $row['odnotip']);
+            elseif (is_numeric(trim($row['odnotip'])))
+                $odnotip[] = trim($row['odnotip']);
+        }
+
+        // Список для выборки
+        if (is_array($odnotip))
+            foreach ($odnotip as $value) {
+                if (!empty($value))
+                    $odnotipList.=' id=' . trim($value) . ' OR';
+            }
+
+        $odnotipList = substr($odnotipList, 0, strlen($odnotipList) - 2);
+
+        // Режим проверки остатков на складе
+        if ($this->PHPShopSystem->getSerilizeParam('admoption.sklad_status') == 2)
+            $chek_items = ' and items>0';
+        else
+            $chek_items = null;
+
+        if (!empty($odnotipList)) {
+
+            $PHPShopOrm = new PHPShopOrm();
+            $PHPShopOrm->debug = $this->debug;
+            $result = $PHPShopOrm->query("select * from " . $this->getValue('base.products') . " where (" . $odnotipList . ") " . $chek_items . " and  enabled='1' and parent_enabled='0' and sklad!='1' order by num");
+            while ($product_row = mysqli_fetch_assoc($result))
+                $data[] = $product_row;
+
+            // Сетка товаров
+            if (!empty($data) and is_array($data))
+                $disp = $PHPShopProductIconElements->seamply_forma($data, $this->odnotip_setka_num, $this->template_odnotip, $this->line);
+        }
+
+
+        if (!empty($disp)) {
+            // Вставка в центральную часть
+            if (PHPShopParser::check($this->getValue('templates.main_product_odnotip_list'), 'productOdnotipList')) {
+                $this->set('productOdnotipList', $disp);
+                $this->set('productOdnotip', __('Рекомендуемые товары'));
+            } else {
+                // Вставка в правый столбец
+                $this->set('specMainTitle', __('Рекомендуемые товары'));
+                $this->set('specMainIcon', $disp);
+            }
+
+            // Перехват модуля в середине функции
+            $this->setHook(__CLASS__, __FUNCTION__, $row, 'MIDDLE');
+
+            $odnotipDisp = ParseTemplateReturn($this->getValue('templates.main_product_odnotip_list'));
+            $this->set('odnotipDisp', $odnotipDisp);
+        }
+        // Выводим последние новинки
+        else {
+            $this->set('specMainIcon', $PHPShopProductIconElements->specMainIcon(true, $this->category));
+        }
+
+        // Перехват модуля в конце функции
+        $this->setHook(__CLASS__, __FUNCTION__, $row, 'END');
     }
 
     /**
@@ -44,8 +128,16 @@ class PHPShopNews extends PHPShopCore {
         if ($this->setHook(__CLASS__, __FUNCTION__, false, 'START'))
             return true;
 
+        $where['datau'] = '<'.time();
+
+        // Мультибаза
+        if (defined("HostID"))
+            $where['servers'] = " REGEXP 'i" . HostID . "i'";
+        elseif (defined("HostMain"))
+            $where['datau'].= ' and (servers ="" or servers REGEXP "i1000i")';
+
         // Выборка данных
-        $this->dataArray = parent::getListInfoItem(array('*'), false, array('order' => 'id DESC'));
+        $this->dataArray = parent::getListInfoItem(array('*'), $where, array('order' => 'id DESC'));
 
         // 404
         if (!isset($this->dataArray))
@@ -155,18 +247,30 @@ class PHPShopNews extends PHPShopCore {
         if (!PHPShopSecurity::true_num($this->PHPShopNav->getId()))
             return $this->setError404();
 
+        $where['id'] = '='.$this->PHPShopNav->getId();
+        $where['datau'] = '<'.time();
+
+        // Мультибаза
+        if (defined("HostID"))
+            $where['servers'] = " REGEXP 'i" . HostID . "i'";
+        elseif (defined("HostMain"))
+            $where['datau'].= ' and (servers ="" or servers REGEXP "i1000i")';
+
         // Выборка данных
-        $row = parent::getFullInfoItem(array('*'), array('id' => '=' . $this->PHPShopNav->getId()));
+        $row = parent::getFullInfoItem(array('*'), $where);
 
         // 404
         if (!isset($row))
             return $this->setError404();
 
+        // Однотипные товары
+        $this->odnotip($row);
+
         // Определяем переменые
         $this->set('newsData', $row['datas']);
         $this->set('newsZag', $row['zag']);
         $this->set('newsKratko', $row['kratko']);
-        $this->set('newsPodrob', $row['podrob']);
+        $this->set('newsPodrob', Parser($row['podrob']));
 
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__, $row, 'MIDDLE');
@@ -182,9 +286,9 @@ class PHPShopNews extends PHPShopCore {
         // Генератор keywords
         include('./phpshop/lib/autokeyword/class.autokeyword.php');
         $this->keywords = callAutokeyword($row['kratko']);
-        
+
         // Навигация хлебные крошки
-        $this->navigation(false, $row['zag'],array('name'=>__('Новости'),'url'=>'/news/'));
+        $this->navigation(false, $row['zag'], array('name' => __('Новости'), 'url' => '/news/'));
 
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__, $row, 'END');

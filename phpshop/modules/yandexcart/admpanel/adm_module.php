@@ -46,7 +46,7 @@ function actionUpdate() {
     $PHPShopOrm->debug = false;
     $_POST['region_data_new']=1;
     $action = $PHPShopOrm->update($_POST);
-    header('Location: ?path=modules&install=check');
+    header('Location: ?path=modules&id='.$_GET['id']);
     return $action;
 }
 

@@ -2,7 +2,7 @@
 <module>
     <version>1.0</version>
     <name>Сбербанк России</name>
-    <description>Модуль интеграции интернет-магазина с платежным шлюзом Сбербанка РФ</description>
+    <description>Прием оплат через Сбербанк в соответствии с 54-ФЗ.</description>
     <category>payment</category>
      <adminmenu>
         <title>Сбербанк России</title>

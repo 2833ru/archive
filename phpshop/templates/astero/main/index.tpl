@@ -352,7 +352,7 @@
                 <span class="tab-label">{Кабинет}</span>
             </a>
             <a class="tab-item @cart_active@" href="/order/" id="bar-cart">
-                <span class="icon icon-download"></span>{ }<span class="badge badge-positive" id="mobilnum">@cart_active_num@</span>
+                <span class="icon icon-download"></span> <span class="badge badge-positive" id="mobilnum">@cart_active_num@</span>
                 <span class="tab-label">{Корзина}</span>
             </a>
             <a class="tab-item" href="#" data-toggle="modal" data-target="#searchModal">

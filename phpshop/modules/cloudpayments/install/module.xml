@@ -3,7 +3,7 @@
     <version>1.0</version>
     <name>CloudPayments</name>
     <faqlink>http://faq.phpshop.ru/page/cloudpayments.html</faqlink>
-    <description>Прием оплат через CloudPayments</description>
+    <description>Прием оплат через CloudPayments в соответствии с 54-ФЗ.</description>
     <category>payment</category>
     <adminmenu>
         <title>CloudPayments</title>

@@ -10,7 +10,7 @@ function template_index_cloud_hook($obj, $disp, $rout) {
         $menucatalog = null;
         if (is_array($GLOBALS['Cache'][$GLOBALS['SysValue']['base']['categories']]))
             foreach ($GLOBALS['Cache'][$GLOBALS['SysValue']['base']['categories']] as $val) {
-                if (empty($val['parent_to']))
+                if (empty($val['parent_to']) and empty($val['skin_enabled']))
                     $menucatalog.='<li><a href="/shop/CID_' . $val['id'] . '.html">' . $val['name'] . '</a></li>';
             }
         $GLOBALS['SysValue']['other']['menuCatal'] = $menucatalog;

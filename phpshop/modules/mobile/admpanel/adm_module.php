@@ -9,7 +9,33 @@ function actionUpdate() {
 
     $action = $PHPShopOrm->update($_POST);
     if($action)
-    header('Location: ?path=modules&install=check');
+    header('Location: ?path=modules&id=' . $_GET['id']);
+}
+
+// Выбор шаблона дизайна
+function GetSkinList($skin) {
+    global $PHPShopGUI;
+    $dir = "../templates/";
+
+    if (is_dir($dir)) {
+        if (@$dh = opendir($dir)) {
+            while (($file = readdir($dh)) !== false) {
+                if (file_exists($dir . '/' . $file . "/main/index.tpl")) {
+
+                    if ($skin == $file)
+                        $sel = "selected";
+                    else
+                        $sel = "";
+
+                    if ($file != "." and $file != ".." and !strpos($file, '.'))
+                        $value[] = array($file, $file, $sel);
+                }
+            }
+            closedir($dh);
+        }
+    }
+
+    return $PHPShopGUI->setSelect('skin_new', $value);
 }
 
 function actionStart() {
@@ -26,7 +52,8 @@ function actionStart() {
     // Заголовок
     $returncall_value[] = array('телефон', 1, $data['returncall']);
     $returncall_value[] = array('обратный звонок', 2, $data['returncall']);
-    $Tab1.=$PHPShopGUI->setField(__("Заголовок:"), $PHPShopGUI->setSelect('returncall_new', $returncall_value, 200));
+    $Tab1.=$PHPShopGUI->setField("Заголовок", $PHPShopGUI->setSelect('returncall_new', $returncall_value));
+    $Tab1.=$PHPShopGUI->setField("Дизайн", GetSkinList($data['skin']));
 
     $Tab2 = $PHPShopGUI->setPay();
 

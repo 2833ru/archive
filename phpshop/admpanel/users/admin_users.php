@@ -52,7 +52,7 @@ function actionStart() {
     // Таблица с данными
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['users']);
     $PHPShopOrm->debug = false;
-    $data = $PHPShopOrm->select(array('*'), false, array('order' => 'id DESC'), array('limit' => 1000));
+    $data = $PHPShopOrm->select(array('*'), false, array('order' => 'id DESC'), array('limit' => 300));
     if (is_array($data))
         foreach ($data as $row) {
         

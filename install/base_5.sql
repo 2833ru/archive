@@ -111,6 +111,7 @@ CREATE TABLE `phpshop_categories` (
   `parent_title` int(11) DEFAULT '0',
   `sort_cache` blob,
   `sort_cache_created_at` int(11),
+  `cat_seo_name_old` VARCHAR(255) DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `parent_to` (`parent_to`),
   KEY `servers` (`servers`)
@@ -244,6 +245,7 @@ CREATE TABLE `phpshop_delivery` (
   `icon` varchar(255) DEFAULT '',
   `payment` varchar(255) DEFAULT '',
   `ofd_nds` varchar(64) DEFAULT '',
+  `sum_max` float DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
@@ -715,42 +717,52 @@ INSERT INTO `phpshop_modules_tinkoff_system` VALUES (1, 0, 'Платежная система Ти
 --
 
 CREATE TABLE `phpshop_modules_oneclick_jurnal` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `date` int(11) DEFAULT '0',
-  `name` varchar(64) DEFAULT '',
-  `tel` varchar(64) DEFAULT '',
+  `id` int(11) NOT NULL auto_increment,
+  `date` int(11) default '0',
+  `name` varchar(64) default '',
+  `tel` varchar(64) default '',
   `message` text,
-  `product_name` varchar(64) DEFAULT '',
-  `product_id` int(11) DEFAULT NULL,
-  `product_price` varchar(64) DEFAULT '',
-  `status` enum('1','2','3','4') DEFAULT '1',
-  `ip` varchar(64) DEFAULT '',
-  PRIMARY KEY (`id`)
+  `product_name` varchar(64) default '',
+  `product_id` int(11),
+  `product_price` varchar(64) default '',
+  `product_image` varchar(64) default '',
+  `status` enum('1','2','3','4') default '1',
+  `ip` varchar(64) default '',
+  PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 -- --------------------------------------------------------
 
 --
 -- Структура таблицы `phpshop_modules_oneclick_system`
---
 
-CREATE TABLE `phpshop_modules_oneclick_system` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `enabled` enum('0','1','2') DEFAULT '1',
+CREATE TABLE IF NOT EXISTS `phpshop_modules_oneclick_system` (
+  `id` int(11) NOT NULL auto_increment,
+  `enabled` enum('0','1','2') default '1',
   `title` text,
   `title_end` text,
-  `serial` varchar(64) DEFAULT '',
-  `windows` enum('0','1') DEFAULT '0',
-  `version` float DEFAULT '1.1',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+  `serial` varchar(64) default '',
+  `windows` enum('0','1') default '0',
+  `display` enum('0','1') default '0',
+  `version` varchar(64) DEFAULT '1.1',
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
+
+INSERT INTO `phpshop_modules_oneclick_system` VALUES (1,'0','Спасибо, Ваш заказ принят!','Наши менеджеры свяжутся с Вами для уточнения деталей.','','1','0','1.4');
+--
+
+CREATE TABLE IF NOT EXISTS `phpshop_modules_promotions_system` (
+  `id` int(11) NOT NULL auto_increment,
+  `version` varchar(64) DEFAULT '1.0',
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 --
 -- Дамп данных таблицы `phpshop_modules_oneclick_system`
 --
 
-INSERT INTO `phpshop_modules_oneclick_system` (`id`, `enabled`, `title`, `title_end`, `serial`, `windows`, `version`) VALUES
-(1, '0', 'Спасибо, Ваш заказ принят!', 'Наши менеджеры свяжутся с Вами для уточнения деталей.', '', '1', 1.2);
+INSERT INTO `phpshop_modules_promotions_system` VALUES (1,'2.5');
 
 -- --------------------------------------------------------
 
@@ -862,7 +874,8 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_seourlpro_system` (
   `cat_content_enabled` enum('1','2') default '1',
   `seo_news_enabled` enum('1','2') default '1',
   `seo_page_enabled` enum('1','2') default '1',
-  `version` FLOAT(2) DEFAULT '2.0',
+  `redirect_enabled` enum('1','2') default '1',
+  `version` VARCHAR(64) DEFAULT '',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
@@ -871,7 +884,7 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_seourlpro_system` (
 --
 
 INSERT INTO `phpshop_modules_seourlpro_system` (`id`, `paginator`, `seo_brands_enabled`, `cat_content_enabled`, `version`) VALUES
-(1, '1', '2', '1', '2.0');
+(1, '1', '2', '1', '2.1');
 
 -- --------------------------------------------------------
 
@@ -975,6 +988,9 @@ CREATE TABLE `phpshop_news` (
   `kratko` text,
   `podrob` text,
   `datau` int(11) DEFAULT '0',
+  `odnotip` text,
+  `news_seo_name` VARCHAR(255) DEFAULT '',
+  `servers` varchar(64) default '',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
@@ -1177,8 +1193,8 @@ CREATE TABLE `phpshop_page` (
 
 INSERT INTO `phpshop_page` (`id`, `name`, `link`, `category`, `keywords`, `description`, `content`, `servers`, `num`, `datas`, `odnotip`, `title`, `enabled`, `secure`, `secure_groups`) VALUES
 (1, 'Благодарим вас за установку PHPShop @version@', 'index', 2000, '', '', '<p><img style="float: left; margin: 0px 10px 10px 0px;" src="/UserFiles/Image/Trial/box.png" alt="" />Представляем PHPShop 5 - новую версию интернет-магазина, в которой мы соединили современные веб-технологии и наш 14-летний опыт создания и поддержки интернет-магазинов. Начинка PHPShop 5 - это HTML5, Bootstrap, jQuery, позволяющие создавать качественные, функциональные проекты с современным и адаптивным дизайном.</p>\n<p> </p>\n<p>PHPShop - это целый <strong>программный комплекс</strong> для создания и управления интернет-магазином. Кроме самого PHP-скрипта для продажи товара и обработки заказов на сервере, существует специальный набор дополнительных <strong>бесплатных Windows утилит</strong>, объединенных в пакет <a href="http://phpshop.ru/loads/files/setup.exe" target="_blank" rel="noopener">EasyControl</a>. Утилиты делятся на 4 группы по назначению: заполнение товарной базы, управление заказами, настройка дизайна магазина и техническое обслуживание.</p>\n<p>К первой относится мощная, уникальная утилита <a href="http://faq.phpshop.ru/page/batch-loading.html" target="_blank" rel="noopener">PriceLoader</a> для комплексной обработки прайс-листов поставщиков, автоматической загрузки и обновления номенклатуры в ваш магазин. Так же PriceLoader позволяет делать копии товарной базы на основе файл Яндекс.Маркета (YML-прайс), пакетно добавлять и обрабатывать изображения к товарам, удалять с сервера устаревшие изображения, переводить описание товара на любой язык через Яндекс.Перевод. Вам не понадобится часами заполнять описания товаров, достаточно <strong>один раз настроить PriceLoader</strong> на автоматическую обработку и синхронизацию цен.</p>\n<p>Утилиты Monitor, Chat помогают осуществлять <strong>контроль и обработку новых заказов</strong>, получать статистику посещений и общаться с пользователями сайта с помощью <strong>текстового чата</strong> приложения Chat.</p>\n<p>С помощью утилиты визуальной настройки дизайна <a href="http://wiki.phpshop.ru/index.php/PHPShop_Editor" target="_blank" rel="noopener">Editor</a>, приложения эмулятора интернет-магазина <strong>Мой Магазин</strong> и синхронизации <strong>Server Synhronizer</strong> можно легко на своем локальном компьютере настроить внешний вид магазина, заполнить его товарами (например, через PriceLoader или 1С), настроить все функции и модули, а затем одним кликом <a href="http://faq.phpshop.ru/page/synch.html" target="_blank" rel="noopener">синхронизировать</a> результат с рабочим сайтом. Это сэкономит ваше время и не потребует постоянного подключения к интернету.</p>\n<p>К последней группе относятся утилиты для обслуживания PHP скриптов на сервере. Installer и <strong>Updater</strong> позволяют установить и обновить PHPShop в 3 клика. После ввода нескольких параметров доступа к сайту утилиты загрузят нужные файлы и обновят данные. Своевременные обновления защищают магазин и расширяют его технические возможности. Для <strong>восстановления потерянного пароля</strong> используется <a href="http://wiki.phpshop.ru/index.php/Password_Restore_Help" target="_blank" rel="noopener">PasswordRestore</a>. SiteLock поможет защитить сайт дополнительными сложно подбираемыми паролями. Интегрированная среда разработки <a href="http://wiki.phpshop.ru/index.php/PHPShop_IDE" target="_blank" rel="noopener">IDE</a> послужит серьезным подспорьем разработчикам для расширения возможностей PHPShop и написания собственных модулей.</p>\n<p>Для пользователей 1С существует возможность автоматизировать заполнение номенклатурой и обработки заказов с PHPShop. Мощный фирменный функционал <a href="http://phpshop.ru/page/1c.html" target="_blank" rel="noopener">синхронизации интернет-магазина с 1С</a> намного повысит эффективность вашего бизнеса. Бесплатная удаленная настройка нашими специалистами такой синхронизации сократит время запуска проекта.</p>\n<p>По любым техническим вопросам или программным доработкам можно обратится в <a href="https://help.phpshop.ru" target="_blank" rel="noopener">службу технической поддержки</a>. Мы оказываем <strong>полный спектр услуг</strong>, в том числе создание уникального <a href="http://www.phpshop.ru/calculation/brifdesign/" target="_blank" rel="noopener">персонального дизайна</a> или доработка существующего.</p>\n<blockquote>Мы делаем прибыльные интернет-магазины уже 14 лет, - доверьте свой бизнес опытным разработчикам!<footer class="text-right"><cite>Команда PHPShop Software</cite></footer></blockquote>', '', 0, 1523285236, '', '', '1', '0', ''),
-(24, 'Дизайн', 'design', 1000, '', '', '<p>В комплект интернет-магазина PHPShop @version@ входят десятки шаблонов с разными цветовыми оттенками у каждого. В установочный пакет включены только 7 самых популярных адаптивных шаблонов, остальные шаблоны можно установить из панели управления в разделе <kbd>Настройка</kbd> - <kbd>Шаблоны дизайна</kbd></p>\n<p><a href="?skin=diggi"><img class="template" title="diggi" src="/UserFiles/Image/Trial/template_icon/diggi.gif" alt="" width="150" height="120" /></a><a href="?skin=spice"><img class="template" title="spice" src="/UserFiles/Image/Trial/template_icon/spice.gif" alt="" width="150" height="120" /></a><a href="?skin=astero"><img class="template" title="astero" src="/UserFiles/Image/Trial/template_icon/astero.gif" alt="" width="150" height="120" /></a> <a href="?skin=bootstrap"><img class="template" title="bootstrap" src="/UserFiles/Image/Trial/template_icon/bootstrap.gif" alt="" width="150" height="120" /></a><a href="?skin=unishop"><img class="template" title="unishop" src="/UserFiles/Image/Trial/template_icon/unishop.gif" alt="" width="150" height="120" /></a><a href="?skin=hub"><img class="template" title="hub" src="/UserFiles/Image/Trial/template_icon/hub.gif" alt="" width="150" height="120" /></a></p>\n<h2>Изменение дизайна</h2>\n<p>Для редактирования дизайна из панели управления используется функция <strong>Редактор шаблонов</strong>.</p>\n<p><a title="Инструкция Template Edit" href="http://faq.phpshop.ru/page/template-edit.html" target="_blank" rel="noopener"><img class="template" src="/UserFiles/Image/Trial/template_edit.jpg" alt="" width="95%" /></a></p>\n<p>Для редактирования дизайна на локальном компьютере под управлением Windows существует <strong>визуальный редактор</strong> шаблонов PHPShop Editor.</p>\n<p><a title="Инструкция PHPShop Editor" href="http://faq.phpshop.ru/page/your-design.html" target="_blank" rel="noopener"><img class="template" src="/UserFiles/Image/Trial/phpshop_editor.jpg" alt="PHPShop Editor" width="95%" /></a></p>\n<h2>Персональный дизайн</h2>\n<p>Наше дизайн-бюро делает дизайны только для PHPShop, а значит, неожиданностей при создании дизайна не произойдет, и вы получите уникальный профессиональный дизайн в срок, отвечающий всем требованиям сегодняшнего дня.</p>\n<ol>\n<li>Мы на 100% знаем свою платформу, а это значит, что Вам не придется переплачивать за часы работы дизайнера, не знакомого с PHPShop.</li>\n<li>Мы стараемся учитывать всю функциональность PHPShop еще на первом этапе его создания, и вы получите работающий интернет-магазин таким, каким Вы его видите на утвержденном Вами макете.</li>\n<li>Большинство доработок, ранее требовавших вмешательства в код платформы, на новой версии PHPShop 5, производятся с помощью "дизайн-хуков", - это значит, что в будущем вы сможете обновляться без потери доработок.</li>\n<li>Мы соблюдаем сроки, и предоставляем гарантии - если после завершения проекта Вы заметите недочет с нашей стороны мы устраним его.</li>\n</ol>\n<p>Для заказа персонального дизайна нужно заполнить бриф, в котором вы формулируете будущий проект, все возникающие вопросы уточнить у наших консультантов. Cрок создания макета дизайна - 15 рабочих дней</p>\n<p><a class="btn btn-sm btn-success" href="http://www.phpshop.ru/calculation/brifdesign/" target="_blank" rel="noopener">Заполнить Бриф на Персональный дизайн сайта</a></p>', '', 1, 1523280795, '', 'Дополнительные шаблоны PHPShop', '1', '0', ''),
-(26, 'Купить', 'purchase', 1000, '', '', '<p>Ваш тестовый интернет-магазин <strong>@serverName@</strong> на базе платформы PHPShop @version@ будет работать 30 дней. <strong>Вы можете уже сейчас наполнять свой магазин, все данные после покупки сохранятся! </strong>Купив <strong>бессрочную лицензию PHPShop</strong>, вам потребуется <strong>загрузить лишь один файл лицензии</strong>, вся заполненная товарная база останется нетронутой.\n</p><p>Для приобретения программного обеспечения PHPShop, нужно перейти в раздел оформления заказа по кнопке ниже. Далее, вам нужно выбрать удобный тип оплаты - электронный: картами Visa, Mastercard, через банкоматы Qiwi, через Сбербанк, банковским переводом для юридических лиц. После выбора оплаты, в разделе Счета появится счет на оплату в электронном виде. Оригиналы всех документов мы отправляем по почте, указанной в разделе Профиль вашего личного кабинета.</p>\n<p><a class="btn btm-sm btn-primary" target="_blank" href="http://www.phpshop.ru/order/?from=@serverName@&amp;action=order">Перейти к оформлению заказа PHPShop</a></p>\n<h2>Консультации</h2>\n<p>Мы будем рады видеть вас у нас в офисе с понедельника по пятницу с 10:00 до 19:00. Не забудьте предупредить нас о встрече по телефону.</p>\n<p><strong>Тел: &#43;7 (495) 989-11-15</strong></p>\n<p>Адрес: Рязанский проспект, д. 24 корп. 2, 2 этаж, офис 3., м. Рязанский проспект. Бизнес-центр "Юнион-Центр".</p>\n<p><iframe src="https://www.google.ru/maps?f=q&amp;source=s_q&amp;hl=ru&amp;geocode=FbEtUgMdgq5AAg%3BFaQ8UgMdCWhAAiGO9hUAe8ehdCm1mSQod7VKQTGO9hUAe8ehdA&amp;q=%D0%A0%D1%8F%D0%B7%D0%B0%D0%BD%D1%81%D0%BA%D0%B8%D0%B9 %D0%BF%D1%80%D0%BE%D1%81%D0%BF., 24 %D0%BA%D0%BE%D1%80%D0%BF%D1%83%D1%81 2, %D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0&amp;aq=1&amp;oq=%D1%80%D1%8F%D0%B7%D0%B0%D0%BD%D1%81%D0%BA%D0%B8%D0%B9 %D0%BF%D1%80%D0%BE%D1%81%D0%BF%D0%B5%D0%BA%D1%82 &amp;sll=55.720729,37.774676&amp;sspn=0.004061,0.011362&amp;ie=UTF8&amp;hq=&amp;hnear=%D0%A0%D1%8F%D0%B7%D0%B0%D0%BD%D1%81%D0%BA%D0%B8%D0%B9 %D0%BF%D1%80%D0%BE%D1%81%D0%BF., 24 %D0%BA%D0%BE%D1%80%D0%BF%D1%83%D1%81 2, %D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0, %D0%B3%D0%BE%D1%80%D0%BE%D0%B4 %D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0&amp;t=m&amp;start=0&amp;ll=55.725805,37.774343&amp;spn=0.016918,0.036478&amp;z=14&amp;iwloc=A&amp;output=embed" frameborder="0" scrolling="no" height="350" width="100%"></iframe><br><small><a style="color: #0000ff; text-align: left;" href="https://www.google.ru/maps?f=q&amp;source=embed&amp;hl=ru&amp;geocode=FbEtUgMdgq5AAg%3BFaQ8UgMdCWhAAiGO9hUAe8ehdCm1mSQod7VKQTGO9hUAe8ehdA&amp;q=%D0%A0%D1%8F%D0%B7%D0%B0%D0%BD%D1%81%D0%BA%D0%B8%D0%B9 %D0%BF%D1%80%D0%BE%D1%81%D0%BF., 24 %D0%BA%D0%BE%D1%80%D0%BF%D1%83%D1%81 2, %D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0&amp;aq=1&amp;oq=%D1%80%D1%8F%D0%B7%D0%B0%D0%BD%D1%81%D0%BA%D0%B8%D0%B9 %D0%BF%D1%80%D0%BE%D1%81%D0%BF%D0%B5%D0%BA%D1%82 &amp;sll=55.720729,37.774676&amp;sspn=0.004061,0.011362&amp;ie=UTF8&amp;hq=&amp;hnear=%D0%A0%D1%8F%D0%B7%D0%B0%D0%BD%D1%81%D0%BA%D0%B8%D0%B9 %D0%BF%D1%80%D0%BE%D1%81%D0%BF., 24 %D0%BA%D0%BE%D1%80%D0%BF%D1%83%D1%81 2, %D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0, %D0%B3%D0%BE%D1%80%D0%BE%D0%B4 %D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0&amp;t=m&amp;start=0&amp;ll=55.725805,37.774343&amp;spn=0.016918,0.036478&amp;z=14&amp;iwloc=A" target="_blank">Просмотреть увеличенную карту</a></small></p>\n', '', 2, 1522156399, '', 'Купить PHPShop', '1', '0', ''),
+(24, 'Дизайн', 'design', 1000, '', '', '<p>В комплект интернет-магазина PHPShop @version@ входят десятки шаблонов с разными цветовыми оттенками у каждого. В установочный пакет включены только 8 самых популярных адаптивных шаблонов, остальные шаблоны можно установить из панели управления в разделе <kbd>Настройка</kbd> - <kbd>Шаблоны дизайна</kbd></p>\n<p><a href="?skin=diggi"><img class="template" title="diggi" src="/UserFiles/Image/Trial/template_icon/diggi.gif" alt="" width="150" height="120" /></a><a href="?skin=spice"><img class="template" title="spice" src="/UserFiles/Image/Trial/template_icon/spice.gif" alt="" width="150" height="120" /></a><a href="?skin=astero"><img class="template" title="astero" src="/UserFiles/Image/Trial/template_icon/astero.gif" alt="" width="150" height="120" /></a> <a href="?skin=bootstrap"><img class="template" title="bootstrap" src="/UserFiles/Image/Trial/template_icon/bootstrap.gif" alt="" width="150" height="120" /></a><a href="?skin=unishop"><img class="template" title="unishop" src="/UserFiles/Image/Trial/template_icon/unishop.gif" alt="" width="150" height="120" /></a><a href="?skin=hub"><img class="template" title="hub" src="/UserFiles/Image/Trial/template_icon/hub.gif" alt="" width="150" height="120" /></a><a href="?skin=terra"><img class="template" title="hub" src="/UserFiles/Image/Trial/template_icon/terra.gif" alt="" width="150" height="120" /></a></p>\n<h2>Изменение дизайна</h2>\n<p>Для редактирования дизайна из панели управления используется функция <strong>Редактор шаблонов</strong>.</p>\n<p><a title="Инструкция Template Edit" href="http://faq.phpshop.ru/page/templating.html" target="_blank" rel="noopener"><img class="template" src="/UserFiles/Image/Trial/template_edit.jpg" alt="" ></a></p>\n<p>Для редактирования дизайна на локальном компьютере под управлением Windows существует <strong>визуальный редактор</strong> шаблонов PHPShop Editor.</p>\n<p><a title="Инструкция PHPShop Editor" href="http://faq.phpshop.ru/page/your-design.html" target="_blank" rel="noopener"><img class="template" src="/UserFiles/Image/Trial/phpshop_editor.jpg" alt="PHPShop Editor" ></a></p>\n<h2>Персональный дизайн</h2>\n<p>Наше дизайн-бюро делает дизайны только для PHPShop, а значит, неожиданностей при создании дизайна не произойдет, и вы получите уникальный профессиональный дизайн в срок, отвечающий всем требованиям сегодняшнего дня.</p>\n<ol>\n<li>Мы на 100% знаем свою платформу, а это значит, что Вам не придется переплачивать за часы работы дизайнера, не знакомого с PHPShop.</li>\n<li>Мы стараемся учитывать всю функциональность PHPShop еще на первом этапе его создания, и вы получите работающий интернет-магазин таким, каким Вы его видите на утвержденном Вами макете.</li>\n<li>Большинство доработок, ранее требовавших вмешательства в код платформы, на новой версии PHPShop 5, производятся с помощью "дизайн-хуков", - это значит, что в будущем вы сможете обновляться без потери доработок.</li>\n<li>Мы соблюдаем сроки, и предоставляем гарантии - если после завершения проекта Вы заметите недочет с нашей стороны мы устраним его.</li>\n</ol>\n<p>Для заказа персонального дизайна нужно заполнить бриф, в котором вы формулируете будущий проект, все возникающие вопросы уточнить у наших консультантов. Cрок создания макета дизайна - 15 рабочих дней</p>\n<p><a class="btn btn-sm btn-success" href="http://www.phpshop.ru/calculation/brifdesign/" target="_blank" rel="noopener">Заполнить Бриф на Персональный дизайн сайта</a></p>', 'i1ii1000i', 1, 1537525119, '', 'Дополнительные шаблоны PHPShop', '1', '0', ''),
+(26, 'Купить', 'purchase', 1000, '', '', '<p>Ваш тестовый интернет-магазин <strong>@serverName@</strong> на базе платформы PHPShop @version@ будет работать 30 дней. <strong>Вы можете уже сейчас наполнять свой магазин, все данные после покупки сохранятся! </strong>Купив <strong>бессрочную лицензию PHPShop</strong>, вам потребуется <strong>загрузить лишь один файл лицензии</strong>, вся заполненная товарная база останется нетронутой.\n</p><p>Для приобретения программного обеспечения PHPShop, нужно перейти в раздел оформления заказа по кнопке ниже. Далее, вам нужно выбрать удобный тип оплаты - электронный: картами Visa, Mastercard, через банкоматы Qiwi, через Сбербанк, банковским переводом для юридических лиц. После выбора оплаты, в разделе Счета появится счет на оплату в электронном виде. Оригиналы всех документов мы отправляем по почте, указанной в разделе Профиль вашего личного кабинета.</p>\n<p><a class="btn btm-sm btn-primary" target="_blank" href="http://www.phpshop.ru/order/?from=@serverName@&amp;action=order">Перейти к оформлению заказа PHPShop</a></p>', '', 2, 1522156399, '', 'Купить PHPShop', '1', '0', ''),
 (25, 'Разработчикам', 'developers', 1000, '', '', '<p>В помощь разработчикам PHPShop Software разработала специально интегрированную среду разработки <strong>PHPShop IDE</strong> и визуальный редактор шаблонов <strong>PHPShop Editor</strong>.\n</p><h3>PHPShop IDE</h3>\n<p>PHPShop IDE обладает большими возможностями и ускоряет процесс редактирования кода, ориентированна на широкий круг пользователей от новичков до профессионалов.</p>\n<p><strong>Возможности:</strong></p>\n<ol>\n<li class="trial">Подсвет и редактирование встроенных функций PHPShop API </li>\n<li>Парсинг и возможность редактирования добавления методов через окна настроек </li>\n<li>Быстрый доступ к часто используемым HTML и PHP функциям </li>\n<li>Автоматическое создание новых модулей и библиотек </li>\n<li>Добавление новых возможностей через внешний XML-файл настроек </li>\n<li>Редактирование шаблонов дизайна </li>\n<li>Форматирование и выравнивание кода </li>\n<li>Создание закладок в коде для быстрого доступа к участкам кода </li>\n</ol>\n\n<p><a title="Инструкция PHPShop IDE" href="http://wiki.phpshop.ru/index.php/PHPShop_IDE" target="_blank"><img class="template" src="/UserFiles/Image/Trial/phpshop_ide.jpg" alt="PHPShop IDE"></a></p>\n<h3>PHPShop Editor</h3>\n<p>PHPShop Editor позволяет самостоятельно менять местами блоки, убирать ненужные элементы дизайна, управлять всеми доступными внутренними переменными шаблонизатора в визуальном режиме.</p>\n<p><strong>Режим визуального управления и редактирования</strong> позволяет менять местами и управлять кодом внутренних блоков дизайна: опросами, баннерами, каталогами и т.д. Блоки можно перемещать в любое место, удалять из шаблона. Поддерживается режим HTML-редактора кода для выбранного блока.</p>\n<strong>Мастер оформления</strong> дает возможность через визуальные средства менять цветовые стили оформления CSS: подложка, цвета, шрифт, кнопки, селекты, ссылки элементов дизайна.\n\n<p><strong>Режим правки HTML кода</strong> служит для изменения кода шаблона и помогает ориентироваться настройке шаблона. В режим можно попасть, нажав правой кнопкой мыши на нужном блоке и выбрав в меню опцию редактирования. Все элементы изображены в виде дерева файлов с описанием содержания файлов шаблонов. Для каждого шаблона выводятся доступные переменные с описанием для использования в шаблоне.</p>\n<p><a title="Инструкция PHPShop Editor" href="http://wiki.phpshop.ru/index.php/PHPShop_Editor" target="_blank"><img class="template" src="/UserFiles/Image/Trial/phpshop_editor.jpg" alt="PHPShop Editor"></a></p>\n<p><strong>Более 20 бесплатных утилит для работы с PHPShop</strong> собраны в пакет <a title="Описание ути лит EasyControl" href="http://wiki.phpshop.ru/index.php/PHPShop_EasyControl" target="_blank">EasyControl</a> и доступны для загрузки на сайте разработчика в разделе <a title="Центр загрузки PHPShop" href="http://phpshop.ru/page/downloads.html" target="_blank">Центр загрузки</a>.</p>\n', '', 4, 1523280449, '', 'Разработчикам PHPShop', '0', '0', ''),
 (23, 'Управление', 'admin', 1000, '', '', '<p>Для доступа к панели управления PHPShop нажмите сочетание клавиш <kbd>Ctrl</kbd>   <kbd>F12</kbd> или используйте кнопку перехода ниже.<br> Логин по умолчанию <strong>demo</strong>, пароль <strong>demouser</strong>. Если вы при установке задали свой логин и пароль, то используйте свои данные при авторизации.\n</p><p><a href="..phpshop/admpanel/" target="_blank" class="btn btn-success btn-sm"><span class="glyphicon glyphicon-share-alt"></span> Переход в панель управления</a></p>\n<h2>Тестовая база</h2>\nПри установке магазина заполняется тестовая товарная база для демонстрации возможностей программы. Для очистки тестовой базы следует в панели управления магазином перейти в меню <kbd>База</kbd> - <kbd>SQL запрос к базе</kbd> выбрать в выпадающем списке опцию <strong>"Очистить базу"</strong>. Обращаем Ваше внимание, что очистится вся товарная база с момента начала работы магазина.\n<h2>Дополнительные утилиты</h2>\nPHPShop EasyControl - <strong>уникальный набор  бесплатных утилит</strong> для создания и управления интернет-магазином PHPShop на локальном компьютере . EasyControl прост в установке и не требует никаких специальных навыков. С помощью EasyControl Вы сможете установить сайт локально на ПК либо на хостинг, обновлять платформу сайта, обрабатывать заказы, заполнять товарную базу и редактировать шаблоны. В состав пакета входят 20 утилит: <strong>Order Agent, Monitor, Updater, Installer, Chat,  Price Loader, Editor, IDE, Password Restore</strong> и другие.\n<p><a href="http://www.phpshop.ru/loads/files/setup.exe" target="_blank" class="btn btn-info btn-sm"><span class="glyphicon glyphicon-share-alt"></span> Скачать утилиты EasyControl</a></p>', '', 3, 1522156405, '39,40', 'Администрирование PHPShop', '1', '0', ''),
 (27, 'Ресурсы', 'help', 4, '', '', '<h3>Справка</h3> Справочно-информационный сайт (F.A.Q.), описывающий возможности PHPShop и ответы на частые вопросы по управлению интернет-магазином. Снабжен большим количеством скриншотов и видео-уроков.<br>Адрес: <a href="http://faq.phpshop.ru" target="_blank">faq.phpshop.ru</a><h3>Техническая документация</h3> Справочный сайт для разработчиков (WIKI). Содержит большое количество технической документации с примерами по разработке PHPShop. Описание утилит EasyControl и дополнительных модулей.<br>Адрес: <a href="http://wiki.phpshop.ru" target="_blank">wiki.phpshop.ru</a><h3>Описание API</h3> Справочный сайт для разработчиков (PHPDoc). Содержит подробное описание API PHPShop, функций и классов.<br>Адрес: <a href="http://doc.phpshop.ru" target="_blank">doc.phpshop.ru</a><h3>База знаний</h3> Справочный сайт службы технической поддержки. Содержит ответы по наиболее частым вопросам, встречающихся у пользователей PHPShop в поддержке.<br>Адрес: <a href="https://help.phpshop.ru" target="_blank">help.phpshop.ru</a><h3>Социальные сети</h3> Персональные странички в популярных социальный сетях. Содержат много интересных публикаций по возможностям платформы, новостях и акциям.<br>Адрес: <a href="https://www.facebook.com/shopsoft" target="_blank">https://www.facebook.com/shopsoft</a><br><a href="https://twitter.com/PHPShopCMS" target="_blank">https://twitter.com/PHPShopCMS</a><br><a href="https://plus.google.com/+PhpshopRu" target="_blank">https://plus.google.com/+PhpshopRu</a><h3>Видео-уроки</h3> Информационный портал с видео-уроками по работе с PHPShop на портале YouTube. Содержат подробные уроки по настройки и работе с 1С-Синхронизацией, PHPShop и утилитами EasyControl.<br>Адрес: <a href="http://www.youtube.com/user/phpshopsoftware" target="_blank">http://www.youtube.com/user/phpshopsoftware</a>', '1', 1, 0, '', '', '1', '0', ''),
@@ -1203,6 +1219,8 @@ CREATE TABLE `phpshop_page_categories` (
   `num` int(64) DEFAULT '1',
   `parent_to` int(11) DEFAULT '0',
   `content` text,
+  `page_cat_seo_name` VARCHAR(255) DEFAULT '',
+  `servers` varchar(64) default '',
   PRIMARY KEY (`id`),
   KEY `parent_to` (`parent_to`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
@@ -1372,6 +1390,7 @@ CREATE TABLE `phpshop_products` (
   `price_search` float DEFAULT '0',
   `parent2` text,
   `color` varchar(64) DEFAULT NULL,
+  `prod_seo_name_old` VARCHAR(255) DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `category` (`category`),
   KEY `enabled` (`enabled`),
@@ -1683,6 +1702,7 @@ CREATE TABLE `phpshop_servers` (
   `adminmail` varchar(255) DEFAULT '',
   `currency` int(11),
   `lang` varchar(32),
+  `admoption` blob,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 

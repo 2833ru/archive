@@ -124,7 +124,8 @@ class PHPShopLang {
  */
 function __($value) {
     global $PHPShopLang;
-    return $PHPShopLang->gettext($value);
+    if ($PHPShopLang)
+        return $PHPShopLang->gettext($value);
 }
 
 /**

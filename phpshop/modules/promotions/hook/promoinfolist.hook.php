@@ -3,96 +3,19 @@
 /**
  * Цены меняем
  */
-function UID_odnotip_hook($obj, $row, $rout) {
+function UID_promotions_hook($obj, $row, $rout) {
     // Если нет новой цены
-    global $PHPShopModules, $promotionslist, $SysValue;
-
-    if(!empty($row['price_n'])) { return false; }
-
-    $category = $row['category'];
-    $uid = $row['id'];
-
-
+    global $PHPShopModules, $SysValue;
 
     if ($rout == "MIDDLE") {
-
-
-        //список промо
-        $data = $promotionslist;
-
-        //двумерный массив если запись одна
-        if ($data[0]['code'] == '') {
-            $data[0] = $data;
-        }
-
-
-        if (isset($data)) {
-            foreach ($data as $key => $pro) {
-
-                //Массив категорий для промо кода
-                if ($pro['categories_check'] == 1):
-                    //категории массив
-                    $category_ar = explode(',', $pro['categories']);
-                endif;
-
-                if ($pro['products_check'] == 1):
-                    //категории массив
-                    $products_ar = explode(',', $pro['products']);
-                endif;
-
-
-                $sumche = 0;
-                $sumchep = 0;
-
-                //узнаем по каким категориям
-                if (isset($category_ar)) {
-                    foreach ($category_ar as $val_c) {
-                        if ($val_c == $category) {
-                            $sumche = 1;
-                            break;
-                        } else {
-                            $sumche = 0;
-                        }
-                    }
-                }
-
-                //узнаем по каким товарам
-                if (isset($products_ar)) {
-                    foreach ($products_ar as $val_p) {
-                        if ($val_p == $uid) {
-                            $sumchep = 1;
-                            break;
-                        } else {
-                            $sumchep = 0;
-                        }
-                    }
-                }
-                //обнуляем категории и товары
-                unset($category_ar);
-                unset($products_ar);
-
-                if ($sumche == 1 or $sumchep == 1):
-                    //если процент
-                    if ($pro['discount_tip'] == 1) {
-                        $pro['discount'];
-                        $discount[] = $pro['discount'];
-                    }
-                    if ($pro['discount_tip'] == 0) {
-                        $pro['discount'];
-                        $discountsum[] = $pro['discount'];
-                    }
-                endif;
-            }
-            //Берем самую большую скидку
-            if (isset($discount))
-                $discount = max($discount) / 100;
-
-            if (isset($discountsum))
-                $discountsum = max($discountsum);
-        }
-
+        
+        // Получаем информацию о скидках по действующим промоакциям
+        $discount_info = promotion_get_discount($row, true); 
+        $discount = $discount_info['percent'];
+        $discountsum = $discount_info['sum'];
+        
         //Если есть скидка
-        if ($discount != '' or $discountsum != '') {
+        if (!empty($discount) || !empty($discountsum)) {
 
             $priceDiscount[] = $obj->price($row) - ($obj->price($row) * $discount);
             $priceDiscount[] = $obj->price($row) - $discountsum;
@@ -107,59 +30,14 @@ function UID_odnotip_hook($obj, $row, $rout) {
             $productPriceNew = $obj->price($row);
             
             if ($productPrice < $productPriceNew) {
-            $obj->set('productPrice', $productPrice);
-            $obj->set('productPriceRub', PHPShopText::strike($productPriceNew. " " . $obj->currency()));
-
-            //ставим лэйбл
-            $obj->set('promotionsIcon', '');
+                $obj->set('productPrice', $productPrice);
+                $obj->set('productPriceRub', PHPShopText::strike($productPriceNew. " " . $obj->currency()));
+    
+                //ставим лэйбл
+                $obj->set('promotionsIcon', $discount_info['label']);
+                $obj->set('promotionInfo', $discount_info['description']);
             }
         }
-
-
-        //выведем информацию о скидках
-        $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.promotions.promotions_forms"));
-        $PHPShopOrm->debug = false;
-        $where['enabled'] = '="1"';
-        $data = $PHPShopOrm->select(array('*'), $where, array('order' => 'id'), array('limit' => 500));
-
-        if (isset($data)) {
-            foreach ($data as $value) {
-                //массив категорий промо-кодов
-                if ($value['categories_check'] == 1):
-                    //категории массив
-                    $category_ar = explode(',', $value['categories']);
-                    //Создаем запрос для создания массива товаров по ID категорий
-                    if (isset($category_ar)):
-                        foreach ($category_ar as $val_cat) {
-                            if ($val_cat == $row['category']) {
-                                $inf_text_code[$value['id']] = '<div>' . $value['description'] . '</div>';
-                                $promoLabel = $value['label'];
-                            }
-                        }
-                    endif;
-                endif;
-                //массив товаров промо-кодов
-                if ($value['products_check'] == 1):
-                    //категории массив
-                    $products_ar = explode(',', $value['products']);
-                    foreach ($products_ar as $prod_id) {
-                        if ($row['id'] == $prod_id) {
-                            //массив с описанием акции
-                            $inf_text_code[$value['id']] = '<div>' . $value['description'] . '</div>';
-                            $promoLabel = $value['label'];
-                        }
-                    }
-                endif;
-            }
-        }
-        if (isset($inf_text_code)):
-            foreach ($inf_text_code as $value_text) {
-                $inf_text_code_all .= $value_text;
-            }
-        endif;
-
-        $obj->set('promotionInfo', $inf_text_code_all);
-        $obj->set('promotionsIcon', $promoLabel);
     }
 }
 
@@ -167,98 +45,17 @@ function UID_odnotip_hook($obj, $row, $rout) {
  * Форматируем описание товара до 250 символов в длину
  * @param array $obj объект
  */
-function product_grid_n_hook($obj, $row) {
+function product_grid_promotions_hook($obj, $row) {
 
-    global $PHPShopModules, $promotionslist;
+    global $PHPShopModules;
 
-    if(!empty($row['price_n'])) {$obj->set('promotionsIcon', ''); return false; }
-
-    $category = $row['category'];
-    $uid = $row['id'];
-
-
-    //список промо
-    $data = $promotionslist;
-
-    //двумерный массив если запись одна
-    if ($data[0]['code'] == '') {
-        $data[0] = $data;
-    }
-
-
-
-    if (isset($data)) {
-        foreach ($data as $key => $pro) {
-            //Массив категорий для промо кода
-            if ($pro['categories_check'] == 1):
-                //категории массив
-                $category_ar = explode(',', $pro['categories']);
-            endif;
-
-            if ($pro['products_check'] == 1):
-                //категории массив
-                $products_ar = explode(',', $pro['products']);
-            endif;
-
-            $sumche = 0;
-            $sumchep = 0;
-
-            //узнаем по каким категориям
-            if (isset($category_ar)) {
-                foreach ($category_ar as $val_c) {
-                    if ($val_c == $category) {
-                        $sumche = 1;
-                        break;
-                    } else {
-                        $sumche = 0;
-                    }
-                }
-            }
-
-            //узнаем по каким товарам
-            if (isset($products_ar)) {
-                foreach ($products_ar as $val_p) {
-                    if ($val_p == $uid) {
-                        $sumchep = 1;
-                        break;
-                    } else {
-                        $sumchep = 0;
-                    }
-                }
-            }
-            //обнуляем категории и товары
-            unset($category_ar);
-            unset($products_ar);
-            
-            $labels = array();
-            if ($sumche == 1 or $sumchep == 1):
-                //если процент
-                if ($pro['discount_tip'] == 1) {
-                    $pro['discount'];
-                    $discount[] = $pro['discount'];
-                    $labels[$pro['discount']] = $pro['label'];
-                }
-                if ($pro['discount_tip'] == 0) {
-                    $pro['discount'];
-                    $discountsum[] = $pro['discount'];
-                    $labels[$pro['discount']] = $pro['label'];
-                }
-            endif;
-        }
-        //Берем самую большую скидку
-        if (isset($discount)) {
-            $discount = max($discount) / 100;
-            $lab = $labels[$discount*100];
-        }
-
-        if (isset($discountsum)) {
-            $discountsum = max($discountsum);
-            $lab = $labels[$discountsum];            
-        }
-    }
+    // Получаем информацию о скидках по действующим промоакциям
+    $discount_info = promotion_get_discount($row);
+    $discount = $discount_info['percent'];
+    $discountsum = $discount_info['sum'];
 
     //Если есть скидка
-    if ($discount != '' or $discountsum != '') {
+    if (!empty($discount) || !empty($discountsum)) {
 
         $priceDiscount[] = $obj->price($row) - ($obj->price($row) * $discount);
         $priceDiscount[] = $obj->price($row) - $discountsum;
@@ -277,14 +74,16 @@ function product_grid_n_hook($obj, $row) {
             $obj->set('productPriceRub', PHPShopText::strike($productPriceNew . " " . $obj->currency()));
 
             //ставим лэйбл
-            $obj->set('promotionsIcon', $lab);
+            $obj->set('promotionsIcon', $discount_info['label']);
         }
+    } else {
+        $obj->set('promotionsIcon', '');
     }
 }
 
 $addHandler = array
     (
-    'UID' => 'UID_odnotip_hook',
-    'product_grid' => 'product_grid_n_hook'
+    'UID' => 'UID_promotions_hook',
+    'product_grid' => 'product_grid_promotions_hook'
 );
 ?>

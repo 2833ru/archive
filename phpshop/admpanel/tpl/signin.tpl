@@ -17,10 +17,10 @@
         <link  href="./css/bar.css" rel="stylesheet">
 
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-        <!--#if lt IE 9#>
+        <!--[if lt IE 9]>
           <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
           <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-        <!#endif#-->
+        <![endif]-->
     </head>
 
     <body id="form-signin">
@@ -41,16 +41,16 @@
 
                 <div class="input-group @error@">
                     <span class="input-group-addon" id="input-group-addon1"><span class="glyphicon glyphicon-user"></span></span>
-                    <input type="text" name="log" class="form-control" value="@user@" placeholder="{Пользователь}" required autofocus>
+                    <input type="text" name="log" class="form-control" value="@user@" placeholder="{Пользователь}" required @autofocus@ @readonly@>
                 </div>
                 <div class="input-group @error@">
                     <span class="input-group-addon" id="input-group-addon2"><span class="glyphicon glyphicon-lock"></span></span>
-                    <input type="password" name="pas" class="form-control" value="@password@" placeholder="{Пароль}"  required>
+                    <input type="password" name="pas" class="form-control" value="@password@" placeholder="{Пароль}"  required @readonly@>
                 </div>
 
                 <div class="checkbox ">
                     <label  class="hidden-xs">
-                        <input type="checkbox" name="actionHash" value="true" id="remember-me"> {Восстановить пароль}
+                        <input type="checkbox" name="actionHash" value="true" id="remember-me" @disabled@> {Восстановить пароль}
                         
                     </label>
                     <small class="pull-right text-muted text-uppercase"><img src="../locale/@lang@/icon.png" /> @code@</small>

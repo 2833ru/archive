@@ -30,6 +30,11 @@ class PHPShopBrandsElement extends PHPShopElements {
 
         $arrayVendorValue = array();
 
+        // Учет модуля SEOURLPRO
+        if (!empty($GLOBALS['SysValue']['base']['seourlpro']['seourlpro_system'])) {
+            $seourlpro_enabled = true;
+        }
+
         // Массив имен характеристик
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']);
         $PHPShopOrm->debug = $this->debug;
@@ -49,10 +54,10 @@ class PHPShopBrandsElement extends PHPShopElements {
 
             // Массив значений 
             $i = 0;
-            $result = $PHPShopOrm->query("select name, id, icon, category from " . $GLOBALS['SysValue']['base']['sort'] . " where $sortValue order by name");
+            $result = $PHPShopOrm->query("select * from " . $GLOBALS['SysValue']['base']['sort'] . " where $sortValue order by name");
 
             while (@$row = mysqli_fetch_array($result)) {
-                $arrayVendorValue[$row['name']][] = array('name' => $row['name'], 'id' => $row['id'], 'category' => $row['category'], 'icon' => $row['icon']);
+                $arrayVendorValue[$row['name']][] = array('name' => $row['name'], 'id' => $row['id'], 'category' => $row['category'], 'icon' => $row['icon'], 'seo' => $row['sort_seo_name']);
             }
 
             // Проверка на уникального имени
@@ -76,13 +81,31 @@ class PHPShopBrandsElement extends PHPShopElements {
                                 $this->set('brandIcon', $val['icon']);
                         }
                         $this->set('brandName', $v[0]['name']);
-                        $this->set('brandPageLink', $GLOBALS['SysValue']['dir']['dir'] . '/selection/?' . substr($link, 0, strlen($link) - 1));
+
+
+                        if ($seourlpro_enabled) {
+                            if (empty($row['sort_seo_name']))
+                                $this->set('brandPageLink', '/brand/' . PHPShopString::toLatin($v[0]['name']) . '.html');
+                            else
+                                $this->set('brandPageLink', '/brand/' . $v[0]['sort_seo_name'] . '.html');
+                        }
+                        else
+                            $this->set('brandPageLink', $GLOBALS['SysValue']['dir']['dir'] . '/selection/?' . substr($link, 0, strlen($link) - 1));
+
                         $this->set('brandsList', ParseTemplateReturn('brands/top_brands_one.tpl'), true);
                     } else {
 
                         $this->set('brandIcon', $v[0]['icon']);
                         $this->set('brandName', $v[0]['name']);
-                        $this->set('brandPageLink', $GLOBALS['SysValue']['dir']['dir'] . '/selection/?v[' . $v[0]['category'] . ']=' . $v[0]['id']);
+
+                        if ($seourlpro_enabled) {
+                            if (empty($row['sort_seo_name']))
+                                $this->set('brandPageLink', '/brand/' . PHPShopString::toLatin($v[0]['name']) . '.html');
+                            else
+                                $this->set('brandPageLink', '/brand/' . $v[0]['sort_seo_name'] . '.html');
+                        }
+                        else
+                            $this->set('brandPageLink', $GLOBALS['SysValue']['dir']['dir'] . '/selection/?v[' . $v[0]['category'] . ']=' . $v[0]['id']);
                         $this->set('brandsList', ParseTemplateReturn('brands/top_brands_one.tpl'), true);
                     }
                 }

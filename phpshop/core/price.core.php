@@ -238,7 +238,7 @@ class PHPShopPrice extends PHPShopShopCore {
                 if (empty($user_price_activate))
                     $price = $this->price($row) . ' ' . $this->currency();
                 else
-                    $price = PHPShopText::a('../users/register.html', PHPShopText::img('images/shop/icon_user.gif', false, 'absMiddle'), $this->lang('user_register_title'));
+                    $price = null;
 
 
                 $dis.=$this->tr('#ffffff', $name, $price, $cart);

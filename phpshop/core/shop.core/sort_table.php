@@ -51,11 +51,12 @@ function sort_table($obj, $row) {
 
                 // Определение цвета
                 if ($row['name'][0] == '#')
-                    @$arrayVendorValue[$row['category']]['name'].= '  <div class="sort-color" style="width:25px;height:25px;background:' . $row['name'] . ';float:left;padding:3px;margin:3px;"></div>  ';
+                    $arrayVendorValue[$row['category']]['name'].= '  <div class="sort-color" style="width:25px;height:25px;background:' . $row['name'] . ';float:left;padding:3px;margin:3px;"></div>  ';
                 else
-                    @$arrayVendorValue[$row['category']]['name'].= ", " . $row['name'];
+                    $arrayVendorValue[$row['category']]['name'].= ", " . $row['name'];
 
-                @$arrayVendorValue[$row['category']]['page'].= $row['page'];
+                $arrayVendorValue[$row['category']]['page'].= $row['page'];
+                $arrayVendorValue[$row['category']]['id'].= $row['id'];
 
                 // Бренд
                 if ($arrayVendor[$row['category']]['brand']) {
@@ -84,7 +85,7 @@ function sort_table($obj, $row) {
             if (is_array($arrayVendor))
                 foreach ($arrayVendor as $idCategory => $value) {
 
-                    if (!empty($value['product']) and strstr($odnotip,',')) {
+                    if (!empty($value['product']) and strstr($odnotip, ',')) {
 
                         $where['id'] = ' IN (' . $odnotip . ')';
                         $where['enabled'] = "='1'";
@@ -93,24 +94,26 @@ function sort_table($obj, $row) {
                         $PHPShopOrm->debug = $obj->debug;
                         $PHPShopOrm->mysql_error = false;
                         $data = $PHPShopOrm->select(array('*'), $where, false, array('limit' => 100));
-                        if (is_array($data)){
-                            $sortValueName=null;
-                            foreach ($data as $row){
-                            
-                                if(!isset($row['prod_seo_name']))
-                                  $p_link='/shop/UID_' . $row['id'] . '.html';
-                                else $p_link = '/id/' . str_replace("_", "-", PHPShopString::toLatin($row['name'])).'-'.$row['id']. '.html';
+                        if (is_array($data)) {
+                            $sortValueName = null;
+                            foreach ($data as $row) {
 
-                                     $sortValueName.= PHPShopText::a($p_link, $row['name']).'<br>';
+                                if (!isset($row['prod_seo_name']))
+                                    $p_link = '/shop/UID_' . $row['id'] . '.html';
+                                else
+                                    $p_link = '/id/' . str_replace("_", "-", PHPShopString::toLatin($row['name'])) . '-' . $row['id'] . '.html';
+
+                                $sortValueName.= PHPShopText::a($p_link, $row['name']) . '<br>';
                             }
                         }
 
                         $sortName = PHPShopText::b($value['name']);
-                        $dis.=PHPShopText::tr($sortName . ': ', substr($sortValueName,0,strlen($sortValueName)-2));
+                        $dis.=PHPShopText::tr($sortName . ': ', substr($sortValueName, 0, strlen($sortValueName) - 2));
                     }
 
                     elseif (!empty($arrayVendorValue[$idCategory]['name'])) {
                         if (!empty($value['name'])) {
+
 
                             // Описание
                             if (!empty($value['page']))
@@ -118,7 +121,9 @@ function sort_table($obj, $row) {
                             else
                                 $sortName = PHPShopText::b($value['name']);
 
-                            if (!empty($arrayVendorValue[$idCategory]['page']))
+                            if (!empty($value['brand']))
+                                $sortValueName = PHPShopText::a('/selection/?v[' . $idCategory . ']=' . $arrayVendorValue[$idCategory]['id'], substr($arrayVendorValue[$idCategory]['name'], 2));
+                            else if (!empty($arrayVendorValue[$idCategory]['page']))
                                 $sortValueName = PHPShopText::a('/page/' . $arrayVendorValue[$idCategory]['page'] . '.html', substr($arrayVendorValue[$idCategory]['name'], 2));
                             else
                                 $sortValueName = substr($arrayVendorValue[$idCategory]['name'], 2);
@@ -133,4 +138,5 @@ function sort_table($obj, $row) {
         }
     }
 }
+
 ?>

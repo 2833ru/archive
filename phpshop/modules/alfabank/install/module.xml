@@ -2,7 +2,7 @@
 <module>
     <version>1.0</version>
     <name>Альфабанк</name>
-    <description>Модуль интеграции интернет-магазина с платежным шлюзом Альфабанка</description>
+    <description>Прием оплат через Альфабанк в соответствии с 54-ФЗ.</description>
     <category>payment</category>
     <faqlink>http://faq.phpshop.ru/page/alfabank.html</faqlink>
      <adminmenu>

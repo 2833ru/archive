@@ -14,7 +14,7 @@ function actionBaseUpdate()
     $option = $PHPShopOrm->select();
     $new_version = $PHPShopModules->getUpdate($option['version']);
     $PHPShopOrm->clean();
-    $action = $PHPShopOrm->update(array('version_new' => $new_version));
+    $PHPShopOrm->update(array('version_new' => $new_version));
 }
 
 /**
@@ -27,7 +27,7 @@ function actionUpdate()
 
     $PHPShopOrm->debug = false;
     $action = $PHPShopOrm->update($_POST);
-    header('Location: ?path=modules&install=check');
+    header('Location: ?path=modules&id=' . $_GET['id']);
 
     return $action;
 }
@@ -39,6 +39,8 @@ function actionUpdate()
 function actionStart()
 {
     global $PHPShopGUI, $PHPShopOrm;
+
+    PHPShopObj::loadClass('order');
 
     $PHPShopOrm->objBase = $GLOBALS['SysValue']['base']['tinkoff']['tinkoff_system'];
     $data = $PHPShopOrm->select();
@@ -78,6 +80,19 @@ function actionStart()
     );
     $taxationSelect = $PHPShopGUI->setSelect('taxation_new', $taxation, 300);
     $Tab1 .= $PHPShopGUI->setField('Система налогооблажения', $taxationSelect, 1, null, 'tinkoff-taxation' . ($data['enabled_taxation'] ? '' : ' hidden'));
+
+    // Доступые статусы заказов
+    $PHPShopOrderStatusArray = new PHPShopOrderStatusArray();
+    $OrderStatusArray = $PHPShopOrderStatusArray->getArray();
+    $order_status_value[] = array(__('Новый заказ'), 0, $data['status']);
+    if (is_array($OrderStatusArray))
+        foreach ($OrderStatusArray as $order_status)
+            $order_status_value[] = array($order_status['name'], $order_status['id'], $data['status']);
+
+    // Статус заказа
+    $Tab1.= $PHPShopGUI->setField('Оплата при статусе', $PHPShopGUI->setSelect('status_new', $order_status_value, 300));
+
+    $Tab1.=$PHPShopGUI->setField('Описание оплаты', $PHPShopGUI->setTextarea('title_end_new', $data['title_end']));
 
     // Форма регистрации
     $Tab3 = $PHPShopGUI->setPay(null, false, $data['version'], true);

@@ -6,15 +6,25 @@ $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['system']);
 // Стартовый вид
 function actionStart() {
     global $PHPShopGUI, $PHPShopModules, $TitlePage, $PHPShopOrm;
+    
+    PHPShopObj::loadClass('order');
 
     // Выборка
     $data = $PHPShopOrm->select();
     $option = unserialize($data['1c_option']);
 
+    $PHPShopGUI->action_button['CRM Журнал'] = array(
+        'name' => 'Журнал операций',
+        'action' => 'report.crm',
+        'class' => 'btn btn-default btn-sm navbar-btn btn-action-panel',
+        'type' => 'button',
+        'icon' => 'glyphicon glyphicon-hourglass'
+    );
+
     // Размер названия поля
     $PHPShopGUI->field_col = 3;
     $PHPShopGUI->addJSFiles('./system/gui/system.gui.js');
-    $PHPShopGUI->setActionPanel($TitlePage, false, array('Сохранить'));
+    $PHPShopGUI->setActionPanel($TitlePage, false, array('CRM Журнал', 'Сохранить'));
 
     $PHPShopGUI->_CODE = '<p></p>' . $PHPShopGUI->setField("Бухгалтерские документы", $PHPShopGUI->setCheckbox('1c_load_accounts_new', 1, 'Оригинальный счет с печатью и подписями из 1С', $data['1c_load_accounts']) . '<br>' . $PHPShopGUI->setCheckbox('1c_load_invoice_new', 1, 'Оригинальная счет-фактура с печатью из 1С', $data['1c_load_invoice']), 1, 'Оригинальные документы выгружаются из 1С при синхронизации заказов.');
 
@@ -22,11 +32,26 @@ function actionStart() {
             $PHPShopGUI->setCheckbox('option[update_description]', 1, 'Краткое описание', $option['update_description']) . '<br>' .
             $PHPShopGUI->setCheckbox('option[update_content]', 1, 'Подробное описание', $option['update_content']) . '<br>' .
             $PHPShopGUI->setCheckbox('option[update_category]', 1, 'Родительская категория', $option['update_category']) . '<br>' .
-            $PHPShopGUI->setCheckbox('option[update_sort]', 1, 'Характериcтики и свойства', $option['update_sort']). '<br>' .
-            $PHPShopGUI->setCheckbox('option[update_option]', 1, 'Подтипы', $option['update_option']). '<br>' .
-            $PHPShopGUI->setCheckbox('option[update_price]', 1, 'Цены', $option['update_price']). '<br>' .
+            $PHPShopGUI->setCheckbox('option[update_sort]', 1, 'Характериcтики и свойства', $option['update_sort']) . '<br>' .
+            $PHPShopGUI->setCheckbox('option[update_option]', 1, 'Подтипы', $option['update_option']) . '<br>' .
+            $PHPShopGUI->setCheckbox('option[update_price]', 1, 'Цены', $option['update_price']) . '<br>' .
             $PHPShopGUI->setCheckbox('option[update_item]', 1, 'Склад', $option['update_item'])
     );
+
+    // Доступые статусы заказов
+    $PHPShopOrderStatusArray = new PHPShopOrderStatusArray();
+    $OrderStatusArray = $PHPShopOrderStatusArray->getArray();
+    $order_status_value[] = array(__('Не используется'), 0, $option['1c_load_status']);
+    if (is_array($OrderStatusArray))
+        foreach ($OrderStatusArray as $order_status)
+            $order_status_value[] = array($order_status['name'], $order_status['id'], $option['1c_load_status']);
+
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setField("Статус заказа", $PHPShopGUI->setSelect('option[1c_load_status]', $order_status_value, 300).'<br>'.
+            $PHPShopGUI->setCheckbox('option[1c_load_status_email]', 1, 'E-mail оповещение покупателя о новых загруженных бухгалтерских документах из 1С', $option['1c_load_status_email'])
+            , 1, 'Заказы поступают в 1С только при определенном статусе');
+    
+    
+
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
@@ -55,7 +80,6 @@ function actionSave() {
 
     // Сохранение данных
     actionUpdate();
-
 }
 
 // Функция обновления

@@ -12,6 +12,29 @@
 function comment_rate($obj, $args) {
     $row = $args['row'];
     $type = $args['type'];
+
+    // Звезды glyphicon
+    if ($row['rate'] > 0)
+        $obj->set('rateStarA', 'glyphicon-star');
+    else
+        $obj->set('rateStarA', 'glyphicon-star-empty');
+    if ($row['rate'] > 1)
+        $obj->set('rateStarB', 'glyphicon-star');
+    else
+        $obj->set('rateStarB', 'glyphicon-star-empty');
+    if ($row['rate'] > 2)
+        $obj->set('rateStarC', 'glyphicon-star');
+    else
+        $obj->set('rateStarC', 'glyphicon-star-empty');
+   if ($row['rate'] > 3)
+        $obj->set('rateStarD', 'glyphicon-star');
+    else
+        $obj->set('rateStarD', 'glyphicon-star-empty');
+   if ($row['rate'] > 4)
+        $obj->set('rateStarE', 'glyphicon-star');
+    else
+        $obj->set('rateStarE', 'glyphicon-star-empty');
+    
     $rate = new rateForComment($row['rate'], $row['rate_count']);
     if ($type)
         $obj->set("rateCid", $rate->parseCID());

@@ -26,7 +26,8 @@
                     <div class="small">@productSklad@</div>
 
                 </div>
-                <div class="review hidden-xs"> @rateUid@ </div>
+                <div class="rating hidden-xs"> @rateUid@ </div>
+
 
                 @promotionInfo@ 
             </div>

@@ -100,7 +100,7 @@ if (!empty($_POST['version_update'])) {
 
     if (empty($result)) {
         $done = '<div class="alert alert-success alert-dismissible" role="alert">
-  <strong>Поздравляем Вас</strong> PHPShop успешно обновлен с версии ' . $_POST['version_update'] . ' до ' . $brand . '
+  <strong>Поздравляем</strong>, PHPShop успешно обновлен с версии ' . $_POST['version_update'] . ' до ' . $brand . '
 </div> 
 <div class="panel panel-warning">
                 <div class="panel-heading">
@@ -607,14 +607,14 @@ dbase="mybase";         # имя базы</pre>
                                                     <div class="form-group">
                                                         <label class="col-sm-2 control-label">Имя</label>
                                                         <div class="col-sm-10">
-                                                            <input type="text" name="user" required class="form-control" placeholder="Администратор">
+                                                            <input type="text" name="user" required class="form-control" placeholder="Администратор" value="Администратор">
                                                         </div>
                                                     </div>
 
                                                     <div class="form-group">
                                                         <label class="col-sm-2 control-label">Пользователь</label>
                                                         <div class="col-sm-10">
-                                                            <input type="text" name="login" required class="form-control" placeholder="admin">
+                                                            <input type="text" name="login" required class="form-control" placeholder="admin" value="admin">
                                                         </div>
                                                     </div>
                                                     <div class="form-group">

@@ -8,8 +8,5 @@
     <adminmenu>
         <title>NextPay</title>
         <capability>true</capability>
-        <podmenu>
-            <podmenu_name>Настройка</podmenu_name>
-        </podmenu>
     </adminmenu>
 </module>

@@ -7,9 +7,11 @@
  * @param int $title заголовок характеристики
  * @param array $vendor массив характеристик
  */
-function sorttemplate($value, $n, $title, $vendor) {
+function sorttemplate($value, $n, $title, $vendor, $help) {
     global $PHPShopGUI;
     $i = 1;
+    
+    
 
     if (is_array($value)) {
         sort($value);
@@ -29,9 +31,13 @@ function sorttemplate($value, $n, $title, $vendor) {
         }
     }
 
+    // Описание
+    if (!empty($help))
+        $help = '<div class="text-muted">' . $help . ':</div>';
+
     $value = $PHPShopGUI->setSelect('vendor_array_new[' . $n . '][]', $value_new, 500, null, false, $search = true, false, $size = 1, $multiple = true);
 
-    $disp = $PHPShopGUI->setField('<a href="?path=sort&id='.$n.'">'.$title.'</a>', $value,1, null,  null, 'control-label', false) .
+    $disp = $PHPShopGUI->setField('<a href="?path=sort&id=' . $n . '">' . $title . '</a>'.$help, $value, 1, null, null, 'control-label', false) .
             $PHPShopGUI->setField(null, $PHPShopGUI->setInputArg(array('type' => 'text', 'placeholder' => 'Ввести другое через разделитель #', 'size' => '500', 'name' => 'vendor_array_add[' . $n . ']', 'class' => 'vendor_add')));
 
     return $disp;
@@ -51,7 +57,7 @@ function tab_sorts($data) {
 
     if (empty($sort))
         $sort =
-                '<p class="text-muted">'.__('Для отображения характеристик у товаров необходимо объединить <a href="?path=sort" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-share-alt"></span> Характеристики в группы</a> и выбрать эти группы у <a href="?path=catalog&id=' . intval($_GET['cat']) . '" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-share-alt"></span> Каталогов товаров</a>. Характеристики из выбранных груп появятся в товарах указанных каталогов').'</p>';
+                '<p class="text-muted">' . __('Для отображения характеристик у товаров необходимо объединить <a href="?path=sort" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-share-alt"></span> Характеристики в группы</a> и выбрать эти группы у <a href="?path=catalog&id=' . intval($_GET['cat']) . '" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-share-alt"></span> Каталогов товаров</a>. Характеристики из выбранных груп появятся в товарах указанных каталогов') . '</p>';
 
 
     return $PHPShopGUI->setCollapse('Характеристики', $sort, $collapse = 'none', true, false);

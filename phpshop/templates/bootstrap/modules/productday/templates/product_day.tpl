@@ -9,7 +9,7 @@
 
         <h4 class="media-heading"><a href="/shop/UID_@productDayId@.html">@productDayName@</a></h4>
         @productDayDescription@
-        <h3>@productDayPrice@ <span class="rubznak">@productDayCurrency@</span>{ }<sup class="text-muted small"><s>@productDayPriceN@</s></sup></h3>
+        <h3>@productDayPrice@ <span class="rubznak">@productDayCurrency@</span> <sup class="text-muted small"><s>@productDayPriceN@</s></sup></h3>
 
         <div class="alert alert-warning" style="margin-bottom: 0px">
             <div class="row">

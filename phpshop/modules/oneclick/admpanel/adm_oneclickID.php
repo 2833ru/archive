@@ -6,7 +6,7 @@ $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.oneclick.oneclick_j
 // Функция обновления
 function actionUpdate() {
     global $PHPShopOrm;
-    $_POST['date_new']=PHPShopDate::GetUnixTime($_POST['date_new']);
+    $_POST['date_new'] = PHPShopDate::GetUnixTime($_POST['date_new']);
     $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['rowID']));
     return array('success' => $action);
 }
@@ -26,9 +26,9 @@ function actionSave() {
 
 // Начальная функция загрузки
 function actionStart() {
-    global $PHPShopGUI, $PHPShopOrm;
-    
-        // Выбор даты
+    global $PHPShopGUI, $PHPShopOrm, $PHPShopSystem;
+
+    // Выбор даты
     $PHPShopGUI->addJSFiles('./js/bootstrap-datetimepicker.min.js', './news/gui/news.gui.js');
     $PHPShopGUI->addCSSFiles('./css/bootstrap-datetimepicker.min.css');
 
@@ -36,22 +36,47 @@ function actionStart() {
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
     $PHPShopGUI->field_col = 1;
 
-    $Tab1 = $PHPShopGUI->setField('Дата', $PHPShopGUI->setInputDate("date_new", PHPShopDate::get($data['date'])));
+    if (!empty($data['product_image']))
+        $icon = '<img src="' . $data['product_image'] . '" onerror="this.onerror = null;this.src = \'./images/no_photo.gif\'" class="media-object">';
+    else
+        $icon = '<img class="media-object" src="./images/no_photo.gif">';
+    
+    // Знак рубля
+    if ($PHPShopSystem->getDefaultValutaIso() == 'RUB')
+        $currency = ' <span class="rubznak">p</span>';
+    else
+        $currency = $PHPShopSystem->getDefaultValutaCode();
+    
+    $name = '
+<div class="media">
+  <div class="media-left">
+    <a href="?path=product&id=' . $data['product_id'] . '&return=modules.dir.oneclick.' . $data['id'] . '" >
+      ' . $icon . '
+    </a>
+  </div>
+   <div class="media-body">
+    <div class="media-heading"><a href="?path=product&id=' . $data['product_id'] . '&return=modules.dir.oneclick.' . $data['id'] . '" >' . $data['product_name'] . '</a></div>
+    ' . $data['product_price'] . ' '.$currency.'
+  </div>
+</div>';
+
+    $Tab1.= $PHPShopGUI->setField('Дата', $PHPShopGUI->setInputDate("date_new", PHPShopDate::get($data['date'])));
     $Tab1.= $PHPShopGUI->setField('Имя', $PHPShopGUI->setInputText($data['ip'], 'name_new', $data['name']));
     $Tab1.= $PHPShopGUI->setField('Телефон', $PHPShopGUI->setInputText(false, 'tel_new', $data['tel']));
-    $Tab1.= $PHPShopGUI->setField('Корзина', $PHPShopGUI->setInputText('<a href="?path=product&id='.$data['product_id'].'">ID:' . $data['product_id'].'</a>', 'product_name_new', $data['product_name']));
-    $Tab1.=$PHPShopGUI->setField('Сообщение', $PHPShopGUI->setTextarea('message_new', $data['message']));
+    $Tab1.= $PHPShopGUI->setField('Корзина', $name);
 
-    $status_atrray[] = array('Новая', 1, $data['status']);
-    $status_atrray[] = array('Перезвонить', 2, $data['status']);
-    $status_atrray[] = array('Недоcтупен', 3, $data['status']);
-    $status_atrray[] = array('Выполнен', 4, $data['status']);
+    $Tab1.=$PHPShopGUI->setField('Комментарий', $PHPShopGUI->setTextarea('message_new', $data['message']));
+
+    $status_atrray[] = array('Новая заявка', 1, $data['status'],'data-content="<span class=\'glyphicon glyphicon-text-background\' style=\'color:#35A6E8\'></span> Новая заявка"');
+    $status_atrray[] = array('Перезвонить', 2, $data['status'],'data-content="<span class=\'glyphicon glyphicon-text-background\' style=\'color:#EC971F\'></span> Перезвонить"');
+    $status_atrray[] = array('Недоcтупен', 3, $data['status'],'data-content="<span class=\'glyphicon glyphicon-text-background\' style=\'color:red\'></span> Недоcтупен"');
+    $status_atrray[] = array('Выполнен', 4, $data['status'],'data-content="<span class=\'glyphicon glyphicon-text-background\' style=\'color:#70BD1B\'></span> Выполнен"');
 
     $Tab1.=$PHPShopGUI->setField('Статус', $PHPShopGUI->setSelect('status_new', $status_atrray, 150));
 
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1,true));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true));
 
     $ContentFooter =
             $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .

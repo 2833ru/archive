@@ -1,4 +1,5 @@
 <?php
+
 PHPShopObj::loadClass("page");
 
 $TitlePage = __('Новая категория страниц');
@@ -47,7 +48,7 @@ function actionStart() {
 
     // Размер названия поля
     $PHPShopGUI->field_col = 2;
-    $PHPShopGUI->addJSFiles('./js/jquery.treegrid.js','./page/gui/page.gui.js');
+    $PHPShopGUI->addJSFiles('./js/jquery.treegrid.js', './page/gui/page.gui.js');
 
     // Начальные данные
     $data = array();
@@ -62,7 +63,7 @@ function actionStart() {
     $PHPShopCategoryArray = new PHPShopPageCategoryArray();
     $CategoryArray = $PHPShopCategoryArray->getArray();
 
-    $CategoryArray[0]['name'] = '- '.__('Корневой уровень').' -';
+    $CategoryArray[0]['name'] = '- ' . __('Корневой уровень') . ' -';
     $tree_array = array();
 
     $PHPShopCategoryArrayKey = $PHPShopCategoryArray->getKey('parent_to.id', true);
@@ -112,6 +113,8 @@ function actionStart() {
     $Tab_info.= $PHPShopGUI->setField("Размещение", $tree_select);
 
     $Tab_info.=$PHPShopGUI->setField("Приоритет", $PHPShopGUI->setInputText(false, 'num_new', $data['num'], '100'));
+    
+    $Tab_info.=$PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'));
 
     $Tab1 = $PHPShopGUI->setCollapse('Информация', $Tab_info);
 
@@ -130,7 +133,7 @@ function actionStart() {
     $PHPShopGUI->setTab(array("Основное", $Tab1), array("Описание", $Tab2));
 
     // Левый сайдбар
-    $sidebarleft[] = array('title' => 'Категории', 'content' => $tree, 'title-icon' => '<span class="glyphicon glyphicon-plus new" data-toggle="tooltip" data-placement="top" title="'.__('Добавить каталог').'"></span>&nbsp;<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="'._('Развернуть').'"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="Свернуть"></span>');
+    $sidebarleft[] = array('title' => 'Категории', 'content' => $tree, 'title-icon' => '<span class="glyphicon glyphicon-plus new" data-toggle="tooltip" data-placement="top" title="' . __('Добавить каталог') . '"></span>&nbsp;<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="' . __('Развернуть') . '"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="'.__('Свернуть').'"></span>');
     $PHPShopGUI->setSidebarLeft($sidebarleft, 3);
     $PHPShopGUI->sidebarLeftCell = 3;
 
@@ -151,6 +154,13 @@ function actionInsert() {
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
+
+    // Мультибаза
+    $_POST['servers_new'] = "";
+    if (is_array($_POST['servers']))
+        foreach ($_POST['servers'] as $v)
+            if ($v != 'null' and !strstr($v, ','))
+                $_POST['servers_new'].="i" . $v . "i";
 
     $action = $PHPShopOrm->insert($_POST);
 

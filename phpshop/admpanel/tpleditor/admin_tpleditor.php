@@ -206,7 +206,7 @@ function actionStart() {
             $PHPShopGUI->_CODE = '<div class="panel panel-default" id="varlist">
             <div class="panel-body">' . $var_list . '<div class="text-right data-row"><a href="#" id="vartable" data-toggle="modal" data-target="#selectModal" data-title="' . $_GET['file'] . '"><span class="glyphicon glyphicon-question-sign"></span>'.__('Описание переменных').'</a></div></div></div>';
 
-            // Модальное окно таблицы описаний перменных
+            // Модальное окно таблицы описаний переменных
             $selectModalBody = '<table class="table table-striped"><tr><th>'.__('Переменная').'</th><th>'.__('Описание').'</th></tr>' . $selectModal . '</table>';
         }
 

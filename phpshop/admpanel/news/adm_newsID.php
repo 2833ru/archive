@@ -1,14 +1,17 @@
 <?php
 
-$TitlePage = __('Редактирование Новости').' #' . $_GET['id'];
+$TitlePage = __('Редактирование Новости') . ' #' . $_GET['id'];
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['news']);
 
 function actionStart() {
     global $PHPShopGUI, $PHPShopSystem, $PHPShopOrm, $PHPShopModules;
 
+    // Размер названия поля
+    $PHPShopGUI->field_col = 2;
+
     // Выбор даты
-    $PHPShopGUI->addJSFiles('./js/bootstrap-datetimepicker.min.js','./js/jquery.waypoints.min.js', './news/gui/news.gui.js');
-    $PHPShopGUI->addCSSFiles('./css/bootstrap-datetimepicker.min.css');
+    $PHPShopGUI->addJSFiles('./js/jquery.tagsinput.min.js', './js/bootstrap-datetimepicker.min.js', './js/jquery.waypoints.min.js', './news/gui/news.gui.js');
+    $PHPShopGUI->addCSSFiles('./css/jquery.tagsinput.css', './css/bootstrap-datetimepicker.min.css');
 
     // Выборка
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
@@ -30,10 +33,10 @@ function actionStart() {
         'url' => '../../news/ID_' . $data['id'] . '.html',
         'action' => 'front',
         'target' => '_blank',
-        'class'=>$GLOBALS['isFrame']
+        'class' => $GLOBALS['isFrame']
     );
 
-    $PHPShopGUI->setActionPanel(__("Редактирование Новости от")." " . $data['datas'], array('Предпросмотр', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'));
+    $PHPShopGUI->setActionPanel(__("Редактирование Новости от") . " " . $data['datas'], array('Предпросмотр', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'));
 
     // Редактор 1
     $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));
@@ -41,7 +44,6 @@ function actionStart() {
     $oFCKeditor->Height = '270';
     $oFCKeditor->Value = $data['kratko'];
 
-    // Содержание закладки 1
     $Tab1 = $PHPShopGUI->setField("Дата", $PHPShopGUI->setInputDate("datas_new", $data['datas'])) .
             $PHPShopGUI->setField("Заголовок", $PHPShopGUI->setInput("text", "zag_new", $data['zag']));
 
@@ -55,11 +57,21 @@ function actionStart() {
 
     $Tab1.=$PHPShopGUI->setField("Подробно", $oFCKeditor2->AddGUI());
 
+    if (empty($data['date_start']))
+        $data['date_start'] = $data['datas'];
+
+    $Tab2.=$PHPShopGUI->setField("Начало показа", $PHPShopGUI->setInputDate("datau_new", PHPShopDate::get($data['datau'])));
+
+    // Рекомендуемые товары
+    $Tab2.= $PHPShopGUI->setField('Рекомендуемые товары', $PHPShopGUI->setTextarea('odnotip_new', $data['odnotip'], false, false, 300, __('Укажите ID товаров или воспользуйтесь <a href="#" data-target="#odnotip_new"  class="btn btn-sm btn-default tag-search"><span class="glyphicon glyphicon-search"></span> поиском товаров</a>')));
+
+    $Tab2.=$PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'));
+
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1,true));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Дополнительно", $Tab2, true));
 
 
     // Вывод кнопок сохранить и выход в футер
@@ -88,11 +100,22 @@ function actionSave() {
 // Функция обновления
 function actionUpdate() {
     global $PHPShopOrm, $PHPShopModules;
-
-    $_POST['datau_new'] = time();
-
+    
+    if (!empty($_POST['datau_new']))
+        $_POST['datau_new'] = PHPShopDate::GetUnixTime($_POST['datau_new']);
+    else
+        $_POST['datau_new'] = PHPShopDate::GetUnixTime($_POST['datas_new']);
+    
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
+
+    // Мультибаза
+    $_POST['servers_new'] = "";
+    if (is_array($_POST['servers']))
+        foreach ($_POST['servers'] as $v)
+            if ($v != 'null' and !strstr($v, ','))
+                $_POST['servers_new'].="i" . $v . "i";
+
     $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['rowID']));
 
     return array("success" => $action);

@@ -454,7 +454,7 @@
 
                             <div class="form-group">
                                 <label>{Пароль}</label>
-                                <input type="password" name="password" class="form-control" placeholder="{Пароль{..." required="">
+                                <input type="password" name="password" class="form-control" placeholder="{Пароль}..." required="">
                                 <span class="glyphicon glyphicon-remove form-control-feedback hide" aria-hidden="true"></span>
                             </div>
                             <div class="checkbox">

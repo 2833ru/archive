@@ -1,7 +1,8 @@
 <?php
+
 PHPShopObj::loadClass("page");
 
-$TitlePage = __('Редактирование страницы').' #' . $_GET['id'];
+$TitlePage = __('Редактирование страницы') . ' #' . $_GET['id'];
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['page']);
 
 // Построение дерева категорий
@@ -60,14 +61,14 @@ function actionStart() {
         $title_name = $data['name'];
 
     $PHPShopGUI->field_col = 2;
-    $PHPShopGUI->setActionPanel(__("Страница") . ': ' . $title_name, array('Создать', 'Предпросмотр', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'),false);
+    $PHPShopGUI->setActionPanel(__("Страница") . ': ' . $title_name, array('Создать', 'Предпросмотр', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'), false);
     $PHPShopGUI->addJSFiles('./js/jquery.tagsinput.min.js', './page/gui/page.gui.js');
     $PHPShopGUI->addCSSFiles('./css/jquery.tagsinput.css');
 
     $PHPShopCategoryArray = new PHPShopPageCategoryArray();
     $CategoryArray = $PHPShopCategoryArray->getArray();
 
-    $CategoryArray[0]['name'] = '- '.__('Корневой уровень').' -';
+    $CategoryArray[0]['name'] = '- ' . __('Корневой уровень') . ' -';
 
     $tree_array = array();
 
@@ -88,7 +89,7 @@ function actionStart() {
     $tree_array[0]['sub'][1000] = __('Главное меню сайта');
     $tree_array[0]['sub'][2000] = __('Начальная страница');
 
-    $tree_select.='<option value="0" ' . $data['category'] . ' data-subtext="<span class=\'glyphicon glyphicon-cog\'></span> '.__('Настройка').'">'.__('Внутренняя страница').'</option>';
+    $tree_select.='<option value="0" ' . $data['category'] . ' data-subtext="<span class=\'glyphicon glyphicon-cog\'></span> ' . __('Настройка') . '">' . __('Внутренняя страница') . '</option>';
     if (is_array($tree_array[0]['sub']))
         foreach ($tree_array[0]['sub'] as $k => $v) {
             $check = treegenerator($tree_array[$k], 1, $data['category']);
@@ -99,7 +100,7 @@ function actionStart() {
                 $selected = null;
 
             if (in_array($k, array(1000, 2000)))
-                $subtext = 'data-subtext="<span class=\'glyphicon glyphicon-cog\'></span> '.__('Настройка').'"';
+                $subtext = 'data-subtext="<span class=\'glyphicon glyphicon-cog\'></span> ' . __('Настройка') . '"';
             else
                 $subtext = null;
 
@@ -124,23 +125,26 @@ function actionStart() {
     $SelectValue[] = array('Вывод в каталоге', 1, $data['enabled']);
     $SelectValue[] = array('Заблокировать', 0, $data['enabled']);
 
-    $Tab1.= $PHPShopGUI->setField("Опции вывода:", $PHPShopGUI->setSelect("enabled_new", $SelectValue, 300,true));
+    if ($data['category'] != 2000)
+        $Tab1.= $PHPShopGUI->setField("Опции вывода:", $PHPShopGUI->setSelect("enabled_new", $SelectValue, 300, true));
 
     // Рекомендуемые товары
-    $Tab1.=$PHPShopGUI->setField('Рекомендуемые товары для совместной продажи', $PHPShopGUI->setTextarea('odnotip_new', $data['odnotip'], false, false, false, 
-            __('Укажите ID товаров или воспользуйтесь <a href="#" data-target="#odnotip_new"  class="btn btn-sm btn-default tag-search"><span class="glyphicon glyphicon-search"></span> поиском товаров</a>')));
+    if ($data['category'] != 2000)
+        $Tab1.=$PHPShopGUI->setField('Рекомендуемые товары для совместной продажи', $PHPShopGUI->setTextarea('odnotip_new', $data['odnotip'], false, false, false, __('Укажите ID товаров или воспользуйтесь <a href="#" data-target="#odnotip_new"  class="btn btn-sm btn-default tag-search"><span class="glyphicon glyphicon-search"></span> поиском товаров</a>')));
 
     // Содержание закладки 3
-    $Tab3 = $PHPShopGUI->setField("Title", $PHPShopGUI->setTextarea("title_new", $data['title']));
-    $Tab3.=$PHPShopGUI->setField("Description", $PHPShopGUI->setTextarea("description_new", $data['description']));
-    $Tab3.=$PHPShopGUI->setField("Keywords", $PHPShopGUI->setTextarea("keywords_new", $data['keywords']));
-    $Tab1.=$PHPShopGUI->setCollapse('SEO / Мета-данные', $Tab3);
+    if ($data['category'] != 2000) {
+        $Tab3 = $PHPShopGUI->setField("Title", $PHPShopGUI->setTextarea("title_new", $data['title']));
+        $Tab3.=$PHPShopGUI->setField("Description", $PHPShopGUI->setTextarea("description_new", $data['description']));
+        $Tab3.=$PHPShopGUI->setField("Keywords", $PHPShopGUI->setTextarea("keywords_new", $data['keywords']));
+        $Tab1.=$PHPShopGUI->setCollapse('SEO / Мета-данные', $Tab3);
 
-    // Безопасность
-    $SecurityValue[] = array('Всем пользователям', 0, $data['secure']);
-    $SecurityValue[] = array('Только зарегистрированным пользователям', 1, $data['secure']);
-    $Tab1.=$PHPShopGUI->setCollapse('Доступность', $PHPShopGUI->setField("Показывать", $PHPShopGUI->setSelect("secure_new", $SecurityValue, 300,true)) .
-            $PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/')));
+        // Безопасность
+        $SecurityValue[] = array('Всем пользователям', 0, $data['secure']);
+        $SecurityValue[] = array('Только зарегистрированным пользователям', 1, $data['secure']);
+        $Tab1.=$PHPShopGUI->setCollapse('Доступность', $PHPShopGUI->setField("Показывать", $PHPShopGUI->setSelect("secure_new", $SecurityValue, 300, true)) .
+                $PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/')));
+    }
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
@@ -170,7 +174,7 @@ function actionUpdate() {
 
     // Корректировка пустых значений
     $PHPShopOrm->updateZeroVars('enabled_new', 'secure_new');
-    
+
     // Мультибаза
     $_POST['servers_new'] = "";
     if (is_array($_POST['servers']))

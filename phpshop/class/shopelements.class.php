@@ -325,14 +325,6 @@ class PHPShopProductElements extends PHPShopElements {
             $this->set('elementCartOptionHide', 'hide hidden');
         }
 
-        // ≈сли цены показывать только после авторизации
-        if ($this->user_price_activate == 1 and empty($_SESSION['UsersId'])) {
-            $this->set('ComStartCart', PHPShopText::comment('<'));
-            $this->set('ComEndCart', PHPShopText::comment('>'));
-            $this->set('productPrice', null);
-            $this->set('productValutaName', '');
-        }
-
         // ѕроверка на нулевую цену 
         if (empty($row['price'])) {
             $this->set('ComStartCart', PHPShopText::comment('<'));
@@ -350,6 +342,17 @@ class PHPShopProductElements extends PHPShopElements {
         }
         else
             $this->set('elementCartOptionHide', 'hide hidden');
+        
+        // ≈сли цены показывать только после авторизации
+        if ($this->user_price_activate == 1 and empty($_SESSION['UsersId'])) {
+            $this->set('ComStartCart', PHPShopText::comment('<'));
+            $this->set('ComEndCart', PHPShopText::comment('>'));
+            $this->set('productPrice', null);
+            $this->set('productValutaName', null);
+            $this->set('productPriceRub', null);
+            $this->set('elementCartHide', 'hide hidden');
+            $this->set('elementCartOptionHide', 'hide hidden');
+        }
 
         // ѕерехват модул€, занесение в пам€ть наличи€ модул€ дл€ оптимизации
         if ($this->memory_get(__CLASS__ . '.' . __FUNCTION__, true)) {

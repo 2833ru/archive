@@ -180,7 +180,8 @@ function navigation_seourl($obj, $name) {
     if (empty($home))
         $home = PHPShopText::a('/', __('Главная'));
 
-    $arrayPath = $obj->navigation_array;
+    if (is_array($obj->navigation_array))
+        $arrayPath = array_reverse($obj->navigation_array);
 
     if (is_array($arrayPath)) {
         foreach ($arrayPath as $v) {

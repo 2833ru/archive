@@ -3,7 +3,7 @@
 /**
  * Обработчик жалобы на цену
  * @author PHPShop Software
- * @version 1.2
+ * @version 1.3
  * @package PHPShopCore
  */
 class PHPShopPricemail extends PHPShopCore {
@@ -71,10 +71,9 @@ class PHPShopPricemail extends PHPShopCore {
         if ($this->setHook(__CLASS__, __FUNCTION__, $_POST, 'START'))
             return true;
 
-        if (PHPShopSecurity::true_param($_SESSION['text'], $_POST['mail'], $_POST['name_person'], $_POST['link_to_page'])) {
+        if (PHPShopSecurity::true_param($_POST['mail'], $_POST['name_person'], $_POST['link_to_page'])) {
 
             // Заголовок e-mail пользователю
-            //$title = $this->PHPShopSystem->getName() . " - " . __('Сообщение о меньшей цене');
             $title = __('Сообщение о меньшей цене');
 
             $this->set('user_name', $_POST['name_person']);

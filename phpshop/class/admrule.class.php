@@ -39,6 +39,7 @@ class PHPShopAdminRule {
             'upload' => 'update',
             'currency' => 'valuta',
             'tpleditor' => 'system',
+            'metrica'=>'report'
         );
     }
 

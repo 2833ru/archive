@@ -269,6 +269,7 @@ class PHPShopYml {
             $category = $row['category'];
             $uid = $row['uid'];
             $price = $row['price'];
+            $oldprice = $row['price_n'];
 
             if ($row['p_enabled'] == 1)
                 $p_enabled = "true";
@@ -279,24 +280,23 @@ class PHPShopYml {
             $content = '<![CDATA[' . $row['content'] . ']]>';
             $baseinputvaluta = $row['baseinputvaluta'];
 
-            if ($baseinputvaluta) {
-                //Если валюта отличается от базовой
-                if ($baseinputvaluta !== $this->defvaluta) {
-                    $vkurs = $this->PHPShopValuta[$baseinputvaluta]['kurs'];
+            //Если валюта отличается от базовой
+            if ($baseinputvaluta !== $this->defvaluta) {
+                $vkurs = $this->PHPShopValuta[$baseinputvaluta]['kurs'];
 
-                    // Если курс нулевой или валюта удалена
-                    if (empty($vkurs))
-                        $vkurs = 1;
+                // Если курс нулевой или валюта удалена
+                if (empty($vkurs))
+                    $vkurs = 1;
 
-                    // Приводим цену в базовую валюту
-                    $price = $price / $vkurs;
-                    $oldprice = $oldprice / $vkurs;
-                }
+                // Приводим цену в базовую валюту
+                $price = $price / $vkurs;
+                $oldprice = $oldprice / $vkurs;
             }
+
 
             $price = ($price + (($price * $this->percent) / 100));
             $price = round($price, intval($this->format));
-            $oldprice = round($row['price_n'], intval($this->format));
+            $oldprice = round($oldprice, intval($this->format));
 
             $array = array(
                 "id" => $id,
@@ -336,11 +336,10 @@ class PHPShopYml {
                 $parent = @explode(",", $row['parent']);
 
                 $Parents = $this->parent($parent, $array);
-                if (is_array($Parents)){
-                    $array['parent']=1;
+                if (is_array($Parents)) {
+                    $array['parent'] = 1;
                     $Products = array_merge($Products, $Parents);
                 }
-                
             }
 
             $Products[$id] = $array;
@@ -367,6 +366,7 @@ class PHPShopYml {
         $name = trim(strip_tags($row['name']));
         $uid = $row['uid'];
         $price = $row['price'];
+        $oldprice = $row['price_n'];
 
         $baseinputvaluta = $row['baseinputvaluta'];
 
@@ -554,13 +554,13 @@ function setProducts() {
         if (!empty($val['group_id'])) {
             $val['id'] = $id;
             $group_id = ' group_id="' . $val['group_id'] . '"';
-            $group_postfix = '?option='.$id;
+            $group_postfix = '?option=' . $id;
         }
         // Родитель
-        elseif(!empty($val['parent']))
-            $group_postfix = '?option='.$id;
+        elseif (!empty($val['parent']))
+            $group_postfix = '?option=' . $id;
         else
-            $group_id = $group_postfix =null;
+            $group_id = $group_postfix = null;
 
         // Изображение
         if (!empty($val['picture'])) {

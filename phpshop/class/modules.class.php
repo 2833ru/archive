@@ -45,9 +45,6 @@ class PHPShopModules {
 
         $this->checkKeyBase();
 
-        // Добавляем хуки шаблона
-        $this->addTemplateHook();
-
         $data = $this->PHPShopOrm->select(array('*'), false, false, array('limit' => 100));
         if (is_array($data))
             foreach ($data as $row) {
@@ -56,6 +53,8 @@ class PHPShopModules {
                     $this->getIni($path);
             }
 
+        // Добавляем хуки шаблона
+        $this->addTemplateHook();
 
         // Проверка конфликтных модулей и хуков
         foreach ($this->unload as $v)

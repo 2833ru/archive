@@ -3,7 +3,7 @@
 $TitlePage = __("Панель инструментов");
 
 // Оповещение пользователя по почте
-function mailNotice($type, $until_day) {
+function mailNotice($type, $until_day, $promo = null) {
     global $PHPShopSystem;
 
     $admoption = $PHPShopSystem->getParam('admoption');
@@ -23,6 +23,14 @@ function mailNotice($type, $until_day) {
             case "support":
                 $userContent = PHPShopParser::file("tpl/support.mail.tpl", true, false);
                 new PHPShopMail($PHPShopSystem->getEmail(), $PHPShopSystem->getEmail(), __('Заканчивается техническая поддержка для сайта') . ' ' . $_SERVER['SERVER_NAME'], $userContent, "text/html");
+
+                break;
+
+            case "promo":
+                PHPShopParser::set('promo', $promo);
+                PHPShopParser::set('day', $until_day);
+                $userContent = PHPShopParser::file("tpl/promo.mail.tpl", true, false);
+                new PHPShopMail($PHPShopSystem->getEmail(), $PHPShopSystem->getEmail(), __('Получите скидку 2500 руб. на покупку для сайта') . ' ' . $_SERVER['SERVER_NAME'], $userContent, "text/html");
 
                 break;
         }
@@ -131,17 +139,40 @@ function actionStart() {
 
     // Заканчивается лицензия
     $LicenseUntilUnixTime = $License['License']['Expires'];
-    $until = $LicenseUntilUnixTime - date("U");
+    $until = $LicenseUntilUnixTime - time();
     $until_day = abs(round($until / (24 * 60 * 60)));
-    if (is_numeric($LicenseUntilUnixTime))
-        if ($until_day < 8 and $until_day > 0) {
+
+    $until_promo = $until - 15 * 24 * 60 * 60;
+    $hour = floor($until_promo / 3600);
+    $day = floor($hour / 24);
+    $min = ($until_promo / 60) % 60;
+    if (is_numeric($LicenseUntilUnixTime)) {
+        $until_promo_str = $LicenseUntilUnixTime - 15 * 24 * 60 * 60;
+        mailNotice('promo', PHPShopDate::get($until_promo_str, true), getCupon($LicenseUntilUnixTime));
+
+        // Купон
+        if ($until_promo > 0) {
+
+            if ($day <= 3)
+                $css_promo = "text-danger";
+            else
+                $css_promo = null;
+
+
+            $search_jurnal = __('Используйте купон <b class="text-success">' . getCupon($LicenseUntilUnixTime) . '</b> при оформлении заказа и получите скидку <b>2500 руб.</b> До конца акции осталось <span class="' . $css_promo . '"><b>' . $day . '</b> дней <b>' . ($hour % 24) . '</b> часов <b>' . $min . '</b> минут</span>.');
+            $search_jurnal_title = __('Получите скидку') . '<a class="pull-right btn btn-xs btn-default" href="http://phpshop.ru/order/?code=' . getCupon($LicenseUntilUnixTime) . '" target="_blank"><span class="glyphicon glyphicon-ruble"></span> ' . __('Купить') . '</a>';
+            $search_jurnal_class = 'panel-primary';
+            $search_jairnal_icon = 'exclamation-sign';
+        }
+        // Сообщение
+        else if ($until_day < 8 and $until_day > 0) {
             mailNotice('license', $until_day);
             $search_jurnal = __('Для перехода на полную версию необходимо приобрести лицензию. <b>Все изменения, произведенные на демо-версии сайта, сохранятся</b>.');
             $search_jurnal_title = __('Лицензия заканчивается через') . ' <span class="label label-primary">' . abs(round($until_day)) . '  ' . __('дней') . '</span><a class="pull-right btn btn-xs btn-primary" href="http://phpshop.ru/order/" target="_blank"><span class="glyphicon glyphicon-ruble"></span> ' . __('Купить') . '</a>';
             $search_jurnal_class = 'panel-danger';
             $search_jairnal_icon = 'exclamation-sign';
         }
-
+    }
 
     $PHPShopGUI->setActionPanel($TitlePage, false, array('Время'));
     $PHPShopGUI->addJSFiles('js/chart.min.js', 'intro/gui/intro.gui.js');
@@ -186,7 +217,7 @@ function actionStart() {
                 $status_name = __('Не определен');
 
             if ($row['id'] < 100)
-                $uid = '<span class="hidden-xs">' . __('Заказ') . '</span> ' . $row['uid'];
+                $uid = '<span class="hidden-xs hidden-md">' . __('Заказ') . '</span> ' . $row['uid'];
             else
                 $uid = $row['uid'];
 
@@ -194,7 +225,7 @@ function actionStart() {
                 $row['fio'] = $row['name'];
 
 
-            $PHPShopInterface->setRow(array('name' => '<span class="label label-info" title="' . $status_name . '" style="background-color:' . $PHPShopOrder->getStatusColor() . '"><span class="hidden-xs">' . substr($status_name, 0, 25) . '</span></span>', 'link' => '?path=order&return=intro&id=' . $row['id'], 'class' => 'label-link'), array('name' => $uid, 'link' => '?path=order&return=intro&id=' . $row['id']), array('name' => $row['fio'], 'link' => '?path=shopusers&return=intro&id=' . $row['user']), array('name' => $datas, 'class' => 'text-muted'), array('name' => $PHPShopOrder->getTotal(false, ' ') . ' ' . $currency, 'align' => 'right', 'class' => 'strong'));
+            $PHPShopInterface->setRow(array('name' => '<span class="hidden-xs hidden-md label label-info" title="' . $status_name . '" style="background-color:' . $PHPShopOrder->getStatusColor() . '"><span class="hidden-xs hidden-md">' . substr($status_name, 0, 25) . '</span></span>', 'link' => '?path=order&return=intro&id=' . $row['id'], 'class' => 'label-link'), array('name' => $uid, 'link' => '?path=order&return=intro&id=' . $row['id']), array('name' => $row['fio'], 'link' => '?path=shopusers&return=intro&id=' . $row['user']), array('name' => $datas, 'class' => 'text-muted hidden-xs'), array('name' => $PHPShopOrder->getTotal(false, ' ') . ' ' . $currency, 'align' => 'right', 'class' => 'strong'));
         }
 
     if (is_array($canvas_data)) {
@@ -290,13 +321,13 @@ function actionStart() {
    </div>   
 
    <div class="row intro-row">
-       <div class="col-xs-12 col-md-12 col-lg-6">
+       <div class="col-md-6">
            <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-shopping-cart"></span> ' . __('Последние заказы') . ' <a class="pull-right" href="?path=order">' . __('Показать больше') . '</a></div>
                    <table class="table table-hover intro-list">' . $order_list . '</table>
           </div>
        </div>
-       <div class="visible-lg col-lg-6">
+       <div class="hidden-xs hidden-sm col-md-6">
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-stats"></span> ' . __('Статистика заказов') . ' 
              <span class="pull-right hidden-xs">
@@ -310,15 +341,13 @@ function actionStart() {
     <li class="disabled"><a href="#" class="canvas-line">' . __('Линейная диаграмма') . '</a></li>
     <li><a href="#" class="canvas-bar">' . __('Гистограмма') . '</a></li>
     <li><a href="#" class="canvas-radar">' . __('Радар диаграмма') . '</a></li>
-    <li class="divider"></li>
-    <li><a href="?path=report.statproduct">' . __('Больше отчетов') . '</a></li>
   </ul>
 </div>
 
              
                 </span>
               </div>
-                <div class="panel-body">
+                <div class="panel-body" style="padding:7px">
                  <div class="intro-canvas">
                      <canvas id="canvas" data-currency="' . $PHPShopSystem->getDefaultValutaCode() . '"  data-value=\'[' . substr($canvas_value, 0, strlen($canvas_value) - 1) . ']\' data-label=\'[' . substr($canvas_label, 0, strlen($canvas_label) - 1) . ']\'></canvas>
                  </div>
@@ -326,7 +355,109 @@ function actionStart() {
           </div>
        </div>
    </div>
-   
+';
+
+    // Трафик
+    $metrica_id = $PHPShopSystem->getSerilizeParam('admoption.metrica_id');
+    $metrica_token = $PHPShopSystem->getSerilizeParam('admoption.metrica_token');
+
+    if (PHPShopSecurity::true_param($metrica_id, $metrica_token, $PHPShopSystem->getSerilizeParam('admoption.metrica_widget'))) {
+
+        $PHPShopInterface = new PHPShopInterface();
+        $PHPShopInterface->checkbox_action = false;
+        $PHPShopInterface->setCaption(array("Дата", "10%"), array("Визит", "10%",array('align' => 'center')), array("Посетители", "10%",array('align' => 'center')), array("Просмотры", "10%",array('align' => 'center')), array("Время ", "10%", array('align' => 'right')));
+
+        $ctx = stream_context_create(array('http' =>
+            array(
+                'timeout' => 5
+            )
+        ));
+
+        $array_url_data = array(
+            'preset' => 'traffic',
+            'metrics' => 'ym:s:visits,ym:s:users,ym:s:pageviews,ym:s:percentNewVisitors,ym:s:bounceRate,ym:s:pageDepth,ym:s:avgVisitDurationSeconds',
+            'group' => 'day',
+            'date1' => date('Y-m-d', strtotime("-7 day")),
+            'date2' => date('Y-m-d'),
+            'id' => $metrica_id,
+            'oauth_token' => $metrica_token,
+        );
+
+        $url = 'https://api-metrika.yandex.ru/stat/v1/data?' . http_build_query($array_url_data);
+        $json_data = json_decode(file_get_contents($url,false,$ctx), true);
+
+        if (is_array($json_data)) {
+
+            $canvas_data = $json_data = $json_data[data];
+            $canvas_value = $canvas_label = null;
+            foreach ($json_data as $value) {
+                $date = $value[dimensions][0][id];
+                $visits = $value[metrics][0];
+                $users = $value[metrics][1];
+                $pageviews = $value[metrics][2];
+                $avgVisitDurationSeconds = $value[metrics][6] / 60;
+
+                $PHPShopInterface->setRow(array('name'=>date('d.m.Y', strtotime($date)),'align' => 'left'), array('name'=>$visits,'align' => 'center'), array('name'=>$users,'align' => 'center'), array('name'=>$pageviews,'align' => 'center'), array('name' => round($avgVisitDurationSeconds, 2), 'align' => 'right'));
+            }
+
+
+            // График
+            if (is_array($canvas_data)) {
+                krsort($canvas_data);
+                foreach ($canvas_data as $value) {
+
+                    $canvas_value.='"' . $value[metrics][0] . '",';
+                    $canvas_label.='"' . date('d.m', strtotime($value[dimensions][0][id])) . '",';
+                }
+            }
+
+            $traffic_list = $PHPShopInterface->getContent();
+
+
+            $PHPShopGUI->_CODE.=' 
+    <div class="row intro-row">
+       <div class="col-md-6 hidden-xs hidden-sm">
+          <div class="panel panel-default">
+             <div class="panel-heading"><span class="glyphicon glyphicon-equalizer"></span> ' . __('Посещаемость') . ' 
+             <span class="pull-right hidden-xs">
+             
+<div class="dropdown">
+  <button class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+    <span class="glyphicon glyphicon-cog"></span>
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-right canvas-select">
+    <li class="disabled"><a href="#" class="canvas-line" data-canvas="2">' . __('Линейная диаграмма') . '</a></li>
+    <li><a href="#" class="canvas-bar" data-canvas="2">' . __('Гистограмма') . '</a></li>
+    <li><a href="#" class="canvas-radar" data-canvas="2">' . __('Радар диаграмма') . '</a></li>
+    <li class="divider"></li>
+    <li><a href="?path=metrica">' . __('Показать больше') . '</a></li>
+  </ul>
+</div>
+
+                </span>
+              </div>
+                <div class="panel-body" style="">
+                 <div class="intro-canvas">
+                     <canvas id="canvas2" data-title="' . __('посетителя') . '"  data-value=\'[' . substr($canvas_value, 0, strlen($canvas_value) - 1) . ']\' data-label=\'[' . substr($canvas_label, 0, strlen($canvas_label) - 1) . ']\'></canvas>
+                 </div>
+               </div>
+          </div>
+       </div>
+              <div class="col-md-6 ">
+       
+           <div class="panel panel-default">
+             <div class="panel-heading"><span class="glyphicon glyphicon-dashboard"></span> ' . __('Посещаемость') . ' <a class="pull-right" href="?path=metrica.traffic">' . __('Показать больше') . '</a></div>
+                   <table class="table table-hover ">' . $traffic_list . '</table>
+          </div>
+
+       </div>
+     </div>';
+        }
+    }
+
+    // Количество товара
+    $PHPShopGUI->_CODE.='   
     <div class="row intro-row">
        <div class="col-md-2 col-xs-6">
           <div class="panel panel-default">
@@ -376,9 +507,10 @@ function actionStart() {
                </div>
           </div>
        </div>
-   </div>   
-   
-<div class="row intro-row">
+   </div>';
+
+    // Журнал авторизации
+    $PHPShopGUI->_CODE.='<div class="row intro-row">
        <div class="col-md-6 col-xs-12">
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-user"></span> ' . __('Журнал авторизации') . ' <a class="pull-right" href="?path=users.jurnal">' . __('Показать больше') . '</a></div>
@@ -395,6 +527,18 @@ function actionStart() {
 ';
 
     $PHPShopGUI->Compile();
+}
+
+function getCupon($string) {
+    $chars = 'ABCDEFGHJKLMNOPQRSTUVWXYZ';
+    $chars_array = str_split($chars);
+    $string_array = str_split($string);
+    $result = null;
+
+    foreach ($string_array as $v)
+        $result.=$chars_array[$v];
+
+    return 'SALE-' . $result;
 }
 
 ?>

@@ -48,6 +48,12 @@ function actionStart() {
     $work[] = array('Курсы валют', 'phpshop/modules/cron/sample/currency.php');
     $work[] = array('Снятие с продаж товаров', 'phpshop/modules/cron/sample/product.php');
     $work[] = array('Разновалютый поиск', 'phpshop/modules/cron/sample/pricesearch.php');
+    
+    // Учет модуля SiteMap
+    if (!empty($GLOBALS['SysValue']['base']['sitemap']['sitemap_system'])) {
+        $work[] = array('Карта сайта', 'phpshop/modules/sitemap/cron/sitemap_generator.php');
+        $work[] = array('Карта сайта SSL', 'phpshop/modules/sitemap/cron/sitemap_generator.php');
+    }
 
     $Tab1 = $PHPShopGUI->setField("Название задачи:", $PHPShopGUI->setInput("text.requared", "name_new", $data['name']));
     $Tab1.=$PHPShopGUI->setField("Запускаемый Файл:" , $PHPShopGUI->setInputArg(array('type'=>"text.requared", 'name'=>"path_new", 'size'=>'60%','float'=>'left','placeholder'=>'phpshop/modules/cron/sample/testcron.php','value'=>$data['path'])) . $PHPShopGUI->setSelect('work', $work, 200, 'left', false, false,false,false,false,false,'selectpicker', '$(\'input[name=path_new]\').val(this.value);'));

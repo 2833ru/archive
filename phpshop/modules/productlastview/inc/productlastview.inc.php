@@ -8,7 +8,7 @@ if (!defined("OBJENABLED"))
  */
 PHPShopObj::loadClass('order');
 
-class ProductLastView extends PHPShopElements {
+class ProductLastView extends PHPShopProductElements {
 
     var $debug = false;
 
@@ -191,10 +191,8 @@ class ProductLastView extends PHPShopElements {
 
         // Если есть товары в корзине
         if (count($this->_PRODUCT) > 0) {
-            $list = $this->display('productlastviewform', array('currency' => $this->currency));
+            $list = $this->display('productlastviewform', array('currency' => $this->currency,'user_price_activate'=>$this->user_price_activate));
             $this->set('productlastview_list', $list, true);
-
-            //$product = parseTemplateReturn($GLOBALS['SysValue']['templates']['productlastview']['productlastview_forma'], true);
             $product = PHPShopParser::file($GLOBALS['SysValue']['templates']['productlastview']['productlastview_forma'], true, false, true);
 
             $this->set('leftMenuContent', $product);
@@ -229,6 +227,7 @@ PHPShopObj::loadClass('parser');
 
 function productlastviewform($val, $option) {
     global $SysValue;
+    
 
     // Учет модуля SEOURLPRO
     if (!empty($GLOBALS['SysValue']['base']['seourlpro']['seourlpro_system'])) {
@@ -247,6 +246,11 @@ function productlastviewform($val, $option) {
     else {
         $url = '/shop/UID_' . $val['id'];
         PHPShopParser::set('productlastview_product_url', $url);
+    }
+    
+    // Если цены показывать только после авторизации
+    if($option['user_price_activate'] == 1){
+        $val['price']=$val['price_n']=$option['currency']=null;
     }
 
     PHPShopParser::set('productlastview_product_id', $val['id']);

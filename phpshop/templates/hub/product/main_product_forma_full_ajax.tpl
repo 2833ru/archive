@@ -29,7 +29,6 @@
                     <span class="price-new rubznak" itemprop="priceCurrency" content="RUB">@productValutaName@</span>
                 </div>
                 <div class="product-page-raiting rating">
-                    <span>{Рейтинг}:</span>
                     @rateUid@
                 </div>
             </div>

@@ -28,7 +28,7 @@
             <hr>
             <div class="media">
                 <div class="media-left">
-                    <a href="http://@serverShop@/shop/UID_@productId@.html"><IMG src="http://@serverShop@@productImg@" alt="@productName@" title="@productName@" border="0" hspace="10"></a>
+                    <a href="//@serverShop@/shop/UID_@productId@.html"><IMG src="//@serverShop@@productImg@" alt="@productName@" title="@productName@" border="0" hspace="10"></a>
                 </div>
                 <div class="media-body">
                     <div class="panel panel-default">
@@ -40,7 +40,7 @@
                             <p>@productDes@</p>
                             <h4>Цена: @productPrice@ @productValutaName@</h4>
 
-                            <a href="http://@serverShop@/shop/UID_@productId@.html" title="Перейти по ссылке: @productName@" class="pull-right"><span class="glyphicon glyphicon-share-alt"></span> http://@serverShop@/shop/UID_@productId@.html</a>
+                            <a href="//@serverShop@/shop/UID_@productId@.html" title="Перейти по ссылке: @productName@" class="pull-right"><span class="glyphicon glyphicon-share-alt"></span> http://@serverShop@/shop/UID_@productId@.html</a>
                         </div>
                     </div>
 

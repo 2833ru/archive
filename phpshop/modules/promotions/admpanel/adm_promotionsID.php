@@ -124,7 +124,10 @@ function actionUpdate() {
         } else {
             $_POST['categories_new'] = '';
         }
-
+        
+        if(is_array($_POST['statuses'])) 
+            $_POST['statuses_new'] = serialize($_POST['statuses']);
+        
         $PHPShopOrm->updateZeroVars('block_old_price_new');
 
         //Общая скидка
@@ -180,6 +183,7 @@ function actionStart() {
 
     $count_active = $PHPShopOrm->select(array('count("id") as count'), array('promo_id' => "='$id'", 'enabled' => '="1"'));
     $qty_active_count = $count_active['count'];
+    
     // способ оплаты
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['payment_systems']);
     $data_payment_systems = $PHPShopOrm->select(array('id,name'), false, array('order' => 'name'), array('limit' => 100));
@@ -192,12 +196,9 @@ function actionStart() {
         $value_payment_systems[] = array($value['name'], $value['id'], $sel);
     }
 
-
     //рекурс категорий в мультиселект
     $categories_option = Vivod_pot($data['categories']);
     $categories_mul_sel .= '<select multiple size="10" id="categories"  class="form-control input-sm" name="categories[]">' . $categories_option . '</select>';
-
-
 
     if ($qty_all_count)
         $qty_all = $PHPShopGUI->setDiv(false, $qty_all_count, '" class="badge  badge-info', 'qty-all" data-toggle="tooltip" title="Всего промокодов');
@@ -209,8 +210,23 @@ function actionStart() {
         $qty_off = '<button class="btn btn-danger btn-sm" type="button" id="qty_del" name="qty_del"> Удалить <span id="qty_off_count" data-count="' . $qty_off_count . '">' . $qty_off_count . '</span> использованных промокодов
 </button>';
 
-
-    $Tab1.=$PHPShopGUI->setCollapse('Условия', $PHPShopGUI->setField('Категории', $PHPShopGUI->setHelp('Выберите категории товаров и/или укажите ID товаров для акции.') . $PHPShopGUI->setCheckbox("categories_check_new", 1, "Учитывать категории товара", $data['categories_check']) . $PHPShopGUI->setCheckbox("selectalloption", 1, "Выбрать все категории?", '', "right") . $categories_mul_sel) .
+    // Статусы покупателя
+    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['shopusers_status']);
+    $data_user_status = $PHPShopOrm->select(array('id,name'), false, array('order' => 'name'), array('limit' => 100));
+    $status_array = unserialize($data['statuses']); 
+    array_unshift($data_user_status, array('id' => '-', 'name' => '- Покупатели без статуса -'));
+    
+    foreach ($data_user_status as $value) {
+        if (is_array($status_array) && in_array($value['id'], $status_array))
+            $sel = 'selected';
+        else
+            $sel = false;
+        $value_user_status[] = array($value['name'], $value['id'], $sel);        
+    }
+    
+    $Tab1.=$PHPShopGUI->setCollapse('Условия', $PHPShopGUI->setField('Статус покупателя', $PHPShopGUI->setCheckbox('status_check_new', 1, 'Учитывать статус покупателя', $data['status_check']) . '<br>' .
+            $PHPShopGUI->setSelect('statuses[]', $value_user_status, '300', true, false, false, '300', false, true)) .
+            $PHPShopGUI->setField('Категории', $PHPShopGUI->setHelp('Выберите категории товаров и/или укажите ID товаров для акции.') . $PHPShopGUI->setCheckbox("categories_check_new", 1, "Учитывать категории товара", $data['categories_check']) . $PHPShopGUI->setCheckbox("selectalloption", 1, "Выбрать все категории?", '', "right") . $categories_mul_sel) .
             $PHPShopGUI->setField('Товары', $PHPShopGUI->setCheckbox("products_check_new", 1, "Учитывать товары", $data['products_check']) . $PHPShopGUI->setCheckbox("block_old_price_new", 1, "Игнорировать товары со старой ценой", $data['block_old_price']) .
                     $PHPShopGUI->setTextarea('products_new', $data['products']) . $PHPShopGUI->setHelp('ID товаров в формате 1,2,3 без пробелов'))
             .

@@ -261,8 +261,11 @@ class PHPShopSocauth extends PHPShopCore {
         }
 
         if ($result) {  // если авторизация прошла
-            $regMass['login'] = $token['email'];
-            //$regMass['login'] = "vk" . $userInfo['uid'] . "@" . str_replace("www.", "", $_SERVER['SERVER_NAME']);
+            if(empty($token['email'])) {
+                $regMass['login'] = "vk" . $userInfo['id'] . "@" . str_replace("www.", "", $_SERVER['SERVER_NAME']);
+            } else {
+                $regMass['login'] = $token['email'];
+            }
             $regMass['name'] = PHPShopString::utf8_win1251($userInfo['first_name'] . " " . $userInfo[';ast_name']);
             $regMass['first_name'] = PHPShopString::utf8_win1251($userInfo['first_name']);
             $regMass['last_name'] = PHPShopString::utf8_win1251($userInfo['last_name']);

@@ -63,7 +63,7 @@ class PHPShopDate {
      */
     static function GetUnixTime($data, $delim = '-') {
         $array = explode($delim, $data);
-        return @mktime(12, 0, 0, $array[1], $array[0], $array[2]);
+        return @mktime(1, 0, 0, $array[1], $array[0], $array[2]);
     }
 
 }

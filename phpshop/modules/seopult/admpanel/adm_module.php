@@ -6,7 +6,7 @@ $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.seopult.seopult_sys
 // Функция обновления
 function actionUpdate() {
     global $PHPShopOrm, $PHPShopModules;
-
+    
 
     $params = array(
         'login' => PHPShopString::win_utf8($_POST['login_new']),
@@ -52,7 +52,18 @@ function actionUpdate() {
 }
 
 function actionStart() {
-    global $PHPShopGUI, $PHPShopSystem, $PHPShopOrm;
+    global $PHPShopGUI, $PHPShopSystem, $PHPShopOrm,$select_name,$TitlePage;
+    
+        $PHPShopGUI->action_button['Пульт'] = array(
+        'name' => 'Пульт управления',
+        'action' => 'modules.dir.seopult',
+        'class' => 'btn  btn-default btn-sm navbar-btn btn-action-panel',
+        'type' => 'button',
+        'icon' => 'glyphicon glyphicon-th'
+    );
+
+    
+     $PHPShopGUI->setActionPanel($TitlePage, $select_name, array('Пульт', 'Сохранить','Закрыть'));
 
     // Выборка
     $data = $PHPShopOrm->select();

@@ -493,7 +493,7 @@ form.navbar-right{
 
     .sidebar-left{
         margin-bottom: 0px;
-        padding-bottom: 0px;
+        padding-bottom: 10px;
         padding-top:10px;
 
         -background-color: transparent;
@@ -501,7 +501,8 @@ form.navbar-right{
 
     .sidebar-right{
         margin-bottom: 0px;
-        padding-bottom: 0px;
+        padding-bottom: 10px;
+        padding-top: 10px;
         -background-color: transparent;
     }
 

@@ -104,7 +104,7 @@ function tab_base($data) {
         }
 
 
-    if (count($data_pic) % 4 != 0)
+    if (count($data_pic) % 3 != 0)
         $img_list.='</div>';
 
 
@@ -147,7 +147,7 @@ function tab_base($data) {
         }
 
 
-    if (count($data_pic) % 4 != 0)
+    if (count($data_pic) % 3 != 0)
         $img_list_free.='</div>';
 
     // Персональный дизайн

@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_visualcart_system` (
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 
-INSERT INTO `phpshop_modules_visualcart_system` VALUES (1, '1', '1', 'Корзина', 50,'1', '');
+INSERT INTO `phpshop_modules_visualcart_system` VALUES (1, '0', '1', 'Корзина', 50,'1', '');
 
 DROP TABLE IF EXISTS `phpshop_modules_visualcart_memory`;
 CREATE TABLE `phpshop_modules_visualcart_memory` (

@@ -30,7 +30,7 @@ function actionStart() {
     $data = $PHPShopOrm->select();
 
     // Вывод
-    $e_value[] = array('кнока звонок', 0, $data['enabled']);
+    $e_value[] = array('кнопка звонок', 0, $data['enabled']);
     $e_value[] = array('слева', 1, $data['enabled']);
     $e_value[] = array('справа', 2, $data['enabled']);
 
@@ -49,7 +49,7 @@ function actionStart() {
     $Tab1.=$PHPShopGUI->setField('Тип вывода', $PHPShopGUI->setSelect('windows_new', $w_value, 200));
     //$Tab1.=$PHPShopGUI->setField('Captcha', $PHPShopGUI->setSelect('captcha_enabled_new', $c_value, 200));
 
-    $info = 'Для произвольной вставки элемента следует выбрать парамет вывода "Кнока звонок" и в ручном режиме вставить переменную
+    $info = 'Для произвольной вставки элемента следует выбрать парамет вывода "Кнопка звонок" и в ручном режиме вставить переменную
         <kbd>@returncall@</kbd> в свой шаблон.
         <p>Для персонализации формы вывода отредактируйте шаблоны <code>phpshop/modules/returncall/templates/</code></p>
         <p>Для включения защитной каптчи используйте <kbd>@returncall_captcha@</kbd> в форме обратного звонка <code>

@@ -3,7 +3,7 @@
     <version>1.1</version>
     <name>Liqpay</name>
     <faqlink>http://faq.phpshop.ru/page/liqpay.html</faqlink>
-    <description>Прием оплат через Liqpay.</description>
+    <description>Прием оплат через Liqpay для Украины.</description>
     <category>payment</category>
     <adminmenu>
         <title>Прием оплат через Liqpay</title>

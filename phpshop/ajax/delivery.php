@@ -74,7 +74,7 @@ function GetDeliveryPrice($deliveryID, $sum, $weight = 0) {
 
 $GetDeliveryPrice = GetDeliveryPrice(intval($_REQUEST['xid']), $_REQUEST['sum'], floatval($_REQUEST['wsum']));
 $totalsumma = $_REQUEST['sum'] + $GetDeliveryPrice;
-$deliveryArr = delivery(false, intval($_REQUEST['xid']));
+$deliveryArr = delivery(false, intval($_REQUEST['xid']),$_REQUEST['sum']);
 $dellist = $deliveryArr['dellist'];
 $adresList = $deliveryArr['adresList'];
 

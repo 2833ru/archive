@@ -3,7 +3,7 @@
     <version>1.3</version>
     <name>Яндекс.Касса</name>
     <faqlink>http://faq.phpshop.ru/page/yandex-kassa.html</faqlink>
-    <description>Прием оплат через Яндекс.Касса для юридических лиц.</description>
+    <description>Прием оплат через Яндекс.Касса в соответствии с 54-ФЗ.</description>
     <category>yandex,payment</category>
     <adminmenu>
         <title>Яндекс.Касса</title>

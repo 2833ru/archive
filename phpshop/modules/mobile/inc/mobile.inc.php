@@ -15,23 +15,26 @@ class AddToTemplateMDetect extends PHPShopProductElements {
 
     function __construct() {
         global $PHPShopSystem;
-
-        $skin = 'mobile';
-
         parent::__construct();
 
         // Настройки
         $option = $this->option();
+        $skin = $option['skin'];
 
         if (!empty($_GET['mobile']) and $_GET['mobile'] == 'true') {
             if (file_exists("phpshop/templates/" . $skin . "/index.html")) {
                 $_SESSION['skin'] = $skin;
+                
+
 
                 $option = null;
                 if (!empty($_GET['native']))
                     $option = '?native=' . $_GET['native'];
 
                 $url = str_replace("?mobile=true", "", $_SERVER['REQUEST_URI']);
+
+                if($skin != 'mobile')
+                    header('Location:  '.$url);
 
                 unset($_SESSION['Memory']);
 

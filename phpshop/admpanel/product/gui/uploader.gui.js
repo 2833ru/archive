@@ -107,8 +107,8 @@
             // We can replace original filename if needed
             if (!filename.length) {
                 ui.replaceName = "custom-data";
-            } else if (filename.length > 14) {
-                ui.replaceName = filename.substr(0, 10) + "_" + filename.substr(filename.lastIndexOf('.'));
+            } else if (filename.length > 70) {
+                ui.replaceName = filename.substr(0, 65) + "_" + filename.substr(filename.lastIndexOf('.'));
             }
 
             // We can add some data to POST in upload request

@@ -16,4 +16,3 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_ddeliverywidget_system` (
 INSERT INTO `phpshop_modules_ddeliverywidget_system` VALUES (1,'','','','0', '2', '1.2');
 
 ALTER TABLE `phpshop_delivery` ADD `is_mod` enum('1','2') DEFAULT '1';
-ALTER TABLE `phpshop_orders` ADD `ddelivery_token` varchar(64) default '';

@@ -83,8 +83,8 @@ class PHPShopPage extends PHPShopCore {
             $PHPShopOrm = new PHPShopOrm();
             $PHPShopOrm->debug = $this->debug;
             $result = $PHPShopOrm->query("select * from " . $this->getValue('base.products') . " where (" . $odnotipList . ") " . $chek_items . " and  enabled='1' and parent_enabled='0' and sklad!='1' order by num");
-            while ($row = mysqli_fetch_assoc($result))
-                $data[] = $row;
+            while ($product_row = mysqli_fetch_assoc($result))
+                $data[] = $product_row;
 
             // Сетка товаров
             if (!empty($data) and is_array($data))
@@ -142,8 +142,7 @@ class PHPShopPage extends PHPShopCore {
         // Мультибаза
         if (defined("HostID")) {
             $sort.= " and servers REGEXP 'i" . HostID . "i'";
-        }
-        elseif(defined("HostMain"))
+        } elseif (defined("HostMain"))
             $sort.= " and (servers = '' or servers REGEXP 'i1000i')";
 
         $PHPShopOrm = new PHPShopOrm();
@@ -161,8 +160,11 @@ class PHPShopPage extends PHPShopCore {
         $this->PHPShopCategory = new PHPShopPageCategory($this->category);
         $this->category_name = $this->PHPShopCategory->getName();
 
+        // Однотипные товары
+        $this->odnotip($row);
+
         // Определяем переменные
-        $this->set('pageContent', Parser(stripslashes($row['content'])));
+        $this->set('pageContent', Parser($row['content']));
         $this->set('pageTitle', $row['name']);
         $this->set('catalogCategory', $this->category_name);
         $this->set('catalogId', $this->category);
@@ -170,9 +172,6 @@ class PHPShopPage extends PHPShopCore {
 
         // Выделяем меню раздела
         $this->set('NavActive', $row['link']);
-
-        // Однотипные товары
-        $this->odnotip($row);
 
         // Мета
         if (empty($row['title']))
@@ -242,8 +241,16 @@ class PHPShopPage extends PHPShopCore {
         if (empty($this->category_name))
             return $this->setError404();
 
+        $where = array('category' => '=' . $this->category, 'enabled' => "='1'");
+
+        // Мультибаза
+        if (defined("HostID"))
+            $where['servers'] = " REGEXP 'i" . HostID . "i'";
+        elseif (defined("HostMain"))
+            $where['enabled'].= ' and (servers ="" or servers REGEXP "i1000i")';
+
         // Выборка данных
-        $dataArray = $this->PHPShopOrm->select(array('*'), array('category' => '=' . $this->category, 'enabled' => "='1'"), array('order' => 'num'), array('limit' => 100));
+        $dataArray = $this->PHPShopOrm->select(array('*'), $where, array('order' => 'num'), array('limit' => 100));
         if (is_array($dataArray)) {
 
             if (count($dataArray) > 1)
@@ -308,10 +315,18 @@ class PHPShopPage extends PHPShopCore {
         if (empty($this->category_name))
             return $this->setError404();
 
+        $where = array('parent_to' => '=' . $this->category);
+
+        // Мультибаза
+        if (defined("HostID"))
+            $where['servers'] = " REGEXP 'i" . HostID . "i'";
+        elseif (defined("HostMain"))
+            $where['parent_to'].= ' and (servers ="" or servers REGEXP "i1000i")';
+
         // Выборка данных
         $PHPShopOrm = new PHPShopOrm($this->getValue('base.page_categories'));
         $PHPShopOrm->debug = $this->debug;
-        $dataArray = $PHPShopOrm->select(array('name', 'id'), array('parent_to' => '=' . $this->category), array('order' => 'num,id desc'), array('limit' => 100));
+        $dataArray = $PHPShopOrm->select(array('name', 'id'), $where, array('order' => 'num,id desc'), array('limit' => 100));
         if (is_array($dataArray))
             foreach ($dataArray as $row) {
 

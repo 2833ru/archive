@@ -1,7 +1,7 @@
-<div id="raiting_star">
-    <div id="raiting">
-        <div id="raiting_blank"></div> <!--блок пустых звезд-->
-        <div id="raiting_votes" style="width:@avgRateWidth@px"></div> <!--блок с итогами голосов -->
+<div class="rating_star">
+    <div class="rating_inner">
+        <div class="rating_blank"></div> <!--блок пустых звезд-->
+        <div class="rating_votes" style="width:@avgRateWidth@px"></div> <!--блок с итогами голосов -->
     </div>
-    <div id="raiting_info"> {—редн€€ оценка} <b>@avgRate@</b> ({по оценкам} <b>@avgRateNum@</b> {пользователей}) </div>
+    <div class="rating_info"> @avgRate@ | по оценкам @avgRateNum@ пользователей </div>
 </div>

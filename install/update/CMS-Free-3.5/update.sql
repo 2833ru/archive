@@ -692,3 +692,7 @@ ALTER TABLE `phpshop_servers` ADD `adres` varchar(255) default '';
 ALTER TABLE `phpshop_servers` ADD `logo` varchar(255) default '';
 ALTER TABLE `phpshop_servers` ADD `adminmail` varchar(255) default '';
 ALTER TABLE `phpshop_order_status` ADD `mail_message` text default '';
+ALTER TABLE `phpshop_news` ADD `odnotip` text;
+ALTER TABLE `phpshop_servers` ADD `admoption` blob;
+ALTER TABLE `phpshop_news` ADD `servers` varchar(64) default '';
+ALTER TABLE `phpshop_page_categories` ADD `servers` varchar(64) default '';

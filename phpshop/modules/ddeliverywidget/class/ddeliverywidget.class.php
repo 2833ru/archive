@@ -18,7 +18,7 @@ class ddeliverywidget {
 class DDeliveryHelper
 {
 
-    const PROD_URL = 'http://ddelivery.ru/api/';
+    const PROD_URL = 'https://ddelivery.ru/api/';
 
     public $apiKey;
 

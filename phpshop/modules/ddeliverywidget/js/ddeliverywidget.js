@@ -1,8 +1,10 @@
 function ddeliverywidgetStart() {
 
     var products = $.parseJSON($("input:hidden.cartListJson").val());
-    $('<input type="hidden" name="ddeliverySum" id="ddeliverySum">').insertAfter('#d');
-    $('<input type="hidden" name="ddeliveryReq" class="req form-control">').insertAfter('#dop_info');
+    if(!$('input').is('[name="ddeliverySum"]')) { $('<input type="hidden" name="ddeliverySum" id="ddeliverySum">').insertAfter('#d'); }
+    if(!$('input').is('[name="ddeliveryReq"]')) { $('<input type="hidden" name="ddeliveryReq" class="req form-control">').insertAfter('#dop_info'); }
+    if(!$('input').is('[name="ddeliveryDop"]')) { $('<input type="hidden" name="ddeliveryDop">').insertAfter('#dop_info'); }
+    if(!$('input').is('[name="ddeliveryData"]')) { $('<input type="hidden" name="ddeliveryData">').insertAfter('#dop_info'); }
 
     var widget = new DDeliveryWidgetCart("dd-widget", {
         apiScript: "/phpshop/modules/ddeliverywidget/api/dd-widget-api.php",
@@ -21,35 +23,47 @@ function ddeliverywidgetStart() {
     // Вызовется при получении ответа от сервера DDelivery
         
         $('<input type="hidden" name="ddeliveryToken" value="' + response.id + '">').insertAfter('#d');
+        $('input[name="ddeliveryReq"]').val($('input[name="ddeliveryDop"]').val());
         $('#ddelivery-close').text('Продолжить').addClass('btn-success');
     });       
     
-    widget.on("change", function (data) {
-    // Вызовется при изменении выбранного способа доставки
-    // или любого другого значения в виджете
-        if(typeof data.delivery.point!=="undefined") {
-            var info = 'ПВЗ: ' + data.delivery.point.delivery_company_name;
-            info = info + ', срок: ' + data.delivery.point.delivery_date;
-            info = info +', адрес ПВЗ: '+data.delivery.point.address;
-            var del_sum = data.delivery.point.price_delivery;
-        } else {
-            var info = 'Доставка: ' + data.delivery.delivery_company_name;
-            info = info + ', срок: ' + data.delivery.delivery_date;
-            var del_sum = data.delivery.total_price;
+    widget.on("beforeSubmit", function (data) {
+        if(typeof data.delivery!=="undefined") {
+            if(typeof data.delivery.point!=="undefined") {
+                var info = 'ПВЗ: ' + data.delivery.point.delivery_company_name;
+                info = info + ', срок: ' + data.delivery.point.delivery_date;
+                info = info +', адрес ПВЗ: ' + data.city.name + ' ' + data.delivery.point.address;
+                info = info + ', телефон: ' + data.contacts.phone;  
+                var del_sum = data.delivery.point.price_delivery;
+            } else {
+                var info = 'Доставка: ' + data.delivery.delivery_company_name;
+                info = info + ', срок: ' + data.delivery.delivery_date;
+                info = info + ', адрес: ' + data.contacts.address.index + ' ' + data.city.name + ' ул.' + data.contacts.address.street + ' д.' + data.contacts.address.house + ' кв.' + data.contacts.address.flat;
+                info = info + ', телефон: ' + data.contacts.phone;  
+                var del_sum = data.delivery.total_price;
+            }
+            $('input[name="ddeliveryDop"]').val(info);
+            $('#deliveryInfo').html(info);
+
+            $("#DosSumma").html(del_sum);
+            $("#TotalSumma").html(Number(del_sum) + Number($('#OrderSumma').val()));
+            $('#ddeliverySum').val(del_sum);
         }
-        $('input[name="ddeliveryReq"]').val(info);
 
-        $("#DosSumma").html(del_sum);
-        $("#TotalSumma").html(Number(del_sum) + Number($('#OrderSumma').val()));
-        $('#ddeliverySum').val(del_sum);
-
-        //$('input[name="name_new"]').val(data.contacts.address.index);
+        $('input[name="name_new"]').val(data.contacts.fullName);
+		$('input[name="fio_new"]').val(data.contacts.fullName); 
+		if(data.contacts.phone) $('input[name="tel_new"]').val(data.contacts.phone.substring(1)); 
         $('input[name="city_new"]').val(data.city.name);
         $('input[name="flat_new"]').val(data.contacts.address.flat);
         $('input[name="house_new"]').val(data.contacts.address.house);
         $('input[name="street_new"]').val(data.contacts.address.street);
         $('input[name="index_new"]').val(data.contacts.address.index);
         
+        $('input[name="ddeliveryData"]').val(JSON.stringify(data, null, 0));
+        
+        // Hook
+        if ($.isFunction(window.ddeliverywidgetHook))
+            ddeliverywidgetHook(data);
     });      
 
     $("#ddeliverywidgetModal").modal("toggle");
@@ -64,7 +78,7 @@ function ddeliverywidgetReset() {
 function ddeliverywidgetHook(data) {
     
     // Блокировка по городу
-    if (data['city_name'] != 'Москва') {
+    if (data.city.name != 'Москва') {
 
         // блокировка способов оплат
         var paymentStop = '3'; // ИД оплаты через запятую

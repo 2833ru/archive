@@ -211,7 +211,7 @@ class PHPShopRSS {
                 "id" => $id,
                 "category" => $category,
                 "name" => $name,
-                "picture" => $row['pic_small'],
+                "picture" => $row['pic_big'],
                 "price" => $price,
                 "oldprice" => $oldprice,
                 "weight" => $row['weight'],

@@ -138,6 +138,9 @@ function actionInsert() {
         $_POST['categories_new'] = '';
     }
     
+    if(is_array($_POST['statuses'])) 
+        $_POST['statuses_new'] = serialize($_POST['statuses']);
+
     $PHPShopOrm->updateZeroVars('block_old_price_new');
 
      //Общая скидка
@@ -235,7 +238,23 @@ function actionStart() {
 		$qty_off = '<button class="btn btn-danger btn-sm" type="button" id="qty_del" name="qty_del"> Удалить <span id="qty_off_count" data-count="'.$qty_off_count.'">'.$qty_off_count.'</span> использованных промокодов
 </button>';
 
-    $Tab1.=$PHPShopGUI->setCollapse('Условия', $PHPShopGUI->setField('Категории', $PHPShopGUI->setHelp('Выберите категории товаров и/или укажите ID товаров для акции.').$PHPShopGUI->setCheckbox("categories_check_new", 1, "Учитывать категории товара", $data['categories_check']) . $PHPShopGUI->setCheckbox("selectalloption", 1, "Выбрать все категории?", '', "right") . $categories_mul_sel) .
+    // Статусы покупателя
+    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['shopusers_status']);
+    $data_user_status = $PHPShopOrm->select(array('id,name'), false, array('order' => 'name'), array('limit' => 100));
+    $status_array = unserialize($data['statuses']); 
+    array_unshift($data_user_status, array('id' => 0, 'name' => '- Покупатели без статуса -'));
+    
+    foreach ($data_user_status as $value) {
+        if (is_array($status_array) && in_array($value['id'], $status_array))
+            $sel = 'selected';
+        else
+            $sel = false;
+        $value_user_status[] = array($value['name'], $value['id'], $sel);        
+    }
+
+    $Tab1.=$PHPShopGUI->setCollapse('Условия', $PHPShopGUI->setField('Статус покупателя', $PHPShopGUI->setCheckbox('status_check_new', 1, 'Учитывать статус покупателя', $data['status_check']) . '<br>' .
+            $PHPShopGUI->setSelect('statuses[]', $value_user_status, '300', true, false, false, '300', false, true)) .
+            $PHPShopGUI->setField('Категории', $PHPShopGUI->setHelp('Выберите категории товаров и/или укажите ID товаров для акции.').$PHPShopGUI->setCheckbox("categories_check_new", 1, "Учитывать категории товара", $data['categories_check']) . $PHPShopGUI->setCheckbox("selectalloption", 1, "Выбрать все категории?", '', "right") . $categories_mul_sel) .
             $PHPShopGUI->setField('Товары', $PHPShopGUI->setCheckbox("products_check_new", 1, "Учитывать товары", $data['products_check'])  .$PHPShopGUI->setCheckbox("block_old_price_new", 1, "Игнорировать товары со старой ценой", $data['block_old_price']) .
             $PHPShopGUI->setTextarea('products_new', $data['products']) . $PHPShopGUI->setHelp('ID товаров в формате 1,2,3 без пробелов')) .
             $PHPShopGUI->setField('Заказ', $PHPShopGUI->setCheckbox("sum_order_check_new", 1, "Учитывать сумму заказа", $data['sum_order_check']) .

@@ -88,11 +88,13 @@ $(document).ready(function() {
        
         }
     });
+    /*
     changeOfProductRatingView();
     setInterval(changeOfReviewsRatingView, 100)
     $(document).on('click', function() {
         changeOfReviewsRatingView();
-    })
+    })*/
+    
     $('.sidebar-nav li').removeClass('dropdown');
     $('.sidebar-nav li ul').removeClass('dropdown-menu');
     /*$('.sidebar-nav > li > a').on('click', function() {

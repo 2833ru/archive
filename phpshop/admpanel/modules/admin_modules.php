@@ -284,9 +284,6 @@ function actionStart() {
                         else
                             $trial = null;
 
-
-
-
                         if (!$PHPShopBase->Rule->CheckedRules('modules', 'edit') or EXPIRES < $Info['sign']) {
                             $status = '<span class="glyphicon glyphicon-lock pull-right"></span> ';
                             unset($drop_menu);
@@ -313,7 +310,7 @@ function actionStart() {
 
     $tree = '<table class="table table-hover">
         <tr class="treegrid-all">
-           <td><a href="?path=modules" class="treegrid-parent" data-parent="treegrid-all">'.__('Все модули').'</a> <span id="mod-install-count" class="label label-primary pull-right">73</span></td>
+           <td><a href="?path=modules" class="treegrid-parent" data-parent="treegrid-all">'.__('Все модули').'</a> <span id="mod-install-count" class="label label-primary pull-right">75</span></td>
 	</tr>
         <tr class="treegrid-template">
            <td><a href="?path=modules&cat=template" class="treegrid-parent" data-parent="treegrid-template">'.__('Дизайн').'</a> <span id="mod-install-count" class="label label-primary pull-right">5</span></td>
@@ -328,7 +325,7 @@ function actionStart() {
            <td><a href="?path=modules&cat=seo" class="treegrid-parent" data-parent="treegrid-seo">SEO</a> <span id="mod-install-count" class="label label-primary pull-right">5</span></td>
 	</tr>
         <tr class="treegrid-delivery">
-           <td><a href="?path=modules&cat=delivery" class="treegrid-parent" data-parent="treegrid-delivery">'.__('Доставка').'</a> <span id="mod-install-count" class="label label-primary pull-right">4</span></td>
+           <td><a href="?path=modules&cat=delivery" class="treegrid-parent" data-parent="treegrid-delivery">'.__('Доставка').'</a> <span id="mod-install-count" class="label label-primary pull-right">5</span></td>
 	</tr>
         <tr class="treegrid-chat">
            <td><a href="?path=modules&cat=chat" class="treegrid-parent" data-parent="treegrid-delivery">'.__('Чаты и звонки').'</a> <span id="mod-install-count" class="label label-primary pull-right">5</span></td>
@@ -337,7 +334,7 @@ function actionStart() {
            <td><a href="?path=modules&cat=crm" class="treegrid-parent" data-parent="treegrid-crm">CRM</a> <span id="mod-install-count" class="label label-primary pull-right">2</span></td>
 	</tr>
         <tr class="treegrid-payment">
-           <td><a href="?path=modules&cat=payment" class="treegrid-parent" data-parent="treegrid-payment">'.__('Платежные системы').'</a> <span id="mod-install-count" class="label label-primary pull-right">18</span></td>
+           <td><a href="?path=modules&cat=payment" class="treegrid-parent" data-parent="treegrid-payment">'.__('Платежные системы').'</a> <span id="mod-install-count" class="label label-primary pull-right">19</span></td>
 	</tr>
         <tr class="treegrid-yandex">
            <td><a href="?path=modules&cat=yandex" class="treegrid-parent" data-parent="treegrid-yandex">'.__('Яндекс').'</a> <span id="mod-install-count" class="label label-primary pull-right">5</span></td>

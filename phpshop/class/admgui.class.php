@@ -80,6 +80,8 @@ class PHPShopGUI {
      */
     function setIcon($data, $id = "icon_new", $drag_off = false, $option = array('load' => true, 'server' => true, 'url' => true, 'multi' => false, 'view' => false), $width = false) {
 
+        $filename = $option['load'] === true ? '' : $option['load'];
+
         if (!empty($data)) {
             $name = '<span data-icon="' . $id . '">' . $data . '</span>';
             if (!empty($width))
@@ -90,13 +92,13 @@ class PHPShopGUI {
             $icon = '<img class="img-thumbnail img-thumbnail-dashed" data-thumbnail="' . $id . '" src="images/no_photo.gif">';
             $name = '<span data-icon="' . $id . '">' . $this->__('Выбрать файл') . '</span>';
             $icon_hide = 'hide';
-            $drag = '<input type="file" name="file"  data-target="' . $id . '">';
+            $drag = '<input type="file" name="file' . $filename . '"  data-target="' . $id . '">';
         }
 
         $add = $help = null;
 
         if (!empty($option['load']))
-            $add.='<span class="btn btn-default btn-file">' . $this->__('Загрузить') . '<input type="file" name="file"  data-target="' . $id . '"></span>';
+            $add.='<span class="btn btn-default btn-file">' . $this->__('Загрузить') . '<input type="file" name="file' . $filename . '"  data-target="' . $id . '"></span>';
         if (!empty($option['multi']))
             $add.='<button type="button" class="btn btn-default" id="uploaderModal">' . $this->__('Пакетно') . '</button>';
         if (!empty($option['server']))
@@ -104,7 +106,7 @@ class PHPShopGUI {
 
         if (!empty($option['url']))
             $add.='<button type="button" class="btn btn-default" id="promtUrl" data-target="' . $id . '">URL</button>
-                 <input type="hidden" name="furl" id="furl" value="0">';
+              <input type="hidden" name="furl' . $filename . '" id="furl" value="0">';
 
         if ($drag_off) {
             $drag = null;
@@ -112,17 +114,17 @@ class PHPShopGUI {
         }
 
         $dis = '
-        <div class="row">
-           <div class="col-md-2 btn-file"><a href="#" class="link-thumbnail">' . $icon . '</a>' . $drag . '</div>';
+     <div class="row">
+        <div class="col-md-2 btn-file"><a href="#" class="link-thumbnail">' . $icon . '</a>' . $drag . '</div>';
 
         if (empty($option['view']))
             $dis.='
-           <div class="col-md-10">
-             <p><span class="remove glyphicon glyphicon-remove-sign ' . $icon_hide . '" data-return="' . $id . '" data-toggle="tooltip" data-placement="top" title="' . $this->__('Удалить эту запись') . '"></span> ' . $name . '</p><input type="hidden" name="' . $id . '" value="' . $data . '">
-               <div class="btn-group btn-group-sm" role="group" aria-label="...">
-                 ' . $add . '
-              </div>
-          </div>';
+        <div class="col-md-10">
+          <p><span class="remove glyphicon glyphicon-remove-sign ' . $icon_hide . '" data-return="' . $id . '" data-toggle="tooltip" data-placement="top" title="' . $this->__('Удалить эту запись') . '"></span> ' . $name . '</p><input type="hidden" name="' . $id . '" value="' . $data . '">
+            <div class="btn-group btn-group-sm" role="group" aria-label="...">
+              ' . $add . '
+           </div>
+       </div>';
         else
             $dis.='<input type="hidden" name="' . $id . '" value="' . $data . '">';
 
@@ -214,7 +216,7 @@ class PHPShopGUI {
                     if (!empty($val['title-icon']))
                         $dis.='<span class="pull-right title-icon">' . $val['title-icon'] . '</span>';
 
-                    $dis.='<h6>' . $this->__($val['title']) . '</h6>';
+                    $dis.='<h6 class="hidden-xs hidden-sm">' . $this->__($val['title']) . '</h6>';
                     $dis.='<div class="row">';
 
                     if (!empty($val['icon'])) {
@@ -275,7 +277,7 @@ class PHPShopGUI {
                 if (is_array($val)) {
 
                     $dis.='<div class="sidebar-data" id="' . $val['idelement'] . '">';
-                    $dis.='<h6>' . $this->__($val['title']) . '</h6>';
+                    $dis.='<h6 class="hidden-xs hidden-sm">' . $this->__($val['title']) . '</h6>';
                     $dis.='<div class="row">';
 
                     if (!empty($val['icon'])) {
@@ -849,7 +851,7 @@ class PHPShopGUI {
      * @param bool $locale locale вкл/выкл
      * @return string
      */
-    function setInput($type, $name, $value, $float = null, $size = false, $onclick = false, $class = false, $action = false, $caption = false, $description = false, $placeholder = null, $locale= true) {
+    function setInput($type, $name, $value, $float = null, $size = false, $onclick = false, $class = false, $action = false, $caption = false, $description = false, $placeholder = null, $locale = true) {
         static $passN;
 
         $class_array = array(
@@ -891,8 +893,8 @@ class PHPShopGUI {
 
             $passN++;
         }
-        
-        
+
+
 
         if (!empty($description) or !empty($caption)) {
 
@@ -901,7 +903,7 @@ class PHPShopGUI {
             if (!empty($caption))
                 $CODE.= ' <div class="input-group-addon input-sm">' . $caption . '</div>';
 
-            $CODE.= '<input class="' . $class_array[$type] . ' ' . $class . '" type="' . $type . '" value="' . $value . '"  name="' . $name . '" id="' . $name . '" placeholder="' . $this->__($placeholder,$locale) . '">';
+            $CODE.= '<input class="' . $class_array[$type] . ' ' . $class . '" type="' . $type . '" value="' . $value . '"  name="' . $name . '" id="' . $name . '" placeholder="' . $this->__($placeholder, $locale) . '">';
 
             if (!empty($description))
                 $CODE.='<div class="input-group-addon input-sm">' . $description . '</div>';
@@ -932,12 +934,12 @@ class PHPShopGUI {
      * @param bool $locale locale вкл/выкл
      * @return string
      */
-    function setInputText($caption, $name, $value, $size = false, $description = false, $float = false, $class = false, $placeholder = false,$locale=true) {
+    function setInputText($caption, $name, $value, $size = false, $description = false, $float = false, $class = false, $placeholder = false, $locale = true) {
 
         // + fix
         $value = str_replace('&#43;', '+', $value);
 
-        return $this->setInput('text', $name, htmlentities($value, ENT_COMPAT, 'cp1251'), $float, $size, false, $class, false, $caption, $description, $placeholder,$locale);
+        return $this->setInput('text', $name, htmlentities($value, ENT_COMPAT, 'cp1251'), $float, $size, false, $class, false, $caption, $description, $placeholder, $locale);
     }
 
     /**
@@ -1159,7 +1161,7 @@ class PHPShopGUI {
      * @param string $text подсказка
      * @param bool $locale локализация
      */
-    function setHelpIcon($text, $locale=true) {
+    function setHelpIcon($text, $locale = true) {
         if ($locale)
             $text = $this->__($text);
         return '&nbsp;<span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="' . $text . '" style="cursor:pointer;"></span> ';
@@ -1306,7 +1308,7 @@ class PHPShopGUI {
         if (empty($id))
             $id = $name;
 
-        $CODE = $caption . '<select class="' . $class . ' show-menu-arrow hidden-edit" ' . $search . ' data-container="" data-none-selected-text="'.$this->__('Не выбрано').'" data-style="' . $style . '" data-width="' . $width . '"  name="' . $name . '" id="' . $id . '" size="' . $size . '" onchange="' . $onchange . '"   ' . $multiple . '>';
+        $CODE = $caption . '<select class="' . $class . ' show-menu-arrow hidden-edit" ' . $search . ' data-container="" data-none-selected-text="' . $this->__('Не выбрано') . '" data-style="' . $style . '" data-width="' . $width . '"  name="' . $name . '" id="' . $id . '" size="' . $size . '" onchange="' . $onchange . '"   ' . $multiple . '>';
         if (is_array($value))
             foreach ($value as $val) {
 
@@ -1378,7 +1380,7 @@ class PHPShopGUI {
             $checked = null;
 
         if (!empty($caption))
-            $CODE = '<div class="checkbox-inline"><label><input type="checkbox" value="' . $value . '" name="' . $name . '" id="' . $name . '" ' . $checked . ' ' . $disabled . '> ' . $this->__($caption,$locale) . '</label></div> ';
+            $CODE = '<div class="checkbox-inline"><label><input type="checkbox" value="' . $value . '" name="' . $name . '" id="' . $name . '" ' . $checked . ' ' . $disabled . '> ' . $this->__($caption, $locale) . '</label></div> ';
         else
             $CODE.='<input type="checkbox" value="' . $value . '" name="' . $name . '" id="' . $name . '" ' . $checked . ' ' . $disabled . '>';
 
@@ -1860,7 +1862,7 @@ class PHPShopInterface extends PHPShopGUI {
         <div class="container row sidebarcontainer">
             ' . $this->sidebarLeft . '
             <div class="col-md-' . $cell . ' main">
-            <table class="table table-hover " id="' . $id . '">
+            <table class="table table-hover table-responsive" id="' . $id . '">
 		' . $this->_CODE . '
                 </tbody>
             </table>
@@ -1885,8 +1887,8 @@ class PHPShopInterface extends PHPShopGUI {
     function setCaption() {
         $Arg = func_get_args();
         $CODE = null;
+        
         $option['align'] = 'left';
-
 
         foreach ($Arg as $key => $val) {
 

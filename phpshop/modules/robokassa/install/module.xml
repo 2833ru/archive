@@ -2,10 +2,9 @@
 <module>
     <version>1.1</version>
     <name>Robokassa</name>
-    <description>Прием оплат через Robokassa.</description>
+    <description>Прием оплат через Robokassa в соответствии с 54-ФЗ.</description>
     <category>payment</category>
     <faqlink>http://faq.phpshop.ru/page/robokassa.html</faqlink>
-    <status>update</status>
     <adminmenu>
         <title>Robokassa</title>
         <capability>true</capability>

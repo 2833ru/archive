@@ -84,7 +84,7 @@ class PHPShopSort {
             while (@$row = mysqli_fetch_array($result)) {
                 $id = $row['id'];
                 $name = $row['name'];
-                $this->disp.=$this->value($id, $name, true, $template, $vendor);
+                $this->disp.=$this->value($id, $name, true, $template, $vendor, $row['description']);
             }
         }
     }
@@ -163,9 +163,11 @@ class PHPShopSort {
      * @param string $title Название
      * @param bool $all Показывать опцию выбрать все
      * @param string $template Имя функции шаблона вывода
+     * @param int $v ID характеристики родителя
+     * @param string $help Подсказка
      * @return string
      */
-    function value($n, $title, $all = false, $template = null, $vendor = false) {
+    function value($n, $title, $all = false, $template = null, $vendor = false, $help = null) {
         global $SysValue;
 
         $disp = null;
@@ -228,7 +230,7 @@ class PHPShopSort {
             $size = (strlen($title) + 7) * 6;
             $disp = PHPShopText::select('v[' . $n . ']', $value, $size, false, false, false, false, false, $n);
         } elseif (function_exists($template) && !empty($value)) {
-            $disp = call_user_func_array($template, array($value, $n, $title, $vendor));
+            $disp = call_user_func_array($template, array($value, $n, $title, $vendor, $help));
         }
 
         // Массив характеристик для использования в модулях

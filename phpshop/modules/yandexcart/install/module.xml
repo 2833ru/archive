@@ -2,7 +2,7 @@
 <module>
     <version>2.1</version>
     <name>Яндекс.Заказ</name>
-    <description>Модуль заказов через Яндекс.Маркет.</description>
+    <description>Модуль продаж через Яндекс.Маркет.</description>
     <faqlink>http://faq.phpshop.ru/page/yandex-cart.html</faqlink>
     <category>yandex,sale</category>
     <status>update</status>

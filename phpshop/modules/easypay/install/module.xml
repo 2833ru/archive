@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<module>
+    <version>1.0</version>
+    <name>Easypay</name>
+    <faqlink>http://faq.phpshop.ru/page/easypay.html</faqlink>
+    <description>Прием оплат через Easypay c ЕРИП для Белоруссии.</description>
+    <category>payment</category>
+    <status>new</status>
+    <adminmenu>
+        <title>Прием оплат Easypay</title>
+        <capability>true</capability>
+    </adminmenu>
+</module>

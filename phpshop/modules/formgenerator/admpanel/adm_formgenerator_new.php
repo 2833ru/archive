@@ -25,7 +25,7 @@ function actionStart() {
         $content = file_get_contents('../modules/formgenerator/templates/formgenerator.tpl');
 
     $Tab1 = $PHPShopGUI->setField('Название:', $PHPShopGUI->setInputText(false, 'name_new', 'Новая форма'));
-    $Tab1.=$PHPShopGUI->setField('Ссылка:', $PHPShopGUI->setInputText('http://' . $_SERVER['SERVER_NAME'] . '/formgenerator/', 'path_new', 'example'));
+    $Tab1.=$PHPShopGUI->setField('Ссылка:', $PHPShopGUI->setInputText('http://' . $_SERVER['SERVER_NAME'] . '/formgenerator/', 'path_new', 'example',false,'/'));
     $Tab1.=$PHPShopGUI->setField('E-mail:', $PHPShopGUI->setInputText(false, 'mail_new', $PHPShopSystem->getParam("adminmail2")));
     $Tab1.=$PHPShopGUI->setline() . $PHPShopGUI->setField('Статус:', $PHPShopGUI->setCheckbox('enabled_new', '1', 'Вывод на сайте', 1) .
                     $PHPShopGUI->setCheckbox('user_mail_copy_new', '1', 'Выслать копию пользователю на e-mail', 1));
@@ -43,7 +43,7 @@ function actionStart() {
     $Tab2 = $oFCKeditor->AddGUI();
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1), array("Содержание", $Tab2));
+    $PHPShopGUI->setTab(array("Основное", $Tab1,true), array("Содержание", $Tab2));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("submit", "saveID", "Сохранить", "right", false, false, false, "actionInsert.modules.create");

@@ -29,7 +29,16 @@ function index_newselement_seourl_hook($obj, $dt, $rout) {
             if ($seourl_option["seo_news_enabled"] != 2)
                 return false;
 
-            $result = $obj->PHPShopOrm->select(array('*'), false, array('order' => 'id DESC'), array("limit" => $obj->limit));
+        $where['datau'] = '<' . time();
+
+        // Мультибаза
+        if (defined("HostID"))
+            $where['servers'] = " REGEXP 'i" . HostID . "i'";
+        elseif (defined("HostMain"))
+            $where['datau'].= ' and (servers ="" or servers REGEXP "i1000i")';
+
+
+            $result = $obj->PHPShopOrm->select(array('*'), $where, array('order' => 'id DESC'), array("limit" => $obj->limit));
 
             // Проверка на еденичню запись
             if ($obj->limit > 1)

@@ -24,10 +24,10 @@ if (!file_exists('./css/bootstrap-theme-' . $theme . '.css'))
 
         <!-- Bootstrap -->
         <link id="bootstrap_theme" href="../../css/bootstrap-theme-<?php echo $theme; ?>.css" rel="stylesheet">
-        <script src="../../js/jquery-1.11.0.min.js"></script>
-        <script src="../../js/jquery.damnUploader.min.js"></script>
-        <script src="./uploader.gui.js"></script>
-        <script src="../../js/locale.ru.js"></script>
+        <script src="../../js/jquery-1.11.0.min.js" data-rocketoptimized="false" data-cfasync="false"></script>
+        <script src="../../js/jquery.damnUploader.min.js" data-rocketoptimized="false" data-cfasync="false"></script>
+        <script src="./uploader.gui.js" data-rocketoptimized="false" data-cfasync="false"></script>
+        <script src="../../../locale/<?php echo $_SESSION['lang'];?>/gui.js" data-rocketoptimized="false" data-cfasync="false"></script>
 
     </head>
     <body>

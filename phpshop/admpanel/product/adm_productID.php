@@ -434,7 +434,7 @@ function actionUpdate() {
         if (isset($_POST['editID'])) {
             if (is_array($_POST['files_new'])) {
                 foreach ($_POST['files_new'] as $k => $files)
-                    $files_new[$k] = @array_map("urldecode", $files);
+                    $files_new[] = @array_map("urldecode", $files);
 
                 $_POST['files_new'] = serialize($files_new);
             }
@@ -468,8 +468,6 @@ function actionUpdate() {
     // Права пользователя
     $_POST['user_new'] = $_SESSION['idPHPSHOP'];
 
-
-
     $PHPShopOrm->debug = false;
     $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['rowID']));
     $PHPShopOrm->clean();
@@ -499,7 +497,7 @@ function fotoAdd() {
 
     // Папка сохранения
     $path = $GLOBALS['SysValue']['dir']['dir'] . '/UserFiles/Image/' . $PHPShopSystem->getSerilizeParam('admoption.image_result_path');
-
+    
     // Соль
     $RName = substr(abs(crc32(time())), 0, 5);
 
@@ -528,6 +526,9 @@ function fotoAdd() {
         $file = $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['dir']['dir'] . $_POST['img_new'];
         $path_parts = pathinfo($file);
         $file_name = $path_parts['basename'];
+        
+        // Сохранение пути файла
+        $path = $GLOBALS['SysValue']['dir']['dir'] . str_replace($_SERVER['DOCUMENT_ROOT'],'',$path_parts['dirname']).'/';
     }
 
     if (!empty($file)) {

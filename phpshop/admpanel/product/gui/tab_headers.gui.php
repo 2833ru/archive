@@ -108,7 +108,7 @@ function tab_headers($row) {
 <input type="button" value="," onclick="ShablonAdd(\',\',\'ShablonD\')" class="buttonSh">
 <input type="button" value="-" onclick="ShablonAdd(\'-\',\'ShablonD\')" class="buttonSh">
 <input type="button" value="/" onclick="ShablonAdd(\'/\',\'ShablonD\')" class="buttonSh">
-<input type="button"  value="'.__('Пробел').' onclick="ShablonAdd(\' \',\'ShablonD\')" class="buttonSh">
+<input type="button"  value="'.__('Пробел').'" onclick="ShablonAdd(\' \',\'ShablonD\')" class="buttonSh">
 <input type="button"  value="'.__('Ввести слово').'" onclick="ShablonPromt(\'ShablonD\')" class="buttonSh">
 <input type="button"  value="'.__('Сбросить').'" onclick="ShablonDell(\'ShablonD\')" class="buttonSh">
  </div>

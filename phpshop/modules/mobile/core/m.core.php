@@ -16,7 +16,7 @@ class PHPShopM extends PHPShopCore {
     }
 
     function index() {
-        header('Location: ?mobile=true');
+        header('Location: /?mobile=true');
 
     }
 

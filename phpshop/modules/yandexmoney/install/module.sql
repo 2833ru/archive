@@ -3,13 +3,13 @@
 DROP TABLE IF EXISTS `phpshop_modules_yandexmoney_system`;
 CREATE TABLE IF NOT EXISTS `phpshop_modules_yandexmoney_system` (
   `id` int(11) NOT NULL auto_increment,
-  `status` int(11) NOT NULL,
-  `title` text NOT NULL,
-  `title_end` text NOT NULL,
-  `merchant_id` varchar(64) NOT NULL default '',
-  `merchant_sig` varchar(64) NOT NULL default '',
-  `serial` varchar(64) NOT NULL default '',
-  `version` FLOAT(2) DEFAULT '1.0' NOT NULL,
+  `status` int(11),
+  `title` text,
+  `title_end` text,
+  `merchant_id` varchar(64) default '',
+  `merchant_sig` varchar(64) default '',
+  `serial` varchar(64) default '',
+  `version` varchar(64) DEFAULT '1.0',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 

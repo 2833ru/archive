@@ -179,7 +179,8 @@ php@</p>
 </p>
 <br>         
 <hr>
-<p>{Вы можете проверить статус заказа, загрузить файлы, распечатать платежные документы, через} <a href='http://".$_SERVER["SERVER_NAME"].$GLOBALS["SysValue"]["dir"]["dir"]."/users/order.html?order_info=".$_POST["ouid"]."#Order'>{Личный кабинет}</a>.
+<p>{Вы можете проверить статус заказа, загрузить файлы, распечатать платежные документы, через} 
+    <a href='http://@serverPath@users/order.html?order_info=@ouid@#Order'>{Личный кабинет}</a>.
 </p>
 <p>{Если у Вас есть вопрос, задайте его нам в Личном кабинете в разделе} <a href="http://@serverPath@users/message.html">{Связь с менеджером}</a>. </p>   
         </td>

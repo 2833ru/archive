@@ -28,6 +28,7 @@ function tab_map() {
     global $PHPShopGUI, $MapValue;
 
     $map_name = array(
+        'terra'=>4,
         'hub'=>4,
         'unishop'=>2,
         'bootstrap' => 2,

@@ -24,7 +24,6 @@
                 </li>
                 <li>
                     <div class="rating">
-                        <span>{Рейтинг} :</span>
                         @rateUid@
                     </div>
                 </li>

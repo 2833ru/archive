@@ -39,7 +39,7 @@ function actionStart() {
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
 
     $Tab1 = $PHPShopGUI->setField('Название:', $PHPShopGUI->setInputText(false, 'name_new', $data['name']));
-    $Tab1.=$PHPShopGUI->setField('Ссылка:', $PHPShopGUI->setInputText('http://' . $_SERVER['SERVER_NAME'] . '/formgenerator/', 'path_new', $data['path']));
+    $Tab1.=$PHPShopGUI->setField('Ссылка:', $PHPShopGUI->setInputText('http://' . $_SERVER['SERVER_NAME'] . '/formgenerator/', 'path_new', $data['path'],false,'/'));
     $Tab1.=$PHPShopGUI->setField('E-mail:', $PHPShopGUI->setInputText(false, 'mail_new', $data['mail']));
     $Tab1.=$PHPShopGUI->setline() . $PHPShopGUI->setField('Статус:', $PHPShopGUI->setCheckbox('enabled_new', '1', 'Вывод на сайте', $data['enabled']) .
                     $PHPShopGUI->setCheckbox('user_mail_copy_new', '1', 'Выслать копию пользователю на e-mail', 1));
@@ -51,20 +51,15 @@ $PHPShopFormgeneratorElement = new PHPShopFormgeneratorElement();
 echo $PHPShopFormgeneratorElement->forma("' . $data['path'] . '");
 php@', 'none', '98%', 100) . $PHPShopGUI->setHelp('Код для ручной вставки. Для вставки кода в текстовый блок предварительно отключите визуальный редактор.');
 
-
-
     // Редактор 1
     $PHPShopGUI->setEditor('ace', true);
-
     $oFCKeditor = new Editor('content_new');
     $oFCKeditor->Height = '520';
     $oFCKeditor->Value = $data['content'];
     $Tab2 = $oFCKeditor->AddGUI();
 
-
-
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1), array("Содержание", $Tab2), array("Код", $Tab3));
+    $PHPShopGUI->setTab(array("Основное", $Tab1,true), array("Содержание", $Tab2), array("Код", $Tab3));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =

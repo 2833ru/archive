@@ -1,6 +1,6 @@
 #!bin/bash
 
-# PHPShop Updater v 1.0
+# PHPShop Updater 
 
 RED='\033[01;31m'
 GREEN='\033[01;32m'
@@ -9,14 +9,15 @@ CYAN='\033[01;36m'
 WHITE='\033[01;37m'
 NC='\033[00m'
 TMP='../backup/temp/'
+V='1.1'
 
 if [ $# = 0 ] ; then 
-    echo  "${CYAN}PHPShop Updater 1.0${NC}"
+    /bin/echo -e  "${CYAN}PHPShop Updater ${V}${NC}"
 fi
 
 # check unzip lib
 if [ ! $(which unzip) ] ; then 
-   echo "${RED}You need to install the unzip library!${NC}"
+   /bin/echo -e "${RED}You need to install the unzip library!${NC}"
    exit 0
 fi
 
@@ -25,7 +26,7 @@ fi
 . `pwd`/../license/`ls ../license`  > /dev/null 2>&1
 
 if [ $(echo $DomenLocked | tr -d '\r' ) = "" ] ; then 
-   echo  "${RED}Failed to find the license file, run this file in /sh/ directory!${NC}"
+   /bin/echo -e  "${RED}Failed to find the license file, run this file in /sh/ directory!${NC}"
    exit 0
 fi
 
@@ -41,13 +42,13 @@ wget "$link&check=true" -O ${TMP}l q >/dev/null 2>&1
 version=`more ${TMP}l`
 
 if [ $version = "no_update" ] ; then 
-   echo  "${YELLOW}You have the latest version, no updates required${NC}"
+   /bin/echo -e  "${YELLOW}You have the latest version, no updates required${NC}"
    exit 0
 elif [ $version = "passive" ] ; then 
-   echo "${YELLOW}To update, you need to extend the technical support!${NC}"
+   /bin/echo -e "${YELLOW}To update, you need to extend the technical support!${NC}"
    exit 0
 elif [ $# = 0 ] ; then
-   echo "${NC}New PHPShop ${version} is available, update now? (y / n)${NC}"
+   /bin/echo -e "${NC}New PHPShop ${version} is available, update now? (y / n)${NC}"
    read ready
    if [ $ready = "n" ] ; then 
    exit 0
@@ -64,14 +65,14 @@ wget "$link&file=zip" -O ${TMP}update.zip -q >/dev/null 2>&1
 wget "$link&file=ini" -O ${TMP}config_update.txt -q >/dev/null 2>&1
 
 if [ -s ${TMP}update.zip ] ; then 
-   echo  "${GREEN}Loading  is finished...${NC}"
-else "${RED}Downloading update files failed!${NC}"
+   /bin/echo -e "${GREEN}Loading  is finished...${NC}"
+else /bin/echo -e "${RED}Downloading update files failed!${NC}"
    exit 0;
 fi
 
 unzip -o ${TMP}update.zip -d ../
 rm -rf ${TMP}update.zip
-echo  "${GREEN}Unpacking is finished...${NC}"
+/bin/echo -e "${GREEN}Unpacking is finished...${NC}"
 
 # update mysql
 wget "$link&file=sql" -O ${TMP}update.sql -q >/dev/null 2>&1
@@ -80,7 +81,7 @@ if [ -s ${TMP}update.sql ] ; then
    result=`php cli.lib.php sql`
 
    if [ $result = "done" ] ; then 
-   echo  "${GREEN}Update MySQL is finished...${NC}"
+   /bin/echo -e "${GREEN}Update MySQL is finished...${NC}"
    rm -rf ${TMP}update.sql
    fi
 fi
@@ -90,10 +91,10 @@ chmod 775 ../phpshop/inc/config.ini
 result=`php cli.lib.php ini`
 
 if [ $result = "done" ] ; then 
-   echo  "${GREEN}Update config is finished...${NC}"
+   /bin/echo -e "${GREEN}Update config is finished...${NC}"
    rm -rf ${TMP}config_update.txt
 else 
-   echo  "${RED}Configuration file can not be updated!${NC}"
+   /bin/echo -e "${RED}Configuration file can not be updated!${NC}"
    exit 0
 fi
 
@@ -105,15 +106,15 @@ chmod 775 ../backup/backups/$current >/dev/null 2>&1
 
 result=`php cli.lib.php backup $current`
 if [ $result = "done" ] ; then 
-   echo  "${GREEN}Backup version ${current} is finished...${NC}"
+   /bin/echo -e "${GREEN}Backup version ${current} is finished...${NC}"
    rm -rf ${TMP}upd_conf.txt
    rm -rf ${TMP}restore.sql
 else 
-   echo  "${RED}Backup version ${current} can not be created!${NC}"
+   /bin/echo -e "${RED}Backup version ${current} can not be created!${NC}"
 fi
 
 
-echo  "${CYAN}Your PHPShop update successful to version ${version} ${NC}"
+/bin/echo -e "${CYAN}Your PHPShop update successful to version ${version} ${NC}"
 
 
 # check new version one more
@@ -122,9 +123,9 @@ version=`more ${TMP}l`
 rm -rf ${TMP}l
 
 if [ $version = "no_update" ] ; then 
-   echo "${CYAN}No more updates, you have the latest version${NC}"
+   /bin/echo -e "${CYAN}No more updates, you have the latest version${NC}"
    else  
-   echo "${NC}New PHPShop ${version} is available, update now? (y / n)${NC}"
+   /bin/echo -e "${NC}New PHPShop ${version} is available, update now? (y / n)${NC}"
    read ready
 
    if [ $ready = "y" ] ; then 
