@@ -3,7 +3,7 @@
     <version>1.5</version>
     <name>OZON Seller</name>
     <description>Модуль продаж через OZON.</description>
-    <category>pro,sale</category>
+    <category>pro,marketplaces</category>
     <sign>1663226062</sign>
     <faqlink>https://docs.phpshop.ru/moduli/prodazhi/ozon-seller</faqlink>
     <pro>true</pro>

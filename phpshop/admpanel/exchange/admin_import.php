@@ -400,6 +400,13 @@ function csv_update($data) {
                             $path_parts = pathinfo($img);
                             $path_parts['basename'] = PHPShopFile::toLatin($path_parts['basename']);
 
+                            // Проверка имени файла
+                            if (file_exists($_SERVER['DOCUMENT_ROOT'] . $GLOBALS['dir']['dir'] . '/UserFiles/Image/' . $path . $path_parts['basename'])){
+                                // Соль
+                                $rand = '_'.substr(abs(crc32($img)), 0, 5);
+                                $path_parts['basename'] = str_replace([".png", ".jpg", ".jpeg", ".gif", ".PNG", ".JPG", ".JPEG", ".GIF", ".WEBP"], [$rand.".png", $rand.".jpg", $rand.".jpeg", $rand.".gif", $rand.".PNG", $rand.".JPG", $rand.".JPEG", $rand.".GIF", $rand.".WEBP"], $path_parts['basename']);
+                            }
+
                             // Файл загружен
                             if (downloadFile($img, $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['dir']['dir'] . '/UserFiles/Image/' . $path . $path_parts['basename']))
                                 $img_load++;
@@ -411,12 +418,12 @@ function csv_update($data) {
 
                             // Сохранение в webp
                             if ($PHPShopSystem->ifSerilizeParam('admoption.image_webp_save') and $path_parts['extension'] != 'webp') {
-                                
-                                $thumb = new PHPThumb($_SERVER['DOCUMENT_ROOT'].$img);
+
+                                $thumb = new PHPThumb($_SERVER['DOCUMENT_ROOT'] . $img);
                                 $thumb->setFormat('WEBP');
                                 $name_webp = str_replace([".png", ".jpg", ".jpeg", ".gif", ".PNG", ".JPG", ".JPEG", ".GIF", ".WEBP"], '.webp', $img);
-            
-                                $thumb->save($_SERVER['DOCUMENT_ROOT'].$name_webp);
+
+                                $thumb->save($_SERVER['DOCUMENT_ROOT'] . $name_webp);
                                 //@unlink($_SERVER['DOCUMENT_ROOT'].$img);
                                 $img = $name_webp;
                             }
@@ -957,11 +964,13 @@ function actionStart() {
         $memory[$_GET['path']]['export_imgproc'] = @$_POST['export_imgproc'];
         $memory[$_GET['path']]['export_code'] = @$_POST['export_code'];
         $memory[$_GET['path']]['bot'] = @$_POST['bot'];
+        $memory[$_GET['path']]['export_key'] = @$_POST['export_key'];
 
         $export_sortdelim = @$memory[$_GET['path']]['export_sortdelim'];
         $export_sortsdelim = @$memory[$_GET['path']]['export_sortsdelim'];
         $export_imgvalue = @$memory[$_GET['path']]['export_imgdelim'];
         $export_code = $memory[$_GET['path']]['export_code'];
+        $export_key = $memory[$_GET['path']]['export_key'];
     }
     // Настройки по умолчанию
     else {
@@ -976,7 +985,6 @@ function actionStart() {
         if ($subpath[2] == 'catalog')
             $memory[$_GET['path']]['export_action'] = 'insert';
     }
-
 
     $PHPShopGUI->action_button['Импорт'] = array(
         'name' => __('Выполнить'),
@@ -1009,6 +1017,8 @@ function actionStart() {
             $data['path'] = null;
         }
 
+        $key_value[] = array('Id или Артикул', 0);
+
         foreach ($data as $key => $val) {
 
             if (!empty($key_name[$key]))
@@ -1034,12 +1044,14 @@ function actionStart() {
                 $select_value[] = array(ucfirst($name), ucfirst($name), false, $help);
 
                 // Ключ обнвления
-                if ($key != 'id' and $key != 'uid' and $key != 'vendor' and $key != 'vendor_array')
-                    $key_value[] = array(ucfirst($name), $key, false);
+                if ($key != 'id' and $key != 'uid' and $key != 'vendor' and $key != 'vendor_array') {
+                    $key_value[] = array(ucfirst($name), $key, $export_key);
+                }
             }
         }
     } else
         $list = '<span class="text-warning hidden-xs">' . __('Недостаточно данных для создания карты полей. Создайте одну запись в нужном разделе в ручном режиме для начала работы') . '.</span>';
+
 
     // Размер названия поля
     $PHPShopGUI->field_col = 3;
@@ -1099,7 +1111,6 @@ function actionStart() {
     $code_value[] = array('ANSI', 'ansi', $export_code);
     $code_value[] = array('UTF-8', 'utf', $export_code);
 
-    $key_value[] = array('Id или Артикул', 0, 'selected');
 
     // Закладка 1
     $Tab1 = $PHPShopGUI->setField("Файл", $PHPShopGUI->setFile($_POST['lfile'])) .
@@ -1240,7 +1251,7 @@ class sortCheck {
             $this->debug('Есть характеристика "' . $name . '" c ID=' . $check_name['id'] . ' и CATEGORY=' . $check_name['category']);
 
             // Проверка значения характеристики
-            $check_value = (new PHPShopOrm($GLOBALS['SysValue']['base']['sort']))->getOne(['*'], ['name' => '="' . $value . '"','category'=>'="' . $check_name['id'] . '"']);
+            $check_value = (new PHPShopOrm($GLOBALS['SysValue']['base']['sort']))->getOne(['*'], ['name' => '="' . $value . '"', 'category' => '="' . $check_name['id'] . '"']);
             if ($check_value) {
                 $this->debug('Есть значение характеристики "' . $name . '" = "' . $value . '" c ID=' . $check_value['id']);
 

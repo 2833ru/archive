@@ -37,7 +37,7 @@ function modulesSubMenu($subpath) {
             $TitlePage = $db['adminmenu']['podmenu']['podmenu_name'];
         }
 
-        $TitlePage.= '  ' . $db['name'];
+        $TitlePage.= ' - ' . $db['name'];
     }
 
     $TitlePage=__($TitlePage);

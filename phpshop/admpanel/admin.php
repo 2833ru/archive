@@ -176,7 +176,7 @@ if (!file_exists('./css/bootstrap-theme-' . $theme . '.css'))
     $theme = 'default';
 
 $version = null;
-$adm_title = $adm_brand = $PHPShopSystem->getSerilizeParam('admoption.adm_title');
+$adm_title = $adm_brand = substr($PHPShopSystem->getSerilizeParam('admoption.adm_title'),0,70);
 foreach (str_split($GLOBALS['SysValue']['upload']['version']) as $w)
     $version .= $w . '.';
 $brand = 'PHPShop ' . substr($version, 0, 3);
@@ -416,7 +416,7 @@ if (!empty($_COOKIE['fullscreen'])) {
                                         </ul>
                                     </li>
                                     <li><a href="?path=shopusers.notice"><?php _e('Уведомления'); ?><span class="dropdown-header"><?php _e('Запросы от покупателей о поступлении товара на склад'); ?></span></a></li>
-                                    <li><a href="?path=shopusers.comment"><?php _e('Комментарии'); ?><span class="dropdown-header"><?php _e('Список комментариев для товаров, оставленные пользователями'); ?></span></a></li>
+                                    <li><a href="?path=shopusers.comment"><?php _e('Отзывы о товарах'); ?><span class="dropdown-header"><?php _e('Список отзывов для товаров, оставленные пользователями'); ?></span></a></li>
                                     <li class="divider"></li>
                                     <li><a href="?path=dialog"><span class="glyphicon glyphicon-comment"></span> <?php _e('Диалоги с пользователями'); ?></a></li>
                                 </ul>
@@ -428,7 +428,7 @@ if (!empty($_COOKIE['fullscreen'])) {
                                     <li><a href="?path=page.catalog"><?php _e('Страницы'); ?><span class="dropdown-header"><?php _e('Создание и публикация страниц'); ?></span></a></li>
                                     <li><a href="?path=photo.catalog"><?php _e('Фотогалерея'); ?><span class="dropdown-header"><?php _e('Фотогалерея изображений на сайте'); ?></span></a></li>
                                     <li><a href="?path=menu"><?php _e('Текстовые блоки'); ?><span class="dropdown-header"><?php _e('Вывод текстовых блоков в блок-меню'); ?></span></a></li>
-                                    <li><a href="?path=gbook"><?php _e('Отзывы'); ?><span class="dropdown-header"><?php _e('Отзывы пользователей о сайте'); ?></span></a></li>
+                                    <li><a href="?path=gbook"><?php _e('Отзывы о сайте'); ?><span class="dropdown-header"><?php _e('Отзывы пользователей о сайте'); ?></span></a></li>
                                     <li><a href="?path=news"><?php _e('Новости'); ?><span class="dropdown-header"><?php _e('Новостная лента сайта'); ?></span></a></li>
                                 </ul>
                             </li>

@@ -6,7 +6,13 @@
 // Включение [true/false]
 $enabled = false;
 
-$_classPath = "../../../";
+if (empty($_SERVER['DOCUMENT_ROOT'])){
+    $_classPath = realpath(dirname(__FILE__)) . "/../../../";
+    $enabled = true;
+}
+else
+    $_classPath = "../../../";
+
 $SysValue = parse_ini_file($_classPath . "inc/config.ini", 1);
 $host = $SysValue['connect']['host'];
 $dbname = $SysValue['connect']['dbase'];

@@ -65,7 +65,7 @@ function actionStart() {
         <ol>
         <li>Зарегистрироваться, заключить договор с <a href="https://paykeeper.ru/paykeeper/register/registerform/" target="_blank">PayKeeper</a>.</li>
         <li>Секретное слово необходимо сгенерировать в личном кабинете PayKeeper, скопировать и вставить в поле <kbd>Секретное поле</kbd> в настройках модуля. </li>
-        <li>В поле Адрес формы оплаты укажите URL адрес следующего вида: <code>http://имя_сайта.ru.server.paykeeper.ru/order/inline/cp1251</code></li>
+        <li>В поле Адрес формы оплаты укажите URL адрес следующего вида: <code>https://имя_сайта.server.paykeeper.ru/order/inline/cp1251</code></li>
         </ol>
         <h4>Настройка личного кабинета PayKeeper</h4>
         <ol>

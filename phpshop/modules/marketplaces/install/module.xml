@@ -2,9 +2,9 @@
 <module>
     <version>1.1</version>
     <name>Маркетплейсы</name>
-    <description>Модуль продаж через маркетплейсы.</description>
+    <description>Модуль продаж через маркетплейсы СберМегаМаркет, AliExpress и др.</description>
     <faqlink>https://docs.phpshop.ru/moduli/prodazhi/marketplaces</faqlink>
-    <category>sale</category>
+    <category>marketplaces</category>
     <sign>1629707429</sign>
     <adminmenu>
         <title>Маркетплейсы</title>

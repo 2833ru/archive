@@ -73,7 +73,7 @@ function mysqlrestore() {
                 $sql_query = PHPShopString::win_utf8($sql_query, true);
             }
 
-            $sql_array = explode(";".PHP_EOL, trim($sql_query));
+            $sql_array = explode(";" . PHP_EOL, trim($sql_query));
 
             $result = true;
             foreach ($sql_array as $v) {
@@ -122,14 +122,14 @@ function mysqlrestore() {
 
                 if (strlen($v) > 10) {
                     $result = mysqli_query($link_db, $v);
-                }
 
-                if (!$result) {
-                    $error_line .= '[Line ' . $k . '] ';
-                    $result_error_tracert .= 'Запрос: ' . $v . '
+
+                    if (!$result) {
+                        $error_line .= '[Line ' . $k . '] ';
+                        $result_error_tracert .= 'Запрос: ' . $v . '
 Ошибка: ' . mysqli_error($link_db);
-                } else
-                    @mysqli_free_result($result);
+                    } //else @mysqli_free_result($result);
+                }
             }
 
 

@@ -3,13 +3,20 @@
 /**
  * Кеширование значений фильтра, под которые нет товаров.
  */
+
 // Включение для SSH Cron
-$enabled = true;
+$enabled = false;
 
 if (function_exists('set_time_limit'))
     set_time_limit(0);
 
-$_classPath = "../../../";
+if (empty($_SERVER['DOCUMENT_ROOT'])){
+    $_classPath = realpath(dirname(__FILE__)) . "/../../../";
+    $enabled = true;
+}
+else
+    $_classPath = "../../../";
+
 include_once($_classPath . "class/obj.class.php");
 PHPShopObj::loadClass(["base", "system", "orm"]);
 $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, true);
@@ -22,9 +29,9 @@ if (empty($enabled))
     exit("Ошибка авторизации!");
 
 class CacheFilter {
-    
+
     // Отладка
-    private $debug=false;
+    private $debug = false;
 
     public function __construct() {
 
@@ -78,7 +85,7 @@ class CacheFilter {
         }
 
         //print_r($this->cache);
-        echo "Кеш обновлен у ".count($this->getCategoriesAll)." категорий";
+        echo "Кеш обновлен у " . count($this->getCategoriesAll) . " категорий";
     }
 
     private function setParentCache($cat, $cache) {
@@ -101,8 +108,8 @@ class CacheFilter {
 
                         if (!empty($v)) {
 
-                            if($this->debug)
-                            echo 'Каталог ' . $cat . ' нашел ' . $key . '-' . $k . ' было ' . (int) $this->cache[$cat]['products'][$key][$k] . ' добавил ' . $v . ' стало ' . ((int) $this->cache[$cat]['products'][$key][$k] + $v) . '<br>';
+                            if ($this->debug)
+                                echo 'Каталог ' . $cat . ' нашел ' . $key . '-' . $k . ' было ' . (int) $this->cache[$cat]['products'][$key][$k] . ' добавил ' . $v . ' стало ' . ((int) $this->cache[$cat]['products'][$key][$k] + $v) . '<br>';
 
                             $this->cache[$cat]['products'][$key][$k] += $v;
                         }
@@ -140,18 +147,20 @@ class CacheFilter {
                 foreach ($sorts as $sort) {
                     $values = $this->getSortValues((int) $sort);
 
-                    foreach ($values as $value) {
-                        $count = $this->countProducts((int) $value, (int) $sort, (int) $category['id']);
-                        $total += $count;
+                    if (is_array($values)) {
+                        foreach ($values as $value) {
+                            $count = $this->countProducts((int) $value, (int) $sort, (int) $category['id']);
+                            $total += $count;
 
-                        if ($count === 0) {
-                            $cache['filter_cache'][(int) $sort][$value] = (int) $value;
+                            if ($count === 0) {
+                                $cache['filter_cache'][(int) $sort][$value] = (int) $value;
+                            }
+
+                            $cache['products'][(int) $sort][(int) $value] = $count;
                         }
 
                         $cache['products'][(int) $sort][(int) $value] = $count;
                     }
-
-                    $cache['products'][(int) $sort][(int) $value] = $count;
                 }
 
                 $this->cache[$category['id']] = $cache;
@@ -168,9 +177,15 @@ class CacheFilter {
     }
 
     private function getSortValues($sortId) {
-        $orm = new PHPShopOrm('phpshop_sort');
 
-        return array_column($orm->getList(['id'], ['category' => sprintf('="%s"', $sortId)]), 'id', 'id');
+        // Фильтр?
+        $filtr = (new PHPShopOrm('phpshop_sort_categories'))->getOne(['filtr'], ['id' => sprintf('="%s"', $sortId)])['filtr'];
+
+        if (!empty($filtr)) {
+            $orm = new PHPShopOrm('phpshop_sort');
+
+            return array_column($orm->getList(['id'], ['category' => sprintf('="%s"', $sortId)]), 'id', 'id');
+        }
     }
 
     private function countProducts($valueId, $sortId, $categoryId) {

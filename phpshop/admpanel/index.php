@@ -248,8 +248,6 @@ function actionStart() {
         else
             $_SESSION['update'] = 0;
     }
-    else  $_SESSION['update']='trial';
-
 
     if ($License['License']['Pro'] == 'Start')
         $_SESSION['mod_limit'] = 5;

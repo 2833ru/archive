@@ -4,7 +4,7 @@
     <name>Яндекс.Маркет</name>
     <description>Модуль продаж через Яндекс.Маркет.</description>
     <faqlink>https://docs.phpshop.ru/moduli/yandeks/yandex-cart</faqlink>
-    <category>yandex,pro</category>
+    <category>yandex,pro,marketplaces</category>
     <sign>1675679202</sign>
     <status>Hit</status>
     <adminmenu>

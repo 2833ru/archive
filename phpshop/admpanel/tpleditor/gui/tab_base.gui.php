@@ -190,9 +190,8 @@ function tab_base($data) {
                 $new = ' <span class="label label-primary">new</span>';
             else
                 $new = null;
-
-
-            $img_list_default .= '<div class="col-md-4"><div class="panel ' . $panel . '"><div class="panel-heading">' . $row['name'] . $new . $mes . '</div><div class="panel-body text-center"><img class="image-shadow image-skin"  src="https://mini.s-shot.ru/1024x1024/400/png/?https://myphpshop.ru/?skin=' . $row['name'].'&demo&r=1"></div>
+            
+            $img_list_default .= '<div class="col-md-4"><div class="panel ' . $panel . '"><div class="panel-heading">' . $row['name'] . $new . $mes . '</div><div class="panel-body text-center"><img class="image-shadow image-skin"  src="https://mini.s-shot.ru/1024x1024/400/png/?https://myphpshop.ru/?skin=' . $row['name'].'&demo&r=1&base=fashion"></div>
                 
            <div class="text-center panel-footer">
                     

@@ -37,7 +37,6 @@ class YandexMarket {
 
         return (int) $data['count'];
     }
-    
 
     public function importProducts($from, $imported, $id = false) {
         $limit = 100;
@@ -51,12 +50,11 @@ class YandexMarket {
             $products = $orm->getList(
                     ['*'], self::IMPORT_CONDITION, ['order' => 'id ASC'], ['limit' => $from . ', ' . $limit]
             );
-        }
-        else {
+        } else {
             $where = self::IMPORT_CONDITION;
-            $where['id']='='.$id;
+            $where['id'] = '=' . $id;
             $products = $orm->getList(
-                    ['*'], $where, ['order' => 'id ASC'], ['limit' =>'10']
+                    ['*'], $where, ['order' => 'id ASC'], ['limit' => '10']
             );
         }
 
@@ -118,12 +116,16 @@ class YandexMarket {
                 $pictures[] = $this->getFullUrl($product['pic_big']);
             }
 
- 
+
             $options = unserialize($this->options['options']);
 
             // Блокировка изображений
             if (empty($options['block_image']))
                 $pictures = [];
+
+            // Шаблон описания
+            if (strstr($this->options['description_template'], '@Description@'))
+                $product['content'] = $product['description'];
 
             // Блокировка описаний
             if (empty($options['block_content']))

@@ -160,11 +160,7 @@ function actionStart() {
     $valuta_area = null;
     if (is_array($valuta_array))
         foreach ($valuta_array as $val) {
-            if ($baseinputvaluta == $val['id']) {
-                $check = 'checked';
-            } else
-                $check = false;
-            $valuta_area .= $PHPShopGUI->setRadio('baseinputvaluta_new', $val['id'], $val['name'], $check, false, false, array('code' => $val['code']), false);
+            $valuta_area .= $PHPShopGUI->setRadio('baseinputvaluta_new', $val['id'], $val['name'], $baseinputvaluta);
         }
 
     // Валюта

@@ -104,21 +104,20 @@ $().ready(function() {
     // Указать ID товара в виде тега  -  2 шаг
     $("body").on('click', "#selectModal .modal-footer .id-add-send", function(event) {
         event.preventDefault();
+        
+        $('.search-list input:checkbox').each(function() {
+            var id = $(this).attr('data-id');
+            $(selectTarget).removeTag(id);
+        });
+        
 
         $('.search-list input:checkbox:checked').each(function() {
             var id = $(this).attr('data-id');
-            if ($('#odnotip_new').tagExist(id))
-            {
-                this.disabled;
-                $(selectTarget).removeTag(id);
-            }
-            else
-                $(selectTarget).addTag(id);
+            $(selectTarget).addTag(id);
         });
 
         $('#selectModal').modal('hide');
     });
-
 
     // Выбор элемента по клику в модальном окне подбора товара
     $('body').on('click', ".search-list  td", function() {

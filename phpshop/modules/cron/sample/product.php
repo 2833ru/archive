@@ -1,5 +1,4 @@
 <?php
-
 /**
  * —н€тие с продаж товара с датой изменени€ менее ’ дней
  */
@@ -13,7 +12,13 @@ $day=3;
 // 1 - убирать с сайта, 2 - под заказ
 $option=2;
 
-$_classPath = "../../../";
+if (empty($_SERVER['DOCUMENT_ROOT'])){
+    $_classPath = realpath(dirname(__FILE__)) . "/../../../";
+    $enabled = true;
+}
+else
+    $_classPath = "../../../";
+
 $SysValue = parse_ini_file($_classPath . "inc/config.ini", 1);
 $host = $SysValue['connect']['host'];
 $dbname = $SysValue['connect']['dbase'];

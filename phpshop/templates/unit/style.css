@@ -524,7 +524,7 @@ label {
   margin: 0.3125rem 0rem 0rem !important;
 }
 
-/* Блок рейтинга*/
+/* �л�к �е��и�га*/
 .rate_l .rating {
   margin-left: 0rem;
   padding-left: 0rem;
@@ -539,7 +539,7 @@ label {
   margin: 0.3125rem auto 0rem;
 }
 
-/* Блок рейтинга*/
+/* �л�к �е��и�га*/
 #raiting_blank,
 #raiting_votes,
 #raiting_hover {
@@ -552,13 +552,13 @@ label {
   width: 5rem;
 }
 
-/* "Чистые" звездочки */
+/* "Чи���е" звез���ки */
 #raiting_votes {
   background: url(images/stars/stars1-5.png);
   cursor: default;
 }
 
-/*  Закрашенные звездочки */
+/*  �ак�а�е���е звез���ки */
 #raiting_info {
   text-align: center;
 }
@@ -567,7 +567,7 @@ label {
   margin: 0.9375rem;
 }
 
-/*Поддержка стилей для шаблона оформления заказа под новую логику*/
+/*����е�жка ��иле� �л� �абл��а �����ле�и� заказа п�� ��в�� л�гик�*/
 span.wait {
   display: inline-block;
   width: 1rem;
@@ -754,7 +754,7 @@ img.template:hover {
   color: #6C809A !important;
 }
 
-/* Размеры и цвета */
+/* Раз�е�� и �ве�а */
 .big_size_block {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -5732,7 +5732,7 @@ textarea:focus, textarea {
 .product-page-select > .select-option:hover {
   background: #F1FAD0;
   border: 0.0625rem solid #F1F2F3;
-  /* тень голубая */
+  /* �е�� г�л�ба� */
   -webkit-box-shadow: 0rem 0.25rem 0.25rem rgba(9, 154, 220, 0.21);
           box-shadow: 0rem 0.25rem 0.25rem rgba(9, 154, 220, 0.21);
 }
@@ -6374,7 +6374,7 @@ button {
   .sticky {
     position: -webkit-sticky;
     position: sticky;
-    /* Липкое позиционирование */
+    /* �ипк�е п�зи�и��и��ва�ие */
     top: 0;
     z-index: 999 !important;
   }
@@ -6416,8 +6416,8 @@ text-align: center;}
 @media(max-width:767px){.product-block-wrapper-fix .stock{display:none}}
 .addToCartList span{transition:all 0s!Important;}
 footer img{margin-bottom:16px}
-.preview-sort{ white-space: nowrap; /* Запрещаем перенос строк */
-    overflow: hidden; /* Обрезаем все, что не помещается в область */
+.preview-sort{ white-space: nowrap; /* �ап�е�ае� пе�е��� ����к */
+    overflow: hidden; /* �б�езае� в�е, ��� �е п��е�ае��� в �бла��� */
  
     text-overflow: ellipsis;}
 	.style-selector-wrapper .block-heading h3.block-title {padding:0.9375rem 0.8rem}

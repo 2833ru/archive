@@ -107,11 +107,14 @@ class PHPShopString {
 
     /**
      * Перевод в латиницу
-     * @param string $str
+     * @param string $str строка
+     * @param bool $lower перевод в нижний регистр
      * @return string
      */
-    static function toLatin($str) {
-        $str = strtolower($str);
+    static function toLatin($str, $lower = true) {
+
+        if ($lower)
+            $str = strtolower($str);
 
         // UTF Fix
         if ($GLOBALS['PHPShopBase']->codBase == 'utf-8')
@@ -157,7 +160,7 @@ class PHPShopString {
             else
                 $new_str .= $_Array[$val];
 
-        return preg_replace('([^a-z0-9/_\.-])', '', $new_str);
+        return preg_replace('([^a-zA-Z0-9/_\.-])', '', $new_str);
     }
 
     // Отрезаем до точки с заменой 

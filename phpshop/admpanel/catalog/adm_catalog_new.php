@@ -108,7 +108,9 @@ function actionStart() {
 
     $PHPShopCategoryArray = new PHPShopCategoryArray($where);
     $CategoryArray = $PHPShopCategoryArray->getArray();
-    $GLOBALS['count'] = count($CategoryArray);
+
+    if (is_array($CategoryArray))
+        $GLOBALS['count'] = count($CategoryArray);
 
     $CategoryArray[0]['name'] = '- ' . __('Корневой уровень') . ' -';
     $tree_array = array();

@@ -346,6 +346,7 @@ charset="cp1251";   # кодировка базы</pre>
 /UserFiles/Files
 /1cManager/upload
 /1cManager/goods
+/1cManager/sklad
 /phpshop/admpanel/csv
 /phpshop/admpanel/dumper/backup</pre>
 

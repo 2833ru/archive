@@ -249,7 +249,7 @@ function actionStart() {
                 $valuta_def_name = $val['code'];
             } else
                 $check = false;
-            $valuta_area .= $PHPShopGUI->setRadio('baseinputvaluta_new', $val['id'], $val['name'], $check, false, false, array('code' => $val['code']), false);
+            $valuta_area .= $PHPShopGUI->setRadio('baseinputvaluta_new', $val['id'], $val['name'], $data['baseinputvaluta']);
         }
 
     // Цены
@@ -560,17 +560,19 @@ function actionUpdate() {
             foreach ($postOdnotip as $value) {
                 if ((int) $value > 0) {
                     $odnotip[] = (int) $value;
-                    
+
                     // Связи однотипов
-                    $odnotip_data = $PHPShopOrm->getOne(['odnotip'],['id'=>'='.(int)$value]);
-                    $odnotip_array = explode(',',$odnotip_data['odnotip']);
-                    if(is_array($odnotip_array)){
-                        if(!in_array($_POST['rowID'],$odnotip_array))
-                                $odnotip_array[]=$_POST['rowID'];
+                    if ($PHPShopSystem->ifSerilizeParam('admoption.odnotip')) {
+                        $odnotip_data = $PHPShopOrm->getOne(['odnotip'], ['id' => '=' . (int) $value]);
+                        $odnotip_array = explode(',', $odnotip_data['odnotip']);
+                        if (is_array($odnotip_array)) {
+                            if (!in_array($_POST['rowID'], $odnotip_array))
+                                $odnotip_array[] = $_POST['rowID'];
+                        } else
+                            $odnotip_array[] = $_POST['rowID'];
+
+                        $PHPShopOrm->update(['odnotip_new' => implode(',', $odnotip_array)], ['id' => '=' . (int) $value]);
                     }
-                    else $odnotip_array[]=$_POST['rowID'];
-                            
-                    $PHPShopOrm->update(['odnotip_new'=>implode(',', $odnotip_array)],['id'=>'='.(int)$value]);
                 }
             }
 
@@ -720,7 +722,7 @@ function fotoAdd() {
     if (!empty($_FILES['file']['name'])) {
         $_FILES['file']['ext'] = PHPShopSecurity::getExt($_FILES['file']['name']);
         $_FILES['file']['name'] = PHPShopString::toLatin(str_replace('.' . $_FILES['file']['ext'], '', PHPShopString::utf8_win1251($_FILES['file']['name']))) . '.' . $_FILES['file']['ext'];
-        if (in_array($_FILES['file']['ext'], array('gif', 'png', 'jpg', 'jpeg','webp'))) {
+        if (in_array($_FILES['file']['ext'], array('gif', 'png', 'jpg', 'jpeg', 'webp'))) {
             if (move_uploaded_file($_FILES['file']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . $path . $_FILES['file']['name'])) {
                 $file = $_SERVER['DOCUMENT_ROOT'] . $path . $_FILES['file']['name'];
                 $file_name = $_FILES['file']['name'];
@@ -1051,7 +1053,7 @@ function actionOptionEdit() {
                 $valuta_def_name = $val['code'];
             } else
                 $check = false;
-            $valuta_area .= $PHPShopGUI->setRadio('baseinputvaluta_new', $val['id'], $val['name'], $check, false, false, false, false);
+            $valuta_area .= $PHPShopGUI->setRadio('baseinputvaluta_new', $val['id'], $val['name'], $data['baseinputvaluta']);
         }
 
     // Цена

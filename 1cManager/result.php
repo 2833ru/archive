@@ -632,7 +632,7 @@ class ReadCsv1C extends PHPShopReadCsvNative {
             // Подчиненные товары
             if ($this->ObjSystem->getSerilizeParam("1c_option.update_option") == 1) {
 
-                if ((PHPShopProductFunction::true_parent($CsvToArray[0]) and ! PHPShopProductFunction::true_parent($CsvToArray[16])) or $CsvToArray[16] == 1) {
+                if ((PHPShopProductFunction::true_parent($CsvToArray[0]) and ! PHPShopProductFunction::true_parent($CsvToArray[16])) or $CsvToArray[16] == "1") {
                     $sql .= "parent_enabled='1', ";
                 } else {
                     $sql .= "parent_enabled='0', ";
@@ -641,7 +641,7 @@ class ReadCsv1C extends PHPShopReadCsvNative {
                 if (strstr($CsvToArray[16], "@")) {
                     $parent_array = explode("@", $CsvToArray[16]);
                     $sql .= "parent='" . $parent_array[0] . "', parent2='" . $parent_array[1] . "',";
-                } elseif ($CsvToArray[16] != 1)
+                } elseif ($CsvToArray[16] != "1")
                     $sql .= "parent='" . $CsvToArray[16] . "', ";
             }
 
@@ -868,7 +868,7 @@ class ReadCsv1C extends PHPShopReadCsvNative {
 
             // Подчиненные товары
             if ($this->ObjSystem->getSerilizeParam("1c_option.update_option") == 1) {
-                if (PHPShopProductFunction::true_parent($CsvToArray[0]) or $CsvToArray[16] == 1) {
+                if (PHPShopProductFunction::true_parent($CsvToArray[0]) or $CsvToArray[16] == "1") {
                     $sql .= "parent_enabled='1', ";
                 } else {
                     $sql .= "parent_enabled='0', ";

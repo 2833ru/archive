@@ -317,7 +317,7 @@ function actionStart() {
                 $valuta_def_name = $val['code'];
             } else
                 $check = false;
-            $valuta_area .= $PHPShopGUI->setRadio('baseinputvaluta_new', $val['id'], $val['name'], $check, false, false, array('code' => $val['code']), false);
+            $valuta_area .= $PHPShopGUI->setRadio('baseinputvaluta_new', $val['id'], $val['name'], $val['id']);
         }
 
     // Цены
@@ -635,15 +635,17 @@ function actionInsert() {
                 $odnotip[] = (int) $value;
 
                 // Связи однотипов
-                $odnotip_data = $PHPShopOrm->getOne(['odnotip'], ['id' => '=' . (int) $value]);
-                $odnotip_array = explode(',',$odnotip_data['odnotip']);
-                if (is_array($odnotip_array)) {
-                    if (!in_array($_POST['rowID'], $odnotip_array))
+                if ($PHPShopSystem->ifSerilizeParam('admoption.odnotip')) {
+                    $odnotip_data = $PHPShopOrm->getOne(['odnotip'], ['id' => '=' . (int) $value]);
+                    $odnotip_array = explode(',', $odnotip_data['odnotip']);
+                    if (is_array($odnotip_array)) {
+                        if (!in_array($_POST['rowID'], $odnotip_array))
+                            $odnotip_array[] = $_POST['rowID'];
+                    } else
                         $odnotip_array[] = $_POST['rowID'];
-                } else
-                    $odnotip_array[] = $_POST['rowID'];
 
-                $PHPShopOrm->update(['odnotip_new' => implode(',', $odnotip_array)], ['id' => '=' . (int) $value]);
+                    $PHPShopOrm->update(['odnotip_new' => implode(',', $odnotip_array)], ['id' => '=' . (int) $value]);
+                }
             }
         }
         $_POST['odnotip_new'] = implode(',', $odnotip);

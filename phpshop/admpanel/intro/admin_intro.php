@@ -228,7 +228,7 @@ function actionStart() {
     if (is_array($data)) {
         foreach ($data as $row) {
             $d = date("d", $row['datas']) . '.' . date("m", $row['datas']);
-            $array_order_date[$d] += $row['sum'];
+            $array_order_date[$d] += (int)$row['sum'];
         }
 
         if (is_array($array_order_date)) {

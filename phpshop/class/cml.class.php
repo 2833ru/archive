@@ -181,35 +181,36 @@ class PHPShopCommerceML {
         global $PHPShopSystem;
 
         $xml = null;
-        foreach ($data as $row)
-            if (is_array($row)) {
+        if (is_array($data))
+            foreach ($data as $row)
+                if (is_array($row)) {
 
-                $PHPShopOrder = new PHPShopOrderFunction($row['id']);
-                $this->update_status[] = $row['id'];
+                    $PHPShopOrder = new PHPShopOrderFunction($row['id']);
+                    $this->update_status[] = $row['id'];
 
-                $num = 0;
-                $id = $row['id'];
-                $uid = $row['uid'];
-                $order = unserialize($row['orders']);
-                $status = unserialize($row['status']);
-                $sum = $PHPShopOrder->returnSumma($order['Cart']['sum'], $order['Person']['discount']);
+                    $num = 0;
+                    $id = $row['id'];
+                    $uid = $row['uid'];
+                    $order = unserialize($row['orders']);
+                    $status = unserialize($row['status']);
+                    $sum = $PHPShopOrder->returnSumma($order['Cart']['sum'], $order['Person']['discount']);
 
-                $item = null;
-                if (is_array($order['Cart']['cart']))
-                    foreach ($order['Cart']['cart'] as $val) {
+                    $item = null;
+                    if (is_array($order['Cart']['cart']))
+                        foreach ($order['Cart']['cart'] as $val) {
 
-                        $num = $val['num'];
-                        $sum = $PHPShopOrder->returnSumma($val['price'] * $num, $order['Person']['discount']);
+                            $num = $val['num'];
+                            $sum = $PHPShopOrder->returnSumma($val['price'] * $num, $order['Person']['discount']);
 
-                        if (!empty($val['uid']) and $this->exchange_key == 'external') {
-                            $id = $val['uid'];
-                            $uid = null;
-                        } else {
-                            $id = $val['id'];
-                            $uid = $val['uid'];
-                        }
+                            if (!empty($val['uid']) and $this->exchange_key == 'external') {
+                                $id = $val['uid'];
+                                $uid = null;
+                            } else {
+                                $id = $val['id'];
+                                $uid = $val['uid'];
+                            }
 
-                        $item .= '<Товар>
+                            $item .= '<Товар>
 				<Ид>' . $id . '</Ид>
 				<Штрихкод></Штрихкод>
 				<Артикул>' . $uid . '</Артикул>
@@ -219,12 +220,12 @@ class PHPShopCommerceML {
 				<Сумма>' . $sum . '</Сумма>
 				<Единица>шт</Единица>
 			</Товар>';
-                    }
+                        }
 
-                if (empty($row['fio']))
-                    $row['fio'] = $row['org_name'];
+                    if (empty($row['fio']))
+                        $row['fio'] = $row['org_name'];
 
-                $xml .= '
+                    $xml .= '
 	<Документ>
                 <Ид>' . $row['id'] . '</Ид>
 		<Номер>' . $row['uid'] . '</Номер>
@@ -248,7 +249,7 @@ class PHPShopCommerceML {
 ' . $item . '
 		</Товары>
 	</Документ>';
-            }
+                }
 
         $xml = '<?xml version="1.0" encoding="windows-1251"?>
 <КоммерческаяИнформация ВерсияСхемы="2.04" ДатаФормирования="' . PHPShopDate::get(time(), false, true) . '">

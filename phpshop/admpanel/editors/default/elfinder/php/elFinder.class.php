@@ -3269,7 +3269,7 @@ class elFinder
         $mtimes = $args['mtime'] ? $args['mtime'] : array();
         $tmpfname = '';
         
-        $files = $this->fileNamesToLatin($files);
+        $files = $this->fileNamesToLatin($files,false);
 
         if (!$volume) {
             return array_merge(array('error' => $this->error(self::ERROR_UPLOAD, self::ERROR_TRGDIR_NOT_FOUND, '#' . $target)), $header);
@@ -5394,7 +5394,7 @@ var go = function() {
         foreach ($files['name'] as $key => $name) {
             $nameParts = explode('.', $name);
             $fileExt = '.' . array_pop($nameParts);
-            $files['name'][$key] = PHPShopString::toLatin(str_replace($fileExt, '', PHPShopString::utf8_win1251($name))) . $fileExt;
+            $files['name'][$key] = PHPShopString::toLatin(str_replace($fileExt, '', PHPShopString::utf8_win1251($name)),false) . $fileExt;
         }
 
         return $files;
