@@ -1,0 +1,27 @@
+
+  Z-Payment Payment Start ------------------
+  date=June 24, 2010, 1:56 pm
+  Result false, bad sign
+  
+  MY_LMI_HASH=B8020E8E15C5362A7AC49800E3E86E99
+  REQUEST_URI=/payment/z-payment/result.php
+  IP=127.0.0.1
+  Z-Payment Payment End --------------------
+  
+Z-Payment Payment Start ------------------
+date=June 24, 2010, 4:50 pm
+Result false, bad sign
+
+MY_LMI_HASH=B8020E8E15C5362A7AC49800E3E86E99
+REQUEST_URI=/payment/z-payment/result.php
+IP=127.0.0.1
+Z-Payment Payment End --------------------
+
+Z-Payment Payment Start ------------------
+date=June 24, 2010, 4:50 pm
+Result false, bad sign
+
+MY_LMI_HASH=B8020E8E15C5362A7AC49800E3E86E99
+REQUEST_URI=/payment/z-payment/result.php
+IP=127.0.0.1
+Z-Payment Payment End --------------------

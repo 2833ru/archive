@@ -1,0 +1,2 @@
+<div class="tovar_parentList">@parentList@</div>
+<div class="tovar_parentBay"><a href="javascript:AddToCartParent(@productId@)" title="@productSale@"><img src="images/clothes_36.gif" border="0"></a></div>

@@ -1,0 +1,1 @@
+<div class="plashka_center_baner">@banerTitle@</div><div class="plashka_center_banCont">@banerContent@</div>

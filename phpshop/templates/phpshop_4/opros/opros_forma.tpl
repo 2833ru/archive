@@ -1,0 +1,1 @@
+<div id="vote_input"><input type="radio" name="getopros" value="@valueId@"><span>@valueName@</span></div>

@@ -1,0 +1,1 @@
+<div class="TOPcatalog_div"><span class="TOPcatalog_text1"><a href="/shop/CID_@catalogId@.html"><img src="images/bt-template_83.gif" border="0"></a></span>&nbsp;&nbsp;<span class="TOPcatalog_text2"><a href="/shop/CID_@catalogId@.html">@catalogName@</a></span></div>

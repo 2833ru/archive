@@ -1,0 +1,1 @@
+<li class="catalog_page"><a href="/page/CID_@catalogId@.html">@catalogName@</a></li>

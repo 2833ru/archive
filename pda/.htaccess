@@ -1,0 +1,37 @@
+#Action php-script /cgi-bin/php
+#AddHandler php-script .php
+#php_flag register_globals on
+#php_flag display_errors on
+#php_flag log_errors on
+#php_flag error_reporting 0
+#php_value memory_limit 100M
+#php_flag memory_limit 100M
+#php_flag session.use_trans_sid off
+
+DirectoryIndex pda.php
+Options -Indexes 
+
+AddDefaultCharset windows-1251
+RewriteEngine On
+#Options FollowSymLinks
+#Options SymLinksIfOwnerMatch
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ pda.php
+
+ErrorDocument 404 /
+<IfModule mod_expires.c>
+	ExpiresActive on
+	ExpiresByType image/jpeg "access plus 3 day"
+	ExpiresByType image/gif "access plus 3 day"
+</IfModule>
+
+<files *.ini>
+Order Deny,Allow
+Deny From All
+</files>
+<files *.tpl>
+Order Deny,Allow
+Deny From All
+</files>

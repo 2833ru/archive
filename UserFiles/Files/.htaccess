@@ -1,0 +1,12 @@
+<files *.rar>
+Order Deny,Allow
+Deny From All
+</files>
+<files *.zip>
+Order Deny,Allow
+Deny From All
+</files>
+<files *.exe>
+Order Deny,Allow
+Deny From All
+</files>

@@ -1,0 +1,3 @@
+Заменить все файлы, кроме:
+1. /UserFiles
+2. /phpshop/inc/config.ini 
