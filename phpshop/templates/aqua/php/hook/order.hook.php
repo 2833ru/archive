@@ -38,8 +38,8 @@ function productcartforma_hook($obj,$var,$rout) {
 
 $addHandler=array
         (
-  
-    'product'=>'productcartforma_hook'
+    'ordercartforma'=>'ordercartforma_hook',
+    '#product'=>'productcartforma_hook'
 
 );
 ?>

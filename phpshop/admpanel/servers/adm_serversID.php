@@ -16,7 +16,7 @@ require("../language/".$Lang."/language.php");
 <head>
 	<title>Редактирование Сервера</title>
 <META http-equiv=Content-Type content="text/html; charset=<?=$SysValue['Lang']['System']['charset']?>">
-<LINK href="../css/texts.css" type=text/css rel=stylesheet>
+<LINK href="../skins/<?=$_SESSION['theme']?>/texts.css" type=text/css rel=stylesheet>
 <SCRIPT language="JavaScript" src="/phpshop/lib/Subsys/JsHttpRequest/Js.js"></SCRIPT>
 <script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
 <script type="text/javascript" language="JavaScript1.2" src="../language/<?=$Lang?>/language_windows.js"></script>
@@ -43,7 +43,7 @@ DoResize(<? echo $GetSystems['width_icon']?>,400,350);
 <SCRIPT language=JavaScript type=text/javascript>preloader(1);</SCRIPT>
 <?
 // Редактирование записей 
-	  $sql="select * from ".$SysValue['base']['table_name31']." where id='$id'";
+	  $sql="select * from ".$SysValue['base']['table_name31']." where id=".intval($id);
       $result=mysql_query($sql);
 	  $row = mysql_fetch_array($result);
 	  $id=$row['id'];

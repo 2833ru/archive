@@ -44,12 +44,15 @@ function image_gallery($obj, $row) {
             }
 
 
-            if (is_array($FotoArray))
+            if (is_array($FotoArray)){
+                if(!empty($row['info']))
+                $alt=$row['info'];
+                else $alt=$name_foto;
                 $dBig = '<div align="center" id="IMGloader" style="padding-bottom: 10px">
-<a class=highslide onclick="return hs.expand(this)" href="' . $obj->checkMultibase($name_b, true) . '" target=_blank getParams="null"><img id="currentBigPic" src="' . $obj->checkMultibase($pic_big, true) . '" border="1" class="imgOn" alt="' . $row['name'] . '"
+<a class=highslide onclick="return hs.expand(this)" href="' . $obj->checkMultibase($name_b, true) . '" target=_blank getParams="null"><img id="currentBigPic" src="' . $obj->checkMultibase($pic_big, true) . '" border="1" class="imgOn" alt="' . $alt . '"
     onerror="NoFoto2(this)"></a><div class="highslide-caption">' . $name_foto . '</div><br>' . $FotoArray[0]["info"] . '
 </div>';
-
+            }
             if (is_array($FotoArray[0]) and count($FotoArray) > 1)
                 $disp.='<td align="center">
   <a href="javascript:fotoload(' . $n . ',0);"><img src="' . $FotoArray[0]["name_s"] . '" alt="' . $FotoArray[0]["info"] . '" border="1" class="imgOn" onerror="NoFoto2(this)"></a></td>';

@@ -5,6 +5,7 @@
  * @author PHPShop Software
  * @version 1.10
  * @package PHPShopClass
+ * @tutorial http://doc.phpshop.ru/PHPShopClass/PHPShopModules.html
  */
 class PHPShopModules {
 

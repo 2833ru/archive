@@ -31,7 +31,7 @@ function getExt($sFileName)//ffilter
 <head>
 	<title>Работа с базой</title>
 <META http-equiv=Content-Type content="text/html; charset=windows-1251">
-<LINK href="../css/texts.css" type=text/css rel=stylesheet>
+<LINK href="../skins/<?=$_SESSION['theme']?>/texts.css" type=text/css rel=stylesheet>
 <script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
 <script type="text/javascript" language="JavaScript1.2" src="../language/<?=$Lang?>/language_windows.js"></script>
 <script>

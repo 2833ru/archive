@@ -2,7 +2,7 @@
 CREATE TABLE `phpshop_modules_ymladvance_system` (
   `id` int(11) NOT NULL auto_increment,
   `serial` varchar(64) NOT NULL default '',
-  `vendor` varchar(255) NOT NULL default '',
+  `vendor` blob NOT NULL,
   `warranty_enabled` enum('0','1') NOT NULL default '1',
   `version` float(2) NOT NULL default '1',
   PRIMARY KEY  (`id`)

@@ -61,7 +61,7 @@ function actionStart() {
     $Tab1.=$PHPShopGUI->setField('Привязка к страницам:', $PHPShopGUI->setInputText(false, 'dir_new', '', '98%', ' * Пример: /page/about.html,/page/company.html'));
 
 
-    $PHPShopGUI->setEditor('default', true);
+    $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"), true);
     $oFCKeditor = new Editor('content_new', true);
     $oFCKeditor->Height = '320';
     $oFCKeditor->Config['EditorAreaCSS'] = $_classPath . "../templates" . chr(47) . $PHPShopSystem->getParam("skin") . chr(47) . $SysValue['css']['default'];

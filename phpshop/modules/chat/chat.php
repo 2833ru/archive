@@ -49,6 +49,27 @@ function smile($string) {
     return $string;
 }
 
+
+function get_file_link($matches){
+    $path_parts = pathinfo($matches[0]);
+    $url=parse_url($matches[0]);
+    
+   if($url['scheme'] == 'file')
+    return '<a href="'.chr(47).$GLOBALS['SysValue']['dir']['dir'].'UserFiles/Image/'.$_SESSION['chat_dir'].$path_parts['basename'].'" target="_blank">'.$path_parts['basename'].'</a>'; 
+    else if($url['host'] != $_SERVER['SERVER_NAME'])
+       return '<a href="'.$matches[0].'" target="_blank">'.$matches[0].'</a>'; 
+      else 
+    return '<a href="http://'.$url['host'].chr(47).$GLOBALS['SysValue']['dir']['dir'].'UserFiles/Image/'.$_SESSION['chat_dir'].$path_parts['basename'].'" target="_blank">'.$path_parts['basename'].'</a>'; 
+}
+
+function check_content($content){
+
+    $str = smile($content);
+    $str = preg_replace_callback('/((www|http:\/\/|file:\/\/)[^ ]+)/', 'get_file_link', $str);
+    
+    return $str;
+}
+
 // Начало чата
 if (empty($_SESSION['mod_chat_user_session'])) {
     
@@ -59,10 +80,14 @@ if (empty($_SESSION['mod_chat_user_session'])) {
         $PHPShopOrm->debug = false;
         $data_system = $PHPShopOrm->select(array('*'), false, false, array('limit' => 1));
         
+        
         // Дизайн чата
         if(!empty($data_system['skin']))
         $_SESSION['chat_skin']=$data_system['skin'];
         else $_SESSION['chat_skin']='default';
+        
+        // Размещение
+        $_SESSION['chat_dir']=$data_system['upload_dir'];
         
         if ($data_system['operator'] == 2) {
             $block = 'disabled';
@@ -110,9 +135,11 @@ if (empty($_SESSION['mod_chat_user_session'])) {
 }
 
 // Список сообщений
+if(!empty($_SESSION['mod_chat_user_session'])){
 $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.chat.chat_jurnal"));
 $PHPShopOrm->debug = false;
 $data = $PHPShopOrm->select(array('*'), array('user_session' => "='" . $_SESSION['mod_chat_user_session'] . "'"), array('order' => 'id'), array('limit' => 100));
+}
 $time = time();
 if (is_array($data)) {
     $content = null;
@@ -130,7 +157,7 @@ if (is_array($data)) {
         }
 
         $name = PHPShopText::img('./templates/' . $icon, 3, 'absmiddle') . $name;
-        $content.=PHPShopText::div($name . ': ' . preg_replace('/((www|http:\/\/)[^ ]+)/', '<a href="\1" target="_blank">\1</a>', smile($row['content'])), "left", false, false, $div_class);
+        $content.=PHPShopText::div($name . ': ' . check_content($row['content']), "left", false, false, $div_class);
 
         $time = $row['date'];
     }
@@ -139,14 +166,16 @@ if (is_array($data)) {
     $name = PHPShopText::b('Администрация');
     $div_class = 'text_admin';
     $name = PHPShopText::img('./templates/' . $icon, 3, 'absmiddle') . $name;
-    $content=PHPShopText::div($name . ': ' . preg_replace('/((www|http:\/\/)[^ ]+)/', '<a href="\1" target="_blank">\1</a>', $content), "left", false, false, $div_class);
+    $content=PHPShopText::div($name . ': ' .check_content($content), "left", false, false, $div_class);
 
 }
 
+PHPShopParser::set('chat_mod_product_name', $GLOBALS['SysValue']['license']['product_name']);
 PHPShopParser::set('chat_mod_skin',$_SESSION['chat_skin']);
 PHPShopParser::set('chat_mod_disable', $block);
 PHPShopParser::set('chat_mod_time', $time);
+PHPShopParser::set('chat_mod_dir', $_SESSION['chat_dir']);
 PHPShopParser::set('chat_mod_content', $content);
-PHPShopParser::set('chat_mod_sound', $PHPShopModules->getParam("templates.chat.chat_sound"));
+PHPShopParser::set('chat_mod_sound', $PHPShopModules->getParam("templates.chat_sound"));
 PHPShopParser::file('./templates/chat_window.tpl');
 ?>

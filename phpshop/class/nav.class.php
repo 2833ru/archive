@@ -3,7 +3,7 @@
 /**
  * Библиотека навигации
  * @author PHPShop Software
- * @version 1.2
+ * @version 1.3
  * @package PHPShopClass
  */
 class PHPShopNav {
@@ -114,6 +114,8 @@ class PHPShopNav {
     function getPage() {
         if ($this->objNav['page'] > 0 or $this->objNav['page'] == 'ALL')
             return $this->objNav['page'];
+        elseif($this->objNav['path'] == 'spec' or $this->objNav['path'] == 'newtip')
+            return $this->getId();
         else
             return 1;
     }

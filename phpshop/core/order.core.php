@@ -307,7 +307,7 @@ function ordercartforma($val, $option) {
     global $PHPShopModules;
 
     // Перехват модуля в начале функции
-    $hook = $PHPShopModules->setHookHandler(__FUNCTION__, __FUNCTION__, $val, $option, 'START');
+    $hook = $PHPShopModules->setHookHandler(__FUNCTION__, __FUNCTION__,array(&$val), $option, 'START');
     if ($hook)
         return $hook;
 

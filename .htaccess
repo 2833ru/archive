@@ -47,7 +47,7 @@ RewriteRule ^(.*)$ /$1/ [L,R=302]
 Options -Indexes 
 
 # Запрет вызовы через браузер сторонних опасных файлов шаблона
-# default - on
+# default - off
 #RewriteCond %{REQUEST_URI} ^(/phpshop/templates/(.*))
 #RewriteCond %{REQUEST_URI} !((.*)\.(gif|jpg|swf|png|jpeg|js|css|GIF|JPG|PNG|JPEG))$
 #RewriteRule .* - [F]
@@ -60,7 +60,7 @@ Options -Indexes
 #RewriteRule .* - [F]
 
 # Запрет выполнения php в загружаемых папках
-# default - on
+# default - off
 #RewriteCond %{REQUEST_URI} ^((/UserFiles/(.*).(php\d?|phtml))|(/phpshop/templates/(.*).(php\d?|phtml))|(/phpshop/admpanel/csv/(.*).(php\d?|phtml)))$
 #RewriteRule .* - [F]
 

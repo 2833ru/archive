@@ -59,6 +59,7 @@ function PHPShopChat_exit(){
 }
 
 
+
 function PHPShopChat_get() {
     var req = new Subsys_JsHttpRequest_Js();
     var time = document.getElementById('chat_mod_time').value;
@@ -70,9 +71,16 @@ function PHPShopChat_get() {
                 
                 // Звуковой сигнал и прокрутка
                 if(req.responseJS.message != null){
-                        document.getElementById('chat_mod_content').innerHTML+='<span id="chat_mod_scroll_point_'+req.responseJS.time+'"></span>';
-                        document.getElementById('chat_mod_scroll_point_'+req.responseJS.time+'').scrollIntoView(false);
-                    mySound.play();
+                    document.getElementById('chat_mod_content').innerHTML+='<span id="chat_mod_scroll_point_'+req.responseJS.time+'"></span>';
+                    document.getElementById('chat_mod_scroll_point_'+req.responseJS.time+'').scrollIntoView(false);
+                    mySound.play();      
+                    window.document.title='!!! Новое сообщение в чате !!!';
+                    
+                    // Чат закрыт менеджером
+                    /*
+                    var pattern=/.*(Менеджер закрыл чат)/;
+                    if(pattern.test(req.responseJS.message))
+                        document.getElementById('chat_mod_user_text').disabled='disabled';*/
                 }
             }
         }
@@ -102,6 +110,7 @@ function PHPShopChat_write(post) {
                     if(req.responseJS.message != null){
                         document.getElementById('chat_mod_content').innerHTML+='<span id="chat_mod_scroll_point_'+req.responseJS.time+'"></span>';
                         document.getElementById('chat_mod_scroll_point_'+req.responseJS.time+'').scrollIntoView(false);
+                        window.document.title='PHPShop.Chat Free';
                     }
                 }
             }
@@ -113,6 +122,8 @@ function PHPShopChat_write(post) {
             addtext: addtext,
             time: time
         });
+        
+        document.getElementById('chat_mod_user_text').focus();
     }
     else{
         window.opener.location.replace('/forma/');
@@ -122,15 +133,20 @@ function PHPShopChat_write(post) {
 
 
 function PHPShopChat_email(){
-    
     if(document.getElementById('chat_mod_user_text').disabled){
-        document.getElementById('chat_mod_send_button_icon').src='./templates/email.gif';
-        document.getElementById('chat_mod_send_button_text').innerHTML='E-mail';
+        
+        if(document.getElementById('chat_mod_product_name').value == 'PHPShop Start')
+            document.getElementById('post').style.display='none';
+
+        else{
+            document.getElementById('chat_mod_send_button_icon').src='./templates/email.gif';
+            document.getElementById('chat_mod_send_button_text').innerHTML='E-mail';
+        }
     }
-    
 }
 
 function PHPShopChat_ping(){
+    document.getElementById('chat_mod_user_text').focus();
     setInterval("PHPShopChat_get()",5000);
 }
 

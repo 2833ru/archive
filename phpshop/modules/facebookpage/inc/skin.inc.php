@@ -20,6 +20,7 @@ class PHPShopFacebookpageElement extends PHPShopElements {
         else 
             $location = "/";
         header("Location: $location");
+        die();
     }
 
 }

@@ -15,6 +15,13 @@ body
     padding:0px
 }
 
+.gradient {/*-префикс-linear-gradient(стартовый цвет,финишный цвет);*/
+    background: -moz-linear-gradient(#FFF, ButtonFace);
+    background: -ms-linear-gradient(#FFF, ButtonFace);
+    background: -o-linear-gradient(#FFF, ButtonFace);
+    background: -webkit-linear-gradient(#FFF, ButtonFace);
+}
+
 table.iconpane{
     border:1px;
     border-style:outset;
@@ -22,6 +29,10 @@ table.iconpane{
     border-top-width:0px;
     height:27px;
     width:100%;
+    background: -moz-linear-gradient(#FFF, ButtonFace);
+    background: -ms-linear-gradient(#FFF, ButtonFace);
+    background: -o-linear-gradient(#FFF, ButtonFace);
+    background: -webkit-linear-gradient(#FFF, ButtonFace);
 }
 
 .cMenu{
@@ -185,9 +196,12 @@ table.sortable span.sortarrow {
 #pane{
     border: 1px;
     border-style: outset;
-    background: ButtonFace;
     text-align: center;
     padding: 5px;
+    background: -moz-linear-gradient(#FFF, ButtonFace);
+    background: -ms-linear-gradient(#FFF, ButtonFace);
+    background: -o-linear-gradient(#FFF, ButtonFace);
+    background: -webkit-linear-gradient(#FFF, ButtonFace);
 }
 .menu_line {
     background: #808080;
@@ -203,6 +217,9 @@ tr.row td {
     cursor: help;
 }
 
+tr.padding td:first-child{
+    padding-left:10px;
+}
 
 #rol td{
     padding: 3px;

@@ -17,7 +17,7 @@ require("../language/".$Lang."/language.php");
 <head>
 	<title>Создание новой записи</title>
 <META http-equiv=Content-Type content="text/html; charset=windows-1251">
-<LINK href="../css/texts.css" type=text/css rel=stylesheet>
+<LINK href="../skins/<?=$_SESSION['theme']?>/texts.css" type=text/css rel=stylesheet>
 <SCRIPT language="JavaScript" src="/phpshop/lib/Subsys/JsHttpRequest/Js.js"></SCRIPT>
 <script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
 <script type="text/javascript" language="JavaScript1.2" src="../language/<?=$Lang?>/language_windows.js"></script>

@@ -16,7 +16,7 @@ require("../language/".$Lang."/language.php");
 <head>
 	<title>Редактирование Характеристики для Рейтинга</title>
 <META http-equiv=Content-Type content="text/html; charset=<?=$SysValue['Lang']['System']['charset']?>">
-<LINK href="../css/texts.css" type=text/css rel=stylesheet>
+<LINK href="../skins/<?=$_SESSION['theme']?>/texts.css" type=text/css rel=stylesheet>
 <script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
 <script type="text/javascript" language="JavaScript1.2" src="../language/<? 
 echo $Lang;?>/language_windows.js"></script>

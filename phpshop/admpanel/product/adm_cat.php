@@ -138,7 +138,7 @@ return $num;
 <title><?=$SysValue['Lang']['Category'][1]?></title>
 <META http-equiv="Content-Type" content="text-html; charset=<?=$SysValue['Lang']['System']['charset']?>">
 <meta http-equiv="MSThemeCompatible" content="Yes">
-<LINK href="../css/texts.css" type=text/css rel=stylesheet>
+<LINK href=".../skins/<?=$_SESSION['theme']?>/texts.css" type=text/css rel=stylesheet>
 <LINK href="../css/dtree.css" type=text/css rel=stylesheet>
 <SCRIPT language=JavaScript src="../java/dtree2.js" type=text/javascript></SCRIPT>
 <script language="JavaScript">

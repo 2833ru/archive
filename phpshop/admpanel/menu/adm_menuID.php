@@ -42,7 +42,7 @@ function actionStart() {
     global $PHPShopGUI, $PHPShopSystem, $SysValue, $_classPath, $PHPShopOrm, $PHPShopModules;
 
     // Выборка
-    $data = $PHPShopOrm->select(array('*'), array('id' => '=' . $_GET['id']));
+    $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
     extract($data);
 
     // ID окна для памяти закладок

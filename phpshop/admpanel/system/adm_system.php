@@ -28,8 +28,8 @@ $option = unserialize($GetSystems['admoption']);
     <head>
         <title>Системные Настройки</title>
         <META http-equiv=Content-Type content="text/html; charset=<?= $SysValue['Lang']['System']['charset'] ?>">
-        <LINK href="../css/texts.css" type=text/css rel=stylesheet>
-              <LINK href="../css/tab.winclassic.css" type=text/css rel=stylesheet>
+        <LINK href="../skins/<?=$_SESSION['theme']?>/texts.css" type=text/css rel=stylesheet>
+        <LINK href="../skins/<?=$_SESSION['theme']?>/tab.css" type=text/css rel=stylesheet>
         <script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
         <script type="text/javascript" src="../java/tabpane.js"></script>
 
@@ -101,10 +101,39 @@ $option = unserialize($GetSystems['admoption']);
 ";
             return @$disp;
         }
+        
+        
+// Выбор дизайна административной части
+        function GetTheme($skin) {
+            
+            if(empty($skin)) $skin='default';
+            
+            $dir = "../skins";
+            if (is_dir($dir)) {
+                if ($dh = opendir($dir)) {
+                    while (($file = readdir($dh)) !== false) {
 
-// Выбор шкуры
+                        if ($skin == $file)
+                            $sel = "selected";
+                        else
+                            $sel = "";
+
+                        if ($file != "." and $file != ".." and $file != "index.html")
+                            @$name.= "<option value=\"$file\" $sel>$file</option>";
+                    }
+                    closedir($dh);
+                }
+            }
+            $disp = "
+<select name=\"theme_new\">
+" . @$name . "
+</select>
+";
+            return @$disp;
+        }
+
+// Выбор дизайна внешней части
         function GetSkins($skin) {
-            global $SysValue;
             $dir = "../../templates";
             if (is_dir($dir)) {
                 if ($dh = opendir($dir)) {
@@ -682,11 +711,20 @@ tabPane.addTabPage( document.getElementById( \"regim\" ) );
 <table>
     <tr>
 	  <td align=right>
+	<span name=txtLang id=txtLang>Цветовая тема</span>:
+	  </td>
+	  <td align=left>" . GetTheme($option['theme']) . "
+ <span name=txtLang id=txtLang>* Внешний вид панели управления</span>
+	  </td>
+	</tr>
+    <tr>
+	  <td align=right>
 	<span name=txtLang id=txtLang>Визуальный редактор</span>:
 	  </td>
 	  <td align=left>" . Editors($option['editor']) . "
- <span name=txtLang id=txtLang>* Включенный редактор влияет на скорость работы</span>
-	  </td>
+              	<BUTTON style=\"width: 170\" onclick=\"window.open('http://wiki.phpshop.ru/index.php/Modules#WISWIG_Load');return false;\">
+	<img src=\"../icon/page_code.gif\" width=\"16\" height=\"16\" border=\"0\" align=\"absmiddle\"> Установить редакторы</BUTTON>
+ </td>
 	</tr>
 	<tr>
 	  <td align=right>
@@ -723,15 +761,7 @@ tabPane.addTabPage( document.getElementById( \"regim\" ) );
 	 * Копирование RSS каналов в новости
 	  </td>
 	</tr>
-		<tr>
-	  <td align=right>
-	Цифровые товары:
-	  </td>
-	  <td align=left>
-	 <input type=\"checkbox\" value=\"1\" name=\"digital_product_enabled_new\" $digital_product_enabled>
-	 * Поддержка продажи цифровых товаров (файлов)
-	  </td>
-	</tr>
+		
 
 		<tr>
 	  <td align=right>
@@ -757,7 +787,7 @@ tabPane.addTabPage( document.getElementById( \"regim\" ) );
 	XML кодировка:
         </td>
         <td align=left>
-        " . getXmlCode($option['xmlencode']) . "
+        " . getXmlCode($option['xmlencode']) . " <span name=txtLang id=txtLang>* Настройка отображения модулей</span>
 	</td>
 </tr>
 </table>
@@ -789,6 +819,15 @@ tabPane.addTabPage( document.getElementById( \"user\" ) );
 	<td><span name=txtLang id=txtLang>Смена дизайна</span>:</td>
 	<td><input type=\"checkbox\" value=\"1\" name=\"user_skin_new\" $user_skin> * Опция смены дизайна на сайте</td>
 </tr>
+<tr>
+	  <td >
+	Цифровые товары:
+	  </td>
+	  <td align=left>
+	 <input type=\"checkbox\" value=\"1\" name=\"digital_product_enabled_new\" $digital_product_enabled>
+	 * Поддержка продажи цифровых товаров (файлов)
+	  </td>
+	</tr>
 </table>
 
 </div>
@@ -961,6 +1000,7 @@ tabPane.addTabPage( document.getElementById( \"img\" ) );
                 $option["calibrated"] = $calibrated_new;
                 $option["nowbuy_enabled"] = $nowbuy_enabled_new;
                 $option["xmlencode"] = $xmlencode_new;
+                $option["theme"] = $theme_new;
                 $option_new = serialize($option);
 
                 $sql = "UPDATE ".$PHPShopBase->getParam('base.system')."

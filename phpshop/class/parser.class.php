@@ -3,7 +3,7 @@
 /**
  * Библиотека парсинга данных
  * @author PHPShop Software
- * @version 1.2
+ * @version 1.3
  * @package PHPShopClass
  */
 class PHPShopParser {
@@ -16,7 +16,7 @@ class PHPShopParser {
      */
     function check($path, $value) {
         $string = null;
-        $path =  $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . chr(47) . $path;
+        $path = $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . chr(47) . $path;
         if (file_exists($path))
             $string = @file_get_contents($path);
         else
@@ -45,6 +45,7 @@ class PHPShopParser {
             "/phpshop\//i" => "/phpshop/",
         );
 
+        $string = @preg_replace_callback("/(@php)(.*)(php@)/sU", "phpshopparserevalstr", $string);
         $string = @preg_replace("/@([a-zA-Z0-9_]+)@/e", '$GLOBALS["SysValue"]["other"]["\1"]', $string);
         $string = preg_replace(array_keys($replaces), array_values($replaces), $string);
         if (!empty($return))
@@ -65,7 +66,6 @@ class PHPShopParser {
         else
             $GLOBALS['SysValue']['other'][$name] = $value;
     }
-
     /**
      * Выдача системной переменной
      * @param string $name
@@ -77,4 +77,16 @@ class PHPShopParser {
 
 }
 
-?>
+// Обработка php тегов
+function phpshopparserevalstr($str) {
+    ob_start();
+    if (eval(stripslashes($str[2])) !== NULL) {
+        echo ('<center style="color:red"><br><br><b>PHPShop Template Code: В шаблоне обнаружена ошибка выполнения php</b><br>');
+        echo ('Код содержащий ошибки:');
+        echo ('<pre>');
+        echo ($str[2]);
+        echo ('</pre></center>');
+        return ob_get_clean();
+    }
+    return ob_get_clean();
+}

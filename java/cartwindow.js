@@ -10,7 +10,7 @@ var comboheight='';
 function initialize(){
 combowidth=cartwindow.offsetWidth;
 comboheight=cartwindow.offsetHeight;
-if (document.all){
+if (document.all && !document.querySelector){
 setInterval("staticit_ie()",50);
 
                if(navigator.appName == "Microsoft Internet Explorer"){
@@ -26,7 +26,7 @@ cartwindow.style.visibility="visible";
 }
 
 function initialize_off(){
-if (document.all){
+if (document.all && !document.querySelector){
 setInterval("staticit_ie()",50);
 cartwindow.style.visibility="hidden";
 }

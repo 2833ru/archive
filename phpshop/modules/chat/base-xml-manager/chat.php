@@ -32,8 +32,8 @@ class PHPShopChat extends PHPShopBaseXml {
 
     function PHPShopChat() {
         $this->debug = false;
-        $this->true_method = array('select', 'update', 'insert');
-        $this->true_from = array('chat.chat_jurnal', 'chat.chat_users','chat.chat_system');
+        $this->true_method = array('select', 'update', 'insert','delete');
+        $this->true_from = array('chat.chat_jurnal', 'chat.chat_users','chat.chat_system','chat.chat_operators');
         $this->log = $_POST['log'];
         $this->pas = $_POST['pas'];
         parent::PHPShopBaseXml();

@@ -1,5 +1,27 @@
-<?
+<?php
+session_start();
+$_classPath = "../";
 require("connect.php");
+include($_classPath . "class/obj.class.php");
+PHPShopObj::loadClass("base");
+PHPShopObj::loadClass("system");
+PHPShopObj::loadClass("admgui");
+PHPShopObj::loadClass("orm");
+PHPShopObj::loadClass("date");
+PHPShopObj::loadClass("xml");
+PHPShopObj::loadClass("security");
+PHPShopObj::loadClass("string");
+
+$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
+
+// Системные настройки
+$PHPShopSystem = new PHPShopSystem();
+
+// Тема панели
+$theme=PHPShopSecurity::TotalClean($PHPShopSystem->getSerilizeParam('admoption.theme'),2);
+if(!empty($theme))
+$_SESSION['theme']=$theme;
+else $_SESSION['theme']='default';
 
 // Secure Fix 6.0
 function RequestSearch($search) {
@@ -55,11 +77,6 @@ function RequestSearch($search) {
 
 // Проверка безопасности
 foreach($_REQUEST as $val) RequestSearch($val);
-
-// Отключаем ошибки
-error_reporting(0);
-@mysql_connect ("$host", "$user_db", "$pass_db")or @die("Невозможно подсоединиться к базе");
-mysql_select_db("$dbase")or @die("Невозможно подсоединиться к базе");
 $SendMailStatus=null;
 
 
@@ -128,7 +145,7 @@ IP отправителя:".$_SERVER['REMOTE_ADDR']."
 
 ---------------
 С уважением,
-Компания PHPSHOP
+Компания PHPShop
 http://www.phpshop.ru";
 
         $codepage  = "windows-1251";
@@ -205,30 +222,6 @@ VALUES ('','".htmlspecialchars(addslashes($_POST['log']."@".base64_decode($_POST
     }
 }
 
-// Выбор языка
-function GetLang($skin) {
-    global $SysValue;
-
-    $name=null;
-    $dir="./language";
-    if (is_dir($dir)) {
-        if (@$dh = @opendir($dir)) {
-            while (($file = readdir($dh)) !== false) {
-
-                if($skin == $file)
-                    $sel="selected";
-                else $sel="";
-
-                if($file!="." and $file!=".." and $file!="index.html")
-                    $name.= "<option value=\"$file\" $sel>".ucfirst($file)."</option>";
-            }
-            closedir($dh);
-        }
-    }
-    $disp="<select name=\"LangIn\" onchange=\"ReloadLang(this.value)\">".$name."</select>";
-    return $disp;
-}
-
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -237,14 +230,10 @@ function GetLang($skin) {
         <META http-equiv=Content-Type content="text/html; charset=windows-1251">
         <META name="ROBOTS" content="NONE">
         <META name="copyright" content="<?=$RegTo?>">
-        <META name="engine-copyright" content="PHPSHOP.RU, <?=$ProductName;?>">
-        <LINK href="css/texts.css" type="text/css" rel="stylesheet">
+        <META name="engine-copyright" content="PHPShop LTD, <?=$ProductName;?>">
+        <LINK href="skins/<?= $_SESSION['theme'];?>/texts.css" type="text/css" rel="stylesheet">
         <script language="JavaScript">
 <?=@$_Path;?>
-
-            function ReloadLang(my_lang){
-                location.replace("./?lang="+my_lang)
-            }
 
             function CookiesFlash(){
                 if(confirm("Внимание!\nВы действительно хотите удалить идентификационные\nданные (Cookies) с этого компьютера?")){
@@ -286,7 +275,7 @@ function GetLang($skin) {
 	<td valign=\"middle\">
 
 <form method=\"post\">
-<table align=\"center\" cellpadding=\"0\" cellspacing=\"1\" border=\"0\" style=\"border: 2px;border-style:outset; border-color:ButtonFace;\" width=\"330\">
+<table align=\"center\" cellpadding=\"0\" cellspacing=\"1\" border=\"0\" class=\"login\">
 <tr align=\"center\" >
 <td colspan=3 >
 <table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" height=\"50\" id=\"title\">
@@ -305,10 +294,10 @@ function GetLang($skin) {
 </tr>
 <tr>
 <td align=\"left\" style=\"padding:5\">
-<FIELDSET style=\"width: 20em; height: 5em;\">
+<FIELDSET>
 <LEGEND ><span name=txtLang id=txtLang>Пользователь</span></LEGEND>
 <div style=\"padding:10\">
-<input type=\"text\" name=\"log\" size=\"33\" maxlength=\"20\" value=\"".$_COOKIE['mylog']."\" id=log>
+<input type=\"text\" name=\"log\" style=\"width:180px\" maxlength=\"20\" value=\"".$_COOKIE['mylog']."\" id=log>
 </div>
 </FIELDSET>
 </td>
@@ -319,10 +308,10 @@ function GetLang($skin) {
 </tr>
 <tr>
 <td style=\"padding:5\">
-<FIELDSET style=\"width: 20em; height: 5em;\">
+<FIELDSET>
 <LEGEND ><span name=txtLang id=txtLang>Пароль</span></LEGEND>
 <div style=\"padding:10\">
-<input type=\"password\" name=\"pas\" id=pas size=\"33\" maxlength=\"20\" value=\"".base64_decode($_COOKIE['mypas'])."\" >
+<input type=\"password\" name=\"pas\" id=pas style=\"width:180px\" maxlength=\"20\" value=\"".base64_decode($_COOKIE['mypas'])."\" >
 </div>
 </FIELDSET>
 </td>

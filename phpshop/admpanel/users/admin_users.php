@@ -199,16 +199,16 @@ function Users() {
         $display.='<tr class="row ' . $style_r . '" id="r' . $id . '" onmouseover="PHPShopJS.rowshow_on(this)" onmouseout="PHPShopJS.rowshow_out(this,\'' . $style_r . '\')">';
 
         $display.="
-    <td style=\"padding:3\" align=center onclick=\"miniWin('users/adm_userID.php?id=$id',500,500)\">
+    <td style=\"padding:3\" align=center onclick=\"miniWin('users/adm_userID.php?id=$id',550,500)\">
 	" . $checked . "
 	</td>
-	<td onclick=\"miniWin('users/adm_userID.php?id=$id',500,500)\">
+	<td onclick=\"miniWin('users/adm_userID.php?id=$id',550,500)\">
 	" . $row['mail'] . "
 	</td>
-	<td onclick=\"miniWin('users/adm_userID.php?id=$id',500,500)\">
+	<td onclick=\"miniWin('users/adm_userID.php?id=$id',550,500)\">
 	$login
 	</td>
-	<td onclick=\"miniWin('users/adm_userID.php?id=$id',500,500)\">
+	<td onclick=\"miniWin('users/adm_userID.php?id=$id',550,500)\">
 	" . GetLastEnter($login) . "
 	</td>
     </tr>

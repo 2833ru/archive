@@ -1,5 +1,6 @@
 <?php
 
+if(empty($_SESSION['theme']))
 $_SESSION['theme'] = 'classic';
 
 /**
@@ -130,10 +131,12 @@ class PHPShopGUI {
      * @param string $value содержание
      * @param string $action action
      * @param string $name имя
+     * @param string $style CSS стилизация
+     * @param string $target параметр target
      * @return string
      */
-    function setForm($value, $action = false, $name = "product_edit") {
-        $CODE.='<form method="post" enctype="multipart/form-data" action="' . $action . '" name="' . $name . '" id="' . $name . '">
+    function setForm($value, $action = false, $name = "product_edit", $style=false, $target=false) {
+        $CODE.='<form method="post" target="'.$target.'" enctype="multipart/form-data" action="' . $action . '" name="' . $name . '" id="' . $name . '" style="'.$style.'">
             ' . $value . '</form>';
         return $CODE;
     }
@@ -201,9 +204,9 @@ class PHPShopGUI {
      * @param string $value текст
      * @return string
      */
-    function setLine($value = false) {
+    function setLine($value = false,$padding_top=false) {
         $CODE = '
-	 <div style="clear:both;">' . $value . '</div>';
+	 <div style="clear:both;padding-top:'.$this->chekSize($padding_top).'">' . $value . '</div>';
         return $CODE;
     }
 
@@ -435,7 +438,7 @@ class PHPShopGUI {
      * @param string $code содержание
      */
     function setFooter($code) {
-        $this->_CODE.=$this->setDiv("right", $code);
+        $this->_CODE.=$this->setDiv("right", $code, false, 'footer');
 
         // Слушатель
         if (is_array($this->action))

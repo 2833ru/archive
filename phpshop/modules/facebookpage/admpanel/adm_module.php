@@ -51,6 +51,7 @@ function GetSkinsIcon($skin) {
     return @$disp;
 }
 
+
 // Функция обновления
 function actionUpdate() {
     global $PHPShopOrm;
@@ -64,7 +65,7 @@ function actionUpdate() {
 
 // Начальная функция загрузки
 function actionStart() {
-    global $PHPShopGUI, $PHPShopSystem, $SysValue, $_classPath, $PHPShopOrm;
+    global $PHPShopGUI, $_classPath, $PHPShopOrm;
 
 
     $PHPShopGUI->dir = $_classPath . "admpanel/";
@@ -101,8 +102,8 @@ function actionStart() {
     
     $skin_arr = GetSkins();
     if (!count($skin_arr))
-        $skinAlert = 'Шаблоны для facebook отсутствуют в системе:<br>
-            <input type="button" value="Установить" name="" id="" style="width:80px;" class="but" onclick="window.location.replace(\'?zip=true\')">';
+        $skinAlert = '<span style="color:red">Шаблоны для facebook отсутствуют в системе!<br>
+            <input type="button" value="Установить шаблоны" name="" id="" style="width:150px;" class="but" onclick="window.location.replace(\'?zip=true\')"></span>';
     if ($zip_log == 1)
         $skinAlert = "Шаблоны для facebook успешно установлены!";
     if ($zip_log == 2 OR ($zip_log == 1 and !count($skin_arr)))
@@ -129,8 +130,8 @@ function actionStart() {
             document.getElementById("icon").src=path;
         }
         </script>';
-    $ContentField1 .= $PHPShopGUI->setSelect('skin_new', $select_arr, 200, "none", '', 'GetSkinIcon_facebook(this.value)', false, 10);
-    $ContentField1 .= GetSkinsIcon($now_skin);
+    $ContentField1 .= $PHPShopGUI->setSelect('skin_new', $select_arr, 200, "left", '', 'GetSkinIcon_facebook(this.value)', false, 10);
+    $ContentField1.=$PHPShopGUI->setField('Скриншот',GetSkinsIcon($now_skin),$float="left",$margin_left=5);
 
     $Info = getInstruct();
     $ContentField2 = $PHPShopGUI->setInfo($Info, 200, '95%');
@@ -138,7 +139,7 @@ function actionStart() {
 
 // Содержание закладки 1
     $Tab1 = $PHPShopGUI->setField("Выберите дизайн для страницы в facebook", $ContentField1);
-    $Tab1 .= $skinAlert;
+    $Tab1 .= $PHPShopGUI->setLine($skinAlert,10);
     $Tab2 = $PHPShopGUI->setField("Настройка", $ContentField2);
 
     $Tab3 = $PHPShopGUI->setPay($serial, false);

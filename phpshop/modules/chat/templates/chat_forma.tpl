@@ -4,8 +4,9 @@ function checkModChatForma(){
         var w=500;
         var h=600;
         var url='phpshop/modules/chat/chat.php?name='+document.getElementById('chat_mod_user_name').value;
-        return window.open(url,"_blank","dependent=1,left=100,top=20,width="+w+",height="+h+",location=0,menubar=0,resizable=1,scrollbars=0,status=0,titlebar=0,toolbar=0");
-    }
+        chat=window.open(url,"chat","dependent=1,left=100,top=20,width="+w+",height="+h+",location=0,menubar=0,resizable=1,scrollbars=0,status=0,titlebar=0,toolbar=0");
+        chat.focus();
+}
     else 
         return false;
 }

@@ -16,7 +16,7 @@ require("../language/".$Lang."/language.php");
 <head>
 	<title>Создание записи нового канала RSS</title>
 <META http-equiv=Content-Type content="text/html; charset=<?=$SysValue['Lang']['System']['charset']?>">
-<LINK href="../css/texts.css" type=text/css rel=stylesheet>
+<LINK href="../skins/<?=$_SESSION['theme']?>/texts.css" type=text/css rel=stylesheet>
 
 
 <SCRIPT language="JavaScript" src="/phpshop/lib/Subsys/JsHttpRequest/Js.js"></SCRIPT>
@@ -24,7 +24,7 @@ require("../language/".$Lang."/language.php");
 <script type="text/javascript" language="JavaScript1.2" src="../language/<?=$Lang?>/language_windows.js"></script>
 <script type="text/javascript" language="JavaScript1.2" src="../language/<?=$Lang?>/language_interface.js"></script>
 
-<LINK href="../css/dateselector.css" type=text/css rel=stylesheet>
+<LINK href="../skins/<?=$_SESSION['theme']?>/dateselector.css" type=text/css rel=stylesheet>
 <SCRIPT language="JavaScript" src="../java/popup_lib.js"></SCRIPT>
 <SCRIPT language="JavaScript" src="../java/dateselector.js"></SCRIPT>
 

@@ -323,6 +323,7 @@ class ReadCsv1C extends PHPShopReadCsvPro {
             $sql.="price5='" . @$CsvToArray[11] . "', "; // цена 5
             $sql.="items='" . @$CsvToArray[6] . "', "; // склад
             $sql.="datas='" . date("U") . "', "; // дата изменения
+            
             // Подчиненные товары
             if (is_numeric($CsvToArray[16]) and $CsvToArray[16] == 1) {
                 $sql.="parent_enabled='1', ";

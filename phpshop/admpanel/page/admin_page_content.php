@@ -58,7 +58,7 @@ function actionStart() {
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=<?=$GLOBALS['PHPShopLangCharset']?>">
-        <link href="../css/texts.css" type=text/css rel=stylesheet>
+        <link href="../skins/<?=$_SESSION['theme']?>/texts.css" type=text/css rel=stylesheet>
         <script type="text/javascript" language="JavaScript1.2" src="../java/sorttable.js"></script>
         <script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
     </head>

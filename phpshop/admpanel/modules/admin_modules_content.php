@@ -1,5 +1,4 @@
 <?php
-
 $_classPath = "../../";
 include($_classPath . "class/obj.class.php");
 PHPShopObj::loadClass("base");
@@ -35,7 +34,7 @@ function ChekInstallModule($path) {
     if (mysql_num_rows($result) > 0) {
         $return[0] = "#C0D2EC";
         $return[1] = "
-<BUTTON style=\"width: 10em; height: 2.2em; margin-left:5\"  onclick=\"DoUpdateModules('off','$path','".$_GET['pid']."');return false;\">
+<BUTTON style=\"width: 10em; height: 2.2em; margin-left:5\"  onclick=\"DoUpdateModules('off','$path','" . $_GET['pid'] . "');return false;\">
 <img src=\"../img/icon-deactivate.gif\" border=\"0\" align=\"absmiddle\">
 Отключить
 </BUTTON>
@@ -47,7 +46,7 @@ function ChekInstallModule($path) {
 
         $return[0] = "white";
         $return[1] = "
-<BUTTON style=\"width: 10em; height: 2.2em; margin-left:5\"  onclick=\"DoUpdateModules('on','$path','".$_GET['pid']."');return false;\">
+<BUTTON style=\"width: 10em; height: 2.2em; margin-left:5\"  onclick=\"DoUpdateModules('on','$path','" . $_GET['pid'] . "');return false;\">
 <img src=\"../img/icon-activate.gif\"  border=\"0\" align=\"absmiddle\">
 Установить
 </BUTTON>
@@ -63,11 +62,7 @@ function actionStart() {
     $PHPShopInterface->razmer = "height:560px;";
     $PHPShopInterface->imgPath = '../img/';
 
-    if (CheckedRules($UserStatus["module"], 0))
-        $PHPShopInterface->setCaption(array("Название", "20%"), array("Описание", "50%"), array("Установлено", "10%"));
-    else
-        $PHPShopInterface->setCaption(array("Управление", "10%"), array("Название", "20%"), array("Описание", "50%"), array("Установлено", "15%"));
-
+    $PHPShopInterface->setCaption(array("Управление", "10%"), array("Название", "20%"), array("Описание", "50%"), array("Установлено", "15%"));
 
     $path = "../../modules/";
     $i = 1;
@@ -79,9 +74,9 @@ function actionStart() {
 
                     // Информация по модулю
                     $Info = GetModuleInfo($file);
-                    
+
                     // Если выбрана категория
-                    if (isset($_GET['pid']) and strstr($Info['category'],$_GET['pid']) and empty($Info['hidden'])) {
+                    if (isset($_GET['pid']) and strstr($Info['category'], $_GET['pid']) and empty($Info['hidden'])) {
 
                         $ChekInstallModule = ChekInstallModule($file);
 
@@ -100,14 +95,19 @@ function actionStart() {
                         $ModuleHomePage = '<img src="' . $path . $file . '/install/' . $Info['icon'] . '" align="absmiddle">
 <a href="http://wiki.phpshop.ru/index.php/Modules#' . str_replace(' ', '_', $Info['name']) . '" target="_blank" title="Описание модуля" class="blue">' . $Info['name'] . ' ' . $Info['version'] . $trial . '</a>';
 
-                        if (CheckedRules($UserStatus["module"], 0))
-                            $PHPShopInterface->setRow($i, $ModuleHomePage, $Info['description'], $InstallDate);
-                        else
-                            $PHPShopInterface->setRow($i, $ChekInstallModule[1], $ModuleHomePage, $Info['description'], $InstallDate);
+                        if (CheckedRules($UserStatus["module"], 0)) {
+                            $ChekInstallModule[1] = "<BUTTON style=\"width: 10em; height: 2.2em; margin-left:5\" >
+<img src=\"../img/errormessage.gif\"  border=\"0\" align=\"absmiddle\">
+Нет прав
+</BUTTON>";
+                        }
+
+
+                        $PHPShopInterface->setRow($i, $ChekInstallModule[1], $ModuleHomePage, $Info['description'], $InstallDate);
                         $i++;
                     }
                     // Вывод всех модулей
-                    elseif(empty($_GET['pid']) and empty($Info['hidden'])) {
+                    elseif (empty($_GET['pid']) and empty($Info['hidden'])) {
                         $ChekInstallModule = ChekInstallModule($file);
 
                         // Дата установки
@@ -125,10 +125,16 @@ function actionStart() {
                         $ModuleHomePage = '<img src="' . $path . $file . '/install/' . $Info['icon'] . '" align="absmiddle">
 <a href="http://wiki.phpshop.ru/index.php/Modules#' . str_replace(' ', '_', $Info['name']) . '" target="_blank" title="Описание модуля" class="blue">' . $Info['name'] . ' ' . $Info['version'] . $trial . '</a>';
 
-                        if (CheckedRules($UserStatus["module"], 0))
-                            $PHPShopInterface->setRow($i, $ModuleHomePage, $Info['description'], $InstallDate);
-                        else
-                            $PHPShopInterface->setRow($i, $ChekInstallModule[1], $ModuleHomePage, $Info['description'], $InstallDate);
+
+                        if (CheckedRules($UserStatus["module"], 0)) {
+                            $ChekInstallModule[1] = "<BUTTON style=\"width: 10em; height: 2.2em; margin-left:5\" >
+<img src=\"../img/errormessage.gif\"  border=\"0\" align=\"absmiddle\">
+Нет прав
+</BUTTON>";
+                        }
+
+
+                        $PHPShopInterface->setRow($i, $ChekInstallModule[1], $ModuleHomePage, $Info['description'], $InstallDate);
                         $i++;
                     }
                 }
@@ -143,16 +149,16 @@ function actionStart() {
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=<?= $GLOBALS['PHPShopLangCharset'] ?>">
-        <LINK href="../css/texts.css" type=text/css rel=stylesheet>
-        <script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
-        <script type="text/javascript" language="JavaScript1.2" src="../java/sorttable.js"></script>
-        <SCRIPT language="JavaScript" src="/phpshop/lib/Subsys/JsHttpRequest/Js.js"></SCRIPT>
-    </head>
-    <body bottommargin="0" rightmargin="0" topmargin="0" leftmargin="0" bgcolor="ffffff">
+            <LINK href="../skins/<?=$_SESSION['theme']?>/texts.css" type=text/css rel=stylesheet>
+                <script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
+                <script type="text/javascript" language="JavaScript1.2" src="../java/sorttable.js"></script>
+                <SCRIPT language="JavaScript" src="/phpshop/lib/Subsys/JsHttpRequest/Js.js"></SCRIPT>
+                </head>
+                <body bottommargin="0" rightmargin="0" topmargin="0" leftmargin="0" bgcolor="ffffff">
 
-        <?
-        // Вывод формы при старте
-        $PHPShopInterface->setLoader(false, 'actionStart');
-        ?>
-    </body>
-</html>
+                    <?
+                    // Вывод формы при старте
+                    $PHPShopInterface->setLoader(false, 'actionStart');
+                    ?>
+                </body>
+                </html>

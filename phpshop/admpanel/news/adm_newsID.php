@@ -29,7 +29,7 @@ function actionStart() {
     global $PHPShopGUI, $PHPShopSystem, $PHPShopBase, $PHPShopOrm, $PHPShopModules;
 
     // Выборка
-    $data = $PHPShopOrm->select(array('*'), array('id' => '=' . $_GET['id']));
+    $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
 
     $PHPShopGUI->dir = "../";
     $PHPShopGUI->addJSFiles('../java/popup_lib.js', '../java/dateselector.js');

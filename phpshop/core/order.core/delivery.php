@@ -158,7 +158,7 @@ function delivery($obj,$deliveryID) {
 
 
     if ($varamount==1) {
-        if (!(($curid==$deliveryID))) $waytodo='<IMG onload="UpdateDelivery('.$curid.');" SRC="images/shop/flag_green.gif">';
+        if (!(($curid==$deliveryID))) $waytodo='<IMG onload="UpdateDelivery('.$curid.');" SRC="../'.$pathTemplate.'/images/shop/flag_green.gif">';
     }
 
     if ($stop) {

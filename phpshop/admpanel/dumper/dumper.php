@@ -673,7 +673,7 @@ return <<<HTML
 <HEAD>
 <TITLE>Работа с базой</TITLE>
 <META HTTP-EQUIV=Content-Type CONTENT="text/html; charset=windows-1251">
-<LINK href="../css/texts.css" type=text/css rel=stylesheet>
+<LINK href="../skins/{$_SESSION['theme']}/texts.css" type=text/css rel=stylesheet>
 <STYLE TYPE="TEXT/CSS">
 <!--
 body{

@@ -1,84 +1,101 @@
 <?
 require("../connect.php");
-@mysql_connect ("$host", "$user_db", "$pass_db")or @die("Невозможно подсоединиться к базе");
-mysql_select_db("$dbase")or @die("Невозможно подсоединиться к базе");
+@mysql_connect("$host", "$user_db", "$pass_db") or @die("Невозможно подсоединиться к базе");
+mysql_select_db("$dbase") or @die("Невозможно подсоединиться к базе");
 require("../enter_to_admin.php");
 
 // Языки
-$GetSystems=GetSystems();
-$systems=$GetSystems;
-$option=unserialize($GetSystems['admoption']);
-$Lang=$option['lang'];
-require("../language/".$Lang."/language.php");
+$GetSystems = GetSystems();
+$systems = $GetSystems;
+$option = unserialize($GetSystems['admoption']);
+$Lang = $option['lang'];
+require("../language/" . $Lang . "/language.php");
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
-<head>
-	<title>Документооборот</title>
-<META http-equiv=Content-Type content="text/html; charset=<?=$SysValue['Lang']['System']['charset']?>">
-<meta http-equiv="MSThemeCompatible" content="Yes">
-<LINK href="../css/texts.css" type=text/css rel=stylesheet>
-<LINK href="../css/tab.winclassic.css" type=text/css rel=stylesheet>
-<script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
-<script type="text/javascript" src="../java/tabpane.js"></script>
-<script type="text/javascript" language="JavaScript1.2" src="../language/<?=$Lang?>/language_windows.js"></script>
+    <head>
+        <title>Документооборот</title>
+        <META http-equiv=Content-Type content="text/html; charset=<?= $SysValue['Lang']['System']['charset'] ?>">
+        <meta http-equiv="MSThemeCompatible" content="Yes">
+        <LINK href="../skins/<?= $_SESSION['theme'] ?>/texts.css" type=text/css rel=stylesheet>
+        <LINK href="../skins/<?= $_SESSION['theme'] ?>/tab.css" type=text/css rel=stylesheet>
+        <script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
+        <script type="text/javascript" src="../java/tabpane.js"></script>
+        <script type="text/javascript" language="JavaScript1.2" src="../language/<?= $Lang ?>/language_windows.js"></script>
 
-<script type="text/javascript">
-DoResize(<? echo $GetSystems['width_icon']?>,500,400);
-</script>
+        <script type="text/javascript">
+            DoResize(<? echo $GetSystems['width_icon'] ?>, 500, 400);
+        </script>
 
-</head>
-<body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0" onload="DoCheckLang(location.pathname,<?=$SysValue['lang']['lang_enabled']?>);preloader(0)">
-<table id="loader">
-<tr>
-	<td valign="middle" align="center">
-		<div id="loadmes" onclick="preloader(0)">
-<table width="100%" height="100%">
-<tr>
-	<td id="loadimg"></td>
-	<td ><b><?=$SysValue['Lang']['System']['loading']?></b><br><?=$SysValue['Lang']['System']['loading2']?></td>
-</tr>
-</table>
-		</div>
-</td>
-</tr>
-</table>
+    </head>
+    <body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0" onload="DoCheckLang(location.pathname,<?= $SysValue['lang']['lang_enabled'] ?>);
+                preloader(0)">
+        <table id="loader">
+            <tr>
+                <td valign="middle" align="center">
+                    <div id="loadmes" onclick="preloader(0)">
+                        <table width="100%" height="100%">
+                            <tr>
+                                <td id="loadimg"></td>
+                                <td ><b><?= $SysValue['Lang']['System']['loading'] ?></b><br><?= $SysValue['Lang']['System']['loading2'] ?></td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+        </table>
 
-<SCRIPT language=JavaScript type=text/javascript>preloader(1);</SCRIPT>
-<?
-$sql="select * from $table_name3";
-$result=mysql_query($sql);
-$row = mysql_fetch_array($result);
+        <SCRIPT language=JavaScript type=text/javascript>preloader(1);</SCRIPT>
+        <?
+        $sql = "select * from $table_name3";
+        $result = mysql_query($sql);
+        $row = mysql_fetch_array($result);
 
-	
-	if($row['1c_load_accounts']==1) $load_accounts="checked";
-	 else $load_accounts="";
-	 
-	if($row['1c_load_invoice']==1) $load_invoice="checked";
-	 else $load_invoice="";
 
-         $с_option=unserialize($row['1c_option']);
+        if ($row['1c_load_accounts'] == 1)
+            $load_accounts = "checked";
+        else
+            $load_accounts = "";
 
-         if($с_option['update_name']==1) $update_name="checked";
-	 else $update_name="";
+        if ($row['1c_load_invoice'] == 1)
+            $load_invoice = "checked";
+        else
+            $load_invoice = "";
 
-         if($с_option['update_content']==1) $update_content="checked";
-	 else $update_content="";
+        $с_option = unserialize($row['1c_option']);
 
-         if($с_option['update_description']==1) $update_description="checked";
-	 else $update_description="";
+        if ($с_option['update_name'] == 1)
+            $update_name = "checked";
+        else
+            $update_name = "";
 
-         if($с_option['update_category']==1) $update_category="checked";
-	 else $update_category="";
+        if ($с_option['update_content'] == 1)
+            $update_content = "checked";
+        else
+            $update_content = "";
 
-         if($с_option['update_category']==1) $update_category="checked";
-	 else $update_category="";
+        if ($с_option['update_description'] == 1)
+            $update_description = "checked";
+        else
+            $update_description = "";
 
-         if($с_option['update_sort']==1) $update_sort="checked";
-	 else $update_sort="";
-	 
-	
-echo"
+        if ($с_option['update_category'] == 1)
+            $update_category = "checked";
+        else
+            $update_category = "";
+
+        if ($с_option['update_category'] == 1)
+            $update_category = "checked";
+        else
+            $update_category = "";
+
+        if ($с_option['update_sort'] == 1)
+            $update_sort = "checked";
+        else
+            $update_sort = "";
+
+
+        echo"
 <table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" height=\"50\" id=\"title\">
 <tr bgcolor=\"#ffffff\">
 	<td style=\"padding:10\">
@@ -175,32 +192,32 @@ tabPane.addTabPage( document.getElementById( \"sklad\" ) );
 
 
 
-if(isset($optionsSAVE))
-{
-if(CheckedRules($UserStatus["option"],1) == 1){
+        if (isset($optionsSAVE)) {
+            if (CheckedRules($UserStatus["option"], 1) == 1) {
 
-$с_option["update_name"]=$update_name_new;
-$с_option["update_content"]=$update_content_new;
-$с_option["update_description"]=$update_description_new;
-$с_option["update_category"]=$update_category_new;
-$с_option["update_sort"]=$update_sort_new;
-$с_option_new=serialize($с_option);
+                $с_option["update_name"] = $update_name_new;
+                $с_option["update_content"] = $update_content_new;
+                $с_option["update_description"] = $update_description_new;
+                $с_option["update_category"] = $update_category_new;
+                $с_option["update_sort"] = $update_sort_new;
+                $с_option_new = serialize($с_option);
 
 
-$sql="UPDATE $table_name3
+                $sql = "UPDATE $table_name3
 SET
 1c_load_accounts='$load_accounts_new',
 1c_load_invoice='$load_invoice_new',
 1c_option='$с_option_new'";
-$result=mysql_query($sql)or @die("Невозможно изменить запись".$sql.mysql_error());
-echo"
+                $result = mysql_query($sql) or @die("Невозможно изменить запись" . $sql . mysql_error());
+                echo"
 	 <script>
 	 CL();
 	 </script>
 	   ";
-}else $UserChek->BadUserFormaWindow();
-  }
-   
-?>
+            }
+            else
+                $UserChek->BadUserFormaWindow();
+        }
+        ?>
 
 

@@ -322,6 +322,96 @@ function GetOrderStatusApi($n) {
     return $disp;
 }
 
+function GetOrderStat1select($n) {
+    
+    $t = "s$n";
+    $$t = "selected";
+
+    $disp="<select name='list' id='list'>
+            <option value='1' $s1>Товары</option>
+            <option value='2' $s2>Клиенты</option>
+            <!--<option value='3' $s3>Сотрудники</option>-->
+            <option value='4' $s4>Виды оплат</option>
+           </select>";
+    return $disp;
+}
+function GetOrderStat1Cats($n) {
+    
+    $sql="select id, name, parent_to from phpshop_categories WHERE 1" ;
+    $result=mysql_query($sql);
+    while(@$row = mysql_fetch_array(@$result)) {
+        $mass[$row['id']]['name'] = $row['name'];
+        $mass[$row['id']]['parent_to'] = $row['parent_to'];
+    }
+
+    $dis=null;
+    $sql="select category from phpshop_products WHERE 1 GROUP BY category" ;
+    $result=mysql_query($sql);
+    while(@$row = mysql_fetch_array(@$result)) {
+        if($n==$row['category'])  $sel2="selected";
+        else $sel2="";
+        
+        if(!empty($mass[$mass[$row['category']]['parent_to']]['name']))
+        $dis.="<option value='".$row['category']."' $sel2>".$mass[$mass[$row['category']]['parent_to']]['name']."->".$mass[$row['category']]['name']."</option>";
+    }
+    
+    $disp="<select name='order_serach' id='order_serach'>
+            <option value='0'>Все</option>
+            ".$dis."
+           </select>";
+    return $disp;
+}
+
+function cp1251_to_utf8($txt) {
+    $in_arr = array(
+        chr(208), chr(192), chr(193), chr(194),
+        chr(195), chr(196), chr(197), chr(168),
+        chr(198), chr(199), chr(200), chr(201),
+        chr(202), chr(203), chr(204), chr(205),
+        chr(206), chr(207), chr(209), chr(210),
+        chr(211), chr(212), chr(213), chr(214),
+        chr(215), chr(216), chr(217), chr(218),
+        chr(219), chr(220), chr(221), chr(222),
+        chr(223), chr(224), chr(225), chr(226),
+        chr(227), chr(228), chr(229), chr(184),
+        chr(230), chr(231), chr(232), chr(233),
+        chr(234), chr(235), chr(236), chr(237),
+        chr(238), chr(239), chr(240), chr(241),
+        chr(242), chr(243), chr(244), chr(245),
+        chr(246), chr(247), chr(248), chr(249),
+        chr(250), chr(251), chr(252), chr(253),
+        chr(254), chr(255)
+    );
+
+    $out_arr = array(
+        chr(208) . chr(160), chr(208) . chr(144), chr(208) . chr(145),
+        chr(208) . chr(146), chr(208) . chr(147), chr(208) . chr(148),
+        chr(208) . chr(149), chr(208) . chr(129), chr(208) . chr(150),
+        chr(208) . chr(151), chr(208) . chr(152), chr(208) . chr(153),
+        chr(208) . chr(154), chr(208) . chr(155), chr(208) . chr(156),
+        chr(208) . chr(157), chr(208) . chr(158), chr(208) . chr(159),
+        chr(208) . chr(161), chr(208) . chr(162), chr(208) . chr(163),
+        chr(208) . chr(164), chr(208) . chr(165), chr(208) . chr(166),
+        chr(208) . chr(167), chr(208) . chr(168), chr(208) . chr(169),
+        chr(208) . chr(170), chr(208) . chr(171), chr(208) . chr(172),
+        chr(208) . chr(173), chr(208) . chr(174), chr(208) . chr(175),
+        chr(208) . chr(176), chr(208) . chr(177), chr(208) . chr(178),
+        chr(208) . chr(179), chr(208) . chr(180), chr(208) . chr(181),
+        chr(209) . chr(145), chr(208) . chr(182), chr(208) . chr(183),
+        chr(208) . chr(184), chr(208) . chr(185), chr(208) . chr(186),
+        chr(208) . chr(187), chr(208) . chr(188), chr(208) . chr(189),
+        chr(208) . chr(190), chr(208) . chr(191), chr(209) . chr(128),
+        chr(209) . chr(129), chr(209) . chr(130), chr(209) . chr(131),
+        chr(209) . chr(132), chr(209) . chr(133), chr(209) . chr(134),
+        chr(209) . chr(135), chr(209) . chr(136), chr(209) . chr(137),
+        chr(209) . chr(138), chr(209) . chr(139), chr(209) . chr(140),
+        chr(209) . chr(141), chr(209) . chr(142), chr(209) . chr(143)
+    );
+
+    $txt = str_replace($in_arr, $out_arr, $txt);
+    return $txt;
+}
+
 function __($str){
  return   $str; 
 }
@@ -351,6 +441,9 @@ $table_name19=$SysValue['base']['table_name19'];
 $table_name27=$SysValue['base']['table_name27'];
 $table_name32=$SysValue['base']['table_name32'];
 $SysValue['lang']['lang_enabled']=0;
+
+// Тема панели управления
+//$_SESSION['theme']='default';
 
 // Обновление
 define("TIME_LIMIT", 600);

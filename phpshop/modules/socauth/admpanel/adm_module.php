@@ -77,6 +77,7 @@ function actionStart() {
     $authConfig = unserialize($data['authConfig']);
     $fcCongif = $authConfig['facebook'];
     $twCongif = $authConfig['twitter'];
+    $vkCongif = $authConfig['vk'];
     
 // Графический заголовок окна
     $PHPShopGUI->setHeader("Настройка модуля 'SocAuth'", "Настройки", $PHPShopGUI->dir . "img/i_display_settings_med[1].gif");
@@ -88,11 +89,15 @@ function actionStart() {
     
     $ContentField2 = $PHPShopGUI->setInput("text", "authConfig[twitter][key]", $twCongif['key'], '' , 250, '', '', '', 'Consumer key');
     $ContentField2 .= $PHPShopGUI->setInput("text", "authConfig[twitter][secretkey]", $twCongif['secretkey'], '' , 250, '', '', '', 'Consumer secret');
+    
+    $ContentField3 = $PHPShopGUI->setInput("text", "authConfig[vk][client_id]", $vkCongif['client_id'], '' , 250, '', '', '', 'ID приложения');
+    $ContentField3 .= $PHPShopGUI->setInput("text", "authConfig[vk][client_secret]", $vkCongif['client_secret'], '' , 250, '', '', '', 'Защищенный ключ');
 
 
 // Содержание закладки 1
     $Tab1 = $PHPShopGUI->setField("Настройка facebook", $ContentField1);
     $Tab1.=$PHPShopGUI->setField("Настройка twitter", $ContentField2);
+    $Tab1.=$PHPShopGUI->setField("Настройка ВКонтакте", $ContentField3);
 
 
     $Info = getInstruct();
@@ -133,7 +138,8 @@ return '
 users/users_forma.tpl<br><br>
 вставить метки:<br><br>
 @facebookAuth@<br><br>
-@twitterAuth@
+@twitterAuth@<br><br>
+@vkontakteAuth@
 <h4>Настройка twitter.com</h4>
 - авторизоваться в твиттере<br><br>
 - перейти по ссылке:<br><br>
@@ -167,6 +173,21 @@ http://test.phpshop-partners.ru<br><br>
 - из созданного приложения взять данные<br><br>
 <b>App ID</b><br><br>
 <b>App Secret</b><br><br>
+- указанные в предыдущем меню параметры необходимо прописать в соответствующие поля 
+в настройке модуля авторизации через соц сети во вкладке "основное"
+
+<h4>Настройка vk.com</h4>
+- авторизоваться в vk.com<br><br>
+- перейти по ссылке:<br><br>
+<a href="http://vk.com/editapp?act=create" target="_blank">http://vk.com/editapp?act=create</a><br><br>
+- создать приложение типа веб-сайт (Название может быть любым) <br><br>
+- в поле "Адрес сайта" необходимо указать полностью адрес вашего домена, например:<br><br>
+http://test.phpshop-partners.ru<br><br>
+- в поле "Базовый домен" необходимо указать ваш домен (если сайт лежит ну субдомене, нужно указывать только основной), например:<br><br>
+сайт лежи на test.phpshop-partners.ru, нужно указать phpshop-partners.ru<br><br>
+- из созданного приложения взять данные<br><br>
+<b>ID приложения</b><br><br>
+<b>Защищенный ключ</b><br><br>
 - указанные в предыдущем меню параметры необходимо прописать в соответствующие поля 
 в настройке модуля авторизации через соц сети во вкладке "основное"
 

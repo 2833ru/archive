@@ -761,7 +761,7 @@ function initialize(){
     combowidth=cartwindow.offsetWidth;
     comboheight=cartwindow.offsetHeight;
 
-    if (document.all){
+    if (document.all && !document.querySelector){
         setInterval("staticit_ie()",50);
 
         if(navigator.appName == "Microsoft Internet Explorer"){
@@ -778,7 +778,7 @@ function initialize(){
 
 function initialize_off(){
     var cartwindow=document.getElementById('cartwindow');
-    if (document.all){
+    if (document.all && !document.querySelector){
         setInterval("staticit_ie()",50);
         cartwindow.style.visibility="hidden";
     }

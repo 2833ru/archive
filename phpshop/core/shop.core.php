@@ -515,7 +515,7 @@ class PHPShopShop extends PHPShopShopCore {
 
         // ID категории
         $this->category = PHPShopSecurity::TotalClean($this->PHPShopNav->getId(), 1);
-        $this->PHPShopCategory = new PHPShopCategory($this->category);
+        $this->PHPShopCategory = new PHPShopCategory(intval($this->category));
         $this->category_name = $this->PHPShopCategory->getName();
 
         // Запрос на подкаталоги
@@ -578,6 +578,10 @@ class PHPShopShop extends PHPShopShopCore {
         // Перехват модуля в начале
         if ($this->setHook(__CLASS__, __FUNCTION__, false, 'START'))
             return true;
+        
+        // 404 если каталога не существует
+        if(empty($this->category_name))
+            return $this->setError404();
 
         // Путь для навигации
         $this->objPath = './CID_' . $this->category . '_';

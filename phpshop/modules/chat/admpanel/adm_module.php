@@ -37,6 +37,13 @@ function actionBaseUpdate() {
 // Функция обновления
 function actionUpdate() {
     global $PHPShopOrm;
+    
+    // Обязательное заполнение / в конце директории
+    if(substr($_POST['upload_dir_new'], -1) != '/')
+           $_POST['upload_dir_new'].='/';
+    
+    // Попытка проставить права 777 на папку для файлов
+    @chmod($_SERVER['DOCUMENT_ROOT'] .$GLOBALS['SysValue']['dir']['dir'].'/UserFiles/Image/'.$_POST['upload_dir_new'],777);
 
     $PHPShopOrm->debug=false;
     $action = $PHPShopOrm->update($_POST);
@@ -58,7 +65,7 @@ function GetSkinList($skin) {
                     $sel="selected";
                 else $sel="";
 
-                if($file!="." and $file!=".." and $file!="index.html")
+                if($file!="." and $file!=".." and !strpos($file, '.'))
                     $value[]=array($file,$file,$sel);
             }
             closedir($dh);
@@ -97,13 +104,14 @@ function actionStart() {
     $Tab1=$PHPShopGUI->setField('Заголовок',$PHPShopGUI->setInputText(false,'title_new', $title));
     $Tab1.=$PHPShopGUI->setField('Приветственое сообщение', $PHPShopGUI->setTextarea('title_start_new', $title_start));
     $Tab1.=$PHPShopGUI->setField('Cообщение выключенного режима', $PHPShopGUI->setTextarea('title_end_new', $title_end));
-    $Tab1.=$PHPShopGUI->setField('Место вывода',$PHPShopGUI->setSelect('enabled_new',$e_value,150),'left');
+    $Tab1.=$PHPShopGUI->setField('Место вывода',$PHPShopGUI->setSelect('enabled_new',$e_value,100),'left');
     $Tab1.=$PHPShopGUI->setField('Дизайн',GetSkinList($data['skin']),'left');
+    $Tab1.=$PHPShopGUI->setField('Файлы пользователей',$PHPShopGUI->setInputText('/UserFiles/Image/','upload_dir_new', $upload_dir,100),'left');
     //$Tab1.=$PHPShopGUI->setField('Тип вывода',$PHPShopGUI->setSelect('windows_new',$w_value,150),'left');
     
     $info='
 
-Для произвольной вставки элемента следует выбрать парамет вывода "Не выводить" и в ручном режиме вставить переменную
+Для произвольной вставки элемента следует выбрать параметр вывода "Не выводить" и в ручном режиме вставить переменную
         <b>@chat@</b> в свой шаблон.
         <p>Для персонализации формы вывода отредактируйте шаблоны phpshop/modules/chat/templates/. 
         CSS стили цветовой гаммы находятся в phpshop/modules/chat/templates/skin/ 

@@ -40,13 +40,13 @@ function Catalog() {
 <div align=\"center\" style=\"padding:5\">
 <table cellpadding=\"0\" cellspacing=\"0\">
   <tr>
-  <td class=\"butoff\"><img name=imgLang src=\"icon/chart_organisation_add.gif\" alt=\"Открыть все\" width=\"16\" height=\"16\" border=\"0\"  onclick=\"window.frame1.d.openAll()\">
+  <td id=\"but381\" class=\"butoff\" onmouseover=\"PHPShopJS.button_on(this)\" onmouseout=\"PHPShopJS.button_off(this)\"><img name=imgLang src=\"icon/chart_organisation_add.gif\" alt=\"Открыть все\" width=\"16\" height=\"16\" border=\"0\"  onclick=\"window.frame1.d.openAll()\">
     </td>
    	<td width=\"10\"></td>
 	<td width=\"1\" bgcolor=\"#ffffff\"></td>
 	<td width=\"1\" bgcolor=\"#808080\"></td>
    <td width=\"5\"></td>
-	<td  class=\"butoff\"><img name=imgLang src=\"icon/chart_organisation_delete.gif\" alt=\"Закрыть все\" width=\"16\" height=\"16\" border=\"0\"  onclick=\"window.frame1.d.closeAll()\"></td>
+	<td  id=\"but382\" class=\"butoff\" onmouseover=\"PHPShopJS.button_on(this)\" onmouseout=\"PHPShopJS.button_off(this)\"><img name=imgLang src=\"icon/chart_organisation_delete.gif\" alt=\"Закрыть все\" width=\"16\" height=\"16\" border=\"0\"  onclick=\"window.frame1.d.closeAll()\"></td>
   </tr>
 </table>
 </div>

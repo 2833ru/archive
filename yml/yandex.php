@@ -36,7 +36,7 @@ class PHPShopSortSearch {
         $this->tag = $tag;
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['table_name20']);
         $PHPShopOrm->debug = false;
-        $data = $PHPShopOrm->select(array('id'), array('name' => '="' . $name . '"'), false, array('limit' => 1));
+        $data = $PHPShopOrm->select(array('id'), array('name' => '="' . $name . '"', 'category' => "!=0"), false, array('limit' => 1));
         if (is_array($data)) {
 
             $sort_category = $data['id'];
@@ -56,24 +56,30 @@ class PHPShopSortSearch {
      * @return string имя характеристики в тэге
      */
     function search($row) {
+
+        // Проверка на сложный параметр
+        if (strstr($this->tag, ' ')) {
+            $tag_array = explode(" ", $this->tag);
+            $tag_start = $this->tag;
+            $tag_end = $tag_array[0];
+        } else {
+            $tag_start = $tag_end = $this->tag;
+        }
+
         if (is_array($row))
             foreach ($row as $val) {
                 if (!empty($this->sort_array[$val[0]])) {
-                    
-                    // Проверка на сложный параметр
-                    if(strstr($this->tag,' ')){
-                        $tag_array=  explode(" ", $this->tag);
-                        $tag_start=$this->tag;
-                        $tag_end=$tag_array[0];
-                    }
-                    else{
-                        $tag_start=$tag_end=$this->tag;
-                    }
-                          
+
+
+
                     return '
                         <' . $tag_start . '>' . $this->sort_array[$val[0]] . '</' . $tag_end . '>';
                 }
             }
+
+
+        return '
+                        <' . $tag_start . '>None</' . $tag_end . '>';
     }
 
 }
@@ -263,6 +269,7 @@ class PHPShopYml {
      * Заголовок 
      */
     function setHeader() {
+        global $PHPShopBase;
         $this->xml.='<?xml version="1.0" encoding="windows-1251"?>
 <!DOCTYPE yml_catalog SYSTEM "shops.dtd">
 <yml_catalog date="' . date('Y-m-d H:m') . '">
@@ -270,6 +277,8 @@ class PHPShopYml {
 <shop>
 <name>' . $this->PHPShopSystem->getName() . '</name>
 <company>' . $this->PHPShopSystem->getValue('company') . '</company>
+<platform>' . $PHPShopBase->getParam('license.product_name') . '</platform>
+<version>' . $PHPShopBase->getParam('upload.version') . '</version>
 <url>http://' . $_SERVER['SERVER_NAME'] . '</url>';
     }
 
@@ -312,7 +321,7 @@ class PHPShopYml {
      * Товары 
      */
     function setProducts() {
-        $vendor=null;
+        $vendor = null;
         $this->xml.='<offers>';
         $product = $this->product($vendor = true);
 
@@ -337,10 +346,10 @@ class PHPShopYml {
             $vendor = null;
 
             // Тэг характеристики
-            if ($this->vendor){
-                if(is_array($PHPShopSortSearch))
-                    foreach($PHPShopSortSearch as $SortSearch)
-                $vendor.= $SortSearch->search($val['vendor_array']);
+            if ($this->vendor) {
+                if (is_array($PHPShopSortSearch))
+                    foreach ($PHPShopSortSearch as $SortSearch)
+                        $vendor.= $SortSearch->search($val['vendor_array']);
             }
 
             // Если есть bid
@@ -354,7 +363,7 @@ class PHPShopYml {
             if (!empty($seourl_enabled))
                 $seourl = '_' . PHPShopString::toLatin($val['name']);
 
-            $xml = '<offer id="' . $val['id'] . '" available="' . $val['p_enabled'] . '" ' . $bid_str . '>
+             $xml = '<offer id="' . $val['id'] . '" available="' . $val['p_enabled'] . '" ' . $bid_str . '>
  <url>http://' . $_SERVER['SERVER_NAME'] . $GLOBALS['SysValue']['dir']['dir'] . '/shop/UID_' . $val['id'] . $seourl . '.html?from=yml</url>
       <price>' . $val['price'] . '</price>
       <currencyId>' . $this->defvalutaiso . '</currencyId>

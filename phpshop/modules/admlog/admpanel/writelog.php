@@ -13,6 +13,7 @@ function setLog($data=false,$nameHandler=false) {
             else $nameHandler = 'Редактирование';
         }
         elseif(!empty($_REQUEST['delID'])) $nameHandler = 'Удаление';
+        else  $nameHandler = 'Сохранение';
     } else $PHPShopGUI->title = 'Журнал событий';
 
     // Заголовок
@@ -42,6 +43,7 @@ $addHandler=array(
         'actionStart'=>false,
         'actionDelete'=>'setLog',
         'actionUpdate'=>'setLog',
-        'actionInsert'=>'setLog'
+        'actionInsert'=>'setLog',
+        'actionSave'=>'setLog'
 );
 ?>

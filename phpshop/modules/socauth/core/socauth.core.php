@@ -25,7 +25,7 @@ class PHPShopSocauth extends PHPShopCore {
         $this->authConfig = unserialize($data['authConfig']);
 
         // Список экшенов
-        $this->action = array("nav" => array("facebook", "twitter", "index"));
+        $this->action = array("nav" => array("facebook", "twitter", "vk", "index"));
 
         parent::PHPShopCore();
     }
@@ -76,7 +76,7 @@ class PHPShopSocauth extends PHPShopCore {
                 $this->error = ParseTemplateReturn($GLOBALS['SysValue']['templates']['socauth']['socauth_twitter_auth_fail'], true);
             } else {
                 $uid = $user_info->id;
-                $regMass['login'] = "twitter" . $user_info->id . "@" . $_SERVER['SERVER_NAME'];
+                $regMass['login'] = "twitter" . $user_info->id . "@" . str_replace("www.", "", $_SERVER['SERVER_NAME']);
                 $regMass['name'] = PHPShopString::utf8_win1251($user_info->name);
 
                 return $regMass;
@@ -126,6 +126,26 @@ class PHPShopSocauth extends PHPShopCore {
         $this->parseTemplate($GLOBALS['SysValue']['templates']['socauth']['socauth_main_forma'], true);
     }
 
+    // экшен авторизации через VK
+    function vk() {
+        // получаем данные от фейсбука
+        $regArr = $this->vk_getData();
+        if ($regArr) { // если данные получены
+            //print_r($regArr);
+            $regUser = $this->authUser($regArr);
+            if ($regUser) {
+                $this->set('message', ParseTemplateReturn($GLOBALS['SysValue']['templates']['socauth']['socauth_vkontakte_success'], true));
+            } else {
+                $this->set('message', $this->error);
+            }
+        } else {
+            $this->set('message', $this->error);
+        }
+
+
+        $this->parseTemplate($GLOBALS['SysValue']['templates']['socauth']['socauth_main_forma'], true);
+    }
+
     // метод авторизации или регистрации пользователя.
     function authUser($mass) {
         $auth = new PHPShopUserSoc($mass);
@@ -149,33 +169,38 @@ class PHPShopSocauth extends PHPShopCore {
         require './phpshop/modules/socauth/lib/facebook/facebook.php';
 
         $facebook = new Facebook(array(
-                    'appId' => $this->authConfig['facebook']['appid'],
-                    'secret' => $this->authConfig['facebook']['secret'],
-                    'cookie' => false
-                ));
+            'appId' => $this->authConfig['facebook']['appid'],
+            'secret' => $this->authConfig['facebook']['secret'],
+            'cookie' => false
+        ));
+        // Get User ID
+        $user = $facebook->getUser();
 
-        $session = $facebook->getSession();
+        if ($user) {
+            try {
+                // Proceed knowing you have a logged in user who's authenticated.
+                $user_profile = $facebook->api('/me');
+            } catch (FacebookApiException $e) {
+                error_log($e);
+                $user = null;
+            }
+        }
 
-        if (!empty($session)) {  // если авторизация прошла
-            // получаем данные от фейсбука 
-            $uid = $facebook->getUser();
-            $user = $facebook->api('/me');
-            $naitik = $facebook->api('/naitik');
 
-
-            if (!empty($user)) { // если данные получены
+        if ($user) {  // если авторизация прошла
+            if (!empty($user_profile)) { // если данные получены
                 // Если емейл не передан, отказываем в авторизации.
-                if (!isset($user['email'])) {
+                if (!isset($user_profile['email'])) {
                     $this->set('link', $facebook->getLoginUrl(array('req_perms' => 'email')));
                     $this->error = ParseTemplateReturn($GLOBALS['SysValue']['templates']['socauth']['socauth_facebook_email_fail'], true);
 
                     return false;
                 }
 
-                $regMass['login'] = $user['email'];
-                $regMass['name'] = PHPShopString::utf8_win1251($user['name']);
-                $regMass['first_name'] = PHPShopString::utf8_win1251($user['first_name']);
-                $regMass['last_name'] = PHPShopString::utf8_win1251($user['last_name']);
+                $regMass['login'] = $user_profile['email'];
+                $regMass['name'] = PHPShopString::utf8_win1251($user_profile['name']);
+                $regMass['first_name'] = PHPShopString::utf8_win1251($user_profile['first_name']);
+                $regMass['last_name'] = PHPShopString::utf8_win1251($user_profile['last_name']);
 
                 return $regMass;
             } else {
@@ -188,6 +213,62 @@ class PHPShopSocauth extends PHPShopCore {
             // переходим на авторизацию с запросом возможности передачи емейла.
             $login_url = $facebook->getLoginUrl(array('req_perms' => 'email'));
             header("Location: " . $login_url);
+        }
+    }
+
+    // метод получения данных от VK
+    function vk_getData() {
+        $client_id = $this->authConfig['vk']['client_id']; // ID приложения
+        $client_secret = $this->authConfig['vk']['client_secret']; // Защищённый ключ
+        $redirect_uri = "http://" . $_SERVER['SERVER_NAME'] . "/socauth/vk/"; // Адрес сайта
+        $url = 'https://oauth.vk.com/authorize';
+
+        $params = array(
+            'client_id' => $client_id,
+            'redirect_uri' => $redirect_uri,
+            'response_type' => 'code'
+        );
+
+
+        if (isset($_GET['code'])) {
+            $result = false;
+            $params = array(
+                'client_id' => $client_id,
+                'client_secret' => $client_secret,
+                'code' => $_GET['code'],
+                'redirect_uri' => $redirect_uri
+            );
+            $token = json_decode(file_get_contents('https://oauth.vk.com/access_token' . '?' . urldecode(http_build_query($params))), true);
+            if (isset($token['access_token'])) {
+                $params = array(
+                    'uids' => $token['user_id'],
+                    'fields' => 'uid,first_name,last_name,screen_name,sex,bdate,photo_big',
+                    'access_token' => $token['access_token']
+                );
+                $userInfo = json_decode(file_get_contents('https://api.vk.com/method/users.get' . '?' . urldecode(http_build_query($params))), true);
+                if (isset($userInfo['response'][0]['uid'])) {
+                    $userInfo = $userInfo['response'][0];
+                    $result = true;
+                }
+            }
+
+        } else {
+            header("Location:" . $url . '?' . urldecode(http_build_query($params)));
+            die();
+        }
+
+
+        if ($result) {  // если авторизация прошла
+            $regMass['login'] = $user_profile['email'];
+            $regMass['login'] = "vk" . $userInfo['uid'] . "@" . str_replace("www.", "", $_SERVER['SERVER_NAME']);
+            $regMass['name'] = PHPShopString::utf8_win1251($userInfo['first_name'] . " " . $userInfo[';ast_name']);
+            $regMass['first_name'] = PHPShopString::utf8_win1251($userInfo['first_name']);
+            $regMass['last_name'] = PHPShopString::utf8_win1251($userInfo['last_name']);
+
+            return $regMass;
+        } else {
+            $this->error = ParseTemplateReturn($GLOBALS['SysValue']['templates']['socauth']['socauth_vkontakte_auth_fail'], true);
+            return false;
         }
     }
 

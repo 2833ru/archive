@@ -255,41 +255,74 @@ function actionSave() {
 }
 
 /**
+ * Оповещение пользователя о новом статусе
+ * @param array $data массив данных заказа
+ */
+function sendUserMail($data) {
+    global $PHPShopSystem;
+
+    if ($data['statusi'] != $_POST['statusi_new']) {
+        PHPShopObj::loadClass("parser");
+        PHPShopObj::loadClass("mail");
+        PHPShopParser::set('ouid', $data['uid']);
+        PHPShopParser::set('date', PHPShopDate::dataV($data['datas']));
+
+        // Доступные статусы заказов
+        $PHPShopOrderStatusArray = new PHPShopOrderStatusArray();
+        PHPShopParser::set('status', $PHPShopOrderStatusArray->getParam($_POST['statusi_new'] . '.name'));
+        PHPShopParser::set('user', $data['user']);
+        PHPShopParser::set('company', $PHPShopSystem->getParam('name'));
+        $title = $PHPShopSystem->getValue('name') . ' - статус заказа ' . $data['uid'] . ' изменен';
+        $order = unserialize($data['orders']);
+
+        PHPShopParser::set('mail', $order['Person']['mail']);
+        $content = PHPShopParser::file('../../lib/templates/order/status.tpl', true);
+        if (!empty($content)) {
+            new PHPShopMail($order['Person']['mail'], $PHPShopSystem->getValue('adminmail2'), $title, $content);
+        }
+    }
+}
+
+/**
  * Экшен обновления
  * @return bool 
  */
 function actionUpdate() {
     global $PHPShopModules, $PHPShopOrm;
 
-        // Перехват модуля
-        $PHPShopModules->setAdmHandler($_SERVER["SCRIPT_NAME"], __FUNCTION__, $_POST);
+    // Перехват модуля
+    $PHPShopModules->setAdmHandler($_SERVER["SCRIPT_NAME"], __FUNCTION__, $_POST);
 
-        // Данные по заказу
-        $PHPShopOrm->debug = false;
-        $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_POST['visitorID'])));
-        $order = unserialize($data['orders']);
+    // Данные по заказу
+    $PHPShopOrm->debug = false;
+    $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_POST['visitorID'])));
+    $order = unserialize($data['orders']);
 
-        // Новые данные
-        if (is_array($_POST['person']))
-            foreach ($_POST['person'] as $k => $v)
-                $order['Person'][$k] = $v;
+    // Новые данные
+    if (is_array($_POST['person']))
+        foreach ($_POST['person'] as $k => $v)
+            $order['Person'][$k] = $v;
 
-        // Сериализация данных заказа
-        $_POST['orders_new'] = serialize($order);
+    // Сериализация данных заказа
+    $_POST['orders_new'] = serialize($order);
 
-        // Комментарий и время обработки
-        $_POST['status']['time'] = PHPShopDate::dataV();
-        $_POST['status_new'] = serialize($_POST['status']);
+    // Комментарий и время обработки
+    $_POST['status']['time'] = PHPShopDate::dataV();
+    $_POST['status_new'] = serialize($_POST['status']);
+    $_POST['admin_new'] = $_SESSION['idPHPSHOP'];
 
-        $PHPShopOrm->clean();
+    $PHPShopOrm->clean();
 
-        // Списывание со склада из корзины
-        updateStore($data);
+    // Списывание со склада из корзины
+    updateStore($data);
 
-        $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['visitorID']));
-        $PHPShopOrm->clean();
+    // Оповещение пользователя о новом статусе
+    sendUserMail($data);
 
-        return $action;
+    $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['visitorID']));
+    $PHPShopOrm->clean();
+
+    return $action;
 }
 
 // Функция удаления

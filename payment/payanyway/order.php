@@ -25,7 +25,7 @@ $inv_id = $mrh_ouid[0]."".$mrh_ouid[1];     //номер счета
 $inv_desc  = "PHPShopPaymentService";
 
 // сумма покупки
-$out_summ  = $GLOBALS['SysValue']['other']['total'];
+$out_summ  = number_format($GLOBALS['SysValue']['other']['total'], 2, '.', '');
 
 // код валюты в заказе
 $mnt_currency = $GLOBALS['PHPShopSystem']->getDefaultValutaIso();

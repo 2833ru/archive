@@ -600,6 +600,26 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
         return PHPShopText::a('/shop/CID_' . $val['id'] . '.html', $val['name'], $val['name']) . ' | ';
     }
 
+    
+    /**
+     * Форма ячеек для leftCatalTable
+     * @return string
+     */
+    function setCell($d1, $d2 = null, $d3 = null, $d4 = null, $d5 = null) {
+
+        // Перехват модуля, занесение в память наличия модуля для оптимизации
+        if ($this->memory_get(__CLASS__ . '.' . __FUNCTION__, true)) {
+            $Arg = func_get_args();
+            $hook = $this->setHook(__CLASS__, __FUNCTION__, $Arg);
+            if ($hook) {
+                return $hook;
+            } else
+                $this->memory_set(__CLASS__ . '.' . __FUNCTION__, 0);
+        }
+
+        return parent::setCell($d1, $d2, $d3, $d4, $d5, $d5);
+    }
+    
     /**
      * Таблица категорий с иконками
      * @return string

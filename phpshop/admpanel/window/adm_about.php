@@ -1,6 +1,6 @@
 <?php
+session_start();
 require("../connect.php");
-
 
 // Выбор файла
 function GetFile($dir) {
@@ -40,7 +40,7 @@ else
     <head>
         <title>О Программе</title>
         <META http-equiv=Content-Type content="text/html; charset=windows-1251">
-        <LINK href="../css/texts.css" type=text/css rel=stylesheet>
+        <LINK href="../skins/<?= $_SESSION['theme'] ?>/texts.css" type=text/css rel=stylesheet>
         <script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
     </head>
     <body bottommargin="0" topmargin="0" leftmargin="0" rightmargin="0">
@@ -71,7 +71,7 @@ else
                                     <tr bgcolor="#ffffff">
                                         <td><?= $ProductNameTM; ?></td>
                                         <td>
-<?= $SysValue['upload']['version']; ?>
+                                            <?= $SysValue['upload']['version']; ?>
                                         </td>
                                     </tr>
                                     <tr>
@@ -81,7 +81,7 @@ else
                                     <tr bgcolor="#ffffff">
                                         <td><span name=txtLang id=txtLang>Окончание</span></td>
                                         <td>
-<?= $TechPodUntil; ?>
+                                            <?= $TechPodUntil; ?>
                                         </td>
                                     </tr>
                                     <tr>
@@ -91,16 +91,19 @@ else
                                     <tr bgcolor="#ffffff">
                                         <td><span name=txtLang id=txtLang>Окончание</span></td>
                                         <td>
-<?= $LicenseUntil; ?>
+                                            <?= $LicenseUntil; ?>
                                         </td>
                                     </tr>
                                 </table>
-
+<form method="post" target="_blank" enctype="multipart/form-data" action="http://www.phpshop.ru/order.html" name="product_upgrade" id="product_support" style="display:none">
+<input type="hidden" value="supportstart" name="addToCartFromPages" id="addToCartFromPages">             
+<input type="hidden" value="<?=$DomenLocked?>" name="addToCartFromPagesDomen" id="addToCartFromPagesDomen">
+</form>
                                 <div align="center" style="padding:10">
-                                    <a href="http://www.phpshop.ru/docs/techpod.html" target="_blank" style="color:blue" title="Перейти на сайт разработчика для подробной информации"><span name=txtLang id=txtLang>Пролонгация технической поддержки</span></a>
-                                </div>
-                                <div align="center" style="padding:10">
-                                    <input type="button" value="Проверить лицензию" onclick="window.open('http://www.phpshop.ru/chek/?name=<?= $DomenLocked ?>')">
+                                    <BUTTON style="width: 150px; height: 40px; margin-left:5" title="Приобрести техническую поддержку"  onclick="DoUpgrade('product_support');
+                                            return false;">
+                                        Приобрести техническую поддержку
+                                    </BUTTON>
                                 </div>
                             </td>
                             <td valign="top">
@@ -204,10 +207,10 @@ else
                     <table width="100%" cellpadding="0" cellpadding="0">
                         <tr>
                             <td style="padding-left:10px">
-<?
-if ($License['License']['RegisteredTo'] == "Trial NoName") {
-    ?>
-                                    <BUTTON style="width: 15em; height: 2.2em; margin-top:5" type=submit onClick="window.open('http://www.phpshop.ru/order/2.html','_blank');" name="btnLang"><img src="../icon/key_add.gif" alt="" width="16" height="16" border="0" align="absmiddle" hspace="5">Купить лицензию</BUTTON>
+                                <?
+                                if ($License['License']['RegisteredTo'] == "Trial NoName") {
+                                    ?>
+                                    <BUTTON style="width: 15em; height: 2.2em; margin-top:5" type=submit onClick="window.open('http://www.phpshop.ru/order/2.html', '_blank');" name="btnLang"><img src="../icon/key_add.gif" alt="" width="16" height="16" border="0" align="absmiddle" hspace="5">Купить лицензию</BUTTON>
                                 <? } ?>
                             </td>
                             <td align="right" style="padding:10">	<BUTTON style="width: 7em; height: 2.2em; margin-top:5" type=submit onClick="return onCancel();" name="btnLang">Закрыть</BUTTON></td>

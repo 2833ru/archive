@@ -864,7 +864,8 @@ switch ($p) {
 			<option value="222" id=txtLang>Разослать сообщение</option>
    </select>
    </td>
-	   
+   <td width="3">
+  <td width="10" id=pane align=center style="padding:0px"><input type=checkbox value=1 name=DoAll onclick="SelectAllBox(this,form_flag)"></td>   
 	
 </tr>
 </table>
@@ -980,7 +981,7 @@ switch ($p) {
         $a_button = 3;
         //${"list_".$var4.""}="SELECTED";
         $interface = '
-<table width="100%" cellpadding="0" cellpadding="0" style="border:1px;border-style:outset;border-color:ButtonFace;border-top-width: 0px;"  height="10">
+<table width="100%" cellpadding="0" cellpadding="0" class="gradient" style="border:1px;border-style:outset;border-color:ButtonFace;border-top-width: 0px;"  height="10">
 <tr>
 <td style="padding-left:10px">
 <form method="post" name=calendar>
@@ -1105,6 +1106,254 @@ switch ($p) {
 
 	 ';
         require("../order/admin_visiter.php");
+        if (CheckedRules($UserStatus["visitor"], 0) == 1)
+            $interface.=Visitor($var1, $var2, $var3, $var4);
+        else
+            $interface = $UserChek->BadUserForma();
+        break;
+
+    // Отчет по клиентам
+    case("orders_stat1"):
+        $a_button = 3;
+        //${"list_".$var4.""}="SELECTED";
+        $interface = '
+<table width="100%" cellpadding="0" cellpadding="0" style="border:1px;border-style:outset;border-color:ButtonFace;border-top-width: 0px;" height="10">
+<tr>
+<td style="padding-left:10px">
+<form method="post" name=calendar>
+<table cellpadding="0" cellspacing="0">
+<tr>
+	<td>
+<input type="text" style="width:80" value="';
+        if (!$var1)
+            $interface.= date("d-m-Y");
+        else
+            $interface.= @$var1;
+        $interface.='" name="pole1" onMouseMove="show(\'[' . $SysValue['Lang']['Help']['Help'] . ']\', \'' . $SysValue['Lang']['Help']['forma_1'] . '\')" onMouseOut="hide()" onfocus="hide()">
+
+</td>
+	<td>
+	<IMG onclick="popUpCalendar(this, calendar.pole1, \'dd-mm-yyyy\');" height=16 hspace=3 src="icon/date.gif" width=16 border=0 align="absmiddle">
+	</td>
+	<td><input type="text" style="width:80" value="';
+        if (!$var2)
+            $interface.= date("d-m-Y");
+        else
+            $interface.= @$var2;
+        $interface.='" name="pole2" onMouseMove="show(\'[' . $SysValue['Lang']['Help']['Help'] . ']\', \'' . $SysValue['Lang']['Help']['forma_2'] . '\')" onMouseOut="hide()" onfocus="hide()">
+	</td>
+	<td><IMG onclick="popUpCalendar(this, calendar.pole2, \'dd-mm-yyyy\');" height=16 hspace=3 src="icon/date.gif" width=16 border=0 align="absmiddle">
+	</td>
+	<td>
+	</td>
+	<td width="10"></td>
+	<td width="1" bgcolor="#ffffff"></td>
+	<td width="1" bgcolor="#808080"></td>
+   <td width="10"></td>
+	<td>
+	<table cellspacing="0" cellpadding="0" >
+<tr>
+    <td>
+            ' . GetOrderStat1Cats($var3) . '
+	</td>
+</tr>
+</table>
+	</td>
+	<td width="10"></td>
+	<td width="1" bgcolor="#ffffff"></td>
+	<td width="1" bgcolor="#808080"></td>
+   <td width="10"></td>
+   <td>
+   <span name=txtLang id=txtLang>Тип статистики</span>: ' . GetOrderStat1select($var4) . '
+   <input type=button id=btnStatus value="Показать" class=but3 onclick="DoReload(\'orders_stat1\',calendar.pole1.value, calendar.pole2.value,document.getElementById(\'order_serach\').value,document.getElementById(\'list\').value);">
+   </td>
+    <td width="10"></td>
+	<td width="1" bgcolor="#ffffff"></td>
+	<td width="1" bgcolor="#808080"></td>
+    <td width="3"></td>
+	    <td id="but30"  class="butoff"><a target="_blank" href="csv/orders_stat1_'.md5(date('y-m-d').$_SESSION['pasPHPSHOP']).'.csv"><img name="imgLang" src="icon/page_excel.gif" title="Выгрузить в Excel" width="16" height="16" border="0" onmouseover="ButOn(30)" onmouseout="ButOff(30)"></a></td>
+    <td width="3"></td>
+	    <td><a href="#" onclick="showGraph();"><img name="imgLang" src="icon/chart_curve.gif" title="Показать/скрыть график" width="16" height="16" border="0" onmouseover="ButOn(31)" onmouseout="ButOff(31)"></a></td>
+    <td width="3"></td>
+	
+</tr>
+</table>
+</form>
+</td>
+</td>
+</tr>
+</table>
+	 ';
+        require("../order_stat/order_stat1.php");
+        if (CheckedRules($UserStatus["visitor"], 0) == 1)
+            $interface.=Visitor($var1, $var2, $var3, $var4);
+        else
+            $interface = $UserChek->BadUserForma();
+        break;
+
+    // Отчет по сотрудникам
+    case("orders_stat2"):
+        $a_button = 3;
+        //${"list_".$var4.""}="SELECTED";
+        $interface = '
+<table width="100%" cellpadding="0" cellpadding="0" style="border:1px;border-style:outset;border-color:ButtonFace;border-top-width: 0px;" height="10">
+<tr>
+<td style="padding-left:10px">
+<form method="post" name=calendar>
+<table cellpadding="0" cellspacing="0">
+<tr>
+	<td>
+<input type="text" style="width:80" value="';
+        if (!$var1)
+            $interface.= date("d-m-Y");
+        else
+            $interface.= @$var1;
+        $interface.='" name="pole1" onMouseMove="show(\'[' . $SysValue['Lang']['Help']['Help'] . ']\', \'' . $SysValue['Lang']['Help']['forma_1'] . '\')" onMouseOut="hide()" onfocus="hide()">
+
+</td>
+	<td>
+	<IMG onclick="popUpCalendar(this, calendar.pole1, \'dd-mm-yyyy\');" height=16 hspace=3 src="icon/date.gif" width=16 border=0 align="absmiddle">
+	</td>
+	<td><input type="text" style="width:80" value="';
+        if (!$var2)
+            $interface.= date("d-m-Y");
+        else
+            $interface.= @$var2;
+        $interface.='" name="pole2" onMouseMove="show(\'[' . $SysValue['Lang']['Help']['Help'] . ']\', \'' . $SysValue['Lang']['Help']['forma_2'] . '\')" onMouseOut="hide()" onfocus="hide()">
+	</td>
+	<td><IMG onclick="popUpCalendar(this, calendar.pole2, \'dd-mm-yyyy\');" height=16 hspace=3 src="icon/date.gif" width=16 border=0 align="absmiddle">
+	</td>
+	<td>
+	</td>
+	<td width="10"></td>
+	<td width="1" bgcolor="#ffffff"></td>
+	<td width="1" bgcolor="#808080"></td>
+   <td width="10"></td>
+	<td>
+	<table cellspacing="0" cellpadding="0" >
+<tr>
+    <td>
+            ' . GetOrderStat1Cats($var3) . '
+	</td>
+</tr>
+</table>
+	</td>
+	<td width="10"></td>
+	<td width="1" bgcolor="#ffffff"></td>
+	<td width="1" bgcolor="#808080"></td>
+   <td width="10"></td>
+   <td>
+   <input type=button id=btnStatus value="Показать" class=but3 onclick="DoReload(\'orders_stat2\',calendar.pole1.value, calendar.pole2.value,document.getElementById(\'order_serach\').value,\'\');">
+   </td>
+   <td width="10"></td>
+	<td width="1" bgcolor="#ffffff"></td>
+	<td width="1" bgcolor="#808080"></td>
+    <td width="3"></td>
+	    <td id="but30"  class="butoff"><a target="_blank" href="csv/orders_stat2_'.md5(date('y-m-d').$_SESSION['pasPHPSHOP']).'.csv"><img name="imgLang" src="icon/page_excel.gif" title="Выгрузить в Excel" width="16" height="16" border="0" onmouseover="ButOn(30)" onmouseout="ButOff(30)"></a></td>
+    <td width="3"></td>
+	    <td><a href="#" onclick="showGraph();"><img name="imgLang" src="icon/chart_curve.gif" title="Показать/скрыть график" width="16" height="16" border="0" onmouseover="ButOn(31)" onmouseout="ButOff(31)"></a></td>
+    <td width="3"></td>
+    
+</tr>
+</table>
+</form>
+</td>
+</td>
+</tr>
+</table>
+	 ';
+        require("../order_stat/order_stat2.php");
+        if (CheckedRules($UserStatus["visitor"], 0) == 1)
+            $interface.=Visitor($var1, $var2, $var3, $var4);
+        else
+            $interface = $UserChek->BadUserForma();
+        break;
+
+
+    // Отчет по динамики
+    case("orders_stat3"):
+        $a_button = 3;
+        //${"list_".$var4.""}="SELECTED";
+        $interface = '
+<table width="100%" cellpadding="0" cellpadding="0" style="border:1px;border-style:outset;border-color:ButtonFace;border-top-width: 0px;" height="10">
+<tr>
+<td style="padding-left:10px">
+<form method="post" name=calendar>
+<table cellpadding="0" cellspacing="0">
+<tr>
+	<td>
+<input type="text" style="width:80" value="';
+        if (!$var1)
+            $interface.= date("d-m-Y");
+        else
+            $interface.= @$var1;
+        $interface.='" name="pole1" onMouseMove="show(\'[' . $SysValue['Lang']['Help']['Help'] . ']\', \'' . $SysValue['Lang']['Help']['forma_1'] . '\')" onMouseOut="hide()" onfocus="hide()">
+
+</td>
+	<td>
+	<IMG onclick="popUpCalendar(this, calendar.pole1, \'dd-mm-yyyy\');" height=16 hspace=3 src="icon/date.gif" width=16 border=0 align="absmiddle">
+	</td>
+	<td><input type="text" style="width:80" value="';
+        if (!$var2)
+            $interface.= date("d-m-Y");
+        else
+            $interface.= @$var2;
+        
+        if(!$var4)
+            $var4=30;
+        
+        $interface.='" name="pole2" onMouseMove="show(\'[' . $SysValue['Lang']['Help']['Help'] . ']\', \'' . $SysValue['Lang']['Help']['forma_2'] . '\')" onMouseOut="hide()" onfocus="hide()">
+	</td>
+	<td><IMG onclick="popUpCalendar(this, calendar.pole2, \'dd-mm-yyyy\');" height=16 hspace=3 src="icon/date.gif" width=16 border=0 align="absmiddle">
+	</td>
+	<td>
+	</td>
+	<td width="10"></td>
+	<td width="1" bgcolor="#ffffff"></td>
+	<td width="1" bgcolor="#808080"></td>
+   <td width="10"></td>
+	<td>
+	<table cellspacing="0" cellpadding="0" >
+<tr>
+    <td>
+            ' . GetOrderStat1Cats($var3) . '
+	</td>
+</tr>
+</table>
+	</td>
+        <td width="10"></td>
+	<td width="1" bgcolor="#ffffff"></td>
+	<td width="1" bgcolor="#808080"></td>
+   <td width="10"></td>
+   <td>
+   <span>Накрутка: </span> <input type="text" name="list" id="list" value="'.$var4.'" style="width:50px">%
+   </td>
+	<td width="10"></td>
+	<td width="1" bgcolor="#ffffff"></td>
+	<td width="1" bgcolor="#808080"></td>
+   <td width="10"></td>
+   <td>
+   <input type=button id=btnStatus value="Показать" class=but3 onclick="DoReload(\'orders_stat3\',calendar.pole1.value, calendar.pole2.value,document.getElementById(\'order_serach\').value,document.getElementById(\'list\').value);">
+   </td>
+    <td width="10"></td>
+	<td width="1" bgcolor="#ffffff"></td>
+	<td width="1" bgcolor="#808080"></td>
+    <td width="3"></td>
+	    <td id="but30"  class="butoff"><a target="_blank" href="csv/orders_stat3_'.md5(date('y-m-d').$_SESSION['pasPHPSHOP']).'.csv"><img name="imgLang" src="icon/page_excel.gif" title="Выгрузить в Excel" width="16" height="16" border="0" onmouseover="ButOn(30)" onmouseout="ButOff(30)"></a></td>
+    <td width="3"></td>
+	    <td><a href="#" onclick="showGraph();"><img name="imgLang" src="icon/chart_curve.gif" title="Показать/скрыть график" width="16" height="16" border="0" onmouseover="ButOn(31)" onmouseout="ButOff(31)"></a></td>
+    <td width="3"></td>   
+</tr>
+</table>
+</form>
+</td>
+</td>
+</tr>
+</table>
+
+
+	 ';
+        require("../order_stat/order_stat3.php");
         if (CheckedRules($UserStatus["visitor"], 0) == 1)
             $interface.=Visitor($var1, $var2, $var3, $var4);
         else

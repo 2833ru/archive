@@ -38,9 +38,9 @@ function actionStart() {
 
 
     // Выборка
-    $data = $PHPShopOrm->select(array('*'), array('id' => '=' . $_GET['id']));
+    $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
     extract($data);
-
+    
     // ID окна для памяти закладок
     $PHPShopGUI->setID(__FILE__, $data['id']);
 
@@ -53,6 +53,12 @@ function actionStart() {
     // Графический заголовок окна
     $PHPShopGUI->setHeader("Редактирование Страниц", "Укажите данные для записи в базу.", $PHPShopGUI->dir . "img/i_website_tab[1].gif");
 
+        // Нет данных
+    if (!is_array($data)) {
+        $PHPShopGUI->setFooter($PHPShopGUI->setInput("button", "", "Закрыть", "center", 100, "return onCancel();", "but"));
+        return true;
+    }
+   
     // Редактор 1
     $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));
     $oFCKeditor = new Editor('content_new');

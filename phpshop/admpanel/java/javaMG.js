@@ -3,6 +3,19 @@
 // Copyright © www.phpshop.ru. Все права защищены.   //
 //***************************************************//
 
+function showGraph(){
+    d = document;
+    var tempp = d.getElementById('graph').style.display;
+    if(tempp != "none"){
+        d.getElementById('graph').style.display="none";
+        SetCookie('stat_graph', 0, 10);
+    }
+    else{
+        d.getElementById('graph').style.display="block";
+        SetCookie('stat_graph', 1, 10);
+    }
+}
+
 function PHPShopJS(){
 
     this.button_on = function(a){
@@ -108,6 +121,9 @@ function PHPShopJS(){
 
 var PHPShopJS = new PHPShopJS();
 
+function DoUpgrade(name){
+    document.getElementById(name).submit();
+}
 
 // Управление модулями
 function DoUpdateModules(action,xid,pid){

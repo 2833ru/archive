@@ -42,7 +42,7 @@ function query_filter($obj) {
     if (!empty($_REQUEST['set']))
         $set = $_REQUEST['set'];
     else
-        $set = 1;
+        $set = 2;
 
     if (!empty($_REQUEST['pole']))
         $pole = $_REQUEST['pole'];
@@ -94,12 +94,12 @@ function query_filter($obj) {
         switch ($pole) {
             case(1):
                 foreach ($_WORDS as $w)
-                    $sort.="(name REGEXP '$w' or uid REGEXP '$w' or id = '$w' or keywords REGEXP '$w') or ";
+                    $sort.="(name REGEXP '$w' or uid REGEXP '$w' or id = '$w' or keywords REGEXP '$w') and ";
                 break;
 
             case(2):
                 foreach ($_WORDS as $w)
-                    $sort.="(name REGEXP '$w' or content REGEXP '$w' or description REGEXP '$w' or keywords REGEXP '$w' or uid REGEXP '$w' or id = '$w') or ";
+                    $sort.="(name REGEXP '$w' or content REGEXP '$w' or description REGEXP '$w' or keywords REGEXP '$w' or uid REGEXP '$w' or id = '$w') and ";
                 break;
         }
     }

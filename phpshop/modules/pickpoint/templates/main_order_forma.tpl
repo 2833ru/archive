@@ -99,7 +99,8 @@ document.getElementById('adr_name').value=result['name']+', '+result['address'];
 	</td>
 	<td>
 	<textarea style="width:300px; height:100px; font-family:tahoma; font-size:11px ; color:#4F4F4F " name="adr_name" id="adr_name">@UserAdres@</textarea><img src="images/shop/flag_green.gif" alt="" width="16" height="16" border="0" hspace="5" align="absmiddle">
-	</td>
+        <span id="pickpoint_phpshop">1</span>
+        </td>
 </tr>
 <tr>
    <td align="right">Тип оплаты <br>покупки</td>

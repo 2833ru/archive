@@ -1,56 +1,54 @@
 <?
 require("../connect.php");
-@mysql_connect ("$host", "$user_db", "$pass_db")or @die("Невозможно подсоединиться к базе");
-mysql_select_db("$dbase")or @die("Невозможно подсоединиться к базе");
+@mysql_connect("$host", "$user_db", "$pass_db") or @die("Невозможно подсоединиться к базе");
+mysql_select_db("$dbase") or @die("Невозможно подсоединиться к базе");
 require("../enter_to_admin.php");
 
 // Языки
-$GetSystems=GetSystems();
-$option=unserialize($GetSystems['admoption']);
-$Lang=$option['lang'];
-require("../language/".$Lang."/language.php");
-if(CheckedRules($UserStatus["option"],1) == 0) die ("Недостаточно прав!");
+$GetSystems = GetSystems();
+$option = unserialize($GetSystems['admoption']);
+$Lang = $option['lang'];
+require("../language/" . $Lang . "/language.php");
+
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
-<head>
-  <title>Реквизиты</title>
-<META http-equiv=Content-Type content="text/html; charset=windows-1251">
-<LINK href="../css/texts.css" type=text/css rel=stylesheet>
-<script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
-<script type="text/javascript" language="JavaScript1.2" src="../language/<?=$Lang?>/language_windows.js"></script>
-<script>
-DoResize(<? echo $GetSystems['width_icon']?>,500,500);
-</script>
-</head>
-<body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0" onload="DoCheckLang(location.pathname,<?=$SysValue['lang']['lang_enabled']?>);preloader(0)">
-<table id="loader">
-<tr>
-  <td valign="middle" align="center">
-    <div id="loadmes" onclick="preloader(0)">
-<table width="100%" height="100%">
-<tr>
-  <td id="loadimg"></td>
-  <td ><b><?=$SysValue['Lang']['System']['loading']?></b><br><?=$SysValue['Lang']['System']['loading2']?></td>
-</tr>
-</table>
-    </div>
-</td>
-</tr>
-</table>
+    <head>
+        <title>Реквизиты</title>
+        <META http-equiv=Content-Type content="text/html; charset=windows-1251">
+        <LINK href="../skins/<?= $_SESSION['theme'] ?>/texts.css" type=text/css rel=stylesheet>
+        <script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
+        <script type="text/javascript" language="JavaScript1.2" src="../language/<?= $Lang ?>/language_windows.js"></script>
+    </head>
+    <body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0" onload="DoCheckLang(location.pathname,<?= $SysValue['lang']['lang_enabled'] ?>);
+                preloader(0)">
+        <table id="loader">
+            <tr>
+                <td valign="middle" align="center">
+                    <div id="loadmes" onclick="preloader(0)">
+                        <table width="100%" height="100%">
+                            <tr>
+                                <td id="loadimg"></td>
+                                <td ><b><?= $SysValue['Lang']['System']['loading'] ?></b><br><?= $SysValue['Lang']['System']['loading2'] ?></td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+        </table>
 
-<SCRIPT language=JavaScript type=text/javascript>preloader(1);</SCRIPT>
-<?
-$sql="select * from $table_name3";
-$result=mysql_query($sql);
-$row = mysql_fetch_array($result);
-$name=$row['name'];
-  $company=stripslashes($row['company']);
-  $tel=$row['tel'];
-  $adminmail2=$row['adminmail2'];
-  $bank=$row['bank'];
-  $LoadBanc=unserialize($bank);
-echo"
+        <SCRIPT language=JavaScript type=text/javascript>preloader(1);</SCRIPT>
+        <?
+        $sql = "select * from $table_name3";
+        $result = mysql_query($sql);
+        $row = mysql_fetch_array($result);
+        $name = $row['name'];
+        $company = stripslashes($row['company']);
+        $tel = $row['tel'];
+        $adminmail2 = $row['adminmail2'];
+        $bank = $row['bank'];
+        $LoadBanc = unserialize($bank);
+        echo"
 <table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" height=\"50\" id=\"title\">
 <tr bgcolor=\"#ffffff\">
   <td style=\"padding:10\">
@@ -65,7 +63,7 @@ echo"
 <br>
 <table >
 <tr valign=\"top\">
-<form action=\"$PHP_SELF\" method=\"post\" name=\"system_forma\">
+<form method=\"post\" name=\"system_forma\">
 <tr class=adm2>
     <td align=right>
    <span name=txtLang id=txtLang> Название магазина</span>:
@@ -103,7 +101,7 @@ echo"
     <span name=txtLang id=txtLang>Наименование организации</span>:
     </td>
     <td align=left>
-    <input type=text name=org_name size=60 value=\"".$LoadBanc['org_name']."\">
+    <input type=text name=org_name size=60 value=\"" . $LoadBanc['org_name'] . "\">
     </td>
   </tr>
   <tr class=adm2>
@@ -111,7 +109,7 @@ echo"
    <span name=txtLang id=txtLang> Юридический адрес</span>:
     </td>
     <td align=left>
-    <input type=text name=org_ur_adres size=60 value=\"".$LoadBanc['org_ur_adres']."\">
+    <input type=text name=org_ur_adres size=60 value=\"" . $LoadBanc['org_ur_adres'] . "\">
     </td>
   </tr>
   <tr class=adm2>
@@ -119,7 +117,7 @@ echo"
     <span name=txtLang id=txtLang>Физический адрес</span>:
     </td>
     <td align=left>
-    <input type=text name=org_adres size=60 value=\"".$LoadBanc['org_adres']."\">
+    <input type=text name=org_adres size=60 value=\"" . $LoadBanc['org_adres'] . "\">
     </td>
   </tr>
 <tr class=adm2>
@@ -127,7 +125,7 @@ echo"
     <span name=txtLang id=txtLang>ИНН</span>:
     </td>
     <td align=left>
-    <input type=text name=org_inn size=60 value=\"".$LoadBanc['org_inn']."\" >
+    <input type=text name=org_inn size=60 value=\"" . $LoadBanc['org_inn'] . "\" >
     </td>
   </tr>
   <tr class=adm2>
@@ -135,7 +133,7 @@ echo"
    <span name=txtLang id=txtLang> КПП</span>:
     </td>
     <td align=left>
-    <input type=text name=org_kpp size=60 value=\"".$LoadBanc['org_kpp']."\">
+    <input type=text name=org_kpp size=60 value=\"" . $LoadBanc['org_kpp'] . "\">
     </td>
   </tr>
   <tr class=adm2>
@@ -143,7 +141,7 @@ echo"
    <span name=txtLang id=txtLang> № Счета организации</span>:
     </td>
     <td align=left>
-    <input type=text name=org_schet size=60 value=\"".$LoadBanc['org_schet']."\">
+    <input type=text name=org_schet size=60 value=\"" . $LoadBanc['org_schet'] . "\">
     </td>
   </tr>
   <tr class=adm2>
@@ -151,7 +149,7 @@ echo"
    <span name=txtLang id=txtLang> Наименование банка</span>:
     </td>
     <td align=left>
-    <input type=text name=org_bank size=60 value=\"".$LoadBanc['org_bank']."\">
+    <input type=text name=org_bank size=60 value=\"" . $LoadBanc['org_bank'] . "\">
     </td>
   </tr>
   <tr class=adm2>
@@ -159,7 +157,7 @@ echo"
     <span name=txtLang id=txtLang>БИК</span>:
     </td>
     <td align=left>
-  <input type=text name=org_bic size=60 value=\"".$LoadBanc['org_bic']."\">
+  <input type=text name=org_bic size=60 value=\"" . $LoadBanc['org_bic'] . "\">
     </td>
   </tr>
   <tr class=adm2>
@@ -167,7 +165,7 @@ echo"
     <span name=txtLang id=txtLang>№ Счета банка</span>:
     </td>
     <td align=left>
-    <input type=text name=org_bank_schet size=60 value=\"".$LoadBanc['org_bank_schet']."\">
+    <input type=text name=org_bank_schet size=60 value=\"" . $LoadBanc['org_bank_schet'] . "\">
     </td>
   </tr>
 </table>
@@ -187,38 +185,39 @@ echo"
 ";
 
 
-if(isset($optionsSAVE))
-{
-if(CheckedRules($UserStatus["option"],1) == 1){
-$LoadBancNew = array(
-"org_name"=>str_replace("\"","&quot;",$org_name),
-"org_ur_adres"=>$org_ur_adres,
-"org_adres"=>$org_adres,
-"org_inn"=>$org_inn,
-"org_kpp"=>$org_kpp,
-"org_schet"=>$org_schet,
-"org_bank"=>str_replace("\"","&quot;",$org_bank),
-"org_bic"=>$org_bic,
-"org_bank_schet"=>$org_bank_schet
-);
+        if (isset($optionsSAVE)) {
+            if (CheckedRules($UserStatus["option"], 1) == 1) {
+                $LoadBancNew = array(
+                    "org_name" => str_replace("\"", "&quot;", $org_name),
+                    "org_ur_adres" => $org_ur_adres,
+                    "org_adres" => $org_adres,
+                    "org_inn" => $org_inn,
+                    "org_kpp" => $org_kpp,
+                    "org_schet" => $org_schet,
+                    "org_bank" => str_replace("\"", "&quot;", $org_bank),
+                    "org_bic" => $org_bic,
+                    "org_bank_schet" => $org_bank_schet
+                );
 
-$LoadBancSer=serialize($LoadBancNew);
-$sql="UPDATE $table_name3
+                $LoadBancSer = serialize($LoadBancNew);
+                $sql = "UPDATE $table_name3
 SET
-name='".addslashes($name_new)."',
-company='".addslashes($company_new)."',
+name='" . addslashes($name_new) . "',
+company='" . addslashes($company_new) . "',
 tel='$tel_new',
 adminmail2='$adminmail2_new',
-bank ='".$LoadBancSer."'";
-$result=mysql_query($sql)or @die("".mysql_error()."");
-$UpdateWrite=UpdateWrite();// Обновляем LastModified
-echo"
+bank ='" . $LoadBancSer . "'";
+                $result = mysql_query($sql) or @die("" . mysql_error() . "");
+                $UpdateWrite = UpdateWrite(); // Обновляем LastModified
+                echo"
    <script>
    CL();
    </script>
      ";
-   }else $UserChek->BadUserFormaWindow();
-   } 
-?>
+            }
+            else
+                $UserChek->BadUserFormaWindow();
+        }
+        ?>
 
 

@@ -190,7 +190,7 @@ else  $xml_support="............<img src=\"rewritemodtest/errormessage.gif\"  bo
                     <p><strong>Установщик приветсвует Вас</strong>.<br>
 	На этой странице вы найдет всю необходимую информацию, которая поможет вам установить и настроить Интернет-магазин на своем сайте.</p> 
 	Ниже приведена инструкция для ручной установки PHPShop Software на виртуальный хостинг.<br> Перед установкой рекомендуем ознакомиться со
-        списком <a href="http://phpshop.ru/docs/hosting.html/" target="_blank" title="Хостинги">протестированных хостингов</a> на соответствие с
+        списком <a href="http://phpshop.ru/docs/hosting.html" target="_blank" title="Хостинги">протестированных хостингов</a> на соответствие с
         системными требованиями PHPShop SoftWare.
                 </td>
             </tr>
@@ -276,7 +276,7 @@ else  $xml_support="............<img src=\"rewritemodtest/errormessage.gif\"  bo
                     <p class=pre>[dir]<br>
                         dir="/market";
                     </p>
-                <li>В файле java/java2.js указываем имя директории, куда установлен скрипт
+                <li>В файле java/phpshop.js указываем имя директории, куда установлен скрипт
                     <p class=pre>var ROOT_PATH="/market";</p>
 
 
@@ -309,7 +309,7 @@ else  $xml_support="............<img src=\"rewritemodtest/errormessage.gif\"  bo
     <li>Создаем папку /old/ загружаем туда все файлы из корневой директории www
     <li>Загружаем в очищенную директорию www новые файлы из архива новой версии в <strong>бинарном режиме</strong>
     <li>Из старого файла config.ini берем параметры подключения к базе данных (первые 5 строк) и вставляем в новый конфиг (/phpshop/inc/config.ini)
-    <li>Запускаем <a href="javascript:miniWin('update/install.php',600,570)">апдейтер баз данных</a> (ваш_сайт/install/update/install.php), выбираем текущую версию, если ее там нет, то обновлять базу не нужно. Стираем папку /install/
+    <li>Запускаем <img src="rewritemodtest/icon-setup.gif" border=0 align=absmiddle>  <a href="javascript:miniWin('update/install.php',600,570)">апдейтер баз данных</a> (ваш_сайт/install/update/install.php), выбираем текущую версию, если ее там нет, то обновлять базу не нужно. Стираем папку /install/
     <li>Из папки /old/ копируем папку /UserFiles и /license со старыми картинками и лицензией в обновленный скрипт в тоже место
     <li>По необходимости копируем старый шаблон /phpshop/templates/, но с учетом что в нем могли быть внесены изменения для новой версии (сравнить с оригиналом)
 </ol>
@@ -323,7 +323,7 @@ else  $xml_support="............<img src=\"rewritemodtest/errormessage.gif\"  bo
     <br><br>
 <ol >
     <li>Создайте копию текущей базы данных на старом сервере через утилиту панели управления "Резервные копи базы": База -> Резервные копи базы (Backup)
-    <li>Загружаем файлы переносимого скрипта из папки веб-файлов (www, htdocs, public_html) в одноименную папку на новом сервере в <strong>бинарном режиме</strong>.<br><br>
+    <li>Загружаем файлы переносимого скрипта из папки веб-файлов (www, htdocs, public_html) в одноименную папку на новом сервере.<br><br>
         Для мгновенного переноса файлов с сервера на сервер можно воспользоваться утилитой <a href="http://phpshop.ru/loads/ThLHDegJUj/putty.exe" target="_blank">PyTTY</a> и  протоколом SSH. <br>
         Комманды оболочки после подключения на старом сервере (www заменяется на имя своей папки хранения веб-файлов):
         <p class=pre>

@@ -51,6 +51,26 @@ function smile($string) {
     return $string;
 }
 
+function get_file_link($matches){
+    $path_parts = pathinfo($matches[0]);
+    $url=parse_url($matches[0]);
+    
+   if($url['scheme'] == 'file')
+    return '<a href="'.chr(47).$GLOBALS['SysValue']['dir']['dir'].'UserFiles/Image/'.$_SESSION['chat_dir'].$path_parts['basename'].'" target="_blank">'.$path_parts['basename'].'</a>'; 
+    else if($url['host'] != $_SERVER['SERVER_NAME'])
+       return '<a href="'.$matches[0].'" target="_blank">'.$matches[0].'</a>'; 
+      else 
+    return '<a href="http://'.$url['host'].chr(47).$GLOBALS['SysValue']['dir']['dir'].'UserFiles/Image/'.$_SESSION['chat_dir'].$path_parts['basename'].'" target="_blank">'.$path_parts['basename'].'</a>'; 
+}
+
+function check_content($content) {
+
+    $str = smile($content);
+    $str = preg_replace_callback('/((www|http:\/\/|file:\/\/)[^ ]+)/', 'get_file_link', $str);
+
+    return $str;
+}
+
 if (!empty($_SESSION['mod_chat_user_session'])) {
 
 
@@ -113,7 +133,7 @@ if (!empty($_SESSION['mod_chat_user_session'])) {
             }
 
             $name = PHPShopText::img('./templates/' . $icon, 3, 'absmiddle') . $name;
-            $content.=PHPShopText::div($name . ': ' . preg_replace('/((www|http:\/\/)[^ ]+)/', '<a href="\1" target="_blank">\1</a>', smile($row['content'])), "left", false, false, $div_class);
+            $content.=PHPShopText::div($name . ': ' . check_content($row['content']), "left", false, false, $div_class);
             $time = $row['date'];
         }
     }

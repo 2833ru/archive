@@ -3,9 +3,10 @@
  * Библиотека Отправление почты
  * @version 1.1
  * @package PHPShopClass
+ * @tutorial http://doc.phpshop.ru/PHPShopClass/PHPShopMail.html
  * <code>
  * // example:
- * $PHPShopMail= new PHPShopMail('user@localhost','admin@localhost'','Test','Hi, user!');
+ * $PHPShopMail= new PHPShopMail('user@localhost','admin@localhost','Test','Hi, user!');
  * </code>
  * @param string $to куда
  * @param string $from от кого
@@ -73,6 +74,7 @@ Powered & Developed by www.PHPShop.ru
 }
 
 class PHPShopMailFile {
+    var $codepage = "windows-1251";
 
     function PHPShopMailFile($to,$from,$zag,$content,$filename,$file) {
         $this->from=$from;
@@ -91,7 +93,7 @@ class PHPShopMailFile {
 
     function getZag($text) {
         $f = fopen($this->file,"rb");
-        $zag= "------------".$this->un."\nContent-Type:".$this->type.";\n";
+        $zag = "------------" . $this->un . "\nContent-Type:text/html; charset=" . $this->codepage . "\n";
         $zag.= "Content-Transfer-Encoding: 8bit\n\n$text\n\n";
         $zag.= "------------".$this->un."\n";
         $zag.= "Content-Type: application/octet-stream;";

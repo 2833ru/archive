@@ -16,7 +16,7 @@ function DelivList($PID = 0, $lvl = 0) {
     $numRows = 0;
     $display = null;
 
-    $sql = 'select * from ' . $SysValue['base']['table_name30'] . ' where (PID=' . $PID . ' AND is_folder="0") order by city';
+    $sql = 'select * from ' . $SysValue['base']['table_name30'] . ' where (PID=' . intval($PID) . ' AND is_folder="0") order by city';
     $result = mysql_query($sql);
     $lvl++;
     while (@$row = mysql_fetch_array(@$result)) {
@@ -101,7 +101,7 @@ if ($i > 30)
         <script type="text/javascript" language="JavaScript1.2" src="../java/sorttable.js"></script>
     </head>
     <body style="background: threedface; color: windowtext;" topmargin="0" rightmargin="3" leftmargin="3" >
-            <? if (isset($id)) { ?>
+        <? if (isset($id)) { ?>
 
 
             <table cellpadding="0" cellspacing="1" width="100%" border="0"  class="sortable" id="sort">
@@ -112,15 +112,16 @@ if ($i > 30)
                     <td width="100" id=pane align=><span name=txtLang id=txtLang>Бесплатно свыше</span></td>
                     <td id=pane width="150"><span name=txtLang id=txtLang>Такса за 0.5кг</span></td>
                 </tr>
-    <?= $display ?>
+                <?= $display ?>
             </table>
 
-            <div align="right" style="padding:10"><BUTTON style="width: 15em; height: 2.2em; margin-left:5"  onclick="miniWin('adm_delivery_new.php?categoryID=<?= $id ?>',600,500);return false;">
+            <div align="right" style="padding:10"><BUTTON style="width: 15em; height: 2.2em; margin-left:5"  onclick="miniWin('adm_delivery_new.php?categoryID=<?= $id ?>', 600, 500);
+                        return false;">
                     <img src="../icon/page_add.gif" width="16" height="16" border="0" align="absmiddle" hspace="5">
                     <span name=txtLang id=txtLang>Новая позиция</span>
                 </BUTTON></div>
             <input type="hidden" value="<?= $id ?>" id="catal" name="catal">
 
-<? } ?>
+        <? } ?>
     </body>
 </html>

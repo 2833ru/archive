@@ -50,7 +50,7 @@ function actionStart() {
     $orderID=intval($_GET['orderID']);
     
     // Выборка
-    $data = $PHPShopOrm->select(array('*'), array('id' => '=' . $orderID));
+    $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($orderID)));
 
     $PHPShopGUI->dir = "../";
 

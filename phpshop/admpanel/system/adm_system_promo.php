@@ -1,64 +1,64 @@
 <?
 require("../connect.php");
-@mysql_connect ("$host", "$user_db", "$pass_db")or @die("Невозможно подсоединиться к базе");
-mysql_select_db("$dbase")or @die("Невозможно подсоединиться к базе");
+@mysql_connect("$host", "$user_db", "$pass_db") or @die("Невозможно подсоединиться к базе");
+mysql_select_db("$dbase") or @die("Невозможно подсоединиться к базе");
 require("../enter_to_admin.php");
 
 // Языки
-$GetSystems=GetSystems();
-$option=unserialize($GetSystems['admoption']);
-$Lang=$option['lang'];
-require("../language/".$Lang."/language.php");
+$GetSystems = GetSystems();
+$option = unserialize($GetSystems['admoption']);
+$Lang = $option['lang'];
+require("../language/" . $Lang . "/language.php");
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
-<head>
-	<title>Promo Настройки</title>
-<META http-equiv=Content-Type content="text/html; charset=<?=$SysValue['Lang']['System']['charset']?>">
-<LINK href="../css/texts.css" type=text/css rel=stylesheet>
-<LINK href="../css/tab.winclassic.css" type=text/css rel=stylesheet>
-<script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
-<script type="text/javascript" src="../java/tabpane.js"></script>
-<script type="text/javascript" language="JavaScript1.2" src="../language/<?=$Lang?>/language_windows.js"></script>
-<script>
-DoResize(<? echo $GetSystems['width_icon']?>,650,630);
-</script>
-</head>
-<body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0" onload="DoCheckLang(location.pathname,<?=$SysValue['lang']['lang_enabled']?>);preloader(0)">
-<table id="loader">
-<tr>
-	<td valign="middle" align="center">
-		<div id="loadmes" onclick="preloader(0)">
-<table width="100%" height="100%">
-<tr>
-	<td id="loadimg"></td>
-	<td ><b><?=$SysValue['Lang']['System']['loading']?></b><br><?=$SysValue['Lang']['System']['loading2']?></td>
-</tr>
-</table>
-		</div>
-</td>
-</tr>
-</table>
+    <head>
+        <title>Promo Настройки</title>
+        <META http-equiv=Content-Type content="text/html; charset=<?= $SysValue['Lang']['System']['charset'] ?>">
+        <LINK href="../skins/<?= $_SESSION['theme'] ?>/texts.css" type=text/css rel=stylesheet>
+        <LINK href="../skins/<?= $_SESSION['theme'] ?>/tab.css" type=text/css rel=stylesheet>
+        <script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
+        <script type="text/javascript" src="../java/tabpane.js"></script>
+        <script type="text/javascript" language="JavaScript1.2" src="../language/<?= $Lang ?>/language_windows.js"></script>
+        <script>
+            DoResize(<? echo $GetSystems['width_icon'] ?>, 650, 630);
+        </script>
+    </head>
+    <body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0" onload="DoCheckLang(location.pathname,<?= $SysValue['lang']['lang_enabled'] ?>);
+                preloader(0)">
+        <table id="loader">
+            <tr>
+                <td valign="middle" align="center">
+                    <div id="loadmes" onclick="preloader(0)">
+                        <table width="100%" height="100%">
+                            <tr>
+                                <td id="loadimg"></td>
+                                <td ><b><?= $SysValue['Lang']['System']['loading'] ?></b><br><?= $SysValue['Lang']['System']['loading2'] ?></td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+        </table>
 
-<SCRIPT language=JavaScript type=text/javascript>preloader(1);</SCRIPT>
-<?
-
-$sql="select * from $table_name3";
-$result=mysql_query($sql);
-$row = mysql_fetch_array($result);
-	$title=$row['title'];
-	$keywords=$row['keywords'];
-	$title_shablon=$row['title_shablon'];
-	$descrip=$row['descrip'];
-	$descrip_shablon=$row['descrip_shablon'];
-	$keywords_shablon=$row['keywords_shablon'];
-	$title_shablon2=$row['title_shablon2'];
-    $descrip_shablon2=$row['descrip_shablon2'];
-	$keywords_shablon2=$row['keywords_shablon2'];
-	$title_shablon3=$row['title_shablon3'];
-    $descrip_shablon3=$row['descrip_shablon3'];
-	$keywords_shablon3=$row['keywords_shablon3'];
-echo"
+        <SCRIPT language=JavaScript type=text/javascript>preloader(1);</SCRIPT>
+        <?
+        $sql = "select * from $table_name3";
+        $result = mysql_query($sql);
+        $row = mysql_fetch_array($result);
+        $title = $row['title'];
+        $keywords = $row['keywords'];
+        $title_shablon = $row['title_shablon'];
+        $descrip = $row['descrip'];
+        $descrip_shablon = $row['descrip_shablon'];
+        $keywords_shablon = $row['keywords_shablon'];
+        $title_shablon2 = $row['title_shablon2'];
+        $descrip_shablon2 = $row['descrip_shablon2'];
+        $keywords_shablon2 = $row['keywords_shablon2'];
+        $title_shablon3 = $row['title_shablon3'];
+        $descrip_shablon3 = $row['descrip_shablon3'];
+        $keywords_shablon3 = $row['keywords_shablon3'];
+        echo"
 <table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" height=\"50\" id=\"title\">
 <tr bgcolor=\"#ffffff\">
 	<td style=\"padding:10\">
@@ -71,7 +71,7 @@ echo"
 </tr>
 </table>
 <br>";
-echo('
+        echo('
 <!-- begin tab pane -->
 
 <div class="tab-pane" id="article-tab" style="margin-top:5px;height:250px">
@@ -95,7 +95,7 @@ tabPane.addTabPage( document.getElementById( "content" ) );
   <FIELDSET >
 	<LEGEND >Title</LEGEND>
 	<div style="padding:10">
-	 <textarea  name="title_new" style="width:100%;height: 6em;">'.$title.'</textarea>
+	 <textarea  name="title_new" style="width:100%;height: 6em;">' . $title . '</textarea>
 	 
 </div>
 </FIELDSET>
@@ -106,7 +106,7 @@ tabPane.addTabPage( document.getElementById( "content" ) );
    <FIELDSET >
 	<LEGEND >Description</LEGEND>
 	<div style="padding:10" align="center">
-	 <textarea  name="descrip_new" style="width:100%;height: 7em;">'.$descrip.'</textarea>
+	 <textarea  name="descrip_new" style="width:100%;height: 7em;">' . $descrip . '</textarea>
 	  
 </div>
 </FIELDSET>
@@ -117,7 +117,7 @@ tabPane.addTabPage( document.getElementById( "content" ) );
    <FIELDSET >
 	<LEGEND >Keywords</LEGEND>
 	<div style="padding:10" align="center">
-	 <textarea  name="keywords_new" style="width:100%;height: 7em;">'.$keywords.'</textarea>
+	 <textarea  name="keywords_new" style="width:100%;height: 7em;">' . $keywords . '</textarea>
 	  
 </div>
 </FIELDSET>
@@ -138,7 +138,7 @@ tabPane.addTabPage( document.getElementById( "catal" ) );
   <FIELDSET id=fldLayout >
 <LEGEND id=lgdLayout><u>T</u>itle:</LEGEND>
 <div style="padding:10;width: 100%">
-<textarea style="width: 100%; height: 5em;" name="title_shablon3_new" id="Shablon3" readonly>'.$title_shablon3.'</textarea>
+<textarea style="width: 100%; height: 5em;" name="title_shablon3_new" id="Shablon3" readonly>' . $title_shablon3 . '</textarea>
 <input type="button" name="btnLang" value="Каталог" onclick="ShablonAdd(\'@Catalog@\',\'Shablon3\')" class="buttonSh">
 <input type="button" name="btnLang" value="Общий" onclick="ShablonAdd(\'@System@\',\'Shablon3\')" class="buttonSh">
 <input type="button" value="," onclick="ShablonAdd(\',\',\'Shablon3\')" class="buttonSh">
@@ -156,7 +156,7 @@ tabPane.addTabPage( document.getElementById( "catal" ) );
   <FIELDSET id=fldLayout >
 <LEGEND id=lgdLayout><u>D</u>escription:</LEGEND>
 <div style="padding:10;width: 100%">
-<textarea style="width: 100%; height: 5em;" name="descrip_shablon3_new" id="ShablonD3" readonly>'.$descrip_shablon3.'</textarea>
+<textarea style="width: 100%; height: 5em;" name="descrip_shablon3_new" id="ShablonD3" readonly>' . $descrip_shablon3 . '</textarea>
 <input type="button" name="btnLang" value="Каталог" onclick="ShablonAdd(\'@Catalog@\',\'ShablonD3\')" class="buttonSh">
 <input type="button" name="btnLang" value="Общий" onclick="ShablonAdd(\'@System@\',\'ShablonD3\')" class="buttonSh">
 <input type="button" value="," onclick="ShablonAdd(\',\',\'ShablonD3\')" class="buttonSh">
@@ -174,7 +174,7 @@ tabPane.addTabPage( document.getElementById( "catal" ) );
   <FIELDSET id=fldLayout >
 <LEGEND id=lgdLayout><u>K</u>eywords:</LEGEND>
 <div style="padding:10;width: 100%">
-<textarea style="width: 100%; height: 5em;" name="keywords_shablon3_new" id="ShablonK3" readonly>'.$keywords_shablon3.'</textarea>
+<textarea style="width: 100%; height: 5em;" name="keywords_shablon3_new" id="ShablonK3" readonly>' . $keywords_shablon3 . '</textarea>
 <input type="button" name="btnLang" value="Каталог" onclick="ShablonAdd(\'@Catalog@\',\'ShablonK3\')" class="buttonSh">
 <input type="button" name="btnLang" value="Общий" onclick="ShablonAdd(\'@System@\',\'ShablonK3\')" class="buttonSh">
 <input type="button" name="btnLang" value="Автоподбор" onclick="ShablonAdd(\'@Generator@\',\'ShablonK\')" class="buttonSh">
@@ -201,7 +201,7 @@ tabPane.addTabPage( document.getElementById( "catalog" ) );
   <FIELDSET id=fldLayout >
 <LEGEND id=lgdLayout><u>T</u>itle:</LEGEND>
 <div style="padding:10;width: 100%">
-<textarea style="width: 100%; height: 5em;" name="title_shablon_new" id="Shablon" readonly>'.$title_shablon.'</textarea>
+<textarea style="width: 100%; height: 5em;" name="title_shablon_new" id="Shablon" readonly>' . $title_shablon . '</textarea>
 <input type="button" name="btnLang" value="Каталог" onclick="ShablonAdd(\'@Catalog@\',\'Shablon\')" class="buttonSh">
 <input type="button" name="btnLang" value="Подкаталог" onclick="ShablonAdd(\'@Podcatalog@\',\'Shablon\')" class="buttonSh">
 <input type="button" name="btnLang" value="Общий" onclick="ShablonAdd(\'@System@\',\'Shablon\')" class="buttonSh">
@@ -220,7 +220,7 @@ tabPane.addTabPage( document.getElementById( "catalog" ) );
   <FIELDSET id=fldLayout >
 <LEGEND id=lgdLayout><u>D</u>escription:</LEGEND>
 <div style="padding:10;width: 100%">
-<textarea style="width: 100%; height: 5em;" name="descrip_shablon_new" id="ShablonD" readonly>'.$descrip_shablon.'</textarea>
+<textarea style="width: 100%; height: 5em;" name="descrip_shablon_new" id="ShablonD" readonly>' . $descrip_shablon . '</textarea>
 <input type="button" name="btnLang" value="Каталог" onclick="ShablonAdd(\'@Catalog@\',\'ShablonD\')" class="buttonSh">
 <input type="button" name="btnLang" value="Подкаталог" onclick="ShablonAdd(\'@Podcatalog@\',\'ShablonD\')" class="buttonSh">
 <input type="button" name="btnLang" value="Общий" onclick="ShablonAdd(\'@System@\',\'ShablonD\')" class="buttonSh">
@@ -239,7 +239,7 @@ tabPane.addTabPage( document.getElementById( "catalog" ) );
   <FIELDSET id=fldLayout >
 <LEGEND id=lgdLayout><u>K</u>eywords:</LEGEND>
 <div style="padding:10;width: 100%">
-<textarea style="width: 100%; height: 5em;" name="keywords_shablon_new" id="ShablonK" readonly>'.$keywords_shablon.'</textarea>
+<textarea style="width: 100%; height: 5em;" name="keywords_shablon_new" id="ShablonK" readonly>' . $keywords_shablon . '</textarea>
 <input type="button" name="btnLang" value="Каталог" onclick="ShablonAdd(\'@Catalog@\',\'ShablonK\')" class="buttonSh">
 <input type="button" name="btnLang" value="Подкаталог" onclick="ShablonAdd(\'@Podcatalog@\',\'ShablonK\')" class="buttonSh">
 <input type="button" name="btnLang" value="Общий" onclick="ShablonAdd(\'@System@\',\'ShablonK\')" class="buttonSh">
@@ -267,7 +267,7 @@ tabPane.addTabPage( document.getElementById( "product" ) );
   <FIELDSET id=fldLayout >
 <LEGEND id=lgdLayout><u>T</u>itle:</LEGEND>
 <div style="padding:10;width: 100%">
-<textarea style="width: 100%; height: 5em;" name="title_shablon2_new" id="Shablon2" readonly>'.$title_shablon2.'</textarea>
+<textarea style="width: 100%; height: 5em;" name="title_shablon2_new" id="Shablon2" readonly>' . $title_shablon2 . '</textarea>
 <input type="button" name="btnLang" value="Каталог" onclick="ShablonAdd(\'@Catalog@\',\'Shablon2\')" class="buttonSh">
 <input type="button" name="btnLang" value="Подкаталог" onclick="ShablonAdd(\'@Podcatalog@\',\'Shablon2\')" class="buttonSh">
 <input type="button" name="btnLang" value="Товар" onclick="ShablonAdd(\'@Product@\',\'Shablon2\')" class="buttonSh">
@@ -287,7 +287,7 @@ tabPane.addTabPage( document.getElementById( "product" ) );
   <FIELDSET id=fldLayout >
 <LEGEND id=lgdLayout><u>D</u>escription:</LEGEND>
 <div style="padding:10;width: 100%">
-<textarea style="width: 100%; height: 5em;" name="descrip_shablon2_new" id="ShablonD2" readonly>'.$descrip_shablon2.'</textarea>
+<textarea style="width: 100%; height: 5em;" name="descrip_shablon2_new" id="ShablonD2" readonly>' . $descrip_shablon2 . '</textarea>
 <input type="button" name="btnLang" value="Каталог" onclick="ShablonAdd(\'@Catalog@\',\'ShablonD2\')" class="buttonSh">
 <input type="button" name="btnLang"  value="Подкаталог" onclick="ShablonAdd(\'@Podcatalog@\',\'ShablonD2\')" class="buttonSh">
 <input type="button"  name="btnLang" value="Товар" onclick="ShablonAdd(\'@Product@\',\'ShablonD2\')" class="buttonSh">
@@ -307,7 +307,7 @@ tabPane.addTabPage( document.getElementById( "product" ) );
   <FIELDSET id=fldLayout >
 <LEGEND id=lgdLayout><u>K</u>eywords:</LEGEND>
 <div style="padding:10;width: 100%">
-<textarea style="width: 100%; height: 5em;" name="keywords_shablon2_new" id="ShablonK2" readonly>'.$keywords_shablon2.'</textarea>
+<textarea style="width: 100%; height: 5em;" name="keywords_shablon2_new" id="ShablonK2" readonly>' . $keywords_shablon2 . '</textarea>
 <input type="button" name="btnLang" value="Каталог" onclick="ShablonAdd(\'@Catalog@\',\'ShablonK2\')" class="buttonSh">
 <input type="button" name="btnLang" value="Подкаталог" onclick="ShablonAdd(\'@Podcatalog@\',\'ShablonK2\')" class="buttonSh">
 <input type="button" name="btnLang" value="Товар" onclick="ShablonAdd(\'@Product@\',\'ShablonK2\')" class="buttonSh">
@@ -324,7 +324,7 @@ tabPane.addTabPage( document.getElementById( "product" ) );
 </table>
 </div>
 ');
-echo"
+        echo"
 
 <hr>
 <table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" height=\"50\" >
@@ -341,10 +341,9 @@ echo"
 </table>
 ";
 
-if(isset($optionsSAVE))
-{
-if(CheckedRules($UserStatus["option"],1) == 1){
-$sql="UPDATE $table_name3
+        if (isset($optionsSAVE)) {
+            if (CheckedRules($UserStatus["option"], 1) == 1) {
+                $sql = "UPDATE $table_name3
 SET
 title='$title_new',
 keywords='$keywords_new',
@@ -358,15 +357,17 @@ title_shablon2 ='$title_shablon2_new',
 descrip_shablon3='$descrip_shablon3_new',
 keywords_shablon3 ='$keywords_shablon3_new',
 title_shablon3 ='$title_shablon3_new'";
-$result=mysql_query($sql)or @die(mysql_error());
-$UpdateWrite=UpdateWrite();// Обновляем LastModified
-echo"
+                $result = mysql_query($sql) or @die(mysql_error());
+                $UpdateWrite = UpdateWrite(); // Обновляем LastModified
+                echo"
 	 <script>
 	 CL();
 	 </script>
 	   ";
-} else $UserChek->BadUserFormaWindow();
-   }
-?>
+            }
+            else
+                $UserChek->BadUserFormaWindow();
+        }
+        ?>
 
 

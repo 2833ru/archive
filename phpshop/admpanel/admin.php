@@ -9,6 +9,7 @@ PHPShopObj::loadClass("orm");
 PHPShopObj::loadClass("date");
 PHPShopObj::loadClass("xml");
 PHPShopObj::loadClass("security");
+PHPShopObj::loadClass("string");
 
 $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
 $PHPShopBase->chekAdmin();
@@ -184,6 +185,13 @@ stm_ep();
         $IconTab = $PHPShopIcon->setBorder() . $IconTab;
     return array($disp, $IconTab);
 }
+
+// Тема панели
+$theme=PHPShopSecurity::TotalClean($PHPShopSystem->getSerilizeParam('admoption.theme'),2);
+if(!empty($theme))
+$_SESSION['theme']=$theme;
+else $_SESSION['theme']='default';
+
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -193,9 +201,9 @@ stm_ep();
         <META name="ROBOTS" content="NONE">
         <META name="copyright" content="<?= $RegTo ?>">
         <META name="engine-copyright" content="PHPSHOP.RU, <?= $ProductName; ?>">
-        <LINK href="css/texts.css" type=text/css rel=stylesheet>
-              <LINK href="css/dateselector.css" type=text/css rel=stylesheet>
-              <LINK href="css/help.css" type=text/css rel=stylesheet>
+        <LINK href="skins/<?=$_SESSION['theme']?>/texts.css" type=text/css rel=stylesheet>
+        <LINK href="skins/<?=$_SESSION['theme']?>/dateselector.css" type=text/css rel=stylesheet>
+        <LINK href="css/help.css" type=text/css rel=stylesheet>
         <SCRIPT language="JavaScript" src="/phpshop/lib/Subsys/JsHttpRequest/Js.js"></SCRIPT>
         <script type="text/javascript" language="JavaScript" src="/phpshop/lib/JsHttpRequest/JsHttpRequest.js"></script>
         <SCRIPT type="text/javascript" language="JavaScript" src="java/popup_lib.js"></SCRIPT>
@@ -275,7 +283,7 @@ stm_ep();
         if(document.getElementById("CSCHint"))document.getElementById("CSCHint").style.visibility="hidden";}
         </script>
     </head>
-    <body id="mybody" style="background: threedface; color: windowtext;" topmargin="0" rightmargin="3" leftmargin="3" <?= $onload ?>  onhelp="initSlide(0);loadhelp();return false;">
+    <body id="mybody"  topmargin="0" rightmargin="3" leftmargin="3" <?= $onload ?>  onhelp="initSlide(0);loadhelp();return false;">
         <span id="cartwindow" style="position:absolute;left:10px;top:0;visibility:hidden; width: 250px; height: 68px;Z-INDEX: 3;BACKGROUND: #C0D2EC;padding:10px;border: solid;border-width: 1px; border-color:#4D88C8;FILTER: revealTrans  (duration=1,transition=4);" >
             <table width="100%" height="100%">
                 <tr>
@@ -353,7 +361,7 @@ if (empty($warning_mes)) {
                     <div id="loadmes" style="margin-bottom: 50px;" onclick="preloader(0)">
                         <table width="100%" height="100%">
                             <tr>
-                                <td id="loadimg"></td>
+                                <td id="loadimg"><img src="img/loader.gif" alt="" width="32" height="32" border="0" align="absmiddle"</td>
                                 <td ><b><?= $SysValue['Lang']['System']['loading'] ?></b><br><?= $SysValue['Lang']['System']['loading2'] ?></td>
                             </tr>
                         </table>
@@ -368,10 +376,10 @@ if (empty($warning_mes)) {
         <SCRIPT language=JavaScript type=text/javascript>preloader(1);</SCRIPT>
 
 
-        <table width="100%" cellpadding="0" cellspacing="1" style="border: 1px;border-style: outset; Z-INDEX: 1;border-color:ButtonFace;">
+        <table width="100%" cellpadding="0" cellspacing="3" class="gradient" style="border: 1px;border-style: outset; Z-INDEX: 1;border-color:ButtonFace;">
 <tr>
     <td style="padding-left:7px">
-	<script type="text/javascript" language="JavaScript1.2" src="skins/classic/menu.js"></script>
+	<script type="text/javascript" language="JavaScript1.2" src="skins/<?=$_SESSION['theme']?>/menu.js"></script>
 
         <script>
             // Основное меню
@@ -395,16 +403,16 @@ echo $CreateModulesMenu[0];
     stm_aix("p0i7","p0i0",[0,"Справка"],60,20);
     stm_bpx("p12","p1",[]);
     stm_aix("p12i0","p1i0",[0,"Техническая Поддержка","","",-1,-1,0,"http://help.phpshop.ru/","_blank","","","icon_info.gif","icon_info.gif"]);
-    stm_aix("p12i0","p1i0",[0,"Справка по разделу","","",-1,-1,0,"javascript:initSlide(0);loadhelp();","_self","","","question_frame.png","question_frame.png"]);
-    stm_aix("p12i0","p1i0",[0,"Учебник","","",-1,-1,0,"http://faq.phpshop.ru","_blank","","","book.gif","book.gif"]);
-    stm_aix("p12i1","p1i0",[0,"Новости","","",-1,-1,0,"http://www.phpshop.ru/news/","_blank","","","book_next.gif","book_next.gif"]);
-    stm_aix("p12i4","p1i0",[0,"Установить Order Agent Windows","","",-1,-1,0,"http://www.phpshop.ru/loads/downloadexe.php","_blank","","","plugin.gif","plugin.gif"]);
-    stm_aix("p12i4","p1i0",[0,"Установить Order Agent Mobil","","",-1,-1,0,"http://www.phpshop.ru/docs/mobileagent.html","_blank","","","plugin_blue.gif","plugin_blue.gif"]);
-    stm_aix("p12i4","p1i0",[0,"Установить Order Gadget","","",-1,-1,0,"http://www.phpshop.ru/docs/vistagadget.html","_blank","","","plugin_red.gif","plugin_red.gif"]);
-    stm_aix("p12i4","p1i0",[0,"Установить обработчик 1С:Предприятие","","",-1,-1,0,"http://www.phpshop.ru/docs/1c.html","_blank","","","1c_icon.gif","1c_icon.gif"]);
-    stm_aix("p12i6","p1i0",[0,"О программе","","",-1,-1,0,"javascript:miniWin('window/adm_about.php',650,500)","_self","","","image.gif","image.gif"]);
-    stm_aix("p12i8","p1i0",[0,"Выход","","",-1,-1,0,"javascript:window.close()","_self","","","door.gif","door.gif"]);
-    stm_aix("p12i9","p1i0",[0,"Магазин","","",-1,-1,0,"../../","_blank","","","house.gif","house.gif"]);
+    stm_aix("p12i1","p1i0",[0,"Справка по разделу","","",-1,-1,0,"javascript:initSlide(0);loadhelp();","_self","","","question_frame.png","question_frame.png"]);
+    stm_aix("p12i2","p1i0",[0,"Учебник","","",-1,-1,0,"http://faq.phpshop.ru","_blank","","","book.gif","book.gif"]);
+    stm_aix("p12i3","p1i0",[0,"Новости","","",-1,-1,0,"http://www.phpshop.ru/news/","_blank","","","book_next.gif","book_next.gif"]);
+    stm_aix("p12i4","p1i0",[0,"Установить Easy Control","","",-1,-1,0,"http://www.phpshop.ru/loads/files/setup.exe","_blank","","","plugin.gif","plugin.gif"]);
+    stm_aix("p12i5","p1i0",[0,"Установить Order Agent Mobil","","",-1,-1,0,"http://www.phpshop.ru/page/downloads.html","_blank","","","plugin_blue.gif","plugin_blue.gif"]);
+    stm_aix("p12i6","p1i0",[0,"Установить Order Gadget","","",-1,-1,0,"http://www.phpshop.ru/page/downloads.html","_blank","","","plugin_red.gif","plugin_red.gif"]);
+    stm_aix("p12i7","p1i0",[0,"Установить обработчик 1С:Предприятие","","",-1,-1,0,"http://www.phpshop.ru/page/pro1c.html#6","_blank","","","1c_icon.gif","1c_icon.gif"]);
+    stm_aix("p12i8","p1i0",[0,"О программе","","",-1,-1,0,"javascript:miniWin('window/adm_about.php',670,500)","_self","","","image.gif","image.gif"]);
+    stm_aix("p12i9","p1i0",[0,"Выход","","",-1,-1,0,"javascript:window.close()","_self","","","door.gif","door.gif"]);
+    stm_aix("p12i10","p1i0",[0,"Магазин","","",-1,-1,0,"../../","_blank","","","house.gif","house.gif"]);
     stm_ep();
     stm_ep();
     stm_em();

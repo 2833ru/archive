@@ -73,7 +73,7 @@ return $dis;
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=<?=$SysValue['Lang']['System']['charset']?>">
-<LINK href="../css/dtree.css" type=text/css rel=stylesheet>
+<LINK href="../skins/<?=$_SESSION['theme']?>/dtree.css" type=text/css rel=stylesheet>
 <SCRIPT language="JavaScript" src="../java/dtree.js" type=text/javascript></SCRIPT>
 </head>
 <body bottommargin="0" rightmargin="0" topmargin="0" leftmargin="0" bgcolor="#ffffff">

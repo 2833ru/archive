@@ -80,6 +80,6 @@ $_RESULT = array(
 ); 
 
 // Перехват модуля в начале функции
-$hook=$PHPShopModules->setHookHandler('delivery','delivery', $_RESULT, $_REQUEST['xid']);
+$hook=$PHPShopModules->setHookHandler('delivery','delivery', false, array($_RESULT, $_REQUEST['xid']));
 if($hook) $_RESULT=$hook;
 ?>
