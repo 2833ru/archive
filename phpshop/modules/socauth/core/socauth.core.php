@@ -363,6 +363,9 @@ class PHPShopUserSoc extends PHPShopElements {
 
                 // Логин пользователя
                 $_SESSION['UsersLogin'] = $data['login'];
+                
+                // Email
+                $_SESSION['UsersMail'] = $data['mail'];
 
                 // Имя пользователя
                 $_SESSION['UsersName'] = $data['name'];

@@ -333,6 +333,10 @@ class PHPShopShop extends PHPShopShopCore {
             $this->set('productArt', ParseTemplateReturn('product/main_product_forma_full_productArt.tpl'));
         }
 
+        // Опции склада
+        $this->checkStore($row);
+
+        $this->set('productSaleReady', $this->lang('productSaleReady'));
         $this->set('productDes', Parser($row['content']));
         $this->set('productPriceMoney', $this->dengi);
         $this->set('productBack', $this->lang('product_back'));
@@ -341,9 +345,6 @@ class PHPShopShop extends PHPShopShopCore {
         $this->set('productValutaName', $this->currency());
         $this->set('productUid', $row['id']);
         $this->set('productId', $row['id']);
-
-        // Опции склада
-        $this->checkStore($row);
 
         // Статьи по теме
         $this->article($row);
@@ -743,7 +744,7 @@ function CID_Product($category = null) {
     $this->set('catalogCat', $parent_category_row['name']);
     $this->set('catalogCategory', $this->PHPShopCategory->getName());
     $this->set('productId', $this->category);
-    $this->set('catalogId', $cat);
+    $this->set('catalogUId', $cat);
     $this->set('pcatalogId', $this->category);
 
     // Фильтр товаров

@@ -24,7 +24,9 @@ PHPShopObj::loadClass("system");
 PHPShopObj::loadClass("valuta");
 PHPShopObj::loadClass("string");
 PHPShopObj::loadClass("security");
+PHPShopObj::loadClass("xml");
 
+$_REQUEST['template']=$_SESSION['skin'];
 
 // Проверка прав админа
 if (!empty($_SESSION['logPHPSHOP']) and PHPShopSecurity::true_skin($_COOKIE[$_REQUEST['template'] . '_theme'])) {
@@ -35,30 +37,37 @@ if (!empty($_SESSION['logPHPSHOP']) and PHPShopSecurity::true_skin($_COOKIE[$_RE
 
         // Parse CSS
         if ($_POST['parser'] == 'css') {
-            PHPShopObj::loadClass(array("parser","file"));
-            
+            PHPShopObj::loadClass(array("parser", "file"));
 
-            $css_file='../templates/' . $_SESSION['skin'] . '/css/' . $_COOKIE[$_REQUEST['template'].'_theme'] . '.css';
+
+            $option = xml2array('../templates/'. $_SESSION['skin'] . '/editor/style.xml', false, true);
+            $optionIndex = array_values($option['element']);
+            $css_file = '../templates/' . $_SESSION['skin'] . '/css/' . $_COOKIE[$_REQUEST['template'] . '_theme'] . '.css';
             $PHPShopCssParser = new PHPShopCssParser($css_file);
             $css_parse = $PHPShopCssParser->parse();
-            
-            //print_r($css_parse);
 
-            $i=0;
+            $i = 0;
             if (is_array($css_parse))
                 foreach ($css_parse as $key => $val) {
 
                     // Есть изменение CSS
-                    if (is_array($_POST['color'][$i])){
+                    if (is_array($_POST['color'][$i])) {
                         foreach ($_POST['color'][$i] as $color => $value)
-                            if (!empty($value))
-                                $PHPShopCssParser->setParam($key, $color, $value);
+                            if (!empty($value)){
+                                
+                                if($optionIndex[$i]['var']['important'] == 'true')
+                                    $add=' !important';
+                                else $add=null;
+                                
+                                $PHPShopCssParser->setParam($key, $color, $value,$add);
+                            }
                     }
-                    
-                $i++;
+
+                    $i++;
                 }
 
             // Запись изменений
+            PHPShopFile::chmod($css_file);
             PHPShopFile::write($css_file, $PHPShopCssParser->compile());
         }
 
@@ -88,6 +97,8 @@ if (!empty($_SESSION['logPHPSHOP']) and PHPShopSecurity::true_skin($_COOKIE[$_RE
 
         if ($_REQUEST['type'] == 'json') {
             $_RESULT['status'] = PHPShopString::win_utf8($_RESULT['status']);
+            header("HTTP/1.1 200");
+            header("Content-Type: application/json");
             echo json_encode($_RESULT);
         }
     }

@@ -705,9 +705,12 @@ $(document).ready(function() {
     });
 
     // Визуальная корзина
-    if ($("#cartlink").attr('data-content') == "") {
-        $("#cartlink").attr('href', '/order/');
-    }
+    $("#cartlink").on('click', function() {
+        if ($(this).attr('data-content') == "") {
+            window.location.href=$('#body').attr('data-dir')+'/order/';
+        }
+    });
+
     $('[data-toggle="popover"]').popover();
     $('a[data-toggle="popover"]').on('show.bs.popover', function() {
         $('a[data-toggle="popover"]').attr('data-content', $("#visualcart_tmp").html());
@@ -852,92 +855,6 @@ $(document).ready(function() {
         slider.goToSlide(sliderbig.getCurrentSlide());
         sliderbig.destroySlider();
         delete sliderbig;
-    });
-
-    // Сolorpicker
-    if ($('.color').length) {
-        $('.color').colorpicker({format: 'hex'});
-
-
-        // Сolorpicker Live
-        $('.color').colorpicker().on('changeColor', function(e) {
-            var el = $(this).find('.color-value').attr('data-option');
-            var name = $(this).find('.color-value').attr('name');
-            $(el).css('cssText', name + ':' + e.color.toHex() + ' !important');
-        });
-
-    }
-
-    // сохранение оформления c Сolorpicker
-    $(".saveTheme").on('click', function() {
-
-        var data = 'template=astero&type=json&parser=css&';
-        $('.color-value').each(function() {
-            data += 'color[' + $(this).attr('id').split('color-').join('') + '][' + $(this).attr('name') + ']=' + $(this).val() + '&';
-        });
-
-        $.ajax({
-            url: ROOT_PATH + '/phpshop/ajax/skin.php',
-            type: 'post',
-            data: data,
-            dataType: 'json',
-            success: function(json) {
-                if (json['success']) {
-                    showAlertMessage(json['status']);
-                }
-            }
-        });
-    });
-
-    // смена оформления
-    $(".bootstrap-theme").on('click', function() {
-        $.cookie($('#bootstrap_theme').attr('data-name') + '_theme', $(this).attr('data-skin'), {
-            path: '/'
-        });
-
-        setTimeout(function() {
-
-            $('#body').fadeIn("slow", window.location.reload());
-            //$('.color').colorpicker('update');
-            //$('.color').colorpicker('reposition');
-
-        }, 1000);
-
-
-    });
-
-    $("#color-slide").slider({
-        range: false,
-        step: 5,
-        min: 0,
-        max: 360,
-        values: [$("#color-slide").attr('data-option')],
-        slide: function(event, ui) {
-            $($(".color-filter").attr('data-option')).css('cssText', 'filter: hue-rotate(' + ui.values[0] + 'deg) !important');
-            $(".color-filter").val(ui.values[0]);
-        }
-    });
-
-
-    $('#style-selector .style-toggle').click(function(e) {
-        e.preventDefault();
-        if ($(this).hasClass('ss-close')) {
-            $(this).removeClass('ss-close');
-            $(this).addClass('ss-open');
-            $('#style-selector').animate({'right': '-' + $('#style-selector').width() + 'px'}, 'slow');
-
-            $.cookie('style_selector_status', 'disabled', {
-                path: '/'
-            });
-        } else {
-            $(this).removeClass('ss-open');
-            $(this).addClass('ss-close');
-            $('#style-selector').animate({'right': '0px'}, 'slow');
-
-            $.cookie('style_selector_status', 'enabled', {
-                path: '/'
-            });
-        }
     });
 
 

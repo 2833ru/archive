@@ -41,9 +41,9 @@
         <!-- Available Options Starts -->
 
         <div class="options fix-wrapper">
-            
+
             @optionsDisp@
-       
+
             @ComStartCart@
             <div class="form-group">
                 <label class="control-label text-uppercase" for="input-quantity">Количество</label>
@@ -67,21 +67,27 @@
                     Сравнить
                 </button>                                   
             </div>
-            
+
             @ComEndCart@ 
-   
+
             @productParentList@
-            
-            
+
+
             @ComStartNotice@
             <div class="cart-button button-group compare-list-button-wrapper">
                 <a class="btn btn-cart" href="/users/notice.html?productId=@productUid@" title="@productNotice@">
                     <i class="fa fa-envelope-o" aria-hidden="true"></i>                            
-                   Уведомить
+                    Уведомить
                 </a>                                   
             </div>
+            <div class="cart-button button-group compare-list-button-wrapper">
+                <button type="button" class="btn btn-cart addToWishList" role="button" data-uid="@productUid@">
+                    <i class="fa fa-heart" aria-hidden="true"></i>                            
+                    Отложить
+                </button>                                   
+            </div>
             @ComEndNotice@ 
-            
+
         </div>
 
         <!-- Available Options Ends -->

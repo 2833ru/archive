@@ -72,12 +72,12 @@ window.escape = function(str)
 
 // Нет изображения
 function imgerror(obj) {
-    obj.onerror=null;
+    obj.onerror = null;
     obj.src = './images/no_photo.gif';
 }
 
 $().ready(function() {
-    
+
     // Поиск в FAQ
     $("#search").on('input', function() {
         var words = $(this).val();
@@ -130,10 +130,15 @@ $().ready(function() {
     });
 
     // Назад
-    $('.back').on('click', function(event) {
+    $('.back, .check-frame').on('click', function(event) {
         event.preventDefault();
-        history.back(1);
+
+        if ($.getUrlVar('frame') !== undefined) {
+            parent.window.$('#adminModal').modal('hide');
+        } else
+            history.back(1);
     });
+
 
     // Загрузка иконки
     $('.btn-file :file').on('fileselect', function(event, numFiles, label) {
@@ -164,6 +169,7 @@ $().ready(function() {
             $('[data-icon="' + id + '"]').prev('.glyphicon').removeClass('hide');
             $("input[name='" + id + "']").val(file);
             $(".img-thumbnail").attr('src', file);
+            $("input[name=img_new]").val(file);
             $("input[name=furl]").val(1);
         }
     });
@@ -316,8 +322,15 @@ $().ready(function() {
             processData: false,
             success: function(json) {
 
-                if (json['success'] == 1)
+                if (json['success'] == 1) {
                     showAlertMessage(locale.save_done);
+
+                    if ($.getUrlVar('frame') !== undefined) {
+                        parent.window.$('#adminModal').modal('hide');
+                        parent.window.location.reload();
+                    }
+
+                }
                 else
                     showAlertMessage(locale.save_false, true);
             }
@@ -328,9 +341,13 @@ $().ready(function() {
     // Иконки оформления меню
     $(".deleteone, .delete").append(' <span class="glyphicon glyphicon-trash"></span>');
 
+
+
+
     // Удаление из карточки
     $(".deleteone").on('click', function(event) {
         event.preventDefault();
+
         if (confirm(locale.confirm_delete)) {
             //$('#product_edit').append('<input>').attr('type', 'hidden').attr('name', 'delID').val(1);
             $('#product_edit').append('<input type="hidden" name="delID" value="1">');
@@ -339,8 +356,15 @@ $().ready(function() {
                 dataType: "json",
                 success: function(json) {
 
-                    if (json['success'] == 1)
-                        window.location.href = '?path=' + $('#path').val();
+                    if (json['success'] == 1) {
+
+                        if ($.getUrlVar('frame') !== undefined) {
+                            parent.window.$('#adminModal').modal('hide');
+                            parent.window.location.reload();
+                        }
+                        else
+                            window.location.href = '?path=' + $('#path').val();
+                    }
                     else
                         showAlertMessage(locale.save_false, true);
                 }
@@ -359,7 +383,8 @@ $().ready(function() {
                     if (json['success'] == 1) {
                         if (typeof(table) != 'undefined')
                             table.fnDeleteRow(id.attr('data-row'));
-                        else id.remove();
+                        else
+                            id.remove();
                         showAlertMessage(locale.save_done);
                     } else
                         showAlertMessage(locale.save_false, true);
@@ -500,22 +525,32 @@ $().ready(function() {
         $('#elfinderModal').modal('hide');
     });
 
+    // Progress
+
+
+    if (parent.window.$('#adminModal') && $.getUrlVar('frame') !== undefined) {
+        parent.window.$('.progress-bar').css('width', '90%');
+        setTimeout(function() {
+            parent.window.$('.progress').toggleClass('hide');
+        }, 500);
+    }
+
 });
 
 // GET переменные из URL страницы
 $.extend({
-  getUrlVars: function(){
-    var vars = [], hash;
-    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-    for(var i = 0; i < hashes.length; i++)
-    {
-      hash = hashes[i].split('=');
-      vars.push(hash[0]);
-      vars[hash[0]] = hash[1];
+    getUrlVars: function() {
+        var vars = [], hash;
+        var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+        for (var i = 0; i < hashes.length; i++)
+        {
+            hash = hashes[i].split('=');
+            vars.push(hash[0]);
+            vars[hash[0]] = hash[1];
+        }
+        return vars;
+    },
+    getUrlVar: function(name) {
+        return $.getUrlVars()[name];
     }
-    return vars;
-  },
-  getUrlVar: function(name){
-    return $.getUrlVars()[name];
-  }
 });

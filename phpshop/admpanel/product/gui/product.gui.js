@@ -37,17 +37,19 @@ $().ready(function() {
     // Перезагрузка страницы при добавлении изображения
     $("button[name=editID]").on('click', function(event) {
         event.preventDefault();
+        
+        
         if ($('input[name="img_new"]').val()) {
             setTimeout(function() {
                 window.location.href = window.location.href.split('&tab=1').join('') + '&tab=1';
             }, 5000);
         }
-
         // Мобильная версия с перезагрузкой
-        else if ($('.navbar-right  button[name="saveID"]').is(":hidden")) {
+        else if ($('.navbar-right  button[name="saveID"]').is(":hidden") && $.getUrlVar('frame') === undefined) {
             $('#product_edit').append('<input type="hidden" name="saveID" value="1">');
             $('#product_edit').submit();
         }
+        
 
         // Проверка характеристики
         $('.vendor_add').each(function() {

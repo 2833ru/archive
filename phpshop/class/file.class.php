@@ -12,15 +12,15 @@ class PHPShopFile {
      * Права на запись файла
      * @param string $file имя файла
      */
-    static function chmod($file, $error = false) {
+    static function chmod($file, $error = false, $rul = 0775) {
         if (function_exists('chmod')) {
-            if (@chmod($file, 0775))
+            if (@chmod($file, $rul))
                 return true;
             elseif ($error)
-                echo 'Нет файла ' . $file;
+                return 'Нет файла ' . $file;
         }
         elseif ($error)
-            echo __FUNCTION__ . '() запрещена';
+            return __FUNCTION__ . '() запрещена';
     }
 
     /**

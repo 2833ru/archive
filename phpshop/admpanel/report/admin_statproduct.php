@@ -119,7 +119,7 @@ function actionStart() {
     $PHPShopInterface->addJSFiles('./js/bootstrap-datetimepicker.min.js', './js/bootstrap-datetimepicker.ru.js', 'report/gui/report.gui.js');
     $PHPShopInterface->addCSSFiles('./css/bootstrap-datetimepicker.min.css');
     $PHPShopInterface->setActionPanel($TitlePage, array('Export'), false);
-    $PHPShopInterface->setCaption(array('№', '5%'), array("Категория", "65%"), array("Кол-во", "15%", array('align' => 'center')),array("Прибыль", "15%", array('align' => 'center','view' => intval($_GET['where']['margin']))), array(__("Выручка"), "15%", array('align' => 'right')));
+    $PHPShopInterface->setCaption(array('№', '5%'), array("Категория", "65%"), array("Кол-во", "15%", array('align' => 'center')), array("Прибыль", "15%", array('align' => 'center', 'view' => intval($_GET['where']['margin']))), array(__("Выручка"), "15%", array('align' => 'right')));
 
     // Выборка ИД товаров
     $PHPShopOrm = new PHPShopOrm();
@@ -131,27 +131,35 @@ function actionStart() {
         foreach ($data as $row) {
             $order = unserialize($row['orders']);
             $cart = $order['Cart']['cart'];
+            $discount = $order['Person']['discount'];
 
             if (sizeof($cart) != 0)
                 if (is_array($cart))
                     foreach ($cart as $key => $val) {
-                    
+
                         // Поиск товара
-                        if(!empty($_GET['where']['name'])){
-                            
-                            if($val['id'] == trim($_GET['where']['name']) or $val['uid'] == trim($_GET['where']['name']) or stristr($val['name'], trim($_GET['where']['name'] )))
-                            true;
-                            else  continue;
+                        if (!empty($_GET['where']['name'])) {
+
+                            if ($val['id'] == trim($_GET['where']['name']) or $val['uid'] == trim($_GET['where']['name']) or stristr($val['name'], trim($_GET['where']['name'])))
+                                true;
+                            else
+                                continue;
                         }
-                    
-                        $productIds[] = intval($key);
-                        $totalIds[$key] = $row['sum'];
-                        $orderIds[$key] = $row['id'];
+
+                        if (!empty($val['name'])) {
+                            $productIds[] = intval($key);
+                            if ($order['Cart']['num'] > 1) {
+                                $sum = $val['price'] * $val['num'];
+                                $totalIds[$key] = number_format($sum - ($sum * $discount / 100), 0, ".", '')   ;
+                            }
+                            else
+                                $totalIds[$key] = $row['sum'];
+                            $orderIds[$key] = $row['id'];
+                        }
                     }
         }
 
     $catCount = array();
-
 
     if (is_array($productIds)) {
         $PHPShopProductArray = new PHPShopProductArray(array('id' => ' IN(' . implode(',', $productIds) . ')'));
@@ -169,15 +177,13 @@ function actionStart() {
                         $catCount[$row['category']]['count'] = 1;
                         $catCount[$row['category']]['sum'] = $totalIds[$row['id']];
                     }
-                    
+
                     $catCount[$row['category']]['export'][] = $orderIds[$row['id']];
                 }
-                
-                
             }
     }
 
-    $max=0;
+    $max = 0;
     foreach ($catCount as $key => $val) {
         $max+= $val['count'];
     }
@@ -190,8 +196,8 @@ function actionStart() {
 
             $export.='"' . @implode(',', $row['export']) . '",';
             $value = round(($row['count'] * 100) / $max);
-            
-            if(!empty($_GET['where']['margin']))
+
+            if (!empty($_GET['where']['margin']))
                 $margin = round(($row['sum'] * intval($_GET['where']['margin'])) / 100);
 
             $progress = '
@@ -202,7 +208,7 @@ function actionStart() {
   </div>
 </div>';
 
-            $PHPShopInterface->setRow($i, $progress, array('name' => $row['count'], 'align' => 'center'),array('name' => $margin.$currency,'view' => intval($_GET['where']['margin']), 'align' => 'center'), array('name' => $row['sum'] . $currency, 'align' => 'right'));
+            $PHPShopInterface->setRow($i, $progress, array('name' => $row['count'], 'align' => 'center'), array('name' => $margin . $currency, 'view' => intval($_GET['where']['margin']), 'align' => 'center'), array('name' => $row['sum'] . $currency, 'align' => 'right','order'=>$row['sum']));
             $i++;
         }
 
@@ -215,7 +221,7 @@ function actionStart() {
     $searchforma.=$PHPShopInterface->setInputDate("date_end", $date_end, false, null, 'Дата конца отбора');
     $searchforma.=$tree_select;
     $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[name]', 'placeholder' => 'Товар', 'value' => $_GET['where']['name']));
-    $searchforma.= '<p>'.$PHPShopInterface->setInputArg(array('type' => 'text', 'caption'=>'%', 'name' => 'where[margin]', 'placeholder' => 'Наценка', 'value' => $_GET['where']['margin'])).'</p>';
+    $searchforma.= '<p>' . $PHPShopInterface->setInputArg(array('type' => 'text', 'caption' => '%', 'name' => 'where[margin]', 'placeholder' => 'Наценка', 'value' => $_GET['where']['margin'])) . '</p>';
     $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'hidden', 'name' => 'path', 'value' => $_GET['path']));
     $searchforma.=$PHPShopInterface->setButton(__('Показать'), 'search', 'btn-order-search pull-right');
 

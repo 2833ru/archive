@@ -37,11 +37,12 @@ class PHPShopIndex extends PHPShopCore {
         //$this->seoguard();
 
         // Выборка данных
-        $row = parent::getFullInfoItem(array('name,content'), array('category' => "=2000", 'enabled' => "='1'"));
+        $row = parent::getFullInfoItem(array('id,name,content'), array('category' => "=2000", 'enabled' => "='1'"));
 
         // Определяем переменные
         $this->set('mainContent', Parser($row['content']));
         $this->set('mainContentTitle', Parser($row['name']));
+        $this->PHPShopNav->objNav['id']=$row['id'];
 
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__, $row, 'END');

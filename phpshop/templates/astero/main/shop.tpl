@@ -17,7 +17,7 @@
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/bootstrap.min.css" rel="stylesheet">
 
     </head>
-    <body id="body">
+    <body id="body" data-dir="@ShopDir@" data-path="@php echo $GLOBALS['PHPShopNav']->objNav['path']; php@" data-id="@php echo $GLOBALS['PHPShopNav']->objNav['id']; php@" data-subpath="@php echo $GLOBALS['PHPShopNav']->objNav['name']; php@">
 
         <!-- Template -->
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/animate.css" rel="stylesheet">
@@ -25,7 +25,7 @@
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/responsive.css" rel="stylesheet">
 
         <!-- Theme -->
-        <link id="bootstrap_theme" data-name="@php echo $_SESSION['skin']; php@" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/@bootstrap_theme@.css" rel="stylesheet">
+        <link id="bootstrap_theme" data-name="@php echo $_SESSION['skin']; php@" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/@astero_theme@.css" rel="stylesheet">
 
         <!-- Fonts -->
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/font-awesome.min.css" rel="stylesheet">
@@ -92,7 +92,8 @@
                             <div class="pull-right">                           
                                 <!-- Currency Starts -->
                                 <div class="btn-group header-valuta-disp-wrapper">
-                                    @valutaDisp@
+                                    <!--@valutaDisp@-->
+                                    <h4><i class="fa fa-phone-square" aria-hidden="true"></i> Тел: @telNum@</h4>
                                 </div>
                                 <!-- Currency Ends -->                      
                             </div>
@@ -197,6 +198,7 @@
                 <!-- Primary Content Starts -->
                 <div class="col-md-9 col-xs-12">
                     @DispShop@
+                    @getPhotos@
                 </div>
                 <!-- Primary Content Ends -->
                 <!-- Sidebar Starts -->
@@ -246,12 +248,6 @@
                     
                     @rightMenu@
 
-                    <!-- Bestsellers Links Starts -->
-                    <h3 class="side-heading">@specMainTitle@</h3>
-                    <div class="side-product no-box-shadow col-md-12">
-                        @specMainIcon@
-                    </div>
-                    <!-- Bestsellers Links Ends -->
                 </div>
                 <!-- Sidebar Ends -->
             </div>
@@ -407,7 +403,7 @@
         </div>
         <!--/ Модальное окно авторизации-->
         
-                <!-- Модальное окно мобильного поиска -->
+        <!-- Модальное окно мобильного поиска -->
         <div class="modal fade bs-example-modal-sm" id="searchModal" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
@@ -430,6 +426,7 @@
             </div>
         </div>
         <!--/ Модальное окно мобильного поиска -->
+        
 
         <!-- JQuery Plugins  -->
         <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/bootstrap.min.js"></script>

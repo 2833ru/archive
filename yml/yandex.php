@@ -1,11 +1,16 @@
 <?php
-
 /**
  * Файл выгрузки для Яндекс Маркет
  * @author PHPShop Software
- * @version 1.8
+ * @version 1.9
  * @package PHPShopXML
+ * @example ?ssl [bool] SSL
+ * @example ?getall [bool] Выгрузка всех товаров без учета флага YML
+ * @example ?from [bool] Метка в ссылки товара from
  */
+
+
+
 $_classPath = "../phpshop/";
 include($_classPath . "class/obj.class.php");
 PHPShopObj::loadClass("base");
@@ -133,6 +138,7 @@ class PHPShopYml {
      * @var bool 
      */
     var $memory = true;
+    var $ssl = 'http://';
 
     /**
      * Конструктор
@@ -157,6 +163,10 @@ class PHPShopYml {
 
         // Кол-во знаков после запятой в цене
         $this->format = $this->PHPShopSystem->getSerilizeParam('admoption.price_znak');
+
+        // SSL 
+        if (isset($_GET['ssl']))
+            $this->ssl='https://';
 
         $this->setHook(__CLASS__, __FUNCTION__);
     }
@@ -248,7 +258,7 @@ class PHPShopYml {
         $result = $PHPShopOrm->query("select * from " . $GLOBALS['SysValue']['base']['products'] . " where $where enabled='1' and parent_enabled='0' and price>0");
         while ($row = mysqli_fetch_array($result)) {
             $id = $row['id'];
-            $name = htmlspecialchars($row['name'], null, 'windows-1251');
+            $name = '<![CDATA[' . trim(strip_tags($row['name'])) . ']]>';
             $category = $row['category'];
             $uid = $row['uid'];
             $price = $row['price'];
@@ -260,7 +270,7 @@ class PHPShopYml {
                 $p_enabled = "false";
 
             // $description = htmlspecialchars(trim(PHPShopString::mySubstr($row['description'], 300)), null, 'windows-1251');
-            $description = '<![CDATA[' . strip_tags($row['description'], '<p><h3><ul><li><br>') . ']]>';
+            $description = '<![CDATA[' . trim(strip_tags($row['description'], '<p><h3><ul><li><br>')) . ']]>';
             $content = '<![CDATA[' . $row['content'] . ']]>';
             $baseinputvaluta = $row['baseinputvaluta'];
 
@@ -328,7 +338,7 @@ class PHPShopYml {
 <shop>
 <name>' . $this->PHPShopSystem->getName() . '</name>
 <company>' . $this->PHPShopSystem->getValue('company') . '</company>
-<url>http://' . $_SERVER['SERVER_NAME'] . '</url>
+<url>'.$this->ssl . $_SERVER['SERVER_NAME'] . '</url>
 <platform>PHPShop</platform>
 <version>' . $GLOBALS['SysValue']['upload']['version'] . '</version>';
     }
@@ -468,11 +478,11 @@ class PHPShopYml {
 
             $xml = '
 <offer id="' . $val['id'] . '" available="' . $val['p_enabled'] . '" ' . $bid_str . '>
- <url>http://' . $_SERVER['SERVER_NAME'] . $GLOBALS['SysValue']['dir']['dir'] . $url . '.html' . $from . '</url>
+ <url>' .$this->ssl . $_SERVER['SERVER_NAME'] . $GLOBALS['SysValue']['dir']['dir'] . $url . '.html' . $from . '</url>
       <price>' . $val['price'] . '</price>
       <currencyId>' . $this->defvalutaiso . '</currencyId>
       <categoryId>' . $val['category'] . '</categoryId>
-      <picture>http://' . $_SERVER['SERVER_NAME'] . $val['picture'] . '</picture>
+      <picture>'.$this->ssl  . $_SERVER['SERVER_NAME'] . $val['picture'] . '</picture>
       <name>' . $this->cleanStr($val['name']) . '</name>' .
                     $vendor . '
       <description>' . $this->cleanStr($val['description']) . '</description>' .
@@ -526,7 +536,7 @@ class PHPShopYml {
 }
 
 header("HTTP/1.1 200");
-header("Content-Type: application/xml");
+header("Content-Type: application/xml; charset=cp1251");
 $PHPShopYml = new PHPShopYml();
 $PHPShopYml->compile();
 ?>

@@ -5,7 +5,7 @@ $TitlePage = __("Отзывы");
 function actionStart() {
     global $PHPShopInterface;
     $PHPShopInterface->setActionPanel(__("Отзывы"), array('Удалить выбранные'), array('Добавить'));
-    $PHPShopInterface->setCaption(array(null, "3%"), array("Заголовок", "40%"), array("Пользователь", "20%"), array("Дата", "10%", array('align' => 'center')), array("Ответ", "10%", array('align' => 'center')), array("", "10%"), array("Статус &nbsp;&nbsp;&nbsp;", "10%", array('align' => 'right')));
+    $PHPShopInterface->setCaption(array(null, "3%"), array("Заголовок", "40%"), array("Пользователь", "20%"), array("Дата", "10%", array('align' => 'center')), array("Ответ", "10%", array('align' => 'center')), array("", "10%"), array("Статус", "10%", array('align' => 'right')));
 
 
     // Таблица с данными

@@ -6,6 +6,76 @@ PHPShopObj::loadClass('category');
 
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
 
+
+/**
+ * Настройка полей - 2 шаг
+ */
+function actionOptionSave() {
+
+    // Память выбранных полей
+    if (is_array($_POST['option'])) {
+
+        $memory = json_decode($_COOKIE['check_memory'], true);
+        unset($memory['order.option']);
+        foreach ($_POST['option'] as $k => $v) {
+            $memory['order.option'][$k] = $v;
+        }
+        if (is_array($memory))
+            setcookie("check_memory", json_encode($memory), time() + 3600000 * 6, $GLOBALS['SysValue']['dir']['dir'] . '/phpshop/admpanel/');
+    }
+
+    return array('success' => true);
+}
+
+/**
+ * Настройка полей - 1 шаг
+ */
+function actionOption() {
+    global $PHPShopInterface;
+
+    // Память выбранных полей
+    if (!empty($_COOKIE['check_memory'])) {
+        $memory = json_decode($_COOKIE['check_memory'], true);
+    }
+    if (!is_array($memory['order.option'])) {
+        $memory['order.option']['uid'] = 1;
+        $memory['order.option']['statusi'] = 1;
+        $memory['order.option']['datas'] = 1;
+        $memory['order.option']['fio'] = 1;
+        $memory['order.option']['menu'] = 1;
+        $memory['order.option']['tel'] = 1;
+        $memory['order.option']['sum'] = 1;
+        $memory['order.option']['city'] = 0;
+        $memory['order.option']['adres'] = 0;
+        $memory['order.option']['org'] = 0;
+    }
+
+    $message = '<p class="text-muted">Вы можете изменить перечень полей в таблице отображения заказов.</p>';
+
+    $searchforma = $message .
+            $PHPShopInterface->setCheckbox('uid', 1, __('№ Заказа'), $memory['order.option']['uid']) .
+            $PHPShopInterface->setCheckbox('statusi', 1, __('Статус'), $memory['order.option']['statusi']) .
+            $PHPShopInterface->setCheckbox('datas', 1, __('Дата'), $memory['order.option']['datas']) .
+            $PHPShopInterface->setCheckbox('id', 1, __('ID'), $memory['order.option']['id']) .
+            $PHPShopInterface->setCheckbox('fio', 1, __('Покупатель'), $memory['order.option']['fio']) .
+            $PHPShopInterface->setCheckbox('sum', 1, __('Сумма'), $memory['order.option']['sum']) .
+            $PHPShopInterface->setCheckbox('tel', 1, __('Телефон'), $memory['order.option']['tel']) . '<br>' .
+            $PHPShopInterface->setCheckbox('menu', 1, __('Экшен меню'), $memory['order.option']['menu']) .  
+            $PHPShopInterface->setCheckbox('discount', 1, __('Скидка'), $memory['order.option']['discount']).
+            $PHPShopInterface->setCheckbox('city', 1, __('Город'), $memory['order.option']['city']).
+            $PHPShopInterface->setCheckbox('adres', 1, __('Адрес'), $memory['order.option']['adres']).
+            $PHPShopInterface->setCheckbox('org', 1, __('Компания'), $memory['order.option']['org'])        
+            ;
+
+    $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'hidden', 'name' => 'path', 'value' => 'order'));
+    $searchforma.='<p class="clearfix"> </p>';
+
+
+    $PHPShopInterface->_CODE.=$searchforma;
+
+    exit($PHPShopInterface->getContent() . '<p class="clearfix"> </p>');
+}
+
 // Определение визульного вывода поля
 function getKeyView($val) {
 

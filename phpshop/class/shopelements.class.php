@@ -91,7 +91,10 @@ class PHPShopProductElements extends PHPShopElements {
         else
             $currency = $this->dengi;
 
-        $row = $this->select(array($name), array('id' => '=' . intval($currency)), false, array('limit' => 1), __FUNCTION__, array('base' => $this->getValue('base.currency'), 'cache' => 'true'));
+        $row = $this->select(array('*'), array('id' => '=' . intval($currency)), false, array('limit' => 1), __FUNCTION__, array('base' => $this->getValue('base.currency'), 'cache' => 'true'));
+        
+        if($name == 'code' and ($row['iso'] == 'RUR' or $row['iso']=="RUB"))
+        return 'p';
 
         return $row[$name];
     }
@@ -215,6 +218,9 @@ class PHPShopProductElements extends PHPShopElements {
             $this->set('productSklad', $this->lang('product_on_sklad') . " " . $row['items'] . " " . $this->lang('product_on_sklad_i'));
         else
             $this->set('productSklad', '');
+        
+        // Форматирование
+        $price = number_format($this->price($row), $this->format, '.', ' ');
 
         // Если товар на складе
         if (empty($row['sklad'])) {
@@ -227,13 +233,13 @@ class PHPShopProductElements extends PHPShopElements {
 
             // Если нет новой цены
             if (empty($row['price_n'])) {
-                $this->set('productPrice', $this->price($row));
+                $this->set('productPrice',  $price);
                 $this->set('productPriceRub', '');
             }
 
             // Если есть новая цена
             else {
-                $productPrice = $this->price($row);
+                $productPrice =  $price;
                 $productPriceNew = $this->price($row, true);
                 $this->set('productPrice', $productPrice);
                 $this->set('productPriceRub', PHPShopText::strike($productPriceNew . " " . $this->currency));
@@ -242,7 +248,7 @@ class PHPShopProductElements extends PHPShopElements {
 
         // Товар под заказ
         else {
-            $this->set('productPrice', $this->price($row));
+            $this->set('productPrice',  $price);
             $this->set('productPriceRub', $this->lang('sklad_mesage'));
             $this->set('ComStartNotice', '');
             $this->set('ComEndNotice', '');
@@ -408,6 +414,9 @@ function product_grid($dataArray, $cell, $template = false, $line = true) {
         $this->total = count($dataArray);
         foreach ($dataArray as $row) {
 
+            // Опции склада
+            $this->checkStore($row);
+
             // Определяем переменные
             $this->set('productName', $row['name']);
             $this->set('productArt', $row['uid']);
@@ -421,7 +430,7 @@ function product_grid($dataArray, $cell, $template = false, $line = true) {
                 $this->set('productImg', $row['pic_small']);
 
             // Проверка режима Multibase
-            $this->checkMultibase($row['pic_small']);
+            //$this->checkMultibase($row['pic_small']);
 
             $this->set('productImgBigFoto', $row['pic_big']);
             $this->set('productPriceMoney', $this->PHPShopSystem->getValue('dengi'));
@@ -432,8 +441,6 @@ function product_grid($dataArray, $cell, $template = false, $line = true) {
             // Подключение функции вывода средней оценки товара из отзывов пользователей
             $this->doLoadFunction(__CLASS__, 'comment_rate', array("row" => $row, "type" => "CID"), 'shop');
 
-            // Опции склада
-            $this->checkStore($row);
 
             // Шаблон ячейки товара
             if (empty($template))

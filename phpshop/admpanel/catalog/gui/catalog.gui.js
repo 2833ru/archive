@@ -56,6 +56,7 @@ $().ready(function() {
                 $('#selectModal .modal-title').html(locale.option_title);
                 $('#selectModal .modal-footer .btn-primary').addClass('option-send');
                 $('#selectModal .modal-footer .btn-delete').addClass('hidden');
+                $('#selectModal .modal-footer .btn-primary').html(locale.ok);
                 $('#selectModal .modal-body').html(data);
                 $('#selectModal').modal('show');
             }

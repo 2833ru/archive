@@ -6,7 +6,7 @@ a{
 }
 a:hover, 
 a:focus{
-    color:#1c1c1c;
+    -color:#1c1c1c;
     text-decoration: none;
 }
 a:focus{
@@ -126,12 +126,19 @@ hr{
     background:none;
     color:#fff;
 }
-
+.header-valuta-disp-wrapper > h4 {
+    color: #fff;
+    margin-top: 20px;
+    margin-bottom: 0;
+    position: relative;
+    z-index: 2;
+}
 /* Currency & Languages Drop Down Styles Starts */
 
 .header-top .btn-group{
     display:table-cell;
-}	
+    z-index: 1;
+}
 .header-top .btn-link{
     position:relative;
     padding:12px 15px 12px 50px;
@@ -592,6 +599,10 @@ hr{
     text-align:center;
     text-transform:uppercase;
 }
+ .product-head > a {
+     color: inherit;
+ }
+
 .product-col{
     padding:15px 15px 10px;
     margin-bottom:20px;
@@ -908,7 +919,7 @@ hr{
     text-transform:uppercase;
 }
 .product-info .product-details .manufacturer span{
-    min-width:130px;
+    -min-width:130px;
     display:inline-block;
     color:#452e11;
 }
@@ -1409,7 +1420,7 @@ img.template:hover{
 }
 .table-optionsDisp select {
     display: block;
-    width: 100%;
+    width: inherit;
     height: 34px;
     padding: 6px 12px;
     margin-bottom: 15px;
@@ -1924,4 +1935,26 @@ img.template:hover{
     border: 0px;
     height: 42px;
     background: #D9D9D9 !important;
+}
+body.modal-open {
+    overflow: visible;
+    padding-right: 0px !important;
+}
+.news-list a:hover .panel.panel-default {
+    -webkit-box-shadow: 0 0 28px rgba(0, 0, 0, 0.8);
+    -moz-box-shadow: 0 0 28px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 0 28px rgba(0, 0, 0, 0.8);
+}
+.news-list a .panel.panel-default {
+    -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+    -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+}
+.news-list a:hover {
+    color: #35b1ce;
+}
+.panel.panel-default {
+    -webkit-transition: 0.5s;
+    -moz-transition: 0.5s;
+    transition: 0.5s;
 }

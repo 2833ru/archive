@@ -10,7 +10,7 @@ PHPShopObj::loadClass('delivery');
  * Обработчик кабинета пользователя
  * @author PHPShop Software
  * @tutorial http://wiki.phpshop.ru/index.php/PHPShopUsers
- * @version 1.4
+ * @version 1.5
  * @package PHPShopCore
  */
 class PHPShopUsers extends PHPShopCore {
@@ -515,7 +515,7 @@ class PHPShopUsers extends PHPShopCore {
                 $this->set('user_ip', $_SERVER['REMOTE_ADDR']);
                 $this->set('user_login', $data['login']);
                 $this->set('user_name', $data['name']);
-                $this->set('user_mail', $data['mail']);
+                $this->set('user_mail', $data['login']);
                 $this->set('user_password', $this->decode($data['password']));
 
                 // Заголовок e-mail пользователю
@@ -523,7 +523,7 @@ class PHPShopUsers extends PHPShopCore {
                 $title = __('Восстановление пароля пользователя') . " " . $_POST['login'];
 
                 // Отправка e-mail пользователю
-                $PHPShopMail = new PHPShopMail($data['mail'], $this->PHPShopSystem->getParam('adminmail2'), $title, '', true, true);
+                $PHPShopMail = new PHPShopMail($data['login'], $this->PHPShopSystem->getParam('adminmail2'), $title, '', true, true);
                 
                 // Содержание e-mail пользователю
                 $content = ParseTemplateReturn('./phpshop/lib/templates/users/mail_sendpassword.tpl', true);
@@ -609,6 +609,7 @@ class PHPShopUsers extends PHPShopCore {
             $PHPShopUser = new PHPShopUser($_SESSION['UsersId']);
             $wishlist = unserialize($PHPShopUser->objRow['wishlist']);
             if (is_array($wishlist)) {
+                
                 // удаление из вишлиста
                 if ($_REQUEST['delete']) {
                     unset($wishlist[$_REQUEST['delete']]);
@@ -625,6 +626,10 @@ class PHPShopUsers extends PHPShopCore {
                     $objProduct = new PHPShopProduct($key);
 
                     if ($objProduct->getParam("enabled") == 1) {
+                        
+                        if($objProduct->getParam("sklad") == 1)
+                            $this->set('prodDisabled', 'disabled');
+                        else $this->set('prodDisabled', '');
 
                         $this->set('prodId', $key);
                         $this->set('prodName', $objProduct->getParam("name"));

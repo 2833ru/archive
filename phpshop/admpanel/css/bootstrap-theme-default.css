@@ -6407,7 +6407,7 @@ button.close {
 }
 @media (min-width: 768px) and (max-width: 991px) {
   .visible-sm {
-    display: block !important;
+    display: block ;
   }
   table.visible-sm {
     display: table;

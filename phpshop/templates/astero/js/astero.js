@@ -1,6 +1,6 @@
 /** �?змение вида рейтинга товара начало **/
 function changeOfProductRatingView() {
-    var raitingWidth = $('#raiting_votes').css('width');
+    var raitingWidth = $('#raiting_votes').outerWidth();
     var raitingstarZero = ('<i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i>')
     var raitingstarOne = ('<i class="fa fa-star"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i>');
     var raitingstarTwo = ('<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i>');
@@ -8,27 +8,27 @@ function changeOfProductRatingView() {
     var raitingstarFour = ('<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i>');
     var raitingstarFive = ('<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>');
 
-    if (raitingWidth == ('0px')) {
+    if (raitingWidth == 0) {
         $('#raiting_star').remove();
         $('.rating').append(raitingstarZero);
     }
-    if (raitingWidth == ('24px')) {
+    if (raitingWidth > 1 && raitingWidth <= 16) {
         $('#raiting_star').remove();
         $('.rating').append(raitingstarOne);
     }
-    if (raitingWidth == ('32px')) {
+    if (raitingWidth > 17 && raitingWidth <= 24) {
         $('#raiting_star').remove();
         $('.rating').append(raitingstarTwo);
     }
-    if (raitingWidth == ('48px')) {
+    if (raitingWidth > 25 && raitingWidth <= 32) {
         $('#raiting_star').remove();
         $('.rating').append(raitingstarThree);
     }
-    if (raitingWidth == ('64px')) {
+    if (raitingWidth > 33 && raitingWidth <= 48) {
         $('#raiting_star').remove();
         $('.rating').append(raitingstarFour);
     }
-    if (raitingWidth == ('80px')) {
+    if (raitingWidth > 49 && raitingWidth <= 64) {
         $('#raiting_star').remove();
         $('.rating').append(raitingstarFive);
     }
@@ -95,14 +95,14 @@ $(document).ready(function() {
     })
     $('.sidebar-nav > li').removeClass('dropdown');
     $('.sidebar-nav > li > ul').removeClass('dropdown-menu');
-    $('.sidebar-nav > li > a').on('click', function(e) {
-        if ($(e.target).hasClass('active')) {
-            $(e.target).removeClass('active');
-            $(e.target).siblings('ul').removeClass('active');
+    $('.sidebar-nav > li > a').on('click', function() {
+        if ($(this).hasClass('active')) {
+            $(this).removeClass('active');
+            $(this).siblings('ul').removeClass('active');
         } else {
-            $(e.target).addClass('active');
-            $(e.target).siblings('ul').addClass('active');
-            $(e.target).siblings('ul').addClass('fadeIn animated');
+            $(this).addClass('active');
+            $(this).siblings('ul').addClass('active');
+            $(this).siblings('ul').addClass('fadeIn animated');
         }
     });
     $('.main-navbar-list-catalog-wrapper').children('li').children('ul').removeClass('dropdown-menu');
@@ -119,15 +119,15 @@ $(document).ready(function() {
             $('.main-navbar-list-catalog-hidden').removeClass('active');
         }
     });
-    $('.main-navbar-list-catalog-wrapper > li > a').on('click', function(e) {
-        if ($(e.target).hasClass('active')) {
-            $(e.target).removeClass('active');
-            $(e.target).siblings('ul').removeClass('active');
-            $(e.target).siblings('ul').removeClass('fadeIn animated');
+    $('.main-navbar-list-catalog-wrapper > li > a').on('click', function() {
+        if ($(this).hasClass('active')) {
+            $(this).removeClass('active');
+            $(this).siblings('ul').removeClass('active');
+            $(this).siblings('ul').removeClass('fadeIn animated');
         } else {
-            $(e.target).addClass('active');
-            $(e.target).siblings('ul').addClass('active');
-            $(e.target).siblings('ul').addClass('fadeIn animated');
+            $(this).addClass('active');
+            $(this).siblings('ul').addClass('active');
+            $(this).siblings('ul').addClass('fadeIn animated');
         }
     });
     var pathname = self.location.pathname;

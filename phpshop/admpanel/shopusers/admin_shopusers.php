@@ -25,7 +25,7 @@ function actionStart() {
 
     $PHPShopInterface->addJSFiles('./shopusers/gui/shopusers.gui.js');
     $PHPShopInterface->setActionPanel(__("Покупатели"), array('Поиск', 'CSV', 'Удалить выбранные'), array('Добавить Пользователя'));
-    $PHPShopInterface->setCaption(array(null, "2%"), array("Имя", "25%"), array("E-mail", "20%"), array("Статус", "20%"), array("Скидка %", "10%"), array("Вход", "10%"), array("", "10%"), array("Статус &nbsp;&nbsp;&nbsp;", "10%", array('align' => 'right')));
+    $PHPShopInterface->setCaption(array(null, "2%"), array("Имя", "25%"), array("E-mail", "20%"), array("Статус", "20%"), array("Скидка %", "10%"), array("Вход", "10%"), array("", "10%"), array("Статус", "10%", array('align' => 'right')));
 
     // Стытусы пользователей
     $PHPShopUserStatus = new PHPShopUserStatusArray();
@@ -55,15 +55,21 @@ function actionStart() {
     $data = $PHPShopOrm->select(array('*'), $where, array('order' => 'id DESC'), $limit);
     if (is_array($data))
         foreach ($data as $row) {
-        
-                // Enabled
+
+            // Enabled
             if (empty($row['enabled']))
                 $enabled = 'text-muted';
             else
                 $enabled = null;
 
+            // Накопительная скидка
+            $discount_td = $PHPShopUserStatusArray[$row['status']]['discount'];
+            if ($row['cumulative_discount'] > $discount_td) {
+                $discount_td = $row['cumulative_discount'];
+            }
+
             $PHPShopInterface->setRow(
-                    $row['id'], array('name' => $row['name'], 'link' => '?path=shopusers&id=' . $row['id'], 'align' => 'left','class'=>$enabled), array('name' => $row['login'], 'link' => 'mailto:' . $row['login'],'class'=>$enabled), $PHPShopUserStatusArray[$row['status']]['name'], $PHPShopUserStatusArray[$row['status']]['discount'], array('name' => '<span class="hide">'.$row['datas'].'</span>'.PHPShopDate::get($row['datas'])), array('action' => array('edit', 'order', '|', 'delete', 'id' => $row['id']), 'align' => 'center'), array('status' => array('enable' => $row['enabled'], 'align' => 'right', 'caption' => array('Выкл', 'Вкл'))));
+                    $row['id'], array('name' => $row['name'], 'link' => '?path=shopusers&id=' . $row['id'], 'align' => 'left', 'class' => $enabled), array('name' => $row['login'], 'link' => 'mailto:' . $row['login'], 'class' => $enabled), $PHPShopUserStatusArray[$row['status']]['name'], $discount_td, array('name' => '<span class="hide">' . $row['datas'] . '</span>' . PHPShopDate::get($row['datas'])), array('action' => array('edit', 'order', '|', 'delete', 'id' => $row['id']), 'align' => 'center'), array('status' => array('enable' => $row['enabled'], 'align' => 'right', 'caption' => array('Выкл', 'Вкл'))));
         }
     $PHPShopInterface->Compile();
 }
@@ -75,8 +81,8 @@ function actionAdvanceSearch() {
     global $PHPShopInterface;
 
     $PHPShopInterface->field_col = 2;
-    
-        // Статусы пользователей
+
+    // Статусы пользователей
     PHPShopObj::loadClass('user');
     $PHPShopUserStatus = new PHPShopUserStatusArray();
     $PHPShopUserStatusArray = $PHPShopUserStatus->getArray();

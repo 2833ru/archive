@@ -54,7 +54,7 @@ function actionStart() {
 
     // Размер названия поля
     $PHPShopGUI->field_col = 2;
-    $PHPShopGUI->addJSFiles('./js/jquery.treegrid.js','./page/gui/page.gui.js');
+    $PHPShopGUI->addJSFiles('./js/jquery.treegrid.js', './page/gui/page.gui.js');
 
     // Выборка
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
@@ -68,7 +68,8 @@ function actionStart() {
         'name' => 'Предпросмотр',
         'url' => '../../page/CID_' . $data['id'] . '.html',
         'action' => 'front',
-        'target' => '_blank'
+        'target' => '_blank',
+        'class'=>$GLOBALS['isFrame']
     );
 
     $PHPShopGUI->setActionPanel(__("Каталог") . ': ' . $data['name'], array('Создать', 'Предпросмотр', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'));
@@ -149,11 +150,13 @@ function actionStart() {
     // Вывод формы закладки
     $PHPShopGUI->setTab(array(__("Основное"), $Tab1), array(__("Описание"), $Tab2));
 
+    if (empty($GLOBALS['isFrame'])) {
 
-    // Левый сайдбар
-    $sidebarleft[] = array('title' => 'Категории', 'content' => $tree, 'title-icon' => '<span class="glyphicon glyphicon-plus new" data-toggle="tooltip" data-placement="top" title="Добавить каталог"></span>&nbsp;<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="Развернуть"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="Свернуть"></span>');
-    $PHPShopGUI->setSidebarLeft($sidebarleft, 3);
-    $PHPShopGUI->sidebarLeftCell = 3;
+        // Левый сайдбар
+        $sidebarleft[] = array('title' => 'Категории', 'content' => $tree, 'title-icon' => '<span class="glyphicon glyphicon-plus new" data-toggle="tooltip" data-placement="top" title="Добавить каталог"></span>&nbsp;<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="Развернуть"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="Свернуть"></span>');
+        $PHPShopGUI->setSidebarLeft($sidebarleft, 3);
+        $PHPShopGUI->sidebarLeftCell = 3;
+    }
 
 
 

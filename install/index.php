@@ -343,7 +343,6 @@ dbase="mybase";     # имя базы</pre>
 /backup/backups
 /backup/temp
 /phpshop/admpanel/csv
-/files/price
 /phpshop/admpanel/dumper/backup</pre>
 
                         <li>Для входа в <b>Административную панель</b> нажмите комбинацию клавиш <kbd>CTRL</kbd> + <kbd>F12</kbd>  или по ссылке  <a href="http://<?php echo $_SERVER['SERVER_NAME'] ?>/phpshop/admpanel/">http://<?php echo $_SERVER['SERVER_NAME'] ?>/phpshop/admpanel/</a><br>

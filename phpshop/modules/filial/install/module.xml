@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<module>
+    <version>1.0</version>
+    <name>Филиал</name>
+    <faqlink>http://faq.phpshop.ru/page/filial.html</faqlink>
+    <description>Модуль настройки филиалов для мультиподдоменных лицензии.</description>
+    <category>sale</category>
+    <status>new</status>
+    <adminmenu>
+        <title>Филиал</title>
+        <capability>true</capability>
+    </adminmenu>
+</module>

@@ -164,12 +164,6 @@
       @org_adres@</p></td>
       
     </tr>
-    <tr height="10">
-      <td align="center" valign="top" style="color:grey; font-family:Helvetica, Arial, sans-serif; font-size:10px; line-height:150%; padding-top:30px; padding-right:20px; padding-bottom:5px; padding-left:20px; text-align:center;">
-                                        <i>Создание интернет-магазина <a style="color:grey" href="http://www.phpshop.ru/">PHPShop Software</a></i>
-                                        
-    </tr>
-
 </tbody>  
 </table> 
 

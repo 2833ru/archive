@@ -51,7 +51,8 @@ function actionStart() {
         'name' => 'Предпросмотр',
         'url' => '../../page/' . $data['link'] . '.html',
         'action' => 'front',
-        'target' => '_blank'
+        'target' => '_blank',
+        'class'=>$GLOBALS['isFrame']
     );
 
     $PHPShopGUI->field_col = 2;

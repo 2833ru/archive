@@ -311,6 +311,7 @@ function search_base($obj, $words) {
     $string = null;
 
     $PHPShopOrm = new PHPShopOrm();
+    $PHPShopOrm->mysql_error = false;
     $PHPShopOrm->debug = $obj->debug;
     $result = $PHPShopOrm->query("select uid from " . $GLOBALS['SysValue']['base']['table_name26'] . " where name REGEXP 'i" . $words . "i'");
     while (@$row = mysqli_fetch_array(@$result)) {

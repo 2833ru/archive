@@ -4,6 +4,9 @@
     <li class="active">@formaTitle@</li>
 </ol>
 
-<h2 class="main-heading text-center">@formaTitle@</h2>
+
+<div class="page-header">
+    <h1>@formaTitle@</h1>
+</div>
 
 @formaContent@ 

@@ -74,7 +74,7 @@ class PHPShopSecurity {
     static function true_email($email) {
         if (strlen($email) > 100)
             return FALSE;
-        return preg_match("/^([a-z0-9_\.-]+@[a-z0-9_\.\-]+\.[a-z0-9_-]{2,6})$/i", trim($email));
+        return preg_match("/^([a-z0-9_\.-]+@[a-z0-9_\.\-]+\.[a-z0-9_-]{2,8})$/i", trim($email));
     }
 
     /**

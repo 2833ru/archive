@@ -176,7 +176,8 @@ class PHPShopUserElement extends PHPShopElements {
             $this->set('wishlistCount', $_SESSION['wishlistCount']);
             $dis = $this->parseTemplate('users/wishlist/wishlist_top_enter.tpl');
         } else {
-            $this->set('wishlistCount', count($_SESSION['wishlist']));
+            $this->set('wishlistCount', 0);
+            //$this->set('wishlistCount', count($_SESSION['wishlist']));
             $dis = $this->parseTemplate('users/wishlist/wishlist_top.tpl');
         }
         return $dis;
@@ -203,7 +204,7 @@ class PHPShopUserElement extends PHPShopElements {
                     }
                 $_SESSION['wishlistCount'] = count($wishlist);
                 $wishlist = serialize($wishlist);
-                $PHPShopOrm->update(array('wishlist' => "$wishlist"), array('id' => '=' . $data['id']), false);
+                $PHPShopOrm->update(array('wishlist' => $wishlist), array('id' => '=' . $data['id']), false);
                 //unset($_SESSION['wishlist']);
                 // ID пользователя
                 $_SESSION['UsersId'] = $data['id'];
@@ -558,7 +559,13 @@ class PHPShopTextElement extends PHPShopElements {
      */
     function topMenu() {
         $dis = null;
-        $objBase = $GLOBALS['SysValue']['base']['table_name11'];
+
+        // Перехват модуля
+        $hook = $this->setHook(__CLASS__, __FUNCTION__, null, 'START');
+        if ($hook)
+            return $hook;
+
+        $objBase = $GLOBALS['SysValue']['base']['page'];
         $PHPShopOrm = new PHPShopOrm($objBase);
         $data = $PHPShopOrm->select(array('name', 'link'), array("category" => "=1000", 'enabled' => "='1'"), array('order' => 'num'), array("limit" => 20));
         if (is_array($data))
@@ -575,11 +582,12 @@ class PHPShopTextElement extends PHPShopElements {
                     $this->set('topMenuActive', '');
 
                 // Перехват модуля
-                $this->setHook(__CLASS__, __FUNCTION__, $row);
+                $this->setHook(__CLASS__, __FUNCTION__, $row, 'MIDDLE');
 
                 // Подключаем шаблон
                 $dis.=$this->parseTemplate($this->getValue('templates.top_menu'));
             }
+
         return $dis;
     }
 
@@ -1005,6 +1013,7 @@ class PHPShopBannerElement extends PHPShopElements {
         $count_all = $this->row['count_all'] + 1;
         $this->PHPShopOrm->update(array('count_all' => $count_all, 'count_today' => $count_today, 'datas' => date("d.m.y")), array('id' => "=" . $this->row['id']), $prefix = '');
     }
+
 }
 
 /**

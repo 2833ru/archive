@@ -57,7 +57,6 @@ ErrorDocument 403 /404.html
 RewriteCond %{REQUEST_URI} (map|search|compare|order|done|clients|users|gbook|links|price|news|spec|newtip)$
 RewriteRule ^(.*)$ /$1/ [L,R=302]
 
-
 ## PHPShop Security ##
 
 # Запрет навигации по папкам через браузер

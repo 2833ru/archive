@@ -1,6 +1,6 @@
 <nav class="visible-xs">
     <ul class="pager">
-        <li class="previous"><a href="/shop/CID_@catalogId@.html"><span aria-hidden="true">&larr;</span> @catalogCategory@</a></li>
+        <li class="previous"><a href="/shop/CID_@catalogUId@.html"><span aria-hidden="true">&larr;</span> @catalogCategory@</a></li>
     </ul>
 </nav>
 <ol class="breadcrumb hidden-xs">

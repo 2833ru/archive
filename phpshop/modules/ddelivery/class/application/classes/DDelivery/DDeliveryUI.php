@@ -1786,21 +1786,26 @@ use DDelivery\Order\DDeliveryOrder;
                 41 => array('name' => 'Кит', 'ico' => 'kit'),
                 42 => array('name' => 'Imlogistics', 'ico' => 'imlogistics'),
                 43 => array('name' => 'Imlogistics', 'ico' => 'imlogistics'),
-                44 => array('name' => 'Почта России', 'ico' => 'russianpost'),
                 45 => array('name' => 'Aplix курьерская доставка', 'ico' => 'aplix'),
                 48 => array('name' => 'Aplix IML курьерская доставка', 'ico' => 'aplix_imlogistics'),
                 49 => array('name' => 'IML Забор', 'ico' => 'imlogistics'),
-                50 => array('name' => 'Почта России 1-й класс', 'ico' => 'mail'),
                 51 => array('name' => 'EMS Почта России', 'ico' => 'ems'),
-
                 52 => array('name' => 'ЕКБ-доставка забор', 'ico' => 'pack'),
                 53 => array('name' => 'ЕКБ-доставка курьер', 'ico' => 'pack'),
                 54 => array('name' => 'Почта России 1-й класс.', 'ico' => 'mail'),
                 55 => array('name' => 'Почта России.', 'ico' => 'mail'),
                 106 => array('name' => 'Вестовой', 'ico' => 'pack'),
 			    108 => array('name' => 'B2Cpl', 'ico' => 'pack'),
-               
-
+                130 => array('name' => 'Почта России', 'ico' => 'russianpost'),
+				107 => array('name' => 'DPD Parcel Казахстан', 'ico' => 'dpd'),
+				111 => array('name' => 'DPD Consumer Казахстан', 'ico' => 'dpd'),
+				115 => array('name' => 'DPD E-parcel', 'ico' => 'dpd'),
+				121 => array('name' => 'DPD e-Book', 'ico' => 'dpd'),
+				119 => array('name' => 'DD Забор', 'ico' => 'dd'),
+				92 => array('name' => 'Dostavista', 'ico' => 'dostavista'),
+                58 => array('name' => 'Logsis', 'ico' => 'logsis'),
+				127 => array('name' => 'Кенгу24', 'ico' => 'kengu24'),
+                129 => array('name' => 'Попутный Ветер', 'ico' => 'puputny_veter'),
             );
         }
 

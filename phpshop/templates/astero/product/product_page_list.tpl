@@ -1,11 +1,17 @@
+<nav class="visible-xs">
+    <ul class="pager">
+        <li class="previous"><a href="/shop/CID_@catalogUId@.html"><span aria-hidden="true">&larr;</span> @catalogCategory@</a></li>
+    </ul>
+</nav>
+
 <!-- Breadcrumb Starts -->
-    <ol class="breadcrumb ">
+    <ol class="breadcrumb hidden-xs">
         @breadCrumbs@
     </ol>
 <!-- Breadcrumb Ends -->
 
 <!-- Main Heading Starts -->
-    <h2 class="main-heading2">
+    <h2 class="main-heading2 hidden-xs">
         @catalogCategory@
     </h2>
 <!-- Main Heading Ends -->

@@ -182,7 +182,7 @@ if ($PERSON['discount'] > 0) {
         </tr>
         <tr class=tablerow>
             <td class=tablerow>Время доставки:</td>
-            <td class=tableright><?= $dost_ot ?></td>
+            <td class=tableright><?= $dost_ot . $row['delivtime']  ?></td>
         </tr>
         <tr class=tablerow >
             <td class=tablerow>Тип оплаты:</td>

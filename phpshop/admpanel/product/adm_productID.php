@@ -54,8 +54,8 @@ function actionStart() {
     }
 
     // Имя товара
-    if (strlen($data['name']) > 60)
-        $title_name = substr($data['name'], 0, 60) . '...';
+    if (strlen($data['name']) > 47)
+        $title_name = substr($data['name'], 0, 47) . '...';
     else
         $title_name = $data['name'];
 
@@ -63,7 +63,8 @@ function actionStart() {
         'name' => 'Предпросмотр',
         'url' => '../../shop/UID_' . $data['id'] . '.html',
         'action' => 'front',
-        'target' => '_blank'
+        'target' => '_blank',
+        'class' => $GLOBALS['isFrame']
     );
 
     $PHPShopGUI->setActionPanel(__("Товар") . ": " . $title_name . ' [ID ' . $data['id'] . ']', array('Сделать копию', 'Предпросмотр', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'));
@@ -357,7 +358,6 @@ function actionUpdate() {
             }
         }
 
-
         // Изменение характеристик
         $_POST['vendor_new'] = null;
         if (is_array($_POST['vendor_array_new']))
@@ -415,12 +415,9 @@ function actionUpdate() {
     // Права пользователя
     $_POST['user_new'] = $_SESSION['idPHPSHOP'];
 
-
     $PHPShopOrm->debug = false;
     $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['rowID']));
     $PHPShopOrm->clean();
-
-
 
     return array('success' => $action);
 }
@@ -478,13 +475,12 @@ function fotoAdd() {
         $file_name = $path_parts['basename'];
     }
 
-
     if (!empty($file)) {
-
+        
         // Маленькое изображение (тумбнейл)
         $thumb = new PHPThumb($file);
         $thumb->setOptions(array('jpegQuality' => $width_kratko));
-
+        
         // Адаптивность
         if (!empty($img_adaptive))
             $thumb->adaptiveResize($img_tw, $img_th);

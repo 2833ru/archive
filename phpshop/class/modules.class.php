@@ -118,8 +118,10 @@ class PHPShopModules {
             $sql = file_get_contents($file);
             $sqlArray = explode(";", $sql);
             if (is_array($sqlArray))
-                foreach ($sqlArray as $val)
-                    mysqli_query($link_db,$val);
+                foreach ($sqlArray as $val) {
+                    if (!empty($val))
+                        @mysqli_query($link_db, $val);
+                }
         }
         $db = $this->getXml('../modules/' . $this->path . '../install/module.xml');
         return $db['version'];

@@ -73,12 +73,12 @@ abstract class PHPThumbLibrary {
      * @return bool
      */
     protected function validateRequestedResource($filename) {
-        
-        /*
-        if (false !== filter_var($filename, FILTER_VALIDATE_URL)) {
-            $this->remoteImage = true;
-            return true;
-        }*/
+
+        if (function_exists('filter_var'))
+            if (false !== filter_var($filename, FILTER_VALIDATE_URL)) {
+                $this->remoteImage = true;
+                return true;
+            }
 
         if (file_exists($filename)) {
             return true;
@@ -1427,6 +1427,7 @@ class PHPThumb extends PHPThumbLibrary {
      * @param int $right_margin
      * @param int $bottom_margin
      */
+
     function createWatermark($image_path, $right_margin, $bottom_margin) {
 
         // load image used as watermark
@@ -1450,7 +1451,8 @@ class PHPThumb extends PHPThumbLibrary {
      * @param int $alpha_level [0-127]
      * @param int $angle
      */
-    function createWatermarkText($text, $size, $font, $right_margin, $bottom_margin, $hex="#CCCCCC", $alpha_level = 100, $angle = 0) {
+
+    function createWatermarkText($text, $size, $font, $right_margin, $bottom_margin, $hex = "#CCCCCC", $alpha_level = 100, $angle = 0) {
 
         list($r, $g, $b) = sscanf($hex, "#%02x%02x%02x");
         $color = imagecolorallocatealpha($this->workingImage, $r, $g, $b, $alpha_level);
@@ -1458,7 +1460,6 @@ class PHPThumb extends PHPThumbLibrary {
         $box = imagettfbbox($size, $angle, $font, $text);
         $sx = abs($box[4] - $box[0]);
         //$sy = abs($box[5] - $box[1]);
-
         // Add some shadow to the text
         imagettftext($this->workingImage, $size, $angle, imagesx($this->workingImage) - $sx - $right_margin, imagesy($this->workingImage) - $bottom_margin, $color, $font, $text);
 

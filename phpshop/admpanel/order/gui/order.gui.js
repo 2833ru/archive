@@ -1,12 +1,70 @@
 
 $().ready(function() {
 
+    // Настройка полей - 2 шаг
+    $("body").on('click', "#selectModal .modal-footer .option-send", function(event) {
+        event.preventDefault();
+
+        if ($('#selectModal input:checkbox:checked').length) {
+            var data = [];
+            $('#selectModal input:checkbox:checked').each(function() {
+                data.push({name: 'option[' + $(this).attr('name') + ']', value: $(this).val()});
+
+            });
+
+            data.push({name: 'selectID', value: 1});
+            data.push({name: 'ajax', value: 1});
+            data.push({name: 'actionList[selectID]', value: 'actionOptionSave'});
+            $.ajax({
+                mimeType: 'text/html; charset=windows-1251',
+                url: '?path=order.select',
+                type: 'post',
+                data: data,
+                dataType: "json",
+                async: false,
+                success: function() {
+                    window.location.reload();
+                }
+
+            });
+        }
+        else
+            alert(locale.select_no);
+    });
+
+    // Настройка полей - 1 шаг
+    $(".option").on('click', function(event) {
+        event.preventDefault();
+       
+        var data = [];
+        data.push({name: 'selectID', value: 1});
+        data.push({name: 'ajax', value: 1});
+        data.push({name: 'actionList[selectID]', value: 'actionOption'});
+
+        $.ajax({
+            mimeType: 'text/html; charset=windows-1251',
+            url: '?path=order.select',
+            type: 'post',
+            data: data,
+            dataType: "html",
+            async: false,
+            success: function(data) {
+                $('#selectModal .modal-dialog').removeClass('modal-lg');
+                $('#selectModal .modal-title').html(locale.option_title);
+                $('#selectModal .modal-footer .btn-primary').addClass('option-send');
+                $('#selectModal .modal-footer .btn-delete').addClass('hidden');
+                $('#selectModal .modal-body').html(data);
+                $('#selectModal').modal('show');
+            }
+        });
+    });
+
     // Обзор товара в корзине
     $('body').on('click', ".media-heading > a", function(event) {
         if ($('.bar-tab').is(":visible")) {
             event.preventDefault();
             $(this).closest(".data-row").find(".cart-value-edit").click();
-            
+
         }
     });
 

@@ -190,12 +190,12 @@ function actionStart() {
     $data = $PHPShopOrm->select();
 
     $Info = "
-   1. Для автоматического создания sitemap.xml установите модуль <kbd>Cron</kbd> и добавьте в него новую задачу с адресом
-        исполняемого файла:<br>  <code>phpshop/modules/sitemap/cron/sitemap_generator.php</code>
-        <p>
-   2. В поисковиках укажите адрес <code>http://" . $_SERVER['SERVER_NAME'] . "/UserFiles/Files/sitemap.xml</code> для автоматической обработки поисковыми ботами.
-       </p>
-   3. Установите опцию CHMOD 775 на папку /UserFiles/Files/ для записи в нее файла sitemap.xml";
+        <ol>
+        <li>Для автоматического создания sitemap.xml установите модуль <kbd>Cron</kbd> и добавьте в него новую задачу с адресом
+        исполняемого файла:<br>  <code>phpshop/modules/sitemap/cron/sitemap_generator.php</code> или <code>phpshop/modules/sitemap/cron/sitemap_generator_ssl.php</code> для поддердки HTTPS.
+        <li>В поисковиках укажите адрес <code>http://" . $_SERVER['SERVER_NAME'] . "/UserFiles/Files/sitemap.xml</code> для автоматической обработки поисковыми ботами.
+        <li>Установите опцию CHMOD 775 на папку /UserFiles/Files/ для записи в нее файла sitemap.xml
+        </ol>";
     $Tab1 = $PHPShopGUI->setInfo($Info);
 
     $Tab2 = $PHPShopGUI->setPay();

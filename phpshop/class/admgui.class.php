@@ -128,7 +128,7 @@ class PHPShopGUI {
         if (!empty($option['load']))
             $add.='<span class="file-input btn btn-default btn-file">Загрузить<input type="file" name="file" data-target="' . $id . '"></span>';
         if (!empty($option['server']))
-            $add.='<button type="button" class="btn btn-default" id="server" data-return="return=' . $id . '" data-toggle="modal" data-target="#elfinderModal" data-path="'.$option['server'].'">Сервер</button>';
+            $add.='<button type="button" class="btn btn-default" id="server" data-return="return=' . $id . '" data-toggle="modal" data-target="#elfinderModal" data-path="' . $option['server'] . '">Сервер</button>';
 
         if (!empty($option['url']))
             $add.='<button type="button" class="btn btn-default" id="promtUrl" data-target="' . $id . '">URL</button><input type="hidden" name="furl" id="furl" value="0">';
@@ -298,12 +298,21 @@ class PHPShopGUI {
     function setActionPanel($title, $action = array(), $button = array()) {
         global $subpath;
 
-        if ($subpath[0] != 'modules') {
-            $xs_class = ' hidden-xs';
-            $xs_btn_name = 'Сохранить и закрыть';
+        if (empty($GLOBALS['isFrame'])) {
+            if ($subpath[0] != 'modules') {
+                $xs_class = ' hidden-xs';
+                $xs_btn_name = 'Сохранить и закрыть';
+                $addFrameLink = null;
+            } else {
+                $xs_class = null;
+                $xs_btn_name = 'Сохранить';
+                $addFrameLink = '&frame=true';
+            }
+
+            $btnBack = 'Назад';
         } else {
-            $xs_class = null;
-            $xs_btn_name = 'Сохранить';
+            $addFrameLink = '&frame=true';
+            $btnBack = 'Закрыть';
         }
 
 
@@ -326,7 +335,7 @@ class PHPShopGUI {
         $this->action_button['Сохранить и закрыть'] = array(
             'name' => $xs_btn_name,
             'action' => 'saveID',
-            'class' => 'btn  btn-default btn-sm navbar-btn' . $xs_class,
+            'class' => 'btn  btn-default btn-sm navbar-btn' . $xs_class . $GLOBALS['isFrame'],
             'type' => 'submit',
             'icon' => 'glyphicon glyphicon-ok'
         );
@@ -380,10 +389,9 @@ class PHPShopGUI {
             'url' => '#'
         );
 
-
         $this->action_select['Создать'] = array(
             'name' => 'Создать новый',
-            'action' => 'new',
+            'action' => 'new' . $GLOBALS['isFrame'],
             'url' => '#'
         );
 
@@ -394,12 +402,13 @@ class PHPShopGUI {
         );
 
         $this->action_select['|'] = array(
-            'action' => 'divider',
+            'action' => 'divider' . $GLOBALS['isFrame'],
         );
 
         $this->action_select['Сделать копию'] = array(
             'name' => 'Сделать копию',
-            'url' => '?path=' . $_GET['path'] . '&action=new&id=' . $_GET['id']
+            'url' => '?path=' . $_GET['path'] . '&action=new&id=' . $_GET['id'] . $addFrameLink,
+            'action' => $GLOBALS['isFrame']
         );
 
 
@@ -418,9 +427,9 @@ class PHPShopGUI {
         $CODE = '
             <!-- Action panell -->
             <div class="navbar-header">
-                        <a type="button" class="btn btn-default btn-sm navbar-btn pull-left ' . $back['class'] . '" href="?path=' . $back['url'] . '">
-                            <span class="glyphicon glyphicon-arrow-left"></span> Назад</a>
-                        <span class="navbar-brand hidden-xs">' . $title . '</span>
+                        <a type="button" class="btn btn-default btn-sm navbar-btn pull-left ' . $back['class'] . ' check-frame" href="?path=' . $back['url'] . '">
+                            <span class="glyphicon glyphicon-arrow-left"></span> ' . $btnBack . '</a>
+                        <span class="navbar-brand hidden-xs ">' . $title . '</span>
                     </div>
                     <ul class="nav navbar-nav navbar-right pull-right">';
 
@@ -459,7 +468,7 @@ class PHPShopGUI {
 
 
         $this->actionPanel = '<nav class="navbar-action">
-                <div class="container">' . $CODE . '</div>
+                <div class="container" style="' . $GLOBALS['frameWidth'] . '">' . $CODE . '</div>
             </nav>
          <!-- /.Action panell -->
          <div id="fix-check" class="visible-lg"></div>
@@ -629,7 +638,7 @@ class PHPShopGUI {
         if ($form)
             echo '<form method="post" enctype="multipart/form-data" name="product_edit" id="product_edit" class="form-horizontal" role="form" data-toggle="validator">';
         echo $this->actionPanel . '
-                <div class="container row sidebarcontainer" >
+                <div class="container row sidebarcontainer" style="' . $GLOBALS['frameWidth'] . '">
                     ' . $this->sidebarLeft . '
                     <div class="col-md-' . $cell . ' main">
                      ' . $this->_CODE . '
@@ -723,9 +732,20 @@ class PHPShopGUI {
      * @param string $size размер
      * @return string
      */
-    function setInputColor($name, $value, $size = 200,$id=false,$option=false) {
+    function setInputColor($name, $value, $size = 200, $id = false, $opt = false) {
+        $add_option = null;
+
+        if (!is_array($opt) and !empty($opt))
+            $option['option'] = $opt;
+        else
+            $option = $opt;
+
+        if (is_array($option))
+            foreach ($option as $k => $v)
+                $add_option.=' data-' . $k . '="' . $v . '" ';
+
         $CODE = '<div class="input-group color" style="width:' . $this->chekSize($size) . '">
-    <input type="text" id="'.$id.'" name="' . $name . '" value="' . $value . '" class="form-control input-sm color-value" data-option="'.$option.'">
+    <input type="text" id="' . $id . '" name="' . $name . '" value="' . $value . '" class="form-control input-sm color-value" ' . $add_option . '>
     <span class="input-group-addon input-sm"><i></i></span></div>';
         return $CODE;
     }
@@ -898,9 +918,9 @@ class PHPShopGUI {
 
         $Arg = func_get_args();
         foreach ($Arg as $val) {
-            
-            if(!empty($val[2]))
-                $val[1]='<hr>'.$val[1];
+
+            if (!empty($val[2]))
+                $val[1] = '<hr>' . $val[1];
 
             $this->addTabName.='<li role="presentation"><a href="#tabs-' . $this->tab_key . '" aria-controls="tabs-' . $this->tab_key . '" role="tab" data-toggle="tab" data-id="' . $val[0] . '">' . $val[0] . '</a></li>';
             $this->addTabContent.='<div role="tabpanel" class="tab-pane fade" id="tabs-' . $this->tab_key . '">' . $val[1] . '</div>';
@@ -909,7 +929,7 @@ class PHPShopGUI {
         }
     }
 
-        /**
+    /**
      * Прорисовка закладок Tab
      * <code>
      * // example:
@@ -1239,14 +1259,14 @@ class PHPShopGUI {
      * @param string $onchange имя javascript функции по экшену onchange
      * @return string
      */
-    function setRadio($name, $value, $caption, $checked = "checked", $onchange = "return true",$class=false) {
+    function setRadio($name, $value, $caption, $checked = "checked", $onchange = "return true", $class = false) {
 
         // Автовыделение 
         if ($value == $checked)
             $checked = "checked";
 
         $CODE = '
-	 <div class="radio-inline '.$class.'"><label><input type="radio" value="' . $value . '" name="' . $name . '" id="' . $name . '" ' . $checked . ' onchange="' . $onchange . '">' . $caption . '<i class="fa fa-circle-o small"></i></label></div>
+	 <div class="radio-inline ' . $class . '"><label><input type="radio" value="' . $value . '" name="' . $name . '" id="' . $name . '" ' . $checked . ' onchange="' . $onchange . '">' . $caption . '<i class="fa fa-circle-o small"></i></label></div>
 	 ';
         return $CODE;
     }
@@ -1542,14 +1562,15 @@ class PHPShopGUI {
         }
         else
             $version_info = $db['version'];
-        
-        if(!empty($db['status']))
-            $status=' <span class="label label-default">'.$db['status'].'</span>';
-        else $status=null;
+
+        if (!empty($db['status']))
+            $status = ' <span class="label label-default">' . $db['status'] . '</span>';
+        else
+            $status = null;
 
         $CODE.='<tr>
                   <td>' . $db['name'] . '</td>
-                  <td>' . $version_info . $status.'</td>
+                  <td>' . $version_info . $status . '</td>
                   <td>' . $db['description'] . $mes . '</td>
                </tr>
                </table>';

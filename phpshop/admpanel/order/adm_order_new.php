@@ -118,6 +118,7 @@ function actionStart() {
     $data['datas'] = time();
     $data['uid'] = setNum();
     $data['statusi'] = 0;
+    $data['seller']=0;
     $data['sum_new'] = $order['Cart']['sum'];
 
     // Запись пустого заказа для получения идентификатора заказа

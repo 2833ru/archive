@@ -330,7 +330,8 @@ document.getElementById('order').style.display = 'none';
         $all_num = explode("-", $last);
         $ferst_num = $all_num[0];
         $order_num = $ferst_num + 1;
-        $this->order_num = $order_num . "-" . substr(abs(crc32(uniqid(session_id()))), 0, $this->format);
+        //$this->order_num = $order_num . "-" . substr(abs(crc32(uniqid(session_id()))), 0, $this->format);
+        $this->order_num = $order_num . "-" . substr(rand(1000,99999), 0, $this->format);
 
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__, $row);

@@ -78,9 +78,28 @@ function actionStart() {
 
 // Функция записи
 function actionInsert() {
-    global $PHPShopOrm, $PHPShopModules;
+    global $PHPShopOrm, $PHPShopModules,$PHPShopSystem;
 
-    $_POST['password_new']=base64_encode($_POST['password_new']);
+    $_POST['password_new'] = base64_encode($_POST['password_new']);
+
+    // Оповещение пользователя
+    if (!empty($_POST['enabled_new']) and !empty($_POST['sendActivationEmail'])) {
+
+        PHPShopObj::loadClass("parser");
+        PHPShopObj::loadClass("mail");
+
+        PHPShopParser::set('user_name', $_POST['name_new']);
+        PHPShopParser::set('login', $_POST['login_new']);
+        PHPShopParser::set('password', $_POST['password_new']);
+
+        $zag_adm = "Ваш аккаунт был успешно активирован Администратором";
+        $PHPShopMail = new PHPShopMail($_POST['login_new'], $PHPShopSystem->getEmail(), $zag_adm, '', true, true);
+        $content_adm = PHPShopParser::file('../lib/templates/users/mail_user_activation_by_admin_success.tpl', true);
+
+        if (!empty($content_adm)) {
+            $PHPShopMail->sendMailNow($content_adm);
+        }
+    }
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
@@ -92,7 +111,7 @@ function actionInsert() {
     else
         header('Location: ?path=' . $_GET['path']);
 
-    return array("success" =>  $action);
+    return array("success" => $action);
 }
 
 // Обработка событий

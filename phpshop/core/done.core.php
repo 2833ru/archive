@@ -145,7 +145,7 @@ class PHPShopDone extends PHPShopCore {
                     $this->delivery = 0;
 
                 // Скидка
-                $this->discount = $this->PHPShopOrder->ChekDiscount($this->PHPShopCart->getSum());
+                $this->discount = $this->PHPShopOrder->ChekDiscount($this->sum);
 
                 // Итого
                 $this->total = $this->PHPShopOrder->returnSumma($this->sum, $this->discount) + $this->delivery;
@@ -289,7 +289,7 @@ class PHPShopDone extends PHPShopCore {
 
         if ($this->PHPShopSystem->ifSerilizeParam('admoption.sms_enabled')) {
 
-            $msg = $this->lang('mail_title_adm') . $this->ouid . " - " . $this->sum . " " . $this->currency;
+            $msg = $this->lang('mail_title_adm') . $this->ouid . " - " . $this->total . " " . $this->currency;
             $phone = $this->getValue('sms.phone');
 
             include_once($this->getValue('file.sms'));
@@ -354,7 +354,7 @@ class PHPShopDone extends PHPShopCore {
         $insert['status_new'] = serialize($this->status);
         $insert['user_new'] = $this->userId;
         $insert['dop_info_new'] = PHPShopSecurity::CleanStr($_POST['dop_info']);
-        $insert['sum_new'] = $this->sum + $this->delivery;
+        $insert['sum_new'] = $this->total;
 
 
         // формируем данные для записи адреса к пользователю в аккаунт

@@ -197,7 +197,7 @@ function actionStart() {
             else
                 $uid = $row['uid'];
 
-            $PHPShopInterface->setRow(array('name' => '<span class="label label-info" style="background-color:' . $PHPShopOrder->getStatusColor() . '"><span class="hidden-xs">' . $status_name . '</span></span>', 'link' => '?path=order&return=intro&id=' . $row['id'], 'class' => 'label-link'), array('name' => $uid, 'link' => '?path=order&return=intro&id=' . $row['id']), array('name' => $row['fio'], 'link' => '?path=shopusers&return=intro&id=' . $row['user']), array('name' => $datas, 'class' => 'text-muted'), array('name' => $PHPShopOrder->getTotal(false, ' ') . ' ' . $currency, 'align' => 'right', 'class' => 'strong'));
+            $PHPShopInterface->setRow(array('name' => '<span class="label label-info" title="'.$status_name.'" style="background-color:' . $PHPShopOrder->getStatusColor() . '"><span class="hidden-xs">' . substr($status_name,0,25) . '</span></span>', 'link' => '?path=order&return=intro&id=' . $row['id'], 'class' => 'label-link'), array('name' => $uid, 'link' => '?path=order&return=intro&id=' . $row['id']), array('name' => $row['fio'], 'link' => '?path=shopusers&return=intro&id=' . $row['user']), array('name' => $datas, 'class' => 'text-muted'), array('name' => $PHPShopOrder->getTotal(false, ' ') . ' ' . $currency, 'align' => 'right', 'class' => 'strong'));
         }
 
     $order_list = $PHPShopInterface->getContent();

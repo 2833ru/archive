@@ -7,7 +7,7 @@ function addYandexcartDelivery($data) {
         $data['yandex_enabled'] = 1;
     if (empty($data['yandex_day']))
         $data['yandex_day'] = 2;
-    $Tab3 = $PHPShopGUI->setField("Максимально дней на доставку", $PHPShopGUI->setInputText(null, 'yandex_day_new', $data['yandex_day'], 100));
+    $Tab3 = $PHPShopGUI->setField("Срок доставки дней", $PHPShopGUI->setInputText('от', 'yandex_day_new', $data['yandex_day_min'], 100,false,'left').$PHPShopGUI->set_(3).$PHPShopGUI->setInputText(null, 'yandex_day_new', $data['yandex_day'], 100,'до'));
     $Tab3.=$PHPShopGUI->setField(__('Яндекс.Заказ'), $PHPShopGUI->setRadio('yandex_enabled_new', 1, __('Выключить'), $data['yandex_enabled'], false, 'text-warning') .
             $PHPShopGUI->setRadio('yandex_enabled_new', 2, __('Включить'), $data['yandex_enabled']));
 

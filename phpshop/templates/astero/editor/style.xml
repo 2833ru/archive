@@ -90,8 +90,8 @@
     </element>
     <element>
         <name>.header-valuta-disp-wrapper .btn-default,#cart .dropdown-menu</name>
-        <description>Валюта</description>
-        <content>Меню смены валюты</content>
+        <description>Корзина</description>
+        <content>Меню визуальной корзины</content>
         <var>
             <name>background</name>
             <type>color</type>

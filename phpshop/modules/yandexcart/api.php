@@ -3,7 +3,7 @@
 $_classPath = "../../";
 include($_classPath . "class/obj.class.php");
 PHPShopObj::loadClass("base");
-$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
+$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, true);
 PHPShopObj::loadClass("orm");
 PHPShopObj::loadClass("system");
 PHPShopObj::loadClass("text");
@@ -80,6 +80,115 @@ switch ($_SERVER["PATH_INFO"]) {
     // Добавление в корзину
     case('/cart'):
 
+        $option['region_data'] = unserialize($option['region_data']);
+
+        // Rest Yandex
+        if (!is_array($option['region_data'])) {
+            include_once($_classPath . 'modules/yandexcart/class/yandexmarket.class.php');
+
+            $YandexMarketRest = new YandexMarketRest();
+            $resultRegion = $YandexMarketRest->request(null, array(), 'region');
+
+            $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['yandexcart']['yandexcart_system']);
+            $PHPShopOrm->update(array('region_data_new' => serialize(json_decode($resultRegion, true))));
+
+            $option['region_data'] = $resultRegion;
+        }
+
+        // Доставка
+        $result["cart"]["deliveryOptions"] = array();
+        $PHPShopDeliveryArray = new PHPShopDeliveryArray(array('enabled' => "='1'", 'is_folder' => "!='1'", 'yandex_enabled' => "='2'"), array('yandex_day_min', 'yandex_day', 'yandex_type', 'yandex_payment', 'yandex_outlet', 'yandex_check'));
+        $deliveryPrice = $PHPShopDeliveryArray->getArray();
+
+        // Обход ошибки чеклиста. Выбор всех доставок.
+        /*
+          if (!is_array($deliveryPrice)) {
+          $PHPShopDeliveryArray = new PHPShopDeliveryArray(array('enabled' => "='1'", 'is_folder' => "!='1'"), array('yandex_day', 'yandex_type', 'yandex_payment', 'yandex_outlet', 'yandex_check'));
+          $deliveryPrice = $PHPShopDeliveryArray->getArray();
+          } */
+        
+        
+        // Корзина для подсчета бесплатной доставки
+        $items = $data['cart']['items'];
+        $priceTotal = $weightTotal = 0;
+        if (is_array($items))
+            foreach ($items as $item) {
+                $mi["feedId"] = $item["feedId"];
+                $mi["offerId"] = $item["offerId"];
+
+
+                $PHPShopProduct = new PHPShopProduct($item["offerId"]);
+                $PHPShopProduct->debug = false;
+                $mi["price"] = intval(PHPShopProductFunction::GetPriceValuta($item["offerId"], $PHPShopProduct->getPrice()));
+                $mi["count"] = $PHPShopProduct->getValue('items');
+
+                // Итоговая стоимость
+                $priceTotal += $mi["price"] * $item['count'];
+
+                // Итоговый вес
+                $weightTotal+=$PHPShopProduct->getParam('weight') * $item['count'];
+            }
+
+
+        // Тип доставки
+        $delivery_type = array('DELIVERY', 'DELIVERY', 'PICKUP', 'POST');
+        $i = 0;
+
+        $paymentMethods[0] = array('CASH_ON_DELIVERY', 'CARD_ON_DELIVERY', 'YANDEX');
+        $paymentMethods[1] = array('CASH_ON_DELIVERY', 'CARD_ON_DELIVERY', 'YANDEX');
+        $paymentMethods[2] = array('CASH_ON_DELIVERY', 'YANDEX');
+        $paymentMethods[3] = array('YANDEX');
+
+        if (is_array($deliveryPrice))
+            foreach ($deliveryPrice as $delivery) {
+                if ($delivery['id']) {
+
+                    $PHPShopDelivery = new PHPShopDelivery($delivery['id']);
+
+                    // Проверка локального региона
+                    if ($data["cart"]['delivery']['region']['id'] != $option['region_data']['region']['id'])
+                        continue;
+
+                    // Доставка кол-во дней
+                    if (empty($delivery['yandex_day']))
+                        $delivery['yandex_day'] = 2;
+
+                    $fromDate = strtotime("+" . intval($delivery['yandex_day_min']) . " day");
+                    $toDate = strtotime("+" . intval($delivery['yandex_day']) . " day");
+
+
+                    // Точки
+                    if (!empty($delivery['yandex_outlet'])) {
+                        if (strstr($delivery['yandex_outlet'], ',')) {
+                            $outlet = explode(",", $delivery['yandex_outlet']);
+                        }
+                        else
+                            $outlet[] = $delivery['yandex_outlet'];
+                    }
+
+                    $result["cart"]["deliveryOptions"][$i] = array(
+                        "id" => $delivery['id'],
+                        "type" => $delivery_type[intval($delivery['yandex_type'])],
+                        "serviceName" => iconv("cp1251", "utf-8", substr($delivery['city'], 0, 50)),
+                        "price" => intval($PHPShopDelivery->getPrice($priceTotal, $weightTotal)),
+                        "dates" => array("fromDate" => date("d-m-Y", $fromDate), 'toDate' => date("d-m-Y", $toDate))
+                    );
+
+                    if (is_array($outlet)) {
+                        foreach ($outlet as $point)
+                            $outlets[] = array('id' => intval($point));
+
+                        $result["cart"]["deliveryOptions"][$i]["outlets"] = $outlets;
+                    }
+
+                    // Тип оплаты
+                    $result["cart"]["deliveryOptions"][$i]["paymentMethods"] = $paymentMethods[intval($delivery['yandex_payment'])];
+
+                    $i++;
+                }
+            }
+
+
         // Корзина
         $items = $data['cart']['items'];
         $priceTotal = $weightTotal = 0;
@@ -106,91 +215,12 @@ switch ($_SERVER["PATH_INFO"]) {
                 // Итоговый вес
                 $weightTotal+=$PHPShopProduct->getParam('weight') * $item['count'];
 
-                $mi["delivery"] = true;
+                if (count($result["cart"]["deliveryOptions"])>0)
+                    $mi["delivery"] = true;
+                else
+                    $mi["delivery"] = false;
+
                 $result["cart"]["items"][] = $mi;
-            }
-
-        $option['region_data'] = unserialize($option['region_data']);
-
-        // Rest Yandex
-        if (!is_array($option['region_data'])) {
-            include_once($_classPath . 'modules/yandexcart/class/yandexmarket.class.php');
-
-            $YandexMarketRest = new YandexMarketRest();
-            $resultRegion = $YandexMarketRest->request(null, array(), 'region');
-
-            $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['yandexcart']['yandexcart_system']);
-            $PHPShopOrm->update(array('region_data_new' => serialize(json_decode($resultRegion, true))));
-
-            $option['region_data'] = $resultRegion;
-        }
-
-        // Доставка
-        $result["cart"]["deliveryOptions"] = array();
-        $PHPShopDeliveryArray = new PHPShopDeliveryArray(array('enabled' => "='1'", 'is_folder' => "!='1'", 'yandex_enabled' => "='2'"), array('yandex_day', 'yandex_type', 'yandex_payment', 'yandex_outlet', 'yandex_check'));
-        $deliveryPrice = $PHPShopDeliveryArray->getArray();
-
-        // Обход ошибки чеклиста. Выбор всех доставок.
-        if (!is_array($deliveryPrice)) {
-            $PHPShopDeliveryArray = new PHPShopDeliveryArray(array('enabled' => "='1'", 'is_folder' => "!='1'"), array('yandex_day', 'yandex_type', 'yandex_payment', 'yandex_outlet', 'yandex_check'));
-            $deliveryPrice = $PHPShopDeliveryArray->getArray();
-        }
-
-
-        // Тип доставки
-        $delivery_type = array('DELIVERY', 'DELIVERY', 'PICKUP', 'POST');
-        $i = 0;
-
-        $paymentMethods[0] = array('CASH_ON_DELIVERY', 'CARD_ON_DELIVERY', 'YANDEX');
-        $paymentMethods[1] = array('CASH_ON_DELIVERY', 'CARD_ON_DELIVERY', 'YANDEX');
-        $paymentMethods[2] = array('CASH_ON_DELIVERY', 'YANDEX');
-        $paymentMethods[3] = array('YANDEX');
-
-        if (is_array($deliveryPrice))
-            foreach ($deliveryPrice as $delivery) {
-                if ($delivery['id']) {
-
-                    $PHPShopDelivery = new PHPShopDelivery($delivery['id']);
-
-                    // Проверка локального региона
-                    if ($delivery['id'] == 2 and $data["cart"]['delivery']['region']['id'] != $option['region_data']['region']['id'])
-                        continue;
-
-                    // Доставка кол-во дней
-                    if (empty($delivery['yandex_day']))
-                        $delivery['yandex_day'] = 2;
-                    $toDate = strtotime("+" . intval($option['delivery_day']) . " day");
-
-
-                    // Точки
-                    if (!empty($delivery['yandex_outlet'])) {
-                        if (strstr($delivery['yandex_outlet'], ',')) {
-                            $outlet = explode(",", $delivery['yandex_outlet']);
-                        }
-                        else
-                            $outlet[] = $delivery['yandex_outlet'];
-                    }
-
-                    $result["cart"]["deliveryOptions"][$i] = array(
-                        "id" => $delivery['id'],
-                        "type" => $delivery_type[intval($delivery['yandex_type'])],
-                        "serviceName" => iconv("cp1251", "utf-8", substr($delivery['city'], 0, 50)),
-                        "price" => intval($PHPShopDelivery->getPrice($delivery['price'], $weightTotal)),
-                        "dates" => array("fromDate" => date("d-m-Y"), 'toDate' => date("d-m-Y", $toDate))
-                    );
-
-                    if (is_array($outlet)) {
-                        foreach ($outlet as $point)
-                            $outlets[] = array('id' => intval($point));
-
-                        $result["cart"]["deliveryOptions"][$i]["outlets"] = $outlets;
-                    }
-
-                    // Тип оплаты
-                    $result["cart"]["deliveryOptions"][$i]["paymentMethods"] = $paymentMethods[intval($delivery['yandex_payment'])];
-
-                    $i++;
-                }
             }
 
         // Тип оплаты
@@ -242,7 +272,7 @@ switch ($_SERVER["PATH_INFO"]) {
         $all_num = explode("-", $last);
         $ferst_num = $all_num[0];
         $order_num = $ferst_num + 1;
-        $order_num = $order_num . "-" . substr(abs(crc32(uniqid(session_id()))), 0, 2);
+        $order_num = $order_num . "-" . rand(10,99);
 
         // Данные покупателя
         $result["Person"] = array(
@@ -281,6 +311,7 @@ switch ($_SERVER["PATH_INFO"]) {
         $insert['orders_new'] = serialize($result);
         //$insert['status_new'] = serialize(array('maneger' => iconv("utf-8", "cp1251", $data['order']['notes'])));
         $insert['dop_info_new'] = 'yandex' . $data['order']['id'];
+        $insert['sum_new']=$sum+$delivery_price;
 
 
         // Запись заказа в БД

@@ -17,7 +17,7 @@ ALTER TABLE `phpshop_products` ADD `sales_notes` varchar(50) DEFAULT '';
 ALTER TABLE `phpshop_products` ADD `country_of_origin` varchar(50) DEFAULT '';
 ALTER TABLE `phpshop_products` ADD `adult` enum('1','2') DEFAULT '2';
 ALTER TABLE `phpshop_products` ADD `delivery` enum('1','2') DEFAULT '1';
-ALTER TABLE `phpshop_products` ADD `pickup` enum('1','2') DEFAULT '1';
+ALTER TABLE `phpshop_products` ADD `pickup` enum('1','2') DEFAULT '2';
 ALTER TABLE `phpshop_products` ADD `store` enum('1','2') DEFAULT '2';
 ALTER TABLE `phpshop_sort_categories` ADD `yandex_param` enum('1','2') DEFAULT '1';
 ALTER TABLE `phpshop_sort_categories` ADD `yandex_param_unit` varchar(64) DEFAULT '';

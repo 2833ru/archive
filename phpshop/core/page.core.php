@@ -129,11 +129,12 @@ class PHPShopPage extends PHPShopCore {
      */
     function index($link = false) {
 
-        if ($this->setHook(__CLASS__, __FUNCTION__, false, 'START'))
-            return true;
+        $hook_start=$this->setHook(__CLASS__, __FUNCTION__, false, 'START');
+            if($hook_start)
+                return true;
 
         // Безопасность
-        if (empty($link))
+        if(empty($link))
             $link = PHPShopSecurity::TotalClean($this->PHPShopNav->getName(true), 2);
 
         // Страницы только для аторизованных
@@ -163,6 +164,7 @@ class PHPShopPage extends PHPShopCore {
         $this->set('pageTitle', $row['name']);
         $this->set('catalogCategory', $this->category_name);
         $this->set('catalogId', $this->category);
+        $this->PHPShopNav->objNav['id']=$row['id'];
 
         // Выделяем меню раздела
         $this->set('NavActive', $row['link']);
@@ -184,7 +186,9 @@ class PHPShopPage extends PHPShopCore {
         $this->navigation($row['category'], $row['name']);
 
         // Перехват модуля
-        $this->setHook(__CLASS__, __FUNCTION__, $row, 'END');
+        $hook_end=$this->setHook(__CLASS__, __FUNCTION__, $row, 'END');
+        if($hook_end)
+          return true;
 
         // Подключаем шаблон
         $this->parseTemplate($this->getValue('templates.page_page_list'));

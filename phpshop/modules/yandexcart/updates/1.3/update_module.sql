@@ -1,0 +1,1 @@
+ALTER TABLE `phpshop_delivery` ADD `yandex_day_min` int(11) DEFAULT '1';

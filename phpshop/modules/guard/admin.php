@@ -107,7 +107,7 @@ switch ($_GET['do']) {
 
     case "chek":
 
-        include_once($_classPath . '/admpanel/enter_to_admin.php');
+        $PHPShopBase->chekAdmin();
 
         // Пишем лог
         $Guard->log('start');
@@ -133,7 +133,7 @@ switch ($_GET['do']) {
         $message = '<pre>
 * Измененных файлов - ' . count($Guard->changes) . '
 * Новых файлов - ' . count($Guard->new) . '
-* Зараженных файлов - ' . count($Guard->infected) . '
+* Предположение на зараженние файлов - ' . count($Guard->infected) . '
 
 Полный отчет и инструкции по дальнейшим действиям
 направлены по адресу ' . $PHPShopSystem->getParam('adminmail2') . '

@@ -223,7 +223,7 @@ function actionStart() {
 
     // Стоп лист
     if (empty($_GET['option']) or $_GET['option'] == 'lite')
-        $stop_array = array('css', 'icon', 'php', 'js', 'fonts', 'images', 'icon', 'modules', 'index.html', 'style.css', 'font', 'brands', 'breadcrumbs', 'calendar', 'clients', 'comment', 'error', 'forma', 'gbook', 'links', 'map', 'opros', 'order', 'paginator', 'price', 'print', 'search', 'slider', 'selection', 'users', 'pricemail');
+        $stop_array = array('css', 'icon', 'php', 'js', 'fonts', 'images', 'icon', 'modules', 'index.html', 'style.css', 'font', 'brands', 'breadcrumbs', 'calendar', 'clients', 'comment', 'error', 'forma', 'gbook', 'links', 'map', 'opros', 'order', 'paginator', 'price', 'print', 'search', 'slider', 'selection', 'users', 'pricemail','editor');
     else
         $stop_array = array('css', 'icon', 'php', 'js', 'fonts', 'images', 'icon', 'modules', 'index.html', 'style.css', 'font');
 
@@ -309,7 +309,7 @@ function actionStart() {
     $PHPShopGUI->setFooter($ContentFooter);
 
     $sidebarleft[] = array('title' => __('Шаблоны в системе'), 'content' => $tree, 'title-icon' => $title_icon);
-    $sidebarleft[] = array('title' => __('Магазин дизайнов'), 'content' => $market);
+    //$sidebarleft[] = array('title' => __('Магазин дизайнов'), 'content' => $market);
 
     $PHPShopGUI->sidebarLeftCell = 3;
     $PHPShopGUI->setSidebarLeft($sidebarleft, 3);

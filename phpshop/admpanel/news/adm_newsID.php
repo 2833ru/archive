@@ -29,7 +29,8 @@ function actionStart() {
         'name' => 'Предпросмотр',
         'url' => '../../news/ID_' . $data['id'] . '.html',
         'action' => 'front',
-        'target' => '_blank'
+        'target' => '_blank',
+        'class'=>$GLOBALS['isFrame']
     );
 
     $PHPShopGUI->setActionPanel(__("Редактирование Новости от " . $data['datas']), array('Предпросмотр', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'));

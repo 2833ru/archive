@@ -202,7 +202,7 @@ function actionSave() {
     $result = actionUpdate();
     
       if (isset($_REQUEST['ajax'])) {
-      exit(json_encode(array("success" => $result)));
+      exit(json_encode($result));
       }
       else header('Location: ?path=' . $_GET['path'].'&cat='.$_POST['PID_new']); 
 }
@@ -229,13 +229,14 @@ function actionUpdate() {
     // Корректировка пустых значений
     $PHPShopOrm->updateZeroVars('flag_new', 'enabled_new', 'price_null_enabled_new');
 
+    if(!empty($_POST['icon_new']))
     $_POST['icon_new'] = iconAdd('icon_new');
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
     $PHPShopOrm->debug = false;
 
-    $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['rowID']));
+    $action = $PHPShopOrm->update($_POST, array('id' => '=' . intval($_POST['rowID'])));
 
     return array("success" => $action);
 }

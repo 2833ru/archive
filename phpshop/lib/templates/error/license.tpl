@@ -50,7 +50,7 @@
                 <div class="panel-body">
 
                     <ol>
-                        <li>Скрипт магазина PHPShop установлен на домен <mark>@server@</mark>, отличный от указанного <mark>@serverLocked@</mark> в файле лицензии <code>@file@</code></li>
+                        <li>Скрипт магазина PHPShop установлен на домен <mark>@server@</mark>, отличный от указанного в файле лицензии.</li>
                         <li>Истек срок выданной лицензии (тестовый период 30 дней).</li>
                         <li>Лицензия применена к версии магазина PHPShop, отличной от указанной в лицензии.</li>
                         <li>Нарушена целостность лицензии.</li>
@@ -61,7 +61,8 @@
                     <ol>
                         <li>Проверить лицензию на домен через <a href="http://www.phpshop.ru/order/?from=@server@">форму проверки лицензий</a>.</li>
                         <li>Ознакомиться с <a href="https://help.phpshop.ru/knowledgebase.php?article=291">инструкцией решения проблем в лицензиях</a></li>
-                        <li>Оформить <a href="http://www.phpshop.ru/order/?from=@server@">заказ на покупку</a> PHPShop.</li>
+                        <li>Оформить <a href="http://www.phpshop.ru/order/?from=@server@#buy">заказ на покупку</a> постоянной лицензии PHPShop.</li>
+                        <li>Оформить <a href="http://www.phpshop.ru/order/?from=@server@#rent">заказ на аренду</a> лицензии PHPShop на своем хостинге <span class="label label-success">New</span></li>
                         <li>Продлить <a href="http://www.phpshop.ru/order/?from=@server@">техническую поддержку</a> и получить новую лицензию для PHPShop.</li>
                         <li>Пожаловаться на ошибку <a href="http://www.phpshop.ru/page/address.html">Администрации</a>.
                         </li>
@@ -76,7 +77,7 @@
         <footer class="footer">
             <div class="container">
                 <p class="text-muted text-center">
-                    Перейти <a href="http://www.phpshop.ru" target="_blank" title="Разработчик"><span class="glyphicon glyphicon-home"></span>домой</a> или воспользоваться <a href="https://help.phpshop.ru" target="_blank" title="Техническая поддержка"><span class="glyphicon glyphicon-user"></span>технической поддержкой</a>
+                    Перейти <a href="http://www.phpshop.ru" target="_blank" title="Разработчик"><span class="glyphicon glyphicon-home"></span>PHPShop</a> или воспользоваться <a href="https://help.phpshop.ru" target="_blank" title="Техническая поддержка"><span class="glyphicon glyphicon-user"></span>технической поддержкой</a>
                 </p>
             </div>
         </footer>

@@ -61,14 +61,15 @@ function actionStart() {
     $PHPShopGUI->action_select['Предпросмотр'] = array(
         'name' => 'Предпросмотр',
         'url' => '../../shop/CID_' . $data['id'] . '.html',
-        'action' => 'front',
+        'action' => 'front'.$GLOBALS['isFrame'],
         'target' => '_blank'
     );
 
 
     $PHPShopGUI->action_select['Товары'] = array(
         'name' => 'Товары в каталоге',
-        'url' => '?path=' . $_GET['path'] . '&cat=' . intval($_GET['id'])
+        'url' => '?path=' . $_GET['path'] . '&cat=' . intval($_GET['id']),
+        'class'=>$GLOBALS['isFrame']
     );
 
     $PHPShopGUI->setActionPanel(__("Каталог") . ': ' . $data['name'] . ' [ID ' . $data['id'] . ']', array('Товары', 'Создать', 'Предпросмотр', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'));
@@ -209,10 +210,13 @@ function actionStart() {
                  </span>
             </div></div>';
 
+    if(empty($GLOBALS['isFrame'])){
+    
     // Левый сайдбар
     $sidebarleft[] = array('title' => 'Категории', 'content' => $search.'<div id="tree">' . $treebar . '</div>', 'title-icon' => '<span class="glyphicon glyphicon-plus new" data-toggle="tooltip" data-placement="top" title="Добавить каталог"></span>&nbsp;<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="Развернуть"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="Свернуть"></span>&nbsp;<span class="glyphicon glyphicon-search" id="show-category-search" data-toggle="tooltip" data-placement="top" title="Поиск"></span>');
     $PHPShopGUI->setSidebarLeft($sidebarleft, 3);
     $PHPShopGUI->sidebarLeftCell = 3;
+    }
 
 
     // Вывод кнопок сохранить и выход в футер

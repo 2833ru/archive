@@ -1,8 +1,3 @@
------------------------
--- PHPShop CMS Free
--- Module Install SQL
------------------------
-
 
 DROP TABLE IF EXISTS `phpshop_modules_guard_crc`;
 CREATE TABLE IF NOT EXISTS `phpshop_modules_guard_crc` (
@@ -39,10 +34,8 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_guard_signature` (
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 
-INSERT INTO `phpshop_modules_guard_signature` VALUES (2, 'HTML Trojan Loader ¹1', 'iframe[^stwtag("iframe"]');
-INSERT INTO `phpshop_modules_guard_signature` VALUES (3, 'JavaScript Trojan Loader ¹1', 'unescape[^unescape\\\\(document.cookie]');
-INSERT INTO `phpshop_modules_guard_signature` VALUES (4, 'PHP Trojan Loader ¹2', '@include_once');
-INSERT INTO `phpshop_modules_guard_signature` VALUES (5, 'PHP Trojan Loader ¹3', 'preg_replace');
+INSERT INTO `phpshop_modules_guard_signature` VALUES (1, 'PHP Shell Links Loader A', '@include_once');
+INSERT INTO `phpshop_modules_guard_signature` VALUES (2, 'PHP Shell B', 'preg_replace');
 
 
 DROP TABLE IF EXISTS `phpshop_modules_guard_system`;

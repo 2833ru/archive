@@ -9,7 +9,7 @@
         </div>
     </td>
     <td >
-        <a class="btn btn-success btn-sm" title="В корзину" onclick="addToCartList('@prodId@');">+</a>
+        <a class="btn btn-success btn-sm" title="В корзину" onclick="addToCartList('@prodId@');" @prodDisabled@>+</a>
         <a href="?delete=@prodId@" title="Удалить из списка" class="btn btn-info btn-sm hidden-xs">X</a>
     </td>
 </tr>

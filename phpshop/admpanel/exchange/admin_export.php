@@ -330,6 +330,8 @@ function actionSave() {
         header("Location: " . $sorce);
 }
 
+
+
 // Стартовый вид
 function actionStart() {
     global $PHPShopGUI, $PHPShopModules, $TitlePage, $PHPShopOrm, $key_name, $subpath, $key_base, $key_stop;

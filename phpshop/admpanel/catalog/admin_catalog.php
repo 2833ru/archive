@@ -101,14 +101,23 @@ function actionStart() {
         $memory['catalog.option']['uid'] = 0;
         $memory['catalog.option']['id'] = 0;
         $memory['catalog.option']['num'] = 0;
+        $memory['catalog.option']['sort'] = 0;
     }
 
     $PHPShopInterface->setCaption(
-            array(null, "3%"), array("Иконка", "5%", array('sort' => 'none', 'view' => intval($memory['catalog.option']['icon']))), array("Название", "40%", array('view' => intval($memory['catalog.option']['name']))), array("№", "10%", array('view' => intval($memory['catalog.option']['num']))), array("ID", "10%", array('view' => intval($memory['catalog.option']['id']))), array("Артикул", "15%", array('view' => intval($memory['catalog.option']['uid']))), array("Цена", "15%", array('view' => intval($memory['catalog.option']['price']))), array("Кол-во", "10%", array('view' => intval($memory['catalog.option']['item']))), array("", "7%", array('view' => intval($memory['catalog.option']['menu']))), array("Статус" . "", "7%", array('align' => 'right', 'view' => intval($memory['catalog.option']['status'])))
+            array(null, "3%"), array("Иконка", "5%", array('sort' => 'none', 'view' => intval($memory['catalog.option']['icon']))), array("Название", "40%", array('view' => intval($memory['catalog.option']['name']))), array("№", "10%", array('view' => intval($memory['catalog.option']['num']))), array("ID", "10%", array('view' => intval($memory['catalog.option']['id']))), array("Артикул", "15%", array('view' => intval($memory['catalog.option']['uid']))), array("Цена", "15%", array('view' => intval($memory['catalog.option']['price']))), array("Кол-во", "10%", array('view' => intval($memory['catalog.option']['item']))), array("", "7%", array('view' => intval($memory['catalog.option']['menu']))), array("Характеристики", "30%", array('view' => intval($memory['catalog.option']['sort']))), array("Статус", "7%", array('align' => 'right', 'view' => intval($memory['catalog.option']['status'])))
     );
 
     $PHPShopInterface->addJSFiles('./js/jquery.treegrid.js', './catalog/gui/catalog.gui.js', './js/bootstrap-treeview.min.js');
     $PHPShopInterface->addCSSFiles('./css/bootstrap-treeview.min.css');
+
+    // Характеристики
+    if (!empty($memory['catalog.option']['sort'])) {
+        $PHPShopSortArray = new PHPShopSortArray();
+        $PHPShopSort = $PHPShopSortArray->getArray();
+    }
+    else
+        $PHPShopSort = array();
 
 
     if (isset($_GET['where']['category']) and $_GET['where']['category'] != $_GET['cat'])
@@ -216,9 +225,17 @@ function actionStart() {
     else
         $postfix = null;
 
+
     // Таблица с данными
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
     $PHPShopOrm->debug = false;
+
+    // Быстрый поиск
+    if ($_GET['from'] == 'header') {
+        $PHPShopOrm->Option['where'] = " or ";
+        $where['uid'] = $where['id'] = $where['name'];
+    }
+
     $PHPShopOrm->mysql_error = false;
     $data = $PHPShopOrm->select(array('*'), $where, $order, $limit);
     if (is_array($data))
@@ -273,8 +290,20 @@ function actionStart() {
             if ($row['items'] < 0)
                 $row['items'] = 0;
 
+            // Характеристики
+            $sort_list = null;
+            $sort = unserialize($row['vendor_array']);
+            if (is_array($sort))
+                foreach ($sort as $scat=>$sorts) {
+                    if (is_array($sorts))
+                        foreach ($sorts as $s)
+                            $sort_list.='<a href="?path=sort&id='.$scat.'" class="text-muted">' . $PHPShopSort[$s]['name'] . '</a>, ';
+                }
+
+            $sort_list = substr($sort_list, 0, strlen($sort_list) - 2);
+
             $PHPShopInterface->setRow(
-                    $row['id'], array('name' => $icon, 'link' => '?path=product&return=catalog.' . $row['category'] . '&id=' . $row['id'], 'align' => 'left', 'view' => intval($memory['catalog.option']['icon'])), array('name' => $row['name'], 'link' => '?path=product&return=catalog.' . $row['category'] . '&id=' . $row['id'], 'align' => 'left', 'addon' => $uid, 'class' => $enabled, 'view' => intval($memory['catalog.option']['name'])), array('name' => $row['num'], 'align' => 'center', 'editable' => 'num_new', 'view' => intval($memory['catalog.option']['num'])), array('name' => $row['id'], 'view' => intval($memory['catalog.option']['id'])), array('name' => $row['uid'], 'view' => intval($memory['catalog.option']['uid'])), array('name' => $row['price'], 'editable' => 'price_new', 'view' => intval($memory['catalog.option']['price'])), array('name' => $row['items'], 'align' => 'center', 'editable' => 'items_new', 'view' => intval($memory['catalog.option']['item'])), array('action' => array('edit', 'copy', 'url', '|', 'delete', 'id' => $row['id']), 'align' => 'center', 'view' => intval($memory['catalog.option']['menu'])), array('status' => array('enable' => $row['enabled'], 'align' => 'right', 'caption' => array('Выкл', 'Вкл')), 'view' => intval($memory['catalog.option']['status']))
+                    $row['id'], array('name' => $icon, 'link' => '?path=product&return=catalog.' . $row['category'] . '&id=' . $row['id'], 'align' => 'left', 'view' => intval($memory['catalog.option']['icon'])), array('name' => $row['name'], 'link' => '?path=product&return=catalog.' . $row['category'] . '&id=' . $row['id'], 'align' => 'left', 'addon' => $uid, 'class' => $enabled, 'view' => intval($memory['catalog.option']['name'])), array('name' => $row['num'], 'align' => 'center', 'editable' => 'num_new', 'view' => intval($memory['catalog.option']['num'])), array('name' => $row['id'], 'view' => intval($memory['catalog.option']['id'])), array('name' => $row['uid'], 'view' => intval($memory['catalog.option']['uid'])), array('name' => $row['price'], 'editable' => 'price_new', 'view' => intval($memory['catalog.option']['price'])), array('name' => $row['items'], 'align' => 'center', 'editable' => 'items_new', 'view' => intval($memory['catalog.option']['item'])), array('action' => array('edit', 'copy', 'url', '|', 'delete', 'id' => $row['id']), 'align' => 'center', 'view' => intval($memory['catalog.option']['menu'])), array('name' => $sort_list, 'view' => intval($memory['catalog.option']['sort'])), array('status' => array('enable' => $row['enabled'], 'align' => 'right', 'caption' => array('Выкл', 'Вкл')), 'view' => intval($memory['catalog.option']['status']))
             );
         }
 

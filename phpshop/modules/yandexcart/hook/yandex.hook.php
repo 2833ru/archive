@@ -145,11 +145,11 @@ function setDelivery_yandexcart_hook($obj, $data) {
 
     // Доставка
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['delivery']);
-    $delivery = $PHPShopOrm->select(array('price', 'yandex_day'), array('enabled' => "='1'", 'is_folder' => "='0'", 'yandex_enabled' => "='2'", 'yandex_check' => "='2'"), false, array('limit' => 300));
+    $delivery = $PHPShopOrm->select(array('price', 'yandex_day'), array('enabled' => "='1'", 'is_folder' => "!='1'", 'yandex_enabled' => "='2'", 'yandex_check' => "='2'"), false, array('limit' => 300));
     $GLOBALS['delivery'] = $delivery;
 
     if (!empty($delivery))
-        $data['xml'] = str_replace('<local_delivery_cost>' . $data['val']['price'] . '</local_delivery_cost>', ' ', $data['xml']);
+        $data['xml'] = str_replace('<local_delivery_cost>' . $data['val']['price'] . '</local_delivery_cost>', '<delivery-options/>', $data['xml']);
 
     // Бренды
     $PHPShopOrm = new PHPShopOrm();

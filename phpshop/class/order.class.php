@@ -223,8 +223,8 @@ class PHPShopOrderFunction extends PHPShopObj {
 
         $maxsum = 0;
         $maxdiscount = 0;
-        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['table_name23']);
-        $row = $PHPShopOrm->select(array('sum', 'discount'), array('sum' => "<'$mysum'", 'enabled' => "='1'"), array('order' => 'sum desc'), array('limit' => 1));
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['discount']);
+        $row = $PHPShopOrm->select(array('sum', 'discount'), array('sum' => "<='$mysum'", 'enabled' => "='1'"), array('order' => 'sum desc'), array('limit' => 1));
         if (is_array($row)) {
             $sum = $row['sum'];
             if ($sum > $maxsum) {
@@ -466,7 +466,7 @@ class PHPShopOrderStatusArray extends PHPShopArray {
      */
     function __construct() {
         $this->objBase = $GLOBALS['SysValue']['base']['order_status'];
-        parent::__construct('id', 'name', 'color', 'sklad_action');
+        parent::__construct('id', 'name', 'color', 'sklad_action','cumulative_action');
     }
 
 }

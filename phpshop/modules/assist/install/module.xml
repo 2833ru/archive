@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.1</version>
+    <version>1.2</version>
     <name>Assist</name>
     <faqlink>http://assist.ru</faqlink>
     <description>Прием оплат через Assist.</description>
     <category>assist,sale</category>
+    <status>update</status>
     <adminmenu>
         <title>Прием оплат через Assist</title>
         <capability>true</capability>

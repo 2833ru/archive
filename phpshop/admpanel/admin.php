@@ -2,13 +2,24 @@
 if (empty($_GET['path']))
     header('Location: ?path=intro');
 
+// Фрейм
+if(isset($_GET['frame'])){
+    $isFrame=' hidden ';
+    $frameWidth='width:100%;';
+    $isMobile=null;
+}
+else {
+    $isFrame=$frameWidtn=null;
+    $isMobile='visible-xs';
+}
+
 session_start();
 $_classPath = "../";
 include($_classPath . "class/obj.class.php");
 PHPShopObj::loadClass(array("base", "system", "admgui", "orm", "date", "xml", "security", "string", "parser", "mail", "lang"));
 
 
-$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, false);
+$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, true);
 $PHPShopBase->chekAdmin();
 
 // Системные настройки
@@ -121,6 +132,7 @@ if (empty($adm_title)) {
     $adm_title = 'PHPShop';
     $adm_brand = $brand;
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -161,9 +173,9 @@ if (empty($adm_title)) {
         <!-- Localization -->
         <script src="js/locale.ru.js"></script>
 
-        <div class="container">
+        <div class="container" style="<?= $frameWidth; ?>">
 
-            <nav class="navbar navbar-default" >
+            <nav class="navbar navbar-default <?= $isFrame; ?>">
                 <div>
 
                     <!-- Brand  -->
@@ -225,8 +237,9 @@ if (empty($adm_title)) {
                                     <li><a href="http://idea.phpshop.ru" target="_blank">Предложить идею</a></li>
                                     <li class="divider"></li>
                                     <li class="dropdown-header">Дополнительно</li>
-                                    <li><a href="http://template.phpshop.ru" target="_blank">Магазин дизайнов</a></li>
-                                    <li><a href="http://phpshop.ru/loads/files/setup.exe" target="_blank">Утилиты EasyControl</a></li>
+                                    <li><a href="http://www.phpshop.ru/loads/files/setup.exe" target="_blank">Утилиты EasyControl</a></li>
+                                    <li><a href="http://www.phpshop.ru/page/yandex-webmaster.html" target="_blank">SEO оптимизация</a></li>
+                                    <li><a href="http://www.phpshop.ru/page/hosting.html" target="_blank">Хостинг</a></li>
                                     <li class="divider"></li>
                                     <li><a href="?path=update"><span class="glyphicon glyphicon-cloud-download"></span> Мастер обновления</a></li>
 
@@ -250,7 +263,7 @@ if (empty($adm_title)) {
                     </div><!-- /.navbar-collapse -->
                 </div>
             </nav>
-            <nav class="navbar navbar-inverse navbar-statick">
+            <nav class="navbar navbar-inverse navbar-statick <?= $isFrame; ?>">
                 <div>
 
                     <div class="navbar-header pull-left">
@@ -338,7 +351,6 @@ if (empty($adm_title)) {
                             case 3:
                                 $search_class = 'hidden-xs search-product';
                                 $search_placeholder = __('Искать в товарах...');
-                                $search_action = '?path=catalog';
                                 $search_target = '_self';
                                 $search_name = 'where[name]';
                                 $search_value = PHPShopSecurity::true_search($_GET['where']['name']);
@@ -358,6 +370,7 @@ if (empty($adm_title)) {
                             <div class="input-group">
                                 <input name="<?php echo $search_name; ?>" maxlength="50" value="<?php echo $search_value; ?>" id="<?php echo $search_id; ?>" class="form-control input-sm" placeholder="<?php echo $search_placeholder; ?>" required="" type="search"  data-container="body" data-toggle="popover" data-placement="bottom" data-html="true"  data-content="">
                                 <input type="hidden" name="path" value="catalog">
+                                <input type="hidden" name="from" value="header">
                                 <span class="input-group-btn">
                                     <button class="btn btn-default btn-sm" type="submit"><span class="glyphicon glyphicon-search"></span></button>
                                 </span>
@@ -504,8 +517,8 @@ if (empty($adm_title)) {
         <!--/ Modal filemanager -->
 
         <!-- Fixed mobile bar -->
-        <div class="bar-padding-fix visible-xs visible-sm"> </div>
-        <nav class="navbar navbar-statick navbar-fixed-bottom bar bar-tab visible-xs visible-sm" role="navigation">
+        <div class="bar-padding-fix <?= $isMobile.$isFrame; ?>"> </div>
+        <nav class="navbar navbar-statick navbar-fixed-bottom bar bar-tab visible-xs visible-sm <?= $isFrame; ?>" role="navigation">
             <a class="tab-item <?= $menu_active_intro; ?>" href="./admin.php">
                 <span class="icon icon-home"></span>
                 <span class="tab-label">Домой</span>

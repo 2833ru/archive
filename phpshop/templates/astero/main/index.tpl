@@ -17,7 +17,7 @@
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/bootstrap.min.css" rel="stylesheet">
 
     </head>
-    <body id="body">
+    <body id="body" data-dir="@ShopDir@" data-path="@php echo $GLOBALS['PHPShopNav']->objNav['path']; php@" data-id="@php echo $GLOBALS['PHPShopNav']->objNav['id']; php@">
 
         <!-- Template -->
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/animate.css" rel="stylesheet">
@@ -25,7 +25,7 @@
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/responsive.css" rel="stylesheet">
 
         <!-- Theme -->
-        <link id="bootstrap_theme" data-name="@php echo $_SESSION['skin']; php@" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/@bootstrap_theme@.css" rel="stylesheet">
+        <link id="bootstrap_theme" data-name="@php echo $_SESSION['skin']; php@" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/@astero_theme@.css" rel="stylesheet">
 
         <!-- Fonts -->
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/font-awesome.min.css" rel="stylesheet">
@@ -93,7 +93,8 @@
                             <div class="pull-right">                           
                                 <!-- Currency Starts -->
                                 <div class="btn-group header-valuta-disp-wrapper">
-                                    @valutaDisp@
+                                    <!--@valutaDisp@-->
+                                    <h4><i class="fa fa-phone-square" aria-hidden="true"></i> Тел: @telNum@</h4>
                                 </div>
                                 <!-- Currency Ends -->                      
                             </div>
@@ -147,7 +148,7 @@
                 </div>
                 <!-- Main Header Ends -->
             </div>
-            <!-- Nested Container Ends 
+            <!-- Nested Container Ends -->
             
             <!-- Header Area Background Block Starts -->
             <div class="header-area-background-block"></div>
@@ -215,7 +216,7 @@
                     <div >@mainContent@</div>
 
                     <!-- Heading Starts -->
-                    <h2 class="product-head page-header">Новинки</h2>
+                    <h2 class="product-head page-header"><a href="/newtip/" title="Все новинки">Новинки</a></h2>
                     <!-- Heading Ends -->
                     <!-- Products Row Starts -->
                     <!-- Product Starts -->
@@ -241,7 +242,7 @@
             <section class="products-list">         
                 <div class="container">
                     <!-- Heading Starts -->
-                    <h2 class="product-head page-header">Спецпредложения</h2>
+                    <h2 class="product-head page-header"><a href="/spec/" title="Все спецпредложения">Спецпредложения</a></h2>
                     <!-- Heading Ends -->
                     <!-- Products Row Starts -->
                     <div class="row">
@@ -253,9 +254,11 @@
             <!-- Latest Products Ends -->
 
             <!-- News Starts -->
-            <h2 class="product-head page-header">Новости</h2>
+            <h2 class="product-head page-header"><a href="/news/" title="Все новости">Новости</a></h2>
             <div class="news-list">
-                @miniNews@
+                <div class="row">
+                    @miniNews@
+                </div>                
             </div>
             <!-- News Ends -->
 
