@@ -61,7 +61,7 @@ require("../language/russian/language.php");
 
                                 echo '
 <input type=text id="myName"  style="width: 170" value="' . Disp_cat($_GET['categoryID']) . '">
-<input type="hidden" value="' . $_GET['categoryID'] . '" name="NPID" id="myCat">
+<input type="hidden" value="" name="NPID" id="myCat">
 <BUTTON style="width: 3em; height: 2.2em; margin-left:5"  onclick="miniWinFull(\'adm_cat.php?category=' . $_GET['categoryID'] . '\',300,400,300,200)"><img src="../img/icon-move-banner.gif"  width="16" height="16" border="0"></BUTTON>';
                                 ?>
                         </FIELDSET>
@@ -71,7 +71,7 @@ require("../language/russian/language.php");
                             <legend>»конка</legend>
 
                             <div style="float:left;padding:14px;">
-                                <input type="text" value="<?= $row['icon'] ?>" name="icon_new" id="icon_new" style="width:100px;" class="" onclick="" title=""> </div>
+                                <input type="text" value="<?= $row['icon'] ?>" name="icon_new" id="icon_new" style="width:200px;" class="" onclick="" title=""> </div>
                             <div style="float:right;padding:5px;">
                                 <button style="width:100px; height:25px; margin-left:5" onclick="ReturnPic('icon_new');
                                         return false;">
@@ -147,7 +147,7 @@ require("../language/russian/language.php");
                     mysql_query("UPDATE " . $SysValue['base']['table_name30'] . " SET flag='0' WHERE is_folder='1'") or die(mysql_error());
 
                 $sql = "INSERT INTO " . $SysValue['base']['table_name30'] . "
-VALUES ('','$city_new','$price_new','$enabled_new','$flag_new','$price_null_new','$price_null_enabled_new','$NPID','$taxa_new','1','','','$num_new','$icon_new')";
+VALUES ('','$city_new','$price_new','$enabled_new','$flag_new','$price_null_new','$price_null_enabled_new','".intval($NPID)."','$taxa_new','1','','','$num_new','$icon_new')";
                 $result = mysql_query($sql) or @die("" . mysql_error() . "");
                 echo'
 	  <script>

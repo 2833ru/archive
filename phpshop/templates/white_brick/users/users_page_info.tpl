@@ -1,11 +1,14 @@
 <div id="allspec">
-                    @user_error@
-                </div>
-
-
+    @user_error@
+</div>
 
 <form name="users_password" method="post">
     <table style="padding-top: 10px;padding-bottom: 10px">
+        <tr>
+            <td width="180">Статус:<br><br></td>
+            <td width="10"></td>
+            <td><b>@user_status@</b></td>
+        </tr>
         <tr>
             <td width="180">E-mail:</td>
             <td width="10"></td>

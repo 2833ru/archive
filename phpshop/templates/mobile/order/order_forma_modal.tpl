@@ -7,9 +7,9 @@
         <p class="content-padded">
         <form method="post" name="forma_order" action="/done/">
             <input type="email" placeholder="E-mail" name="mail" required value="@UserMail@">
-            <input type="text" placeholder="ФИО" name="name_new" required value="@UserName@">
+            <input type="text" placeholder="ФИО" name="fio_new" required value="@UserName@">
             <input type="text" placeholder="Телефон" name="tel_new" required value="@UserTel@">
-            <textarea rows="5" name="adr_name" placeholder="Адрес доставки">@UserAdres@</textarea>
+            <textarea rows="5" name="street_new" placeholder="Адрес доставки">@UserAdres@</textarea>
             <input type="hidden" name="d" id="d" value="@delivery_id@">
             <input type="hidden" name="ouid" id="ouid" value="@orderNum@">
             <input type="hidden" name="order_metod" id="order_metod">
@@ -29,7 +29,7 @@
     </div>
 </div> 
 <div id="modalPayment" class="modal">
-    <header class="bar btn-positive">
+    <header class="bar bar-nav">
         <a class="icon icon-close pull-right" href="#modalPayment" onclick="modal_off(this.hash)"></a>
         <h1 class="title">Выбор оплаты</h1>
     </header>

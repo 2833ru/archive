@@ -46,16 +46,16 @@ class PHPShopSeoProCore extends PHPShopShop {
             return true;
 
         parent::doLoadFunction(__CLASS__, __FUNCTION__, $row, 'shop');
-
+        $page=$this->PHPShopNav->getPage();
         if ($seourl_option['paginator'] == 2) {
-            if ($this->PHPShopNav->getPage() > 1) {
+            if ($page > 1) {
                 $this->doLoadFunction('PHPShopShop', 'set_meta', $row);
                 $this->description.= ' Часть ' . $this->PHPShopNav->getPage();
-                $this->title.=' Страница ' . $this->PHPShopNav->getPage();
+                $this->title.=' - Страница ' . $this->PHPShopNav->getPage();
                 return true;
-            } elseif ($this->PHPShopNav->getPage() == 'ALL') {
+            } elseif (!empty($page) and $page == 'ALL') {
                 $this->doLoadFunction('PHPShopShop', 'set_meta', $row);
-                $this->title.=' Все страницы';
+                $this->title.=' - Все страницы';
                 $this->set('catalogCategory', ' - Все страницы', true);
                 return true;
             }
@@ -68,8 +68,8 @@ class PHPShopCat extends PHPShopCore {
 
     function __construct() {
 
-        // Обработка массива памяти категорий
-        //$GLOBALS['PHPShopSeoPro']->catCacheToMemory();
+        // Обработка массива памяти категорий при большой вложенности
+        $GLOBALS['PHPShopSeoPro']->catArrayToMemory();
         $GLOBALS['PHPShopSeoPro']->true_dir = 'cat';
         $GLOBALS['PHPShopSeoPro']->setRout();
 

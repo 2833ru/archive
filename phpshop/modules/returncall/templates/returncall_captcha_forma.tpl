@@ -1,11 +1,6 @@
-
-<p id="returncall_captcha">
-<div>
-    <img src="phpshop/modules/returncall/inc/captcha.php" width="136px" alt="" border="0">
-</div>
-<div>
-<b>¬ведите код</b><br>
-<input type="text" name="key" style="width:130px;">
-</div>
-</p>
-
+<tr>
+    <td>¬ведите код:</td>
+    <td><img src="phpshop/modules/returncall/inc/captcha.php"  alt="" border="0">
+     <input type="text" name="key" style="width:85px;">
+    </td>
+</tr>

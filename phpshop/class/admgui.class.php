@@ -525,7 +525,7 @@ class PHPShopGUI {
      * @param int $size размер
      * @return string
      */
-    function setSelect($name, $value, $width, $float = "none", $caption = false, $onchange = "return true", $height = false, $size = 1, $multiple = false, $id = false) {
+    function setSelect($name, $value, $width=false, $float = "none", $caption = false, $onchange = "return true", $height = false, $size = 1, $multiple = false, $id = false) {
 
         if ($multiple)
             $multiple = 'multiple';
@@ -599,7 +599,7 @@ class PHPShopGUI {
             $checked = null;
 
         $CODE = '
-	 <input type="checkbox" value="' . $value . '" name="' . $name . '" id="' . $name . '" ' . $checked . ' onchange="' . $onchange . '"> ' . $caption . '
+	 <label><input type="checkbox" value="' . $value . '" name="' . $name . '" id="' . $name . '" ' . $checked . ' onchange="' . $onchange . '"> ' . $caption . '</label>
 	 ';
         return $CODE;
     }
@@ -620,7 +620,7 @@ class PHPShopGUI {
             $checked = "checked";
 
         $CODE = '
-	 <input type="radio" value="' . $value . '" name="' . $name . '" id="' . $name . '" ' . $checked . ' onchange="' . $onchange . '"> ' . $caption . '
+	 <label><input type="radio" value="' . $value . '" name="' . $name . '" id="' . $name . '" ' . $checked . ' onchange="' . $onchange . '"> ' . $caption . '</label>
 	 ';
         return $CODE;
     }
@@ -865,7 +865,7 @@ class PHPShopGUI {
      * Прорисовка формы о модуле
      * @return string
      */
-    function setPay($serial, $pay = false, $version = false, $update = false) {
+    function setPay($serial=false, $pay = false, $version = false, $update = false) {
         global $PHPShopModules;
 
         $mes = null;

@@ -17,7 +17,7 @@
 <NOINDEX>
 <form method="post" action="/shop/CID_@productId@.html" name="sort">
    <div>
-   Сортировка по: <a href="./CID_@productId@_@productPageThis@.html?@productVendor@&f=@productSortNext@&s=@productSort@" title="Изменить направление"><img src="images/shop/@productSortImg@.gif" alt="Изменить направление" hspace="3"  border="0" align="absmiddle"></a><a href="./CID_@productId@_@productPageThis@.html?@productVendor@&f=@productSortTo@&s=1" class="@productSortA@">алфавиту</a> - <a href="./CID_@productId@_@productPageThis@.html?@productVendor@&f=@productSortTo@&s=2"  class="@productSortB@">цене</a> - <a href="./CID_@productId@_@productPageThis@.html?@productVendor@&f=@productSortTo@&s=3"  class="@productSortC@">популярности</a>
+   Сортировка по: <a href="?@productVendor@&f=@productSortNext@&s=@productSort@" title="Изменить направление"><img src="images/shop/@productSortImg@.gif" alt="Изменить направление" hspace="3"  border="0" align="absmiddle"></a><a href="?@productVendor@&f=@productSortTo@&s=1" class="@productSortA@">алфавиту</a> - <a href="?@productVendor@&f=@productSortTo@&s=2"  class="@productSortB@">цене</a> - <a href="?@productVendor@&f=@productSortTo@&s=3"  class="@productSortC@">популярности</a>
    </div>
    <div style="width: 100%">
      <div style="float:left;line-height: 17px;">Цена от:&nbsp;</div>

@@ -84,7 +84,7 @@ class PHPShopReturncall extends PHPShopCore {
         // Проверка каптчи
         if($this->system['captcha_enabled'] == 1){
 
-            if (empty($_SESSION['mod_returncall_captcha']) or $_SESSION['mod_returncall_captcha'] != $_POST['key'])
+            if (empty($_SESSION['mod_returncall_captcha']) or strtolower($_SESSION['mod_returncall_captcha']) != strtolower($_POST['key']))
                 $error = true;
         }
 

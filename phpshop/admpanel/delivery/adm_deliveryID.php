@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 $_classPath = "../../";
 include($_classPath . "class/obj.class.php");
@@ -91,11 +91,14 @@ function actionStart() {
     $city_select_value[] = array('Только Регионы и города РФ', 1, $data['city_select']);
     $city_select_value[] = array('Все страны мира', 2, $data['city_select']);
     $Tab1.=$PHPShopGUI->setField(__("Помощь подбора стран, регионов и городов:"), $PHPShopGUI->setSelect('city_select_new', $city_select_value, 120), 'left');
-// Иконка
+
+    // Иконка
     $Tab1.= $PHPShopGUI->setField(__('Иконка'), $PHPShopGUI->setInputText(false, "icon_new", $data['icon'], '190px', false, 'left') .
             $PHPShopGUI->setButton(__('Выбрать'), "../img/icon-move-banner.gif", "100px", '25px', "right", "ReturnPic('icon_new');return false;"));
-    
-    
+    // Вес
+    $Tab1.= $PHPShopGUI->setField('Такса за каждые 0.5 кг веса', $PHPShopGUI->setInputText('Используется для задания дополнительной тарификации (например, для "Почта России")<BR>Каждые дополнительные 0.5 кг свыше базовых 0.5 кг будут стоить', "taxa_new", $data['taxa'], 50, $PHPShopSystem->getDefaultValutaCode())
+    );
+
     $Tab2 .= $PHPShopGUI->setField(__("Настройка полей адреса для данного типа доставки:"), "<table >
                 <tr><td>Поле</td><td>вкл/выкл</td><td>Название при выводе</td><td>Обязательное</td><td>No</td></tr>"
             . "<tr><td>Страна</td>"
@@ -163,7 +166,7 @@ function actionStart() {
 
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array(__("Основное"), $Tab1, 300), array(__("Настройка полей данных по адресу"), $Tab2, 480));
+    $PHPShopGUI->setTab(array(__("Основное"), $Tab1, 450), array(__("Настройка полей данных по адресу"), $Tab2, 450));
 
 
 

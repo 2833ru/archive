@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<module>
+    <version>1.4</version>
+    <name>DDelivery</name>
+    <description>Модуль расчета доставки DDelivery.ru</description>
+    <icon>icon.png</icon>
+    <category>sale</category>
+    <status>Update</status>
+    <adminmenu>
+        <title>DDelivery</title>
+        <podmenu>
+            <podmenu_name>Настройка</podmenu_name>
+            <podmenu_icon>icon.png</podmenu_icon>
+            <podmenu_action>javascript:miniWin('../modules/ddelivery/admpanel/adm_module.php',710,710);</podmenu_action>
+        </podmenu>
+        <!--
+        <podmenu>
+            <podmenu_name>Отправить заявки с подходящим статусом</podmenu_name>
+            <podmenu_icon>icon.png</podmenu_icon>
+            <podmenu_action>javascript:miniWin('../modules/ddelivery/admpanel/status.php?action=1',510,450);</podmenu_action>
+        </podmenu>
+        -->
+        <podmenu>
+            <podmenu_name>Синхронизировать статусы</podmenu_name>
+            <podmenu_icon>icon.png</podmenu_icon>
+            <podmenu_action>javascript:miniWin('../modules/ddelivery/admpanel/status.php?action=2',450,450);</podmenu_action>
+        </podmenu>
+        <!--
+        <podmenu>
+            <podmenu_name>Настройка дополнительных полей</podmenu_name>
+            <podmenu_icon>icon.png</podmenu_icon>
+            <podmenu_action>javascript:miniWin('../modules/ddelivery/admpanel/adm_module2.php',510,450);</podmenu_action>
+        </podmenu>
+        -->
+    </adminmenu>
+</module>

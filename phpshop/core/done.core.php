@@ -100,7 +100,7 @@ class PHPShopDone extends PHPShopCore {
      */
     function send_to_order() {
         global $SysValue;
-        
+
         // Перехват модуля
         if ($this->setHook(__CLASS__, __FUNCTION__, $_POST, 'START'))
             return true;
@@ -113,7 +113,7 @@ class PHPShopDone extends PHPShopCore {
             $PHPShopUsers = new PHPShopUsers();
             $this->userId = $PHPShopUsers->add_user_from_order($_POST['mail']);
 
-            if (isset($_SESSION['UsersLogin']) AND ! empty($_SESSION['UsersLogin']))
+            if (isset($_SESSION['UsersLogin']) AND !empty($_SESSION['UsersLogin']))
                 $_POST['mail'] = ($_SESSION['UsersMail']);
 
             if (PHPShopSecurity::true_email($_POST['mail']) AND $this->userId) {
@@ -212,7 +212,10 @@ class PHPShopDone extends PHPShopCore {
         $this->set('adr_name', PHPShopSecurity::CleanStr(@$_POST['adr_name']));
         $this->set('deliveryCity', $this->PHPShopDelivery->getCity());
         $this->set('mail', $_POST['mail']);
-        $this->set('payment', $this->PHPShopPayment->getName());
+
+        if ($this->PHPShopPayment)
+            $this->set('payment', $this->PHPShopPayment->getName());
+
         $this->set('company', $this->PHPShopSystem->getParam('name'));
 
         // формируем список данных полей доставки.

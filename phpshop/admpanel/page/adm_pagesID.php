@@ -83,6 +83,12 @@ function actionStart() {
 
     $Tab1.= $PHPShopGUI->setField("Вывод:", $PHPShopGUI->setSelect("enabled_new", $SelectValue, 150), "none", 5);
 
+    // Рекомендуемые товары
+    $Tab1.=$PHPShopGUI->setField('Рекомендуемые товары для совместной продажи:', $PHPShopGUI->setTextarea('odnotip_new', $data['odnotip'], false, '99%') .
+                    $PHPShopGUI->setLine() .
+                    $PHPShopGUI->setImage('../icon/icon_info.gif', 16, 16) .
+                    __('Введите ID товаров в формате 1,2,3 без пробелов'), 'none');
+
     // Содержание закладки 2
     $Tab2 = $oFCKeditor->AddGUI();
 

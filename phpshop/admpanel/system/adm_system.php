@@ -217,6 +217,8 @@ $option = unserialize($GetSystems['admoption']);
                 break;
             case(3): $row3 = "selected";
                 break;
+            case(4): $row4 = "selected";
+                break;
         }
 
         switch ($row['num_row_adm']) {
@@ -408,6 +410,8 @@ tabPane.addTabPage( document.getElementById( \"vetrina\" ) );
 			<option value=1 $rowl>1</option>
 			<option value=2 $row2>2</option>
 			<option value=3 $row3>3</option>
+
+                            
 </select> רע.
 	  </td>
 	</tr>

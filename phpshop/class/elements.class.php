@@ -367,7 +367,7 @@ class PHPShopElements {
     function setHtmlOption($class_name) {
         if (!empty($GLOBALS['SysValue']['html'][strtolower($class_name)])){
             $this->cell_type = $GLOBALS['SysValue']['html'][strtolower($class_name)];
-            $this->cell=1;
+            //$this->cell=1;
             $this->product_grid = null;
         }
     }

@@ -1,5 +1,47 @@
 <?php
 
+function toLatin_hook($str) {
+    $str = strtolower($str);
+    $str = str_replace("&nbsp;", "", $str);
+    $str = str_replace("/", "", $str);
+    $str = str_replace("\\", "", $str);
+    $str = str_replace("(", "", $str);
+    $str = str_replace(")", "", $str);
+    $str = str_replace(":", "", $str);
+    $str = str_replace("-", "", $str);
+    $str = str_replace(" ", "_", $str);
+    $str = str_replace("!", "", $str);
+    $str = str_replace("|", "_", $str);
+    $str = str_replace(".", "_", $str);
+    $str = str_replace("№", "N", $str);
+    $str = str_replace("?", "", $str);
+    $str = str_replace("&nbsp", "_", $str);
+    $str = str_replace("&amp;", '_', $str);
+    $str = str_replace("ь", "", $str);
+    $str = str_replace("Ь", "", $str);
+    $str = str_replace("ъ", "", $str);
+    $str = str_replace("«", "", $str);
+    $str = str_replace("»", "", $str);
+    $str = str_replace("“", "", $str);
+    $str = str_replace(",", "", $str);
+    $str = str_replace("™", "", $str);
+    $str = str_replace("’", "", $str);
+    $str = str_replace("®", "", $str);
+
+    $new_str = '';
+    $_Array = array(" " => "_", "а" => "a", "б" => "b", "в" => "v", "г" => "g", "д" => "d", "е" => "e", "ё" => "e", "ж" => "zh", "з" => "z", "и" => "i", "й" => "y", "к" => "k", "л" => "l", "м" => "m", "н" => "n", "о" => "o", "п" => "p", "р" => "r", "с" => "s", "т" => "t", "у" => "u", "ф" => "f", "х" => "h", "ц" => "c", "ч" => "ch", "ш" => "sh", "щ" => "sch", "ъ" => "i", "ы" => "y", "ь" => "i", "э" => "e", "ю" => "u", "я" => "ya", "А" => "a", "Б" => "b", "В" => "v", "Г" => "g", "Д" => "d", "Е" => "e", "Ё" => "e", "Ж" => "zh", "З" => "z", "И" => "i", "Й" => "y", "К" => "k", "Л" => "l", "М" => "m", "Н" => "n", "О" => "o", "П" => "p", "Р" => "r", "С" => "s", "Т" => "t", "Ы" => "Y", "У" => "u", "Ф" => "f", "Х" => "h", "Ц" => "c", "Ч" => "ch", "Ш" => "sh", "Щ" => "sch", "Э" => "e", "Ю" => "u", "Я" => "ya", "." => "_", "$" => "i", "%" => "i", "&" => "_and_");
+
+    $chars = preg_split('//', $str, -1, PREG_SPLIT_NO_EMPTY);
+
+    foreach ($chars as $val)
+        if (empty($_Array[$val]))
+            $new_str.=$val;
+        else
+            $new_str.=$_Array[$val];
+
+    return preg_replace('([^a-z0-9_\.-])', '', $new_str);
+}
+
 /*
  * SEO обработка ссылок в списке товаров /shop/
  */
@@ -19,17 +61,28 @@ function CID_Product_seourlpro_hook($obj, $row, $rout) {
 
     // Проверка уникальности SEO ссылки
     if ($rout == 'START') {
+
+        // Поддержка сложных ссылок /cat/*
+        $obj->objPath = '/CID_' . $obj->category . '_';
+
         if (!empty($seo_name))
             $url_true = '/' . $seo_name;
         else
             $url_true = '/' . $GLOBALS['PHPShopSeoPro']->setLatin($catalog_name);
 
         $url = $obj->PHPShopNav->getName(true);
-        $url_true_nav = $url_true . '-' . $obj->PHPShopNav->getPage();
+
+        // Учет первой страницы
+        if ($obj->PHPShopNav->getPage() == 1)
+            $url_true_nav = $url_true;
+        else
+            $url_true_nav = $url_true . '-' . $obj->PHPShopNav->getPage();
+
         $url_pack = '/shop/CID_' . $obj->PHPShopNav->getId();
         $url_nav = '/shop/CID_' . $obj->PHPShopNav->getId() . '_' . $obj->PHPShopNav->getPage();
-        $url_old_seo = '/shop/CID_' . $obj->PHPShopNav->getId() . '_' . str_replace("-", "_", PHPShopString::toLatin($catalog_name));
-        $url_old_seo_nav = '/shop/CID_' . $obj->PHPShopNav->getId() . '_' . $obj->PHPShopNav->getPage() . '_' . str_replace("-", "_", PHPShopString::toLatin($catalog_name));
+        $url_old_seo = '/shop/CID_' . $obj->PHPShopNav->getId() . '_' . str_replace("-", "_", toLatin_hook($catalog_name));
+        if ($obj->PHPShopNav->getId())
+            $url_old_seo_nav = '/shop/CID_' . $obj->PHPShopNav->getId() . '_' . $obj->PHPShopNav->getPage() . '_' . str_replace("-", "_", toLatin_hook($catalog_name));
 
         // Query
         if (!empty($_SERVER["QUERY_STRING"]))
@@ -57,21 +110,30 @@ function CID_Product_seourlpro_hook($obj, $row, $rout) {
 
         // Рекомендации BDBD
         if ($seourl_option['paginator'] == 2) {
+
             if ($page > 1) {
 
-                // Отключение описания каталога в пагинаторе
-                $obj->set('catalogContent', null);
+                // Отключение описания каталога в пагинаторе 
+                if ($seourl_option['cat_content_enabled'] == 2) {
+                    $obj->set('catalogContent', null);
+                }
 
                 // Добавление номера страниц в имя каталога
                 $obj->set('catalogCategory', ' - страница ' . $page, true);
             }
 
             // Создание переменной точного адреса canonical для отсеивания дублей
-            if (!empty($_SERVER["QUERY_STRING"]))
-                $obj->set('seourl_canonical', '<link rel="canonical" href="http://' . $_SERVER['SERVER_NAME'] . $obj->get('ShopDir') . '/shop/CID_' . $obj->PHPShopNav->getId() . '-' . $page . $seo_name . '.html">');
+            if (!empty($_SERVER["QUERY_STRING"])) {
 
-            if (empty($page))
-                $obj->set('seourl_canonical', '<link rel="canonical" href="http://' . $_SERVER['SERVER_NAME'] . $obj->get('ShopDir') . '/shop/CID_' . $obj->PHPShopNav->getId() . '-1' . $seo_name . '.html">');
+                // Учет первой страницы
+                if ($page > 1)
+                    $obj->set('seourl_canonical', '<link rel="canonical" href="http://' . $_SERVER['SERVER_NAME'] . $obj->get('ShopDir') . '/shop/CID_' . $obj->PHPShopNav->getId() . '-' . $page . '.html">');
+                else
+                    $obj->set('seourl_canonical', '<link rel="canonical" href="http://' . $_SERVER['SERVER_NAME'] . $obj->get('ShopDir') . '/shop/CID_' . $obj->PHPShopNav->getId() . '.html">');
+            }
+            /*
+              if (empty($page))
+              $obj->set('seourl_canonical', '<link rel="canonical" href="http://' . $_SERVER['SERVER_NAME'] . $obj->get('ShopDir') . '/shop/CID_' . $obj->PHPShopNav->getId() . '-1' . $seo_name . '.html">'); */
         }
 
         // Учет модуля Mobile
@@ -108,7 +170,7 @@ function CID_Category_seourlpro_hook($obj, $dataArray, $rout) {
 
         $url = $obj->PHPShopNav->getName(true);
         $url_pack = '/shop/CID_' . $obj->PHPShopNav->getId();
-        $url_old_seo = '/shop/CID_' . $obj->PHPShopNav->getId() . '_' . str_replace("-", "_", PHPShopString::toLatin($catalog_name));
+        $url_old_seo = '/shop/CID_' . $obj->PHPShopNav->getId() . '_' . str_replace("-", "_", toLatin_hook($catalog_name));
 
 
         // Если ссылка не сходится
@@ -130,7 +192,7 @@ function CID_Category_seourlpro_hook($obj, $dataArray, $rout) {
             foreach ($dataArray as $row) {
 
                 if (!empty($row['cat_seo_name']))
-                    $GLOBALS['PHPShopSeoPro']->setMemory($row['id'], $row['cat_seo_name']);
+                    $GLOBALS['PHPShopSeoPro']->setMemory($row['id'], $row['cat_seo_name'], 1, false);
                 else
                     $GLOBALS['PHPShopSeoPro']->setMemory($row['id'], $row['name']);
             }
@@ -156,7 +218,7 @@ function UID_seourlpro_hook($obj, $row, $rout) {
 
         $url = $obj->PHPShopNav->getName(true);
         $url_pack = '/shop/UID_' . $obj->PHPShopNav->getId();
-        $url_old_seo = '/shop/UID_' . $obj->PHPShopNav->getId() . '_' . str_replace("-", "_", PHPShopString::toLatin($row['name']));
+        $url_old_seo = '/shop/UID_' . $obj->PHPShopNav->getId() . '_' . str_replace("-", "_", toLatin_hook($row['name']));
 
         // Если ссылка не сходится
         if ($url != $url_true and $url != $url_pack and $url != $url_old_seo) {

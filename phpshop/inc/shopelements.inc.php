@@ -321,6 +321,12 @@ class PHPShopProductIndexElements extends PHPShopProductElements {
     var $memory = false;
 
     /**
+     * шаблон товара
+     * @var string 
+     */
+    var $template = '';
+
+    /**
      * Констурктор
      */
     function PHPShopProductIndexElements() {
@@ -408,7 +414,7 @@ class PHPShopProductIndexElements extends PHPShopProductElements {
                                 $this->set('productInfo', $this->lang('productInfo'));
 
                                 // Добавляем в дизайн ячейки с товарами
-                                $this->product_grid($dataArray, $this->cell);
+                                $this->product_grid($dataArray, $this->cell, $this->template);
 
                                 // Собираем и возвращаем таблицу с товарами
                                 $disp = $this->compile();
@@ -468,7 +474,7 @@ class PHPShopProductIndexElements extends PHPShopProductElements {
         // Проверка запуска главной страницы
         if ($this->PHPShopNav->index()) {
 
-            //
+            
             // Количество ячеек для вывода товара
             if (empty($this->cell))
                 $this->cell = $this->PHPShopSystem->getParam('num_vitrina');
@@ -517,7 +523,7 @@ class PHPShopProductIndexElements extends PHPShopProductElements {
 
 
             // Добавляем в дизайн ячейки с товарами
-            $this->product_grid($this->dataArray, $this->cell);
+            $this->product_grid($this->dataArray, $this->cell, $this->template);
 
             // Собираем и возвращаем таблицу с товарами
             return $this->compile();

@@ -1,5 +1,5 @@
-<?
-session_start();
+<?php
+
 require_once './lib/captcha/php-captcha.inc.php';
 $imagesPath = './lib/font/'; 
 

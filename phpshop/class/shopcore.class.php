@@ -57,6 +57,7 @@ class PHPShopShopCore extends PHPShopCore {
      * @var string  
      */
     var $cell_type = 'default';
+
     /**
      * Класс элемента товара
      * @var string 
@@ -80,7 +81,7 @@ class PHPShopShopCore extends PHPShopCore {
 
         // Валюта товара
         $this->dengi = $this->PHPShopSystem->getParam('dengi');
-        
+
         // HTML опции верстки
         $this->setHtmlOption(__CLASS__);
     }
@@ -353,6 +354,7 @@ class PHPShopShopCore extends PHPShopCore {
 
         // Кол-во страниц в навигации
         $num = ceil($this->num_page / $this->num_row);
+        $this->max_page = $num;
 
         // 404 ошибка при ошибочной пагинации
         if ($this->page > $this->num_page and $this->page != 'ALL') {
@@ -368,6 +370,13 @@ class PHPShopShopCore extends PHPShopCore {
                 $p_do = 1;
             }
 
+
+            if ($this->page != 'ALL')
+                $this->set("paginPageCurnet", $this->page);
+            else
+                $this->set("paginPageCurnet", '-');
+            $this->set("paginPageCount", $num);
+
             while ($i <= $num) {
                 if ($i > 1) {
                     $p_start = $this->num_row * ($i - 1) + 1;
@@ -380,9 +389,6 @@ class PHPShopShopCore extends PHPShopCore {
                 $this->set("paginPageRangeStart", $p_start);
                 $this->set("paginPageRangeEnd", $p_end);
                 $this->set("paginPageNumber", $i);
-                $this->set("paginPageCurnet", $i);
-                $this->set("paginPageCount", $i);
-
 
                 if ($i != $this->page) {
                     if ($i == 1) {
@@ -567,6 +573,8 @@ class PHPShopShopCore extends PHPShopCore {
         else
             $this->grid_style = '';
 
+        $this->separator = null;
+
         $Arg = func_get_args();
         $item = 1;
 
@@ -612,7 +620,7 @@ class PHPShopShopCore extends PHPShopCore {
             case 'li':
                 if (is_array($args))
                     foreach ($args as $key => $val) {
-                        $tr.='<li class="'.$this->cell_type_class.'">' . $val . '</li>';
+                        $tr.='<li class="' . $this->cell_type_class . '">' . $val . '</li>';
                         $item++;
                     }
                 break;
@@ -621,7 +629,7 @@ class PHPShopShopCore extends PHPShopCore {
             case 'div':
                 if (is_array($args))
                     foreach ($args as $key => $val) {
-                        $tr.='<div class="'.$this->cell_type_class.'">' . $val . '</div>';
+                        $tr.='<div class="' . $this->cell_type_class . '">' . $val . '</div>';
                         $item++;
                     }
                 break;
@@ -641,8 +649,12 @@ class PHPShopShopCore extends PHPShopCore {
                     }
                 $tr.='</tr>';
 
-                if (!empty($this->setka_footer))
-                    $tr.='<tr><td ' . $this->grid_style . ' colspan="' . ($this->cell * 2) . '" height="1"><img height="1" src="images/spacer.gif"></td></tr>';
+
+                $this->separator = '<tr><td ' . $this->grid_style . ' colspan="' . ($this->cell * 2) . '" height="1"><img height="1" src="images/spacer.gif"></td></tr>';
+
+                if (!empty($this->setka_footer)) {
+                    $tr.=$this->separator;
+                }
         }
 
 
@@ -694,7 +706,7 @@ class PHPShopShopCore extends PHPShopCore {
         $this->set('catalog', $this->lang('catalog'));
         if ($this->PHPShopNav->getPage() > 0)
             $this->set('productPageThis', $this->PHPShopNav->getPage());
-        else
+        elseif ($this->PHPShopNav->getPage() != 'ALL')
             $this->set('productPageThis', 1);
 
         $d1 = $d2 = $d3 = $d4 = $d5 = $d6 = $d7 = null;
@@ -783,4 +795,5 @@ class PHPShopShopCore extends PHPShopCore {
     }
 
 }
+
 ?>

@@ -7,7 +7,7 @@
 <form method="post" name="forma_gbook">
     <table width="100%" cellpadding="5" class="forma_message">
         <tr>
-            <td width="30%">Имя </td>
+            <td width="15%">Имя </td>
             <td>
                 <input type="text" name="name_new" maxlength="45" style=" height:18px; font-family:tahoma; font-size:11px ; color:#4F4F4F ">
                 <img src="images/shop/flag_green.gif" alt="" width="16" height="16" border="0" hspace="5" align="absmiddle"> </td>
@@ -18,7 +18,7 @@
             </td>
         </tr>
         <tr>
-            <td>Тема сообщения </td>
+            <td>Заголовок</td>
             <td><textarea style=" height:50px; font-family:tahoma; font-size:11px ; color:#4F4F4F " name="tema_new" maxlength="60" id="content"></textarea>
                 <img src="images/shop/flag_green.gif" alt="" width="16" height="16" border="0" hspace="5" align="absmiddle"> </td>
         </tr>
@@ -27,14 +27,10 @@
             <td valign="top"><textarea style=" height:150px; font-family:tahoma; font-size:11px ; color:#4F4F4F " name="otsiv_new" maxlength="300" id="content"></textarea>
                 <img src="images/shop/flag_green.gif" alt="" width="16" height="16" border="0" hspace="5" align="absmiddle"> </td>
         </tr>
-    </table>
-
-    <table width="100%">
         <tr>
-            <td  width="30%" align="left"><img src="phpshop/captcha.php" id="captcha" alt="" border="0"><br>
-                <a class=b  title="Обновить картинку" href="javascript:CapReload();">Обновить картинку</a></td>
-            <td>Введите код, указанный на картинке<br>
-                <input type="text" name="key" style="">
+            <td  align="left"><img src="phpshop/captcha3.php" id="captcha" alt="" border="0"></td>
+            <td>
+                <input type="text" name="key" placeholder="Введите код, указанный на картинке">
                 <img src="images/shop/flag_green.gif" alt="" width="16" height="16" border="0" hspace="5" align="absmiddle"></td>
         </tr>
         <tr>

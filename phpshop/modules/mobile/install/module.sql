@@ -12,4 +12,4 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_mobile_system` (
 
 
 
-INSERT INTO `phpshop_modules_mobile_system` VALUES (1,'ƒоступна мобильна€ верси€ сайта, перейти?','','1','1.2');
+INSERT INTO `phpshop_modules_mobile_system` VALUES (1,'ƒоступна мобильна€ верси€ сайта, перейти?','','1','1.3');

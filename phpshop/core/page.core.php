@@ -4,7 +4,7 @@
  * Обработчик страниц
  * @author PHPShop Software
  * @tutorial http://wiki.phpshop.ru/index.php/PHPShopPage
- * @version 1.2
+ * @version 1.3
  * @package PHPShopCore
  */
 class PHPShopPage extends PHPShopCore {
@@ -40,53 +40,88 @@ class PHPShopPage extends PHPShopCore {
     }
 
     /**
-     * Вывод сопутствующих товаров
-     * @param array $row массим товаров
+     * Однотипные товары
+     * @param array $row массив данных
      */
     function odnotip($row) {
         global $PHPShopProductIconElements;
+
+        $this->odnotip_setka_num = 1;
+        $this->line = false;
+        $this->template_odnotip = 'main_spec_forma_icon';
+
+        // Перехват модуля в начале функции
+        $hook = $this->setHook(__CLASS__, __FUNCTION__, $row, 'START');
+        if ($hook)
+            return true;
 
         $disp = null;
         $odnotipList = null;
         if (!empty($row['odnotip'])) {
             if (strpos($row['odnotip'], ','))
                 $odnotip = explode(",", $row['odnotip']);
-            else
+            elseif (is_numeric(trim($row['odnotip'])))
                 $odnotip[] = trim($row['odnotip']);
         }
 
         // Список для выборки
-        if (!empty($odnotip) and is_array($odnotip))
+        if (is_array($odnotip))
             foreach ($odnotip as $value) {
-                $odnotipList.=' id=' . intval($value) . ' OR';
+                if (!empty($value))
+                    $odnotipList.=' id=' . trim($value) . ' OR';
             }
 
         $odnotipList = substr($odnotipList, 0, strlen($odnotipList) - 2);
 
+        // Режим проверки остатков на складе
+        if ($this->PHPShopSystem->getSerilizeParam('admoption.sklad_status') == 2)
+            $chek_items = ' and items>0';
+        else
+            $chek_items = null;
+
         if (!empty($odnotipList)) {
+
             $PHPShopOrm = new PHPShopOrm();
             $PHPShopOrm->debug = $this->debug;
-            $result = $PHPShopOrm->query("select * from " . $this->getValue('base.products') . " where (" . $odnotipList . " and enabled='1') order by num");
+            $result = $PHPShopOrm->query("select * from " . $this->getValue('base.products') . " where (" . $odnotipList . ") " . $chek_items . " and  enabled='1' and parent_enabled='0' and sklad!='1' order by num");
             while ($row = mysql_fetch_assoc($result))
                 $data[] = $row;
+
+            // Сетка товаров
+            if (!empty($data) and is_array($data))
+                $disp = $PHPShopProductIconElements->seamply_forma($data, $this->odnotip_setka_num, $this->template_odnotip, $this->line);
         }
 
-        if (!empty($data) and is_array($data)) {
 
+        if (!empty($disp)) {
             // Вставка в центральную часть
             if (PHPShopParser::check($this->getValue('templates.main_product_odnotip_list'), 'productOdnotipList')) {
-                $this->set('productOdnotipList', $PHPShopProductIconElements->seamply_forma($data, $this->odnootip_cell_center, 'main_spec_forma_icon'));
+                $this->set('productOdnotipList', $disp);
                 $this->set('productOdnotip', __('Рекомендуемые товары'));
             } else {
                 // Вставка в правый столбец
                 $this->set('specMainTitle', __('Рекомендуемые товары'));
-                $this->set('specMainIcon', $PHPShopProductIconElements->seamply_forma($data, $this->odnootip_cell_block, 'main_spec_forma_icon'));
+                $this->set('specMainIcon', $disp);
             }
-            
+
+            // Перехват модуля в середине функции
+            $this->setHook(__CLASS__, __FUNCTION__, $row, 'MIDDLE');
+
             $odnotipDisp = ParseTemplateReturn($this->getValue('templates.main_product_odnotip_list'));
             $this->set('odnotipDisp', $odnotipDisp);
         }
+        // Выводим последние новинки
+        else {
+            $this->set('specMainIcon', $PHPShopProductIconElements->specMainIcon(true, $this->category));
+        }
+
+        // Перехват модуля в конце функции
+        $this->setHook(__CLASS__, __FUNCTION__, $row, 'END');
     }
+
+    
+    
+    
 
     /**
      * Экшен по умолчанию, вывод данных по странице

@@ -78,7 +78,7 @@ class PHPShopString {
             $str = '_' . $str;
 
         $str = str_replace("&nbsp;", "", $str);
-        $str = str_replace("/", "-", $str);
+        //$str = str_replace("/", "-", $str); // Добавлено для SeoPro
         $str = str_replace("\\", "", $str);
         $str = str_replace("(", "", $str);
         $str = str_replace(")", "", $str);

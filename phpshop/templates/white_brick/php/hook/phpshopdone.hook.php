@@ -1,7 +1,7 @@
 <?php
 
 
-function index_nt_hook($obj, $dataArray, $rout) {
+function done_index_nt_hook($obj, $dataArray, $rout) {
 
     if ($rout == 'START') {
         $obj->set('UidLeftColHide','span12');
@@ -13,6 +13,6 @@ function index_nt_hook($obj, $dataArray, $rout) {
  */
 $addHandler = array
     (
-    'index' => 'index_nt_hook'
+    'index' => 'done_index_nt_hook'
 );
 ?>

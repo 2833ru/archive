@@ -1,14 +1,12 @@
 <?php
 
-
-
 /**
  * Изменение сетки товаров в "Сейчас покупают"
  * @param array $obj объект
  */
 function nowBuy_hook($obj) {
-    $obj->cell=2;
-    $obj->limitpos=4;
+    $obj->cell = 2;
+    $obj->limitpos = 4;
 }
 
 /**
@@ -16,27 +14,27 @@ function nowBuy_hook($obj) {
  * @param array $obj объект
  */
 function specMain_hook($obj) {
-    $obj->cell=2;
-    $obj->limit=4;
+    $obj->cell = 2;
+    $obj->limit = 4;
 }
 
 /**
  * Изменение сетки категорий в "Таблице категорий на главной"
  * @param array $obj объект
  */
-function leftCatalTable_hook($obj) {
+function leftCatalTable_hook($obj,$data,$rout) {
 
     // Выключаем блок
     return true;
     
-    $obj->cell=1;
+    //$obj->cell=1;
+
 }
 
-$addHandler=array
-        (
-        'nowBuy'=>'nowBuy_hook',
-        'specMain'=>'specMain_hook',
-        'leftCatalTable'=>'leftCatalTable_hook'
+$addHandler = array
+    (
+    'nowBuy' => 'nowBuy_hook',
+    'specMain' => 'specMain_hook',
+    'leftCatalTable' => 'leftCatalTable_hook'
 );
-
 ?>

@@ -47,13 +47,16 @@ class AddToTemplateMDetect extends PHPShopProductElements {
             exit();
         }
 
-
-        // Настройки
-        $option = $this->option();
         $this->memory_set('mobile.logo', $option['logo']);
         $this->memory_set('mobile.returncall', $option['returncall']);
+    }
+
+    function message() {
 
         if ($this->detect() and empty($_SESSION['MobileDetectConfirm'])) {
+            
+            // Настройки
+            $option = $this->option();
 
             if (empty($option['message']))
                 $option['message'] = "Доступна мобильная версия сайта, перейти?";
@@ -66,8 +69,9 @@ class AddToTemplateMDetect extends PHPShopProductElements {
 		</script>
         <!-- MobileDetectConfirm -->';
 
-            $this->set('leftMenu', $js, true);
+            //$this->set('leftMenu', $js, true);
             $_SESSION['MobileDetectConfirm'] = true;
+            return $js;
         }
     }
 

@@ -115,17 +115,19 @@ class PHPShopSeoPro {
         if ($enabled) {
             $str = PHPShopString::toLatin($str);
             $str = str_replace("_", "-", $str);
+            //$str = str_replace("/", "-", $str);
         }
 
         return $str;
     }
 
     function catArrayToMemory() {
+
         $PHPShopCategoryArray = new PHPShopCategorySeoProArray();
         foreach ($PHPShopCategoryArray->getArray() as $key => $val) {
 
             if (!empty($val['cat_seo_name'])) {
-                $this->setMemory($key, $val['cat_seo_name'],1,false);
+                $this->setMemory($key, $val['cat_seo_name'], 1, false);
                 $this->memory['CID_' . $key . '_1'] = $this->setLatin($val['cat_seo_name'] . '-1');
                 $this->memory['shop/CID_' . $key . '_ALL'] = $this->setLatin($val['cat_seo_name']) . '-ALL';
             } else {
@@ -148,6 +150,19 @@ class PHPShopSeoPro {
 
     function stro_replace($search, $replace, $subject) {
         return strtr($subject, array_combine($search, $replace));
+    }
+
+
+    function AjaxCompile($result) {
+
+        // Товары
+        $array_str_prod = array_values($this->memory_prod);
+        $array_id_prod = array_keys($this->memory_prod);
+
+        if (is_array($this->memory_prod))
+            $result = $this->stro_replace($array_id_prod, $array_str_prod, $result);
+
+        return $result;
     }
 
     function Compile($obj) {

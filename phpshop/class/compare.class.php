@@ -31,6 +31,12 @@ class PHPShopCompare {
         $objID = PHPShopSecurity::TotalClean($objID, 1);
         $objProduct = new PHPShopProduct($objID);
         $name = PHPShopSecurity::CleanStr($objProduct->getParam("name"));
+
+        // готовим метки дл€ шаблонов сообщений.
+        PHPShopParser::set('prodId', $objID);
+        PHPShopParser::set('prodName', $name);
+        PHPShopParser::set('ShopDir', $GLOBALS['SysValue']['dir']['dir']);
+
         if (!is_array($this->_COMPARE[$objID])) {
             $new = array(
                 "id" => $objID,
@@ -38,13 +44,20 @@ class PHPShopCompare {
                 "category" => $objProduct->getParam("category"));
             $this->_COMPARE[$objID] = $new;
 
-            // сообщение дл€ вывода во всплывающее окно
-            $this->message = "¬ы успешно добавили <a href='/shop/UID_$objID.html' title='ѕодробное описание'>$name</a> 
-            в  <a href='/compare/' title='ѕерейти в вашу корзину'>сравнение</a>";
+            if (PHPShopParser::checkFile('../../' . $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/users/compare/compare_add_alert_done.tpl")) {
+                // сообщение дл€ вывода во всплывающее окно
+                $this->message = PHPShopParser::file('../../' . $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/users/compare/compare_add_alert_done.tpl", true);
+            }
+            else
+                $this->message = PHPShopParser::file('../lib/templates/compare/compare_add_alert_done.tpl', true);
         } else {
             // сообщение дл€ вывода во всплывающее окно
-            $this->message = "“овар <a href='/shop/UID_$objID.html' title='ѕодробное описание'>$name</a> 
-            уже добавлен в <a href='/compare/' title='ѕерейти в вашу корзину'>сравнение</a>";
+            if (PHPShopParser::checkFile('../../' . $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/users/compare/compare_add_alert_ready.tpl")) {
+
+                $this->message = PHPShopParser::file('../../' . $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/users/compare/compare_add_alert_ready.tpl", true);
+            }
+            else
+                $this->message = PHPShopParser::file('../lib/templates/compare/compare_add_alert_ready.tpl', true);
         }
     }
 
@@ -57,7 +70,7 @@ class PHPShopCompare {
 
     /**
      * ѕодсчет количества товаров в сравнении
-     * @return <type>
+     * @return int
      */
     function getNum() {
         return count($this->_COMPARE);

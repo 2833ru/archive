@@ -141,14 +141,14 @@ function setGeneration() {
 
     // Каталоги
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
-    $data = $PHPShopOrm->select(array('id,name'), false, false, array('limit' => 10000));
+    $data = $PHPShopOrm->select(array('*'), array('skin_enabled'=>"='0'"), false, array('limit' => 10000));
 
     $seourl = null;
     if (is_array($data))
         foreach ($data as $row) {
 
             // Стандартный урл
-            $url = '/shop/UID_' . $row['id'];
+            $url = '/shop/CID_' . $row['id'];
 
             // SEOURL
             if ($seourl_enabled)
@@ -156,10 +156,10 @@ function setGeneration() {
 
             //  SEOURLPRO
             if (!empty($seourlpro_enabled)) {
-                if (empty($row['prod_seo_name']))
+                if (empty($row['cat_seo_name']))
                     $url = '/'.str_replace("_", "-", PHPShopString::toLatin($row['name']));
                 else
-                    $url = '/'.$row['prod_seo_name'];
+                    $url = '/'.$row['cat_seo_name'];
             }
 
             $stat_products.= '<url>' . "\n";

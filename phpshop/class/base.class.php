@@ -198,7 +198,7 @@ class PHPShopBase {
      */
     function setPHPCoreReporting() {
         if (function_exists('error_reporting')) {
-            error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT);
+            error_reporting('E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT');
             if ($this->phpversion() and function_exists('ini_set')) {
                 ini_set('allow_call_time_pass_reference', 1);
             }

@@ -28,7 +28,7 @@ class MainCatalogTree extends CatalogTree {
         $this->dis.="d.add($n,$id,'$name','$link','','','','$icon');";
     }
 
-    function create($parent_to) {
+    function create($parent_to=0) {
         $result = $this->sql("select * from " . $this->table . " where parent_to=" . intval($parent_to) . " order by num");
         $i = 0;
         while ($row = mysql_fetch_array($result)) {

@@ -84,70 +84,75 @@ function actionStart() {
     $city_select_value[] = array('Только Регионы и города РФ', 1, $data['city_select']);
     $city_select_value[] = array('Все страны мира', 2, $data['city_select']);
     $Tab1.=$PHPShopGUI->setField(__("Помощь подбора стран, регионов и городов:"), $PHPShopGUI->setSelect('city_select_new', $city_select_value, 120), 'left');
+    
     // Иконка
     $Tab1.= $PHPShopGUI->setField(__('Иконка'), $PHPShopGUI->setInputText(false, "icon_new", $data['icon'], '190px', false, 'left') .
             $PHPShopGUI->setButton(__('Выбрать'), "../img/icon-move-banner.gif", "100px", '25px', "right", "ReturnPic('icon_new');return false;"));
-
+    
+    // Вес
+    $Tab1.= $PHPShopGUI->setField('Такса за каждые 0.5 кг веса', $PHPShopGUI->setInputText('Используется для задания дополнительной тарификации (например, для "Почта России")<BR>Каждые дополнительные 0.5 кг свыше базовых 0.5 кг будут стоить', "taxa_new", $data['taxa'], 50, $PHPShopSystem->getDefaultValutaCode())
+    );
+    
     $Tab2 .= $PHPShopGUI->setField(__("Настройка полей адреса для данного типа доставки:"), "<table >
                 <tr><td>Поле</td><td>вкл/выкл</td><td>Название при выводе</td><td>Обязательное</td><td>No</td></tr>"
             . "<tr><td>Страна</td>"
             . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][country][enabled]', 1, __(''), $data_fields[enabled][country][enabled]) . "</td>"
-            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[enabled][country][name]', $data_fields[enabled][country][name], "100") . "</td>"
+            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[enabled][country][name]', __('Страна'), "100") . "</td>"
             . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][country][req]', 1, __(''), $data_fields[enabled][country][req]) . "</td>"
             . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[num][country]', $data_fields[num][country], "20") . "</td></tr>"
             . "<tr><td>Регион/штат</td>"
             . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][state][enabled]', 1, __(''), $data_fields[enabled][state][enabled]) . "</td>"
-            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[enabled][state][name]', $data_fields[enabled][state][name], "100") . "</td>"
+            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[enabled][state][name]', __('Регион'), "100") . "</td>"
             . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][state][req]', 1, __(''), $data_fields[enabled][state][req]) . "</td>"
             . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[num][state]', $data_fields[num][state], "20") . "</td></tr>"
             . "<tr><td>Город</td>"
             . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][city][enabled]', 1, __(''), $data_fields[enabled][city][enabled]) . "</td>"
-            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[enabled][city][name]', $data_fields[enabled][city][name], "100") . "</td>"
+            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[enabled][city][name]', __('Город'), "100") . "</td>"
             . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][city][req]', 1, __(''), $data_fields[enabled][city][req]) . "</td>"
             . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[num][city]', $data_fields[num][city], "20") . "</td></tr>"
             . "<tr><td>Индекс</td>"
             . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][index][enabled]', 1, __(''), $data_fields[enabled][index][enabled]) . "</td>"
-            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[enabled][index][name]', $data_fields[enabled][index][name], "100") . "</td>"
+            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[enabled][index][name]', __('Индекс'), "100") . "</td>"
             . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][index][req]', 1, __(''), $data_fields[enabled][index][req]) . "</td>"
             . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[num][index]', $data_fields[num][index], "20") . "</td></tr>"
             . "<tr><td>ФИО</td>"
             . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][fio][enabled]', 1, __(''), $data_fields[enabled][fio][enabled]) . "</td>"
-            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[enabled][fio][name]', $data_fields[enabled][fio][name], "100") . "</td>"
+            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[enabled][fio][name]', __('ФИО'), "100") . "</td>"
             . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][fio][req]', 1, __(''), $data_fields[enabled][fio][req]) . "</td>"
             . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[num][fio]', $data_fields[num][fio], "20") . "</td></tr>"
             . "<tr><td>Телефон</td>"
             . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][tel][enabled]', 1, __(''), $data_fields[enabled][tel][enabled]) . "</td>"
-            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[enabled][tel][name]', $data_fields[enabled][tel][name], "100") . "</td>"
+            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[enabled][tel][name]', __('Телефон'), "100") . "</td>"
             . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][tel][req]', 1, __(''), $data_fields[enabled][tel][req]) . "</td>"
             . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[num][tel]', $data_fields[num][tel], "20") . "</td></tr>"
             . "<tr><td>Улица</td>"
             . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][street][enabled]', 1, __(''), $data_fields[enabled][street][enabled]) . "</td>"
-            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[enabled][street][name]', $data_fields[enabled][street][name], "100") . "</td>"
+            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[enabled][street][name]', __('Улица'), "100") . "</td>"
             . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][street][req]', 1, __(''), $data_fields[enabled][street][req]) . "</td>"
             . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[num][street]', $data_fields[num][street], "20") . "</td></tr>"
             . "<tr><td>Дом</td>"
             . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][house][enabled]', 1, __(''), $data_fields[enabled][house][enabled]) . "</td>"
-            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[enabled][house][name]', $data_fields[enabled][house][name], "100") . "</td>"
+            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[enabled][house][name]', __('Дом'), "100") . "</td>"
             . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][house][req]', 1, __(''), $data_fields[enabled][house][req]) . "</td>"
             . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[num][house]', $data_fields[num][house], "20") . "</td></tr>"
             . "<tr><td>Подъезд</td>"
             . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][porch][enabled]', 1, __(''), $data_fields[enabled][porch][enabled]) . "</td>"
-            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[enabled][porch][name]', $data_fields[enabled][porch][name], "100") . "</td>"
+            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[enabled][porch][name]',  __('Подъезд'), "100") . "</td>"
             . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][porch][req]', 1, __(''), $data_fields[enabled][porch][req]) . "</td>"
             . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[num][porch]', $data_fields[num][porch], "20") . "</td></tr>"
             . "<tr><td>Код домофона</td>"
             . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][door_phone][enabled]', 1, __(''), $data_fields[enabled][door_phone][enabled]) . "</td>"
-            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[enabled][door_phone][name]', $data_fields[enabled][door_phone][name], "100") . "</td>"
+            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[enabled][door_phone][name]', __('Код домофона'), "100") . "</td>"
             . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][door_phone][req]', 1, __(''), $data_fields[enabled][door_phone][req]) . "</td>"
             . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[num][door_phone]', $data_fields[num][door_phone], "20") . "</td></tr>"
             . "<tr><td>Квартира</td>"
             . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][flat][enabled]', 1, __(''), $data_fields[enabled][flat][enabled]) . "</td>"
-            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[enabled][flat][name]', $data_fields[enabled][flat][name], "100") . "</td>"
+            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[enabled][flat][name]', __('Квартира'), "100") . "</td>"
             . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][flat][req]', 1, __(''), $data_fields[enabled][flat][req]) . "</td>"
             . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[num][flat]', $data_fields[num][flat], "20") . "</td></tr>"
             . "<tr><td>Время доставки</td>"
             . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][delivtime][enabled]', 1, __(''), $data_fields[enabled][delivtime][enabled]) . "</td>"
-            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[enabled][delivtime][name]', $data_fields[enabled][delivtime][name], "100") . "</td>"
+            . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[enabled][delivtime][name]', __('Время доставки'), "100") . "</td>"
             . "<td>" . $PHPShopGUI->setCheckbox('data_fields[enabled][delivtime][req]', 1, __(''), $data_fields[enabled][delivtime][req]) . "</td>"
             . "<td>" . $PHPShopGUI->setInputText(false, 'data_fields[num][delivtime]', $data_fields[num][delivtime], "20") . "</td></tr>"
             . "</table>"
@@ -155,7 +160,7 @@ function actionStart() {
 
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array(__("Основное"), $Tab1, 300), array(__("Настройка полей данных по адресу"), $Tab2, 480));
+    $PHPShopGUI->setTab(array(__("Основное"), $Tab1, 450), array(__("Настройка полей данных по адресу"), $Tab2, 450));
 
 
 

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<module>
+    <version>1.01</version>
+    <name>Smart Filter</name>
+    <description>Модуль Smart Filter</description>
+    <icon>icon.png</icon>
+	<trial>true</trial>
+    <category>template,form</category>
+    <adminmenu>
+        <title>Smart Filter</title>
+        <podmenu>
+            <podmenu_name>Настройка Smart Filter</podmenu_name>
+            <podmenu_icon>icon.png</podmenu_icon>
+            <podmenu_action>javascript:miniWin('../modules/w4asmartfilter/admpanel/adm_module.php',510,450);</podmenu_action>
+        </podmenu>
+    </adminmenu>
+        <history>
+        <update>
+            <date>26.09.2014</date>
+            <content>Адаптирован для Ver.4.0</content>
+        </update>
+    </history>
+</module>

@@ -1,8 +1,6 @@
 <div id="allspec">
-                    @user_error@
-                </div>
-
-
+    @user_error@
+</div>
 
 <form name="users_password" method="post">
     <table style="padding-top: 10px;padding-bottom: 10px">
@@ -29,11 +27,13 @@
     </table>
 </form>
 <form name="users_data" method="post">
-    
-	
+
+
     <table width="99%" cellpadding="5">
         <tr>
-            <td colspan="2"><p><br></p></td>
+            <td width="180">Статус:&nbsp;&nbsp;&nbsp;
+            </td>
+            <td><b>@user_status@</b></td>
         </tr>
         <tr>
             <td width="180">Контактное лицо:&nbsp;&nbsp;&nbsp;
@@ -71,7 +71,7 @@
             <td valign="top" colspan="2">
                 <br>
                 <div id="allspec"><img src="images/shop/comment.gif" alt="" width="16" height="16" border="0" hspace="5" align="absmiddle">Данные, отмеченные <b>флажками</b> обязательны для заполнения.<br>
-                   
+
                 </div><br>
                 <input type="hidden" value="1" name="update_user">
                 <input type="button" value="Изменить данные" onclick="UpdateUserForma()">

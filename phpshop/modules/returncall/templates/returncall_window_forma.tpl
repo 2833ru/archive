@@ -11,7 +11,7 @@
         <div>
             <div style="border:1px solid #ccc; background:#ebf1f6 ">
                 <form action="@ShopDir@/returncall/" method="post" onsubmit="return checkModReturnCallForma();" >
-                    <table style="margin:0px 8px 10px 9px" border="0" cellpadding="0" cellspacing="0">
+                    <table style="margin:0px 8px 10px 9px" border="0" cellpadding="1" cellspacing="1">
                         <tbody>
                             <tr>
                                 <td colspan="2" style="padding:10px;" align="right"><a style="padding:0px; font-size:11px;margin:0px 0px 0px 5px;color:#086ebd" href="javascript:void(0)" onclick="document.getElementById('mod_recall_forma').style.display = 'none';">закрыть</a></td>
@@ -36,9 +36,7 @@
                                 <td>Сообщение:</td>
                                 <td><textarea name="returncall_mod_message" cols="12" rows="3"></textarea></td>
                             </tr>
-                            <tr>
-                                <td colspan="2">@returncall_captcha@</td>
-                            </tr>
+                            @returncall_captcha@
                             <tr>
                        
                                 <td colspan="2"><input type="submit" name="returncall_mod_send" value="Перезвоните мне"></td>

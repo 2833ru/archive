@@ -1,9 +1,17 @@
-////// new jQuery use functions //////
+/**
+ * Поддержка jQuery функций
+ * @package PHPShopJavaScript
+ * @author PHPShop Software
+ * @version 1.1
+ */
+
+// Динамическая прокрутка товаров
+var AJAX_SCROLL = false;
 
 // HTML анимации загрузки при аякс запросах
 var waitText = '<span class="wait">&nbsp;</span>';
 // Сообщение о необходимости авторизации для того, чтобы оставить отзык к товару.
-var commentAuthErrMess = "Функция добавления комментария возможна только для авторизованных пользователей.\n<a href='/users/?from=true'>Авторизуйтесь или пройдите регистрацию</a>.";
+var commentAuthErrMess = "Функция добавления комментария возможна только для авторизованных пользователей.\n<a href='" + dirPath() + "/users/?from=true'>Авторизуйтесь или пройдите регистрацию</a>.";
 
 // вывод сообщений после доабвление в корзину, сравнение, вишлист и т.д.
 function showAlertMessage(message) {
@@ -39,8 +47,12 @@ function IsEmail(email) {
 
 // добавление товара в вишлист
 function addToWishList(product_id) {
+
+    // Реальное размещение
+    var dir = dirPath();
+
     $.ajax({
-        url: '/phpshop/ajax/wishlist.php',
+        url: dir + '/phpshop/ajax/wishlist.php',
         type: 'post',
         data: 'product_id=' + product_id,
         dataType: 'json',
@@ -69,6 +81,10 @@ function UpdateDeliveryJq(xid, obj) {
                 document.getElementById('d').value = xid;
                 document.getElementById('TotalSumma').innerHTML = (req.responseJS.total || '');
                 document.getElementById('seldelivery').innerHTML = (req.responseJS.dellist || '');
+                
+                // учет хука доставки
+                if(typeof(req.responseJS.hook))
+                    eval(req.responseJS.hook);
 
                 $("#userAdresData").hide();
                 document.getElementById('userAdresData').innerHTML = (req.responseJS.adresList || '');
@@ -221,12 +237,7 @@ $(document).ready(function() {
             $("#showYurDataForPaymentLoad").html($(str).html());
     });
     // выделяем первую в списке оплату.
-    $("input#order_metod:first").attr('checked','checked').change(); 
-    
-    // выделяем оплату при клике на div в котором она расположена.
-    $("form[name='forma_order'] div.paymOneEl").live('click', function() {
-        $(this).find("input[type=radio]").attr('checked','checked').change();
-    });    
+    $("input#order_metod:first").attr('checked', 'checked').change();
 
 
     // при изменении адреса, заполняем соотв. поля
@@ -275,8 +286,9 @@ $(document).ready(function() {
 
         $("form[name='forma_order'] select.citylist").attr("disabled", true);
         $(this).after(waitText);
+        var dir = dirPath();
         $.ajax({
-            url: '/phpshop/ajax/citylist.php',
+            url: dir + '/phpshop/ajax/citylist.php',
             type: 'post',
             data: {
                 country: $("form[name='forma_order'] select.citylist[name=country_new] option:selected").attr('for'),
@@ -303,16 +315,12 @@ $(document).ready(function() {
     });
 
     // выбор способа доставки
-    $("form[name='forma_order'] input[name=dostavka_metod]").live('change', function() {
+    $("form[name='forma_order'] input[name=dostavka_metod]").live('click', function() {
         $(this).next().after(waitText);
         UpdateDeliveryJq($(this).val());
     });
 
-    // смена доставки при клике на ее название.
-    $("form[name='forma_order'] span.deliveryName").live('click', function() {
-        var radioVal = $(this).attr('for');
-        $("form[name='forma_order'] input[name=dostavka_metod][value=" + radioVal + "]").change();
-    });
+
 
     // при вводе Имени пользователя, автоматом прописываем его в адрес если он пуст
     $("form[name='forma_order'] input[name=name_new]").live('change', function() {

@@ -44,6 +44,11 @@ class PHPShopArray {
      * @var int многомерный [1] одномерный масив [2] или [3] простой массив
      */
     var $objType = 1;
+    
+    /**
+     * @var bool режим проверки ключей
+     */
+    var $checkKey = false;
 
     /**
      * Сортировка выборки
@@ -62,7 +67,7 @@ class PHPShopArray {
      * @param mixed $param имя параметра через запятую
      */
     function setArray() {
-        if ($this->objArgNum > 0) {
+        if (!$this->checkKey and $this->objArgNum > 0) {
             foreach ($this->objArg as $v) {
                 $select[] = $v;
             }

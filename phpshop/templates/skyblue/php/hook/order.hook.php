@@ -41,9 +41,24 @@ function order_first_order_check($obj, $data, $rout) {
     }
 }
 
+function delivery_hook($obj){
+    $PHPShopDeliveryArray = new PHPShopDeliveryArray();
+    $DeliveryArray = $PHPShopDeliveryArray->getArray();
+
+    $disp=null;
+    if(is_array($DeliveryArray))
+        foreach($DeliveryArray as $row)
+            $disp.=PHPShopText::setInput('radio', 'dostavka_metod', $row['id'],false,false,false,false,$row['name']);
+    
+    
+    $obj->set('orderDelivery',$disp);        
+    return true;
+}
+
 $addHandler = array
     (
     '#ordercartforma' => 'ordercartforma_hook',
-    '#order' => 'order_first_order_check'
+    '#order' => 'order_first_order_check',
+    '#delivery'=>'delivery_hook'
 );
 ?>

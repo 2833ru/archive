@@ -58,12 +58,12 @@ function actionStart() {
 
 
     // получаем ИД автоматическое название создаваемой страницы
-    $sql = "SHOW TABLE STATUS LIKE '".$GLOBALS['SysValue']['base']['page']."'";
+    $sql = "SHOW TABLE STATUS LIKE '" . $GLOBALS['SysValue']['base']['page'] . "'";
     $result = mysql_query($sql);
     $array = mysql_fetch_array($result);
     $ai = $array['Auto_increment'];
     $link = "page$ai";
-    
+
 
     // Содержание закладки 1
     $Tab1 = $PHPShopGUI->setField("Каталог:", $PHPShopGUI->setInput("text", "parent_name", getCatPath($_GET['categoryID']), "left", 450) .
@@ -79,6 +79,12 @@ function actionStart() {
     $SelectValue[] = array('Заблокировать', 0, $enabled);
 
     $Tab1.= $PHPShopGUI->setField("Вывод:", $PHPShopGUI->setSelect("enabled_new", $SelectValue, 150), "none", 5);
+
+    // Рекомендуемые товары
+    $Tab1.=$PHPShopGUI->setField('Рекомендуемые товары для совместной продажи:', $PHPShopGUI->setTextarea('odnotip_new', $data['odnotip'], false, '99%') .
+            $PHPShopGUI->setLine() .
+            $PHPShopGUI->setImage('../icon/icon_info.gif', 16, 16) .
+            __('Введите ID товаров в формате 1,2,3 без пробелов'), 'none');
 
     // Содержание закладки 2
     $Tab2 = $oFCKeditor->AddGUI();

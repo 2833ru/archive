@@ -315,13 +315,13 @@ class PHPShopShop extends PHPShopShopCore {
         $this->checkMultibase($row['pic_small']);
 
         $this->set('productName', $row['name']);
-        
+
         // Артикул
         $this->set('productArt', $row['uid']);
         if (!empty($row['uid']) and PHPShopParser::checkFile('product/main_product_forma_full_productArt.tpl')) {
             $this->set('productArt', ParseTemplateReturn('product/main_product_forma_full_productArt.tpl'));
         }
-        
+
         $this->set('productDes', Parser($row['content']));
         $this->set('productPriceMoney', $this->dengi);
         $this->set('productBack', $this->lang('product_back'));
@@ -615,6 +615,9 @@ function CID_Product($category = null) {
     if (!empty($category))
         $this->category = intval($category);
 
+    // Путь для навигации
+    $this->objPath = './CID_' . $this->category . '_';
+
     // Перехват модуля в начале
     if ($this->setHook(__CLASS__, __FUNCTION__, false, 'START'))
         return true;
@@ -623,8 +626,6 @@ function CID_Product($category = null) {
     if (empty($this->category_name))
         return $this->setError404();
 
-    // Путь для навигации
-    $this->objPath = './CID_' . $this->category . '_';
 
     // Валюта
     $this->set('productValutaName', $this->currency());
@@ -662,12 +663,33 @@ function CID_Product($category = null) {
         $this->setPaginator(count($this->dataArray), $order);
     }
 
-    
+
     // Добавляем в дизайн ячейки с товарами
     $grid = $this->product_grid($this->dataArray, $cell);
+
+    // Ajax Paginator
+    if (!empty($GLOBALS['SysValue']['base']['seourlpro']['seourlpro_system'])) {
+        $this->set('page_prefix', '-');
+        $seourlpro = true;
+    }
+    else
+        $this->set('page_prefix', '_');
+
+    $this->set('page_postfix', $_SERVER['QUERY_STRING']);
+    $this->set('max_page', $this->max_page);
+    if (isset($_POST['ajax'])) {
+
+       // Поддержка модуля SeoUrlPro
+       if (!empty($seourlpro))
+            $grid = $GLOBALS['PHPShopSeoPro']->AjaxCompile($grid);
+
+        exit(PHPShopParser::replacedir($this->separator.$grid));
+    }
+
     if (empty($grid))
         $grid = PHPShopText::h2($this->lang('empty_product_list'));
     $this->add($grid, true);
+
 
     // Родительская категория
     $cat = $this->PHPShopCategory->getParam('parent_to');
@@ -754,7 +776,7 @@ function other_cat_navigation($parent) {
         $PHPShopOrm = new PHPShopOrm($this->getValue('base.categories'));
         $PHPShopOrm->debug = $this->debug;
         $PHPShopOrm->cache = false;
-        $dataArray = $PHPShopOrm->select(array('*'), array('parent_to' => '=' . $parent,'skin_enabled'=>" != '1'"), array('order' => 'num'), array('limit' => 100));
+        $dataArray = $PHPShopOrm->select(array('*'), array('parent_to' => '=' . $parent, 'skin_enabled' => " != '1'"), array('order' => 'num'), array('limit' => 100));
         if (is_array($dataArray))
             foreach ($dataArray as $row) {
 
@@ -773,15 +795,15 @@ function other_cat_navigation($parent) {
     if ($hook)
         return true;
 
-    
-    $this->set('DispCatNav', substr($dis,0,strlen($dis)-2));
+
+    $this->set('DispCatNav', substr($dis, 0, strlen($dis) - 2));
 }
 
 /**
  * Вывод списка категорий
  */
 function CID_Category() {
-    
+
     // шаблон вывода категорий с иконками
     $this->cid_cat_with_foto_template = 'catalog/cid_category.tpl';
 
@@ -889,6 +911,7 @@ function CID_Category() {
     // Подключаем шаблон
     $this->parseTemplate($this->getValue('templates.catalog_info_forma'));
 }
+
 /**
  * Экшен 404 ошибки по ссылке /shop/
  */

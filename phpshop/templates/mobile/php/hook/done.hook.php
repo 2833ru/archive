@@ -12,7 +12,7 @@ function send_to_order_mob_hook($obj, $row, $rout) {
             unset($_POST['name_person']);
         }
 
-        if (!PHPShopSecurity::true_param($_POST['mail'], $_POST['name_new'], $_POST['tel_new'], $_POST['adr_name'])) {
+        if (!PHPShopSecurity::true_param($_POST['mail'], $_POST['fio_new'], $_POST['tel_new'], $_POST['street_new'])) {
             $obj->set('orderMesage', message_mob_hook_content($obj->lang('bad_order_mesage_1')));
             $obj->parseTemplate($obj->getValue('templates.order_forma_mesage_main'));
             return true;

@@ -139,7 +139,7 @@ function delivery($obj, $deliveryID) {
                 $img = "&nbsp;<img src='{$row['icon']}' title='$city' height='30'>&nbsp;";
             else
                 $img = "";
-            @$disp .= '<span class="delivOneEl">&nbsp;<input type=radio value=' . $row['id'] . ' ' . $chk . '  name="dostavka_metod" id="dostavka_metod" > <span class="deliveryName" for="' . $row['id'] . '">' . $img . $city . '</span></span>';
+            @$disp .= '<span class="delivOneEl"><label><input type=radio value=' . $row['id'] . ' ' . $chk . '  name="dostavka_metod" id="dostavka_metod" > <span class="deliveryName">' . $img . $city . '</span></span></label>';
             $varamount++;
             $curid = $row['id'];
         }

@@ -174,7 +174,12 @@ class PHPShopProductElements extends PHPShopElements {
      * @return string
      */
     function compile() {
-        $table = '<table cellpadding="0" cellspacing="0" border="0">' . $this->product_grid . '</table>';
+
+        if ($this->cell_type == 'default' or $this->cell_type == 'table')
+            $table = '<table cellpadding="0" cellspacing="0" border="0">' . $this->product_grid . '</table>';
+        else
+            $table = $this->product_grid;
+
         $this->product_grid = null;
         return $table;
     }
@@ -452,7 +457,19 @@ class PHPShopProductElements extends PHPShopElements {
                         $tr.='<div class="' . $this->cell_type_class . '">' . $val . '</div>';
                         $item++;
                     }
-                $this->cell = 1;
+                //$this->cell = 1;
+                break;
+
+
+            // Bootstrap
+            case 'bootstrap':
+                $tr = '<div class="row">';
+                if (is_array($args))
+                    foreach ($args as $key => $val) {
+                        $tr.=$val;
+                        $item++;
+                    }
+                $tr.='</div>';
                 break;
 
             // Табличная

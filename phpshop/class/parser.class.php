@@ -39,6 +39,17 @@ class PHPShopParser {
             return false;
     }
 
+    static function replacedir($string) {
+        $replaces = array(
+            "/images\//i" => $GLOBALS['SysValue']['dir']['dir'] . $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/images/",
+            "/!images!\//i" => "images/",
+            "/java\//i" => "/java/",
+            "/css\//i" => "/css/",
+            "/phpshop\//i" => "/phpshop/",
+        );
+        return $string = preg_replace(array_keys($replaces), array_values($replaces), $string);
+    }
+
     /**
      * Обработка файла шаблона, вставка переменнных
      * @param string $path путь к файлу шаблона
@@ -66,7 +77,7 @@ class PHPShopParser {
         $string = @preg_replace("/@([a-zA-Z0-9_]+)@/e", '$GLOBALS["SysValue"]["other"]["\1"]', $string);
 
         if (!empty($replace))
-        $string = preg_replace(array_keys($replaces), array_values($replaces), $string);
+            $string = preg_replace(array_keys($replaces), array_values($replaces), $string);
 
         if (!empty($return))
             return $string;

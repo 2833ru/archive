@@ -682,6 +682,7 @@ function GetSort(id, sort) {
 
 // Системная информация
 function systemInfo() {
+    var dir = dirPath();
     var req = new Subsys_JsHttpRequest_Js();
     req.onreadystatechange = function() {
         if (req.readyState == 4) {
@@ -692,7 +693,7 @@ function systemInfo() {
         }
     }
     req.caching = false;
-    req.open('POST', '/phpshop/ajax/info.php', true);
+    req.open('POST', dir+'/phpshop/ajax/info.php', true);
     req.send({
         test: 303
     });

@@ -66,6 +66,7 @@ class PHPShopCoreElement extends PHPShopElements {
             $this->set('UserLogin', $_SESSION['UserLogin']);
         $this->set('ShopDir', $this->getValue('dir.dir'));
         $this->set('date', date("d-m-y H:i a"));
+        $this->set('year', date("Y"));
         $this->set('user_ip', $_SERVER['REMOTE_ADDR']);
         $this->set('NavActive', $this->PHPShopNav->getPath());
         $v = $this->getValue('upload.version');
@@ -465,7 +466,7 @@ class PHPShopTextElement extends PHPShopElements {
                 } else {
                     $dirs = explode(",", $row['dir']);
                     foreach ($dirs as $dir)
-                        if (strpos($_SERVER['REQUEST_URI'], $dir) or $_SERVER['REQUEST_URI'] == $dir) {
+                        if (@strpos($_SERVER['REQUEST_URI'], $dir) or $_SERVER['REQUEST_URI'] == $dir) {
                             $this->set('leftMenuName', $row['name']);
                             $this->set('leftMenuContent', Parser($row['content']));
 
@@ -503,7 +504,7 @@ class PHPShopTextElement extends PHPShopElements {
                 } else {
                     $dirs = explode(",", $row['dir']);
                     foreach ($dirs as $dir)
-                        if (strpos($_SERVER['REQUEST_URI'], $dir) or $_SERVER['REQUEST_URI'] == $dir) {
+                        if (@strpos($_SERVER['REQUEST_URI'], $dir) or $_SERVER['REQUEST_URI'] == $dir) {
                             $this->set('leftMenuName', $row['name']);
                             $this->set('leftMenuContent', Parser($row['content']));
 

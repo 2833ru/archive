@@ -340,12 +340,15 @@ class PHPShopText {
      * @return string
      */
     static function setInput($type, $name, $value, $float = "none", $size = 200, $onclick = "return true", $class = false, $caption = false, $description = false) {
+        
+        if(!empty($onclick))
+            $onclick='onclick="'.$onclick.'"';
 
-        $input = ' <input type="' . $type . '" value="' . $value . '" name="' . $name . '" id="' . $name . '"> ';
+        $input = ' <input type="' . $type . '" value="' . $value . '" name="' . $name . '" id="' . $name . '" '.$onclick.'> ';
 
         if ($type != 'hidden')
             $input='<div style="float:' . $float . $padding . '">
-             ' . $caption . $input . $description . '</div>';
+             <label>' . $caption . $input . $description . '</label></div>';
 
         return $input;
     }

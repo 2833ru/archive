@@ -104,7 +104,7 @@ function getExt($sFileName) {//ffilter
                 @$bases.=$SysValue['base'][$val] . ", ";
 
             $bases = substr($bases, 0, strlen($bases) - 2);
-            $bases2 = preg_replace("phpshop_system", "", $bases);
+          
             ?>
             <TABLE cellSpacing=1 cellPadding=5 width="100%" align=center border=0>
                 <FORM method="post" name="sql_forma2" id="sql_forma2" encType="multipart/form-data">

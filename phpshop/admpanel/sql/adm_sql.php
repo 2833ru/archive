@@ -77,7 +77,12 @@ require("../language/russian/language.php");
             unset($baseArray['phpshop_system']);
             unset($baseArray['phpshop_users']);
             unset($baseArray['phpshop_valuta']);
-            $bases = null;
+            unset($baseArray['phpshop_citylist_country']);
+            unset($baseArray['phpshop_citylist_region']);
+            unset($baseArray['phpshop_citylist_city']);
+            unset($baseArray['phpshop_modules_key']);
+            
+            
             $TRUNCATE = null;
 
             foreach ($baseArray as $val) {

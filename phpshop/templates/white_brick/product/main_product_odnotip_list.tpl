@@ -3,7 +3,7 @@
             <h2>Похожие товары</h2>
            
             <div id="carousel-featured-0" class="es-carousel-wrapper">
-                <div class="es-carousel">@productOdnotipList@</div>
+                <div class="es-carousel"><ul>@productOdnotipList@</ul></div>
             </div>
   </section>
 

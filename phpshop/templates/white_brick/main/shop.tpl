@@ -45,6 +45,8 @@
         <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@javascript/nivo_slider.js"></script>
         <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@javascript/jCarousel.js"></script>
         <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@javascript/tabs.js"></script>
+                <script type="text/javascript" src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@javascript/waypoints.min.js"></script>
+               
         <SCRIPT language="JavaScript" type="text/javascript" src="java/phpshop.js"></SCRIPT>
         <SCRIPT language="JavaScript" type="text/javascript" src="java/jqfunc.js"></SCRIPT>
         <script> document.createElement('header');
@@ -159,7 +161,7 @@
                                             if($_SESSION['UsersId']) echo '
                                             <li>
                                                 <div class="menu_links"> <a href="/users/" >Мой аккаунт</a> </div>
-                                                <div>
+                                                <div class="user-forma">
                                                     <ul>
                                                         <li><a href="/users/">@UsersLogin@</a></li>
                                                         <li><a href="/users/order.html">Отследить заказ</a></li>
@@ -223,7 +225,7 @@
                             <div class="box-heading">
                                 <h2>Мой аккаунт</h2>
                             </div>
-                            <div class="box-content">
+                            <div class="box-content user-links">
                                 <ul>
                                     <li><a href="/users/">@UsersLogin@</a></li>
                                     <li><a href="/users/order.html">Отследить заказ</a></li>
@@ -313,8 +315,7 @@
                                 <li><a href="/users/notice.html">Уведомления о товарах</a></li>
                                 <li><a href="/users/wishlist.html">Отложенные товары</a></li>
                                 <li><a href="/users/message.html">Связь с менеджерами</a></li>
-                                <li><a href="" onClick="javascript:UserLogOut();
-                                            return false;">Выйти</a></li>
+                              @php if($_SESSION['UsersId']) echo '<li><a href="javascript:UserLogOut();">Выйти</a></li>'; php@
                             </ul>
                         </div>
                     </div>

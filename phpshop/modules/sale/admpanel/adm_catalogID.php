@@ -23,7 +23,7 @@ function updateAllPrice(){
     price_n='.$_POST['mod_sale_old'].',
     '.$price_n.'
     where category='.intval($_POST['catalogID']);
-    $PHPShopOrm->update();
+    $PHPShopOrm->update(false);
 }
 
 

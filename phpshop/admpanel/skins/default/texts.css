@@ -463,9 +463,9 @@ div, input, button, select, fieldset, textarea, td, th{
 
 input,textarea,select{
     border: solid 1px #CCC;
-    -webkit-border-radius:5px;
-    -moz-border-radius:5px;
-    border-radius:5px;
+    -webkit-border-radius:4px;
+    -moz-border-radius:4px;
+    border-radius:4px;
     padding:2px;
 }
 
@@ -474,9 +474,9 @@ input.but{
     height: 2.2em;
     font-size: 8pt;
     border: solid 1px #BFC6CD;
-    -webkit-border-radius:5px;
-    -moz-border-radius:5px;
-    border-radius:5px;
+    -webkit-border-radius:4px;
+    -moz-border-radius:4px;
+    border-radius:4px;
     background: -moz-linear-gradient(#FFF, #F0F0F0,#FFF);
     background: -ms-linear-gradient(#FFF, #F0F0F0,#FFF);
     background: -o-linear-gradient(#FFF, #F0F0F0,#FFF);
@@ -507,9 +507,9 @@ hr{
 
 input[type=file]{
     border: solid 1px #CCC;
-    -webkit-border-radius:5px;
-    -moz-border-radius:5px;
-    border-radius:5px;
+    -webkit-border-radius:4px;
+    -moz-border-radius:4px;
+    border-radius:4px;
     background: #FFF;
     width: 400px;
 }
@@ -542,9 +542,9 @@ button{
     font-size: 8pt;
     margin-top:0;
     border: solid 1px #CCC;
-    -webkit-border-radius:5px;
-    -moz-border-radius:5px;
-    border-radius:5px;
+    -webkit-border-radius:4px;
+    -moz-border-radius:4px;
+    border-radius:4px;
     background: -moz-linear-gradient(#FFF, #F0F0F0,#FFF);
     background: -ms-linear-gradient(#FFF, #F0F0F0,#FFF);
     background: -o-linear-gradient(#FFF, #F0F0F0,#FFF);

@@ -225,7 +225,7 @@
                                 <h2><a href="/spec/">Спецпредложения</a></h2>
                             </div>
                             <div id="carousel-featured-0" class="es-carousel-wrapper">
-                                <div class="es-carousel">@specMain@</div>
+                                <div class="es-carousel"><ul>@specMain@</ul></div>
                             </div>
                         </section>
                         <script type="text/javascript">
@@ -242,7 +242,7 @@
                             <div class="header_rel">
                                 <h2><a href="/newtip/">Новинки</a></h2></div>
                             <div id="carousel-latest-0" class="es-carousel-wrapper">
-                                <div class="es-carousel">@specMainIcon@</div>
+                                <div class="es-carousel"><ul>@specMainIcon@</ul></div>
                             </div>
                         </section>
                         <script type="text/javascript">
@@ -273,7 +273,7 @@
                                 <h2>Сейчас покупают</h2>
                             </div>
                             <div id="carousel-nowBuy-0" class="es-carousel-wrapper">
-                                <div class="es-carousel"> @nowBuy@</div>
+                                <div class="es-carousel"><ul>@nowBuy@</ul></div>
                             </div>
                         </section>
                         <script type="text/javascript">
@@ -330,7 +330,7 @@
                                     <li><a href="/users/order.html">Отследить заказ</a></li>
                                     <li><a href="/users/notice.html">Уведомления о товарах</a></li>
                                     <li><a href="/users/message.html">Связь с менеджерами</a></li>
-                                    <li><a href="javascript:UserLogOut();">Выйти</a></li>
+                                   @php if($_SESSION['UsersId']) echo '<li><a href="javascript:UserLogOut();">Выйти</a></li>'; php@
                                 </ul>
                             </div>
                         </div>

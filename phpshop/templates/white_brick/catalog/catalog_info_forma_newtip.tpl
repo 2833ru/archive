@@ -2,7 +2,7 @@
 <h2>Новинки каталога</h2>
 
 <div id="carousel-featured-0" class="es-carousel-wrapper">
-    <div class="es-carousel">@subCatProdList2@</div>
+    <div class="es-carousel"><ul>@subCatProdList2@</ul></div>
 </div>
 
 <script type="text/javascript">
